@@ -4,10 +4,13 @@ Want to add a checkout to your Android app? No matter if your shopper wants to p
 This README provides the usage manual for the SDK itself. For the full documentation, including the server side implementation guidelines, refer to https://docs.adyen.com/developers/in-app-integration-guide.
 
 ## Installation
-The Adyen SDK can be integrated easily into your project using .... For this, add the following line to your ...
+The Adyen SDK can be integrated easily into your project.
+
+Import the core or ui module by adding one of the following lines to your build.gradle file.
 
 ```
-...
+compile 'com.adyen.checkout:core:1.0.5'
+compile 'com.adyen.checkout:ui:1.0.5'
 ```
 
 To give you as much flexibility as possible, our Android SDK can be integrated in two ways:
