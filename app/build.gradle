@@ -31,4 +31,6 @@ dependencies {
     compile fileTree(include: ['*.jar'], dir: 'libs')
 
     compile 'com.adyen.checkout:ui:1.0.5'
+    compile 'com.adyen.checkout:core:1.0.5'
+
 }
