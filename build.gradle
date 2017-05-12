@@ -1,0 +1,50 @@
+buildscript {
+    repositories {
+        jcenter()
+    }
+    dependencies {
+        classpath 'com.android.tools.build:gradle:2.3.1'
+    }
+}
+
+allprojects {
+    repositories {
+        jcenter()
+        repositories {
+            flatDir {
+                dirs 'libs'
+            }
+        }
+    }
+}
+
+// This block encapsulates custom properties and makes them available to all
+// modules in the project.
+ext {
+    compileSdkVersion = 25
+    buildToolsVersion = "25.0.3"
+
+    supportLibVersion = "25.3.1"
+    supportAnnotationsVersion = "25.3.1"
+    jUnitVersion = "4.12"
+
+    minSdkVersion = 15
+    targetSdkVersion = 25
+    versionCode = 2
+    versionName = "1.0.3"
+
+    release_debuggable = false
+    release_minifyEnabled = false
+    release_useProguard = false
+    release_shrinkResources = false
+
+    debug_debuggable = true
+    debug_testCoverageEnabled = true
+
+    defaultPublishConfig = "release"
+    publishNonDefault = true
+
+    testBuildType = "debug"
+}
+
+apply plugin: 'java'

@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+              android:id="@+id/payment_form_layout"
+              android:layout_width="match_parent"
+              android:layout_height="match_parent"
+              android:background="@color/white"
+              android:orientation="vertical">
+    <EditText
+        android:id="@+id/credit_card_cvc"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginRight="10dp"
+        android:gravity="center"
+        android:hint="Security code"
+        android:inputType="phone"
+        android:paddingBottom="15dp"
+        android:textColorHint="@color/hint_text_color"
+        android:textSize="18sp"/>
+
+    <TextView
+        android:id="@+id/credit_card_cvc_label"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:layout_marginRight="15dp"
+        android:layout_marginTop="-5dp"
+        android:text="3-digit number"
+        android:textAppearance="?android:attr/textAppearanceSmall"
+        android:textColor="@color/lighter_grey_border"
+        android:textSize="12sp"/>
+
+
+    <Button android:id="@+id/collectCreditCardData"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:text="PROCEED"/>
+
+</LinearLayout>
