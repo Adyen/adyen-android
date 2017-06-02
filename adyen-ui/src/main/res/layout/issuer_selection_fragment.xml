@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/activity_issuer_payment_method_selection"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:background="@color/background_light_grey">
+
+    <ListView
+        android:id="@+id/issuer_methods_list"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@color/background_light_grey"
+        android:dividerHeight="0.5dp"
+        android:divider="@color/separator_line_grey"
+        android:paddingTop="22dp"
+        android:clipToPadding="false"/>
+
+</LinearLayout>

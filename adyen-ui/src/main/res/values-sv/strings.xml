@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="card_number">Kortnummer</string>
+    <string name="cancel_button">Avbryt</string>
+    <string name="cardholder_name">Kortinnehavarens namn</string>
+    <string name="cvc_extended_hint_with_last_digits">Vänligen fyll i CVC kod för %1$s</string>
+    <string name="expiry_date">Förfallodatum</string>
+    <string name="hint_cardholder_name">Jan Johansson</string>
+    <string name="hint_expiry_date">MM/ÅÅ</string>
+    <string name="pay_with_amount">Betala %1$s</string>
+    <string name="remember_card_hint">Spara kortuppgifter</string>
+    <string name="title_card_details">Kortuppgifter</string>
+    <string name="title_payment_methods">Betalningsmetoder</string>
+    <string name="title_verify_card">Verifiera ditt kort</string>
+    <string name="preferred_payment_methods_label">Dina sparade betalningsmetoder</string>
+    <string name="other_payment_methods_label">Välj annan betalningsmetod</string>
+
+</resources>

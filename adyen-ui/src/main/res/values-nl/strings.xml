@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="cancel_button">Annuleren</string>
+    <string name="card_number">Kaartnummer</string>
+    <string name="cardholder_name">Kaarthouder</string>
+    <string name="cvc_extended_hint_with_last_digits">Voer alstublieft uw CVC in voor %1$s</string>
+    <string name="expiry_date">Vervaldatum</string>
+    <string name="hint_cardholder_name">Jan Janssen</string>
+    <string name="pay_with_amount">Betaal %1$s</string>
+    <string name="remember_card_hint">Kaart opslaan</string>
+    <string name="title_card_details">Kaartdetails</string>
+    <string name="title_payment_methods">Betaalopties</string>
+    <string name="title_verify_card">Verifieer uw kaart</string>
+    <string name="hint_expiry_date">MM/JJ</string>
+</resources>

@@ -1,0 +1,90 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <style name="AdyenTheme" parent="android:Theme.Holo.Light">
+        <item name="colorPrimary">#673AB7</item>
+        <item name="colorPrimaryDark">#512DA8</item>
+        <item name="colorAccent">@color/light_green</item>
+        <item name="android:editTextStyle">@style/adyenEditText</item>
+        <item name="android:buttonStyle">@style/adyenCheckoutButton</item>
+        <item name="android:textViewStyle">@style/aydenHintTextView</item>
+        <item name="android:checkboxStyle">@style/adyenCheckBox</item>
+        <item name="android:actionBarStyle">@style/adyenActionBar</item>
+        <item name="android:alertDialogStyle">@style/dialogStyle</item>
+        <item name="android:windowContentOverlay">@null</item>
+    </style>
+
+    <style name="AdyenTranslucentActivity" parent="android:Theme">
+        <item name="android:windowIsTranslucent">true</item>
+        <item name="android:windowBackground">@android:color/transparent</item>
+        <item name="android:windowNoTitle">true</item>
+        <item name="android:windowIsFloating">true</item>
+        <item name="android:backgroundDimEnabled">true</item>
+        <item name="android:windowContentOverlay">@null</item>
+    </style>
+
+    <style name="adyenEditText" parent="@android:style/Widget.Holo.EditText">
+        <item name="android:color">@color/black</item>
+        <item name="android:textSize">18sp</item>
+        <item name="android:textCursorDrawable">@drawable/black_cursor</item>
+        <item name="android:textColor">@color/black_text</item>
+        <item name="android:textColorHint">@color/hint_text_color</item>
+        <item name="android:background">@drawable/custom_edittext_selector</item>
+        <item name="android:drawable">@drawable/custom_edittext_selector</item>
+        <item name="android:imeOptions">flagNoExtractUi</item>
+    </style>
+
+    <style name="adyenCheckoutButton" parent="@android:style/Widget.Holo.Button">
+        <item name="android:textAllCaps">false</item>
+        <item name="android:textColor">@color/white</item>
+        <item name="android:background">@drawable/selector_checkout_button</item>
+    </style>
+
+    <style name="adyenRoundCheckoutButton" parent="adyenCheckoutButton">
+        <item name="android:background">@drawable/selector_round_checkout_button</item>
+    </style>
+
+    <style name="adyenCheckBox" parent="@android:style/Widget.Holo.CompoundButton.CheckBox">
+        <item name="android:button">@drawable/selector_checkbox</item>
+    </style>
+
+    <style name="aydenHintTextView" parent="@android:style/Widget.Holo.TextView">
+        <item name="android:textAppearance">?android:attr/textAppearanceSmall</item>
+        <item name="android:textSize">13sp</item>
+        <item name="android:textColor">@color/main_text_grey</item>
+    </style>
+
+    <style name="adyenCheckoutTextView" parent="@android:style/Widget.Holo.TextView">
+        <item name="android:textColor">@color/white</item>
+        <item name="android:textStyle">bold</item>
+        <item name="android:textSize">20sp</item>
+    </style>
+
+    <style name="Divider">
+        <item name="android:background">@color/separator_line_grey</item>
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:layout_height">0.5dp</item>
+    </style>
+
+    <style name="adyenActionBar" parent="@android:style/Widget.Holo.ActionBar">
+        <item name="android:background">@color/white</item>
+        <item name="android:padding">0dp</item>
+        <item name="android:height">64dp</item>
+    </style>
+
+    <style name="LoadingAnimationView">
+        <item name="indicatorColor">@color/light_green</item>
+        <item name="minWidth">48dp</item>
+        <item name="maxWidth">48dp</item>
+        <item name="minHeight">48dp</item>
+        <item name="maxHeight">48dp</item>
+    </style>
+
+    <style name="dialogStyle" parent="@android:style/Theme.Holo.Dialog">
+        <item name="android:background">@color/white</item>
+        <item name="android:editTextStyle">@style/adyenEditText</item>
+        <item name="android:buttonStyle">@style/adyenCheckoutButton</item>
+        <item name="android:textViewStyle">@style/aydenHintTextView</item>
+    </style>
+
+</resources>

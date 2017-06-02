@@ -1,1 +1,1 @@
-include ':app', ':customuiapplication', ':checkoutdemo', ':customwithcheckoutui'
+include ':app', ':adyen-core', ':adyen-ui', ':adyen-androidpay', ':customuiapplication', ':testutils', ':checkoutdemo', ':customwithadyenui'

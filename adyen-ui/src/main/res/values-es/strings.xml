@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="card_number">Número de tarjeta</string>
+    <string name="cancel_button">Cancelar</string>
+    <string name="cardholder_name">Nombre</string>
+    <string name="cvc_extended_hint_with_last_digits">Porfavor entre el número CVC para %1$s</string>
+    <string name="expiry_date">Fecha de caducidad</string>
+    <string name="pay_with_amount">Pagar %1$s</string>
+    <string name="remember_card_hint">Guardar tarjeta</string>
+    <string name="title_payment_methods">Métodos de pago</string>
+    <string name="title_card_details">Detalles de la tarjeta</string>
+    <string name="title_verify_card">Validar tarjeta</string>
+    <string name="hint_expiry_date">MM/AA</string>
+
+</resources>

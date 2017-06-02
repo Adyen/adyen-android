@@ -1,35 +1,57 @@
 apply plugin: 'com.android.application'
 
 android {
-    compileSdkVersion rootProject.ext.compileSdkVersion
-    buildToolsVersion rootProject.ext.buildToolsVersion
+    compileSdkVersion rootProject.compileSdkVersion
+    buildToolsVersion rootProject.buildToolsVersion
 
     defaultConfig {
         applicationId "com.adyen.checkout"
-        minSdkVersion rootProject.ext.minSdkVersion
-        targetSdkVersion rootProject.ext.targetSdkVersion
-        versionCode rootProject.ext.versionCode
-        versionName rootProject.ext.versionName
+        minSdkVersion rootProject.minSdkVersion
+        targetSdkVersion rootProject.targetSdkVersion
+        versionCode rootProject.versionCode
+        versionName rootProject.versionName
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
     }
     buildTypes {
         release {
-            debuggable rootProject.ext.release_debuggable
-            minifyEnabled rootProject.ext.release_minifyEnabled
+            debuggable rootProject.release_debuggable
+            minifyEnabled rootProject.release_minifyEnabled
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
         }
         debug {
-            debuggable rootProject.ext.debug_debuggable
-            testCoverageEnabled = rootProject.ext.debug_testCoverageEnabled
+            debuggable rootProject.debug_debuggable
+            testCoverageEnabled = rootProject.debug_testCoverageEnabled
         }
     }
+    lintOptions {
+        disable 'MissingTranslation'
+    }
 
-    testBuildType rootProject.ext.testBuildType
+    testBuildType rootProject.testBuildType
 }
 
 dependencies {
     compile fileTree(include: ['*.jar'], dir: 'libs')
+    testCompile "junit:junit:${rootProject.jUnitVersion}"
+    androidTestCompile 'com.android.support.test.espresso:espresso-core:2.2.2'
 
-    compile 'com.adyen.checkout:ui:1.0.5'
+    // UiAutomator
+    androidTestCompile 'com.android.support.test.uiautomator:uiautomator-v18:2.1.2'
+    androidTestCompile project(':testutils')
 
+    compile "com.android.support:support-annotations:${rootProject.supportAnnotationsVersion}"
+    if (publishNonDefault) {
+        debugCompile project(path: ':adyen-core', configuration: 'debug')
+        releaseCompile project(path: ':adyen-core', configuration: 'release')
+
+        debugCompile project(path: ':adyen-androidpay', configuration: 'debug')
+        releaseCompile project(path: ':adyen-androidpay', configuration: 'release')
+
+        debugCompile project(path: ':adyen-ui', configuration: 'debug')
+        releaseCompile project(path: ':adyen-ui', configuration: 'release')
+    } else {
+        compile project(':adyen-core')
+        compile project(':adyen-androidpay')
+        compile project(':adyen-ui')
+    }
 }

@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="card_number">Número do Cartão</string>
+    <string name="cancel_button">Cancelar</string>
+    <string name="cardholder_name">Titular do Cartão</string>
+    <string name="cvc_extended_hint_with_last_digits">Porfavor insira o código CVC para %1$s</string>
+    <string name="expiry_date">Data de Vencimento</string>
+    <string name="hint_cardholder_name">João Silva</string>
+    <string name="pay_with_amount">Pagar %1$s</string>
+    <string name="remember_card_hint">Lembrar o cartão</string>
+    <string name="title_card_details">Detalhes do cartão</string>
+    <string name="title_payment_methods">Meios de pagamento</string>
+    <string name="title_verify_card">Verifique o seu cartão</string>
+    <string name="hint_expiry_date">MM/AA</string>
+
+</resources>

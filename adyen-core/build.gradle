@@ -1,0 +1,56 @@
+apply plugin: 'com.android.library'
+
+ext {
+    RELEASE_ARTIFACT_NAME = 'core'
+}
+apply from: "$rootProject.rootDir/release.gradle"
+
+android {
+    compileSdkVersion rootProject.compileSdkVersion
+    buildToolsVersion rootProject.buildToolsVersion
+
+    defaultPublishConfig rootProject.defaultPublishConfig
+    publishNonDefault rootProject.publishNonDefault
+
+    defaultConfig {
+        minSdkVersion rootProject.minSdkVersion
+        targetSdkVersion rootProject.targetSdkVersion
+        versionCode rootProject.versionCode
+        versionName rootProject.versionName
+    }
+    buildTypes {
+        release {
+            debuggable rootProject.release_debuggable
+            minifyEnabled rootProject.release_minifyEnabled
+            shrinkResources rootProject.release_shrinkResources
+            useProguard rootProject.release_useProguard
+            proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
+        }
+        debug {
+            debuggable rootProject.debug_debuggable
+            testCoverageEnabled = rootProject.debug_testCoverageEnabled
+        }
+    }
+
+    testOptions {
+        unitTests.returnDefaultValues = true
+    }
+
+    testBuildType rootProject.testBuildType
+}
+
+dependencies {
+    compile fileTree(dir: 'libs', include: ['*.jar'])
+    testCompile "junit:junit:${rootProject.jUnitVersion}"
+    testCompile 'com.openpojo:openpojo:0.8.4'
+    testCompile 'org.json:json:20140107'
+
+    compile "com.android.support:appcompat-v7:${rootProject.supportLibVersion}"
+    compile "com.android.support:support-annotations:${rootProject.supportAnnotationsVersion}"
+    compile 'com.android.support:customtabs:25.3.1'
+
+    compile 'io.reactivex:rxjava:1.1.6'
+    compile 'io.reactivex:rxandroid:1.2.1'
+
+    compile 'com.adyen.cse:adyen-cse:1.0.2'
+}

@@ -40,8 +40,8 @@ public class MainActivity extends FragmentActivity implements PaymentDataEntryFr
 
     private static final String MERCHANT_SERVER_URL = "https://checkoutshopper-test.adyen.com/checkoutshopper/demo/easy-integration/merchantserver/";
 
-    private static final String MERCHANT_API_SECRET_KEY = "ADD_YOUR_API_KEY";
-    private static final String MERCHANT_APP_ID = "ADD_YOUR_APP_ID";
+    private static final String MERCHANT_API_SECRET_KEY = //YOUR_API_KEY
+    private static final String MERCHANT_APP_ID = "TestMerchantApp";
 
     private PaymentRequest paymentRequest;
     private final PaymentRequestListener paymentRequestListener = new PaymentRequestListener() {

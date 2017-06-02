@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="card_number">Numero di Carta</string>
+    <string name="cancel_button">Annulla</string>
+    <string name="cardholder_name">Titolare</string>
+    <string name="cvc_extended_hint_with_last_digits">Inserire il codice CVC per %1$s</string>
+    <string name="expiry_date">Data di Scadenza</string>
+    <string name="hint_cardholder_name">Alberto Rossi</string>
+    <string name="hint_expiry_date">MM/AA</string>
+    <string name="pay_with_amount">Paga %1$s</string>
+    <string name="remember_card_hint">Salva i Dettagli della Carta</string>
+    <string name="title_card_details">Dettagli Carta</string>
+    <string name="title_payment_methods">Metodo di Pagamento</string>
+    <string name="title_verify_card">Verifica la Carta</string>
+    <string name="preferred_payment_methods_label">Metodi di pagamento</string>
+    <string name="other_payment_methods_label">Scegli altro metodo di pagamento</string>
+
+</resources>

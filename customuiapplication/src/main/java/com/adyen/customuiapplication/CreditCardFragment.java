@@ -13,11 +13,10 @@ import com.adyen.core.models.paymentdetails.CVCOnlyPaymentDetails;
 import com.adyen.core.models.paymentdetails.CreditCardPaymentDetails;
 import com.adyen.core.models.paymentdetails.PaymentDetails;
 
-import org.json.JSONException;
-import org.json.JSONObject;
+import java.util.Date;
 
-import adyen.com.adyencse.encrypter.ClientSideEncrypter;
 import adyen.com.adyencse.encrypter.exception.EncrypterException;
+import adyen.com.adyencse.pojo.Card;
 
 /**
  * Fragment for collecting credit card info.
@@ -80,32 +79,24 @@ public class CreditCardFragment extends Fragment {
             view.findViewById(R.id.collectCreditCardData).setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(final View view) {
-                    final JSONObject sensitiveData = new JSONObject();
+
+                    Card card = new Card();
+                    card.setNumber(creditCardNoView.getText().toString());
+                    card.setCardHolderName("checkout shopper");
+                    card.setCvc(cvcView.getText().toString());
+                    card.setExpiryMonth(expiryDateView.getText().subSequence(0, 2).toString());
+                    card.setExpiryYear("20" + expiryDateView.getText().subSequence(2, 4).toString());
+                    card.setGenerationTime(new Date());
+
                     try {
-                        sensitiveData.put("number", creditCardNoView.getText());
-                        sensitiveData.put("expiryMonth", expiryDateView.getText().subSequence(0, 2));
-                        sensitiveData.put("expiryYear", "20" + expiryDateView.getText().subSequence(2, 4));
-                        sensitiveData.put("cvc", cvcView.getText());
-                        sensitiveData.put("holderName", "checkout shopper");
-                        sensitiveData.put("generationtime", generationTime);
-
-                        try {
-                            ClientSideEncrypter encrypter = new ClientSideEncrypter(publicKey);
-                            String encryptedData = encrypter.encrypt(sensitiveData.toString());
-
-                            CreditCardPaymentDetails paymentDetails = new CreditCardPaymentDetails(encryptedData, true);
-                            if (creditCardInfoListener != null) {
-                                creditCardInfoListener.onCreditCardInfoProvided(paymentDetails);
-                            } else {
-                                Log.w(TAG, "No listener provided.");
-                            }
-                        } catch (EncrypterException e) {
-                            e.printStackTrace();
+                        CreditCardPaymentDetails paymentDetails = new CreditCardPaymentDetails(card.serialize(publicKey), true);
+                        if (creditCardInfoListener != null) {
+                            creditCardInfoListener.onCreditCardInfoProvided(paymentDetails);
+                        } else {
+                            Log.w(TAG, "No listener provided.");
                         }
-
-
-                    } catch (final JSONException jsonException) {
-                        Log.e(TAG, "Credit card information cannot be collected");
+                    } catch (EncrypterException e) {
+                        e.printStackTrace();
                     }
                 }
             });

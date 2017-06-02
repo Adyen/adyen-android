@@ -34,13 +34,13 @@ public class MainActivity extends FragmentActivity {
 
     private static final String TAG = MainActivity.class.getSimpleName();
 
+    private static final String MERCHANT_SERVER_URL = "https://checkoutshopper-test.adyen.com/checkoutshopper/demo/easy-integration/"
+            + "merchantserver/";
     private static final String SETUP = "setup";
     private static final String VERIFY = "verify";
+    private static final String MERCHANT_API_SECRET_KEY = //YOUR_API_KEY
 
-    private static final String MERCHANT_SERVER_URL = "https://checkoutshopper-test.adyen.com/checkoutshopper/demo/easy-integration/merchantserver/";
-
-    private static final String MERCHANT_API_SECRET_KEY = "ADD_YOUR_API_KEY";
-    private static final String MERCHANT_APP_ID = "ADD_YOUR_APP_ID";
+    private static final String MERCHANT_APP_ID = "TestMerchantApp";
 
     private PaymentRequest paymentRequest;
     private Context context;

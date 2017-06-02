@@ -30,8 +30,8 @@ ext {
 
     minSdkVersion = 15
     targetSdkVersion = 25
-    versionCode = 2
-    versionName = "1.0.3"
+    versionCode = 3
+    versionName = "1.2.0"
 
     release_debuggable = false
     release_minifyEnabled = false
@@ -42,9 +42,200 @@ ext {
     debug_testCoverageEnabled = true
 
     defaultPublishConfig = "release"
-    publishNonDefault = true
+    publishNonDefault = !project.hasProperty('sdkRelease')
 
     testBuildType = "debug"
 }
 
 apply plugin: 'java'
+apply plugin: 'jacoco'
+jacoco {
+    toolVersion = "0.7.9"
+}
+
+subprojects {
+
+    def fileFilter = ['**/R.class', '**/R$*.class', '**/BuildConfig.*', '**/Manifest*.*', '**/*Test*.*', 'android/**/*.*', '**/checkout/**', '**/customuiapplication/**', '**/checkoutdemo/**', '**/customwithadyenui/**']
+
+    apply plugin: 'checkstyle'
+    checkstyle {
+        toolVersion = "7.6.1"
+    }
+    task checkstyle(type: Checkstyle) {
+        configFile file("$rootDir/config/checkstyle/checkstyle.xml")
+        source 'src'
+        include '**/*.java'
+        exclude '**/gen/**'
+
+        classpath = files()
+    }
+
+    apply plugin: 'findbugs'
+    findbugs {
+        toolVersion = "3.0.1"
+    }
+    task findbugs(type: FindBugs, dependsOn: "assembleDebug") {
+        effort = "max"
+        reportLevel = "medium"
+        excludeFilter = new File("$project.rootDir/config/findbugs/findbugs-filter.xml")
+        classes = files("$project.buildDir/intermediates/classes/debug")
+        source = fileTree("$project.buildDir/../src/main/java/")
+        classpath = files()
+        reports {
+            xml.enabled = false
+            html.enabled = true
+            xml {
+                destination "$project.buildDir/findbugs/findbugs-output.xml"
+            }
+            html {
+                destination "$project.buildDir/findbugs/findbugs-output.html"
+            }
+        }
+    }
+
+    apply plugin: 'jacoco'
+    jacoco {
+        toolVersion = "0.7.9"
+    }
+    task jacocoTestReport(type: JacocoReport, dependsOn: ['testDebugUnitTest', 'createDebugCoverageReport']) {
+        reports {
+            xml.enabled = true
+            html.enabled = true
+        }
+
+        def debugTree = fileTree(dir: "$project.buildDir/intermediates/classes/debug", excludes: fileFilter)
+        def mainSrc = "${project.projectDir}/src/main/java"
+
+        sourceDirectories = files([mainSrc])
+        classDirectories = files([debugTree])
+        executionData = fileTree(dir: "$project.buildDir", includes: [
+                "jacoco/testDebugUnitTest.exec",
+                "outputs/code-coverage/connected/*coverage.ec"
+        ])
+    }
+
+    task jacocoUnitTestReport(type: JacocoReport, dependsOn: ['testDebugUnitTest']) {
+        reports {
+            xml.enabled = true
+            html.enabled = true
+        }
+
+        def debugTree = fileTree(dir: "$project.buildDir/intermediates/classes/debug", excludes: fileFilter)
+        def mainSrc = "${project.projectDir}/src/main/java"
+
+        sourceDirectories = files([mainSrc])
+        classDirectories = files([debugTree])
+        executionData = fileTree(dir: "$project.buildDir", includes: [
+                "jacoco/testDebugUnitTest.exec"
+        ])
+    }
+
+    afterEvaluate {
+        project.tasks.check.dependsOn('findbugs', 'checkstyle')
+    }
+
+}
+
+clean {
+    delete rootProject.buildDir
+}
+
+def publishedProjects = subprojects.findAll()
+task jacocoOverallTestReport(type: JacocoReport, group: 'Coverage reports') {
+    description = 'Generates an aggregate report from all subprojects'
+
+    dependsOn(publishedProjects.jacocoTestReport)
+
+    additionalSourceDirs = files(publishedProjects.sourceSets.main.allSource.srcDirs)
+    sourceDirectories = files(publishedProjects.jacocoTestReport.sourceDirectories)
+    classDirectories = files(publishedProjects.jacocoTestReport.classDirectories)
+    executionData = files(publishedProjects.jacocoTestReport.executionData)
+
+    doFirst {
+        executionData = files(executionData.findAll { it.exists() })
+    }
+
+    reports {
+        html.enabled = true // human readable
+        xml.enabled = true // required by coveralls
+    }
+
+    getReports().getHtml().setDestination(file("$buildDir/reports/jacocoOverallTestReport/html"))
+    getReports().getXml().setDestination(file("$buildDir/reports/jacocoOverallTestReport/merged.xml"))
+}
+
+task jacocoOverallUnitTestReport(type: JacocoReport, group: 'Coverage reports') {
+    description = 'Generates an aggregate report from all subprojects'
+
+    dependsOn(publishedProjects.jacocoUnitTestReport)
+
+    additionalSourceDirs = files(publishedProjects.sourceSets.main.allSource.srcDirs)
+    sourceDirectories = files(publishedProjects.jacocoTestReport.sourceDirectories)
+    classDirectories = files(publishedProjects.jacocoTestReport.classDirectories)
+    executionData = files(publishedProjects.jacocoTestReport.executionData)
+
+    doFirst {
+        executionData = files(executionData.findAll { it.exists() })
+    }
+
+    reports {
+        html.enabled = true // human readable
+        xml.enabled = true // required by coveralls
+    }
+
+    getReports().getHtml().setDestination(file("$buildDir/reports/jacocoOverallUnitTestReport/html"))
+    getReports().getXml().setDestination(file("$buildDir/reports/jacocoOverallUnitTestReport/merged.xml"))
+}
+
+task prepareSDKRelease(type: Copy) {
+    publishedProjects.forEach {
+        println "$it.name/build/outputs/aar/$it.name-release.aar"
+        from "$it.name/build/outputs/aar/$it.name-release.aar"
+        into "$buildDir/outputs/sdk/"
+        rename { String fileName ->
+            fileName.replace('release', rootProject.ext.versionName);
+        }
+    }
+}
+
+def javadocProjects= [
+        ":adyen-ui",
+        ":adyen-core"
+]
+
+task generateJavadoc(type: Javadoc) {
+    javadocProjects.forEach {
+        source += files(project(it).jacocoTestReport.sourceDirectories)
+    }
+    classpath = files(subprojects.collect {project -> project.sourceSets.main.compileClasspath})
+    destinationDir = file("$buildDir/javadoc/")
+
+    include('**/Amount.java')
+    include('**/Issuer.java')
+    include('**/Payment.java')
+    include('**/PaymentMethod.java')
+    include('**/PaymentRequest.java')
+    include('**/PaymentRequestListener.java')
+    include('**/PaymentRequestDetailsListener.java')
+    include('**/PaymentRequestResult.java')
+    include('**/PaymentDataCallback.java')
+    include('**/PaymentDetailsCallback.java')
+    include('**/PaymentMethodCallback.java')
+
+    include('**/CreditCardFragment.java')
+    include('**/CreditCardFragmentBuilder.java')
+    include('**/IssuerSelectionFragment.java')
+    include('**/IssuerSelectionFragmentBuilder.java')
+    include('**/PaymentMethodSelectionFragment.java')
+    include('**/PaymentMethodSelectionFragmentBuilder.java')
+    include('**/SepaDirectDebitFragment.java')
+    include('**/SepaDirectDebitFragmentBuilder.java')
+}
+
+if (JavaVersion.current().isJava8Compatible()) {
+    allprojects {
+        tasks.withType(Javadoc) {
+            options.addStringOption('Xdoclint:none', '-quiet')
+        }
+    }
+}

@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <string name="card_number">Kartennummer</string>
+    <string name="expiry_date">Gültig bis</string>
+    <string name="cardholder_name">Name des Karteninhabers</string>
+    <string name="hint_cardholder_name">Martin Schmidt</string>
+    <string name="pay_with_amount">%1$s bezahlen</string>
+    <string name="remember_card_hint">Karte speichern</string>
+    <string name="cancel_button">Abbrechen</string>
+    <string name="cvc_extended_hint_with_last_digits">Bitte CVC code für %1$s eingeben</string>
+    <string name="title_card_details">Karteneingabe</string>
+    <string name="title_payment_methods">Bezahlmöglichkeiten</string>
+    <string name="title_verify_card">Karte verifizieren</string>
+    <string name="hint_expiry_date">MM/JJ</string>
+    <string name="preferred_payment_methods_label">Ihre Bezahlmethoden</string>
+    <string name="other_payment_methods_label">Andere Bezahlmöglichkeiten</string>
+    <string name="hint_iban_number">DE89 3704 0044 0532 0130 00</string>
+    <string name="example">Beispiel:</string>
+    <string name="bank_account_number">Kontonummer (IBAN):</string>
+    <string name="giropay_search_field_hint">Bankname / BIC / Bankleitzahl</string>
+</resources>

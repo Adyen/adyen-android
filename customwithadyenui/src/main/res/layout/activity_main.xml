@@ -1,0 +1,230 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+                xmlns:tools="http://schemas.android.com/tools"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:paddingBottom="@dimen/activity_vertical_margin"
+                android:paddingLeft="@dimen/activity_horizontal_margin"
+                android:paddingRight="@dimen/activity_horizontal_margin"
+                android:paddingTop="@dimen/activity_vertical_margin"
+                tools:context="com.adyen.customuiapplication.MainActivity">
+
+    <ScrollView
+        android:layout_width="fill_parent"
+        android:layout_height="fill_parent">
+
+        <RelativeLayout
+            android:id="@+id/footer"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content">
+
+            <RelativeLayout
+                android:id="@+id/orderDetailLayout"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
+
+                <TextView
+                    android:id="@+id/orderAmountTitle"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentStart="true"
+                    android:layout_alignParentLeft="true"
+                    android:layout_alignParentTop="true"
+                    android:text="Order Amount"
+                    android:textSize="20dp"/>
+
+                <EditText
+                    android:id="@+id/orderAmountEntry"
+                    android:layout_width="wrap_content"
+                    android:minWidth="100sp"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@id/orderAmountTitle"
+                    android:digits="0123456789,."
+                    android:inputType="numberDecimal"
+                    android:text="0"
+                    android:textSize="50dp"
+                />
+
+                <TextView
+                    android:id="@+id/orderCurrencyTitle"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentEnd="true"
+                    android:layout_alignParentRight="true"
+                    android:layout_alignParentTop="true"
+                    android:text="Order Currency"
+                    android:textSize="20dp"/>
+
+                <EditText
+                    android:id="@+id/orderCurrencyEntry"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@id/orderCurrencyTitle"
+                    android:layout_alignParentEnd="true"
+                    android:layout_alignParentRight="true"
+                    android:inputType="textCapCharacters"
+                    android:maxLength="3"
+                    android:text="EUR"
+                    android:textSize="50dp"
+                />
+
+            </RelativeLayout>
+
+            <TextView
+                android:id="@+id/merchantReferenceTitle"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_below="@id/orderDetailLayout"
+                android:text="Merchant Reference"
+                android:textSize="20dp"/>
+
+            <EditText
+                android:id="@+id/merchantReferenceEntry"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_below="@id/merchantReferenceTitle"
+                android:layout_alignParentEnd="true"
+                android:layout_alignParentRight="true"
+                android:text="DemoDEMOdemo"
+                android:textSize="20dp"
+            />
+
+            <TextView
+                android:id="@+id/countryTitle"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_below="@id/merchantReferenceEntry"
+                android:text="Country"
+                android:textSize="20dp"/>
+
+            <EditText
+                android:id="@+id/countryEntry"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_below="@id/countryTitle"
+                android:layout_alignParentEnd="true"
+                android:layout_alignParentRight="true"
+                android:inputType="textCapCharacters"
+                android:maxLength="2"
+                android:text="NL"
+                android:textSize="20dp"
+            />
+
+            <TextView
+                android:id="@+id/paymentDeadlineTitle"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_below="@id/countryEntry"
+                android:text="Payment Deadline"
+                android:textSize="20dp"/>
+
+            <EditText
+                android:id="@+id/paymentDeadlineEntry"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_below="@id/paymentDeadlineTitle"
+                android:layout_alignParentEnd="true"
+                android:layout_alignParentRight="true"
+                android:inputType="datetime"
+                android:text="2017-03-17T14:11:10"
+                android:textSize="20dp"
+            />
+
+            <TextView
+                android:id="@+id/shopperLocaleTitle"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_below="@id/paymentDeadlineEntry"
+                android:text="Shopper Locale"
+                android:textSize="20dp"/>
+
+            <EditText
+                android:id="@+id/shopperLocaleEntry"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_below="@id/shopperLocaleTitle"
+                android:layout_alignParentEnd="true"
+                android:layout_alignParentRight="true"
+                android:inputType="textCapCharacters"
+                android:maxLength="2"
+                android:text="NL"
+                android:textSize="20dp"
+            />
+
+            <TextView
+                android:id="@+id/shopperIpTitle"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_below="@id/shopperLocaleEntry"
+                android:text="Shopper IP"
+                android:textSize="20dp"/>
+
+            <EditText
+                android:id="@+id/shopperIpEntry"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_below="@id/shopperIpTitle"
+                android:layout_alignParentEnd="true"
+                android:layout_alignParentRight="true"
+                android:inputType="numberDecimal"
+                android:maxLength="15"
+                android:text="192.168.11.90"
+                android:textSize="20dp"
+            />
+
+            <TextView
+                android:id="@+id/merchantAccountTitle"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_below="@id/shopperIpEntry"
+                android:text="Merchant Account"
+                android:textSize="20dp"/>
+
+            <EditText
+                android:id="@+id/merchantAccountEntry"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_below="@id/merchantAccountTitle"
+                android:layout_alignParentEnd="true"
+                android:layout_alignParentRight="true"
+                android:text="TestMerchantCheckout"
+                android:textSize="20dp"
+            />
+
+            <TextView
+                android:id="@+id/returnUrlTitle"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_below="@id/merchantAccountEntry"
+                android:text="Return URL"
+                android:textSize="20dp"/>
+
+            <EditText
+                android:id="@+id/returnUrlEntry"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_below="@id/returnUrlTitle"
+                android:layout_alignParentEnd="true"
+                android:layout_alignParentRight="true"
+                android:inputType="textUri"
+                android:text="app://checkout"
+                android:textSize="20dp"
+            />
+
+            <Button
+                android:id="@+id/proceed_button"
+                android:layout_width="250dp"
+                android:layout_height="62.5dp"
+                android:layout_below="@id/returnUrlEntry"
+                android:layout_centerInParent="true"
+                android:layout_marginBottom="10dp"
+                android:layout_marginLeft="10dp"
+                android:layout_marginRight="10dp"
+                android:padding="10dp"
+                android:scaleType="fitCenter"
+                android:text="PAY">
+            </Button>
+
+        </RelativeLayout>
+    </ScrollView>
+</RelativeLayout>
