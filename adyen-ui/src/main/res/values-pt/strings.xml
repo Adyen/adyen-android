@@ -3,7 +3,7 @@
     <string name="card_number">Número do Cartão</string>
     <string name="cancel_button">Cancelar</string>
     <string name="cardholder_name">Titular do Cartão</string>
-    <string name="cvc_extended_hint_with_last_digits">Porfavor insira o código CVC para %1$s</string>
+    <string name="cvc_extended_hint_with_last_digits">Por favor insira o código CVC para %1$s</string>
     <string name="expiry_date">Data de Vencimento</string>
     <string name="hint_cardholder_name">João Silva</string>
     <string name="pay_with_amount">Pagar %1$s</string>

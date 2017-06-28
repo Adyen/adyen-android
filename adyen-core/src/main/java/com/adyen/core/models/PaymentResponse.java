@@ -36,6 +36,8 @@ public class PaymentResponse {
     private List<PaymentMethod> paymentMethods = new ArrayList<>();
     private List<PaymentMethod> preferredPaymentMethods = new ArrayList<>();
 
+    private String disableRecurringDetailUrl;
+
     private PaymentResponse() {
         // default constructor is hidden
     }
@@ -66,6 +68,8 @@ public class PaymentResponse {
         //parse payment methods
         paymentMethods = parsePaymentMethods(responseJSON.getJSONArray("paymentMethods"));
         preferredPaymentMethods = parsePreferredPaymentMethods(responseJSON.optJSONArray("recurringDetails"));
+
+        disableRecurringDetailUrl = responseJSON.optString("disableRecurringDetailUrl");
     }
 
     public String getPaymentData() {
@@ -173,4 +177,7 @@ public class PaymentResponse {
         return new JSONObject(new String(response, Charset.forName("UTF-8")));
     }
 
+    public String getDisableRecurringDetailUrl() {
+        return disableRecurringDetailUrl;
+    }
 }

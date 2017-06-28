@@ -27,6 +27,7 @@ public final class PaymentMethod implements Serializable {
         public static final String CARD = "card";
         public static final String IDEAL = "ideal";
         public static final String SEPA_DIRECT_DEBIT = "sepadirectdebit";
+        public static final String PAYPAL = "paypal";
     }
 
     private static final long serialVersionUID = 2587948839462686004L;
@@ -322,4 +323,11 @@ public final class PaymentMethod implements Serializable {
 
     }
 
+    @Override
+    public boolean equals(Object obj) {
+        if (!(obj instanceof PaymentMethod)) {
+            return false;
+        }
+        return ((PaymentMethod) obj).getPaymentMethodData().equals(this.paymentMethodData);
+    }
 }

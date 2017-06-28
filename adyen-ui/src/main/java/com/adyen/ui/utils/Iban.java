@@ -2,7 +2,6 @@ package com.adyen.ui.utils;
 
 import com.adyen.core.utils.StringUtils;
 
-import java.math.BigInteger;
 import java.util.Arrays;
 
 /*

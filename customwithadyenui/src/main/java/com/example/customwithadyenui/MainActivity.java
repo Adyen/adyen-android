@@ -259,10 +259,9 @@ public class MainActivity extends FragmentActivity implements
         try {
 
             jsonObject.put("shopperLocale", paymentSetupRequest.getShopperLocale());
-            jsonObject.put("sessionValidity", "2017-03-28T17:18:59+00:00");
             jsonObject.put("token", token);
 
-            jsonObject.put("appUrlScheme", "app://checkout");
+            jsonObject.put("appUrlScheme", "example-shopping-app://");
             jsonObject.put("customerCountry", paymentSetupRequest.getCountryCode());
             jsonObject.put("currency", paymentSetupRequest.getAmount().getCurrency());
             jsonObject.put("quantity", paymentSetupRequest.getAmount().getValue());

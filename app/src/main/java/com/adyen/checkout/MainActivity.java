@@ -125,10 +125,9 @@ public class MainActivity extends FragmentActivity implements PaymentDataEntryFr
             jsonObject.put("merchantAccount", "TestMerchantCheckout");
 
             jsonObject.put("shopperLocale", paymentSetupRequest.getShopperLocale());
-            jsonObject.put("sessionValidity", "2017-05-05T13:09:50");
             jsonObject.put("token", token);
 
-            jsonObject.put("appUrlScheme", "app://checkout");
+            jsonObject.put("appUrlScheme", "example-shopping-app://");
             jsonObject.put("customerCountry", paymentSetupRequest.getCountryCode());
             jsonObject.put("currency", paymentSetupRequest.getAmount().getCurrency());
             jsonObject.put("quantity", paymentSetupRequest.getAmount().getValue());

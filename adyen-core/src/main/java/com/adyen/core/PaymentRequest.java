@@ -6,6 +6,7 @@ import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.content.LocalBroadcastManager;
 
+import com.adyen.core.interfaces.DeletePreferredPaymentMethodListener;
 import com.adyen.core.interfaces.PaymentRequestDetailsListener;
 import com.adyen.core.interfaces.PaymentRequestListener;
 import com.adyen.core.internals.PaymentTrigger;
@@ -125,6 +126,17 @@ public class PaymentRequest {
 
     PaymentStateHandler getPaymentStateHandler() {
         return paymentStateHandler;
+    }
+
+    /**
+     * Delete a preferred {@link PaymentMethod}.
+     * This will remove the stored payment details from this shopper on the back-end.
+     * @param paymentMethod A reference to the {@link PaymentMethod} that should be removed.
+     *                      Must be a preferred {@link PaymentMethod}.
+     * @param listener {@link DeletePreferredPaymentMethodListener} listener to get the result.
+     */
+    public void deletePreferredPaymentMethod(final PaymentMethod paymentMethod, DeletePreferredPaymentMethodListener listener) {
+        paymentStateHandler.deletePreferredPaymentMethod(paymentMethod, listener);
     }
 
 }

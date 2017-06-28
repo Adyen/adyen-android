@@ -142,6 +142,14 @@ public class DefaultPaymentRequestDetailsListener implements PaymentRequestDetai
             intent.putExtra(PUBLIC_KEY, paymentRequest.getPublicKey());
             intent.putExtra(GENERATION_TIME, paymentRequest.getGenerationTime());
             context.startActivity(intent);
+        } else if (paymentRequest.getPaymentMethod().getType().equals(PaymentMethod.Type.PAYPAL)) {
+            //We can set "storeDetails" to true if we want to set up a recurring contract.
+            /*
+            if (requiredFields.containsKey("storeDetails")) {
+                requiredFields.put("storeDetails", true);
+            }
+            */
+            callback.completionWithPaymentDetails(requiredFields);
         } else if (requiredFields.containsKey("cardDetails.cvc")) {
             final Intent intent = new Intent(context, TranslucentDialogActivity.class);
             intent.putExtra(AMOUNT, paymentRequest.getAmount());
@@ -172,8 +180,8 @@ public class DefaultPaymentRequestDetailsListener implements PaymentRequestDetai
                 paymentMethodService.process(context, paymentRequest, paymentRequest.getPaymentRequestListener(), null);
             }
         } else {
-            //TODO add error callback
-            //callback.onError(new Throwable("Could not process payment details for payment method."));
+            //This will work if all fields are optional.
+            callback.completionWithPaymentDetails(requiredFields);
         }
     }
 }

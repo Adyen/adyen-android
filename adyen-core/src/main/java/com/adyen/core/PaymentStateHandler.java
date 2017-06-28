@@ -11,6 +11,7 @@ import android.util.Log;
 
 import com.adyen.core.exceptions.PostResponseFormatException;
 import com.adyen.core.exceptions.UIModuleNotAvailableException;
+import com.adyen.core.interfaces.DeletePreferredPaymentMethodListener;
 import com.adyen.core.interfaces.HttpResponseCallback;
 import com.adyen.core.interfaces.PaymentRequestDetailsListener;
 import com.adyen.core.interfaces.PaymentRequestListener;
@@ -448,4 +449,62 @@ class PaymentStateHandler implements State.StateChangeListener {
     void setPaymentDetails(Map<String, Object> paymentDetails) {
         this.paymentDetails = paymentDetails;
     }
+
+    void deletePreferredPaymentMethod(final PaymentMethod paymentMethod, final DeletePreferredPaymentMethodListener listener) {
+        Log.d(TAG, "deletePreferredPaymentMethod()");
+        if (paymentMethod == null) {
+            Log.e(TAG, "paymentMethod cannot be null.");
+            return;
+        }
+        if (listener == null) {
+            Log.e(TAG, "listener cannot be null.");
+            return;
+        }
+        if (!paymentMethod.isOneClick() || !preferredPaymentMethods.contains(paymentMethod)) {
+            listener.onFail();
+            return;
+        }
+
+        final Map<String, String> headers = new HashMap<>();
+        headers.put("Content-Type", "application/json; charset=UTF-8");
+        final JSONObject paymentRequestPostData = new JSONObject();
+        try {
+            paymentRequestPostData.put("paymentData", paymentResponse.getPaymentData());
+            paymentRequestPostData.put("paymentMethodData", paymentMethod.getPaymentMethodData());
+
+            AsyncHttpClient.post(paymentResponse.getDisableRecurringDetailUrl(), headers, paymentRequestPostData.toString(),
+                    new HttpResponseCallback() {
+                        @Override
+                        public void onSuccess(byte[] response) {
+                            try {
+                                JSONObject jsonObject = new JSONObject(new String(response, Charset.forName("UTF-8")));
+
+                                if (jsonObject.has("resultCode") && jsonObject.getString("resultCode").equals("Success")) {
+                                    listener.onSuccess();
+
+                                    preferredPaymentMethods.remove(paymentMethod);
+
+                                    for (PaymentRequestDetailsListener detailsListener : paymentRequestDetailsListeners) {
+                                        detailsListener.onPaymentMethodSelectionRequired(paymentRequest, preferredPaymentMethods,
+                                                filteredPaymentMethodsList, paymentBroadcastReceivers.getPaymentMethodCallback());
+                                    }
+                                    return;
+                                }
+                            } catch (JSONException e) {
+                                Log.e(TAG, "Deletion of preferred payment method has failed", e);
+                            }
+                            listener.onFail();
+                        }
+
+                        @Override
+                        public void onFailure(Throwable e) {
+                            Log.e(TAG, "Deletion of preferred payment method has failed", e);
+                            listener.onFail();
+                        }
+                    });
+        } catch (JSONException e) {
+            listener.onFail();
+        }
+    }
+
 }
