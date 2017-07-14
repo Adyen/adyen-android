@@ -1,4 +1,4 @@
-package com.example.customwithadyenui;
+package com.example.customwithcheckoutui;
 
 import android.content.Context;
 import android.content.Intent;
@@ -23,6 +23,7 @@ import com.adyen.core.models.PaymentMethod;
 import com.adyen.core.models.PaymentRequestResult;
 import com.adyen.core.models.paymentdetails.CreditCardPaymentDetails;
 import com.adyen.core.models.paymentdetails.IdealPaymentDetails;
+import com.adyen.core.models.paymentdetails.InputDetail;
 import com.adyen.core.models.paymentdetails.SepaDirectDebitPaymentDetails;
 import com.adyen.core.utils.AsyncHttpClient;
 import com.adyen.ui.fragments.CreditCardFragment;
@@ -38,6 +39,7 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.nio.charset.Charset;
+import java.util.Collection;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -105,7 +107,7 @@ public class MainActivity extends FragmentActivity implements
 
         @Override
         public void onPaymentDetailsRequired(@NonNull final PaymentRequest paymentRequest,
-                                             @NonNull final Map<String, Object> requiredFields,
+                                             @NonNull final Collection<InputDetail> inputDetails,
                                              @NonNull final PaymentDetailsCallback callback) {
             Log.d(TAG, "paymentRequestDetailsListener.onPaymentDetailsRequired()");
             final String paymentMethodType = paymentRequest.getPaymentMethod().getType();
@@ -119,8 +121,11 @@ public class MainActivity extends FragmentActivity implements
                         .setShopperReference(paymentRequest.getShopperReference())
                         .setCreditCardInfoListener(new CreditCardFragment.CreditCardInfoListener() {
                             @Override
-                            public void onCreditCardInfoProvided(CreditCardPaymentDetails paymentDetails) {
-                                callback.completionWithPaymentDetails(paymentDetails);
+                            public void onCreditCardInfoProvided(String cardToken, boolean storeDetails) {
+                                CreditCardPaymentDetails creditCardPaymentDetails = new CreditCardPaymentDetails(inputDetails);
+                                creditCardPaymentDetails.fillCardToken(cardToken);
+                                creditCardPaymentDetails.fillStoreDetails(storeDetails);
+                                callback.completionWithPaymentDetails(creditCardPaymentDetails);
                             }
                         })
                         .build();
@@ -133,8 +138,10 @@ public class MainActivity extends FragmentActivity implements
                         .setPaymentMethod(paymentRequest.getPaymentMethod())
                         .setIssuerSelectionListener(new IssuerSelectionFragment.IssuerSelectionListener() {
                             @Override
-                            public void onIssuerSelected(IdealPaymentDetails issuerSelectionPaymentDetails) {
-                                callback.completionWithPaymentDetails(issuerSelectionPaymentDetails);
+                            public void onIssuerSelected(String issuer) {
+                                IdealPaymentDetails idealPaymentDetails = new IdealPaymentDetails(inputDetails);
+                                idealPaymentDetails.fillIssuer(issuer);
+                                callback.completionWithPaymentDetails(idealPaymentDetails);
                             }
                         })
                         .build();
@@ -147,8 +154,11 @@ public class MainActivity extends FragmentActivity implements
                         .setAmount(paymentRequest.getAmount())
                         .setSEPADirectDebitPaymentDetailsListener(new SepaDirectDebitFragment.SEPADirectDebitPaymentDetailsListener() {
                             @Override
-                            public void onPaymentDetails(SepaDirectDebitPaymentDetails paymentDetails) {
-                                callback.completionWithPaymentDetails(paymentDetails);
+                            public void onPaymentDetails(String iban, String accountHolder) {
+                                SepaDirectDebitPaymentDetails sepaDirectDebitPaymentDetails = new SepaDirectDebitPaymentDetails(inputDetails);
+                                sepaDirectDebitPaymentDetails.fillIban(iban);
+                                sepaDirectDebitPaymentDetails.fillOwner(accountHolder);
+                                callback.completionWithPaymentDetails(sepaDirectDebitPaymentDetails);
                             }
                         })
                         .build();
@@ -266,7 +276,8 @@ public class MainActivity extends FragmentActivity implements
             jsonObject.put("currency", paymentSetupRequest.getAmount().getCurrency());
             jsonObject.put("quantity", paymentSetupRequest.getAmount().getValue());
             jsonObject.put("platform", "android");
-            jsonObject.put("basketId", "M+M Black dress & accessories");
+            jsonObject.put("basketId", "example-basked-id");
+            jsonObject.put("customerId", "example-customer-id");
 
         } catch (final JSONException jsonException) {
             Log.e("Unexpected error", "Setup failed");

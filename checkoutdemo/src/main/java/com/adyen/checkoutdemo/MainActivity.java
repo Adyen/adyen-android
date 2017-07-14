@@ -121,7 +121,7 @@ public class MainActivity extends FragmentActivity {
             jsonObject.put("quantity", "17408");
             jsonObject.put("platform", "android");
             jsonObject.put("basketId", "M+M Black dress & accessories");
-            jsonObject.put("customerId", "emred");
+            jsonObject.put("customerId", "example-customer-id");
         } catch (final JSONException jsonException) {
             Log.e("Unexpected error", "Setup failed");
         }

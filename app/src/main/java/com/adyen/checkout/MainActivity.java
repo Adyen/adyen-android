@@ -132,8 +132,8 @@ public class MainActivity extends FragmentActivity implements PaymentDataEntryFr
             jsonObject.put("currency", paymentSetupRequest.getAmount().getCurrency());
             jsonObject.put("quantity", paymentSetupRequest.getAmount().getValue());
             jsonObject.put("platform", "android");
-            jsonObject.put("basketId", "M+M Black dress & accessories");
-            jsonObject.put("customerId", "emred");
+            jsonObject.put("basketId", "example-basked-id");
+            jsonObject.put("customerId", "example-customer-id");
 
         } catch (final JSONException jsonException) {
             Log.e("Unexpected error", "Setup failed");

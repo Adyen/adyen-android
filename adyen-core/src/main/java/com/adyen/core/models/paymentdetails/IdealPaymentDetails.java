@@ -1,29 +1,24 @@
 package com.adyen.core.models.paymentdetails;
 
-import com.adyen.core.models.Issuer;
-
+import java.util.Collection;
 
 /**
- * PaymentDetails class for PaymentMethod ideal.
+ * PaymentDetails class for sepa direct debit payments.
  */
 public class IdealPaymentDetails extends PaymentDetails {
 
     private static final String IDEAL_ISSUER = "idealIssuer";
 
-    /**
-     * Create PaymentDetails for PaymentMethod ideal.
-     * @param issuerId String of the issuer id.
-     */
-    public IdealPaymentDetails(final String issuerId) {
-        map.put(IDEAL_ISSUER, issuerId);
+    public IdealPaymentDetails(Collection<InputDetail> inputDetails) {
+        super(inputDetails);
     }
 
-    /**
-     * Create PaymentDetails for PaymentMethod ideal.
-     * @param issuer The selected {@link Issuer} to create the PaymentDetails from.
-     */
-    public IdealPaymentDetails(final Issuer issuer) {
-        map.put(IDEAL_ISSUER, issuer.getIssuerId());
+    public boolean fillIssuer(final String issuerId) {
+        return super.fill(IDEAL_ISSUER, issuerId);
+    }
+
+    public boolean fillIssuer(final InputDetail.Item issuerItem) {
+        return super.fill(IDEAL_ISSUER, issuerItem.getId());
     }
 
 }

@@ -18,7 +18,8 @@ import android.widget.TextView;
 import com.adyen.core.constants.Constants;
 import com.adyen.core.models.Amount;
 import com.adyen.core.models.PaymentMethod;
-import com.adyen.core.models.paymentdetails.CreditCardPaymentDetails;
+import com.adyen.core.models.paymentdetails.InputDetail;
+import com.adyen.core.models.paymentdetails.PaymentDetails;
 import com.adyen.core.utils.AmountUtil;
 import com.adyen.core.utils.StringUtils;
 import com.adyen.ui.R;
@@ -41,7 +42,7 @@ import adyen.com.adyencse.encrypter.ClientSideEncrypter;
 import adyen.com.adyencse.encrypter.exception.EncrypterException;
 
 /**
- * Fragment for collecting {@link CreditCardPaymentDetails} for credit card payments.
+ * Fragment for collecting {@link PaymentDetails} for credit card payments.
  * Should be instantiated via {@link CreditCardFragmentBuilder}.
  */
 public class CreditCardFragment extends Fragment {
@@ -75,7 +76,7 @@ public class CreditCardFragment extends Fragment {
      * The listener interface for receiving the (encrypted) credit card data.
      */
     public interface CreditCardInfoListener {
-        void onCreditCardInfoProvided(CreditCardPaymentDetails creditCardInfo);
+        void onCreditCardInfoProvided(String token, boolean storeDetails);
     }
 
      void setCreditCardInfoListener(@NonNull final CreditCardInfoListener creditCardInfoListener) {
@@ -92,7 +93,11 @@ public class CreditCardFragment extends Fragment {
         publicKey = args.getString(Constants.DataKeys.PUBLIC_KEY);
         generationTime = args.getString(Constants.DataKeys.GENERATION_TIME);
 
-        nameRequired = paymentMethod.getRequiredFields().containsKey("cardHolderName");
+        for (InputDetail inputDetail : paymentMethod.getInputDetails()) {
+            if (inputDetail.getKey().equals("cardHolderName")) {
+                nameRequired = true;
+            }
+        }
 
         theme = args.getInt("theme");
 
@@ -176,10 +181,13 @@ public class CreditCardFragment extends Fragment {
         collectDataButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(final View view) {
-                CreditCardPaymentDetails paymentDetails = getPaymentDetails();
+                String token = getToken();
+
+                boolean storeDetails = !StringUtils.isEmptyOrNull(shopperReference)
+                        && saveCardCheckBox.isChecked();
 
                 if (creditCardInfoListener != null) {
-                    creditCardInfoListener.onCreditCardInfoProvided(paymentDetails);
+                    creditCardInfoListener.onCreditCardInfoProvided(token, storeDetails);
                 } else {
                     Log.w(TAG, "No listener provided.");
                 }
@@ -206,11 +214,10 @@ public class CreditCardFragment extends Fragment {
         return fragmentView;
     }
 
-    private CreditCardPaymentDetails getPaymentDetails() {
+    private String getToken() {
         if (!inputFieldsAvailable()) {
             return null;
         }
-        CreditCardPaymentDetails paymentDetails = null;
         final JSONObject sensitiveData = new JSONObject();
         try {
 
@@ -229,17 +236,13 @@ public class CreditCardFragment extends Fragment {
             ClientSideEncrypter encrypter = new ClientSideEncrypter(publicKey);
             String encryptedData = encrypter.encrypt(sensitiveData.toString());
 
-            boolean storeDetails = !StringUtils.isEmptyOrNull(shopperReference)
-                    && saveCardCheckBox.isChecked();
-
-            paymentDetails = new CreditCardPaymentDetails(encryptedData,
-                    storeDetails);
+            return encryptedData;
         } catch (JSONException e) {
             e.printStackTrace();
         } catch (EncrypterException e) {
             e.printStackTrace();
         }
-        return paymentDetails;
+        return "";
     }
 
     private boolean inputFieldsAvailable() {

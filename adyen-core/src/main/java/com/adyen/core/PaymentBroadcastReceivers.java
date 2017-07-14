@@ -13,6 +13,7 @@ import com.adyen.core.interfaces.PaymentMethodCallback;
 import com.adyen.core.internals.PaymentTrigger;
 import com.adyen.core.models.PaymentMethod;
 import com.adyen.core.models.PaymentResponse;
+import com.adyen.core.models.paymentdetails.InputDetail;
 import com.adyen.core.models.paymentdetails.PaymentDetails;
 
 import org.json.JSONException;
@@ -39,7 +40,7 @@ class PaymentBroadcastReceivers {
         public void completionWithPaymentMethod(@NonNull final PaymentMethod selectedPaymentMethod) {
             paymentStateHandler.setPaymentMethod(selectedPaymentMethod);
 
-            if (!selectedPaymentMethod.getRequiredFields().isEmpty()) {
+            if (!(selectedPaymentMethod.getInputDetails() == null || selectedPaymentMethod.getInputDetails().isEmpty())) {
                 paymentStateHandler.getPaymentProcessorStateMachine().onTrigger(
                         PaymentTrigger.PAYMENT_DETAILS_REQUIRED);
             } else {
@@ -58,21 +59,23 @@ class PaymentBroadcastReceivers {
                         PaymentTrigger.PAYMENT_DATA_PROVIDED);
             } catch (final JSONException jsonException) {
                 Log.e(TAG, "Provided payment data response is invalid", jsonException);
-                paymentStateHandler.setPaymentErrorThrowableAndTriggerError(jsonException);
+                paymentStateHandler.setPaymentErrorThrowableAndTriggerError(
+                        new Exception("Provided payment data response is invalid", jsonException));
             }
         }
     };
 
+
     private PaymentDetailsCallback paymentDetailsCallback = new PaymentDetailsCallback() {
         @Override
-        public void completionWithPaymentDetails(@NonNull Map<String, Object> paymentDetails) {
+        public void completionWithPaymentDetails(PaymentDetails paymentDetails) {
             paymentStateHandler.setPaymentDetails(paymentDetails);
             paymentStateHandler.getPaymentProcessorStateMachine().onTrigger(PaymentTrigger.PAYMENT_DETAILS_PROVIDED);
         }
 
         @Override
-        public void completionWithPaymentDetails(PaymentDetails paymentDetails) {
-            paymentStateHandler.setPaymentDetails(paymentDetails.toMap());
+        public void completionWithPaymentDetails(@NonNull Map<String, Object> paymentDetails) {
+            paymentStateHandler.setPaymentDetails(paymentDetails);
             paymentStateHandler.getPaymentProcessorStateMachine().onTrigger(PaymentTrigger.PAYMENT_DETAILS_PROVIDED);
         }
     };
@@ -117,13 +120,15 @@ class PaymentBroadcastReceivers {
                 Log.e(TAG, "androidPayInfoListener failed: " + errorMessage);
                 paymentStateHandler.setPaymentErrorThrowableAndTriggerError(new Throwable(errorMessage));
             } else {
-                final Map<String, Object> inputFields = paymentStateHandler.getPaymentMethod().getRequiredFields();
+                PaymentDetails paymentDetails = new PaymentDetails(paymentStateHandler.getPaymentMethod().getInputDetails());
                 if (androidPayToken != null) {
-                    for (final String key : inputFields.keySet()) {
-                        inputFields.put(key, androidPayToken);
+                    for (InputDetail inputDetail : paymentDetails.getInputDetails()) {
+                        if (inputDetail.getType() == InputDetail.Type.AndroidPayToken) {
+                            inputDetail.fill(androidPayToken);
+                        }
                     }
                 }
-                paymentDetailsCallback.completionWithPaymentDetails(PaymentDetails.fromMap(inputFields));
+                paymentDetailsCallback.completionWithPaymentDetails(paymentDetails);
             }
             LocalBroadcastManager.getInstance(context).unregisterReceiver(this);
         }

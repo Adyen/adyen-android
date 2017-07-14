@@ -13,7 +13,7 @@ import android.widget.ArrayAdapter;
 import android.widget.ImageView;
 import android.widget.TextView;
 
-import com.adyen.core.models.Issuer;
+import com.adyen.core.models.paymentdetails.InputDetail;
 import com.adyen.core.utils.AsyncImageDownloader;
 import com.adyen.ui.R;
 import com.adyen.ui.utils.IconUtil;
@@ -24,14 +24,14 @@ import java.util.List;
  * A custom {@link ArrayAdapter} for displaying issuers.
  */
 
-public class IssuerListAdapter extends ArrayAdapter<Issuer> {
+public class IssuerListAdapter extends ArrayAdapter<InputDetail.Item> {
 
     private static final String TAG = IssuerListAdapter.class.getSimpleName();
 
     @NonNull
     private final Activity context;
     @NonNull
-    private final List<Issuer> issuers;
+    private final List<InputDetail.Item> issuers;
 
     private static class ViewHolder {
         private TextView paymentMethodNameView;
@@ -39,7 +39,7 @@ public class IssuerListAdapter extends ArrayAdapter<Issuer> {
         private String url;
     }
 
-    public IssuerListAdapter(@NonNull Activity context, @NonNull List<Issuer> issuers) {
+    public IssuerListAdapter(@NonNull Activity context, @NonNull List<InputDetail.Item> issuers) {
         super(context, R.layout.payment_method_list, issuers);
         Log.d(TAG, "IssuerListAdapter()");
         this.context = context;
@@ -48,7 +48,7 @@ public class IssuerListAdapter extends ArrayAdapter<Issuer> {
 
     @Nullable
     @Override
-    public Issuer getItem(int position) {
+    public InputDetail.Item getItem(int position) {
         return issuers.get(position);
     }
 
@@ -71,9 +71,9 @@ public class IssuerListAdapter extends ArrayAdapter<Issuer> {
 
         if (viewHolder != null) {
             if (viewHolder.paymentMethodNameView != null && viewHolder.imageView != null) {
-                viewHolder.paymentMethodNameView.setText(issuers.get(position).getIssuerName());
+                viewHolder.paymentMethodNameView.setText(issuers.get(position).getName());
                 String modifiedUrl = IconUtil.addScaleFactorToIconUrl(context,
-                        issuers.get(position).getIssuerLogoUrl());
+                        issuers.get(position).getImageUrl());
                 viewHolder.url = modifiedUrl;
                 AsyncImageDownloader.downloadImage(getContext(), new AsyncImageDownloader.ImageListener() {
                     @Override

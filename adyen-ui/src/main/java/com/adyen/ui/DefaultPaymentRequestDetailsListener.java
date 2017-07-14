@@ -18,16 +18,18 @@ import com.adyen.core.interfaces.PaymentMethodCallback;
 import com.adyen.core.interfaces.PaymentRequestDetailsListener;
 import com.adyen.core.interfaces.UriCallback;
 import com.adyen.core.internals.ModuleAvailabilityUtil;
-import com.adyen.core.models.Issuer;
 import com.adyen.core.models.PaymentMethod;
+import com.adyen.core.models.paymentdetails.InputDetail;
+import com.adyen.core.models.paymentdetails.InputDetailsUtil;
+import com.adyen.core.models.paymentdetails.PaymentDetails;
 import com.adyen.core.services.PaymentMethodService;
 import com.adyen.ui.activities.CheckoutActivity;
 import com.adyen.ui.activities.RedirectHandlerActivity;
 import com.adyen.ui.activities.TranslucentDialogActivity;
 
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.List;
-import java.util.Map;
 
 import static com.adyen.core.constants.Constants.DataKeys.GENERATION_TIME;
 import static com.adyen.core.constants.Constants.DataKeys.PUBLIC_KEY;
@@ -58,6 +60,7 @@ public class DefaultPaymentRequestDetailsListener implements PaymentRequestDetai
                                                  @NonNull List<PaymentMethod> preferredPaymentMethods,
                                                  @NonNull List<PaymentMethod> availablePaymentMethods,
                                                  @NonNull PaymentMethodCallback callback) {
+
         final Intent intent = new Intent(context.getApplicationContext(), CheckoutActivity.class);
         final Bundle bundle = new Bundle();
         ArrayList<PaymentMethod> preferredPaymentMethodsArrayList = new ArrayList<>();
@@ -111,15 +114,12 @@ public class DefaultPaymentRequestDetailsListener implements PaymentRequestDetai
 
     @Override
     public void onPaymentDetailsRequired(@NonNull PaymentRequest paymentRequest,
-                                         @NonNull Map<String, Object> requiredFields,
+                                         @NonNull Collection<InputDetail> inputDetails,
                                          @NonNull PaymentDetailsCallback callback) {
         if (paymentRequest.getPaymentMethod().getType().equals(PaymentMethod.Type.IDEAL)) {
 
-            ArrayList<Issuer> issuers = new ArrayList<>();
-            issuers.addAll(paymentRequest.getPaymentMethod().getIssuers());
             final Intent intent = new Intent(context, CheckoutActivity.class);
             Bundle bundle = new Bundle();
-            bundle.putSerializable("issuers", issuers);
             bundle.putSerializable(PAYMENT_METHOD, paymentRequest.getPaymentMethod());
             bundle.putInt("fragment", CheckoutActivity.ISSUER_SELECTION_FRAGMENT);
             intent.putExtras(bundle);
@@ -127,6 +127,7 @@ public class DefaultPaymentRequestDetailsListener implements PaymentRequestDetai
         } else if (paymentRequest.getPaymentMethod().getType().equals(PaymentMethod.Type.SEPA_DIRECT_DEBIT)) {
             final Intent intent = new Intent(context, CheckoutActivity.class);
             Bundle bundle = new Bundle();
+            bundle.putSerializable(PAYMENT_METHOD, paymentRequest.getPaymentMethod());
             bundle.putSerializable(AMOUNT, paymentRequest.getAmount());
             bundle.putInt("fragment", CheckoutActivity.SEPA_DIRECT_DEBIT_FRAGMENT);
             intent.putExtras(bundle);
@@ -134,8 +135,6 @@ public class DefaultPaymentRequestDetailsListener implements PaymentRequestDetai
         } else if (paymentRequest.getPaymentMethod().getType().equals(PaymentMethod.Type.CARD)) {
             final Intent intent = new Intent(context, CheckoutActivity.class);
             intent.putExtra(FRAGMENT, CheckoutActivity.CREDIT_CARD_FRAGMENT);
-            intent.putExtra(CheckoutActivity.CARD_HOLDER_NAME_REQUIRED,
-                    requiredFields.containsKey("cardHolderName"));
             intent.putExtra(CheckoutActivity.PAYMENT_METHOD, paymentRequest.getPaymentMethod());
             intent.putExtra(AMOUNT, paymentRequest.getAmount());
             intent.putExtra(SHOPPER_REFERENCE, paymentRequest.getShopperReference());
@@ -144,13 +143,8 @@ public class DefaultPaymentRequestDetailsListener implements PaymentRequestDetai
             context.startActivity(intent);
         } else if (paymentRequest.getPaymentMethod().getType().equals(PaymentMethod.Type.PAYPAL)) {
             //We can set "storeDetails" to true if we want to set up a recurring contract.
-            /*
-            if (requiredFields.containsKey("storeDetails")) {
-                requiredFields.put("storeDetails", true);
-            }
-            */
-            callback.completionWithPaymentDetails(requiredFields);
-        } else if (requiredFields.containsKey("cardDetails.cvc")) {
+            callback.completionWithPaymentDetails(new PaymentDetails(inputDetails));
+        } else if (InputDetailsUtil.containsKey(inputDetails, "cardDetails.cvc")) {
             final Intent intent = new Intent(context, TranslucentDialogActivity.class);
             intent.putExtra(AMOUNT, paymentRequest.getAmount());
             intent.putExtra(CheckoutActivity.PAYMENT_METHOD, paymentRequest.getPaymentMethod());
@@ -181,7 +175,7 @@ public class DefaultPaymentRequestDetailsListener implements PaymentRequestDetai
             }
         } else {
             //This will work if all fields are optional.
-            callback.completionWithPaymentDetails(requiredFields);
+            callback.completionWithPaymentDetails(new PaymentDetails(inputDetails));
         }
     }
 }

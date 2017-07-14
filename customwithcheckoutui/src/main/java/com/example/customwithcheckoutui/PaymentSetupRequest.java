@@ -1,4 +1,4 @@
-package com.example.customwithadyenui;
+package com.example.customwithcheckoutui;
 
 import android.support.annotation.NonNull;
 

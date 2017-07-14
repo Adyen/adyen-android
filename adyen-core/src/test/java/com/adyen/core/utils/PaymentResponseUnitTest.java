@@ -2,6 +2,7 @@ package com.adyen.core.utils;
 
 import com.adyen.core.models.PaymentMethod;
 import com.adyen.core.models.PaymentResponse;
+import com.adyen.core.models.paymentdetails.InputDetailsUtil;
 
 import org.junit.Test;
 
@@ -156,7 +157,7 @@ public class PaymentResponseUnitTest {
         assertEquals(44, paymentMethods.size());
         for (final PaymentMethod paymentMethod : paymentMethods) {
             if ("ideal".equals(paymentMethod.getType())) {
-                assertEquals(14, paymentMethod.getIssuers().size());
+                assertEquals(14, InputDetailsUtil.getInputDetail(paymentMethod.getInputDetails(), "idealIssuer").getItems().size());
             }
         }
     }

@@ -36,7 +36,9 @@ dependencies {
     testCompile "junit:junit:${rootProject.jUnitVersion}"
     if (publishNonDefault) {
         compile project(path: ':adyen-core', configuration: 'release')
+        compile project(path: ':adyen-ui', configuration: 'release')
     } else {
         compile project(':adyen-core')
+        compile project(':adyen-ui')
     }
 }

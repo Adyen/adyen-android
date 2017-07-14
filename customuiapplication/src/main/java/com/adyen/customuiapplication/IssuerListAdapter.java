@@ -12,7 +12,7 @@ import android.widget.ArrayAdapter;
 import android.widget.ImageView;
 import android.widget.TextView;
 
-import com.adyen.core.models.Issuer;
+import com.adyen.core.models.paymentdetails.InputDetail;
 import com.adyen.core.utils.AsyncImageDownloader;
 
 import java.util.List;
@@ -21,21 +21,21 @@ import java.util.List;
  * A custom {@link ArrayAdapter} for displaying issuers.
  */
 
-class IssuerListAdapter extends ArrayAdapter<Issuer> {
+class IssuerListAdapter extends ArrayAdapter<InputDetail.Item> {
 
     private static final String TAG = IssuerListAdapter.class.getSimpleName();
 
     @NonNull
     private final Activity context;
     @NonNull
-    private final List<Issuer> issuers;
+    private final List<InputDetail.Item> issuers;
 
     private static class ViewHolder {
         private TextView paymentMethodNameView;
         private ImageView imageView;
     }
 
-    IssuerListAdapter(@NonNull Activity context, @NonNull List<Issuer> issuers) {
+    IssuerListAdapter(@NonNull Activity context, @NonNull List<InputDetail.Item> issuers) {
         super(context, R.layout.payment_method_list, issuers);
         Log.d(TAG, "IssuerListAdapter()");
 
@@ -60,8 +60,8 @@ class IssuerListAdapter extends ArrayAdapter<Issuer> {
             viewHolder = (ViewHolder) view.getTag();
         }
 
-        viewHolder.paymentMethodNameView.setText(issuers.get(position).getIssuerName());
-        AsyncImageDownloader.downloadImage(context, viewHolder.imageView, issuers.get(position).getIssuerLogoUrl(),
+        viewHolder.paymentMethodNameView.setText(issuers.get(position).getName());
+        AsyncImageDownloader.downloadImage(context, viewHolder.imageView, issuers.get(position).getImageUrl(),
                 null);
 
         return view;

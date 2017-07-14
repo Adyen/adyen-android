@@ -1,4 +1,4 @@
-package com.example.customwithadyenui;
+package com.example.customwithcheckoutui;
 
 import android.app.Activity;
 import android.os.Bundle;

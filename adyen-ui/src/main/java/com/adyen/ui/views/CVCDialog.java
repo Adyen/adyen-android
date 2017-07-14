@@ -17,7 +17,7 @@ import android.widget.TextView;
 import com.adyen.core.constants.Constants;
 import com.adyen.core.models.Amount;
 import com.adyen.core.models.PaymentMethod;
-import com.adyen.core.models.paymentdetails.CVCOnlyPaymentDetails;
+import com.adyen.core.models.paymentdetails.PaymentDetails;
 import com.adyen.core.utils.AmountUtil;
 import com.adyen.core.utils.StringUtils;
 import com.adyen.ui.R;
@@ -93,7 +93,9 @@ public class CVCDialog extends Dialog {
                     return;
                 } else {
                     final Intent intent = new Intent(Constants.PaymentRequest.PAYMENT_DETAILS_PROVIDED_INTENT);
-                    intent.putExtra("PaymentDetails", new CVCOnlyPaymentDetails(cvcEditText.getCVC()));
+                    PaymentDetails paymentDetails = new PaymentDetails(paymentMethod.getInputDetails());
+                    paymentDetails.fill("cardDetails.cvc", cvcEditText.getCVC());
+                    intent.putExtra("PaymentDetails", paymentDetails);
                     LocalBroadcastManager.getInstance(getContext().getApplicationContext()).sendBroadcast(intent);
 
                     cvcEditText.setEnabled(false);

@@ -1,36 +1,87 @@
 package com.adyen.core.models.paymentdetails;
 
 
+import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
+
 import java.io.Serializable;
-import java.util.Collections;
+import java.util.Collection;
 import java.util.HashMap;
 import java.util.Map;
 
 /**
- * Convenience class for saving payment details collected from user and to submit them to the sdk.
- * Different PaymentMethods will have different implementation of this class.
+ * Class for collecting the required PaymentDetails from the shopper to make the payment.
  */
 public class PaymentDetails implements Serializable {
 
-    Map<String, Object> map = new HashMap<>();
+    @NonNull private Map<String, InputDetail> inputDetails = new HashMap<>();
 
-    /**
-     * Construct a generic instance of {@link PaymentDetails} class by using a Map<String, Object> object.
-     * @param inputMap The map containing the required fields and the payment details as key-value pairs.
-     * @return An instance of {@link PaymentDetails}.
-     */
-    public static PaymentDetails fromMap(final Map<String, Object> inputMap) {
-        PaymentDetails paymentDetails = new PaymentDetails();
-        paymentDetails.map = new HashMap<>(inputMap);
-        return paymentDetails;
+    public PaymentDetails(Collection<InputDetail> inputDetails) {
+        for (InputDetail inputDetail : inputDetails) {
+            this.inputDetails.put(inputDetail.getKey(), inputDetail);
+        }
     }
 
     /**
-     * PaymentDetails is an abstraction of key-value pairs.
-     * Therefore an PaymentDetails implements a toMap() method to retrieve the key value pairs.
-     * @return The map containing these payment details.
+     * Returns true if this {@link PaymentDetails} instance contains an {@link InputDetail} with a specific key.
+     * @param key The key to check.
+     * @return True iff an {@link InputDetail} with this key is contained.
      */
-    public Map<String, Object> toMap() {
-        return Collections.unmodifiableMap(map);
+    public boolean hasKey(final String key) {
+        return this.inputDetails.containsKey(key);
     }
+
+    /**
+     * Check if there are any {@link InputDetail} to be filled out.
+     * @return true if there are no InputDetails that can be filled out.
+     */
+    public boolean isEmpty() {
+        return inputDetails.isEmpty();
+    }
+
+    /**
+     * Fills an InputDetails with a key value pair.
+     * @param key {@link InputDetail} with this key will be filled.
+     * @param value Value to be saved.
+     * @return true if the setting of this key was successful.
+     */
+    public boolean fill(final String key, final String value) {
+        InputDetail inputDetail = this.inputDetails.get(key);
+        if (inputDetail == null) {
+            return false;
+        }
+        return inputDetail.fill(value);
+    }
+
+    /**
+     * Fills an InputDetails with a key value pair.
+     * @param key {@link InputDetail} with this key will be filled.
+     * @param value The boolean value to be saved
+     * @return true if the setting of this key was successful.
+     */
+    public boolean fill(final String key, final boolean value) {
+        InputDetail inputDetail = this.inputDetails.get(key);
+        if (inputDetail == null) {
+            return false;
+        }
+        return inputDetail.fill(value);
+    }
+
+    public boolean isFilled() {
+        for (InputDetail inputDetail : inputDetails.values()) {
+            if (!inputDetail.isFilled() && !inputDetail.isOptional()) {
+                return false;
+            }
+        }
+        return true;
+    }
+
+    public @NonNull Collection<InputDetail> getInputDetails() {
+        return this.inputDetails.values();
+    }
+
+    public @Nullable InputDetail getInputDetail(final String key) {
+        return inputDetails.get(key);
+    }
+
 }

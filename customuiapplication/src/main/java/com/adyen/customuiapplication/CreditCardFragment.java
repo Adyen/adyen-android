@@ -9,10 +9,6 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.EditText;
 
-import com.adyen.core.models.paymentdetails.CVCOnlyPaymentDetails;
-import com.adyen.core.models.paymentdetails.CreditCardPaymentDetails;
-import com.adyen.core.models.paymentdetails.PaymentDetails;
-
 import java.util.Date;
 
 import adyen.com.adyencse.encrypter.exception.EncrypterException;
@@ -35,7 +31,7 @@ public class CreditCardFragment extends Fragment {
      * Container Activity must implement this interface.
      */
     public interface CreditCardInfoListener {
-        void onCreditCardInfoProvided(PaymentDetails paymentDetails);
+        void onCreditCardInfoProvided(String paymentDetails);
     }
 
     public void setCreditCardInfoListener(@NonNull final CreditCardInfoListener creditCardInfoListener) {
@@ -61,9 +57,8 @@ public class CreditCardFragment extends Fragment {
             view.findViewById(R.id.collectCreditCardData).setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(final View view) {
-                    CVCOnlyPaymentDetails paymentDetails = new CVCOnlyPaymentDetails(cvcView.getText().toString());
                     if (creditCardInfoListener != null) {
-                        creditCardInfoListener.onCreditCardInfoProvided(paymentDetails);
+                        creditCardInfoListener.onCreditCardInfoProvided(cvcView.getText().toString());
                     } else {
                         Log.w(TAG, "No listener provided.");
                     }
@@ -89,9 +84,9 @@ public class CreditCardFragment extends Fragment {
                     card.setGenerationTime(new Date());
 
                     try {
-                        CreditCardPaymentDetails paymentDetails = new CreditCardPaymentDetails(card.serialize(publicKey), true);
+                        String creditCardData = card.serialize(publicKey);
                         if (creditCardInfoListener != null) {
-                            creditCardInfoListener.onCreditCardInfoProvided(paymentDetails);
+                            creditCardInfoListener.onCreditCardInfoProvided(creditCardData);
                         } else {
                             Log.w(TAG, "No listener provided.");
                         }

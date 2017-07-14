@@ -15,6 +15,7 @@ public interface PaymentDetailsCallback {
      * The callback which is called when payment details are provided by the client.
      * @param paymentDetails payment details which are provided by the client.
      */
+    @Deprecated
     void completionWithPaymentDetails(@NonNull Map<String, Object> paymentDetails);
 
     /**

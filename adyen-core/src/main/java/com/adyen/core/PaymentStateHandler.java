@@ -26,6 +26,8 @@ import com.adyen.core.models.Payment;
 import com.adyen.core.models.PaymentMethod;
 import com.adyen.core.models.PaymentRequestResult;
 import com.adyen.core.models.PaymentResponse;
+import com.adyen.core.models.paymentdetails.InputDetail;
+import com.adyen.core.models.paymentdetails.PaymentDetails;
 import com.adyen.core.utils.AsyncHttpClient;
 import com.adyen.core.utils.Util;
 
@@ -77,7 +79,8 @@ class PaymentStateHandler implements State.StateChangeListener {
     private PaymentProcessorStateMachine paymentProcessorStateMachine;
     private PaymentBroadcastReceivers paymentBroadcastReceivers;
 
-    private Map<String, Object> paymentDetails;
+    private PaymentDetails paymentDetails;
+    @Deprecated private Map<String, Object> requiredFieldsPaymentDetails;
 
     PaymentStateHandler(Context context, PaymentRequest paymentRequest,
                         @NonNull final PaymentRequestListener paymentRequestListener,
@@ -194,7 +197,7 @@ class PaymentStateHandler implements State.StateChangeListener {
                 paymentBroadcastReceivers.getAndroidPayInfoListener(), androidPayIntentFilter);
 
         for (PaymentRequestDetailsListener detailsListener : paymentRequestDetailsListeners) {
-            detailsListener.onPaymentDetailsRequired(paymentRequest, paymentMethod.getRequiredFields(),
+            detailsListener.onPaymentDetailsRequired(paymentRequest, paymentMethod.getInputDetails(),
                     paymentBroadcastReceivers.getPaymentDetailsCallback());
         }
     }
@@ -324,9 +327,16 @@ class PaymentStateHandler implements State.StateChangeListener {
             paymentRequestPostData.put("paymentData", paymentResponse.getPaymentData());
             paymentRequestPostData.put("paymentMethodData", paymentMethod.getPaymentMethodData());
 
-            JSONObject jsonDetails = Util.mapToJson(this.paymentDetails);
+            JSONObject jsonDetails = new JSONObject();
+
+            if (paymentDetails != null) {
+                jsonDetails = paymentDetailsToJson(paymentDetails);
+            } else if (requiredFieldsPaymentDetails != null) {
+                jsonDetails = Util.mapToJson(requiredFieldsPaymentDetails);
+            }
+
             if (sdkHandlesUI()) {
-                if (paymentDetails == null) {
+                if (paymentDetails == null && requiredFieldsPaymentDetails == null) {
                     jsonDetails = new JSONObject();
                 }
                 Log.d(TAG, "Return url is going to be overridden by SDK");
@@ -446,8 +456,12 @@ class PaymentStateHandler implements State.StateChangeListener {
         }
     };
 
-    void setPaymentDetails(Map<String, Object> paymentDetails) {
+    void setPaymentDetails(PaymentDetails paymentDetails) {
         this.paymentDetails = paymentDetails;
+    }
+
+    void setPaymentDetails(Map<String, Object> paymentDetails) {
+        this.requiredFieldsPaymentDetails = paymentDetails;
     }
 
     void deletePreferredPaymentMethod(final PaymentMethod paymentMethod, final DeletePreferredPaymentMethodListener listener) {
@@ -503,8 +517,17 @@ class PaymentStateHandler implements State.StateChangeListener {
                         }
                     });
         } catch (JSONException e) {
+            Log.e(TAG, "Deletion of preferred payment method has failed", e);
             listener.onFail();
         }
+    }
+
+    private static JSONObject paymentDetailsToJson(@NonNull PaymentDetails paymentDetails) throws JSONException {
+        JSONObject jsonObject = new JSONObject();
+        for (InputDetail inputDetail : paymentDetails.getInputDetails()) {
+            jsonObject.put(inputDetail.getKey(), inputDetail.getValue());
+        }
+        return jsonObject;
     }
 
 }

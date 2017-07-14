@@ -4,9 +4,11 @@ import android.support.annotation.NonNull;
 
 import com.adyen.core.PaymentRequest;
 import com.adyen.core.models.PaymentMethod;
+import com.adyen.core.models.paymentdetails.InputDetail;
+import com.adyen.core.models.paymentdetails.PaymentDetails;
 
+import java.util.Collection;
 import java.util.List;
-import java.util.Map;
 
 /**
  * Listener for listening to detailed events from {@link PaymentRequest}.
@@ -54,11 +56,13 @@ public interface PaymentRequestDetailsListener {
      * This callback will only be triggered if the selected payment method requires additional details.
      *
      * @param paymentRequest {@link PaymentRequest} reference.
-     * @param requiredFields The details that have to be provided by the shopper.
+     * @param inputDetails The collection of {@link InputDetail} that have to be provided by the shopper.
      * @param callback {@link PaymentDetailsCallback} instance in order to inform {@link PaymentRequest}
      *                                               about the required fields.
+     *                                               {@link PaymentDetailsCallback} needs to be called with an instance of {@link PaymentDetails} that
+     *                                               is to be created using the {@link InputDetail} collection.
      */
-    void onPaymentDetailsRequired(@NonNull PaymentRequest paymentRequest, @NonNull Map<String, Object> requiredFields,
+    void onPaymentDetailsRequired(@NonNull PaymentRequest paymentRequest, @NonNull Collection<InputDetail> inputDetails,
                                   @NonNull PaymentDetailsCallback callback);
 
 }

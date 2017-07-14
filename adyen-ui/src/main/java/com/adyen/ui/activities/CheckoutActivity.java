@@ -182,6 +182,8 @@ public class CheckoutActivity extends FragmentActivity {
             case CREDIT_CARD_FRAGMENT: {
                 showActionBar();
 
+                final PaymentMethod paymentMethod = (PaymentMethod) intent.getSerializableExtra(PAYMENT_METHOD);
+
                 CreditCardFragment creditCardFragment = new CreditCardFragmentBuilder()
                         .setPaymentMethod((PaymentMethod) intent.getSerializableExtra(PAYMENT_METHOD))
                         .setPublicKey(intent.getStringExtra(Constants.DataKeys.PUBLIC_KEY))
@@ -190,9 +192,13 @@ public class CheckoutActivity extends FragmentActivity {
                         .setShopperReference(intent.getStringExtra(Constants.DataKeys.SHOPPER_REFERENCE))
                         .setCreditCardInfoListener(new CreditCardFragment.CreditCardInfoListener() {
                             @Override
-                            public void onCreditCardInfoProvided(CreditCardPaymentDetails creditCardInfo) {
+                            public void onCreditCardInfoProvided(String token, boolean storeDetails) {
+                                CreditCardPaymentDetails paymentDetails = new CreditCardPaymentDetails(paymentMethod.getInputDetails());
+                                paymentDetails.fillCardToken(token);
+                                paymentDetails.fillStoreDetails(storeDetails);
+
                                 final Intent intent = new Intent(Constants.PaymentRequest.PAYMENT_DETAILS_PROVIDED_INTENT);
-                                intent.putExtra(PAYMENT_DETAILS, creditCardInfo);
+                                intent.putExtra(PAYMENT_DETAILS, paymentDetails);
                                 LocalBroadcastManager.getInstance(context).sendBroadcast(intent);
                                 backButtonDisabled = true;
                             }
@@ -208,13 +214,17 @@ public class CheckoutActivity extends FragmentActivity {
             case ISSUER_SELECTION_FRAGMENT: {
                 showActionBar();
 
+                final PaymentMethod paymentMethod = (PaymentMethod) bundle.getSerializable(PAYMENT_METHOD);
+
                 IssuerSelectionFragment issuerSelectionFragment = new IssuerSelectionFragmentBuilder()
-                        .setPaymentMethod((PaymentMethod) bundle.getSerializable(PAYMENT_METHOD))
+                        .setPaymentMethod(paymentMethod)
                         .setIssuerSelectionListener(new IssuerSelectionFragment.IssuerSelectionListener() {
                             @Override
-                            public void onIssuerSelected(IdealPaymentDetails issuerPaymentDetails) {
+                            public void onIssuerSelected(String issuer) {
+                                IdealPaymentDetails paymentDetails = new IdealPaymentDetails(paymentMethod.getInputDetails());
+                                paymentDetails.fillIssuer(issuer);
                                 final Intent intent = new Intent(Constants.PaymentRequest.PAYMENT_DETAILS_PROVIDED_INTENT);
-                                intent.putExtra(PAYMENT_DETAILS, issuerPaymentDetails);
+                                intent.putExtra(PAYMENT_DETAILS, paymentDetails);
                                 LocalBroadcastManager.getInstance(context).sendBroadcast(intent);
                             }
                         })
@@ -228,13 +238,19 @@ public class CheckoutActivity extends FragmentActivity {
             case SEPA_DIRECT_DEBIT_FRAGMENT: {
                 showActionBar();
 
+                final PaymentMethod paymentMethod = (PaymentMethod) bundle.getSerializable(PAYMENT_METHOD);
+
                 SepaDirectDebitFragment sepaDirectDebitFragment = new SepaDirectDebitFragmentBuilder()
                         .setAmount((Amount) intent.getSerializableExtra(AMOUNT))
                         .setSEPADirectDebitPaymentDetailsListener(new SepaDirectDebitFragment.SEPADirectDebitPaymentDetailsListener() {
                             @Override
-                            public void onPaymentDetails(SepaDirectDebitPaymentDetails sepaPaymentDetails) {
+                            public void onPaymentDetails(String iban, String accountHolder) {
+                                SepaDirectDebitPaymentDetails paymentDetails = new SepaDirectDebitPaymentDetails(paymentMethod.getInputDetails());
+                                paymentDetails.fillIban(iban);
+                                paymentDetails.fillOwner(accountHolder);
+
                                 final Intent intent = new Intent(Constants.PaymentRequest.PAYMENT_DETAILS_PROVIDED_INTENT);
-                                intent.putExtra(PAYMENT_DETAILS, sepaPaymentDetails);
+                                intent.putExtra(PAYMENT_DETAILS, paymentDetails);
                                 LocalBroadcastManager.getInstance(context).sendBroadcast(intent);
                             }
                         })

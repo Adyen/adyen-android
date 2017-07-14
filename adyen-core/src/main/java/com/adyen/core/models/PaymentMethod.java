@@ -1,7 +1,8 @@
 package com.adyen.core.models;
 
-import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
+
+import com.adyen.core.models.paymentdetails.InputDetail;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -9,6 +10,7 @@ import org.json.JSONObject;
 
 import java.io.Serializable;
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -43,7 +45,7 @@ public final class PaymentMethod implements Serializable {
 
     // Optional fields.
     private Configuration configuration;
-    @NonNull private HashMap<String, Object> requiredFields = new HashMap<>(); // These are the fields that are required for incomplete payment
+
     // methods (e.g. encrypted card data).
     private Card card;
 
@@ -52,11 +54,14 @@ public final class PaymentMethod implements Serializable {
 
     private String logoUrl;
 
-    // An exception for iDEAL. Actually issuers is another type of a required field.
-    private List<Issuer> issuers;
+    private Collection<InputDetail> inputDetails;
 
     private PaymentMethod() {
 
+    }
+
+    public Collection<InputDetail> getInputDetails() {
+        return this.inputDetails;
     }
 
     static PaymentMethod createPaymentMethod(final JSONObject paymentMethodJSON, final String logoBaseUrl)
@@ -77,7 +82,7 @@ public final class PaymentMethod implements Serializable {
 
         final JSONArray inputDetails = paymentMethodJSON.optJSONArray("inputDetails");
         if (inputDetails != null) {
-            paymentMethod.requiredFields = parseFieldsForPaymentMethodDetails(paymentMethod, inputDetails);
+            paymentMethod.inputDetails = parseInputDetails(inputDetails);
         }
 
         if (!paymentMethodJSON.isNull("card")) {
@@ -109,37 +114,23 @@ public final class PaymentMethod implements Serializable {
 
         final JSONArray inputDetails = paymentMethodJSON.optJSONArray("inputDetails");
         if (inputDetails != null) {
-            paymentMethod.requiredFields = parseFieldsForPaymentMethodDetails(paymentMethod, inputDetails);
+            paymentMethod.inputDetails = parseInputDetails(inputDetails);
         }
 
         return paymentMethod;
     }
 
-    private static HashMap<String, Object> parseFieldsForPaymentMethodDetails(final PaymentMethod paymentMethod,
-                                                                          final JSONArray requiredFields)
-            throws JSONException {
-        final HashMap<String, Object> requiredFieldsMap = new HashMap<>();
-        for (int r = 0; r < requiredFields.length(); r++) {
-            final JSONObject field = requiredFields.optJSONObject(r);
-            if (field != null) {
-                if ("idealIssuer".equals(field.optString("key"))) {
-                    final List<Issuer> listOfIssuers = new ArrayList<>();
-                    // This payment method has a list of issuers; we need to parse this list.
+    private static Collection<InputDetail> parseInputDetails(final JSONArray inputDetailsJson) throws JSONException {
+        Collection<InputDetail> inputDetails = new ArrayList<>();
+        for (int r = 0; r < inputDetailsJson.length(); r++) {
+            final JSONObject field = inputDetailsJson.optJSONObject(r);
 
-                    final JSONArray issuers = field.optJSONArray("items");
-                    if (issuers != null) {
-                        for (int p = 0; p < issuers.length(); p++) {
-                            final JSONObject issuerJSONObject = issuers.optJSONObject(p);
-                            final Issuer issuer = new Issuer(issuerJSONObject);
-                            listOfIssuers.add(issuer);
-                        }
-                        paymentMethod.issuers = listOfIssuers;
-                    }
-                }
-                requiredFieldsMap.put(field.getString("key"), null);
+            if (field != null) {
+                InputDetail inputDetail = InputDetail.fromJson(field);
+                inputDetails.add(InputDetail.fromJson(field));
             }
         }
-        return requiredFieldsMap;
+        return inputDetails;
     }
 
     /**
@@ -204,27 +195,11 @@ public final class PaymentMethod implements Serializable {
     }
 
     /**
-     * Get a list of issuers if an issuer selection is required.
-     * @return A list of issuers if the payment method requires selection of an issuer.
-     */
-    public @Nullable List<Issuer> getIssuers() {
-        return issuers;
-    }
-
-    /**
-     * Get the required fields that need to be filled to use this payment method.
-     * @return A map that contains the required fields, which need to be filled by the shopper/merchant.
-     */
-    public @NonNull Map<String, Object> getRequiredFields() {
-        return new HashMap<>(requiredFields);
-    }
-
-    /**
      * The method to determine if a redirect is required for this payment method.
      * @return True if a redirect is required, otherwise false
      */
     public boolean isRedirectMethod() {
-        return requiredFields.isEmpty();
+        return (this.inputDetails == null || this.inputDetails.isEmpty()) && !this.isOneClick;
     }
 
     /**
@@ -329,5 +304,23 @@ public final class PaymentMethod implements Serializable {
             return false;
         }
         return ((PaymentMethod) obj).getPaymentMethodData().equals(this.paymentMethodData);
+    }
+
+    @Override
+    public int hashCode() {
+        return this.paymentMethodData.hashCode();
+    }
+
+    /**
+     * Legacy method to get the deprecated requiredFields map.
+     * @return Map<String, Object> that can be filled out and passed to the old interface.
+     */
+    @Deprecated
+    public Map<String, Object> getRequiredFieldsMap() {
+        Map<String, Object> requiredFields = new HashMap<>();
+        for (InputDetail inputDetail : inputDetails) {
+            requiredFields.put(inputDetail.getKey(), null);
+        }
+        return requiredFields;
     }
 }

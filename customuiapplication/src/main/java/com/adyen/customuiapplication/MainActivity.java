@@ -1,6 +1,5 @@
 package com.adyen.customuiapplication;
 
-import android.app.AlertDialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
@@ -9,6 +8,7 @@ import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.customtabs.CustomTabsIntent;
 import android.support.v4.app.FragmentActivity;
+import android.support.v7.app.AlertDialog;
 import android.util.Log;
 import android.widget.Toast;
 
@@ -20,18 +20,21 @@ import com.adyen.core.interfaces.PaymentMethodCallback;
 import com.adyen.core.interfaces.PaymentRequestDetailsListener;
 import com.adyen.core.interfaces.PaymentRequestListener;
 import com.adyen.core.interfaces.UriCallback;
-import com.adyen.core.models.Issuer;
 import com.adyen.core.models.Payment;
 import com.adyen.core.models.PaymentMethod;
 import com.adyen.core.models.PaymentRequestResult;
+import com.adyen.core.models.paymentdetails.CVCOnlyPaymentDetails;
+import com.adyen.core.models.paymentdetails.CreditCardPaymentDetails;
 import com.adyen.core.models.paymentdetails.IdealPaymentDetails;
-import com.adyen.core.models.paymentdetails.PaymentDetails;
+import com.adyen.core.models.paymentdetails.InputDetail;
+import com.adyen.core.models.paymentdetails.InputDetailsUtil;
 import com.adyen.core.utils.AsyncHttpClient;
 
 import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.nio.charset.Charset;
+import java.util.Collection;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
@@ -99,21 +102,33 @@ public class MainActivity extends FragmentActivity implements
 
         @Override
         public void onPaymentDetailsRequired(@NonNull final PaymentRequest paymentRequest,
-                                             @NonNull final Map<String, Object> requiredFields,
+                                             @NonNull final Collection<InputDetail> inputDetails,
                                              @NonNull final PaymentDetailsCallback callback) {
             Log.d(TAG, "paymentRequestDetailsListener.onPaymentDetailsRequired()");
             final String paymentMethodType = paymentRequest.getPaymentMethod().getType();
-            if ("card".equals(paymentMethodType)) {
+
+            if (PaymentMethod.Type.CARD.equals(paymentMethodType)) {
+
                 final CreditCardFragment creditCardFragment = new CreditCardFragment();
                 final Bundle bundle = new Bundle();
                 //ONE CLICK CHECK
-                if (requiredFields.containsKey("cardDetails.cvc")) {
+                final boolean isOneClick = InputDetailsUtil.containsKey(inputDetails, "cardDetails.cvc");
+                if (isOneClick) {
                     bundle.putBoolean("oneClick", true);
                 }
                 creditCardFragment.setCreditCardInfoListener(new CreditCardFragment.CreditCardInfoListener() {
                     @Override
-                    public void onCreditCardInfoProvided(PaymentDetails paymentDetails) {
-                        callback.completionWithPaymentDetails(paymentDetails);
+                    public void onCreditCardInfoProvided(String creditCardInfo) {
+                        if (isOneClick) {
+                            CVCOnlyPaymentDetails cvcOnlyPaymentDetails = new CVCOnlyPaymentDetails(inputDetails);
+                            cvcOnlyPaymentDetails.fillCvc(creditCardInfo);
+                            callback.completionWithPaymentDetails(cvcOnlyPaymentDetails);
+
+                        } else {
+                            CreditCardPaymentDetails creditCardPaymentDetails = new CreditCardPaymentDetails(inputDetails);
+                            creditCardPaymentDetails.fillCardToken(creditCardInfo);
+                            callback.completionWithPaymentDetails(creditCardPaymentDetails);
+                        }
                     }
                 });
                 bundle.putString("public_key", paymentRequest.getPublicKey());
@@ -122,22 +137,27 @@ public class MainActivity extends FragmentActivity implements
 
                 getSupportFragmentManager().beginTransaction().replace(android.R.id.content,
                         creditCardFragment).addToBackStack(null).commitAllowingStateLoss();
-            } else if ("ideal".equals(paymentMethodType)) {
+
+            } else if (PaymentMethod.Type.IDEAL.equals(paymentMethodType)) {
                 final AlertDialog.Builder alertDialog = new AlertDialog.Builder(MainActivity.this);
-                final List<Issuer> issuers = paymentRequest.getPaymentMethod().getIssuers();
+                final List<InputDetail.Item> issuers = InputDetailsUtil.getInputDetail(inputDetails, "idealIssuer").getItems();
                 final IssuerListAdapter issuerListAdapter = new IssuerListAdapter(MainActivity.this, issuers);
                 alertDialog.setSingleChoiceItems(issuerListAdapter, -1, new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(@NonNull final DialogInterface dialogInterface, final int i) {
-                        final Issuer selectedIssuer = issuers.get(i);
+                        IdealPaymentDetails idealPaymentDetails = new IdealPaymentDetails(inputDetails);
+                        idealPaymentDetails.fillIssuer(issuers.get(i));
                         dialogInterface.dismiss();
-                        callback.completionWithPaymentDetails(new IdealPaymentDetails(selectedIssuer));
+                        callback.completionWithPaymentDetails(idealPaymentDetails);
                     }
                 });
                 alertDialog.show();
+
             } else {
-                    Log.w(TAG, "UI for " + paymentMethodType + " has not been implemented.");
-                    paymentRequest.cancel();
+                String message = "UI for " + paymentMethodType + " has not been implemented.";
+                Log.w(TAG, message);
+                Toast.makeText(MainActivity.this, message, Toast.LENGTH_LONG).show();
+                paymentRequest.cancel();
             }
         }
     };
@@ -252,8 +272,8 @@ public class MainActivity extends FragmentActivity implements
             jsonObject.put("currency", paymentSetupRequest.getAmount().getCurrency());
             jsonObject.put("quantity", paymentSetupRequest.getAmount().getValue());
             jsonObject.put("platform", "android");
-            jsonObject.put("basketId", "M+M Black dress & accessories");
-            jsonObject.put("customerId", "test");
+            jsonObject.put("basketId", "example-basked-id");
+            jsonObject.put("customerId", "example-customer-id");
 
         } catch (final JSONException jsonException) {
             Log.e("Unexpected error", "Setup failed");

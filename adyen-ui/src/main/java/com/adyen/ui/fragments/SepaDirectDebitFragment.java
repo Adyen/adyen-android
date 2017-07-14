@@ -13,7 +13,6 @@ import android.widget.CompoundButton;
 import android.widget.TextView;
 
 import com.adyen.core.models.Amount;
-import com.adyen.core.models.paymentdetails.SepaDirectDebitPaymentDetails;
 import com.adyen.core.utils.AmountUtil;
 import com.adyen.core.utils.StringUtils;
 import com.adyen.ui.R;
@@ -43,11 +42,9 @@ public class SepaDirectDebitFragment extends Fragment {
         //Default empty constructor
     }
 
-    /**
-     * The listener interface for receiving the collected {@link SepaDirectDebitPaymentDetails}.
-     */
+
     public interface SEPADirectDebitPaymentDetailsListener {
-        void onPaymentDetails(SepaDirectDebitPaymentDetails paymentDetails);
+        void onPaymentDetails(String iban, String accountHolder);
     }
 
     @Override
@@ -98,10 +95,7 @@ public class SepaDirectDebitFragment extends Fragment {
         confirmButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                SepaDirectDebitPaymentDetails paymentDetails = new SepaDirectDebitPaymentDetails(
-                        ibanEditText.getIbanNumber(),
-                        ibanAccountHolder.getText().toString());
-                sepaDirectDebitPaymentDetailsListener.onPaymentDetails(paymentDetails);
+                sepaDirectDebitPaymentDetailsListener.onPaymentDetails(ibanEditText.getIbanNumber(), ibanEditText.getIbanNumber());
             }
         });
         validator.setOnReadyStateChangedListener(new AdyenInputValidator.OnReadyStateChangedListener() {

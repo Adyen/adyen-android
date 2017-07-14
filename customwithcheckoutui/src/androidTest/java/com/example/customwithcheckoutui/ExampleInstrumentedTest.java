@@ -1,4 +1,4 @@
-package com.example.customwithadyenui;
+package com.example.customwithcheckoutui;
 
 import android.content.Context;
 import android.support.test.InstrumentationRegistry;

@@ -11,9 +11,8 @@ import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ListView;
 
-import com.adyen.core.models.Issuer;
 import com.adyen.core.models.PaymentMethod;
-import com.adyen.core.models.paymentdetails.IdealPaymentDetails;
+import com.adyen.core.models.paymentdetails.InputDetail;
 import com.adyen.ui.R;
 import com.adyen.ui.activities.CheckoutActivity;
 import com.adyen.ui.adapters.IssuerListAdapter;
@@ -30,7 +29,7 @@ public class IssuerSelectionFragment extends Fragment {
 
     private static final String TAG = IssuerSelectionFragment.class.getSimpleName();
     private IssuerSelectionListener issuerSelectionListener;
-    private List<Issuer> issuers = new CopyOnWriteArrayList<>();
+    private List<InputDetail.Item> issuers = new CopyOnWriteArrayList<>();
     private PaymentMethod paymentMethod;
 
     private int theme;
@@ -46,7 +45,7 @@ public class IssuerSelectionFragment extends Fragment {
      * The listener interface for receiving selected issuer.
      */
     public interface IssuerSelectionListener {
-        void onIssuerSelected(IdealPaymentDetails issuerPaymentDetails);
+        void onIssuerSelected(String issuer);
     }
 
 
@@ -67,7 +66,12 @@ public class IssuerSelectionFragment extends Fragment {
         LayoutInflater localInflater = inflater.cloneInContext(contextThemeWrapper);
         fragmentView = localInflater.inflate(R.layout.issuer_selection_fragment, container, false);
 
-        issuers = paymentMethod.getIssuers();
+        for (InputDetail inputDetail : paymentMethod.getInputDetails()) {
+            if (inputDetail.getKey().equals("idealIssuer")) {
+                issuers = inputDetail.getItems();
+                break;
+            }
+        }
 
         final IssuerListAdapter issuerListAdapter = new IssuerListAdapter(getActivity(), issuers);
         final ListView listView = (ListView) fragmentView.findViewById(R.id.issuer_methods_list);
@@ -75,9 +79,8 @@ public class IssuerSelectionFragment extends Fragment {
         listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(final AdapterView<?> adapterView, final View view, final int i, final long l) {
-                String selectedIssuer = issuers.get(i).getIssuerId();
-                IdealPaymentDetails paymentDetails = new IdealPaymentDetails(selectedIssuer);
-                issuerSelectionListener.onIssuerSelected(paymentDetails);
+                String selectedIssuer = issuers.get(i).getId();
+                issuerSelectionListener.onIssuerSelected(selectedIssuer);
             }
         });
 
