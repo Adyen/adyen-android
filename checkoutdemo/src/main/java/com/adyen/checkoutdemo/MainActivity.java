@@ -6,6 +6,7 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.v4.app.FragmentActivity;
+import android.text.TextUtils;
 import android.util.Log;
 import android.util.TypedValue;
 import android.view.View;
@@ -34,13 +35,12 @@ public class MainActivity extends FragmentActivity {
 
     private static final String TAG = MainActivity.class.getSimpleName();
 
-    private static final String MERCHANT_SERVER_URL = "https://checkoutshopper-test.adyen.com/checkoutshopper/demo/easy-integration/"
-            + "merchantserver/";
     private static final String SETUP = "setup";
     private static final String VERIFY = "verify";
-    private static final String MERCHANT_API_SECRET_KEY = //YOUR_API_KEY
 
-    private static final String MERCHANT_APP_ID = "TestMerchantApp";
+    private String merchantServerUrl = ""; // Add the URL for your server here
+    private String merchantApiSecretKey = ""; // Add the api secret key for your server here
+    private String merchantApiHeaderKey = ""; // Add the header key for api secret key here
 
     private PaymentRequest paymentRequest;
     private Context context;
@@ -52,10 +52,9 @@ public class MainActivity extends FragmentActivity {
                                            @NonNull final PaymentDataCallback paymentDataCallback) {
             final Map<String, String> headers = new HashMap<>();
             headers.put("Content-Type", "application/json; charset=UTF-8");
-            headers.put("X-MerchantServer-App-SecretKey", MERCHANT_API_SECRET_KEY);
-            headers.put("X-MerchantServer-App-Id", MERCHANT_APP_ID);
+            headers.put(merchantApiHeaderKey, merchantApiSecretKey);
 
-            AsyncHttpClient.post(MERCHANT_SERVER_URL + SETUP, headers, getSetupDataString(token), new HttpResponseCallback() {
+            AsyncHttpClient.post(merchantServerUrl + SETUP, headers, getSetupDataString(token), new HttpResponseCallback() {
                 @Override
                 public void onSuccess(final byte[] response) {
                     paymentDataCallback.completionWithPaymentData(response);
@@ -91,6 +90,12 @@ public class MainActivity extends FragmentActivity {
         super.onCreate(savedInstanceState);
         this.requestWindowFeature(Window.FEATURE_NO_TITLE);
         setContentView(R.layout.activity_main);
+
+        // These parameters must be set correctly. If they are not set; a fallback will be tried but this is solely for development purposes.
+        merchantServerUrl = TextUtils.isEmpty(merchantServerUrl) ? BuildConfig.SERVER_URL : merchantServerUrl;
+        merchantApiSecretKey = TextUtils.isEmpty(merchantApiSecretKey) ? BuildConfig.API_KEY : merchantApiSecretKey;
+        merchantApiHeaderKey = TextUtils.isEmpty(merchantApiHeaderKey) ? BuildConfig.API_HEADER_KEY : merchantApiHeaderKey;
+
         context = this;
         setStatusBarTranslucent(true);
 
@@ -98,6 +103,10 @@ public class MainActivity extends FragmentActivity {
         checkoutButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+                if (TextUtils.isEmpty(merchantApiSecretKey) || TextUtils.isEmpty(merchantApiHeaderKey) || TextUtils.isEmpty(merchantServerUrl)) {
+                    Toast.makeText(getApplicationContext(), "Server parameters have not been configured correctly", Toast.LENGTH_SHORT).show();
+                    return;
+                }
                 paymentRequest = new PaymentRequest(context, paymentRequestListener);
                 paymentRequest.start();
             }
@@ -112,18 +121,20 @@ public class MainActivity extends FragmentActivity {
     private String getSetupDataString(final String token) {
         final JSONObject jsonObject = new JSONObject();
         try {
+            jsonObject.put("merchantAccount", "TestMerchant"); // Not required when communicating with merchant server
             jsonObject.put("shopperLocale", "NL");
             jsonObject.put("token", token);
-
-            jsonObject.put("appUrlScheme", "example-shopping-app://");
-            jsonObject.put("customerCountry", "NL");
-            jsonObject.put("currency", "USD");
-            jsonObject.put("quantity", "17408");
-            jsonObject.put("platform", "android");
-            jsonObject.put("basketId", "M+M Black dress & accessories");
-            jsonObject.put("customerId", "example-customer-id");
+            jsonObject.put("returnUrl", "example-shopping-app://");
+            jsonObject.put("countryCode", "NL");
+            final JSONObject amount = new JSONObject();
+            amount.put("value", "17408");
+            amount.put("currency", "USD");
+            jsonObject.put("amount", amount);
+            jsonObject.put("channel", "android");
+            jsonObject.put("reference", "M+M Black dress & accessories");
+            jsonObject.put("shopperReference", "example-customer@exampleprovider");
         } catch (final JSONException jsonException) {
-            Log.e("Unexpected error", "Setup failed");
+            Log.e(TAG, "Setup failed", jsonException);
         }
         return jsonObject.toString();
     }
@@ -159,9 +170,9 @@ public class MainActivity extends FragmentActivity {
 
         final Map<String, String> headers = new HashMap<>();
         headers.put("Content-Type", "application/json; charset=UTF-8");
-        headers.put("X-MerchantServer-App-SecretKey", MERCHANT_API_SECRET_KEY);
-        headers.put("X-MerchantServer-App-Id", MERCHANT_APP_ID);
-        AsyncHttpClient.post(MERCHANT_SERVER_URL + VERIFY, headers, verifyString, new HttpResponseCallback() {
+        headers.put(merchantApiHeaderKey, merchantApiSecretKey);
+
+        AsyncHttpClient.post(merchantServerUrl + VERIFY, headers, verifyString, new HttpResponseCallback() {
             String resultString = "";
             @Override
             public void onSuccess(final byte[] response) {

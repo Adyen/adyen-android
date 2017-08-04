@@ -71,29 +71,10 @@
             </RelativeLayout>
 
             <TextView
-                android:id="@+id/merchantReferenceTitle"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_below="@id/orderDetailLayout"
-                android:text="Merchant Reference"
-                android:textSize="20dp"/>
-
-            <EditText
-                android:id="@+id/merchantReferenceEntry"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_below="@id/merchantReferenceTitle"
-                android:layout_alignParentEnd="true"
-                android:layout_alignParentRight="true"
-                android:text="DemoDEMOdemo"
-                android:textSize="20dp"
-                />
-
-            <TextView
                 android:id="@+id/countryTitle"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_below="@id/merchantReferenceEntry"
+                android:layout_below="@id/orderDetailLayout"
                 android:text="Country"
                 android:textSize="20dp"/>
 
@@ -111,30 +92,10 @@
                 />
 
             <TextView
-                android:id="@+id/paymentDeadlineTitle"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_below="@id/countryEntry"
-                android:text="Payment Deadline"
-                android:textSize="20dp"/>
-
-            <EditText
-                android:id="@+id/paymentDeadlineEntry"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_below="@id/paymentDeadlineTitle"
-                android:layout_alignParentEnd="true"
-                android:layout_alignParentRight="true"
-                android:inputType="datetime"
-                android:text="2017-03-17T14:11:10"
-                android:textSize="20dp"
-                />
-
-            <TextView
                 android:id="@+id/shopperLocaleTitle"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_below="@id/paymentDeadlineEntry"
+                android:layout_below="@id/countryEntry"
                 android:text="Shopper Locale"
                 android:textSize="20dp"/>
 
@@ -146,29 +107,8 @@
                 android:layout_alignParentEnd="true"
                 android:layout_alignParentRight="true"
                 android:inputType="textCapCharacters"
-                android:maxLength="2"
-                android:text="NL"
-                android:textSize="20dp"
-                />
-
-            <TextView
-                android:id="@+id/shopperIpTitle"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_below="@id/shopperLocaleEntry"
-                android:text="Shopper IP"
-                android:textSize="20dp"/>
-
-            <EditText
-                android:id="@+id/shopperIpEntry"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_below="@id/shopperIpTitle"
-                android:layout_alignParentEnd="true"
-                android:layout_alignParentRight="true"
-                android:inputType="numberDecimal"
-                android:maxLength="15"
-                android:text="192.168.11.90"
+                android:maxLength="5"
+                android:text="nl_NL"
                 android:textSize="20dp"
                 />
 
@@ -176,7 +116,7 @@
                 android:id="@+id/merchantAccountTitle"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_below="@id/shopperIpEntry"
+                android:layout_below="@id/shopperLocaleEntry"
                 android:text="Merchant Account"
                 android:textSize="20dp"/>
 
@@ -187,35 +127,36 @@
                 android:layout_below="@id/merchantAccountTitle"
                 android:layout_alignParentEnd="true"
                 android:layout_alignParentRight="true"
-                android:text="TestMerchantCheckout"
+                android:text="TestMerchant"
                 android:textSize="20dp"
                 />
 
             <TextView
-                android:id="@+id/returnUrlTitle"
+                android:id="@+id/installmentsTitle"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_below="@id/merchantAccountEntry"
-                android:text="Return URL"
+                android:text="Maximum Number of Installments"
                 android:textSize="20dp"/>
 
-            <EditText
-                android:id="@+id/returnUrlEntry"
+            <Spinner
+                android:id="@+id/installmentsEntry"
+                android:paddingLeft="10dp"
+                android:paddingRight="10dp"
+                android:layout_marginBottom="40dp"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_below="@id/returnUrlTitle"
+                android:layout_below="@id/installmentsTitle"
                 android:layout_alignParentEnd="true"
                 android:layout_alignParentRight="true"
-                android:inputType="textUri"
-                android:text="app://checkout"
-                android:textSize="20dp"
-                />
+                android:entries="@array/installment_options"
+            />
 
             <Button
                 android:id="@+id/proceed_button"
                 android:layout_width="250dp"
                 android:layout_height="62.5dp"
-                android:layout_below="@id/returnUrlEntry"
+                android:layout_below="@id/installmentsEntry"
                 android:layout_centerInParent="true"
                 android:layout_marginBottom="10dp"
                 android:layout_marginLeft="10dp"

@@ -181,9 +181,6 @@ public class CheckoutActivity extends FragmentActivity {
             }
             case CREDIT_CARD_FRAGMENT: {
                 showActionBar();
-
-                final PaymentMethod paymentMethod = (PaymentMethod) intent.getSerializableExtra(PAYMENT_METHOD);
-
                 CreditCardFragment creditCardFragment = new CreditCardFragmentBuilder()
                         .setPaymentMethod((PaymentMethod) intent.getSerializableExtra(PAYMENT_METHOD))
                         .setPublicKey(intent.getStringExtra(Constants.DataKeys.PUBLIC_KEY))
@@ -192,13 +189,9 @@ public class CheckoutActivity extends FragmentActivity {
                         .setShopperReference(intent.getStringExtra(Constants.DataKeys.SHOPPER_REFERENCE))
                         .setCreditCardInfoListener(new CreditCardFragment.CreditCardInfoListener() {
                             @Override
-                            public void onCreditCardInfoProvided(String token, boolean storeDetails) {
-                                CreditCardPaymentDetails paymentDetails = new CreditCardPaymentDetails(paymentMethod.getInputDetails());
-                                paymentDetails.fillCardToken(token);
-                                paymentDetails.fillStoreDetails(storeDetails);
-
+                            public void onCreditCardInfoProvided(CreditCardPaymentDetails creditCardPaymentDetails) {
                                 final Intent intent = new Intent(Constants.PaymentRequest.PAYMENT_DETAILS_PROVIDED_INTENT);
-                                intent.putExtra(PAYMENT_DETAILS, paymentDetails);
+                                intent.putExtra(PAYMENT_DETAILS, creditCardPaymentDetails);
                                 LocalBroadcastManager.getInstance(context).sendBroadcast(intent);
                                 backButtonDisabled = true;
                             }

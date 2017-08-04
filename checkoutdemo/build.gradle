@@ -13,6 +13,9 @@ android {
 
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
 
+        buildConfigField "String", "SERVER_URL", "\"" + System.getProperty("SERVER_URL", "").trim() + "\""
+        buildConfigField "String", "API_KEY", "\"" + System.getProperty("API_KEY", "").trim() + "\""
+        buildConfigField "String", "API_HEADER_KEY", "\"" + System.getProperty("API_HEADER_KEY", "").trim() + "\""
     }
     buildTypes {
         release {

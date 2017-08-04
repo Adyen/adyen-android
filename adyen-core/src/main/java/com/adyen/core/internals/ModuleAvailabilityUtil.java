@@ -11,11 +11,12 @@ import com.adyen.core.services.PaymentMethodService;
 
 import java.util.List;
 
-import rx.Observable;
-import rx.Subscriber;
-import rx.android.schedulers.AndroidSchedulers;
-import rx.functions.Func1;
-import rx.schedulers.Schedulers;
+import io.reactivex.Observable;
+import io.reactivex.ObservableEmitter;
+import io.reactivex.ObservableOnSubscribe;
+import io.reactivex.functions.Function;
+import io.reactivex.schedulers.Schedulers;
+import io.reactivex.android.schedulers.AndroidSchedulers;
 
 /**
  *
@@ -48,29 +49,26 @@ public final class ModuleAvailabilityUtil {
     public static Observable<List<PaymentMethod>> filterPaymentMethods(
             @NonNull final Context context, @NonNull List<PaymentMethod> unfilteredPaymentMethods) {
 
-        return Observable.from(unfilteredPaymentMethods).concatMap(
-                new Func1<PaymentMethod, Observable<PaymentMethod>>() {
+        return Observable.fromIterable(unfilteredPaymentMethods).concatMap(
+                new Function<PaymentMethod, Observable<PaymentMethod>>() {
             @Override
-            public Observable<PaymentMethod> call(final PaymentMethod paymentMethod) {
-                return Observable.create(new Observable.OnSubscribe<PaymentMethod>() {
+            public Observable<PaymentMethod> apply(final PaymentMethod paymentMethod) {
+                return Observable.create(new ObservableOnSubscribe<PaymentMethod>() {
                     @Override
-                    public void call(final Subscriber<? super PaymentMethod> subscriber) {
+                    public void subscribe(final ObservableEmitter<PaymentMethod> subscriber) {
                         isPaymentMethodAvailable(context, paymentMethod,
                                 new PaymentMethodAvailabilityCallback() {
                             @Override
                             public void onSuccess(boolean isAvailable) {
-                                if (!subscriber.isUnsubscribed() && isAvailable) {
+                                if (!subscriber.isDisposed() && isAvailable) {
                                     subscriber.onNext(paymentMethod);
-                                } else {
-                                    subscriber.onNext(null);
                                 }
-                                subscriber.onCompleted();
+                                subscriber.onComplete();
                             }
 
                             @Override
                             public void onFail(Throwable e) {
-                                subscriber.onNext(null);
-                                subscriber.onCompleted();
+                                subscriber.onComplete();
                             }
                         });
                     }
@@ -78,6 +76,7 @@ public final class ModuleAvailabilityUtil {
             }
         })
         .toList()
+        .toObservable()
         .subscribeOn(Schedulers.newThread())
         .observeOn(AndroidSchedulers.mainThread());
     }

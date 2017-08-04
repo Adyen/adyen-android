@@ -10,6 +10,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.Spinner;
 
 import com.adyen.core.models.Amount;
 import com.adyen.core.utils.AmountUtil;
@@ -79,14 +80,10 @@ public class PaymentDataEntryFragment extends Fragment {
                 amountCurrencyString));
         paymentRequest.setCountryCode(((EditText) view.findViewById(R.id.countryEntry)).getText().toString());
         paymentRequest.setShopperLocale(((EditText) view.findViewById(R.id.shopperLocaleEntry)).getText().toString());
-        paymentRequest.setShopperIP(((EditText) view.findViewById(R.id.shopperIpEntry)).getText().toString());
         paymentRequest.setMerchantAccount(((EditText) view.findViewById(R.id.merchantAccountEntry)).getText()
                 .toString());
-        paymentRequest.setMerchantReference(((EditText) view.findViewById(R.id.merchantReferenceEntry)).getText()
-                .toString());
-        paymentRequest.setPaymentDeadline(((EditText) view.findViewById(R.id.paymentDeadlineEntry)).getText()
-                .toString());
-        paymentRequest.setReturnURL(((EditText) view.findViewById(R.id.returnUrlEntry)).getText().toString());
+        String maxNumberOfInstallments = ((String) ((Spinner) view.findViewById(R.id.installmentsEntry)).getSelectedItem());
+        paymentRequest.setMaxNumberOfInstallments(maxNumberOfInstallments);
 
         return paymentRequest;
     }

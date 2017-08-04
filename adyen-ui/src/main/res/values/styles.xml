@@ -66,6 +66,12 @@
         <item name="android:layout_height">0.5dp</item>
     </style>
 
+    <style name="BoldDivider">
+        <item name="android:background">@color/black</item>
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:layout_height">1px</item>
+    </style>
+
     <style name="adyenActionBar" parent="@android:style/Widget.Holo.ActionBar">
         <item name="android:background">@color/white</item>
         <item name="android:padding">0dp</item>

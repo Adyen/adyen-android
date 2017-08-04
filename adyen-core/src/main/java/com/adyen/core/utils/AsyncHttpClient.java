@@ -8,10 +8,13 @@ import com.adyen.core.internals.HttpClient;
 
 import java.util.Map;
 
-import rx.Observable;
-import rx.Subscriber;
-import rx.android.schedulers.AndroidSchedulers;
-import rx.schedulers.Schedulers;
+import io.reactivex.Observable;
+import io.reactivex.ObservableEmitter;
+import io.reactivex.ObservableOnSubscribe;
+import io.reactivex.Observer;
+import io.reactivex.disposables.Disposable;
+import io.reactivex.schedulers.Schedulers;
+import io.reactivex.android.schedulers.AndroidSchedulers;
 
 /**
  * Utility class for handling Asynchronous HTTP requests.
@@ -27,10 +30,10 @@ public final class AsyncHttpClient {
         Log.d(TAG, "POST data: " + data);
         final HttpClient httpClient = new HttpClient();
 
-        Observable.create(new Observable.OnSubscribe<byte[]>() {
+        Observable.create(new ObservableOnSubscribe<byte[]>() {
             @Override
-            public void call(@NonNull Subscriber<? super byte[]> subscriber) {
-                if (subscriber.isUnsubscribed()) {
+            public void subscribe(@NonNull ObservableEmitter<byte[]> subscriber) {
+                if (subscriber.isDisposed()) {
                     return;
                 }
                 byte[] response = null;
@@ -40,16 +43,24 @@ public final class AsyncHttpClient {
                     // TODO: In general, catching a generic Exception is not a good practice.
                     subscriber.onError(e);
                 }
-                subscriber.onNext(response);
-                subscriber.onCompleted();
+                if (response != null) {
+                    subscriber.onNext(response);
+                }
+                subscriber.onComplete();
             }
         })
                 .subscribeOn(Schedulers.newThread())
                 .observeOn(AndroidSchedulers.mainThread())
-                .subscribe(new Subscriber<byte[]>() {
-                    @Override
-                    public void onCompleted() {
+                .subscribe(new Observer<byte[]>() {
 
+                    @Override
+                    public void onSubscribe(@io.reactivex.annotations.NonNull final Disposable d) {
+                        // Do nothing
+                    }
+
+                    @Override
+                    public void onComplete() {
+                        // Do nothing
                     }
 
                     @Override

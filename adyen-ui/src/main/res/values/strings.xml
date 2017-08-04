@@ -12,6 +12,7 @@
     <string name="pay_with_amount">Pay %1$s</string>
     <string name="remember_card_hint">Remember card</string>
     <string name="title_card_details">Card Details</string>
+    <string name="card_number_of_installments">Number of installments</string>
     <string name="title_payment_methods">Payment Methods</string>
     <string name="bank_account_number">Bank account number (IBAN)</string>
     <string name="hint_iban_number">NL53 ABNA 1925 1294 122</string>

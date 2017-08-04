@@ -8,6 +8,7 @@ import android.support.test.runner.AndroidJUnit4;
 import android.support.test.uiautomator.UiDevice;
 
 import com.adyen.core.models.Payment;
+import com.adyen.core.models.paymentdetails.InputDetail;
 import com.adyen.testutils.EspressoTestUtils;
 import com.adyen.testutils.RetryTest;
 
@@ -21,6 +22,7 @@ import java.util.Collection;
 import java.util.Random;
 
 import static android.support.test.InstrumentationRegistry.getInstrumentation;
+import static android.support.test.espresso.Espresso.onData;
 import static android.support.test.espresso.Espresso.onView;
 import static android.support.test.espresso.action.ViewActions.clearText;
 import static android.support.test.espresso.action.ViewActions.click;
@@ -34,6 +36,9 @@ import static android.support.test.espresso.matcher.ViewMatchers.withText;
 import static com.adyen.testutils.EspressoTestUtils.closeAllActivities;
 import static com.adyen.testutils.EspressoTestUtils.waitForText;
 import static com.adyen.testutils.EspressoTestUtils.waitForView;
+import static org.hamcrest.Matchers.allOf;
+import static org.hamcrest.Matchers.instanceOf;
+import static org.hamcrest.Matchers.is;
 import static org.hamcrest.Matchers.not;
 import static org.hamcrest.text.IsEqualIgnoringCase.equalToIgnoringCase;
 
@@ -59,7 +64,7 @@ public class PaymentAppTest {
     public ActivityTestRule<MainActivity> mainActivityRule = new ActivityTestRule<>(MainActivity.class);
 
     @Rule
-    public RetryTest retry = new RetryTest(5);
+    public RetryTest retry = new RetryTest(3);
 
     @After
     public void tearDown() throws Exception {
@@ -302,6 +307,12 @@ public class PaymentAppTest {
         checkResultString(Payment.PaymentStatus.AUTHORISED.toString());
     }
 
+    @Test
+    public void testCardInstallments() throws Exception {
+        checkCardPaymentWithInstallments(AMOUNT, EUR, "Credit Card", CARD_NUMBER, CARD_EXP_DATE, CARD_CVC_CODE, 6, 2,
+                Payment.PaymentStatus.AUTHORISED.toString());
+    }
+
     // TODO: Add a test for returning from redirect and selecting another method.
 
     private void payWithVISACard(final String amountValue, final String amountCurrency) throws Exception {
@@ -317,7 +328,17 @@ public class PaymentAppTest {
     private void checkCardPayment(final String amountValue, final String amountCurrency, final String cardType,
                              final String cardNumber, final String cardExpiryDate,
                              final String cardCVC, final String expectedResult) throws Exception {
-        goToPaymentListFragment(amountValue, amountCurrency);
+        checkCardPaymentWithInstallments(amountValue, amountCurrency, cardType, cardNumber, cardExpiryDate, cardCVC, 1, 1, expectedResult);
+    }
+
+    private void checkCardPaymentWithInstallments(final String amountValue, final String amountCurrency, final String cardType,
+                                  final String cardNumber, final String cardExpiryDate,
+                                  final String cardCVC, final int maxNumberOfInstallments, final int numberOfInstallments,
+                                                  final String expectedResult) throws Exception {
+        if (maxNumberOfInstallments < numberOfInstallments || numberOfInstallments < 1) {
+            throw new IllegalArgumentException("Requested number of installments is invalid.");
+        }
+        goToPaymentListFragment(amountValue, amountCurrency, String.valueOf(maxNumberOfInstallments));
 
         onView(withText(equalToIgnoringCase(cardType))).perform(click());
         onView(withId(R.id.adyen_credit_card_no)).perform(clearText(), typeText(cardNumber),
@@ -326,6 +347,12 @@ public class PaymentAppTest {
                 closeSoftKeyboard());
         onView(withId(R.id.adyen_credit_card_cvc)).perform(typeText(cardCVC),
                 closeSoftKeyboard());
+
+        if (numberOfInstallments > 1) {
+            onView(withId(R.id.installments_spinner)).perform(click());
+            onData(allOf(is(instanceOf(InputDetail.Item.class)))).atPosition(numberOfInstallments - 1).perform(click());
+        }
+
         onView(withId(R.id.collectCreditCardData)).perform(click());
         checkResultString(expectedResult);
     }
@@ -346,11 +373,22 @@ public class PaymentAppTest {
     }
 
     private void goToPaymentListFragment(final String amount, final String currency) throws Exception {
+        goToPaymentListFragment(amount, currency, "1");
+    }
+
+    private void goToPaymentListFragment(final String amount, final String currency, final String maxNumberOfInstallments) throws Exception {
         EspressoTestUtils.waitForView(R.id.orderAmountEntry);
         onView(withId(R.id.orderAmountEntry)).perform(clearText(), typeText(amount),
                 closeSoftKeyboard());
         onView(withId(R.id.orderCurrencyEntry)).perform(clearText(), typeText(currency),
                 closeSoftKeyboard());
+
+        short installments = Short.parseShort(maxNumberOfInstallments);
+        if (installments > 1) {
+            onView(withId(R.id.installmentsEntry)).perform(click());
+            onData(allOf(is(instanceOf(String.class)))).atPosition(installments - 1).perform(click());
+        }
+
         onView(withId(R.id.proceed_button)).perform(scrollTo(), click());
 
         EspressoTestUtils.waitForView(com.adyen.ui.R.id.activity_payment_method_selection);

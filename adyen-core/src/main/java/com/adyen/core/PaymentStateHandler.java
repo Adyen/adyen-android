@@ -41,8 +41,8 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import rx.Observable;
-import rx.functions.Action1;
+import io.reactivex.Observable;
+import io.reactivex.functions.Consumer;
 
 import static com.adyen.core.constants.Constants.PaymentRequest.ADYEN_UI_FINALIZE_INTENT;
 import static com.adyen.core.constants.Constants.PaymentRequest.PAYMENT_DETAILS_PROVIDED_INTENT;
@@ -257,9 +257,9 @@ class PaymentStateHandler implements State.StateChangeListener {
             this.preferredPaymentMethods = paymentResponse.getPreferredPaymentMethods();
             Observable<List<PaymentMethod>> listObservable = ModuleAvailabilityUtil.filterPaymentMethods(context,
                     unfilteredPaymentMethods);
-            listObservable.subscribe(new Action1<List<PaymentMethod>>() {
+            listObservable.subscribe(new Consumer<List<PaymentMethod>>() {
                 @Override
-                public void call(List<PaymentMethod> filteredPaymentMethods) {
+                public void accept(List<PaymentMethod> filteredPaymentMethods) {
                     filteredPaymentMethods.removeAll(Collections.singleton(null));
                     PaymentStateHandler.this.filteredPaymentMethodsList.clear();
                     PaymentStateHandler.this.filteredPaymentMethodsList.addAll(filteredPaymentMethods);
@@ -525,7 +525,15 @@ class PaymentStateHandler implements State.StateChangeListener {
     private static JSONObject paymentDetailsToJson(@NonNull PaymentDetails paymentDetails) throws JSONException {
         JSONObject jsonObject = new JSONObject();
         for (InputDetail inputDetail : paymentDetails.getInputDetails()) {
-            jsonObject.put(inputDetail.getKey(), inputDetail.getValue());
+            if (inputDetail.getInputDetails() != null && !inputDetail.getInputDetails().isEmpty()) {
+                JSONObject recursiveDetailJson = new JSONObject();
+                for (InputDetail recursiveDetail : inputDetail.getInputDetails()) {
+                    recursiveDetailJson.put(recursiveDetail.getKey(), recursiveDetail.getValue());
+                }
+                jsonObject.put(inputDetail.getKey(), recursiveDetailJson);
+            } else {
+                jsonObject.put(inputDetail.getKey(), inputDetail.getValue());
+            }
         }
         return jsonObject;
     }

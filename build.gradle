@@ -30,8 +30,8 @@ ext {
 
     minSdkVersion = 15
     targetSdkVersion = 25
-    versionCode = 3
-    versionName = "1.4.0"
+    versionCode = 4
+    versionName = "1.5.0"
 
     release_debuggable = false
     release_minifyEnabled = false
@@ -208,7 +208,7 @@ task generateJavadoc(type: Javadoc) {
         source += files(project(it).jacocoTestReport.sourceDirectories)
     }
     classpath = files(subprojects.collect {project -> project.sourceSets.main.compileClasspath})
-    destinationDir = file("$buildDir/javadoc/")
+    destinationDir = file("docs/")
 
     include('**/Amount.java')
     include('**/Issuer.java')
@@ -222,14 +222,23 @@ task generateJavadoc(type: Javadoc) {
     include('**/PaymentDetailsCallback.java')
     include('**/PaymentMethodCallback.java')
 
-    include('**/CreditCardFragment.java')
-    include('**/CreditCardFragmentBuilder.java')
-    include('**/IssuerSelectionFragment.java')
-    include('**/IssuerSelectionFragmentBuilder.java')
-    include('**/PaymentMethodSelectionFragment.java')
-    include('**/PaymentMethodSelectionFragmentBuilder.java')
-    include('**/SepaDirectDebitFragment.java')
-    include('**/SepaDirectDebitFragmentBuilder.java')
+    include('**/PaymentDetails.java')
+    include('**/CreditCardPaymentDetails.java')
+    include('**/CVCOnlyPaymentDetails.java')
+    include('**/IdealPaymentDetails.java')
+    include('**/SepaDirectDebitPaymentDetails.java')
+
+    include('**/InputDetail.java')
+    include('**/InputDetailsUtil.java')
+
+//    include('**/CreditCardFragment.java')
+//    include('**/CreditCardFragmentBuilder.java')
+//    include('**/IssuerSelectionFragment.java')
+//    include('**/IssuerSelectionFragmentBuilder.java')
+//    include('**/PaymentMethodSelectionFragment.java')
+//    include('**/PaymentMethodSelectionFragmentBuilder.java')
+//    include('**/SepaDirectDebitFragment.java')
+//    include('**/SepaDirectDebitFragmentBuilder.java')
 }
 
 if (JavaVersion.current().isJava8Compatible()) {
@@ -238,4 +247,41 @@ if (JavaVersion.current().isJava8Compatible()) {
             options.addStringOption('Xdoclint:none', '-quiet')
         }
     }
+}
+
+/*
+  This task is solely for development purposes. The merchant application is not expected to have
+  an api configuration XML file.
+ */
+task parseXml() {
+    if (!file('api_configuration.xml').exists()) {
+        return;
+    }
+    def parsedProjectXml = (new XmlParser()).parse('api_configuration.xml')
+    def env = project.findProperty('serverEnv') ?: "TEST"
+    def type = project.findProperty('serverType') ?: "MERCHANT_SERVER"
+
+    def url = parsedProjectXml[type][env].URL.text()
+    def apiKey = parsedProjectXml[type][env].API_KEY.text()
+    def apiKeyHeaderKey = parsedProjectXml[type][env].API_HEADER_KEY.text()
+
+    if (env.toString() == "LIVE") {
+        if (!url?.trim()) {
+            ant.input(message: 'Enter live API URL\n', addproperty: 'SERVER_URL')
+            System.setProperty('SERVER_URL', ant.properties.SERVER_URL)
+        } else {
+            System.setProperty('SERVER_URL', url)
+        }
+        if (!apiKey?.trim()) {
+            ant.input(message: 'Enter live API key\n', addproperty: 'API_KEY')
+            System.setProperty('API_KEY', ant.properties.API_KEY)
+        } else {
+            System.setProperty('API_KEY', apiKey)
+        }
+    } else {
+        System.setProperty('SERVER_URL', url)
+        System.setProperty('API_KEY', apiKey)
+    }
+    System.setProperty('API_HEADER_KEY', apiKeyHeaderKey)
+
 }

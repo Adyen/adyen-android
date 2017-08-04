@@ -24,7 +24,7 @@ public class AdyenIconImageView extends AppCompatImageView {
 
     @Override
     public void setImageBitmap(Bitmap bm) {
-        super.setImageDrawable(IconUtil.resizeRoundCornersAndAddBorder(getContext(), bm, this.getHeight()));
+        super.setImageDrawable(IconUtil.resizeRoundCornersAndAddBorder(getContext(), bm, this.getMeasuredHeight()));
     }
 
 }

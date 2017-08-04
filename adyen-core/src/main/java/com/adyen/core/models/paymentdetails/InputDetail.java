@@ -20,6 +20,8 @@ public final class InputDetail implements Serializable {
     private boolean optional = true;
     private ArrayList<Item> items = new ArrayList<>();
 
+    private ArrayList<InputDetail> inputDetails;
+
     private InputDetail() {
 
     }
@@ -39,7 +41,16 @@ public final class InputDetail implements Serializable {
     }
 
     public boolean isFilled() {
-        return !StringUtils.isEmptyOrNull(value);
+        if (inputDetails != null && !inputDetails.isEmpty()) {
+            for (InputDetail inputDetail : inputDetails) {
+                if (!inputDetail.isFilled()) {
+                    return false;
+                }
+            }
+            return true;
+        } else {
+            return !StringUtils.isEmptyOrNull(value);
+        }
     }
 
     public static InputDetail fromJson(@NonNull final JSONObject jsonObject) throws JSONException {
@@ -47,15 +58,32 @@ public final class InputDetail implements Serializable {
         inputDetail.key = jsonObject.getString("key");
         inputDetail.optional = jsonObject.optBoolean("optional", false);
         inputDetail.type = Type.fromString(jsonObject.getString("type"));
+        inputDetail.value = jsonObject.optString("value");
         if (inputDetail.type == Type.Select) {
             JSONArray jsonItems = jsonObject.getJSONArray("items");
             for (int i = 0; i < jsonItems.length(); i++) {
                 inputDetail.items.add(Item.fromJson(jsonItems.getJSONObject(i)));
             }
         }
+        if (jsonObject.has("inputDetails")) {
+            JSONArray jsonObjectInputDetails = jsonObject.getJSONArray("inputDetails");
+            for (int i = 0; i < jsonObjectInputDetails.length(); i++) {
+                inputDetail.addInputDetail(fromJson(jsonObjectInputDetails.getJSONObject(i)));
+            }
+        }
         return inputDetail;
     }
 
+    private void addInputDetail(InputDetail inputDetail) {
+        if (inputDetails == null) {
+            this.inputDetails = new ArrayList<>();
+        }
+        inputDetails.add(inputDetail);
+    }
+
+    public ArrayList<InputDetail> getInputDetails() {
+        return inputDetails;
+    }
 
     public String getKey() {
         return key;
@@ -87,7 +115,7 @@ public final class InputDetail implements Serializable {
         AndroidPayToken("androidPayToken"), // A token used by a wallet
         SamsungPayToken("samsungPayToken"), // A token used by a wallet
         Cvc("cvc"), //A field to enter CVC code
-        Address("Address"),
+        Address("address"),
         Unknown("Unknown");
 
         private String apiField;
@@ -123,7 +151,7 @@ public final class InputDetail implements Serializable {
         static Item fromJson(@NonNull final JSONObject jsonObject) throws JSONException {
             Item item = new Item();
             item.id = jsonObject.getString("id");
-            item.imageUrl = jsonObject.getString("imageUrl");
+            item.imageUrl = jsonObject.optString("imageUrl");
             item.name = jsonObject.getString("name");
             return item;
         }

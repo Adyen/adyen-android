@@ -7,8 +7,8 @@ This README provides the usage manual for the SDK itself. For the full documenta
 To integrate the Adyen SDK into your project, import the **core** or **ui** module by adding one of the following lines to your build.gradle file.
 
 ```
-compile 'com.adyen.checkout:core:1.0.6'
-compile 'com.adyen.checkout:ui:1.0.6'
+compile 'com.adyen.checkout:core:1.4.1'
+compile 'com.adyen.checkout:ui:1.4.1'
 ```
 
 To give you as much flexibility as possible, our Android SDK can be integrated in two ways:
@@ -137,9 +137,29 @@ This method is called only if payment details are required. For example, if Cred
 
 ```java
 @Override
-public void onPaymentDetailsRequired(@NonNull final PaymentRequest paymentRequest, @NonNull final Map<String, Object> requiredFields, @NonNull final PaymentDetailsCallback callback) {
-    // For different payment methods different UI might be required. It is suggested to check selected method via paymentRequest.getPaymentMethod() and display UI accordingly.
-    // When all payment details are retrieved, SDK should be notified via PaymentDetailsCallback.
+public void onPaymentDetailsRequired(@NonNull final PaymentRequest paymentRequest, @NonNull final Collection<InputDetail> inputDetails, @NonNull final PaymentDetailsCallback callback) {
+  // For different payment methods different UI might be required. It is suggested to check selected method via paymentRequest.getPaymentMethod() and display UI accordingly.
+  // When all payment details are retrieved, SDK should be notified via PaymentDetailsCallback.
+  if (PaymentMethod.Type.CARD.equals(paymentRequest.getPaymentMethod().getType())) {
+     Card card = new Card();
+     card.setNumber("4111111111111111");
+     card.setCardHolderName("checkout shopper");
+     card.setCvc("737");
+     card.setExpiryMonth("10");
+     card.setExpiryYear("2020");
+     card.setGenerationTime(new Date());
+
+     try {
+       //Create PaymentDetails object from the inputDetails and fill them with the shopper input.
+       //Then call callback.completionWithPaymentDetails.
+       CreditCardPaymentDetails creditCardPaymentDetails = new CreditCardPaymentDetails(inputDetails);
+       creditCardPaymentDetails.fillCardToken(card.serialize(paymentRequest.getPublicKey()));
+       creditCardPaymentDetails.fillStoreDetails(true);
+       callback.completionWithPaymentDetails(creditCardPaymentDetails);
+     } catch (EncrypterException e) {
+       e.printStackTrace();
+     }
+  }
 }
 ```
 

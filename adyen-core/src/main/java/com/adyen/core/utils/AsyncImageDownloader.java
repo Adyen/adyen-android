@@ -13,10 +13,13 @@ import android.widget.ImageView;
 import java.io.FileNotFoundException;
 import java.io.InputStream;
 
-import rx.Observable;
-import rx.Subscriber;
-import rx.android.schedulers.AndroidSchedulers;
-import rx.schedulers.Schedulers;
+import io.reactivex.Observable;
+import io.reactivex.ObservableEmitter;
+import io.reactivex.ObservableOnSubscribe;
+import io.reactivex.Observer;
+import io.reactivex.disposables.Disposable;
+import io.reactivex.schedulers.Schedulers;
+import io.reactivex.android.schedulers.AndroidSchedulers;
 
 /**
  * Utility class for downloading images and assigning them to ImageViews.
@@ -43,37 +46,43 @@ public final class AsyncImageDownloader {
      */
     public static void downloadImage(final Context context, @NonNull final ImageView imageView,
                                      @NonNull final String url, @Nullable final Bitmap fallbackImage) {
-        Observable.create(new Observable.OnSubscribe<Bitmap>() {
+        Observable.create(new ObservableOnSubscribe<Bitmap>() {
                               @Override
-                              public void call(@NonNull Subscriber<? super Bitmap> subscriber) {
-                                  if (subscriber.isUnsubscribed()) {
+                              public void subscribe(@NonNull ObservableEmitter<Bitmap> subscriber) {
+                                  if (subscriber.isDisposed()) {
                                       return;
                                   }
                                   Bitmap icon = retrieveImage(context, url, fallbackImage);
                                   subscriber.onNext(icon);
-                                  subscriber.onCompleted();
+                                  subscriber.onComplete();
                               }
                           }
 
         ).subscribeOn(Schedulers.newThread())
-         .observeOn(AndroidSchedulers.mainThread())
-         .subscribe(new Subscriber<Bitmap>() {
-                                      @Override
-                                      public void onCompleted() {
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(new Observer<Bitmap>() {
+                               @Override
+                               public void onSubscribe(@io.reactivex.annotations.NonNull final Disposable d) {
+                                   // Do nothing
+                               }
 
-                                      }
+                               @Override
+                               public void onComplete() {
+                                   // Do nothing
+                               }
 
-                                      @Override
-                                      public void onError(Throwable e) {
-                                      }
+                               @Override
+                               public void onError(Throwable e) {
+                                   // Do nothing
+                               }
 
-                                      @Override
-                                      public void onNext(Bitmap response) {
-                                          imageView.setImageBitmap(response);
-                                      }
-                                  }
+                               @Override
+                               public void onNext(Bitmap response) {
+                                   imageView.setImageBitmap(response);
+                               }
+                           }
 
-                        );
+                );
     }
 
     //TODO: Following method is copy pasted from above. Reuse the code and refactor!
@@ -87,27 +96,35 @@ public final class AsyncImageDownloader {
      */
     public static void downloadImage(final Context context, @NonNull final ImageListener imageListener,
                                      @NonNull final String url, @Nullable final Bitmap fallbackImage) {
-        Observable.create(new Observable.OnSubscribe<Pair<Bitmap, String>>() {
+        Observable.create(new ObservableOnSubscribe<Pair<Bitmap, String>>() {
                               @Override
-                              public void call(@NonNull Subscriber<? super Pair<Bitmap, String>> subscriber) {
-                                  if (subscriber.isUnsubscribed()) {
+                              public void subscribe(@NonNull ObservableEmitter<Pair<Bitmap, String>> subscriber) {
+                                  if (subscriber.isDisposed()) {
                                       return;
                                   }
                                   Bitmap icon = retrieveImage(context, url, fallbackImage);
-                                  subscriber.onNext(new Pair<Bitmap, String>(icon, url));
-                                  subscriber.onCompleted();
+                                  subscriber.onNext(new Pair<>(icon, url));
+                                  subscriber.onComplete();
                               }
                           }
 
         ).subscribeOn(Schedulers.newThread())
                 .observeOn(AndroidSchedulers.mainThread())
-                .subscribe(new Subscriber<Pair<Bitmap, String>>() {
+                .subscribe(new Observer<Pair<Bitmap, String>>() {
+
                     @Override
-                    public void onCompleted() {
+                    public void onSubscribe(@io.reactivex.annotations.NonNull final Disposable d) {
+                        // Do nothing
+                    }
+
+                    @Override
+                    public void onComplete() {
+                        // Do nothing
                     }
 
                     @Override
                     public void onError(Throwable e) {
+                        // Do nothing
                     }
 
                     @Override

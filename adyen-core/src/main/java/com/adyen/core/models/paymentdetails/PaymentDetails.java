@@ -4,6 +4,9 @@ package com.adyen.core.models.paymentdetails;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 
+import com.adyen.core.PaymentRequest;
+import com.adyen.core.interfaces.PaymentDetailsCallback;
+
 import java.io.Serializable;
 import java.util.Collection;
 import java.util.HashMap;
@@ -11,11 +14,18 @@ import java.util.Map;
 
 /**
  * Class for collecting the required PaymentDetails from the shopper to make the payment.
+ * This is the generic {@Link PaymentDetails} class that can handle all payment methods.
+ * For convenience, several more specific subclasses of this class are provided.
  */
 public class PaymentDetails implements Serializable {
 
     @NonNull private Map<String, InputDetail> inputDetails = new HashMap<>();
 
+    /**
+     * This class should be instantiated using the inputDetails received from
+     * {@link com.adyen.core.interfaces.PaymentRequestDetailsListener#onPaymentDetailsRequired(PaymentRequest, Collection, PaymentDetailsCallback)}.
+     * @param inputDetails InputDetails obtained from the SDK.
+     */
     public PaymentDetails(Collection<InputDetail> inputDetails) {
         for (InputDetail inputDetail : inputDetails) {
             this.inputDetails.put(inputDetail.getKey(), inputDetail);

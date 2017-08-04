@@ -38,7 +38,7 @@ final class DeviceTokenGenerator {
                     Settings.Secure.ANDROID_ID);
             deviceInfo.put("deviceFingerprintVersion", DEVICE_FINGER_PRINT_VERSION);
             deviceInfo.put("platform", "android");
-            deviceInfo.put("apiVersion", "2");
+            deviceInfo.put("apiVersion", "3");
             deviceInfo.put("osVersion", Build.VERSION.SDK_INT);
             deviceInfo.put("sdkVersion", SDK_VERSION);
             deviceInfo.put("deviceIdentifier", androidId);

@@ -4,6 +4,7 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.v4.app.FragmentActivity;
+import android.text.TextUtils;
 import android.util.Log;
 import android.widget.Toast;
 
@@ -38,10 +39,9 @@ public class MainActivity extends FragmentActivity implements PaymentDataEntryFr
     private static final String SETUP = "setup";
     private static final String VERIFY = "verify";
 
-    private static final String MERCHANT_SERVER_URL = "https://checkoutshopper-test.adyen.com/checkoutshopper/demo/easy-integration/merchantserver/";
-
-    private static final String MERCHANT_API_SECRET_KEY = //YOUR_API_KEY
-    private static final String MERCHANT_APP_ID = "TestMerchantApp";
+    private String merchantServerUrl = ""; // Add the URL for your server here
+    private String merchantApiSecretKey = ""; // Add the api secret key for your server here
+    private String merchantApiHeaderKey = ""; // Add the header key for api secret key here
 
     private PaymentRequest paymentRequest;
     private final PaymentRequestListener paymentRequestListener = new PaymentRequestListener() {
@@ -50,15 +50,15 @@ public class MainActivity extends FragmentActivity implements PaymentDataEntryFr
         public void onPaymentDataRequested(@NonNull final PaymentRequest request, @NonNull String token,
                                            @NonNull final PaymentDataCallback callback) {
             if (paymentRequest != request) {
-                Log.d(TAG, "onPaymentResult(): This is not the payment request that we created.");
+                Log.d(TAG, "onPaymentDataRequested(): This is not the payment request that we created.");
                 return;
             }
-            Log.d(TAG, "paymentRequestListener.provideSetupData()");
+
             final Map<String, String> headers = new HashMap<>();
             headers.put("Content-Type", "application/json; charset=UTF-8");
-            headers.put("X-MerchantServer-App-SecretKey", MERCHANT_API_SECRET_KEY);
-            headers.put("X-MerchantServer-App-Id", MERCHANT_APP_ID);
-            AsyncHttpClient.post(MERCHANT_SERVER_URL + SETUP, headers, getSetupDataString(token), new HttpResponseCallback() {
+            headers.put(merchantApiHeaderKey, merchantApiSecretKey);
+
+            AsyncHttpClient.post(merchantServerUrl + SETUP, headers, getSetupDataString(token), new HttpResponseCallback() {
                 @Override
                 public void onSuccess(final byte[] response) {
                     callback.completionWithPaymentData(response);
@@ -110,6 +110,14 @@ public class MainActivity extends FragmentActivity implements PaymentDataEntryFr
     @Override
     public void onPaymentRequested(final PaymentSetupRequest paymentSetupRequest) {
         Log.d(TAG, "onPaymentRequested");
+        merchantServerUrl = TextUtils.isEmpty(merchantServerUrl) ? BuildConfig.SERVER_URL : merchantServerUrl;
+        merchantApiSecretKey = TextUtils.isEmpty(merchantApiSecretKey) ? BuildConfig.API_KEY : merchantApiSecretKey;
+        merchantApiHeaderKey = TextUtils.isEmpty(merchantApiHeaderKey) ? BuildConfig.API_HEADER_KEY : merchantApiHeaderKey;
+
+        if (TextUtils.isEmpty(merchantApiSecretKey) || TextUtils.isEmpty(merchantApiHeaderKey) || TextUtils.isEmpty(merchantServerUrl)) {
+            Toast.makeText(getApplicationContext(), "Server parameters have not been configured correctly", Toast.LENGTH_SHORT).show();
+            return;
+        }
         this.paymentSetupRequest = paymentSetupRequest;
         if (paymentRequest != null) {
             paymentRequest.cancel();
@@ -121,22 +129,32 @@ public class MainActivity extends FragmentActivity implements PaymentDataEntryFr
     private String getSetupDataString(final String token) {
         final JSONObject jsonObject = new JSONObject();
         try {
-            jsonObject.put("reference", "M+M Black dress & accessories");
-            jsonObject.put("merchantAccount", "TestMerchantCheckout");
-
+            jsonObject.put("merchantAccount", paymentSetupRequest.getMerchantAccount()); // Not required when communicating with merchant server
             jsonObject.put("shopperLocale", paymentSetupRequest.getShopperLocale());
             jsonObject.put("token", token);
-
-            jsonObject.put("appUrlScheme", "example-shopping-app://");
-            jsonObject.put("customerCountry", paymentSetupRequest.getCountryCode());
-            jsonObject.put("currency", paymentSetupRequest.getAmount().getCurrency());
-            jsonObject.put("quantity", paymentSetupRequest.getAmount().getValue());
-            jsonObject.put("platform", "android");
-            jsonObject.put("basketId", "example-basked-id");
-            jsonObject.put("customerId", "example-customer-id");
-
+            jsonObject.put("returnUrl", "example-shopping-app://");
+            jsonObject.put("countryCode", paymentSetupRequest.getCountryCode());
+            final JSONObject amount = new JSONObject();
+            amount.put("value", paymentSetupRequest.getAmount().getValue());
+            amount.put("currency", paymentSetupRequest.getAmount().getCurrency());
+            jsonObject.put("amount", amount);
+            jsonObject.put("channel", "android");
+            jsonObject.put("reference", "Android Checkout SDK Payment: " + System.currentTimeMillis());
+            jsonObject.put("shopperReference", "example-customer@exampleprovider");
+            try {
+                short maxNumberOfInstallments = Short.parseShort(paymentSetupRequest.getMaxNumberOfInstallments());
+                if (maxNumberOfInstallments > 1) {
+                    final JSONObject configuration = new JSONObject();
+                    final JSONObject installments = new JSONObject();
+                    installments.put("maxNumberOfInstallments", maxNumberOfInstallments);
+                    configuration.put("installments", installments);
+                    jsonObject.put("configuration", configuration);
+                }
+            } catch (final NumberFormatException numberFormatException) {
+                Log.w(TAG, "Invalid value for maximum number of installments", numberFormatException);
+            }
         } catch (final JSONException jsonException) {
-            Log.e("Unexpected error", "Setup failed");
+            Log.e(TAG, "Setup failed", jsonException);
         }
         return jsonObject.toString();
     }
@@ -154,9 +172,9 @@ public class MainActivity extends FragmentActivity implements PaymentDataEntryFr
 
         final Map<String, String> headers = new HashMap<>();
         headers.put("Content-Type", "application/json; charset=UTF-8");
-        headers.put("X-MerchantServer-App-SecretKey", MERCHANT_API_SECRET_KEY);
-        headers.put("X-MerchantServer-App-Id", MERCHANT_APP_ID);
-        AsyncHttpClient.post(MERCHANT_SERVER_URL + VERIFY, headers, verifyString, new HttpResponseCallback() {
+        headers.put(merchantApiHeaderKey, merchantApiSecretKey);
+
+        AsyncHttpClient.post(merchantServerUrl + VERIFY, headers, verifyString, new HttpResponseCallback() {
             String resultString = "";
             @Override
             public void onSuccess(final byte[] response) {

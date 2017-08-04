@@ -5,6 +5,7 @@ import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
+import android.text.TextUtils;
 import android.util.Log;
 import android.view.ContextThemeWrapper;
 import android.view.LayoutInflater;
@@ -13,17 +14,20 @@ import android.view.ViewGroup;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.Button;
 import android.widget.LinearLayout;
+import android.widget.Spinner;
 import android.widget.TextView;
 
 import com.adyen.core.constants.Constants;
 import com.adyen.core.models.Amount;
 import com.adyen.core.models.PaymentMethod;
+import com.adyen.core.models.paymentdetails.CreditCardPaymentDetails;
 import com.adyen.core.models.paymentdetails.InputDetail;
 import com.adyen.core.models.paymentdetails.PaymentDetails;
 import com.adyen.core.utils.AmountUtil;
 import com.adyen.core.utils.StringUtils;
 import com.adyen.ui.R;
 import com.adyen.ui.activities.CheckoutActivity;
+import com.adyen.ui.adapters.InstallmentOptionsAdapter;
 import com.adyen.ui.utils.AdyenInputValidator;
 import com.adyen.ui.views.CVCEditText;
 import com.adyen.ui.views.CardHolderEditText;
@@ -36,10 +40,13 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.List;
 
 import adyen.com.adyencse.encrypter.ClientSideEncrypter;
 import adyen.com.adyencse.encrypter.exception.EncrypterException;
+
+import static com.adyen.core.models.paymentdetails.CreditCardPaymentDetails.INSTALLMENTS;
 
 /**
  * Fragment for collecting {@link PaymentDetails} for credit card payments.
@@ -62,6 +69,7 @@ public class CreditCardFragment extends Fragment {
     private CVCEditText cvcView;
     private CardHolderEditText cardHolderEditText;
     private CheckoutCheckBox saveCardCheckBox;
+    private Spinner installmentsSpinner;
 
     private int theme;
 
@@ -73,10 +81,10 @@ public class CreditCardFragment extends Fragment {
     }
 
     /**
-     * The listener interface for receiving the (encrypted) credit card data.
+     * The listener interface for receiving the card payment details.
      */
     public interface CreditCardInfoListener {
-        void onCreditCardInfoProvided(String token, boolean storeDetails);
+        void onCreditCardInfoProvided(CreditCardPaymentDetails creditCardPaymentDetails);
     }
 
      void setCreditCardInfoListener(@NonNull final CreditCardInfoListener creditCardInfoListener) {
@@ -111,8 +119,6 @@ public class CreditCardFragment extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        Log.d(TAG, "onCreateView()");
-
         final View fragmentView;
 
         final Context contextThemeWrapper = new ContextThemeWrapper(getActivity(), theme);
@@ -129,6 +135,18 @@ public class CreditCardFragment extends Fragment {
             final LinearLayout cardHolderLayout = ((LinearLayout)
                     fragmentView.findViewById(R.id.card_holder_name_layout));
             cardHolderLayout.setVisibility(View.VISIBLE);
+        }
+
+        final Collection<InputDetail> inputDetails = paymentMethod.getInputDetails();
+        for (final InputDetail inputDetail : inputDetails) {
+            if (INSTALLMENTS.equals(inputDetail.getKey())) {
+                fragmentView.findViewById(R.id.card_installments_area).setVisibility(View.VISIBLE);
+                final List<InputDetail.Item> installmentOptions = inputDetail.getItems();
+                installmentsSpinner = (Spinner) fragmentView.findViewById(R.id.installments_spinner);
+                final InstallmentOptionsAdapter installmentOptionsAdapter = new InstallmentOptionsAdapter(getActivity(), installmentOptions);
+                installmentsSpinner.setAdapter(installmentOptionsAdapter);
+                break;
+            }
         }
 
         final Button collectDataButton = (Button) fragmentView.findViewById(R.id.collectCreditCardData);
@@ -187,7 +205,14 @@ public class CreditCardFragment extends Fragment {
                         && saveCardCheckBox.isChecked();
 
                 if (creditCardInfoListener != null) {
-                    creditCardInfoListener.onCreditCardInfoProvided(token, storeDetails);
+                    final CreditCardPaymentDetails creditCardPaymentDetails = new CreditCardPaymentDetails(inputDetails);
+                    creditCardPaymentDetails.fillCardToken(token);
+                    if (installmentsSpinner != null) {
+                        creditCardPaymentDetails.fillNumberOfInstallments(Short.valueOf(((InputDetail.Item) installmentsSpinner
+                                .getSelectedItem()).getId()));
+                    }
+                    creditCardPaymentDetails.fillStoreDetails(storeDetails);
+                    creditCardInfoListener.onCreditCardInfoProvided(creditCardPaymentDetails);
                 } else {
                     Log.w(TAG, "No listener provided.");
                 }
@@ -218,6 +243,10 @@ public class CreditCardFragment extends Fragment {
         if (!inputFieldsAvailable()) {
             return null;
         }
+        if (TextUtils.isEmpty(publicKey)) {
+            Log.e(TAG, "Public key is not available; credit card payment cannot be handled.");
+            return "";
+        }
         final JSONObject sensitiveData = new JSONObject();
         try {
 
@@ -238,9 +267,9 @@ public class CreditCardFragment extends Fragment {
 
             return encryptedData;
         } catch (JSONException e) {
-            e.printStackTrace();
+            Log.e(TAG, "JSON Exception occurred while generating token.", e);
         } catch (EncrypterException e) {
-            e.printStackTrace();
+            Log.e(TAG, "EncrypterException occurred while generating token.", e);
         }
         return "";
     }

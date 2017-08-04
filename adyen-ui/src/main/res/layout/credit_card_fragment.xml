@@ -170,6 +170,32 @@
                         android:focusable="true" />
                 </LinearLayout>
 
+                <LinearLayout
+                    android:id="@+id/card_installments_area"
+                    android:visibility="gone"
+                    android:paddingTop="10dp"
+                    android:paddingBottom="12dp"
+                    android:background="@android:color/white"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical">
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="left"
+                        android:text="@string/card_number_of_installments"
+                        android:id="@+id/installments_label"
+                        android:textSize="12sp" />
+
+                    <Spinner android:layout_width="match_parent"
+                             android:layout_height="wrap_content"
+                             android:id="@+id/installments_spinner" />
+
+                    <View style="@style/BoldDivider" />
+
+                </LinearLayout>
+
                 <RelativeLayout
                     android:id="@+id/layout_save_card"
                     android:clipChildren="false"
