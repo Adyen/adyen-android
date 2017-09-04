@@ -1,6 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-
     <string name="card_number">Kartennummer</string>
     <string name="expiry_date">Gültig bis</string>
     <string name="cardholder_name">Name des Karteninhabers</string>

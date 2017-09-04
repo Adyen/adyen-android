@@ -63,17 +63,34 @@
                             android:layout_height="wrap_content" />
                     </RelativeLayout>
 
-
-                    <com.adyen.ui.views.CreditCardEditText
-                        android:id="@+id/adyen_credit_card_no"
-                        android:layout_width="fill_parent"
+                    <LinearLayout
+                        android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:hint="@string/hint_card_number"
-                        android:inputType="phone"
-                        android:focusable="true"
-                        android:gravity="center_vertical"
-                        android:drawableLeft="@drawable/cc_placeholder_icon"
-                        android:drawablePadding="12dp"/>
+                        android:gravity="center_vertical">
+
+                        <com.adyen.ui.views.CreditCardEditText
+                            android:id="@+id/adyen_credit_card_no"
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="1"
+                            android:hint="@string/hint_card_number"
+                            android:inputType="phone"
+                            android:focusable="true"
+                            android:gravity="center_vertical"
+                            android:drawableLeft="@drawable/cc_placeholder_icon"
+                            android:drawablePadding="12dp"/>
+
+                        <ImageButton
+                            android:id="@+id/scan_card_button"
+                            style="@style/Widget.AppCompat.Button.Borderless"
+                            android:layout_width="56dp"
+                            android:layout_height="wrap_content"
+                            android:layout_marginRight="-4dp"
+                            android:layout_marginEnd="-4dp"
+                            android:src="@drawable/ic_scan_generic_24dp"
+                            android:contentDescription="@null" />
+
+                    </LinearLayout>
 
                 </LinearLayout>
 
@@ -120,6 +137,7 @@
                     <LinearLayout
                         android:layout_width="0dp"
                         android:layout_height="wrap_content"
+                        android:id="@+id/adyen_cvc_layout"
                         android:layout_weight=".20"
                         android:orientation="vertical">
 

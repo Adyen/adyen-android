@@ -86,6 +86,9 @@ public final class GiropayFragment extends Fragment {
         payButton = (Button) fragmentView.findViewById(R.id.pay_giropay_button);
         exampleView = fragmentView.findViewById(R.id.giropay_example_layout);
 
+        if (getActivity() instanceof CheckoutActivity) {
+            ((CheckoutActivity) getActivity()).setActionBarTitle(R.string.title_giropay);
+        }
         return fragmentView;
     }
 

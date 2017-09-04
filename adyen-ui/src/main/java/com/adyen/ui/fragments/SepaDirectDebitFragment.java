@@ -110,6 +110,10 @@ public class SepaDirectDebitFragment extends Fragment {
         final String amountString = getString(R.string.pay_with_amount, valueString);
         amountTextview.setText(amountString);
 
+        if (getActivity() instanceof CheckoutActivity) {
+            ((CheckoutActivity) getActivity()).setActionBarTitle(R.string.title_sepa);
+        }
+
         return fragmentView;
     }
 

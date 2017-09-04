@@ -8,6 +8,7 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import com.adyen.ui.R;
+import com.adyen.ui.activities.CheckoutActivity;
 
 /**
  * Fragment to hold a loading animation during network requests.
@@ -19,6 +20,9 @@ public class LoadingScreenFragment extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, Bundle savedInstanceState) {
         View fragmentView = inflater.inflate(R.layout.loading_screen_fragment, container, false);
+        if (getActivity() instanceof CheckoutActivity) {
+            ((CheckoutActivity) getActivity()).hideActionBar();
+        }
         return fragmentView;
     }
 }

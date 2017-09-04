@@ -278,7 +278,7 @@ public class PaymentAppTest {
         EspressoTestUtils.rotateScreen();
         onView(withText(equalToIgnoringCase("Credit Card"))).perform(scrollTo(), click());
         waitForView(R.id.adyen_credit_card_no);
-        Espresso.pressBack();
+        Espresso.pressBack(); // closes the keyboard
         Espresso.pressBack();
         EspressoTestUtils.rotateScreen();
         onView(withText(equalToIgnoringCase("Credit Card"))).perform(scrollTo(), click());
@@ -311,6 +311,50 @@ public class PaymentAppTest {
     public void testCardInstallments() throws Exception {
         checkCardPaymentWithInstallments(AMOUNT, EUR, "Credit Card", CARD_NUMBER, CARD_EXP_DATE, CARD_CVC_CODE, 6, 2,
                 Payment.PaymentStatus.AUTHORISED.toString());
+    }
+
+    @Test
+    public void testActionBarTitle() throws Exception {
+        goToPaymentListFragment(AMOUNT, EUR);
+        waitForText("Payment Methods");
+        onView(withText(equalToIgnoringCase("Credit Card"))).perform(scrollTo(), click());
+        waitForText("Card Details");
+        Espresso.pressBack();
+        Espresso.pressBack();
+        waitForText("Payment Methods");
+        onView(withText(equalToIgnoringCase("SEPA Direct Debit"))).perform(scrollTo(), click());
+        waitForText("Cardholder Name");
+        waitForText("SEPA Direct Debit");
+        Espresso.pressBack();
+        waitForText("Payment Methods");
+        waitForText("Payment Methods");
+        onView(withText(equalToIgnoringCase("iDEAL"))).perform(scrollTo(), click());
+        waitForText("iDeal");
+        Espresso.pressBack();
+        waitForText("Payment Methods");
+    }
+
+    @Test
+    public void testNoCVC() throws Exception {
+        goToPaymentListFragment(AMOUNT, EUR, "BE", "1");
+        onView(withText(equalToIgnoringCase("Bancontact card"))).perform(scrollTo(), click());
+        onView(withId(R.id.adyen_credit_card_no)).perform(clearText(), typeText("6703444444444449"),
+                closeSoftKeyboard());
+        onView(withId(R.id.adyen_credit_card_exp_date)).perform(typeText("818"),
+                closeSoftKeyboard());
+        checkCreditCardPayButtonIsEnabled(true);
+    }
+
+    @Test
+    public void testOptionalCVC() throws Exception {
+        goToPaymentListFragment(AMOUNT, EUR);
+        onView(withText(equalToIgnoringCase("Credit Card"))).perform(scrollTo(), click());
+        waitForText("CVC/CVV");
+        onView(withId(R.id.adyen_credit_card_no)).perform(clearText(), typeText("6731 0123 4567 8906"),
+                closeSoftKeyboard());
+        onView(withId(R.id.adyen_credit_card_exp_date)).perform(typeText("818"),
+                closeSoftKeyboard());
+        checkCreditCardPayButtonIsEnabled(true);
     }
 
     // TODO: Add a test for returning from redirect and selecting another method.
@@ -376,12 +420,22 @@ public class PaymentAppTest {
         goToPaymentListFragment(amount, currency, "1");
     }
 
+
     private void goToPaymentListFragment(final String amount, final String currency, final String maxNumberOfInstallments) throws Exception {
+        goToPaymentListFragment(amount, currency, "NL", maxNumberOfInstallments);
+    }
+
+    private void goToPaymentListFragment(final String amount, final String currency, final String countryCode, final String maxNumberOfInstallments)
+            throws Exception {
         EspressoTestUtils.waitForView(R.id.orderAmountEntry);
         onView(withId(R.id.orderAmountEntry)).perform(clearText(), typeText(amount),
                 closeSoftKeyboard());
         onView(withId(R.id.orderCurrencyEntry)).perform(clearText(), typeText(currency),
                 closeSoftKeyboard());
+        if (!"NL".equalsIgnoreCase(countryCode)) {
+            onView(withId(R.id.countryEntry)).perform(clearText(), typeText(countryCode),
+                    closeSoftKeyboard());
+        }
 
         short installments = Short.parseShort(maxNumberOfInstallments);
         if (installments > 1) {

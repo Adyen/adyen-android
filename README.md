@@ -4,12 +4,16 @@ Want to add a checkout to your Android app? No matter if your shopper wants to p
 This README provides the usage manual for the SDK itself. For the full documentation, including the server side implementation guidelines, refer to https://docs.adyen.com/developers/in-app-integration-guide.
 
 ## Installation
-To integrate the Adyen SDK into your project, import the **core** or **ui** module by adding one of the following lines to your build.gradle file.
+To integrate the Adyen SDK into your project, import the **core**, **utils** and **ui** module by adding the following lines to your build.gradle file.
 
 ```
-compile 'com.adyen.checkout:core:1.4.1'
-compile 'com.adyen.checkout:ui:1.4.1'
+compile 'com.adyen.checkout:core:1.7.0'
+compile 'com.adyen.checkout:utils:1.7.0'
+compile 'com.adyen.checkout:ui:1.7.0'
+compile 'com.adyen.checkout:cardscan:1.7.0'
 ```
+
+> For implementing Custom integration, only the **core** module is required. However, you might also want to include the **utils** module to use Adyen's utility methods such as Luhn check, credit card type detection, etc.
 
 To give you as much flexibility as possible, our Android SDK can be integrated in two ways:
 
@@ -33,30 +37,31 @@ You can make use of the Adyen test server until you have implemented your own se
 
 ```java
     @Override
-    public void onPaymentDataRequested(@NonNull final PaymentRequest paymentRequest, @NonNull String s, @NonNull final PaymentDataCallback paymentDataCallback) {
+    public void onPaymentDataRequested(@NonNull final PaymentRequest paymentRequest, @NonNull String token, @NonNull final PaymentDataCallback paymentDataCallback) {
         final Map<String, String> headers = new HashMap<>();
         headers.put("Content-Type", "application/json; charset=UTF-8");
 
 		// Provide below the data to identify your app against the server, implement your own protocol (e.g. OAuth 2.0) to use your own server.
-        headers.put("X-MerchantServer-App-SecretKey", MERCHANT_API_SECRET_KEY); // Use the provided MERCHANT_API_SECRET_KEY, or obtain from Customer Area.
-        headers.put("X-MerchantServer-App-Id", MERCHANT_APP_ID); // Use the provided MERCHANT_APP_ID, or obtain from Customer Area.
+        headers.put("x-demo-server-api-key", MERCHANT_API_SECRET_KEY); // Use the provided MERCHANT_API_SECRET_KEY, or obtain from Customer Area.
 
         final JSONObject jsonObject = new JSONObject();
         try {
             // You always need to get the token from the SDK, even when using your own server.
-            jsonObject.put("sdkToken", s);
+            jsonObject.put("token", token);
             // Below is dummy data in a format expected by the Adyen test server. When implementing your own server, the data below becomes free format; you can also decide to add it to the payment creation request while sending it from your own server.
-            jsonObject.put("appUrlScheme", "app://checkout");
-            jsonObject.put("customerCountry", "NL");
-            jsonObject.put("currency", "EUR");
-            jsonObject.put("quantity", 100);
-            jsonObject.put("customerId", "example.merchant@adyen.com");
-            jsonObject.put("platform", "android");
-            jsonObject.put("basketId", "test-payment");
+            jsonObject.put("returnUrl", "example-shopping-app://");
+            jsonObject.put("countryCode", "NL");
+            final JSONObject amount = new JSONObject();
+            amount.put("value", "17408");
+            amount.put("currency", "USD");
+            jsonObject.put("amount", amount);
+            jsonObject.put("shopperReference", "example.merchant@adyen.com");
+            jsonObject.put("channel", "android");
+            jsonObject.put("reference", "test-payment");
         } catch (final JSONException jsonException) {
             Log.e("Unexpected error", "Setup failed");
         }
-        AsyncHttpClient.post(MERCHANT_SERVER_URL, headers, jsonObject.toString(), new HttpResponseCallback() { // Use https://checkoutshopper-test.adyen.com/checkoutshopper/demo/easy-integration/merchantserver/setup
+        AsyncHttpClient.post(MERCHANT_SERVER_URL, headers, jsonObject.toString(), new HttpResponseCallback() { // Use https://checkoutshopper-test.adyen.com/checkoutshopper/demoserver/setup
             @Override
             public void onSuccess(final byte[] response) {
                 paymentDataCallback.completionWithPaymentData(response);
@@ -162,6 +167,26 @@ public void onPaymentDetailsRequired(@NonNull final PaymentRequest paymentReques
   }
 }
 ```
+
+## Examples
+
+For your convenience, we included the following demo modules into this repository:
+
+* **checkoutdemo** – A functioning demo of the Checkout SDK using the Quick integration.
+
+* **app** – Also uses the Quick integration, but allows to configure parameters for setting up the payment request.
+
+* **customuiapplication** – An example implementation of the Custom integration where the application fully handles the UI.
+
+* **customwithcheckoutui** – An experimental module where the Custom integration is used with UI elements (fragments, views) from the Checkout UI.
+
+
+## See also
+
+ * [Complete Documentation](https://docs.adyen.com/developers/in-app-integration?platform=inapp-android)
+
+ * [SDK Reference](https://adyen.github.io/adyen-android/)
+
 
 ## License
 

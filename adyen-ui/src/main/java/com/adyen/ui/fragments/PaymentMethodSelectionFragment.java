@@ -16,6 +16,7 @@ import android.widget.ListView;
 
 import com.adyen.core.models.PaymentMethod;
 import com.adyen.ui.R;
+import com.adyen.ui.activities.CheckoutActivity;
 import com.adyen.ui.adapters.PaymentListAdapter;
 
 import java.util.ArrayList;
@@ -126,6 +127,10 @@ public class PaymentMethodSelectionFragment extends Fragment {
             preferredPaymentMethodsLayout.setVisibility(View.GONE);
         } else {
             preferredPaymentMethodsLayout.setVisibility(View.VISIBLE);
+        }
+
+        if (getActivity() instanceof CheckoutActivity) {
+            ((CheckoutActivity) getActivity()).setActionBarTitle(R.string.title_payment_methods);
         }
 
         return fragmentView;

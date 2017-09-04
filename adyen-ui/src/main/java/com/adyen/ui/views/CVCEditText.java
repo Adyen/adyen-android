@@ -24,6 +24,8 @@ public class CVCEditText extends CheckoutEditText {
 
     private int maxLength = CVC_MAX_LENGTH;
 
+    private boolean optional;
+
     private AdyenInputValidator validator;
 
     private void init() {
@@ -71,6 +73,9 @@ public class CVCEditText extends CheckoutEditText {
             public void onFocusChange(View v, boolean hasFocus) {
                 if (hasFocus) {
                     CVCEditText.this.setTextColor(ContextCompat.getColor(getContext(), R.color.black_text));
+                    if (validator != null) {
+                        validator.setReady(CVCEditText.this, hasValidInput());
+                    }
                 } else {
                     if (!hasValidInput()) {
                         CVCEditText.this.setTextColor(ContextCompat.getColor(getContext(),
@@ -127,7 +132,10 @@ public class CVCEditText extends CheckoutEditText {
     }
 
     public boolean hasValidInput() {
-        return this.getText().toString().length() == maxLength;
+        return (this.getText().toString().length() == maxLength) || optional;
     }
 
+    public void setOptional(final boolean optional) {
+        this.optional = optional;
+    }
 }

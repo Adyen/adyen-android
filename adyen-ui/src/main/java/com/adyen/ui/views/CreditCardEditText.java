@@ -7,7 +7,6 @@ import android.support.v4.content.ContextCompat;
 import android.text.Editable;
 import android.text.InputFilter;
 import android.text.Spanned;
-import android.text.TextUtils;
 import android.text.TextWatcher;
 import android.util.AttributeSet;
 import android.view.View;
@@ -15,13 +14,16 @@ import android.view.View;
 import com.adyen.core.utils.AsyncImageDownloader;
 import com.adyen.core.utils.StringUtils;
 import com.adyen.ui.R;
+import com.adyen.ui.fragments.CreditCardFragmentBuilder;
 import com.adyen.ui.utils.AdyenInputValidator;
-import com.adyen.ui.utils.CardType;
 import com.adyen.ui.utils.IconUtil;
-import com.adyen.ui.utils.Luhn;
+import com.adyen.utils.CardType;
+import com.adyen.utils.Luhn;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
+import java.util.concurrent.CopyOnWriteArrayList;
 
 
 /**
@@ -37,12 +39,17 @@ public class CreditCardEditText extends CheckoutEditText {
     private String baseURL;
     private String placeHolderIconUrl = "";
 
-    private List<String> allowedCardTypes;
+    private Map<String, CreditCardFragmentBuilder.CvcFieldStatus> allowedCardTypes;
     private Integer[] numberOfDigits;
+
+    private List<CVCFieldStatusListener> cvcFieldStatusListeners = new CopyOnWriteArrayList<>();
+
+    public interface CVCFieldStatusListener {
+        void onCVCFieldStatusChanged(CreditCardFragmentBuilder.CvcFieldStatus cvcFieldStatus);
+    }
 
     private void init() {
         ArrayList<InputFilter> cardNoFilters = new ArrayList<>();
-        //TODO adjust cc number max length to type of card
         cardNoFilters.add(new InputFilter.LengthFilter(CC_MAX_LENGTH));
         cardNoFilters.add(new InputFilter() {
             @Override
@@ -88,6 +95,10 @@ public class CreditCardEditText extends CheckoutEditText {
         init();
     }
 
+    public void addCVCFieldStatusListener(CVCFieldStatusListener cvcFieldStatusListener) {
+        cvcFieldStatusListeners.add(cvcFieldStatusListener);
+    }
+
     public void setValidator(AdyenInputValidator validator) {
         this.validator = validator;
         this.validator.addInputField(CreditCardEditText.this);
@@ -98,59 +109,66 @@ public class CreditCardEditText extends CheckoutEditText {
     }
 
     private class CreditCardInputFormatWatcher implements TextWatcher {
+        private final char spacingChar = ' ';
 
-        private static final char SEPARATOR = ' ';
-        private int pos;
-        private int mLength;
+        private final String spacingString = String.valueOf(spacingChar);
 
-        @Override
-        public void onTextChanged(CharSequence s, int start, int before, int count) {
-        }
+        private boolean deleted;
 
         @Override
         public void beforeTextChanged(CharSequence s, int start, int count, int after) {
-            pos = start;
-            mLength = s.toString().length();
+            // Nothing to do.
+        }
 
+        @Override
+        public void onTextChanged(CharSequence s, int start, int before, int count) {
+            deleted = (count == 0);
         }
 
         @Override
         public void afterTextChanged(Editable s) {
+            removeTextChangedListener(this);
 
-            if (pos == 0) {
-                initializeLogo();
-                if (s.toString().length() == 1 && s.charAt(pos) == SEPARATOR) {
-                    s.clear();
-                }
-                if (validator != null) {
-                    validator.setReady(CreditCardEditText.this, isValidNr(s.toString()));
-                }
-                return;
-            }
+            int length = s.length();
+            int nextGroupStart = 4;
 
-            int len = s.length();
-            if (!(mLength >= len)) {
-                // Remove spacing char
-                if (!(pos > 0 && ((pos - 4) % 5) == 0)) {
-                    final char c = s.charAt(pos);
-                    if (SEPARATOR == c) {
-                        s.delete(pos - 1, pos);
+            for (int i = 0; i < length; i++) {
+                char c = s.charAt(i);
+
+                if (i == nextGroupStart) {
+                    if (c != spacingChar) {
+                        if (!Character.isDigit(c)) {
+                            s.replace(i, i + 1, spacingString);
+                        } else {
+                            s.insert(i, spacingString);
+                            length = s.length();
+
+                            if (deleted) {
+                                int selectionStart = getSelectionStart();
+                                int selectionEnd = getSelectionEnd();
+                                int newSelectionStart = selectionStart - 1 == i ? selectionStart - 1 : selectionStart;
+                                int newSelectionEnd = selectionEnd - 1 == i ? selectionEnd - 1 : selectionEnd;
+                                setSelection(newSelectionStart, newSelectionEnd);
+                            }
+                        }
+                    }
+
+                    nextGroupStart += 5;
+                } else {
+                    if (!Character.isDigit(c)) {
+                        s.delete(i, i + 1);
+                        length = s.length();
                     }
                 }
-
-                // Insert SEPARATOR where needed.
-                if (s.length() > 0 && (s.length() % 5) == 0) {
-                    char c = s.charAt(pos);
-                    //If user enters a digit where there should be a space we insert SEPARATOR
-                    if (Character.isDigit(c) && TextUtils.split(s.toString(), String.valueOf(SEPARATOR)).length <= 4) {
-                        s.insert(s.length() - 1, String.valueOf(SEPARATOR));
-                    }
-                }
             }
+
+            addTextChangedListener(this);
 
             int cvcLength = CVCEditText.CVC_MAX_LENGTH;
 
-            CardType cardType = CardType.detect(s.toString().replace(" ", ""), allowedCardTypes);
+            List<String> allowedCardsList = new ArrayList<>(allowedCardTypes.keySet());
+
+            CardType cardType = CardType.detect(s.toString().replace(" ", ""), allowedCardsList);
             if (cardType == CardType.amex) {
                 cvcLength = CVCEditText.CVC_MAX_LENGTH_AMEX;
             }
@@ -171,6 +189,9 @@ public class CreditCardEditText extends CheckoutEditText {
             }
 
             if (cvcEditText != null) {
+                for (CVCFieldStatusListener cvcFieldStatusListener : cvcFieldStatusListeners) {
+                    cvcFieldStatusListener.onCVCFieldStatusChanged(allowedCardTypes.get(cardType.name()));
+                }
                 cvcEditText.setMaxLength(cvcLength);
             }
 
@@ -227,7 +248,7 @@ public class CreditCardEditText extends CheckoutEditText {
         return logoUrl.substring(0, lastIndexOfSeparator + 1);
     }
 
-    public void setAllowedCardTypes(List<String> allowedCardTypes) {
+    public void setAllowedCardTypes(Map<String, CreditCardFragmentBuilder.CvcFieldStatus> allowedCardTypes) {
         this.allowedCardTypes = allowedCardTypes;
     }
 }

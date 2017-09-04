@@ -54,13 +54,16 @@ dependencies {
     if (publishNonDefault) {
         debugCompile project(path: ':adyen-core', configuration:'debug')
         releaseCompile project(path: ':adyen-core', configuration:'release')
+
+        debugCompile project(path: ':adyen-utils', configuration:'debug')
+        releaseCompile project(path: ':adyen-utils', configuration:'release')
+
+        debugCompile project(path: ':adyen-cardscan', configuration:'debug')
+        releaseCompile project(path: ':adyen-cardscan', configuration:'release')
     } else {
-        //When releasing; uncomment the next line and comment the line after that. Then
-        //upload adyen-core to bintray. Afterwards, comment the next line and uncomment the line
-        //after that and recompile. This way, adyen-ui can find new version of adyen-core.
-        //This process should be improved.
-//        compile project(':adyen-core')
         provided group: 'com.adyen.checkout', name: 'core', version: "${rootProject.versionName}"
+        provided group: 'com.adyen.checkout', name: 'utils', version: "${rootProject.versionName}"
+        provided group: 'com.adyen.cardscan', name: 'cardscan', version: "${rootProject.versionName}"
     }
 
 }

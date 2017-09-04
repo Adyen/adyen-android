@@ -53,7 +53,9 @@ public final class AsyncImageDownloader {
                                       return;
                                   }
                                   Bitmap icon = retrieveImage(context, url, fallbackImage);
-                                  subscriber.onNext(icon);
+                                  if (icon != null) {
+                                      subscriber.onNext(icon);
+                                  }
                                   subscriber.onComplete();
                               }
                           }
@@ -103,7 +105,9 @@ public final class AsyncImageDownloader {
                                       return;
                                   }
                                   Bitmap icon = retrieveImage(context, url, fallbackImage);
-                                  subscriber.onNext(new Pair<>(icon, url));
+                                  if (icon != null) {
+                                      subscriber.onNext(new Pair<>(icon, url));
+                                  }
                                   subscriber.onComplete();
                               }
                           }
@@ -144,6 +148,7 @@ public final class AsyncImageDownloader {
      * @param fallbackImage fallback in case no image is found at the given url
      * @return Bitmap found at the given url
      */
+    @Nullable
     private static Bitmap retrieveImage(Context context, String url, Bitmap fallbackImage) {
         Bitmap icon = BITMAP_LRU_CACHE.get(url);
         if (icon == null) {

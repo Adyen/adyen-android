@@ -41,6 +41,7 @@ public final class AsyncHttpClient {
                     response = httpClient.post(url, headers, data);
                 } catch (Exception e) {
                     // TODO: In general, catching a generic Exception is not a good practice.
+                    Log.e(TAG, "Post failed", e);
                     subscriber.onError(e);
                 }
                 if (response != null) {

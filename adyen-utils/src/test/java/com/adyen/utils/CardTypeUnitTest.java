@@ -1,4 +1,4 @@
-package com.adyen.ui.utils;
+package com.adyen.utils;
 
 import org.junit.Test;
 

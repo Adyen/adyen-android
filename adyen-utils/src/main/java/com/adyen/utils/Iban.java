@@ -1,6 +1,6 @@
-package com.adyen.ui.utils;
+package com.adyen.utils;
 
-import com.adyen.core.utils.StringUtils;
+import android.text.TextUtils;
 
 import java.util.Arrays;
 
@@ -168,7 +168,7 @@ public enum Iban {
     }
 
     private static Iban getIbanForCountry(String possibleIban) {
-        if (StringUtils.isEmptyOrNull(possibleIban) || possibleIban.length() < 2) {
+        if (TextUtils.isEmpty(possibleIban) || possibleIban.length() < 2) {
             return null;
         }
         String countryCode = possibleIban.substring(0, 2);

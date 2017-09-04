@@ -47,16 +47,17 @@ import io.reactivex.functions.Consumer;
 import static com.adyen.core.constants.Constants.PaymentRequest.ADYEN_UI_FINALIZE_INTENT;
 import static com.adyen.core.constants.Constants.PaymentRequest.PAYMENT_DETAILS_PROVIDED_INTENT;
 import static com.adyen.core.constants.Constants.PaymentRequest.PAYMENT_METHOD_SELECTED_INTENT;
-import static com.adyen.core.constants.Constants.PaymentStateHandler.ANDROID_PAY_TOKEN_PROVIDED;
-import static com.adyen.core.constants.Constants.PaymentStateHandler.COMPLETE_RESPONSE;
-import static com.adyen.core.constants.Constants.PaymentStateHandler.ERROR_RESPONSE;
-import static com.adyen.core.constants.Constants.PaymentStateHandler.REDIRECT_RESPONSE;
-import static com.adyen.core.constants.Constants.PaymentStateHandler.SDK_RETURN_URL;
-import static com.adyen.core.constants.Constants.PaymentStateHandler.URL_JSON_KEY;
 
 class PaymentStateHandler implements State.StateChangeListener {
 
     private static final String TAG = PaymentStateHandler.class.getSimpleName();
+
+    private static final String SDK_RETURN_URL = "adyencheckout://";
+    private static final String REDIRECT_RESPONSE = "redirect";
+    private static final String COMPLETE_RESPONSE = "complete";
+    private static final String ERROR_RESPONSE = "error";
+    private static final String URL_JSON_KEY = "url";
+    private static final String ANDROID_PAY_TOKEN_PROVIDED = "com.adyen.androidpay.ui.AndroidTokenProvided";
 
     private Throwable paymentErrorThrowable;
 

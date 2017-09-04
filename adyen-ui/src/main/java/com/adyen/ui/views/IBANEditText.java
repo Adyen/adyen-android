@@ -11,7 +11,7 @@ import android.util.AttributeSet;
 import android.widget.EditText;
 
 import com.adyen.ui.utils.AdyenInputValidator;
-import com.adyen.ui.utils.Iban;
+import com.adyen.utils.Iban;
 
 import java.util.ArrayList;
 

@@ -1,6 +1,4 @@
 <resources>
-    <string name="app_name" translatable="false">Core</string>
-
     <string name="card_number">Card Number</string>
     <string name="hint_card_number" translatable="false">1234 5678 9012 3456</string>
     <string name="expiry_date">Expiry Date</string>

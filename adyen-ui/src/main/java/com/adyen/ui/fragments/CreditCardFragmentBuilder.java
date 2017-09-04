@@ -16,11 +16,19 @@ import static com.adyen.core.constants.Constants.DataKeys.PAYMENT_METHOD;
  */
 public class CreditCardFragmentBuilder {
 
+    public enum CvcFieldStatus {
+        REQUIRED,
+        OPTIONAL,
+        NOCVC
+    }
+
     //mandatory fields
     private Amount amount;
     private PaymentMethod paymentMethod;
     private String generationtime;
     private String publicKey;
+    private CvcFieldStatus cvcFieldStatus;
+    private boolean paymentCardScanEnabled;
     private CreditCardFragment.CreditCardInfoListener creditCardInfoListener;
 
     //optional
@@ -75,6 +83,15 @@ public class CreditCardFragmentBuilder {
         return this;
     }
 
+    public CreditCardFragmentBuilder setCVCFieldStatus(final CvcFieldStatus cvcFieldStatus) {
+        this.cvcFieldStatus = cvcFieldStatus;
+        return this;
+    }
+
+    public CreditCardFragmentBuilder setPaymentCardScanEnabled(final boolean paymentCardScanEnabled) {
+        this.paymentCardScanEnabled = paymentCardScanEnabled;
+        return this;
+    }
 
     /**
      * Build the {@link CreditCardFragment}.
@@ -91,6 +108,8 @@ public class CreditCardFragmentBuilder {
         bundle.putString(Constants.DataKeys.PUBLIC_KEY, publicKey);
         bundle.putString(Constants.DataKeys.GENERATION_TIME, generationtime);
         bundle.putSerializable(PAYMENT_METHOD, paymentMethod);
+        bundle.putString(Constants.DataKeys.CVC_FIELD_STATUS, cvcFieldStatus.name());
+        bundle.putBoolean(Constants.DataKeys.PAYMENT_CARD_SCAN_ENABLED, paymentCardScanEnabled);
         bundle.putInt("theme", theme);
 
         fragment.setArguments(bundle);

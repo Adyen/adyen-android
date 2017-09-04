@@ -9,7 +9,6 @@ import android.text.InputFilter;
 import android.text.TextWatcher;
 import android.util.AttributeSet;
 import android.view.View;
-import android.widget.EditText;
 
 import com.adyen.ui.R;
 import com.adyen.ui.utils.AdyenInputValidator;
@@ -30,7 +29,7 @@ public class ExpiryDateEditText extends CheckoutEditText {
         ArrayList<InputFilter> dateFilters = new ArrayList<>();
         dateFilters.add(new InputFilter.LengthFilter(EDIT_TEXT_MAX_LENGTH));
         this.setFilters(dateFilters.toArray(new InputFilter[dateFilters.size()]));
-        this.addTextChangedListener(new ExpiryDateFormatWatcher(this));
+        this.addTextChangedListener(new ExpiryDateFormatWatcher());
 
         setOnFocusChangeListener(new OnFocusChangeListener() {
             @Override
@@ -82,131 +81,78 @@ public class ExpiryDateEditText extends CheckoutEditText {
     }
 
     class ExpiryDateFormatWatcher implements TextWatcher {
+        private final char separatorChar = '/';
 
-        private static final String ZERO = "0";
-        private static final String SEPARATOR = "/";
+        private final String separatorString = String.valueOf(separatorChar);
 
-        private EditText mEditText;
-        private int mLength;
-        private int pos;
-        private int count;
+        private boolean deleted;
 
-        ExpiryDateFormatWatcher(EditText editText) {
-            this.mEditText = editText;
+        @Override
+        public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+            // Nothing to do.
         }
 
         @Override
         public void onTextChanged(CharSequence s, int start, int before, int count) {
-            pos = start;
-            this.count = count;
-        }
-
-        @Override
-        public void beforeTextChanged(CharSequence s, int start, int count, int after) {
-            mLength = s.toString().length();
+            deleted = count == 0;
         }
 
         @Override
         public void afterTextChanged(Editable s) {
+            removeTextChangedListener(this);
 
-            if (count > 1) {
-                s.delete(pos, pos + count);
-                validator.setReady(ExpiryDateEditText.this, false);
-                return;
+            if (s.length() == 1 && s.charAt(0) > '1') {
+                s.insert(0, "0");
             }
 
-            boolean moveCursorToEnd = false;
-            String str = s.toString();
-            int len = s.length();
-
-            //user is deleting a char
-            if (mLength >= len) {
-                validator.setReady(ExpiryDateEditText.this, false);
-                return;
-            }
-
-            String newChar = str.substring(pos, pos + 1);
-
-            //user is trying to add invalid number to month value (number before separator), might result in
-            // 122/17 or 76/17
-            if (len >= 3 && pos < 3) {
-                if (isDigit(str, 2) || Integer.parseInt(str.substring(0, 2)) > 12) {
-                    s.delete(pos, pos + 1);
-                    return;
+            if (s.length() == 2 && !deleted) {
+                if (s.toString().matches("\\d/")) {
+                    s.insert(0, "0");
+                } else if (!s.toString().contains(separatorString)) {
+                    s.append(separatorChar);
                 }
             }
 
-            //Check if user is entering separator, only valid at pos 3
-            if (!isDigit(newChar)) {
-                if (newChar.equals(SEPARATOR)) {
-                    if (pos == 1) {
-                        s.insert(0, ZERO);
-                    } else if (pos == 2) {
-                        //do nothing
-                    } else {
-                        s.delete(pos, pos + 1);
+            for (int i = 0; i < s.length(); i++) {
+                char c = s.charAt(i);
+
+                if (i == 2) {
+                    if (c != separatorChar) {
+                        if (!Character.isDigit(c)) {
+                            s.replace(i, i + 1, separatorString);
+                        } else {
+                            s.insert(i, separatorString);
+
+                            if (deleted) {
+                                int selectionStart = getSelectionStart();
+                                int selectionEnd = getSelectionEnd();
+                                int newSelectionStart = selectionStart - 1 == i ? selectionStart - 1 : selectionStart;
+                                int newSelectionEnd = selectionEnd - 1 == i ? selectionEnd - 1 : selectionEnd;
+                                setSelection(newSelectionStart, newSelectionEnd);
+                            }
+                        }
                     }
                 } else {
-                    s.delete(pos, pos + 1);
-                }
-            } else {
-                //user added a digit, check if result is valid
-                if (len == 1) {
-                    if (!charIsOneOrZero(s.charAt(0))) {
-                        final String newStr = ZERO + str;
-                        s.insert(0, ZERO);
-                        moveCursorToEnd = true;
+                    if (!Character.isDigit(c)) {
+                        s.delete(i, i + 1);
                     }
-                } else if (len == 2) {
-                    if (String.valueOf(s.charAt(s.length() - 1)).equals(SEPARATOR)) {
-                        mEditText.setText(ZERO + str);
-                        moveCursorToEnd = true;
-                    } else if (Integer.parseInt(str.substring(0, 2)) <= 12
-                            && Integer.parseInt(str.substring(0, 2)) > 0) {
-                        s.append(SEPARATOR);
-                        moveCursorToEnd = true;
-                    } else {
-                        s.delete(pos, pos + 1);
-                    }
-                } else if (len == 3) {
-
-                } else if (len == 4) {
-
-                } else if (len == 5) {
-
                 }
             }
 
-            if (moveCursorToEnd) {
-                mEditText.setSelection(mEditText.getText().toString().length());
-            }
+            boolean inputDateValid = isInputDateValid(s.toString());
 
             if (validator != null) {
-                validator.setReady(ExpiryDateEditText.this, isInputDateValid(s.toString()));
+                validator.setReady(ExpiryDateEditText.this, inputDateValid);
             }
 
-            if (isInputDateValid(s.toString())) {
+            if (inputDateValid) {
                 View next = focusSearch(View.FOCUS_RIGHT);
                 if (next != null) {
                     next.requestFocus();
                 }
             }
-        }
 
-        private boolean charIsOneOrZero(char charFromString) {
-            int month = 0;
-            if (Character.isDigit(charFromString)) {
-                month = Integer.parseInt(String.valueOf(charFromString));
-            }
-            return month <= 1;
-        }
-
-        private boolean isDigit(String string) {
-            return string.matches(".*\\d.*");
-        }
-
-        private boolean isDigit(String str, int pos) {
-            return str.substring(pos, pos + 1).matches(".*\\d.*");
+            addTextChangedListener(this);
         }
     }
 

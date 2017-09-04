@@ -1,17 +1,20 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-
     package="com.adyen.ui">
 
-    <application android:allowBackup="true" android:label="@string/app_name" android:supportsRtl="true">
+    <application
+        android:allowBackup="true"
+        android:supportsRtl="true">
 
         <activity
             android:theme="@style/AdyenTheme"
             android:name="com.adyen.ui.activities.CheckoutActivity"
             android:configChanges="orientation|screenSize|keyboardHidden"
             android:launchMode="singleTask" />
+
         <activity
             android:name="com.adyen.ui.activities.RedirectHandlerActivity"
             android:noHistory="false"
+            android:enabled="false"
             android:launchMode="singleTask">
             <intent-filter>
                 <action android:name="android.intent.action.VIEW"/>
@@ -20,18 +23,19 @@
                 <data android:scheme="adyencheckout"/>
             </intent-filter>
         </activity>
+
         <activity
             android:name="com.adyen.ui.activities.TranslucentDialogActivity"
             android:noHistory="true"
             android:launchMode="singleTask"
-            android:theme="@style/AdyenTranslucentActivity"
-            />
+            android:theme="@style/AdyenTranslucentActivity" />
+
         <activity
             android:name="com.adyen.ui.activities.TranslucentLoadingScreenActivity"
             android:noHistory="true"
             android:launchMode="singleTask"
-            android:theme="@style/AdyenTranslucentActivity"
-            />
+            android:theme="@style/AdyenTranslucentActivity" />
+
         <receiver
             android:name="com.adyen.ui.RedirectionHandlerReceiver"
             android:enabled="true"
@@ -40,6 +44,7 @@
                 <action android:name="adyen.core.utils.DISABLE_REDIRECTION_HANDLER" />
             </intent-filter>
         </receiver>
+
     </application>
 
 </manifest>

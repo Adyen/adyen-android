@@ -4,8 +4,12 @@ import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
+import android.content.pm.PackageInfo;
+import android.content.pm.PackageManager;
+import android.content.pm.ResolveInfo;
 import android.net.Uri;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
 import android.support.customtabs.CustomTabsIntent;
 import android.support.v4.app.FragmentActivity;
 import android.support.v4.content.ContextCompat;
@@ -15,6 +19,8 @@ import android.util.Log;
 
 import com.adyen.core.constants.Constants;
 import com.adyen.ui.R;
+
+import java.util.List;
 
 import static com.adyen.core.constants.Constants.PaymentRequest.ADYEN_UI_FINALIZE_INTENT;
 
@@ -27,6 +33,9 @@ import static com.adyen.core.constants.Constants.PaymentRequest.ADYEN_UI_FINALIZ
 public class RedirectHandlerActivity extends FragmentActivity {
 
     private static final String TAG = RedirectHandlerActivity.class.getSimpleName();
+
+    private static final String CHROME_PACKAGE_NAME = "com.android.chrome";
+
     private Context context;
 
     public static final int CHROME_CUSTOM_TABS_REQUEST_CODE = 100;
@@ -38,16 +47,9 @@ public class RedirectHandlerActivity extends FragmentActivity {
         final Intent intent = getIntent();
         final String urlString = intent.getStringExtra("url");
         if (!TextUtils.isEmpty(urlString)) {
-            CustomTabsIntent.Builder builder = new CustomTabsIntent.Builder();
-            builder.setShowTitle(true).build();
-            builder.setToolbarColor(ContextCompat.getColor(this, R.color.white));
-
-            CustomTabsIntent customTabsIntent = builder.build();
-            customTabsIntent.intent.addFlags(Intent.FLAG_ACTIVITY_NO_HISTORY);
-            customTabsIntent.intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
-            customTabsIntent.intent.setData(Uri.parse(urlString));
-            //customTabsIntent.launchUrl(this, Uri.parse(urlString));
-            startActivityForResult(customTabsIntent.intent, CHROME_CUSTOM_TABS_REQUEST_CODE);
+            Intent redirectIntent = createRedirectIntent(Uri.parse(urlString));
+            redirectIntent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+            startActivityForResult(redirectIntent, CHROME_CUSTOM_TABS_REQUEST_CODE);
 
             LocalBroadcastManager.getInstance(getApplicationContext()).registerReceiver(uiFinalizationReceiver,
                     new IntentFilter(ADYEN_UI_FINALIZE_INTENT));
@@ -92,6 +94,50 @@ public class RedirectHandlerActivity extends FragmentActivity {
         returnIntent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
         LocalBroadcastManager.getInstance(context).sendBroadcast(returnIntent);
         finish();
+    }
+
+    private boolean useCustomTabsIntent() {
+        try {
+            PackageInfo packageInfo = getPackageManager().getPackageInfo(CHROME_PACKAGE_NAME, 0);
+            String[] parts = packageInfo.versionName != null ? packageInfo.versionName.split("\\.") : new String[0];
+            int version = Integer.parseInt(parts[0]);
+            return version < 40 || version > 58;
+        } catch (PackageManager.NameNotFoundException e) {
+            // Not installed.
+            return false;
+        } catch (NumberFormatException e) {
+            // Cannot parse version.
+            return false;
+        }
+    }
+
+    @NonNull
+    private Intent createRedirectIntent(@NonNull Uri uri) {
+        CustomTabsIntent customTabsIntent = new CustomTabsIntent.Builder()
+                .setShowTitle(true)
+                .setToolbarColor(ContextCompat.getColor(this, R.color.white))
+                .build();
+        customTabsIntent.intent.setData(uri);
+        Intent result = customTabsIntent.intent;
+
+        List<ResolveInfo> resolveInfoList = getPackageManager().queryIntentActivities(result, 0);
+
+        if (useCustomTabsIntent()) {
+            // Do not prompt user to select from all installed browsers, use ChromeCustomTabs with Chrome by default.
+            for (ResolveInfo resolveInfo : resolveInfoList) {
+                if (CHROME_PACKAGE_NAME.equals(resolveInfo.activityInfo.packageName)) {
+                    result.setPackage(CHROME_PACKAGE_NAME);
+                    result.setClassName(CHROME_PACKAGE_NAME, resolveInfo.activityInfo.name);
+                    break;
+                }
+            }
+        } else if (resolveInfoList.size() > 1) {
+            // Create chooser with Chrome, but don't use CustomTabsIntent.
+            Intent target = new Intent(Intent.ACTION_VIEW, uri);
+            result = Intent.createChooser(target, null);
+        }
+
+        return result;
     }
 
     private BroadcastReceiver uiFinalizationReceiver = new BroadcastReceiver() {

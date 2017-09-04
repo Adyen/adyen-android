@@ -6,6 +6,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.os.Bundle;
+import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentActivity;
 import android.support.v4.app.FragmentManager;
@@ -49,6 +50,8 @@ public class CheckoutActivity extends FragmentActivity {
 
     private static final String TAG = CheckoutActivity.class.getSimpleName();
 
+    private static final String TAG_CREDIT_CARD_FRAGMENT = "CREDIT_CARD_FRAGMENT";
+
     // TODO: Get rid of this intent - dangerous.
     public static final int PAYMENT_METHOD_SELECTION_FRAGMENT = 0;
     public static final int CREDIT_CARD_FRAGMENT = 1;
@@ -70,6 +73,17 @@ public class CheckoutActivity extends FragmentActivity {
     private Context context;
 
     int currentFragment;
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+
+        Fragment fragment = getSupportFragmentManager().findFragmentByTag(TAG_CREDIT_CARD_FRAGMENT);
+
+        if (fragment instanceof CreditCardFragment) {
+            fragment.onActivityResult(requestCode, resultCode, data);
+        }
+    }
 
     @SuppressWarnings("unchecked")
     @Override
@@ -146,7 +160,6 @@ public class CheckoutActivity extends FragmentActivity {
 
         switch (fragmentId) {
             case PAYMENT_METHOD_SELECTION_FRAGMENT: {
-                showActionBar();
                 final ArrayList<PaymentMethod> preferredPaymentMethods = (ArrayList) bundle
                         .getSerializable(PREFERED_PAYMENT_METHODS);
                 final ArrayList<PaymentMethod> paymentMethods = (ArrayList) bundle
@@ -174,19 +187,21 @@ public class CheckoutActivity extends FragmentActivity {
 
 
                 replaceFragment(paymentMethodSelectionFragment);
-                setActionBarTitle(R.string.title_payment_methods);
 
                 hideKeyboard();
                 break;
             }
             case CREDIT_CARD_FRAGMENT: {
-                showActionBar();
                 CreditCardFragment creditCardFragment = new CreditCardFragmentBuilder()
                         .setPaymentMethod((PaymentMethod) intent.getSerializableExtra(PAYMENT_METHOD))
                         .setPublicKey(intent.getStringExtra(Constants.DataKeys.PUBLIC_KEY))
                         .setGenerationtime(intent.getStringExtra(Constants.DataKeys.GENERATION_TIME))
                         .setAmount((Amount) intent.getSerializableExtra(AMOUNT))
                         .setShopperReference(intent.getStringExtra(Constants.DataKeys.SHOPPER_REFERENCE))
+                        .setCVCFieldStatus(
+                                CreditCardFragmentBuilder.CvcFieldStatus.valueOf(intent.getStringExtra(Constants.DataKeys.CVC_FIELD_STATUS))
+                        )
+                        .setPaymentCardScanEnabled(intent.getBooleanExtra(Constants.DataKeys.PAYMENT_CARD_SCAN_ENABLED, false))
                         .setCreditCardInfoListener(new CreditCardFragment.CreditCardInfoListener() {
                             @Override
                             public void onCreditCardInfoProvided(CreditCardPaymentDetails creditCardPaymentDetails) {
@@ -199,14 +214,11 @@ public class CheckoutActivity extends FragmentActivity {
                         .build();
 
 
-                replaceFragment(creditCardFragment);
-                setActionBarTitle(R.string.title_card_details);
+                replaceFragment(creditCardFragment, TAG_CREDIT_CARD_FRAGMENT);
 
                 break;
             }
             case ISSUER_SELECTION_FRAGMENT: {
-                showActionBar();
-
                 final PaymentMethod paymentMethod = (PaymentMethod) bundle.getSerializable(PAYMENT_METHOD);
 
                 IssuerSelectionFragment issuerSelectionFragment = new IssuerSelectionFragmentBuilder()
@@ -225,12 +237,9 @@ public class CheckoutActivity extends FragmentActivity {
 
 
                 replaceFragment(issuerSelectionFragment);
-                setActionBarTitle(R.string.title_issuers);
                 break;
             }
             case SEPA_DIRECT_DEBIT_FRAGMENT: {
-                showActionBar();
-
                 final PaymentMethod paymentMethod = (PaymentMethod) bundle.getSerializable(PAYMENT_METHOD);
 
                 SepaDirectDebitFragment sepaDirectDebitFragment = new SepaDirectDebitFragmentBuilder()
@@ -250,22 +259,18 @@ public class CheckoutActivity extends FragmentActivity {
                         .build();
 
                 replaceFragment(sepaDirectDebitFragment);
-                setActionBarTitle(R.string.title_sepa);
                 break;
             }
             case GIROPAY_FRAGMENT: {
-                showActionBar();
                 final GiropayFragment giropayFragment = new GiropayFragment();
 
                 Bundle giroPayBundle = new Bundle();
                 giroPayBundle.putSerializable(AMOUNT, intent.getSerializableExtra(AMOUNT));
                 giropayFragment.setArguments(giroPayBundle);
                 replaceFragment(giropayFragment);
-                setActionBarTitle(R.string.title_giropay);
                 break;
             }
             case LOADING_SCREEN_FRAGMENT: {
-                hideActionBar();
                 final LoadingScreenFragment loadingScreenFragment = new LoadingScreenFragment();
                 replaceFragment(loadingScreenFragment);
                 break;
@@ -291,22 +296,17 @@ public class CheckoutActivity extends FragmentActivity {
         }
     }
 
-    private void setActionBarTitle(int titleId) {
-        if (getActionBar() != null && getActionBar().getCustomView() != null) {
-            ((TextView) getActionBar().getCustomView().findViewById(R.id.action_bar_title))
-                    .setText(getString(titleId));
+    public void setActionBarTitle(int titleId) {
+        ActionBar actionBar = getActionBar();
+        if (actionBar != null && actionBar.getCustomView() != null) {
+            ((TextView) actionBar.getCustomView().findViewById(R.id.action_bar_title)).setText(getString(titleId));
+            actionBar.show();
         }
     }
 
-    private void hideActionBar() {
+    public void hideActionBar() {
         if (getActionBar() != null) {
             getActionBar().hide();
-        }
-    }
-
-    private void showActionBar() {
-        if (getActionBar() != null) {
-            getActionBar().show();
         }
     }
 
@@ -319,6 +319,10 @@ public class CheckoutActivity extends FragmentActivity {
     }
 
     private void replaceFragment(Fragment fragment) {
+        replaceFragment(fragment, null);
+    }
+
+    private void replaceFragment(Fragment fragment, @Nullable String tag) {
         final String backStateName = fragment.getClass().getName();
         final FragmentManager manager = getSupportFragmentManager();
         boolean fragmentPopped = manager.popBackStackImmediate(backStateName, 0);
@@ -327,7 +331,7 @@ public class CheckoutActivity extends FragmentActivity {
             //fragment not in back stack, create it.
             Log.d(TAG, "Starting fragment: " + backStateName);
             FragmentTransaction ft = manager.beginTransaction();
-            ft.replace(android.R.id.content, fragment);
+            ft.replace(android.R.id.content, fragment, tag);
             ft.addToBackStack(backStateName);
             ft.commit();
         } else {

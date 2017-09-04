@@ -1,12 +1,17 @@
-<manifest xmlns:android="http://schemas.android.com/apk/res/android" package="com.adyen.androidpay">
+<manifest xmlns:android="http://schemas.android.com/apk/res/android"
+    package="com.adyen.androidpay">
 
-    <application android:allowBackup="true" android:label="@string/app_name"
+    <application
+        android:allowBackup="true"
         android:supportsRtl="true">
 
         <!-- Enables the Android Pay API -->
-        <meta-data android:name="com.google.android.gms.wallet.api.enabled" android:value="true" />
+        <meta-data
+            android:name="com.google.android.gms.wallet.api.enabled"
+            android:value="true" />
 
-        <activity android:name=".ui.AndroidPayActivity" />
+        <activity
+            android:name=".ui.AndroidPayActivity" />
 
     </application>
 

@@ -11,6 +11,9 @@ import org.json.JSONObject;
 
 import java.io.Serializable;
 import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Iterator;
+import java.util.Map;
 
 public final class InputDetail implements Serializable {
 
@@ -21,6 +24,8 @@ public final class InputDetail implements Serializable {
     private ArrayList<Item> items = new ArrayList<>();
 
     private ArrayList<InputDetail> inputDetails;
+
+    private Map<String, String> configuration = new HashMap<>();
 
     private InputDetail() {
 
@@ -59,6 +64,16 @@ public final class InputDetail implements Serializable {
         inputDetail.optional = jsonObject.optBoolean("optional", false);
         inputDetail.type = Type.fromString(jsonObject.getString("type"));
         inputDetail.value = jsonObject.optString("value");
+        JSONObject configurationJSON = jsonObject.optJSONObject("configuration");
+        if (configurationJSON != null) {
+            Iterator<String> keys = configurationJSON.keys();
+            while (keys.hasNext()) {
+                String key = keys.next();
+                String value = configurationJSON.getString(key);
+                inputDetail.configuration.put(key, value);
+            }
+        }
+
         if (inputDetail.type == Type.Select) {
             JSONArray jsonItems = jsonObject.getJSONArray("items");
             for (int i = 0; i < jsonItems.length(); i++) {
@@ -103,6 +118,10 @@ public final class InputDetail implements Serializable {
 
     public String getValue() {
         return value;
+    }
+
+    public Map<String, String> getConfiguration() {
+        return configuration;
     }
 
     public enum Type implements Serializable {

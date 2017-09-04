@@ -43,36 +43,36 @@ public class HttpClient<T extends HttpClient> {
     private static final @NonNull String METHOD_POST = "POST";
 
     @Nullable
-    private SSLSocketFactory mSSLSocketFactory;
-    private int mConnectTimeout;
-    private int mReadTimeout;
+    private SSLSocketFactory sslSocketFactory;
+    private int connectTimeout;
+    private int readTimeout;
 
 
     public HttpClient() {
-        mConnectTimeout = (int) TimeUnit.SECONDS.toMillis(60);
-        mReadTimeout = (int) TimeUnit.SECONDS.toMillis(60);
+        connectTimeout = (int) TimeUnit.SECONDS.toMillis(60);
+        readTimeout = (int) TimeUnit.SECONDS.toMillis(60);
 
         try {
-            SSLContext sslContext = SSLContext.getInstance("SSL");
+            SSLContext sslContext = SSLContext.getInstance("TLSv1.2");
             sslContext.init(null, null, null);
-            mSSLSocketFactory = sslContext.getSocketFactory();
+            sslSocketFactory = sslContext.getSocketFactory();
         } catch (final @NonNull NoSuchAlgorithmException | KeyManagementException e) {
             e.printStackTrace();
-            mSSLSocketFactory = null;
+            sslSocketFactory = null;
         }
     }
 
     @NonNull
     @SuppressWarnings("unchecked")
     public T setConnectTimeout(int timeout) {
-        mConnectTimeout = timeout;
+        connectTimeout = timeout;
         return (T) this;
     }
 
     @NonNull
     @SuppressWarnings("unchecked")
     public T setReadTimeout(int timeout) {
-        mReadTimeout = timeout;
+        readTimeout = timeout;
         return (T) this;
     }
 
@@ -130,15 +130,15 @@ public class HttpClient<T extends HttpClient> {
         HttpURLConnection connection = (HttpURLConnection) new URL(url).openConnection();
 
         if (connection instanceof HttpsURLConnection) {
-            if (mSSLSocketFactory == null) {
+            if (sslSocketFactory == null) {
                 throw new SSLException("SSLSocketFactory failed to initialize");
             }
 
-            ((HttpsURLConnection) connection).setSSLSocketFactory(mSSLSocketFactory);
+            ((HttpsURLConnection) connection).setSSLSocketFactory(sslSocketFactory);
         }
 
-        connection.setConnectTimeout(mConnectTimeout);
-        connection.setReadTimeout(mReadTimeout);
+        connection.setConnectTimeout(connectTimeout);
+        connection.setReadTimeout(readTimeout);
 
         if (headers != null && headers.size() > 0) {
             final Set<Map.Entry<String, String>> entries = headers.entrySet();

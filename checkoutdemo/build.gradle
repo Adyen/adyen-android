@@ -37,11 +37,7 @@ dependencies {
     })
     compile "com.android.support:appcompat-v7:${rootProject.supportLibVersion}"
     testCompile "junit:junit:${rootProject.jUnitVersion}"
-    if (publishNonDefault) {
-        compile project(path: ':adyen-core', configuration: 'release')
-        compile project(path: ':adyen-ui', configuration: 'release')
-    } else {
-        compile project(':adyen-core')
-        compile project(':adyen-ui')
-    }
+    compile 'com.adyen.checkout:core:1.6.1'
+    compile 'com.adyen.checkout:ui:1.6.1'
+    compile 'com.adyen.checkout:utils:1.6.1'
 }

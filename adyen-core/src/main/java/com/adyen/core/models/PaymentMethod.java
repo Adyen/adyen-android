@@ -30,6 +30,7 @@ public final class PaymentMethod implements Serializable {
         public static final String IDEAL = "ideal";
         public static final String SEPA_DIRECT_DEBIT = "sepadirectdebit";
         public static final String PAYPAL = "paypal";
+        public static final String BCMC = "bcmc";
     }
 
     private static final long serialVersionUID = 2587948839462686004L;
@@ -90,14 +91,26 @@ public final class PaymentMethod implements Serializable {
             paymentMethod.name = "•••• " + card.getString("number");
             paymentMethod.card = new Card(card);
         }
+        PaymentMethod.Configuration configuration = new Configuration();
         if (!paymentMethodJSON.isNull("configuration")) {
             final JSONObject configurationJson = paymentMethodJSON.getJSONObject("configuration");
-            PaymentMethod.Configuration configuration = new Configuration();
             configuration.merchantId = configurationJson.optString("merchantIdentifier");
             configuration.merchantName = configurationJson.optString("merchantName");
             configuration.publicKey = configurationJson.optString("publicKey").replaceAll("\\r\\n", "");
-            paymentMethod.configuration = configuration;
         }
+
+        if (paymentMethod.inputDetails != null) {
+            for (InputDetail detail : paymentMethod.inputDetails) {
+                Map<String, String> inputDetailConfiguration = detail.getConfiguration();
+                if (inputDetailConfiguration != null && inputDetailConfiguration.size() > 0) {
+                    configuration.cvcOptional = inputDetailConfiguration.get("cvcOptional");
+                    configuration.noCVC = inputDetailConfiguration.get("noCVC");
+                    break;
+                }
+            }
+
+        }
+        paymentMethod.configuration = configuration;
 
         return paymentMethod;
     }
@@ -281,6 +294,8 @@ public final class PaymentMethod implements Serializable {
         private String merchantId;
         private String merchantName;
         private String publicKey;
+        private String cvcOptional;
+        private String noCVC;
 
         private Configuration() { }
 
@@ -296,14 +311,19 @@ public final class PaymentMethod implements Serializable {
             return publicKey;
         }
 
+        public String getCvcOptional() {
+            return cvcOptional;
+        }
+
+        public String getNoCVC() {
+            return noCVC;
+        }
     }
 
     @Override
     public boolean equals(Object obj) {
-        if (!(obj instanceof PaymentMethod)) {
-            return false;
-        }
-        return ((PaymentMethod) obj).getPaymentMethodData().equals(this.paymentMethodData);
+        return (obj instanceof PaymentMethod)
+                && ((PaymentMethod) obj).getPaymentMethodData().equals(this.paymentMethodData);
     }
 
     @Override

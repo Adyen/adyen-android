@@ -1,22 +1,31 @@
 package com.adyen.ui.fragments;
 
 import android.content.Context;
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.text.TextUtils;
 import android.util.Log;
+import android.view.ContextMenu;
 import android.view.ContextThemeWrapper;
 import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.Button;
+import android.widget.ImageButton;
 import android.widget.LinearLayout;
 import android.widget.Spinner;
 import android.widget.TextView;
+import android.widget.Toast;
 
+import com.adyen.cardscan.PaymentCard;
+import com.adyen.cardscan.PaymentCardScanner;
+import com.adyen.cardscan.PaymentCardScannerFactory;
 import com.adyen.core.constants.Constants;
 import com.adyen.core.models.Amount;
 import com.adyen.core.models.PaymentMethod;
@@ -41,20 +50,25 @@ import org.json.JSONObject;
 
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import adyen.com.adyencse.encrypter.ClientSideEncrypter;
 import adyen.com.adyencse.encrypter.exception.EncrypterException;
 
+import static android.view.View.GONE;
+import static android.view.View.VISIBLE;
 import static com.adyen.core.models.paymentdetails.CreditCardPaymentDetails.INSTALLMENTS;
 
 /**
  * Fragment for collecting {@link PaymentDetails} for credit card payments.
  * Should be instantiated via {@link CreditCardFragmentBuilder}.
  */
-public class CreditCardFragment extends Fragment {
+public class CreditCardFragment extends Fragment implements CreditCardEditText.CVCFieldStatusListener, PaymentCardScanner.Listener {
 
     private static final String TAG = CreditCardFragment.class.getSimpleName();
+    private static final String TAG_LOADING_SCREEN_FRAGMENT = LoadingScreenFragment.class.getSimpleName();
     private CreditCardInfoListener creditCardInfoListener;
     private boolean oneClick;
     private boolean nameRequired;
@@ -65,13 +79,20 @@ public class CreditCardFragment extends Fragment {
     private String generationTime;
 
     private CreditCardEditText creditCardNoView;
+    private ImageButton scanCardButton;
     private ExpiryDateEditText expiryDateView;
     private CVCEditText cvcView;
     private CardHolderEditText cardHolderEditText;
     private CheckoutCheckBox saveCardCheckBox;
     private Spinner installmentsSpinner;
 
+    private LinearLayout cvcLayout;
+
+    private CreditCardFragmentBuilder.CvcFieldStatus cvcFieldStatus = CreditCardFragmentBuilder.CvcFieldStatus.REQUIRED;
+
     private int theme;
+
+    private List<PaymentCardScanner> paymentCardScanners;
 
     /**
      * Use {@link CreditCardFragmentBuilder} instead.
@@ -87,7 +108,7 @@ public class CreditCardFragment extends Fragment {
         void onCreditCardInfoProvided(CreditCardPaymentDetails creditCardPaymentDetails);
     }
 
-     void setCreditCardInfoListener(@NonNull final CreditCardInfoListener creditCardInfoListener) {
+    void setCreditCardInfoListener(@NonNull final CreditCardInfoListener creditCardInfoListener) {
         this.creditCardInfoListener = creditCardInfoListener;
     }
 
@@ -100,6 +121,7 @@ public class CreditCardFragment extends Fragment {
         shopperReference = args.getString(Constants.DataKeys.SHOPPER_REFERENCE);
         publicKey = args.getString(Constants.DataKeys.PUBLIC_KEY);
         generationTime = args.getString(Constants.DataKeys.GENERATION_TIME);
+        cvcFieldStatus = CreditCardFragmentBuilder.CvcFieldStatus.valueOf(args.getString(Constants.DataKeys.CVC_FIELD_STATUS));
 
         for (InputDetail inputDetail : paymentMethod.getInputDetails()) {
             if (inputDetail.getKey().equals("cardHolderName")) {
@@ -112,8 +134,92 @@ public class CreditCardFragment extends Fragment {
     }
 
     @Override
+    public void onScanStarted(@NonNull PaymentCardScanner paymentCardScanner) {
+        // Do nothing.
+    }
+
+    @Override
+    public void onScanCompleted(@NonNull PaymentCardScanner paymentCardScanner, @NonNull PaymentCard paymentCard) {
+        creditCardNoView.setText(paymentCard.getCardNumber());
+
+        Integer expiryMonth = paymentCard.getExpiryMonth();
+        Integer expiryYear = paymentCard.getExpiryYear();
+
+        if (expiryMonth != null && expiryYear != null) {
+            expiryDateView.setText(expiryMonth + "/" + expiryYear);
+        }
+
+        cvcView.setText(paymentCard.getSecurityCode());
+    }
+
+    @Override
+    public void onScanError(@NonNull PaymentCardScanner paymentCardScanner, @Nullable Throwable error) {
+        String errorMessage = error != null ? error.getLocalizedMessage() : null;
+
+        if (!TextUtils.isEmpty(errorMessage)) {
+            Toast.makeText(getContext(), errorMessage, Toast.LENGTH_SHORT).show();
+        }
+    }
+
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+
+        for (PaymentCardScanner paymentCardScanner : paymentCardScanners) {
+            paymentCardScanner.onActivityResult(requestCode, resultCode, data);
+        }
+    }
+
+    @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
+        paymentCardScanners = new ArrayList<>();
+
+        if (getArguments().getBoolean(Constants.DataKeys.PAYMENT_CARD_SCAN_ENABLED)) {
+            PaymentCardScannerFactory factory = PaymentCardScannerFactory.Loader.getPaymentCardScannerFactory(getContext());
+
+            if (factory != null) {
+                paymentCardScanners.addAll(factory.getPaymentCardScanners(getActivity()));
+            }
+
+            for (PaymentCardScanner paymentCardScanner : paymentCardScanners) {
+                paymentCardScanner.setListener(this);
+            }
+
+        }
+    }
+
+    @Override
+    public void onCreateContextMenu(ContextMenu menu, View v, ContextMenu.ContextMenuInfo menuInfo) {
+        super.onCreateContextMenu(menu, v, menuInfo);
+
+        if (v == scanCardButton) {
+            int size = paymentCardScanners.size();
+
+            if (size == 1) {
+                PaymentCardScanner paymentCardScanner = paymentCardScanners.get(0);
+                paymentCardScanner.startScan();
+            } else if (size > 1) {
+                for (int itemId = 0; itemId < size; itemId++) {
+                    PaymentCardScanner paymentCardScanner = paymentCardScanners.get(itemId);
+                    menu.add(Menu.NONE, itemId, Menu.NONE, paymentCardScanner.getDisplayDescription());
+                }
+            }
+        }
+    }
+
+    @Override
+    public boolean onContextItemSelected(MenuItem item) {
+        int index = item.getItemId();
+
+        if (index >= 0 && index < paymentCardScanners.size()) {
+            PaymentCardScanner paymentCardScanner = paymentCardScanners.get(index);
+            paymentCardScanner.startScan();
+            return true;
+        } else {
+            return super.onContextItemSelected(item);
+        }
     }
 
     @Override
@@ -126,21 +232,33 @@ public class CreditCardFragment extends Fragment {
         fragmentView = localInflater.inflate(R.layout.credit_card_fragment, container, false);
 
         creditCardNoView = ((CreditCardEditText) fragmentView.findViewById(R.id.adyen_credit_card_no));
+        scanCardButton = (ImageButton) fragmentView.findViewById(R.id.scan_card_button);
+        scanCardButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                scanCardButton.showContextMenu();
+            }
+        });
+        if (paymentCardScanners.size() == 1) {
+            scanCardButton.setImageDrawable(paymentCardScanners.get(0).getDisplayIcon());
+        }
+        registerForContextMenu(scanCardButton);
+        scanCardButton.setVisibility(paymentCardScanners.isEmpty() ? View.GONE : View.VISIBLE);
         expiryDateView = ((ExpiryDateEditText) fragmentView.findViewById(R.id.adyen_credit_card_exp_date));
         cvcView = ((CVCEditText) fragmentView.findViewById(R.id.adyen_credit_card_cvc));
-
+        cvcLayout = ((LinearLayout) fragmentView.findViewById(R.id.adyen_cvc_layout));
 
         cardHolderEditText = ((CardHolderEditText) fragmentView.findViewById(R.id.credit_card_holder_name));
         if (nameRequired) {
             final LinearLayout cardHolderLayout = ((LinearLayout)
                     fragmentView.findViewById(R.id.card_holder_name_layout));
-            cardHolderLayout.setVisibility(View.VISIBLE);
+            cardHolderLayout.setVisibility(VISIBLE);
         }
 
         final Collection<InputDetail> inputDetails = paymentMethod.getInputDetails();
         for (final InputDetail inputDetail : inputDetails) {
             if (INSTALLMENTS.equals(inputDetail.getKey())) {
-                fragmentView.findViewById(R.id.card_installments_area).setVisibility(View.VISIBLE);
+                fragmentView.findViewById(R.id.card_installments_area).setVisibility(VISIBLE);
                 final List<InputDetail.Item> installmentOptions = inputDetail.getItems();
                 installmentsSpinner = (Spinner) fragmentView.findViewById(R.id.installments_spinner);
                 final InstallmentOptionsAdapter installmentOptionsAdapter = new InstallmentOptionsAdapter(getActivity(), installmentOptions);
@@ -167,24 +285,28 @@ public class CreditCardFragment extends Fragment {
         creditCardNoView.setLogoUrl(paymentMethod.getLogoUrl());
         creditCardNoView.initializeLogo();
 
-        final List<String> allowedCardTypes = new ArrayList<>();
-        final List<PaymentMethod> memberPaymentMethods = paymentMethod.getMemberPaymentMethods();
-        if (memberPaymentMethods != null) {
-            for (final PaymentMethod memberPaymentMethod : memberPaymentMethods) {
-                allowedCardTypes.add(memberPaymentMethod.getType());
-            }
-        }
+        final Map<String, CreditCardFragmentBuilder.CvcFieldStatus> allowedCardTypes = getAllowedCardTypes();
+
         creditCardNoView.setAllowedCardTypes(allowedCardTypes);
 
         expiryDateView.setValidator(validator);
-        cvcView.setValidator(validator);
+
+        if (cvcFieldStatus == CreditCardFragmentBuilder.CvcFieldStatus.NOCVC) {
+            cvcView.setOptional(true);
+            cvcLayout.setVisibility(GONE);
+        } else {
+            cvcLayout.setVisibility(VISIBLE);
+            creditCardNoView.addCVCFieldStatusListener(this);
+            cvcView.setValidator(validator);
+        }
+
         if (nameRequired) {
             cardHolderEditText.setValidator(validator);
         }
 
         saveCardCheckBox = (CheckoutCheckBox) fragmentView.findViewById(R.id.save_card_checkbox);
         if (!StringUtils.isEmptyOrNull(shopperReference)) {
-            fragmentView.findViewById(R.id.layout_save_card).setVisibility(View.VISIBLE);
+            fragmentView.findViewById(R.id.layout_save_card).setVisibility(VISIBLE);
             fragmentView.findViewById(R.id.layout_click_area_save_card).setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
@@ -193,7 +315,7 @@ public class CreditCardFragment extends Fragment {
                 }
             });
         } else {
-            fragmentView.findViewById(R.id.layout_save_card).setVisibility(View.GONE);
+            fragmentView.findViewById(R.id.layout_save_card).setVisibility(GONE);
         }
 
         collectDataButton.setOnClickListener(new View.OnClickListener() {
@@ -217,10 +339,10 @@ public class CreditCardFragment extends Fragment {
                     Log.w(TAG, "No listener provided.");
                 }
 
-                checkoutTextView.setVisibility(View.GONE);
+                checkoutTextView.setVisibility(GONE);
                 final ThreeDotsLoadingView progressBar = ((ThreeDotsLoadingView)
                         fragmentView.findViewById(R.id.processing_progress_bar));
-                progressBar.setVisibility(View.VISIBLE);
+                progressBar.setVisibility(VISIBLE);
 
                 cvcView.setEnabled(false);
                 creditCardNoView.setEnabled(false);
@@ -236,7 +358,54 @@ public class CreditCardFragment extends Fragment {
             }
         });
 
+        if (getActivity() instanceof CheckoutActivity) {
+            ((CheckoutActivity) getActivity()).setActionBarTitle(R.string.title_card_details);
+        }
         return fragmentView;
+    }
+
+    @NonNull
+    private Map<String, CreditCardFragmentBuilder.CvcFieldStatus> getAllowedCardTypes() {
+        final Map<String, CreditCardFragmentBuilder.CvcFieldStatus> allowedCardTypes = new HashMap<>();
+        final List<PaymentMethod> memberPaymentMethods = paymentMethod.getMemberPaymentMethods();
+        if (memberPaymentMethods != null) {
+            for (final PaymentMethod memberPaymentMethod : memberPaymentMethods) {
+                if (memberPaymentMethod.getInputDetails() != null && "true".equals(memberPaymentMethod.getConfiguration().getNoCVC())) {
+                    allowedCardTypes.put(memberPaymentMethod.getType(), CreditCardFragmentBuilder.CvcFieldStatus.NOCVC);
+                } else if (memberPaymentMethod.getConfiguration() != null && "true".equals(memberPaymentMethod.getConfiguration().getCvcOptional())) {
+                    allowedCardTypes.put(memberPaymentMethod.getType(), CreditCardFragmentBuilder.CvcFieldStatus.OPTIONAL);
+                } else {
+                    allowedCardTypes.put(memberPaymentMethod.getType(), CreditCardFragmentBuilder.CvcFieldStatus.REQUIRED);
+                }
+            }
+        } else {
+            if ("true".equals(paymentMethod.getConfiguration().getNoCVC())) {
+                allowedCardTypes.put(paymentMethod.getType(), CreditCardFragmentBuilder.CvcFieldStatus.NOCVC);
+            } else if ("true".equals(paymentMethod.getConfiguration().getCvcOptional())) {
+                allowedCardTypes.put(paymentMethod.getType(), CreditCardFragmentBuilder.CvcFieldStatus.OPTIONAL);
+            } else {
+                allowedCardTypes.put(paymentMethod.getType(), CreditCardFragmentBuilder.CvcFieldStatus.REQUIRED);
+            }
+        }
+        return allowedCardTypes;
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+
+        for (PaymentCardScanner paymentCardScanner : paymentCardScanners) {
+            paymentCardScanner.onResume();
+        }
+    }
+
+    @Override
+    public void onPause() {
+        super.onPause();
+
+        for (PaymentCardScanner paymentCardScanner : paymentCardScanners) {
+            paymentCardScanner.onPause();
+        }
     }
 
     private String getToken() {
@@ -261,11 +430,8 @@ public class CreditCardFragment extends Fragment {
             sensitiveData.put("expiryYear", expiryDateView.getFullYear());
             sensitiveData.put("generationtime", generationTime);
             sensitiveData.put("cvc", cvcView.getCVC());
-
             ClientSideEncrypter encrypter = new ClientSideEncrypter(publicKey);
-            String encryptedData = encrypter.encrypt(sensitiveData.toString());
-
-            return encryptedData;
+            return encrypter.encrypt(sensitiveData.toString());
         } catch (JSONException e) {
             Log.e(TAG, "JSON Exception occurred while generating token.", e);
         } catch (EncrypterException e) {
@@ -292,6 +458,22 @@ public class CreditCardFragment extends Fragment {
         creditCardNoView.requestFocus();
         InputMethodManager imm = (InputMethodManager) getContext().getSystemService(Context.INPUT_METHOD_SERVICE);
         imm.showSoftInput(creditCardNoView, InputMethodManager.SHOW_IMPLICIT);
+    }
+
+    @Override
+    public void onCVCFieldStatusChanged(final CreditCardFragmentBuilder.CvcFieldStatus cvcFieldStatus) {
+        this.cvcFieldStatus = cvcFieldStatus;
+
+        if (cvcFieldStatus == CreditCardFragmentBuilder.CvcFieldStatus.NOCVC) {
+            cvcLayout.setVisibility(GONE);
+        } else {
+            cvcLayout.setVisibility(VISIBLE);
+            if (cvcFieldStatus == CreditCardFragmentBuilder.CvcFieldStatus.OPTIONAL) {
+                cvcView.setOptional(true);
+            } else {
+                cvcView.setOptional(false);
+            }
+        }
     }
 
 }

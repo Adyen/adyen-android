@@ -26,12 +26,15 @@ import com.adyen.core.services.PaymentMethodService;
 import com.adyen.ui.activities.CheckoutActivity;
 import com.adyen.ui.activities.RedirectHandlerActivity;
 import com.adyen.ui.activities.TranslucentDialogActivity;
+import com.adyen.ui.fragments.CreditCardFragmentBuilder;
 
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 
+import static com.adyen.core.constants.Constants.DataKeys.CVC_FIELD_STATUS;
 import static com.adyen.core.constants.Constants.DataKeys.GENERATION_TIME;
+import static com.adyen.core.constants.Constants.DataKeys.PAYMENT_CARD_SCAN_ENABLED;
 import static com.adyen.core.constants.Constants.DataKeys.PUBLIC_KEY;
 import static com.adyen.core.constants.Constants.DataKeys.SHOPPER_REFERENCE;
 import static com.adyen.core.constants.Constants.PaymentRequest.REDIRECT_HANDLED_INTENT;
@@ -140,6 +143,18 @@ public class DefaultPaymentRequestDetailsListener implements PaymentRequestDetai
             intent.putExtra(SHOPPER_REFERENCE, paymentRequest.getShopperReference());
             intent.putExtra(PUBLIC_KEY, paymentRequest.getPublicKey());
             intent.putExtra(GENERATION_TIME, paymentRequest.getGenerationTime());
+            intent.putExtra(CVC_FIELD_STATUS, CreditCardFragmentBuilder.CvcFieldStatus.REQUIRED.name());
+            intent.putExtra(PAYMENT_CARD_SCAN_ENABLED, true);
+            context.startActivity(intent);
+        } else if (paymentRequest.getPaymentMethod().getType().equals(PaymentMethod.Type.BCMC)) {
+            final Intent intent = new Intent(context, CheckoutActivity.class);
+            intent.putExtra(FRAGMENT, CheckoutActivity.CREDIT_CARD_FRAGMENT);
+            intent.putExtra(CheckoutActivity.PAYMENT_METHOD, paymentRequest.getPaymentMethod());
+            intent.putExtra(AMOUNT, paymentRequest.getAmount());
+            intent.putExtra(SHOPPER_REFERENCE, paymentRequest.getShopperReference());
+            intent.putExtra(PUBLIC_KEY, paymentRequest.getPublicKey());
+            intent.putExtra(GENERATION_TIME, paymentRequest.getGenerationTime());
+            intent.putExtra(CVC_FIELD_STATUS, CreditCardFragmentBuilder.CvcFieldStatus.NOCVC.name());
             context.startActivity(intent);
         } else if (paymentRequest.getPaymentMethod().getType().equals(PaymentMethod.Type.PAYPAL)) {
             //We can set "storeDetails" to true if we want to set up a recurring contract.

@@ -39,9 +39,14 @@ public class MainActivity extends FragmentActivity implements PaymentDataEntryFr
     private static final String SETUP = "setup";
     private static final String VERIFY = "verify";
 
-    private String merchantServerUrl = ""; // Add the URL for your server here
-    private String merchantApiSecretKey = ""; // Add the api secret key for your server here
-    private String merchantApiHeaderKey = ""; // Add the header key for api secret key here
+    // Add the URL for your server here; or you can use the demo server of Adyen: https://checkoutshopper-test.adyen.com/checkoutshopper/demoserver/
+    private String merchantServerUrl = "";
+
+    // Add the api secret key for your server here; you can retrieve this key from customer area.
+    private String merchantApiSecretKey = "";
+
+    // Add the header key for merchant server api secret key here; e.g. "x-demo-server-api-key"
+    private String merchantApiHeaderKeyForApiSecretKey = "";
 
     private PaymentRequest paymentRequest;
     private final PaymentRequestListener paymentRequestListener = new PaymentRequestListener() {
@@ -56,7 +61,7 @@ public class MainActivity extends FragmentActivity implements PaymentDataEntryFr
 
             final Map<String, String> headers = new HashMap<>();
             headers.put("Content-Type", "application/json; charset=UTF-8");
-            headers.put(merchantApiHeaderKey, merchantApiSecretKey);
+            headers.put(merchantApiHeaderKeyForApiSecretKey, merchantApiSecretKey);
 
             AsyncHttpClient.post(merchantServerUrl + SETUP, headers, getSetupDataString(token), new HttpResponseCallback() {
                 @Override
@@ -112,9 +117,13 @@ public class MainActivity extends FragmentActivity implements PaymentDataEntryFr
         Log.d(TAG, "onPaymentRequested");
         merchantServerUrl = TextUtils.isEmpty(merchantServerUrl) ? BuildConfig.SERVER_URL : merchantServerUrl;
         merchantApiSecretKey = TextUtils.isEmpty(merchantApiSecretKey) ? BuildConfig.API_KEY : merchantApiSecretKey;
-        merchantApiHeaderKey = TextUtils.isEmpty(merchantApiHeaderKey) ? BuildConfig.API_HEADER_KEY : merchantApiHeaderKey;
+        merchantApiHeaderKeyForApiSecretKey = TextUtils.isEmpty(merchantApiHeaderKeyForApiSecretKey)
+                ? BuildConfig.API_HEADER_KEY
+                : merchantApiHeaderKeyForApiSecretKey;
 
-        if (TextUtils.isEmpty(merchantApiSecretKey) || TextUtils.isEmpty(merchantApiHeaderKey) || TextUtils.isEmpty(merchantServerUrl)) {
+        if (TextUtils.isEmpty(merchantApiSecretKey)
+                || TextUtils.isEmpty(merchantApiHeaderKeyForApiSecretKey)
+                || TextUtils.isEmpty(merchantServerUrl)) {
             Toast.makeText(getApplicationContext(), "Server parameters have not been configured correctly", Toast.LENGTH_SHORT).show();
             return;
         }
@@ -172,7 +181,7 @@ public class MainActivity extends FragmentActivity implements PaymentDataEntryFr
 
         final Map<String, String> headers = new HashMap<>();
         headers.put("Content-Type", "application/json; charset=UTF-8");
-        headers.put(merchantApiHeaderKey, merchantApiSecretKey);
+        headers.put(merchantApiHeaderKeyForApiSecretKey, merchantApiSecretKey);
 
         AsyncHttpClient.post(merchantServerUrl + VERIFY, headers, verifyString, new HttpResponseCallback() {
             String resultString = "";

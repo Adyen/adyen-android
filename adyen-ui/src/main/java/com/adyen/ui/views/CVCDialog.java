@@ -22,7 +22,7 @@ import com.adyen.core.utils.AmountUtil;
 import com.adyen.core.utils.StringUtils;
 import com.adyen.ui.R;
 import com.adyen.ui.utils.AdyenInputValidator;
-import com.adyen.ui.utils.CardType;
+import com.adyen.utils.CardType;
 
 public class CVCDialog extends Dialog {
 

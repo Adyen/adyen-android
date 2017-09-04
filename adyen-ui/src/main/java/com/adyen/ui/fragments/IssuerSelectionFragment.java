@@ -84,6 +84,9 @@ public class IssuerSelectionFragment extends Fragment {
             }
         });
 
+        if (getActivity() instanceof CheckoutActivity) {
+            ((CheckoutActivity) getActivity()).setActionBarTitle(R.string.title_issuers);
+        }
         return fragmentView;
     }
 
