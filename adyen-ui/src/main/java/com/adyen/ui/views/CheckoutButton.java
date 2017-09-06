@@ -1,12 +1,10 @@
 package com.adyen.ui.views;
 
-import android.annotation.TargetApi;
 import android.content.Context;
-import android.os.Build;
+import android.support.v7.widget.AppCompatButton;
 import android.util.AttributeSet;
-import android.widget.Button;
 
-public class CheckoutButton extends Button {
+public class CheckoutButton extends AppCompatButton {
 
     public static final int FULLY_OPAQUE = 255;
     public static final int TRANSPARENT = 96;
@@ -21,15 +19,6 @@ public class CheckoutButton extends Button {
 
     public CheckoutButton(Context context, AttributeSet attrs, int defStyleAttr) {
         super(context, attrs, defStyleAttr);
-    }
-
-    @TargetApi(Build.VERSION_CODES.LOLLIPOP)
-    public CheckoutButton(Context context, AttributeSet attrs, int defStyleAttr, int defStyleRes) {
-        super(context, attrs, defStyleAttr, defStyleRes);
-    }
-
-    private void init() {
-
     }
 
     @Override

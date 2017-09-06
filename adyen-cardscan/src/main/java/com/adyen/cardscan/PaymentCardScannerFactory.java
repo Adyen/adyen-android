@@ -44,7 +44,7 @@ public interface PaymentCardScannerFactory {
             try {
                 String packageName = context.getPackageName();
                 ApplicationInfo applicationInfo = context.getPackageManager().getApplicationInfo(packageName, PackageManager.GET_META_DATA);
-                String factoryClass = applicationInfo.metaData.getString(MANIFEST_KEY);
+                String factoryClass = (applicationInfo.metaData != null) ? applicationInfo.metaData.getString(MANIFEST_KEY) : null;
 
                 if (factoryClass != null) {
                     return (PaymentCardScannerFactory) Class.forName(factoryClass).newInstance();

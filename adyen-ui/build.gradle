@@ -63,7 +63,7 @@ dependencies {
     } else {
         provided group: 'com.adyen.checkout', name: 'core', version: "${rootProject.versionName}"
         provided group: 'com.adyen.checkout', name: 'utils', version: "${rootProject.versionName}"
-        provided group: 'com.adyen.cardscan', name: 'cardscan', version: "${rootProject.versionName}"
+        provided group: 'com.adyen.checkout', name: 'cardscan', version: "${rootProject.versionName}"
     }
 
 }

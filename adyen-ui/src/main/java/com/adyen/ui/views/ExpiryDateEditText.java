@@ -81,9 +81,9 @@ public class ExpiryDateEditText extends CheckoutEditText {
     }
 
     class ExpiryDateFormatWatcher implements TextWatcher {
-        private final char separatorChar = '/';
+        private static final char SEPARATOR_CHAR = '/';
 
-        private final String separatorString = String.valueOf(separatorChar);
+        private final String separatorString = String.valueOf(SEPARATOR_CHAR);
 
         private boolean deleted;
 
@@ -109,7 +109,7 @@ public class ExpiryDateEditText extends CheckoutEditText {
                 if (s.toString().matches("\\d/")) {
                     s.insert(0, "0");
                 } else if (!s.toString().contains(separatorString)) {
-                    s.append(separatorChar);
+                    s.append(SEPARATOR_CHAR);
                 }
             }
 
@@ -117,7 +117,7 @@ public class ExpiryDateEditText extends CheckoutEditText {
                 char c = s.charAt(i);
 
                 if (i == 2) {
-                    if (c != separatorChar) {
+                    if (c != SEPARATOR_CHAR) {
                         if (!Character.isDigit(c)) {
                             s.replace(i, i + 1, separatorString);
                         } else {

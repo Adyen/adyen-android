@@ -30,8 +30,8 @@ ext {
 
     minSdkVersion = 15
     targetSdkVersion = 25
-    versionCode = 7
-    versionName = "1.7.0"
+    versionCode = 8
+    versionName = "1.7.1"
 
     release_debuggable = false
     release_minifyEnabled = false

@@ -109,9 +109,9 @@ public class CreditCardEditText extends CheckoutEditText {
     }
 
     private class CreditCardInputFormatWatcher implements TextWatcher {
-        private final char spacingChar = ' ';
+        private static final char SPACING_CHAR = ' ';
 
-        private final String spacingString = String.valueOf(spacingChar);
+        private final String spacingString = String.valueOf(SPACING_CHAR);
 
         private boolean deleted;
 
@@ -136,7 +136,7 @@ public class CreditCardEditText extends CheckoutEditText {
                 char c = s.charAt(i);
 
                 if (i == nextGroupStart) {
-                    if (c != spacingChar) {
+                    if (c != SPACING_CHAR) {
                         if (!Character.isDigit(c)) {
                             s.replace(i, i + 1, spacingString);
                         } else {
