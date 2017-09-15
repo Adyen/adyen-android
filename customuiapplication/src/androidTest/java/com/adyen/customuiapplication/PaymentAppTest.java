@@ -1,19 +1,23 @@
 package com.adyen.customuiapplication;
 
+import android.support.test.espresso.matcher.BoundedMatcher;
 import android.support.test.filters.LargeTest;
 import android.support.test.rule.ActivityTestRule;
 import android.support.test.runner.AndroidJUnit4;
 
 import com.adyen.core.models.Payment;
+import com.adyen.core.models.PaymentMethod;
 import com.adyen.testutils.EspressoTestUtils;
 import com.adyen.testutils.RetryTest;
 
+import org.hamcrest.Matcher;
 import org.junit.After;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 
 import static android.support.test.InstrumentationRegistry.getInstrumentation;
+import static android.support.test.espresso.Espresso.onData;
 import static android.support.test.espresso.Espresso.onView;
 import static android.support.test.espresso.action.ViewActions.clearText;
 import static android.support.test.espresso.action.ViewActions.click;
@@ -75,7 +79,9 @@ public class PaymentAppTest {
                              final String cardCVC, final String expectedResult) throws Exception {
         goToPaymentListFragment(amountValue, amountCurrency);
 
-        onView(withText(equalToIgnoringCase(cardType))).perform(click());
+        onData(paymentMethodWithName(cardType))
+                .inAdapterView(withId(android.R.id.list))
+                .perform(click());
         onView(withId(R.id.credit_card_no)).perform(clearText(), typeText(cardNumber),
                 closeSoftKeyboard());
         onView(withId(R.id.credit_card_exp_date)).perform(typeText(cardExpiryDate),
@@ -98,4 +104,19 @@ public class PaymentAppTest {
         EspressoTestUtils.waitForView(R.id.activity_payment_method_selection);
     }
 
+    public static Matcher<Object> paymentMethodWithName(final String name) {
+        final Matcher matcher = equalToIgnoringCase(name);
+
+        return new BoundedMatcher<Object, PaymentMethod>(PaymentMethod.class) {
+            @Override
+            public void describeTo(org.hamcrest.Description description) {
+                matcher.describeTo(description);
+            }
+
+            @Override
+            protected boolean matchesSafely(PaymentMethod paymentMethod) {
+                return matcher.matches(paymentMethod.getName());
+            }
+        };
+    }
 }

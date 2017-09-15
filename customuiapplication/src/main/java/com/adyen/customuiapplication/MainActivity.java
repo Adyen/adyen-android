@@ -286,7 +286,7 @@ public class MainActivity extends FragmentActivity implements
             amount.put("value", paymentSetupRequest.getAmount().getValue());
             amount.put("currency", paymentSetupRequest.getAmount().getCurrency());
             jsonObject.put("amount", amount);
-            jsonObject.put("channel", "android");
+            jsonObject.put("channel", "Android");
             jsonObject.put("reference", "Android Checkout SDK Payment: " + System.currentTimeMillis());
             jsonObject.put("shopperReference", "example-customer@exampleprovider");
         } catch (final JSONException jsonException) {

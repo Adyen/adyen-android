@@ -37,8 +37,8 @@ dependencies {
     })
     compile "com.android.support:appcompat-v7:${rootProject.supportLibVersion}"
     testCompile "junit:junit:${rootProject.jUnitVersion}"
-    compile 'com.adyen.checkout:core:1.7.1'
-    compile 'com.adyen.checkout:ui:1.7.1'
-    compile 'com.adyen.checkout:utils:1.7.1'
-    compile 'com.adyen.checkout:cardscan:1.7.1'
+    compile 'com.adyen.checkout:core:1.8.1'
+    compile 'com.adyen.checkout:ui:1.8.1'
+    compile 'com.adyen.checkout:utils:1.8.1'
+    compile 'com.adyen.checkout:cardscan:1.8.1'
 }

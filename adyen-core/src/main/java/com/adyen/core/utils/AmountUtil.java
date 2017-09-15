@@ -133,7 +133,15 @@ public final class AmountUtil {
     }
 
     private static String getCurrencySymbol(final String currencyCode) {
-        return Currency.getInstance(currencyCode).getSymbol();
+        Currency currency = null;
+
+        try {
+            currency = Currency.getInstance(currencyCode);
+        } catch (IllegalArgumentException e) {
+            // Unknown currency code, ignore.
+        }
+
+        return currency != null ? currency.getSymbol() : currencyCode;
     }
 
     private static int getExponent(@NonNull String currencyCode) {
@@ -172,6 +180,9 @@ public final class AmountUtil {
             return 0;
         }
         if ("BYN".equals(currencyCode)) {
+            return 2;
+        }
+        if ("RSD".equals(currencyCode)) {
             return 2;
         }
 

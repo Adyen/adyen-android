@@ -212,7 +212,24 @@ public final class PaymentMethod implements Serializable {
      * @return True if a redirect is required, otherwise false
      */
     public boolean isRedirectMethod() {
+        // TODO: 08/09/2017 PayPal has input, but you cannot set it in the default UI.
+        if (Type.PAYPAL.equals(type)) {
+            return true;
+        }
+
         return (this.inputDetails == null || this.inputDetails.isEmpty()) && !this.isOneClick;
+    }
+
+    public boolean requiresInput() {
+        if (this.inputDetails != null) {
+            for (InputDetail inputDetail : this.inputDetails) {
+                if (!inputDetail.isOptional()) {
+                    return true;
+                }
+            }
+        }
+
+        return false;
     }
 
     /**

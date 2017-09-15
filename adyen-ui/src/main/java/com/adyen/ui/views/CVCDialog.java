@@ -104,6 +104,7 @@ public class CVCDialog extends Dialog {
 
                     backButtonEnabled = false;
 
+                    findViewById(R.id.dialog_view).setVisibility(View.INVISIBLE);
                     findViewById(R.id.progress_bar).setVisibility(View.VISIBLE);
                 }
             }

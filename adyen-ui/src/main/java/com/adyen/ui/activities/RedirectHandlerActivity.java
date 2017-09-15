@@ -19,6 +19,7 @@ import android.util.Log;
 
 import com.adyen.core.constants.Constants;
 import com.adyen.ui.R;
+import com.adyen.utils.RedirectUtil;
 
 import java.util.List;
 
@@ -47,7 +48,7 @@ public class RedirectHandlerActivity extends FragmentActivity {
         final Intent intent = getIntent();
         final String urlString = intent.getStringExtra("url");
         if (!TextUtils.isEmpty(urlString)) {
-            Intent redirectIntent = createRedirectIntent(Uri.parse(urlString));
+            Intent redirectIntent = createRedirectIntent(urlString);
             redirectIntent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
             startActivityForResult(redirectIntent, CHROME_CUSTOM_TABS_REQUEST_CODE);
 
@@ -112,29 +113,39 @@ public class RedirectHandlerActivity extends FragmentActivity {
     }
 
     @NonNull
-    private Intent createRedirectIntent(@NonNull Uri uri) {
-        CustomTabsIntent customTabsIntent = new CustomTabsIntent.Builder()
-                .setShowTitle(true)
-                .setToolbarColor(ContextCompat.getColor(this, R.color.white))
-                .build();
-        customTabsIntent.intent.setData(uri);
-        Intent result = customTabsIntent.intent;
+    private Intent createRedirectIntent(@NonNull String urlString) {
+        Intent result;
 
-        List<ResolveInfo> resolveInfoList = getPackageManager().queryIntentActivities(result, 0);
+        Uri uri = Uri.parse(urlString);
+        RedirectUtil.ResolveResult resolveResult = RedirectUtil.determineResolveResult(this, uri);
 
-        if (useCustomTabsIntent()) {
-            // Do not prompt user to select from all installed browsers, use ChromeCustomTabs with Chrome by default.
-            for (ResolveInfo resolveInfo : resolveInfoList) {
-                if (CHROME_PACKAGE_NAME.equals(resolveInfo.activityInfo.packageName)) {
-                    result.setPackage(CHROME_PACKAGE_NAME);
-                    result.setClassName(CHROME_PACKAGE_NAME, resolveInfo.activityInfo.name);
-                    break;
+        if (resolveResult.getResolveType() == RedirectUtil.ResolveType.APPLICATION) {
+            // If the user has selected a default app for this URL, open with app.
+            result = new Intent(Intent.ACTION_VIEW, uri);
+        } else {
+            CustomTabsIntent customTabsIntent = new CustomTabsIntent.Builder()
+                    .setShowTitle(true)
+                    .setToolbarColor(ContextCompat.getColor(this, R.color.white))
+                    .build();
+            customTabsIntent.intent.setData(uri);
+            result = customTabsIntent.intent;
+
+            List<ResolveInfo> resolveInfoList = getPackageManager().queryIntentActivities(result, 0);
+
+            if (useCustomTabsIntent()) {
+                // Do not prompt user to select from all installed browsers, use ChromeCustomTabs with Chrome by default.
+                for (ResolveInfo resolveInfo : resolveInfoList) {
+                    if (CHROME_PACKAGE_NAME.equals(resolveInfo.activityInfo.packageName)) {
+                        result.setPackage(CHROME_PACKAGE_NAME);
+                        result.setClassName(CHROME_PACKAGE_NAME, resolveInfo.activityInfo.name);
+                        break;
+                    }
                 }
+            } else if (resolveInfoList.size() > 1) {
+                // Create chooser with Chrome, but don't use CustomTabsIntent.
+                Intent target = new Intent(Intent.ACTION_VIEW, uri);
+                result = Intent.createChooser(target, null);
             }
-        } else if (resolveInfoList.size() > 1) {
-            // Create chooser with Chrome, but don't use CustomTabsIntent.
-            Intent target = new Intent(Intent.ACTION_VIEW, uri);
-            result = Intent.createChooser(target, null);
         }
 
         return result;

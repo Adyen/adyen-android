@@ -172,7 +172,8 @@ public class CheckoutActivity extends FragmentActivity {
                         .setPaymentMethodSelectionListener(new PaymentMethodSelectionFragment.PaymentMethodSelectionListener() {
                             @Override
                             public void onPaymentMethodSelected(PaymentMethod paymentMethod) {
-                                if (paymentMethod.isRedirectMethod()) {
+                                if (paymentMethod.isRedirectMethod()
+                                        || (paymentMethod.isOneClick() && !paymentMethod.requiresInput())) {
                                     final Intent intent = new Intent(context.getApplicationContext(),
                                             TranslucentLoadingScreenActivity.class);
                                     context.startActivity(intent);
