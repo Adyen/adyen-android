@@ -38,7 +38,7 @@ public class Payment {
 
         static PaymentStatus getPaymentStatus(final String string) {
             for (PaymentStatus status : PaymentStatus.values()) {
-                if (string.equalsIgnoreCase(status.status)) {
+                if (status.status.equalsIgnoreCase(string)) {
                     return status;
                 }
             }

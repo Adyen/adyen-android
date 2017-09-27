@@ -73,6 +73,7 @@ public class MainActivity extends FragmentActivity implements PaymentDataEntryFr
                 public void onFailure(final Throwable e) {
                     Log.e(TAG, "HTTP Response problem: ", e);
                     paymentRequest.cancel();
+                    paymentRequest = null;
                 }
             });
         }
@@ -80,25 +81,27 @@ public class MainActivity extends FragmentActivity implements PaymentDataEntryFr
         @Override
         public void onPaymentResult(@NonNull PaymentRequest request,
                                     @NonNull PaymentRequestResult paymentResult) {
-            if (paymentRequest != request) {
-                Log.d(TAG, "onPaymentResult(): This is not the payment request that we created.");
-                return;
-            }
-            Log.d(TAG, "paymentRequestListener.onPaymentResult() -> " + request);
-            String resultString;
-            if (paymentResult.isProcessed()) {
-                resultString = paymentResult.getPayment().getPaymentStatus().toString();
-                verifyPayment(paymentResult.getPayment());
+            if (paymentRequest == request) {
+                Log.d(TAG, "paymentRequestListener.onPaymentResult() -> " + request);
+                String resultString;
+                if (paymentResult.isProcessed()) {
+                    resultString = paymentResult.getPayment().getPaymentStatus().toString();
+                    verifyPayment(paymentResult.getPayment());
+                } else {
+                    resultString = paymentResult.getError().toString();
+                }
+
+                final Intent intent = new Intent(getApplicationContext(), PaymentResultActivity.class);
+                intent.putExtra("Result", resultString);
+                intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+                intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                startActivity(intent);
+                finish();
             } else {
-                resultString = paymentResult.getError().toString();
+                Log.d(TAG, "onPaymentResult(): This is not the payment request that we created.");
             }
 
-            final Intent intent = new Intent(getApplicationContext(), PaymentResultActivity.class);
-            intent.putExtra("Result", resultString);
-            intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
-            intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-            startActivity(intent);
-            finish();
+            paymentRequest = null;
         }
 
     };
@@ -128,9 +131,7 @@ public class MainActivity extends FragmentActivity implements PaymentDataEntryFr
             return;
         }
         this.paymentSetupRequest = paymentSetupRequest;
-        if (paymentRequest != null) {
-            paymentRequest.cancel();
-        }
+
         paymentRequest = new PaymentRequest(this, paymentRequestListener);
         paymentRequest.start();
     }

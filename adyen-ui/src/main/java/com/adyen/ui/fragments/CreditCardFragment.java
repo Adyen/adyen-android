@@ -422,7 +422,7 @@ public class CreditCardFragment extends Fragment implements CreditCardEditText.C
             if (nameRequired) {
                 sensitiveData.put("holderName", cardHolderEditText.getText());
             } else {
-                sensitiveData.put("holderName", "checkout shopper");
+                sensitiveData.put("holderName", "Checkout Shopper Placeholder");
             }
             sensitiveData.put("number", creditCardNoView.getCCNumber());
 

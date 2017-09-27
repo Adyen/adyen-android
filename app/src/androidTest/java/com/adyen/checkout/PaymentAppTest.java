@@ -512,7 +512,7 @@ public class PaymentAppTest {
         Espresso.pressBack();
         EspressoTestUtils.waitForView(R.id.activity_payment_method_selection);
         Espresso.pressBack();
-        EspressoTestUtils.waitForView(R.id.orderAmountTitle);
+        EspressoTestUtils.waitForView(R.id.verificationTextView);
         try {
             // Actually this should not be required. However without pressing back one last time; the
             // activity cannot be started in the next test. To avoid it; we kill the PaymentResultActivity as well.

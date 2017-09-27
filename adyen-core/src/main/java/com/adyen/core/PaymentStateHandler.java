@@ -152,6 +152,8 @@ class PaymentStateHandler implements State.StateChangeListener {
                 break;
             case CANCELLED:
                 Log.d(TAG, "Payment cancelled.");
+                paymentResult = new PaymentRequestResult(new Throwable("Cancelled"));
+                notifyPaymentResult();
                 LocalBroadcastManager.getInstance(context).sendBroadcast(new Intent(ADYEN_UI_FINALIZE_INTENT));
                 unregisterBroadcastReceivers();
                 break;
