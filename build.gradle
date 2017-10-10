@@ -28,10 +28,10 @@ ext {
     supportAnnotationsVersion = "25.3.1"
     jUnitVersion = "4.12"
 
-    minSdkVersion = 15
+    minSdkVersion = 16
     targetSdkVersion = 25
-    versionCode = 11
-    versionName = "1.9.0"
+    versionCode = 12
+    versionName = "1.10.0"
 
     release_debuggable = false
     release_minifyEnabled = false

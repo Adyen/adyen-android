@@ -25,7 +25,6 @@ import java.util.Set;
 import java.util.concurrent.TimeUnit;
 
 import javax.net.ssl.HttpsURLConnection;
-import javax.net.ssl.SSLContext;
 import javax.net.ssl.SSLException;
 import javax.net.ssl.SSLSocketFactory;
 
@@ -53,9 +52,7 @@ public class HttpClient<T extends HttpClient> {
         readTimeout = (int) TimeUnit.SECONDS.toMillis(60);
 
         try {
-            SSLContext sslContext = SSLContext.getInstance("TLSv1.2");
-            sslContext.init(null, null, null);
-            sslSocketFactory = sslContext.getSocketFactory();
+            sslSocketFactory = new TLSSocketFactory();
         } catch (final @NonNull NoSuchAlgorithmException | KeyManagementException e) {
             e.printStackTrace();
             sslSocketFactory = null;

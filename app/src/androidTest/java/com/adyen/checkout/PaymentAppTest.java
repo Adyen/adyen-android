@@ -252,7 +252,7 @@ public class PaymentAppTest {
 
     @Test
     public void testSepaDirectDebitPayment() throws Exception {
-        checkSepaPayment(AMOUNT, EUR, IBAN, ACCOUNT_OWNER_NAME, Payment.PaymentStatus.RECEIVED.toString());
+        checkSepaPayment(AMOUNT, EUR, IBAN, ACCOUNT_OWNER_NAME, Payment.PaymentStatus.AUTHORISED.toString());
     }
 
     @Test
@@ -269,7 +269,7 @@ public class PaymentAppTest {
         onView(withId(R.id.consent_direct_debit_checkbox)).perform(click());
         EspressoTestUtils.rotateScreen();
         onView(withId(R.id.collect_direct_debit_data)).perform(click());
-        checkResultString(Payment.PaymentStatus.RECEIVED.toString());
+        checkResultString(Payment.PaymentStatus.AUTHORISED.toString());
     }
 
     @Test
