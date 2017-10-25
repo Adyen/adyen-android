@@ -10,16 +10,23 @@ import android.support.v4.util.Pair;
 import android.util.Log;
 import android.widget.ImageView;
 
+import com.adyen.core.internals.TLSSocketFactory;
+
 import java.io.FileNotFoundException;
-import java.io.InputStream;
+import java.net.URL;
+import java.security.KeyManagementException;
+import java.security.NoSuchAlgorithmException;
+
+import javax.net.ssl.HttpsURLConnection;
+import javax.net.ssl.SSLSocketFactory;
 
 import io.reactivex.Observable;
 import io.reactivex.ObservableEmitter;
 import io.reactivex.ObservableOnSubscribe;
 import io.reactivex.Observer;
+import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.disposables.Disposable;
 import io.reactivex.schedulers.Schedulers;
-import io.reactivex.android.schedulers.AndroidSchedulers;
 
 /**
  * Utility class for downloading images and assigning them to ImageViews.
@@ -32,6 +39,16 @@ public final class AsyncImageDownloader {
     private static final int MAX_NUMBER_OF_IMAGES_TO_BE_CACHED = 50;
     @NonNull private static final LruCache<String, Bitmap> BITMAP_LRU_CACHE
             = new LruCache<>(MAX_NUMBER_OF_IMAGES_TO_BE_CACHED);
+
+    private static final SSLSocketFactory SSL_SOCKET_FACTORY;
+
+    static {
+        try {
+            SSL_SOCKET_FACTORY = new TLSSocketFactory();
+        } catch (KeyManagementException | NoSuchAlgorithmException e) {
+            throw new RuntimeException(e);
+        }
+    }
 
     public interface ImageListener {
         void onImage(Bitmap bitmap, String url);
@@ -162,7 +179,7 @@ public final class AsyncImageDownloader {
 
     /**
      * This method issues an http request to retrieve the image at the given url.
-     * If successfull, the image will be saved in the local cache (static variable) and
+     * If successful, the image will be saved in the local cache (static variable) and
      * also in the sharedpreferences.
      * @param context Application context
      * @param url Url of the icon to be loaded
@@ -171,10 +188,14 @@ public final class AsyncImageDownloader {
      */
     private static Bitmap downloadImage(Context context, String url, Bitmap fallbackImage) {
         Bitmap icon = null;
+        HttpsURLConnection urlConnection = null;
         try {
             Log.d(TAG, "Downloading image from: " + url);
-            InputStream in = new java.net.URL(url).openStream();
-            icon = BitmapFactory.decodeStream(in);
+            urlConnection = (HttpsURLConnection) new URL(url).openConnection();
+            urlConnection.setSSLSocketFactory(SSL_SOCKET_FACTORY);
+            urlConnection.connect();
+
+            icon = BitmapFactory.decodeStream(urlConnection.getInputStream());
             BITMAP_LRU_CACHE.put(url, icon);
             IconStorage.storeIcon(context, icon, url);
         } catch (@NonNull final FileNotFoundException fileNotFoundException) {
@@ -190,6 +211,10 @@ public final class AsyncImageDownloader {
         } catch (Exception e) {
             Log.e("Error", e.getMessage());
             e.printStackTrace();
+        } finally {
+            if (urlConnection != null) {
+                urlConnection.disconnect();
+            }
         }
         return icon;
     }

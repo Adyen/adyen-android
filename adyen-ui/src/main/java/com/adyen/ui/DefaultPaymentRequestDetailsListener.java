@@ -11,6 +11,7 @@ import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.v4.content.LocalBroadcastManager;
 import android.util.Log;
+import android.widget.Toast;
 
 import com.adyen.core.PaymentRequest;
 import com.adyen.core.interfaces.PaymentDetailsCallback;
@@ -166,25 +167,23 @@ public class DefaultPaymentRequestDetailsListener implements PaymentRequestDetai
             intent.setFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION);
             context.startActivity(intent);
         } else if (paymentRequest.getPaymentMethod().getPaymentModule() != null) {
-            PaymentMethodService paymentMethodService;
+            PaymentMethodService paymentMethodService = null;
             try {
                 paymentMethodService = ModuleAvailabilityUtil.getModulePaymentService(
                         paymentRequest.getPaymentMethod().getPaymentModule());
             } catch (@NonNull final ClassNotFoundException e) {
                 Log.e(TAG, "requestPaymentMethodDetails(): Payment module not found.", e);
-                return;
             } catch (@NonNull final IllegalAccessException e) {
                 Log.e(TAG, "requestPaymentMethodDetails(): IllegalAccessException occurred", e);
-                return;
             } catch (@NonNull final InstantiationException e) {
                 Log.e(TAG, "requestPaymentMethodDetails(): InstantiationException occurred", e);
-                return;
             } catch (@NonNull NullPointerException nullPointerException) {
                 Log.e(TAG, "requestPaymentMethodDetails(): Null pointer exception: ", nullPointerException);
-                return;
             }
 
-            if (paymentMethodService != null) {
+            if (paymentMethodService == null) {
+                Toast.makeText(context, "Payment method not supported.", Toast.LENGTH_LONG).show();
+            } else {
                 // Pass the request to the correct module. The rest will be handled by the module.
                 paymentMethodService.process(context, paymentRequest, paymentRequest.getPaymentRequestListener(), null);
             }

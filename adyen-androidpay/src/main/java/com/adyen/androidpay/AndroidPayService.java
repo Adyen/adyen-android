@@ -96,6 +96,7 @@ public class AndroidPayService implements PaymentMethodService, GoogleApiClient.
         intent.putExtra("amount", paymentRequest.getAmount());
         intent.putExtra("publicKey", paymentMethod.getConfiguration().getPublicKey());
         intent.putExtra("merchantName", paymentMethod.getConfiguration().getMerchantName());
+        intent.putExtra("environment", paymentMethod.getConfiguration().getEnvironment());
         context.startActivity(intent);
     }
 

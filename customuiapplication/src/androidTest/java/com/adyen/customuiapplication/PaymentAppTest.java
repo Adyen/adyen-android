@@ -4,6 +4,7 @@ import android.support.test.espresso.matcher.BoundedMatcher;
 import android.support.test.filters.LargeTest;
 import android.support.test.rule.ActivityTestRule;
 import android.support.test.runner.AndroidJUnit4;
+import android.support.test.uiautomator.UiDevice;
 
 import com.adyen.core.models.Payment;
 import com.adyen.core.models.PaymentMethod;
@@ -12,6 +13,7 @@ import com.adyen.testutils.RetryTest;
 
 import org.hamcrest.Matcher;
 import org.junit.After;
+import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -50,6 +52,11 @@ public class PaymentAppTest {
 
     @Rule
     public RetryTest retry = new RetryTest(5);
+
+    @Before
+    public void setUp() throws Throwable {
+        UiDevice.getInstance(getInstrumentation()).wakeUp();
+    }
 
     @After
     public void tearDown() throws Exception {

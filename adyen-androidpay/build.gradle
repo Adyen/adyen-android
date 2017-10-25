@@ -52,6 +52,6 @@ dependencies {
         debugCompile project(path: ':adyen-core', configuration: 'debug')
         releaseCompile project(path: ':adyen-core', configuration: 'release')
     } else {
-        compile project(':adyen-core')
+        provided group: 'com.adyen.checkout', name: 'core', version: "${rootProject.versionName}"
     }
 }

@@ -97,6 +97,7 @@ public final class PaymentMethod implements Serializable {
             configuration.merchantId = configurationJson.optString("merchantIdentifier");
             configuration.merchantName = configurationJson.optString("merchantName");
             configuration.publicKey = configurationJson.optString("publicKey").replaceAll("\\r\\n", "");
+            configuration.environment = configurationJson.optString("environment");
         }
 
         if (paymentMethod.inputDetails != null) {
@@ -313,6 +314,7 @@ public final class PaymentMethod implements Serializable {
         private String publicKey;
         private String cvcOptional;
         private String noCVC;
+        private String environment; //For AndroidPay
 
         private Configuration() { }
 
@@ -334,6 +336,10 @@ public final class PaymentMethod implements Serializable {
 
         public String getNoCVC() {
             return noCVC;
+        }
+
+        public String getEnvironment() {
+            return environment;
         }
     }
 

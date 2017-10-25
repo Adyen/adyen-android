@@ -106,9 +106,9 @@ public class ExpiryDateEditText extends CheckoutEditText {
             }
 
             if (s.length() == 2 && !deleted) {
-                if (s.toString().matches("\\d/")) {
+                if (s.toString().matches("\\d[^\\d]")) {
                     s.insert(0, "0");
-                } else if (!s.toString().contains(separatorString)) {
+                } else if (!s.toString().matches("\\d*[^\\d]\\d*")) {
                     s.append(SEPARATOR_CHAR);
                 }
             }
@@ -157,7 +157,7 @@ public class ExpiryDateEditText extends CheckoutEditText {
     }
 
     private boolean isInputDateValid(String dateStr) {
-        if (dateStr.length() == 5) {
+        if (dateStr.matches("(0?[1-9]|1[0-2])/[\\d]{2}")) {
             Calendar c = Calendar.getInstance();
             int currentYear = c.get(Calendar.YEAR) - 2000;
             int currentMonth = c.get(Calendar.MONTH) + 1; //month january is 0

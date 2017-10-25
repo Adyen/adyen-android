@@ -20,7 +20,7 @@ final class DeviceTokenGenerator {
 
     private static final String TAG = DeviceTokenGenerator.class.getSimpleName();
 
-    private static final String DEVICE_FINGER_PRINT_VERSION = "1.0";
+    private static final String DEVICE_FINGER_PRINT_VERSION = "1.1";
     private static final String SDK_VERSION = BuildConfig.VERSION_NAME;
 
     private DeviceTokenGenerator() {
@@ -31,7 +31,7 @@ final class DeviceTokenGenerator {
      * Uses device and SDK information to create token.
      * @return token
      */
-    static String getToken(final Context context, final PaymentStateHandler paymentStateHandler) {
+    static String getToken(final Context context, final PaymentStateHandler paymentStateHandler, boolean isQuickIntegration) {
         final JSONObject deviceInfo = new JSONObject();
         try {
             final String androidId = Settings.Secure.getString(context.getContentResolver(),
@@ -43,6 +43,8 @@ final class DeviceTokenGenerator {
             deviceInfo.put("sdkVersion", SDK_VERSION);
             deviceInfo.put("deviceIdentifier", androidId);
             deviceInfo.put("locale", StringUtils.getLocale(context));
+
+            deviceInfo.put("integration", (isQuickIntegration) ? "quick" : "custom");
 
         } catch (final JSONException jsonException) {
             Log.e(TAG, "Token could not be created", jsonException);

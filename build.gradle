@@ -3,7 +3,7 @@ buildscript {
         jcenter()
     }
     dependencies {
-        classpath 'com.android.tools.build:gradle:2.3.1'
+        classpath 'com.android.tools.build:gradle:2.3.3'
     }
 }
 
@@ -30,8 +30,8 @@ ext {
 
     minSdkVersion = 16
     targetSdkVersion = 25
-    versionCode = 12
-    versionName = "1.10.0"
+    versionCode = 14
+    versionName = "1.11.1"
 
     release_debuggable = false
     release_minifyEnabled = false
@@ -55,7 +55,7 @@ jacoco {
 
 subprojects {
 
-    def fileFilter = ['**/R.class', '**/R$*.class', '**/BuildConfig.*', '**/Manifest*.*', '**/*Test*.*', 'android/**/*.*', '**/checkout/**', '**/customuiapplication/**', '**/checkoutdemo/**', '**/customwithadyenui/**']
+    def fileFilter = ['**/R.class', '**/R$*.class', '**/BuildConfig.*', '**/Manifest*.*', '**/*Test*.*', 'android/**/*.*', '**/checkout/**', '**/customuiapplication/**', '**/checkoutdemo/**', '**/customwithcheckoutui/**']
 
     apply plugin: 'checkstyle'
     checkstyle {
@@ -162,6 +162,15 @@ task jacocoOverallTestReport(type: JacocoReport, group: 'Coverage reports') {
 
     getReports().getHtml().setDestination(file("$buildDir/reports/jacocoOverallTestReport/html"))
     getReports().getXml().setDestination(file("$buildDir/reports/jacocoOverallTestReport/merged.xml"))
+
+    doLast {
+        publishedProjects.forEach { publishedProject ->
+            copy {
+                from "$publishedProject.buildDir/reports/"
+                into "$buildDir/reports/$publishedProject.name/"
+            }
+        }
+    }
 }
 
 task jacocoOverallUnitTestReport(type: JacocoReport, group: 'Coverage reports') {
@@ -259,7 +268,7 @@ task parseXml() {
     }
     def parsedProjectXml = (new XmlParser()).parse('api_configuration.xml')
     def env = project.findProperty('serverEnv') ?: "TEST"
-    def type = project.findProperty('serverType') ?: "MERCHANT_SERVER"
+    def type = project.findProperty('serverType') ?: "DIRECT_API"
 
     def url = parsedProjectXml[type][env].URL.text()
     def apiKey = parsedProjectXml[type][env].API_KEY.text()

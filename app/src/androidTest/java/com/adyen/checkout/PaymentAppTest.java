@@ -1,5 +1,7 @@
 package com.adyen.checkout;
 
+import android.content.Intent;
+import android.content.pm.ActivityInfo;
 import android.support.test.espresso.Espresso;
 import android.support.test.espresso.NoActivityResumedException;
 import android.support.test.filters.LargeTest;
@@ -13,15 +15,18 @@ import com.adyen.testutils.EspressoTestUtils;
 import com.adyen.testutils.RetryTest;
 
 import org.junit.After;
+import org.junit.Before;
 import org.junit.Ignore;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 
+import java.util.Calendar;
 import java.util.Collection;
 import java.util.Random;
 
 import static android.support.test.InstrumentationRegistry.getInstrumentation;
+import static android.support.test.InstrumentationRegistry.getTargetContext;
 import static android.support.test.espresso.Espresso.onData;
 import static android.support.test.espresso.Espresso.onView;
 import static android.support.test.espresso.action.ViewActions.clearText;
@@ -69,6 +74,14 @@ public class PaymentAppTest {
     @After
     public void tearDown() throws Exception {
         closeAllActivities(getInstrumentation());
+    }
+
+    @Before
+    public void setUp() throws Throwable {
+        UiDevice.getInstance(getInstrumentation()).wakeUp();
+        Intent intent = new Intent(getTargetContext(), MainActivity.class);
+        mainActivityRule.launchActivity(intent);
+        mainActivityRule.getActivity().setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
     }
 
     @Test
@@ -143,6 +156,46 @@ public class PaymentAppTest {
 
         checkInputFieldEnablesButton(R.id.adyen_credit_card_exp_date, R.id.collectCreditCardData, CARD_EXP_DATE, true);
         cancelCreditCardPayment();
+    }
+
+    @Test
+    public void testCardExpiryExtended() throws Exception {
+        goToCreditCardFragment();
+
+        checkCreditCardPayButtonIsEnabled(false);
+
+        onView(withId(R.id.adyen_credit_card_no)).perform(typeText("4111111111111111"));
+        onView(withId(R.id.adyen_credit_card_cvc)).perform(typeText("737"));
+
+        int startYear = Calendar.getInstance().get(Calendar.YEAR);
+        int startMonth = Calendar.getInstance().get(Calendar.MONTH) + 1;
+
+        int start = startYear * 12 + startMonth - 3;
+        int end = 2030 * 12;
+
+        for (int i = start; i <= end; i++) {
+            int month = i % 12;
+            if (month == 0) {
+                month = 12;
+            }
+            int year = i / 12 - 2000;
+
+            if (month > 9) {
+                String text = month + "" + year;
+                onView(withId(R.id.adyen_credit_card_exp_date)).perform(clearText(), typeText(text));
+                checkCreditCardPayButtonIsEnabled(true);
+            } else {
+                String text = "0" + month + year;
+                onView(withId(R.id.adyen_credit_card_exp_date)).perform(clearText(), typeText(text));
+                checkCreditCardPayButtonIsEnabled(true);
+
+                if (month > 1) {
+                    text = month + "" + year;
+                    onView(withId(R.id.adyen_credit_card_exp_date)).perform(clearText(), typeText(text));
+                    checkCreditCardPayButtonIsEnabled(true);
+                }
+            }
+        }
     }
 
     @Test
@@ -340,7 +393,7 @@ public class PaymentAppTest {
         onView(withText(equalToIgnoringCase("Bancontact card"))).perform(scrollTo(), click());
         onView(withId(R.id.adyen_credit_card_no)).perform(clearText(), typeText("6703444444444449"),
                 closeSoftKeyboard());
-        onView(withId(R.id.adyen_credit_card_exp_date)).perform(typeText("818"),
+        onView(withId(R.id.adyen_credit_card_exp_date)).perform(clearText(), typeText("818"),
                 closeSoftKeyboard());
         checkCreditCardPayButtonIsEnabled(true);
     }
@@ -352,7 +405,16 @@ public class PaymentAppTest {
         waitForText("CVC/CVV");
         onView(withId(R.id.adyen_credit_card_no)).perform(clearText(), typeText("6731 0123 4567 8906"),
                 closeSoftKeyboard());
-        onView(withId(R.id.adyen_credit_card_exp_date)).perform(typeText("818"),
+        onView(withId(R.id.adyen_credit_card_exp_date)).perform(clearText(), typeText("818"),
+                closeSoftKeyboard());
+        checkCreditCardPayButtonIsEnabled(true);
+        onView(withId(R.id.adyen_credit_card_cvc)).perform(clearText(), typeText("7"),
+                closeSoftKeyboard());
+        checkCreditCardPayButtonIsEnabled(false);
+        onView(withId(R.id.adyen_credit_card_cvc)).perform(clearText(), typeText("73"),
+                closeSoftKeyboard());
+        checkCreditCardPayButtonIsEnabled(false);
+        onView(withId(R.id.adyen_credit_card_cvc)).perform(clearText(), typeText("737"),
                 closeSoftKeyboard());
         checkCreditCardPayButtonIsEnabled(true);
     }

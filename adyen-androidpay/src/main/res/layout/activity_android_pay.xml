@@ -1,12 +1,22 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:layout_width="match_parent" android:layout_height="match_parent">
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+              android:layout_width="match_parent"
+              android:layout_height="match_parent"
+    android:weightSum="3"
+    android:orientation="vertical"
+    android:gravity="bottom">
 
-    <FrameLayout
-        android:id="@+id/android_pay_fragment_container"
-        android:layout_width="300dp"
-        android:layout_height="48dp"
-        android:layout_alignParentBottom="true"
-        android:layout_centerHorizontal="true"/>
+    <LinearLayout
+        android:background="@android:color/white"
+        android:layout_weight="1"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:gravity="center">
 
-</RelativeLayout>
+        <FrameLayout
+            android:id="@+id/android_pay_fragment_container"
+            android:layout_width="300dp"
+            android:layout_height="48dp"/>
+    </LinearLayout>
+
+</LinearLayout>

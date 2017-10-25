@@ -74,7 +74,7 @@ class PaymentStateHandler implements State.StateChangeListener {
     private PaymentRequestResult paymentResult;
     private PaymentRequest paymentRequest;
 
-    private List<PaymentMethod> filteredPaymentMethodsList;
+    private List<PaymentMethod> availablePaymentMethods;
     private List<PaymentMethod> preferredPaymentMethods;
 
     private PaymentProcessorStateMachine paymentProcessorStateMachine;
@@ -92,7 +92,7 @@ class PaymentStateHandler implements State.StateChangeListener {
         this.merchantPaymentRequestDetailsListener = paymentRequestDetailsListener;
 
         paymentBroadcastReceivers = new PaymentBroadcastReceivers(this, paymentRequest);
-        filteredPaymentMethodsList = new ArrayList<>();
+        availablePaymentMethods = new ArrayList<>();
         paymentProcessorStateMachine = new PaymentProcessorStateMachine(this);
 
         paymentRequestListeners.add(paymentRequestListener);
@@ -184,7 +184,7 @@ class PaymentStateHandler implements State.StateChangeListener {
     private void requestPaymentData() {
         Log.d(TAG, "requestPaymentData()");
 
-        final String token = DeviceTokenGenerator.getToken(context, this);
+        final String token = DeviceTokenGenerator.getToken(context, this, sdkHandlesUI());
 
         for (PaymentRequestListener listener : paymentRequestListeners) {
             listener.onPaymentDataRequested(paymentRequest, token, paymentBroadcastReceivers.getPaymentDataCallback());
@@ -210,7 +210,7 @@ class PaymentStateHandler implements State.StateChangeListener {
 
         for (PaymentRequestDetailsListener detailsListener : paymentRequestDetailsListeners) {
             detailsListener.onPaymentMethodSelectionRequired(paymentRequest, preferredPaymentMethods,
-                    filteredPaymentMethodsList, paymentBroadcastReceivers.getPaymentMethodCallback());
+                    availablePaymentMethods, paymentBroadcastReceivers.getPaymentMethodCallback());
         }
 
         final IntentFilter intentFilter = new IntentFilter(PAYMENT_METHOD_SELECTED_INTENT);
@@ -256,19 +256,25 @@ class PaymentStateHandler implements State.StateChangeListener {
 
     private void fetchPaymentMethods() {
         if (paymentResponse != null) {
-            List<PaymentMethod> unfilteredPaymentMethods = paymentResponse.getAvailablePaymentMethods();
             this.preferredPaymentMethods = paymentResponse.getPreferredPaymentMethods();
-            Observable<List<PaymentMethod>> listObservable = ModuleAvailabilityUtil.filterPaymentMethods(context,
-                    unfilteredPaymentMethods);
-            listObservable.subscribe(new Consumer<List<PaymentMethod>>() {
-                @Override
-                public void accept(List<PaymentMethod> filteredPaymentMethods) {
-                    filteredPaymentMethods.removeAll(Collections.singleton(null));
-                    PaymentStateHandler.this.filteredPaymentMethodsList.clear();
-                    PaymentStateHandler.this.filteredPaymentMethodsList.addAll(filteredPaymentMethods);
-                    paymentProcessorStateMachine.onTrigger(PaymentTrigger.PAYMENT_METHODS_AVAILABLE);
-                }
-            });
+
+            if (merchantPaymentRequestDetailsListener == null) {
+                List<PaymentMethod> unfilteredPaymentMethods = paymentResponse.getAvailablePaymentMethods();
+                Observable<List<PaymentMethod>> listObservable = ModuleAvailabilityUtil.filterPaymentMethods(context,
+                        unfilteredPaymentMethods);
+                listObservable.subscribe(new Consumer<List<PaymentMethod>>() {
+                    @Override
+                    public void accept(List<PaymentMethod> filteredPaymentMethods) {
+                        filteredPaymentMethods.removeAll(Collections.singleton(null));
+                        PaymentStateHandler.this.availablePaymentMethods.clear();
+                        PaymentStateHandler.this.availablePaymentMethods.addAll(filteredPaymentMethods);
+                        paymentProcessorStateMachine.onTrigger(PaymentTrigger.PAYMENT_METHODS_AVAILABLE);
+                    }
+                });
+            } else {
+                this.availablePaymentMethods = paymentResponse.getAvailablePaymentMethods();
+                paymentProcessorStateMachine.onTrigger(PaymentTrigger.PAYMENT_METHODS_AVAILABLE);
+            }
         }
     }
 
@@ -503,7 +509,7 @@ class PaymentStateHandler implements State.StateChangeListener {
 
                                     for (PaymentRequestDetailsListener detailsListener : paymentRequestDetailsListeners) {
                                         detailsListener.onPaymentMethodSelectionRequired(paymentRequest, preferredPaymentMethods,
-                                                filteredPaymentMethodsList, paymentBroadcastReceivers.getPaymentMethodCallback());
+                                                availablePaymentMethods, paymentBroadcastReceivers.getPaymentMethodCallback());
                                     }
                                     return;
                                 }

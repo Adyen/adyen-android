@@ -11,7 +11,8 @@
             android:value="true" />
 
         <activity
-            android:name=".ui.AndroidPayActivity" />
+            android:name=".ui.AndroidPayActivity"
+            android:theme="@style/AndroidPayActivity"/>
 
     </application>
 

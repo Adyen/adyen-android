@@ -1,7 +1,10 @@
 package com.adyen.androidpay.ui;
 
 import android.app.Activity;
+import android.content.BroadcastReceiver;
+import android.content.Context;
 import android.content.Intent;
+import android.content.IntentFilter;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
@@ -33,6 +36,8 @@ import java.util.HashMap;
 import java.util.Locale;
 import java.util.Map;
 
+import static com.adyen.core.constants.Constants.PaymentRequest.ADYEN_UI_FINALIZE_INTENT;
+
 public class AndroidPayActivity extends FragmentActivity implements GoogleApiClient.OnConnectionFailedListener,
         GoogleApiClient.ConnectionCallbacks {
 
@@ -50,6 +55,13 @@ public class AndroidPayActivity extends FragmentActivity implements GoogleApiCli
     private String cartTotal;
     private String merchantName;
     private String currency;
+
+    private BroadcastReceiver uiFinalizationIntent = new BroadcastReceiver() {
+        @Override
+        public void onReceive(final Context context, final Intent intent) {
+            finish();
+        }
+    };
 
     @SuppressWarnings("unchecked")
     @Override
@@ -69,12 +81,22 @@ public class AndroidPayActivity extends FragmentActivity implements GoogleApiCli
 
         googleApiClient = getGoogleApiClient();
 
-        supportWalletFragment = createWalletFragment(WalletConstants.ENVIRONMENT_TEST,
+        int environment = WalletConstants.ENVIRONMENT_TEST;
+
+        if (intent.hasExtra("environment") && intent.getExtras().getString("environment") != null
+                && !intent.getExtras().getString("environment").isEmpty()) {
+            environment = Integer.parseInt(intent.getExtras().getString("environment"));
+        }
+
+        supportWalletFragment = createWalletFragment(environment,
                 WalletFragmentStyle.BuyButtonAppearance.ANDROID_PAY_DARK, WalletConstants.THEME_DARK);
         // add Wallet fragment to the UI
         getSupportFragmentManager().beginTransaction()
                 .replace(R.id.android_pay_fragment_container, supportWalletFragment)
                 .commit();
+
+        LocalBroadcastManager.getInstance(getApplicationContext()).registerReceiver(uiFinalizationIntent,
+                new IntentFilter(ADYEN_UI_FINALIZE_INTENT));
     }
 
     @Override

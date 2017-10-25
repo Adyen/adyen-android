@@ -132,7 +132,8 @@ public class CVCEditText extends CheckoutEditText {
     }
 
     public boolean hasValidInput() {
-        return (this.getText().toString().length() == maxLength) || optional;
+        int cvcLength = this.getText().toString().length();
+        return optional ? ((cvcLength == maxLength) || (cvcLength == 0))  : (cvcLength == maxLength);
     }
 
     public void setOptional(final boolean optional) {
