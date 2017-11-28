@@ -21,7 +21,8 @@ import com.adyen.core.constants.Constants;
 import com.adyen.core.models.Amount;
 import com.adyen.core.models.PaymentMethod;
 import com.adyen.core.models.paymentdetails.CreditCardPaymentDetails;
-import com.adyen.core.models.paymentdetails.IdealPaymentDetails;
+import com.adyen.core.models.paymentdetails.IssuerSelectionPaymentDetails;
+import com.adyen.core.models.paymentdetails.QiwiWalletPaymentDetails;
 import com.adyen.core.models.paymentdetails.SepaDirectDebitPaymentDetails;
 import com.adyen.ui.R;
 import com.adyen.ui.fragments.CreditCardFragment;
@@ -32,6 +33,8 @@ import com.adyen.ui.fragments.IssuerSelectionFragmentBuilder;
 import com.adyen.ui.fragments.LoadingScreenFragment;
 import com.adyen.ui.fragments.PaymentMethodSelectionFragment;
 import com.adyen.ui.fragments.PaymentMethodSelectionFragmentBuilder;
+import com.adyen.ui.fragments.QiwiWalletFragment;
+import com.adyen.ui.fragments.QiwiWalletFragmentBuilder;
 import com.adyen.ui.fragments.SepaDirectDebitFragment;
 import com.adyen.ui.fragments.SepaDirectDebitFragmentBuilder;
 
@@ -58,6 +61,7 @@ public class CheckoutActivity extends FragmentActivity {
     public static final int ISSUER_SELECTION_FRAGMENT = 2;
     public static final int SEPA_DIRECT_DEBIT_FRAGMENT = 3;
     public static final int GIROPAY_FRAGMENT = 4;
+    public static final int QIWI_WALLET_FRAGMENT = 5;
     public static final int LOADING_SCREEN_FRAGMENT = 11;
 
     public static final String PREFERED_PAYMENT_METHODS = "preferredPaymentMethods";
@@ -125,11 +129,9 @@ public class CheckoutActivity extends FragmentActivity {
         if (backStackEntryCount == 0) {
             super.onBackPressed();
         } else {
-            FragmentManager.BackStackEntry backEntry = getSupportFragmentManager().
-                    getBackStackEntryAt(backStackEntryCount - 1);
+            FragmentManager.BackStackEntry backEntry = getSupportFragmentManager().getBackStackEntryAt(backStackEntryCount - 1);
             String tag = backEntry.getName();
-            if (PaymentMethodSelectionFragment.class.getName().equals(tag)
-                    || LoadingScreenFragment.class.getName().equals(tag)) {
+            if (PaymentMethodSelectionFragment.class.getName().equals(tag) || LoadingScreenFragment.class.getName().equals(tag)) {
                 final Intent cancellationIntent = new Intent(Constants.PaymentRequest.PAYMENT_REQUEST_CANCELLED_INTENT);
                 LocalBroadcastManager.getInstance(this).sendBroadcast(cancellationIntent);
                 finish();
@@ -160,10 +162,8 @@ public class CheckoutActivity extends FragmentActivity {
 
         switch (fragmentId) {
             case PAYMENT_METHOD_SELECTION_FRAGMENT: {
-                final ArrayList<PaymentMethod> preferredPaymentMethods = (ArrayList) bundle
-                        .getSerializable(PREFERED_PAYMENT_METHODS);
-                final ArrayList<PaymentMethod> paymentMethods = (ArrayList) bundle
-                        .getSerializable(PAYMENT_METHODS);
+                final ArrayList<PaymentMethod> preferredPaymentMethods = (ArrayList) bundle.getSerializable(PREFERED_PAYMENT_METHODS);
+                final ArrayList<PaymentMethod> paymentMethods = (ArrayList) bundle.getSerializable(PAYMENT_METHODS);
 
                 final PaymentMethodSelectionFragment paymentMethodSelectionFragment
                         = new PaymentMethodSelectionFragmentBuilder()
@@ -174,8 +174,7 @@ public class CheckoutActivity extends FragmentActivity {
                             public void onPaymentMethodSelected(PaymentMethod paymentMethod) {
                                 if (paymentMethod.isRedirectMethod()
                                         || (paymentMethod.isOneClick() && !paymentMethod.requiresInput())) {
-                                    final Intent intent = new Intent(context.getApplicationContext(),
-                                            TranslucentLoadingScreenActivity.class);
+                                    final Intent intent = new Intent(context.getApplicationContext(), TranslucentLoadingScreenActivity.class);
                                     context.startActivity(intent);
                                 }
                                 Intent intent = new Intent(PAYMENT_METHOD_SELECTED_INTENT);
@@ -184,11 +183,7 @@ public class CheckoutActivity extends FragmentActivity {
                             }
                         })
                         .build();
-
-
-
                 replaceFragment(paymentMethodSelectionFragment);
-
                 hideKeyboard();
                 break;
             }
@@ -213,21 +208,17 @@ public class CheckoutActivity extends FragmentActivity {
                             }
                         })
                         .build();
-
-
                 replaceFragment(creditCardFragment, TAG_CREDIT_CARD_FRAGMENT);
-
                 break;
             }
             case ISSUER_SELECTION_FRAGMENT: {
                 final PaymentMethod paymentMethod = (PaymentMethod) bundle.getSerializable(PAYMENT_METHOD);
-
                 IssuerSelectionFragment issuerSelectionFragment = new IssuerSelectionFragmentBuilder()
                         .setPaymentMethod(paymentMethod)
                         .setIssuerSelectionListener(new IssuerSelectionFragment.IssuerSelectionListener() {
                             @Override
                             public void onIssuerSelected(String issuer) {
-                                IdealPaymentDetails paymentDetails = new IdealPaymentDetails(paymentMethod.getInputDetails());
+                                IssuerSelectionPaymentDetails paymentDetails = new IssuerSelectionPaymentDetails(paymentMethod.getInputDetails());
                                 paymentDetails.fillIssuer(issuer);
                                 final Intent intent = new Intent(Constants.PaymentRequest.PAYMENT_DETAILS_PROVIDED_INTENT);
                                 intent.putExtra(PAYMENT_DETAILS, paymentDetails);
@@ -235,8 +226,6 @@ public class CheckoutActivity extends FragmentActivity {
                             }
                         })
                         .build();
-
-
                 replaceFragment(issuerSelectionFragment);
                 break;
             }
@@ -258,8 +247,28 @@ public class CheckoutActivity extends FragmentActivity {
                             }
                         })
                         .build();
-
                 replaceFragment(sepaDirectDebitFragment);
+                break;
+            }
+            case QIWI_WALLET_FRAGMENT: {
+                final PaymentMethod paymentMethod = (PaymentMethod) bundle.getSerializable(PAYMENT_METHOD);
+                paymentMethod.getInputDetails();
+                QiwiWalletFragment qiwiWalletFragment = new QiwiWalletFragmentBuilder()
+                        .setAmount((Amount) intent.getSerializableExtra(AMOUNT))
+                        .setPaymentMethod(paymentMethod)
+                        .setQiwiWalletPaymentDetailsListener(new QiwiWalletFragment.QiwiWalletPaymentDetailsListener() {
+                            @Override
+                            public void onPaymentDetails(String countryCode, String telephoneNumber) {
+                                QiwiWalletPaymentDetails paymentDetails = new QiwiWalletPaymentDetails(paymentMethod.getInputDetails());
+                                paymentDetails.fillTelephoneNumber(countryCode, telephoneNumber);
+
+                                final Intent intent = new Intent(Constants.PaymentRequest.PAYMENT_DETAILS_PROVIDED_INTENT);
+                                intent.putExtra(PAYMENT_DETAILS, paymentDetails);
+                                LocalBroadcastManager.getInstance(context).sendBroadcast(intent);
+                            }
+                        })
+                        .build();
+                replaceFragment(qiwiWalletFragment);
                 break;
             }
             case GIROPAY_FRAGMENT: {
@@ -298,9 +307,13 @@ public class CheckoutActivity extends FragmentActivity {
     }
 
     public void setActionBarTitle(int titleId) {
+        setActionBarTitle(getString(titleId));
+    }
+
+    public void setActionBarTitle(String title) {
         ActionBar actionBar = getActionBar();
         if (actionBar != null && actionBar.getCustomView() != null) {
-            ((TextView) actionBar.getCustomView().findViewById(R.id.action_bar_title)).setText(getString(titleId));
+            ((TextView) actionBar.getCustomView().findViewById(R.id.action_bar_title)).setText(title);
             actionBar.show();
         }
     }

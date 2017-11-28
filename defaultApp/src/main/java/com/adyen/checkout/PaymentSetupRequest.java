@@ -8,6 +8,8 @@ public class PaymentSetupRequest {
     private String shopperLocale;
     private String merchantAccount;
     private String countryCode;
+    private String reference;
+    private String shopperReference;
     private String maxNumberOfInstallments;
 
     public Amount getAmount() {
@@ -40,6 +42,22 @@ public class PaymentSetupRequest {
 
     public void setCountryCode(final String countryCode) {
         this.countryCode = countryCode;
+    }
+
+    public String getReference() {
+        return reference;
+    }
+
+    public void setReference(String reference) {
+        this.reference = reference;
+    }
+
+    public String getShopperReference() {
+        return shopperReference;
+    }
+
+    public void setShopperReference(String shopperReference) {
+        this.shopperReference = shopperReference;
     }
 
     public String getMaxNumberOfInstallments() {

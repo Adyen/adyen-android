@@ -382,7 +382,7 @@ public class PaymentAppTest {
         waitForText("Payment Methods");
         waitForText("Payment Methods");
         onView(withText(equalToIgnoringCase("iDEAL"))).perform(scrollTo(), click());
-        waitForText("iDeal");
+        waitForText("iDEAL");
         Espresso.pressBack();
         waitForText("Payment Methods");
     }

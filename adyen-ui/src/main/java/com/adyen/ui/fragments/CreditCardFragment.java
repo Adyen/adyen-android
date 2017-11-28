@@ -72,6 +72,7 @@ public class CreditCardFragment extends Fragment implements CreditCardEditText.C
     private CreditCardInfoListener creditCardInfoListener;
     private boolean oneClick;
     private boolean nameRequired;
+    private boolean storeDetailsOptionAvailable;
     private Amount amount;
     private String shopperReference;
     private PaymentMethod paymentMethod;
@@ -124,8 +125,15 @@ public class CreditCardFragment extends Fragment implements CreditCardEditText.C
         cvcFieldStatus = CreditCardFragmentBuilder.CvcFieldStatus.valueOf(args.getString(Constants.DataKeys.CVC_FIELD_STATUS));
 
         for (InputDetail inputDetail : paymentMethod.getInputDetails()) {
-            if (inputDetail.getKey().equals("cardHolderName")) {
-                nameRequired = true;
+            if (CreditCardPaymentDetails.ADDITIONAL_DATA_CARD.equals(inputDetail.getKey())) {
+                if (inputDetail.getConfiguration() != null
+                        && inputDetail.getConfiguration().containsKey(CreditCardPaymentDetails.CARD_HOLDER_NAME_REQUIRED)
+                        && "true".equalsIgnoreCase(inputDetail.getConfiguration().get(CreditCardPaymentDetails.CARD_HOLDER_NAME_REQUIRED))) {
+                    nameRequired = true;
+                }
+            }
+            if (inputDetail.getKey().equals("storeDetails")) {
+                storeDetailsOptionAvailable = true;
             }
         }
 
@@ -305,7 +313,7 @@ public class CreditCardFragment extends Fragment implements CreditCardEditText.C
         }
 
         saveCardCheckBox = (CheckoutCheckBox) fragmentView.findViewById(R.id.save_card_checkbox);
-        if (!StringUtils.isEmptyOrNull(shopperReference)) {
+        if (!StringUtils.isEmptyOrNull(shopperReference) && storeDetailsOptionAvailable) {
             fragmentView.findViewById(R.id.layout_save_card).setVisibility(VISIBLE);
             fragmentView.findViewById(R.id.layout_click_area_save_card).setOnClickListener(new View.OnClickListener() {
                 @Override

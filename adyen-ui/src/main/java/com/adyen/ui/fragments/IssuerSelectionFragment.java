@@ -67,7 +67,7 @@ public class IssuerSelectionFragment extends Fragment {
         fragmentView = localInflater.inflate(R.layout.issuer_selection_fragment, container, false);
 
         for (InputDetail inputDetail : paymentMethod.getInputDetails()) {
-            if (inputDetail.getKey().equals("idealIssuer")) {
+            if (inputDetail.getKey().equals("idealIssuer") || inputDetail.getKey().equals("issuer")) {
                 issuers = inputDetail.getItems();
                 break;
             }
@@ -85,7 +85,7 @@ public class IssuerSelectionFragment extends Fragment {
         });
 
         if (getActivity() instanceof CheckoutActivity) {
-            ((CheckoutActivity) getActivity()).setActionBarTitle(R.string.title_issuers);
+            ((CheckoutActivity) getActivity()).setActionBarTitle(paymentMethod.getName());
         }
         return fragmentView;
     }

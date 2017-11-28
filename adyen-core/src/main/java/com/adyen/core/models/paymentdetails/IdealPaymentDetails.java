@@ -3,11 +3,11 @@ package com.adyen.core.models.paymentdetails;
 import java.util.Collection;
 
 /**
- * PaymentDetails class for sepa direct debit payments.
+ * PaymentDetails class for the iDEAL issuer selection.
  */
 public class IdealPaymentDetails extends PaymentDetails {
 
-    private static final String IDEAL_ISSUER = "idealIssuer";
+    public static final String IDEAL_ISSUER = "idealIssuer";
 
     public IdealPaymentDetails(Collection<InputDetail> inputDetails) {
         super(inputDetails);

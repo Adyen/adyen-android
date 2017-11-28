@@ -149,8 +149,8 @@ public class MainActivity extends FragmentActivity implements PaymentDataEntryFr
             amount.put("currency", paymentSetupRequest.getAmount().getCurrency());
             jsonObject.put("amount", amount);
             jsonObject.put("channel", "Android");
-            jsonObject.put("reference", "Android Checkout SDK Payment: " + System.currentTimeMillis());
-            jsonObject.put("shopperReference", "example-customer@exampleprovider");
+            jsonObject.put("reference", paymentSetupRequest.getReference());
+            jsonObject.put("shopperReference", paymentSetupRequest.getShopperReference());
             try {
                 short maxNumberOfInstallments = Short.parseShort(paymentSetupRequest.getMaxNumberOfInstallments());
                 if (maxNumberOfInstallments > 1) {
@@ -192,7 +192,8 @@ public class MainActivity extends FragmentActivity implements PaymentDataEntryFr
                     JSONObject jsonVerifyResponse = new JSONObject(new String(response, Charset.forName("UTF-8")));
                     String authResponse = jsonVerifyResponse.getString("authResponse");
                     if (authResponse.equalsIgnoreCase(payment.getPaymentStatus().toString())) {
-                        resultString = "Payment is " + payment.getPaymentStatus().toString().toLowerCase() + " and verified.";
+                        resultString = "Payment is " + payment.getPaymentStatus().toString().toLowerCase() + " and verified. Reference: "
+                                + jsonVerifyResponse.getString("merchantReference");
                     } else {
                         resultString = "Failed to verify payment.";
                     }

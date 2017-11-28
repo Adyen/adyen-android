@@ -31,6 +31,7 @@ public final class PaymentMethod implements Serializable {
         public static final String SEPA_DIRECT_DEBIT = "sepadirectdebit";
         public static final String PAYPAL = "paypal";
         public static final String BCMC = "bcmc";
+        public static final String QIWI_WALLET = "qiwiwallet";
     }
 
     private static final long serialVersionUID = 2587948839462686004L;

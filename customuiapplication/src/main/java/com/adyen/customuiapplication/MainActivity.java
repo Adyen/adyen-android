@@ -26,7 +26,7 @@ import com.adyen.core.models.PaymentMethod;
 import com.adyen.core.models.PaymentRequestResult;
 import com.adyen.core.models.paymentdetails.CVCOnlyPaymentDetails;
 import com.adyen.core.models.paymentdetails.CreditCardPaymentDetails;
-import com.adyen.core.models.paymentdetails.IdealPaymentDetails;
+import com.adyen.core.models.paymentdetails.IssuerSelectionPaymentDetails;
 import com.adyen.core.models.paymentdetails.InputDetail;
 import com.adyen.core.models.paymentdetails.InputDetailsUtil;
 import com.adyen.core.utils.AsyncHttpClient;
@@ -149,10 +149,10 @@ public class MainActivity extends FragmentActivity implements
                 alertDialog.setSingleChoiceItems(issuerListAdapter, -1, new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(@NonNull final DialogInterface dialogInterface, final int i) {
-                        IdealPaymentDetails idealPaymentDetails = new IdealPaymentDetails(inputDetails);
-                        idealPaymentDetails.fillIssuer(issuers.get(i));
+                        IssuerSelectionPaymentDetails issuerSelectionPaymentDetails = new IssuerSelectionPaymentDetails(inputDetails);
+                        issuerSelectionPaymentDetails.fillIssuer(issuers.get(i));
                         dialogInterface.dismiss();
-                        callback.completionWithPaymentDetails(idealPaymentDetails);
+                        callback.completionWithPaymentDetails(issuerSelectionPaymentDetails);
                     }
                 });
                 alertDialog.show();

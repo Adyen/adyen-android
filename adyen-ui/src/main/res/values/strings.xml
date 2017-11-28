@@ -14,9 +14,12 @@
     <string name="title_payment_methods">Payment Methods</string>
     <string name="bank_account_number">Bank account number (IBAN)</string>
     <string name="hint_iban_number">NL53 ABNA 1925 1294 122</string>
+    <string name="country_code">Country code</string>
+    <string name="telephone_number">Telephone number</string>
+    <string name="hint_telehone_number">0123456789</string>
 
-    <string name="title_issuers" translatable="false">iDeal</string>
     <string name="title_sepa">SEPA Direct Debit</string>
+    <string name="title_qiwi_wallet">Qiwi Wallet</string>
     <string name="direct_debit_consent">I agree that the amount below will be debited from my bank account.</string>
     <string name="title_giropay" translatable="false">Giropay</string>
     <string name="giropay_search_field_hint">Bankname / BIC / Bankleitzahl</string>

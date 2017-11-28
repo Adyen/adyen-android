@@ -13,6 +13,8 @@ public class CreditCardPaymentDetails extends PaymentDetails {
     public static final String INSTALLMENTS = "installments";
     public static final String BILLING_ADDRESS = "billingAddress";
 
+    public static final String CARD_HOLDER_NAME_REQUIRED = "cardHolderNameRequired";
+
     public enum AddressKey {
         street,
         houseNumberOrName,

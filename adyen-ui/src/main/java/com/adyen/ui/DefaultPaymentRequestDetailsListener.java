@@ -20,8 +20,10 @@ import com.adyen.core.interfaces.PaymentRequestDetailsListener;
 import com.adyen.core.interfaces.UriCallback;
 import com.adyen.core.internals.ModuleAvailabilityUtil;
 import com.adyen.core.models.PaymentMethod;
+import com.adyen.core.models.paymentdetails.IdealPaymentDetails;
 import com.adyen.core.models.paymentdetails.InputDetail;
 import com.adyen.core.models.paymentdetails.InputDetailsUtil;
+import com.adyen.core.models.paymentdetails.IssuerSelectionPaymentDetails;
 import com.adyen.core.models.paymentdetails.PaymentDetails;
 import com.adyen.core.services.PaymentMethodService;
 import com.adyen.ui.activities.CheckoutActivity;
@@ -120,8 +122,9 @@ public class DefaultPaymentRequestDetailsListener implements PaymentRequestDetai
     public void onPaymentDetailsRequired(@NonNull PaymentRequest paymentRequest,
                                          @NonNull Collection<InputDetail> inputDetails,
                                          @NonNull PaymentDetailsCallback callback) {
-        if (paymentRequest.getPaymentMethod().getType().equals(PaymentMethod.Type.IDEAL)) {
 
+        if (InputDetailsUtil.containsKey(inputDetails, IdealPaymentDetails.IDEAL_ISSUER)
+                || InputDetailsUtil.containsKey(inputDetails, IssuerSelectionPaymentDetails.ISSUER)) {
             final Intent intent = new Intent(context, CheckoutActivity.class);
             Bundle bundle = new Bundle();
             bundle.putSerializable(PAYMENT_METHOD, paymentRequest.getPaymentMethod());
@@ -156,6 +159,14 @@ public class DefaultPaymentRequestDetailsListener implements PaymentRequestDetai
             intent.putExtra(PUBLIC_KEY, paymentRequest.getPublicKey());
             intent.putExtra(GENERATION_TIME, paymentRequest.getGenerationTime());
             intent.putExtra(CVC_FIELD_STATUS, CreditCardFragmentBuilder.CvcFieldStatus.NOCVC.name());
+            context.startActivity(intent);
+        } else if (paymentRequest.getPaymentMethod().getType().equals(PaymentMethod.Type.QIWI_WALLET)) {
+            final Intent intent = new Intent(context, CheckoutActivity.class);
+            Bundle bundle = new Bundle();
+            bundle.putSerializable(PAYMENT_METHOD, paymentRequest.getPaymentMethod());
+            bundle.putSerializable(AMOUNT, paymentRequest.getAmount());
+            bundle.putInt("fragment", CheckoutActivity.QIWI_WALLET_FRAGMENT);
+            intent.putExtras(bundle);
             context.startActivity(intent);
         } else if (paymentRequest.getPaymentMethod().getType().equals(PaymentMethod.Type.PAYPAL)) {
             //We can set "storeDetails" to true if we want to set up a recurring contract.

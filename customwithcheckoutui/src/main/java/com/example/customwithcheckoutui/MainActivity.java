@@ -23,7 +23,7 @@ import com.adyen.core.models.Payment;
 import com.adyen.core.models.PaymentMethod;
 import com.adyen.core.models.PaymentRequestResult;
 import com.adyen.core.models.paymentdetails.CreditCardPaymentDetails;
-import com.adyen.core.models.paymentdetails.IdealPaymentDetails;
+import com.adyen.core.models.paymentdetails.IssuerSelectionPaymentDetails;
 import com.adyen.core.models.paymentdetails.InputDetail;
 import com.adyen.core.models.paymentdetails.SepaDirectDebitPaymentDetails;
 import com.adyen.core.utils.AsyncHttpClient;
@@ -141,9 +141,9 @@ public class MainActivity extends FragmentActivity implements
                         .setIssuerSelectionListener(new IssuerSelectionFragment.IssuerSelectionListener() {
                             @Override
                             public void onIssuerSelected(String issuer) {
-                                IdealPaymentDetails idealPaymentDetails = new IdealPaymentDetails(inputDetails);
-                                idealPaymentDetails.fillIssuer(issuer);
-                                callback.completionWithPaymentDetails(idealPaymentDetails);
+                                IssuerSelectionPaymentDetails issuerSelectionPaymentDetails = new IssuerSelectionPaymentDetails(inputDetails);
+                                issuerSelectionPaymentDetails.fillIssuer(issuer);
+                                callback.completionWithPaymentDetails(issuerSelectionPaymentDetails);
                             }
                         })
                         .build();

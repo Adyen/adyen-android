@@ -43,8 +43,8 @@ final class DeviceTokenGenerator {
             deviceInfo.put("sdkVersion", SDK_VERSION);
             deviceInfo.put("deviceIdentifier", androidId);
             deviceInfo.put("locale", StringUtils.getLocale(context));
-
             deviceInfo.put("integration", (isQuickIntegration) ? "quick" : "custom");
+            deviceInfo.put("deviceModel", Build.MANUFACTURER + " " + Build.DEVICE);
 
         } catch (final JSONException jsonException) {
             Log.e(TAG, "Token could not be created", jsonException);

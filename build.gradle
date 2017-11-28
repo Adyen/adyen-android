@@ -30,8 +30,8 @@ ext {
 
     minSdkVersion = 16
     targetSdkVersion = 25
-    versionCode = 15
-    versionName = "1.12.0"
+    versionCode = 16
+    versionName = "1.13.0"
 
     release_debuggable = false
     release_minifyEnabled = false
@@ -235,6 +235,7 @@ task generateJavadoc(type: Javadoc) {
     include('**/CreditCardPaymentDetails.java')
     include('**/CVCOnlyPaymentDetails.java')
     include('**/IdealPaymentDetails.java')
+    include('**/IssuerSelectionPaymentDetails.java')
     include('**/SepaDirectDebitPaymentDetails.java')
 
     include('**/InputDetail.java')

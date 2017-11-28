@@ -71,21 +71,25 @@ public class PaymentDataEntryFragment extends Fragment {
     @NonNull
     private PaymentSetupRequest buildPaymentRequest(final View view) throws ParseException {
         Log.v(TAG, "buildPaymentRequest()");
-        PaymentSetupRequest paymentRequest = new PaymentSetupRequest();
+        PaymentSetupRequest paymentSetupRequest = new PaymentSetupRequest();
+        paymentSetupRequest.setMerchantAccount(((EditText) view.findViewById(R.id.merchantAccountEntry)).getText()
+                .toString());
         final String amountValueString = ((EditText) view.findViewById(R.id.orderAmountEntry)).getText().toString();
         final String amountCurrencyString = ((EditText) view.findViewById(R.id.orderCurrencyEntry))
                 .getText().toString();
 
-        paymentRequest.setAmount(new Amount(AmountUtil.parseMajorAmount(amountCurrencyString, amountValueString),
+        paymentSetupRequest.setAmount(new Amount(AmountUtil.parseMajorAmount(amountCurrencyString, amountValueString),
                 amountCurrencyString));
-        paymentRequest.setCountryCode(((EditText) view.findViewById(R.id.countryEntry)).getText().toString());
-        paymentRequest.setShopperLocale(((EditText) view.findViewById(R.id.shopperLocaleEntry)).getText().toString());
-        paymentRequest.setMerchantAccount(((EditText) view.findViewById(R.id.merchantAccountEntry)).getText()
+        paymentSetupRequest.setCountryCode(((EditText) view.findViewById(R.id.countryEntry)).getText().toString());
+        paymentSetupRequest.setShopperLocale(((EditText) view.findViewById(R.id.shopperLocaleEntry)).getText().toString());
+        paymentSetupRequest.setShopperReference(((EditText) view.findViewById(R.id.shopperReferenceEntry)).getText()
+                .toString());
+        paymentSetupRequest.setReference(((EditText) view.findViewById(R.id.referenceEntry)).getText()
                 .toString());
         String maxNumberOfInstallments = ((String) ((Spinner) view.findViewById(R.id.installmentsEntry)).getSelectedItem());
-        paymentRequest.setMaxNumberOfInstallments(maxNumberOfInstallments);
+        paymentSetupRequest.setMaxNumberOfInstallments(maxNumberOfInstallments);
 
-        return paymentRequest;
+        return paymentSetupRequest;
     }
 
 }

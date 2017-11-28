@@ -7,10 +7,10 @@ This README provides the usage manual for the SDK itself. For the full documenta
 To integrate the Adyen SDK into your project, import the **core**, **utils** and **ui** module by adding the following lines to your build.gradle file.
 
 ```
-compile 'com.adyen.checkout:core:1.12.0'
-compile 'com.adyen.checkout:utils:1.12.0'
-compile 'com.adyen.checkout:ui:1.12.0'
-compile 'com.adyen.checkout:cardscan:1.12.0'
+compile 'com.adyen.checkout:core:1.13.0'
+compile 'com.adyen.checkout:utils:1.13.0'
+compile 'com.adyen.checkout:ui:1.13.0'
+compile 'com.adyen.checkout:cardscan:1.13.0'
 ```
 
 > For implementing Custom integration, only the **core** module is required. However, you might also want to include the **utils** module to use Adyen's utility methods such as Luhn check, credit card type detection, etc.
@@ -174,7 +174,7 @@ For your convenience, we included the following demo modules into this repositor
 
 * **checkoutdemo** – A functioning demo of the Checkout SDK using the Quick integration.
 
-* **app** – Also uses the Quick integration, but allows to configure parameters for setting up the payment request.
+* **defaultApp** – Also uses the Quick integration, but allows to configure parameters for setting up the payment request.
 
 * **customuiapplication** – An example implementation of the Custom integration where the application fully handles the UI.
 
