@@ -102,11 +102,11 @@ public class QiwiWalletFragment extends Fragment {
 
         final TextView amountTextview = (TextView) fragmentView.findViewById(R.id.amount_text_view);
         final String valueString = AmountUtil.format(amount, true, StringUtils.getLocale(getActivity()));
-        final String amountString = getString(R.string.pay_with_amount, valueString);
+        final String amountString = getString(R.string.payButton_formatted, valueString);
         amountTextview.setText(amountString);
 
         if (getActivity() instanceof CheckoutActivity) {
-            ((CheckoutActivity) getActivity()).setActionBarTitle(R.string.title_qiwi_wallet);
+            ((CheckoutActivity) getActivity()).setActionBarTitle(paymentMethod.getName());
         }
 
         return fragmentView;

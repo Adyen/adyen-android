@@ -74,7 +74,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_alignParentLeft="true"
-                    android:text="@string/giropay_search_field_hint"
+                    android:text="@string/giropay_searchField_placeholder"
                     android:id="@+id/credit_card_no_label"
                     android:textSize="12sp" />
 
@@ -82,7 +82,7 @@
                     android:id="@+id/adyen_giropay_lookup_edit_text"
                     android:layout_width="fill_parent"
                     android:layout_height="wrap_content"
-                    android:hint="@string/min_3_chars"
+                    android:hint="@string/giropay_minimumLength"
                     android:inputType="textCapWords|textNoSuggestions"
                     android:drawablePadding="12dp"
                     android:gravity="center_vertical" />
@@ -103,7 +103,7 @@
                 android:layout_height="wrap_content" />
             <TextView
                 android:layout_marginTop="4dp"
-                android:text="@string/giropay_example"
+                android:text="@string/giropay_searchField_placeholder"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content" />
         </LinearLayout>

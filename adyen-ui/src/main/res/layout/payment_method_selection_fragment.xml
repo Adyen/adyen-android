@@ -22,7 +22,7 @@
                 android:layout_height="wrap_content"
                 android:layout_marginLeft="20dp"
                 android:layout_marginTop="26dp"
-                android:text="@string/preferred_payment_methods_label"
+                android:text="@string/paymentMethods_storedMethods"
                 android:textSize="13sp"/>
 
             <View
@@ -54,7 +54,7 @@
             android:layout_height="wrap_content"
             android:layout_marginLeft="20dp"
             android:layout_marginTop="26dp"
-            android:text="@string/other_payment_methods_label"
+            android:text="@string/paymentMethods_otherMethods"
             android:textSize="13sp"/>
 
         <View

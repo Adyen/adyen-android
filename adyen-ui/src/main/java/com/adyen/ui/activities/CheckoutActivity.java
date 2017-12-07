@@ -233,6 +233,7 @@ public class CheckoutActivity extends FragmentActivity {
                 final PaymentMethod paymentMethod = (PaymentMethod) bundle.getSerializable(PAYMENT_METHOD);
 
                 SepaDirectDebitFragment sepaDirectDebitFragment = new SepaDirectDebitFragmentBuilder()
+                        .setPaymentMethod(paymentMethod)
                         .setAmount((Amount) intent.getSerializableExtra(AMOUNT))
                         .setSEPADirectDebitPaymentDetailsListener(new SepaDirectDebitFragment.SEPADirectDebitPaymentDetailsListener() {
                             @Override
@@ -272,9 +273,11 @@ public class CheckoutActivity extends FragmentActivity {
                 break;
             }
             case GIROPAY_FRAGMENT: {
+                final PaymentMethod paymentMethod = (PaymentMethod) bundle.getSerializable(PAYMENT_METHOD);
                 final GiropayFragment giropayFragment = new GiropayFragment();
 
                 Bundle giroPayBundle = new Bundle();
+                giroPayBundle.putSerializable(PAYMENT_METHOD, paymentMethod);
                 giroPayBundle.putSerializable(AMOUNT, intent.getSerializableExtra(AMOUNT));
                 giropayFragment.setArguments(giroPayBundle);
                 replaceFragment(giropayFragment);

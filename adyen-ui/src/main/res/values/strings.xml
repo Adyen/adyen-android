@@ -1,39 +1,66 @@
+<?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string name="card_number">Card Number</string>
-    <string name="hint_card_number" translatable="false">1234 5678 9012 3456</string>
-    <string name="expiry_date">Expiry Date</string>
-    <string name="hint_expiry_date">MM/YY</string>
-    <string name="cvc_cvv" translatable="false">CVC/CVV</string>
-    <string name="hint_cvc_cvv" translatable="false">123</string>
-    <string name="cardholder_name">Cardholder Name</string>
-    <string name="hint_cardholder_name">John Snow</string>
-    <string name="pay_with_amount">Pay %1$s</string>
-    <string name="remember_card_hint">Remember card</string>
-    <string name="title_card_details">Card Details</string>
-    <string name="card_number_of_installments">Number of installments</string>
-    <string name="title_payment_methods">Payment Methods</string>
-    <string name="bank_account_number">Bank account number (IBAN)</string>
-    <string name="hint_iban_number">NL53 ABNA 1925 1294 122</string>
     <string name="country_code">Country code</string>
     <string name="telephone_number">Telephone number</string>
     <string name="hint_telehone_number">0123456789</string>
-
-    <string name="title_sepa">SEPA Direct Debit</string>
-    <string name="title_qiwi_wallet">Qiwi Wallet</string>
-    <string name="direct_debit_consent">I agree that the amount below will be debited from my bank account.</string>
-    <string name="title_giropay" translatable="false">Giropay</string>
-    <string name="giropay_search_field_hint">Bankname / BIC / Bankleitzahl</string>
-    <string name="min_3_chars">Min. 3 characters</string>
-
-    <string name="cancel_button">Cancel</string>
-    <string name="title_verify_card">Verify your card</string>
-
-    <string name="preferred_payment_methods_label">Your payment methods</string>
-    <string name="other_payment_methods_label">Select other method</string>
-    <string name="cvc_extended_hint_with_last_digits">Please enter the CVC code for %1$s</string>
-
-    <string name="giropay_example" translatable="false">Deutsche Bank PGK Berlin 10883 Berlin (10070024 / DEUTDEDBBER)</string>
     <string name="example">Example:</string>
-    <string name="font_sans_serif_light" translatable="false">sans-serif-light</string>
 
+  <string name="paymentMethods_title">Payment Methods</string>
+  <string name="paymentMethods_storedMethods">Your payment methods</string>
+  <string name="paymentMethods_otherMethods">Select other method</string>
+  <string name="paymentMethods_moreMethodsButton">More payment methods</string>
+  <string name="payButton">Pay</string>
+  <string name="payButton_formatted">Pay %1$s</string>
+  <string name="cancelButton">Cancel</string>
+  <string name="dismissButton">OK</string>
+  <string name="storeDetails">Save for my next payment</string>
+  <string name="payment_redirecting">You will be redirected…</string>
+  <string name="payment_processing">Your payment is being processed</string>
+  <string name="creditCard_title">Card Details</string>
+  <string name="creditCard_holderName">Cardholder name</string>
+  <string name="creditCard_holderName_placeholder"> J. Smith</string>
+  <string name="creditCard_numberField_title">Card Number</string>
+  <string name="creditCard_numberField_placeholder">1234 5678 9012 3456</string>
+  <string name="creditCard_numberField_invalid">Invalid card number</string>
+  <string name="creditCard_expiryDateField_title">Expiry Date</string>
+  <string name="creditCard_expiryDateField_placeholder">MM/YY</string>
+  <string name="creditCard_expiryDateField_invalid">Invalid expiration date</string>
+  <string name="creditCard_expiryDateField_month">Month</string>
+  <string name="creditCard_expiryDateField_month_placeholder">MM</string>
+  <string name="creditCard_expiryDateField_year">Year</string>
+  <string name="creditCard_expiryDateField_year_placeholder">YY</string>
+  <string name="creditCard_cvcField_title">CVC / CVV</string>
+  <string name="creditCard_cvcField_placeholder">123</string>
+  <string name="creditCard_installmentsField">Number of installments</string>
+  <string name="creditCard_storeDetailsButton">Remember this card for my next payment</string>
+  <string name="creditCard_oneClickVerification_title">Verify your card</string>
+  <string name="creditCard_oneClickVerification_message">Please enter the CVC code for %1$s</string>
+  <string name="creditCard_oneClickVerification_invalidInput_title">Invalid CVC</string>
+  <string name="creditCard_oneClickVerification_invalidInput_message">Please enter a valid CVC to continue.</string>
+  <string name="sepaDirectDebit_ibanField_title">Account Number (IBAN)</string>
+  <string name="sepaDirectDebit_ibanField_placeholder">NL53 ABNA 1925 1294 122</string>
+  <string name="sepaDirectDebit_ibanField_invalid">Invalid account number</string>
+  <string name="sepaDirectDebit_nameField_title">Holder Name</string>
+  <string name="sepaDirectDebit_nameField_placeholder">J. Smith</string>
+  <string name="sepaDirectDebit_consentButton">I agree that the amount below will be debited from my bank account.</string>
+  <string name="sepa_ownerName">Holder Name</string>
+  <string name="sepa_ibanNumber">Account Number (IBAN)</string>
+  <string name="giropay_searchField_placeholder">Bankname / BIC / Bankleitzahl</string>
+  <string name="giropay_minimumLength">Min. 3 characters</string>
+  <string name="giropay_noResults">No search results</string>
+  <string name="error_title">Error</string>
+  <string name="error_subtitle_redirect">Redirect failed</string>
+  <string name="error_subtitle_payment">Payment failed</string>
+  <string name="error_subtitle_refused">Payment refused</string>
+  <string name="error_message_unknown">An unknown error occurred</string>
+  <string name="error_message_cannotConnectToInternet">Failed to connect to the internet, please check your internet connection.</string>
+  <string name="error_message_cannotConnectToHost">Failed to connect to our payment server.</string>
+  <string name="error_retryButton">Try again</string>
+  <string name="idealIssuer_selectField_title">Bank</string>
+  <string name="idealIssuer_selectField_placeholder">Select your bank</string>
+  <string name="creditCard_success">Payment Successful</string>
+  <string name="oneClick_confirmationAlert_title">Confirm %1$s payment</string>
+  <string name="redirect_cannotOpenApp_title">Cannot Open App</string>
+  <string name="redirect_cannotOpenApp_appNotInstalledMessage">This app could not be opened because it is not installed on this device.</string>
+  <string name="holderName">Cardholder name</string>
 </resources>

@@ -52,7 +52,7 @@
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:layout_alignParentLeft="true"
-                            android:text="@string/card_number"
+                            android:text="@string/creditCard_numberField_title"
                             android:id="@+id/credit_card_no_label"
                             android:textSize="12sp" />
 
@@ -73,7 +73,7 @@
                             android:layout_width="0dp"
                             android:layout_height="wrap_content"
                             android:layout_weight="1"
-                            android:hint="@string/hint_card_number"
+                            android:hint="@string/creditCard_numberField_placeholder"
                             android:inputType="phone"
                             android:focusable="true"
                             android:gravity="center_vertical"
@@ -112,7 +112,7 @@
                         <TextView
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:text="@string/expiry_date"
+                            android:text="@string/creditCard_expiryDateField_title"
                             android:id="@+id/credit_card_exp_date_label"
                             android:textSize="12sp" />
 
@@ -121,7 +121,7 @@
                             android:layout_width="fill_parent"
                             android:layout_height="wrap_content"
                             android:inputType="phone"
-                            android:hint="@string/hint_expiry_date"
+                            android:hint="@string/creditCard_expiryDateField_placeholder"
                             android:layout_marginRight="15dp"
                             android:nextFocusDown="@+id/adyen_credit_card_cvc" />
 
@@ -144,7 +144,7 @@
                         <TextView
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:text="@string/cvc_cvv"
+                            android:text="@string/creditCard_cvcField_title"
                             android:id="@+id/credit_card_cvc_label"
                             android:layout_gravity="left"
                             android:textSize="12sp" />
@@ -153,7 +153,7 @@
                             android:id="@+id/adyen_credit_card_cvc"
                             android:layout_width="fill_parent"
                             android:layout_height="wrap_content"
-                            android:hint="@string/hint_cvc_cvv"
+                            android:hint="@string/creditCard_cvcField_placeholder"
                             android:inputType="phone"
                             android:gravity="left" />
 
@@ -175,7 +175,7 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_gravity="left"
-                        android:text="@string/cardholder_name"
+                        android:text="@string/creditCard_holderName"
                         android:id="@+id/card_holder_name_label"
                         android:textSize="12sp" />
 
@@ -183,7 +183,7 @@
                         android:id="@+id/credit_card_holder_name"
                         android:layout_width="fill_parent"
                         android:layout_height="wrap_content"
-                        android:hint="@string/hint_cardholder_name"
+                        android:hint="@string/creditCard_holderName_placeholder"
                         android:inputType="textCapWords|textNoSuggestions"
                         android:focusable="true" />
                 </LinearLayout>
@@ -202,7 +202,7 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_gravity="left"
-                        android:text="@string/card_number_of_installments"
+                        android:text="@string/creditCard_installmentsField"
                         android:id="@+id/installments_label"
                         android:textSize="12sp" />
 
@@ -235,7 +235,7 @@
 
                         <TextView
                             android:layout_alignParentLeft="true"
-                            android:text="@string/remember_card_hint"
+                            android:text="@string/creditCard_storeDetailsButton"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content" />
 

@@ -47,7 +47,7 @@
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:layout_alignParentLeft="true"
-                            android:text="@string/bank_account_number"
+                            android:text="@string/sepaDirectDebit_ibanField_title"
                             android:textSize="12sp" />
 
                         <ImageView
@@ -61,7 +61,7 @@
                         android:id="@+id/adyen_sepa_iban_edit_text"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:hint="@string/hint_iban_number"
+                        android:hint="@string/sepaDirectDebit_ibanField_placeholder"
                         android:inputType="textCapCharacters|textNoSuggestions"
                         android:focusable="true"
                         android:textAllCaps="true"
@@ -79,7 +79,7 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_gravity="left"
-                        android:text="@string/cardholder_name"
+                        android:text="@string/sepaDirectDebit_nameField_title"
                         android:id="@+id/card_holder_name_label"
                         android:textSize="12sp" />
 
@@ -87,7 +87,7 @@
                         android:id="@+id/adyen_bank_account_holder_name"
                         android:layout_width="fill_parent"
                         android:layout_height="wrap_content"
-                        android:hint="@string/hint_cardholder_name"
+                        android:hint="@string/sepaDirectDebit_nameField_placeholder"
                         android:inputType="textCapWords"
                         android:focusable="true" />
 
@@ -124,7 +124,7 @@
                         <TextView
                             android:layout_toLeftOf="@+id/consent_direct_debit_checkbox"
                             android:paddingRight="20dp"
-                            android:text="@string/direct_debit_consent"
+                            android:text="@string/sepaDirectDebit_consentButton"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content" />
 

@@ -24,6 +24,7 @@ import android.widget.TextView;
 
 import com.adyen.core.internals.HttpClient;
 import com.adyen.core.models.Amount;
+import com.adyen.core.models.PaymentMethod;
 import com.adyen.core.utils.AmountUtil;
 import com.adyen.core.utils.StringUtils;
 import com.adyen.ui.R;
@@ -55,12 +56,14 @@ public final class GiropayFragment extends Fragment {
 
     private GiroPayLookUpASyncTask lookupAsyncTask = null;
 
+    private PaymentMethod paymentMethod;
     private Amount amount;
 
     @Override
     public void setArguments(Bundle args) {
         super.setArguments(args);
         amount = (Amount) args.get(CheckoutActivity.AMOUNT);
+        paymentMethod = (PaymentMethod) args.get(CheckoutActivity.PAYMENT_METHOD);
     }
 
     @Nullable
@@ -79,7 +82,7 @@ public final class GiropayFragment extends Fragment {
 
         TextView amountTextView = (TextView) fragmentView.findViewById(R.id.amount_text_view);
         final String amountLocalized = AmountUtil.format(amount, true, StringUtils.getLocale(getActivity()));
-        final String amountString = getString(R.string.pay_with_amount, amountLocalized);
+        final String amountString = getString(R.string.payButton_formatted, amountLocalized);
         amountTextView.setText(amountString);
 
         loadingView = fragmentView.findViewById(R.id.loading_icon_view);
@@ -87,7 +90,7 @@ public final class GiropayFragment extends Fragment {
         exampleView = fragmentView.findViewById(R.id.giropay_example_layout);
 
         if (getActivity() instanceof CheckoutActivity) {
-            ((CheckoutActivity) getActivity()).setActionBarTitle(R.string.title_giropay);
+            ((CheckoutActivity) getActivity()).setActionBarTitle(paymentMethod != null ? paymentMethod.getName() : "");
         }
         return fragmentView;
     }

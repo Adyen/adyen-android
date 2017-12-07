@@ -56,6 +56,7 @@ class PaymentStateHandler implements State.StateChangeListener {
     private static final String REDIRECT_RESPONSE = "redirect";
     private static final String COMPLETE_RESPONSE = "complete";
     private static final String ERROR_RESPONSE = "error";
+    private static final String VALIDATION_RESPONSE = "validation";
     private static final String URL_JSON_KEY = "url";
     private static final String ANDROID_PAY_TOKEN_PROVIDED = "com.adyen.androidpay.ui.AndroidTokenProvided";
 
@@ -298,7 +299,7 @@ class PaymentStateHandler implements State.StateChangeListener {
                     } else if (COMPLETE_RESPONSE.equals(type)) {
                         paymentResult = new PaymentRequestResult(new Payment(responseJson));
                         paymentProcessorStateMachine.onTrigger(PaymentTrigger.PAYMENT_RESULT_RECEIVED);
-                    } else if (ERROR_RESPONSE.equals(type)) {
+                    } else if (ERROR_RESPONSE.equals(type) || VALIDATION_RESPONSE.equals(type)) {
                         Log.w(TAG, "Payment failed: " + responseJson.toString());
                         paymentErrorThrowable = new PostResponseFormatException(
                                 responseJson.getString("errorMessage"));

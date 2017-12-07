@@ -13,6 +13,7 @@ import android.widget.CompoundButton;
 import android.widget.TextView;
 
 import com.adyen.core.models.Amount;
+import com.adyen.core.models.PaymentMethod;
 import com.adyen.core.utils.AmountUtil;
 import com.adyen.core.utils.StringUtils;
 import com.adyen.ui.R;
@@ -28,6 +29,8 @@ import com.adyen.ui.views.IBANEditText;
  * Should be instantiated via {@link SepaDirectDebitFragmentBuilder}.
  */
 public class SepaDirectDebitFragment extends Fragment {
+
+    private PaymentMethod paymentMethod;
 
     private Amount amount;
 
@@ -50,6 +53,9 @@ public class SepaDirectDebitFragment extends Fragment {
     @Override
     public void setArguments(Bundle args) {
         super.setArguments(args);
+
+        paymentMethod = (PaymentMethod) args.get(CheckoutActivity.PAYMENT_METHOD);
+
         amount = (Amount) args.get(CheckoutActivity.AMOUNT);
 
         theme = args.getInt("theme");
@@ -107,11 +113,11 @@ public class SepaDirectDebitFragment extends Fragment {
 
         final TextView amountTextview = (TextView) fragmentView.findViewById(R.id.amount_text_view);
         final String valueString = AmountUtil.format(amount, true, StringUtils.getLocale(getActivity()));
-        final String amountString = getString(R.string.pay_with_amount, valueString);
+        final String amountString = getString(R.string.payButton_formatted, valueString);
         amountTextview.setText(amountString);
 
         if (getActivity() instanceof CheckoutActivity) {
-            ((CheckoutActivity) getActivity()).setActionBarTitle(R.string.title_sepa);
+            ((CheckoutActivity) getActivity()).setActionBarTitle(paymentMethod.getName());
         }
 
         return fragmentView;

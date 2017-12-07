@@ -130,7 +130,7 @@ public class PaymentMethodSelectionFragment extends Fragment {
         }
 
         if (getActivity() instanceof CheckoutActivity) {
-            ((CheckoutActivity) getActivity()).setActionBarTitle(R.string.title_payment_methods);
+            ((CheckoutActivity) getActivity()).setActionBarTitle(R.string.paymentMethods_title);
         }
 
         return fragmentView;

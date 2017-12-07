@@ -58,7 +58,7 @@ public class CVCDialog extends Dialog {
         final TextView cvcHintTextView = ((TextView) findViewById(R.id.extended_cvc_hint_textview));
         final String cardName = paymentMethod.getName().replaceAll(" ", "\u00A0"); //replace whitespace
         // in "**** 1234" with non-breakable whitespace
-        final String cvcHint = getContext().getString(R.string.cvc_extended_hint_with_last_digits, cardName);
+        final String cvcHint = getContext().getString(R.string.creditCard_oneClickVerification_message, cardName);
         cvcHintTextView.setText(cvcHint);
 
         final CVCEditText cvcEditText = (CVCEditText) findViewById(R.id.adyen_credit_card_cvc);
@@ -75,7 +75,7 @@ public class CVCDialog extends Dialog {
         AdyenInputValidator validator = new AdyenInputValidator();
         final Button checkoutButton = (Button) findViewById(R.id.button_confirm_cvc_verification);
         String amountStr = AmountUtil.format(amount, true, StringUtils.getLocale(activity));
-        final String amountString = getContext().getString(R.string.pay_with_amount, amountStr);
+        final String amountString = getContext().getString(R.string.payButton_formatted, amountStr);
         checkoutButton.setText(amountString);
         checkoutButton.setEnabled(false);
         validator.setOnReadyStateChangedListener(new AdyenInputValidator.OnReadyStateChangedListener() {

@@ -18,7 +18,7 @@
             android:paddingTop="10dp"
             android:textColor="@color/black_text"
             android:layout_gravity="center_horizontal"
-            android:text="@string/title_verify_card"
+            android:text="@string/creditCard_oneClickVerification_title"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content" />
 
@@ -29,7 +29,7 @@
             android:paddingRight="10dp"
             android:textSize="18sp"
             android:gravity="center"
-            android:text="@string/cvc_extended_hint_with_last_digits"
+            android:text="@string/creditCard_oneClickVerification_message"
             android:layout_gravity="center_horizontal"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content" />
@@ -44,7 +44,7 @@
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="@string/cvc_cvv"
+                android:text="@string/creditCard_cvcField_title"
                 android:id="@+id/credit_card_cvc_label"
                 android:layout_gravity="left"
                 android:textSize="12sp" />
@@ -56,7 +56,7 @@
                 android:id="@+id/adyen_credit_card_cvc"
                 android:paddingRight="50dp"
                 android:layout_width="wrap_content"
-                android:hint="@string/hint_cvc_cvv"
+                android:hint="@string/creditCard_cvcField_placeholder"
                 android:layout_height="wrap_content" />
 
         </LinearLayout>
@@ -83,7 +83,7 @@
                     android:id="@+id/button_cancel_cvc_verification"
                     android:background="@android:color/transparent"
                     android:textColor="@color/hint_text_color"
-                    android:text="@string/cancel_button"
+                    android:text="@string/cancelButton"
                     android:textSize="18sp"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content" />
@@ -93,7 +93,7 @@
                 android:paddingTop="0.5dp"
                 android:textAppearance="@style/TextAppearance.AppCompat.Small"
                 android:id="@+id/button_confirm_cvc_verification"
-                android:text="@string/pay_with_amount"
+                android:text="@string/payButton_formatted"
                 android:layout_gravity="right"
                 android:textSize="18sp"
                 android:layout_weight="0.5"

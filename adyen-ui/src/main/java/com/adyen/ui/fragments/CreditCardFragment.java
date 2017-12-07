@@ -279,7 +279,7 @@ public class CreditCardFragment extends Fragment implements CreditCardEditText.C
 
         final TextView checkoutTextView = (TextView) fragmentView.findViewById(R.id.amount_text_view);
         final String amountString = AmountUtil.format(amount, true, StringUtils.getLocale(getActivity()));
-        final String checkoutString = getString(R.string.pay_with_amount, amountString);
+        final String checkoutString = getString(R.string.payButton_formatted, amountString);
         checkoutTextView.setText(checkoutString);
         AdyenInputValidator validator = new AdyenInputValidator();
         validator.setOnReadyStateChangedListener(new AdyenInputValidator.OnReadyStateChangedListener() {
@@ -367,7 +367,7 @@ public class CreditCardFragment extends Fragment implements CreditCardEditText.C
         });
 
         if (getActivity() instanceof CheckoutActivity) {
-            ((CheckoutActivity) getActivity()).setActionBarTitle(R.string.title_card_details);
+            ((CheckoutActivity) getActivity()).setActionBarTitle(R.string.creditCard_title);
         }
         return fragmentView;
     }

@@ -376,7 +376,7 @@ public class PaymentAppTest {
         Espresso.pressBack();
         waitForText("Payment Methods");
         onView(withText(equalToIgnoringCase("SEPA Direct Debit"))).perform(scrollTo(), click());
-        waitForText("Cardholder Name");
+        waitForText("Holder Name");
         waitForText("SEPA Direct Debit");
         Espresso.pressBack();
         waitForText("Payment Methods");
@@ -402,7 +402,7 @@ public class PaymentAppTest {
     public void testOptionalCVC() throws Exception {
         goToPaymentListFragment(AMOUNT, EUR);
         onView(withText(equalToIgnoringCase("Credit Card"))).perform(scrollTo(), click());
-        waitForText("CVC/CVV");
+        waitForText("CVC / CVV");
         onView(withId(R.id.adyen_credit_card_no)).perform(clearText(), typeText("6731 0123 4567 8906"),
                 closeSoftKeyboard());
         onView(withId(R.id.adyen_credit_card_exp_date)).perform(clearText(), typeText("818"),
