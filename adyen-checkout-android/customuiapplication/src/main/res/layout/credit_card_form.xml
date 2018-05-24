@@ -1,0 +1,123 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+              android:orientation="vertical"
+              android:id="@+id/payment_form_layout"
+              android:layout_width="match_parent"
+              android:layout_height="match_parent"
+              android:background="@color/white">
+
+    <EditText
+        android:id="@+id/credit_card_no"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:hint="Credit card"
+        android:inputType="phone"
+        android:focusable="true"
+        android:layout_marginTop="10dp"
+        android:textSize="18sp"
+        android:textColorHint="@color/hint_text_color"
+        android:layout_marginLeft="10dp"
+        android:layout_marginRight="10dp"
+        android:paddingBottom="15dp"/>
+
+    <ImageSwitcher
+        android:id="@+id/cardType"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="right|center_vertical"
+        android:layout_marginTop="-35dp"
+        android:layout_marginRight="13dp"
+        android:src="@mipmap/ady_card_unknown"
+        android:background="@drawable/card_border"/>
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textAppearance="?android:attr/textAppearanceSmall"
+        android:layout_gravity="left"
+        android:text="16-digit number"
+        android:id="@+id/credit_card_no_label"
+        android:textColor="@color/lighter_grey_border"
+        android:textSize="12sp"
+        android:layout_marginLeft="15dp"
+        android:layout_marginTop="10dp"/>
+
+    <LinearLayout
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal">
+
+        <LinearLayout
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight=".30"
+            android:orientation="vertical"
+            android:layout_marginTop="10dp">
+
+            <EditText
+                android:id="@+id/credit_card_exp_date"
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:inputType="phone"
+                android:hint="Expiration date"
+                android:textSize="18sp"
+                android:textColorHint="@color/hint_text_color"
+                android:layout_marginLeft="10dp"
+                android:layout_marginRight="15dp"
+                android:paddingBottom="15dp"/>
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textAppearance="?android:attr/textAppearanceSmall"
+                android:text="MM/YY"
+                android:id="@+id/credit_card_exp_date_label"
+                android:textColor="@color/lighter_grey_border"
+                android:textSize="12sp"
+                android:layout_marginLeft="15dp"
+                android:layout_marginTop="-5dp"/>
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight=".20"
+            android:orientation="vertical"
+            android:layout_marginTop="10dp">
+
+            <EditText
+                android:id="@+id/credit_card_cvc"
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:inputType="phone"
+                android:hint="Security code"
+                android:gravity="right"
+                android:textSize="18sp"
+                android:textColorHint="@color/hint_text_color"
+                android:layout_marginRight="10dp"
+                android:paddingBottom="15dp"/>
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textAppearance="?android:attr/textAppearanceSmall"
+                android:text="3-digit number"
+                android:id="@+id/credit_card_cvc_label"
+                android:layout_gravity="right"
+                android:textColor="@color/lighter_grey_border"
+                android:textSize="12sp"
+                android:layout_marginRight="15dp"
+                android:layout_marginTop="-5dp"/>
+
+        </LinearLayout>
+
+    </LinearLayout>
+
+    <Button android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/collectCreditCardData"
+    android:layout_gravity="center"
+    android:text="PROCEED"/>
+
+</LinearLayout>

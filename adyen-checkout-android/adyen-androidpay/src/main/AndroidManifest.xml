@@ -1,0 +1,19 @@
+<manifest xmlns:android="http://schemas.android.com/apk/res/android"
+    package="com.adyen.androidpay">
+
+    <application
+        android:allowBackup="true"
+        android:supportsRtl="true">
+
+        <!-- Enables the Android Pay API -->
+        <meta-data
+            android:name="com.google.android.gms.wallet.api.enabled"
+            android:value="true" />
+
+        <activity
+            android:name=".ui.AndroidPayActivity"
+            android:theme="@style/AndroidPayActivity"/>
+
+    </application>
+
+</manifest>

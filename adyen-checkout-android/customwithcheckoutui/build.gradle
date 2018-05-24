@@ -1,0 +1,53 @@
+apply plugin: 'com.android.application'
+
+android {
+    compileSdkVersion rootProject.ext.compileSdkVersion
+    buildToolsVersion rootProject.ext.buildToolsVersion
+
+    defaultConfig {
+        applicationId "com.example.customwithadyenui"
+        minSdkVersion rootProject.minSdkVersion
+        targetSdkVersion rootProject.targetSdkVersion
+        versionCode rootProject.versionCode
+        versionName rootProject.versionName
+
+        testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
+
+        buildConfigField "String", "SERVER_URL", "\"" + System.getProperty("SERVER_URL", "").trim() + "\""
+        buildConfigField "String", "API_KEY", "\"" + System.getProperty("API_KEY", "").trim() + "\""
+        buildConfigField "String", "API_HEADER_KEY", "\"" + System.getProperty("API_HEADER_KEY", "").trim() + "\""
+    }
+    buildTypes {
+        release {
+            debuggable false
+            minifyEnabled false
+            shrinkResources false
+            useProguard false
+            proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
+        }
+        debug {
+            debuggable rootProject.debug_debuggable
+            testCoverageEnabled = rootProject.debug_testCoverageEnabled
+        }
+    }
+}
+
+dependencies {
+    compile fileTree(dir: 'libs', include: ['*.jar'])
+    androidTestCompile('com.android.support.test.espresso:espresso-core:2.2.2', {
+        exclude group: 'com.android.support', module: 'support-annotations'
+    })
+    compile "com.android.support:appcompat-v7:${rootProject.ext.supportLibVersion}"
+    testCompile "junit:junit:${rootProject.ext.jUnitVersion}"
+
+    if (publishNonDefault) {
+        debugCompile project(path: ':adyen-core', configuration: 'debug')
+        releaseCompile project(path: ':adyen-core', configuration: 'release')
+
+        debugCompile project(path: ':adyen-ui', configuration: 'debug')
+        releaseCompile project(path: ':adyen-ui', configuration: 'release')
+    } else {
+        compile project(':adyen-core')
+        compile project(':adyen-ui')
+    }
+}

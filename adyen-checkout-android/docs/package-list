@@ -1,0 +1,4 @@
+com.adyen.core
+com.adyen.core.interfaces
+com.adyen.core.models
+com.adyen.core.models.paymentdetails

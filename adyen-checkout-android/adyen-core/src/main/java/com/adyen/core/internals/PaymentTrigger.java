@@ -1,0 +1,20 @@
+package com.adyen.core.internals;
+
+/**
+ * Triggers used for state transitions in {@link PaymentProcessorStateMachine}.
+ */
+
+public enum PaymentTrigger {
+    PAYMENT_REQUESTED,
+    PAYMENT_DATA_PROVIDED,
+    PAYMENT_METHODS_AVAILABLE,
+    PAYMENT_DETAILS_REQUIRED,
+    PAYMENT_DETAILS_NOT_REQUIRED,
+    PAYMENT_SELECTION_CANCELLED,
+    PAYMENT_DETAILS_PROVIDED,
+    REDIRECTION_REQUIRED,
+    RETURN_URI_RECEIVED,
+    PAYMENT_RESULT_RECEIVED,
+    ERROR_OCCURRED,
+    PAYMENT_CANCELLED
+}

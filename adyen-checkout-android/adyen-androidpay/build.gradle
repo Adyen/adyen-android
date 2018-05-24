@@ -1,0 +1,57 @@
+apply plugin: 'com.android.library'
+
+ext {
+    RELEASE_ARTIFACT_NAME = 'androidpay'
+}
+apply from: "$rootProject.rootDir/release.gradle"
+
+android {
+    compileSdkVersion rootProject.compileSdkVersion
+    buildToolsVersion rootProject.buildToolsVersion
+
+    defaultPublishConfig rootProject.defaultPublishConfig
+    publishNonDefault rootProject.publishNonDefault
+
+    defaultConfig {
+        minSdkVersion 19 // AndroidPay is not supported before SDK version 19
+        targetSdkVersion rootProject.targetSdkVersion
+        versionCode rootProject.versionCode
+        versionName rootProject.versionName
+
+        testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
+
+    }
+    buildTypes {
+        release {
+            debuggable rootProject.release_debuggable
+            minifyEnabled rootProject.release_minifyEnabled
+            shrinkResources rootProject.release_shrinkResources
+            useProguard rootProject.release_useProguard
+            proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
+        }
+        debug {
+            debuggable rootProject.debug_debuggable
+            testCoverageEnabled = rootProject.debug_testCoverageEnabled
+        }
+    }
+
+    testBuildType rootProject.testBuildType
+}
+
+dependencies {
+    compile fileTree(include: ['*.jar'], dir: 'libs')
+    androidTestCompile('com.android.support.test.espresso:espresso-core:2.2.2', {
+        exclude group: 'com.android.support', module: 'support-annotations'
+    })
+    compile "com.android.support:appcompat-v7:${rootProject.supportLibVersion}"
+    testCompile "junit:junit:${rootProject.jUnitVersion}"
+
+    compile 'com.google.android.gms:play-services-wallet:10.2.1'
+
+    if (publishNonDefault) {
+        debugCompile project(path: ':adyen-core', configuration: 'debug')
+        releaseCompile project(path: ':adyen-core', configuration: 'release')
+    } else {
+        provided group: 'com.adyen.checkout', name: 'core', version: "${rootProject.versionName}"
+    }
+}

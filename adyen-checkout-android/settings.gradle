@@ -1,0 +1,1 @@
+include ':adyen-core', ':adyen-ui', ':adyen-utils', ':adyen-cardscan', ':adyen-androidpay', ':testutils', ':customuiapplication',  ':checkoutdemo', ':customwithcheckoutui', ':defaultApp'
