@@ -6,10 +6,10 @@ android {
 
     defaultConfig {
         applicationId "com.example.customwithadyenui"
-        minSdkVersion rootProject.ext.minSdkVersion
-        targetSdkVersion rootProject.ext.targetSdkVersion
-        versionCode rootProject.ext.versionCode
-        versionName rootProject.ext.versionName
+        minSdkVersion rootProject.minSdkVersion
+        targetSdkVersion rootProject.targetSdkVersion
+        versionCode rootProject.versionCode
+        versionName rootProject.versionName
 
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
 
@@ -19,12 +19,15 @@ android {
     }
     buildTypes {
         release {
+            debuggable false
             minifyEnabled false
+            shrinkResources false
+            useProguard false
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
         }
         debug {
-            debuggable rootProject.ext.debug_debuggable
-            testCoverageEnabled = rootProject.ext.debug_testCoverageEnabled
+            debuggable rootProject.debug_debuggable
+            testCoverageEnabled = rootProject.debug_testCoverageEnabled
         }
     }
 }

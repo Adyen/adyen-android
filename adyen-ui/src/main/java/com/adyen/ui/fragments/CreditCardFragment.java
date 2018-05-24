@@ -73,6 +73,7 @@ public class CreditCardFragment extends Fragment implements CreditCardEditText.C
     private boolean oneClick;
     private boolean nameRequired;
     private boolean storeDetailsOptionAvailable;
+    private boolean storeDetailsOptionChecked;
     private Amount amount;
     private String shopperReference;
     private PaymentMethod paymentMethod;
@@ -134,6 +135,7 @@ public class CreditCardFragment extends Fragment implements CreditCardEditText.C
             }
             if (inputDetail.getKey().equals("storeDetails")) {
                 storeDetailsOptionAvailable = true;
+                storeDetailsOptionChecked = "true".equals(inputDetail.getValue()) ? true : false;
             }
         }
 
@@ -313,6 +315,7 @@ public class CreditCardFragment extends Fragment implements CreditCardEditText.C
         }
 
         saveCardCheckBox = (CheckoutCheckBox) fragmentView.findViewById(R.id.save_card_checkbox);
+        saveCardCheckBox.setChecked(storeDetailsOptionChecked);
         if (!StringUtils.isEmptyOrNull(shopperReference) && storeDetailsOptionAvailable) {
             fragmentView.findViewById(R.id.layout_save_card).setVisibility(VISIBLE);
             fragmentView.findViewById(R.id.layout_click_area_save_card).setOnClickListener(new View.OnClickListener() {

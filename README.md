@@ -1,7 +1,7 @@
 # Adyen SDK for Android
 Want to add a checkout to your Android app? No matter if your shopper wants to pay with a card (optionally with 3D Secure & One-click), wallet or a local payment method – all can be integrated in the same way, using the Adyen SDK. The Adyen SDK enrypts sensitive card data and sends it directly to Adyen, to keep your PCI scope limited.
 
-This README provides the usage manual for the SDK itself. For the full documentation, including the server side implementation guidelines, refer to https://docs.adyen.com/developers/in-app-integration-guide.
+This README provides the usage manual for the SDK itself. For the full documentation, including the server side implementation guidelines, refer to https://docs.adyen.com/developers/checkout/android.
 
 ## Installation
 To integrate the Adyen SDK into your project, import the **core**, **utils** and **ui** module by adding the following lines to your build.gradle file.
@@ -181,9 +181,18 @@ For your convenience, we included the following demo modules into this repositor
 * **customwithcheckoutui** – An experimental module where the Custom integration is used with UI elements (fragments, views) from the Checkout UI.
 
 
+## Proguard Rules
+
+If you are using the Quick integration together with Proguard you need to add the following rules:
+
+```
+-keep public class com.adyen.ui.DefaultPaymentRequestListener {*;}
+-keep public class com.adyen.ui.DefaultPaymentRequestDetailsListener {*;}
+```
+
 ## See also
 
- * [Complete Documentation](https://docs.adyen.com/developers/in-app-integration?platform=inapp-android)
+ * [Complete Documentation](https://docs.adyen.com/developers/checkout/android)
 
  * [SDK Reference](https://adyen.github.io/adyen-android/)
 

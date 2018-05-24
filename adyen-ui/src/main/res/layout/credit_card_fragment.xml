@@ -240,7 +240,7 @@
                             android:layout_height="wrap_content" />
 
                         <com.adyen.ui.views.CheckoutCheckBox
-                            android:checked="true"
+                            android:checked="false"
                             android:gravity="center"
                             android:layout_gravity="center"
                             android:id="@+id/save_card_checkbox"
