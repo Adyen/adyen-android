@@ -1,0 +1,48 @@
+ext.releaseArtifactId = "ui"
+
+apply plugin: "com.android.library"
+apply from: "$rootProject.rootDir/checkDependencies.gradle"
+apply from: "$rootProject.rootDir/quality.gradle"
+apply from: "$rootProject.rootDir/release.gradle"
+
+android {
+    compileSdkVersion rootProject.compileSdkVersion
+    buildToolsVersion rootProject.buildToolsVersion
+
+    defaultConfig {
+        minSdkVersion rootProject.minSdkVersion
+        targetSdkVersion rootProject.targetSdkVersion
+        versionCode rootProject.versionCode
+        versionName rootProject.versionName
+    }
+
+    buildTypes {
+        debug {
+            testCoverageEnabled rootProject.testCoverageEnabled
+        }
+        release {
+            minifyEnabled false
+            proguardFiles getDefaultProguardFile("proguard-android.txt"), "proguard-rules.pro"
+        }
+    }
+}
+
+dependencies {
+    testImplementation "junit:junit:${rootProject.junitVersion}"
+
+    implementation "com.android.support:appcompat-v7:${rootProject.supportLibVersion}"
+    implementation "com.android.support:recyclerview-v7:${rootProject.supportLibVersion}"
+    implementation "com.android.support:customtabs:${rootProject.supportLibVersion}"
+    implementation "com.android.support:design:${rootProject.supportLibVersion}"
+    implementation "android.arch.lifecycle:extensions:${rootProject.lifecycleVersion}"
+
+    implementation project(":checkout-base")
+    implementation project(":checkout-core")
+    implementation project(":checkout-core-card")
+    implementation project(":checkout-util")
+
+    // Plugins
+    compileOnly project(":checkout-nfc")
+    compileOnly project(":checkout-googlewallet")
+    compileOnly project(":checkout-wechatpay")
+}

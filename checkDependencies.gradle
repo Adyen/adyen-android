@@ -1,0 +1,37 @@
+import java.security.MessageDigest
+
+afterEvaluate {
+    def relevantConfigurations = configurations.all.findAll {
+        it.canBeResolved && it.name.startsWith("release") && it.name.contains("Classpath") && !it.name.contains("AndroidTest") && !it.name.contains("UnitTest")
+    }
+
+    relevantConfigurations.each { configuration ->
+        configuration.resolvedConfiguration.firstLevelModuleDependencies.each { dependency ->
+            if (dependency.moduleGroup != "com.adyen.checkout" && dependency.moduleGroup != "adyen-checkout-android-v2") {
+                dependency.moduleArtifacts.each { artifact ->
+                    def (checksum, algorithm) = rootProject.checksums.findResult {
+                        final parts = it.split(":")
+                        assert parts.length == 4 : "Checksum declaration $it has invalid length"
+
+                        if (dependency.moduleGroup == parts[0] && dependency.moduleName == parts[1]) {
+                            return [parts[2], parts[3]]
+                        } else {
+                            return null
+                        }
+                    } ?: [null, null]
+
+                    assert checksum != null : "Missing checksum declaration for $dependency.name"
+                    assert algorithm != null : "Missing algorithm declaration for $dependency.name"
+
+                    MessageDigest md = MessageDigest.getInstance(algorithm)
+                    artifact.file.eachByte 4096, {bytes, size ->
+                        md.update(bytes, 0, size)
+                    }
+                    final calculatedChecksum = md.digest().collect {String.format "%02x", it}.join()
+
+                    assert checksum == calculatedChecksum : "Checksum ($algorithm) does not match: $dependency.name"
+                }
+            }
+        }
+    }
+}

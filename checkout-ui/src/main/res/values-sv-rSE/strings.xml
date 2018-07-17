@@ -1,0 +1,68 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="checkout_title">Kassa</string>
+    <string name="checkout_one_click_payment_method_section_title">Dina sparade betalningsmetoder</string>
+    <string name="checkout_payment_method_section_title">Betalningsmetoder</string>
+    <string name="checkout_payment_method_section_with_one_click_title">Välj annan betalningsmetod</string>
+    <string name="checkout_select_other_payment_method">Välj annan betalningsmetod</string>
+    <string name="checkout_store_details">Spara för min nästa betalning</string>
+    <string name="checkout_error_message_default">Ett fel uppstod under processen.</string>
+    <string name="checkout_error_message_network_unavailable">Det gick inte att ansluta till internet. Kontrollera din internetanslutning.</string>
+    <string name="checkout_error_message_network_hint">Kontrollera internetanslutningen och försök igen.</string>
+    <string name="checkout_pay_amount_format">Betala %s</string>
+    <string name="checkout_one_click_delete_confirmation_message">Ta bort betalningssätt %s?</string>
+    <string name="checkout_one_click_delete">Radera</string>
+    <string name="checkout_error_dialog_title">Fel</string>
+    <string name="checkout_ok">OK</string>
+    <string name="checkout_skip">Hoppa över</string>
+
+    <!-- Card -->
+    <string name="checkout_card_holder_name_hint">Kortinnehavarens namn</string>
+    <string name="checkout_card_card_number_hint">Kortnummer</string>
+    <string name="checkout_card_expiry_date_caption">Förfallodatum</string>
+    <string name="checkout_card_expiry_date_hint">MM/AA</string>
+    <string name="checkout_card_security_code_hint">CVC / CVV</string>
+    <string name="checkout_card_installments">Number of installments</string>
+    <string name="checkout_card_nfc_error_chip_unsupported">Uppvisa ett enda kreditkort.</string>
+    <string name="checkout_card_nfc_error_card_unsupported">Detta kort stöds inte.</string>
+    <string name="checkout_card_nfc_error_connection_lost">Försök igen.</string>
+    <string name="checkout_card_one_click_expires_format">Utgår %s</string>
+    <string name="checkout_card_one_click_security_code_prompt">Vänligen fyll i CVC kod för %s</string>
+    <string name="checkout_card_reader_tutorial_enable_nfc">Aktivera NFC</string>
+    <string name="checkout_card_reader_tutorial_action">NFC-kortläsare</string>
+    <string name="checkout_card_reader_tutorial_title">Kreditkortsläsare</string>
+    <string name="checkout_card_reader_tutorial_explanation">Håll kortet nära din mobiltelefons bakre övre del.</string>
+    <string name="checkout_nfc_settings_redirect_failed_toast">Omdirigering till NFC-inställningarna misslyckades</string>
+
+    <!-- Card.CupSecurePlus -->
+    <string name="checkout_card_cup_secure_plus_phone_number_hint">Mobilnummer</string>
+    <string name="checkout_card_cup_secure_plus_details_activity_title">Autentisera</string>
+    <string name="checkout_card_cup_secure_plus_sms_code_prompt">Ett SMS med en verifieringskod har skickats till ditt registrerade telefonnummer.</string>
+    <string name="checkout_card_cup_secure_plus_sms_code_caption">SMS-kod</string>
+
+    <!-- Doku -->
+    <string name="checkout_doku_email_address">E-postadress</string>
+    <string name="checkout_doku_first_name">Förnamn</string>
+    <string name="checkout_doku_last_name">Efternamn</string>
+
+    <!-- Giropay -->
+    <string name="checkout_giropay_search_hint">Bankname / BIC / Bankleitzahl</string>
+    <string name="checkout_giropay_search_hint_loading_failed">BIC (Bank Identifier Code)</string>
+    <string name="checkout_giropay_error_search_no_results">Inga sökresultat</string>
+
+    <!-- Issuer -->
+    <string name="checkout_issuer_choose_issuer">Välj din bank</string>
+    <string name="checkout_issuer_open_with_app_format">Öppna med %s</string>
+
+    <!-- QiwiWallet -->
+    <string name="checkout_qiwiwallet_country_code_tooltip">Landskod</string>
+    
+    <string name="checkout_qiwiwallet_phone_number_caption">Mobilnummer</string>
+    <string name="checkout_qiwiwallet_phone_number_hint">123–456–789</string>
+
+    <!-- SepaDirectDebit -->
+    <string name="checkout_sdd_iban">Kontonummer (IBAN)</string>
+    <string name="checkout_sdd_account_holder_name">Känt av kontoinnehavaren</string>
+    <string name="checkout_sdd_consent">Jag håller med om att beloppet nedan debiteras från mitt bankkonto.</string>
+    <string name="checkout_sdd_iban_suggestion">Menade du</string>
+</resources>

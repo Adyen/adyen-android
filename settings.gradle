@@ -1,1 +1,9 @@
-include ':adyen-core', ':adyen-ui', ':adyen-utils', ':adyen-cardscan', ':adyen-androidpay', ':testutils', ':customuiapplication',  ':checkoutdemo', ':customwithcheckoutui', ':defaultApp'
+include ':checkout-base',
+        ':checkout-core',
+        ':checkout-core-card',
+        ':checkout-googlewallet',
+        ':checkout-nfc',
+        ':checkout-ui',
+        ':checkout-util',
+        ':checkout-wechatpay',
+        ':example-app'

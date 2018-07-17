@@ -1,0 +1,68 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="checkout_title">结帐</string>
+    <string name="checkout_one_click_payment_method_section_title">您的支付方式</string>
+    <string name="checkout_payment_method_section_title">支付方式</string>
+    <string name="checkout_payment_method_section_with_one_click_title">选择其他方式</string>
+    <string name="checkout_select_other_payment_method">选择其他方式</string>
+    <string name="checkout_store_details">保存以便下次支付使用</string>
+    <string name="checkout_error_message_default">操作过程中出错。</string>
+    <string name="checkout_error_message_network_unavailable">未能连接互联网，请检查互联网连接。</string>
+    <string name="checkout_error_message_network_hint">检查您的网络连接并重试。</string>
+    <string name="checkout_pay_amount_format">支付 %s</string>
+    <string name="checkout_one_click_delete_confirmation_message">删除付款方式 %s？</string>
+    <string name="checkout_one_click_delete">删除</string>
+    <string name="checkout_error_dialog_title">错误</string>
+    <string name="checkout_ok">确定</string>
+    <string name="checkout_skip">跳过</string>
+
+    <!-- Card -->
+    <string name="checkout_card_holder_name_hint">持卡人姓名</string>
+    <string name="checkout_card_card_number_hint">卡号</string>
+    <string name="checkout_card_expiry_date_caption">有效期</string>
+    <string name="checkout_card_expiry_date_hint">月月/年年</string>
+    <string name="checkout_card_security_code_hint">CVC / CVV</string>
+    <string name="checkout_card_installments">分期付款期数</string>
+    <string name="checkout_card_nfc_error_chip_unsupported">请出示一张信用片。</string>
+    <string name="checkout_card_nfc_error_card_unsupported">不支持此卡。</string>
+    <string name="checkout_card_nfc_error_connection_lost">请重试。</string>
+    <string name="checkout_card_one_click_expires_format">%s过期</string>
+    <string name="checkout_card_one_click_security_code_prompt">请输入 %s 的 CVC 码</string>
+    <string name="checkout_card_reader_tutorial_enable_nfc">启用 NFC</string>
+    <string name="checkout_card_reader_tutorial_action">NFC 刷卡器</string>
+    <string name="checkout_card_reader_tutorial_title">信用卡刷卡器</string>
+    <string name="checkout_card_reader_tutorial_explanation">将信用卡放在靠近手机背面顶部处。</string>
+    <string name="checkout_nfc_settings_redirect_failed_toast">未能重定向至 NFC 设置</string>
+
+    <!-- Card.CupSecurePlus -->
+    <string name="checkout_card_cup_secure_plus_phone_number_hint">手机号</string>
+    <string name="checkout_card_cup_secure_plus_details_activity_title">身份验证</string>
+    <string name="checkout_card_cup_secure_plus_sms_code_prompt">包含验证码的短信已发送至您的注册手机号码。</string>
+    <string name="checkout_card_cup_secure_plus_sms_code_caption">SMS 代码</string>
+
+    <!-- Doku -->
+    <string name="checkout_doku_email_address">电子邮件地址</string>
+    <string name="checkout_doku_first_name">名字</string>
+    <string name="checkout_doku_last_name">姓氏</string>
+
+    <!-- Giropay -->
+    <string name="checkout_giropay_search_hint">银行名称 / BIC（银行识别码） / 银行代码</string>
+    <string name="checkout_giropay_search_hint_loading_failed">BIC（银行标识代码）</string>
+    <string name="checkout_giropay_error_search_no_results">无搜索结果</string>
+
+    <!-- Issuer -->
+    <string name="checkout_issuer_choose_issuer">选择您的银行</string>
+    <string name="checkout_issuer_open_with_app_format">使用 %s 打开</string>
+
+    <!-- QiwiWallet -->
+    <string name="checkout_qiwiwallet_country_code_tooltip">国家代码</string>
+    
+    <string name="checkout_qiwiwallet_phone_number_caption">手机号</string>
+    <string name="checkout_qiwiwallet_phone_number_hint">123–456–789</string>
+
+    <!-- SepaDirectDebit -->
+    <string name="checkout_sdd_iban">账号 (IBAN)</string>
+    <string name="checkout_sdd_account_holder_name">持卡人姓名</string>
+    <string name="checkout_sdd_consent">我同意从我的银行账户扣除以下金额。</string>
+    <string name="checkout_sdd_iban_suggestion">您是指</string>
+</resources>

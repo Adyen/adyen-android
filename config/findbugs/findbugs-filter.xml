@@ -1,10 +1,12 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <FindBugsFilter>
+    <!-- Do not check auto-generated resources classes -->
     <Match>
-        <!-- ignore all issues in resource generation -->
-        <Class name="~.*\.R\$.*"/>
+        <Class name="~.*R\$.*"/>
     </Match>
+
+    <!-- Do not check auto-generated manifest classes -->
     <Match>
-        <Class name="~.*\.Manifest\$.*"/>
+        <Class name="~.*Manifest\$.*"/>
     </Match>
 </FindBugsFilter>

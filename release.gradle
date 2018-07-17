@@ -1,18 +1,13 @@
-// Helper gradle file for creating release zip files. In order to use it, in the project gradle file; define
-// RELEASE_ARTIFACT_NAME as follows.
-//ext {
-//    RELEASE_ARTIFACT_NAME = 'ui'
-//}
-//apply from: "$rootProject.rootDir/release.gradle"
-// Then, at the root project, run the following command:
-// ./gradlew clean build -PsdkRelease generateReleaseZips
-apply plugin: 'maven'
+apply plugin: 'maven-publish'
+apply plugin: 'com.jfrog.bintray'
+// TODO: add support for signing of artifacts
 
-def artifactId = project.RELEASE_ARTIFACT_NAME
-def version = rootProject.versionName
-def localReleaseDest = "${buildDir}/release/${version}"
-def outputDirectory = "${project.rootProject.rootDir}/build/sdk-releases"
-def outputZipName = "${project.name}-release-${version}.zip"
+def theGroupId = "com.adyen.checkout"
+def theArtifactId = project.releaseArtifactId
+def theVersion = rootProject.versionName
+
+group theGroupId
+version theVersion
 
 task androidJavadocs(type: Javadoc) {
     failOnError = false
@@ -31,27 +26,69 @@ task androidSourcesJar(type: Jar) {
     from android.sourceSets.main.java.srcDirs
 }
 
-uploadArchives {
-    repositories.mavenDeployer {
-        pom.groupId = "com.adyen.checkout"
-        pom.artifactId = artifactId
-        pom.version = version
-        repository(url: "file://${localReleaseDest}")
+publishing {
+    publications {
+        bintrayMavenPublication(MavenPublication) {
+            groupId theGroupId
+            artifactId theArtifactId
+            version theVersion
+
+            artifact androidJavadocsJar
+            artifact androidSourcesJar
+            artifact bundleRelease
+
+            pom.withXml {
+                final dependenciesNode = asNode().appendNode('dependencies')
+
+                ext.addDependency = { Dependency dep, String scope ->
+                    final dependencyNode = dependenciesNode.appendNode('dependency')
+                    dependencyNode.appendNode('groupId', dep.group)
+                    dependencyNode.appendNode('artifactId', dep.group == theGroupId ? dep.name.substring(9) : dep.name)
+                    dependencyNode.appendNode('version', dep.version)
+                    dependencyNode.appendNode('scope', scope)
+
+                    if (!dep.transitive) {
+                        final exclusionNode = dependencyNode.appendNode('exclusions').appendNode('exclusion')
+                        exclusionNode.appendNode('groupId', '*')
+                        exclusionNode.appendNode('artifactId', '*')
+                    } else if (!dep.properties.excludeRules.empty) {
+                        final exclusionNode = dependencyNode.appendNode('exclusions').appendNode('exclusion')
+                        dep.properties.excludeRules.each { ExcludeRule rule ->
+                            exclusionNode.appendNode('groupId', rule.group ?: '*')
+                            exclusionNode.appendNode('artifactId', rule.module ?: '*')
+                        }
+                    }
+                }
+
+                configurations.api.getAllDependencies().each { dep -> addDependency(dep, "compile") }
+                configurations.implementation.getAllDependencies().each { dep -> addDependency(dep, "runtime") }
+            }
+        }
     }
 }
 
-task generateReleaseZips(type: Zip) {
-    from localReleaseDest
-    destinationDir file("$outputDirectory")
-    archiveName "$outputZipName"
-    doLast {
-        println "$outputDirectory/$outputZipName has been generated."
+bintray {
+    user = findProperty('BINTRAY_USER')
+    key = findProperty('BINTRAY_KEY')
+    publications = ['bintrayMavenPublication']
+    pkg {
+        // TODO: Put under userOrg?
+        //userOrg = 'checkout'
+        repo = 'adyen-v2'
+        name = theArtifactId
+        licenses = ['MIT']
+        vcsUrl = 'https://github.com/Adyen/adyen-android.git'
+        issueTrackerUrl = 'https://github.com/Adyen/adyen-android/issues'
+        publish = false
+        version {
+            name = theVersion
+            released  = new Date()
+            vcsTag = theVersion
+            gpg {
+                // TODO: enable GPG signing
+                sign = false
+                passphrase = findProperty('BINTRAY_GPG_PASSPHRASE')
+            }
+        }
     }
-}
-
-generateReleaseZips.dependsOn(uploadArchives)
-
-artifacts {
-    archives androidSourcesJar
-    archives androidJavadocsJar
 }

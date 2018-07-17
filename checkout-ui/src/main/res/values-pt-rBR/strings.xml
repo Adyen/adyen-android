@@ -1,0 +1,68 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="checkout_title">Checkout</string>
+    <string name="checkout_one_click_payment_method_section_title">Meus métodos de pagamento</string>
+    <string name="checkout_payment_method_section_title">Meios de pagamento</string>
+    <string name="checkout_payment_method_section_with_one_click_title">Todos os métodos de pagamento</string>
+    <string name="checkout_select_other_payment_method">Todos os métodos de pagamento</string>
+    <string name="checkout_store_details">Salvar para meu próximo pagamento</string>
+    <string name="checkout_error_message_default">Ocorreu um erro durante a operação.</string>
+    <string name="checkout_error_message_network_unavailable">Falha ao se conectar à internet. Verifique sua conexão de internet.</string>
+    <string name="checkout_error_message_network_hint">Verifique sua conexão com a internet e tente novamente.</string>
+    <string name="checkout_pay_amount_format">Pagar %s</string>
+    <string name="checkout_one_click_delete_confirmation_message">Excluir métodos de pagamento %s?</string>
+    <string name="checkout_one_click_delete">Excluir</string>
+    <string name="checkout_error_dialog_title">Erro</string>
+    <string name="checkout_ok">OK</string>
+    <string name="checkout_skip">Pular</string>
+
+    <!-- Card -->
+    <string name="checkout_card_holder_name_hint">Nome do titular do cartão</string>
+    <string name="checkout_card_card_number_hint">Número do Cartão</string>
+    <string name="checkout_card_expiry_date_caption">Data de Vencimento</string>
+    <string name="checkout_card_expiry_date_hint">MM/AA</string>
+    <string name="checkout_card_security_code_hint">CVC / CVV</string>
+    <string name="checkout_card_installments">Opções de Parcelamento</string>
+    <string name="checkout_card_nfc_error_chip_unsupported">Apresente um único cartão de crédito.</string>
+    <string name="checkout_card_nfc_error_card_unsupported">Esse cartão não é suportado.</string>
+    <string name="checkout_card_nfc_error_connection_lost">Tente novamente.</string>
+    <string name="checkout_card_one_click_expires_format">Expira em %s</string>
+    <string name="checkout_card_one_click_security_code_prompt">Por favor insira o código CVC para %s</string>
+    <string name="checkout_card_reader_tutorial_enable_nfc">Habilitar NFC</string>
+    <string name="checkout_card_reader_tutorial_action">Leitor de cartão NFC</string>
+    <string name="checkout_card_reader_tutorial_title">Leitor de cartão de crédito</string>
+    <string name="checkout_card_reader_tutorial_explanation">Segure o cartão de crédito próximo à parte superior traseira do seu celular.</string>
+    <string name="checkout_nfc_settings_redirect_failed_toast">Falha no redirecionamento para configurações de NFC</string>
+
+    <!-- Card.CupSecurePlus -->
+    <string name="checkout_card_cup_secure_plus_phone_number_hint">Celular</string>
+    <string name="checkout_card_cup_secure_plus_details_activity_title">Autenticar</string>
+    <string name="checkout_card_cup_secure_plus_sms_code_prompt">Enviamos uma mensagem de texto com um código de verificação para o seu número de telefone registrado.</string>
+    <string name="checkout_card_cup_secure_plus_sms_code_caption">Código SMS</string>
+
+    <!-- Doku -->
+    <string name="checkout_doku_email_address">Endereço de e-mail</string>
+    <string name="checkout_doku_first_name">Nome</string>
+    <string name="checkout_doku_last_name">Sobrenome</string>
+
+    <!-- Giropay -->
+    <string name="checkout_giropay_search_hint">Nome do banco / BIC / Bankleitzahl</string>
+    <string name="checkout_giropay_search_hint_loading_failed">BIC (Código de identificação do banco)</string>
+    <string name="checkout_giropay_error_search_no_results">Não há resultados de pesquisa</string>
+
+    <!-- Issuer -->
+    <string name="checkout_issuer_choose_issuer">Selecione seu banco</string>
+    <string name="checkout_issuer_open_with_app_format">Abrir com %s</string>
+
+    <!-- QiwiWallet -->
+    <string name="checkout_qiwiwallet_country_code_tooltip">Código do país</string>
+    
+    <string name="checkout_qiwiwallet_phone_number_caption">Celular</string>
+    <string name="checkout_qiwiwallet_phone_number_hint">123–456–789</string>
+
+    <!-- SepaDirectDebit -->
+    <string name="checkout_sdd_iban">Número de conta (NIB)</string>
+    <string name="checkout_sdd_account_holder_name">Nome do titular da conta bancária</string>
+    <string name="checkout_sdd_consent">Concordo que o seguinte valor será deduzido da minha conta bancária.</string>
+    <string name="checkout_sdd_iban_suggestion">Você quis dizer</string>
+</resources>

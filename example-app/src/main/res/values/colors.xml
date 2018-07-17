@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <color name="colorPrimary">@color/teal_500</color>
+    <color name="colorPrimaryDark">@color/teal_700</color>
+    <color name="colorAccent">@color/teal_500</color>
+
+    <color name="colorPrimaryOverride">@color/deep_orange_500</color>
+    <color name="colorPrimaryDarkOverride">@color/deep_orange_700</color>
+    <color name="colorAccentOverride">@color/deep_orange_500</color>
+
+    <color name="teal_500">#009688</color>
+    <color name="teal_700">#00796B</color>
+
+    <color name="deep_orange_500">#FF5722</color>
+    <color name="deep_orange_700">#E64A19</color>
+</resources>

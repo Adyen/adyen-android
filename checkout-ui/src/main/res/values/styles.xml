@@ -1,0 +1,90 @@
+<resources xmlns:tools="http://schemas.android.com/tools">
+    <style name="AppTheme" parent="Theme.AppCompat.Light.DarkActionBar" />
+
+    <style name="AppTheme.Checkout" />
+
+    <style name="AppTheme.Checkout.Internal">
+        <item name="android:textViewStyle">@style/Checkout.TextView</item>
+        <item name="android:editTextStyle">@style/Checkout.EditText</item>
+        <item name="android:buttonStyle">@style/Checkout.Button</item>
+        <item name="android:switchStyle" tools:ignore="NewApi">@style/Checkout.Switch</item>
+        <item name="android:spinnerStyle">@style/Checkout.Spinner</item>
+
+        <!--item name="textViewStyle">@style/Checkout.Text</item-->
+        <item name="editTextStyle">@style/Checkout.EditText</item>
+        <item name="buttonStyle">@style/Checkout.Button</item>
+        <item name="switchStyle">@style/Checkout.Switch</item>
+        <item name="spinnerStyle">@style/Checkout.Spinner</item>
+    </style>
+
+    <style name="AppTheme.Checkout.Internal.Translucent">
+        <item name="android:windowIsTranslucent">true</item>
+        <item name="android:backgroundDimEnabled">true</item>
+        <item name="android:windowBackground">@color/transparent</item>
+
+        <item name="windowNoTitle">true</item>
+        <item name="windowActionBar">false</item>
+    </style>
+
+    <style name="Checkout" parent="AppTheme.Checkout" />
+
+    <!-- Text. -->
+    <style name="Checkout.TextAppearance" parent="TextAppearance.AppCompat" />
+
+    <style name="Checkout.TextAppearance.Primary">
+        <item name="android:textSize">@dimen/abc_text_size_menu_material</item>
+        <item name="android:textColor">?android:attr/textColorPrimary</item>
+    </style>
+
+    <style name="Checkout.TextAppearance.Secondary">
+        <item name="android:textSize">@dimen/abc_text_size_small_material</item>
+        <item name="android:textColor">?android:attr/textColorSecondary</item>
+    </style>
+
+    <style name="Checkout.TextAppearance.Title">
+        <item name="android:textSize">@dimen/abc_text_size_title_material</item>
+        <item name="android:textColor">?android:attr/textColorPrimary</item>
+        <item name="android:textStyle">bold</item>
+    </style>
+
+    <style name="Checkout.TextAppearance.Error" parent="TextAppearance.Design.Error">
+        <item name="android:textColor">@color/error</item>
+    </style>
+
+    <!-- Widget. -->
+    <style name="Checkout.TextView" parent="android:Widget.TextView">
+        <item name="android:textAppearance">@style/Checkout.TextAppearance.Primary</item>
+    </style>
+
+    <style name="Checkout.EditText" parent="Widget.AppCompat.EditText">
+        <item name="android:imeOptions">flagNoExtractUi</item>
+    </style>
+
+    <style name="Checkout.Button" parent="Widget.AppCompat.Button.Colored" >
+        <item name="android:minHeight">@dimen/height_button</item>
+        <item name="android:textSize">@dimen/text_size_button</item>
+    </style>
+
+    <style name="Checkout.Button.Inverse" parent="Widget.AppCompat.Button.Borderless.Colored">
+        <item name="android:minHeight">@dimen/height_button</item>
+        <item name="android:textSize">@dimen/text_size_button</item>
+        <item name="android:textColor">?colorAccent</item>
+    </style>
+
+    <style name="Checkout.Button.Numpad" parent="Widget.AppCompat.Button.Borderless">
+        <item name="android:textSize">28sp</item>
+        <item name="android:background">@drawable/numpad_button_state_background</item>
+    </style>
+
+    <style name="Checkout.Switch" parent="Widget.AppCompat.CompoundButton.Switch">
+        <item name="android:textAppearance">@style/Checkout.TextAppearance.Primary</item>
+    </style>
+
+    <style name="Checkout.Spinner" parent="Widget.AppCompat.Spinner.Underlined" />
+
+    <!-- ProgressDialogFragment. -->
+    <style name="ProgressDialogFragment.Window" parent="@style/Animation.AppCompat.Dialog">
+        <item name="android:windowEnterAnimation">@anim/progress_dialog_fragment_in</item>
+        <item name="android:windowExitAnimation">@anim/progress_dialog_fragment_out</item>
+    </style>
+</resources>

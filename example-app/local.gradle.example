@@ -1,0 +1,10 @@
+/**
+ * Rename this file to local.gradle and replace <YOUR_API_KEY> with your Checkout Demo Server API Key.
+ */
+android {
+    buildTypes {
+        debug {
+            buildConfigField "String", "CHECKOUT_API_KEY", "\"<YOUR_DEMO_SERVER_API_KEY>\""
+        }
+    }
+}

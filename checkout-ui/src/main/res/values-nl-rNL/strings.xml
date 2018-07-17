@@ -1,0 +1,68 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="checkout_title">Afrekenen</string>
+    <string name="checkout_one_click_payment_method_section_title">Opgeslagen betaalmethodes</string>
+    <string name="checkout_payment_method_section_title">Betaalmethodes</string>
+    <string name="checkout_payment_method_section_with_one_click_title">Alle betaalmethodes</string>
+    <string name="checkout_select_other_payment_method">Alle betaalmethodes</string>
+    <string name="checkout_store_details">Bewaar voor mijn volgende betaling</string>
+    <string name="checkout_error_message_default">Er is tijdens de bewerking een fout opgetreden.</string>
+    <string name="checkout_error_message_network_unavailable">Verbinden is mislukt. Controleer uw internetverbinding.</string>
+    <string name="checkout_error_message_network_hint">Controleer uw internetverbinding en probeer het opnieuw.</string>
+    <string name="checkout_pay_amount_format">%s betalen</string>
+    <string name="checkout_one_click_delete_confirmation_message">Betalingsmethode %s verwijderen?</string>
+    <string name="checkout_one_click_delete">Verwijderen</string>
+    <string name="checkout_error_dialog_title">Fout</string>
+    <string name="checkout_ok">Oké</string>
+    <string name="checkout_skip">Overslaan</string>
+
+    <!-- Card -->
+    <string name="checkout_card_holder_name_hint">Naam kaarthouder</string>
+    <string name="checkout_card_card_number_hint">Kaartnummer</string>
+    <string name="checkout_card_expiry_date_caption">Vervaldatum</string>
+    <string name="checkout_card_expiry_date_hint">MM/JJ</string>
+    <string name="checkout_card_security_code_hint">Verificatiecode</string>
+    <string name="checkout_card_installments">Aantal termijnen</string>
+    <string name="checkout_card_nfc_error_chip_unsupported">Houdt alstublieft één credit card tegen het apparaat aan.</string>
+    <string name="checkout_card_nfc_error_card_unsupported">Deze kaart wordt niet ondersteund.</string>
+    <string name="checkout_card_nfc_error_connection_lost">Probeer het opnieuw.</string>
+    <string name="checkout_card_one_click_expires_format">Verloopt op %s</string>
+    <string name="checkout_card_one_click_security_code_prompt">Voer de verificatiecode in voor %s</string>
+    <string name="checkout_card_reader_tutorial_enable_nfc">NFC inschakelen</string>
+    <string name="checkout_card_reader_tutorial_action">NFC-kaartlezer</string>
+    <string name="checkout_card_reader_tutorial_title">Creditcardlezer</string>
+    <string name="checkout_card_reader_tutorial_explanation">Houd de creditcard dicht bij het bovenste gedeelte van de achterkant van uw mobiele telefoon.</string>
+    <string name="checkout_nfc_settings_redirect_failed_toast">Doorverwijzen naar NFC-instellingen mislukt</string>
+
+    <!-- Card.CupSecurePlus -->
+    <string name="checkout_card_cup_secure_plus_phone_number_hint">Telefoonnummer mobiel</string>
+    <string name="checkout_card_cup_secure_plus_details_activity_title">Verifiëren</string>
+    <string name="checkout_card_cup_secure_plus_sms_code_prompt">Er is een sms-bericht met een verificatiecode naar uw geregistreerde telefoonnummer gestuurd.</string>
+    <string name="checkout_card_cup_secure_plus_sms_code_caption">Sms-code</string>
+
+    <!-- Doku -->
+    <string name="checkout_doku_email_address">E-mailadres</string>
+    <string name="checkout_doku_first_name">Voornaam</string>
+    <string name="checkout_doku_last_name">Achternaam</string>
+
+    <!-- Giropay -->
+    <string name="checkout_giropay_search_hint">Banknaam / BIC / Bankleitzahl</string>
+    <string name="checkout_giropay_search_hint_loading_failed">BIC (Bank Identifier Code)</string>
+    <string name="checkout_giropay_error_search_no_results">Geen zoekresultaten</string>
+
+    <!-- Issuer -->
+    <string name="checkout_issuer_choose_issuer">Selecteer uw bank</string>
+    <string name="checkout_issuer_open_with_app_format">Openen met %s</string>
+
+    <!-- QiwiWallet -->
+    <string name="checkout_qiwiwallet_country_code_tooltip">Landcode</string>
+    
+    <string name="checkout_qiwiwallet_phone_number_caption">Telefoonnummer mobiel</string>
+    <string name="checkout_qiwiwallet_phone_number_hint">123–456–789</string>
+
+    <!-- SepaDirectDebit -->
+    <string name="checkout_sdd_iban">Rekeningnummer (IBAN)</string>
+    <string name="checkout_sdd_account_holder_name">Ten name van</string>
+    <string name="checkout_sdd_consent">Ik ga akkoord met een eenmalige afschrijving van het onderstaande bedrag.</string>
+    <string name="checkout_sdd_iban_suggestion">Bedoelde u</string>
+</resources>

@@ -1,202 +1,253 @@
 # Adyen SDK for Android
-Want to add a checkout to your Android app? No matter if your shopper wants to pay with a card (optionally with 3D Secure & One-click), wallet or a local payment method – all can be integrated in the same way, using the Adyen SDK. The Adyen SDK enrypts sensitive card data and sends it directly to Adyen, to keep your PCI scope limited.
+Want to add checkout to your Android app? No matter if your shopper wants to pay with a card (optionally with 3D Secure & One-click), wallet or a local payment method – all can be integrated in the same way, using the Adyen SDK. The Adyen SDK encrypts sensitive card data and sends it directly to Adyen in order to keep your PCI scope limited.
 
-This README provides the usage manual for the SDK itself. For the full documentation, including the server side implementation guidelines, refer to https://docs.adyen.com/developers/checkout/android.
-
-## Installation
-To integrate the Adyen SDK into your project, import the **core**, **utils** and **ui** module by adding the following lines to your build.gradle file.
-
-```
-compile 'com.adyen.checkout:core:1.14.1'
-compile 'com.adyen.checkout:utils:1.14.1'
-compile 'com.adyen.checkout:ui:1.14.1'
-compile 'com.adyen.checkout:cardscan:1.14.1'
-```
-
-> For implementing Custom integration, only the **core** module is required. However, you might also want to include the **utils** module to use Adyen's utility methods such as Luhn check, credit card type detection, etc.
+This README provides the usage manual for the SDK itself. For the full documentation, including the server side implementation guidelines, refer to the [In-app Integration Guide](https://docs.adyen.com/developers/in-app-integration-guide).
 
 To give you as much flexibility as possible, our Android SDK can be integrated in two ways:
 
-* **Quick integration** – Benefit from the SDK out-of-the-box with a fully optimized UI.
+* **Quick integration** – Benefit from a fully optimized out-of-the-box UI with the SDK.
 * **Custom integration** – Design your own UI while leveraging the underlying functionality of the SDK.
 
 ## Quick integration
-The Quick integration of the SDK provides UI components for payment method selection, entering payment details (credit card entry form, iDEAL issuer selection, and so on). To get started, you should create and start a `PaymentRequest`:
+#### Installation
+Import the quick integration modules by adding these lines to your build.gradle file.
 
-```java
-PaymentRequest paymentRequest = new PaymentRequest(context, paymentRequestListener);
-paymentRequest.start();
+```groovy
+final checkoutVersion = "2.0.0"
+implementation "com.adyen.checkout:ui:${checkoutVersion}"
+implementation "com.adyen.checkout:nfc:${checkoutVersion}" // Optional; Integrates NFC card reader in card UI
 ```
 
-A `PaymentRequest` needs a context and a `PaymentRequestListener` to be instantiated. The `PaymentRequestListener` requires two methods to be implemented: `onPaymentDataRequested` and `onPaymentResult`.
-
-##### - onPaymentDataRequested
-The `onPaymentDataRequested` is called to obtain the payment methods. You have to send the SDK token and payment information to your server. For this, use the `AsyncHttpClient` utility class from the SDK. You are expected to call `callback.completionWithPaymentData(response)` after successfully receiving the response from your server, as this enables the SDK to process the payment.
-
-You can make use of the Adyen test server until you have implemented your own server. See below an example of a request to the Adyen test server:
+#### Getting started
+The Quick integration of the SDK provides UI components for payment method selection, entering payment method details (credit card entry form, iDEAL issuer selection, etc.). To get started, use the `CheckoutController` class to start the payment:
 
 ```java
+CheckoutController.startPayment(/*Activity*/ this, new CheckoutSetupParametersHandler() {
     @Override
-    public void onPaymentDataRequested(@NonNull final PaymentRequest paymentRequest, @NonNull String token, @NonNull final PaymentDataCallback paymentDataCallback) {
-        final Map<String, String> headers = new HashMap<>();
-        headers.put("Content-Type", "application/json; charset=UTF-8");
-
-		// Provide below the data to identify your app against the server, implement your own protocol (e.g. OAuth 2.0) to use your own server.
-        headers.put("x-demo-server-api-key", MERCHANT_API_SECRET_KEY); // Use the provided MERCHANT_API_SECRET_KEY, or obtain from Customer Area.
-
-        final JSONObject jsonObject = new JSONObject();
-        try {
-            // You always need to get the token from the SDK, even when using your own server.
-            jsonObject.put("token", token);
-            // Below is dummy data in a format expected by the Adyen test server. When implementing your own server, the data below becomes free format; you can also decide to add it to the payment creation request while sending it from your own server.
-            jsonObject.put("returnUrl", "example-shopping-app://");
-            jsonObject.put("countryCode", "NL");
-            final JSONObject amount = new JSONObject();
-            amount.put("value", "17408");
-            amount.put("currency", "USD");
-            jsonObject.put("amount", amount);
-            jsonObject.put("shopperReference", "example.merchant@adyen.com");
-            jsonObject.put("channel", "android");
-            jsonObject.put("reference", "test-payment");
-        } catch (final JSONException jsonException) {
-            Log.e("Unexpected error", "Setup failed");
-        }
-        AsyncHttpClient.post(MERCHANT_SERVER_URL, headers, jsonObject.toString(), new HttpResponseCallback() { // Use https://checkoutshopper-test.adyen.com/checkoutshopper/demoserver/setup
-            @Override
-            public void onSuccess(final byte[] response) {
-                paymentDataCallback.completionWithPaymentData(response);
-            }
-            @Override
-            public void onFailure(final Throwable e) {
-                paymentRequest.cancel();
-            }
-        });
+    public void onRequestPaymentSession(@NonNull CheckoutSetupParameters checkoutSetupParameters) {
+        // TODO: Forward to your own server and request the payment session from Adyen with the given CheckoutSetupParameters.
     }
+
+    @Override
+    public void onError(@NonNull CheckoutException checkoutException) {
+        // TODO: Handle error.
+    }
+});
 ```
 
+Send the `CheckoutSetupParameters` to your own server, which then needs to forward this data, among some other parameters, to the Adyen Checkout API. See the [Checkout API Reference](https://docs.adyen.com/developers/in-app-integration/checkout-api-reference#setup) for more details.
 
-##### - onPaymentResult
+##### - Generating StartCheckoutParameters
+After receiving the payment session data from your own server, use the `CheckoutController` to handle the payment session response:
 
-The `onPaymentResult` method of the `PaymentRequestListener` is called when the SDK has authorized the payment. To find out whether your payment was successfully processed, call `paymentRequestResult.isProcessed`:
+```java
+String encodedPaymentSession = ...;
+CheckoutController.handlePaymentSessionResponse(/*Activity*/ this, encodedPaymentSession, new StartPaymentParametersHandler() {
+    @Override
+    public void onStartPaymentParameters(@NonNull StartPaymentParameters startPaymentParameters) {
+        // TODO: Start the desired checkout process.
+    }
+
+    @Override
+    public void onError(@NonNull CheckoutException checkoutException) {
+        // TODO: Handle error.
+    }
+});
+```
+
+##### - Starting the desired checkout process
+With the `StartPaymentParameters`, you can now start the checkout process:
+```java
+PaymentMethodHandler paymentMethodHandler = CheckoutController.getCheckoutHandler(startPaymentParameters);
+paymentMethodHandler.handlePaymentMethodDetails(/* Activity */ this, REQUEST_CODE_CHECKOUT);
+```
+
+##### - Handling onActivityResult(int, int, Intent)
+After the payment has been processed, you will receive the result in your calling Activity:
 
 ```java
 @Override
-public void onPaymentResult(@NonNull PaymentRequest paymentRequest, @NonNull PaymentRequestResult paymentRequestResult) {
-    if (paymentRequestResult.isProcessed() && (
-            paymentRequestResult.getPayment().getPaymentStatus() == Payment.PaymentStatus.AUTHORISED
-                    || paymentRequestResult.getPayment().getPaymentStatus() == Payment.PaymentStatus.RECEIVED)) {
-        Intent intent  = new Intent(context, SuccessActivity.class);
-        startActivity(intent);
-        finish();
-    } else {
-        Intent intent  = new Intent(context, FailureActivity.class);
-        startActivity(intent);
-        finish();
+protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+    super.onActivityResult(requestCode, resultCode, data);
+
+    if (requestCode == REQUEST_CODE_CHECKOUT) {
+        if (resultCode == PaymentMethodHandler.RESULT_CODE_OK) {
+            PaymentResult paymentResult = PaymentMethodHandler.Util.getPaymentResult(data);
+            // Handle PaymentResult.
+        } else {
+            CheckoutException checkoutException = PaymentMethodHandler.Util.getCheckoutException(data);
+
+            if (resultCode == PaymentMethodHandler.RESULT_CODE_CANCELED) {
+                // Handle cancellation and optional CheckoutException.
+            } else {
+                // Handle CheckoutException.
+            }
+        }
     }
 }
 ```
 
-Keep in mind that `isProcessed` does not mean that the payment succeeded. Therefore, you are supposed to check the payment result. If `isProcessed` returns `false`, you can get the `Throwable` via `paymentRequestResult.getError` method.
+
+#### Configuration
+
+##### - Changing the Theme
+By default, we extend your existing `AppTheme` in our quick integration. If that does not give you the results that you would like to have, you can override the theme by adding a new theme to your `styles.xml` file:
+
+```xml
+<style name="AppTheme.Checkout" parent="Theme.AppCompat[...]">
+    <item name="colorPrimary">@color/checkoutColorPrimary</item>
+    <item name="colorPrimaryDark">@color/checkoutColorPrimaryDark</item>
+    <item name="colorAccent">@color/checkoutColorAccent</item>
+</style>
+```
+
+> The default AppTheme (or the AppTheme.Checkout) must have an AppCompat Theme as parent.
+
+##### - Changing the orientation
+You can set the screen orientation by overriding the appropriate resource:
+```xml
+<resources>
+    <integer name="checkout_screenOrientation">1</integer>
+</resources>
+```
+The number corresponds to `ActivityInfo.ScreenOrientation`:
+- landscape: 0 (ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE)
+- portrait: 1 (ActivityInfo.SCREEN_ORIENTATION_PORTRAIT)
+- etc.
+
+##### - Changing the font
+By default, we use the font that is declared in the theme that is used for checkout (so either `AppTheme` or `AppTheme.Checkout`). You can override it by providing a new font resource:
+```xml
+<style name="AppTheme" parent="Theme.AppCompat[...]">
+    [...]
+    <item name="android:fontFamily">@font/montserrat</item>
+    <item name="fontFamily">@font/montserrat</item>
+</style>
+```
+
 
 ## Custom integration
-
-It is possible to have more control over the payment flow — presenting your own UI for specific payment methods, filtering a list of payment methods, or implementing your own unique checkout experience.
-
-For more control, implement the `PaymentRequestDetailsListener` and configure your `PaymentRequest` object accordingly. Note that you also have to implement the methods from the Quick integration.
-
-```java
-final PaymentRequest paymentRequest = new PaymentRequest(context, paymentRequestListener, paymentRequestDetailsListener);
-paymentRequest.start();
+#### Installation
+Import the following modules by adding these line to your build.gradle file.
+```groovy
+final checkoutVersion = "2.0.0"
+implementation "com.adyen.checkout:core:${checkoutVersion}"
+implementation "com.adyen.checkout:core-card:${checkoutVersion}" // Optional; Required for processing card payments.
+implementation "com.adyen.checkout:nfc:${checkoutVersion}" // Optional; Enables reading of card information with the device"s NFC chip.
+implementation "com.adyen.checkout:util:${checkoutVersion}" // Optional; Collection of utility classes.
 ```
 
-##### - onPaymentMethodSelectionRequired
+#### Getting started
+It is possible to have more control over the payment flow — presenting your own UI for specific payment methods, filtering a list of payment methods, or implementing your own unique checkout experience. To get started, use the `PaymentController` class to start the payment:
 
-This method gives you two lists of payment methods available for your payment request.  The `recurringMethods` list contains `One-Click` enabled payment methods. Other payment options are present in the `otherMethods` list.
+> The following example uses RxJava and RxAndroid to perform asynchronous tasks.
+
+```java
+PaymentController.startPayment(/*Activity*/ this, new PaymentSetupParametersHandler() {
+    @Override
+    public void onRequestPaymentSession(@NonNull PaymentSetupParameters paymentSetupParameters) {
+        // TODO: Forward to your own server and request the payment session from Adyen with the given PaymentSetupParameters.
+    }
+
+    @Override
+    public void onError(@NonNull CheckoutException checkoutException) {
+        // TODO: Handle error.
+    }
+});
+```
+
+Send the `PaymentSetupParameters` to your own server, which then needs to forward this data, among some other parameters, to the Adyen Checkout API. See the [Checkout API Reference](https://docs.adyen.com/developers/in-app-integration/checkout-api-reference#setup) for more details.
+
+##### - Create a PaymentSession
+After receiving the Base64 encoded payment session data from your own server, use the `PaymentController` to handle the payment session response:
+
+```java
+String encodedPaymentSession = ...;
+PaymentController.handlePaymentSessionResponse(/*Activity*/ this, encodedPaymentSession, new StartPaymentParametersHandler() {
+    @Override
+    public void onPaymentInitialized(@NonNull StartPaymentParameters startPaymentParameters) {
+        PaymentReference paymentReference = startPaymentParamters.getPaymentReference();
+        // TODO: Use the PaymentReference to retrieve a PaymentHandler (see next section).
+    }
+
+    @Override
+    public void onError(@NonNull CheckoutException checkoutException) {
+        // TODO: Handle error.
+    }
+});
+```
+
+With the `PaymentReference` you can retrieve an instance of a `PaymentHandler`. Here you can attach the desired Observers and Handlers in the scope of the current Activity (Observers and Handlers will automatically be removed when the `Activity` is destroyed):
+
+> `PaymentReference` is `Parcelable`, so you can pass it along to another `Activity`. 
 
 ```java
 @Override
-public void onPaymentMethodSelectionRequired(@NonNull final PaymentRequest paymentRequest, final List<PaymentMethod> recurringMethods, @NonNull final List<PaymentMethod> otherMethods, @NonNull final PaymentMethodCallback callback) {
-    // Initialise UI for displaying provided payment methods. The selected method should be notified via PaymentMethodCallback
+protected void onCreate(@Nullable Bundle savedInstanceState) {
+    super.onCreate(savedInstanceState);
+
+    PaymentReference paymentReference = getIntent().getParcelableExtra("EXTRA_PAYMENT_REFERENCE");
+    mPaymentHandler = paymentReference.getPaymentHandler(/*Activity*/ this);
+    
+    // Observe data
+    mPaymentHandler.getNetworkingStateObservable().observe(/*Activity*/ this, new Observer<NetworkingState>() {
+        @Override
+        public void onChanged(@NonNull NetworkingState networkingState) {
+            // TODO: Handle NetworkingState.
+        }
+    });
+    mPaymentHandler.getPaymentSessionObservable().observe(/*Activity*/ this, new Observer<PaymentSession>() {
+        @Override
+        public void onChanged(@NonNull PaymentSession paymentSession) {
+            // TODO: Handle PaymentSession change, i.e. refresh your list of PaymentMethods.
+        }
+    });
+    mPaymentHandler.getPaymentResultObservable().observe(/*Activity*/ this, new Observer<PaymentResult>() {
+        @Override
+        public void onChanged(@NonNull PaymentResult paymentResult) {
+            // TODO: Handle PaymentResult.
+        }
+    });
+    
+    // Handle data
+    mPaymentHandler.setRedirectHandler(/*Activity*/ this, new RedirectHandler() {
+        @Override
+        public void onRedirectRequired(@NonNull RedirectDetails redirectDetails) {
+            // TODO: Handle RedirectDetails.
+        }
+    });
+    mPaymentHandler.setAdditionalDetailsHandler(/*Activity*/ this, new AdditionalDetailsHandler() {
+        @Override
+        public void onAdditionalDetailsRequired(@NonNull AdditionalDetails additionalDetails) {
+            // TODO: Handle AdditionalDetails.
+        }
+    });
+    mPaymentHandler.setErrorHandler(/*Activity*/ this, new ErrorHandler() {
+        @Override
+        public void onError(@NonNull CheckoutException error) {
+            // TODO: Handle CheckoutException.
+        }
+    });
 }
 ```
 
-##### onRedirectRequired
-
-This method is called only when a payment method, which requires redirection, is selected. If the UI is not handled by SDK, this method is called and then the merchant application is expected to open the provided link. When the operation on this page is completed (e.g. a shopper completed the payment), the application is opened via a `URI`. This URI has to be returned to the SDK via `UriCallback`.
+In order to make a payment, select a `PaymentMethod` and retrieve the according `PaymentMethodDetails` from the shopper.
 
 ```java
-@Override
-public void onRedirectRequired(@NonNull final PaymentRequest paymentRequest, final String redirectUrl, @NonNull final UriCallback returnUriCallback) {
-    // Open the given redirectUrl using Chrome custom tabs.
-    uriCallback = returnUriCallback;
-    CustomTabsIntent.Builder builder = new CustomTabsIntent.Builder();
-    CustomTabsIntent customTabsIntent = builder.build();
-    customTabsIntent.launchUrl(context, Uri.parse(redirectUrl));
-}
-```
-Note that the launch mode of your activity must be `singleTask` in order to be able to handle redirections. When the operation on the redirected web page is completed, your activity will be opened via a deep link. In this case your activity should override the `onNewIntent` method, and when the new intent is received, it should notify the SDK via `UriCallback`.
-
-##### onPaymentDetailsRequired
-
-This method is called only if payment details are required. For example, if Credit Card is selected as a payment method, then the credit card number, CVC and other details are required. In this case, if the UI is not handled by SDK, the merchant application will be notified via this method. The merchant application is supposed to display a UI for collecting this information, and then it should notify the SDK via `PaymentDetailsCallback`.
-
-```java
-@Override
-public void onPaymentDetailsRequired(@NonNull final PaymentRequest paymentRequest, @NonNull final Collection<InputDetail> inputDetails, @NonNull final PaymentDetailsCallback callback) {
-  // For different payment methods different UI might be required. It is suggested to check selected method via paymentRequest.getPaymentMethod() and display UI accordingly.
-  // When all payment details are retrieved, SDK should be notified via PaymentDetailsCallback.
-  if (PaymentMethod.Type.CARD.equals(paymentRequest.getPaymentMethod().getType())) {
-     Card card = new Card();
-     card.setNumber("4111111111111111");
-     card.setCardHolderName("checkout shopper");
-     card.setCvc("737");
-     card.setExpiryMonth("10");
-     card.setExpiryYear("2020");
-     card.setGenerationTime(new Date());
-
-     try {
-       //Create PaymentDetails object from the inputDetails and fill them with the shopper input.
-       //Then call callback.completionWithPaymentDetails.
-       CreditCardPaymentDetails creditCardPaymentDetails = new CreditCardPaymentDetails(inputDetails);
-       creditCardPaymentDetails.fillCardToken(card.serialize(paymentRequest.getPublicKey()));
-       creditCardPaymentDetails.fillStoreDetails(true);
-       callback.completionWithPaymentDetails(creditCardPaymentDetails);
-     } catch (EncrypterException e) {
-       e.printStackTrace();
-     }
-  }
-}
+PaymentMethod paymentMethod = ...; // The user selected PaymentMethod.
+PaymentMethodDetails paymentMethodDetails = ...; // The user entered payment method details, e.g. `CardDetails` for card payments. You can check what's required and optional to submit by looking at `PaymentMethod.getInputDetails()`.
+mPaymentHandler.initiatePayment(paymentMethod, paymentMethodDetails);
 ```
 
-## Examples
 
-For your convenience, we included the following demo modules into this repository:
-
-* **checkoutdemo** – A functioning demo of the Checkout SDK using the Quick integration.
-
-* **defaultApp** – Also uses the Quick integration, but allows to configure parameters for setting up the payment request.
-
-* **customuiapplication** – An example implementation of the Custom integration where the application fully handles the UI.
-
-* **customwithcheckoutui** – An experimental module where the Custom integration is used with UI elements (fragments, views) from the Checkout UI.
-
-
-## Proguard Rules
-
-If you are using the Quick integration together with Proguard you need to add the following rules:
-
-```
--keep public class com.adyen.ui.DefaultPaymentRequestListener {*;}
--keep public class com.adyen.ui.DefaultPaymentRequestDetailsListener {*;}
-```
+## Example App - Quick Start
+Run `bash <(curl -s https://github.com/Adyen/adyen-android/raw/2.x/setup.sh)`
 
 ## See also
-
- * [Complete Documentation](https://docs.adyen.com/developers/checkout/android)
+ * [Complete Documentation](https://docs.adyen.com/developers/checkout/android-sdk)
 
  * [SDK Reference](https://adyen.github.io/adyen-android/)
 
 
 ## License
-
 This repository is open source and available under the MIT license. For more information, see the LICENSE file.

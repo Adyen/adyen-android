@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <color name="transparent">#00000000</color>
+    <color name="white">#FFFFFF</color>
+    <color name="error">#F44336</color>
+    <color name="drawable_border">#8A000000</color>
+    <color name="numpad_background">#FAFAFA</color>
+    <color name="numpad_divider">#F5F5F5</color>
+    <color name="code_view_rect">#BDBDBD</color>
+</resources>
