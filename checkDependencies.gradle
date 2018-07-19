@@ -7,7 +7,7 @@ afterEvaluate {
 
     relevantConfigurations.each { configuration ->
         configuration.resolvedConfiguration.firstLevelModuleDependencies.each { dependency ->
-            if (dependency.moduleGroup != "com.adyen.checkout" && dependency.moduleGroup != "adyen-checkout-android-v2") {
+            if (dependency.moduleGroup != "com.adyen.checkout" && dependency.moduleGroup != rootProject.name) {
                 dependency.moduleArtifacts.each { artifact ->
                     def (checksum, algorithm) = rootProject.checksums.findResult {
                         final parts = it.split(":")

@@ -63,6 +63,6 @@
     <!-- SepaDirectDebit -->
     <string name="checkout_sdd_iban">Número de cuenta (IBAN)</string>
     <string name="checkout_sdd_account_holder_name">Nombre del titular de cuenta</string>
-    <string name="checkout_sdd_consent">Acepto que la cantidad indicada se deducirá de mi cuenta bancaria.</string>
+    <string name="checkout_sdd_consent">Estoy de acuerdo en que la cantidad indicada será deducida de mi cuenta bancaria.</string>
     <string name="checkout_sdd_iban_suggestion">Quiso decir</string>
 </resources>

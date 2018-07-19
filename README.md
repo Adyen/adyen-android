@@ -1,7 +1,7 @@
 # Adyen SDK for Android
 Want to add checkout to your Android app? No matter if your shopper wants to pay with a card (optionally with 3D Secure & One-click), wallet or a local payment method – all can be integrated in the same way, using the Adyen SDK. The Adyen SDK encrypts sensitive card data and sends it directly to Adyen in order to keep your PCI scope limited.
 
-This README provides the usage manual for the SDK itself. For the full documentation, including the server side implementation guidelines, refer to the [In-app Integration Guide](https://docs.adyen.com/developers/in-app-integration-guide).
+This README provides the usage manual for the SDK itself. For the full documentation, including the server side implementation guidelines, refer to the [Android SDK Guide](https://docs.adyen.com/developers/checkout/android-sdk).
 
 To give you as much flexibility as possible, our Android SDK can be integrated in two ways:
 
@@ -9,6 +9,11 @@ To give you as much flexibility as possible, our Android SDK can be integrated i
 * **Custom integration** – Design your own UI while leveraging the underlying functionality of the SDK.
 
 ## Quick integration
+![Credit Card](https://user-images.githubusercontent.com/8339684/42883150-0aeec504-8a9b-11e8-9a23-426ce4771481.gif)
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+![One-Click](https://user-images.githubusercontent.com/8339684/42883151-0badfece-8a9b-11e8-94d9-41320e757b01.gif)
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+
 #### Installation
 Import the quick integration modules by adding these lines to your build.gradle file.
 
@@ -35,9 +40,9 @@ CheckoutController.startPayment(/*Activity*/ this, new CheckoutSetupParametersHa
 });
 ```
 
-Send the `CheckoutSetupParameters` to your own server, which then needs to forward this data, among some other parameters, to the Adyen Checkout API. See the [Checkout API Reference](https://docs.adyen.com/developers/in-app-integration/checkout-api-reference#setup) for more details.
+Send the `CheckoutSetupParameters` to your own server, which then needs to forward this data, among some other parameters, to the Adyen Checkout API. See the [API Explorer](https://docs.adyen.com/api-explorer/#/PaymentSetupAndVerificationService/v32/paymentSession) for more details.
 
-##### - Generating StartCheckoutParameters
+##### - Generating StartPaymentParameters
 After receiving the payment session data from your own server, use the `CheckoutController` to handle the payment session response:
 
 ```java
@@ -111,8 +116,8 @@ You can set the screen orientation by overriding the appropriate resource:
 </resources>
 ```
 The number corresponds to `ActivityInfo.ScreenOrientation`:
-- landscape: 0 (ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE)
-- portrait: 1 (ActivityInfo.SCREEN_ORIENTATION_PORTRAIT)
+- landscape: 0 (`ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE`)
+- portrait: 1 (`ActivityInfo.SCREEN_ORIENTATION_PORTRAIT`)
 - etc.
 
 ##### - Changing the font
@@ -128,7 +133,7 @@ By default, we use the font that is declared in the theme that is used for check
 
 ## Custom integration
 #### Installation
-Import the following modules by adding these line to your build.gradle file.
+Import the following modules by adding these line to your `build.gradle` file.
 ```groovy
 final checkoutVersion = "2.0.0"
 implementation "com.adyen.checkout:core:${checkoutVersion}"
@@ -139,8 +144,6 @@ implementation "com.adyen.checkout:util:${checkoutVersion}" // Optional; Collect
 
 #### Getting started
 It is possible to have more control over the payment flow — presenting your own UI for specific payment methods, filtering a list of payment methods, or implementing your own unique checkout experience. To get started, use the `PaymentController` class to start the payment:
-
-> The following example uses RxJava and RxAndroid to perform asynchronous tasks.
 
 ```java
 PaymentController.startPayment(/*Activity*/ this, new PaymentSetupParametersHandler() {
@@ -156,7 +159,7 @@ PaymentController.startPayment(/*Activity*/ this, new PaymentSetupParametersHand
 });
 ```
 
-Send the `PaymentSetupParameters` to your own server, which then needs to forward this data, among some other parameters, to the Adyen Checkout API. See the [Checkout API Reference](https://docs.adyen.com/developers/in-app-integration/checkout-api-reference#setup) for more details.
+Send the `PaymentSetupParameters` to your own server, which then needs to forward this data, among some other parameters, to the Adyen Checkout API. See the [API Explorer](https://docs.adyen.com/api-explorer/#/PaymentSetupAndVerificationService/v32/paymentSession) for more details.
 
 ##### - Create a PaymentSession
 After receiving the Base64 encoded payment session data from your own server, use the `PaymentController` to handle the payment session response:
@@ -241,13 +244,10 @@ mPaymentHandler.initiatePayment(paymentMethod, paymentMethodDetails);
 
 
 ## Example App - Quick Start
-Run `bash <(curl -s https://github.com/Adyen/adyen-android/raw/2.x/setup.sh)`
+Run `bash <(curl -s https://raw.githubusercontent.com/Adyen/adyen-android/master/setup.sh)`
 
 ## See also
- * [Complete Documentation](https://docs.adyen.com/developers/checkout/android-sdk)
-
- * [SDK Reference](https://adyen.github.io/adyen-android/)
-
+ * [Android SDK Guide](https://docs.adyen.com/developers/checkout/android-sdk)
 
 ## License
 This repository is open source and available under the MIT license. For more information, see the LICENSE file.

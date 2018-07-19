@@ -73,6 +73,9 @@ public final class NfcCardReader {
         mListener = listener;
     }
 
+    /**
+     * @return Whether the device has NFC enabled in the settings.
+     */
     public boolean isNfcEnabledOnDevice() {
         return mNfcAdapter.isEnabled();
     }

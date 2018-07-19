@@ -39,9 +39,9 @@ import com.adyen.checkout.core.card.CardValidator;
 import com.adyen.checkout.core.card.Cards;
 import com.adyen.checkout.core.card.EncryptedCard;
 import com.adyen.checkout.core.card.EncryptionException;
+import com.adyen.checkout.core.handler.AdditionalDetailsHandler;
 import com.adyen.checkout.core.internal.model.InputDetailImpl;
 import com.adyen.checkout.core.internal.model.PaymentMethodImpl;
-import com.adyen.checkout.core.handler.AdditionalDetailsHandler;
 import com.adyen.checkout.core.model.CardDetails;
 import com.adyen.checkout.core.model.CupSecurePlusDetails;
 import com.adyen.checkout.core.model.InputDetail;
@@ -723,11 +723,28 @@ public class CardDetailsActivity extends CheckoutDetailsActivity
     @NonNull
     private CardValidator.SecurityCodeValidationResult getSecurityCodeValidationResult() {
         String securityCode = mSecurityCodeEditText.getText().toString();
-        PaymentMethodUtil.Requirement securityCodeRequirement = PaymentMethodUtil
-                .getRequirementForInputDetail(CardDetails.KEY_ENCRYPTED_SECURITY_CODE, mAllowedPaymentMethods);
-        CardType cardType = mAllowedPaymentMethods.size() == 1 ? CardType.forTxVariantProvider(mAllowedPaymentMethods.get(0)) : null;
+        boolean isRequired;
+        CardType cardType;
 
-        return Cards.VALIDATOR.validateSecurityCode(securityCode, securityCodeRequirement == PaymentMethodUtil.Requirement.REQUIRED, cardType);
+        if (mAllowedPaymentMethods.size() == 1) {
+            PaymentMethod paymentMethod = mAllowedPaymentMethods.get(0);
+            isRequired = PaymentMethodUtil
+                    .getRequirementForInputDetail(CardDetails.KEY_ENCRYPTED_SECURITY_CODE, paymentMethod) == PaymentMethodUtil.Requirement.REQUIRED;
+            cardType = CardType.forTxVariantProvider(paymentMethod);
+        } else {
+            List<CardType> estimatedCardTypes = getCardTypesToDisplay();
+
+            if (estimatedCardTypes.size() == 1 && estimatedCardTypes.get(0) == CardType.AMERICAN_EXPRESS) {
+                isRequired = true;
+                cardType = CardType.AMERICAN_EXPRESS;
+            } else {
+                isRequired = PaymentMethodUtil.getRequirementForInputDetail(CardDetails.KEY_ENCRYPTED_SECURITY_CODE, mAllowedPaymentMethods)
+                        == PaymentMethodUtil.Requirement.REQUIRED;
+                cardType = null;
+            }
+        }
+
+        return Cards.VALIDATOR.validateSecurityCode(securityCode, isRequired, cardType);
     }
 
     @NonNull
