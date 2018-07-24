@@ -72,7 +72,7 @@ public final class DrawablePreProcessor {
     }
 
     @NonNull
-    public Drawable preProcess(@NonNull Drawable drawable) {
+    private Drawable preProcess(@NonNull Drawable drawable) {
         Bitmap bitmap = convertToBitmap(drawable);
         int cornerRadius = (int) (bitmap.getHeight() * CORNER_RADIUS_FACTOR);
         int color = ContextCompat.getColor(mApplication, R.color.drawable_border);
@@ -119,7 +119,7 @@ public final class DrawablePreProcessor {
         Paint paint = new Paint();
         paint.setColor(Color.WHITE);
         Rect rect = new Rect(0, 0, bitmap.getWidth(), bitmap.getHeight());
-        Rect rectTarget = new Rect(1, 1, bitmap.getWidth() - 1, bitmap.getHeight() - 1);
+        Rect rectTarget = new Rect(0, 0, bitmap.getWidth(), bitmap.getHeight());
         RectF rectF = new RectF(rect);
         paint.setAntiAlias(true);
         canvas.drawARGB(0, 0, 0, 0);

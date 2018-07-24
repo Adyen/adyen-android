@@ -14,6 +14,8 @@ android {
         targetSdkVersion rootProject.targetSdkVersion
         versionCode rootProject.versionCode
         versionName rootProject.versionName
+
+        vectorDrawables.useSupportLibrary = true
     }
 
     buildTypes {

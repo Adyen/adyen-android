@@ -4,7 +4,7 @@
 
     <item
         android:id="@+id/action_card_reader_tutorial"
-        android:icon="@drawable/ic_contactless_white_24dp"
+        android:icon="@drawable/ic_contactless_24dp"
         android:title="@string/checkout_card_reader_tutorial_action"
         android:visible="false"
         app:showAsAction="ifRoom"/>

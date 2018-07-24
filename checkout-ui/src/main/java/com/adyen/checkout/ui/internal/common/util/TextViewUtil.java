@@ -3,7 +3,6 @@ package com.adyen.checkout.ui.internal.common.util;
 import android.graphics.drawable.Drawable;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
-import android.support.v4.content.ContextCompat;
 import android.text.InputFilter;
 import android.widget.TextView;
 
@@ -55,12 +54,12 @@ public final class TextViewUtil {
     }
 
     public static void setDefaultTextColor(@NonNull TextView textView) {
-        int color = ContextCompat.getColor(textView.getContext(), android.R.color.primary_text_light);
+        int color = ThemeUtil.getAttributeColor(textView.getContext(), android.R.attr.textColorPrimary);
         textView.setTextColor(color);
     }
 
     public static void setErrorTextColor(@NonNull TextView textView) {
-        int color = ContextCompat.getColor(textView.getContext(), R.color.error);
+        int color = ThemeUtil.getAttributeColor(textView.getContext(), R.attr.colorError);
         textView.setTextColor(color);
     }
 

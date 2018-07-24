@@ -30,8 +30,8 @@ ext {
             "com.tencent.mm.opensdk:wechat-sdk-android-without-mta:aff8bb92f98aa96792b984e51982fb35a8562c7cdeec270a3f163384f37bf87b:SHA-256",
     ]
 
-    versionCode = 201
-    versionName = "2.0.1"
+    versionCode = 202
+    versionName = "2.0.2"
 
     testCoverageEnabled = true
 }

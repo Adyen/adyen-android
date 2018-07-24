@@ -81,7 +81,7 @@ class CheckoutMethodPickerAdapter extends RecyclerView.Adapter<TwoLineItemViewHo
 
         if (viewType == VIEW_TYPE_DELETABLE) {
             ImageView actionImageView = holder.getActionImageView();
-            actionImageView.setImageResource(R.drawable.ic_clear_black_24dp);
+            actionImageView.setImageResource(R.drawable.ic_clear_24dp);
             TypedArray typedArray = actionImageView.getContext().obtainStyledAttributes(new int[]{android.R.attr.selectableItemBackground});
             actionImageView.setBackground(typedArray.getDrawable(0));
             typedArray.recycle();

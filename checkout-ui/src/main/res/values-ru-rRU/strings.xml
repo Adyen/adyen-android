@@ -47,7 +47,6 @@
 
     <!-- Giropay -->
     <string name="checkout_giropay_search_hint">Bankname / BIC / Bankleitzahl</string>
-    <string name="checkout_giropay_search_hint_loading_failed">БИК (банковский идентификационный код)</string>
     <string name="checkout_giropay_error_search_no_results">Ничего не найдено</string>
 
     <!-- Issuer -->

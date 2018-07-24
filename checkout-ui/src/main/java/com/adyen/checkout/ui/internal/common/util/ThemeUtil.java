@@ -5,6 +5,7 @@ import android.content.res.TypedArray;
 import android.graphics.PorterDuff;
 import android.graphics.PorterDuffColorFilter;
 import android.graphics.drawable.Drawable;
+import android.support.annotation.AttrRes;
 import android.support.annotation.ColorInt;
 import android.support.annotation.NonNull;
 import android.util.TypedValue;
@@ -21,8 +22,13 @@ import com.adyen.checkout.ui.R;
 public final class ThemeUtil {
     @ColorInt
     public static int getPrimaryThemeColor(@NonNull Context context) {
+        return getAttributeColor(context, R.attr.colorPrimary);
+    }
+
+    @ColorInt
+    public static int getAttributeColor(@NonNull Context context, @AttrRes int attributeColor) {
         TypedValue typedValue = new TypedValue();
-        TypedArray a = context.obtainStyledAttributes(typedValue.data, new int[] {R.attr.colorPrimary});
+        TypedArray a = context.obtainStyledAttributes(typedValue.data, new int[] {attributeColor});
         int color = a.getColor(0, 0);
         a.recycle();
 

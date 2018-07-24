@@ -8,7 +8,7 @@ import android.support.annotation.DrawableRes;
 import android.support.annotation.MainThread;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
-import android.support.v4.content.ContextCompat;
+import android.support.v7.content.res.AppCompatResources;
 
 /**
  * Copyright (c) 2018 Adyen B.V.
@@ -101,7 +101,7 @@ public abstract class Request implements Runnable {
     @Nullable
     private Drawable loadDrawableResource(@DrawableRes int drawableResId) {
         if (drawableResId != 0) {
-            return ContextCompat.getDrawable(mRembrandt.getApplication(), drawableResId);
+            return AppCompatResources.getDrawable(mRembrandt.getApplication(), drawableResId);
         } else {
             return null;
         }

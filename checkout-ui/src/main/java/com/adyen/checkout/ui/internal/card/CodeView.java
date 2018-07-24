@@ -57,12 +57,13 @@ public class CodeView extends AppCompatEditText {
     }
 
     public CodeView(@NonNull Context context, @Nullable AttributeSet attrs) {
-        this(context, attrs, android.R.attr.editTextStyle);
+        this(context, attrs, R.attr.editTextStyle);
     }
 
     public CodeView(@NonNull Context context, @Nullable AttributeSet attrs, int defStyleAttr) {
         super(context, attrs, defStyleAttr);
 
+        getPaint().setColor(ThemeUtil.getAttributeColor(context, android.R.attr.textColorPrimary));
         mRectF = new RectF();
         initRectPaints(context);
         setBackgroundColor(Color.TRANSPARENT);

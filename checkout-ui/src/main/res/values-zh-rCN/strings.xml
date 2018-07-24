@@ -47,7 +47,6 @@
 
     <!-- Giropay -->
     <string name="checkout_giropay_search_hint">银行名称 / BIC（银行识别码） / 银行代码</string>
-    <string name="checkout_giropay_search_hint_loading_failed">BIC（银行标识代码）</string>
     <string name="checkout_giropay_error_search_no_results">无搜索结果</string>
 
     <!-- Issuer -->

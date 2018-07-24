@@ -40,8 +40,8 @@ public final class Rembrandt {
 
         return get(application)
                 .load(wrappedCallable)
-                .placeholder(R.drawable.ic_image_black_24dp)
-                .error(R.drawable.ic_broken_image_black_24dp)
+                .placeholder(R.drawable.ic_image_24dp)
+                .error(R.drawable.ic_broken_image_24dp)
                 .build();
     }
 

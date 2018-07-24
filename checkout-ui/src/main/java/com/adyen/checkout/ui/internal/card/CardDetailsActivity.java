@@ -53,13 +53,13 @@ import com.adyen.checkout.ui.R;
 import com.adyen.checkout.ui.internal.common.activity.CheckoutDetailsActivity;
 import com.adyen.checkout.ui.internal.common.fragment.ErrorDialogFragment;
 import com.adyen.checkout.ui.internal.common.fragment.ProgressDialogFragment;
+import com.adyen.checkout.ui.internal.common.util.Adapter;
 import com.adyen.checkout.ui.internal.common.util.ConnectivityDelegate;
 import com.adyen.checkout.ui.internal.common.util.KeyboardUtil;
 import com.adyen.checkout.ui.internal.common.util.LockToCheckmarkAnimationDelegate;
 import com.adyen.checkout.ui.internal.common.util.PayButtonUtil;
 import com.adyen.checkout.ui.internal.common.util.PaymentMethodUtil;
 import com.adyen.checkout.ui.internal.common.util.PhoneNumberUtil;
-import com.adyen.checkout.ui.internal.common.util.SimpleArrayAdapter;
 import com.adyen.checkout.ui.internal.common.util.TextViewUtil;
 import com.adyen.checkout.ui.internal.common.util.image.Rembrandt;
 import com.adyen.checkout.ui.internal.common.util.image.Target;
@@ -529,16 +529,16 @@ public class CardDetailsActivity extends CheckoutDetailsActivity
     }
 
     private void setupInstallmentViews() {
-        SimpleArrayAdapter<Item> installmentsAdapter = new SimpleArrayAdapter<Item>(this) {
+        Adapter<Item> installmentsAdapter = Adapter.forSpinner(new Adapter.TextDelegate<Item>() {
             @NonNull
             @Override
-            protected String getText(@NonNull Item item) {
+            public String getText(@NonNull Item item) {
                 String[] parts = item.getName().split("\\s");
                 parts = replaceCurrencyCodeWithSymbol(parts);
 
                 return parts != null ? TextUtils.join(" ", parts) : item.getName();
             }
-        };
+        });
         mInstallmentsSpinner = findViewById(R.id.spinner_installments);
 
         Iterator<PaymentMethod> paymentMethodIterator = mAllowedPaymentMethods.iterator();
@@ -564,16 +564,11 @@ public class CardDetailsActivity extends CheckoutDetailsActivity
         if (installmentsInputDetail == null) {
             mInstallmentsContainer.setVisibility(View.GONE);
             mInstallmentsSpinner.setAdapter(null);
-            installmentsAdapter.clear();
+            installmentsAdapter.setItems(null);
         } else {
             mInstallmentsContainer.setVisibility(View.VISIBLE);
             mInstallmentsSpinner.setAdapter(installmentsAdapter);
-
-            List<Item> items = installmentsInputDetail.getItems();
-
-            if (items != null) {
-                installmentsAdapter.addAll(items);
-            }
+            installmentsAdapter.setItems(installmentsInputDetail.getItems());
         }
     }
 

@@ -45,12 +45,12 @@
                     <path
                         android:name="path_5"
                         android:pathData="M 250 34 L 358 34 L 358 219 L 250 219 Z"
-                        android:fillColor="#ededed"
+                        android:fillColor="?android:attr/colorBackground"
                         android:strokeWidth="1"/>
                     <path
                         android:name="path_6"
                         android:pathData="M 304 208 C 302.343 208 301 209.343 301 211 C 301 212.657 302.343 214 304 214 C 305.657 214 307 212.657 307 211 C 307 209.343 305.657 208 304 208 Z"
-                        android:fillColor="#ffffff"
+                        android:fillColor="?colorControlNormal"
                         android:strokeColor="#979797"
                         android:strokeWidth="1"/>
                     <path
@@ -61,20 +61,13 @@
                     <path
                         android:name="path_8"
                         android:pathData="M 270 211 L 276 208 L 276 214 Z"
-                        android:fillColor="#ffffff"
+                        android:fillColor="?colorControlNormal"
                         android:strokeColor="#979797"
                         android:strokeWidth="1"/>
-                    <group android:name="group_2">
-                        <path
-                            android:name="path_4_1"
-                            android:pathData="M 332 208 L 338 208 L 338 214 L 332 214 Z"
-                            android:fillColor="#000"
-                            android:strokeWidth="1"/>
-                    </group>
                     <path
                         android:name="path_9"
                         android:pathData="M 332.5 208.5 L 337.5 208.5 L 337.5 213.5 L 332.5 213.5 Z"
-                        android:fillColor="#ffffff"
+                        android:fillColor="?colorControlNormal"
                         android:strokeColor="#979797"
                         android:strokeWidth="1"/>
                     <path

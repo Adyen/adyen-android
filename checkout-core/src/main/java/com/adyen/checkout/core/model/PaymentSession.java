@@ -3,8 +3,6 @@ package com.adyen.checkout.core.model;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 
-import com.adyen.checkout.base.HostProvider;
-
 import java.util.Date;
 import java.util.List;
 
@@ -48,10 +46,4 @@ public interface PaymentSession {
      */
     @NonNull
     Date getGenerationTime();
-
-    /**
-     * @return The {@link HostProvider} for the {@link com.adyen.checkout.base.LogoApi LogoApi}.
-     */
-    @NonNull
-    HostProvider getLogoApiHostProvider();
 }

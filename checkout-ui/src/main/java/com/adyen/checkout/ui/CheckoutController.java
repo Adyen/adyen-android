@@ -83,18 +83,17 @@ public final class CheckoutController {
      * Get a {@link PaymentMethodHandler} that is capable of handling a given {@link PaymentMethod}.
      *
      * @param activity The current {@link Activity}.
-     * @param paymentParameters The {@link StartPaymentParameters} to handle.
+     * @param paymentReference The {@link PaymentReference} to handle.
      * @param paymentMethod The {@link PaymentMethod} to handle.
      * @return The {@link PaymentMethodHandler}, or {@code null} if non can handle the given {@link PaymentMethod}.
      */
     @Nullable
     public static PaymentMethodHandler getPaymentMethodHandler(
             @NonNull Activity activity,
-            @NonNull StartPaymentParameters paymentParameters,
+            @NonNull PaymentReference paymentReference,
             @NonNull PaymentMethod paymentMethod
     ) {
         Application application = activity.getApplication();
-        PaymentReference paymentReference = paymentParameters.getPaymentReference();
 
         if (CardHandler.FACTORY.supports(application, paymentMethod)) {
             return new CardHandler(paymentReference, paymentMethod);

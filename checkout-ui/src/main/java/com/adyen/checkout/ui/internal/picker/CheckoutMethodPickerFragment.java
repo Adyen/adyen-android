@@ -154,7 +154,12 @@ public class CheckoutMethodPickerFragment extends CheckoutSessionFragment {
                 peekHeight = child.getBottom();
 
                 if (peekHeight > maxPeekHeight) {
-                    peekHeight -= child.getMeasuredHeight() / 2;
+                    int childHeight = child.getMeasuredHeight();
+                    peekHeight -= childHeight / 2;
+
+                    if (childIndex == childCount) {
+                        peekHeight -= childHeight;
+                    }
                 }
             }
         }

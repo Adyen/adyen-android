@@ -47,7 +47,6 @@
 
     <!-- Giropay -->
     <string name="checkout_giropay_search_hint">Banknaam / BIC / Bankleitzahl</string>
-    <string name="checkout_giropay_search_hint_loading_failed">BIC (Bank Identifier Code)</string>
     <string name="checkout_giropay_error_search_no_results">Geen zoekresultaten</string>
 
     <!-- Issuer -->

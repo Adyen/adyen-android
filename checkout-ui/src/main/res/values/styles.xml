@@ -26,59 +26,50 @@
         <item name="windowActionBar">false</item>
     </style>
 
-    <style name="Checkout" parent="AppTheme.Checkout" />
+    <style name="Checkout" />
 
     <!-- Text. -->
     <style name="Checkout.TextAppearance" parent="TextAppearance.AppCompat" />
 
     <style name="Checkout.TextAppearance.Primary">
-        <item name="android:textSize">@dimen/abc_text_size_menu_material</item>
-        <item name="android:textColor">?android:attr/textColorPrimary</item>
+        <item name="android:textSize">16sp</item>
     </style>
 
     <style name="Checkout.TextAppearance.Secondary">
-        <item name="android:textSize">@dimen/abc_text_size_small_material</item>
+        <item name="android:textSize">14sp</item>
         <item name="android:textColor">?android:attr/textColorSecondary</item>
     </style>
 
-    <style name="Checkout.TextAppearance.Title">
-        <item name="android:textSize">@dimen/abc_text_size_title_material</item>
-        <item name="android:textColor">?android:attr/textColorPrimary</item>
-        <item name="android:textStyle">bold</item>
-    </style>
+    <style name="Checkout.TextAppearance.Title" parent="TextAppearance.AppCompat.Title" />
 
     <style name="Checkout.TextAppearance.Error" parent="TextAppearance.Design.Error">
-        <item name="android:textColor">@color/error</item>
+        <item name="android:textColor">?attr/colorError</item>
     </style>
 
     <!-- Widget. -->
     <style name="Checkout.TextView" parent="android:Widget.TextView">
-        <item name="android:textAppearance">@style/Checkout.TextAppearance.Primary</item>
+        <item name="android:textAppearance">@style/Checkout.TextAppearance</item>
     </style>
 
     <style name="Checkout.EditText" parent="Widget.AppCompat.EditText">
         <item name="android:imeOptions">flagNoExtractUi</item>
     </style>
 
-    <style name="Checkout.Button" parent="Widget.AppCompat.Button.Colored" >
+    <style name="Checkout.Button" parent="Widget.AppCompat.Button.Colored">
         <item name="android:minHeight">@dimen/height_button</item>
-        <item name="android:textSize">@dimen/text_size_button</item>
     </style>
 
     <style name="Checkout.Button.Inverse" parent="Widget.AppCompat.Button.Borderless.Colored">
         <item name="android:minHeight">@dimen/height_button</item>
-        <item name="android:textSize">@dimen/text_size_button</item>
-        <item name="android:textColor">?colorAccent</item>
     </style>
 
     <style name="Checkout.Button.Numpad" parent="Widget.AppCompat.Button.Borderless">
+        <item name="android:textColor">@color/numpad_text</item>
         <item name="android:textSize">28sp</item>
         <item name="android:background">@drawable/numpad_button_state_background</item>
     </style>
 
-    <style name="Checkout.Switch" parent="Widget.AppCompat.CompoundButton.Switch">
-        <item name="android:textAppearance">@style/Checkout.TextAppearance.Primary</item>
-    </style>
+    <style name="Checkout.Switch" parent="Widget.AppCompat.CompoundButton.Switch" />
 
     <style name="Checkout.Spinner" parent="Widget.AppCompat.Spinner.Underlined" />
 

@@ -24,7 +24,7 @@ public final class PaymentMethodDeletionResponse extends JsonObject {
     public PaymentMethodDeletionResponse(@NonNull JSONObject jsonObject) throws JSONException {
         super(jsonObject);
 
-        mResultCode = parseEnum(jsonObject.getString(KEY_RESULT_CODE), ResultCode.class);
+        mResultCode = parseEnum(KEY_RESULT_CODE, ResultCode.class);
     }
 
     @Override

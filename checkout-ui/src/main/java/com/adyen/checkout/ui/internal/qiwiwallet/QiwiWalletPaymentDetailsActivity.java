@@ -17,8 +17,8 @@ import com.adyen.checkout.core.model.PaymentMethod;
 import com.adyen.checkout.core.model.QiwiWalletDetails;
 import com.adyen.checkout.ui.R;
 import com.adyen.checkout.ui.internal.common.activity.CheckoutDetailsActivity;
+import com.adyen.checkout.ui.internal.common.util.Adapter;
 import com.adyen.checkout.ui.internal.common.util.PayButtonUtil;
-import com.adyen.checkout.ui.internal.common.util.SimpleArrayAdapter;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -59,13 +59,15 @@ public class QiwiWalletPaymentDetailsActivity extends CheckoutDetailsActivity {
         setContentView(R.layout.activity_qiwi_wallet_details);
         setTitle(mPaymentMethod.getName());
         mPhoneNumberPrefixSpinner = findViewById(R.id.spinner_phoneNumberPrefix);
-        mPhoneNumberPrefixSpinner.setAdapter(new SimpleArrayAdapter<Item>(this, getItems(mPaymentMethod)) {
+        Adapter<Item> adapter = Adapter.forSpinner(new Adapter.TextDelegate<Item>() {
             @NonNull
             @Override
-            protected String getText(@NonNull Item item) {
+            public String getText(@NonNull Item item) {
                 return getString(R.string.checkout_qiwiwallet_country_code_format, item.getId(), item.getName());
             }
         });
+        adapter.setItems(getItems(mPaymentMethod));
+        mPhoneNumberPrefixSpinner.setAdapter(adapter);
         mPhoneNumberEditText = findViewById(R.id.editText_phoneNumber);
         mPayButton = findViewById(R.id.button_continue);
         PayButtonUtil.setPayButtonText(this, mPayButton);

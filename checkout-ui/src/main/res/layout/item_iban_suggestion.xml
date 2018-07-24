@@ -20,7 +20,7 @@
         android:paddingRight="@dimen/standard_half_margin"
         android:paddingEnd="@dimen/standard_half_margin"
         android:paddingBottom="@dimen/standard_quarter_margin"
-        android:textColor="@color/white"
+        android:textColor="?android:attr/textColorPrimaryInverse"
         android:elevation="@dimen/elevation_default"
         tools:text="INGB"
         tools:ignore="UnusedAttribute" />

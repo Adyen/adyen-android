@@ -13,7 +13,6 @@
     <dimen name="progress_dialog_size">80dp</dimen>
 
     <dimen name="height_button">58dp</dimen>
-    <dimen name="text_size_button">16sp</dimen>
 
     <dimen name="elevation_default">2dp</dimen>
 </resources>

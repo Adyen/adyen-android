@@ -92,8 +92,8 @@ abstract class IssuerCheckoutMethod extends CheckoutMethod {
 
             return Rembrandt.get(application)
                     .load(new AppIconCallable(application, mResolveInfo))
-                    .placeholder(R.drawable.ic_image_black_24dp)
-                    .error(R.drawable.ic_broken_image_black_24dp)
+                    .placeholder(R.drawable.ic_image_24dp)
+                    .error(R.drawable.ic_broken_image_24dp)
                     .build();
         }
 

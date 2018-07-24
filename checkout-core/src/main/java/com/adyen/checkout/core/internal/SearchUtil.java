@@ -1,4 +1,4 @@
-package com.adyen.checkout.ui.internal.common.util;
+package com.adyen.checkout.core.internal;
 
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;

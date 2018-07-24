@@ -144,12 +144,6 @@ public final class PaymentSessionImpl extends JsonObject implements PaymentSessi
         return mGenerationTime;
     }
 
-    @NonNull
-    @Override
-    public HostProvider getLogoApiHostProvider() {
-        return new LogoApiHostProvider(mCheckoutshopperBaseUrl);
-    }
-
     @Override
     public boolean equals(Object o) {
         if (this == o) {
@@ -240,6 +234,11 @@ public final class PaymentSessionImpl extends JsonObject implements PaymentSessi
     @NonNull
     public String getDisableRecurringDetailUrl() {
         return mDisableRecurringDetailUrl;
+    }
+
+    @NonNull
+    public HostProvider getLogoApiHostProvider() {
+        return new LogoApiHostProvider(mCheckoutshopperBaseUrl);
     }
 
     @NonNull
