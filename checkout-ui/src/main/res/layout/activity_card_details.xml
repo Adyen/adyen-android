@@ -116,8 +116,8 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:inputType="phone"
-                android:nextFocusDown="@id/spinner_installments"
-                android:nextFocusForward="@id/spinner_installments" />
+                android:nextFocusDown="@+id/spinner_installments"
+                android:nextFocusForward="@+id/spinner_installments" />
 
         </com.adyen.checkout.ui.internal.common.view.CustomTextInputLayout>
 
@@ -141,8 +141,8 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:gravity="end"
-                android:nextFocusDown="@id/switchCompat_storeDetails"
-                android:nextFocusForward="@id/switchCompat_storeDetails" />
+                android:nextFocusDown="@+id/switchCompat_storeDetails"
+                android:nextFocusForward="@+id/switchCompat_storeDetails" />
 
         </LinearLayout>
 
