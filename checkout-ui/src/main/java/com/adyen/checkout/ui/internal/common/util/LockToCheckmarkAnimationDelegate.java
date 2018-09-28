@@ -1,7 +1,9 @@
 package com.adyen.checkout.ui.internal.common.util;
 
+import android.graphics.drawable.Animatable;
+import android.graphics.drawable.Drawable;
 import android.support.annotation.NonNull;
-import android.support.graphics.drawable.AnimatedVectorDrawableCompat;
+import android.support.v7.content.res.AppCompatResources;
 import android.widget.TextView;
 
 import com.adyen.checkout.ui.R;
@@ -18,19 +20,11 @@ public final class LockToCheckmarkAnimationDelegate {
 
     private final ValidationCallback mValidationCallback;
 
-    private final AnimatedVectorDrawableCompat mAnimatedVectorDrawable;
-
-    private final AnimatedVectorDrawableCompat mAnimatedVectorDrawableReverse;
-
     private boolean mValid;
 
     public LockToCheckmarkAnimationDelegate(@NonNull TextView textView, @NonNull ValidationCallback validationCallback) {
         mTextView = textView;
         mValidationCallback = validationCallback;
-
-        mAnimatedVectorDrawable = AnimatedVectorDrawableCompat.create(mTextView.getContext(), R.drawable.ic_lock_to_checkmark_animated);
-        mAnimatedVectorDrawableReverse = AnimatedVectorDrawableCompat
-                .create(mTextView.getContext(), R.drawable.ic_lock_to_checkmark_animated_reverse);
 
         setDrawableRight();
         performValidation();
@@ -50,15 +44,24 @@ public final class LockToCheckmarkAnimationDelegate {
         if (valid != mValid) {
             setDrawableRight();
             mValid = valid;
-            ((AnimatedVectorDrawableCompat) mTextView.getCompoundDrawables()[2]).start();
+
+            Drawable drawable = mTextView.getCompoundDrawables()[2];
+
+            if (drawable instanceof Animatable) {
+                ((Animatable) drawable).start();
+            }
         }
     }
 
     private void setDrawableRight() {
         if (mValid) {
-            TextViewUtil.setCompoundDrawableRight(mTextView, mAnimatedVectorDrawableReverse.mutate());
+            //noinspection ConstantConditions
+            Drawable drawable = AppCompatResources.getDrawable(mTextView.getContext(), R.drawable.ic_lock_to_checkmark_animated_reverse).mutate();
+            TextViewUtil.setCompoundDrawableRight(mTextView, drawable);
         } else {
-            TextViewUtil.setCompoundDrawableRight(mTextView, mAnimatedVectorDrawable.mutate());
+            //noinspection ConstantConditions
+            Drawable drawable = AppCompatResources.getDrawable(mTextView.getContext(), R.drawable.ic_lock_to_checkmark_animated).mutate();
+            TextViewUtil.setCompoundDrawableRight(mTextView, drawable);
         }
     }
 

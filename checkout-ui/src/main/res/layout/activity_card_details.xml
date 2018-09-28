@@ -44,7 +44,7 @@
                 android:layout_height="wrap_content"
                 android:inputType="phone"
                 android:nextFocusDown="@+id/editText_expiryDate"
-                android:nextFocusForward="@id/editText_expiryDate" />
+                android:nextFocusForward="@+id/editText_expiryDate" />
 
         </com.adyen.checkout.ui.internal.common.view.CustomTextInputLayout>
 
@@ -79,7 +79,7 @@
                     android:inputType="date"
                     android:maxLength="7"
                     android:nextFocusDown="@+id/editText_securityCode"
-                    android:nextFocusForward="@id/editText_securityCode" />
+                    android:nextFocusForward="@+id/editText_securityCode" />
 
             </com.adyen.checkout.ui.internal.common.view.CustomTextInputLayout>
 
@@ -98,8 +98,8 @@
                     android:layout_height="wrap_content"
                     android:inputType="number"
                     android:maxLength="4"
-                    android:nextFocusDown="@id/editText_phoneNumber"
-                    android:nextFocusForward="@id/editText_phoneNumber" />
+                    android:nextFocusDown="@+id/editText_phoneNumber"
+                    android:nextFocusForward="@+id/editText_phoneNumber" />
 
             </com.adyen.checkout.ui.internal.common.view.CustomTextInputLayout>
 
@@ -116,8 +116,8 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:inputType="phone"
-                android:nextFocusDown="@id/spinner_installments"
-                android:nextFocusForward="@id/spinner_installments" />
+                android:nextFocusDown="@+id/spinner_installments"
+                android:nextFocusForward="@+id/spinner_installments" />
 
         </com.adyen.checkout.ui.internal.common.view.CustomTextInputLayout>
 
@@ -141,8 +141,8 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:gravity="end"
-                android:nextFocusDown="@id/switchCompat_storeDetails"
-                android:nextFocusForward="@id/switchCompat_storeDetails" />
+                android:nextFocusDown="@+id/switchCompat_storeDetails"
+                android:nextFocusForward="@+id/switchCompat_storeDetails" />
 
         </LinearLayout>
 
@@ -156,8 +156,8 @@
             android:paddingLeft="4dp"
             android:checked="false"
             android:text="@string/checkout_store_details"
-            android:nextFocusDown="@id/button_pay"
-            android:nextFocusForward="@id/button_pay" />
+            android:nextFocusDown="@+id/button_pay"
+            android:nextFocusForward="@+id/button_pay" />
 
         <Button
             android:id="@+id/button_pay"

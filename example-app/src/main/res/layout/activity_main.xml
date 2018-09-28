@@ -14,7 +14,7 @@
         android:id="@+id/viewPager_tabs"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_above="@id/button_checkout"/>
+        android:layout_above="@+id/button_checkout" />
 
     <Button
         android:id="@+id/button_checkout"

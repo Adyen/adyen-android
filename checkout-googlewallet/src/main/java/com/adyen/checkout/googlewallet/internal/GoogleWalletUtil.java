@@ -1,6 +1,7 @@
 package com.adyen.checkout.googlewallet.internal;
 
 import android.app.Activity;
+import android.content.Context;
 import android.content.Intent;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
@@ -12,6 +13,8 @@ import com.adyen.checkout.core.model.PaymentMethod;
 import com.adyen.checkout.core.model.PaymentMethodDetails;
 import com.adyen.checkout.core.model.PaymentSession;
 import com.adyen.checkout.util.AmountFormat;
+import com.google.android.gms.common.ConnectionResult;
+import com.google.android.gms.common.GoogleApiAvailability;
 import com.google.android.gms.wallet.Wallet;
 import com.google.android.gms.wallet.WalletConstants;
 
@@ -22,6 +25,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.List;
+import java.util.concurrent.Callable;
 
 /**
  * Copyright (c) 2018 Adyen B.V.
@@ -33,7 +37,20 @@ import java.util.List;
 public abstract class GoogleWalletUtil {
     static final int TIMEOUT_DEFAULT_SECONDS = 4;
 
+    static final Callable<Boolean> CALLABLE_FALSE = new Callable<Boolean>() {
+        @Override
+        public Boolean call() {
+            return false;
+        }
+    };
+
     private static final DecimalFormat DECIMAL_FORMAT = new DecimalFormat("0.##");
+
+    static boolean isPlayServicesUnavailable(@NonNull Context context) {
+        int googlePlayServicesAvailable = GoogleApiAvailability.getInstance().isGooglePlayServicesAvailable(context);
+
+        return ConnectionResult.SUCCESS != googlePlayServicesAvailable;
+    }
 
     @NonNull
     static Wallet.WalletOptions buildWalletOptions(int environment) {

@@ -40,3 +40,23 @@
 }
 # Ignore annotation used for build tooling.
 -dontwarn org.codehaus.mojo.animal_sniffer.IgnoreJRERequirement
+
+
+#### OkHttp ####
+-dontwarn okhttp3.**
+-dontwarn okio.**
+-dontwarn javax.annotation.**
+-dontwarn org.conscrypt.**
+# A resource is loaded with a relative path so the package of this class must be preserved.
+-keepnames class okhttp3.internal.publicsuffix.PublicSuffixDatabase
+
+
+#### Example app ####
+-keep class com.adyen.example.** { *; }
+
+
+#### Adyen Checkout ####
+-keep class com.adyen.checkout.core.** { *; }
+-dontwarn com.adyen.checkout.nfc.**
+-dontwarn com.adyen.checkout.googlewallet.**
+-dontwarn com.adyen.checkout.wechatpay.**

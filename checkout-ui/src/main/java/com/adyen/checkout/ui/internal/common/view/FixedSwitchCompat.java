@@ -21,6 +21,8 @@ import com.adyen.checkout.ui.R;
 public class FixedSwitchCompat extends SwitchCompat {
     public FixedSwitchCompat(@NonNull Context context) {
         super(context);
+
+        fixFontFamily(context);
     }
 
     public FixedSwitchCompat(@NonNull Context context, @Nullable AttributeSet attrs) {
@@ -45,7 +47,7 @@ public class FixedSwitchCompat extends SwitchCompat {
             Typeface font = ResourcesCompat.getFont(context, fontResourceId);
             setTypeface(font);
         } else if (fontAndroidResourceId != 0) {
-            Typeface font = ResourcesCompat.getFont(context, fontResourceId);
+            Typeface font = ResourcesCompat.getFont(context, fontAndroidResourceId);
             setTypeface(font);
         }
 

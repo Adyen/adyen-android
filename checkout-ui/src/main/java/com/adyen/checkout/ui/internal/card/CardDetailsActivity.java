@@ -12,7 +12,6 @@ import android.net.NetworkInfo;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
-import android.support.graphics.drawable.AnimatedVectorDrawableCompat;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v7.widget.RecyclerView;
@@ -92,6 +91,8 @@ public class CardDetailsActivity extends CheckoutDetailsActivity
 
     private EditText mCardNumberEditText;
 
+    private LockToCheckmarkAnimationDelegate mLockToCheckmarkAnimationDelegate;
+
     private EditText mExpiryDateEditText;
 
     private EditText mSecurityCodeEditText;
@@ -157,15 +158,7 @@ public class CardDetailsActivity extends CheckoutDetailsActivity
     protected void onRestoreInstanceState(Bundle savedInstanceState) {
         super.onRestoreInstanceState(savedInstanceState);
 
-        if (Cards.VALIDATOR.validateNumber(mCardNumberEditText.getText().toString()).getValidity() == CardValidator.Validity.VALID) {
-            if (!mCardNumberEditText.hasFocus()) {
-                AnimatedVectorDrawableCompat animatedVectorDrawable = (AnimatedVectorDrawableCompat) mCardNumberEditText.getCompoundDrawables()[2];
-
-                if (animatedVectorDrawable != null) {
-                    animatedVectorDrawable.start();
-                }
-            }
-        }
+        mLockToCheckmarkAnimationDelegate.onTextChanged();
     }
 
     @Override
@@ -181,6 +174,14 @@ public class CardDetailsActivity extends CheckoutDetailsActivity
 
         mHolderNameEditText = findViewById(R.id.editText_holderName);
         mCardNumberEditText = findViewById(R.id.editText_cardNumber);
+        mLockToCheckmarkAnimationDelegate = new LockToCheckmarkAnimationDelegate(
+                mCardNumberEditText,
+                new LockToCheckmarkAnimationDelegate.ValidationCallback() {
+                    @Override
+                    public boolean isValid() {
+                        return isCardNumberValidForUser();
+                    }
+                });
         mExpiryDateEditText = findViewById(R.id.editText_expiryDate);
         mSecurityCodeEditText = findViewById(R.id.editText_securityCode);
         mPhoneNumberEditText = findViewById(R.id.editText_phoneNumber);
@@ -331,16 +332,6 @@ public class CardDetailsActivity extends CheckoutDetailsActivity
     }
 
     private void setupCardNumberEditText(boolean requestFocus) {
-        final LockToCheckmarkAnimationDelegate animationDelegate = new LockToCheckmarkAnimationDelegate(
-                mCardNumberEditText,
-                new LockToCheckmarkAnimationDelegate.ValidationCallback() {
-                    @Override
-                    public boolean isValid() {
-                        return isCardNumberValidForUser();
-                    }
-                }
-        );
-
         TextViewUtil.addInputFilter(
                 mCardNumberEditText,
                 new InputFilter.LengthFilter(CardValidator.NUMBER_MAXIMUM_LENGTH + CardValidator.NUMBER_MAXIMUM_LENGTH / 4)
@@ -349,7 +340,7 @@ public class CardDetailsActivity extends CheckoutDetailsActivity
             @Override
             public void onFocusChange(View v, boolean hasFocus) {
                 validateCardNumberEditText();
-                animationDelegate.onFocusChanged();
+                mLockToCheckmarkAnimationDelegate.onFocusChanged();
             }
         });
         mCardNumberEditText.addTextChangedListener(new SimpleTextWatcher() {
@@ -369,7 +360,7 @@ public class CardDetailsActivity extends CheckoutDetailsActivity
                     KeyboardUtil.showAndSelect(mExpiryDateEditText);
                 }
 
-                animationDelegate.onTextChanged();
+                mLockToCheckmarkAnimationDelegate.onTextChanged();
             }
         });
         Cards.FORMATTER.attachAsYouTypeNumberFormatter(mCardNumberEditText);

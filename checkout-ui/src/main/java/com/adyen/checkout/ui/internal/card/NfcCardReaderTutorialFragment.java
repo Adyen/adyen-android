@@ -5,15 +5,18 @@ import android.app.Dialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.graphics.drawable.Animatable;
+import android.graphics.drawable.Animatable2;
 import android.graphics.drawable.Drawable;
+import android.os.Build;
 import android.os.Bundle;
 import android.provider.Settings;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.graphics.drawable.Animatable2Compat;
-import android.support.graphics.drawable.AnimatedVectorDrawableCompat;
 import android.support.v7.app.AppCompatDialog;
 import android.support.v7.app.AppCompatDialogFragment;
+import android.support.v7.content.res.AppCompatResources;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -31,35 +34,19 @@ import com.adyen.checkout.ui.R;
  * <p>
  * Created by ran on 19/04/2017.
  */
-// TODO: 25/06/2018 Fix animation on Build.VERSION.SDK_INT < Build.VERSION_CODES.LOLLIPOP.
+// TODO: 25/06/2018 Fix animation on Build.VERSION.SDK_INT <= Build.VERSION_CODES.M.
 public class NfcCardReaderTutorialFragment extends AppCompatDialogFragment {
     public static final String TAG = NfcCardReaderTutorialFragment.class.getSimpleName();
+
+    private final AnimationCallbackDelegate mAnimationCallbackDelegate = new AnimationCallbackDelegate();
+
+    private final ReverseAnimationCallbackDelegate mReverseAnimationCallbackDelegate = new ReverseAnimationCallbackDelegate();
 
     private Button mDismissButton;
 
     private View mEnableNfcButton;
 
     private ImageView mTutorialAnimImageView;
-
-    private AnimatedVectorDrawableCompat mTutorialAnimDrawable;
-
-    private AnimatedVectorDrawableCompat mTutorialAnimDrawableReversed;
-
-    private Animatable2Compat.AnimationCallback mAnimationCallback = new Animatable2Compat.AnimationCallback() {
-        @Override
-        public void onAnimationEnd(Drawable drawable) {
-            mTutorialAnimImageView.setImageDrawable(mTutorialAnimDrawableReversed);
-            mTutorialAnimDrawableReversed.start();
-        }
-    };
-
-    private Animatable2Compat.AnimationCallback mReverseAnimationCallback = new Animatable2Compat.AnimationCallback() {
-        @Override
-        public void onAnimationEnd(Drawable drawable) {
-            mTutorialAnimImageView.setImageDrawable(mTutorialAnimDrawable);
-            mTutorialAnimDrawable.start();
-        }
-    };
 
     private Listener mListener;
 
@@ -97,16 +84,7 @@ public class NfcCardReaderTutorialFragment extends AppCompatDialogFragment {
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_nfc_card_reader_tutorial, container, false);
 
-        mTutorialAnimDrawable = AnimatedVectorDrawableCompat.create(inflater.getContext(), R.drawable.card_reader_tutorial_animation);
-        //noinspection ConstantConditions
-        mTutorialAnimDrawable.registerAnimationCallback(mAnimationCallback);
-
-        mTutorialAnimDrawableReversed = AnimatedVectorDrawableCompat.create(inflater.getContext(), R.drawable.card_reader_tutorial_animation_reverse);
-        //noinspection ConstantConditions
-        mTutorialAnimDrawableReversed.registerAnimationCallback(mReverseAnimationCallback);
-
         mTutorialAnimImageView = view.findViewById(R.id.imageView_tutorialAnim);
-        mTutorialAnimImageView.setImageDrawable(mTutorialAnimDrawable);
 
         mDismissButton = view.findViewById(R.id.button_dismiss);
         mDismissButton.setOnClickListener(new View.OnClickListener() {
@@ -128,12 +106,10 @@ public class NfcCardReaderTutorialFragment extends AppCompatDialogFragment {
     }
 
     @Override
-    public void onStart() {
-        super.onStart();
+    public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
+        super.onViewCreated(view, savedInstanceState);
 
-        if (mTutorialAnimDrawable != null && !mTutorialAnimDrawable.isRunning() && !mTutorialAnimDrawableReversed.isRunning()) {
-            mTutorialAnimDrawable.start();
-        }
+        startAnimation();
     }
 
     @Override
@@ -150,15 +126,15 @@ public class NfcCardReaderTutorialFragment extends AppCompatDialogFragment {
     }
 
     @Override
-    public void onStop() {
-        super.onStop();
+    public void onDestroyView() {
+        super.onDestroyView();
 
-        if (mTutorialAnimDrawable != null && mTutorialAnimDrawable.isRunning()) {
-            mTutorialAnimDrawable.stop();
-        }
+        Drawable drawable = mTutorialAnimImageView.getDrawable();
 
-        if (mReverseAnimationCallback != null && mTutorialAnimDrawableReversed.isRunning()) {
-            mTutorialAnimDrawableReversed.stop();
+        if (drawable instanceof Animatable2Compat) {
+            ((Animatable2Compat) drawable).clearAnimationCallbacks();
+        } else if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M && drawable instanceof Animatable2) {
+            ((Animatable2) drawable).clearAnimationCallbacks();
         }
     }
 
@@ -179,6 +155,104 @@ public class NfcCardReaderTutorialFragment extends AppCompatDialogFragment {
             startActivity(intent);
         } else {
             Toast.makeText(getContext(), R.string.checkout_nfc_settings_redirect_failed_toast, Toast.LENGTH_LONG).show();
+        }
+    }
+
+    private void startAnimation() {
+        Context context = getContext();
+
+        if (context == null) {
+            return;
+        }
+
+        Drawable tutorialAnimDrawable = AppCompatResources.getDrawable(context, R.drawable.card_reader_tutorial_animation);
+        mTutorialAnimImageView.setImageDrawable(tutorialAnimDrawable);
+        //noinspection ConstantConditions
+        mAnimationCallbackDelegate.register(tutorialAnimDrawable);
+        ((Animatable) tutorialAnimDrawable).start();
+    }
+
+    private void startReverseAnimation() {
+        Context context = getContext();
+
+        if (context == null) {
+            return;
+        }
+
+        Drawable tutorialAnimDrawableReversed = AppCompatResources.getDrawable(context, R.drawable.card_reader_tutorial_animation_reverse);
+        mTutorialAnimImageView.setImageDrawable(tutorialAnimDrawableReversed);
+        //noinspection ConstantConditions
+        mReverseAnimationCallbackDelegate.register(tutorialAnimDrawableReversed);
+        ((Animatable) tutorialAnimDrawableReversed).start();
+    }
+
+    private void registerAnimationCallback(
+            @NonNull Drawable drawable,
+            @NonNull Animatable2Compat.AnimationCallback compatCallback,
+            @NonNull Animatable2.AnimationCallback callback
+    ) {
+        if (drawable instanceof Animatable2Compat) {
+            ((Animatable2Compat) drawable).registerAnimationCallback(compatCallback);
+        } else if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M && drawable instanceof Animatable2) {
+            ((Animatable2) drawable).registerAnimationCallback(callback);
+        } else {
+            throw new RuntimeException("Invalid drawable.");
+        }
+    }
+
+    private final class AnimationCallbackDelegate {
+        private final Animatable2.AnimationCallback mAnimationCallback;
+
+        private final Animatable2Compat.AnimationCallback mAnimationCallbackCompat = new Animatable2Compat.AnimationCallback() {
+            @Override
+            public void onAnimationEnd(Drawable drawable) {
+                startReverseAnimation();
+            }
+        };
+
+        private AnimationCallbackDelegate() {
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+                mAnimationCallback = new Animatable2.AnimationCallback() {
+                    @Override
+                    public void onAnimationEnd(Drawable drawable) {
+                        startReverseAnimation();
+                    }
+                };
+            } else {
+                mAnimationCallback = null;
+            }
+        }
+
+        private void register(@NonNull Drawable drawable) {
+            registerAnimationCallback(drawable, mAnimationCallbackCompat, mAnimationCallback);
+        }
+    }
+
+    private final class ReverseAnimationCallbackDelegate {
+        private final Animatable2.AnimationCallback mAnimationCallback;
+
+        private final Animatable2Compat.AnimationCallback mAnimationCallbackCompat = new Animatable2Compat.AnimationCallback() {
+            @Override
+            public void onAnimationEnd(Drawable drawable) {
+                startAnimation();
+            }
+        };
+
+        private ReverseAnimationCallbackDelegate() {
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+                mAnimationCallback = new Animatable2.AnimationCallback() {
+                    @Override
+                    public void onAnimationEnd(Drawable drawable) {
+                        startAnimation();
+                    }
+                };
+            } else {
+                mAnimationCallback = null;
+            }
+        }
+
+        private void register(@NonNull Drawable drawable) {
+            registerAnimationCallback(drawable, mAnimationCallbackCompat, mAnimationCallback);
         }
     }
 }

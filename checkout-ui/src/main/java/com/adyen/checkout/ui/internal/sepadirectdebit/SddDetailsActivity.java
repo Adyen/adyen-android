@@ -6,7 +6,6 @@ import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.design.widget.Snackbar;
-import android.support.graphics.drawable.AnimatedVectorDrawableCompat;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.SwitchCompat;
 import android.text.Editable;
@@ -206,8 +205,7 @@ public class SddDetailsActivity extends CheckoutDetailsActivity implements IbanS
         private boolean mDeleted;
 
         private ValidationListener() {
-            mDelegate = new LockToCheckmarkAnimationDelegate(mIbanEditText, new LockToCheckmarkAnimationDelegate
-                    .ValidationCallback() {
+            mDelegate = new LockToCheckmarkAnimationDelegate(mIbanEditText, new LockToCheckmarkAnimationDelegate.ValidationCallback() {
                 @Override
                 public boolean isValid() {
                     Iban iban = Iban.parse(mIbanEditText.getText().toString());
@@ -229,7 +227,6 @@ public class SddDetailsActivity extends CheckoutDetailsActivity implements IbanS
             boolean isValid = Iban.parse(s.toString()) != null;
 
             if (s == mIbanEditText.getEditableText() && !mDeleted && mIbanEditText.getSelectionEnd() == mIbanEditText.length() && isValid) {
-                ((AnimatedVectorDrawableCompat) mIbanEditText.getCompoundDrawables()[2]).start();
                 mAccountHolderNameEditText.requestFocus();
             }
 

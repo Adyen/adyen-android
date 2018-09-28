@@ -18,7 +18,7 @@ To give you as much flexibility as possible, our Android SDK can be integrated i
 Import the quick integration modules by adding these lines to your build.gradle file.
 
 ```groovy
-final checkoutVersion = "2.0.0"
+final checkoutVersion = "2.0.3"
 implementation "com.adyen.checkout:ui:${checkoutVersion}"
 implementation "com.adyen.checkout:nfc:${checkoutVersion}" // Optional; Integrates NFC card reader in card UI
 ```
@@ -135,7 +135,7 @@ By default, we use the font that is declared in the theme that is used for check
 #### Installation
 Import the following modules by adding these line to your `build.gradle` file.
 ```groovy
-final checkoutVersion = "2.0.0"
+final checkoutVersion = "2.0.3"
 implementation "com.adyen.checkout:core:${checkoutVersion}"
 implementation "com.adyen.checkout:core-card:${checkoutVersion}" // Optional; Required for processing card payments.
 implementation "com.adyen.checkout:nfc:${checkoutVersion}" // Optional; Enables reading of card information with the device"s NFC chip.
@@ -240,6 +240,17 @@ In order to make a payment, select a `PaymentMethod` and retrieve the according 
 PaymentMethod paymentMethod = ...; // The user selected PaymentMethod.
 PaymentMethodDetails paymentMethodDetails = ...; // The user entered payment method details, e.g. `CardDetails` for card payments. You can check what's required and optional to submit by looking at `PaymentMethod.getInputDetails()`.
 mPaymentHandler.initiatePayment(paymentMethod, paymentMethodDetails);
+```
+
+
+## Proguard Rules
+If you are using ProGuard add the following options:
+```proguard
+#### Adyen Checkout ####
+-keep class com.adyen.checkout.core.** { *; }
+-dontwarn com.adyen.checkout.nfc.**
+-dontwarn com.adyen.checkout.googlewallet.**
+-dontwarn com.adyen.checkout.wechatpay.**
 ```
 
 

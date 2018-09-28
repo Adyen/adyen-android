@@ -2,11 +2,13 @@ package com.adyen.example;
 
 import android.support.annotation.NonNull;
 import android.support.design.widget.BottomSheetBehavior;
+import android.support.test.espresso.assertion.ViewAssertions;
 import android.support.test.rule.ActivityTestRule;
 import android.support.test.runner.AndroidJUnit4;
 import android.support.v7.widget.RecyclerView;
 import android.widget.TextView;
 
+import com.adyen.checkout.ui.internal.card.CardDetailsActivity;
 import com.adyen.checkout.ui.internal.sepadirectdebit.SddDetailsActivity;
 import com.adyen.checkout.ui.internal.common.activity.CheckoutActivity;
 import com.adyen.checkout.ui.internal.common.util.KeyboardUtil;
@@ -26,6 +28,7 @@ import static android.support.test.espresso.action.ViewActions.click;
 import static android.support.test.espresso.action.ViewActions.typeText;
 import static android.support.test.espresso.contrib.RecyclerViewActions.actionOnHolderItem;
 import static android.support.test.espresso.contrib.RecyclerViewActions.scrollToHolder;
+import static android.support.test.espresso.matcher.ViewMatchers.isClickable;
 import static android.support.test.espresso.matcher.ViewMatchers.withId;
 import static android.support.test.espresso.matcher.ViewMatchers.withText;
 import static com.adyen.example.EspressoTestUtils.waitForActivity;
@@ -57,6 +60,9 @@ public class PaymentAppTest {
         onView(withId(com.adyen.checkout.ui.R.id.editText_cardNumber)).perform(clearText(), typeText("5555444433331111"));
         onView(withId(com.adyen.checkout.ui.R.id.editText_expiryDate)).perform(clearText(), typeText("1020"));
         onView(withId(com.adyen.checkout.ui.R.id.editText_securityCode)).perform(clearText(), typeText("737"));
+        KeyboardUtil.hide(EspressoTestUtils.waitForActivity(CardDetailsActivity.class).findViewById(R.id.button_pay));
+        Thread.sleep(500);
+        onView(withId(com.adyen.checkout.ui.R.id.button_pay)).check(ViewAssertions.matches(isClickable()));
         onView(withId(com.adyen.checkout.ui.R.id.button_pay)).perform(click());
 
         confirmPaymentAndWaitForResult();
@@ -73,6 +79,7 @@ public class PaymentAppTest {
         onView(withId(com.adyen.checkout.ui.R.id.switchCompat_consent)).perform(click());
         KeyboardUtil.hide(EspressoTestUtils.waitForActivity(SddDetailsActivity.class).findViewById(R.id.button_continue));
         Thread.sleep(500);
+        onView(withId(com.adyen.checkout.ui.R.id.button_continue)).check(ViewAssertions.matches(isClickable()));
         onView(withId(com.adyen.checkout.ui.R.id.button_continue)).perform(click());
 
         confirmPaymentAndWaitForResult();

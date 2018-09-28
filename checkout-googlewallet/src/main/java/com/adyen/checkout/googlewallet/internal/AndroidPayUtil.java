@@ -51,6 +51,10 @@ public class AndroidPayUtil extends GoogleWalletUtil {
             @NonNull PaymentSession paymentSession,
             @NonNull PaymentMethod paymentMethod
     ) {
+        if (isPlayServicesUnavailable(context)) {
+            return CALLABLE_FALSE;
+        }
+
         return new IsReadyToPayCallable(context, paymentSession, paymentMethod);
     }
 
