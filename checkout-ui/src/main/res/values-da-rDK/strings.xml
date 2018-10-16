@@ -13,6 +13,7 @@
     <string name="checkout_one_click_delete_confirmation_message">Slet betalingsmåde %s?</string>
     <string name="checkout_one_click_delete">Slet</string>
     <string name="checkout_error_dialog_title">Fejl</string>
+    <string name="checkout_error_redirect_failed">Omdirigering fejlede</string>
     <string name="checkout_ok">OK</string>
     <string name="checkout_skip">Spring over</string>
 

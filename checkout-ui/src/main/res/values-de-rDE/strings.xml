@@ -13,6 +13,7 @@
     <string name="checkout_one_click_delete_confirmation_message">Zahlungsmethode %s entfernen?</string>
     <string name="checkout_one_click_delete">Entfernen</string>
     <string name="checkout_error_dialog_title">Fehler</string>
+    <string name="checkout_error_redirect_failed">Weiterleitung fehlgeschlagen</string>
     <string name="checkout_ok">OK</string>
     <string name="checkout_skip">Überspringen</string>
 

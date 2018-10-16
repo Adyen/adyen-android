@@ -13,6 +13,7 @@
     <string name="checkout_one_click_delete_confirmation_message">是否刪除付款方式 %s？</string>
     <string name="checkout_one_click_delete">刪除</string>
     <string name="checkout_error_dialog_title">錯誤</string>
+    <string name="checkout_error_redirect_failed">無法重新導向</string>
     <string name="checkout_ok">確定</string>
     <string name="checkout_skip">跳過</string>
 

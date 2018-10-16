@@ -7,7 +7,6 @@ apply from: "$rootProject.rootDir/quality.gradle"
 
 android {
     compileSdkVersion rootProject.compileSdkVersion
-    buildToolsVersion rootProject.buildToolsVersion
 
     defaultConfig {
         minSdkVersion rootProject.minSdkVersion

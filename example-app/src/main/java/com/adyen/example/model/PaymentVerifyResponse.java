@@ -13,7 +13,10 @@ import com.squareup.moshi.Json;
  */
 public final class PaymentVerifyResponse {
     @Json(name = "authResponse")
-    private AuthResponse mAuthResponse;
+    private ResultCode mAuthResponse;
+
+    @Json(name = "resultCode")
+    private ResultCode mResultCode;
 
     @Json(name = "merchantReference")
     private String mMerchantReference;
@@ -22,8 +25,8 @@ public final class PaymentVerifyResponse {
     private String mPspReference;
 
     @NonNull
-    public AuthResponse getAuthResponse() {
-        return mAuthResponse;
+    public ResultCode getResultCode() {
+        return mResultCode != null ? mResultCode : mAuthResponse;
     }
 
     @NonNull
@@ -39,7 +42,7 @@ public final class PaymentVerifyResponse {
     /**
      * The authorization response.
      */
-    public enum AuthResponse {
+    public enum ResultCode {
         @Json(name = "Pending") PENDING,
         @Json(name = "Received") RECEIVED,
         @Json(name = "Authorised") AUTHORIZED,

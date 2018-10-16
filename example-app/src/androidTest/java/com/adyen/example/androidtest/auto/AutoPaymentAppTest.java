@@ -1,21 +1,16 @@
-package com.adyen.example;
+package com.adyen.example.androidtest.auto;
 
-import android.support.annotation.NonNull;
-import android.support.design.widget.BottomSheetBehavior;
 import android.support.test.espresso.assertion.ViewAssertions;
 import android.support.test.rule.ActivityTestRule;
 import android.support.test.runner.AndroidJUnit4;
-import android.support.v7.widget.RecyclerView;
-import android.widget.TextView;
 
 import com.adyen.checkout.ui.internal.card.CardDetailsActivity;
-import com.adyen.checkout.ui.internal.sepadirectdebit.SddDetailsActivity;
-import com.adyen.checkout.ui.internal.common.activity.CheckoutActivity;
 import com.adyen.checkout.ui.internal.common.util.KeyboardUtil;
+import com.adyen.checkout.ui.internal.sepadirectdebit.SddDetailsActivity;
+import com.adyen.example.MainActivity;
+import com.adyen.example.R;
+import com.adyen.example.androidtest.EspressoTestUtils;
 
-import org.hamcrest.BaseMatcher;
-import org.hamcrest.Description;
-import org.hamcrest.Matcher;
 import org.junit.After;
 import org.junit.Rule;
 import org.junit.Test;
@@ -26,13 +21,11 @@ import static android.support.test.espresso.Espresso.onView;
 import static android.support.test.espresso.action.ViewActions.clearText;
 import static android.support.test.espresso.action.ViewActions.click;
 import static android.support.test.espresso.action.ViewActions.typeText;
-import static android.support.test.espresso.contrib.RecyclerViewActions.actionOnHolderItem;
-import static android.support.test.espresso.contrib.RecyclerViewActions.scrollToHolder;
 import static android.support.test.espresso.matcher.ViewMatchers.isClickable;
 import static android.support.test.espresso.matcher.ViewMatchers.withId;
-import static android.support.test.espresso.matcher.ViewMatchers.withText;
-import static com.adyen.example.EspressoTestUtils.waitForActivity;
-import static com.adyen.example.EspressoTestUtils.waitForView;
+import static com.adyen.example.androidtest.PaymentAppTestUtils.confirmPaymentAndWaitForResult;
+import static com.adyen.example.androidtest.PaymentAppTestUtils.goToPaymentMethodsOverview;
+import static com.adyen.example.androidtest.PaymentAppTestUtils.selectPaymentMethodByName;
 
 /**
  * Copyright (c) 2017 Adyen B.V.
@@ -42,7 +35,7 @@ import static com.adyen.example.EspressoTestUtils.waitForView;
  * Created by timon on 13/10/2017.
  */
 @RunWith(AndroidJUnit4.class)
-public class PaymentAppTest {
+public class AutoPaymentAppTest {
     @Rule
     public ActivityTestRule<MainActivity> mMainActivityTestRule = new ActivityTestRule<>(MainActivity.class);
 
@@ -55,7 +48,7 @@ public class PaymentAppTest {
     public void testCardPayment() throws Exception {
         goToPaymentMethodsOverview();
 
-        selectPaymentMethod("Credit Card");
+        selectPaymentMethodByName("Credit Card");
 
         onView(withId(com.adyen.checkout.ui.R.id.editText_cardNumber)).perform(clearText(), typeText("5555444433331111"));
         onView(withId(com.adyen.checkout.ui.R.id.editText_expiryDate)).perform(clearText(), typeText("1020"));
@@ -72,7 +65,7 @@ public class PaymentAppTest {
     public void testSddPayment() throws Exception {
         goToPaymentMethodsOverview();
 
-        selectPaymentMethod("SEPA Direct Debit");
+        selectPaymentMethodByName("SEPA Direct Debit");
 
         onView(withId(com.adyen.checkout.ui.R.id.editText_iban)).perform(clearText(), typeText("NL13TEST0123456789"));
         onView(withId(com.adyen.checkout.ui.R.id.editText_accountHolderName)).perform(clearText(), typeText("T Ester"));
@@ -83,55 +76,5 @@ public class PaymentAppTest {
         onView(withId(com.adyen.checkout.ui.R.id.button_continue)).perform(click());
 
         confirmPaymentAndWaitForResult();
-    }
-
-    private void goToPaymentMethodsOverview() throws Exception {
-        onView(withId(R.id.button_checkout)).perform(click());
-        waitForView(com.adyen.checkout.ui.R.id.coordinatorLayout_content);
-
-        try {
-            Thread.sleep(750);
-            onView(withText(com.adyen.checkout.ui.R.string.checkout_select_other_payment_method)).perform(click());
-            Thread.sleep(750);
-        } catch (Exception e) {
-            // Not displayed.
-        }
-    }
-
-    private void selectPaymentMethod(@NonNull final String paymentMethodName) throws Exception {
-        Matcher<RecyclerView.ViewHolder> viewHolderMatcher = new BaseMatcher<RecyclerView.ViewHolder>() {
-            @Override
-            public boolean matches(Object item) {
-                if (item instanceof RecyclerView.ViewHolder) {
-                    TextView primaryTextView = ((RecyclerView.ViewHolder) item).itemView.findViewById(R.id.textView_primary);
-                    String primaryText = primaryTextView.getText().toString();
-
-                    return primaryText.equals(paymentMethodName);
-                } else {
-                    return false;
-                }
-            }
-
-            @Override
-            public void describeTo(Description description) {
-                description.appendText("TwoLineItemViewHolder with primary text: " + paymentMethodName);
-            }
-        };
-
-        CheckoutActivity checkoutActivity = waitForActivity(CheckoutActivity.class);
-        checkoutActivity.mBottomSheetBehavior.setState(BottomSheetBehavior.STATE_EXPANDED);
-
-        Thread.sleep(500);
-
-        onView(withId(com.adyen.checkout.ui.R.id.recyclerView_checkoutMethods))
-                .perform(
-                        scrollToHolder(viewHolderMatcher),
-                        actionOnHolderItem(viewHolderMatcher, click())
-                );
-    }
-
-    private void confirmPaymentAndWaitForResult() throws Exception {
-        waitForActivity(SuccessActivity.class);
-        Thread.sleep(500);
     }
 }

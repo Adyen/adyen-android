@@ -35,7 +35,7 @@ publishing {
 
             artifact androidJavadocsJar
             artifact androidSourcesJar
-            artifact bundleRelease
+            artifact bundleReleaseAar
 
             pom.withXml {
                 final dependenciesNode = asNode().appendNode('dependencies')
@@ -68,8 +68,8 @@ publishing {
 }
 
 bintray {
-    user = findProperty('BINTRAY_USER')
-    key = findProperty('BINTRAY_KEY')
+    user = System.env.BINTRAY_USER
+    key = System.env.BINTRAY_KEY
     publications = ['bintrayMavenPublication']
     pkg {
         // TODO: Put under userOrg?

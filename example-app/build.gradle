@@ -8,7 +8,6 @@ if (file("local.gradle").exists()) {
 
 android {
     compileSdkVersion rootProject.compileSdkVersion
-    buildToolsVersion rootProject.buildToolsVersion
 
     defaultConfig {
         applicationId "com.adyen.example"
@@ -38,24 +37,24 @@ dependencies {
 
     implementation "com.android.support:appcompat-v7:${rootProject.supportLibVersion}"
 
-    implementation 'io.reactivex.rxjava2:rxjava:2.1.6'
-    implementation 'io.reactivex.rxjava2:rxandroid:2.0.1'
+    implementation "io.reactivex.rxjava2:rxjava:2.1.6"
+    implementation "io.reactivex.rxjava2:rxandroid:2.0.1"
 
-    implementation 'com.squareup.retrofit2:retrofit:2.4.0'
-    implementation 'com.squareup.retrofit2:converter-moshi:2.4.0'
-    implementation 'com.squareup.retrofit2:adapter-rxjava2:2.4.0'
+    implementation "com.squareup.retrofit2:retrofit:2.4.0"
+    implementation "com.squareup.retrofit2:converter-moshi:2.4.0"
+    implementation "com.squareup.retrofit2:adapter-rxjava2:2.4.0"
 
-    implementation 'com.squareup.okhttp3:logging-interceptor:3.10.0'
+    implementation "com.squareup.okhttp3:logging-interceptor:3.10.0"
 
-    implementation 'com.squareup.moshi:moshi:1.5.0'
+    implementation "com.squareup.moshi:moshi:1.5.0"
 
-    implementation project(':checkout-base')
-    implementation project(':checkout-core')
-    implementation project(':checkout-util')
-    implementation project(':checkout-ui')
+    implementation project(":checkout-base")
+    implementation project(":checkout-core")
+    implementation project(":checkout-util")
+    implementation project(":checkout-ui")
 
     // Plugins
-    implementation project(':checkout-nfc')
-    implementation project(':checkout-googlewallet')
-    implementation project(':checkout-wechatpay')
+    implementation project(":checkout-nfc")
+    implementation project(":checkout-googlewallet")
+    implementation project(":checkout-wechatpay")
 }

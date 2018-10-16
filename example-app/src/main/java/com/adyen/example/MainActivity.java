@@ -240,12 +240,12 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
             @Override
             public void onNext(@NonNull PaymentVerifyResponse paymentVerifyResponse) {
-                PaymentVerifyResponse.AuthResponse authResponse = paymentVerifyResponse.getAuthResponse();
+                PaymentVerifyResponse.ResultCode resultCode = paymentVerifyResponse.getResultCode();
 
-                if (authResponse == PaymentVerifyResponse.AuthResponse.AUTHORIZED || authResponse == PaymentVerifyResponse.AuthResponse.RECEIVED) {
+                if (resultCode == PaymentVerifyResponse.ResultCode.AUTHORIZED || resultCode == PaymentVerifyResponse.ResultCode.RECEIVED) {
                     startActivity(new Intent(MainActivity.this, SuccessActivity.class));
                 } else {
-                    Toast.makeText(getApplicationContext(), "Result: " + authResponse, Toast.LENGTH_SHORT).show();
+                    Toast.makeText(getApplicationContext(), "Result: " + resultCode, Toast.LENGTH_SHORT).show();
                 }
             }
 

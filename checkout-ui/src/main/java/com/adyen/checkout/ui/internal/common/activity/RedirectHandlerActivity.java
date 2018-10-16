@@ -12,6 +12,7 @@ import android.view.Gravity;
 import android.view.View;
 import android.widget.FrameLayout;
 import android.widget.ProgressBar;
+import android.widget.Toast;
 
 import com.adyen.checkout.core.PaymentHandler;
 import com.adyen.checkout.core.PaymentReference;
@@ -87,7 +88,13 @@ public class RedirectHandlerActivity extends AppCompatActivity {
         if (savedInstanceState == null) {
             RedirectDetails redirectDetails = getIntent().getParcelableExtra(EXTRA_REDIRECT_DETAILS);
             Intent redirectIntent = createRedirectIntent(redirectDetails.getUri());
-            startActivityForResult(redirectIntent, REQUEST_CODE_REDIRECT);
+
+            if (redirectIntent.resolveActivity(getPackageManager()) != null) {
+                startActivityForResult(redirectIntent, REQUEST_CODE_REDIRECT);
+            } else {
+                Toast.makeText(getApplicationContext(), R.string.checkout_error_redirect_failed, Toast.LENGTH_LONG).show();
+                finish();
+            }
         }
     }
 

@@ -13,6 +13,7 @@
     <string name="checkout_one_click_delete_confirmation_message">Excluir métodos de pagamento %s?</string>
     <string name="checkout_one_click_delete">Excluir</string>
     <string name="checkout_error_dialog_title">Erro</string>
+    <string name="checkout_error_redirect_failed">Falha no redirecionamento</string>
     <string name="checkout_ok">OK</string>
     <string name="checkout_skip">Pular</string>
 

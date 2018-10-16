@@ -13,6 +13,7 @@
     <string name="checkout_one_click_delete_confirmation_message">Delete payment method %s?</string>
     <string name="checkout_one_click_delete">Delete</string>
     <string name="checkout_error_dialog_title">Error</string>
+    <string name="checkout_error_redirect_failed">Redirect failed</string>
     <string name="checkout_ok">OK</string>
     <string name="checkout_skip">Skip</string>
 

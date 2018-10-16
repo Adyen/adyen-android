@@ -1,4 +1,4 @@
-package com.adyen.example;
+package com.adyen.example.androidtest;
 
 import android.app.Activity;
 import android.app.Instrumentation;
@@ -24,6 +24,7 @@ import static android.support.test.espresso.Espresso.onView;
 import static android.support.test.espresso.assertion.ViewAssertions.matches;
 import static android.support.test.espresso.matcher.ViewMatchers.isDisplayed;
 import static android.support.test.espresso.matcher.ViewMatchers.withText;
+import static org.hamcrest.CoreMatchers.containsString;
 
 /**
  *
@@ -106,6 +107,10 @@ public final class EspressoTestUtils {
         }
     }
 
+    public static void waitForToastWithText(String toastText) {
+        onView(withText(containsString(toastText))).inRoot(isToast()).check(matches(isDisplayed()));
+    }
+
     private static void waitForView(final int viewId, final long sleepInterval, final long timeout)
             throws InterruptedException, TimeoutException {
         final long currentTime = System.currentTimeMillis();
@@ -177,6 +182,7 @@ public final class EspressoTestUtils {
         return retAtomic.get();
     }
 
+    @NonNull
     private static Set<Activity> getActivitiesInStages(Stage... stages) {
         final Set<Activity> activities = new HashSet<>();
         final ActivityLifecycleMonitor instance = ActivityLifecycleMonitorRegistry.getInstance();
@@ -211,7 +217,12 @@ public final class EspressoTestUtils {
         return activityClosed;
     }
 
+    @NonNull
+    private static ToastMatcher isToast() {
+        return new ToastMatcher();
+    }
+
     private EspressoTestUtils() {
-        // Private Constructor
+        throw new IllegalStateException("No instances.");
     }
 }

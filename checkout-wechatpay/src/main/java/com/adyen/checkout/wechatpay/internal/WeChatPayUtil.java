@@ -8,6 +8,7 @@ import android.support.annotation.NonNull;
 
 import com.adyen.checkout.core.model.WeChatPayDetails;
 import com.adyen.checkout.core.model.WeChatPaySdkRedirectData;
+import com.tencent.mm.opensdk.constants.Build;
 import com.tencent.mm.opensdk.modelbase.BaseReq;
 import com.tencent.mm.opensdk.modelbase.BaseResp;
 import com.tencent.mm.opensdk.modelpay.PayReq;
@@ -33,9 +34,10 @@ public final class WeChatPayUtil implements IWXAPIEventHandler {
 
     public static boolean isAvailable(@NonNull Context context) {
         IWXAPI api = WXAPIFactory.createWXAPI(context.getApplicationContext(), null, true);
-        boolean isAvailable = api.isWXAppInstalled() && api.isWXAppSupportAPI();
+        boolean isAppInstalled = api.isWXAppInstalled();
+        boolean isSupported = Build.PAY_SUPPORTED_SDK_INT <= api.getWXAppSupportAPI();
         api.detach();
-        return isAvailable;
+        return isAppInstalled && isSupported;
     }
 
     @NonNull

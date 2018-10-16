@@ -3,13 +3,11 @@ ext {
     targetSdkVersion = 27
     minSdkVersion = 16
 
-    buildToolsVersion = "27.0.3"
-
     supportLibVersion = "27.1.1"
     roomVersion = "1.1.1"
     lifecycleVersion = "1.1.1"
     playServicesWalletVersion = "15.0.1"
-    weChatPayVersion = "5.1.4"
+    weChatPayVersion = "5.1.6"
     adyenCseVersion = "1.0.5"
 
     espressoVersion = "3.0.1"
@@ -27,11 +25,11 @@ ext {
             "com.android.support:recyclerview-v7:619f39f296cbecda5c3ffdd861d78f60:MD5",
             "com.android.support:customtabs:5a282babea31b0081fd45887c76b4976:MD5",
             "com.android.support:design:481deb2f8b4451e322d52ecdb9224cf4:MD5",
-            "com.tencent.mm.opensdk:wechat-sdk-android-without-mta:aff8bb92f98aa96792b984e51982fb35a8562c7cdeec270a3f163384f37bf87b:SHA-256",
+            "com.tencent.mm.opensdk:wechat-sdk-android-without-mta:9a15154c07c05eadba8351c110647c1754316e32d8f12f55e24679891b52739c:SHA-256",
     ]
 
-    versionCode = 203
-    versionName = "2.0.3"
+    versionCode = 204
+    versionName = "2.1.0"
 
     testCoverageEnabled = true
 }
@@ -42,7 +40,7 @@ buildscript {
         jcenter()
     }
     dependencies {
-        classpath "com.android.tools.build:gradle:3.1.3"
+        classpath "com.android.tools.build:gradle:3.2.0"
         classpath "com.jfrog.bintray.gradle:gradle-bintray-plugin:1.8.2"
     }
 }

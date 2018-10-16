@@ -13,6 +13,7 @@
     <string name="checkout_one_click_delete_confirmation_message">Betalingsmethode %s verwijderen?</string>
     <string name="checkout_one_click_delete">Verwijderen</string>
     <string name="checkout_error_dialog_title">Fout</string>
+    <string name="checkout_error_redirect_failed">Doorsturen niet gelukt</string>
     <string name="checkout_ok">Oké</string>
     <string name="checkout_skip">Overslaan</string>
 

@@ -13,6 +13,7 @@
     <string name="checkout_one_click_delete_confirmation_message">Supprimer le mode de paiement %s ?</string>
     <string name="checkout_one_click_delete">Supprimer</string>
     <string name="checkout_error_dialog_title">Erreur</string>
+    <string name="checkout_error_redirect_failed">Échec de la redirection</string>
     <string name="checkout_ok">OK</string>
     <string name="checkout_skip">Ignorer</string>
 

@@ -107,6 +107,7 @@ class CheckoutMethodPickerAdapter extends RecyclerView.Adapter<TwoLineItemViewHo
         checkoutMethod.buildLogoRequestArgs(mLogoApi).into(mLifecycleOwner, holder, holder.getLogoImageView());
         holder.setPrimaryText(checkoutMethod.getPrimaryText());
         holder.setSecondaryText(checkoutMethod.getSecondaryText());
+        holder.itemView.setTag(checkoutMethod.getPaymentMethod().getType());
     }
 
     @Override
