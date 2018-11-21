@@ -15,6 +15,10 @@
         <item name="buttonStyle">@style/Checkout.Button</item>
         <item name="switchStyle">@style/Checkout.Switch</item>
         <item name="spinnerStyle">@style/Checkout.Spinner</item>
+
+        <item name="colorIconActiveFocused">?attr/colorControlNormal</item>
+        <item name="colorIconActive">?android:attr/textColorSecondary</item>
+        <item name="colorIconInactive">?android:attr/textColorTertiary</item>
     </style>
 
     <style name="AppTheme.Checkout.Internal.Translucent">
@@ -27,6 +31,12 @@
     </style>
 
     <style name="Checkout" />
+
+    <declare-styleable name="CheckoutTints">
+        <attr name="colorIconActiveFocused" format="color|reference" />
+        <attr name="colorIconActive" format="color|reference" />
+        <attr name="colorIconInactive" format="color|reference" />
+    </declare-styleable>
 
     <!-- Text. -->
     <style name="Checkout.TextAppearance" parent="TextAppearance.AppCompat" />

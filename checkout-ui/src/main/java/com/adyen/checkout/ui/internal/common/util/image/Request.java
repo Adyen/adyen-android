@@ -1,5 +1,6 @@
 package com.adyen.checkout.ui.internal.common.util.image;
 
+import android.app.Application;
 import android.graphics.drawable.Drawable;
 import android.os.Handler;
 import android.os.Looper;
@@ -9,6 +10,9 @@ import android.support.annotation.MainThread;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v7.content.res.AppCompatResources;
+
+import com.adyen.checkout.ui.R;
+import com.adyen.checkout.ui.internal.common.util.ThemeUtil;
 
 /**
  * Copyright (c) 2018 Adyen B.V.
@@ -101,7 +105,14 @@ public abstract class Request implements Runnable {
     @Nullable
     private Drawable loadDrawableResource(@DrawableRes int drawableResId) {
         if (drawableResId != 0) {
-            return AppCompatResources.getDrawable(mRembrandt.getApplication(), drawableResId);
+            Application application = mRembrandt.getApplication();
+            Drawable drawable = AppCompatResources.getDrawable(application, drawableResId);
+
+            if (drawable != null) {
+                ThemeUtil.setTintFromAttributeColor(application, drawable, R.attr.colorIconActive);
+            }
+
+            return drawable;
         } else {
             return null;
         }

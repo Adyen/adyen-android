@@ -60,6 +60,7 @@ import com.adyen.checkout.ui.internal.common.util.PayButtonUtil;
 import com.adyen.checkout.ui.internal.common.util.PaymentMethodUtil;
 import com.adyen.checkout.ui.internal.common.util.PhoneNumberUtil;
 import com.adyen.checkout.ui.internal.common.util.TextViewUtil;
+import com.adyen.checkout.ui.internal.common.util.ThemeUtil;
 import com.adyen.checkout.ui.internal.common.util.image.Rembrandt;
 import com.adyen.checkout.ui.internal.common.util.image.Target;
 import com.adyen.checkout.ui.internal.common.util.recyclerview.CheckoutItemAnimator;
@@ -275,7 +276,14 @@ public class CardDetailsActivity extends CheckoutDetailsActivity
         getMenuInflater().inflate(R.menu.menu_card_details, menu);
 
         MenuItem cardReaderMenuItem = menu.findItem(R.id.action_card_reader_tutorial);
-        cardReaderMenuItem.setVisible(mNfcCardReader != null);
+
+        if (mNfcCardReader != null) {
+            cardReaderMenuItem.setVisible(true);
+            Context themedActionBarContext = ThemeUtil.getThemedActionBarContext(this);
+            ThemeUtil.setTintFromAttributeColor(themedActionBarContext, cardReaderMenuItem.getIcon(), R.attr.colorIconActiveFocused);
+        } else {
+            cardReaderMenuItem.setVisible(false);
+        }
 
         return true;
     }

@@ -11,7 +11,10 @@ import com.adyen.checkout.core.internal.model.AndroidPayConfigurationImpl;
  * This file is open source and available under the MIT license. See the LICENSE file for more info.
  * <p>
  * Created by timon on 04/07/2018.
+ * <p>
+ * @deprecated Android Pay has been deprecated in favor of Google Pay.
  */
+@Deprecated
 @ProvidedBy(AndroidPayConfigurationImpl.class)
 public interface AndroidPayConfiguration extends Configuration {
     /**

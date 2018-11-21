@@ -11,7 +11,7 @@ import com.adyen.checkout.ui.internal.card.CardCheckoutMethodFactory;
 import com.adyen.checkout.ui.internal.def.DefaultCheckoutMethodFactory;
 import com.adyen.checkout.ui.internal.doku.DokuCheckoutMethodFactory;
 import com.adyen.checkout.ui.internal.giropay.GiroPayCheckoutMethodFactory;
-import com.adyen.checkout.ui.internal.googlewallet.GoogleWalletCheckoutMethodFactory;
+import com.adyen.checkout.ui.internal.googlewallet.GooglePayCheckoutMethodFactory;
 import com.adyen.checkout.ui.internal.issuer.IssuerCheckoutMethodFactory;
 import com.adyen.checkout.ui.internal.paypal.PayPalCheckoutMethodFactory;
 import com.adyen.checkout.ui.internal.qiwiwallet.QiwiWalletCheckoutMethodFactory;
@@ -107,10 +107,10 @@ public class UpdateCheckoutMethodsCallable implements Callable<CheckoutMethodsMo
     private List<CheckoutMethodFactory> initCheckoutMethodFactories(@NonNull Application application) {
         List<CheckoutMethodFactory> checkoutMethodFactories = new ArrayList<>();
 
-        checkoutMethodFactories.add(new GoogleWalletCheckoutMethodFactory(application));
         checkoutMethodFactories.add(new CardCheckoutMethodFactory(application));
         checkoutMethodFactories.add(new DokuCheckoutMethodFactory(application));
         checkoutMethodFactories.add(new GiroPayCheckoutMethodFactory(application));
+        checkoutMethodFactories.add(new GooglePayCheckoutMethodFactory(application));
         checkoutMethodFactories.add(new IssuerCheckoutMethodFactory(application));
         checkoutMethodFactories.add(new PayPalCheckoutMethodFactory(application));
         checkoutMethodFactories.add(new QiwiWalletCheckoutMethodFactory(application));

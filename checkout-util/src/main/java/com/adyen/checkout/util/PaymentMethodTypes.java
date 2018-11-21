@@ -10,6 +10,10 @@ package com.adyen.checkout.util;
  * Created by timon on 10/04/2018.
  */
 public final class PaymentMethodTypes {
+    /**
+     * @deprecated Android Pay has been deprecated in favor of Google Pay.
+     */
+    @Deprecated
     public static final String ANDROID_PAY = "androidpay";
 
     public static final String BCMC = "bcmc";

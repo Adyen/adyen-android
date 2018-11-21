@@ -1,0 +1,68 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="checkout_title">チェックアウト</string>
+    <string name="checkout_one_click_payment_method_section_title">選択済みのお支払い方法</string>
+    <string name="checkout_payment_method_section_title">お支払い方法</string>
+    <string name="checkout_payment_method_section_with_one_click_title">その他のお支払いオプション</string>
+    <string name="checkout_select_other_payment_method">その他のお支払いオプション</string>
+    <string name="checkout_store_details">次回のお支払いのため詳細を保存</string>
+    <string name="checkout_error_message_default">操作中にエラーが発生しました。</string>
+    <string name="checkout_error_message_network_unavailable">インターネットに接続できませんでした。インターネット接続を確認してください。</string>
+    <string name="checkout_error_message_network_hint">インターネット接続を確認し、もう一度お試しください。</string>
+    <string name="checkout_pay_amount_format">%sのお支払い</string>
+    <string name="checkout_one_click_delete_confirmation_message">%sのお支払い方法を削除しますか</string>
+    <string name="checkout_one_click_delete">削除</string>
+    <string name="checkout_error_dialog_title">エラー</string>
+    <string name="checkout_error_redirect_failed">画面の切り替え失敗にしました</string>
+    <string name="checkout_ok">OK</string>
+    <string name="checkout_skip">スキップ</string>
+
+    <!-- Card -->
+    <string name="checkout_card_holder_name_hint">カード名義</string>
+    <string name="checkout_card_card_number_hint">カード番号</string>
+    <string name="checkout_card_expiry_date_caption">有効期限</string>
+    <string name="checkout_card_expiry_date_hint">MM/YY</string>
+    <string name="checkout_card_security_code_hint">セキュリティーコード (CVC)</string>
+    <string name="checkout_card_installments">分割回数</string>
+    <string name="checkout_card_nfc_error_chip_unsupported">1枚のクレジットカードを提示してください。</string>
+    <string name="checkout_card_nfc_error_card_unsupported">このカードタイプはご利用頂けません。</string>
+    <string name="checkout_card_nfc_error_connection_lost">再度お試し下さい。</string>
+    <string name="checkout_card_one_click_expires_format">%s に期限が切れます</string>
+    <string name="checkout_card_one_click_security_code_prompt">%sのためセキュリティーコードをご入力下さい</string>
+    <string name="checkout_card_reader_tutorial_enable_nfc">NFC を有効にする</string>
+    <string name="checkout_card_reader_tutorial_action">NFC カードリーダー</string>
+    <string name="checkout_card_reader_tutorial_title">クレジットカードリーダー</string>
+    <string name="checkout_card_reader_tutorial_explanation">クレジットカードを携帯電話の背面上部に近づけてください。</string>
+    <string name="checkout_nfc_settings_redirect_failed_toast">NFC 設定にリダイレクトできませんでした</string>
+
+    <!-- Card.CupSecurePlus -->
+    <string name="checkout_card_cup_secure_plus_phone_number_hint">携帯番号</string>
+    <string name="checkout_card_cup_secure_plus_details_activity_title">認証します</string>
+    <string name="checkout_card_cup_secure_plus_sms_code_prompt">登録された電話番号に確認コードをテキストメッセージで送信しました。</string>
+    <string name="checkout_card_cup_secure_plus_sms_code_caption">SMS コード</string>
+
+    <!-- Doku -->
+    <string name="checkout_doku_email_address">Eメールアドレス</string>
+    <string name="checkout_doku_first_name">名</string>
+    <string name="checkout_doku_last_name">姓</string>
+
+    <!-- Giropay -->
+    <string name="checkout_giropay_search_hint">銀行名/ BIC / Bankleitzahl</string>
+    <string name="checkout_giropay_error_search_no_results">検索結果がございません</string>
+
+    <!-- Issuer -->
+    <string name="checkout_issuer_choose_issuer">銀行を選択してください</string>
+    <string name="checkout_issuer_open_with_app_format">%sで開きます</string>
+
+    <!-- QiwiWallet -->
+    <string name="checkout_qiwiwallet_country_code_tooltip">国コード</string>
+    
+    <string name="checkout_qiwiwallet_phone_number_caption">携帯番号</string>
+    <string name="checkout_qiwiwallet_phone_number_hint">123–456–789</string>
+
+    <!-- SepaDirectDebit -->
+    <string name="checkout_sdd_iban">口座番号 (IBAN)</string>
+    <string name="checkout_sdd_account_holder_name">口座名義</string>
+    <string name="checkout_sdd_consent">私は以下の金額が私の銀行口座から引き落とされることに同意します。</string>
+    <string name="checkout_sdd_iban_suggestion">もしかして</string>
+</resources>

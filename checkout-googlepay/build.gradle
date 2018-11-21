@@ -1,9 +1,9 @@
-ext.releaseArtifactId = "googlewallet"
+ext.releaseArtifactId = "googlepay"
 
 apply plugin: "com.android.library"
 apply from: "$rootProject.rootDir/checkDependencies.gradle"
 apply from: "$rootProject.rootDir/quality.gradle"
-//apply from: "$rootProject.rootDir/release.gradle"
+apply from: "$rootProject.rootDir/release.gradle"
 
 android {
     compileSdkVersion rootProject.compileSdkVersion

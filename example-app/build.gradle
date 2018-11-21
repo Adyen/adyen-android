@@ -55,6 +55,6 @@ dependencies {
 
     // Plugins
     implementation project(":checkout-nfc")
-    implementation project(":checkout-googlewallet")
+    implementation project(":checkout-googlepay")
     implementation project(":checkout-wechatpay")
 }

@@ -15,7 +15,10 @@ import org.json.JSONObject;
  * This file is open source and available under the MIT license. See the LICENSE file for more info.
  * <p>
  * Created by timon on 09/07/2018.
+ * <p>
+ * @deprecated Android Pay has been deprecated in favor of Google Pay.
  */
+@Deprecated
 public final class AndroidPayConfigurationImpl extends JsonObject implements AndroidPayConfiguration {
     public static final Parcelable.Creator<AndroidPayConfigurationImpl> CREATOR = new DefaultCreator<>(AndroidPayConfigurationImpl.class);
 

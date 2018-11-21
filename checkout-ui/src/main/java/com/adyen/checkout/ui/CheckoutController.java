@@ -14,7 +14,7 @@ import com.adyen.checkout.core.StartPaymentParameters;
 import com.adyen.checkout.core.handler.StartPaymentParametersHandler;
 import com.adyen.checkout.core.internal.model.DeviceFingerprint;
 import com.adyen.checkout.core.model.PaymentMethod;
-import com.adyen.checkout.googlewallet.GoogleWalletHandler;
+import com.adyen.checkout.googlepay.GooglePayHandler;
 import com.adyen.checkout.ui.internal.CheckoutHandler;
 import com.adyen.checkout.ui.internal.card.CardHandler;
 import com.adyen.checkout.ui.internal.doku.DokuHandler;
@@ -101,8 +101,8 @@ public final class CheckoutController {
             return new DokuHandler(paymentReference, paymentMethod);
         } else if (GiroPayHandler.FACTORY.supports(application, paymentMethod)) {
             return new GiroPayHandler(paymentReference, paymentMethod);
-        } else if (GoogleWalletHandler.FACTORY.supports(application, paymentMethod)) {
-            return new GoogleWalletHandler(paymentReference, paymentMethod);
+        } else if (GooglePayHandler.FACTORY.supports(application, paymentMethod)) {
+            return new GooglePayHandler(paymentReference, paymentMethod);
         } else if (IssuerHandler.FACTORY.supports(application, paymentMethod)) {
             return new IssuerHandler(paymentReference, paymentMethod);
         } else if (QiwiWalletHandler.FACTORY.supports(application, paymentMethod)) {

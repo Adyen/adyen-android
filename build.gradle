@@ -6,7 +6,7 @@ ext {
     supportLibVersion = "27.1.1"
     roomVersion = "1.1.1"
     lifecycleVersion = "1.1.1"
-    playServicesWalletVersion = "15.0.1"
+    playServicesWalletVersion = "16.0.1"
     weChatPayVersion = "5.1.6"
     adyenCseVersion = "1.0.5"
 
@@ -20,7 +20,7 @@ ext {
             "android.arch.persistence.room:runtime:85cb19d9aaa725308470cbb71b3b1a91:MD5",
             "android.arch.persistence.room:compiler:c208e3e84a2ab539ad4a0c4dc7b8aee0:MD5",
             "com.adyen.cse:adyen-cse:71b934caa76326fdbfaade8a0916737048b5306c3a86faffedc15bf16dfdabc4:SHA-256",
-            "com.google.android.gms:play-services-wallet:8a1887a18e5dfec1d0c5216327a8651f:MD5",
+            "com.google.android.gms:play-services-wallet:0b1f46bd3fe205286d44aa8e5aeab5e2:MD5",
             "com.android.support:appcompat-v7:5272248a8e29af3b29c195e28a3ad780:MD5",
             "com.android.support:recyclerview-v7:619f39f296cbecda5c3ffdd861d78f60:MD5",
             "com.android.support:customtabs:5a282babea31b0081fd45887c76b4976:MD5",
@@ -28,8 +28,8 @@ ext {
             "com.tencent.mm.opensdk:wechat-sdk-android-without-mta:9a15154c07c05eadba8351c110647c1754316e32d8f12f55e24679891b52739c:SHA-256",
     ]
 
-    versionCode = 204
-    versionName = "2.1.0"
+    versionCode = 205
+    versionName = "2.2.0"
 
     testCoverageEnabled = true
 }

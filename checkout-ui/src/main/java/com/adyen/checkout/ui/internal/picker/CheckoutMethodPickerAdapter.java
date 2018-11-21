@@ -16,6 +16,7 @@ import com.adyen.checkout.ui.R;
 import com.adyen.checkout.ui.internal.common.model.CheckoutMethod;
 import com.adyen.checkout.ui.internal.common.model.CheckoutMethodPickerListener;
 import com.adyen.checkout.ui.internal.common.util.SnackbarSwipeHandler;
+import com.adyen.checkout.ui.internal.common.util.ThemeUtil;
 import com.adyen.checkout.ui.internal.common.util.recyclerview.SimpleDiffCallback;
 import com.adyen.checkout.ui.internal.common.view.holder.TwoLineItemViewHolder;
 
@@ -82,6 +83,7 @@ class CheckoutMethodPickerAdapter extends RecyclerView.Adapter<TwoLineItemViewHo
         if (viewType == VIEW_TYPE_DELETABLE) {
             ImageView actionImageView = holder.getActionImageView();
             actionImageView.setImageResource(R.drawable.ic_clear_24dp);
+            ThemeUtil.setTintFromAttributeColor(actionImageView.getContext(), actionImageView.getDrawable(), R.attr.colorIconActive);
             TypedArray typedArray = actionImageView.getContext().obtainStyledAttributes(new int[]{android.R.attr.selectableItemBackground});
             actionImageView.setBackground(typedArray.getDrawable(0));
             typedArray.recycle();

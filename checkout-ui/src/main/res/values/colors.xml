@@ -6,7 +6,4 @@
     <color name="numpad_background">#FAFAFA</color>
     <color name="numpad_divider">#F5F5F5</color>
     <color name="code_view_rect">#BDBDBD</color>
-    <color name="icon_active_focused">#DE000000</color>
-    <color name="icon_active">#8A000000</color>
-    <color name="icon_inactive">#61000000</color>
 </resources>

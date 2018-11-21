@@ -6,7 +6,6 @@ import android.content.Context;
 import android.content.res.Resources;
 import android.graphics.Bitmap;
 import android.graphics.Canvas;
-import android.graphics.Color;
 import android.graphics.Paint;
 import android.graphics.PorterDuff;
 import android.graphics.PorterDuffXfermode;
@@ -14,8 +13,6 @@ import android.graphics.Rect;
 import android.graphics.RectF;
 import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
-import android.graphics.drawable.GradientDrawable;
-import android.graphics.drawable.LayerDrawable;
 import android.support.annotation.ColorInt;
 import android.support.annotation.NonNull;
 import android.support.annotation.Px;
@@ -105,46 +102,31 @@ public final class DrawablePreProcessor {
             @Px int cornerRadius,
             @ColorInt int borderColor
     ) {
-        BitmapDrawable bitmapDrawable = new BitmapDrawable(context.getResources(), makeRoundCorners(bitmap, cornerRadius));
-        bitmapDrawable.setAntiAlias(true);
+        int width = bitmap.getWidth();
+        int height = bitmap.getHeight();
 
-        return addBorder(bitmapDrawable, cornerRadius, borderColor);
-    }
-
-    @NonNull
-    private Bitmap makeRoundCorners(@NonNull Bitmap bitmap, @Px int cornerRadius) {
-        Bitmap output = Bitmap.createBitmap(bitmap.getWidth(), bitmap.getHeight(), Bitmap.Config.ARGB_8888);
+        Bitmap output = Bitmap.createBitmap(width, height, Bitmap.Config.ARGB_8888);
         output.setDensity(Resources.getSystem().getDisplayMetrics().densityDpi);
         Canvas canvas = new Canvas(output);
-        Paint paint = new Paint();
-        paint.setColor(Color.WHITE);
-        Rect rect = new Rect(0, 0, bitmap.getWidth(), bitmap.getHeight());
-        Rect rectTarget = new Rect(0, 0, bitmap.getWidth(), bitmap.getHeight());
+
+        Paint logoPaint = new Paint();
+        logoPaint.setAntiAlias(true);
+        Rect rect = new Rect(0, 0, width, height);
         RectF rectF = new RectF(rect);
-        paint.setAntiAlias(true);
-        canvas.drawARGB(0, 0, 0, 0);
-        canvas.drawRoundRect(rectF, cornerRadius, cornerRadius, paint);
-        paint.setXfermode(new PorterDuffXfermode(PorterDuff.Mode.SRC_ATOP));
-        canvas.drawBitmap(bitmap, rect, rectTarget, paint);
+        canvas.drawRoundRect(rectF, cornerRadius, cornerRadius, logoPaint);
+        logoPaint.setXfermode(new PorterDuffXfermode(PorterDuff.Mode.SRC_ATOP));
+        canvas.drawBitmap(bitmap, rect, rect, logoPaint);
 
-        return output;
-    }
+        Paint borderPaint = new Paint();
+        borderPaint.setStyle(Paint.Style.STROKE);
+        borderPaint.setColor(borderColor);
+        borderPaint.setAntiAlias(true);
+        borderPaint.setStrokeWidth(1);
+        canvas.drawRoundRect(rectF, cornerRadius, cornerRadius, borderPaint);
 
-    @NonNull
-    private Drawable addBorder(@NonNull Drawable drawable, @Px int cornerRadius, @ColorInt int borderColor) {
-        Drawable[] drawables = new Drawable[2];
-        drawables[0] = drawable;
-        drawables[1] = getBorderDrawable(cornerRadius, borderColor);
+        BitmapDrawable bitmapDrawable = new BitmapDrawable(context.getResources(), output);
+        bitmapDrawable.setAntiAlias(true);
 
-        return new LayerDrawable(drawables);
-    }
-
-    @NonNull
-    private Drawable getBorderDrawable(@Px int cornerRadius, @ColorInt int borderColor) {
-        GradientDrawable borderDrawable = new GradientDrawable();
-        borderDrawable.setCornerRadius(cornerRadius);
-        borderDrawable.setStroke(1, borderColor);
-
-        return borderDrawable;
+        return bitmapDrawable;
     }
 }

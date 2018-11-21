@@ -7,6 +7,7 @@ import android.support.annotation.Nullable;
 import android.support.annotation.StringRes;
 import android.support.v7.widget.AppCompatTextView;
 import android.text.Editable;
+import android.text.TextUtils;
 import android.util.AttributeSet;
 import android.view.View;
 import android.view.ViewGroup;
@@ -110,6 +111,8 @@ public class CustomTextInputLayout extends LinearLayout {
         LinearLayout.LayoutParams layoutParams = new LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT);
 
         mCaptionTextView = new AppCompatTextView(context);
+        mCaptionTextView.setMaxLines(1);
+        mCaptionTextView.setEllipsize(TextUtils.TruncateAt.END);
         mCaptionTextView.setLayoutParams(layoutParams);
         mCaptionTextView.setTextColor(ThemeUtil.getPrimaryThemeColor(context));
         addView(mCaptionTextView, 0);

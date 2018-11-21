@@ -1,4 +1,4 @@
-package com.adyen.checkout.googlewallet;
+package com.adyen.checkout.googlepay;
 
 import android.app.Activity;
 import android.app.Application;
@@ -8,13 +8,11 @@ import android.support.annotation.NonNull;
 import com.adyen.checkout.core.CheckoutException;
 import com.adyen.checkout.core.PaymentMethodHandler;
 import com.adyen.checkout.core.PaymentReference;
-import com.adyen.checkout.core.model.AndroidPayConfiguration;
 import com.adyen.checkout.core.model.GooglePayConfiguration;
 import com.adyen.checkout.core.model.PaymentMethod;
 import com.adyen.checkout.core.model.PaymentSession;
-import com.adyen.checkout.googlewallet.internal.AndroidPayUtil;
-import com.adyen.checkout.googlewallet.internal.GooglePayUtil;
-import com.adyen.checkout.googlewallet.internal.GoogleWalletDetailsActivity;
+import com.adyen.checkout.googlepay.internal.GooglePayDetailsActivity;
+import com.adyen.checkout.googlepay.internal.IsReadyToPayCallable;
 import com.adyen.checkout.util.PaymentMethodTypes;
 
 import java.util.concurrent.Callable;
@@ -26,14 +24,13 @@ import java.util.concurrent.Callable;
  * <p>
  * Created by timon on 11/06/2018.
  */
-public final class GoogleWalletHandler implements PaymentMethodHandler {
+public final class GooglePayHandler implements PaymentMethodHandler {
     public static final Factory FACTORY = new Factory() {
         @Override
         public boolean supports(@NonNull Application application, @NonNull PaymentMethod paymentMethod) {
             String paymentMethodType = paymentMethod.getType();
 
-            return PaymentMethodTypes.ANDROID_PAY.equals(paymentMethodType)
-                    || PaymentMethodTypes.GOOGLE_PAY.equals(paymentMethodType);
+            return PaymentMethodTypes.GOOGLE_PAY.equals(paymentMethodType);
         }
 
         @Override
@@ -43,22 +40,12 @@ public final class GoogleWalletHandler implements PaymentMethodHandler {
                 @NonNull PaymentMethod paymentMethod
         ) {
             try {
-                String paymentMethodType = paymentMethod.getType();
+                paymentMethod.getConfiguration(GooglePayConfiguration.class);
 
-                if (PaymentMethodTypes.ANDROID_PAY.equals(paymentMethodType)) {
-                    paymentMethod.getConfiguration(AndroidPayConfiguration.class);
-
-                    return true;
-                } else if (PaymentMethodTypes.GOOGLE_PAY.equals(paymentMethodType)) {
-                    paymentMethod.getConfiguration(GooglePayConfiguration.class);
-
-                    return true;
-                }
+                return true;
             } catch (CheckoutException e) {
-                // Invalid configuration.
+                return false;
             }
-
-            return false;
         }
     };
 
@@ -69,14 +56,14 @@ public final class GoogleWalletHandler implements PaymentMethodHandler {
     private final PaymentMethod mPaymentMethod;
 
     /**
-     * Returns a {@link Callable} that can be executed on a background thread to determine whether the shopper has setup the given payment method
-     * and is ready to pay.
+     * Returns a {@link Callable} that can be executed on a background thread to determine whether the shopper has setup Google Pay and is ready to
+     * pay.
      *
      * @param application The {@link Application}.
      * @param paymentSession The {@link PaymentSession}.
-     * @param paymentMethod The Google Wallet {@link PaymentMethod}.
-     * @return A {@link Callable} to be executed on a background thread to determine whether the shopper has setup the given payment method and is
-     * ready to pay.
+     * @param paymentMethod The Google Pay {@link PaymentMethod}.
+     * @return A {@link Callable} that can be executed on a background thread to determine whether the shopper has setup Google Pay and is ready to
+     * pay.
      */
     @NonNull
     public static Callable<Boolean> getReadyToPayCallable(
@@ -84,14 +71,10 @@ public final class GoogleWalletHandler implements PaymentMethodHandler {
             @NonNull PaymentSession paymentSession,
             @NonNull PaymentMethod paymentMethod
     ) {
-        if (PaymentMethodTypes.ANDROID_PAY.equals(paymentMethod.getType())) {
-            return AndroidPayUtil.isReadyToPay(application, paymentSession, paymentMethod);
-        } else  {
-            return GooglePayUtil.isReadyToPay(application, paymentSession, paymentMethod);
-        }
+        return new IsReadyToPayCallable(application, paymentSession, paymentMethod);
     }
 
-    public GoogleWalletHandler(@NonNull PaymentReference paymentReference, @NonNull PaymentMethod paymentMethod) {
+    public GooglePayHandler(@NonNull PaymentReference paymentReference, @NonNull PaymentMethod paymentMethod) {
         mPaymentReference = paymentReference;
         mPaymentMethod = paymentMethod;
     }
@@ -99,7 +82,7 @@ public final class GoogleWalletHandler implements PaymentMethodHandler {
     @Override
     public void handlePaymentMethodDetails(@NonNull Activity activity, int requestCode) {
         activity.finishActivity(requestCode);
-        Intent intent = GoogleWalletDetailsActivity.newIntent(activity, mPaymentReference, mPaymentMethod);
+        Intent intent = GooglePayDetailsActivity.newIntent(activity, mPaymentReference, mPaymentMethod);
         activity.startActivityForResult(intent, requestCode);
     }
 }

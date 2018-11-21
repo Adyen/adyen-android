@@ -1,5 +1,6 @@
 package com.adyen.checkout.ui.internal.common.util;
 
+import android.content.Context;
 import android.graphics.drawable.Animatable;
 import android.graphics.drawable.Drawable;
 import android.support.annotation.NonNull;
@@ -54,13 +55,17 @@ public final class LockToCheckmarkAnimationDelegate {
     }
 
     private void setDrawableRight() {
+        Context context = mTextView.getContext();
+
         if (mValid) {
             //noinspection ConstantConditions
-            Drawable drawable = AppCompatResources.getDrawable(mTextView.getContext(), R.drawable.ic_lock_to_checkmark_animated_reverse).mutate();
+            Drawable drawable = AppCompatResources.getDrawable(context, R.drawable.ic_lock_to_checkmark_animated_reverse).mutate();
+            ThemeUtil.setTintFromAttributeColor(context, drawable, R.attr.colorIconActive);
             TextViewUtil.setCompoundDrawableRight(mTextView, drawable);
         } else {
             //noinspection ConstantConditions
-            Drawable drawable = AppCompatResources.getDrawable(mTextView.getContext(), R.drawable.ic_lock_to_checkmark_animated).mutate();
+            Drawable drawable = AppCompatResources.getDrawable(context, R.drawable.ic_lock_to_checkmark_animated).mutate();
+            ThemeUtil.setTintFromAttributeColor(context, drawable, R.attr.colorIconActive);
             TextViewUtil.setCompoundDrawableRight(mTextView, drawable);
         }
     }

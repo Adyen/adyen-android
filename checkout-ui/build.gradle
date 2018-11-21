@@ -44,6 +44,6 @@ dependencies {
 
     // Plugins
     compileOnly project(":checkout-nfc")
-    compileOnly project(":checkout-googlewallet")
+    compileOnly project(":checkout-googlepay")
     compileOnly project(":checkout-wechatpay")
 }

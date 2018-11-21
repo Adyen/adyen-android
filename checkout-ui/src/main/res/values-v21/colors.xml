@@ -1,6 +1,0 @@
-<?xml version="1.0" encoding="utf-8"?>
-<resources>
-    <color name="icon_active_focused">?android:attr/textColorPrimary</color>
-    <color name="icon_active">?android:attr/textColorSecondary</color>
-    <color name="icon_inactive">?android:attr/textColorTertiary</color>
-</resources>
