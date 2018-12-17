@@ -58,5 +58,5 @@
 #### Adyen Checkout ####
 -keep class com.adyen.checkout.core.** { *; }
 -dontwarn com.adyen.checkout.nfc.**
--dontwarn com.adyen.checkout.googlewallet.**
+-dontwarn com.adyen.checkout.googlepay.**
 -dontwarn com.adyen.checkout.wechatpay.**
