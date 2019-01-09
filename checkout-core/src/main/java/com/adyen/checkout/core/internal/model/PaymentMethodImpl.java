@@ -1,3 +1,11 @@
+/*
+ * Copyright (c) 2018 Adyen N.V.
+ *
+ * This file is open source and available under the MIT license. See the LICENSE file for more info.
+ *
+ * Created by timon on 09/07/2018.
+ */
+
 package com.adyen.checkout.core.internal.model;
 
 import android.os.Parcelable;
@@ -5,6 +13,7 @@ import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 
 import com.adyen.checkout.core.CheckoutException;
+import com.adyen.checkout.base.internal.HashUtils;
 import com.adyen.checkout.core.internal.ProvidedBy;
 import com.adyen.checkout.core.model.Configuration;
 import com.adyen.checkout.core.model.InputDetail;
@@ -16,15 +25,33 @@ import org.json.JSONObject;
 import java.util.ArrayList;
 import java.util.List;
 
-/**
- * Copyright (c) 2018 Adyen B.V.
- * <p>
- * This file is open source and available under the MIT license. See the LICENSE file for more info.
- * <p>
- * Created by timon on 09/07/2018.
- */
 public final class PaymentMethodImpl extends PaymentMethodBase implements PaymentMethod {
+    @NonNull
     public static final Parcelable.Creator<PaymentMethodImpl> CREATOR = new DefaultCreator<>(PaymentMethodImpl.class);
+
+    private static final String KEY_NAME = "name";
+
+    private static final String KEY_INPUT_DETAILS = "details";
+
+    private static final String KEY_CONFIGURATION = "configuration";
+
+    private static final String KEY_GROUP = "group";
+
+    private static final String KEY_STORED_DETAILS = "storedDetails";
+
+    private static final String KEY_PAYMENT_METHOD_DATA = "paymentMethodData";
+
+    private String mName;
+
+    private List<InputDetailImpl> mInputDetails;
+
+    private JSONObject mConfiguration;
+
+    private PaymentMethodImpl mGroup;
+
+    private StoredDetailsImpl mStoredDetails;
+
+    private String mPaymentMethodData;
 
     @Nullable
     public static PaymentMethod findByType(@Nullable List<PaymentMethod> paymentMethods, @NonNull String type) {
@@ -45,27 +72,15 @@ public final class PaymentMethodImpl extends PaymentMethodBase implements Paymen
         return null;
     }
 
-    private String mName;
-
-    private List<InputDetailImpl> mInputDetails;
-
-    private JSONObject mConfiguration;
-
-    private PaymentMethodImpl mGroup;
-
-    private StoredDetailsImpl mStoredDetails;
-
-    private String mPaymentMethodData;
-
     private PaymentMethodImpl(@NonNull JSONObject jsonObject) throws JSONException {
         super(jsonObject);
 
-        mName = jsonObject.getString("name");
-        mInputDetails = parseOptionalList("details", InputDetailImpl.class);
-        mConfiguration = jsonObject.optJSONObject("configuration");
-        mGroup = parseOptional("group", PaymentMethodImpl.class);
-        mStoredDetails = parseOptional("storedDetails", StoredDetailsImpl.class);
-        mPaymentMethodData = jsonObject.getString("paymentMethodData");
+        mName = jsonObject.getString(KEY_NAME);
+        mInputDetails = parseOptionalList(KEY_INPUT_DETAILS, InputDetailImpl.class);
+        mConfiguration = jsonObject.optJSONObject(KEY_CONFIGURATION);
+        mGroup = parseOptional(KEY_GROUP, PaymentMethodImpl.class);
+        mStoredDetails = parseOptional(KEY_STORED_DETAILS, StoredDetailsImpl.class);
+        mPaymentMethodData = jsonObject.getString(KEY_PAYMENT_METHOD_DATA);
     }
 
     @NonNull
@@ -77,7 +92,7 @@ public final class PaymentMethodImpl extends PaymentMethodBase implements Paymen
     @Nullable
     @Override
     public List<InputDetail> getInputDetails() {
-        return mInputDetails != null ? new ArrayList<InputDetail>(mInputDetails) : null;
+        return mInputDetails != null ? new ArrayList<InputDetail>(mInputDetails) :  null;
     }
 
     @NonNull
@@ -109,7 +124,7 @@ public final class PaymentMethodImpl extends PaymentMethodBase implements Paymen
     }
 
     @Override
-    public boolean equals(Object o) {
+    public boolean equals(@Nullable Object o) {
         if (this == o) {
             return true;
         }
@@ -143,15 +158,16 @@ public final class PaymentMethodImpl extends PaymentMethodBase implements Paymen
     @Override
     public int hashCode() {
         int result = super.hashCode();
-        result = 31 * result + (mName != null ? mName.hashCode() : 0);
-        result = 31 * result + (mPaymentMethodData != null ? mPaymentMethodData.hashCode() : 0);
-        result = 31 * result + (mInputDetails != null ? mInputDetails.hashCode() : 0);
-        result = 31 * result + (mConfiguration != null ? mConfiguration.hashCode() : 0);
-        result = 31 * result + (mGroup != null ? mGroup.hashCode() : 0);
-        result = 31 * result + (mStoredDetails != null ? mStoredDetails.hashCode() : 0);
+        result = HashUtils.MULTIPLIER * result + (mName != null ? mName.hashCode() : 0);
+        result = HashUtils.MULTIPLIER * result + (mPaymentMethodData != null ? mPaymentMethodData.hashCode() : 0);
+        result = HashUtils.MULTIPLIER * result + (mInputDetails != null ? mInputDetails.hashCode() : 0);
+        result = HashUtils.MULTIPLIER * result + (mConfiguration != null ? mConfiguration.hashCode() : 0);
+        result = HashUtils.MULTIPLIER * result + (mGroup != null ? mGroup.hashCode() : 0);
+        result = HashUtils.MULTIPLIER * result + (mStoredDetails != null ? mStoredDetails.hashCode() : 0);
         return result;
     }
 
+    @NonNull
     @Override
     public String toString() {
         return "PaymentMethod{" + "Name='" + mName + '\'' + '}';

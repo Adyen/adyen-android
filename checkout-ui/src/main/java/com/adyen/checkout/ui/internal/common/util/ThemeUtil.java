@@ -1,3 +1,11 @@
+/*
+ * Copyright (c) 2017 Adyen N.V.
+ *
+ * This file is open source and available under the MIT license. See the LICENSE file for more info.
+ *
+ * Created by timon on 18/10/2017.
+ */
+
 package com.adyen.checkout.ui.internal.common.util;
 
 import android.app.Activity;
@@ -17,13 +25,6 @@ import android.util.TypedValue;
 
 import com.adyen.checkout.ui.R;
 
-/**
- * Copyright (c) 2017 Adyen B.V.
- * <p>
- * This file is open source and available under the MIT license. See the LICENSE file for more info.
- * <p>
- * Created by timon on 18/10/2017.
- */
 public final class ThemeUtil {
     @ColorInt
     public static int getPrimaryThemeColor(@NonNull Context context) {
@@ -59,6 +60,7 @@ public final class ThemeUtil {
         setTint(drawable, color);
     }
 
+    @NonNull
     public static Context getThemedActionBarContext(@NonNull Activity activity) {
         if (activity instanceof AppCompatActivity) {
             ActionBar supportActionBar = ((AppCompatActivity) activity).getSupportActionBar();

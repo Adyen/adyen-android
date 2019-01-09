@@ -1,3 +1,11 @@
+/*
+ * Copyright (c) 2017 Adyen N.V.
+ *
+ * This file is open source and available under the MIT license. See the LICENSE file for more info.
+ *
+ * Created by timon on 05/08/2017.
+ */
+
 package com.adyen.checkout.base.internal;
 
 import android.os.Parcel;
@@ -12,13 +20,6 @@ import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
-/**
- * Copyright (c) 2017 Adyen B.V.
- * <p>
- * This file is open source and available under the MIT license. See the LICENSE file for more info.
- * <p>
- * Created by timon on 05/08/2017.
- */
 public final class Parcelables {
     private static final int FLAG_NULL = 0;
 

@@ -10,12 +10,15 @@
     <string name="checkout_error_message_network_unavailable">Bitte überprüfen Sie Ihre Internetverbindung</string>
     <string name="checkout_error_message_network_hint">Überprüfen Sie Ihre Internetverbindung und versuchen Sie es erneut.</string>
     <string name="checkout_pay_amount_format">%s zahlen</string>
+    
+    <string name="checkout_surcharge_total_amount_format">Der Gesamtbetrag beinhaltet einen Zuschlag in Höhe von %s.</string>
     <string name="checkout_one_click_delete_confirmation_message">Zahlungsmethode %s entfernen?</string>
     <string name="checkout_one_click_delete">Entfernen</string>
     <string name="checkout_error_dialog_title">Fehler</string>
     <string name="checkout_error_redirect_failed">Weiterleitung fehlgeschlagen</string>
     <string name="checkout_ok">OK</string>
     <string name="checkout_skip">Überspringen</string>
+    <string name="checkout_backspace">Rücktaste</string>
 
     <!-- Card -->
     <string name="checkout_card_holder_name_hint">Name des Karteninhabers</string>
@@ -65,4 +68,41 @@
     <string name="checkout_sdd_account_holder_name">Name des Kontoinhabers</string>
     <string name="checkout_sdd_consent">Ich bin damit einverstanden, dass der genannte Betrag von meinem Konto abgebucht wird.</string>
     <string name="checkout_sdd_iban_suggestion">Meinten Sie</string>
+
+    <!-- Open Invoice -->
+
+    <!-- Personal Details -->
+    <string name="checkout_personal_details_title">Persönliche Angaben</string>
+    <string name="checkout_personal_details_first_name">Vorname</string>
+    <string name="checkout_personal_details_infix">Vorwahl</string>
+    <string name="checkout_personal_details_last_name">Nachname</string>
+    <string name="checkout_personal_details_gender">Geschlecht</string>
+    <string name="checkout_personal_details_gender_male">Männlich</string>
+    <string name="checkout_personal_details_gender_female">Weiblich</string>
+    <string name="checkout_personal_details_gender_unknown">Unbekannt</string>
+    <string name="checkout_personal_details_date_of_birth">Geburtsdatum</string>
+    <string name="checkout_personal_details_telehone_number">Telefonnummer</string>
+    <string name="checkout_personal_details_social_security_number">Sozialversicherungsnummer</string>
+    
+    <string name="checkout_personal_details_shopper_email">E-Mail-Adresse</string>
+
+    <!-- Address -->
+    <string name="checkout_address_street">Straße</string>
+    <string name="checkout_address_house_number">Hausnummer</string>
+    <string name="checkout_address_city">Stadt</string>
+    <string name="checkout_address_postal_code">Postleitzahl</string>
+    <string name="checkout_address_country">Land</string>
+
+    <string name="checkout_billing_address_title">Rechnungsadresse</string>
+    <string name="checkout_delivery_address_title">Lieferadresse</string>
+    <string name="checkout_separate_delivery_address">Abweichende Lieferadresse angeben</string>
+
+    <string name="checkout_terms_and_conditions_title">Allgemeine Geschäftsbedingungen</string>
+    <string name="checkout_terms_and_conditions_toggle">Ich stimme den allgemeinen Geschäftsbedingungen zu</string>
+    <string name="checkout_klarna_terms_and_conditions_text">Mit der Übermittlung der für die Abwicklung des Rechnungskaufes und einer Identitäts- und Bonitätsprüfung erforderlichen Daten an Klarna bin ich einverstanden. Meine %s kann ich jederzeit mit Wirkung für die Zukunft widerrufen.</string>
+    <string name="checkout_klarna_consent">Einwilligung</string>
+    <string name="checkout_klarna_more_information">Weitere Informationen</string>
+
+    <string name="checkout_input_error_empty_field">Pflichtfeld, bitte ausfüllen.</string>
+    <string name="checkout_input_error_incorrect_format">Das Eingabeformat ist ungültig.</string>
 </resources>

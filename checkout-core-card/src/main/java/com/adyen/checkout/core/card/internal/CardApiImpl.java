@@ -1,3 +1,11 @@
+/*
+ * Copyright (c) 2018 Adyen N.V.
+ *
+ * This file is open source and available under the MIT license. See the LICENSE file for more info.
+ *
+ * Created by timon on 25/01/2018.
+ */
+
 package com.adyen.checkout.core.card.internal;
 
 import android.app.Application;
@@ -14,13 +22,6 @@ import org.json.JSONObject;
 
 import java.util.concurrent.Callable;
 
-/**
- * Copyright (c) 2018 Adyen B.V.
- * <p>
- * This file is open source and available under the MIT license. See the LICENSE file for more info.
- * <p>
- * Created by timon on 25/01/2018.
- */
 public final class CardApiImpl extends CardApi {
     // %1$s = publicKeyToken
     private static final String PUBLIC_KEY_PATH = "hpp/cse/%1$s/json.shtml";

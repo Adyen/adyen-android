@@ -1,20 +1,23 @@
+/*
+ * Copyright (c) 2017 Adyen N.V.
+ *
+ * This file is open source and available under the MIT license. See the LICENSE file for more info.
+ *
+ * Created by emmanuel on 04/12/2017.
+ */
+
 package com.adyen.checkout.core.model;
 
 import android.os.Parcel;
 import android.os.Parcelable;
 import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
 
 import org.json.JSONException;
 import org.json.JSONObject;
 
-/**
- * Copyright (c) 2017 Adyen B.V.
- * <p>
- * This file is open source and available under the MIT license. See the LICENSE file for more info.
- * <p>
- * Created by emmanuel on 04/12/2017.
- */
 public final class IssuerDetails extends PaymentMethodDetails {
+    @NonNull
     public static final Parcelable.Creator<IssuerDetails> CREATOR = new Parcelable.Creator<IssuerDetails>() {
         @Override
         public IssuerDetails createFromParcel(@NonNull Parcel parcel) {
@@ -27,6 +30,7 @@ public final class IssuerDetails extends PaymentMethodDetails {
         }
     };
 
+    @NonNull
     public static final String KEY_ISSUER = "issuer";
 
     private String mIssuer;
@@ -42,7 +46,7 @@ public final class IssuerDetails extends PaymentMethodDetails {
     }
 
     @Override
-    public void writeToParcel(Parcel parcel, int flags) {
+    public void writeToParcel(@NonNull Parcel parcel, int flags) {
         parcel.writeString(mIssuer);
     }
 
@@ -55,7 +59,7 @@ public final class IssuerDetails extends PaymentMethodDetails {
     }
 
     @Override
-    public boolean equals(Object o) {
+    public boolean equals(@Nullable Object o) {
         if (this == o) {
             return true;
         }
@@ -76,9 +80,9 @@ public final class IssuerDetails extends PaymentMethodDetails {
     public static final class Builder {
         private final IssuerDetails mIssuerDetails;
 
-        public Builder(@NonNull String issuer) {
+        public Builder(@NonNull String issuerId) {
             mIssuerDetails = new IssuerDetails();
-            mIssuerDetails.mIssuer = issuer;
+            mIssuerDetails.mIssuer = issuerId;
         }
 
         @NonNull

@@ -1,3 +1,11 @@
+/*
+ * Copyright (c) 2017 Adyen N.V.
+ *
+ * This file is open source and available under the MIT license. See the LICENSE file for more info.
+ *
+ * Created by timon on 06/09/2017.
+ */
+
 package com.adyen.checkout.nfc.internal;
 
 import android.support.annotation.NonNull;
@@ -5,13 +13,6 @@ import android.support.annotation.Nullable;
 
 import java.util.Arrays;
 
-/**
- * Copyright (c) 2017 Adyen B.V.
- * <p>
- * This file is open source and available under the MIT license. See the LICENSE file for more info.
- * <p>
- * Created by timon on 06/09/2017.
- */
 public class Tag extends ByteParsable {
     private static final int MULTIBYTE_TAG_MASK = 0x1F;
 
@@ -21,6 +22,7 @@ public class Tag extends ByteParsable {
         return tag.parse(bytes) > 0 ? tag : null;
     }
 
+    @SuppressWarnings("checkstyle:MagicNumber")
     @Override
     public int parse(@NonNull byte[] bytes) {
         byte[] result = new byte[3];

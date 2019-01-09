@@ -1,3 +1,11 @@
+/*
+ * Copyright (c) 2017 Adyen N.V.
+ *
+ * This file is open source and available under the MIT license. See the LICENSE file for more info.
+ *
+ * Created by timon on 11/10/2017.
+ */
+
 package com.adyen.checkout.core.card.internal;
 
 import android.support.annotation.NonNull;
@@ -7,12 +15,6 @@ import android.widget.EditText;
 
 /**
  * A {@link TextWatcher} that formats a card expiry date to a readable format while typing.
- * <p>
- * Copyright (c) 2017 Adyen B.V.
- * <p>
- * This file is open source and available under the MIT license. See the LICENSE file for more info.
- * <p>
- * Created by timon on 11/10/2017.
  */
 public final class AsYouTypeExpiryDateFormatter implements TextWatcher {
     private final EditText mEditText;
@@ -46,19 +48,19 @@ public final class AsYouTypeExpiryDateFormatter implements TextWatcher {
     }
 
     @Override
-    public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+    public void beforeTextChanged(@NonNull CharSequence s, int start, int count, int after) {
         // Nothing to do.
     }
 
     @Override
-    public void onTextChanged(CharSequence s, int start, int before, int count) {
+    public void onTextChanged(@NonNull CharSequence s, int start, int before, int count) {
         if (!mTransforming) {
             mDeleted = count == 0;
         }
     }
 
     @Override
-    public void afterTextChanged(Editable s) {
+    public void afterTextChanged(@NonNull Editable s) {
         if (!mTransforming) {
             mTransforming = true;
 

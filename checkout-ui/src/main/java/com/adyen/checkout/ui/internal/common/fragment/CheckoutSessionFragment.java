@@ -1,3 +1,11 @@
+/*
+ * Copyright (c) 2018 Adyen N.V.
+ *
+ * This file is open source and available under the MIT license. See the LICENSE file for more info.
+ *
+ * Created by timon on 21/03/2018.
+ */
+
 package com.adyen.checkout.ui.internal.common.fragment;
 
 import android.os.Bundle;
@@ -13,14 +21,8 @@ import com.adyen.checkout.core.PaymentReference;
 import com.adyen.checkout.core.model.PaymentSession;
 import com.adyen.checkout.ui.internal.common.model.CheckoutSessionProvider;
 
-/**
- * Copyright (c) 2018 Adyen B.V.
- * <p>
- * This file is open source and available under the MIT license. See the LICENSE file for more info.
- * <p>
- * Created by timon on 21/03/2018.
- */
 public abstract class CheckoutSessionFragment extends Fragment implements CheckoutSessionProvider {
+    @NonNull
     protected static final String ARG_PAYMENT_REFERENCE = "ARG_PAYMENT_REFERENCE";
 
     private PaymentReference mPaymentReference;

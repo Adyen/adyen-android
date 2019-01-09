@@ -1,3 +1,11 @@
+/*
+ * Copyright (c) 2017 Adyen N.V.
+ *
+ * This file is open source and available under the MIT license. See the LICENSE file for more info.
+ *
+ * Created by timon on 07/09/2017.
+ */
+
 package com.adyen.checkout.nfc.internal;
 
 import android.support.annotation.NonNull;
@@ -6,13 +14,7 @@ import android.support.annotation.Nullable;
 import java.util.List;
 import java.util.Random;
 
-/**
- * Copyright (c) 2017 Adyen B.V.
- * <p>
- * This file is open source and available under the MIT license. See the LICENSE file for more info.
- * <p>
- * Created by timon on 07/09/2017.
- */
+@SuppressWarnings("checkstyle:MagicNumber")
 public class PdolDataGenerator extends ByteParsable {
     private static final Random RANDOM = new Random();
 
@@ -65,17 +67,23 @@ public class PdolDataGenerator extends ByteParsable {
         byte[] value = null;
 
         if (tagLength.getTag().equals(Tags.TERMINAL_TRANSACTION_QUALIFIERS)) {
-            value = new byte[] {(byte) 0x36, (byte) 0x20, (byte) 0x40, (byte) 0x00}; // Contactless, Offline only
+            // Contactless, Offline only
+            value = new byte[] {(byte) 0x36, (byte) 0x20, (byte) 0x40, (byte) 0x00};
         } else if (tagLength.getTag().equals(Tags.TERMINAL_COUNTRY_CODE)) {
-            value = new byte[] {0x05, 0x28}; // NL = 528
+            // NL = 528
+            value = new byte[] {0x05, 0x28};
         } else if (tagLength.getTag().equals(Tags.TRANSACTION_CURRENCY_CODE)) {
-            value = new byte[] {0x08, 0x40}; // USD
+            // USD
+            value = new byte[] {0x08, 0x40};
         } else if (tagLength.getTag().equals(Tags.TRANSACTION_DATE)) {
-            value = new byte[] {0x17, 0x09, 0x07}; // yy MM dd
+            // yy MM dd
+            value = new byte[] {0x17, 0x09, 0x07};
         } else if (tagLength.getTag().equals(Tags.TRANSACTION_TYPE)) {
-            value = new byte[] {(byte) 0x00}; // Purchase
+            // Purchase
+            value = new byte[] {(byte) 0x00};
         } else if (tagLength.getTag().equals(Tags.AMOUNT_AUTHORIZED_NUMERIC)) {
-            value = new byte[] {0x00}; // 0.00
+            // 0.00
+            value = new byte[] {0x00};
         } else if (tagLength.getTag().equals(Tags.TERMINAL_TYPE)) {
             value = new byte[] {0x22};
         } else if (tagLength.getTag().equals(Tags.TERMINAL_CAPABILITIES)) {

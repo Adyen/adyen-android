@@ -1,3 +1,11 @@
+/*
+ * Copyright (c) 2018 Adyen N.V.
+ *
+ * This file is open source and available under the MIT license. See the LICENSE file for more info.
+ *
+ * Created by timon on 29/05/2018.
+ */
+
 package com.adyen.checkout.core.internal.persistence;
 
 import android.arch.persistence.room.Room;
@@ -8,13 +16,6 @@ import android.support.annotation.Nullable;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
-/**
- * Copyright (c) 2018 Adyen B.V.
- * <p>
- * This file is open source and available under the MIT license. See the LICENSE file for more info.
- * <p>
- * Created by timon on 29/05/2018.
- */
 public final class PaymentRepository {
     private static final String PAYMENT_DATABASE = "payment-database.db";
 

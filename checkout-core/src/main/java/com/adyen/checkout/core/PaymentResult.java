@@ -1,3 +1,11 @@
+/*
+ * Copyright (c) 2018 Adyen N.V.
+ *
+ * This file is open source and available under the MIT license. See the LICENSE file for more info.
+ *
+ * Created by timon on 09/05/2018.
+ */
+
 package com.adyen.checkout.core;
 
 import android.os.Parcelable;
@@ -7,12 +15,6 @@ import com.adyen.checkout.core.model.PaymentResultCode;
 
 /**
  * The {@link PaymentResult} interface describes the result of a payment.
- * <p>
- * Copyright (c) 2018 Adyen B.V.
- * <p>
- * This file is open source and available under the MIT license. See the LICENSE file for more info.
- * <p>
- * Created by timon on 09/05/2018.
  */
 public interface PaymentResult extends Parcelable {
     /**

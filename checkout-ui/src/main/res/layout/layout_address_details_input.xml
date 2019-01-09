@@ -1,0 +1,169 @@
+<?xml version="1.0" encoding="utf-8"?>
+<com.adyen.checkout.ui.internal.openinvoice.view.AddressDetailsInputLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_marginTop="@dimen/standard_half_margin"
+    android:layout_marginBottom="@dimen/standard_half_margin"
+    android:orientation="vertical"
+    android:animateLayoutChanges="true"
+    android:clipChildren="false"
+    android:clipToPadding="false"
+    tools:theme="@style/Theme.AppCompat.Light">
+
+    <TextView
+        android:id="@+id/textView_title"
+        style="@style/Checkout.TextAppearance.Section.Title"
+        android:text="@string/checkout_billing_address_title"/>
+
+    <TextView
+        android:id="@+id/textView_readOnlyDetails"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:paddingStart="@dimen/standard_quarter_margin"
+        android:paddingEnd="@dimen/standard_quarter_margin"
+        style="@style/Checkout.TextAppearance.Section.ReadOnly"
+        android:visibility="gone"
+        tools:visibility="visible"
+        tools:text="Test \nTest"/>
+
+    <com.adyen.checkout.ui.internal.common.view.CustomTextInputLayout
+        android:id="@+id/layout_street"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        app:customTextInputLayout_caption="@string/checkout_address_street"
+        android:visibility="gone"
+        tools:visibility="visible">
+
+        <android.support.design.widget.TextInputEditText
+            android:id="@+id/editText_street"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:inputType="textPersonName|textCapWords|text"
+            android:saveEnabled="false"
+            tools:text="@string/checkout_address_street" />
+
+        <include layout="@layout/input_error_feedback_layout"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="@dimen/standard_quarter_margin"
+            android:layout_marginStart="@dimen/standard_quarter_margin"
+            android:layout_marginRight="@dimen/standard_quarter_margin"
+            android:layout_marginEnd="@dimen/standard_quarter_margin"/>
+
+    </com.adyen.checkout.ui.internal.common.view.CustomTextInputLayout>
+
+    <com.adyen.checkout.ui.internal.common.view.CustomTextInputLayout
+        android:id="@+id/layout_houseNumber"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        app:customTextInputLayout_caption="@string/checkout_address_house_number"
+        android:visibility="gone"
+        tools:visibility="visible">
+
+        <android.support.design.widget.TextInputEditText
+            android:id="@+id/editText_houseNumber"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:inputType="number"
+            android:saveEnabled="false"
+            tools:text="@string/checkout_address_house_number" />
+
+        <include layout="@layout/input_error_feedback_layout"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="@dimen/standard_quarter_margin"
+            android:layout_marginStart="@dimen/standard_quarter_margin"
+            android:layout_marginRight="@dimen/standard_quarter_margin"
+            android:layout_marginEnd="@dimen/standard_quarter_margin"/>
+
+    </com.adyen.checkout.ui.internal.common.view.CustomTextInputLayout>
+
+    <com.adyen.checkout.ui.internal.common.view.CustomTextInputLayout
+        android:id="@+id/layout_city"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        app:customTextInputLayout_caption="@string/checkout_address_city"
+        android:visibility="gone"
+        tools:visibility="visible">
+
+        <android.support.design.widget.TextInputEditText
+            android:id="@+id/editText_city"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:inputType="textPersonName|textCapWords|text"
+            android:saveEnabled="false"
+            tools:text="@string/checkout_address_city" />
+
+        <include layout="@layout/input_error_feedback_layout"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="@dimen/standard_quarter_margin"
+            android:layout_marginStart="@dimen/standard_quarter_margin"
+            android:layout_marginRight="@dimen/standard_quarter_margin"
+            android:layout_marginEnd="@dimen/standard_quarter_margin"/>
+
+    </com.adyen.checkout.ui.internal.common.view.CustomTextInputLayout>
+
+    <com.adyen.checkout.ui.internal.common.view.CustomTextInputLayout
+        android:id="@+id/layout_postalCode"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        app:customTextInputLayout_caption="@string/checkout_address_postal_code"
+        android:visibility="gone"
+        tools:visibility="visible">
+
+        <android.support.design.widget.TextInputEditText
+            android:id="@+id/editText_postalCode"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:inputType="textPostalAddress|text"
+            android:saveEnabled="false"
+            tools:text="@string/checkout_address_postal_code" />
+
+        <include layout="@layout/input_error_feedback_layout"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="@dimen/standard_quarter_margin"
+            android:layout_marginStart="@dimen/standard_quarter_margin"
+            android:layout_marginRight="@dimen/standard_quarter_margin"
+            android:layout_marginEnd="@dimen/standard_quarter_margin"/>
+
+    </com.adyen.checkout.ui.internal.common.view.CustomTextInputLayout>
+
+    <LinearLayout
+        android:id="@+id/layout_country"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:visibility="gone"
+        android:orientation="vertical"
+        tools:visibility="visible">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:layout_marginStart="@dimen/standard_quarter_margin"
+            android:layout_marginLeft="@dimen/standard_quarter_margin"
+            style="@style/Checkout.TextAppearance.Secondary"
+            android:text="@string/checkout_address_country"/>
+
+        <Spinner
+            android:id="@+id/spinner_country"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:saveEnabled="false"
+            tools:listitem="@layout/input_details_item_dropdown" />
+
+        <include layout="@layout/input_error_feedback_layout"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="@dimen/standard_quarter_margin"
+            android:layout_marginStart="@dimen/standard_quarter_margin"
+            android:layout_marginRight="@dimen/standard_quarter_margin"
+            android:layout_marginEnd="@dimen/standard_quarter_margin"/>
+
+    </LinearLayout>
+
+</com.adyen.checkout.ui.internal.openinvoice.view.AddressDetailsInputLayout>

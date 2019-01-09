@@ -1,15 +1,16 @@
+/*
+ * Copyright (c) 2018 Adyen N.V.
+ *
+ * This file is open source and available under the MIT license. See the LICENSE file for more info.
+ *
+ * Created by Ran Haveshush on 10/10/2018.
+ */
+
 package com.adyen.example.androidtest;
 
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 
-/**
- * Copyright (c) 2018 Adyen B.V.
- * <p>
- * This file is open source and available under the MIT license. See the LICENSE file for more info.
- * <p>
- * Created by Ran Haveshush on 10/10/2018.
- */
 public final class PaymentSetup {
     private Amount mAmount;
 

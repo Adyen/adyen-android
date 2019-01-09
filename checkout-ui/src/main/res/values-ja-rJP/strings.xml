@@ -10,12 +10,15 @@
     <string name="checkout_error_message_network_unavailable">インターネットに接続できませんでした。インターネット接続を確認してください。</string>
     <string name="checkout_error_message_network_hint">インターネット接続を確認し、もう一度お試しください。</string>
     <string name="checkout_pay_amount_format">%sのお支払い</string>
+    
+    <string name="checkout_surcharge_total_amount_format">合計金額には、%s の追加料金が含まれています。</string>
     <string name="checkout_one_click_delete_confirmation_message">%sのお支払い方法を削除しますか</string>
     <string name="checkout_one_click_delete">削除</string>
     <string name="checkout_error_dialog_title">エラー</string>
     <string name="checkout_error_redirect_failed">画面の切り替え失敗にしました</string>
     <string name="checkout_ok">OK</string>
     <string name="checkout_skip">スキップ</string>
+    <string name="checkout_backspace">バックスペース</string>
 
     <!-- Card -->
     <string name="checkout_card_holder_name_hint">カード名義</string>
@@ -65,4 +68,41 @@
     <string name="checkout_sdd_account_holder_name">口座名義</string>
     <string name="checkout_sdd_consent">私は以下の金額が私の銀行口座から引き落とされることに同意します。</string>
     <string name="checkout_sdd_iban_suggestion">もしかして</string>
+
+    <!-- Open Invoice -->
+
+    <!-- Personal Details -->
+    <string name="checkout_personal_details_title">個人情報</string>
+    <string name="checkout_personal_details_first_name">名</string>
+    <string name="checkout_personal_details_infix">敬称</string>
+    <string name="checkout_personal_details_last_name">姓</string>
+    <string name="checkout_personal_details_gender">性別</string>
+    <string name="checkout_personal_details_gender_male">男性</string>
+    <string name="checkout_personal_details_gender_female">女性</string>
+    <string name="checkout_personal_details_gender_unknown">不明</string>
+    <string name="checkout_personal_details_date_of_birth">生年月日</string>
+    <string name="checkout_personal_details_telehone_number">電話番号</string>
+    <string name="checkout_personal_details_social_security_number">ソーシャルセキュリティー番号</string>
+    
+    <string name="checkout_personal_details_shopper_email">Eメールアドレス</string>
+
+    <!-- Address -->
+    <string name="checkout_address_street">番地</string>
+    <string name="checkout_address_house_number">部屋番号</string>
+    <string name="checkout_address_city">市区</string>
+    <string name="checkout_address_postal_code">郵便番号</string>
+    <string name="checkout_address_country">国</string>
+
+    <string name="checkout_billing_address_title">ご請求住所</string>
+    <string name="checkout_delivery_address_title">配送先住所</string>
+    <string name="checkout_separate_delivery_address">別の配送先住所を指定してください</string>
+
+    <string name="checkout_terms_and_conditions_title">利用規約</string>
+    <string name="checkout_terms_and_conditions_toggle">利用規約に同意したごとになります</string>
+    <string name="checkout_klarna_terms_and_conditions_text">私は身元確認、信用評価、購入の清算などの目的のためKlarnaが私の情報を使用する事に同意致します。法律に基づき、データ使用をするための%sを無効にする場合があります。利用規約が適用されます。</string>
+    <string name="checkout_klarna_consent">同意</string>
+    <string name="checkout_klarna_more_information">詳細情報</string>
+
+    <string name="checkout_input_error_empty_field">必須フィールドです。入力してください。</string>
+    <string name="checkout_input_error_incorrect_format">入力形式が無効です。</string>
 </resources>

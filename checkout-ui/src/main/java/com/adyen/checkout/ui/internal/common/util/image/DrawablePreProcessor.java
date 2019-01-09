@@ -1,3 +1,11 @@
+/*
+ * Copyright (c) 2018 Adyen N.V.
+ *
+ * This file is open source and available under the MIT license. See the LICENSE file for more info.
+ *
+ * Created by timon on 16/03/2018.
+ */
+
 package com.adyen.checkout.ui.internal.common.util.image;
 
 import android.annotation.SuppressLint;
@@ -22,13 +30,6 @@ import com.adyen.checkout.ui.R;
 
 import java.util.concurrent.Callable;
 
-/**
- * Copyright (c) 2018 Adyen B.V.
- * <p>
- * This file is open source and available under the MIT license. See the LICENSE file for more info.
- * <p>
- * Created by timon on 16/03/2018.
- */
 public final class DrawablePreProcessor {
     private static final float CORNER_RADIUS_FACTOR = 1f / 8f;
 

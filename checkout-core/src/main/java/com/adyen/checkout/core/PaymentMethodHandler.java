@@ -1,3 +1,11 @@
+/*
+ * Copyright (c) 2018 Adyen N.V.
+ *
+ * This file is open source and available under the MIT license. See the LICENSE file for more info.
+ *
+ * Created by timon on 11/06/2018.
+ */
+
 package com.adyen.checkout.core;
 
 import android.app.Activity;
@@ -11,12 +19,6 @@ import com.adyen.checkout.core.model.PaymentSession;
 
 /**
  * Interface offering functionality to handle the details for a {@link PaymentMethod}.
- * <p>
- * Copyright (c) 2018 Adyen B.V.
- * <p>
- * This file is open source and available under the MIT license. See the LICENSE file for more info.
- * <p>
- * Created by timon on 11/06/2018.
  */
 public interface PaymentMethodHandler {
     /**
@@ -38,12 +40,14 @@ public interface PaymentMethodHandler {
      * Result key for {@link Activity#onActivityResult(int, int, Intent)} to retrieve a {@link PaymentResult} with from the result {@link Intent}
      * in case {@code resultCode == RESULT_CODE_OK}.
      */
+    @NonNull
     String RESULT_PAYMENT_RESULT = "RESULT_PAYMENT_RESULT";
 
     /**
      * Result key for {@link Activity#onActivityResult(int, int, Intent)} to retrieve a {@link CheckoutException} with from the result {@link Intent}
      * in case {@code resultCode != RESULT_CODE_OK}.
      */
+    @NonNull
     String RESULT_CHECKOUT_EXCEPTION = "RESULT_CHECKOUT_EXCEPTION";
 
     /**

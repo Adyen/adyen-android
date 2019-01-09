@@ -73,6 +73,15 @@
             android:layout_marginTop="@dimen/standard_margin"
             tools:text="@string/checkout_pay_amount_format" />
 
+        <TextView
+            android:id="@+id/textView_surcharge"
+            style="@style/Checkout.TextAppearance.Tertiary"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_horizontal"
+            android:textIsSelectable="false"
+            tools:text="@string/checkout_surcharge_total_amount_format" />
+
     </LinearLayout>
 
 </ScrollView>

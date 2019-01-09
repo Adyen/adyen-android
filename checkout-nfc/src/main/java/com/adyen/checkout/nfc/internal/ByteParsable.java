@@ -1,23 +1,25 @@
+/*
+ * Copyright (c) 2017 Adyen N.V.
+ *
+ * This file is open source and available under the MIT license. See the LICENSE file for more info.
+ *
+ * Created by timon on 06/09/2017.
+ */
+
 package com.adyen.checkout.nfc.internal;
 
 import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
 
 import java.util.Arrays;
 
-/**
- * Copyright (c) 2017 Adyen B.V.
- * <p>
- * This file is open source and available under the MIT license. See the LICENSE file for more info.
- * <p>
- * Created by timon on 06/09/2017.
- */
 public abstract class ByteParsable {
     private byte[] mBytes = new byte[0];
 
     ByteParsable() { }
 
     @Override
-    public boolean equals(Object o) {
+    public boolean equals(@Nullable Object o) {
         if (this == o) {
             return true;
         }
@@ -35,6 +37,7 @@ public abstract class ByteParsable {
         return Arrays.hashCode(mBytes);
     }
 
+    @NonNull
     @Override
     public String toString() {
         return ByteUtil.bytesToHexFormatted(mBytes);

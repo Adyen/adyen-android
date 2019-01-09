@@ -10,12 +10,15 @@
     <string name="checkout_error_message_network_unavailable">Verbinden is mislukt. Controleer uw internetverbinding.</string>
     <string name="checkout_error_message_network_hint">Controleer uw internetverbinding en probeer het opnieuw.</string>
     <string name="checkout_pay_amount_format">%s betalen</string>
+    
+    <string name="checkout_surcharge_total_amount_format">Het totaalbedrag is inclusief een toeslag van %s.</string>
     <string name="checkout_one_click_delete_confirmation_message">Betalingsmethode %s verwijderen?</string>
     <string name="checkout_one_click_delete">Verwijderen</string>
     <string name="checkout_error_dialog_title">Fout</string>
     <string name="checkout_error_redirect_failed">Doorsturen niet gelukt</string>
     <string name="checkout_ok">Oké</string>
     <string name="checkout_skip">Overslaan</string>
+    <string name="checkout_backspace">Backspace</string>
 
     <!-- Card -->
     <string name="checkout_card_holder_name_hint">Naam kaarthouder</string>
@@ -65,4 +68,41 @@
     <string name="checkout_sdd_account_holder_name">Ten name van</string>
     <string name="checkout_sdd_consent">Ik ga akkoord met een eenmalige afschrijving van het onderstaande bedrag.</string>
     <string name="checkout_sdd_iban_suggestion">Bedoelde u</string>
+
+    <!-- Open Invoice -->
+
+    <!-- Personal Details -->
+    <string name="checkout_personal_details_title">Persoonlijke gegevens</string>
+    <string name="checkout_personal_details_first_name">Voornaam</string>
+    <string name="checkout_personal_details_infix">Voorvoegsel</string>
+    <string name="checkout_personal_details_last_name">Achternaam</string>
+    <string name="checkout_personal_details_gender">Geslacht</string>
+    <string name="checkout_personal_details_gender_male">Man</string>
+    <string name="checkout_personal_details_gender_female">Vrouw</string>
+    <string name="checkout_personal_details_gender_unknown">Onbekend</string>
+    <string name="checkout_personal_details_date_of_birth">Geboortedatum</string>
+    <string name="checkout_personal_details_telehone_number">Telefoonnummer</string>
+    <string name="checkout_personal_details_social_security_number">Burgerservicenummer</string>
+    
+    <string name="checkout_personal_details_shopper_email">E-mailadres</string>
+
+    <!-- Address -->
+    <string name="checkout_address_street">Straatnaam</string>
+    <string name="checkout_address_house_number">Huisnummer</string>
+    <string name="checkout_address_city">Stad</string>
+    <string name="checkout_address_postal_code">Postcode</string>
+    <string name="checkout_address_country">Land</string>
+
+    <string name="checkout_billing_address_title">Factuuradres</string>
+    <string name="checkout_delivery_address_title">Bezorgadres</string>
+    <string name="checkout_separate_delivery_address">Een afwijkend bezorgadres opgeven</string>
+
+    <string name="checkout_terms_and_conditions_title">Algemene voorwaarden</string>
+    <string name="checkout_terms_and_conditions_toggle">Ga akkoord met de algemene voorwaarden</string>
+    <string name="checkout_klarna_terms_and_conditions_text">Ik geef Klarna toestemming om mijn gegevens te verwerken voor het vaststellen van mijn identiteit, het beoordelen van mijn kredietwaardigheid en het afwikkelen van de aankoop. Ik heb de mogelijkheid om mijn %s in te trekken voor het verwerken van mijn gegevens en voor de doeleinden waarvoor dit wettelijk is toegestaan. De algemene voorwaarden van de winkelier zijn van toepassing.</string>
+    <string name="checkout_klarna_consent">toestemming</string>
+    <string name="checkout_klarna_more_information">Meer informatie</string>
+
+    <string name="checkout_input_error_empty_field">Dit is een verplicht veld. Vul het in.</string>
+    <string name="checkout_input_error_incorrect_format">De invoerindeling is niet geldig.</string>
 </resources>

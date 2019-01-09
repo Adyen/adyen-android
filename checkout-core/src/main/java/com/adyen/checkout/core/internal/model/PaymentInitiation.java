@@ -1,3 +1,11 @@
+/*
+ * Copyright (c) 2017 Adyen N.V.
+ *
+ * This file is open source and available under the MIT license. See the LICENSE file for more info.
+ *
+ * Created by timon on 07/08/2017.
+ */
+
 package com.adyen.checkout.core.internal.model;
 
 import android.os.Parcel;
@@ -7,19 +15,14 @@ import android.support.annotation.Nullable;
 
 import com.adyen.checkout.base.internal.JsonSerializable;
 import com.adyen.checkout.base.internal.Parcelables;
+import com.adyen.checkout.base.internal.HashUtils;
 import com.adyen.checkout.core.model.PaymentMethodDetails;
 
 import org.json.JSONException;
 import org.json.JSONObject;
 
-/**
- * Copyright (c) 2017 Adyen B.V.
- * <p>
- * This file is open source and available under the MIT license. See the LICENSE file for more info.
- * <p>
- * Created by timon on 07/08/2017.
- */
 public final class PaymentInitiation implements Parcelable, JsonSerializable {
+    @NonNull
     public static final Creator<PaymentInitiation> CREATOR = new Creator<PaymentInitiation>() {
         @Override
         public PaymentInitiation createFromParcel(Parcel parcel) {
@@ -54,7 +57,7 @@ public final class PaymentInitiation implements Parcelable, JsonSerializable {
     }
 
     @Override
-    public void writeToParcel(Parcel parcel, int flags) {
+    public void writeToParcel(@NonNull Parcel parcel, int flags) {
         parcel.writeString(mPaymentData);
         parcel.writeString(mPaymentMethodData);
         Parcelables.write(parcel, mPaymentMethodDetails);
@@ -72,7 +75,7 @@ public final class PaymentInitiation implements Parcelable, JsonSerializable {
     }
 
     @Override
-    public boolean equals(Object o) {
+    public boolean equals(@Nullable Object o) {
         if (this == o) {
             return true;
         }
@@ -94,8 +97,8 @@ public final class PaymentInitiation implements Parcelable, JsonSerializable {
     @Override
     public int hashCode() {
         int result = mPaymentData != null ? mPaymentData.hashCode() : 0;
-        result = 31 * result + (mPaymentMethodData != null ? mPaymentMethodData.hashCode() : 0);
-        result = 31 * result + (mPaymentMethodDetails != null ? mPaymentMethodDetails.hashCode() : 0);
+        result = HashUtils.MULTIPLIER * result + (mPaymentMethodData != null ? mPaymentMethodData.hashCode() : 0);
+        result = HashUtils.MULTIPLIER * result + (mPaymentMethodDetails != null ? mPaymentMethodDetails.hashCode() : 0);
         return result;
     }
 

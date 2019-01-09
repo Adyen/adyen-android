@@ -1,3 +1,11 @@
+/*
+ * Copyright (c) 2018 Adyen N.V.
+ *
+ * This file is open source and available under the MIT license. See the LICENSE file for more info.
+ *
+ * Created by timon on 11/05/2018.
+ */
+
 package com.adyen.checkout.core;
 
 import android.app.Activity;
@@ -11,13 +19,6 @@ import com.adyen.checkout.core.internal.PaymentSetupParametersImpl;
 import com.adyen.checkout.core.internal.StartPaymentParametersImpl;
 import com.adyen.checkout.core.internal.model.PaymentSessionImpl;
 
-/**
- * Copyright (c) 2018 Adyen B.V.
- * <p>
- * This file is open source and available under the MIT license. See the LICENSE file for more info.
- * <p>
- * Created by timon on 11/05/2018.
- */
 public final class PaymentController {
     /**
      * Starts the payment.

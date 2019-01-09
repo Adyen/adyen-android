@@ -1,3 +1,11 @@
+/*
+ * Copyright (c) 2018 Adyen N.V.
+ *
+ * This file is open source and available under the MIT license. See the LICENSE file for more info.
+ *
+ * Created by timon on 29/05/2018.
+ */
+
 package com.adyen.checkout.core.internal.persistence;
 
 import android.arch.persistence.room.Database;
@@ -8,13 +16,6 @@ import android.support.annotation.NonNull;
 
 import java.util.Date;
 
-/**
- * Copyright (c) 2018 Adyen B.V.
- * <p>
- * This file is open source and available under the MIT license. See the LICENSE file for more info.
- * <p>
- * Created by timon on 29/05/2018.
- */
 @Database(entities = {PaymentSessionEntity.class, PaymentInitiationResponseEntity.class}, version = 1, exportSchema = false)
 @TypeConverters(PaymentDatabase.DateConverter.class)
 abstract class PaymentDatabase extends RoomDatabase {

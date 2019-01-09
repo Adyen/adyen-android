@@ -1,3 +1,11 @@
+/*
+ * Copyright (c) 2017 Adyen N.V.
+ *
+ * This file is open source and available under the MIT license. See the LICENSE file for more info.
+ *
+ * Created by timon on 13/08/2017.
+ */
+
 package com.adyen.checkout.util.sepadirectdebit;
 
 import android.support.annotation.NonNull;
@@ -12,17 +20,20 @@ import java.util.Map;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-/**
- * Copyright (c) 2017 Adyen B.V.
- * <p>
- * This file is open source and available under the MIT license. See the LICENSE file for more info.
- * <p>
- * Created by timon on 13/08/2017.
- */
 public final class Iban {
+
+    static final int IBAN_BLOCK_SIZE = 4;
+
+    private static final int COUNTRY_CODE_POSITION_END = 2;
+
+    private static final int CHECK_DIGIT_POSITION_START = 2;
+
+    private static final int CHECK_DIGIT_POSITION_END = 4;
+
     /**
      * Based on https://www.ecb.europa.eu (SEPA Countries) and https://en.wikipedia.org (Single Euro Payments Area).
      */
+    @SuppressWarnings("checkstyle:MagicNumber")
     private static final Map<String, Details> COUNTRY_DETAILS = Collections.unmodifiableMap(new HashMap<String, Details>() {
         {
             put("AD", new Details(Pattern.compile("^AD\\d{10}[0-9A-Z]{12}$"), 24));
@@ -106,6 +117,7 @@ public final class Iban {
      * @return The masked IBAN value.
      */
     @NonNull
+    @SuppressWarnings("checkstyle:AvoidEscapedUnicodeCharacters")
     public static String mask(@Nullable String ibanValue) {
         String normalizedValue = normalize(ibanValue);
 
@@ -209,7 +221,7 @@ public final class Iban {
     }
 
     private static boolean isChecksumValid(@NonNull String normalizedIban) {
-        String rearrangedIban = normalizedIban.substring(4) + normalizedIban.substring(0, 4);
+        String rearrangedIban = normalizedIban.substring(IBAN_BLOCK_SIZE) + normalizedIban.substring(0, IBAN_BLOCK_SIZE);
 
         StringBuilder numericIban = new StringBuilder();
 
@@ -223,6 +235,7 @@ public final class Iban {
     }
 
     @NonNull
+    @SuppressWarnings("checkstyle:MagicNumber")
     private static String getZeroPaddedValue(@NonNull String normalizedValue, @NonNull Details details) {
         int length = normalizedValue.length();
         int difference = details.mLength - length;
@@ -260,17 +273,17 @@ public final class Iban {
 
     @NonNull
     public String getCountryCode() {
-        return mValue.substring(0, 2);
+        return mValue.substring(0, COUNTRY_CODE_POSITION_END);
     }
 
     @NonNull
     public String getCheckDigits() {
-        return mValue.substring(2, 4);
+        return mValue.substring(CHECK_DIGIT_POSITION_START, CHECK_DIGIT_POSITION_END);
     }
 
     @NonNull
     public String getBban() {
-        return mValue.substring(4);
+        return mValue.substring(IBAN_BLOCK_SIZE);
     }
 
     public boolean isSepa() {

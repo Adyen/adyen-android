@@ -1,3 +1,11 @@
+/*
+ * Copyright (c) 2017 Adyen N.V.
+ *
+ * This file is open source and available under the MIT license. See the LICENSE file for more info.
+ *
+ * Created by timon on 24/11/2017.
+ */
+
 package com.adyen.checkout.ui.internal.giropay;
 
 import android.content.Context;
@@ -5,6 +13,7 @@ import android.content.Intent;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
 import android.support.v4.widget.ContentLoadingProgressBar;
 import android.view.KeyEvent;
 import android.view.View;
@@ -35,13 +44,6 @@ import com.adyen.checkout.util.internal.SimpleTextWatcher;
 import java.util.List;
 import java.util.concurrent.Callable;
 
-/**
- * Copyright (c) 2017 Adyen B.V.
- * <p>
- * This file is open source and available under the MIT license. See the LICENSE file for more info.
- * <p>
- * Created by timon on 24/11/2017.
- */
 public class GiroPayDetailsActivity extends CheckoutDetailsActivity {
     private static final String EXTRA_PAYMENT_METHOD = "EXTRA_PAYMENT_METHOD";
 
@@ -60,6 +62,8 @@ public class GiroPayDetailsActivity extends CheckoutDetailsActivity {
     private TextView mErrorTextView;
 
     private Button mPayButton;
+
+    private TextView mSurchargeTextView;
 
     private PaymentMethod mPaymentMethod;
 
@@ -82,7 +86,7 @@ public class GiroPayDetailsActivity extends CheckoutDetailsActivity {
     }
 
     @Override
-    protected void onCreate(Bundle savedInstanceState) {
+    protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
         mPaymentMethod = getIntent().getParcelableExtra(EXTRA_PAYMENT_METHOD);
@@ -151,7 +155,6 @@ public class GiroPayDetailsActivity extends CheckoutDetailsActivity {
         });
         mErrorTextView = findViewById(R.id.textView_error);
         mPayButton = findViewById(R.id.button_continue);
-        PayButtonUtil.setPayButtonText(this, mPayButton);
         mPayButton.setEnabled(mSelectedGiroPayIssuer != null);
         mPayButton.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -162,6 +165,10 @@ public class GiroPayDetailsActivity extends CheckoutDetailsActivity {
                 }
             }
         });
+
+        mSurchargeTextView = findViewById(R.id.textView_surcharge);
+
+        PayButtonUtil.setPayButtonText(this, mPaymentMethod, mPayButton, mSurchargeTextView);
 
         mSearchHandler.getNetworkInfoObservable().observe(this, new Observer<NetworkingState>() {
             @Override
@@ -197,7 +204,7 @@ public class GiroPayDetailsActivity extends CheckoutDetailsActivity {
     }
 
     @Override
-    protected void onSaveInstanceState(Bundle outState) {
+    protected void onSaveInstanceState(@NonNull Bundle outState) {
         super.onSaveInstanceState(outState);
 
         outState.putParcelable(STATE_SELECTED_GIRO_PAY_ISSUER, mSelectedGiroPayIssuer);

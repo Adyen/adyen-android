@@ -1,3 +1,11 @@
+/*
+ * Copyright (c) 2017 Adyen N.V.
+ *
+ * This file is open source and available under the MIT license. See the LICENSE file for more info.
+ *
+ * Created by timon on 14/11/2017.
+ */
+
 package com.adyen.example;
 
 import android.annotation.SuppressLint;
@@ -8,6 +16,7 @@ import android.provider.Settings;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
+import android.support.v7.widget.SwitchCompat;
 import android.text.Editable;
 import android.text.TextUtils;
 import android.util.Patterns;
@@ -22,17 +31,18 @@ import com.adyen.checkout.util.AmountFormat;
 import com.adyen.checkout.util.internal.CheckoutCurrency;
 import com.adyen.checkout.util.internal.SimpleTextWatcher;
 import com.adyen.example.model.PaymentSetupRequest;
+import com.adyen.example.model.request.Address;
+import com.adyen.example.model.request.Amount;
+import com.adyen.example.model.request.Configuration;
+import com.adyen.example.model.request.Installments;
+import com.adyen.example.model.request.LineItem;
+import com.adyen.example.model.request.ShopperInput;
+import com.adyen.example.model.request.ShopperName;
 
+import java.util.ArrayList;
 import java.util.Locale;
 import java.util.MissingResourceException;
 
-/**
- * Copyright (c) 2017 Adyen B.V.
- * <p>
- * This file is open source and available under the MIT license. See the LICENSE file for more info.
- * <p>
- * Created by timon on 14/11/2017.
- */
 public class ConfigurationFragment extends Fragment {
     private TextView mAmountTextView;
 
@@ -62,40 +72,100 @@ public class ConfigurationFragment extends Fragment {
 
     private EditText mCardHolderNameEditText;
 
-    @SuppressLint("HardwareIds")
+    private SwitchCompat mAddShopperInputSwitch;
+
+    //PaymentSetupRequest configuration parameters
+    private String mShopperLocale = null;
+
+    private String mCountry = null;
+
+    private String mMerchantReference = null;
+
+    private String mShopperReference = null;
+
+    private String mShopperEmail = null;
+
+    private Configuration mConfiguration = null;
+
+    private ArrayList<LineItem> mLineItems = null;
+
+    private ShopperName mShopperName = null;
+
+    private String mDateOfBirth = null;
+
+    private String mTelephoneNumber = null;
+
+    private String mSocialSecurityNumber = null;
+
+    private Address mBillingAddress = null;
+
+    private Address mDeliveryAddress = null;
+
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_configuration, container, false);
 
+        findViews(view);
+        setupTextChangeListeners();
+
+        if (savedInstanceState == null) {
+            String merchantReference = getAbsoluteHashString(BuildConfig.CHECKOUT_API_KEY);
+            @SuppressLint("HardwareIds")
+            String shopperReference = Build.MANUFACTURER + "_" + Build.MODEL + "_"
+                    + getAbsoluteHashString(Settings.Secure.getString(view.getContext().getContentResolver(), Settings.Secure.ANDROID_ID));
+            String shopperEmail = "customer@provider.com";
+            mMerchantReferenceEditText.setText(merchantReference);
+            mShopperReferenceEditText.setText(shopperReference);
+            mShopperEmailEditText.setText(shopperEmail);
+        }
+
+        displayFormattedAmount();
+        displayFormattedCountry();
+        displayFormattedShopperLocale();
+        displayFormattedCardHolderNameRequirement();
+        displayFormattedInstallments();
+
+        return view;
+    }
+
+    private void findViews(View view) {
         mAmountTextView = view.findViewById(R.id.textView_amount);
         mCountryTextView = view.findViewById(R.id.textView_country);
         mShopperLocaleTextView = view.findViewById(R.id.textView_shopperLocale);
         mInstallmentsTextView = view.findViewById(R.id.textView_installments);
         mCardHolderNameTextView = view.findViewById(R.id.textView_cardHolderName);
-
         mAmountValueEditText = view.findViewById(R.id.editText_amountValue);
+        mAmountCurrencyEditText = view.findViewById(R.id.editText_amountCurrency);
+        mCountryCodeEditText = view.findViewById(R.id.editText_countryCode);
+        mShopperLocaleEditText = view.findViewById(R.id.editText_shopperLocale);
+        mMerchantReferenceEditText = view.findViewById(R.id.editText_merchantReference);
+        mShopperReferenceEditText = view.findViewById(R.id.editText_shopperReference);
+        mShopperEmailEditText = view.findViewById(R.id.editText_shopperEmail);
+        mInstallmentsEditText = view.findViewById(R.id.editText_installments);
+        mCardHolderNameEditText = view.findViewById(R.id.editText_cardHolderName);
+        mAddShopperInputSwitch = view.findViewById(R.id.switch_addShopperInput);
+    }
+
+    private void setupTextChangeListeners() {
         mAmountValueEditText.addTextChangedListener(new SimpleTextWatcher() {
             @Override
             public void afterTextChanged(Editable s) {
                 displayFormattedAmount();
             }
         });
-        mAmountCurrencyEditText = view.findViewById(R.id.editText_amountCurrency);
         mAmountCurrencyEditText.addTextChangedListener(new SimpleTextWatcher() {
             @Override
             public void afterTextChanged(Editable s) {
                 displayFormattedAmount();
             }
         });
-        mCountryCodeEditText = view.findViewById(R.id.editText_countryCode);
         mCountryCodeEditText.addTextChangedListener(new SimpleTextWatcher() {
             @Override
             public void afterTextChanged(Editable s) {
                 displayFormattedCountry();
             }
         });
-        mShopperLocaleEditText = view.findViewById(R.id.editText_shopperLocale);
         mShopperLocaleEditText.addTextChangedListener(new SimpleTextWatcher() {
             @Override
             public void afterTextChanged(Editable s) {
@@ -116,48 +186,26 @@ public class ConfigurationFragment extends Fragment {
                 displayFormattedShopperLocale();
             }
         });
-        mMerchantReferenceEditText = view.findViewById(R.id.editText_merchantReference);
-        mShopperReferenceEditText = view.findViewById(R.id.editText_shopperReference);
-        mShopperEmailEditText = view.findViewById(R.id.editText_shopperEmail);
-        mInstallmentsEditText = view.findViewById(R.id.editText_installments);
+
         mInstallmentsEditText.addTextChangedListener(new SimpleTextWatcher() {
             @Override
             public void afterTextChanged(Editable s) {
                 displayFormattedInstallments();
             }
         });
-        mCardHolderNameEditText = view.findViewById(R.id.editText_cardHolderName);
         mCardHolderNameEditText.addTextChangedListener(new SimpleTextWatcher() {
             @Override
             public void afterTextChanged(Editable s) {
                 displayFormattedCardHolderNameRequirement();
             }
         });
-
-        if (savedInstanceState == null) {
-            String merchantReference = getAbsoluteHashString(BuildConfig.CHECKOUT_API_KEY);
-            String shopperReference = Build.MANUFACTURER + "_" + Build.MODEL + "_"
-                    + getAbsoluteHashString(Settings.Secure.getString(view.getContext().getContentResolver(), Settings.Secure.ANDROID_ID));
-            String shopperEmail = "customer@provider.com";
-            mMerchantReferenceEditText.setText(merchantReference);
-            mShopperReferenceEditText.setText(shopperReference);
-            mShopperEmailEditText.setText(shopperEmail);
-        }
-
-        displayFormattedAmount();
-        displayFormattedCountry();
-        displayFormattedShopperLocale();
-        displayFormattedCardHolderNameRequirement();
-        displayFormattedInstallments();
-
-        return view;
     }
 
     @Nullable
     public PaymentSetupRequest getPaymentSetupRequest(@NonNull CheckoutSetupParameters checkoutSetupParameters) {
         boolean valid = true;
 
-        PaymentSetupRequest.Amount amount = null;
+        Amount amount = null;
 
         try {
             amount = getAmount();
@@ -166,67 +214,79 @@ public class ConfigurationFragment extends Fragment {
             valid = false;
         }
 
-        Locale shopperLocale = null;
-
         try {
-            shopperLocale = getShopperLocale();
+            mShopperLocale = getShopperLocale().toString();
         } catch (IllegalArgumentException | MissingResourceException e) {
             mShopperLocaleEditText.setError(e.getLocalizedMessage());
             valid = false;
         }
 
-        Locale country = null;
-
         try {
-            country = getCountry();
+            mCountry = getCountry().getCountry();
         } catch (MissingResourceException e) {
             mCountryCodeEditText.setError(e.getLocalizedMessage());
             valid = false;
         }
 
-        String merchantReference = mMerchantReferenceEditText.getText().toString();
-        String shopperReference = mShopperReferenceEditText.getText().toString();
-
-        String shopperEmail = null;
+        mMerchantReference = mMerchantReferenceEditText.getText().toString();
+        mShopperReference = mShopperReferenceEditText.getText().toString();
 
         try {
-            shopperEmail = getShopperEmail();
+            mShopperEmail = getShopperEmail();
         } catch (IllegalArgumentException e) {
             mShopperEmailEditText.setError(e.getMessage());
             valid = false;
         }
 
-        PaymentSetupRequest.Configuration configuration = null;
-
+        //Set CardHolderName
         try {
-            PaymentSetupRequest.CardHolderNameRequirement cardHolderNameRequirement = getCardHolderNameRequirement();
-
+            Configuration.CardHolderNameRequirement cardHolderNameRequirement = getCardHolderNameRequirement();
             if (cardHolderNameRequirement != null) {
-                if (configuration == null) {
-                    configuration = new PaymentSetupRequest.Configuration();
+                if (mConfiguration == null) {
+                    mConfiguration = new Configuration();
                 }
-
-                configuration.setCardHolderName(cardHolderNameRequirement);
+                mConfiguration.setCardHolderName(cardHolderNameRequirement);
             }
-
         } catch (IllegalArgumentException e) {
             mCardHolderNameEditText.setError(e.getLocalizedMessage());
             valid = false;
         }
 
+        //Set Installments
         try {
-            PaymentSetupRequest.Installments installments = getInstallments();
-
+            Installments installments = getInstallments();
             if (installments != null) {
-                if (configuration == null) {
-                    configuration = new PaymentSetupRequest.Configuration();
+                if (mConfiguration == null) {
+                    mConfiguration = new Configuration();
                 }
-
-                configuration.setInstallments(installments);
+                mConfiguration.setInstallments(installments);
             }
         } catch (NumberFormatException e) {
             mInstallmentsEditText.setError(e.getLocalizedMessage());
             valid = false;
+        }
+
+        //Set ShopperInput
+        if (mAddShopperInputSwitch.isChecked()) {
+            ShopperInput shopperInput = getShopperInput();
+            if (mConfiguration == null) {
+                mConfiguration = new Configuration();
+            }
+            mConfiguration.setShopperInput(shopperInput);
+
+
+            mBillingAddress = getBillingAddress();
+            mDeliveryAddress = getDeliveryAddress();
+            mShopperName = getShopperName();
+            mDateOfBirth = getDateOfBirth();
+            mTelephoneNumber = getTelephoneNumber();
+            mSocialSecurityNumber = getSocialSecurityNumber();
+        }
+
+        if (valid) {
+            //adding mocked line item by default
+            mLineItems = new ArrayList<>();
+            mLineItems.add(new LineItem("Item1", amount.getValue().intValue()));
         }
 
         if (valid) {
@@ -234,12 +294,19 @@ public class ConfigurationFragment extends Fragment {
             String returnUrl = checkoutSetupParameters.getReturnUrl();
 
             return new PaymentSetupRequest.Builder(BuildConfig.MERCHANT_ACCOUNT, sdkToken, returnUrl, amount)
-                    .setShopperLocale(shopperLocale.toString())
-                    .setCountryCode(country.getCountry())
-                    .setReference(merchantReference)
-                    .setShopperReference(shopperReference)
-                    .setShopperEmail(shopperEmail)
-                    .setConfiguration(configuration)
+                    .setShopperLocale(mShopperLocale)
+                    .setCountryCode(mCountry)
+                    .setReference(mMerchantReference)
+                    .setShopperReference(mShopperReference)
+                    .setShopperEmail(mShopperEmail)
+                    .setConfiguration(mConfiguration)
+                    .setLineItems(mLineItems)
+                    .setShopperName(mShopperName)
+                    .setDateOfBirth(mDateOfBirth)
+                    .setTelephoneNumber(mTelephoneNumber)
+                    .setSocialSecurityNumber(mSocialSecurityNumber)
+                    .setBillingAddress(mBillingAddress)
+                    .setDeliveryAddress(mDeliveryAddress)
                     .build();
         } else {
             return null;
@@ -251,7 +318,7 @@ public class ConfigurationFragment extends Fragment {
 
         if (context != null) {
             try {
-                PaymentSetupRequest.Amount amount = getAmount();
+                Amount amount = getAmount();
                 mAmountTextView.setText(AmountFormat.format(getContext(), amount.getValue(), amount.getCurrency()));
             } catch (IllegalArgumentException e) {
                 mAmountTextView.setText("???");
@@ -278,7 +345,7 @@ public class ConfigurationFragment extends Fragment {
 
     private void displayFormattedInstallments() {
         try {
-            PaymentSetupRequest.Installments installments = getInstallments();
+            Installments installments = getInstallments();
 
             if (installments == null) {
                 mInstallmentsTextView.setText("-");
@@ -292,7 +359,7 @@ public class ConfigurationFragment extends Fragment {
 
     private void displayFormattedCardHolderNameRequirement() {
         try {
-            PaymentSetupRequest.CardHolderNameRequirement cardHolderNameRequirement = getCardHolderNameRequirement();
+            Configuration.CardHolderNameRequirement cardHolderNameRequirement = getCardHolderNameRequirement();
 
             if (cardHolderNameRequirement == null) {
                 mCardHolderNameTextView.setText("-");
@@ -305,12 +372,12 @@ public class ConfigurationFragment extends Fragment {
     }
 
     @NonNull
-    private PaymentSetupRequest.Amount getAmount() throws IllegalArgumentException {
+    private Amount getAmount() throws IllegalArgumentException {
         String currencyText = mAmountCurrencyEditText.getText().toString().toUpperCase();
         long value = Long.parseLong(mAmountValueEditText.getText().toString());
         String currency = CheckoutCurrency.valueOf(currencyText).name();
 
-        return new PaymentSetupRequest.Amount(value, currency);
+        return new Amount(value, currency);
     }
 
     @NonNull
@@ -354,18 +421,18 @@ public class ConfigurationFragment extends Fragment {
     }
 
     @Nullable
-    private PaymentSetupRequest.CardHolderNameRequirement getCardHolderNameRequirement() throws IllegalArgumentException {
+    private Configuration.CardHolderNameRequirement getCardHolderNameRequirement() throws IllegalArgumentException {
         String cardHolderNameValue = mCardHolderNameEditText.getText().toString().trim().toUpperCase();
 
         if (TextUtils.isEmpty(cardHolderNameValue)) {
             return null;
         } else {
-            return PaymentSetupRequest.CardHolderNameRequirement.valueOf(cardHolderNameValue);
+            return Configuration.CardHolderNameRequirement.valueOf(cardHolderNameValue);
         }
     }
 
     @Nullable
-    private PaymentSetupRequest.Installments getInstallments() throws NumberFormatException {
+    private Installments getInstallments() throws NumberFormatException {
         String installmentsString = mInstallmentsEditText.getText().toString().trim();
 
         if (installmentsString.isEmpty()) {
@@ -375,7 +442,7 @@ public class ConfigurationFragment extends Fragment {
         int installmentsCount = Integer.parseInt(installmentsString);
 
         if (installmentsCount > 1) {
-            return new PaymentSetupRequest.Installments(installmentsCount);
+            return new Installments(installmentsCount);
         } else {
             return null;
         }
@@ -384,5 +451,119 @@ public class ConfigurationFragment extends Fragment {
     @NonNull
     private String getAbsoluteHashString(@NonNull Object object) {
         return String.valueOf(Math.abs(object.hashCode()));
+    }
+
+    @NonNull
+    private ShopperInput getShopperInput() {
+        ShopperInput shopperInput = new ShopperInput();
+        shopperInput.setPersonalDetails(ShopperInput.FieldVisibility.EDITABLE);
+        shopperInput.setBillingAddress(ShopperInput.FieldVisibility.EDITABLE);
+        shopperInput.setDeliveryAddress(ShopperInput.FieldVisibility.EDITABLE);
+        return shopperInput;
+    }
+
+    @NonNull
+    private ShopperName getShopperName() {
+
+        ShopperName shopperName = new ShopperName();
+        shopperName.setFirstName("Shopper");
+        shopperName.setLastName("Android Checkout");
+        shopperName.setGender(ShopperName.Gender.MALE);
+        return shopperName;
+    }
+
+    @NonNull
+    private String getTelephoneNumber() {
+        switch (mCountry) {
+            case "SE":
+                return "0765260000";
+            case "NO":
+                return "40 123 456";
+            case "NL":
+                return "0612345678";
+            case "DE":
+                return "01522113356";
+            default:
+                return "12345678";
+        }
+    }
+
+    @Nullable
+    private String getSocialSecurityNumber() {
+        String country = mCountry == null ? "" : mCountry;
+        switch (country) {
+            case "SE":
+                return "4103219202";
+            case "NO":
+                return "01087000571";
+            default:
+                return null;
+        }
+    }
+
+    @NonNull
+    private String getDateOfBirth() {
+        String country = mCountry == null ? "" : mCountry;
+        switch (country) {
+            case "NL":
+                return "1970-07-10";
+            case "DE":
+                return "1960-07-07";
+            default:
+                return "1980-01-01";
+        }
+    }
+
+    @NonNull
+    private Address getBillingAddress() {
+        Address billingAddress = new Address();
+
+        String country = mCountry == null ? "" : mCountry;
+        switch (country) {
+            case "NL":
+                billingAddress.setStreet("Neherkade");
+                billingAddress.setHouseNumberOrName("1");
+                billingAddress.setCity("Gravenhage");
+                billingAddress.setCountry(country);
+                billingAddress.setPostalCode("2521VA");
+                billingAddress.setStateOrProvince("Noord");
+                break;
+            case "SE":
+                billingAddress.setStreet("Stårgatan");
+                billingAddress.setHouseNumberOrName("1");
+                billingAddress.setCity("Ankeborg");
+                billingAddress.setCountry(country);
+                billingAddress.setPostalCode("12345");
+                break;
+            case "NO":
+                billingAddress.setStreet("Sæffleberggate");
+                billingAddress.setHouseNumberOrName("56");
+                billingAddress.setCity("Oslo");
+                billingAddress.setCountry(country);
+                billingAddress.setPostalCode("0563");
+                break;
+            case "DE":
+                billingAddress.setStreet("Hellersbergstraße");
+                billingAddress.setHouseNumberOrName("14");
+                billingAddress.setCity("Neuss");
+                billingAddress.setCountry(country);
+                billingAddress.setPostalCode("41460");
+                break;
+            default:
+                billingAddress.setStreet("Strass");
+                billingAddress.setHouseNumberOrName("1");
+                billingAddress.setCity("Amsterdam");
+                billingAddress.setCountry(country);
+                billingAddress.setPostalCode("1234AB");
+                billingAddress.setStateOrProvince("Noord");
+                break;
+        }
+        return billingAddress;
+    }
+
+    @NonNull
+    private Address getDeliveryAddress() {
+        return getBillingAddress();
+
     }
 }

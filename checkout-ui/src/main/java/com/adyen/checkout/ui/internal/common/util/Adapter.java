@@ -1,3 +1,11 @@
+/*
+ * Copyright (c) 2018 Adyen N.V.
+ *
+ * This file is open source and available under the MIT license. See the LICENSE file for more info.
+ *
+ * Created by timon on 20/07/2018.
+ */
+
 package com.adyen.checkout.ui.internal.common.util;
 
 import android.content.Context;
@@ -7,6 +15,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
+import android.widget.CheckedTextView;
 import android.widget.Filter;
 import android.widget.Filterable;
 import android.widget.TextView;
@@ -15,19 +24,14 @@ import com.adyen.checkout.ui.R;
 
 import java.util.List;
 
-/**
- * Copyright (c) 2018 Adyen B.V.
- * <p>
- * This file is open source and available under the MIT license. See the LICENSE file for more info.
- * <p>
- * Created by timon on 20/07/2018.
- */
 public final class Adapter<T> extends BaseAdapter implements Filterable {
     private final boolean mUsePaddingInGetView;
 
     private final TextDelegate<T> mTextDelegate;
 
     private List<T> mItems;
+
+    private ViewCustomizationDelegate mViewCustomizationDelegate;
 
     @NonNull
     public static <T> Adapter<T> forSpinner(@NonNull TextDelegate<T> textDelegate) {
@@ -113,6 +117,10 @@ public final class Adapter<T> extends BaseAdapter implements Filterable {
         notifyDataSetChanged();
     }
 
+    public void setViewCustomizationDelegate(@Nullable ViewCustomizationDelegate viewCustomizationDelegate) {
+        mViewCustomizationDelegate = viewCustomizationDelegate;
+    }
+
     @NonNull
     private View getViewInternal(int position, @Nullable View convertView, @NonNull ViewGroup parent, boolean padView) {
         View view;
@@ -138,6 +146,10 @@ public final class Adapter<T> extends BaseAdapter implements Filterable {
         View view = LayoutInflater.from(context).inflate(R.layout.item_dropdown, parent, false);
         view.setPadding(padding, padding, padding, padding);
 
+        if (mViewCustomizationDelegate != null) {
+            mViewCustomizationDelegate.customizeView((CheckedTextView) view);
+        }
+
         return view;
     }
 
@@ -149,5 +161,9 @@ public final class Adapter<T> extends BaseAdapter implements Filterable {
     public interface TextDelegate<T> {
         @NonNull
         String getText(@NonNull T input);
+    }
+
+    public interface ViewCustomizationDelegate {
+        void customizeView(@NonNull CheckedTextView textView);
     }
 }

@@ -1,3 +1,11 @@
+/*
+ * Copyright (c) 2018 Adyen N.V.
+ *
+ * This file is open source and available under the MIT license. See the LICENSE file for more info.
+ *
+ * Created by timon on 02/05/2018.
+ */
+
 package com.adyen.checkout.ui.internal.card;
 
 import android.content.Context;
@@ -20,23 +28,20 @@ import com.adyen.checkout.ui.internal.common.activity.CheckoutDetailsActivity;
 import com.adyen.checkout.ui.internal.common.util.PayButtonUtil;
 import com.adyen.checkout.util.internal.SimpleTextWatcher;
 
-/**
- * Copyright (c) 2018 Adyen B.V.
- * <p>
- * This file is open source and available under the MIT license. See the LICENSE file for more info.
- * <p>
- * Created by timon on 02/05/2018.
- */
 public class CupSecurePlusDetailsActivity extends CheckoutDetailsActivity {
     private static final String EXTRA_PAYMENT_METHOD = "EXTRA_PAYMENT_METHOD";
 
     private static final String EXTRA_ADDITIONAL_DETAILS = "EXTRA_ADDITIONAL_DETAILS";
+
+    private static final int EXPECTED_SMS_CODE_SIZE = 6;
 
     private TextView mSmsCodePromptTextView;
 
     private EditText mSmsCodeEditText;
 
     private Button mPayButton;
+
+    private TextView mSurchargeTextView;
 
     private PaymentMethod mPaymentMethod;
 
@@ -78,7 +83,6 @@ public class CupSecurePlusDetailsActivity extends CheckoutDetailsActivity {
         });
 
         mPayButton = findViewById(R.id.button_pay);
-        PayButtonUtil.setPayButtonText(this, mPayButton);
         mPayButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -88,11 +92,15 @@ public class CupSecurePlusDetailsActivity extends CheckoutDetailsActivity {
             }
         });
 
+        mSurchargeTextView = findViewById(R.id.textView_surcharge);
+
+        PayButtonUtil.setPayButtonText(this, mPaymentMethod, mPayButton, mSurchargeTextView);
+
         updatePayButton();
     }
 
     private void updatePayButton() {
-        mPayButton.setEnabled(getTrimmedSmsCode().length() == 6);
+        mPayButton.setEnabled(getTrimmedSmsCode().length() == EXPECTED_SMS_CODE_SIZE);
     }
 
     @NonNull

@@ -1,3 +1,11 @@
+/*
+ * Copyright (c) 2018 Adyen N.V.
+ *
+ * This file is open source and available under the MIT license. See the LICENSE file for more info.
+ *
+ * Created by timon on 23/04/2018.
+ */
+
 package com.adyen.checkout.googlepay.internal;
 
 import android.content.Context;
@@ -30,13 +38,6 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-/**
- * Copyright (c) 2018 Adyen B.V.
- * <p>
- * This file is open source and available under the MIT license. See the LICENSE file for more info.
- * <p>
- * Created by timon on 23/04/2018.
- */
 final class GooglePayUtil {
     private static final DecimalFormat DECIMAL_FORMAT = new DecimalFormat("0.##");
 

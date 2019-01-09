@@ -1,3 +1,11 @@
+/*
+ * Copyright (c) 2018 Adyen N.V.
+ *
+ * This file is open source and available under the MIT license. See the LICENSE file for more info.
+ *
+ * Created by timon on 05/04/2018.
+ */
+
 package com.adyen.checkout.ui.internal.common.fragment;
 
 import android.arch.lifecycle.Observer;
@@ -10,6 +18,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.TextView;
 
 import com.adyen.checkout.core.PaymentReference;
 import com.adyen.checkout.ui.R;
@@ -20,19 +29,15 @@ import com.adyen.checkout.ui.internal.common.model.CheckoutViewModel;
 import com.adyen.checkout.ui.internal.common.util.PayButtonUtil;
 import com.adyen.checkout.ui.internal.common.view.holder.TwoLineItemViewHolder;
 
-/**
- * Copyright (c) 2018 Adyen B.V.
- * <p>
- * This file is open source and available under the MIT license. See the LICENSE file for more info.
- * <p>
- * Created by timon on 05/04/2018.
- */
 public class PreselectedCheckoutMethodFragment extends CheckoutSessionFragment {
+    @NonNull
     public static final String TAG = "PRESELECTED_CHECKOUT_METHOD_FRAGMENT";
 
     private TwoLineItemViewHolder mTwoLineItemViewHolder;
 
     private Button mConfirmButton;
+
+    private TextView mSurchargeTextView;
 
     private Button mSelectOtherPaymentMethodButton;
 
@@ -73,7 +78,6 @@ public class PreselectedCheckoutMethodFragment extends CheckoutSessionFragment {
         mTwoLineItemViewHolder = TwoLineItemViewHolder.create(view, R.id.item_two_line);
 
         mConfirmButton = view.findViewById(R.id.button_confirm);
-        PayButtonUtil.setPayButtonText(this, mConfirmButton);
         mConfirmButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -88,6 +92,8 @@ public class PreselectedCheckoutMethodFragment extends CheckoutSessionFragment {
                 }
             }
         });
+
+        mSurchargeTextView = view.findViewById(R.id.textView_surcharge);
 
         mSelectOtherPaymentMethodButton = view.findViewById(R.id.button_selectOtherPaymentMethod);
         mSelectOtherPaymentMethodButton.setOnClickListener(new View.OnClickListener() {
@@ -119,6 +125,7 @@ public class PreselectedCheckoutMethodFragment extends CheckoutSessionFragment {
             mCheckoutMethod.buildLogoRequestArgs(getLogoApi()).into(this, mTwoLineItemViewHolder.getLogoImageView());
             mTwoLineItemViewHolder.setPrimaryText(mCheckoutMethod.getPrimaryText());
             mTwoLineItemViewHolder.setSecondaryText(mCheckoutMethod.getSecondaryText());
+            PayButtonUtil.setPayButtonText(this, mCheckoutMethod.getPaymentMethod(), mConfirmButton, mSurchargeTextView);
         }
     }
 }

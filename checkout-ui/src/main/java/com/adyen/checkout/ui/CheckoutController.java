@@ -1,3 +1,11 @@
+/*
+ * Copyright (c) 2018 Adyen N.V.
+ *
+ * This file is open source and available under the MIT license. See the LICENSE file for more info.
+ *
+ * Created by timon on 24/05/2018.
+ */
+
 package com.adyen.checkout.ui;
 
 import android.app.Activity;
@@ -20,17 +28,11 @@ import com.adyen.checkout.ui.internal.card.CardHandler;
 import com.adyen.checkout.ui.internal.doku.DokuHandler;
 import com.adyen.checkout.ui.internal.giropay.GiroPayHandler;
 import com.adyen.checkout.ui.internal.issuer.IssuerHandler;
+import com.adyen.checkout.ui.internal.openinvoice.OpenInvoiceHandler;
 import com.adyen.checkout.ui.internal.qiwiwallet.QiwiWalletHandler;
 import com.adyen.checkout.ui.internal.sepadirectdebit.SepaDirectDebitHandler;
 import com.adyen.checkout.wechatpay.WeChatPayHandler;
 
-/**
- * Copyright (c) 2018 Adyen B.V.
- * <p>
- * This file is open source and available under the MIT license. See the LICENSE file for more info.
- * <p>
- * Created by timon on 24/05/2018.
- */
 public final class CheckoutController {
     /**
      * Starts the payment.
@@ -105,6 +107,8 @@ public final class CheckoutController {
             return new GooglePayHandler(paymentReference, paymentMethod);
         } else if (IssuerHandler.FACTORY.supports(application, paymentMethod)) {
             return new IssuerHandler(paymentReference, paymentMethod);
+        } else if (OpenInvoiceHandler.FACTORY.supports(application, paymentMethod)) {
+            return new OpenInvoiceHandler(paymentReference, paymentMethod);
         } else if (QiwiWalletHandler.FACTORY.supports(application, paymentMethod)) {
             return new QiwiWalletHandler(paymentReference, paymentMethod);
         } else if (SepaDirectDebitHandler.FACTORY.supports(application, paymentMethod)) {

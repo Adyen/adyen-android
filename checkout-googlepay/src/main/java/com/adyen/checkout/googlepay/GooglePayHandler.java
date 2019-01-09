@@ -1,3 +1,11 @@
+/*
+ * Copyright (c) 2018 Adyen B.V.
+ *
+ * This file is open source and available under the MIT license. See the LICENSE file for more info.
+ *
+ * Created by timon on 11/06/2018.
+ */
+
 package com.adyen.checkout.googlepay;
 
 import android.app.Activity;
@@ -17,14 +25,8 @@ import com.adyen.checkout.util.PaymentMethodTypes;
 
 import java.util.concurrent.Callable;
 
-/**
- * Copyright (c) 2018 Adyen B.V.
- * <p>
- * This file is open source and available under the MIT license. See the LICENSE file for more info.
- * <p>
- * Created by timon on 11/06/2018.
- */
 public final class GooglePayHandler implements PaymentMethodHandler {
+    @NonNull
     public static final Factory FACTORY = new Factory() {
         @Override
         public boolean supports(@NonNull Application application, @NonNull PaymentMethod paymentMethod) {
@@ -49,6 +51,7 @@ public final class GooglePayHandler implements PaymentMethodHandler {
         }
     };
 
+    @NonNull
     public static final String RESULT_ERROR_CODE = "RESULT_ERROR_CODE";
 
     private final PaymentReference mPaymentReference;
@@ -63,7 +66,7 @@ public final class GooglePayHandler implements PaymentMethodHandler {
      * @param paymentSession The {@link PaymentSession}.
      * @param paymentMethod The Google Pay {@link PaymentMethod}.
      * @return A {@link Callable} that can be executed on a background thread to determine whether the shopper has setup Google Pay and is ready to
-     * pay.
+     *         pay.
      */
     @NonNull
     public static Callable<Boolean> getReadyToPayCallable(

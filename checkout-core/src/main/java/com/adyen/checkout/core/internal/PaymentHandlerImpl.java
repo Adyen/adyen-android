@@ -1,3 +1,11 @@
+/*
+ * Copyright (c) 2018 Adyen N.V.
+ *
+ * This file is open source and available under the MIT license. See the LICENSE file for more info.
+ *
+ * Created by timon on 08/05/2018.
+ */
+
 package com.adyen.checkout.core.internal;
 
 import android.app.Activity;
@@ -42,13 +50,6 @@ import java.util.concurrent.Callable;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
-/**
- * Copyright (c) 2018 Adyen B.V.
- * <p>
- * This file is open source and available under the MIT license. See the LICENSE file for more info.
- * <p>
- * Created by timon on 08/05/2018.
- */
 public final class PaymentHandlerImpl implements PaymentHandler {
     private static final Handler MAIN_HANDLER = new Handler(Looper.getMainLooper());
 
@@ -198,6 +199,38 @@ public final class PaymentHandlerImpl implements PaymentHandler {
         initiatePayment(paymentSession, (PaymentMethodImpl) paymentMethod, paymentMethodDetails);
     }
 
+    private void initiatePayment(
+            @NonNull PaymentSessionImpl paymentSession,
+            @NonNull final PaymentMethodImpl paymentMethod,
+            @Nullable PaymentMethodDetails paymentMethodDetails
+    ) {
+        String paymentData = paymentSession.getPaymentData();
+        String paymentMethodData = paymentMethod.getPaymentMethodData();
+        PaymentInitiation paymentInitiation = new PaymentInitiation.Builder(paymentData, paymentMethodData)
+                .setPaymentMethodDetails(paymentMethodDetails)
+                .build();
+
+        final Callable<PaymentInitiationResponse> callable = CheckoutApi
+                .getInstance(mApplication)
+                .initiatePayment(paymentSession, paymentInitiation);
+
+        mExecutorService.submit(new Runnable() {
+            @Override
+            public void run() {
+                handleRequestStarted();
+
+                try {
+                    PaymentInitiationResponse response = callable.call();
+                    handlePaymentInitiationResponse(paymentMethod, response);
+                } catch (Exception e) {
+                    handleException(e, "An error occurred while initiating the payment.");
+                } finally {
+                    handleRequestFinished();
+                }
+            }
+        });
+    }
+
     @Override
     public void submitAdditionalDetails(@NonNull PaymentMethodDetails paymentMethodDetails) {
         PaymentSessionImpl paymentSession = mPaymentSessionEntity.paymentSession;
@@ -278,38 +311,6 @@ public final class PaymentHandlerImpl implements PaymentHandler {
                     .Builder("Cannot delete payment method that is not a one click payment method.", null).build();
             handleCheckoutException(checkoutException);
         }
-    }
-
-    private void initiatePayment(
-            @NonNull PaymentSessionImpl paymentSession,
-            @NonNull final PaymentMethodImpl paymentMethod,
-            @Nullable PaymentMethodDetails paymentMethodDetails
-    ) {
-        String paymentData = paymentSession.getPaymentData();
-        String paymentMethodData = paymentMethod.getPaymentMethodData();
-        PaymentInitiation paymentInitiation = new PaymentInitiation.Builder(paymentData, paymentMethodData)
-                .setPaymentMethodDetails(paymentMethodDetails)
-                .build();
-
-        final Callable<PaymentInitiationResponse> callable = CheckoutApi
-                .getInstance(mApplication)
-                .initiatePayment(paymentSession, paymentInitiation);
-
-        mExecutorService.submit(new Runnable() {
-            @Override
-            public void run() {
-                handleRequestStarted();
-
-                try {
-                    PaymentInitiationResponse response = callable.call();
-                    handlePaymentInitiationResponse(paymentMethod, response);
-                } catch (Exception e) {
-                    handleException(e, "An error occurred while initiating the payment.");
-                } finally {
-                    handleRequestFinished();
-                }
-            }
-        });
     }
 
     private void deletePaymentMethod(@NonNull final PaymentSessionImpl paymentSession, @NonNull final PaymentMethodImpl paymentMethod) {

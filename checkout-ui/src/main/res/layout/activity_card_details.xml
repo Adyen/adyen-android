@@ -67,10 +67,10 @@
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
-                android:paddingEnd="@dimen/standard_half_margin"
-                android:paddingRight="@dimen/standard_half_margin"
+                android:layout_marginEnd="@dimen/standard_half_margin"
+                android:layout_marginRight="@dimen/standard_half_margin"
                 app:customTextInputLayout_caption="@string/checkout_card_expiry_date_caption"
-                app:customTextInputLayout_hint="@string/checkout_card_expiry_date_hint" >
+                app:customTextInputLayout_hint="@string/checkout_card_expiry_date_hint">
 
                 <android.support.design.widget.TextInputEditText
                     android:id="@+id/editText_expiryDate"
@@ -88,8 +88,8 @@
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
-                android:paddingStart="@dimen/standard_half_margin"
-                android:paddingLeft="@dimen/standard_half_margin"
+                android:layout_marginLeft="@dimen/standard_half_margin"
+                android:layout_marginStart="@dimen/standard_half_margin"
                 app:customTextInputLayout_caption="@string/checkout_card_security_code_hint">
 
                 <android.support.design.widget.TextInputEditText
@@ -126,13 +126,12 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="@dimen/standard_margin"
-            android:orientation="horizontal"
-            android:paddingStart="4dp"
-            android:paddingLeft="4dp">
+            android:orientation="horizontal">
 
             <TextView
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
+                android:padding="@dimen/standard_quarter_margin"
                 android:layout_weight="1"
                 android:text="@string/checkout_card_installments" />
 
@@ -152,12 +151,13 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="@dimen/standard_margin"
-            android:paddingStart="4dp"
-            android:paddingLeft="4dp"
+            android:paddingStart="@dimen/standard_quarter_margin"
+            android:paddingLeft="@dimen/standard_quarter_margin"
             android:checked="false"
             android:text="@string/checkout_store_details"
             android:nextFocusDown="@+id/button_pay"
-            android:nextFocusForward="@+id/button_pay" />
+            android:nextFocusForward="@+id/button_pay"
+            tools:ignore="RtlSymmetry"/>
 
         <Button
             android:id="@+id/button_pay"
@@ -165,6 +165,15 @@
             android:layout_height="wrap_content"
             android:layout_marginTop="@dimen/standard_margin"
             tools:text="@string/checkout_pay_amount_format" />
+
+        <TextView
+            android:id="@+id/textView_surcharge"
+            style="@style/Checkout.TextAppearance.Tertiary"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_horizontal"
+            android:textIsSelectable="false"
+            tools:text="@string/checkout_surcharge_total_amount_format" />
 
     </LinearLayout>
 

@@ -1,3 +1,11 @@
+/*
+ * Copyright (c) 2018 Adyen N.V.
+ *
+ * This file is open source and available under the MIT license. See the LICENSE file for more info.
+ *
+ * Created by timon on 13/07/2018.
+ */
+
 package com.adyen.checkout.core.internal;
 
 import android.app.Activity;
@@ -8,13 +16,6 @@ import com.adyen.checkout.core.internal.lifecycle.LifecycleFragment;
 import java.util.ArrayList;
 import java.util.List;
 
-/**
- * Copyright (c) 2018 Adyen B.V.
- * <p>
- * This file is open source and available under the MIT license. See the LICENSE file for more info.
- * <p>
- * Created by timon on 13/07/2018.
- */
 abstract class BaseManager<H, D> {
     private final List<H> mHandlers = new ArrayList<>();
 

@@ -1,3 +1,11 @@
+/*
+ * Copyright (c) 2017 Adyen N.V.
+ *
+ * This file is open source and available under the MIT license. See the LICENSE file for more info.
+ *
+ * Created by timon on 03/10/2017.
+ */
+
 package com.adyen.checkout.ui.internal.sepadirectdebit;
 
 import android.content.Context;
@@ -23,15 +31,12 @@ import java.util.Set;
 import java.util.TreeMap;
 import java.util.TreeSet;
 
-/**
- * Copyright (c) 2017 Adyen B.V.
- * <p>
- * This file is open source and available under the MIT license. See the LICENSE file for more info.
- * <p>
- * Created by timon on 03/10/2017.
- */
 public class GermanyAdapter extends CountryAdapter {
     private static final String TAG = GermanyAdapter.class.getSimpleName();
+
+    private static final int MIN_BANK_IDENTIFIER_SIZE = 2;
+    private static final int MAX_BANK_IDENTIFIER_SIZE = 8;
+    private static final int EXPECTED_NUMBER_OF_ENTRIES = 3;
 
     private TreeMap<String, List<String>> mBankCodeNameMapping;
 
@@ -45,13 +50,13 @@ public class GermanyAdapter extends CountryAdapter {
             loadBankCodes(editText.getContext());
         }
 
-        if (normalizedIban.length() > 4) {
-            String enteredBankCode = normalizedIban.substring(4);
+        if (normalizedIban.length() > COUNTRY_BLOCK_LENGTH) {
+            String enteredBankCode = normalizedIban.substring(COUNTRY_BLOCK_LENGTH);
             int length = enteredBankCode.length();
 
-            if (length > 2 && length < 8) {
-                String upperBound;
+            if (length > MIN_BANK_IDENTIFIER_SIZE && length < MAX_BANK_IDENTIFIER_SIZE) {
 
+                String upperBound;
                 try {
                     upperBound = String.valueOf(Integer.parseInt(enteredBankCode) + 1);
                 } catch (NumberFormatException e) {
@@ -251,7 +256,7 @@ public class GermanyAdapter extends CountryAdapter {
 
             String[] entries = line.split(";");
 
-            if (entries.length != 3) {
+            if (entries.length != EXPECTED_NUMBER_OF_ENTRIES) {
                 return null;
             }
 

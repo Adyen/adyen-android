@@ -1,3 +1,11 @@
+/*
+ * Copyright (c) 2017 Adyen N.V.
+ *
+ * This file is open source and available under the MIT license. See the LICENSE file for more info.
+ *
+ * Created by ran on 26/04/2018.
+ */
+
 package com.adyen.checkout.wechatpay.internal;
 
 import android.app.Activity;
@@ -22,13 +30,6 @@ import com.adyen.checkout.util.PaymentMethodTypes;
 import com.adyen.checkout.wechatpay.WeChatPayHandler;
 import com.tencent.mm.opensdk.modelbase.BaseResp;
 
-/**
- * Copyright (c) 2017 Adyen B.V.
- * <p>
- * This file is open source and available under the MIT license. See the LICENSE file for more info.
- * <p>
- * Created by ran on 26/04/2018.
- */
 public class WeChatPayDetailsActivity extends Activity implements WeChatPayListener {
     private static final String EXTRA_PAYMENT_REFERENCE = "EXTRA_PAYMENT_REFERENCE";
 
@@ -114,7 +115,7 @@ public class WeChatPayDetailsActivity extends Activity implements WeChatPayListe
     }
 
     @Override
-    protected void onNewIntent(Intent intent) {
+    protected void onNewIntent(@NonNull Intent intent) {
         super.onNewIntent(intent);
 
         mWeChatPayUtil.handleIntent(intent);

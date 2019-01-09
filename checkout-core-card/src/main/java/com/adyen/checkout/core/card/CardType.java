@@ -1,3 +1,11 @@
+/*
+ * Copyright (c) 2018 Adyen N.V.
+ *
+ * This file is open source and available under the MIT license. See the LICENSE file for more info.
+ *
+ * Created by timon on 07/02/2018.
+ */
+
 package com.adyen.checkout.core.card;
 
 import android.support.annotation.NonNull;
@@ -14,13 +22,6 @@ import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-/**
- * Copyright (c) 2018 Adyen B.V.
- * <p>
- * This file is open source and available under the MIT license. See the LICENSE file for more info.
- * <p>
- * Created by timon on 07/02/2018.
- */
 public enum CardType implements TxVariantProvider {
     // NAME("txVariant", "^(first.two)(third)d*$"))
     ACCEL("accel", Pattern.compile("^(19|23|4\\d|5\\d|6[02348]|81)(\\d)\\d*$")),

@@ -5,6 +5,10 @@
         <attr name="customTextInputLayout_hint" format="string" />
     </declare-styleable>
 
+    <declare-styleable name="LabeledInputLayout">
+        <attr name="LabeledInputLayout_caption" format="string" />
+    </declare-styleable>
+
     <declare-styleable name="CodeView">
         <attr name="codeView_length" format="integer" />
     </declare-styleable>

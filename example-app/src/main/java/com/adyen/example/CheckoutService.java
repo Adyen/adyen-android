@@ -1,3 +1,11 @@
+/*
+ * Copyright (c) 2018 Adyen N.V.
+ *
+ * This file is open source and available under the MIT license. See the LICENSE file for more info.
+ *
+ * Created by timon on 30/01/2018.
+ */
+
 package com.adyen.example;
 
 import android.os.Build;
@@ -28,13 +36,6 @@ import retrofit2.http.Body;
 import retrofit2.http.Headers;
 import retrofit2.http.POST;
 
-/**
- * Copyright (c) 2018 Adyen B.V.
- * <p>
- * This file is open source and available under the MIT license. See the LICENSE file for more info.
- * <p>
- * Created by timon on 30/01/2018.
- */
 public interface CheckoutService {
     CheckoutService INSTANCE = new Retrofit.Builder()
             .baseUrl(BuildConfig.MERCHANT_SERVER_URL)
@@ -83,6 +84,10 @@ public interface CheckoutService {
             }
 
             return client;
+        }
+
+        private Util() {
+            throw new IllegalStateException("No instances.");
         }
     }
 }

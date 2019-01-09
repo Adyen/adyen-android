@@ -1,19 +1,24 @@
+/*
+ * Copyright (c) 2017 Adyen N.V.
+ *
+ * This file is open source and available under the MIT license. See the LICENSE file for more info.
+ *
+ * Created by timon on 16/11/2017.
+ */
+
 package com.adyen.checkout.core.model;
 
 import android.os.Parcel;
 import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
+
+import com.adyen.checkout.base.internal.HashUtils;
 
 import org.json.JSONException;
 import org.json.JSONObject;
 
-/**
- * Copyright (c) 2017 Adyen B.V.
- * <p>
- * This file is open source and available under the MIT license. See the LICENSE file for more info.
- * <p>
- * Created by timon on 16/11/2017.
- */
 public final class QiwiWalletDetails extends PaymentMethodDetails {
+    @NonNull
     public static final Creator<QiwiWalletDetails> CREATOR = new Creator<QiwiWalletDetails>() {
         @Override
         public QiwiWalletDetails createFromParcel(Parcel source) {
@@ -26,8 +31,10 @@ public final class QiwiWalletDetails extends PaymentMethodDetails {
         }
     };
 
+    @NonNull
     public static final String KEY_TELEPHONE_NUMBER_PREFIX = "qiwiwallet.telephoneNumberPrefix";
 
+    @NonNull
     public static final String KEY_TELEPHONE_NUMBER = "qiwiwallet.telephoneNumber";
 
     private String mTelephoneNumberPrefix;
@@ -46,7 +53,7 @@ public final class QiwiWalletDetails extends PaymentMethodDetails {
     }
 
     @Override
-    public void writeToParcel(Parcel dest, int flags) {
+    public void writeToParcel(@NonNull Parcel dest, int flags) {
         dest.writeString(mTelephoneNumberPrefix);
         dest.writeString(mTelephoneNumber);
     }
@@ -62,7 +69,7 @@ public final class QiwiWalletDetails extends PaymentMethodDetails {
     }
 
     @Override
-    public boolean equals(Object o) {
+    public boolean equals(@Nullable Object o) {
         if (this == o) {
             return true;
         }
@@ -81,7 +88,7 @@ public final class QiwiWalletDetails extends PaymentMethodDetails {
     @Override
     public int hashCode() {
         int result = mTelephoneNumberPrefix != null ? mTelephoneNumberPrefix.hashCode() : 0;
-        result = 31 * result + (mTelephoneNumber != null ? mTelephoneNumber.hashCode() : 0);
+        result = HashUtils.MULTIPLIER * result + (mTelephoneNumber != null ? mTelephoneNumber.hashCode() : 0);
         return result;
     }
 

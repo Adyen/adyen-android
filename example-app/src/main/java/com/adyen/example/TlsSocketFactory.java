@@ -1,22 +1,22 @@
+/*
+ * Copyright (c) 2018 Adyen N.V.
+ *
+ * This file is open source and available under the MIT license. See the LICENSE file for more info.
+ *
+ * Created by ran on 20/04/2018.
+ */
+
 package com.adyen.example;
 
 import java.io.IOException;
 import java.net.InetAddress;
 import java.net.Socket;
-import java.net.UnknownHostException;
 
 import javax.net.ssl.SSLSocket;
 import javax.net.ssl.SSLSocketFactory;
 
 /**
- * Copyright (c) 2018 Adyen B.V.
- * <p>
- * This file is open source and available under the MIT license. See the LICENSE file for more info.
- * For some reason, android supports TLS v1.2 from API 16, but enables it by
- * default only from API 20.
- * <p>
- * <p>
- * Created by ran on 20/04/2018.
+ * For some reason, android supports TLS v1.2 from API 16, but enables it by default only from API 20.
  */
 public class TlsSocketFactory extends SSLSocketFactory {
     public static final String TLS_V12 = "TLSv1.2";
@@ -46,12 +46,12 @@ public class TlsSocketFactory extends SSLSocketFactory {
     }
 
     @Override
-    public Socket createSocket(String host, int port) throws IOException, UnknownHostException {
+    public Socket createSocket(String host, int port) throws IOException {
         return patch(delegate.createSocket(host, port));
     }
 
     @Override
-    public Socket createSocket(String host, int port, InetAddress localHost, int localPort) throws IOException, UnknownHostException {
+    public Socket createSocket(String host, int port, InetAddress localHost, int localPort) throws IOException {
         return patch(delegate.createSocket(host, port, localHost, localPort));
     }
 

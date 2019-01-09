@@ -1,14 +1,15 @@
+/*
+ * Copyright (c) 2018 Adyen N.V.
+ *
+ * This file is open source and available under the MIT license. See the LICENSE file for more info.
+ *
+ * Created by timon on 31/01/2018.
+ */
+
 package com.adyen.checkout.util.sepadirectdebit;
 
 import android.support.annotation.Nullable;
 
-/**
- * Copyright (c) 2018 Adyen B.V.
- * <p>
- * This file is open source and available under the MIT license. See the LICENSE file for more info.
- * <p>
- * Created by timon on 31/01/2018.
- */
 public final class HolderName {
     private static final String REGEX_AT_LEAST_PARTIAL = "[\\w0-9/?!:().,'+\\- ]*";
 

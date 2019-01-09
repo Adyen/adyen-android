@@ -1,3 +1,11 @@
+/*
+ * Copyright (c) 2018 Adyen N.V.
+ *
+ * This file is open source and available under the MIT license. See the LICENSE file for more info.
+ *
+ * Created by timon on 17/04/2018.
+ */
+
 package com.adyen.checkout.ui.internal.common.model;
 
 import android.support.annotation.NonNull;
@@ -7,13 +15,6 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
-/**
- * Copyright (c) 2018 Adyen B.V.
- * <p>
- * This file is open source and available under the MIT license. See the LICENSE file for more info.
- * <p>
- * Created by timon on 17/04/2018.
- */
 public final class CheckoutMethodsModel {
     private final int mOneClickCheckoutMethodCount;
 

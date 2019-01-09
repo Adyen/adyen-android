@@ -1,3 +1,11 @@
+/*
+ * Copyright (c) 2017 Adyen N.V.
+ *
+ * This file is open source and available under the MIT license. See the LICENSE file for more info.
+ *
+ * Created by timon on 11/08/2017.
+ */
+
 package com.adyen.checkout.ui.internal.common.fragment;
 
 import android.app.Dialog;
@@ -24,13 +32,6 @@ import com.adyen.checkout.ui.internal.common.util.ThemeUtil;
 
 import java.lang.ref.WeakReference;
 
-/**
- * Copyright (c) 2017 Adyen B.V.
- * <p>
- * This file is open source and available under the MIT license. See the LICENSE file for more info.
- * <p>
- * Created by timon on 11/08/2017.
- */
 public class ProgressDialogFragment extends AppCompatDialogFragment {
     private static final String TAG = ProgressDialogFragment.class.getSimpleName();
 
@@ -46,14 +47,6 @@ public class ProgressDialogFragment extends AppCompatDialogFragment {
 
     public static void show(@NonNull Fragment fragment) {
         show(fragment.getChildFragmentManager());
-    }
-
-    public static void hide(@NonNull AppCompatActivity activity) {
-        hide(activity.getSupportFragmentManager());
-    }
-
-    public static void hide(@NonNull Fragment fragment) {
-        hide(fragment.getChildFragmentManager());
     }
 
     private static void show(@NonNull FragmentManager fragmentManager) {
@@ -73,6 +66,14 @@ public class ProgressDialogFragment extends AppCompatDialogFragment {
                     // ProgressDialogFragment doesn't have state.
                     .commitAllowingStateLoss();
         }
+    }
+
+    public static void hide(@NonNull AppCompatActivity activity) {
+        hide(activity.getSupportFragmentManager());
+    }
+
+    public static void hide(@NonNull Fragment fragment) {
+        hide(fragment.getChildFragmentManager());
     }
 
     private static void hide(@NonNull FragmentManager fragmentManager) {
@@ -176,7 +177,7 @@ public class ProgressDialogFragment extends AppCompatDialogFragment {
 
     @NonNull
     @Override
-    public Dialog onCreateDialog(Bundle savedInstanceState) {
+    public Dialog onCreateDialog(@Nullable Bundle savedInstanceState) {
         Dialog dialog = super.onCreateDialog(savedInstanceState);
         dialog.requestWindowFeature(Window.FEATURE_NO_TITLE | View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN);
 

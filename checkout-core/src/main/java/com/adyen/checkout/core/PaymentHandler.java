@@ -1,3 +1,11 @@
+/*
+ * Copyright (c) 2018 Adyen N.V.
+ *
+ * This file is open source and available under the MIT license. See the LICENSE file for more info.
+ *
+ * Created by timon on 15/05/2018.
+ */
+
 package com.adyen.checkout.core;
 
 import android.app.Activity;
@@ -15,12 +23,6 @@ import com.adyen.checkout.core.model.PaymentSession;
 
 /**
  * The {@link PaymentHandler} interface provides means to perform payment related tasks.
- * <p>
- * Copyright (c) 2018 Adyen B.V.
- * <p>
- * This file is open source and available under the MIT license. See the LICENSE file for more info.
- * <p>
- * Created by timon on 15/05/2018.
  */
 public interface PaymentHandler {
     /**

@@ -1,3 +1,11 @@
+/*
+ * Copyright (c) 2017 Adyen N.V.
+ *
+ * This file is open source and available under the MIT license. See the LICENSE file for more info.
+ *
+ * Created by timon on 16/08/2017.
+ */
+
 package com.adyen.checkout.core.model;
 
 import android.os.Parcel;
@@ -5,20 +13,16 @@ import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 
 import com.adyen.checkout.base.internal.Parcelables;
+import com.adyen.checkout.base.internal.HashUtils;
 
 import org.json.JSONException;
 import org.json.JSONObject;
 
 /**
  * {@link PaymentMethodDetails} for credit card payments. This class contains only tokenized and encrypted card data.
- * <p>
- * Copyright (c) 2017 Adyen B.V.
- * <p>
- * This file is open source and available under the MIT license. See the LICENSE file for more info.
- * <p>
- * Created by timon on 16/08/2017.
  */
 public final class CardDetails extends PaymentMethodDetails {
+    @NonNull
     public static final Creator<CardDetails> CREATOR = new Creator<CardDetails>() {
         @Override
         public CardDetails createFromParcel(Parcel parcel) {
@@ -31,22 +35,31 @@ public final class CardDetails extends PaymentMethodDetails {
         }
     };
 
+    @NonNull
     public static final String KEY_HOLDER_NAME = "holderName";
 
+    @NonNull
     public static final String KEY_ENCRYPTED_CARD_NUMBER = "encryptedCardNumber";
 
+    @NonNull
     public static final String KEY_ENCRYPTED_EXPIRY_MONTH = "encryptedExpiryMonth";
 
+    @NonNull
     public static final String KEY_ENCRYPTED_EXPIRY_YEAR = "encryptedExpiryYear";
 
+    @NonNull
     public static final String KEY_ENCRYPTED_SECURITY_CODE = "encryptedSecurityCode";
 
+    @NonNull
     public static final String KEY_PHONE_NUMBER = "telephoneNumber";
 
+    @NonNull
     public static final String KEY_STORE_DETAILS = "storeDetails";
 
+    @NonNull
     public static final String KEY_INSTALLMENTS = "installments";
 
+    @NonNull
     public static final String KEY_BILLING_ADDRESS = "billingAddress";
 
     private String mHolderName;
@@ -86,7 +99,7 @@ public final class CardDetails extends PaymentMethodDetails {
     }
 
     @Override
-    public void writeToParcel(Parcel parcel, int flags) {
+    public void writeToParcel(@NonNull Parcel parcel, int flags) {
         parcel.writeString(mHolderName);
         parcel.writeString(mEncryptedCardNumber);
         parcel.writeString(mEncryptedExpiryMonth);
@@ -116,7 +129,7 @@ public final class CardDetails extends PaymentMethodDetails {
     }
 
     @Override
-    public boolean equals(Object o) {
+    public boolean equals(@Nullable Object o) {
         if (this == o) {
             return true;
         }
@@ -156,14 +169,14 @@ public final class CardDetails extends PaymentMethodDetails {
     @Override
     public int hashCode() {
         int result = mHolderName != null ? mHolderName.hashCode() : 0;
-        result = 31 * result + (mEncryptedCardNumber != null ? mEncryptedCardNumber.hashCode() : 0);
-        result = 31 * result + (mEncryptedExpiryMonth != null ? mEncryptedExpiryMonth.hashCode() : 0);
-        result = 31 * result + (mEncryptedExpiryYear != null ? mEncryptedExpiryYear.hashCode() : 0);
-        result = 31 * result + (mEncryptedSecurityCode != null ? mEncryptedSecurityCode.hashCode() : 0);
-        result = 31 * result + (mPhoneNumber != null ? mPhoneNumber.hashCode() : 0);
-        result = 31 * result + (mStoreDetails != null ? mStoreDetails.hashCode() : 0);
-        result = 31 * result + (mInstallments != null ? mInstallments.hashCode() : 0);
-        result = 31 * result + (mBillingAddress != null ? mBillingAddress.hashCode() : 0);
+        result = HashUtils.MULTIPLIER * result + (mEncryptedCardNumber != null ? mEncryptedCardNumber.hashCode() : 0);
+        result = HashUtils.MULTIPLIER * result + (mEncryptedExpiryMonth != null ? mEncryptedExpiryMonth.hashCode() : 0);
+        result = HashUtils.MULTIPLIER * result + (mEncryptedExpiryYear != null ? mEncryptedExpiryYear.hashCode() : 0);
+        result = HashUtils.MULTIPLIER * result + (mEncryptedSecurityCode != null ? mEncryptedSecurityCode.hashCode() : 0);
+        result = HashUtils.MULTIPLIER * result + (mPhoneNumber != null ? mPhoneNumber.hashCode() : 0);
+        result = HashUtils.MULTIPLIER * result + (mStoreDetails != null ? mStoreDetails.hashCode() : 0);
+        result = HashUtils.MULTIPLIER * result + (mInstallments != null ? mInstallments.hashCode() : 0);
+        result = HashUtils.MULTIPLIER * result + (mBillingAddress != null ? mBillingAddress.hashCode() : 0);
         return result;
     }
 

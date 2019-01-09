@@ -1,3 +1,11 @@
+/*
+ * Copyright (c) 2018 Adyen N.V.
+ *
+ * This file is open source and available under the MIT license. See the LICENSE file for more info.
+ *
+ * Created by timon on 17/04/2018.
+ */
+
 package com.adyen.checkout.ui.internal.common.model;
 
 import android.app.Application;
@@ -11,8 +19,9 @@ import com.adyen.checkout.ui.internal.card.CardCheckoutMethodFactory;
 import com.adyen.checkout.ui.internal.def.DefaultCheckoutMethodFactory;
 import com.adyen.checkout.ui.internal.doku.DokuCheckoutMethodFactory;
 import com.adyen.checkout.ui.internal.giropay.GiroPayCheckoutMethodFactory;
-import com.adyen.checkout.ui.internal.googlewallet.GooglePayCheckoutMethodFactory;
+import com.adyen.checkout.ui.internal.googlepay.GooglePayCheckoutMethodFactory;
 import com.adyen.checkout.ui.internal.issuer.IssuerCheckoutMethodFactory;
+import com.adyen.checkout.ui.internal.openinvoice.OpenInvoiceCheckoutMethodFactory;
 import com.adyen.checkout.ui.internal.paypal.PayPalCheckoutMethodFactory;
 import com.adyen.checkout.ui.internal.qiwiwallet.QiwiWalletCheckoutMethodFactory;
 import com.adyen.checkout.ui.internal.sepadirectdebit.SddCheckoutMethodFactory;
@@ -24,13 +33,6 @@ import java.util.Comparator;
 import java.util.List;
 import java.util.concurrent.Callable;
 
-/**
- * Copyright (c) 2018 Adyen B.V.
- * <p>
- * This file is open source and available under the MIT license. See the LICENSE file for more info.
- * <p>
- * Created by timon on 17/04/2018.
- */
 public class UpdateCheckoutMethodsCallable implements Callable<CheckoutMethodsModel> {
     private static final String TAG = UpdateCheckoutMethodsCallable.class.getSimpleName();
 
@@ -53,6 +55,7 @@ public class UpdateCheckoutMethodsCallable implements Callable<CheckoutMethodsMo
         mIncludePreselectedCheckoutMethod = includePreselectedCheckoutMethod;
     }
 
+    @Nullable
     @Override
     public CheckoutMethodsModel call() {
         // TODO: 17/04/2018 Execute multi-threaded?
@@ -112,6 +115,7 @@ public class UpdateCheckoutMethodsCallable implements Callable<CheckoutMethodsMo
         checkoutMethodFactories.add(new GiroPayCheckoutMethodFactory(application));
         checkoutMethodFactories.add(new GooglePayCheckoutMethodFactory(application));
         checkoutMethodFactories.add(new IssuerCheckoutMethodFactory(application));
+        checkoutMethodFactories.add(new OpenInvoiceCheckoutMethodFactory(application));
         checkoutMethodFactories.add(new PayPalCheckoutMethodFactory(application));
         checkoutMethodFactories.add(new QiwiWalletCheckoutMethodFactory(application));
         checkoutMethodFactories.add(new SddCheckoutMethodFactory(application));

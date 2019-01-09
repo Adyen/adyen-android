@@ -1,3 +1,11 @@
+/*
+ * Copyright (c) 2017 Adyen N.V.
+ *
+ * This file is open source and available under the MIT license. See the LICENSE file for more info.
+ *
+ * Created by timon on 11/10/2017.
+ */
+
 package com.adyen.checkout.util.sepadirectdebit;
 
 import android.support.annotation.NonNull;
@@ -8,17 +16,12 @@ import android.widget.EditText;
 
 import com.adyen.checkout.util.internal.SimpleTextWatcher;
 
-/**
- * Copyright (c) 2017 Adyen B.V.
- * <p>
- * This file is open source and available under the MIT license. See the LICENSE file for more info.
- * <p>
- * Created by timon on 11/10/2017.
- */
 public final class AsYouTypeIbanFormatter extends SimpleTextWatcher {
     private static final char SPACING_CHAR = ' ';
 
     private static final String SPACING_STRING = String.valueOf(SPACING_CHAR);
+
+    private static final int BLOCK_SIZE_WITH_SPACE = Iban.IBAN_BLOCK_SIZE + SPACING_STRING.length();
 
     private final EditText mEditText;
 
@@ -39,14 +42,14 @@ public final class AsYouTypeIbanFormatter extends SimpleTextWatcher {
     }
 
     @Override
-    public void onTextChanged(CharSequence s, int start, int before, int count) {
+    public void onTextChanged(@NonNull CharSequence s, int start, int before, int count) {
         if (!mTransforming) {
             mDeleted = count == 0;
         }
     }
 
     @Override
-    public void afterTextChanged(Editable s) {
+    public void afterTextChanged(@NonNull Editable s) {
         if (!mTransforming) {
             mTransforming = true;
 
@@ -91,7 +94,7 @@ public final class AsYouTypeIbanFormatter extends SimpleTextWatcher {
     }
 
     private boolean isSpacingIndex(int index) {
-        return (index + 1) % 5 == 0;
+        return (index + 1) % BLOCK_SIZE_WITH_SPACE == 0;
     }
 
     private boolean isValidCharacterClass(char c) {

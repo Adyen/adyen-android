@@ -1,6 +1,15 @@
+/*
+ * Copyright (c) 2017 Adyen N.V.
+ *
+ * This file is open source and available under the MIT license. See the LICENSE file for more info.
+ *
+ * Created by timon on 28/11/2017.
+ */
+
 package com.adyen.checkout.core.internal.model;
 
 import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
 
 import com.adyen.checkout.base.internal.JsonObject;
 
@@ -10,14 +19,8 @@ import org.json.JSONObject;
 import java.util.ArrayList;
 import java.util.List;
 
-/**
- * Copyright (c) 2017 Adyen B.V.
- * <p>
- * This file is open source and available under the MIT license. See the LICENSE file for more info.
- * <p>
- * Created by timon on 28/11/2017.
- */
 public final class GiroPayIssuersResponse extends JsonObject {
+    @NonNull
     public static final Creator<GiroPayIssuersResponse> CREATOR = new DefaultCreator<>(GiroPayIssuersResponse.class);
 
     private final List<GiroPayIssuerImpl> mGiroPayIssuers;
@@ -29,7 +32,7 @@ public final class GiroPayIssuersResponse extends JsonObject {
     }
 
     @Override
-    public boolean equals(Object o) {
+    public boolean equals(@Nullable Object o) {
         if (this == o) {
             return true;
         }

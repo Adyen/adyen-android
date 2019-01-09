@@ -1,18 +1,22 @@
+/*
+ * Copyright (c) 2017 Adyen N.V.
+ *
+ * This file is open source and available under the MIT license. See the LICENSE file for more info.
+ *
+ * Created by timon on 07/08/2017.
+ */
+
 package com.adyen.example;
 
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
-import android.support.v4.app.Fragment;
-import android.support.v4.app.FragmentManager;
-import android.support.v4.app.FragmentPagerAdapter;
 import android.support.v4.view.ViewPager;
 import android.support.v4.widget.ContentLoadingProgressBar;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.View;
-import android.view.ViewGroup;
 import android.view.WindowManager;
 import android.widget.Button;
 import android.widget.Toast;
@@ -39,25 +43,10 @@ import io.reactivex.disposables.Disposable;
 import io.reactivex.schedulers.Schedulers;
 import okhttp3.ResponseBody;
 
-/**
- * Copyright (c) 2017 Adyen B.V.
- * <p>
- * This file is open source and available under the MIT license. See the LICENSE file for more info.
- * <p>
- * Created by timon on 07/08/2017.
- */
 public class MainActivity extends AppCompatActivity implements View.OnClickListener {
     private static final String TAG = MainActivity.class.getSimpleName();
 
     private static final int REQUEST_CODE_CHECKOUT = 1;
-
-    private static final int FRAGMENT_POSITION_SHOPPING_CART = 0;
-
-    private static final int FRAGMENT_POSITION_CONFIGURATION = FRAGMENT_POSITION_SHOPPING_CART + 1;
-
-    private static final int FRAGMENT_COUNT = FRAGMENT_POSITION_CONFIGURATION + 1;
-
-    private ConfigurationFragment mConfigurationFragment;
 
     private ViewPager mViewPager;
 
@@ -66,6 +55,10 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     private ContentLoadingProgressBar mProgressBar;
 
     private CompositeDisposable mCompositeDisposable = new CompositeDisposable();
+
+    private TabsAdapter mTabsAdapter;
+
+    private ViewPager.SimpleOnPageChangeListener mPageChangeListener;
 
     @Override
     public void onClick(View view) {
@@ -90,19 +83,23 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
         setContentView(R.layout.activity_main);
 
-        mViewPager = findViewById(R.id.viewPager_tabs);
-        mViewPager.setAdapter(new TabsAdapter(getSupportFragmentManager()));
-        mViewPager.addOnPageChangeListener(new ViewPager.SimpleOnPageChangeListener() {
+        mTabsAdapter = new TabsAdapter(getSupportFragmentManager());
+
+        mPageChangeListener = new ViewPager.SimpleOnPageChangeListener() {
             @Override
             public void onPageSelected(int position) {
-                if (position == FRAGMENT_POSITION_SHOPPING_CART) {
+                if (position == TabsAdapter.FRAGMENT_POSITION_SHOPPING_CART) {
                     KeyboardUtil.hide(mViewPager);
                     getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_ADJUST_NOTHING);
-                } else if (position == FRAGMENT_POSITION_CONFIGURATION) {
+                } else if (position == TabsAdapter.FRAGMENT_POSITION_CONFIGURATION) {
                     getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_ADJUST_RESIZE);
                 }
             }
-        });
+        };
+
+        mViewPager = findViewById(R.id.viewPager_tabs);
+        mViewPager.setAdapter(mTabsAdapter);
+        mViewPager.addOnPageChangeListener(mPageChangeListener);
         mProgressBar = findViewById(R.id.progressBar);
         mCheckoutButton = findViewById(R.id.button_checkout);
         mCheckoutButton.setOnClickListener(this);
@@ -141,20 +138,22 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         super.onDestroy();
 
         mCompositeDisposable.dispose();
+        mViewPager.removeOnPageChangeListener(mPageChangeListener);
     }
 
     private void retrievePaymentSession(@NonNull CheckoutSetupParameters checkoutSetupParameters) {
-        PaymentSetupRequest paymentSetupRequest = mConfigurationFragment != null
-                ? mConfigurationFragment.getPaymentSetupRequest(checkoutSetupParameters)
+        ConfigurationFragment configurationFragment = mTabsAdapter.getConfigurationFragment();
+        PaymentSetupRequest paymentSetupRequest = configurationFragment != null
+                ? configurationFragment.getPaymentSetupRequest(checkoutSetupParameters)
                 : null;
 
         if (paymentSetupRequest == null) {
-            mViewPager.setCurrentItem(FRAGMENT_POSITION_CONFIGURATION);
+            mViewPager.setCurrentItem(TabsAdapter.FRAGMENT_POSITION_CONFIGURATION);
         } else {
             mCheckoutButton.setClickable(false);
             mProgressBar.show();
 
-            mViewPager.setCurrentItem(FRAGMENT_POSITION_SHOPPING_CART);
+            mViewPager.setCurrentItem(TabsAdapter.FRAGMENT_POSITION_SHOPPING_CART);
 
             CheckoutService.INSTANCE
                     .paymentSession(paymentSetupRequest)
@@ -260,49 +259,5 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                 mProgressBar.hide();
             }
         };
-    }
-
-    private final class TabsAdapter extends FragmentPagerAdapter {
-        private TabsAdapter(@NonNull FragmentManager fragmentManager) {
-            super(fragmentManager);
-        }
-
-        @Override
-        public int getCount() {
-            return FRAGMENT_COUNT;
-        }
-
-        @Override
-        public Fragment getItem(int position) {
-            switch (position) {
-                case FRAGMENT_POSITION_SHOPPING_CART:
-                    return new ShoppingCartFragment();
-                case FRAGMENT_POSITION_CONFIGURATION:
-                    return new ConfigurationFragment();
-                default:
-                    throw new IllegalArgumentException("Invalid position.");
-            }
-        }
-
-        @NonNull
-        @Override
-        public Object instantiateItem(ViewGroup container, int position) {
-            Fragment fragment = (Fragment) super.instantiateItem(container, position);
-
-            if (position == FRAGMENT_POSITION_CONFIGURATION) {
-                mConfigurationFragment = (ConfigurationFragment) fragment;
-            }
-
-            return fragment;
-        }
-
-        @Override
-        public void destroyItem(ViewGroup container, int position, Object object) {
-            super.destroyItem(container, position, object);
-
-            if (object == mConfigurationFragment) {
-                mConfigurationFragment = null;
-            }
-        }
     }
 }

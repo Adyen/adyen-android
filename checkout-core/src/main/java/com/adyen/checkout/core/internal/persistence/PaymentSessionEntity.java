@@ -1,3 +1,11 @@
+/*
+ * Copyright (c) 2018 Adyen N.V.
+ *
+ * This file is open source and available under the MIT license. See the LICENSE file for more info.
+ *
+ * Created by timon on 29/05/2018.
+ */
+
 package com.adyen.checkout.core.internal.persistence;
 
 import android.arch.persistence.room.ColumnInfo;
@@ -15,14 +23,8 @@ import org.json.JSONObject;
 
 import java.util.Date;
 
-/**
- * Copyright (c) 2018 Adyen B.V.
- * <p>
- * This file is open source and available under the MIT license. See the LICENSE file for more info.
- * <p>
- * Created by timon on 29/05/2018.
- */
 @Entity(tableName = "payment_sessions")
+@SuppressWarnings("MemberName")
 public final class PaymentSessionEntity {
     @NonNull
     @PrimaryKey()

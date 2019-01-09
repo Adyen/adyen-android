@@ -1,3 +1,11 @@
+/*
+ * Copyright (c) 2018 Adyen N.V.
+ *
+ * This file is open source and available under the MIT license. See the LICENSE file for more info.
+ *
+ * Created by timon on 06/02/2018.
+ */
+
 package com.adyen.checkout.core.card.internal;
 
 import android.support.annotation.NonNull;
@@ -12,14 +20,13 @@ import java.util.GregorianCalendar;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-/**
- * Copyright (c) 2018 Adyen B.V.
- * <p>
- * This file is open source and available under the MIT license. See the LICENSE file for more info.
- * <p>
- * Created by timon on 06/02/2018.
- */
 public final class CardValidatorImpl implements CardValidator {
+    public static final int GENERAL_CARD_SECURITY_CODE_SIZE = 3;
+    public static final int AMEX_SECURITY_CODE_SIZE = 4;
+
+    public static final int GENERAL_CARD_NUMBER_SIZE = 16;
+    public static final int AMEX_NUMBER_SIZE = 15;
+
     @VisibleForTesting
     public static final int MAXIMUM_EXPIRED_MONTHS = 3;
 
@@ -116,9 +123,10 @@ public final class CardValidatorImpl implements CardValidator {
             }
         } else {
             if (cardType == CardType.AMERICAN_EXPRESS) {
-                return new SecurityCodeValidationResult(length == 4 ? Validity.VALID : Validity.PARTIAL, normalizedSecurityCode);
+                return new SecurityCodeValidationResult(length == AMEX_SECURITY_CODE_SIZE ? Validity.VALID : Validity.PARTIAL,
+                        normalizedSecurityCode);
             } else if (cardType != null) {
-                if (length == 3) {
+                if (length == GENERAL_CARD_SECURITY_CODE_SIZE) {
                     return new SecurityCodeValidationResult(Validity.VALID, normalizedSecurityCode);
                 } else {
                     return new SecurityCodeValidationResult(Validity.INVALID, null);
@@ -148,11 +156,14 @@ public final class CardValidatorImpl implements CardValidator {
         return true;
     }
 
+    @SuppressWarnings("checkstyle:MagicNumber")
     private boolean isLuhnChecksumValid(@NonNull String normalizedNumber) {
-        int s1 = 0, s2 = 0;
+        int s1 = 0;
+        int s2 = 0;
         String reverse = new StringBuffer(normalizedNumber).reverse().toString();
 
         for (int i = 0; i < reverse.length(); i++) {
+
             int digit = Character.digit(reverse.charAt(i), 10);
 
             if (i % 2 == 0) {
@@ -169,6 +180,7 @@ public final class CardValidatorImpl implements CardValidator {
         return (s1 + s2) % 10 == 0;
     }
 
+    @SuppressWarnings("checkstyle:MagicNumber")
     private int makeFourDigitYear(@NonNull String value) {
         switch (value.length()) {
             case 2:

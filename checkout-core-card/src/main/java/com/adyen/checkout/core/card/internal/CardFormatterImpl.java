@@ -1,3 +1,11 @@
+/*
+ * Copyright (c) 2018 Adyen N.V.
+ *
+ * This file is open source and available under the MIT license. See the LICENSE file for more info.
+ *
+ * Created by timon on 07/02/2018.
+ */
+
 package com.adyen.checkout.core.card.internal;
 
 import android.support.annotation.NonNull;
@@ -11,17 +19,13 @@ import java.util.Calendar;
 import java.util.Date;
 import java.util.Locale;
 
-/**
- * Copyright (c) 2018 Adyen B.V.
- * <p>
- * This file is open source and available under the MIT license. See the LICENSE file for more info.
- * <p>
- * Created by timon on 07/02/2018.
- */
 public final class CardFormatterImpl implements CardFormatter {
+    @SuppressWarnings("checkstyle:AvoidEscapedUnicodeCharacters")
     private static final char MASKING_CHAR = '\u2022';
 
     private static final char NON_BREAKING_SPACE = '\u00A0';
+
+    private static final int VISIBLE_CHARS_MASK = 4;
 
     private final char mNumberSeparator;
 
@@ -51,7 +55,7 @@ public final class CardFormatterImpl implements CardFormatter {
     @Override
     public String maskNumber(@NonNull String number) {
         int length = number.length();
-        String lastDigits = number.substring(Math.max(length - 4, 0));
+        String lastDigits = number.substring(Math.max(length - VISIBLE_CHARS_MASK, 0));
         String padded = String.format("%1$8s", lastDigits).replaceAll("\\s", String.valueOf(MASKING_CHAR));
 
         return padded.replaceFirst("(.{4})", "$1" + NON_BREAKING_SPACE);

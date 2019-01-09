@@ -1,3 +1,11 @@
+/*
+ * Copyright (c) 2018 Adyen N.V.
+ *
+ * This file is open source and available under the MIT license. See the LICENSE file for more info.
+ *
+ * Created by timon on 24/04/2018.
+ */
+
 package com.adyen.checkout.base.internal;
 
 import android.support.annotation.NonNull;
@@ -11,13 +19,6 @@ import java.security.NoSuchAlgorithmException;
 import javax.net.ssl.HttpsURLConnection;
 import javax.net.ssl.SSLSocketFactory;
 
-/**
- * Copyright (c) 2018 Adyen B.V.
- * <p>
- * This file is open source and available under the MIT license. See the LICENSE file for more info.
- * <p>
- * Created by timon on 24/04/2018.
- */
 public abstract class BaseHttpUrlConnectionFactory {
     private static final SSLSocketFactory SSL_SOCKET_FACTORY;
 

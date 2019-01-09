@@ -1,3 +1,11 @@
+/*
+ * Copyright (c) 2018 Adyen N.V.
+ *
+ * This file is open source and available under the MIT license. See the LICENSE file for more info.
+ *
+ * Created by timon on 21/03/2018.
+ */
+
 package com.adyen.checkout.ui.internal.issuer;
 
 import android.app.Application;
@@ -22,13 +30,6 @@ import java.util.List;
 import java.util.Map;
 import java.util.concurrent.Callable;
 
-/**
- * Copyright (c) 2018 Adyen B.V.
- * <p>
- * This file is open source and available under the MIT license. See the LICENSE file for more info.
- * <p>
- * Created by timon on 21/03/2018.
- */
 public class IssuerCheckoutMethodFactory extends CheckoutMethodFactory {
     private static final Map<String, String> IDEAL_ISSUER_APP_PACKAGE_NAMES = new HashMap<String, String>() {
         {

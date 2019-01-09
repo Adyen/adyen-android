@@ -1,3 +1,11 @@
+/*
+ * Copyright (c) 2017 Adyen N.V.
+ *
+ * This file is open source and available under the MIT license. See the LICENSE file for more info.
+ *
+ * Created by timon on 08/08/2017.
+ */
+
 package com.adyen.checkout.core.internal.model;
 
 import android.net.Uri;
@@ -10,6 +18,7 @@ import com.adyen.checkout.core.AdditionalDetails;
 import com.adyen.checkout.core.CheckoutException;
 import com.adyen.checkout.core.PaymentResult;
 import com.adyen.checkout.core.RedirectDetails;
+import com.adyen.checkout.base.internal.HashUtils;
 import com.adyen.checkout.core.internal.ProvidedBy;
 import com.adyen.checkout.core.model.InputDetail;
 import com.adyen.checkout.core.model.PaymentResultCode;
@@ -21,14 +30,8 @@ import org.json.JSONObject;
 import java.util.ArrayList;
 import java.util.List;
 
-/**
- * Copyright (c) 2017 Adyen B.V.
- * <p>
- * This file is open source and available under the MIT license. See the LICENSE file for more info.
- * <p>
- * Created by timon on 08/08/2017.
- */
 public final class PaymentInitiationResponse extends JsonObject {
+    @NonNull
     public static final Creator<PaymentInitiationResponse> CREATOR = new DefaultCreator<>(PaymentInitiationResponse.class);
 
     private static final String KEY_TYPE = "type";
@@ -80,7 +83,7 @@ public final class PaymentInitiationResponse extends JsonObject {
     }
 
     @Override
-    public boolean equals(Object o) {
+    public boolean equals(@Nullable Object o) {
         if (this == o) {
             return true;
         }
@@ -108,10 +111,10 @@ public final class PaymentInitiationResponse extends JsonObject {
     @Override
     public int hashCode() {
         int result = mType != null ? mType.hashCode() : 0;
-        result = 31 * result + (mCompleteFields != null ? mCompleteFields.hashCode() : 0);
-        result = 31 * result + (mDetailFields != null ? mDetailFields.hashCode() : 0);
-        result = 31 * result + (mRedirectFields != null ? mRedirectFields.hashCode() : 0);
-        result = 31 * result + (mErrorFields != null ? mErrorFields.hashCode() : 0);
+        result = HashUtils.MULTIPLIER * result + (mCompleteFields != null ? mCompleteFields.hashCode() : 0);
+        result = HashUtils.MULTIPLIER * result + (mDetailFields != null ? mDetailFields.hashCode() : 0);
+        result = HashUtils.MULTIPLIER * result + (mRedirectFields != null ? mRedirectFields.hashCode() : 0);
+        result = HashUtils.MULTIPLIER * result + (mErrorFields != null ? mErrorFields.hashCode() : 0);
         return result;
     }
 
@@ -149,6 +152,7 @@ public final class PaymentInitiationResponse extends JsonObject {
     }
 
     public static final class CompleteFields extends JsonObject implements PaymentResult {
+        @NonNull
         public static final Parcelable.Creator<CompleteFields> CREATOR = new DefaultCreator<>(CompleteFields.class);
 
         private static final String KEY_PAYLOAD = "payload";
@@ -184,7 +188,7 @@ public final class PaymentInitiationResponse extends JsonObject {
         }
 
         @Override
-        public boolean equals(Object o) {
+        public boolean equals(@Nullable Object o) {
             if (this == o) {
                 return true;
             }
@@ -206,8 +210,8 @@ public final class PaymentInitiationResponse extends JsonObject {
         @Override
         public int hashCode() {
             int result = mPayload != null ? mPayload.hashCode() : 0;
-            result = 31 * result + (mResultCode != null ? mResultCode.hashCode() : 0);
-            result = 31 * result + (mPaymentMethod != null ? mPaymentMethod.hashCode() : 0);
+            result = HashUtils.MULTIPLIER * result + (mResultCode != null ? mResultCode.hashCode() : 0);
+            result = HashUtils.MULTIPLIER * result + (mPaymentMethod != null ? mPaymentMethod.hashCode() : 0);
             return result;
         }
 
@@ -218,6 +222,7 @@ public final class PaymentInitiationResponse extends JsonObject {
     }
 
     public static final class DetailFields extends JsonObject implements AdditionalDetails {
+        @NonNull
         public static final Parcelable.Creator<DetailFields> CREATOR = new DefaultCreator<>(DetailFields.class);
 
         private static final String KEY_PAYMENT_METHOD = "paymentMethod";
@@ -280,7 +285,7 @@ public final class PaymentInitiationResponse extends JsonObject {
         }
 
         @Override
-        public boolean equals(Object o) {
+        public boolean equals(@Nullable Object o) {
             if (this == o) {
                 return true;
             }
@@ -306,9 +311,9 @@ public final class PaymentInitiationResponse extends JsonObject {
         @Override
         public int hashCode() {
             int result = mPaymentMethod != null ? mPaymentMethod.hashCode() : 0;
-            result = 31 * result + (mPaymentMethodReturnData != null ? mPaymentMethodReturnData.hashCode() : 0);
-            result = 31 * result + (mRedirectData != null ? mRedirectData.hashCode() : 0);
-            result = 31 * result + (mResponseDetails != null ? mResponseDetails.hashCode() : 0);
+            result = HashUtils.MULTIPLIER * result + (mPaymentMethodReturnData != null ? mPaymentMethodReturnData.hashCode() : 0);
+            result = HashUtils.MULTIPLIER * result + (mRedirectData != null ? mRedirectData.hashCode() : 0);
+            result = HashUtils.MULTIPLIER * result + (mResponseDetails != null ? mResponseDetails.hashCode() : 0);
             return result;
         }
 
@@ -329,6 +334,7 @@ public final class PaymentInitiationResponse extends JsonObject {
     }
 
     public static final class RedirectFields extends JsonObject implements RedirectDetails {
+        @NonNull
         public static final Parcelable.Creator<RedirectFields> CREATOR = new DefaultCreator<>(RedirectFields.class);
 
         private static final String KEY_PAYMENT_METHOD = "paymentMethod";
@@ -360,7 +366,7 @@ public final class PaymentInitiationResponse extends JsonObject {
         }
 
         @Override
-        public boolean equals(Object o) {
+        public boolean equals(@Nullable Object o) {
             if (this == o) {
                 return true;
             }
@@ -383,8 +389,8 @@ public final class PaymentInitiationResponse extends JsonObject {
         @Override
         public int hashCode() {
             int result = mPaymentMethod != null ? mPaymentMethod.hashCode() : 0;
-            result = 31 * result + (mUrl != null ? mUrl.hashCode() : 0);
-            result = 31 * result + (mSubmitPaymentMethodReturnData != null ? mSubmitPaymentMethodReturnData.hashCode() : 0);
+            result = HashUtils.MULTIPLIER * result + (mUrl != null ? mUrl.hashCode() : 0);
+            result = HashUtils.MULTIPLIER * result + (mSubmitPaymentMethodReturnData != null ? mSubmitPaymentMethodReturnData.hashCode() : 0);
             return result;
         }
 
@@ -404,6 +410,7 @@ public final class PaymentInitiationResponse extends JsonObject {
     }
 
     public static final class ErrorFields extends JsonObject {
+        @NonNull
         public static final Creator<ErrorFields> CREATOR = new DefaultCreator<>(ErrorFields.class);
 
         private static final String KEY_ERROR_CODE = "errorCode";
@@ -427,7 +434,7 @@ public final class PaymentInitiationResponse extends JsonObject {
         }
 
         @Override
-        public boolean equals(Object o) {
+        public boolean equals(@Nullable Object o) {
             if (this == o) {
                 return true;
             }
@@ -449,8 +456,8 @@ public final class PaymentInitiationResponse extends JsonObject {
         @Override
         public int hashCode() {
             int result = mErrorMessage != null ? mErrorMessage.hashCode() : 0;
-            result = 31 * result + (mErrorCode != null ? mErrorCode.hashCode() : 0);
-            result = 31 * result + (mPayload != null ? mPayload.hashCode() : 0);
+            result = HashUtils.MULTIPLIER * result + (mErrorCode != null ? mErrorCode.hashCode() : 0);
+            result = HashUtils.MULTIPLIER * result + (mPayload != null ? mPayload.hashCode() : 0);
             return result;
         }
 

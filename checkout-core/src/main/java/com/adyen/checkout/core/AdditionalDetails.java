@@ -1,3 +1,11 @@
+/*
+ * Copyright (c) 2018 Adyen N.V.
+ *
+ * This file is open source and available under the MIT license. See the LICENSE file for more info.
+ *
+ * Created by timon on 09/05/2018.
+ */
+
 package com.adyen.checkout.core;
 
 import android.os.Parcelable;
@@ -11,12 +19,6 @@ import java.util.List;
 /**
  * Interface providing information about additional details that need to be provided to continue with the payment after it has been initialized
  * with {@link PaymentHandler#initiatePayment(com.adyen.checkout.core.model.PaymentMethod, com.adyen.checkout.core.model.PaymentMethodDetails)}.
- * <p>
- * Copyright (c) 2018 Adyen B.V.
- * <p>
- * This file is open source and available under the MIT license. See the LICENSE file for more info.
- * <p>
- * Created by timon on 09/05/2018.
  */
 public interface AdditionalDetails extends Parcelable {
     /**

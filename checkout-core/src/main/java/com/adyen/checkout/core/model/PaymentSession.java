@@ -1,3 +1,11 @@
+/*
+ * Copyright (c) 2017 Adyen N.V.
+ *
+ * This file is open source and available under the MIT license. See the LICENSE file for more info.
+ *
+ * Created by timon on 04/08/2017.
+ */
+
 package com.adyen.checkout.core.model;
 
 import android.support.annotation.NonNull;
@@ -8,12 +16,6 @@ import java.util.List;
 
 /**
  * A {@link PaymentSession} holds all relevant information that is needed to make a payment.
- * <p>
- * Copyright (c) 2017 Adyen B.V.
- * <p>
- * This file is open source and available under the MIT license. See the LICENSE file for more info.
- * <p>
- * Created by timon on 04/08/2017.
  */
 public interface PaymentSession {
     /**
@@ -30,7 +32,7 @@ public interface PaymentSession {
 
     /**
      * @return A {@link List} of available one-click {@link PaymentMethod PaymentMethods}, i.e. methods that have been used by the shopper before
-     * and for which details were stored.
+     *         and for which details were stored.
      */
     @Nullable
     List<PaymentMethod> getOneClickPaymentMethods();

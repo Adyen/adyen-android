@@ -1,3 +1,11 @@
+/*
+ * Copyright (c) 2017 Adyen N.V.
+ *
+ * This file is open source and available under the MIT license. See the LICENSE file for more info.
+ *
+ * Created by timon on 22/08/2017.
+ */
+
 package com.adyen.checkout.ui.internal.common.activity;
 
 import android.animation.ValueAnimator;
@@ -35,15 +43,10 @@ import com.adyen.checkout.ui.internal.picker.CheckoutMethodPickerFragment;
 
 import java.util.List;
 
-/**
- * Copyright (c) 2017 Adyen B.V.
- * <p>
- * This file is open source and available under the MIT license. See the LICENSE file for more info.
- * <p>
- * Created by timon on 22/08/2017.
- */
 public class CheckoutActivity extends CheckoutSessionActivity implements CheckoutMethodPickerListener, CheckoutHandler {
     private static final int REQUEST_CODE_PAYMENT_METHOD_DETAILS = 1;
+
+    private static final int BOTTOM_SHEET_ANIMATION_DURATION = 150;
 
     private CheckoutViewModel mCheckoutViewModel;
 
@@ -51,6 +54,7 @@ public class CheckoutActivity extends CheckoutSessionActivity implements Checkou
 
     private ContentLoadingProgressBar mProgressBar;
 
+    @Nullable
     @VisibleForTesting
     public BottomSheetBehavior mBottomSheetBehavior;
 
@@ -201,7 +205,7 @@ public class CheckoutActivity extends CheckoutSessionActivity implements Checkou
     }
 
     @Override
-    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+    protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
 
         if (requestCode == REQUEST_CODE_PAYMENT_METHOD_DETAILS && resultCode == PaymentMethodHandler.RESULT_CODE_ERROR) {
@@ -295,7 +299,7 @@ public class CheckoutActivity extends CheckoutSessionActivity implements Checkou
     private void startBottomSheetAnimation(int initialPeekHeight, int newPeekHeight) {
         cancelBottomSheetAnimation();
         mBottomSheetValueAnimator = ValueAnimator.ofInt(initialPeekHeight, newPeekHeight);
-        mBottomSheetValueAnimator.setDuration(150);
+        mBottomSheetValueAnimator.setDuration(BOTTOM_SHEET_ANIMATION_DURATION);
         mBottomSheetValueAnimator.setInterpolator(new DecelerateInterpolator());
         mBottomSheetValueAnimator.addUpdateListener(new ValueAnimator.AnimatorUpdateListener() {
             @Override

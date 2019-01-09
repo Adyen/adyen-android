@@ -1,3 +1,11 @@
+/*
+ * Copyright (c) 2018 Adyen N.V.
+ *
+ * This file is open source and available under the MIT license. See the LICENSE file for more info.
+ *
+ * Created by timon on 02/07/2018.
+ */
+
 package com.adyen.checkout.ui.internal;
 
 import android.app.Activity;
@@ -8,13 +16,6 @@ import com.adyen.checkout.core.PaymentMethodHandler;
 import com.adyen.checkout.core.StartPaymentParameters;
 import com.adyen.checkout.ui.internal.common.activity.CheckoutActivity;
 
-/**
- * Copyright (c) 2018 Adyen B.V.
- * <p>
- * This file is open source and available under the MIT license. See the LICENSE file for more info.
- * <p>
- * Created by timon on 02/07/2018.
- */
 public final class CheckoutHandler implements PaymentMethodHandler {
     private final StartPaymentParameters mPaymentParameters;
 

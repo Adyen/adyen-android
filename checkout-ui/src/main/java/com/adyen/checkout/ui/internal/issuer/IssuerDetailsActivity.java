@@ -1,3 +1,10 @@
+/*
+ * Copyright (c) 2017 Adyen N.V.
+ *
+ * This file is open source and available under the MIT license. See the LICENSE file for more info.
+ *
+ */
+
 package com.adyen.checkout.ui.internal.issuer;
 
 import android.content.Context;
@@ -19,12 +26,6 @@ import com.adyen.checkout.ui.internal.common.activity.CheckoutDetailsActivity;
 import com.adyen.checkout.ui.internal.common.util.ThemeUtil;
 import com.adyen.checkout.ui.internal.common.util.recyclerview.HeaderItemDecoration;
 
-/**
- * Copyright (c) 2017 Adyen B.V.
- * <p>
- * This file is open source and available under the MIT license. See the LICENSE file for more info.
- * <p>
- */
 public class IssuerDetailsActivity extends CheckoutDetailsActivity implements IssuersAdapter.Listener {
     private static final String EXTRA_PAYMENT_METHOD = "EXTRA_PAYMENT_METHOD";
 

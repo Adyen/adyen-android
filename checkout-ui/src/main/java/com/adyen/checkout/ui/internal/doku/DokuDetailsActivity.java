@@ -1,3 +1,9 @@
+/*
+ * Copyright (c) 2017 Adyen N.V.
+ *
+ * This file is open source and available under the MIT license. See the LICENSE file for more info.
+ */
+
 package com.adyen.checkout.ui.internal.doku;
 
 import android.content.Context;
@@ -24,18 +30,14 @@ import com.adyen.checkout.util.internal.SimpleTextWatcher;
 
 import java.util.regex.Matcher;
 
-/**
- * Copyright (c) 2017 Adyen B.V.
- * <p>
- * This file is open source and available under the MIT license. See the LICENSE file for more info.
- * <p>
- */
 public class DokuDetailsActivity extends CheckoutDetailsActivity implements View.OnClickListener {
     private static final String EXTRA_PAYMENT_METHOD = "EXTRA_PAYMENT_METHOD";
 
     private PaymentMethod mPaymentMethod;
 
     private Button mPayButton;
+
+    private TextView mSurchargeTextView;
 
     private EditText mShopperEmailEditText;
 
@@ -53,7 +55,7 @@ public class DokuDetailsActivity extends CheckoutDetailsActivity implements View
     }
 
     @Override
-    public void onClick(View v) {
+    public void onClick(@NonNull View v) {
         if (v == mPayButton && validate()) {
             String shopperEmail = mShopperEmailEditText.getText().toString().trim();
             String lastName = mLastNameEditText.getText().toString().trim();
@@ -87,8 +89,11 @@ public class DokuDetailsActivity extends CheckoutDetailsActivity implements View
         mFirstNameEditText.setOnFocusChangeListener(validationListener);
 
         mPayButton = findViewById(R.id.button_continue);
-        PayButtonUtil.setPayButtonText(this, mPayButton);
         mPayButton.setOnClickListener(this);
+
+        mSurchargeTextView = findViewById(R.id.textView_surcharge);
+
+        PayButtonUtil.setPayButtonText(this, mPaymentMethod, mPayButton, mSurchargeTextView);
 
         validate();
 

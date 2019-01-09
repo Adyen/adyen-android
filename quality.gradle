@@ -3,7 +3,7 @@ task checkstyle(type: Checkstyle, dependsOn: "assembleDebug") {
     description = "Checkstyle"
     group = "verification"
 
-    configFile = file("$rootDir/config/checkstyle/checkstyle-rules.xml")
+    configFile = file("$rootDir/config/checkstyle/checkstyle-rules-adyen.xml")
     source = fileTree("src/main/java")
     include "**/*.java"
     exclude "**/gen/**"
@@ -25,9 +25,10 @@ task findbugs(type: FindBugs, dependsOn: "assembleDebug") {
 
     effort = "max"
     reportLevel = "high"
+    ignoreFailures = false
 
     excludeFilter = file("$rootProject.rootDir/config/findbugs/findbugs-filter.xml")
-    classes = files("$project.buildDir/intermediates/classes/debug")
+    classes = fileTree("${project.buildDir.absolutePath}/intermediates/javac")
     source = fileTree("$project.rootDir/src/")
     classpath = files()
 
@@ -43,6 +44,8 @@ task pmd(type: Pmd, dependsOn: "assembleDebug") {
     description = "Pmd"
     group = "verification"
 
+    ignoreFailures true
+
     ruleSetFiles = files("$rootProject.rootDir/config/pmd/pmd-rules.xml")
     source = fileTree("src/main/java")
     include '**/*.java'
@@ -57,7 +60,9 @@ task pmd(type: Pmd, dependsOn: "assembleDebug") {
 
 android {
     lintOptions {
-        abortOnError = true
+        abortOnError true
+
+        lintConfig file("$rootProject.rootDir/config/lint/lint.xml")
 
         xmlReport false
         htmlReport true
@@ -65,5 +70,4 @@ android {
     }
 }
 
-// TODO: configure PMD to be less strict / valuable?
-check.dependsOn "checkstyle", "findbugs", /*"pmd",*/ "lint"
+check.dependsOn "checkstyle", "findbugs", "pmd", "lint"

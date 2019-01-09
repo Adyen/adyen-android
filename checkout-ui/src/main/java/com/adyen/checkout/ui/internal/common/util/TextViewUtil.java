@@ -1,3 +1,11 @@
+/*
+ * Copyright (c) 2017 Adyen N.V.
+ *
+ * This file is open source and available under the MIT license. See the LICENSE file for more info.
+ *
+ * Created by timon on 18/12/2017.
+ */
+
 package com.adyen.checkout.ui.internal.common.util;
 
 import android.graphics.drawable.Drawable;
@@ -10,13 +18,6 @@ import com.adyen.checkout.ui.R;
 
 import java.util.Arrays;
 
-/**
- * Copyright (c) 2017 Adyen B.V.
- * <p>
- * This file is open source and available under the MIT license. See the LICENSE file for more info.
- * <p>
- * Created by timon on 18/12/2017.
- */
 public final class TextViewUtil {
     private static final int DRAWABLE_LEFT = 0;
 
@@ -50,6 +51,28 @@ public final class TextViewUtil {
             }
 
             textView.setFilters(filters);
+        }
+    }
+
+    @NonNull
+    private static InputFilter[] removeInputFilter(@NonNull InputFilter[] inputFilters, @NonNull InputFilter inputFilter) {
+        int index = -1;
+
+        for (int i = 0; i < inputFilters.length; i++) {
+            if (inputFilters[i] == inputFilter) {
+                index = i;
+                break;
+            }
+        }
+
+        if (index != -1) {
+            int newLength = inputFilters.length - 1;
+            InputFilter[] target = new InputFilter[newLength];
+            System.arraycopy(inputFilters, index + 1, target, index, newLength - index);
+
+            return target;
+        } else {
+            return inputFilters;
         }
     }
 
@@ -88,28 +111,6 @@ public final class TextViewUtil {
     private static void ensureBoundsSet(@Nullable Drawable drawable) {
         if (drawable != null && drawable.getBounds().isEmpty()) {
             drawable.setBounds(0, 0, drawable.getIntrinsicWidth(), drawable.getIntrinsicHeight());
-        }
-    }
-
-    @NonNull
-    private static InputFilter[] removeInputFilter(@NonNull InputFilter[] inputFilters, @NonNull InputFilter inputFilter) {
-        int index = -1;
-
-        for (int i = 0; i < inputFilters.length; i++) {
-            if (inputFilters[i] == inputFilter) {
-                index = i;
-                break;
-            }
-        }
-
-        if (index != -1) {
-            int newLength = inputFilters.length - 1;
-            InputFilter[] target = new InputFilter[newLength];
-            System.arraycopy(inputFilters, index + 1, target, index, newLength - index);
-
-            return target;
-        } else {
-            return inputFilters;
         }
     }
 

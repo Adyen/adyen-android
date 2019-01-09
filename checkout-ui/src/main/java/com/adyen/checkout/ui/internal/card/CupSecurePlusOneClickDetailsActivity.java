@@ -1,4 +1,15 @@
+/*
+ * Copyright (c) 2018 Adyen N.V.
+ *
+ * This file is open source and available under the MIT license. See the LICENSE file for more info.
+ *
+ * Created by timon on 02/05/2018.
+ */
+
 package com.adyen.checkout.ui.internal.card;
+
+import static com.adyen.checkout.core.card.internal.CardValidatorImpl.AMEX_SECURITY_CODE_SIZE;
+import static com.adyen.checkout.core.card.internal.CardValidatorImpl.GENERAL_CARD_SECURITY_CODE_SIZE;
 
 import android.content.Context;
 import android.content.Intent;
@@ -24,8 +35,8 @@ import com.adyen.checkout.core.card.CardValidator;
 import com.adyen.checkout.core.card.Cards;
 import com.adyen.checkout.core.card.EncryptedCard;
 import com.adyen.checkout.core.card.EncryptionException;
-import com.adyen.checkout.core.internal.model.InputDetailImpl;
 import com.adyen.checkout.core.handler.AdditionalDetailsHandler;
+import com.adyen.checkout.core.internal.model.InputDetailImpl;
 import com.adyen.checkout.core.model.CardDetails;
 import com.adyen.checkout.core.model.CupSecurePlusDetails;
 import com.adyen.checkout.core.model.InputDetail;
@@ -44,13 +55,6 @@ import com.adyen.checkout.util.internal.SimpleTextWatcher;
 import java.util.Date;
 import java.util.List;
 
-/**
- * Copyright (c) 2018 Adyen B.V.
- * <p>
- * This file is open source and available under the MIT license. See the LICENSE file for more info.
- * <p>
- * Created by timon on 02/05/2018.
- */
 public class CupSecurePlusOneClickDetailsActivity extends CheckoutDetailsActivity {
     private static final String EXTRA_PAYMENT_METHOD = "EXTRA_PAYMENT_METHOD";
 
@@ -61,6 +65,8 @@ public class CupSecurePlusOneClickDetailsActivity extends CheckoutDetailsActivit
     private EditText mPhoneNumberEditText;
 
     private Button mPayButton;
+
+    private TextView mSurchargeTextView;
 
     private PaymentMethod mPaymentMethod;
 
@@ -92,7 +98,8 @@ public class CupSecurePlusOneClickDetailsActivity extends CheckoutDetailsActivit
         builder.setSpan(new StyleSpan(Typeface.BOLD), start, end, Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
         mSecurityCodePromptTextView.setText(builder);
 
-        int length = mPaymentMethod.getTxVariant().equals(CardType.AMERICAN_EXPRESS.getTxVariant()) ? 4 : 3;
+        int length = mPaymentMethod.getTxVariant().equals(CardType.AMERICAN_EXPRESS.getTxVariant()) ? AMEX_SECURITY_CODE_SIZE
+                : GENERAL_CARD_SECURITY_CODE_SIZE;
 
         mSecurityCodeView = findViewById(R.id.codeView_securityCode);
         mSecurityCodeView.setLength(length);
@@ -123,13 +130,16 @@ public class CupSecurePlusOneClickDetailsActivity extends CheckoutDetailsActivit
         });
 
         mPayButton = findViewById(R.id.button_pay);
-        PayButtonUtil.setPayButtonText(this, mPayButton);
         mPayButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 submit();
             }
         });
+
+        mSurchargeTextView = findViewById(R.id.textView_surcharge);
+
+        PayButtonUtil.setPayButtonText(this, mPaymentMethod, mPayButton, mSurchargeTextView);
 
         updatePayButton();
 
@@ -154,7 +164,7 @@ public class CupSecurePlusOneClickDetailsActivity extends CheckoutDetailsActivit
     }
 
     @Override
-    protected void onRestoreInstanceState(Bundle savedInstanceState) {
+    protected void onRestoreInstanceState(@NonNull Bundle savedInstanceState) {
         super.onRestoreInstanceState(savedInstanceState);
 
         updatePayButton();

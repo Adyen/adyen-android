@@ -1,3 +1,11 @@
+/*
+ * Copyright (c) 2018 Adyen N.V.
+ *
+ * This file is open source and available under the MIT license. See the LICENSE file for more info.
+ *
+ * Created by timon on 03/05/2018.
+ */
+
 package com.adyen.checkout.ui.internal.card;
 
 import android.annotation.SuppressLint;
@@ -26,13 +34,6 @@ import com.adyen.checkout.ui.R;
 import com.adyen.checkout.ui.internal.common.util.TextViewUtil;
 import com.adyen.checkout.ui.internal.common.util.ThemeUtil;
 
-/**
- * Copyright (c) 2018 Adyen B.V.
- * <p>
- * This file is open source and available under the MIT license. See the LICENSE file for more info.
- * <p>
- * Created by timon on 03/05/2018.
- */
 public class CodeView extends AppCompatEditText {
     private static final int DEFAULT_LENGTH = 4;
 
@@ -110,7 +111,7 @@ public class CodeView extends AppCompatEditText {
     }
 
     @Override
-    public void onRestoreInstanceState(Parcelable state) {
+    public void onRestoreInstanceState(@NonNull Parcelable state) {
         if (state instanceof Bundle) {
             Bundle bundle = (Bundle) state;
             super.onRestoreInstanceState(bundle.getParcelable(STATE_SUPER_STATE));
@@ -135,7 +136,7 @@ public class CodeView extends AppCompatEditText {
     }
 
     @Override
-    protected void onDraw(Canvas canvas) {
+    protected void onDraw(@NonNull Canvas canvas) {
         TextPaint textPaint = getPaint();
         final float ascent = textPaint.ascent();
         final float descent = textPaint.descent();
@@ -148,7 +149,7 @@ public class CodeView extends AppCompatEditText {
 
         final char[] chars = getText().toString().toCharArray();
 
-        final int baseline = (int) ((canvas.getHeight() / 2) - ((descent + ascent) / 2));
+        final int baseline = (int) ((getHeight() / 2) - ((descent + ascent) / 2));
 
         mRectF.set(strokeWidth / 2, baseline + ascent, textSize + strokeWidth / 2, baseline + descent);
         mRectPaint.setStrokeWidth(strokeWidth);

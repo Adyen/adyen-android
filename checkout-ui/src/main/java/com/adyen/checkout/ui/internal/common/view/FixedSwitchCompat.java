@@ -1,3 +1,11 @@
+/*
+ * Copyright (c) 2018 Adyen N.V.
+ *
+ * This file is open source and available under the MIT license. See the LICENSE file for more info.
+ *
+ * Created by timon on 28/06/2018.
+ */
+
 package com.adyen.checkout.ui.internal.common.view;
 
 import android.content.Context;
@@ -11,13 +19,6 @@ import android.util.AttributeSet;
 
 import com.adyen.checkout.ui.R;
 
-/**
- * Copyright (c) 2018 Adyen B.V.
- * <p>
- * This file is open source and available under the MIT license. See the LICENSE file for more info.
- * <p>
- * Created by timon on 28/06/2018.
- */
 public class FixedSwitchCompat extends SwitchCompat {
     public FixedSwitchCompat(@NonNull Context context) {
         super(context);

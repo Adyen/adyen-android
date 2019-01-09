@@ -1,3 +1,11 @@
+/*
+ * Copyright (c) 2017 Adyen N.V.
+ *
+ * This file is open source and available under the MIT license. See the LICENSE file for more info.
+ *
+ * Created by ran on 26/04/2018.
+ */
+
 package com.adyen.checkout.wechatpay.internal;
 
 import android.app.Application;
@@ -18,13 +26,6 @@ import com.tencent.mm.opensdk.openapi.WXAPIFactory;
 
 import java.lang.ref.WeakReference;
 
-/**
- * Copyright (c) 2017 Adyen B.V.
- * <p>
- * This file is open source and available under the MIT license. See the LICENSE file for more info.
- * <p>
- * Created by ran on 26/04/2018.
- */
 public final class WeChatPayUtil implements IWXAPIEventHandler {
     private final WeChatPayProvider mProvider;
 
@@ -72,12 +73,12 @@ public final class WeChatPayUtil implements IWXAPIEventHandler {
     }
 
     @Override
-    public void onReq(BaseReq baseReq) {
+    public void onReq(@NonNull BaseReq baseReq) {
         // Do nothing.
     }
 
     @Override
-    public void onResp(BaseResp baseResp) {
+    public void onResp(@NonNull BaseResp baseResp) {
         WeChatPayListener weChatPayListener = mListenerWeakReference.get();
         if (weChatPayListener == null) {
             throw new RuntimeException("The weak reference to " + WeChatPayListener.class.getName() + " is null");

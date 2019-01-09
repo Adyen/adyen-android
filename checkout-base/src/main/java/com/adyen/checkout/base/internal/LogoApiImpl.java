@@ -1,3 +1,11 @@
+/*
+ * Copyright (c) 2017 Adyen N.V.
+ *
+ * This file is open source and available under the MIT license. See the LICENSE file for more info.
+ *
+ * Created by timon on 28/12/2017.
+ */
+
 package com.adyen.checkout.base.internal;
 
 import android.app.Application;
@@ -23,16 +31,11 @@ import java.util.Collections;
 import java.util.Locale;
 import java.util.concurrent.Callable;
 
-/**
- * Copyright (c) 2017 Adyen B.V.
- * <p>
- * This file is open source and available under the MIT license. See the LICENSE file for more info.
- * <p>
- * Created by timon on 28/12/2017.
- */
 public final class LogoApiImpl extends LogoApi implements ComponentCallbacks {
     //%1$s = size, %2$s = txVariant(/txSubVariant)-densityExtension
     private static final String LOGO_PATH = "checkoutshopper/images/logos/%1$s/%2$s.png";
+
+    private static final int LRU_CACHE_MAX_SIZE = 50;
 
     private static final Size DEFAULT_SIZE = Size.SMALL;
 
@@ -72,7 +75,7 @@ public final class LogoApiImpl extends LogoApi implements ComponentCallbacks {
         mApplication = application;
         mLogoUrlFormat = hostProvider.getUrl() + LOGO_PATH;
         mDensityExtension = getDensityExtension(application.getResources().getDisplayMetrics().densityDpi);
-        mCache = new LruCache<>(50);
+        mCache = new LruCache<>(LRU_CACHE_MAX_SIZE);
     }
 
     @NonNull
@@ -82,7 +85,7 @@ public final class LogoApiImpl extends LogoApi implements ComponentCallbacks {
     }
 
     @Override
-    public void onConfigurationChanged(Configuration newConfig) {
+    public void onConfigurationChanged(@NonNull Configuration newConfig) {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN_MR1) {
             String newDensityExtension = getDensityExtension(newConfig.densityDpi);
 

@@ -1,3 +1,11 @@
+/*
+ * Copyright (c) 2018 Adyen N.V.
+ *
+ * This file is open source and available under the MIT license. See the LICENSE file for more info.
+ *
+ * Created by timon on 25/04/2018.
+ */
+
 package com.adyen.checkout.ui.internal.common.util;
 
 import android.content.Context;
@@ -9,13 +17,6 @@ import android.widget.TextView;
 
 import com.adyen.checkout.ui.R;
 
-/**
- * Copyright (c) 2018 Adyen B.V.
- * <p>
- * This file is open source and available under the MIT license. See the LICENSE file for more info.
- * <p>
- * Created by timon on 25/04/2018.
- */
 public final class LockToCheckmarkAnimationDelegate {
     private final TextView mTextView;
 

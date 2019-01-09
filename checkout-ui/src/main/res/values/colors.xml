@@ -6,4 +6,5 @@
     <color name="numpad_background">#FAFAFA</color>
     <color name="numpad_divider">#F5F5F5</color>
     <color name="code_view_rect">#BDBDBD</color>
+    <color name="error">#FFFF0000</color>
 </resources>

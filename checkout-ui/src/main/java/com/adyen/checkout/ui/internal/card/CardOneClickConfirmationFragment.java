@@ -1,4 +1,15 @@
+/*
+ * Copyright (c) 2018 Adyen N.V.
+ *
+ * This file is open source and available under the MIT license. See the LICENSE file for more info.
+ *
+ * Created by timon on 17/01/2018.
+ */
+
 package com.adyen.checkout.ui.internal.card;
+
+import static com.adyen.checkout.core.card.internal.CardValidatorImpl.AMEX_SECURITY_CODE_SIZE;
+import static com.adyen.checkout.core.card.internal.CardValidatorImpl.GENERAL_CARD_SECURITY_CODE_SIZE;
 
 import android.content.Context;
 import android.graphics.Typeface;
@@ -38,13 +49,6 @@ import com.adyen.checkout.ui.internal.common.util.PayButtonUtil;
 
 import java.util.Date;
 
-/**
- * Copyright (c) 2018 Adyen B.V.
- * <p>
- * This file is open source and available under the MIT license. See the LICENSE file for more info.
- * <p>
- * Created by timon on 17/01/2018.
- */
 public class CardOneClickConfirmationFragment extends CheckoutDetailsFragment {
     private static final String ARG_PAYMENT_METHOD = "ARG_PAYMENT_METHOD";
 
@@ -53,6 +57,8 @@ public class CardOneClickConfirmationFragment extends CheckoutDetailsFragment {
     private CodeView mSecurityCodeView;
 
     private Button mPayButton;
+
+    private TextView mSurchargeTextView;
 
     private Button mSelectOtherPaymentMethodButton;
 
@@ -96,16 +102,21 @@ public class CardOneClickConfirmationFragment extends CheckoutDetailsFragment {
 
         mSecurityCodeView = view.findViewById(R.id.codeView_securityCode);
         mSecurityCodeView.setInputType(InputType.TYPE_NULL);
-        mSecurityCodeView.setLength(mPaymentMethod.getTxVariant().equals(CardType.AMERICAN_EXPRESS.getTxVariant()) ? 4 : 3);
+        mSecurityCodeView.setLength(
+                mPaymentMethod.getTxVariant().equals(CardType.AMERICAN_EXPRESS.getTxVariant()) ? AMEX_SECURITY_CODE_SIZE
+                        : GENERAL_CARD_SECURITY_CODE_SIZE);
 
         mPayButton = view.findViewById(R.id.button_pay);
-        PayButtonUtil.setPayButtonText(this, mPayButton);
         mPayButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 submit();
             }
         });
+
+        mSurchargeTextView = view.findViewById(R.id.textView_surcharge);
+
+        PayButtonUtil.setPayButtonText(this, mPaymentMethod, mPayButton, mSurchargeTextView);
 
         updatePayButton();
 
@@ -159,8 +170,8 @@ public class CardOneClickConfirmationFragment extends CheckoutDetailsFragment {
         if (validationResult.getValidity() == CardValidator.Validity.VALID) {
             mPayButton.setEnabled(
                     validatedSecurityCode == null
-                            || (!isAmex && validatedSecurityCode.length() == 3)
-                            || (isAmex && validatedSecurityCode.length() == 4)
+                            || (!isAmex && validatedSecurityCode.length() == GENERAL_CARD_SECURITY_CODE_SIZE)
+                            || (isAmex && validatedSecurityCode.length() == AMEX_SECURITY_CODE_SIZE)
             );
         } else {
             mPayButton.setEnabled(false);

@@ -1,3 +1,11 @@
+/*
+ * Copyright (c) 2017 Adyen N.V.
+ *
+ * This file is open source and available under the MIT license. See the LICENSE file for more info.
+ *
+ * Created by timon on 15/08/2017.
+ */
+
 package com.adyen.checkout.ui.internal.sepadirectdebit;
 
 import android.support.annotation.NonNull;
@@ -13,13 +21,6 @@ import java.util.HashMap;
 import java.util.Locale;
 import java.util.Map;
 
-/**
- * Copyright (c) 2017 Adyen B.V.
- * <p>
- * This file is open source and available under the MIT license. See the LICENSE file for more info.
- * <p>
- * Created by timon on 15/08/2017.
- */
 public class IbanSuggestionsAdapter extends RecyclerView.Adapter<IbanSuggestionViewHolder> {
     private final Map<String, CountryAdapter> mAdapters = new HashMap<String, CountryAdapter>() {
         {
@@ -61,8 +62,9 @@ public class IbanSuggestionsAdapter extends RecyclerView.Adapter<IbanSuggestionV
         mListener = listener;
     }
 
+    @NonNull
     @Override
-    public IbanSuggestionViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
+    public IbanSuggestionViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
         final IbanSuggestionViewHolder viewHolder = mCurrentCountryAdapter.onCreateViewHolder(parent, viewType);
         viewHolder.itemView.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -80,7 +82,7 @@ public class IbanSuggestionsAdapter extends RecyclerView.Adapter<IbanSuggestionV
     }
 
     @Override
-    public void onBindViewHolder(IbanSuggestionViewHolder holder, int position) {
+    public void onBindViewHolder(@NonNull IbanSuggestionViewHolder holder, int position) {
         mCurrentCountryAdapter.onBindViewHolder(holder, position);
     }
 

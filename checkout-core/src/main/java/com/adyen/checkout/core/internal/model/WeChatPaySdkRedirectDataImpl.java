@@ -1,22 +1,26 @@
+/*
+ * Copyright (c) 2018 Adyen N.V.
+ *
+ * This file is open source and available under the MIT license. See the LICENSE file for more info.
+ *
+ * Created by timon on 10/07/2018.
+ */
+
 package com.adyen.checkout.core.internal.model;
 
 import android.os.Parcelable;
 import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
 
 import com.adyen.checkout.base.internal.JsonObject;
+import com.adyen.checkout.base.internal.HashUtils;
 import com.adyen.checkout.core.model.WeChatPaySdkRedirectData;
 
 import org.json.JSONException;
 import org.json.JSONObject;
 
-/**
- * Copyright (c) 2018 Adyen B.V.
- * <p>
- * This file is open source and available under the MIT license. See the LICENSE file for more info.
- * <p>
- * Created by timon on 10/07/2018.
- */
 public final class WeChatPaySdkRedirectDataImpl extends JsonObject implements WeChatPaySdkRedirectData {
+    @NonNull
     public static final Parcelable.Creator<WeChatPaySdkRedirectDataImpl> CREATOR = new DefaultCreator<>(WeChatPaySdkRedirectDataImpl.class);
 
     private final String mAppId;
@@ -88,7 +92,7 @@ public final class WeChatPaySdkRedirectDataImpl extends JsonObject implements We
     }
 
     @Override
-    public boolean equals(Object o) {
+    public boolean equals(@Nullable Object o) {
         if (this == o) {
             return true;
         }
@@ -122,12 +126,12 @@ public final class WeChatPaySdkRedirectDataImpl extends JsonObject implements We
     @Override
     public int hashCode() {
         int result = mAppId != null ? mAppId.hashCode() : 0;
-        result = 31 * result + (mPartnerId != null ? mPartnerId.hashCode() : 0);
-        result = 31 * result + (mPrepayId != null ? mPrepayId.hashCode() : 0);
-        result = 31 * result + (mTimestamp != null ? mTimestamp.hashCode() : 0);
-        result = 31 * result + (mPackageValue != null ? mPackageValue.hashCode() : 0);
-        result = 31 * result + (mNonceStr != null ? mNonceStr.hashCode() : 0);
-        result = 31 * result + (mSignature != null ? mSignature.hashCode() : 0);
+        result = HashUtils.MULTIPLIER * result + (mPartnerId != null ? mPartnerId.hashCode() : 0);
+        result = HashUtils.MULTIPLIER * result + (mPrepayId != null ? mPrepayId.hashCode() : 0);
+        result = HashUtils.MULTIPLIER * result + (mTimestamp != null ? mTimestamp.hashCode() : 0);
+        result = HashUtils.MULTIPLIER * result + (mPackageValue != null ? mPackageValue.hashCode() : 0);
+        result = HashUtils.MULTIPLIER * result + (mNonceStr != null ? mNonceStr.hashCode() : 0);
+        result = HashUtils.MULTIPLIER * result + (mSignature != null ? mSignature.hashCode() : 0);
         return result;
     }
 }

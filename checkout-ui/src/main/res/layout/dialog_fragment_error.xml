@@ -24,6 +24,7 @@
         android:layout_marginLeft="@dimen/standard_margin"
         android:layout_marginRight="@dimen/standard_margin"
         android:layout_marginEnd="@dimen/standard_margin"
+        android:textIsSelectable="false"
         tools:text="@string/checkout_error_dialog_title" />
 
     <TextView
@@ -34,6 +35,7 @@
         android:layout_marginLeft="@dimen/standard_margin"
         android:layout_marginRight="@dimen/standard_margin"
         android:layout_marginEnd="@dimen/standard_margin"
+        android:textIsSelectable="true"
         tools:text="@string/checkout_error_message_default" />
 
     <Button

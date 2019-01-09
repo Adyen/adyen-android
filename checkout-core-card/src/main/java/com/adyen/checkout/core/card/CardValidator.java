@@ -1,15 +1,16 @@
+/*
+ * Copyright (c) 2018 Adyen N.V.
+ *
+ * This file is open source and available under the MIT license. See the LICENSE file for more info.
+ *
+ * Created by timon on 06/02/2018.
+ */
+
 package com.adyen.checkout.core.card;
 
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 
-/**
- * Copyright (c) 2018 Adyen B.V.
- * <p>
- * This file is open source and available under the MIT license. See the LICENSE file for more info.
- * <p>
- * Created by timon on 06/02/2018.
- */
 public interface CardValidator {
     int NUMBER_MINIMUM_LENGTH = 8;
 
@@ -96,8 +97,8 @@ public interface CardValidator {
 
         /**
          * @return If {@code getValidity == Validity.VALID}, the normalized valid holder name.<br/>
-         * If {@code getValidity == Validity.PARTIAL}, the normalized partial holder name.<br/>
-         * If {@code getValidity == Validity.INVALID}, {@code null}.
+         *         If {@code getValidity == Validity.PARTIAL}, the normalized partial holder name.<br/>
+         *         If {@code getValidity == Validity.INVALID}, {@code null}.
          */
         @Nullable
         public String getHolderName() {
@@ -119,8 +120,8 @@ public interface CardValidator {
 
         /**
          * @return If {@code getValidity == Validity.VALID}, the normalized valid number.<br/>
-         * If {@code getValidity == Validity.PARTIAL}, the normalized partial number.<br/>
-         * If {@code getValidity == Validity.INVALID}, {@code null}.
+         *         If {@code getValidity == Validity.PARTIAL}, the normalized partial number.<br/>
+         *         If {@code getValidity == Validity.INVALID}, {@code null}.
          */
         @Nullable
         public String getNumber() {
@@ -145,8 +146,8 @@ public interface CardValidator {
 
         /**
          * @return If {@code getValidity == Validity.VALID}, the valid expiry month, where {@code 1} refers to January.<br/>
-         * If {@code getValidity == Validity.PARTIAL}, the valid expiry month or {@code null} if not yet provided.<br/>
-         * If {@code getValidity == Validity.INVALID}, {@code null}.
+         *         If {@code getValidity == Validity.PARTIAL}, the valid expiry month or {@code null} if not yet provided.<br/>
+         *         If {@code getValidity == Validity.INVALID}, {@code null}.
          */
         @Nullable
         public Integer getExpiryMonth() {
@@ -155,8 +156,8 @@ public interface CardValidator {
 
         /**
          * @return If {@code getValidity == Validity.VALID}, the valid expiry year.<br/>
-         * If {@code getValidity == Validity.PARTIAL}, {@code null}.<br/>
-         * If {@code getValidity == Validity.INVALID}, {@code null}.
+         *         If {@code getValidity == Validity.PARTIAL}, {@code null}.<br/>
+         *         If {@code getValidity == Validity.INVALID}, {@code null}.
          */
         @Nullable
         public Integer getExpiryYear() {
@@ -178,9 +179,9 @@ public interface CardValidator {
 
         /**
          * @return If {@code getValidity == Validity.VALID}, the normalized valid security code (may be {@code null}, only valid then if the security
-         * code is optional).<br/>
-         * If {@code getValidity == Validity.PARTIAL}, the normalized partial security code.<br/>
-         * If {@code getValidity == Validity.INVALID}, {@code null}.
+         *         code is optional).<br/>
+         *         If {@code getValidity == Validity.PARTIAL}, the normalized partial security code.<br/>
+         *         If {@code getValidity == Validity.INVALID}, {@code null}.
          */
         @Nullable
         public String getSecurityCode() {

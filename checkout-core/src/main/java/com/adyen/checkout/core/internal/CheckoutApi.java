@@ -1,3 +1,11 @@
+/*
+ * Copyright (c) 2017 Adyen N.V.
+ *
+ * This file is open source and available under the MIT license. See the LICENSE file for more info.
+ *
+ * Created by timon on 08/09/2017.
+ */
+
 package com.adyen.checkout.core.internal;
 
 import android.app.Application;
@@ -9,6 +17,7 @@ import com.adyen.checkout.base.internal.Json;
 import com.adyen.checkout.base.internal.JsonObject;
 import com.adyen.checkout.base.internal.JsonSerializable;
 import com.adyen.checkout.core.CheckoutException;
+import com.adyen.checkout.core.internal.model.AddressAndNameResponse;
 import com.adyen.checkout.core.internal.model.GiroPayConfiguration;
 import com.adyen.checkout.core.internal.model.GiroPayIssuersResponse;
 import com.adyen.checkout.core.internal.model.PaymentInitiation;
@@ -18,6 +27,7 @@ import com.adyen.checkout.core.internal.model.PaymentMethodDeletionResponse;
 import com.adyen.checkout.core.internal.model.PaymentMethodImpl;
 import com.adyen.checkout.core.internal.model.PaymentSessionImpl;
 import com.adyen.checkout.core.model.PaymentMethod;
+import com.adyen.checkout.core.model.PaymentSession;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -25,13 +35,6 @@ import org.json.JSONObject;
 import java.io.IOException;
 import java.util.concurrent.Callable;
 
-/**
- * Copyright (c) 2017 Adyen B.V.
- * <p>
- * This file is open source and available under the MIT license. See the LICENSE file for more info.
- * <p>
- * Created by timon on 08/09/2017.
- */
 public final class CheckoutApi extends Api {
     private static CheckoutApi sInstance;
 
@@ -111,6 +114,43 @@ public final class CheckoutApi extends Api {
                 JSONObject response = post(issuersUrl, body);
 
                 return JsonObject.parseFrom(response, GiroPayIssuersResponse.class);
+            }
+        };
+    }
+
+    @NonNull
+    public Callable<AddressAndNameResponse> getSsnLookup(
+            @NonNull final PaymentMethod paymentMethod,
+            @NonNull final PaymentSession paymentSession,
+            @NonNull final String callUrl,
+            @NonNull final String socialSecurityNumber
+    ) {
+        return new Callable<AddressAndNameResponse>() {
+            @Override
+            public AddressAndNameResponse call() throws Exception {
+
+                final String paymentMethodData = ((PaymentMethodImpl) paymentMethod).getPaymentMethodData();
+                final String paymentData = ((PaymentSessionImpl) paymentSession).getPaymentData();
+
+                JsonSerializable body = new JsonSerializable() {
+                    @NonNull
+                    @Override
+                    public JSONObject serialize() throws JSONException {
+                        JSONObject jsonObject = new JSONObject();
+                        jsonObject.put("paymentData", paymentData);
+                        jsonObject.put("paymentMethodData", paymentMethodData);
+                        jsonObject.put("socialSecurityNumber", socialSecurityNumber);
+
+                        return jsonObject;
+                    }
+                };
+                JSONObject response = post(callUrl, body);
+
+                if (response.length() == 0) {
+                    return null;
+                }
+
+                return JsonObject.parseFrom(response, AddressAndNameResponse.class);
             }
         };
     }

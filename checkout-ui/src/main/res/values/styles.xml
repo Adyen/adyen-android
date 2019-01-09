@@ -50,7 +50,25 @@
         <item name="android:textColor">?android:attr/textColorSecondary</item>
     </style>
 
+    <style name="Checkout.TextAppearance.Tertiary">
+        <item name="android:textSize">12sp</item>
+        <item name="android:textColor">?android:attr/textColorTertiary</item>
+    </style>
+
     <style name="Checkout.TextAppearance.Title" parent="TextAppearance.AppCompat.Title" />
+
+    <style name="Checkout.TextAppearance.Section.Title" parent="TextAppearance.AppCompat.Title">
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:layout_height">@dimen/section_title_height</item>
+        <item name="android:textSize">14sp</item>
+        <item name="android:paddingLeft">@dimen/standard_quarter_margin</item>
+        <item name="android:textStyle">bold</item>
+        <item name="android:gravity">center_vertical</item>
+    </style>
+
+    <style name="Checkout.TextAppearance.Section.ReadOnly" parent="Checkout.TextAppearance.Primary" >
+        <item name="android:lineSpacingExtra">8dp</item>
+    </style>
 
     <style name="Checkout.TextAppearance.Error" parent="TextAppearance.Design.Error">
         <item name="android:textColor">?attr/colorError</item>

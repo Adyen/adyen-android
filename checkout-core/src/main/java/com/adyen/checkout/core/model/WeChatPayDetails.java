@@ -1,9 +1,19 @@
+/*
+ * Copyright (c) 2017 Adyen N.V.
+ *
+ * This file is open source and available under the MIT license. See the LICENSE file for more info.
+ *
+ * Created by ran on 08/05/2018.
+ */
+
 package com.adyen.checkout.core.model;
 
 import android.os.Parcel;
 import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
 
 import com.adyen.checkout.core.internal.model.AdditionalPaymentMethodDetails;
+import com.adyen.checkout.base.internal.HashUtils;
 import com.adyen.checkout.core.internal.model.PaymentInitiationResponse;
 
 import org.json.JSONException;
@@ -11,14 +21,9 @@ import org.json.JSONObject;
 
 /**
  * {@link PaymentMethodDetails} for WeChat Pay payments.
- * <p>
- * Copyright (c) 2017 Adyen B.V.
- * <p>
- * This file is open source and available under the MIT license. See the LICENSE file for more info.
- * <p>
- * Created by ran on 08/05/2018.
  */
 public final class WeChatPayDetails extends AdditionalPaymentMethodDetails {
+    @NonNull
     public static final Creator<WeChatPayDetails> CREATOR = new Creator<WeChatPayDetails>() {
         @Override
         public WeChatPayDetails createFromParcel(Parcel source) {
@@ -31,6 +36,7 @@ public final class WeChatPayDetails extends AdditionalPaymentMethodDetails {
         }
     };
 
+    @NonNull
     public static final String KEY_RESULT_CODE = "resultCode";
 
     private static final String KEY_PAYMENT_METHOD_RETURN_DATA = "paymentMethodReturnData";
@@ -76,7 +82,7 @@ public final class WeChatPayDetails extends AdditionalPaymentMethodDetails {
     }
 
     @Override
-    public boolean equals(Object o) {
+    public boolean equals(@Nullable Object o) {
         if (this == o) {
             return true;
         }
@@ -97,7 +103,7 @@ public final class WeChatPayDetails extends AdditionalPaymentMethodDetails {
     @Override
     public int hashCode() {
         int result = mResultCode != null ? mResultCode.hashCode() : 0;
-        result = 31 * result + (mPaymentMethodReturnData != null ? mPaymentMethodReturnData.hashCode() : 0);
+        result = HashUtils.MULTIPLIER * result + (mPaymentMethodReturnData != null ? mPaymentMethodReturnData.hashCode() : 0);
         return result;
     }
 

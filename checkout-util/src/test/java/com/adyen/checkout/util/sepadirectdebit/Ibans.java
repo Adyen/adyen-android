@@ -1,3 +1,11 @@
+/*
+ * Copyright (c) 2017 Adyen N.V.
+ *
+ * This file is open source and available under the MIT license. See the LICENSE file for more info.
+ *
+ * Created by timon on 27/10/2017.
+ */
+
 package com.adyen.checkout.util.sepadirectdebit;
 
 import android.support.annotation.NonNull;
@@ -6,13 +14,6 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
-/**
- * Copyright (c) 2017 Adyen B.V.
- * <p>
- * This file is open source and available under the MIT license. See the LICENSE file for more info.
- * <p>
- * Created by timon on 27/10/2017.
- */
 public final class Ibans {
     public static final List<String> NETHERLANDS = Collections.unmodifiableList(netherlands());
 

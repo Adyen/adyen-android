@@ -1,3 +1,11 @@
+/*
+ * Copyright (c) 2017 Adyen N.V.
+ *
+ * This file is open source and available under the MIT license. See the LICENSE file for more info.
+ *
+ * Created by timon on 28/12/2017.
+ */
+
 package com.adyen.checkout.base;
 
 import android.app.Application;
@@ -13,17 +21,12 @@ import java.util.concurrent.Callable;
 /**
  * The {@link LogoApi} class provides means to generate URLs for logos and to create {@link Callable} objects with which {@link Drawable} objects
  * can be retrieved directly.
- * <p>
- * Copyright (c) 2017 Adyen B.V.
- * <p>
- * This file is open source and available under the MIT license. See the LICENSE file for more info.
- * <p>
- * Created by timon on 28/12/2017.
  */
 public abstract class LogoApi extends Api {
     /**
      * The {@link HostProvider} connecting to the test environment.
      */
+    @NonNull
     public static final HostProvider TEST = new HostProvider() {
         @NonNull
         @Override
@@ -35,6 +38,7 @@ public abstract class LogoApi extends Api {
     /**
      * The {@link HostProvider} connecting to the live environment in Europe.
      */
+    @NonNull
     public static final HostProvider LIVE_EU = new HostProvider() {
         @NonNull
         @Override
@@ -46,6 +50,7 @@ public abstract class LogoApi extends Api {
     /**
      * The {@link HostProvider} connecting to the live environment in the US.
      */
+    @NonNull
     public static final HostProvider LIVE_US = new HostProvider() {
         @NonNull
         @Override
@@ -57,6 +62,7 @@ public abstract class LogoApi extends Api {
     /**
      * The {@link HostProvider} connecting to the live environment in Australia.
      */
+    @NonNull
     public static final HostProvider LIVE_AU = new HostProvider() {
         @NonNull
         @Override

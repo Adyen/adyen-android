@@ -1,3 +1,11 @@
+/*
+ * Copyright (c) 2017 Adyen N.V.
+ *
+ * This file is open source and available under the MIT license. See the LICENSE file for more info.
+ *
+ * Created by timon on 17/08/2017.
+ */
+
 package com.adyen.checkout.ui.internal.common.util;
 
 import android.content.Context;
@@ -12,13 +20,6 @@ import android.support.annotation.Nullable;
 
 import com.adyen.checkout.base.internal.Parcelables;
 
-/**
- * Copyright (c) 2017 Adyen B.V.
- * <p>
- * This file is open source and available under the MIT license. See the LICENSE file for more info.
- * <p>
- * Created by timon on 17/08/2017.
- */
 public final class RedirectUtil {
     private static final String RESOLVER_ACTIVITY_PACKAGE_NAME = "android";
 
@@ -75,6 +76,7 @@ public final class RedirectUtil {
     }
 
     public static final class ResolveResult implements Parcelable {
+        @NonNull
         public static final Creator<ResolveResult> CREATOR = new Creator<ResolveResult>() {
             @Override
             public ResolveResult createFromParcel(Parcel in) {
@@ -107,7 +109,7 @@ public final class RedirectUtil {
         }
 
         @Override
-        public void writeToParcel(Parcel out, int flags) {
+        public void writeToParcel(@NonNull Parcel out, int flags) {
             Parcelables.writeSerializable(out, mResolveType);
             Parcelables.write(out, mResolveInfo);
         }

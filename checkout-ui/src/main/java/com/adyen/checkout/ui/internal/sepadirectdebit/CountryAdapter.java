@@ -1,3 +1,11 @@
+/*
+ * Copyright (c) 2017 Adyen N.V.
+ *
+ * This file is open source and available under the MIT license. See the LICENSE file for more info.
+ *
+ * Created by timon on 15/08/2017.
+ */
+
 package com.adyen.checkout.ui.internal.sepadirectdebit;
 
 import android.support.annotation.NonNull;
@@ -12,23 +20,20 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
 
-/**
- * Copyright (c) 2017 Adyen B.V.
- * <p>
- * This file is open source and available under the MIT license. See the LICENSE file for more info.
- * <p>
- * Created by timon on 15/08/2017.
- */
 public abstract class CountryAdapter extends RecyclerView.Adapter<IbanSuggestionViewHolder> {
+
+    static final int COUNTRY_BLOCK_LENGTH = 4;
+
     private List<Suggestion> mSuggestions = new ArrayList<>();
 
+    @NonNull
     @Override
-    public IbanSuggestionViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
+    public IbanSuggestionViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
         return IbanSuggestionViewHolder.create(parent);
     }
 
     @Override
-    public void onBindViewHolder(IbanSuggestionViewHolder holder, int position) {
+    public void onBindViewHolder(@NonNull IbanSuggestionViewHolder holder, int position) {
         holder.getTextView().setText(mSuggestions.get(position).getName());
     }
 

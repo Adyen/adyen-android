@@ -1,9 +1,18 @@
+/*
+ * Copyright (c) 2017 Adyen N.V.
+ *
+ * This file is open source and available under the MIT license. See the LICENSE file for more info.
+ *
+ * Created by timon on 14/09/2017.
+ */
+
 package com.adyen.checkout.core.internal.model;
 
 import android.content.Context;
 import android.os.Build;
 import android.provider.Settings;
 import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
 import android.util.Base64;
 
 import com.adyen.checkout.base.internal.Api;
@@ -11,6 +20,7 @@ import com.adyen.checkout.base.internal.Json;
 import com.adyen.checkout.base.internal.JsonSerializable;
 import com.adyen.checkout.core.BuildConfig;
 import com.adyen.checkout.core.CheckoutException;
+import com.adyen.checkout.base.internal.HashUtils;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -18,13 +28,6 @@ import org.json.JSONObject;
 import java.util.Date;
 import java.util.Locale;
 
-/**
- * Copyright (c) 2017 Adyen B.V.
- * <p>
- * This file is open source and available under the MIT license. See the LICENSE file for more info.
- * <p>
- * Created by timon on 14/09/2017.
- */
 public final class DeviceFingerprint implements JsonSerializable {
     private static final String DEVICE_FINGERPRINT_VERSION = "1.0";
 
@@ -91,7 +94,7 @@ public final class DeviceFingerprint implements JsonSerializable {
     }
 
     @Override
-    public boolean equals(Object o) {
+    public boolean equals(@Nullable Object o) {
         if (this == o) {
             return true;
         }
@@ -116,9 +119,9 @@ public final class DeviceFingerprint implements JsonSerializable {
     @Override
     public int hashCode() {
         int result = mDeviceIdentifier != null ? mDeviceIdentifier.hashCode() : 0;
-        result = 31 * result + (mIntegration != null ? mIntegration.hashCode() : 0);
-        result = 31 * result + (mLocale != null ? mLocale.hashCode() : 0);
-        result = 31 * result + (mGenerationTime != null ? mGenerationTime.hashCode() : 0);
+        result = HashUtils.MULTIPLIER * result + (mIntegration != null ? mIntegration.hashCode() : 0);
+        result = HashUtils.MULTIPLIER * result + (mLocale != null ? mLocale.hashCode() : 0);
+        result = HashUtils.MULTIPLIER * result + (mGenerationTime != null ? mGenerationTime.hashCode() : 0);
         return result;
     }
 }

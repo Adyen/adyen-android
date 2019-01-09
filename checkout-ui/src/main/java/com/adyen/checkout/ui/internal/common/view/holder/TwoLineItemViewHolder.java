@@ -1,3 +1,11 @@
+/*
+ * Copyright (c) 2017 Adyen N.V.
+ *
+ * This file is open source and available under the MIT license. See the LICENSE file for more info.
+ *
+ * Created by timon on 09/08/2017.
+ */
+
 package com.adyen.checkout.ui.internal.common.view.holder;
 
 import android.support.annotation.IdRes;
@@ -13,13 +21,6 @@ import android.widget.TextView;
 
 import com.adyen.checkout.ui.R;
 
-/**
- * Copyright (c) 2017 Adyen B.V.
- * <p>
- * This file is open source and available under the MIT license. See the LICENSE file for more info.
- * <p>
- * Created by timon on 09/08/2017.
- */
 public final class TwoLineItemViewHolder extends RecyclerView.ViewHolder {
     private ImageView mLogoImageView;
 

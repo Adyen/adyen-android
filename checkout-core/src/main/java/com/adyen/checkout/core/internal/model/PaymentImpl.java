@@ -1,3 +1,11 @@
+/*
+ * Copyright (c) 2018 Adyen N.V.
+ *
+ * This file is open source and available under the MIT license. See the LICENSE file for more info.
+ *
+ * Created by timon on 09/07/2018.
+ */
+
 package com.adyen.checkout.core.internal.model;
 
 import android.os.Parcelable;
@@ -5,6 +13,7 @@ import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 
 import com.adyen.checkout.base.internal.JsonObject;
+import com.adyen.checkout.base.internal.HashUtils;
 import com.adyen.checkout.core.model.Payment;
 
 import org.json.JSONException;
@@ -12,14 +21,8 @@ import org.json.JSONObject;
 
 import java.util.Date;
 
-/**
- * Copyright (c) 2018 Adyen B.V.
- * <p>
- * This file is open source and available under the MIT license. See the LICENSE file for more info.
- * <p>
- * Created by timon on 09/07/2018.
- */
 public final class PaymentImpl extends JsonObject implements Payment {
+    @NonNull
     public static final Parcelable.Creator<PaymentImpl> CREATOR = new DefaultCreator<>(PaymentImpl.class);
 
     private String mCountryCode;
@@ -55,7 +58,7 @@ public final class PaymentImpl extends JsonObject implements Payment {
     }
 
     @Override
-    public boolean equals(Object o) {
+    public boolean equals(@Nullable Object o) {
         if (this == o) {
             return true;
         }
@@ -89,15 +92,16 @@ public final class PaymentImpl extends JsonObject implements Payment {
     @Override
     public int hashCode() {
         int result = mCountryCode != null ? mCountryCode.hashCode() : 0;
-        result = 31 * result + (mReference != null ? mReference.hashCode() : 0);
-        result = 31 * result + (mSessionValidity != null ? mSessionValidity.hashCode() : 0);
-        result = 31 * result + (mAmount != null ? mAmount.hashCode() : 0);
-        result = 31 * result + (mReturnUrl != null ? mReturnUrl.hashCode() : 0);
-        result = 31 * result + (mShopperLocale != null ? mShopperLocale.hashCode() : 0);
-        result = 31 * result + (mShopperReference != null ? mShopperReference.hashCode() : 0);
+        result = HashUtils.MULTIPLIER * result + (mReference != null ? mReference.hashCode() : 0);
+        result = HashUtils.MULTIPLIER * result + (mSessionValidity != null ? mSessionValidity.hashCode() : 0);
+        result = HashUtils.MULTIPLIER * result + (mAmount != null ? mAmount.hashCode() : 0);
+        result = HashUtils.MULTIPLIER * result + (mReturnUrl != null ? mReturnUrl.hashCode() : 0);
+        result = HashUtils.MULTIPLIER * result + (mShopperLocale != null ? mShopperLocale.hashCode() : 0);
+        result = HashUtils.MULTIPLIER * result + (mShopperReference != null ? mShopperReference.hashCode() : 0);
         return result;
     }
 
+    @NonNull
     @Override
     public String toString() {
         return "Payment{" + "CountryCode='" + mCountryCode + '\'' + ", Amount=" + mAmount + '}';

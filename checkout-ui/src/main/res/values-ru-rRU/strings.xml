@@ -10,12 +10,15 @@
     <string name="checkout_error_message_network_unavailable">Не удается подключиться к интернету. Проверьте свое подключение.</string>
     <string name="checkout_error_message_network_hint">Проверьте интернет-подключение и попробуйте еще раз.</string>
     <string name="checkout_pay_amount_format">Заплатить %s</string>
+    
+    <string name="checkout_surcharge_total_amount_format">Общая сумма включает %s дополнительного сбора.</string>
     <string name="checkout_one_click_delete_confirmation_message">Удалить способ оплаты %s?</string>
     <string name="checkout_one_click_delete">Удалить</string>
     <string name="checkout_error_dialog_title">Ошибка</string>
     <string name="checkout_error_redirect_failed">Сбой перенаправления</string>
     <string name="checkout_ok">ОК</string>
     <string name="checkout_skip">Пропустить</string>
+    <string name="checkout_backspace">Backspace</string>
 
     <!-- Card -->
     <string name="checkout_card_holder_name_hint">Имя владельца карты</string>
@@ -65,4 +68,41 @@
     <string name="checkout_sdd_account_holder_name">Имя владельца</string>
     <string name="checkout_sdd_consent">Выражаю согласие на списание нижеуказанной суммы с моего банковского счета.</string>
     <string name="checkout_sdd_iban_suggestion">Возможно, вы имели в виду</string>
+
+    <!-- Open Invoice -->
+
+    <!-- Personal Details -->
+    <string name="checkout_personal_details_title">Личные данные</string>
+    <string name="checkout_personal_details_first_name">Имя</string>
+    <string name="checkout_personal_details_infix">Приставка</string>
+    <string name="checkout_personal_details_last_name">Фамилия</string>
+    <string name="checkout_personal_details_gender">Пол</string>
+    <string name="checkout_personal_details_gender_male">Мужчина</string>
+    <string name="checkout_personal_details_gender_female">Женщина</string>
+    <string name="checkout_personal_details_gender_unknown">Неизвестно</string>
+    <string name="checkout_personal_details_date_of_birth">Дата рождения</string>
+    <string name="checkout_personal_details_telehone_number">Номер телефона</string>
+    <string name="checkout_personal_details_social_security_number">Номер социального страхования или ИНН</string>
+    
+    <string name="checkout_personal_details_shopper_email">Адрес эл. почты</string>
+
+    <!-- Address -->
+    <string name="checkout_address_street">Улица</string>
+    <string name="checkout_address_house_number">Номер дома</string>
+    <string name="checkout_address_city">Город</string>
+    <string name="checkout_address_postal_code">Почтовый индекс</string>
+    <string name="checkout_address_country">Страна</string>
+
+    <string name="checkout_billing_address_title">Платежный адрес</string>
+    <string name="checkout_delivery_address_title">Адрес доставки</string>
+    <string name="checkout_separate_delivery_address">Укажите отдельный адрес доставки</string>
+
+    <string name="checkout_terms_and_conditions_title">Условия</string>
+    <string name="checkout_terms_and_conditions_toggle">Я соглашаюсь с условиями</string>
+    <string name="checkout_klarna_terms_and_conditions_text">Даю согласие на обработку моих данных Klarna в целях идентификации и оценки кредитоспособности, а также расчета за покупку. Я имею право отозвать свое %s на обработку данных и в иных целях, предусмотренных законом. Применяются общие условия продавца.</string>
+    <string name="checkout_klarna_consent">согласие</string>
+    <string name="checkout_klarna_more_information">Дополнительная информация</string>
+
+    <string name="checkout_input_error_empty_field">Обязательное поле; пожалуйста, заполните его.</string>
+    <string name="checkout_input_error_incorrect_format">Неверный формат ввода.</string>
 </resources>

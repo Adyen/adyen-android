@@ -1,3 +1,11 @@
+/*
+ * Copyright (c) 2018 Adyen N.V.
+ *
+ * This file is open source and available under the MIT license. See the LICENSE file for more info.
+ *
+ * Created by timon on 19/07/2018.
+ */
+
 package com.adyen.checkout.core.internal;
 
 import android.app.Application;
@@ -23,13 +31,6 @@ import java.util.concurrent.Callable;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
-/**
- * Copyright (c) 2018 Adyen B.V.
- * <p>
- * This file is open source and available under the MIT license. See the LICENSE file for more info.
- * <p>
- * Created by timon on 19/07/2018.
- */
 public class GiroPayIssuerSearchHandler implements SearchHandler<List<GiroPayIssuer>> {
     private static final Handler MAIN_HANDLER = new Handler(Looper.getMainLooper());
 

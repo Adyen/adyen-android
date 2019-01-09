@@ -1,5 +1,14 @@
+/*
+ * Copyright (c) 2018 Adyen N.V.
+ *
+ * This file is open source and available under the MIT license. See the LICENSE file for more info.
+ *
+ * Created by timon on 01/05/2018.
+ */
+
 package com.adyen.checkout.ui.internal.common.util.image;
 
+import android.annotation.SuppressLint;
 import android.arch.lifecycle.Lifecycle;
 import android.arch.lifecycle.LifecycleOwner;
 import android.graphics.drawable.Drawable;
@@ -10,13 +19,6 @@ import android.widget.ImageView;
 
 import java.util.concurrent.Callable;
 
-/**
- * Copyright (c) 2018 Adyen B.V.
- * <p>
- * This file is open source and available under the MIT license. See the LICENSE file for more info.
- * <p>
- * Created by timon on 01/05/2018.
- */
 public final class RequestArgs {
     private final Rembrandt mRembrandt;
 
@@ -36,6 +38,7 @@ public final class RequestArgs {
         mImageCallable = imageCallable;
     }
 
+    @SuppressLint("LambdaLast")
     public void into(@NonNull LifecycleOwner lifecycleOwner, @NonNull ImageView target) {
         into(lifecycleOwner, new Target.ImageView(target));
     }
@@ -46,6 +49,7 @@ public final class RequestArgs {
         mRembrandt.startRequest(request);
     }
 
+    @SuppressLint("LambdaLast")
     public void into(@NonNull LifecycleOwner lifecycleOwner, @NonNull RecyclerView.ViewHolder viewHolder, @NonNull ImageView target) {
         into(lifecycleOwner, viewHolder, new Target.ImageView(target));
     }

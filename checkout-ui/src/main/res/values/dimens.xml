@@ -15,4 +15,8 @@
     <dimen name="height_button">58dp</dimen>
 
     <dimen name="elevation_default">2dp</dimen>
+
+    <dimen name="section_title_height">28dp</dimen>
+
+    <dimen name="primarySpinnerTextSize">18sp</dimen>
 </resources>

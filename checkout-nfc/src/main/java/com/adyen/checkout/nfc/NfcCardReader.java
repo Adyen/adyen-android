@@ -1,3 +1,11 @@
+/*
+ * Copyright (c) 2017 Adyen N.V.
+ *
+ * This file is open source and available under the MIT license. See the LICENSE file for more info.
+ *
+ * Created by timon on 29/08/2017.
+ */
+
 package com.adyen.checkout.nfc;
 
 import android.annotation.TargetApi;
@@ -28,18 +36,16 @@ import java.util.List;
 
 /**
  * The {@link NfcCardReader} provides an interface to read {@link Card} information from cards with an NFC chip.
- * <p>
- * Copyright (c) 2017 Adyen B.V.
- * <p>
- * This file is open source and available under the MIT license. See the LICENSE file for more info.
- * <p>
- * Created by timon on 29/08/2017.
  */
 @TargetApi(Build.VERSION_CODES.KITKAT)
 public final class NfcCardReader {
     private static final byte[] PSE = "1PAY.SYS.DDF01".getBytes(ByteUtil.NFC_CHARSET);
 
     private static final byte[] PPSE = "2PAY.SYS.DDF01".getBytes(ByteUtil.NFC_CHARSET);
+
+    private static final int DATE_LENGTH = 4;
+
+    private static final int DATE_MIDDLE = 2;
 
     private final Activity mActivity;
 
@@ -146,10 +152,10 @@ public final class NfcCardReader {
             String pan = panAndRest[0];
             String rest = panAndRest[1];
 
-            if (rest.length() >= 4) {
+            if (rest.length() >= DATE_LENGTH) {
                 try {
-                    int expiryMonth = Integer.parseInt(rest.substring(2, 4));
-                    int expiryYear = Integer.parseInt(rest.substring(0, 2));
+                    int expiryYear = Integer.parseInt(rest.substring(0, DATE_MIDDLE));
+                    int expiryMonth = Integer.parseInt(rest.substring(DATE_MIDDLE, DATE_LENGTH));
 
                     Card card = new Card.Builder()
                             .setNumber(pan)
@@ -185,8 +191,9 @@ public final class NfcCardReader {
 
                 try {
                     String expiryDateString = ByteUtil.bytesToHex(expiryDateBytes).replaceAll("\\s", "");
-                    int expiryMonth = Integer.parseInt(expiryDateString.substring(2, 4));
-                    int expiryYear = Integer.parseInt(expiryDateString.substring(0, 2));
+
+                    int expiryYear = Integer.parseInt(expiryDateString.substring(0, DATE_MIDDLE));
+                    int expiryMonth = Integer.parseInt(expiryDateString.substring(DATE_MIDDLE, DATE_LENGTH));
 
                     Card card = new Card.Builder()
                             .setNumber(pan)
@@ -329,6 +336,7 @@ public final class NfcCardReader {
         return TagLengthValue.parseTagLengthValue(response != null ? response.getValue() : null);
     }
 
+    @SuppressWarnings("checkstyle:MagicNumber")
     @Nullable
     private TagLengthValue getPseRecord(@NonNull IsoDep isoDep, @Nullable TagLengthValue sfi) throws IOException {
         byte[] sfiBytes = sfi != null ? sfi.getValue() : null;
@@ -390,6 +398,7 @@ public final class NfcCardReader {
         return TagLengthValue.parseTagLengthValue(response != null ? response.getValue() : null);
     }
 
+    @SuppressWarnings("checkstyle:MagicNumber")
     @NonNull
     private List<TagLengthValue> getRecordInformation(@NonNull IsoDep isoDep, @NonNull ApplicationFileLocator applicationFileLocator)
             throws IOException {
@@ -468,6 +477,8 @@ public final class NfcCardReader {
     }
 
     private final class NfcReaderCallback implements NfcAdapter.ReaderCallback {
+        private static final int TIMEOUT = 5000;
+
         @Override
         public void onTagDiscovered(Tag tag) {
             try {
@@ -475,7 +486,7 @@ public final class NfcCardReader {
 
                 if (isoDep != null) {
                     notifyChipDiscovered(true);
-                    isoDep.setTimeout(5000);
+                    isoDep.setTimeout(TIMEOUT);
                     isoDep.connect();
                     readCard(isoDep);
                     isoDep.close();

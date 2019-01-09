@@ -1,3 +1,11 @@
+/*
+ * Copyright (c) 2018 Adyen N.V.
+ *
+ * This file is open source and available under the MIT license. See the LICENSE file for more info.
+ *
+ * Created by timon on 01/05/2018.
+ */
+
 package com.adyen.checkout.ui.internal.common.util.image;
 
 import android.arch.lifecycle.Lifecycle;
@@ -6,13 +14,6 @@ import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v7.widget.RecyclerView;
 
-/**
- * Copyright (c) 2018 Adyen B.V.
- * <p>
- * This file is open source and available under the MIT license. See the LICENSE file for more info.
- * <p>
- * Created by timon on 01/05/2018.
- */
 class ViewHolderRequest extends LifecycleAwareRequest {
     private RecyclerView.ViewHolder mViewHolder;
 

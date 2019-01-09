@@ -1,3 +1,11 @@
+/*
+ * Copyright (c) 2018 Adyen N.V.
+ *
+ * This file is open source and available under the MIT license. See the LICENSE file for more info.
+ *
+ * Created by Ran Haveshush on 10/10/2018.
+ */
+
 package com.adyen.example.androidtest;
 
 import android.support.annotation.NonNull;
@@ -27,13 +35,6 @@ import static android.support.test.espresso.matcher.ViewMatchers.withText;
 import static com.adyen.example.androidtest.EspressoTestUtils.waitForActivity;
 import static com.adyen.example.androidtest.EspressoTestUtils.waitForView;
 
-/**
- * Copyright (c) 2018 Adyen B.V.
- * <p>
- * This file is open source and available under the MIT license. See the LICENSE file for more info.
- * <p>
- * Created by Ran Haveshush on 10/10/2018.
- */
 public class PaymentAppTestUtils {
 
     public static void changePaymentSetup(@NonNull final PaymentSetup paymentSetup) {

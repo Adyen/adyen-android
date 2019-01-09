@@ -1,22 +1,26 @@
+/*
+ * Copyright (c) 2018 Adyen N.V.
+ *
+ * This file is open source and available under the MIT license. See the LICENSE file for more info.
+ *
+ * Created by timon on 09/07/2018.
+ */
+
 package com.adyen.checkout.core.internal.model;
 
 import android.os.Parcelable;
 import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
 
 import com.adyen.checkout.base.internal.JsonObject;
+import com.adyen.checkout.base.internal.HashUtils;
 import com.adyen.checkout.core.model.Amount;
 
 import org.json.JSONException;
 import org.json.JSONObject;
 
-/**
- * Copyright (c) 2018 Adyen B.V.
- * <p>
- * This file is open source and available under the MIT license. See the LICENSE file for more info.
- * <p>
- * Created by timon on 09/07/2018.
- */
 public final class AmountImpl extends JsonObject implements Amount {
+    @NonNull
     public static final Parcelable.Creator<AmountImpl> CREATOR = new DefaultCreator<>(AmountImpl.class);
 
     private final long mValue;
@@ -42,7 +46,7 @@ public final class AmountImpl extends JsonObject implements Amount {
     }
 
     @Override
-    public boolean equals(Object o) {
+    public boolean equals(@Nullable Object o) {
         if (this == o) {
             return true;
         }
@@ -60,11 +64,12 @@ public final class AmountImpl extends JsonObject implements Amount {
 
     @Override
     public int hashCode() {
-        int result = (int) (mValue ^ (mValue >>> 32));
-        result = 31 * result + (mCurrency != null ? mCurrency.hashCode() : 0);
+        int result = Long.valueOf(mValue).hashCode();
+        result = HashUtils.MULTIPLIER * result + (mCurrency != null ? mCurrency.hashCode() : 0);
         return result;
     }
 
+    @NonNull
     @Override
     public String toString() {
         return "Amount{" + "Value=" + mValue + ", Currency='" + mCurrency + '\'' + '}';

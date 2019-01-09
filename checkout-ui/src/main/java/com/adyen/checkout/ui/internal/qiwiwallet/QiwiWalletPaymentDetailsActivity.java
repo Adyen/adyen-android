@@ -1,3 +1,11 @@
+/*
+ * Copyright (c) 2017 Adyen N.V.
+ *
+ * This file is open source and available under the MIT license. See the LICENSE file for more info.
+ *
+ * Created by timon on 16/11/2017.
+ */
+
 package com.adyen.checkout.ui.internal.qiwiwallet;
 
 import android.content.Context;
@@ -9,6 +17,7 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Spinner;
+import android.widget.TextView;
 
 import com.adyen.checkout.core.PaymentReference;
 import com.adyen.checkout.core.model.InputDetail;
@@ -23,13 +32,6 @@ import com.adyen.checkout.ui.internal.common.util.PayButtonUtil;
 import java.util.ArrayList;
 import java.util.List;
 
-/**
- * Copyright (c) 2017 Adyen B.V.
- * <p>
- * This file is open source and available under the MIT license. See the LICENSE file for more info.
- * <p>
- * Created by timon on 16/11/2017.
- */
 public class QiwiWalletPaymentDetailsActivity extends CheckoutDetailsActivity {
     private static final String EXTRA_PAYMENT_METHOD = "EXTRA_PAYMENT_METHOD";
 
@@ -40,6 +42,8 @@ public class QiwiWalletPaymentDetailsActivity extends CheckoutDetailsActivity {
     private EditText mPhoneNumberEditText;
 
     private Button mPayButton;
+
+    private TextView mSurchargeTextView;
 
     @NonNull
     public static Intent newIntent(@NonNull Context context, @NonNull PaymentReference paymentReference, @NonNull PaymentMethod paymentMethod) {
@@ -70,7 +74,6 @@ public class QiwiWalletPaymentDetailsActivity extends CheckoutDetailsActivity {
         mPhoneNumberPrefixSpinner.setAdapter(adapter);
         mPhoneNumberEditText = findViewById(R.id.editText_phoneNumber);
         mPayButton = findViewById(R.id.button_continue);
-        PayButtonUtil.setPayButtonText(this, mPayButton);
         mPayButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -80,6 +83,10 @@ public class QiwiWalletPaymentDetailsActivity extends CheckoutDetailsActivity {
                 getPaymentHandler().initiatePayment(mPaymentMethod, qiwiWalletDetails);
             }
         });
+
+        mSurchargeTextView = findViewById(R.id.textView_surcharge);
+
+        PayButtonUtil.setPayButtonText(this, mPaymentMethod, mPayButton, mSurchargeTextView);
     }
 
     @NonNull

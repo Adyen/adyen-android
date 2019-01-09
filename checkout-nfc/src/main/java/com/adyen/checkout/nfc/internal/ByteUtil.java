@@ -1,3 +1,11 @@
+/*
+ * Copyright (c) 2017 Adyen N.V.
+ *
+ * This file is open source and available under the MIT license. See the LICENSE file for more info.
+ *
+ * Created by timon on 30/08/2017.
+ */
+
 package com.adyen.checkout.nfc.internal;
 
 import android.support.annotation.NonNull;
@@ -6,16 +14,11 @@ import android.support.annotation.Nullable;
 import java.nio.charset.Charset;
 import java.util.Locale;
 
-/**
- * Copyright (c) 2017 Adyen B.V.
- * <p>
- * This file is open source and available under the MIT license. See the LICENSE file for more info.
- * <p>
- * Created by timon on 30/08/2017.
- */
 public final class ByteUtil {
+    @NonNull
     public static final Charset NFC_CHARSET = Charset.forName("ISO-8859-1");
 
+    @SuppressWarnings("checkstyle:AvoidEscapedUnicodeCharacters")
     private static final String HEX_SUBSCRIPT_FORMAT = "[%s]\u2081\u2086";
 
     private static final String BYTE_HEX = "%02X ";
@@ -39,6 +42,7 @@ public final class ByteUtil {
         return sb.toString().trim();
     }
 
+    @NonNull
     public static String bytesToHexFormatted(@Nullable byte... bytes) {
         return String.format(Locale.US, HEX_SUBSCRIPT_FORMAT, bytesToHex(bytes));
     }

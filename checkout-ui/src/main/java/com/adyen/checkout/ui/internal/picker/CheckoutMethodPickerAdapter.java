@@ -1,3 +1,11 @@
+/*
+ * Copyright (c) 2018 Adyen N.V.
+ *
+ * This file is open source and available under the MIT license. See the LICENSE file for more info.
+ *
+ * Created by timon on 20/03/2018.
+ */
+
 package com.adyen.checkout.ui.internal.picker;
 
 import android.arch.lifecycle.LifecycleOwner;
@@ -12,24 +20,21 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 
 import com.adyen.checkout.base.LogoApi;
+import com.adyen.checkout.core.CheckoutException;
+import com.adyen.checkout.core.model.SurchargeConfiguration;
 import com.adyen.checkout.ui.R;
 import com.adyen.checkout.ui.internal.common.model.CheckoutMethod;
 import com.adyen.checkout.ui.internal.common.model.CheckoutMethodPickerListener;
 import com.adyen.checkout.ui.internal.common.util.SnackbarSwipeHandler;
+import com.adyen.checkout.ui.internal.common.util.SurchargeFormat;
 import com.adyen.checkout.ui.internal.common.util.ThemeUtil;
 import com.adyen.checkout.ui.internal.common.util.recyclerview.SimpleDiffCallback;
 import com.adyen.checkout.ui.internal.common.view.holder.TwoLineItemViewHolder;
+import com.adyen.checkout.util.internal.TextFormat;
 
 import java.util.ArrayList;
 import java.util.List;
 
-/**
- * Copyright (c) 2018 Adyen B.V.
- * <p>
- * This file is open source and available under the MIT license. See the LICENSE file for more info.
- * <p>
- * Created by timon on 20/03/2018.
- */
 class CheckoutMethodPickerAdapter extends RecyclerView.Adapter<TwoLineItemViewHolder> {
     private static final int VIEW_TYPE_DEFAULT = 0;
 
@@ -107,7 +112,20 @@ class CheckoutMethodPickerAdapter extends RecyclerView.Adapter<TwoLineItemViewHo
     public void onBindViewHolder(@NonNull TwoLineItemViewHolder holder, int position) {
         CheckoutMethod checkoutMethod = mAllCheckoutMethods.get(position);
         checkoutMethod.buildLogoRequestArgs(mLogoApi).into(mLifecycleOwner, holder, holder.getLogoImageView());
-        holder.setPrimaryText(checkoutMethod.getPrimaryText());
+
+        SurchargeConfiguration surchargeConfiguration;
+        try {
+            surchargeConfiguration = checkoutMethod.getPaymentMethod().getConfiguration(SurchargeConfiguration.class);
+            Context context = holder.itemView.getContext();
+
+            String primaryText = checkoutMethod.getPrimaryText();
+            CharSequence surcharge = SurchargeFormat.format(context, surchargeConfiguration);
+
+            holder.setPrimaryText(TextFormat.format(context, R.string.checkout_surcharge_cost_format, primaryText, surcharge));
+        } catch (CheckoutException e) {
+            holder.setPrimaryText(checkoutMethod.getPrimaryText());
+        }
+
         holder.setSecondaryText(checkoutMethod.getSecondaryText());
         holder.itemView.setTag(checkoutMethod.getPaymentMethod().getType());
     }

@@ -1,3 +1,11 @@
+/*
+ * Copyright (c) 2017 Adyen N.V.
+ *
+ * This file is open source and available under the MIT license. See the LICENSE file for more info.
+ *
+ * Created by timon on 09/08/2017.
+ */
+
 package com.adyen.checkout.core.model;
 
 import android.os.Parcel;
@@ -11,14 +19,9 @@ import org.json.JSONObject;
 
 /**
  * {@link PaymentMethodDetails} for PayPal payments.
- * <p>
- * Copyright (c) 2017 Adyen B.V.
- * <p>
- * This file is open source and available under the MIT license. See the LICENSE file for more info.
- * <p>
- * Created by timon on 09/08/2017.
  */
 public final class PayPalDetails extends PaymentMethodDetails {
+    @NonNull
     public static final Creator<PayPalDetails> CREATOR = new Creator<PayPalDetails>() {
         @Override
         public PayPalDetails createFromParcel(Parcel parcel) {
@@ -31,6 +34,7 @@ public final class PayPalDetails extends PaymentMethodDetails {
         }
     };
 
+    @NonNull
     public static final String KEY_STORE_DETAILS = "storeDetails";
 
     private Boolean mStoreDetails;
@@ -46,7 +50,7 @@ public final class PayPalDetails extends PaymentMethodDetails {
     }
 
     @Override
-    public void writeToParcel(Parcel parcel, int flags) {
+    public void writeToParcel(@NonNull Parcel parcel, int flags) {
         Parcelables.writeSerializable(parcel, mStoreDetails);
     }
 
@@ -60,7 +64,7 @@ public final class PayPalDetails extends PaymentMethodDetails {
     }
 
     @Override
-    public boolean equals(Object o) {
+    public boolean equals(@Nullable Object o) {
         if (this == o) {
             return true;
         }

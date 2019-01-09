@@ -1,7 +1,16 @@
+/*
+ * Copyright (c) 2018 Adyen N.V.
+ *
+ * This file is open source and available under the MIT license. See the LICENSE file for more info.
+ *
+ * Created by timon on 28/05/2018.
+ */
+
 package com.adyen.checkout.core.internal.model;
 
 import android.os.Parcelable;
 import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
 
 import com.adyen.checkout.base.internal.JsonObject;
 import com.adyen.checkout.core.internal.ProvidedBy;
@@ -10,15 +19,9 @@ import com.adyen.checkout.core.model.RedirectData;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-/**
- * Copyright (c) 2018 Adyen B.V.
- * <p>
- * This file is open source and available under the MIT license. See the LICENSE file for more info.
- * <p>
- * Created by timon on 28/05/2018.
- */
 @ProvidedBy(ThreeDSecureRedirectData.class)
 public final class ThreeDSecureRedirectData extends JsonObject implements RedirectData {
+    @NonNull
     public static final Parcelable.Creator<ThreeDSecureRedirectData> CREATOR = new DefaultCreator<>(ThreeDSecureRedirectData.class);
 
     private final String mMd;
@@ -30,7 +33,7 @@ public final class ThreeDSecureRedirectData extends JsonObject implements Redire
     }
 
     @Override
-    public boolean equals(Object o) {
+    public boolean equals(@Nullable Object o) {
         if (this == o) {
             return true;
         }

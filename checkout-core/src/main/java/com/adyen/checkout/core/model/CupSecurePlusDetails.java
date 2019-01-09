@@ -1,24 +1,28 @@
+/*
+ * Copyright (c) 2018 Adyen N.V.
+ *
+ * This file is open source and available under the MIT license. See the LICENSE file for more info.
+ *
+ * Created by timon on 01/05/2018.
+ */
+
 package com.adyen.checkout.core.model;
 
 import android.os.Parcel;
 import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
 
 import com.adyen.checkout.core.CheckoutException;
 import com.adyen.checkout.core.internal.model.AdditionalPaymentMethodDetails;
+import com.adyen.checkout.base.internal.HashUtils;
 import com.adyen.checkout.core.internal.model.PaymentInitiationResponse;
 import com.adyen.checkout.core.internal.model.ThreeDSecureRedirectData;
 
 import org.json.JSONException;
 import org.json.JSONObject;
 
-/**
- * Copyright (c) 2018 Adyen B.V.
- * <p>
- * This file is open source and available under the MIT license. See the LICENSE file for more info.
- * <p>
- * Created by timon on 01/05/2018.
- */
 public final class CupSecurePlusDetails extends AdditionalPaymentMethodDetails {
+    @NonNull
     public static final Creator<CupSecurePlusDetails> CREATOR = new Creator<CupSecurePlusDetails>() {
         @Override
         public CupSecurePlusDetails createFromParcel(@NonNull Parcel source) {
@@ -31,6 +35,7 @@ public final class CupSecurePlusDetails extends AdditionalPaymentMethodDetails {
         }
     };
 
+    @NonNull
     public static final String KEY_SMS_CODE = "cupsecureplus.smscode";
 
     private String mSmsCode;
@@ -53,7 +58,7 @@ public final class CupSecurePlusDetails extends AdditionalPaymentMethodDetails {
     }
 
     @Override
-    public void writeToParcel(Parcel dest, int flags) {
+    public void writeToParcel(@NonNull Parcel dest, int flags) {
         dest.writeString(mSmsCode);
         dest.writeString(mMd);
     }
@@ -69,7 +74,7 @@ public final class CupSecurePlusDetails extends AdditionalPaymentMethodDetails {
     }
 
     @Override
-    public boolean equals(Object o) {
+    public boolean equals(@Nullable Object o) {
         if (this == o) {
             return true;
         }
@@ -88,7 +93,7 @@ public final class CupSecurePlusDetails extends AdditionalPaymentMethodDetails {
     @Override
     public int hashCode() {
         int result = mSmsCode != null ? mSmsCode.hashCode() : 0;
-        result = 31 * result + (mMd != null ? mMd.hashCode() : 0);
+        result = HashUtils.MULTIPLIER * result + (mMd != null ? mMd.hashCode() : 0);
         return result;
     }
 

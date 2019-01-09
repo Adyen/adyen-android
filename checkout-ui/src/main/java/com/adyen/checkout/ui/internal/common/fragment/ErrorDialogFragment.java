@@ -1,3 +1,11 @@
+/*
+ * Copyright (c) 2017 Adyen N.V.
+ *
+ * This file is open source and available under the MIT license. See the LICENSE file for more info.
+ *
+ * Created by timon on 03/10/2017.
+ */
+
 package com.adyen.checkout.ui.internal.common.fragment;
 
 import android.app.Dialog;
@@ -20,14 +28,8 @@ import com.adyen.checkout.ui.R;
 
 import java.net.UnknownHostException;
 
-/**
- * Copyright (c) 2017 Adyen B.V.
- * <p>
- * This file is open source and available under the MIT license. See the LICENSE file for more info.
- * <p>
- * Created by timon on 03/10/2017.
- */
 public class ErrorDialogFragment extends AppCompatDialogFragment {
+    @NonNull
     public static final String TAG = ErrorDialogFragment.class.getName() + ".TAG";
 
     private static final String ARG_TITLE = "ARG_TITLE";
@@ -84,7 +86,7 @@ public class ErrorDialogFragment extends AppCompatDialogFragment {
 
     @NonNull
     @Override
-    public Dialog onCreateDialog(Bundle savedInstanceState) {
+    public Dialog onCreateDialog(@NonNull Bundle savedInstanceState) {
         AppCompatDialog dialog = (AppCompatDialog) super.onCreateDialog(savedInstanceState);
         dialog.supportRequestWindowFeature(Window.FEATURE_NO_TITLE);
 

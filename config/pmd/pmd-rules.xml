@@ -21,6 +21,7 @@
     <rule ref="rulesets/java/basic.xml"/>
     <rule ref="rulesets/java/design.xml">
         <exclude name="ConfusingTernary"/>
+        <exclude name="AbstractClassWithoutAbstractMethod"/>
     </rule>
     <rule ref="rulesets/java/typeresolution.xml"/>
     <rule ref="rulesets/java/empty.xml/EmptyCatchBlock">

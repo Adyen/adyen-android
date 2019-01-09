@@ -1,3 +1,11 @@
+/*
+ * Copyright (c) 2018 Adyen N.V.
+ *
+ * This file is open source and available under the MIT license. See the LICENSE file for more info.
+ *
+ * Created by timon on 11/06/2018.
+ */
+
 package com.adyen.checkout.wechatpay;
 
 import android.app.Activity;
@@ -13,14 +21,8 @@ import com.adyen.checkout.util.PaymentMethodTypes;
 import com.adyen.checkout.wechatpay.internal.WeChatPayDetailsActivity;
 import com.adyen.checkout.wechatpay.internal.WeChatPayUtil;
 
-/**
- * Copyright (c) 2018 Adyen B.V.
- * <p>
- * This file is open source and available under the MIT license. See the LICENSE file for more info.
- * <p>
- * Created by timon on 11/06/2018.
- */
 public final class WeChatPayHandler implements PaymentMethodHandler {
+    @NonNull
     public static final Factory FACTORY = new Factory() {
         @Override
         public boolean supports(@NonNull Application application, @NonNull PaymentMethod paymentMethod) {

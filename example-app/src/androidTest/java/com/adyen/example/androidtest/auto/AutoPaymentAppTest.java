@@ -1,3 +1,11 @@
+/*
+ * Copyright (c) 2017 Adyen N.V.
+ *
+ * This file is open source and available under the MIT license. See the LICENSE file for more info.
+ *
+ * Created by timon on 13/10/2017.
+ */
+
 package com.adyen.example.androidtest.auto;
 
 import android.support.test.espresso.assertion.ViewAssertions;
@@ -27,13 +35,6 @@ import static com.adyen.example.androidtest.PaymentAppTestUtils.confirmPaymentAn
 import static com.adyen.example.androidtest.PaymentAppTestUtils.goToPaymentMethodsOverview;
 import static com.adyen.example.androidtest.PaymentAppTestUtils.selectPaymentMethodByName;
 
-/**
- * Copyright (c) 2017 Adyen B.V.
- * <p>
- * This file is open source and available under the MIT license. See the LICENSE file for more info.
- * <p>
- * Created by timon on 13/10/2017.
- */
 @RunWith(AndroidJUnit4.class)
 public class AutoPaymentAppTest {
     @Rule

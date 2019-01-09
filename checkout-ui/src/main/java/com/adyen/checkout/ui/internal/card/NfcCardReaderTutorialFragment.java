@@ -1,3 +1,11 @@
+/*
+ * Copyright (c) 2017 Adyen N.V.
+ *
+ * This file is open source and available under the MIT license. See the LICENSE file for more info.
+ *
+ * Created by ran on 19/04/2017.
+ */
+
 package com.adyen.checkout.ui.internal.card;
 
 import android.app.Activity;
@@ -27,15 +35,9 @@ import android.widget.Toast;
 
 import com.adyen.checkout.ui.R;
 
-/**
- * Copyright (c) 2017 Adyen B.V.
- * <p>
- * This file is open source and available under the MIT license. See the LICENSE file for more info.
- * <p>
- * Created by ran on 19/04/2017.
- */
 // TODO: 25/06/2018 Fix animation on Build.VERSION.SDK_INT <= Build.VERSION_CODES.M.
 public class NfcCardReaderTutorialFragment extends AppCompatDialogFragment {
+    @NonNull
     public static final String TAG = NfcCardReaderTutorialFragment.class.getSimpleName();
 
     private final AnimationCallbackDelegate mAnimationCallbackDelegate = new AnimationCallbackDelegate();
@@ -50,17 +52,13 @@ public class NfcCardReaderTutorialFragment extends AppCompatDialogFragment {
 
     private Listener mListener;
 
-    interface Listener {
-        boolean isNfcEnabledOnDevice();
-    }
-
     @NonNull
     public static NfcCardReaderTutorialFragment newInstance() {
         return new NfcCardReaderTutorialFragment();
     }
 
     @Override
-    public void onAttach(Context context) {
+    public void onAttach(@NonNull Context context) {
         super.onAttach(context);
 
         if (context instanceof Listener) {
@@ -72,7 +70,7 @@ public class NfcCardReaderTutorialFragment extends AppCompatDialogFragment {
 
     @NonNull
     @Override
-    public Dialog onCreateDialog(Bundle savedInstanceState) {
+    public Dialog onCreateDialog(@Nullable Bundle savedInstanceState) {
         AppCompatDialog dialog = (AppCompatDialog) super.onCreateDialog(savedInstanceState);
         dialog.supportRequestWindowFeature(Window.FEATURE_NO_TITLE);
 
@@ -81,7 +79,7 @@ public class NfcCardReaderTutorialFragment extends AppCompatDialogFragment {
 
     @Nullable
     @Override
-    public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, Bundle savedInstanceState) {
+    public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_nfc_card_reader_tutorial, container, false);
 
         mTutorialAnimImageView = view.findViewById(R.id.imageView_tutorialAnim);
@@ -139,7 +137,7 @@ public class NfcCardReaderTutorialFragment extends AppCompatDialogFragment {
     }
 
     @Override
-    public void onDismiss(DialogInterface dialog) {
+    public void onDismiss(@NonNull DialogInterface dialog) {
         super.onDismiss(dialog);
 
         final Activity activity = getActivity();
@@ -226,6 +224,10 @@ public class NfcCardReaderTutorialFragment extends AppCompatDialogFragment {
         private void register(@NonNull Drawable drawable) {
             registerAnimationCallback(drawable, mAnimationCallbackCompat, mAnimationCallback);
         }
+    }
+
+    interface Listener {
+        boolean isNfcEnabledOnDevice();
     }
 
     private final class ReverseAnimationCallbackDelegate {

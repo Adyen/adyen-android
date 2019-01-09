@@ -1,3 +1,11 @@
+/*
+ * Copyright (c) 2017 Adyen N.V.
+ *
+ * This file is open source and available under the MIT license. See the LICENSE file for more info.
+ *
+ * Created by timon on 12/08/2017.
+ */
+
 package com.adyen.checkout.ui.internal.sepadirectdebit;
 
 import android.content.Context;
@@ -32,13 +40,6 @@ import com.adyen.checkout.util.sepadirectdebit.AsYouTypeIbanFormatter;
 import com.adyen.checkout.util.sepadirectdebit.HolderName;
 import com.adyen.checkout.util.sepadirectdebit.Iban;
 
-/**
- * Copyright (c) 2017 Adyen B.V.
- * <p>
- * This file is open source and available under the MIT license. See the LICENSE file for more info.
- * <p>
- * Created by timon on 12/08/2017.
- */
 public class SddDetailsActivity extends CheckoutDetailsActivity implements IbanSuggestionsAdapter.Listener, View.OnClickListener {
     private static final String EXTRA_PAYMENT_METHOD = "EXTRA_PAYMENT_METHOD";
 
@@ -58,6 +59,8 @@ public class SddDetailsActivity extends CheckoutDetailsActivity implements IbanS
 
     private Button mPayButton;
 
+    private TextView mSurchargeTextView;
+
     private Snackbar mSnackbar;
 
     @NonNull
@@ -76,7 +79,7 @@ public class SddDetailsActivity extends CheckoutDetailsActivity implements IbanS
     }
 
     @Override
-    public void onClick(View v) {
+    public void onClick(@NonNull View v) {
         if (v == mPayButton && validate()) {
             Iban iban = Iban.parse(mIbanEditText.getText().toString());
             String holderName = mAccountHolderNameEditText.getText().toString().trim();
@@ -97,8 +100,6 @@ public class SddDetailsActivity extends CheckoutDetailsActivity implements IbanS
         setTitle(mPaymentMethod.getName());
         mIbanEditText = findViewById(R.id.editText_iban);
 
-        ValidationListener validationListener = new ValidationListener();
-
         mIbanSuggestionsRecyclerView = findViewById(R.id.recyclerView_ibanSuggestions);
         mIbanSuggestionsRecyclerView.setItemAnimator(new CheckoutItemAnimator(getResources()));
         mIbanSuggestionsAdapter = new IbanSuggestionsAdapter(mIbanEditText, this);
@@ -112,6 +113,9 @@ public class SddDetailsActivity extends CheckoutDetailsActivity implements IbanS
                 mIbanSuggestionsRecyclerView.setVisibility(mIbanSuggestionsAdapter.getItemCount() == 0 ? View.GONE : View.VISIBLE);
             }
         });
+
+        ValidationListener validationListener = new ValidationListener();
+
         mIbanEditText.addTextChangedListener(validationListener);
         mIbanEditText.setOnFocusChangeListener(validationListener);
         AsYouTypeIbanFormatter.attach(mIbanEditText);
@@ -124,8 +128,10 @@ public class SddDetailsActivity extends CheckoutDetailsActivity implements IbanS
         mConsentSwitchCompat.setOnCheckedChangeListener(validationListener);
 
         mPayButton = findViewById(R.id.button_continue);
-        PayButtonUtil.setPayButtonText(this, mPayButton);
         mPayButton.setOnClickListener(this);
+        mSurchargeTextView = findViewById(R.id.textView_surcharge);
+
+        PayButtonUtil.setPayButtonText(this, mPaymentMethod, mPayButton, mSurchargeTextView);
 
         validate();
 

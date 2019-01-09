@@ -1,3 +1,11 @@
+/*
+ * Copyright (c) 2017 Adyen N.V.
+ *
+ * This file is open source and available under the MIT license. See the LICENSE file for more info.
+ *
+ * Created by timon on 24/11/2017.
+ */
+
 package com.adyen.checkout.core.internal;
 
 import android.support.annotation.NonNull;
@@ -6,13 +14,6 @@ import android.text.TextUtils;
 
 import java.util.Locale;
 
-/**
- * Copyright (c) 2017 Adyen B.V.
- * <p>
- * This file is open source and available under the MIT license. See the LICENSE file for more info.
- * <p>
- * Created by timon on 24/11/2017.
- */
 public final class SearchUtil {
     public static boolean matches(@Nullable CharSequence query, @NonNull CharSequence string) {
         if (TextUtils.isEmpty(query)) {

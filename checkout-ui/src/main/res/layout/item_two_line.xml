@@ -34,6 +34,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:textAppearance="@style/Checkout.TextAppearance.Primary"
+            android:textIsSelectable="false"
             tools:text="Primary Text" />
 
         <TextView

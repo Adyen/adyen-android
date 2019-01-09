@@ -1,3 +1,11 @@
+/*
+ * Copyright (c) 2017 Adyen N.V.
+ *
+ * This file is open source and available under the MIT license. See the LICENSE file for more info.
+ *
+ * Created by ran on 08/05/2018.
+ */
+
 package com.adyen.checkout.wechatpay.internal;
 
 import android.app.Activity;
@@ -5,12 +13,6 @@ import android.support.annotation.NonNull;
 
 /**
  * Provider for the {@link WeChatPayUtil}.
- * <p>
- * Copyright (c) 2017 Adyen B.V.
- * <p>
- * This file is open source and available under the MIT license. See the LICENSE file for more info.
- * <p>
- * Created by ran on 08/05/2018.
  */
 public final class WeChatPayProvider {
 
@@ -41,6 +43,7 @@ public final class WeChatPayProvider {
             return this;
         }
 
+        @NonNull
         public WeChatPayProvider build() {
             return new WeChatPayProvider(this);
         }

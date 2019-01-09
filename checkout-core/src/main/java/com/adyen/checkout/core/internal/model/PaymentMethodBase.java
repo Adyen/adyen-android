@@ -1,20 +1,23 @@
+/*
+ * Copyright (c) 2018 Adyen N.V.
+ *
+ * This file is open source and available under the MIT license. See the LICENSE file for more info.
+ *
+ * Created by timon on 01/05/2018.
+ */
+
 package com.adyen.checkout.core.internal.model;
 
 import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
 
 import com.adyen.checkout.base.internal.JsonObject;
 
 import org.json.JSONException;
 import org.json.JSONObject;
 
-/**
- * Copyright (c) 2018 Adyen B.V.
- * <p>
- * This file is open source and available under the MIT license. See the LICENSE file for more info.
- * <p>
- * Created by timon on 01/05/2018.
- */
 public class PaymentMethodBase extends JsonObject {
+    @NonNull
     public static final Creator<PaymentMethodBase> CREATOR = new DefaultCreator<>(PaymentMethodBase.class);
 
     private final String mType;
@@ -26,7 +29,7 @@ public class PaymentMethodBase extends JsonObject {
     }
 
     @Override
-    public boolean equals(Object o) {
+    public boolean equals(@Nullable Object o) {
         if (this == o) {
             return true;
         }

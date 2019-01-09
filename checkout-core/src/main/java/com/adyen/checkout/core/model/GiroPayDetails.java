@@ -1,3 +1,11 @@
+/*
+ * Copyright (c) 2017 Adyen N.V.
+ *
+ * This file is open source and available under the MIT license. See the LICENSE file for more info.
+ *
+ * Created by timon on 22/11/2017.
+ */
+
 package com.adyen.checkout.core.model;
 
 import android.os.Parcel;
@@ -7,14 +15,8 @@ import android.support.annotation.Nullable;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-/**
- * Copyright (c) 2017 Adyen B.V.
- * <p>
- * This file is open source and available under the MIT license. See the LICENSE file for more info.
- * <p>
- * Created by timon on 22/11/2017.
- */
 public final class GiroPayDetails extends PaymentMethodDetails {
+    @NonNull
     public static final Creator<GiroPayDetails> CREATOR = new Creator<GiroPayDetails>() {
         @Override
         public GiroPayDetails createFromParcel(Parcel source) {
@@ -27,7 +29,8 @@ public final class GiroPayDetails extends PaymentMethodDetails {
         }
     };
 
-    public static final String KEY_GIROPAY_BIC = "giropay.bic";
+    @NonNull
+    public static final String KEY_GIROPAY_BIC = "bic";
 
     private String mBic;
 
@@ -42,7 +45,7 @@ public final class GiroPayDetails extends PaymentMethodDetails {
     }
 
     @Override
-    public void writeToParcel(Parcel dest, int flags) {
+    public void writeToParcel(@NonNull Parcel dest, int flags) {
         dest.writeString(mBic);
     }
 
@@ -56,7 +59,7 @@ public final class GiroPayDetails extends PaymentMethodDetails {
     }
 
     @Override
-    public boolean equals(Object o) {
+    public boolean equals(@Nullable Object o) {
         if (this == o) {
             return true;
         }

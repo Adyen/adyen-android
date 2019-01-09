@@ -1,3 +1,11 @@
+/*
+ * Copyright (c) 2017 Adyen N.V.
+ *
+ * This file is open source and available under the MIT license. See the LICENSE file for more info.
+ *
+ * Created by timon on 15/08/2017.
+ */
+
 package com.adyen.checkout.ui.internal.common.util.recyclerview;
 
 import android.support.annotation.NonNull;
@@ -5,13 +13,6 @@ import android.support.v7.util.DiffUtil;
 
 import java.util.List;
 
-/**
- * Copyright (c) 2017 Adyen B.V.
- * <p>
- * This file is open source and available under the MIT license. See the LICENSE file for more info.
- * <p>
- * Created by timon on 15/08/2017.
- */
 public class SimpleDiffCallback<T extends SimpleDiffCallback.Comparable<T>> extends DiffUtil.Callback {
     private List<T> mOldItems;
 

@@ -1,5 +1,14 @@
+/*
+ * Copyright (c) 2018 Adyen N.V.
+ *
+ * This file is open source and available under the MIT license. See the LICENSE file for more info.
+ *
+ * Created by timon on 25/01/2018.
+ */
+
 package com.adyen.checkout.core.card;
 
+import android.annotation.SuppressLint;
 import android.app.Application;
 import android.support.annotation.NonNull;
 
@@ -11,18 +20,14 @@ import com.adyen.checkout.core.card.internal.CardValidatorImpl;
 import java.util.Date;
 import java.util.concurrent.Callable;
 
-/**
- * Copyright (c) 2018 Adyen B.V.
- * <p>
- * This file is open source and available under the MIT license. See the LICENSE file for more info.
- * <p>
- * Created by timon on 25/01/2018.
- */
 public final class Cards {
+    @NonNull
     public static final CardFormatter FORMATTER;
 
+    @NonNull
     public static final CardValidator VALIDATOR;
 
+    @NonNull
     public static final CardEncryptor ENCRYPTOR;
 
     static {
@@ -47,6 +52,7 @@ public final class Cards {
      * @see CardApi#getPublicKey(String)
      * @see CardEncryptor#encryptFields(Card, Date, String)
      */
+    @SuppressLint("LambdaLast")
     @NonNull
     public static Callable<EncryptedCard> fetchPublicKeyAndEncrypt(
             @NonNull Application application,
@@ -81,6 +87,7 @@ public final class Cards {
      * @see CardApi#getPublicKey(String)
      * @see CardEncryptor#encrypt(String, Card, Date, String)
      */
+    @SuppressLint("LambdaLast")
     @NonNull
     public static Callable<String> fetchPublicKeyAndEncryptToToken(
             @NonNull Application application,

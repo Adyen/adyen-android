@@ -22,6 +22,7 @@
         android:paddingBottom="@dimen/standard_quarter_margin"
         android:textColor="?android:attr/textColorPrimaryInverse"
         android:elevation="@dimen/elevation_default"
+        android:textIsSelectable="false"
         tools:text="INGB"
         tools:ignore="UnusedAttribute" />
 

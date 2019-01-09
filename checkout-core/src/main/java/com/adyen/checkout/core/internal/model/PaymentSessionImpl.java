@@ -1,3 +1,11 @@
+/*
+ * Copyright (c) 2018 Adyen N.V.
+ *
+ * This file is open source and available under the MIT license. See the LICENSE file for more info.
+ *
+ * Created by timon on 04/07/2018.
+ */
+
 package com.adyen.checkout.core.internal.model;
 
 import android.os.Parcelable;
@@ -9,6 +17,7 @@ import com.adyen.checkout.base.HostProvider;
 import com.adyen.checkout.base.internal.Api;
 import com.adyen.checkout.base.internal.JsonObject;
 import com.adyen.checkout.core.CheckoutException;
+import com.adyen.checkout.base.internal.HashUtils;
 import com.adyen.checkout.core.model.PaymentMethod;
 import com.adyen.checkout.core.model.PaymentSession;
 
@@ -21,14 +30,8 @@ import java.util.Date;
 import java.util.Iterator;
 import java.util.List;
 
-/**
- * Copyright (c) 2018 Adyen B.V.
- * <p>
- * This file is open source and available under the MIT license. See the LICENSE file for more info.
- * <p>
- * Created by timon on 04/07/2018.
- */
 public final class PaymentSessionImpl extends JsonObject implements PaymentSession {
+    @NonNull
     public static final Parcelable.Creator<PaymentSessionImpl> CREATOR = new DefaultCreator<>(PaymentSessionImpl.class);
 
     private static final String KEY_GENERATIONTIME = "generationtime";
@@ -145,7 +148,7 @@ public final class PaymentSessionImpl extends JsonObject implements PaymentSessi
     }
 
     @Override
-    public boolean equals(Object o) {
+    public boolean equals(@Nullable Object o) {
         if (this == o) {
             return true;
         }
@@ -189,15 +192,15 @@ public final class PaymentSessionImpl extends JsonObject implements PaymentSessi
     @Override
     public int hashCode() {
         int result = mGenerationTime != null ? mGenerationTime.hashCode() : 0;
-        result = 31 * result + (mCheckoutshopperBaseUrl != null ? mCheckoutshopperBaseUrl.hashCode() : 0);
-        result = 31 * result + (mInitiationUrl != null ? mInitiationUrl.hashCode() : 0);
-        result = 31 * result + (mDisableRecurringDetailUrl != null ? mDisableRecurringDetailUrl.hashCode() : 0);
-        result = 31 * result + (mPaymentData != null ? mPaymentData.hashCode() : 0);
-        result = 31 * result + (mPayment != null ? mPayment.hashCode() : 0);
-        result = 31 * result + (mEnvironment != null ? mEnvironment.hashCode() : 0);
-        result = 31 * result + (mPublicKey != null ? mPublicKey.hashCode() : 0);
-        result = 31 * result + (mPaymentMethods != null ? mPaymentMethods.hashCode() : 0);
-        result = 31 * result + (mOneClickPaymentMethods != null ? mOneClickPaymentMethods.hashCode() : 0);
+        result = HashUtils.MULTIPLIER * result + (mCheckoutshopperBaseUrl != null ? mCheckoutshopperBaseUrl.hashCode() : 0);
+        result = HashUtils.MULTIPLIER * result + (mInitiationUrl != null ? mInitiationUrl.hashCode() : 0);
+        result = HashUtils.MULTIPLIER * result + (mDisableRecurringDetailUrl != null ? mDisableRecurringDetailUrl.hashCode() : 0);
+        result = HashUtils.MULTIPLIER * result + (mPaymentData != null ? mPaymentData.hashCode() : 0);
+        result = HashUtils.MULTIPLIER * result + (mPayment != null ? mPayment.hashCode() : 0);
+        result = HashUtils.MULTIPLIER * result + (mEnvironment != null ? mEnvironment.hashCode() : 0);
+        result = HashUtils.MULTIPLIER * result + (mPublicKey != null ? mPublicKey.hashCode() : 0);
+        result = HashUtils.MULTIPLIER * result + (mPaymentMethods != null ? mPaymentMethods.hashCode() : 0);
+        result = HashUtils.MULTIPLIER * result + (mOneClickPaymentMethods != null ? mOneClickPaymentMethods.hashCode() : 0);
         return result;
     }
 

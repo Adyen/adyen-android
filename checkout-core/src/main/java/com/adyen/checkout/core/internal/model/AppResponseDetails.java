@@ -1,7 +1,16 @@
+/*
+ * Copyright (c) 2017 Adyen N.V.
+ *
+ * This file is open source and available under the MIT license. See the LICENSE file for more info.
+ *
+ * Created by timon on 27/09/2017.
+ */
+
 package com.adyen.checkout.core.internal.model;
 
 import android.os.Parcel;
 import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
 
 import com.adyen.checkout.core.model.PaymentMethodDetails;
 
@@ -10,14 +19,9 @@ import org.json.JSONObject;
 
 /**
  * {@link PaymentMethodDetails} for payments where the shopper was redirected directly to another app.
- * <p>
- * Copyright (c) 2017 Adyen B.V.
- * <p>
- * This file is open source and available under the MIT license. See the LICENSE file for more info.
- * <p>
- * Created by timon on 27/09/2017.
  */
 public final class AppResponseDetails extends PaymentMethodDetails {
+    @NonNull
     public static final Creator<AppResponseDetails> CREATOR = new Creator<AppResponseDetails>() {
         @Override
         public AppResponseDetails createFromParcel(Parcel parcel) {
@@ -30,6 +34,7 @@ public final class AppResponseDetails extends PaymentMethodDetails {
         }
     };
 
+    @NonNull
     public static final String KEY_RETURN_URL_QUERY_STRING = "returnUrlQueryString";
 
     private String mReturnUrlQueryString;
@@ -45,7 +50,7 @@ public final class AppResponseDetails extends PaymentMethodDetails {
     }
 
     @Override
-    public void writeToParcel(Parcel parcel, int flags) {
+    public void writeToParcel(@NonNull Parcel parcel, int flags) {
         parcel.writeString(mReturnUrlQueryString);
     }
 
@@ -59,7 +64,7 @@ public final class AppResponseDetails extends PaymentMethodDetails {
     }
 
     @Override
-    public boolean equals(Object o) {
+    public boolean equals(@Nullable Object o) {
         if (this == o) {
             return true;
         }

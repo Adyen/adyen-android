@@ -1,3 +1,11 @@
+/*
+ * Copyright (c) 2017 Adyen N.V.
+ *
+ * This file is open source and available under the MIT license. See the LICENSE file for more info.
+ *
+ * Created by timon on 30/08/2017.
+ */
+
 package com.adyen.checkout.nfc.internal;
 
 import android.support.annotation.NonNull;
@@ -7,13 +15,6 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
-/**
- * Copyright (c) 2017 Adyen B.V.
- * <p>
- * This file is open source and available under the MIT license. See the LICENSE file for more info.
- * <p>
- * Created by timon on 30/08/2017.
- */
 public class TagLengthValue extends TagLength {
     private final List<TagLengthValue> mChildTagLengthValues = new ArrayList<>();
 
@@ -52,6 +53,7 @@ public class TagLengthValue extends TagLength {
         return parsed;
     }
 
+    @NonNull
     @Override
     public String toString() {
         return String.format("%s || Value: %s", super.toString(), ByteUtil.bytesToReadable(mValue));
@@ -62,6 +64,7 @@ public class TagLengthValue extends TagLength {
         return find(Tag.parseTag(tag));
     }
 
+    @Nullable
     public TagLengthValue find(@Nullable Tag tag) {
         if (getTag().equals(tag)) {
             return this;

@@ -1,3 +1,11 @@
+/*
+ * Copyright (c) 2017 Adyen N.V.
+ *
+ * This file is open source and available under the MIT license. See the LICENSE file for more info.
+ *
+ * Created by timon on 11/08/2017.
+ */
+
 package com.adyen.checkout.ui.internal.common.view;
 
 import android.content.Context;
@@ -13,7 +21,6 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
-import android.widget.EditText;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
@@ -21,13 +28,6 @@ import com.adyen.checkout.ui.R;
 import com.adyen.checkout.ui.internal.common.util.ThemeUtil;
 import com.adyen.checkout.util.internal.SimpleTextWatcher;
 
-/**
- * Copyright (c) 2017 Adyen B.V.
- * <p>
- * This file is open source and available under the MIT license. See the LICENSE file for more info.
- * <p>
- * Created by timon on 11/08/2017.
- */
 public class CustomTextInputLayout extends LinearLayout {
     private TextView mCaptionTextView;
 
@@ -60,7 +60,7 @@ public class CustomTextInputLayout extends LinearLayout {
     protected void onFinishInflate() {
         super.onFinishInflate();
 
-        EditText editText = getEditText();
+        TextView editText = getInputText();
 
         if (editText != null) {
             mCaptionTextView.setPadding(
@@ -69,8 +69,11 @@ public class CustomTextInputLayout extends LinearLayout {
                     editText.getPaddingRight(),
                     mCaptionTextView.getPaddingBottom()
             );
-            int paddingTop = getResources().getDimensionPixelSize(R.dimen.standard_half_margin);
-            editText.setPadding(editText.getPaddingLeft(), paddingTop, editText.getPaddingRight(), editText.getPaddingBottom());
+            // Was throwing an exception when rendering on Android Studio
+            if (!isInEditMode()) {
+                int paddingTop = getResources().getDimensionPixelSize(R.dimen.standard_half_margin);
+                editText.setPadding(editText.getPaddingLeft(), paddingTop, editText.getPaddingRight(), editText.getPaddingBottom());
+            }
 
             editText.addTextChangedListener(new SimpleTextWatcher() {
                 @Override
@@ -108,7 +111,7 @@ public class CustomTextInputLayout extends LinearLayout {
         mHint = typedArray.getString(R.styleable.CustomTextInputLayout_customTextInputLayout_hint);
         typedArray.recycle();
 
-        LinearLayout.LayoutParams layoutParams = new LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT);
+        final LinearLayout.LayoutParams layoutParams = new LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT);
 
         mCaptionTextView = new AppCompatTextView(context);
         mCaptionTextView.setMaxLines(1);
@@ -122,12 +125,12 @@ public class CustomTextInputLayout extends LinearLayout {
     }
 
     @Nullable
-    private EditText getEditText() {
+    private TextView getInputText() {
         if (getChildCount() >= 2) {
             View secondChild = getChildAt(1);
 
-            if (secondChild instanceof EditText) {
-                return (EditText) secondChild;
+            if (secondChild instanceof TextView) {
+                return (TextView) secondChild;
             }
         }
 
@@ -135,7 +138,7 @@ public class CustomTextInputLayout extends LinearLayout {
     }
 
     private void updateCaptionAndHint() {
-        EditText editText = getEditText();
+        TextView editText = getInputText();
 
         if (editText != null) {
             int prevVisibilityCaption = mCaptionTextView.getVisibility();
@@ -143,7 +146,7 @@ public class CustomTextInputLayout extends LinearLayout {
             mCaptionTextView.setText(mCaption);
             mCaptionTextView.setVisibility(newVisibilityCaption);
 
-            if (prevVisibilityCaption != newVisibilityCaption) {
+            if (prevVisibilityCaption != newVisibilityCaption && !isInEditMode()) {
                 Animation animation;
 
                 if (newVisibilityCaption == VISIBLE) {

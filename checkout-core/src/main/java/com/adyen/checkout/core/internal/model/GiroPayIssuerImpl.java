@@ -1,22 +1,26 @@
+/*
+ * Copyright (c) 2018 Adyen N.V.
+ *
+ * This file is open source and available under the MIT license. See the LICENSE file for more info.
+ *
+ * Created by timon on 10/07/2018.
+ */
+
 package com.adyen.checkout.core.internal.model;
 
 import android.os.Parcelable;
 import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
 
 import com.adyen.checkout.base.internal.JsonObject;
+import com.adyen.checkout.base.internal.HashUtils;
 import com.adyen.checkout.core.model.GiroPayIssuer;
 
 import org.json.JSONException;
 import org.json.JSONObject;
 
-/**
- * Copyright (c) 2018 Adyen B.V.
- * <p>
- * This file is open source and available under the MIT license. See the LICENSE file for more info.
- * <p>
- * Created by timon on 10/07/2018.
- */
 public final class GiroPayIssuerImpl extends JsonObject implements GiroPayIssuer {
+    @NonNull
     public static final Parcelable.Creator<GiroPayIssuerImpl> CREATOR = new DefaultCreator<>(GiroPayIssuerImpl.class);
 
     private static final String KEY_BANK_NAME = "bankName";
@@ -40,7 +44,7 @@ public final class GiroPayIssuerImpl extends JsonObject implements GiroPayIssuer
     }
 
     @Override
-    public boolean equals(Object o) {
+    public boolean equals(@Nullable Object o) {
         if (this == o) {
             return true;
         }
@@ -62,8 +66,8 @@ public final class GiroPayIssuerImpl extends JsonObject implements GiroPayIssuer
     @Override
     public int hashCode() {
         int result = mBankName != null ? mBankName.hashCode() : 0;
-        result = 31 * result + (mBic != null ? mBic.hashCode() : 0);
-        result = 31 * result + (mBlz != null ? mBlz.hashCode() : 0);
+        result = HashUtils.MULTIPLIER * result + (mBic != null ? mBic.hashCode() : 0);
+        result = HashUtils.MULTIPLIER * result + (mBlz != null ? mBlz.hashCode() : 0);
         return result;
     }
 

@@ -1,3 +1,11 @@
+/*
+ * Copyright (c) 2017 Adyen N.V.
+ *
+ * This file is open source and available under the MIT license. See the LICENSE file for more info.
+ *
+ * Created by timon on 09/08/2017.
+ */
+
 package com.adyen.checkout.ui.internal.issuer;
 
 import android.app.Application;
@@ -20,13 +28,6 @@ import com.adyen.checkout.ui.internal.common.view.holder.TwoLineItemViewHolder;
 import java.util.List;
 import java.util.concurrent.Callable;
 
-/**
- * Copyright (c) 2017 Adyen B.V.
- * <p>
- * This file is open source and available under the MIT license. See the LICENSE file for more info.
- * <p>
- * Created by timon on 09/08/2017.
- */
 class IssuersAdapter extends RecyclerView.Adapter<TwoLineItemViewHolder> {
     private final AppCompatActivity mActivity;
 

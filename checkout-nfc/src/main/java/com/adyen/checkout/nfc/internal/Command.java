@@ -1,16 +1,18 @@
+/*
+ * Copyright (c) 2017 Adyen N.V.
+ *
+ * This file is open source and available under the MIT license. See the LICENSE file for more info.
+ *
+ * Created by timon on 30/08/2017.
+ */
+
 package com.adyen.checkout.nfc.internal;
 
 import android.support.annotation.NonNull;
 
 import java.util.Arrays;
 
-/**
- * Copyright (c) 2017 Adyen B.V.
- * <p>
- * This file is open source and available under the MIT license. See the LICENSE file for more info.
- * <p>
- * Created by timon on 30/08/2017.
- */
+@SuppressWarnings("checkstyle:MagicNumber")
 public final class Command {
     private final byte mCla;
 
@@ -50,7 +52,7 @@ public final class Command {
     }
 
     @NonNull
-    public static Command read(byte p1, byte p2, @NonNull byte[] data, byte... responseLength) {
+    public static Command read(byte p1, byte p2, @NonNull byte[] data, @NonNull byte... responseLength) {
         byte[] length = getLengthBytes(data.length);
 
         return new Command((byte) 0x00, (byte) 0xB2, p1, p2, length, data, responseLength);
@@ -90,6 +92,7 @@ public final class Command {
         return new byte[] {(byte) 0x00};
     }
 
+    @NonNull
     @Override
     public String toString() {
         return ByteUtil.bytesToHexFormatted(getBytes());

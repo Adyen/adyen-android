@@ -1,7 +1,14 @@
+/*
+ * Copyright (c) 2017 Adyen N.V.
+ *
+ * This file is open source and available under the MIT license. See the LICENSE file for more info.
+ *
+ * Created by timon on 11/08/2017.
+ */
+
 package com.adyen.checkout.util;
 
 import android.content.Context;
-import android.os.Build;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.annotation.StringRes;
@@ -13,23 +20,16 @@ import android.util.Log;
 
 import com.adyen.checkout.core.model.Amount;
 import com.adyen.checkout.util.internal.CheckoutCurrency;
+import com.adyen.checkout.util.internal.TextFormat;
 
 import java.math.BigDecimal;
 import java.text.DecimalFormat;
 import java.text.DecimalFormatSymbols;
 import java.text.NumberFormat;
-import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Currency;
-import java.util.List;
 import java.util.Locale;
 
-/**
- * Copyright (c) 2017 Adyen B.V.
- * <p>
- * This file is open source and available under the MIT license. See the LICENSE file for more info.
- * <p>
- * Created by timon on 11/08/2017.
- */
 public final class AmountFormat {
     private static final String TAG = AmountFormat.class.getSimpleName();
 
@@ -55,25 +55,40 @@ public final class AmountFormat {
      */
     @NonNull
     public static CharSequence format(@NonNull Context context, long value, @NonNull String currencyCode) {
+        Locale locale = LocaleUtil.getLocale(context);
+
         BigDecimal decimalValue = toBigDecimal(value, currencyCode);
-
-        Locale locale = getLocale(context);
-
         int fractionDigits = decimalValue.scale();
 
-        NumberFormat format = DecimalFormat.getInstance(locale);
-        format.setMinimumFractionDigits(fractionDigits);
-        format.setMaximumFractionDigits(fractionDigits);
+        CharSequence formattedAmount;
+        try {
+            Currency currency = Currency.getInstance(currencyCode);
+            NumberFormat currencyFormat = DecimalFormat.getCurrencyInstance(locale);
+            currencyFormat.setCurrency(currency);
+            currencyFormat.setMinimumFractionDigits(fractionDigits);
+            currencyFormat.setMaximumFractionDigits(fractionDigits);
+            formattedAmount = currencyFormat.format(decimalValue);
+        } catch (IllegalArgumentException | NullPointerException e) {
+            Log.e(TAG, "Could not determine currency for code." + currencyCode, e);
+            //fallback to generic formatting
+            NumberFormat numberFormat = DecimalFormat.getInstance(locale);
+            numberFormat.setMinimumFractionDigits(fractionDigits);
+            numberFormat.setMaximumFractionDigits(fractionDigits);
+            String formattedValue = numberFormat.format(decimalValue);
+            formattedAmount = new SpannableStringBuilder(context.getString(R.string.amount_format, currencyCode, formattedValue));
+        }
 
-        String currencySymbol = getCurrencySymbol(locale, currencyCode);
-        String formattedValue = format.format(decimalValue);
-
-        SpannableStringBuilder builder = new SpannableStringBuilder(context.getString(R.string.amount_format, currencySymbol, formattedValue));
-        String[] parts = builder.toString().split("\\" + String.valueOf(DecimalFormatSymbols.getInstance(locale).getDecimalSeparator()));
+        SpannableStringBuilder builder = new SpannableStringBuilder(formattedAmount);
+        String[] parts = builder.toString().split(String.format("\\%s",
+                String.valueOf(DecimalFormatSymbols.getInstance(locale).getDecimalSeparator())));
 
         if (parts.length == 2) {
             int decimalStart = parts[0].length() + 1;
-            int decimalEnd = decimalStart + parts[1].length();
+            int decimalEnd = decimalStart + fractionDigits;
+
+            if (decimalEnd > builder.length()) {
+                decimalEnd = decimalStart + parts[1].length();
+            }
 
             builder.setSpan(new TopAlignSuperscriptSpan(), decimalStart, decimalEnd, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
         }
@@ -91,38 +106,19 @@ public final class AmountFormat {
      */
     @NonNull
     public static CharSequence getStringWithFormattedAmounts(@NonNull Context context, @StringRes int resId, @Nullable Object... formatArgs) {
-        Object[] convertedFormatArgs;
-        List<CharSequence> formattedAmounts = new ArrayList<>();
+        Object[] convertedFormatArgs = formatArgs != null ? Arrays.copyOf(formatArgs, formatArgs.length) : null;
 
-        if (formatArgs == null || formatArgs.length == 0) {
-            convertedFormatArgs = new Object[0];
-        } else {
-            convertedFormatArgs = new Object[formatArgs.length];
+        if (convertedFormatArgs != null) {
+            for (int i = 0; i < convertedFormatArgs.length; i++) {
+                Object convertedFormatArg = convertedFormatArgs[i];
 
-            for (int i = 0; i < formatArgs.length; i++) {
-                Object formatArg = formatArgs[i];
-
-                if (formatArg instanceof Amount) {
-                    CharSequence formattedAmount = format(context, ((Amount) formatArg));
-                    convertedFormatArgs[i] = formattedAmount;
-                    formattedAmounts.add(formattedAmount);
-                } else {
-                    convertedFormatArgs[i] = formatArg;
+                if (convertedFormatArg instanceof Amount) {
+                    convertedFormatArgs[i] = format(context, (Amount) convertedFormatArg);
                 }
             }
         }
 
-        SpannableStringBuilder builder = new SpannableStringBuilder(context.getString(resId, convertedFormatArgs));
-
-        for (CharSequence formattedAmount : formattedAmounts) {
-            int indexOfFormattedAmount = builder.toString().indexOf(formattedAmount.toString());
-
-            if (indexOfFormattedAmount >= 0) {
-                builder.replace(indexOfFormattedAmount, indexOfFormattedAmount + formattedAmount.length(), formattedAmount);
-            }
-        }
-
-        return builder;
+        return TextFormat.format(context, resId, convertedFormatArgs);
     }
 
     /**
@@ -173,15 +169,6 @@ public final class AmountFormat {
     }
 
     @NonNull
-    private static Locale getLocale(@NonNull Context context) {
-        if (Build.VERSION.SDK_INT < Build.VERSION_CODES.N) {
-            return context.getResources().getConfiguration().locale;
-        } else {
-            return context.getResources().getConfiguration().getLocales().get(0);
-        }
-    }
-
-    @NonNull
     private static String getCurrencySymbol(@NonNull Locale locale, @NonNull String currencyCode) {
         try {
             Currency currency = Currency.getInstance(currencyCode);
@@ -193,7 +180,7 @@ public final class AmountFormat {
 
             return symbol;
         } catch (IllegalArgumentException | NullPointerException e) {
-            Log.e(TAG, "Could not determine currency symbol for " + currencyCode, e);
+            Log.e(TAG, "Could not determine currency symbol for " + currencyCode);
 
             return currencyCode;
         }

@@ -1,3 +1,11 @@
+/*
+ * Copyright (c) 2018 Adyen N.V.
+ *
+ * This file is open source and available under the MIT license. See the LICENSE file for more info.
+ *
+ * Created by timon on 31/10/2018.
+ */
+
 package com.adyen.checkout.googlepay.internal;
 
 import android.content.Context;
@@ -20,14 +28,9 @@ import java.util.concurrent.ExecutionException;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.TimeoutException;
 
-/**
- * Copyright (c) 2018 Adyen B.V.
- * <p>
- * This file is open source and available under the MIT license. See the LICENSE file for more info.
- * <p>
- * Created by timon on 31/10/2018.
- */
 public final class IsReadyToPayCallable implements Callable<Boolean> {
+    private static final int WAIT_TIME = 5;
+
     private final Context mApplicationContext;
 
     private final PaymentSession mPaymentSession;
@@ -40,6 +43,7 @@ public final class IsReadyToPayCallable implements Callable<Boolean> {
         mPaymentMethod = paymentMethod;
     }
 
+    @NonNull
     @Override
     public Boolean call() {
         if (!PaymentMethodTypes.GOOGLE_PAY.equals(mPaymentMethod.getType())) {
@@ -66,7 +70,7 @@ public final class IsReadyToPayCallable implements Callable<Boolean> {
         Task<Boolean> readyToPayTask = GooglePayUtil.getIsReadyToPayTask(mApplicationContext, mPaymentSession, configuration);
 
         try {
-            return Tasks.await(readyToPayTask, 5, TimeUnit.SECONDS);
+            return Tasks.await(readyToPayTask, WAIT_TIME, TimeUnit.SECONDS);
         } catch (InterruptedException | ExecutionException | TimeoutException e) {
             return false;
         }

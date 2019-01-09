@@ -1,81 +1,88 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-    package="com.adyen.checkout.ui">
+          package="com.adyen.checkout.ui">
 
-    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
+    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE"/>
 
-    <application>
-
+    <application
+        android:supportsRtl="true">
         <activity
-            android:theme="@style/AppTheme.Checkout.Internal.Translucent"
             android:name=".internal.common.activity.CheckoutActivity"
             android:label="@string/checkout_title"
-            android:windowSoftInputMode="adjustNothing" />
+            android:theme="@style/AppTheme.Checkout.Internal.Translucent"
+            android:windowSoftInputMode="adjustNothing"/>
 
         <activity
-            android:theme="@style/AppTheme.Checkout.Internal.Translucent"
             android:name=".internal.common.activity.RedirectHandlerActivity"
             android:launchMode="singleTask"
+            android:theme="@style/AppTheme.Checkout.Internal.Translucent"
             android:windowSoftInputMode="stateAlwaysHidden">
-
             <intent-filter>
-                <action android:name="android.intent.action.VIEW" />
-                <category android:name="android.intent.category.DEFAULT" />
-                <category android:name="android.intent.category.BROWSABLE" />
+                <action android:name="android.intent.action.VIEW"/>
+
+                <category android:name="android.intent.category.DEFAULT"/>
+                <category android:name="android.intent.category.BROWSABLE"/>
+
                 <data
-                    android:scheme="checkout"
-                    android:host="${applicationId}" />
+                    android:host="${applicationId}"
+                    android:scheme="checkout"/>
             </intent-filter>
         </activity>
 
         <activity
-            android:theme="@style/AppTheme.Checkout.Internal"
             android:name=".internal.card.CardDetailsActivity"
             android:screenOrientation="@integer/checkout_screenOrientation"
-            android:windowSoftInputMode="adjustResize" />
+            android:theme="@style/AppTheme.Checkout.Internal"
+            android:windowSoftInputMode="adjustResize"/>
 
         <activity
-            android:theme="@style/AppTheme.Checkout.Internal"
             android:name=".internal.card.CupSecurePlusOneClickDetailsActivity"
             android:screenOrientation="@integer/checkout_screenOrientation"
-            android:windowSoftInputMode="adjustResize" />
+            android:theme="@style/AppTheme.Checkout.Internal"
+            android:windowSoftInputMode="adjustResize"/>
 
         <activity
-            android:theme="@style/AppTheme.Checkout.Internal"
             android:name=".internal.card.CupSecurePlusDetailsActivity"
             android:label="@string/checkout_card_cup_secure_plus_details_activity_title"
             android:screenOrientation="@integer/checkout_screenOrientation"
-            android:windowSoftInputMode="adjustResize" />
+            android:theme="@style/AppTheme.Checkout.Internal"
+            android:windowSoftInputMode="adjustResize"/>
 
         <activity
-            android:theme="@style/AppTheme.Checkout.Internal"
             android:name=".internal.doku.DokuDetailsActivity"
             android:screenOrientation="@integer/checkout_screenOrientation"
-            android:windowSoftInputMode="adjustResize" />
+            android:theme="@style/AppTheme.Checkout.Internal"
+            android:windowSoftInputMode="adjustResize"/>
 
         <activity
-            android:theme="@style/AppTheme.Checkout.Internal"
             android:name=".internal.giropay.GiroPayDetailsActivity"
             android:screenOrientation="@integer/checkout_screenOrientation"
-            android:windowSoftInputMode="adjustResize" />
+            android:theme="@style/AppTheme.Checkout.Internal"
+            android:windowSoftInputMode="adjustResize"/>
 
         <activity
-            android:theme="@style/AppTheme.Checkout.Internal"
             android:name=".internal.issuer.IssuerDetailsActivity"
             android:screenOrientation="@integer/checkout_screenOrientation"
-            android:windowSoftInputMode="adjustResize" />
+            android:theme="@style/AppTheme.Checkout.Internal"
+            android:windowSoftInputMode="adjustResize"/>
 
         <activity
-            android:theme="@style/AppTheme.Checkout.Internal"
             android:name=".internal.qiwiwallet.QiwiWalletPaymentDetailsActivity"
             android:screenOrientation="@integer/checkout_screenOrientation"
-            android:windowSoftInputMode="adjustResize" />
+            android:theme="@style/AppTheme.Checkout.Internal"
+            android:windowSoftInputMode="adjustResize"/>
 
         <activity
-            android:theme="@style/AppTheme.Checkout.Internal"
             android:name=".internal.sepadirectdebit.SddDetailsActivity"
             android:screenOrientation="@integer/checkout_screenOrientation"
-            android:windowSoftInputMode="adjustResize" />
+            android:theme="@style/AppTheme.Checkout.Internal"
+            android:windowSoftInputMode="adjustResize"/>
+
+        <activity
+            android:name=".internal.openinvoice.OpenInvoiceDetailsActivity"
+            android:screenOrientation="@integer/checkout_screenOrientation"
+            android:theme="@style/AppTheme.Checkout.Internal"
+            android:windowSoftInputMode="adjustResize"/>
 
     </application>
 

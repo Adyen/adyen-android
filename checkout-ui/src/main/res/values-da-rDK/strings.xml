@@ -10,12 +10,15 @@
     <string name="checkout_error_message_network_unavailable">Kunne ikke oprette forbindelse til internettet. Kontrollér din internetforbindelse.</string>
     <string name="checkout_error_message_network_hint">Kontrollér din internetforbindelse, og prøv igen.</string>
     <string name="checkout_pay_amount_format">Betal %s</string>
+    
+    <string name="checkout_surcharge_total_amount_format">Det samlede beløb indeholder et tillægsgebyr på %s.</string>
     <string name="checkout_one_click_delete_confirmation_message">Slet betalingsmåde %s?</string>
     <string name="checkout_one_click_delete">Slet</string>
     <string name="checkout_error_dialog_title">Fejl</string>
     <string name="checkout_error_redirect_failed">Omdirigering fejlede</string>
     <string name="checkout_ok">OK</string>
     <string name="checkout_skip">Spring over</string>
+    <string name="checkout_backspace">Tilbage</string>
 
     <!-- Card -->
     <string name="checkout_card_holder_name_hint">Kortholdernavn</string>
@@ -65,4 +68,41 @@
     <string name="checkout_sdd_account_holder_name">Kontohavernavn</string>
     <string name="checkout_sdd_consent">Jeg accepterer, at beløbet nedenfor trækkes på min bankkonto.</string>
     <string name="checkout_sdd_iban_suggestion">Mente du</string>
+
+    <!-- Open Invoice -->
+
+    <!-- Personal Details -->
+    <string name="checkout_personal_details_title">Personlige oplysninger</string>
+    <string name="checkout_personal_details_first_name">Fornavn</string>
+    <string name="checkout_personal_details_infix">Præfiks</string>
+    <string name="checkout_personal_details_last_name">Efternavn</string>
+    <string name="checkout_personal_details_gender">Køn</string>
+    <string name="checkout_personal_details_gender_male">Mand</string>
+    <string name="checkout_personal_details_gender_female">Kvinde</string>
+    <string name="checkout_personal_details_gender_unknown">Ukendt</string>
+    <string name="checkout_personal_details_date_of_birth">Fødselsdato</string>
+    <string name="checkout_personal_details_telehone_number">Telefonnummer</string>
+    <string name="checkout_personal_details_social_security_number">CPR-nummer</string>
+    
+    <string name="checkout_personal_details_shopper_email">E-mailadresse</string>
+
+    <!-- Address -->
+    <string name="checkout_address_street">Gade</string>
+    <string name="checkout_address_house_number">Husnummer</string>
+    <string name="checkout_address_city">By</string>
+    <string name="checkout_address_postal_code">Postnummer</string>
+    <string name="checkout_address_country">Land</string>
+
+    <string name="checkout_billing_address_title">Faktureringsadresse</string>
+    <string name="checkout_delivery_address_title">Leveringsadresse</string>
+    <string name="checkout_separate_delivery_address">Angiv en separat leveringsadresse</string>
+
+    <string name="checkout_terms_and_conditions_title">Vilkår og betingelser</string>
+    <string name="checkout_terms_and_conditions_toggle">Acceptér vilkårene og betingelserne</string>
+    <string name="checkout_klarna_terms_and_conditions_text">Jeg giver mit samtykke til, at Klarna kan behandle mine data med henblik på bekræftelse af min identitet og kreditvurdering samt afregning af mit køb. Jeg kan tilbagekalde mit %s til behandling af data og til formål, hvor dette er muligt i henhold til gældende lov. Sælgers generelle vilkår og betingelser gælder.</string>
+    <string name="checkout_klarna_consent">samtykke</string>
+    <string name="checkout_klarna_more_information">Mere information</string>
+
+    <string name="checkout_input_error_empty_field">Obligatorisk felt. Feltet skal udfyldes.</string>
+    <string name="checkout_input_error_incorrect_format">Indtastningsformatet er ugyldigt.</string>
 </resources>

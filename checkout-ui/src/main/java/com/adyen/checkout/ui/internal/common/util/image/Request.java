@@ -1,3 +1,11 @@
+/*
+ * Copyright (c) 2018 Adyen N.V.
+ *
+ * This file is open source and available under the MIT license. See the LICENSE file for more info.
+ *
+ * Created by timon on 01/05/2018.
+ */
+
 package com.adyen.checkout.ui.internal.common.util.image;
 
 import android.app.Application;
@@ -14,13 +22,6 @@ import android.support.v7.content.res.AppCompatResources;
 import com.adyen.checkout.ui.R;
 import com.adyen.checkout.ui.internal.common.util.ThemeUtil;
 
-/**
- * Copyright (c) 2018 Adyen B.V.
- * <p>
- * This file is open source and available under the MIT license. See the LICENSE file for more info.
- * <p>
- * Created by timon on 01/05/2018.
- */
 public abstract class Request implements Runnable {
     private static final Handler MAIN_HANDLER = new Handler(Looper.getMainLooper());
 

@@ -1,20 +1,25 @@
+/*
+ * Copyright (c) 2017 Adyen N.V.
+ *
+ * This file is open source and available under the MIT license. See the LICENSE file for more info.
+ *
+ * Created by emmanuel on 04/12/2017.
+ */
+
 package com.adyen.checkout.core.model;
 
 import android.os.Parcel;
 import android.os.Parcelable;
 import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
+
+import com.adyen.checkout.base.internal.HashUtils;
 
 import org.json.JSONException;
 import org.json.JSONObject;
 
-/**
- * Copyright (c) 2017 Adyen B.V.
- * <p>
- * This file is open source and available under the MIT license. See the LICENSE file for more info.
- * <p>
- * Created by emmanuel on 04/12/2017.
- */
 public final class DokuDetails extends PaymentMethodDetails {
+    @NonNull
     public static final Parcelable.Creator<DokuDetails> CREATOR = new Parcelable.Creator<DokuDetails>() {
         @Override
         public DokuDetails createFromParcel(Parcel parcel) {
@@ -27,10 +32,13 @@ public final class DokuDetails extends PaymentMethodDetails {
         }
     };
 
+    @NonNull
     public static final String KEY_SHOPPER_EMAIL = "shopperEmail";
 
+    @NonNull
     public static final String KEY_FIRST_NAME = "firstName";
 
+    @NonNull
     public static final String KEY_LAST_NAME = "lastName";
 
     private String mShopperEmail;
@@ -52,7 +60,7 @@ public final class DokuDetails extends PaymentMethodDetails {
     }
 
     @Override
-    public void writeToParcel(Parcel parcel, int flags) {
+    public void writeToParcel(@NonNull Parcel parcel, int flags) {
         parcel.writeString(mShopperEmail);
         parcel.writeString(mFirstName);
         parcel.writeString(mLastName);
@@ -69,7 +77,7 @@ public final class DokuDetails extends PaymentMethodDetails {
     }
 
     @Override
-    public boolean equals(Object o) {
+    public boolean equals(@Nullable Object o) {
         if (this == o) {
             return true;
         }
@@ -91,8 +99,8 @@ public final class DokuDetails extends PaymentMethodDetails {
     @Override
     public int hashCode() {
         int result = mShopperEmail != null ? mShopperEmail.hashCode() : 0;
-        result = 31 * result + (mFirstName != null ? mFirstName.hashCode() : 0);
-        result = 31 * result + (mLastName != null ? mLastName.hashCode() : 0);
+        result = HashUtils.MULTIPLIER * result + (mFirstName != null ? mFirstName.hashCode() : 0);
+        result = HashUtils.MULTIPLIER * result + (mLastName != null ? mLastName.hashCode() : 0);
         return result;
     }
 

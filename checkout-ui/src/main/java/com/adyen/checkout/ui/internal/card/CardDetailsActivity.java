@@ -1,4 +1,15 @@
+/*
+ * Copyright (c) 2017 Adyen N.V.
+ *
+ * This file is open source and available under the MIT license. See the LICENSE file for more info.
+ *
+ * Created by timon on 10/08/2017.
+ */
+
 package com.adyen.checkout.ui.internal.card;
+
+import static com.adyen.checkout.core.card.internal.CardValidatorImpl.AMEX_NUMBER_SIZE;
+import static com.adyen.checkout.core.card.internal.CardValidatorImpl.GENERAL_CARD_NUMBER_SIZE;
 
 import android.app.Application;
 import android.arch.lifecycle.Observer;
@@ -25,6 +36,7 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Spinner;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.adyen.checkout.base.internal.Objects;
@@ -77,16 +89,11 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.concurrent.Callable;
 
-/**
- * Copyright (c) 2017 Adyen B.V.
- * <p>
- * This file is open source and available under the MIT license. See the LICENSE file for more info.
- * <p>
- * Created by timon on 10/08/2017.
- */
 public class CardDetailsActivity extends CheckoutDetailsActivity
         implements View.OnClickListener, NfcCardReaderTutorialFragment.Listener, DialogInterface.OnDismissListener {
     private static final String EXTRA_TARGET_PAYMENT_METHOD = "EXTRA_TARGET_PAYMENT_METHOD";
+
+    private static final int CARD_NUMBER_BLOCK_LENGTH = 4;
 
     private EditText mHolderNameEditText;
 
@@ -107,6 +114,8 @@ public class CardDetailsActivity extends CheckoutDetailsActivity
     private SwitchCompat mStoreDetailsSwitchCompat;
 
     private Button mPayButton;
+
+    private TextView mSurchargeTextView;
 
     private PaymentMethod mTargetPaymentMethod;
 
@@ -130,7 +139,7 @@ public class CardDetailsActivity extends CheckoutDetailsActivity
     }
 
     @Override
-    public void onClick(View view) {
+    public void onClick(@NonNull View view) {
         if (view == mPayButton) {
             try {
                 CardDetails cardDetails = buildCardDetails();
@@ -147,7 +156,7 @@ public class CardDetailsActivity extends CheckoutDetailsActivity
     }
 
     @Override
-    public void onDismiss(DialogInterface dialog) {
+    public void onDismiss(@NonNull DialogInterface dialog) {
         View focus = getWindow().getDecorView().findFocus();
 
         if (focus != null) {
@@ -156,7 +165,7 @@ public class CardDetailsActivity extends CheckoutDetailsActivity
     }
 
     @Override
-    protected void onRestoreInstanceState(Bundle savedInstanceState) {
+    protected void onRestoreInstanceState(@NonNull Bundle savedInstanceState) {
         super.onRestoreInstanceState(savedInstanceState);
 
         mLockToCheckmarkAnimationDelegate.onTextChanged();
@@ -189,6 +198,7 @@ public class CardDetailsActivity extends CheckoutDetailsActivity
         mInstallmentsContainer = findViewById(R.id.linearLayout_installmentsContainer);
         mStoreDetailsSwitchCompat = findViewById(R.id.switchCompat_storeDetails);
         mPayButton = findViewById(R.id.button_pay);
+        mSurchargeTextView = findViewById(R.id.textView_surcharge);
 
         try {
             mNfcCardReader = NfcCardReader.getInstance(this, new NfcCardReaderListener());
@@ -272,7 +282,7 @@ public class CardDetailsActivity extends CheckoutDetailsActivity
     }
 
     @Override
-    public boolean onCreateOptionsMenu(Menu menu) {
+    public boolean onCreateOptionsMenu(@NonNull Menu menu) {
         getMenuInflater().inflate(R.menu.menu_card_details, menu);
 
         MenuItem cardReaderMenuItem = menu.findItem(R.id.action_card_reader_tutorial);
@@ -289,7 +299,7 @@ public class CardDetailsActivity extends CheckoutDetailsActivity
     }
 
     @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
+    public boolean onOptionsItemSelected(@NonNull MenuItem item) {
         if (item.getItemId() == R.id.action_card_reader_tutorial) {
             showCardReaderTutorialFragment();
             return true;
@@ -342,7 +352,7 @@ public class CardDetailsActivity extends CheckoutDetailsActivity
     private void setupCardNumberEditText(boolean requestFocus) {
         TextViewUtil.addInputFilter(
                 mCardNumberEditText,
-                new InputFilter.LengthFilter(CardValidator.NUMBER_MAXIMUM_LENGTH + CardValidator.NUMBER_MAXIMUM_LENGTH / 4)
+                new InputFilter.LengthFilter(CardValidator.NUMBER_MAXIMUM_LENGTH + CardValidator.NUMBER_MAXIMUM_LENGTH / CARD_NUMBER_BLOCK_LENGTH)
         );
         mCardNumberEditText.setOnFocusChangeListener(new View.OnFocusChangeListener() {
             @Override
@@ -387,8 +397,8 @@ public class CardDetailsActivity extends CheckoutDetailsActivity
             //noinspection ConstantConditions
             int length = number.length();
 
-            valid = mCardNumberEditText.getSelectionEnd() == mCardNumberEditText.length()
-                    && (length == 16 || length == 15 && CardType.estimate(number).contains(CardType.AMERICAN_EXPRESS));
+            valid = mCardNumberEditText.getSelectionEnd() == mCardNumberEditText.length() && (length == GENERAL_CARD_NUMBER_SIZE
+                    || length == AMEX_NUMBER_SIZE && CardType.estimate(number).contains(CardType.AMERICAN_EXPRESS));
         }
 
         return valid;
@@ -592,7 +602,7 @@ public class CardDetailsActivity extends CheckoutDetailsActivity
     }
 
     private void setupPayButton() {
-        PayButtonUtil.setPayButtonText(this, mPayButton);
+        PayButtonUtil.setPayButtonText(this, mTargetPaymentMethod, mPayButton, mSurchargeTextView);
         mPayButton.setOnClickListener(this);
     }
 

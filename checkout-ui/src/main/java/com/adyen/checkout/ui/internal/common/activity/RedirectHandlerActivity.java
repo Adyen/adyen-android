@@ -1,3 +1,11 @@
+/*
+ * Copyright (c) 2017 Adyen N.V.
+ *
+ * This file is open source and available under the MIT license. See the LICENSE file for more info.
+ *
+ * Created by timon on 16/10/2017.
+ */
+
 package com.adyen.checkout.ui.internal.common.activity;
 
 import android.content.Context;
@@ -21,13 +29,6 @@ import com.adyen.checkout.ui.R;
 import com.adyen.checkout.ui.internal.common.util.RedirectUtil;
 import com.adyen.checkout.ui.internal.common.util.ThemeUtil;
 
-/**
- * Copyright (c) 2017 Adyen B.V.
- * <p>
- * This file is open source and available under the MIT license. See the LICENSE file for more info.
- * <p>
- * Created by timon on 16/10/2017.
- */
 public class RedirectHandlerActivity extends AppCompatActivity {
     private static final String EXTRA_PAYMENT_REFERENCE = "EXTRA_PAYMENT_REFERENCE";
 
@@ -99,7 +100,7 @@ public class RedirectHandlerActivity extends AppCompatActivity {
     }
 
     @Override
-    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+    protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
 
         if (requestCode == REQUEST_CODE_REDIRECT) {
@@ -108,7 +109,7 @@ public class RedirectHandlerActivity extends AppCompatActivity {
     }
 
     @Override
-    protected void onNewIntent(Intent intent) {
+    protected void onNewIntent(@NonNull Intent intent) {
         super.onNewIntent(intent);
 
         Uri data = intent.getData();
@@ -136,7 +137,7 @@ public class RedirectHandlerActivity extends AppCompatActivity {
     }
 
     @Override
-    protected void onSaveInstanceState(Bundle outState) {
+    protected void onSaveInstanceState(@NonNull Bundle outState) {
         super.onSaveInstanceState(outState);
 
         outState.putBoolean(STATE_ON_ACTIVITY_RESULT_CALLED_FOR_REDIRECT, mOnActivityResultCalledForRedirect);

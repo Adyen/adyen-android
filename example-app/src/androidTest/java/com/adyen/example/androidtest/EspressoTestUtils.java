@@ -1,3 +1,9 @@
+/*
+ * Copyright (c) 2018 Adyen N.V.
+ *
+ * This file is open source and available under the MIT license. See the LICENSE file for more info.
+ */
+
 package com.adyen.example.androidtest;
 
 import android.app.Activity;
@@ -27,7 +33,6 @@ import static android.support.test.espresso.matcher.ViewMatchers.withText;
 import static org.hamcrest.CoreMatchers.containsString;
 
 /**
- *
  * Test utility methods.
  */
 public final class EspressoTestUtils {

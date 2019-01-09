@@ -1,3 +1,11 @@
+/*
+ * Copyright (c) 2018 Adyen N.V.
+ *
+ * This file is open source and available under the MIT license. See the LICENSE file for more info.
+ *
+ * Created by timon on 29/01/2018.
+ */
+
 package com.adyen.checkout.ui.internal.common.activity;
 
 import android.content.Intent;
@@ -22,15 +30,9 @@ import com.adyen.checkout.ui.internal.common.fragment.ErrorDialogFragment;
 import com.adyen.checkout.ui.internal.common.fragment.ProgressDialogFragment;
 import com.adyen.checkout.ui.internal.common.model.CheckoutSessionProvider;
 
-/**
- * Copyright (c) 2018 Adyen B.V.
- * <p>
- * This file is open source and available under the MIT license. See the LICENSE file for more info.
- * <p>
- * Created by timon on 29/01/2018.
- */
 public abstract class CheckoutSessionActivity extends AppCompatActivity
         implements CheckoutSessionProvider {
+    @NonNull
     public static final String EXTRA_PAYMENT_REFERENCE = "EXTRA_PAYMENT_REFERENCE";
 
     private PaymentHandler mPaymentHandler;

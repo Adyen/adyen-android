@@ -10,12 +10,15 @@
     <string name="checkout_error_message_network_unavailable">Nie można połączyć się z Internetem, sprawdź połączenie z Internetem.</string>
     <string name="checkout_error_message_network_hint">Sprawdź połączenie z Internetem i spróbuj ponownie.</string>
     <string name="checkout_pay_amount_format">Zapłać %s</string>
+    
+    <string name="checkout_surcharge_total_amount_format">Łączna kwota obejmuje %s opłaty dodatkowej</string>
     <string name="checkout_one_click_delete_confirmation_message">Usunąć metodę płatności %s?</string>
     <string name="checkout_one_click_delete">Usuń</string>
     <string name="checkout_error_dialog_title">Błąd</string>
     <string name="checkout_error_redirect_failed">Przekierowanie nie powiodło się</string>
     <string name="checkout_ok">Ok</string>
     <string name="checkout_skip">Pomiń</string>
+    <string name="checkout_backspace">Backspace</string>
 
     <!-- Card -->
     <string name="checkout_card_holder_name_hint">Imię i nazwisko posiadacza karty</string>
@@ -65,4 +68,41 @@
     <string name="checkout_sdd_account_holder_name">Imię i nazwisko posiadacza karty</string>
     <string name="checkout_sdd_consent">Wyrażam zgodę na pobranie poniższej kwoty z mojego rachunku bankowego.</string>
     <string name="checkout_sdd_iban_suggestion">Czy masz na myśli</string>
+
+    <!-- Open Invoice -->
+
+    <!-- Personal Details -->
+    <string name="checkout_personal_details_title">Dane osobowe</string>
+    <string name="checkout_personal_details_first_name">Imię</string>
+    <string name="checkout_personal_details_infix">Prefiks</string>
+    <string name="checkout_personal_details_last_name">Nazwisko</string>
+    <string name="checkout_personal_details_gender">Płeć</string>
+    <string name="checkout_personal_details_gender_male">Mężczyzna</string>
+    <string name="checkout_personal_details_gender_female">Kobieta</string>
+    <string name="checkout_personal_details_gender_unknown">Nieznane</string>
+    <string name="checkout_personal_details_date_of_birth">Data urodzenia</string>
+    <string name="checkout_personal_details_telehone_number">Numer telefonu</string>
+    <string name="checkout_personal_details_social_security_number">Numer dowodu osobistego</string>
+    
+    <string name="checkout_personal_details_shopper_email">Adres e-mail</string>
+
+    <!-- Address -->
+    <string name="checkout_address_street">Ulica</string>
+    <string name="checkout_address_house_number">Numer domu i mieszkania</string>
+    <string name="checkout_address_city">Miasto</string>
+    <string name="checkout_address_postal_code">Kod pocztowy</string>
+    <string name="checkout_address_country">Kraj</string>
+
+    <string name="checkout_billing_address_title">Adres rozliczeniowy</string>
+    <string name="checkout_delivery_address_title">Adres dostawy</string>
+    <string name="checkout_separate_delivery_address">Podaj osobny adres dostawy</string>
+
+    <string name="checkout_terms_and_conditions_title">Warunki świadczenia usług</string>
+    <string name="checkout_terms_and_conditions_toggle">Zgadzam się na warunki świadczenia usług</string>
+    <string name="checkout_klarna_terms_and_conditions_text">Wyrażam zgodę na przetwarzanie moich danych przez spółkę Klarna w celu identyfikacji i oceny kredytowej oraz rozliczenia zakupu. Mogę wycofać moją %s na przetwarzanie danych w celach dopuszczonych przez prawo. Obowiązują ogólne warunki Sprzedającego.</string>
+    <string name="checkout_klarna_consent">zgoda</string>
+    <string name="checkout_klarna_more_information">Więcej informacji</string>
+
+    <string name="checkout_input_error_empty_field">Pole wymagane, wypełnij.</string>
+    <string name="checkout_input_error_incorrect_format">Format danych wejściowych jest nieprawidłowy.</string>
 </resources>

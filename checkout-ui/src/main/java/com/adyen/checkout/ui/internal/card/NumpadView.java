@@ -1,3 +1,11 @@
+/*
+ * Copyright (c) 2018 Adyen N.V.
+ *
+ * This file is open source and available under the MIT license. See the LICENSE file for more info.
+ *
+ * Created by timon on 12/03/2018.
+ */
+
 package com.adyen.checkout.ui.internal.card;
 
 import android.content.Context;
@@ -10,13 +18,6 @@ import android.widget.LinearLayout;
 
 import com.adyen.checkout.ui.R;
 
-/**
- * Copyright (c) 2018 Adyen B.V.
- * <p>
- * This file is open source and available under the MIT license. See the LICENSE file for more info.
- * <p>
- * Created by timon on 12/03/2018.
- */
 public class NumpadView extends LinearLayout {
     private KeyListener mKeyListener;
 
@@ -79,8 +80,8 @@ public class NumpadView extends LinearLayout {
     private final class CharNotifier implements View.OnClickListener {
         private final char mChar;
 
-        private CharNotifier(char aChar) {
-            mChar = aChar;
+        private CharNotifier(char charToNotify) {
+            mChar = charToNotify;
         }
 
         @Override

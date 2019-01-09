@@ -1,3 +1,11 @@
+/*
+ * Copyright (c) 2018 Adyen N.V.
+ *
+ * This file is open source and available under the MIT license. See the LICENSE file for more info.
+ *
+ * Created by timon on 03/04/2018.
+ */
+
 package com.adyen.checkout.ui.internal.doku;
 
 import android.app.Application;
@@ -15,13 +23,6 @@ import java.util.Collections;
 import java.util.List;
 import java.util.concurrent.Callable;
 
-/**
- * Copyright (c) 2018 Adyen B.V.
- * <p>
- * This file is open source and available under the MIT license. See the LICENSE file for more info.
- * <p>
- * Created by timon on 03/04/2018.
- */
 public class DokuCheckoutMethodFactory extends CheckoutMethodFactory {
     public DokuCheckoutMethodFactory(@NonNull Application application) {
         super(application);

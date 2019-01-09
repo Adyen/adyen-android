@@ -1,3 +1,11 @@
+/*
+ * Copyright (c) 2018 Adyen N.V.
+ *
+ * This file is open source and available under the MIT license. See the LICENSE file for more info.
+ *
+ * Created by timon on 07/06/2018.
+ */
+
 package com.adyen.checkout.googlepay.internal;
 
 import android.app.Activity;
@@ -27,13 +35,6 @@ import com.google.android.gms.wallet.WalletConstants;
 
 import org.json.JSONException;
 
-/**
- * Copyright (c) 2018 Adyen B.V.
- * <p>
- * This file is open source and available under the MIT license. See the LICENSE file for more info.
- * <p>
- * Created by timon on 07/06/2018.
- */
 public class GooglePayDetailsActivity extends Activity {
     private static final String EXTRA_PAYMENT_REFERENCE = "EXTRA_PAYMENT_REFERENCE";
 
@@ -104,7 +105,7 @@ public class GooglePayDetailsActivity extends Activity {
     }
 
     @Override
-    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+    protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
 
         if (requestCode == REQUEST_CODE_GOOGLE_PAY) {

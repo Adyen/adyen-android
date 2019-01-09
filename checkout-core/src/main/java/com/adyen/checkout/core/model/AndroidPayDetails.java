@@ -1,21 +1,25 @@
+/*
+ * Copyright (c) 2017 Adyen N.V.
+ *
+ * This file is open source and available under the MIT license. See the LICENSE file for more info.
+ *
+ * Created by timon on 18/10/2017.
+ */
+
 package com.adyen.checkout.core.model;
 
 import android.os.Parcel;
 import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
 
 import org.json.JSONException;
 import org.json.JSONObject;
 
 /**
  * {@link PaymentMethodDetails} for Android Pay payments. This class contains only tokenized and encrypted card data.
- * <p>
- * Copyright (c) 2017 Adyen B.V.
- * <p>
- * This file is open source and available under the MIT license. See the LICENSE file for more info.
- * <p>
- * Created by timon on 18/10/2017.
  */
 public final class AndroidPayDetails extends PaymentMethodDetails {
+    @NonNull
     public static final Creator<AndroidPayDetails> CREATOR = new Creator<AndroidPayDetails>() {
         @Override
         public AndroidPayDetails createFromParcel(Parcel source) {
@@ -28,6 +32,7 @@ public final class AndroidPayDetails extends PaymentMethodDetails {
         }
     };
 
+    @NonNull
     public static final String KEY_ADDITIONAL_DATA_TOKEN = "additionalData.androidpay.token";
 
     private String mToken;
@@ -43,7 +48,7 @@ public final class AndroidPayDetails extends PaymentMethodDetails {
     }
 
     @Override
-    public void writeToParcel(Parcel dest, int flags) {
+    public void writeToParcel(@NonNull Parcel dest, int flags) {
         dest.writeString(mToken);
     }
 
@@ -57,7 +62,7 @@ public final class AndroidPayDetails extends PaymentMethodDetails {
     }
 
     @Override
-    public boolean equals(Object o) {
+    public boolean equals(@Nullable Object o) {
         if (this == o) {
             return true;
         }

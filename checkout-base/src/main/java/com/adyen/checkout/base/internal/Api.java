@@ -1,3 +1,11 @@
+/*
+ * Copyright (c) 2017 Adyen N.V.
+ *
+ * This file is open source and available under the MIT license. See the LICENSE file for more info.
+ *
+ * Created by timon on 08/09/2017.
+ */
+
 package com.adyen.checkout.base.internal;
 
 import android.support.annotation.NonNull;
@@ -11,14 +19,8 @@ import java.net.HttpURLConnection;
 import java.nio.charset.Charset;
 import java.util.Map;
 
-/**
- * Copyright (c) 2017 Adyen B.V.
- * <p>
- * This file is open source and available under the MIT license. See the LICENSE file for more info.
- * <p>
- * Created by timon on 08/09/2017.
- */
 public abstract class Api {
+    @NonNull
     public static final Charset CHARSET = Charset.forName("UTF-8");
 
     private static final int BUFFER_SIZE = 1024;

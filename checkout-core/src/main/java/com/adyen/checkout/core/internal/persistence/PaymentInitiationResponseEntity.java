@@ -1,3 +1,11 @@
+/*
+ * Copyright (c) 2018 Adyen N.V.
+ *
+ * This file is open source and available under the MIT license. See the LICENSE file for more info.
+ *
+ * Created by timon on 29/05/2018.
+ */
+
 package com.adyen.checkout.core.internal.persistence;
 
 import android.arch.persistence.room.ColumnInfo;
@@ -16,13 +24,6 @@ import com.adyen.checkout.core.internal.model.PaymentInitiationResponse;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-/**
- * Copyright (c) 2018 Adyen B.V.
- * <p>
- * This file is open source and available under the MIT license. See the LICENSE file for more info.
- * <p>
- * Created by timon on 29/05/2018.
- */
 @Entity(tableName = "payment_initiation_responses",
         indices = {@Index("payment_session_uuid")},
         foreignKeys = @ForeignKey(
@@ -32,6 +33,7 @@ import org.json.JSONObject;
                 onUpdate = ForeignKey.CASCADE,
                 onDelete = ForeignKey.CASCADE
         ))
+@SuppressWarnings("MemberName")
 public final class PaymentInitiationResponseEntity {
     @PrimaryKey(autoGenerate = true)
     @ColumnInfo(name = "id")

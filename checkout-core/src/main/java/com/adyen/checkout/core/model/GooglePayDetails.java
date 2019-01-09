@@ -1,19 +1,22 @@
+/*
+ * Copyright (c) 2018 Adyen N.V.
+ *
+ * This file is open source and available under the MIT license. See the LICENSE file for more info.
+ *
+ * Created by timon on 24/04/2018.
+ */
+
 package com.adyen.checkout.core.model;
 
 import android.os.Parcel;
 import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
 
 import org.json.JSONException;
 import org.json.JSONObject;
 
-/**
- * Copyright (c) 2018 Adyen B.V.
- * <p>
- * This file is open source and available under the MIT license. See the LICENSE file for more info.
- * <p>
- * Created by timon on 24/04/2018.
- */
 public final class GooglePayDetails extends PaymentMethodDetails {
+    @NonNull
     public static final Creator<GooglePayDetails> CREATOR = new Creator<GooglePayDetails>() {
         @Override
         public GooglePayDetails createFromParcel(Parcel source) {
@@ -26,6 +29,7 @@ public final class GooglePayDetails extends PaymentMethodDetails {
         }
     };
 
+    @NonNull
     public static final String KEY_ADDITIONAL_DATA_TOKEN = "additionalData.paywithgoogle.token";
 
     private String mToken;
@@ -41,7 +45,7 @@ public final class GooglePayDetails extends PaymentMethodDetails {
     }
 
     @Override
-    public void writeToParcel(Parcel dest, int flags) {
+    public void writeToParcel(@NonNull Parcel dest, int flags) {
         dest.writeString(mToken);
     }
 
@@ -55,7 +59,7 @@ public final class GooglePayDetails extends PaymentMethodDetails {
     }
 
     @Override
-    public boolean equals(Object o) {
+    public boolean equals(@Nullable Object o) {
         if (this == o) {
             return true;
         }

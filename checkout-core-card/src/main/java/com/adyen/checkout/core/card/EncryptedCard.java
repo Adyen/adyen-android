@@ -1,3 +1,11 @@
+/*
+ * Copyright (c) 2018 Adyen N.V.
+ *
+ * This file is open source and available under the MIT license. See the LICENSE file for more info.
+ *
+ * Created by timon on 06/02/2018.
+ */
+
 package com.adyen.checkout.core.card;
 
 import android.os.Parcel;
@@ -5,14 +13,8 @@ import android.os.Parcelable;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 
-/**
- * Copyright (c) 2018 Adyen B.V.
- * <p>
- * This file is open source and available under the MIT license. See the LICENSE file for more info.
- * <p>
- * Created by timon on 06/02/2018.
- */
 public final class EncryptedCard implements Parcelable {
+    @NonNull
     public static final Parcelable.Creator<EncryptedCard> CREATOR = new Parcelable.Creator<EncryptedCard>() {
         @Override
         public EncryptedCard createFromParcel(Parcel source) {
@@ -50,7 +52,7 @@ public final class EncryptedCard implements Parcelable {
     }
 
     @Override
-    public void writeToParcel(Parcel dest, int flags) {
+    public void writeToParcel(@NonNull Parcel dest, int flags) {
         dest.writeString(mEncryptedNumber);
         dest.writeString(mEncryptedExpiryMonth);
         dest.writeString(mEncryptedExpiryYear);

@@ -1,3 +1,11 @@
+/*
+ * Copyright (c) 2018 Adyen N.V.
+ *
+ * This file is open source and available under the MIT license. See the LICENSE file for more info.
+ *
+ * Created by timon on 11/07/2018.
+ */
+
 package com.adyen.checkout.core.internal;
 
 import android.app.Activity;
@@ -15,12 +23,6 @@ import java.util.Map;
 
 /**
  * Simplified version of {@code android.arch.lifecycle.LiveData}.
- * <p>
- * Copyright (c) 2018 Adyen B.V.
- * <p>
- * This file is open source and available under the MIT license. See the LICENSE file for more info.
- * <p>
- * Created by timon on 11/07/2018.
  */
 public class ObservableImpl<T> implements Observable<T> {
     private static final int START_VERSION = -1;
@@ -112,11 +114,12 @@ public class ObservableImpl<T> implements Observable<T> {
 
         mDispatchingValue = true;
 
+        ObserverWrapper internalInitiator = initiator;
         do {
             mDispatchInvalidated = false;
-            if (initiator != null) {
-                considerNotify(initiator);
-                initiator = null;
+            if (internalInitiator != null) {
+                considerNotify(internalInitiator);
+                internalInitiator = null;
             } else {
                 for (Map.Entry<Observer<T>, ObserverWrapper> entry : mObservers.entrySet()) {
                     considerNotify(entry.getValue());

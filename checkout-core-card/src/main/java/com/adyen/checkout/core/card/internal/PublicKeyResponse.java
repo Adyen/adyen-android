@@ -1,21 +1,24 @@
+/*
+ * Copyright (c) 2018 Adyen N.V.
+ *
+ * This file is open source and available under the MIT license. See the LICENSE file for more info.
+ *
+ * Created by timon on 25/01/2018.
+ */
+
 package com.adyen.checkout.core.card.internal;
 
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 
+import com.adyen.checkout.base.internal.HashUtils;
 import com.adyen.checkout.base.internal.JsonObject;
 
 import org.json.JSONException;
 import org.json.JSONObject;
 
-/**
- * Copyright (c) 2018 Adyen B.V.
- * <p>
- * This file is open source and available under the MIT license. See the LICENSE file for more info.
- * <p>
- * Created by timon on 25/01/2018.
- */
 public final class PublicKeyResponse extends JsonObject {
+    @NonNull
     public static final Creator<PublicKeyResponse> CREATOR = new DefaultCreator<>(PublicKeyResponse.class);
 
     private final String mStatus;
@@ -33,7 +36,7 @@ public final class PublicKeyResponse extends JsonObject {
     }
 
     @Override
-    public boolean equals(Object o) {
+    public boolean equals(@Nullable Object o) {
         if (this == o) {
             return true;
         }
@@ -55,8 +58,8 @@ public final class PublicKeyResponse extends JsonObject {
     @Override
     public int hashCode() {
         int result = mStatus != null ? mStatus.hashCode() : 0;
-        result = 31 * result + (mId != null ? mId.hashCode() : 0);
-        result = 31 * result + (mPublicKey != null ? mPublicKey.hashCode() : 0);
+        result = HashUtils.MULTIPLIER * result + (mId != null ? mId.hashCode() : 0);
+        result = HashUtils.MULTIPLIER * result + (mPublicKey != null ? mPublicKey.hashCode() : 0);
         return result;
     }
 

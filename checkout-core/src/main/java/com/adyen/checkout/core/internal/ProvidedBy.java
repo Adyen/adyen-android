@@ -1,3 +1,11 @@
+/*
+ * Copyright (c) 2018 Adyen N.V.
+ *
+ * This file is open source and available under the MIT license. See the LICENSE file for more info.
+ *
+ * Created by timon on 10/07/2018.
+ */
+
 package com.adyen.checkout.core.internal;
 
 import android.support.annotation.NonNull;
@@ -13,13 +21,6 @@ import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 
-/**
- * Copyright (c) 2018 Adyen B.V.
- * <p>
- * This file is open source and available under the MIT license. See the LICENSE file for more info.
- * <p>
- * Created by timon on 10/07/2018.
- */
 @Retention(RetentionPolicy.RUNTIME)
 @Target(ElementType.TYPE)
 public @interface ProvidedBy {
@@ -27,6 +28,7 @@ public @interface ProvidedBy {
     Class<? extends JsonObject> value();
 
     final class Util {
+        @NonNull
         public static <T> T parse(@NonNull JSONObject jsonObject, @NonNull Class<T> clazz) throws CheckoutException {
             try {
                 ProvidedBy providerBy = clazz.getAnnotation(ProvidedBy.class);

@@ -1,22 +1,26 @@
+/*
+ * Copyright (c) 2018 Adyen N.V.
+ *
+ * This file is open source and available under the MIT license. See the LICENSE file for more info.
+ *
+ * Created by timon on 09/07/2018.
+ */
+
 package com.adyen.checkout.core.internal.model;
 
 import android.os.Parcelable;
 import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
 
 import com.adyen.checkout.base.internal.JsonObject;
+import com.adyen.checkout.base.internal.HashUtils;
 import com.adyen.checkout.core.model.Card;
 
 import org.json.JSONException;
 import org.json.JSONObject;
 
-/**
- * Copyright (c) 2018 Adyen B.V.
- * <p>
- * This file is open source and available under the MIT license. See the LICENSE file for more info.
- * <p>
- * Created by timon on 09/07/2018.
- */
 public final class CardImpl extends JsonObject implements Card {
+    @NonNull
     public static final Parcelable.Creator<CardImpl> CREATOR = new DefaultCreator<>(CardImpl.class);
 
     private String mHolderName;
@@ -59,7 +63,7 @@ public final class CardImpl extends JsonObject implements Card {
     }
 
     @Override
-    public boolean equals(Object o) {
+    public boolean equals(@Nullable Object o) {
         if (this == o) {
             return true;
         }
@@ -84,12 +88,13 @@ public final class CardImpl extends JsonObject implements Card {
     @Override
     public int hashCode() {
         int result = mHolderName != null ? mHolderName.hashCode() : 0;
-        result = 31 * result + (mExpiryMonth != null ? mExpiryMonth.hashCode() : 0);
-        result = 31 * result + (mExpiryYear != null ? mExpiryYear.hashCode() : 0);
-        result = 31 * result + (mNumber != null ? mNumber.hashCode() : 0);
+        result = HashUtils.MULTIPLIER * result + (mExpiryMonth != null ? mExpiryMonth.hashCode() : 0);
+        result = HashUtils.MULTIPLIER * result + (mExpiryYear != null ? mExpiryYear.hashCode() : 0);
+        result = HashUtils.MULTIPLIER * result + (mNumber != null ? mNumber.hashCode() : 0);
         return result;
     }
 
+    @NonNull
     @Override
     public String toString() {
         return "Card{" + "Number='" + mNumber + '\'' + '}';

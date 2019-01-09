@@ -1,3 +1,11 @@
+/*
+ * Copyright (c) 2018 Adyen N.V.
+ *
+ * This file is open source and available under the MIT license. See the LICENSE file for more info.
+ *
+ * Created by timon on 16/03/2018.
+ */
+
 package com.adyen.checkout.ui.internal.picker;
 
 import android.arch.lifecycle.Observer;
@@ -31,15 +39,11 @@ import com.adyen.checkout.ui.internal.common.util.recyclerview.HeaderItemDecorat
 import java.util.ArrayList;
 import java.util.List;
 
-/**
- * Copyright (c) 2018 Adyen B.V.
- * <p>
- * This file is open source and available under the MIT license. See the LICENSE file for more info.
- * <p>
- * Created by timon on 16/03/2018.
- */
 public class CheckoutMethodPickerFragment extends CheckoutSessionFragment {
+    @NonNull
     public static final String TAG = "TAG_CHECKOUT_METHOD_PICKER_FRAGMENT";
+
+    private static final float DESIRED_HEIGHT_PROPORTION = 2f / 3f;
 
     private CheckoutViewModel mCheckoutViewModel;
 
@@ -59,7 +63,7 @@ public class CheckoutMethodPickerFragment extends CheckoutSessionFragment {
     }
 
     @Override
-    public void onAttach(Context context) {
+    public void onAttach(@NonNull Context context) {
         super.onAttach(context);
 
         if (context instanceof CheckoutMethodPickerListener) {
@@ -142,7 +146,7 @@ public class CheckoutMethodPickerFragment extends CheckoutSessionFragment {
     }
 
     public int getDesiredPeekHeight() {
-        int maxPeekHeight = getResources().getDisplayMetrics().heightPixels * 2 / 3;
+        int maxPeekHeight = (int) (getResources().getDisplayMetrics().heightPixels * DESIRED_HEIGHT_PROPORTION);
         int peekHeight = 0;
         int childIndex = 0;
         int childCount = mCheckoutMethodsRecyclerView.getAdapter().getItemCount();
