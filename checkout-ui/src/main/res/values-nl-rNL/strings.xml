@@ -101,6 +101,8 @@
     <string name="checkout_terms_and_conditions_toggle">Ga akkoord met de algemene voorwaarden</string>
     <string name="checkout_klarna_terms_and_conditions_text">Ik geef Klarna toestemming om mijn gegevens te verwerken voor het vaststellen van mijn identiteit, het beoordelen van mijn kredietwaardigheid en het afwikkelen van de aankoop. Ik heb de mogelijkheid om mijn %s in te trekken voor het verwerken van mijn gegevens en voor de doeleinden waarvoor dit wettelijk is toegestaan. De algemene voorwaarden van de winkelier zijn van toepassing.</string>
     <string name="checkout_klarna_consent">toestemming</string>
+    <string name="checkout_afterpay_terms_and_conditions_text">Ik ga akkoord met de %s van AfterPay</string>
+    <string name="checkout_afterpay_conditions">betalingsvoorwaarden</string>
     <string name="checkout_klarna_more_information">Meer informatie</string>
 
     <string name="checkout_input_error_empty_field">Dit is een verplicht veld. Vul het in.</string>

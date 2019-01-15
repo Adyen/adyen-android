@@ -101,6 +101,8 @@
     <string name="checkout_terms_and_conditions_toggle">Ich stimme den allgemeinen Geschäftsbedingungen zu</string>
     <string name="checkout_klarna_terms_and_conditions_text">Mit der Übermittlung der für die Abwicklung des Rechnungskaufes und einer Identitäts- und Bonitätsprüfung erforderlichen Daten an Klarna bin ich einverstanden. Meine %s kann ich jederzeit mit Wirkung für die Zukunft widerrufen.</string>
     <string name="checkout_klarna_consent">Einwilligung</string>
+    <string name="checkout_afterpay_terms_and_conditions_text">Ich bin mit den %s von AfterPay einverstanden</string>
+    <string name="checkout_afterpay_conditions">Zahlungsbedingungen</string>
     <string name="checkout_klarna_more_information">Weitere Informationen</string>
 
     <string name="checkout_input_error_empty_field">Pflichtfeld, bitte ausfüllen.</string>

@@ -57,6 +57,12 @@ public final class PaymentImpl extends JsonObject implements Payment {
         return mAmount;
     }
 
+    @NonNull
+    @Override
+    public String getCountryCode() {
+        return mCountryCode;
+    }
+
     @Override
     public boolean equals(@Nullable Object o) {
         if (this == o) {
@@ -105,11 +111,6 @@ public final class PaymentImpl extends JsonObject implements Payment {
     @Override
     public String toString() {
         return "Payment{" + "CountryCode='" + mCountryCode + '\'' + ", Amount=" + mAmount + '}';
-    }
-
-    @NonNull
-    public String getCountryCode() {
-        return mCountryCode;
     }
 
     @NonNull

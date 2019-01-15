@@ -196,39 +196,7 @@ public final class PaymentHandlerImpl implements PaymentHandler {
     @Override
     public void initiatePayment(@NonNull PaymentMethod paymentMethod, @Nullable PaymentMethodDetails paymentMethodDetails) {
         PaymentSessionImpl paymentSession = mPaymentSessionEntity.paymentSession;
-        initiatePayment(paymentSession, (PaymentMethodImpl) paymentMethod, paymentMethodDetails);
-    }
-
-    private void initiatePayment(
-            @NonNull PaymentSessionImpl paymentSession,
-            @NonNull final PaymentMethodImpl paymentMethod,
-            @Nullable PaymentMethodDetails paymentMethodDetails
-    ) {
-        String paymentData = paymentSession.getPaymentData();
-        String paymentMethodData = paymentMethod.getPaymentMethodData();
-        PaymentInitiation paymentInitiation = new PaymentInitiation.Builder(paymentData, paymentMethodData)
-                .setPaymentMethodDetails(paymentMethodDetails)
-                .build();
-
-        final Callable<PaymentInitiationResponse> callable = CheckoutApi
-                .getInstance(mApplication)
-                .initiatePayment(paymentSession, paymentInitiation);
-
-        mExecutorService.submit(new Runnable() {
-            @Override
-            public void run() {
-                handleRequestStarted();
-
-                try {
-                    PaymentInitiationResponse response = callable.call();
-                    handlePaymentInitiationResponse(paymentMethod, response);
-                } catch (Exception e) {
-                    handleException(e, "An error occurred while initiating the payment.");
-                } finally {
-                    handleRequestFinished();
-                }
-            }
-        });
+        initiatePaymentInternal(paymentSession, (PaymentMethodImpl) paymentMethod, paymentMethodDetails);
     }
 
     @Override
@@ -256,7 +224,7 @@ public final class PaymentHandlerImpl implements PaymentHandler {
             }
         }
 
-        initiatePayment(paymentSession, paymentMethod, paymentMethodDetails);
+        initiatePaymentInternal(paymentSession, paymentMethod, paymentMethodDetails);
     }
 
     @Override
@@ -277,7 +245,7 @@ public final class PaymentHandlerImpl implements PaymentHandler {
 
         if (redirectFields.isSubmitPaymentMethodReturnData()) {
             AppResponseDetails appResponseDetails = new AppResponseDetails.Builder(redirectResult.getQuery()).build();
-            initiatePayment(paymentSession, paymentMethod, appResponseDetails);
+            initiatePaymentInternal(paymentSession, paymentMethod, appResponseDetails);
         } else {
             try {
                 JSONObject jsonObject = new JSONObject();
@@ -335,6 +303,37 @@ public final class PaymentHandlerImpl implements PaymentHandler {
                     }
                 } catch (Exception e) {
                     handleException(e, "An error occurred while deleting the payment method.");
+                } finally {
+                    handleRequestFinished();
+                }
+            }
+        });
+    }
+
+    private void initiatePaymentInternal(
+            @NonNull PaymentSessionImpl paymentSession,
+            @NonNull final PaymentMethodImpl paymentMethod,
+            @Nullable PaymentMethodDetails paymentMethodDetails
+    ) {
+        String paymentData = paymentSession.getPaymentData();
+        String paymentMethodData = paymentMethod.getPaymentMethodData();
+        PaymentInitiation paymentInitiation = new PaymentInitiation.Builder(paymentData, paymentMethodData)
+                .setPaymentMethodDetails(paymentMethodDetails)
+                .build();
+
+        final Callable<PaymentInitiationResponse> callable = CheckoutApi
+                .getInstance(mApplication)
+                .initiatePayment(paymentSession, paymentInitiation);
+
+        handleRequestStarted();
+        mExecutorService.submit(new Runnable() {
+            @Override
+            public void run() {
+                try {
+                    PaymentInitiationResponse response = callable.call();
+                    handlePaymentInitiationResponse(paymentMethod, response);
+                } catch (Exception e) {
+                    handleException(e, "An error occurred while initiating the payment.");
                 } finally {
                     handleRequestFinished();
                 }

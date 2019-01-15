@@ -101,6 +101,8 @@
     <string name="checkout_terms_and_conditions_toggle">Acceptér vilkårene og betingelserne</string>
     <string name="checkout_klarna_terms_and_conditions_text">Jeg giver mit samtykke til, at Klarna kan behandle mine data med henblik på bekræftelse af min identitet og kreditvurdering samt afregning af mit køb. Jeg kan tilbagekalde mit %s til behandling af data og til formål, hvor dette er muligt i henhold til gældende lov. Sælgers generelle vilkår og betingelser gælder.</string>
     <string name="checkout_klarna_consent">samtykke</string>
+    <string name="checkout_afterpay_terms_and_conditions_text">Jeg accepterer AfterPays %s</string>
+    <string name="checkout_afterpay_conditions">betalingsbetingelser</string>
     <string name="checkout_klarna_more_information">Mere information</string>
 
     <string name="checkout_input_error_empty_field">Obligatorisk felt. Feltet skal udfyldes.</string>

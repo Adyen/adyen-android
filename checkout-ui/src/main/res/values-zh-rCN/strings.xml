@@ -101,6 +101,8 @@
     <string name="checkout_terms_and_conditions_toggle">同意条款和条件</string>
     <string name="checkout_klarna_terms_and_conditions_text">我同意由 Klarna 处理我的数据，用于身份和信用评估以及购买结算。我可以撤销对处理数据以及依法可行用途的 %s。商户的一般条款和条件适用。</string>
     <string name="checkout_klarna_consent">同意</string>
+    <string name="checkout_afterpay_terms_and_conditions_text">我同意 AfterPay 的 %s</string>
+    <string name="checkout_afterpay_conditions">支付条件</string>
     <string name="checkout_klarna_more_information">更多信息</string>
 
     <string name="checkout_input_error_empty_field">必填字段，请填写。</string>

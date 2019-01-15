@@ -101,6 +101,8 @@
     <string name="checkout_terms_and_conditions_toggle">Accetto i termini e le condizioni</string>
     <string name="checkout_klarna_terms_and_conditions_text">Autorizzo Klarna a elaborare i miei dati per effettuare verifiche relative a identità e affidabilità finanziaria e alla liquidazione dell\'acquisto. Sono autorizzato a revocare il mio %s per l\'elaborazione dei dati, ai sensi di quanto stabilito dalla legge. Vengono applicati i termini e le condizioni dell\'esercente.</string>
     <string name="checkout_klarna_consent">consenso</string>
+    <string name="checkout_afterpay_terms_and_conditions_text">Accetto i %s di AfterPay</string>
+    <string name="checkout_afterpay_conditions">termini di pagamento</string>
     <string name="checkout_klarna_more_information">Maggiori informazioni</string>
 
     <string name="checkout_input_error_empty_field">È necessario compilare il campo.</string>

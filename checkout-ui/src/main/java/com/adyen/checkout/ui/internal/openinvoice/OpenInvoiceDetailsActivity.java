@@ -14,6 +14,7 @@ import static com.adyen.checkout.core.model.OpenInvoiceDetails.KEY_DELIVERY_ADDR
 import static com.adyen.checkout.core.model.OpenInvoiceDetails.KEY_PERSONAL_DETAILS;
 import static com.adyen.checkout.core.model.OpenInvoiceDetails.KEY_SEPARATE_DELIVERY_ADDRESS;
 
+import android.content.ActivityNotFoundException;
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.Typeface;
@@ -37,13 +38,13 @@ import android.widget.EditText;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.adyen.checkout.core.CheckoutException;
 import com.adyen.checkout.core.Observer;
 import com.adyen.checkout.core.PaymentReference;
 import com.adyen.checkout.core.SearchHandler;
 import com.adyen.checkout.core.internal.model.InputDetailImpl;
-import com.adyen.checkout.core.internal.model.PaymentImpl;
 import com.adyen.checkout.core.model.Address;
 import com.adyen.checkout.core.model.FieldSetConfiguration;
 import com.adyen.checkout.core.model.InputDetail;
@@ -70,6 +71,10 @@ public class OpenInvoiceDetailsActivity extends CheckoutDetailsActivity implemen
 
     private static final String KLARNA_CONSENT_URL = "https://cdn.klarna.com/1.0/shared/content/legal/terms/2/de_de/consent";
     private static final String KLARNA_MORE_INFO_URL = "https://cdn.klarna.com/1.0/shared/content/legal/terms/2/%s/invoice";
+
+    private static final String AFTERPAY_NL_CONSENT_URL = "https://www.afterpay.nl/nl/algemeen/betalen-met-afterpay/betalingsvoorwaarden";
+    private static final String AFTERPAY_BE_CONSENT_URL = "https://www.afterpay.be/be/footer/betalen-met-afterpay/betalingsvoorwaarden";
+    private static final String AFTERPAY_US_CONSENT_URL = "https://www.afterpay.nl/en/algemeen/pay-with-afterpay/payment-conditions";
 
     private PaymentMethod mPaymentMethod;
     private SearchHandler<KlarnaSsnLookupResponse> mSearchHandler;
@@ -173,6 +178,14 @@ public class OpenInvoiceDetailsActivity extends CheckoutDetailsActivity implemen
         });
     }
 
+    private boolean isKlarna() {
+        return PaymentMethodTypes.KLARNA.equals(mPaymentMethod.getType());
+    }
+
+    private boolean isAfterpay() {
+        return PaymentMethodTypes.AFTERPAY.equals(mPaymentMethod.getType());
+    }
+
     private void setupSSnLookup() {
         if (mPersonalDetailsLayout.getFormVisibility() == FieldSetConfiguration.FieldVisibility.READ_ONLY) {
             return;
@@ -221,7 +234,7 @@ public class OpenInvoiceDetailsActivity extends CheckoutDetailsActivity implemen
                 mSsnLookupEditText.addTextChangedListener(new AsYouTypeSsnFormatter(ssnCompleteCallback));
                 mSsnLookupEditText.addTextChangedListener(new SimpleTextWatcher() {
                     @Override
-                    public void afterTextChanged(Editable s) {
+                    public void afterTextChanged(@NonNull Editable s) {
                         checkValidation();
                     }
                 });
@@ -305,7 +318,7 @@ public class OpenInvoiceDetailsActivity extends CheckoutDetailsActivity implemen
                         }
                         break;
                     case KEY_CONSENT_CHECKBOX:
-                        setupKlarnaConsent();
+                        setupConsent();
                         break;
                     default:
                         if (!detail.isOptional()) {
@@ -317,30 +330,39 @@ public class OpenInvoiceDetailsActivity extends CheckoutDetailsActivity implemen
         }
     }
 
-    private void setupKlarnaConsent() {
-        mConsentLayout.setVisibility(View.VISIBLE);
+    private void setupConsent() {
+        String highlighted;
+        String termsAndConditions;
 
-        String consent = getString(R.string.checkout_klarna_consent);
-        String termsAndConditions = getString(R.string.checkout_klarna_terms_and_conditions_text);
+        if (isKlarna()) {
+            highlighted = getString(R.string.checkout_klarna_consent);
+            termsAndConditions = getString(R.string.checkout_klarna_terms_and_conditions_text);
+        } else if (isAfterpay()) {
+            highlighted = getString(R.string.checkout_afterpay_conditions);
+            termsAndConditions = getString(R.string.checkout_afterpay_terms_and_conditions_text);
+        } else {
+            return;
+        }
+
         final int replacePosition = termsAndConditions.indexOf("%s");
 
+        mConsentLayout.setVisibility(View.VISIBLE);
+
         if (replacePosition > -1) {
-            final int endOfSpan = replacePosition + consent.length();
-            SpannableStringBuilder spannableTermsAndConditions = new SpannableStringBuilder(String.format(termsAndConditions, consent));
+            final int endOfSpan = replacePosition + highlighted.length();
+            SpannableStringBuilder spannableTermsAndConditions = new SpannableStringBuilder(String.format(termsAndConditions, highlighted));
             spannableTermsAndConditions.setSpan(new UnderlineSpan(), replacePosition, endOfSpan, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
             spannableTermsAndConditions.setSpan(new StyleSpan(Typeface.BOLD), replacePosition, endOfSpan, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
             mConsentText.setText(spannableTermsAndConditions);
         } else {
-            mConsentText.setText(String.format(termsAndConditions, consent));
+            mConsentText.setText(String.format(termsAndConditions, highlighted));
         }
 
-        mConsentText.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Intent browserIntent = new Intent(Intent.ACTION_VIEW, Uri.parse(KLARNA_CONSENT_URL));
-                startActivity(browserIntent);
-            }
-        });
+        if (isKlarna()) {
+            klarnaConsentClick();
+        } else if (isAfterpay()) {
+            afterpayConsentClick();
+        }
 
         mConsentSwitch.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             @Override
@@ -350,9 +372,49 @@ public class OpenInvoiceDetailsActivity extends CheckoutDetailsActivity implemen
         });
     }
 
+    private void klarnaConsentClick() {
+        mConsentText.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                launchBrowser(Uri.parse(KLARNA_CONSENT_URL));
+            }
+        });
+    }
+
+    private void afterpayConsentClick() {
+        getPaymentHandler().getPaymentSessionObservable().observe(this, new Observer<PaymentSession>() {
+            @Override
+            public void onChanged(@NonNull PaymentSession paymentSession) {
+
+                String countryCode = paymentSession.getPayment().getCountryCode().toLowerCase(Locale.ROOT);
+                Locale userLocale = LocaleUtil.getLocale(OpenInvoiceDetailsActivity.this);
+
+                boolean isSameLocaleAndCountry = countryCode.toUpperCase(Locale.ROOT).equals(userLocale.getCountry().toUpperCase(Locale.ROOT));
+
+                final String url;
+                if (isSameLocaleAndCountry && "NL".equals(countryCode.toUpperCase(Locale.ROOT))) {
+                    url = AFTERPAY_NL_CONSENT_URL;
+                } else if (isSameLocaleAndCountry && "BE".equals(countryCode.toUpperCase(Locale.ROOT))) {
+                    url = AFTERPAY_BE_CONSENT_URL;
+                } else {
+                    url = AFTERPAY_US_CONSENT_URL;
+                }
+
+                mConsentText.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        launchBrowser(Uri.parse(url));
+                    }
+                });
+            }
+        });
+
+
+    }
+
     private void setupMoreInformationButton() {
         //this button only applies for Klarna payment method
-        if (PaymentMethodTypes.KLARNA.equals(mPaymentMethod.getType())) {
+        if (isKlarna()) {
             final Button moreInformationButton = findViewById(R.id.button_more_information);
             moreInformationButton.setVisibility(View.VISIBLE);
 
@@ -360,7 +422,7 @@ public class OpenInvoiceDetailsActivity extends CheckoutDetailsActivity implemen
                 @Override
                 public void onChanged(@NonNull PaymentSession paymentSession) {
                     //the binding legal page is based on the country of origin
-                    String countryCode = ((PaymentImpl) paymentSession.getPayment()).getCountryCode().toLowerCase(Locale.ROOT);
+                    String countryCode = paymentSession.getPayment().getCountryCode().toLowerCase(Locale.ROOT);
                     Locale userLocale = LocaleUtil.getLocale(OpenInvoiceDetailsActivity.this);
                     //but we can show an english version if the shopper locale is not the same
                     String klarnaCountryCode;
@@ -375,12 +437,19 @@ public class OpenInvoiceDetailsActivity extends CheckoutDetailsActivity implemen
                     moreInformationButton.setOnClickListener(new View.OnClickListener() {
                         @Override
                         public void onClick(View v) {
-                            Intent browserIntent = new Intent(Intent.ACTION_VIEW, Uri.parse(klarnaUrl));
-                            startActivity(browserIntent);
+                            launchBrowser(Uri.parse(klarnaUrl));
                         }
                     });
                 }
             });
+        }
+    }
+
+    private void launchBrowser(@NonNull Uri uri) {
+        try {
+            startActivity(new Intent(Intent.ACTION_VIEW, uri));
+        } catch (ActivityNotFoundException e) {
+            Toast.makeText(getApplicationContext(), R.string.checkout_error_redirect_failed, Toast.LENGTH_LONG).show();
         }
     }
 

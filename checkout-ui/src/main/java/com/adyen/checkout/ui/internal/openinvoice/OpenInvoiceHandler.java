@@ -26,8 +26,10 @@ public class OpenInvoiceHandler implements PaymentMethodHandler {
         @Override
         public boolean supports(@NonNull Application application, @NonNull PaymentMethod paymentMethod) {
             //fallback to DefaultPaymentMethod for HPP redirect if there are no input details
-            return PaymentMethodTypes.KLARNA.equals(paymentMethod.getType())
-                    && paymentMethod.getInputDetails() != null;
+            boolean isKlarna = PaymentMethodTypes.KLARNA.equals(paymentMethod.getType());
+            boolean isAfterpay = PaymentMethodTypes.AFTERPAY.equals(paymentMethod.getType());
+
+            return (isAfterpay || isKlarna) && paymentMethod.getInputDetails() != null;
         }
 
         @Override

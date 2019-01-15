@@ -17,4 +17,10 @@ public interface Payment extends Parcelable {
      */
     @NonNull
     Amount getAmount();
+
+    /**
+     * @return The code of the country specified for this Payment.
+     */
+    @NonNull
+    String getCountryCode();
 }

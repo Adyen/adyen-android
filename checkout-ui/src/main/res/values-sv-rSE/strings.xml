@@ -101,6 +101,8 @@
     <string name="checkout_terms_and_conditions_toggle">Samtyck till villkoren</string>
     <string name="checkout_klarna_terms_and_conditions_text">Jag samtycker till att Klarna bearbetar mina data för identifiering, kreditprövning och köpeavtal. Jag kan återkalla mitt %s för bearbetning av data och för syften där detta möjliggörs av lagen. Allmänna regler och villkor för handlaren tillämpas.</string>
     <string name="checkout_klarna_consent">samtycke</string>
+    <string name="checkout_afterpay_terms_and_conditions_text">Jag godkänner AfterPays %s</string>
+    <string name="checkout_afterpay_conditions">betalvillkor</string>
     <string name="checkout_klarna_more_information">Mer information</string>
 
     <string name="checkout_input_error_empty_field">Obligatoriskt fält, vänligen fyll i.</string>

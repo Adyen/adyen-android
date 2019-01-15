@@ -87,7 +87,7 @@ public final class DeviceFingerprint implements JsonSerializable {
         deviceInfo.put("deviceModel", DEVICE_MODEL);
         deviceInfo.put("deviceIdentifier", mDeviceIdentifier);
         deviceInfo.put("integration", mIntegration);
-        deviceInfo.put("locale", mLocale);
+        deviceInfo.put("locale", getLocaleWithoutScript(mLocale));
         deviceInfo.put("generationTime", mGenerationTime);
 
         return deviceInfo;
@@ -123,5 +123,14 @@ public final class DeviceFingerprint implements JsonSerializable {
         result = HashUtils.MULTIPLIER * result + (mLocale != null ? mLocale.hashCode() : 0);
         result = HashUtils.MULTIPLIER * result + (mGenerationTime != null ? mGenerationTime.hashCode() : 0);
         return result;
+    }
+
+    /**
+     * Some locales have extra part named "Language Script" that specified by # after Region code e.g. "zh_CN_#Hans"
+     * Since backend doesn't support "script" part of locale, we need to remove it!
+     * This function parse locale and return string with `${LanguageCode}_${RegionCode}` format.
+     */
+    private String getLocaleWithoutScript(@NonNull Locale locale) {
+        return String.format("%s_%s", locale.getLanguage(), locale.getCountry());
     }
 }

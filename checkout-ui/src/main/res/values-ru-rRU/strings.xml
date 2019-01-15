@@ -101,6 +101,8 @@
     <string name="checkout_terms_and_conditions_toggle">Я соглашаюсь с условиями</string>
     <string name="checkout_klarna_terms_and_conditions_text">Даю согласие на обработку моих данных Klarna в целях идентификации и оценки кредитоспособности, а также расчета за покупку. Я имею право отозвать свое %s на обработку данных и в иных целях, предусмотренных законом. Применяются общие условия продавца.</string>
     <string name="checkout_klarna_consent">согласие</string>
+    <string name="checkout_afterpay_terms_and_conditions_text">Я принимаю %s AfterPay</string>
+    <string name="checkout_afterpay_conditions">условия оплаты</string>
     <string name="checkout_klarna_more_information">Дополнительная информация</string>
 
     <string name="checkout_input_error_empty_field">Обязательное поле; пожалуйста, заполните его.</string>

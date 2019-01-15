@@ -22,6 +22,9 @@ public final class PaymentMethodTypes {
     public static final String ANDROID_PAY = "androidpay";
 
     @NonNull
+    public static final String AFTERPAY = "afterpay_default";
+
+    @NonNull
     public static final String BCMC = "bcmc";
 
     @NonNull
