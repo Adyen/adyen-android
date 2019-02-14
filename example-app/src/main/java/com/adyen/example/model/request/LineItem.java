@@ -44,7 +44,7 @@ public final class LineItem implements Serializable {
     @Json(name = "taxCategory")
     private String mTaxCategory;
 
-    @Json(name = "mTaxPercentage")
+    @Json(name = "taxPercentage")
     private int mTaxPercentage;
 
     public LineItem(@NonNull String id, int amountIncludingTax) {

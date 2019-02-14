@@ -34,12 +34,14 @@ import org.json.JSONObject;
 import java.math.BigDecimal;
 import java.math.RoundingMode;
 import java.text.DecimalFormat;
+import java.text.DecimalFormatSymbols;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Locale;
 import java.util.Map;
 
 final class GooglePayUtil {
-    private static final DecimalFormat DECIMAL_FORMAT = new DecimalFormat("0.##");
+    private static final DecimalFormat DECIMAL_FORMAT = new DecimalFormat("0.##", new DecimalFormatSymbols(Locale.US));
 
     @NonNull
     static Task<Boolean> getIsReadyToPayTask(

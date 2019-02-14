@@ -17,7 +17,7 @@ then
   exit 0
 fi
 
-ANDROID_STUDIO_VERSION="3.2"
+ANDROID_STUDIO_VERSION="3.3"
 
 # Get the directory of the script file
 DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" >/dev/null 2>&1 && pwd )"

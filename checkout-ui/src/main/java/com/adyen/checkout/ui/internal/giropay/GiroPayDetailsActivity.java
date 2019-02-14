@@ -145,7 +145,7 @@ public class GiroPayDetailsActivity extends CheckoutDetailsActivity {
         mSelectedGiroPayIssuerViewHolder = TwoLineItemViewHolder.create(findViewById(android.R.id.content), R.id.item_two_line);
         Callable<Drawable> logoCallable = getLogoApi().newBuilder(mPaymentMethod).buildCallable();
         Rembrandt.createDefaultLogoRequestArgs(getApplication(), logoCallable).into(this, mSelectedGiroPayIssuerViewHolder.getLogoImageView());
-        mSelectedGiroPayIssuerViewHolder.getActionImageView().setImageResource(R.drawable.ic_clear_24dp);
+        mSelectedGiroPayIssuerViewHolder.getActionImageView().setImageResource(R.drawable.ic_primary_24dp);
         mSelectedGiroPayIssuerViewHolder.getActionImageView().setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
