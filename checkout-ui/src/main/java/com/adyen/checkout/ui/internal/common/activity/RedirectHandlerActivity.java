@@ -30,6 +30,7 @@ import com.adyen.checkout.ui.internal.common.util.RedirectUtil;
 import com.adyen.checkout.ui.internal.common.util.ThemeUtil;
 
 public class RedirectHandlerActivity extends AppCompatActivity {
+
     private static final String EXTRA_PAYMENT_REFERENCE = "EXTRA_PAYMENT_REFERENCE";
 
     private static final String EXTRA_REDIRECT_DETAILS = "EXTRA_REDIRECT_DETAILS";

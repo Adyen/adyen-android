@@ -11,9 +11,11 @@ package com.adyen.checkout.googlepay.internal;
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
+import android.content.pm.PackageManager;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
+import android.util.Log;
 
 import com.adyen.checkout.core.CheckoutException;
 import com.adyen.checkout.core.Observable;
@@ -21,7 +23,9 @@ import com.adyen.checkout.core.Observer;
 import com.adyen.checkout.core.PaymentHandler;
 import com.adyen.checkout.core.PaymentReference;
 import com.adyen.checkout.core.PaymentResult;
+import com.adyen.checkout.core.RedirectDetails;
 import com.adyen.checkout.core.handler.ErrorHandler;
+import com.adyen.checkout.core.handler.RedirectHandler;
 import com.adyen.checkout.core.model.GooglePayConfiguration;
 import com.adyen.checkout.core.model.GooglePayDetails;
 import com.adyen.checkout.core.model.PaymentMethod;
@@ -36,14 +40,15 @@ import com.google.android.gms.wallet.WalletConstants;
 import org.json.JSONException;
 
 public class GooglePayDetailsActivity extends Activity {
+    private static final String TAG = GooglePayDetails.class.getSimpleName();
     private static final String EXTRA_PAYMENT_REFERENCE = "EXTRA_PAYMENT_REFERENCE";
 
     private static final String EXTRA_PAYMENT_METHOD = "EXTRA_PAYMENT_METHOD";
 
     private static final int REQUEST_CODE_GOOGLE_PAY = 1;
 
+    private PaymentReference mPaymentReference;
     private PaymentMethod mPaymentMethod;
-
     private PaymentHandler mPaymentHandler;
 
     @NonNull
@@ -61,9 +66,9 @@ public class GooglePayDetailsActivity extends Activity {
 
         Intent intent = getIntent();
 
-        PaymentReference paymentReference = intent.getParcelableExtra(EXTRA_PAYMENT_REFERENCE);
+        mPaymentReference = intent.getParcelableExtra(EXTRA_PAYMENT_REFERENCE);
         mPaymentMethod = intent.getParcelableExtra(EXTRA_PAYMENT_METHOD);
-        mPaymentHandler = paymentReference.getPaymentHandler(this);
+        mPaymentHandler = mPaymentReference.getPaymentHandler(this);
 
         final GooglePayConfiguration configuration;
         try {
@@ -102,6 +107,34 @@ public class GooglePayDetailsActivity extends Activity {
                 finish();
             }
         });
+        mPaymentHandler.setRedirectHandler(this, new RedirectHandler() {
+            @Override
+            public void onRedirectRequired(@NonNull RedirectDetails redirectDetails) {
+                handleRedirect(redirectDetails);
+            }
+        });
+    }
+
+    private void handleRedirect(RedirectDetails redirectDetails) {
+        Class<?> redirectActivityClass;
+        try {
+            redirectActivityClass = Class.forName("com.adyen.checkout.ui.internal.common.activity.RedirectHandlerActivity");
+        } catch (ClassNotFoundException e) {
+            Log.e(TAG, "Failed to get redirect class.", e);
+            return;
+        }
+
+        Intent redirectIntent = new Intent(GooglePayDetailsActivity.this, redirectActivityClass);
+
+        redirectIntent.putExtra(EXTRA_PAYMENT_REFERENCE, mPaymentReference);
+        redirectIntent.putExtra("EXTRA_REDIRECT_DETAILS", redirectDetails);
+
+        boolean isCallable = getPackageManager().queryIntentActivities(redirectIntent, PackageManager.MATCH_DEFAULT_ONLY).size() > 0;
+        if (isCallable) {
+            startActivity(redirectIntent);
+        } else {
+            Log.e(TAG, "RedirectHandlerActivity not callable.");
+        }
     }
 
     @Override

@@ -30,8 +30,8 @@ import com.adyen.checkout.ui.internal.common.fragment.ErrorDialogFragment;
 import com.adyen.checkout.ui.internal.common.fragment.ProgressDialogFragment;
 import com.adyen.checkout.ui.internal.common.model.CheckoutSessionProvider;
 
-public abstract class CheckoutSessionActivity extends AppCompatActivity
-        implements CheckoutSessionProvider {
+public abstract class CheckoutSessionActivity extends AppCompatActivity implements CheckoutSessionProvider {
+
     @NonNull
     public static final String EXTRA_PAYMENT_REFERENCE = "EXTRA_PAYMENT_REFERENCE";
 

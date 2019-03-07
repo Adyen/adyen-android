@@ -76,6 +76,9 @@ public final class PaymentSetupRequest implements Serializable {
     @Json(name = "deliveryAddress")
     private Address mDeliveryAddress;
 
+    @Json(name = "executeThreeD")
+    private String mExecuteThreeD;
+
     public static final class Builder {
         private final PaymentSetupRequest mPaymentSetupRequest;
 
@@ -158,6 +161,11 @@ public final class PaymentSetupRequest implements Serializable {
 
         public Builder setDeliveryAddress(@Nullable Address deliveryAddress) {
             mPaymentSetupRequest.mDeliveryAddress = deliveryAddress;
+            return this;
+        }
+
+        public Builder setExecuteThreeD(@Nullable String executeThreeD) {
+            mPaymentSetupRequest.mExecuteThreeD = executeThreeD;
             return this;
         }
 
