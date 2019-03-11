@@ -17,6 +17,7 @@ import com.adyen.checkout.base.LogoApi;
 import com.adyen.checkout.core.handler.AdditionalDetailsHandler;
 import com.adyen.checkout.core.handler.ErrorHandler;
 import com.adyen.checkout.core.handler.RedirectHandler;
+import com.adyen.checkout.core.handler.AuthenticationHandler;
 import com.adyen.checkout.core.model.PaymentMethod;
 import com.adyen.checkout.core.model.PaymentMethodDetails;
 import com.adyen.checkout.core.model.PaymentSession;
@@ -48,6 +49,16 @@ public interface PaymentHandler {
      */
     @NonNull
     Observable<PaymentResult> getPaymentResultObservable();
+
+    /**
+     * Sets an {@link Activity} scoped {@link AuthenticationHandler} for this {@link PaymentHandler}. Setting this {@link AuthenticationHandler}
+     * is required for {@link PaymentMethod PaymentMethods} that might require {@link AuthenticationDetails} after calling
+     * {@link #initiatePayment(PaymentMethod, PaymentMethodDetails)} the first time.
+     *
+     * @param activity The current {@link Activity}.
+     * @param authenticationHandler The {@link AuthenticationHandler} responsible for handling {@link AuthenticationDetails}.
+     */
+    void setAuthenticationHandler(@NonNull Activity activity, @NonNull AuthenticationHandler authenticationHandler);
 
     /**
      * Sets an {@link Activity} scoped {@link RedirectHandler} for this {@link PaymentHandler}. Setting this {@link RedirectHandler} is required for
@@ -85,6 +96,13 @@ public interface PaymentHandler {
      * @param paymentMethodDetails The {@link PaymentMethodDetails} to initiate the payment with.
      */
     void initiatePayment(@NonNull PaymentMethod paymentMethod, @Nullable PaymentMethodDetails paymentMethodDetails);
+
+    /**
+     * Submits authentication details for a payment that was previously initiated.
+     *
+     * @param paymentMethodDetails The {@link PaymentMethodDetails} containing the authentication details needed for the payment.
+     */
+    void submitAuthenticationDetails(@NonNull PaymentMethodDetails paymentMethodDetails);
 
     /**
      * Submits additional details for a payment that was previously initiated.

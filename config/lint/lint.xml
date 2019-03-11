@@ -6,6 +6,9 @@
     <!-- We update dependecies as necessary. Just keep the warning as a reminder -->
     <issue id="GradleDependency" severity="warning"/>
 
+    <!-- We don't enforce checks regarding translation. Just keep the warning as a reminder -->
+    <issue id="DuplicateStrings" severity="warning"/>
+
     <!-- UI Module -->
 
     <!-- We might want to adress this in the future. See error explanation. -->

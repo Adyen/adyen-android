@@ -1,0 +1,36 @@
+ext.releaseArtifactId = "threeds"
+
+apply plugin: 'com.android.library'
+// TODO: uncomment this line after adyen-3ds2 will have an md5 file.
+//apply from: "$rootProject.rootDir/checkDependencies.gradle"
+apply from: "$rootProject.rootDir/quality.gradle"
+apply from: "$rootProject.rootDir/release.gradle"
+
+android {
+    compileSdkVersion rootProject.compileSdkVersion
+
+    defaultConfig {
+        minSdkVersion rootProject.minSdkVersion
+        targetSdkVersion rootProject.targetSdkVersion
+        versionCode rootProject.versionCode
+        versionName rootProject.versionName
+    }
+
+    buildTypes {
+        debug {
+            testCoverageEnabled rootProject.testCoverageEnabled
+        }
+        release {
+            minifyEnabled false
+            proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
+        }
+    }
+}
+
+dependencies {
+    implementation "com.android.support:support-annotations:${rootProject.supportLibVersion}"
+
+    implementation "com.adyen.threeds:adyen-3ds2:0.9.3"
+
+    implementation project(":checkout-base")
+}

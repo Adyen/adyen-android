@@ -16,10 +16,12 @@ import android.support.annotation.Nullable;
 import com.adyen.checkout.base.internal.JsonObject;
 import com.adyen.checkout.core.AdditionalDetails;
 import com.adyen.checkout.core.CheckoutException;
+import com.adyen.checkout.core.AuthenticationDetails;
 import com.adyen.checkout.core.PaymentResult;
 import com.adyen.checkout.core.RedirectDetails;
 import com.adyen.checkout.base.internal.HashUtils;
 import com.adyen.checkout.core.internal.ProvidedBy;
+import com.adyen.checkout.core.model.Authentication;
 import com.adyen.checkout.core.model.InputDetail;
 import com.adyen.checkout.core.model.PaymentResultCode;
 import com.adyen.checkout.core.model.RedirectData;
@@ -40,6 +42,8 @@ public final class PaymentInitiationResponse extends JsonObject {
 
     private final CompleteFields mCompleteFields;
 
+    private final AuthenticationFields mAuthenticationFields;
+
     private final DetailFields mDetailFields;
 
     private final RedirectFields mRedirectFields;
@@ -54,25 +58,37 @@ public final class PaymentInitiationResponse extends JsonObject {
         switch (mType) {
             case COMPLETE:
                 mCompleteFields = parseFrom(jsonObject, CompleteFields.class);
+                mAuthenticationFields = null;
                 mDetailFields = null;
                 mRedirectFields = null;
                 mErrorFields = null;
                 break;
             case DETAILS:
                 mCompleteFields = null;
+                mAuthenticationFields = null;
                 mDetailFields = parseFrom(jsonObject, DetailFields.class);
                 mRedirectFields = null;
                 mErrorFields = null;
                 break;
             case REDIRECT:
                 mCompleteFields = null;
+                mAuthenticationFields = null;
                 mDetailFields = null;
                 mRedirectFields = parseFrom(jsonObject, RedirectFields.class);
+                mErrorFields = null;
+                break;
+            case IDENTIFY_SHOPPER:
+            case CHALLENGE_SHOPPER:
+                mCompleteFields = null;
+                mAuthenticationFields = parseFrom(jsonObject, AuthenticationFields.class);
+                mDetailFields = null;
+                mRedirectFields = null;
                 mErrorFields = null;
                 break;
             case ERROR:
             case VALIDATION:
                 mCompleteFields = null;
+                mAuthenticationFields = null;
                 mDetailFields = null;
                 mRedirectFields = null;
                 mErrorFields = parseFrom(jsonObject, ErrorFields.class);
@@ -97,6 +113,9 @@ public final class PaymentInitiationResponse extends JsonObject {
             return false;
         }
         if (mCompleteFields != null ? !mCompleteFields.equals(that.mCompleteFields) : that.mCompleteFields != null) {
+            return false;
+        }
+        if (mAuthenticationFields != null ? !mAuthenticationFields.equals(that.mAuthenticationFields) : that.mAuthenticationFields != null) {
             return false;
         }
         if (mDetailFields != null ? !mDetailFields.equals(that.mDetailFields) : that.mDetailFields != null) {
@@ -129,6 +148,11 @@ public final class PaymentInitiationResponse extends JsonObject {
     }
 
     @Nullable
+    public AuthenticationFields getAuthenticationFields() {
+        return mAuthenticationFields;
+    }
+
+    @Nullable
     public DetailFields getDetailFields() {
         return mDetailFields;
     }
@@ -147,6 +171,10 @@ public final class PaymentInitiationResponse extends JsonObject {
         COMPLETE,
         DETAILS,
         REDIRECT,
+        @SerializedName("identifyShopper")
+        IDENTIFY_SHOPPER,
+        @SerializedName("challengeShopper")
+        CHALLENGE_SHOPPER,
         ERROR,
         VALIDATION
     }
@@ -163,9 +191,9 @@ public final class PaymentInitiationResponse extends JsonObject {
 
         private final String mPayload;
 
-        private final PaymentResultCode mResultCode;
-
         private final PaymentMethodBase mPaymentMethod;
+
+        private final PaymentResultCode mResultCode;
 
         private CompleteFields(@NonNull JSONObject jsonObject) throws JSONException {
             super(jsonObject);
@@ -406,6 +434,109 @@ public final class PaymentInitiationResponse extends JsonObject {
 
         public boolean isSubmitPaymentMethodReturnData() {
             return Boolean.TRUE.equals(mSubmitPaymentMethodReturnData);
+        }
+    }
+
+    public static final class AuthenticationFields extends JsonObject implements AuthenticationDetails {
+        public static final Parcelable.Creator<AuthenticationFields> CREATOR = new DefaultCreator<>(AuthenticationFields.class);
+
+        private static final String KEY_AUTHENTICATION = "authentication";
+
+        private static final String KEY_PAYMENT_DATA = "paymentData";
+
+        private static final String KEY_PAYMENT_METHOD = "paymentMethod";
+
+        private static final String KEY_RESPONSE_DETAILS = "responseDetails";
+
+        private static final String KEY_RESULT_CODE = "resultCode";
+
+        private final JSONObject mAuthentication;
+
+        private final String mPaymentData;
+
+        private final PaymentMethodBase mPaymentMethod;
+
+        private final List<InputDetailImpl> mResponseDetails;
+
+        private final PaymentResultCode mResultCode;
+
+        protected AuthenticationFields(@NonNull JSONObject jsonObject) throws JSONException {
+            super(jsonObject);
+
+            mPaymentData = jsonObject.getString(KEY_PAYMENT_DATA);
+            mPaymentMethod = parse(KEY_PAYMENT_METHOD, PaymentMethodBase.class);
+            mAuthentication = jsonObject.getJSONObject(KEY_AUTHENTICATION);
+            mResponseDetails = parseList(KEY_RESPONSE_DETAILS, InputDetailImpl.class);
+            mResultCode = parseEnum(KEY_RESULT_CODE, PaymentResultCode.class);
+        }
+
+        @Override
+        public boolean equals(Object o) {
+            if (this == o) {
+                return true;
+            }
+            if (!(o instanceof AuthenticationFields)) {
+                return false;
+            }
+
+            AuthenticationFields that = (AuthenticationFields) o;
+
+            if (mAuthentication != null ? !mAuthentication.equals(that.mAuthentication) : that.mAuthentication != null) {
+                return false;
+            }
+            if (mPaymentData != null ? !mPaymentData.equals(that.mPaymentData) : that.mPaymentData != null) {
+                return false;
+            }
+            if (mPaymentMethod != null ? !mPaymentMethod.equals(that.mPaymentMethod) : that.mPaymentMethod != null) {
+                return false;
+            }
+            if (mResponseDetails != null ? !mResponseDetails.equals(that.mResponseDetails) : that.mResponseDetails != null) {
+                return false;
+            }
+            return mResultCode == that.mResultCode;
+        }
+
+        @Override
+        public int hashCode() {
+            int result = mAuthentication != null ? mAuthentication.hashCode() : 0;
+            result = HashUtils.MULTIPLIER * result + (mPaymentData != null ? mPaymentData.hashCode() : 0);
+            result = HashUtils.MULTIPLIER * result + (mPaymentMethod != null ? mPaymentMethod.hashCode() : 0);
+            result = HashUtils.MULTIPLIER * result + (mResponseDetails != null ? mResponseDetails.hashCode() : 0);
+            result = HashUtils.MULTIPLIER * result + (mResultCode != null ? mResultCode.hashCode() : 0);
+            return result;
+        }
+
+        @NonNull
+        @Override
+        public String getPaymentMethodType() {
+            return mPaymentMethod.getType();
+        }
+
+        @NonNull
+        @Override
+        public List<InputDetail> getInputDetails() {
+            return new ArrayList<InputDetail>(mResponseDetails);
+        }
+
+        @NonNull
+        @Override
+        public <T extends Authentication> T getAuthentication(@NonNull Class<T> authenticationClass) throws CheckoutException {
+            if (authenticationClass == null) {
+                throw new CheckoutException.Builder("No Authentication is available.", null).build();
+            }
+
+            return ProvidedBy.Util.parse(mAuthentication, authenticationClass);
+        }
+
+        @NonNull
+        @Override
+        public PaymentResultCode getResultCode() {
+            return mResultCode;
+        }
+
+        @NonNull
+        public String getPaymentData() {
+            return mPaymentData;
         }
     }
 

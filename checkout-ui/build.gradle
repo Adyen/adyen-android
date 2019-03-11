@@ -43,6 +43,7 @@ dependencies {
     implementation project(":checkout-util")
 
     // Plugins
+    compileOnly project(":checkout-threeds")
     compileOnly project(":checkout-nfc")
     compileOnly project(":checkout-googlepay")
     compileOnly project(":checkout-wechatpay")

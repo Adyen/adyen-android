@@ -15,9 +15,9 @@ import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.util.Base64;
 
-import com.adyen.checkout.base.internal.Api;
+import com.adyen.checkout.base.internal.Base64Coder;
 import com.adyen.checkout.base.internal.Json;
-import com.adyen.checkout.base.internal.JsonSerializable;
+import com.adyen.checkout.base.internal.JsonEncodable;
 import com.adyen.checkout.core.BuildConfig;
 import com.adyen.checkout.core.CheckoutException;
 import com.adyen.checkout.base.internal.HashUtils;
@@ -28,7 +28,7 @@ import org.json.JSONObject;
 import java.util.Date;
 import java.util.Locale;
 
-public final class DeviceFingerprint implements JsonSerializable {
+public final class DeviceFingerprint extends JsonEncodable {
     private static final String DEVICE_FINGERPRINT_VERSION = "1.0";
 
     private static final String PLATFORM = "Android";
@@ -52,9 +52,7 @@ public final class DeviceFingerprint implements JsonSerializable {
         DeviceFingerprint deviceFingerprint = new DeviceFingerprint(context, integrationType);
 
         try {
-            String json = deviceFingerprint.serialize().toString();
-
-            return Base64.encodeToString(json.getBytes(Api.CHARSET), Base64.NO_WRAP);
+            return Base64Coder.encode(deviceFingerprint, Base64.NO_WRAP);
         } catch (JSONException e) {
             throw new CheckoutException.Builder("Error generating SDK token.", e)
                     .setFatal(true)

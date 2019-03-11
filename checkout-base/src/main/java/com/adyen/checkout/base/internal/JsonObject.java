@@ -64,7 +64,7 @@ public abstract class JsonObject implements Parcelable {
 
             SerializedName serializedName = field.getAnnotation(SerializedName.class);
 
-            if (serializedName != null && enumValue.equals(serializedName.value())) {
+            if (serializedName != null && enumValue.equalsIgnoreCase(serializedName.value())) {
                 //noinspection RedundantTypeArguments, type arguments need to be present for compiler
                 return JsonObject.<T>getEnumValueFromField(field);
             }

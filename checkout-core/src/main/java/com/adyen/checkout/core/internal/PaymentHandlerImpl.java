@@ -25,6 +25,7 @@ import com.adyen.checkout.core.PaymentHandler;
 import com.adyen.checkout.core.PaymentReference;
 import com.adyen.checkout.core.PaymentResult;
 import com.adyen.checkout.core.handler.AdditionalDetailsHandler;
+import com.adyen.checkout.core.handler.AuthenticationHandler;
 import com.adyen.checkout.core.handler.ErrorHandler;
 import com.adyen.checkout.core.handler.RedirectHandler;
 import com.adyen.checkout.core.internal.model.AdditionalPaymentMethodDetails;
@@ -50,6 +51,7 @@ import java.util.concurrent.Callable;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
+@SuppressWarnings("OverloadMethodsDeclarationOrder")
 public final class PaymentHandlerImpl implements PaymentHandler {
     private static final Handler MAIN_HANDLER = new Handler(Looper.getMainLooper());
 
@@ -64,6 +66,8 @@ public final class PaymentHandlerImpl implements PaymentHandler {
     private final ObservableImpl<PaymentSession> mPaymentSessionObservable;
 
     private final ObservableImpl<PaymentResult> mPaymentResultObservable;
+
+    private final AuthenticationManager mAuthenticationManager;
 
     private final RedirectManager mRedirectManager;
 
@@ -142,11 +146,13 @@ public final class PaymentHandlerImpl implements PaymentHandler {
             }
         };
 
+        mAuthenticationManager = new AuthenticationManager(listener);
         mRedirectManager = new RedirectManager(listener);
         mAdditionalDetailsManager = new AdditionalDetailsManager(listener);
         mErrorManager = new ErrorManager(new BaseManager.Listener() {
             @Override
-            public void onHandled() { }
+            public void onHandled() {
+            }
         });
 
         if (mPaymentInitiationResponseEntity != null) {
@@ -179,6 +185,11 @@ public final class PaymentHandlerImpl implements PaymentHandler {
     }
 
     @Override
+    public void setAuthenticationHandler(@NonNull Activity activity, @NonNull AuthenticationHandler authenticationHandler) {
+        mAuthenticationManager.addHandler(activity, authenticationHandler);
+    }
+
+    @Override
     public void setRedirectHandler(@NonNull Activity activity, @NonNull RedirectHandler redirectHandler) {
         mRedirectManager.addHandler(activity, redirectHandler);
     }
@@ -196,7 +207,27 @@ public final class PaymentHandlerImpl implements PaymentHandler {
     @Override
     public void initiatePayment(@NonNull PaymentMethod paymentMethod, @Nullable PaymentMethodDetails paymentMethodDetails) {
         PaymentSessionImpl paymentSession = mPaymentSessionEntity.paymentSession;
-        initiatePaymentInternal(paymentSession, (PaymentMethodImpl) paymentMethod, paymentMethodDetails);
+        initiatePayment(paymentSession, (PaymentMethodImpl) paymentMethod, paymentMethodDetails);
+    }
+
+    @Override
+    public void submitAuthenticationDetails(@NonNull PaymentMethodDetails paymentMethodDetails) {
+        PaymentSessionImpl paymentSession = mPaymentSessionEntity.paymentSession;
+        PaymentInitiationResponse.AuthenticationFields authenticationFields = mPaymentInitiationResponseEntity.paymentInitiationResponse
+                .getAuthenticationFields();
+
+        if (authenticationFields == null) {
+            CheckoutException checkoutException = new CheckoutException.Builder(
+                    "Could not submit authentication details, AuthenticationFields == null.",
+                    null
+            ).build();
+            handleCheckoutException(checkoutException);
+            return;
+        }
+
+        PaymentMethodImpl paymentMethod = mPaymentInitiationResponseEntity.paymentMethod;
+
+        initiatePayment(paymentSession, authenticationFields.getPaymentData(), paymentMethod, paymentMethodDetails);
     }
 
     @Override
@@ -224,7 +255,7 @@ public final class PaymentHandlerImpl implements PaymentHandler {
             }
         }
 
-        initiatePaymentInternal(paymentSession, paymentMethod, paymentMethodDetails);
+        initiatePayment(paymentSession, paymentMethod, paymentMethodDetails);
     }
 
     @Override
@@ -245,7 +276,7 @@ public final class PaymentHandlerImpl implements PaymentHandler {
 
         if (redirectFields.isSubmitPaymentMethodReturnData()) {
             AppResponseDetails appResponseDetails = new AppResponseDetails.Builder(redirectResult.getQuery()).build();
-            initiatePaymentInternal(paymentSession, paymentMethod, appResponseDetails);
+            initiatePayment(paymentSession, paymentMethod, appResponseDetails);
         } else {
             try {
                 JSONObject jsonObject = new JSONObject();
@@ -310,12 +341,20 @@ public final class PaymentHandlerImpl implements PaymentHandler {
         });
     }
 
-    private void initiatePaymentInternal(
+    private void initiatePayment(
             @NonNull PaymentSessionImpl paymentSession,
+            @NonNull PaymentMethodImpl paymentMethod,
+            @Nullable PaymentMethodDetails paymentMethodDetails
+    ) {
+        initiatePayment(paymentSession, paymentSession.getPaymentData(), paymentMethod, paymentMethodDetails);
+    }
+
+    private void initiatePayment(
+            @NonNull PaymentSessionImpl paymentSession,
+            @NonNull String paymentData,
             @NonNull final PaymentMethodImpl paymentMethod,
             @Nullable PaymentMethodDetails paymentMethodDetails
     ) {
-        String paymentData = paymentSession.getPaymentData();
         String paymentMethodData = paymentMethod.getPaymentMethodData();
         PaymentInitiation paymentInitiation = new PaymentInitiation.Builder(paymentData, paymentMethodData)
                 .setPaymentMethodDetails(paymentMethodDetails)
@@ -417,6 +456,12 @@ public final class PaymentHandlerImpl implements PaymentHandler {
                     case REDIRECT:
                         if (!paymentInitiationResponseEntity.handled) {
                             mRedirectManager.setData(paymentInitiationResponse.getRedirectFields());
+                        }
+                        break;
+                    case IDENTIFY_SHOPPER:
+                    case CHALLENGE_SHOPPER:
+                        if (!paymentInitiationResponseEntity.handled) {
+                            mAuthenticationManager.setData(paymentInitiationResponse.getAuthenticationFields());
                         }
                         break;
                     case DETAILS:

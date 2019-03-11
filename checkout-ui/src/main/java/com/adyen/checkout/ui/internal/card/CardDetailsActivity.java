@@ -41,6 +41,8 @@ import android.widget.Toast;
 
 import com.adyen.checkout.base.internal.Objects;
 import com.adyen.checkout.core.AdditionalDetails;
+import com.adyen.checkout.core.AuthenticationDetails;
+import com.adyen.checkout.core.CheckoutException;
 import com.adyen.checkout.core.Observable;
 import com.adyen.checkout.core.PaymentHandler;
 import com.adyen.checkout.core.PaymentReference;
@@ -51,15 +53,23 @@ import com.adyen.checkout.core.card.Cards;
 import com.adyen.checkout.core.card.EncryptedCard;
 import com.adyen.checkout.core.card.EncryptionException;
 import com.adyen.checkout.core.handler.AdditionalDetailsHandler;
+import com.adyen.checkout.core.handler.AuthenticationHandler;
+import com.adyen.checkout.core.internal.model.ChallengeAuthentication;
+import com.adyen.checkout.core.internal.model.FingerprintAuthentication;
 import com.adyen.checkout.core.internal.model.InputDetailImpl;
 import com.adyen.checkout.core.internal.model.PaymentMethodImpl;
 import com.adyen.checkout.core.model.CardDetails;
+import com.adyen.checkout.core.model.ChallengeDetails;
 import com.adyen.checkout.core.model.CupSecurePlusDetails;
+import com.adyen.checkout.core.model.FingerprintDetails;
 import com.adyen.checkout.core.model.InputDetail;
 import com.adyen.checkout.core.model.Item;
 import com.adyen.checkout.core.model.PaymentMethod;
 import com.adyen.checkout.core.model.PaymentSession;
 import com.adyen.checkout.nfc.NfcCardReader;
+import com.adyen.checkout.threeds.Card3DS2Authenticator;
+import com.adyen.checkout.threeds.ChallengeResult;
+import com.adyen.checkout.threeds.ThreeDS2Exception;
 import com.adyen.checkout.ui.R;
 import com.adyen.checkout.ui.internal.common.activity.CheckoutDetailsActivity;
 import com.adyen.checkout.ui.internal.common.fragment.ErrorDialogFragment;
@@ -122,6 +132,8 @@ public class CardDetailsActivity extends CheckoutDetailsActivity
     private List<PaymentMethod> mAllowedPaymentMethods;
 
     private NfcCardReader mNfcCardReader;
+
+    private Card3DS2Authenticator mCard3DS2Authenticator;
 
     private ConnectivityDelegate mConnectivityDelegate;
 
@@ -206,6 +218,24 @@ public class CardDetailsActivity extends CheckoutDetailsActivity
             mNfcCardReader = null;
         }
 
+        try {
+            mCard3DS2Authenticator = new Card3DS2Authenticator(this, new Card3DS2Authenticator.AuthenticationListener() {
+                @Override
+                public void onSuccess(@NonNull ChallengeResult challengeResult) {
+                    mCard3DS2Authenticator.release();
+                    ChallengeDetails challengeDetails = new ChallengeDetails(challengeResult.getPayload());
+                    getPaymentHandler().submitAuthenticationDetails(challengeDetails);
+                }
+
+                @Override
+                public void onFailure(@NonNull ThreeDS2Exception e) {
+                    mCard3DS2Authenticator.release();
+                }
+            });
+        } catch (NoClassDefFoundError e) {
+            mCard3DS2Authenticator = null;
+        }
+
         mConnectivityDelegate = new ConnectivityDelegate(this, new Observer<NetworkInfo>() {
             @Override
             public void onChanged(@Nullable NetworkInfo networkInfo) {
@@ -237,6 +267,43 @@ public class CardDetailsActivity extends CheckoutDetailsActivity
                 paymentSessionObservable.removeObserver(this);
             }
         });
+
+        if (mCard3DS2Authenticator != null) {
+            paymentHandler.setAuthenticationHandler(this, new AuthenticationHandler() {
+                @Override
+                public void onAuthenticationDetailsRequired(@NonNull AuthenticationDetails authenticationDetails) {
+                    try {
+                        switch (authenticationDetails.getResultCode()) {
+                            case IDENTIFY_SHOPPER: {
+                                FingerprintAuthentication authentication = authenticationDetails.getAuthentication(FingerprintAuthentication.class);
+                                String encodedFingerprintToken = authentication.getFingerprintToken();
+                                String encodedFingerprint = mCard3DS2Authenticator.createFingerprint(encodedFingerprintToken);
+                                FingerprintDetails fingerprintDetails = new FingerprintDetails(encodedFingerprint);
+                                getPaymentHandler().submitAuthenticationDetails(fingerprintDetails);
+                                break;
+                            }
+                            case CHALLENGE_SHOPPER: {
+                                ChallengeAuthentication authentication = authenticationDetails.getAuthentication(ChallengeAuthentication.class);
+                                String encodedChallengeToken = authentication.getChallengeToken();
+                                mCard3DS2Authenticator.presentChallenge(encodedChallengeToken);
+                                break;
+                            }
+                            default:
+                                ErrorDialogFragment
+                                        .newInstance(CardDetailsActivity.this,
+                                                new IllegalStateException("Unsupported result code: " + authenticationDetails.getResultCode()))
+                                        .showIfNotShown(getSupportFragmentManager());
+                                break;
+                        }
+                    } catch (CheckoutException | ThreeDS2Exception e) {
+                        ErrorDialogFragment
+                                .newInstance(CardDetailsActivity.this, e)
+                                .showIfNotShown(getSupportFragmentManager());
+                    }
+                }
+            });
+        }
+
         paymentHandler.setAdditionalDetailsHandler(this, new AdditionalDetailsHandler() {
             @Override
             public void onAdditionalDetailsRequired(@NonNull AdditionalDetails additionalDetails) {
@@ -282,6 +349,14 @@ public class CardDetailsActivity extends CheckoutDetailsActivity
     }
 
     @Override
+    protected void onDestroy() {
+        super.onDestroy();
+
+        if (mCard3DS2Authenticator != null) {
+            mCard3DS2Authenticator.release();
+        }
+    }
+
     public boolean onCreateOptionsMenu(@NonNull Menu menu) {
         getMenuInflater().inflate(R.menu.menu_card_details, menu);
 
@@ -417,7 +492,7 @@ public class CardDetailsActivity extends CheckoutDetailsActivity
 
                 @Override
                 public void setImageDrawable(@Nullable Drawable drawable) {
-                    Drawable drawableLeft =  new InsetDrawable(drawable, 0, 0, mInsetRight, 0);
+                    Drawable drawableLeft = new InsetDrawable(drawable, 0, 0, mInsetRight, 0);
                     Resources resources = getResources();
                     int width = resources.getDimensionPixelSize(R.dimen.payment_method_logo_width) + mInsetRight;
                     int height = resources.getDimensionPixelSize(R.dimen.payment_method_logo_height);
@@ -510,7 +585,7 @@ public class CardDetailsActivity extends CheckoutDetailsActivity
 
                 if (securityCodeValidationResult.getValidity() == CardValidator.Validity.VALID
                         && PaymentMethodUtil.getRequirementForInputDetail(CardDetails.KEY_PHONE_NUMBER, mAllowedPaymentMethods)
-                                != PaymentMethodUtil.Requirement.NONE) {
+                        != PaymentMethodUtil.Requirement.NONE) {
                     KeyboardUtil.showAndSelect(mPhoneNumberEditText);
                 }
             }

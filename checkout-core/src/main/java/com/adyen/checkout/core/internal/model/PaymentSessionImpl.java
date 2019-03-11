@@ -11,10 +11,10 @@ package com.adyen.checkout.core.internal.model;
 import android.os.Parcelable;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
-import android.util.Base64;
 
 import com.adyen.checkout.base.HostProvider;
-import com.adyen.checkout.base.internal.Api;
+import com.adyen.checkout.base.internal.Base64Coder;
+import com.adyen.checkout.base.internal.JsonDecodable;
 import com.adyen.checkout.base.internal.JsonObject;
 import com.adyen.checkout.core.CheckoutException;
 import com.adyen.checkout.base.internal.HashUtils;
@@ -30,7 +30,7 @@ import java.util.Date;
 import java.util.Iterator;
 import java.util.List;
 
-public final class PaymentSessionImpl extends JsonObject implements PaymentSession {
+public final class PaymentSessionImpl extends JsonDecodable implements PaymentSession {
     @NonNull
     public static final Parcelable.Creator<PaymentSessionImpl> CREATOR = new DefaultCreator<>(PaymentSessionImpl.class);
 
@@ -80,19 +80,11 @@ public final class PaymentSessionImpl extends JsonObject implements PaymentSessi
             // Check if the whole PaymentSessionResponse was forwarded.
             JSONObject jsonObjectWrapper = new JSONObject(encodedPaymentSession);
             PaymentSessionResponse paymentSessionResponse = JsonObject.parseFrom(jsonObjectWrapper, PaymentSessionResponse.class);
-            byte[] decodedPaymentSession = Base64.decode(paymentSessionResponse.getPaymentSession(), Base64.DEFAULT);
-            String paymentSessionJson = new String(decodedPaymentSession, Api.CHARSET);
-            JSONObject jsonObject = new JSONObject(paymentSessionJson);
-
-            return parseFrom(jsonObject, PaymentSessionImpl.class);
+            return Base64Coder.decode(paymentSessionResponse.getPaymentSession(), PaymentSessionImpl.class);
         } catch (JSONException | IllegalArgumentException e1) {
             try {
                 // Check if only the paymentSession value was forwarded.
-                byte[] decodedPaymentSession = Base64.decode(encodedPaymentSession, Base64.DEFAULT);
-                String paymentSessionJson = new String(decodedPaymentSession, Api.CHARSET);
-                JSONObject jsonObject = new JSONObject(paymentSessionJson);
-
-                return parseFrom(jsonObject, PaymentSessionImpl.class);
+                return Base64Coder.decode(encodedPaymentSession, PaymentSessionImpl.class);
             } catch (IllegalArgumentException | JSONException e2) {
                 throw new CheckoutException.Builder("Error parsing payment session data.", e2)
                         .setFatal(true)

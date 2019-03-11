@@ -29,6 +29,16 @@ public enum PaymentResultCode {
     @SerializedName("authorised")
     AUTHORIZED,
     /**
+     * Indicates that the shopper needs to be identified by 3DS authentication.
+     */
+    @SerializedName("identifyShopper")
+    IDENTIFY_SHOPPER,
+    /**
+     * Indicates that the shopper needs to pass a 3DS challenge.
+     */
+    @SerializedName("challengeShopper")
+    CHALLENGE_SHOPPER,
+    /**
      * Indicates that an error occurred while processing the payment.
      */
     ERROR,
