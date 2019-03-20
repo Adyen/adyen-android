@@ -30,6 +30,17 @@
                 style="@style/Checkout.TextAppearance.Section.Title"
                 android:text="@string/checkout_personal_details_social_security_number"/>
 
+            <EditText
+                android:id="@+id/editText_ssnLookup"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_below="@id/textView_ssnLookupTitle"
+                android:digits="1234567890 "
+                android:inputType="number"
+                android:maxLength="13"
+                android:hint="@string/checkout_personal_details_social_security_number_hint"
+                tools:ignore="Autofill" />
+
             <android.support.v4.widget.ContentLoadingProgressBar
                 android:id="@+id/progressBar_ssnLookup"
                 style="@style/Widget.AppCompat.ProgressBar"
@@ -41,17 +52,7 @@
                 android:layout_alignEnd="@id/editText_ssnLookup"
                 android:visibility="gone"
                 tools:visibility="visible"/>
-
-            <EditText
-                android:id="@+id/editText_ssnLookup"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_below="@id/textView_ssnLookupTitle"
-                android:digits="1234567890 "
-                android:inputType="number"
-                android:maxLength="13"
-                android:hint="@string/checkout_personal_details_social_security_number_hint"
-                tools:ignore="Autofill" />
+                
         </RelativeLayout>
 
         <LinearLayout
