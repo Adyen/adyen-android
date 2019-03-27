@@ -29,7 +29,7 @@ ext {
     ]
 
     versionCode = 210
-    versionName = "2.4.0"
+    versionName = "2.4.1"
 
     testCoverageEnabled = true
 }
