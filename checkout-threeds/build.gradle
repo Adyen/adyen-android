@@ -30,7 +30,7 @@ android {
 dependencies {
     implementation "com.android.support:support-annotations:${rootProject.supportLibVersion}"
 
-    implementation "com.adyen.threeds:adyen-3ds2:0.9.3"
+    implementation "com.adyen.threeds:adyen-3ds2:0.9.4"
 
     implementation project(":checkout-base")
 }

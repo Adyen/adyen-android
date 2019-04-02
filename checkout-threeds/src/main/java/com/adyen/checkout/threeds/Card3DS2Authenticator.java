@@ -103,7 +103,7 @@ public final class Card3DS2Authenticator {
     @SuppressWarnings("WeakerAccess")
     @NonNull
     public String createFingerprint(@NonNull String directoryServerId, @NonNull String directoryServerPublicKey) throws ThreeDS2Exception {
-        ConfigParameters configParameters = AdyenConfigParameters.from(directoryServerId, directoryServerPublicKey);
+        ConfigParameters configParameters = new AdyenConfigParameters.Builder(directoryServerId, directoryServerPublicKey).build();
 
         try {
             ThreeDS2Service.INSTANCE.initialize(mActivity, configParameters, null, mUiCustomization);
