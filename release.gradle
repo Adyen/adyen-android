@@ -26,42 +26,44 @@ task androidSourcesJar(type: Jar) {
     from android.sourceSets.main.java.srcDirs
 }
 
-publishing {
-    publications {
-        bintrayMavenPublication(MavenPublication) {
-            groupId theGroupId
-            artifactId theArtifactId
-            version theVersion
+project.afterEvaluate {
+    publishing {
+        publications {
+            bintrayMavenPublication(MavenPublication) {
+                groupId theGroupId
+                artifactId theArtifactId
+                version theVersion
 
-            artifact androidJavadocsJar
-            artifact androidSourcesJar
-            artifact bundleReleaseAar
+                artifact androidJavadocsJar
+                artifact androidSourcesJar
+                artifact bundleReleaseAar
 
-            pom.withXml {
-                final dependenciesNode = asNode().appendNode('dependencies')
+                pom.withXml {
+                    final dependenciesNode = asNode().appendNode('dependencies')
 
-                ext.addDependency = { Dependency dep, String scope ->
-                    final dependencyNode = dependenciesNode.appendNode('dependency')
-                    dependencyNode.appendNode('groupId', dep.group)
-                    dependencyNode.appendNode('artifactId', dep.group == theGroupId ? dep.name.substring(9) : dep.name)
-                    dependencyNode.appendNode('version', dep.version)
-                    dependencyNode.appendNode('scope', scope)
+                    ext.addDependency = { Dependency dep, String scope ->
+                        final dependencyNode = dependenciesNode.appendNode('dependency')
+                        dependencyNode.appendNode('groupId', dep.group)
+                        dependencyNode.appendNode('artifactId', dep.group == theGroupId ? dep.name.substring(9) : dep.name)
+                        dependencyNode.appendNode('version', dep.version)
+                        dependencyNode.appendNode('scope', scope)
 
-                    if (!dep.transitive) {
-                        final exclusionNode = dependencyNode.appendNode('exclusions').appendNode('exclusion')
-                        exclusionNode.appendNode('groupId', '*')
-                        exclusionNode.appendNode('artifactId', '*')
-                    } else if (!dep.properties.excludeRules.empty) {
-                        final exclusionNode = dependencyNode.appendNode('exclusions').appendNode('exclusion')
-                        dep.properties.excludeRules.each { ExcludeRule rule ->
-                            exclusionNode.appendNode('groupId', rule.group ?: '*')
-                            exclusionNode.appendNode('artifactId', rule.module ?: '*')
+                        if (!dep.transitive) {
+                            final exclusionNode = dependencyNode.appendNode('exclusions').appendNode('exclusion')
+                            exclusionNode.appendNode('groupId', '*')
+                            exclusionNode.appendNode('artifactId', '*')
+                        } else if (!dep.properties.excludeRules.empty) {
+                            final exclusionNode = dependencyNode.appendNode('exclusions').appendNode('exclusion')
+                            dep.properties.excludeRules.each { ExcludeRule rule ->
+                                exclusionNode.appendNode('groupId', rule.group ?: '*')
+                                exclusionNode.appendNode('artifactId', rule.module ?: '*')
+                            }
                         }
                     }
-                }
 
-                configurations.api.getAllDependencies().each { dep -> addDependency(dep, "compile") }
-                configurations.implementation.getAllDependencies().each { dep -> addDependency(dep, "runtime") }
+                    configurations.api.getAllDependencies().each { dep -> addDependency(dep, "compile") }
+                    configurations.implementation.getAllDependencies().each { dep -> addDependency(dep, "runtime") }
+                }
             }
         }
     }
