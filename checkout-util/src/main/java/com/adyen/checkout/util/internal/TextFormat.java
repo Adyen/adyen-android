@@ -29,6 +29,9 @@ public final class TextFormat {
             for (Object formatArg : formatArgs) {
                 String stringArg = formatArg.toString();
                 int indexStart = string.indexOf(stringArg);
+                if (indexStart == -1) {
+                    continue;
+                }
                 // TODO: 05/11/2018 Improve replacing.
                 int indexEnd = indexStart + (Character.isDigit(builder.charAt(indexStart + 1)) ? INDEXED_STRING_ARG_LENGTH : STRING_ARG_LENGTH);
                 builder.replace(indexStart, indexEnd, formatArg instanceof CharSequence ? ((CharSequence) formatArg) : formatArg.toString());

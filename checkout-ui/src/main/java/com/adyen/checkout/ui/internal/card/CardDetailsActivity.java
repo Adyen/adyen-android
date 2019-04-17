@@ -100,7 +100,7 @@ import java.util.List;
 import java.util.concurrent.Callable;
 
 public class CardDetailsActivity extends CheckoutDetailsActivity
-        implements View.OnClickListener, NfcCardReaderTutorialFragment.Listener, DialogInterface.OnDismissListener {
+        implements View.OnClickListener, NfcCardReaderTutorialFragment.Listener, DialogInterface.OnDismissListener, AuthenticationHandler {
     private static final String EXTRA_TARGET_PAYMENT_METHOD = "EXTRA_TARGET_PAYMENT_METHOD";
 
     private static final int CARD_NUMBER_BLOCK_LENGTH = 4;
@@ -218,24 +218,6 @@ public class CardDetailsActivity extends CheckoutDetailsActivity
             mNfcCardReader = null;
         }
 
-        try {
-            mCard3DS2Authenticator = new Card3DS2Authenticator(this, new Card3DS2Authenticator.AuthenticationListener() {
-                @Override
-                public void onSuccess(@NonNull ChallengeResult challengeResult) {
-                    mCard3DS2Authenticator.release();
-                    ChallengeDetails challengeDetails = new ChallengeDetails(challengeResult.getPayload());
-                    getPaymentHandler().submitAuthenticationDetails(challengeDetails);
-                }
-
-                @Override
-                public void onFailure(@NonNull ThreeDS2Exception e) {
-                    mCard3DS2Authenticator.release();
-                }
-            });
-        } catch (NoClassDefFoundError e) {
-            mCard3DS2Authenticator = null;
-        }
-
         mConnectivityDelegate = new ConnectivityDelegate(this, new Observer<NetworkInfo>() {
             @Override
             public void onChanged(@Nullable NetworkInfo networkInfo) {
@@ -268,40 +250,11 @@ public class CardDetailsActivity extends CheckoutDetailsActivity
             }
         });
 
-        if (mCard3DS2Authenticator != null) {
-            paymentHandler.setAuthenticationHandler(this, new AuthenticationHandler() {
-                @Override
-                public void onAuthenticationDetailsRequired(@NonNull AuthenticationDetails authenticationDetails) {
-                    try {
-                        switch (authenticationDetails.getResultCode()) {
-                            case IDENTIFY_SHOPPER: {
-                                FingerprintAuthentication authentication = authenticationDetails.getAuthentication(FingerprintAuthentication.class);
-                                String encodedFingerprintToken = authentication.getFingerprintToken();
-                                String encodedFingerprint = mCard3DS2Authenticator.createFingerprint(encodedFingerprintToken);
-                                FingerprintDetails fingerprintDetails = new FingerprintDetails(encodedFingerprint);
-                                getPaymentHandler().submitAuthenticationDetails(fingerprintDetails);
-                                break;
-                            }
-                            case CHALLENGE_SHOPPER: {
-                                ChallengeAuthentication authentication = authenticationDetails.getAuthentication(ChallengeAuthentication.class);
-                                String encodedChallengeToken = authentication.getChallengeToken();
-                                mCard3DS2Authenticator.presentChallenge(encodedChallengeToken);
-                                break;
-                            }
-                            default:
-                                ErrorDialogFragment
-                                        .newInstance(CardDetailsActivity.this,
-                                                new IllegalStateException("Unsupported result code: " + authenticationDetails.getResultCode()))
-                                        .showIfNotShown(getSupportFragmentManager());
-                                break;
-                        }
-                    } catch (CheckoutException | ThreeDS2Exception e) {
-                        ErrorDialogFragment
-                                .newInstance(CardDetailsActivity.this, e)
-                                .showIfNotShown(getSupportFragmentManager());
-                    }
-                }
-            });
+        try {
+            mCard3DS2Authenticator = new Card3DS2Authenticator(this);
+            paymentHandler.setAuthenticationHandler(this, this);
+        } catch (NoClassDefFoundError e) {
+            mCard3DS2Authenticator = null;
         }
 
         paymentHandler.setAdditionalDetailsHandler(this, new AdditionalDetailsHandler() {
@@ -386,6 +339,69 @@ public class CardDetailsActivity extends CheckoutDetailsActivity
     @Override
     public boolean isNfcEnabledOnDevice() {
         return mNfcCardReader != null && mNfcCardReader.isNfcEnabledOnDevice();
+    }
+
+    @Override
+    public void onAuthenticationDetailsRequired(@NonNull AuthenticationDetails authenticationDetails) {
+        if (mCard3DS2Authenticator.isReleased()) {
+            mCard3DS2Authenticator = new Card3DS2Authenticator(this);
+        }
+
+        try {
+            switch (authenticationDetails.getResultCode()) {
+                case IDENTIFY_SHOPPER: {
+                    FingerprintAuthentication authentication = authenticationDetails.getAuthentication(FingerprintAuthentication.class);
+                    String encodedFingerprintToken = authentication.getFingerprintToken();
+                    mCard3DS2Authenticator.createFingerprint(encodedFingerprintToken, new Card3DS2Authenticator.FingerprintListener() {
+                        @Override
+                        public void onSuccess(@NonNull String fingerprint) {
+                            FingerprintDetails fingerprintDetails = new FingerprintDetails(fingerprint);
+                            getPaymentHandler().submitAuthenticationDetails(fingerprintDetails);
+                        }
+
+                        @Override
+                        public void onFailure(@NonNull ThreeDS2Exception e) {
+                            mCard3DS2Authenticator.release();
+                            ErrorDialogFragment
+                                    .newInstance(CardDetailsActivity.this, e)
+                                    .showIfNotShown(getSupportFragmentManager());
+                        }
+                    });
+                    break;
+                }
+                case CHALLENGE_SHOPPER: {
+                    ChallengeAuthentication authentication = authenticationDetails.getAuthentication(ChallengeAuthentication.class);
+                    String encodedChallengeToken = authentication.getChallengeToken();
+                    mCard3DS2Authenticator.presentChallenge(encodedChallengeToken, new Card3DS2Authenticator.SimpleChallengeListener() {
+                        @Override
+                        public void onSuccess(@NonNull ChallengeResult challengeResult) {
+                            mCard3DS2Authenticator.release();
+                            ChallengeDetails challengeDetails = new ChallengeDetails(challengeResult.getPayload());
+                            getPaymentHandler().submitAuthenticationDetails(challengeDetails);
+                        }
+
+                        @Override
+                        public void onFailure(@NonNull ThreeDS2Exception e) {
+                            mCard3DS2Authenticator.release();
+                            ErrorDialogFragment
+                                    .newInstance(CardDetailsActivity.this, e)
+                                    .showIfNotShown(getSupportFragmentManager());
+                        }
+                    });
+                    break;
+                }
+                default:
+                    ErrorDialogFragment
+                            .newInstance(CardDetailsActivity.this,
+                                    new IllegalStateException("Unsupported result code: " + authenticationDetails.getResultCode()))
+                            .showIfNotShown(getSupportFragmentManager());
+                    break;
+            }
+        } catch (CheckoutException | ThreeDS2Exception e) {
+            ErrorDialogFragment
+                    .newInstance(CardDetailsActivity.this, e)
+                    .showIfNotShown(getSupportFragmentManager());
+        }
     }
 
     private boolean setupHolderNameViews(boolean initialLaunch) {

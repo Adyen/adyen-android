@@ -40,21 +40,18 @@ public final class Card3DS2Authenticator {
 
     private Activity mActivity;
 
-    private ListenerDelegate mListenerDelegate;
+    private UiCustomization mUiCustomization;
 
     private Transaction mTransaction;
-
-    private UiCustomization mUiCustomization;
 
     /**
      * Initializes the 3DS2 card authenticator.
      * <p/>
      *
      * @param activity The current activity
-     * @param listener {@link AuthenticationListener} the 3DS2 authentication listener
      */
-    public Card3DS2Authenticator(@NonNull Activity activity, @NonNull AuthenticationListener listener) {
-        this(activity, null, listener);
+    public Card3DS2Authenticator(@NonNull Activity activity) {
+        this(activity, null);
     }
 
     /**
@@ -63,13 +60,11 @@ public final class Card3DS2Authenticator {
      *
      * @param activity        The current activity.
      * @param uiCustomization (optional) The {@link UiCustomization}, UI configuration information that is used to specify the UI layout and theme.
-     * @param listener        {@link AuthenticationListener} which will be invoked on authentication success with the challenge result or failure.
      */
     @SuppressWarnings("WeakerAccess")
-    public Card3DS2Authenticator(@NonNull Activity activity, @Nullable UiCustomization uiCustomization, @NonNull AuthenticationListener listener) {
+    public Card3DS2Authenticator(@NonNull Activity activity, @Nullable UiCustomization uiCustomization) {
         mActivity = activity;
         mUiCustomization = uiCustomization;
-        mListenerDelegate = new ListenerDelegate(listener);
     }
 
     /**
@@ -77,19 +72,17 @@ public final class Card3DS2Authenticator {
      * <p/>
      *
      * @param encodedFingerprintToken The fingerprint token received from the Checkout API.
-     * @return The encoded device fingerprint.
+     * @param listener                {@link FingerprintListener} The fingerprint listener listens to fingerprint creation success or failure.
      */
     @SuppressWarnings("WeakerAccess")
     @NonNull
-    public String createFingerprint(@NonNull String encodedFingerprintToken) throws ThreeDS2Exception {
-        FingerprintToken fingerprintToken;
+    public void createFingerprint(@NonNull String encodedFingerprintToken, @NonNull FingerprintListener listener) {
         try {
-            fingerprintToken = Base64Coder.decode(encodedFingerprintToken, FingerprintToken.class);
+            FingerprintToken fingerprintToken = Base64Coder.decode(encodedFingerprintToken, FingerprintToken.class);
+            createFingerprint(fingerprintToken.getDirectoryServerId(), fingerprintToken.getDirectoryServerPublicKey(), listener);
         } catch (JSONException e) {
-            throw ThreeDS2Exception.from("Fingerprint token decoding failure.", e);
+            listener.onFailure(ThreeDS2Exception.from("Fingerprint token decoding failure.", e));
         }
-
-        return createFingerprint(fingerprintToken.getDirectoryServerId(), fingerprintToken.getDirectoryServerPublicKey());
     }
 
     /**
@@ -98,32 +91,39 @@ public final class Card3DS2Authenticator {
      *
      * @param directoryServerId        The directory server identifier.
      * @param directoryServerPublicKey The directory server public key.
-     * @return The encoded device fingerprint.
+     * @param listener                 {@link FingerprintListener} The fingerprint listener listens to fingerprint creation success or failure.
      */
     @SuppressWarnings("WeakerAccess")
     @NonNull
-    public String createFingerprint(@NonNull String directoryServerId, @NonNull String directoryServerPublicKey) throws ThreeDS2Exception {
+    public void createFingerprint(
+            @NonNull String directoryServerId,
+            @NonNull String directoryServerPublicKey,
+            @NonNull FingerprintListener listener
+    ) {
         ConfigParameters configParameters = new AdyenConfigParameters.Builder(directoryServerId, directoryServerPublicKey).build();
 
         try {
+            // TODO: 15/04/2019 make this call async.
             ThreeDS2Service.INSTANCE.initialize(mActivity, configParameters, null, mUiCustomization);
         } catch (SDKAlreadyInitializedException e) {
             // Do nothing.
         }
 
         try {
-            mTransaction = ThreeDS2Service.INSTANCE.createTransaction(null, null);
+            closeTransaction();
+            createTransaction();
         } catch (SDKNotInitializedException e) {
-            throw ThreeDS2Exception.from("Transaction creation failure, 3DS service isn't initialized.", e);
+            listener.onFailure(ThreeDS2Exception.from("Transaction creation failure, 3DS service isn't initialized.", e));
         }
 
         AuthenticationRequestParameters authenticationRequestParameters = mTransaction.getAuthenticationRequestParameters();
         Fingerprint fingerprint = new Fingerprint(authenticationRequestParameters);
 
         try {
-            return Base64Coder.encode(fingerprint);
+            String encodedFingerprint = Base64Coder.encode(fingerprint);
+            listener.onSuccess(encodedFingerprint);
         } catch (JSONException e) {
-            throw ThreeDS2Exception.from("Fingerprint encoding failure.", e);
+            listener.onFailure(ThreeDS2Exception.from("Fingerprint encoding failure.", e));
         }
     }
 
@@ -132,9 +132,10 @@ public final class Card3DS2Authenticator {
      * <p/>
      *
      * @param encodedChallengeToken The challenge token, as received from the Checkout API.
+     * @param listener              {@link ChallengeListener} The challenge listener listens to challenge authentication success or failure.
      */
-    public void presentChallenge(@NonNull String encodedChallengeToken) throws ThreeDS2Exception {
-        presentChallenge(encodedChallengeToken, DEFAULT_CHALLENGE_TIME_OUT);
+    public void presentChallenge(@NonNull String encodedChallengeToken, @NonNull ChallengeListener listener) throws ThreeDS2Exception {
+        presentChallenge(encodedChallengeToken, DEFAULT_CHALLENGE_TIME_OUT, listener);
     }
 
     /**
@@ -143,27 +144,29 @@ public final class Card3DS2Authenticator {
      *
      * @param encodedChallengeToken The challenge token, as received from the Checkout API.
      * @param challengeTimeOut      The challenge timeout in minutes, the default is 10 minutes, minimum is 5 minutes.
+     * @param listener              {@link ChallengeListener} The challenge listener listens to challenge authentication success or failure.
      */
     @SuppressWarnings("WeakerAccess")
-    public void presentChallenge(@NonNull String encodedChallengeToken, int challengeTimeOut) throws ThreeDS2Exception {
-        Challenge challenge;
+    public void presentChallenge(
+            @NonNull String encodedChallengeToken,
+            int challengeTimeOut,
+            @NonNull ChallengeListener listener
+    ) throws ThreeDS2Exception {
         try {
-            challenge = Base64Coder.decode(encodedChallengeToken, Challenge.class);
+            Challenge challenge = Base64Coder.decode(encodedChallengeToken, Challenge.class);
+            ChallengeParameters challengeParameters = createChallengeParameters(challenge);
+            mTransaction.doChallenge(mActivity, challengeParameters, new ListenerDelegate(listener), challengeTimeOut);
         } catch (JSONException e) {
             throw ThreeDS2Exception.from("Challenge token decoding failure.", e);
         }
-
-        ChallengeParameters challengeParameters = createChallengeParameters(challenge);
-
-        mTransaction.doChallenge(mActivity, challengeParameters, mListenerDelegate, challengeTimeOut);
     }
 
+    /**
+     * Releases the resources been held by the {@link Card3DS2Authenticator}.
+     */
     // TODO: 21/11/2018 replace the release with lifecycle aware logic.
-    public void release() {
-        if (mTransaction != null) {
-            mTransaction.close();
-            mTransaction = null;
-        }
+    public synchronized void release() {
+        closeTransaction();
 
         try {
             ThreeDS2Service.INSTANCE.cleanup(mActivity);
@@ -172,7 +175,13 @@ public final class Card3DS2Authenticator {
         }
 
         mActivity = null;
-        mListenerDelegate = null;
+    }
+
+    /**
+     * @return true if the {@link Card3DS2Authenticator} is released, otherwise false.
+     */
+    public synchronized boolean isReleased() {
+        return mActivity == null;
     }
 
     @NonNull
@@ -186,18 +195,92 @@ public final class Card3DS2Authenticator {
         return challengeParameters;
     }
 
+    private void createTransaction() throws SDKNotInitializedException {
+        mTransaction = ThreeDS2Service.INSTANCE.createTransaction(null, null);
+    }
+
+    private void closeTransaction() {
+        if (mTransaction != null) {
+            mTransaction.close();
+            mTransaction = null;
+        }
+    }
+
+    public interface FingerprintListener {
+        /**
+         * Invoked on fingerprint creation without a failure.
+         * <p/>
+         *
+         * @param fingerprint contains the fingerprint data.
+         */
+        void onSuccess(@NonNull String fingerprint);
+
+        /**
+         * Invoked on fingerprint failure.
+         * <p/>
+         *
+         * @param e {@link ThreeDS2Exception} contains the failure metadata.
+         */
+        void onFailure(@NonNull ThreeDS2Exception e);
+    }
+
+    public interface ChallengeListener {
+        /**
+         * Invoked on challenge finish without a failure.
+         * <p/>
+         *
+         * @param challengeResult {@link ChallengeResult} contains the challenge authentication state and payload.
+         */
+        void onSuccess(@NonNull ChallengeResult challengeResult);
+
+        /**
+         * This method will be called when a user backs from a challenge.
+         */
+        void onCancel();
+
+        /**
+         * This method will be called on challenge timeout.<br>
+         * The default timeout is 10 minutes, the minimum timout is 5 minutes.<br>
+         * It is possible to change the challenge timeout by passing desirable timeout to the following method
+         * {@link Card3DS2Authenticator#presentChallenge(String, int, ChallengeListener)}
+         */
+        void onTimeout();
+
+        /**
+         * Invoked on challenge failure.
+         * <p/>
+         *
+         * @param e {@link ThreeDS2Exception} contains the failure metadata.
+         */
+        void onFailure(@NonNull ThreeDS2Exception e);
+    }
+
+    /**
+     * Simple implementation of {@link ChallengeListener} provides empty implementation of optional
+     * callback methods {@link ChallengeListener#onCancel()} and {@link ChallengeListener#onTimeout()}.
+     */
+    public abstract static class SimpleChallengeListener implements ChallengeListener {
+        @Override
+        public void onCancel() {
+        }
+
+        @Override
+        public void onTimeout() {
+        }
+    }
+
     private final class ListenerDelegate implements ChallengeStatusReceiver {
 
         private static final String PROTOCOL_ERROR_FORMAT = "Error [code: %s, description: %s, details: %s]";
 
         private static final String RUNTIME_ERROR_FORMAT = "Error [code: %s, message: %s]";
 
-        private final AuthenticationListener mDelegate;
+        private final ChallengeListener mDelegate;
 
         /**
          * Initializes the ListenerDelegate.
          */
-        ListenerDelegate(@NonNull AuthenticationListener listener) {
+        ListenerDelegate(@NonNull ChallengeListener listener) {
             mDelegate = listener;
         }
 
@@ -216,12 +299,12 @@ public final class Card3DS2Authenticator {
 
         @Override
         public void cancelled() {
-            mDelegate.onFailure(ThreeDS2Exception.from("Challenge was canceled."));
+            mDelegate.onCancel();
         }
 
         @Override
         public void timedout() {
-            mDelegate.onFailure(ThreeDS2Exception.from("Challenge was timed out."));
+            mDelegate.onTimeout();
         }
 
         /**
@@ -250,23 +333,5 @@ public final class Card3DS2Authenticator {
 
             mDelegate.onFailure(ThreeDS2Exception.from(message));
         }
-    }
-
-    public interface AuthenticationListener {
-        /**
-         * Invoked on challenge finish without a failure.
-         * <p/>
-         *
-         * @param challengeResult {@link ChallengeResult} contains the challlgen authentication state and payload.
-         */
-        void onSuccess(@NonNull ChallengeResult challengeResult);
-
-        /**
-         * Invoked on challenge failure.
-         * <p/>
-         *
-         * @param e {@link ThreeDS2Exception} contains the failure metadata.
-         */
-        void onFailure(@NonNull ThreeDS2Exception e);
     }
 }

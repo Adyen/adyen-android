@@ -18,7 +18,7 @@ To give you as much flexibility as possible, our Android SDK can be integrated i
 Import the quick integration modules by adding these lines to your build.gradle file.
 
 ```groovy
-final checkoutVersion = "2.4.1"
+final checkoutVersion = "2.4.3"
 implementation "com.adyen.checkout:ui:${checkoutVersion}"
 implementation "com.adyen.checkout:nfc:${checkoutVersion}" // Optional; Integrates NFC card reader in card UI
 implementation "com.adyen.checkout:wechatpay:${checkoutVersion}" // Optional; Integrates support for WeChat Pay
@@ -136,7 +136,7 @@ By default, we use the font that is declared in the theme that is used for check
 #### Installation
 Import the following modules by adding these line to your `build.gradle` file.
 ```groovy
-final checkoutVersion = "2.4.1"
+final checkoutVersion = "2.4.3"
 implementation "com.adyen.checkout:core:${checkoutVersion}"
 implementation "com.adyen.checkout:core-card:${checkoutVersion}" // Optional; Required for processing card payments.
 implementation "com.adyen.checkout:nfc:${checkoutVersion}" // Optional; Enables reading of card information with the device"s NFC chip.
@@ -183,7 +183,7 @@ PaymentController.handlePaymentSessionResponse(/*Activity*/ this, encodedPayment
 
 With the `PaymentReference` you can retrieve an instance of a `PaymentHandler`. Here you can attach the desired Observers and Handlers in the scope of the current Activity (Observers and Handlers will automatically be removed when the `Activity` is destroyed):
 
-> `PaymentReference` is `Parcelable`, so you can pass it along to another `Activity`. 
+> `PaymentReference` is `Parcelable`, so you can pass it along to another `Activity`.
 
 ```java
 @Override
@@ -192,7 +192,7 @@ protected void onCreate(@Nullable Bundle savedInstanceState) {
 
     PaymentReference paymentReference = getIntent().getParcelableExtra("EXTRA_PAYMENT_REFERENCE");
     mPaymentHandler = paymentReference.getPaymentHandler(/*Activity*/ this);
-    
+
     // Observe data
     mPaymentHandler.getNetworkingStateObservable().observe(/*Activity*/ this, new Observer<NetworkingState>() {
         @Override
@@ -212,7 +212,7 @@ protected void onCreate(@Nullable Bundle savedInstanceState) {
             // TODO: Handle PaymentResult.
         }
     });
-    
+
     // Handle data
     mPaymentHandler.setRedirectHandler(/*Activity*/ this, new RedirectHandler() {
         @Override
@@ -252,6 +252,7 @@ If you are using ProGuard add the following options:
 -dontwarn com.adyen.checkout.nfc.**
 -dontwarn com.adyen.checkout.googlepay.**
 -dontwarn com.adyen.checkout.wechatpay.**
+-dontwarn com.adyen.checkout.threeds.**
 ```
 
 

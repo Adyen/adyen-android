@@ -33,7 +33,6 @@ import static android.support.test.espresso.action.ViewActions.click;
 import static android.support.test.espresso.action.ViewActions.typeText;
 import static android.support.test.espresso.matcher.ViewMatchers.isClickable;
 import static android.support.test.espresso.matcher.ViewMatchers.withId;
-import static android.support.test.espresso.web.sugar.Web.onWebView;
 import static com.adyen.example.androidtest.PaymentAppTestUtils.changePaymentSetup;
 import static com.adyen.example.androidtest.PaymentAppTestUtils.confirmPaymentAndWaitForResult;
 import static com.adyen.example.androidtest.PaymentAppTestUtils.goToPaymentMethodsOverview;
@@ -42,8 +41,10 @@ import static org.hamcrest.Matchers.anything;
 
 @RunWith(AndroidJUnit4.class)
 public class AutoPaymentAppTest {
-
-    private String creditCardNumberThreeds = "4111111111111111";
+    private static final String CARD_NUMBER = "5555444433331111";
+    private static final String CARD_NUMBER_3DS2 = "4111111111111111";
+    private static final String CARD_EXPIRY_DATE = "1020";
+    private static final String CARD_CVC = "737";
 
     @Rule
     public ActivityTestRule<MainActivity> mMainActivityTestRule = new ActivityTestRule<>(MainActivity.class);
@@ -55,34 +56,25 @@ public class AutoPaymentAppTest {
 
     @Test
     public void testCardPayment() throws Exception {
-        mMainActivityTestRule.launchActivity(null);
-        this.performCreditCardPayment("5555444433331111");
+        performCreditCardPayment(CARD_NUMBER);
         confirmPaymentAndWaitForResult();
     }
 
     @Test
-    public void testCardPaymentThreedsText() throws Exception {
-        this.performCreditCardPayment(this.creditCardNumberThreeds);
-        Thread.sleep(500);
+    public void testCardPayment3DS2Text() throws Exception {
+        changeAmount(12100L);
+        performCreditCardPayment(CARD_NUMBER_3DS2);
+        Thread.sleep(1000);
         onView(withId(com.adyen.threeds2.R.id.editText_text)).perform(clearText(), typeText("1234"));
         onView(withId(com.adyen.threeds2.R.id.button_continue)).perform(click());
         confirmPaymentAndWaitForResult();
     }
 
     @Test
-    public void testCardPaymentThreedsSingleSelect() throws Exception {
-        changeAmount(12120L);
-        this.performCreditCardPayment(this.creditCardNumberThreeds);
-        Thread.sleep(500);
-        onView(withId(com.adyen.threeds2.R.id.button_next)).perform(click());
-        confirmPaymentAndWaitForResult();
-    }
-
-    @Test
-    public void testCardPaymentThreedsMultiSelect() throws Exception {
-        changeAmount(12120L);
-        this.performCreditCardPayment(this.creditCardNumberThreeds);
-        Thread.sleep(500);
+    public void testCardPayment3DS2SingleSelect1() throws Exception {
+        changeAmount(12110L);
+        performCreditCardPayment(CARD_NUMBER_3DS2);
+        Thread.sleep(1000);
         onData(anything()).inAdapterView(withId(com.adyen.threeds2.R.id.listView_selectInfoItems))
                 .atPosition(0).perform(click());
         onView(withId(com.adyen.threeds2.R.id.button_next)).perform(click());
@@ -90,32 +82,44 @@ public class AutoPaymentAppTest {
     }
 
     @Test
-    public void testCardPaymentThreedsOutOfBand() throws Exception {
-        changeAmount(12130L);
-        this.performCreditCardPayment(this.creditCardNumberThreeds);
-        Thread.sleep(500);
-        onView(withId(com.adyen.threeds2.R.id.button_continue)).perform(click());
+    public void testCardPayment3DS2SingleSelect2() throws Exception {
+        changeAmount(12110L);
+        performCreditCardPayment(CARD_NUMBER_3DS2);
+        Thread.sleep(1000);
+        onData(anything()).inAdapterView(withId(com.adyen.threeds2.R.id.listView_selectInfoItems))
+                .atPosition(1).perform(click());
+        onView(withId(com.adyen.threeds2.R.id.button_next)).perform(click());
         confirmPaymentAndWaitForResult();
     }
 
+    @Test
+    public void testCardPayment3DS2MultiSelect1() throws Exception {
+        changeAmount(12120L);
+        performCreditCardPayment(CARD_NUMBER_3DS2);
+        Thread.sleep(1000);
+        onData(anything()).inAdapterView(withId(com.adyen.threeds2.R.id.listView_selectInfoItems))
+                .atPosition(0).perform(click());
+        onView(withId(com.adyen.threeds2.R.id.button_next)).perform(click());
+        confirmPaymentAndWaitForResult();
+    }
 
     @Test
-    public void testCardPaymentWith3dth() throws Exception {
+    public void testCardPayment3DS2MultiSelect2() throws Exception {
+        changeAmount(12120L);
+        performCreditCardPayment(CARD_NUMBER_3DS2);
+        Thread.sleep(2000);
+        onData(anything()).inAdapterView(withId(com.adyen.threeds2.R.id.listView_selectInfoItems))
+                .atPosition(0).perform(click());
+        onView(withId(com.adyen.threeds2.R.id.button_next)).perform(click());
+        confirmPaymentAndWaitForResult();
+    }
 
-        mMainActivityTestRule.launchActivity(null);
-
-        goToPaymentMethodsOverview();
-
-        selectPaymentMethodByName("Credit Card");
-
-        onView(withId(com.adyen.checkout.ui.R.id.editText_cardNumber)).perform(clearText(), typeText("5555444433331111"));
-        onView(withId(com.adyen.checkout.ui.R.id.editText_expiryDate)).perform(clearText(), typeText("1020"));
-        onView(withId(com.adyen.checkout.ui.R.id.editText_securityCode)).perform(clearText(), typeText("737"));
-        KeyboardUtil.hide(EspressoTestUtils.waitForActivity(CardDetailsActivity.class).findViewById(R.id.button_pay));
-        Thread.sleep(500);
-        onView(withId(com.adyen.checkout.ui.R.id.button_pay)).check(ViewAssertions.matches(isClickable()));
-        onView(withId(com.adyen.checkout.ui.R.id.button_pay)).perform(click());
-
+    @Test
+    public void testCardPayment3DS2OutOfBand() throws Exception {
+        changeAmount(12130L);
+        performCreditCardPayment(CARD_NUMBER_3DS2);
+        Thread.sleep(1000);
+        onView(withId(com.adyen.threeds2.R.id.button_continue)).perform(click());
         confirmPaymentAndWaitForResult();
     }
 
@@ -142,8 +146,8 @@ public class AutoPaymentAppTest {
         selectPaymentMethodByName("Credit Card");
 
         onView(withId(com.adyen.checkout.ui.R.id.editText_cardNumber)).perform(clearText(), typeText(creditCardNumber));
-        onView(withId(com.adyen.checkout.ui.R.id.editText_expiryDate)).perform(clearText(), typeText("1020"));
-        onView(withId(com.adyen.checkout.ui.R.id.editText_securityCode)).perform(clearText(), typeText("737"));
+        onView(withId(com.adyen.checkout.ui.R.id.editText_expiryDate)).perform(clearText(), typeText(CARD_EXPIRY_DATE));
+        onView(withId(com.adyen.checkout.ui.R.id.editText_securityCode)).perform(clearText(), typeText(CARD_CVC));
         KeyboardUtil.hide(EspressoTestUtils.waitForActivity(CardDetailsActivity.class).findViewById(R.id.button_pay));
         Thread.sleep(500);
         onView(withId(com.adyen.checkout.ui.R.id.button_pay)).check(ViewAssertions.matches(isClickable()));

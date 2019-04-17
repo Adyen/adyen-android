@@ -48,9 +48,6 @@ dependencies {
 
     implementation "com.squareup.moshi:moshi:1.6.0"
 
-    implementation project(":checkout-base")
-    implementation project(":checkout-core")
-    implementation project(":checkout-util")
     implementation project(":checkout-ui")
 
     // Plugins

@@ -38,5 +38,5 @@ dependencies {
     implementation "android.arch.persistence.room:runtime:${rootProject.roomVersion}"
     annotationProcessor "android.arch.persistence.room:compiler:${rootProject.roomVersion}"
 
-    implementation project(":checkout-base")
+    api project(":checkout-base")
 }

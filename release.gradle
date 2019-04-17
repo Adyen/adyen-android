@@ -1,3 +1,5 @@
+import com.sun.tools.classfile.Dependency
+
 apply plugin: 'maven-publish'
 apply plugin: 'com.jfrog.bintray'
 // TODO: add support for signing of artifacts

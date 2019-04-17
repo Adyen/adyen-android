@@ -37,10 +37,10 @@ dependencies {
     implementation "com.android.support:design:${rootProject.supportLibVersion}"
     implementation "android.arch.lifecycle:extensions:${rootProject.lifecycleVersion}"
 
-    implementation project(":checkout-base")
-    implementation project(":checkout-core")
-    implementation project(":checkout-core-card")
-    implementation project(":checkout-util")
+    api project(":checkout-base")
+    api project(":checkout-core")
+    api project(":checkout-core-card")
+    api project(":checkout-util")
 
     // Plugins
     compileOnly project(":checkout-threeds")

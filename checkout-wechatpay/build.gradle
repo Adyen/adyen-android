@@ -30,7 +30,7 @@ dependencies {
     implementation "com.android.support:support-annotations:${rootProject.supportLibVersion}"
     implementation "com.tencent.mm.opensdk:wechat-sdk-android-without-mta:${rootProject.weChatPayVersion}"
 
-    implementation project(":checkout-base")
-    implementation project(":checkout-core")
-    implementation project(":checkout-util")
+    api project(":checkout-base")
+    api project(":checkout-core")
+    api project(":checkout-util")
 }
