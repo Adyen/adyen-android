@@ -1,0 +1,107 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="checkout_title">เช็คเอาท์</string>
+    <string name="checkout_one_click_payment_method_section_title">วิธีชำระเงินของคุณ</string>
+    <string name="checkout_payment_method_section_title">วิธีชำระเงิน</string>
+    <string name="checkout_payment_method_section_with_one_click_title">เลือกวิธีอื่น</string>
+    <string name="checkout_select_other_payment_method">เลือกวิธีอื่น</string>
+    <string name="checkout_store_details">บันทึกไว้สำหรับการชำระเงินครั้งถัดไปของฉัน</string>
+    <string name="checkout_error_message_default">เกิดข้อผิดพลาดในระหว่างดำเนินการ</string>
+    <string name="checkout_error_message_network_unavailable">เชื่อมต่ออินเตอร์เน็ตไม่สำเร็จ กรุณาตรวจสอบการเชื่อมต่ออินเตอร์เน็ตของคุณ</string>
+    <string name="checkout_error_message_network_hint">ตรวจสอบการเชื่อมต่ออินเตอร์เน็ตของคุณ แล้วลองใหม่อีกครั้ง</string>
+    <string name="checkout_pay_amount_format">ชำระ %s</string>
+    <string name="checkout_surcharge_total_amount_format">ยอดทั้งหมดรวมค่าใช้จ่ายเพิ่มเติม %s</string>
+    <string name="checkout_one_click_delete_confirmation_message">ลบวิธีการชำระเงิน %s?</string>
+    <string name="checkout_one_click_delete">ลบ</string>
+    <string name="checkout_error_dialog_title">ข้อผิดพลาด</string>
+    <string name="checkout_error_redirect_failed">เปลี่ยนเส้นทางไม่สำเร็จ</string>
+    <string name="checkout_ok">OK</string>
+    <string name="checkout_skip">ข้าม</string>
+    <string name="checkout_backspace">ปุ่มลบ</string>
+
+    <!-- Card -->
+    <string name="checkout_card_holder_name_hint">ชื่อผู้ถือบัตร</string>
+    <string name="checkout_card_card_number_hint">หมายเลขบัตร</string>
+    <string name="checkout_card_expiry_date_caption">วันหมดอายุ</string>
+    <string name="checkout_card_expiry_date_hint">MM/YY</string>
+    <string name="checkout_card_security_code_hint">CVC / CVV</string>
+    <string name="checkout_card_installments">จำนวนงวด</string>
+    <string name="checkout_card_nfc_error_chip_unsupported">กรุณาแสดงบัตรเครดิตเพียงใบเดียว</string>
+    <string name="checkout_card_nfc_error_card_unsupported">ไม่รองรับบัตรนี้</string>
+    <string name="checkout_card_nfc_error_connection_lost">กรุณาลองใหม่อีกครั้ง</string>
+    <string name="checkout_card_one_click_expires_format">หมดอายุ %s</string>
+    <string name="checkout_card_one_click_security_code_prompt">กรุณากรอกรหัส CVC สำหรับ %s</string>
+    <string name="checkout_card_reader_tutorial_enable_nfc">เปิดใช้งาน NFC</string>
+    <string name="checkout_card_reader_tutorial_action">เครื่องอ่านบัตร NFC</string>
+    <string name="checkout_card_reader_tutorial_title">เครื่องอ่านบัตรเครดิต</string>
+    <string name="checkout_card_reader_tutorial_explanation">ถือบัตรเครดิตไว้ใกล้ๆ ด้านหลังส่วนบนสุดของโทรศัพท์มือถือของคุณ</string>
+    <string name="checkout_nfc_settings_redirect_failed_toast">เปลี่ยนเส้นทางไปยังการตั้งค่า NFC ไม่สำเร็จ</string>
+
+    <!-- Card.CupSecurePlus -->
+    <string name="checkout_card_cup_secure_plus_phone_number_hint">หมายเลขโทรศัพท์มือถือ</string>
+    <string name="checkout_card_cup_secure_plus_details_activity_title">รับรองความถูกต้อง</string>
+    <string name="checkout_card_cup_secure_plus_sms_code_prompt">ข้อความพร้อมรหัสยืนยันถูกส่งไปยังหมายเลขโทรศัพท์ที่คุณลงทะเบียนไว้แล้ว</string>
+    <string name="checkout_card_cup_secure_plus_sms_code_caption">รหัส SMS</string>
+
+    <!-- Doku -->
+    <string name="checkout_doku_email_address">อีเมลแอดเดรส</string>
+    <string name="checkout_doku_first_name">ชื่อ</string>
+    <string name="checkout_doku_last_name">นามสกุล</string>
+
+    <!-- Giropay -->
+    <string name="checkout_giropay_search_hint">ชื่อธนาคาร / BIC / รหัสธนาคาร</string>
+    <string name="checkout_giropay_error_search_no_results">ไม่พบผลลัพธ์การค้นหา</string>
+
+    <!-- Issuer -->
+    <string name="checkout_issuer_choose_issuer">เลือกธนาคารของคุณ</string>
+    <string name="checkout_issuer_open_with_app_format">เปิดด้วย %s</string>
+
+    <!-- QiwiWallet -->
+    <string name="checkout_qiwiwallet_country_code_tooltip">รหัสประเทศ</string>
+    <string name="checkout_qiwiwallet_phone_number_caption">หมายเลขโทรศัพท์มือถือ</string>
+    <string name="checkout_qiwiwallet_phone_number_hint">123–456–789</string>
+
+    <!-- SepaDirectDebit -->
+    <string name="checkout_sdd_iban">หมายเลขบัญชี (IBAN)</string>
+    <string name="checkout_sdd_account_holder_name">ชื่อผู้ถือบัตร</string>
+    <string name="checkout_sdd_consent">ข้าพเจ้ายอมรับว่า จำนวนด้านล่างจะถูกหักจากบัญชีธนาคารของข้าพเจ้า</string>
+    <string name="checkout_sdd_iban_suggestion">คุณหมายความว่า</string>
+
+    <!-- Open Invoice -->
+
+    <!-- Personal Details -->
+    <string name="checkout_personal_details_title">รายละเอียดส่วนตัว</string>
+    <string name="checkout_personal_details_first_name">ชื่อ</string>
+    <string name="checkout_personal_details_infix">คำนำหน้า</string>
+    <string name="checkout_personal_details_last_name">นามสกุล</string>
+    <string name="checkout_personal_details_gender">เพศ</string>
+    <string name="checkout_personal_details_gender_male">ชาย</string>
+    <string name="checkout_personal_details_gender_female">หญิง</string>
+    <string name="checkout_personal_details_gender_unknown">ไม่รู้จัก</string>
+    <string name="checkout_personal_details_date_of_birth">วันเดือนปีเกิด</string>
+    <string name="checkout_personal_details_telehone_number">หมายเลขโทรศัพท์</string>
+    <string name="checkout_personal_details_social_security_number">หมายเลขประกันสังคม</string>
+    <string name="checkout_personal_details_shopper_email">อีเมล</string>
+
+    <!-- Address -->
+    <string name="checkout_address_street">ถนน</string>
+    <string name="checkout_address_house_number">บ้านเลขที่</string>
+    <string name="checkout_address_city">เมือง</string>
+    <string name="checkout_address_postal_code">รหัสไปรษณีย์</string>
+    <string name="checkout_address_country">ประเทศ</string>
+
+    <string name="checkout_billing_address_title">ที่อยู่ในการแจ้งค่าใช้จ่าย</string>
+    <string name="checkout_delivery_address_title">ที่อยู่ในการจัดส่ง</string>
+    <string name="checkout_separate_delivery_address">ที่อยู่จัดส่งแยกต่างหาก</string>
+
+    <string name="checkout_terms_and_conditions_title">ข้อกำหนดและเงื่อนไข</string>
+    <string name="checkout_terms_and_conditions_toggle">ยอมรับข้อกำหนด &amp; เงื่อนไข</string>
+    <string name="checkout_klarna_terms_and_conditions_text">ข้าพเจ้ายินยอมให้ Klarna ประมวลผลข้อมูลของข้าพเจ้าเพื่อวัตถุประสงค์ในการระบุตัวตน การประเมินเครดิต และการชำระเงินในการสั่งซื้อ ข้าพเจ้าอาจเพิกถอน%sของข้าพเจ้าสำหรับการประมวลผลข้อมูล และเพื่อวัตถุประสงค์ที่อาจเป็นไปได้ตามกฎหมาย ข้อกำหนดและเงื่อนไขทั่วไปของผู้ค้ามีผลบังคับใช้</string>
+    <string name="checkout_klarna_consent">ยินยอม</string>
+    <string name="checkout_afterpay_terms_and_conditions_text">ข้าพเจ้ายอมรับ%sของ AfterPay</string>
+    <string name="checkout_afterpay_conditions">เงื่อนไขการชำระเงิน</string>
+    <string name="checkout_klarna_more_information">ข้อมูลเพิ่มเติม</string>
+
+    <string name="checkout_input_error_empty_field">ฟิลด์บังคับ กรุณากรอกข้อมูล</string>
+    <string name="checkout_input_error_incorrect_format">รูปแบบข้อมูลที่กรอกไม่ถูกต้อง</string>
+</resources>
