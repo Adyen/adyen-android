@@ -30,7 +30,7 @@ android {
 dependencies {
     implementation "com.android.support:support-annotations:${rootProject.supportLibVersion}"
 
-    implementation("com.adyen.threeds:adyen-3ds2:0.9.5") {
+    implementation("com.adyen.threeds:adyen-3ds2:0.9.6") {
         exclude group: 'com.android.support', module: 'appcompat-v7'
     }
 

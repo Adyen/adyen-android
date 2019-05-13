@@ -28,8 +28,8 @@ ext {
             "com.tencent.mm.opensdk:wechat-sdk-android-without-mta:9a15154c07c05eadba8351c110647c1754316e32d8f12f55e24679891b52739c:SHA-256",
     ]
 
-    versionCode = 243
-    versionName = "2.4.3"
+    versionCode = 244
+    versionName = "2.4.4"
 
     testCoverageEnabled = true
 }
@@ -40,7 +40,7 @@ buildscript {
         jcenter()
     }
     dependencies {
-        classpath "com.android.tools.build:gradle:3.3.2"
+        classpath 'com.android.tools.build:gradle:3.4.0'
         classpath "com.jfrog.bintray.gradle:gradle-bintray-plugin:1.8.4"
     }
 }

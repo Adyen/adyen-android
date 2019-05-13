@@ -301,15 +301,6 @@ public class CardDetailsActivity extends CheckoutDetailsActivity
         }
     }
 
-    @Override
-    protected void onDestroy() {
-        super.onDestroy();
-
-        if (mCard3DS2Authenticator != null) {
-            mCard3DS2Authenticator.release();
-        }
-    }
-
     public boolean onCreateOptionsMenu(@NonNull Menu menu) {
         getMenuInflater().inflate(R.menu.menu_card_details, menu);
 
