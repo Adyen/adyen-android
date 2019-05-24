@@ -50,7 +50,7 @@ After receiving the payment session data from your own server, use the `Checkout
 String encodedPaymentSession = ...;
 CheckoutController.handlePaymentSessionResponse(/*Activity*/ this, encodedPaymentSession, new StartPaymentParametersHandler() {
     @Override
-    public void onStartPaymentParameters(@NonNull StartPaymentParameters startPaymentParameters) {
+    public void onPaymentInitialized(@NonNull StartPaymentParameters startPaymentParameters) {
         // TODO: Start the desired checkout process.
     }
 
