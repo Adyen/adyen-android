@@ -30,6 +30,10 @@
         <item name="windowActionBar">false</item>
     </style>
 
+    <style name="ThreeDS2Theme"
+           parent="AppTheme.Checkout"
+           tools:ignore="PrivateResource"/>
+
     <style name="Checkout" />
 
     <declare-styleable name="CheckoutTints">

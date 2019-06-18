@@ -18,7 +18,7 @@ To give you as much flexibility as possible, our Android SDK can be integrated i
 Import the quick integration modules by adding these lines to your build.gradle file.
 
 ```groovy
-final checkoutVersion = "2.4.4"
+final checkoutVersion = "2.4.5"
 implementation "com.adyen.checkout:ui:${checkoutVersion}"
 implementation "com.adyen.checkout:nfc:${checkoutVersion}" // Optional; Integrates NFC card reader in card UI
 implementation "com.adyen.checkout:wechatpay:${checkoutVersion}" // Optional; Integrates support for WeChat Pay
@@ -50,7 +50,7 @@ After receiving the payment session data from your own server, use the `Checkout
 String encodedPaymentSession = ...;
 CheckoutController.handlePaymentSessionResponse(/*Activity*/ this, encodedPaymentSession, new StartPaymentParametersHandler() {
     @Override
-    public void onStartPaymentParameters(@NonNull StartPaymentParameters startPaymentParameters) {
+    public void onPaymentInitialized(@NonNull StartPaymentParameters startPaymentParameters) {
         // TODO: Start the desired checkout process.
     }
 
@@ -136,7 +136,7 @@ By default, we use the font that is declared in the theme that is used for check
 #### Installation
 Import the following modules by adding these line to your `build.gradle` file.
 ```groovy
-final checkoutVersion = "2.4.4"
+final checkoutVersion = "2.4.5"
 implementation "com.adyen.checkout:core:${checkoutVersion}"
 implementation "com.adyen.checkout:core-card:${checkoutVersion}" // Optional; Required for processing card payments.
 implementation "com.adyen.checkout:nfc:${checkoutVersion}" // Optional; Enables reading of card information with the device"s NFC chip.
