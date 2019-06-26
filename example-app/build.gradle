@@ -1,58 +1,75 @@
+/*
+ * Copyright (c) 2019 Adyen N.V.
+ *
+ * This file is open source and available under the MIT license. See the LICENSE file for more info.
+ *
+ * Created by caiof on 8/2/2019.
+ */
+
 apply plugin: 'com.android.application'
+apply plugin: 'kotlin-android'
+apply plugin: 'kotlin-android-extensions'
+
+apply from: "../config/gradle/codeQualityKt.gradle"
+apply from: "../config/gradle/ci.gradle"
 
 if (file("local.gradle").exists()) {
     apply from: "local.gradle"
 } else {
-    throw new GradleException("File example-app/local.gradle not found. Duplicate example-app/local.gradle.example and fill in your API key.")
+    logger.lifecycle("File example-app/local.gradle not found. Duplicate example-app/local.gradle.example and fill in your API key.")
 }
 
+// This runConnectedAndroidTest.gradle script is applied,
+// so it will be possible to run the example app connected android tests
+// in Jenkins release process.
+apply from: "../config/gradle/runConnectedAndroidTest.gradle"
+
 android {
-    compileSdkVersion rootProject.compileSdkVersion
+    compileSdkVersion version_compile_sdk
 
     defaultConfig {
-        applicationId "com.adyen.example"
-        minSdkVersion rootProject.minSdkVersion
-        targetSdkVersion rootProject.targetSdkVersion
-        versionCode rootProject.versionCode
-        versionName rootProject.versionName
+        applicationId "com.adyen.checkout.example"
+
+        minSdkVersion version_min_sdk
+        targetSdkVersion version_target_sdk
+        versionCode version_code
+        versionName version_name
 
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
+    }
 
-        buildConfigField "String", "MERCHANT_ACCOUNT", "\"\""
-        buildConfigField "String", "MERCHANT_SERVER_URL", "\"https://checkoutshopper-test.adyen.com/checkoutshopper/demoserver/\""
-        buildConfigField "String", "API_KEY_HEADER_NAME", "\"x-demo-server-api-key\""
-        buildConfigField "String", "CHECKOUT_API_KEY", "\"\""
+    buildTypes {
+        release {
+            minifyEnabled false
+            proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
+        }
+    }
+
+    compileOptions {
+        sourceCompatibility JavaVersion.VERSION_1_8
+        targetCompatibility JavaVersion.VERSION_1_8
     }
 }
 
 dependencies {
-    androidTestImplementation("com.android.support.test.espresso:espresso-core:${rootProject.espressoVersion}", {
-        //exclude group: "com.android.support", module: "support-annotations"
-    })
-    androidTestImplementation("com.android.support.test.espresso:espresso-contrib:${rootProject.espressoVersion}", {
-        //exclude group: "com.android.support", module: "support-annotations"
-    })
-    androidTestImplementation "com.android.support.test.uiautomator:uiautomator-v18:${rootProject.uiautomatorVersion}"
-    testImplementation "junit:junit:${rootProject.junitVersion}"
+    // Tests
+    testImplementation "junit:junit:$version_junit"
+    androidTestImplementation "com.android.support.test:runner:$version_support_test_runner"
+    androidTestImplementation "com.android.support.test.espresso:espresso-core:$version_espresso"
 
-    implementation "com.android.support:appcompat-v7:${rootProject.supportLibVersion}"
+    // Checkout
+    implementation project(':drop-in')
 
-    implementation "io.reactivex.rxjava2:rxjava:2.2.2"
-    implementation "io.reactivex.rxjava2:rxandroid:2.1.0"
-
-    implementation "com.squareup.retrofit2:retrofit:2.4.0"
-    implementation "com.squareup.retrofit2:converter-moshi:2.4.0"
-    implementation "com.squareup.retrofit2:adapter-rxjava2:2.4.0"
-
-    implementation "com.squareup.okhttp3:logging-interceptor:3.11.0"
-
-    implementation "com.squareup.moshi:moshi:1.6.0"
-
-    implementation project(":checkout-ui")
-
-    // Plugins
-    implementation project(":checkout-threeds")
-    implementation project(":checkout-nfc")
-    implementation project(":checkout-googlepay")
-    implementation project(":checkout-wechatpay")
+    // Dependencies
+    implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk7:$version_kotlin"
+    implementation "org.jetbrains.kotlinx:kotlinx-coroutines-android:$version_kotlinx"
+    implementation "com.android.support:appcompat-v7:$version_support_library"
+    implementation "com.android.support.constraint:constraint-layout:$version_constraint_layout"
+    implementation "com.android.support:recyclerview-v7:$version_support_library"
+    implementation "android.arch.lifecycle:extensions:$version_lifecycle_extensions"
+    implementation "com.squareup.retrofit2:retrofit:$version_retrofit2"
+    implementation "com.squareup.retrofit2:converter-moshi:$version_retrofit2"
+    implementation "com.squareup.retrofit2:converter-gson:$version_retrofit2"
+    implementation "com.squareup.moshi:moshi-adapters:$version_moshi_adapters"
+    implementation "com.jakewharton.retrofit:retrofit2-kotlin-coroutines-adapter:$version_coroutines_adapter"
 }

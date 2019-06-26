@@ -17,8 +17,6 @@ then
   exit 0
 fi
 
-ANDROID_STUDIO_VERSION="3.3"
-
 # Get the directory of the script file
 DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" >/dev/null 2>&1 && pwd )"
 echo "Source IDE directory is: ${DIR}"
@@ -40,7 +38,23 @@ cp -i "${file_orig}${file_name}" "${file_dest}${file_name}"
 # Copy CodeStyle profile
 echo "Setting up CodeStyle"
 file_orig="${DIR}/codeStyle/"
-file_dest="/Users/${USER}/Library/Preferences/AndroidStudio${ANDROID_STUDIO_VERSION}/codestyles/"
+android_studio="/Users/${USER}/Library/Preferences"
+selected_android_studio=""
+
+available_android_studio=$(find ${android_studio} -mindepth 1 -maxdepth 1 -type d -iregex '.*AndroidStudio.*')
+
+eval "available_android_studio=($available_android_studio)"
+
+if [ ${#available_android_studio[@]} -eq 1 ]; then
+    selected_android_studio=${available_android_studio[0]}
+else
+    select selected_item in "${available_android_studio[@]}"; do
+        selected_android_studio=${selected_item}
+        break
+    done
+fi
+
+file_dest="${selected_android_studio}/codestyles/"
 file_name="AdyenAndroidStyle.xml"
 
 cp "${file_orig}${file_name}" "${file_dest}${file_name}"

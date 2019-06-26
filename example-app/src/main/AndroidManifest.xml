@@ -1,16 +1,24 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-    package="com.adyen.example">
+          xmlns:tools="http://schemas.android.com/tools"
+          package="com.adyen.checkout.example">
+
+    <uses-permission android:name="android.permission.INTERNET"/>
 
     <application
-        android:allowBackup="true"
+        android:name=".CheckoutExampleApplication"
+        android:allowBackup="false"
         android:icon="@mipmap/ic_launcher"
         android:label="@string/app_name"
         android:roundIcon="@mipmap/ic_launcher_round"
-        android:theme="@style/AppTheme">
+        android:supportsRtl="true"
+        android:theme="@style/AppTheme"
+        tools:ignore="GoogleAppIndexingWarning">
 
-        <activity android:name=".MainActivity"
-            android:launchMode="singleTop">
+        <activity
+            android:name=".ResultActivity"/>
+
+        <activity android:name=".MainActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN"/>
 
@@ -18,8 +26,9 @@
             </intent-filter>
         </activity>
 
-        <activity android:name=".SuccessActivity" />
-
+        <service
+            android:name=".ExampleDropInService"
+            android:permission="android.permission.BIND_JOB_SERVICE"/>
     </application>
 
 </manifest>

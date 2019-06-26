@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+  ~ Copyright (c) 2019 Adyen N.V.
+  ~
+  ~ This file is open source and available under the MIT license. See the LICENSE file for more info.
+  ~
+  ~ Created by caiof on 21/3/2019.
+  -->
+
+<android.support.constraint.ConstraintLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".activity.ComponentActivity">
+
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintBottom_toTopOf="@+id/payButton">
+
+        <FrameLayout
+            android:id="@+id/componentContainer"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/standard_margin"
+            android:layout_marginStart="@dimen/standard_double_margin"
+            android:layout_marginLeft="@dimen/standard_double_margin"
+            android:layout_marginEnd="@dimen/standard_double_margin"
+            android:layout_marginRight="@dimen/standard_double_margin" />
+    </ScrollView>
+
+
+    <Button
+        android:id="@+id/payButton"
+        android:layout_width="0dp"
+        android:layout_height="@dimen/pay_button_height"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        style="@style/Checkout.Button.Colored"
+        android:enabled="false"
+        android:text="@string/pay_button" />
+
+</android.support.constraint.ConstraintLayout>

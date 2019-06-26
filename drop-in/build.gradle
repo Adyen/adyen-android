@@ -1,0 +1,73 @@
+/*
+ * Copyright (c) 2019 Adyen N.V.
+ *
+ * This file is open source and available under the MIT license. See the LICENSE file for more info.
+ *
+ * Created by caiof on 8/2/2019.
+ */
+
+// Maven artifact
+ext.mavenArtifactId = "drop-in"
+ext.mavenArtifactName = "Adyen checkout drop-in component"
+ext.mavenArtifactDescription = "Adyen checkout drop-in component client for Adyen's Checkout API."
+
+apply plugin: 'com.android.library'
+apply plugin: 'kotlin-android'
+apply plugin: 'kotlin-android-extensions'
+
+android {
+    compileSdkVersion version_compile_sdk
+
+    defaultConfig {
+        minSdkVersion version_min_sdk
+        targetSdkVersion version_target_sdk
+        versionCode version_code
+        versionName version_name
+
+        testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
+
+        // Get scheme for redirect result
+        manifestPlaceholders = ["checkoutRedirectScheme": rootProject.ext.checkoutRedirectScheme]
+    }
+
+    buildTypes {
+        release {
+            minifyEnabled false
+            proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
+        }
+    }
+
+    compileOptions {
+        sourceCompatibility JavaVersion.VERSION_1_8
+        targetCompatibility JavaVersion.VERSION_1_8
+    }
+}
+
+dependencies {
+    //Tests
+    testImplementation "junit:junit:$version_junit"
+    androidTestImplementation "com.android.support.test:runner:$version_support_test_runner"
+    androidTestImplementation "com.android.support.test.espresso:espresso-core:$version_espresso"
+
+    // Checkout
+    api project(":ideal-ui")
+    api project(":molpay-ui")
+    api project(":dotpay-ui")
+    api project(":entercash-ui")
+    api project(":eps-ui")
+    api project(":openbanking-ui")
+    api project(":card-ui")
+    api project(":redirect")
+    api project(":3ds2")
+
+    // Dependencies
+    implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk7:$version_kotlin"
+    implementation "com.android.support.constraint:constraint-layout:$version_constraint_layout"
+    implementation "com.android.support:recyclerview-v7:$version_support_library"
+    implementation "com.android.support:design:$version_support_library"
+}
+
+// This sharedTasks.gradle script is applied at the end of this build.gradle script,
+// since javadocs.gradle script is dependent on android.compileSdkVersion property,
+// which is set on the android block above.
+apply from: "../config/gradle/sharedTasks.gradle"

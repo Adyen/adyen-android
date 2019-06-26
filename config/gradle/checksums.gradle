@@ -1,0 +1,30 @@
+/*
+ * Copyright (c) 2019 Adyen N.V.
+ *
+ * This file is open source and available under the MIT license. See the LICENSE file for more info.
+ *
+ * Created by ran on 6/2/2019.
+ */
+
+if (!hasProperty("checksums")) {
+    final checksums = [
+            "junit:junit:4.12:af7ca61fba26556cfe5b40cf15aadc14:MD5",
+            "com.android.support.test:runner:1.0.2:ea1c07b6950d389d1d041fb05009da22:MD5",
+            "com.android.support:support-annotations:28.0.0:46efec36398d1479da563d09b7e7104f:MD5",
+            "com.android.support:support-fragment:28.0.0:58ca247aecdd37f16249373ce5a4a50c:MD5",
+            "com.android.support:appcompat-v7:28.0.0:33c01268b72c786cfefd26d6ebc6a7f3:MD5",
+            "com.android.support.constraint:constraint-layout:1.1.3:138b49f8b64f7171066bcf645ecc078f:MD5",
+            "com.android.support:recyclerview-v7:28.0.0:bfc263568f483872edcfdd89d986dec9:MD5",
+            "com.android.support:customtabs:28.0.0:831d767b6e1180d4b2bff4c1c5dace07:MD5",
+            "com.android.support:design:28.0.0:e98ad3c70613cb5e6ab312489ee8d4ff:MD5",
+            "org.jetbrains.kotlin:kotlin-stdlib-jdk7:1.3.31:2ccfa99735888fb60053f3c7f07243f0:MD5",
+            "org.jetbrains.kotlin:kotlin-compiler-embeddable:1.3.31:ad2487348294aa9786909ef25af067d3:MD5",
+            "org.jetbrains.kotlin:kotlin-android-extensions:1.3.31:f2deaa702fd7ee6e181ea5cae218dcd5:MD5",
+            "org.jetbrains.kotlin:kotlin-android-extensions-runtime:1.3.31:22a2bec727c199aa9c605a68528ad9de:MD5",
+            "android.arch.lifecycle:extensions:1.1.1:6544fbf7708d91530d279541942407bd:MD5",
+            "com.android.support:design:28.0.0:e98ad3c70613cb5e6ab312489ee8d4ff:MD5",
+            "com.adyen.cse:adyen-cse:1.0.5:6ddf508e1dc2ce2f2a77a7c7b392dc60:MD5"
+    ]
+
+    ext.checksums = checksums
+}

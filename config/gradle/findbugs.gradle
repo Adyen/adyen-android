@@ -1,0 +1,31 @@
+/*
+ * Copyright (c) 2019 Adyen N.V.
+ *
+ * This file is open source and available under the MIT license. See the LICENSE file for more info.
+ *
+ * Created by ran on 6/2/2019.
+ */
+
+apply plugin: "findbugs"
+
+task findbugs(type: FindBugs, dependsOn: "assembleDebug") {
+    description = "Find bugs mainly design flaws, bad practices, multithreaded correctness and code vulnerabilities."
+    group = "verification"
+
+    ignoreFailures = false
+
+    effort = "max"
+    reportLevel = "high"
+    showProgress = true
+
+    excludeFilter = file("$rootProject.rootDir/config/findbugs/findbugs-filter.xml")
+    classes = files("build/intermediates/javac")
+    source = fileTree("src")
+    classpath = files()
+
+    reports {
+        xml.enabled false
+        html.enabled true
+        html.destination file("$project.buildDir/reports/findbugs/findbugs-results.html")
+    }
+}

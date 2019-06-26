@@ -9,6 +9,12 @@
     <exclude-pattern>.*/R.java</exclude-pattern>
     <exclude-pattern>.*/gen/.*</exclude-pattern>
 
+    <rule ref="category/java/errorprone.xml">
+        <!-- Giving false positives -->
+        <exclude name="BeanMembersShouldSerialize"/>
+        <exclude name="DataflowAnomalyAnalysis"/>
+    </rule>
+
     <rule ref="rulesets/java/unnecessary.xml"/>
     <rule ref="rulesets/java/imports.xml">
         <exclude name="TooManyStaticImports"/>
@@ -21,7 +27,6 @@
     <rule ref="rulesets/java/basic.xml"/>
     <rule ref="rulesets/java/design.xml">
         <exclude name="ConfusingTernary"/>
-        <exclude name="AbstractClassWithoutAbstractMethod"/>
     </rule>
     <rule ref="rulesets/java/typeresolution.xml"/>
     <rule ref="rulesets/java/empty.xml/EmptyCatchBlock">

@@ -1,0 +1,39 @@
+/*
+ * Copyright (c) 2019 Adyen N.V.
+ *
+ * This file is open source and available under the MIT license. See the LICENSE file for more info.
+ *
+ * Created by ran on 23/5/2019.
+ */
+
+/**
+ * An anti-bikeshedding Kotlin linter with built-in formatter.
+ *
+ * Docs: https://github.com/pinterest/ktlint
+ */
+
+configurations {
+    ktlint
+}
+
+dependencies {
+    ktlint "com.pinterest:ktlint:$version_ktlint"
+}
+
+task ktlint(type: JavaExec) {
+    description = "Check Kotlin code style."
+    group = "verification"
+
+    classpath = configurations.ktlint
+    main = "com.pinterest.ktlint.Main"
+    args "src/**/*.kt", "--reporter=plain", "--reporter=checkstyle,output=${project.buildDir}/reports/klint/klint-results.xml"
+}
+
+task ktlintFormat(type: JavaExec) {
+    description = "Fix Kotlin code style deviations."
+    group = "formatting"
+
+    classpath = configurations.ktlint
+    main = "com.pinterest.ktlint.Main"
+    args "-F", "src/**/*.kt"
+}

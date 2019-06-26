@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+  ~ Copyright (c) 2019 Adyen N.V.
+  ~
+  ~ This file is open source and available under the MIT license. See the LICENSE file for more info.
+  ~
+  ~ Created by caiof on 15/3/2019.
+  -->
+
+<resources>
+    <!-- Placeholder to be overridden by main app. -->
+    <style name="AppTheme" parent="Theme.AppCompat.Light.DarkActionBar"/>
+
+    <style name="Checkout" parent="AppTheme"/>
+
+    <!-- Text -->
+    <style name="Checkout.TextAppearance" />
+
+    <style name="Checkout.TextAppearance.Primary">
+        <item name="android:textSize">16sp</item>
+    </style>
+
+    <style name="Checkout.Translucent">
+        <item name="android:windowIsTranslucent">true</item>
+        <item name="android:backgroundDimEnabled">true</item>
+        <item name="android:windowBackground">@android:color/transparent</item>
+        <item name="windowNoTitle">true</item>
+        <item name="windowActionBar">false</item>
+    </style>
+
+</resources>

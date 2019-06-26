@@ -1,0 +1,31 @@
+/*
+ * Copyright (c) 2019 Adyen N.V.
+ *
+ * This file is open source and available under the MIT license. See the LICENSE file for more info.
+ *
+ * Created by ran on 6/2/2019.
+ */
+
+apply plugin: "pmd"
+
+task pmd(type: Pmd) {
+    description = "Identifying potential problems mainly dead code, duplicated code, cyclomatic complexity and overcomplicated expressions."
+    group = "verification"
+
+    ignoreFailures false
+
+    // Remove default ruleSets from gradle
+    ruleSets.clear()
+    // Add out defined ruleSets
+    ruleSetFiles = files("$rootProject.rootDir/config/pmd/pmd-rules.xml")
+
+    source = fileTree("src/main/java")
+    include '**/*.java'
+    exclude '**/gen/**'
+
+    reports {
+        xml.enabled false
+        html.enabled true
+        html.destination file("$project.buildDir/reports/pmd/pmd-results.html")
+    }
+}

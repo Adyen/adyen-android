@@ -1,0 +1,60 @@
+/*
+ * Copyright (c) 2019 Adyen N.V.
+ *
+ * This file is open source and available under the MIT license. See the LICENSE file for more info.
+ *
+ * Created by arman on 12/6/2019.
+ */
+
+// Maven artifact
+ext.mavenArtifactId = "entercash-ui"
+ext.mavenArtifactName = "Adyen checkout entercash ui component"
+ext.mavenArtifactDescription = "Adyen checkout entercash ui component client for Adyen's Checkout API."
+
+apply plugin: 'com.android.library'
+
+android {
+    compileSdkVersion version_compile_sdk
+
+    defaultConfig {
+        minSdkVersion version_min_sdk
+        targetSdkVersion version_target_sdk
+        versionCode version_code
+        versionName version_name
+
+        testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
+
+    }
+
+    buildTypes {
+        release {
+            minifyEnabled false
+            proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
+        }
+    }
+
+    compileOptions {
+        sourceCompatibility JavaVersion.VERSION_1_8
+        targetCompatibility JavaVersion.VERSION_1_8
+    }
+}
+
+dependencies {
+    //Tests
+    testImplementation "junit:junit:$version_junit"
+    androidTestImplementation "com.android.support.test:runner:$version_support_test_runner"
+    androidTestImplementation "com.android.support.test.espresso:espresso-core:$version_espresso"
+
+    // Checkout
+    api project(":issuer-list-ui")
+    api project(":entercash-base")
+
+    // Dependencies
+    implementation "com.android.support:appcompat-v7:$version_support_library"
+    implementation "com.android.support:recyclerview-v7:$version_support_library"
+}
+
+// This sharedTasks.gradle script is applied at the end of this build.gradle script,
+// since javadocs.gradle script is dependent on android.compileSdkVersion property,
+// which is set on the android block above.
+apply from: "../config/gradle/sharedTasks.gradle"

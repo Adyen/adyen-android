@@ -1,0 +1,42 @@
+ext.mavenArtifactId = "#module_name"
+ext.mavenArtifactName = "Adyen checkout #module_name component"
+ext.mavenArtifactDescription = "Adyen checkout #module_name component client for Adyen's Checkout API."
+
+apply plugin: 'com.android.library'
+
+android {
+    compileSdkVersion version_compile_sdk
+
+    defaultConfig {
+        minSdkVersion version_min_sdk
+        targetSdkVersion version_target_sdk
+        versionCode version_code
+        versionName version_name
+
+        testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
+    }
+
+    buildTypes {
+        release {
+            minifyEnabled false
+            proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
+        }
+    }
+
+    compileOptions {
+        sourceCompatibility JavaVersion.VERSION_1_8
+        targetCompatibility JavaVersion.VERSION_1_8
+    }
+}
+
+dependencies {
+    //Tests
+    testImplementation "junit:junit:$version_junit"
+    androidTestImplementation "com.android.support.test:runner:$version_support_test_runner"
+    androidTestImplementation "com.android.support.test.espresso:espresso-core:$version_espresso"
+}
+
+// This sharedTasks.gradle script is applied at the end of this build.gradle script,
+// since javadocs.gradle script is dependent on android.compileSdkVersion property,
+// which is set on the android block above.
+apply from: "../config/gradle/sharedTasks.gradle"

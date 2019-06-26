@@ -1,0 +1,20 @@
+/*
+ * Copyright (c) 2019 Adyen N.V.
+ *
+ * This file is open source and available under the MIT license. See the LICENSE file for more info.
+ *
+ * Created by ran on 6/2/2019.
+ */
+
+android {
+    lintOptions {
+        abortOnError = true
+        ignoreWarnings false
+
+        lintConfig file("$rootProject.rootDir/config/lint/lint.xml")
+
+        xmlReport false
+        htmlReport true
+        htmlOutput file("$project.buildDir/reports/lint/lint-results.html")
+    }
+}

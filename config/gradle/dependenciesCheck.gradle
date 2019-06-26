@@ -1,0 +1,59 @@
+/*
+ * Copyright (c) 2019 Adyen N.V.
+ *
+ * This file is open source and available under the MIT license. See the LICENSE file for more info.
+ *
+ * Created by ran on 6/2/2019.
+ */
+
+import java.security.MessageDigest
+
+afterEvaluate {
+    def relevantConfigurations = configurations.all.findAll {
+        it.canBeResolved && it.name.contains("Classpath") && !it.name.contains("AndroidTest") && !it.name.contains("UnitTest")
+    }
+
+    if (relevantConfigurations.size() <= 0) {
+        return
+    }
+
+    logger.lifecycle("\nChecking dependencies credibility:")
+
+    relevantConfigurations.each { configuration ->
+        configuration.resolvedConfiguration.firstLevelModuleDependencies.each { dependency ->
+            final moduleGroup = dependency.moduleGroup.toString()
+
+            if (moduleGroup != "com.adyen.checkout" && moduleGroup != rootProject.name) {
+                dependency.moduleArtifacts.each { artifact ->
+                    def (checksum, algorithm) = checksums.findResult {
+                        final parts = it.split(":")
+
+                        assert parts.length == 5: "Checksum declaration $it has invalid length"
+
+                        if (dependency.moduleGroup == parts[0] && dependency.moduleName == parts[1] && dependency.moduleVersion == parts[2]) {
+                            return [parts[3], parts[4]]
+                        } else {
+                            return null
+                        }
+                    } ?: [null, null]
+
+                    assert checksum != null: "Missing checksum declaration for $dependency.name"
+                    assert algorithm != null: "Missing algorithm declaration for $dependency.name"
+
+                    MessageDigest md = MessageDigest.getInstance(algorithm)
+
+                    artifact.file.eachByte 4096, { bytes, size ->
+                        md.update(bytes, 0, size)
+                    }
+                    final calculatedChecksum = md.digest().collect { String.format "%02x", it }.join()
+
+                    assert checksum == calculatedChecksum: "Checksum ($algorithm) does not match: $dependency.name"
+                }
+
+                logger.lifecycle("\u2705 $configuration: $dependency.name")
+            }
+        }
+    }
+
+    logger.lifecycle("Done successfully.\n")
+}

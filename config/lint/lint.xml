@@ -6,33 +6,6 @@
     <!-- We update dependecies as necessary. Just keep the warning as a reminder -->
     <issue id="GradleDependency" severity="warning"/>
 
-    <!-- We don't enforce checks regarding translation. Just keep the warning as a reminder -->
-    <issue id="DuplicateStrings" severity="warning"/>
-
-    <!-- UI Module -->
-
-    <!-- We might want to adress this in the future. See error explanation. -->
-    <issue id="SyntheticAccessor" severity="warning"/>
-
-    <!-- Duplicate IDs are intended to allow layout reuse. Save state is managed inside AddressDetailsInputLayout -->
-    <issue id="DuplicateIncludedIds">
-        <ignore path="src/main/res/layout/activity_open_invoice_details.xml"/>
-    </issue>
-
-    <!-- Weird typo error. Add new exceptions if necessary when adding translation files. -->
-    <issue id="Typos">
-        <ignore path="src/main/res/values-nb-rNO/strings.xml"/>
-    </issue>
-
-    <!-- False positive as the layout is not the root for the activity. -->
-    <issue id="Overdraw">
-        <ignore path="src/main/res/layout/item_two_line.xml"/>
-        <ignore path="src/main/res/layout/item_iban_suggestion.xml"/>
-    </issue>
-
-    <!-- We don't want to use the App Indexing Api -->
-    <issue id="GoogleAppIndexingApiWarning">
-        <ignore path="src/main/java/com/adyen/checkout/ui/internal/common/activity/RedirectHandlerActivity.java"/>
-    </issue>
-
+    <!-- We don't use App Indexing -->
+    <issue id="GoogleAppIndexingApiWarning" severity="ignore"/>
 </lint>

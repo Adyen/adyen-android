@@ -1,4 +1,4 @@
 <resources>
-    <string name="app_name">MARY &amp; MARX</string>
-    <string name="button_checkout">Checkout</string>
+    <string name="app_name">Adyen Checkout</string>
+    <string name="start_checkout">Start Checkout</string>
 </resources>

@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="utf-8"?>
+<manifest xmlns:android="http://schemas.android.com/apk/res/android"
+          package="com.adyen.checkout.dropin">
+
+    <uses-permission android:name="android.permission.WAKE_LOCK"/>
+
+    <application>
+        <activity
+            android:name=".activity.PaymentMethodPickerActivity"
+            android:theme="@style/Checkout.Translucent" />
+        <activity
+            android:name=".activity.ComponentActivity"
+            android:windowSoftInputMode="adjustResize"/>
+        <activity
+            android:name=".activity.LoadingActivity"
+            android:theme="@style/Checkout.Translucent"
+            android:launchMode="singleTask"
+            android:windowSoftInputMode="stateAlwaysHidden">
+            <intent-filter>
+                <action android:name="android.intent.action.VIEW"/>
+
+                <category android:name="android.intent.category.DEFAULT"/>
+                <category android:name="android.intent.category.BROWSABLE"/>
+
+                <data
+                    android:host="${applicationId}"
+                    android:scheme="${checkoutRedirectScheme}"/>
+            </intent-filter>
+        </activity>
+    </application>
+
+</manifest>

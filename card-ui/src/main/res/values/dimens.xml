@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+  ~ Copyright (c) 2019 Adyen N.V.
+  ~
+  ~ This file is open source and available under the MIT license. See the LICENSE file for more info.
+  ~
+  ~ Created by arman on 28/5/2019.
+  -->
+
+<resources>
+    <dimen name="cardList_top_margin">20dp</dimen>
+    <dimen name="payment_method_logo_width">32dp</dimen>
+    <dimen name="payment_method_logo_height">20dp</dimen>
+
+    <dimen name="payment_method_margin">26dp</dimen>
+</resources>

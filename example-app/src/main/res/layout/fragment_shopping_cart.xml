@@ -1,8 +1,0 @@
-<?xml version="1.0" encoding="utf-8"?>
-<ImageView xmlns:android="http://schemas.android.com/apk/res/android"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:paddingLeft="@dimen/standard_double_margin"
-    android:paddingRight="@dimen/standard_double_margin"
-    android:src="@drawable/checkout_window"
-    android:contentDescription="@null" />

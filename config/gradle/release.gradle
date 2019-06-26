@@ -1,0 +1,140 @@
+/*
+ * Copyright (c) 2019 Adyen N.V.
+ *
+ * This file is open source and available under the MIT license. See the LICENSE file for more info.
+ *
+ * Created by ran on 6/2/2019.
+ */
+
+apply plugin: "maven-publish"
+apply plugin: "com.jfrog.bintray"
+
+apply from: "../config/gradle/artifacts.gradle"
+
+// TODO: 03/01/2019 add support for signing of artifacts.
+
+final theGroupId = "com.adyen.checkout"
+final theArtifactId = project.mavenArtifactId
+final theVersion = project.version_name
+
+final theName = project.mavenArtifactName
+final theDescription = project.mavenArtifactDescription
+final theUrl = "https://github.com/Adyen/adyen-android"
+
+final theLicenseName = "MIT License"
+final theLicenseUrl = "https://opensource.org/licenses/MIT"
+
+final theOrganizationName = "Adyen N.V."
+final theOrganizationUrl = "https://www.adyen.com/"
+
+final theScmConnection = "scm:git:git://github.com/Adyen/adyen-android.git"
+final theScmUrl = "https://github.com/Adyen/adyen-android"
+
+project.afterEvaluate {
+    publishing {
+        publications {
+            bintrayMavenPublication(MavenPublication) {
+                groupId theGroupId
+                artifactId theArtifactId
+                version theVersion
+
+                artifact androidJavadocsJar
+                artifact androidSourcesJar
+                artifact bundleReleaseAar
+
+                pom {
+                    name = theName
+                    description = theDescription
+                    url = theUrl
+                    licenses {
+                        license {
+                            name = theLicenseName
+                            url = theLicenseUrl
+                        }
+                    }
+                    organization {
+                        name = theOrganizationName
+                        url = theOrganizationUrl
+                    }
+                    scm {
+                        connection = theScmConnection
+                        developerConnection = theScmConnection
+                        url = theScmUrl
+                    }
+                }
+
+                // Add dependencies to the POM file.
+                pom.withXml {
+                    logger.lifecycle("\nPublishing maven repository $theGroupId:$theArtifactId:$theVersion\n")
+
+                    final dependenciesNode = asNode().appendNode("dependencies")
+
+                    ext.addDependency = { dep, scope ->
+                        if (dep.name != 'unspecified') {
+                            final depGroup = dep.group != rootProject.name ? dep.group : theGroupId
+                            final depName = dep.name
+                            final depVersion = dep.version != 'unspecified' ? dep.version : theVersion
+
+                            final dependencyNode = dependenciesNode.appendNode("dependency")
+                            dependencyNode.appendNode("groupId", depGroup)
+                            dependencyNode.appendNode("artifactId", depName)
+                            dependencyNode.appendNode("version", depVersion)
+                            dependencyNode.appendNode("scope", scope)
+
+                            if (!dep.hasProperty("transitive") || !dep.transitive) {
+                                final exclusionNode = dependencyNode.appendNode("exclusions").appendNode("exclusion")
+                                exclusionNode.appendNode("groupId", "*")
+                                exclusionNode.appendNode("artifactId", "*")
+                            } else if (!dep.properties.excludeRules.empty) {
+                                final exclusionNode = dependencyNode.appendNode("exclusions").appendNode("exclusion")
+                                dep.properties.excludeRules.each { rule ->
+                                    exclusionNode.appendNode("groupId", rule.group ?: "*")
+                                    exclusionNode.appendNode("artifactId", rule.module ?: "*")
+                                }
+                            }
+                        }
+                    }
+
+                    logger.lifecycle("- Append api dependencies:")
+                    configurations.api.dependencies.each { dep -> addDependency(dep, "compile") }
+                    logger.lifecycle("- Append implementation dependencies:")
+                    configurations.implementation.dependencies.each { dep -> addDependency(dep, "runtime") }
+                }
+            }
+        }
+    }
+}
+
+bintray {
+    user = System.env.BINTRAY_USER
+    key = System.env.BINTRAY_KEY
+
+    publications = ["bintrayMavenPublication"]
+
+    dryRun = false
+    publish = false
+    override = true
+
+    pkg {
+        repo = "adyen-checkout-v3"
+        name = theArtifactId
+
+        websiteUrl = "https://github.com/Adyen/adyen-android"
+        issueTrackerUrl = "https://github.com/adyen-android/issues"
+        vcsUrl = "https://github.com/Adyen/adyen-android.git"
+        licenses = ["MIT"]
+
+        version {
+            name = theVersion
+            released = new Date()
+            vcsTag = theVersion
+
+            gpg {
+                sign = true
+                passphrase = System.env.BINTRAY_GPG_PASSPHRASE
+            }
+        }
+    }
+}
+
+bintrayUpload.dependsOn "ci"

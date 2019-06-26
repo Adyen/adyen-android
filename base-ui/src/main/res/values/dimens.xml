@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+  ~ Copyright (c) 2019 Adyen N.V.
+  ~
+  ~ This file is open source and available under the MIT license. See the LICENSE file for more info.
+  ~
+  ~ Created by caiof on 15/3/2019.
+  -->
+
+<resources>
+
+    <dimen name="standard_quarter_margin">4dp</dimen>
+    <dimen name="standard_half_margin">8dp</dimen>
+    <dimen name="standard_margin">16dp</dimen>
+    <dimen name="standard_double_margin">32dp</dimen>
+
+    <dimen name="logo_width">40dp</dimen>
+    <dimen name="logo_height">26dp</dimen>
+
+</resources>

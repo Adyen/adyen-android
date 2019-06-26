@@ -1,0 +1,2380 @@
+{
+  "groups": [
+    {
+      "name": "WeChatPay",
+      "types": [
+        "wechatpayQR",
+        "wechatpayWeb"
+      ]
+    },
+    {
+      "name": "AliPay",
+      "types": [
+        "alipay_hk"
+      ]
+    },
+    {
+      "name": "Credit Card",
+      "types": [
+        "amex",
+        "amex_androidpay",
+        "aura",
+        "bcmc",
+        "cartebancaire",
+        "cup",
+        "diners",
+        "discover",
+        "elo",
+        "girocard",
+        "hipercard",
+        "jcb",
+        "laser",
+        "maestro",
+        "mc",
+        "rupay",
+        "troy",
+        "uatp",
+        "visa"
+      ]
+    }
+  ],
+  "paymentMethods": [
+    {
+      "details": [
+        {
+          "details": [
+            {
+              "key": "ownerName",
+              "type": "text"
+            },
+            {
+              "key": "bankLocationId",
+              "type": "text"
+            },
+            {
+              "key": "bankAccountNumber",
+              "type": "text"
+            }
+          ],
+          "key": "bankAccount",
+          "type": "bankAccount"
+        },
+        {
+          "details": [
+            {
+              "key": "street",
+              "type": "text"
+            },
+            {
+              "key": "houseNumberOrName",
+              "type": "text"
+            },
+            {
+              "key": "city",
+              "type": "text"
+            },
+            {
+              "key": "postalCode",
+              "type": "text"
+            },
+            {
+              "key": "stateOrProvince",
+              "type": "text"
+            },
+            {
+              "key": "country",
+              "type": "text"
+            }
+          ],
+          "key": "billingAddress",
+          "type": "address"
+        }
+      ],
+      "name": "ACH Direct Debit",
+      "supportsRecurring": true,
+      "type": "ach"
+    },
+    {
+      "name": "Adyen Voucher",
+      "supportsRecurring": true,
+      "type": "adyen_test_voucher"
+    },
+    {
+      "details": [
+        {
+          "details": [
+            {
+              "key": "firstName",
+              "type": "text"
+            },
+            {
+              "key": "lastName",
+              "type": "text"
+            },
+            {
+              "items": [
+                {
+                  "id": "M",
+                  "name": "male"
+                },
+                {
+                  "id": "F",
+                  "name": "female"
+                }
+              ],
+              "key": "gender",
+              "type": "radio"
+            },
+            {
+              "key": "dateOfBirth",
+              "type": "date"
+            },
+            {
+              "key": "telephoneNumber",
+              "type": "tel"
+            },
+            {
+              "key": "shopperEmail",
+              "type": "emailAddress"
+            }
+          ],
+          "key": "personalDetails",
+          "type": "fieldSet"
+        },
+        {
+          "details": [
+            {
+              "key": "street",
+              "type": "text"
+            },
+            {
+              "key": "houseNumberOrName",
+              "type": "text"
+            },
+            {
+              "key": "city",
+              "type": "text"
+            },
+            {
+              "key": "postalCode",
+              "type": "text"
+            },
+            {
+              "key": "stateOrProvince",
+              "optional": true,
+              "type": "text"
+            },
+            {
+              "items": [
+                {
+                  "id": "NL",
+                  "name": "Netherlands"
+                },
+                {
+                  "id": "BE",
+                  "name": "Belgium"
+                }
+              ],
+              "key": "country",
+              "type": "select"
+            }
+          ],
+          "key": "billingAddress",
+          "type": "address"
+        },
+        {
+          "key": "separateDeliveryAddress",
+          "optional": true,
+          "type": "boolean",
+          "value": "false"
+        },
+        {
+          "details": [
+            {
+              "key": "street",
+              "type": "text"
+            },
+            {
+              "key": "houseNumberOrName",
+              "type": "text"
+            },
+            {
+              "key": "city",
+              "type": "text"
+            },
+            {
+              "key": "postalCode",
+              "type": "text"
+            },
+            {
+              "key": "stateOrProvince",
+              "optional": true,
+              "type": "text"
+            },
+            {
+              "items": [
+                {
+                  "id": "NL",
+                  "name": "Netherlands"
+                },
+                {
+                  "id": "BE",
+                  "name": "Belgium"
+                }
+              ],
+              "key": "country",
+              "type": "select"
+            }
+          ],
+          "key": "deliveryAddress",
+          "optional": true,
+          "type": "address"
+        }
+      ],
+      "name": "AfterPay Invoice",
+      "supportsRecurring": true,
+      "type": "afterpay_default"
+    },
+    {
+      "name": "AfterPay DirectDebit",
+      "supportsRecurring": true,
+      "type": "afterpay_directdebit"
+    },
+    {
+      "name": "AfterPay",
+      "supportsRecurring": true,
+      "type": "afterpaytouch"
+    },
+    {
+      "name": "AliPay HK",
+      "supportsRecurring": true,
+      "type": "alipay_hk"
+    },
+    {
+      "details": [
+        {
+          "key": "number",
+          "type": "text"
+        },
+        {
+          "key": "expiryMonth",
+          "type": "text"
+        },
+        {
+          "key": "expiryYear",
+          "type": "text"
+        },
+        {
+          "key": "cvc",
+          "type": "text"
+        },
+        {
+          "key": "holderName",
+          "optional": true,
+          "type": "text"
+        }
+      ],
+      "name": "Credit Card",
+      "type": "scheme"
+    },
+    {
+      "name": "Credit Card via AsiaPay",
+      "supportsRecurring": true,
+      "type": "asiapay"
+    },
+    {
+      "name": "China UnionPay",
+      "supportsRecurring": true,
+      "type": "asiapay_unionpay"
+    },
+    {
+      "name": "Baby Gift Card",
+      "type": "babygiftcard"
+    },
+    {
+      "name": "Baloto",
+      "supportsRecurring": true,
+      "type": "baloto"
+    },
+    {
+      "name": "BancNet",
+      "supportsRecurring": true,
+      "type": "bancnet"
+    },
+    {
+      "name": "Bank Transfer (BG)",
+      "supportsRecurring": true,
+      "type": "bankTransfer_BG"
+    },
+    {
+      "name": "Bank Transfer (CH)",
+      "supportsRecurring": true,
+      "type": "bankTransfer_CH"
+    },
+    {
+      "name": "Bank Transfer (DE)",
+      "supportsRecurring": true,
+      "type": "bankTransfer_DE"
+    },
+    {
+      "name": "Bank Transfer (FI)",
+      "supportsRecurring": true,
+      "type": "bankTransfer_FI"
+    },
+    {
+      "name": "Bank Transfer (GB)",
+      "supportsRecurring": true,
+      "type": "bankTransfer_GB"
+    },
+    {
+      "name": "Bank Transfer (HU)",
+      "supportsRecurring": true,
+      "type": "bankTransfer_HU"
+    },
+    {
+      "name": "SEPA Bank Transfer",
+      "supportsRecurring": true,
+      "type": "bankTransfer_IBAN"
+    },
+    {
+      "name": "Bank Transfer (IE)",
+      "supportsRecurring": true,
+      "type": "bankTransfer_IE"
+    },
+    {
+      "name": "Electronic Bank Transfer (MX)",
+      "supportsRecurring": true,
+      "type": "bankTransfer_MX_linked"
+    },
+    {
+      "name": "Bank Transfer (MX)",
+      "supportsRecurring": true,
+      "type": "bankTransfer_MX_offline"
+    },
+    {
+      "name": "Bank Transfer (NL)",
+      "supportsRecurring": true,
+      "type": "bankTransfer_NL"
+    },
+    {
+      "name": "Bank Transfer (PL)",
+      "supportsRecurring": true,
+      "type": "bankTransfer_PL"
+    },
+    {
+      "name": "Bank Transfer (SE)",
+      "supportsRecurring": true,
+      "type": "bankTransfer_SE"
+    },
+    {
+      "name": "Bank Transfer (US)",
+      "supportsRecurring": true,
+      "type": "bankTransfer_US"
+    },
+    {
+      "details": [
+        {
+          "key": "number",
+          "type": "text"
+        },
+        {
+          "key": "expiryMonth",
+          "type": "text"
+        },
+        {
+          "key": "expiryYear",
+          "type": "text"
+        },
+        {
+          "key": "holderName",
+          "optional": true,
+          "type": "text"
+        }
+      ],
+      "name": "Bancontact card",
+      "type": "bcmc"
+    },
+    {
+      "name": "Bijenkorf Cadeaucard",
+      "type": "bijcadeaucard"
+    },
+    {
+      "name": "99Bill",
+      "supportsRecurring": true,
+      "type": "bill99"
+    },
+    {
+      "details": [
+        {
+          "items": [
+            {
+              "id": "ATP_DIRECT",
+              "name": "Airtel Payment Bank"
+            },
+            {
+              "id": "ALB_DIRECT",
+              "name": "Allahabad Bank "
+            },
+            {
+              "id": "ADB_DIRECT",
+              "name": "Andhra Bank "
+            },
+            {
+              "id": "UTI_DIRECT",
+              "name": "Axis Bank "
+            },
+            {
+              "id": "BDN_DIRECT",
+              "name": "Bandhan bank"
+            },
+            {
+              "id": "BBK_DIRECT",
+              "name": "Bank of Bahrain and Kuwait"
+            },
+            {
+              "id": "BBR_DIRECT",
+              "name": "Bank of Baroda "
+            },
+            {
+              "id": "BBC_DIRECT",
+              "name": "Bank of Baroda - Corporate"
+            },
+            {
+              "id": "BOI_DIRECT",
+              "name": "Bank of India"
+            },
+            {
+              "id": "BOM_DIRECT",
+              "name": "Bank of Maharashtra"
+            },
+            {
+              "id": "BCB_DIRECT",
+              "name": "Bassien Catholic Co-Operative Bank "
+            },
+            {
+              "id": "BMN_DIRECT",
+              "name": "Bharatiya Mahila Bank"
+            },
+            {
+              "id": "CNB_DIRECT",
+              "name": "Canara Bank"
+            },
+            {
+              "id": "CSB_DIRECT",
+              "name": "Catholic Syrian Bank"
+            },
+            {
+              "id": "CBI_DIRECT",
+              "name": "Central Bank of India"
+            },
+            {
+              "id": "CUB_DIRECT",
+              "name": "City Union Bank"
+            },
+            {
+              "id": "CRP_DIRECT",
+              "name": "Corporation Bank"
+            },
+            {
+              "id": "COB_DIRECT",
+              "name": "Cosmos Bank"
+            },
+            {
+              "id": "DEN_DIRECT",
+              "name": "Dena Bank"
+            },
+            {
+              "id": "DBK_DIRECT",
+              "name": "Deutsche Bank"
+            },
+            {
+              "id": "DCB_DIRECT",
+              "name": "Development Credit Bank"
+            },
+            {
+              "id": "DLB_DIRECT",
+              "name": "Dhanlakshmi Bank - Retail Net Banking"
+            },
+            {
+              "id": "FBK_DIRECT",
+              "name": "Federal Bank"
+            },
+            {
+              "id": "HDF_DIRECT",
+              "name": "HDFC Bank"
+            },
+            {
+              "id": "ICI_DIRECT",
+              "name": "ICICI Bank "
+            },
+            {
+              "id": "IDB_DIRECT",
+              "name": "IDBI Bank - Retail Net Banking"
+            },
+            {
+              "id": "IDN_DIRECT",
+              "name": "IDFC Bank"
+            },
+            {
+              "id": "INB_DIRECT",
+              "name": "Indian Bank"
+            },
+            {
+              "id": "IOB_DIRECT",
+              "name": "Indian Overseas Bank"
+            },
+            {
+              "id": "IDS_DIRECT",
+              "name": "IndusInd Bank"
+            },
+            {
+              "id": "JKB_DIRECT",
+              "name": "Jammu & Kashmir Bank"
+            },
+            {
+              "id": "JSB_DIRECT",
+              "name": "Janata Sahakari Bank"
+            },
+            {
+              "id": "KJB_DIRECT",
+              "name": "Kalyan Janata Sahakari Bank"
+            },
+            {
+              "id": "KBL_DIRECT",
+              "name": "Karnataka Bank Ltd"
+            },
+            {
+              "id": "KVB_DIRECT",
+              "name": "Karur Vysya Bank"
+            },
+            {
+              "id": "162_DIRECT",
+              "name": "Kotak Bank"
+            },
+            {
+              "id": "LVC_DIRECT",
+              "name": "Laxmi Vilas Bank - Corporate "
+            },
+            {
+              "id": "LVR_DIRECT",
+              "name": "Laxmi Vilas Bank - Retail"
+            },
+            {
+              "id": "OBC_DIRECT",
+              "name": "Oriental Bank of Commerce"
+            },
+            {
+              "id": "PNY_DIRECT",
+              "name": "PNB YUVA Netbanking "
+            },
+            {
+              "id": "PMC_DIRECT",
+              "name": "Punjab & Maharastra Co-op Bank"
+            },
+            {
+              "id": "PSB_DIRECT",
+              "name": "Punjab & Sind Bank"
+            },
+            {
+              "id": "PNB_DIRECT",
+              "name": "Punjab National Bank "
+            },
+            {
+              "id": "CPN_DIRECT",
+              "name": "Punjab National Bank - Corporate "
+            },
+            {
+              "id": "RBL_DIRECT",
+              "name": "Ratnakar Bank"
+            },
+            {
+              "id": "SWB_DIRECT",
+              "name": "Saraswat Bank"
+            },
+            {
+              "id": "SIB_DIRECT",
+              "name": "South Indian Bank"
+            },
+            {
+              "id": "SCB_DIRECT",
+              "name": "Standard Chartered Bank"
+            },
+            {
+              "id": "SBI_DIRECT",
+              "name": "State Bank of India"
+            },
+            {
+              "id": "SYD_DIRECT",
+              "name": "Syndicate Bank"
+            },
+            {
+              "id": "TJB_DIRECT",
+              "name": "TJSB Bank"
+            },
+            {
+              "id": "TMB_DIRECT",
+              "name": "Tamilnad Mercantile Bank Ltd"
+            },
+            {
+              "id": "TNC_DIRECT",
+              "name": "Tamilnadu State Co-op Bank"
+            },
+            {
+              "id": "MSB_DIRECT",
+              "name": "The Mehsana Urban Co Op Bank Ltd"
+            },
+            {
+              "id": "UBI_DIRECT",
+              "name": "Union Bank of India"
+            },
+            {
+              "id": "UNI_DIRECT",
+              "name": "United Bank of India"
+            },
+            {
+              "id": "VJB_DIRECT",
+              "name": "Vijaya Bank"
+            },
+            {
+              "id": "YBK_DIRECT",
+              "name": "Yes Bank Ltd"
+            },
+            {
+              "id": "DBS_DIRECT",
+              "name": "digibank by DBS"
+            }
+          ],
+          "key": "issuer",
+          "type": "select"
+        }
+      ],
+      "name": "Online Banking India",
+      "supportsRecurring": true,
+      "type": "billdesk_online"
+    },
+    {
+      "name": "UPI",
+      "supportsRecurring": true,
+      "type": "billdesk_upi"
+    },
+    {
+      "name": "Wallets India",
+      "supportsRecurring": true,
+      "type": "billdesk_wallet"
+    },
+    {
+      "name": "Boleto",
+      "supportsRecurring": true,
+      "type": "boleto"
+    },
+    {
+      "name": "Boleto Bancario via Santander",
+      "supportsRecurring": true,
+      "type": "boletobancario_santander"
+    },
+    {
+      "name": "Bradesco",
+      "supportsRecurring": true,
+      "type": "bradesco"
+    },
+    {
+      "name": "Cash-Ticket",
+      "type": "cashticket"
+    },
+    {
+      "name": "CashU",
+      "supportsRecurring": true,
+      "type": "cashu"
+    },
+    {
+      "name": "CCAvenue",
+      "supportsRecurring": true,
+      "type": "ccavenue"
+    },
+    {
+      "details": [
+        {
+          "key": "shopperEmail",
+          "type": "emailAddress"
+        },
+        {
+          "key": "shopper.firstName",
+          "type": "text"
+        },
+        {
+          "key": "shopper.lastName",
+          "type": "text"
+        },
+        {
+          "key": "telephoneNumber",
+          "type": "tel"
+        }
+      ],
+      "name": "Mula Checkout",
+      "supportsRecurring": true,
+      "type": "cellulant"
+    },
+    {
+      "name": "ClickandBuy",
+      "supportsRecurring": true,
+      "type": "clickandbuy"
+    },
+    {
+      "name": "Paiement en 3 fois par Cartes Bancaires",
+      "supportsRecurring": true,
+      "type": "cofinoga_3xcb"
+    },
+    {
+      "details": [
+        {
+          "key": "number",
+          "type": "text"
+        },
+        {
+          "key": "expiryMonth",
+          "type": "text"
+        },
+        {
+          "key": "expiryYear",
+          "type": "text"
+        },
+        {
+          "key": "cvc",
+          "type": "text"
+        },
+        {
+          "key": "holderName",
+          "optional": true,
+          "type": "text"
+        },
+        {
+          "key": "telephoneNumber",
+          "optional": true,
+          "type": "text"
+        }
+      ],
+      "name": "ExpressPay",
+      "supportsRecurring": true,
+      "type": "cup"
+    },
+    {
+      "name": "custom_settlement",
+      "supportsRecurring": true,
+      "type": "custom_settlement"
+    },
+    {
+      "name": "DineroMail",
+      "supportsRecurring": true,
+      "type": "dineromail"
+    },
+    {
+      "name": "Online bank transfer.",
+      "supportsRecurring": true,
+      "type": "directEbanking"
+    },
+    {
+      "name": "Direct Debit Brazil - Banco do Brazil",
+      "supportsRecurring": true,
+      "type": "directdebit_BR_bancodobrasil"
+    },
+    {
+      "name": "Direct Debit Brazil - Bradesco",
+      "supportsRecurring": true,
+      "type": "directdebit_BR_bradesco"
+    },
+    {
+      "name": "Direct Debit Brazil - Caixa Economica Federal",
+      "supportsRecurring": true,
+      "type": "directdebit_BR_caixa"
+    },
+    {
+      "name": "Direct Debit Brazil - HSBC",
+      "supportsRecurring": true,
+      "type": "directdebit_BR_hsbc"
+    },
+    {
+      "name": "Direct Debit Brazil - Itau",
+      "supportsRecurring": true,
+      "type": "directdebit_BR_itau"
+    },
+    {
+      "name": "Direct Debit Brazil - Santander",
+      "supportsRecurring": true,
+      "type": "directdebit_BR_santander"
+    },
+    {
+      "name": "BACS Direct Debit",
+      "supportsRecurring": true,
+      "type": "directdebit_GB"
+    },
+    {
+      "name": "Eenmalige machtiging",
+      "supportsRecurring": true,
+      "type": "directdebit_NL"
+    },
+    {
+      "details": [
+        {
+          "key": "shopperEmail",
+          "type": "emailAddress"
+        },
+        {
+          "key": "firstName",
+          "type": "text"
+        },
+        {
+          "key": "lastName",
+          "type": "text"
+        },
+        {
+          "key": "infix",
+          "optional": true,
+          "type": "text"
+        }
+      ],
+      "name": "DOKU",
+      "supportsRecurring": true,
+      "type": "doku"
+    },
+    {
+      "name": "Alfamart",
+      "supportsRecurring": true,
+      "type": "doku_alfamart"
+    },
+    {
+      "name": "ATM Mandiri VA LITE",
+      "supportsRecurring": true,
+      "type": "doku_atm_mandiri_va_lite"
+    },
+    {
+      "name": "KlikBCA",
+      "supportsRecurring": true,
+      "type": "doku_bca_klikpay"
+    },
+    {
+      "name": "BCA Bank Transfer",
+      "supportsRecurring": true,
+      "type": "doku_bca_va"
+    },
+    {
+      "name": "BNI Debit Online (VCN)",
+      "supportsRecurring": true,
+      "type": "doku_bni"
+    },
+    {
+      "name": "BNI VA",
+      "supportsRecurring": true,
+      "type": "doku_bni_va"
+    },
+    {
+      "name": "BRI VA",
+      "supportsRecurring": true,
+      "type": "doku_bri_va"
+    },
+    {
+      "name": "BRI e-Pay",
+      "supportsRecurring": true,
+      "type": "doku_briepay"
+    },
+    {
+      "name": "CIMB VA",
+      "supportsRecurring": true,
+      "type": "doku_cimb_va"
+    },
+    {
+      "name": "Danamon VA",
+      "supportsRecurring": true,
+      "type": "doku_danamon_va"
+    },
+    {
+      "name": "Indomaret",
+      "supportsRecurring": true,
+      "type": "doku_indomaret"
+    },
+    {
+      "name": "Mandiri ClickPay",
+      "supportsRecurring": true,
+      "type": "doku_mandiri_clickpay"
+    },
+    {
+      "name": "Mandiri VA",
+      "supportsRecurring": true,
+      "type": "doku_mandiri_va"
+    },
+    {
+      "name": "ATM Permata",
+      "supportsRecurring": true,
+      "type": "doku_permata_atm"
+    },
+    {
+      "name": "Bank Transfer",
+      "supportsRecurring": true,
+      "type": "doku_permata_lite_atm"
+    },
+    {
+      "name": "Sinarmas ATM",
+      "supportsRecurring": true,
+      "type": "doku_sinarmas_va"
+    },
+    {
+      "name": "DOKU wallet",
+      "supportsRecurring": true,
+      "type": "doku_wallet"
+    },
+    {
+      "details": [
+        {
+          "items": [
+            {
+              "id": "92",
+              "name": "Bank Spółdzielczy w Brodnicy"
+            },
+            {
+              "id": "11",
+              "name": "Bank transfer / postal"
+            },
+            {
+              "id": "74",
+              "name": "Banki Spółdzielcze"
+            },
+            {
+              "id": "90",
+              "name": "BGŻ BNP Paribas PBL"
+            },
+            {
+              "id": "73",
+              "name": "BLIK"
+            },
+            {
+              "id": "87",
+              "name": "Credit Agricole PBL"
+            },
+            {
+              "id": "83",
+              "name": "EnveloBank"
+            },
+            {
+              "id": "55",
+              "name": "erata - dotpay installment"
+            },
+            {
+              "id": "93",
+              "name": "eSKOK"
+            },
+            {
+              "id": "56",
+              "name": "eurobank płatności online"
+            },
+            {
+              "id": "76",
+              "name": "Getin Bank PBL"
+            },
+            {
+              "id": "81",
+              "name": "Idea Cloud"
+            },
+            {
+              "id": "7",
+              "name": "ING Corporate customers"
+            },
+            {
+              "id": "35",
+              "name": "Kantor Polski"
+            },
+            {
+              "id": "44",
+              "name": "Millennium - Płatności Internetowe"
+            },
+            {
+              "id": "10",
+              "name": "Millennium Corporate customers"
+            },
+            {
+              "id": "68",
+              "name": "mRaty"
+            },
+            {
+              "id": "1",
+              "name": "mTransfer"
+            },
+            {
+              "id": "91",
+              "name": "Nest Bank"
+            },
+            {
+              "id": "80",
+              "name": "Noble Pay"
+            },
+            {
+              "id": "50",
+              "name": "Pay Way Toyota Bank"
+            },
+            {
+              "id": "45",
+              "name": "Pay with Alior Bank"
+            },
+            {
+              "id": "65",
+              "name": "Paylink Idea Bank"
+            },
+            {
+              "id": "36",
+              "name": "Pekao24Przelew"
+            },
+            {
+              "id": "70",
+              "name": "Pocztowy24"
+            },
+            {
+              "id": "6",
+              "name": "Przelew24"
+            },
+            {
+              "id": "46",
+              "name": "Płacę z Citi Handlowy"
+            },
+            {
+              "id": "38",
+              "name": "Płacę z ING"
+            },
+            {
+              "id": "2",
+              "name": "Płacę z Inteligo"
+            },
+            {
+              "id": "4",
+              "name": "Płacę z iPKO"
+            },
+            {
+              "id": "72",
+              "name": "Płacę z Orange"
+            },
+            {
+              "id": "66",
+              "name": "Płacę z PBS"
+            },
+            {
+              "id": "75",
+              "name": "Płacę z Plus Bank"
+            },
+            {
+              "id": "51",
+              "name": "Płać z BOŚ"
+            },
+            {
+              "id": "48",
+              "name": "R-Przelew"
+            },
+            {
+              "id": "88",
+              "name": "Raiffeisen"
+            },
+            {
+              "id": "52",
+              "name": "SkyCash"
+            },
+            {
+              "id": "58",
+              "name": "Szybkie Platnosci Internetowe z Deutsche Bank PBC"
+            },
+            {
+              "id": "60",
+              "name": "T-Mobile usługi bankowe"
+            },
+            {
+              "id": "21",
+              "name": "VIA - Moje Rachunki"
+            },
+            {
+              "id": "84",
+              "name": "Volkswagen Bank direct"
+            },
+            {
+              "id": "31",
+              "name": "Zaplac w Zabce i we Freshmarket"
+            },
+            {
+              "id": "24",
+              "name": "mPay"
+            }
+          ],
+          "key": "issuer",
+          "type": "select"
+        }
+      ],
+      "name": "Local Polish Payment Methods",
+      "supportsRecurring": true,
+      "type": "dotpay"
+    },
+    {
+      "name": "Dragonpay Prepaid Credits",
+      "supportsRecurring": true,
+      "type": "dragonpay_credits"
+    },
+    {
+      "name": "Online Banking",
+      "supportsRecurring": true,
+      "type": "dragonpay_ebanking"
+    },
+    {
+      "name": "GCash",
+      "supportsRecurring": true,
+      "type": "dragonpay_gcash"
+    },
+    {
+      "name": "Over The Counter Banks",
+      "supportsRecurring": true,
+      "type": "dragonpay_otc_banking"
+    },
+    {
+      "name": "OTC non-Bank via Dragonpay",
+      "supportsRecurring": true,
+      "type": "dragonpay_otc_non_banking"
+    },
+    {
+      "name": "Convenience Stores",
+      "supportsRecurring": true,
+      "type": "dragonpay_otc_philippines"
+    },
+    {
+      "name": "eagleeye_voucher",
+      "type": "eagleeye_voucher"
+    },
+    {
+      "name": "Finnish E-Banking",
+      "supportsRecurring": true,
+      "type": "ebanking_FI"
+    },
+    {
+      "name": "Pay-easy ATM",
+      "supportsRecurring": true,
+      "type": "econtext_atm"
+    },
+    {
+      "name": "Online Banking",
+      "supportsRecurring": true,
+      "type": "econtext_online"
+    },
+    {
+      "name": "7-Eleven",
+      "supportsRecurring": true,
+      "type": "econtext_seven_eleven"
+    },
+    {
+      "name": "Convenience Stores",
+      "supportsRecurring": true,
+      "type": "econtext_stores"
+    },
+    {
+      "name": "Lastschrift (ELV)",
+      "supportsRecurring": true,
+      "type": "elv"
+    },
+    {
+      "details": [
+        {
+          "items": [
+            {
+              "id": "550",
+              "name": "Česká spořitelna"
+            },
+            {
+              "id": "231",
+              "name": "POP Pankki"
+            },
+            {
+              "id": "551",
+              "name": "Komerční banka"
+            },
+            {
+              "id": "232",
+              "name": "Aktia"
+            },
+            {
+              "id": "552",
+              "name": "Raiffeisen"
+            },
+            {
+              "id": "750",
+              "name": "Swedbank"
+            },
+            {
+              "id": "211",
+              "name": "Nordea"
+            },
+            {
+              "id": "233",
+              "name": "Säästöpankki"
+            },
+            {
+              "id": "553",
+              "name": "ČSOB"
+            },
+            {
+              "id": "751",
+              "name": "SEB"
+            },
+            {
+              "id": "234",
+              "name": "S-Pankki"
+            },
+            {
+              "id": "554",
+              "name": "Moneta"
+            },
+            {
+              "id": "752",
+              "name": "Nordea"
+            },
+            {
+              "id": "235",
+              "name": "OmaSP"
+            },
+            {
+              "id": "213",
+              "name": "Op-Pohjola"
+            },
+            {
+              "id": "555",
+              "name": "UniCredit"
+            },
+            {
+              "id": "753",
+              "name": "LHV"
+            },
+            {
+              "id": "556",
+              "name": "Fio"
+            },
+            {
+              "id": "557",
+              "name": "mBank"
+            },
+            {
+              "id": "216",
+              "name": "Handelsbanken"
+            },
+            {
+              "id": "260",
+              "name": "Länsförsäkringar"
+            },
+            {
+              "id": "240",
+              "name": "BankDeposit"
+            },
+            {
+              "id": "265",
+              "name": "Sparbanken"
+            },
+            {
+              "id": "640",
+              "name": "BankDeposit"
+            },
+            {
+              "id": "200",
+              "name": "Ålandsbanken"
+            },
+            {
+              "id": "720",
+              "name": "Swedbank"
+            },
+            {
+              "id": "940",
+              "name": "Swedbank"
+            },
+            {
+              "id": "204",
+              "name": "Danske Bank"
+            },
+            {
+              "id": "721",
+              "name": "SEB"
+            },
+            {
+              "id": "941",
+              "name": "SEB"
+            },
+            {
+              "id": "722",
+              "name": "DNB"
+            },
+            {
+              "id": "942",
+              "name": "Citadele"
+            },
+            {
+              "id": "205",
+              "name": "Handelsbanken"
+            },
+            {
+              "id": "723",
+              "name": "Šiaulių bankas"
+            },
+            {
+              "id": "943",
+              "name": "DNB"
+            },
+            {
+              "id": "206",
+              "name": "Nordea"
+            },
+            {
+              "id": "724",
+              "name": "Nordea"
+            },
+            {
+              "id": "207",
+              "name": "SEB"
+            },
+            {
+              "id": "208",
+              "name": "Skandiabanken"
+            },
+            {
+              "id": "209",
+              "name": "Swedbank"
+            }
+          ],
+          "key": "issuer",
+          "type": "select"
+        }
+      ],
+      "name": "Bank Payment",
+      "supportsRecurring": true,
+      "type": "entercash"
+    },
+    {
+      "name": "Nationale Entertainment Card",
+      "type": "entertainmentcard"
+    },
+    {
+      "details": [
+        {
+          "items": [
+            {
+              "id": "d5d5b133-1c0d-4c08-b2be-3c9b116dc326",
+              "name": "Dolomitenbank"
+            },
+            {
+              "id": "ee9fc487-ebe0-486c-8101-17dce5141a67",
+              "name": "Raiffeissen Bankengruppe"
+            },
+            {
+              "id": "6765e225-a0dc-4481-9666-e26303d4f221",
+              "name": "Hypo Tirol Bank AG"
+            },
+            {
+              "id": "8b0bfeea-fbb0-4337-b3a1-0e25c0f060fc",
+              "name": "Sparda Bank Wien"
+            },
+            {
+              "id": "1190c4d1-b37a-487e-9355-e0a067f54a9f",
+              "name": "Schoellerbank AG"
+            },
+            {
+              "id": "e2e97aaa-de4c-4e18-9431-d99790773433",
+              "name": "Volksbank Gruppe"
+            },
+            {
+              "id": "bb7d223a-17d5-48af-a6ef-8a2bf5a4e5d9",
+              "name": "Immo-Bank"
+            },
+            {
+              "id": "e6819e7a-f663-414b-92ec-cf7c82d2f4e5",
+              "name": "Bank Austria"
+            },
+            {
+              "id": "eff103e6-843d-48b7-a6e6-fbd88f511b11",
+              "name": "Easybank AG"
+            },
+            {
+              "id": "25942cc9-617d-42a1-89ba-d1ab5a05770a",
+              "name": "VR-BankBraunau"
+            },
+            {
+              "id": "4a0a975b-0594-4b40-9068-39f77b3a91f9",
+              "name": "Volkskreditbank"
+            },
+            {
+              "id": "3fdc41fc-3d3d-4ee3-a1fe-cd79cfd58ea3",
+              "name": "Erste Bank und Sparkassen"
+            },
+            {
+              "id": "ba7199cc-f057-42f2-9856-2378abf21638",
+              "name": "BAWAG P.S.K. Gruppe"
+            }
+          ],
+          "key": "issuer",
+          "type": "select"
+        }
+      ],
+      "name": "EPS",
+      "supportsRecurring": true,
+      "type": "eps"
+    },
+    {
+      "name": "3x Oney",
+      "supportsRecurring": true,
+      "type": "facilypay_3x"
+    },
+    {
+      "name": "4x Oney",
+      "supportsRecurring": true,
+      "type": "facilypay_4x"
+    },
+    {
+      "name": "Fashioncheque",
+      "type": "fashioncheque"
+    },
+    {
+      "name": "Generic GiftCard",
+      "type": "genericgiftcard"
+    },
+    {
+      "name": "GiftFor2",
+      "type": "giftfor2card"
+    },
+    {
+      "details": [
+        {
+          "key": "bic",
+          "type": "text"
+        }
+      ],
+      "name": "GiroPay",
+      "supportsRecurring": true,
+      "type": "giropay"
+    },
+    {
+      "name": "Givex",
+      "type": "givex"
+    },
+    {
+      "name": "Globe GCash",
+      "supportsRecurring": true,
+      "type": "globegcash"
+    },
+    {
+      "name": "Goldsmiths Card",
+      "type": "goldsmithscard"
+    },
+    {
+      "name": "Hallmark Card",
+      "type": "hallmarkcard"
+    },
+    {
+      "name": "HDFC",
+      "supportsRecurring": true,
+      "type": "hdfc"
+    },
+    {
+      "details": [
+        {
+          "items": [
+            {
+              "id": "1121",
+              "name": "Test Issuer"
+            },
+            {
+              "id": "1154",
+              "name": "Test Issuer 5"
+            },
+            {
+              "id": "1153",
+              "name": "Test Issuer 4"
+            },
+            {
+              "id": "1152",
+              "name": "Test Issuer 3"
+            },
+            {
+              "id": "1151",
+              "name": "Test Issuer 2"
+            },
+            {
+              "id": "1162",
+              "name": "Test Issuer Cancelled"
+            },
+            {
+              "id": "1161",
+              "name": "Test Issuer Pending"
+            },
+            {
+              "id": "1160",
+              "name": "Test Issuer Refused"
+            },
+            {
+              "id": "1159",
+              "name": "Test Issuer 10"
+            },
+            {
+              "id": "1158",
+              "name": "Test Issuer 9"
+            },
+            {
+              "id": "1157",
+              "name": "Test Issuer 8"
+            },
+            {
+              "id": "1156",
+              "name": "Test Issuer 7"
+            },
+            {
+              "id": "1155",
+              "name": "Test Issuer 6"
+            },
+            {
+              "id": "804",
+              "name": "Handelsbanken"
+            }
+          ],
+          "key": "issuer",
+          "type": "select"
+        }
+      ],
+      "name": "iDEAL",
+      "supportsRecurring": true,
+      "type": "ideal"
+    },
+    {
+      "name": "Korean Account Transfer (IniPay)",
+      "supportsRecurring": true,
+      "type": "inicisIniPay_accounttransfer"
+    },
+    {
+      "name": "Korean Credit Cards (IniPay)",
+      "supportsRecurring": true,
+      "type": "inicisIniPay_creditcard"
+    },
+    {
+      "name": "Korean Mobile Phone (IniPay)",
+      "supportsRecurring": true,
+      "type": "inicisIniPay_mobilephone"
+    },
+    {
+      "name": "Korean Virtual Account (IniPay)",
+      "supportsRecurring": true,
+      "type": "inicisIniPay_virtualaccount"
+    },
+    {
+      "name": "Korean Account Transfer (Mobile)",
+      "supportsRecurring": true,
+      "type": "inicisMobile_accounttransfer"
+    },
+    {
+      "name": "Korean Credit Cards (Mobile)",
+      "supportsRecurring": true,
+      "type": "inicisMobile_creditcard"
+    },
+    {
+      "name": "Korean Mobile Phone (Mobile)",
+      "supportsRecurring": true,
+      "type": "inicisMobile_mobilephone"
+    },
+    {
+      "name": "Korean Virtual Account (Mobile)",
+      "supportsRecurring": true,
+      "type": "inicisMobile_virtualaccount"
+    },
+    {
+      "name": "Korean Credit Cards",
+      "supportsRecurring": true,
+      "type": "inicis_creditcard"
+    },
+    {
+      "name": "Interac® Online",
+      "supportsRecurring": true,
+      "type": "interac"
+    },
+    {
+      "name": "Instant EFT",
+      "supportsRecurring": true,
+      "type": "ipay"
+    },
+    {
+      "name": "iPay88",
+      "supportsRecurring": true,
+      "type": "ipay88"
+    },
+    {
+      "name": "isracard",
+      "supportsRecurring": true,
+      "type": "isracard"
+    },
+    {
+      "name": "Phone Payment",
+      "supportsRecurring": true,
+      "type": "ivr"
+    },
+    {
+      "name": "Landline phone",
+      "supportsRecurring": true,
+      "type": "ivrLandline"
+    },
+    {
+      "name": "Mobile phone",
+      "supportsRecurring": true,
+      "type": "ivrMobile"
+    },
+    {
+      "name": "Kado Wereld",
+      "type": "kadowereld"
+    },
+    {
+      "name": "Karen Millen Card",
+      "supportsRecurring": true,
+      "type": "karenmillen"
+    },
+    {
+      "name": "Karen Millen GiftCard",
+      "type": "karenmillengiftcard"
+    },
+    {
+      "name": "Bank Transfer",
+      "supportsRecurring": true,
+      "type": "kcp_banktransfer"
+    },
+    {
+      "name": "Korea–issued cards",
+      "supportsRecurring": true,
+      "type": "kcp_creditcard"
+    },
+    {
+      "name": "PayCo",
+      "supportsRecurring": true,
+      "type": "kcp_payco"
+    },
+    {
+      "name": "Klarna B2B",
+      "supportsRecurring": true,
+      "type": "klarna_b2b"
+    },
+    {
+      "name": "klarna_paynow",
+      "supportsRecurring": true,
+      "type": "klarna_paynow"
+    },
+    {
+      "name": "klarnapayments",
+      "supportsRecurring": true,
+      "type": "klarnapayments"
+    },
+    {
+      "name": "klarnapayments_account",
+      "supportsRecurring": true,
+      "type": "klarnapayments_account"
+    },
+    {
+      "name": "China Credit Card",
+      "supportsRecurring": true,
+      "type": "lianlianpay_creditcard"
+    },
+    {
+      "name": "China Debit Card",
+      "supportsRecurring": true,
+      "type": "lianlianpay_debitcard"
+    },
+    {
+      "name": "China Online Banking",
+      "supportsRecurring": true,
+      "type": "lianlianpay_ebanking"
+    },
+    {
+      "name": "Mappin & Webb Card",
+      "type": "mappinwebbcard"
+    },
+    {
+      "name": "Mercado Pago",
+      "supportsRecurring": true,
+      "type": "mercadopago"
+    },
+    {
+      "name": "AliPay via MOLPay",
+      "supportsRecurring": true,
+      "type": "molpay_alipay"
+    },
+    {
+      "name": "7-Eleven",
+      "supportsRecurring": true,
+      "type": "molpay_cash"
+    },
+    {
+      "name": "CIMB Virtual Account",
+      "supportsRecurring": true,
+      "type": "molpay_cimb_va"
+    },
+    {
+      "name": "Malaysia E-Banking via MOLPay",
+      "supportsRecurring": true,
+      "type": "molpay_ebanking_MY"
+    },
+    {
+      "details": [
+        {
+          "items": [
+            {
+              "id": "molpay_krungsribank",
+              "name": "Krungsri Bank"
+            },
+            {
+              "id": "molpay_krungthaibank",
+              "name": "Krung Thai Bank"
+            },
+            {
+              "id": "molpay_siamcommercialbank",
+              "name": "The Siam Commercial Bank"
+            },
+            {
+              "id": "molpay_bangkokbank",
+              "name": "Bangkok Bank"
+            }
+          ],
+          "key": "issuer",
+          "type": "select"
+        }
+      ],
+      "name": "Thailand E-Banking",
+      "supportsRecurring": true,
+      "type": "molpay_ebanking_TH"
+    },
+    {
+      "details": [
+        {
+          "items": [
+            {
+              "id": "vtcpay-bidv",
+              "name": "BIDV"
+            },
+            {
+              "id": "vtcpay-vietinbank",
+              "name": "Vietinbank"
+            },
+            {
+              "id": "vtcpay-agribank",
+              "name": "Agribank"
+            },
+            {
+              "id": "vtcpay-sacombank",
+              "name": "Sacombank"
+            },
+            {
+              "id": "vtcpay-mb",
+              "name": "MB Bank"
+            },
+            {
+              "id": "vtcpay-maritimebank",
+              "name": "MaritimeBank"
+            },
+            {
+              "id": "vtcpay-dongabank",
+              "name": "DongABank"
+            },
+            {
+              "id": "vtcpay-vietcombank",
+              "name": "Vietcombank"
+            },
+            {
+              "id": "vtcpay-acb",
+              "name": "ACB"
+            },
+            {
+              "id": "vtcpay-techcombank",
+              "name": "Techcombank"
+            }
+          ],
+          "key": "issuer",
+          "type": "select"
+        }
+      ],
+      "name": "Vietnam E-Banking",
+      "supportsRecurring": true,
+      "type": "molpay_ebanking_VN"
+    },
+    {
+      "details": [
+        {
+          "items": [
+            {
+              "id": "fpx_bimb",
+              "name": "Bank Islam"
+            },
+            {
+              "id": "fpx_uob",
+              "name": "UOB Bank"
+            },
+            {
+              "id": "fpx_cimbclicks",
+              "name": "CIMB Clicks"
+            },
+            {
+              "id": "fpx_kfh",
+              "name": "Kuwait Finance House"
+            },
+            {
+              "id": "fpx_rhb",
+              "name": "RHB Now"
+            },
+            {
+              "id": "fpx_abmb",
+              "name": "Alliance Bank"
+            },
+            {
+              "id": "fpx_hsbc",
+              "name": "HSBC"
+            },
+            {
+              "id": "fpx_amb",
+              "name": "Am Online"
+            },
+            {
+              "id": "fpx_ocbc",
+              "name": "OCBC Bank"
+            },
+            {
+              "id": "fpx_abb",
+              "name": "Affin Bank"
+            },
+            {
+              "id": "fpx_scb",
+              "name": "Standard Chartered Bank"
+            },
+            {
+              "id": "fpx_pbb",
+              "name": "Public Bank"
+            },
+            {
+              "id": "fpx_bsn",
+              "name": "Bank Simpanan Nasional"
+            },
+            {
+              "id": "fpx_bmmb",
+              "name": "Bank Muamalat"
+            },
+            {
+              "id": "fpx_hlb",
+              "name": "Hong Leong Connect"
+            },
+            {
+              "id": "fpx_mb2u",
+              "name": "Maybank2u"
+            },
+            {
+              "id": "fpx_bkrm",
+              "name": "Bank Rakyat"
+            }
+          ],
+          "key": "issuer",
+          "type": "select"
+        }
+      ],
+      "name": "Malaysia E-Banking",
+      "supportsRecurring": true,
+      "type": "molpay_ebanking_fpx_MY"
+    },
+    {
+      "name": "eNETS Debit",
+      "supportsRecurring": true,
+      "type": "molpay_enetsd"
+    },
+    {
+      "name": "epay",
+      "supportsRecurring": true,
+      "type": "molpay_epay"
+    },
+    {
+      "name": "Esapay",
+      "supportsRecurring": true,
+      "type": "molpay_esapay"
+    },
+    {
+      "name": "MyClear FPX",
+      "supportsRecurring": true,
+      "type": "molpay_fpx"
+    },
+    {
+      "name": "Maybank2u",
+      "supportsRecurring": true,
+      "type": "molpay_maybank2u"
+    },
+    {
+      "name": "Nganluong",
+      "supportsRecurring": true,
+      "type": "molpay_nganluong"
+    },
+    {
+      "name": "Tesco Lotus",
+      "supportsRecurring": true,
+      "type": "molpay_paysbuy"
+    },
+    {
+      "name": "MOLPoints",
+      "supportsRecurring": true,
+      "type": "molpay_points"
+    },
+    {
+      "name": "RHB Now",
+      "supportsRecurring": true,
+      "type": "molpay_rhb"
+    },
+    {
+      "name": "SAM by SingPost",
+      "supportsRecurring": true,
+      "type": "molpay_singpost"
+    },
+    {
+      "name": "MOLWallet",
+      "supportsRecurring": true,
+      "type": "molpay_wallet"
+    },
+    {
+      "name": "MoMo ATM",
+      "supportsRecurring": true,
+      "type": "momo_atm"
+    },
+    {
+      "details": [
+        {
+          "key": "returnUrlQueryString",
+          "type": "text"
+        }
+      ],
+      "name": "MoMo E-Wallet",
+      "supportsRecurring": true,
+      "type": "momo_wallet"
+    },
+    {
+      "details": [
+        {
+          "key": "returnUrlQueryString",
+          "type": "text"
+        }
+      ],
+      "name": "momo_wallet_app",
+      "supportsRecurring": true,
+      "type": "momo_wallet_app"
+    },
+    {
+      "name": "Moneybookers",
+      "supportsRecurring": true,
+      "type": "moneybookers"
+    },
+    {
+      "name": "Multibanco",
+      "supportsRecurring": true,
+      "type": "multibanco"
+    },
+    {
+      "name": "Nationale Tuinbon",
+      "type": "nationaletuinbon"
+    },
+    {
+      "name": "Nationale Verwen Cadeaubon",
+      "type": "nationaleverwencadeaubon"
+    },
+    {
+      "name": "BankAxess",
+      "supportsRecurring": true,
+      "type": "netaxept_bankaxess"
+    },
+    {
+      "name": "NETELLER",
+      "type": "neteller"
+    },
+    {
+      "name": "Onebip",
+      "supportsRecurring": true,
+      "type": "onebip"
+    },
+    {
+      "name": "One Two Three",
+      "supportsRecurring": true,
+      "type": "onetwothree"
+    },
+    {
+      "details": [
+        {
+          "items": [
+            {
+              "id": "1",
+              "name": "Model Bank v2"
+            }
+          ],
+          "key": "issuer",
+          "type": "select"
+        }
+      ],
+      "name": "Online banking",
+      "supportsRecurring": true,
+      "type": "openbanking_UK"
+    },
+    {
+      "name": "Oxxo",
+      "supportsRecurring": true,
+      "type": "oxxo"
+    },
+    {
+      "name": "PayMaya Wallet",
+      "supportsRecurring": true,
+      "type": "paymaya_wallet"
+    },
+    {
+      "name": "PayPal",
+      "supportsRecurring": true,
+      "type": "paypal"
+    },
+    {
+      "name": "Paysafecard",
+      "supportsRecurring": true,
+      "type": "paysafecard"
+    },
+    {
+      "name": "Payshop",
+      "supportsRecurring": true,
+      "type": "payshop"
+    },
+    {
+      "name": "PayD AMT via Paythru",
+      "supportsRecurring": true,
+      "type": "paythru_amt"
+    },
+    {
+      "name": "EFT via Paythru",
+      "supportsRecurring": true,
+      "type": "paythru_eft"
+    },
+    {
+      "name": "PayTM",
+      "supportsRecurring": true,
+      "type": "paytm"
+    },
+    {
+      "name": "PayU",
+      "supportsRecurring": true,
+      "type": "payu_IN"
+    },
+    {
+      "name": "PayU NetBanking",
+      "supportsRecurring": true,
+      "type": "payu_IN_nb"
+    },
+    {
+      "name": "Plastix",
+      "type": "plastix"
+    },
+    {
+      "name": "Pluim",
+      "type": "pluimgiftcard"
+    },
+    {
+      "name": "POLi",
+      "supportsRecurring": true,
+      "type": "poli"
+    },
+    {
+      "name": "PPS",
+      "supportsRecurring": true,
+      "type": "pps"
+    },
+    {
+      "name": "Boleto Bancario via Primeiropay",
+      "supportsRecurring": true,
+      "type": "primeiropay_boleto"
+    },
+    {
+      "name": "PSE",
+      "supportsRecurring": true,
+      "type": "pse"
+    },
+    {
+      "details": [
+        {
+          "items": [
+            {
+              "id": "+7",
+              "name": "RU"
+            },
+            {
+              "id": "+9955",
+              "name": "GE"
+            },
+            {
+              "id": "+507",
+              "name": "PA"
+            },
+            {
+              "id": "+44",
+              "name": "GB"
+            },
+            {
+              "id": "+992",
+              "name": "TJ"
+            },
+            {
+              "id": "+370",
+              "name": "LT"
+            },
+            {
+              "id": "+972",
+              "name": "IL"
+            },
+            {
+              "id": "+996",
+              "name": "KG"
+            },
+            {
+              "id": "+380",
+              "name": "UA"
+            },
+            {
+              "id": "+84",
+              "name": "VN"
+            },
+            {
+              "id": "+90",
+              "name": "TR"
+            },
+            {
+              "id": "+994",
+              "name": "AZ"
+            },
+            {
+              "id": "+374",
+              "name": "AM"
+            },
+            {
+              "id": "+371",
+              "name": "LV"
+            },
+            {
+              "id": "+91",
+              "name": "IN"
+            },
+            {
+              "id": "+66",
+              "name": "TH"
+            },
+            {
+              "id": "+373",
+              "name": "MD"
+            },
+            {
+              "id": "+1",
+              "name": "US"
+            },
+            {
+              "id": "+81",
+              "name": "JP"
+            },
+            {
+              "id": "+998",
+              "name": "UZ"
+            },
+            {
+              "id": "+77",
+              "name": "KZ"
+            },
+            {
+              "id": "+375",
+              "name": "BY"
+            },
+            {
+              "id": "+372",
+              "name": "EE"
+            },
+            {
+              "id": "+40",
+              "name": "RO"
+            },
+            {
+              "id": "+82",
+              "name": "KR"
+            }
+          ],
+          "key": "qiwiwallet.telephoneNumberPrefix",
+          "type": "select"
+        },
+        {
+          "key": "qiwiwallet.telephoneNumber",
+          "type": "text"
+        }
+      ],
+      "name": "Qiwi Wallet",
+      "supportsRecurring": true,
+      "type": "qiwiwallet"
+    },
+    {
+      "name": "RatePay Direct Debit",
+      "supportsRecurring": true,
+      "type": "ratepay_directdebit"
+    },
+    {
+      "name": "SafetyPay",
+      "supportsRecurring": true,
+      "type": "safetypay"
+    },
+    {
+      "name": "SafetyPay Cash",
+      "supportsRecurring": true,
+      "type": "safetypay_cash"
+    },
+    {
+      "name": "SEB Direktbetalning",
+      "supportsRecurring": true,
+      "type": "sebdirectpayment"
+    },
+    {
+      "details": [
+        {
+          "key": "sepa.ownerName",
+          "type": "text"
+        },
+        {
+          "key": "sepa.ibanNumber",
+          "type": "text"
+        }
+      ],
+      "name": "SEPA Direct Debit",
+      "supportsRecurring": true,
+      "type": "sepadirectdebit"
+    },
+    {
+      "name": "7-Eleven",
+      "supportsRecurring": true,
+      "type": "seveneleven"
+    },
+    {
+      "name": "Premium SMS",
+      "supportsRecurring": true,
+      "type": "sms"
+    },
+    {
+      "name": "Swish",
+      "supportsRecurring": true,
+      "type": "swish"
+    },
+    {
+      "name": "TCS Test GiftCard",
+      "type": "tcstestgiftcard"
+    },
+    {
+      "name": "TenPay",
+      "supportsRecurring": true,
+      "type": "tenpay"
+    },
+    {
+      "name": "Trustly Direct bank e-Payments",
+      "supportsRecurring": true,
+      "type": "trustly"
+    },
+    {
+      "name": "Online Banking by Trustpay",
+      "supportsRecurring": true,
+      "type": "trustpay"
+    },
+    {
+      "name": "Ukash",
+      "supportsRecurring": true,
+      "type": "ukash"
+    },
+    {
+      "name": "UnionPay",
+      "supportsRecurring": true,
+      "type": "unionpay"
+    },
+    {
+      "details": [
+        {
+          "key": "telephoneNumber",
+          "optional": true,
+          "type": "tel"
+        }
+      ],
+      "name": "Vipps",
+      "supportsRecurring": true,
+      "type": "vipps"
+    },
+    {
+      "details": [
+        {
+          "key": "visacheckout.callId",
+          "type": "text"
+        }
+      ],
+      "name": "Visa Checkout",
+      "supportsRecurring": true,
+      "type": "visacheckout"
+    },
+    {
+      "name": "Webshop Giftcard",
+      "type": "webshopgiftcard"
+    },
+    {
+      "name": "WeChat Pay",
+      "supportsRecurring": true,
+      "type": "wechatpayQR"
+    },
+    {
+      "name": "WeChat Pay",
+      "supportsRecurring": true,
+      "type": "wechatpayWeb"
+    },
+    {
+      "name": "Western Union",
+      "supportsRecurring": true,
+      "type": "westernunion"
+    },
+    {
+      "name": "WOS Card",
+      "type": "woscard"
+    },
+    {
+      "name": "Alfa-Click",
+      "supportsRecurring": true,
+      "type": "yandex_alfaclick"
+    },
+    {
+      "name": "Pay using bank card",
+      "supportsRecurring": true,
+      "type": "yandex_bank_card"
+    },
+    {
+      "name": "Cash terminals",
+      "supportsRecurring": true,
+      "type": "yandex_cash"
+    },
+    {
+      "name": "Pay using installments",
+      "supportsRecurring": true,
+      "type": "yandex_installments"
+    },
+    {
+      "name": "Yandex.Money",
+      "supportsRecurring": true,
+      "type": "yandex_money"
+    },
+    {
+      "name": "Promsvyazbank",
+      "supportsRecurring": true,
+      "type": "yandex_promsvyazbank"
+    },
+    {
+      "name": "Qiwi Wallet",
+      "supportsRecurring": true,
+      "type": "yandex_qiwi"
+    },
+    {
+      "name": "Sberbank Online",
+      "supportsRecurring": true,
+      "type": "yandex_sberbank"
+    },
+    {
+      "name": "WebMoney",
+      "supportsRecurring": true,
+      "type": "yandex_webmoney"
+    },
+    {
+      "name": "Your Gift",
+      "type": "yourgift"
+    }
+  ]
+}

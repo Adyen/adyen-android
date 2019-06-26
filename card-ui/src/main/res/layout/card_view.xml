@@ -1,0 +1,91 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+  ~ Copyright (c) 2019 Adyen N.V.
+  ~
+  ~ This file is open source and available under the MIT license. See the LICENSE file for more info.
+  ~
+  ~ Created by ran on 13/3/2019.
+  -->
+
+<merge xmlns:android="http://schemas.android.com/apk/res/android"
+       xmlns:tools="http://schemas.android.com/tools"
+       android:layout_width="match_parent"
+       android:layout_height="wrap_content"
+       android:orientation="vertical"
+       tools:parentTag="android.widget.LinearLayout">
+
+    <FrameLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+        <android.support.design.widget.TextInputLayout
+            android:id="@+id/textInputLayout_cardNumber"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+
+            <android.support.design.widget.TextInputEditText
+                android:id="@+id/editText_cardNumber"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:hint="@string/checkout_card_number_hint"
+                android:inputType="phone"
+                android:nextFocusDown="@+id/editText_expiryDate"
+                android:nextFocusForward="@+id/editText_expiryDate"/>
+        </android.support.design.widget.TextInputLayout>
+
+        <android.support.v7.widget.RecyclerView
+            android:id="@+id/recyclerView_cardList"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="end|top"
+            android:layout_marginTop="@dimen/cardList_top_margin">
+
+        </android.support.v7.widget.RecyclerView>
+    </FrameLayout>
+
+    <android.support.design.widget.TextInputLayout
+        android:id="@+id/textInputLayout_expiryDate"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+        <android.support.design.widget.TextInputEditText
+            android:id="@+id/editText_expiryDate"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:hint="@string/checkout_card_expiry_date_hint"
+            android:inputType="date"
+            android:maxLength="7"
+            android:nextFocusForward="@+id/editText_securityCode"
+            android:nextFocusRight="@+id/editText_securityCode"/>
+    </android.support.design.widget.TextInputLayout>
+
+    <android.support.design.widget.TextInputLayout
+        android:id="@+id/textInputLayout_securityCode"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+        <android.support.design.widget.TextInputEditText
+            android:id="@+id/editText_securityCode"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:hint="@string/checkout_card_security_code_hint"
+            android:inputType="number"
+            android:maxLength="4"
+            android:nextFocusForward="@+id/editText_cardHolder"
+            android:nextFocusRight="@+id/editText_cardHolder"/>
+    </android.support.design.widget.TextInputLayout>
+
+    <android.support.design.widget.TextInputLayout
+        android:id="@+id/textInputLayout_cardHolder"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+        <android.support.design.widget.TextInputEditText
+            android:id="@+id/editText_cardHolder"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:hint="@string/checkout_card_holder_hint"
+            android:inputType="text"/>
+    </android.support.design.widget.TextInputLayout>
+
+
+</merge>

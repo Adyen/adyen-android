@@ -1,10 +1,14 @@
 /**
- * Rename this file to local.gradle and replace <YOUR_API_KEY> with your Checkout Demo Server API Key.
+ * Rename this file to local.gradle and replace the values in <PLACEHOLDER> with the configuration to connect to the Server.
  */
 android {
     buildTypes {
         debug {
-            buildConfigField "String", "CHECKOUT_API_KEY", "\"<YOUR_DEMO_SERVER_API_KEY>\""
+            buildConfigField "String", "MERCHANT_ACCOUNT", "\"<YOUR_MERCHANT_ACCOUNT>\""
+            buildConfigField "String", "MERCHANT_SERVER_URL", "\"<YOUR_SERVER_URL>\""
+            buildConfigField "String", "API_KEY_HEADER_NAME", "\"<API_KEY_HEADER>\""
+            buildConfigField "String", "CHECKOUT_API_KEY", "\"<YOUR_API_KEY>\""
+            buildConfigField "String", "PUBLIC_KEY", "\"<PUBLIC_KEY>\""
         }
     }
 }
