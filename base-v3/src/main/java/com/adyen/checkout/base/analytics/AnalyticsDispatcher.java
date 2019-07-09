@@ -64,15 +64,16 @@ public class AnalyticsDispatcher extends JobIntentService {
         }
 
         Logger.v(TAG, "Sending analytic event.");
-        final URL finalUrl = event.toUrl(envUrl + ANALYTICS_ENDPOINT);
+
         HttpsURLConnection urlConnection = null;
         try {
+            final URL finalUrl = event.toUrl(envUrl + ANALYTICS_ENDPOINT);
             urlConnection = (HttpsURLConnection) finalUrl.openConnection();
             urlConnection.setSSLSocketFactory(SSLSocketUtil.getSSLSocketFactory());
             urlConnection.connect();
-            // Need to read the consume the inputstream for the connection to count on the backend.
-            //noinspection ResultOfMethodCallIgnored
             final InputStream inputStream = urlConnection.getInputStream();
+            // Need to read to consume the inputStream for the connection to count on the backend.
+            //noinspection ResultOfMethodCallIgnored
             inputStream.read();
             inputStream.close();
         } catch (IOException | NoSuchAlgorithmException | KeyManagementException e) {

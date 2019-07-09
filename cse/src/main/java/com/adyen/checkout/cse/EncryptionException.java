@@ -10,7 +10,9 @@ package com.adyen.checkout.cse;
 
 import android.support.annotation.NonNull;
 
-public class EncryptionException extends Exception {
+import com.adyen.checkout.core.exeption.CheckoutException;
+
+public class EncryptionException extends CheckoutException {
 
     private static final long serialVersionUID = 604047691381396990L;
 

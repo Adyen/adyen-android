@@ -51,16 +51,12 @@ public final class JsonUtils {
      * @return The JSONObject that was contained in the Parcel.
      */
     @Nullable
-    public static JSONObject readFromParcel(@NonNull Parcel parcel) {
+    public static JSONObject readFromParcel(@NonNull Parcel parcel) throws JSONException {
         switch (parcel.readInt()) {
             case FLAG_NULL:
                 return null;
             case FLAG_NON_NULL:
-                try {
-                    return new JSONObject(parcel.readString());
-                } catch (JSONException e) {
-                    throw new RuntimeException("Invalid JSON.", e);
-                }
+                return new JSONObject(parcel.readString());
             default:
                 throw new IllegalArgumentException("Invalid flag.");
         }

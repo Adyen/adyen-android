@@ -18,8 +18,17 @@ import java.util.concurrent.Executors;
 
 public final class ThreadManager {
 
-    public static final Handler MAIN_HANDLER = new Handler(Looper.getMainLooper());
+    public static final Handler MAIN_HANDLER = getMainHandler();
     public static final ExecutorService EXECUTOR = Executors.newCachedThreadPool();
+
+    private static Handler getMainHandler() {
+        try {
+            return new Handler(Looper.getMainLooper());
+        } catch (RuntimeException e) {
+            // avoid Looper class on testing
+            return new Handler();
+        }
+    }
 
     private ThreadManager() {
         throw new NoConstructorException();

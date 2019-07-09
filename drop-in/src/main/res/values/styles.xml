@@ -7,6 +7,11 @@
   ~ Created by caiof on 26/3/2019.
   -->
 
-<resources>
-    <style name="Checkout.Button.Colored" parent="Widget.AppCompat.Button.Colored" />
+<resources xmlns:tools="http://schemas.android.com/tools">
+
+    <style name="AdyenCheckout.Button.Colored" parent="Widget.AppCompat.Button.Colored" />
+
+    <style name="ThreeDS2Theme"
+           parent="AdyenCheckout"
+           tools:ignore="PrivateResource"/>
 </resources>

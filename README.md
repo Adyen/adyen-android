@@ -11,15 +11,15 @@ The Components are available through [jcenter][dl], you only need to add the Gra
 Import the Component module for the Payment Method you want to use by adding it to your `build.gradle` file.
 For example, for the Drop-in solution you should add:
 ```groovy
-implementation "com.adyen.checkout:drop-in:3.0.0-rc01"
+implementation "com.adyen.checkout:drop-in:3.0.0-rc02"
 ```
 For a Credit Card component you should add:
 ```groovy
-implementation "com.adyen.checkout:card-ui:3.0.0-rc01"
+implementation "com.adyen.checkout:card-ui:3.0.0-rc02"
 ```
 For and iDeal component you should add:
 ```groovy
-implementation "com.adyen.checkout:ideal-ui:3.0.0-rc01"
+implementation "com.adyen.checkout:ideal-ui:3.0.0-rc02"
 ```
 
 ## Drop-in
@@ -140,7 +140,7 @@ You can also find the components that can handle the `action` object.
 
 This repository is open source and available under the MIT license. For more information, see the LICENSE file.
 
-[dl]: https://bintray.com/checkout/checkout-v3
+[dl]: https://jcenter.bintray.com/com/adyen/checkout/
 [apiExplorer.paymentMethods]: https://docs.adyen.com/api-explorer/#/PaymentSetupAndVerificationService/v46/paymentMethods
 [apiExplorer.payments]: https://docs.adyen.com/api-explorer/#/PaymentSetupAndVerificationService/v46/payments
 [apiExplorer.paymentsDetails]: https://docs.adyen.com/api-explorer/#/PaymentSetupAndVerificationService/v46/paymentsDetails

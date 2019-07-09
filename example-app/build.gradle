@@ -44,11 +44,6 @@ android {
             proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
         }
     }
-
-    compileOptions {
-        sourceCompatibility JavaVersion.VERSION_1_8
-        targetCompatibility JavaVersion.VERSION_1_8
-    }
 }
 
 dependencies {
@@ -59,6 +54,7 @@ dependencies {
 
     // Checkout
     implementation project(':drop-in')
+//    implementation "com.adyen.checkout:drop-in:$version_name"
 
     // Dependencies
     implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk7:$version_kotlin"

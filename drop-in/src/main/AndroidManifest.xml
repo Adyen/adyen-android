@@ -7,13 +7,13 @@
     <application>
         <activity
             android:name=".activity.PaymentMethodPickerActivity"
-            android:theme="@style/Checkout.Translucent" />
+            android:theme="@style/AdyenCheckout.Translucent" />
         <activity
             android:name=".activity.ComponentActivity"
             android:windowSoftInputMode="adjustResize"/>
         <activity
             android:name=".activity.LoadingActivity"
-            android:theme="@style/Checkout.Translucent"
+            android:theme="@style/AdyenCheckout.Translucent"
             android:launchMode="singleTask"
             android:windowSoftInputMode="stateAlwaysHidden">
             <intent-filter>

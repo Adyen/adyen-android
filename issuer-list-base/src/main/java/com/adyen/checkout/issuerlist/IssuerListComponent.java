@@ -61,9 +61,6 @@ public abstract class IssuerListComponent<T extends IssuerListPaymentMethod> ext
     @Override
     @NonNull
     protected IssuerListOutputData onInputDataChanged(@NonNull IssuerListInputData inputData) {
-
-        // TODO validator, formatter, etc...
-
         // can also reuse instance if we implement equals properly
         return new IssuerListOutputData(inputData.getSelectedIssuer());
     }
@@ -100,16 +97,16 @@ public abstract class IssuerListComponent<T extends IssuerListPaymentMethod> ext
     @NonNull
     @Override
     protected PaymentComponentState<T> createComponentState() {
-        final T issuerListParam = instantiateTypedPaymentMethod();
+        final T issuerListState = instantiateTypedPaymentMethod();
 
         final IssuerModel selectedIssuer = getOutputData().getSelectedIssuer();
 
-        issuerListParam.setType(getPaymentMethodType());
-        issuerListParam.setIssuer(selectedIssuer != null ? selectedIssuer.getId() : "");
+        issuerListState.setType(getPaymentMethodType());
+        issuerListState.setIssuer(selectedIssuer != null ? selectedIssuer.getId() : "");
 
         final boolean isValid = getOutputData().isValid();
 
-        return new PaymentComponentState<>(issuerListParam, isValid);
+        return new PaymentComponentState<>(issuerListState, isValid);
     }
 
     @NonNull

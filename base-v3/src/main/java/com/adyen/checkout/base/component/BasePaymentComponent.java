@@ -15,6 +15,7 @@ import android.content.Context;
 import android.support.annotation.CallSuper;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
+import android.support.annotation.WorkerThread;
 
 import com.adyen.checkout.base.Configuration;
 import com.adyen.checkout.base.ComponentError;
@@ -26,7 +27,9 @@ import com.adyen.checkout.base.component.data.output.OutputData;
 import com.adyen.checkout.base.component.lifecycle.PaymentComponentViewModel;
 import com.adyen.checkout.base.model.paymentmethods.PaymentMethod;
 import com.adyen.checkout.base.model.payments.request.PaymentComponentData;
+import com.adyen.checkout.core.api.ThreadManager;
 import com.adyen.checkout.core.code.Lint;
+import com.adyen.checkout.core.exeption.CheckoutException;
 import com.adyen.checkout.core.log.LogUtil;
 import com.adyen.checkout.core.log.Logger;
 
@@ -91,12 +94,12 @@ public abstract class BasePaymentComponent<ConfigurationT extends Configuration,
         // in any other cases we notify observer when output data is valid.
         final boolean shouldNotify = mOutputData.isValid() || mOutputData.isValid() != wasValid;
         if (shouldNotify) {
-            new Thread(new Runnable() {
+            ThreadManager.EXECUTOR.submit(new Runnable() {
                 @Override
                 public void run() {
                     mPaymentComponentStateLiveData.postValue(createComponentState());
                 }
-            }).start();
+            });
         }
     }
 
@@ -116,9 +119,9 @@ public abstract class BasePaymentComponent<ConfigurationT extends Configuration,
         mComponentErrorLiveData.observe(lifecycleOwner, observer);
     }
 
-    protected void notifyError(@NonNull ComponentError componentError) {
-        Logger.e(TAG, "notifyError - " + componentError.getErrorMessage());
-        mComponentErrorLiveData.setValue(componentError);
+    protected void notifyException(@NonNull CheckoutException e) {
+        Logger.e(TAG, "notifyException - " + e.getMessage());
+        mComponentErrorLiveData.postValue(new ComponentError(e));
     }
 
     @CallSuper
@@ -132,6 +135,7 @@ public abstract class BasePaymentComponent<ConfigurationT extends Configuration,
 
 
     @NonNull
+    @WorkerThread
     protected abstract PaymentComponentState<PaymentT> createComponentState();
 
     private void assertSupported(@NonNull PaymentMethod paymentMethod) {

@@ -20,6 +20,9 @@ import javax.net.ssl.SSLContext;
 import javax.net.ssl.SSLSocket;
 import javax.net.ssl.SSLSocketFactory;
 
+/**
+ * A factory that creates a secure connection socket.
+ */
 class TlsSocketFactory extends SSLSocketFactory {
     private final SSLSocketFactory mInternalSslSocketFactory;
 

@@ -26,11 +26,8 @@ public final class CardEncryptorImpl implements CardEncryptor {
     @WorkerThread
     @NonNull
     @Override
-    public EncryptedCard encryptFields(@NonNull final Card card,
-            @NonNull final String publicKey)
-            throws EncryptionException {
+    public EncryptedCard encryptFields(@NonNull final Card card, @NonNull final String publicKey) throws EncryptionException {
         try {
-
             final Date generationTime = new Date();
             final String cardNumber = card.getNumber();
             String encryptedNumber = null;

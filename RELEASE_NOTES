@@ -1,3 +1,5 @@
 <ul>
-<li>Release 3.0.0-rc01</li>
+<li>Improve error handling, notify to observer.</li>
+<li>3DS2 error flows go to observer.</li>
+<li>Bug fixes.</li>
 </ul>

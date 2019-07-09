@@ -15,12 +15,12 @@ import android.os.Bundle
 import android.support.v7.app.AppCompatActivity
 import android.view.View
 import android.widget.Toast
-import com.adyen.checkout.base.ComponentView
 import com.adyen.checkout.base.ComponentError
+import com.adyen.checkout.base.ComponentView
 import com.adyen.checkout.base.PaymentComponent
 import com.adyen.checkout.base.PaymentComponentState
-import com.adyen.checkout.base.model.payments.request.PaymentComponentData
 import com.adyen.checkout.base.model.paymentmethods.PaymentMethod
+import com.adyen.checkout.base.model.payments.request.PaymentComponentData
 import com.adyen.checkout.core.exeption.CheckoutException
 import com.adyen.checkout.core.log.LogUtil
 import com.adyen.checkout.core.log.Logger
@@ -82,6 +82,7 @@ class ComponentActivity : AppCompatActivity(), Observer<PaymentComponentState<in
 
     override fun onChanged(paymentComponentState: PaymentComponentState<in PaymentComponentData>?) {
         if (componentView.isConfirmationRequired) {
+            @Suppress("UsePropertyAccessSyntax")
             payButton.isEnabled = paymentComponentState != null && paymentComponentState.isValid()
         } else {
             startPayment()
@@ -115,12 +116,12 @@ class ComponentActivity : AppCompatActivity(), Observer<PaymentComponentState<in
     }
 
     private fun startPayment() {
-        val paymentMethodParam = component.state
+        val componentState = component.state
         try {
-            if (paymentMethodParam != null) {
-                if (paymentMethodParam.isValid) {
-                    Logger.d(TAG, "Making payment with type ${paymentMethodParam.data.type}")
-                    val intent = LoadingActivity.getIntentForPayments(this, paymentMethodParam.data)
+            if (componentState != null) {
+                if (componentState.isValid) {
+                    Logger.d(TAG, "Making payment with type ${componentState.data.type}")
+                    val intent = LoadingActivity.getIntentForPayments(this, componentState.data)
                     startActivity(intent)
                 } else {
                     throw CheckoutException("PaymentComponentState are not valid.")
@@ -142,7 +143,7 @@ class ComponentActivity : AppCompatActivity(), Observer<PaymentComponentState<in
     }
 
     private fun handleError(componentError: ComponentError) {
-        Logger.e(TAG, componentError.errorMessage)
+        Logger.e(TAG, "handleError", componentError.exception)
         Toast.makeText(this@ComponentActivity, R.string.component_error, Toast.LENGTH_LONG).show()
         finish()
     }

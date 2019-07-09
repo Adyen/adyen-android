@@ -13,13 +13,13 @@ import android.support.annotation.NonNull;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentActivity;
 
-import com.adyen.checkout.base.DetailsComponentProvider;
+import com.adyen.checkout.base.ActionComponentProvider;
 
-public class DetailsComponentProviderImpl<ComponentT extends BaseActionComponent> implements DetailsComponentProvider<ComponentT> {
+public class ActionComponentProviderImpl<ComponentT extends BaseActionComponent> implements ActionComponentProvider<ComponentT> {
 
     private final Class<ComponentT> mComponentClass;
 
-    public DetailsComponentProviderImpl(@NonNull Class<ComponentT> componentClass) {
+    public ActionComponentProviderImpl(@NonNull Class<ComponentT> componentClass) {
         mComponentClass = componentClass;
     }
 

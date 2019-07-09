@@ -14,6 +14,7 @@ import static com.adyen.checkout.card.data.validator.NumberValidator.GENERAL_CAR
 import android.arch.lifecycle.LifecycleOwner;
 import android.arch.lifecycle.Observer;
 import android.content.Context;
+import android.graphics.drawable.Drawable;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.design.widget.TextInputLayout;
@@ -37,6 +38,8 @@ import com.adyen.checkout.card.data.output.NumberField;
 import com.adyen.checkout.card.data.output.SecurityCodeField;
 import com.adyen.checkout.card.model.CardType;
 import com.adyen.checkout.card.ui.R;
+
+import java.util.HashMap;
 
 /**
  * CardView for {@link CardComponent}.
@@ -84,7 +87,6 @@ public final class CardView extends LinearLayout implements ComponentView<CardCo
 
         LayoutInflater.from(context).inflate(R.layout.card_view, this, true);
 
-
         mCardListRecyclerView = findViewById(R.id.recyclerView_cardList);
         mCardListRecyclerView.setLayoutManager(new LinearLayoutManager(getContext(),
                 LinearLayoutManager.HORIZONTAL,
@@ -100,11 +102,14 @@ public final class CardView extends LinearLayout implements ComponentView<CardCo
                 notifyInputDataChanged();
             }
         });
-        mCardNumberEditText.setOnFocusChangeListener((v, hasFocus) -> {
-            mCardNumberInput.setErrorEnabled(!hasFocus);
+        mCardNumberEditText.setOnFocusChangeListener(new OnFocusChangeListener() {
+            @Override
+            public void onFocusChange(View v, boolean hasFocus) {
+                mCardNumberInput.setErrorEnabled(!hasFocus);
 
-            if (!hasFocus && !mComponent.getOutputData().getNumber().getValidationResult().isValid()) {
-                mCardNumberInput.setError(getContext().getString(R.string.checkout_card_number_not_valid));
+                if (!hasFocus && !mComponent.getOutputData().getNumber().getValidationResult().isValid()) {
+                    mCardNumberInput.setError(CardView.this.getContext().getString(R.string.checkout_card_number_not_valid));
+                }
             }
         });
 
@@ -117,11 +122,14 @@ public final class CardView extends LinearLayout implements ComponentView<CardCo
                 notifyInputDataChanged();
             }
         });
-        mExpiryDateEditText.setOnFocusChangeListener((v, hasFocus) -> {
-            mExpiryDateInput.setErrorEnabled(!hasFocus);
+        mExpiryDateEditText.setOnFocusChangeListener(new OnFocusChangeListener() {
+            @Override
+            public void onFocusChange(View v, boolean hasFocus) {
+                mExpiryDateInput.setErrorEnabled(!hasFocus);
 
-            if (!hasFocus && !mComponent.getOutputData().getExpiryDate().getValidationResult().isValid()) {
-                mExpiryDateInput.setError(getContext().getString(R.string.checkout_expiry_date_not_valid));
+                if (!hasFocus && !mComponent.getOutputData().getExpiryDate().getValidationResult().isValid()) {
+                    mExpiryDateInput.setError(CardView.this.getContext().getString(R.string.checkout_expiry_date_not_valid));
+                }
             }
         });
 
@@ -134,11 +142,14 @@ public final class CardView extends LinearLayout implements ComponentView<CardCo
                 notifyInputDataChanged();
             }
         });
-        mSecurityCodeEditText.setOnFocusChangeListener((v, hasFocus) -> {
-            mSecurityCodeInput.setErrorEnabled(!hasFocus);
+        mSecurityCodeEditText.setOnFocusChangeListener(new OnFocusChangeListener() {
+            @Override
+            public void onFocusChange(View v, boolean hasFocus) {
+                mSecurityCodeInput.setErrorEnabled(!hasFocus);
 
-            if (!hasFocus && !mComponent.getOutputData().getSecurityCode().getValidationResult().isValid()) {
-                mSecurityCodeInput.setError(getContext().getString(R.string.checkout_security_code_not_valid));
+                if (!hasFocus && !mComponent.getOutputData().getSecurityCode().getValidationResult().isValid()) {
+                    mSecurityCodeInput.setError(CardView.this.getContext().getString(R.string.checkout_security_code_not_valid));
+                }
             }
         });
 
@@ -151,11 +162,14 @@ public final class CardView extends LinearLayout implements ComponentView<CardCo
                 notifyInputDataChanged();
             }
         });
-        mCardHolderEditText.setOnFocusChangeListener((v, hasFocus) -> {
-            mCardHolderInput.setErrorEnabled(!hasFocus);
+        mCardHolderEditText.setOnFocusChangeListener(new OnFocusChangeListener() {
+            @Override
+            public void onFocusChange(View v, boolean hasFocus) {
+                mCardHolderInput.setErrorEnabled(!hasFocus);
 
-            if (!hasFocus && !mComponent.getOutputData().getHolderNameField().getValidationResult().isValid()) {
-                mCardHolderInput.setError(getContext().getString(R.string.checkout_holder_name_not_valid));
+                if (!hasFocus && !mComponent.getOutputData().getHolderNameField().getValidationResult().isValid()) {
+                    mCardHolderInput.setError(CardView.this.getContext().getString(R.string.checkout_holder_name_not_valid));
+                }
             }
         });
 
@@ -172,7 +186,12 @@ public final class CardView extends LinearLayout implements ComponentView<CardCo
 
     private void notifyInputDataChanged() {
         if (mComponent != null) {
-            post(() -> mComponent.inputDataChanged(mCardInputData));
+            post(new Runnable() {
+                @Override
+                public void run() {
+                    mComponent.inputDataChanged(mCardInputData);
+                }
+            });
         }
     }
 
@@ -229,14 +248,18 @@ public final class CardView extends LinearLayout implements ComponentView<CardCo
     @Override
     public void attach(@NonNull CardComponent component, @NonNull LifecycleOwner lifecycleOwner) {
         mComponent = component;
+        mCardListAdapter = new CardListAdapter(mComponent);
+
         mComponent.observeOutputData(lifecycleOwner, this);
-        mComponent.getCardLogoImages().observe(lifecycleOwner, stringDrawableHashMap -> {
-            mCardListAdapter.setCardLogos(stringDrawableHashMap);
+        mComponent.getCardLogoImages().observe(lifecycleOwner, new Observer<HashMap<String, Drawable>>() {
+            @Override
+            public void onChanged(@Nullable HashMap<String, Drawable> stringDrawableHashMap) {
+                mCardListAdapter.setCardLogos(stringDrawableHashMap);
+            }
         });
 
         mCardHolderInput.setVisibility(mComponent.isHolderNameRequire() ? VISIBLE : GONE);
 
-        mCardListAdapter = new CardListAdapter(mComponent);
         mCardListAdapter.setCards(mComponent.getSupportedFilterCards(null));
         mCardListRecyclerView.setAdapter(mCardListAdapter);
 

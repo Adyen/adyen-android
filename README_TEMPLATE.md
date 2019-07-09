@@ -140,7 +140,7 @@ You can also find the components that can handle the `action` object.
 
 This repository is open source and available under the MIT license. For more information, see the LICENSE file.
 
-[dl]: https://bintray.com/checkout/checkout-v3
+[dl]: https://jcenter.bintray.com/com/adyen/checkout/
 [apiExplorer.paymentMethods]: https://docs.adyen.com/api-explorer/#/PaymentSetupAndVerificationService/v46/paymentMethods
 [apiExplorer.payments]: https://docs.adyen.com/api-explorer/#/PaymentSetupAndVerificationService/v46/payments
 [apiExplorer.paymentsDetails]: https://docs.adyen.com/api-explorer/#/PaymentSetupAndVerificationService/v46/paymentsDetails

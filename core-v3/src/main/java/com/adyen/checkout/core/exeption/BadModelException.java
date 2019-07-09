@@ -13,6 +13,9 @@ import android.support.annotation.Nullable;
 
 import com.adyen.checkout.core.model.ModelUtils;
 
+/**+
+ * Exception thrown when a {@link com.adyen.checkout.core.model.ModelObject} does not meet the requirement of having a SERIALIZER object.
+ */
 public class BadModelException extends CheckoutException {
 
     private static final long serialVersionUID = -1161500360463809921L;

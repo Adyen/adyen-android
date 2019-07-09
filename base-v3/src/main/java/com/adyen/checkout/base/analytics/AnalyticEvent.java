@@ -123,9 +123,9 @@ public class AnalyticEvent implements Parcelable {
      * @return The full URL to be called.
      */
     @NonNull
-    URL toUrl(@NonNull String baseUrl) {
+    URL toUrl(@NonNull String baseUrl) throws MalformedURLException {
         if (!URLUtil.isValidUrl(baseUrl)) {
-            throw new CheckoutException("Invalid URL format - " + baseUrl);
+            throw new MalformedURLException("Invalid URL format - " + baseUrl);
         }
         final Uri baseUri = Uri.parse(baseUrl);
 
@@ -145,11 +145,7 @@ public class AnalyticEvent implements Parcelable {
                 .appendQueryParameter(SYSTEM_VERSION_KEY, mSystemVersion)
                 .build();
 
-        try {
-            return new URL(finalUri.toString());
-        } catch (MalformedURLException e) {
-            throw new CheckoutException("Error forming URL", e);
-        }
+        return new URL(finalUri.toString());
     }
 
     @Override

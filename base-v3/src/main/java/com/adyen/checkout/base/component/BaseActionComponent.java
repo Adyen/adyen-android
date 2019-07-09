@@ -21,6 +21,7 @@ import com.adyen.checkout.base.ActionComponentData;
 import com.adyen.checkout.base.ComponentError;
 import com.adyen.checkout.base.model.payments.response.Action;
 import com.adyen.checkout.core.exeption.CheckoutException;
+import com.adyen.checkout.core.exeption.ComponentException;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -34,7 +35,7 @@ public abstract class BaseActionComponent extends AndroidViewModel implements Ac
 
     private final MutableLiveData<ActionComponentData> mResultLiveData = new MutableLiveData<>();
 
-    private final MutableLiveData<ComponentError> mErrorParamMutableLiveData = new MutableLiveData<>();
+    private final MutableLiveData<ComponentError> mErrorMutableLiveData = new MutableLiveData<>();
 
     private String mPaymentData;
 
@@ -53,10 +54,16 @@ public abstract class BaseActionComponent extends AndroidViewModel implements Ac
     @Override
     public void handleAction(@NonNull Activity activity, @NonNull Action action) {
         if (!canHandleAction(action)) {
-            throw new CheckoutException("Action type not supported by this component - " + action.getType());
+            notifyException(new ComponentException("Action type not supported by this component - " + action.getType()));
+            return;
         }
+
         mPaymentData = action.getPaymentData();
-        handleActionInternal(activity, action);
+        try {
+            handleActionInternal(activity, action);
+        } catch (ComponentException e) {
+            notifyException(e);
+        }
     }
 
     @Override
@@ -66,25 +73,25 @@ public abstract class BaseActionComponent extends AndroidViewModel implements Ac
 
     @Override
     public void observeErrors(@NonNull LifecycleOwner lifecycleOwner, @NonNull Observer<ComponentError> observer) {
-        mErrorParamMutableLiveData.observe(lifecycleOwner, observer);
+        mErrorMutableLiveData.observe(lifecycleOwner, observer);
     }
 
-    protected abstract void handleActionInternal(@NonNull Activity activity, @NonNull Action action);
+    protected abstract void handleActionInternal(@NonNull Activity activity, @NonNull Action action) throws ComponentException;
 
-    protected void notifyDetails(@NonNull JSONObject details) {
+    protected void notifyDetails(@NonNull JSONObject details) throws ComponentException {
 
         final JSONObject componentData = new JSONObject();
         try {
             componentData.putOpt(PAYMENT_DATA_KEY, mPaymentData);
             componentData.accumulate(DETAILS_KEY, details);
         } catch (JSONException e) {
-            throw new CheckoutException("Unable to create ActionComponentData", e);
+            throw new ComponentException("Unable to create ActionComponentData", e);
         }
 
         mResultLiveData.setValue(new ActionComponentData(componentData));
     }
 
-    protected void notifyError(@NonNull ComponentError componentError) {
-        mErrorParamMutableLiveData.setValue(componentError);
+    protected void notifyException(@NonNull CheckoutException e) {
+        mErrorMutableLiveData.setValue(new ComponentError(e));
     }
 }

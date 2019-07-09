@@ -64,11 +64,12 @@ public abstract class IssuerListRecyclerView<IssuerListComponentT extends Issuer
     @Override
     public void attach(@NonNull IssuerListComponentT component, @NonNull LifecycleOwner lifecycleOwner) {
         mComponent = component;
-        mComponent.getIssuersLiveData().observe(lifecycleOwner, this);
 
         mIssuersAdapter = new IssuerListRecyclerAdapter(Collections.<IssuerModel>emptyList(), hideIssuersLogo());
         mIssuersAdapter.setItemCLickListener(this);
         mIssuersRecyclerView.setAdapter(mIssuersAdapter);
+
+        mComponent.getIssuersLiveData().observe(lifecycleOwner, this);
 
         mComponent.sendAnalyticsEvent(getContext());
     }

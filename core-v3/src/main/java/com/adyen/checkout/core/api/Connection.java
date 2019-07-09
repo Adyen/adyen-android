@@ -21,6 +21,11 @@ import java.util.Collections;
 import java.util.Map;
 import java.util.concurrent.Callable;
 
+/**
+ * A wrapper for a callable network connection.
+ *
+ * @param <T> The type of the connection return.
+ */
 public abstract class Connection<T> implements Callable<T> {
 
     private static final Charset CHARSET = Charset.forName("UTF-8");
@@ -41,11 +46,24 @@ public abstract class Connection<T> implements Callable<T> {
         return mUrl;
     }
 
+    /**
+     * Performs an URL connection using HTTP GET.
+     *
+     * @return The byte array of the response
+     * @throws IOException In case an IO error happens.
+     */
     @NonNull
     protected byte[] get() throws IOException {
         return get(Collections.<String, String>emptyMap());
     }
 
+    /**
+     * Performs an URL connection using HTTP GET.
+     *
+     * @param headers The headers of the connection.
+     * @return The byte array of the response
+     * @throws IOException n case an IO error happens.
+     */
     @NonNull
     protected byte[] get(@NonNull Map<String, String> headers) throws IOException {
         if (mURLConnection != null) {
@@ -64,6 +82,12 @@ public abstract class Connection<T> implements Callable<T> {
         }
     }
 
+    /**
+     * Performs an URL connection using HTTP POST.
+     *
+     * @return The byte array of the response
+     * @throws IOException In case an IO error happens.
+     */
     @NonNull
     protected byte[] post(@NonNull Map<String, String> headers, @NonNull byte[] data) throws IOException {
         if (mURLConnection != null) {

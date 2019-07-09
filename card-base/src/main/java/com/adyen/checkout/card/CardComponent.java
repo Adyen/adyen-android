@@ -15,15 +15,14 @@ import android.graphics.drawable.Drawable;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 
-import com.adyen.checkout.base.ComponentError;
 import com.adyen.checkout.base.PaymentComponentProvider;
 import com.adyen.checkout.base.PaymentComponentState;
 import com.adyen.checkout.base.api.LogoApi;
 import com.adyen.checkout.base.component.BasePaymentComponent;
 import com.adyen.checkout.base.component.PaymentComponentProviderImpl;
-import com.adyen.checkout.base.model.payments.request.CardPaymentMethod;
 import com.adyen.checkout.base.model.paymentmethods.InputDetail;
 import com.adyen.checkout.base.model.paymentmethods.PaymentMethod;
+import com.adyen.checkout.base.model.payments.request.CardPaymentMethod;
 import com.adyen.checkout.base.util.PaymentMethodTypes;
 import com.adyen.checkout.card.data.formatter.CardFormatter;
 import com.adyen.checkout.card.data.input.CardInputData;
@@ -36,13 +35,12 @@ import com.adyen.checkout.card.data.validator.CardValidator;
 import com.adyen.checkout.card.model.CardType;
 import com.adyen.checkout.card.model.EncryptedCard;
 import com.adyen.checkout.core.util.StringUtil;
+import com.adyen.checkout.cse.EncryptionException;
 
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
-
-import adyen.com.adyencse.encrypter.exception.EncrypterException;
 
 public final class CardComponent extends BasePaymentComponent<CardConfiguration, CardInputData, CardOutputData, CardPaymentMethod> implements
         CardLogoCallback.DrawableFetchedCallback {
@@ -67,9 +65,6 @@ public final class CardComponent extends BasePaymentComponent<CardConfiguration,
     public CardComponent(@NonNull PaymentMethod paymentMethod, @NonNull CardConfiguration configuration) {
         super(paymentMethod, configuration);
 
-        // TODO: 18/03/2019 add filtering by supported schemes configuration.
-        // TODO: 18/03/2019 pass the card validator in. for better unit test? ask from ran!
-
         mCardFormatter = new CardFormatter.Builder().build();
         mCardValidator = new CardValidator.Builder().build();
         mCardEncryption = new CardEncryptionImpl();
@@ -84,7 +79,6 @@ public final class CardComponent extends BasePaymentComponent<CardConfiguration,
     @NonNull
     @Override
     protected CardOutputData onInputDataChanged(@NonNull CardInputData inputData) {
-        // TODO: 2019-05-03 Let's talk about how to handle output data with validation and formatter! @caio @arman talked about it
         onNumberChanged(inputData.getCardNumber());
         onExpiryDateChanged(inputData.getExpiryDate());
         onSecurityCodeChanged(inputData.getSecurityCode());
@@ -120,8 +114,8 @@ public final class CardComponent extends BasePaymentComponent<CardConfiguration,
             encryptedCard = mCardEncryption.encryptCardOutput(getOutputData(),
                     getConfiguration().getPublicKey(),
                     new Date());
-        } catch (EncrypterException e) {
-            notifyError(new ComponentError("An error occurred during encryption."));
+        } catch (EncryptionException e) {
+            notifyException(e);
             return new PaymentComponentState<>(cardPaymentMethod, false);
         }
 
@@ -256,7 +250,8 @@ public final class CardComponent extends BasePaymentComponent<CardConfiguration,
 
     @Override
     public void onDrawableFetched(@NonNull String id, @Nullable Drawable drawable) {
-        final HashMap<String, Drawable> cardLogoList = (mCardLogoImages.getValue() == null) ? new HashMap<>() : mCardLogoImages.getValue();
+        final HashMap<String, Drawable> cardLogoList =
+                (mCardLogoImages.getValue() == null) ? new HashMap<String, Drawable>() : mCardLogoImages.getValue();
         cardLogoList.put(id, drawable);
         mCardLogoImages.postValue(cardLogoList);
     }

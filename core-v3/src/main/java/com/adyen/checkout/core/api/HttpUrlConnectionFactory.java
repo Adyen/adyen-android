@@ -15,6 +15,9 @@ import com.adyen.checkout.core.log.Logger;
 
 import java.net.HttpURLConnection;
 
+/**
+ * A factory that creates a URL connections using a secure socket encryption.
+ */
 final class HttpUrlConnectionFactory extends BaseHttpUrlConnectionFactory {
     private static final String TAG = LogUtil.getTag();
 
@@ -45,7 +48,6 @@ final class HttpUrlConnectionFactory extends BaseHttpUrlConnectionFactory {
     @Override
     HttpURLConnection handleInsecureConnection(@NonNull HttpURLConnection httpUrlConnection) {
         Logger.w(TAG, ERROR_MESSAGE_INSECURE_CONNECTION);
-
         return httpUrlConnection;
     }
 }

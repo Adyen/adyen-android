@@ -11,22 +11,26 @@ package com.adyen.checkout.base.ui.adapter;
 import android.support.annotation.CallSuper;
 import android.support.annotation.NonNull;
 import android.support.v7.widget.RecyclerView;
+import android.view.View;
 
 import com.adyen.checkout.core.log.LogUtil;
 import com.adyen.checkout.core.log.Logger;
 
 public abstract class ClickableListRecyclerAdapter<ViewHolderT extends RecyclerView.ViewHolder> extends RecyclerView.Adapter<ViewHolderT> {
-    private static final String TAG = LogUtil.getTag();
+    static final String TAG = LogUtil.getTag();
 
     OnItemCLickedListener mOnItemCLickedListener;
 
     @CallSuper
     @Override
-    public void onBindViewHolder(@NonNull ViewHolderT viewHolderT, int position) {
-        viewHolderT.itemView.setOnClickListener(v -> {
-            Logger.d(TAG, "click");
-            if (mOnItemCLickedListener != null) {
-                mOnItemCLickedListener.onItemClicked(viewHolderT.getAdapterPosition());
+    public void onBindViewHolder(@NonNull final ViewHolderT viewHolderT, int position) {
+        viewHolderT.itemView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Logger.d(TAG, "click");
+                if (mOnItemCLickedListener != null) {
+                    mOnItemCLickedListener.onItemClicked(viewHolderT.getAdapterPosition());
+                }
             }
         });
     }

@@ -12,6 +12,9 @@ import android.os.Parcel;
 import android.os.Parcelable;
 import android.support.annotation.NonNull;
 
+import com.adyen.checkout.core.exeption.CheckoutException;
+
+import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.lang.reflect.Array;
@@ -69,9 +72,14 @@ public abstract class ModelObject implements Parcelable {
         @NonNull
         @Override
         public final T createFromParcel(@NonNull Parcel source) {
-            final JSONObject jsonObject = JsonUtils.readFromParcel(source);
-            if (jsonObject == null) {
-                throw new NullPointerException("JSONObject is null.");
+            final JSONObject jsonObject;
+            try {
+                jsonObject = JsonUtils.readFromParcel(source);
+                if (jsonObject == null) {
+                    throw new CheckoutException("Failed to create ModelObject from parcel. JSONObject is null.");
+                }
+            } catch (JSONException e) {
+                throw new CheckoutException("Failed to create ModelObject from parcel.", e);
             }
 
             return ModelUtils.deserializeModel(jsonObject, mClass);

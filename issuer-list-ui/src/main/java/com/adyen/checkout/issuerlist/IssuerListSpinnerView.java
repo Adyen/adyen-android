@@ -65,10 +65,11 @@ public abstract class IssuerListSpinnerView<IssuerListComponentT extends IssuerL
     public void attach(@NonNull IssuerListComponentT component, @NonNull LifecycleOwner lifecycleOwner) {
         mComponent = component;
 
-        mComponent.getIssuersLiveData().observe(lifecycleOwner, createIssuersObserver());
         mIssuersSpinner.setOnItemSelectedListener(this);
         mIssuersAdapter = new IssuerListSpinnerAdapter(getContext(), Collections.<IssuerModel>emptyList(), hideIssuersLogo());
         mIssuersSpinner.setAdapter(mIssuersAdapter);
+
+        mComponent.getIssuersLiveData().observe(lifecycleOwner, createIssuersObserver());
 
         mComponent.sendAnalyticsEvent(getContext());
     }

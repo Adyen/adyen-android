@@ -10,6 +10,9 @@ package com.adyen.checkout.core.code;
 
 import com.adyen.checkout.core.exeption.NoConstructorException;
 
+/**
+ * Utility class for constants related to Lint.
+ */
 public final class Lint {
 
     public static final String WEAKER_ACCESS = "WeakerAccess";

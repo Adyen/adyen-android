@@ -33,7 +33,7 @@ class DropIn private constructor() {
         const val RESULT_KEY = "payment_result"
 
         @JvmStatic
-        val INSTANCE: DropIn = DropIn()
+        val INSTANCE: DropIn by lazy { DropIn() }
     }
 
     private lateinit var resultIntent: Intent

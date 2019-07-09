@@ -17,23 +17,29 @@ import com.adyen.checkout.core.exeption.CheckoutException;
  */
 public class ComponentError {
 
-    private String mErrorMessage;
-
-    public ComponentError(@NonNull String errorMessage) {
-        mErrorMessage = errorMessage;
-    }
+    private final CheckoutException mException;
 
     public ComponentError(@NonNull CheckoutException e) {
-        this(e.getMessage());
+        mException = e;
     }
 
     /**
-     * The message about the error. This message is not intended for user feedback, but for development feedback on what happened.
+     * This message is not intended for user feedback, but for development feedback on what happened.
      *
-     * @return A development driven error message.
+     * @return A development driven error message from the Exception.
      */
     @NonNull
     public String getErrorMessage() {
-        return mErrorMessage;
+        return mException.getMessage();
+    }
+
+    /**
+     * Can be used to try to identify the root cause of the issue.
+     *
+     * @return The exception that happened.
+     */
+    @NonNull
+    public CheckoutException getException() {
+        return mException;
     }
 }
