@@ -8,6 +8,7 @@
 
 package com.adyen.checkout.ideal;
 
+import android.content.Context;
 import android.support.annotation.NonNull;
 import android.util.DisplayMetrics;
 
@@ -17,14 +18,35 @@ import com.adyen.checkout.issuerlist.IssuerListConfiguration;
 import java.util.Locale;
 
 public class IdealConfiguration extends IssuerListConfiguration {
+
     /**
-     * Constructor with minimal required parameters for this Configuration.
+     * Constructor with all parameters.
      *
      * @param shopperLocale  The locale that should be used to display strings and layouts. Can differ from device default.
      * @param displayMetrics The current {@link DisplayMetrics} of the device to fetch images of matching size.
-     * @param environment    The environment to be used to fetch the logos of the available Issuers.
+     * @param environment    The environment to be used to make network calls.
      */
     public IdealConfiguration(@NonNull Locale shopperLocale, @NonNull DisplayMetrics displayMetrics, @NonNull Environment environment) {
         super(shopperLocale, displayMetrics, environment);
+    }
+
+    /**
+     * Builder to create a {@link IdealConfiguration} more easily.
+     */
+    public static final class Builder extends IssuerListBuilder<IdealConfiguration> {
+
+        public Builder(@NonNull Context context) {
+            super(context);
+        }
+
+        public Builder(@NonNull Locale shopperLocale, @NonNull Environment environment, @NonNull DisplayMetrics displayMetrics) {
+            super(shopperLocale, environment, displayMetrics);
+        }
+
+        @NonNull
+        @Override
+        public IdealConfiguration build() {
+            return new IdealConfiguration(mBuilderShopperLocale, mBuilderDisplayMetrics, mBuilderEnvironment);
+        }
     }
 }

@@ -43,7 +43,9 @@ public final class RedirectUtil {
 
     private static final String PAYLOAD_PARAMETER = "payload";
     private static final String REDIRECT_RESULT_PARAMETER = "redirectResult";
-    private static final String RETURN_URL_QUERY_PARAMETER = "returnUrlQueryString";
+    private static final String PAYMENT_RESULT_PARAMETER = "PaRes";
+    private static final String MD_PARAMETER = "MD";
+
     private static final String RESOLVER_ACTIVITY_PACKAGE_NAME = "android";
 
     @NonNull
@@ -78,6 +80,9 @@ public final class RedirectUtil {
      * A redirect may return to the application using the ReturnUrl when properly setup in an Intent Filter. Is usually contains result information
      * as parameters on that returnUrl. This method parses those results and returns a {@link JSONObject} to be used in the details call.
      *
+     * <p/>
+     * We are not handling the case for returnUrlQueryString detail, merchants who use that custom scenario should parse the URL themselves.
+     *
      * @param data The returned Uri
      * @return The parsed value to be passed on the payments/details call, on the details parameter.
      */
@@ -88,34 +93,38 @@ public final class RedirectUtil {
         final JSONObject result = new JSONObject();
 
         for (String parameter : data.getQueryParameterNames()) {
+            // getQueryParameter already does HTML decoding
             if (PAYLOAD_PARAMETER.equals(parameter)) {
                 try {
-                    // getQueryParameter already does HTML decoding
                     result.put(PAYLOAD_PARAMETER, data.getQueryParameter(parameter));
-                    return result;
                 } catch (JSONException e) {
                     throw new CheckoutException("Error creating Redirect payload.", e);
                 }
             }
             if (REDIRECT_RESULT_PARAMETER.equals(parameter)) {
                 try {
-                    // getQueryParameter already does HTML decoding
                     result.put(REDIRECT_RESULT_PARAMETER, data.getQueryParameter(parameter));
-                    return result;
                 } catch (JSONException e) {
                     throw new CheckoutException("Error creating Redirect result parameter.", e);
                 }
             }
+            if (PAYMENT_RESULT_PARAMETER.equals(parameter)) {
+                try {
+                    result.put(PAYMENT_RESULT_PARAMETER, data.getQueryParameter(parameter));
+                } catch (JSONException e) {
+                    throw new CheckoutException("Error creating Redirect payment result.", e);
+                }
+            }
+            if (MD_PARAMETER.equals(parameter)) {
+                try {
+                    result.put(MD_PARAMETER, data.getQueryParameter(parameter));
+                } catch (JSONException e) {
+                    throw new CheckoutException("Error creating Redirect MD.", e);
+                }
+            }
         }
 
-        Logger.d(TAG, "Fallback to returnUrlQueryString");
-        final String returnUrlQueryString = data.getQuery();
-        try {
-            result.put(RETURN_URL_QUERY_PARAMETER, returnUrlQueryString);
-            return result;
-        } catch (JSONException e) {
-            throw new CheckoutException("Error creating Redirect returnUrlQueryString.", e);
-        }
+        return result;
     }
 
     /**

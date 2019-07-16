@@ -14,6 +14,7 @@ import android.arch.lifecycle.LifecycleOwner;
 import android.arch.lifecycle.Observer;
 import android.content.Context;
 import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
 
 import com.adyen.checkout.adyen3ds2.model.ChallengeResult;
 import com.adyen.checkout.adyen3ds2.model.ChallengeToken;
@@ -40,6 +41,7 @@ import com.adyen.threeds2.ProtocolErrorEvent;
 import com.adyen.threeds2.RuntimeErrorEvent;
 import com.adyen.threeds2.ThreeDS2Service;
 import com.adyen.threeds2.Transaction;
+import com.adyen.threeds2.customization.UiCustomization;
 import com.adyen.threeds2.exception.SDKAlreadyInitializedException;
 import com.adyen.threeds2.exception.SDKNotInitializedException;
 import com.adyen.threeds2.parameters.ChallengeParameters;
@@ -68,6 +70,9 @@ public final class Adyen3DS2Component extends BaseActionComponent implements Cha
     @SuppressWarnings(Lint.SYNTHETIC)
     Transaction mTransaction;
 
+    @SuppressWarnings(Lint.SYNTHETIC)
+    UiCustomization mUiCustomization;
+
     public Adyen3DS2Component(@NonNull Application application) {
         super(application);
     }
@@ -89,6 +94,18 @@ public final class Adyen3DS2Component extends BaseActionComponent implements Cha
             // This is OK if the user goes back and starts a new payment.
             // TODO notify error to activity?
             Logger.e(TAG, "Lost challenge result reference.");
+        }
+    }
+
+    /**
+     * Set a {@link UiCustomization} object to be passed to the 3DS2 SDK for customizing the challenge screen.
+     * Needs to be set before handling any action.
+     *
+     * @param uiCustomization The customization object.
+     */
+    public void setUiCustomization(@Nullable UiCustomization uiCustomization) {
+        synchronized (this) {
+            mUiCustomization = uiCustomization;
         }
     }
 
@@ -179,7 +196,9 @@ public final class Adyen3DS2Component extends BaseActionComponent implements Cha
             public void run() {
                 try {
                     Logger.d(TAG, "initialize 3DS2 SDK");
-                    ThreeDS2Service.INSTANCE.initialize(context, configParameters, null, null);
+                    synchronized (Adyen3DS2Component.this) {
+                        ThreeDS2Service.INSTANCE.initialize(context, configParameters, null, mUiCustomization);
+                    }
                 } catch (SDKAlreadyInitializedException e) {
                     // This shouldn't cause any side effect.
                     Logger.w(TAG, "3DS2 Service already initialized.");

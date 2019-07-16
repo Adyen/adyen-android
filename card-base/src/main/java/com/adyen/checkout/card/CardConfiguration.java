@@ -8,11 +8,13 @@
 
 package com.adyen.checkout.card;
 
+import android.content.Context;
 import android.support.annotation.NonNull;
 import android.util.DisplayMetrics;
 
 import com.adyen.checkout.base.Configuration;
-import com.adyen.checkout.base.PaymentComponent;
+import com.adyen.checkout.base.component.BaseConfiguration;
+import com.adyen.checkout.base.component.BaseConfigurationBuilder;
 import com.adyen.checkout.card.model.CardType;
 import com.adyen.checkout.core.api.Environment;
 
@@ -22,29 +24,17 @@ import java.util.List;
 import java.util.Locale;
 
 /**
- * {@link Configuration} class required by {@link PaymentComponent} to change it's behavior.
- * {@link CardComponent#PROVIDER}
+ * {@link Configuration} class required by {@link CardComponent} to change it's behavior. Pass it to the {@link CardComponent#PROVIDER}.
  */
-public class CardConfiguration implements Configuration {
+public class CardConfiguration extends BaseConfiguration {
 
-    private static final CardType[] DEFAULT_SUPPORTED_CARD =
+    private static final CardType[] DEFAULT_SUPPORTED_CARDS =
             new CardType[]{CardType.VISA, CardType.AMERICAN_EXPRESS, CardType.MASTERCARD};
 
     private final String mPublicKey;
-    private final List<CardType> mSupportedCardTypes;
-    private final boolean mHolderNameRequire;
-    private final Locale mShopperLocale;
     private final DisplayMetrics mDisplayMetrics;
-    private final Environment mEnvironment;
-
-    @NonNull
-    public static CardConfiguration getDefault(
-            @NonNull Locale shopperLocale,
-            @NonNull DisplayMetrics displayMetrics,
-            @NonNull Environment environment,
-            @NonNull String publicKey) {
-        return new CardConfiguration.Builder(shopperLocale, displayMetrics, environment, publicKey).build();
-    }
+    private final boolean mHolderNameRequire;
+    private final List<CardType> mSupportedCardTypes;
 
     /**
      * Constructs a {@link CardConfiguration} object.
@@ -56,17 +46,17 @@ public class CardConfiguration implements Configuration {
      */
     public CardConfiguration(
             @NonNull Locale shopperLocale,
-            @NonNull DisplayMetrics displayMetrics,
             @NonNull Environment environment,
+            @NonNull DisplayMetrics displayMetrics,
             @NonNull String publicKey,
             boolean holderNameRequire,
             @NonNull CardType... supportCardTypes) {
-        this.mShopperLocale = shopperLocale;
-        this.mPublicKey = publicKey;
-        this.mEnvironment = environment;
-        this.mDisplayMetrics = displayMetrics;
-        this.mHolderNameRequire = holderNameRequire;
-        this.mSupportedCardTypes = Collections.unmodifiableList(Arrays.asList(supportCardTypes));
+        super(shopperLocale, environment);
+
+        mPublicKey = publicKey;
+        mDisplayMetrics = displayMetrics;
+        mHolderNameRequire = holderNameRequire;
+        mSupportedCardTypes = Collections.unmodifiableList(Arrays.asList(supportCardTypes));
     }
 
     /**
@@ -80,15 +70,18 @@ public class CardConfiguration implements Configuration {
     }
 
     /**
-     * Get supported card types.
+     * The list of {@link CardType} that this payment supports. Used to predict the card type of the
      *
-     * @return return list of {@link CardType}
+     * @return The list of {@link CardType}.
      */
     @NonNull
     public List<CardType> getSupportedCardTypes() {
         return mSupportedCardTypes;
     }
 
+    /**
+     * @return If the Holder Name is required for this Card payment.
+     */
     public boolean isHolderNameRequire() {
         return mHolderNameRequire;
     }
@@ -104,54 +97,58 @@ public class CardConfiguration implements Configuration {
     }
 
     /**
-     * Get display metrics.
-     *
-     * @return {@link Environment}
+     * Builder to create a {@link CardConfiguration} more easily.
      */
-    @NonNull
-    public Environment getEnvironment() {
-        return mEnvironment;
-    }
+    public static final class Builder extends BaseConfigurationBuilder<CardConfiguration> {
 
-    /**
-     * Get shopper's locale.
-     *
-     * @return {@link Locale}
-     */
-    @NonNull
-    @Override
-    public Locale getShopperLocale() {
-        return mShopperLocale;
-    }
+        private String mBuilderPublicKey;
+        private DisplayMetrics mBuilderDisplayMetrics;
 
-    /**
-     * Card Configuration Builder.
-     */
-    public static final class Builder {
-
-        private final String mPublicKey;
-        private final Locale mShopperLocale;
-        private final DisplayMetrics mDisplayMetrics;
-        private final Environment mEnvironment;
-
-        private CardType[] mSupportedCardTypes = DEFAULT_SUPPORTED_CARD;
-        private boolean mHolderNameRequire;
+        private CardType[] mBuilderSupportedCardTypes = DEFAULT_SUPPORTED_CARDS;
+        private boolean mBuilderHolderNameRequire;
 
         /**
-         * Constructor of Card Configuration Builder.
+         * Constructor of Card Configuration Builder with default values.
          *
-         * @param shopperLocale {@link Locale}
-         * @param publicKey     {@link String}
+         * @param context   A context
+         * @param publicKey The public key to be used for encryption. You can get it from the Customer Area.
+         */
+        public Builder(@NonNull Context context, @NonNull String publicKey) {
+            super(context);
+            mBuilderDisplayMetrics = context.getResources().getDisplayMetrics();
+            mBuilderPublicKey = publicKey;
+        }
+
+        /**
+         * Builder with required parameters for a {@link CardConfiguration}.
+         *
+         * @param shopperLocale     The Locale of the shopper.
+         * @param environment       The {@link Environment} to be used for network calls to Adyen.
+         * @param displayMetrics    The DisplayMetrics to fetch images with the correct size.
+         * @param publicKey         The public key to be used for encryption. You can get it from the Customer Area.
          */
         public Builder(
                 @NonNull Locale shopperLocale,
-                @NonNull DisplayMetrics displayMetrics,
                 @NonNull Environment environment,
+                @NonNull DisplayMetrics displayMetrics,
                 @NonNull String publicKey) {
-            this.mShopperLocale = shopperLocale;
-            this.mDisplayMetrics = displayMetrics;
-            this.mEnvironment = environment;
-            this.mPublicKey = publicKey;
+            super(shopperLocale, environment);
+            mBuilderDisplayMetrics = displayMetrics;
+            mBuilderPublicKey = publicKey;
+        }
+
+        /**
+         * @param publicKey The public key to be used for encryption. You can get it from the Customer Area.
+         */
+        public void setPublicKey(@NonNull String publicKey) {
+            mBuilderPublicKey = publicKey;
+        }
+
+        /**
+         * @param displayMetrics The DisplayMetrics to fetch images with the correct size.
+         */
+        public void setDisplayMetrics(@NonNull DisplayMetrics displayMetrics) {
+            mBuilderDisplayMetrics = displayMetrics;
         }
 
         /**
@@ -162,7 +159,7 @@ public class CardConfiguration implements Configuration {
          */
         @NonNull
         public Builder setSupportedCardTypes(@NonNull CardType... supportCardTypes) {
-            this.mSupportedCardTypes = supportCardTypes;
+            this.mBuilderSupportedCardTypes = supportCardTypes;
             return this;
         }
 
@@ -174,7 +171,7 @@ public class CardConfiguration implements Configuration {
          */
         @NonNull
         public Builder setHolderNameRequire(boolean holderNameRequire) {
-            this.mHolderNameRequire = holderNameRequire;
+            this.mBuilderHolderNameRequire = holderNameRequire;
             return this;
         }
 
@@ -185,7 +182,14 @@ public class CardConfiguration implements Configuration {
          */
         @NonNull
         public CardConfiguration build() {
-            return new CardConfiguration(mShopperLocale, mDisplayMetrics, mEnvironment, mPublicKey, mHolderNameRequire, mSupportedCardTypes);
+            return new CardConfiguration(
+                    mBuilderShopperLocale,
+                    mBuilderEnvironment,
+                    mBuilderDisplayMetrics,
+                    mBuilderPublicKey,
+                    mBuilderHolderNameRequire,
+                    mBuilderSupportedCardTypes
+            );
         }
     }
 

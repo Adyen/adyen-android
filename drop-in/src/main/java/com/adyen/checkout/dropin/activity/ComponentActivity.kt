@@ -92,10 +92,7 @@ class ComponentActivity : AppCompatActivity(), Observer<PaymentComponentState<in
     private fun attachComponent(paymentMethod: PaymentMethod) {
         try {
             component = ComponentParsingProvider.getComponentFor(this@ComponentActivity, paymentMethod)
-                ?: throw CheckoutException("Unable to create PaymentComponent from Factory for type ${paymentMethod.type}")
-
             componentView = ComponentParsingProvider.getViewFor(this@ComponentActivity, paymentMethod)
-                ?: throw CheckoutException("Unable to create ComponentView from Factory for type ${paymentMethod.type}")
         } catch (e: CheckoutException) {
             handleError(ComponentError(e))
             return

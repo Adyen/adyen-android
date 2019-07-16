@@ -19,9 +19,19 @@ import java.util.Locale;
  */
 public interface Configuration {
 
+    /**
+     * Get shopper's locale.
+     *
+     * @return {@link Locale}
+     */
     @NonNull
     Locale getShopperLocale();
 
+    /**
+     * Get the {@link Environment} to be used for network calls to Adyen.
+     *
+     * @return The Environment
+     */
     @NonNull
     Environment getEnvironment();
 }

@@ -188,12 +188,17 @@ class LoadingActivity : AppCompatActivity(), ActionHandler.DetailsRequestedInter
             }
             CallResult.ResultType.ERROR -> {
                 Logger.d(TAG, "ERROR - ${callResult.content}")
-                Toast.makeText(this@LoadingActivity, R.string.payment_failed, Toast.LENGTH_SHORT).show()
+                Toast.makeText(this@LoadingActivity, R.string.payment_failed, Toast.LENGTH_LONG).show()
                 finish()
             }
             CallResult.ResultType.WAIT -> {
                 throw CheckoutException("WAIT CallResult is not expected to be propagated.")
             }
         }
+    }
+
+    override fun onError(errorMessage: String) {
+        Toast.makeText(this@LoadingActivity, R.string.action_failed, Toast.LENGTH_LONG).show()
+        finish()
     }
 }

@@ -31,6 +31,14 @@ class ActionHandler(activity: FragmentActivity, private val callback: DetailsReq
     init {
         redirectComponent.observe(activity, this)
         adyen3DS2Component.observe(activity, this)
+
+        redirectComponent.observeErrors(activity, Observer {
+            callback.onError(it?.errorMessage ?: "Redirect Error.")
+        })
+
+        adyen3DS2Component.observeErrors(activity, Observer {
+            callback.onError(it?.errorMessage ?: "3DS2 Error.")
+        })
     }
 
     override fun onChanged(componentData: ActionComponentData?) {
@@ -60,5 +68,7 @@ class ActionHandler(activity: FragmentActivity, private val callback: DetailsReq
 
     interface DetailsRequestedInterface {
         fun requestDetailsCall(componentData: ActionComponentData)
+
+        fun onError(errorMessage: String)
     }
 }

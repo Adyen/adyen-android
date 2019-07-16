@@ -17,10 +17,8 @@ import android.view.View
 import android.widget.Toast
 import com.adyen.checkout.base.model.PaymentMethodsApiResponse
 import com.adyen.checkout.card.CardConfiguration
-import com.adyen.checkout.core.api.Environment
 import com.adyen.checkout.core.log.LogUtil
 import com.adyen.checkout.core.log.Logger
-import com.adyen.checkout.core.util.LocaleUtil
 import com.adyen.checkout.dropin.DropIn
 import com.adyen.checkout.dropin.DropInConfiguration
 import com.adyen.checkout.example.arch.PaymentMethodsViewModel
@@ -81,7 +79,7 @@ class MainActivity : AppCompatActivity() {
         Logger.d(TAG, "startCheckout")
 
         val cardConfiguration =
-                CardConfiguration.Builder(LocaleUtil.getLocale(this), resources.displayMetrics, Environment.EUROPE, BuildConfig.PUBLIC_KEY)
+                CardConfiguration.Builder(this@MainActivity, BuildConfig.PUBLIC_KEY)
                 .build()
 
         val dropInConfiguration = DropInConfiguration.Builder(this@MainActivity, ExampleDropInService::class.java)

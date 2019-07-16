@@ -18,6 +18,7 @@ import com.adyen.checkout.base.util.PaymentMethodTypes
 import com.adyen.checkout.card.CardComponent
 import com.adyen.checkout.card.CardConfiguration
 import com.adyen.checkout.card.CardView
+import com.adyen.checkout.core.exeption.CheckoutException
 import com.adyen.checkout.dotpay.DotpayComponent
 import com.adyen.checkout.dotpay.DotpayConfiguration
 import com.adyen.checkout.dotpay.DotpayRecyclerView
@@ -26,7 +27,7 @@ import com.adyen.checkout.entercash.EntercashConfiguration
 import com.adyen.checkout.entercash.EntercashRecyclerView
 import com.adyen.checkout.eps.EPSComponent
 import com.adyen.checkout.eps.EPSConfiguration
-import com.adyen.checkout.eps.EPSSpinnerView
+import com.adyen.checkout.eps.EPSRecyclerView
 import com.adyen.checkout.ideal.IdealComponent
 import com.adyen.checkout.ideal.IdealConfiguration
 import com.adyen.checkout.ideal.IdealRecyclerView
@@ -46,10 +47,11 @@ internal class ComponentParsingProvider {
         /**
          * Provides a [PaymentComponent] from a [PaymentComponentProvider] using the [PaymentMethod] reference.
          *
-         * @param activity The Activity which the PaymentComponent will be bound to.
+         * @param activity The Activity/Fragment which the PaymentComponent lifecycle will be bound to.
          * @param paymentMethod The payment method to be parsed.
+         * @throws CheckoutException In case a component cannot be created.
          */
-        internal fun getComponentFor(activity: FragmentActivity, paymentMethod: PaymentMethod): PaymentComponent? {
+        internal fun getComponentFor(activity: FragmentActivity, paymentMethod: PaymentMethod): PaymentComponent {
             val dropInConfig = DropIn.INSTANCE.configuration
 
             val component = when (paymentMethod.type) {
@@ -84,56 +86,48 @@ internal class ComponentParsingProvider {
                     EntercashComponent.PROVIDER.get(activity, paymentMethod, entercashConfig)
                 }
                 PaymentMethodTypes.SCHEME -> {
-                    // Fallback default will not work because we don't have the public key
-                    val cardConfig = dropInConfig.getConfigurationFor(PaymentMethodTypes.SCHEME)
-                            ?: CardConfiguration.getDefault(dropInConfig.shopperLocale, dropInConfig.displayMetrics,
-                                    dropInConfig.environment, "")
+                    val cardConfig: CardConfiguration = dropInConfig.getConfigurationFor(PaymentMethodTypes.SCHEME)
+                        ?: throw CheckoutException("Card Component requires specific configuration to be initialized by Drop-in.")
                     CardComponent.PROVIDER.get(activity, paymentMethod, cardConfig)
                 }
                 else -> {
-                    null
+                    throw CheckoutException("Unable to find component for type - ${paymentMethod.type}")
                 }
             }
-            component?.setCreatedForDropIn()
+            component.setCreatedForDropIn()
             return component
         }
 
         /**
-         * Provides a [ComponentView] using the [PaymentMethod] reference.
+         * Provides a [ComponentView] to be used in Drop-in using the [PaymentMethod] reference.
+         * View type is defined by our UI specifications.
          *
          * @param context The context used to create the View
          * @param paymentMethod The payment method to be parsed.
          */
-        internal fun getViewFor(context: Context, paymentMethod: PaymentMethod): ComponentView<PaymentComponent>? {
+        internal fun getViewFor(context: Context, paymentMethod: PaymentMethod): ComponentView<PaymentComponent> {
             return when (paymentMethod.type) {
                 PaymentMethodTypes.IDEAL -> {
-                    // Choose view type for the component
                     @Suppress("UNCHECKED_CAST")
                     IdealRecyclerView(context) as ComponentView<PaymentComponent>
-//                    IdealSpinnerView(context) as ComponentView<PaymentComponent>
                 }
                 PaymentMethodTypes.MOLPAY -> {
-                    // Choose view type for the component
                     @Suppress("UNCHECKED_CAST")
                     MolpayRecyclerView(context) as ComponentView<PaymentComponent>
                 }
                 PaymentMethodTypes.EPS -> {
-                    // Choose view type for the component
                     @Suppress("UNCHECKED_CAST")
-                    EPSSpinnerView(context) as ComponentView<PaymentComponent>
+                    EPSRecyclerView(context) as ComponentView<PaymentComponent>
                 }
                 PaymentMethodTypes.DOTPAY -> {
-                    // Choose view type for the component
                     @Suppress("UNCHECKED_CAST")
                     DotpayRecyclerView(context) as ComponentView<PaymentComponent>
                 }
                 PaymentMethodTypes.OPEN_BANKING -> {
-                    // Choose view type for the component
                     @Suppress("UNCHECKED_CAST")
                     OpenBankingRecyclerView(context) as ComponentView<PaymentComponent>
                 }
                 PaymentMethodTypes.ENTERCASH -> {
-                    // Choose view type for the component
                     @Suppress("UNCHECKED_CAST")
                     EntercashRecyclerView(context) as ComponentView<PaymentComponent>
                 }
@@ -142,7 +136,7 @@ internal class ComponentParsingProvider {
                     CardView(context) as ComponentView<PaymentComponent>
                 }
                 else -> {
-                    null
+                    throw CheckoutException("Unable to find view for type - ${paymentMethod.type}")
                 }
             }
         }
