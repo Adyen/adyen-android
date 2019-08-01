@@ -78,13 +78,13 @@ class MainActivity : AppCompatActivity() {
     private fun startCheckout() {
         Logger.d(TAG, "startCheckout")
 
-        val cardConfiguration =
-                CardConfiguration.Builder(this@MainActivity, BuildConfig.PUBLIC_KEY)
+        val cardConfiguration = CardConfiguration.Builder(this@MainActivity, BuildConfig.PUBLIC_KEY)
+                .setShopperReference(BuildConfig.SHOPPER_REFERENCE)
                 .build()
 
         val dropInConfiguration = DropInConfiguration.Builder(this@MainActivity, ExampleDropInService::class.java)
-            .addCardConfiguration(cardConfiguration)
-            .build()
+                .addCardConfiguration(cardConfiguration)
+                .build()
 
         val resultIntent = Intent(this, MainActivity::class.java)
         resultIntent.flags = Intent.FLAG_ACTIVITY_CLEAR_TOP

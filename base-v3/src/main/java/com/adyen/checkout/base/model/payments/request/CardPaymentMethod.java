@@ -19,7 +19,7 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 @SuppressWarnings({"MemberName", "PMD.DataClass"})
-public final class CardPaymentMethod extends PaymentComponentData {
+public final class CardPaymentMethod extends PaymentMethodDetails {
 
     @NonNull
     public static final Creator<CardPaymentMethod> CREATOR = new Creator<>(CardPaymentMethod.class);
@@ -31,6 +31,7 @@ public final class CardPaymentMethod extends PaymentComponentData {
     private static final String ENCRYPTED_EXPIRY_YEAR = "encryptedExpiryYear";
     private static final String ENCRYPTED_SECURITY_CODE = "encryptedSecurityCode";
     private static final String HOLDER_NAME = "holderName";
+    private static final String RECURRING_REF = "recurringDetailReference";
 
     @NonNull
     public static final Serializer<CardPaymentMethod> SERIALIZER = new Serializer<CardPaymentMethod>() {
@@ -41,12 +42,13 @@ public final class CardPaymentMethod extends PaymentComponentData {
             final JSONObject jsonObject = new JSONObject();
             try {
                 // getting parameters from parent class
-                jsonObject.putOpt(PaymentComponentData.TYPE, modelObject.getType());
+                jsonObject.putOpt(PaymentMethodDetails.TYPE, modelObject.getType());
 
                 jsonObject.putOpt(ENCRYPTED_CARD_NUMBER, modelObject.getEncryptedCardNumber());
                 jsonObject.putOpt(ENCRYPTED_EXPIRY_MONTH, modelObject.getEncryptedExpiryMonth());
                 jsonObject.putOpt(ENCRYPTED_EXPIRY_YEAR, modelObject.getEncryptedExpiryYear());
                 jsonObject.putOpt(ENCRYPTED_SECURITY_CODE, modelObject.getEncryptedSecurityCode());
+                jsonObject.putOpt(RECURRING_REF, modelObject.getRecurringDetailReference());
                 jsonObject.putOpt(HOLDER_NAME, modelObject.getHolderName());
             } catch (JSONException e) {
                 throw new ModelSerializationException(IdealPaymentMethod.class, e);
@@ -60,11 +62,12 @@ public final class CardPaymentMethod extends PaymentComponentData {
             final CardPaymentMethod cardPaymentMethod = new CardPaymentMethod();
 
             // getting parameters from parent class
-            cardPaymentMethod.setType(jsonObject.optString(PaymentComponentData.TYPE, null));
+            cardPaymentMethod.setType(jsonObject.optString(PaymentMethodDetails.TYPE, null));
 
             cardPaymentMethod.setEncryptedCardNumber(jsonObject.optString(ENCRYPTED_CARD_NUMBER, null));
             cardPaymentMethod.setEncryptedExpiryMonth(jsonObject.optString(ENCRYPTED_EXPIRY_MONTH, null));
             cardPaymentMethod.setEncryptedExpiryYear(jsonObject.optString(ENCRYPTED_EXPIRY_YEAR, null));
+            cardPaymentMethod.setRecurringDetailReference(jsonObject.optString(RECURRING_REF));
             cardPaymentMethod.setEncryptedSecurityCode(jsonObject.optString(ENCRYPTED_SECURITY_CODE, null));
             cardPaymentMethod.setHolderName(jsonObject.optString(HOLDER_NAME, null));
 
@@ -77,6 +80,7 @@ public final class CardPaymentMethod extends PaymentComponentData {
     private String encryptedExpiryYear;
     private String encryptedSecurityCode;
     private String holderName;
+    private String recurringDetailReference;
 
     public CardPaymentMethod() {
         super();
@@ -131,5 +135,14 @@ public final class CardPaymentMethod extends PaymentComponentData {
 
     public void setHolderName(@Nullable String holderName) {
         this.holderName = holderName;
+    }
+
+    @Nullable
+    public String getRecurringDetailReference() {
+        return recurringDetailReference;
+    }
+
+    public void setRecurringDetailReference(@NonNull String recurringDetailReference) {
+        this.recurringDetailReference = recurringDetailReference;
     }
 }

@@ -20,14 +20,15 @@ import com.adyen.checkout.base.model.paymentmethods.InputDetail;
 import com.adyen.checkout.base.model.paymentmethods.Item;
 import com.adyen.checkout.base.model.paymentmethods.PaymentMethod;
 import com.adyen.checkout.base.model.payments.request.IssuerListPaymentMethod;
+import com.adyen.checkout.base.model.payments.request.PaymentComponentData;
 import com.adyen.checkout.core.log.LogUtil;
 import com.adyen.checkout.core.log.Logger;
 
 import java.util.ArrayList;
 import java.util.List;
 
-public abstract class IssuerListComponent<T extends IssuerListPaymentMethod> extends
-        BasePaymentComponent<IssuerListConfiguration, IssuerListInputData, IssuerListOutputData, T> implements
+public abstract class IssuerListComponent<IssuerListPaymentMethodT extends IssuerListPaymentMethod> extends
+        BasePaymentComponent<IssuerListConfiguration, IssuerListInputData, IssuerListOutputData> implements
         IssuerLogoCallback.DrawableFetchedCallback {
     private static final String TAG = LogUtil.getTag();
 
@@ -96,21 +97,24 @@ public abstract class IssuerListComponent<T extends IssuerListPaymentMethod> ext
 
     @NonNull
     @Override
-    protected PaymentComponentState<T> createComponentState() {
-        final T issuerListState = instantiateTypedPaymentMethod();
+    protected PaymentComponentState<IssuerListPaymentMethodT> createComponentState() {
+        final IssuerListPaymentMethodT issuerListPaymentMethod = instantiateTypedPaymentMethod();
 
         final IssuerModel selectedIssuer = getOutputData().getSelectedIssuer();
 
-        issuerListState.setType(getPaymentMethodType());
-        issuerListState.setIssuer(selectedIssuer != null ? selectedIssuer.getId() : "");
+        issuerListPaymentMethod.setType(getPaymentMethodType());
+        issuerListPaymentMethod.setIssuer(selectedIssuer != null ? selectedIssuer.getId() : "");
 
         final boolean isValid = getOutputData().isValid();
 
-        return new PaymentComponentState<>(issuerListState, isValid);
+        final PaymentComponentData<IssuerListPaymentMethodT> paymentComponentData = new PaymentComponentData<>();
+        paymentComponentData.setPaymentMethod(issuerListPaymentMethod);
+
+        return new PaymentComponentState<>(paymentComponentData, isValid);
     }
 
     @NonNull
-    protected abstract T instantiateTypedPaymentMethod();
+    protected abstract IssuerListPaymentMethodT instantiateTypedPaymentMethod();
 
     @Override
     protected void onCleared() {

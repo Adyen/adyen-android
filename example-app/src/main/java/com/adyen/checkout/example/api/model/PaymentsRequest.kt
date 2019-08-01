@@ -8,13 +8,15 @@
 
 package com.adyen.checkout.example.api.model
 
-import com.adyen.checkout.base.model.payments.request.PaymentComponentData
+import com.adyen.checkout.base.model.payments.request.PaymentMethodDetails
 import com.adyen.checkout.redirect.RedirectUtil
 
 // TODO this class is just a mock for tests
 @Suppress("MagicNumber")
 data class PaymentsRequest(
-    val paymentMethod: PaymentComponentData,
+    val paymentMethod: PaymentMethodDetails,
+    val shopperReference: String,
+    val storePaymentMethod: Boolean,
     val amount: Amount = Amount("EUR", 1337),
     val merchantAccount: String = "TestMerchantCheckout", // BuildConfig.MERCHANT_ACCOUNT,
     val reference: String = "no-reference",

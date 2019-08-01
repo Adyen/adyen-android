@@ -18,7 +18,7 @@ import com.adyen.checkout.core.model.JsonUtils;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-public class GenericPaymentMethod extends PaymentComponentData {
+public class GenericPaymentMethod extends PaymentMethodDetails {
     @NonNull
     public static final Creator<GenericPaymentMethod> CREATOR = new Creator<>(GenericPaymentMethod.class);
 
@@ -31,7 +31,7 @@ public class GenericPaymentMethod extends PaymentComponentData {
             final JSONObject jsonObject = new JSONObject();
             try {
                 // getting parameters from parent class
-                jsonObject.putOpt(PaymentComponentData.TYPE, modelObject.getType());
+                jsonObject.putOpt(PaymentMethodDetails.TYPE, modelObject.getType());
 
             } catch (JSONException e) {
                 throw new ModelSerializationException(GenericPaymentMethod.class, e);
@@ -42,7 +42,7 @@ public class GenericPaymentMethod extends PaymentComponentData {
         @NonNull
         @Override
         public GenericPaymentMethod deserialize(@NonNull JSONObject jsonObject) {
-            return new GenericPaymentMethod(jsonObject.optString(PaymentComponentData.TYPE, null));
+            return new GenericPaymentMethod(jsonObject.optString(PaymentMethodDetails.TYPE, null));
         }
     };
 

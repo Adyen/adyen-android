@@ -23,6 +23,7 @@ import com.adyen.checkout.base.Configuration;
 import com.adyen.checkout.base.DataProvider;
 import com.adyen.checkout.base.PaymentComponentState;
 import com.adyen.checkout.base.model.paymentmethods.PaymentMethod;
+import com.adyen.checkout.base.model.payments.request.PaymentComponentData;
 import com.adyen.checkout.base.models.TestInputData;
 import com.adyen.checkout.base.models.TestOutputData;
 import com.adyen.checkout.base.models.TestPaymentMethod;
@@ -41,7 +42,7 @@ public class BaseComponentTest {
     @Rule
     public TestRule rule = new InstantTaskExecutorRule();
 
-    BasePaymentComponent<Configuration, TestInputData, TestOutputData, TestPaymentMethod> mBaseComponent;
+    BasePaymentComponent<Configuration, TestInputData, TestOutputData> mBaseComponent;
 
     PaymentMethod paymentMethod;
     ClassLoader classLoader;
@@ -54,7 +55,7 @@ public class BaseComponentTest {
 
     @Test(expected = IllegalArgumentException.class)
     public void initBaseComponent_notSupportedPaymentMethod_expectException() throws IOException, JSONException {
-        mBaseComponent = new BasePaymentComponent<Configuration, TestInputData, TestOutputData, TestPaymentMethod>(DataProvider.getPaymentMethodResponse(
+        mBaseComponent = new BasePaymentComponent<Configuration, TestInputData, TestOutputData>(DataProvider.getPaymentMethodResponse(
                 classLoader).getPaymentMethods().get(0),
                 null) {
             @NonNull
@@ -126,7 +127,7 @@ public class BaseComponentTest {
     }
 
     private BasePaymentComponent getBaseComponent() {
-        BasePaymentComponent baseComponent = new BasePaymentComponent<Configuration, TestInputData, TestOutputData, TestPaymentMethod>(paymentMethod, null) {
+        BasePaymentComponent baseComponent = new BasePaymentComponent<Configuration, TestInputData, TestOutputData>(paymentMethod, null) {
             @NonNull
             @Override
             protected TestOutputData onInputDataChanged(@NonNull TestInputData inputData) {
@@ -143,7 +144,9 @@ public class BaseComponentTest {
             @NonNull
             @Override
             protected PaymentComponentState<TestPaymentMethod> createComponentState() {
-                return new PaymentComponentState<>(new TestPaymentMethod(), true);
+                final PaymentComponentData<TestPaymentMethod> paymentComponentData = new PaymentComponentData<>();
+                paymentComponentData.setPaymentMethod(new TestPaymentMethod());
+                return new PaymentComponentState<>(paymentComponentData, true);
             }
 
             @NonNull

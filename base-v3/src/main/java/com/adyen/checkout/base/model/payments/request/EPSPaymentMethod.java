@@ -34,7 +34,7 @@ public final class EPSPaymentMethod extends IssuerListPaymentMethod {
             final JSONObject jsonObject = new JSONObject();
             try {
                 // getting parameters from parent class
-                jsonObject.putOpt(PaymentComponentData.TYPE, modelObject.getType());
+                jsonObject.putOpt(PaymentMethodDetails.TYPE, modelObject.getType());
                 jsonObject.putOpt(IssuerListPaymentMethod.ISSUER, modelObject.getIssuer());
 
 
@@ -50,7 +50,7 @@ public final class EPSPaymentMethod extends IssuerListPaymentMethod {
             final EPSPaymentMethod idealPaymentMethod = new EPSPaymentMethod();
 
             // getting parameters from parent class
-            idealPaymentMethod.setType(jsonObject.optString(PaymentComponentData.TYPE, null));
+            idealPaymentMethod.setType(jsonObject.optString(PaymentMethodDetails.TYPE, null));
             idealPaymentMethod.setIssuer(jsonObject.optString(IssuerListPaymentMethod.ISSUER, null));
 
             return idealPaymentMethod;

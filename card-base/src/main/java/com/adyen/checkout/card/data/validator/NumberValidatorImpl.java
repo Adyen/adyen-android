@@ -26,7 +26,12 @@ public final class NumberValidatorImpl implements NumberValidator {
 
     @NonNull
     @Override
-    public NumberValidationResult validateNumber(@NonNull String number) {
+    public NumberValidationResult validateNumber(@NonNull String number, boolean isOneClick) {
+
+        if (isOneClick) {
+            return new NumberValidationResult(Validity.VALID, number);
+        }
+
         final String normalizedNumber = normalize(number, mNumberSeparator);
         final int length = normalizedNumber.length();
 

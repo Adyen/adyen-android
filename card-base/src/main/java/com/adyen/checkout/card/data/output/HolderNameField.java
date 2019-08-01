@@ -8,14 +8,12 @@
 
 package com.adyen.checkout.card.data.output;
 
-import com.adyen.checkout.base.component.data.output.BaseField;
-import com.adyen.checkout.base.component.validator.Validity;
-import com.adyen.checkout.card.data.validator.CardValidator;
+import android.support.annotation.NonNull;
 
-public class HolderNameField extends BaseField<String> {
-    private static final String EMPTY_STRING = "";
+import com.adyen.checkout.card.data.validator.HolderNameValidator;
 
-    HolderNameField() {
-        super(EMPTY_STRING, EMPTY_STRING, new CardValidator.HolderNameValidationResult(Validity.INVALID, null));
+public class HolderNameField extends BaseFiled<HolderNameValidator.HolderNameValidationResult> {
+    public HolderNameField(@NonNull HolderNameValidator.HolderNameValidationResult validationResult) {
+        super(validationResult);
     }
 }

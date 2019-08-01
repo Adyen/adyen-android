@@ -11,7 +11,7 @@ package com.adyen.checkout.base.model.payments.request;
 import android.support.annotation.Nullable;
 
 @SuppressWarnings("MemberName")
-public abstract class IssuerListPaymentMethod extends PaymentComponentData {
+public abstract class IssuerListPaymentMethod extends PaymentMethodDetails {
 
     static final String ISSUER = "issuer";
 

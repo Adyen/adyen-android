@@ -9,75 +9,100 @@
 package com.adyen.checkout.card.data.output;
 
 import android.support.annotation.NonNull;
-import android.support.annotation.Nullable;
 
 import com.adyen.checkout.base.component.data.output.OutputData;
 
 public final class CardOutputData implements OutputData {
 
-    private final NumberField mNumber;
-    private final ExpiryDateField mExpiryDate;
-    private final SecurityCodeField mSecurityCode;
     private final HolderNameField mHolderNameField;
+    private final CardNumberField mCardNumberField;
+    private final ExpiryDateField mExpiryDateField;
+    private final SecurityCodeField mSecurityCodeField;
+    private boolean mIsStoredPaymentMethodEnable;
+
+    public static final HolderNameField EMPTY_HOLDER_NAME_FILED = new HolderNameField(null);
+    public static final CardNumberField EMPTY_CARD_NUMBER_FILED = new CardNumberField(null);
+    public static final ExpiryDateField EMPTY_EXPIRY_DATE_FILED = new ExpiryDateField(null);
+    public static final SecurityCodeField EMPTY_SECURITY_CODE_FILED = new SecurityCodeField(null);
 
     /**
      * Constructs a {@link com.adyen.checkout.card.CardComponent} object.
-     *
-     * @param number       {@link NumberField}
-     * @param expiryDate   {@link ExpiryDateField}
-     * @param securityCode {@link SecurityCodeField}
-     */
-    public CardOutputData(@NonNull NumberField number, @NonNull ExpiryDateField expiryDate, @Nullable SecurityCodeField securityCode) {
-        this(number, expiryDate, securityCode, null);
+     **/
+    public CardOutputData(@NonNull CardNumberField cardNumberField, @NonNull ExpiryDateField expiryDateField,
+            @NonNull SecurityCodeField securityCodeField, @NonNull HolderNameField holderNameField) {
+        this(cardNumberField, expiryDateField, securityCodeField, holderNameField, false);
     }
 
     /**
      * Constructs a {@link com.adyen.checkout.card.CardComponent} object.
-     *
-     * @param number          {@link NumberField}
-     * @param expiryDate      {@link ExpiryDateField}
-     * @param securityCode    {@link SecurityCodeField}
-     * @param holderNameField {@link HolderNameField}
      */
-    public CardOutputData(@NonNull NumberField number, @NonNull ExpiryDateField expiryDate, @Nullable SecurityCodeField securityCode,
-            @Nullable HolderNameField holderNameField) {
-        mNumber = number;
-        mExpiryDate = expiryDate;
-        mSecurityCode = securityCode;
+    public CardOutputData(@NonNull CardNumberField cardNumberField, @NonNull ExpiryDateField expiryDateField,
+            @NonNull SecurityCodeField securityCodeField, @NonNull HolderNameField holderNameField, boolean isStoredPaymentMethodEnable) {
+        mCardNumberField = cardNumberField;
+        mExpiryDateField = expiryDateField;
+        mSecurityCodeField = securityCodeField;
         mHolderNameField = holderNameField;
+        mIsStoredPaymentMethodEnable = isStoredPaymentMethodEnable;
     }
 
+    /**
+     * Constructs a {@link com.adyen.checkout.card.CardComponent} object.
+     * With empty objects.
+     */
     public CardOutputData() {
-        this(new NumberField(), new ExpiryDateField(), new SecurityCodeField(), new HolderNameField());
+        mCardNumberField = EMPTY_CARD_NUMBER_FILED;
+        mHolderNameField = EMPTY_HOLDER_NAME_FILED;
+        mExpiryDateField = EMPTY_EXPIRY_DATE_FILED;
+        mSecurityCodeField = EMPTY_SECURITY_CODE_FILED;
     }
 
     @NonNull
-    public NumberField getNumber() {
-        return mNumber;
+    public CardNumberField getCardNumberField() {
+        return mCardNumberField;
     }
 
     @NonNull
-    public ExpiryDateField getExpiryDate() {
-        return mExpiryDate;
+    public ExpiryDateField getExpiryDateField() {
+        return mExpiryDateField;
     }
 
     @NonNull
-    public SecurityCodeField getSecurityCode() {
-        return mSecurityCode;
+    public SecurityCodeField getSecurityCodeField() {
+        return mSecurityCodeField;
     }
 
-    @Nullable
+    @NonNull
     public HolderNameField getHolderNameField() {
         return mHolderNameField;
     }
 
+    /**
+     * Check if object is created by default constructor.
+     */
+    public boolean isEmpty() {
+        return mCardNumberField.equals(EMPTY_CARD_NUMBER_FILED)
+                && mHolderNameField.equals(EMPTY_HOLDER_NAME_FILED)
+                && mSecurityCodeField.equals(EMPTY_SECURITY_CODE_FILED)
+                && mExpiryDateField.equals(EMPTY_EXPIRY_DATE_FILED);
+    }
+
     @Override
     public boolean isValid() {
-        final boolean requiredFieldsValidation = mNumber.getValidationResult().isValid()
-                && mExpiryDate.getValidationResult().isValid()
-                && mSecurityCode.getValidationResult().isValid();
+        if (!isEmpty()) {
+            return mCardNumberField.getValidationResult().isValid()
+                    && mExpiryDateField.getValidationResult().isValid()
+                    && mSecurityCodeField.getValidationResult().isValid()
+                    && mHolderNameField.getValidationResult().isValid();
+        }
 
-        return (mHolderNameField == null) ? requiredFieldsValidation
-                : mHolderNameField.getValidationResult().isValid() && requiredFieldsValidation;
+        return false;
+    }
+
+    public void setStoredPaymentMethodStatus(boolean storedPaymentMethodEnable) {
+        mIsStoredPaymentMethodEnable = storedPaymentMethodEnable;
+    }
+
+    public boolean isStoredPaymentMethodEnable() {
+        return mIsStoredPaymentMethodEnable;
     }
 }

@@ -8,26 +8,20 @@
 
 package com.adyen.checkout.core.api;
 
+import static com.adyen.checkout.core.api.SSLSocketUtil.TLS_SOCKET_FACTORY;
+
 import android.support.annotation.NonNull;
 
 import java.io.IOException;
 import java.net.HttpURLConnection;
 import java.net.URL;
-import java.security.KeyManagementException;
-import java.security.NoSuchAlgorithmException;
 
 import javax.net.ssl.HttpsURLConnection;
-import javax.net.ssl.SSLSocketFactory;
 
 abstract class BaseHttpUrlConnectionFactory {
-    private static final SSLSocketFactory SSL_SOCKET_FACTORY;
 
     static {
-        try {
-            SSL_SOCKET_FACTORY = new TlsSocketFactory();
-        } catch (NoSuchAlgorithmException | KeyManagementException e) {
-            throw new RuntimeException("Could not initialize SSLSocketFactory.", e);
-        }
+        HttpsURLConnection.setDefaultSSLSocketFactory(TLS_SOCKET_FACTORY);
     }
 
     @NonNull
@@ -35,7 +29,7 @@ abstract class BaseHttpUrlConnectionFactory {
         final HttpURLConnection urlConnection = (HttpURLConnection) new URL(url).openConnection();
 
         if (urlConnection instanceof HttpsURLConnection) {
-            ((HttpsURLConnection) urlConnection).setSSLSocketFactory(SSL_SOCKET_FACTORY);
+            ((HttpsURLConnection) urlConnection).setSSLSocketFactory(TLS_SOCKET_FACTORY);
             return urlConnection;
         } else {
             return handleInsecureConnection(urlConnection);

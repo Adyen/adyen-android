@@ -55,7 +55,7 @@ public class Threeds2ChallengeAction extends Action {
             threeds2ChallengeAction.setType(jsonObject.optString(Action.TYPE, null));
             threeds2ChallengeAction.setPaymentData(jsonObject.optString(Action.PAYMENT_DATA, null));
 
-            threeds2ChallengeAction.setToken(jsonObject.optString(TOKEN));
+            threeds2ChallengeAction.setToken(jsonObject.optString(TOKEN, null));
             return threeds2ChallengeAction;
         }
     };

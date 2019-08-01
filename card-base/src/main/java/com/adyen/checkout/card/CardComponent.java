@@ -9,91 +9,112 @@
 package com.adyen.checkout.card;
 
 import android.arch.lifecycle.LifecycleOwner;
-import android.arch.lifecycle.MutableLiveData;
 import android.arch.lifecycle.Observer;
-import android.graphics.drawable.Drawable;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 
 import com.adyen.checkout.base.PaymentComponentProvider;
 import com.adyen.checkout.base.PaymentComponentState;
-import com.adyen.checkout.base.api.LogoApi;
 import com.adyen.checkout.base.component.BasePaymentComponent;
-import com.adyen.checkout.base.component.PaymentComponentProviderImpl;
 import com.adyen.checkout.base.model.paymentmethods.InputDetail;
 import com.adyen.checkout.base.model.paymentmethods.PaymentMethod;
+import com.adyen.checkout.base.model.paymentmethods.RecurringDetail;
 import com.adyen.checkout.base.model.payments.request.CardPaymentMethod;
+import com.adyen.checkout.base.model.payments.request.PaymentComponentData;
+import com.adyen.checkout.base.util.DateUtils;
 import com.adyen.checkout.base.util.PaymentMethodTypes;
-import com.adyen.checkout.card.data.formatter.CardFormatter;
 import com.adyen.checkout.card.data.input.CardInputData;
+import com.adyen.checkout.card.data.output.CardNumberField;
 import com.adyen.checkout.card.data.output.CardOutputData;
 import com.adyen.checkout.card.data.output.ExpiryDateField;
 import com.adyen.checkout.card.data.output.HolderNameField;
-import com.adyen.checkout.card.data.output.NumberField;
 import com.adyen.checkout.card.data.output.SecurityCodeField;
 import com.adyen.checkout.card.data.validator.CardValidator;
+import com.adyen.checkout.card.data.validator.ExpiryDateValidator;
 import com.adyen.checkout.card.model.CardType;
-import com.adyen.checkout.card.model.EncryptedCard;
 import com.adyen.checkout.core.util.StringUtil;
+import com.adyen.checkout.cse.Card;
+import com.adyen.checkout.cse.CardEncryptor;
+import com.adyen.checkout.cse.EncryptedCard;
 import com.adyen.checkout.cse.EncryptionException;
+import com.adyen.checkout.cse.internal.CardEncryptorImpl;
 
 import java.util.ArrayList;
-import java.util.Date;
-import java.util.HashMap;
 import java.util.List;
 
-public final class CardComponent extends BasePaymentComponent<CardConfiguration, CardInputData, CardOutputData, CardPaymentMethod> implements
-        CardLogoCallback.DrawableFetchedCallback {
+public final class CardComponent extends BasePaymentComponent<CardConfiguration, CardInputData, CardOutputData> {
 
-    public static final PaymentComponentProvider<CardComponent, CardConfiguration> PROVIDER = new PaymentComponentProviderImpl<>(CardComponent.class);
+    public static final PaymentComponentProvider<CardComponent, CardConfiguration> PROVIDER = new CardComponentProvider();
 
-    private final CardFormatter mCardFormatter;
-    private final CardValidator mCardValidator;
-    private final CardEncryption mCardEncryption;
 
-    private final MutableLiveData<HashMap<String, Drawable>> mCardLogoImages = new MutableLiveData<>();
+    private final CardEncryptor mCardEncryption = new CardEncryptorImpl();
+    private final CardValidator mCardValidator = new CardValidator.Builder().build();
+
     private final List<CardType> mFilteredSupportedCards = new ArrayList<>();
-
-    private final LogoApi mLogoApi;
+    private CardInputData mStoredPaymentInputData;
 
     /**
-     * Constructs a {@link BasePaymentComponent} object.
+     * Constructs a {@link CardComponent} object.
+     *
+     * @param paymentMethod {@link PaymentMethod} represents card payment method.
+     * @param configuration {@link CardConfiguration}.
+     */
+    public CardComponent(@NonNull RecurringDetail paymentMethod, @NonNull CardConfiguration configuration) {
+        super(paymentMethod, configuration);
+
+        mStoredPaymentInputData = new CardInputData();
+        mStoredPaymentInputData.setCardNumber(paymentMethod.getLastFour());
+        mStoredPaymentInputData.setExpiryDate(paymentMethod.getExpiryMonth()
+                + DateUtils.removeFirstTwoDigitFromYear(paymentMethod.getExpiryYear()));
+
+        final CardType cardType = CardType.getCardTypeByTxVarient(paymentMethod.getBrand());
+        if (cardType != null) {
+            mFilteredSupportedCards.add(cardType);
+        }
+    }
+
+    public boolean isStoredPaymentMethod() {
+        return mStoredPaymentInputData != null;
+    }
+
+    @Nullable
+    public CardInputData getStoredPaymentInputData() {
+        return mStoredPaymentInputData;
+    }
+
+    /**
+     * Constructs a {@link CardComponent} object.
      *
      * @param paymentMethod {@link PaymentMethod} represents card payment method.
      * @param configuration {@link CardConfiguration}.
      */
     public CardComponent(@NonNull PaymentMethod paymentMethod, @NonNull CardConfiguration configuration) {
         super(paymentMethod, configuration);
-
-        mCardFormatter = new CardFormatter.Builder().build();
-        mCardValidator = new CardValidator.Builder().build();
-        mCardEncryption = new CardEncryptionImpl();
-
-        mLogoApi = LogoApi.getInstance(configuration.getEnvironment(), configuration.getDisplayMetrics());
     }
 
-    protected boolean isHolderNameRequire() {
+    public boolean isHolderNameRequire() {
         return getConfiguration().isHolderNameRequire();
+    }
+
+    public boolean showStorePaymentField() {
+        return getConfiguration().isShowStorePaymentFieldEnable();
+    }
+
+    @NonNull
+    @Override
+    protected CardConfiguration getConfiguration() {
+        return super.getConfiguration();
     }
 
     @NonNull
     @Override
     protected CardOutputData onInputDataChanged(@NonNull CardInputData inputData) {
-        onNumberChanged(inputData.getCardNumber());
-        onExpiryDateChanged(inputData.getExpiryDate());
-        onSecurityCodeChanged(inputData.getSecurityCode());
-        onHolderNameChanged(inputData.getHolderName());
-
-        if (isHolderNameRequire()) {
-            return new CardOutputData(getOutputData().getNumber(),
-                    getOutputData().getExpiryDate(),
-                    getOutputData().getSecurityCode(),
-                    getOutputData().getHolderNameField());
-        } else {
-            return new CardOutputData(getOutputData().getNumber(),
-                    getOutputData().getExpiryDate(),
-                    getOutputData().getSecurityCode());
-        }
+        return new CardOutputData(
+                new CardNumberField(mCardValidator.validateNumber(inputData.getCardNumber(), isStoredPaymentMethod())),
+                new ExpiryDateField(mCardValidator.validateExpiryDate(inputData.getExpiryDate())),
+                new SecurityCodeField(getSecurityCodeValidationResult(inputData.getSecurityCode())),
+                new HolderNameField(mCardValidator.validateHolderName(inputData.getHolderName(), isHolderNameRequire())),
+                inputData.isStorePaymentEnable());
     }
 
     @NonNull
@@ -109,26 +130,50 @@ public final class CardComponent extends BasePaymentComponent<CardConfiguration,
         final CardPaymentMethod cardPaymentMethod = new CardPaymentMethod();
         cardPaymentMethod.setType(CardPaymentMethod.PAYMENT_METHOD_TYPE);
 
+        final Card.Builder card = new Card.Builder();
+        final CardOutputData outputData = getOutputData();
+
         final EncryptedCard encryptedCard;
         try {
-            encryptedCard = mCardEncryption.encryptCardOutput(getOutputData(),
-                    getConfiguration().getPublicKey(),
-                    new Date());
+            if (!isStoredPaymentMethod()) {
+                card.setNumber(outputData.getCardNumberField().getValidationResult().getNumber());
+            }
+
+            card.setSecurityCode(outputData.getSecurityCodeField().getValidationResult().getSecurityCode());
+
+            final ExpiryDateValidator.ExpiryDateValidationResult expiryDateResult = outputData.getExpiryDateField().getValidationResult();
+            if (expiryDateResult.getExpiryYear() != null && expiryDateResult.getExpiryMonth() != null) {
+                card.setExpiryDate(expiryDateResult.getExpiryMonth(), expiryDateResult.getExpiryYear());
+            }
+
+            encryptedCard = mCardEncryption.encryptFields(card.build(), getConfiguration().getPublicKey());
         } catch (EncryptionException e) {
             notifyException(e);
-            return new PaymentComponentState<>(cardPaymentMethod, false);
+            final PaymentComponentData<CardPaymentMethod> paymentComponentData = new PaymentComponentData<>();
+            paymentComponentData.setPaymentMethod(cardPaymentMethod);
+            return new PaymentComponentState<>(paymentComponentData, false);
         }
 
-        cardPaymentMethod.setEncryptedCardNumber(encryptedCard.getEncryptedNumber());
-        cardPaymentMethod.setEncryptedExpiryMonth(encryptedCard.getEncryptedExpiryMonth());
-        cardPaymentMethod.setEncryptedExpiryYear(encryptedCard.getEncryptedExpiryYear());
+        if (!isStoredPaymentMethod()) {
+            cardPaymentMethod.setEncryptedCardNumber(encryptedCard.getEncryptedNumber());
+            cardPaymentMethod.setEncryptedExpiryMonth(encryptedCard.getEncryptedExpiryMonth());
+            cardPaymentMethod.setEncryptedExpiryYear(encryptedCard.getEncryptedExpiryYear());
+        } else {
+            cardPaymentMethod.setRecurringDetailReference(((RecurringDetail) getPaymentMethod()).getId());
+        }
+
         cardPaymentMethod.setEncryptedSecurityCode(encryptedCard.getEncryptedSecurityCode());
 
         if (isHolderNameRequire() && getOutputData().getHolderNameField() != null) {
-            cardPaymentMethod.setHolderName(getOutputData().getHolderNameField().getValue());
+            cardPaymentMethod.setHolderName(outputData.getHolderNameField().getValidationResult().getHolderName());
         }
 
-        return new PaymentComponentState<>(cardPaymentMethod, getOutputData().isValid());
+        final PaymentComponentData<CardPaymentMethod> paymentComponentData = new PaymentComponentData<>();
+        paymentComponentData.setPaymentMethod(cardPaymentMethod);
+        paymentComponentData.setStorePaymentMethod(outputData.isStoredPaymentMethodEnable());
+        paymentComponentData.setShopperReference(getConfiguration().getShopperReference());
+
+        return new PaymentComponentState<>(paymentComponentData, getOutputData().isValid());
     }
 
     @Override
@@ -148,13 +193,13 @@ public final class CardComponent extends BasePaymentComponent<CardConfiguration,
         return new CardOutputData();
     }
 
-    protected void getCardTypeImage(@NonNull String txVariant) {
-        final CardLogoCallback callback = new CardLogoCallback(txVariant, this);
-        mLogoApi.getLogo(txVariant, null, null, callback);
-    }
-
     @NonNull
     protected List<CardType> getSupportedFilterCards(@Nullable String cardNumber) {
+
+        if (isStoredPaymentMethod()) {
+            return mFilteredSupportedCards;
+        }
+
         final List<CardType> supportedCardTypes = getConfiguration().getSupportedCardTypes();
 
         if (StringUtil.hasContent(cardNumber)) {
@@ -173,59 +218,6 @@ public final class CardComponent extends BasePaymentComponent<CardConfiguration,
         return getConfiguration().getSupportedCardTypes();
     }
 
-    private void onNumberChanged(@Nullable String number) {
-        if (number != null) {
-            final String unformattedNumber = mCardFormatter.unformatNumber(number);
-
-            final NumberField numberField = getOutputData().getNumber();
-            numberField.setValue(unformattedNumber);
-
-            final String formattedNumber = mCardFormatter.formatNumber(numberField.getValue());
-            numberField.setDisplayValue(formattedNumber);
-
-            final CardValidator.NumberValidationResult validationResult = mCardValidator.validateNumber(numberField.getValue());
-            numberField.setValidationResult(validationResult);
-        }
-    }
-
-    private void onExpiryDateChanged(@Nullable String expiryDate) {
-        if (expiryDate != null) {
-            final ExpiryDateField expiryDateField = getOutputData().getExpiryDate();
-
-            final String formattedExpiryDate = mCardFormatter.formatExpiryDate(expiryDate, expiryDateField.getValue());
-
-            expiryDateField.setDisplayValue(formattedExpiryDate);
-            expiryDateField.setValue(expiryDate);
-
-            final CardValidator.ExpiryDateValidationResult validationResult = mCardValidator.validateExpiryDate(expiryDate);
-            expiryDateField.setValidationResult(validationResult);
-        }
-    }
-
-    private void onSecurityCodeChanged(@Nullable String securityCode) {
-        if (securityCode != null) {
-            final SecurityCodeField securityCodeField = getOutputData().getSecurityCode();
-            securityCodeField.setValue(securityCode);
-
-            final String formattedSecurityCode = mCardFormatter.formatSecurityCode(securityCode);
-            securityCodeField.setDisplayValue(formattedSecurityCode);
-
-            final CardValidator.SecurityCodeValidationResult validationResult = getSecurityCodeValidationResult(securityCode);
-            securityCodeField.setValidationResult(validationResult);
-        }
-    }
-
-    private void onHolderNameChanged(@Nullable String holderName) {
-        if (holderName != null) {
-            final HolderNameField holderNameField = getOutputData().getHolderNameField();
-            holderNameField.setValue(holderName);
-
-            holderNameField.setDisplayValue(holderName);
-
-            final CardValidator.HolderNameValidationResult validationResult = mCardValidator.validateHolderName(holderName, true);
-            holderNameField.setValidationResult(validationResult);
-        }
-    }
 
     private CardValidator.SecurityCodeValidationResult getSecurityCodeValidationResult(@NonNull String securityCode) {
         final InputDetail securityCodeInputDetail = getInputDetail("cvc");
@@ -246,24 +238,5 @@ public final class CardComponent extends BasePaymentComponent<CardConfiguration,
         }
 
         return null;
-    }
-
-    @Override
-    public void onDrawableFetched(@NonNull String id, @Nullable Drawable drawable) {
-        final HashMap<String, Drawable> cardLogoList =
-                (mCardLogoImages.getValue() == null) ? new HashMap<String, Drawable>() : mCardLogoImages.getValue();
-        cardLogoList.put(id, drawable);
-        mCardLogoImages.postValue(cardLogoList);
-    }
-
-    @NonNull
-    public MutableLiveData<HashMap<String, Drawable>> getCardLogoImages() {
-        return mCardLogoImages;
-    }
-
-    @Override
-    protected void onCleared() {
-        super.onCleared();
-        mLogoApi.cancellAll();
     }
 }

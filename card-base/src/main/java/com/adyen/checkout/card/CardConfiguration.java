@@ -10,6 +10,7 @@ package com.adyen.checkout.card;
 
 import android.content.Context;
 import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
 import android.util.DisplayMetrics;
 
 import com.adyen.checkout.base.Configuration;
@@ -33,8 +34,10 @@ public class CardConfiguration extends BaseConfiguration {
 
     private final String mPublicKey;
     private final DisplayMetrics mDisplayMetrics;
+    private final String mShopperReference;
     private final boolean mHolderNameRequire;
     private final List<CardType> mSupportedCardTypes;
+    private final boolean mShowStorePaymentField;
 
     /**
      * Constructs a {@link CardConfiguration} object.
@@ -50,6 +53,8 @@ public class CardConfiguration extends BaseConfiguration {
             @NonNull DisplayMetrics displayMetrics,
             @NonNull String publicKey,
             boolean holderNameRequire,
+            @NonNull String shopperReference,
+            boolean showStorePaymentField,
             @NonNull CardType... supportCardTypes) {
         super(shopperLocale, environment);
 
@@ -57,6 +62,8 @@ public class CardConfiguration extends BaseConfiguration {
         mDisplayMetrics = displayMetrics;
         mHolderNameRequire = holderNameRequire;
         mSupportedCardTypes = Collections.unmodifiableList(Arrays.asList(supportCardTypes));
+        mShopperReference = shopperReference;
+        mShowStorePaymentField = showStorePaymentField;
     }
 
     /**
@@ -96,6 +103,15 @@ public class CardConfiguration extends BaseConfiguration {
         return mDisplayMetrics;
     }
 
+    @Nullable
+    public String getShopperReference() {
+        return mShopperReference;
+    }
+
+    public boolean isShowStorePaymentFieldEnable() {
+        return mShowStorePaymentField;
+    }
+
     /**
      * Builder to create a {@link CardConfiguration} more easily.
      */
@@ -106,6 +122,8 @@ public class CardConfiguration extends BaseConfiguration {
 
         private CardType[] mBuilderSupportedCardTypes = DEFAULT_SUPPORTED_CARDS;
         private boolean mBuilderHolderNameRequire;
+        private boolean mBuilderShowStorePaymentField = true;
+        private String mShopperReference;
 
         /**
          * Constructor of Card Configuration Builder with default values.
@@ -116,24 +134,6 @@ public class CardConfiguration extends BaseConfiguration {
         public Builder(@NonNull Context context, @NonNull String publicKey) {
             super(context);
             mBuilderDisplayMetrics = context.getResources().getDisplayMetrics();
-            mBuilderPublicKey = publicKey;
-        }
-
-        /**
-         * Builder with required parameters for a {@link CardConfiguration}.
-         *
-         * @param shopperLocale     The Locale of the shopper.
-         * @param environment       The {@link Environment} to be used for network calls to Adyen.
-         * @param displayMetrics    The DisplayMetrics to fetch images with the correct size.
-         * @param publicKey         The public key to be used for encryption. You can get it from the Customer Area.
-         */
-        public Builder(
-                @NonNull Locale shopperLocale,
-                @NonNull Environment environment,
-                @NonNull DisplayMetrics displayMetrics,
-                @NonNull String publicKey) {
-            super(shopperLocale, environment);
-            mBuilderDisplayMetrics = displayMetrics;
             mBuilderPublicKey = publicKey;
         }
 
@@ -176,6 +176,24 @@ public class CardConfiguration extends BaseConfiguration {
         }
 
         /**
+         * Show store payment field.
+         *
+         * @param showStorePaymentField {@link Boolean}
+         * @return {@link CardConfiguration.Builder}
+         */
+        @NonNull
+        public Builder set(boolean showStorePaymentField) {
+            this.mBuilderShowStorePaymentField = showStorePaymentField;
+            return this;
+        }
+
+        @NonNull
+        public Builder setShopperReference(@NonNull String shopperReference) {
+            this.mShopperReference = shopperReference;
+            return this;
+        }
+
+        /**
          * Build {@link CardConfiguration} object from {@link CardConfiguration.Builder} inputs.
          *
          * @return {@link CardConfiguration}
@@ -188,6 +206,8 @@ public class CardConfiguration extends BaseConfiguration {
                     mBuilderDisplayMetrics,
                     mBuilderPublicKey,
                     mBuilderHolderNameRequire,
+                    mShopperReference,
+                    mBuilderShowStorePaymentField,
                     mBuilderSupportedCardTypes
             );
         }

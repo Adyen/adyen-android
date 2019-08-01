@@ -11,6 +11,7 @@ package com.adyen.checkout.card.data.validator;
 import static com.adyen.checkout.card.data.validator.ValidatorUtils.normalize;
 
 import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
 import android.support.annotation.VisibleForTesting;
 
 import com.adyen.checkout.base.component.validator.Validity;
@@ -30,13 +31,15 @@ public final class ExpiryDateValidatorImpl implements ExpiryDateValidator {
     @VisibleForTesting
     public static final int MONTHS_IN_YEAR = 12;
 
-    private final char mExpiryDateSeparator;
-
     private final Pattern mExpiryDatePattern;
 
-    ExpiryDateValidatorImpl(char expiryDateSeparator) {
-        mExpiryDateSeparator = expiryDateSeparator;
-        mExpiryDatePattern = Pattern.compile("(0?[1-9]|1[0-2])\\" + expiryDateSeparator + "((20)?\\d{2})");
+    ExpiryDateValidatorImpl() {
+        this(null);
+    }
+
+    ExpiryDateValidatorImpl(@Nullable String expiryDateSeparator) {
+        final String mExpiryDateSeparator = (expiryDateSeparator == null) ? "" : expiryDateSeparator;
+        mExpiryDatePattern = Pattern.compile("(0[1-9]|1[0-2])\\" + mExpiryDateSeparator + "/?([0-9]{2})");
     }
 
     @NonNull
@@ -44,16 +47,13 @@ public final class ExpiryDateValidatorImpl implements ExpiryDateValidator {
     public ExpiryDateValidationResult validateExpiryDate(@NonNull String expiryDate) {
         final String normalizedExpiryDate = normalize(expiryDate);
         final Matcher matcher = mExpiryDatePattern.matcher(normalizedExpiryDate);
-        final String[] parts = expiryDate.split("\\" + mExpiryDateSeparator);
 
         if (matcher.matches()) {
-            final Integer expiryMonth = Integer.parseInt(parts[0]);
-            final Integer expiryYear = makeFourDigitYear(parts[1]);
+            final Integer expiryMonth = Integer.parseInt(matcher.group(1));
+            final Integer expiryYear = makeFourDigitYear(matcher.group(2));
             final Validity validity = isAcceptedForTransaction(expiryMonth, expiryYear) ? Validity.VALID : Validity.INVALID;
 
             return new ExpiryDateValidationResult(validity, expiryMonth, expiryYear);
-        } else if (matcher.hitEnd()) {
-            return new ExpiryDateValidationResult(Validity.PARTIAL, parts.length == 2 ? Integer.parseInt(parts[0]) : null, null);
         } else {
             return new ExpiryDateValidationResult(Validity.INVALID, null, null);
         }

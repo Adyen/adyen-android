@@ -16,4 +16,8 @@
     <string name="checkout_expiry_date_not_valid">Expiry date is not valid</string>
     <string name="checkout_security_code_not_valid">Security Code is not valid</string>
     <string name="checkout_holder_name_not_valid">Holder name is not valid</string>
+
+    <string name="card_number_4digit">•••• %s</string>
+    <string name="expires_in">%s/%s</string>
+    <string name="store_payment_method">Save details for next time</string>
 </resources>

@@ -38,8 +38,8 @@ public final class PaymentMethodsGroup extends ModelObject {
             final JSONObject jsonObject = new JSONObject();
             try {
                 jsonObject.putOpt(GROUP_TYPE, modelObject.getGroupType());
-                jsonObject.putOpt(NAME, modelObject.getGroupType());
-                jsonObject.putOpt(TYPES, modelObject.getGroupType());
+                jsonObject.putOpt(NAME, modelObject.getName());
+                jsonObject.putOpt(TYPES, JsonUtils.serializeOptStringList(modelObject.getTypes()));
             } catch (JSONException e) {
                 throw new ModelSerializationException(PaymentMethodsGroup.class, e);
             }

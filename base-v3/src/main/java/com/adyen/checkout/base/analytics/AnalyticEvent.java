@@ -27,7 +27,7 @@ import java.util.Locale;
 public class AnalyticEvent implements Parcelable {
 
     private static final String DROPIN_FLAVOR = "dropin";
-    private static final String COMPONENT_FLAVOR = "component";
+    private static final String COMPONENT_FLAVOR = "components";
 
     private static final String CURRENT_PAYLOAD_VERSION = "1";
     private static final String ANDROID_PLATFORM = "android";

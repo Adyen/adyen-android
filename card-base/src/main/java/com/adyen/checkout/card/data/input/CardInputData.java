@@ -13,10 +13,11 @@ import android.support.annotation.Nullable;
 import com.adyen.checkout.base.component.data.input.InputData;
 
 public final class CardInputData implements InputData {
-    private String mCardNumber;
-    private String mExpiryDate;
-    private String mSecurityCode;
-    private String mHolderName;
+    private String mCardNumber = "";
+    private String mExpiryDate = "";
+    private String mSecurityCode = "";
+    private String mHolderName = "";
+    private boolean mStorePayment;
 
     @Nullable
     public String getCardNumber() {
@@ -52,5 +53,13 @@ public final class CardInputData implements InputData {
 
     public void setHolderName(@Nullable String holderName) {
         mHolderName = holderName;
+    }
+
+    public boolean isStorePaymentEnable() {
+        return mStorePayment;
+    }
+
+    public void setStorePayment(boolean storePayment) {
+        mStorePayment = storePayment;
     }
 }

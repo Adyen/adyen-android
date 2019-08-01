@@ -8,12 +8,13 @@
 
 package com.adyen.checkout.base.analytics;
 
+import static com.adyen.checkout.core.api.SSLSocketUtil.TLS_SOCKET_FACTORY;
+
 import android.content.Context;
 import android.content.Intent;
 import android.support.annotation.NonNull;
 import android.support.v4.app.JobIntentService;
 
-import com.adyen.checkout.base.util.SSLSocketUtil;
 import com.adyen.checkout.core.api.Environment;
 import com.adyen.checkout.core.log.LogUtil;
 import com.adyen.checkout.core.log.Logger;
@@ -21,8 +22,6 @@ import com.adyen.checkout.core.log.Logger;
 import java.io.IOException;
 import java.io.InputStream;
 import java.net.URL;
-import java.security.KeyManagementException;
-import java.security.NoSuchAlgorithmException;
 
 import javax.net.ssl.HttpsURLConnection;
 
@@ -69,14 +68,14 @@ public class AnalyticsDispatcher extends JobIntentService {
         try {
             final URL finalUrl = event.toUrl(envUrl + ANALYTICS_ENDPOINT);
             urlConnection = (HttpsURLConnection) finalUrl.openConnection();
-            urlConnection.setSSLSocketFactory(SSLSocketUtil.getSSLSocketFactory());
+            urlConnection.setSSLSocketFactory(TLS_SOCKET_FACTORY);
             urlConnection.connect();
             final InputStream inputStream = urlConnection.getInputStream();
             // Need to read to consume the inputStream for the connection to count on the backend.
             //noinspection ResultOfMethodCallIgnored
             inputStream.read();
             inputStream.close();
-        } catch (IOException | NoSuchAlgorithmException | KeyManagementException e) {
+        } catch (IOException e) {
             Logger.e(TAG, "Failed to send analytics event.", e);
         } finally {
             if (urlConnection != null) {

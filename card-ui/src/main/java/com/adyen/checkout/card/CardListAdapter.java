@@ -9,28 +9,27 @@
 package com.adyen.checkout.card;
 
 import android.content.res.Resources;
-import android.graphics.drawable.Drawable;
 import android.support.annotation.NonNull;
+import android.support.v4.content.ContextCompat;
 import android.support.v7.widget.RecyclerView;
 import android.view.View;
 import android.view.ViewGroup;
 
+import com.adyen.checkout.base.api.ImageLoader;
 import com.adyen.checkout.base.ui.view.RoundCornerImageView;
 import com.adyen.checkout.card.model.CardType;
 import com.adyen.checkout.card.ui.R;
 
 import java.util.Collections;
 import java.util.List;
-import java.util.Map;
 
 public class CardListAdapter extends RecyclerView.Adapter<CardListAdapter.ImageViewHolder> {
 
     private List<CardType> mCards = Collections.emptyList();
-    private final CardComponent mCardComponent;
-    private Map<String, Drawable> mCardLogosByTxVariant;
+    private final ImageLoader mImageLoader;
 
-    CardListAdapter(CardComponent cardComponent) {
-        this.mCardComponent = cardComponent;
+    CardListAdapter(ImageLoader imageLoader) {
+        mImageLoader = imageLoader;
     }
 
     @NonNull
@@ -44,6 +43,7 @@ public class CardListAdapter extends RecyclerView.Adapter<CardListAdapter.ImageV
         layoutParams.leftMargin = leftMargin;
 
         final RoundCornerImageView imageView = new RoundCornerImageView(parent.getContext());
+        imageView.setStrokeColor(ContextCompat.getColor(parent.getContext(), R.color.stroke_color));
         imageView.setLayoutParams(layoutParams);
 
         return new ImageViewHolder(imageView);
@@ -51,13 +51,7 @@ public class CardListAdapter extends RecyclerView.Adapter<CardListAdapter.ImageV
 
     @Override
     public void onBindViewHolder(@NonNull ImageViewHolder imageViewHolder, int i) {
-        final String text = mCards.get(i).getTxVariant();
-        if (mCardLogosByTxVariant != null && mCardLogosByTxVariant.containsKey(text)) {
-            imageViewHolder.mCardLogo.setImageDrawable(mCardLogosByTxVariant.get(text));
-            // TODO: 2019-06-03 set placeholder image.
-        } else {
-            mCardComponent.getCardTypeImage(mCards.get(i).getTxVariant());
-        }
+        mImageLoader.load(mCards.get(i).getTxVariant(), imageViewHolder.mCardLogo);
     }
 
     @Override
@@ -68,11 +62,6 @@ public class CardListAdapter extends RecyclerView.Adapter<CardListAdapter.ImageV
 
     void setCards(@NonNull List<CardType> cards) {
         this.mCards = cards;
-        notifyDataSetChanged();
-    }
-
-    void setCardLogos(@NonNull Map<String, Drawable> cardLogosByTxVariant) {
-        this.mCardLogosByTxVariant = cardLogosByTxVariant;
         notifyDataSetChanged();
     }
 

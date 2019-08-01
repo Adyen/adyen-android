@@ -9,4 +9,5 @@
 
 <resources>
     <color name="overlay">#55000000</color>
+    <color name="indicator_color">#1F000000</color>
 </resources>

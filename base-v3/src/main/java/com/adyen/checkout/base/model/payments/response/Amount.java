@@ -48,7 +48,7 @@ public class Amount extends ModelObject {
         @Override
         public Amount deserialize(@NonNull JSONObject jsonObject) {
             final Amount amount = new Amount();
-            amount.setCurrency(jsonObject.optString(CURRENCY));
+            amount.setCurrency(jsonObject.optString(CURRENCY, null));
             amount.setValue(jsonObject.optInt(VALUE, -1));
             return amount;
         }

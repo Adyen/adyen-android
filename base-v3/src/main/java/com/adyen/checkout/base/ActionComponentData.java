@@ -14,15 +14,15 @@ import org.json.JSONObject;
 
 public class ActionComponentData {
 
-    private final JSONObject mData;
+    private final JSONObject mDetails;
 
-    public ActionComponentData(@NonNull JSONObject actionData) {
-        mData = actionData;
+    public ActionComponentData(@NonNull JSONObject actionDetails) {
+        mDetails = actionDetails;
     }
 
     @NonNull
-    public JSONObject getData() {
-        return mData;
+    public JSONObject getDetails() {
+        return mDetails;
     }
 
 }

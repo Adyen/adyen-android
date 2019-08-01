@@ -39,7 +39,7 @@ public class PaymentMethodsApiResponseTest {
 
         assert paymentMethodsApiResponse.getGroups() != null;
         assert paymentMethodsApiResponse.getGroups().size() == 3;
-        assert paymentMethodsApiResponse.getOneClickPaymentMethods() == null;
+        assert paymentMethodsApiResponse.getStoredPaymentMethods() == null;
         assert paymentMethodsApiResponse.getPaymentMethods() != null;
         assert paymentMethodsApiResponse.getPaymentMethods().size() == 209;
     }

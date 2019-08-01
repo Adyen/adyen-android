@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+  ~ Copyright (c) 2019 Adyen N.V.
+  ~
+  ~ This file is open source and available under the MIT license. See the LICENSE file for more info.
+  ~
+  ~ Created by arman on 5/7/2019.
+  -->
+
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+              xmlns:tools="http://schemas.android.com/tools"
+              android:layout_width="match_parent"
+              android:layout_height="wrap_content"
+              android:orientation="vertical"
+              android:paddingBottom="@dimen/standard_half_margin">
+    <FrameLayout android:layout_width="@dimen/indicator_width"
+                 android:layout_height="@dimen/indicator_height"
+                 android:layout_gravity="center"
+                 android:layout_marginTop="@dimen/standard_quarter_margin"
+                 android:background="@drawable/bottom_sheet_indicator">
+
+    </FrameLayout>
+    <TextView
+        android:id="@+id/header"
+        style="@style/headerTitleStyle"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textIsSelectable="false"
+        tools:text="Header"/>
+</LinearLayout>

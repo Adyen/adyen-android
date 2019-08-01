@@ -13,7 +13,6 @@ import android.support.annotation.NonNull;
 public interface CardValidator extends HolderNameValidator, NumberValidator, ExpiryDateValidator, SecurityCodeValidator {
     final class Builder {
         private static final char DEFAULT_NUMBER_SEPARATOR = ' ';
-        private static final char DEFAULT_EXPIRY_DATE_SEPARATOR = '/';
 
         private HolderNameValidator mHolderNameValidator;
         private NumberValidator mNumberValidator;
@@ -49,7 +48,7 @@ public interface CardValidator extends HolderNameValidator, NumberValidator, Exp
             return new CardValidatorImpl(
                     mHolderNameValidator != null ? mHolderNameValidator : new HolderNameValidatorImpl(),
                     mNumberValidator != null ? mNumberValidator : new NumberValidatorImpl(DEFAULT_NUMBER_SEPARATOR),
-                    mExpiryDateValidator != null ? mExpiryDateValidator : new ExpiryDateValidatorImpl(DEFAULT_EXPIRY_DATE_SEPARATOR),
+                    mExpiryDateValidator != null ? mExpiryDateValidator : new ExpiryDateValidatorImpl(),
                     mSecurityCodeValidator != null ? mSecurityCodeValidator : new SecurityCodeValidatorImpl()
             );
         }

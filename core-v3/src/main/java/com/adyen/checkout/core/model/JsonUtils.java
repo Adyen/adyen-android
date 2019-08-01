@@ -13,6 +13,7 @@ import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 
 import com.adyen.checkout.core.exeption.NoConstructorException;
+import com.adyen.checkout.core.util.StringUtil;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -84,6 +85,29 @@ public final class JsonUtils {
         }
 
         return Collections.unmodifiableList(list);
+    }
+
+    /**
+     * Serializes a List of String to a {@link JSONArray}.
+     *
+     * @param stringList The {@link List} of Strings to be serialized.
+     * @return The populated {@link JSONArray}. Could be null.
+     */
+    @Nullable
+    public static JSONArray serializeOptStringList(@Nullable List<String> stringList) {
+        if (stringList == null) {
+            return null;
+        }
+
+        final JSONArray jsonArray = new JSONArray();
+
+        for (String string : stringList) {
+            if (StringUtil.hasContent(string)) {
+                jsonArray.put(string);
+            }
+        }
+
+        return jsonArray;
     }
 
     private JsonUtils() {

@@ -34,7 +34,7 @@ public final class PaymentMethodsApiResponse extends ModelObject {
     public static final Creator<PaymentMethodsApiResponse> CREATOR = new Creator<>(PaymentMethodsApiResponse.class);
 
     private static final String GROUPS = "groups";
-    private static final String ONE_CLICK_PAYMENT_METHODS = "oneClickPaymentMethods";
+    private static final String STORED_PAYMENT_METHODS = "storedPaymentMethods";
     private static final String PAYMENT_METHODS = "paymentMethods";
 
     @NonNull
@@ -45,8 +45,8 @@ public final class PaymentMethodsApiResponse extends ModelObject {
             final JSONObject jsonObject = new JSONObject();
             try {
                 jsonObject.putOpt(GROUPS, ModelUtils.serializeOptList(modelObject.getGroups(), PaymentMethodsGroup.SERIALIZER));
-                jsonObject.putOpt(ONE_CLICK_PAYMENT_METHODS,
-                        ModelUtils.serializeOptList(modelObject.getOneClickPaymentMethods(), RecurringDetail.SERIALIZER));
+                jsonObject.putOpt(STORED_PAYMENT_METHODS,
+                        ModelUtils.serializeOptList(modelObject.getStoredPaymentMethods(), RecurringDetail.SERIALIZER));
                 jsonObject.putOpt(PAYMENT_METHODS, ModelUtils.serializeOptList(modelObject.getPaymentMethods(), PaymentMethod.SERIALIZER));
             } catch (JSONException e) {
                 throw new ModelSerializationException(PaymentMethodsApiResponse.class, e);
@@ -59,8 +59,8 @@ public final class PaymentMethodsApiResponse extends ModelObject {
         public PaymentMethodsApiResponse deserialize(@NonNull JSONObject jsonObject) {
             final PaymentMethodsApiResponse paymentMethodsApiResponse = new PaymentMethodsApiResponse();
             paymentMethodsApiResponse.setGroups(ModelUtils.deserializeOptList(jsonObject.optJSONArray(GROUPS), PaymentMethodsGroup.SERIALIZER));
-            paymentMethodsApiResponse.setOneClickPaymentMethods(
-                    ModelUtils.deserializeOptList(jsonObject.optJSONArray(ONE_CLICK_PAYMENT_METHODS), RecurringDetail.SERIALIZER));
+            paymentMethodsApiResponse.setStoredPaymentMethods(
+                    ModelUtils.deserializeOptList(jsonObject.optJSONArray(STORED_PAYMENT_METHODS), RecurringDetail.SERIALIZER));
             paymentMethodsApiResponse.setPaymentMethods(
                     ModelUtils.deserializeOptList(jsonObject.optJSONArray(PAYMENT_METHODS), PaymentMethod.SERIALIZER));
             return paymentMethodsApiResponse;
@@ -68,7 +68,7 @@ public final class PaymentMethodsApiResponse extends ModelObject {
     };
 
     private List<PaymentMethodsGroup> groups;
-    private List<RecurringDetail> oneClickPaymentMethods;
+    private List<RecurringDetail> storedPaymentMethods;
     private List<PaymentMethod> paymentMethods;
 
     @Override
@@ -82,8 +82,8 @@ public final class PaymentMethodsApiResponse extends ModelObject {
     }
 
     @Nullable
-    public List<RecurringDetail> getOneClickPaymentMethods() {
-        return oneClickPaymentMethods;
+    public List<RecurringDetail> getStoredPaymentMethods() {
+        return storedPaymentMethods;
     }
 
     @Nullable
@@ -95,8 +95,8 @@ public final class PaymentMethodsApiResponse extends ModelObject {
         this.groups = groups;
     }
 
-    public void setOneClickPaymentMethods(@Nullable List<RecurringDetail> oneClickPaymentMethods) {
-        this.oneClickPaymentMethods = oneClickPaymentMethods;
+    public void setStoredPaymentMethods(@Nullable List<RecurringDetail> storedPaymentMethods) {
+        this.storedPaymentMethods = storedPaymentMethods;
     }
 
     public void setPaymentMethods(@Nullable List<PaymentMethod> paymentMethods) {

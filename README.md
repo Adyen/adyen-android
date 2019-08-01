@@ -2,6 +2,8 @@
 
 Adyen Components for Android allows you to accept in-app payments by providing you with the building blocks you need to create a checkout experience.
 
+For an overview of how you can integrate with Adyen on Android check out the [Documentation Website][docs.android]
+
 ## Installation
 
 The Components are available through [jcenter][dl], you only need to add the Gradle dependency.
@@ -11,15 +13,15 @@ The Components are available through [jcenter][dl], you only need to add the Gra
 Import the Component module for the Payment Method you want to use by adding it to your `build.gradle` file.
 For example, for the Drop-in solution you should add:
 ```groovy
-implementation "com.adyen.checkout:drop-in:3.0.0"
+implementation "com.adyen.checkout:drop-in:3.1.0"
 ```
 For a Credit Card component you should add:
 ```groovy
-implementation "com.adyen.checkout:card-ui:3.0.0"
+implementation "com.adyen.checkout:card-ui:3.1.0"
 ```
 For and iDeal component you should add:
 ```groovy
-implementation "com.adyen.checkout:ideal-ui:3.0.0"
+implementation "com.adyen.checkout:ideal-ui:3.1.0"
 ```
 
 ## Drop-in
@@ -132,7 +134,9 @@ You can also find the components that can handle the `action` object.
 
 ## See also
 
-* [Adyen Checkout Documentation](https://docs.adyen.com/checkout/)
+* [Android Documentation][docs.android]
+
+* [Adyen Checkout Documentation][docs.checkout]
 
 * [API Reference](https://docs.adyen.com/checkout/api-only/)
 
@@ -140,6 +144,8 @@ You can also find the components that can handle the `action` object.
 
 This repository is open source and available under the MIT license. For more information, see the LICENSE file.
 
+[docs.checkout]: https://docs.adyen.com/checkout/
+[docs.android]: https://docs.adyen.com/checkout/android/
 [dl]: https://jcenter.bintray.com/com/adyen/checkout/
 [apiExplorer.paymentMethods]: https://docs.adyen.com/api-explorer/#/PaymentSetupAndVerificationService/v46/paymentMethods
 [apiExplorer.payments]: https://docs.adyen.com/api-explorer/#/PaymentSetupAndVerificationService/v46/payments

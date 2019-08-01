@@ -17,12 +17,13 @@ import com.adyen.checkout.base.model.payments.request.IdealPaymentMethod
 import com.adyen.checkout.base.model.payments.request.MolpayPaymentMethod
 import com.adyen.checkout.base.model.payments.request.OpenBankingPaymentMethod
 import com.adyen.checkout.base.model.payments.request.PaymentComponentData
+import com.adyen.checkout.base.model.payments.request.PaymentMethodDetails
 import com.adyen.checkout.base.model.payments.response.Action
 import com.adyen.checkout.core.log.LogUtil
 import com.adyen.checkout.core.log.Logger
 import com.adyen.checkout.core.model.JsonUtils
-import com.adyen.checkout.dropin.DropInService
-import com.adyen.checkout.dropin.api.CallResult
+import com.adyen.checkout.dropin.service.CallResult
+import com.adyen.checkout.dropin.service.DropInService
 import com.adyen.checkout.example.api.CheckoutApiService
 import com.adyen.checkout.example.api.model.PaymentsRequest
 import com.squareup.moshi.Moshi
@@ -45,10 +46,16 @@ class ExampleDropInService : DropInService() {
     override fun makePaymentsCall(paymentComponentData: JSONObject): CallResult {
         Logger.d(TAG, "makePaymentsCall")
 
-        val paymentsRequest = PaymentsRequest(PaymentComponentData.SERIALIZER.deserialize(paymentComponentData))
+        val serializedPaymentComponentData = PaymentComponentData.SERIALIZER.deserialize(paymentComponentData)
+
+        val paymentMethod = serializedPaymentComponentData.paymentMethod ?: return CallResult(CallResult.ResultType.ERROR, "Empty payment data")
+
+        val paymentsRequest = PaymentsRequest(paymentMethod,
+                serializedPaymentComponentData.shopperReference!!,
+                serializedPaymentComponentData.isStorePaymentMethodEnable)
 
         val moshi = Moshi.Builder()
-                .add(PolymorphicJsonAdapterFactory.of(PaymentComponentData::class.java, PaymentComponentData.TYPE)
+                .add(PolymorphicJsonAdapterFactory.of(PaymentMethodDetails::class.java, PaymentMethodDetails.TYPE)
                         .withSubtype(CardPaymentMethod::class.java, CardPaymentMethod.PAYMENT_METHOD_TYPE)
                         .withSubtype(IdealPaymentMethod::class.java, IdealPaymentMethod.PAYMENT_METHOD_TYPE)
                         .withSubtype(MolpayPaymentMethod::class.java, MolpayPaymentMethod.PAYMENT_METHOD_TYPE)

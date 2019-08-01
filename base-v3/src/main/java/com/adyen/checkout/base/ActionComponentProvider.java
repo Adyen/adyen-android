@@ -12,7 +12,7 @@ import android.support.annotation.NonNull;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentActivity;
 
-public interface ActionComponentProvider<ComponentT extends ActionComponent> {
+public interface ActionComponentProvider<ComponentT extends ActionComponent> extends ComponentProvider<ComponentT> {
 
     @NonNull
     ComponentT get(@NonNull FragmentActivity activity);

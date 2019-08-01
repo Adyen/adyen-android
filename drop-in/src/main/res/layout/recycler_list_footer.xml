@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+  ~ Copyright (c) 2019 Adyen N.V.
+  ~
+  ~ This file is open source and available under the MIT license. See the LICENSE file for more info.
+  ~
+  ~ Created by arman on 30/7/2019.
+  -->
+
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+              android:layout_width="match_parent"
+              android:layout_height="wrap_content"
+              android:orientation="vertical">
+    <android.support.v7.widget.AppCompatButton
+        android:id="@+id/payButton"
+        style="@style/AdyenCheckout.Button.Colored"
+        android:layout_width="match_parent"
+        android:text="@string/continue_button"/>
+
+    <TextView
+        android:id="@+id/others"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:gravity="center"
+        android:paddingBottom="@dimen/standard_half_margin"
+        android:text="@string/change_payment_method"
+        android:textColor="@color/primaryColor"
+        android:textSize="16sp"
+        android:textStyle="normal"/>
+</LinearLayout>

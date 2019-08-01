@@ -14,7 +14,7 @@ import android.content.Intent
 import com.adyen.checkout.base.model.PaymentMethodsApiResponse
 import com.adyen.checkout.core.log.LogUtil
 import com.adyen.checkout.core.log.Logger
-import com.adyen.checkout.dropin.activity.PaymentMethodPickerActivity
+import com.adyen.checkout.dropin.ui.DropInActivity
 
 /**
  * Drop-in is the easy solution to using components. The Merchant only needs to provide the response of the paymentMethods/ endpoint
@@ -64,7 +64,7 @@ class DropIn private constructor() {
         resultIntent = resultHandlerIntent
         configuration = dropInConfiguration
 
-        val intent = PaymentMethodPickerActivity.createIntent(context, paymentMethodsApiResponse)
+        val intent = DropInActivity.createIntent(context, paymentMethodsApiResponse)
         context.startActivity(intent)
     }
 

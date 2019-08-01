@@ -10,9 +10,9 @@ package com.adyen.checkout.base.models;
 
 import android.os.Parcel;
 
-import com.adyen.checkout.base.model.payments.request.PaymentComponentData;
+import com.adyen.checkout.base.model.payments.request.PaymentMethodDetails;
 
-public class TestPaymentMethod extends PaymentComponentData {
+public class TestPaymentMethod extends PaymentMethodDetails {
 
     @Override
     public void writeToParcel(Parcel dest, int flags) {

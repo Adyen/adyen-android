@@ -11,21 +11,21 @@ package com.adyen.checkout.example.api
 import android.os.Build
 import com.adyen.checkout.base.model.PaymentMethodsApiResponse
 import com.adyen.checkout.base.model.payments.request.CardPaymentMethod
+import com.adyen.checkout.base.model.payments.request.DotpayPaymentMethod
+import com.adyen.checkout.base.model.payments.request.EPSPaymentMethod
+import com.adyen.checkout.base.model.payments.request.EntercashPaymentMethod
+import com.adyen.checkout.base.model.payments.request.GenericPaymentMethod
 import com.adyen.checkout.base.model.payments.request.IdealPaymentMethod
 import com.adyen.checkout.base.model.payments.request.MolpayPaymentMethod
-import com.adyen.checkout.base.model.payments.request.EPSPaymentMethod
-import com.adyen.checkout.base.model.payments.request.DotpayPaymentMethod
 import com.adyen.checkout.base.model.payments.request.OpenBankingPaymentMethod
-import com.adyen.checkout.base.model.payments.request.GenericPaymentMethod
-import com.adyen.checkout.base.model.payments.request.EntercashPaymentMethod
-import com.adyen.checkout.base.model.payments.request.PaymentComponentData
+import com.adyen.checkout.base.model.payments.request.PaymentMethodDetails
 import com.adyen.checkout.base.model.payments.response.Action
+import com.adyen.checkout.base.model.payments.response.QrCodeAction
 import com.adyen.checkout.base.model.payments.response.RedirectAction
 import com.adyen.checkout.base.model.payments.response.Threeds2ChallengeAction
 import com.adyen.checkout.base.model.payments.response.Threeds2FingerprintAction
 import com.adyen.checkout.base.model.payments.response.VoucherAction
-import com.adyen.checkout.base.model.payments.response.QrCodeAction
-import com.adyen.checkout.base.util.TLSSocketFactory
+import com.adyen.checkout.core.api.SSLSocketUtil
 import com.adyen.checkout.example.BuildConfig
 import com.adyen.checkout.example.api.model.PaymentMethodsRequest
 import com.adyen.checkout.example.model.PaymentsApiResponse
@@ -43,8 +43,7 @@ import retrofit2.http.Body
 import retrofit2.http.Headers
 import retrofit2.http.POST
 import java.security.KeyStore
-import java.util.Arrays
-import javax.net.ssl.SSLContext
+import java.util.* // ktlint-disable no-wildcard-imports
 import javax.net.ssl.TrustManagerFactory
 import javax.net.ssl.X509TrustManager
 
@@ -55,7 +54,7 @@ interface CheckoutApiService {
 
             // Add custom adapters for classes that are not properly mapped
             val moshi = Moshi.Builder()
-                    .add(PolymorphicJsonAdapterFactory.of(PaymentComponentData::class.java, PaymentComponentData.TYPE)
+                    .add(PolymorphicJsonAdapterFactory.of(PaymentMethodDetails::class.java, PaymentMethodDetails.TYPE)
                             .withSubtype(CardPaymentMethod::class.java, CardPaymentMethod.PAYMENT_METHOD_TYPE)
                             .withSubtype(IdealPaymentMethod::class.java, IdealPaymentMethod.PAYMENT_METHOD_TYPE)
                             .withSubtype(MolpayPaymentMethod::class.java, MolpayPaymentMethod.PAYMENT_METHOD_TYPE)
@@ -116,10 +115,7 @@ interface CheckoutApiService {
                     }
 
                     val trustManager = trustManagers[0] as X509TrustManager
-
-                    val sslContext = SSLContext.getInstance(TLSSocketFactory.TLS_V12)
-                    sslContext.init(null, trustManagers, null)
-                    client.sslSocketFactory(TLSSocketFactory(sslContext.socketFactory), trustManager)
+                    client.sslSocketFactory(SSLSocketUtil.TLS_SOCKET_FACTORY, trustManager)
                 }
 
                 return client

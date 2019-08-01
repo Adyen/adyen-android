@@ -9,6 +9,7 @@
 package com.adyen.checkout.card.model;
 
 import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -88,6 +89,20 @@ public enum CardType implements TxVariantProvider {
 
         return result;
     }
+
+    /**
+     * Get CardType from txVariant.
+     */
+    @Nullable
+    public static CardType getCardTypeByTxVarient(@NonNull String txVariant) {
+        for (CardType type : CardType.values()) {
+            if (type.mTxVariant.equals(txVariant)) {
+                return type;
+            }
+        }
+        return null;
+    }
+
 
     CardType(@NonNull String txVariant, @NonNull Pattern pattern) {
         mTxVariant = txVariant;

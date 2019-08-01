@@ -8,17 +8,28 @@
 
 package com.adyen.checkout.base;
 
+import android.app.Application;
 import android.support.annotation.NonNull;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentActivity;
 
 import com.adyen.checkout.base.model.paymentmethods.PaymentMethod;
+import com.adyen.checkout.core.exeption.CheckoutException;
 
-public interface PaymentComponentProvider<ComponentT extends PaymentComponent, ConfigurationT extends Configuration> {
+public interface PaymentComponentProvider<ComponentT extends PaymentComponent, ConfigurationT extends Configuration>
+        extends ComponentProvider<ComponentT> {
 
     @NonNull
-    ComponentT get(@NonNull FragmentActivity activity, @NonNull PaymentMethod paymentMethod, @NonNull ConfigurationT config);
+    ComponentT get(@NonNull FragmentActivity activity, @NonNull PaymentMethod paymentMethod, @NonNull ConfigurationT configuration)
+            throws CheckoutException;
 
     @NonNull
-    ComponentT get(@NonNull Fragment fragment, @NonNull PaymentMethod paymentMethod, @NonNull ConfigurationT config);
+    ComponentT get(@NonNull Fragment fragment, @NonNull PaymentMethod paymentMethod, @NonNull ConfigurationT configuration)
+            throws CheckoutException;
+
+    void isAvailable(
+            @NonNull Application applicationContext,
+            @NonNull PaymentMethod paymentMethod,
+            @NonNull ConfigurationT configuration,
+            @NonNull ComponentAvailableCallback<ConfigurationT> callback);
 }

@@ -39,8 +39,8 @@ public final class CardValidatorImpl implements CardValidator {
 
     @NonNull
     @Override
-    public NumberValidationResult validateNumber(@NonNull String number) {
-        return mNumberValidator.validateNumber(number);
+    public NumberValidationResult validateNumber(@NonNull String number, boolean isOneClick) {
+        return mNumberValidator.validateNumber(number, isOneClick);
     }
 
     @NonNull

@@ -25,7 +25,7 @@ import com.adyen.checkout.eps.EPSConfiguration
 import com.adyen.checkout.ideal.IdealConfiguration
 import com.adyen.checkout.molpay.MolpayConfiguration
 import com.adyen.checkout.openbanking.OpenBankingConfiguration
-import java.util.Locale
+import java.util.* // ktlint-disable no-wildcard-imports
 import kotlin.collections.HashMap
 
 /**
@@ -50,12 +50,12 @@ class DropInConfiguration internal constructor(builder: Builder) : Configuration
         return environment
     }
 
-    fun <T : Configuration> getConfigurationFor(@PaymentMethodTypes.SupportedPaymentMethod paymentMethod: String): T? {
+    fun <T : Configuration> getConfigurationFor(@PaymentMethodTypes.SupportedPaymentMethod paymentMethod: String, context: Context): T {
         return if (PaymentMethodTypes.SUPPORTED_PAYMENT_METHODS.contains(paymentMethod) && availableConfigs.containsKey(paymentMethod)) {
             @Suppress("UNCHECKED_CAST")
-            availableConfigs[paymentMethod] as T?
+            availableConfigs[paymentMethod] as T
         } else {
-            null
+            getDefaultConfigFor(paymentMethod, context)
         }
     }
 
@@ -74,7 +74,6 @@ class DropInConfiguration internal constructor(builder: Builder) : Configuration
         val mEnvironment: Environment = Environment.EUROPE
 
         internal val availableConfigs = HashMap<String, Configuration>()
-        internal var publicKey: String = ""
 
         init {
             Logger.d(TAG, "class name - ${serviceClass.name}")

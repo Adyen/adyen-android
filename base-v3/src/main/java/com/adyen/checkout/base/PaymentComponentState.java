@@ -11,19 +11,18 @@ package com.adyen.checkout.base;
 import android.support.annotation.NonNull;
 
 import com.adyen.checkout.base.model.payments.request.PaymentComponentData;
+import com.adyen.checkout.base.model.payments.request.PaymentMethodDetails;
 
 /**
  * The current state of a PaymentComponent.
- *
- * @param <PaymentComponentDataT> The collected data that can used to fill the payments/ API call.
  */
-public final class PaymentComponentState<PaymentComponentDataT extends PaymentComponentData> {
+public final class PaymentComponentState<PaymentMethodDetailsT extends PaymentMethodDetails> {
 
-    private final PaymentComponentDataT mPaymentMethodForRequest;
+    private final PaymentComponentData<PaymentMethodDetailsT> mPaymentComponentData;
     private final boolean mIsValid;
 
-    public PaymentComponentState(@NonNull PaymentComponentDataT paymentMethodParam, boolean isValid) {
-        mPaymentMethodForRequest = paymentMethodParam;
+    public PaymentComponentState(@NonNull PaymentComponentData<PaymentMethodDetailsT> paymentComponentData, boolean isValid) {
+        mPaymentComponentData = paymentComponentData;
         mIsValid = isValid;
     }
 
@@ -31,8 +30,8 @@ public final class PaymentComponentState<PaymentComponentDataT extends PaymentCo
      * @return The data that was collected by the component.
      */
     @NonNull
-    public PaymentComponentDataT getData() {
-        return mPaymentMethodForRequest;
+    public PaymentComponentData<PaymentMethodDetailsT> getData() {
+        return mPaymentComponentData;
     }
 
     /**

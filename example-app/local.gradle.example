@@ -9,6 +9,7 @@ android {
             buildConfigField "String", "API_KEY_HEADER_NAME", "\"<API_KEY_HEADER>\""
             buildConfigField "String", "CHECKOUT_API_KEY", "\"<YOUR_API_KEY>\""
             buildConfigField "String", "PUBLIC_KEY", "\"<PUBLIC_KEY>\""
+            buildConfigField "String", "SHOPPER_REFERENCE", "\"<SHOPPER_REFERENCE>\""
         }
     }
 }

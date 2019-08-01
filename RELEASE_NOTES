@@ -1,9 +1,6 @@
-#### Android Components (V3)
-Version 3.x.x is a completely new way of integrating payments using the Checkout API (payments/) with our UI Components or Drop-in.
-It is not compatible with the integrations of version 2.x.x, which used the SDK specific API (paymentSession/).
-Version 2.x.x will only receive maintenance for bug fixes, not any new features.
-Check the Readme page and documentation website for more information.
-
-- Create default Configuration Builders.
-- Add UiCustomization class to 3DS2 component.
-- Bug fixes.
+<ul>
+<li>Add "One Click Payment" option for card payment.</li>
+<li>Update UI/UX for Drop-In and components.</li>
+<li>Changed PaymentComponent observer output to contain PaymentComponentData. PaymentMethodDetails is now inside of PaymentComponentData.</li>
+<li>Bug fixes.</li>
+</ul>

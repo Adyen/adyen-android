@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+  ~ Copyright (c) 2019 Adyen N.V.
+  ~
+  ~ This file is open source and available under the MIT license. See the LICENSE file for more info.
+  ~
+  ~ Created by arman on 29/7/2019.
+  -->
+
+
+<TextView
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/payment_method_header"
+    style="@style/headerTitleStyle"
+    android:layout_width="match_parent"
+    android:textIsSelectable="false"
+    android:layout_height="wrap_content"
+    android:layout_marginBottom="@dimen/standard_quarter_margin"/>

@@ -13,10 +13,10 @@ import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.adyen.checkout.base.ui.adapter.ClickableListRecyclerAdapter;
+import com.adyen.checkout.base.ui.view.RoundCornerImageView;
 import com.adyen.checkout.core.log.LogUtil;
 import com.adyen.checkout.core.log.Logger;
 import com.adyen.checkout.issuerlist.ui.R;
@@ -78,9 +78,9 @@ class IssuerListRecyclerAdapter extends ClickableListRecyclerAdapter<IssuerListR
         return mIssuerModelList.get(position);
     }
 
-    static final class IssuerViewHolder extends RecyclerView.ViewHolder {
+    final class IssuerViewHolder extends RecyclerView.ViewHolder {
 
-        private final ImageView mLogoImage;
+        private final RoundCornerImageView mLogoImage;
         private final TextView mText;
 
         IssuerViewHolder(@NonNull View itemView, boolean hideIssuerLogo) {

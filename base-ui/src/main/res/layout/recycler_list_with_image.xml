@@ -9,33 +9,39 @@
 
 <LinearLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
-    android:layout_width="match_parent"
-    android:layout_height="wrap_content"
-    android:orientation="horizontal"
-    android:padding="@dimen/standard_margin"
+    android:layout_width="match_parent" android:layout_height="wrap_content"
     android:background="?selectableItemBackground"
     android:clickable="true"
-    android:focusable="true">
+    android:focusable="true"
+    android:orientation="horizontal"
+    android:paddingStart="@dimen/standard_margin"
+    android:paddingLeft="@dimen/standard_margin"
+    android:paddingTop="@dimen/standard_three_quarters_margin"
+    android:paddingEnd="@dimen/standard_margin"
+    android:paddingRight="@dimen/standard_margin"
+    android:paddingBottom="@dimen/standard_three_quarters_margin">
 
-    <android.support.v7.widget.AppCompatImageView
+    <com.adyen.checkout.base.ui.view.RoundCornerImageView
         android:id="@+id/imageView_logo"
         android:layout_width="@dimen/logo_width"
         android:layout_height="@dimen/logo_height"
-        android:minHeight="@dimen/logo_height"
-        android:maxHeight="@dimen/logo_width"
-        android:layout_marginRight="@dimen/standard_margin"
         android:layout_marginEnd="@dimen/standard_margin"
-        android:scaleType="centerCrop"
+        android:layout_marginRight="@dimen/standard_margin"
+        android:contentDescription="@null"
+        android:maxHeight="@dimen/logo_width"
+        android:minHeight="@dimen/logo_height"
+        android:scaleType="fitCenter"
         android:src="@drawable/ic_placeholder_image"
-        android:contentDescription="@null"/>
+        app:strokeColor="@color/stroke_color"/>
 
     <android.support.v7.widget.AppCompatTextView
         android:id="@+id/textView_text"
         android:layout_width="match_parent"
-        android:maxHeight="@dimen/logo_width"
         android:layout_height="wrap_content"
         android:layout_gravity="center_vertical"
+        android:maxHeight="@dimen/logo_width"
         tools:text="Test"/>
 
 </LinearLayout>

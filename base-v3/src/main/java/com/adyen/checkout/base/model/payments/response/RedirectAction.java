@@ -57,8 +57,8 @@ public class RedirectAction extends Action {
             redirectAction.setType(jsonObject.optString(Action.TYPE, null));
             redirectAction.setPaymentData(jsonObject.optString(Action.PAYMENT_DATA, null));
 
-            redirectAction.setMethod(jsonObject.optString(METHOD));
-            redirectAction.setUrl(jsonObject.optString(URL));
+            redirectAction.setMethod(jsonObject.optString(METHOD, null));
+            redirectAction.setUrl(jsonObject.optString(URL, null));
             return redirectAction;
         }
     };

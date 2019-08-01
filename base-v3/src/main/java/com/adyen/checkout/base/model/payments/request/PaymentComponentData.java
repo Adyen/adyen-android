@@ -3,32 +3,32 @@
  *
  * This file is open source and available under the MIT license. See the LICENSE file for more info.
  *
- * Created by caiof on 28/5/2019.
+ * Created by caiof on 23/7/2019.
  */
 
 package com.adyen.checkout.base.model.payments.request;
 
+import android.os.Parcel;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 
-import com.adyen.checkout.core.code.Lint;
-import com.adyen.checkout.core.exeption.CheckoutException;
+import com.adyen.checkout.core.exeption.ModelSerializationException;
+import com.adyen.checkout.core.model.JsonUtils;
 import com.adyen.checkout.core.model.ModelObject;
-import com.adyen.checkout.core.util.StringUtil;
+import com.adyen.checkout.core.model.ModelUtils;
 
+import org.json.JSONException;
 import org.json.JSONObject;
 
-/**
- * This class is a top level abstraction for data objects that can be serialized to the paymentMethod parameter on a payments/ call.
- * The {@link #SERIALIZER} object can serialize this to a {@link JSONObject} with the corresponding data.
- *
- * <p/>
- * Alternatively you can use other parsing libraries if they support polymorphism.
- */
-@SuppressWarnings("MemberName")
-public abstract class PaymentComponentData extends ModelObject {
+@SuppressWarnings({"MemberName", "PMD.DataClass"})
+public class PaymentComponentData<PaymentMethodDetailsT extends PaymentMethodDetails> extends ModelObject {
 
-    public static final String TYPE = "type";
+    @NonNull
+    public static final Creator<PaymentComponentData> CREATOR = new Creator<>(PaymentComponentData.class);
+
+    private static final String PAYMENT_METHOD = "paymentMethod";
+    private static final String STORE_PAYMENT_METHOD = "storePaymentMethod";
+    private static final String SHOPPER_REFERENCE = "shopperReference";
 
     @NonNull
     public static final Serializer<PaymentComponentData> SERIALIZER = new Serializer<PaymentComponentData>() {
@@ -36,59 +36,62 @@ public abstract class PaymentComponentData extends ModelObject {
         @NonNull
         @Override
         public JSONObject serialize(@NonNull PaymentComponentData modelObject) {
-            final String actionType = modelObject.getType();
-            if (!StringUtil.hasContent(actionType)) {
-                throw new CheckoutException("PaymentMethod type not found");
+            final JSONObject jsonObject = new JSONObject();
+            try {
+                jsonObject.putOpt(PAYMENT_METHOD, ModelUtils.serializeOpt(modelObject.getPaymentMethod(), PaymentMethodDetails.SERIALIZER));
+                jsonObject.putOpt(STORE_PAYMENT_METHOD, modelObject.isStorePaymentMethodEnable());
+                jsonObject.putOpt(SHOPPER_REFERENCE, modelObject.getShopperReference());
+            } catch (JSONException e) {
+                throw new ModelSerializationException(PaymentComponentData.class, e);
             }
-            //noinspection unchecked
-            final Serializer<PaymentComponentData> serializer = (Serializer<PaymentComponentData>) getChildSerializer(actionType);
-            return serializer.serialize(modelObject);
+            return jsonObject;
         }
 
         @NonNull
         @Override
         public PaymentComponentData deserialize(@NonNull JSONObject jsonObject) {
-            final String actionType = jsonObject.optString(TYPE);
-            if (!StringUtil.hasContent(actionType)) {
-                throw new CheckoutException("PaymentMethod type not found");
-            }
+            final PaymentComponentData paymentComponentData = new PaymentComponentData();
             //noinspection unchecked
-            final Serializer<PaymentComponentData> serializer = (Serializer<PaymentComponentData>) getChildSerializer(actionType);
-            return serializer.deserialize(jsonObject);
+            paymentComponentData.setPaymentMethod(
+                    ModelUtils.deserializeOpt(jsonObject.optJSONObject(PAYMENT_METHOD), PaymentMethodDetails.SERIALIZER));
+            paymentComponentData.setStorePaymentMethod(jsonObject.optBoolean(STORE_PAYMENT_METHOD));
+            paymentComponentData.setShopperReference(jsonObject.optString(SHOPPER_REFERENCE));
+            return paymentComponentData;
         }
     };
 
-    private String type;
+    private PaymentMethodDetailsT paymentMethod;
+    private boolean storePaymentMethod;
+    private String shopperReference;
 
-    @SuppressWarnings(Lint.SYNTHETIC)
-    @NonNull
-    static Serializer<? extends PaymentComponentData> getChildSerializer(@NonNull String paymentMethodType) {
-        switch (paymentMethodType) {
-            case IdealPaymentMethod.PAYMENT_METHOD_TYPE:
-                return IdealPaymentMethod.SERIALIZER;
-            case CardPaymentMethod.PAYMENT_METHOD_TYPE:
-                return CardPaymentMethod.SERIALIZER;
-            case MolpayPaymentMethod.PAYMENT_METHOD_TYPE:
-                return MolpayPaymentMethod.SERIALIZER;
-            case DotpayPaymentMethod.PAYMENT_METHOD_TYPE:
-                return DotpayPaymentMethod.SERIALIZER;
-            case EPSPaymentMethod.PAYMENT_METHOD_TYPE:
-                return EPSPaymentMethod.SERIALIZER;
-            case OpenBankingPaymentMethod.PAYMENT_METHOD_TYPE:
-                return OpenBankingPaymentMethod.SERIALIZER;
-            case EntercashPaymentMethod.PAYMENT_METHOD_TYPE:
-                return EntercashPaymentMethod.SERIALIZER;
-            default:
-                return GenericPaymentMethod.SERIALIZER;
-        }
+    @Override
+    public void writeToParcel(@NonNull Parcel dest, int flags) {
+        JsonUtils.writeToParcel(dest, SERIALIZER.serialize(this));
     }
 
     @Nullable
-    public String getType() {
-        return type;
+    public PaymentMethodDetailsT getPaymentMethod() {
+        return paymentMethod;
     }
 
-    public void setType(@Nullable String type) {
-        this.type = type;
+    public void setPaymentMethod(@Nullable PaymentMethodDetailsT paymentMethod) {
+        this.paymentMethod = paymentMethod;
+    }
+
+    public void setStorePaymentMethod(boolean status) {
+        storePaymentMethod = status;
+    }
+
+    public boolean isStorePaymentMethodEnable() {
+        return storePaymentMethod;
+    }
+
+    public void setShopperReference(@NonNull String shopperReference) {
+        this.shopperReference = shopperReference;
+    }
+
+    @Nullable
+    public String getShopperReference() {
+        return shopperReference;
     }
 }

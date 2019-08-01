@@ -28,7 +28,7 @@ public interface NumberValidator {
      * @return A {@link NumberValidationResult}.
      */
     @NonNull
-    NumberValidationResult validateNumber(@NonNull String number);
+    NumberValidationResult validateNumber(@NonNull String number, boolean isOneClick);
 
     /**
      * {@link ValidationResult} for a card number.

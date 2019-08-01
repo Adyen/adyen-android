@@ -14,18 +14,20 @@ import android.support.annotation.Nullable;
 
 import com.adyen.checkout.core.exeption.ModelSerializationException;
 import com.adyen.checkout.core.model.JsonUtils;
-import com.adyen.checkout.core.model.ModelUtils;
 
 import org.json.JSONException;
 import org.json.JSONObject;
 
-@SuppressWarnings("MemberName")
+@SuppressWarnings({"MemberName", "PMD.DataClass"})
 public final class RecurringDetail extends PaymentMethod {
     @NonNull
     public static final Creator<RecurringDetail> CREATOR = new Creator<>(RecurringDetail.class);
 
-    private static final String RECURRING_DETAIL_REFERENCE = "recurringDetailReference";
-    private static final String STORED_DETAILS = "storedDetails";
+    private static final String RECURRING_DETAIL_REFERENCE = "id";
+    private static final String EXPIRY_MONTH = "expiryMonth";
+    private static final String EXPIRY_YEAR = "expiryYear";
+    private static final String LAST_FOUR = "lastFour";
+    private static final String BRAND = "brand";
 
     @NonNull
     public static final Serializer<RecurringDetail> SERIALIZER = new Serializer<RecurringDetail>() {
@@ -35,8 +37,11 @@ public final class RecurringDetail extends PaymentMethod {
             // Get parameters from parent class
             final JSONObject jsonObject = PaymentMethod.SERIALIZER.serialize(modelObject);
             try {
-                jsonObject.putOpt(RECURRING_DETAIL_REFERENCE, modelObject.getRecurringDetailReference());
-                jsonObject.putOpt(STORED_DETAILS, ModelUtils.serializeOpt(modelObject.getStoredDetails(), StoredDetails.SERIALIZER));
+                jsonObject.putOpt(RECURRING_DETAIL_REFERENCE, modelObject.getId());
+                jsonObject.putOpt(EXPIRY_MONTH, modelObject.getExpiryMonth());
+                jsonObject.putOpt(EXPIRY_YEAR, modelObject.getExpiryYear());
+                jsonObject.putOpt(LAST_FOUR, modelObject.getLastFour());
+                jsonObject.putOpt(BRAND, modelObject.getBrand());
             } catch (JSONException e) {
                 throw new ModelSerializationException(RecurringDetail.class, e);
             }
@@ -58,15 +63,21 @@ public final class RecurringDetail extends PaymentMethod {
             recurringDetail.setSupportsRecurring(paymentMethod.getSupportsRecurring());
             recurringDetail.setType(paymentMethod.getType());
 
-            recurringDetail.setRecurringDetailReference(jsonObject.optString(RECURRING_DETAIL_REFERENCE, null));
-            recurringDetail.setStoredDetails(ModelUtils.deserializeOpt(jsonObject.optJSONObject(STORED_DETAILS), StoredDetails.SERIALIZER));
+            recurringDetail.setId(jsonObject.optString(RECURRING_DETAIL_REFERENCE));
+            recurringDetail.setExpiryMonth(jsonObject.optString(EXPIRY_MONTH));
+            recurringDetail.setExpiryYear(jsonObject.optString(EXPIRY_YEAR));
+            recurringDetail.setLastFour(jsonObject.optString(LAST_FOUR));
+            recurringDetail.setBrand(jsonObject.optString(BRAND));
 
             return recurringDetail;
         }
     };
 
-    private String recurringDetailReference;
-    private StoredDetails storedDetails;
+    private String id;
+    private String expiryMonth;
+    private String expiryYear;
+    private String lastFour;
+    private String brand;
 
     @Override
     public void writeToParcel(@NonNull Parcel dest, int flags) {
@@ -74,20 +85,47 @@ public final class RecurringDetail extends PaymentMethod {
     }
 
     @Nullable
-    public String getRecurringDetailReference() {
-        return recurringDetailReference;
+    public String getId() {
+        return id;
     }
 
-    @Nullable
-    public StoredDetails getStoredDetails() {
-        return storedDetails;
+    public void setId(@NonNull String id) {
+        this.id = id;
     }
 
-    public void setRecurringDetailReference(@Nullable String recurringDetailReference) {
-        this.recurringDetailReference = recurringDetailReference;
+    @NonNull
+    public String getExpiryMonth() {
+        return expiryMonth;
     }
 
-    public void setStoredDetails(@Nullable StoredDetails storedDetails) {
-        this.storedDetails = storedDetails;
+    public void setExpiryMonth(@NonNull String expiryMonth) {
+        this.expiryMonth = expiryMonth;
+    }
+
+    @NonNull
+    public String getExpiryYear() {
+        return expiryYear;
+    }
+
+    public void setExpiryYear(@NonNull String expiryYear) {
+        this.expiryYear = expiryYear;
+    }
+
+    @NonNull
+    public String getLastFour() {
+        return lastFour;
+    }
+
+    public void setLastFour(@NonNull String lastFour) {
+        this.lastFour = lastFour;
+    }
+
+    @NonNull
+    public String getBrand() {
+        return brand;
+    }
+
+    public void setBrand(@NonNull String brand) {
+        this.brand = brand;
     }
 }

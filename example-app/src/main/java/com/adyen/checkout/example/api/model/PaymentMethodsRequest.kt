@@ -13,12 +13,13 @@ import com.adyen.checkout.example.BuildConfig
 @Suppress("MagicNumber")
 data class PaymentMethodsRequest(
     val merchantAccount: String = BuildConfig.MERCHANT_ACCOUNT,
-//        val additionalData: Any,
-//        val allowedPaymentMethods: ArrayList<String>,
+    val shopperReference: String,
+//  val additionalData: Any,
+//  val allowedPaymentMethods: ArrayList<String>,
     val amount: Amount = Amount("EUR", 1337),
-//        val blockedPaymentMethods: ArrayList<String>,
+//  val blockedPaymentMethods: ArrayList<String>,
     val channel: String = "android",
     val countryCode: String = "NL",
-    val shopperLocale: String = "en_US",
-    val shopperReference: String = "testDropIn-Android"
+    val shopperLocale: String = "en_US"
+
 )

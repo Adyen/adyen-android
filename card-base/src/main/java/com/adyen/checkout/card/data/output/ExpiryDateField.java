@@ -3,20 +3,18 @@
  *
  * This file is open source and available under the MIT license. See the LICENSE file for more info.
  *
- * Created by ran on 19/3/2019.
+ * Created by arman on 22/7/2019.
  */
 
 package com.adyen.checkout.card.data.output;
 
-import com.adyen.checkout.base.component.data.output.BaseField;
+import android.support.annotation.NonNull;
 
-import com.adyen.checkout.base.component.validator.Validity;
-import com.adyen.checkout.card.data.validator.CardValidator;
+import com.adyen.checkout.card.data.validator.ExpiryDateValidator;
 
-public class ExpiryDateField extends BaseField<String> {
-    private static final String EMPTY_STRING = "";
+public class ExpiryDateField extends BaseFiled<ExpiryDateValidator.ExpiryDateValidationResult> {
 
-    ExpiryDateField() {
-        super(EMPTY_STRING, EMPTY_STRING, new CardValidator.ExpiryDateValidationResult(Validity.INVALID, null, null));
+    public ExpiryDateField(@NonNull ExpiryDateValidator.ExpiryDateValidationResult validationResult) {
+        super(validationResult);
     }
 }

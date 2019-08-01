@@ -8,15 +8,18 @@
 
 package com.adyen.checkout.base.component;
 
+import android.app.Application;
 import android.arch.lifecycle.ViewModelProviders;
 import android.support.annotation.NonNull;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentActivity;
 
-import com.adyen.checkout.base.PaymentComponentProvider;
+import com.adyen.checkout.base.ComponentAvailableCallback;
 import com.adyen.checkout.base.Configuration;
+import com.adyen.checkout.base.PaymentComponentProvider;
 import com.adyen.checkout.base.component.lifecycle.ComponentViewModelFactory;
 import com.adyen.checkout.base.model.paymentmethods.PaymentMethod;
+import com.adyen.checkout.core.exeption.CheckoutException;
 
 public final class PaymentComponentProviderImpl<BaseComponentT extends BasePaymentComponent, ConfigurationT extends Configuration>
         implements PaymentComponentProvider<BaseComponentT, ConfigurationT> {
@@ -29,15 +32,26 @@ public final class PaymentComponentProviderImpl<BaseComponentT extends BasePayme
 
     @NonNull
     @Override
-    public BaseComponentT get(@NonNull FragmentActivity activity, @NonNull PaymentMethod paymentMethod, @NonNull ConfigurationT configuration) {
+    public BaseComponentT get(@NonNull FragmentActivity activity, @NonNull PaymentMethod paymentMethod, @NonNull ConfigurationT configuration)
+            throws CheckoutException {
         final ComponentViewModelFactory factory = new ComponentViewModelFactory(paymentMethod, configuration);
         return ViewModelProviders.of(activity, factory).get(mComponentClass);
     }
 
     @NonNull
     @Override
-    public BaseComponentT get(@NonNull Fragment fragment, @NonNull PaymentMethod paymentMethod, @NonNull ConfigurationT configuration) {
+    public BaseComponentT get(@NonNull Fragment fragment, @NonNull PaymentMethod paymentMethod, @NonNull ConfigurationT configuration)
+            throws CheckoutException {
         final ComponentViewModelFactory factory = new ComponentViewModelFactory(paymentMethod, configuration);
         return ViewModelProviders.of(fragment, factory).get(mComponentClass);
+    }
+
+    @Override
+    public void isAvailable(
+            @NonNull Application applicationContext,
+            @NonNull PaymentMethod paymentMethod,
+            @NonNull ConfigurationT config,
+            @NonNull ComponentAvailableCallback<ConfigurationT> callback) {
+        callback.onAvailabilityResult(true, paymentMethod, config);
     }
 }

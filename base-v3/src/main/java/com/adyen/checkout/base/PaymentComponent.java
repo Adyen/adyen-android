@@ -11,11 +11,11 @@ package com.adyen.checkout.base;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 
-import com.adyen.checkout.base.model.payments.request.PaymentComponentData;
+import com.adyen.checkout.base.model.payments.request.PaymentMethodDetails;
 
 /**
  * A component that handles collecting user input data. It handles validating and formatting the data for the UI.
- * A valid {@link PaymentComponentState} contains {@link PaymentComponentData} to help compose the payments/ call on the backend.
+ * A valid {@link PaymentComponentState} contains {@link PaymentMethodDetails} to help compose the payments/ call on the backend.
  *
  * <p/>
  * Should be used attached to a corresponding ComponentView to get data from.
