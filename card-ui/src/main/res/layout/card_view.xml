@@ -26,7 +26,7 @@
             <com.adyen.checkout.card.ui.CardNumberInput
                 android:id="@+id/editText_cardNumber"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
+                android:layout_height="@dimen/input_height"
                 android:hint="@string/checkout_card_number_hint"
                 android:inputType="phone"
                 android:nextFocusDown="@+id/editText_expiryDate"
@@ -61,7 +61,7 @@
             <com.adyen.checkout.card.ui.ExpiryDateInput
                 android:id="@+id/editText_expiryDate"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
+                android:layout_height="@dimen/input_height"
                 android:hint="@string/checkout_card_expiry_date_hint"
                 android:inputType="date"
                 android:maxLength="7"
@@ -81,7 +81,7 @@
             <com.adyen.checkout.card.ui.SecurityCodeInput
                 android:id="@+id/editText_securityCode"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
+                android:layout_height="@dimen/input_height"
                 android:hint="@string/checkout_card_security_code_hint"
                 android:inputType="number"
                 android:maxLength="4"
@@ -99,7 +99,7 @@
         <com.adyen.checkout.card.ui.AdyenTextInputEditText
             android:id="@+id/editText_cardHolder"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
+            android:layout_height="@dimen/input_height"
             android:hint="@string/checkout_card_holder_hint"
             android:inputType="text"/>
     </android.support.design.widget.TextInputLayout>

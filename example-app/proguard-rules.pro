@@ -19,3 +19,8 @@
 # If you keep the line number information, uncomment this to
 # hide the original source file name.
 #-renamesourcefileattribute SourceFile
+
+-keep class com.adyen.checkout.base.model.** { *; }
+-keepclassmembers public class * implements com.adyen.checkout.base.PaymentComponent {
+   public <init>(...);
+}

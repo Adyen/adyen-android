@@ -13,15 +13,15 @@ The Components are available through [jcenter][dl], you only need to add the Gra
 Import the Component module for the Payment Method you want to use by adding it to your `build.gradle` file.
 For example, for the Drop-in solution you should add:
 ```groovy
-implementation "com.adyen.checkout:drop-in:3.1.0"
+implementation "com.adyen.checkout:drop-in:3.1.1"
 ```
 For a Credit Card component you should add:
 ```groovy
-implementation "com.adyen.checkout:card-ui:3.1.0"
+implementation "com.adyen.checkout:card-ui:3.1.1"
 ```
 For and iDeal component you should add:
 ```groovy
-implementation "com.adyen.checkout:ideal-ui:3.1.0"
+implementation "com.adyen.checkout:ideal-ui:3.1.1"
 ```
 
 ## Drop-in
@@ -131,6 +131,18 @@ You can also find the components that can handle the `action` object.
 
 - Redirect
 - 3DS2 (Fingerprint and Challenge)
+
+## ProGuard
+
+If you use ProGuard or R8, the following rules should be enough to maintain all expected functionality.
+Please let us know if you find any issues.
+
+```
+-keep class com.adyen.checkout.base.model.** { *; }
+-keepclassmembers public class * implements com.adyen.checkout.base.PaymentComponent {
+   public <init>(...);
+}
+```
 
 ## See also
 

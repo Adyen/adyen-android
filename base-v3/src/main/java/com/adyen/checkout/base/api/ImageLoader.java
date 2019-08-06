@@ -51,11 +51,11 @@ public class ImageLoader {
     /**
      * Load image to ImageView with place holder before load and error fallback image.
      */
-    public void load(@NonNull String txVariant, @NonNull ImageView view, @Nullable @DrawableRes int placeHolderResourceID,
-            @Nullable @DrawableRes final int errorHolderResourceID) {
+    public void load(@NonNull String txVariant, @NonNull ImageView view, @Nullable @DrawableRes int placeholder,
+            @Nullable @DrawableRes final int errorFallback) {
 
-        if (placeHolderResourceID != 0) {
-            view.setImageResource(placeHolderResourceID);
+        if (placeholder != 0) {
+            view.setImageResource(placeholder);
         }
 
         final String id = txVariant + view.getId();
@@ -85,7 +85,7 @@ public class ImageLoader {
             public void onReceiveFailed() {
                 final ImageView imageView = mImageViews.get(id).get();
                 if (imageView != null) {
-                    imageView.setImageResource(errorHolderResourceID);
+                    imageView.setImageResource(errorFallback);
                 }
 
                 mCallbacks.remove(id);

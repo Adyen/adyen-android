@@ -1,6 +1,3 @@
 <ul>
-<li>Add "One Click Payment" option for card payment.</li>
-<li>Update UI/UX for Drop-In and components.</li>
-<li>Changed PaymentComponent observer output to contain PaymentComponentData. PaymentMethodDetails is now inside of PaymentComponentData.</li>
 <li>Bug fixes.</li>
 </ul>

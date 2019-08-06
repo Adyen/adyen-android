@@ -64,7 +64,9 @@ class DropInActivity : AppCompatActivity(), DropInBottomSheetDialogFragment.Prot
                     intent.getParcelableExtra(PAYMENT_METHODS_RESPONSE_KEY)
                 }
 
-        PaymentMethodListDialogFragment.newInstance(false).show(supportFragmentManager, PAYMENT_METHOD_FRAGMENT_TAG)
+        if (getFragmentByTag(COMPONENT_FRAGMENT_TAG) == null && getFragmentByTag(PAYMENT_METHOD_FRAGMENT_TAG) == null) {
+            PaymentMethodListDialogFragment.newInstance(false).show(supportFragmentManager, PAYMENT_METHOD_FRAGMENT_TAG)
+        }
 
         sendAnalyticsEvent()
     }
@@ -108,12 +110,16 @@ class DropInActivity : AppCompatActivity(), DropInBottomSheetDialogFragment.Prot
 
     private fun hideFragmentDialog(tag: String) {
         getFragmentByTag(tag).let {
-            it.dismiss()
+            it?.dismiss()
         }
     }
 
-    private fun getFragmentByTag(tag: String): DialogFragment {
+    private fun getFragmentByTag(tag: String): DialogFragment? {
         var fragment = supportFragmentManager.findFragmentByTag(tag)
-        return fragment as DialogFragment
+
+        if (fragment is DialogFragment)
+            return fragment
+
+        return null
     }
 }

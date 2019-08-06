@@ -110,10 +110,13 @@ public final class CardView extends LinearLayout implements ComponentView<CardCo
         mCardNumberEditText.setOnFocusChangeListener(new OnFocusChangeListener() {
             @Override
             public void onFocusChange(View v, boolean hasFocus) {
-                mCardNumberInput.setErrorEnabled(!hasFocus);
+                if (!mComponent.isStoredPaymentMethod()) {
+                    mCardNumberInput.setErrorEnabled(!hasFocus);
 
-                if (!hasFocus && (isOutputEmpty() || !mComponent.getOutputData().getCardNumberField().getValidationResult().isValid())) {
-                    mCardNumberInput.setError(getContext().getString(R.string.checkout_card_number_not_valid));
+                    if (!hasFocus && (isOutputEmpty()
+                            || !mComponent.getOutputData().getCardNumberField().getValidationResult().isValid())) {
+                        mCardNumberInput.setError(getContext().getString(R.string.checkout_card_number_not_valid));
+                    }
                 }
             }
         });

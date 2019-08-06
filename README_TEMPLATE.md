@@ -132,6 +132,18 @@ You can also find the components that can handle the `action` object.
 - Redirect
 - 3DS2 (Fingerprint and Challenge)
 
+## ProGuard
+
+If you use ProGuard or R8, the following rules should be enough to maintain all expected functionality.
+Please let us know if you find any issues.
+
+```
+-keep class com.adyen.checkout.base.model.** { *; }
+-keepclassmembers public class * implements com.adyen.checkout.base.PaymentComponent {
+   public <init>(...);
+}
+```
+
 ## See also
 
 * [Android Documentation][docs.android]

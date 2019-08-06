@@ -92,7 +92,13 @@ public final class CardComponent extends BasePaymentComponent<CardConfiguration,
         super(paymentMethod, configuration);
     }
 
+    /**
+     * Return false when {@link #isStoredPaymentMethod()} is true.
+     */
     public boolean isHolderNameRequire() {
+        if (isStoredPaymentMethod()) {
+            return false;
+        }
         return getConfiguration().isHolderNameRequire();
     }
 

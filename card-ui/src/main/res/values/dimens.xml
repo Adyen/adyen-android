@@ -13,4 +13,5 @@
     <dimen name="payment_method_logo_height">20dp</dimen>
 
     <dimen name="payment_method_margin">26dp</dimen>
+    <dimen name="input_height">55dp</dimen>
 </resources>
