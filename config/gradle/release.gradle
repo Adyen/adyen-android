@@ -6,6 +6,8 @@
  * Created by ran on 6/2/2019.
  */
 
+import groovy.json.JsonSlurper
+
 apply plugin: "maven-publish"
 apply plugin: "com.jfrog.bintray"
 
@@ -137,4 +139,19 @@ bintray {
     }
 }
 
-bintrayUpload.dependsOn "ci"
+task publishAndUploadToBintray {
+    doLast {
+        def req = ['curl', '-s -X', 'POST',
+                   "-u${System.env.BINTRAY_USER}:${System.env.BINTRAY_KEY}",
+                   "${System.env.BINTRAY_API}/${theArtifactId}/${theVersion}/publish"].execute()
+        def response = req.text
+        if (response) {
+            def json = new JsonSlurper().parseText(response)
+            println "${json.files} files from ${theArtifactId} module have been published"
+        } else {
+            throw new GradleException("Publishing ${theArtifactId} failed")
+        }
+    }
+}
+
+publishAndUploadToBintray.dependsOn "bintrayUpload"

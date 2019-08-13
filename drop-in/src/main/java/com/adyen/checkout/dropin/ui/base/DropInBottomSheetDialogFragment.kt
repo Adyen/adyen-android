@@ -18,13 +18,13 @@ import android.view.KeyEvent
 import android.widget.FrameLayout
 import com.adyen.checkout.base.model.paymentmethods.PaymentMethod
 import com.adyen.checkout.dropin.R
-import java.lang.IllegalArgumentException
+import com.adyen.checkout.googlepay.GooglePayConfiguration
 
 abstract class DropInBottomSheetDialogFragment : BottomSheetDialogFragment() {
 
     lateinit var protocol: Protocol
 
-    var dialogInitViewState: Int = BottomSheetBehavior.STATE_COLLAPSED
+    private var dialogInitViewState: Int = BottomSheetBehavior.STATE_COLLAPSED
 
     fun setInitViewState(firstViewState: Int) {
         this.dialogInitViewState = firstViewState
@@ -75,5 +75,6 @@ abstract class DropInBottomSheetDialogFragment : BottomSheetDialogFragment() {
         fun showComponentDialog(paymentMethod: PaymentMethod, wasInExpandMode: Boolean)
         fun showPaymentMethodsDialog(showInExpandStatus: Boolean)
         fun terminateDropIn()
+        fun startGooglePay(paymentMethod: PaymentMethod, googlePayConfiguration: GooglePayConfiguration)
     }
 }

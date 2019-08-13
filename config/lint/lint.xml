@@ -8,4 +8,20 @@
 
     <!-- We don't use App Indexing -->
     <issue id="GoogleAppIndexingApiWarning" severity="ignore"/>
+
+    <!-- We are keeping an old version of Google Wallet until we update to Android X support libs -->
+    <issue id="GradleCompatible" severity="warning"/>
+
+    <!-- Google Pay UI elements were imported from google, only file renames for clarity -->
+    <issue id="UnusedAttribute" >
+        <ignore regexp=".*src\/main\/res\/.*googlepay.*"/>
+    </issue>
+    <issue id="ContentDescription" >
+        <ignore regexp=".*src\/main\/res\/.*googlepay.*"/>
+    </issue>
+    <issue id="RedundantNamespace" >
+        <ignore path="src/main/res/drawable-v21/googlepay_white_button_background.xml"/>
+        <ignore path="src/main/res/drawable-v21/googlepay_white_button_no_shadow_background.xml"/>
+    </issue>
+
 </lint>

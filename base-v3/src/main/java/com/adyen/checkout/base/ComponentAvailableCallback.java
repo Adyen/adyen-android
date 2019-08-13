@@ -9,10 +9,11 @@
 package com.adyen.checkout.base;
 
 import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
 
 import com.adyen.checkout.base.model.paymentmethods.PaymentMethod;
 
 public interface ComponentAvailableCallback<ConfigurationT extends Configuration> {
 
-    void onAvailabilityResult(boolean isAvailable, @NonNull PaymentMethod paymentMethod, @NonNull ConfigurationT config);
+    void onAvailabilityResult(boolean isAvailable, @NonNull PaymentMethod paymentMethod, @Nullable ConfigurationT config);
 }

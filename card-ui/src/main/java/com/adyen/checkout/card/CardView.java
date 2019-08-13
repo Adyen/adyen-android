@@ -74,13 +74,8 @@ public final class CardView extends LinearLayout implements ComponentView<CardCo
         this(context, attrs, 0);
     }
 
-    /**
-     * CardView constructor.
-     *
-     * @param context      {@link Context}
-     * @param attrs        {@link AttributeSet}
-     * @param defStyleAttr {@link Integer}
-     */
+    // Regular View constructor
+    @SuppressWarnings("JavadocMethod")
     public CardView(@NonNull Context context, @Nullable AttributeSet attrs, int defStyleAttr) {
         super(context, attrs, defStyleAttr);
 

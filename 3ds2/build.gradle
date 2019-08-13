@@ -13,10 +13,10 @@ ext.mavenArtifactDescription = "Adyen Checkout 3DS2 component client for Adyen's
 
 apply plugin: 'com.android.library'
 
-// TODO switch back when we have MD5 file for 3DS2 SDK
-//apply from: "../config/gradle/sharedTasks.gradle"
+// TODO switch back to use `sharedTasks.gradle` when we have MD5 file for 3DS2 SDK
 apply from: "../config/gradle/codeQuality.gradle"
 apply from: "../config/gradle/ci.gradle"
+apply from: "../config/gradle/runConnectedAndroidTest.gradle"
 
 android {
     compileSdkVersion version_compile_sdk

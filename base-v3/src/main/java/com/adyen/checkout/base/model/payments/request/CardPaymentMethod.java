@@ -12,6 +12,7 @@ import android.os.Parcel;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 
+import com.adyen.checkout.base.util.PaymentMethodTypes;
 import com.adyen.checkout.core.exeption.ModelSerializationException;
 import com.adyen.checkout.core.model.JsonUtils;
 
@@ -24,7 +25,7 @@ public final class CardPaymentMethod extends PaymentMethodDetails {
     @NonNull
     public static final Creator<CardPaymentMethod> CREATOR = new Creator<>(CardPaymentMethod.class);
 
-    public static final String PAYMENT_METHOD_TYPE = "scheme";
+    public static final String PAYMENT_METHOD_TYPE = PaymentMethodTypes.SCHEME;
 
     private static final String ENCRYPTED_CARD_NUMBER = "encryptedCardNumber";
     private static final String ENCRYPTED_EXPIRY_MONTH = "encryptedExpiryMonth";

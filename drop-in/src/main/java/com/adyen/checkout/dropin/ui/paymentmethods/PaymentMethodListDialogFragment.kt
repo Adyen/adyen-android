@@ -69,6 +69,7 @@ class PaymentMethodListDialogFragment : DropInBottomSheetDialogFragment(), Payme
 
     private fun addObserver(recyclerView: RecyclerView) {
         mDropInViewModel.paymentMethodsModelLiveData.observe(this, Observer<PaymentMethodsModel> {
+            Logger.d(TAG, "paymentMethods changed")
             if (it == null) {
                 throw CheckoutException("List of PaymentMethodModel is null.")
             }
@@ -84,6 +85,7 @@ class PaymentMethodListDialogFragment : DropInBottomSheetDialogFragment(), Payme
                 recyclerView.adapter = paymentMethodAdapter
             } else {
                 paymentMethodAdapter.updatePaymentMethodsList(it)
+                paymentMethodAdapter.notifyDataSetChanged()
             }
         })
     }
@@ -97,6 +99,11 @@ class PaymentMethodListDialogFragment : DropInBottomSheetDialogFragment(), Payme
     override fun onPaymentMethodSelected(paymentMethod: PaymentMethod, isInExpandMode: Boolean) {
         Logger.d(TAG, "onPaymentMethodSelected")
         if (PaymentMethodTypes.SUPPORTED_PAYMENT_METHODS.contains(paymentMethod.type)) {
+            // TODO refactor this logic to a layer that decides is payment method needs to present View or not
+            if (paymentMethod.type == PaymentMethodTypes.GOOGLE_PAY) {
+                protocol.startGooglePay(paymentMethod, DropIn.INSTANCE.configuration.getConfigurationFor(PaymentMethodTypes.GOOGLE_PAY, context!!))
+                return
+            }
             protocol.showComponentDialog(paymentMethod, isInExpandMode)
         } else {
             val paymentComponentData = PaymentComponentData<PaymentMethodDetails>()

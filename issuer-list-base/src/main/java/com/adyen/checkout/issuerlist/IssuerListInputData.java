@@ -13,6 +13,7 @@ import android.support.annotation.Nullable;
 import com.adyen.checkout.base.component.data.input.InputData;
 
 public class IssuerListInputData implements InputData {
+
     private IssuerModel mSelectedIssuer;
 
     void setSelectedIssuer(@Nullable IssuerModel selectedIssuer) {

@@ -40,12 +40,16 @@ public class CardConfiguration extends BaseConfiguration {
     private final boolean mShowStorePaymentField;
 
     /**
-     * Constructs a {@link CardConfiguration} object.
+     * Constructor with all parameters. You can use the Builder to initialize this object more easily.
      *
-     * @param shopperLocale     {@link Locale}
-     * @param publicKey         {@link String}
-     * @param holderNameRequire {@link Boolean}
-     * @param supportCardTypes  {@link CardType}
+     * @param shopperLocale         The locale that should be used to display strings and layouts. Can differ from device default.
+     * @param environment           The environment to be used to make network calls.
+     * @param displayMetrics        The current {@link DisplayMetrics} of the device to fetch images of matching size.
+     * @param publicKey             The public key used for encryption of the card data. You can get it from the Customer Area.
+     * @param shopperReference      The unique identifier of the shopper.
+     * @param holderNameRequire     If the holder name of the card should be shown as a required field.
+     * @param showStorePaymentField If the component should show the option to store the card for later use.
+     * @param supportCardTypes      The list of supported card brands to be shown to the user.
      */
     public CardConfiguration(
             @NonNull Locale shopperLocale,
@@ -138,6 +142,24 @@ public class CardConfiguration extends BaseConfiguration {
         }
 
         /**
+         * Builder with required parameters for a {@link CardConfiguration}.
+         *
+         * @param shopperLocale     The Locale of the shopper.
+         * @param environment       The {@link Environment} to be used for network calls to Adyen.
+         * @param displayMetrics    The DisplayMetrics to fetch images with the correct size.
+         * @param publicKey         The public key used for encryption of the card data. You can get it from the Customer Area.
+         */
+        public Builder(
+                @NonNull Locale shopperLocale,
+                @NonNull Environment environment,
+                @NonNull DisplayMetrics displayMetrics,
+                @NonNull String publicKey) {
+            super(shopperLocale, environment);
+            mBuilderDisplayMetrics = displayMetrics;
+            mBuilderPublicKey = publicKey;
+        }
+
+        /**
          * @param publicKey The public key to be used for encryption. You can get it from the Customer Area.
          */
         public void setPublicKey(@NonNull String publicKey) {
@@ -182,7 +204,7 @@ public class CardConfiguration extends BaseConfiguration {
          * @return {@link CardConfiguration.Builder}
          */
         @NonNull
-        public Builder set(boolean showStorePaymentField) {
+        public Builder setShowStorePaymentField(boolean showStorePaymentField) {
             this.mBuilderShowStorePaymentField = showStorePaymentField;
             return this;
         }

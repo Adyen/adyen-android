@@ -8,16 +8,7 @@
 
 package com.adyen.checkout.example
 
-import com.adyen.checkout.base.model.payments.request.CardPaymentMethod
-import com.adyen.checkout.base.model.payments.request.DotpayPaymentMethod
-import com.adyen.checkout.base.model.payments.request.EPSPaymentMethod
-import com.adyen.checkout.base.model.payments.request.EntercashPaymentMethod
-import com.adyen.checkout.base.model.payments.request.GenericPaymentMethod
-import com.adyen.checkout.base.model.payments.request.IdealPaymentMethod
-import com.adyen.checkout.base.model.payments.request.MolpayPaymentMethod
-import com.adyen.checkout.base.model.payments.request.OpenBankingPaymentMethod
-import com.adyen.checkout.base.model.payments.request.PaymentComponentData
-import com.adyen.checkout.base.model.payments.request.PaymentMethodDetails
+import com.adyen.checkout.base.model.payments.request.* // ktlint-disable no-wildcard-imports
 import com.adyen.checkout.base.model.payments.response.Action
 import com.adyen.checkout.core.log.LogUtil
 import com.adyen.checkout.core.log.Logger
@@ -63,14 +54,20 @@ class ExampleDropInService : DropInService() {
                         .withSubtype(DotpayPaymentMethod::class.java, DotpayPaymentMethod.PAYMENT_METHOD_TYPE)
                         .withSubtype(EntercashPaymentMethod::class.java, EntercashPaymentMethod.PAYMENT_METHOD_TYPE)
                         .withSubtype(OpenBankingPaymentMethod::class.java, OpenBankingPaymentMethod.PAYMENT_METHOD_TYPE)
+                        .withSubtype(GooglePayPaymentMethod::class.java, GooglePayPaymentMethod.PAYMENT_METHOD_TYPE)
                         .withSubtype(GenericPaymentMethod::class.java, "other")
                 )
                 .build()
         val jsonAdapter = moshi.adapter(PaymentsRequest::class.java)
         val requestString = jsonAdapter.toJson(paymentsRequest)
-        Logger.v(TAG, "requestJson - ${JSONObject(requestString).toString(JsonUtils.IDENT_SPACES)}")
 
-        val requestBody = RequestBody.create(MediaType.parse("application/json"), requestString)
+        val request = JSONObject(requestString)
+        request.remove("paymentMethod")
+        request.put("paymentMethod", paymentComponentData.getJSONObject("paymentMethod"))
+
+        Logger.v(TAG, "requestJson - ${request.toString(JsonUtils.IDENT_SPACES)}")
+
+        val requestBody = RequestBody.create(MediaType.parse("application/json"), request.toString())
 
         val call = CheckoutApiService.INSTANCE.payments(requestBody)
 

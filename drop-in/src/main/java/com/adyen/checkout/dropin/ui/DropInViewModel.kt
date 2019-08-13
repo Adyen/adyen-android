@@ -42,8 +42,8 @@ class DropInViewModel(application: Application) : AndroidViewModel(application),
 
     private val paymentMethodsModel = PaymentMethodsModel()
 
-    override fun onAvailabilityResult(isAvailable: Boolean, paymentMethod: PaymentMethod, config: Configuration) {
-        Logger.d(TAG, "onAvailabilityResult - $isAvailable")
+    override fun onAvailabilityResult(isAvailable: Boolean, paymentMethod: PaymentMethod, config: Configuration?) {
+        Logger.d(TAG, "onAvailabilityResult - ${paymentMethod.type} $isAvailable")
 
         if (isAvailable) {
             addPaymentMethod(paymentMethod)

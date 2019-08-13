@@ -24,7 +24,7 @@ class PaymentMethodsRepository {
     suspend fun getPaymentMethods(): PaymentMethodsApiResponse? {
         Logger.d(TAG, "getPaymentMethods")
 
-        val paymentMethodsRequest = PaymentMethodsRequest("TestMerchantCheckout", BuildConfig.SHOPPER_REFERENCE)
+        val paymentMethodsRequest = PaymentMethodsRequest(BuildConfig.MERCHANT_ACCOUNT, BuildConfig.SHOPPER_REFERENCE)
         val result = CheckoutApiService.INSTANCE.paymentMethodsAsync(paymentMethodsRequest).await()
 
         Logger.d(TAG, "PaymentMethodsApiResponse received - ${result.body()}")

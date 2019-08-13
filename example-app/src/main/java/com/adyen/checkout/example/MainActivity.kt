@@ -22,6 +22,7 @@ import com.adyen.checkout.core.log.Logger
 import com.adyen.checkout.dropin.DropIn
 import com.adyen.checkout.dropin.DropInConfiguration
 import com.adyen.checkout.example.arch.PaymentMethodsViewModel
+import com.adyen.checkout.googlepay.GooglePayConfiguration
 import kotlinx.android.synthetic.main.activity_main.*
 
 class MainActivity : AppCompatActivity() {
@@ -78,13 +79,17 @@ class MainActivity : AppCompatActivity() {
     private fun startCheckout() {
         Logger.d(TAG, "startCheckout")
 
-        val cardConfiguration = CardConfiguration.Builder(this@MainActivity, BuildConfig.PUBLIC_KEY)
+        val googlePayConfig = GooglePayConfiguration.Builder(this@MainActivity, "TestMerchantCheckout").build()
+
+        val cardConfiguration =
+                CardConfiguration.Builder(this@MainActivity, BuildConfig.PUBLIC_KEY)
                 .setShopperReference(BuildConfig.SHOPPER_REFERENCE)
                 .build()
 
         val dropInConfiguration = DropInConfiguration.Builder(this@MainActivity, ExampleDropInService::class.java)
-                .addCardConfiguration(cardConfiguration)
-                .build()
+            .addCardConfiguration(cardConfiguration)
+            .addGooglePayConfiguration(googlePayConfig)
+            .build()
 
         val resultIntent = Intent(this, MainActivity::class.java)
         resultIntent.flags = Intent.FLAG_ACTIVITY_CLEAR_TOP

@@ -11,7 +11,7 @@
 // Re-enable it after Android Studio will officially support macOS Mojave,
 // or Android releases will run on a dedicated Jenkins server which runs macOS
 // that supports Android Studio.
-task ci(dependsOn: ['check', 'test'/*, 'runConnectedAndroidTest'*/]) {
+task ci(dependsOn: ['check', 'test', 'connectedAndroidTest']) {
     description = "Continiues integration task dependes on 'check' 'test' and 'runConnectedAndroidTest' tasks."
     group = "verification"
 }

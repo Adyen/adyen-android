@@ -51,7 +51,7 @@ public abstract class BasePaymentComponent<ConfigurationT extends Configuration,
     private boolean mIsAnalyticsEnabled = true;
 
     /**
-     * Constructs a {@link BasePaymentComponent} object.
+     * Component should not be instantiated directly. Instead use the PROVIDER object.
      *
      * @param paymentMethod {@link PaymentMethod}
      * @param configuration {@link ConfigurationT}

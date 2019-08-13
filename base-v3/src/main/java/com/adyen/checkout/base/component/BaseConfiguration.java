@@ -20,7 +20,7 @@ public abstract class BaseConfiguration implements Configuration {
     private final Locale mShopperLocale;
     private final Environment mEnvironment;
 
-    public BaseConfiguration(@NonNull Locale shopperLocale, @NonNull Environment environment) {
+    protected BaseConfiguration(@NonNull Locale shopperLocale, @NonNull Environment environment) {
         mShopperLocale = shopperLocale;
         mEnvironment = environment;
     }

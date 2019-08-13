@@ -18,18 +18,15 @@ import com.adyen.checkout.core.api.Environment;
 
 import java.util.Locale;
 
-public class IssuerListConfiguration extends BaseConfiguration {
+public abstract class IssuerListConfiguration extends BaseConfiguration {
 
     private final DisplayMetrics mDisplayMetrics;
 
-    /**
-     * Constructor with all parameters.
-     *
-     * @param shopperLocale  The locale that should be used to display strings and layouts. Can differ from device default.
-     * @param displayMetrics The current {@link DisplayMetrics} of the device to fetch images of matching size.
-     * @param environment    The environment to be used to make network calls.
-     */
-    public IssuerListConfiguration(@NonNull Locale shopperLocale, @NonNull DisplayMetrics displayMetrics, @NonNull Environment environment) {
+    protected IssuerListConfiguration(
+            @NonNull Locale shopperLocale,
+            @NonNull DisplayMetrics displayMetrics,
+            @NonNull Environment environment
+    ) {
         super(shopperLocale, environment);
         mDisplayMetrics = displayMetrics;
     }
@@ -46,12 +43,12 @@ public class IssuerListConfiguration extends BaseConfiguration {
         @NonNull
         protected DisplayMetrics mBuilderDisplayMetrics;
 
-        public IssuerListBuilder(@NonNull Context context) {
+        protected IssuerListBuilder(@NonNull Context context) {
             super(context);
             mBuilderDisplayMetrics = context.getResources().getDisplayMetrics();
         }
 
-        public IssuerListBuilder(@NonNull Locale shopperLocale, @NonNull Environment environment, @NonNull DisplayMetrics displayMetrics) {
+        protected IssuerListBuilder(@NonNull Locale shopperLocale, @NonNull Environment environment, @NonNull DisplayMetrics displayMetrics) {
             super(shopperLocale, environment);
             mBuilderDisplayMetrics = displayMetrics;
         }

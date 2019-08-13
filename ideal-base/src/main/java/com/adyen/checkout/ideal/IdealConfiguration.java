@@ -20,13 +20,17 @@ import java.util.Locale;
 public class IdealConfiguration extends IssuerListConfiguration {
 
     /**
-     * Constructor with all parameters.
+     * Constructor with all parameters. You can use the Builder to initialize this object more easily.
      *
      * @param shopperLocale  The locale that should be used to display strings and layouts. Can differ from device default.
      * @param displayMetrics The current {@link DisplayMetrics} of the device to fetch images of matching size.
      * @param environment    The environment to be used to make network calls.
      */
-    public IdealConfiguration(@NonNull Locale shopperLocale, @NonNull DisplayMetrics displayMetrics, @NonNull Environment environment) {
+    public IdealConfiguration(
+            @NonNull Locale shopperLocale,
+            @NonNull DisplayMetrics displayMetrics,
+            @NonNull Environment environment
+    ) {
         super(shopperLocale, displayMetrics, environment);
     }
 

@@ -100,7 +100,7 @@ class PaymentMethodAdapter(
                 when (paymentMethod) {
                     HEADER_PLACEHOLDER_ITEM_SP -> holder.title.setText(R.string.store_payment_methods_header)
                     HEADER_PLACEHOLDER_ITEM_P -> {
-                        holder.title.setText(if (showInExpandStatus) R.string.other_payment_methods
+                        holder.title.setText(if (!showInExpandStatus) R.string.other_payment_methods
                         else R.string.payment_methods_header)
                     }
                 }

@@ -6,7 +6,7 @@
  * Created by caiof on 4/6/2019.
  */
 
-package com.adyen.checkout.base.model.payments.response;
+package com.adyen.checkout.base.model.payments;
 
 import android.os.Parcel;
 import android.support.annotation.NonNull;

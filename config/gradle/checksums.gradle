@@ -23,7 +23,9 @@ if (!hasProperty("checksums")) {
             "org.jetbrains.kotlin:kotlin-android-extensions-runtime:1.3.41:ebd99afb8b3d7454d955aca50506f2bf:MD5",
             "android.arch.lifecycle:extensions:1.1.1:6544fbf7708d91530d279541942407bd:MD5",
             "com.android.support:design:28.0.0:e98ad3c70613cb5e6ab312489ee8d4ff:MD5",
-            "com.adyen.cse:adyen-cse:1.0.5:6ddf508e1dc2ce2f2a77a7c7b392dc60:MD5"
+            "com.adyen.cse:adyen-cse:1.0.5:6ddf508e1dc2ce2f2a77a7c7b392dc60:MD5",
+            "com.google.android.gms:play-services-wallet:16.0.1:0b1f46bd3fe205286d44aa8e5aeab5e2:MD5",
+            "com.android.support:multidex:1.0.3:253a5e007611db73d04349b5f872b69b:MD5"
     ]
 
     ext.checksums = checksums

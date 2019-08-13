@@ -64,7 +64,7 @@ public class JsonUtilsInstrumentedTest {
     }
 
     @Test
-    public void readFromParcel_Pass_ReadJson() {
+    public void readFromParcel_Pass_ReadJson() throws JSONException {
 
         Parcel parcel = Parcel.obtain();
         JSONObject jsonObject = new JSONObject();
@@ -83,7 +83,7 @@ public class JsonUtilsInstrumentedTest {
     }
 
     @Test
-    public void readFromParcel_Pass_ReadNull() {
+    public void readFromParcel_Pass_ReadNull() throws JSONException {
         Parcel parcel = Parcel.obtain();
 
         // Write JSON to parcel

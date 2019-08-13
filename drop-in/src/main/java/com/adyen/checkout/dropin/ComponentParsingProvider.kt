@@ -11,11 +11,7 @@ package com.adyen.checkout.dropin
 import android.app.Application
 import android.content.Context
 import android.support.v4.app.Fragment
-import com.adyen.checkout.base.ComponentAvailableCallback
-import com.adyen.checkout.base.ComponentView
-import com.adyen.checkout.base.Configuration
-import com.adyen.checkout.base.PaymentComponent
-import com.adyen.checkout.base.PaymentComponentProvider
+import com.adyen.checkout.base.* // ktlint-disable no-wildcard-imports
 import com.adyen.checkout.base.component.BaseConfigurationBuilder
 import com.adyen.checkout.base.model.paymentmethods.PaymentMethod
 import com.adyen.checkout.base.util.PaymentMethodTypes
@@ -23,6 +19,7 @@ import com.adyen.checkout.card.CardComponent
 import com.adyen.checkout.card.CardConfiguration
 import com.adyen.checkout.card.CardView
 import com.adyen.checkout.core.exeption.CheckoutException
+import com.adyen.checkout.core.log.Logger
 import com.adyen.checkout.dotpay.DotpayComponent
 import com.adyen.checkout.dotpay.DotpayConfiguration
 import com.adyen.checkout.dotpay.DotpayRecyclerView
@@ -32,6 +29,8 @@ import com.adyen.checkout.entercash.EntercashRecyclerView
 import com.adyen.checkout.eps.EPSComponent
 import com.adyen.checkout.eps.EPSConfiguration
 import com.adyen.checkout.eps.EPSRecyclerView
+import com.adyen.checkout.googlepay.GooglePayComponent
+import com.adyen.checkout.googlepay.GooglePayConfiguration
 import com.adyen.checkout.ideal.IdealComponent
 import com.adyen.checkout.ideal.IdealConfiguration
 import com.adyen.checkout.ideal.IdealRecyclerView
@@ -43,6 +42,13 @@ import com.adyen.checkout.openbanking.OpenBankingConfiguration
 import com.adyen.checkout.openbanking.OpenBankingRecyclerView
 
 internal fun <T : Configuration> getDefaultConfigFor(@PaymentMethodTypes.SupportedPaymentMethod paymentMethod: String, context: Context): T {
+
+    val specificRequirementConfigs = listOf(PaymentMethodTypes.SCHEME, PaymentMethodTypes.GOOGLE_PAY)
+
+    if (specificRequirementConfigs.contains(paymentMethod)) {
+        throw CheckoutException("Cannot provide default config for $paymentMethod. Please add it to the DropInConfiguration with required fields.")
+    }
+
     // get default builder for Configuration type
     val builder: BaseConfigurationBuilder<out Configuration> = when (paymentMethod) {
         PaymentMethodTypes.IDEAL -> {
@@ -63,9 +69,6 @@ internal fun <T : Configuration> getDefaultConfigFor(@PaymentMethodTypes.Support
         PaymentMethodTypes.ENTERCASH -> {
             EntercashConfiguration.Builder(context)
         }
-        PaymentMethodTypes.SCHEME -> {
-            throw CheckoutException("Cannot provide default config for $paymentMethod. Missing Public Key. ")
-        }
         else -> {
             throw CheckoutException("Unable to find component for type - $paymentMethod")
         }
@@ -85,15 +88,21 @@ internal fun checkComponentAvailability(
     paymentMethod: PaymentMethod,
     callback: ComponentAvailableCallback<in Configuration>
 ) {
-    val dropInConfig = DropIn.INSTANCE.configuration
-    val type = paymentMethod.type ?: throw CheckoutException("PaymentMethod is null")
+    try {
+        val dropInConfig = DropIn.INSTANCE.configuration
+        val type = paymentMethod.type ?: throw CheckoutException("PaymentMethod is null")
 
-    val provider = getProviderForType(type)
-    val configuration = dropInConfig.getConfigurationFor<Configuration>(type, application)
+        val provider = getProviderForType(type)
+        val configuration = dropInConfig.getConfigurationFor<Configuration>(type, application)
 
-    provider.isAvailable(application, paymentMethod, configuration, callback)
+        provider.isAvailable(application, paymentMethod, configuration, callback)
+    } catch (e: CheckoutException) {
+        Logger.e("CO.ComponentParsingProvider", "Unable to initiate ${paymentMethod.type}", e)
+        callback.onAvailabilityResult(false, paymentMethod, null)
+    }
 }
 
+@Suppress("ComplexMethod")
 internal fun getProviderForType(type: String): PaymentComponentProvider<PaymentComponent, Configuration> {
     @Suppress("UNCHECKED_CAST")
     return when (type) {
@@ -118,6 +127,9 @@ internal fun getProviderForType(type: String): PaymentComponentProvider<PaymentC
         PaymentMethodTypes.SCHEME -> {
             CardComponent.PROVIDER as PaymentComponentProvider<PaymentComponent, Configuration>
         }
+        PaymentMethodTypes.GOOGLE_PAY -> {
+            GooglePayComponent.PROVIDER as PaymentComponentProvider<PaymentComponent, Configuration>
+        }
         else -> {
             throw CheckoutException("Unable to find component for type - $type")
         }
@@ -131,6 +143,7 @@ internal fun getProviderForType(type: String): PaymentComponentProvider<PaymentC
  * @param paymentMethod The payment method to be parsed.
  * @throws CheckoutException In case a component cannot be created.
  */
+@Suppress("ComplexMethod")
 internal fun getComponentFor(fragment: Fragment, paymentMethod: PaymentMethod): PaymentComponent {
     val dropInConfig = DropIn.INSTANCE.configuration
 
@@ -162,6 +175,10 @@ internal fun getComponentFor(fragment: Fragment, paymentMethod: PaymentMethod): 
         PaymentMethodTypes.SCHEME -> {
             val cardConfig: CardConfiguration = dropInConfig.getConfigurationFor(PaymentMethodTypes.SCHEME, fragment.context!!)
             CardComponent.PROVIDER.get(fragment, paymentMethod, cardConfig)
+        }
+        PaymentMethodTypes.GOOGLE_PAY -> {
+            val googlePayConfiguration: GooglePayConfiguration = dropInConfig.getConfigurationFor(PaymentMethodTypes.GOOGLE_PAY, fragment.context!!)
+            GooglePayComponent.PROVIDER.get(fragment, paymentMethod, googlePayConfiguration)
         }
         else -> {
             throw CheckoutException("Unable to find component for type - ${paymentMethod.type}")
@@ -202,6 +219,7 @@ internal fun getViewFor(context: Context, paymentMethod: PaymentMethod): Compone
         PaymentMethodTypes.SCHEME -> {
             CardView(context) as ComponentView<PaymentComponent>
         }
+        // GooglePay does not require a View in Drop-in
         else -> {
             throw CheckoutException("Unable to find view for type - ${paymentMethod.type}")
         }

@@ -22,6 +22,7 @@ import com.adyen.checkout.dotpay.DotpayConfiguration
 import com.adyen.checkout.dropin.DropInConfiguration.Builder
 import com.adyen.checkout.entercash.EntercashConfiguration
 import com.adyen.checkout.eps.EPSConfiguration
+import com.adyen.checkout.googlepay.GooglePayConfiguration
 import com.adyen.checkout.ideal.IdealConfiguration
 import com.adyen.checkout.molpay.MolpayConfiguration
 import com.adyen.checkout.openbanking.OpenBankingConfiguration
@@ -139,6 +140,14 @@ class DropInConfiguration internal constructor(builder: Builder) : Configuration
          */
         fun addOpenBankingConfiguration(openBankingConfiguration: OpenBankingConfiguration): Builder {
             availableConfigs[PaymentMethodTypes.OPEN_BANKING] = openBankingConfiguration
+            return this
+        }
+
+        /**
+         * Add configuration for Google Pay payment method.
+         */
+        fun addGooglePayConfiguration(googlePayConfiguration: GooglePayConfiguration): Builder {
+            availableConfigs[PaymentMethodTypes.GOOGLE_PAY] = googlePayConfiguration
             return this
         }
     }
