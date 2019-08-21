@@ -175,6 +175,11 @@ public final class Adyen3DS2Component extends BaseActionComponent implements Cha
         closeTransaction(getApplication());
     }
 
+    private void noActiveTransaction() {
+        Logger.d(TAG, "no active transaction");
+        notifyException(new Authentication3DS2Exception("No active transaction"));
+    }
+
     private void identifyShopper(final Context context, final String encodedFingerprintToken) throws ComponentException {
         Logger.d(TAG, "identifyShopper");
         final String decodedFingerprintToken = Base64Encoder.decode(encodedFingerprintToken);
@@ -234,6 +239,11 @@ public final class Adyen3DS2Component extends BaseActionComponent implements Cha
 
     private void challengeShopper(Activity activity, String encodedChallengeToken) throws ComponentException {
         Logger.d(TAG, "challengeShopper");
+
+        if (mTransaction == null) {
+            noActiveTransaction();
+            return;
+        }
 
         final String decodedChallengeToken = Base64Encoder.decode(encodedChallengeToken);
 
