@@ -26,7 +26,7 @@ import com.adyen.checkout.core.exeption.CheckoutException
 import com.adyen.checkout.core.log.LogUtil
 import com.adyen.checkout.core.log.Logger
 import com.adyen.checkout.dropin.ActionHandler
-import com.adyen.checkout.dropin.DropIn
+import com.adyen.checkout.dropin.DropInConfiguration
 import com.adyen.checkout.dropin.R
 import com.adyen.checkout.dropin.service.CallResult
 import com.adyen.checkout.dropin.service.DropInService
@@ -36,6 +36,7 @@ import org.json.JSONObject
 /**
  * Activity that presents a loading state to the user. Used to wait for API calls and handle Redirects.
  */
+@Suppress("TooManyFunctions")
 class LoadingActivity : AppCompatActivity(), ActionHandler.DetailsRequestedInterface {
 
     companion object {
@@ -43,19 +44,27 @@ class LoadingActivity : AppCompatActivity(), ActionHandler.DetailsRequestedInter
         protected val TAG = LogUtil.getTag()
 
         private const val PAYMENT_COMPONENT_DATA_REQUEST_KEY = "payment_component_data_request"
+        private const val DROP_IN_COMPONENT_CONFIG_KEY = "drop_in_component_config_key"
         private const val ACTION_PAYMENTS = "payments"
 
         private const val TIME_OUT_DELAY = 10000L
 
         // False positive
         @Suppress("FunctionParameterNaming")
-        fun getIntentForPayments(context: Context, paymentComponentData: PaymentComponentData<in PaymentMethodDetails>): Intent {
+        fun getIntentForPayments(
+            context: Context,
+            paymentComponentData: PaymentComponentData<in PaymentMethodDetails>,
+            dropInConfiguration: DropInConfiguration
+        ): Intent {
             val intent = Intent(context, LoadingActivity::class.java)
             intent.putExtra(PAYMENT_COMPONENT_DATA_REQUEST_KEY, paymentComponentData)
+            intent.putExtra(DROP_IN_COMPONENT_CONFIG_KEY, dropInConfiguration)
             intent.action = ACTION_PAYMENTS
             return intent
         }
     }
+
+    private lateinit var dropInConfiguration: DropInConfiguration
 
     private val timeoutHandler = Handler()
     private val timeoutRunnable = Runnable {
@@ -95,13 +104,19 @@ class LoadingActivity : AppCompatActivity(), ActionHandler.DetailsRequestedInter
         setContentView(R.layout.loading)
         overridePendingTransition(0, 0)
 
-        actionHandler = ActionHandler(this, this)
-
         callResultIntentFilter = IntentFilter(DropInService.getCallResultAction(this))
 
         // registerBroadcastReceivers
         val localBroadcastManager = LocalBroadcastManager.getInstance(this)
         localBroadcastManager.registerReceiver(callResultReceiver, callResultIntentFilter)
+
+        dropInConfiguration = if (savedInstanceState != null && savedInstanceState.containsKey(DROP_IN_COMPONENT_CONFIG_KEY)) {
+            savedInstanceState.getParcelable(DROP_IN_COMPONENT_CONFIG_KEY)!!
+        } else {
+            intent.getParcelableExtra(DROP_IN_COMPONENT_CONFIG_KEY)
+        }
+
+        actionHandler = ActionHandler(this, this)
 
         if (savedInstanceState == null) {
             handleIntent(intent)
@@ -148,8 +163,10 @@ class LoadingActivity : AppCompatActivity(), ActionHandler.DetailsRequestedInter
         // TODO create time out?
     }
 
-    override fun requestDetailsCall(componentData: ActionComponentData) {
-        DropInService.requestDetailsCall(this@LoadingActivity, componentData.details)
+    override fun requestDetailsCall(actionComponentData: ActionComponentData) {
+        DropInService.requestDetailsCall(this@LoadingActivity,
+            ActionComponentData.SERIALIZER.serialize(actionComponentData),
+            dropInConfiguration.serviceComponentName)
     }
 
     private fun handleIntent(intent: Intent) {
@@ -159,7 +176,7 @@ class LoadingActivity : AppCompatActivity(), ActionHandler.DetailsRequestedInter
             ACTION_PAYMENTS -> {
                 val paymentComponentData: PaymentComponentData<in PaymentMethodDetails> =
                     intent.getParcelableExtra(PAYMENT_COMPONENT_DATA_REQUEST_KEY)
-                DropInService.requestPaymentsCall(this, paymentComponentData)
+                DropInService.requestPaymentsCall(this, paymentComponentData, dropInConfiguration.serviceComponentName)
             }
             // Redirect response
             Intent.ACTION_VIEW -> {
@@ -181,12 +198,11 @@ class LoadingActivity : AppCompatActivity(), ActionHandler.DetailsRequestedInter
         Logger.d(TAG, "handleCallResult - ${callResult.type.name}")
         when (callResult.type) {
             CallResult.ResultType.FINISHED -> {
-                DropIn.INSTANCE.sendResult(this, callResult.content)
-                finish()
+                this.sendResult(callResult.content)
             }
             CallResult.ResultType.ACTION -> {
                 val action = Action.SERIALIZER.deserialize(JSONObject(callResult.content))
-                actionHandler.handleAction(this@LoadingActivity, action)
+                actionHandler.handleAction(this@LoadingActivity, action, this::sendResult)
             }
             CallResult.ResultType.ERROR -> {
                 Logger.d(TAG, "ERROR - ${callResult.content}")
@@ -201,6 +217,18 @@ class LoadingActivity : AppCompatActivity(), ActionHandler.DetailsRequestedInter
 
     override fun onError(errorMessage: String) {
         Toast.makeText(this@LoadingActivity, R.string.action_failed, Toast.LENGTH_LONG).show()
+        finish()
+    }
+
+    override fun finish() {
+        super.finish()
+        overridePendingTransition(0, R.anim.fade_out)
+    }
+
+    private fun sendResult(content: String) {
+        val data = Intent()
+        data.putExtra(DropInActivity.CALL_RESULT_KEY_FROM_RESULT, content)
+        setResult(RESULT_OK, data)
         finish()
     }
 }

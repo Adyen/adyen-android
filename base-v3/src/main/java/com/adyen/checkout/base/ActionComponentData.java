@@ -8,21 +8,75 @@
 
 package com.adyen.checkout.base;
 
+import android.os.Parcel;
 import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
 
+import com.adyen.checkout.core.exeption.ModelSerializationException;
+import com.adyen.checkout.core.model.JsonUtils;
+import com.adyen.checkout.core.model.ModelObject;
+
+import org.json.JSONException;
 import org.json.JSONObject;
 
-public class ActionComponentData {
-
-    private final JSONObject mDetails;
-
-    public ActionComponentData(@NonNull JSONObject actionDetails) {
-        mDetails = actionDetails;
-    }
+@SuppressWarnings("MemberName")
+public class ActionComponentData extends ModelObject {
 
     @NonNull
-    public JSONObject getDetails() {
-        return mDetails;
+    public static final Creator<ActionComponentData> CREATOR = new Creator<>(ActionComponentData.class);
+
+    private static final String PAYMENT_DATA = "paymentData";
+    private static final String DETAILS = "details";
+
+    @NonNull
+    public static final ModelObject.Serializer<ActionComponentData> SERIALIZER = new ModelObject.Serializer<ActionComponentData>() {
+
+        @NonNull
+        @Override
+        public JSONObject serialize(@NonNull ActionComponentData modelObject) {
+            final JSONObject jsonObject = new JSONObject();
+            try {
+                jsonObject.putOpt(PAYMENT_DATA, modelObject.getPaymentData());
+                jsonObject.putOpt(DETAILS, modelObject.getDetails());
+            } catch (JSONException e) {
+                throw new ModelSerializationException(ActionComponentData.class, e);
+            }
+            return jsonObject;
+        }
+
+        @NonNull
+        @Override
+        public ActionComponentData deserialize(@NonNull JSONObject jsonObject) {
+            final ActionComponentData actionComponentData = new ActionComponentData();
+            actionComponentData.setPaymentData(jsonObject.optString(PAYMENT_DATA));
+            actionComponentData.setDetails(jsonObject.optJSONObject(DETAILS));
+            return actionComponentData;
+        }
+    };
+
+    private String paymentData;
+    private JSONObject details;
+
+    @Override
+    public void writeToParcel(@NonNull Parcel dest, int flags) {
+        JsonUtils.writeToParcel(dest, SERIALIZER.serialize(this));
     }
 
+    @Nullable
+    public String getPaymentData() {
+        return paymentData;
+    }
+
+    public void setPaymentData(@Nullable String paymentData) {
+        this.paymentData = paymentData;
+    }
+
+    @Nullable
+    public JSONObject getDetails() {
+        return details;
+    }
+
+    public void setDetails(@Nullable JSONObject details) {
+        this.details = details;
+    }
 }

@@ -15,8 +15,10 @@
         android:theme="@style/AppTheme"
         tools:ignore="GoogleAppIndexingWarning">
 
-        <activity
-            android:name=".ResultActivity"/>
+        <activity android:name=".SettingsActivity">
+        </activity>
+
+        <activity android:name=".ResultActivity"/>
 
         <activity android:name=".MainActivity">
             <intent-filter>

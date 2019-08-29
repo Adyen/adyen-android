@@ -22,6 +22,7 @@ import android.widget.AdapterView;
 import android.widget.LinearLayout;
 
 import com.adyen.checkout.base.ComponentView;
+import com.adyen.checkout.base.api.ImageLoader;
 import com.adyen.checkout.core.log.LogUtil;
 import com.adyen.checkout.core.log.Logger;
 import com.adyen.checkout.issuerlist.ui.R;
@@ -66,7 +67,10 @@ public abstract class IssuerListSpinnerView<IssuerListComponentT extends IssuerL
         mComponent = component;
 
         mIssuersSpinner.setOnItemSelectedListener(this);
-        mIssuersAdapter = new IssuerListSpinnerAdapter(getContext(), Collections.<IssuerModel>emptyList(), hideIssuersLogo());
+        mIssuersAdapter = new IssuerListSpinnerAdapter(getContext(),
+                Collections.<IssuerModel>emptyList(),
+                ImageLoader.getInstance(getContext(), component.getConfiguration().getEnvironment()), component.getPaymentMethodType(),
+                hideIssuersLogo());
         mIssuersSpinner.setAdapter(mIssuersAdapter);
 
         mComponent.getIssuersLiveData().observe(lifecycleOwner, createIssuersObserver());
@@ -84,17 +88,7 @@ public abstract class IssuerListSpinnerView<IssuerListComponentT extends IssuerL
     }
 
     void onIssuersChanged(@Nullable List<IssuerModel> issuerList) {
-        // TODO: optimize
-        if (issuerList != null && !issuerList.isEmpty()) {
-            if (mIssuersAdapter.getCount() == 0) {
-                mIssuersAdapter.updateIssuers(issuerList);
-                for (IssuerModel issuer : issuerList) {
-                    mComponent.fetchIssuerLogo(issuer.getId());
-                }
-            } else {
-                mIssuersAdapter.updateIssuers(issuerList);
-            }
-        }
+        mIssuersAdapter.updateIssuers(issuerList);
     }
 
     @Override

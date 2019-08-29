@@ -23,15 +23,11 @@ import com.adyen.checkout.base.model.payments.response.Action;
 import com.adyen.checkout.core.exeption.CheckoutException;
 import com.adyen.checkout.core.exeption.ComponentException;
 
-import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.util.List;
 
 public abstract class BaseActionComponent extends AndroidViewModel implements ActionComponent {
-
-    private static final String DETAILS_KEY = "details";
-    private static final String PAYMENT_DATA_KEY = "paymentData";
 
     private final MutableLiveData<ActionComponentData> mResultLiveData = new MutableLiveData<>();
 
@@ -79,16 +75,11 @@ public abstract class BaseActionComponent extends AndroidViewModel implements Ac
     protected abstract void handleActionInternal(@NonNull Activity activity, @NonNull Action action) throws ComponentException;
 
     protected void notifyDetails(@NonNull JSONObject details) throws ComponentException {
+        final ActionComponentData actionComponentData = new ActionComponentData();
+        actionComponentData.setDetails(details);
+        actionComponentData.setPaymentData(mPaymentData);
 
-        final JSONObject componentData = new JSONObject();
-        try {
-            componentData.putOpt(PAYMENT_DATA_KEY, mPaymentData);
-            componentData.accumulate(DETAILS_KEY, details);
-        } catch (JSONException e) {
-            throw new ComponentException("Unable to create ActionComponentData", e);
-        }
-
-        mResultLiveData.setValue(new ActionComponentData(componentData));
+        mResultLiveData.setValue(actionComponentData);
     }
 
     protected void notifyException(@NonNull CheckoutException e) {

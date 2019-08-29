@@ -9,28 +9,22 @@
 package com.adyen.checkout.issuerlist;
 
 import android.arch.lifecycle.MutableLiveData;
-import android.graphics.drawable.Drawable;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 
 import com.adyen.checkout.base.PaymentComponentState;
-import com.adyen.checkout.base.api.LogoApi;
 import com.adyen.checkout.base.component.BasePaymentComponent;
 import com.adyen.checkout.base.model.paymentmethods.InputDetail;
 import com.adyen.checkout.base.model.paymentmethods.Item;
 import com.adyen.checkout.base.model.paymentmethods.PaymentMethod;
 import com.adyen.checkout.base.model.payments.request.IssuerListPaymentMethod;
 import com.adyen.checkout.base.model.payments.request.PaymentComponentData;
-import com.adyen.checkout.core.log.LogUtil;
-import com.adyen.checkout.core.log.Logger;
 
 import java.util.ArrayList;
 import java.util.List;
 
 public abstract class IssuerListComponent<IssuerListPaymentMethodT extends IssuerListPaymentMethod> extends
-        BasePaymentComponent<IssuerListConfiguration, IssuerListInputData, IssuerListOutputData> implements
-        IssuerLogoCallback.DrawableFetchedCallback {
-    private static final String TAG = LogUtil.getTag();
+        BasePaymentComponent<IssuerListConfiguration, IssuerListInputData, IssuerListOutputData> {
 
     private final MutableLiveData<List<IssuerModel>> mIssuersLiveData = new MutableLiveData<>();
 
@@ -66,27 +60,10 @@ public abstract class IssuerListComponent<IssuerListPaymentMethodT extends Issue
         return new IssuerListOutputData(inputData.getSelectedIssuer());
     }
 
-    protected void fetchIssuerLogo(@NonNull final String issuerId) {
-        Logger.v(TAG, "fetchIssuerLogo - " + issuerId);
-        final IssuerLogoCallback callback = new IssuerLogoCallback(issuerId, this);
-        final LogoApi logoApi = LogoApi.getInstance(getConfiguration().getEnvironment(), getConfiguration().getDisplayMetrics());
-        logoApi.getLogo(getPaymentMethodType(), issuerId, null, callback);
-    }
-
+    @NonNull
     @Override
-    public void onDrawableFetched(@NonNull String id, @Nullable Drawable drawable) {
-        Logger.v(TAG, "onDrawableFetched - " + id);
-        final IssuerModel issuer = IssuerModel.getFromList(id, mIssuersLiveData.getValue());
-
-        if (issuer != null) {
-            if (issuer.getLogo() != drawable && drawable != null) {
-                issuer.setLogo(drawable);
-                // notify that the content of the array changed
-                mIssuersLiveData.setValue(mIssuersLiveData.getValue());
-            }
-        } else  {
-            Logger.e(TAG, "IssuerModel ID has no associated variable - " + id);
-        }
+    protected IssuerListConfiguration getConfiguration() {
+        return super.getConfiguration();
     }
 
     @NonNull
@@ -115,12 +92,4 @@ public abstract class IssuerListComponent<IssuerListPaymentMethodT extends Issue
 
     @NonNull
     protected abstract IssuerListPaymentMethodT instantiateTypedPaymentMethod();
-
-    @Override
-    protected void onCleared() {
-        super.onCleared();
-        Logger.d(TAG, "onCleared");
-        // cancel all pending logo requests
-        LogoApi.getInstance(getConfiguration().getEnvironment(), getConfiguration().getDisplayMetrics()).cancellAll();
-    }
 }

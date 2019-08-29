@@ -16,6 +16,8 @@ import android.support.annotation.Nullable;
 import android.widget.ImageView;
 
 import com.adyen.checkout.core.api.Environment;
+import com.adyen.checkout.core.log.LogUtil;
+import com.adyen.checkout.core.log.Logger;
 
 import java.lang.ref.WeakReference;
 import java.util.HashMap;
@@ -23,6 +25,7 @@ import java.util.Map;
 
 @SuppressWarnings("SyntheticAccessor")
 public class ImageLoader {
+    private static final String TAG = LogUtil.getTag();
 
     private final LogoApi mLogoApi;
     private final Map<String, LogoConnectionTask.LogoCallback> mCallbacks = new HashMap<>();
@@ -49,16 +52,31 @@ public class ImageLoader {
     }
 
     /**
+     * Load image to ImageView.
+     */
+    public void load(@NonNull String txVariant, @Nullable String txSubVariant, @NonNull ImageView view) {
+        this.load(txVariant, txSubVariant, view, 0, 0);
+    }
+
+    /**
      * Load image to ImageView with place holder before load and error fallback image.
      */
     public void load(@NonNull String txVariant, @NonNull ImageView view, @Nullable @DrawableRes int placeholder,
+            @Nullable @DrawableRes final int errorFallback) {
+        this.load(txVariant, "", view, placeholder, errorFallback);
+    }
+
+    /**
+     * Load image to ImageView with place holder before load and error fallback image.
+     */
+    public void load(@NonNull String txVariant, @NonNull String txSubVariant, @NonNull ImageView view, @Nullable @DrawableRes int placeholder,
             @Nullable @DrawableRes final int errorFallback) {
 
         if (placeholder != 0) {
             view.setImageResource(placeholder);
         }
 
-        final String id = txVariant + view.getId();
+        final String id = txVariant + txSubVariant + view.getId();
 
         if (mCallbacks.containsKey(id)) {
             mLogoApi.cancelLogoRequest(txVariant, null, null);
@@ -74,6 +92,8 @@ public class ImageLoader {
                     final ImageView imageView = mImageViews.get(id).get();
                     if (imageView != null) {
                         imageView.setImageDrawable(drawable);
+                    } else {
+                        Logger.e(TAG, "ImageView is null for received Logo - " + id);
                     }
 
                     mCallbacks.remove(id);
@@ -95,6 +115,6 @@ public class ImageLoader {
 
         mImageViews.put(id, new WeakReference<>(view));
         mCallbacks.put(id, callback);
-        mLogoApi.getLogo(txVariant, null, null, callback);
+        mLogoApi.getLogo(txVariant, txSubVariant, null, callback);
     }
 }

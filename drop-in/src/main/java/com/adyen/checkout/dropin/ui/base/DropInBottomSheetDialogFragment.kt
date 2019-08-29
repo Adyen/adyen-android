@@ -17,6 +17,8 @@ import android.support.design.widget.BottomSheetDialogFragment
 import android.view.KeyEvent
 import android.widget.FrameLayout
 import com.adyen.checkout.base.model.paymentmethods.PaymentMethod
+import com.adyen.checkout.base.model.payments.request.PaymentComponentData
+import com.adyen.checkout.base.model.payments.request.PaymentMethodDetails
 import com.adyen.checkout.dropin.R
 import com.adyen.checkout.googlepay.GooglePayConfiguration
 
@@ -74,6 +76,7 @@ abstract class DropInBottomSheetDialogFragment : BottomSheetDialogFragment() {
     interface Protocol {
         fun showComponentDialog(paymentMethod: PaymentMethod, wasInExpandMode: Boolean)
         fun showPaymentMethodsDialog(showInExpandStatus: Boolean)
+        fun sendPaymentRequest(paymentComponentData: PaymentComponentData<in PaymentMethodDetails>)
         fun terminateDropIn()
         fun startGooglePay(paymentMethod: PaymentMethod, googlePayConfiguration: GooglePayConfiguration)
     }

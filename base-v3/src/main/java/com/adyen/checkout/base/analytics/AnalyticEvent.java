@@ -19,6 +19,7 @@ import android.webkit.URLUtil;
 import com.adyen.checkout.base.BuildConfig;
 import com.adyen.checkout.core.exeption.CheckoutException;
 import com.adyen.checkout.core.util.LocaleUtil;
+import com.adyen.checkout.core.util.ParcelUtils;
 
 import java.net.MalformedURLException;
 import java.net.URL;
@@ -102,7 +103,7 @@ public class AnalyticEvent implements Parcelable {
         return new AnalyticEvent(context.getPackageName(), flavorName, components, LocaleUtil.toLanguageTag(locale));
     }
 
-    protected AnalyticEvent(@NonNull Parcel in) {
+    AnalyticEvent(@NonNull Parcel in) {
         mFlavor = in.readString();
         mComponent = in.readString();
         mLocale = in.readString();
@@ -150,7 +151,7 @@ public class AnalyticEvent implements Parcelable {
 
     @Override
     public int describeContents() {
-        return 0;
+        return ParcelUtils.NO_FILE_DESCRIPTOR;
     }
 
     @Override

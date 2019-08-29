@@ -10,19 +10,13 @@ package com.adyen.checkout.example
 
 import android.app.Application
 import android.util.Log
-import com.adyen.checkout.core.code.Lint
-import com.adyen.checkout.core.log.LogUtil
 import com.adyen.checkout.core.log.Logger
 
 class CheckoutExampleApplication : Application() {
 
     companion object {
-        @Suppress(Lint.PROTECTED_IN_FINAL)
-        protected val TAG = LogUtil.getTag()
-
         init {
             Logger.setLogcatLevel(Log.DEBUG)
-            Logger.d(TAG, "Logger set to DEBUG level.")
         }
     }
 }

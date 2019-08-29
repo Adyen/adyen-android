@@ -36,12 +36,12 @@ public abstract class PaymentMethodDetails extends ModelObject {
         @NonNull
         @Override
         public JSONObject serialize(@NonNull PaymentMethodDetails modelObject) {
-            final String actionType = modelObject.getType();
-            if (!StringUtil.hasContent(actionType)) {
+            final String paymentMethodType = modelObject.getType();
+            if (!StringUtil.hasContent(paymentMethodType)) {
                 throw new CheckoutException("PaymentMethod type not found");
             }
             //noinspection unchecked
-            final Serializer<PaymentMethodDetails> serializer = (Serializer<PaymentMethodDetails>) getChildSerializer(actionType);
+            final Serializer<PaymentMethodDetails> serializer = (Serializer<PaymentMethodDetails>) getChildSerializer(paymentMethodType);
             return serializer.serialize(modelObject);
         }
 

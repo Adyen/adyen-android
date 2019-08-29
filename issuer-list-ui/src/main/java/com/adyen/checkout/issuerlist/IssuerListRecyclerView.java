@@ -21,6 +21,7 @@ import android.view.LayoutInflater;
 import android.widget.LinearLayout;
 
 import com.adyen.checkout.base.ComponentView;
+import com.adyen.checkout.base.api.ImageLoader;
 import com.adyen.checkout.base.ui.adapter.ClickableListRecyclerAdapter;
 import com.adyen.checkout.core.log.LogUtil;
 import com.adyen.checkout.core.log.Logger;
@@ -65,7 +66,9 @@ public abstract class IssuerListRecyclerView<IssuerListComponentT extends Issuer
     public void attach(@NonNull IssuerListComponentT component, @NonNull LifecycleOwner lifecycleOwner) {
         mComponent = component;
 
-        mIssuersAdapter = new IssuerListRecyclerAdapter(Collections.<IssuerModel>emptyList(), hideIssuersLogo());
+        mIssuersAdapter = new IssuerListRecyclerAdapter(Collections.<IssuerModel>emptyList(),
+                ImageLoader.getInstance(getContext(), component.getConfiguration().getEnvironment()), component.getPaymentMethodType(),
+                hideIssuersLogo());
         mIssuersAdapter.setItemCLickListener(this);
         mIssuersRecyclerView.setAdapter(mIssuersAdapter);
 
@@ -97,14 +100,6 @@ public abstract class IssuerListRecyclerView<IssuerListComponentT extends Issuer
             return;
         }
 
-        // Only fetch logos on the first update
-        if (mIssuersAdapter.getItemCount() == 0) {
-            for (IssuerModel issuerModel : issuerModels) {
-                if (issuerModel.getLogo() == null && mComponent != null) {
-                    mComponent.fetchIssuerLogo(issuerModel.getId());
-                }
-            }
-        }
         mIssuersAdapter.updateIssuerModelList(issuerModels);
     }
 

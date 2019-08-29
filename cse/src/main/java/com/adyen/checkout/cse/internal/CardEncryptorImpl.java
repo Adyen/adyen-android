@@ -33,11 +33,15 @@ public final class CardEncryptorImpl implements CardEncryptor {
             String encryptedNumber = null;
 
             if (cardNumber != null) {
-                encryptedNumber = new adyen.com.adyencse.pojo.Card.Builder()
-                        .setNumber(cardNumber)
-                        .setGenerationTime(generationTime)
-                        .build()
-                        .serialize(publicKey);
+                try {
+                    encryptedNumber = new adyen.com.adyencse.pojo.Card.Builder()
+                            .setNumber(cardNumber)
+                            .setGenerationTime(generationTime)
+                            .build()
+                            .serialize(publicKey);
+                } catch (RuntimeException e) {
+                    throw new EncryptionException("Encryption failed.", e);
+                }
             }
 
             final Integer expiryMonth = card.getExpiryMonth();
@@ -61,7 +65,7 @@ public final class CardEncryptorImpl implements CardEncryptor {
                 encryptedExpiryMonth = null;
                 encryptedExpiryYear = null;
             } else {
-                throw new IllegalStateException("Both expiryMonth and expiryYear need to be set for encryption.");
+                throw new EncryptionException("Both expiryMonth and expiryYear need to be set for encryption.", null);
             }
 
             final String encryptedSecurityCode = new adyen.com.adyencse.pojo.Card.Builder()

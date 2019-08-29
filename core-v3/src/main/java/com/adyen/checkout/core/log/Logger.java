@@ -30,15 +30,16 @@ public final class Logger {
     // TODO: 14/02/2019 The idea is for this class to have a system where we can send a stream of logs to the merchant and/or proxy to Logcat.
 
     private static final int SENSITIVE = -1;
+    public static final int NONE = Log.ASSERT + 1;
 
     // The logcat limit changes per device, you can see it using $adb logcat -g
     // 2KB seems like a safe value to be within max payload range
     private static final int MAX_LOGCAT_MSG_SIZE = 2048;
 
     @LogLevel
-    private static int sLogcatLevel = BuildConfig.DEBUG ?  Log.DEBUG : Log.ERROR;
+    private static int sLogcatLevel = BuildConfig.DEBUG ?  Log.DEBUG : NONE;
 
-    @IntDef({SENSITIVE, Log.VERBOSE, Log.DEBUG, Log.INFO, Log.WARN, Log.ERROR})
+    @IntDef({SENSITIVE, Log.VERBOSE, Log.DEBUG, Log.INFO, Log.WARN, Log.ERROR, NONE})
     @Retention(RetentionPolicy.SOURCE)
     public @interface LogLevel{}
 
@@ -159,7 +160,10 @@ public final class Logger {
                     Log.e(tag, msg, tr);
                 }
                 break;
+            case NONE:
+                // intentional fallthrough
             default:
+                // Don't Log anything
         }
     }
 

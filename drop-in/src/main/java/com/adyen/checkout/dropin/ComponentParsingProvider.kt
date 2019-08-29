@@ -11,7 +11,11 @@ package com.adyen.checkout.dropin
 import android.app.Application
 import android.content.Context
 import android.support.v4.app.Fragment
-import com.adyen.checkout.base.* // ktlint-disable no-wildcard-imports
+import com.adyen.checkout.base.ComponentAvailableCallback
+import com.adyen.checkout.base.ComponentView
+import com.adyen.checkout.base.Configuration
+import com.adyen.checkout.base.PaymentComponent
+import com.adyen.checkout.base.PaymentComponentProvider
 import com.adyen.checkout.base.component.BaseConfigurationBuilder
 import com.adyen.checkout.base.model.paymentmethods.PaymentMethod
 import com.adyen.checkout.base.util.PaymentMethodTypes
@@ -19,6 +23,7 @@ import com.adyen.checkout.card.CardComponent
 import com.adyen.checkout.card.CardConfiguration
 import com.adyen.checkout.card.CardView
 import com.adyen.checkout.core.exeption.CheckoutException
+import com.adyen.checkout.core.log.LogUtil
 import com.adyen.checkout.core.log.Logger
 import com.adyen.checkout.dotpay.DotpayComponent
 import com.adyen.checkout.dotpay.DotpayConfiguration
@@ -41,7 +46,18 @@ import com.adyen.checkout.openbanking.OpenBankingComponent
 import com.adyen.checkout.openbanking.OpenBankingConfiguration
 import com.adyen.checkout.openbanking.OpenBankingRecyclerView
 
-internal fun <T : Configuration> getDefaultConfigFor(@PaymentMethodTypes.SupportedPaymentMethod paymentMethod: String, context: Context): T {
+class ComponentParsingProvider {
+    companion object {
+        val TAG = LogUtil.getTag()
+    }
+}
+
+internal fun <T : Configuration> getDefaultConfigFor(
+    @PaymentMethodTypes.SupportedPaymentMethod
+    paymentMethod: String,
+    context: Context,
+    dropInConfiguration: DropInConfiguration
+): T {
 
     val specificRequirementConfigs = listOf(PaymentMethodTypes.SCHEME, PaymentMethodTypes.GOOGLE_PAY)
 
@@ -74,10 +90,8 @@ internal fun <T : Configuration> getDefaultConfigFor(@PaymentMethodTypes.Support
         }
     }
 
-    // set default values from DropIn
-    val dropInConfig = DropIn.INSTANCE.configuration
-    builder.setShopperLocale(dropInConfig.shopperLocale)
-    builder.setEnvironment(dropInConfig.environment)
+    builder.setShopperLocale(dropInConfiguration.shopperLocale)
+    builder.setEnvironment(dropInConfiguration.environment)
 
     @Suppress("UNCHECKED_CAST")
     return builder.build() as T
@@ -86,18 +100,18 @@ internal fun <T : Configuration> getDefaultConfigFor(@PaymentMethodTypes.Support
 internal fun checkComponentAvailability(
     application: Application,
     paymentMethod: PaymentMethod,
+    dropInConfiguration: DropInConfiguration,
     callback: ComponentAvailableCallback<in Configuration>
 ) {
     try {
-        val dropInConfig = DropIn.INSTANCE.configuration
         val type = paymentMethod.type ?: throw CheckoutException("PaymentMethod is null")
 
         val provider = getProviderForType(type)
-        val configuration = dropInConfig.getConfigurationFor<Configuration>(type, application)
+        val configuration = dropInConfiguration.getConfigurationFor<Configuration>(type, application)
 
         provider.isAvailable(application, paymentMethod, configuration, callback)
     } catch (e: CheckoutException) {
-        Logger.e("CO.ComponentParsingProvider", "Unable to initiate ${paymentMethod.type}", e)
+        Logger.e(ComponentParsingProvider.TAG, "Unable to initiate ${paymentMethod.type}", e)
         callback.onAvailabilityResult(false, paymentMethod, null)
     }
 }
@@ -144,40 +158,44 @@ internal fun getProviderForType(type: String): PaymentComponentProvider<PaymentC
  * @throws CheckoutException In case a component cannot be created.
  */
 @Suppress("ComplexMethod")
-internal fun getComponentFor(fragment: Fragment, paymentMethod: PaymentMethod): PaymentComponent {
-    val dropInConfig = DropIn.INSTANCE.configuration
+internal fun getComponentFor(
+    fragment: Fragment,
+    paymentMethod: PaymentMethod,
+    dropInConfiguration: DropInConfiguration
+): PaymentComponent {
+    val context = fragment.requireContext()
 
     val component = when (paymentMethod.type) {
         PaymentMethodTypes.IDEAL -> {
-            val idealConfig: IdealConfiguration = dropInConfig.getConfigurationFor(PaymentMethodTypes.IDEAL, fragment.context!!)
+            val idealConfig: IdealConfiguration = dropInConfiguration.getConfigurationFor(PaymentMethodTypes.IDEAL, context)
             IdealComponent.PROVIDER.get(fragment, paymentMethod, idealConfig)
         }
         PaymentMethodTypes.MOLPAY -> {
-            val molpayConfig: MolpayConfiguration = dropInConfig.getConfigurationFor(PaymentMethodTypes.MOLPAY, fragment.context!!)
+            val molpayConfig: MolpayConfiguration = dropInConfiguration.getConfigurationFor(PaymentMethodTypes.MOLPAY, context)
             MolpayComponent.PROVIDER.get(fragment, paymentMethod, molpayConfig)
         }
         PaymentMethodTypes.EPS -> {
-            val epsConfig: EPSConfiguration = dropInConfig.getConfigurationFor(PaymentMethodTypes.EPS, fragment.context!!)
+            val epsConfig: EPSConfiguration = dropInConfiguration.getConfigurationFor(PaymentMethodTypes.EPS, context)
             EPSComponent.PROVIDER.get(fragment, paymentMethod, epsConfig)
         }
         PaymentMethodTypes.OPEN_BANKING -> {
-            val openBankingConfig: OpenBankingConfiguration = dropInConfig.getConfigurationFor(PaymentMethodTypes.OPEN_BANKING, fragment.context!!)
+            val openBankingConfig: OpenBankingConfiguration = dropInConfiguration.getConfigurationFor(PaymentMethodTypes.OPEN_BANKING, context)
             OpenBankingComponent.PROVIDER.get(fragment, paymentMethod, openBankingConfig)
         }
         PaymentMethodTypes.DOTPAY -> {
-            val dotpayConfig: DotpayConfiguration = dropInConfig.getConfigurationFor(PaymentMethodTypes.DOTPAY, fragment.context!!)
+            val dotpayConfig: DotpayConfiguration = dropInConfiguration.getConfigurationFor(PaymentMethodTypes.DOTPAY, context)
             DotpayComponent.PROVIDER.get(fragment, paymentMethod, dotpayConfig)
         }
         PaymentMethodTypes.ENTERCASH -> {
-            val entercashConfig: EntercashConfiguration = dropInConfig.getConfigurationFor(PaymentMethodTypes.ENTERCASH, fragment.context!!)
+            val entercashConfig: EntercashConfiguration = dropInConfiguration.getConfigurationFor(PaymentMethodTypes.ENTERCASH, context)
             EntercashComponent.PROVIDER.get(fragment, paymentMethod, entercashConfig)
         }
         PaymentMethodTypes.SCHEME -> {
-            val cardConfig: CardConfiguration = dropInConfig.getConfigurationFor(PaymentMethodTypes.SCHEME, fragment.context!!)
+            val cardConfig: CardConfiguration = dropInConfiguration.getConfigurationFor(PaymentMethodTypes.SCHEME, context)
             CardComponent.PROVIDER.get(fragment, paymentMethod, cardConfig)
         }
         PaymentMethodTypes.GOOGLE_PAY -> {
-            val googlePayConfiguration: GooglePayConfiguration = dropInConfig.getConfigurationFor(PaymentMethodTypes.GOOGLE_PAY, fragment.context!!)
+            val googlePayConfiguration: GooglePayConfiguration = dropInConfiguration.getConfigurationFor(PaymentMethodTypes.GOOGLE_PAY, context)
             GooglePayComponent.PROVIDER.get(fragment, paymentMethod, googlePayConfiguration)
         }
         else -> {

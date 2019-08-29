@@ -54,7 +54,6 @@ dependencies {
 
     // Checkout
     implementation project(':drop-in')
-//    implementation "com.adyen.checkout:drop-in:$version_name"
 
     // Dependencies
     implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk7:$version_kotlin"
@@ -62,6 +61,8 @@ dependencies {
     implementation "com.android.support:appcompat-v7:$version_support_library"
     implementation "com.android.support.constraint:constraint-layout:$version_constraint_layout"
     implementation "com.android.support:recyclerview-v7:$version_support_library"
+    implementation "com.android.support:design:$version_support_library"
+    implementation "com.android.support:preference-v7:$version_support_library"
     implementation "android.arch.lifecycle:extensions:$version_lifecycle_extensions"
     implementation "com.squareup.retrofit2:retrofit:$version_retrofit2"
     implementation "com.squareup.retrofit2:converter-moshi:$version_retrofit2"

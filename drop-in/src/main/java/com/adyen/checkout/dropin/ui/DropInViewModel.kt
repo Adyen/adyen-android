@@ -19,6 +19,7 @@ import com.adyen.checkout.base.model.paymentmethods.RecurringDetail
 import com.adyen.checkout.base.util.PaymentMethodTypes
 import com.adyen.checkout.core.log.LogUtil
 import com.adyen.checkout.core.log.Logger
+import com.adyen.checkout.dropin.DropInConfiguration
 import com.adyen.checkout.dropin.checkComponentAvailability
 import com.adyen.checkout.dropin.ui.paymentmethods.PaymentMethodsModel
 
@@ -39,6 +40,8 @@ class DropInViewModel(application: Application) : AndroidViewModel(application),
                 }
             }
         }
+
+    lateinit var dropInConfiguration: DropInConfiguration
 
     private val paymentMethodsModel = PaymentMethodsModel()
 
@@ -77,12 +80,12 @@ class DropInViewModel(application: Application) : AndroidViewModel(application),
 
             Logger.d(TAG, "Checking availability for type - $type")
 
-            checkComponentAvailability(getApplication(), paymentMethod, this)
+            checkComponentAvailability(getApplication(), paymentMethod, dropInConfiguration, this)
         }
     }
 
     private fun addPaymentMethod(paymentMethod: PaymentMethod) {
-        if (paymentMethod is RecurringDetail) {
+        if (paymentMethod is RecurringDetail && paymentMethod.isEcommarce) {
             paymentMethodsModel.storedPaymentMethods.add(paymentMethod)
         } else {
             paymentMethodsModel.paymentMethods.add(paymentMethod)

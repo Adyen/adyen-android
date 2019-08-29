@@ -26,10 +26,8 @@ import com.adyen.checkout.base.util.PaymentMethodTypes
 import com.adyen.checkout.core.exeption.CheckoutException
 import com.adyen.checkout.core.log.LogUtil
 import com.adyen.checkout.core.log.Logger
-import com.adyen.checkout.dropin.DropIn
 import com.adyen.checkout.dropin.R
 import com.adyen.checkout.dropin.ui.DropInViewModel
-import com.adyen.checkout.dropin.ui.LoadingActivity
 import com.adyen.checkout.dropin.ui.base.DropInBottomSheetDialogFragment
 import kotlinx.android.synthetic.main.fragmentdialog_header.view.*
 
@@ -56,7 +54,7 @@ class PaymentMethodListDialogFragment : DropInBottomSheetDialogFragment(), Payme
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         Logger.d(TAG, "onCreateView")
-        mDropInViewModel = ViewModelProviders.of(activity!!).get(DropInViewModel::class.java)
+        mDropInViewModel = ViewModelProviders.of(requireActivity()).get(DropInViewModel::class.java)
         val view = inflater.inflate(R.layout.fragmentdialog_paymentmethod_list_dialog, container, false)
         addObserver(view.findViewById(R.id.recyclerView_paymentMethods))
         return view
@@ -78,10 +76,10 @@ class PaymentMethodListDialogFragment : DropInBottomSheetDialogFragment(), Payme
             if (!::mPaymentMethodModelList.isInitialized) {
                 mPaymentMethodModelList = it
                 paymentMethodAdapter = PaymentMethodAdapter(mPaymentMethodModelList,
-                        ImageLoader.getInstance(context!!, DropIn.INSTANCE.configuration.environment),
+                        ImageLoader.getInstance(requireContext(), mDropInViewModel.dropInConfiguration.environment),
                         arguments?.getBoolean(SHOW_IN_EXPAND_STATUS)!!,
                         this)
-                recyclerView.layoutManager = LinearLayoutManager(context)
+                recyclerView.layoutManager = LinearLayoutManager(requireContext())
                 recyclerView.adapter = paymentMethodAdapter
             } else {
                 paymentMethodAdapter.updatePaymentMethodsList(it)
@@ -101,14 +99,15 @@ class PaymentMethodListDialogFragment : DropInBottomSheetDialogFragment(), Payme
         if (PaymentMethodTypes.SUPPORTED_PAYMENT_METHODS.contains(paymentMethod.type)) {
             // TODO refactor this logic to a layer that decides is payment method needs to present View or not
             if (paymentMethod.type == PaymentMethodTypes.GOOGLE_PAY) {
-                protocol.startGooglePay(paymentMethod, DropIn.INSTANCE.configuration.getConfigurationFor(PaymentMethodTypes.GOOGLE_PAY, context!!))
+                protocol.startGooglePay(paymentMethod,
+                        mDropInViewModel.dropInConfiguration.getConfigurationFor(PaymentMethodTypes.GOOGLE_PAY, requireContext()))
                 return
             }
             protocol.showComponentDialog(paymentMethod, isInExpandMode)
         } else {
             val paymentComponentData = PaymentComponentData<PaymentMethodDetails>()
             paymentComponentData.paymentMethod = GenericPaymentMethod(paymentMethod.type)
-            startActivity(LoadingActivity.getIntentForPayments(context!!, paymentComponentData))
+            protocol.sendPaymentRequest(paymentComponentData)
         }
     }
 }

@@ -13,6 +13,8 @@ import android.os.Parcelable;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 
+import com.adyen.checkout.core.util.ParcelUtils;
+
 @SuppressWarnings("SyntheticAccessor")
 public final class EncryptedCard implements Parcelable {
     @NonNull
@@ -49,7 +51,7 @@ public final class EncryptedCard implements Parcelable {
 
     @Override
     public int describeContents() {
-        return 0;
+        return ParcelUtils.NO_FILE_DESCRIPTOR;
     }
 
     @Override

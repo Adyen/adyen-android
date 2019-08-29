@@ -3,10 +3,10 @@
  *
  * This file is open source and available under the MIT license. See the LICENSE file for more info.
  *
- * Created by caiof on 3/7/2019.
+ * Created by caiof on 21/8/2019.
  */
 
-package com.adyen.checkout.adyen3ds2;
+package com.adyen.checkout.adyen3ds2.exception;
 
 import android.support.annotation.NonNull;
 

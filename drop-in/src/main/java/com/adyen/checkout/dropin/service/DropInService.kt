@@ -8,6 +8,7 @@
 
 package com.adyen.checkout.dropin.service
 
+import android.content.ComponentName
 import android.content.Context
 import android.content.Intent
 import android.support.v4.app.JobIntentService
@@ -17,11 +18,14 @@ import com.adyen.checkout.base.model.payments.request.PaymentMethodDetails
 import com.adyen.checkout.core.exeption.CheckoutException
 import com.adyen.checkout.core.log.LogUtil
 import com.adyen.checkout.core.log.Logger
-import com.adyen.checkout.dropin.DropIn
 import org.json.JSONObject
 
 /**
  * Base service to be extended by the merchant to provide the network calls that connect to the Adyen endpoints.
+ * Calls should be made to your server, and from there to Adyen.
+ *
+ * The methods [makePaymentsCall] and [makeDetailsCall] are already run in the background and can return synchronously. Or async, check documentation.
+ * The result [CallResult] is the result of the network call and can mean different things. Check the [CallResult.ResultType] for more information.
  */
 abstract class DropInService : JobIntentService() {
 
@@ -59,11 +63,12 @@ abstract class DropInService : JobIntentService() {
          */
         // False positive
         @Suppress("FunctionParameterNaming")
-        fun requestPaymentsCall(context: Context, paymentComponentData: PaymentComponentData<out PaymentMethodDetails>) {
+        fun requestPaymentsCall(
+            context: Context,
+            paymentComponentData: PaymentComponentData<out PaymentMethodDetails>,
+            merchantService: ComponentName
+        ) {
             Logger.d(TAG, "requestPaymentsCall - ${paymentComponentData.paymentMethod?.type}")
-
-            val merchantService = DropIn.INSTANCE.configuration.serviceComponentName
-            Logger.d(TAG, "merchantService - $merchantService")
 
             val workIntent = Intent()
             workIntent.putExtra(REQUEST_TYPE_KEY, PAYMENTS_REQUEST)
@@ -75,10 +80,8 @@ abstract class DropInService : JobIntentService() {
         /**
          * Helper function that sends a request for the merchant to make the details call.
          */
-        fun requestDetailsCall(context: Context, details: JSONObject) {
+        fun requestDetailsCall(context: Context, details: JSONObject, merchantService: ComponentName) {
             Logger.d(TAG, "requestDetailsCall")
-
-            val merchantService = DropIn.INSTANCE.configuration.serviceComponentName
 
             val workIntent = Intent()
             workIntent.putExtra(REQUEST_TYPE_KEY, DETAILS_REQUEST)
@@ -152,12 +155,20 @@ abstract class DropInService : JobIntentService() {
     }
 
     /**
-     * In this method the merchant should make the network call to the payments/ endpoint.
-     * We provide the "paymentMethod" parameter content, the rest should be filled in according to your needs.
+     * In this method you should make the network call to tell your server to make a call to the payments/ endpoint.
      *
-     * This call is expected to be synchronous, as it already runs in the background, and the base class will handle messaging with the UI after it
-     * finishes based on the [CallResult]. If you want to make the call asynchronously, return [CallResult.ResultType.WAIT] on the type and call the
-     * [asyncCallback] method afterwards.
+     * We provide a [PaymentComponentData] (as JSONObject) with the parameters we can infer from the Component [Configuration] and the user input,
+     * specially the "paymentMethod" object with the shopper input details.
+     * The rest of the payments/ call object should be filled in, on your server, according to your needs.
+     *
+     * You can use [PaymentComponentData.SERIALIZER] to serialize the data between the data object and a [JSONObject] depending on what you prefer.
+     *
+     * The return of this method is expected to be a [CallResult] with the result of the network request.
+     * See expected [CallResult.ResultType] and the associated content.
+     *
+     * This call is expected to be synchronous, as it already runs in a background thread, and the base class will handle messaging the UI
+     * after it finishes, based on the [CallResult]. If you want to make the call asynchronously, return [CallResult.ResultType.WAIT] on the type
+     * and call the [asyncCallback] method afterwards when it is done with the result.
      *
      * See https://docs.adyen.com/api-explorer/ for more information on the API documentation.
      *
@@ -167,7 +178,12 @@ abstract class DropInService : JobIntentService() {
     abstract fun makePaymentsCall(paymentComponentData: JSONObject): CallResult
 
     /**
-     * In this method the merchant should make the network call to the payments/details/ endpoint.
+     * In this method you should make the network call to tell your server to make a call to the payments/details/ endpoint.
+     *
+     * We provide a [ActionComponentData] (as JSONObject) with the whole result expected by the payments/details/ endpoint
+     * (if paymentData was provided).
+     *
+     * You can use [ActionComponentData.SERIALIZER] to serialize the data between the data object and a [JSONObject] depending on what you prefer.
      *
      * This call is expected to be synchronous, as it already runs in the background, and the base class will handle messaging with the UI after it
      * finishes based on the [CallResult]. If you want to make the call asynchronously, return [CallResult.ResultType.WAIT] on the type and call the

@@ -33,12 +33,28 @@ class DropIn private constructor() {
         const val RESULT_KEY = "payment_result"
 
         @JvmStatic
+        @Deprecated("You can use `DropIn.startPayment instead`")
         val INSTANCE: DropIn by lazy { DropIn() }
+
+        /**
+         * Starts the checkout flow to be handled by the Drop-In solution. Make sure you have [DropInService] set up before calling this.
+         * We suggest that you set up the resultHandlerIntent with the appropriate flags to clear the stack of the checkout activities.
+         *
+         * @param context A context to start the Checkout flow.
+         * @param paymentMethodsApiResponse The result from the paymentMethods/ endpoint.
+         * @param dropInConfiguration Additional required configuration data.
+         *
+         */
+        @JvmStatic
+        fun startPayment(
+            context: Context,
+            paymentMethodsApiResponse: PaymentMethodsApiResponse,
+            dropInConfiguration: DropInConfiguration
+        ) {
+            val intent = DropInActivity.createIntent(context, dropInConfiguration, paymentMethodsApiResponse)
+            context.startActivity(intent)
+        }
     }
-
-    private lateinit var resultIntent: Intent
-
-    lateinit var configuration: DropInConfiguration private set
 
     init {
         Logger.d(TAG, "Init")
@@ -54,22 +70,14 @@ class DropIn private constructor() {
      * @param resultHandlerIntent The Intent used with [Activity.startActivity] that will contain the payment result extra with key [RESULT_KEY].
      *
      */
+    @Deprecated("resultHandlerIntent need to pass with DropInConfiguration")
     fun startPayment(
         context: Context,
         paymentMethodsApiResponse: PaymentMethodsApiResponse,
         dropInConfiguration: DropInConfiguration,
         resultHandlerIntent: Intent
     ) {
-
-        resultIntent = resultHandlerIntent
-        configuration = dropInConfiguration
-
-        val intent = DropInActivity.createIntent(context, paymentMethodsApiResponse)
-        context.startActivity(intent)
-    }
-
-    internal fun sendResult(activity: Activity, paymentResult: String) {
-        resultIntent.putExtra(RESULT_KEY, paymentResult)
-        activity.startActivity(resultIntent)
+        dropInConfiguration.resultHandlerIntent = resultHandlerIntent
+        startPayment(context, paymentMethodsApiResponse, dropInConfiguration)
     }
 }

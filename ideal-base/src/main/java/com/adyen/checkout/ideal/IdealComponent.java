@@ -50,12 +50,6 @@ public final class IdealComponent extends IssuerListComponent<IdealPaymentMethod
         return super.onInputDataChanged(inputData);
     }
 
-    @SuppressWarnings("PMD.UselessOverridingMethod")
-    @Override
-    protected void fetchIssuerLogo(@NonNull final String issuerId) {
-        super.fetchIssuerLogo(issuerId);
-    }
-
     @NonNull
     @Override
     protected IdealPaymentMethod instantiateTypedPaymentMethod() {

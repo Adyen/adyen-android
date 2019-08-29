@@ -22,10 +22,12 @@ import com.adyen.checkout.base.analytics.AnalyticEvent
 import com.adyen.checkout.base.analytics.AnalyticsDispatcher
 import com.adyen.checkout.base.model.PaymentMethodsApiResponse
 import com.adyen.checkout.base.model.paymentmethods.PaymentMethod
+import com.adyen.checkout.base.model.payments.request.PaymentComponentData
 import com.adyen.checkout.base.model.payments.request.PaymentMethodDetails
 import com.adyen.checkout.core.log.LogUtil
 import com.adyen.checkout.core.log.Logger
 import com.adyen.checkout.dropin.DropIn
+import com.adyen.checkout.dropin.DropInConfiguration
 import com.adyen.checkout.dropin.R
 import com.adyen.checkout.dropin.ui.base.DropInBottomSheetDialogFragment
 import com.adyen.checkout.dropin.ui.component.ComponentDialogFragment
@@ -45,26 +47,35 @@ class DropInActivity : AppCompatActivity(), DropInBottomSheetDialogFragment.Prot
         private const val PAYMENT_METHOD_FRAGMENT_TAG = "PAYMENT_METHODS_DIALOG_FRAGMENT"
         private const val COMPONENT_FRAGMENT_TAG = "COMPONENT_DIALOG_FRAGMENT"
 
-        private const val PAYMENT_METHODS_RESPONSE_KEY = "payment_methods_response"
+        private const val PAYMENT_METHODS_RESPONSE_KEY = "PAYMENT_METHODS_RESPONSE_KEY"
+        private const val DROP_IN_CONFIGURATION_KEY = "DROP_IN_CONFIGURATION_KEY"
+        private const val DROP_IN_INTENT = "DROP_IN_INTENT"
 
         private const val GOOGLE_PAY_REQUEST_CODE = 1
 
-        fun createIntent(context: Context, paymentMethodsApiResponse: PaymentMethodsApiResponse): Intent {
+        const val CALL_RESULT_KEY_FROM_RESULT = "CALL_RESULT_KEY_FROM_RESULT"
+        const val CALL_RESULT_REQUEST_CODE = 2
+
+        fun createIntent(context: Context, dropInConfiguration: DropInConfiguration, paymentMethodsApiResponse: PaymentMethodsApiResponse): Intent {
             val intent = Intent(context, DropInActivity::class.java)
             intent.putExtra(PAYMENT_METHODS_RESPONSE_KEY, paymentMethodsApiResponse)
+            intent.putExtra(DROP_IN_CONFIGURATION_KEY, dropInConfiguration)
+            intent.putExtra(DROP_IN_INTENT, dropInConfiguration.resultHandlerIntent)
             return intent
         }
     }
 
+    private lateinit var dropInConfiguration: DropInConfiguration
     private lateinit var dropInViewModel: DropInViewModel
-
+    private lateinit var resultIntent: Intent
     private lateinit var googlePayComponent: GooglePayComponent
+
     private val googlePayObserver: Observer<PaymentComponentState<PaymentMethodDetails>> = Observer {
         if (it!!.isValid) {
-            val intent = LoadingActivity.getIntentForPayments(this@DropInActivity, it.data)
-            startActivity(intent)
+            sendPaymentRequest(it.data)
         }
     }
+
     private val googlePayErrorObserver: Observer<ComponentError> = Observer {
         Logger.d(TAG, "GooglePay error - ${it?.errorMessage}")
         showPaymentMethodsDialog(true)
@@ -78,6 +89,14 @@ class DropInActivity : AppCompatActivity(), DropInBottomSheetDialogFragment.Prot
 
         dropInViewModel = ViewModelProviders.of(this).get(DropInViewModel::class.java)
 
+        dropInConfiguration = if (savedInstanceState != null && savedInstanceState.containsKey(DROP_IN_CONFIGURATION_KEY)) {
+            savedInstanceState.getParcelable(DROP_IN_CONFIGURATION_KEY)!!
+        } else {
+            intent.getParcelableExtra(DROP_IN_CONFIGURATION_KEY)
+        }
+
+        dropInViewModel.dropInConfiguration = dropInConfiguration
+
         dropInViewModel.paymentMethodsApiResponse =
                 if (savedInstanceState != null && savedInstanceState.containsKey(PAYMENT_METHODS_RESPONSE_KEY)) {
                     savedInstanceState.getParcelable(PAYMENT_METHODS_RESPONSE_KEY)!!
@@ -89,21 +108,43 @@ class DropInActivity : AppCompatActivity(), DropInBottomSheetDialogFragment.Prot
             PaymentMethodListDialogFragment.newInstance(false).show(supportFragmentManager, PAYMENT_METHOD_FRAGMENT_TAG)
         }
 
+        resultIntent = if (savedInstanceState != null && savedInstanceState.containsKey(DROP_IN_INTENT)) {
+            savedInstanceState.getParcelable(DROP_IN_INTENT)!!
+        } else {
+            intent.getParcelableExtra(DROP_IN_INTENT)
+        }
+
         sendAnalyticsEvent()
     }
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         super.onActivityResult(requestCode, resultCode, data)
-        if (requestCode == GOOGLE_PAY_REQUEST_CODE) {
-            googlePayComponent.handleActivityResult(resultCode, data)
+        when (requestCode) {
+            GOOGLE_PAY_REQUEST_CODE -> googlePayComponent.handleActivityResult(resultCode, data)
+            CALL_RESULT_REQUEST_CODE -> {
+                data?.let {
+                    dropInConfiguration.resultHandlerIntent.putExtra(DropIn.RESULT_KEY,
+                            it.getStringExtra(CALL_RESULT_KEY_FROM_RESULT)).let { intent ->
+                        startActivity(intent)
+                        overridePendingTransition(0, R.anim.fade_out)
+                    }
+                }
+            }
         }
+    }
+
+    override fun sendPaymentRequest(paymentComponentData: PaymentComponentData<in PaymentMethodDetails>) {
+        val loadingActivity = LoadingActivity.getIntentForPayments(this, paymentComponentData, dropInConfiguration)
+        startActivityForResult(loadingActivity, CALL_RESULT_REQUEST_CODE)
     }
 
     override fun onSaveInstanceState(outState: Bundle?, outPersistentState: PersistableBundle?) {
         super.onSaveInstanceState(outState, outPersistentState)
+
         Logger.d(TAG, "onSaveInstanceState")
-        // TODO save all possible DropIn state
+
         outState?.putParcelable(PAYMENT_METHODS_RESPONSE_KEY, dropInViewModel.paymentMethodsApiResponse)
+        outState?.putParcelable(DROP_IN_CONFIGURATION_KEY, dropInConfiguration)
     }
 
     override fun onDestroy() {
@@ -114,7 +155,7 @@ class DropInActivity : AppCompatActivity(), DropInBottomSheetDialogFragment.Prot
     override fun showComponentDialog(paymentMethod: PaymentMethod, wasInExpandMode: Boolean) {
         Logger.d(TAG, "showComponentDialog")
         hideFragmentDialog(PAYMENT_METHOD_FRAGMENT_TAG)
-        ComponentDialogFragment.newInstance(paymentMethod, wasInExpandMode).show(supportFragmentManager, COMPONENT_FRAGMENT_TAG)
+        ComponentDialogFragment.newInstance(paymentMethod, dropInConfiguration, wasInExpandMode).show(supportFragmentManager, COMPONENT_FRAGMENT_TAG)
     }
 
     override fun showPaymentMethodsDialog(showInExpandStatus: Boolean) {
@@ -142,8 +183,8 @@ class DropInActivity : AppCompatActivity(), DropInBottomSheetDialogFragment.Prot
     private fun sendAnalyticsEvent() {
         Logger.d(TAG, "sendAnalyticsEvent")
         val analyticEvent = AnalyticEvent.create(this, AnalyticEvent.Flavor.DROPIN,
-                "dropin", DropIn.INSTANCE.configuration.shopperLocale)
-        AnalyticsDispatcher.dispatchEvent(this, DropIn.INSTANCE.configuration.environment, analyticEvent)
+                "dropin", dropInConfiguration.shopperLocale)
+        AnalyticsDispatcher.dispatchEvent(this, dropInConfiguration.environment, analyticEvent)
     }
 
     private fun hideFragmentDialog(tag: String) {

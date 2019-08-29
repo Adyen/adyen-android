@@ -11,7 +11,6 @@ package com.adyen.checkout.example.arch
 import com.adyen.checkout.base.model.PaymentMethodsApiResponse
 import com.adyen.checkout.core.log.LogUtil
 import com.adyen.checkout.core.log.Logger
-import com.adyen.checkout.example.BuildConfig
 import com.adyen.checkout.example.api.CheckoutApiService
 import com.adyen.checkout.example.api.model.PaymentMethodsRequest
 
@@ -21,10 +20,9 @@ class PaymentMethodsRepository {
         private val TAG: String = LogUtil.getTag()
     }
 
-    suspend fun getPaymentMethods(): PaymentMethodsApiResponse? {
-        Logger.d(TAG, "getPaymentMethods")
+    suspend fun getPaymentMethods(paymentMethodsRequest: PaymentMethodsRequest): PaymentMethodsApiResponse? {
+        Logger.d(TAG, "getPaymentMethods:\n$paymentMethodsRequest")
 
-        val paymentMethodsRequest = PaymentMethodsRequest(BuildConfig.MERCHANT_ACCOUNT, BuildConfig.SHOPPER_REFERENCE)
         val result = CheckoutApiService.INSTANCE.paymentMethodsAsync(paymentMethodsRequest).await()
 
         Logger.d(TAG, "PaymentMethodsApiResponse received - ${result.body()}")

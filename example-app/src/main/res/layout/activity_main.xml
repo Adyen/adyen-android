@@ -15,6 +15,9 @@
     android:layout_height="match_parent"
     tools:context=".MainActivity">
 
+    <include
+        layout="@layout/toolbar"/>
+
     <Button
         android:id="@+id/startCheckoutButton"
         android:layout_width="wrap_content"

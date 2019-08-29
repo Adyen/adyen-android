@@ -9,6 +9,8 @@
 package com.adyen.checkout.googlepay;
 
 import android.content.Context;
+import android.os.Parcel;
+import android.os.Parcelable;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 
@@ -18,6 +20,7 @@ import com.adyen.checkout.base.model.payments.Amount;
 import com.adyen.checkout.base.util.CheckoutCurrency;
 import com.adyen.checkout.core.api.Environment;
 import com.adyen.checkout.core.exeption.CheckoutException;
+import com.adyen.checkout.core.util.ParcelUtils;
 import com.adyen.checkout.googlepay.model.BillingAddressParameters;
 import com.adyen.checkout.googlepay.model.MerchantInfo;
 import com.adyen.checkout.googlepay.model.ShippingAddressParameters;
@@ -44,10 +47,21 @@ public class GooglePayConfiguration extends BaseConfiguration {
     private final boolean mBillingAddressRequired;
     private final BillingAddressParameters mBillingAddressParameters;
 
+    public static final Parcelable.Creator<GooglePayConfiguration> CREATOR = new Parcelable.Creator<GooglePayConfiguration>() {
+        public GooglePayConfiguration createFromParcel(@NonNull Parcel in) {
+            return new GooglePayConfiguration(in);
+        }
+
+        public GooglePayConfiguration[] newArray(int size) {
+            return new GooglePayConfiguration[size];
+        }
+    };
+
     /**
-     * Constructor with all parameters. You can use the Builder to initialize this object more easily.
+     * @deprecated Constructor with all parameters. Use the Builder to initialize this object.
      */
-    @SuppressWarnings("ParameterNumber")
+    @SuppressWarnings({"DeprecatedIsStillUsed", "ParameterNumber"})
+    @Deprecated
     public GooglePayConfiguration(
             @NonNull Locale shopperLocale,
             @NonNull Environment environment,
@@ -79,6 +93,41 @@ public class GooglePayConfiguration extends BaseConfiguration {
         mShippingAddressParameters = shippingAddressParameters;
         mBillingAddressRequired = billingAddressRequired;
         mBillingAddressParameters = billingAddressParameters;
+    }
+
+    GooglePayConfiguration(@NonNull Parcel in) {
+        super(in);
+        mMerchantAccount = in.readString();
+        mGooglePayEnvironment = in.readInt();
+        mAmount = in.readParcelable(Amount.class.getClassLoader());
+        mMerchantInfo = in.readParcelable(MerchantInfo.class.getClassLoader());
+        mAllowedAuthMethods = in.readArrayList(String.class.getClassLoader());
+        mAllowedCardNetworks = in.readArrayList(String.class.getClassLoader());
+        mAllowPrepaidCards = ParcelUtils.readBoolean(in);
+        mEmailRequired = ParcelUtils.readBoolean(in);
+        mExistingPaymentMethodRequired = ParcelUtils.readBoolean(in);
+        mShippingAddressRequired = ParcelUtils.readBoolean(in);
+        mShippingAddressParameters = in.readParcelable(ShippingAddressParameters.class.getClassLoader());
+        mBillingAddressRequired = ParcelUtils.readBoolean(in);
+        mBillingAddressParameters = in.readParcelable(BillingAddressParameters.class.getClassLoader());
+    }
+
+    @Override
+    public void writeToParcel(@NonNull Parcel dest, int flags) {
+        super.writeToParcel(dest, flags);
+        dest.writeString(mMerchantAccount);
+        dest.writeInt(mGooglePayEnvironment);
+        dest.writeParcelable(mAmount, flags);
+        dest.writeParcelable(mMerchantInfo, flags);
+        dest.writeList(mAllowedAuthMethods);
+        dest.writeList(mAllowedCardNetworks);
+        ParcelUtils.writeBoolean(dest, mAllowPrepaidCards);
+        ParcelUtils.writeBoolean(dest, mEmailRequired);
+        ParcelUtils.writeBoolean(dest, mExistingPaymentMethodRequired);
+        ParcelUtils.writeBoolean(dest, mShippingAddressRequired);
+        dest.writeParcelable(mShippingAddressParameters, flags);
+        ParcelUtils.writeBoolean(dest, mBillingAddressRequired);
+        dest.writeParcelable(mBillingAddressParameters, flags);
     }
 
     @NonNull
@@ -169,7 +218,7 @@ public class GooglePayConfiguration extends BaseConfiguration {
         /**
          * Builder with required parameters.
          *
-         * @param context A context to get some information.
+         * @param context         A context to get some information.
          * @param merchantAccount Your merchant account with Adyen.
          */
         public Builder(@NonNull Context context, @NonNull String merchantAccount) {
@@ -180,8 +229,8 @@ public class GooglePayConfiguration extends BaseConfiguration {
         /**
          * Builder with required parameters.
          *
-         * @param shopperLocale The locale of the Shopper for translation.
-         * @param environment TThe {@link Environment} to be used for network calls to Adyen.
+         * @param shopperLocale   The locale of the Shopper for translation.
+         * @param environment     TThe {@link Environment} to be used for network calls to Adyen.
          * @param merchantAccount Your merchant account with Adyen.
          */
         public Builder(@NonNull Locale shopperLocale, @NonNull Environment environment, @NonNull String merchantAccount) {
@@ -213,6 +262,7 @@ public class GooglePayConfiguration extends BaseConfiguration {
 
         /**
          * Set the merchant account to be put in the payment token from Google to Adyen.
+         *
          * @param merchantAccount Your merchant account.
          */
         public void setMerchantAccount(@NonNull String merchantAccount) {

@@ -9,6 +9,7 @@
 package com.adyen.checkout.cse;
 
 import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
 
 import com.adyen.checkout.core.exeption.CheckoutException;
 
@@ -16,7 +17,7 @@ public class EncryptionException extends CheckoutException {
 
     private static final long serialVersionUID = 604047691381396990L;
 
-    public EncryptionException(@NonNull String message, @NonNull Throwable cause) {
+    public EncryptionException(@NonNull String message, @Nullable Throwable cause) {
         super(message, cause);
     }
 }

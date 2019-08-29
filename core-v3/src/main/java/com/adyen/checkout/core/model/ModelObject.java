@@ -13,6 +13,7 @@ import android.os.Parcelable;
 import android.support.annotation.NonNull;
 
 import com.adyen.checkout.core.exeption.CheckoutException;
+import com.adyen.checkout.core.util.ParcelUtils;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -32,7 +33,7 @@ public abstract class ModelObject implements Parcelable {
     @SuppressWarnings("PMD.EmptyMethodInAbstractClassShouldBeAbstract")
     @Override
     public final int describeContents() {
-        return 0;
+        return ParcelUtils.NO_FILE_DESCRIPTOR;
     }
 
     /**

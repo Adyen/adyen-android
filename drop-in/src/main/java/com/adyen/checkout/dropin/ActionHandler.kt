@@ -47,7 +47,7 @@ class ActionHandler(activity: FragmentActivity, private val callback: DetailsReq
         }
     }
 
-    fun handleAction(activity: FragmentActivity, action: Action) {
+    fun handleAction(activity: FragmentActivity, action: Action, sendResult: (String) -> Unit) {
         when {
             redirectComponent.canHandleAction(action) -> {
                 redirectComponent.handleAction(activity, action)
@@ -57,7 +57,7 @@ class ActionHandler(activity: FragmentActivity, private val callback: DetailsReq
             }
             else -> {
                 Logger.e(TAG, "Unknown Action - ${action.type}")
-                DropIn.INSTANCE.sendResult(activity, "$UNKNOWN_ACTION.${action.type}")
+                sendResult("$UNKNOWN_ACTION.${action.type}")
             }
         }
     }
@@ -67,8 +67,7 @@ class ActionHandler(activity: FragmentActivity, private val callback: DetailsReq
     }
 
     interface DetailsRequestedInterface {
-        fun requestDetailsCall(componentData: ActionComponentData)
-
+        fun requestDetailsCall(actionComponentData: ActionComponentData)
         fun onError(errorMessage: String)
     }
 }

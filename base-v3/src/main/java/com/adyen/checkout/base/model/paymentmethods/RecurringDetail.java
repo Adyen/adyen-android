@@ -15,8 +15,12 @@ import android.support.annotation.Nullable;
 import com.adyen.checkout.core.exeption.ModelSerializationException;
 import com.adyen.checkout.core.model.JsonUtils;
 
+import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
+
+import java.util.Collections;
+import java.util.List;
 
 @SuppressWarnings({"MemberName", "PMD.DataClass"})
 public final class RecurringDetail extends PaymentMethod {
@@ -28,6 +32,9 @@ public final class RecurringDetail extends PaymentMethod {
     private static final String EXPIRY_YEAR = "expiryYear";
     private static final String LAST_FOUR = "lastFour";
     private static final String BRAND = "brand";
+    private static final String SUPPORTED_SHOPPER_INTERACTIONS = "supportedShopperInteractions";
+
+    private static final String ECOMMERCE = "Ecommerce";
 
     @NonNull
     public static final Serializer<RecurringDetail> SERIALIZER = new Serializer<RecurringDetail>() {
@@ -42,6 +49,7 @@ public final class RecurringDetail extends PaymentMethod {
                 jsonObject.putOpt(EXPIRY_YEAR, modelObject.getExpiryYear());
                 jsonObject.putOpt(LAST_FOUR, modelObject.getLastFour());
                 jsonObject.putOpt(BRAND, modelObject.getBrand());
+                jsonObject.putOpt(SUPPORTED_SHOPPER_INTERACTIONS, new JSONArray(modelObject.getSupportedShopperInteractions()));
             } catch (JSONException e) {
                 throw new ModelSerializationException(RecurringDetail.class, e);
             }
@@ -69,6 +77,12 @@ public final class RecurringDetail extends PaymentMethod {
             recurringDetail.setLastFour(jsonObject.optString(LAST_FOUR));
             recurringDetail.setBrand(jsonObject.optString(BRAND));
 
+            final List<String> supportedShopperInteractions = JsonUtils.parseOptStringList(jsonObject.optJSONArray(SUPPORTED_SHOPPER_INTERACTIONS));
+
+            if (supportedShopperInteractions != null) {
+                recurringDetail.setSupportedShopperInteractions(supportedShopperInteractions);
+            }
+
             return recurringDetail;
         }
     };
@@ -78,6 +92,7 @@ public final class RecurringDetail extends PaymentMethod {
     private String expiryYear;
     private String lastFour;
     private String brand;
+    private List<String> supportedShopperInteractions = Collections.emptyList();
 
     @Override
     public void writeToParcel(@NonNull Parcel dest, int flags) {
@@ -127,5 +142,18 @@ public final class RecurringDetail extends PaymentMethod {
 
     public void setBrand(@NonNull String brand) {
         this.brand = brand;
+    }
+
+    @NonNull
+    public List<String> getSupportedShopperInteractions() {
+        return supportedShopperInteractions;
+    }
+
+    public void setSupportedShopperInteractions(@NonNull List<String> supportedShopperInteractions) {
+        this.supportedShopperInteractions = supportedShopperInteractions;
+    }
+
+    public boolean isEcommarce() {
+        return supportedShopperInteractions.contains(ECOMMERCE);
     }
 }

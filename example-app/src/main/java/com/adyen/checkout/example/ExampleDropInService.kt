@@ -17,6 +17,7 @@ import com.adyen.checkout.dropin.service.CallResult
 import com.adyen.checkout.dropin.service.DropInService
 import com.adyen.checkout.example.api.CheckoutApiService
 import com.adyen.checkout.example.api.model.PaymentsRequest
+import com.adyen.checkout.example.api.model.createPaymentsRequest
 import com.squareup.moshi.Moshi
 import com.squareup.moshi.adapters.PolymorphicJsonAdapterFactory
 import okhttp3.MediaType
@@ -37,37 +38,22 @@ class ExampleDropInService : DropInService() {
     override fun makePaymentsCall(paymentComponentData: JSONObject): CallResult {
         Logger.d(TAG, "makePaymentsCall")
 
+        // Check out the documentation of this method on the parent DropInService class
+
+        Logger.v(TAG, "paymentComponentData - ${paymentComponentData.toString(JsonUtils.IDENT_SPACES)}")
+
         val serializedPaymentComponentData = PaymentComponentData.SERIALIZER.deserialize(paymentComponentData)
 
-        val paymentMethod = serializedPaymentComponentData.paymentMethod ?: return CallResult(CallResult.ResultType.ERROR, "Empty payment data")
+        if (serializedPaymentComponentData.paymentMethod == null) {
+            return CallResult(CallResult.ResultType.ERROR, "Empty payment data")
+        }
 
-        val paymentsRequest = PaymentsRequest(paymentMethod,
-                serializedPaymentComponentData.shopperReference!!,
-                serializedPaymentComponentData.isStorePaymentMethodEnable)
+        val paymentsRequest = createPaymentsRequest(this@ExampleDropInService, serializedPaymentComponentData)
+        val paymentsRequestJson = serializePaymentsRequest(paymentsRequest)
 
-        val moshi = Moshi.Builder()
-                .add(PolymorphicJsonAdapterFactory.of(PaymentMethodDetails::class.java, PaymentMethodDetails.TYPE)
-                        .withSubtype(CardPaymentMethod::class.java, CardPaymentMethod.PAYMENT_METHOD_TYPE)
-                        .withSubtype(IdealPaymentMethod::class.java, IdealPaymentMethod.PAYMENT_METHOD_TYPE)
-                        .withSubtype(MolpayPaymentMethod::class.java, MolpayPaymentMethod.PAYMENT_METHOD_TYPE)
-                        .withSubtype(EPSPaymentMethod::class.java, EPSPaymentMethod.PAYMENT_METHOD_TYPE)
-                        .withSubtype(DotpayPaymentMethod::class.java, DotpayPaymentMethod.PAYMENT_METHOD_TYPE)
-                        .withSubtype(EntercashPaymentMethod::class.java, EntercashPaymentMethod.PAYMENT_METHOD_TYPE)
-                        .withSubtype(OpenBankingPaymentMethod::class.java, OpenBankingPaymentMethod.PAYMENT_METHOD_TYPE)
-                        .withSubtype(GooglePayPaymentMethod::class.java, GooglePayPaymentMethod.PAYMENT_METHOD_TYPE)
-                        .withSubtype(GenericPaymentMethod::class.java, "other")
-                )
-                .build()
-        val jsonAdapter = moshi.adapter(PaymentsRequest::class.java)
-        val requestString = jsonAdapter.toJson(paymentsRequest)
+        Logger.v(TAG, "payments/ - ${paymentsRequestJson.toString(JsonUtils.IDENT_SPACES)}")
 
-        val request = JSONObject(requestString)
-        request.remove("paymentMethod")
-        request.put("paymentMethod", paymentComponentData.getJSONObject("paymentMethod"))
-
-        Logger.v(TAG, "requestJson - ${request.toString(JsonUtils.IDENT_SPACES)}")
-
-        val requestBody = RequestBody.create(MediaType.parse("application/json"), request.toString())
+        val requestBody = RequestBody.create(MediaType.parse("application/json"), paymentsRequestJson.toString())
 
         val call = CheckoutApiService.INSTANCE.payments(requestBody)
 
@@ -99,7 +85,9 @@ class ExampleDropInService : DropInService() {
     }
 
     override fun makeDetailsCall(actionComponentData: JSONObject): CallResult {
-        Logger.d(TAG, "makeDetailsCall \n${actionComponentData.toString(JsonUtils.IDENT_SPACES)}")
+        Logger.d(TAG, "makeDetailsCall")
+
+        Logger.v(TAG, "payments/details/ - ${actionComponentData.toString(JsonUtils.IDENT_SPACES)}")
 
         val requestBody = RequestBody.create(MediaType.parse("application/json"), actionComponentData.toString())
         val call = CheckoutApiService.INSTANCE.details(requestBody)
@@ -122,5 +110,30 @@ class ExampleDropInService : DropInService() {
             Logger.e(TAG, "IOException", e)
             CallResult(CallResult.ResultType.ERROR, "IOException")
         }
+    }
+
+    private fun serializePaymentsRequest(paymentsRequest: PaymentsRequest): JSONObject {
+        val moshi = Moshi.Builder()
+                .add(PolymorphicJsonAdapterFactory.of(PaymentMethodDetails::class.java, PaymentMethodDetails.TYPE)
+                        .withSubtype(CardPaymentMethod::class.java, CardPaymentMethod.PAYMENT_METHOD_TYPE)
+                        .withSubtype(IdealPaymentMethod::class.java, IdealPaymentMethod.PAYMENT_METHOD_TYPE)
+                        .withSubtype(MolpayPaymentMethod::class.java, MolpayPaymentMethod.PAYMENT_METHOD_TYPE)
+                        .withSubtype(EPSPaymentMethod::class.java, EPSPaymentMethod.PAYMENT_METHOD_TYPE)
+                        .withSubtype(DotpayPaymentMethod::class.java, DotpayPaymentMethod.PAYMENT_METHOD_TYPE)
+                        .withSubtype(EntercashPaymentMethod::class.java, EntercashPaymentMethod.PAYMENT_METHOD_TYPE)
+                        .withSubtype(OpenBankingPaymentMethod::class.java, OpenBankingPaymentMethod.PAYMENT_METHOD_TYPE)
+                        .withSubtype(GooglePayPaymentMethod::class.java, GooglePayPaymentMethod.PAYMENT_METHOD_TYPE)
+                        .withSubtype(GenericPaymentMethod::class.java, "other")
+                )
+                .build()
+        val jsonAdapter = moshi.adapter(PaymentsRequest::class.java)
+        val requestString = jsonAdapter.toJson(paymentsRequest)
+        val request = JSONObject(requestString)
+
+        // TODO GooglePayPaymentMethod token has a variable name that is not compatible with Moshi
+        request.remove("paymentMethod")
+        request.put("paymentMethod", PaymentMethodDetails.SERIALIZER.serialize(paymentsRequest.paymentMethod))
+
+        return request
     }
 }

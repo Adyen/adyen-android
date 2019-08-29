@@ -15,27 +15,24 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
+import com.adyen.checkout.base.api.ImageLoader;
 import com.adyen.checkout.base.ui.adapter.ClickableListRecyclerAdapter;
 import com.adyen.checkout.base.ui.view.RoundCornerImageView;
-import com.adyen.checkout.core.log.LogUtil;
-import com.adyen.checkout.core.log.Logger;
 import com.adyen.checkout.issuerlist.ui.R;
 
 import java.util.List;
 
 class IssuerListRecyclerAdapter extends ClickableListRecyclerAdapter<IssuerListRecyclerAdapter.IssuerViewHolder> {
-    private static final String TAG = LogUtil.getTag();
-
     private List<IssuerModel> mIssuerModelList;
-    private boolean mHideIssuerLogo;
+    private final ImageLoader mImageLoader;
+    private final String mPaymentMethod;
+    private final boolean mHideIssuerLogo;
 
-    IssuerListRecyclerAdapter(@NonNull List<IssuerModel> issuerModelList) {
-        this(issuerModelList, false);
-    }
-
-    IssuerListRecyclerAdapter(@NonNull List<IssuerModel> issuerModelList, boolean hideIssuerLogo) {
+    IssuerListRecyclerAdapter(@NonNull List<IssuerModel> issuerModelList, ImageLoader imageLoader, String paymentMethod, boolean hideIssuerLogo) {
         mIssuerModelList = issuerModelList;
         mHideIssuerLogo = hideIssuerLogo;
+        mImageLoader = imageLoader;
+        mPaymentMethod = paymentMethod;
     }
 
     @NonNull
@@ -48,7 +45,7 @@ class IssuerListRecyclerAdapter extends ClickableListRecyclerAdapter<IssuerListR
     @Override
     public void onBindViewHolder(@NonNull IssuerViewHolder issuerViewHolder, int position) {
         super.onBindViewHolder(issuerViewHolder, position);
-        issuerViewHolder.bind(mIssuerModelList.get(position), mHideIssuerLogo);
+        issuerViewHolder.bind(mPaymentMethod, mIssuerModelList.get(position), mHideIssuerLogo, mImageLoader);
     }
 
     @Override
@@ -58,20 +55,8 @@ class IssuerListRecyclerAdapter extends ClickableListRecyclerAdapter<IssuerListR
 
     // We only expect either a full new list or small changes on an item, like a new Logo drawable
     void updateIssuerModelList(@NonNull List<IssuerModel> issuerModelList) {
-        final boolean newList = mIssuerModelList.size() != issuerModelList.size();
         mIssuerModelList = issuerModelList;
-        if (newList) {
-            Logger.d(TAG, "new list");
-            notifyDataSetChanged();
-        } else {
-            Logger.v(TAG, "update list");
-            for (int position = 0; position < mIssuerModelList.size(); position++) {
-                if (mIssuerModelList.get(position).isUpdated()) {
-                    mIssuerModelList.get(position).consumeUpdate();
-                    notifyItemChanged(position);
-                }
-            }
-        }
+        notifyDataSetChanged();
     }
 
     IssuerModel getIssuerAt(int position) {
@@ -91,14 +76,14 @@ class IssuerListRecyclerAdapter extends ClickableListRecyclerAdapter<IssuerListR
             mLogoImage.setVisibility(hideIssuerLogo ? View.GONE : View.VISIBLE);
         }
 
-        void bind(IssuerModel issuerModel, boolean hideIssuerLogo) {
+        void bind(String paymentMethod, IssuerModel issuerModel, boolean hideIssuerLogo, ImageLoader imageLoader) {
             mText.setText(issuerModel.getName());
             if (!hideIssuerLogo) {
-                if (issuerModel.getLogo() != null) {
-                    mLogoImage.setImageDrawable(issuerModel.getLogo());
-                } else {
-                    mLogoImage.setImageResource(R.drawable.ic_placeholder_image);
-                }
+                imageLoader.load(paymentMethod,
+                        issuerModel.getId(),
+                        mLogoImage,
+                        R.drawable.ic_placeholder_image,
+                        R.drawable.ic_placeholder_image);
             }
         }
 

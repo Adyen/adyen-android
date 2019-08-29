@@ -9,8 +9,8 @@
 package com.adyen.checkout.issuerlist;
 
 import android.content.Context;
+import android.os.Parcel;
 import android.support.annotation.NonNull;
-import android.util.DisplayMetrics;
 
 import com.adyen.checkout.base.component.BaseConfiguration;
 import com.adyen.checkout.base.component.BaseConfigurationBuilder;
@@ -20,41 +20,27 @@ import java.util.Locale;
 
 public abstract class IssuerListConfiguration extends BaseConfiguration {
 
-    private final DisplayMetrics mDisplayMetrics;
-
     protected IssuerListConfiguration(
             @NonNull Locale shopperLocale,
-            @NonNull DisplayMetrics displayMetrics,
             @NonNull Environment environment
     ) {
         super(shopperLocale, environment);
-        mDisplayMetrics = displayMetrics;
     }
 
-    @NonNull
-    DisplayMetrics getDisplayMetrics() {
-        return mDisplayMetrics;
+    protected IssuerListConfiguration(@NonNull Parcel in) {
+        super(in);
     }
 
 
     public abstract static class IssuerListBuilder<IssuerListConfigurationT extends IssuerListConfiguration>
             extends BaseConfigurationBuilder<IssuerListConfigurationT> {
 
-        @NonNull
-        protected DisplayMetrics mBuilderDisplayMetrics;
-
         protected IssuerListBuilder(@NonNull Context context) {
             super(context);
-            mBuilderDisplayMetrics = context.getResources().getDisplayMetrics();
         }
 
-        protected IssuerListBuilder(@NonNull Locale shopperLocale, @NonNull Environment environment, @NonNull DisplayMetrics displayMetrics) {
+        protected IssuerListBuilder(@NonNull Locale shopperLocale, @NonNull Environment environment) {
             super(shopperLocale, environment);
-            mBuilderDisplayMetrics = displayMetrics;
-        }
-
-        public void setDisplayMetrics(@NonNull DisplayMetrics builderDisplayMetrics) {
-            mBuilderDisplayMetrics = builderDisplayMetrics;
         }
     }
 }

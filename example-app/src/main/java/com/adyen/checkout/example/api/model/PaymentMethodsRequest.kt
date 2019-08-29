@@ -8,18 +8,17 @@
 
 package com.adyen.checkout.example.api.model
 
-import com.adyen.checkout.example.BuildConfig
+import com.adyen.checkout.base.model.payments.Amount
 
 @Suppress("MagicNumber")
 data class PaymentMethodsRequest(
-    val merchantAccount: String = BuildConfig.MERCHANT_ACCOUNT,
+    val merchantAccount: String,
     val shopperReference: String,
-//  val additionalData: Any,
-//  val allowedPaymentMethods: ArrayList<String>,
-    val amount: Amount = Amount("EUR", 1337),
-//  val blockedPaymentMethods: ArrayList<String>,
-    val channel: String = "android",
+//    val additionalData: Any,
+//    val allowedPaymentMethods: ArrayList<String>,
+    val amount: Amount,
+//    val blockedPaymentMethods: ArrayList<String>,
     val countryCode: String = "NL",
-    val shopperLocale: String = "en_US"
-
+    val shopperLocale: String = "en_US",
+    val channel: String = "android"
 )

@@ -26,10 +26,10 @@ import com.adyen.checkout.base.model.payments.request.PaymentMethodDetails
 import com.adyen.checkout.core.exeption.CheckoutException
 import com.adyen.checkout.core.log.LogUtil
 import com.adyen.checkout.core.log.Logger
+import com.adyen.checkout.dropin.DropInConfiguration
 import com.adyen.checkout.dropin.R
 import com.adyen.checkout.dropin.getComponentFor
 import com.adyen.checkout.dropin.getViewFor
-import com.adyen.checkout.dropin.ui.LoadingActivity
 import com.adyen.checkout.dropin.ui.base.DropInBottomSheetDialogFragment
 import kotlinx.android.synthetic.main.fragmentdialog_component.*
 import kotlinx.android.synthetic.main.fragmentdialog_header.view.*
@@ -41,11 +41,13 @@ class ComponentDialogFragment : DropInBottomSheetDialogFragment(), Observer<Paym
 
         private const val PAYMENT_METHOD = "PAYMENT_METHOD"
         private const val WAS_IN_EXPAND_STATUS = "WAS_IN_EXPAND_STATUS"
+        private const val DROP_IN_CONFIGURATION = "DROP_IN_CONFIGURATION"
 
-        fun newInstance(paymentMethod: PaymentMethod, wasInExpandStatus: Boolean): ComponentDialogFragment {
+        fun newInstance(paymentMethod: PaymentMethod, dropInConfiguration: DropInConfiguration, wasInExpandStatus: Boolean): ComponentDialogFragment {
             val args = Bundle()
             args.putParcelable(PAYMENT_METHOD, paymentMethod)
             args.putBoolean(WAS_IN_EXPAND_STATUS, wasInExpandStatus)
+            args.putParcelable(DROP_IN_CONFIGURATION, dropInConfiguration)
 
             val componentDialogFragment = ComponentDialogFragment()
             componentDialogFragment.arguments = args
@@ -55,12 +57,14 @@ class ComponentDialogFragment : DropInBottomSheetDialogFragment(), Observer<Paym
     }
 
     private lateinit var paymentMethod: PaymentMethod
+    private lateinit var dropInConfiguration: DropInConfiguration
     private lateinit var component: PaymentComponent
     private lateinit var componentView: ComponentView<PaymentComponent>
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         paymentMethod = arguments?.getParcelable(PAYMENT_METHOD) ?: throw IllegalArgumentException("Payment method is null")
+        dropInConfiguration = arguments?.getParcelable(DROP_IN_CONFIGURATION) ?: throw IllegalArgumentException("DropIn Configuration is null")
     }
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
@@ -104,8 +108,8 @@ class ComponentDialogFragment : DropInBottomSheetDialogFragment(), Observer<Paym
 
     private fun attachComponent(paymentMethod: PaymentMethod) {
         try {
-            component = getComponentFor(this, paymentMethod)
-            componentView = getViewFor(activity!!, paymentMethod)
+            component = getComponentFor(this, paymentMethod, dropInConfiguration)
+            componentView = getViewFor(requireContext(), paymentMethod)
         } catch (e: CheckoutException) {
             handleError(ComponentError(e))
             return
@@ -133,9 +137,7 @@ class ComponentDialogFragment : DropInBottomSheetDialogFragment(), Observer<Paym
         try {
             if (componentState != null) {
                 if (componentState.isValid) {
-                    Logger.d(TAG, "Making payment with type ${componentState.data.paymentMethod?.type}")
-                    val intent = LoadingActivity.getIntentForPayments(context!!, componentState.data)
-                    startActivity(intent)
+                    protocol.sendPaymentRequest(componentState.data)
                 } else {
                     throw CheckoutException("PaymentComponentState are not valid.")
                 }

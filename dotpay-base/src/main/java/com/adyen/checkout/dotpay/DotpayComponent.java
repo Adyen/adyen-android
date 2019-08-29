@@ -50,12 +50,6 @@ public final class DotpayComponent extends IssuerListComponent<DotpayPaymentMeth
         return super.onInputDataChanged(inputData);
     }
 
-    @SuppressWarnings("PMD.UselessOverridingMethod")
-    @Override
-    protected void fetchIssuerLogo(@NonNull final String issuerId) {
-        super.fetchIssuerLogo(issuerId);
-    }
-
     @NonNull
     @Override
     protected DotpayPaymentMethod instantiateTypedPaymentMethod() {

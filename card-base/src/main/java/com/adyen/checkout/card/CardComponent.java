@@ -32,22 +32,22 @@ import com.adyen.checkout.card.data.output.SecurityCodeField;
 import com.adyen.checkout.card.data.validator.CardValidator;
 import com.adyen.checkout.card.data.validator.ExpiryDateValidator;
 import com.adyen.checkout.card.model.CardType;
+import com.adyen.checkout.core.log.LogUtil;
+import com.adyen.checkout.core.log.Logger;
 import com.adyen.checkout.core.util.StringUtil;
 import com.adyen.checkout.cse.Card;
-import com.adyen.checkout.cse.CardEncryptor;
 import com.adyen.checkout.cse.EncryptedCard;
 import com.adyen.checkout.cse.EncryptionException;
-import com.adyen.checkout.cse.internal.CardEncryptorImpl;
+import com.adyen.checkout.cse.Encryptor;
 
 import java.util.ArrayList;
 import java.util.List;
 
 public final class CardComponent extends BasePaymentComponent<CardConfiguration, CardInputData, CardOutputData> {
+    private static final String TAG = LogUtil.getTag();
 
     public static final PaymentComponentProvider<CardComponent, CardConfiguration> PROVIDER = new CardComponentProvider();
 
-
-    private final CardEncryptor mCardEncryption = new CardEncryptorImpl();
     private final CardValidator mCardValidator = new CardValidator.Builder().build();
 
     private final List<CardType> mFilteredSupportedCards = new ArrayList<>();
@@ -115,6 +115,7 @@ public final class CardComponent extends BasePaymentComponent<CardConfiguration,
     @NonNull
     @Override
     protected CardOutputData onInputDataChanged(@NonNull CardInputData inputData) {
+        Logger.v(TAG, "onInputDataChanged");
         return new CardOutputData(
                 new CardNumberField(mCardValidator.validateNumber(inputData.getCardNumber(), isStoredPaymentMethod())),
                 new ExpiryDateField(mCardValidator.validateExpiryDate(inputData.getExpiryDate())),
@@ -132,6 +133,7 @@ public final class CardComponent extends BasePaymentComponent<CardConfiguration,
     @NonNull
     @Override
     protected PaymentComponentState<CardPaymentMethod> createComponentState() {
+        Logger.v(TAG, "createComponentState");
 
         final CardPaymentMethod cardPaymentMethod = new CardPaymentMethod();
         cardPaymentMethod.setType(CardPaymentMethod.PAYMENT_METHOD_TYPE);
@@ -152,7 +154,7 @@ public final class CardComponent extends BasePaymentComponent<CardConfiguration,
                 card.setExpiryDate(expiryDateResult.getExpiryMonth(), expiryDateResult.getExpiryYear());
             }
 
-            encryptedCard = mCardEncryption.encryptFields(card.build(), getConfiguration().getPublicKey());
+            encryptedCard = Encryptor.INSTANCE.encryptFields(card.build(), getConfiguration().getPublicKey());
         } catch (EncryptionException e) {
             notifyException(e);
             final PaymentComponentData<CardPaymentMethod> paymentComponentData = new PaymentComponentData<>();
@@ -179,6 +181,7 @@ public final class CardComponent extends BasePaymentComponent<CardConfiguration,
         paymentComponentData.setStorePaymentMethod(outputData.isStoredPaymentMethodEnable());
         paymentComponentData.setShopperReference(getConfiguration().getShopperReference());
 
+        Logger.v(TAG, "return createComponentState");
         return new PaymentComponentState<>(paymentComponentData, getOutputData().isValid());
     }
 

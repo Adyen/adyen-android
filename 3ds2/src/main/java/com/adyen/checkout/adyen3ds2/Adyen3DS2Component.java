@@ -16,6 +16,7 @@ import android.content.Context;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 
+import com.adyen.checkout.adyen3ds2.exception.Authentication3DS2Exception;
 import com.adyen.checkout.adyen3ds2.model.ChallengeResult;
 import com.adyen.checkout.adyen3ds2.model.ChallengeToken;
 import com.adyen.checkout.adyen3ds2.model.FingerprintToken;
@@ -234,6 +235,11 @@ public final class Adyen3DS2Component extends BaseActionComponent implements Cha
 
     private void challengeShopper(Activity activity, String encodedChallengeToken) throws ComponentException {
         Logger.d(TAG, "challengeShopper");
+
+        if (mTransaction == null) {
+            notifyException(new Authentication3DS2Exception("Failed to make challenge, missing reference to initial transaction."));
+            return;
+        }
 
         final String decodedChallengeToken = Base64Encoder.decode(encodedChallengeToken);
 

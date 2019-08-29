@@ -18,6 +18,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
 
+import com.adyen.checkout.base.api.ImageLoader;
 import com.adyen.checkout.issuerlist.ui.R;
 
 import java.util.List;
@@ -28,16 +29,17 @@ public class IssuerListSpinnerAdapter extends BaseAdapter {
 
     private List<IssuerModel> mIssuerList;
 
-    private boolean mHideIssuerLogo;
+    private final boolean mHideIssuerLogo;
+    private final ImageLoader mImageLoader;
+    private final String mPaymentMethod;
 
-    IssuerListSpinnerAdapter(@NonNull Context context, @NonNull List<IssuerModel> issuerList) {
-        this(context, issuerList, false);
-    }
-
-    IssuerListSpinnerAdapter(@NonNull Context context, @NonNull List<IssuerModel> issuerList, boolean hideIssuerLogo) {
+    IssuerListSpinnerAdapter(@NonNull Context context, @NonNull List<IssuerModel> issuerList, ImageLoader imageLoader, String paymentMethod,
+            boolean hideIssuerLogo) {
         mInflater = LayoutInflater.from(context);
         mIssuerList = issuerList;
         mHideIssuerLogo = hideIssuerLogo;
+        mImageLoader = imageLoader;
+        mPaymentMethod = paymentMethod;
     }
 
     void updateIssuers(@NonNull List<IssuerModel> issuerList) {
@@ -79,11 +81,11 @@ public class IssuerListSpinnerAdapter extends BaseAdapter {
 
         issuerName.setText(issuer.getName());
         if (!mHideIssuerLogo) {
-            if (issuer.getLogo() != null) {
-                issuerLogo.setImageDrawable(issuer.getLogo());
-            } else {
-                issuerLogo.setImageResource(R.drawable.ic_placeholder_image);
-            }
+            mImageLoader.load(mPaymentMethod,
+                    issuer.getId(),
+                    issuerLogo,
+                    R.drawable.ic_placeholder_image,
+                    R.drawable.ic_placeholder_image);
         } else {
             issuerLogo.setVisibility(View.GONE);
         }
