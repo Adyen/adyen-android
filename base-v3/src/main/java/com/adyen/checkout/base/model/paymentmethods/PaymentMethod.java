@@ -31,6 +31,7 @@ public class PaymentMethod extends ModelObject {
     private static final String DETAILS = "details";
     private static final String GROUP = "group";
     private static final String NAME = "name";
+    private static final String BRANDS = "brands";
     private static final String PAYMENT_METHOD_DATA = "paymentMethodData";
     private static final String SUPPORTS_RECURRING = "supportsRecurring";
     private static final String TYPE = "type";
@@ -47,6 +48,7 @@ public class PaymentMethod extends ModelObject {
                 jsonObject.putOpt(DETAILS, ModelUtils.serializeOptList(modelObject.getDetails(), InputDetail.SERIALIZER));
                 jsonObject.putOpt(GROUP, ModelUtils.serializeOpt(modelObject.getGroup(), Group.SERIALIZER));
                 jsonObject.putOpt(NAME, modelObject.getName());
+                jsonObject.putOpt(BRANDS, JsonUtils.serializeOptStringList(modelObject.getBrands()));
                 jsonObject.putOpt(PAYMENT_METHOD_DATA, modelObject.getPaymentMethodData());
                 jsonObject.putOpt(SUPPORTS_RECURRING, modelObject.getSupportsRecurring());
                 jsonObject.putOpt(TYPE, modelObject.getType());
@@ -64,6 +66,7 @@ public class PaymentMethod extends ModelObject {
             paymentMethod.setDetails(ModelUtils.deserializeOptList(jsonObject.optJSONArray(DETAILS), InputDetail.SERIALIZER));
             paymentMethod.setGroup(ModelUtils.deserializeOpt(jsonObject.optJSONObject(GROUP), Group.SERIALIZER));
             paymentMethod.setName(jsonObject.optString(NAME, null));
+            paymentMethod.setBrands(JsonUtils.parseOptStringList(jsonObject.optJSONArray(BRANDS)));
             paymentMethod.setPaymentMethodData(jsonObject.optString(PAYMENT_METHOD_DATA, null));
             paymentMethod.setSupportsRecurring(jsonObject.optBoolean(SUPPORTS_RECURRING, false));
             paymentMethod.setType(jsonObject.optString(TYPE, null));
@@ -77,6 +80,7 @@ public class PaymentMethod extends ModelObject {
     private List<InputDetail> details;
     private Group group;
     private String name;
+    private List<String> brands;
     private String paymentMethodData;
     private boolean supportsRecurring;
     private String type;
@@ -134,6 +138,15 @@ public class PaymentMethod extends ModelObject {
 
     public void setName(@Nullable String name) {
         this.name = name;
+    }
+
+    public void setBrands(@Nullable List<String> brands) {
+        this.brands = brands;
+    }
+
+    @Nullable
+    public List<String> getBrands() {
+        return brands;
     }
 
     public void setPaymentMethodData(@Nullable String paymentMethodData) {

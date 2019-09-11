@@ -13,6 +13,20 @@
 [//]: <> (Add changes that not released yet into `Unreleased` section)
 [//]: <> (Comment `Unreleased` section if there are no changes)
 [//]: <> (## [Unreleased])
+## [3.3.0] - 2019-09-11
+### Added
+- Created SepaComponent
+- Created Card Component view specifically for DropIn to have more space to show supported card types in screen.
+- DropIn will try to parse and use card brands from payment method response if there were no SupportedCard type in CardConfiguration
+### Changed
+- Component `observe()` will now notify the observer every time the user changes the input even though content and validation might not have changed.
+- Refactored validation structure for fields
+- CardType class moved from package `com.adyen.checkout.card.model` to package `com.adyen.checkout.card.data`
+- CardType's regex updated
+### Fixed
+- Issue with image sometimes not loading
+- Catching unexpected exception on Card encryption. 
+
 ## [3.2.1] - 2019-08-29
 ### Added
 - Created Settings screen on Example app to facilitate testing instead of hard coding values.

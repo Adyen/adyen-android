@@ -1,5 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?>
-<!--
+<?xml version="1.0" encoding="utf-8"?><!--
   ~ Copyright (c) 2019 Adyen N.V.
   ~
   ~ This file is open source and available under the MIT license. See the LICENSE file for more info.
@@ -8,15 +7,17 @@
   -->
 
 <merge xmlns:android="http://schemas.android.com/apk/res/android"
-       xmlns:tools="http://schemas.android.com/tools"
-       android:layout_width="match_parent"
-       android:layout_height="wrap_content"
-       android:orientation="vertical"
-       tools:parentTag="android.widget.LinearLayout">
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="vertical"
+    tools:parentTag="android.widget.LinearLayout">
 
     <FrameLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content">
+
         <android.support.design.widget.TextInputLayout
             android:id="@+id/textInputLayout_cardNumber"
             style="@style/AdyenCheckout.TextInputLayout"
@@ -30,25 +31,30 @@
                 android:hint="@string/checkout_card_number_hint"
                 android:inputType="phone"
                 android:nextFocusDown="@+id/editText_expiryDate"
-                android:nextFocusForward="@+id/editText_expiryDate"/>
+                android:nextFocusForward="@+id/editText_expiryDate" />
         </android.support.design.widget.TextInputLayout>
 
-        <android.support.v7.widget.RecyclerView
-            android:id="@+id/recyclerView_cardList"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
+        <com.adyen.checkout.base.ui.view.RoundCornerImageView
+            android:id="@+id/cardType_imageView"
+            android:layout_width="24dp"
+            android:layout_height="16dp"
             android:layout_gravity="end|top"
             android:layout_marginTop="@dimen/cardList_top_margin"
-            android:layout_marginEnd="@dimen/cardList_top_margin"
-            android:layout_marginRight="@dimen/cardList_top_margin">
+            android:layout_marginEnd="@dimen/standard_margin"
+            android:layout_marginRight="@dimen/standard_margin"
+            android:src="@drawable/ic_card"
+            app:strokeColor="@color/stroke_color"
+            app:strokeWidth="0dp">
 
-        </android.support.v7.widget.RecyclerView>
+        </com.adyen.checkout.base.ui.view.RoundCornerImageView>
     </FrameLayout>
 
-    <LinearLayout android:layout_width="match_parent"
-                  android:layout_height="wrap_content"
-                  android:baselineAligned="false"
-                  android:orientation="horizontal">
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:baselineAligned="false"
+        android:orientation="horizontal">
+
         <android.support.design.widget.TextInputLayout
             android:id="@+id/textInputLayout_expiryDate"
             style="@style/AdyenCheckout.TextInputLayout"
@@ -66,7 +72,7 @@
                 android:inputType="date"
                 android:maxLength="7"
                 android:nextFocusRight="@+id/editText_securityCode"
-                android:nextFocusForward="@+id/editText_securityCode"/>
+                android:nextFocusForward="@+id/editText_securityCode" />
         </android.support.design.widget.TextInputLayout>
 
         <android.support.design.widget.TextInputLayout
@@ -86,7 +92,7 @@
                 android:inputType="number"
                 android:maxLength="4"
                 android:nextFocusRight="@+id/editText_cardHolder"
-                android:nextFocusForward="@+id/editText_cardHolder"/>
+                android:nextFocusForward="@+id/editText_cardHolder" />
         </android.support.design.widget.TextInputLayout>
     </LinearLayout>
 
@@ -96,12 +102,12 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content">
 
-        <com.adyen.checkout.card.ui.AdyenTextInputEditText
+        <com.adyen.checkout.base.ui.view.AdyenTextInputEditText
             android:id="@+id/editText_cardHolder"
             android:layout_width="match_parent"
             android:layout_height="@dimen/input_height"
             android:hint="@string/checkout_card_holder_hint"
-            android:inputType="text"/>
+            android:inputType="text" />
     </android.support.design.widget.TextInputLayout>
 
     <android.support.v7.widget.SwitchCompat
@@ -109,6 +115,6 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:text="@string/store_payment_method"
-        android:theme="@style/StorePaymentSwitch"/>
+        android:theme="@style/AdyenCheckout.Card.StorePaymentSwitch" />
 
 </merge>

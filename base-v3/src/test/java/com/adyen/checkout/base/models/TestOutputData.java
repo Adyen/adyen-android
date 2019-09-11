@@ -8,19 +8,17 @@
 
 package com.adyen.checkout.base.models;
 
-import com.adyen.checkout.base.component.data.output.OutputData;
+import com.adyen.checkout.base.component.OutputData;
 
 public class TestOutputData implements OutputData {
 
-    public String type;
     public boolean isValid;
 
-    public TestOutputData(String type) {
-        this.type = type;
+    public TestOutputData() {
+        this(false);
     }
 
-    public TestOutputData(String type, boolean isValid) {
-        this.type = type;
+    public TestOutputData(boolean isValid) {
         this.isValid = isValid;
     }
 

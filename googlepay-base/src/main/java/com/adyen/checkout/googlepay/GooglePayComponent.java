@@ -48,7 +48,7 @@ public class GooglePayComponent extends BasePaymentComponent<GooglePayConfigurat
 
     @NonNull
     @Override
-    protected GooglePayOutputData createOutputData(@NonNull PaymentMethod paymentMethod) {
+    protected GooglePayOutputData createEmptyOutputData() {
         return new GooglePayOutputData(null);
     }
 

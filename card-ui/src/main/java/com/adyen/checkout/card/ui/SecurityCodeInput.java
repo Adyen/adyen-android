@@ -27,10 +27,6 @@ public class SecurityCodeInput extends CardNumberInput {
 
     public SecurityCodeInput(@NonNull Context context, @Nullable AttributeSet attrs, int defStyleAttr) {
         super(context, attrs, defStyleAttr);
-    }
-
-    @Override
-    public int maxLength() {
-        return MAX_LENGTH;
+        enforceMaxInputLength(MAX_LENGTH);
     }
 }

@@ -85,7 +85,7 @@ public final class CardEncryptorImpl implements CardEncryptor {
             return builder
                     .setEncryptedSecurityCode(encryptedSecurityCode)
                     .build();
-        } catch (EncrypterException e) {
+        } catch (EncrypterException | IllegalStateException e) {
             throw new EncryptionException(e.getMessage(), e.getCause());
         }
     }

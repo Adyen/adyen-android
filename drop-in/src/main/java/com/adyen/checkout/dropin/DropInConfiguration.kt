@@ -38,9 +38,9 @@ import java.util.Locale
  */
 class DropInConfiguration : Configuration, Parcelable {
 
-    private val availableConfigs: HashMap<String, Configuration>
     private val shopperLocale: Locale
     private val environment: Environment
+    val availableConfigs: HashMap<String, Configuration>
     val serviceComponentName: ComponentName
     var resultHandlerIntent: Intent = Intent()
 

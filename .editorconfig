@@ -1,0 +1,3 @@
+# Rules to ignore by klint
+[*.{kt,kts}]
+disabled_rules=no-wildcard-imports,import-ordering

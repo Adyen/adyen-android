@@ -24,13 +24,15 @@ import com.adyen.checkout.base.model.PaymentMethodsApiResponse
 import com.adyen.checkout.base.model.paymentmethods.PaymentMethod
 import com.adyen.checkout.base.model.payments.request.PaymentComponentData
 import com.adyen.checkout.base.model.payments.request.PaymentMethodDetails
+import com.adyen.checkout.base.util.PaymentMethodTypes
 import com.adyen.checkout.core.log.LogUtil
 import com.adyen.checkout.core.log.Logger
 import com.adyen.checkout.dropin.DropIn
 import com.adyen.checkout.dropin.DropInConfiguration
 import com.adyen.checkout.dropin.R
 import com.adyen.checkout.dropin.ui.base.DropInBottomSheetDialogFragment
-import com.adyen.checkout.dropin.ui.component.ComponentDialogFragment
+import com.adyen.checkout.dropin.ui.component.CardComponentDialogFragment
+import com.adyen.checkout.dropin.ui.component.GenericComponentDialogFragment
 import com.adyen.checkout.dropin.ui.paymentmethods.PaymentMethodListDialogFragment
 import com.adyen.checkout.googlepay.GooglePayComponent
 import com.adyen.checkout.googlepay.GooglePayConfiguration
@@ -98,11 +100,11 @@ class DropInActivity : AppCompatActivity(), DropInBottomSheetDialogFragment.Prot
         dropInViewModel.dropInConfiguration = dropInConfiguration
 
         dropInViewModel.paymentMethodsApiResponse =
-                if (savedInstanceState != null && savedInstanceState.containsKey(PAYMENT_METHODS_RESPONSE_KEY)) {
-                    savedInstanceState.getParcelable(PAYMENT_METHODS_RESPONSE_KEY)!!
-                } else {
-                    intent.getParcelableExtra(PAYMENT_METHODS_RESPONSE_KEY)
-                }
+            if (savedInstanceState != null && savedInstanceState.containsKey(PAYMENT_METHODS_RESPONSE_KEY)) {
+                savedInstanceState.getParcelable(PAYMENT_METHODS_RESPONSE_KEY)!!
+            } else {
+                intent.getParcelableExtra(PAYMENT_METHODS_RESPONSE_KEY)
+            }
 
         if (getFragmentByTag(COMPONENT_FRAGMENT_TAG) == null && getFragmentByTag(PAYMENT_METHOD_FRAGMENT_TAG) == null) {
             PaymentMethodListDialogFragment.newInstance(false).show(supportFragmentManager, PAYMENT_METHOD_FRAGMENT_TAG)
@@ -124,7 +126,7 @@ class DropInActivity : AppCompatActivity(), DropInBottomSheetDialogFragment.Prot
             CALL_RESULT_REQUEST_CODE -> {
                 data?.let {
                     dropInConfiguration.resultHandlerIntent.putExtra(DropIn.RESULT_KEY,
-                            it.getStringExtra(CALL_RESULT_KEY_FROM_RESULT)).let { intent ->
+                        it.getStringExtra(CALL_RESULT_KEY_FROM_RESULT)).let { intent ->
                         startActivity(intent)
                         overridePendingTransition(0, R.anim.fade_out)
                     }
@@ -155,7 +157,12 @@ class DropInActivity : AppCompatActivity(), DropInBottomSheetDialogFragment.Prot
     override fun showComponentDialog(paymentMethod: PaymentMethod, wasInExpandMode: Boolean) {
         Logger.d(TAG, "showComponentDialog")
         hideFragmentDialog(PAYMENT_METHOD_FRAGMENT_TAG)
-        ComponentDialogFragment.newInstance(paymentMethod, dropInConfiguration, wasInExpandMode).show(supportFragmentManager, COMPONENT_FRAGMENT_TAG)
+        val dialogFragment = when (paymentMethod.type) {
+            PaymentMethodTypes.SCHEME -> CardComponentDialogFragment
+            else -> GenericComponentDialogFragment
+        }.newInstance(paymentMethod, dropInConfiguration, wasInExpandMode)
+
+        dialogFragment.show(supportFragmentManager, COMPONENT_FRAGMENT_TAG)
     }
 
     override fun showPaymentMethodsDialog(showInExpandStatus: Boolean) {
@@ -183,7 +190,7 @@ class DropInActivity : AppCompatActivity(), DropInBottomSheetDialogFragment.Prot
     private fun sendAnalyticsEvent() {
         Logger.d(TAG, "sendAnalyticsEvent")
         val analyticEvent = AnalyticEvent.create(this, AnalyticEvent.Flavor.DROPIN,
-                "dropin", dropInConfiguration.shopperLocale)
+            "dropin", dropInConfiguration.shopperLocale)
         AnalyticsDispatcher.dispatchEvent(this, dropInConfiguration.environment, analyticEvent)
     }
 

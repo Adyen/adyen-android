@@ -8,9 +8,9 @@
   -->
 
 <resources>
-    <dimen name="cardList_top_margin">20dp</dimen>
-    <dimen name="payment_method_logo_width">32dp</dimen>
-    <dimen name="payment_method_logo_height">20dp</dimen>
+    <dimen name="cardList_top_margin">24dp</dimen>
+    <dimen name="brand_logo_width">24dp</dimen>
+    <dimen name="brand_logo_height">16dp</dimen>
 
     <dimen name="payment_method_margin">26dp</dimen>
     <dimen name="input_height">55dp</dimen>

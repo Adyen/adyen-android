@@ -139,6 +139,7 @@ Please let us know if you find any issues.
 
 ```
 -keep class com.adyen.checkout.base.model.** { *; }
+-keep class com.adyen.threeds2.** { *; }
 -keepclassmembers public class * implements com.adyen.checkout.base.PaymentComponent {
    public <init>(...);
 }

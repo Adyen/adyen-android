@@ -36,6 +36,8 @@ android {
         versionName version_name
 
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
+
+        multiDexEnabled true
     }
 
     buildTypes {
@@ -56,6 +58,7 @@ dependencies {
     implementation project(':drop-in')
 
     // Dependencies
+    implementation "com.android.support:multidex:$version_multidex"
     implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk7:$version_kotlin"
     implementation "org.jetbrains.kotlinx:kotlinx-coroutines-android:$version_kotlinx"
     implementation "com.android.support:appcompat-v7:$version_support_library"

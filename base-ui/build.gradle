@@ -45,6 +45,7 @@ dependencies {
     // Dependencies
     implementation "com.android.support:appcompat-v7:$version_support_library"
     implementation "com.android.support:recyclerview-v7:$version_support_library"
+    implementation "com.android.support:design:$version_support_library"
 }
 
 // This sharedTasks.gradle script is applied at the end of this build.gradle script,

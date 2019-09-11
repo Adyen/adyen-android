@@ -51,6 +51,15 @@
           "type": "text"
         }
       ],
+      "brands": [
+        "mc",
+        "visa",
+        "amex",
+        "cup",
+        "diners",
+        "discover",
+        "jcb"
+      ],
       "name": "Credit Card",
       "type": "scheme"
     },

@@ -21,17 +21,12 @@ import com.adyen.checkout.base.model.paymentmethods.PaymentMethod;
 import com.adyen.checkout.base.model.paymentmethods.RecurringDetail;
 import com.adyen.checkout.base.model.payments.request.CardPaymentMethod;
 import com.adyen.checkout.base.model.payments.request.PaymentComponentData;
-import com.adyen.checkout.base.util.DateUtils;
 import com.adyen.checkout.base.util.PaymentMethodTypes;
-import com.adyen.checkout.card.data.input.CardInputData;
-import com.adyen.checkout.card.data.output.CardNumberField;
-import com.adyen.checkout.card.data.output.CardOutputData;
-import com.adyen.checkout.card.data.output.ExpiryDateField;
-import com.adyen.checkout.card.data.output.HolderNameField;
-import com.adyen.checkout.card.data.output.SecurityCodeField;
-import com.adyen.checkout.card.data.validator.CardValidator;
-import com.adyen.checkout.card.data.validator.ExpiryDateValidator;
-import com.adyen.checkout.card.model.CardType;
+import com.adyen.checkout.base.validation.ValidatedField;
+import com.adyen.checkout.card.data.CardInputData;
+import com.adyen.checkout.card.data.CardOutputData;
+import com.adyen.checkout.card.data.CardType;
+import com.adyen.checkout.card.data.ExpiryDate;
 import com.adyen.checkout.core.log.LogUtil;
 import com.adyen.checkout.core.log.Logger;
 import com.adyen.checkout.core.util.StringUtil;
@@ -41,14 +36,13 @@ import com.adyen.checkout.cse.EncryptionException;
 import com.adyen.checkout.cse.Encryptor;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 public final class CardComponent extends BasePaymentComponent<CardConfiguration, CardInputData, CardOutputData> {
     private static final String TAG = LogUtil.getTag();
 
     public static final PaymentComponentProvider<CardComponent, CardConfiguration> PROVIDER = new CardComponentProvider();
-
-    private final CardValidator mCardValidator = new CardValidator.Builder().build();
 
     private final List<CardType> mFilteredSupportedCards = new ArrayList<>();
     private CardInputData mStoredPaymentInputData;
@@ -64,10 +58,19 @@ public final class CardComponent extends BasePaymentComponent<CardConfiguration,
 
         mStoredPaymentInputData = new CardInputData();
         mStoredPaymentInputData.setCardNumber(paymentMethod.getLastFour());
-        mStoredPaymentInputData.setExpiryDate(paymentMethod.getExpiryMonth()
-                + DateUtils.removeFirstTwoDigitFromYear(paymentMethod.getExpiryYear()));
 
-        final CardType cardType = CardType.getCardTypeByTxVarient(paymentMethod.getBrand());
+        try {
+            final ExpiryDate storedDate = new ExpiryDate(
+                    Integer.parseInt(paymentMethod.getExpiryMonth()),
+                    Integer.parseInt(paymentMethod.getExpiryYear())
+            );
+            mStoredPaymentInputData.setExpiryDate(storedDate);
+        } catch (NumberFormatException e) {
+            Logger.e(TAG, "Failed to parse stored Date", e);
+            mStoredPaymentInputData.setExpiryDate(ExpiryDate.EMPTY_DATE);
+        }
+
+        final CardType cardType = CardType.getCardTypeByTxVariant(paymentMethod.getBrand());
         if (cardType != null) {
             mFilteredSupportedCards.add(cardType);
         }
@@ -117,11 +120,12 @@ public final class CardComponent extends BasePaymentComponent<CardConfiguration,
     protected CardOutputData onInputDataChanged(@NonNull CardInputData inputData) {
         Logger.v(TAG, "onInputDataChanged");
         return new CardOutputData(
-                new CardNumberField(mCardValidator.validateNumber(inputData.getCardNumber(), isStoredPaymentMethod())),
-                new ExpiryDateField(mCardValidator.validateExpiryDate(inputData.getExpiryDate())),
-                new SecurityCodeField(getSecurityCodeValidationResult(inputData.getSecurityCode())),
-                new HolderNameField(mCardValidator.validateHolderName(inputData.getHolderName(), isHolderNameRequire())),
-                inputData.isStorePaymentEnable());
+                validateCardNumber(inputData.getCardNumber()),
+                validateExpiryDate(inputData.getExpiryDate()),
+                validateSecurityCode(inputData.getSecurityCode()),
+                validateHolderName(inputData.getHolderName()),
+                inputData.isStorePaymentEnable()
+        );
     }
 
     @NonNull
@@ -140,25 +144,30 @@ public final class CardComponent extends BasePaymentComponent<CardConfiguration,
 
         final Card.Builder card = new Card.Builder();
         final CardOutputData outputData = getOutputData();
+        final PaymentComponentData<CardPaymentMethod> paymentComponentData = new PaymentComponentData<>();
+
+        // If data is not valid we just return empty object, encryption would fail and we don't pass unencrypted data.
+        if (!outputData.isValid()) {
+            return new PaymentComponentState<>(paymentComponentData, false);
+        }
 
         final EncryptedCard encryptedCard;
         try {
             if (!isStoredPaymentMethod()) {
-                card.setNumber(outputData.getCardNumberField().getValidationResult().getNumber());
+                card.setNumber(outputData.getCardNumberField().getValue());
             }
 
-            card.setSecurityCode(outputData.getSecurityCodeField().getValidationResult().getSecurityCode());
+            card.setSecurityCode(outputData.getSecurityCodeField().getValue());
 
-            final ExpiryDateValidator.ExpiryDateValidationResult expiryDateResult = outputData.getExpiryDateField().getValidationResult();
-            if (expiryDateResult.getExpiryYear() != null && expiryDateResult.getExpiryMonth() != null) {
+            final ExpiryDate expiryDateResult = outputData.getExpiryDateField().getValue();
+
+            if (expiryDateResult.getExpiryYear() != ExpiryDate.EMPTY_VALUE && expiryDateResult.getExpiryMonth() != ExpiryDate.EMPTY_VALUE) {
                 card.setExpiryDate(expiryDateResult.getExpiryMonth(), expiryDateResult.getExpiryYear());
             }
 
             encryptedCard = Encryptor.INSTANCE.encryptFields(card.build(), getConfiguration().getPublicKey());
         } catch (EncryptionException e) {
             notifyException(e);
-            final PaymentComponentData<CardPaymentMethod> paymentComponentData = new PaymentComponentData<>();
-            paymentComponentData.setPaymentMethod(cardPaymentMethod);
             return new PaymentComponentState<>(paymentComponentData, false);
         }
 
@@ -172,17 +181,15 @@ public final class CardComponent extends BasePaymentComponent<CardConfiguration,
 
         cardPaymentMethod.setEncryptedSecurityCode(encryptedCard.getEncryptedSecurityCode());
 
-        if (isHolderNameRequire() && getOutputData().getHolderNameField() != null) {
-            cardPaymentMethod.setHolderName(outputData.getHolderNameField().getValidationResult().getHolderName());
+        if (isHolderNameRequire()) {
+            cardPaymentMethod.setHolderName(outputData.getHolderNameField().getValue());
         }
 
-        final PaymentComponentData<CardPaymentMethod> paymentComponentData = new PaymentComponentData<>();
         paymentComponentData.setPaymentMethod(cardPaymentMethod);
         paymentComponentData.setStorePaymentMethod(outputData.isStoredPaymentMethodEnable());
         paymentComponentData.setShopperReference(getConfiguration().getShopperReference());
 
-        Logger.v(TAG, "return createComponentState");
-        return new PaymentComponentState<>(paymentComponentData, getOutputData().isValid());
+        return new PaymentComponentState<>(paymentComponentData, outputData.isValid());
     }
 
     @Override
@@ -198,7 +205,7 @@ public final class CardComponent extends BasePaymentComponent<CardConfiguration,
 
     @NonNull
     @Override
-    protected CardOutputData createOutputData(@NonNull PaymentMethod paymentMethod) {
+    protected CardOutputData createEmptyOutputData() {
         return new CardOutputData();
     }
 
@@ -207,6 +214,10 @@ public final class CardComponent extends BasePaymentComponent<CardConfiguration,
 
         if (isStoredPaymentMethod()) {
             return mFilteredSupportedCards;
+        }
+
+        if (cardNumber == null || cardNumber.isEmpty()) {
+            return Collections.emptyList();
         }
 
         final List<CardType> supportedCardTypes = getConfiguration().getSupportedCardTypes();
@@ -227,12 +238,39 @@ public final class CardComponent extends BasePaymentComponent<CardConfiguration,
         return getConfiguration().getSupportedCardTypes();
     }
 
+    private ValidatedField<String> validateCardNumber(@NonNull String cardNumber) {
+        if (isStoredPaymentMethod()) {
+            return new ValidatedField<>(cardNumber, ValidatedField.Validation.VALID);
+        } else {
+            return CardValidationUtils.validateCardNumber(cardNumber);
+        }
+    }
 
-    private CardValidator.SecurityCodeValidationResult getSecurityCodeValidationResult(@NonNull String securityCode) {
+    private ValidatedField<ExpiryDate> validateExpiryDate(@NonNull ExpiryDate expiryDate) {
+        if (isStoredPaymentMethod()) {
+            return new ValidatedField<>(expiryDate, ValidatedField.Validation.VALID);
+        } else {
+            return CardValidationUtils.validateExpiryDate(expiryDate);
+        }
+    }
+
+    private ValidatedField<String> validateSecurityCode(@NonNull String securityCode) {
         final InputDetail securityCodeInputDetail = getInputDetail("cvc");
         final boolean isRequired = securityCodeInputDetail == null || !securityCodeInputDetail.isOptional();
 
-        return mCardValidator.validateSecurityCode(securityCode, isRequired, null);
+        if (isRequired) {
+            return CardValidationUtils.validateSecurityCode(securityCode, null);
+        } else {
+            return new ValidatedField<>(securityCode, ValidatedField.Validation.VALID);
+        }
+    }
+
+    private ValidatedField<String> validateHolderName(@NonNull String holderName) {
+        if (isHolderNameRequire() && !StringUtil.hasContent(holderName)) {
+            return new ValidatedField<>(holderName, ValidatedField.Validation.INVALID);
+        } else {
+            return new ValidatedField<>(holderName, ValidatedField.Validation.VALID);
+        }
     }
 
     @Nullable

@@ -32,6 +32,7 @@ public final class PaymentMethodTypes {
     public static final String OPEN_BANKING = "openbanking_UK";
     public static final String SCHEME = "scheme";
     public static final String GOOGLE_PAY = "paywithgoogle";
+    public static final String SEPA = "sepadirectdebit";
 
 
 
@@ -39,7 +40,7 @@ public final class PaymentMethodTypes {
     public static final List<String> SUPPORTED_PAYMENT_METHODS;
 
     // Helper annotation to enforce use of a constant from here when needed.
-    @StringDef({IDEAL, MOLPAY, DOTPAY, EPS, ENTERCASH, OPEN_BANKING, SCHEME, GOOGLE_PAY})
+    @StringDef({IDEAL, MOLPAY, DOTPAY, EPS, ENTERCASH, OPEN_BANKING, SCHEME, GOOGLE_PAY, SEPA})
     @Retention(RetentionPolicy.SOURCE)
     public @interface SupportedPaymentMethod {}
 
@@ -54,6 +55,7 @@ public final class PaymentMethodTypes {
         paymentMethods.add(OPEN_BANKING);
         paymentMethods.add(SCHEME);
         paymentMethods.add(GOOGLE_PAY);
+        paymentMethods.add(SEPA);
 
         SUPPORTED_PAYMENT_METHODS = Collections.unmodifiableList(paymentMethods);
     }

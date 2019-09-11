@@ -22,8 +22,6 @@ import com.adyen.checkout.base.Configuration;
 import com.adyen.checkout.base.PaymentComponentState;
 import com.adyen.checkout.base.analytics.AnalyticEvent;
 import com.adyen.checkout.base.analytics.AnalyticsDispatcher;
-import com.adyen.checkout.base.component.data.input.InputData;
-import com.adyen.checkout.base.component.data.output.OutputData;
 import com.adyen.checkout.base.component.lifecycle.PaymentComponentViewModel;
 import com.adyen.checkout.base.model.paymentmethods.PaymentMethod;
 import com.adyen.checkout.core.api.ThreadManager;
@@ -59,52 +57,8 @@ public abstract class BasePaymentComponent<ConfigurationT extends Configuration,
     public BasePaymentComponent(@NonNull PaymentMethod paymentMethod, @NonNull ConfigurationT configuration) {
         super(paymentMethod, configuration);
         assertSupported(paymentMethod);
-        mOutputData = createOutputData(paymentMethod);
+        mOutputData = createEmptyOutputData();
         mOutputLiveData.setValue(mOutputData);
-    }
-
-    /**
-     * Receives a net set of {@link InputData} from the user to be processed.
-     *
-     * @param inputData {@link InputDataT}
-     */
-    public final void inputDataChanged(@NonNull InputDataT inputData) {
-        final OutputDataT newOutputData = onInputDataChanged(inputData);
-        if (!mOutputData.equals(newOutputData)) {
-            mOutputData = newOutputData;
-            mOutputLiveData.setValue(mOutputData);
-            notifyStateChanged();
-        }
-    }
-
-    @NonNull
-    protected OutputDataT getOutputData() {
-        return mOutputData;
-    }
-
-    @NonNull
-    protected abstract OutputDataT onInputDataChanged(@NonNull InputDataT inputData);
-
-    private void notifyStateChanged() {
-        final PaymentComponentState currentValue = mPaymentComponentStateLiveData.getValue();
-        final boolean wasValid = currentValue != null && currentValue.isValid();
-        // if last value was valid and new output data become invalid we need to notify observer
-        // in any other cases we notify observer when output data is valid.
-        final boolean shouldNotify = mOutputData.isValid() || mOutputData.isValid() != wasValid;
-        if (shouldNotify) {
-            ThreadManager.EXECUTOR.submit(new Runnable() {
-                @Override
-                public void run() {
-                    mPaymentComponentStateLiveData.postValue(createComponentState());
-                }
-            });
-        }
-    }
-
-    @Override
-    @Nullable
-    public PaymentComponentState getState() {
-        return mPaymentComponentStateLiveData.getValue();
     }
 
     @Override
@@ -117,37 +71,24 @@ public abstract class BasePaymentComponent<ConfigurationT extends Configuration,
         mComponentErrorLiveData.observe(lifecycleOwner, observer);
     }
 
-    protected void notifyException(@NonNull CheckoutException e) {
-        Logger.e(TAG, "notifyException - " + e.getMessage());
-        mComponentErrorLiveData.postValue(new ComponentError(e));
+    @Override
+    @Nullable
+    public PaymentComponentState getState() {
+        return mPaymentComponentStateLiveData.getValue();
     }
 
-    @CallSuper
-    protected void observeOutputData(@NonNull LifecycleOwner lifecycleOwner, @NonNull Observer<OutputDataT> observer) {
-        // Parent component needs to overrides this for view to have access to the method in the package
-        mOutputLiveData.observe(lifecycleOwner, observer);
-    }
-
-    @NonNull
-    protected abstract OutputDataT createOutputData(@NonNull PaymentMethod paymentMethod);
-
-
-    @NonNull
-    @WorkerThread
-    protected abstract PaymentComponentState createComponentState();
-
-    private void assertSupported(@NonNull PaymentMethod paymentMethod) {
-        if (!isSupported(paymentMethod)) {
-            throw new IllegalArgumentException("Unsupported payment method type " + paymentMethod);
+    /**
+     * Receives a set of {@link InputData} from the user to be processed.
+     *
+     * @param inputData {@link InputDataT}
+     */
+    public final void inputDataChanged(@NonNull InputDataT inputData) {
+        final OutputDataT newOutputData = onInputDataChanged(inputData);
+        if (!mOutputData.equals(newOutputData)) {
+            mOutputData = newOutputData;
+            mOutputLiveData.setValue(mOutputData);
+            notifyStateChanged();
         }
-    }
-
-    private boolean isSupported(@NonNull PaymentMethod paymentMethod) {
-        return getPaymentMethodType().equals(paymentMethod.getType());
-    }
-
-    public void setCreatedForDropIn() {
-        mIsCreatedForDropIn = true;
     }
 
     /**
@@ -177,5 +118,60 @@ public abstract class BasePaymentComponent<ConfigurationT extends Configuration,
             final AnalyticEvent analyticEvent = AnalyticEvent.create(context, flavor, getPaymentMethodType(), getConfiguration().getShopperLocale());
             AnalyticsDispatcher.dispatchEvent(context, getConfiguration().getEnvironment(), analyticEvent);
         }
+    }
+
+    @NonNull
+    protected OutputDataT getOutputData() {
+        return mOutputData;
+    }
+
+    /**
+     * Called every time the {@link InputData} changes.
+     *
+     * @param inputData The new InputData
+     * @return The OutputData after processing.
+     */
+    @NonNull
+    protected abstract OutputDataT onInputDataChanged(@NonNull InputDataT inputData);
+
+    @NonNull
+    protected abstract OutputDataT createEmptyOutputData();
+
+    @NonNull
+    @WorkerThread
+    protected abstract PaymentComponentState createComponentState();
+
+    protected void notifyException(@NonNull CheckoutException e) {
+        Logger.e(TAG, "notifyException - " + e.getMessage());
+        mComponentErrorLiveData.postValue(new ComponentError(e));
+    }
+
+    @CallSuper
+    protected void observeOutputData(@NonNull LifecycleOwner lifecycleOwner, @NonNull Observer<OutputDataT> observer) {
+        // Parent component needs to overrides this for view to have access to the method in the package
+        mOutputLiveData.observe(lifecycleOwner, observer);
+    }
+
+    private void notifyStateChanged() {
+        ThreadManager.EXECUTOR.submit(new Runnable() {
+            @Override
+            public void run() {
+                mPaymentComponentStateLiveData.postValue(createComponentState());
+            }
+        });
+    }
+
+    private void assertSupported(@NonNull PaymentMethod paymentMethod) {
+        if (!isSupported(paymentMethod)) {
+            throw new IllegalArgumentException("Unsupported payment method type " + paymentMethod);
+        }
+    }
+
+    private boolean isSupported(@NonNull PaymentMethod paymentMethod) {
+        return getPaymentMethodType().equals(paymentMethod.getType());
+    }
+
+    public void setCreatedForDropIn() {
+        mIsCreatedForDropIn = true;
     }
 }

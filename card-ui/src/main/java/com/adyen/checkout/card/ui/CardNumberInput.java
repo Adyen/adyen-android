@@ -14,9 +14,11 @@ import android.support.annotation.Nullable;
 import android.text.Editable;
 import android.util.AttributeSet;
 
-public class CardNumberInput extends NumberInputEditText {
+import com.adyen.checkout.base.ui.view.AdyenTextInputEditText;
+import com.adyen.checkout.card.CardValidationUtils;
 
-    private static final int MAX_DIGIT_LENGTH = 19;
+public class CardNumberInput extends AdyenTextInputEditText {
+
     private static final int MAX_DIGIT_SEPARATOR_COUNT = 4;
     private static final char DIGIT_SEPARATOR = ' ';
 
@@ -30,11 +32,7 @@ public class CardNumberInput extends NumberInputEditText {
 
     public CardNumberInput(@NonNull Context context, @Nullable AttributeSet attrs, int defStyleAttr) {
         super(context, attrs, defStyleAttr);
-    }
-
-    @Override
-    public int maxLength() {
-        return MAX_DIGIT_LENGTH + MAX_DIGIT_SEPARATOR_COUNT;
+        enforceMaxInputLength(CardValidationUtils.MAXIMUM_CARD_NUMBER_LENGTH  + MAX_DIGIT_SEPARATOR_COUNT);
     }
 
     @NonNull

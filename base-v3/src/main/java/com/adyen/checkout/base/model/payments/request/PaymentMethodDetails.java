@@ -80,6 +80,8 @@ public abstract class PaymentMethodDetails extends ModelObject {
                 return EntercashPaymentMethod.SERIALIZER;
             case GooglePayPaymentMethod.PAYMENT_METHOD_TYPE:
                 return GooglePayPaymentMethod.SERIALIZER;
+            case SepaPaymentMethod.PAYMENT_METHOD_TYPE:
+                return SepaPaymentMethod.SERIALIZER;
             default:
                 return GenericPaymentMethod.SERIALIZER;
         }

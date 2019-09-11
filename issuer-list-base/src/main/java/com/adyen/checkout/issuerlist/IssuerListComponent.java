@@ -68,7 +68,7 @@ public abstract class IssuerListComponent<IssuerListPaymentMethodT extends Issue
 
     @NonNull
     @Override
-    protected IssuerListOutputData createOutputData(@NonNull PaymentMethod paymentMethod) {
+    protected IssuerListOutputData createEmptyOutputData() {
         return new IssuerListOutputData(null);
     }
 

@@ -79,8 +79,6 @@ public class ImageLoader {
         final String id = txVariant + txSubVariant + view.getId();
 
         if (mCallbacks.containsKey(id)) {
-            mLogoApi.cancelLogoRequest(txVariant, null, null);
-
             mCallbacks.remove(id);
             mImageViews.remove(id);
         }

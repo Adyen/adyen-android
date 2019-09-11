@@ -21,7 +21,6 @@ import com.adyen.checkout.base.ComponentView
 import com.adyen.checkout.base.PaymentComponent
 import com.adyen.checkout.base.PaymentComponentState
 import com.adyen.checkout.base.model.paymentmethods.PaymentMethod
-import com.adyen.checkout.base.model.paymentmethods.RecurringDetail
 import com.adyen.checkout.base.model.payments.request.PaymentMethodDetails
 import com.adyen.checkout.core.exeption.CheckoutException
 import com.adyen.checkout.core.log.LogUtil
@@ -31,8 +30,9 @@ import com.adyen.checkout.dropin.R
 import com.adyen.checkout.dropin.getComponentFor
 import com.adyen.checkout.dropin.getViewFor
 import com.adyen.checkout.dropin.ui.base.DropInBottomSheetDialogFragment
-import kotlinx.android.synthetic.main.fragmentdialog_component.*
-import kotlinx.android.synthetic.main.fragmentdialog_header.view.*
+import kotlinx.android.synthetic.main.fragmentdialog_component.componentContainer
+import kotlinx.android.synthetic.main.fragmentdialog_component.payButton
+import kotlinx.android.synthetic.main.fragmentdialog_header.view.header
 
 class ComponentDialogFragment : DropInBottomSheetDialogFragment(), Observer<PaymentComponentState<in PaymentMethodDetails>> {
 
@@ -76,13 +76,7 @@ class ComponentDialogFragment : DropInBottomSheetDialogFragment(), Observer<Paym
         Logger.d(TAG, "onViewCreated")
         super.onViewCreated(view, savedInstanceState)
         attachComponent(paymentMethod)
-
-        if (paymentMethod is RecurringDetail) {
-            // we're not receiving name of payment method from stored payments
-            view.header.setText(R.string.credit_card)
-        } else {
-            view.header.text = paymentMethod.name
-        }
+        view.header.setText(R.string.credit_card)
     }
 
     override fun onBackPressed(): Boolean {

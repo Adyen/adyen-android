@@ -26,9 +26,9 @@ import com.adyen.checkout.base.ui.R;
 
 public class RoundCornerImageView extends AppCompatImageView {
 
-    private static final float DEFAULT_RADIUS = 9.0f;
-    private static final float DEFAULT_STROKE_WIDTH = 4f;
-    private static final int DEFAULT_STROKE_COLOR = Color.BLACK;
+    public static final float DEFAULT_RADIUS = 9.0f;
+    public static final int DEFAULT_STROKE_COLOR = Color.BLACK;
+    public static final float DEFAULT_STROKE_WIDTH = 4f;
 
     private float mRadius;
     private final Paint mStrokePaint = new Paint();
@@ -93,12 +93,14 @@ public class RoundCornerImageView extends AppCompatImageView {
 
         mStrokePaint.reset();
 
-        mStrokePaint.setStyle(Paint.Style.STROKE);
-        mStrokePaint.setAntiAlias(true);
-        mStrokePaint.setColor(mStrokeColor);
-        mStrokePaint.setStrokeWidth(mStrokeWidth);
+        if (mStrokeWidth > 0) {
+            mStrokePaint.setStyle(Paint.Style.STROKE);
+            mStrokePaint.setAntiAlias(true);
+            mStrokePaint.setColor(mStrokeColor);
+            mStrokePaint.setStrokeWidth(mStrokeWidth);
 
-        canvas.drawRoundRect(rect, mRadius, mRadius, mStrokePaint);
+            canvas.drawRoundRect(rect, mRadius, mRadius, mStrokePaint);
+        }
 
         final Path path = new Path();
         path.addRoundRect(rect, mRadius, mRadius, Path.Direction.CW);

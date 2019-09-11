@@ -40,12 +40,12 @@ dependencies {
     androidTestImplementation "com.android.support.test:runner:$version_support_test_runner"
     androidTestImplementation "com.android.support.test.espresso:espresso-core:$version_espresso"
 
-    // Dependencies
-    implementation "com.android.support:design:$version_support_library"
-
     // Checkout
     api project(":base-ui")
     api project(":card-base")
+
+    // Dependencies
+    implementation "com.android.support:design:$version_support_library"
 }
 
 // This sharedTasks.gradle script is applied at the end of this build.gradle script,

@@ -43,7 +43,7 @@ import retrofit2.http.Body
 import retrofit2.http.Headers
 import retrofit2.http.POST
 import java.security.KeyStore
-import java.util.* // ktlint-disable no-wildcard-imports
+import java.util.Arrays
 import javax.net.ssl.TrustManagerFactory
 import javax.net.ssl.X509TrustManager
 

@@ -12,8 +12,13 @@ import android.app.Activity
 import android.content.Context
 import android.content.Intent
 import com.adyen.checkout.base.model.PaymentMethodsApiResponse
+import com.adyen.checkout.base.model.paymentmethods.PaymentMethod
+import com.adyen.checkout.base.util.PaymentMethodTypes
+import com.adyen.checkout.card.CardConfiguration
+import com.adyen.checkout.card.data.CardType
 import com.adyen.checkout.core.log.LogUtil
 import com.adyen.checkout.core.log.Logger
+import com.adyen.checkout.dropin.DropIn.Companion.startPayment
 import com.adyen.checkout.dropin.ui.DropInActivity
 
 /**
@@ -25,6 +30,7 @@ import com.adyen.checkout.dropin.ui.DropInActivity
  *
  * After setting up the [DropInService], just call [startPayment] and the checkout process will start.
  */
+@Suppress("SyntheticAccessor")
 class DropIn private constructor() {
 
     companion object {
@@ -51,33 +57,60 @@ class DropIn private constructor() {
             paymentMethodsApiResponse: PaymentMethodsApiResponse,
             dropInConfiguration: DropInConfiguration
         ) {
+
+            for (each in paymentMethodsApiResponse.paymentMethods!!) {
+                if (each.type == PaymentMethodTypes.SCHEME) {
+                    this.handleSupportedCards(dropInConfiguration, each, context)
+                    break
+                }
+            }
+
             val intent = DropInActivity.createIntent(context, dropInConfiguration, paymentMethodsApiResponse)
             context.startActivity(intent)
         }
-    }
 
-    init {
-        Logger.d(TAG, "Init")
-    }
+        init {
+            Logger.d(TAG, "Init")
+        }
 
-    /**
-     * Starts the checkout flow to be handled by the Drop-In solution. Make sure you have [DropInService] set up before calling this.
-     * We suggest that you set up the resultHandlerIntent with the appropriate flags to clear the stack of the checkout activities.
-     *
-     * @param context A context to start the Checkout flow.
-     * @param paymentMethodsApiResponse The result from the paymentMethods/ endpoint.
-     * @param dropInConfiguration Additional required configuration data.
-     * @param resultHandlerIntent The Intent used with [Activity.startActivity] that will contain the payment result extra with key [RESULT_KEY].
-     *
-     */
-    @Deprecated("resultHandlerIntent need to pass with DropInConfiguration")
-    fun startPayment(
-        context: Context,
-        paymentMethodsApiResponse: PaymentMethodsApiResponse,
-        dropInConfiguration: DropInConfiguration,
-        resultHandlerIntent: Intent
-    ) {
-        dropInConfiguration.resultHandlerIntent = resultHandlerIntent
-        startPayment(context, paymentMethodsApiResponse, dropInConfiguration)
+        /**
+         * Try to get supported cards from API response when [CardConfiguration] supported cards are default ones.
+         */
+        @Suppress("SpreadOperator")
+        private fun handleSupportedCards(dropInConfiguration: DropInConfiguration, schemePaymentMethod: PaymentMethod, context: Context) {
+            var cardConfiguration = dropInConfiguration.getConfigurationFor<CardConfiguration>(PaymentMethodTypes.SCHEME, context)
+            if (cardConfiguration.supportedCardTypes == CardConfiguration.DEFAULT_SUPPORTED_CARDS_LIST) {
+                var supportedCardTypesFromApi = schemePaymentMethod.brands?.mapNotNull { brand -> CardType.getCardTypeByTxVariant(brand) }
+                if (!supportedCardTypesFromApi.isNullOrEmpty()) {
+                    val newCardConfiguration = cardConfiguration
+                        .newBuilder()
+                        .setSupportedCardTypes(*supportedCardTypesFromApi.orEmpty().toTypedArray())
+                        .build()
+
+                    dropInConfiguration.availableConfigs[PaymentMethodTypes.SCHEME] = newCardConfiguration
+                }
+            }
+        }
+
+        /**
+         * Starts the checkout flow to be handled by the Drop-In solution. Make sure you have [DropInService] set up before calling this.
+         * We suggest that you set up the resultHandlerIntent with the appropriate flags to clear the stack of the checkout activities.
+         *
+         * @param context A context to start the Checkout flow.
+         * @param paymentMethodsApiResponse The result from the paymentMethods/ endpoint.
+         * @param dropInConfiguration Additional required configuration data.
+         * @param resultHandlerIntent The Intent used with [Activity.startActivity] that will contain the payment result extra with key [RESULT_KEY].
+         *
+         */
+        @Deprecated("resultHandlerIntent need to pass with DropInConfiguration")
+        fun startPayment(
+            context: Context,
+            paymentMethodsApiResponse: PaymentMethodsApiResponse,
+            dropInConfiguration: DropInConfiguration,
+            resultHandlerIntent: Intent
+        ) {
+            dropInConfiguration.resultHandlerIntent = resultHandlerIntent
+            startPayment(context, paymentMethodsApiResponse, dropInConfiguration)
+        }
     }
 }

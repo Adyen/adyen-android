@@ -22,4 +22,6 @@ include ':3ds2',
         ':molpay-ui',
         ':openbanking-base',
         ':openbanking-ui',
-        ':redirect'
+        ':redirect',
+        'sepa-base',
+        'sepa-ui'

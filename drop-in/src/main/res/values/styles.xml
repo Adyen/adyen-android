@@ -1,5 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?>
-<!--
+<?xml version="1.0" encoding="utf-8"?><!--
   ~ Copyright (c) 2019 Adyen N.V.
   ~
   ~ This file is open source and available under the MIT license. See the LICENSE file for more info.
@@ -8,6 +7,7 @@
   -->
 
 <resources xmlns:tools="http://schemas.android.com/tools">
+
     <style name="AdyenCheckout.Button.Colored" parent="Widget.AppCompat.Button.Colored">
         <item name="android:textColor">@color/white</item>
         <item name="android:layout_height">@dimen/pay_button_height</item>
@@ -32,15 +32,16 @@
         <item name="android:windowSoftInputMode">adjustResize</item>
     </style>
 
-    <style name="AdyenCheckout.BottomSheetDialogTheme" parent="AdyenCheckout.BaseBottomSheetDialog"/>
+    <style name="AdyenCheckout.BottomSheetDialogTheme" parent="AdyenCheckout.BaseBottomSheetDialog" />
 
-    <style name="ThreeDS2Theme"
-           parent="AdyenCheckout"
-           tools:ignore="PrivateResource"/>
+    <style name="ThreeDS2Theme" parent="AdyenCheckout" tools:ignore="PrivateResource" />
 
-    <style name="headerTitleStyle">
+    <style name="headerTitleStyle" parent="headerTitleStyleWithoutStartPadding">
         <item name="android:paddingStart">@dimen/standard_margin</item>
         <item name="android:paddingLeft">@dimen/standard_margin</item>
+    </style>
+
+    <style name="headerTitleStyleWithoutStartPadding">
         <item name="android:paddingTop">@dimen/standard_half_margin</item>
         <item name="android:paddingEnd">@dimen/standard_margin</item>
         <item name="android:paddingRight">@dimen/standard_margin</item>

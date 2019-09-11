@@ -1,0 +1,95 @@
+<?xml version="1.0" encoding="utf-8"?>
+<merge xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical">
+
+    <FrameLayout
+        android:layout_width="@dimen/indicator_width"
+        android:layout_height="@dimen/indicator_height"
+        android:layout_gravity="top|center"
+        android:layout_marginTop="@dimen/standard_quarter_margin"
+        android:background="@drawable/bottom_sheet_indicator">
+
+    </FrameLayout>
+
+    <android.support.constraint.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:paddingLeft="@dimen/standard_margin"
+        android:paddingRight="@dimen/standard_margin"
+        android:paddingBottom="@dimen/standard_half_margin"
+        app:layout_constraintEnd_toEndOf="@+id/flow"
+        app:layout_constraintStart_toEndOf="@+id/flow">
+
+        <TextView
+            android:id="@+id/header"
+            style="@style/headerTitleStyleWithoutStartPadding"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textIsSelectable="false"
+            app:layout_constrainedWidth="true"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            tools:text="Header" />
+
+        <android.support.constraint.helper.Flow
+            android:id="@+id/flow"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            app:constraint_referenced_ids="header,recyclerView_cardList"
+            app:flow_horizontalBias="0"
+            app:flow_horizontalStyle="spread_inside"
+            app:flow_wrapMode="chain"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <android.support.v7.widget.RecyclerView
+            android:id="@+id/recyclerView_cardList"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="@dimen/cardList_top_margin"
+            android:layout_marginLeft="@dimen/cardList_top_margin"
+            android:layout_marginTop="@dimen/cardList_top_margin"
+            android:layout_marginEnd="@dimen/cardList_top_margin"
+            android:layout_marginRight="@dimen/cardList_top_margin"
+            android:orientation="horizontal"
+            android:paddingTop="@dimen/standard_half_margin"
+            app:layoutManager="android.support.v7.widget.LinearLayoutManager"
+            app:layout_constraintStart_toStartOf="parent"
+            app:reverseLayout="true"
+            tools:ignore="MissingConstraints"
+            tools:itemCount="10">
+
+        </android.support.v7.widget.RecyclerView>
+
+    </android.support.constraint.ConstraintLayout>
+
+    <android.support.v4.widget.NestedScrollView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_weight="1">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical">
+
+            <com.adyen.checkout.card.CardView
+                android:id="@+id/cardView"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent" />
+
+            <Button
+                android:id="@+id/payButton"
+                style="@style/AdyenCheckout.Button.Colored"
+                android:layout_width="match_parent"
+                android:enabled="false"
+                android:text="@string/pay_button" />
+        </LinearLayout>
+    </android.support.v4.widget.NestedScrollView>
+
+</merge>

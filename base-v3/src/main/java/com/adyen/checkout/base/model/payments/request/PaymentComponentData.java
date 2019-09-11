@@ -86,7 +86,7 @@ public class PaymentComponentData<PaymentMethodDetailsT extends PaymentMethodDet
         return storePaymentMethod;
     }
 
-    public void setShopperReference(@NonNull String shopperReference) {
+    public void setShopperReference(@Nullable String shopperReference) {
         this.shopperReference = shopperReference;
     }
 

@@ -18,7 +18,7 @@ import android.util.DisplayMetrics;
 import com.adyen.checkout.base.Configuration;
 import com.adyen.checkout.base.component.BaseConfiguration;
 import com.adyen.checkout.base.component.BaseConfigurationBuilder;
-import com.adyen.checkout.card.model.CardType;
+import com.adyen.checkout.card.data.CardType;
 import com.adyen.checkout.core.api.Environment;
 import com.adyen.checkout.core.util.ParcelUtils;
 
@@ -34,6 +34,9 @@ public class CardConfiguration extends BaseConfiguration {
 
     private static final CardType[] DEFAULT_SUPPORTED_CARDS =
             new CardType[]{CardType.VISA, CardType.AMERICAN_EXPRESS, CardType.MASTERCARD};
+
+    public static final List<CardType> DEFAULT_SUPPORTED_CARDS_LIST =
+            Collections.unmodifiableList(Arrays.asList(DEFAULT_SUPPORTED_CARDS));
 
     private final String mPublicKey;
     private final String mShopperReference;
@@ -100,12 +103,12 @@ public class CardConfiguration extends BaseConfiguration {
             boolean holderNameRequire,
             @NonNull String shopperReference,
             boolean showStorePaymentField,
-            @NonNull CardType... supportCardTypes) {
+            @NonNull List<CardType> supportCardTypes) {
         super(shopperLocale, environment);
 
         mPublicKey = publicKey;
         mHolderNameRequire = holderNameRequire;
-        mSupportedCardTypes = Collections.unmodifiableList(Arrays.asList(supportCardTypes));
+        mSupportedCardTypes = supportCardTypes;
         mShopperReference = shopperReference;
         mShowStorePaymentField = showStorePaymentField;
     }
@@ -178,6 +181,11 @@ public class CardConfiguration extends BaseConfiguration {
         return mShowStorePaymentField;
     }
 
+    @NonNull
+    public Builder newBuilder() {
+        return new Builder(this);
+    }
+
     /**
      * Builder to create a {@link CardConfiguration} more easily.
      */
@@ -185,10 +193,24 @@ public class CardConfiguration extends BaseConfiguration {
 
         private String mBuilderPublicKey;
 
-        private CardType[] mBuilderSupportedCardTypes = DEFAULT_SUPPORTED_CARDS;
+        private List<CardType> mBuilderSupportedCardTypes = DEFAULT_SUPPORTED_CARDS_LIST;
         private boolean mBuilderHolderNameRequire;
         private boolean mBuilderShowStorePaymentField = true;
         private String mShopperReference;
+
+
+        /**
+         * Constructor of Card Configuration Builder with instance of CardConfiguration.
+         */
+        public Builder(@NonNull CardConfiguration cardConfiguration) {
+            super(cardConfiguration.getShopperLocale(), cardConfiguration.getEnvironment());
+
+            mBuilderPublicKey = cardConfiguration.getPublicKey();
+            mBuilderSupportedCardTypes = cardConfiguration.getSupportedCardTypes();
+            mBuilderHolderNameRequire = cardConfiguration.isHolderNameRequire();
+            mBuilderShowStorePaymentField = cardConfiguration.isShowStorePaymentFieldEnable();
+            mShopperReference = cardConfiguration.getShopperReference();
+        }
 
         /**
          * Constructor of Card Configuration Builder with default values.
@@ -251,7 +273,7 @@ public class CardConfiguration extends BaseConfiguration {
          */
         @NonNull
         public Builder setSupportedCardTypes(@NonNull CardType... supportCardTypes) {
-            this.mBuilderSupportedCardTypes = supportCardTypes;
+            this.mBuilderSupportedCardTypes = Arrays.asList(supportCardTypes);
             return this;
         }
 

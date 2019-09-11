@@ -14,11 +14,29 @@ import android.support.annotation.Nullable;
 import android.text.Editable;
 import android.util.AttributeSet;
 
-public class ExpiryDateInput extends NumberInputEditText {
+import com.adyen.checkout.base.ui.view.AdyenTextInputEditText;
+import com.adyen.checkout.card.data.ExpiryDate;
+import com.adyen.checkout.core.log.LogUtil;
+import com.adyen.checkout.core.log.Logger;
+import com.adyen.checkout.core.util.StringUtil;
+
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.Calendar;
+import java.util.Date;
+import java.util.GregorianCalendar;
+import java.util.Locale;
+
+public class ExpiryDateInput extends AdyenTextInputEditText {
+    private static final String TAG = LogUtil.getTag();
+
+    public static final String SEPARATOR = "/";
+    private static final String DATE_FORMAT = "MM" + SEPARATOR + "yy";
 
     private static final int MAX_LENGTH = 5;
-    private static final char DATE_SEPARATOR = '/';
-    private static final int ONE_DIGIT_MONTH = 1;
+    private static final int MAX_SECOND_DIGIT_MONTH = 1;
+
+    private final SimpleDateFormat mDateFormat = new SimpleDateFormat(DATE_FORMAT, Locale.ROOT);
 
     public ExpiryDateInput(@NonNull Context context) {
         this(context, null);
@@ -30,20 +48,18 @@ public class ExpiryDateInput extends NumberInputEditText {
 
     public ExpiryDateInput(@NonNull Context context, @Nullable AttributeSet attrs, int defStyleAttr) {
         super(context, attrs, defStyleAttr);
-    }
-
-    @Override
-    public int maxLength() {
-        return MAX_LENGTH;
+        enforceMaxInputLength(MAX_LENGTH);
     }
 
     @Override
     public void afterTextChanged(@NonNull Editable editable) {
         final String initial = editable.toString();
+        // remove digits
         String processed = initial.replaceAll("\\D", "");
-        processed = processed.replaceAll("(\\d{2})(?=\\d)", "$1" + DATE_SEPARATOR);
-
-        if (processed.length() == 1 && isStringInt(processed) && Integer.parseInt(processed) > ONE_DIGIT_MONTH) {
+        // add separator
+        processed = processed.replaceAll("(\\d{2})(?=\\d)", "$1" + SEPARATOR);
+        // add tailing zero to month
+        if (processed.length() == 1 && isStringInt(processed) && Integer.parseInt(processed) > MAX_SECOND_DIGIT_MONTH) {
             processed = "0" + processed;
         }
 
@@ -54,10 +70,43 @@ public class ExpiryDateInput extends NumberInputEditText {
         super.afterTextChanged(editable);
     }
 
+    /**
+     * Get the {@link ExpiryDate} currenlty input by the user.
+     *
+     * @return The current entered Date or {@link ExpiryDate#EMPTY_DATE} if not valid.
+     */
     @NonNull
-    @Override
-    public String getRawValue() {
-        return getText().toString().replace(DATE_SEPARATOR + "", "");
+    public ExpiryDate getDate() {
+        final String normalizedExpiryDate = StringUtil.normalize(getRawValue());
+        Logger.v(TAG, "getDate - " + normalizedExpiryDate);
+        try {
+            final Date parsedDate = mDateFormat.parse(normalizedExpiryDate);
+            final Calendar calendar = GregorianCalendar.getInstance();
+            calendar.setTime(parsedDate);
+            // GregorianCalendar is 0 based
+            return new ExpiryDate(calendar.get(Calendar.MONTH) + 1, calendar.get(Calendar.YEAR));
+        } catch (ParseException e) {
+            Logger.d(TAG, "getDate - value does not match expected pattern.", e);
+            return ExpiryDate.EMPTY_DATE;
+        }
+    }
+
+    /**
+     * Set an {@link ExpiryDate} to be displayed on the field.
+     *
+     * @param expiryDate The new value.
+     */
+    public void setDate(@Nullable ExpiryDate expiryDate) {
+        if (expiryDate != null && expiryDate != ExpiryDate.EMPTY_DATE) {
+            Logger.v(TAG, "setDate - " + expiryDate.getExpiryYear() + " " + expiryDate.getExpiryMonth());
+            final Calendar calendar = GregorianCalendar.getInstance();
+            calendar.clear();
+            // first day of month, GregorianCalendar month is 0 based.
+            calendar.set(expiryDate.getExpiryYear(), expiryDate.getExpiryMonth() - 1, 1);
+            setText(mDateFormat.format(calendar.getTime()));
+        } else {
+            setText("");
+        }
     }
 
     private boolean isStringInt(String s) {

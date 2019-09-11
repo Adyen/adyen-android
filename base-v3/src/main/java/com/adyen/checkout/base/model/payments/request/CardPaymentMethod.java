@@ -83,11 +83,6 @@ public final class CardPaymentMethod extends PaymentMethodDetails {
     private String holderName;
     private String recurringDetailReference;
 
-    public CardPaymentMethod() {
-        super();
-        setType(PAYMENT_METHOD_TYPE);
-    }
-
     @Override
     public void writeToParcel(@NonNull Parcel dest, int flags) {
         JsonUtils.writeToParcel(dest, SERIALIZER.serialize(this));
@@ -143,7 +138,7 @@ public final class CardPaymentMethod extends PaymentMethodDetails {
         return recurringDetailReference;
     }
 
-    public void setRecurringDetailReference(@NonNull String recurringDetailReference) {
+    public void setRecurringDetailReference(@Nullable String recurringDetailReference) {
         this.recurringDetailReference = recurringDetailReference;
     }
 }

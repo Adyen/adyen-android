@@ -8,7 +8,7 @@
 
 package com.adyen.checkout.example
 
-import com.adyen.checkout.base.model.payments.request.* // ktlint-disable no-wildcard-imports
+import com.adyen.checkout.base.model.payments.request.*
 import com.adyen.checkout.base.model.payments.response.Action
 import com.adyen.checkout.core.log.LogUtil
 import com.adyen.checkout.core.log.Logger
@@ -123,6 +123,7 @@ class ExampleDropInService : DropInService() {
                         .withSubtype(EntercashPaymentMethod::class.java, EntercashPaymentMethod.PAYMENT_METHOD_TYPE)
                         .withSubtype(OpenBankingPaymentMethod::class.java, OpenBankingPaymentMethod.PAYMENT_METHOD_TYPE)
                         .withSubtype(GooglePayPaymentMethod::class.java, GooglePayPaymentMethod.PAYMENT_METHOD_TYPE)
+                        .withSubtype(SepaPaymentMethod::class.java, SepaPaymentMethod.PAYMENT_METHOD_TYPE)
                         .withSubtype(GenericPaymentMethod::class.java, "other")
                 )
                 .build()

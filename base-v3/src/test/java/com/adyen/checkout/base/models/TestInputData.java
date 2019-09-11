@@ -8,7 +8,7 @@
 
 package com.adyen.checkout.base.models;
 
-import com.adyen.checkout.base.component.data.input.InputData;
+import com.adyen.checkout.base.component.InputData;
 
 public class TestInputData implements InputData {
     public boolean isValid = true;

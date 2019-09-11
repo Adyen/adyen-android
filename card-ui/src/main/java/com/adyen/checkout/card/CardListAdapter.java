@@ -8,16 +8,15 @@
 
 package com.adyen.checkout.card;
 
-import android.content.res.Resources;
 import android.support.annotation.NonNull;
-import android.support.v4.content.ContextCompat;
 import android.support.v7.widget.RecyclerView;
+import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
 import com.adyen.checkout.base.api.ImageLoader;
 import com.adyen.checkout.base.ui.view.RoundCornerImageView;
-import com.adyen.checkout.card.model.CardType;
+import com.adyen.checkout.card.data.CardType;
 import com.adyen.checkout.card.ui.R;
 
 import java.util.Collections;
@@ -25,43 +24,43 @@ import java.util.List;
 
 public class CardListAdapter extends RecyclerView.Adapter<CardListAdapter.ImageViewHolder> {
 
-    private List<CardType> mCards = Collections.emptyList();
+    private final List<CardType> mSupportedCards;
+    private List<CardType> mFilteredCards = Collections.emptyList();
     private final ImageLoader mImageLoader;
 
-    CardListAdapter(ImageLoader imageLoader) {
+    private static final float ACTIVE = 1f;
+    private static final float NOT_ACTIVE = 0.2f;
+
+    CardListAdapter(ImageLoader imageLoader, List<CardType> supportedCards) {
         mImageLoader = imageLoader;
+        mSupportedCards = supportedCards;
     }
 
     @NonNull
     @Override
     public ImageViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int i) {
-        final Resources resources = parent.getResources();
-        final int width = resources.getDimensionPixelSize(R.dimen.payment_method_logo_width);
-        final int height = resources.getDimensionPixelSize(R.dimen.payment_method_logo_height);
-        final int leftMargin = resources.getDimensionPixelSize(R.dimen.standard_quarter_margin);
-        final RecyclerView.LayoutParams layoutParams = new RecyclerView.LayoutParams(width, height);
-        layoutParams.leftMargin = leftMargin;
 
-        final RoundCornerImageView imageView = new RoundCornerImageView(parent.getContext());
-        imageView.setStrokeColor(ContextCompat.getColor(parent.getContext(), R.color.stroke_color));
-        imageView.setLayoutParams(layoutParams);
+        final RoundCornerImageView imageView =
+                (RoundCornerImageView) LayoutInflater.from(parent.getContext()).inflate(R.layout.brand_logo, parent, false);
 
         return new ImageViewHolder(imageView);
     }
 
     @Override
     public void onBindViewHolder(@NonNull ImageViewHolder imageViewHolder, int i) {
-        mImageLoader.load(mCards.get(i).getTxVariant(), imageViewHolder.mCardLogo);
+        final CardType card = mSupportedCards.get(i);
+        imageViewHolder.mCardLogo.setAlpha(mFilteredCards.isEmpty() || mFilteredCards.contains(card) ? ACTIVE : NOT_ACTIVE);
+        mImageLoader.load(card.getTxVariant(), imageViewHolder.mCardLogo);
     }
 
     @Override
     public int getItemCount() {
-        return mCards.size();
+        return mSupportedCards.size();
     }
 
 
-    void setCards(@NonNull List<CardType> cards) {
-        this.mCards = cards;
+    void setFilteredCard(@NonNull List<CardType> filteredCards) {
+        this.mFilteredCards = filteredCards;
         notifyDataSetChanged();
     }
 

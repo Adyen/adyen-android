@@ -28,4 +28,14 @@
         <item name="windowActionBar">false</item>
     </style>
 
+    <style name="AdyenCheckout.HintTextStyle" parent="TextAppearance.AppCompat">
+        <item name="android:textColor">@color/primaryColor</item>
+    </style>
+
+    <style name="AdyenCheckout.TextInputLayout" parent="Widget.MaterialComponents.TextInputLayout.OutlinedBox">
+        <item name="boxStrokeColor">@color/primaryColor</item>
+        <item name="hintTextAppearance">@style/AdyenCheckout.HintTextStyle</item>
+        <item name="android:minHeight">90dp</item>
+    </style>
+
 </resources>

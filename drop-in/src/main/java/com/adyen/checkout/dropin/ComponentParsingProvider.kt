@@ -45,6 +45,9 @@ import com.adyen.checkout.molpay.MolpayRecyclerView
 import com.adyen.checkout.openbanking.OpenBankingComponent
 import com.adyen.checkout.openbanking.OpenBankingConfiguration
 import com.adyen.checkout.openbanking.OpenBankingRecyclerView
+import com.adyen.checkout.sepa.SepaComponent
+import com.adyen.checkout.sepa.SepaConfiguration
+import com.adyen.checkout.sepa.SepaView
 
 class ComponentParsingProvider {
     companion object {
@@ -52,6 +55,7 @@ class ComponentParsingProvider {
     }
 }
 
+@Suppress("ComplexMethod")
 internal fun <T : Configuration> getDefaultConfigFor(
     @PaymentMethodTypes.SupportedPaymentMethod
     paymentMethod: String,
@@ -84,6 +88,9 @@ internal fun <T : Configuration> getDefaultConfigFor(
         }
         PaymentMethodTypes.ENTERCASH -> {
             EntercashConfiguration.Builder(context)
+        }
+        PaymentMethodTypes.SEPA -> {
+            SepaConfiguration.Builder(context)
         }
         else -> {
             throw CheckoutException("Unable to find component for type - $paymentMethod")
@@ -144,6 +151,9 @@ internal fun getProviderForType(type: String): PaymentComponentProvider<PaymentC
         PaymentMethodTypes.GOOGLE_PAY -> {
             GooglePayComponent.PROVIDER as PaymentComponentProvider<PaymentComponent, Configuration>
         }
+        PaymentMethodTypes.SEPA -> {
+            SepaComponent.PROVIDER as PaymentComponentProvider<PaymentComponent, Configuration>
+        }
         else -> {
             throw CheckoutException("Unable to find component for type - $type")
         }
@@ -198,6 +208,10 @@ internal fun getComponentFor(
             val googlePayConfiguration: GooglePayConfiguration = dropInConfiguration.getConfigurationFor(PaymentMethodTypes.GOOGLE_PAY, context)
             GooglePayComponent.PROVIDER.get(fragment, paymentMethod, googlePayConfiguration)
         }
+        PaymentMethodTypes.SEPA -> {
+            val sepaConfiguration: SepaConfiguration = dropInConfiguration.getConfigurationFor(PaymentMethodTypes.SEPA, fragment.context!!)
+            SepaComponent.PROVIDER.get(fragment, paymentMethod, sepaConfiguration)
+        }
         else -> {
             throw CheckoutException("Unable to find component for type - ${paymentMethod.type}")
         }
@@ -213,6 +227,7 @@ internal fun getComponentFor(
  * @param context The context used to create the View
  * @param paymentMethod The payment method to be parsed.
  */
+@Suppress("ComplexMethod")
 internal fun getViewFor(context: Context, paymentMethod: PaymentMethod): ComponentView<PaymentComponent> {
     @Suppress("UNCHECKED_CAST")
     return when (paymentMethod.type) {
@@ -236,6 +251,9 @@ internal fun getViewFor(context: Context, paymentMethod: PaymentMethod): Compone
         }
         PaymentMethodTypes.SCHEME -> {
             CardView(context) as ComponentView<PaymentComponent>
+        }
+        PaymentMethodTypes.SEPA -> {
+            SepaView(context) as ComponentView<PaymentComponent>
         }
         // GooglePay does not require a View in Drop-in
         else -> {
