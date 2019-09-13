@@ -13,6 +13,10 @@
 [//]: <> (Add changes that not released yet into `Unreleased` section)
 [//]: <> (Comment `Unreleased` section if there are no changes)
 [//]: <> (## [Unreleased])
+## [3.3.1] - 2019-09-13
+### Fixed
+- There was issue with ConstraintLayout's Flow related to [ClassNotFoundException androidx.constraintlayout.widget.helper.Flow](https://github.com/Adyen/adyen-android/issues/109) fixed
+- Created method to save the state of an ActionComponent when the Activity gets destroyed to persist the `paymentData`.
 ## [3.3.0] - 2019-09-11
 ### Added
 - Created SepaComponent

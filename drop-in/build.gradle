@@ -64,7 +64,6 @@ dependencies {
 
     // Dependencies
     implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk7:$version_kotlin"
-    implementation "com.android.support.constraint:constraint-layout:$version_constraint_layout"
     implementation "com.android.support:recyclerview-v7:$version_support_library"
     implementation "com.android.support:design:$version_support_library"
 }

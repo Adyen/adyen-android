@@ -117,6 +117,7 @@ class LoadingActivity : AppCompatActivity(), ActionHandler.DetailsRequestedInter
         }
 
         actionHandler = ActionHandler(this, this)
+        actionHandler.restoreState(savedInstanceState)
 
         if (savedInstanceState == null) {
             handleIntent(intent)
@@ -132,6 +133,11 @@ class LoadingActivity : AppCompatActivity(), ActionHandler.DetailsRequestedInter
             Logger.d(TAG, "onResume without response, setting time out")
             timeoutHandler.postDelayed(timeoutRunnable, TIME_OUT_DELAY)
         }
+    }
+
+    override fun onSaveInstanceState(outState: Bundle?) {
+        actionHandler.saveState(outState)
+        super.onSaveInstanceState(outState)
     }
 
     override fun onPause() {

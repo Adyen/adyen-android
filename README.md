@@ -13,15 +13,11 @@ The Components are available through [jcenter][dl], you only need to add the Gra
 Import the Component module for the Payment Method you want to use by adding it to your `build.gradle` file.
 For example, for the Drop-in solution you should add:
 ```groovy
-implementation "com.adyen.checkout:drop-in:3.3.0"
+implementation "com.adyen.checkout:drop-in:3.3.1"
 ```
 For a Credit Card component you should add:
 ```groovy
-implementation "com.adyen.checkout:card-ui:3.3.0"
-```
-For and iDeal component you should add:
-```groovy
-implementation "com.adyen.checkout:ideal-ui:3.3.0"
+implementation "com.adyen.checkout:card-ui:3.3.1"
 ```
 
 ## Drop-in
@@ -114,23 +110,6 @@ cardComponent.observe(this@MainActivity, Observer {
     }
 })
 ```
-
-### Available Components
-
-You can find a list of currently available components in the `PaymentMethodTypes.SUPPORTED_PAYMENT_METHODS` with the corresponding payment method type.
-
-- Credit Card
-- iDeal
-- Dotpay
-- MOLPay
-- EPS
-- Entercash
-- Open banking
-
-You can also find the components that can handle the `action` object.
-
-- Redirect
-- 3DS2 (Fingerprint and Challenge)
 
 ## ProGuard
 

@@ -8,11 +8,11 @@
 
 package com.adyen.checkout.example
 
-import android.app.Application
+import android.support.multidex.MultiDexApplication
 import android.util.Log
 import com.adyen.checkout.core.log.Logger
 
-class CheckoutExampleApplication : Application() {
+class CheckoutExampleApplication : MultiDexApplication() {
 
     companion object {
         init {

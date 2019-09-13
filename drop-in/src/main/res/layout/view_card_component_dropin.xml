@@ -15,15 +15,13 @@
 
     </FrameLayout>
 
-    <android.support.constraint.ConstraintLayout
+    <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="horizontal"
         android:paddingLeft="@dimen/standard_margin"
         android:paddingRight="@dimen/standard_margin"
-        android:paddingBottom="@dimen/standard_half_margin"
-        app:layout_constraintEnd_toEndOf="@+id/flow"
-        app:layout_constraintStart_toEndOf="@+id/flow">
+        android:paddingBottom="@dimen/standard_half_margin">
 
         <TextView
             android:id="@+id/header"
@@ -36,28 +34,13 @@
             app:layout_constraintTop_toTopOf="parent"
             tools:text="Header" />
 
-        <android.support.constraint.helper.Flow
-            android:id="@+id/flow"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            app:constraint_referenced_ids="header,recyclerView_cardList"
-            app:flow_horizontalBias="0"
-            app:flow_horizontalStyle="spread_inside"
-            app:flow_wrapMode="chain"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent" />
-
         <android.support.v7.widget.RecyclerView
             android:id="@+id/recyclerView_cardList"
-            android:layout_width="wrap_content"
+            android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:layout_marginStart="@dimen/cardList_top_margin"
-            android:layout_marginLeft="@dimen/cardList_top_margin"
-            android:layout_marginTop="@dimen/cardList_top_margin"
-            android:layout_marginEnd="@dimen/cardList_top_margin"
-            android:layout_marginRight="@dimen/cardList_top_margin"
+            android:layout_marginTop="@dimen/standard_half_margin"
+            android:layout_weight="1"
             android:orientation="horizontal"
-            android:paddingTop="@dimen/standard_half_margin"
             app:layoutManager="android.support.v7.widget.LinearLayoutManager"
             app:layout_constraintStart_toStartOf="parent"
             app:reverseLayout="true"
@@ -66,7 +49,7 @@
 
         </android.support.v7.widget.RecyclerView>
 
-    </android.support.constraint.ConstraintLayout>
+    </LinearLayout>
 
     <android.support.v4.widget.NestedScrollView
         android:layout_width="match_parent"

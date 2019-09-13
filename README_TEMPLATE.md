@@ -19,10 +19,6 @@ For a Credit Card component you should add:
 ```groovy
 implementation "com.adyen.checkout:card-ui:<latest-version>"
 ```
-For and iDeal component you should add:
-```groovy
-implementation "com.adyen.checkout:ideal-ui:<latest-version>"
-```
 
 ## Drop-in
 
@@ -114,23 +110,6 @@ cardComponent.observe(this@MainActivity, Observer {
     }
 })
 ```
-
-### Available Components
-
-You can find a list of currently available components in the `PaymentMethodTypes.SUPPORTED_PAYMENT_METHODS` with the corresponding payment method type.
-
-- Credit Card
-- iDeal
-- Dotpay
-- MOLPay
-- EPS
-- Entercash
-- Open banking
-
-You can also find the components that can handle the `action` object.
-
-- Redirect
-- 3DS2 (Fingerprint and Challenge)
 
 ## ProGuard
 

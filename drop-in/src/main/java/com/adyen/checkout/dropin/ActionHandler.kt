@@ -10,6 +10,7 @@ package com.adyen.checkout.dropin
 
 import android.arch.lifecycle.Observer
 import android.net.Uri
+import android.os.Bundle
 import android.support.v4.app.FragmentActivity
 import com.adyen.checkout.adyen3ds2.Adyen3DS2Component
 import com.adyen.checkout.base.ActionComponentData
@@ -45,6 +46,16 @@ class ActionHandler(activity: FragmentActivity, private val callback: DetailsReq
         if (componentData != null) {
             callback.requestDetailsCall(componentData)
         }
+    }
+
+    fun saveState(bundle: Bundle?) {
+        redirectComponent.saveState(bundle)
+        adyen3DS2Component.saveState(bundle)
+    }
+
+    fun restoreState(bundle: Bundle?) {
+        redirectComponent.restoreState(bundle)
+        adyen3DS2Component.restoreState(bundle)
     }
 
     fun handleAction(activity: FragmentActivity, action: Action, sendResult: (String) -> Unit) {
