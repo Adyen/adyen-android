@@ -19,6 +19,9 @@ import com.adyen.checkout.base.PaymentComponentProvider
 import com.adyen.checkout.base.component.BaseConfigurationBuilder
 import com.adyen.checkout.base.model.paymentmethods.PaymentMethod
 import com.adyen.checkout.base.util.PaymentMethodTypes
+import com.adyen.checkout.bcmc.BcmcComponent
+import com.adyen.checkout.bcmc.BcmcConfiguration
+import com.adyen.checkout.bcmc.BcmcView
 import com.adyen.checkout.card.CardComponent
 import com.adyen.checkout.card.CardConfiguration
 import com.adyen.checkout.card.CardView
@@ -154,6 +157,9 @@ internal fun getProviderForType(type: String): PaymentComponentProvider<PaymentC
         PaymentMethodTypes.SEPA -> {
             SepaComponent.PROVIDER as PaymentComponentProvider<PaymentComponent, Configuration>
         }
+        PaymentMethodTypes.BCMC -> {
+            BcmcComponent.PROVIDER as PaymentComponentProvider<PaymentComponent, Configuration>
+        }
         else -> {
             throw CheckoutException("Unable to find component for type - $type")
         }
@@ -212,6 +218,10 @@ internal fun getComponentFor(
             val sepaConfiguration: SepaConfiguration = dropInConfiguration.getConfigurationFor(PaymentMethodTypes.SEPA, fragment.context!!)
             SepaComponent.PROVIDER.get(fragment, paymentMethod, sepaConfiguration)
         }
+        PaymentMethodTypes.BCMC -> {
+            val bcmcConfiguration: BcmcConfiguration = dropInConfiguration.getConfigurationFor(PaymentMethodTypes.BCMC, fragment.context!!)
+            BcmcComponent.PROVIDER.get(fragment, paymentMethod, bcmcConfiguration)
+        }
         else -> {
             throw CheckoutException("Unable to find component for type - ${paymentMethod.type}")
         }
@@ -254,6 +264,9 @@ internal fun getViewFor(context: Context, paymentMethod: PaymentMethod): Compone
         }
         PaymentMethodTypes.SEPA -> {
             SepaView(context) as ComponentView<PaymentComponent>
+        }
+        PaymentMethodTypes.BCMC -> {
+            BcmcView(context) as ComponentView<PaymentComponent>
         }
         // GooglePay does not require a View in Drop-in
         else -> {

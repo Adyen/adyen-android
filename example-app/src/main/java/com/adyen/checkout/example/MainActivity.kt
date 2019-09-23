@@ -20,6 +20,7 @@ import android.view.MenuItem
 import android.view.View
 import android.widget.Toast
 import com.adyen.checkout.base.model.PaymentMethodsApiResponse
+import com.adyen.checkout.bcmc.BcmcConfiguration
 import com.adyen.checkout.card.CardConfiguration
 import com.adyen.checkout.core.log.LogUtil
 import com.adyen.checkout.core.log.Logger
@@ -118,11 +119,16 @@ class MainActivity : AppCompatActivity() {
                     ?: BuildConfig.SHOPPER_REFERENCE)
                 .build()
 
+        val bcmcConfiguration =
+            BcmcConfiguration.Builder(this@MainActivity, BuildConfig.PUBLIC_KEY)
+                .build()
+
         val resultIntent = Intent(this, MainActivity::class.java)
         resultIntent.flags = Intent.FLAG_ACTIVITY_CLEAR_TOP
 
         val dropInConfiguration = DropInConfiguration.Builder(this@MainActivity, resultIntent, ExampleDropInService::class.java)
             .addCardConfiguration(cardConfiguration)
+            .addBcmcConfiguration(bcmcConfiguration)
             .addGooglePayConfiguration(googlePayConfig)
             .build()
 

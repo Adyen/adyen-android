@@ -61,6 +61,7 @@ dependencies {
     api project(":3ds2")
     api project(":googlepay-base")
     api project(":sepa-ui")
+    api project(":bcmc-ui")
 
     // Dependencies
     implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk7:$version_kotlin"

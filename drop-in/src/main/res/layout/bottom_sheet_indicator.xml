@@ -4,15 +4,15 @@
   ~
   ~ This file is open source and available under the MIT license. See the LICENSE file for more info.
   ~
-  ~ Created by arman on 29/7/2019.
+  ~ Created by arman on 5/7/2019.
   -->
 
-
-<TextView
+<FrameLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
-    android:id="@+id/payment_method_header"
-    style="@style/headerTitleStyle"
+    xmlns:tools="http://schemas.android.com/tools"
+    tools:ignore="MergeRootFrame"
     android:layout_width="match_parent"
-    android:textIsSelectable="false"
-    android:layout_height="wrap_content"
-    android:layout_marginBottom="@dimen/standard_quarter_margin"/>
+    android:layout_height="wrap_content" >
+    <View
+        style="@style/AdyenCheckout.BottomSheetIndicator" />
+</FrameLayout>

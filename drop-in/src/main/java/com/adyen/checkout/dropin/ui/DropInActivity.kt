@@ -86,7 +86,7 @@ class DropInActivity : AppCompatActivity(), DropInBottomSheetDialogFragment.Prot
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         Logger.d(TAG, "onCreate - $savedInstanceState")
-        setContentView(R.layout.activity_payment_method_picker)
+        setContentView(R.layout.activity_drop_in)
         overridePendingTransition(0, 0)
 
         dropInViewModel = ViewModelProviders.of(this).get(DropInViewModel::class.java)

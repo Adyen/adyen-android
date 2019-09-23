@@ -9,14 +9,14 @@
 
 <LinearLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical">
-    <include layout="@layout/fragmentdialog_header"
-             android:layout_width="match_parent"
-             android:layout_height="wrap_content"/>
+    <include layout="@layout/bottom_sheet_indicator"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"/>
     <android.support.v7.widget.RecyclerView
-        xmlns:tools="http://schemas.android.com/tools"
         android:id="@+id/recyclerView_paymentMethods"
         android:layout_width="match_parent"
         android:layout_height="0dp"

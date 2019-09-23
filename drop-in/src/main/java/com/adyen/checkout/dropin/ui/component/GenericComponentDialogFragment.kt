@@ -24,9 +24,9 @@ import com.adyen.checkout.core.log.Logger
 import com.adyen.checkout.dropin.R
 import com.adyen.checkout.dropin.getViewFor
 import com.adyen.checkout.dropin.ui.base.BaseComponentDialogFragment
-import kotlinx.android.synthetic.main.fragmentdialog_component.componentContainer
-import kotlinx.android.synthetic.main.fragmentdialog_component.payButton
-import kotlinx.android.synthetic.main.fragmentdialog_header.view.header
+import kotlinx.android.synthetic.main.fragment_generic_component.componentContainer
+import kotlinx.android.synthetic.main.fragment_generic_component.payButton
+import kotlinx.android.synthetic.main.fragment_generic_component.view.header
 
 class GenericComponentDialogFragment : BaseComponentDialogFragment() {
 
@@ -37,7 +37,7 @@ class GenericComponentDialogFragment : BaseComponentDialogFragment() {
     }
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
-        return inflater.inflate(R.layout.fragmentdialog_component, container, false)
+        return inflater.inflate(R.layout.fragment_generic_component, container, false)
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {

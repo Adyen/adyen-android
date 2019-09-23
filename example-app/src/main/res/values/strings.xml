@@ -10,6 +10,8 @@
     <string name="shopper_information">Shopper Information</string>
     <string name="shopper_reference_key">shopper_reference</string>
     <string name="shopper_reference_title">Shopper Reference</string>
+    <string name="threeds2_key">threeds2</string>
+    <string name="threeds2_title">3DS2</string>
     <string name="shopper_country_key">shopper_country</string>
     <string name="shopper_country_title">Country</string>
     <string name="shopper_locale_key">shopper_locale</string>
@@ -18,7 +20,7 @@
     <string name="shopper_email_title">Shopper Email</string>
 
     <string name="payment_information">Payment Information</string>
-    <string name="currency_key" >amount_currency</string>
+    <string name="currency_key">amount_currency</string>
     <string name="currency_title">Currency</string>
     <string name="value_key">amount_value</string>
     <string name="value_title">Value</string>

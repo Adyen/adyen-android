@@ -33,16 +33,17 @@ public final class PaymentMethodTypes {
     public static final String SCHEME = "scheme";
     public static final String GOOGLE_PAY = "paywithgoogle";
     public static final String SEPA = "sepadirectdebit";
-
+    public static final String BCMC = "bcmc";
 
 
     // List of all payment method types.
     public static final List<String> SUPPORTED_PAYMENT_METHODS;
 
     // Helper annotation to enforce use of a constant from here when needed.
-    @StringDef({IDEAL, MOLPAY, DOTPAY, EPS, ENTERCASH, OPEN_BANKING, SCHEME, GOOGLE_PAY, SEPA})
+    @StringDef({IDEAL, MOLPAY, DOTPAY, EPS, ENTERCASH, OPEN_BANKING, SCHEME, GOOGLE_PAY, SEPA, BCMC})
     @Retention(RetentionPolicy.SOURCE)
-    public @interface SupportedPaymentMethod {}
+    public @interface SupportedPaymentMethod {
+    }
 
     static {
         final ArrayList<String> paymentMethods = new ArrayList<>();
@@ -56,6 +57,7 @@ public final class PaymentMethodTypes {
         paymentMethods.add(SCHEME);
         paymentMethods.add(GOOGLE_PAY);
         paymentMethods.add(SEPA);
+        paymentMethods.add(BCMC);
 
         SUPPORTED_PAYMENT_METHODS = Collections.unmodifiableList(paymentMethods);
     }

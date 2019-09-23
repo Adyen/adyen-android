@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+  ~ Copyright (c) 2019 Adyen N.V.
+  ~
+  ~ This file is open source and available under the MIT license. See the LICENSE file for more info.
+  ~
+  ~ Created by caiof on 13/9/2019.
+  -->
+
+<resources>
+    <style name="AdyenCheckout.Sepa"/>
+
+    <style name="AdyenCheckout.Sepa.HolderNameInput" parent="AdyenCheckout.TextInputEditText">
+        <item name="android:hint">@string/checkout_sepa_holder_name</item>
+        <item name="android:inputType">text|textPersonName|textCapWords</item>
+    </style>
+
+    <style name="AdyenCheckout.Sepa.AccountNumberInput" parent="AdyenCheckout.TextInputEditText">
+        <item name="android:hint">@string/checkout_sepa_account_number</item>
+        <item name="android:inputType">text|textCapCharacters</item>
+    </style>
+
+</resources>

@@ -22,6 +22,7 @@ import com.adyen.checkout.card.data.CardType;
 import com.adyen.checkout.core.api.Environment;
 import com.adyen.checkout.core.util.ParcelUtils;
 
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
@@ -34,6 +35,9 @@ public class CardConfiguration extends BaseConfiguration {
 
     private static final CardType[] DEFAULT_SUPPORTED_CARDS =
             new CardType[]{CardType.VISA, CardType.AMERICAN_EXPRESS, CardType.MASTERCARD};
+
+    private static final CardType[] BLACK_LIST_CARDS =
+            new CardType[]{CardType.BCMC};
 
     public static final List<CardType> DEFAULT_SUPPORTED_CARDS_LIST =
             Collections.unmodifiableList(Arrays.asList(DEFAULT_SUPPORTED_CARDS));
@@ -273,7 +277,11 @@ public class CardConfiguration extends BaseConfiguration {
          */
         @NonNull
         public Builder setSupportedCardTypes(@NonNull CardType... supportCardTypes) {
-            this.mBuilderSupportedCardTypes = Arrays.asList(supportCardTypes);
+
+            final List supportCards = new ArrayList(Arrays.asList(supportCardTypes));
+            supportCards.removeAll(Arrays.asList(BLACK_LIST_CARDS));
+
+            this.mBuilderSupportedCardTypes = supportCards;
             return this;
         }
 

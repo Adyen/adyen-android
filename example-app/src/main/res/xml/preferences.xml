@@ -1,5 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?>
-<!--
+<?xml version="1.0" encoding="utf-8"?><!--
   ~ Copyright (c) 2019 Adyen N.V.
   ~
   ~ This file is open source and available under the MIT license. See the LICENSE file for more info.
@@ -9,46 +8,48 @@
 
 <PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android">
 
-    <PreferenceCategory
-        android:title="@string/merchant_information">
+    <PreferenceCategory android:title="@string/merchant_information">
 
         <EditTextPreference
             android:key="@string/merchant_account_key"
-            android:title="@string/merchant_account_title"/>
+            android:title="@string/merchant_account_title" />
 
     </PreferenceCategory>
 
-    <PreferenceCategory
-        android:title="@string/shopper_information">
+    <PreferenceCategory android:title="@string/shopper_information">
 
         <EditTextPreference
             android:key="@string/shopper_reference_key"
-            android:title="@string/shopper_reference_title"/>
+            android:title="@string/shopper_reference_title" />
 
         <EditTextPreference
             android:key="@string/shopper_country_key"
-            android:title="@string/shopper_country_title"/>
+            android:title="@string/shopper_country_title" />
 
         <EditTextPreference
             android:key="@string/shopper_locale_key"
-            android:title="@string/shopper_locale_title"/>
+            android:title="@string/shopper_locale_title" />
 
         <EditTextPreference
             android:key="@string/shopper_email_key"
-            android:title="@string/shopper_email_title"/>
+            android:title="@string/shopper_email_title" />
+
+        <SwitchPreference
+            android:key="@string/threeds2_key"
+            android:title="@string/threeds2_title" />
+
     </PreferenceCategory>
 
-    <PreferenceCategory
-        android:title="@string/payment_information">
+    <PreferenceCategory android:title="@string/payment_information">
 
         <EditTextPreference
             android:key="@string/currency_key"
-            android:title="@string/currency_title"/>
+            android:title="@string/currency_title" />
 
         <EditTextPreference
             android:inputType="number"
             android:key="@string/value_key"
-            android:title="@string/value_title"/>
+            android:title="@string/value_title" />
     </PreferenceCategory>
 
 </PreferenceScreen>

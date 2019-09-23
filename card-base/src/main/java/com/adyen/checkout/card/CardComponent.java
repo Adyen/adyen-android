@@ -76,15 +76,6 @@ public final class CardComponent extends BasePaymentComponent<CardConfiguration,
         }
     }
 
-    public boolean isStoredPaymentMethod() {
-        return mStoredPaymentInputData != null;
-    }
-
-    @Nullable
-    public CardInputData getStoredPaymentInputData() {
-        return mStoredPaymentInputData;
-    }
-
     /**
      * Constructs a {@link CardComponent} object.
      *
@@ -93,6 +84,15 @@ public final class CardComponent extends BasePaymentComponent<CardConfiguration,
      */
     public CardComponent(@NonNull PaymentMethod paymentMethod, @NonNull CardConfiguration configuration) {
         super(paymentMethod, configuration);
+    }
+
+    public boolean isStoredPaymentMethod() {
+        return mStoredPaymentInputData != null;
+    }
+
+    @Nullable
+    public CardInputData getStoredPaymentInputData() {
+        return mStoredPaymentInputData;
     }
 
     /**

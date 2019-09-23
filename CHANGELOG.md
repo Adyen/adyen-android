@@ -13,10 +13,20 @@
 [//]: <> (Add changes that not released yet into `Unreleased` section)
 [//]: <> (Comment `Unreleased` section if there are no changes)
 [//]: <> (## [Unreleased])
+## [3.4.0] - 2019-09-23
+### Added
+- Created standard style pattern for customizing XML layouts of the Components.
+- Created BCMC component.
+- Add option in Setting screen to enable 3ds2.
+### Changed
+- In CardConfiguration BCMC card type gonna be exclude from supported card type list.
+
 ## [3.3.1] - 2019-09-13
 ### Fixed
 - There was issue with ConstraintLayout's Flow related to [ClassNotFoundException androidx.constraintlayout.widget.helper.Flow](https://github.com/Adyen/adyen-android/issues/109) fixed
 - Created method to save the state of an ActionComponent when the Activity gets destroyed to persist the `paymentData`.
+- Fixed non Ecommerce stored payment methods being shown as a regular payment method.
+
 ## [3.3.0] - 2019-09-11
 ### Added
 - Created SepaComponent

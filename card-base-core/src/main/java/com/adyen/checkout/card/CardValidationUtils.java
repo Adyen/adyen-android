@@ -3,7 +3,7 @@
  *
  * This file is open source and available under the MIT license. See the LICENSE file for more info.
  *
- * Created by caiof on 3/9/2019.
+ * Created by arman on 18/9/2019.
  */
 
 package com.adyen.checkout.card;
@@ -39,8 +39,11 @@ public final class CardValidationUtils {
     private static final int MAXIMUM_EXPIRED_MONTHS = 3;
 
 
+    /**
+     * Validate card number.
+     */
     @NonNull
-    static ValidatedField<String> validateCardNumber(@NonNull String number) {
+    public static ValidatedField<String> validateCardNumber(@NonNull String number) {
 
         final String normalizedNumber = StringUtil.normalize(number);
         final int length = normalizedNumber.length();
@@ -88,7 +91,11 @@ public final class CardValidationUtils {
         return (s1 + s2) % 10 == 0;
     }
 
-    static ValidatedField<ExpiryDate> validateExpiryDate(@NonNull ExpiryDate expiryDate) {
+    /**
+     * Validate Expiry Date.
+     */
+    @NonNull
+    public static ValidatedField<ExpiryDate> validateExpiryDate(@NonNull ExpiryDate expiryDate) {
 
         if (dateExists(expiryDate)) {
             final Calendar expiryDateCalendar = getExpiryCalendar(expiryDate);
@@ -108,10 +115,13 @@ public final class CardValidationUtils {
         return new ValidatedField<>(expiryDate, ValidatedField.Validation.INVALID);
     }
 
-    // We always pass CardType null, but we can enforce size validation for Amex or otherwise if necessary.
+    /**
+     * Validate Security Code.
+     * We always pass CardType null, but we can enforce size validation for Amex or otherwise if necessary.
+     */
     @SuppressWarnings("SameParameterValue")
     @NonNull
-    static ValidatedField<String> validateSecurityCode(@NonNull String securityCode, @Nullable CardType cardType) {
+    public static ValidatedField<String> validateSecurityCode(@NonNull String securityCode, @Nullable CardType cardType) {
         final String normalizedSecurityCode = StringUtil.normalize(securityCode);
         final int length = normalizedSecurityCode.length();
 

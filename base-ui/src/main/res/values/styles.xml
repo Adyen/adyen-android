@@ -8,9 +8,10 @@
   -->
 
 <resources>
-    <!-- Placeholder to be overridden by main app. -->
+    <!-- Placeholder to be overridden by main app -->
     <style name="AppTheme" parent="Theme.AppCompat.DayNight"/>
 
+    <!-- Base theme for Checkout -->
     <style name="AdyenCheckout" parent="AppTheme"/>
 
     <!-- Text -->
@@ -35,7 +36,46 @@
     <style name="AdyenCheckout.TextInputLayout" parent="Widget.MaterialComponents.TextInputLayout.OutlinedBox">
         <item name="boxStrokeColor">@color/primaryColor</item>
         <item name="hintTextAppearance">@style/AdyenCheckout.HintTextStyle</item>
-        <item name="android:minHeight">90dp</item>
+        <item name="android:minHeight">@dimen/input_layout_height</item>
+    </style>
+
+    <style name="AdyenCheckout.TextInputEditText">
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:layout_height">@dimen/input_height</item>
+    </style>
+
+    <style name="AdyenCheckout.RecyclerListItem">
+        <item name="android:background">?selectableItemBackground</item>
+        <item name="android:paddingStart">@dimen/standard_margin</item>
+        <item name="android:paddingLeft">@dimen/standard_margin</item>
+        <item name="android:paddingTop">@dimen/standard_three_quarters_margin</item>
+        <item name="android:paddingEnd">@dimen/standard_margin</item>
+        <item name="android:paddingRight">@dimen/standard_margin</item>
+        <item name="android:paddingBottom">@dimen/standard_three_quarters_margin</item>
+    </style>
+
+    <style name="AdyenCheckout.SpinnerListItem">
+        <item name="android:background">?selectableItemBackground</item>
+        <item name="android:padding">@dimen/standard_margin</item>
+    </style>
+
+    <style name="AdyenCheckout.Image"/>
+
+    <style name="AdyenCheckout.Image.Logo" parent="AdyenCheckout.Image">
+        <item name="android:layout_width">@dimen/logo_width</item>
+        <item name="android:layout_height">@dimen/logo_height</item>
+        <item name="android:minHeight">@dimen/logo_height</item>
+        <item name="android:maxHeight">@dimen/logo_width</item>
+        <item name="android:layout_marginRight">@dimen/standard_margin</item>
+        <item name="android:layout_marginEnd">@dimen/standard_margin</item>
+        <item name="android:src">@drawable/ic_placeholder_image</item>
+        <item name="android:scaleType">fitCenter</item>
+        <item name="android:contentDescription">@null</item>
+    </style>
+
+    <style name="AdyenCheckout.ListItemText">
+        <item name="android:layout_gravity">center_vertical</item>
+        <item name="android:maxHeight">@dimen/logo_width</item>
     </style>
 
 </resources>

@@ -3,7 +3,7 @@
  *
  * This file is open source and available under the MIT license. See the LICENSE file for more info.
  *
- * Created by caiof on 2/9/2019.
+ * Created by arman on 16/9/2019.
  */
 
 package com.adyen.checkout.card.data;

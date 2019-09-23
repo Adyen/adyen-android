@@ -15,6 +15,7 @@ import android.os.Parcel
 import android.os.Parcelable
 import com.adyen.checkout.base.Configuration
 import com.adyen.checkout.base.util.PaymentMethodTypes
+import com.adyen.checkout.bcmc.BcmcConfiguration
 import com.adyen.checkout.card.CardConfiguration
 import com.adyen.checkout.core.api.Environment
 import com.adyen.checkout.core.log.LogUtil
@@ -29,6 +30,7 @@ import com.adyen.checkout.googlepay.GooglePayConfiguration
 import com.adyen.checkout.ideal.IdealConfiguration
 import com.adyen.checkout.molpay.MolpayConfiguration
 import com.adyen.checkout.openbanking.OpenBankingConfiguration
+import com.adyen.checkout.sepa.SepaConfiguration
 import java.util.Locale
 
 /**
@@ -36,6 +38,7 @@ import java.util.Locale
  * There you will find specific methods to add configurations for each specific PaymentComponent, to be able to customize their behavior.
  * If you don't specify anything, a default configuration will be used.
  */
+@SuppressWarnings("TooManyFunctions")
 class DropInConfiguration : Configuration, Parcelable {
 
     private val shopperLocale: Locale
@@ -203,6 +206,22 @@ class DropInConfiguration : Configuration, Parcelable {
          */
         fun addGooglePayConfiguration(googlePayConfiguration: GooglePayConfiguration): Builder {
             availableConfigs[PaymentMethodTypes.GOOGLE_PAY] = googlePayConfiguration
+            return this
+        }
+
+        /**
+         * Add configuration for Sepa payment method.
+         */
+        fun addSepaConfiguration(sepaConfiguration: SepaConfiguration): Builder {
+            availableConfigs[PaymentMethodTypes.SEPA] = sepaConfiguration
+            return this
+        }
+
+        /**
+         * Add configuration for Sepa payment method.
+         */
+        fun addBcmcConfiguration(bcmcConfiguration: BcmcConfiguration): Builder {
+            availableConfigs[PaymentMethodTypes.BCMC] = bcmcConfiguration
             return this
         }
     }

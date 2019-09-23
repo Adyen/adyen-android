@@ -1,0 +1,66 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+  ~ Copyright (c) 2019 Adyen N.V.
+  ~
+  ~ This file is open source and available under the MIT license. See the LICENSE file for more info.
+  ~
+  ~ Created by arman on 18/9/2019.
+  -->
+
+<resources>
+    <style name="AdyenCheckout.Card"/>
+
+    <style name="AdyenCheckout.Image.CardLogo">
+        <item name="android:layout_width">@dimen/brand_logo_width</item>
+        <item name="android:layout_height">@dimen/brand_logo_height</item>
+    </style>
+
+    <style name="AdyenCheckout.Card.BrandListLogo" parent="AdyenCheckout.Image.CardLogo">
+        <item name="android:layout_marginStart">@dimen/standard_quarter_margin</item>
+        <item name="android:layout_marginLeft">@dimen/standard_quarter_margin</item>
+    </style>
+
+    <style name="AdyenCheckout.Card.BrandRecognitionLogo" parent="AdyenCheckout.Image.CardLogo">
+        <item name="android:layout_marginStart">@dimen/standard_quarter_margin</item>
+        <item name="android:layout_marginLeft">@dimen/standard_quarter_margin</item>
+        <item name="android:layout_gravity">end|top</item>
+        <item name="android:layout_marginTop">@dimen/cardList_top_margin</item>
+        <item name="android:layout_marginEnd">@dimen/standard_margin</item>
+        <item name="android:layout_marginRight">@dimen/standard_margin</item>
+        <item name="android:src">@drawable/ic_card</item>
+    </style>
+
+    <style name="AdyenCheckout.Card.CardNumberInput" parent="AdyenCheckout.TextInputEditText">
+        <item name="android:hint">@string/checkout_card_number_hint</item>
+        <item name="android:inputType">phone</item>
+    </style>
+
+    <style name="AdyenCheckout.Card.ExpiryDateInput" parent="AdyenCheckout.TextInputEditText">
+        <item name="android:hint">@string/checkout_card_expiry_date_hint</item>
+        <item name="android:inputType">date</item>
+        <item name="android:maxLength">7</item>
+    </style>
+
+    <style name="AdyenCheckout.Card.SecurityCodeInput" parent="AdyenCheckout.TextInputEditText">
+        <item name="android:hint">@string/checkout_card_security_code_hint</item>
+        <item name="android:inputType">number</item>
+        <item name="android:maxLength">4</item>
+    </style>
+
+    <style name="AdyenCheckout.Card.HolderNameInput" parent="AdyenCheckout.TextInputEditText">
+        <item name="android:hint">@string/checkout_card_holder_hint</item>
+        <item name="android:inputType">text</item>
+    </style>
+
+    <style name="AdyenCheckout.Card.StorePaymentSwitch">
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:text">@string/store_payment_method</item>
+        <item name="android:layout_marginBottom">@dimen/standard_margin</item>
+        <item name="android:textSize">18sp</item>
+        <item name="android:paddingLeft">@dimen/standard_quarter_margin</item>
+        <item name="android:paddingBottom">@dimen/standard_three_quarters_margin</item>
+        <item name="android:paddingRight">@dimen/standard_quarter_margin</item>
+        <item name="colorControlActivated">@color/primaryColor</item>
+    </style>
+</resources>

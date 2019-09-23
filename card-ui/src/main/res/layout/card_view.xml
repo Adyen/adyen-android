@@ -26,23 +26,18 @@
 
             <com.adyen.checkout.card.ui.CardNumberInput
                 android:id="@+id/editText_cardNumber"
-                android:layout_width="match_parent"
-                android:layout_height="@dimen/input_height"
-                android:hint="@string/checkout_card_number_hint"
-                android:inputType="phone"
+                style="@style/AdyenCheckout.Card.CardNumberInput"
                 android:nextFocusDown="@+id/editText_expiryDate"
-                android:nextFocusForward="@+id/editText_expiryDate" />
+                android:nextFocusForward="@+id/editText_expiryDate"
+                tools:ignore="RequiredSize" />
         </android.support.design.widget.TextInputLayout>
 
+
         <com.adyen.checkout.base.ui.view.RoundCornerImageView
-            android:id="@+id/cardType_imageView"
-            android:layout_width="24dp"
-            android:layout_height="16dp"
-            android:layout_gravity="end|top"
-            android:layout_marginTop="@dimen/cardList_top_margin"
-            android:layout_marginEnd="@dimen/standard_margin"
-            android:layout_marginRight="@dimen/standard_margin"
-            android:src="@drawable/ic_card"
+            android:id="@+id/cardBrandLogo_imageView"
+            style="@style/AdyenCheckout.Card.BrandRecognitionLogo"
+            android:layout_width="@dimen/brand_logo_width"
+            android:layout_height="@dimen/brand_logo_height"
             app:strokeColor="@color/stroke_color"
             app:strokeWidth="0dp">
 
@@ -66,13 +61,10 @@
 
             <com.adyen.checkout.card.ui.ExpiryDateInput
                 android:id="@+id/editText_expiryDate"
-                android:layout_width="match_parent"
-                android:layout_height="@dimen/input_height"
-                android:hint="@string/checkout_card_expiry_date_hint"
-                android:inputType="date"
-                android:maxLength="7"
+                style="@style/AdyenCheckout.Card.ExpiryDateInput"
                 android:nextFocusRight="@+id/editText_securityCode"
-                android:nextFocusForward="@+id/editText_securityCode" />
+                android:nextFocusForward="@+id/editText_securityCode"
+                tools:ignore="RequiredSize" />
         </android.support.design.widget.TextInputLayout>
 
         <android.support.design.widget.TextInputLayout
@@ -86,13 +78,10 @@
 
             <com.adyen.checkout.card.ui.SecurityCodeInput
                 android:id="@+id/editText_securityCode"
-                android:layout_width="match_parent"
-                android:layout_height="@dimen/input_height"
-                android:hint="@string/checkout_card_security_code_hint"
-                android:inputType="number"
-                android:maxLength="4"
+                style="@style/AdyenCheckout.Card.SecurityCodeInput"
                 android:nextFocusRight="@+id/editText_cardHolder"
-                android:nextFocusForward="@+id/editText_cardHolder" />
+                android:nextFocusForward="@+id/editText_cardHolder"
+                tools:ignore="RequiredSize" />
         </android.support.design.widget.TextInputLayout>
     </LinearLayout>
 
@@ -104,17 +93,13 @@
 
         <com.adyen.checkout.base.ui.view.AdyenTextInputEditText
             android:id="@+id/editText_cardHolder"
-            android:layout_width="match_parent"
-            android:layout_height="@dimen/input_height"
-            android:hint="@string/checkout_card_holder_hint"
-            android:inputType="text" />
+            style="@style/AdyenCheckout.Card.HolderNameInput"
+            tools:ignore="RequiredSize" />
     </android.support.design.widget.TextInputLayout>
 
     <android.support.v7.widget.SwitchCompat
         android:id="@+id/switch_storePaymentMethod"
+        style="@style/AdyenCheckout.Card.StorePaymentSwitch"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:text="@string/store_payment_method"
-        android:theme="@style/AdyenCheckout.Card.StorePaymentSwitch" />
-
+        android:layout_height="wrap_content" />
 </merge>

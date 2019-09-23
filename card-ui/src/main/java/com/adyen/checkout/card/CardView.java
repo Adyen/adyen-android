@@ -44,7 +44,7 @@ import java.util.List;
 @SuppressWarnings("SyntheticAccessor")
 public final class CardView extends LinearLayout implements ComponentView<CardComponent>, Observer<CardOutputData> {
 
-    private RoundCornerImageView mCardTypeImageView;
+    private RoundCornerImageView mCardBrandLogoImageView;
 
     private final CardNumberInput mCardNumberEditText;
     private final ExpiryDateInput mExpiryDateEditText;
@@ -82,7 +82,7 @@ public final class CardView extends LinearLayout implements ComponentView<CardCo
         final int padding = (int) getResources().getDimension(R.dimen.standard_margin);
         setPadding(padding, padding, padding, 0);
 
-        mCardTypeImageView = findViewById(R.id.cardType_imageView);
+        mCardBrandLogoImageView = findViewById(R.id.cardBrandLogo_imageView);
 
         mStorePaymentMethod = findViewById(R.id.switch_storePaymentMethod);
 
@@ -239,11 +239,11 @@ public final class CardView extends LinearLayout implements ComponentView<CardCo
 
         final List<CardType> supportedCardType = mComponent.getSupportedFilterCards(validatedNumber.getValue());
         if (supportedCardType.isEmpty()) {
-            mCardTypeImageView.setStrokeWidth(0f);
-            mCardTypeImageView.setImageResource(R.drawable.ic_card);
+            mCardBrandLogoImageView.setStrokeWidth(0f);
+            mCardBrandLogoImageView.setImageResource(R.drawable.ic_card);
         } else {
-            mCardTypeImageView.setStrokeWidth(RoundCornerImageView.DEFAULT_STROKE_WIDTH);
-            mImageLoader.load(supportedCardType.get(0).getTxVariant(), mCardTypeImageView);
+            mCardBrandLogoImageView.setStrokeWidth(RoundCornerImageView.DEFAULT_STROKE_WIDTH);
+            mImageLoader.load(supportedCardType.get(0).getTxVariant(), mCardBrandLogoImageView);
         }
 
     }

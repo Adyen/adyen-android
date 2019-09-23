@@ -12,28 +12,18 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:orientation="horizontal"
-    android:padding="@dimen/standard_margin"
-    android:background="?selectableItemBackground" >
+    style="@style/AdyenCheckout.SpinnerListItem"
+    android:orientation="horizontal" >
 
     <android.support.v7.widget.AppCompatImageView
         android:id="@+id/imageView_logo"
-        android:layout_width="@dimen/logo_width"
-        android:layout_height="@dimen/logo_height"
-        android:minHeight="@dimen/logo_height"
-        android:maxHeight="@dimen/logo_width"
-        android:layout_marginRight="@dimen/standard_margin"
-        android:layout_marginEnd="@dimen/standard_margin"
-        android:scaleType="centerCrop"
-        android:src="@drawable/ic_placeholder_image"
-        android:contentDescription="@null"/>
+        style="@style/AdyenCheckout.Image.Logo" />
 
     <android.support.v7.widget.AppCompatTextView
         android:id="@+id/textView_text"
         android:layout_width="match_parent"
-        android:maxHeight="@dimen/logo_width"
         android:layout_height="wrap_content"
-        android:layout_gravity="center_vertical"
+        style="@style/AdyenCheckout.ListItemText"
         tools:text="Test"/>
 
 </LinearLayout>

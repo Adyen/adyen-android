@@ -18,6 +18,7 @@
     <dimen name="logo_width">40dp</dimen>
     <dimen name="logo_height">26dp</dimen>
 
+    <dimen name="input_layout_height">90dp</dimen>
     <dimen name="input_height">55dp</dimen>
 
 </resources>

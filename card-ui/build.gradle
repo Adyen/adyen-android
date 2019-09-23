@@ -41,7 +41,7 @@ dependencies {
     androidTestImplementation "com.android.support.test.espresso:espresso-core:$version_espresso"
 
     // Checkout
-    api project(":base-ui")
+    api project(":card-ui-core")
     api project(":card-base")
 
     // Dependencies

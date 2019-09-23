@@ -85,8 +85,12 @@ class DropInViewModel(application: Application) : AndroidViewModel(application),
     }
 
     private fun addPaymentMethod(paymentMethod: PaymentMethod) {
-        if (paymentMethod is RecurringDetail && paymentMethod.isEcommarce) {
-            paymentMethodsModel.storedPaymentMethods.add(paymentMethod)
+        if (paymentMethod is RecurringDetail) {
+            if (paymentMethod.isEcommerce) {
+                paymentMethodsModel.storedPaymentMethods.add(paymentMethod)
+            } else {
+                Logger.d(TAG, "Stored method ${paymentMethod.type} is not Ecommerce")
+            }
         } else {
             paymentMethodsModel.paymentMethods.add(paymentMethod)
         }

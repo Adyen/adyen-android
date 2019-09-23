@@ -35,9 +35,9 @@ fun createPaymentMethodsRequest(context: Context): PaymentMethodsRequest {
     val preferences = PreferenceManager.getDefaultSharedPreferences(context)
 
     val merchantAccount =
-            preferences.getString(context.getString(R.string.merchant_account_key), BuildConfig.MERCHANT_ACCOUNT) ?: BuildConfig.MERCHANT_ACCOUNT
+        preferences.getString(context.getString(R.string.merchant_account_key), BuildConfig.MERCHANT_ACCOUNT) ?: BuildConfig.MERCHANT_ACCOUNT
     val shopperReference =
-            preferences.getString(context.getString(R.string.shopper_reference_key), BuildConfig.SHOPPER_REFERENCE) ?: BuildConfig.SHOPPER_REFERENCE
+        preferences.getString(context.getString(R.string.shopper_reference_key), BuildConfig.SHOPPER_REFERENCE) ?: BuildConfig.SHOPPER_REFERENCE
     val amount = getAmount(context, preferences)
     val countryCode = preferences.getString(context.getString(R.string.shopper_country_key), DEFAULT_COUNTRY) ?: DEFAULT_COUNTRY
     val shopperLocale = preferences.getString(context.getString(R.string.shopper_locale_key), DEFAULT_LOCALE) ?: DEFAULT_LOCALE
@@ -51,14 +51,15 @@ fun createPaymentsRequest(context: Context, paymentComponentData: PaymentCompone
 
     @Suppress("UsePropertyAccessSyntax")
     return PaymentsRequest(
-            paymentComponentData.getPaymentMethod() as PaymentMethodDetails,
-            paymentComponentData.getShopperReference()
-                    ?: preferences.getString(context.getString(R.string.shopper_reference_key), BuildConfig.SHOPPER_REFERENCE)
-                    ?: BuildConfig.SHOPPER_REFERENCE,
-            paymentComponentData.isStorePaymentMethodEnable,
-            getAmount(context, preferences),
-            preferences.getString(context.getString(R.string.merchant_account_key), BuildConfig.MERCHANT_ACCOUNT) ?: BuildConfig.MERCHANT_ACCOUNT,
-            RedirectComponent.getReturnUrl(context)
+        paymentComponentData.getPaymentMethod() as PaymentMethodDetails,
+        paymentComponentData.getShopperReference()
+            ?: preferences.getString(context.getString(R.string.shopper_reference_key), BuildConfig.SHOPPER_REFERENCE)
+            ?: BuildConfig.SHOPPER_REFERENCE,
+        paymentComponentData.isStorePaymentMethodEnable,
+        getAmount(context, preferences),
+        preferences.getString(context.getString(R.string.merchant_account_key), BuildConfig.MERCHANT_ACCOUNT) ?: BuildConfig.MERCHANT_ACCOUNT,
+        RedirectComponent.getReturnUrl(context),
+        additionalData = AdditionalData(preferences.getBoolean(context.getString(R.string.threeds2_key), false).toString())
     )
 }
 

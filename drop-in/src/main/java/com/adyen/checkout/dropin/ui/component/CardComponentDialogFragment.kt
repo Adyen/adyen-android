@@ -21,9 +21,9 @@ import com.adyen.checkout.core.log.LogUtil
 import com.adyen.checkout.core.log.Logger
 import com.adyen.checkout.dropin.R
 import com.adyen.checkout.dropin.ui.base.BaseComponentDialogFragment
+import kotlinx.android.synthetic.main.fragment_card_component.dropInCardView
+import kotlinx.android.synthetic.main.view_card_component_dropin.view.header
 import kotlinx.android.synthetic.main.view_card_component_dropin.view.payButton
-import kotlinx.android.synthetic.main.fragmentdialog_card_component.dropInCardView
-import kotlinx.android.synthetic.main.fragmentdialog_header.view.header
 
 class CardComponentDialogFragment : BaseComponentDialogFragment() {
 
@@ -32,7 +32,7 @@ class CardComponentDialogFragment : BaseComponentDialogFragment() {
     }
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
-        return inflater.inflate(R.layout.fragmentdialog_card_component, container, false)
+        return inflater.inflate(R.layout.fragment_card_component, container, false)
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {

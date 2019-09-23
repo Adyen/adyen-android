@@ -29,7 +29,6 @@ import com.adyen.checkout.core.log.Logger
 import com.adyen.checkout.dropin.R
 import com.adyen.checkout.dropin.ui.DropInViewModel
 import com.adyen.checkout.dropin.ui.base.DropInBottomSheetDialogFragment
-import kotlinx.android.synthetic.main.fragmentdialog_header.view.*
 
 class PaymentMethodListDialogFragment : DropInBottomSheetDialogFragment(), PaymentMethodAdapter.OnPaymentMethodSelectedCallback {
 
@@ -55,14 +54,9 @@ class PaymentMethodListDialogFragment : DropInBottomSheetDialogFragment(), Payme
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         Logger.d(TAG, "onCreateView")
         mDropInViewModel = ViewModelProviders.of(requireActivity()).get(DropInViewModel::class.java)
-        val view = inflater.inflate(R.layout.fragmentdialog_paymentmethod_list_dialog, container, false)
+        val view = inflater.inflate(R.layout.fragment_payment_methods_list, container, false)
         addObserver(view.findViewById(R.id.recyclerView_paymentMethods))
         return view
-    }
-
-    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
-        super.onViewCreated(view, savedInstanceState)
-        view.header.visibility = View.GONE
     }
 
     private fun addObserver(recyclerView: RecyclerView) {

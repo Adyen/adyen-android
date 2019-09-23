@@ -153,7 +153,7 @@ public final class RecurringDetail extends PaymentMethod {
         this.supportedShopperInteractions = supportedShopperInteractions;
     }
 
-    public boolean isEcommarce() {
+    public boolean isEcommerce() {
         return supportedShopperInteractions.contains(ECOMMERCE);
     }
 }
