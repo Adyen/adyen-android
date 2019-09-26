@@ -98,7 +98,7 @@ public final class CardView extends LinearLayout implements ComponentView<CardCo
         mCardNumberEditText.setOnFocusChangeListener(new OnFocusChangeListener() {
             @Override
             public void onFocusChange(View v, boolean hasFocus) {
-                if (!mComponent.isStoredPaymentMethod()) {
+                if (mComponent!=null && !mComponent.isStoredPaymentMethod()) {
                     mCardNumberInput.setErrorEnabled(!hasFocus);
 
                     if (!hasFocus && (isOutputEmpty() || !mComponent.getOutputData().getCardNumberField().isValid())) {
@@ -131,7 +131,7 @@ public final class CardView extends LinearLayout implements ComponentView<CardCo
             public void onFocusChange(View v, boolean hasFocus) {
                 mExpiryDateInput.setErrorEnabled(!hasFocus);
 
-                if (!hasFocus && (isOutputEmpty() || !mComponent.getOutputData().getExpiryDateField().isValid())) {
+                if (!hasFocus && (isOutputEmpty() || (mComponent!=null && !mComponent.getOutputData().getExpiryDateField().isValid()))) {
                     mExpiryDateInput.setError(getContext().getString(R.string.checkout_expiry_date_not_valid));
                 }
             }
@@ -151,7 +151,7 @@ public final class CardView extends LinearLayout implements ComponentView<CardCo
             public void onFocusChange(View v, boolean hasFocus) {
                 mSecurityCodeInput.setErrorEnabled(!hasFocus);
 
-                if (!hasFocus && (isOutputEmpty() || !mComponent.getOutputData().getSecurityCodeField().isValid())) {
+                if (!hasFocus && (isOutputEmpty() || (mComponent!=null && !mComponent.getOutputData().getSecurityCodeField().isValid()))) {
                     mSecurityCodeInput.setError(getContext().getString(R.string.checkout_security_code_not_valid));
                 }
             }
@@ -171,7 +171,7 @@ public final class CardView extends LinearLayout implements ComponentView<CardCo
             public void onFocusChange(View v, boolean hasFocus) {
                 mCardHolderInput.setErrorEnabled(!hasFocus);
 
-                if (!hasFocus && (isOutputEmpty() || !mComponent.getOutputData().getHolderNameField().isValid())) {
+                if (!hasFocus && (isOutputEmpty() || (mComponent!=null && !mComponent.getOutputData().getHolderNameField().isValid()))) {
                     mCardHolderInput.setError(getContext().getString(R.string.checkout_holder_name_not_valid));
                 }
             }
@@ -236,7 +236,9 @@ public final class CardView extends LinearLayout implements ComponentView<CardCo
         if (validatedNumber.getValidation() == ValidatedField.Validation.VALID) {
             changeFocusOfInput(validatedNumber.getValue());
         }
-
+        if (mComponent==null) {
+            return;
+        }
         final List<CardType> supportedCardType = mComponent.getSupportedFilterCards(validatedNumber.getValue());
         if (supportedCardType.isEmpty()) {
             mCardBrandLogoImageView.setStrokeWidth(0f);
@@ -255,6 +257,9 @@ public final class CardView extends LinearLayout implements ComponentView<CardCo
     }
 
     private boolean isOutputEmpty() {
+        if (mComponent==null) {
+            return true;
+        }
         return mComponent.getOutputData().isEmpty();
     }
 
