@@ -10,21 +10,14 @@ package com.adyen.checkout.example.api
 
 import android.os.Build
 import com.adyen.checkout.base.model.PaymentMethodsApiResponse
-import com.adyen.checkout.base.model.payments.request.CardPaymentMethod
-import com.adyen.checkout.base.model.payments.request.DotpayPaymentMethod
-import com.adyen.checkout.base.model.payments.request.EPSPaymentMethod
-import com.adyen.checkout.base.model.payments.request.EntercashPaymentMethod
-import com.adyen.checkout.base.model.payments.request.GenericPaymentMethod
-import com.adyen.checkout.base.model.payments.request.IdealPaymentMethod
-import com.adyen.checkout.base.model.payments.request.MolpayPaymentMethod
-import com.adyen.checkout.base.model.payments.request.OpenBankingPaymentMethod
-import com.adyen.checkout.base.model.payments.request.PaymentMethodDetails
+import com.adyen.checkout.base.model.payments.request.*
 import com.adyen.checkout.base.model.payments.response.Action
 import com.adyen.checkout.base.model.payments.response.QrCodeAction
 import com.adyen.checkout.base.model.payments.response.RedirectAction
 import com.adyen.checkout.base.model.payments.response.Threeds2ChallengeAction
 import com.adyen.checkout.base.model.payments.response.Threeds2FingerprintAction
 import com.adyen.checkout.base.model.payments.response.VoucherAction
+import com.adyen.checkout.base.util.PaymentMethodTypes
 import com.adyen.checkout.core.api.SSLSocketUtil
 import com.adyen.checkout.example.BuildConfig
 import com.adyen.checkout.example.api.model.PaymentMethodsRequest
@@ -57,11 +50,15 @@ interface CheckoutApiService {
                     .add(PolymorphicJsonAdapterFactory.of(PaymentMethodDetails::class.java, PaymentMethodDetails.TYPE)
                             .withSubtype(CardPaymentMethod::class.java, CardPaymentMethod.PAYMENT_METHOD_TYPE)
                             .withSubtype(IdealPaymentMethod::class.java, IdealPaymentMethod.PAYMENT_METHOD_TYPE)
-                            .withSubtype(MolpayPaymentMethod::class.java, MolpayPaymentMethod.PAYMENT_METHOD_TYPE)
+                            .withSubtype(MolpayPaymentMethod::class.java, PaymentMethodTypes.MOLPAY_VIETNAM)
+//                            .withSubtype(MolpayPaymentMethod::class.java, PaymentMethodTypes.MOLPAY_MALAYSIA)
+//                            .withSubtype(MolpayPaymentMethod::class.java, PaymentMethodTypes.MOLPAY_THAILAND)
                             .withSubtype(EPSPaymentMethod::class.java, EPSPaymentMethod.PAYMENT_METHOD_TYPE)
                             .withSubtype(DotpayPaymentMethod::class.java, DotpayPaymentMethod.PAYMENT_METHOD_TYPE)
                             .withSubtype(EntercashPaymentMethod::class.java, EntercashPaymentMethod.PAYMENT_METHOD_TYPE)
                             .withSubtype(OpenBankingPaymentMethod::class.java, OpenBankingPaymentMethod.PAYMENT_METHOD_TYPE)
+                            .withSubtype(GooglePayPaymentMethod::class.java, GooglePayPaymentMethod.PAYMENT_METHOD_TYPE)
+                            .withSubtype(SepaPaymentMethod::class.java, SepaPaymentMethod.PAYMENT_METHOD_TYPE)
                             .withSubtype(GenericPaymentMethod::class.java, "other")
                     )
                     .add(PolymorphicJsonAdapterFactory.of(Action::class.java, Action.TYPE)

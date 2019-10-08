@@ -29,14 +29,20 @@ public final class MolpayComponent extends IssuerListComponent<MolpayPaymentMeth
     public static final PaymentComponentProvider<MolpayComponent, MolpayConfiguration> PROVIDER =
             new PaymentComponentProviderImpl<>(MolpayComponent.class);
 
+    private static final String[] PAYMENT_METHOD_TYPES = {
+            PaymentMethodTypes.MOLPAY_THAILAND,
+            PaymentMethodTypes.MOLPAY_MALAYSIA,
+            PaymentMethodTypes.MOLPAY_VIETNAM
+    };
+
     public MolpayComponent(@NonNull PaymentMethod paymentMethod, @NonNull MolpayConfiguration configuration) {
         super(paymentMethod, configuration);
     }
 
     @NonNull
     @Override
-    public String getPaymentMethodType() {
-        return PaymentMethodTypes.MOLPAY;
+    public String[] getSupportedPaymentMethodTypes() {
+        return PAYMENT_METHOD_TYPES;
     }
 
     @Override

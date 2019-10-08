@@ -17,7 +17,7 @@ import android.support.annotation.NonNull;
 import android.webkit.URLUtil;
 
 import com.adyen.checkout.base.BuildConfig;
-import com.adyen.checkout.core.exeption.CheckoutException;
+import com.adyen.checkout.core.exception.CheckoutException;
 import com.adyen.checkout.core.util.LocaleUtil;
 import com.adyen.checkout.core.util.ParcelUtils;
 

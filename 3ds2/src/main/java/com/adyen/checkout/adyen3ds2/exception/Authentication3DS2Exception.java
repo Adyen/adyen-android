@@ -10,7 +10,7 @@ package com.adyen.checkout.adyen3ds2.exception;
 
 import android.support.annotation.NonNull;
 
-import com.adyen.checkout.core.exeption.ComponentException;
+import com.adyen.checkout.core.exception.ComponentException;
 
 /**
  * This exception is just an indication that the 3DS2 Authentication did not finish as expected.

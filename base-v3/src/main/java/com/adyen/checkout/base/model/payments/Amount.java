@@ -12,18 +12,30 @@ import android.os.Parcel;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 
-import com.adyen.checkout.core.exeption.ModelSerializationException;
+import com.adyen.checkout.core.exception.ModelSerializationException;
 import com.adyen.checkout.core.model.JsonUtils;
 import com.adyen.checkout.core.model.ModelObject;
 
 import org.json.JSONException;
 import org.json.JSONObject;
 
-@SuppressWarnings("MemberName")
+@SuppressWarnings({"MemberName", "PMD.DataClass"})
 public class Amount extends ModelObject {
 
     @NonNull
     public static final Creator<Amount> CREATOR = new Creator<>(Amount.class);
+
+    @NonNull
+    public static final Amount EMPTY;
+
+    private static final String EMPTY_CURRENCY = "NONE";
+    private static final int EMPTY_VALUE = -1;
+
+    static {
+        EMPTY = new Amount();
+        EMPTY.setCurrency(EMPTY_CURRENCY);
+        EMPTY.setValue(EMPTY_VALUE);
+    }
 
     private static final String CURRENCY = "currency";
     private static final String VALUE = "value";
@@ -71,12 +83,15 @@ public class Amount extends ModelObject {
         this.currency = currency;
     }
 
-    @Nullable
     public int getValue() {
         return value;
     }
 
-    public void setValue(@Nullable int value) {
+    public void setValue(int value) {
         this.value = value;
+    }
+
+    public boolean isEmpty() {
+        return EMPTY_CURRENCY.equals(currency) || value == EMPTY_VALUE;
     }
 }

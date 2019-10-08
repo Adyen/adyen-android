@@ -8,18 +8,14 @@
 
 package com.adyen.checkout.openbanking;
 
-import android.arch.lifecycle.LifecycleOwner;
 import android.content.Context;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.util.AttributeSet;
 
-import com.adyen.checkout.core.log.LogUtil;
-import com.adyen.checkout.core.log.Logger;
 import com.adyen.checkout.issuerlist.IssuerListSpinnerView;
 
 public final class OpenBankingSpinnerView extends IssuerListSpinnerView<OpenBankingComponent> {
-    private static final String TAG = LogUtil.getTag();
 
     public OpenBankingSpinnerView(@NonNull Context context) {
         super(context);
@@ -31,12 +27,5 @@ public final class OpenBankingSpinnerView extends IssuerListSpinnerView<OpenBank
 
     public OpenBankingSpinnerView(@NonNull Context context, @Nullable AttributeSet attrs, int defStyleAttr) {
         super(context, attrs, defStyleAttr);
-    }
-
-    @Override
-    public void attach(@NonNull OpenBankingComponent component, @NonNull LifecycleOwner lifecycleOwner) {
-        super.attach(component, lifecycleOwner);
-        Logger.d(TAG, "attach");
-        mComponent.observeOutputData(lifecycleOwner, createOutputDataObserver());
     }
 }

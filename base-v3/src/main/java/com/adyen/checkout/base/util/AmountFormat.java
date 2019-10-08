@@ -11,7 +11,8 @@ package com.adyen.checkout.base.util;
 import android.support.annotation.NonNull;
 
 import com.adyen.checkout.base.model.payments.Amount;
-import com.adyen.checkout.core.exeption.NoConstructorException;
+import com.adyen.checkout.core.exception.CheckoutException;
+import com.adyen.checkout.core.exception.NoConstructorException;
 import com.adyen.checkout.core.log.LogUtil;
 import com.adyen.checkout.core.log.Logger;
 
@@ -51,10 +52,10 @@ public final class AmountFormat {
         final String normalizedCurrencyCode = currencyCode.replaceAll("[^A-Z]", "").toUpperCase(Locale.ROOT);
 
         try {
-            final CheckoutCurrency checkoutCurrency = CheckoutCurrency.valueOf(normalizedCurrencyCode);
+            final CheckoutCurrency checkoutCurrency = CheckoutCurrency.find(normalizedCurrencyCode);
             return checkoutCurrency.getFractionDigits();
-        } catch (IllegalArgumentException e) {
-            Logger.e(TAG, normalizedCurrencyCode + " is an unsupported currency. Falling back to information from java.util.Currency.");
+        } catch (CheckoutException e) {
+            Logger.e(TAG, normalizedCurrencyCode + " is an unsupported currency. Falling back to information from java.util.Currency.", e);
         }
 
         try {

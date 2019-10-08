@@ -10,7 +10,7 @@ package com.adyen.checkout.base;
 
 import android.support.annotation.NonNull;
 
-import com.adyen.checkout.core.exeption.CheckoutException;
+import com.adyen.checkout.core.exception.CheckoutException;
 
 /**
  * Data about an error that happened inside a component.

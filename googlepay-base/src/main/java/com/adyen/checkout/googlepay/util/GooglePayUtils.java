@@ -12,8 +12,8 @@ import android.support.annotation.NonNull;
 
 import com.adyen.checkout.base.model.payments.Amount;
 import com.adyen.checkout.base.util.AmountFormat;
-import com.adyen.checkout.core.exeption.CheckoutException;
-import com.adyen.checkout.core.exeption.NoConstructorException;
+import com.adyen.checkout.core.exception.CheckoutException;
+import com.adyen.checkout.core.exception.NoConstructorException;
 import com.adyen.checkout.googlepay.GooglePayConfiguration;
 import com.adyen.checkout.googlepay.model.CardParameters;
 import com.adyen.checkout.googlepay.model.TokenizationParameters;

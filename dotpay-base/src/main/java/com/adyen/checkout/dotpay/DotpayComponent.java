@@ -29,14 +29,16 @@ public final class DotpayComponent extends IssuerListComponent<DotpayPaymentMeth
     public static final PaymentComponentProvider<DotpayComponent, DotpayConfiguration> PROVIDER =
             new PaymentComponentProviderImpl<>(DotpayComponent.class);
 
+    private static final String[] PAYMENT_METHOD_TYPES = {PaymentMethodTypes.DOTPAY};
+
     public DotpayComponent(@NonNull PaymentMethod paymentMethod, @NonNull DotpayConfiguration configuration) {
         super(paymentMethod, configuration);
     }
 
     @NonNull
     @Override
-    public String getPaymentMethodType() {
-        return PaymentMethodTypes.DOTPAY;
+    public String[] getSupportedPaymentMethodTypes() {
+        return PAYMENT_METHOD_TYPES;
     }
 
     @Override

@@ -11,7 +11,7 @@ package com.adyen.checkout.base.model.payments.request;
 import android.os.Parcel;
 import android.support.annotation.NonNull;
 
-import com.adyen.checkout.core.exeption.ModelSerializationException;
+import com.adyen.checkout.core.exception.ModelSerializationException;
 import com.adyen.checkout.core.model.JsonUtils;
 
 import org.json.JSONException;

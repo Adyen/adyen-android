@@ -22,8 +22,8 @@ import android.view.View;
 import android.widget.CompoundButton;
 import android.widget.LinearLayout;
 
-import com.adyen.checkout.base.ComponentView;
 import com.adyen.checkout.base.api.ImageLoader;
+import com.adyen.checkout.base.ui.view.AdyenLinearLayout;
 import com.adyen.checkout.base.ui.view.AdyenTextInputEditText;
 import com.adyen.checkout.base.ui.view.RoundCornerImageView;
 import com.adyen.checkout.base.validation.ValidatedField;
@@ -42,25 +42,21 @@ import java.util.List;
  * CardView for {@link CardComponent}.
  */
 @SuppressWarnings("SyntheticAccessor")
-public final class CardView extends LinearLayout implements ComponentView<CardComponent>, Observer<CardOutputData> {
+public final class CardView extends AdyenLinearLayout<CardComponent> implements Observer<CardOutputData> {
 
     private RoundCornerImageView mCardBrandLogoImageView;
 
-    private final CardNumberInput mCardNumberEditText;
-    private final ExpiryDateInput mExpiryDateEditText;
+    private CardNumberInput mCardNumberEditText;
+    private ExpiryDateInput mExpiryDateEditText;
 
-    private final TextInputLayout mExpiryDateInput;
-    private final TextInputLayout mSecurityCodeInput;
-    private final TextInputLayout mCardNumberInput;
-    private final TextInputLayout mCardHolderInput;
-    private final SwitchCompat mStorePaymentMethod;
+    private TextInputLayout mExpiryDateInput;
+    private TextInputLayout mSecurityCodeInput;
+    private TextInputLayout mCardNumberInput;
+    private TextInputLayout mCardHolderInput;
 
-    private final CardInputData mCardInputData;
+    private CardInputData mCardInputData;
 
     private ImageLoader mImageLoader;
-
-    @Nullable
-    private CardComponent mComponent;
 
     public CardView(@NonNull Context context) {
         this(context, null);
@@ -70,21 +66,24 @@ public final class CardView extends LinearLayout implements ComponentView<CardCo
         this(context, attrs, 0);
     }
 
-    // Regular View constructor
-    @SuppressWarnings("JavadocMethod")
+    /**
+     * View for CardComponent.
+     */
     public CardView(@NonNull Context context, @Nullable AttributeSet attrs, int defStyleAttr) {
         super(context, attrs, defStyleAttr);
-
         setOrientation(LinearLayout.VERTICAL);
 
-        LayoutInflater.from(context).inflate(R.layout.card_view, this, true);
+        LayoutInflater.from(getContext()).inflate(R.layout.card_view, this, true);
 
         final int padding = (int) getResources().getDimension(R.dimen.standard_margin);
         setPadding(padding, padding, padding, 0);
+    }
 
+    @Override
+    public void initView() {
         mCardBrandLogoImageView = findViewById(R.id.cardBrandLogo_imageView);
 
-        mStorePaymentMethod = findViewById(R.id.switch_storePaymentMethod);
+        final SwitchCompat storePaymentMethod = findViewById(R.id.switch_storePaymentMethod);
 
         mCardNumberInput = findViewById(R.id.textInputLayout_cardNumber);
         mCardNumberEditText = (CardNumberInput) mCardNumberInput.getEditText();
@@ -98,17 +97,17 @@ public final class CardView extends LinearLayout implements ComponentView<CardCo
         mCardNumberEditText.setOnFocusChangeListener(new OnFocusChangeListener() {
             @Override
             public void onFocusChange(View v, boolean hasFocus) {
-                if (!mComponent.isStoredPaymentMethod()) {
+                if (!getComponent().isStoredPaymentMethod()) {
                     mCardNumberInput.setErrorEnabled(!hasFocus);
 
-                    if (!hasFocus && (isOutputEmpty() || !mComponent.getOutputData().getCardNumberField().isValid())) {
+                    if (!hasFocus && (isOutputEmpty() || !getComponent().getOutputData().getCardNumberField().isValid())) {
                         mCardNumberInput.setError(getContext().getString(R.string.checkout_card_number_not_valid));
                     }
                 }
             }
         });
 
-        mStorePaymentMethod.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+        storePaymentMethod.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             @Override
             public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
                 mCardInputData.setStorePayment(isChecked);
@@ -131,7 +130,7 @@ public final class CardView extends LinearLayout implements ComponentView<CardCo
             public void onFocusChange(View v, boolean hasFocus) {
                 mExpiryDateInput.setErrorEnabled(!hasFocus);
 
-                if (!hasFocus && (isOutputEmpty() || !mComponent.getOutputData().getExpiryDateField().isValid())) {
+                if (!hasFocus && (isOutputEmpty() || !getComponent().getOutputData().getExpiryDateField().isValid())) {
                     mExpiryDateInput.setError(getContext().getString(R.string.checkout_expiry_date_not_valid));
                 }
             }
@@ -151,7 +150,7 @@ public final class CardView extends LinearLayout implements ComponentView<CardCo
             public void onFocusChange(View v, boolean hasFocus) {
                 mSecurityCodeInput.setErrorEnabled(!hasFocus);
 
-                if (!hasFocus && (isOutputEmpty() || !mComponent.getOutputData().getSecurityCodeField().isValid())) {
+                if (!hasFocus && (isOutputEmpty() || !getComponent().getOutputData().getSecurityCodeField().isValid())) {
                     mSecurityCodeInput.setError(getContext().getString(R.string.checkout_security_code_not_valid));
                 }
             }
@@ -171,34 +170,16 @@ public final class CardView extends LinearLayout implements ComponentView<CardCo
             public void onFocusChange(View v, boolean hasFocus) {
                 mCardHolderInput.setErrorEnabled(!hasFocus);
 
-                if (!hasFocus && (isOutputEmpty() || !mComponent.getOutputData().getHolderNameField().isValid())) {
+                if (!hasFocus && (isOutputEmpty() || !getComponent().getOutputData().getHolderNameField().isValid())) {
                     mCardHolderInput.setError(getContext().getString(R.string.checkout_holder_name_not_valid));
                 }
             }
         });
 
         mCardInputData = new CardInputData();
-    }
 
-    @SuppressWarnings("NullableProblems")
-    @Override
-    public void onChanged(@NonNull CardOutputData cardOutputData) {
-        if (!cardOutputData.isEmpty()) {
-            onCardNumberValidated(cardOutputData.getCardNumberField());
-            onExpiryDateValidated(cardOutputData.getExpiryDateField());
-        }
-
-        if (mComponent != null && mComponent.isStoredPaymentMethod()) {
-            mSecurityCodeInput.getEditText().requestFocus();
-        }
-    }
-
-    @Override
-    public void attach(@NonNull CardComponent component, @NonNull LifecycleOwner lifecycleOwner) {
-        mComponent = component;
-
-        if (mComponent.isStoredPaymentMethod()) {
-            final CardInputData storedCardInput = mComponent.getStoredPaymentInputData();
+        if (getComponent().isStoredPaymentMethod()) {
+            final CardInputData storedCardInput = getComponent().getStoredPaymentInputData();
 
             mCardNumberEditText.setText(
                     getContext().getString(R.string.card_number_4digit, storedCardInput.getCardNumber()));
@@ -207,18 +188,34 @@ public final class CardView extends LinearLayout implements ComponentView<CardCo
             mExpiryDateEditText.setDate(storedCardInput.getExpiryDate());
             mExpiryDateEditText.setEnabled(false);
 
-            mStorePaymentMethod.setVisibility(GONE);
+            storePaymentMethod.setVisibility(GONE);
             mCardHolderInput.setVisibility(GONE);
         } else {
-            mCardHolderInput.setVisibility(mComponent.isHolderNameRequire() ? VISIBLE : GONE);
-            mStorePaymentMethod.setVisibility(mComponent.showStorePaymentField() ? VISIBLE : GONE);
+            mCardHolderInput.setVisibility(getComponent().isHolderNameRequire() ? VISIBLE : GONE);
+            storePaymentMethod.setVisibility(getComponent().showStorePaymentField() ? VISIBLE : GONE);
+        }
+    }
+
+    @Override
+    public void onComponentAttached() {
+        mImageLoader = ImageLoader.getInstance(getContext(), getComponent().getConfiguration().getEnvironment());
+    }
+
+    @Override
+    public void onChanged(@Nullable CardOutputData cardOutputData) {
+        if (!cardOutputData.isEmpty()) {
+            onCardNumberValidated(cardOutputData.getCardNumberField());
+            onExpiryDateValidated(cardOutputData.getExpiryDateField());
         }
 
-        mImageLoader = ImageLoader.getInstance(getContext(), component.getConfiguration().getEnvironment());
+        if (getComponent().isStoredPaymentMethod()) {
+            mSecurityCodeInput.getEditText().requestFocus();
+        }
+    }
 
-        mComponent.observeOutputData(lifecycleOwner, this);
-
-        mComponent.sendAnalyticsEvent(getContext());
+    @Override
+    public void observeComponentChanges(@NonNull LifecycleOwner lifecycleOwner) {
+        getComponent().observeOutputData(lifecycleOwner, this);
     }
 
     @Override
@@ -227,9 +224,7 @@ public final class CardView extends LinearLayout implements ComponentView<CardCo
     }
 
     private void notifyInputDataChanged() {
-        if (mComponent != null) {
-            mComponent.inputDataChanged(mCardInputData);
-        }
+        getComponent().inputDataChanged(mCardInputData);
     }
 
     private void onCardNumberValidated(@NonNull ValidatedField<String> validatedNumber) {
@@ -237,7 +232,7 @@ public final class CardView extends LinearLayout implements ComponentView<CardCo
             changeFocusOfInput(validatedNumber.getValue());
         }
 
-        final List<CardType> supportedCardType = mComponent.getSupportedFilterCards(validatedNumber.getValue());
+        final List<CardType> supportedCardType = getComponent().getSupportedFilterCards(validatedNumber.getValue());
         if (supportedCardType.isEmpty()) {
             mCardBrandLogoImageView.setStrokeWidth(0f);
             mCardBrandLogoImageView.setImageResource(R.drawable.ic_card);
@@ -249,13 +244,13 @@ public final class CardView extends LinearLayout implements ComponentView<CardCo
     }
 
     private void onExpiryDateValidated(@Nullable ValidatedField<ExpiryDate> validatedExpiryDate) {
-        if (validatedExpiryDate != null && validatedExpiryDate.getValidation() == ValidatedField.Validation.VALID) {
+        if (validatedExpiryDate.getValidation() == ValidatedField.Validation.VALID) {
             goToNextInputIfFocus(mExpiryDateEditText);
         }
     }
 
     private boolean isOutputEmpty() {
-        return mComponent.getOutputData().isEmpty();
+        return getComponent().getOutputData().isEmpty();
     }
 
     private void changeFocusOfInput(String numberValue) {

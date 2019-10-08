@@ -11,6 +11,7 @@ package com.adyen.checkout.base;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 
+import com.adyen.checkout.base.component.Configuration;
 import com.adyen.checkout.base.model.paymentmethods.PaymentMethod;
 
 public interface ComponentAvailableCallback<ConfigurationT extends Configuration> {

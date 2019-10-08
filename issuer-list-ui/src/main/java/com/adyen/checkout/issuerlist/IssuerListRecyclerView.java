@@ -11,18 +11,16 @@ package com.adyen.checkout.issuerlist;
 import android.arch.lifecycle.LifecycleOwner;
 import android.arch.lifecycle.Observer;
 import android.content.Context;
-import android.support.annotation.CallSuper;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.AttributeSet;
 import android.view.LayoutInflater;
-import android.widget.LinearLayout;
 
-import com.adyen.checkout.base.ComponentView;
 import com.adyen.checkout.base.api.ImageLoader;
 import com.adyen.checkout.base.ui.adapter.ClickableListRecyclerAdapter;
+import com.adyen.checkout.base.ui.view.AdyenLinearLayout;
 import com.adyen.checkout.core.log.LogUtil;
 import com.adyen.checkout.core.log.Logger;
 import com.adyen.checkout.issuerlist.ui.R;
@@ -30,14 +28,11 @@ import com.adyen.checkout.issuerlist.ui.R;
 import java.util.Collections;
 import java.util.List;
 
-public abstract class IssuerListRecyclerView<IssuerListComponentT extends IssuerListComponent> extends LinearLayout implements
-        ComponentView<IssuerListComponentT>, Observer<List<IssuerModel>>, ClickableListRecyclerAdapter.OnItemCLickedListener {
+public abstract class IssuerListRecyclerView<IssuerListComponentT extends IssuerListComponent> extends
+        AdyenLinearLayout<IssuerListComponentT> implements Observer<List<IssuerModel>>, ClickableListRecyclerAdapter.OnItemCLickedListener {
     private static final String TAG = LogUtil.getTag();
 
-    @Nullable
-    protected IssuerListComponentT mComponent;
-
-    private final RecyclerView mIssuersRecyclerView;
+    private RecyclerView mIssuersRecyclerView;
     private IssuerListRecyclerAdapter mIssuersAdapter;
 
     private final IssuerListInputData mIdealInputData = new IssuerListInputData();
@@ -54,27 +49,30 @@ public abstract class IssuerListRecyclerView<IssuerListComponentT extends Issuer
     @SuppressWarnings("JavadocMethod")
     public IssuerListRecyclerView(@NonNull Context context, @Nullable AttributeSet attrs, int defStyleAttr) {
         super(context, attrs, defStyleAttr);
-
         LayoutInflater.from(getContext()).inflate(R.layout.issuer_list_recycler_view, this, true);
-
-        mIssuersRecyclerView = findViewById(R.id.recycler_issuers);
-        mIssuersRecyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
     }
 
-    @CallSuper
     @Override
-    public void attach(@NonNull IssuerListComponentT component, @NonNull LifecycleOwner lifecycleOwner) {
-        mComponent = component;
+    public void initView() {
+        mIssuersRecyclerView = findViewById(R.id.recycler_issuers);
+        mIssuersRecyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
 
-        mIssuersAdapter = new IssuerListRecyclerAdapter(Collections.<IssuerModel>emptyList(),
-                ImageLoader.getInstance(getContext(), component.getConfiguration().getEnvironment()), component.getPaymentMethodType(),
-                hideIssuersLogo());
         mIssuersAdapter.setItemCLickListener(this);
         mIssuersRecyclerView.setAdapter(mIssuersAdapter);
+    }
 
-        mComponent.getIssuersLiveData().observe(lifecycleOwner, this);
+    @Override
+    public void onComponentAttached() {
+        mIssuersAdapter = new IssuerListRecyclerAdapter(Collections.<IssuerModel>emptyList(),
+                ImageLoader.getInstance(getContext(), getComponent().getConfiguration().getEnvironment()),
+                getComponent().getPaymentMethod().getType(),
+                hideIssuersLogo());
+    }
 
-        mComponent.sendAnalyticsEvent(getContext());
+    @Override
+    public void observeComponentChanges(@NonNull LifecycleOwner lifecycleOwner) {
+        getComponent().getIssuersLiveData().observe(lifecycleOwner, this);
+
     }
 
     @Override
@@ -117,10 +115,6 @@ public abstract class IssuerListRecyclerView<IssuerListComponentT extends Issuer
     public void onItemClicked(int position) {
         Logger.d(TAG, "onItemClicked - " + position);
         mIdealInputData.setSelectedIssuer(mIssuersAdapter.getIssuerAt(position));
-        if (mComponent != null) {
-            mComponent.inputDataChanged(mIdealInputData);
-        } else {
-            Logger.e(TAG, "component null");
-        }
+        getComponent().inputDataChanged(mIdealInputData);
     }
 }

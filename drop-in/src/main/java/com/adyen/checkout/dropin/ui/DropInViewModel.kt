@@ -12,7 +12,7 @@ import android.app.Application
 import android.arch.lifecycle.AndroidViewModel
 import android.arch.lifecycle.MutableLiveData
 import com.adyen.checkout.base.ComponentAvailableCallback
-import com.adyen.checkout.base.Configuration
+import com.adyen.checkout.base.component.Configuration
 import com.adyen.checkout.base.model.PaymentMethodsApiResponse
 import com.adyen.checkout.base.model.paymentmethods.PaymentMethod
 import com.adyen.checkout.base.model.paymentmethods.RecurringDetail

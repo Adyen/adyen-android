@@ -7,17 +7,14 @@
     <application>
         <activity
             android:name=".ui.DropInActivity"
-            android:theme="@style/AdyenCheckout.Translucent"/>
-        <activity
-            android:name=".ui.LoadingActivity"
             android:launchMode="singleTask"
-            android:theme="@style/AdyenCheckout.Translucent"
-            android:windowSoftInputMode="stateAlwaysHidden">
+            android:theme="@style/AdyenCheckout.Translucent">
             <intent-filter>
                 <action android:name="android.intent.action.VIEW"/>
 
                 <category android:name="android.intent.category.DEFAULT"/>
                 <category android:name="android.intent.category.BROWSABLE"/>
+
 
                 <data
                     android:host="${applicationId}"

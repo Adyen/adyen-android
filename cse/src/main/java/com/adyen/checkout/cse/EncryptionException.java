@@ -11,7 +11,7 @@ package com.adyen.checkout.cse;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 
-import com.adyen.checkout.core.exeption.CheckoutException;
+import com.adyen.checkout.core.exception.CheckoutException;
 
 public class EncryptionException extends CheckoutException {
 

@@ -12,6 +12,7 @@ import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -61,12 +62,14 @@ public enum CardType {
 
     private final Pattern mPattern;
 
-    private static final Map<String, CardType> MAPPED_BY_NAME = new HashMap<>();
+    private static final Map<String, CardType> MAPPED_BY_NAME;
 
     static {
+        final Map<String, CardType> hashMap = new HashMap<>();
         for (CardType type : CardType.values()) {
-            MAPPED_BY_NAME.put(type.mTxVariant, type);
+            hashMap.put(type.mTxVariant, type);
         }
+        MAPPED_BY_NAME = Collections.unmodifiableMap(hashMap);
     }
 
     /**

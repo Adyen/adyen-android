@@ -23,7 +23,7 @@ import com.adyen.checkout.base.model.payments.request.GenericPaymentMethod
 import com.adyen.checkout.base.model.payments.request.PaymentComponentData
 import com.adyen.checkout.base.model.payments.request.PaymentMethodDetails
 import com.adyen.checkout.base.util.PaymentMethodTypes
-import com.adyen.checkout.core.exeption.CheckoutException
+import com.adyen.checkout.core.exception.CheckoutException
 import com.adyen.checkout.core.log.LogUtil
 import com.adyen.checkout.core.log.Logger
 import com.adyen.checkout.dropin.R

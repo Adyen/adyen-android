@@ -18,7 +18,6 @@ import android.support.annotation.Nullable;
 import android.support.annotation.WorkerThread;
 
 import com.adyen.checkout.base.ComponentError;
-import com.adyen.checkout.base.Configuration;
 import com.adyen.checkout.base.PaymentComponentState;
 import com.adyen.checkout.base.analytics.AnalyticEvent;
 import com.adyen.checkout.base.analytics.AnalyticsDispatcher;
@@ -26,9 +25,10 @@ import com.adyen.checkout.base.component.lifecycle.PaymentComponentViewModel;
 import com.adyen.checkout.base.model.paymentmethods.PaymentMethod;
 import com.adyen.checkout.core.api.ThreadManager;
 import com.adyen.checkout.core.code.Lint;
-import com.adyen.checkout.core.exeption.CheckoutException;
+import com.adyen.checkout.core.exception.CheckoutException;
 import com.adyen.checkout.core.log.LogUtil;
 import com.adyen.checkout.core.log.Logger;
+import com.adyen.checkout.core.util.StringUtil;
 
 public abstract class BasePaymentComponent<ConfigurationT extends Configuration, InputDataT extends InputData, OutputDataT extends OutputData>
         extends PaymentComponentViewModel<ConfigurationT> {
@@ -59,6 +59,18 @@ public abstract class BasePaymentComponent<ConfigurationT extends Configuration,
         assertSupported(paymentMethod);
         mOutputData = createEmptyOutputData();
         mOutputLiveData.setValue(mOutputData);
+    }
+
+    @SuppressWarnings("MissingDeprecated")
+    @Deprecated
+    @NonNull
+    @Override
+    public String getPaymentMethodType() {
+        if (getSupportedPaymentMethodTypes().length > 0) {
+            return getSupportedPaymentMethodTypes()[0];
+        } else {
+            throw new CheckoutException("Component supported types is empty");
+        }
     }
 
     @Override
@@ -115,7 +127,12 @@ public abstract class BasePaymentComponent<ConfigurationT extends Configuration,
                 flavor = AnalyticEvent.Flavor.COMPONENT;
             }
 
-            final AnalyticEvent analyticEvent = AnalyticEvent.create(context, flavor, getPaymentMethodType(), getConfiguration().getShopperLocale());
+            final String type = getPaymentMethod().getType();
+            if (!StringUtil.hasContent(type)) {
+                throw new CheckoutException("Payment method has empty or null type");
+            }
+
+            final AnalyticEvent analyticEvent = AnalyticEvent.create(context, flavor, type, getConfiguration().getShopperLocale());
             AnalyticsDispatcher.dispatchEvent(context, getConfiguration().getEnvironment(), analyticEvent);
         }
     }
@@ -168,7 +185,12 @@ public abstract class BasePaymentComponent<ConfigurationT extends Configuration,
     }
 
     private boolean isSupported(@NonNull PaymentMethod paymentMethod) {
-        return getPaymentMethodType().equals(paymentMethod.getType());
+        for (String paymentMethodType : getSupportedPaymentMethodTypes()) {
+            if (paymentMethodType.equals(paymentMethod.getType())) {
+                return true;
+            }
+        }
+        return false;
     }
 
     public void setCreatedForDropIn() {

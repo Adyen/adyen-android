@@ -11,7 +11,6 @@ package com.adyen.checkout.base.component;
 import android.content.Context;
 import android.support.annotation.NonNull;
 
-import com.adyen.checkout.base.Configuration;
 import com.adyen.checkout.core.api.Environment;
 import com.adyen.checkout.core.util.LocaleUtil;
 

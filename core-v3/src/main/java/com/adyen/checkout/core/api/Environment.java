@@ -12,7 +12,7 @@ import android.os.Parcel;
 import android.os.Parcelable;
 import android.support.annotation.NonNull;
 
-import com.adyen.checkout.core.exeption.CheckoutException;
+import com.adyen.checkout.core.exception.CheckoutException;
 import com.adyen.checkout.core.util.ParcelUtils;
 
 import java.net.MalformedURLException;

@@ -8,6 +8,15 @@
 
 package com.adyen.checkout.base.util;
 
+import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
+
+import com.adyen.checkout.core.util.StringUtil;
+
+import java.util.Collections;
+import java.util.HashMap;
+import java.util.Map;
+
 /**
  * Utility class holding currency information.
  * @see <a href="https://docs.adyen.com/developers/currency-codes">Adyen currency codes</a>
@@ -152,7 +161,39 @@ public enum CheckoutCurrency {
     ZAR(2),
     ZMW(2);
 
+    private static final Map<String, CheckoutCurrency> CURRENCIES_HASHMAP;
+    static {
+        final HashMap<String, CheckoutCurrency> hashMap = new HashMap<>();
+        for (CheckoutCurrency checkoutCurrency : CheckoutCurrency.values()) {
+            hashMap.put(checkoutCurrency.name(), checkoutCurrency);
+        }
+        CURRENCIES_HASHMAP = Collections.unmodifiableMap(hashMap);
+    }
+
     private final int mFractionDigits;
+
+    /**
+     * Check if the currency code is supported by Adyen.
+     *
+     * @param currency the 3 letter code of the currency.
+     * @return if the currency exists and is supported by Adyen
+     */
+    public static boolean isSupported(@Nullable String currency) {
+        return StringUtil.hasContent(currency) && CURRENCIES_HASHMAP.containsKey(currency);
+    }
+
+    /**
+     * Find the instance of {@link CheckoutCurrency} based on the currency code.
+     *
+     * @param currency The currency code.
+     * @return The CheckoutCurrency instance, or throws a {@link com.adyen.checkout.core.exeption.CheckoutException} if the code is not supported.
+     */
+    @NonNull
+    public static CheckoutCurrency find(@Nullable String currency) {
+        CurrencyUtils.assertCurrency(currency);
+        //noinspection ConstantConditions
+        return CURRENCIES_HASHMAP.get(currency);
+    }
 
     CheckoutCurrency(int fractionDigits) {
         mFractionDigits = fractionDigits;

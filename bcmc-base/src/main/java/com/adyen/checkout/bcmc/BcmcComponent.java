@@ -36,6 +36,8 @@ import com.adyen.checkout.cse.Encryptor;
 public final class BcmcComponent extends BasePaymentComponent<BcmcConfiguration, BcmcInputData, BcmcOutputData> {
     private static final String TAG = LogUtil.getTag();
 
+    private static final String[] PAYMENT_METHOD_TYPES = {PaymentMethodTypes.BCMC};
+
     public static final PaymentComponentProvider<BcmcComponent, BcmcConfiguration> PROVIDER = new BcmcComponentProvider();
     public static final CardType SUPPORTED_CARD_TYPE = CardType.BCMC;
 
@@ -69,6 +71,12 @@ public final class BcmcComponent extends BasePaymentComponent<BcmcConfiguration,
     @Override
     public String getPaymentMethodType() {
         return PaymentMethodTypes.BCMC;
+    }
+
+    @NonNull
+    @Override
+    public String[] getSupportedPaymentMethodTypes() {
+        return PAYMENT_METHOD_TYPES;
     }
 
     @NonNull
@@ -131,7 +139,6 @@ public final class BcmcComponent extends BasePaymentComponent<BcmcConfiguration,
         return new BcmcOutputData();
     }
 
-    @NonNull
     protected boolean isCardNumberSupported(@Nullable String cardNumber) {
 
         if (cardNumber == null || cardNumber.isEmpty()) {

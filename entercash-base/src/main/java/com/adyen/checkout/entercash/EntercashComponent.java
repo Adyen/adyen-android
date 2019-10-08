@@ -29,14 +29,16 @@ public final class EntercashComponent extends IssuerListComponent<EntercashPayme
     public static final PaymentComponentProvider<EntercashComponent, EntercashConfiguration> PROVIDER =
             new PaymentComponentProviderImpl<>(EntercashComponent.class);
 
+    private static final String[] PAYMENT_METHOD_TYPES = {PaymentMethodTypes.ENTERCASH};
+
     public EntercashComponent(@NonNull PaymentMethod paymentMethod, @NonNull EntercashConfiguration configuration) {
         super(paymentMethod, configuration);
     }
 
     @NonNull
     @Override
-    public String getPaymentMethodType() {
-        return PaymentMethodTypes.ENTERCASH;
+    public String[] getSupportedPaymentMethodTypes() {
+        return PAYMENT_METHOD_TYPES;
     }
 
     @Override

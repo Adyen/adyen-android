@@ -12,7 +12,7 @@ import android.content.Context;
 import android.os.Build;
 import android.support.annotation.NonNull;
 
-import com.adyen.checkout.core.exeption.NoConstructorException;
+import com.adyen.checkout.core.exception.NoConstructorException;
 
 import java.util.Locale;
 

@@ -11,8 +11,8 @@ package com.adyen.checkout.base.component.lifecycle;
 import android.arch.lifecycle.ViewModel;
 import android.support.annotation.NonNull;
 
-import com.adyen.checkout.base.Configuration;
 import com.adyen.checkout.base.PaymentComponent;
+import com.adyen.checkout.base.component.Configuration;
 import com.adyen.checkout.base.model.paymentmethods.PaymentMethod;
 
 public abstract class PaymentComponentViewModel<ConfigurationT extends Configuration> extends ViewModel implements PaymentComponent {
@@ -27,7 +27,7 @@ public abstract class PaymentComponentViewModel<ConfigurationT extends Configura
     }
 
     @NonNull
-    protected PaymentMethod getPaymentMethod() {
+    public PaymentMethod getPaymentMethod() {
         return mPaymentMethod;
     }
 

@@ -14,12 +14,12 @@ import android.os.Parcelable;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 
-import com.adyen.checkout.base.component.BaseConfiguration;
+import com.adyen.checkout.base.component.Configuration;
 import com.adyen.checkout.base.component.BaseConfigurationBuilder;
 import com.adyen.checkout.base.model.payments.Amount;
 import com.adyen.checkout.base.util.CheckoutCurrency;
 import com.adyen.checkout.core.api.Environment;
-import com.adyen.checkout.core.exeption.CheckoutException;
+import com.adyen.checkout.core.exception.CheckoutException;
 import com.adyen.checkout.core.util.ParcelUtils;
 import com.adyen.checkout.googlepay.model.BillingAddressParameters;
 import com.adyen.checkout.googlepay.model.MerchantInfo;
@@ -31,7 +31,7 @@ import com.google.android.gms.wallet.WalletConstants;
 import java.util.List;
 import java.util.Locale;
 
-public class GooglePayConfiguration extends BaseConfiguration {
+public class GooglePayConfiguration extends Configuration {
 
     private final String mMerchantAccount;
     private final int mGooglePayEnvironment;

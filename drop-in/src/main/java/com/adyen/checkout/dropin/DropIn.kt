@@ -109,8 +109,10 @@ class DropIn private constructor() {
             dropInConfiguration: DropInConfiguration,
             resultHandlerIntent: Intent
         ) {
-            dropInConfiguration.resultHandlerIntent = resultHandlerIntent
-            startPayment(context, paymentMethodsApiResponse, dropInConfiguration)
+            val newConfigurationBuilder = DropInConfiguration.Builder(dropInConfiguration)
+            newConfigurationBuilder.setResultHandlerIntent(resultHandlerIntent)
+
+            startPayment(context, paymentMethodsApiResponse, newConfigurationBuilder.build())
         }
     }
 }

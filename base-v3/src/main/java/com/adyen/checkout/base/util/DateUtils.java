@@ -10,7 +10,7 @@ package com.adyen.checkout.base.util;
 
 import android.support.annotation.NonNull;
 
-import com.adyen.checkout.core.exeption.NoConstructorException;
+import com.adyen.checkout.core.exception.NoConstructorException;
 
 public final class DateUtils {
 

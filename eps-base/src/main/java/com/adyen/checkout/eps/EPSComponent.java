@@ -30,14 +30,16 @@ public final class EPSComponent extends IssuerListComponent<EPSPaymentMethod> {
     public static final PaymentComponentProvider<EPSComponent, EPSConfiguration> PROVIDER =
             new PaymentComponentProviderImpl<>(EPSComponent.class);
 
+    private static final String[] PAYMENT_METHOD_TYPES = {PaymentMethodTypes.EPS};
+
     public EPSComponent(@NonNull PaymentMethod paymentMethod, @NonNull EPSConfiguration configuration) {
         super(paymentMethod, configuration);
     }
 
     @NonNull
     @Override
-    public String getPaymentMethodType() {
-        return PaymentMethodTypes.EPS;
+    public String[] getSupportedPaymentMethodTypes() {
+        return PAYMENT_METHOD_TYPES;
     }
 
     @Override

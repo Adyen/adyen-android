@@ -15,7 +15,7 @@ import android.support.v4.app.JobIntentService
 import android.support.v4.content.LocalBroadcastManager
 import com.adyen.checkout.base.model.payments.request.PaymentComponentData
 import com.adyen.checkout.base.model.payments.request.PaymentMethodDetails
-import com.adyen.checkout.core.exeption.CheckoutException
+import com.adyen.checkout.core.exception.CheckoutException
 import com.adyen.checkout.core.log.LogUtil
 import com.adyen.checkout.core.log.Logger
 import org.json.JSONObject

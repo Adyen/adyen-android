@@ -15,7 +15,7 @@ import android.support.annotation.Nullable;
 import com.adyen.checkout.base.model.paymentmethods.PaymentMethod;
 import com.adyen.checkout.base.model.paymentmethods.PaymentMethodsGroup;
 import com.adyen.checkout.base.model.paymentmethods.RecurringDetail;
-import com.adyen.checkout.core.exeption.ModelSerializationException;
+import com.adyen.checkout.core.exception.ModelSerializationException;
 import com.adyen.checkout.core.model.JsonUtils;
 import com.adyen.checkout.core.model.ModelObject;
 import com.adyen.checkout.core.model.ModelUtils;

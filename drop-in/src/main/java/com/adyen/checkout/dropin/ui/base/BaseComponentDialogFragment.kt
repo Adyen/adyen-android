@@ -20,7 +20,7 @@ import com.adyen.checkout.base.PaymentComponent
 import com.adyen.checkout.base.PaymentComponentState
 import com.adyen.checkout.base.model.paymentmethods.PaymentMethod
 import com.adyen.checkout.base.model.payments.request.PaymentMethodDetails
-import com.adyen.checkout.core.exeption.CheckoutException
+import com.adyen.checkout.core.exception.CheckoutException
 import com.adyen.checkout.core.log.LogUtil
 import com.adyen.checkout.core.log.Logger
 import com.adyen.checkout.dropin.DropInConfiguration

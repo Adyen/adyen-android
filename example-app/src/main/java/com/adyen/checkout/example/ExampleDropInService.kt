@@ -10,6 +10,7 @@ package com.adyen.checkout.example
 
 import com.adyen.checkout.base.model.payments.request.*
 import com.adyen.checkout.base.model.payments.response.Action
+import com.adyen.checkout.base.util.PaymentMethodTypes
 import com.adyen.checkout.core.log.LogUtil
 import com.adyen.checkout.core.log.Logger
 import com.adyen.checkout.core.model.JsonUtils
@@ -117,7 +118,9 @@ class ExampleDropInService : DropInService() {
                 .add(PolymorphicJsonAdapterFactory.of(PaymentMethodDetails::class.java, PaymentMethodDetails.TYPE)
                         .withSubtype(CardPaymentMethod::class.java, CardPaymentMethod.PAYMENT_METHOD_TYPE)
                         .withSubtype(IdealPaymentMethod::class.java, IdealPaymentMethod.PAYMENT_METHOD_TYPE)
-                        .withSubtype(MolpayPaymentMethod::class.java, MolpayPaymentMethod.PAYMENT_METHOD_TYPE)
+                        .withSubtype(MolpayPaymentMethod::class.java, PaymentMethodTypes.MOLPAY_VIETNAM)
+//                        .withSubtype(MolpayPaymentMethod::class.java, PaymentMethodTypes.MOLPAY_MALAYSIA)
+//                        .withSubtype(MolpayPaymentMethod::class.java, PaymentMethodTypes.MOLPAY_THAILAND)
                         .withSubtype(EPSPaymentMethod::class.java, EPSPaymentMethod.PAYMENT_METHOD_TYPE)
                         .withSubtype(DotpayPaymentMethod::class.java, DotpayPaymentMethod.PAYMENT_METHOD_TYPE)
                         .withSubtype(EntercashPaymentMethod::class.java, EntercashPaymentMethod.PAYMENT_METHOD_TYPE)

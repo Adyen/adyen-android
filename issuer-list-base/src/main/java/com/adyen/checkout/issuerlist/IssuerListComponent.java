@@ -79,7 +79,7 @@ public abstract class IssuerListComponent<IssuerListPaymentMethodT extends Issue
 
         final IssuerModel selectedIssuer = getOutputData().getSelectedIssuer();
 
-        issuerListPaymentMethod.setType(getPaymentMethodType());
+        issuerListPaymentMethod.setType(getPaymentMethod().getType());
         issuerListPaymentMethod.setIssuer(selectedIssuer != null ? selectedIssuer.getId() : "");
 
         final boolean isValid = getOutputData().isValid();

@@ -8,6 +8,7 @@
 
 <resources>
     <string name="pay_button">Pay</string>
+    <string name="pay_button_with_value">Pay %s</string>
     <string name="payment_methods_header">Payment methods</string>
     <string name="payment_failed">Error sending payment. Please try again.</string>
     <string name="action_failed">Error proceeding with payment. Please try again.</string>

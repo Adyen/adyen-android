@@ -22,11 +22,13 @@ import android.widget.Toast
 import com.adyen.checkout.base.model.PaymentMethodsApiResponse
 import com.adyen.checkout.bcmc.BcmcConfiguration
 import com.adyen.checkout.card.CardConfiguration
+import com.adyen.checkout.core.exception.CheckoutException
 import com.adyen.checkout.core.log.LogUtil
 import com.adyen.checkout.core.log.Logger
 import com.adyen.checkout.dropin.DropIn
 import com.adyen.checkout.dropin.DropInConfiguration
 import com.adyen.checkout.example.api.model.createPaymentMethodsRequest
+import com.adyen.checkout.example.api.model.getAmountFromPreferences
 import com.adyen.checkout.example.arch.PaymentMethodsViewModel
 import com.adyen.checkout.googlepay.GooglePayConfiguration
 import kotlinx.android.synthetic.main.activity_main.progressBar
@@ -126,13 +128,19 @@ class MainActivity : AppCompatActivity() {
         val resultIntent = Intent(this, MainActivity::class.java)
         resultIntent.flags = Intent.FLAG_ACTIVITY_CLEAR_TOP
 
-        val dropInConfiguration = DropInConfiguration.Builder(this@MainActivity, resultIntent, ExampleDropInService::class.java)
+        val dropInConfigurationBuilder = DropInConfiguration.Builder(this@MainActivity, resultIntent, ExampleDropInService::class.java)
             .addCardConfiguration(cardConfiguration)
             .addBcmcConfiguration(bcmcConfiguration)
             .addGooglePayConfiguration(googlePayConfig)
-            .build()
 
-        DropIn.startPayment(this@MainActivity, paymentMethodsApiResponse, dropInConfiguration)
+        val amount = getAmountFromPreferences(this@MainActivity)
+        try {
+            dropInConfigurationBuilder.setAmount(amount)
+        } catch (e: CheckoutException) {
+            Logger.e(TAG, "Amount $amount not valid", e)
+        }
+
+        DropIn.startPayment(this@MainActivity, paymentMethodsApiResponse, dropInConfigurationBuilder.build())
     }
 
     private fun setLoading(isLoading: Boolean) {

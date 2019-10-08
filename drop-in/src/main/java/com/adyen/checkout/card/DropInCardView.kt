@@ -13,18 +13,16 @@ import android.arch.lifecycle.Observer
 import android.content.Context
 import android.util.AttributeSet
 import android.view.LayoutInflater
-import android.widget.LinearLayout
-import com.adyen.checkout.base.ComponentView
 import com.adyen.checkout.base.api.ImageLoader
+import com.adyen.checkout.base.ui.view.AdyenLinearLayout
 import com.adyen.checkout.card.data.CardOutputData
 import kotlinx.android.synthetic.main.view_card_component_dropin.view.cardView
 import kotlinx.android.synthetic.main.view_card_component_dropin.view.recyclerView_cardList
 import com.adyen.checkout.dropin.R as dropInR
 
-class DropInCardView : LinearLayout, ComponentView<CardComponent>, Observer<CardOutputData> {
+class DropInCardView : AdyenLinearLayout<CardComponent>, Observer<CardOutputData> {
 
     lateinit var mCardListAdapter: CardListAdapter
-    lateinit var component: CardComponent
 
     constructor(context: Context) : this(context, null)
 
@@ -35,24 +33,28 @@ class DropInCardView : LinearLayout, ComponentView<CardComponent>, Observer<Card
         LayoutInflater.from(context).inflate(dropInR.layout.view_card_component_dropin, this, true)
     }
 
+    override fun initView() {
+        // nothing
+    }
+
+    override fun onComponentAttached() {
+        if (!component.isStoredPaymentMethod) {
+            mCardListAdapter = CardListAdapter(ImageLoader.getInstance(context, component.configuration.environment),
+                component.configuration.supportedCardTypes)
+            recyclerView_cardList.adapter = mCardListAdapter
+        }
+    }
+
+    override fun observeComponentChanges(lifecycleOwner: LifecycleOwner) {
+        cardView.attach(component, lifecycleOwner)
+        component.observeOutputData(lifecycleOwner, this)
+    }
+
     override fun onChanged(cardOutputData: CardOutputData?) {
         cardOutputData?.let {
             if (!component.isStoredPaymentMethod) {
                 mCardListAdapter.setFilteredCard(component.getSupportedFilterCards(it.cardNumberField.value))
             }
-        }
-    }
-
-    override fun attach(component: CardComponent, lifecycleOwner: LifecycleOwner) {
-        this.component = component
-
-        cardView.attach(component, lifecycleOwner)
-        component.observeOutputData(lifecycleOwner, this)
-
-        if (!component.isStoredPaymentMethod) {
-            mCardListAdapter = CardListAdapter(ImageLoader.getInstance(context, component.configuration.environment),
-                component.configuration.supportedCardTypes)
-            recyclerView_cardList.adapter = mCardListAdapter
         }
     }
 

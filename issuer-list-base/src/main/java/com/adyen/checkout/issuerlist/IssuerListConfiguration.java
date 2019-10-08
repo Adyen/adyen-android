@@ -12,13 +12,13 @@ import android.content.Context;
 import android.os.Parcel;
 import android.support.annotation.NonNull;
 
-import com.adyen.checkout.base.component.BaseConfiguration;
+import com.adyen.checkout.base.component.Configuration;
 import com.adyen.checkout.base.component.BaseConfigurationBuilder;
 import com.adyen.checkout.core.api.Environment;
 
 import java.util.Locale;
 
-public abstract class IssuerListConfiguration extends BaseConfiguration {
+public abstract class IssuerListConfiguration extends Configuration {
 
     protected IssuerListConfiguration(
             @NonNull Locale shopperLocale,

@@ -20,7 +20,7 @@ import com.adyen.checkout.base.model.paymentmethods.PaymentMethod;
 import com.adyen.checkout.base.model.payments.request.GooglePayPaymentMethod;
 import com.adyen.checkout.base.model.payments.request.PaymentComponentData;
 import com.adyen.checkout.base.util.PaymentMethodTypes;
-import com.adyen.checkout.core.exeption.ComponentException;
+import com.adyen.checkout.core.exception.ComponentException;
 import com.adyen.checkout.core.log.LogUtil;
 import com.adyen.checkout.core.log.Logger;
 import com.adyen.checkout.googlepay.util.GooglePayUtils;
@@ -35,6 +35,8 @@ public class GooglePayComponent extends BasePaymentComponent<GooglePayConfigurat
     private static final String TAG = LogUtil.getTag();
 
     public static final PaymentComponentProvider<GooglePayComponent, GooglePayConfiguration> PROVIDER = new GooglePayProvider();
+
+    private static final String[] PAYMENT_METHOD_TYPES = {PaymentMethodTypes.GOOGLE_PAY};
 
     public GooglePayComponent(@NonNull PaymentMethod paymentMethod, @NonNull GooglePayConfiguration configuration) {
         super(paymentMethod, configuration);
@@ -69,8 +71,8 @@ public class GooglePayComponent extends BasePaymentComponent<GooglePayConfigurat
 
     @NonNull
     @Override
-    public String getPaymentMethodType() {
-        return PaymentMethodTypes.GOOGLE_PAY;
+    public String[] getSupportedPaymentMethodTypes() {
+        return PAYMENT_METHOD_TYPES;
     }
 
     /**

@@ -11,7 +11,7 @@ package com.adyen.checkout.core.util;
 import android.os.Parcel;
 import android.support.annotation.NonNull;
 
-import com.adyen.checkout.core.exeption.NoConstructorException;
+import com.adyen.checkout.core.exception.NoConstructorException;
 
 public final class ParcelUtils {
 

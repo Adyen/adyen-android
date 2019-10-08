@@ -3,7 +3,7 @@
  *
  * This file is open source and available under the MIT license. See the LICENSE file for more info.
  *
- * Created by arman on 20/2/2019.
+ * Created by arman on 30/9/2019.
  */
 
 package com.adyen.checkout.base;
@@ -21,10 +21,29 @@ public interface ComponentView<ComponentT extends PaymentComponent> {
     /**
      * Attach the {@link PaymentComponent} to the view to interact with.
      *
-     * @param component The component.
+     * @param component      The component.
      * @param lifecycleOwner The lifecycle owner where the view is.
      */
     void attach(@NonNull ComponentT component, @NonNull LifecycleOwner lifecycleOwner);
+
+    /**
+     * This function will be called when the component got attached to the View.
+     * It's better to init ViewLess objects like ImageLoader here.
+     */
+    void onComponentAttached();
+
+    /**
+     * This function will be called when the component is attached and the view is ready to get initialized.
+     * It's better to find sub views here and add listeners to inputs changes or make the view Visible or Gone depends on the configration of a
+     * component.
+     */
+    void initView();
+
+    /**
+     * This function will be called after the component got attach and the view got initialize.
+     * It's better to Observer on live data objects here.
+     */
+    void observeComponentChanges(@NonNull LifecycleOwner lifecycleOwner);
 
     /**
      * Tells if the view interaction requires confirmation from the user to start the payment flow.

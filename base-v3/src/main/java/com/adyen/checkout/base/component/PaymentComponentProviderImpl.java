@@ -15,11 +15,10 @@ import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentActivity;
 
 import com.adyen.checkout.base.ComponentAvailableCallback;
-import com.adyen.checkout.base.Configuration;
 import com.adyen.checkout.base.PaymentComponentProvider;
 import com.adyen.checkout.base.component.lifecycle.ComponentViewModelFactory;
 import com.adyen.checkout.base.model.paymentmethods.PaymentMethod;
-import com.adyen.checkout.core.exeption.CheckoutException;
+import com.adyen.checkout.core.exception.CheckoutException;
 
 public final class PaymentComponentProviderImpl<BaseComponentT extends BasePaymentComponent, ConfigurationT extends Configuration>
         implements PaymentComponentProvider<BaseComponentT, ConfigurationT> {

@@ -11,7 +11,6 @@ package com.adyen.checkout.issuerlist;
 import android.arch.lifecycle.LifecycleOwner;
 import android.arch.lifecycle.Observer;
 import android.content.Context;
-import android.support.annotation.CallSuper;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v7.widget.AppCompatSpinner;
@@ -19,10 +18,9 @@ import android.util.AttributeSet;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.AdapterView;
-import android.widget.LinearLayout;
 
-import com.adyen.checkout.base.ComponentView;
 import com.adyen.checkout.base.api.ImageLoader;
+import com.adyen.checkout.base.ui.view.AdyenLinearLayout;
 import com.adyen.checkout.core.log.LogUtil;
 import com.adyen.checkout.core.log.Logger;
 import com.adyen.checkout.issuerlist.ui.R;
@@ -30,14 +28,11 @@ import com.adyen.checkout.issuerlist.ui.R;
 import java.util.Collections;
 import java.util.List;
 
-public abstract class IssuerListSpinnerView<IssuerListComponentT extends IssuerListComponent> extends LinearLayout implements
-        ComponentView<IssuerListComponentT>, AdapterView.OnItemSelectedListener {
+public abstract class IssuerListSpinnerView<IssuerListComponentT extends IssuerListComponent> extends
+        AdyenLinearLayout<IssuerListComponentT> implements AdapterView.OnItemSelectedListener {
     private static final String TAG = LogUtil.getTag();
 
-    @Nullable
-    protected IssuerListComponentT mComponent;
-
-    private final AppCompatSpinner mIssuersSpinner;
+    private AppCompatSpinner mIssuersSpinner;
 
     private final IssuerListInputData mIdealInputData = new IssuerListInputData();
 
@@ -55,27 +50,28 @@ public abstract class IssuerListSpinnerView<IssuerListComponentT extends IssuerL
     @SuppressWarnings("JavadocMethod")
     public IssuerListSpinnerView(@NonNull Context context, @Nullable AttributeSet attrs, int defStyleAttr) {
         super(context, attrs, defStyleAttr);
-
         LayoutInflater.from(getContext()).inflate(R.layout.issuer_list_spinner_view, this, true);
-
-        mIssuersSpinner = findViewById(R.id.spinner_issuers);
     }
 
-    @CallSuper
     @Override
-    public void attach(@NonNull IssuerListComponentT component, @NonNull LifecycleOwner lifecycleOwner) {
-        mComponent = component;
-
+    public void initView() {
+        mIssuersSpinner = findViewById(R.id.spinner_issuers);
+        mIssuersSpinner.setAdapter(mIssuersAdapter);
         mIssuersSpinner.setOnItemSelectedListener(this);
+    }
+
+    @Override
+    public void onComponentAttached() {
         mIssuersAdapter = new IssuerListSpinnerAdapter(getContext(),
                 Collections.<IssuerModel>emptyList(),
-                ImageLoader.getInstance(getContext(), component.getConfiguration().getEnvironment()), component.getPaymentMethodType(),
+                ImageLoader.getInstance(getContext(), getComponent().getConfiguration().getEnvironment()),
+                getComponent().getPaymentMethod().getType(),
                 hideIssuersLogo());
-        mIssuersSpinner.setAdapter(mIssuersAdapter);
+    }
 
-        mComponent.getIssuersLiveData().observe(lifecycleOwner, createIssuersObserver());
-
-        mComponent.sendAnalyticsEvent(getContext());
+    @Override
+    public void observeComponentChanges(@NonNull LifecycleOwner lifecycleOwner) {
+        getComponent().getIssuersLiveData().observe(lifecycleOwner, createIssuersObserver());
     }
 
     @Override
@@ -95,7 +91,7 @@ public abstract class IssuerListSpinnerView<IssuerListComponentT extends IssuerL
     public void onItemSelected(@NonNull AdapterView<?> parent, @NonNull View view, int position, long id) {
         Logger.d(TAG, "onItemSelected - " + mIssuersAdapter.getItem(position).getName());
         mIdealInputData.setSelectedIssuer(mIssuersAdapter.getItem(position));
-        mComponent.inputDataChanged(mIdealInputData);
+        getComponent().inputDataChanged(mIdealInputData);
     }
 
     @Override

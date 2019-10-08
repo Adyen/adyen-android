@@ -6,7 +6,7 @@
  * Created by caiof on 15/4/2019.
  */
 
-package com.adyen.checkout.core.exeption;
+package com.adyen.checkout.core.exception;
 
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;

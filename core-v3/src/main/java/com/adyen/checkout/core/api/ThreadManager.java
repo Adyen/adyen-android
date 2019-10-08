@@ -11,7 +11,7 @@ package com.adyen.checkout.core.api;
 import android.os.Handler;
 import android.os.Looper;
 
-import com.adyen.checkout.core.exeption.NoConstructorException;
+import com.adyen.checkout.core.exception.NoConstructorException;
 
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;

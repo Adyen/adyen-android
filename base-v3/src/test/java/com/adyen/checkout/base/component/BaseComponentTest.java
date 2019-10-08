@@ -19,11 +19,11 @@ import android.arch.lifecycle.Observer;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 
-import com.adyen.checkout.base.Configuration;
 import com.adyen.checkout.base.DataProvider;
 import com.adyen.checkout.base.PaymentComponentState;
 import com.adyen.checkout.base.model.paymentmethods.PaymentMethod;
 import com.adyen.checkout.base.model.payments.request.PaymentComponentData;
+import com.adyen.checkout.base.models.TestConfiguration;
 import com.adyen.checkout.base.models.TestInputData;
 import com.adyen.checkout.base.models.TestOutputData;
 import com.adyen.checkout.base.models.TestPaymentMethod;
@@ -42,7 +42,7 @@ public class BaseComponentTest {
     @Rule
     public TestRule rule = new InstantTaskExecutorRule();
 
-    BasePaymentComponent<Configuration, TestInputData, TestOutputData> mBaseComponent;
+    BasePaymentComponent<TestConfiguration, TestInputData, TestOutputData> mBaseComponent;
 
     PaymentMethod paymentMethod;
     ClassLoader classLoader;
@@ -55,7 +55,7 @@ public class BaseComponentTest {
 
     @Test(expected = IllegalArgumentException.class)
     public void initBaseComponent_notSupportedPaymentMethod_expectException() throws IOException, JSONException {
-        mBaseComponent = new BasePaymentComponent<Configuration, TestInputData, TestOutputData>(DataProvider.getPaymentMethodResponse(
+        mBaseComponent = new BasePaymentComponent<TestConfiguration, TestInputData, TestOutputData>(DataProvider.getPaymentMethodResponse(
                 classLoader).getPaymentMethods().get(0),
                 null) {
             @NonNull
@@ -78,8 +78,8 @@ public class BaseComponentTest {
 
             @NonNull
             @Override
-            public String getPaymentMethodType() {
-                return "something";
+            public String[] getSupportedPaymentMethodTypes() {
+                return new String[]{"something"};
             }
         };
     }
@@ -125,7 +125,7 @@ public class BaseComponentTest {
     }
 
     private BasePaymentComponent getBaseComponent() {
-        BasePaymentComponent baseComponent = new BasePaymentComponent<Configuration, TestInputData, TestOutputData>(paymentMethod, null) {
+        BasePaymentComponent baseComponent = new BasePaymentComponent<TestConfiguration, TestInputData, TestOutputData>(paymentMethod, null) {
             @NonNull
             @Override
             protected TestOutputData onInputDataChanged(@NonNull TestInputData inputData) {
@@ -149,8 +149,8 @@ public class BaseComponentTest {
 
             @NonNull
             @Override
-            public String getPaymentMethodType() {
-                return paymentMethod.getType();
+            public String[] getSupportedPaymentMethodTypes() {
+                return new String[]{paymentMethod.getType()};
             }
         };
 

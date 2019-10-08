@@ -23,10 +23,20 @@ import com.adyen.checkout.base.model.payments.request.PaymentMethodDetails;
 public interface PaymentComponent extends Component<PaymentComponentState> {
 
     /**
-     * @return The "type" of payment method supported by this Component.
+     * @deprecated Use {@link #getSupportedPaymentMethodTypes()} instead with a list of the supported payment method types.
+     *             This method will only return the first value of the list.
+     *
+     * @return The first value of "type" of payment method supported by this Component.
      */
+    @Deprecated
     @NonNull
     String getPaymentMethodType();
+
+    /**
+     * @return An array of the supported {@link com.adyen.checkout.base.util.PaymentMethodTypes}
+     */
+    @NonNull
+    String[] getSupportedPaymentMethodTypes();
 
     /**
      * @return The last {@link PaymentComponentState} of this Component.

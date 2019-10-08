@@ -13,13 +13,16 @@ import android.content.Context
 import android.content.Intent
 import android.os.Parcel
 import android.os.Parcelable
-import com.adyen.checkout.base.Configuration
+import com.adyen.checkout.base.component.Configuration
+import com.adyen.checkout.base.model.payments.Amount
+import com.adyen.checkout.base.util.CheckoutCurrency
 import com.adyen.checkout.base.util.PaymentMethodTypes
 import com.adyen.checkout.bcmc.BcmcConfiguration
 import com.adyen.checkout.card.CardConfiguration
 import com.adyen.checkout.core.api.Environment
+import com.adyen.checkout.core.exception.CheckoutException
 import com.adyen.checkout.core.log.LogUtil
-import com.adyen.checkout.core.log.Logger
+import com.adyen.checkout.core.model.JsonUtils
 import com.adyen.checkout.core.util.LocaleUtil
 import com.adyen.checkout.core.util.ParcelUtils
 import com.adyen.checkout.dotpay.DotpayConfiguration
@@ -41,11 +44,10 @@ import java.util.Locale
 @SuppressWarnings("TooManyFunctions")
 class DropInConfiguration : Configuration, Parcelable {
 
-    private val shopperLocale: Locale
-    private val environment: Environment
     val availableConfigs: HashMap<String, Configuration>
     val serviceComponentName: ComponentName
-    var resultHandlerIntent: Intent = Intent()
+    val resultHandlerIntent: Intent
+    val amount: Amount
 
     companion object {
         @JvmField
@@ -55,42 +57,38 @@ class DropInConfiguration : Configuration, Parcelable {
         }
     }
 
-    constructor(builder: Builder) {
-        availableConfigs = builder.availableConfigs
-        shopperLocale = builder.shopperLocale
-        environment = builder.mEnvironment
-        serviceComponentName = builder.serviceComponentName
-        builder.resultHandlerIntent?.let {
-            resultHandlerIntent = it
-        }
+    constructor(
+        shopperLocale: Locale,
+        environment: Environment,
+        availableConfigs: HashMap<String, Configuration>,
+        serviceComponentName: ComponentName,
+        resultHandlerIntent: Intent,
+        amount: Amount
+    ) : super(shopperLocale, environment) {
+        this.availableConfigs = availableConfigs
+        this.serviceComponentName = serviceComponentName
+        this.resultHandlerIntent = resultHandlerIntent
+        this.amount = amount
     }
 
-    constructor(parcel: Parcel) {
+    constructor(parcel: Parcel) : super(parcel) {
+        @Suppress("UNCHECKED_CAST")
         availableConfigs = parcel.readHashMap(Configuration::class.java.classLoader) as HashMap<String, Configuration>
-        shopperLocale = parcel.readSerializable() as Locale
-        environment = parcel.readParcelable(Environment::class.java.classLoader)
-        serviceComponentName = parcel.readParcelable(ComponentName::class.java.classLoader)
-        resultHandlerIntent = parcel.readParcelable(Intent::class.java.classLoader)
+        serviceComponentName = parcel.readParcelable(ComponentName::class.java.classLoader)!!
+        resultHandlerIntent = parcel.readParcelable(Intent::class.java.classLoader)!!
+        amount = Amount.CREATOR.createFromParcel(parcel)
     }
 
     override fun writeToParcel(dest: Parcel, flags: Int) {
+        super.writeToParcel(dest, flags)
         dest.writeMap(availableConfigs)
-        dest.writeSerializable(shopperLocale)
-        dest.writeParcelable(environment, flags)
         dest.writeParcelable(serviceComponentName, flags)
         dest.writeParcelable(resultHandlerIntent, flags)
+        JsonUtils.writeToParcel(dest, Amount.SERIALIZER.serialize(amount))
     }
 
     override fun describeContents(): Int {
         return ParcelUtils.NO_FILE_DESCRIPTOR
-    }
-
-    override fun getShopperLocale(): Locale {
-        return shopperLocale
-    }
-
-    override fun getEnvironment(): Environment {
-        return environment
     }
 
     fun <T : Configuration> getConfigurationFor(@PaymentMethodTypes.SupportedPaymentMethod paymentMethod: String, context: Context): T {
@@ -111,38 +109,74 @@ class DropInConfiguration : Configuration, Parcelable {
             val TAG = LogUtil.getTag()
         }
 
-        var serviceComponentName: ComponentName
-        var shopperLocale: Locale
-        var mEnvironment: Environment = Environment.EUROPE
-        var resultHandlerIntent: Intent? = null
+        private val availableConfigs = HashMap<String, Configuration>()
+
+        private var serviceComponentName: ComponentName
+        private var shopperLocale: Locale
+        private var resultHandlerIntent: Intent
+        private var environment: Environment = Environment.EUROPE
+        private var amount: Amount = Amount.EMPTY
 
         private val packageName: String
         private val serviceClassName: String
-        private val context: Context
 
         @Deprecated("You need to pass resultHandlerIntent to drop-in configuration")
-        constructor(context: Context, serviceClass: Class<out Any?>) : this(context, null, serviceClass)
+        constructor(context: Context, serviceClass: Class<out Any?>) : this(context, Intent(), serviceClass)
 
         /**
          * @param context
          * @param resultHandlerIntent The Intent used with [Activity.startActivity] that will contain the payment result extra with key [RESULT_KEY].
          * @param serviceClass Service that extended from [DropInService] that would handle network requests.
          */
-        constructor(context: Context, resultHandlerIntent: Intent?, serviceClass: Class<out Any?>) {
+        constructor(context: Context, resultHandlerIntent: Intent, serviceClass: Class<out Any?>) {
             this.packageName = context.packageName
             this.serviceClassName = serviceClass.name
-            this.resultHandlerIntent = resultHandlerIntent
-            this.context = context
 
-            Logger.d(TAG, "class name - $serviceClassName")
-            serviceComponentName = ComponentName(packageName, serviceClassName)
-            shopperLocale = LocaleUtil.getLocale(context)
+            this.resultHandlerIntent = resultHandlerIntent
+            this.serviceComponentName = ComponentName(packageName, serviceClassName)
+            this.shopperLocale = LocaleUtil.getLocale(context)
         }
 
-        internal val availableConfigs = HashMap<String, Configuration>()
+        /**
+         * Create a Builder with the same values of an existing Configuration object.
+         */
+        constructor(dropInConfiguration: DropInConfiguration) {
+            this.packageName = dropInConfiguration.serviceComponentName.packageName
+            this.serviceClassName = dropInConfiguration.serviceComponentName.className
 
-        fun build(): DropInConfiguration {
-            return DropInConfiguration(this)
+            this.serviceComponentName = dropInConfiguration.serviceComponentName
+            this.shopperLocale = dropInConfiguration.shopperLocale
+            this.environment = dropInConfiguration.environment
+            this.resultHandlerIntent = dropInConfiguration.resultHandlerIntent
+            this.amount = dropInConfiguration.amount
+        }
+
+        fun setServiceComponentName(serviceComponentName: ComponentName): Builder {
+            this.serviceComponentName = serviceComponentName
+            return this
+        }
+
+        fun setShopperLocale(shopperLocale: Locale): Builder {
+            this.shopperLocale = shopperLocale
+            return this
+        }
+
+        fun setResultHandlerIntent(resultHandlerIntent: Intent): Builder {
+            this.resultHandlerIntent = resultHandlerIntent
+            return this
+        }
+
+        fun setEnvironment(environment: Environment): Builder {
+            this.environment = environment
+            return this
+        }
+
+        fun setAmount(amount: Amount): Builder {
+            if (!CheckoutCurrency.isSupported(amount.currency) || amount.value < 0) {
+                throw CheckoutException("Currency is not valid.")
+            }
+            this.amount = amount
+            return this
         }
 
         /**
@@ -162,10 +196,26 @@ class DropInConfiguration : Configuration, Parcelable {
         }
 
         /**
-         * Add configuration for MolPay payment method.
+         * Add configuration for MolPay Thailand payment method.
          */
-        fun addMolpayConfiguration(molpayConfiguration: MolpayConfiguration): Builder {
-            availableConfigs[PaymentMethodTypes.MOLPAY] = molpayConfiguration
+        fun addMolpayThailandConfiguration(molpayConfiguration: MolpayConfiguration): Builder {
+            availableConfigs[PaymentMethodTypes.MOLPAY_THAILAND] = molpayConfiguration
+            return this
+        }
+
+        /**
+         * Add configuration for MolPay Malasya payment method.
+         */
+        fun addMolpayMalasyaConfiguration(molpayConfiguration: MolpayConfiguration): Builder {
+            availableConfigs[PaymentMethodTypes.MOLPAY_MALAYSIA] = molpayConfiguration
+            return this
+        }
+
+        /**
+         * Add configuration for MolPay Vietnam payment method.
+         */
+        fun addMolpayVietnamConfiguration(molpayConfiguration: MolpayConfiguration): Builder {
+            availableConfigs[PaymentMethodTypes.MOLPAY_VIETNAM] = molpayConfiguration
             return this
         }
 
@@ -223,6 +273,20 @@ class DropInConfiguration : Configuration, Parcelable {
         fun addBcmcConfiguration(bcmcConfiguration: BcmcConfiguration): Builder {
             availableConfigs[PaymentMethodTypes.BCMC] = bcmcConfiguration
             return this
+        }
+
+        /**
+         * Create the [DropInConfiguration] instance.
+         */
+        fun build(): DropInConfiguration {
+            return DropInConfiguration(
+                    shopperLocale,
+                    environment,
+                    availableConfigs,
+                    serviceComponentName,
+                    resultHandlerIntent,
+                    amount
+            )
         }
     }
 }

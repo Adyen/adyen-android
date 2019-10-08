@@ -12,23 +12,22 @@ import android.os.Parcel;
 import android.os.Parcelable;
 import android.support.annotation.NonNull;
 
-import com.adyen.checkout.base.Configuration;
 import com.adyen.checkout.core.api.Environment;
 import com.adyen.checkout.core.util.ParcelUtils;
 
 import java.util.Locale;
 
-public abstract class BaseConfiguration implements Configuration, Parcelable {
+public abstract class Configuration implements Parcelable {
 
     private final Locale mShopperLocale;
     private final Environment mEnvironment;
 
-    protected BaseConfiguration(@NonNull Locale shopperLocale, @NonNull Environment environment) {
+    protected Configuration(@NonNull Locale shopperLocale, @NonNull Environment environment) {
         mShopperLocale = shopperLocale;
         mEnvironment = environment;
     }
 
-    protected BaseConfiguration(@NonNull Parcel in) {
+    protected Configuration(@NonNull Parcel in) {
         mShopperLocale = (Locale) in.readSerializable();
         mEnvironment = in.readParcelable(Environment.class.getClassLoader());
     }
@@ -39,7 +38,6 @@ public abstract class BaseConfiguration implements Configuration, Parcelable {
     }
 
     @NonNull
-    @Override
     public Locale getShopperLocale() {
         return mShopperLocale;
     }

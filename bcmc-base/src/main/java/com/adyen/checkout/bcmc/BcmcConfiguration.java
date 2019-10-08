@@ -15,8 +15,7 @@ import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.util.DisplayMetrics;
 
-import com.adyen.checkout.base.Configuration;
-import com.adyen.checkout.base.component.BaseConfiguration;
+import com.adyen.checkout.base.component.Configuration;
 import com.adyen.checkout.base.component.BaseConfigurationBuilder;
 import com.adyen.checkout.core.api.Environment;
 
@@ -25,7 +24,7 @@ import java.util.Locale;
 /**
  * {@link Configuration} class required by {@link BcmcComponent} to change it's behavior. Pass it to the {@link BcmcComponent#PROVIDER}.
  */
-public class BcmcConfiguration extends BaseConfiguration {
+public class BcmcConfiguration extends Configuration {
 
     private final String mPublicKey;
 

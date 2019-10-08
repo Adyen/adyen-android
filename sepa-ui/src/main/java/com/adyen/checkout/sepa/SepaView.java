@@ -21,32 +21,29 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.LinearLayout;
 
-import com.adyen.checkout.base.ComponentView;
+import com.adyen.checkout.base.ui.view.AdyenLinearLayout;
 import com.adyen.checkout.base.ui.view.AdyenTextInputEditText;
 import com.adyen.checkout.core.code.Lint;
-import com.adyen.checkout.core.exeption.CheckoutException;
+import com.adyen.checkout.core.exception.CheckoutException;
 import com.adyen.checkout.core.log.LogUtil;
 import com.adyen.checkout.core.log.Logger;
 import com.adyen.checkout.sepa.ui.R;
 
-public class SepaView extends LinearLayout implements ComponentView<SepaComponent>, Observer<SepaOutputData> {
+public class SepaView extends AdyenLinearLayout<SepaComponent> implements Observer<SepaOutputData> {
     private static final String TAG = LogUtil.getTag();
-
-    @SuppressLint(Lint.SYNTHETIC)
-    SepaComponent mSepaComponent;
 
     @SuppressLint(Lint.SYNTHETIC)
     SepaInputData mSepaInputData = new SepaInputData();
 
     @SuppressLint(Lint.SYNTHETIC)
-    final TextInputLayout mHolderNameInput;
+    TextInputLayout mHolderNameInput;
     @SuppressLint(Lint.SYNTHETIC)
-    final TextInputLayout mIbanNumberInput;
+    TextInputLayout mIbanNumberInput;
 
     @SuppressLint(Lint.SYNTHETIC)
-    final AdyenTextInputEditText mHolderNameEditText;
+    AdyenTextInputEditText mHolderNameEditText;
     @SuppressLint(Lint.SYNTHETIC)
-    final AdyenTextInputEditText mIbanNumberEditText;
+    AdyenTextInputEditText mIbanNumberEditText;
 
     public SepaView(@NonNull Context context) {
         this(context, null);
@@ -60,15 +57,19 @@ public class SepaView extends LinearLayout implements ComponentView<SepaComponen
     @SuppressWarnings("JavadocMethod")
     public SepaView(@NonNull Context context, @Nullable AttributeSet attrs, int defStyleAttr) {
         super(context, attrs, defStyleAttr);
+
         setOrientation(LinearLayout.VERTICAL);
+
+        LayoutInflater.from(getContext()).inflate(R.layout.sepa_view, this, true);
 
         final int padding = (int) getResources().getDimension(R.dimen.standard_margin);
         setPadding(padding, padding, padding, 0);
+    }
 
-        final View root = LayoutInflater.from(context).inflate(R.layout.sepa_view, this, true);
-
-        mHolderNameInput = root.findViewById(R.id.textInputLayout_holderName);
-        mIbanNumberInput = root.findViewById(R.id.textInputLayout_ibanNumber);
+    @Override
+    public void initView() {
+        mHolderNameInput = findViewById(R.id.textInputLayout_holderName);
+        mIbanNumberInput = findViewById(R.id.textInputLayout_ibanNumber);
         mHolderNameEditText = (AdyenTextInputEditText) mHolderNameInput.getEditText();
         mIbanNumberEditText = (AdyenTextInputEditText) mIbanNumberInput.getEditText();
 
@@ -96,7 +97,7 @@ public class SepaView extends LinearLayout implements ComponentView<SepaComponen
             public void onFocusChange(View v, boolean hasFocus) {
                 mIbanNumberInput.setErrorEnabled(!hasFocus);
 
-                if (!hasFocus && !mSepaComponent.getOutputData().getIbanNumberField().isValid()) {
+                if (!hasFocus && !getComponent().getOutputData().getIbanNumberField().isValid()) {
                     mIbanNumberInput.setError(getContext().getString(R.string.checkout_iban_not_valid));
                 }
             }
@@ -109,9 +110,13 @@ public class SepaView extends LinearLayout implements ComponentView<SepaComponen
     }
 
     @Override
-    public void attach(@NonNull SepaComponent component, @NonNull LifecycleOwner lifecycleOwner) {
-        mSepaComponent = component;
-        mSepaComponent.observeOutputData(lifecycleOwner, this);
+    public void onComponentAttached() {
+        // nothing to impl
+    }
+
+    @Override
+    public void observeComponentChanges(@NonNull LifecycleOwner lifecycleOwner) {
+        getComponent().observeOutputData(lifecycleOwner, this);
     }
 
     @Override
@@ -121,8 +126,6 @@ public class SepaView extends LinearLayout implements ComponentView<SepaComponen
 
     @SuppressLint(Lint.SYNTHETIC)
     void notifyInputDataChanged() {
-        if (mSepaComponent != null) {
-            mSepaComponent.inputDataChanged(mSepaInputData);
-        }
+        getComponent().inputDataChanged(mSepaInputData);
     }
 }

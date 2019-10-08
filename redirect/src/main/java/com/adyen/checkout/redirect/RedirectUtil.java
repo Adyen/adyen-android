@@ -23,8 +23,8 @@ import android.support.customtabs.CustomTabsIntent;
 
 import com.adyen.checkout.base.ui.util.ThemeUtil;
 import com.adyen.checkout.core.code.Lint;
-import com.adyen.checkout.core.exeption.CheckoutException;
-import com.adyen.checkout.core.exeption.NoConstructorException;
+import com.adyen.checkout.core.exception.CheckoutException;
+import com.adyen.checkout.core.exception.NoConstructorException;
 import com.adyen.checkout.core.log.LogUtil;
 import com.adyen.checkout.core.log.Logger;
 

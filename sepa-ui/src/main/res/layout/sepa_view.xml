@@ -37,9 +37,4 @@
             style="@style/AdyenCheckout.Sepa.AccountNumberInput" />
     </android.support.design.widget.TextInputLayout>
 
-    <TextView
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:text="@string/checkout_sepa_consent"/>
-
 </merge>

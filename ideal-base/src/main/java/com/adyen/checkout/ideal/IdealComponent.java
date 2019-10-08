@@ -29,14 +29,16 @@ public final class IdealComponent extends IssuerListComponent<IdealPaymentMethod
     public static final PaymentComponentProvider<IdealComponent, IdealConfiguration> PROVIDER =
             new PaymentComponentProviderImpl<>(IdealComponent.class);
 
+    private static final String[] PAYMENT_METHOD_TYPES = {PaymentMethodTypes.IDEAL};
+
     public IdealComponent(@NonNull PaymentMethod paymentMethod, @NonNull IdealConfiguration configuration) {
         super(paymentMethod, configuration);
     }
 
     @NonNull
     @Override
-    public String getPaymentMethodType() {
-        return PaymentMethodTypes.IDEAL;
+    public String[] getSupportedPaymentMethodTypes() {
+        return PAYMENT_METHOD_TYPES;
     }
 
     @Override

@@ -28,6 +28,8 @@ public class SepaComponent extends BasePaymentComponent<SepaConfiguration, SepaI
 
     public static final PaymentComponentProvider<SepaComponent, SepaConfiguration> PROVIDER = new PaymentComponentProviderImpl<>(SepaComponent.class);
 
+    private static final String[] PAYMENT_METHOD_TYPES = {PaymentMethodTypes.SEPA};
+
     public SepaComponent(@NonNull PaymentMethod paymentMethod, @NonNull SepaConfiguration configuration) {
         super(paymentMethod, configuration);
     }
@@ -71,8 +73,8 @@ public class SepaComponent extends BasePaymentComponent<SepaConfiguration, SepaI
 
     @NonNull
     @Override
-    public String getPaymentMethodType() {
-        return PaymentMethodTypes.SEPA;
+    public String[] getSupportedPaymentMethodTypes() {
+        return PAYMENT_METHOD_TYPES;
     }
 
     @Override

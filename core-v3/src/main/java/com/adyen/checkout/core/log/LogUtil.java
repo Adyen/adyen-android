@@ -11,7 +11,7 @@ package com.adyen.checkout.core.log;
 import android.os.Build;
 import android.support.annotation.NonNull;
 
-import com.adyen.checkout.core.exeption.NoConstructorException;
+import com.adyen.checkout.core.exception.NoConstructorException;
 
 /**
  * Utility class with methods related to logs.

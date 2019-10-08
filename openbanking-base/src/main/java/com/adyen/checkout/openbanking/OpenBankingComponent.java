@@ -29,14 +29,16 @@ public final class OpenBankingComponent extends IssuerListComponent<OpenBankingP
     public static final PaymentComponentProvider<OpenBankingComponent, OpenBankingConfiguration> PROVIDER =
             new PaymentComponentProviderImpl<>(OpenBankingComponent.class);
 
+    private static final String[] PAYMENT_METHOD_TYPES = {PaymentMethodTypes.OPEN_BANKING};
+
     public OpenBankingComponent(@NonNull PaymentMethod paymentMethod, @NonNull OpenBankingConfiguration configuration) {
         super(paymentMethod, configuration);
     }
 
     @NonNull
     @Override
-    public String getPaymentMethodType() {
-        return PaymentMethodTypes.OPEN_BANKING;
+    public String[] getSupportedPaymentMethodTypes() {
+        return PAYMENT_METHOD_TYPES;
     }
 
     @Override

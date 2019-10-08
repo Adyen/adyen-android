@@ -16,7 +16,7 @@ import android.support.annotation.NonNull;
 import android.util.TypedValue;
 
 import com.adyen.checkout.base.ui.R;
-import com.adyen.checkout.core.exeption.NoConstructorException;
+import com.adyen.checkout.core.exception.NoConstructorException;
 
 public final class ThemeUtil {
 

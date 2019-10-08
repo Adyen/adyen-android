@@ -13,8 +13,9 @@ import android.support.annotation.NonNull;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentActivity;
 
+import com.adyen.checkout.base.component.Configuration;
 import com.adyen.checkout.base.model.paymentmethods.PaymentMethod;
-import com.adyen.checkout.core.exeption.CheckoutException;
+import com.adyen.checkout.core.exception.CheckoutException;
 
 public interface PaymentComponentProvider<ComponentT extends PaymentComponent, ConfigurationT extends Configuration>
         extends ComponentProvider<ComponentT> {

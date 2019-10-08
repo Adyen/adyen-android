@@ -13,14 +13,14 @@ import android.os.Parcel;
 import android.os.Parcelable;
 import android.support.annotation.NonNull;
 
-import com.adyen.checkout.base.component.BaseConfiguration;
+import com.adyen.checkout.base.component.Configuration;
 import com.adyen.checkout.base.component.BaseConfigurationBuilder;
 import com.adyen.checkout.core.api.Environment;
 import com.adyen.checkout.core.code.Lint;
 
 import java.util.Locale;
 
-public class SepaConfiguration extends BaseConfiguration {
+public class SepaConfiguration extends Configuration {
 
     public static final Parcelable.Creator<SepaConfiguration> CREATOR = new Parcelable.Creator<SepaConfiguration>() {
         public SepaConfiguration createFromParcel(@NonNull Parcel in) {

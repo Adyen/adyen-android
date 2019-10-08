@@ -8,23 +8,21 @@
 
 package com.adyen.checkout.base.models;
 
+import android.os.Parcel;
 import android.support.annotation.NonNull;
 
-import com.adyen.checkout.base.Configuration;
+import com.adyen.checkout.base.component.Configuration;
 import com.adyen.checkout.core.api.Environment;
 
 import java.util.Locale;
 
-public class TestConfiguration implements Configuration {
-    @NonNull
-    @Override
-    public Locale getShopperLocale() {
-        return new Locale("en");
+public class TestConfiguration extends Configuration {
+
+    public TestConfiguration() {
+        super(Locale.US, Environment.TEST);
     }
 
-    @NonNull
-    @Override
-    public Environment getEnvironment() {
-        return Environment.TEST;
+    protected TestConfiguration(@NonNull Parcel in) {
+        super(in);
     }
 }

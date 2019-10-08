@@ -11,8 +11,8 @@ package com.adyen.checkout.core.model;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 
-import com.adyen.checkout.core.exeption.BadModelException;
-import com.adyen.checkout.core.exeption.NoConstructorException;
+import com.adyen.checkout.core.exception.BadModelException;
+import com.adyen.checkout.core.exception.NoConstructorException;
 
 import org.json.JSONArray;
 import org.json.JSONObject;

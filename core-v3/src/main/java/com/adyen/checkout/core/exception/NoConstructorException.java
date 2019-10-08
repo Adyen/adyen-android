@@ -6,7 +6,7 @@
  * Created by caiof on 4/3/2019.
  */
 
-package com.adyen.checkout.core.exeption;
+package com.adyen.checkout.core.exception;
 
 /**
  * Exception to prevent instantiation of utility classes.

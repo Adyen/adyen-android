@@ -11,8 +11,9 @@ package com.adyen.checkout.base.model.payments.request;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 
+import com.adyen.checkout.base.util.PaymentMethodTypes;
 import com.adyen.checkout.core.code.Lint;
-import com.adyen.checkout.core.exeption.CheckoutException;
+import com.adyen.checkout.core.exception.CheckoutException;
 import com.adyen.checkout.core.model.ModelObject;
 import com.adyen.checkout.core.util.StringUtil;
 
@@ -68,7 +69,10 @@ public abstract class PaymentMethodDetails extends ModelObject {
                 return IdealPaymentMethod.SERIALIZER;
             case CardPaymentMethod.PAYMENT_METHOD_TYPE:
                 return CardPaymentMethod.SERIALIZER;
-            case MolpayPaymentMethod.PAYMENT_METHOD_TYPE:
+            //Intentional fallthrough of different flavors o Molpay
+            case PaymentMethodTypes.MOLPAY_MALAYSIA:
+            case PaymentMethodTypes.MOLPAY_THAILAND:
+            case PaymentMethodTypes.MOLPAY_VIETNAM:
                 return MolpayPaymentMethod.SERIALIZER;
             case DotpayPaymentMethod.PAYMENT_METHOD_TYPE:
                 return DotpayPaymentMethod.SERIALIZER;

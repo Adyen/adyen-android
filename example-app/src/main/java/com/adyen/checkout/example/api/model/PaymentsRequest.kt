@@ -18,8 +18,8 @@ data class PaymentsRequest(
     val storePaymentMethod: Boolean,
     val amount: Amount,
     val merchantAccount: String,
-    // unique reference of the payment
     val returnUrl: String,
+    // unique reference of the payment
     val reference: String = "android-test-components",
     val channel: String = "android",
     val additionalData: AdditionalData = AdditionalData(allow3DS2 = "false")

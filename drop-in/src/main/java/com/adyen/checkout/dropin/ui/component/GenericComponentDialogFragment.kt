@@ -18,7 +18,8 @@ import com.adyen.checkout.base.ComponentView
 import com.adyen.checkout.base.PaymentComponent
 import com.adyen.checkout.base.PaymentComponentState
 import com.adyen.checkout.base.model.payments.request.PaymentMethodDetails
-import com.adyen.checkout.core.exeption.CheckoutException
+import com.adyen.checkout.base.util.CurrencyUtils
+import com.adyen.checkout.core.exception.CheckoutException
 import com.adyen.checkout.core.log.LogUtil
 import com.adyen.checkout.core.log.Logger
 import com.adyen.checkout.dropin.R
@@ -43,6 +44,11 @@ class GenericComponentDialogFragment : BaseComponentDialogFragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         Logger.d(TAG, "onViewCreated")
         view.header.text = paymentMethod.name
+
+        if (!dropInConfiguration.amount.isEmpty) {
+            val value = CurrencyUtils.formatAmount(dropInConfiguration.amount, dropInConfiguration.shopperLocale)
+            payButton.text = String.format(resources.getString(R.string.pay_button_with_value), value)
+        }
 
         payButton.setOnClickListener {
             startPayment()

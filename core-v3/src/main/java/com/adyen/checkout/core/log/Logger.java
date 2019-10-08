@@ -14,7 +14,7 @@ import android.support.annotation.Nullable;
 import android.util.Log;
 
 import com.adyen.checkout.core.BuildConfig;
-import com.adyen.checkout.core.exeption.NoConstructorException;
+import com.adyen.checkout.core.exception.NoConstructorException;
 
 import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;

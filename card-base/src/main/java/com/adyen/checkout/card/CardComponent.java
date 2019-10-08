@@ -44,6 +44,8 @@ public final class CardComponent extends BasePaymentComponent<CardConfiguration,
 
     public static final PaymentComponentProvider<CardComponent, CardConfiguration> PROVIDER = new CardComponentProvider();
 
+    private static final String[] PAYMENT_METHOD_TYPES = {PaymentMethodTypes.SCHEME};
+
     private final List<CardType> mFilteredSupportedCards = new ArrayList<>();
     private CardInputData mStoredPaymentInputData;
 
@@ -130,8 +132,8 @@ public final class CardComponent extends BasePaymentComponent<CardConfiguration,
 
     @NonNull
     @Override
-    public String getPaymentMethodType() {
-        return PaymentMethodTypes.SCHEME;
+    public String[] getSupportedPaymentMethodTypes() {
+        return PAYMENT_METHOD_TYPES;
     }
 
     @NonNull

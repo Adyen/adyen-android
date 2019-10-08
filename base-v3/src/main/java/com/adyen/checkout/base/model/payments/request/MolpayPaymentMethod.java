@@ -11,8 +11,7 @@ package com.adyen.checkout.base.model.payments.request;
 import android.os.Parcel;
 import android.support.annotation.NonNull;
 
-import com.adyen.checkout.base.util.PaymentMethodTypes;
-import com.adyen.checkout.core.exeption.ModelSerializationException;
+import com.adyen.checkout.core.exception.ModelSerializationException;
 import com.adyen.checkout.core.model.JsonUtils;
 
 import org.json.JSONException;
@@ -22,7 +21,7 @@ public final class MolpayPaymentMethod extends IssuerListPaymentMethod {
     @NonNull
     public static final Creator<MolpayPaymentMethod> CREATOR = new Creator<>(MolpayPaymentMethod.class);
 
-    public static final String PAYMENT_METHOD_TYPE = PaymentMethodTypes.MOLPAY;
+    // TODO: 2019-09-26 refactor SERIALIZER of parent to support multiple TxVariants
 
     @NonNull
     public static final Serializer<MolpayPaymentMethod> SERIALIZER = new Serializer<MolpayPaymentMethod>() {

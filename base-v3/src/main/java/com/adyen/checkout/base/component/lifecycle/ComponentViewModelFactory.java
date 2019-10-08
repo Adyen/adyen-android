@@ -12,7 +12,7 @@ import android.arch.lifecycle.ViewModel;
 import android.arch.lifecycle.ViewModelProvider;
 import android.support.annotation.NonNull;
 
-import com.adyen.checkout.base.Configuration;
+import com.adyen.checkout.base.component.Configuration;
 import com.adyen.checkout.base.model.paymentmethods.PaymentMethod;
 
 public final class ComponentViewModelFactory implements ViewModelProvider.Factory {

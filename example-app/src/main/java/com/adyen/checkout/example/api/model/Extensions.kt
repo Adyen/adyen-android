@@ -63,6 +63,10 @@ fun createPaymentsRequest(context: Context, paymentComponentData: PaymentCompone
     )
 }
 
+fun getAmountFromPreferences(context: Context): Amount {
+    return getAmount(context, PreferenceManager.getDefaultSharedPreferences(context))
+}
+
 private fun getAmount(context: Context, preferences: SharedPreferences): Amount {
     val amountValue = preferences.getInt(context.getString(R.string.value_key), DEFAULT_VALUE)
     val amountCurrency = preferences.getString(context.getString(R.string.currency_key), DEFAULT_CURRENCY) ?: DEFAULT_CURRENCY

@@ -15,8 +15,9 @@ import android.view.View
 import android.view.ViewGroup
 import com.adyen.checkout.base.PaymentComponentState
 import com.adyen.checkout.base.model.payments.request.PaymentMethodDetails
+import com.adyen.checkout.base.util.CurrencyUtils
 import com.adyen.checkout.card.CardComponent
-import com.adyen.checkout.core.exeption.CheckoutException
+import com.adyen.checkout.core.exception.CheckoutException
 import com.adyen.checkout.core.log.LogUtil
 import com.adyen.checkout.core.log.Logger
 import com.adyen.checkout.dropin.R
@@ -44,6 +45,11 @@ class CardComponentDialogFragment : BaseComponentDialogFragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         Logger.d(TAG, "onViewCreated")
+
+        if (!dropInConfiguration.amount.isEmpty) {
+            val value = CurrencyUtils.formatAmount(dropInConfiguration.amount, dropInConfiguration.shopperLocale)
+            dropInCardView.payButton.text = String.format(resources.getString(R.string.pay_button_with_value), value)
+        }
 
         component.observe(this, this)
         component.observeErrors(this, createErrorHandlerObserver())

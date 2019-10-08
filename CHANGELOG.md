@@ -13,6 +13,19 @@
 [//]: <> (Add changes that not released yet into `Unreleased` section)
 [//]: <> (Comment `Unreleased` section if there are no changes)
 [//]: <> (## [Unreleased])
+## [3.4.1] - 2019-10-07
+### Added
+- MolpayComponents can how handle multiple MolPay PaymentMethods (molpay_ebanking_fpx_MY, molpay_ebanking_TH, molpay_ebanking_VN)
+- You can check which payment methods a Component can handle by calling `getSupportedPaymentMethodTypes()`
+- Added option to show payment Amount on the DropIn pay button.
+### Changed
+- Deprecated `getPaymentMethodType()` in favor of `getSupportedPaymentMethodTypes()`.
+- Merge Loading Activity into DropIn Activity to have single Activity for DropIn component.
+- Configuration interface removed in favor of base class plus minor code improvements.
+### Fixed
+- Add margin left to CardListAdapter's layout.
+- Fixed typo on package `com.adyen.checkout.core.exeption` to `com.adyen.checkout.core.exception`
+
 ## [3.4.0] - 2019-09-23
 ### Added
 - Created standard style pattern for customizing XML layouts of the Components.

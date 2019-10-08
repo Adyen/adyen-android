@@ -8,7 +8,7 @@
 
 package com.adyen.checkout.core.code;
 
-import com.adyen.checkout.core.exeption.NoConstructorException;
+import com.adyen.checkout.core.exception.NoConstructorException;
 
 /**
  * Utility class for constants related to Lint.

@@ -10,7 +10,7 @@ package com.adyen.checkout.base.util;
 
 import android.support.annotation.StringDef;
 
-import com.adyen.checkout.core.exeption.NoConstructorException;
+import com.adyen.checkout.core.exception.NoConstructorException;
 
 import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
@@ -25,7 +25,9 @@ public final class PaymentMethodTypes {
 
     // Type of the payment method as received by the paymentMethods/ API
     public static final String IDEAL = "ideal";
-    public static final String MOLPAY = "molpay_ebanking_fpx_MY";
+    public static final String MOLPAY_MALAYSIA = "molpay_ebanking_fpx_MY";
+    public static final String MOLPAY_THAILAND = "molpay_ebanking_TH";
+    public static final String MOLPAY_VIETNAM = "molpay_ebanking_VN";
     public static final String DOTPAY = "dotpay";
     public static final String EPS = "eps";
     public static final String ENTERCASH = "entercash";
@@ -35,12 +37,11 @@ public final class PaymentMethodTypes {
     public static final String SEPA = "sepadirectdebit";
     public static final String BCMC = "bcmc";
 
-
     // List of all payment method types.
     public static final List<String> SUPPORTED_PAYMENT_METHODS;
 
     // Helper annotation to enforce use of a constant from here when needed.
-    @StringDef({IDEAL, MOLPAY, DOTPAY, EPS, ENTERCASH, OPEN_BANKING, SCHEME, GOOGLE_PAY, SEPA, BCMC})
+    @StringDef({IDEAL, MOLPAY_MALAYSIA, MOLPAY_THAILAND, MOLPAY_VIETNAM, DOTPAY, EPS, ENTERCASH, OPEN_BANKING, SCHEME, GOOGLE_PAY, SEPA, BCMC})
     @Retention(RetentionPolicy.SOURCE)
     public @interface SupportedPaymentMethod {
     }
@@ -49,7 +50,9 @@ public final class PaymentMethodTypes {
         final ArrayList<String> paymentMethods = new ArrayList<>();
 
         paymentMethods.add(IDEAL);
-        paymentMethods.add(MOLPAY);
+        paymentMethods.add(MOLPAY_MALAYSIA);
+        paymentMethods.add(MOLPAY_THAILAND);
+        paymentMethods.add(MOLPAY_VIETNAM);
         paymentMethods.add(DOTPAY);
         paymentMethods.add(EPS);
         paymentMethods.add(ENTERCASH);
