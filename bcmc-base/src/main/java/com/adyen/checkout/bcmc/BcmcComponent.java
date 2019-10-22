@@ -93,7 +93,7 @@ public final class BcmcComponent extends BasePaymentComponent<BcmcConfiguration,
         final PaymentComponentData<CardPaymentMethod> paymentComponentData = new PaymentComponentData<>();
 
         // If data is not valid we just return empty object, encryption would fail and we don't pass unencrypted data.
-        if (!outputData.isValid()) {
+        if (outputData == null || !outputData.isValid()) {
             return new PaymentComponentState<>(paymentComponentData, false);
         }
 
@@ -127,16 +127,10 @@ public final class BcmcComponent extends BasePaymentComponent<BcmcConfiguration,
         super.observeOutputData(lifecycleOwner, observer);
     }
 
-    @NonNull
+    @Nullable
     @Override
     protected BcmcOutputData getOutputData() {
         return super.getOutputData();
-    }
-
-    @NonNull
-    @Override
-    protected BcmcOutputData createEmptyOutputData() {
-        return new BcmcOutputData();
     }
 
     protected boolean isCardNumberSupported(@Nullable String cardNumber) {

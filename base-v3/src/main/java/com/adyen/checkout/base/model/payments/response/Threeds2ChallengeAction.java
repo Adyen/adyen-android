@@ -38,6 +38,7 @@ public class Threeds2ChallengeAction extends Action {
                 // Get parameters from parent class
                 jsonObject.putOpt(Action.TYPE, modelObject.getType());
                 jsonObject.putOpt(Action.PAYMENT_DATA, modelObject.getPaymentData());
+                jsonObject.putOpt(Action.PAYMENT_METHOD_TYPE, modelObject.getPaymentMethodType());
 
                 jsonObject.putOpt(TOKEN, modelObject.getToken());
             } catch (JSONException e) {
@@ -54,6 +55,7 @@ public class Threeds2ChallengeAction extends Action {
             // getting parameters from parent class
             threeds2ChallengeAction.setType(jsonObject.optString(Action.TYPE, null));
             threeds2ChallengeAction.setPaymentData(jsonObject.optString(Action.PAYMENT_DATA, null));
+            threeds2ChallengeAction.setPaymentMethodType(jsonObject.optString(Action.PAYMENT_METHOD_TYPE, null));
 
             threeds2ChallengeAction.setToken(jsonObject.optString(TOKEN, null));
             return threeds2ChallengeAction;

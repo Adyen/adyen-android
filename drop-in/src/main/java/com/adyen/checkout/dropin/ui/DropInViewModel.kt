@@ -15,7 +15,7 @@ import com.adyen.checkout.base.ComponentAvailableCallback
 import com.adyen.checkout.base.component.Configuration
 import com.adyen.checkout.base.model.PaymentMethodsApiResponse
 import com.adyen.checkout.base.model.paymentmethods.PaymentMethod
-import com.adyen.checkout.base.model.paymentmethods.RecurringDetail
+import com.adyen.checkout.base.model.paymentmethods.StoredPaymentMethod
 import com.adyen.checkout.base.util.PaymentMethodTypes
 import com.adyen.checkout.core.log.LogUtil
 import com.adyen.checkout.core.log.Logger
@@ -66,13 +66,19 @@ class DropInViewModel(application: Application) : AndroidViewModel(application),
                 continue
             }
 
+            if (PaymentMethodTypes.UNSUPPORTED_PAYMENT_METHODS.contains(type)) {
+                Logger.e(TAG, "Unsupported PaymentMethod - $type")
+                continue
+            }
+
             // If details is empty we default back to redirect, otherwise we don't support it.
             if (!PaymentMethodTypes.SUPPORTED_PAYMENT_METHODS.contains(type) && paymentMethod.details != null) {
                 Logger.e(TAG, "PaymentMethod not yet supported - $type")
                 continue
             }
 
-            if (paymentMethod.details == null) {
+            // WeChatPaySdk is an exception of an empty payment method that needs to check availability
+            if (paymentMethod.details == null && paymentMethod.type != PaymentMethodTypes.WECHAT_PAY_SDK) {
                 Logger.d(TAG, "Empty payment method type - $type")
                 addPaymentMethod(paymentMethod)
                 continue
@@ -85,7 +91,7 @@ class DropInViewModel(application: Application) : AndroidViewModel(application),
     }
 
     private fun addPaymentMethod(paymentMethod: PaymentMethod) {
-        if (paymentMethod is RecurringDetail) {
+        if (paymentMethod is StoredPaymentMethod) {
             if (paymentMethod.isEcommerce) {
                 paymentMethodsModel.storedPaymentMethods.add(paymentMethod)
             } else {

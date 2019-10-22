@@ -47,6 +47,7 @@ public class VoucherAction extends Action {
                 // Get parameters from parent class
                 jsonObject.putOpt(Action.TYPE, modelObject.getType());
                 jsonObject.putOpt(Action.PAYMENT_DATA, modelObject.getPaymentData());
+                jsonObject.putOpt(Action.PAYMENT_METHOD_TYPE, modelObject.getPaymentMethodType());
 
                 jsonObject.putOpt(SURCHARGE, ModelUtils.serializeOpt(modelObject.getSurcharge(), Amount.SERIALIZER));
                 jsonObject.putOpt(INITIAL_AMOUNT, ModelUtils.serializeOpt(modelObject.getInitialAmount(), Amount.SERIALIZER));
@@ -70,6 +71,7 @@ public class VoucherAction extends Action {
             // getting parameters from parent class
             voucherAction.setType(jsonObject.optString(Action.TYPE, null));
             voucherAction.setPaymentData(jsonObject.optString(Action.PAYMENT_DATA, null));
+            voucherAction.setPaymentMethodType(jsonObject.optString(Action.PAYMENT_METHOD_TYPE, null));
 
             voucherAction.setSurcharge(ModelUtils.deserializeOpt(jsonObject.optJSONObject(SURCHARGE), Amount.SERIALIZER));
             voucherAction.setInitialAmount(ModelUtils.deserializeOpt(jsonObject.optJSONObject(INITIAL_AMOUNT), Amount.SERIALIZER));

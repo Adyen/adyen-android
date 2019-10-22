@@ -38,6 +38,7 @@ public class QrCodeAction extends Action {
                 // Get parameters from parent class
                 jsonObject.putOpt(Action.TYPE, modelObject.getType());
                 jsonObject.putOpt(Action.PAYMENT_DATA, modelObject.getPaymentData());
+                jsonObject.putOpt(Action.PAYMENT_METHOD_TYPE, modelObject.getPaymentMethodType());
 
                 jsonObject.putOpt(QR_CODE_DATA, modelObject.getQrCodeData());
             } catch (JSONException e) {
@@ -54,6 +55,7 @@ public class QrCodeAction extends Action {
             // getting parameters from parent class
             qrCodeAction.setType(jsonObject.optString(Action.TYPE, null));
             qrCodeAction.setPaymentData(jsonObject.optString(Action.PAYMENT_DATA, null));
+            qrCodeAction.setPaymentMethodType(jsonObject.optString(Action.PAYMENT_METHOD_TYPE, null));
 
             qrCodeAction.setQrCodeData(jsonObject.optString(QR_CODE_DATA));
             return qrCodeAction;

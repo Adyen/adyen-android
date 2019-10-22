@@ -39,6 +39,7 @@ public class RedirectAction extends Action {
                 // Get parameters from parent class
                 jsonObject.putOpt(Action.TYPE, modelObject.getType());
                 jsonObject.putOpt(Action.PAYMENT_DATA, modelObject.getPaymentData());
+                jsonObject.putOpt(Action.PAYMENT_METHOD_TYPE, modelObject.getPaymentMethodType());
 
                 jsonObject.putOpt(METHOD, modelObject.getMethod());
                 jsonObject.putOpt(URL, modelObject.getUrl());
@@ -56,6 +57,7 @@ public class RedirectAction extends Action {
             // getting parameters from parent class
             redirectAction.setType(jsonObject.optString(Action.TYPE, null));
             redirectAction.setPaymentData(jsonObject.optString(Action.PAYMENT_DATA, null));
+            redirectAction.setPaymentMethodType(jsonObject.optString(Action.PAYMENT_METHOD_TYPE, null));
 
             redirectAction.setMethod(jsonObject.optString(METHOD, null));
             redirectAction.setUrl(jsonObject.optString(URL, null));

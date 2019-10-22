@@ -1,3 +1,12 @@
+/*
+ * Copyright (c) 2019 Adyen N.V.
+ *
+ * This file is open source and available under the MIT license. See the LICENSE file for more info.
+ *
+ * Created by caiof on 8/2/2019.
+ */
+
+// Maven artifact
 ext.mavenArtifactId = "sepa-base"
 ext.mavenArtifactName = "Adyen checkout sepa-base component"
 ext.mavenArtifactDescription = "Adyen checkout sepa-base component client for Adyen's Checkout API."
@@ -14,13 +23,6 @@ android {
         versionName version_name
 
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
-    }
-
-    buildTypes {
-        release {
-            minifyEnabled false
-            proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
-        }
     }
 }
 

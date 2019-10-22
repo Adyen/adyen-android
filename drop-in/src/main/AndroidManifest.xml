@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-          package="com.adyen.checkout.dropin">
+    package="com.adyen.checkout.dropin">
 
-    <uses-permission android:name="android.permission.WAKE_LOCK"/>
+    <uses-permission android:name="android.permission.WAKE_LOCK" />
 
     <application>
         <activity
@@ -10,15 +10,15 @@
             android:launchMode="singleTask"
             android:theme="@style/AdyenCheckout.Translucent">
             <intent-filter>
-                <action android:name="android.intent.action.VIEW"/>
+                <action android:name="android.intent.action.VIEW" />
 
-                <category android:name="android.intent.category.DEFAULT"/>
-                <category android:name="android.intent.category.BROWSABLE"/>
+                <category android:name="android.intent.category.DEFAULT" />
+                <category android:name="android.intent.category.BROWSABLE" />
 
 
                 <data
                     android:host="${applicationId}"
-                    android:scheme="${checkoutRedirectScheme}"/>
+                    android:scheme="${checkoutRedirectScheme}" />
             </intent-filter>
         </activity>
     </application>

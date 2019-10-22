@@ -66,7 +66,7 @@ public class EPSConfiguration extends IssuerListConfiguration {
     }
 
     /**
-     * Builder to create a {@link EPSConfiguration} more easily.
+     * Builder to create a {@link EPSConfiguration}.
      */
     public static final class Builder extends IssuerListBuilder<EPSConfiguration> {
 

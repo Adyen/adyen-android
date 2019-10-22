@@ -65,7 +65,7 @@ public class MolpayConfiguration extends IssuerListConfiguration {
     }
 
     /**
-     * Builder to create a {@link MolpayConfiguration} more easily.
+     * Builder to create a {@link MolpayConfiguration}.
      */
     public static final class Builder extends IssuerListBuilder<MolpayConfiguration> {
 

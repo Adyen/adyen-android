@@ -18,7 +18,7 @@ import android.widget.ImageView
 import android.widget.TextView
 import com.adyen.checkout.base.api.ImageLoader
 import com.adyen.checkout.base.model.paymentmethods.PaymentMethod
-import com.adyen.checkout.base.model.paymentmethods.RecurringDetail
+import com.adyen.checkout.base.model.paymentmethods.StoredPaymentMethod
 import com.adyen.checkout.base.util.DateUtils
 import com.adyen.checkout.base.util.PaymentMethodTypes
 import com.adyen.checkout.core.log.LogUtil
@@ -74,7 +74,7 @@ class PaymentMethodAdapter(
         val context: Context = holder.itemView.context
         when {
             (holder is PaymentMethodVH) -> {
-                if (paymentMethod is RecurringDetail) {
+                if (paymentMethod is StoredPaymentMethod) {
                     holder.text.text = context.getString(R.string.card_number_4digit, paymentMethod.lastFour)
                     holder.detail.text = context.getString(R.string.expires_in, paymentMethod.expiryMonth,
                             DateUtils.removeFirstTwoDigitFromYear(paymentMethod.expiryYear))
@@ -85,7 +85,7 @@ class PaymentMethodAdapter(
                 }
 
                 var txVariant = when (paymentMethod.type) {
-                    PaymentMethodTypes.SCHEME -> if (paymentMethod is RecurringDetail) paymentMethod.brand else CARD_LOGO_TYPE
+                    PaymentMethodTypes.SCHEME -> if (paymentMethod is StoredPaymentMethod) paymentMethod.brand else CARD_LOGO_TYPE
                     else -> paymentMethod.type!!
                 }
 

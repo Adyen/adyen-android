@@ -22,12 +22,6 @@ public final class CardOutputData implements OutputData {
 
     private boolean mIsStoredPaymentMethodEnable;
 
-    private static final ValidatedField<String> EMPTY_HOLDER_NAME_FILED = new ValidatedField<>("", ValidatedField.Validation.PARTIAL);
-    private static final ValidatedField<String> EMPTY_CARD_NUMBER_FILED = new ValidatedField<>("", ValidatedField.Validation.PARTIAL);
-    private static final ValidatedField<ExpiryDate> EMPTY_EXPIRY_DATE_FILED =
-            new ValidatedField<>(ExpiryDate.EMPTY_DATE, ValidatedField.Validation.PARTIAL);
-    private static final ValidatedField<String> EMPTY_SECURITY_CODE_FILED = new ValidatedField<>("", ValidatedField.Validation.PARTIAL);
-
     /**
      * Constructs a {@link com.adyen.checkout.card.CardComponent} object.
      */
@@ -43,17 +37,6 @@ public final class CardOutputData implements OutputData {
         mSecurityCodeField = securityCodeField;
         mHolderNameField = holderNameField;
         mIsStoredPaymentMethodEnable = isStoredPaymentMethodEnable;
-    }
-
-    /**
-     * Constructs a {@link com.adyen.checkout.card.CardComponent} object.
-     * With empty objects.
-     */
-    public CardOutputData() {
-        mCardNumberField = EMPTY_CARD_NUMBER_FILED;
-        mHolderNameField = EMPTY_HOLDER_NAME_FILED;
-        mExpiryDateField = EMPTY_EXPIRY_DATE_FILED;
-        mSecurityCodeField = EMPTY_SECURITY_CODE_FILED;
     }
 
     @NonNull
@@ -76,26 +59,12 @@ public final class CardOutputData implements OutputData {
         return mHolderNameField;
     }
 
-    /**
-     * Check if object is created by default constructor.
-     */
-    public boolean isEmpty() {
-        return mCardNumberField.equals(EMPTY_CARD_NUMBER_FILED)
-                && mHolderNameField.equals(EMPTY_HOLDER_NAME_FILED)
-                && mSecurityCodeField.equals(EMPTY_SECURITY_CODE_FILED)
-                && mExpiryDateField.equals(EMPTY_EXPIRY_DATE_FILED);
-    }
-
     @Override
     public boolean isValid() {
-        if (!isEmpty()) {
-            return mCardNumberField.isValid()
-                    && mExpiryDateField.isValid()
-                    && mSecurityCodeField.isValid()
-                    && mHolderNameField.isValid();
-        }
-
-        return false;
+        return mCardNumberField.isValid()
+                && mExpiryDateField.isValid()
+                && mSecurityCodeField.isValid()
+                && mHolderNameField.isValid();
     }
 
     public void setStoredPaymentMethodStatus(boolean storedPaymentMethodEnable) {

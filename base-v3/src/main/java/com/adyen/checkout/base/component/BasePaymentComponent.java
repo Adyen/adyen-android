@@ -40,7 +40,7 @@ public abstract class BasePaymentComponent<ConfigurationT extends Configuration,
 
     private final MutableLiveData<ComponentError> mComponentErrorLiveData = new MutableLiveData<>();
 
-    @NonNull
+    @Nullable
     private OutputDataT mOutputData;
 
     private final MutableLiveData<OutputDataT> mOutputLiveData = new MutableLiveData<>();
@@ -57,8 +57,6 @@ public abstract class BasePaymentComponent<ConfigurationT extends Configuration,
     public BasePaymentComponent(@NonNull PaymentMethod paymentMethod, @NonNull ConfigurationT configuration) {
         super(paymentMethod, configuration);
         assertSupported(paymentMethod);
-        mOutputData = createEmptyOutputData();
-        mOutputLiveData.setValue(mOutputData);
     }
 
     @SuppressWarnings("MissingDeprecated")
@@ -96,7 +94,7 @@ public abstract class BasePaymentComponent<ConfigurationT extends Configuration,
      */
     public final void inputDataChanged(@NonNull InputDataT inputData) {
         final OutputDataT newOutputData = onInputDataChanged(inputData);
-        if (!mOutputData.equals(newOutputData)) {
+        if (!newOutputData.equals(mOutputData)) {
             mOutputData = newOutputData;
             mOutputLiveData.setValue(mOutputData);
             notifyStateChanged();
@@ -137,7 +135,7 @@ public abstract class BasePaymentComponent<ConfigurationT extends Configuration,
         }
     }
 
-    @NonNull
+    @Nullable
     protected OutputDataT getOutputData() {
         return mOutputData;
     }
@@ -150,9 +148,6 @@ public abstract class BasePaymentComponent<ConfigurationT extends Configuration,
      */
     @NonNull
     protected abstract OutputDataT onInputDataChanged(@NonNull InputDataT inputData);
-
-    @NonNull
-    protected abstract OutputDataT createEmptyOutputData();
 
     @NonNull
     @WorkerThread

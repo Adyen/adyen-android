@@ -38,6 +38,7 @@ public class Threeds2FingerprintAction extends Action {
                 // Get parameters from parent class
                 jsonObject.putOpt(Action.TYPE, modelObject.getType());
                 jsonObject.putOpt(Action.PAYMENT_DATA, modelObject.getPaymentData());
+                jsonObject.putOpt(Action.PAYMENT_METHOD_TYPE, modelObject.getPaymentMethodType());
 
                 jsonObject.putOpt(TOKEN, modelObject.getToken());
             } catch (JSONException e) {
@@ -54,6 +55,7 @@ public class Threeds2FingerprintAction extends Action {
             // getting parameters from parent class
             threeds2FingerprintAction.setType(jsonObject.optString(Action.TYPE, null));
             threeds2FingerprintAction.setPaymentData(jsonObject.optString(Action.PAYMENT_DATA, null));
+            threeds2FingerprintAction.setPaymentMethodType(jsonObject.optString(Action.PAYMENT_METHOD_TYPE, null));
 
             threeds2FingerprintAction.setToken(jsonObject.optString(TOKEN));
             return threeds2FingerprintAction;

@@ -50,14 +50,8 @@ public class GooglePayComponent extends BasePaymentComponent<GooglePayConfigurat
 
     @NonNull
     @Override
-    protected GooglePayOutputData createEmptyOutputData() {
-        return new GooglePayOutputData(null);
-    }
-
-    @NonNull
-    @Override
     protected PaymentComponentState<GooglePayPaymentMethod> createComponentState() {
-        final PaymentData paymentData = getOutputData().getPaymentData();
+        final PaymentData paymentData = getOutputData() != null ? getOutputData().getPaymentData() : null;
 
         final PaymentComponentData<GooglePayPaymentMethod> paymentComponentData = new PaymentComponentData<>();
         final GooglePayPaymentMethod paymentMethod = new GooglePayPaymentMethod();

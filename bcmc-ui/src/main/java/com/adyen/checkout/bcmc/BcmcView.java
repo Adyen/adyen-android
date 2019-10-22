@@ -88,7 +88,8 @@ public final class BcmcView extends AdyenLinearLayout<BcmcComponent> implements 
             public void onFocusChange(View v, boolean hasFocus) {
                 mCardNumberInput.setErrorEnabled(!hasFocus);
 
-                if (!hasFocus && (isOutputEmpty() || !getComponent().getOutputData().getCardNumberField().isValid())) {
+                final BcmcOutputData outputData = getComponent().getOutputData();
+                if (!hasFocus && outputData != null && !outputData.getCardNumberField().isValid()) {
                     mCardNumberInput.setError(getContext().getString(R.string.checkout_card_number_not_valid));
                 }
             }
@@ -109,7 +110,8 @@ public final class BcmcView extends AdyenLinearLayout<BcmcComponent> implements 
             public void onFocusChange(View v, boolean hasFocus) {
                 mExpiryDateInput.setErrorEnabled(!hasFocus);
 
-                if (!hasFocus && (isOutputEmpty() || !getComponent().getOutputData().getExpiryDateField().isValid())) {
+                final BcmcOutputData outputData = getComponent().getOutputData();
+                if (!hasFocus && outputData != null && !outputData.getExpiryDateField().isValid()) {
                     mExpiryDateInput.setError(getContext().getString(R.string.checkout_expiry_date_not_valid));
                 }
             }
@@ -124,8 +126,8 @@ public final class BcmcView extends AdyenLinearLayout<BcmcComponent> implements 
     }
 
     @Override
-    public void onChanged(@NonNull BcmcOutputData cardOutputData) {
-        if (!cardOutputData.isEmpty()) {
+    public void onChanged(@Nullable BcmcOutputData cardOutputData) {
+        if (cardOutputData != null) {
             onCardNumberValidated(cardOutputData.getCardNumberField());
         }
     }
@@ -156,10 +158,6 @@ public final class BcmcView extends AdyenLinearLayout<BcmcComponent> implements 
             mCardBrandLogoImageView.setStrokeWidth(RoundCornerImageView.DEFAULT_STROKE_WIDTH);
             mImageLoader.load(BcmcComponent.SUPPORTED_CARD_TYPE.getTxVariant(), mCardBrandLogoImageView);
         }
-    }
-
-    private boolean isOutputEmpty() {
-        return getComponent().getOutputData().isEmpty();
     }
 
     private void changeFocusOfInput(String numberValue) {

@@ -128,13 +128,9 @@ public final class CardValidationUtils {
         ValidatedField.Validation validation = ValidatedField.Validation.INVALID;
 
         if (StringUtil.isDigitsAndSeparatorsOnly(normalizedSecurityCode)) {
-            if (length < GENERAL_CARD_SECURITY_CODE_SIZE) {
-                validation = ValidatedField.Validation.PARTIAL;
-            } else if (cardType == CardType.AMERICAN_EXPRESS && length == AMEX_SECURITY_CODE_SIZE) {
+            if (cardType == CardType.AMERICAN_EXPRESS && length == AMEX_SECURITY_CODE_SIZE) {
                 validation = ValidatedField.Validation.VALID;
-            } else if (cardType != null && length == GENERAL_CARD_SECURITY_CODE_SIZE) {
-                validation = ValidatedField.Validation.VALID;
-            } else if (length <= AMEX_CARD_NUMBER_LENGTH) {
+            } else if (length == GENERAL_CARD_SECURITY_CODE_SIZE && cardType != CardType.AMERICAN_EXPRESS) {
                 validation = ValidatedField.Validation.VALID;
             }
         }

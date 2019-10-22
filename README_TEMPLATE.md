@@ -65,7 +65,8 @@ Don't forget to also add the service your manifest.
 Some payment methods need additional configuration. For example, to enable the card form, the Drop-in needs a public key from the Customer Area to be used for encryption. These payment method specific configuration parameters can be set in the `DropInConfiguration`:
 
 ```kotlin
-val dropInConfiguration = DropInConfiguration.Builder(this@MainActivity, YourDropInService::class.java)
+val dropInConfiguration = DropInConfiguration.Builder(this@MainActivity,
+resultIntent, YourDropInService::class.java)
     .addCardConfiguration(cardConfiguration)
     .build()
 ```
@@ -73,7 +74,7 @@ val dropInConfiguration = DropInConfiguration.Builder(this@MainActivity, YourDro
 After serializing the payment methods and creating the configuration, the Drop-in is ready to be initialized. Just call the `.startPayment()` method, the final result sent on the `CallResult` will be added to your `resultIntent` to start your Activity.
 
 ```kotlin
-DropIn.INSTANCE.startPayment(this@YourActivity, mPaymentMethodsApiResponse, dropInConfiguration, resultIntent)
+DropIn.startPayment(this@YourActivity, paymentMethodsApiResponse, dropInConfiguration)
 ```
 
 ## Components

@@ -88,7 +88,7 @@ public class BcmcConfiguration extends Configuration {
     }
 
     /**
-     * Builder to create a {@link BcmcConfiguration} more easily.
+     * Builder to create a {@link BcmcConfiguration}.
      */
     public static final class Builder extends BaseConfigurationBuilder<BcmcConfiguration> {
 

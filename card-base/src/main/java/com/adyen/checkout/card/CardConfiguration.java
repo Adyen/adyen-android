@@ -192,7 +192,7 @@ public class CardConfiguration extends Configuration {
     }
 
     /**
-     * Builder to create a {@link CardConfiguration} more easily.
+     * Builder to create a {@link CardConfiguration}.
      */
     public static final class Builder extends BaseConfigurationBuilder<CardConfiguration> {
 

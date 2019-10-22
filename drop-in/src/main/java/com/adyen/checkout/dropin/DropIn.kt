@@ -78,10 +78,13 @@ class DropIn private constructor() {
          */
         @Suppress("SpreadOperator")
         private fun handleSupportedCards(dropInConfiguration: DropInConfiguration, schemePaymentMethod: PaymentMethod, context: Context) {
+
             var cardConfiguration = dropInConfiguration.getConfigurationFor<CardConfiguration>(PaymentMethodTypes.SCHEME, context)
+
             if (cardConfiguration.supportedCardTypes == CardConfiguration.DEFAULT_SUPPORTED_CARDS_LIST) {
                 var supportedCardTypesFromApi = schemePaymentMethod.brands?.mapNotNull { brand -> CardType.getCardTypeByTxVariant(brand) }
                 if (!supportedCardTypesFromApi.isNullOrEmpty()) {
+                    Logger.d(TAG, "Updating supported cards to - $supportedCardTypesFromApi")
                     val newCardConfiguration = cardConfiguration
                         .newBuilder()
                         .setSupportedCardTypes(*supportedCardTypesFromApi.orEmpty().toTypedArray())

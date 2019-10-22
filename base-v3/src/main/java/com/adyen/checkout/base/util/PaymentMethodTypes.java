@@ -36,33 +36,54 @@ public final class PaymentMethodTypes {
     public static final String GOOGLE_PAY = "paywithgoogle";
     public static final String SEPA = "sepadirectdebit";
     public static final String BCMC = "bcmc";
+    public static final String WECHAT_PAY_SDK = "wechatpaySDK";
+
+    // Payment methods that might be interpreted as redirect, but are actually not supported
+    public static final String BCMC_QR = "bcmc_mobile_QR";
+    public static final String WECHAT_PAY_MINI_PROGRAM = "wechatpayMiniProgram";
+    public static final String WECHAT_PAY_QR = "wechatpayQR";
+    public static final String WECHAT_PAY_WEB = "wechatpayWeb";
 
     // List of all payment method types.
     public static final List<String> SUPPORTED_PAYMENT_METHODS;
+    public static final List<String> UNSUPPORTED_PAYMENT_METHODS;
 
     // Helper annotation to enforce use of a constant from here when needed.
-    @StringDef({IDEAL, MOLPAY_MALAYSIA, MOLPAY_THAILAND, MOLPAY_VIETNAM, DOTPAY, EPS, ENTERCASH, OPEN_BANKING, SCHEME, GOOGLE_PAY, SEPA, BCMC})
+    @StringDef({IDEAL, MOLPAY_MALAYSIA, MOLPAY_THAILAND, MOLPAY_VIETNAM, DOTPAY, EPS, ENTERCASH, OPEN_BANKING, SCHEME, GOOGLE_PAY, SEPA, BCMC,
+            WECHAT_PAY_SDK})
     @Retention(RetentionPolicy.SOURCE)
     public @interface SupportedPaymentMethod {
     }
 
     static {
-        final ArrayList<String> paymentMethods = new ArrayList<>();
+        final ArrayList<String> supportedPaymentMethods = new ArrayList<>();
 
-        paymentMethods.add(IDEAL);
-        paymentMethods.add(MOLPAY_MALAYSIA);
-        paymentMethods.add(MOLPAY_THAILAND);
-        paymentMethods.add(MOLPAY_VIETNAM);
-        paymentMethods.add(DOTPAY);
-        paymentMethods.add(EPS);
-        paymentMethods.add(ENTERCASH);
-        paymentMethods.add(OPEN_BANKING);
-        paymentMethods.add(SCHEME);
-        paymentMethods.add(GOOGLE_PAY);
-        paymentMethods.add(SEPA);
-        paymentMethods.add(BCMC);
+        // Populate supported list
+        supportedPaymentMethods.add(IDEAL);
+        supportedPaymentMethods.add(MOLPAY_MALAYSIA);
+        supportedPaymentMethods.add(MOLPAY_THAILAND);
+        supportedPaymentMethods.add(MOLPAY_VIETNAM);
+        supportedPaymentMethods.add(DOTPAY);
+        supportedPaymentMethods.add(EPS);
+        supportedPaymentMethods.add(ENTERCASH);
+        supportedPaymentMethods.add(OPEN_BANKING);
+        supportedPaymentMethods.add(SCHEME);
+        supportedPaymentMethods.add(GOOGLE_PAY);
+        supportedPaymentMethods.add(SEPA);
+        supportedPaymentMethods.add(BCMC);
+        supportedPaymentMethods.add(WECHAT_PAY_SDK);
 
-        SUPPORTED_PAYMENT_METHODS = Collections.unmodifiableList(paymentMethods);
+        SUPPORTED_PAYMENT_METHODS = Collections.unmodifiableList(supportedPaymentMethods);
+
+        final ArrayList<String> unsupportedPaymentMethods = new ArrayList<>();
+
+        // Populate unsupported list
+        unsupportedPaymentMethods.add(BCMC_QR);
+        unsupportedPaymentMethods.add(WECHAT_PAY_MINI_PROGRAM);
+        unsupportedPaymentMethods.add(WECHAT_PAY_QR);
+        unsupportedPaymentMethods.add(WECHAT_PAY_WEB);
+
+        UNSUPPORTED_PAYMENT_METHODS = Collections.unmodifiableList(unsupportedPaymentMethods);
     }
 
     private PaymentMethodTypes() {

@@ -66,12 +66,6 @@ public class BaseComponentTest {
 
             @NonNull
             @Override
-            protected TestOutputData createEmptyOutputData() {
-                return new TestOutputData();
-            }
-
-            @NonNull
-            @Override
             protected PaymentComponentState createComponentState() {
                 return null;
             }
@@ -94,8 +88,7 @@ public class BaseComponentTest {
                 Assert.assertNotNull(testOutputData);
             }
         });
-        Assert.assertNotNull(mBaseComponent.getOutputData());
-
+        Assert.assertNull(mBaseComponent.getOutputData());
     }
 
     @Test
@@ -131,12 +124,6 @@ public class BaseComponentTest {
             protected TestOutputData onInputDataChanged(@NonNull TestInputData inputData) {
                 TestOutputData outputData = new TestOutputData(inputData.isValid);
                 return outputData;
-            }
-
-            @NonNull
-            @Override
-            protected TestOutputData createEmptyOutputData() {
-                return new TestOutputData();
             }
 
             @NonNull

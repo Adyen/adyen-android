@@ -47,6 +47,7 @@ import com.adyen.checkout.dropin.ui.paymentmethods.PaymentMethodListDialogFragme
 import com.adyen.checkout.googlepay.GooglePayComponent
 import com.adyen.checkout.googlepay.GooglePayConfiguration
 import com.adyen.checkout.redirect.RedirectUtil
+import com.adyen.checkout.wechatpay.WeChatPayUtils
 import org.json.JSONObject
 
 /**
@@ -294,8 +295,14 @@ class DropInActivity : AppCompatActivity(), DropInBottomSheetDialogFragment.Prot
     }
 
     private fun handleIntent(intent: Intent) {
-        Logger.d(TAG, "handleIntent - ${intent.action}")
+        Logger.d(TAG, "handleIntent: action - ${intent.action}")
         newIntentReceived = true
+
+        if (WeChatPayUtils.isResultIntent(intent)) {
+            Logger.d(TAG, "isResultIntent")
+            actionHandler.handleWeChatPayResponse(intent)
+        }
+
         when (intent.action) {
             // Redirect response
             Intent.ACTION_VIEW -> {

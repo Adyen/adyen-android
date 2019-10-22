@@ -89,19 +89,30 @@ class PaymentMethodListDialogFragment : DropInBottomSheetDialogFragment(), Payme
     }
 
     override fun onPaymentMethodSelected(paymentMethod: PaymentMethod, isInExpandMode: Boolean) {
-        Logger.d(TAG, "onPaymentMethodSelected")
-        if (PaymentMethodTypes.SUPPORTED_PAYMENT_METHODS.contains(paymentMethod.type)) {
-            // TODO refactor this logic to a layer that decides is payment method needs to present View or not
-            if (paymentMethod.type == PaymentMethodTypes.GOOGLE_PAY) {
-                protocol.startGooglePay(paymentMethod,
-                        mDropInViewModel.dropInConfiguration.getConfigurationFor(PaymentMethodTypes.GOOGLE_PAY, requireContext()))
-                return
+        Logger.d(TAG, "onPaymentMethodSelected - ${paymentMethod.type}")
+        paymentMethod.type?.let { paymentMethodType ->
+            when (paymentMethodType) {
+                PaymentMethodTypes.GOOGLE_PAY -> {
+                    protocol.startGooglePay(
+                            paymentMethod, mDropInViewModel.dropInConfiguration.getConfigurationFor(PaymentMethodTypes.GOOGLE_PAY, requireContext()))
+                }
+                PaymentMethodTypes.WECHAT_PAY_SDK -> {
+                    sendPayment(paymentMethodType)
+                }
+                else -> {
+                    if (PaymentMethodTypes.SUPPORTED_PAYMENT_METHODS.contains(paymentMethodType)) {
+                        protocol.showComponentDialog(paymentMethod, isInExpandMode)
+                    } else {
+                        sendPayment(paymentMethodType)
+                    }
+                }
             }
-            protocol.showComponentDialog(paymentMethod, isInExpandMode)
-        } else {
-            val paymentComponentData = PaymentComponentData<PaymentMethodDetails>()
-            paymentComponentData.paymentMethod = GenericPaymentMethod(paymentMethod.type)
-            protocol.sendPaymentRequest(paymentComponentData)
         }
+    }
+
+    private fun sendPayment(type: String) {
+        val paymentComponentData = PaymentComponentData<PaymentMethodDetails>()
+        paymentComponentData.paymentMethod = GenericPaymentMethod(type)
+        protocol.sendPaymentRequest(paymentComponentData)
     }
 }

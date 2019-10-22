@@ -65,7 +65,7 @@ public class DotpayConfiguration extends IssuerListConfiguration {
     }
 
     /**
-     * Builder to create a {@link DotpayConfiguration} more easily.
+     * Builder to create a {@link DotpayConfiguration}.
      */
     public static final class Builder extends IssuerListBuilder<DotpayConfiguration> {
 

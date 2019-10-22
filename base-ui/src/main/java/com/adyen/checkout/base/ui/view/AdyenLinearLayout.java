@@ -48,7 +48,10 @@ public abstract class AdyenLinearLayout<ComponentT extends BasePaymentComponent>
     }
 
     @NonNull
-    public ComponentT getComponent() {
+    protected ComponentT getComponent() {
+        if (mComponent == null) {
+            throw new RuntimeException("Should not get Component before it's attached");
+        }
         return mComponent;
     }
 }

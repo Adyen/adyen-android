@@ -1,0 +1,61 @@
+/*
+ * Copyright (c) 2019 Adyen N.V.
+ *
+ * This file is open source and available under the MIT license. See the LICENSE file for more info.
+ *
+ * Created by caiof on 17/9/2019.
+ */
+
+package com.adyen.checkout.wechatpay;
+
+import android.support.annotation.NonNull;
+
+import com.adyen.checkout.base.PaymentComponentProvider;
+import com.adyen.checkout.base.PaymentComponentState;
+import com.adyen.checkout.base.component.BasePaymentComponent;
+import com.adyen.checkout.base.component.EmptyInputData;
+import com.adyen.checkout.base.component.EmptyOutputData;
+import com.adyen.checkout.base.model.paymentmethods.PaymentMethod;
+import com.adyen.checkout.base.model.payments.request.GenericPaymentMethod;
+import com.adyen.checkout.base.model.payments.request.PaymentComponentData;
+import com.adyen.checkout.base.util.PaymentMethodTypes;
+
+public class WeChatPayComponent extends BasePaymentComponent<WeChatPayConfiguration, EmptyInputData, EmptyOutputData> {
+
+    public static final PaymentComponentProvider<WeChatPayComponent, WeChatPayConfiguration> PROVIDER = new WeChatPayProvider();
+
+    private static final String[] PAYMENT_METHOD_TYPES = {PaymentMethodTypes.WECHAT_PAY_SDK};
+
+    /**
+     * Component should not be instantiated directly. Instead use the PROVIDER object.
+     *
+     * @param paymentMethod {@link PaymentMethod}
+     * @param configuration {@link WeChatPayConfiguration}
+     */
+    public WeChatPayComponent(@NonNull PaymentMethod paymentMethod, @NonNull WeChatPayConfiguration configuration) {
+        super(paymentMethod, configuration);
+    }
+
+    @NonNull
+    @Override
+    protected EmptyOutputData onInputDataChanged(@NonNull EmptyInputData inputData) {
+        return new EmptyOutputData();
+    }
+
+    @NonNull
+    @Override
+    protected PaymentComponentState createComponentState() {
+        final GenericPaymentMethod paymentMethodDetails = new GenericPaymentMethod(PaymentMethodTypes.WECHAT_PAY_SDK);
+        final PaymentComponentData<GenericPaymentMethod> componentData = new PaymentComponentData<>();
+        componentData.setPaymentMethod(paymentMethodDetails);
+
+        return new PaymentComponentState<>(componentData, true);
+    }
+
+    @NonNull
+    @Override
+    public String[] getSupportedPaymentMethodTypes() {
+        return PAYMENT_METHOD_TYPES;
+    }
+
+}

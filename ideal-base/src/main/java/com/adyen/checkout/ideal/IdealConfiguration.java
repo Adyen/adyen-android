@@ -65,7 +65,7 @@ public class IdealConfiguration extends IssuerListConfiguration {
     }
 
     /**
-     * Builder to create a {@link IdealConfiguration} more easily.
+     * Builder to create a {@link IdealConfiguration}.
      */
     public static final class Builder extends IssuerListBuilder<IdealConfiguration> {
 

@@ -24,4 +24,8 @@
         <ignore path="src/main/res/drawable-v21/googlepay_white_button_no_shadow_background.xml"/>
     </issue>
 
+    <issue id="InvalidPackage">
+        <ignore path="*/net.bytebuddy/byte-buddy-agent/*"/>
+    </issue>
+
 </lint>

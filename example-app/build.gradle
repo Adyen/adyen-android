@@ -40,6 +40,10 @@ android {
         multiDexEnabled true
     }
 
+    testOptions {
+        animationsDisabled = true
+    }
+
     buildTypes {
         release {
             minifyEnabled false
@@ -52,7 +56,12 @@ dependencies {
     // Tests
     testImplementation "junit:junit:$version_junit"
     androidTestImplementation "com.android.support.test:runner:$version_support_test_runner"
+    androidTestImplementation "com.android.support.test:rules:$version_support_test_runner"
     androidTestImplementation "com.android.support.test.espresso:espresso-core:$version_espresso"
+    androidTestImplementation "com.android.support.test.espresso:espresso-contrib:$version_espresso"
+    androidTestImplementation "com.android.support.test.espresso:espresso-intents:$version_espresso"
+    androidTestImplementation "com.jakewharton.espresso:okhttp3-idling-resource:$version_okhttp_idling_resource"
+    androidTestImplementation "com.android.support.test.uiautomator:uiautomator-v18:$version_uiautomator"
 
     // Checkout
     implementation project(':drop-in')
@@ -61,6 +70,7 @@ dependencies {
     implementation "com.android.support:multidex:$version_multidex"
     implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk7:$version_kotlin"
     implementation "org.jetbrains.kotlinx:kotlinx-coroutines-android:$version_kotlinx"
+    implementation "org.jetbrains.kotlinx:kotlinx-coroutines-core:$version_kotlinx"
     implementation "com.android.support:appcompat-v7:$version_support_library"
     implementation "com.android.support.constraint:constraint-layout:$version_constraint_layout"
     implementation "com.android.support:recyclerview-v7:$version_support_library"
@@ -72,4 +82,8 @@ dependencies {
     implementation "com.squareup.retrofit2:converter-gson:$version_retrofit2"
     implementation "com.squareup.moshi:moshi-adapters:$version_moshi_adapters"
     implementation "com.jakewharton.retrofit:retrofit2-kotlin-coroutines-adapter:$version_coroutines_adapter"
+    implementation "com.squareup.okhttp3:logging-interceptor:$version_okhttp_logging"
+    implementation "org.koin:koin-android:$version_koin"
+    implementation "org.koin:koin-test:$version_koin"
+    implementation "org.koin:koin-android-viewmodel:$version_koin"
 }

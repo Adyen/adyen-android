@@ -190,7 +190,7 @@ public class GooglePayConfiguration extends Configuration {
     }
 
     /**
-     * Google Pay Configuration Builder.
+     * Builder to create a {@link GooglePayConfiguration}.
      */
     public static final class Builder extends BaseConfigurationBuilder<GooglePayConfiguration> {
 

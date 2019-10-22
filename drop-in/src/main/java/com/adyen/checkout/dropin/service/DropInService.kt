@@ -108,6 +108,12 @@ abstract class DropInService : JobIntentService() {
         }
     }
 
+    override fun onDestroy() {
+        super.onDestroy()
+        // Android will only call new tasks from enqueueWork if the previous one has finished nas the service is destroyed
+        Logger.d(TAG, "onDestroy")
+    }
+
     /**
      * Call this method for asynchronous handling of [makePaymentsCall]
      */

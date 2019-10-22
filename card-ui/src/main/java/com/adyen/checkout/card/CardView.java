@@ -100,7 +100,8 @@ public final class CardView extends AdyenLinearLayout<CardComponent> implements 
                 if (!getComponent().isStoredPaymentMethod()) {
                     mCardNumberInput.setErrorEnabled(!hasFocus);
 
-                    if (!hasFocus && (isOutputEmpty() || !getComponent().getOutputData().getCardNumberField().isValid())) {
+                    final CardOutputData outputData = getComponent().getOutputData();
+                    if (!hasFocus && outputData != null && !outputData.getCardNumberField().isValid()) {
                         mCardNumberInput.setError(getContext().getString(R.string.checkout_card_number_not_valid));
                     }
                 }
@@ -130,7 +131,8 @@ public final class CardView extends AdyenLinearLayout<CardComponent> implements 
             public void onFocusChange(View v, boolean hasFocus) {
                 mExpiryDateInput.setErrorEnabled(!hasFocus);
 
-                if (!hasFocus && (isOutputEmpty() || !getComponent().getOutputData().getExpiryDateField().isValid())) {
+                final CardOutputData outputData = getComponent().getOutputData();
+                if (!hasFocus && outputData != null && !outputData.getExpiryDateField().isValid()) {
                     mExpiryDateInput.setError(getContext().getString(R.string.checkout_expiry_date_not_valid));
                 }
             }
@@ -150,7 +152,8 @@ public final class CardView extends AdyenLinearLayout<CardComponent> implements 
             public void onFocusChange(View v, boolean hasFocus) {
                 mSecurityCodeInput.setErrorEnabled(!hasFocus);
 
-                if (!hasFocus && (isOutputEmpty() || !getComponent().getOutputData().getSecurityCodeField().isValid())) {
+                final CardOutputData outputData = getComponent().getOutputData();
+                if (!hasFocus && outputData != null && !outputData.getSecurityCodeField().isValid()) {
                     mSecurityCodeInput.setError(getContext().getString(R.string.checkout_security_code_not_valid));
                 }
             }
@@ -170,7 +173,8 @@ public final class CardView extends AdyenLinearLayout<CardComponent> implements 
             public void onFocusChange(View v, boolean hasFocus) {
                 mCardHolderInput.setErrorEnabled(!hasFocus);
 
-                if (!hasFocus && (isOutputEmpty() || !getComponent().getOutputData().getHolderNameField().isValid())) {
+                final CardOutputData outputData = getComponent().getOutputData();
+                if (!hasFocus && outputData != null && !outputData.getHolderNameField().isValid()) {
                     mCardHolderInput.setError(getContext().getString(R.string.checkout_holder_name_not_valid));
                 }
             }
@@ -203,7 +207,7 @@ public final class CardView extends AdyenLinearLayout<CardComponent> implements 
 
     @Override
     public void onChanged(@Nullable CardOutputData cardOutputData) {
-        if (!cardOutputData.isEmpty()) {
+        if (cardOutputData != null) {
             onCardNumberValidated(cardOutputData.getCardNumberField());
             onExpiryDateValidated(cardOutputData.getExpiryDateField());
         }
@@ -243,14 +247,10 @@ public final class CardView extends AdyenLinearLayout<CardComponent> implements 
 
     }
 
-    private void onExpiryDateValidated(@Nullable ValidatedField<ExpiryDate> validatedExpiryDate) {
+    private void onExpiryDateValidated(@NonNull ValidatedField<ExpiryDate> validatedExpiryDate) {
         if (validatedExpiryDate.getValidation() == ValidatedField.Validation.VALID) {
             goToNextInputIfFocus(mExpiryDateEditText);
         }
-    }
-
-    private boolean isOutputEmpty() {
-        return getComponent().getOutputData().isEmpty();
     }
 
     private void changeFocusOfInput(String numberValue) {

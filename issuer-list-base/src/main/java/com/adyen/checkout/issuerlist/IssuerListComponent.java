@@ -68,16 +68,10 @@ public abstract class IssuerListComponent<IssuerListPaymentMethodT extends Issue
 
     @NonNull
     @Override
-    protected IssuerListOutputData createEmptyOutputData() {
-        return new IssuerListOutputData(null);
-    }
-
-    @NonNull
-    @Override
     protected PaymentComponentState<IssuerListPaymentMethodT> createComponentState() {
         final IssuerListPaymentMethodT issuerListPaymentMethod = instantiateTypedPaymentMethod();
 
-        final IssuerModel selectedIssuer = getOutputData().getSelectedIssuer();
+        final IssuerModel selectedIssuer = getOutputData() != null ? getOutputData().getSelectedIssuer() : null;
 
         issuerListPaymentMethod.setType(getPaymentMethod().getType());
         issuerListPaymentMethod.setIssuer(selectedIssuer != null ? selectedIssuer.getId() : "");

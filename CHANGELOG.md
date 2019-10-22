@@ -13,6 +13,16 @@
 [//]: <> (Add changes that not released yet into `Unreleased` section)
 [//]: <> (Comment `Unreleased` section if there are no changes)
 [//]: <> (## [Unreleased])
+## [3.5.0] - 2019-10-21
+### Added
+- WeChatPay SDK payment method.
+### Changed
+- Renamed `RecurringDetail` to `StoredPaymentMethod` to match the object array names on the [documentation](https://docs.adyen.com/api-explorer/#/PaymentSetupAndVerificationService/v50/paymentMethods__section_resParams).
+- Added the fields `holderName` and `shopperEmail` that were missing.
+- Precise CVC check in CardComponent for Amex card type.
+### Deprecated
+- Created new deprecated `RecurringDetail` to maintain backwards compatibility for now.
+ 
 ## [3.4.1] - 2019-10-07
 ### Added
 - MolpayComponents can how handle multiple MolPay PaymentMethods (molpay_ebanking_fpx_MY, molpay_ebanking_TH, molpay_ebanking_VN)

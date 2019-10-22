@@ -51,6 +51,8 @@ import com.adyen.checkout.openbanking.OpenBankingRecyclerView
 import com.adyen.checkout.sepa.SepaComponent
 import com.adyen.checkout.sepa.SepaConfiguration
 import com.adyen.checkout.sepa.SepaView
+import com.adyen.checkout.wechatpay.WeChatPayComponent
+import com.adyen.checkout.wechatpay.WeChatPayConfiguration
 
 class ComponentParsingProvider {
     companion object {
@@ -97,8 +99,11 @@ internal fun <T : Configuration> getDefaultConfigFor(
         PaymentMethodTypes.SEPA -> {
             SepaConfiguration.Builder(context)
         }
+        PaymentMethodTypes.WECHAT_PAY_SDK -> {
+            WeChatPayConfiguration.Builder(context)
+        }
         else -> {
-            throw CheckoutException("Unable to find component for type - $paymentMethod")
+            throw CheckoutException("Unable to find component configuration for type - $paymentMethod")
         }
     }
 
@@ -164,6 +169,9 @@ internal fun getProviderForType(type: String): PaymentComponentProvider<PaymentC
         PaymentMethodTypes.BCMC -> {
             BcmcComponent.PROVIDER as PaymentComponentProvider<PaymentComponent, Configuration>
         }
+        PaymentMethodTypes.WECHAT_PAY_SDK -> {
+            WeChatPayComponent.PROVIDER as PaymentComponentProvider<PaymentComponent, Configuration>
+        }
         else -> {
             throw CheckoutException("Unable to find component for type - $type")
         }
@@ -227,12 +235,16 @@ internal fun getComponentFor(
             GooglePayComponent.PROVIDER.get(fragment, paymentMethod, googlePayConfiguration)
         }
         PaymentMethodTypes.SEPA -> {
-            val sepaConfiguration: SepaConfiguration = dropInConfiguration.getConfigurationFor(PaymentMethodTypes.SEPA, fragment.context!!)
+            val sepaConfiguration: SepaConfiguration = dropInConfiguration.getConfigurationFor(PaymentMethodTypes.SEPA, context)
             SepaComponent.PROVIDER.get(fragment, paymentMethod, sepaConfiguration)
         }
         PaymentMethodTypes.BCMC -> {
-            val bcmcConfiguration: BcmcConfiguration = dropInConfiguration.getConfigurationFor(PaymentMethodTypes.BCMC, fragment.context!!)
+            val bcmcConfiguration: BcmcConfiguration = dropInConfiguration.getConfigurationFor(PaymentMethodTypes.BCMC, context)
             BcmcComponent.PROVIDER.get(fragment, paymentMethod, bcmcConfiguration)
+        }
+        PaymentMethodTypes.WECHAT_PAY_SDK -> {
+            val weChatPayConfiguration: WeChatPayConfiguration = dropInConfiguration.getConfigurationFor(PaymentMethodTypes.WECHAT_PAY_SDK, context)
+            WeChatPayComponent.PROVIDER.get(fragment, paymentMethod, weChatPayConfiguration)
         }
         else -> {
             throw CheckoutException("Unable to find component for type - ${paymentMethod.type}")
@@ -282,7 +294,7 @@ internal fun getViewFor(context: Context, paymentMethod: PaymentMethod): Compone
         PaymentMethodTypes.BCMC -> {
             BcmcView(context) as ComponentView<PaymentComponent>
         }
-        // GooglePay does not require a View in Drop-in
+        // GooglePay and WeChatPay do not require a View in Drop-in
         else -> {
             throw CheckoutException("Unable to find view for type - ${paymentMethod.type}")
         }

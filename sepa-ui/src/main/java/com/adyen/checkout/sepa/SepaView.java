@@ -97,7 +97,8 @@ public class SepaView extends AdyenLinearLayout<SepaComponent> implements Observ
             public void onFocusChange(View v, boolean hasFocus) {
                 mIbanNumberInput.setErrorEnabled(!hasFocus);
 
-                if (!hasFocus && !getComponent().getOutputData().getIbanNumberField().isValid()) {
+                final SepaOutputData outputData = getComponent().getOutputData();
+                if (!hasFocus && outputData != null && !outputData.getIbanNumberField().isValid()) {
                     mIbanNumberInput.setError(getContext().getString(R.string.checkout_iban_not_valid));
                 }
             }

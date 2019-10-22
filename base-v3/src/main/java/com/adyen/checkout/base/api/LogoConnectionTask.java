@@ -56,7 +56,7 @@ public final class LogoConnectionTask extends ConnectionTask<BitmapDrawable> {
                 final BitmapDrawable result = get(SAFETY_TIMEOUT, TimeUnit.MILLISECONDS);
                 notifyLogo(result);
             } catch (ExecutionException e) {
-                Logger.e(TAG, "Execution failed.", e);
+                Logger.e(TAG, "Execution failed for logo  - " + getLogoUrl());
                 notifyFailed();
             } catch (InterruptedException e) {
                 Logger.e(TAG, "Execution interrupted.", e);

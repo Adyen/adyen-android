@@ -65,7 +65,7 @@ public class OpenBankingConfiguration extends IssuerListConfiguration {
     }
 
     /**
-     * Builder to create a {@link OpenBankingConfiguration} more easily.
+     * Builder to create a {@link OpenBankingConfiguration}.
      */
     public static final class Builder extends IssuerListBuilder<OpenBankingConfiguration> {
 

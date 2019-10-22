@@ -27,6 +27,7 @@ public abstract class Action extends ModelObject {
 
     public static final String TYPE = "type";
     public static final String PAYMENT_DATA = "paymentData";
+    public static final String PAYMENT_METHOD_TYPE = "paymentMethodType";
 
     @NonNull
     public static final Serializer<Action> SERIALIZER = new Serializer<Action>() {
@@ -58,6 +59,7 @@ public abstract class Action extends ModelObject {
 
     private String type;
     private String paymentData;
+    private String paymentMethodType;
 
     @SuppressWarnings(Lint.SYNTHETIC)
     @NonNull
@@ -73,6 +75,8 @@ public abstract class Action extends ModelObject {
                 return QrCodeAction.SERIALIZER;
             case VoucherAction.ACTION_TYPE:
                 return VoucherAction.SERIALIZER;
+            case WeChatPaySdkAction.ACTION_TYPE:
+                return WeChatPaySdkAction.SERIALIZER;
             default:
                 throw new CheckoutException("Action type not found - " + actionType);
         }
@@ -94,5 +98,14 @@ public abstract class Action extends ModelObject {
 
     public void setPaymentData(@Nullable String paymentData) {
         this.paymentData = paymentData;
+    }
+
+    @Nullable
+    public String getPaymentMethodType() {
+        return paymentMethodType;
+    }
+
+    public void setPaymentMethodType(@Nullable String paymentMethodType) {
+        this.paymentMethodType = paymentMethodType;
     }
 }

@@ -18,7 +18,7 @@ import com.adyen.checkout.base.PaymentComponentState;
 import com.adyen.checkout.base.component.BasePaymentComponent;
 import com.adyen.checkout.base.model.paymentmethods.InputDetail;
 import com.adyen.checkout.base.model.paymentmethods.PaymentMethod;
-import com.adyen.checkout.base.model.paymentmethods.RecurringDetail;
+import com.adyen.checkout.base.model.paymentmethods.StoredPaymentMethod;
 import com.adyen.checkout.base.model.payments.request.CardPaymentMethod;
 import com.adyen.checkout.base.model.payments.request.PaymentComponentData;
 import com.adyen.checkout.base.util.PaymentMethodTypes;
@@ -55,7 +55,7 @@ public final class CardComponent extends BasePaymentComponent<CardConfiguration,
      * @param paymentMethod {@link PaymentMethod} represents card payment method.
      * @param configuration {@link CardConfiguration}.
      */
-    public CardComponent(@NonNull RecurringDetail paymentMethod, @NonNull CardConfiguration configuration) {
+    public CardComponent(@NonNull StoredPaymentMethod paymentMethod, @NonNull CardConfiguration configuration) {
         super(paymentMethod, configuration);
 
         mStoredPaymentInputData = new CardInputData();
@@ -124,7 +124,7 @@ public final class CardComponent extends BasePaymentComponent<CardConfiguration,
         return new CardOutputData(
                 validateCardNumber(inputData.getCardNumber()),
                 validateExpiryDate(inputData.getExpiryDate()),
-                validateSecurityCode(inputData.getSecurityCode()),
+                validateSecurityCode(inputData.getSecurityCode(), getSupportedFilterCards(inputData.getCardNumber())),
                 validateHolderName(inputData.getHolderName()),
                 inputData.isStorePaymentEnable()
         );
@@ -178,7 +178,7 @@ public final class CardComponent extends BasePaymentComponent<CardConfiguration,
             cardPaymentMethod.setEncryptedExpiryMonth(encryptedCard.getEncryptedExpiryMonth());
             cardPaymentMethod.setEncryptedExpiryYear(encryptedCard.getEncryptedExpiryYear());
         } else {
-            cardPaymentMethod.setRecurringDetailReference(((RecurringDetail) getPaymentMethod()).getId());
+            cardPaymentMethod.setRecurringDetailReference(((StoredPaymentMethod) getPaymentMethod()).getId());
         }
 
         cardPaymentMethod.setEncryptedSecurityCode(encryptedCard.getEncryptedSecurityCode());
@@ -199,16 +199,10 @@ public final class CardComponent extends BasePaymentComponent<CardConfiguration,
         super.observeOutputData(lifecycleOwner, observer);
     }
 
-    @NonNull
+    @Nullable
     @Override
     protected CardOutputData getOutputData() {
         return super.getOutputData();
-    }
-
-    @NonNull
-    @Override
-    protected CardOutputData createEmptyOutputData() {
-        return new CardOutputData();
     }
 
     @NonNull
@@ -256,12 +250,13 @@ public final class CardComponent extends BasePaymentComponent<CardConfiguration,
         }
     }
 
-    private ValidatedField<String> validateSecurityCode(@NonNull String securityCode) {
+    private ValidatedField<String> validateSecurityCode(@NonNull String securityCode,
+            List<CardType> supportedFilterCards) {
         final InputDetail securityCodeInputDetail = getInputDetail("cvc");
         final boolean isRequired = securityCodeInputDetail == null || !securityCodeInputDetail.isOptional();
-
         if (isRequired) {
-            return CardValidationUtils.validateSecurityCode(securityCode, null);
+            final CardType firstCardType = !supportedFilterCards.isEmpty() ? supportedFilterCards.get(0) : null;
+            return CardValidationUtils.validateSecurityCode(securityCode, firstCardType);
         } else {
             return new ValidatedField<>(securityCode, ValidatedField.Validation.VALID);
         }

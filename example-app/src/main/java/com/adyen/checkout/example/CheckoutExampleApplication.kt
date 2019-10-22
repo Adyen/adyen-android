@@ -11,12 +11,24 @@ package com.adyen.checkout.example
 import android.support.multidex.MultiDexApplication
 import android.util.Log
 import com.adyen.checkout.core.log.Logger
+import com.adyen.checkout.example.di.appModule
+import org.koin.android.ext.koin.androidContext
+import org.koin.core.context.startKoin
 
 class CheckoutExampleApplication : MultiDexApplication() {
 
     companion object {
         init {
             Logger.setLogcatLevel(Log.DEBUG)
+        }
+    }
+
+    override fun onCreate() {
+        super.onCreate()
+
+        startKoin {
+            androidContext(this@CheckoutExampleApplication)
+            modules(appModule)
         }
     }
 }

@@ -1,6 +1,8 @@
 include ':3ds2',
         ':base-ui',
         ':base-v3',
+        ':bcmc-base',
+        ':bcmc-ui',
         ':core-v3',
         ':card-base-core',
         ':card-ui-core',
@@ -27,5 +29,4 @@ include ':3ds2',
         ':redirect',
         ':sepa-base',
         ':sepa-ui',
-        ':bcmc-base',
-        ':bcmc-ui'
+        'wechatpay-base'

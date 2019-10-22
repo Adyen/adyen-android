@@ -65,7 +65,7 @@ public class EntercashConfiguration extends IssuerListConfiguration {
     }
 
     /**
-     * Builder to create a {@link EntercashConfiguration} more easily.
+     * Builder to create a {@link EntercashConfiguration}.
      */
     public static final class Builder extends IssuerListBuilder<EntercashConfiguration> {
 
