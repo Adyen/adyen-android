@@ -29,7 +29,7 @@ public final class MolpayComponent extends IssuerListComponent<MolpayPaymentMeth
     public static final PaymentComponentProvider<MolpayComponent, MolpayConfiguration> PROVIDER =
             new PaymentComponentProviderImpl<>(MolpayComponent.class);
 
-    private static final String[] PAYMENT_METHOD_TYPES = {
+    public static final String[] PAYMENT_METHOD_TYPES = {
             PaymentMethodTypes.MOLPAY_THAILAND,
             PaymentMethodTypes.MOLPAY_MALAYSIA,
             PaymentMethodTypes.MOLPAY_VIETNAM

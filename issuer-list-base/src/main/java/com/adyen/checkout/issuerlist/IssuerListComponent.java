@@ -24,7 +24,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 public abstract class IssuerListComponent<IssuerListPaymentMethodT extends IssuerListPaymentMethod> extends
-        BasePaymentComponent<IssuerListConfiguration, IssuerListInputData, IssuerListOutputData> {
+        BasePaymentComponent<IssuerListConfiguration, IssuerListInputData, IssuerListOutputData, PaymentComponentState> {
 
     private final MutableLiveData<List<IssuerModel>> mIssuersLiveData = new MutableLiveData<>();
 

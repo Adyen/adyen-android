@@ -8,6 +8,7 @@
 
 package com.adyen.checkout.dropin.ui
 
+import android.app.Activity
 import android.arch.lifecycle.Observer
 import android.arch.lifecycle.ViewModelProviders
 import android.content.BroadcastReceiver
@@ -21,13 +22,11 @@ import android.support.v7.app.AppCompatActivity
 import android.widget.Toast
 import com.adyen.checkout.base.ActionComponentData
 import com.adyen.checkout.base.ComponentError
-import com.adyen.checkout.base.PaymentComponentState
 import com.adyen.checkout.base.analytics.AnalyticEvent
 import com.adyen.checkout.base.analytics.AnalyticsDispatcher
 import com.adyen.checkout.base.model.PaymentMethodsApiResponse
 import com.adyen.checkout.base.model.paymentmethods.PaymentMethod
 import com.adyen.checkout.base.model.payments.request.PaymentComponentData
-import com.adyen.checkout.base.model.payments.request.PaymentMethodDetails
 import com.adyen.checkout.base.model.payments.response.Action
 import com.adyen.checkout.base.util.PaymentMethodTypes
 import com.adyen.checkout.core.code.Lint
@@ -45,6 +44,7 @@ import com.adyen.checkout.dropin.ui.component.CardComponentDialogFragment
 import com.adyen.checkout.dropin.ui.component.GenericComponentDialogFragment
 import com.adyen.checkout.dropin.ui.paymentmethods.PaymentMethodListDialogFragment
 import com.adyen.checkout.googlepay.GooglePayComponent
+import com.adyen.checkout.googlepay.GooglePayComponentState
 import com.adyen.checkout.googlepay.GooglePayConfiguration
 import com.adyen.checkout.redirect.RedirectUtil
 import com.adyen.checkout.wechatpay.WeChatPayUtils
@@ -65,7 +65,7 @@ class DropInActivity : AppCompatActivity(), DropInBottomSheetDialogFragment.Prot
 
         private const val PAYMENT_METHODS_RESPONSE_KEY = "PAYMENT_METHODS_RESPONSE_KEY"
         private const val DROP_IN_CONFIGURATION_KEY = "DROP_IN_CONFIGURATION_KEY"
-        private const val IS_LOADING_DIALOG_VISIBLE = "IS_LOADING_DIALOG_VISIBLE"
+        private const val IS_WAITING_FOR_RESULT = "IS_WAITING_FOR_RESULT"
         private const val DROP_IN_INTENT = "DROP_IN_INTENT"
 
         private const val GOOGLE_PAY_REQUEST_CODE = 1
@@ -91,18 +91,16 @@ class DropInActivity : AppCompatActivity(), DropInBottomSheetDialogFragment.Prot
     @Suppress(Lint.PROTECTED_IN_FINAL)
     protected lateinit var actionHandler: ActionHandler
 
-    // If a new intent is received we can continue processing, otherwise we might need to time out
     @Suppress(Lint.PROTECTED_IN_FINAL)
-    private var newIntentReceived = false
+    private var isWaitingResult = false
 
     private val loadingDialog = LoadingDialogFragment.newInstance()
-    private var isLoadingVisible = false
 
     private val callResultReceiver = object : BroadcastReceiver() {
         override fun onReceive(context: Context?, intent: Intent?) {
             Logger.d(TAG, "callResultReceiver onReceive")
             if (context != null && intent != null) {
-                newIntentReceived = false
+                isWaitingResult = false
                 if (intent.hasExtra(DropInService.API_CALL_RESULT_KEY)) {
                     val callResult = intent.getParcelableExtra<CallResult>(DropInService.API_CALL_RESULT_KEY)
                     handleCallResult(callResult)
@@ -113,9 +111,9 @@ class DropInActivity : AppCompatActivity(), DropInBottomSheetDialogFragment.Prot
         }
     }
 
-    private val googlePayObserver: Observer<PaymentComponentState<PaymentMethodDetails>> = Observer {
+    private val googlePayObserver: Observer<GooglePayComponentState> = Observer {
         if (it!!.isValid) {
-            sendPaymentRequest(it.data)
+            requestPaymentsCall(it.data)
         }
     }
 
@@ -129,6 +127,10 @@ class DropInActivity : AppCompatActivity(), DropInBottomSheetDialogFragment.Prot
         Logger.d(TAG, "onCreate - $savedInstanceState")
         setContentView(R.layout.activity_drop_in)
         overridePendingTransition(0, 0)
+
+        savedInstanceState?.let {
+            isWaitingResult = it.getBoolean(IS_WAITING_FOR_RESULT, false)
+        }
 
         dropInViewModel = ViewModelProviders.of(this).get(DropInViewModel::class.java)
 
@@ -157,8 +159,6 @@ class DropInActivity : AppCompatActivity(), DropInBottomSheetDialogFragment.Prot
             intent.getParcelableExtra(DROP_IN_INTENT)
         }
 
-        savedInstanceState?.let { isLoadingVisible = it.getBoolean(IS_LOADING_DIALOG_VISIBLE, false) }
-
         callResultIntentFilter = IntentFilter(DropInService.getCallResultAction(this))
 
         // registerBroadcastReceivers
@@ -178,12 +178,6 @@ class DropInActivity : AppCompatActivity(), DropInBottomSheetDialogFragment.Prot
         }
     }
 
-    override fun sendPaymentRequest(paymentComponentData: PaymentComponentData<in PaymentMethodDetails>) {
-        loadingDialog.show(supportFragmentManager, LOADING_FRAGMENT_TAG)
-        isLoadingVisible = true
-        DropInService.requestPaymentsCall(this, paymentComponentData, dropInConfiguration.serviceComponentName)
-    }
-
     override fun onNewIntent(intent: Intent?) {
         super.onNewIntent(intent)
         Logger.d(TAG, "onNewIntent")
@@ -194,7 +188,15 @@ class DropInActivity : AppCompatActivity(), DropInBottomSheetDialogFragment.Prot
         }
     }
 
+    override fun requestPaymentsCall(paymentComponentData: PaymentComponentData<*>) {
+        isWaitingResult = true
+        setLoading(true)
+        DropInService.requestPaymentsCall(this, paymentComponentData, dropInConfiguration.serviceComponentName)
+    }
+
     override fun requestDetailsCall(actionComponentData: ActionComponentData) {
+        isWaitingResult = true
+        setLoading(true)
         DropInService.requestDetailsCall(this,
             ActionComponentData.SERIALIZER.serialize(actionComponentData),
             dropInConfiguration.serviceComponentName)
@@ -213,7 +215,7 @@ class DropInActivity : AppCompatActivity(), DropInBottomSheetDialogFragment.Prot
         outState?.let {
             it.putParcelable(PAYMENT_METHODS_RESPONSE_KEY, dropInViewModel.paymentMethodsApiResponse)
             it.putParcelable(DROP_IN_CONFIGURATION_KEY, dropInConfiguration)
-            it.putBoolean(IS_LOADING_DIALOG_VISIBLE, isLoadingVisible)
+            it.putBoolean(IS_WAITING_FOR_RESULT, isWaitingResult)
 
             actionHandler.saveState(it)
         }
@@ -221,9 +223,7 @@ class DropInActivity : AppCompatActivity(), DropInBottomSheetDialogFragment.Prot
 
     override fun onResume() {
         super.onResume()
-        if (!newIntentReceived && isLoadingVisible) {
-            getFragmentByTag(LOADING_FRAGMENT_TAG)?.dismiss()
-        }
+        setLoading(isWaitingResult)
     }
 
     override fun onDestroy() {
@@ -251,6 +251,7 @@ class DropInActivity : AppCompatActivity(), DropInBottomSheetDialogFragment.Prot
 
     override fun terminateDropIn() {
         Logger.d(TAG, "terminateDropIn")
+        setResult(Activity.RESULT_CANCELED)
         finish()
         overridePendingTransition(0, R.anim.fade_out)
     }
@@ -296,7 +297,7 @@ class DropInActivity : AppCompatActivity(), DropInBottomSheetDialogFragment.Prot
 
     private fun handleIntent(intent: Intent) {
         Logger.d(TAG, "handleIntent: action - ${intent.action}")
-        newIntentReceived = true
+        isWaitingResult = false
 
         if (WeChatPayUtils.isResultIntent(intent)) {
             Logger.d(TAG, "isResultIntent")
@@ -333,5 +334,15 @@ class DropInActivity : AppCompatActivity(), DropInBottomSheetDialogFragment.Prot
     private fun getFragmentByTag(tag: String): DialogFragment? {
         val fragment = supportFragmentManager.findFragmentByTag(tag)
         return fragment as DialogFragment?
+    }
+
+    private fun setLoading(showLoading: Boolean) {
+        if (showLoading) {
+            if (!loadingDialog.isAdded) {
+                loadingDialog.show(supportFragmentManager, LOADING_FRAGMENT_TAG)
+            }
+        } else {
+            getFragmentByTag(LOADING_FRAGMENT_TAG)?.dismiss()
+        }
     }
 }

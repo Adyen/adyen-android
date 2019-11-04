@@ -34,7 +34,7 @@ open abstract class BaseComponentDialogFragment : DropInBottomSheetDialogFragmen
     }
 
     lateinit var paymentMethod: PaymentMethod
-    lateinit var component: PaymentComponent
+    lateinit var component: PaymentComponent<PaymentComponentState<in PaymentMethodDetails>>
     lateinit var dropInConfiguration: DropInConfiguration
 
     open class BaseCompanion<T : BaseComponentDialogFragment>(var classes: Class<T>) {
@@ -94,11 +94,11 @@ open abstract class BaseComponentDialogFragment : DropInBottomSheetDialogFragmen
     }
 
     fun startPayment() {
-        val componentState = component.state
+        val componentState = component.getState()
         try {
             if (componentState != null) {
                 if (componentState.isValid) {
-                    protocol.sendPaymentRequest(componentState.data)
+                    protocol.requestPaymentsCall(componentState.data)
                 } else {
                     throw CheckoutException("PaymentComponentState are not valid.")
                 }

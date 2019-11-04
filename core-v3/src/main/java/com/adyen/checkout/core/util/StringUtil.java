@@ -9,21 +9,10 @@
 package com.adyen.checkout.core.util;
 
 import android.support.annotation.NonNull;
-import android.support.annotation.Nullable;
 
 import com.adyen.checkout.core.exception.NoConstructorException;
 
 public final class StringUtil {
-
-    /**
-     * Check if the string has any content, eg. is not null and not empty.
-     *
-     * @param string The string to be verified
-     * @return If it has content or not.
-     */
-    public static boolean hasContent(@Nullable String string) {
-        return string != null && !string.isEmpty();
-    }
 
     /**
      * Removes empty spaces and any additional specified characters.

@@ -12,10 +12,12 @@ import android.arch.lifecycle.ViewModel;
 import android.support.annotation.NonNull;
 
 import com.adyen.checkout.base.PaymentComponent;
+import com.adyen.checkout.base.PaymentComponentState;
 import com.adyen.checkout.base.component.Configuration;
 import com.adyen.checkout.base.model.paymentmethods.PaymentMethod;
 
-public abstract class PaymentComponentViewModel<ConfigurationT extends Configuration> extends ViewModel implements PaymentComponent {
+public abstract class PaymentComponentViewModel<ConfigurationT extends Configuration, ComponentStateT extends PaymentComponentState> extends
+        ViewModel implements PaymentComponent<ComponentStateT> {
 
     private final PaymentMethod mPaymentMethod;
 

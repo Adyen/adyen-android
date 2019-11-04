@@ -32,7 +32,6 @@
 
     <style name="AdyenCheckout.Card.CardNumberInput" parent="AdyenCheckout.TextInputEditText">
         <item name="android:hint">@string/checkout_card_number_hint</item>
-        <item name="android:inputType">phone</item>
     </style>
 
     <style name="AdyenCheckout.Card.ExpiryDateInput" parent="AdyenCheckout.TextInputEditText">

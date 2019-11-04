@@ -20,7 +20,7 @@ import com.adyen.checkout.base.model.payments.request.GenericPaymentMethod;
 import com.adyen.checkout.base.model.payments.request.PaymentComponentData;
 import com.adyen.checkout.base.util.PaymentMethodTypes;
 
-public class WeChatPayComponent extends BasePaymentComponent<WeChatPayConfiguration, EmptyInputData, EmptyOutputData> {
+public class WeChatPayComponent extends BasePaymentComponent<WeChatPayConfiguration, EmptyInputData, EmptyOutputData, PaymentComponentState> {
 
     public static final PaymentComponentProvider<WeChatPayComponent, WeChatPayConfiguration> PROVIDER = new WeChatPayProvider();
 

@@ -52,9 +52,13 @@ class ExampleDropInService : DropInService() {
             keyValueStorage.getAmount(),
             keyValueStorage.getMerchantAccount(),
             RedirectComponent.getReturnUrl(applicationContext),
-            AdditionalData(allow3DS2 = keyValueStorage.isThreeds2Enable().toString()))
+            AdditionalData(
+                allow3DS2 = keyValueStorage.isThreeds2Enable().toString(),
+                executeThreeD = keyValueStorage.isExecuteThreeD().toString()
+            )
+        )
 
-        Logger.v(TAG, "paymentComponentData - ${paymentComponentData.toString(JsonUtils.IDENT_SPACES)}")
+        Logger.v(TAG, "paymentComponentData - ${JsonUtils.indent(paymentComponentData)}")
 
         val requestBody = paymentRequest.toString().toRequestBody(CONTENT_TYPE)
         val call = paymentsRepository.paymentsRequest(requestBody)
@@ -65,7 +69,7 @@ class ExampleDropInService : DropInService() {
     override fun makeDetailsCall(actionComponentData: JSONObject): CallResult {
         Logger.d(TAG, "makeDetailsCall")
 
-        Logger.v(TAG, "payments/details/ - ${actionComponentData.toString(JsonUtils.IDENT_SPACES)}")
+        Logger.v(TAG, "payments/details/ - ${JsonUtils.indent(actionComponentData)}")
 
         val requestBody = actionComponentData.toString().toRequestBody(CONTENT_TYPE)
         val call = paymentsRepository.detailsRequest(requestBody)
@@ -83,13 +87,12 @@ class ExampleDropInService : DropInService() {
                 Logger.e(TAG, "errorBody - ${String(byteArray)}")
             }
 
-            val detailsResponse = JSONObject(response.body()?.string())
-
             if (response.isSuccessful) {
+            val detailsResponse = JSONObject(response.body()?.string())
                 if (detailsResponse.has("action")) {
                     CallResult(CallResult.ResultType.ACTION, detailsResponse.get("action").toString())
                 } else {
-                    Logger.d(TAG, "Final result - ${detailsResponse.toString(JsonUtils.IDENT_SPACES)}")
+                    Logger.d(TAG, "Final result - ${JsonUtils.indent(detailsResponse)}")
 
                     var content = "EMPTY"
                     if (detailsResponse.has("resultCode")) {

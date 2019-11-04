@@ -8,6 +8,7 @@
 
 package com.adyen.checkout.example.ui.main
 
+import android.app.Activity
 import android.arch.lifecycle.Observer
 import android.content.Intent
 import android.os.Bundle
@@ -28,7 +29,7 @@ import com.adyen.checkout.dropin.DropInConfiguration
 import com.adyen.checkout.example.BuildConfig
 import com.adyen.checkout.example.R
 import com.adyen.checkout.example.data.storage.KeyValueStorage
-import com.adyen.checkout.example.service.ExampleDropInService
+import com.adyen.checkout.example.service.ExampleSimplifiedDropInService
 import com.adyen.checkout.example.ui.configuration.ConfigurationActivity
 import com.adyen.checkout.googlepay.GooglePayConfiguration
 import kotlinx.android.synthetic.main.activity_main.progressBar
@@ -106,6 +107,13 @@ class MainActivity : AppCompatActivity() {
         }
     }
 
+    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
+        super.onActivityResult(requestCode, resultCode, data)
+        if (requestCode == DropIn.DROP_IN_REQUEST_CODE && resultCode == Activity.RESULT_CANCELED) {
+            Logger.d(TAG, "DropIn CANCELED")
+        }
+    }
+
     private fun startDropIn(paymentMethodsApiResponse: PaymentMethodsApiResponse) {
         Logger.d(TAG, "startDropIn")
         setLoading(false)
@@ -130,7 +138,7 @@ class MainActivity : AppCompatActivity() {
         val dropInConfigurationBuilder = DropInConfiguration.Builder(
             this@MainActivity,
             resultIntent,
-            ExampleDropInService::class.java
+            ExampleSimplifiedDropInService::class.java
         )
             .addCardConfiguration(cardConfiguration)
             .addBcmcConfiguration(bcmcConfiguration)

@@ -42,7 +42,7 @@ public class BaseComponentTest {
     @Rule
     public TestRule rule = new InstantTaskExecutorRule();
 
-    BasePaymentComponent<TestConfiguration, TestInputData, TestOutputData> mBaseComponent;
+    BasePaymentComponent<TestConfiguration, TestInputData, TestOutputData, PaymentComponentState> mBaseComponent;
 
     PaymentMethod paymentMethod;
     ClassLoader classLoader;
@@ -55,8 +55,9 @@ public class BaseComponentTest {
 
     @Test(expected = IllegalArgumentException.class)
     public void initBaseComponent_notSupportedPaymentMethod_expectException() throws IOException, JSONException {
-        mBaseComponent = new BasePaymentComponent<TestConfiguration, TestInputData, TestOutputData>(DataProvider.getPaymentMethodResponse(
-                classLoader).getPaymentMethods().get(0),
+        mBaseComponent = new BasePaymentComponent<TestConfiguration, TestInputData, TestOutputData, PaymentComponentState>(
+                DataProvider.getPaymentMethodResponse(
+                        classLoader).getPaymentMethods().get(0),
                 null) {
             @NonNull
             @Override
@@ -118,7 +119,8 @@ public class BaseComponentTest {
     }
 
     private BasePaymentComponent getBaseComponent() {
-        BasePaymentComponent baseComponent = new BasePaymentComponent<TestConfiguration, TestInputData, TestOutputData>(paymentMethod, null) {
+        BasePaymentComponent baseComponent = new BasePaymentComponent<TestConfiguration, TestInputData, TestOutputData, PaymentComponentState>(
+                paymentMethod, null) {
             @NonNull
             @Override
             protected TestOutputData onInputDataChanged(@NonNull TestInputData inputData) {

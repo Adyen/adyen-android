@@ -15,7 +15,7 @@
 apply plugin: 'io.gitlab.arturbosch.detekt'
 
 detekt {
-    toolVersion = "$project.version_detekt"
+    toolVersion = "$project.detekt_version"
 
     input = files("src")
     filters = ".*/resources/.*,.*/build/.*"

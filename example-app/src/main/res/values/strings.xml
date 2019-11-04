@@ -6,12 +6,15 @@
     <string name="merchant_information">Merchant Information</string>
     <string name="merchant_account_key">merchant_account</string>
     <string name="merchant_account_title">Merchant Account</string>
+    <string name="additional_data_title">Additional Data</string>
 
     <string name="shopper_information">Shopper Information</string>
     <string name="shopper_reference_key">shopper_reference</string>
     <string name="shopper_reference_title">Shopper Reference</string>
     <string name="threeds2_key">threeds2</string>
     <string name="threeds2_title">3DS2</string>
+    <string name="execute3D_key">execute_3d</string>
+    <string name="execute3D_key_title">Execute 3D</string>
     <string name="shopper_country_key">shopper_country</string>
     <string name="shopper_country_title">Country</string>
     <string name="shopper_locale_key">shopper_locale</string>

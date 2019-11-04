@@ -17,6 +17,7 @@ import android.arch.lifecycle.Observer;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
+import android.text.TextUtils;
 
 import com.adyen.checkout.base.ActionComponent;
 import com.adyen.checkout.base.ActionComponentData;
@@ -26,7 +27,6 @@ import com.adyen.checkout.core.exception.CheckoutException;
 import com.adyen.checkout.core.exception.ComponentException;
 import com.adyen.checkout.core.log.LogUtil;
 import com.adyen.checkout.core.log.Logger;
-import com.adyen.checkout.core.util.StringUtil;
 
 import org.json.JSONObject;
 
@@ -86,7 +86,7 @@ public abstract class BaseActionComponent extends AndroidViewModel implements Ac
      * @param bundle The bundle to save the sate into.
      */
     public void saveState(@Nullable Bundle bundle) {
-        if (bundle != null && StringUtil.hasContent(mPaymentData)) {
+        if (bundle != null && !TextUtils.isEmpty(mPaymentData)) {
             if (bundle.containsKey(PAYMENT_DATA_KEY)) {
                 Logger.d(TAG, "bundle already has paymentData, overriding");
             }
@@ -100,7 +100,7 @@ public abstract class BaseActionComponent extends AndroidViewModel implements Ac
      * @param bundle The bundle to restore the sate from.
      */
     public void restoreState(@Nullable Bundle bundle) {
-        if (bundle != null && bundle.containsKey(PAYMENT_DATA_KEY) && !StringUtil.hasContent(mPaymentData)) {
+        if (bundle != null && bundle.containsKey(PAYMENT_DATA_KEY) && TextUtils.isEmpty(mPaymentData)) {
             mPaymentData = bundle.getString(PAYMENT_DATA_KEY);
         }
     }

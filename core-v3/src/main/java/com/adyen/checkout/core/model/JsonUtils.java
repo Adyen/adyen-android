@@ -11,9 +11,9 @@ package com.adyen.checkout.core.model;
 import android.os.Parcel;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
+import android.text.TextUtils;
 
 import com.adyen.checkout.core.exception.NoConstructorException;
-import com.adyen.checkout.core.util.StringUtil;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -25,10 +25,31 @@ import java.util.List;
 
 public final class JsonUtils {
 
-    public static final int IDENT_SPACES = 4;
+    public static final int INDENTATION_SPACES = 4;
+    private static final String PARSING_ERROR = "PARSING_ERROR";
+    private static final String NULL_OBJECT = "NULL";
 
     private static final int FLAG_NULL = 0;
     private static final int FLAG_NON_NULL = FLAG_NULL + 1;
+
+    /**
+     * Transforms a JSONObject to an indented string form.
+     *
+     * @param jsonObject The object, can be null.
+     * @return The indented string version of the json.
+     */
+    @NonNull
+    public static String indent(@Nullable JSONObject jsonObject) {
+        if (jsonObject != null) {
+            try {
+                return jsonObject.toString(INDENTATION_SPACES);
+            } catch (JSONException e) {
+                return PARSING_ERROR;
+            }
+        } else {
+            return NULL_OBJECT;
+        }
+    }
 
     /**
      * Writes a {@link JSONObject} to a {@link Parcel} as a {@link String}.
@@ -102,7 +123,7 @@ public final class JsonUtils {
         final JSONArray jsonArray = new JSONArray();
 
         for (String string : stringList) {
-            if (StringUtil.hasContent(string)) {
+            if (!TextUtils.isEmpty(string)) {
                 jsonArray.put(string);
             }
         }

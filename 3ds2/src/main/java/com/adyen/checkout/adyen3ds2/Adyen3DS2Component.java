@@ -15,6 +15,7 @@ import android.arch.lifecycle.Observer;
 import android.content.Context;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
+import android.text.TextUtils;
 
 import com.adyen.checkout.adyen3ds2.exception.Authentication3DS2Exception;
 import com.adyen.checkout.adyen3ds2.model.ChallengeResult;
@@ -34,7 +35,6 @@ import com.adyen.checkout.core.exception.CheckoutException;
 import com.adyen.checkout.core.exception.ComponentException;
 import com.adyen.checkout.core.log.LogUtil;
 import com.adyen.checkout.core.log.Logger;
-import com.adyen.checkout.core.util.StringUtil;
 import com.adyen.threeds2.AuthenticationRequestParameters;
 import com.adyen.threeds2.ChallengeStatusReceiver;
 import com.adyen.threeds2.CompletionEvent;
@@ -121,7 +121,7 @@ public final class Adyen3DS2Component extends BaseActionComponent implements Cha
     protected void handleActionInternal(@NonNull Activity activity, @NonNull Action action) throws ComponentException {
         if (Threeds2FingerprintAction.ACTION_TYPE.equals(action.getType())) {
             final Threeds2FingerprintAction fingerprintAction = (Threeds2FingerprintAction) action;
-            if (!StringUtil.hasContent(fingerprintAction.getToken())) {
+            if (TextUtils.isEmpty(fingerprintAction.getToken())) {
                 throw new ComponentException("Fingerprint token not found.");
             }
 
@@ -129,7 +129,7 @@ public final class Adyen3DS2Component extends BaseActionComponent implements Cha
 
         } else if (Threeds2ChallengeAction.ACTION_TYPE.equals(action.getType())) {
             final Threeds2ChallengeAction challengeAction = (Threeds2ChallengeAction) action;
-            if (!StringUtil.hasContent(challengeAction.getToken())) {
+            if (TextUtils.isEmpty(challengeAction.getToken())) {
                 throw new ComponentException("Challenge token not found.");
             }
             challengeShopper(activity, challengeAction.getToken());

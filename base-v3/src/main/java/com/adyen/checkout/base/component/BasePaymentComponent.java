@@ -16,6 +16,7 @@ import android.support.annotation.CallSuper;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.annotation.WorkerThread;
+import android.text.TextUtils;
 
 import com.adyen.checkout.base.ComponentError;
 import com.adyen.checkout.base.PaymentComponentState;
@@ -28,15 +29,15 @@ import com.adyen.checkout.core.code.Lint;
 import com.adyen.checkout.core.exception.CheckoutException;
 import com.adyen.checkout.core.log.LogUtil;
 import com.adyen.checkout.core.log.Logger;
-import com.adyen.checkout.core.util.StringUtil;
 
-public abstract class BasePaymentComponent<ConfigurationT extends Configuration, InputDataT extends InputData, OutputDataT extends OutputData>
-        extends PaymentComponentViewModel<ConfigurationT> {
+public abstract class BasePaymentComponent<ConfigurationT extends Configuration, InputDataT extends InputData, OutputDataT extends OutputData,
+        ComponentStateT extends PaymentComponentState>
+        extends PaymentComponentViewModel<ConfigurationT, ComponentStateT> {
 
     private static final String TAG = LogUtil.getTag();
 
     @SuppressWarnings(Lint.SYNTHETIC)
-    final MutableLiveData<PaymentComponentState> mPaymentComponentStateLiveData = new MutableLiveData<>();
+    final MutableLiveData<ComponentStateT> mPaymentComponentStateLiveData = new MutableLiveData<>();
 
     private final MutableLiveData<ComponentError> mComponentErrorLiveData = new MutableLiveData<>();
 
@@ -72,7 +73,7 @@ public abstract class BasePaymentComponent<ConfigurationT extends Configuration,
     }
 
     @Override
-    public void observe(@NonNull LifecycleOwner lifecycleOwner, @NonNull Observer<PaymentComponentState> observer) {
+    public void observe(@NonNull LifecycleOwner lifecycleOwner, @NonNull Observer<ComponentStateT> observer) {
         mPaymentComponentStateLiveData.observe(lifecycleOwner, observer);
     }
 
@@ -126,7 +127,7 @@ public abstract class BasePaymentComponent<ConfigurationT extends Configuration,
             }
 
             final String type = getPaymentMethod().getType();
-            if (!StringUtil.hasContent(type)) {
+            if (TextUtils.isEmpty(type)) {
                 throw new CheckoutException("Payment method has empty or null type");
             }
 
@@ -151,7 +152,7 @@ public abstract class BasePaymentComponent<ConfigurationT extends Configuration,
 
     @NonNull
     @WorkerThread
-    protected abstract PaymentComponentState createComponentState();
+    protected abstract ComponentStateT createComponentState();
 
     protected void notifyException(@NonNull CheckoutException e) {
         Logger.e(TAG, "notifyException - " + e.getMessage());

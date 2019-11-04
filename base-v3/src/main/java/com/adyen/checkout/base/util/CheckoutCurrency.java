@@ -10,8 +10,7 @@ package com.adyen.checkout.base.util;
 
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
-
-import com.adyen.checkout.core.util.StringUtil;
+import android.text.TextUtils;
 
 import java.util.Collections;
 import java.util.HashMap;
@@ -179,7 +178,7 @@ public enum CheckoutCurrency {
      * @return if the currency exists and is supported by Adyen
      */
     public static boolean isSupported(@Nullable String currency) {
-        return StringUtil.hasContent(currency) && CURRENCIES_HASHMAP.containsKey(currency);
+        return !TextUtils.isEmpty(currency) && CURRENCIES_HASHMAP.containsKey(currency);
     }
 
     /**

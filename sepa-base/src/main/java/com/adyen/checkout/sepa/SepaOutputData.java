@@ -10,10 +10,10 @@ package com.adyen.checkout.sepa;
 
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
+import android.text.TextUtils;
 
 import com.adyen.checkout.base.component.OutputData;
 import com.adyen.checkout.base.validation.ValidatedField;
-import com.adyen.checkout.core.util.StringUtil;
 
 public class SepaOutputData implements OutputData {
 
@@ -23,7 +23,7 @@ public class SepaOutputData implements OutputData {
 
     SepaOutputData(@NonNull String ownerName, @NonNull String ibanNumber) {
         mOwnerNameField = new ValidatedField<>(ownerName,
-                StringUtil.hasContent(ownerName) ? ValidatedField.Validation.VALID : ValidatedField.Validation.PARTIAL);
+                TextUtils.isEmpty(ownerName) ? ValidatedField.Validation.PARTIAL : ValidatedField.Validation.VALID);
         mIban = Iban.parse(ibanNumber);
         mIbanNumberField = validateIbanNumber(ibanNumber, mIban);
     }

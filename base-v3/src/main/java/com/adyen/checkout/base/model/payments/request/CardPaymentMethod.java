@@ -32,7 +32,7 @@ public final class CardPaymentMethod extends PaymentMethodDetails {
     private static final String ENCRYPTED_EXPIRY_YEAR = "encryptedExpiryYear";
     private static final String ENCRYPTED_SECURITY_CODE = "encryptedSecurityCode";
     private static final String HOLDER_NAME = "holderName";
-    private static final String RECURRING_REF = "recurringDetailReference";
+    private static final String STORED_PAYMENT_METHOD_ID = "storedPaymentMethodId";
 
     @NonNull
     public static final Serializer<CardPaymentMethod> SERIALIZER = new Serializer<CardPaymentMethod>() {
@@ -49,7 +49,7 @@ public final class CardPaymentMethod extends PaymentMethodDetails {
                 jsonObject.putOpt(ENCRYPTED_EXPIRY_MONTH, modelObject.getEncryptedExpiryMonth());
                 jsonObject.putOpt(ENCRYPTED_EXPIRY_YEAR, modelObject.getEncryptedExpiryYear());
                 jsonObject.putOpt(ENCRYPTED_SECURITY_CODE, modelObject.getEncryptedSecurityCode());
-                jsonObject.putOpt(RECURRING_REF, modelObject.getRecurringDetailReference());
+                jsonObject.putOpt(STORED_PAYMENT_METHOD_ID, modelObject.getStoredPaymentMethodId());
                 jsonObject.putOpt(HOLDER_NAME, modelObject.getHolderName());
             } catch (JSONException e) {
                 throw new ModelSerializationException(IdealPaymentMethod.class, e);
@@ -68,7 +68,7 @@ public final class CardPaymentMethod extends PaymentMethodDetails {
             cardPaymentMethod.setEncryptedCardNumber(jsonObject.optString(ENCRYPTED_CARD_NUMBER, null));
             cardPaymentMethod.setEncryptedExpiryMonth(jsonObject.optString(ENCRYPTED_EXPIRY_MONTH, null));
             cardPaymentMethod.setEncryptedExpiryYear(jsonObject.optString(ENCRYPTED_EXPIRY_YEAR, null));
-            cardPaymentMethod.setRecurringDetailReference(jsonObject.optString(RECURRING_REF));
+            cardPaymentMethod.setStoredPaymentMethodId(jsonObject.optString(STORED_PAYMENT_METHOD_ID));
             cardPaymentMethod.setEncryptedSecurityCode(jsonObject.optString(ENCRYPTED_SECURITY_CODE, null));
             cardPaymentMethod.setHolderName(jsonObject.optString(HOLDER_NAME, null));
 
@@ -81,7 +81,7 @@ public final class CardPaymentMethod extends PaymentMethodDetails {
     private String encryptedExpiryYear;
     private String encryptedSecurityCode;
     private String holderName;
-    private String recurringDetailReference;
+    private String storedPaymentMethodId;
 
     @Override
     public void writeToParcel(@NonNull Parcel dest, int flags) {
@@ -133,12 +133,29 @@ public final class CardPaymentMethod extends PaymentMethodDetails {
         this.holderName = holderName;
     }
 
+    /**
+     * @deprecated use StoredPaymentMethodId instead
+     */
     @Nullable
+    @Deprecated
     public String getRecurringDetailReference() {
-        return recurringDetailReference;
+        return storedPaymentMethodId;
     }
 
+    /**
+     * @deprecated use StoredPaymentMethodId instead
+     */
+    @Deprecated
     public void setRecurringDetailReference(@Nullable String recurringDetailReference) {
-        this.recurringDetailReference = recurringDetailReference;
+        this.storedPaymentMethodId = recurringDetailReference;
+    }
+
+    public void setStoredPaymentMethodId(@Nullable String storedPaymentMethodId) {
+        this.storedPaymentMethodId = storedPaymentMethodId;
+    }
+
+    @Nullable
+    public String getStoredPaymentMethodId() {
+        return this.storedPaymentMethodId;
     }
 }

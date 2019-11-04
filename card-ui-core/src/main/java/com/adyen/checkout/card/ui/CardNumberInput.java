@@ -12,6 +12,8 @@ import android.content.Context;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.text.Editable;
+import android.text.InputType;
+import android.text.method.DigitsKeyListener;
 import android.util.AttributeSet;
 
 import com.adyen.checkout.base.ui.view.AdyenTextInputEditText;
@@ -21,6 +23,7 @@ public class CardNumberInput extends AdyenTextInputEditText {
 
     private static final int MAX_DIGIT_SEPARATOR_COUNT = 4;
     private static final char DIGIT_SEPARATOR = ' ';
+    private static final String SUPPORTED_DIGITS = "0123456789";
 
     public CardNumberInput(@NonNull Context context) {
         this(context, null);
@@ -30,9 +33,14 @@ public class CardNumberInput extends AdyenTextInputEditText {
         this(context, attrs, 0);
     }
 
+    /**
+     * Input that support formatting for card number.
+     */
     public CardNumberInput(@NonNull Context context, @Nullable AttributeSet attrs, int defStyleAttr) {
         super(context, attrs, defStyleAttr);
-        enforceMaxInputLength(CardValidationUtils.MAXIMUM_CARD_NUMBER_LENGTH  + MAX_DIGIT_SEPARATOR_COUNT);
+        enforceMaxInputLength(CardValidationUtils.MAXIMUM_CARD_NUMBER_LENGTH + MAX_DIGIT_SEPARATOR_COUNT);
+        setInputType(InputType.TYPE_CLASS_NUMBER);
+        setKeyListener(DigitsKeyListener.getInstance(SUPPORTED_DIGITS + DIGIT_SEPARATOR));
     }
 
     @NonNull

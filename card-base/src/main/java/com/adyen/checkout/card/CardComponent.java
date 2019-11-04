@@ -12,9 +12,9 @@ import android.arch.lifecycle.LifecycleOwner;
 import android.arch.lifecycle.Observer;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
+import android.text.TextUtils;
 
 import com.adyen.checkout.base.PaymentComponentProvider;
-import com.adyen.checkout.base.PaymentComponentState;
 import com.adyen.checkout.base.component.BasePaymentComponent;
 import com.adyen.checkout.base.model.paymentmethods.InputDetail;
 import com.adyen.checkout.base.model.paymentmethods.PaymentMethod;
@@ -29,7 +29,6 @@ import com.adyen.checkout.card.data.CardType;
 import com.adyen.checkout.card.data.ExpiryDate;
 import com.adyen.checkout.core.log.LogUtil;
 import com.adyen.checkout.core.log.Logger;
-import com.adyen.checkout.core.util.StringUtil;
 import com.adyen.checkout.cse.Card;
 import com.adyen.checkout.cse.EncryptedCard;
 import com.adyen.checkout.cse.EncryptionException;
@@ -39,12 +38,17 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
-public final class CardComponent extends BasePaymentComponent<CardConfiguration, CardInputData, CardOutputData> {
+public final class CardComponent extends BasePaymentComponent<
+        CardConfiguration,
+        CardInputData,
+        CardOutputData,
+        CardComponentState> {
     private static final String TAG = LogUtil.getTag();
 
     public static final PaymentComponentProvider<CardComponent, CardConfiguration> PROVIDER = new CardComponentProvider();
 
     private static final String[] PAYMENT_METHOD_TYPES = {PaymentMethodTypes.SCHEME};
+    private static final int BIN_VALUE_LENGTH = 6;
 
     private final List<CardType> mFilteredSupportedCards = new ArrayList<>();
     private CardInputData mStoredPaymentInputData;
@@ -138,7 +142,7 @@ public final class CardComponent extends BasePaymentComponent<CardConfiguration,
 
     @NonNull
     @Override
-    protected PaymentComponentState<CardPaymentMethod> createComponentState() {
+    protected CardComponentState createComponentState() {
         Logger.v(TAG, "createComponentState");
 
         final CardPaymentMethod cardPaymentMethod = new CardPaymentMethod();
@@ -148,9 +152,17 @@ public final class CardComponent extends BasePaymentComponent<CardConfiguration,
         final CardOutputData outputData = getOutputData();
         final PaymentComponentData<CardPaymentMethod> paymentComponentData = new PaymentComponentData<>();
 
+        final String cardNumber = outputData.getCardNumberField().getValue();
+
+        final List<CardType> cardTypes = getSupportedFilterCards(cardNumber);
+        final CardType firstCardType = !cardTypes.isEmpty() ? cardTypes.get(0) : null;
+
+        final String binValue = getBinValueFromCardNumber(cardNumber);
+
+
         // If data is not valid we just return empty object, encryption would fail and we don't pass unencrypted data.
         if (!outputData.isValid()) {
-            return new PaymentComponentState<>(paymentComponentData, false);
+            return new CardComponentState(paymentComponentData, false, firstCardType, binValue);
         }
 
         final EncryptedCard encryptedCard;
@@ -170,7 +182,7 @@ public final class CardComponent extends BasePaymentComponent<CardConfiguration,
             encryptedCard = Encryptor.INSTANCE.encryptFields(card.build(), getConfiguration().getPublicKey());
         } catch (EncryptionException e) {
             notifyException(e);
-            return new PaymentComponentState<>(paymentComponentData, false);
+            return new CardComponentState(paymentComponentData, false, firstCardType, binValue);
         }
 
         if (!isStoredPaymentMethod()) {
@@ -178,7 +190,7 @@ public final class CardComponent extends BasePaymentComponent<CardConfiguration,
             cardPaymentMethod.setEncryptedExpiryMonth(encryptedCard.getEncryptedExpiryMonth());
             cardPaymentMethod.setEncryptedExpiryYear(encryptedCard.getEncryptedExpiryYear());
         } else {
-            cardPaymentMethod.setRecurringDetailReference(((StoredPaymentMethod) getPaymentMethod()).getId());
+            cardPaymentMethod.setStoredPaymentMethodId(((StoredPaymentMethod) getPaymentMethod()).getId());
         }
 
         cardPaymentMethod.setEncryptedSecurityCode(encryptedCard.getEncryptedSecurityCode());
@@ -191,7 +203,7 @@ public final class CardComponent extends BasePaymentComponent<CardConfiguration,
         paymentComponentData.setStorePaymentMethod(outputData.isStoredPaymentMethodEnable());
         paymentComponentData.setShopperReference(getConfiguration().getShopperReference());
 
-        return new PaymentComponentState<>(paymentComponentData, outputData.isValid());
+        return new CardComponentState(paymentComponentData, outputData.isValid(), firstCardType, binValue);
     }
 
     @Override
@@ -218,7 +230,7 @@ public final class CardComponent extends BasePaymentComponent<CardConfiguration,
 
         final List<CardType> supportedCardTypes = getConfiguration().getSupportedCardTypes();
 
-        if (StringUtil.hasContent(cardNumber)) {
+        if (!TextUtils.isEmpty(cardNumber)) {
             final List<CardType> estimateCardTypes = CardType.estimate(cardNumber);
             mFilteredSupportedCards.clear();
 
@@ -263,7 +275,7 @@ public final class CardComponent extends BasePaymentComponent<CardConfiguration,
     }
 
     private ValidatedField<String> validateHolderName(@NonNull String holderName) {
-        if (isHolderNameRequire() && !StringUtil.hasContent(holderName)) {
+        if (isHolderNameRequire() && TextUtils.isEmpty(holderName)) {
             return new ValidatedField<>(holderName, ValidatedField.Validation.INVALID);
         } else {
             return new ValidatedField<>(holderName, ValidatedField.Validation.VALID);
@@ -282,5 +294,9 @@ public final class CardComponent extends BasePaymentComponent<CardConfiguration,
         }
 
         return null;
+    }
+
+    private String getBinValueFromCardNumber(String cardNumber) {
+        return cardNumber.length() < BIN_VALUE_LENGTH ? cardNumber : cardNumber.substring(0, BIN_VALUE_LENGTH);
     }
 }

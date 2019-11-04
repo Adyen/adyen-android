@@ -62,32 +62,40 @@ class DropInViewModel(application: Application) : AndroidViewModel(application),
             val type = paymentMethod.type
 
             if (type == null) {
-                Logger.e(TAG, "Unexpected null type on PaymentMethod")
-                continue
+                Logger.e(TAG, "PaymentMethod type is null")
+            } else if (isSupported(type)) {
+                checkComponentAvailability(getApplication(), paymentMethod, dropInConfiguration, this)
+            } else {
+                if (!requiresDetails(paymentMethod)) {
+                    Logger.d(TAG, "No details required - $type")
+                    addPaymentMethod(paymentMethod)
+                } else {
+                    Logger.e(TAG, "PaymentMethod not yet supported - $type")
+                }
             }
-
-            if (PaymentMethodTypes.UNSUPPORTED_PAYMENT_METHODS.contains(type)) {
-                Logger.e(TAG, "Unsupported PaymentMethod - $type")
-                continue
-            }
-
-            // If details is empty we default back to redirect, otherwise we don't support it.
-            if (!PaymentMethodTypes.SUPPORTED_PAYMENT_METHODS.contains(type) && paymentMethod.details != null) {
-                Logger.e(TAG, "PaymentMethod not yet supported - $type")
-                continue
-            }
-
-            // WeChatPaySdk is an exception of an empty payment method that needs to check availability
-            if (paymentMethod.details == null && paymentMethod.type != PaymentMethodTypes.WECHAT_PAY_SDK) {
-                Logger.d(TAG, "Empty payment method type - $type")
-                addPaymentMethod(paymentMethod)
-                continue
-            }
-
-            Logger.d(TAG, "Checking availability for type - $type")
-
-            checkComponentAvailability(getApplication(), paymentMethod, dropInConfiguration, this)
         }
+    }
+
+    private fun isSupported(paymentMethodType: String): Boolean {
+
+        if (PaymentMethodTypes.UNSUPPORTED_PAYMENT_METHODS.contains(paymentMethodType)) {
+            Logger.e(TAG, "Unsupported PaymentMethod - $paymentMethodType")
+            return false
+        }
+
+        return PaymentMethodTypes.SUPPORTED_PAYMENT_METHODS.contains(paymentMethodType)
+    }
+
+    private fun requiresDetails(paymentMethod: PaymentMethod): Boolean {
+        // If details is empty or all optional, we can call payments directly.
+        paymentMethod.details?.let {
+            for (inputDetail in it) {
+                if (!inputDetail.isOptional) {
+                    return true
+                }
+            }
+        }
+        return false
     }
 
     private fun addPaymentMethod(paymentMethod: PaymentMethod) {

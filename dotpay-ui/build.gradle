@@ -14,11 +14,11 @@ ext.mavenArtifactDescription = "Adyen checkout dotpay ui component client for Ad
 apply plugin: 'com.android.library'
 
 android {
-    compileSdkVersion version_compile_sdk
+    compileSdkVersion compile_sdk_version
 
     defaultConfig {
-        minSdkVersion version_min_sdk
-        targetSdkVersion version_target_sdk
+        minSdkVersion min_sdk_version
+        targetSdkVersion target_sdk_version
         versionCode version_code
         versionName version_name
 
@@ -29,17 +29,17 @@ android {
 
 dependencies {
     //Tests
-    testImplementation "junit:junit:$version_junit"
-    androidTestImplementation "com.android.support.test:runner:$version_support_test_runner"
-    androidTestImplementation "com.android.support.test.espresso:espresso-core:$version_espresso"
+    testImplementation "junit:junit:$junit_version"
+    androidTestImplementation "com.android.support.test:runner:$support_test_runner_version"
+    androidTestImplementation "com.android.support.test.espresso:espresso-core:$espresso_version"
 
     // Checkout
     api project(":issuer-list-ui")
     api project(":dotpay-base")
 
     // Dependencies
-    implementation "com.android.support:appcompat-v7:$version_support_library"
-    implementation "com.android.support:recyclerview-v7:$version_support_library"
+    implementation "com.android.support:appcompat-v7:$support_library_version"
+    implementation "com.android.support:recyclerview-v7:$support_library_version"
 }
 
 // This sharedTasks.gradle script is applied at the end of this build.gradle script,

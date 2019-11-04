@@ -8,4 +8,7 @@
 
 package com.adyen.checkout.example.data.api.model.paymentsRequest
 
-data class AdditionalData(val allow3DS2: String = "false")
+data class AdditionalData(
+    val allow3DS2: String = "false",
+    val executeThreeD: String = "false"
+)

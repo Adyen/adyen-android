@@ -10,6 +10,7 @@ package com.adyen.checkout.card;
 
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
+import android.text.TextUtils;
 
 import com.adyen.checkout.base.validation.ValidatedField;
 import com.adyen.checkout.card.data.CardType;
@@ -19,8 +20,11 @@ import com.adyen.checkout.core.util.StringUtil;
 
 import java.util.Calendar;
 import java.util.GregorianCalendar;
+import java.util.regex.Pattern;
 
 public final class CardValidationUtils {
+
+    private static final String PUBLIC_KEY_PATTERN = "([0-9]){5}\\|([A-Z]|[0-9]){512}";
 
     // Luhn Check
     private static final int RADIX = 10;
@@ -38,6 +42,10 @@ public final class CardValidationUtils {
     private static final int MAXIMUM_YEARS_IN_FUTURE = 20;
     private static final int MAXIMUM_EXPIRED_MONTHS = 3;
 
+    public static boolean isPublicKeyValid(@Nullable String publicKey) {
+        final Pattern pubKeyPattern = Pattern.compile(PUBLIC_KEY_PATTERN);
+        return !TextUtils.isEmpty(publicKey) && pubKeyPattern.matcher(publicKey).find();
+    }
 
     /**
      * Validate card number.

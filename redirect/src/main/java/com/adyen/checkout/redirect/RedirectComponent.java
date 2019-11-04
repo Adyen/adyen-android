@@ -10,21 +10,22 @@ package com.adyen.checkout.redirect;
 
 import android.app.Activity;
 import android.app.Application;
+import android.content.ActivityNotFoundException;
 import android.content.Context;
 import android.content.Intent;
 import android.net.Uri;
 import android.support.annotation.NonNull;
+import android.text.TextUtils;
 
 import com.adyen.checkout.base.ActionComponentProvider;
-import com.adyen.checkout.base.component.BaseActionComponent;
 import com.adyen.checkout.base.component.ActionComponentProviderImpl;
+import com.adyen.checkout.base.component.BaseActionComponent;
 import com.adyen.checkout.base.model.payments.response.Action;
 import com.adyen.checkout.base.model.payments.response.RedirectAction;
 import com.adyen.checkout.core.exception.CheckoutException;
 import com.adyen.checkout.core.exception.ComponentException;
 import com.adyen.checkout.core.log.LogUtil;
 import com.adyen.checkout.core.log.Logger;
-import com.adyen.checkout.core.util.StringUtil;
 
 import org.json.JSONObject;
 
@@ -62,10 +63,14 @@ public final class RedirectComponent extends BaseActionComponent {
      */
     public static void makeRedirect(@NonNull Activity activity, @NonNull RedirectAction redirectAction) throws ComponentException {
         Logger.d(TAG, "makeRedirect - " + redirectAction.getUrl());
-        if (StringUtil.hasContent(redirectAction.getUrl())) {
+        if (!TextUtils.isEmpty(redirectAction.getUrl())) {
             final Uri redirectUri = Uri.parse(redirectAction.getUrl());
             final Intent redirectIntent = RedirectUtil.createRedirectIntent(activity, redirectUri);
-            activity.startActivity(redirectIntent);
+            try {
+                activity.startActivity(redirectIntent);
+            } catch (ActivityNotFoundException e) {
+                throw new ComponentException("Redirect to app failed.", e);
+            }
         } else {
             throw new ComponentException("Redirect URL is empty.");
         }

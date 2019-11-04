@@ -9,9 +9,9 @@
 package com.adyen.checkout.googlepay;
 
 import android.support.annotation.Nullable;
+import android.text.TextUtils;
 
 import com.adyen.checkout.base.component.OutputData;
-import com.adyen.checkout.core.util.StringUtil;
 import com.adyen.checkout.googlepay.util.GooglePayUtils;
 import com.google.android.gms.wallet.PaymentData;
 
@@ -25,7 +25,7 @@ public class GooglePayOutputData implements OutputData {
 
     @Override
     public boolean isValid() {
-        return mPaymentData != null && StringUtil.hasContent(GooglePayUtils.findToken(mPaymentData));
+        return mPaymentData != null && !TextUtils.isEmpty(GooglePayUtils.findToken(mPaymentData));
     }
 
     @Nullable

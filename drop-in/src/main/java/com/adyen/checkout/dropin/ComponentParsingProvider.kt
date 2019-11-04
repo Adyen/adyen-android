@@ -15,9 +15,11 @@ import com.adyen.checkout.base.ComponentAvailableCallback
 import com.adyen.checkout.base.ComponentView
 import com.adyen.checkout.base.PaymentComponent
 import com.adyen.checkout.base.PaymentComponentProvider
+import com.adyen.checkout.base.PaymentComponentState
 import com.adyen.checkout.base.component.BaseConfigurationBuilder
 import com.adyen.checkout.base.component.Configuration
 import com.adyen.checkout.base.model.paymentmethods.PaymentMethod
+import com.adyen.checkout.base.model.payments.request.PaymentMethodDetails
 import com.adyen.checkout.base.util.PaymentMethodTypes
 import com.adyen.checkout.bcmc.BcmcComponent
 import com.adyen.checkout.bcmc.BcmcConfiguration
@@ -121,6 +123,8 @@ internal fun checkComponentAvailability(
     callback: ComponentAvailableCallback<in Configuration>
 ) {
     try {
+        Logger.d(ComponentParsingProvider.TAG, "Checking availability for type - ${paymentMethod.type}")
+
         val type = paymentMethod.type ?: throw CheckoutException("PaymentMethod is null")
 
         val provider = getProviderForType(type)
@@ -134,48 +138,26 @@ internal fun checkComponentAvailability(
 }
 
 @Suppress("ComplexMethod")
-internal fun getProviderForType(type: String): PaymentComponentProvider<PaymentComponent, Configuration> {
+internal fun getProviderForType(type: String): PaymentComponentProvider<PaymentComponent<*>, Configuration> {
     @Suppress("UNCHECKED_CAST")
     return when (type) {
-        PaymentMethodTypes.IDEAL -> {
-            IdealComponent.PROVIDER as PaymentComponentProvider<PaymentComponent, Configuration>
-        }
+        PaymentMethodTypes.IDEAL -> IdealComponent.PROVIDER
         PaymentMethodTypes.MOLPAY_THAILAND,
         PaymentMethodTypes.MOLPAY_MALAYSIA,
-        PaymentMethodTypes.MOLPAY_VIETNAM -> {
-            MolpayComponent.PROVIDER as PaymentComponentProvider<PaymentComponent, Configuration>
-        }
-        PaymentMethodTypes.EPS -> {
-            EPSComponent.PROVIDER as PaymentComponentProvider<PaymentComponent, Configuration>
-        }
-        PaymentMethodTypes.OPEN_BANKING -> {
-            OpenBankingComponent.PROVIDER as PaymentComponentProvider<PaymentComponent, Configuration>
-        }
-        PaymentMethodTypes.DOTPAY -> {
-            DotpayComponent.PROVIDER as PaymentComponentProvider<PaymentComponent, Configuration>
-        }
-        PaymentMethodTypes.ENTERCASH -> {
-            EntercashComponent.PROVIDER as PaymentComponentProvider<PaymentComponent, Configuration>
-        }
-        PaymentMethodTypes.SCHEME -> {
-            CardComponent.PROVIDER as PaymentComponentProvider<PaymentComponent, Configuration>
-        }
-        PaymentMethodTypes.GOOGLE_PAY -> {
-            GooglePayComponent.PROVIDER as PaymentComponentProvider<PaymentComponent, Configuration>
-        }
-        PaymentMethodTypes.SEPA -> {
-            SepaComponent.PROVIDER as PaymentComponentProvider<PaymentComponent, Configuration>
-        }
-        PaymentMethodTypes.BCMC -> {
-            BcmcComponent.PROVIDER as PaymentComponentProvider<PaymentComponent, Configuration>
-        }
-        PaymentMethodTypes.WECHAT_PAY_SDK -> {
-            WeChatPayComponent.PROVIDER as PaymentComponentProvider<PaymentComponent, Configuration>
-        }
+        PaymentMethodTypes.MOLPAY_VIETNAM -> MolpayComponent.PROVIDER
+        PaymentMethodTypes.EPS -> EPSComponent.PROVIDER
+        PaymentMethodTypes.OPEN_BANKING -> OpenBankingComponent.PROVIDER
+        PaymentMethodTypes.DOTPAY -> DotpayComponent.PROVIDER
+        PaymentMethodTypes.ENTERCASH -> EntercashComponent.PROVIDER
+        PaymentMethodTypes.SCHEME -> CardComponent.PROVIDER
+        PaymentMethodTypes.GOOGLE_PAY -> GooglePayComponent.PROVIDER
+        PaymentMethodTypes.SEPA -> SepaComponent.PROVIDER
+        PaymentMethodTypes.BCMC -> BcmcComponent.PROVIDER
+        PaymentMethodTypes.WECHAT_PAY_SDK -> WeChatPayComponent.PROVIDER
         else -> {
             throw CheckoutException("Unable to find component for type - $type")
         }
-    }
+    } as PaymentComponentProvider<PaymentComponent<*>, Configuration>
 }
 
 /**
@@ -190,7 +172,7 @@ internal fun getComponentFor(
     fragment: Fragment,
     paymentMethod: PaymentMethod,
     dropInConfiguration: DropInConfiguration
-): PaymentComponent {
+): PaymentComponent<PaymentComponentState<in PaymentMethodDetails>> {
     val context = fragment.requireContext()
 
     val component = when (paymentMethod.type) {
@@ -251,7 +233,7 @@ internal fun getComponentFor(
         }
     }
     component.setCreatedForDropIn()
-    return component
+    return component as PaymentComponent<PaymentComponentState<in PaymentMethodDetails>>
 }
 
 /**
@@ -262,41 +244,26 @@ internal fun getComponentFor(
  * @param paymentMethod The payment method to be parsed.
  */
 @Suppress("ComplexMethod")
-internal fun getViewFor(context: Context, paymentMethod: PaymentMethod): ComponentView<PaymentComponent> {
+internal fun getViewFor(
+    context: Context,
+    paymentMethod: PaymentMethod
+): ComponentView<PaymentComponent<PaymentComponentState<in PaymentMethodDetails>>> {
     @Suppress("UNCHECKED_CAST")
     return when (paymentMethod.type) {
-        PaymentMethodTypes.IDEAL -> {
-            IdealRecyclerView(context) as ComponentView<PaymentComponent>
-        }
+        PaymentMethodTypes.IDEAL -> IdealRecyclerView(context)
         PaymentMethodTypes.MOLPAY_THAILAND,
         PaymentMethodTypes.MOLPAY_MALAYSIA,
-        PaymentMethodTypes.MOLPAY_VIETNAM -> {
-            MolpayRecyclerView(context) as ComponentView<PaymentComponent>
-        }
-        PaymentMethodTypes.EPS -> {
-            EPSRecyclerView(context) as ComponentView<PaymentComponent>
-        }
-        PaymentMethodTypes.DOTPAY -> {
-            DotpayRecyclerView(context) as ComponentView<PaymentComponent>
-        }
-        PaymentMethodTypes.OPEN_BANKING -> {
-            OpenBankingRecyclerView(context) as ComponentView<PaymentComponent>
-        }
-        PaymentMethodTypes.ENTERCASH -> {
-            EntercashRecyclerView(context) as ComponentView<PaymentComponent>
-        }
-        PaymentMethodTypes.SCHEME -> {
-            CardView(context) as ComponentView<PaymentComponent>
-        }
-        PaymentMethodTypes.SEPA -> {
-            SepaView(context) as ComponentView<PaymentComponent>
-        }
-        PaymentMethodTypes.BCMC -> {
-            BcmcView(context) as ComponentView<PaymentComponent>
-        }
+        PaymentMethodTypes.MOLPAY_VIETNAM -> MolpayRecyclerView(context)
+        PaymentMethodTypes.EPS -> EPSRecyclerView(context)
+        PaymentMethodTypes.DOTPAY -> DotpayRecyclerView(context)
+        PaymentMethodTypes.OPEN_BANKING -> OpenBankingRecyclerView(context)
+        PaymentMethodTypes.ENTERCASH -> EntercashRecyclerView(context)
+        PaymentMethodTypes.SCHEME -> CardView(context)
+        PaymentMethodTypes.SEPA -> SepaView(context)
+        PaymentMethodTypes.BCMC -> BcmcView(context)
         // GooglePay and WeChatPay do not require a View in Drop-in
         else -> {
             throw CheckoutException("Unable to find view for type - ${paymentMethod.type}")
         }
-    }
+    } as ComponentView<PaymentComponent<in PaymentComponentState<in PaymentMethodDetails>>>
 }

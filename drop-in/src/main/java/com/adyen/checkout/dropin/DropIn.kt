@@ -38,13 +38,16 @@ class DropIn private constructor() {
 
         const val RESULT_KEY = "payment_result"
 
-        @JvmStatic
+        const val DROP_IN_REQUEST_CODE = 529
+
         @Deprecated("You can use `DropIn.startPayment instead`")
         val INSTANCE: DropIn by lazy { DropIn() }
 
         /**
          * Starts the checkout flow to be handled by the Drop-In solution. Make sure you have [DropInService] set up before calling this.
          * We suggest that you set up the resultHandlerIntent with the appropriate flags to clear the stack of the checkout activities.
+         *
+         * If you want to have a cancellation callback, pass an [Activity] as context and you will get activityResult as CANCELED.
          *
          * @param context A context to start the Checkout flow.
          * @param paymentMethodsApiResponse The result from the paymentMethods/ endpoint.
@@ -66,11 +69,11 @@ class DropIn private constructor() {
             }
 
             val intent = DropInActivity.createIntent(context, dropInConfiguration, paymentMethodsApiResponse)
-            context.startActivity(intent)
-        }
-
-        init {
-            Logger.d(TAG, "Init")
+            if (context is Activity) {
+                context.startActivityForResult(intent, DROP_IN_REQUEST_CODE)
+            } else {
+                context.startActivity(intent)
+            }
         }
 
         /**

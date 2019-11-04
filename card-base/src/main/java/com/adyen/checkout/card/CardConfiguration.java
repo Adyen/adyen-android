@@ -15,8 +15,8 @@ import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.util.DisplayMetrics;
 
-import com.adyen.checkout.base.component.Configuration;
 import com.adyen.checkout.base.component.BaseConfigurationBuilder;
+import com.adyen.checkout.base.component.Configuration;
 import com.adyen.checkout.card.data.CardType;
 import com.adyen.checkout.core.api.Environment;
 import com.adyen.checkout.core.exception.CheckoutException;
@@ -27,7 +27,6 @@ import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 import java.util.Locale;
-import java.util.regex.Pattern;
 
 /**
  * {@link Configuration} class required by {@link CardComponent} to change it's behavior. Pass it to the {@link CardComponent#PROVIDER}.
@@ -324,7 +323,7 @@ public class CardConfiguration extends Configuration {
         @NonNull
         public CardConfiguration build() {
 
-            if (!isPublicKeyValid()) {
+            if (!CardValidationUtils.isPublicKeyValid(mBuilderPublicKey)) {
                 throw new CheckoutException("Invalid Public Key. Please find the valid public key on the Customer Area.");
             }
 
@@ -337,11 +336,6 @@ public class CardConfiguration extends Configuration {
                     mBuilderShowStorePaymentField,
                     mBuilderSupportedCardTypes
             );
-        }
-
-        private boolean isPublicKeyValid() {
-            final Pattern pubKeyPattern = Pattern.compile("([0-9]){5}\\|([A-Z]|[0-9]){512}");
-            return pubKeyPattern.matcher(mBuilderPublicKey).find();
         }
     }
 

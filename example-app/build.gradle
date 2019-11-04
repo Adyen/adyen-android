@@ -25,13 +25,13 @@ if (file("local.gradle").exists()) {
 apply from: "../config/gradle/runConnectedAndroidTest.gradle"
 
 android {
-    compileSdkVersion version_compile_sdk
+    compileSdkVersion compile_sdk_version
 
     defaultConfig {
         applicationId "com.adyen.checkout.example"
 
-        minSdkVersion version_min_sdk
-        targetSdkVersion version_target_sdk
+        minSdkVersion min_sdk_version
+        targetSdkVersion target_sdk_version
         versionCode version_code
         versionName version_name
 
@@ -54,36 +54,36 @@ android {
 
 dependencies {
     // Tests
-    testImplementation "junit:junit:$version_junit"
-    androidTestImplementation "com.android.support.test:runner:$version_support_test_runner"
-    androidTestImplementation "com.android.support.test:rules:$version_support_test_runner"
-    androidTestImplementation "com.android.support.test.espresso:espresso-core:$version_espresso"
-    androidTestImplementation "com.android.support.test.espresso:espresso-contrib:$version_espresso"
-    androidTestImplementation "com.android.support.test.espresso:espresso-intents:$version_espresso"
-    androidTestImplementation "com.jakewharton.espresso:okhttp3-idling-resource:$version_okhttp_idling_resource"
-    androidTestImplementation "com.android.support.test.uiautomator:uiautomator-v18:$version_uiautomator"
+    testImplementation "junit:junit:$junit_version"
+    androidTestImplementation "com.android.support.test:runner:$support_test_runner_version"
+    androidTestImplementation "com.android.support.test:rules:$support_test_runner_version"
+    androidTestImplementation "com.android.support.test.espresso:espresso-core:$espresso_version"
+    androidTestImplementation "com.android.support.test.espresso:espresso-contrib:$espresso_version"
+    androidTestImplementation "com.android.support.test.espresso:espresso-intents:$espresso_version"
+    androidTestImplementation "com.jakewharton.espresso:okhttp3-idling-resource:$okhttp_idling_resource_version"
+    androidTestImplementation "com.android.support.test.uiautomator:uiautomator-v18:$uiautomator_version"
 
     // Checkout
     implementation project(':drop-in')
 
     // Dependencies
-    implementation "com.android.support:multidex:$version_multidex"
-    implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk7:$version_kotlin"
-    implementation "org.jetbrains.kotlinx:kotlinx-coroutines-android:$version_kotlinx"
-    implementation "org.jetbrains.kotlinx:kotlinx-coroutines-core:$version_kotlinx"
-    implementation "com.android.support:appcompat-v7:$version_support_library"
-    implementation "com.android.support.constraint:constraint-layout:$version_constraint_layout"
-    implementation "com.android.support:recyclerview-v7:$version_support_library"
-    implementation "com.android.support:design:$version_support_library"
-    implementation "com.android.support:preference-v7:$version_support_library"
-    implementation "android.arch.lifecycle:extensions:$version_lifecycle_extensions"
-    implementation "com.squareup.retrofit2:retrofit:$version_retrofit2"
-    implementation "com.squareup.retrofit2:converter-moshi:$version_retrofit2"
-    implementation "com.squareup.retrofit2:converter-gson:$version_retrofit2"
-    implementation "com.squareup.moshi:moshi-adapters:$version_moshi_adapters"
-    implementation "com.jakewharton.retrofit:retrofit2-kotlin-coroutines-adapter:$version_coroutines_adapter"
-    implementation "com.squareup.okhttp3:logging-interceptor:$version_okhttp_logging"
-    implementation "org.koin:koin-android:$version_koin"
-    implementation "org.koin:koin-test:$version_koin"
-    implementation "org.koin:koin-android-viewmodel:$version_koin"
+    implementation "com.android.support:multidex:$multidex_version"
+    implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk7:$kotlin_version"
+    implementation "org.jetbrains.kotlinx:kotlinx-coroutines-android:$kotlinx_version"
+    implementation "org.jetbrains.kotlinx:kotlinx-coroutines-core:$kotlinx_version"
+    implementation "com.android.support:appcompat-v7:$support_library_version"
+    implementation "com.android.support.constraint:constraint-layout:$constraint_layout_version"
+    implementation "com.android.support:recyclerview-v7:$support_library_version"
+    implementation "com.android.support:design:$support_library_version"
+    implementation "com.android.support:preference-v7:$support_library_version"
+    implementation "android.arch.lifecycle:extensions:$lifecycle_extensions_version"
+    implementation "com.squareup.retrofit2:retrofit:$retrofit2_version"
+    implementation "com.squareup.retrofit2:converter-moshi:$retrofit2_version"
+    implementation "com.squareup.retrofit2:converter-gson:$retrofit2_version"
+    implementation "com.squareup.moshi:moshi-adapters:$moshi_adapters_version"
+    implementation "com.jakewharton.retrofit:retrofit2-kotlin-coroutines-adapter:$coroutines_adapter_version"
+    implementation "com.squareup.okhttp3:logging-interceptor:$okhttp_logging_version"
+    implementation "org.koin:koin-android:$koin_version"
+    implementation "org.koin:koin-test:$koin_version"
+    implementation "org.koin:koin-android-viewmodel:$koin_version"
 }

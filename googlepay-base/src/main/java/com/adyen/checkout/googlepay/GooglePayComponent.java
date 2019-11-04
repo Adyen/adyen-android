@@ -14,7 +14,6 @@ import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 
 import com.adyen.checkout.base.PaymentComponentProvider;
-import com.adyen.checkout.base.PaymentComponentState;
 import com.adyen.checkout.base.component.BasePaymentComponent;
 import com.adyen.checkout.base.model.paymentmethods.PaymentMethod;
 import com.adyen.checkout.base.model.payments.request.GooglePayPaymentMethod;
@@ -31,7 +30,8 @@ import com.google.android.gms.wallet.PaymentDataRequest;
 import com.google.android.gms.wallet.PaymentsClient;
 import com.google.android.gms.wallet.Wallet;
 
-public class GooglePayComponent extends BasePaymentComponent<GooglePayConfiguration, GooglePayInputData, GooglePayOutputData> {
+public class GooglePayComponent extends
+        BasePaymentComponent<GooglePayConfiguration, GooglePayInputData, GooglePayOutputData, GooglePayComponentState> {
     private static final String TAG = LogUtil.getTag();
 
     public static final PaymentComponentProvider<GooglePayComponent, GooglePayConfiguration> PROVIDER = new GooglePayProvider();
@@ -50,7 +50,7 @@ public class GooglePayComponent extends BasePaymentComponent<GooglePayConfigurat
 
     @NonNull
     @Override
-    protected PaymentComponentState<GooglePayPaymentMethod> createComponentState() {
+    protected GooglePayComponentState createComponentState() {
         final PaymentData paymentData = getOutputData() != null ? getOutputData().getPaymentData() : null;
 
         final PaymentComponentData<GooglePayPaymentMethod> paymentComponentData = new PaymentComponentData<>();
@@ -72,7 +72,7 @@ public class GooglePayComponent extends BasePaymentComponent<GooglePayConfigurat
     /**
      * Start the GooglePay screen which will return the result to the provided Activity.
      *
-     * @param activity The activity to start the screen and later receive the result.
+     * @param activity    The activity to start the screen and later receive the result.
      * @param requestCode The code that will be returned on the {@link Activity#onActivityResult(int, int, Intent)}
      */
     @SuppressWarnings("JavadocReference")
@@ -88,7 +88,7 @@ public class GooglePayComponent extends BasePaymentComponent<GooglePayConfigurat
      * Handle the result from the GooglePay screen that was started by {@link #startGooglePayScreen(Activity, int)}.
      *
      * @param resultCode The result code from the {@link Activity#onActivityResult(int, int, Intent)}
-     * @param data The data intent from the {@link Activity#onActivityResult(int, int, Intent)}
+     * @param data       The data intent from the {@link Activity#onActivityResult(int, int, Intent)}
      */
     @SuppressWarnings("JavadocReference")
     public void handleActivityResult(int resultCode, @Nullable Intent data) {

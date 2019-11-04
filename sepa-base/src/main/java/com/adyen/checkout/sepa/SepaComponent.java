@@ -24,7 +24,7 @@ import com.adyen.checkout.base.util.PaymentMethodTypes;
 import com.adyen.checkout.core.log.LogUtil;
 import com.adyen.checkout.core.log.Logger;
 
-public class SepaComponent extends BasePaymentComponent<SepaConfiguration, SepaInputData, SepaOutputData> {
+public class SepaComponent extends BasePaymentComponent<SepaConfiguration, SepaInputData, SepaOutputData, PaymentComponentState> {
     private static final String TAG = LogUtil.getTag();
 
     public static final PaymentComponentProvider<SepaComponent, SepaConfiguration> PROVIDER = new PaymentComponentProviderImpl<>(SepaComponent.class);

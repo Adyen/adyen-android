@@ -17,7 +17,9 @@ import android.util.DisplayMetrics;
 
 import com.adyen.checkout.base.component.Configuration;
 import com.adyen.checkout.base.component.BaseConfigurationBuilder;
+import com.adyen.checkout.card.CardValidationUtils;
 import com.adyen.checkout.core.api.Environment;
+import com.adyen.checkout.core.exception.CheckoutException;
 
 import java.util.Locale;
 
@@ -134,6 +136,11 @@ public class BcmcConfiguration extends Configuration {
          */
         @NonNull
         public BcmcConfiguration build() {
+
+            if (!CardValidationUtils.isPublicKeyValid(mBuilderPublicKey)) {
+                throw new CheckoutException("Invalid Public Key. Please find the valid public key on the Customer Area.");
+            }
+
             return new BcmcConfiguration(
                     mBuilderShopperLocale,
                     mBuilderEnvironment,

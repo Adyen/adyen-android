@@ -10,11 +10,11 @@ package com.adyen.checkout.base.model.payments.response;
 
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
+import android.text.TextUtils;
 
 import com.adyen.checkout.core.code.Lint;
 import com.adyen.checkout.core.exception.CheckoutException;
 import com.adyen.checkout.core.model.ModelObject;
-import com.adyen.checkout.core.util.StringUtil;
 
 import org.json.JSONObject;
 
@@ -36,7 +36,7 @@ public abstract class Action extends ModelObject {
         @Override
         public JSONObject serialize(@NonNull Action modelObject) {
             final String actionType = modelObject.getType();
-            if (!StringUtil.hasContent(actionType)) {
+            if (TextUtils.isEmpty(actionType)) {
                 throw new CheckoutException("Action type not found");
             }
             //noinspection unchecked
@@ -48,7 +48,7 @@ public abstract class Action extends ModelObject {
         @Override
         public Action deserialize(@NonNull JSONObject jsonObject) {
             final String actionType = jsonObject.optString(TYPE);
-            if (!StringUtil.hasContent(actionType)) {
+            if (TextUtils.isEmpty(actionType)) {
                 throw new CheckoutException("Action type not found");
             }
             //noinspection unchecked

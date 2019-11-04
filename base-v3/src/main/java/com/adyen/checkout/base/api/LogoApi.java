@@ -12,6 +12,7 @@ import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
+import android.text.TextUtils;
 import android.util.DisplayMetrics;
 import android.util.LruCache;
 
@@ -20,7 +21,6 @@ import com.adyen.checkout.core.api.ThreadManager;
 import com.adyen.checkout.core.code.Lint;
 import com.adyen.checkout.core.log.LogUtil;
 import com.adyen.checkout.core.log.Logger;
-import com.adyen.checkout.core.util.StringUtil;
 
 import java.util.HashMap;
 import java.util.Locale;
@@ -124,7 +124,7 @@ public final class LogoApi {
                 ThreadManager.EXECUTOR.submit(logoConnectionTask);
             } else {
                 Logger.d(TAG,
-                        "Execution for " + txVariant + (StringUtil.hasContent(txSubVariant) ? "/" + txSubVariant : "") + " is already running.");
+                        "Execution for " + txVariant + (TextUtils.isEmpty(txSubVariant) ? "" : "/" + txSubVariant) + " is already running.");
             }
         }
     }

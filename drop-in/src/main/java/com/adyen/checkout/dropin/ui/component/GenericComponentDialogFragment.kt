@@ -31,7 +31,7 @@ import kotlinx.android.synthetic.main.fragment_generic_component.view.header
 
 class GenericComponentDialogFragment : BaseComponentDialogFragment() {
 
-    private lateinit var componentView: ComponentView<PaymentComponent>
+    private lateinit var componentView: ComponentView<PaymentComponent<in PaymentComponentState<in PaymentMethodDetails>>>
 
     companion object : BaseCompanion<GenericComponentDialogFragment>(GenericComponentDialogFragment::class.java) {
         private val TAG = LogUtil.getTag()
@@ -63,7 +63,7 @@ class GenericComponentDialogFragment : BaseComponentDialogFragment() {
     }
 
     override fun onChanged(paymentComponentState: PaymentComponentState<in PaymentMethodDetails>?) {
-        if (componentView.isConfirmationRequired) {
+        if (componentView.isConfirmationRequired()) {
             @Suppress("UsePropertyAccessSyntax")
             payButton.isEnabled = paymentComponentState != null && paymentComponentState.isValid()
         } else {
@@ -72,15 +72,15 @@ class GenericComponentDialogFragment : BaseComponentDialogFragment() {
     }
 
     private fun attachComponent(
-        component: PaymentComponent,
-        componentView: ComponentView<PaymentComponent>
+        component: PaymentComponent<PaymentComponentState<in PaymentMethodDetails>>,
+        componentView: ComponentView<PaymentComponent<in PaymentComponentState<in PaymentMethodDetails>>>
     ) {
         component.observe(this, this)
         component.observeErrors(this, createErrorHandlerObserver())
         componentContainer.addView(componentView as View)
         componentView.attach(component, this)
 
-        if (componentView.isConfirmationRequired) {
+        if (componentView.isConfirmationRequired()) {
             payButton.setOnClickListener {
                 startPayment()
             }

@@ -13,12 +13,12 @@ import android.arch.lifecycle.ViewModelProviders;
 import android.support.annotation.NonNull;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentActivity;
+import android.text.TextUtils;
 
 import com.adyen.checkout.base.ComponentAvailableCallback;
 import com.adyen.checkout.base.PaymentComponentProvider;
 import com.adyen.checkout.base.component.lifecycle.ComponentViewModelFactory;
 import com.adyen.checkout.base.model.paymentmethods.PaymentMethod;
-import com.adyen.checkout.core.util.StringUtil;
 
 public class BcmcComponentProvider implements PaymentComponentProvider<BcmcComponent, BcmcConfiguration> {
 
@@ -43,8 +43,7 @@ public class BcmcComponentProvider implements PaymentComponentProvider<BcmcCompo
             @NonNull BcmcConfiguration configuration,
             @NonNull ComponentAvailableCallback<BcmcConfiguration> callback) {
 
-        // TODO: 2019-07-23 Check if pubkey meets regex requirements
-        final boolean isPubKeyAvailable = StringUtil.hasContent(configuration.getPublicKey());
+        final boolean isPubKeyAvailable = !TextUtils.isEmpty(configuration.getPublicKey());
         callback.onAvailabilityResult(isPubKeyAvailable, paymentMethod, configuration);
     }
 }

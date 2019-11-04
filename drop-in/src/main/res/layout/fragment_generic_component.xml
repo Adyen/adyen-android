@@ -39,7 +39,7 @@
                 android:layout_height="0dp"
                 android:layout_weight="1"/>
 
-            <Button
+            <android.support.v7.widget.AppCompatButton
                 android:id="@+id/payButton"
                 style="@style/AdyenCheckout.Button.Colored"
                 android:enabled="false"

@@ -21,6 +21,7 @@ interface KeyValueStorage {
     fun getCountry(): String
     fun getShopperLocale(): String
     fun isThreeds2Enable(): Boolean
+    fun isExecuteThreeD(): Boolean
     fun getShopperEmail(): String
     fun getMerchantAccount(): String
 }
@@ -33,6 +34,7 @@ class KeyValueStorageImpl(private val appContext: Context, private val sharedPre
         private const val DEFAULT_VALUE = "1337"
         private const val DEFAULT_CURRENCY = "EUR"
         private const val DEFAULT_THREEDS2_ENABLE = true
+        private const val DEFAULT_EXECUTE_3D = false
     }
 
     override fun getShopperReference(): String {
@@ -61,6 +63,10 @@ class KeyValueStorageImpl(private val appContext: Context, private val sharedPre
 
     override fun isThreeds2Enable(): Boolean {
         return sharedPreferences.get(appContext, R.string.threeds2_key, DEFAULT_THREEDS2_ENABLE)
+    }
+
+    override fun isExecuteThreeD(): Boolean {
+        return sharedPreferences.get(appContext, R.string.execute3D_key, DEFAULT_EXECUTE_3D)
     }
 
     override fun getShopperEmail(): String {

@@ -15,7 +15,6 @@ import android.support.annotation.Nullable;
 import com.adyen.checkout.core.exception.ModelSerializationException;
 import com.adyen.checkout.core.model.JsonUtils;
 import com.adyen.checkout.core.model.ModelObject;
-import com.adyen.checkout.core.util.StringUtil;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -32,8 +31,6 @@ public class WeChatPaySdkData extends ModelObject {
     private static final String PREPAY_ID = "prepayid";
     private static final String SIGN = "sign";
     private static final String TIMESTAMP = "timestamp";
-
-    private static final String OLD_PACKAGE = "package";
 
     @NonNull
     public static final Serializer<WeChatPaySdkData> SERIALIZER = new Serializer<WeChatPaySdkData>() {
@@ -66,11 +63,6 @@ public class WeChatPaySdkData extends ModelObject {
             weChatPaySdkData.setPrepayid(jsonObject.optString(PREPAY_ID, null));
             weChatPaySdkData.setSign(jsonObject.optString(SIGN, null));
             weChatPaySdkData.setTimestamp(jsonObject.optString(TIMESTAMP, null));
-
-            // TODO remove this after we updates the object name on the API response
-            if (!StringUtil.hasContent(weChatPaySdkData.getPackageValue())) {
-                weChatPaySdkData.setPackageValue(jsonObject.optString(OLD_PACKAGE, null));
-            }
 
             return weChatPaySdkData;
         }

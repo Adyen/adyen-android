@@ -38,8 +38,10 @@ class CardComponentDialogFragment : BaseComponentDialogFragment() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        if (component !is CardComponent) {
-            throw CheckoutException("Component is not card")
+        try {
+            component as CardComponent
+        } catch (e: ClassCastException) {
+            throw CheckoutException("Component is not CardComponent")
         }
     }
 

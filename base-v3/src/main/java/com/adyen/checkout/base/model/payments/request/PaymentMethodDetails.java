@@ -10,12 +10,12 @@ package com.adyen.checkout.base.model.payments.request;
 
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
+import android.text.TextUtils;
 
 import com.adyen.checkout.base.util.PaymentMethodTypes;
 import com.adyen.checkout.core.code.Lint;
 import com.adyen.checkout.core.exception.CheckoutException;
 import com.adyen.checkout.core.model.ModelObject;
-import com.adyen.checkout.core.util.StringUtil;
 
 import org.json.JSONObject;
 
@@ -38,7 +38,7 @@ public abstract class PaymentMethodDetails extends ModelObject {
         @Override
         public JSONObject serialize(@NonNull PaymentMethodDetails modelObject) {
             final String paymentMethodType = modelObject.getType();
-            if (!StringUtil.hasContent(paymentMethodType)) {
+            if (TextUtils.isEmpty(paymentMethodType)) {
                 throw new CheckoutException("PaymentMethod type not found");
             }
             //noinspection unchecked
@@ -50,7 +50,7 @@ public abstract class PaymentMethodDetails extends ModelObject {
         @Override
         public PaymentMethodDetails deserialize(@NonNull JSONObject jsonObject) {
             final String actionType = jsonObject.optString(TYPE, null);
-            if (!StringUtil.hasContent(actionType)) {
+            if (TextUtils.isEmpty(actionType)) {
                 throw new CheckoutException("PaymentMethod type not found");
             }
             //noinspection unchecked

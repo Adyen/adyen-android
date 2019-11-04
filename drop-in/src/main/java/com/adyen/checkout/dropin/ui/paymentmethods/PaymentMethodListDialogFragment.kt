@@ -91,6 +91,7 @@ class PaymentMethodListDialogFragment : DropInBottomSheetDialogFragment(), Payme
     override fun onPaymentMethodSelected(paymentMethod: PaymentMethod, isInExpandMode: Boolean) {
         Logger.d(TAG, "onPaymentMethodSelected - ${paymentMethod.type}")
         paymentMethod.type?.let { paymentMethodType ->
+            // Check some specific payment methods that don't need to show a view
             when (paymentMethodType) {
                 PaymentMethodTypes.GOOGLE_PAY -> {
                     protocol.startGooglePay(
@@ -113,6 +114,6 @@ class PaymentMethodListDialogFragment : DropInBottomSheetDialogFragment(), Payme
     private fun sendPayment(type: String) {
         val paymentComponentData = PaymentComponentData<PaymentMethodDetails>()
         paymentComponentData.paymentMethod = GenericPaymentMethod(type)
-        protocol.sendPaymentRequest(paymentComponentData)
+        protocol.requestPaymentsCall(paymentComponentData)
     }
 }

@@ -16,11 +16,11 @@ apply plugin: 'kotlin-android'
 apply plugin: 'kotlin-android-extensions'
 
 android {
-    compileSdkVersion version_compile_sdk
+    compileSdkVersion compile_sdk_version
 
     defaultConfig {
-        minSdkVersion version_min_sdk
-        targetSdkVersion version_target_sdk
+        minSdkVersion min_sdk_version
+        targetSdkVersion target_sdk_version
         versionCode version_code
         versionName version_name
 
@@ -33,9 +33,9 @@ android {
 
 dependencies {
     //Tests
-    testImplementation "junit:junit:$version_junit"
-    androidTestImplementation "com.android.support.test:runner:$version_support_test_runner"
-    androidTestImplementation "com.android.support.test.espresso:espresso-core:$version_espresso"
+    testImplementation "junit:junit:$junit_version"
+    androidTestImplementation "com.android.support.test:runner:$support_test_runner_version"
+    androidTestImplementation "com.android.support.test.espresso:espresso-core:$espresso_version"
 
     // Checkout
     api project(":ideal-ui")
@@ -53,9 +53,9 @@ dependencies {
     api project(":wechatpay-base")
 
     // Dependencies
-    implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk7:$version_kotlin"
-    implementation "com.android.support:recyclerview-v7:$version_support_library"
-    implementation "com.android.support:design:$version_support_library"
+    implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk7:$kotlin_version"
+    implementation "com.android.support:recyclerview-v7:$support_library_version"
+    implementation "com.android.support:design:$support_library_version"
 }
 
 // This sharedTasks.gradle script is applied at the end of this build.gradle script,

@@ -33,7 +33,7 @@ import com.adyen.checkout.cse.EncryptedCard;
 import com.adyen.checkout.cse.EncryptionException;
 import com.adyen.checkout.cse.Encryptor;
 
-public final class BcmcComponent extends BasePaymentComponent<BcmcConfiguration, BcmcInputData, BcmcOutputData> {
+public final class BcmcComponent extends BasePaymentComponent<BcmcConfiguration, BcmcInputData, BcmcOutputData, PaymentComponentState> {
     private static final String TAG = LogUtil.getTag();
 
     private static final String[] PAYMENT_METHOD_TYPES = {PaymentMethodTypes.BCMC};

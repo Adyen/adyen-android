@@ -17,7 +17,7 @@ configurations {
 }
 
 dependencies {
-    ktlint "com.pinterest:ktlint:$version_ktlint"
+    ktlint "com.pinterest:ktlint:$ktlint_version"
 }
 
 task ktlint(type: JavaExec) {

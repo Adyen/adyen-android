@@ -16,6 +16,18 @@
 
     </PreferenceCategory>
 
+    <PreferenceCategory android:title="@string/payment_information">
+
+        <EditTextPreference
+            android:key="@string/currency_key"
+            android:title="@string/currency_title" />
+
+        <EditTextPreference
+            android:inputType="number"
+            android:key="@string/value_key"
+            android:title="@string/value_title" />
+    </PreferenceCategory>
+
     <PreferenceCategory android:title="@string/shopper_information">
 
         <EditTextPreference
@@ -34,22 +46,17 @@
             android:key="@string/shopper_email_key"
             android:title="@string/shopper_email_title" />
 
+    </PreferenceCategory>
+
+    <PreferenceCategory android:title="@string/additional_data_title">
+
         <SwitchPreference
             android:key="@string/threeds2_key"
             android:title="@string/threeds2_title" />
+        <SwitchPreference
+            android:key="@string/execute3D_key"
+            android:title="@string/execute3D_key_title" />
 
-    </PreferenceCategory>
-
-    <PreferenceCategory android:title="@string/payment_information">
-
-        <EditTextPreference
-            android:key="@string/currency_key"
-            android:title="@string/currency_title" />
-
-        <EditTextPreference
-            android:inputType="number"
-            android:key="@string/value_key"
-            android:title="@string/value_title" />
     </PreferenceCategory>
 
 </PreferenceScreen>

@@ -13,6 +13,17 @@
 [//]: <> (Add changes that not released yet into `Unreleased` section)
 [//]: <> (Comment `Unreleased` section if there are no changes)
 [//]: <> (## [Unreleased])
+## [3.5.1] - 2019-11-04
+### Added
+- `BinValue` and `CardType` included to CardComponentState 
+- New `SimplifiedDropInService` is an extension of the `DropInService` that handles the raw `payments/` response without having to deal with `CallResult`
+- Payment methods with all details being optional will now show in the Drop-in list. 
+- You can now pass an `Activity` as the `Context` when starting the DropIn and and check for cancelling on the `onActivityResult` with `DropIn.DROP_IN_REQUEST_CODE`
+### Changed
+- CardNumber input type changed to `InputType.TYPE_CLASS_NUMBER`
+### Deprecated
+- `recurringDetailReference` deprecated, use storedPaymentMethodId instead - API changes.
+
 ## [3.5.0] - 2019-10-21
 ### Added
 - WeChatPay SDK payment method.
