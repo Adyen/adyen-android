@@ -26,6 +26,8 @@ public class TransactionInfoModel extends ModelObject {
     public static final Creator<TransactionInfoModel> CREATOR = new Creator<>(TransactionInfoModel.class);
 
     private static final String CURRENCY_CODE = "currencyCode";
+    private static final String COUNTRY_CODE = "countryCode";
+    private static final String TRANSACTION_ID = "transactionId";
     private static final String TOTAL_PRICE_STATUS = "totalPriceStatus";
     private static final String TOTAL_PRICE = "totalPrice";
     private static final String TOTAL_PRICE_LABEL = "totalPriceLabel";
@@ -40,6 +42,8 @@ public class TransactionInfoModel extends ModelObject {
             final JSONObject jsonObject = new JSONObject();
             try {
                 jsonObject.putOpt(CURRENCY_CODE, modelObject.getCurrencyCode());
+                jsonObject.putOpt(COUNTRY_CODE, modelObject.getCountryCode());
+                jsonObject.putOpt(TRANSACTION_ID, modelObject.getTransactionId());
                 jsonObject.putOpt(TOTAL_PRICE_STATUS, modelObject.getTotalPriceStatus());
                 jsonObject.putOpt(TOTAL_PRICE, modelObject.getTotalPrice());
                 jsonObject.putOpt(TOTAL_PRICE_LABEL, modelObject.getTotalPriceLabel());
@@ -55,6 +59,8 @@ public class TransactionInfoModel extends ModelObject {
         public TransactionInfoModel deserialize(@NonNull JSONObject jsonObject) {
             final TransactionInfoModel transactionInfoModel = new TransactionInfoModel();
             transactionInfoModel.setCurrencyCode(jsonObject.optString(CURRENCY_CODE, null));
+            transactionInfoModel.setCountryCode(jsonObject.optString(COUNTRY_CODE, null));
+            transactionInfoModel.setTransactionId(jsonObject.optString(TRANSACTION_ID, null));
             transactionInfoModel.setTotalPriceStatus(jsonObject.optString(TOTAL_PRICE_STATUS, null));
             transactionInfoModel.setTotalPrice(jsonObject.optString(TOTAL_PRICE, null));
             transactionInfoModel.setTotalPriceLabel(jsonObject.optString(TOTAL_PRICE_LABEL, null));
@@ -64,6 +70,8 @@ public class TransactionInfoModel extends ModelObject {
     };
 
     private String currencyCode;
+    private String countryCode;
+    private String transactionId;
     private String totalPriceStatus;
     private String totalPrice;
     private String totalPriceLabel;
@@ -81,6 +89,24 @@ public class TransactionInfoModel extends ModelObject {
 
     public void setCurrencyCode(@Nullable String currencyCode) {
         this.currencyCode = currencyCode;
+    }
+
+    @Nullable
+    public String getCountryCode() {
+        return countryCode;
+    }
+
+    public void setCountryCode(@Nullable String countryCode) {
+        this.countryCode = countryCode;
+    }
+
+    @Nullable
+    public String getTransactionId() {
+        return transactionId;
+    }
+
+    public void setTransactionId(@Nullable String transactionId) {
+        this.transactionId = transactionId;
     }
 
     @Nullable

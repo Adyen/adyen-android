@@ -1,0 +1,112 @@
+<?xml version="1.0" encoding="utf-8"?><!--
+  ~ Copyright (c) 2019 Adyen N.V.
+  ~
+  ~ This file is open source and available under the MIT license. See the LICENSE file for more info.
+  ~
+  ~ Created by arman on 7/11/2019.
+  -->
+
+<resources>
+
+    <style name="AdyenCheckout.AfterPay" />
+
+    <style name="AdyenCheckout.AfterPay.FirstNameInput" parent="AdyenCheckout.TextInputEditText">
+        <item name="android:hint">@string/checkout_afterpay_first_name</item>
+        <item name="android:inputType">text|textPersonName|textCapWords</item>
+    </style>
+
+    <style name="AdyenCheckout.AfterPay.LastNameInput" parent="AdyenCheckout.TextInputEditText">
+        <item name="android:hint">@string/checkout_afterpay_last_name</item>
+        <item name="android:inputType">text|textPersonName|textCapWords</item>
+    </style>
+
+    <style name="AdyenCheckout.AfterPay.DateOfBirthInput" parent="AdyenCheckout.TextInputEditText">
+        <item name="android:hint">@string/checkout_afterpay_date_of_birth</item>
+        <item name="android:inputType">text|textPersonName|textCapWords</item>
+    </style>
+
+
+    <style name="AdyenCheckout.AfterPay.PhoneNumberInput" parent="AdyenCheckout.TextInputEditText">
+        <item name="android:hint">@string/checkout_afterpay_phone_number</item>
+        <item name="android:inputType">text|textPersonName|textCapWords</item>
+    </style>
+
+    <style name="AdyenCheckout.AfterPay.EmailAddressInput" parent="AdyenCheckout.TextInputEditText">
+        <item name="android:hint">@string/checkout_afterpay_email_address</item>
+        <item name="android:inputType">text|textPersonName|textCapWords</item>
+    </style>
+
+    <style name="AdyenCheckout.AfterPay.StreetInput" parent="AdyenCheckout.TextInputEditText">
+        <item name="android:hint">@string/checkout_afterpay_street</item>
+        <item name="android:inputType">text|textPersonName|textCapWords</item>
+    </style>
+
+    <style name="AdyenCheckout.AfterPay.HouseNumberInput" parent="AdyenCheckout.TextInputEditText">
+        <item name="android:hint">@string/checkout_afterpay_house_number</item>
+        <item name="android:inputType">text|textPersonName|textCapWords</item>
+    </style>
+
+    <style name="AdyenCheckout.AfterPay.PostalCodeInput" parent="AdyenCheckout.TextInputEditText">
+        <item name="android:hint">@string/checkout_afterpay_postal_code</item>
+        <item name="android:inputType">text|textPersonName|textCapWords</item>
+    </style>
+
+    <style name="AdyenCheckout.AfterPay.CountryInput" parent="AdyenCheckout.TextInputEditText">
+        <item name="android:hint">@string/checkout_afterpay_country</item>
+        <item name="android:inputType">text|textPersonName|textCapWords</item>
+    </style>
+
+    <style name="AdyenCheckout.AfterPay.CityInput" parent="AdyenCheckout.TextInputEditText">
+        <item name="android:hint">@string/checkout_afterpay_city</item>
+        <item name="android:inputType">text|textPersonName|textCapWords</item>
+    </style>
+
+    <style name="AdyenCheckout.AfterPay.SectionTitle">
+        <item name="android:layout_marginBottom">@dimen/standard_margin</item>
+        <item name="android:layout_marginStart">@dimen/standard_quarter_margin</item>
+        <item name="android:layout_marginLeft">@dimen/standard_quarter_margin</item>
+        <item name="android:layout_marginEnd">@dimen/standard_quarter_margin</item>
+        <item name="android:layout_marginRight">@dimen/standard_quarter_margin</item>
+        <item name="android:textStyle">bold</item>
+        <item name="android:selectable">false</item>
+        <item name="android:textColor">@color/label_color</item>
+    </style>
+
+    <style name="AdyenCheckout.AfterPay.SectionDetail">
+        <item name="android:layout_marginTop">-8dp</item>
+        <item name="android:layout_marginBottom">@dimen/standard_margin</item>
+        <item name="android:layout_marginStart">@dimen/standard_quarter_margin</item>
+        <item name="android:layout_marginLeft">@dimen/standard_quarter_margin</item>
+        <item name="android:layout_marginEnd">@dimen/standard_quarter_margin</item>
+        <item name="android:layout_marginRight">@dimen/standard_quarter_margin</item>
+        <item name="android:visibility">gone</item>
+        <item name="android:textSize">16sp</item>
+        <item name="android:selectable">false</item>
+        <item name="android:textColor">@color/textColor</item>
+    </style>
+
+    <style name="AdyenCheckout.TabLayout" parent="Widget.Design.TabLayout">
+        <item name="tabIndicatorColor">@null</item>
+        <item name="android:layout_marginStart">@dimen/standard_quarter_margin</item>
+        <item name="android:layout_marginLeft">@dimen/standard_quarter_margin</item>
+        <item name="android:layout_marginEnd">@dimen/standard_quarter_margin</item>
+        <item name="android:layout_marginRight">@dimen/standard_quarter_margin</item>
+        <item name="tabPaddingEnd">0dp</item>
+        <item name="tabPaddingStart">0dp</item>
+        <item name="tabRippleColor">@null</item>
+        <item name="android:layout_marginBottom">@dimen/standard_margin</item>
+    </style>
+
+    <style name="AdyenCheckout.AfterPay.TabContent">
+        <item name="android:layout_margin">@dimen/standard_half_margin</item>
+        <item name="android:layout_gravity">center</item>
+        <item name="android:textColor">@drawable/tab_text_color</item>
+        <item name="android:textSize">14sp</item>
+    </style>
+
+    <style name="AdyenCheckout.AfterPay.HR">
+        <item name="android:background">@color/lineColor</item>
+        <item name="android:layout_marginBottom">@dimen/standard_half_margin</item>
+    </style>
+
+</resources>

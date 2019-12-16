@@ -36,6 +36,7 @@ public class GooglePayConfiguration extends Configuration {
     private final String mMerchantAccount;
     private final int mGooglePayEnvironment;
     private final Amount mAmount;
+    private final String mCountryCode;
     private final MerchantInfo mMerchantInfo;
     private final List<String> mAllowedAuthMethods;
     private final List<String> mAllowedCardNetworks;
@@ -56,6 +57,42 @@ public class GooglePayConfiguration extends Configuration {
             return new GooglePayConfiguration[size];
         }
     };
+
+    @SuppressWarnings("ParameterNumber")
+    GooglePayConfiguration(
+            @NonNull Locale shopperLocale,
+            @NonNull Environment environment,
+            @NonNull String merchantAccount,
+            int googlePayEnvironment,
+            @NonNull Amount amount,
+            @Nullable String countryCode,
+            @Nullable MerchantInfo merchantInfo,
+            @NonNull List<String> allowedAuthMethods,
+            @NonNull List<String> allowedCardNetworks,
+            boolean allowPrepaidCards,
+            boolean emailRequired,
+            boolean existingPaymentMethodRequired,
+            boolean shippingAddressRequired,
+            @Nullable ShippingAddressParameters shippingAddressParameters,
+            boolean billingAddressRequired,
+            @Nullable BillingAddressParameters billingAddressParameters
+    ) {
+        super(shopperLocale, environment);
+        mMerchantAccount = merchantAccount;
+        mGooglePayEnvironment = googlePayEnvironment;
+        mAmount = amount;
+        mCountryCode = countryCode;
+        mMerchantInfo = merchantInfo;
+        mAllowedAuthMethods = allowedAuthMethods;
+        mAllowedCardNetworks = allowedCardNetworks;
+        mAllowPrepaidCards = allowPrepaidCards;
+        mEmailRequired = emailRequired;
+        mExistingPaymentMethodRequired = existingPaymentMethodRequired;
+        mShippingAddressRequired = shippingAddressRequired;
+        mShippingAddressParameters = shippingAddressParameters;
+        mBillingAddressRequired = billingAddressRequired;
+        mBillingAddressParameters = billingAddressParameters;
+    }
 
     /**
      * @deprecated Constructor with all parameters. Use the Builder to initialize this object.
@@ -83,6 +120,7 @@ public class GooglePayConfiguration extends Configuration {
         mMerchantAccount = merchantAccount;
         mGooglePayEnvironment = googlePayEnvironment;
         mAmount = amount;
+        mCountryCode = null;
         mMerchantInfo = merchantInfo;
         mAllowedAuthMethods = allowedAuthMethods;
         mAllowedCardNetworks = allowedCardNetworks;
@@ -100,6 +138,7 @@ public class GooglePayConfiguration extends Configuration {
         mMerchantAccount = in.readString();
         mGooglePayEnvironment = in.readInt();
         mAmount = in.readParcelable(Amount.class.getClassLoader());
+        mCountryCode = in.readString();
         mMerchantInfo = in.readParcelable(MerchantInfo.class.getClassLoader());
         mAllowedAuthMethods = in.readArrayList(String.class.getClassLoader());
         mAllowedCardNetworks = in.readArrayList(String.class.getClassLoader());
@@ -118,6 +157,7 @@ public class GooglePayConfiguration extends Configuration {
         dest.writeString(mMerchantAccount);
         dest.writeInt(mGooglePayEnvironment);
         dest.writeParcelable(mAmount, flags);
+        dest.writeString(mCountryCode);
         dest.writeParcelable(mMerchantInfo, flags);
         dest.writeList(mAllowedAuthMethods);
         dest.writeList(mAllowedCardNetworks);
@@ -138,6 +178,11 @@ public class GooglePayConfiguration extends Configuration {
     @NonNull
     public Amount getAmount() {
         return mAmount;
+    }
+
+    @Nullable
+    public String getCountryCode() {
+        return mCountryCode;
     }
 
     public int getGooglePayEnvironment() {
@@ -198,6 +243,7 @@ public class GooglePayConfiguration extends Configuration {
         private int mBuilderGooglePayEnvironment = WalletConstants.ENVIRONMENT_TEST;
         private Amount mBuilderAmount = createDefaultAmount();
         private MerchantInfo mBuilderMerchantInfo = null;
+        private String mBuilderCountryCode = null;
         private List<String> mBuilderAllowedAuthMethods = AllowedAuthMethods.getAllAllowedAuthMethods();
         private List<String> mBuilderAllowedCardNetworks = AllowedCardNetworks.getAllAllowedCardNetworks();
         private boolean mBuilderAllowPrepaidCards = false;
@@ -247,6 +293,7 @@ public class GooglePayConfiguration extends Configuration {
                     mBuilderMerchantAccount,
                     mBuilderGooglePayEnvironment,
                     mBuilderAmount,
+                    mBuilderCountryCode,
                     mBuilderMerchantInfo,
                     mBuilderAllowedAuthMethods,
                     mBuilderAllowedCardNetworks,
@@ -265,8 +312,10 @@ public class GooglePayConfiguration extends Configuration {
          *
          * @param merchantAccount Your merchant account.
          */
-        public void setMerchantAccount(@NonNull String merchantAccount) {
+        @NonNull
+        public Builder setMerchantAccount(@NonNull String merchantAccount) {
             mBuilderMerchantAccount = merchantAccount;
+            return this;
         }
 
         /**
@@ -275,56 +324,86 @@ public class GooglePayConfiguration extends Configuration {
          *
          * @param googlePayEnvironment The GooglePay environment.
          */
-        public void setGooglePayEnvironment(int googlePayEnvironment) {
+        @NonNull
+        public Builder setGooglePayEnvironment(int googlePayEnvironment) {
             if (googlePayEnvironment != WalletConstants.ENVIRONMENT_TEST && googlePayEnvironment != WalletConstants.ENVIRONMENT_PRODUCTION) {
                 throw new CheckoutException("Invalid value for Google Environment. "
                         + "Use either WalletConstants.ENVIRONMENT_TEST or WalletConstants.ENVIRONMENT_PRODUCTION");
             }
             mBuilderGooglePayEnvironment = googlePayEnvironment;
+            return this;
         }
 
-        public void setAmount(@NonNull Amount amount) {
+        @NonNull
+        public Builder setAmount(@NonNull Amount amount) {
             mBuilderAmount = amount;
+            return this;
         }
 
-        public void setBuilderMerchantInfo(@Nullable MerchantInfo builderMerchantInfo) {
+        @NonNull
+        public Builder setBuilderMerchantInfo(@Nullable MerchantInfo builderMerchantInfo) {
             mBuilderMerchantInfo = builderMerchantInfo;
+            return this;
         }
 
-        public void setAllowedAuthMethods(@Nullable List<String> allowedAuthMethods) {
+        @NonNull
+        public Builder setCountryCode(@Nullable String countryCode) {
+            mBuilderCountryCode = countryCode;
+            return this;
+        }
+
+        @NonNull
+        public Builder setAllowedAuthMethods(@Nullable List<String> allowedAuthMethods) {
             mBuilderAllowedAuthMethods = allowedAuthMethods;
+            return this;
         }
 
-        public void setAllowedCardNetworks(@Nullable List<String> allowedCardNetworks) {
+        @NonNull
+        public Builder setAllowedCardNetworks(@Nullable List<String> allowedCardNetworks) {
             mBuilderAllowedCardNetworks = allowedCardNetworks;
+            return this;
         }
 
-        public void setAllowPrepaidCards(boolean allowPrepaidCards) {
+        @NonNull
+        public Builder setAllowPrepaidCards(boolean allowPrepaidCards) {
             mBuilderAllowPrepaidCards = allowPrepaidCards;
+            return this;
         }
 
-        public void setEmailRequired(boolean builderEmailRequired) {
+        @NonNull
+        public Builder setEmailRequired(boolean builderEmailRequired) {
             mBuilderEmailRequired = builderEmailRequired;
+            return this;
         }
 
-        public void setExistingPaymentMethodRequired(boolean builderExistingPaymentMethodRequired) {
+        @NonNull
+        public Builder setExistingPaymentMethodRequired(boolean builderExistingPaymentMethodRequired) {
             mBuilderExistingPaymentMethodRequired = builderExistingPaymentMethodRequired;
+            return this;
         }
 
-        public void setShippingAddressRequired(boolean builderShippingAddressRequired) {
+        @NonNull
+        public Builder setShippingAddressRequired(boolean builderShippingAddressRequired) {
             mBuilderShippingAddressRequired = builderShippingAddressRequired;
+            return this;
         }
 
-        public void setShippingAddressParameters(@Nullable ShippingAddressParameters builderShippingAddressParameters) {
+        @NonNull
+        public Builder setShippingAddressParameters(@Nullable ShippingAddressParameters builderShippingAddressParameters) {
             mBuilderShippingAddressParameters = builderShippingAddressParameters;
+            return this;
         }
 
-        public void setBillingAddressRequired(boolean builderBillingAddressRequired) {
+        @NonNull
+        public Builder setBillingAddressRequired(boolean builderBillingAddressRequired) {
             mBuilderBillingAddressRequired = builderBillingAddressRequired;
+            return this;
         }
 
-        public void setBillingAddressParameters(@Nullable BillingAddressParameters builderBillingAddressParameters) {
+        @NonNull
+        public Builder setBillingAddressParameters(@Nullable BillingAddressParameters builderBillingAddressParameters) {
             mBuilderBillingAddressParameters = builderBillingAddressParameters;
+            return this;
         }
     }
 }

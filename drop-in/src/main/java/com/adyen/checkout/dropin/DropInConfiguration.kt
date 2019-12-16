@@ -13,6 +13,7 @@ import android.content.Context
 import android.content.Intent
 import android.os.Parcel
 import android.os.Parcelable
+import com.adyen.checkout.afterpay.AfterPayConfiguration
 import com.adyen.checkout.base.component.Configuration
 import com.adyen.checkout.base.model.payments.Amount
 import com.adyen.checkout.base.util.CheckoutCurrency
@@ -276,16 +277,24 @@ class DropInConfiguration : Configuration, Parcelable {
         }
 
         /**
+         * Add configuration for Sepa payment method.
+         */
+        fun addAfterPayConfiguration(afterPayConfiguration: AfterPayConfiguration): Builder {
+            availableConfigs[PaymentMethodTypes.AFTER_PAY] = afterPayConfiguration
+            return this
+        }
+
+        /**
          * Create the [DropInConfiguration] instance.
          */
         fun build(): DropInConfiguration {
             return DropInConfiguration(
-                    shopperLocale,
-                    environment,
-                    availableConfigs,
-                    serviceComponentName,
-                    resultHandlerIntent,
-                    amount
+                shopperLocale,
+                environment,
+                availableConfigs,
+                serviceComponentName,
+                resultHandlerIntent,
+                amount
             )
         }
     }

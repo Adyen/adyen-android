@@ -9,18 +9,23 @@
 package com.adyen.checkout.googlepay.util;
 
 import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
 
 import com.adyen.checkout.base.model.payments.Amount;
+import com.adyen.checkout.base.model.payments.request.GooglePayPaymentMethod;
 import com.adyen.checkout.base.util.AmountFormat;
+import com.adyen.checkout.base.util.PaymentMethodTypes;
 import com.adyen.checkout.core.exception.CheckoutException;
 import com.adyen.checkout.core.exception.NoConstructorException;
+import com.adyen.checkout.core.log.LogUtil;
+import com.adyen.checkout.core.log.Logger;
 import com.adyen.checkout.googlepay.GooglePayConfiguration;
 import com.adyen.checkout.googlepay.model.CardParameters;
-import com.adyen.checkout.googlepay.model.TokenizationParameters;
 import com.adyen.checkout.googlepay.model.GooglePayPaymentMethodModel;
 import com.adyen.checkout.googlepay.model.IsReadyToPayRequestModel;
 import com.adyen.checkout.googlepay.model.PaymentDataRequestModel;
 import com.adyen.checkout.googlepay.model.PaymentMethodTokenizationSpecification;
+import com.adyen.checkout.googlepay.model.TokenizationParameters;
 import com.adyen.checkout.googlepay.model.TransactionInfoModel;
 import com.google.android.gms.wallet.IsReadyToPayRequest;
 import com.google.android.gms.wallet.PaymentData;
@@ -38,6 +43,8 @@ import java.util.ArrayList;
 import java.util.Locale;
 
 public final class GooglePayUtils {
+    private static final String TAG = LogUtil.getTag();
+
     private static final DecimalFormat GOOGLE_PAY_DECIMAL_FORMAT = new DecimalFormat("0.##", new DecimalFormatSymbols(Locale.ROOT));
     private static final int GOOGLE_PAY_DECIMAL_SCALE = 2;
 
@@ -57,8 +64,10 @@ public final class GooglePayUtils {
     // TransactionInfoModel
     private static final String DEFAULT_TOTAL_PRICE_STATUS = "FINAL";
 
-    // Token
+    // PaymentData result JSON keys
     private static final String PAYMENT_METHOD_DATA = "paymentMethodData";
+    private static final String INFO = "info";
+    private static final String CARD_NETWORK = "cardNetwork";
     private static final String TOKENIZATION_DATA = "tokenizationData";
     private static final String TOKEN = "token";
 
@@ -120,6 +129,40 @@ public final class GooglePayUtils {
         }
     }
 
+    /**
+     * Create the PaymentMethod object from Google Pay based on the response from the SDK.
+     *
+     * @param paymentData The response from Google Pay SDK.
+     * @return The object matching the data for the API call to Adyen.
+     */
+    @Nullable
+    public static GooglePayPaymentMethod createGooglePayPaymentMethod(@Nullable PaymentData paymentData) {
+        if (paymentData == null) {
+            return null;
+        }
+
+        final GooglePayPaymentMethod paymentMethod = new GooglePayPaymentMethod();
+        paymentMethod.setType(PaymentMethodTypes.GOOGLE_PAY);
+
+        try {
+            final JSONObject paymentDataJson = new JSONObject(paymentData.toJson());
+            final JSONObject paymentMethodDataJson = paymentDataJson.getJSONObject(PAYMENT_METHOD_DATA);
+
+            final JSONObject tokenizationDataJson = paymentMethodDataJson.getJSONObject(TOKENIZATION_DATA);
+            paymentMethod.setGooglePayToken(tokenizationDataJson.getString(TOKEN));
+
+            final JSONObject infoJson = paymentMethodDataJson.optJSONObject(INFO);
+            if (infoJson != null) {
+                paymentMethod.setGooglePayCardNetwork(infoJson.optString(CARD_NETWORK, null));
+            }
+
+            return paymentMethod;
+        } catch (JSONException e) {
+            Logger.e(TAG, "Failed to find Google Pay token.", e);
+            return null;
+        }
+    }
+
     private static IsReadyToPayRequestModel createIsReadyToPayRequestModel(@NonNull GooglePayConfiguration configuration) {
         final IsReadyToPayRequestModel isReadyToPayRequestModel = new IsReadyToPayRequestModel();
         isReadyToPayRequestModel.setApiVersion(MAJOR_API_VERSION);
@@ -139,7 +182,7 @@ public final class GooglePayUtils {
         paymentDataRequestModel.setApiVersion(MAJOR_API_VERSION);
         paymentDataRequestModel.setApiVersionMinor(MINOT_API_VERSION);
         paymentDataRequestModel.setMerchantInfo(configuration.getMerchantInfo());
-        paymentDataRequestModel.setTransactionInfo(createTransactionInfo(configuration.getAmount()));
+        paymentDataRequestModel.setTransactionInfo(createTransactionInfo(configuration.getAmount(), configuration.getCountryCode()));
 
         final ArrayList<GooglePayPaymentMethodModel> allowedPaymentMethods = new ArrayList<>();
         allowedPaymentMethods.add(createCardPaymentMethod(configuration));
@@ -187,13 +230,14 @@ public final class GooglePayUtils {
     }
 
     @NonNull
-    private static TransactionInfoModel createTransactionInfo(@NonNull Amount amount) {
+    private static TransactionInfoModel createTransactionInfo(@NonNull Amount amount, @Nullable String countryCode) {
         BigDecimal bigDecimal = AmountFormat.toBigDecimal(amount);
         bigDecimal = bigDecimal.setScale(GOOGLE_PAY_DECIMAL_SCALE, RoundingMode.HALF_UP);
         final String displayAmount = GOOGLE_PAY_DECIMAL_FORMAT.format(bigDecimal);
 
         final TransactionInfoModel transactionInfoModel = new TransactionInfoModel();
         transactionInfoModel.setTotalPrice(displayAmount);
+        transactionInfoModel.setCountryCode(countryCode);
         transactionInfoModel.setTotalPriceStatus(DEFAULT_TOTAL_PRICE_STATUS);
         transactionInfoModel.setCurrencyCode(amount.getCurrency());
 

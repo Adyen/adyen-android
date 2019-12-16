@@ -27,7 +27,6 @@ public final class ParcelUtils {
     /**
      * Write boolean in to Parcel.
      */
-    @NonNull
     public static void writeBoolean(@NonNull Parcel dest, boolean value) {
         dest.writeInt(value ? BOOLEAN_TRUE_VALUE : BOOLEAN_FALSE_VALUE);
     }
@@ -35,7 +34,6 @@ public final class ParcelUtils {
     /**
      * Read boolean from Parcel.
      */
-    @NonNull
     public static boolean readBoolean(@NonNull Parcel in) {
         return in.readInt() == BOOLEAN_TRUE_VALUE;
     }

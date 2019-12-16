@@ -8,7 +8,6 @@
 
 package com.adyen.checkout.example.service
 
-import com.adyen.checkout.base.model.payments.Amount
 import com.adyen.checkout.core.log.LogUtil
 import com.adyen.checkout.core.log.Logger
 import com.adyen.checkout.core.model.JsonUtils
@@ -18,7 +17,6 @@ import com.adyen.checkout.example.data.api.model.paymentsRequest.AdditionalData
 import com.adyen.checkout.example.data.storage.KeyValueStorage
 import com.adyen.checkout.example.repositories.paymentMethods.PaymentsRepository
 import com.adyen.checkout.redirect.RedirectComponent
-import com.google.gson.Gson
 import okhttp3.MediaType
 import okhttp3.MediaType.Companion.toMediaType
 import okhttp3.RequestBody.Companion.toRequestBody
@@ -50,6 +48,7 @@ class ExampleDropInService : DropInService() {
             paymentComponentData,
             keyValueStorage.getShopperReference(),
             keyValueStorage.getAmount(),
+            keyValueStorage.getCountry(),
             keyValueStorage.getMerchantAccount(),
             RedirectComponent.getReturnUrl(applicationContext),
             AdditionalData(
@@ -88,7 +87,7 @@ class ExampleDropInService : DropInService() {
             }
 
             if (response.isSuccessful) {
-            val detailsResponse = JSONObject(response.body()?.string())
+                val detailsResponse = JSONObject(response.body()?.string())
                 if (detailsResponse.has("action")) {
                     CallResult(CallResult.ResultType.ACTION, detailsResponse.get("action").toString())
                 } else {
@@ -108,30 +107,5 @@ class ExampleDropInService : DropInService() {
             Logger.e(TAG, "IOException", e)
             CallResult(CallResult.ResultType.ERROR, "IOException")
         }
-    }
-
-    @Suppress("LongParameterList")
-    private fun createPaymentRequest(
-        paymentComponentData: JSONObject,
-        shopperReference: String,
-        amount: Amount,
-        merchantAccount: String,
-        redirectUrl: String,
-        additionalData: AdditionalData
-    ): JSONObject {
-
-        val request = JSONObject()
-
-        request.putOpt("paymentMethod", paymentComponentData.getJSONObject("paymentMethod"))
-        request.put("shopperReference", shopperReference)
-        request.put("storePaymentMethod", paymentComponentData.getBoolean("storePaymentMethod"))
-        request.put("amount", JSONObject(Gson().toJson(amount)))
-        request.put("merchantAccount", merchantAccount)
-        request.put("returnUrl", redirectUrl)
-        request.put("reference", "android-test-components")
-        request.put("channel", "android")
-        request.put("additionalData", JSONObject(Gson().toJson(additionalData)))
-
-        return request
     }
 }

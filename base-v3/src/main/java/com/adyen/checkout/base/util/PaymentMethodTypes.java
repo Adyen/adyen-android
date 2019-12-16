@@ -35,6 +35,7 @@ public final class PaymentMethodTypes {
     public static final String SCHEME = "scheme";
     public static final String GOOGLE_PAY = "paywithgoogle";
     public static final String SEPA = "sepadirectdebit";
+    public static final String AFTER_PAY = "afterpay_default";
     public static final String BCMC = "bcmc";
     public static final String WECHAT_PAY_SDK = "wechatpaySDK";
 
@@ -50,7 +51,7 @@ public final class PaymentMethodTypes {
 
     // Helper annotation to enforce use of a constant from here when needed.
     @StringDef({IDEAL, MOLPAY_MALAYSIA, MOLPAY_THAILAND, MOLPAY_VIETNAM, DOTPAY, EPS, ENTERCASH, OPEN_BANKING, SCHEME, GOOGLE_PAY, SEPA, BCMC,
-            WECHAT_PAY_SDK})
+            WECHAT_PAY_SDK, AFTER_PAY})
     @Retention(RetentionPolicy.SOURCE)
     public @interface SupportedPaymentMethod {
     }
@@ -70,6 +71,7 @@ public final class PaymentMethodTypes {
         supportedPaymentMethods.add(SCHEME);
         supportedPaymentMethods.add(GOOGLE_PAY);
         supportedPaymentMethods.add(SEPA);
+        supportedPaymentMethods.add(AFTER_PAY);
         supportedPaymentMethods.add(BCMC);
         supportedPaymentMethods.add(WECHAT_PAY_SDK);
 

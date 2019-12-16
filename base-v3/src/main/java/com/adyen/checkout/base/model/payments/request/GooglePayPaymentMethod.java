@@ -27,7 +27,8 @@ public class GooglePayPaymentMethod extends PaymentMethodDetails {
 
     public static final String PAYMENT_METHOD_TYPE = PaymentMethodTypes.GOOGLE_PAY;
 
-    private static final String PAY_WITH_GOOGLE_TOKEN = "paywithgoogle.token";
+    private static final String GOOGLE_PAY_TOKEN = "googlePayToken";
+    private static final String GOOGLE_PAY_CARD_NETWORK = "googlePayCardNetwork";
 
     @NonNull
     public static final Serializer<GooglePayPaymentMethod> SERIALIZER = new Serializer<GooglePayPaymentMethod>() {
@@ -39,7 +40,8 @@ public class GooglePayPaymentMethod extends PaymentMethodDetails {
                 // getting parameters from parent class
                 jsonObject.putOpt(PaymentMethodDetails.TYPE, modelObject.getType());
 
-                jsonObject.putOpt(PAY_WITH_GOOGLE_TOKEN, modelObject.getToken());
+                jsonObject.putOpt(GOOGLE_PAY_TOKEN, modelObject.getGooglePayToken());
+                jsonObject.putOpt(GOOGLE_PAY_CARD_NETWORK, modelObject.getGooglePayCardNetwork());
             } catch (JSONException e) {
                 throw new ModelSerializationException(GooglePayPaymentMethod.class, e);
             }
@@ -54,25 +56,55 @@ public class GooglePayPaymentMethod extends PaymentMethodDetails {
             // getting parameters from parent class
             googlePayPaymentMethod.setType(jsonObject.optString(PaymentMethodDetails.TYPE, null));
 
-            googlePayPaymentMethod.setToken(jsonObject.optString(PAY_WITH_GOOGLE_TOKEN, null));
+            googlePayPaymentMethod.setGooglePayToken(jsonObject.optString(GOOGLE_PAY_TOKEN, null));
+            googlePayPaymentMethod.setGooglePayCardNetwork(jsonObject.optString(GOOGLE_PAY_CARD_NETWORK, null));
 
             return googlePayPaymentMethod;
         }
     };
 
-    private String token;
+    private String googlePayToken;
+    private String googlePayCardNetwork;
 
     @Override
     public void writeToParcel(@NonNull Parcel dest, int flags) {
         JsonUtils.writeToParcel(dest, SERIALIZER.serialize(this));
     }
 
+    /**
+     * @deprecated Deprecated in favor of {@link #getGooglePayToken()}.
+     * @return The token returned from Google Pay
+     */
+    @Deprecated
     @Nullable
     public String getToken() {
-        return token;
+        return googlePayToken;
     }
 
+    /**
+     * @deprecated Deprecated in favor of {@link #setGooglePayToken(String)}.
+     * @param token The token returned from Google Pay
+     */
+    @Deprecated
     public void setToken(@Nullable String token) {
-        this.token = token;
+        googlePayToken = token;
+    }
+
+    @Nullable
+    public String getGooglePayToken() {
+        return googlePayToken;
+    }
+
+    public void setGooglePayToken(@Nullable String googlePayToken) {
+        this.googlePayToken = googlePayToken;
+    }
+
+    @Nullable
+    public String getGooglePayCardNetwork() {
+        return googlePayCardNetwork;
+    }
+
+    public void setGooglePayCardNetwork(@Nullable String googlePayCardNetwork) {
+        this.googlePayCardNetwork = googlePayCardNetwork;
     }
 }

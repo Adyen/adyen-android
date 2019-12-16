@@ -19,6 +19,12 @@
     <issue id="ContentDescription" >
         <ignore regexp=".*src\/main\/res\/.*googlepay.*"/>
     </issue>
+    <issue id="NegativeMargin">
+        <ignore path="src/main/res/values/styles.xml"/>
+    </issue>
+    <issue id="DuplicateStrings">
+        <ignore path="src/main/res/values/strings.xml"/>
+    </issue>
     <issue id="RedundantNamespace" >
         <ignore path="src/main/res/drawable-v21/googlepay_white_button_background.xml"/>
         <ignore path="src/main/res/drawable-v21/googlepay_white_button_no_shadow_background.xml"/>

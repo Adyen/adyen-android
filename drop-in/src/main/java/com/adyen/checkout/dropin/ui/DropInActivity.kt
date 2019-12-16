@@ -18,8 +18,8 @@ import android.content.IntentFilter
 import android.os.Bundle
 import android.support.v4.app.DialogFragment
 import android.support.v4.content.LocalBroadcastManager
+import android.support.v7.app.AlertDialog
 import android.support.v7.app.AppCompatActivity
-import android.widget.Toast
 import com.adyen.checkout.base.ActionComponentData
 import com.adyen.checkout.base.ComponentError
 import com.adyen.checkout.base.analytics.AnalyticEvent
@@ -66,7 +66,6 @@ class DropInActivity : AppCompatActivity(), DropInBottomSheetDialogFragment.Prot
         private const val PAYMENT_METHODS_RESPONSE_KEY = "PAYMENT_METHODS_RESPONSE_KEY"
         private const val DROP_IN_CONFIGURATION_KEY = "DROP_IN_CONFIGURATION_KEY"
         private const val IS_WAITING_FOR_RESULT = "IS_WAITING_FOR_RESULT"
-        private const val DROP_IN_INTENT = "DROP_IN_INTENT"
 
         private const val GOOGLE_PAY_REQUEST_CODE = 1
 
@@ -74,17 +73,14 @@ class DropInActivity : AppCompatActivity(), DropInBottomSheetDialogFragment.Prot
             val intent = Intent(context, DropInActivity::class.java)
             intent.putExtra(PAYMENT_METHODS_RESPONSE_KEY, paymentMethodsApiResponse)
             intent.putExtra(DROP_IN_CONFIGURATION_KEY, dropInConfiguration)
-            intent.putExtra(DROP_IN_INTENT, dropInConfiguration.resultHandlerIntent)
             return intent
         }
     }
 
-    private lateinit var dropInConfiguration: DropInConfiguration
     private lateinit var dropInViewModel: DropInViewModel
-    private lateinit var resultIntent: Intent
     private lateinit var googlePayComponent: GooglePayComponent
 
-    private lateinit var callResultIntentFilter: IntentFilter
+    private lateinit var serviceResultIntentFilter: IntentFilter
 
     private lateinit var localBroadcastManager: LocalBroadcastManager
 
@@ -128,47 +124,50 @@ class DropInActivity : AppCompatActivity(), DropInBottomSheetDialogFragment.Prot
         setContentView(R.layout.activity_drop_in)
         overridePendingTransition(0, 0)
 
-        savedInstanceState?.let {
-            isWaitingResult = it.getBoolean(IS_WAITING_FOR_RESULT, false)
-        }
-
+        localBroadcastManager = LocalBroadcastManager.getInstance(this)
         dropInViewModel = ViewModelProviders.of(this).get(DropInViewModel::class.java)
 
-        dropInConfiguration = if (savedInstanceState != null && savedInstanceState.containsKey(DROP_IN_CONFIGURATION_KEY)) {
-            savedInstanceState.getParcelable(DROP_IN_CONFIGURATION_KEY)!!
-        } else {
-            intent.getParcelableExtra(DROP_IN_CONFIGURATION_KEY)
+        val bundle = savedInstanceState ?: intent.extras
+
+        val initializationSuccessful = initializeBundleVariables(bundle)
+        if (!initializationSuccessful) {
+            showError(getString(R.string.action_failed), true)
+            return
         }
-
-        dropInViewModel.dropInConfiguration = dropInConfiguration
-
-        dropInViewModel.paymentMethodsApiResponse =
-            if (savedInstanceState != null && savedInstanceState.containsKey(PAYMENT_METHODS_RESPONSE_KEY)) {
-                savedInstanceState.getParcelable(PAYMENT_METHODS_RESPONSE_KEY)!!
-            } else {
-                intent.getParcelableExtra(PAYMENT_METHODS_RESPONSE_KEY)
-            }
 
         if (getFragmentByTag(COMPONENT_FRAGMENT_TAG) == null && getFragmentByTag(PAYMENT_METHOD_FRAGMENT_TAG) == null) {
             PaymentMethodListDialogFragment.newInstance(false).show(supportFragmentManager, PAYMENT_METHOD_FRAGMENT_TAG)
         }
 
-        resultIntent = if (savedInstanceState != null && savedInstanceState.containsKey(DROP_IN_INTENT)) {
-            savedInstanceState.getParcelable(DROP_IN_INTENT)!!
-        } else {
-            intent.getParcelableExtra(DROP_IN_INTENT)
-        }
-
-        callResultIntentFilter = IntentFilter(DropInService.getCallResultAction(this))
-
-        // registerBroadcastReceivers
-        localBroadcastManager = LocalBroadcastManager.getInstance(this)
-        localBroadcastManager.registerReceiver(callResultReceiver, callResultIntentFilter)
+        serviceResultIntentFilter = IntentFilter(DropInService.getServiceResultAction(this))
+        localBroadcastManager.registerReceiver(callResultReceiver, serviceResultIntentFilter)
 
         actionHandler = ActionHandler(this, this)
         actionHandler.restoreState(savedInstanceState)
 
         sendAnalyticsEvent()
+    }
+
+    private fun initializeBundleVariables(bundle: Bundle): Boolean {
+        isWaitingResult = bundle.getBoolean(IS_WAITING_FOR_RESULT, false)
+
+        var variablesLoaded = true
+
+        if (bundle.containsKey(DROP_IN_CONFIGURATION_KEY)) {
+            dropInViewModel.dropInConfiguration = bundle.getParcelable(DROP_IN_CONFIGURATION_KEY)!!
+        } else {
+            Logger.e(TAG, "DropInConfiguration not found")
+            variablesLoaded = false
+        }
+
+        if (bundle.containsKey(PAYMENT_METHODS_RESPONSE_KEY)) {
+            dropInViewModel.paymentMethodsApiResponse = bundle.getParcelable(PAYMENT_METHODS_RESPONSE_KEY)!!
+        } else {
+            Logger.e(TAG, "PaymentMethods response not found")
+            variablesLoaded = false
+        }
+
+        return variablesLoaded
     }
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
@@ -191,7 +190,20 @@ class DropInActivity : AppCompatActivity(), DropInBottomSheetDialogFragment.Prot
     override fun requestPaymentsCall(paymentComponentData: PaymentComponentData<*>) {
         isWaitingResult = true
         setLoading(true)
-        DropInService.requestPaymentsCall(this, paymentComponentData, dropInConfiguration.serviceComponentName)
+        // include amount value if merchant passed it to the DropIn
+        if (!dropInViewModel.dropInConfiguration.amount.isEmpty) {
+            paymentComponentData.amount = dropInViewModel.dropInConfiguration.amount
+        }
+        DropInService.requestPaymentsCall(this, paymentComponentData, dropInViewModel.dropInConfiguration.serviceComponentName)
+    }
+
+    override fun showError(errorMessage: String, terminate: Boolean) {
+        AlertDialog.Builder(this)
+                .setTitle(R.string.error_dialog_title)
+                .setMessage(errorMessage)
+                .setOnDismissListener { this@DropInActivity.shouldFinish(terminate) }
+                .setPositiveButton(R.string.error_dialog_button) { dialog, _ -> dialog.dismiss() }
+                .show()
     }
 
     override fun requestDetailsCall(actionComponentData: ActionComponentData) {
@@ -199,12 +211,11 @@ class DropInActivity : AppCompatActivity(), DropInBottomSheetDialogFragment.Prot
         setLoading(true)
         DropInService.requestDetailsCall(this,
             ActionComponentData.SERIALIZER.serialize(actionComponentData),
-            dropInConfiguration.serviceComponentName)
+                dropInViewModel.dropInConfiguration.serviceComponentName)
     }
 
     override fun onError(errorMessage: String) {
-        Toast.makeText(this, R.string.action_failed, Toast.LENGTH_LONG).show()
-        finish()
+        showError(getString(R.string.action_failed), true)
     }
 
     override fun onSaveInstanceState(outState: Bundle?) {
@@ -212,12 +223,12 @@ class DropInActivity : AppCompatActivity(), DropInBottomSheetDialogFragment.Prot
 
         Logger.d(TAG, "onSaveInstanceState")
 
-        outState?.let {
-            it.putParcelable(PAYMENT_METHODS_RESPONSE_KEY, dropInViewModel.paymentMethodsApiResponse)
-            it.putParcelable(DROP_IN_CONFIGURATION_KEY, dropInConfiguration)
-            it.putBoolean(IS_WAITING_FOR_RESULT, isWaitingResult)
+        outState?.run {
+            putParcelable(PAYMENT_METHODS_RESPONSE_KEY, dropInViewModel.paymentMethodsApiResponse)
+            putParcelable(DROP_IN_CONFIGURATION_KEY, dropInViewModel.dropInConfiguration)
+            putBoolean(IS_WAITING_FOR_RESULT, isWaitingResult)
 
-            actionHandler.saveState(it)
+            actionHandler.saveState(this)
         }
     }
 
@@ -238,7 +249,7 @@ class DropInActivity : AppCompatActivity(), DropInBottomSheetDialogFragment.Prot
         val dialogFragment = when (paymentMethod.type) {
             PaymentMethodTypes.SCHEME -> CardComponentDialogFragment
             else -> GenericComponentDialogFragment
-        }.newInstance(paymentMethod, dropInConfiguration, wasInExpandMode)
+        }.newInstance(paymentMethod, dropInViewModel.dropInConfiguration, wasInExpandMode)
 
         dialogFragment.show(supportFragmentManager, COMPONENT_FRAGMENT_TAG)
     }
@@ -279,8 +290,11 @@ class DropInActivity : AppCompatActivity(), DropInBottomSheetDialogFragment.Prot
             }
             CallResult.ResultType.ERROR -> {
                 Logger.d(TAG, "ERROR - ${callResult.content}")
-                Toast.makeText(this, R.string.payment_failed, Toast.LENGTH_LONG).show()
-                finish()
+                showError(getString(R.string.payment_failed), callResult.dismissDropIn)
+            }
+            CallResult.ResultType.ERROR_WITH_MESSAGE -> {
+                Logger.d(TAG, "ERROR_WITH_MESSAGE - ${callResult.content}")
+                showError(callResult.content, callResult.dismissDropIn)
             }
             CallResult.ResultType.WAIT -> {
                 throw CheckoutException("WAIT CallResult is not expected to be propagated.")
@@ -288,8 +302,16 @@ class DropInActivity : AppCompatActivity(), DropInBottomSheetDialogFragment.Prot
         }
     }
 
+    private fun shouldFinish(dismissDropIn: Boolean) {
+        if (dismissDropIn) {
+            terminateDropIn()
+        } else {
+            setLoading(false)
+        }
+    }
+
     private fun sendResult(content: String) {
-        dropInConfiguration.resultHandlerIntent.putExtra(DropIn.RESULT_KEY, content).let { intent ->
+        dropInViewModel.dropInConfiguration.resultHandlerIntent.putExtra(DropIn.RESULT_KEY, content).let { intent ->
             startActivity(intent)
             terminateDropIn()
         }
@@ -323,8 +345,8 @@ class DropInActivity : AppCompatActivity(), DropInBottomSheetDialogFragment.Prot
     private fun sendAnalyticsEvent() {
         Logger.d(TAG, "sendAnalyticsEvent")
         val analyticEvent = AnalyticEvent.create(this, AnalyticEvent.Flavor.DROPIN,
-            "dropin", dropInConfiguration.shopperLocale)
-        AnalyticsDispatcher.dispatchEvent(this, dropInConfiguration.environment, analyticEvent)
+            "dropin", dropInViewModel.dropInConfiguration.shopperLocale)
+        AnalyticsDispatcher.dispatchEvent(this, dropInViewModel.dropInConfiguration.environment, analyticEvent)
     }
 
     private fun hideFragmentDialog(tag: String) {

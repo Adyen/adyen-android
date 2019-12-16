@@ -1,0 +1,46 @@
+/*
+ * Copyright (c) 2019 Adyen N.V.
+ *
+ * This file is open source and available under the MIT license. See the LICENSE file for more info.
+ *
+ * Created by arman on 7/11/2019.
+ */
+
+// Maven artifact
+ext.mavenArtifactId = "afterpay-ui"
+ext.mavenArtifactName = "Adyen checkout afterpay-ui component"
+ext.mavenArtifactDescription = "Adyen checkout afterpay-ui component client for Adyen's Checkout API."
+
+apply plugin: 'com.android.library'
+
+android {
+    compileSdkVersion compile_sdk_version
+
+    defaultConfig {
+        minSdkVersion min_sdk_version
+        targetSdkVersion target_sdk_version
+        versionCode version_code
+        versionName version_name
+
+        testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
+    }
+}
+
+dependencies {
+    //Tests
+    testImplementation "junit:junit:$junit_version"
+    androidTestImplementation "com.android.support.test:runner:$support_test_runner_version"
+    androidTestImplementation "com.android.support.test.espresso:espresso-core:$espresso_version"
+
+    // Checkout
+    api project(':base-ui')
+    api project(':afterpay-base')
+
+    // Dependencies
+    implementation "com.android.support:design:$support_library_version"
+}
+
+// This sharedTasks.gradle script is applied at the end of this build.gradle script,
+// since javadocs.gradle script is dependent on android.compileSdkVersion property,
+// which is set on the android block above.
+apply from: "../config/gradle/sharedTasks.gradle"

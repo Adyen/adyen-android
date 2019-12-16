@@ -14,7 +14,6 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.Toast
 import com.adyen.checkout.base.ComponentError
 import com.adyen.checkout.base.PaymentComponent
 import com.adyen.checkout.base.PaymentComponentState
@@ -94,7 +93,7 @@ open abstract class BaseComponentDialogFragment : DropInBottomSheetDialogFragmen
     }
 
     fun startPayment() {
-        val componentState = component.getState()
+        val componentState = component.state
         try {
             if (componentState != null) {
                 if (componentState.isValid) {
@@ -120,8 +119,6 @@ open abstract class BaseComponentDialogFragment : DropInBottomSheetDialogFragmen
 
     fun handleError(componentError: ComponentError) {
         Logger.e(TAG, componentError.errorMessage)
-        Toast.makeText(context, R.string.component_error, Toast.LENGTH_LONG).show()
-
-        protocol.terminateDropIn()
+        protocol.showError(getString(R.string.component_error), true)
     }
 }

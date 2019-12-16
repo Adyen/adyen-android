@@ -11,6 +11,9 @@ package com.adyen.checkout.dropin
 import android.app.Application
 import android.content.Context
 import android.support.v4.app.Fragment
+import com.adyen.checkout.afterpay.AfterPayComponent
+import com.adyen.checkout.afterpay.AfterPayConfiguration
+import com.adyen.checkout.afterpay.AfterPayView
 import com.adyen.checkout.base.ComponentAvailableCallback
 import com.adyen.checkout.base.ComponentView
 import com.adyen.checkout.base.PaymentComponent
@@ -154,6 +157,7 @@ internal fun getProviderForType(type: String): PaymentComponentProvider<PaymentC
         PaymentMethodTypes.SEPA -> SepaComponent.PROVIDER
         PaymentMethodTypes.BCMC -> BcmcComponent.PROVIDER
         PaymentMethodTypes.WECHAT_PAY_SDK -> WeChatPayComponent.PROVIDER
+        PaymentMethodTypes.AFTER_PAY -> AfterPayComponent.PROVIDER
         else -> {
             throw CheckoutException("Unable to find component for type - $type")
         }
@@ -228,6 +232,10 @@ internal fun getComponentFor(
             val weChatPayConfiguration: WeChatPayConfiguration = dropInConfiguration.getConfigurationFor(PaymentMethodTypes.WECHAT_PAY_SDK, context)
             WeChatPayComponent.PROVIDER.get(fragment, paymentMethod, weChatPayConfiguration)
         }
+        PaymentMethodTypes.AFTER_PAY -> {
+            val afterPayConfiguration: AfterPayConfiguration = dropInConfiguration.getConfigurationFor(PaymentMethodTypes.AFTER_PAY, context)
+            AfterPayComponent.PROVIDER.get(fragment, paymentMethod, afterPayConfiguration)
+        }
         else -> {
             throw CheckoutException("Unable to find component for type - ${paymentMethod.type}")
         }
@@ -261,6 +269,7 @@ internal fun getViewFor(
         PaymentMethodTypes.SCHEME -> CardView(context)
         PaymentMethodTypes.SEPA -> SepaView(context)
         PaymentMethodTypes.BCMC -> BcmcView(context)
+        PaymentMethodTypes.AFTER_PAY -> AfterPayView(context)
         // GooglePay and WeChatPay do not require a View in Drop-in
         else -> {
             throw CheckoutException("Unable to find view for type - ${paymentMethod.type}")

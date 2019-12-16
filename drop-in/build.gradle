@@ -38,6 +38,7 @@ dependencies {
     androidTestImplementation "com.android.support.test.espresso:espresso-core:$espresso_version"
 
     // Checkout
+    api project(":afterpay-ui")
     api project(":ideal-ui")
     api project(":molpay-ui")
     api project(":dotpay-ui")

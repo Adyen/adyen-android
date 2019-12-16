@@ -10,19 +10,25 @@ package com.adyen.checkout.dropin.service
 
 import android.os.Parcel
 import android.os.Parcelable
+import com.adyen.checkout.core.util.ParcelUtils
 
 /**
  * The result from a server call request on the [DropInService]
  */
-class CallResult(val type: ResultType, val content: String) : Parcelable {
+class CallResult(val type: ResultType, val content: String, val dismissDropIn: Boolean) : Parcelable {
+
+    constructor(type: ResultType, content: String) : this (type, content, false)
 
     constructor(parcel: Parcel) : this(
-        ResultType.valueOf(parcel.readString()!!),
-        parcel.readString()!!)
+        ResultType.valueOf(parcel.readString() ?: "ERROR"),
+        parcel.readString() ?: "PARCEL_FAIL",
+        ParcelUtils.readBoolean(parcel)
+    )
 
-    override fun writeToParcel(dest: Parcel?, flags: Int) {
-        dest?.writeString(type.name)
-        dest?.writeString(content)
+    override fun writeToParcel(dest: Parcel, flags: Int) {
+        dest.writeString(type.name)
+        dest.writeString(content)
+        ParcelUtils.writeBoolean(dest, dismissDropIn)
     }
 
     override fun describeContents(): Int {
@@ -43,9 +49,13 @@ class CallResult(val type: ResultType, val content: String) : Parcelable {
          */
         ACTION,
         /**
-         * Call failed with an error. Content should have the localized error message.
+         * Call failed with an error. Generic error message will be shown.
          */
         ERROR,
+        /**
+         * Call failed with an error. Content should have the localized error message which will be shown in an Alert Dialog.
+         */
+        ERROR_WITH_MESSAGE,
         /**
          * Call wants to wait for asynchronous processing. Content is ignored.
          */

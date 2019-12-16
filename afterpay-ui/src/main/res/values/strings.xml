@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="utf-8"?><!--
+  ~ Copyright (c) 2019 Adyen N.V.
+  ~
+  ~ This file is open source and available under the MIT license. See the LICENSE file for more info.
+  ~
+  ~ Created by arman on 7/11/2019.
+  -->
+
+<resources>
+    <string name="checkout_afterpay_first_name">First name</string>
+    <string name="checkout_afterpay_last_name">Last name</string>
+    <string name="checkout_afterpay_date_of_birth">Date of birth</string>
+    <string name="checkout_afterpay_phone_number">Telephone number</string>
+    <string name="checkout_afterpay_email_address">E-mail address</string>
+    <string name="checkout_afterpay_street">Street</string>
+    <string name="checkout_afterpay_house_number">House number</string>
+    <string name="checkout_afterpay_city">City</string>
+    <string name="checkout_afterpay_postal_code">Postal code</string>
+    <string name="checkout_afterpay_country">Country</string>
+    <string name="checkout_afterpay_agreement_text">I agree with the payment conditions of AfterPay</string>
+
+    <string name="checkout_afterpay_personal_details">Personal details</string>
+    <string name="checkout_afterpay_billing_address">Billing address</string>
+    <string name="checkout_afterpay_delivery_address">Delivery address</string>
+    <string name="checkout_afterpay_male">Male</string>
+    <string name="checkout_afterpay_female">Female</string>
+    <string name="checkout_afterpay_separate_delivery_address">Specify a separate delivery address</string>
+
+    <string name="checkout_afterpay_agreement_nl_nl">I agree with the <a href="https://www.afterpay.nl/nl/algemeen/betalen-met-afterpay/betalingsvoorwaarden">payment conditions</a> of AfterPay</string>
+    <string name="checkout_afterpay_agreement_be_be">I agree with the <a href="https://www.afterpay.be/be/footer/betalen-met-afterpay/betalingsvoorwaarden">payment conditions</a> of AfterPay</string>
+    <string name="checkout_afterpay_personal_details_summery">%1$s %2$s\n%3$s\n%4$s</string>
+    <string name="checkout_afterpay_address_summery">%1$s, %2$s\n%3$s, %4$s, %5$s</string>
+    <string name="checkout_afterpay_is_not_valid">%1$s is not valid</string>
+</resources>

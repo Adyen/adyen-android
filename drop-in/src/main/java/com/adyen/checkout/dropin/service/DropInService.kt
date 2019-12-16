@@ -54,7 +54,7 @@ abstract class DropInService : JobIntentService() {
         /**
          * Get the action sent to the [LocalBroadcastManager] to notify the result of the payments call.
          */
-        fun getCallResultAction(context: Context): String {
+        fun getServiceResultAction(context: Context): String {
             return context.packageName + callResultSuffix
         }
 
@@ -152,7 +152,7 @@ abstract class DropInService : JobIntentService() {
             // send response back to activity
             val resultIntent = Intent()
 
-            resultIntent.action = getCallResultAction(this)
+            resultIntent.action = getServiceResultAction(this)
             resultIntent.putExtra(API_CALL_RESULT_KEY, callResult)
 
             val localBroadcastManager = LocalBroadcastManager.getInstance(this)

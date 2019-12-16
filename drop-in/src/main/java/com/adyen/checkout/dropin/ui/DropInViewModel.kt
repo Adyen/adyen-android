@@ -63,10 +63,10 @@ class DropInViewModel(application: Application) : AndroidViewModel(application),
 
             if (type == null) {
                 Logger.e(TAG, "PaymentMethod type is null")
-            } else if (isSupported(type)) {
+            } else if (PaymentMethodTypes.SUPPORTED_PAYMENT_METHODS.contains(type)) {
                 checkComponentAvailability(getApplication(), paymentMethod, dropInConfiguration, this)
             } else {
-                if (!requiresDetails(paymentMethod)) {
+                if (!PaymentMethodTypes.UNSUPPORTED_PAYMENT_METHODS.contains(type) && !isRedirect(paymentMethod)) {
                     Logger.d(TAG, "No details required - $type")
                     addPaymentMethod(paymentMethod)
                 } else {
@@ -76,18 +76,8 @@ class DropInViewModel(application: Application) : AndroidViewModel(application),
         }
     }
 
-    private fun isSupported(paymentMethodType: String): Boolean {
-
-        if (PaymentMethodTypes.UNSUPPORTED_PAYMENT_METHODS.contains(paymentMethodType)) {
-            Logger.e(TAG, "Unsupported PaymentMethod - $paymentMethodType")
-            return false
-        }
-
-        return PaymentMethodTypes.SUPPORTED_PAYMENT_METHODS.contains(paymentMethodType)
-    }
-
-    private fun requiresDetails(paymentMethod: PaymentMethod): Boolean {
-        // If details is empty or all optional, we can call payments directly.
+    private fun isRedirect(paymentMethod: PaymentMethod): Boolean {
+        // If details is empty or all optional, we can call payments directly and assume it's a redirect.
         paymentMethod.details?.let {
             for (inputDetail in it) {
                 if (!inputDetail.isOptional) {

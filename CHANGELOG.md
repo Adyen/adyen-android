@@ -13,6 +13,15 @@
 [//]: <> (Add changes that not released yet into `Unreleased` section)
 [//]: <> (Comment `Unreleased` section if there are no changes)
 [//]: <> (## [Unreleased])
+## [Unreleased]
+### Added
+- Added AfterPay payment method
+- Drop-in now also returns the `Amount` that started the payment flow if it was passed on the `DropInConfiguration`.
+- Added `CallResult.ResultType.ERROR_WITH_MESSAGE` to specify when a custom error message should be shown in DropIn. 
+### Changed
+- Errors now show in a Dialog instead of a Toast.
+- Updated `GooglePayPaymentMethod` Model object to reflect new API parameters with added card network parameter.
+
 ## [3.5.1] - 2019-11-04
 ### Added
 - `BinValue` and `CardType` included to CardComponentState 

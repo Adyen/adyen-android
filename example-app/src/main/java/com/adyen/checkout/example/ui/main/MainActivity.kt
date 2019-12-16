@@ -18,6 +18,7 @@ import android.view.Menu
 import android.view.MenuItem
 import android.view.View
 import android.widget.Toast
+import com.adyen.checkout.afterpay.AfterPayConfiguration
 import com.adyen.checkout.base.model.PaymentMethodsApiResponse
 import com.adyen.checkout.bcmc.BcmcConfiguration
 import com.adyen.checkout.card.CardConfiguration
@@ -115,18 +116,23 @@ class MainActivity : AppCompatActivity() {
     }
 
     private fun startDropIn(paymentMethodsApiResponse: PaymentMethodsApiResponse) {
+        val test = PaymentMethodsApiResponse()
+        test.groups = listOf()
+
         Logger.d(TAG, "startDropIn")
         setLoading(false)
 
-        val googlePayConfig = GooglePayConfiguration.Builder(
-            this@MainActivity,
-            keyValueStorage.getMerchantAccount()
-        ).build()
+        val googlePayConfig = GooglePayConfiguration.Builder(this@MainActivity, keyValueStorage.getMerchantAccount())
+                .setCountryCode(keyValueStorage.getCountry())
+                .build()
 
         val cardConfiguration =
             CardConfiguration.Builder(this@MainActivity, BuildConfig.PUBLIC_KEY)
                 .setShopperReference(keyValueStorage.getShopperReference())
                 .build()
+
+        val afterPayConfiguration = AfterPayConfiguration
+            .Builder(this, AfterPayConfiguration.CountryCode.NL).build()
 
         val bcmcConfiguration =
             BcmcConfiguration.Builder(this@MainActivity, BuildConfig.PUBLIC_KEY)
@@ -141,6 +147,7 @@ class MainActivity : AppCompatActivity() {
             ExampleSimplifiedDropInService::class.java
         )
             .addCardConfiguration(cardConfiguration)
+            .addAfterPayConfiguration(afterPayConfiguration)
             .addBcmcConfiguration(bcmcConfiguration)
             .addGooglePayConfiguration(googlePayConfig)
 

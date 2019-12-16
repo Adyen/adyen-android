@@ -54,11 +54,7 @@ public class GooglePayComponent extends
         final PaymentData paymentData = getOutputData() != null ? getOutputData().getPaymentData() : null;
 
         final PaymentComponentData<GooglePayPaymentMethod> paymentComponentData = new PaymentComponentData<>();
-        final GooglePayPaymentMethod paymentMethod = new GooglePayPaymentMethod();
-        paymentMethod.setType(PaymentMethodTypes.GOOGLE_PAY);
-        if (paymentData != null) {
-            paymentMethod.setToken(GooglePayUtils.findToken(paymentData));
-        }
+        final GooglePayPaymentMethod paymentMethod = GooglePayUtils.createGooglePayPaymentMethod(paymentData);
         paymentComponentData.setPaymentMethod(paymentMethod);
         return new GooglePayComponentState(paymentComponentData, getOutputData().isValid(), getOutputData().getPaymentData());
     }

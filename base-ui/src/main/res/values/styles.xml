@@ -1,5 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?>
-<!--
+<?xml version="1.0" encoding="utf-8"?><!--
   ~ Copyright (c) 2019 Adyen N.V.
   ~
   ~ This file is open source and available under the MIT license. See the LICENSE file for more info.
@@ -9,10 +8,10 @@
 
 <resources>
     <!-- Placeholder to be overridden by main app -->
-    <style name="AppTheme" parent="Theme.AppCompat.DayNight"/>
+    <style name="AppTheme" parent="Theme.AppCompat.DayNight" />
 
     <!-- Base theme for Checkout -->
-    <style name="AdyenCheckout" parent="AppTheme"/>
+    <style name="AdyenCheckout" parent="AppTheme" />
 
     <!-- Text -->
     <style name="AdyenCheckout.TextAppearance" />
@@ -42,6 +41,8 @@
     <style name="AdyenCheckout.TextInputEditText">
         <item name="android:layout_width">match_parent</item>
         <item name="android:layout_height">@dimen/input_height</item>
+        <item name="android:textCursorDrawable">@drawable/cursor_shape</item>
+        <item name="android:textSize">16sp</item>
     </style>
 
     <style name="AdyenCheckout.RecyclerListItem">
@@ -59,7 +60,7 @@
         <item name="android:padding">@dimen/standard_margin</item>
     </style>
 
-    <style name="AdyenCheckout.Image"/>
+    <style name="AdyenCheckout.Image" />
 
     <style name="AdyenCheckout.Image.Logo" parent="AdyenCheckout.Image">
         <item name="android:layout_width">@dimen/logo_width</item>
@@ -76,6 +77,33 @@
     <style name="AdyenCheckout.ListItemText">
         <item name="android:layout_gravity">center_vertical</item>
         <item name="android:maxHeight">@dimen/logo_width</item>
+    </style>
+
+    <style name="AdyenCheckout.Switch" parent="Widget.AppCompat.CompoundButton.Switch">
+        <item name="android:theme">@style/AdyenCheckout.SwitchTheme</item>
+        <item name="android:textSize">16sp</item>
+        <item name="android:textColor">@color/textColor</item>
+        <item name="android:layout_marginStart">@dimen/standard_quarter_margin</item>
+        <item name="android:layout_marginLeft">@dimen/standard_quarter_margin</item>
+        <item name="android:layout_marginEnd">@dimen/standard_quarter_margin</item>
+        <item name="android:layout_marginRight">@dimen/standard_quarter_margin</item>
+        <item name="android:layout_marginBottom">@dimen/standard_margin</item>
+    </style>
+
+    <style name="AdyenCheckout.SwitchTheme" parent="Widget.AppCompat.CompoundButton.Switch">
+        <item name="colorControlActivated">@color/primaryColor</item>
+    </style>
+
+    <style name="AdyenCheckout.HyperTextView">
+        <item name="android:textColorLink">@color/primaryColor</item>
+    </style>
+
+    <style name="AdyenCheckout.CheckBox" parent="Widget.AppCompat.CompoundButton.CheckBox">
+        <item name="android:theme">@style/AdyenCheckout.CheckBoxTheme</item>
+    </style>
+
+    <style name="AdyenCheckout.CheckBoxTheme" parent="Widget.AppCompat.CompoundButton.Switch">
+        <item name="colorAccent">@color/primaryColor</item>
     </style>
 
 </resources>

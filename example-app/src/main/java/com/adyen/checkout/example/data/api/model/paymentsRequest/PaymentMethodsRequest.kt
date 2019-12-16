@@ -20,5 +20,24 @@ data class PaymentMethodsRequest(
 //    val blockedPaymentMethods: ArrayList<String>,
     val countryCode: String = "NL",
     val shopperLocale: String = "en_US",
-    val channel: String = "android"
+    val channel: String = "android",
+    val telephoneNumber: String = "0612345678",
+    val dateOfBirth: String = "1990-01-01",
+    val shopperEmail: String = "shopper@mystoredemo.io",
+    val shopperName: ShopperName = ShopperName(),
+    val billingAddress: Address = Address(),
+    val deliveryAddress: Address = Address()
+)
+
+@SuppressWarnings("MemberName")
+data class ShopperName(val firstName: String = "Jan", val lastName: String = "Jansen", val gender: String = "MALE")
+
+@SuppressWarnings("MemberName")
+data class Address(
+    val country: String = "NL",
+    val city: String = "Capital",
+    val houseNumberOrName: String = "1",
+    val postalCode: String = "1012 DJ",
+    val stateOrProvince: String = "DC",
+    val street: String = "Main St"
 )

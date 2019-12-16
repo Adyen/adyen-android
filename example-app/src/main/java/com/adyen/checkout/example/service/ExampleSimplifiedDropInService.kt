@@ -8,7 +8,6 @@
 
 package com.adyen.checkout.example.service
 
-import com.adyen.checkout.base.model.payments.Amount
 import com.adyen.checkout.core.log.LogUtil
 import com.adyen.checkout.core.log.Logger
 import com.adyen.checkout.core.model.JsonUtils
@@ -17,7 +16,6 @@ import com.adyen.checkout.example.data.api.model.paymentsRequest.AdditionalData
 import com.adyen.checkout.example.data.storage.KeyValueStorage
 import com.adyen.checkout.example.repositories.paymentMethods.PaymentsRepository
 import com.adyen.checkout.redirect.RedirectComponent
-import com.google.gson.Gson
 import okhttp3.MediaType
 import okhttp3.MediaType.Companion.toMediaType
 import okhttp3.RequestBody.Companion.toRequestBody
@@ -42,15 +40,16 @@ class ExampleSimplifiedDropInService : SimplifiedDropInService() {
 
         // Check out the documentation of this method on the parent DropInService class
         val paymentRequest = createPaymentRequest(
-                paymentComponentData,
-                keyValueStorage.getShopperReference(),
-                keyValueStorage.getAmount(),
-                keyValueStorage.getMerchantAccount(),
-                RedirectComponent.getReturnUrl(applicationContext),
-                AdditionalData(
-                    allow3DS2 = keyValueStorage.isThreeds2Enable().toString(),
-                    executeThreeD = keyValueStorage.isExecuteThreeD().toString()
-                )
+            paymentComponentData,
+            keyValueStorage.getShopperReference(),
+            keyValueStorage.getAmount(),
+            keyValueStorage.getCountry(),
+            keyValueStorage.getMerchantAccount(),
+            RedirectComponent.getReturnUrl(applicationContext),
+            AdditionalData(
+                allow3DS2 = keyValueStorage.isThreeds2Enable().toString(),
+                executeThreeD = keyValueStorage.isExecuteThreeD().toString()
+            )
         )
 
         val requestBody = paymentRequest.toString().toRequestBody(CONTENT_TYPE)
@@ -67,31 +66,6 @@ class ExampleSimplifiedDropInService : SimplifiedDropInService() {
         val call = paymentsRepository.detailsRequest(requestBody)
 
         return makeCall(call)
-    }
-
-    @Suppress("LongParameterList")
-    private fun createPaymentRequest(
-        paymentComponentData: JSONObject,
-        shopperReference: String,
-        amount: Amount,
-        merchantAccount: String,
-        redirectUrl: String,
-        additionalData: AdditionalData
-    ): JSONObject {
-
-        val request = JSONObject()
-
-        request.putOpt("paymentMethod", paymentComponentData.getJSONObject("paymentMethod"))
-        request.put("shopperReference", shopperReference)
-        request.put("storePaymentMethod", paymentComponentData.getBoolean("storePaymentMethod"))
-        request.put("amount", JSONObject(Gson().toJson(amount)))
-        request.put("merchantAccount", merchantAccount)
-        request.put("returnUrl", redirectUrl)
-        request.put("reference", "android-test-components")
-        request.put("channel", "android")
-        request.put("additionalData", JSONObject(Gson().toJson(additionalData)))
-
-        return request
     }
 
     private fun makeCall(call: Call<ResponseBody>): JSONObject? {

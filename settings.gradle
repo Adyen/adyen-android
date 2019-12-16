@@ -1,4 +1,6 @@
 include ':3ds2',
+        ':afterpay-base',
+        ':afterpay-ui',
         ':base-ui',
         ':base-v3',
         ':bcmc-base',
