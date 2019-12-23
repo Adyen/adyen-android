@@ -43,8 +43,10 @@ import com.adyen.threeds2.RuntimeErrorEvent;
 import com.adyen.threeds2.ThreeDS2Service;
 import com.adyen.threeds2.Transaction;
 import com.adyen.threeds2.customization.UiCustomization;
+import com.adyen.threeds2.exception.InvalidInputException;
 import com.adyen.threeds2.exception.SDKAlreadyInitializedException;
 import com.adyen.threeds2.exception.SDKNotInitializedException;
+import com.adyen.threeds2.exception.SDKRuntimeException;
 import com.adyen.threeds2.parameters.ChallengeParameters;
 import com.adyen.threeds2.parameters.ConfigParameters;
 import com.adyen.threeds2.util.AdyenConfigParameters;
@@ -200,6 +202,9 @@ public final class Adyen3DS2Component extends BaseActionComponent implements Cha
                     synchronized (Adyen3DS2Component.this) {
                         ThreeDS2Service.INSTANCE.initialize(context, configParameters, null, mUiCustomization);
                     }
+                } catch (final SDKRuntimeException e) {
+                    notifyException(new ComponentException("Failed to initialize 3DS2 SDK", e));
+                    return;
                 } catch (SDKAlreadyInitializedException e) {
                     // This shouldn't cause any side effect.
                     Logger.w(TAG, "3DS2 Service already initialized.");
@@ -208,14 +213,9 @@ public final class Adyen3DS2Component extends BaseActionComponent implements Cha
                 try {
                     Logger.d(TAG, "create transaction");
                     mTransaction = ThreeDS2Service.INSTANCE.createTransaction(null, null);
-                } catch (final SDKNotInitializedException e) {
-                    ThreadManager.MAIN_HANDLER.post(new Runnable() {
-                            @Override
-                            public void run() {
-                                notifyException(new ComponentException("Failed to create transaction", e));
-                            }
-                        }
-                    );
+                } catch (final SDKNotInitializedException | SDKRuntimeException e) {
+                    notifyException(new ComponentException("Failed to create 3DS2 Transaction", e));
+                    return;
                 }
 
                 final AuthenticationRequestParameters authenticationRequestParameters = mTransaction.getAuthenticationRequestParameters();
@@ -253,7 +253,11 @@ public final class Adyen3DS2Component extends BaseActionComponent implements Cha
         final ChallengeToken challengeToken = ChallengeToken.SERIALIZER.deserialize(challengeTokenJson);
         final ChallengeParameters challengeParameters = createChallengeParameters(challengeToken);
 
-        mTransaction.doChallenge(activity, challengeParameters, this, DEFAULT_CHALLENGE_TIME_OUT);
+        try {
+            mTransaction.doChallenge(activity, challengeParameters, this, DEFAULT_CHALLENGE_TIME_OUT);
+        } catch (InvalidInputException e) {
+            notifyException(new CheckoutException("Error starting challenge", e));
+        }
     }
 
     @NonNull

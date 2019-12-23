@@ -116,6 +116,6 @@ public abstract class BaseActionComponent extends AndroidViewModel implements Ac
     }
 
     protected void notifyException(@NonNull CheckoutException e) {
-        mErrorMutableLiveData.setValue(new ComponentError(e));
+        mErrorMutableLiveData.postValue(new ComponentError(e));
     }
 }

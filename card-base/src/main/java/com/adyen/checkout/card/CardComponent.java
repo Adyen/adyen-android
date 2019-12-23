@@ -50,7 +50,7 @@ public final class CardComponent extends BasePaymentComponent<
     private static final String[] PAYMENT_METHOD_TYPES = {PaymentMethodTypes.SCHEME};
     private static final int BIN_VALUE_LENGTH = 6;
 
-    private final List<CardType> mFilteredSupportedCards = new ArrayList<>();
+    private List<CardType> mFilteredSupportedCards = new ArrayList<>();
     private CardInputData mStoredPaymentInputData;
 
     /**
@@ -232,7 +232,7 @@ public final class CardComponent extends BasePaymentComponent<
 
         if (!TextUtils.isEmpty(cardNumber)) {
             final List<CardType> estimateCardTypes = CardType.estimate(cardNumber);
-            mFilteredSupportedCards.clear();
+            mFilteredSupportedCards = new ArrayList<>();
 
             for (CardType supportedCard : supportedCardTypes) {
                 if (estimateCardTypes.contains(supportedCard)) {

@@ -13,7 +13,12 @@
 [//]: <> (Add changes that not released yet into `Unreleased` section)
 [//]: <> (Comment `Unreleased` section if there are no changes)
 [//]: <> (## [Unreleased])
-## [Unreleased]
+## [3.6.1] - 2019-12-20
+### Fixed
+- Catch SDKRuntimeException and InvalidInputException on 3DS2 Component.
+- Avoid concurrency issue on `mFilteredSupportedCards` in `CardComponent`.
+
+## [3.6.0] - 2019-12-17
 ### Added
 - Added AfterPay payment method
 - Drop-in now also returns the `Amount` that started the payment flow if it was passed on the `DropInConfiguration`.
