@@ -50,10 +50,6 @@ class GenericComponentDialogFragment : BaseComponentDialogFragment() {
             payButton.text = String.format(resources.getString(R.string.pay_button_with_value), value)
         }
 
-        payButton.setOnClickListener {
-            startPayment()
-        }
-
         try {
             componentView = getViewFor(requireContext(), paymentMethod)
             attachComponent(component, componentView)
@@ -63,10 +59,7 @@ class GenericComponentDialogFragment : BaseComponentDialogFragment() {
     }
 
     override fun onChanged(paymentComponentState: PaymentComponentState<in PaymentMethodDetails>?) {
-        if (componentView.isConfirmationRequired()) {
-            @Suppress("UsePropertyAccessSyntax")
-            payButton.isEnabled = paymentComponentState != null && paymentComponentState.isValid()
-        } else {
+        if (!componentView.isConfirmationRequired() && component.state?.isValid == true) {
             startPayment()
         }
     }
@@ -82,7 +75,11 @@ class GenericComponentDialogFragment : BaseComponentDialogFragment() {
 
         if (componentView.isConfirmationRequired()) {
             payButton.setOnClickListener {
-                startPayment()
+                if (component.state?.isValid == true) {
+                    startPayment()
+                } else {
+                    componentView.highlightValidationErrors()
+                }
             }
 
             setInitViewState(BottomSheetBehavior.STATE_EXPANDED)

@@ -70,7 +70,7 @@ public abstract class IssuerListRecyclerView<IssuerListComponentT extends Issuer
     }
 
     @Override
-    public void observeComponentChanges(@NonNull LifecycleOwner lifecycleOwner) {
+    protected void observeComponentChanges(@NonNull LifecycleOwner lifecycleOwner) {
         getComponent().getIssuersLiveData().observe(lifecycleOwner, this);
 
     }
@@ -78,6 +78,12 @@ public abstract class IssuerListRecyclerView<IssuerListComponentT extends Issuer
     @Override
     public boolean isConfirmationRequired() {
         return false;
+    }
+
+    @SuppressWarnings("PMD.EmptyMethodInAbstractClassShouldBeAbstract")
+    @Override
+    public void highlightValidationErrors() {
+        // no implementation
     }
 
     public boolean hideIssuersLogo() {

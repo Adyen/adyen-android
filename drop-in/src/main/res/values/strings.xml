@@ -9,7 +9,7 @@
 <resources>
     <string name="pay_button">Pay</string>
     <string name="pay_button_with_value">Pay %s</string>
-    <string name="payment_methods_header">Payment methods</string>
+    <string name="payment_methods_header">Payment Methods</string>
     <string name="error_dialog_title">Error</string>
     <string name="error_dialog_button">OK</string>
     <string name="payment_failed">Error sending payment. Please try again.</string>
@@ -19,6 +19,6 @@
     <string name="store_payment_methods_header">Saved Payment Methods</string>
     <string name="other_payment_methods">Other payment methods</string>
     <string name="continue_button">Continue</string>
-    <string name="change_payment_method">Change payment method</string>
+    <string name="change_payment_method">Change Payment Method</string>
     <string name="credit_card">Credit Card</string>
 </resources>

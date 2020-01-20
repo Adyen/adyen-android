@@ -1,0 +1,23 @@
+<!--
+  ~ Copyright (c) 2019 Adyen N.V.
+  ~
+  ~ This file is open source and available under the MIT license. See the LICENSE file for more info.
+  ~
+  ~ Created by ran on 13/3/2019.
+  -->
+
+<resources>
+    <string name="checkout_card_number_hint">Kaartnummer</string>
+    <string name="checkout_card_holder_hint">Card Holder</string>
+    <string name="checkout_card_expiry_date_hint">Vervaldatum</string>
+    <string name="checkout_card_security_code_hint">Verificatiecode</string>
+
+    <string name="checkout_card_number_not_valid">Ongeldig kaartnummer</string>
+    <string name="checkout_expiry_date_not_valid">Ongeldige vervaldatum</string>
+    <string name="checkout_security_code_not_valid">Ongeldige beveiligingscode</string>
+    <string name="checkout_holder_name_not_valid">Naam houder ongeldig</string>
+
+    <string name="card_number_4digit">•••• %s</string>
+    <string name="expires_in">%s/%s</string>
+    <string name="store_payment_method">Bewaar voor mijn volgende betaling</string>
+</resources>

@@ -52,9 +52,10 @@ public final class CardView extends AdyenLinearLayout<CardComponent> implements 
     private TextInputLayout mExpiryDateInput;
     private TextInputLayout mSecurityCodeInput;
     private TextInputLayout mCardNumberInput;
+    private SwitchCompat mStorePaymentMethodSwitch;
     private TextInputLayout mCardHolderInput;
 
-    private CardInputData mCardInputData;
+    private final CardInputData mCardInputData = new CardInputData();
 
     private ImageLoader mImageLoader;
 
@@ -81,34 +82,15 @@ public final class CardView extends AdyenLinearLayout<CardComponent> implements 
 
     @Override
     public void initView() {
+        initCardNumberInput();
+        initExpiryDateInput();
+        initSecurityCodeInput();
+        initHolderNameInput();
+
         mCardBrandLogoImageView = findViewById(R.id.cardBrandLogo_imageView);
 
-        final SwitchCompat storePaymentMethod = findViewById(R.id.switch_storePaymentMethod);
-
-        mCardNumberInput = findViewById(R.id.textInputLayout_cardNumber);
-        mCardNumberEditText = (CardNumberInput) mCardNumberInput.getEditText();
-        mCardNumberEditText.setOnChangeListener(new AdyenTextInputEditText.Listener() {
-            @Override
-            public void onTextChanged(Editable editable) {
-                mCardInputData.setCardNumber(mCardNumberEditText.getRawValue());
-                notifyInputDataChanged();
-            }
-        });
-        mCardNumberEditText.setOnFocusChangeListener(new OnFocusChangeListener() {
-            @Override
-            public void onFocusChange(View v, boolean hasFocus) {
-                if (!getComponent().isStoredPaymentMethod()) {
-                    mCardNumberInput.setErrorEnabled(!hasFocus);
-
-                    final CardOutputData outputData = getComponent().getOutputData();
-                    if (!hasFocus && outputData != null && !outputData.getCardNumberField().isValid()) {
-                        mCardNumberInput.setError(getContext().getString(R.string.checkout_card_number_not_valid));
-                    }
-                }
-            }
-        });
-
-        storePaymentMethod.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+        mStorePaymentMethodSwitch = findViewById(R.id.switch_storePaymentMethod);
+        mStorePaymentMethodSwitch.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             @Override
             public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
                 mCardInputData.setStorePayment(isChecked);
@@ -116,87 +98,13 @@ public final class CardView extends AdyenLinearLayout<CardComponent> implements 
             }
         });
 
-        mExpiryDateInput = findViewById(R.id.textInputLayout_expiryDate);
-        mExpiryDateEditText = (ExpiryDateInput) mExpiryDateInput.getEditText();
-        mExpiryDateEditText.setOnChangeListener(new AdyenTextInputEditText.Listener() {
-            @Override
-            public void onTextChanged(Editable editable) {
-
-                mCardInputData.setExpiryDate(mExpiryDateEditText.getDate());
-                notifyInputDataChanged();
-            }
-        });
-        mExpiryDateEditText.setOnFocusChangeListener(new OnFocusChangeListener() {
-            @Override
-            public void onFocusChange(View v, boolean hasFocus) {
-                mExpiryDateInput.setErrorEnabled(!hasFocus);
-
-                final CardOutputData outputData = getComponent().getOutputData();
-                if (!hasFocus && outputData != null && !outputData.getExpiryDateField().isValid()) {
-                    mExpiryDateInput.setError(getContext().getString(R.string.checkout_expiry_date_not_valid));
-                }
-            }
-        });
-
-        mSecurityCodeInput = findViewById(R.id.textInputLayout_securityCode);
-        final SecurityCodeInput securityCodeEditText = (SecurityCodeInput) mSecurityCodeInput.getEditText();
-        securityCodeEditText.setOnChangeListener(new AdyenTextInputEditText.Listener() {
-            @Override
-            public void onTextChanged(Editable editable) {
-                mCardInputData.setSecurityCode(editable.toString());
-                notifyInputDataChanged();
-            }
-        });
-        securityCodeEditText.setOnFocusChangeListener(new OnFocusChangeListener() {
-            @Override
-            public void onFocusChange(View v, boolean hasFocus) {
-                mSecurityCodeInput.setErrorEnabled(!hasFocus);
-
-                final CardOutputData outputData = getComponent().getOutputData();
-                if (!hasFocus && outputData != null && !outputData.getSecurityCodeField().isValid()) {
-                    mSecurityCodeInput.setError(getContext().getString(R.string.checkout_security_code_not_valid));
-                }
-            }
-        });
-
-        mCardHolderInput = findViewById(R.id.textInputLayout_cardHolder);
-        final AdyenTextInputEditText cardHolderEditText = (AdyenTextInputEditText) mCardHolderInput.getEditText();
-        cardHolderEditText.setOnChangeListener(new AdyenTextInputEditText.Listener() {
-            @Override
-            public void onTextChanged(Editable editable) {
-                mCardInputData.setHolderName(editable.toString());
-                notifyInputDataChanged();
-            }
-        });
-        cardHolderEditText.setOnFocusChangeListener(new OnFocusChangeListener() {
-            @Override
-            public void onFocusChange(View v, boolean hasFocus) {
-                mCardHolderInput.setErrorEnabled(!hasFocus);
-
-                final CardOutputData outputData = getComponent().getOutputData();
-                if (!hasFocus && outputData != null && !outputData.getHolderNameField().isValid()) {
-                    mCardHolderInput.setError(getContext().getString(R.string.checkout_holder_name_not_valid));
-                }
-            }
-        });
-
-        mCardInputData = new CardInputData();
 
         if (getComponent().isStoredPaymentMethod()) {
-            final CardInputData storedCardInput = getComponent().getStoredPaymentInputData();
-
-            mCardNumberEditText.setText(
-                    getContext().getString(R.string.card_number_4digit, storedCardInput.getCardNumber()));
-            mCardNumberEditText.setEnabled(false);
-
-            mExpiryDateEditText.setDate(storedCardInput.getExpiryDate());
-            mExpiryDateEditText.setEnabled(false);
-
-            storePaymentMethod.setVisibility(GONE);
-            mCardHolderInput.setVisibility(GONE);
+            //noinspection ConstantConditions
+            setStoredCardInterface(getComponent().getStoredPaymentInputData());
         } else {
             mCardHolderInput.setVisibility(getComponent().isHolderNameRequire() ? VISIBLE : GONE);
-            storePaymentMethod.setVisibility(getComponent().showStorePaymentField() ? VISIBLE : GONE);
+            mStorePaymentMethodSwitch.setVisibility(getComponent().showStorePaymentField() ? VISIBLE : GONE);
         }
     }
 
@@ -213,18 +121,61 @@ public final class CardView extends AdyenLinearLayout<CardComponent> implements 
         }
 
         if (getComponent().isStoredPaymentMethod()) {
+            //noinspection ConstantConditions
             mSecurityCodeInput.getEditText().requestFocus();
         }
     }
 
     @Override
-    public void observeComponentChanges(@NonNull LifecycleOwner lifecycleOwner) {
+    protected void observeComponentChanges(@NonNull LifecycleOwner lifecycleOwner) {
         getComponent().observeOutputData(lifecycleOwner, this);
     }
 
     @Override
     public boolean isConfirmationRequired() {
         return true;
+    }
+
+    @Override
+    public void highlightValidationErrors() {
+
+        final CardOutputData outputData;
+        if (getComponent().getOutputData() != null) {
+            outputData = getComponent().getOutputData();
+        } else {
+            return;
+        }
+
+        boolean isErrorFocused = false;
+
+        if (!outputData.getCardNumberField().isValid()) {
+            isErrorFocused = true;
+            mCardNumberEditText.requestFocus();
+            mCardNumberInput.setError(getContext().getString(R.string.checkout_card_number_not_valid));
+        }
+
+        if (!outputData.getExpiryDateField().isValid()) {
+            if (!isErrorFocused) {
+                isErrorFocused = true;
+                mExpiryDateInput.requestFocus();
+            }
+            mExpiryDateInput.setError(getContext().getString(R.string.checkout_expiry_date_not_valid));
+        }
+
+        if (!outputData.getSecurityCodeField().isValid()) {
+            if (!isErrorFocused) {
+                isErrorFocused = true;
+                mSecurityCodeInput.requestFocus();
+            }
+            mSecurityCodeInput.setError(getContext().getString(R.string.checkout_security_code_not_valid));
+        }
+
+        if (mCardHolderInput.getVisibility() == VISIBLE && !outputData.getHolderNameField().isValid()) {
+            if (!isErrorFocused) {
+                mCardHolderInput.requestFocus();
+            }
+            mCardHolderInput.setError(getContext().getString(R.string.checkout_holder_name_not_valid));
+        }
     }
 
     private void notifyInputDataChanged() {
@@ -240,11 +191,12 @@ public final class CardView extends AdyenLinearLayout<CardComponent> implements 
         if (supportedCardType.isEmpty()) {
             mCardBrandLogoImageView.setStrokeWidth(0f);
             mCardBrandLogoImageView.setImageResource(R.drawable.ic_card);
+            mCardNumberEditText.setAmexCardFormat(false);
         } else {
             mCardBrandLogoImageView.setStrokeWidth(RoundCornerImageView.DEFAULT_STROKE_WIDTH);
             mImageLoader.load(supportedCardType.get(0).getTxVariant(), mCardBrandLogoImageView);
+            mCardNumberEditText.setAmexCardFormat(supportedCardType.contains(CardType.AMERICAN_EXPRESS));
         }
-
     }
 
     private void onExpiryDateValidated(@NonNull ValidatedField<ExpiryDate> validatedExpiryDate) {
@@ -266,5 +218,118 @@ public final class CardView extends AdyenLinearLayout<CardComponent> implements 
         if (getRootView().findFocus() == view) {
             findViewById(view.getNextFocusForwardId()).requestFocus();
         }
+    }
+
+    private void initCardNumberInput() {
+        mCardNumberInput = findViewById(R.id.textInputLayout_cardNumber);
+        mCardNumberEditText = (CardNumberInput) mCardNumberInput.getEditText();
+        //noinspection ConstantConditions
+        mCardNumberEditText.setOnChangeListener(new AdyenTextInputEditText.Listener() {
+            @Override
+            public void onTextChanged(@NonNull Editable editable) {
+                mCardInputData.setCardNumber(mCardNumberEditText.getRawValue());
+                notifyInputDataChanged();
+                mCardNumberInput.setError(null);
+            }
+        });
+        mCardNumberEditText.setOnFocusChangeListener(new OnFocusChangeListener() {
+            @Override
+            public void onFocusChange(View v, boolean hasFocus) {
+                if (!getComponent().isStoredPaymentMethod()) {
+                    final CardOutputData outputData = getComponent().getOutputData();
+                    if (hasFocus) {
+                        mCardNumberInput.setError(null);
+                    } else if (outputData != null && !outputData.getCardNumberField().isValid()) {
+                        mCardNumberInput.setError(getContext().getString(R.string.checkout_card_number_not_valid));
+                    }
+                }
+            }
+        });
+    }
+
+    private void initExpiryDateInput() {
+        mExpiryDateInput = findViewById(R.id.textInputLayout_expiryDate);
+        mExpiryDateEditText = (ExpiryDateInput) mExpiryDateInput.getEditText();
+        //noinspection ConstantConditions
+        mExpiryDateEditText.setOnChangeListener(new AdyenTextInputEditText.Listener() {
+            @Override
+            public void onTextChanged(@NonNull Editable editable) {
+                mCardInputData.setExpiryDate(mExpiryDateEditText.getDate());
+                notifyInputDataChanged();
+                mExpiryDateInput.setError(null);
+            }
+        });
+        mExpiryDateEditText.setOnFocusChangeListener(new OnFocusChangeListener() {
+            @Override
+            public void onFocusChange(View v, boolean hasFocus) {
+                final CardOutputData outputData = getComponent().getOutputData();
+                if (hasFocus) {
+                    mExpiryDateInput.setError(null);
+                } else if (outputData != null && !outputData.getExpiryDateField().isValid()) {
+                    mExpiryDateInput.setError(getContext().getString(R.string.checkout_expiry_date_not_valid));
+                }
+            }
+        });
+    }
+
+    private void initSecurityCodeInput() {
+        mSecurityCodeInput = findViewById(R.id.textInputLayout_securityCode);
+        final SecurityCodeInput securityCodeEditText = (SecurityCodeInput) mSecurityCodeInput.getEditText();
+        //noinspection ConstantConditions
+        securityCodeEditText.setOnChangeListener(new AdyenTextInputEditText.Listener() {
+            @Override
+            public void onTextChanged(@NonNull Editable editable) {
+                mCardInputData.setSecurityCode(editable.toString());
+                notifyInputDataChanged();
+                mSecurityCodeInput.setError(null);
+            }
+        });
+        securityCodeEditText.setOnFocusChangeListener(new OnFocusChangeListener() {
+            @Override
+            public void onFocusChange(View v, boolean hasFocus) {
+                final CardOutputData outputData = getComponent().getOutputData();
+                if (hasFocus) {
+                    mSecurityCodeInput.setError(null);
+                } else if (outputData != null && !outputData.getSecurityCodeField().isValid()) {
+                    mSecurityCodeInput.setError(getContext().getString(R.string.checkout_security_code_not_valid));
+                }
+            }
+        });
+    }
+
+    private void initHolderNameInput() {
+        mCardHolderInput = findViewById(R.id.textInputLayout_cardHolder);
+        final AdyenTextInputEditText cardHolderEditText = (AdyenTextInputEditText) mCardHolderInput.getEditText();
+        //noinspection ConstantConditions
+        cardHolderEditText.setOnChangeListener(new AdyenTextInputEditText.Listener() {
+            @Override
+            public void onTextChanged(@NonNull Editable editable) {
+                mCardInputData.setHolderName(editable.toString());
+                notifyInputDataChanged();
+                mCardHolderInput.setError(null);
+            }
+        });
+        cardHolderEditText.setOnFocusChangeListener(new OnFocusChangeListener() {
+            @Override
+            public void onFocusChange(View v, boolean hasFocus) {
+                final CardOutputData outputData = getComponent().getOutputData();
+                if (hasFocus) {
+                    mCardHolderInput.setError(null);
+                } else if (outputData != null && !outputData.getHolderNameField().isValid()) {
+                    mCardHolderInput.setError(getContext().getString(R.string.checkout_holder_name_not_valid));
+                }
+            }
+        });
+    }
+
+    private void setStoredCardInterface(@NonNull CardInputData storedCardInput) {
+        mCardNumberEditText.setText(getContext().getString(R.string.card_number_4digit, storedCardInput.getCardNumber()));
+        mCardNumberEditText.setEnabled(false);
+
+        mExpiryDateEditText.setDate(storedCardInput.getExpiryDate());
+        mExpiryDateEditText.setEnabled(false);
+
+        mStorePaymentMethodSwitch.setVisibility(GONE);
+        mCardHolderInput.setVisibility(GONE);
     }
 }

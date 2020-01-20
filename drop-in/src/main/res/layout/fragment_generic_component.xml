@@ -42,7 +42,6 @@
             <android.support.v7.widget.AppCompatButton
                 android:id="@+id/payButton"
                 style="@style/AdyenCheckout.Button.Colored"
-                android:enabled="false"
                 android:text="@string/pay_button"/>
         </LinearLayout>
     </android.support.v4.widget.NestedScrollView>

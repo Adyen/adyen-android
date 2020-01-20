@@ -1,5 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?>
-<!--
+<?xml version="1.0" encoding="utf-8"?><!--
   ~ Copyright (c) 2019 Adyen N.V.
   ~
   ~ This file is open source and available under the MIT license. See the LICENSE file for more info.
@@ -8,7 +7,8 @@
   -->
 
 <resources>
-    <style name="AdyenCheckout.Card"/>
+
+    <style name="AdyenCheckout.Card" />
 
     <style name="AdyenCheckout.Image.CardLogo">
         <item name="android:layout_width">@dimen/brand_logo_width</item>
@@ -51,15 +51,8 @@
         <item name="android:inputType">text</item>
     </style>
 
-    <style name="AdyenCheckout.Card.StorePaymentSwitch">
-        <item name="android:layout_width">match_parent</item>
-        <item name="android:layout_height">wrap_content</item>
+    <style name="AdyenCheckout.Card.StorePaymentSwitch" parent="AdyenCheckout.Switch">
         <item name="android:text">@string/store_payment_method</item>
-        <item name="android:layout_marginBottom">@dimen/standard_margin</item>
         <item name="android:textSize">18sp</item>
-        <item name="android:paddingLeft">@dimen/standard_quarter_margin</item>
-        <item name="android:paddingBottom">@dimen/standard_three_quarters_margin</item>
-        <item name="android:paddingRight">@dimen/standard_quarter_margin</item>
-        <item name="colorControlActivated">@color/primaryColor</item>
     </style>
 </resources>

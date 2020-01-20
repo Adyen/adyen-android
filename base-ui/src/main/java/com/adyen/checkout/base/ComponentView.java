@@ -34,16 +34,10 @@ public interface ComponentView<ComponentT extends PaymentComponent> {
 
     /**
      * This function will be called when the component is attached and the view is ready to get initialized.
-     * It's better to find sub views here and add listeners to inputs changes or make the view Visible or Gone depends on the configration of a
+     * It's better to find sub views here and add listeners to inputs changes or make the view Visible or Gone depends on the configuration of a
      * component.
      */
     void initView();
-
-    /**
-     * This function will be called after the component got attach and the view got initialize.
-     * It's better to Observer on live data objects here.
-     */
-    void observeComponentChanges(@NonNull LifecycleOwner lifecycleOwner);
 
     /**
      * Tells if the view interaction requires confirmation from the user to start the payment flow.
@@ -56,4 +50,10 @@ public interface ComponentView<ComponentT extends PaymentComponent> {
      * @return If an update from the component attached to this View requires further user confirmation to continue or not.
      */
     boolean isConfirmationRequired();
+
+    /**
+     * Highlight and focus on the current validation errors for the user to take action.
+     * If the component doesn't need validation or if everything is already valid, nothing will happen.
+     */
+    void highlightValidationErrors();
 }

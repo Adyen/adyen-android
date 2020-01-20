@@ -54,4 +54,10 @@ public abstract class AdyenLinearLayout<ComponentT extends BasePaymentComponent>
         }
         return mComponent;
     }
+
+    /**
+     * This function will be called after the component got attached and the view got initialized.
+     * It's better to Observer on live data objects here.
+     */
+    protected abstract void observeComponentChanges(@NonNull LifecycleOwner lifecycleOwner);
 }

@@ -17,18 +17,20 @@
     <string name="checkout_afterpay_city">City</string>
     <string name="checkout_afterpay_postal_code">Postal code</string>
     <string name="checkout_afterpay_country">Country</string>
-    <string name="checkout_afterpay_agreement_text">I agree with the payment conditions of AfterPay</string>
+    <string name="checkout_afterpay_agreement_text">I agree with the %s of AfterPay</string>
+    <string name="checkout_afterpay_agreement_text_condition">payment conditions</string>
 
     <string name="checkout_afterpay_personal_details">Personal details</string>
     <string name="checkout_afterpay_billing_address">Billing address</string>
-    <string name="checkout_afterpay_delivery_address">Delivery address</string>
+    <string name="checkout_afterpay_delivery_address">Delivery Address</string>
     <string name="checkout_afterpay_male">Male</string>
     <string name="checkout_afterpay_female">Female</string>
     <string name="checkout_afterpay_separate_delivery_address">Specify a separate delivery address</string>
 
-    <string name="checkout_afterpay_agreement_nl_nl">I agree with the <a href="https://www.afterpay.nl/nl/algemeen/betalen-met-afterpay/betalingsvoorwaarden">payment conditions</a> of AfterPay</string>
-    <string name="checkout_afterpay_agreement_be_be">I agree with the <a href="https://www.afterpay.be/be/footer/betalen-met-afterpay/betalingsvoorwaarden">payment conditions</a> of AfterPay</string>
+    <string name="checkout_afterpay_agreement_nl_nl">https://www.afterpay.nl/nl/algemeen/betalen-met-afterpay/betalingsvoorwaarden</string>
+    <string name="checkout_afterpay_agreement_be_be">https://www.afterpay.be/be/footer/betalen-met-afterpay/betalingsvoorwaarden</string>
     <string name="checkout_afterpay_personal_details_summery">%1$s %2$s\n%3$s\n%4$s</string>
     <string name="checkout_afterpay_address_summery">%1$s, %2$s\n%3$s, %4$s, %5$s</string>
+
     <string name="checkout_afterpay_is_not_valid">%1$s is not valid</string>
 </resources>

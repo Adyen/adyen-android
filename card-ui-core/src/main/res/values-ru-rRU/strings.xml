@@ -1,0 +1,23 @@
+<!--
+  ~ Copyright (c) 2019 Adyen N.V.
+  ~
+  ~ This file is open source and available under the MIT license. See the LICENSE file for more info.
+  ~
+  ~ Created by ran on 13/3/2019.
+  -->
+
+<resources>
+    <string name="checkout_card_number_hint">Номер карты</string>
+    <string name="checkout_card_holder_hint">Card Holder</string>
+    <string name="checkout_card_expiry_date_hint">Срок действия</string>
+    <string name="checkout_card_security_code_hint">CVC / CVV</string>
+
+    <string name="checkout_card_number_not_valid">Недействительный номер карты</string>
+    <string name="checkout_expiry_date_not_valid">Недействительный срок действия</string>
+    <string name="checkout_security_code_not_valid">Недействительный защитный код</string>
+    <string name="checkout_holder_name_not_valid">Имя владельца неверно</string>
+
+    <string name="card_number_4digit">•••• %s</string>
+    <string name="expires_in">%s/%s</string>
+    <string name="store_payment_method">Сохранить для следующего платежа</string>
+</resources>

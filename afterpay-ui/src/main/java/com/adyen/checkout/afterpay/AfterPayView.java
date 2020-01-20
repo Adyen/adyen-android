@@ -12,6 +12,7 @@ import android.annotation.SuppressLint;
 import android.arch.lifecycle.LifecycleOwner;
 import android.arch.lifecycle.Observer;
 import android.content.Context;
+import android.net.Uri;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.design.widget.TabLayout;
@@ -19,7 +20,10 @@ import android.support.design.widget.TextInputLayout;
 import android.support.v7.widget.AppCompatCheckBox;
 import android.support.v7.widget.SwitchCompat;
 import android.text.Editable;
+import android.text.SpannableString;
+import android.text.Spanned;
 import android.text.method.LinkMovementMethod;
+import android.text.style.ClickableSpan;
 import android.util.AttributeSet;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -31,11 +35,10 @@ import com.adyen.checkout.afterpay.ui.DateOfBirthInput;
 import com.adyen.checkout.afterpay.ui.R;
 import com.adyen.checkout.base.ui.view.AdyenLinearLayout;
 import com.adyen.checkout.base.ui.view.AdyenTextInputEditText;
+import com.adyen.checkout.base.util.BrowserUtils;
 import com.adyen.checkout.core.code.Lint;
 import com.adyen.checkout.core.log.LogUtil;
 import com.adyen.checkout.core.log.Logger;
-
-import java.util.Locale;
 
 @SuppressWarnings("MethodLength")
 public class AfterPayView extends AdyenLinearLayout<AfterPayComponent> implements Observer<AfterPayOutputData>,
@@ -180,9 +183,28 @@ public class AfterPayView extends AdyenLinearLayout<AfterPayComponent> implement
         checkPersonalDetailsConfiguration(configuration.getPersonalDetailsVisibility());
         checkBillingAddressDetailsConfiguration(configuration.getBillingAddressVisibility());
 
-        final Locale countryLocale = getComponent().getConfiguration().getShopperLocale();
-        mAgreementText.setText(countryLocale.equals(AfterPayConfiguration.CountryCode.NL.getLocale()) ? R.string.checkout_afterpay_agreement_nl_nl
-                : R.string.checkout_afterpay_agreement_be_be);
+        final AfterPayConfiguration.CountryCode countryLocale = getComponent().getConfiguration().getCountryCode();
+        final Context context = getContext();
+
+        final int agreementResId = countryLocale == AfterPayConfiguration.CountryCode.NL
+                ? R.string.checkout_afterpay_agreement_nl_nl
+                : R.string.checkout_afterpay_agreement_be_be;
+
+        final String conditionText = context.getString(R.string.checkout_afterpay_agreement_text_condition);
+        final SpannableString spannableAgreementText = new SpannableString(
+                context.getString(R.string.checkout_afterpay_agreement_text, conditionText));
+
+        final int startOfLinkSpan = spannableAgreementText.toString().indexOf(conditionText);
+        final int endOfLinkSpan = startOfLinkSpan + conditionText.length();
+
+        spannableAgreementText.setSpan(new ClickableSpan() {
+            @Override
+            public void onClick(@NonNull View widget) {
+                context.startActivity(BrowserUtils.createBrowserIntent(Uri.parse(context.getString(agreementResId))));
+            }
+        }, startOfLinkSpan, endOfLinkSpan, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
+
+        mAgreementText.setText(spannableAgreementText);
 
         setInitInputData();
     }
@@ -772,13 +794,18 @@ public class AfterPayView extends AdyenLinearLayout<AfterPayComponent> implement
     }
 
     @Override
-    public void observeComponentChanges(@NonNull LifecycleOwner lifecycleOwner) {
+    protected void observeComponentChanges(@NonNull LifecycleOwner lifecycleOwner) {
         getComponent().observeOutputData(lifecycleOwner, this);
     }
 
     @Override
     public boolean isConfirmationRequired() {
         return true;
+    }
+
+    @Override
+    public void highlightValidationErrors() {
+        // TODO: 2020-01-08 IMPLEMENT
     }
 
     @SuppressLint(Lint.SYNTHETIC)

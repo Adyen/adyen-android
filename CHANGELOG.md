@@ -13,6 +13,16 @@
 [//]: <> (Add changes that not released yet into `Unreleased` section)
 [//]: <> (Comment `Unreleased` section if there are no changes)
 [//]: <> (## [Unreleased])
+
+## [3.6.2] - 2020-01-20
+### Added
+- New translation string files for supported locales.
+- ComponentView classes now have `highlightValidationErrors()` method.
+- Added `Cancelled3DS2Exception` related to [Identify 3DS cancellation](https://github.com/Adyen/adyen-android/issues/159) request.
+- Support American Express card number format.
+### Changed
+- Always enable pay button and highlight validation errors on Drop-in.
+
 ## [3.6.1] - 2019-12-20
 ### Fixed
 - Catch SDKRuntimeException and InvalidInputException on 3DS2 Component.

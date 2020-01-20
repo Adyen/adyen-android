@@ -18,6 +18,7 @@ import android.support.annotation.Nullable;
 import android.text.TextUtils;
 
 import com.adyen.checkout.adyen3ds2.exception.Authentication3DS2Exception;
+import com.adyen.checkout.adyen3ds2.exception.Cancelled3DS2Exception;
 import com.adyen.checkout.adyen3ds2.model.ChallengeResult;
 import com.adyen.checkout.adyen3ds2.model.ChallengeToken;
 import com.adyen.checkout.adyen3ds2.model.FingerprintToken;
@@ -153,7 +154,7 @@ public final class Adyen3DS2Component extends BaseActionComponent implements Cha
     @Override
     public void cancelled() {
         Logger.d(TAG, "challenge cancelled");
-        notifyException(new Authentication3DS2Exception("Challenge canceled."));
+        notifyException(new Cancelled3DS2Exception("Challenge canceled."));
         closeTransaction(getApplication());
     }
 

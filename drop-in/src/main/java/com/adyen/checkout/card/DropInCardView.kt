@@ -61,4 +61,8 @@ class DropInCardView : AdyenLinearLayout<CardComponent>, Observer<CardOutputData
     override fun isConfirmationRequired(): Boolean {
         return true
     }
+
+    override fun highlightValidationErrors() {
+        cardView.highlightValidationErrors()
+    }
 }

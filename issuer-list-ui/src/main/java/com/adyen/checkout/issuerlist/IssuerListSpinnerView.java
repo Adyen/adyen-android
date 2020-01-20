@@ -70,13 +70,19 @@ public abstract class IssuerListSpinnerView<IssuerListComponentT extends IssuerL
     }
 
     @Override
-    public void observeComponentChanges(@NonNull LifecycleOwner lifecycleOwner) {
+    protected void observeComponentChanges(@NonNull LifecycleOwner lifecycleOwner) {
         getComponent().getIssuersLiveData().observe(lifecycleOwner, createIssuersObserver());
     }
 
     @Override
     public boolean isConfirmationRequired() {
         return true;
+    }
+
+    @SuppressWarnings("PMD.EmptyMethodInAbstractClassShouldBeAbstract")
+    @Override
+    public void highlightValidationErrors() {
+        // no implementation
     }
 
     public boolean hideIssuersLogo() {

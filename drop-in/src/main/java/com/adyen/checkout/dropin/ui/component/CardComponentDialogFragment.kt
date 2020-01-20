@@ -62,7 +62,11 @@ class CardComponentDialogFragment : BaseComponentDialogFragment() {
 
         if (dropInCardView.isConfirmationRequired) {
             dropInCardView.payButton.setOnClickListener {
-                startPayment()
+                if (component.state?.isValid == true) {
+                    startPayment()
+                } else {
+                    dropInCardView.highlightValidationErrors()
+                }
             }
 
             setInitViewState(BottomSheetBehavior.STATE_EXPANDED)
@@ -73,6 +77,6 @@ class CardComponentDialogFragment : BaseComponentDialogFragment() {
     }
 
     override fun onChanged(paymentComponentState: PaymentComponentState<in PaymentMethodDetails>?) {
-        dropInCardView.payButton.isEnabled = paymentComponentState != null && paymentComponentState.isValid()
+        // nothing, validation is already checked on focus change and button click
     }
 }

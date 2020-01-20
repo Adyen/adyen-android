@@ -46,7 +46,7 @@ public final class BcmcView extends AdyenLinearLayout<BcmcComponent> implements 
     private TextInputLayout mExpiryDateInput;
     private TextInputLayout mCardNumberInput;
 
-    private BcmcInputData mCardInputData;
+    private final BcmcInputData mCardInputData = new BcmcInputData();
 
     private ImageLoader mImageLoader;
 
@@ -74,50 +74,8 @@ public final class BcmcView extends AdyenLinearLayout<BcmcComponent> implements 
     public void initView() {
         mCardBrandLogoImageView = findViewById(R.id.cardBrandLogo_imageView);
 
-        mCardNumberInput = findViewById(R.id.textInputLayout_cardNumber);
-        mCardNumberEditText = (CardNumberInput) mCardNumberInput.getEditText();
-        mCardNumberEditText.setOnChangeListener(new AdyenTextInputEditText.Listener() {
-            @Override
-            public void onTextChanged(Editable editable) {
-                mCardInputData.setCardNumber(mCardNumberEditText.getRawValue());
-                notifyInputDataChanged();
-            }
-        });
-        mCardNumberEditText.setOnFocusChangeListener(new OnFocusChangeListener() {
-            @Override
-            public void onFocusChange(View v, boolean hasFocus) {
-                mCardNumberInput.setErrorEnabled(!hasFocus);
-
-                final BcmcOutputData outputData = getComponent().getOutputData();
-                if (!hasFocus && outputData != null && !outputData.getCardNumberField().isValid()) {
-                    mCardNumberInput.setError(getContext().getString(R.string.checkout_card_number_not_valid));
-                }
-            }
-        });
-
-        mExpiryDateInput = findViewById(R.id.textInputLayout_expiryDate);
-        mExpiryDateEditText = (ExpiryDateInput) mExpiryDateInput.getEditText();
-        mExpiryDateEditText.setOnChangeListener(new AdyenTextInputEditText.Listener() {
-            @Override
-            public void onTextChanged(Editable editable) {
-
-                mCardInputData.setExpiryDate(mExpiryDateEditText.getDate());
-                notifyInputDataChanged();
-            }
-        });
-        mExpiryDateEditText.setOnFocusChangeListener(new OnFocusChangeListener() {
-            @Override
-            public void onFocusChange(View v, boolean hasFocus) {
-                mExpiryDateInput.setErrorEnabled(!hasFocus);
-
-                final BcmcOutputData outputData = getComponent().getOutputData();
-                if (!hasFocus && outputData != null && !outputData.getExpiryDateField().isValid()) {
-                    mExpiryDateInput.setError(getContext().getString(R.string.checkout_expiry_date_not_valid));
-                }
-            }
-        });
-
-        mCardInputData = new BcmcInputData();
+        initCardNumberInput();
+        initExpiryDateInput();
     }
 
     @Override
@@ -133,13 +91,38 @@ public final class BcmcView extends AdyenLinearLayout<BcmcComponent> implements 
     }
 
     @Override
-    public void observeComponentChanges(@NonNull LifecycleOwner lifecycleOwner) {
+    protected void observeComponentChanges(@NonNull LifecycleOwner lifecycleOwner) {
         getComponent().observeOutputData(lifecycleOwner, this);
     }
 
     @Override
     public boolean isConfirmationRequired() {
         return true;
+    }
+
+    @Override
+    public void highlightValidationErrors() {
+        final BcmcOutputData outputData;
+        if (getComponent().getOutputData() != null) {
+            outputData = getComponent().getOutputData();
+        } else {
+            return;
+        }
+
+        boolean isErrorFocused = false;
+
+        if (!outputData.getCardNumberField().isValid()) {
+            isErrorFocused = true;
+            mCardNumberEditText.requestFocus();
+            mCardNumberInput.setError(getContext().getString(R.string.checkout_card_number_not_valid));
+        }
+
+        if (!outputData.getExpiryDateField().isValid()) {
+            if (!isErrorFocused) {
+                mExpiryDateInput.requestFocus();
+            }
+            mExpiryDateInput.setError(getContext().getString(R.string.checkout_expiry_date_not_valid));
+        }
     }
 
     private void notifyInputDataChanged() {
@@ -172,5 +155,55 @@ public final class BcmcView extends AdyenLinearLayout<BcmcComponent> implements 
         if (getRootView().findFocus() == view) {
             findViewById(view.getNextFocusForwardId()).requestFocus();
         }
+    }
+
+    private void initCardNumberInput() {
+        mCardNumberInput = findViewById(R.id.textInputLayout_cardNumber);
+        mCardNumberEditText = (CardNumberInput) mCardNumberInput.getEditText();
+        //noinspection ConstantConditions
+        mCardNumberEditText.setOnChangeListener(new AdyenTextInputEditText.Listener() {
+            @Override
+            public void onTextChanged(@NonNull Editable editable) {
+                mCardInputData.setCardNumber(mCardNumberEditText.getRawValue());
+                notifyInputDataChanged();
+                mCardNumberInput.setError(null);
+            }
+        });
+        mCardNumberEditText.setOnFocusChangeListener(new OnFocusChangeListener() {
+            @Override
+            public void onFocusChange(View v, boolean hasFocus) {
+                final BcmcOutputData outputData = getComponent().getOutputData();
+                if (hasFocus) {
+                    mCardNumberInput.setError(null);
+                } else if (outputData != null && !outputData.getCardNumberField().isValid()) {
+                    mCardNumberInput.setError(getContext().getString(R.string.checkout_card_number_not_valid));
+                }
+            }
+        });
+    }
+
+    private void initExpiryDateInput() {
+        mExpiryDateInput = findViewById(R.id.textInputLayout_expiryDate);
+        mExpiryDateEditText = (ExpiryDateInput) mExpiryDateInput.getEditText();
+        //noinspection ConstantConditions
+        mExpiryDateEditText.setOnChangeListener(new AdyenTextInputEditText.Listener() {
+            @Override
+            public void onTextChanged(@NonNull Editable editable) {
+                mCardInputData.setExpiryDate(mExpiryDateEditText.getDate());
+                notifyInputDataChanged();
+                mExpiryDateInput.setError(null);
+            }
+        });
+        mExpiryDateEditText.setOnFocusChangeListener(new OnFocusChangeListener() {
+            @Override
+            public void onFocusChange(View v, boolean hasFocus) {
+                final BcmcOutputData outputData = getComponent().getOutputData();
+                if (hasFocus) {
+                    mExpiryDateInput.setError(null);
+                } else if (outputData != null && !outputData.getExpiryDateField().isValid()) {
+                    mExpiryDateInput.setError(getContext().getString(R.string.checkout_expiry_date_not_valid));
+                }
+            }
+        });
     }
 }

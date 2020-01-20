@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="utf-8"?><!--
+  ~ Copyright (c) 2019 Adyen N.V.
+  ~
+  ~ This file is open source and available under the MIT license. See the LICENSE file for more info.
+  ~
+  ~ Created by arman on 7/11/2019.
+  -->
+
+<resources>
+    <string name="checkout_afterpay_first_name">名</string>
+    <string name="checkout_afterpay_last_name">姓</string>
+    <string name="checkout_afterpay_date_of_birth">生年月日</string>
+    <string name="checkout_afterpay_phone_number">電話番号</string>
+    <string name="checkout_afterpay_email_address">Eメールアドレス</string>
+    <string name="checkout_afterpay_street">番地</string>
+    <string name="checkout_afterpay_house_number">部屋番号</string>
+    <string name="checkout_afterpay_city">市区</string>
+    <string name="checkout_afterpay_postal_code">郵便番号</string>
+    <string name="checkout_afterpay_country">国</string>
+    <string name="checkout_afterpay_agreement_text">AfterPayの%sで同意</string>
+    <string name="checkout_afterpay_agreement_text_condition">支払条件</string>
+
+    <string name="checkout_afterpay_personal_details">個人情報</string>
+    <string name="checkout_afterpay_billing_address">ご請求住所</string>
+    <string name="checkout_afterpay_delivery_address">配送先住所</string>
+    <string name="checkout_afterpay_male">男性</string>
+    <string name="checkout_afterpay_female">女性</string>
+    <string name="checkout_afterpay_separate_delivery_address">別の配送先住所を指定してください</string>
+
+    <string name="checkout_afterpay_agreement_nl_nl">https://www.afterpay.nl/nl/algemeen/betalen-met-afterpay/betalingsvoorwaarden</string>
+    <string name="checkout_afterpay_agreement_be_be">https://www.afterpay.be/be/footer/betalen-met-afterpay/betalingsvoorwaarden</string>
+    <string name="checkout_afterpay_personal_details_summery">%1$s %2$s\n%3$s\n%4$s</string>
+    <string name="checkout_afterpay_address_summery">%1$s, %2$s\n%3$s, %4$s, %5$s</string>
+
+    <string name="checkout_afterpay_is_not_valid">%1$s is not valid</string>
+</resources>

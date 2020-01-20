@@ -82,6 +82,7 @@ public class SepaView extends AdyenLinearLayout<SepaComponent> implements Observ
             public void onTextChanged(@NonNull Editable editable) {
                 mSepaInputData.setName(mHolderNameEditText.getRawValue());
                 notifyInputDataChanged();
+                mHolderNameInput.setError(null);
             }
         });
 
@@ -90,15 +91,17 @@ public class SepaView extends AdyenLinearLayout<SepaComponent> implements Observ
             public void onTextChanged(@NonNull Editable editable) {
                 mSepaInputData.setIban(mIbanNumberEditText.getRawValue());
                 notifyInputDataChanged();
+                mIbanNumberInput.setError(null);
             }
         });
+
         mIbanNumberEditText.setOnFocusChangeListener(new OnFocusChangeListener() {
             @Override
             public void onFocusChange(View v, boolean hasFocus) {
-                mIbanNumberInput.setErrorEnabled(!hasFocus);
-
                 final SepaOutputData outputData = getComponent().getOutputData();
-                if (!hasFocus && outputData != null && !outputData.getIbanNumberField().isValid()) {
+                if (hasFocus) {
+                    mIbanNumberInput.setError(null);
+                } else if (outputData != null && !outputData.getIbanNumberField().isValid()) {
                     mIbanNumberInput.setError(getContext().getString(R.string.checkout_iban_not_valid));
                 }
             }
@@ -116,13 +119,40 @@ public class SepaView extends AdyenLinearLayout<SepaComponent> implements Observ
     }
 
     @Override
-    public void observeComponentChanges(@NonNull LifecycleOwner lifecycleOwner) {
+    protected void observeComponentChanges(@NonNull LifecycleOwner lifecycleOwner) {
         getComponent().observeOutputData(lifecycleOwner, this);
     }
 
     @Override
     public boolean isConfirmationRequired() {
         return true;
+    }
+
+    @Override
+    public void highlightValidationErrors() {
+        Logger.d(TAG, "highlightValidationErrors");
+
+        final SepaOutputData outputData;
+        if (getComponent().getOutputData() != null) {
+            outputData = getComponent().getOutputData();
+        } else {
+            return;
+        }
+
+        boolean errorFocused = false;
+
+        if (!outputData.getOwnerNameField().isValid()) {
+            errorFocused = true;
+            mHolderNameInput.requestFocus();
+            mHolderNameInput.setError(getContext().getString(R.string.checkout_holder_name_not_valid));
+        }
+
+        if (!outputData.getIbanNumberField().isValid()) {
+            if (!errorFocused) {
+                mIbanNumberInput.requestFocus();
+            }
+            mIbanNumberInput.setError(getContext().getString(R.string.checkout_iban_not_valid));
+        }
     }
 
     @SuppressLint(Lint.SYNTHETIC)
