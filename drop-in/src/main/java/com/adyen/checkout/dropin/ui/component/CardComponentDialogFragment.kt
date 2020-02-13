@@ -8,6 +8,7 @@
 
 package com.adyen.checkout.dropin.ui.component
 
+import android.arch.lifecycle.ViewModelProviders
 import android.os.Bundle
 import android.support.design.widget.BottomSheetBehavior
 import android.view.LayoutInflater
@@ -16,11 +17,13 @@ import android.view.ViewGroup
 import com.adyen.checkout.base.PaymentComponentState
 import com.adyen.checkout.base.model.payments.request.PaymentMethodDetails
 import com.adyen.checkout.base.util.CurrencyUtils
+import com.adyen.checkout.base.util.PaymentMethodTypes
 import com.adyen.checkout.card.CardComponent
 import com.adyen.checkout.core.exception.CheckoutException
 import com.adyen.checkout.core.log.LogUtil
 import com.adyen.checkout.core.log.Logger
 import com.adyen.checkout.dropin.R
+import com.adyen.checkout.dropin.ui.DropInViewModel
 import com.adyen.checkout.dropin.ui.base.BaseComponentDialogFragment
 import kotlinx.android.synthetic.main.fragment_card_component.dropInCardView
 import kotlinx.android.synthetic.main.view_card_component_dropin.view.header
@@ -48,21 +51,28 @@ class CardComponentDialogFragment : BaseComponentDialogFragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         Logger.d(TAG, "onViewCreated")
 
+        val cardComponent = component as CardComponent
+
         if (!dropInConfiguration.amount.isEmpty) {
             val value = CurrencyUtils.formatAmount(dropInConfiguration.amount, dropInConfiguration.shopperLocale)
             dropInCardView.payButton.text = String.format(resources.getString(R.string.pay_button_with_value), value)
         }
 
+        // Keeping generic component to use the observer from the BaseComponentDialogFragment
         component.observe(this, this)
-        component.observeErrors(this, createErrorHandlerObserver())
+        cardComponent.observeErrors(this, createErrorHandlerObserver())
 
-        dropInCardView.attach(component as CardComponent, this)
+        // try to get the name from the payment methods response
+        activity?.let { activity ->
+            val dropInViewModel = ViewModelProviders.of(activity).get(DropInViewModel::class.java)
+            dropInCardView.header.text = dropInViewModel.paymentMethodsApiResponse.paymentMethods?.find { it.type == PaymentMethodTypes.SCHEME }?.name
+        }
 
-        dropInCardView.header.setText(R.string.credit_card)
+        dropInCardView.attach(cardComponent, this)
 
         if (dropInCardView.isConfirmationRequired) {
             dropInCardView.payButton.setOnClickListener {
-                if (component.state?.isValid == true) {
+                if (cardComponent.state?.isValid == true) {
                     startPayment()
                 } else {
                     dropInCardView.highlightValidationErrors()

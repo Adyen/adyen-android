@@ -62,12 +62,6 @@ public abstract class IssuerListComponent<IssuerListPaymentMethodT extends Issue
 
     @NonNull
     @Override
-    protected IssuerListConfiguration getConfiguration() {
-        return super.getConfiguration();
-    }
-
-    @NonNull
-    @Override
     protected PaymentComponentState<IssuerListPaymentMethodT> createComponentState() {
         final IssuerListPaymentMethodT issuerListPaymentMethod = instantiateTypedPaymentMethod();
 

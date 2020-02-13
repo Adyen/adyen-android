@@ -4,6 +4,12 @@ Adyen Components for Android allows you to accept in-app payments by providing y
 
 For an overview of how you can integrate with Adyen on Android check out the [Documentation Website][docs.android]
 
+<br/>
+
+![DropIn Preview](https://docs-admin.is.adyen.com/user/pages/docs/01.checkout/07.android/01.drop-in/dropin-android.jpg)
+
+<br/>
+
 ## Installation
 
 The Components are available through [jcenter][dl], you only need to add the Gradle dependency.

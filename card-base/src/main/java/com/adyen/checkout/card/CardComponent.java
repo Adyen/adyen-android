@@ -50,7 +50,7 @@ public final class CardComponent extends BasePaymentComponent<
     private static final String[] PAYMENT_METHOD_TYPES = {PaymentMethodTypes.SCHEME};
     private static final int BIN_VALUE_LENGTH = 6;
 
-    private List<CardType> mFilteredSupportedCards = new ArrayList<>();
+    private List<CardType> mFilteredSupportedCards = Collections.emptyList();
     private CardInputData mStoredPaymentInputData;
 
     /**
@@ -78,7 +78,9 @@ public final class CardComponent extends BasePaymentComponent<
 
         final CardType cardType = CardType.getCardTypeByTxVariant(paymentMethod.getBrand());
         if (cardType != null) {
-            mFilteredSupportedCards.add(cardType);
+            final List<CardType> storedCardType = new ArrayList<>();
+            storedCardType.add(cardType);
+            mFilteredSupportedCards = Collections.unmodifiableList(storedCardType);
         }
     }
 
@@ -117,18 +119,12 @@ public final class CardComponent extends BasePaymentComponent<
 
     @NonNull
     @Override
-    protected CardConfiguration getConfiguration() {
-        return super.getConfiguration();
-    }
-
-    @NonNull
-    @Override
     protected CardOutputData onInputDataChanged(@NonNull CardInputData inputData) {
         Logger.v(TAG, "onInputDataChanged");
         return new CardOutputData(
                 validateCardNumber(inputData.getCardNumber()),
                 validateExpiryDate(inputData.getExpiryDate()),
-                validateSecurityCode(inputData.getSecurityCode(), getSupportedFilterCards(inputData.getCardNumber())),
+                validateSecurityCode(inputData.getSecurityCode()),
                 validateHolderName(inputData.getHolderName()),
                 inputData.isStorePaymentEnable()
         );
@@ -154,8 +150,7 @@ public final class CardComponent extends BasePaymentComponent<
 
         final String cardNumber = outputData.getCardNumberField().getValue();
 
-        final List<CardType> cardTypes = getSupportedFilterCards(cardNumber);
-        final CardType firstCardType = !cardTypes.isEmpty() ? cardTypes.get(0) : null;
+        final CardType firstCardType = !mFilteredSupportedCards.isEmpty() ? mFilteredSupportedCards.get(0) : null;
 
         final String binValue = getBinValueFromCardNumber(cardNumber);
 
@@ -218,38 +213,37 @@ public final class CardComponent extends BasePaymentComponent<
     }
 
     @NonNull
-    protected List<CardType> getSupportedFilterCards(@Nullable String cardNumber) {
+    protected List<CardType> getSupportedFilterCards() {
+        return mFilteredSupportedCards;
+    }
 
-        if (isStoredPaymentMethod()) {
-            return mFilteredSupportedCards;
-        }
+    private List<CardType> updateSupportedFilterCards(@Nullable String cardNumber) {
+        Logger.d(TAG, "updateSupportedFilterCards");
 
-        if (cardNumber == null || cardNumber.isEmpty()) {
+        if (TextUtils.isEmpty(cardNumber)) {
             return Collections.emptyList();
         }
 
         final List<CardType> supportedCardTypes = getConfiguration().getSupportedCardTypes();
 
-        if (!TextUtils.isEmpty(cardNumber)) {
-            final List<CardType> estimateCardTypes = CardType.estimate(cardNumber);
-            mFilteredSupportedCards = new ArrayList<>();
 
-            for (CardType supportedCard : supportedCardTypes) {
-                if (estimateCardTypes.contains(supportedCard)) {
-                    mFilteredSupportedCards.add(supportedCard);
-                }
+        final List<CardType> estimateCardTypes = CardType.estimate(cardNumber);
+        final List<CardType> filteredCards = new ArrayList<>();
+
+        for (CardType supportedCard : supportedCardTypes) {
+            if (estimateCardTypes.contains(supportedCard)) {
+                filteredCards.add(supportedCard);
             }
-
-            return mFilteredSupportedCards;
         }
 
-        return getConfiguration().getSupportedCardTypes();
+        return Collections.unmodifiableList(filteredCards);
     }
 
     private ValidatedField<String> validateCardNumber(@NonNull String cardNumber) {
         if (isStoredPaymentMethod()) {
             return new ValidatedField<>(cardNumber, ValidatedField.Validation.VALID);
         } else {
+            mFilteredSupportedCards = updateSupportedFilterCards(cardNumber);
             return CardValidationUtils.validateCardNumber(cardNumber);
         }
     }
@@ -262,12 +256,11 @@ public final class CardComponent extends BasePaymentComponent<
         }
     }
 
-    private ValidatedField<String> validateSecurityCode(@NonNull String securityCode,
-            List<CardType> supportedFilterCards) {
+    private ValidatedField<String> validateSecurityCode(@NonNull String securityCode) {
         final InputDetail securityCodeInputDetail = getInputDetail("cvc");
         final boolean isRequired = securityCodeInputDetail == null || !securityCodeInputDetail.isOptional();
         if (isRequired) {
-            final CardType firstCardType = !supportedFilterCards.isEmpty() ? supportedFilterCards.get(0) : null;
+            final CardType firstCardType = !mFilteredSupportedCards.isEmpty() ? mFilteredSupportedCards.get(0) : null;
             return CardValidationUtils.validateSecurityCode(securityCode, firstCardType);
         } else {
             return new ValidatedField<>(securityCode, ValidatedField.Validation.VALID);

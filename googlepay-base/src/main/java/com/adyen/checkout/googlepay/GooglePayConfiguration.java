@@ -284,6 +284,18 @@ public class GooglePayConfiguration extends Configuration {
             mBuilderMerchantAccount = merchantAccount;
         }
 
+        @Override
+        @NonNull
+        public Builder setShopperLocale(@NonNull Locale builderShopperLocale) {
+            return (Builder) super.setShopperLocale(builderShopperLocale);
+        }
+
+        @Override
+        @NonNull
+        public Builder setEnvironment(@NonNull Environment builderEnvironment) {
+            return (Builder) super.setEnvironment(builderEnvironment);
+        }
+
         @NonNull
         @Override
         public GooglePayConfiguration build() {

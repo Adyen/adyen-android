@@ -103,12 +103,6 @@ public class AfterPayComponent extends BasePaymentComponent<AfterPayConfiguratio
 
     @NonNull
     @Override
-    protected AfterPayConfiguration getConfiguration() {
-        return super.getConfiguration();
-    }
-
-    @NonNull
-    @Override
     protected AfterPayOutputData onInputDataChanged(@NonNull AfterPayInputData inputData) {
         Logger.v(TAG, "onInputDataChanged");
 

@@ -12,12 +12,7 @@ import android.app.Activity
 import android.content.Context
 import android.content.Intent
 import com.adyen.checkout.base.model.PaymentMethodsApiResponse
-import com.adyen.checkout.base.model.paymentmethods.PaymentMethod
-import com.adyen.checkout.base.util.PaymentMethodTypes
-import com.adyen.checkout.card.CardConfiguration
-import com.adyen.checkout.card.data.CardType
 import com.adyen.checkout.core.log.LogUtil
-import com.adyen.checkout.core.log.Logger
 import com.adyen.checkout.dropin.DropIn.Companion.startPayment
 import com.adyen.checkout.dropin.ui.DropInActivity
 
@@ -37,6 +32,9 @@ class DropIn private constructor() {
         private val TAG = LogUtil.getTag()
 
         const val RESULT_KEY = "payment_result"
+
+        const val DROP_IN_PREFS = "drop-in-shared-prefs"
+        const val LOCALE_PREF = "drop-in-locale"
 
         const val DROP_IN_REQUEST_CODE = 529
 
@@ -61,40 +59,16 @@ class DropIn private constructor() {
             dropInConfiguration: DropInConfiguration
         ) {
 
-            for (each in paymentMethodsApiResponse.paymentMethods!!) {
-                if (each.type == PaymentMethodTypes.SCHEME) {
-                    this.handleSupportedCards(dropInConfiguration, each, context)
-                    break
-                }
-            }
+            // Add locale to prefs
+            context.getSharedPreferences(DROP_IN_PREFS, Context.MODE_PRIVATE).edit()
+                    .putString(LOCALE_PREF, dropInConfiguration.shopperLocale.toString())
+                    .apply()
 
             val intent = DropInActivity.createIntent(context, dropInConfiguration, paymentMethodsApiResponse)
             if (context is Activity) {
                 context.startActivityForResult(intent, DROP_IN_REQUEST_CODE)
             } else {
                 context.startActivity(intent)
-            }
-        }
-
-        /**
-         * Try to get supported cards from API response when [CardConfiguration] supported cards are default ones.
-         */
-        @Suppress("SpreadOperator")
-        private fun handleSupportedCards(dropInConfiguration: DropInConfiguration, schemePaymentMethod: PaymentMethod, context: Context) {
-
-            var cardConfiguration = dropInConfiguration.getConfigurationFor<CardConfiguration>(PaymentMethodTypes.SCHEME, context)
-
-            if (cardConfiguration.supportedCardTypes == CardConfiguration.DEFAULT_SUPPORTED_CARDS_LIST) {
-                var supportedCardTypesFromApi = schemePaymentMethod.brands?.mapNotNull { brand -> CardType.getCardTypeByTxVariant(brand) }
-                if (!supportedCardTypesFromApi.isNullOrEmpty()) {
-                    Logger.d(TAG, "Updating supported cards to - $supportedCardTypesFromApi")
-                    val newCardConfiguration = cardConfiguration
-                        .newBuilder()
-                        .setSupportedCardTypes(*supportedCardTypesFromApi.orEmpty().toTypedArray())
-                        .build()
-
-                    dropInConfiguration.availableConfigs[PaymentMethodTypes.SCHEME] = newCardConfiguration
-                }
             }
         }
 

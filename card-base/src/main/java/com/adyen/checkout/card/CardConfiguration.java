@@ -36,8 +36,8 @@ public class CardConfiguration extends Configuration {
     private static final CardType[] DEFAULT_SUPPORTED_CARDS =
             new CardType[]{CardType.VISA, CardType.AMERICAN_EXPRESS, CardType.MASTERCARD};
 
-    private static final CardType[] BLACK_LIST_CARDS =
-            new CardType[]{CardType.BCMC};
+    // BCMC is only supported in it's own component.
+    private static final CardType[] BLACKLISTED_CARDS = new CardType[]{CardType.BCMC};
 
     public static final List<CardType> DEFAULT_SUPPORTED_CARDS_LIST =
             Collections.unmodifiableList(Arrays.asList(DEFAULT_SUPPORTED_CARDS));
@@ -197,7 +197,7 @@ public class CardConfiguration extends Configuration {
 
         private String mBuilderPublicKey;
 
-        private List<CardType> mBuilderSupportedCardTypes = DEFAULT_SUPPORTED_CARDS_LIST;
+        private List<CardType> mBuilderSupportedCardTypes = Collections.emptyList();
         private boolean mBuilderHolderNameRequire;
         private boolean mBuilderShowStorePaymentField = true;
         private String mShopperReference;
@@ -262,11 +262,25 @@ public class CardConfiguration extends Configuration {
             mBuilderPublicKey = publicKey;
         }
 
+        @Override
+        @NonNull
+        public Builder setShopperLocale(@NonNull Locale builderShopperLocale) {
+            return (Builder) super.setShopperLocale(builderShopperLocale);
+        }
+
+        @Override
+        @NonNull
+        public Builder setEnvironment(@NonNull Environment builderEnvironment) {
+            return (Builder) super.setEnvironment(builderEnvironment);
+        }
+
         /**
          * @param publicKey The public key to be used for encryption. You can get it from the Customer Area.
          */
-        public void setPublicKey(@NonNull String publicKey) {
+        @NonNull
+        public Builder setPublicKey(@NonNull String publicKey) {
             mBuilderPublicKey = publicKey;
+            return this;
         }
 
         /**
@@ -278,10 +292,10 @@ public class CardConfiguration extends Configuration {
         @NonNull
         public Builder setSupportedCardTypes(@NonNull CardType... supportCardTypes) {
 
-            final List supportCards = new ArrayList(Arrays.asList(supportCardTypes));
-            supportCards.removeAll(Arrays.asList(BLACK_LIST_CARDS));
+            final List<CardType> supportedCards = new ArrayList<>(Arrays.asList(supportCardTypes));
+            supportedCards.removeAll(Arrays.asList(BLACKLISTED_CARDS));
 
-            this.mBuilderSupportedCardTypes = supportCards;
+            mBuilderSupportedCardTypes = supportedCards;
             return this;
         }
 
@@ -293,7 +307,7 @@ public class CardConfiguration extends Configuration {
          */
         @NonNull
         public Builder setHolderNameRequire(boolean holderNameRequire) {
-            this.mBuilderHolderNameRequire = holderNameRequire;
+            mBuilderHolderNameRequire = holderNameRequire;
             return this;
         }
 
@@ -305,13 +319,13 @@ public class CardConfiguration extends Configuration {
          */
         @NonNull
         public Builder setShowStorePaymentField(boolean showStorePaymentField) {
-            this.mBuilderShowStorePaymentField = showStorePaymentField;
+            mBuilderShowStorePaymentField = showStorePaymentField;
             return this;
         }
 
         @NonNull
         public Builder setShopperReference(@NonNull String shopperReference) {
-            this.mShopperReference = shopperReference;
+            mShopperReference = shopperReference;
             return this;
         }
 

@@ -14,6 +14,17 @@
 [//]: <> (Comment `Unreleased` section if there are no changes)
 [//]: <> (## [Unreleased])
 
+## [3.6.3] - 2020-02-11
+### Added
+- Now Drop-in and Components will forcefully try to get localized strings from the ShopperLocale set in the configuration object.
+### Changed
+- `CardComponent` initialization will now try to check the supported brands from the `PaymentMethod` object if no custom array is provided.
+### Fixed
+- Fix issue with 19 digit card number
+- Added missing translated strings.
+- Fix synchronization issue that could trigger an OOB exception in `CardType` detection.
+- Added proper return type for some Configuration Builder methods.
+
 ## [3.6.2] - 2020-01-20
 ### Added
 - New translation string files for supported locales.

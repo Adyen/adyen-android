@@ -15,11 +15,14 @@ import android.content.BroadcastReceiver
 import android.content.Context
 import android.content.Intent
 import android.content.IntentFilter
+import android.content.res.Configuration
+import android.os.Build
 import android.os.Bundle
 import android.support.v4.app.DialogFragment
 import android.support.v4.content.LocalBroadcastManager
 import android.support.v7.app.AlertDialog
 import android.support.v7.app.AppCompatActivity
+import android.text.TextUtils
 import com.adyen.checkout.base.ActionComponentData
 import com.adyen.checkout.base.ComponentError
 import com.adyen.checkout.base.analytics.AnalyticEvent
@@ -49,6 +52,7 @@ import com.adyen.checkout.googlepay.GooglePayConfiguration
 import com.adyen.checkout.redirect.RedirectUtil
 import com.adyen.checkout.wechatpay.WeChatPayUtils
 import org.json.JSONObject
+import java.util.Locale
 
 /**
  * Activity that presents the available PaymentMethods to the Shopper.
@@ -118,6 +122,11 @@ class DropInActivity : AppCompatActivity(), DropInBottomSheetDialogFragment.Prot
         showPaymentMethodsDialog(true)
     }
 
+    override fun attachBaseContext(newBase: Context?) {
+        Logger.d(TAG, "attachBaseContext")
+        super.attachBaseContext(createLocalizedContext(newBase))
+    }
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         Logger.d(TAG, "onCreate - $savedInstanceState")
@@ -146,6 +155,27 @@ class DropInActivity : AppCompatActivity(), DropInBottomSheetDialogFragment.Prot
         actionHandler.restoreState(savedInstanceState)
 
         sendAnalyticsEvent()
+    }
+
+    // False positive from countryStartPosition
+    @Suppress("MagicNumber")
+    private fun createLocalizedContext(baseContext: Context?): Context? {
+        return if (baseContext == null) {
+            baseContext
+        } else {
+            val localeString = baseContext.getSharedPreferences(DropIn.DROP_IN_PREFS, Context.MODE_PRIVATE).getString(DropIn.LOCALE_PREF, "")
+            Logger.d(TAG, "localeString - $localeString")
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN_MR1 && !TextUtils.isEmpty(localeString)) {
+                val config = Configuration(baseContext.resources.configuration)
+                val languageEndPosition = 2
+                val countryStartPosition = 3
+                config.setLocale(Locale(localeString!!.substring(0, languageEndPosition), localeString.substring(countryStartPosition)))
+                baseContext.createConfigurationContext(config)
+            } else {
+                Logger.e(TAG, "Failed to create localized context.")
+                baseContext
+            }
+        }
     }
 
     private fun initializeBundleVariables(bundle: Bundle): Boolean {

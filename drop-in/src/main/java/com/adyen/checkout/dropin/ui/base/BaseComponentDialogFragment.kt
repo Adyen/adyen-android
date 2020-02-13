@@ -36,7 +36,7 @@ open abstract class BaseComponentDialogFragment : DropInBottomSheetDialogFragmen
     lateinit var component: PaymentComponent<PaymentComponentState<in PaymentMethodDetails>>
     lateinit var dropInConfiguration: DropInConfiguration
 
-    open class BaseCompanion<T : BaseComponentDialogFragment>(var classes: Class<T>) {
+    open class BaseCompanion<T : BaseComponentDialogFragment>(private var classes: Class<T>) {
 
         companion object {
             const val PAYMENT_METHOD = "PAYMENT_METHOD"

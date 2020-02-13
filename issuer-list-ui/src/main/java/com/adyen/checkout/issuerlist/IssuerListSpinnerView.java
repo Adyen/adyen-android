@@ -60,6 +60,12 @@ public abstract class IssuerListSpinnerView<IssuerListComponentT extends IssuerL
         mIssuersSpinner.setOnItemSelectedListener(this);
     }
 
+    @SuppressWarnings("PMD.EmptyMethodInAbstractClassShouldBeAbstract")
+    @Override
+    protected void initLocalizedStrings(@NonNull Context localizedContext) {
+        // no embedded localized strings on this view
+    }
+
     @Override
     public void onComponentAttached() {
         mIssuersAdapter = new IssuerListSpinnerAdapter(getContext(),

@@ -22,7 +22,7 @@ import com.adyen.checkout.dropin.R as dropInR
 
 class DropInCardView : AdyenLinearLayout<CardComponent>, Observer<CardOutputData> {
 
-    lateinit var mCardListAdapter: CardListAdapter
+    private lateinit var mCardListAdapter: CardListAdapter
 
     constructor(context: Context) : this(context, null)
 
@@ -35,6 +35,10 @@ class DropInCardView : AdyenLinearLayout<CardComponent>, Observer<CardOutputData
 
     override fun initView() {
         // nothing
+    }
+
+    override fun initLocalizedStrings(localizedContext: Context) {
+        // drop-in is localized by the activity context already
     }
 
     override fun onComponentAttached() {
@@ -53,7 +57,7 @@ class DropInCardView : AdyenLinearLayout<CardComponent>, Observer<CardOutputData
     override fun onChanged(cardOutputData: CardOutputData?) {
         cardOutputData?.let {
             if (!component.isStoredPaymentMethod) {
-                mCardListAdapter.setFilteredCard(component.getSupportedFilterCards(it.cardNumberField.value))
+                mCardListAdapter.setFilteredCard(component.supportedFilterCards)
             }
         }
     }

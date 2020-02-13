@@ -124,7 +124,12 @@ public final class Logger {
 
         switch (logLevel) {
             case SENSITIVE:
-                // intentional fallthrough
+                if (tr == null) {
+                    Log.wtf(tag, msg);
+                } else {
+                    Log.wtf(tag, msg, tr);
+                }
+                break;
             case Log.VERBOSE:
                 if (tr == null) {
                     Log.v(tag, msg);

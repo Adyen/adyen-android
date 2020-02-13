@@ -11,6 +11,7 @@ package com.adyen.checkout.bcmc;
 import android.arch.lifecycle.LifecycleOwner;
 import android.arch.lifecycle.Observer;
 import android.content.Context;
+import android.content.res.TypedArray;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.design.widget.TextInputLayout;
@@ -71,6 +72,22 @@ public final class BcmcView extends AdyenLinearLayout<BcmcComponent> implements 
     }
 
     @Override
+    protected void initLocalizedStrings(@NonNull Context localizedContext) {
+        final int[] myAttrs = {android.R.attr.hint};
+        TypedArray typedArray;
+
+        // Card Number
+        typedArray = localizedContext.obtainStyledAttributes(R.style.AdyenCheckout_Card_CardNumberInput, myAttrs);
+        mCardNumberInput.setHint(typedArray.getString(0));
+        typedArray.recycle();
+
+        // Expiry Date
+        typedArray = localizedContext.obtainStyledAttributes(R.style.AdyenCheckout_Card_ExpiryDateInput, myAttrs);
+        mExpiryDateInput.setHint(typedArray.getString(0));
+        typedArray.recycle();
+    }
+
+    @Override
     public void initView() {
         mCardBrandLogoImageView = findViewById(R.id.cardBrandLogo_imageView);
 
@@ -114,14 +131,14 @@ public final class BcmcView extends AdyenLinearLayout<BcmcComponent> implements 
         if (!outputData.getCardNumberField().isValid()) {
             isErrorFocused = true;
             mCardNumberEditText.requestFocus();
-            mCardNumberInput.setError(getContext().getString(R.string.checkout_card_number_not_valid));
+            mCardNumberInput.setError(mLocalizedContext.getString(R.string.checkout_card_number_not_valid));
         }
 
         if (!outputData.getExpiryDateField().isValid()) {
             if (!isErrorFocused) {
                 mExpiryDateInput.requestFocus();
             }
-            mExpiryDateInput.setError(getContext().getString(R.string.checkout_expiry_date_not_valid));
+            mExpiryDateInput.setError(mLocalizedContext.getString(R.string.checkout_expiry_date_not_valid));
         }
     }
 
@@ -176,7 +193,7 @@ public final class BcmcView extends AdyenLinearLayout<BcmcComponent> implements 
                 if (hasFocus) {
                     mCardNumberInput.setError(null);
                 } else if (outputData != null && !outputData.getCardNumberField().isValid()) {
-                    mCardNumberInput.setError(getContext().getString(R.string.checkout_card_number_not_valid));
+                    mCardNumberInput.setError(mLocalizedContext.getString(R.string.checkout_card_number_not_valid));
                 }
             }
         });
@@ -201,7 +218,7 @@ public final class BcmcView extends AdyenLinearLayout<BcmcComponent> implements 
                 if (hasFocus) {
                     mExpiryDateInput.setError(null);
                 } else if (outputData != null && !outputData.getExpiryDateField().isValid()) {
-                    mExpiryDateInput.setError(getContext().getString(R.string.checkout_expiry_date_not_valid));
+                    mExpiryDateInput.setError(mLocalizedContext.getString(R.string.checkout_expiry_date_not_valid));
                 }
             }
         });

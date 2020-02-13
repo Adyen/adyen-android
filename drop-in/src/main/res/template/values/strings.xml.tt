@@ -13,11 +13,11 @@
     <string name="error_dialog_title">%%error.title%%</string>
     <string name="error_dialog_button">%%dismissButton%%</string>
     <string name="payment_failed">Error sending payment. Please try again.</string>
-    <string name="action_failed">Error proceeding with payment. Please try again.</string>
-    <string name="component_error">An unexpected error happened.</string>
+    <string name="action_failed">%%resultMessages.Error%%</string>
+    <string name="component_error">%%resultMessages.unknown%%</string>
     <string name="time_out_error">Request timed out. Please try again.</string>
-    <string name="store_payment_methods_header">Saved Payment Methods</string>
-    <string name="other_payment_methods">Other payment methods</string>
+    <string name="store_payment_methods_header">%%paymentMethods.storedMethods%%</string>
+    <string name="other_payment_methods">%%paymentMethods.otherMethods%%</string>
     <string name="continue_button">%%continue%%</string>
     <string name="change_payment_method">%%preselectedPaymentMethod.changeButton.accessibilityLabel%%</string>
     <string name="credit_card">Credit Card</string>

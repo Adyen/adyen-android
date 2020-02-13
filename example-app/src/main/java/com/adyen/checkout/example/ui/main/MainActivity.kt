@@ -37,6 +37,7 @@ import kotlinx.android.synthetic.main.activity_main.progressBar
 import kotlinx.android.synthetic.main.activity_main.startCheckoutButton
 import org.koin.android.ext.android.inject
 import org.koin.android.viewmodel.ext.android.viewModel
+import java.util.Locale
 
 class MainActivity : AppCompatActivity() {
 
@@ -122,20 +123,25 @@ class MainActivity : AppCompatActivity() {
         Logger.d(TAG, "startDropIn")
         setLoading(false)
 
+        val shopperLocaleString = keyValueStorage.getShopperLocale()
+        val localeTags = shopperLocaleString.split(shopperLocaleString[2])
+        val shopperLocale = Locale(localeTags[0], localeTags[1])
+
         val googlePayConfig = GooglePayConfiguration.Builder(this@MainActivity, keyValueStorage.getMerchantAccount())
                 .setCountryCode(keyValueStorage.getCountry())
                 .build()
 
-        val cardConfiguration =
-            CardConfiguration.Builder(this@MainActivity, BuildConfig.PUBLIC_KEY)
-                .setShopperReference(keyValueStorage.getShopperReference())
+        val cardConfiguration = CardConfiguration.Builder(this@MainActivity, BuildConfig.PUBLIC_KEY)
+            .setShopperReference(keyValueStorage.getShopperReference())
+            .setShopperLocale(shopperLocale)
+            .build()
+
+        val afterPayConfiguration = AfterPayConfiguration.Builder(this, AfterPayConfiguration.CountryCode.NL)
+                .setShopperLocale(shopperLocale)
                 .build()
 
-        val afterPayConfiguration = AfterPayConfiguration
-            .Builder(this, AfterPayConfiguration.CountryCode.NL).build()
-
-        val bcmcConfiguration =
-            BcmcConfiguration.Builder(this@MainActivity, BuildConfig.PUBLIC_KEY)
+        val bcmcConfiguration = BcmcConfiguration.Builder(this@MainActivity, BuildConfig.PUBLIC_KEY)
+                .setShopperLocale(shopperLocale)
                 .build()
 
         val resultIntent = Intent(this, MainActivity::class.java)
@@ -146,6 +152,7 @@ class MainActivity : AppCompatActivity() {
             resultIntent,
             ExampleSimplifiedDropInService::class.java
         )
+            .setShopperLocale(shopperLocale)
             .addCardConfiguration(cardConfiguration)
             .addAfterPayConfiguration(afterPayConfiguration)
             .addBcmcConfiguration(bcmcConfiguration)

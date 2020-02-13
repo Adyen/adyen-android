@@ -183,16 +183,20 @@ public class AfterPayView extends AdyenLinearLayout<AfterPayComponent> implement
         checkPersonalDetailsConfiguration(configuration.getPersonalDetailsVisibility());
         checkBillingAddressDetailsConfiguration(configuration.getBillingAddressVisibility());
 
+        setInitInputData();
+    }
+
+    @Override
+    protected void initLocalizedStrings(@NonNull final Context localizedContext) {
         final AfterPayConfiguration.CountryCode countryLocale = getComponent().getConfiguration().getCountryCode();
-        final Context context = getContext();
 
         final int agreementResId = countryLocale == AfterPayConfiguration.CountryCode.NL
                 ? R.string.checkout_afterpay_agreement_nl_nl
                 : R.string.checkout_afterpay_agreement_be_be;
 
-        final String conditionText = context.getString(R.string.checkout_afterpay_agreement_text_condition);
+        final String conditionText = localizedContext.getString(R.string.checkout_afterpay_agreement_text_condition);
         final SpannableString spannableAgreementText = new SpannableString(
-                context.getString(R.string.checkout_afterpay_agreement_text, conditionText));
+                localizedContext.getString(R.string.checkout_afterpay_agreement_text, conditionText));
 
         final int startOfLinkSpan = spannableAgreementText.toString().indexOf(conditionText);
         final int endOfLinkSpan = startOfLinkSpan + conditionText.length();
@@ -200,13 +204,13 @@ public class AfterPayView extends AdyenLinearLayout<AfterPayComponent> implement
         spannableAgreementText.setSpan(new ClickableSpan() {
             @Override
             public void onClick(@NonNull View widget) {
-                context.startActivity(BrowserUtils.createBrowserIntent(Uri.parse(context.getString(agreementResId))));
+                getContext().startActivity(BrowserUtils.createBrowserIntent(Uri.parse(localizedContext.getString(agreementResId))));
             }
         }, startOfLinkSpan, endOfLinkSpan, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
 
         mAgreementText.setText(spannableAgreementText);
 
-        setInitInputData();
+        // TODO implement the individual strings for standalone component.
     }
 
     private void bindPersonalDetails() {

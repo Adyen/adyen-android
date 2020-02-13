@@ -44,12 +44,16 @@ public abstract class BaseConfigurationBuilder<ConfigurationT extends Configurat
         mBuilderEnvironment = environment;
     }
 
-    public void setShopperLocale(@NonNull Locale builderShopperLocale) {
+    @NonNull
+    public BaseConfigurationBuilder setShopperLocale(@NonNull Locale builderShopperLocale) {
         mBuilderShopperLocale = builderShopperLocale;
+        return this;
     }
 
-    public void setEnvironment(@NonNull Environment builderEnvironment) {
+    @NonNull
+    public BaseConfigurationBuilder setEnvironment(@NonNull Environment builderEnvironment) {
         mBuilderEnvironment = builderEnvironment;
+        return this;
     }
 
     @NonNull

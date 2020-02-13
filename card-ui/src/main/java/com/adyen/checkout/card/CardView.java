@@ -11,6 +11,7 @@ package com.adyen.checkout.card;
 import android.arch.lifecycle.LifecycleOwner;
 import android.arch.lifecycle.Observer;
 import android.content.Context;
+import android.content.res.TypedArray;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.design.widget.TextInputLayout;
@@ -109,6 +110,39 @@ public final class CardView extends AdyenLinearLayout<CardComponent> implements 
     }
 
     @Override
+    protected void initLocalizedStrings(@NonNull Context localizedContext) {
+
+        int[] myAttrs = {android.R.attr.hint};
+        TypedArray typedArray;
+
+        // Card Number
+        typedArray = localizedContext.obtainStyledAttributes(R.style.AdyenCheckout_Card_CardNumberInput, myAttrs);
+        mCardNumberInput.setHint(typedArray.getString(0));
+        typedArray.recycle();
+
+        // Expiry Date
+        typedArray = localizedContext.obtainStyledAttributes(R.style.AdyenCheckout_Card_ExpiryDateInput, myAttrs);
+        mExpiryDateInput.setHint(typedArray.getString(0));
+        typedArray.recycle();
+
+        // Security Code
+        typedArray = localizedContext.obtainStyledAttributes(R.style.AdyenCheckout_Card_SecurityCodeInput, myAttrs);
+        mSecurityCodeInput.setHint(typedArray.getString(0));
+        typedArray.recycle();
+
+        // Card Holder
+        typedArray = localizedContext.obtainStyledAttributes(R.style.AdyenCheckout_Card_HolderNameInput, myAttrs);
+        mCardHolderInput.setHint(typedArray.getString(0));
+        typedArray.recycle();
+
+        // Store Switch
+        myAttrs = new int[] {android.R.attr.text};
+        typedArray = localizedContext.obtainStyledAttributes(R.style.AdyenCheckout_Card_StorePaymentSwitch, myAttrs);
+        mStorePaymentMethodSwitch.setText(typedArray.getString(0));
+        typedArray.recycle();
+    }
+
+    @Override
     public void onComponentAttached() {
         mImageLoader = ImageLoader.getInstance(getContext(), getComponent().getConfiguration().getEnvironment());
     }
@@ -151,7 +185,7 @@ public final class CardView extends AdyenLinearLayout<CardComponent> implements 
         if (!outputData.getCardNumberField().isValid()) {
             isErrorFocused = true;
             mCardNumberEditText.requestFocus();
-            mCardNumberInput.setError(getContext().getString(R.string.checkout_card_number_not_valid));
+            mCardNumberInput.setError(mLocalizedContext.getString(R.string.checkout_card_number_not_valid));
         }
 
         if (!outputData.getExpiryDateField().isValid()) {
@@ -159,7 +193,7 @@ public final class CardView extends AdyenLinearLayout<CardComponent> implements 
                 isErrorFocused = true;
                 mExpiryDateInput.requestFocus();
             }
-            mExpiryDateInput.setError(getContext().getString(R.string.checkout_expiry_date_not_valid));
+            mExpiryDateInput.setError(mLocalizedContext.getString(R.string.checkout_expiry_date_not_valid));
         }
 
         if (!outputData.getSecurityCodeField().isValid()) {
@@ -167,14 +201,14 @@ public final class CardView extends AdyenLinearLayout<CardComponent> implements 
                 isErrorFocused = true;
                 mSecurityCodeInput.requestFocus();
             }
-            mSecurityCodeInput.setError(getContext().getString(R.string.checkout_security_code_not_valid));
+            mSecurityCodeInput.setError(mLocalizedContext.getString(R.string.checkout_security_code_not_valid));
         }
 
         if (mCardHolderInput.getVisibility() == VISIBLE && !outputData.getHolderNameField().isValid()) {
             if (!isErrorFocused) {
                 mCardHolderInput.requestFocus();
             }
-            mCardHolderInput.setError(getContext().getString(R.string.checkout_holder_name_not_valid));
+            mCardHolderInput.setError(mLocalizedContext.getString(R.string.checkout_holder_name_not_valid));
         }
     }
 
@@ -187,7 +221,7 @@ public final class CardView extends AdyenLinearLayout<CardComponent> implements 
             changeFocusOfInput(validatedNumber.getValue());
         }
 
-        final List<CardType> supportedCardType = getComponent().getSupportedFilterCards(validatedNumber.getValue());
+        final List<CardType> supportedCardType = getComponent().getSupportedFilterCards();
         if (supportedCardType.isEmpty()) {
             mCardBrandLogoImageView.setStrokeWidth(0f);
             mCardBrandLogoImageView.setImageResource(R.drawable.ic_card);
@@ -240,7 +274,7 @@ public final class CardView extends AdyenLinearLayout<CardComponent> implements 
                     if (hasFocus) {
                         mCardNumberInput.setError(null);
                     } else if (outputData != null && !outputData.getCardNumberField().isValid()) {
-                        mCardNumberInput.setError(getContext().getString(R.string.checkout_card_number_not_valid));
+                        mCardNumberInput.setError(mLocalizedContext.getString(R.string.checkout_card_number_not_valid));
                     }
                 }
             }
@@ -266,7 +300,7 @@ public final class CardView extends AdyenLinearLayout<CardComponent> implements 
                 if (hasFocus) {
                     mExpiryDateInput.setError(null);
                 } else if (outputData != null && !outputData.getExpiryDateField().isValid()) {
-                    mExpiryDateInput.setError(getContext().getString(R.string.checkout_expiry_date_not_valid));
+                    mExpiryDateInput.setError(mLocalizedContext.getString(R.string.checkout_expiry_date_not_valid));
                 }
             }
         });
@@ -291,7 +325,7 @@ public final class CardView extends AdyenLinearLayout<CardComponent> implements 
                 if (hasFocus) {
                     mSecurityCodeInput.setError(null);
                 } else if (outputData != null && !outputData.getSecurityCodeField().isValid()) {
-                    mSecurityCodeInput.setError(getContext().getString(R.string.checkout_security_code_not_valid));
+                    mSecurityCodeInput.setError(mLocalizedContext.getString(R.string.checkout_security_code_not_valid));
                 }
             }
         });
@@ -316,14 +350,14 @@ public final class CardView extends AdyenLinearLayout<CardComponent> implements 
                 if (hasFocus) {
                     mCardHolderInput.setError(null);
                 } else if (outputData != null && !outputData.getHolderNameField().isValid()) {
-                    mCardHolderInput.setError(getContext().getString(R.string.checkout_holder_name_not_valid));
+                    mCardHolderInput.setError(mLocalizedContext.getString(R.string.checkout_holder_name_not_valid));
                 }
             }
         });
     }
 
     private void setStoredCardInterface(@NonNull CardInputData storedCardInput) {
-        mCardNumberEditText.setText(getContext().getString(R.string.card_number_4digit, storedCardInput.getCardNumber()));
+        mCardNumberEditText.setText(mLocalizedContext.getString(R.string.card_number_4digit, storedCardInput.getCardNumber()));
         mCardNumberEditText.setEnabled(false);
 
         mExpiryDateEditText.setDate(storedCardInput.getExpiryDate());

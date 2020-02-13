@@ -8,7 +8,7 @@
 
 <resources>
     <string name="checkout_card_number_hint">Número de tarjeta</string>
-    <string name="checkout_card_holder_hint">Card Holder</string>
+    <string name="checkout_card_holder_hint">Nombre en la tarjeta</string>
     <string name="checkout_card_expiry_date_hint">Fecha de expiración</string>
     <string name="checkout_card_security_code_hint">CVC / CVV</string>
 

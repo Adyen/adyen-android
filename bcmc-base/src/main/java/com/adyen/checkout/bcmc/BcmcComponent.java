@@ -53,12 +53,6 @@ public final class BcmcComponent extends BasePaymentComponent<BcmcConfiguration,
 
     @NonNull
     @Override
-    protected BcmcConfiguration getConfiguration() {
-        return super.getConfiguration();
-    }
-
-    @NonNull
-    @Override
     protected BcmcOutputData onInputDataChanged(@NonNull BcmcInputData inputData) {
         Logger.v(TAG, "onInputDataChanged");
         return new BcmcOutputData(

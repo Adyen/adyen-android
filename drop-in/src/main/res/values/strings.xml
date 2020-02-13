@@ -13,11 +13,11 @@
     <string name="error_dialog_title">Error</string>
     <string name="error_dialog_button">OK</string>
     <string name="payment_failed">Error sending payment. Please try again.</string>
-    <string name="action_failed">Error proceeding with payment. Please try again.</string>
-    <string name="component_error">An unexpected error happened.</string>
+    <string name="action_failed">There was an error while processing your payment. Please try again later.</string>
+    <string name="component_error">Something went wrong.</string>
     <string name="time_out_error">Request timed out. Please try again.</string>
-    <string name="store_payment_methods_header">Saved Payment Methods</string>
-    <string name="other_payment_methods">Other payment methods</string>
+    <string name="store_payment_methods_header">Your payment methods</string>
+    <string name="other_payment_methods">Select other method</string>
     <string name="continue_button">Continue</string>
     <string name="change_payment_method">Change Payment Method</string>
     <string name="credit_card">Credit Card</string>

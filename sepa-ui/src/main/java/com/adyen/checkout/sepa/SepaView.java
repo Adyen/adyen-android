@@ -12,6 +12,7 @@ import android.annotation.SuppressLint;
 import android.arch.lifecycle.LifecycleOwner;
 import android.arch.lifecycle.Observer;
 import android.content.Context;
+import android.content.res.TypedArray;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.design.widget.TextInputLayout;
@@ -67,6 +68,22 @@ public class SepaView extends AdyenLinearLayout<SepaComponent> implements Observ
     }
 
     @Override
+    protected void initLocalizedStrings(@NonNull Context localizedContext) {
+        final int[] myAttrs = {android.R.attr.hint};
+        TypedArray typedArray;
+
+        // Holder name
+        typedArray = localizedContext.obtainStyledAttributes(R.style.AdyenCheckout_Sepa_HolderNameInput, myAttrs);
+        mHolderNameInput.setHint(typedArray.getString(0));
+        typedArray.recycle();
+
+        // Account Number
+        typedArray = localizedContext.obtainStyledAttributes(R.style.AdyenCheckout_Sepa_AccountNumberInput, myAttrs);
+        mIbanNumberInput.setHint(typedArray.getString(0));
+        typedArray.recycle();
+    }
+
+    @Override
     public void initView() {
         mHolderNameInput = findViewById(R.id.textInputLayout_holderName);
         mIbanNumberInput = findViewById(R.id.textInputLayout_ibanNumber);
@@ -102,7 +119,7 @@ public class SepaView extends AdyenLinearLayout<SepaComponent> implements Observ
                 if (hasFocus) {
                     mIbanNumberInput.setError(null);
                 } else if (outputData != null && !outputData.getIbanNumberField().isValid()) {
-                    mIbanNumberInput.setError(getContext().getString(R.string.checkout_iban_not_valid));
+                    mIbanNumberInput.setError(mLocalizedContext.getString(R.string.checkout_iban_not_valid));
                 }
             }
         });
@@ -144,14 +161,14 @@ public class SepaView extends AdyenLinearLayout<SepaComponent> implements Observ
         if (!outputData.getOwnerNameField().isValid()) {
             errorFocused = true;
             mHolderNameInput.requestFocus();
-            mHolderNameInput.setError(getContext().getString(R.string.checkout_holder_name_not_valid));
+            mHolderNameInput.setError(mLocalizedContext.getString(R.string.checkout_holder_name_not_valid));
         }
 
         if (!outputData.getIbanNumberField().isValid()) {
             if (!errorFocused) {
                 mIbanNumberInput.requestFocus();
             }
-            mIbanNumberInput.setError(getContext().getString(R.string.checkout_iban_not_valid));
+            mIbanNumberInput.setError(mLocalizedContext.getString(R.string.checkout_iban_not_valid));
         }
     }
 

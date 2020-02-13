@@ -32,7 +32,7 @@
             app:layout_constrainedWidth="true"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent"
-            tools:text="Header" />
+            android:text="@string/credit_card" />
 
         <android.support.v7.widget.RecyclerView
             android:id="@+id/recyclerView_cardList"

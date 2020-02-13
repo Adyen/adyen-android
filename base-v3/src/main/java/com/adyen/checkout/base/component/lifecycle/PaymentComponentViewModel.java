@@ -34,7 +34,7 @@ public abstract class PaymentComponentViewModel<ConfigurationT extends Configura
     }
 
     @NonNull
-    protected ConfigurationT getConfiguration() {
+    public ConfigurationT getConfiguration() {
         return mConfiguration;
     }
 }

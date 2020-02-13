@@ -13,11 +13,11 @@
     <string name="error_dialog_title">エラー</string>
     <string name="error_dialog_button">OK</string>
     <string name="payment_failed">Error sending payment. Please try again.</string>
-    <string name="action_failed">Error proceeding with payment. Please try again.</string>
-    <string name="component_error">An unexpected error happened.</string>
+    <string name="action_failed">支払の処理中にエラーが発生しました。後でもう一度やり直してください。</string>
+    <string name="component_error">問題が発生しました。</string>
     <string name="time_out_error">Request timed out. Please try again.</string>
-    <string name="store_payment_methods_header">Saved Payment Methods</string>
-    <string name="other_payment_methods">Other payment methods</string>
+    <string name="store_payment_methods_header">選択済みのお支払い方法</string>
+    <string name="other_payment_methods">その他のお支払いオプション</string>
     <string name="continue_button">続ける</string>
     <string name="change_payment_method">お支払方法を変更する</string>
     <string name="credit_card">Credit Card</string>

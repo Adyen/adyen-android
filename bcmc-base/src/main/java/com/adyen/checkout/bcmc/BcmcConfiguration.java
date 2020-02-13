@@ -122,6 +122,18 @@ public class BcmcConfiguration extends Configuration {
             mBuilderPublicKey = publicKey;
         }
 
+        @Override
+        @NonNull
+        public Builder setShopperLocale(@NonNull Locale builderShopperLocale) {
+            return (Builder) super.setShopperLocale(builderShopperLocale);
+        }
+
+        @Override
+        @NonNull
+        public Builder setEnvironment(@NonNull Environment builderEnvironment) {
+            return (Builder) super.setEnvironment(builderEnvironment);
+        }
+
         /**
          * @param publicKey The public key to be used for encryption. You can get it from the Customer Area.
          */

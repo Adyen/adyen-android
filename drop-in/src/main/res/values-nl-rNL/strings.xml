@@ -13,11 +13,11 @@
     <string name="error_dialog_title">Fout</string>
     <string name="error_dialog_button">Oké</string>
     <string name="payment_failed">Error sending payment. Please try again.</string>
-    <string name="action_failed">Error proceeding with payment. Please try again.</string>
-    <string name="component_error">An unexpected error happened.</string>
+    <string name="action_failed">Er is een fout opgetreden bij het verwerken van uw betaling. Probeer het later opnieuw.</string>
+    <string name="component_error">Er is iets misgegaan.</string>
     <string name="time_out_error">Request timed out. Please try again.</string>
-    <string name="store_payment_methods_header">Saved Payment Methods</string>
-    <string name="other_payment_methods">Other payment methods</string>
+    <string name="store_payment_methods_header">Opgeslagen betaalmethodes</string>
+    <string name="other_payment_methods">Alle betaalmethodes</string>
     <string name="continue_button">Doorgaan</string>
     <string name="change_payment_method">Betalingsmethode wijzigen</string>
     <string name="credit_card">Credit Card</string>

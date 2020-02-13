@@ -40,7 +40,7 @@ public final class CardOutputData implements OutputData {
     }
 
     @NonNull
-    public ValidatedField<String>  getCardNumberField() {
+    public ValidatedField<String> getCardNumberField() {
         return mCardNumberField;
     }
 
@@ -50,12 +50,12 @@ public final class CardOutputData implements OutputData {
     }
 
     @NonNull
-    public ValidatedField<String>  getSecurityCodeField() {
+    public ValidatedField<String> getSecurityCodeField() {
         return mSecurityCodeField;
     }
 
     @NonNull
-    public ValidatedField<String>  getHolderNameField() {
+    public ValidatedField<String> getHolderNameField() {
         return mHolderNameField;
     }
 

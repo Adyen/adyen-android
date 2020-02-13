@@ -13,11 +13,11 @@
     <string name="error_dialog_title">Fel</string>
     <string name="error_dialog_button">OK</string>
     <string name="payment_failed">Error sending payment. Please try again.</string>
-    <string name="action_failed">Error proceeding with payment. Please try again.</string>
-    <string name="component_error">An unexpected error happened.</string>
+    <string name="action_failed">Det uppstod ett fel vid behandlingen av din betalning. Försök igen senare.</string>
+    <string name="component_error">Någonting gick fel.</string>
     <string name="time_out_error">Request timed out. Please try again.</string>
-    <string name="store_payment_methods_header">Saved Payment Methods</string>
-    <string name="other_payment_methods">Other payment methods</string>
+    <string name="store_payment_methods_header">Dina sparade betalningsmetoder</string>
+    <string name="other_payment_methods">Välj annan betalningsmetod</string>
     <string name="continue_button">Fortsätt</string>
     <string name="change_payment_method">Ändra betalningssätt</string>
     <string name="credit_card">Credit Card</string>

@@ -61,6 +61,12 @@ public abstract class IssuerListRecyclerView<IssuerListComponentT extends Issuer
         mIssuersRecyclerView.setAdapter(mIssuersAdapter);
     }
 
+    @SuppressWarnings("PMD.EmptyMethodInAbstractClassShouldBeAbstract")
+    @Override
+    protected void initLocalizedStrings(@NonNull Context localizedContext) {
+        // no embedded localized strings on this view
+    }
+
     @Override
     public void onComponentAttached() {
         mIssuersAdapter = new IssuerListRecyclerAdapter(Collections.<IssuerModel>emptyList(),
