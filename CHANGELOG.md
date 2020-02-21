@@ -13,6 +13,11 @@
 [//]: <> (Add changes that not released yet into `Unreleased` section)
 [//]: <> (Comment `Unreleased` section if there are no changes)
 [//]: <> (## [Unreleased])
+## [3.6.4] - 2020-02-21
+### Changed
+- Update 3DS2 SDK to version `2.1.0-rc07`
+### Fixed
+- Warning with string with placeholders without specified order.
 
 ## [3.6.3] - 2020-02-11
 ### Added

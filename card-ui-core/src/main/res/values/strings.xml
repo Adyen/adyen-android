@@ -18,6 +18,6 @@
     <string name="checkout_holder_name_not_valid">Holder name invalid</string>
 
     <string name="card_number_4digit">•••• %s</string>
-    <string name="expires_in">%s/%s</string>
+    <string name="expires_in">%1$s/%2$s</string>
     <string name="store_payment_method">Save for my next payment</string>
 </resources>
