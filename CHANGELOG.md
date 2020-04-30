@@ -13,6 +13,15 @@
 [//]: <> (Add changes that not released yet into `Unreleased` section)
 [//]: <> (Comment `Unreleased` section if there are no changes)
 [//]: <> (## [Unreleased])
+## [Unreleased]
+### Changed
+- Update 3DS2 SDK to version `2.1.0-rc08`
+- Added `FLAG_SECURE` to window when `CardView` is present.
+- Card Data validation now accepts up to 30 years in the future.
+### Fixed
+- Fix and use `LocaleUtil.fromLanguageTag()` to parse user locale for localization. 
+- Fix typo in CUP regex validation.
+
 ## [3.6.4] - 2020-02-21
 ### Changed
 - Update 3DS2 SDK to version `2.1.0-rc07`

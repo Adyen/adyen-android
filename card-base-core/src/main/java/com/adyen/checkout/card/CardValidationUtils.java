@@ -39,7 +39,7 @@ public final class CardValidationUtils {
     private static final int AMEX_SECURITY_CODE_SIZE = 4;
     // Date
     private static final int MONTHS_IN_YEAR = 12;
-    private static final int MAXIMUM_YEARS_IN_FUTURE = 20;
+    private static final int MAXIMUM_YEARS_IN_FUTURE = 30;
     private static final int MAXIMUM_EXPIRED_MONTHS = 3;
 
     public static boolean isPublicKeyValid(@Nullable String publicKey) {

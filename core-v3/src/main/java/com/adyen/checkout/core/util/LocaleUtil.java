@@ -11,6 +11,8 @@ package com.adyen.checkout.core.util;
 import android.content.Context;
 import android.os.Build;
 import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
+import android.text.TextUtils;
 
 import com.adyen.checkout.core.exception.NoConstructorException;
 
@@ -22,7 +24,6 @@ import java.util.Locale;
 public final class LocaleUtil {
 
     private static final String TAG_SEPARATOR = "_";
-    private static final int EXPECTED_TAG_ROOTS = 2;
 
     /**
      * Get the current user Locale.
@@ -58,12 +59,32 @@ public final class LocaleUtil {
      * @throws IllegalArgumentException If the Tag is not a valid language tag.
      */
     @NonNull
-    public static Locale fromLanguageTag(@NonNull String tag) throws IllegalArgumentException {
-        final String[] language = tag.split(TAG_SEPARATOR);
-        if (language.length == EXPECTED_TAG_ROOTS) {
-            return new Locale(language[0], language[1]);
+    public static Locale fromLanguageTag(@Nullable String tag) throws IllegalArgumentException {
+        if (TextUtils.isEmpty(tag)) {
+            throw new IllegalArgumentException("Locale tag is empty or null.");
         }
-        throw new IllegalArgumentException("Unexpected language tag - " + tag);
+
+        //noinspection ConstantConditions
+        final String[] language = tag.split(TAG_SEPARATOR);
+
+        final int languageOnly = 1;
+        final int languageAndCountry = 2;
+
+        if (language.length == languageOnly) {
+            if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.LOLLIPOP) {
+                return new Locale.Builder().setLanguage(language[0]).build();
+            } else {
+                return new Locale(language[0]);
+            }
+        } else if (language.length >= languageAndCountry) {
+            if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.LOLLIPOP) {
+                return new Locale.Builder().setLanguage(language[0]).setRegion(language[1]).build();
+            } else {
+                return new Locale(language[0], language[1]);
+            }
+        } else {
+            throw new IllegalArgumentException("Unexpected language tag - " + tag);
+        }
     }
 
     private LocaleUtil() {

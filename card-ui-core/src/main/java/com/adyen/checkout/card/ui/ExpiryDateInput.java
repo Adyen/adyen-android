@@ -83,11 +83,24 @@ public class ExpiryDateInput extends AdyenTextInputEditText {
             final Date parsedDate = mDateFormat.parse(normalizedExpiryDate);
             final Calendar calendar = GregorianCalendar.getInstance();
             calendar.setTime(parsedDate);
+            fixCalendarYear(calendar);
             // GregorianCalendar is 0 based
             return new ExpiryDate(calendar.get(Calendar.MONTH) + 1, calendar.get(Calendar.YEAR));
         } catch (ParseException e) {
-            Logger.d(TAG, "getDate - value does not match expected pattern.", e);
+            Logger.d(TAG, "getDate - value does not match expected pattern. " + e.getLocalizedMessage());
             return ExpiryDate.EMPTY_DATE;
+        }
+    }
+
+    private void fixCalendarYear(@NonNull Calendar calendar) {
+        // On SimpleDateFormat, if the truncated (yy) year is more than 20 years in the future it will use the previous century.
+        // This is a small fix to correct for that without implementing or overriding the DateFormat class.
+        final int yearsInCentury = 100;
+        final Calendar currentCalendar = GregorianCalendar.getInstance();
+        final int currentCentury = currentCalendar.get(Calendar.YEAR) / yearsInCentury;
+        final int calendarCentury = calendar.get(Calendar.YEAR) / yearsInCentury;
+        if (calendarCentury < currentCentury) {
+            calendar.add(Calendar.YEAR, yearsInCentury);
         }
     }
 

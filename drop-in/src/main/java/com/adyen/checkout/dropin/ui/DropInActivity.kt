@@ -22,7 +22,6 @@ import android.support.v4.app.DialogFragment
 import android.support.v4.content.LocalBroadcastManager
 import android.support.v7.app.AlertDialog
 import android.support.v7.app.AppCompatActivity
-import android.text.TextUtils
 import com.adyen.checkout.base.ActionComponentData
 import com.adyen.checkout.base.ComponentError
 import com.adyen.checkout.base.analytics.AnalyticEvent
@@ -36,6 +35,7 @@ import com.adyen.checkout.core.code.Lint
 import com.adyen.checkout.core.exception.CheckoutException
 import com.adyen.checkout.core.log.LogUtil
 import com.adyen.checkout.core.log.Logger
+import com.adyen.checkout.core.util.LocaleUtil
 import com.adyen.checkout.dropin.ActionHandler
 import com.adyen.checkout.dropin.DropIn
 import com.adyen.checkout.dropin.DropInConfiguration
@@ -52,7 +52,6 @@ import com.adyen.checkout.googlepay.GooglePayConfiguration
 import com.adyen.checkout.redirect.RedirectUtil
 import com.adyen.checkout.wechatpay.WeChatPayUtils
 import org.json.JSONObject
-import java.util.Locale
 
 /**
  * Activity that presents the available PaymentMethods to the Shopper.
@@ -160,21 +159,21 @@ class DropInActivity : AppCompatActivity(), DropInBottomSheetDialogFragment.Prot
     // False positive from countryStartPosition
     @Suppress("MagicNumber")
     private fun createLocalizedContext(baseContext: Context?): Context? {
-        return if (baseContext == null) {
+        if (baseContext == null || Build.VERSION.SDK_INT < Build.VERSION_CODES.JELLY_BEAN_MR1) {
+            return baseContext
+        }
+
+        // We needs to get the Locale from sharedPrefs because attachBaseContext is called before onCreate, so we don't have the Config object yet.
+        val localeString = baseContext.getSharedPreferences(DropIn.DROP_IN_PREFS, Context.MODE_PRIVATE).getString(DropIn.LOCALE_PREF, "")
+        val config = Configuration(baseContext.resources.configuration)
+
+        return try {
+            val locale = LocaleUtil.fromLanguageTag(localeString)
+            config.setLocale(locale)
+            baseContext.createConfigurationContext(config)
+        } catch (e: IllegalArgumentException) {
+            Logger.e(TAG, "Failed to parse locale $localeString")
             baseContext
-        } else {
-            val localeString = baseContext.getSharedPreferences(DropIn.DROP_IN_PREFS, Context.MODE_PRIVATE).getString(DropIn.LOCALE_PREF, "")
-            Logger.d(TAG, "localeString - $localeString")
-            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN_MR1 && !TextUtils.isEmpty(localeString)) {
-                val config = Configuration(baseContext.resources.configuration)
-                val languageEndPosition = 2
-                val countryStartPosition = 3
-                config.setLocale(Locale(localeString!!.substring(0, languageEndPosition), localeString.substring(countryStartPosition)))
-                baseContext.createConfigurationContext(config)
-            } else {
-                Logger.e(TAG, "Failed to create localized context.")
-                baseContext
-            }
         }
     }
 

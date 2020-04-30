@@ -28,7 +28,7 @@ public enum CardType {
     CABAL("cabal", Pattern.compile("^(58|6[03])([03469])\\d*$")),
     CARTEBANCAIRE("cartebancaire", Pattern.compile("^[4-6][0-9]{0,15}$")),
     CODENSA("codensa", Pattern.compile("^(590712)[0-9]{0,10}$")),
-    CUP("cup", Pattern.compile("^(62|81)[0-9]{0,17}$/")),
+    CUP("cup", Pattern.compile("^(62|81)[0-9]{0,17}$")),
     DANKORT("dankort", Pattern.compile("^(5019)[0-9]{0,12}$")),
     DINERS("diners", Pattern.compile("^(36)[0-9]{0,12}$")),
     DISCOVER("discover", Pattern.compile("^(6011[0-9]{0,12}|(644|645|646|647|648|649)[0-9]{0,13}|65[0-9]{0,14})$")),

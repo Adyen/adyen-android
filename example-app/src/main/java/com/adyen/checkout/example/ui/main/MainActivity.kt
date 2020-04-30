@@ -25,6 +25,7 @@ import com.adyen.checkout.card.CardConfiguration
 import com.adyen.checkout.core.exception.CheckoutException
 import com.adyen.checkout.core.log.LogUtil
 import com.adyen.checkout.core.log.Logger
+import com.adyen.checkout.core.util.LocaleUtil
 import com.adyen.checkout.dropin.DropIn
 import com.adyen.checkout.dropin.DropInConfiguration
 import com.adyen.checkout.example.BuildConfig
@@ -37,7 +38,6 @@ import kotlinx.android.synthetic.main.activity_main.progressBar
 import kotlinx.android.synthetic.main.activity_main.startCheckoutButton
 import org.koin.android.ext.android.inject
 import org.koin.android.viewmodel.ext.android.viewModel
-import java.util.Locale
 
 class MainActivity : AppCompatActivity() {
 
@@ -124,8 +124,7 @@ class MainActivity : AppCompatActivity() {
         setLoading(false)
 
         val shopperLocaleString = keyValueStorage.getShopperLocale()
-        val localeTags = shopperLocaleString.split(shopperLocaleString[2])
-        val shopperLocale = Locale(localeTags[0], localeTags[1])
+        val shopperLocale = LocaleUtil.fromLanguageTag(shopperLocaleString)
 
         val googlePayConfig = GooglePayConfiguration.Builder(this@MainActivity, keyValueStorage.getMerchantAccount())
                 .setCountryCode(keyValueStorage.getCountry())

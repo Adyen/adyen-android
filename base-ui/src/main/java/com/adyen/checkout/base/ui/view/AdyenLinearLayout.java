@@ -24,8 +24,7 @@ import com.adyen.checkout.core.log.Logger;
 
 import java.util.Locale;
 
-public abstract class AdyenLinearLayout<ComponentT extends BasePaymentComponent> extends LinearLayout implements
-        ComponentView<ComponentT> {
+public abstract class AdyenLinearLayout<ComponentT extends BasePaymentComponent> extends LinearLayout implements ComponentView<ComponentT> {
     private static final String TAG = LogUtil.getTag();
 
     private ComponentT mComponent;

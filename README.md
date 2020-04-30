@@ -19,11 +19,11 @@ The Components are available through [jcenter][dl], you only need to add the Gra
 Import the Component module for the Payment Method you want to use by adding it to your `build.gradle` file.
 For example, for the Drop-in solution you should add:
 ```groovy
-implementation "com.adyen.checkout:drop-in:3.6.4"
+implementation "com.adyen.checkout:drop-in:3.6.5"
 ```
 For a Credit Card component you should add:
 ```groovy
-implementation "com.adyen.checkout:card-ui:3.6.4"
+implementation "com.adyen.checkout:card-ui:3.6.5"
 ```
 
 ## Drop-in

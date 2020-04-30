@@ -45,7 +45,7 @@ import java.util.Locale
 @SuppressWarnings("TooManyFunctions")
 class DropInConfiguration : Configuration, Parcelable {
 
-    val availableConfigs: HashMap<String, Configuration>
+    private val availableConfigs: HashMap<String, Configuration>
     val serviceComponentName: ComponentName
     val resultHandlerIntent: Intent
     val amount: Amount
@@ -157,6 +157,11 @@ class DropInConfiguration : Configuration, Parcelable {
             return this
         }
 
+        /**
+         * Sets the [Locale] to be used for localization on the Drop-in flow.<br>
+         * Note that the [Locale] on the specific component configuration will still take priority and can cause inconsistency in the UI.<br>
+         * Also, due to technical limitations, this Locale will be converted to String and lose additional variants other than language and country.
+         */
         fun setShopperLocale(shopperLocale: Locale): Builder {
             this.shopperLocale = shopperLocale
             return this

@@ -8,9 +8,11 @@
 
 package com.adyen.checkout.card;
 
+import android.app.Activity;
 import android.arch.lifecycle.LifecycleOwner;
 import android.arch.lifecycle.Observer;
 import android.content.Context;
+import android.content.ContextWrapper;
 import android.content.res.TypedArray;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
@@ -20,6 +22,7 @@ import android.text.Editable;
 import android.util.AttributeSet;
 import android.view.LayoutInflater;
 import android.view.View;
+import android.view.WindowManager;
 import android.widget.CompoundButton;
 import android.widget.LinearLayout;
 
@@ -79,6 +82,25 @@ public final class CardView extends AdyenLinearLayout<CardComponent> implements 
 
         final int padding = (int) getResources().getDimension(R.dimen.standard_margin);
         setPadding(padding, padding, padding, 0);
+    }
+
+    @Override
+    protected void onAttachedToWindow() {
+        super.onAttachedToWindow();
+        // Prevent taking screenshot and screen on recents.
+        final Activity activity = getActivity(getContext());
+        if (activity != null) {
+            activity.getWindow().addFlags(WindowManager.LayoutParams.FLAG_SECURE);
+        }
+    }
+
+    @Override
+    protected void onDetachedFromWindow() {
+        super.onDetachedFromWindow();
+        final Activity activity = getActivity(getContext());
+        if (activity != null) {
+            activity.getWindow().clearFlags(WindowManager.LayoutParams.FLAG_SECURE);
+        }
     }
 
     @Override
@@ -365,5 +387,18 @@ public final class CardView extends AdyenLinearLayout<CardComponent> implements 
 
         mStorePaymentMethodSwitch.setVisibility(GONE);
         mCardHolderInput.setVisibility(GONE);
+    }
+
+    @Nullable
+    private Activity getActivity(@NonNull final Context context) {
+        if (context instanceof Activity) {
+            return (Activity) context;
+        }
+
+        if (context instanceof ContextWrapper) {
+            return getActivity(((ContextWrapper) context).getBaseContext());
+        }
+
+        return null;
     }
 }
