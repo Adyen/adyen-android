@@ -6,9 +6,13 @@ For an overview of how you can integrate with Adyen on Android check out the [Do
 
 <br/>
 
-![DropIn Preview](https://docs-admin.is.adyen.com/user/pages/docs/01.checkout/07.android/01.drop-in/dropin-android.jpg)
+![DropIn Preview](https://docs-admin.is.adyen.com/user/pages/docs/01.checkout/08.android/01.drop-in/dropin-android.jpg)
 
 <br/>
+
+## Support
+
+If you have a feature request, or spotted a bug or a technical problem, create a GitHub issue. For other questions, contact our [support team][adyen.support].
 
 ## Installation
 
@@ -19,11 +23,11 @@ The Components are available through [jcenter][dl], you only need to add the Gra
 Import the Component module for the Payment Method you want to use by adding it to your `build.gradle` file.
 For example, for the Drop-in solution you should add:
 ```groovy
-implementation "com.adyen.checkout:drop-in:3.6.5"
+implementation "com.adyen.checkout:drop-in:3.6.6"
 ```
 For a Credit Card component you should add:
 ```groovy
-implementation "com.adyen.checkout:card-ui:3.6.5"
+implementation "com.adyen.checkout:card-ui:3.6.6"
 ```
 
 ## Drop-in
@@ -131,6 +135,18 @@ Please let us know if you find any issues.
 }
 ```
 
+## Common Issues
+
+- Our `TextInputLayout` uses a MaterialComponents style, so it requires your app theme to extend `Theme.MaterialComponents`.
+If you use a `Theme.AppCompat` you might need to override this style. But note that this will also change the appearance of the TextInputLayout.
+```xml
+<style name="AdyenCheckout.TextInputLayout" >
+    <item name="boxStrokeColor">@color/colorAccent</item>
+    <item name="hintTextAppearance">@style/AdyenCheckout.HintTextStyle</item>
+    <item name="android:minHeight">@dimen/input_layout_height</item>
+</style>
+```
+
 ## See also
 
 * [Android Documentation][docs.android]
@@ -149,3 +165,4 @@ This repository is open source and available under the MIT license. For more inf
 [apiExplorer.paymentMethods]: https://docs.adyen.com/api-explorer/#/PaymentSetupAndVerificationService/v46/paymentMethods
 [apiExplorer.payments]: https://docs.adyen.com/api-explorer/#/PaymentSetupAndVerificationService/v46/payments
 [apiExplorer.paymentsDetails]: https://docs.adyen.com/api-explorer/#/PaymentSetupAndVerificationService/v46/paymentsDetails
+[adyen.support]: https://support.adyen.com/hc/en-us/requests/new?ticket_form_id=360000705420

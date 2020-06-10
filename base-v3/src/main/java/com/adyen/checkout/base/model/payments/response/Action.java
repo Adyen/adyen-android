@@ -77,6 +77,8 @@ public abstract class Action extends ModelObject {
                 return VoucherAction.SERIALIZER;
             case WeChatPaySdkAction.ACTION_TYPE:
                 return WeChatPaySdkAction.SERIALIZER;
+            case SdkAction.ACTION_TYPE:
+                return SdkAction.SERIALIZER;
             default:
                 throw new CheckoutException("Action type not found - " + actionType);
         }

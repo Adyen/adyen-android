@@ -34,6 +34,7 @@ public class WeChatPayComponent extends BasePaymentComponent<WeChatPayConfigurat
      */
     public WeChatPayComponent(@NonNull PaymentMethod paymentMethod, @NonNull WeChatPayConfiguration configuration) {
         super(paymentMethod, configuration);
+        onInputDataChanged(new EmptyInputData());
     }
 
     @NonNull

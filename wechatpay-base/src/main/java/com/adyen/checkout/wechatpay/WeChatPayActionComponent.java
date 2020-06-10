@@ -18,6 +18,7 @@ import com.adyen.checkout.base.ActionComponentProvider;
 import com.adyen.checkout.base.component.ActionComponentProviderImpl;
 import com.adyen.checkout.base.component.BaseActionComponent;
 import com.adyen.checkout.base.model.payments.response.Action;
+import com.adyen.checkout.base.model.payments.response.SdkAction;
 import com.adyen.checkout.base.model.payments.response.WeChatPaySdkAction;
 import com.adyen.checkout.base.model.payments.response.WeChatPaySdkData;
 import com.adyen.checkout.core.exception.ComponentException;
@@ -80,14 +81,15 @@ public class WeChatPayActionComponent extends BaseActionComponent {
     @NonNull
     @Override
     protected List<String> getSupportedActionTypes() {
-        final String[] supportedCodes = {WeChatPaySdkAction.ACTION_TYPE};
+        final String[] supportedCodes = {SdkAction.ACTION_TYPE, WeChatPaySdkAction.ACTION_TYPE};
         return Collections.unmodifiableList(Arrays.asList(supportedCodes));
     }
 
     @Override
     protected void handleActionInternal(@NonNull Activity activity, @NonNull Action action) throws ComponentException {
         Logger.d(TAG, "handleActionInternal: activity - " + activity.getLocalClassName());
-        final WeChatPaySdkAction weChatAction = (WeChatPaySdkAction) action;
+        //noinspection unchecked
+        final SdkAction<WeChatPaySdkData> weChatAction = (SdkAction<WeChatPaySdkData>) action;
         if (weChatAction.getSdkData() != null) {
             final boolean weChatInitiated = initiateWeChatPayRedirect(weChatAction.getSdkData(), activity.getLocalClassName());
             if (!weChatInitiated) {

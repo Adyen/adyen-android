@@ -14,13 +14,12 @@ import android.support.annotation.Nullable;
 
 import com.adyen.checkout.core.exception.ModelSerializationException;
 import com.adyen.checkout.core.model.JsonUtils;
-import com.adyen.checkout.core.model.ModelObject;
 
 import org.json.JSONException;
 import org.json.JSONObject;
 
 @SuppressWarnings({"MemberName", "PMD.DataClass"})
-public class WeChatPaySdkData extends ModelObject {
+public class WeChatPaySdkData extends SdkData {
     @NonNull
     public static final Creator<WeChatPaySdkData> CREATOR = new Creator<>(WeChatPaySdkData.class);
 

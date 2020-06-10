@@ -19,6 +19,10 @@ import com.adyen.checkout.core.model.ModelUtils;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+/**
+ * @deprecated Deprecated in favor of {@link SdkAction}
+ */
+@Deprecated
 @SuppressWarnings({"MemberName"})
 public class WeChatPaySdkAction extends Action {
     @NonNull

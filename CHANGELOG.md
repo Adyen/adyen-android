@@ -13,7 +13,15 @@
 [//]: <> (Add changes that not released yet into `Unreleased` section)
 [//]: <> (Comment `Unreleased` section if there are no changes)
 [//]: <> (## [Unreleased])
-## [Unreleased]
+## [3.6.6] - 2020-05-05
+### Added
+- Common issues session on Readme.
+### Changed
+- New Action type `sdk` replaces `wechatpaySDK`
+### Fixed
+- `WeChatPayComponent` automatically triggers observer as expected.
+
+## [3.6.5] - 2020-04-30
 ### Changed
 - Update 3DS2 SDK to version `2.1.0-rc08`
 - Added `FLAG_SECURE` to window when `CardView` is present.
