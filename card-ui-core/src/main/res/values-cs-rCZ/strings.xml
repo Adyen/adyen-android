@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="checkout_card_number_hint">Číslo karty</string>
+    <string name="checkout_card_holder_hint">Jméno držitele karty</string>
+    <string name="checkout_card_expiry_date_hint">Datum expirace</string>
+    <string name="checkout_card_security_code_hint">CVC / CVV</string>
+
+    <string name="checkout_card_number_not_valid">Neplatné číslo karty</string>
+    <string name="checkout_expiry_date_not_valid">Neplatné datum expirace</string>
+    <string name="checkout_security_code_not_valid">Neplatný formát CVC / CVV</string>
+    <string name="checkout_holder_name_not_valid">Neplatné jméno držitele karty</string>
+
+    <string name="card_number_4digit">•••• %s</string>
+    <string name="expires_in">%1$s/%2$s</string>
+    <string name="store_payment_method">Zapamatovat pro příští platbu</string>
+</resources>
