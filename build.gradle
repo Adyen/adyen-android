@@ -1,5 +1,5 @@
 apply from: "config/gradle/checksums.gradle"
-//apply from: "config/gradle/dependenciesCheck.gradle"
+apply from: "config/gradle/dependenciesCheck.gradle"
 
 ext {
     checkoutRedirectScheme = "adyencheckout"

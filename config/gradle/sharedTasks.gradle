@@ -9,7 +9,7 @@
 final kotlinSupport = new FileNameFinder().getFileNames("$project.projectDir/src", "**/*.kt").size() > 0
 
 apply from: "../config/gradle/checksums.gradle"
-//apply from: "../config/gradle/dependenciesCheck.gradle"
+apply from: "../config/gradle/dependenciesCheck.gradle"
 apply from: kotlinSupport ? "../config/gradle/codeQualityKt.gradle" : "../config/gradle/codeQuality.gradle"
 apply from: "../config/gradle/ci.gradle"
 apply from: "../config/gradle/release.gradle"
