@@ -10,7 +10,9 @@ apply from: "../config/gradle/checkstyle.gradle"
 apply from: "../config/gradle/lint.gradle"
 apply from: "../config/gradle/ktlint.gradle"
 apply from: "../config/gradle/pmd.gradle"
-apply from: "../config/gradle/findbugs.gradle"
+// TODO replace findbugs with Spotbugs or Kotlin similar on Gradle 6
+//apply from: "../config/gradle/findbugs.gradle"
+// TODO check detekt config issues on gradle sync
 apply from: "../config/gradle/detekt.gradle"
 
 check.dependsOn "checkstyle", "lint", "ktlint", "pmd", "findbugs", "detekt"

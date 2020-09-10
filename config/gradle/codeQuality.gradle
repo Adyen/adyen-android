@@ -9,6 +9,7 @@
 apply from: "../config/gradle/checkstyle.gradle"
 apply from: "../config/gradle/lint.gradle"
 apply from: "../config/gradle/pmd.gradle"
-apply from: "../config/gradle/findbugs.gradle"
+// TODO replace findbugs with Spotbugs on Gradle 6
+//apply from: "../config/gradle/findbugs.gradle"
 
 check.dependsOn "checkstyle", "lint", "pmd", "findbugs"
