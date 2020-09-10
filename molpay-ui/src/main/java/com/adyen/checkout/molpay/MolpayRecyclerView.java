@@ -13,9 +13,10 @@ import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.util.AttributeSet;
 
+import com.adyen.checkout.base.model.payments.request.MolpayPaymentMethod;
 import com.adyen.checkout.issuerlist.IssuerListRecyclerView;
 
-public class MolpayRecyclerView extends IssuerListRecyclerView<MolpayComponent> {
+public class MolpayRecyclerView extends IssuerListRecyclerView<MolpayPaymentMethod, MolpayComponent> {
 
     public MolpayRecyclerView(@NonNull Context context) {
         super(context);

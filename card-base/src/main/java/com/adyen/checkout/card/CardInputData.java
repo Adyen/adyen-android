@@ -3,15 +3,16 @@
  *
  * This file is open source and available under the MIT license. See the LICENSE file for more info.
  *
- * Created by arman on 16/9/2019.
+ * Created by caiof on 27/8/2020.
  */
 
-package com.adyen.checkout.card.data;
+package com.adyen.checkout.card;
 
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 
 import com.adyen.checkout.base.component.InputData;
+import com.adyen.checkout.card.data.ExpiryDate;
 
 public final class CardInputData implements InputData {
     private String mCardNumber = "";

@@ -1,0 +1,61 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+  ~ Copyright (c) 2020 Adyen N.V.
+  ~
+  ~ This file is open source and available under the MIT license. See the LICENSE file for more info.
+  ~
+  ~ Created by caiof on 2/9/2020.
+  -->
+
+<merge
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    tools:parentTag="android.widget.LinearLayout">
+
+    <!-- TODO fix layout according to design specs -->
+
+    <ImageView
+        android:id="@+id/imageView_logo"
+        style="@style/AdyenCheckout.Image.Logo.Large"
+        android:layout_gravity="center_horizontal"
+
+        android:contentDescription="@null" />
+
+    <TextView
+        android:id="@+id/textView_open_app"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        style="@style/AdyenCheckout.TextAppearance.Primary"
+        android:layout_margin="@dimen/standard_margin"
+        android:layout_gravity="center_horizontal"
+        android:text="@string/checkout_await_open_app"/>
+
+    <LinearLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center_horizontal"
+        android:layout_margin="@dimen/standard_margin"
+        android:orientation="horizontal">
+
+        <ProgressBar
+            android:layout_width="36dp"
+            android:layout_height="36dp"
+            android:indeterminateTint="@color/primaryColor"
+            tools:targetApi="lollipop" />
+
+        <TextView
+            android:id="@+id/textView_waiting_confirmation"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            style="@style/AdyenCheckout.TextAppearance.Secondary"
+            android:layout_gravity="center_vertical"
+            android:layout_margin="@dimen/standard_half_margin"
+            android:text="@string/checkout_await_waiting_confirmation"/>
+    </LinearLayout>
+
+
+
+</merge>

@@ -15,6 +15,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.net.Uri;
 import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
 import android.text.TextUtils;
 
 import com.adyen.checkout.base.ActionComponentProvider;
@@ -34,14 +35,14 @@ import java.util.Collections;
 import java.util.List;
 
 
-public final class RedirectComponent extends BaseActionComponent {
+public final class RedirectComponent extends BaseActionComponent<RedirectConfiguration> {
     private static final String TAG = LogUtil.getTag();
 
     public static final ActionComponentProvider<RedirectComponent> PROVIDER =
-            new ActionComponentProviderImpl<>(RedirectComponent.class);
+            new ActionComponentProviderImpl<>(RedirectComponent.class, RedirectConfiguration.class);
 
-    public RedirectComponent(@NonNull Application application) {
-        super(application);
+    public RedirectComponent(@NonNull Application application, @Nullable RedirectConfiguration configuration) {
+        super(application, configuration);
     }
 
     /**

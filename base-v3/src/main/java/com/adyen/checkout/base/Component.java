@@ -11,13 +11,17 @@ package com.adyen.checkout.base;
 import android.arch.lifecycle.LifecycleOwner;
 import android.arch.lifecycle.Observer;
 import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
+
+import com.adyen.checkout.base.component.Configuration;
 
 /**
  * A {@link Component} is a class that helps to retrieve or format data related to a part of the Checkout API payment.
  *
  * @param <ComponentResultT> The main parameter that notifies changes on this component.
+ * @param <ConfigurationT> The Configuration object associated with this Component.
  */
-public interface Component<ComponentResultT> {
+public interface Component<ComponentResultT, ConfigurationT extends Configuration> {
 
     /**
      * Observe changes on the result of this component.
@@ -36,4 +40,10 @@ public interface Component<ComponentResultT> {
      * @param observer The observer that will receive the updates.
      */
     void observeErrors(@NonNull LifecycleOwner lifecycleOwner, @NonNull Observer<ComponentError> observer);
+
+    /**
+     * @return The {@link Configuration} object used to initialize this Component.
+     */
+    @Nullable
+    ConfigurationT getConfiguration();
 }

@@ -8,30 +8,100 @@
 
 package com.adyen.checkout.base.component;
 
+import android.app.Activity;
+import android.app.Application;
 import android.arch.lifecycle.ViewModelProviders;
 import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentActivity;
 
 import com.adyen.checkout.base.ActionComponentProvider;
+import com.adyen.checkout.base.component.lifecycle.ActionComponentViewModel;
+import com.adyen.checkout.base.component.lifecycle.ActionComponentViewModelFactory;
+import com.adyen.checkout.core.exception.ComponentException;
 
-public class ActionComponentProviderImpl<ComponentT extends BaseActionComponent> implements ActionComponentProvider<ComponentT> {
+public class ActionComponentProviderImpl<ConfigurationT extends Configuration, ComponentT extends ActionComponentViewModel<ConfigurationT>>
+        implements ActionComponentProvider<ComponentT> {
 
     private final Class<ComponentT> mComponentClass;
+    private final Class<ConfigurationT> mConfigurationClass;
+    private final boolean mRequiresConfiguration;
 
-    public ActionComponentProviderImpl(@NonNull Class<ComponentT> componentClass) {
+    public ActionComponentProviderImpl(
+            @NonNull Class<ComponentT> componentClass,
+            @NonNull Class<ConfigurationT> configurationClass
+    ) {
+        this(componentClass, configurationClass, false);
+    }
+
+    /**
+     * Default Constructor.
+     *
+     * @param componentClass The Class of the Component
+     * @param configurationClass The Class of the Configuration
+     * @param requiresConfiguration If this Component requires a Configuration to be initialized.
+     */
+    public ActionComponentProviderImpl(
+            @NonNull Class<ComponentT> componentClass,
+            @NonNull Class<ConfigurationT> configurationClass,
+            boolean requiresConfiguration
+    ) {
         mComponentClass = componentClass;
+        mConfigurationClass = configurationClass;
+        mRequiresConfiguration = requiresConfiguration;
     }
 
     @NonNull
     @Override
     public ComponentT get(@NonNull FragmentActivity activity) {
-        return ViewModelProviders.of(activity).get(mComponentClass);
+        if (requiresConfiguration()) {
+            throw new ComponentException("This Component requires a Configuration object to be initialized.");
+        }
+
+        return get(activity, null);
     }
 
     @NonNull
     @Override
     public ComponentT get(@NonNull Fragment fragment) {
-        return ViewModelProviders.of(fragment).get(mComponentClass);
+        if (requiresConfiguration()) {
+            throw new ComponentException("This Component requires a Configuration object to be initialized.");
+        }
+
+        return get(fragment, null);
+    }
+
+    @NonNull
+    @Override
+    public ComponentT get(@NonNull FragmentActivity activity, @Nullable Configuration configuration) {
+        final ActionComponentViewModelFactory factory =
+                new ActionComponentViewModelFactory(checkApplication(activity), mConfigurationClass, configuration);
+        return ViewModelProviders.of(activity, factory).get(mComponentClass);
+    }
+
+    @NonNull
+    @Override
+    public ComponentT get(@NonNull Fragment fragment, @Nullable Configuration configuration) {
+        final ActionComponentViewModelFactory factory =
+                new ActionComponentViewModelFactory(checkApplication(fragment.getActivity()), mConfigurationClass, configuration);
+        return ViewModelProviders.of(fragment, factory).get(mComponentClass);
+    }
+
+    @Override
+    public boolean requiresConfiguration() {
+        return mRequiresConfiguration;
+    }
+
+    @NonNull
+    private static Application checkApplication(@Nullable Activity activity) {
+        if (activity != null) {
+            final Application application = activity.getApplication();
+            if (application != null) {
+                return application;
+            }
+        }
+        throw new IllegalStateException("Your activity/fragment is not yet attached to "
+                + "Application. You can't request ViewModel before onCreate call.");
     }
 }

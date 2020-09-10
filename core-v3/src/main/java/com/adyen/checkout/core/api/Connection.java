@@ -28,6 +28,11 @@ import java.util.concurrent.Callable;
  */
 public abstract class Connection<T> implements Callable<T> {
 
+    public static final String CONTENT_TYPE_HEADER = "Content-Type";
+    public static final String APP_JSON_CONTENT_TYPE = "application/json";
+
+    // Charset class only available from API 19
+    @SuppressWarnings("CharsetObjectCanBeUsed")
     private static final Charset CHARSET = Charset.forName("UTF-8");
     private static final int BUFFER_SIZE = 1024;
 

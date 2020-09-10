@@ -8,8 +8,6 @@
 
 package com.adyen.checkout.bcmc;
 
-import android.arch.lifecycle.LifecycleOwner;
-import android.arch.lifecycle.Observer;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 
@@ -21,8 +19,6 @@ import com.adyen.checkout.base.model.payments.request.CardPaymentMethod;
 import com.adyen.checkout.base.model.payments.request.PaymentComponentData;
 import com.adyen.checkout.base.util.PaymentMethodTypes;
 import com.adyen.checkout.base.validation.ValidatedField;
-import com.adyen.checkout.bcmc.data.BcmcInputData;
-import com.adyen.checkout.bcmc.data.BcmcOutputData;
 import com.adyen.checkout.card.CardValidationUtils;
 import com.adyen.checkout.card.data.CardType;
 import com.adyen.checkout.card.data.ExpiryDate;
@@ -114,17 +110,6 @@ public final class BcmcComponent extends BasePaymentComponent<BcmcConfiguration,
         paymentComponentData.setPaymentMethod(cardPaymentMethod);
 
         return new PaymentComponentState<>(paymentComponentData, outputData.isValid());
-    }
-
-    @Override
-    protected void observeOutputData(@NonNull LifecycleOwner lifecycleOwner, @NonNull Observer<BcmcOutputData> observer) {
-        super.observeOutputData(lifecycleOwner, observer);
-    }
-
-    @Nullable
-    @Override
-    protected BcmcOutputData getOutputData() {
-        return super.getOutputData();
     }
 
     protected boolean isCardNumberSupported(@Nullable String cardNumber) {

@@ -42,6 +42,7 @@ import com.adyen.checkout.dropin.DropInConfiguration
 import com.adyen.checkout.dropin.R
 import com.adyen.checkout.dropin.service.CallResult
 import com.adyen.checkout.dropin.service.DropInService
+import com.adyen.checkout.dropin.ui.action.ActionComponentDialogFragment
 import com.adyen.checkout.dropin.ui.base.DropInBottomSheetDialogFragment
 import com.adyen.checkout.dropin.ui.component.CardComponentDialogFragment
 import com.adyen.checkout.dropin.ui.component.GenericComponentDialogFragment
@@ -57,13 +58,14 @@ import org.json.JSONObject
  * Activity that presents the available PaymentMethods to the Shopper.
  */
 @Suppress("TooManyFunctions", "SyntheticAccessor")
-class DropInActivity : AppCompatActivity(), DropInBottomSheetDialogFragment.Protocol, ActionHandler.DetailsRequestedInterface {
+class DropInActivity : AppCompatActivity(), DropInBottomSheetDialogFragment.Protocol, ActionHandler.ActionHandlingInterface {
 
     companion object {
         private val TAG = LogUtil.getTag()
 
         private const val PAYMENT_METHOD_FRAGMENT_TAG = "PAYMENT_METHODS_DIALOG_FRAGMENT"
         private const val COMPONENT_FRAGMENT_TAG = "COMPONENT_DIALOG_FRAGMENT"
+        private const val ACTION_FRAGMENT_TAG = "ACTION_DIALOG_FRAGMENT"
         private const val LOADING_FRAGMENT_TAG = "LOADING_DIALOG_FRAGMENT"
 
         private const val PAYMENT_METHODS_RESPONSE_KEY = "PAYMENT_METHODS_RESPONSE_KEY"
@@ -143,14 +145,17 @@ class DropInActivity : AppCompatActivity(), DropInBottomSheetDialogFragment.Prot
             return
         }
 
-        if (getFragmentByTag(COMPONENT_FRAGMENT_TAG) == null && getFragmentByTag(PAYMENT_METHOD_FRAGMENT_TAG) == null) {
+        if (getFragmentByTag(COMPONENT_FRAGMENT_TAG) == null &&
+                getFragmentByTag(PAYMENT_METHOD_FRAGMENT_TAG) == null &&
+                getFragmentByTag(ACTION_FRAGMENT_TAG) == null
+        ) {
             PaymentMethodListDialogFragment.newInstance(false).show(supportFragmentManager, PAYMENT_METHOD_FRAGMENT_TAG)
         }
 
         serviceResultIntentFilter = IntentFilter(DropInService.getServiceResultAction(this))
         localBroadcastManager.registerReceiver(callResultReceiver, serviceResultIntentFilter)
 
-        actionHandler = ActionHandler(this, this)
+        actionHandler = ActionHandler(this, this, dropInViewModel.dropInConfiguration)
         actionHandler.restoreState(savedInstanceState)
 
         sendAnalyticsEvent()
@@ -225,6 +230,13 @@ class DropInActivity : AppCompatActivity(), DropInBottomSheetDialogFragment.Prot
         }
         DropInService.requestPaymentsCall(this, paymentComponentData, dropInViewModel.dropInConfiguration.serviceComponentName)
     }
+    override fun requestDetailsCall(actionComponentData: ActionComponentData) {
+        isWaitingResult = true
+        setLoading(true)
+        DropInService.requestDetailsCall(this,
+                ActionComponentData.SERIALIZER.serialize(actionComponentData),
+                dropInViewModel.dropInConfiguration.serviceComponentName)
+    }
 
     override fun showError(errorMessage: String, terminate: Boolean) {
         AlertDialog.Builder(this)
@@ -235,15 +247,17 @@ class DropInActivity : AppCompatActivity(), DropInBottomSheetDialogFragment.Prot
                 .show()
     }
 
-    override fun requestDetailsCall(actionComponentData: ActionComponentData) {
-        isWaitingResult = true
-        setLoading(true)
-        DropInService.requestDetailsCall(this,
-            ActionComponentData.SERIALIZER.serialize(actionComponentData),
-                dropInViewModel.dropInConfiguration.serviceComponentName)
+    override fun displayAction(action: Action) {
+        Logger.d(TAG, "showActionDialog")
+        setLoading(false)
+        hideFragmentDialog(PAYMENT_METHOD_FRAGMENT_TAG)
+        hideFragmentDialog(COMPONENT_FRAGMENT_TAG)
+        val actionFragment = ActionComponentDialogFragment.newInstance(action)
+        actionFragment.show(supportFragmentManager, ACTION_FRAGMENT_TAG)
+        actionFragment.setToHandleWhenStarting()
     }
 
-    override fun onError(errorMessage: String) {
+    override fun onActionError(errorMessage: String) {
         showError(getString(R.string.action_failed), true)
     }
 
@@ -272,21 +286,23 @@ class DropInActivity : AppCompatActivity(), DropInBottomSheetDialogFragment.Prot
         localBroadcastManager.unregisterReceiver(callResultReceiver)
     }
 
+    override fun showPaymentMethodsDialog(showInExpandStatus: Boolean) {
+        Logger.d(TAG, "showPaymentMethodsDialog")
+        hideFragmentDialog(COMPONENT_FRAGMENT_TAG)
+        hideFragmentDialog(ACTION_FRAGMENT_TAG)
+        PaymentMethodListDialogFragment.newInstance(showInExpandStatus).show(supportFragmentManager, PAYMENT_METHOD_FRAGMENT_TAG)
+    }
+
     override fun showComponentDialog(paymentMethod: PaymentMethod, wasInExpandMode: Boolean) {
         Logger.d(TAG, "showComponentDialog")
         hideFragmentDialog(PAYMENT_METHOD_FRAGMENT_TAG)
+        hideFragmentDialog(ACTION_FRAGMENT_TAG)
         val dialogFragment = when (paymentMethod.type) {
             PaymentMethodTypes.SCHEME -> CardComponentDialogFragment
             else -> GenericComponentDialogFragment
         }.newInstance(paymentMethod, dropInViewModel.dropInConfiguration, wasInExpandMode)
 
         dialogFragment.show(supportFragmentManager, COMPONENT_FRAGMENT_TAG)
-    }
-
-    override fun showPaymentMethodsDialog(showInExpandStatus: Boolean) {
-        Logger.d(TAG, "showPaymentMethodsDialog")
-        hideFragmentDialog(COMPONENT_FRAGMENT_TAG)
-        PaymentMethodListDialogFragment.newInstance(showInExpandStatus).show(supportFragmentManager, PAYMENT_METHOD_FRAGMENT_TAG)
     }
 
     override fun terminateDropIn() {

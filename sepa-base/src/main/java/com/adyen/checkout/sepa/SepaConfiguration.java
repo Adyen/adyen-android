@@ -33,9 +33,12 @@ public class SepaConfiguration extends Configuration {
     };
 
     @SuppressWarnings(Lint.SYNTHETIC)
-    SepaConfiguration(@NonNull Locale shopperLocale,
-            @NonNull Environment environment) {
-        super(shopperLocale, environment);
+    SepaConfiguration(
+            @NonNull Locale shopperLocale,
+            @NonNull Environment environment,
+            @NonNull String clientKey
+    ) {
+        super(shopperLocale, environment, clientKey);
     }
 
     SepaConfiguration(@NonNull Parcel in) {
@@ -80,8 +83,14 @@ public class SepaConfiguration extends Configuration {
 
         @NonNull
         @Override
+        public Builder setClientKey(@NonNull String builderClientKey) {
+            return (Builder) super.setClientKey(builderClientKey);
+        }
+
+        @NonNull
+        @Override
         public SepaConfiguration build() {
-            return new SepaConfiguration(mBuilderShopperLocale, mBuilderEnvironment);
+            return new SepaConfiguration(mBuilderShopperLocale, mBuilderEnvironment, mBuilderClientKey);
         }
     }
 }

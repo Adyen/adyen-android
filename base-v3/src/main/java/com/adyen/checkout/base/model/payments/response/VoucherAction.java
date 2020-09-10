@@ -13,6 +13,7 @@ import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 
 import com.adyen.checkout.base.model.payments.Amount;
+import com.adyen.checkout.base.util.ActionTypes;
 import com.adyen.checkout.core.exception.ModelSerializationException;
 import com.adyen.checkout.core.model.JsonUtils;
 import com.adyen.checkout.core.model.ModelUtils;
@@ -25,7 +26,7 @@ public class VoucherAction extends Action {
     @NonNull
     public static final Creator<VoucherAction> CREATOR = new Creator<>(VoucherAction.class);
 
-    public static final String ACTION_TYPE = "voucher";
+    public static final String ACTION_TYPE = ActionTypes.VOUCHER;
 
     private static final String SURCHARGE = "surcharge";
     private static final String INITIAL_AMOUNT = "initialAmount";

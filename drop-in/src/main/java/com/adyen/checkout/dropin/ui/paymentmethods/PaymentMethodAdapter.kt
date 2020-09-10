@@ -72,6 +72,7 @@ class PaymentMethodAdapter(
     override fun onBindViewHolder(holder: BaseViewHolder, position: Int) {
         val paymentMethod = getPaymentMethod(position)
         val context: Context = holder.itemView.context
+
         when {
             (holder is PaymentMethodVH) -> {
                 if (paymentMethod is StoredPaymentMethod) {

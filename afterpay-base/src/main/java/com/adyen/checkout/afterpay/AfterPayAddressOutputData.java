@@ -15,7 +15,7 @@ import com.adyen.checkout.base.validation.ValidatedField;
 
 import java.util.Locale;
 
-public class AfterPayAddressOutputData implements OutputData {
+class AfterPayAddressOutputData implements OutputData {
 
     private final ValidatedField<String> mStreet;
     private final ValidatedField<String> mHouseNumberOrName;
@@ -28,7 +28,7 @@ public class AfterPayAddressOutputData implements OutputData {
      * Constructs a {@link com.adyen.checkout.afterpay.AfterPayComponent} object.
      */
 
-    public AfterPayAddressOutputData(@NonNull ValidatedField<String> street,
+    AfterPayAddressOutputData(@NonNull ValidatedField<String> street,
             @NonNull ValidatedField<String> houseNumberOrName, @NonNull ValidatedField<String> city,
             @NonNull ValidatedField<String> postalCode, @NonNull ValidatedField<String> stateOrProvince,
             @NonNull ValidatedField<Locale> locale) {

@@ -13,10 +13,10 @@ import android.os.Parcel;
 import android.os.Parcelable;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
-import android.util.DisplayMetrics;
 
 import com.adyen.checkout.base.component.BaseConfigurationBuilder;
 import com.adyen.checkout.base.component.Configuration;
+import com.adyen.checkout.base.util.ValidationUtils;
 import com.adyen.checkout.card.data.CardType;
 import com.adyen.checkout.core.api.Environment;
 import com.adyen.checkout.core.exception.CheckoutException;
@@ -37,7 +37,7 @@ public class CardConfiguration extends Configuration {
             new CardType[]{CardType.VISA, CardType.AMERICAN_EXPRESS, CardType.MASTERCARD};
 
     // BCMC is only supported in it's own component.
-    private static final CardType[] BLACKLISTED_CARDS = new CardType[]{CardType.BCMC};
+    private static final CardType[] UNSUPPORTED_CARDS = new CardType[]{CardType.BCMC};
 
     public static final List<CardType> DEFAULT_SUPPORTED_CARDS_LIST =
             Collections.unmodifiableList(Arrays.asList(DEFAULT_SUPPORTED_CARDS));
@@ -61,39 +61,6 @@ public class CardConfiguration extends Configuration {
     /**
      * @param shopperLocale         The locale that should be used to display strings and layouts. Can differ from device default.
      * @param environment           The environment to be used to make network calls.
-     * @param displayMetrics        The current {@link DisplayMetrics} of the device to fetch images of matching size.
-     * @param publicKey             The public key used for encryption of the card data. You can get it from the Customer Area.
-     * @param shopperReference      The unique identifier of the shopper.
-     * @param holderNameRequire     If the holder name of the card should be shown as a required field.
-     * @param showStorePaymentField If the component should show the option to store the card for later use.
-     * @param supportCardTypes      The list of supported card brands to be shown to the user.
-     * @deprecated Constructor with all parameters. Use the Builder to initialize this object.
-     */
-    @SuppressWarnings("DeprecatedIsStillUsed")
-    @Deprecated
-    public CardConfiguration(
-            @NonNull Locale shopperLocale,
-            @NonNull Environment environment,
-            @SuppressWarnings("PMD.UnusedFormalParameter")
-            @NonNull DisplayMetrics displayMetrics,
-            @NonNull String publicKey,
-            boolean holderNameRequire,
-            @NonNull String shopperReference,
-            boolean showStorePaymentField,
-            @NonNull CardType... supportCardTypes) {
-        super(shopperLocale, environment);
-
-        mPublicKey = publicKey;
-        mHolderNameRequire = holderNameRequire;
-        mSupportedCardTypes = Collections.unmodifiableList(Arrays.asList(supportCardTypes));
-        mShopperReference = shopperReference;
-        mShowStorePaymentField = showStorePaymentField;
-    }
-
-
-    /**
-     * @param shopperLocale         The locale that should be used to display strings and layouts. Can differ from device default.
-     * @param environment           The environment to be used to make network calls.
      * @param publicKey             The public key used for encryption of the card data. You can get it from the Customer Area.
      * @param shopperReference      The unique identifier of the shopper.
      * @param holderNameRequire     If the holder name of the card should be shown as a required field.
@@ -103,12 +70,13 @@ public class CardConfiguration extends Configuration {
     CardConfiguration(
             @NonNull Locale shopperLocale,
             @NonNull Environment environment,
+            @Nullable String clientKey,
             @NonNull String publicKey,
             boolean holderNameRequire,
             @NonNull String shopperReference,
             boolean showStorePaymentField,
             @NonNull List<CardType> supportCardTypes) {
-        super(shopperLocale, environment);
+        super(shopperLocale, environment, clientKey);
 
         mPublicKey = publicKey;
         mHolderNameRequire = holderNameRequire;
@@ -134,19 +102,6 @@ public class CardConfiguration extends Configuration {
         ParcelUtils.writeBoolean(dest, mHolderNameRequire);
         dest.writeList(mSupportedCardTypes);
         ParcelUtils.writeBoolean(dest, mShowStorePaymentField);
-    }
-
-    /**
-     * Get display metrics.
-     *
-     * @return {@link DisplayMetrics}
-     * @deprecated There is no need for {@link DisplayMetrics} in builder any more, it'll always return null
-     */
-    @SuppressWarnings("DeprecatedIsStillUsed")
-    @Deprecated
-    @Nullable
-    public DisplayMetrics getDisplayMetrics() {
-        return null;
     }
 
     /**
@@ -208,6 +163,7 @@ public class CardConfiguration extends Configuration {
          */
         public Builder(@NonNull CardConfiguration cardConfiguration) {
             super(cardConfiguration.getShopperLocale(), cardConfiguration.getEnvironment());
+            mBuilderClientKey = cardConfiguration.getClientKey();
 
             mBuilderPublicKey = cardConfiguration.getPublicKey();
             mBuilderSupportedCardTypes = cardConfiguration.getSupportedCardTypes();
@@ -220,8 +176,31 @@ public class CardConfiguration extends Configuration {
          * Constructor of Card Configuration Builder with default values.
          *
          * @param context   A context
-         * @param publicKey The public key to be used for encryption. You can get it from the Customer Area.
          */
+        public Builder(@NonNull Context context) {
+            super(context);
+        }
+
+        /**
+         * Builder with required parameters for a {@link CardConfiguration}.
+         *
+         * @param shopperLocale The Locale of the shopper.
+         * @param environment   The {@link Environment} to be used for network calls to Adyen.
+         */
+        public Builder(
+                @NonNull Locale shopperLocale,
+                @NonNull Environment environment) {
+            super(shopperLocale, environment);
+        }
+
+        /**
+         * Constructor of Card Configuration Builder with default values.
+         *
+         * @param context   A context
+         * @param publicKey The public key to be used for encryption. You can get it from the Customer Area.
+         * @deprecated      Constructor deprecated since publicKey is no longer always required in favor of clientKey.
+         */
+        @Deprecated
         public Builder(@NonNull Context context, @NonNull String publicKey) {
             super(context);
             mBuilderPublicKey = publicKey;
@@ -233,30 +212,12 @@ public class CardConfiguration extends Configuration {
          * @param shopperLocale The Locale of the shopper.
          * @param environment   The {@link Environment} to be used for network calls to Adyen.
          * @param publicKey     The public key used for encryption of the card data. You can get it from the Customer Area.
-         */
-        public Builder(
-                @NonNull Locale shopperLocale,
-                @NonNull Environment environment,
-                @NonNull String publicKey) {
-            super(shopperLocale, environment);
-            mBuilderPublicKey = publicKey;
-        }
-
-        /**
-         * Builder with required parameters for a {@link CardConfiguration}.
-         *
-         * @param shopperLocale  The Locale of the shopper.
-         * @param environment    The {@link Environment} to be used for network calls to Adyen.
-         * @param displayMetrics The DisplayMetrics to fetch images with the correct size.
-         * @param publicKey      The public key used for encryption of the card data. You can get it from the Customer Area.
-         * @deprecated No need to pass {@link DisplayMetrics} to builder.
+         * @deprecated          Constructor deprecated since publicKey is no longer always required in favor of clientKey.
          */
         @Deprecated
         public Builder(
                 @NonNull Locale shopperLocale,
                 @NonNull Environment environment,
-                @SuppressWarnings("PMD.UnusedFormalParameter")
-                @Nullable DisplayMetrics displayMetrics,
                 @NonNull String publicKey) {
             super(shopperLocale, environment);
             mBuilderPublicKey = publicKey;
@@ -272,6 +233,12 @@ public class CardConfiguration extends Configuration {
         @NonNull
         public Builder setEnvironment(@NonNull Environment builderEnvironment) {
             return (Builder) super.setEnvironment(builderEnvironment);
+        }
+
+        @NonNull
+        @Override
+        public Builder setClientKey(@NonNull String builderClientKey) {
+            return (Builder) super.setClientKey(builderClientKey);
         }
 
         /**
@@ -293,7 +260,7 @@ public class CardConfiguration extends Configuration {
         public Builder setSupportedCardTypes(@NonNull CardType... supportCardTypes) {
 
             final List<CardType> supportedCards = new ArrayList<>(Arrays.asList(supportCardTypes));
-            supportedCards.removeAll(Arrays.asList(BLACKLISTED_CARDS));
+            supportedCards.removeAll(Arrays.asList(UNSUPPORTED_CARDS));
 
             mBuilderSupportedCardTypes = supportedCards;
             return this;
@@ -341,9 +308,15 @@ public class CardConfiguration extends Configuration {
                 throw new CheckoutException("Invalid Public Key. Please find the valid public key on the Customer Area.");
             }
 
+            // This will not be triggered until the public key check above is removed as it takes prioriy.
+            if (!CardValidationUtils.isPublicKeyValid(mBuilderPublicKey) && !ValidationUtils.isClientKeyValid(mBuilderClientKey)) {
+                throw new CheckoutException("You need either a valid Client key or Public key to use the Card Component.");
+            }
+
             return new CardConfiguration(
                     mBuilderShopperLocale,
                     mBuilderEnvironment,
+                    mBuilderClientKey,
                     mBuilderPublicKey,
                     mBuilderHolderNameRequire,
                     mShopperReference,

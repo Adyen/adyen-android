@@ -13,10 +13,10 @@ import android.os.Parcel;
 import android.os.Parcelable;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
-import android.util.DisplayMetrics;
 
-import com.adyen.checkout.base.component.Configuration;
 import com.adyen.checkout.base.component.BaseConfigurationBuilder;
+import com.adyen.checkout.base.component.Configuration;
+import com.adyen.checkout.base.util.ValidationUtils;
 import com.adyen.checkout.card.CardValidationUtils;
 import com.adyen.checkout.core.api.Environment;
 import com.adyen.checkout.core.exception.CheckoutException;
@@ -40,17 +40,12 @@ public class BcmcConfiguration extends Configuration {
         }
     };
 
-
-    /**
-     * @param shopperLocale The locale that should be used to display strings and layouts. Can differ from device default.
-     * @param environment   The environment to be used to make network calls.
-     * @param publicKey     The public key used for encryption of the card data. You can get it from the Customer Area.
-     */
     BcmcConfiguration(
             @NonNull Locale shopperLocale,
             @NonNull Environment environment,
+            @Nullable String clientKey,
             @NonNull String publicKey) {
-        super(shopperLocale, environment);
+        super(shopperLocale, environment, clientKey);
 
         mPublicKey = publicKey;
     }
@@ -64,19 +59,6 @@ public class BcmcConfiguration extends Configuration {
     public void writeToParcel(@NonNull Parcel dest, int flags) {
         super.writeToParcel(dest, flags);
         dest.writeString(mPublicKey);
-    }
-
-    /**
-     * Get display metrics.
-     *
-     * @return {@link DisplayMetrics}
-     * @deprecated There is no need for {@link DisplayMetrics} in builder any more, it'll always return null
-     */
-    @SuppressWarnings("DeprecatedIsStillUsed")
-    @Deprecated
-    @Nullable
-    public DisplayMetrics getDisplayMetrics() {
-        return null;
     }
 
     /**
@@ -100,8 +82,31 @@ public class BcmcConfiguration extends Configuration {
          * Constructor of Card Configuration Builder with default values.
          *
          * @param context   A context
-         * @param publicKey The public key to be used for encryption. You can get it from the Customer Area.
          */
+        public Builder(@NonNull Context context) {
+            super(context);
+        }
+
+        /**
+         * Builder with required parameters for a {@link BcmcConfiguration}.
+         *
+         * @param shopperLocale The Locale of the shopper.
+         * @param environment   The {@link Environment} to be used for network calls to Adyen.
+         */
+        public Builder(
+                @NonNull Locale shopperLocale,
+                @NonNull Environment environment) {
+            super(shopperLocale, environment);
+        }
+
+        /**
+         * Constructor of Card Configuration Builder with default values.
+         *
+         * @param context   A context
+         * @param publicKey The public key to be used for encryption. You can get it from the Customer Area.
+         * @deprecated      Constructor deprecated since publicKey is no longer always required in favor of clientKey.
+         */
+        @Deprecated
         public Builder(@NonNull Context context, @NonNull String publicKey) {
             super(context);
             mBuilderPublicKey = publicKey;
@@ -113,7 +118,9 @@ public class BcmcConfiguration extends Configuration {
          * @param shopperLocale The Locale of the shopper.
          * @param environment   The {@link Environment} to be used for network calls to Adyen.
          * @param publicKey     The public key used for encryption of the card data. You can get it from the Customer Area.
+         * @deprecated          Constructor deprecated since publicKey is no longer always required in favor of clientKey.
          */
+        @Deprecated
         public Builder(
                 @NonNull Locale shopperLocale,
                 @NonNull Environment environment,
@@ -134,11 +141,19 @@ public class BcmcConfiguration extends Configuration {
             return (Builder) super.setEnvironment(builderEnvironment);
         }
 
+        @NonNull
+        @Override
+        public Builder setClientKey(@NonNull String builderClientKey) {
+            return (Builder) super.setClientKey(builderClientKey);
+        }
+
         /**
          * @param publicKey The public key to be used for encryption. You can get it from the Customer Area.
          */
-        public void setPublicKey(@NonNull String publicKey) {
+        @NonNull
+        public Builder setPublicKey(@NonNull String publicKey) {
             mBuilderPublicKey = publicKey;
+            return this;
         }
 
         /**
@@ -153,9 +168,15 @@ public class BcmcConfiguration extends Configuration {
                 throw new CheckoutException("Invalid Public Key. Please find the valid public key on the Customer Area.");
             }
 
+            // This will not be triggered until the public key check above is removed as it takes prioriy.
+            if (!CardValidationUtils.isPublicKeyValid(mBuilderPublicKey) && !ValidationUtils.isClientKeyValid(mBuilderClientKey)) {
+                throw new CheckoutException("You need either a valid Client key or Public key to use the Card Component.");
+            }
+
             return new BcmcConfiguration(
                     mBuilderShopperLocale,
                     mBuilderEnvironment,
+                    mBuilderClientKey,
                     mBuilderPublicKey
             );
         }

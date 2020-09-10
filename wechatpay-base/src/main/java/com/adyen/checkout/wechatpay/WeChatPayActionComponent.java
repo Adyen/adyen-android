@@ -34,11 +34,11 @@ import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 
-public class WeChatPayActionComponent extends BaseActionComponent {
+public class WeChatPayActionComponent extends BaseActionComponent<WeChatPayActionConfiguration> {
     private static final String TAG = LogUtil.getTag();
 
     public static final ActionComponentProvider<WeChatPayActionComponent> PROVIDER =
-            new ActionComponentProviderImpl<>(WeChatPayActionComponent.class);
+            new ActionComponentProviderImpl<>(WeChatPayActionComponent.class, WeChatPayActionConfiguration.class);
 
     private final IWXAPI mApi;
 
@@ -58,8 +58,8 @@ public class WeChatPayActionComponent extends BaseActionComponent {
         }
     };
 
-    public WeChatPayActionComponent(@NonNull Application application) {
-        super(application);
+    public WeChatPayActionComponent(@NonNull Application application, @Nullable WeChatPayActionConfiguration configuration) {
+        super(application, configuration);
         mApi = WXAPIFactory.createWXAPI(application, null, true);
     }
 

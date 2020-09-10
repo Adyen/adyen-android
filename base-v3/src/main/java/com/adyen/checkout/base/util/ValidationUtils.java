@@ -15,29 +15,50 @@ import com.adyen.checkout.core.exception.NoConstructorException;
 import java.util.regex.Pattern;
 
 public final class ValidationUtils {
-    private static final int MIN_PHONE_NUMBER_DIGIT = 6;
 
-    private static final String EXPRESSION = "^[\\w\\.-]+@([\\w\\-]+\\.)+[A-Z]{2,4}$";
-    private static final Pattern PATTERN = Pattern.compile(EXPRESSION, Pattern.CASE_INSENSITIVE);
+    private static final String EMAIL_REGEX = "^[\\w\\.-]+@([\\w\\-]+\\.)+[A-Z]{2,4}$";
+    private static final Pattern EMAIL_PATTERN = Pattern.compile(EMAIL_REGEX, Pattern.CASE_INSENSITIVE);
+
+    private static final String PHONE_REGEX = "^\\D*(\\d\\D*){9,14}$";
+    private static final Pattern PHONE_PATTERN = Pattern.compile(PHONE_REGEX);
+
+    private static final String CLIENT_KEY_REGEX = "([a-z]){4}\\_([A-z]|\\d){32}";
+    private static final Pattern CLIENT_KEY_PATTERN = Pattern.compile(CLIENT_KEY_REGEX);
 
     private ValidationUtils() {
         throw new NoConstructorException();
     }
 
     /**
-     * check if phone number length more than {@value MIN_PHONE_NUMBER_DIGIT}.
+     * Check if phone number is valid.
+     *
+     * @param phoneNumber A string to check if is a phone number.
+     * @return If we consider it a valid phone number or not.
      */
     @NonNull
     public static boolean isPhoneNumberValid(@NonNull String phoneNumber) {
-        return phoneNumber.length() >= MIN_PHONE_NUMBER_DIGIT;
+        return PHONE_PATTERN.matcher(phoneNumber).matches();
     }
 
     /**
-     * check if email is valid.
+     * Check if email is valid.
+     *
+     * @param emailAddress A string to check if is an email address.
+     * @return If we consider it a valid email or not.
      */
     @NonNull
     public static boolean isEmailValid(@NonNull String emailAddress) {
-        return PATTERN.matcher(emailAddress).matches();
+        return EMAIL_PATTERN.matcher(emailAddress).matches();
+    }
+
+    /**
+     * Check if the Client Key is valid.
+     *
+     * @param clientKey A string to check if is a client key.
+     * @return If we consider it a valid client key or not.
+     */
+    public static boolean isClientKeyValid(@NonNull String clientKey) {
+        return CLIENT_KEY_PATTERN.matcher(clientKey).matches();
     }
 }
 

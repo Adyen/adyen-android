@@ -17,6 +17,9 @@ import com.adyen.checkout.base.ComponentError
 import com.adyen.checkout.base.ComponentView
 import com.adyen.checkout.base.PaymentComponent
 import com.adyen.checkout.base.PaymentComponentState
+import com.adyen.checkout.base.ViewableComponent
+import com.adyen.checkout.base.component.Configuration
+import com.adyen.checkout.base.component.OutputData
 import com.adyen.checkout.base.model.payments.request.PaymentMethodDetails
 import com.adyen.checkout.base.util.CurrencyUtils
 import com.adyen.checkout.core.exception.CheckoutException
@@ -31,7 +34,7 @@ import kotlinx.android.synthetic.main.fragment_generic_component.view.header
 
 class GenericComponentDialogFragment : BaseComponentDialogFragment() {
 
-    private lateinit var componentView: ComponentView<PaymentComponent<in PaymentComponentState<in PaymentMethodDetails>>>
+    private lateinit var componentView: ComponentView<in OutputData, ViewableComponent<*, *, *>>
 
     companion object : BaseCompanion<GenericComponentDialogFragment>(GenericComponentDialogFragment::class.java) {
         private val TAG = LogUtil.getTag()
@@ -51,7 +54,7 @@ class GenericComponentDialogFragment : BaseComponentDialogFragment() {
         }
 
         try {
-            componentView = getViewFor(requireContext(), paymentMethod)
+            componentView = getViewFor(requireContext(), paymentMethod.type!!)
             attachComponent(component, componentView)
         } catch (e: CheckoutException) {
             handleError(ComponentError(e))
@@ -65,13 +68,13 @@ class GenericComponentDialogFragment : BaseComponentDialogFragment() {
     }
 
     private fun attachComponent(
-        component: PaymentComponent<PaymentComponentState<in PaymentMethodDetails>>,
-        componentView: ComponentView<PaymentComponent<in PaymentComponentState<in PaymentMethodDetails>>>
+        component: PaymentComponent<PaymentComponentState<in PaymentMethodDetails>, Configuration>,
+        componentView: ComponentView<in OutputData, ViewableComponent<*, *, *>>
     ) {
         component.observe(this, this)
         component.observeErrors(this, createErrorHandlerObserver())
         componentContainer.addView(componentView as View)
-        componentView.attach(component, this)
+        componentView.attach(component as ViewableComponent<*, *, *>, this)
 
         if (componentView.isConfirmationRequired()) {
             payButton.setOnClickListener {

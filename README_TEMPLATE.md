@@ -6,7 +6,7 @@ For an overview of how you can integrate with Adyen on Android check out the [Do
 
 <br/>
 
-![DropIn Preview](https://docs-admin.is.adyen.com/user/pages/docs/01.checkout/08.android/01.drop-in/dropin-android.jpg)
+![DropIn Preview](config/docs/dropin-android.jpg)
 
 <br/>
 

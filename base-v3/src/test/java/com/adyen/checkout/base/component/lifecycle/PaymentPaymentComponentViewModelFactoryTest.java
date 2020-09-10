@@ -22,7 +22,7 @@ import org.junit.Test;
 
 import java.io.IOException;
 
-public class PaymentComponentViewModelFactoryTest {
+public class PaymentPaymentComponentViewModelFactoryTest {
 
     ClassLoader classLoader;
     PaymentMethod mPaymentMethod;
@@ -39,14 +39,14 @@ public class PaymentComponentViewModelFactoryTest {
 
     @Test(expected = RuntimeException.class)
     public void initComponentViewModel_ViewModelWithoutConstructor_expectRuntimeException() {
-        ComponentViewModelFactory componentViewModelFactory = new ComponentViewModelFactory(mPaymentMethod, mTestConfiguration);
-        componentViewModelFactory.create(TestViewModel.class);
+        PaymentComponentViewModelFactory paymentComponentViewModelFactory = new PaymentComponentViewModelFactory(mPaymentMethod, mTestConfiguration);
+        paymentComponentViewModelFactory.create(TestViewModel.class);
     }
 
     @Test
     public void initComponentViewModel_ViewModelWithConstructor_expectSamePaymentMethodAndConfiguration() {
-        ComponentViewModelFactory componentViewModelFactory = new ComponentViewModelFactory(mPaymentMethod, mTestConfiguration);
-        TestViewModelWithConstructor viewModel = componentViewModelFactory.create(TestViewModelWithConstructor.class);
+        PaymentComponentViewModelFactory paymentComponentViewModelFactory = new PaymentComponentViewModelFactory(mPaymentMethod, mTestConfiguration);
+        TestViewModelWithConstructor viewModel = paymentComponentViewModelFactory.create(TestViewModelWithConstructor.class);
 
         Assert.assertEquals(viewModel.paymentMethod, mPaymentMethod);
         Assert.assertEquals(viewModel.testConfiguration, mTestConfiguration);

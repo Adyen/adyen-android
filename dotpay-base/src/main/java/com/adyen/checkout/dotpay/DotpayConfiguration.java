@@ -12,8 +12,6 @@ import android.content.Context;
 import android.os.Parcel;
 import android.os.Parcelable;
 import android.support.annotation.NonNull;
-import android.support.annotation.Nullable;
-import android.util.DisplayMetrics;
 
 import com.adyen.checkout.core.api.Environment;
 import com.adyen.checkout.issuerlist.IssuerListConfiguration;
@@ -33,31 +31,15 @@ public class DotpayConfiguration extends IssuerListConfiguration {
     };
 
     /**
-     * @param shopperLocale  The locale that should be used to display strings and layouts. Can differ from device default.
-     * @param displayMetrics The current {@link DisplayMetrics} of the device to fetch images of matching size.
-     * @param environment    The environment to be used to make network calls.
-     * @deprecated Constructor with all parameters. Use the Builder to initialize this object.
-     */
-    @SuppressWarnings("DeprecatedIsStillUsed")
-    @Deprecated
-    public DotpayConfiguration(
-            @NonNull Locale shopperLocale,
-            @SuppressWarnings("PMD.UnusedFormalParameter")
-            @Nullable DisplayMetrics displayMetrics,
-            @NonNull Environment environment
-    ) {
-        super(shopperLocale, environment);
-    }
-
-    /**
      * @param shopperLocale The locale that should be used to display strings and layouts. Can differ from device default.
      * @param environment   The environment to be used to make network calls.
      */
     DotpayConfiguration(
             @NonNull Locale shopperLocale,
-            @NonNull Environment environment
+            @NonNull Environment environment,
+            @NonNull String clientKey
     ) {
-        super(shopperLocale, environment);
+        super(shopperLocale, environment, clientKey);
     }
 
     DotpayConfiguration(@NonNull Parcel in) {
@@ -71,18 +53,6 @@ public class DotpayConfiguration extends IssuerListConfiguration {
 
         public Builder(@NonNull Context context) {
             super(context);
-        }
-
-        /**
-         * @deprecated No need to pass {@link DisplayMetrics} to builder.
-         */
-        @SuppressWarnings("DeprecatedIsStillUsed")
-        @Deprecated
-        public Builder(@NonNull Locale shopperLocale,
-                @SuppressWarnings("PMD.UnusedFormalParameter")
-                @Nullable DisplayMetrics displayMetrics,
-                @NonNull Environment environment) {
-            super(shopperLocale, environment);
         }
 
         public Builder(@NonNull Locale shopperLocale, @NonNull Environment environment) {
@@ -103,8 +73,14 @@ public class DotpayConfiguration extends IssuerListConfiguration {
 
         @NonNull
         @Override
+        public Builder setClientKey(@NonNull String builderClientKey) {
+            return (Builder) super.setClientKey(builderClientKey);
+        }
+
+        @NonNull
+        @Override
         public DotpayConfiguration build() {
-            return new DotpayConfiguration(mBuilderShopperLocale, mBuilderEnvironment);
+            return new DotpayConfiguration(mBuilderShopperLocale, mBuilderEnvironment, mBuilderClientKey);
         }
     }
 }

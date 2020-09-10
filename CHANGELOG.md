@@ -13,6 +13,20 @@
 [//]: <> (Add changes that not released yet into `Unreleased` section)
 [//]: <> (Comment `Unreleased` section if there are no changes)
 [//]: <> (## [Unreleased])
+## [3.7.0] - 2020-09-10
+### Added
+- MB Way Component.
+- Await Action Component.
+- Client Key to Configuration objects.
+### Changed
+- DropInService JobId is now public.
+- Refactor internal structure to create ViewableComponent interface.
+- Action Components now have a Configuration object, optional in most cases.
+- Block Voucher payment methods that are not yet supported.
+### Fixed
+- Improved validation for Public Key.
+- Date parsing to be non lenient.
+
 ## [3.6.6] - 2020-05-05
 ### Added
 - Common issues session on Readme.

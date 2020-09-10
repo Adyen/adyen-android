@@ -13,6 +13,7 @@ import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 
 import com.adyen.checkout.base.PaymentComponentState;
+import com.adyen.checkout.base.ViewableComponent;
 import com.adyen.checkout.base.component.BasePaymentComponent;
 import com.adyen.checkout.base.model.paymentmethods.InputDetail;
 import com.adyen.checkout.base.model.paymentmethods.Item;
@@ -23,8 +24,9 @@ import com.adyen.checkout.base.model.payments.request.PaymentComponentData;
 import java.util.ArrayList;
 import java.util.List;
 
-public abstract class IssuerListComponent<IssuerListPaymentMethodT extends IssuerListPaymentMethod> extends
-        BasePaymentComponent<IssuerListConfiguration, IssuerListInputData, IssuerListOutputData, PaymentComponentState> {
+public abstract class IssuerListComponent<IssuerListPaymentMethodT extends IssuerListPaymentMethod>
+        extends BasePaymentComponent<IssuerListConfiguration, IssuerListInputData, IssuerListOutputData, PaymentComponentState>
+        implements ViewableComponent<IssuerListOutputData, IssuerListConfiguration, PaymentComponentState> {
 
     private final MutableLiveData<List<IssuerModel>> mIssuersLiveData = new MutableLiveData<>();
 

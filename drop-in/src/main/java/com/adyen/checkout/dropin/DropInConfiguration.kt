@@ -18,6 +18,7 @@ import com.adyen.checkout.base.component.Configuration
 import com.adyen.checkout.base.model.payments.Amount
 import com.adyen.checkout.base.util.CheckoutCurrency
 import com.adyen.checkout.base.util.PaymentMethodTypes
+import com.adyen.checkout.base.util.ValidationUtils
 import com.adyen.checkout.bcmc.BcmcConfiguration
 import com.adyen.checkout.card.CardConfiguration
 import com.adyen.checkout.core.api.Environment
@@ -32,6 +33,7 @@ import com.adyen.checkout.entercash.EntercashConfiguration
 import com.adyen.checkout.eps.EPSConfiguration
 import com.adyen.checkout.googlepay.GooglePayConfiguration
 import com.adyen.checkout.ideal.IdealConfiguration
+import com.adyen.checkout.mbway.MBWayConfiguration
 import com.adyen.checkout.molpay.MolpayConfiguration
 import com.adyen.checkout.openbanking.OpenBankingConfiguration
 import com.adyen.checkout.sepa.SepaConfiguration
@@ -61,11 +63,12 @@ class DropInConfiguration : Configuration, Parcelable {
     constructor(
         shopperLocale: Locale,
         environment: Environment,
+        clientKey: String,
         availableConfigs: HashMap<String, Configuration>,
         serviceComponentName: ComponentName,
         resultHandlerIntent: Intent,
         amount: Amount
-    ) : super(shopperLocale, environment) {
+    ) : super(shopperLocale, environment, clientKey) {
         this.availableConfigs = availableConfigs
         this.serviceComponentName = serviceComponentName
         this.resultHandlerIntent = resultHandlerIntent
@@ -92,12 +95,12 @@ class DropInConfiguration : Configuration, Parcelable {
         return ParcelUtils.NO_FILE_DESCRIPTOR
     }
 
-    fun <T : Configuration> getConfigurationFor(@PaymentMethodTypes.SupportedPaymentMethod paymentMethod: String, context: Context): T {
-        return if (PaymentMethodTypes.SUPPORTED_PAYMENT_METHODS.contains(paymentMethod) && availableConfigs.containsKey(paymentMethod)) {
+    fun <T : Configuration> getConfigurationFor(componentType: String, context: Context): T {
+        return if (availableConfigs.containsKey(componentType)) {
             @Suppress("UNCHECKED_CAST")
-            availableConfigs[paymentMethod] as T
+            availableConfigs[componentType] as T
         } else {
-            getDefaultConfigFor(paymentMethod, context, this)
+            getDefaultConfigFor(componentType, context, this)
         }
     }
 
@@ -112,10 +115,11 @@ class DropInConfiguration : Configuration, Parcelable {
 
         private val availableConfigs = HashMap<String, Configuration>()
 
-        private var serviceComponentName: ComponentName
         private var shopperLocale: Locale
-        private var resultHandlerIntent: Intent
         private var environment: Environment = Environment.EUROPE
+        private var clientKey: String = DEFAULT_EMPTY_CLIENT_KEY
+        private var serviceComponentName: ComponentName
+        private var resultHandlerIntent: Intent
         private var amount: Amount = Amount.EMPTY
 
         private val packageName: String
@@ -167,13 +171,22 @@ class DropInConfiguration : Configuration, Parcelable {
             return this
         }
 
-        fun setResultHandlerIntent(resultHandlerIntent: Intent): Builder {
-            this.resultHandlerIntent = resultHandlerIntent
+        fun setEnvironment(environment: Environment): Builder {
+            this.environment = environment
             return this
         }
 
-        fun setEnvironment(environment: Environment): Builder {
-            this.environment = environment
+        fun setClientKey(clientKey: String): Builder {
+            if (!ValidationUtils.isClientKeyValid(clientKey)) {
+                throw CheckoutException("Client key is not valid.")
+            }
+
+            this.clientKey = clientKey
+            return this
+        }
+
+        fun setResultHandlerIntent(resultHandlerIntent: Intent): Builder {
+            this.resultHandlerIntent = resultHandlerIntent
             return this
         }
 
@@ -289,17 +302,23 @@ class DropInConfiguration : Configuration, Parcelable {
             return this
         }
 
+        fun addMBWayConfiguration(mbwayConfiguration: MBWayConfiguration): Builder {
+            availableConfigs[PaymentMethodTypes.MB_WAY] = mbwayConfiguration
+            return this
+        }
+
         /**
          * Create the [DropInConfiguration] instance.
          */
         fun build(): DropInConfiguration {
             return DropInConfiguration(
-                shopperLocale,
-                environment,
-                availableConfigs,
-                serviceComponentName,
-                resultHandlerIntent,
-                amount
+                    shopperLocale,
+                    environment,
+                    clientKey,
+                    availableConfigs,
+                    serviceComponentName,
+                    resultHandlerIntent,
+                    amount
             )
         }
     }

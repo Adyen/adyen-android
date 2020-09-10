@@ -17,7 +17,7 @@ import android.text.TextUtils;
 
 import com.adyen.checkout.base.ComponentAvailableCallback;
 import com.adyen.checkout.base.PaymentComponentProvider;
-import com.adyen.checkout.base.component.lifecycle.ComponentViewModelFactory;
+import com.adyen.checkout.base.component.lifecycle.PaymentComponentViewModelFactory;
 import com.adyen.checkout.base.model.paymentmethods.PaymentMethod;
 
 public class BcmcComponentProvider implements PaymentComponentProvider<BcmcComponent, BcmcConfiguration> {
@@ -25,14 +25,14 @@ public class BcmcComponentProvider implements PaymentComponentProvider<BcmcCompo
     @NonNull
     @Override
     public BcmcComponent get(@NonNull FragmentActivity activity, @NonNull PaymentMethod paymentMethod, @NonNull BcmcConfiguration configuration) {
-        final ComponentViewModelFactory factory = new ComponentViewModelFactory(paymentMethod, configuration);
+        final PaymentComponentViewModelFactory factory = new PaymentComponentViewModelFactory(paymentMethod, configuration);
         return ViewModelProviders.of(activity, factory).get(BcmcComponent.class);
     }
 
     @NonNull
     @Override
     public BcmcComponent get(@NonNull Fragment fragment, @NonNull PaymentMethod paymentMethod, @NonNull BcmcConfiguration configuration) {
-        final ComponentViewModelFactory factory = new ComponentViewModelFactory(paymentMethod, configuration);
+        final PaymentComponentViewModelFactory factory = new PaymentComponentViewModelFactory(paymentMethod, configuration);
         return ViewModelProviders.of(fragment, factory).get(BcmcComponent.class);
     }
 

@@ -13,9 +13,10 @@ import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.util.AttributeSet;
 
+import com.adyen.checkout.base.model.payments.request.IdealPaymentMethod;
 import com.adyen.checkout.issuerlist.IssuerListRecyclerView;
 
-public class IdealRecyclerView extends IssuerListRecyclerView<IdealComponent> {
+public class IdealRecyclerView extends IssuerListRecyclerView<IdealPaymentMethod, IdealComponent> {
 
     public IdealRecyclerView(@NonNull Context context) {
         super(context);

@@ -17,7 +17,7 @@ import android.text.TextUtils;
 
 import com.adyen.checkout.base.ComponentAvailableCallback;
 import com.adyen.checkout.base.PaymentComponentProvider;
-import com.adyen.checkout.base.component.lifecycle.ComponentViewModelFactory;
+import com.adyen.checkout.base.component.lifecycle.PaymentComponentViewModelFactory;
 import com.adyen.checkout.base.model.paymentmethods.PaymentMethod;
 import com.adyen.checkout.card.data.CardType;
 import com.adyen.checkout.core.log.LogUtil;
@@ -33,7 +33,7 @@ public class CardComponentProvider implements PaymentComponentProvider<CardCompo
     @Override
     public CardComponent get(@NonNull FragmentActivity activity, @NonNull PaymentMethod paymentMethod, @NonNull CardConfiguration configuration) {
         final CardConfiguration verifiedConfiguration = checkSupportedCardTypes(paymentMethod, configuration);
-        final ComponentViewModelFactory factory = new ComponentViewModelFactory(paymentMethod, verifiedConfiguration);
+        final PaymentComponentViewModelFactory factory = new PaymentComponentViewModelFactory(paymentMethod, verifiedConfiguration);
         return ViewModelProviders.of(activity, factory).get(CardComponent.class);
     }
 
@@ -41,7 +41,7 @@ public class CardComponentProvider implements PaymentComponentProvider<CardCompo
     @Override
     public CardComponent get(@NonNull Fragment fragment, @NonNull PaymentMethod paymentMethod, @NonNull CardConfiguration configuration) {
         final CardConfiguration verifiedConfiguration = checkSupportedCardTypes(paymentMethod, configuration);
-        final ComponentViewModelFactory factory = new ComponentViewModelFactory(paymentMethod, verifiedConfiguration);
+        final PaymentComponentViewModelFactory factory = new PaymentComponentViewModelFactory(paymentMethod, verifiedConfiguration);
         return ViewModelProviders.of(fragment, factory).get(CardComponent.class);
     }
 

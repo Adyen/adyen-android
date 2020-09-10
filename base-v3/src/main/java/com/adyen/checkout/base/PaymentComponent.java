@@ -11,6 +11,7 @@ package com.adyen.checkout.base;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 
+import com.adyen.checkout.base.component.Configuration;
 import com.adyen.checkout.base.model.payments.request.PaymentMethodDetails;
 
 /**
@@ -20,7 +21,8 @@ import com.adyen.checkout.base.model.payments.request.PaymentMethodDetails;
  * <p/>
  * Should be used attached to a corresponding ComponentView to get data from.
  */
-public interface PaymentComponent<ComponentStateT extends PaymentComponentState> extends Component<ComponentStateT> {
+public interface PaymentComponent<ComponentStateT extends PaymentComponentState, ConfigurationT extends Configuration>
+        extends Component<ComponentStateT, ConfigurationT> {
 
     /**
      * @deprecated Use {@link #getSupportedPaymentMethodTypes()} instead with a list of the supported payment method types.

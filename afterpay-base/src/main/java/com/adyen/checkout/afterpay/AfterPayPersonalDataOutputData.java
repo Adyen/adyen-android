@@ -15,7 +15,7 @@ import com.adyen.checkout.base.validation.ValidatedField;
 
 import java.util.Calendar;
 
-public class AfterPayPersonalDataOutputData implements OutputData {
+class AfterPayPersonalDataOutputData implements OutputData {
 
     private final ValidatedField<String> mFirstNameField;
     private final ValidatedField<String> mLastNameField;

@@ -19,7 +19,7 @@ class CheckoutExampleApplication : MultiDexApplication() {
 
     companion object {
         init {
-            Logger.setLogcatLevel(Log.DEBUG)
+            Logger.setLogcatLevel(Log.VERBOSE)
         }
     }
 

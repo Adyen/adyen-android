@@ -16,7 +16,7 @@ import android.support.v4.app.FragmentActivity;
 
 import com.adyen.checkout.base.ComponentAvailableCallback;
 import com.adyen.checkout.base.PaymentComponentProvider;
-import com.adyen.checkout.base.component.lifecycle.ComponentViewModelFactory;
+import com.adyen.checkout.base.component.lifecycle.PaymentComponentViewModelFactory;
 import com.adyen.checkout.base.model.paymentmethods.PaymentMethod;
 import com.adyen.checkout.core.exception.CheckoutException;
 import com.adyen.checkout.googlepay.util.GooglePayUtils;
@@ -36,7 +36,7 @@ public class GooglePayProvider implements PaymentComponentProvider<GooglePayComp
     @Override
     public GooglePayComponent get(@NonNull FragmentActivity activity, @NonNull PaymentMethod paymentMethod,
             @NonNull GooglePayConfiguration configuration) throws CheckoutException {
-        final ComponentViewModelFactory factory = new ComponentViewModelFactory(paymentMethod, configuration);
+        final PaymentComponentViewModelFactory factory = new PaymentComponentViewModelFactory(paymentMethod, configuration);
         return ViewModelProviders.of(activity, factory).get(GooglePayComponent.class);
     }
 
@@ -44,7 +44,7 @@ public class GooglePayProvider implements PaymentComponentProvider<GooglePayComp
     @Override
     public GooglePayComponent get(@NonNull Fragment fragment, @NonNull PaymentMethod paymentMethod, @NonNull GooglePayConfiguration configuration)
             throws CheckoutException {
-        final ComponentViewModelFactory factory = new ComponentViewModelFactory(paymentMethod, configuration);
+        final PaymentComponentViewModelFactory factory = new PaymentComponentViewModelFactory(paymentMethod, configuration);
         return ViewModelProviders.of(fragment, factory).get(GooglePayComponent.class);
     }
 

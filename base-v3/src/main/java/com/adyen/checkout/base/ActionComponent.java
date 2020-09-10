@@ -11,6 +11,7 @@ package com.adyen.checkout.base;
 import android.app.Activity;
 import android.support.annotation.NonNull;
 
+import com.adyen.checkout.base.component.Configuration;
 import com.adyen.checkout.base.model.payments.response.Action;
 
 /**
@@ -19,7 +20,7 @@ import com.adyen.checkout.base.model.payments.response.Action;
  * <p/>
  * Result on the {@link ActionComponentData} if populated can be considered valid to be sent back to the payments/details/ API
  */
-public interface ActionComponent extends Component<ActionComponentData> {
+public interface ActionComponent<ConfigurationT extends Configuration> extends Component<ActionComponentData, ConfigurationT> {
 
     /**
      * Provide the action from the API response that needs to be handled.

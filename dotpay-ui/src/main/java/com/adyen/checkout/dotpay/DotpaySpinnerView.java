@@ -13,9 +13,10 @@ import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.util.AttributeSet;
 
+import com.adyen.checkout.base.model.payments.request.DotpayPaymentMethod;
 import com.adyen.checkout.issuerlist.IssuerListSpinnerView;
 
-public final class DotpaySpinnerView extends IssuerListSpinnerView<DotpayComponent> {
+public final class DotpaySpinnerView extends IssuerListSpinnerView<DotpayPaymentMethod, DotpayComponent> {
 
     public DotpaySpinnerView(@NonNull Context context) {
         super(context);

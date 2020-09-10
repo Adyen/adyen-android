@@ -12,6 +12,7 @@ import android.os.Parcel;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 
+import com.adyen.checkout.base.util.ActionTypes;
 import com.adyen.checkout.core.exception.ModelSerializationException;
 import com.adyen.checkout.core.model.JsonUtils;
 
@@ -23,7 +24,7 @@ public class RedirectAction extends Action {
     @NonNull
     public static final Creator<RedirectAction> CREATOR = new Creator<>(RedirectAction.class);
 
-    public static final String ACTION_TYPE = "redirect";
+    public static final String ACTION_TYPE = ActionTypes.REDIRECT;
 
     private static final String METHOD = "method";
     private static final String URL = "url";

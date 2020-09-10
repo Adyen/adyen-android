@@ -20,6 +20,10 @@
         <item name="android:textSize">16sp</item>
     </style>
 
+    <style name="AdyenCheckout.TextAppearance.Secondary">
+        <item name="android:textSize">14sp</item>
+    </style>
+
     <style name="AdyenCheckout.Translucent">
         <item name="android:windowIsTranslucent">true</item>
         <item name="android:backgroundDimEnabled">true</item>

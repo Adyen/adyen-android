@@ -44,7 +44,9 @@ abstract class DropInService : JobIntentService() {
         private const val PAYMENT_COMPONENT_DATA_EXTRA_KEY = "payment_component_data_extra"
         private const val DETAILS_EXTRA_KEY = "details_method_extra"
 
-        private const val dropInJobId = 11
+        // Make it public for merchants who want to override behavior
+        @Suppress("MemberVisibilityCanBePrivate")
+        const val dropInJobId = 11
 
         // Base for the action strings
         private const val adyenCheckoutBaseActionSuffix = ".adyen.checkout"

@@ -17,6 +17,12 @@ import com.adyen.checkout.base.component.Configuration;
 import com.adyen.checkout.base.model.paymentmethods.PaymentMethod;
 import com.adyen.checkout.core.exception.CheckoutException;
 
+/**
+ * Provides an instance of te associated Component linked to provided lifecycle and config.
+ *
+ * @param <ComponentT> The Component to be provided
+ * @param <ConfigurationT> The Configuration for the Component to be provided
+ */
 public interface PaymentComponentProvider<ComponentT extends PaymentComponent, ConfigurationT extends Configuration>
         extends ComponentProvider<ComponentT> {
 

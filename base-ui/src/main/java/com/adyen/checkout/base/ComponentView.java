@@ -11,12 +11,14 @@ package com.adyen.checkout.base;
 import android.arch.lifecycle.LifecycleOwner;
 import android.support.annotation.NonNull;
 
+import com.adyen.checkout.base.component.OutputData;
+
 /**
  * A View that can display input and fill in details for a PaymentComponent.
  *
  * @param <ComponentT> The {@link PaymentComponent} this view is able to interact with.
  */
-public interface ComponentView<ComponentT extends PaymentComponent> {
+public interface ComponentView<OutputDataT extends OutputData, ComponentT extends ViewableComponent> {
 
     /**
      * Attach the {@link PaymentComponent} to the view to interact with.

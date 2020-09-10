@@ -35,8 +35,18 @@ public class ValidatedField<T> {
     }
 
     public enum Validation {
+        /**
+         * Field is valid and can be accepted.
+         */
         VALID,
+        /**
+         * Field is not fully valid.
+         * Could be incomplete or unable to fully validate.
+         */
         PARTIAL,
+        /**
+         * Field is not valid.
+         */
         INVALID
     }
 }

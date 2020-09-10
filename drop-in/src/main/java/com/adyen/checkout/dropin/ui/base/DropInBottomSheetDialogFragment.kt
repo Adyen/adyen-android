@@ -16,6 +16,7 @@ import android.support.design.widget.BottomSheetDialog
 import android.support.design.widget.BottomSheetDialogFragment
 import android.view.KeyEvent
 import android.widget.FrameLayout
+import com.adyen.checkout.base.ActionComponentData
 import com.adyen.checkout.base.model.paymentmethods.PaymentMethod
 import com.adyen.checkout.base.model.payments.request.PaymentComponentData
 import com.adyen.checkout.dropin.R
@@ -49,8 +50,9 @@ abstract class DropInBottomSheetDialogFragment : BottomSheetDialogFragment() {
         dialog.setOnKeyListener { _, keyCode, event ->
             if (keyCode == KeyEvent.KEYCODE_BACK && event.action == KeyEvent.ACTION_UP) {
                 onBackPressed()
+            } else {
+                false
             }
-            false
         }
 
         dialog.setOnShowListener { dialog ->
@@ -72,10 +74,14 @@ abstract class DropInBottomSheetDialogFragment : BottomSheetDialogFragment() {
         return false
     }
 
+    /**
+     * Interface for Drop-in fragments to interact with the main Activity
+     */
     interface Protocol {
-        fun showComponentDialog(paymentMethod: PaymentMethod, wasInExpandMode: Boolean)
         fun showPaymentMethodsDialog(showInExpandStatus: Boolean)
+        fun showComponentDialog(paymentMethod: PaymentMethod, wasInExpandMode: Boolean)
         fun requestPaymentsCall(paymentComponentData: PaymentComponentData<*>)
+        fun requestDetailsCall(actionComponentData: ActionComponentData)
         fun showError(errorMessage: String, terminate: Boolean)
         fun terminateDropIn()
         fun startGooglePay(paymentMethod: PaymentMethod, googlePayConfiguration: GooglePayConfiguration)

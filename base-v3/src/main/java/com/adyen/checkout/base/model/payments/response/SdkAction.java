@@ -12,6 +12,7 @@ import android.os.Parcel;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 
+import com.adyen.checkout.base.util.ActionTypes;
 import com.adyen.checkout.base.util.PaymentMethodTypes;
 import com.adyen.checkout.core.exception.CheckoutException;
 import com.adyen.checkout.core.exception.ModelSerializationException;
@@ -26,7 +27,7 @@ public class SdkAction<SdkDataT extends SdkData> extends Action {
     @NonNull
     public static final Creator<SdkAction> CREATOR = new Creator<>(SdkAction.class);
 
-    public static final String ACTION_TYPE = "sdk";
+    public static final String ACTION_TYPE = ActionTypes.SDK;
 
     private static final String SDK_DATA = "sdkData";
 

@@ -46,9 +46,12 @@ public class ExpiryDateInput extends AdyenTextInputEditText {
         this(context, attrs, 0);
     }
 
+    @SuppressWarnings("JavadocMethod")
     public ExpiryDateInput(@NonNull Context context, @Nullable AttributeSet attrs, int defStyleAttr) {
         super(context, attrs, defStyleAttr);
         enforceMaxInputLength(MAX_LENGTH);
+        // Make sure DateFormat only accepts the correct formatting.
+        mDateFormat.setLenient(false);
     }
 
     @Override

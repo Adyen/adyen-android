@@ -79,6 +79,8 @@ public abstract class Action extends ModelObject {
                 return WeChatPaySdkAction.SERIALIZER;
             case SdkAction.ACTION_TYPE:
                 return SdkAction.SERIALIZER;
+            case AwaitAction.ACTION_TYPE:
+                return AwaitAction.SERIALIZER;
             default:
                 throw new CheckoutException("Action type not found - " + actionType);
         }

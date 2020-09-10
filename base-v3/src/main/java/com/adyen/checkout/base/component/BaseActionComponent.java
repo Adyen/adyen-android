@@ -10,7 +10,6 @@ package com.adyen.checkout.base.component;
 
 import android.app.Activity;
 import android.app.Application;
-import android.arch.lifecycle.AndroidViewModel;
 import android.arch.lifecycle.LifecycleOwner;
 import android.arch.lifecycle.MutableLiveData;
 import android.arch.lifecycle.Observer;
@@ -19,9 +18,9 @@ import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.text.TextUtils;
 
-import com.adyen.checkout.base.ActionComponent;
 import com.adyen.checkout.base.ActionComponentData;
 import com.adyen.checkout.base.ComponentError;
+import com.adyen.checkout.base.component.lifecycle.ActionComponentViewModel;
 import com.adyen.checkout.base.model.payments.response.Action;
 import com.adyen.checkout.core.exception.CheckoutException;
 import com.adyen.checkout.core.exception.ComponentException;
@@ -32,7 +31,7 @@ import org.json.JSONObject;
 
 import java.util.List;
 
-public abstract class BaseActionComponent extends AndroidViewModel implements ActionComponent {
+public abstract class BaseActionComponent<ConfigurationT extends Configuration> extends ActionComponentViewModel<ConfigurationT> {
     private static final String TAG = LogUtil.getTag();
 
     private static final String PAYMENT_DATA_KEY = "payment_data";
@@ -43,8 +42,8 @@ public abstract class BaseActionComponent extends AndroidViewModel implements Ac
 
     private String mPaymentData;
 
-    public BaseActionComponent(@NonNull Application application) {
-        super(application);
+    public BaseActionComponent(@NonNull Application application, @Nullable ConfigurationT configuration) {
+        super(application, configuration);
     }
 
     @Override
@@ -117,5 +116,10 @@ public abstract class BaseActionComponent extends AndroidViewModel implements Ac
 
     protected void notifyException(@NonNull CheckoutException e) {
         mErrorMutableLiveData.postValue(new ComponentError(e));
+    }
+
+    @Nullable
+    protected String getPaymentData() {
+        return mPaymentData;
     }
 }

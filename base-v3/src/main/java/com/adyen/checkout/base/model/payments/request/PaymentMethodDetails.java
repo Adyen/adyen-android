@@ -88,6 +88,8 @@ public abstract class PaymentMethodDetails extends ModelObject {
                 return SepaPaymentMethod.SERIALIZER;
             case AfterPayPaymentMethod.PAYMENT_METHOD_TYPE:
                 return AfterPayPaymentMethod.SERIALIZER;
+            case MBWayPaymentMethod.PAYMENT_METHOD_TYPE:
+                return MBWayPaymentMethod.SERIALIZER;
             default:
                 return GenericPaymentMethod.SERIALIZER;
         }

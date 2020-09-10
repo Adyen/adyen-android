@@ -62,11 +62,12 @@ public class AfterPayConfiguration extends Configuration {
     @SuppressWarnings(Lint.SYNTHETIC)
     AfterPayConfiguration(@NonNull Locale shopperLocale,
             @NonNull Environment environment,
+            @NonNull String clientKey,
             @NonNull VisibilityState builderPersonalDetailsVisibility,
             @NonNull VisibilityState billingAddressVisibility,
             @NonNull VisibilityState deliveryAddressVisibility,
             @NonNull CountryCode countryCode) {
-        super(shopperLocale, environment);
+        super(shopperLocale, environment, clientKey);
         this.mPersonalDetailsVisibility = builderPersonalDetailsVisibility;
         this.mBillingAddressVisibility = billingAddressVisibility;
         this.mDeliveryAddressVisibility = deliveryAddressVisibility;
@@ -154,6 +155,12 @@ public class AfterPayConfiguration extends Configuration {
         }
 
         @NonNull
+        @Override
+        public Builder setClientKey(@NonNull String builderClientKey) {
+            return (Builder) super.setClientKey(builderClientKey);
+        }
+
+        @NonNull
         public Builder setPersonalDetailsState(@NonNull VisibilityState visibilityState) {
             this.mBuilderPersonalDetailsState = visibilityState;
             return this;
@@ -202,6 +209,7 @@ public class AfterPayConfiguration extends Configuration {
         public AfterPayConfiguration build() {
             return new AfterPayConfiguration(mBuilderShopperLocale,
                     mBuilderEnvironment,
+                    mBuilderClientKey,
                     mBuilderPersonalDetailsState,
                     mBuilderBillingAddressState,
                     mBuilderDeliveryAddressState,

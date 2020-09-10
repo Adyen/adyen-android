@@ -15,7 +15,10 @@ import android.support.annotation.NonNull;
 import com.adyen.checkout.base.component.Configuration;
 import com.adyen.checkout.base.model.paymentmethods.PaymentMethod;
 
-public final class ComponentViewModelFactory implements ViewModelProvider.Factory {
+/**
+ * A {@link ViewModelProvider.Factory} to create {@link PaymentComponentViewModel}.
+ */
+public final class PaymentComponentViewModelFactory implements ViewModelProvider.Factory {
 
     private final PaymentMethod mPaymentMethod;
     private final Configuration mConfiguration;
@@ -26,7 +29,7 @@ public final class ComponentViewModelFactory implements ViewModelProvider.Factor
      * @param paymentMethod a {@link PaymentMethod} to pass in {@link PaymentComponentViewModel}
      * @param configuration a {@link Configuration} to pass in {@link PaymentComponentViewModel}
      */
-    public ComponentViewModelFactory(@NonNull PaymentMethod paymentMethod, @NonNull Configuration configuration) {
+    public PaymentComponentViewModelFactory(@NonNull PaymentMethod paymentMethod, @NonNull Configuration configuration) {
         mPaymentMethod = paymentMethod;
         mConfiguration = configuration;
     }

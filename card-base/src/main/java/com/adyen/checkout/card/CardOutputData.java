@@ -1,19 +1,20 @@
 /*
- * Copyright (c) 2019 Adyen N.V.
+ * Copyright (c) 2020 Adyen N.V.
  *
  * This file is open source and available under the MIT license. See the LICENSE file for more info.
  *
- * Created by arman on 18/9/2019.
+ * Created by caiof on 27/8/2020.
  */
 
-package com.adyen.checkout.card.data;
+package com.adyen.checkout.card;
 
 import android.support.annotation.NonNull;
 
 import com.adyen.checkout.base.component.OutputData;
 import com.adyen.checkout.base.validation.ValidatedField;
+import com.adyen.checkout.card.data.ExpiryDate;
 
-public final class CardOutputData implements OutputData {
+final class CardOutputData implements OutputData {
 
     private final ValidatedField<String> mHolderNameField;
     private final ValidatedField<String> mCardNumberField;
@@ -25,7 +26,7 @@ public final class CardOutputData implements OutputData {
     /**
      * Constructs a {@link com.adyen.checkout.card.CardComponent} object.
      */
-    public CardOutputData(
+    CardOutputData(
             @NonNull ValidatedField<String> cardNumberField,
             @NonNull ValidatedField<ExpiryDate> expiryDateField,
             @NonNull ValidatedField<String> securityCodeField,

@@ -3,10 +3,10 @@
  *
  * This file is open source and available under the MIT license. See the LICENSE file for more info.
  *
- * Created by arman on 18/9/2019.
+ * Created by caiof on 27/8/2020.
  */
 
-package com.adyen.checkout.bcmc.data;
+package com.adyen.checkout.bcmc;
 
 import android.support.annotation.NonNull;
 

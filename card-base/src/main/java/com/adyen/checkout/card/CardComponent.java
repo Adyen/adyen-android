@@ -8,8 +8,6 @@
 
 package com.adyen.checkout.card;
 
-import android.arch.lifecycle.LifecycleOwner;
-import android.arch.lifecycle.Observer;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.text.TextUtils;
@@ -23,8 +21,6 @@ import com.adyen.checkout.base.model.payments.request.CardPaymentMethod;
 import com.adyen.checkout.base.model.payments.request.PaymentComponentData;
 import com.adyen.checkout.base.util.PaymentMethodTypes;
 import com.adyen.checkout.base.validation.ValidatedField;
-import com.adyen.checkout.card.data.CardInputData;
-import com.adyen.checkout.card.data.CardOutputData;
 import com.adyen.checkout.card.data.CardType;
 import com.adyen.checkout.card.data.ExpiryDate;
 import com.adyen.checkout.core.log.LogUtil;
@@ -199,17 +195,6 @@ public final class CardComponent extends BasePaymentComponent<
         paymentComponentData.setShopperReference(getConfiguration().getShopperReference());
 
         return new CardComponentState(paymentComponentData, outputData.isValid(), firstCardType, binValue);
-    }
-
-    @Override
-    protected void observeOutputData(@NonNull LifecycleOwner lifecycleOwner, @NonNull Observer<CardOutputData> observer) {
-        super.observeOutputData(lifecycleOwner, observer);
-    }
-
-    @Nullable
-    @Override
-    protected CardOutputData getOutputData() {
-        return super.getOutputData();
     }
 
     @NonNull

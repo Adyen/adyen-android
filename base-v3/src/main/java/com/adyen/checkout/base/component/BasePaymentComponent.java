@@ -12,7 +12,6 @@ import android.arch.lifecycle.LifecycleOwner;
 import android.arch.lifecycle.MutableLiveData;
 import android.arch.lifecycle.Observer;
 import android.content.Context;
-import android.support.annotation.CallSuper;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.annotation.WorkerThread;
@@ -20,6 +19,7 @@ import android.text.TextUtils;
 
 import com.adyen.checkout.base.ComponentError;
 import com.adyen.checkout.base.PaymentComponentState;
+import com.adyen.checkout.base.ViewableComponent;
 import com.adyen.checkout.base.analytics.AnalyticEvent;
 import com.adyen.checkout.base.analytics.AnalyticsDispatcher;
 import com.adyen.checkout.base.component.lifecycle.PaymentComponentViewModel;
@@ -30,9 +30,13 @@ import com.adyen.checkout.core.exception.CheckoutException;
 import com.adyen.checkout.core.log.LogUtil;
 import com.adyen.checkout.core.log.Logger;
 
-public abstract class BasePaymentComponent<ConfigurationT extends Configuration, InputDataT extends InputData, OutputDataT extends OutputData,
-        ComponentStateT extends PaymentComponentState>
-        extends PaymentComponentViewModel<ConfigurationT, ComponentStateT> {
+public abstract class BasePaymentComponent<
+            ConfigurationT extends Configuration,
+            InputDataT extends InputData,
+            OutputDataT extends OutputData,
+            ComponentStateT extends PaymentComponentState>
+        extends PaymentComponentViewModel<ConfigurationT, ComponentStateT>
+        implements ViewableComponent<OutputDataT, ConfigurationT, ComponentStateT> {
 
     private static final String TAG = LogUtil.getTag();
 
@@ -136,8 +140,16 @@ public abstract class BasePaymentComponent<ConfigurationT extends Configuration,
         }
     }
 
+
+    @Override
+    public void observeOutputData(@NonNull LifecycleOwner lifecycleOwner, @NonNull Observer<OutputDataT> observer) {
+        // Parent component needs to overrides this for view to have access to the method in the package
+        mOutputLiveData.observe(lifecycleOwner, observer);
+    }
+
     @Nullable
-    protected OutputDataT getOutputData() {
+    @Override
+    public OutputDataT getOutputData() {
         return mOutputData;
     }
 
@@ -157,12 +169,6 @@ public abstract class BasePaymentComponent<ConfigurationT extends Configuration,
     protected void notifyException(@NonNull CheckoutException e) {
         Logger.e(TAG, "notifyException - " + e.getMessage());
         mComponentErrorLiveData.postValue(new ComponentError(e));
-    }
-
-    @CallSuper
-    protected void observeOutputData(@NonNull LifecycleOwner lifecycleOwner, @NonNull Observer<OutputDataT> observer) {
-        // Parent component needs to overrides this for view to have access to the method in the package
-        mOutputLiveData.observe(lifecycleOwner, observer);
     }
 
     private void notifyStateChanged() {

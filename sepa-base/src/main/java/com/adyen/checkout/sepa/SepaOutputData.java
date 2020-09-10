@@ -15,7 +15,7 @@ import android.text.TextUtils;
 import com.adyen.checkout.base.component.OutputData;
 import com.adyen.checkout.base.validation.ValidatedField;
 
-public class SepaOutputData implements OutputData {
+class SepaOutputData implements OutputData {
 
     private final ValidatedField<String> mOwnerNameField;
     private final ValidatedField<String> mIbanNumberField;

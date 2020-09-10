@@ -59,11 +59,12 @@ import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 
-public final class Adyen3DS2Component extends BaseActionComponent implements ChallengeStatusReceiver {
+public final class Adyen3DS2Component extends BaseActionComponent<Adyen3DS2Configuration> implements ChallengeStatusReceiver {
     @SuppressWarnings(Lint.SYNTHETIC)
     static final String TAG = LogUtil.getTag();
 
-    public static final ActionComponentProvider<Adyen3DS2Component> PROVIDER = new ActionComponentProviderImpl<>(Adyen3DS2Component.class);
+    public static final ActionComponentProvider<Adyen3DS2Component> PROVIDER =
+            new ActionComponentProviderImpl<>(Adyen3DS2Component.class, Adyen3DS2Configuration.class);
 
     private static final String FINGERPRINT_DETAILS_KEY = "threeds2.fingerprint";
     private static final String CHALLENGE_DETAILS_KEY = "threeds2.challengeResult";
@@ -77,8 +78,8 @@ public final class Adyen3DS2Component extends BaseActionComponent implements Cha
     @SuppressWarnings(Lint.SYNTHETIC)
     UiCustomization mUiCustomization;
 
-    public Adyen3DS2Component(@NonNull Application application) {
-        super(application);
+    public Adyen3DS2Component(@NonNull Application application, @Nullable Adyen3DS2Configuration configuration) {
+        super(application, configuration);
     }
 
     @Override

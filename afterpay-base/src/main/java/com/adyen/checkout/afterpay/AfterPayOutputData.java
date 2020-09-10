@@ -12,7 +12,7 @@ import android.support.annotation.NonNull;
 
 import com.adyen.checkout.base.component.OutputData;
 
-public class AfterPayOutputData implements OutputData {
+class AfterPayOutputData implements OutputData {
 
     private AfterPayPersonalDataOutputData mAfterPayPersonalDataOutputData;
     private AfterPayAddressOutputData mBillingAddressOutputData;

@@ -19,7 +19,7 @@ import java.util.Locale;
 public class TestConfiguration extends Configuration {
 
     public TestConfiguration() {
-        super(Locale.US, Environment.TEST);
+        super(Locale.US, Environment.TEST, null);
     }
 
     protected TestConfiguration(@NonNull Parcel in) {

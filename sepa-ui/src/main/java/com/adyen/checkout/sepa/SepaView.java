@@ -22,6 +22,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.LinearLayout;
 
+import com.adyen.checkout.base.PaymentComponentState;
 import com.adyen.checkout.base.ui.view.AdyenLinearLayout;
 import com.adyen.checkout.base.ui.view.AdyenTextInputEditText;
 import com.adyen.checkout.core.code.Lint;
@@ -30,7 +31,8 @@ import com.adyen.checkout.core.log.LogUtil;
 import com.adyen.checkout.core.log.Logger;
 import com.adyen.checkout.sepa.ui.R;
 
-public class SepaView extends AdyenLinearLayout<SepaComponent> implements Observer<SepaOutputData> {
+public class SepaView extends AdyenLinearLayout<SepaOutputData, SepaConfiguration, PaymentComponentState, SepaComponent>
+        implements Observer<SepaOutputData> {
     private static final String TAG = LogUtil.getTag();
 
     @SuppressLint(Lint.SYNTHETIC)

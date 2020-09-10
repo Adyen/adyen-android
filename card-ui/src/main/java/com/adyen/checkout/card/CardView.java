@@ -31,8 +31,6 @@ import com.adyen.checkout.base.ui.view.AdyenLinearLayout;
 import com.adyen.checkout.base.ui.view.AdyenTextInputEditText;
 import com.adyen.checkout.base.ui.view.RoundCornerImageView;
 import com.adyen.checkout.base.validation.ValidatedField;
-import com.adyen.checkout.card.data.CardInputData;
-import com.adyen.checkout.card.data.CardOutputData;
 import com.adyen.checkout.card.data.CardType;
 import com.adyen.checkout.card.data.ExpiryDate;
 import com.adyen.checkout.card.ui.CardNumberInput;
@@ -46,7 +44,8 @@ import java.util.List;
  * CardView for {@link CardComponent}.
  */
 @SuppressWarnings("SyntheticAccessor")
-public final class CardView extends AdyenLinearLayout<CardComponent> implements Observer<CardOutputData> {
+public final class CardView extends AdyenLinearLayout<CardOutputData, CardConfiguration, CardComponentState, CardComponent>
+        implements Observer<CardOutputData> {
 
     private RoundCornerImageView mCardBrandLogoImageView;
 

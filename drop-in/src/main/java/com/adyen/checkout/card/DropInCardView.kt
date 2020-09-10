@@ -15,12 +15,11 @@ import android.util.AttributeSet
 import android.view.LayoutInflater
 import com.adyen.checkout.base.api.ImageLoader
 import com.adyen.checkout.base.ui.view.AdyenLinearLayout
-import com.adyen.checkout.card.data.CardOutputData
 import kotlinx.android.synthetic.main.view_card_component_dropin.view.cardView
 import kotlinx.android.synthetic.main.view_card_component_dropin.view.recyclerView_cardList
 import com.adyen.checkout.dropin.R as dropInR
 
-class DropInCardView : AdyenLinearLayout<CardComponent>, Observer<CardOutputData> {
+internal class DropInCardView : AdyenLinearLayout<CardOutputData, CardConfiguration, CardComponentState, CardComponent>, Observer<CardOutputData> {
 
     private lateinit var mCardListAdapter: CardListAdapter
 

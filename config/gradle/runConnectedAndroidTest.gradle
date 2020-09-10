@@ -17,5 +17,6 @@ task runConnectedAndroidTest(type: Exec) {
 
     workingDir "$scriptsDir"
 
-    commandLine './run_connected_android_test.sh', "$moduleName", "$moduleVersion"
+    // TODO disabling instrumented tests until we can make them reliable
+//    commandLine './run_connected_android_test.sh', "$moduleName", "$moduleVersion"
 }

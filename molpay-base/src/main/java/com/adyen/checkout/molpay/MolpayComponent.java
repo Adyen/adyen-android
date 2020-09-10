@@ -8,8 +8,6 @@
 
 package com.adyen.checkout.molpay;
 
-import android.arch.lifecycle.LifecycleOwner;
-import android.arch.lifecycle.Observer;
 import android.support.annotation.NonNull;
 
 import com.adyen.checkout.base.PaymentComponentProvider;
@@ -43,11 +41,6 @@ public final class MolpayComponent extends IssuerListComponent<MolpayPaymentMeth
     @Override
     public String[] getSupportedPaymentMethodTypes() {
         return PAYMENT_METHOD_TYPES;
-    }
-
-    @Override
-    protected void observeOutputData(@NonNull LifecycleOwner lifecycleOwner, @NonNull Observer<IssuerListOutputData> observer) {
-        super.observeOutputData(lifecycleOwner, observer);
     }
 
     @Override

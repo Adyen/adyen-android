@@ -62,6 +62,7 @@ public class GooglePayConfiguration extends Configuration {
     GooglePayConfiguration(
             @NonNull Locale shopperLocale,
             @NonNull Environment environment,
+            @Nullable String clientKey,
             @NonNull String merchantAccount,
             int googlePayEnvironment,
             @NonNull Amount amount,
@@ -77,50 +78,11 @@ public class GooglePayConfiguration extends Configuration {
             boolean billingAddressRequired,
             @Nullable BillingAddressParameters billingAddressParameters
     ) {
-        super(shopperLocale, environment);
+        super(shopperLocale, environment, clientKey);
         mMerchantAccount = merchantAccount;
         mGooglePayEnvironment = googlePayEnvironment;
         mAmount = amount;
         mCountryCode = countryCode;
-        mMerchantInfo = merchantInfo;
-        mAllowedAuthMethods = allowedAuthMethods;
-        mAllowedCardNetworks = allowedCardNetworks;
-        mAllowPrepaidCards = allowPrepaidCards;
-        mEmailRequired = emailRequired;
-        mExistingPaymentMethodRequired = existingPaymentMethodRequired;
-        mShippingAddressRequired = shippingAddressRequired;
-        mShippingAddressParameters = shippingAddressParameters;
-        mBillingAddressRequired = billingAddressRequired;
-        mBillingAddressParameters = billingAddressParameters;
-    }
-
-    /**
-     * @deprecated Constructor with all parameters. Use the Builder to initialize this object.
-     */
-    @SuppressWarnings({"DeprecatedIsStillUsed", "ParameterNumber"})
-    @Deprecated
-    public GooglePayConfiguration(
-            @NonNull Locale shopperLocale,
-            @NonNull Environment environment,
-            @NonNull String merchantAccount,
-            int googlePayEnvironment,
-            @NonNull Amount amount,
-            @Nullable MerchantInfo merchantInfo,
-            @NonNull List<String> allowedAuthMethods,
-            @NonNull List<String> allowedCardNetworks,
-            boolean allowPrepaidCards,
-            boolean emailRequired,
-            boolean existingPaymentMethodRequired,
-            boolean shippingAddressRequired,
-            @Nullable ShippingAddressParameters shippingAddressParameters,
-            boolean billingAddressRequired,
-            @Nullable BillingAddressParameters billingAddressParameters
-    ) {
-        super(shopperLocale, environment);
-        mMerchantAccount = merchantAccount;
-        mGooglePayEnvironment = googlePayEnvironment;
-        mAmount = amount;
-        mCountryCode = null;
         mMerchantInfo = merchantInfo;
         mAllowedAuthMethods = allowedAuthMethods;
         mAllowedCardNetworks = allowedCardNetworks;
@@ -298,10 +260,17 @@ public class GooglePayConfiguration extends Configuration {
 
         @NonNull
         @Override
+        public Builder setClientKey(@NonNull String builderClientKey) {
+            return (Builder) super.setClientKey(builderClientKey);
+        }
+
+        @NonNull
+        @Override
         public GooglePayConfiguration build() {
             return new GooglePayConfiguration(
                     mBuilderShopperLocale,
                     mBuilderEnvironment,
+                    mBuilderClientKey,
                     mBuilderMerchantAccount,
                     mBuilderGooglePayEnvironment,
                     mBuilderAmount,

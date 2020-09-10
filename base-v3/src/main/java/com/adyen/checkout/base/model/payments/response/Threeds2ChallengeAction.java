@@ -12,6 +12,7 @@ import android.os.Parcel;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 
+import com.adyen.checkout.base.util.ActionTypes;
 import com.adyen.checkout.core.exception.ModelSerializationException;
 import com.adyen.checkout.core.model.JsonUtils;
 
@@ -23,7 +24,7 @@ public class Threeds2ChallengeAction extends Action {
     @NonNull
     public static final Creator<Threeds2ChallengeAction> CREATOR = new Creator<>(Threeds2ChallengeAction.class);
 
-    public static final String ACTION_TYPE = "threeDS2Challenge";
+    public static final String ACTION_TYPE = ActionTypes.THREEDS2_CHALLENGE;
 
     private static final String TOKEN = "token";
 

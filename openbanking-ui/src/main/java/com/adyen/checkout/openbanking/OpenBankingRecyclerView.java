@@ -13,9 +13,10 @@ import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.util.AttributeSet;
 
+import com.adyen.checkout.base.model.payments.request.OpenBankingPaymentMethod;
 import com.adyen.checkout.issuerlist.IssuerListRecyclerView;
 
-public class OpenBankingRecyclerView extends IssuerListRecyclerView<OpenBankingComponent> {
+public class OpenBankingRecyclerView extends IssuerListRecyclerView<OpenBankingPaymentMethod, OpenBankingComponent> {
 
     public OpenBankingRecyclerView(@NonNull Context context) {
         super(context);

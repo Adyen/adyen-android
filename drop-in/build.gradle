@@ -38,19 +38,21 @@ dependencies {
     androidTestImplementation "com.android.support.test.espresso:espresso-core:$espresso_version"
 
     // Checkout
+    api project(":3ds2")
     api project(":afterpay-ui")
-    api project(":ideal-ui")
-    api project(":molpay-ui")
+    api project(":await-ui")
+    api project(":bcmc-ui")
+    api project(":card-ui")
     api project(":dotpay-ui")
     api project(":entercash-ui")
     api project(":eps-ui")
-    api project(":openbanking-ui")
-    api project(":card-ui")
-    api project(":redirect")
-    api project(":3ds2")
     api project(":googlepay-base")
+    api project(":ideal-ui")
+    api project(":mbway-ui")
+    api project(":molpay-ui")
+    api project(":openbanking-ui")
+    api project(":redirect")
     api project(":sepa-ui")
-    api project(":bcmc-ui")
     api project(":wechatpay-base")
 
     // Dependencies

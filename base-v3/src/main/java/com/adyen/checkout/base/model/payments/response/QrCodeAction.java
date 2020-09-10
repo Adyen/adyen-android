@@ -12,6 +12,7 @@ import android.os.Parcel;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 
+import com.adyen.checkout.base.util.ActionTypes;
 import com.adyen.checkout.core.exception.ModelSerializationException;
 import com.adyen.checkout.core.model.JsonUtils;
 
@@ -23,7 +24,7 @@ public class QrCodeAction extends Action {
     @NonNull
     public static final Creator<QrCodeAction> CREATOR = new Creator<>(QrCodeAction.class);
 
-    public static final String ACTION_TYPE = "qrCode";
+    public static final String ACTION_TYPE = ActionTypes.QR_CODE;
 
     private static final String QR_CODE_DATA = "qrCodeData";
 

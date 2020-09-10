@@ -15,7 +15,7 @@ import com.adyen.checkout.base.component.OutputData;
 import com.adyen.checkout.googlepay.util.GooglePayUtils;
 import com.google.android.gms.wallet.PaymentData;
 
-public class GooglePayOutputData implements OutputData {
+class GooglePayOutputData implements OutputData {
 
     private final PaymentData mPaymentData;
 

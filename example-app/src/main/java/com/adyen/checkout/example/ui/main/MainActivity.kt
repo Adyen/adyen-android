@@ -22,6 +22,7 @@ import com.adyen.checkout.afterpay.AfterPayConfiguration
 import com.adyen.checkout.base.model.PaymentMethodsApiResponse
 import com.adyen.checkout.bcmc.BcmcConfiguration
 import com.adyen.checkout.card.CardConfiguration
+import com.adyen.checkout.core.api.Environment
 import com.adyen.checkout.core.exception.CheckoutException
 import com.adyen.checkout.core.log.LogUtil
 import com.adyen.checkout.core.log.Logger
@@ -126,21 +127,27 @@ class MainActivity : AppCompatActivity() {
         val shopperLocaleString = keyValueStorage.getShopperLocale()
         val shopperLocale = LocaleUtil.fromLanguageTag(shopperLocaleString)
 
-        val googlePayConfig = GooglePayConfiguration.Builder(this@MainActivity, keyValueStorage.getMerchantAccount())
-                .setCountryCode(keyValueStorage.getCountry())
-                .build()
-
-        val cardConfiguration = CardConfiguration.Builder(this@MainActivity, BuildConfig.PUBLIC_KEY)
+        val cardConfiguration = CardConfiguration.Builder(this@MainActivity)
+            .setPublicKey(BuildConfig.PUBLIC_KEY)
             .setShopperReference(keyValueStorage.getShopperReference())
             .setShopperLocale(shopperLocale)
+                .setEnvironment(Environment.TEST)
             .build()
+
+        val googlePayConfig = GooglePayConfiguration.Builder(this@MainActivity, keyValueStorage.getMerchantAccount())
+                .setCountryCode(keyValueStorage.getCountry())
+                .setEnvironment(Environment.TEST)
+                .build()
 
         val afterPayConfiguration = AfterPayConfiguration.Builder(this, AfterPayConfiguration.CountryCode.NL)
                 .setShopperLocale(shopperLocale)
+                .setEnvironment(Environment.TEST)
                 .build()
 
-        val bcmcConfiguration = BcmcConfiguration.Builder(this@MainActivity, BuildConfig.PUBLIC_KEY)
+        val bcmcConfiguration = BcmcConfiguration.Builder(this@MainActivity)
+                .setPublicKey(BuildConfig.PUBLIC_KEY)
                 .setShopperLocale(shopperLocale)
+                .setEnvironment(Environment.TEST)
                 .build()
 
         val resultIntent = Intent(this, MainActivity::class.java)
@@ -151,6 +158,8 @@ class MainActivity : AppCompatActivity() {
             resultIntent,
             ExampleSimplifiedDropInService::class.java
         )
+            .setEnvironment(Environment.TEST)
+            .setClientKey(BuildConfig.CLIENT_KEY)
             .setShopperLocale(shopperLocale)
             .addCardConfiguration(cardConfiguration)
             .addAfterPayConfiguration(afterPayConfiguration)

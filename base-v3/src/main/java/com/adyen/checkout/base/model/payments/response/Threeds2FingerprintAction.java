@@ -12,6 +12,7 @@ import android.os.Parcel;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 
+import com.adyen.checkout.base.util.ActionTypes;
 import com.adyen.checkout.core.exception.ModelSerializationException;
 import com.adyen.checkout.core.model.JsonUtils;
 
@@ -23,7 +24,7 @@ public class Threeds2FingerprintAction extends Action {
     @NonNull
     public static final Creator<Threeds2FingerprintAction> CREATOR = new Creator<>(Threeds2FingerprintAction.class);
 
-    public static final String ACTION_TYPE = "threeDS2Fingerprint";
+    public static final String ACTION_TYPE = ActionTypes.THREEDS2_FINGERPRINT;
 
     private static final String TOKEN = "token";
 

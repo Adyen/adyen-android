@@ -8,10 +8,7 @@
 
 package com.adyen.checkout.sepa;
 
-import android.arch.lifecycle.LifecycleOwner;
-import android.arch.lifecycle.Observer;
 import android.support.annotation.NonNull;
-import android.support.annotation.Nullable;
 
 import com.adyen.checkout.base.PaymentComponentProvider;
 import com.adyen.checkout.base.PaymentComponentState;
@@ -62,20 +59,9 @@ public class SepaComponent extends BasePaymentComponent<SepaConfiguration, SepaI
         return new PaymentComponentState<>(paymentComponentData, sepaOutputData != null && sepaOutputData.isValid());
     }
 
-    @Nullable
-    @Override
-    protected SepaOutputData getOutputData() {
-        return super.getOutputData();
-    }
-
     @NonNull
     @Override
     public String[] getSupportedPaymentMethodTypes() {
         return PAYMENT_METHOD_TYPES;
-    }
-
-    @Override
-    protected void observeOutputData(@NonNull LifecycleOwner lifecycleOwner, @NonNull Observer<SepaOutputData> observer) {
-        super.observeOutputData(lifecycleOwner, observer);
     }
 }

@@ -8,8 +8,6 @@
 
 package com.adyen.checkout.afterpay;
 
-import android.arch.lifecycle.LifecycleOwner;
-import android.arch.lifecycle.Observer;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.text.TextUtils;
@@ -170,21 +168,10 @@ public class AfterPayComponent extends BasePaymentComponent<AfterPayConfiguratio
         return new PaymentComponentState<>(paymentComponentData, afterPayOutputData != null && afterPayOutputData.isValid());
     }
 
-    @Nullable
-    @Override
-    protected AfterPayOutputData getOutputData() {
-        return super.getOutputData();
-    }
-
     @NonNull
     @Override
     public String[] getSupportedPaymentMethodTypes() {
         return PAYMENT_METHOD_TYPES;
-    }
-
-    @Override
-    protected void observeOutputData(@NonNull LifecycleOwner lifecycleOwner, @NonNull Observer<AfterPayOutputData> observer) {
-        super.observeOutputData(lifecycleOwner, observer);
     }
 
     private Address getAddressRequestFromOutputData(AfterPayAddressOutputData billingAddressOutputData) {

@@ -19,7 +19,9 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.AdapterView;
 
+import com.adyen.checkout.base.PaymentComponentState;
 import com.adyen.checkout.base.api.ImageLoader;
+import com.adyen.checkout.base.model.payments.request.IssuerListPaymentMethod;
 import com.adyen.checkout.base.ui.view.AdyenLinearLayout;
 import com.adyen.checkout.core.log.LogUtil;
 import com.adyen.checkout.core.log.Logger;
@@ -28,8 +30,10 @@ import com.adyen.checkout.issuerlist.ui.R;
 import java.util.Collections;
 import java.util.List;
 
-public abstract class IssuerListSpinnerView<IssuerListComponentT extends IssuerListComponent> extends
-        AdyenLinearLayout<IssuerListComponentT> implements AdapterView.OnItemSelectedListener {
+public abstract class IssuerListSpinnerView
+        <IssuerListPaymentMethodT extends IssuerListPaymentMethod, IssuerListComponentT extends IssuerListComponent<IssuerListPaymentMethodT>>
+        extends AdyenLinearLayout<IssuerListOutputData, IssuerListConfiguration, PaymentComponentState, IssuerListComponentT>
+        implements AdapterView.OnItemSelectedListener {
     private static final String TAG = LogUtil.getTag();
 
     private AppCompatSpinner mIssuersSpinner;

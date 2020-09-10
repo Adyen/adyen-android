@@ -16,7 +16,7 @@ import android.support.v4.app.FragmentActivity;
 
 import com.adyen.checkout.base.ComponentAvailableCallback;
 import com.adyen.checkout.base.PaymentComponentProvider;
-import com.adyen.checkout.base.component.lifecycle.ComponentViewModelFactory;
+import com.adyen.checkout.base.component.lifecycle.PaymentComponentViewModelFactory;
 import com.adyen.checkout.base.model.paymentmethods.PaymentMethod;
 import com.adyen.checkout.core.exception.CheckoutException;
 
@@ -33,7 +33,7 @@ public final class PaymentComponentProviderImpl<BaseComponentT extends BasePayme
     @Override
     public BaseComponentT get(@NonNull FragmentActivity activity, @NonNull PaymentMethod paymentMethod, @NonNull ConfigurationT configuration)
             throws CheckoutException {
-        final ComponentViewModelFactory factory = new ComponentViewModelFactory(paymentMethod, configuration);
+        final PaymentComponentViewModelFactory factory = new PaymentComponentViewModelFactory(paymentMethod, configuration);
         return ViewModelProviders.of(activity, factory).get(mComponentClass);
     }
 
@@ -41,7 +41,7 @@ public final class PaymentComponentProviderImpl<BaseComponentT extends BasePayme
     @Override
     public BaseComponentT get(@NonNull Fragment fragment, @NonNull PaymentMethod paymentMethod, @NonNull ConfigurationT configuration)
             throws CheckoutException {
-        final ComponentViewModelFactory factory = new ComponentViewModelFactory(paymentMethod, configuration);
+        final PaymentComponentViewModelFactory factory = new PaymentComponentViewModelFactory(paymentMethod, configuration);
         return ViewModelProviders.of(fragment, factory).get(mComponentClass);
     }
 

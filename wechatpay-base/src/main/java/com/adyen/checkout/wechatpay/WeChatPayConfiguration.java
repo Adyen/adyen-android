@@ -12,6 +12,7 @@ import android.content.Context;
 import android.os.Parcel;
 import android.os.Parcelable;
 import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
 
 import com.adyen.checkout.base.component.BaseConfigurationBuilder;
 import com.adyen.checkout.base.component.Configuration;
@@ -31,8 +32,12 @@ public class WeChatPayConfiguration extends Configuration {
         }
     };
 
-    protected WeChatPayConfiguration(@NonNull Locale shopperLocale, @NonNull Environment environment) {
-        super(shopperLocale, environment);
+    protected WeChatPayConfiguration(
+            @NonNull Locale shopperLocale,
+            @NonNull Environment environment,
+            @Nullable String clientKey
+    ) {
+        super(shopperLocale, environment, clientKey);
     }
 
     protected WeChatPayConfiguration(@NonNull Parcel in) {
@@ -82,8 +87,14 @@ public class WeChatPayConfiguration extends Configuration {
 
         @NonNull
         @Override
+        public Builder setClientKey(@NonNull String builderClientKey) {
+            return (Builder) super.setClientKey(builderClientKey);
+        }
+
+        @NonNull
+        @Override
         public WeChatPayConfiguration build() {
-            return new WeChatPayConfiguration(mBuilderShopperLocale, mBuilderEnvironment);
+            return new WeChatPayConfiguration(mBuilderShopperLocale, mBuilderEnvironment, mBuilderClientKey);
         }
     }
 }

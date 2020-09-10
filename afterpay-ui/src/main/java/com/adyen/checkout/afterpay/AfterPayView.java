@@ -33,6 +33,7 @@ import android.widget.TextView;
 
 import com.adyen.checkout.afterpay.ui.DateOfBirthInput;
 import com.adyen.checkout.afterpay.ui.R;
+import com.adyen.checkout.base.PaymentComponentState;
 import com.adyen.checkout.base.ui.view.AdyenLinearLayout;
 import com.adyen.checkout.base.ui.view.AdyenTextInputEditText;
 import com.adyen.checkout.base.util.BrowserUtils;
@@ -41,8 +42,8 @@ import com.adyen.checkout.core.log.LogUtil;
 import com.adyen.checkout.core.log.Logger;
 
 @SuppressWarnings("MethodLength")
-public class AfterPayView extends AdyenLinearLayout<AfterPayComponent> implements Observer<AfterPayOutputData>,
-        CompoundButton.OnCheckedChangeListener {
+public class AfterPayView extends AdyenLinearLayout<AfterPayOutputData, AfterPayConfiguration, PaymentComponentState, AfterPayComponent>
+        implements Observer<AfterPayOutputData>, CompoundButton.OnCheckedChangeListener {
     private static final String TAG = LogUtil.getTag();
 
     @SuppressLint(Lint.SYNTHETIC)

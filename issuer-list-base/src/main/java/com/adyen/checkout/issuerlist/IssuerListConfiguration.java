@@ -22,9 +22,10 @@ public abstract class IssuerListConfiguration extends Configuration {
 
     protected IssuerListConfiguration(
             @NonNull Locale shopperLocale,
-            @NonNull Environment environment
+            @NonNull Environment environment,
+            @NonNull String clientKey
     ) {
-        super(shopperLocale, environment);
+        super(shopperLocale, environment, clientKey);
     }
 
     protected IssuerListConfiguration(@NonNull Parcel in) {
