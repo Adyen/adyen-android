@@ -27,13 +27,14 @@ android {
 dependencies {
     //Tests
     testImplementation "junit:junit:$junit_version"
-    androidTestImplementation 'androidx.test.ext:junit:1.1.1'
-    androidTestImplementation 'androidx.test.espresso:espresso-core:3.1.0'
+    androidTestImplementation "androidx.test.ext:junit:$test_ext_version"
+    androidTestImplementation "androidx.test.espresso:espresso-core:$espresso_version"
 
     // Checkout
     api project(':base-v3')
 
     // Dependencies
+    // TODO update WeChat SDK version
     implementation "com.tencent.mm.opensdk:wechat-sdk-android-without-mta:$wechat_pay_version"
 }
 

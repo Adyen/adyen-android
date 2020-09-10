@@ -21,13 +21,15 @@ android {
 dependencies {
     //Tests
     testImplementation "junit:junit:$junit_version"
-    androidTestImplementation 'androidx.test.ext:junit:1.1.1'
-    androidTestImplementation 'androidx.test.espresso:espresso-core:3.1.0'
+    androidTestImplementation "androidx.test.ext:junit:$test_ext_version"
+    androidTestImplementation "androidx.test.espresso:espresso-core:$espresso_version"
+
+    // Checkout
+    api project(':core-v3')
 
     // Dependencies
-    api project(':core-v3')
     api "com.adyen.cse:adyen-cse:$adyen_cse_version"
-    implementation 'androidx.annotation:annotation:1.0.0'
+    implementation "androidx.annotation:annotation:$annotation_version"
 }
 
 // This sharedTasks.gradle script is applied at the end of this build.gradle script,

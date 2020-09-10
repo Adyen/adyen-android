@@ -31,18 +31,18 @@ dependencies {
     //Tests
     testImplementation "junit:junit:$junit_version"
     testImplementation "org.json:json:$json_version"
-    testImplementation 'androidx.arch.core:core-testing:2.0.0'
+    testImplementation "androidx.arch.core:core-testing:$arch_core_testing_version"
     testImplementation "org.mockito:mockito-core:$mockito_version"
     androidTestImplementation "org.mockito:mockito-android:$mockito_version"
-    androidTestImplementation 'androidx.test.ext:junit:1.1.1'
-    androidTestImplementation 'androidx.test.espresso:espresso-core:3.1.0'
+    androidTestImplementation "androidx.test.ext:junit:$test_ext_version"
+    androidTestImplementation "androidx.test.espresso:espresso-core:$espresso_version"
 
     // Checkout
     api project(':core-v3')
 
     // Dependencies
-    api 'androidx.fragment:fragment:1.0.0'
-    api 'androidx.lifecycle:lifecycle-extensions:2.0.0'
+    api "androidx.fragment:fragment:$fragment_version"
+    api "androidx.lifecycle:lifecycle-extensions:$lifecycle_extensions_version"
 }
 
 // This sharedTasks.gradle script is applied at the end of this build.gradle script,

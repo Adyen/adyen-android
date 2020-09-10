@@ -8,9 +8,14 @@
 
 if (!hasProperty("checksums")) {
     final checksums = [
-            "junit:junit:4.12:af7ca61fba26556cfe5b40cf15aadc14:MD5",
-            "com.android.support.test:runner:1.0.2:ea1c07b6950d389d1d041fb05009da22:MD5",
-            "com.android.support:support-annotations:28.0.0:46efec36398d1479da563d09b7e7104f:MD5",
+            "androidx.annotation:annotation:1.1.0:aaa:MD5",
+
+            //Tests
+//            "junit:junit:4.12:af7ca61fba26556cfe5b40cf15aadc14:MD5",
+//            "androidx.test.ext:junit:1.1.2:aaaa:MD5",
+
+//            "com.android.support.test:runner:1.0.2:ea1c07b6950d389d1d041fb05009da22:MD5",
+//            "com.android.support:support-annotations:28.0.0:46efec36398d1479da563d09b7e7104f:MD5",
             "com.android.support:support-fragment:28.0.0:58ca247aecdd37f16249373ce5a4a50c:MD5",
             "com.android.support:appcompat-v7:28.0.0:33c01268b72c786cfefd26d6ebc6a7f3:MD5",
             "com.android.support.constraint:constraint-layout:2.0.0-beta2:d2a96b4d4884bfed49514cb9bc981d08:MD5",

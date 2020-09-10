@@ -30,16 +30,16 @@ android {
 dependencies {
     //Tests
     testImplementation "junit:junit:$junit_version"
-    androidTestImplementation 'androidx.test.ext:junit:1.1.1'
-    androidTestImplementation 'androidx.test.espresso:espresso-core:3.1.0'
+    androidTestImplementation "androidx.test.ext:junit:$test_ext_version"
+    androidTestImplementation "androidx.test.espresso:espresso-core:$espresso_version"
 
     // Checkout
     api project(":issuer-list-ui")
     api project(":dotpay-base")
 
     // Dependencies
-    implementation 'androidx.appcompat:appcompat:1.0.0'
-    implementation 'androidx.recyclerview:recyclerview:1.0.0'
+    implementation "androidx.appcompat:appcompat:$appcompat_version"
+    implementation "androidx.recyclerview:recyclerview:$recyclerview_version"
 }
 
 // This sharedTasks.gradle script is applied at the end of this build.gradle script,
