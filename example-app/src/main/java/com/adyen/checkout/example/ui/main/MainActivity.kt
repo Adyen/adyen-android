@@ -9,11 +9,11 @@
 package com.adyen.checkout.example.ui.main
 
 import android.app.Activity
-import android.arch.lifecycle.Observer
+import androidx.lifecycle.Observer
 import android.content.Intent
 import android.os.Bundle
-import android.support.v7.app.AppCompatActivity
-import android.support.v7.app.AppCompatDelegate
+import androidx.appcompat.app.AppCompatActivity
+import androidx.appcompat.app.AppCompatDelegate
 import android.view.Menu
 import android.view.MenuItem
 import android.view.View

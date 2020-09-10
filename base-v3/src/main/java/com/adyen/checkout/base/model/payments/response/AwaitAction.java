@@ -9,7 +9,7 @@
 package com.adyen.checkout.base.model.payments.response;
 
 import android.os.Parcel;
-import android.support.annotation.NonNull;
+import androidx.annotation.NonNull;
 
 import com.adyen.checkout.base.util.ActionTypes;
 import com.adyen.checkout.core.exception.ModelSerializationException;

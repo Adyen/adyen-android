@@ -9,7 +9,7 @@
 package com.adyen.checkout.example
 
 import android.os.Bundle
-import android.support.v7.app.AppCompatActivity
+import androidx.appcompat.app.AppCompatActivity
 import com.adyen.checkout.dropin.DropIn
 import kotlinx.android.synthetic.main.activity_result.*
 

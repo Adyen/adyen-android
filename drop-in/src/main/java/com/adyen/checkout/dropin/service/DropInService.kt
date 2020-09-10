@@ -11,8 +11,8 @@ package com.adyen.checkout.dropin.service
 import android.content.ComponentName
 import android.content.Context
 import android.content.Intent
-import android.support.v4.app.JobIntentService
-import android.support.v4.content.LocalBroadcastManager
+import androidx.core.app.JobIntentService
+import androidx.localbroadcastmanager.content.LocalBroadcastManager
 import com.adyen.checkout.base.model.payments.request.PaymentComponentData
 import com.adyen.checkout.base.model.payments.request.PaymentMethodDetails
 import com.adyen.checkout.core.exception.CheckoutException
@@ -157,7 +157,7 @@ abstract class DropInService : JobIntentService() {
             resultIntent.action = getServiceResultAction(this)
             resultIntent.putExtra(API_CALL_RESULT_KEY, callResult)
 
-            val localBroadcastManager = LocalBroadcastManager.getInstance(this)
+            val localBroadcastManager = androidx.localbroadcastmanager.content.LocalBroadcastManager.getInstance(this)
             localBroadcastManager.sendBroadcast(resultIntent)
         }
     }

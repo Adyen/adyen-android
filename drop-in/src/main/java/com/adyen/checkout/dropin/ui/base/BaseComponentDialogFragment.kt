@@ -8,7 +8,7 @@
 
 package com.adyen.checkout.dropin.ui.base
 
-import android.arch.lifecycle.Observer
+import androidx.lifecycle.Observer
 import android.content.DialogInterface
 import android.os.Bundle
 import android.view.LayoutInflater

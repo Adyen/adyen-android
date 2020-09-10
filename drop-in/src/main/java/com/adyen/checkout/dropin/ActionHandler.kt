@@ -8,11 +8,11 @@
 
 package com.adyen.checkout.dropin
 
-import android.arch.lifecycle.Observer
+import androidx.lifecycle.Observer
 import android.content.Intent
 import android.net.Uri
 import android.os.Bundle
-import android.support.v4.app.FragmentActivity
+import androidx.fragment.app.FragmentActivity
 import com.adyen.checkout.adyen3ds2.Adyen3DS2Component
 import com.adyen.checkout.base.ActionComponentData
 import com.adyen.checkout.base.model.payments.response.Action
@@ -23,9 +23,9 @@ import com.adyen.checkout.redirect.RedirectComponent
 import com.adyen.checkout.wechatpay.WeChatPayActionComponent
 
 class ActionHandler(
-    activity: FragmentActivity,
-    private val callback: ActionHandlingInterface,
-    private val dropInConfiguration: DropInConfiguration
+        activity: androidx.fragment.app.FragmentActivity,
+        private val callback: ActionHandlingInterface,
+        private val dropInConfiguration: DropInConfiguration
 ) : Observer<ActionComponentData> {
 
     companion object {
@@ -75,7 +75,7 @@ class ActionHandler(
         adyen3DS2Component.restoreState(bundle)
     }
 
-    fun handleAction(activity: FragmentActivity, action: Action, sendResult: (String) -> Unit) {
+    fun handleAction(activity: androidx.fragment.app.FragmentActivity, action: Action, sendResult: (String) -> Unit) {
         when {
             viewableActionTypes.contains(action.type) -> {
                 callback.displayAction(action)

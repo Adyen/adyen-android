@@ -8,7 +8,7 @@
 
 package com.adyen.checkout.core.api;
 
-import android.support.annotation.NonNull;
+import androidx.annotation.NonNull;
 
 import com.adyen.checkout.core.log.LogUtil;
 import com.adyen.checkout.core.log.Logger;

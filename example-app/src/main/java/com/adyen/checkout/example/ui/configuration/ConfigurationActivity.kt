@@ -9,8 +9,8 @@
 package com.adyen.checkout.example.ui.configuration
 
 import android.os.Bundle
-import android.support.v7.app.AppCompatActivity
-import android.support.v7.preference.PreferenceFragmentCompat
+import androidx.appcompat.app.AppCompatActivity
+import androidx.preference.PreferenceFragmentCompat
 import com.adyen.checkout.example.R
 
 class ConfigurationActivity : AppCompatActivity() {

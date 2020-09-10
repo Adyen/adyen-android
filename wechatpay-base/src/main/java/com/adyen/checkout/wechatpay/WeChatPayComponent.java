@@ -8,7 +8,7 @@
 
 package com.adyen.checkout.wechatpay;
 
-import android.support.annotation.NonNull;
+import androidx.annotation.NonNull;
 
 import com.adyen.checkout.base.PaymentComponentProvider;
 import com.adyen.checkout.base.PaymentComponentState;

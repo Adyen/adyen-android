@@ -18,7 +18,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content">
 
-        <android.support.design.widget.TextInputLayout
+        <com.google.android.material.textfield.TextInputLayout
             android:id="@+id/textInputLayout_cardNumber"
             style="@style/AdyenCheckout.TextInputLayout"
             android:layout_width="match_parent"
@@ -30,7 +30,7 @@
                 android:nextFocusDown="@+id/editText_expiryDate"
                 android:nextFocusForward="@+id/editText_expiryDate"
                 tools:ignore="RequiredSize" />
-        </android.support.design.widget.TextInputLayout>
+        </com.google.android.material.textfield.TextInputLayout>
 
 
         <com.adyen.checkout.base.ui.view.RoundCornerImageView
@@ -44,7 +44,7 @@
         </com.adyen.checkout.base.ui.view.RoundCornerImageView>
     </FrameLayout>
 
-    <android.support.design.widget.TextInputLayout
+    <com.google.android.material.textfield.TextInputLayout
         android:id="@+id/textInputLayout_expiryDate"
         style="@style/AdyenCheckout.TextInputLayout"
         android:layout_width="match_parent"
@@ -57,6 +57,6 @@
             android:nextFocusRight="@+id/editText_securityCode"
             android:nextFocusForward="@+id/editText_securityCode"
             tools:ignore="RequiredSize" />
-    </android.support.design.widget.TextInputLayout>
+    </com.google.android.material.textfield.TextInputLayout>
 
 </merge>

@@ -9,9 +9,9 @@
 package com.adyen.checkout.base;
 
 import android.app.Application;
-import android.support.annotation.NonNull;
-import android.support.v4.app.Fragment;
-import android.support.v4.app.FragmentActivity;
+import androidx.annotation.NonNull;
+import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentActivity;
 
 import com.adyen.checkout.base.component.Configuration;
 import com.adyen.checkout.base.model.paymentmethods.PaymentMethod;

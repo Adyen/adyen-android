@@ -9,13 +9,13 @@
 package com.adyen.checkout.mbway;
 
 import android.annotation.SuppressLint;
-import android.arch.lifecycle.LifecycleOwner;
-import android.arch.lifecycle.Observer;
+import androidx.lifecycle.LifecycleOwner;
+import androidx.lifecycle.Observer;
 import android.content.Context;
 import android.content.res.TypedArray;
-import android.support.annotation.NonNull;
-import android.support.annotation.Nullable;
-import android.support.design.widget.TextInputLayout;
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
+import com.google.android.material.textfield.TextInputLayout;
 import android.text.Editable;
 import android.util.AttributeSet;
 import android.view.LayoutInflater;

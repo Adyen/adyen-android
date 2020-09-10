@@ -8,8 +8,8 @@
 
 package com.adyen.checkout.dropin.ui.action
 
-import android.arch.lifecycle.Observer
-import android.arch.lifecycle.ViewModelProviders
+import androidx.lifecycle.Observer
+import androidx.lifecycle.ViewModelProviders
 import android.content.DialogInterface
 import android.os.Bundle
 import android.view.LayoutInflater

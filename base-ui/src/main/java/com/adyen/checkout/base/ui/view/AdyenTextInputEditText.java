@@ -9,14 +9,16 @@
 package com.adyen.checkout.base.ui.view;
 
 import android.content.Context;
-import android.support.annotation.CallSuper;
-import android.support.annotation.NonNull;
-import android.support.annotation.Nullable;
-import android.support.design.widget.TextInputEditText;
 import android.text.Editable;
 import android.text.InputFilter;
 import android.text.TextWatcher;
 import android.util.AttributeSet;
+
+import androidx.annotation.CallSuper;
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
+
+import com.google.android.material.textfield.TextInputEditText;
 
 public class AdyenTextInputEditText extends TextInputEditText {
 
@@ -37,7 +39,7 @@ public class AdyenTextInputEditText extends TextInputEditText {
      * Constructor of AdyenTextInputEditText.
      */
     public AdyenTextInputEditText(@NonNull Context context, @Nullable AttributeSet attrs, int defStyleAttr) {
-        super(context, attrs, defStyleAttr == 0 ? android.support.design.R.attr.editTextStyle : defStyleAttr);
+        super(context, attrs, defStyleAttr == 0 ? com.google.android.material.R.attr.editTextStyle : defStyleAttr);
         addTextChangedListener(getTextWatcher());
     }
 

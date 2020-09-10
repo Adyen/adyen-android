@@ -10,7 +10,7 @@ package com.adyen.checkout.dropin
 
 import android.app.Application
 import android.content.Context
-import android.support.v4.app.Fragment
+import androidx.fragment.app.Fragment
 import com.adyen.checkout.adyen3ds2.Adyen3DS2Configuration
 import com.adyen.checkout.afterpay.AfterPayComponent
 import com.adyen.checkout.afterpay.AfterPayConfiguration
@@ -200,9 +200,9 @@ internal fun getProviderForType(type: String): PaymentComponentProvider<PaymentC
  */
 @Suppress("ComplexMethod", "LongMethod")
 internal fun getComponentFor(
-    fragment: Fragment,
-    paymentMethod: PaymentMethod,
-    dropInConfiguration: DropInConfiguration
+        fragment: androidx.fragment.app.Fragment,
+        paymentMethod: PaymentMethod,
+        dropInConfiguration: DropInConfiguration
 ): PaymentComponent<PaymentComponentState<in PaymentMethodDetails>, Configuration> {
     val context = fragment.requireContext()
 

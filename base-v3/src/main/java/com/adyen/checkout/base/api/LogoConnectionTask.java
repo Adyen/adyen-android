@@ -9,7 +9,7 @@
 package com.adyen.checkout.base.api;
 
 import android.graphics.drawable.BitmapDrawable;
-import android.support.annotation.NonNull;
+import androidx.annotation.NonNull;
 
 import com.adyen.checkout.core.api.ConnectionTask;
 import com.adyen.checkout.core.api.ThreadManager;

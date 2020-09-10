@@ -42,7 +42,7 @@
         android:layout_height="wrap_content"
         android:layout_gravity="center"
         android:orientation="vertical">
-        <android.support.v7.widget.AppCompatTextView
+        <androidx.appcompat.widget.AppCompatTextView
             android:id="@+id/textView_text"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -52,7 +52,7 @@
             android:textColor="@color/textColor"
             android:textSize="16sp"
             tools:text="Test"/>
-        <android.support.v7.widget.AppCompatTextView
+        <androidx.appcompat.widget.AppCompatTextView
             android:id="@+id/textView_detail"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"

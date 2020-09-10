@@ -9,8 +9,8 @@
 package com.adyen.checkout.base.model;
 
 import android.os.Parcel;
-import android.support.annotation.NonNull;
-import android.support.annotation.Nullable;
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 
 import com.adyen.checkout.base.model.paymentmethods.PaymentMethod;
 import com.adyen.checkout.base.model.paymentmethods.PaymentMethodsGroup;

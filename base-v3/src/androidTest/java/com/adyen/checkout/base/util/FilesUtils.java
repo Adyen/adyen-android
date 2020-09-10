@@ -10,8 +10,8 @@ package com.adyen.checkout.base.util;
 
 import android.content.Context;
 import android.content.res.AssetManager;
-import android.support.annotation.NonNull;
-import android.support.annotation.Nullable;
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 
 import com.adyen.checkout.core.exception.NoConstructorException;
 

@@ -9,8 +9,8 @@
 package com.adyen.checkout.redirect;
 
 import android.content.pm.ResolveInfo;
-import android.support.annotation.NonNull;
-import android.support.annotation.Nullable;
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 
 final class ResolveResult {
 

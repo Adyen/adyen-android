@@ -8,11 +8,11 @@
 
 package com.adyen.checkout.base.ui.view;
 
-import android.arch.lifecycle.LifecycleOwner;
+import androidx.lifecycle.LifecycleOwner;
 import android.content.Context;
 import android.os.Build;
-import android.support.annotation.NonNull;
-import android.support.annotation.Nullable;
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import android.util.AttributeSet;
 import android.widget.LinearLayout;
 

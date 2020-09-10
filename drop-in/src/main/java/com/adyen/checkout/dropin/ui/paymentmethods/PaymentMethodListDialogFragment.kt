@@ -8,12 +8,12 @@
 
 package com.adyen.checkout.dropin.ui.paymentmethods
 
-import android.arch.lifecycle.Observer
-import android.arch.lifecycle.ViewModelProviders
+import androidx.lifecycle.Observer
+import androidx.lifecycle.ViewModelProviders
 import android.content.DialogInterface
 import android.os.Bundle
-import android.support.v7.widget.LinearLayoutManager
-import android.support.v7.widget.RecyclerView
+import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.recyclerview.widget.RecyclerView
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -59,7 +59,7 @@ class PaymentMethodListDialogFragment : DropInBottomSheetDialogFragment(), Payme
         return view
     }
 
-    private fun addObserver(recyclerView: RecyclerView) {
+    private fun addObserver(recyclerView: androidx.recyclerview.widget.RecyclerView) {
         mDropInViewModel.paymentMethodsModelLiveData.observe(this, Observer<PaymentMethodsModel> {
             Logger.d(TAG, "paymentMethods changed")
             if (it == null) {
@@ -73,7 +73,7 @@ class PaymentMethodListDialogFragment : DropInBottomSheetDialogFragment(), Payme
                         ImageLoader.getInstance(requireContext(), mDropInViewModel.dropInConfiguration.environment),
                         arguments?.getBoolean(SHOW_IN_EXPAND_STATUS)!!,
                         this)
-                recyclerView.layoutManager = LinearLayoutManager(requireContext())
+                recyclerView.layoutManager = androidx.recyclerview.widget.LinearLayoutManager(requireContext())
                 recyclerView.adapter = paymentMethodAdapter
             } else {
                 paymentMethodAdapter.updatePaymentMethodsList(it)

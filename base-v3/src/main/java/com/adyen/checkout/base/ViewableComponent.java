@@ -8,11 +8,11 @@
 
 package com.adyen.checkout.base;
 
-import android.arch.lifecycle.LifecycleOwner;
-import android.arch.lifecycle.Observer;
+import androidx.lifecycle.LifecycleOwner;
+import androidx.lifecycle.Observer;
 import android.content.Context;
-import android.support.annotation.NonNull;
-import android.support.annotation.Nullable;
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 
 import com.adyen.checkout.base.component.Configuration;
 import com.adyen.checkout.base.component.OutputData;

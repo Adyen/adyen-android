@@ -11,9 +11,9 @@ package com.adyen.checkout.dropin.ui.base
 import android.app.Dialog
 import android.content.Context
 import android.os.Bundle
-import android.support.design.widget.BottomSheetBehavior
-import android.support.design.widget.BottomSheetDialog
-import android.support.design.widget.BottomSheetDialogFragment
+import com.google.android.material.bottomsheet.BottomSheetBehavior
+import com.google.android.material.bottomsheet.BottomSheetDialog
+import com.google.android.material.bottomsheet.BottomSheetDialogFragment
 import android.view.KeyEvent
 import android.widget.FrameLayout
 import com.adyen.checkout.base.ActionComponentData
@@ -56,8 +56,7 @@ abstract class DropInBottomSheetDialogFragment : BottomSheetDialogFragment() {
         }
 
         dialog.setOnShowListener { dialog ->
-            val bottomSheet = (dialog as BottomSheetDialog)
-                    .findViewById<FrameLayout>(android.support.design.R.id.design_bottom_sheet)
+            val bottomSheet = (dialog as BottomSheetDialog).findViewById<FrameLayout>(com.google.android.material.R.id.design_bottom_sheet)
 
             var behavior = BottomSheetBehavior.from(bottomSheet)
 

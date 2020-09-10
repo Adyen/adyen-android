@@ -9,7 +9,7 @@
 package com.adyen.checkout.dropin.ui.paymentmethods
 
 import android.content.Context
-import android.support.v7.widget.RecyclerView
+import androidx.recyclerview.widget.RecyclerView
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -30,7 +30,7 @@ class PaymentMethodAdapter(
     private var imageLoader: ImageLoader,
     private var showInExpandStatus: Boolean,
     private val onPaymentMethodSelectedCallback: OnPaymentMethodSelectedCallback
-) : RecyclerView.Adapter<PaymentMethodAdapter.BaseViewHolder>() {
+) : androidx.recyclerview.widget.RecyclerView.Adapter<PaymentMethodAdapter.BaseViewHolder>() {
 
     private var expandListOfItem = emptyList<PaymentMethod>()
     private var collapseListOfItem = emptyList<PaymentMethod>()
@@ -202,5 +202,5 @@ class PaymentMethodAdapter(
         internal val pay: Button = rootView.findViewById(R.id.payButton)
     }
 
-    open class BaseViewHolder(rootView: View) : RecyclerView.ViewHolder(rootView)
+    open class BaseViewHolder(rootView: View) : androidx.recyclerview.widget.RecyclerView.ViewHolder(rootView)
 }

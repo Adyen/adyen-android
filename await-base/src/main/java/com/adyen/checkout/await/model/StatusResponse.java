@@ -9,8 +9,8 @@
 package com.adyen.checkout.await.model;
 
 import android.os.Parcel;
-import android.support.annotation.NonNull;
-import android.support.annotation.Nullable;
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 
 import com.adyen.checkout.base.model.payments.request.Address;
 import com.adyen.checkout.core.exception.ModelSerializationException;

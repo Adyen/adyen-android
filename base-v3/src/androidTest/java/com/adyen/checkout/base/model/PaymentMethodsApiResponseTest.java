@@ -10,9 +10,9 @@ package com.adyen.checkout.base.model;
 
 import android.content.Context;
 import android.os.Parcel;
-import android.support.annotation.NonNull;
-import android.support.test.InstrumentationRegistry;
-import android.support.test.runner.AndroidJUnit4;
+import androidx.annotation.NonNull;
+import androidx.test.platform.app.InstrumentationRegistry;
+import androidx.test.ext.junit.runners.AndroidJUnit4;
 
 import com.adyen.checkout.base.util.FilesUtils;
 

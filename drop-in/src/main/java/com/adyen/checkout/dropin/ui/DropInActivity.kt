@@ -9,8 +9,8 @@
 package com.adyen.checkout.dropin.ui
 
 import android.app.Activity
-import android.arch.lifecycle.Observer
-import android.arch.lifecycle.ViewModelProviders
+import androidx.lifecycle.Observer
+import androidx.lifecycle.ViewModelProviders
 import android.content.BroadcastReceiver
 import android.content.Context
 import android.content.Intent
@@ -18,10 +18,10 @@ import android.content.IntentFilter
 import android.content.res.Configuration
 import android.os.Build
 import android.os.Bundle
-import android.support.v4.app.DialogFragment
-import android.support.v4.content.LocalBroadcastManager
-import android.support.v7.app.AlertDialog
-import android.support.v7.app.AppCompatActivity
+import androidx.fragment.app.DialogFragment
+import androidx.localbroadcastmanager.content.LocalBroadcastManager
+import androidx.appcompat.app.AlertDialog
+import androidx.appcompat.app.AppCompatActivity
 import com.adyen.checkout.base.ActionComponentData
 import com.adyen.checkout.base.ComponentError
 import com.adyen.checkout.base.analytics.AnalyticEvent
@@ -87,7 +87,7 @@ class DropInActivity : AppCompatActivity(), DropInBottomSheetDialogFragment.Prot
 
     private lateinit var serviceResultIntentFilter: IntentFilter
 
-    private lateinit var localBroadcastManager: LocalBroadcastManager
+    private lateinit var localBroadcastManager: androidx.localbroadcastmanager.content.LocalBroadcastManager
 
     @Suppress(Lint.PROTECTED_IN_FINAL)
     protected lateinit var actionHandler: ActionHandler
@@ -134,7 +134,7 @@ class DropInActivity : AppCompatActivity(), DropInBottomSheetDialogFragment.Prot
         setContentView(R.layout.activity_drop_in)
         overridePendingTransition(0, 0)
 
-        localBroadcastManager = LocalBroadcastManager.getInstance(this)
+        localBroadcastManager = androidx.localbroadcastmanager.content.LocalBroadcastManager.getInstance(this)
         dropInViewModel = ViewModelProviders.of(this).get(DropInViewModel::class.java)
 
         val bundle = savedInstanceState ?: intent.extras
@@ -398,9 +398,9 @@ class DropInActivity : AppCompatActivity(), DropInBottomSheetDialogFragment.Prot
         getFragmentByTag(tag)?.dismiss()
     }
 
-    private fun getFragmentByTag(tag: String): DialogFragment? {
+    private fun getFragmentByTag(tag: String): androidx.fragment.app.DialogFragment? {
         val fragment = supportFragmentManager.findFragmentByTag(tag)
-        return fragment as DialogFragment?
+        return fragment as androidx.fragment.app.DialogFragment?
     }
 
     private fun setLoading(showLoading: Boolean) {

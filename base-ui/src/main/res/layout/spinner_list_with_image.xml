@@ -15,11 +15,11 @@
     style="@style/AdyenCheckout.SpinnerListItem"
     android:orientation="horizontal" >
 
-    <android.support.v7.widget.AppCompatImageView
+    <androidx.appcompat.widget.AppCompatImageView
         android:id="@+id/imageView_logo"
         style="@style/AdyenCheckout.Image.Logo" />
 
-    <android.support.v7.widget.AppCompatTextView
+    <androidx.appcompat.widget.AppCompatTextView
         android:id="@+id/textView_text"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"

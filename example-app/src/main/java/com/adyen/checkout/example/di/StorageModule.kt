@@ -8,7 +8,7 @@
 
 package com.adyen.checkout.example.di
 
-import android.support.v7.preference.PreferenceManager
+import androidx.preference.PreferenceManager
 import com.adyen.checkout.example.data.storage.KeyValueStorage
 import com.adyen.checkout.example.data.storage.KeyValueStorageImpl
 import org.koin.dsl.module

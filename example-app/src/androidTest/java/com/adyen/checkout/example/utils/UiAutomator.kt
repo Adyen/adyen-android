@@ -8,7 +8,7 @@
 
 package com.adyen.checkout.example.utils
 
-import android.support.annotation.IdRes
+import androidx.annotation.IdRes
 import android.support.test.InstrumentationRegistry
 import android.support.test.espresso.UiController
 import android.support.test.espresso.ViewAction

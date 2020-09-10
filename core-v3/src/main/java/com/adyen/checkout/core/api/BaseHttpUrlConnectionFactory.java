@@ -10,7 +10,7 @@ package com.adyen.checkout.core.api;
 
 import static com.adyen.checkout.core.api.SSLSocketUtil.TLS_SOCKET_FACTORY;
 
-import android.support.annotation.NonNull;
+import androidx.annotation.NonNull;
 
 import java.io.IOException;
 import java.net.HttpURLConnection;

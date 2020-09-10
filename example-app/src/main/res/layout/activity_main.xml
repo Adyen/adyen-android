@@ -7,7 +7,7 @@
   ~ Created by caiof on 8/2/2019.
   -->
 
-<android.support.constraint.ConstraintLayout
+<androidx.constraintlayout.widget.ConstraintLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
@@ -29,7 +29,7 @@
         android:text="@string/start_checkout"
     />
 
-    <android.support.v4.widget.ContentLoadingProgressBar
+    <androidx.core.widget.ContentLoadingProgressBar
         android:id="@+id/progressBar"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
@@ -40,4 +40,4 @@
         app:layout_constraintTop_toTopOf="parent"
         android:visibility="gone"/>
 
-</android.support.constraint.ConstraintLayout>
+</androidx.constraintlayout.widget.ConstraintLayout>

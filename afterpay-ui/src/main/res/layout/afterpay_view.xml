@@ -20,7 +20,7 @@
         android:textIsSelectable="true"
         android:layout_height="wrap_content" />
 
-    <android.support.design.widget.TextInputLayout
+    <com.google.android.material.textfield.TextInputLayout
         android:id="@+id/textInputLayout_firstName"
         style="@style/AdyenCheckout.TextInputLayout"
         android:layout_width="match_parent"
@@ -29,9 +29,9 @@
         <com.adyen.checkout.base.ui.view.AdyenTextInputEditText
             style="@style/AdyenCheckout.AfterPay.FirstNameInput"
             tools:ignore="RequiredSize" />
-    </android.support.design.widget.TextInputLayout>
+    </com.google.android.material.textfield.TextInputLayout>
 
-    <android.support.design.widget.TextInputLayout
+    <com.google.android.material.textfield.TextInputLayout
         android:id="@+id/textInputLayout_lastName"
         style="@style/AdyenCheckout.TextInputLayout"
         android:layout_width="match_parent"
@@ -40,28 +40,28 @@
         <com.adyen.checkout.base.ui.view.AdyenTextInputEditText
             style="@style/AdyenCheckout.AfterPay.LastNameInput"
             tools:ignore="RequiredSize" />
-    </android.support.design.widget.TextInputLayout>
+    </com.google.android.material.textfield.TextInputLayout>
 
-    <android.support.design.widget.TabLayout
+    <com.google.android.material.tabs.TabLayout
         android:id="@+id/tabLayout_gender"
         style="@style/AdyenCheckout.TabLayout"
         android:layout_width="match_parent"
         android:layout_height="wrap_content">
 
-        <android.support.design.widget.TabItem
+        <com.google.android.material.tabs.TabItem
             android:id="@+id/tab_male"
             android:layout_width="wrap_content"
             android:layout_height="match_parent"
             android:layout="@layout/tab_view_start_male" />
 
-        <android.support.design.widget.TabItem
+        <com.google.android.material.tabs.TabItem
             android:id="@+id/tab_female"
             android:layout_width="wrap_content"
             android:layout_height="match_parent"
             android:layout="@layout/tab_view_end_female" />
-    </android.support.design.widget.TabLayout>
+    </com.google.android.material.tabs.TabLayout>
 
-    <android.support.design.widget.TextInputLayout
+    <com.google.android.material.textfield.TextInputLayout
         android:id="@+id/textInputLayout_dateOfBirth"
         style="@style/AdyenCheckout.TextInputLayout"
         android:layout_width="match_parent"
@@ -71,9 +71,9 @@
             style="@style/AdyenCheckout.AfterPay.DateOfBirthInput"
             android:inputType="none"
             tools:ignore="RequiredSize" />
-    </android.support.design.widget.TextInputLayout>
+    </com.google.android.material.textfield.TextInputLayout>
 
-    <android.support.design.widget.TextInputLayout
+    <com.google.android.material.textfield.TextInputLayout
         android:id="@+id/textInputLayout_phoneNumber"
         style="@style/AdyenCheckout.TextInputLayout"
         android:layout_width="match_parent"
@@ -82,9 +82,9 @@
         <com.adyen.checkout.base.ui.view.AdyenTextInputEditText
             style="@style/AdyenCheckout.AfterPay.PhoneNumberInput"
             tools:ignore="RequiredSize" />
-    </android.support.design.widget.TextInputLayout>
+    </com.google.android.material.textfield.TextInputLayout>
 
-    <android.support.design.widget.TextInputLayout
+    <com.google.android.material.textfield.TextInputLayout
         android:id="@+id/textInputLayout_emailAddress"
         style="@style/AdyenCheckout.TextInputLayout"
         android:layout_width="match_parent"
@@ -93,7 +93,7 @@
         <com.adyen.checkout.base.ui.view.AdyenTextInputEditText
             style="@style/AdyenCheckout.AfterPay.EmailAddressInput"
             tools:ignore="RequiredSize" />
-    </android.support.design.widget.TextInputLayout>
+    </com.google.android.material.textfield.TextInputLayout>
 
     <TextView
         style="@style/AdyenCheckout.AfterPay.SectionTitle"
@@ -114,7 +114,7 @@
         android:baselineAligned="false"
         android:orientation="horizontal">
 
-        <android.support.design.widget.TextInputLayout
+        <com.google.android.material.textfield.TextInputLayout
             android:id="@+id/textInputLayout_street"
             style="@style/AdyenCheckout.TextInputLayout"
             android:layout_width="match_parent"
@@ -127,9 +127,9 @@
                 style="@style/AdyenCheckout.AfterPay.StreetInput"
                 android:nextFocusRight="@id/textInputLayout_house_number"
                 tools:ignore="RequiredSize" />
-        </android.support.design.widget.TextInputLayout>
+        </com.google.android.material.textfield.TextInputLayout>
 
-        <android.support.design.widget.TextInputLayout
+        <com.google.android.material.textfield.TextInputLayout
             android:id="@+id/textInputLayout_house_number"
             style="@style/AdyenCheckout.TextInputLayout"
             android:layout_width="match_parent"
@@ -139,7 +139,7 @@
             <com.adyen.checkout.base.ui.view.AdyenTextInputEditText
                 style="@style/AdyenCheckout.AfterPay.HouseNumberInput"
                 tools:ignore="RequiredSize" />
-        </android.support.design.widget.TextInputLayout>
+        </com.google.android.material.textfield.TextInputLayout>
     </LinearLayout>
 
     <LinearLayout
@@ -148,7 +148,7 @@
         android:baselineAligned="false"
         android:orientation="horizontal">
 
-        <android.support.design.widget.TextInputLayout
+        <com.google.android.material.textfield.TextInputLayout
             android:id="@+id/textInputLayout_postal_code"
             style="@style/AdyenCheckout.TextInputLayout"
             android:layout_width="match_parent"
@@ -160,9 +160,9 @@
             <com.adyen.checkout.base.ui.view.AdyenTextInputEditText
                 style="@style/AdyenCheckout.AfterPay.PostalCodeInput"
                 tools:ignore="RequiredSize" />
-        </android.support.design.widget.TextInputLayout>
+        </com.google.android.material.textfield.TextInputLayout>
 
-        <android.support.design.widget.TextInputLayout
+        <com.google.android.material.textfield.TextInputLayout
             android:id="@+id/textInputLayout_city"
             style="@style/AdyenCheckout.TextInputLayout"
             android:layout_width="match_parent"
@@ -172,10 +172,10 @@
             <com.adyen.checkout.base.ui.view.AdyenTextInputEditText
                 style="@style/AdyenCheckout.AfterPay.CityInput"
                 tools:ignore="RequiredSize" />
-        </android.support.design.widget.TextInputLayout>
+        </com.google.android.material.textfield.TextInputLayout>
     </LinearLayout>
 
-    <android.support.design.widget.TextInputLayout
+    <com.google.android.material.textfield.TextInputLayout
         android:id="@+id/textInputLayout_country"
         style="@style/AdyenCheckout.TextInputLayout"
         android:layout_width="match_parent"
@@ -185,9 +185,9 @@
         <com.adyen.checkout.base.ui.view.AdyenTextInputEditText
             style="@style/AdyenCheckout.AfterPay.CountryInput"
             tools:ignore="RequiredSize" />
-    </android.support.design.widget.TextInputLayout>
+    </com.google.android.material.textfield.TextInputLayout>
 
-    <android.support.v7.widget.SwitchCompat
+    <androidx.appcompat.widget.SwitchCompat
         android:id="@+id/separate_delivery_address"
         style="@style/AdyenCheckout.Switch"
         android:layout_width="match_parent"
@@ -218,7 +218,7 @@
         android:orientation="horizontal"
         android:visibility="gone">
 
-        <android.support.design.widget.TextInputLayout
+        <com.google.android.material.textfield.TextInputLayout
             android:id="@+id/textInputLayout_delivery_street"
             style="@style/AdyenCheckout.TextInputLayout"
             android:layout_width="match_parent"
@@ -230,9 +230,9 @@
             <com.adyen.checkout.base.ui.view.AdyenTextInputEditText
                 style="@style/AdyenCheckout.AfterPay.StreetInput"
                 tools:ignore="RequiredSize" />
-        </android.support.design.widget.TextInputLayout>
+        </com.google.android.material.textfield.TextInputLayout>
 
-        <android.support.design.widget.TextInputLayout
+        <com.google.android.material.textfield.TextInputLayout
             android:id="@+id/textInputLayout_delivery_house_number"
             style="@style/AdyenCheckout.TextInputLayout"
             android:layout_width="match_parent"
@@ -242,7 +242,7 @@
             <com.adyen.checkout.base.ui.view.AdyenTextInputEditText
                 style="@style/AdyenCheckout.AfterPay.HouseNumberInput"
                 tools:ignore="RequiredSize" />
-        </android.support.design.widget.TextInputLayout>
+        </com.google.android.material.textfield.TextInputLayout>
     </LinearLayout>
 
     <LinearLayout
@@ -253,7 +253,7 @@
         android:orientation="horizontal"
         android:visibility="gone">
 
-        <android.support.design.widget.TextInputLayout
+        <com.google.android.material.textfield.TextInputLayout
             android:id="@+id/textInputLayout_delivery_postal_code"
             style="@style/AdyenCheckout.TextInputLayout"
             android:layout_width="match_parent"
@@ -265,9 +265,9 @@
             <com.adyen.checkout.base.ui.view.AdyenTextInputEditText
                 style="@style/AdyenCheckout.AfterPay.PostalCodeInput"
                 tools:ignore="RequiredSize" />
-        </android.support.design.widget.TextInputLayout>
+        </com.google.android.material.textfield.TextInputLayout>
 
-        <android.support.design.widget.TextInputLayout
+        <com.google.android.material.textfield.TextInputLayout
             android:id="@+id/textInputLayout_delivery_city"
             style="@style/AdyenCheckout.TextInputLayout"
             android:layout_width="match_parent"
@@ -277,10 +277,10 @@
             <com.adyen.checkout.base.ui.view.AdyenTextInputEditText
                 style="@style/AdyenCheckout.AfterPay.CityInput"
                 tools:ignore="RequiredSize" />
-        </android.support.design.widget.TextInputLayout>
+        </com.google.android.material.textfield.TextInputLayout>
     </LinearLayout>
 
-    <android.support.design.widget.TextInputLayout
+    <com.google.android.material.textfield.TextInputLayout
         android:id="@+id/textInputLayout_delivery_country"
         style="@style/AdyenCheckout.TextInputLayout"
         android:layout_width="match_parent"
@@ -291,7 +291,7 @@
         <com.adyen.checkout.base.ui.view.AdyenTextInputEditText
             style="@style/AdyenCheckout.AfterPay.CountryInput"
             tools:ignore="RequiredSize" />
-    </android.support.design.widget.TextInputLayout>
+    </com.google.android.material.textfield.TextInputLayout>
 
     <FrameLayout
         style="@style/AdyenCheckout.AfterPay.HR"
@@ -314,7 +314,7 @@
             android:layout_height="wrap_content"
             android:layout_weight="1" />
 
-        <android.support.v7.widget.AppCompatCheckBox
+        <androidx.appcompat.widget.AppCompatCheckBox
             android:id="@+id/checkbox_agreement"
             style="@style/AdyenCheckout.CheckBox"
             android:layout_width="wrap_content"

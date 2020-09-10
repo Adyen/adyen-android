@@ -9,7 +9,7 @@
 package com.adyen.checkout.base;
 
 import android.app.Activity;
-import android.support.annotation.NonNull;
+import androidx.annotation.NonNull;
 
 import com.adyen.checkout.base.component.Configuration;
 import com.adyen.checkout.base.model.payments.response.Action;

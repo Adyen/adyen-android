@@ -8,7 +8,7 @@
 
 package com.adyen.checkout.example
 
-import android.support.multidex.MultiDexApplication
+import androidx.multidex.MultiDexApplication
 import android.util.Log
 import com.adyen.checkout.core.log.Logger
 import com.adyen.checkout.example.di.appModule

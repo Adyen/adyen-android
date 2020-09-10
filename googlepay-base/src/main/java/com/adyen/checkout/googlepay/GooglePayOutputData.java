@@ -8,7 +8,7 @@
 
 package com.adyen.checkout.googlepay;
 
-import android.support.annotation.Nullable;
+import androidx.annotation.Nullable;
 import android.text.TextUtils;
 
 import com.adyen.checkout.base.component.OutputData;

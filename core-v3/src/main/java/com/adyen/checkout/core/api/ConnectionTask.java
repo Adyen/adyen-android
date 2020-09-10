@@ -8,8 +8,8 @@
 
 package com.adyen.checkout.core.api;
 
-import android.support.annotation.CallSuper;
-import android.support.annotation.NonNull;
+import androidx.annotation.CallSuper;
+import androidx.annotation.NonNull;
 
 import com.adyen.checkout.core.code.Lint;
 import com.adyen.checkout.core.log.LogUtil;
