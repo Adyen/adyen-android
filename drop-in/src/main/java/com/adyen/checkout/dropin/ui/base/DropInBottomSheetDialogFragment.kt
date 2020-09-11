@@ -34,7 +34,7 @@ abstract class DropInBottomSheetDialogFragment : BottomSheetDialogFragment() {
 
     override fun getTheme(): Int = R.style.AdyenCheckout_BottomSheetDialogTheme
 
-    override fun onAttach(context: Context?) {
+    override fun onAttach(context: Context) {
         super.onAttach(context)
 
         if (activity is Protocol) {
@@ -58,7 +58,8 @@ abstract class DropInBottomSheetDialogFragment : BottomSheetDialogFragment() {
         dialog.setOnShowListener { dialog ->
             val bottomSheet = (dialog as BottomSheetDialog).findViewById<FrameLayout>(com.google.android.material.R.id.design_bottom_sheet)
 
-            var behavior = BottomSheetBehavior.from(bottomSheet)
+            // TODO: 11/09/2020 code smell
+            var behavior = BottomSheetBehavior.from(bottomSheet!!)
 
             if (this.dialogInitViewState == BottomSheetBehavior.STATE_EXPANDED)
                 behavior.skipCollapsed = true

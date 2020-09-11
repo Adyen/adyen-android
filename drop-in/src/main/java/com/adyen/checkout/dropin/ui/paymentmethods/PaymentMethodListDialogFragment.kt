@@ -82,7 +82,7 @@ class PaymentMethodListDialogFragment : DropInBottomSheetDialogFragment(), Payme
         })
     }
 
-    override fun onCancel(dialog: DialogInterface?) {
+    override fun onCancel(dialog: DialogInterface) {
         super.onCancel(dialog)
         Logger.d(TAG, "onCancel")
         protocol.terminateDropIn()

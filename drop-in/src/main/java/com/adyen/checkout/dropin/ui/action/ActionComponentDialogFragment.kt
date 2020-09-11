@@ -102,7 +102,7 @@ class ActionComponentDialogFragment : DropInBottomSheetDialogFragment(), Observe
         return true
     }
 
-    override fun onCancel(dialog: DialogInterface?) {
+    override fun onCancel(dialog: DialogInterface) {
         super.onCancel(dialog)
         Logger.d(TAG, "onCancel")
         protocol.terminateDropIn()

@@ -12,12 +12,14 @@ import android.content.ComponentName
 import android.content.Context
 import android.content.Intent
 import androidx.core.app.JobIntentService
-import androidx.localbroadcastmanager.content.LocalBroadcastManager
 import com.adyen.checkout.base.model.payments.request.PaymentComponentData
 import com.adyen.checkout.base.model.payments.request.PaymentMethodDetails
 import com.adyen.checkout.core.exception.CheckoutException
 import com.adyen.checkout.core.log.LogUtil
 import com.adyen.checkout.core.log.Logger
+import kotlinx.coroutines.ExperimentalCoroutinesApi
+import kotlinx.coroutines.channels.awaitClose
+import kotlinx.coroutines.flow.callbackFlow
 import org.json.JSONObject
 
 /**
@@ -32,9 +34,6 @@ abstract class DropInService : JobIntentService() {
     companion object {
         protected val TAG = LogUtil.getTag()
 
-        // Key of the response content on the intent bundle
-        const val API_CALL_RESULT_KEY = "payments_api_call_result"
-
         // Define the type of request the service needs to perform
         private const val REQUEST_TYPE_KEY = "request_type"
         private const val PAYMENTS_REQUEST = "type_payments"
@@ -48,16 +47,24 @@ abstract class DropInService : JobIntentService() {
         @Suppress("MemberVisibilityCanBePrivate")
         const val dropInJobId = 11
 
-        // Base for the action strings
-        private const val adyenCheckoutBaseActionSuffix = ".adyen.checkout"
-        // com.merchant.package.adyen.checkout.CALL_RESULT
-        private const val callResultSuffix = "$adyenCheckoutBaseActionSuffix.CALL_RESULT"
+        // TODO: 11/09/2020 TEST
+        private var callback: DropInFlowResult = object: DropInFlowResult {
+            override fun dispatchCallResult(callResult: CallResult) {
+                // noop
+            }
+        }
 
-        /**
-         * Get the action sent to the [LocalBroadcastManager] to notify the result of the payments call.
-         */
-        fun getServiceResultAction(context: Context): String {
-            return context.packageName + callResultSuffix
+        // TODO: 11/09/2020 TEST
+        @ExperimentalCoroutinesApi
+        val dropInServiceFlow = callbackFlow<CallResult> {
+            callback = object : DropInFlowResult {
+                override fun dispatchCallResult(callResult: CallResult) {
+                    Logger.e(TAG, "dispatchCallResult")
+                    offer(callResult)
+                }
+            }
+            awaitClose {  }
+            Logger.e(TAG, "FLOW IS CLOSED!!!")
         }
 
         /**
@@ -152,13 +159,8 @@ abstract class DropInService : JobIntentService() {
         // if type is WAIT do nothing and wait for async callback.
         if (callResult.type != CallResult.ResultType.WAIT) {
             // send response back to activity
-            val resultIntent = Intent()
-
-            resultIntent.action = getServiceResultAction(this)
-            resultIntent.putExtra(API_CALL_RESULT_KEY, callResult)
-
-            val localBroadcastManager = androidx.localbroadcastmanager.content.LocalBroadcastManager.getInstance(this)
-            localBroadcastManager.sendBroadcast(resultIntent)
+            // TODO: 11/09/2020 TEST
+            callback.dispatchCallResult(callResult)
         }
     }
 
@@ -203,4 +205,8 @@ abstract class DropInService : JobIntentService() {
      * @return The result of the network call
      */
     abstract fun makeDetailsCall(actionComponentData: JSONObject): CallResult
+
+    private interface DropInFlowResult {
+        fun dispatchCallResult(callResult: CallResult)
+    }
 }

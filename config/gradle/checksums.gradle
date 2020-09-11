@@ -22,7 +22,10 @@ if (!hasProperty("checksums")) {
             "org.jetbrains.kotlin:kotlin-stdlib-jdk7:1.4.0:4f83ac99c7802491f8077650bc8ffe5e:MD5",
             "org.jetbrains.kotlin:kotlin-compiler-embeddable:1.4.0:4c32059e8d5e4e1928854f2a3f240310:MD5",
             "org.jetbrains.kotlin:kotlin-android-extensions:1.4.0:daef64b9947b3e5d7b74224c0b59dca7:MD5",
-            "org.jetbrains.kotlin:kotlin-klib-commonizer-embeddable:1.4.0:da4f467900931659277dbb2db4126cf4:MD5"
+            "org.jetbrains.kotlin:kotlin-klib-commonizer-embeddable:1.4.0:da4f467900931659277dbb2db4126cf4:MD5",
+
+            "androidx.lifecycle:lifecycle-runtime-ktx:2.2.0:6193a70163950a928f5acaf98e7dd282:MD5",
+            "androidx.fragment:fragment-ktx:1.2.5:74c89cc334ecf2ec6ac5df33e628ee2e:MD5"
     ]
 
     ext.checksums = checksums
