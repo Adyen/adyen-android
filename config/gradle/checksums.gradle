@@ -9,20 +9,24 @@
 if (!hasProperty("checksums")) {
     final checksums = [
             "com.adyen.cse:adyen-cse:1.0.5:6ddf508e1dc2ce2f2a77a7c7b392dc60:MD5",
+
             "androidx.annotation:annotation:1.1.0:959a76b836fff5d8cd80877c2626b79f:MD5",
             "androidx.fragment:fragment:1.2.5:209dbc6d8aa197581acc1c564170a09c:MD5",
             "androidx.lifecycle:lifecycle-extensions:2.2.0:21dfb5b34a3e41c838b54e6455c18ed5:MD5",
             "androidx.appcompat:appcompat:1.2.0:f867895f07fa53e100f5de03da7fa412:MD5",
             "androidx.recyclerview:recyclerview:1.1.0:b34afe47d8523d52ca130267cc0776df:MD5",
             "androidx.browser:browser:1.2.0:a14a7a87791b06a4dc46594f65e4e5f2:MD5",
+
             "com.google.android.material:material:1.2.1:6411dc90c9afe66ab7f7e471d9d51311:MD5",
             "com.google.android.gms:play-services-wallet:18.0.0:46b17d3f75af7085556c305e659c030a:MD5",
-            "com.tencent.mm.opensdk:wechat-sdk-android-without-mta:5.1.6:56e6b124d55917d46f452e3052b80379:MD5",
+            
             "org.jetbrains.kotlin:kotlin-android-extensions-runtime:1.4.0:2c04202b9d08416592e61c409d44e6c6:MD5",
             "org.jetbrains.kotlin:kotlin-stdlib-jdk7:1.4.0:4f83ac99c7802491f8077650bc8ffe5e:MD5",
             "org.jetbrains.kotlin:kotlin-compiler-embeddable:1.4.0:4c32059e8d5e4e1928854f2a3f240310:MD5",
             "org.jetbrains.kotlin:kotlin-android-extensions:1.4.0:daef64b9947b3e5d7b74224c0b59dca7:MD5",
             "org.jetbrains.kotlin:kotlin-klib-commonizer-embeddable:1.4.0:da4f467900931659277dbb2db4126cf4:MD5",
+
+            "com.tencent.mm.opensdk:wechat-sdk-android-without-mta:6.6.4:50848e74e4937bf113ad8a44c44cec80:MD5",
 
             "androidx.lifecycle:lifecycle-runtime-ktx:2.2.0:6193a70163950a928f5acaf98e7dd282:MD5",
             "androidx.fragment:fragment-ktx:1.2.5:74c89cc334ecf2ec6ac5df33e628ee2e:MD5"

@@ -91,7 +91,7 @@ public class WeChatPayActionComponent extends BaseActionComponent<WeChatPayActio
         //noinspection unchecked
         final SdkAction<WeChatPaySdkData> weChatAction = (SdkAction<WeChatPaySdkData>) action;
         if (weChatAction.getSdkData() != null) {
-            final boolean weChatInitiated = initiateWeChatPayRedirect(weChatAction.getSdkData(), activity.getLocalClassName());
+            final boolean weChatInitiated = initiateWeChatPayRedirect(weChatAction.getSdkData(), activity.getClass().getName());
             if (!weChatInitiated) {
                 throw new ComponentException("Failed to initialize WeChat app.");
             }

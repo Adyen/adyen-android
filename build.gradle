@@ -66,7 +66,7 @@ allprojects {
 
     // External Dependencies
     ext.play_services_wallet_version = "18.0.0"
-    ext.wechat_pay_version = "5.1.6"
+    ext.wechat_pay_version = "6.6.4"
 
     // Drop-in
     ext.kotlin_stdlib_version = '1.4.10'
