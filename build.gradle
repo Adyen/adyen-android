@@ -62,7 +62,7 @@ allprojects {
 
     // Adyen Dependencies
     ext.adyen_cse_version = "1.0.5"
-    ext.adyen3ds2_version = "2.1.0-rc08"
+    ext.adyen3ds2_version = "2.2.0"
 
     // External Dependencies
     ext.play_services_wallet_version = "18.0.0"

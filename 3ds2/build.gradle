@@ -13,11 +13,6 @@ ext.mavenArtifactDescription = "Adyen Checkout 3DS2 component client for Adyen's
 
 apply plugin: 'com.android.library'
 
-// TODO switch back to use `sharedTasks.gradle` when we have MD5 file for 3DS2 SDK
-apply from: "../config/gradle/codeQuality.gradle"
-apply from: "../config/gradle/ci.gradle"
-apply from: "../config/gradle/runConnectedAndroidTest.gradle"
-
 android {
     compileSdkVersion compile_sdk_version
 
@@ -45,7 +40,7 @@ dependencies {
     api "com.adyen.threeds:adyen-3ds2:$adyen3ds2_version"
 }
 
-// This release.gradle script is applied at the end of this build.gradle script,
+// This sharedTasks.gradle script is applied at the end of this build.gradle script,
 // since javadocs.gradle script is dependent on android.compileSdkVersion property,
 // which is set on the android block above.
-apply from: "../config/gradle/release.gradle"
+apply from: "../config/gradle/sharedTasks.gradle"

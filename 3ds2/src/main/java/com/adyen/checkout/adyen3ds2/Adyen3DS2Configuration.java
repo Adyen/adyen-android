@@ -22,6 +22,9 @@ import java.util.Locale;
 
 public class Adyen3DS2Configuration extends Configuration {
 
+    public final static String PROTOCOL_2_1_0 = "2.1.0";
+    public final static String PROTOCOL_2_2_0 = "2.2.0";
+
     public static final Parcelable.Creator<Adyen3DS2Configuration> CREATOR = new Parcelable.Creator<Adyen3DS2Configuration>() {
         public Adyen3DS2Configuration createFromParcel(@NonNull Parcel in) {
             return new Adyen3DS2Configuration(in);
@@ -32,20 +35,34 @@ public class Adyen3DS2Configuration extends Configuration {
         }
     };
 
+    private final String mProtocolVersion;
+
     protected Adyen3DS2Configuration(@NonNull Locale shopperLocale,
             @NonNull Environment environment,
-            @Nullable String clientKey) {
+            @Nullable String clientKey,
+            @Nullable String protocolVersion
+    ) {
         super(shopperLocale, environment, clientKey);
+        mProtocolVersion = protocolVersion;
     }
 
     protected Adyen3DS2Configuration(@NonNull Parcel in) {
         super(in);
+        mProtocolVersion = in.readString();
+    }
+
+    @Override
+    public void writeToParcel(@NonNull Parcel dest, int flags) {
+        super.writeToParcel(dest, flags);
+        dest.writeString(mProtocolVersion);
     }
 
     /**
      * Builder to create a {@link Adyen3DS2Configuration}.
      */
     public static final class Builder extends BaseConfigurationBuilder<Adyen3DS2Configuration> {
+
+        private String mBuilderProtocolVersion = PROTOCOL_2_1_0;
 
         /**
          * Constructor for Builder with default values.
@@ -79,9 +96,15 @@ public class Adyen3DS2Configuration extends Configuration {
         }
 
         @NonNull
+        public Builder setProtocolVersion(@Nullable String builderProtocolVersion) {
+            mBuilderProtocolVersion = builderProtocolVersion;
+            return this;
+        }
+
+        @NonNull
         @Override
         public Adyen3DS2Configuration build() {
-            return new Adyen3DS2Configuration(mBuilderShopperLocale, mBuilderEnvironment, mBuilderClientKey);
+            return new Adyen3DS2Configuration(mBuilderShopperLocale, mBuilderEnvironment, mBuilderClientKey, mBuilderProtocolVersion);
         }
     }
 }
