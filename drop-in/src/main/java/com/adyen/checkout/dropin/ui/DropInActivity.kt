@@ -14,10 +14,10 @@ import android.content.Intent
 import android.content.res.Configuration
 import android.os.Build
 import android.os.Bundle
-import androidx.activity.viewModels
 import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.Observer
+import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.lifecycleScope
 import com.adyen.checkout.base.ActionComponentData
 import com.adyen.checkout.base.ComponentError
@@ -81,7 +81,13 @@ class DropInActivity : AppCompatActivity(), DropInBottomSheetDialogFragment.Prot
         }
     }
 
-    private val dropInViewModel: DropInViewModel by viewModels()
+    // TODO: 14/09/2020 Check if we can add fragment-ktx to use like this
+//    private val dropInViewModel: DropInViewModel by viewModels()
+    private lateinit var dropInViewModel: DropInViewModel
+
+//    viewModel = ViewModelProvider(this, ViewModelFactory(requireActivity().application)).get(
+//    VenueDetailViewModel::class.java
+//    )
 
     private lateinit var googlePayComponent: GooglePayComponent
 
@@ -115,6 +121,8 @@ class DropInActivity : AppCompatActivity(), DropInBottomSheetDialogFragment.Prot
         Logger.d(TAG, "onCreate - $savedInstanceState")
         setContentView(R.layout.activity_drop_in)
         overridePendingTransition(0, 0)
+
+        dropInViewModel = ViewModelProvider(this, defaultViewModelProviderFactory).get(DropInViewModel::class.java)
 
         val bundle = savedInstanceState ?: intent.extras
 
