@@ -15,4 +15,4 @@ apply from: "../config/gradle/pmd.gradle"
 // TODO check detekt config issues on gradle sync
 apply from: "../config/gradle/detekt.gradle"
 
-check.dependsOn "checkstyle", "lint", "ktlint", "pmd", "findbugs", "detekt"
+check.dependsOn "checkstyle", "lint", "ktlint", "pmd", "detekt" //, "findbugs"

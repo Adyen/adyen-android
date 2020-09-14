@@ -12,4 +12,4 @@ apply from: "../config/gradle/pmd.gradle"
 // TODO replace findbugs with Spotbugs on Gradle 6
 //apply from: "../config/gradle/findbugs.gradle"
 
-check.dependsOn "checkstyle", "lint", "pmd", "findbugs"
+check.dependsOn "checkstyle", "lint", "pmd" //, "findbugs"
