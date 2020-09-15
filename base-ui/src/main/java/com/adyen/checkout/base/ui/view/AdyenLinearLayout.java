@@ -8,20 +8,18 @@
 
 package com.adyen.checkout.base.ui.view;
 
-import androidx.lifecycle.LifecycleOwner;
 import android.content.Context;
-import android.os.Build;
-import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
 import android.util.AttributeSet;
 import android.widget.LinearLayout;
+
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
+import androidx.lifecycle.LifecycleOwner;
 
 import com.adyen.checkout.base.ComponentView;
 import com.adyen.checkout.base.ViewableComponent;
 import com.adyen.checkout.base.component.Configuration;
 import com.adyen.checkout.base.component.OutputData;
-import com.adyen.checkout.core.log.LogUtil;
-import com.adyen.checkout.core.log.Logger;
 
 import java.util.Locale;
 
@@ -31,7 +29,6 @@ public abstract class AdyenLinearLayout<
         ComponentStateT,
         ComponentT extends ViewableComponent<OutputDataT, ConfigurationT, ComponentStateT>>
         extends LinearLayout implements ComponentView<OutputDataT, ComponentT> {
-    private static final String TAG = LogUtil.getTag();
 
     private ComponentT mComponent;
 
@@ -73,17 +70,11 @@ public abstract class AdyenLinearLayout<
     }
 
     private void initLocalization(@NonNull Locale shopperLocale) {
-
         // We need to get the strings from the styles instead of the strings.xml because merchants can override them.
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN_MR1) {
-            final android.content.res.Configuration configuration = getContext().getResources().getConfiguration();
-            final android.content.res.Configuration newConfig = new android.content.res.Configuration(configuration);
-            newConfig.setLocale(shopperLocale);
-            mLocalizedContext = getContext().createConfigurationContext(newConfig);
-        } else {
-            mLocalizedContext = getContext();
-            Logger.e(TAG, "Cannot load custom localized strings bellow API 17. Falling back to user device Locale.");
-        }
+        final android.content.res.Configuration configuration = getContext().getResources().getConfiguration();
+        final android.content.res.Configuration newConfig = new android.content.res.Configuration(configuration);
+        newConfig.setLocale(shopperLocale);
+        mLocalizedContext = getContext().createConfigurationContext(newConfig);
     }
 
     /**

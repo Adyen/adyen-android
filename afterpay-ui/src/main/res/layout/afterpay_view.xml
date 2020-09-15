@@ -120,7 +120,6 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginEnd="10dp"
-            android:layout_marginRight="10dp"
             android:layout_weight="2">
 
             <com.adyen.checkout.base.ui.view.AdyenTextInputEditText
@@ -154,7 +153,6 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginEnd="10dp"
-            android:layout_marginRight="10dp"
             android:layout_weight="4">
 
             <com.adyen.checkout.base.ui.view.AdyenTextInputEditText
@@ -224,7 +222,6 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginEnd="10dp"
-            android:layout_marginRight="10dp"
             android:layout_weight="2">
 
             <com.adyen.checkout.base.ui.view.AdyenTextInputEditText
@@ -259,7 +256,6 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginEnd="10dp"
-            android:layout_marginRight="10dp"
             android:layout_weight="4">
 
             <com.adyen.checkout.base.ui.view.AdyenTextInputEditText

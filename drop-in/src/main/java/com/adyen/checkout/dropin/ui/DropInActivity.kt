@@ -12,7 +12,6 @@ import android.app.Activity
 import android.content.Context
 import android.content.Intent
 import android.content.res.Configuration
-import android.os.Build
 import android.os.Bundle
 import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
@@ -156,7 +155,7 @@ class DropInActivity : AppCompatActivity(), DropInBottomSheetDialogFragment.Prot
     // False positive from countryStartPosition
     @Suppress("MagicNumber")
     private fun createLocalizedContext(baseContext: Context?): Context? {
-        if (baseContext == null || Build.VERSION.SDK_INT < Build.VERSION_CODES.JELLY_BEAN_MR1) {
+        if (baseContext == null) {
             return baseContext
         }
 
@@ -174,7 +173,11 @@ class DropInActivity : AppCompatActivity(), DropInBottomSheetDialogFragment.Prot
         }
     }
 
-    private fun initializeBundleVariables(bundle: Bundle): Boolean {
+    private fun initializeBundleVariables(bundle: Bundle?): Boolean {
+        if (bundle == null) {
+            return false
+        }
+
         isWaitingResult = bundle.getBoolean(IS_WAITING_FOR_RESULT, false)
 
         var variablesLoaded = true

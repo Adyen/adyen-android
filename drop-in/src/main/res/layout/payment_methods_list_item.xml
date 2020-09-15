@@ -29,7 +29,6 @@
         android:layout_height="@dimen/logo_height"
         android:layout_gravity="center"
         android:layout_marginEnd="@dimen/standard_margin"
-        android:layout_marginRight="@dimen/standard_margin"
         android:contentDescription="@null"
         android:maxHeight="@dimen/logo_width"
         android:minHeight="@dimen/logo_height"

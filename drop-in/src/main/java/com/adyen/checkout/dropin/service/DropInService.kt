@@ -107,7 +107,11 @@ abstract class DropInService : JobIntentService() {
             PAYMENTS_REQUEST -> {
                 val paymentComponentDataForRequest =
                     intent.getParcelableExtra<PaymentComponentData<in PaymentMethodDetails>>(PAYMENT_COMPONENT_DATA_EXTRA_KEY)
-                askPaymentsCall(paymentComponentDataForRequest)
+                if (paymentComponentDataForRequest == null) {
+                    handleCallResult(CallResult(CallResult.ResultType.ERROR, "DropInService Error. No content in PAYMENT_COMPONENT_DATA_EXTRA_KEY"))
+                } else {
+                    askPaymentsCall(paymentComponentDataForRequest)
+                }
             }
             DETAILS_REQUEST -> {
                 val detailsString = intent.getStringExtra(DETAILS_EXTRA_KEY)

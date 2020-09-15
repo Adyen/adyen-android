@@ -92,9 +92,9 @@ class MainActivity : AppCompatActivity() {
         return super.onCreateOptionsMenu(menu)
     }
 
-    override fun onOptionsItemSelected(item: MenuItem?): Boolean {
+    override fun onOptionsItemSelected(item: MenuItem): Boolean {
         Logger.d(TAG, "onOptionsItemSelected")
-        if (item?.itemId == R.id.settings) {
+        if (item.itemId == R.id.settings) {
             val intent = Intent(this@MainActivity, ConfigurationActivity::class.java)
             startActivity(intent)
             return true
