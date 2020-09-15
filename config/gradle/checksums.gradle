@@ -22,7 +22,7 @@ if (!hasProperty("checksums")) {
             "com.google.android.gms:play-services-wallet:18.0.0:46b17d3f75af7085556c305e659c030a:MD5",
 
             "org.jetbrains.kotlin:kotlin-android-extensions-runtime:1.4.0:2c04202b9d08416592e61c409d44e6c6:MD5",
-            "org.jetbrains.kotlin:kotlin-stdlib-jdk7:1.4.0:4f83ac99c7802491f8077650bc8ffe5e:MD5",
+            "org.jetbrains.kotlin:kotlin-stdlib-jdk7:1.4.10:4758bbb21000a32c3b251070e32d9c6e:MD5",
             "org.jetbrains.kotlin:kotlin-compiler-embeddable:1.4.0:4c32059e8d5e4e1928854f2a3f240310:MD5",
             "org.jetbrains.kotlin:kotlin-android-extensions:1.4.0:daef64b9947b3e5d7b74224c0b59dca7:MD5",
             "org.jetbrains.kotlin:kotlin-klib-commonizer-embeddable:1.4.0:da4f467900931659277dbb2db4126cf4:MD5",
