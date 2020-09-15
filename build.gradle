@@ -82,7 +82,7 @@ allprojects {
     ext.retrofit2_version = '2.9.0'
     ext.coroutines_adapter_version = "0.9.2"
     ext.moshi_adapters_version = "1.10.0"
-    ext.moshi_kotlin_adapter_version = "1.9.3"
+    ext.moshi_kotlin_adapter_version = "1.10.0"
     ext.okhttp_logging_version = "4.9.0"
     ext.okhttp_idling_resource_version = "1.0.0"
 
