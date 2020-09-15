@@ -28,7 +28,7 @@ import java.util.List;
 /**
  * Object that parses and holds the response data from the paymentMethods/ endpoint.
  */
-@SuppressWarnings("MemberName")
+@SuppressWarnings({"MemberName", "PMD.DataClass"})
 public final class PaymentMethodsApiResponse extends ModelObject {
     @NonNull
     public static final Creator<PaymentMethodsApiResponse> CREATOR = new Creator<>(PaymentMethodsApiResponse.class);

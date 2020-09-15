@@ -21,7 +21,7 @@ import org.json.JSONObject;
 
 import java.util.List;
 
-@SuppressWarnings("MemberName")
+@SuppressWarnings({"MemberName", "PMD.DataClass"})
 public final class PaymentMethodsGroup extends ModelObject {
     @NonNull
     public static final Creator<PaymentMethodsGroup> CREATOR = new Creator<>(PaymentMethodsGroup.class);

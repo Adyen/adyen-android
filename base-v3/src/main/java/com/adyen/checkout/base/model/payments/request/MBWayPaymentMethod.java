@@ -19,7 +19,7 @@ import com.adyen.checkout.core.model.JsonUtils;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-@SuppressWarnings({"AbbreviationAsWordInName", "MemberName"})
+@SuppressWarnings({"AbbreviationAsWordInName", "MemberName", "PMD.DataClass"})
 public class MBWayPaymentMethod extends PaymentMethodDetails {
 
     @NonNull

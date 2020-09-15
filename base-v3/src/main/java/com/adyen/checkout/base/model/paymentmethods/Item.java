@@ -19,7 +19,7 @@ import com.adyen.checkout.core.model.ModelObject;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-@SuppressWarnings("MemberName")
+@SuppressWarnings({"MemberName", "PMD.DataClass"})
 public final class Item extends ModelObject {
     @NonNull
     public static final Creator<Item> CREATOR = new Creator<>(Item.class);

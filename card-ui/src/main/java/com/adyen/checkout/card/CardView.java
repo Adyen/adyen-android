@@ -9,15 +9,9 @@
 package com.adyen.checkout.card;
 
 import android.app.Activity;
-import androidx.lifecycle.LifecycleOwner;
-import androidx.lifecycle.Observer;
 import android.content.Context;
 import android.content.ContextWrapper;
 import android.content.res.TypedArray;
-import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
-import com.google.android.material.textfield.TextInputLayout;
-import androidx.appcompat.widget.SwitchCompat;
 import android.text.Editable;
 import android.util.AttributeSet;
 import android.view.LayoutInflater;
@@ -25,6 +19,12 @@ import android.view.View;
 import android.view.WindowManager;
 import android.widget.CompoundButton;
 import android.widget.LinearLayout;
+
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
+import androidx.appcompat.widget.SwitchCompat;
+import androidx.lifecycle.LifecycleOwner;
+import androidx.lifecycle.Observer;
 
 import com.adyen.checkout.base.api.ImageLoader;
 import com.adyen.checkout.base.ui.view.AdyenLinearLayout;
@@ -37,13 +37,14 @@ import com.adyen.checkout.card.ui.CardNumberInput;
 import com.adyen.checkout.card.ui.ExpiryDateInput;
 import com.adyen.checkout.card.ui.R;
 import com.adyen.checkout.card.ui.SecurityCodeInput;
+import com.google.android.material.textfield.TextInputLayout;
 
 import java.util.List;
 
 /**
  * CardView for {@link CardComponent}.
  */
-@SuppressWarnings("SyntheticAccessor")
+@SuppressWarnings({"SyntheticAccessor", "PMD.GodClass"})
 public final class CardView extends AdyenLinearLayout<CardOutputData, CardConfiguration, CardComponentState, CardComponent>
         implements Observer<CardOutputData> {
 

@@ -8,9 +8,10 @@
 
 package com.adyen.checkout.base.model.payments.request;
 
+import android.text.TextUtils;
+
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
-import android.text.TextUtils;
 
 import com.adyen.checkout.base.util.PaymentMethodTypes;
 import com.adyen.checkout.core.code.Lint;
@@ -26,7 +27,7 @@ import org.json.JSONObject;
  * <p/>
  * Alternatively you can use other parsing libraries if they support polymorphism.
  */
-@SuppressWarnings("MemberName")
+@SuppressWarnings({"MemberName", "PMD.DataClass"})
 public abstract class PaymentMethodDetails extends ModelObject {
 
     public static final String TYPE = "type";

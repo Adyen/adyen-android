@@ -19,7 +19,7 @@ import com.adyen.checkout.core.model.JsonUtils;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-@SuppressWarnings("MemberName")
+@SuppressWarnings({"MemberName", "PMD.DataClass"})
 public class RedirectAction extends Action {
     @NonNull
     public static final Creator<RedirectAction> CREATOR = new Creator<>(RedirectAction.class);

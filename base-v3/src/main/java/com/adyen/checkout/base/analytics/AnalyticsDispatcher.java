@@ -25,6 +25,8 @@ import java.net.URL;
 
 import javax.net.ssl.HttpsURLConnection;
 
+// TODO change to try-with-resources after updating min API lvl
+@SuppressWarnings("PMD.CloseResource")
 public class AnalyticsDispatcher extends JobIntentService {
     private static final String TAG = LogUtil.getTag();
 
