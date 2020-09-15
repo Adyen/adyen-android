@@ -23,9 +23,9 @@ import com.adyen.checkout.redirect.RedirectComponent
 import com.adyen.checkout.wechatpay.WeChatPayActionComponent
 
 class ActionHandler(
-        activity: androidx.fragment.app.FragmentActivity,
-        private val callback: ActionHandlingInterface,
-        private val dropInConfiguration: DropInConfiguration
+    activity: androidx.fragment.app.FragmentActivity,
+    private val callback: ActionHandlingInterface,
+    private val dropInConfiguration: DropInConfiguration
 ) : Observer<ActionComponentData> {
 
     companion object {

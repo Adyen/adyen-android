@@ -19,7 +19,7 @@ import com.adyen.checkout.core.model.ModelObject;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-@SuppressWarnings("MemberName")
+@SuppressWarnings({"MemberName", "PMD.DataClass"})
 public class BillingAddressParameters extends ModelObject {
 
     @NonNull

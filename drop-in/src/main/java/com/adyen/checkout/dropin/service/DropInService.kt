@@ -48,7 +48,7 @@ abstract class DropInService : JobIntentService() {
         const val dropInJobId = 11
 
         // TODO: 11/09/2020 TEST
-        private var callback: DropInFlowResult = object: DropInFlowResult {
+        private var callback: DropInFlowResult = object : DropInFlowResult {
             override fun dispatchCallResult(callResult: CallResult) {
                 // noop
             }
@@ -63,7 +63,7 @@ abstract class DropInService : JobIntentService() {
                     offer(callResult)
                 }
             }
-            awaitClose {  }
+            awaitClose {}
             Logger.e(TAG, "FLOW IS CLOSED!!!")
         }
 

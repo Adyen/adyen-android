@@ -19,7 +19,7 @@ import com.adyen.checkout.core.model.ModelObject;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-@SuppressWarnings({"MemberName", "PMD.AvoidFieldNameMatchingTypeName"})
+@SuppressWarnings({"MemberName", "PMD.AvoidFieldNameMatchingTypeName", "PMD.DataClass"})
 public class TokenizationParameters extends ModelObject {
 
     @NonNull

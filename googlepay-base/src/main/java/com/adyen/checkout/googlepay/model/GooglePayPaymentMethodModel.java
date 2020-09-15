@@ -20,7 +20,7 @@ import com.adyen.checkout.core.model.ModelUtils;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-@SuppressWarnings("MemberName")
+@SuppressWarnings({"MemberName", "PMD.DataClass"})
 public class GooglePayPaymentMethodModel extends ModelObject {
 
     @NonNull
