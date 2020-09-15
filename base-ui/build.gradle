@@ -12,6 +12,7 @@ ext.mavenArtifactName = "Adyen checkout base UI component"
 ext.mavenArtifactDescription = "Adyen checkout base UI component client for Adyen's Checkout API."
 
 apply plugin: 'com.android.library'
+apply plugin: 'kotlin-android'
 
 android {
     compileSdkVersion compile_sdk_version

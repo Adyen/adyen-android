@@ -12,6 +12,7 @@ ext.mavenArtifactName = "Adyen checkout card base core component"
 ext.mavenArtifactDescription = "Adyen checkout card base core component that share classes with other card related components"
 
 apply plugin: 'com.android.library'
+apply plugin: 'kotlin-android'
 
 android {
     compileSdkVersion compile_sdk_version

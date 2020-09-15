@@ -12,6 +12,7 @@ ext.mavenArtifactName = "Adyen checkout core component"
 ext.mavenArtifactDescription = "Adyen checkout core component client for Adyen's Checkout API."
 
 apply plugin: 'com.android.library'
+apply plugin: 'kotlin-android'
 
 android {
     compileSdkVersion compile_sdk_version
@@ -34,7 +35,9 @@ dependencies {
     androidTestImplementation "androidx.test.espresso:espresso-core:$espresso_version"
 
     // Dependencies
+    api "org.jetbrains.kotlin:kotlin-stdlib-jdk7:$kotlin_version"
     api "androidx.annotation:annotation:$annotation_version"
+    api "androidx.core:core-ktx:$kotlin_ktx_version"
 }
 
 // This sharedTasks.gradle script is applied at the end of this build.gradle script,

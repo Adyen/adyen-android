@@ -11,6 +11,7 @@ if (!hasProperty("checksums")) {
             "com.adyen.cse:adyen-cse:1.0.5:6ddf508e1dc2ce2f2a77a7c7b392dc60:MD5",
             "com.adyen.threeds:adyen-3ds2:2.2.0:42314ec7f7f54b5fd9a77c12e59ae78d:MD5",
 
+            "androidx.core:core-ktx:1.3.1:0a47848664f91dcf4c880c473bbebcc4:MD5",
             "androidx.annotation:annotation:1.1.0:959a76b836fff5d8cd80877c2626b79f:MD5",
             "androidx.fragment:fragment:1.2.5:209dbc6d8aa197581acc1c564170a09c:MD5",
             "androidx.lifecycle:lifecycle-extensions:2.2.0:21dfb5b34a3e41c838b54e6455c18ed5:MD5",
@@ -21,11 +22,12 @@ if (!hasProperty("checksums")) {
             "com.google.android.material:material:1.2.1:6411dc90c9afe66ab7f7e471d9d51311:MD5",
             "com.google.android.gms:play-services-wallet:18.0.0:46b17d3f75af7085556c305e659c030a:MD5",
 
-            "org.jetbrains.kotlin:kotlin-android-extensions-runtime:1.4.0:2c04202b9d08416592e61c409d44e6c6:MD5",
+            "org.jetbrains.kotlin:kotlin-stdlib:1.4.10:2598f9c67ccfec4cbf6cdc699cac5841:MD5",
             "org.jetbrains.kotlin:kotlin-stdlib-jdk7:1.4.10:4758bbb21000a32c3b251070e32d9c6e:MD5",
-            "org.jetbrains.kotlin:kotlin-compiler-embeddable:1.4.0:4c32059e8d5e4e1928854f2a3f240310:MD5",
-            "org.jetbrains.kotlin:kotlin-android-extensions:1.4.0:daef64b9947b3e5d7b74224c0b59dca7:MD5",
-            "org.jetbrains.kotlin:kotlin-klib-commonizer-embeddable:1.4.0:da4f467900931659277dbb2db4126cf4:MD5",
+            "org.jetbrains.kotlin:kotlin-android-extensions:1.4.10:d368e15fe6b52cdc7d552e601d2fabb0:MD5",
+            "org.jetbrains.kotlin:kotlin-android-extensions-runtime:1.4.10:b60cf62e1d1ee16982940063dfa7b4ff:MD5",
+            "org.jetbrains.kotlin:kotlin-compiler-embeddable:1.4.10:f55925a13c9cedf66a251f32164f35e6:MD5",
+            "org.jetbrains.kotlin:kotlin-klib-commonizer-embeddable:1.4.10:01b1fe6d355cef111c8e2a1f09e1eb65:MD5",
 
             "com.tencent.mm.opensdk:wechat-sdk-android-without-mta:6.6.4:50848e74e4937bf113ad8a44c44cec80:MD5",
 

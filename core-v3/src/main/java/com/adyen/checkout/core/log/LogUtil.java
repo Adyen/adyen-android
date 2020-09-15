@@ -12,6 +12,7 @@ import android.os.Build;
 import androidx.annotation.NonNull;
 
 import com.adyen.checkout.core.exception.NoConstructorException;
+import com.adyen.checkout.core.util.KotlinBase;
 
 /**
  * Utility class with methods related to logs.
@@ -22,6 +23,10 @@ public final class LogUtil {
     private static final String CLASS_NOT_FOUND = "?Unknown?";
 
     private static final int MAX_TAG_SIZE = 23;
+
+    static {
+        KotlinBase.Companion.log();
+    }
 
     /**
      * Get the TAG to be used for logging inside Checkout classes.
