@@ -6,6 +6,9 @@
     <!-- We update dependecies as necessary. Just keep the warning as a reminder -->
     <issue id="GradleDependency" severity="warning"/>
 
+    <!-- We update dependecies as necessary. Just keep the warning as a reminder -->
+    <issue id="NewerVersionAvailable" severity="warning"/>
+
     <!-- We don't use App Indexing -->
     <issue id="GoogleAppIndexingApiWarning" severity="ignore"/>
 
