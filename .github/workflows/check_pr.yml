@@ -1,5 +1,6 @@
 name: Check PR
 
+# Every PR should be checked for static analysis
 on:
   pull_request:
     branches: [ develop ]
@@ -8,7 +9,7 @@ on:
 jobs:
   gradle-check:
     # https://github.com/actions/virtual-environments/
-    runs-on: ubuntu-20.04
+    runs-on: ubuntu-latest
 
     steps:
       # Checks-out your repository under $GITHUB_WORKSPACE, so your job can access it
@@ -27,7 +28,4 @@ jobs:
 
       # Run gradlew check
       - name: Gradle check
-        run: |
-          echo - Running gradle check
-          ./gradlew check
-          echo - Gradle check finished
+        run: ./gradlew check
