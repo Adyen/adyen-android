@@ -14,7 +14,7 @@
 
     <string name="checkout_card_number_not_valid">Numero carta non valido</string>
     <string name="checkout_expiry_date_not_valid">Data di scadenza non valida</string>
-    <string name="checkout_security_code_not_valid">Codice di sicurezza non valido</string>
+    <string name="checkout_security_code_not_valid">Formato CVC/CVV non valido</string>
     <string name="checkout_holder_name_not_valid">Nome del titolare non valido</string>
 
     <string name="card_number_4digit">•••• %s</string>
