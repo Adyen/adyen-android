@@ -14,7 +14,7 @@
 
     <string name="checkout_card_number_not_valid">Ogiltigt kortnummer</string>
     <string name="checkout_expiry_date_not_valid">Ogiltigt utgångsdatum</string>
-    <string name="checkout_security_code_not_valid">Ogiltig säkerhetskod</string>
+    <string name="checkout_security_code_not_valid">Ogiltigt CVC/CVV-format</string>
     <string name="checkout_holder_name_not_valid">Ogiltigt namn på innehavare</string>
 
     <string name="card_number_4digit">•••• %s</string>

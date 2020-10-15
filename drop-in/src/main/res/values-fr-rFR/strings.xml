@@ -19,6 +19,6 @@
     <string name="store_payment_methods_header">Vos modes de paiement</string>
     <string name="other_payment_methods">Autre méthode de paiement</string>
     <string name="continue_button">Continuer</string>
-    <string name="change_payment_method">Changer de mode de paiement</string>
+    <string name="change_payment_method">Changer de moyen de paiement</string>
     <string name="credit_card">Credit Card</string>
 </resources>

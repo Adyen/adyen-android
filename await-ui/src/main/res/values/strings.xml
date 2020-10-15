@@ -8,6 +8,6 @@
   -->
 
 <resources>
-    <string name="checkout_await_open_app">Open the app to confirm the transaction.</string>
-    <string name="checkout_await_waiting_confirmation">Awaiting confirmation…</string>
+    <string name="checkout_await_open_app">Confirm your payment on the MB WAY app</string>
+    <string name="checkout_await_waiting_confirmation">Waiting for confirmation</string>
 </resources>

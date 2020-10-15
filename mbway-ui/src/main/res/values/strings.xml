@@ -4,12 +4,12 @@
   ~
   ~ This file is open source and available under the MIT license. See the LICENSE file for more info.
   ~
-  ~ Created by caiof on 14/8/2020.
+  ~ Created by caiof on 15/10/2020.
   -->
 
 <resources>
-    <string name="checkout_mbway_email">Email</string>
-    <string name="checkout_mbway_mobile_number">Mobile phone number</string>
-    <string name="checkout_mbway_email_not_valid">Invalid email</string>
-    <string name="checkout_mbway_phone_number_not_valid">Invalid mobile number</string>
+    <string name="checkout_mbway_email">E-mail address</string>
+    <string name="checkout_mbway_mobile_number">Mobile number</string>
+    <string name="checkout_mbway_email_not_valid">Invalid email address</string>
+    <string name="checkout_mbway_phone_number_not_valid">Invalid telephone number</string>
 </resources>
