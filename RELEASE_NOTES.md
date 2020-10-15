@@ -1,2 +1,3 @@
 ### Added
-- Created GitHub Actions to run CI and Publish releases.
+- Translations for MB Way and Await Components
+- GitHub Actions workflows to run CI and Publish releases.
