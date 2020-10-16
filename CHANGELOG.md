@@ -13,6 +13,11 @@
 [//]: <> (Add changes that not released yet into `Unreleased` section)
 [//]: <> (Comment `Unreleased` section if there are no changes)
 [//]: <> (## [Unreleased])
+## [3.7.1] - 2020-10-15
+### Added
+- Translations for MB Way and Await Components
+- GitHub Actions workflows to run CI and Publish releases.
+
 ## [3.7.0] - 2020-09-10
 ### Added
 - MB Way Component.

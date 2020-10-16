@@ -1,0 +1,63 @@
+name: Publish Release
+
+# Every time we merge to main branch we publish a release.
+on:
+  push:
+    branches: [ main ]
+  workflow_dispatch:
+
+jobs:
+  
+  publish-release:
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v2
+        with:
+          ref: main
+
+      - name: Set up JDK 1.8
+        uses: actions/setup-java@v1
+        with:
+          java-version: 1.8
+      
+      - name: Grant execute permission for gradlew
+        run: chmod +x gradlew
+      
+      - name: Gradle check
+        run: ./gradlew check
+
+      # TODO: add more tests or rely on check_release workflow?
+
+      # Packages and publishes the AARs to Bintray
+      - name: Publish to Bintray
+        run: ./gradlew bintrayUpload
+        env:
+          BINTRAY_USER: ${{secrets.BINTRAY_USER}}
+          BINTRAY_KEY: ${{secrets.BINTRAY_KEY}}
+#          BINTRAY_GPG_PASSPHRASE: ${{secrets.BINTRAY_GPG_PASSPHRASE}}
+
+      # Get the version name from a script and save to environment variable.
+      - name: Set PROJECT_VERSION
+        run: |
+          echo "▸ Set run permission."
+          chmod +x scripts/version_name.sh
+          echo "▸ Getting version name"
+          PROJECT_VERSION=$(./scripts/version_name.sh)
+          echo "▸ Variable PROJECT_VERSION set to: ${PROJECT_VERSION}"
+          echo "▸ Adding PROJECT_VERSION variable with: $PROJECT_VERSION"
+          echo "PROJECT_VERSION=$PROJECT_VERSION" >> $GITHUB_ENV
+          echo "▸ DONE"
+
+      # Create the Release TAG and notes.
+      - name: Create GitHub Release
+        uses: actions/create-release@v1
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          commitish: main
+          tag_name: ${{ env.PROJECT_VERSION }}
+          release_name: ${{ env.PROJECT_VERSION }}
+          body_path: ${{ github.workspace }}/RELEASE_NOTES.md
+          draft: false
+          prerelease: false

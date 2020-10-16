@@ -1,5 +1,6 @@
 /**
- * Rename this file to local.gradle and replace the values in <PLACEHOLDER> with the configuration to connect to the Server.
+ * Replace the values in <PLACEHOLDER> with the configuration to connect to YOUR Server. The <> should also be removed.
+ * Your server is the one that should connect to Adyen, DO NOT connect to Adyen directly from the App as this might expose your API keys.
  */
 android {
     buildTypes {
@@ -9,7 +10,13 @@ android {
             buildConfigField "String", "API_KEY_HEADER_NAME", "\"<API_KEY_HEADER>\""
             buildConfigField "String", "CHECKOUT_API_KEY", "\"<YOUR_API_KEY>\""
             buildConfigField "String", "PUBLIC_KEY", "\"<PUBLIC_KEY>\""
+            buildConfigField "String", "CLIENT_KEY", "\"<YOUR_CLIENT_KEY>\""
             buildConfigField "String", "SHOPPER_REFERENCE", "\"<SHOPPER_REFERENCE>\""
+        }
+
+        release {
+            initWith debug
+            matchingFallbacks = ['debug']
         }
     }
 }
