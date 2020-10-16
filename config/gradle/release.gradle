@@ -9,6 +9,7 @@
 import groovy.json.JsonSlurper
 
 apply plugin: "maven-publish"
+// https://github.com/bintray/gradle-bintray-plugin
 apply plugin: "com.jfrog.bintray"
 
 apply from: "../config/gradle/artifacts.gradle"
