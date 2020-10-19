@@ -68,7 +68,7 @@ dependencies {
 
     // Dependencies
     implementation "com.android.support:multidex:$multidex_version"
-    implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk7:$kotlin_version"
+    implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk7:$kotlin_stdlib_version"
     implementation "org.jetbrains.kotlinx:kotlinx-coroutines-android:$kotlinx_version"
     implementation "org.jetbrains.kotlinx:kotlinx-coroutines-core:$kotlinx_version"
     implementation "com.android.support:appcompat-v7:$support_library_version"

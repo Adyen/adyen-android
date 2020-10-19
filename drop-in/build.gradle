@@ -56,7 +56,7 @@ dependencies {
     api project(":wechatpay-base")
 
     // Dependencies
-    implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk7:$kotlin_version"
+    implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk7:$kotlin_stdlib_version"
     implementation "com.android.support:recyclerview-v7:$support_library_version"
     implementation "com.android.support:design:$support_library_version"
 }
