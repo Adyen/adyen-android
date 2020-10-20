@@ -35,7 +35,7 @@ jobs:
         env:
           BINTRAY_USER: ${{secrets.BINTRAY_USER}}
           BINTRAY_KEY: ${{secrets.BINTRAY_KEY}}
-          BINTRAY_GPG_PASSPHRASE: ${{secrets.BINTRAY_GPG_PASSPHRASE}}
+#          BINTRAY_GPG_PASSPHRASE: ${{secrets.BINTRAY_GPG_PASSPHRASE}}
 
       # Get the version name from a script and save to environment variable.
       - name: Set PROJECT_VERSION
