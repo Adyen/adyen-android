@@ -1,14 +1,11 @@
-name: Check Release
+name: Check Release v3
 
-# Every time we open a PR to merge develop into main branch for a release
+# Only triggered manually
 on:
-  pull_request:
-    branches: [ main ]
-    types: [ opened, synchronize, reopened ]
   workflow_dispatch:
 
 jobs:
-  check-release:
+  check-release-v3:
     runs-on: ubuntu-latest
 
     steps:

@@ -1,9 +1,9 @@
-name: Check PR
+name: Check PR v3
 
 # Every PR should be checked for static analysis
 on:
   pull_request:
-    branches: [ develop ]
+    branches: [ v3 ]
     types: [ opened, synchronize, reopened ]
 
 jobs:
