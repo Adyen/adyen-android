@@ -9,8 +9,8 @@
 package com.adyen.checkout.base;
 
 import android.os.Parcel;
-import android.support.annotation.NonNull;
-import android.support.annotation.Nullable;
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 
 import com.adyen.checkout.core.exception.ModelSerializationException;
 import com.adyen.checkout.core.model.JsonUtils;
@@ -19,7 +19,7 @@ import com.adyen.checkout.core.model.ModelObject;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-@SuppressWarnings("MemberName")
+@SuppressWarnings({"MemberName", "PMD.DataClass"})
 public class ActionComponentData extends ModelObject {
 
     @NonNull

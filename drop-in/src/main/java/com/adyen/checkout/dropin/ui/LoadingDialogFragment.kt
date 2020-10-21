@@ -11,13 +11,12 @@ package com.adyen.checkout.dropin.ui
 import android.graphics.Color
 import android.graphics.drawable.ColorDrawable
 import android.os.Bundle
-import android.support.v4.app.DialogFragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import com.adyen.checkout.dropin.R
 
-class LoadingDialogFragment : DialogFragment() {
+class LoadingDialogFragment : androidx.fragment.app.DialogFragment() {
 
     companion object {
         fun newInstance(): LoadingDialogFragment {
@@ -26,7 +25,8 @@ class LoadingDialogFragment : DialogFragment() {
     }
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
-        dialog.window.setBackgroundDrawable(ColorDrawable(Color.TRANSPARENT))
+        // TODO: 11/09/2020 code smell
+        dialog!!.window!!.setBackgroundDrawable(ColorDrawable(Color.TRANSPARENT))
         isCancelable = false
         return inflater.inflate(R.layout.loading, container, false)
     }

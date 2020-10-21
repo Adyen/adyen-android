@@ -8,7 +8,7 @@
 
 package com.adyen.checkout.base.models;
 
-import android.arch.lifecycle.ViewModel;
+import androidx.lifecycle.ViewModel;
 
 import com.adyen.checkout.base.model.paymentmethods.PaymentMethod;
 

@@ -8,7 +8,7 @@
 
 package com.adyen.checkout.adyen3ds2.model;
 
-import android.support.annotation.NonNull;
+import androidx.annotation.NonNull;
 
 import com.adyen.checkout.base.encoding.Base64Encoder;
 import com.adyen.threeds2.CompletionEvent;

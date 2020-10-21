@@ -12,11 +12,7 @@ ext.mavenArtifactName = "Adyen checkout 3DS2 component"
 ext.mavenArtifactDescription = "Adyen Checkout 3DS2 component client for Adyen's Checkout API."
 
 apply plugin: 'com.android.library'
-
-// TODO switch back to use `sharedTasks.gradle` when we have MD5 file for 3DS2 SDK
-apply from: "../config/gradle/codeQuality.gradle"
-apply from: "../config/gradle/ci.gradle"
-apply from: "../config/gradle/runConnectedAndroidTest.gradle"
+apply plugin: 'kotlin-android'
 
 android {
     compileSdkVersion compile_sdk_version
@@ -27,28 +23,25 @@ android {
         versionCode version_code
         versionName version_name
 
-        testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
+        testInstrumentationRunner 'androidx.test.runner.AndroidJUnitRunner'
     }
 }
 
 dependencies {
     //Tests
     testImplementation "junit:junit:$junit_version"
-    androidTestImplementation "com.android.support.test:runner:$support_test_runner_version"
-    androidTestImplementation "com.android.support.test.espresso:espresso-core:$espresso_version"
+    androidTestImplementation "androidx.test.ext:junit:$test_ext_version"
+    androidTestImplementation "androidx.test.espresso:espresso-core:$espresso_version"
 
     // Checkout
     api project(':base-v3')
 
     // Dependencies
+    // TODO update 3DS2 SDK but pass 2.1.0 protocol version in component
     api "com.adyen.threeds:adyen-3ds2:$adyen3ds2_version"
-    // TODO check if excludes are necessary
-//    implementation("com.adyen.threeds:adyen-3ds2:0.9.6") {
-//        exclude group: 'com.android.support', module: 'appcompat-v7'
-//    }
 }
 
-// This release.gradle script is applied at the end of this build.gradle script,
+// This sharedTasks.gradle script is applied at the end of this build.gradle script,
 // since javadocs.gradle script is dependent on android.compileSdkVersion property,
 // which is set on the android block above.
-apply from: "../config/gradle/release.gradle"
+apply from: "../config/gradle/sharedTasks.gradle"

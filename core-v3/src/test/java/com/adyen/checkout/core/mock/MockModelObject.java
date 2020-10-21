@@ -9,7 +9,7 @@
 package com.adyen.checkout.core.mock;
 
 import android.os.Parcel;
-import android.support.annotation.NonNull;
+import androidx.annotation.NonNull;
 
 import com.adyen.checkout.core.model.ModelObject;
 

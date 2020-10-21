@@ -9,8 +9,8 @@
 package com.adyen.checkout.base.model.paymentmethods;
 
 import android.os.Parcel;
-import android.support.annotation.NonNull;
-import android.support.annotation.Nullable;
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 
 import com.adyen.checkout.core.exception.ModelSerializationException;
 import com.adyen.checkout.core.model.JsonUtils;
@@ -20,7 +20,7 @@ import com.adyen.checkout.core.model.ModelUtils;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-@SuppressWarnings("MemberName")
+@SuppressWarnings({"MemberName", "PMD.DataClass"})
 public final class StoredDetails extends ModelObject {
     @NonNull
     public static final Creator<StoredDetails> CREATOR = new Creator<>(StoredDetails.class);

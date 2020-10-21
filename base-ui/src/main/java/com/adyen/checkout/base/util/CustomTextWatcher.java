@@ -8,8 +8,8 @@
 
 package com.adyen.checkout.base.util;
 
-import android.support.annotation.CallSuper;
-import android.support.annotation.NonNull;
+import androidx.annotation.CallSuper;
+import androidx.annotation.NonNull;
 import android.text.Editable;
 
 public abstract class CustomTextWatcher extends SimpleTextWatcher {

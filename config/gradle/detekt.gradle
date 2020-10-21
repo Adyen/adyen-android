@@ -18,7 +18,8 @@ detekt {
     toolVersion = "$project.detekt_version"
 
     input = files("src")
-    filters = ".*/resources/.*,.*/build/.*"
+    // TODO check if we need this
+//    filters = ".*/resources/.*,.*/build/.*"
 
     config = files("$rootProject.rootDir/config/detekt/detekt-config.yml")
 //    baseline = file("$rootProject.rootDir/config/detekt/detekt-baseline.xml")

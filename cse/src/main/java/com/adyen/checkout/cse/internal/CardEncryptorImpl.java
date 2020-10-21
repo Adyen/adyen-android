@@ -8,8 +8,8 @@
 
 package com.adyen.checkout.cse.internal;
 
-import android.support.annotation.NonNull;
-import android.support.annotation.WorkerThread;
+import androidx.annotation.NonNull;
+import androidx.annotation.WorkerThread;
 
 import com.adyen.checkout.cse.Card;
 import com.adyen.checkout.cse.CardEncryptor;

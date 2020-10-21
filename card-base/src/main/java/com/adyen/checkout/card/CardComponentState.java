@@ -8,8 +8,8 @@
 
 package com.adyen.checkout.card;
 
-import android.support.annotation.NonNull;
-import android.support.annotation.Nullable;
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 
 import com.adyen.checkout.base.PaymentComponentState;
 import com.adyen.checkout.base.model.payments.request.CardPaymentMethod;

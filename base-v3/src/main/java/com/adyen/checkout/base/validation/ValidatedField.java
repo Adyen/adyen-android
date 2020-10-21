@@ -8,7 +8,7 @@
 
 package com.adyen.checkout.base.validation;
 
-import android.support.annotation.NonNull;
+import androidx.annotation.NonNull;
 
 public class ValidatedField<T> {
 

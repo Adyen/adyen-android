@@ -8,9 +8,10 @@
 
 package com.adyen.checkout.afterpay;
 
-import android.support.annotation.NonNull;
-import android.support.annotation.Nullable;
 import android.text.TextUtils;
+
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 
 import com.adyen.checkout.base.PaymentComponentProvider;
 import com.adyen.checkout.base.PaymentComponentState;
@@ -32,6 +33,7 @@ import com.adyen.checkout.core.log.Logger;
 import java.util.Collections;
 import java.util.List;
 
+@SuppressWarnings("PMD.GodClass")
 public class AfterPayComponent extends BasePaymentComponent<AfterPayConfiguration, AfterPayInputData, AfterPayOutputData, PaymentComponentState> {
     private static final String TAG = LogUtil.getTag();
 

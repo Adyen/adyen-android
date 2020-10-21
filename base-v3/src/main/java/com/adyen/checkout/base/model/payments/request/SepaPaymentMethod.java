@@ -9,8 +9,8 @@
 package com.adyen.checkout.base.model.payments.request;
 
 import android.os.Parcel;
-import android.support.annotation.NonNull;
-import android.support.annotation.Nullable;
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 
 import com.adyen.checkout.base.util.PaymentMethodTypes;
 import com.adyen.checkout.core.exception.ModelSerializationException;
@@ -19,7 +19,7 @@ import com.adyen.checkout.core.model.JsonUtils;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-@SuppressWarnings("MemberName")
+@SuppressWarnings({"MemberName", "PMD.DataClass"})
 public class SepaPaymentMethod extends PaymentMethodDetails {
 
     @NonNull

@@ -8,7 +8,7 @@
 
 package com.adyen.checkout.eps;
 
-import android.support.annotation.NonNull;
+import androidx.annotation.NonNull;
 
 import com.adyen.checkout.base.PaymentComponentProvider;
 import com.adyen.checkout.base.component.PaymentComponentProviderImpl;

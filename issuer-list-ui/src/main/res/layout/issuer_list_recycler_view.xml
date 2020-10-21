@@ -11,7 +11,7 @@
        xmlns:tools="http://schemas.android.com/tools"
        tools:parentTag="android.widget.LinearLayout">
 
-    <android.support.v7.widget.RecyclerView
+    <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/recycler_issuers"
         android:layout_width="match_parent"
         android:layout_height="match_parent" />

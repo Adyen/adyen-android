@@ -8,8 +8,8 @@
 
 package com.adyen.checkout.base.util;
 
-import android.support.annotation.NonNull;
-import android.support.annotation.Nullable;
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 
 import com.adyen.checkout.base.model.payments.Amount;
 import com.adyen.checkout.core.exception.CheckoutException;

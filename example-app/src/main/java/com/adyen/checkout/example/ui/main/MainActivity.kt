@@ -9,11 +9,11 @@
 package com.adyen.checkout.example.ui.main
 
 import android.app.Activity
-import android.arch.lifecycle.Observer
+import androidx.lifecycle.Observer
 import android.content.Intent
 import android.os.Bundle
-import android.support.v7.app.AppCompatActivity
-import android.support.v7.app.AppCompatDelegate
+import androidx.appcompat.app.AppCompatActivity
+import androidx.appcompat.app.AppCompatDelegate
 import android.view.Menu
 import android.view.MenuItem
 import android.view.View
@@ -92,9 +92,9 @@ class MainActivity : AppCompatActivity() {
         return super.onCreateOptionsMenu(menu)
     }
 
-    override fun onOptionsItemSelected(item: MenuItem?): Boolean {
+    override fun onOptionsItemSelected(item: MenuItem): Boolean {
         Logger.d(TAG, "onOptionsItemSelected")
-        if (item?.itemId == R.id.settings) {
+        if (item.itemId == R.id.settings) {
             val intent = Intent(this@MainActivity, ConfigurationActivity::class.java)
             startActivity(intent)
             return true

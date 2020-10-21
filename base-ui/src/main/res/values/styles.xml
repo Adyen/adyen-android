@@ -8,7 +8,7 @@
 
 <resources>
     <!-- Placeholder to be overridden by main app -->
-    <style name="AppTheme" parent="Theme.AppCompat.DayNight" />
+    <style name="AppTheme" parent="Theme.MaterialComponents.Light.Bridge" />
 
     <!-- Base theme for Checkout -->
     <style name="AdyenCheckout" parent="AppTheme" />

@@ -8,7 +8,7 @@
 
 package com.adyen.checkout.cse;
 
-import android.support.annotation.NonNull;
+import androidx.annotation.NonNull;
 
 import com.adyen.checkout.cse.internal.CardEncryptorImpl;
 

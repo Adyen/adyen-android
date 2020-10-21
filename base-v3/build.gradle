@@ -12,6 +12,7 @@ ext.mavenArtifactName = "Adyen checkout base component"
 ext.mavenArtifactDescription = "Adyen checkout base component client for Adyen's Checkout API."
 
 apply plugin: 'com.android.library'
+apply plugin: 'kotlin-android'
 
 android {
     compileSdkVersion compile_sdk_version
@@ -22,7 +23,7 @@ android {
         versionCode version_code
         versionName version_name
 
-        testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
+        testInstrumentationRunner 'androidx.test.runner.AndroidJUnitRunner'
 
     }
 }
@@ -31,18 +32,18 @@ dependencies {
     //Tests
     testImplementation "junit:junit:$junit_version"
     testImplementation "org.json:json:$json_version"
-    testImplementation "android.arch.core:core-testing:$lifecycle_extensions_version"
+    testImplementation "androidx.arch.core:core-testing:$arch_core_testing_version"
     testImplementation "org.mockito:mockito-core:$mockito_version"
     androidTestImplementation "org.mockito:mockito-android:$mockito_version"
-    androidTestImplementation "com.android.support.test:runner:$support_test_runner_version"
-    androidTestImplementation "com.android.support.test.espresso:espresso-core:$espresso_version"
+    androidTestImplementation "androidx.test.ext:junit:$test_ext_version"
+    androidTestImplementation "androidx.test.espresso:espresso-core:$espresso_version"
 
     // Checkout
     api project(':core-v3')
 
     // Dependencies
-    api "com.android.support:support-fragment:$support_library_version"
-    api "android.arch.lifecycle:extensions:$lifecycle_extensions_version"
+    api "androidx.fragment:fragment:$fragment_version"
+    api "androidx.lifecycle:lifecycle-extensions:$lifecycle_extensions_version"
 }
 
 // This sharedTasks.gradle script is applied at the end of this build.gradle script,

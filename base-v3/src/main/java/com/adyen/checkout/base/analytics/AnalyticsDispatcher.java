@@ -12,8 +12,8 @@ import static com.adyen.checkout.core.api.SSLSocketUtil.TLS_SOCKET_FACTORY;
 
 import android.content.Context;
 import android.content.Intent;
-import android.support.annotation.NonNull;
-import android.support.v4.app.JobIntentService;
+import androidx.annotation.NonNull;
+import androidx.core.app.JobIntentService;
 
 import com.adyen.checkout.core.api.Environment;
 import com.adyen.checkout.core.log.LogUtil;
@@ -25,6 +25,8 @@ import java.net.URL;
 
 import javax.net.ssl.HttpsURLConnection;
 
+// TODO change to try-with-resources after updating min API lvl
+@SuppressWarnings("PMD.CloseResource")
 public class AnalyticsDispatcher extends JobIntentService {
     private static final String TAG = LogUtil.getTag();
 

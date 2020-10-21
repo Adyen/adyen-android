@@ -8,8 +8,7 @@
 
 package com.adyen.checkout.core.api;
 
-import android.os.Build;
-import android.support.annotation.NonNull;
+import androidx.annotation.NonNull;
 
 import java.security.KeyManagementException;
 import java.security.NoSuchAlgorithmException;
@@ -42,14 +41,7 @@ public final class SSLSocketUtil {
     private static SSLSocketFactory getTLSSocketFactory() throws NoSuchAlgorithmException, KeyManagementException {
         final SSLContext context = SSLContext.getInstance("TLS");
         context.init(null, null, null);
-        final SSLSocketFactory v3Factory;
-        if (Build.VERSION.SDK_INT <= Build.VERSION_CODES.KITKAT) {
-            v3Factory = new TLSSocketFactory();
-        } else {
-            v3Factory = context.getSocketFactory();
-        }
-
-        return v3Factory;
+        return context.getSocketFactory();
     }
 
     private SSLSocketUtil() {

@@ -15,7 +15,7 @@ import android.support.test.espresso.intent.matcher.IntentMatchers.hasExtra
 import android.support.test.espresso.intent.rule.IntentsTestRule
 import android.support.test.filters.LargeTest
 import android.support.test.runner.AndroidJUnit4
-import android.support.v7.widget.RecyclerView
+import androidx.recyclerview.widget.RecyclerView
 import com.adyen.checkout.dropin.DropIn
 import com.adyen.checkout.example.data.CREDIT_CARD
 import com.adyen.checkout.example.data.FIRST_STORED_PAYMENT_METHOD
@@ -59,7 +59,7 @@ class MainActivityTest : KoinTest {
     @Test
     fun e2e_3ds2_scheme_success() {
         R.id.startCheckoutButton.performClick()
-        R.id.recyclerView_paymentMethods.performActionOnRecyclerItemAtPosition<RecyclerView.ViewHolder>(FOOTER_OF_PAYEMENT_METHODS_FOOTER, findViewByIdAndPerformClick(R.id.others))
+        R.id.recyclerView_paymentMethods.performActionOnRecyclerItemAtPosition<androidx.recyclerview.widget.RecyclerView.ViewHolder>(FOOTER_OF_PAYEMENT_METHODS_FOOTER, findViewByIdAndPerformClick(R.id.others))
 
         R.id.recyclerView_paymentMethods.findItemByTextinRecyclerAndPerformClick(R.id.textView_text, CREDIT_CARD)
 
@@ -79,7 +79,7 @@ class MainActivityTest : KoinTest {
     @Test
     fun e2e_storedPaymentMethod_scheme_success() {
         R.id.startCheckoutButton.performClick()
-        R.id.recyclerView_paymentMethods.performActionOnRecyclerItemAtPosition<RecyclerView.ViewHolder>(FIRST_STORED_PAYMENT_METHOD, click())
+        R.id.recyclerView_paymentMethods.performActionOnRecyclerItemAtPosition<androidx.recyclerview.widget.RecyclerView.ViewHolder>(FIRST_STORED_PAYMENT_METHOD, click())
         R.id.editText_securityCode.performTypeText(normalScheme.cvc)
         R.id.payButton.performClick()
 
@@ -89,7 +89,7 @@ class MainActivityTest : KoinTest {
     @Test
     fun e2e_storedPaymentMethod_scheme_failed() {
         R.id.startCheckoutButton.performClick()
-        R.id.recyclerView_paymentMethods.performActionOnRecyclerItemAtPosition<RecyclerView.ViewHolder>(FIRST_STORED_PAYMENT_METHOD, click())
+        R.id.recyclerView_paymentMethods.performActionOnRecyclerItemAtPosition<androidx.recyclerview.widget.RecyclerView.ViewHolder>(FIRST_STORED_PAYMENT_METHOD, click())
         // wrong cvc
         R.id.editText_securityCode.performTypeText("888")
         R.id.payButton.performClick()
@@ -100,7 +100,7 @@ class MainActivityTest : KoinTest {
     @Test
     fun e2e_normal_scheme_success() {
         R.id.startCheckoutButton.performClick()
-        R.id.recyclerView_paymentMethods.performActionOnRecyclerItemAtPosition<RecyclerView.ViewHolder>(FOOTER_OF_PAYEMENT_METHODS_FOOTER, findViewByIdAndPerformClick(R.id.others))
+        R.id.recyclerView_paymentMethods.performActionOnRecyclerItemAtPosition<androidx.recyclerview.widget.RecyclerView.ViewHolder>(FOOTER_OF_PAYEMENT_METHODS_FOOTER, findViewByIdAndPerformClick(R.id.others))
 
         R.id.recyclerView_paymentMethods.findItemByTextinRecyclerAndPerformClick(R.id.textView_text, CREDIT_CARD)
 
@@ -118,11 +118,11 @@ class MainActivityTest : KoinTest {
         R.id.startCheckoutButton.performClick()
 
         R.id.recyclerView_paymentMethods
-            .performActionOnRecyclerItemAtPosition<RecyclerView.ViewHolder>(FOOTER_OF_PAYEMENT_METHODS_FOOTER, findViewByIdAndPerformClick(R.id.others))
+            .performActionOnRecyclerItemAtPosition<androidx.recyclerview.widget.RecyclerView.ViewHolder>(FOOTER_OF_PAYEMENT_METHODS_FOOTER, findViewByIdAndPerformClick(R.id.others))
 
         R.id.recyclerView_paymentMethods.findItemByTextinRecyclerAndPerformClick(R.id.textView_text, IDEAL)
 
-        R.id.recycler_issuers.performActionOnRecyclerItemAtPosition<RecyclerView.ViewHolder>(0, click())
+        R.id.recycler_issuers.performActionOnRecyclerItemAtPosition<androidx.recyclerview.widget.RecyclerView.ViewHolder>(0, click())
 
         findObjectWithText(IDEAL_WEBVIEW_REDIRECT_KEY)!!.clickAndWaitForNewWindow()
 

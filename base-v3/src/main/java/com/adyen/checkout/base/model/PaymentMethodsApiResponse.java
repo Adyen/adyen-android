@@ -9,8 +9,8 @@
 package com.adyen.checkout.base.model;
 
 import android.os.Parcel;
-import android.support.annotation.NonNull;
-import android.support.annotation.Nullable;
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 
 import com.adyen.checkout.base.model.paymentmethods.PaymentMethod;
 import com.adyen.checkout.base.model.paymentmethods.PaymentMethodsGroup;
@@ -28,7 +28,7 @@ import java.util.List;
 /**
  * Object that parses and holds the response data from the paymentMethods/ endpoint.
  */
-@SuppressWarnings("MemberName")
+@SuppressWarnings({"MemberName", "PMD.DataClass"})
 public final class PaymentMethodsApiResponse extends ModelObject {
     @NonNull
     public static final Creator<PaymentMethodsApiResponse> CREATOR = new Creator<>(PaymentMethodsApiResponse.class);

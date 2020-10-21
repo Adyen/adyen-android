@@ -10,7 +10,7 @@ package com.adyen.checkout.example.extensions
 
 import android.content.Context
 import android.content.SharedPreferences
-import android.support.annotation.StringRes
+import androidx.annotation.StringRes
 
 @Suppress("ReturnCount")
 inline fun <reified T> SharedPreferences.get(appContext: Context, @StringRes stringRes: Int, defaultValue: T): T {

@@ -16,7 +16,7 @@
     <include layout="@layout/bottom_sheet_indicator"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"/>
-    <android.support.v7.widget.RecyclerView
+    <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/recyclerView_paymentMethods"
         android:layout_width="match_parent"
         android:layout_height="0dp"

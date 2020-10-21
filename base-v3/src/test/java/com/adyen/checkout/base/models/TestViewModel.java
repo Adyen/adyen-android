@@ -8,7 +8,7 @@
 
 package com.adyen.checkout.base.models;
 
-import android.arch.lifecycle.ViewModel;
+import androidx.lifecycle.ViewModel;
 
 public class TestViewModel extends ViewModel {
 }

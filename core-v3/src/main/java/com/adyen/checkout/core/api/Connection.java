@@ -8,8 +8,8 @@
 
 package com.adyen.checkout.core.api;
 
-import android.support.annotation.NonNull;
-import android.support.annotation.Nullable;
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
@@ -26,6 +26,8 @@ import java.util.concurrent.Callable;
  *
  * @param <T> The type of the connection return.
  */
+// TODO change to try-with-resources after updating min API lvl
+@SuppressWarnings("PMD.CloseResource")
 public abstract class Connection<T> implements Callable<T> {
 
     public static final String CONTENT_TYPE_HEADER = "Content-Type";

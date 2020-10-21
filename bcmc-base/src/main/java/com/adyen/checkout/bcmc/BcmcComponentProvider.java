@@ -9,10 +9,10 @@
 package com.adyen.checkout.bcmc;
 
 import android.app.Application;
-import android.arch.lifecycle.ViewModelProviders;
-import android.support.annotation.NonNull;
-import android.support.v4.app.Fragment;
-import android.support.v4.app.FragmentActivity;
+import androidx.lifecycle.ViewModelProviders;
+import androidx.annotation.NonNull;
+import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentActivity;
 import android.text.TextUtils;
 
 import com.adyen.checkout.base.ComponentAvailableCallback;
