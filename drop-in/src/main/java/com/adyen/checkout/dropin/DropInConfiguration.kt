@@ -312,13 +312,13 @@ class DropInConfiguration : Configuration, Parcelable {
          */
         fun build(): DropInConfiguration {
             return DropInConfiguration(
-                    shopperLocale,
-                    environment,
-                    clientKey,
-                    availableConfigs,
-                    serviceComponentName,
-                    resultHandlerIntent,
-                    amount
+                shopperLocale,
+                environment,
+                clientKey,
+                availableConfigs,
+                serviceComponentName,
+                resultHandlerIntent,
+                amount
             )
         }
     }

@@ -9,6 +9,7 @@
 package com.adyen.checkout.example.utils
 
 import android.view.View
+import androidx.recyclerview.widget.RecyclerView
 import androidx.test.espresso.Espresso
 import androidx.test.espresso.ViewAction
 import androidx.test.espresso.ViewInteraction
@@ -36,12 +37,16 @@ fun Int.performTypeText(text: String) = matchView().performTypeText(text)
 
 fun Int.findItemByTextinRecyclerAndPerformClick(textViewID: Int, text: String) =
     matchView()
-        .perform(RecyclerViewActions.actionOnItem<androidx.recyclerview.widget.RecyclerView.ViewHolder>
-        (ViewMatchers.hasDescendant(CoreMatchers.allOf(ViewMatchers.withId(textViewID),
-            ViewMatchers.withText(text))),
-            ViewActions.click()))
+        .perform(
+            RecyclerViewActions.actionOnItem<RecyclerView.ViewHolder>(
+                ViewMatchers.hasDescendant(
+                    CoreMatchers.allOf(ViewMatchers.withId(textViewID), ViewMatchers.withText(text))
+                ),
+                ViewActions.click()
+            )
+        )
 
-fun <T : androidx.recyclerview.widget.RecyclerView.ViewHolder> Int.performActionOnRecyclerItemAtPosition(position: Int, action: ViewAction) =
+fun <T : RecyclerView.ViewHolder> Int.performActionOnRecyclerItemAtPosition(position: Int, action: ViewAction) =
     matchView().performActionOnRecyclerItemAtPosition<T>(position, action)
 
 fun ViewInteraction.performClick() = perform(ViewActions.click())

@@ -8,15 +8,14 @@
 
 package com.adyen.checkout.dropin.ui.paymentmethods
 
-import androidx.lifecycle.Observer
-import androidx.lifecycle.ViewModelProviders
 import android.content.DialogInterface
 import android.os.Bundle
-import androidx.recyclerview.widget.LinearLayoutManager
-import androidx.recyclerview.widget.RecyclerView
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.lifecycle.ViewModelProviders
+import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.recyclerview.widget.RecyclerView
 import com.adyen.checkout.base.api.ImageLoader
 import com.adyen.checkout.base.model.paymentmethods.PaymentMethod
 import com.adyen.checkout.base.model.payments.request.GenericPaymentMethod
@@ -60,26 +59,34 @@ class PaymentMethodListDialogFragment : DropInBottomSheetDialogFragment(), Payme
     }
 
     private fun addObserver(recyclerView: RecyclerView) {
-        mDropInViewModel.paymentMethodsModelLiveData.observe(this, Observer<PaymentMethodsModel> {
-            Logger.d(TAG, "paymentMethods changed")
-            if (it == null) {
-                throw CheckoutException("List of PaymentMethodModel is null.")
-            }
+        mDropInViewModel.paymentMethodsModelLiveData.observe(
+            this,
+            {
+                Logger.d(TAG, "paymentMethods changed")
+                if (it == null) {
+                    throw CheckoutException("List of PaymentMethodModel is null.")
+                }
 
-            // we only expect payment methods to be updated inside the same list, without adding or removing elements
-            if (!::mPaymentMethodModelList.isInitialized) {
-                mPaymentMethodModelList = it
-                paymentMethodAdapter = PaymentMethodAdapter(mPaymentMethodModelList,
-                        ImageLoader.getInstance(requireContext(), mDropInViewModel.dropInConfiguration.environment),
+                // we only expect payment methods to be updated inside the same list, without adding or removing elements
+                if (!::mPaymentMethodModelList.isInitialized) {
+                    mPaymentMethodModelList = it
+                    paymentMethodAdapter = PaymentMethodAdapter(
+                        mPaymentMethodModelList,
+                        ImageLoader.getInstance(
+                            requireContext(),
+                            mDropInViewModel.dropInConfiguration.environment
+                        ),
                         arguments?.getBoolean(SHOW_IN_EXPAND_STATUS)!!,
-                        this)
-                recyclerView.layoutManager = LinearLayoutManager(requireContext())
-                recyclerView.adapter = paymentMethodAdapter
-            } else {
-                paymentMethodAdapter.updatePaymentMethodsList(it)
-                paymentMethodAdapter.notifyDataSetChanged()
+                        this
+                    )
+                    recyclerView.layoutManager = LinearLayoutManager(requireContext())
+                    recyclerView.adapter = paymentMethodAdapter
+                } else {
+                    paymentMethodAdapter.updatePaymentMethodsList(it)
+                    paymentMethodAdapter.notifyDataSetChanged()
+                }
             }
-        })
+        )
     }
 
     override fun onCancel(dialog: DialogInterface) {
@@ -95,7 +102,9 @@ class PaymentMethodListDialogFragment : DropInBottomSheetDialogFragment(), Payme
             when (paymentMethodType) {
                 PaymentMethodTypes.GOOGLE_PAY -> {
                     protocol.startGooglePay(
-                            paymentMethod, mDropInViewModel.dropInConfiguration.getConfigurationFor(PaymentMethodTypes.GOOGLE_PAY, requireContext()))
+                        paymentMethod,
+                        mDropInViewModel.dropInConfiguration.getConfigurationFor(PaymentMethodTypes.GOOGLE_PAY, requireContext())
+                    )
                 }
                 PaymentMethodTypes.WECHAT_PAY_SDK -> {
                     sendPayment(paymentMethodType)

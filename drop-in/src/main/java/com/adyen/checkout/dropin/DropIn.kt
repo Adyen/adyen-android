@@ -61,8 +61,8 @@ class DropIn private constructor() {
 
             // Add locale to prefs
             context.getSharedPreferences(DROP_IN_PREFS, Context.MODE_PRIVATE).edit()
-                    .putString(LOCALE_PREF, dropInConfiguration.shopperLocale.toString())
-                    .apply()
+                .putString(LOCALE_PREF, dropInConfiguration.shopperLocale.toString())
+                .apply()
 
             val intent = DropInActivity.createIntent(context, dropInConfiguration, paymentMethodsApiResponse)
             if (context is Activity) {

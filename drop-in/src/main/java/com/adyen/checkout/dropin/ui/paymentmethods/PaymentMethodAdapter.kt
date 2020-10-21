@@ -77,8 +77,11 @@ class PaymentMethodAdapter(
             (holder is PaymentMethodVH) -> {
                 if (paymentMethod is StoredPaymentMethod) {
                     holder.text.text = context.getString(R.string.card_number_4digit, paymentMethod.lastFour)
-                    holder.detail.text = context.getString(R.string.expires_in, paymentMethod.expiryMonth,
-                            DateUtils.removeFirstTwoDigitFromYear(paymentMethod.expiryYear))
+                    holder.detail.text = context.getString(
+                        R.string.expires_in,
+                        paymentMethod.expiryMonth,
+                        DateUtils.removeFirstTwoDigitFromYear(paymentMethod.expiryYear)
+                    )
                     holder.detail.visibility = View.VISIBLE
                 } else {
                     holder.text.text = paymentMethod?.name
@@ -101,8 +104,12 @@ class PaymentMethodAdapter(
                 when (paymentMethod) {
                     HEADER_PLACEHOLDER_ITEM_SP -> holder.title.setText(R.string.store_payment_methods_header)
                     HEADER_PLACEHOLDER_ITEM_P -> {
-                        holder.title.setText(if (!showInExpandStatus) R.string.other_payment_methods
-                        else R.string.payment_methods_header)
+                        holder.title.setText(
+                            if (!showInExpandStatus)
+                                R.string.other_payment_methods
+                            else
+                                R.string.payment_methods_header
+                        )
                     }
                 }
             }

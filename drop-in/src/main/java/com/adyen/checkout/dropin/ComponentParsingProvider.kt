@@ -308,6 +308,6 @@ internal fun getViewFor(
         else -> {
             throw CheckoutException("Unable to find view for type - $paymentType")
         }
-    // TODO check if this generic approach can be improved
+        // TODO check if this generic approach can be improved
     } as ComponentView<in OutputData, ViewableComponent<*, *, *>>
 }

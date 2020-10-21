@@ -42,8 +42,10 @@ internal class DropInCardView : AdyenLinearLayout<CardOutputData, CardConfigurat
 
     override fun onComponentAttached() {
         if (!component.isStoredPaymentMethod) {
-            mCardListAdapter = CardListAdapter(ImageLoader.getInstance(context, component.configuration.environment),
-                component.configuration.supportedCardTypes)
+            mCardListAdapter = CardListAdapter(
+                ImageLoader.getInstance(context, component.configuration.environment),
+                component.configuration.supportedCardTypes
+            )
             recyclerView_cardList.adapter = mCardListAdapter
         }
     }

@@ -127,7 +127,8 @@ class ActionComponentDialogFragment : DropInBottomSheetDialogFragment(), Observe
         return when (actionType) {
             ActionTypes.AWAIT -> {
                 AwaitComponent.PROVIDER.get(
-                        this, dropInViewModel.dropInConfiguration.getConfigurationFor(ActionTypes.AWAIT, requireContext()))
+                    this, dropInViewModel.dropInConfiguration.getConfigurationFor(ActionTypes.AWAIT, requireContext())
+                )
             }
             else -> {
                 throw ComponentException("Unexpected Action component type - $actionType")
