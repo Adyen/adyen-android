@@ -200,7 +200,7 @@ internal fun getProviderForType(type: String): PaymentComponentProvider<PaymentC
  */
 @Suppress("ComplexMethod", "LongMethod")
 internal fun getComponentFor(
-    fragment: androidx.fragment.app.Fragment,
+    fragment: Fragment,
     paymentMethod: PaymentMethod,
     dropInConfiguration: DropInConfiguration
 ): PaymentComponent<PaymentComponentState<in PaymentMethodDetails>, Configuration> {

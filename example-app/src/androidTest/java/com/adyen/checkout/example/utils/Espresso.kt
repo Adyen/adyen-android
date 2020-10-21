@@ -19,10 +19,10 @@ import org.hamcrest.CoreMatchers
 import org.hamcrest.Matcher
 
 // TODO: 21/10/2020 check InstrumentationRegistry deprecation alternative
-//fun Int.getValue(): String {
-//    val targetContext = InstrumentationRegistry.getTargetContext()
-//    return targetContext.resources.getString(this)
-//}
+// fun Int.getValue(): String {
+//     val targetContext = InstrumentationRegistry.getTargetContext()
+//     return targetContext.resources.getString(this)
+// }
 
 fun Int.asIdViewMatcher() = ViewMatchers.withId(this)
 

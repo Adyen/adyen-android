@@ -59,7 +59,7 @@ class PaymentMethodListDialogFragment : DropInBottomSheetDialogFragment(), Payme
         return view
     }
 
-    private fun addObserver(recyclerView: androidx.recyclerview.widget.RecyclerView) {
+    private fun addObserver(recyclerView: RecyclerView) {
         mDropInViewModel.paymentMethodsModelLiveData.observe(this, Observer<PaymentMethodsModel> {
             Logger.d(TAG, "paymentMethods changed")
             if (it == null) {
@@ -73,7 +73,7 @@ class PaymentMethodListDialogFragment : DropInBottomSheetDialogFragment(), Payme
                         ImageLoader.getInstance(requireContext(), mDropInViewModel.dropInConfiguration.environment),
                         arguments?.getBoolean(SHOW_IN_EXPAND_STATUS)!!,
                         this)
-                recyclerView.layoutManager = androidx.recyclerview.widget.LinearLayoutManager(requireContext())
+                recyclerView.layoutManager = LinearLayoutManager(requireContext())
                 recyclerView.adapter = paymentMethodAdapter
             } else {
                 paymentMethodAdapter.updatePaymentMethodsList(it)

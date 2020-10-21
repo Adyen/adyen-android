@@ -23,7 +23,7 @@ import com.adyen.checkout.redirect.RedirectComponent
 import com.adyen.checkout.wechatpay.WeChatPayActionComponent
 
 class ActionHandler(
-    activity: androidx.fragment.app.FragmentActivity,
+    activity: FragmentActivity,
     private val callback: ActionHandlingInterface,
     private val dropInConfiguration: DropInConfiguration
 ) : Observer<ActionComponentData> {
@@ -75,7 +75,7 @@ class ActionHandler(
         adyen3DS2Component.restoreState(bundle)
     }
 
-    fun handleAction(activity: androidx.fragment.app.FragmentActivity, action: Action, sendResult: (String) -> Unit) {
+    fun handleAction(activity: FragmentActivity, action: Action, sendResult: (String) -> Unit) {
         when {
             viewableActionTypes.contains(action.type) -> {
                 callback.displayAction(action)

@@ -8,7 +8,6 @@
 
 package com.adyen.checkout.example
 
-
 import androidx.test.espresso.action.ViewActions.click
 import androidx.test.espresso.intent.Intents.intended
 import androidx.test.espresso.intent.matcher.IntentMatchers.hasComponent

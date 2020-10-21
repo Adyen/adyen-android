@@ -15,6 +15,7 @@ import android.content.res.Configuration
 import android.os.Bundle
 import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
+import androidx.fragment.app.DialogFragment
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.lifecycleScope
@@ -386,9 +387,9 @@ class DropInActivity : AppCompatActivity(), DropInBottomSheetDialogFragment.Prot
         getFragmentByTag(tag)?.dismiss()
     }
 
-    private fun getFragmentByTag(tag: String): androidx.fragment.app.DialogFragment? {
+    private fun getFragmentByTag(tag: String): DialogFragment? {
         val fragment = supportFragmentManager.findFragmentByTag(tag)
-        return fragment as androidx.fragment.app.DialogFragment?
+        return fragment as DialogFragment?
     }
 
     private fun setLoading(showLoading: Boolean) {

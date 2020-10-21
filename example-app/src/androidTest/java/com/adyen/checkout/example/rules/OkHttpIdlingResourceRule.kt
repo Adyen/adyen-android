@@ -8,7 +8,6 @@
 
 package com.adyen.checkout.example.rules
 
-
 import androidx.test.espresso.IdlingRegistry
 import androidx.test.espresso.IdlingResource
 import com.jakewharton.espresso.OkHttp3IdlingResource
