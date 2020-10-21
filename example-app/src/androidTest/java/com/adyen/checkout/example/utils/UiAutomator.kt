@@ -9,14 +9,14 @@
 package com.adyen.checkout.example.utils
 
 import androidx.annotation.IdRes
-import android.support.test.InstrumentationRegistry
-import android.support.test.espresso.UiController
-import android.support.test.espresso.ViewAction
-import android.support.test.uiautomator.UiDevice
-import android.support.test.uiautomator.UiObject
-import android.support.test.uiautomator.UiSelector
 import android.view.View
 import android.widget.TextView
+import androidx.test.espresso.UiController
+import androidx.test.espresso.ViewAction
+import androidx.test.platform.app.InstrumentationRegistry
+import androidx.test.uiautomator.UiDevice
+import androidx.test.uiautomator.UiObject
+import androidx.test.uiautomator.UiSelector
 import org.hamcrest.Matcher
 
 fun findObjectWithText(search: String): UiObject? {

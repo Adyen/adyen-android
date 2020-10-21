@@ -8,22 +8,21 @@
 
 package com.adyen.checkout.example.utils
 
-import android.support.test.InstrumentationRegistry
-import android.support.test.espresso.Espresso
-import android.support.test.espresso.ViewAction
-import android.support.test.espresso.ViewInteraction
-import android.support.test.espresso.action.ViewActions
-import android.support.test.espresso.contrib.RecyclerViewActions
-import android.support.test.espresso.matcher.ViewMatchers
-import androidx.recyclerview.widget.RecyclerView
 import android.view.View
+import androidx.test.espresso.Espresso
+import androidx.test.espresso.ViewAction
+import androidx.test.espresso.ViewInteraction
+import androidx.test.espresso.action.ViewActions
+import androidx.test.espresso.contrib.RecyclerViewActions
+import androidx.test.espresso.matcher.ViewMatchers
 import org.hamcrest.CoreMatchers
 import org.hamcrest.Matcher
 
-fun Int.getValue(): String {
-    val targetContext = InstrumentationRegistry.getTargetContext()
-    return targetContext.resources.getString(this)
-}
+// TODO: 21/10/2020 check InstrumentationRegistry deprecation alternative
+//fun Int.getValue(): String {
+//    val targetContext = InstrumentationRegistry.getTargetContext()
+//    return targetContext.resources.getString(this)
+//}
 
 fun Int.asIdViewMatcher() = ViewMatchers.withId(this)
 
