@@ -14,9 +14,10 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.fragment.app.DialogFragment
 import com.adyen.checkout.dropin.R
 
-class LoadingDialogFragment : androidx.fragment.app.DialogFragment() {
+class LoadingDialogFragment : DialogFragment() {
 
     companion object {
         fun newInstance(): LoadingDialogFragment {

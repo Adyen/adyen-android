@@ -15,6 +15,7 @@ import android.content.res.Configuration
 import android.os.Bundle
 import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
+import androidx.fragment.app.DialogFragment
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.lifecycleScope
@@ -132,8 +133,8 @@ class DropInActivity : AppCompatActivity(), DropInBottomSheetDialogFragment.Prot
         }
 
         if (getFragmentByTag(COMPONENT_FRAGMENT_TAG) == null &&
-                getFragmentByTag(PAYMENT_METHOD_FRAGMENT_TAG) == null &&
-                getFragmentByTag(ACTION_FRAGMENT_TAG) == null
+            getFragmentByTag(PAYMENT_METHOD_FRAGMENT_TAG) == null &&
+            getFragmentByTag(ACTION_FRAGMENT_TAG) == null
         ) {
             PaymentMethodListDialogFragment.newInstance(false).show(supportFragmentManager, PAYMENT_METHOD_FRAGMENT_TAG)
         }
@@ -228,18 +229,20 @@ class DropInActivity : AppCompatActivity(), DropInBottomSheetDialogFragment.Prot
     override fun requestDetailsCall(actionComponentData: ActionComponentData) {
         isWaitingResult = true
         setLoading(true)
-        DropInService.requestDetailsCall(this,
-                ActionComponentData.SERIALIZER.serialize(actionComponentData),
-                dropInViewModel.dropInConfiguration.serviceComponentName)
+        DropInService.requestDetailsCall(
+            this,
+            ActionComponentData.SERIALIZER.serialize(actionComponentData),
+            dropInViewModel.dropInConfiguration.serviceComponentName
+        )
     }
 
     override fun showError(errorMessage: String, terminate: Boolean) {
         AlertDialog.Builder(this)
-                .setTitle(R.string.error_dialog_title)
-                .setMessage(errorMessage)
-                .setOnDismissListener { this@DropInActivity.shouldFinish(terminate) }
-                .setPositiveButton(R.string.error_dialog_button) { dialog, _ -> dialog.dismiss() }
-                .show()
+            .setTitle(R.string.error_dialog_title)
+            .setMessage(errorMessage)
+            .setOnDismissListener { this@DropInActivity.shouldFinish(terminate) }
+            .setPositiveButton(R.string.error_dialog_button) { dialog, _ -> dialog.dismiss() }
+            .show()
     }
 
     override fun displayAction(action: Action) {
@@ -377,8 +380,12 @@ class DropInActivity : AppCompatActivity(), DropInBottomSheetDialogFragment.Prot
 
     private fun sendAnalyticsEvent() {
         Logger.d(TAG, "sendAnalyticsEvent")
-        val analyticEvent = AnalyticEvent.create(this, AnalyticEvent.Flavor.DROPIN,
-            "dropin", dropInViewModel.dropInConfiguration.shopperLocale)
+        val analyticEvent = AnalyticEvent.create(
+            this,
+            AnalyticEvent.Flavor.DROPIN,
+            "dropin",
+            dropInViewModel.dropInConfiguration.shopperLocale
+        )
         AnalyticsDispatcher.dispatchEvent(this, dropInViewModel.dropInConfiguration.environment, analyticEvent)
     }
 
@@ -386,9 +393,9 @@ class DropInActivity : AppCompatActivity(), DropInBottomSheetDialogFragment.Prot
         getFragmentByTag(tag)?.dismiss()
     }
 
-    private fun getFragmentByTag(tag: String): androidx.fragment.app.DialogFragment? {
+    private fun getFragmentByTag(tag: String): DialogFragment? {
         val fragment = supportFragmentManager.findFragmentByTag(tag)
-        return fragment as androidx.fragment.app.DialogFragment?
+        return fragment as DialogFragment?
     }
 
     private fun setLoading(showLoading: Boolean) {

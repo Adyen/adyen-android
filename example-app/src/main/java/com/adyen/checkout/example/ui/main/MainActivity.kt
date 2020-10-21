@@ -9,15 +9,14 @@
 package com.adyen.checkout.example.ui.main
 
 import android.app.Activity
-import androidx.lifecycle.Observer
 import android.content.Intent
 import android.os.Bundle
-import androidx.appcompat.app.AppCompatActivity
-import androidx.appcompat.app.AppCompatDelegate
 import android.view.Menu
 import android.view.MenuItem
 import android.view.View
 import android.widget.Toast
+import androidx.appcompat.app.AppCompatActivity
+import androidx.appcompat.app.AppCompatDelegate
 import com.adyen.checkout.afterpay.AfterPayConfiguration
 import com.adyen.checkout.base.model.PaymentMethodsApiResponse
 import com.adyen.checkout.bcmc.BcmcConfiguration
@@ -72,14 +71,17 @@ class MainActivity : AppCompatActivity() {
             }
         }
 
-        paymentMethodsViewModel.paymentMethodResponseLiveData.observe(this, Observer {
-            if (it != null) {
-                Logger.d(TAG, "Got paymentMethods response - oneClick? ${it.storedPaymentMethods?.size ?: 0}")
-                if (isWaitingPaymentMethods) startDropIn(it)
-            } else {
-                Logger.v(TAG, "API response is null")
+        paymentMethodsViewModel.paymentMethodResponseLiveData.observe(
+            this,
+            {
+                if (it != null) {
+                    Logger.d(TAG, "Got paymentMethods response - oneClick? ${it.storedPaymentMethods?.size ?: 0}")
+                    if (isWaitingPaymentMethods) startDropIn(it)
+                } else {
+                    Logger.v(TAG, "API response is null")
+                }
             }
-        })
+        )
     }
 
     override fun onResume() {
@@ -131,24 +133,24 @@ class MainActivity : AppCompatActivity() {
             .setPublicKey(BuildConfig.PUBLIC_KEY)
             .setShopperReference(keyValueStorage.getShopperReference())
             .setShopperLocale(shopperLocale)
-                .setEnvironment(Environment.TEST)
+            .setEnvironment(Environment.TEST)
             .build()
 
         val googlePayConfig = GooglePayConfiguration.Builder(this@MainActivity, keyValueStorage.getMerchantAccount())
-                .setCountryCode(keyValueStorage.getCountry())
-                .setEnvironment(Environment.TEST)
-                .build()
+            .setCountryCode(keyValueStorage.getCountry())
+            .setEnvironment(Environment.TEST)
+            .build()
 
         val afterPayConfiguration = AfterPayConfiguration.Builder(this, AfterPayConfiguration.CountryCode.NL)
-                .setShopperLocale(shopperLocale)
-                .setEnvironment(Environment.TEST)
-                .build()
+            .setShopperLocale(shopperLocale)
+            .setEnvironment(Environment.TEST)
+            .build()
 
         val bcmcConfiguration = BcmcConfiguration.Builder(this@MainActivity)
-                .setPublicKey(BuildConfig.PUBLIC_KEY)
-                .setShopperLocale(shopperLocale)
-                .setEnvironment(Environment.TEST)
-                .build()
+            .setPublicKey(BuildConfig.PUBLIC_KEY)
+            .setShopperLocale(shopperLocale)
+            .setEnvironment(Environment.TEST)
+            .build()
 
         val resultIntent = Intent(this, MainActivity::class.java)
         resultIntent.flags = Intent.FLAG_ACTIVITY_CLEAR_TOP

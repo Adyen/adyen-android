@@ -54,9 +54,11 @@ val networkModule = module {
         return Retrofit.Builder()
             .baseUrl(BuildConfig.MERCHANT_SERVER_URL)
             .client(httpClient)
-            .addConverterFactory(MoshiConverterFactory.create(
-                    Moshi.Builder().add(KotlinJsonAdapterFactory()
-            ).build()))
+            .addConverterFactory(
+                MoshiConverterFactory.create(
+                    Moshi.Builder().add(KotlinJsonAdapterFactory()).build()
+                )
+            )
             .addCallAdapterFactory(CoroutineCallAdapterFactory())
             .build()
             .create(CheckoutApiService::class.java)

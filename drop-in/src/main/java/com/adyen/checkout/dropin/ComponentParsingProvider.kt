@@ -200,7 +200,7 @@ internal fun getProviderForType(type: String): PaymentComponentProvider<PaymentC
  */
 @Suppress("ComplexMethod", "LongMethod")
 internal fun getComponentFor(
-    fragment: androidx.fragment.app.Fragment,
+    fragment: Fragment,
     paymentMethod: PaymentMethod,
     dropInConfiguration: DropInConfiguration
 ): PaymentComponent<PaymentComponentState<in PaymentMethodDetails>, Configuration> {
@@ -308,6 +308,6 @@ internal fun getViewFor(
         else -> {
             throw CheckoutException("Unable to find view for type - $paymentType")
         }
-    // TODO check if this generic approach can be improved
+        // TODO check if this generic approach can be improved
     } as ComponentView<in OutputData, ViewableComponent<*, *, *>>
 }

@@ -23,7 +23,7 @@ import com.adyen.checkout.redirect.RedirectComponent
 import com.adyen.checkout.wechatpay.WeChatPayActionComponent
 
 class ActionHandler(
-    activity: androidx.fragment.app.FragmentActivity,
+    activity: FragmentActivity,
     private val callback: ActionHandlingInterface,
     private val dropInConfiguration: DropInConfiguration
 ) : Observer<ActionComponentData> {
@@ -38,7 +38,7 @@ class ActionHandler(
 
     private val redirectComponent = RedirectComponent.PROVIDER.get(activity, dropInConfiguration.getConfigurationFor(ActionTypes.REDIRECT, activity))
     private val adyen3DS2Component =
-            Adyen3DS2Component.PROVIDER.get(activity, dropInConfiguration.getConfigurationFor(ActionTypes.THREEDS2_FINGERPRINT, activity))
+        Adyen3DS2Component.PROVIDER.get(activity, dropInConfiguration.getConfigurationFor(ActionTypes.THREEDS2_FINGERPRINT, activity))
     // get config from Drop-in when available
     private val weChatPayActionComponent = WeChatPayActionComponent.PROVIDER.get(activity, null)
 
@@ -47,16 +47,25 @@ class ActionHandler(
         adyen3DS2Component.observe(activity, this)
         weChatPayActionComponent.observe(activity, this)
 
-        redirectComponent.observeErrors(activity, Observer {
-            callback.onActionError(it?.errorMessage ?: "Redirect Error.")
-        })
+        redirectComponent.observeErrors(
+            activity,
+            {
+                callback.onActionError(it?.errorMessage ?: "Redirect Error.")
+            }
+        )
 
-        adyen3DS2Component.observeErrors(activity, Observer {
-            callback.onActionError(it?.errorMessage ?: "3DS2 Error.")
-        })
-        weChatPayActionComponent.observeErrors(activity, Observer {
-            callback.onActionError(it?.errorMessage ?: "WechatPay Error.")
-        })
+        adyen3DS2Component.observeErrors(
+            activity,
+            {
+                callback.onActionError(it?.errorMessage ?: "3DS2 Error.")
+            }
+        )
+        weChatPayActionComponent.observeErrors(
+            activity,
+            {
+                callback.onActionError(it?.errorMessage ?: "WechatPay Error.")
+            }
+        )
     }
 
     override fun onChanged(componentData: ActionComponentData?) {
@@ -75,7 +84,7 @@ class ActionHandler(
         adyen3DS2Component.restoreState(bundle)
     }
 
-    fun handleAction(activity: androidx.fragment.app.FragmentActivity, action: Action, sendResult: (String) -> Unit) {
+    fun handleAction(activity: FragmentActivity, action: Action, sendResult: (String) -> Unit) {
         when {
             viewableActionTypes.contains(action.type) -> {
                 callback.displayAction(action)

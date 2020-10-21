@@ -30,7 +30,7 @@ class PaymentMethodAdapter(
     private var imageLoader: ImageLoader,
     private var showInExpandStatus: Boolean,
     private val onPaymentMethodSelectedCallback: OnPaymentMethodSelectedCallback
-) : androidx.recyclerview.widget.RecyclerView.Adapter<PaymentMethodAdapter.BaseViewHolder>() {
+) : RecyclerView.Adapter<PaymentMethodAdapter.BaseViewHolder>() {
 
     private var expandListOfItem = emptyList<PaymentMethod>()
     private var collapseListOfItem = emptyList<PaymentMethod>()
@@ -77,8 +77,11 @@ class PaymentMethodAdapter(
             (holder is PaymentMethodVH) -> {
                 if (paymentMethod is StoredPaymentMethod) {
                     holder.text.text = context.getString(R.string.card_number_4digit, paymentMethod.lastFour)
-                    holder.detail.text = context.getString(R.string.expires_in, paymentMethod.expiryMonth,
-                            DateUtils.removeFirstTwoDigitFromYear(paymentMethod.expiryYear))
+                    holder.detail.text = context.getString(
+                        R.string.expires_in,
+                        paymentMethod.expiryMonth,
+                        DateUtils.removeFirstTwoDigitFromYear(paymentMethod.expiryYear)
+                    )
                     holder.detail.visibility = View.VISIBLE
                 } else {
                     holder.text.text = paymentMethod?.name
@@ -101,8 +104,12 @@ class PaymentMethodAdapter(
                 when (paymentMethod) {
                     HEADER_PLACEHOLDER_ITEM_SP -> holder.title.setText(R.string.store_payment_methods_header)
                     HEADER_PLACEHOLDER_ITEM_P -> {
-                        holder.title.setText(if (!showInExpandStatus) R.string.other_payment_methods
-                        else R.string.payment_methods_header)
+                        holder.title.setText(
+                            if (!showInExpandStatus)
+                                R.string.other_payment_methods
+                            else
+                                R.string.payment_methods_header
+                        )
                     }
                 }
             }
@@ -202,5 +209,5 @@ class PaymentMethodAdapter(
         internal val pay: Button = rootView.findViewById(R.id.payButton)
     }
 
-    open class BaseViewHolder(rootView: View) : androidx.recyclerview.widget.RecyclerView.ViewHolder(rootView)
+    open class BaseViewHolder(rootView: View) : RecyclerView.ViewHolder(rootView)
 }

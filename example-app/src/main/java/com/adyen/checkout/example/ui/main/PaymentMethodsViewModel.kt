@@ -52,7 +52,8 @@ class PaymentMethodsViewModel(
             keyValueStorage.getShopperReference(),
             keyValueStorage.getAmount(),
             keyValueStorage.getCountry(),
-            keyValueStorage.getShopperLocale())
+            keyValueStorage.getShopperLocale()
+        )
     }
 
     override fun onCleared() {
