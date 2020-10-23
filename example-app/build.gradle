@@ -64,11 +64,6 @@ android {
 
 dependencies {
     // Tests
-
-    testImplementation "junit:junit:$junit_version"
-    androidTestImplementation "androidx.test.ext:junit:$test_ext_version"
-    androidTestImplementation "androidx.test.espresso:espresso-core:$espresso_version"
-
     testImplementation "junit:junit:$junit_version"
     androidTestImplementation "androidx.test.ext:junit:$test_ext_version"
     androidTestImplementation "androidx.test:rules:$test_rules_version"
@@ -82,28 +77,28 @@ dependencies {
     implementation project(':drop-in')
 
     // Dependencies
-    implementation "androidx.multidex:multidex:$multidex_version"
     implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk7:$kotlin_stdlib_version"
     implementation "org.jetbrains.kotlinx:kotlinx-coroutines-android:$kotlinx_version"
     implementation "org.jetbrains.kotlinx:kotlinx-coroutines-core:$kotlinx_version"
 
+    implementation "androidx.multidex:multidex:$multidex_version"
     implementation "androidx.appcompat:appcompat:$appcompat_version"
     implementation "androidx.recyclerview:recyclerview:$recyclerview_version"
-    implementation "com.google.android.material:material:$material_version"
-
-    implementation "androidx.appcompat:appcompat:$appcompat_version"
     implementation "androidx.lifecycle:lifecycle-extensions:$lifecycle_extensions_version"
-    implementation "androidx.recyclerview:recyclerview:$recyclerview_version"
-    implementation "com.google.android.material:material:$material_version"
     implementation "androidx.constraintlayout:constraintlayout:$constraintlayout_version"
     implementation "androidx.preference:preference-ktx:$preference_version"
+
+    implementation "com.google.android.material:material:$material_version"
+
     implementation "com.squareup.retrofit2:retrofit:$retrofit2_version"
     implementation "com.squareup.retrofit2:converter-moshi:$retrofit2_version"
     implementation "com.squareup.retrofit2:converter-gson:$retrofit2_version"
     implementation "com.squareup.moshi:moshi-adapters:$moshi_adapters_version"
     implementation "com.squareup.moshi:moshi-kotlin:$moshi_kotlin_adapter_version"
-    implementation "com.jakewharton.retrofit:retrofit2-kotlin-coroutines-adapter:$coroutines_adapter_version"
     implementation "com.squareup.okhttp3:logging-interceptor:$okhttp_logging_version"
+
+    implementation "com.jakewharton.retrofit:retrofit2-kotlin-coroutines-adapter:$coroutines_adapter_version"
+
     implementation "org.koin:koin-android:$koin_version"
     implementation "org.koin:koin-test:$koin_version"
     implementation "org.koin:koin-android-viewmodel:$koin_version"
