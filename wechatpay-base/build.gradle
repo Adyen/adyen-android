@@ -17,11 +17,13 @@ android {
         testInstrumentationRunner 'androidx.test.runner.AndroidJUnitRunner'
     }
 
-    buildTypes {
-        release {
-            minifyEnabled false
-            proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
-        }
+    compileOptions {
+        sourceCompatibility JavaVersion.VERSION_1_8
+        targetCompatibility JavaVersion.VERSION_1_8
+    }
+
+    kotlinOptions {
+        jvmTarget = JavaVersion.VERSION_1_8.toString()
     }
 }
 
@@ -35,7 +37,6 @@ dependencies {
     api project(':base-v3')
 
     // Dependencies
-    // TODO update WeChat SDK version
     implementation "com.tencent.mm.opensdk:wechat-sdk-android-without-mta:$wechat_pay_version"
 }
 
