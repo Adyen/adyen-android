@@ -1,6 +1,8 @@
 /**
  * Replace the values in <PLACEHOLDER> with the configuration to connect to YOUR Server. The <> should also be removed.
  * Your server is the one that should connect to Adyen, DO NOT connect to Adyen directly from the App as this might expose your API keys.
+ *
+ * For a permanent local configuration file not tracked by Git, copy this file and rename it to "local.gradle" with your credentials.
  */
 android {
     buildTypes {
