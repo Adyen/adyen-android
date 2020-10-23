@@ -30,6 +30,7 @@ import com.adyen.checkout.dropin.DropIn
 import com.adyen.checkout.dropin.DropInConfiguration
 import com.adyen.checkout.example.BuildConfig
 import com.adyen.checkout.example.R
+import com.adyen.checkout.example.data.api.CheckoutApiService
 import com.adyen.checkout.example.data.storage.KeyValueStorage
 import com.adyen.checkout.example.service.ExampleSimplifiedDropInService
 import com.adyen.checkout.example.ui.configuration.ConfigurationActivity
@@ -63,6 +64,15 @@ class MainActivity : AppCompatActivity() {
         }
 
         startCheckoutButton.setOnClickListener {
+            if (!CheckoutApiService.isRealUrlAvailable()) {
+                Toast.makeText(
+                    this@MainActivity,
+                    "No server URL configured on local.gradle file.",
+                    Toast.LENGTH_SHORT
+                ).show()
+                return@setOnClickListener
+            }
+
             val currentResponse = paymentMethodsViewModel.paymentMethodResponseLiveData.value
             if (currentResponse != null) {
                 startDropIn(currentResponse)
@@ -86,7 +96,9 @@ class MainActivity : AppCompatActivity() {
 
     override fun onResume() {
         super.onResume()
-        paymentMethodsViewModel.requestPaymentMethods()
+        if (CheckoutApiService.isRealUrlAvailable()) {
+            paymentMethodsViewModel.requestPaymentMethods()
+        }
     }
 
     override fun onCreateOptionsMenu(menu: Menu?): Boolean {
