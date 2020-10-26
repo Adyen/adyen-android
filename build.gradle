@@ -3,6 +3,9 @@ apply from: "config/gradle/dependenciesCheck.gradle"
 
 ext {
     checkoutRedirectScheme = "adyencheckout"
+     // This is a quirk in the Spotbugs plugin, the class name isn't findable in the separate spotbugs.gradle file
+     // unless you define classpath "gradle.plugin.com.github.spotbugs.snom:spotbugs-gradle-plugin:4.3.0" there.
+    SpotBugsTask = com.github.spotbugs.snom.SpotBugsTask
 }
 
 buildscript {
@@ -11,6 +14,7 @@ buildscript {
     ext.kotlin_version = '1.4.10'
     ext.detekt_gradle_plugin_version = "1.13.1"
     ext.bintray_gradle_plugin_version = "1.8.5"
+    ext.spotbugs_gradle_plugin_version = "4.5.1"
 
     repositories {
         google()
@@ -23,6 +27,7 @@ buildscript {
         classpath "com.jfrog.bintray.gradle:gradle-bintray-plugin:$bintray_gradle_plugin_version"
         classpath "io.gitlab.arturbosch.detekt:detekt-gradle-plugin:$detekt_gradle_plugin_version"
         classpath "org.jetbrains.kotlin:kotlin-gradle-plugin:$kotlin_version"
+        classpath "gradle.plugin.com.github.spotbugs.snom:spotbugs-gradle-plugin:$spotbugs_gradle_plugin_version"
     }
 }
 

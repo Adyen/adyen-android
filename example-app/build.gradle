@@ -10,7 +10,7 @@ apply plugin: 'com.android.application'
 apply plugin: 'kotlin-android'
 apply plugin: 'kotlin-android-extensions'
 
-apply from: "../config/gradle/codeQualityKt.gradle"
+apply from: "../config/gradle/codeQuality.gradle"
 apply from: "../config/gradle/ci.gradle"
 
 if (file("local.gradle").exists()) {

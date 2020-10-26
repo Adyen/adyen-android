@@ -39,7 +39,7 @@ public class Adyen3DS2Configuration extends Configuration {
 
     protected Adyen3DS2Configuration(@NonNull Locale shopperLocale,
             @NonNull Environment environment,
-            @Nullable String clientKey,
+            @NonNull String clientKey,
             @Nullable String protocolVersion
     ) {
         super(shopperLocale, environment, clientKey);

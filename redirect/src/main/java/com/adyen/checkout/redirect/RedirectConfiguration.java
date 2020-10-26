@@ -11,8 +11,8 @@ package com.adyen.checkout.redirect;
 import android.content.Context;
 import android.os.Parcel;
 import android.os.Parcelable;
+
 import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
 
 import com.adyen.checkout.base.component.BaseConfigurationBuilder;
 import com.adyen.checkout.base.component.Configuration;
@@ -32,9 +32,10 @@ public class RedirectConfiguration extends Configuration {
         }
     };
 
-    protected RedirectConfiguration(@NonNull Locale shopperLocale,
+    protected RedirectConfiguration(
+            @NonNull Locale shopperLocale,
             @NonNull Environment environment,
-            @Nullable String clientKey) {
+            @NonNull String clientKey) {
         super(shopperLocale, environment, clientKey);
     }
 
