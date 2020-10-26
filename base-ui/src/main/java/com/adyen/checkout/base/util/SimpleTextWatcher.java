@@ -8,9 +8,10 @@
 
 package com.adyen.checkout.base.util;
 
-import androidx.annotation.NonNull;
 import android.text.Editable;
 import android.text.TextWatcher;
+
+import androidx.annotation.NonNull;
 
 public class SimpleTextWatcher implements TextWatcher {
     @Override

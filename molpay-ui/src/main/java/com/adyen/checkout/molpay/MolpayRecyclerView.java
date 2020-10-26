@@ -9,9 +9,10 @@
 package com.adyen.checkout.molpay;
 
 import android.content.Context;
+import android.util.AttributeSet;
+
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
-import android.util.AttributeSet;
 
 import com.adyen.checkout.base.model.payments.request.MolpayPaymentMethod;
 import com.adyen.checkout.issuerlist.IssuerListRecyclerView;

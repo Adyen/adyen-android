@@ -9,6 +9,7 @@
 package com.adyen.checkout.core.log;
 
 import android.os.Build;
+
 import androidx.annotation.NonNull;
 
 import com.adyen.checkout.core.exception.NoConstructorException;

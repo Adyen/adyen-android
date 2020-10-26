@@ -10,11 +10,12 @@ package com.adyen.checkout.base.component;
 
 import android.app.Activity;
 import android.app.Application;
-import androidx.lifecycle.ViewModelProviders;
+
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentActivity;
+import androidx.lifecycle.ViewModelProviders;
 
 import com.adyen.checkout.base.ActionComponentProvider;
 import com.adyen.checkout.base.component.lifecycle.ActionComponentViewModel;

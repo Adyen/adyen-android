@@ -14,9 +14,10 @@ import android.content.ActivityNotFoundException;
 import android.content.Context;
 import android.content.Intent;
 import android.net.Uri;
+import android.text.TextUtils;
+
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
-import android.text.TextUtils;
 
 import com.adyen.checkout.base.ActionComponentProvider;
 import com.adyen.checkout.base.component.ActionComponentProviderImpl;

@@ -11,6 +11,7 @@ package com.adyen.checkout.eps;
 import android.content.Context;
 import android.os.Parcel;
 import android.os.Parcelable;
+
 import androidx.annotation.NonNull;
 
 import com.adyen.checkout.core.api.Environment;

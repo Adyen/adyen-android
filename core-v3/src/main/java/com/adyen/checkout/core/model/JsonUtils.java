@@ -9,9 +9,10 @@
 package com.adyen.checkout.core.model;
 
 import android.os.Parcel;
+import android.text.TextUtils;
+
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
-import android.text.TextUtils;
 
 import com.adyen.checkout.core.exception.NoConstructorException;
 

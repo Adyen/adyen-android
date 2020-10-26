@@ -8,10 +8,11 @@
 
 package com.adyen.checkout.await;
 
+import android.os.Handler;
+
+import androidx.annotation.NonNull;
 import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
-import android.os.Handler;
-import androidx.annotation.NonNull;
 
 import com.adyen.checkout.await.api.StatusApi;
 import com.adyen.checkout.await.api.StatusConnectionTask;

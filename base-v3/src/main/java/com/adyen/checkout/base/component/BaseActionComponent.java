@@ -10,13 +10,14 @@ package com.adyen.checkout.base.component;
 
 import android.app.Activity;
 import android.app.Application;
+import android.os.Bundle;
+import android.text.TextUtils;
+
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import androidx.lifecycle.LifecycleOwner;
 import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.Observer;
-import android.os.Bundle;
-import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
-import android.text.TextUtils;
 
 import com.adyen.checkout.base.ActionComponentData;
 import com.adyen.checkout.base.ComponentError;

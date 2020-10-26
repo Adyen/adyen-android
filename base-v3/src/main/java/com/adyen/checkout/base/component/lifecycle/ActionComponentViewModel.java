@@ -9,9 +9,10 @@
 package com.adyen.checkout.base.component.lifecycle;
 
 import android.app.Application;
-import androidx.lifecycle.AndroidViewModel;
+
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.lifecycle.AndroidViewModel;
 
 import com.adyen.checkout.base.ActionComponent;
 import com.adyen.checkout.base.component.Configuration;

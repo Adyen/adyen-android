@@ -12,6 +12,7 @@ import android.content.res.Resources;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.drawable.BitmapDrawable;
+
 import androidx.annotation.NonNull;
 
 import com.adyen.checkout.core.api.Connection;

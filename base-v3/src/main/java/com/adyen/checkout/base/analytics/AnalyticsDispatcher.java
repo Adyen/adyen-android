@@ -12,6 +12,7 @@ import static com.adyen.checkout.core.api.SSLSocketUtil.TLS_SOCKET_FACTORY;
 
 import android.content.Context;
 import android.content.Intent;
+
 import androidx.annotation.NonNull;
 import androidx.core.app.JobIntentService;
 

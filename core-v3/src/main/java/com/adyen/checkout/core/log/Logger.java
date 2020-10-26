@@ -8,10 +8,11 @@
 
 package com.adyen.checkout.core.log;
 
+import android.util.Log;
+
 import androidx.annotation.IntDef;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
-import android.util.Log;
 
 import com.adyen.checkout.core.BuildConfig;
 import com.adyen.checkout.core.exception.NoConstructorException;

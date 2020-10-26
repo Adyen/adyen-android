@@ -9,6 +9,7 @@
 package com.adyen.checkout.base.component;
 
 import android.content.Context;
+
 import androidx.annotation.NonNull;
 
 import com.adyen.checkout.base.util.ValidationUtils;

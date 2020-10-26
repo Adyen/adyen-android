@@ -9,6 +9,7 @@
 package com.adyen.checkout.base.model.payments;
 
 import android.os.Parcel;
+
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 

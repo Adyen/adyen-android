@@ -9,6 +9,7 @@
 package com.adyen.checkout.base.model.payments.request;
 
 import android.os.Parcel;
+
 import androidx.annotation.NonNull;
 
 import com.adyen.checkout.base.util.PaymentMethodTypes;

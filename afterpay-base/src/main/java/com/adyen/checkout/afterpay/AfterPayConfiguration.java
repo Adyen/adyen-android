@@ -11,6 +11,7 @@ package com.adyen.checkout.afterpay;
 import android.content.Context;
 import android.os.Parcel;
 import android.os.Parcelable;
+
 import androidx.annotation.NonNull;
 
 import com.adyen.checkout.base.component.BaseConfigurationBuilder;

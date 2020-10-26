@@ -11,11 +11,12 @@ package com.adyen.checkout.googlepay;
 import android.content.Context;
 import android.os.Parcel;
 import android.os.Parcelable;
+
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 
-import com.adyen.checkout.base.component.Configuration;
 import com.adyen.checkout.base.component.BaseConfigurationBuilder;
+import com.adyen.checkout.base.component.Configuration;
 import com.adyen.checkout.base.model.payments.Amount;
 import com.adyen.checkout.base.util.CheckoutCurrency;
 import com.adyen.checkout.core.api.Environment;

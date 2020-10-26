@@ -9,13 +9,14 @@
 package com.adyen.checkout.card.ui;
 
 import android.content.Context;
-import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
 import android.text.Editable;
 import android.text.InputType;
 import android.text.TextUtils;
 import android.text.method.DigitsKeyListener;
 import android.util.AttributeSet;
+
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 
 import com.adyen.checkout.base.ui.view.AdyenTextInputEditText;
 import com.adyen.checkout.card.CardValidationUtils;

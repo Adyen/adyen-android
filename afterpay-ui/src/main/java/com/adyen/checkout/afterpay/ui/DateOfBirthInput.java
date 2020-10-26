@@ -11,13 +11,14 @@ package com.adyen.checkout.afterpay.ui;
 import android.app.DatePickerDialog;
 import android.content.Context;
 import android.content.DialogInterface;
-import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
 import android.text.InputType;
 import android.util.AttributeSet;
 import android.view.View;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.DatePicker;
+
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 
 import com.adyen.checkout.base.ui.view.AdyenTextInputEditText;
 
