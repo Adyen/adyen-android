@@ -25,7 +25,7 @@ public final class LogUtil {
     private static final int MAX_TAG_SIZE = 23;
 
     static {
-        KotlinBase.Companion.log();
+        KotlinBase.log();
     }
 
     /**

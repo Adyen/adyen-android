@@ -28,7 +28,6 @@ import com.adyen.checkout.base.model.paymentmethods.PaymentMethod
 import com.adyen.checkout.base.model.payments.request.PaymentComponentData
 import com.adyen.checkout.base.model.payments.response.Action
 import com.adyen.checkout.base.util.PaymentMethodTypes
-import com.adyen.checkout.core.code.Lint
 import com.adyen.checkout.core.exception.CheckoutException
 import com.adyen.checkout.core.log.LogUtil
 import com.adyen.checkout.core.log.Logger
@@ -91,10 +90,8 @@ class DropInActivity : AppCompatActivity(), DropInBottomSheetDialogFragment.Prot
 
     private lateinit var googlePayComponent: GooglePayComponent
 
-    @Suppress(Lint.PROTECTED_IN_FINAL)
-    protected lateinit var actionHandler: ActionHandler
+    private lateinit var actionHandler: ActionHandler
 
-    @Suppress(Lint.PROTECTED_IN_FINAL)
     private var isWaitingResult = false
 
     private val loadingDialog = LoadingDialogFragment.newInstance()
@@ -313,8 +310,7 @@ class DropInActivity : AppCompatActivity(), DropInBottomSheetDialogFragment.Prot
         googlePayComponent.startGooglePayScreen(this, GOOGLE_PAY_REQUEST_CODE)
     }
 
-    @Suppress(Lint.PROTECTED_IN_FINAL)
-    protected fun handleCallResult(callResult: CallResult) {
+    private fun handleCallResult(callResult: CallResult) {
         Logger.d(TAG, "handleCallResult - ${callResult.type.name}")
         when (callResult.type) {
             CallResult.ResultType.FINISHED -> {

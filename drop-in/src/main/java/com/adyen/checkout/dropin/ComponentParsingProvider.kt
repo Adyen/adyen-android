@@ -69,10 +69,8 @@ import com.adyen.checkout.sepa.SepaView
 import com.adyen.checkout.wechatpay.WeChatPayComponent
 import com.adyen.checkout.wechatpay.WeChatPayConfiguration
 
-class ComponentParsingProvider {
-    companion object {
-        val TAG = LogUtil.getTag()
-    }
+object ComponentParsingProvider {
+    val TAG = LogUtil.getTag()
 }
 
 @Suppress("ComplexMethod", "LongMethod")
