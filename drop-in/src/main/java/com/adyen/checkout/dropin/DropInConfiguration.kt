@@ -60,6 +60,7 @@ class DropInConfiguration : Configuration, Parcelable {
         }
     }
 
+    @Suppress("LongParameterList")
     constructor(
         shopperLocale: Locale,
         environment: Environment,

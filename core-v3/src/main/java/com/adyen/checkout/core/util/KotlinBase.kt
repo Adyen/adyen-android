@@ -11,15 +11,12 @@ package com.adyen.checkout.core.util
 import com.adyen.checkout.core.log.LogUtil
 import com.adyen.checkout.core.log.Logger
 
-// Placeholder class just to make sure we add Kotlin libs to all dependencies
 // TODO: 15/09/2020 remove after we have some Kotlin code in this module
-@Suppress("SyntheticAccessor")
-class KotlinBase {
-    companion object {
-        private val tag = LogUtil.getTag()
+object KotlinBase {
+    private val tag = LogUtil.getTag()
 
-        fun log() {
-            Logger.v(tag, "Running Kotlin")
-        }
+    @JvmStatic
+    fun log() {
+        Logger.v(tag, "Running Kotlin")
     }
 }
