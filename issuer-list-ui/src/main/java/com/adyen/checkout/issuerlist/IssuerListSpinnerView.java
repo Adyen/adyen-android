@@ -8,16 +8,17 @@
 
 package com.adyen.checkout.issuerlist;
 
-import androidx.lifecycle.LifecycleOwner;
-import androidx.lifecycle.Observer;
 import android.content.Context;
-import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
-import androidx.appcompat.widget.AppCompatSpinner;
 import android.util.AttributeSet;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.AdapterView;
+
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
+import androidx.appcompat.widget.AppCompatSpinner;
+import androidx.lifecycle.LifecycleOwner;
+import androidx.lifecycle.Observer;
 
 import com.adyen.checkout.base.PaymentComponentState;
 import com.adyen.checkout.base.api.ImageLoader;
@@ -30,8 +31,10 @@ import com.adyen.checkout.issuerlist.ui.R;
 import java.util.Collections;
 import java.util.List;
 
-public abstract class IssuerListSpinnerView
-        <IssuerListPaymentMethodT extends IssuerListPaymentMethod, IssuerListComponentT extends IssuerListComponent<IssuerListPaymentMethodT>>
+public abstract class IssuerListSpinnerView<
+        IssuerListPaymentMethodT extends IssuerListPaymentMethod,
+        IssuerListComponentT extends IssuerListComponent<IssuerListPaymentMethodT>
+        >
         extends AdyenLinearLayout<IssuerListOutputData, IssuerListConfiguration, PaymentComponentState, IssuerListComponentT>
         implements AdapterView.OnItemSelectedListener {
     private static final String TAG = LogUtil.getTag();
@@ -99,7 +102,7 @@ public abstract class IssuerListSpinnerView
         return false;
     }
 
-    void onIssuersChanged(@Nullable List<IssuerModel> issuerList) {
+    void onIssuersChanged(@NonNull List<IssuerModel> issuerList) {
         mIssuersAdapter.updateIssuers(issuerList);
     }
 
@@ -125,7 +128,7 @@ public abstract class IssuerListSpinnerView
     private Observer<List<IssuerModel>> createIssuersObserver() {
         return new Observer<List<IssuerModel>>() {
             @Override
-            public void onChanged(@Nullable List<IssuerModel> issuerList) {
+            public void onChanged(@NonNull List<IssuerModel> issuerList) {
                 onIssuersChanged(issuerList);
             }
         };

@@ -11,8 +11,8 @@ package com.adyen.checkout.bcmc;
 import android.content.Context;
 import android.os.Parcel;
 import android.os.Parcelable;
+
 import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
 
 import com.adyen.checkout.base.component.BaseConfigurationBuilder;
 import com.adyen.checkout.base.component.Configuration;
@@ -43,7 +43,7 @@ public class BcmcConfiguration extends Configuration {
     BcmcConfiguration(
             @NonNull Locale shopperLocale,
             @NonNull Environment environment,
-            @Nullable String clientKey,
+            @NonNull String clientKey,
             @NonNull String publicKey) {
         super(shopperLocale, environment, clientKey);
 

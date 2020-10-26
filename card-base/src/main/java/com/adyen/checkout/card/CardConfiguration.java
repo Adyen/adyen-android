@@ -70,7 +70,7 @@ public class CardConfiguration extends Configuration {
     CardConfiguration(
             @NonNull Locale shopperLocale,
             @NonNull Environment environment,
-            @Nullable String clientKey,
+            @NonNull String clientKey,
             @NonNull String publicKey,
             boolean holderNameRequire,
             @NonNull String shopperReference,

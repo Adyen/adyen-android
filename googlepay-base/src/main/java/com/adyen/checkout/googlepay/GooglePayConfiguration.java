@@ -62,7 +62,7 @@ public class GooglePayConfiguration extends Configuration {
     GooglePayConfiguration(
             @NonNull Locale shopperLocale,
             @NonNull Environment environment,
-            @Nullable String clientKey,
+            @NonNull String clientKey,
             @NonNull String merchantAccount,
             int googlePayEnvironment,
             @NonNull Amount amount,
