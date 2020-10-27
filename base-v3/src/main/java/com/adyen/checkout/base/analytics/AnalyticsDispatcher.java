@@ -26,8 +26,6 @@ import java.net.URL;
 
 import javax.net.ssl.HttpsURLConnection;
 
-// TODO change to try-with-resources after updating min API lvl
-@SuppressWarnings("PMD.CloseResource")
 public class AnalyticsDispatcher extends JobIntentService {
     private static final String TAG = LogUtil.getTag();
 
@@ -73,12 +71,13 @@ public class AnalyticsDispatcher extends JobIntentService {
             urlConnection = (HttpsURLConnection) finalUrl.openConnection();
             urlConnection.setSSLSocketFactory(TLS_SOCKET_FACTORY);
             urlConnection.connect();
-            final InputStream inputStream = urlConnection.getInputStream();
-            // Need to read to consume the inputStream for the connection to count on the backend.
-            //noinspection ResultOfMethodCallIgnored
-            inputStream.read();
-            inputStream.close();
-        } catch (IOException e) {
+
+            try (InputStream inputStream = urlConnection.getInputStream()) {
+                // Need to read to consume the inputStream for the connection to count on the backend.
+                //noinspection ResultOfMethodCallIgnored
+                inputStream.read();
+            }
+        }  catch (IOException e) {
             Logger.e(TAG, "Failed to send analytics event.", e);
         } finally {
             if (urlConnection != null) {
