@@ -10,10 +10,11 @@ package com.adyen.checkout.base.api;
 
 import android.content.Context;
 import android.graphics.drawable.BitmapDrawable;
+import android.widget.ImageView;
+
 import androidx.annotation.DrawableRes;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
-import android.widget.ImageView;
 
 import com.adyen.checkout.core.api.Environment;
 import com.adyen.checkout.core.log.LogUtil;

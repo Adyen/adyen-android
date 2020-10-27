@@ -10,12 +10,13 @@ package com.adyen.checkout.adyen3ds2;
 
 import android.app.Activity;
 import android.app.Application;
-import androidx.lifecycle.LifecycleOwner;
-import androidx.lifecycle.Observer;
 import android.content.Context;
+import android.text.TextUtils;
+
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
-import android.text.TextUtils;
+import androidx.lifecycle.LifecycleOwner;
+import androidx.lifecycle.Observer;
 
 import com.adyen.checkout.adyen3ds2.exception.Authentication3DS2Exception;
 import com.adyen.checkout.adyen3ds2.exception.Cancelled3DS2Exception;

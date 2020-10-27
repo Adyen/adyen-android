@@ -10,10 +10,11 @@ package com.adyen.checkout.base.ui.util;
 
 import android.content.Context;
 import android.content.res.TypedArray;
+import android.util.TypedValue;
+
 import androidx.annotation.AttrRes;
 import androidx.annotation.ColorInt;
 import androidx.annotation.NonNull;
-import android.util.TypedValue;
 
 import com.adyen.checkout.base.ui.R;
 import com.adyen.checkout.core.exception.NoConstructorException;

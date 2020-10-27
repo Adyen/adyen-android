@@ -9,18 +9,18 @@
 package com.adyen.checkout.sepa;
 
 import android.annotation.SuppressLint;
-import androidx.lifecycle.LifecycleOwner;
-import androidx.lifecycle.Observer;
 import android.content.Context;
 import android.content.res.TypedArray;
-import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
-import com.google.android.material.textfield.TextInputLayout;
 import android.text.Editable;
 import android.util.AttributeSet;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.LinearLayout;
+
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
+import androidx.lifecycle.LifecycleOwner;
+import androidx.lifecycle.Observer;
 
 import com.adyen.checkout.base.PaymentComponentState;
 import com.adyen.checkout.base.ui.view.AdyenLinearLayout;
@@ -30,6 +30,7 @@ import com.adyen.checkout.core.exception.CheckoutException;
 import com.adyen.checkout.core.log.LogUtil;
 import com.adyen.checkout.core.log.Logger;
 import com.adyen.checkout.sepa.ui.R;
+import com.google.android.material.textfield.TextInputLayout;
 
 public class SepaView extends AdyenLinearLayout<SepaOutputData, SepaConfiguration, PaymentComponentState, SepaComponent>
         implements Observer<SepaOutputData> {

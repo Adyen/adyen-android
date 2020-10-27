@@ -8,9 +8,10 @@
 
 package com.adyen.checkout.card;
 
+import android.text.TextUtils;
+
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
-import android.text.TextUtils;
 
 import com.adyen.checkout.base.validation.ValidatedField;
 import com.adyen.checkout.card.data.CardType;

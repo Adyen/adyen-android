@@ -10,11 +10,12 @@ package com.adyen.checkout.base.api;
 
 import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
-import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
 import android.text.TextUtils;
 import android.util.DisplayMetrics;
 import android.util.LruCache;
+
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 
 import com.adyen.checkout.core.api.Environment;
 import com.adyen.checkout.core.api.ThreadManager;

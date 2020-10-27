@@ -8,9 +8,10 @@
 
 package com.adyen.checkout.base.model.payments.response;
 
+import android.text.TextUtils;
+
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
-import android.text.TextUtils;
 
 import com.adyen.checkout.core.code.Lint;
 import com.adyen.checkout.core.exception.CheckoutException;

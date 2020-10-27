@@ -9,6 +9,7 @@
 package com.adyen.checkout.base;
 
 import android.app.Application;
+
 import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentActivity;

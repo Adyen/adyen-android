@@ -9,6 +9,7 @@
 package com.adyen.checkout.await.model;
 
 import android.os.Parcel;
+
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 

@@ -11,6 +11,7 @@ package com.adyen.checkout.adyen3ds2;
 import android.content.Context;
 import android.os.Parcel;
 import android.os.Parcelable;
+
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 
@@ -22,8 +23,8 @@ import java.util.Locale;
 
 public class Adyen3DS2Configuration extends Configuration {
 
-    public final static String PROTOCOL_2_1_0 = "2.1.0";
-    public final static String PROTOCOL_2_2_0 = "2.2.0";
+    public static final String PROTOCOL_2_1_0 = "2.1.0";
+    public static final String PROTOCOL_2_2_0 = "2.2.0";
 
     public static final Parcelable.Creator<Adyen3DS2Configuration> CREATOR = new Parcelable.Creator<Adyen3DS2Configuration>() {
         public Adyen3DS2Configuration createFromParcel(@NonNull Parcel in) {

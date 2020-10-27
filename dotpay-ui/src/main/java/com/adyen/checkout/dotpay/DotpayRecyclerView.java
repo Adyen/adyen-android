@@ -9,9 +9,10 @@
 package com.adyen.checkout.dotpay;
 
 import android.content.Context;
+import android.util.AttributeSet;
+
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
-import android.util.AttributeSet;
 
 import com.adyen.checkout.base.model.payments.request.DotpayPaymentMethod;
 import com.adyen.checkout.issuerlist.IssuerListRecyclerView;

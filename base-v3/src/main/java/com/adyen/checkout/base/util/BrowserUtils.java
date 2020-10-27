@@ -10,6 +10,7 @@ package com.adyen.checkout.base.util;
 
 import android.content.Intent;
 import android.net.Uri;
+
 import androidx.annotation.NonNull;
 
 import com.adyen.checkout.core.exception.NoConstructorException;

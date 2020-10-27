@@ -9,9 +9,10 @@
 package com.adyen.checkout.eps;
 
 import android.content.Context;
+import android.util.AttributeSet;
+
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
-import android.util.AttributeSet;
 
 import com.adyen.checkout.base.model.payments.request.EPSPaymentMethod;
 import com.adyen.checkout.issuerlist.IssuerListSpinnerView;

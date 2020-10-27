@@ -13,8 +13,9 @@ import android.net.Uri;
 import android.os.Build;
 import android.os.Parcel;
 import android.os.Parcelable;
-import androidx.annotation.NonNull;
 import android.webkit.URLUtil;
+
+import androidx.annotation.NonNull;
 
 import com.adyen.checkout.base.BuildConfig;
 import com.adyen.checkout.core.exception.CheckoutException;

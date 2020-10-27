@@ -9,16 +9,8 @@
 package com.adyen.checkout.afterpay;
 
 import android.annotation.SuppressLint;
-import androidx.lifecycle.LifecycleOwner;
-import androidx.lifecycle.Observer;
 import android.content.Context;
 import android.net.Uri;
-import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
-import com.google.android.material.tabs.TabLayout;
-import com.google.android.material.textfield.TextInputLayout;
-import androidx.appcompat.widget.AppCompatCheckBox;
-import androidx.appcompat.widget.SwitchCompat;
 import android.text.Editable;
 import android.text.SpannableString;
 import android.text.Spanned;
@@ -31,6 +23,13 @@ import android.widget.CompoundButton;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
+import androidx.appcompat.widget.AppCompatCheckBox;
+import androidx.appcompat.widget.SwitchCompat;
+import androidx.lifecycle.LifecycleOwner;
+import androidx.lifecycle.Observer;
+
 import com.adyen.checkout.afterpay.ui.DateOfBirthInput;
 import com.adyen.checkout.afterpay.ui.R;
 import com.adyen.checkout.base.PaymentComponentState;
@@ -40,6 +39,8 @@ import com.adyen.checkout.base.util.BrowserUtils;
 import com.adyen.checkout.core.code.Lint;
 import com.adyen.checkout.core.log.LogUtil;
 import com.adyen.checkout.core.log.Logger;
+import com.google.android.material.tabs.TabLayout;
+import com.google.android.material.textfield.TextInputLayout;
 
 @SuppressWarnings("MethodLength")
 public class AfterPayView extends AdyenLinearLayout<AfterPayOutputData, AfterPayConfiguration, PaymentComponentState, AfterPayComponent>
