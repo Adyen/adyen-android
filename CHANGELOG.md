@@ -13,6 +13,9 @@
 [//]: <> (Add changes that not released yet into `Unreleased` section)
 [//]: <> (Comment `Unreleased` section if there are no changes)
 [//]: <> (## [Unreleased])
+## 4.0.0 an above
+- Starting with 4.0.0 all changes will be on the release notes on GitHub.
+
 ## [3.7.1] - 2020-10-15
 ### Added
 - Translations for MB Way and Await Components
