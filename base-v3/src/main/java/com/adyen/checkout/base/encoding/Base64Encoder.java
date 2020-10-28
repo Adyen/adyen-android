@@ -8,8 +8,9 @@
 
 package com.adyen.checkout.base.encoding;
 
-import android.support.annotation.NonNull;
 import android.util.Base64;
+
+import androidx.annotation.NonNull;
 
 import com.adyen.checkout.core.exception.NoConstructorException;
 

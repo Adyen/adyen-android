@@ -1,0 +1,32 @@
+/*
+ * Copyright (c) 2020 Adyen N.V.
+ *
+ * This file is open source and available under the MIT license. See the LICENSE file for more info.
+ *
+ * Created by caiof on 26/10/2020.
+ */
+
+apply plugin: "com.github.spotbugs"
+
+project.tasks.withType(SpotBugsTask) {
+    group 'Verification'
+    description 'Run Spotbugs on this project.'
+
+    reports {
+        xml.enabled = false
+        html.enabled = true
+    }
+}
+
+spotbugs {
+    ignoreFailures = false
+    effort = "max"
+    reportLevel = "high"
+    reportsDir = file("$project.buildDir/reports/spotbugs/")
+}
+
+
+
+//dependencies {
+//    spotbugsPlugins 'com.h3xstream.findsecbugs:findsecbugs-plugin:1.7.1'
+//}

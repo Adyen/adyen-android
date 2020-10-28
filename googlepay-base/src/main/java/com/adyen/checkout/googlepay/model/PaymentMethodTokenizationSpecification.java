@@ -9,8 +9,9 @@
 package com.adyen.checkout.googlepay.model;
 
 import android.os.Parcel;
-import android.support.annotation.NonNull;
-import android.support.annotation.Nullable;
+
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 
 import com.adyen.checkout.core.exception.ModelSerializationException;
 import com.adyen.checkout.core.model.JsonUtils;
@@ -20,7 +21,7 @@ import com.adyen.checkout.core.model.ModelUtils;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-@SuppressWarnings("MemberName")
+@SuppressWarnings({"MemberName", "PMD.DataClass"})
 public class PaymentMethodTokenizationSpecification extends ModelObject {
 
     @NonNull

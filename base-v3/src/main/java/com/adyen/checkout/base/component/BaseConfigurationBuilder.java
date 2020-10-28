@@ -9,7 +9,8 @@
 package com.adyen.checkout.base.component;
 
 import android.content.Context;
-import android.support.annotation.NonNull;
+
+import androidx.annotation.NonNull;
 
 import com.adyen.checkout.base.util.ValidationUtils;
 import com.adyen.checkout.core.api.Environment;
@@ -54,7 +55,7 @@ public abstract class BaseConfigurationBuilder<ConfigurationT extends Configurat
      * @return The builder instance to chain calls.
      */
     @NonNull
-    public BaseConfigurationBuilder setShopperLocale(@NonNull Locale builderShopperLocale) {
+    public BaseConfigurationBuilder<ConfigurationT> setShopperLocale(@NonNull Locale builderShopperLocale) {
         mBuilderShopperLocale = builderShopperLocale;
         return this;
     }
@@ -64,7 +65,7 @@ public abstract class BaseConfigurationBuilder<ConfigurationT extends Configurat
      * @return The builder instance to chain calls.
      */
     @NonNull
-    public BaseConfigurationBuilder setEnvironment(@NonNull Environment builderEnvironment) {
+    public BaseConfigurationBuilder<ConfigurationT> setEnvironment(@NonNull Environment builderEnvironment) {
         mBuilderEnvironment = builderEnvironment;
         return this;
     }
@@ -74,7 +75,7 @@ public abstract class BaseConfigurationBuilder<ConfigurationT extends Configurat
      * @return The builder instance to chain calls.
      */
     @NonNull
-    public BaseConfigurationBuilder setClientKey(@NonNull String builderClientKey) {
+    public BaseConfigurationBuilder<ConfigurationT> setClientKey(@NonNull String builderClientKey) {
         if (!ValidationUtils.isClientKeyValid(builderClientKey)) {
             throw new CheckoutException("Client key is not valid.");
         }

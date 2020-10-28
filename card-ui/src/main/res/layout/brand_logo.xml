@@ -12,5 +12,4 @@
     android:layout_width="@dimen/brand_logo_width"
     android:layout_height="@dimen/brand_logo_height"
     android:layout_marginStart="@dimen/standard_quarter_margin"
-    android:layout_marginLeft="@dimen/standard_quarter_margin"
     app:strokeColor="@color/stroke_color" />

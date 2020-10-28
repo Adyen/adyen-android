@@ -8,8 +8,8 @@
 
 package com.adyen.checkout.card
 
-import android.arch.lifecycle.LifecycleOwner
-import android.arch.lifecycle.Observer
+import androidx.lifecycle.LifecycleOwner
+import androidx.lifecycle.Observer
 import android.content.Context
 import android.util.AttributeSet
 import android.view.LayoutInflater
@@ -42,8 +42,10 @@ internal class DropInCardView : AdyenLinearLayout<CardOutputData, CardConfigurat
 
     override fun onComponentAttached() {
         if (!component.isStoredPaymentMethod) {
-            mCardListAdapter = CardListAdapter(ImageLoader.getInstance(context, component.configuration.environment),
-                component.configuration.supportedCardTypes)
+            mCardListAdapter = CardListAdapter(
+                ImageLoader.getInstance(context, component.configuration.environment),
+                component.configuration.supportedCardTypes
+            )
             recyclerView_cardList.adapter = mCardListAdapter
         }
     }

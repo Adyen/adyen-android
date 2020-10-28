@@ -12,8 +12,9 @@ import static com.adyen.checkout.core.api.SSLSocketUtil.TLS_SOCKET_FACTORY;
 
 import android.content.Context;
 import android.content.Intent;
-import android.support.annotation.NonNull;
-import android.support.v4.app.JobIntentService;
+
+import androidx.annotation.NonNull;
+import androidx.core.app.JobIntentService;
 
 import com.adyen.checkout.core.api.Environment;
 import com.adyen.checkout.core.log.LogUtil;
@@ -70,12 +71,13 @@ public class AnalyticsDispatcher extends JobIntentService {
             urlConnection = (HttpsURLConnection) finalUrl.openConnection();
             urlConnection.setSSLSocketFactory(TLS_SOCKET_FACTORY);
             urlConnection.connect();
-            final InputStream inputStream = urlConnection.getInputStream();
-            // Need to read to consume the inputStream for the connection to count on the backend.
-            //noinspection ResultOfMethodCallIgnored
-            inputStream.read();
-            inputStream.close();
-        } catch (IOException e) {
+
+            try (InputStream inputStream = urlConnection.getInputStream()) {
+                // Need to read to consume the inputStream for the connection to count on the backend.
+                //noinspection ResultOfMethodCallIgnored
+                inputStream.read();
+            }
+        }  catch (IOException e) {
             Logger.e(TAG, "Failed to send analytics event.", e);
         } finally {
             if (urlConnection != null) {

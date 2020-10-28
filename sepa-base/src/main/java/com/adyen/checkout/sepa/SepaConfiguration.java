@@ -11,10 +11,11 @@ package com.adyen.checkout.sepa;
 import android.content.Context;
 import android.os.Parcel;
 import android.os.Parcelable;
-import android.support.annotation.NonNull;
 
-import com.adyen.checkout.base.component.Configuration;
+import androidx.annotation.NonNull;
+
 import com.adyen.checkout.base.component.BaseConfigurationBuilder;
+import com.adyen.checkout.base.component.Configuration;
 import com.adyen.checkout.core.api.Environment;
 import com.adyen.checkout.core.code.Lint;
 

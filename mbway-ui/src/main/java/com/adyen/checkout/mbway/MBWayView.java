@@ -9,18 +9,18 @@
 package com.adyen.checkout.mbway;
 
 import android.annotation.SuppressLint;
-import android.arch.lifecycle.LifecycleOwner;
-import android.arch.lifecycle.Observer;
 import android.content.Context;
 import android.content.res.TypedArray;
-import android.support.annotation.NonNull;
-import android.support.annotation.Nullable;
-import android.support.design.widget.TextInputLayout;
 import android.text.Editable;
 import android.util.AttributeSet;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.LinearLayout;
+
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
+import androidx.lifecycle.LifecycleOwner;
+import androidx.lifecycle.Observer;
 
 import com.adyen.checkout.base.PaymentComponentState;
 import com.adyen.checkout.base.ui.view.AdyenLinearLayout;
@@ -30,6 +30,7 @@ import com.adyen.checkout.core.exception.CheckoutException;
 import com.adyen.checkout.core.log.LogUtil;
 import com.adyen.checkout.core.log.Logger;
 import com.adyen.checkout.mbway.ui.R;
+import com.google.android.material.textfield.TextInputLayout;
 
 @SuppressWarnings("AbbreviationAsWordInName")
 public class MBWayView extends AdyenLinearLayout<MBWayOutputData, MBWayConfiguration, PaymentComponentState, MBWayComponent>

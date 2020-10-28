@@ -10,10 +10,11 @@ package com.adyen.checkout.base.api;
 
 import android.content.Context;
 import android.graphics.drawable.BitmapDrawable;
-import android.support.annotation.DrawableRes;
-import android.support.annotation.NonNull;
-import android.support.annotation.Nullable;
 import android.widget.ImageView;
+
+import androidx.annotation.DrawableRes;
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 
 import com.adyen.checkout.core.api.Environment;
 import com.adyen.checkout.core.log.LogUtil;
@@ -54,7 +55,7 @@ public class ImageLoader {
     /**
      * Load image to ImageView.
      */
-    public void load(@NonNull String txVariant, @Nullable String txSubVariant, @NonNull ImageView view) {
+    public void load(@NonNull String txVariant, @NonNull String txSubVariant, @NonNull ImageView view) {
         this.load(txVariant, txSubVariant, view, 0, 0);
     }
 
@@ -69,8 +70,8 @@ public class ImageLoader {
     /**
      * Load image to ImageView with place holder before load and error fallback image.
      */
-    public void load(@NonNull String txVariant, @NonNull String txSubVariant, @NonNull ImageView view, @Nullable @DrawableRes int placeholder,
-            @Nullable @DrawableRes final int errorFallback) {
+    public void load(@NonNull String txVariant, @NonNull String txSubVariant, @NonNull ImageView view, @DrawableRes int placeholder,
+            @DrawableRes final int errorFallback) {
 
         if (placeholder != 0) {
             view.setImageResource(placeholder);

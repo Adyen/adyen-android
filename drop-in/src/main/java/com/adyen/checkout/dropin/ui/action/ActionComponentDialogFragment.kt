@@ -8,8 +8,8 @@
 
 package com.adyen.checkout.dropin.ui.action
 
-import android.arch.lifecycle.Observer
-import android.arch.lifecycle.ViewModelProviders
+import androidx.lifecycle.Observer
+import androidx.lifecycle.ViewModelProviders
 import android.content.DialogInterface
 import android.os.Bundle
 import android.view.LayoutInflater
@@ -102,7 +102,7 @@ class ActionComponentDialogFragment : DropInBottomSheetDialogFragment(), Observe
         return true
     }
 
-    override fun onCancel(dialog: DialogInterface?) {
+    override fun onCancel(dialog: DialogInterface) {
         super.onCancel(dialog)
         Logger.d(TAG, "onCancel")
         protocol.terminateDropIn()
@@ -127,7 +127,8 @@ class ActionComponentDialogFragment : DropInBottomSheetDialogFragment(), Observe
         return when (actionType) {
             ActionTypes.AWAIT -> {
                 AwaitComponent.PROVIDER.get(
-                        this, dropInViewModel.dropInConfiguration.getConfigurationFor(ActionTypes.AWAIT, requireContext()))
+                    this, dropInViewModel.dropInConfiguration.getConfigurationFor(ActionTypes.AWAIT, requireContext())
+                )
             }
             else -> {
                 throw ComponentException("Unexpected Action component type - $actionType")

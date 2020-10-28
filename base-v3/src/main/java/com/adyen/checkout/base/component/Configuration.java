@@ -10,8 +10,8 @@ package com.adyen.checkout.base.component;
 
 import android.os.Parcel;
 import android.os.Parcelable;
-import android.support.annotation.NonNull;
-import android.support.annotation.Nullable;
+
+import androidx.annotation.NonNull;
 
 import com.adyen.checkout.core.api.Environment;
 import com.adyen.checkout.core.util.ParcelUtils;
@@ -26,7 +26,7 @@ public abstract class Configuration implements Parcelable {
     private final Environment mEnvironment;
     private final String mClientKey;
 
-    protected Configuration(@NonNull Locale shopperLocale, @NonNull Environment environment, @Nullable String clientKey) {
+    protected Configuration(@NonNull Locale shopperLocale, @NonNull Environment environment, @NonNull String clientKey) {
         mShopperLocale = shopperLocale;
         mEnvironment = environment;
         mClientKey = clientKey;

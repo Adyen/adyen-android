@@ -8,10 +8,11 @@
 
 package com.adyen.checkout.base.ui.adapter;
 
-import android.support.annotation.CallSuper;
-import android.support.annotation.NonNull;
-import android.support.v7.widget.RecyclerView;
 import android.view.View;
+
+import androidx.annotation.CallSuper;
+import androidx.annotation.NonNull;
+import androidx.recyclerview.widget.RecyclerView;
 
 import com.adyen.checkout.core.log.LogUtil;
 import com.adyen.checkout.core.log.Logger;

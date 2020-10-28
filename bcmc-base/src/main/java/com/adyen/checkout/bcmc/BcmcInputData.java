@@ -8,7 +8,7 @@
 
 package com.adyen.checkout.bcmc;
 
-import android.support.annotation.NonNull;
+import androidx.annotation.NonNull;
 
 import com.adyen.checkout.base.component.InputData;
 import com.adyen.checkout.card.data.ExpiryDate;

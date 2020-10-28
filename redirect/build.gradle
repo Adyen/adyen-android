@@ -12,6 +12,7 @@ ext.mavenArtifactName = "Adyen checkout redirect component"
 ext.mavenArtifactDescription = "Adyen checkout redirect component client for Adyen's Checkout API."
 
 apply plugin: 'com.android.library'
+apply plugin: 'kotlin-android'
 
 android {
     compileSdkVersion compile_sdk_version
@@ -22,24 +23,33 @@ android {
         versionCode version_code
         versionName version_name
 
-        testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
+        testInstrumentationRunner 'androidx.test.runner.AndroidJUnitRunner'
 
         // Get scheme for redirect result
         buildConfigField "String", "checkoutRedirectScheme", "\"$rootProject.ext.checkoutRedirectScheme\""
+    }
+
+    compileOptions {
+        sourceCompatibility JavaVersion.VERSION_1_8
+        targetCompatibility JavaVersion.VERSION_1_8
+    }
+
+    kotlinOptions {
+        jvmTarget = JavaVersion.VERSION_1_8.toString()
     }
 }
 
 dependencies {
     //Tests
     testImplementation "junit:junit:$junit_version"
-    androidTestImplementation "com.android.support.test:runner:$support_test_runner_version"
-    androidTestImplementation "com.android.support.test.espresso:espresso-core:$espresso_version"
+    androidTestImplementation "androidx.test.ext:junit:$test_ext_version"
+    androidTestImplementation "androidx.test.espresso:espresso-core:$espresso_version"
 
     // Checkout
     api project(":base-ui")
 
     // Dependencies
-    implementation "com.android.support:customtabs:$support_library_version"
+    implementation "androidx.browser:browser:$browser_version"
 }
 
 // This sharedTasks.gradle script is applied at the end of this build.gradle script,

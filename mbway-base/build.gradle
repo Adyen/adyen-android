@@ -3,6 +3,7 @@ ext.mavenArtifactName = "Adyen checkout mbway-base component"
 ext.mavenArtifactDescription = "Adyen checkout mbway-base component client for Adyen's Checkout API."
 
 apply plugin: 'com.android.library'
+apply plugin: 'kotlin-android'
 
 android {
     compileSdkVersion compile_sdk_version
@@ -13,22 +14,24 @@ android {
         versionCode version_code
         versionName version_name
 
-        testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
+        testInstrumentationRunner 'androidx.test.runner.AndroidJUnitRunner'
     }
 
-    buildTypes {
-        release {
-            minifyEnabled false
-            proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
-        }
+    compileOptions {
+        sourceCompatibility JavaVersion.VERSION_1_8
+        targetCompatibility JavaVersion.VERSION_1_8
+    }
+
+    kotlinOptions {
+        jvmTarget = JavaVersion.VERSION_1_8.toString()
     }
 }
 
 dependencies {
     //Tests
     testImplementation "junit:junit:$junit_version"
-    androidTestImplementation "com.android.support.test:runner:$support_test_runner_version"
-    androidTestImplementation "com.android.support.test.espresso:espresso-core:$espresso_version"
+    androidTestImplementation "androidx.test.ext:junit:$test_ext_version"
+    androidTestImplementation "androidx.test.espresso:espresso-core:$espresso_version"
 
     // Checkout
     api project(':base-v3')

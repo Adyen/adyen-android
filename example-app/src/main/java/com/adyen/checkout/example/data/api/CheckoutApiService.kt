@@ -21,6 +21,15 @@ import retrofit2.http.Headers
 import retrofit2.http.POST
 
 interface CheckoutApiService {
+
+    companion object {
+        private const val defaultGradleUrl = "<YOUR_SERVER_URL>"
+
+        fun isRealUrlAvailable(): Boolean {
+            return BuildConfig.MERCHANT_SERVER_URL != defaultGradleUrl
+        }
+    }
+
     @Headers(BuildConfig.API_KEY_HEADER_NAME + ":" + BuildConfig.CHECKOUT_API_KEY)
     @POST("paymentMethods")
     fun paymentMethodsAsync(@Body paymentMethodsRequest: PaymentMethodsRequest): Deferred<Response<PaymentMethodsApiResponse>>

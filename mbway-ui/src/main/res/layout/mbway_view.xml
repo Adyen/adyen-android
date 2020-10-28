@@ -15,7 +15,7 @@
     android:orientation="vertical"
     tools:parentTag="android.widget.LinearLayout">
 
-    <android.support.design.widget.TextInputLayout
+    <com.google.android.material.textfield.TextInputLayout
         android:id="@+id/textInputLayout_email"
         style="@style/AdyenCheckout.TextInputLayout"
         android:layout_width="match_parent"
@@ -24,9 +24,9 @@
         <com.adyen.checkout.base.ui.view.AdyenTextInputEditText
             tools:ignore="RequiredSize"
             style="@style/AdyenCheckout.MBWay.EmailInput" />
-    </android.support.design.widget.TextInputLayout>
+    </com.google.android.material.textfield.TextInputLayout>
 
-    <android.support.design.widget.TextInputLayout
+    <com.google.android.material.textfield.TextInputLayout
         android:id="@+id/textInputLayout_mobileNumber"
         style="@style/AdyenCheckout.TextInputLayout"
         android:layout_width="match_parent"
@@ -35,6 +35,6 @@
         <com.adyen.checkout.base.ui.view.AdyenTextInputEditText
             tools:ignore="RequiredSize"
             style="@style/AdyenCheckout.MBWay.MobileNumberInput" />
-    </android.support.design.widget.TextInputLayout>
+    </com.google.android.material.textfield.TextInputLayout>
 
 </merge>

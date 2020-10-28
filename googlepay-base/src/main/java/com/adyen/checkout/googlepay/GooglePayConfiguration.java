@@ -11,11 +11,12 @@ package com.adyen.checkout.googlepay;
 import android.content.Context;
 import android.os.Parcel;
 import android.os.Parcelable;
-import android.support.annotation.NonNull;
-import android.support.annotation.Nullable;
 
-import com.adyen.checkout.base.component.Configuration;
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
+
 import com.adyen.checkout.base.component.BaseConfigurationBuilder;
+import com.adyen.checkout.base.component.Configuration;
 import com.adyen.checkout.base.model.payments.Amount;
 import com.adyen.checkout.base.util.CheckoutCurrency;
 import com.adyen.checkout.core.api.Environment;
@@ -62,7 +63,7 @@ public class GooglePayConfiguration extends Configuration {
     GooglePayConfiguration(
             @NonNull Locale shopperLocale,
             @NonNull Environment environment,
-            @Nullable String clientKey,
+            @NonNull String clientKey,
             @NonNull String merchantAccount,
             int googlePayEnvironment,
             @NonNull Amount amount,

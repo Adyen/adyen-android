@@ -8,7 +8,7 @@
 
 package com.adyen.checkout.await.api;
 
-import android.support.annotation.NonNull;
+import androidx.annotation.NonNull;
 
 import com.adyen.checkout.await.model.StatusResponse;
 import com.adyen.checkout.core.exception.NoConstructorException;

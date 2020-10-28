@@ -10,7 +10,7 @@ package com.adyen.checkout.dropin
 
 import android.app.Application
 import android.content.Context
-import android.support.v4.app.Fragment
+import androidx.fragment.app.Fragment
 import com.adyen.checkout.adyen3ds2.Adyen3DS2Configuration
 import com.adyen.checkout.afterpay.AfterPayComponent
 import com.adyen.checkout.afterpay.AfterPayConfiguration
@@ -69,10 +69,8 @@ import com.adyen.checkout.sepa.SepaView
 import com.adyen.checkout.wechatpay.WeChatPayComponent
 import com.adyen.checkout.wechatpay.WeChatPayConfiguration
 
-class ComponentParsingProvider {
-    companion object {
-        val TAG = LogUtil.getTag()
-    }
+object ComponentParsingProvider {
+    val TAG = LogUtil.getTag()
 }
 
 @Suppress("ComplexMethod", "LongMethod")
@@ -308,6 +306,6 @@ internal fun getViewFor(
         else -> {
             throw CheckoutException("Unable to find view for type - $paymentType")
         }
-    // TODO check if this generic approach can be improved
+        // TODO check if this generic approach can be improved
     } as ComponentView<in OutputData, ViewableComponent<*, *, *>>
 }

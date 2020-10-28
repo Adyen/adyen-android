@@ -8,7 +8,7 @@
 
 package com.adyen.checkout.adyen3ds2.exception;
 
-import android.support.annotation.NonNull;
+import androidx.annotation.NonNull;
 
 import com.adyen.checkout.core.exception.ComponentException;
 

@@ -8,8 +8,8 @@
 
 package com.adyen.checkout.core.api;
 
-import android.support.annotation.NonNull;
-import android.support.annotation.Nullable;
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
@@ -103,10 +103,10 @@ public abstract class Connection<T> implements Callable<T> {
             mURLConnection = getUrlConnection(mUrl, headers, HttpMethod.POST);
             mURLConnection.connect();
 
-            final OutputStream outputStream = mURLConnection.getOutputStream();
-            outputStream.write(data);
-            outputStream.flush();
-            outputStream.close();
+            try (OutputStream outputStream = mURLConnection.getOutputStream()) {
+                outputStream.write(data);
+                outputStream.flush();
+            }
 
             return handleResponse(mURLConnection);
         } finally {
@@ -146,17 +146,18 @@ public abstract class Connection<T> implements Callable<T> {
 
     @NonNull
     private byte[] handleResponse(@NonNull HttpURLConnection urlConnection) throws IOException {
-        final InputStream errorStream = urlConnection.getErrorStream();
-
-        if (errorStream == null) {
-            final byte[] responseBytes = getBytes(urlConnection.getInputStream());
-            if (responseBytes != null) {
-                return responseBytes;
+        try (InputStream errorStream = urlConnection.getErrorStream()) {
+            if (errorStream == null) {
+                try (InputStream inputStream = urlConnection.getInputStream()) {
+                    final byte[] responseBytes = getBytes(inputStream);
+                    if (responseBytes != null) {
+                        return responseBytes;
+                    }
+                }
             }
+            final byte[] errorBytes = getBytes(errorStream);
+            throw parseException(errorBytes);
         }
-
-        final byte[] errorBytes = getBytes(errorStream);
-        throw parseException(errorBytes);
     }
 
     @Nullable
@@ -174,8 +175,6 @@ public abstract class Connection<T> implements Callable<T> {
             out.write(buffer, 0, length);
             length = inputStream.read(buffer);
         }
-
-        inputStream.close();
 
         return out.toByteArray();
     }

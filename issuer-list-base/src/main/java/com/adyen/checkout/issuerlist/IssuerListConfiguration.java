@@ -10,10 +10,11 @@ package com.adyen.checkout.issuerlist;
 
 import android.content.Context;
 import android.os.Parcel;
-import android.support.annotation.NonNull;
 
-import com.adyen.checkout.base.component.Configuration;
+import androidx.annotation.NonNull;
+
 import com.adyen.checkout.base.component.BaseConfigurationBuilder;
+import com.adyen.checkout.base.component.Configuration;
 import com.adyen.checkout.core.api.Environment;
 
 import java.util.Locale;

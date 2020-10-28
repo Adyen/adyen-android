@@ -8,18 +8,18 @@
 
 package com.adyen.checkout.bcmc;
 
-import android.arch.lifecycle.LifecycleOwner;
-import android.arch.lifecycle.Observer;
 import android.content.Context;
 import android.content.res.TypedArray;
-import android.support.annotation.NonNull;
-import android.support.annotation.Nullable;
-import android.support.design.widget.TextInputLayout;
 import android.text.Editable;
 import android.util.AttributeSet;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.LinearLayout;
+
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
+import androidx.lifecycle.LifecycleOwner;
+import androidx.lifecycle.Observer;
 
 import com.adyen.checkout.base.PaymentComponentState;
 import com.adyen.checkout.base.api.ImageLoader;
@@ -31,6 +31,7 @@ import com.adyen.checkout.bcmc.ui.R;
 import com.adyen.checkout.card.CardValidationUtils;
 import com.adyen.checkout.card.ui.CardNumberInput;
 import com.adyen.checkout.card.ui.ExpiryDateInput;
+import com.google.android.material.textfield.TextInputLayout;
 
 /**
  * CardView for {@link BcmcComponent}.

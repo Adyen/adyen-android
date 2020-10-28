@@ -11,8 +11,9 @@ package com.adyen.checkout.wechatpay;
 import android.app.Activity;
 import android.app.Application;
 import android.content.Intent;
-import android.support.annotation.NonNull;
-import android.support.annotation.Nullable;
+
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 
 import com.adyen.checkout.base.ActionComponentProvider;
 import com.adyen.checkout.base.component.ActionComponentProviderImpl;
@@ -91,7 +92,7 @@ public class WeChatPayActionComponent extends BaseActionComponent<WeChatPayActio
         //noinspection unchecked
         final SdkAction<WeChatPaySdkData> weChatAction = (SdkAction<WeChatPaySdkData>) action;
         if (weChatAction.getSdkData() != null) {
-            final boolean weChatInitiated = initiateWeChatPayRedirect(weChatAction.getSdkData(), activity.getLocalClassName());
+            final boolean weChatInitiated = initiateWeChatPayRedirect(weChatAction.getSdkData(), activity.getClass().getName());
             if (!weChatInitiated) {
                 throw new ComponentException("Failed to initialize WeChat app.");
             }

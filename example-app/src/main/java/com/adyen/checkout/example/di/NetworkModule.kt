@@ -13,6 +13,8 @@ import com.adyen.checkout.core.api.SSLSocketUtil
 import com.adyen.checkout.example.BuildConfig
 import com.adyen.checkout.example.data.api.CheckoutApiService
 import com.jakewharton.retrofit2.adapter.kotlin.coroutines.CoroutineCallAdapterFactory
+import com.squareup.moshi.Moshi
+import com.squareup.moshi.kotlin.reflect.KotlinJsonAdapterFactory
 import okhttp3.OkHttpClient
 import okhttp3.logging.HttpLoggingInterceptor
 import org.koin.dsl.module
@@ -49,10 +51,19 @@ val networkModule = module {
     }
 
     fun provideApi(httpClient: OkHttpClient): CheckoutApiService {
+        val baseUrl =
+            if (CheckoutApiService.isRealUrlAvailable())
+                BuildConfig.MERCHANT_SERVER_URL
+            else
+                "http://myserver.com/my/endpoint/"
         return Retrofit.Builder()
-            .baseUrl(BuildConfig.MERCHANT_SERVER_URL)
+            .baseUrl(baseUrl)
             .client(httpClient)
-            .addConverterFactory(MoshiConverterFactory.create())
+            .addConverterFactory(
+                MoshiConverterFactory.create(
+                    Moshi.Builder().add(KotlinJsonAdapterFactory()).build()
+                )
+            )
             .addCallAdapterFactory(CoroutineCallAdapterFactory())
             .build()
             .create(CheckoutApiService::class.java)

@@ -11,8 +11,8 @@ package com.adyen.checkout.await;
 import android.content.Context;
 import android.os.Parcel;
 import android.os.Parcelable;
-import android.support.annotation.NonNull;
-import android.support.annotation.Nullable;
+
+import androidx.annotation.NonNull;
 
 import com.adyen.checkout.base.component.BaseConfigurationBuilder;
 import com.adyen.checkout.base.component.Configuration;
@@ -35,7 +35,7 @@ public class AwaitConfiguration extends Configuration {
     protected AwaitConfiguration(
             @NonNull Locale shopperLocale,
             @NonNull Environment environment,
-            @Nullable String clientKey) {
+            @NonNull String clientKey) {
         super(shopperLocale, environment, clientKey);
     }
 

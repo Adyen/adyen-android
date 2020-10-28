@@ -11,7 +11,7 @@
        xmlns:tools="http://schemas.android.com/tools"
        tools:parentTag="android.widget.LinearLayout">
 
-    <android.support.v7.widget.AppCompatSpinner
+    <androidx.appcompat.widget.AppCompatSpinner
         android:id="@+id/spinner_issuers"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"/>

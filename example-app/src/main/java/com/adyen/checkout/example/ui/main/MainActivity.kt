@@ -9,15 +9,14 @@
 package com.adyen.checkout.example.ui.main
 
 import android.app.Activity
-import android.arch.lifecycle.Observer
 import android.content.Intent
 import android.os.Bundle
-import android.support.v7.app.AppCompatActivity
-import android.support.v7.app.AppCompatDelegate
 import android.view.Menu
 import android.view.MenuItem
 import android.view.View
 import android.widget.Toast
+import androidx.appcompat.app.AppCompatActivity
+import androidx.appcompat.app.AppCompatDelegate
 import com.adyen.checkout.afterpay.AfterPayConfiguration
 import com.adyen.checkout.base.model.PaymentMethodsApiResponse
 import com.adyen.checkout.bcmc.BcmcConfiguration
@@ -31,6 +30,7 @@ import com.adyen.checkout.dropin.DropIn
 import com.adyen.checkout.dropin.DropInConfiguration
 import com.adyen.checkout.example.BuildConfig
 import com.adyen.checkout.example.R
+import com.adyen.checkout.example.data.api.CheckoutApiService
 import com.adyen.checkout.example.data.storage.KeyValueStorage
 import com.adyen.checkout.example.service.ExampleSimplifiedDropInService
 import com.adyen.checkout.example.ui.configuration.ConfigurationActivity
@@ -38,7 +38,7 @@ import com.adyen.checkout.googlepay.GooglePayConfiguration
 import kotlinx.android.synthetic.main.activity_main.progressBar
 import kotlinx.android.synthetic.main.activity_main.startCheckoutButton
 import org.koin.android.ext.android.inject
-import org.koin.android.viewmodel.ext.android.viewModel
+import org.koin.androidx.viewmodel.ext.android.viewModel
 
 class MainActivity : AppCompatActivity() {
 
@@ -64,6 +64,15 @@ class MainActivity : AppCompatActivity() {
         }
 
         startCheckoutButton.setOnClickListener {
+            if (!CheckoutApiService.isRealUrlAvailable()) {
+                Toast.makeText(
+                    this@MainActivity,
+                    "No server URL configured on local.gradle file.",
+                    Toast.LENGTH_SHORT
+                ).show()
+                return@setOnClickListener
+            }
+
             val currentResponse = paymentMethodsViewModel.paymentMethodResponseLiveData.value
             if (currentResponse != null) {
                 startDropIn(currentResponse)
@@ -72,19 +81,24 @@ class MainActivity : AppCompatActivity() {
             }
         }
 
-        paymentMethodsViewModel.paymentMethodResponseLiveData.observe(this, Observer {
-            if (it != null) {
-                Logger.d(TAG, "Got paymentMethods response - oneClick? ${it.storedPaymentMethods?.size ?: 0}")
-                if (isWaitingPaymentMethods) startDropIn(it)
-            } else {
-                Logger.v(TAG, "API response is null")
+        paymentMethodsViewModel.paymentMethodResponseLiveData.observe(
+            this,
+            {
+                if (it != null) {
+                    Logger.d(TAG, "Got paymentMethods response - oneClick? ${it.storedPaymentMethods?.size ?: 0}")
+                    if (isWaitingPaymentMethods) startDropIn(it)
+                } else {
+                    Logger.v(TAG, "API response is null")
+                }
             }
-        })
+        )
     }
 
     override fun onResume() {
         super.onResume()
-        paymentMethodsViewModel.requestPaymentMethods()
+        if (CheckoutApiService.isRealUrlAvailable()) {
+            paymentMethodsViewModel.requestPaymentMethods()
+        }
     }
 
     override fun onCreateOptionsMenu(menu: Menu?): Boolean {
@@ -92,9 +106,9 @@ class MainActivity : AppCompatActivity() {
         return super.onCreateOptionsMenu(menu)
     }
 
-    override fun onOptionsItemSelected(item: MenuItem?): Boolean {
+    override fun onOptionsItemSelected(item: MenuItem): Boolean {
         Logger.d(TAG, "onOptionsItemSelected")
-        if (item?.itemId == R.id.settings) {
+        if (item.itemId == R.id.settings) {
             val intent = Intent(this@MainActivity, ConfigurationActivity::class.java)
             startActivity(intent)
             return true
@@ -131,24 +145,24 @@ class MainActivity : AppCompatActivity() {
             .setPublicKey(BuildConfig.PUBLIC_KEY)
             .setShopperReference(keyValueStorage.getShopperReference())
             .setShopperLocale(shopperLocale)
-                .setEnvironment(Environment.TEST)
+            .setEnvironment(Environment.TEST)
             .build()
 
         val googlePayConfig = GooglePayConfiguration.Builder(this@MainActivity, keyValueStorage.getMerchantAccount())
-                .setCountryCode(keyValueStorage.getCountry())
-                .setEnvironment(Environment.TEST)
-                .build()
+            .setCountryCode(keyValueStorage.getCountry())
+            .setEnvironment(Environment.TEST)
+            .build()
 
         val afterPayConfiguration = AfterPayConfiguration.Builder(this, AfterPayConfiguration.CountryCode.NL)
-                .setShopperLocale(shopperLocale)
-                .setEnvironment(Environment.TEST)
-                .build()
+            .setShopperLocale(shopperLocale)
+            .setEnvironment(Environment.TEST)
+            .build()
 
         val bcmcConfiguration = BcmcConfiguration.Builder(this@MainActivity)
-                .setPublicKey(BuildConfig.PUBLIC_KEY)
-                .setShopperLocale(shopperLocale)
-                .setEnvironment(Environment.TEST)
-                .build()
+            .setPublicKey(BuildConfig.PUBLIC_KEY)
+            .setShopperLocale(shopperLocale)
+            .setEnvironment(Environment.TEST)
+            .build()
 
         val resultIntent = Intent(this, MainActivity::class.java)
         resultIntent.flags = Intent.FLAG_ACTIVITY_CLEAR_TOP

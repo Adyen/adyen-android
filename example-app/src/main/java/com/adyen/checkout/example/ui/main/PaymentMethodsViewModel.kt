@@ -8,8 +8,8 @@
 
 package com.adyen.checkout.example.ui.main
 
-import android.arch.lifecycle.MutableLiveData
-import android.arch.lifecycle.ViewModel
+import androidx.lifecycle.MutableLiveData
+import androidx.lifecycle.ViewModel
 import com.adyen.checkout.base.model.PaymentMethodsApiResponse
 import com.adyen.checkout.core.log.LogUtil
 import com.adyen.checkout.core.log.Logger
@@ -52,7 +52,8 @@ class PaymentMethodsViewModel(
             keyValueStorage.getShopperReference(),
             keyValueStorage.getAmount(),
             keyValueStorage.getCountry(),
-            keyValueStorage.getShopperLocale())
+            keyValueStorage.getShopperLocale()
+        )
     }
 
     override fun onCleared() {

@@ -8,7 +8,7 @@
 
 package com.adyen.checkout.base;
 
-import android.support.annotation.NonNull;
+import androidx.annotation.NonNull;
 
 import com.adyen.checkout.base.model.payments.request.PaymentComponentData;
 import com.adyen.checkout.base.model.payments.request.PaymentMethodDetails;

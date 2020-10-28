@@ -8,8 +8,8 @@
 
 package com.adyen.checkout.base.component.lifecycle;
 
-import android.arch.lifecycle.ViewModel;
-import android.support.annotation.NonNull;
+import androidx.lifecycle.ViewModel;
+import androidx.annotation.NonNull;
 
 import com.adyen.checkout.base.PaymentComponent;
 import com.adyen.checkout.base.PaymentComponentState;

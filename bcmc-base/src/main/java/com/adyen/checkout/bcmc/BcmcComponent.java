@@ -8,8 +8,8 @@
 
 package com.adyen.checkout.bcmc;
 
-import android.support.annotation.NonNull;
-import android.support.annotation.Nullable;
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 
 import com.adyen.checkout.base.PaymentComponentProvider;
 import com.adyen.checkout.base.PaymentComponentState;

@@ -8,8 +8,9 @@
 
 package com.adyen.checkout.mbway;
 
-import android.support.annotation.NonNull;
 import android.text.TextUtils;
+
+import androidx.annotation.NonNull;
 
 import com.adyen.checkout.base.component.OutputData;
 import com.adyen.checkout.base.util.ValidationUtils;

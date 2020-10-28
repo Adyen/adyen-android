@@ -23,7 +23,7 @@
         style="@style/AdyenCheckout.Image.Logo"
         app:strokeColor="@color/stroke_color"/>
 
-    <android.support.v7.widget.AppCompatTextView
+    <androidx.appcompat.widget.AppCompatTextView
         android:id="@+id/textView_text"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"

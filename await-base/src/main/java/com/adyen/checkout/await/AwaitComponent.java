@@ -10,13 +10,14 @@ package com.adyen.checkout.await;
 
 import android.app.Activity;
 import android.app.Application;
-import android.arch.lifecycle.LifecycleOwner;
-import android.arch.lifecycle.MutableLiveData;
-import android.arch.lifecycle.Observer;
 import android.content.Context;
-import android.support.annotation.NonNull;
-import android.support.annotation.Nullable;
 import android.text.TextUtils;
+
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
+import androidx.lifecycle.LifecycleOwner;
+import androidx.lifecycle.MutableLiveData;
+import androidx.lifecycle.Observer;
 
 import com.adyen.checkout.await.api.StatusResponseUtils;
 import com.adyen.checkout.await.model.StatusResponse;
@@ -30,6 +31,7 @@ import com.adyen.checkout.base.component.lifecycle.BaseLifecycleObserver;
 import com.adyen.checkout.base.model.payments.response.Action;
 import com.adyen.checkout.base.model.payments.response.AwaitAction;
 import com.adyen.checkout.core.code.Lint;
+import com.adyen.checkout.core.exception.CheckoutException;
 import com.adyen.checkout.core.exception.ComponentException;
 import com.adyen.checkout.core.log.LogUtil;
 import com.adyen.checkout.core.log.Logger;
@@ -78,8 +80,12 @@ public class AwaitComponent extends BaseActionComponent<AwaitConfiguration>
         }
     };
 
-    public AwaitComponent(@NonNull Application application, @NonNull AwaitConfiguration configuration) {
+    public AwaitComponent(@NonNull Application application, @Nullable AwaitConfiguration configuration) {
         super(application, configuration);
+        if (configuration == null) {
+            // This component requires the client key from the configuration to work.
+            throw new CheckoutException("AwaitConfiguration cannot be null for AwaitComponent");
+        }
         mStatusRepository = StatusRepository.getInstance(configuration.getEnvironment());
     }
 
