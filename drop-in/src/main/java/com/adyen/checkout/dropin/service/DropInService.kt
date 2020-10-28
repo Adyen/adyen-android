@@ -47,24 +47,29 @@ abstract class DropInService : JobIntentService() {
         @Suppress("MemberVisibilityCanBePrivate")
         const val dropInJobId = 11
 
-        // TODO: 11/09/2020 TEST
+        // callback to handle sending the CallResult inside the callbackFlow below
         private var callback: DropInFlowResult = object : DropInFlowResult {
             override fun dispatchCallResult(callResult: CallResult) {
-                // noop
+                Logger.e(TAG, "dispatchCallResult - callback called before flow")
             }
         }
 
-        // TODO: 11/09/2020 TEST
+        // This callbackFlow will stay open for new offers on the callback object
+        // this is an experiment to replace LocalBroadcast to communicate with the DropInActivity
+        // TODO: 27/10/2020 check if we can have a different implementation that is not an application-wide event bus
+        //  since it embraces layer violations as per deprecation note
+        // https://developer.android.com/jetpack/androidx/releases/localbroadcastmanager
         @ExperimentalCoroutinesApi
         val dropInServiceFlow = callbackFlow<CallResult> {
             callback = object : DropInFlowResult {
                 override fun dispatchCallResult(callResult: CallResult) {
-                    Logger.e(TAG, "dispatchCallResult")
+                    Logger.d(TAG, "dropInServiceFlow - offer")
                     offer(callResult)
                 }
             }
-            awaitClose {}
-            Logger.e(TAG, "FLOW IS CLOSED!!!")
+            awaitClose {
+                Logger.d(TAG, "dropInServiceFlow - flow closed")
+            }
         }
 
         /**
@@ -163,7 +168,7 @@ abstract class DropInService : JobIntentService() {
         // if type is WAIT do nothing and wait for async callback.
         if (callResult.type != CallResult.ResultType.WAIT) {
             // send response back to activity
-            // TODO: 11/09/2020 TEST
+            Logger.d(TAG, "dropInServiceFlow - dispatchCallResult")
             callback.dispatchCallResult(callResult)
         }
     }

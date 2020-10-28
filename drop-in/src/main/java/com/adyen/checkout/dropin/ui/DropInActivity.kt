@@ -80,13 +80,7 @@ class DropInActivity : AppCompatActivity(), DropInBottomSheetDialogFragment.Prot
         }
     }
 
-    // TODO: 14/09/2020 Check if we can add fragment-ktx to use like this
-//    private val dropInViewModel: DropInViewModel by viewModels()
     private lateinit var dropInViewModel: DropInViewModel
-
-//    viewModel = ViewModelProvider(this, ViewModelFactory(requireActivity().application)).get(
-//    VenueDetailViewModel::class.java
-//    )
 
     private lateinit var googlePayComponent: GooglePayComponent
 
@@ -119,6 +113,7 @@ class DropInActivity : AppCompatActivity(), DropInBottomSheetDialogFragment.Prot
         setContentView(R.layout.activity_drop_in)
         overridePendingTransition(0, 0)
 
+        // If we add fragment-ktx dependency we can replace this with `by viewModels()` on the declaration
         dropInViewModel = ViewModelProvider(this, defaultViewModelProviderFactory).get(DropInViewModel::class.java)
 
         val bundle = savedInstanceState ?: intent.extras
@@ -136,9 +131,10 @@ class DropInActivity : AppCompatActivity(), DropInBottomSheetDialogFragment.Prot
             PaymentMethodListDialogFragment.newInstance(false).show(supportFragmentManager, PAYMENT_METHOD_FRAGMENT_TAG)
         }
 
-        // TODO: 11/09/2020 TEST
+        // Automatically wait to collect new results from the DropInService while lifecycle is active
         lifecycleScope.launchWhenCreated {
             DropInService.dropInServiceFlow.collect {
+                Logger.d(TAG, "dropInServiceFlow collect")
                 isWaitingResult = false
                 handleCallResult(it)
             }
