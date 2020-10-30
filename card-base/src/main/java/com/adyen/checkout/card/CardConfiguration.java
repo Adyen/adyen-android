@@ -48,6 +48,8 @@ public class CardConfiguration extends Configuration {
     private final boolean mHolderNameRequire;
     private final List<CardType> mSupportedCardTypes;
     private final boolean mShowStorePaymentField;
+    private final boolean mHideCvc;
+    private final boolean mHideCvcStoredCard;
 
     public static final Parcelable.Creator<CardConfiguration> CREATOR = new Parcelable.Creator<CardConfiguration>() {
         public CardConfiguration createFromParcel(@NonNull Parcel in) {
@@ -67,6 +69,8 @@ public class CardConfiguration extends Configuration {
      * @param holderNameRequire     If the holder name of the card should be shown as a required field.
      * @param showStorePaymentField If the component should show the option to store the card for later use.
      * @param supportCardTypes      The list of supported card brands to be shown to the user.
+     * @param hideCvc               Hides the CVC field on the payment flow so that it's not required.
+     * @param hideCvcStoredCard     Hides the CVC field on the stored payment flow so that it's not required.
      */
     CardConfiguration(
             @NonNull Locale shopperLocale,
@@ -76,7 +80,10 @@ public class CardConfiguration extends Configuration {
             boolean holderNameRequire,
             @NonNull String shopperReference,
             boolean showStorePaymentField,
-            @NonNull List<CardType> supportCardTypes) {
+            @NonNull List<CardType> supportCardTypes,
+            boolean hideCvc,
+            boolean hideCvcStoredCard
+            ) {
         super(shopperLocale, environment, clientKey);
 
         mPublicKey = publicKey;
@@ -84,6 +91,8 @@ public class CardConfiguration extends Configuration {
         mSupportedCardTypes = supportCardTypes;
         mShopperReference = shopperReference;
         mShowStorePaymentField = showStorePaymentField;
+        mHideCvc = hideCvc;
+        mHideCvcStoredCard = hideCvcStoredCard;
     }
 
     CardConfiguration(@NonNull Parcel in) {
@@ -93,6 +102,8 @@ public class CardConfiguration extends Configuration {
         mHolderNameRequire = ParcelUtils.readBoolean(in);
         mSupportedCardTypes = in.readArrayList(CardType.class.getClassLoader());
         mShowStorePaymentField = ParcelUtils.readBoolean(in);
+        mHideCvc = ParcelUtils.readBoolean(in);
+        mHideCvcStoredCard = ParcelUtils.readBoolean(in);
     }
 
     @Override
@@ -103,6 +114,8 @@ public class CardConfiguration extends Configuration {
         ParcelUtils.writeBoolean(dest, mHolderNameRequire);
         dest.writeList(mSupportedCardTypes);
         ParcelUtils.writeBoolean(dest, mShowStorePaymentField);
+        ParcelUtils.writeBoolean(dest, mHideCvc);
+        ParcelUtils.writeBoolean(dest, mHideCvcStoredCard);
     }
 
     /**
@@ -146,6 +159,16 @@ public class CardConfiguration extends Configuration {
         return new Builder(this);
     }
 
+    @Nullable
+    public boolean isHideCvc() {
+        return mHideCvc;
+    }
+
+    @Nullable
+    public boolean isHideCvcStoredCard() {
+        return mHideCvcStoredCard;
+    }
+
     /**
      * Builder to create a {@link CardConfiguration}.
      */
@@ -157,7 +180,8 @@ public class CardConfiguration extends Configuration {
         private boolean mBuilderHolderNameRequire;
         private boolean mBuilderShowStorePaymentField = true;
         private String mShopperReference;
-
+        private boolean mBuilderHideCvc;
+        private boolean mBuilderHideCvcStoredCard;
 
         /**
          * Constructor of Card Configuration Builder with instance of CardConfiguration.
@@ -171,10 +195,12 @@ public class CardConfiguration extends Configuration {
             mBuilderHolderNameRequire = cardConfiguration.isHolderNameRequire();
             mBuilderShowStorePaymentField = cardConfiguration.isShowStorePaymentFieldEnable();
             mShopperReference = cardConfiguration.getShopperReference();
+            mBuilderHideCvc = cardConfiguration.isHideCvc();
+            mBuilderHideCvcStoredCard = cardConfiguration.isHideCvcStoredCard();
         }
 
         /**
-         * Constructor of Card Configuration Builder with default values.
+         * Constructor of Card Configuration Builder with default values from Context.
          *
          * @param context   A context
          */
@@ -183,7 +209,7 @@ public class CardConfiguration extends Configuration {
         }
 
         /**
-         * Builder with required parameters for a {@link CardConfiguration}.
+         * Builder with parameters for a {@link CardConfiguration}.
          *
          * @param shopperLocale The Locale of the shopper.
          * @param environment   The {@link Environment} to be used for network calls to Adyen.
@@ -252,7 +278,7 @@ public class CardConfiguration extends Configuration {
         }
 
         /**
-         * Set supported card types for card-payment.
+         * Set the supported card types for this payment. Supported types will be shown as user inputs the card number.
          *
          * @param supportCardTypes array of {@link CardType}
          * @return {@link CardConfiguration.Builder}
@@ -268,7 +294,7 @@ public class CardConfiguration extends Configuration {
         }
 
         /**
-         * Set that if holder name require.
+         * Set if the holder name is required and should be shown as an input field.
          *
          * @param holderNameRequire {@link Boolean}
          * @return {@link CardConfiguration.Builder}
@@ -280,7 +306,7 @@ public class CardConfiguration extends Configuration {
         }
 
         /**
-         * Show store payment field.
+         * Set if the option to store the card for future payments should be shown as an input field.
          *
          * @param showStorePaymentField {@link Boolean}
          * @return {@link CardConfiguration.Builder}
@@ -291,9 +317,42 @@ public class CardConfiguration extends Configuration {
             return this;
         }
 
+        /**
+         * Set the unique reference for the shopper doing this transaction.
+         * This value will simply be passed back to you in the {@link com.adyen.checkout.base.model.payments.request.PaymentComponentData} for convenience.
+         *
+         * @param shopperReference The unique shopper reference
+         * @return {@link CardConfiguration.Builder}
+         */
         @NonNull
         public Builder setShopperReference(@NonNull String shopperReference) {
             mShopperReference = shopperReference;
+            return this;
+        }
+
+        /**
+         * Set if the CVC field should be hidden from the Component and not requested to the shopper on a regular payment.
+         * Note that this might have implications for the risk of the transaction. Talk to Adyen Support before enabling this.
+         *
+         * @param hideCvc If CVC should be hidden or not.
+         * @return {@link CardConfiguration.Builder}
+         */
+        @NonNull
+        public Builder setHideCvc(boolean hideCvc) {
+            mBuilderHideCvc = hideCvc;
+            return this;
+        }
+
+        /**
+         * Set if the CVC field should be hidden from the Component and not requested to the shopper on a stored payment flow.
+         * Note that this has implications for the risk of the transaction. Talk to Adyen Support before enabling this.
+         *
+         * @param hideCvcStoredCard If CVC should be hidden or not for stored payments.
+         * @return {@link CardConfiguration.Builder}
+         */
+        @NonNull
+        public Builder setHideCvcStoredCard(boolean hideCvcStoredCard) {
+            mBuilderHideCvcStoredCard = hideCvcStoredCard;
             return this;
         }
 
@@ -309,7 +368,7 @@ public class CardConfiguration extends Configuration {
                 throw new CheckoutException("Invalid Public Key. Please find the valid public key on the Customer Area.");
             }
 
-            // This will not be triggered until the public key check above is removed as it takes prioriy.
+            // This will not be triggered until the public key check above is removed as it takes priority.
             if (!CardValidationUtils.isPublicKeyValid(mBuilderPublicKey) && !ValidationUtils.isClientKeyValid(mBuilderClientKey)) {
                 throw new CheckoutException("You need either a valid Client key or Public key to use the Card Component.");
             }
@@ -322,7 +381,9 @@ public class CardConfiguration extends Configuration {
                     mBuilderHolderNameRequire,
                     mShopperReference,
                     mBuilderShowStorePaymentField,
-                    mBuilderSupportedCardTypes
+                    mBuilderSupportedCardTypes,
+                    mBuilderHideCvc,
+                    mBuilderHideCvcStoredCard
             );
         }
     }
