@@ -1,3 +1,6 @@
 ### Added
-- Translations for MB Way and Await Components
-- GitHub Actions workflows to run CI and Publish releases.
+- Ability for merchants to choose not to request the CVC on `CardComponent`
+- `hideCvc` and `hideCvcStoredCard` flags to `CardConfiguration`
+
+### Fixed
+- Stored BCMC cards will no longer require CVC.
