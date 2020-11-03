@@ -82,7 +82,7 @@ public final class CardComponent extends BasePaymentComponent<
             mStoredPaymentInputData.setExpiryDate(ExpiryDate.EMPTY_DATE);
         }
 
-        final CardType cardType = CardType.getCardTypeByTxVariant(paymentMethod.getBrand());
+        final CardType cardType = CardType.getByBrandName(paymentMethod.getBrand());
         if (cardType != null) {
             final List<CardType> storedCardType = new ArrayList<>();
             storedCardType.add(cardType);

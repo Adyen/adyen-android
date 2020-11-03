@@ -100,17 +100,6 @@ public enum CardType {
         return MAPPED_BY_NAME.get(brand);
     }
 
-    /**
-     * Get CardType from txVariant.
-     *
-     * @deprecated Renamed to {@link #getByBrandName(String)}
-     */
-    @Deprecated
-    @Nullable
-    public static CardType getCardTypeByTxVariant(@NonNull String txVariant) {
-        return getByBrandName(txVariant);
-    }
-
     CardType(@NonNull String txVariant, @NonNull Pattern pattern) {
         mTxVariant = txVariant;
         mPattern = pattern;
