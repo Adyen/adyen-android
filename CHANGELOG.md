@@ -13,6 +13,14 @@
 [//]: <> (Add changes that not released yet into `Unreleased` section)
 [//]: <> (Comment `Unreleased` section if there are no changes)
 [//]: <> (## [Unreleased])
+## [3.7.2] - 2020-11-03
+### Added
+- Ability for merchants to choose not to request the CVC on `CardComponent`
+- `hideCvc` and `hideCvcStoredCard` flags to `CardConfiguration`
+
+### Fixed
+- Stored BCMC cards will no longer require CVC.
+
 ## [3.7.1] - 2020-10-15
 ### Added
 - Translations for MB Way and Await Components
