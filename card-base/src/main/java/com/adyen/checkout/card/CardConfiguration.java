@@ -83,7 +83,7 @@ public class CardConfiguration extends Configuration {
             @NonNull List<CardType> supportCardTypes,
             boolean hideCvc,
             boolean hideCvcStoredCard
-            ) {
+    ) {
         super(shopperLocale, environment, clientKey);
 
         mPublicKey = publicKey;
@@ -319,7 +319,8 @@ public class CardConfiguration extends Configuration {
 
         /**
          * Set the unique reference for the shopper doing this transaction.
-         * This value will simply be passed back to you in the {@link com.adyen.checkout.base.model.payments.request.PaymentComponentData} for convenience.
+         * This value will simply be passed back to you in the {@link com.adyen.checkout.base.model.payments.request.PaymentComponentData}
+         * for convenience.
          *
          * @param shopperReference The unique shopper reference
          * @return {@link CardConfiguration.Builder}

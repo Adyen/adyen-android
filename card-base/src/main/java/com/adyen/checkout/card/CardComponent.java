@@ -51,7 +51,7 @@ public final class CardComponent extends BasePaymentComponent<
     private static final Set<CardType> NO_CVC_BRANDS;
 
     static {
-        HashSet<CardType> brandSet = new HashSet<>();
+        final HashSet<CardType> brandSet = new HashSet<>();
         brandSet.add(CardType.BCMC);
         NO_CVC_BRANDS = Collections.unmodifiableSet(brandSet);
     }
@@ -173,7 +173,9 @@ public final class CardComponent extends BasePaymentComponent<
                 card.setNumber(outputData.getCardNumberField().getValue());
             }
 
-            card.setSecurityCode(isCvcHidden() ? null : outputData.getSecurityCodeField().getValue());
+            if (!isCvcHidden()) {
+                card.setSecurityCode(outputData.getSecurityCodeField().getValue());
+            }
 
             final ExpiryDate expiryDateResult = outputData.getExpiryDateField().getValue();
 

@@ -93,7 +93,7 @@ public enum CardType {
 
     /**
      * Get CardType from the brand name as it appears in the Checkout API.
-     * @see  <a href="https://docs.adyen.com/api-explorer/#/CheckoutService/v65/post/paymentMethods__resParam_storedPaymentMethods-brand></a>"/>
+     * @see  <a href="https://docs.adyen.com/api-explorer/#/CheckoutService/v65/post/paymentMethods__resParam_storedPaymentMethods-brand"></a>
      */
     @Nullable
     public static CardType getByBrandName(@NonNull String brand) {
