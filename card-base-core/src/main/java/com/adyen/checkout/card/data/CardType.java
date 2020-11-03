@@ -92,13 +92,24 @@ public enum CardType {
     }
 
     /**
-     * Get CardType from txVariant.
+     * Get CardType from the brand name as it appears in the Checkout API.
+     * @see  <a href="https://docs.adyen.com/api-explorer/#/CheckoutService/v65/post/paymentMethods__resParam_storedPaymentMethods-brand"></a>
      */
     @Nullable
-    public static CardType getCardTypeByTxVariant(@NonNull String txVariant) {
-        return MAPPED_BY_NAME.get(txVariant);
+    public static CardType getByBrandName(@NonNull String brand) {
+        return MAPPED_BY_NAME.get(brand);
     }
 
+    /**
+     * Get CardType from txVariant.
+     *
+     * @deprecated Renamed to {@link #getByBrandName(String)}
+     */
+    @Deprecated
+    @Nullable
+    public static CardType getCardTypeByTxVariant(@NonNull String txVariant) {
+        return getByBrandName(txVariant);
+    }
 
     CardType(@NonNull String txVariant, @NonNull Pattern pattern) {
         mTxVariant = txVariant;

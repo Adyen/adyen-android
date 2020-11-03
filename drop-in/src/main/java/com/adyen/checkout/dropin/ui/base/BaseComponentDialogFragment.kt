@@ -113,6 +113,7 @@ open abstract class BaseComponentDialogFragment : DropInBottomSheetDialogFragmen
     protected fun createErrorHandlerObserver(): Observer<ComponentError> {
         return Observer {
             if (it != null) {
+                Logger.e(TAG, "ComponentError", it.exception)
                 handleError(it)
             }
         }
