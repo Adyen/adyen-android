@@ -131,7 +131,7 @@ class MainActivity : AppCompatActivity() {
             .setPublicKey(BuildConfig.PUBLIC_KEY)
             .setShopperReference(keyValueStorage.getShopperReference())
             .setShopperLocale(shopperLocale)
-                .setEnvironment(Environment.TEST)
+            .setEnvironment(Environment.TEST)
             .build()
 
         val googlePayConfig = GooglePayConfiguration.Builder(this@MainActivity, keyValueStorage.getMerchantAccount())

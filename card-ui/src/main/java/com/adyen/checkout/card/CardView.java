@@ -128,6 +128,8 @@ public final class CardView extends AdyenLinearLayout<CardOutputData, CardConfig
             mCardHolderInput.setVisibility(getComponent().isHolderNameRequire() ? VISIBLE : GONE);
             mStorePaymentMethodSwitch.setVisibility(getComponent().showStorePaymentField() ? VISIBLE : GONE);
         }
+
+        notifyInputDataChanged();
     }
 
     @Override
@@ -173,6 +175,7 @@ public final class CardView extends AdyenLinearLayout<CardOutputData, CardConfig
         if (cardOutputData != null) {
             onCardNumberValidated(cardOutputData.getCardNumberField());
             onExpiryDateValidated(cardOutputData.getExpiryDateField());
+            mSecurityCodeInput.setVisibility( cardOutputData.isCvcHidden() ? GONE : VISIBLE);
         }
 
         if (getComponent().isStoredPaymentMethod()) {

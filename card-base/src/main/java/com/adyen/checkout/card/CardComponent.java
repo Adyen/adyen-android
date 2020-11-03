@@ -131,7 +131,8 @@ public final class CardComponent extends BasePaymentComponent<
                 validateExpiryDate(inputData.getExpiryDate()),
                 validateSecurityCode(inputData.getSecurityCode()),
                 validateHolderName(inputData.getHolderName()),
-                inputData.isStorePaymentEnable()
+                inputData.isStorePaymentEnable(),
+                isCvcHidden()
         );
     }
 
