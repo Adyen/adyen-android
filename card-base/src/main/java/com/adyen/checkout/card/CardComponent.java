@@ -14,7 +14,6 @@ import android.text.TextUtils;
 
 import com.adyen.checkout.base.PaymentComponentProvider;
 import com.adyen.checkout.base.component.BasePaymentComponent;
-import com.adyen.checkout.base.model.paymentmethods.InputDetail;
 import com.adyen.checkout.base.model.paymentmethods.PaymentMethod;
 import com.adyen.checkout.base.model.paymentmethods.StoredPaymentMethod;
 import com.adyen.checkout.base.model.payments.request.CardPaymentMethod;
@@ -32,7 +31,9 @@ import com.adyen.checkout.cse.Encryptor;
 
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 public final class CardComponent extends BasePaymentComponent<
         CardConfiguration,
@@ -45,6 +46,14 @@ public final class CardComponent extends BasePaymentComponent<
 
     private static final String[] PAYMENT_METHOD_TYPES = {PaymentMethodTypes.SCHEME};
     private static final int BIN_VALUE_LENGTH = 6;
+
+    private static final Set<CardType> NO_CVC_BRANDS;
+
+    static {
+        HashSet<CardType> brandSet = new HashSet<>();
+        brandSet.add(CardType.BCMC);
+        NO_CVC_BRANDS = Collections.unmodifiableSet(brandSet);
+    }
 
     private List<CardType> mFilteredSupportedCards = Collections.emptyList();
     private CardInputData mStoredPaymentInputData;
@@ -162,7 +171,7 @@ public final class CardComponent extends BasePaymentComponent<
                 card.setNumber(outputData.getCardNumberField().getValue());
             }
 
-            card.setSecurityCode(outputData.getSecurityCodeField().getValue());
+            card.setSecurityCode(isCvcHidden() ? null : outputData.getSecurityCodeField().getValue());
 
             final ExpiryDate expiryDateResult = outputData.getExpiryDateField().getValue();
 
@@ -242,14 +251,27 @@ public final class CardComponent extends BasePaymentComponent<
     }
 
     private ValidatedField<String> validateSecurityCode(@NonNull String securityCode) {
-        final InputDetail securityCodeInputDetail = getInputDetail("cvc");
-        final boolean isRequired = securityCodeInputDetail == null || !securityCodeInputDetail.isOptional();
-        if (isRequired) {
+        if (isCvcHidden()) {
+            return new ValidatedField<>(securityCode, ValidatedField.Validation.VALID);
+        } else {
             final CardType firstCardType = !mFilteredSupportedCards.isEmpty() ? mFilteredSupportedCards.get(0) : null;
             return CardValidationUtils.validateSecurityCode(securityCode, firstCardType);
-        } else {
-            return new ValidatedField<>(securityCode, ValidatedField.Validation.VALID);
         }
+    }
+
+    private boolean isCvcHidden() {
+        if (isStoredPaymentMethod()) {
+            return getConfiguration().isHideCvcStoredCard() || isBrandWithoutCvc(((StoredPaymentMethod) getPaymentMethod()).getBrand());
+        } else {
+            return getConfiguration().isHideCvc();
+        }
+    }
+
+    private boolean isBrandWithoutCvc(@Nullable String brand) {
+        if (TextUtils.isEmpty(brand)) {
+            return false;
+        }
+        return NO_CVC_BRANDS.contains(CardType.getByBrandName(brand));
     }
 
     private ValidatedField<String> validateHolderName(@NonNull String holderName) {
@@ -258,20 +280,6 @@ public final class CardComponent extends BasePaymentComponent<
         } else {
             return new ValidatedField<>(holderName, ValidatedField.Validation.VALID);
         }
-    }
-
-    @Nullable
-    private InputDetail getInputDetail(@NonNull String key) {
-        final List<InputDetail> details = getPaymentMethod().getDetails();
-        if (details != null) {
-            for (InputDetail inputDetail : getPaymentMethod().getDetails()) {
-                if (key.equals(inputDetail.getKey())) {
-                    return inputDetail;
-                }
-            }
-        }
-
-        return null;
     }
 
     private String getBinValueFromCardNumber(String cardNumber) {
