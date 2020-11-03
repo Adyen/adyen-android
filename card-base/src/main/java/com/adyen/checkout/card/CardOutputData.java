@@ -21,7 +21,8 @@ final class CardOutputData implements OutputData {
     private final ValidatedField<ExpiryDate> mExpiryDateField;
     private final ValidatedField<String> mSecurityCodeField;
 
-    private boolean mIsStoredPaymentMethodEnable;
+    private final boolean mIsStoredPaymentMethodEnable;
+    private final boolean mIsCvcHidden;
 
     /**
      * Constructs a {@link com.adyen.checkout.card.CardComponent} object.
@@ -31,13 +32,15 @@ final class CardOutputData implements OutputData {
             @NonNull ValidatedField<ExpiryDate> expiryDateField,
             @NonNull ValidatedField<String> securityCodeField,
             @NonNull ValidatedField<String> holderNameField,
-            boolean isStoredPaymentMethodEnable
+            boolean isStoredPaymentMethodEnable,
+            boolean isCvcHidden
     ) {
         mCardNumberField = cardNumberField;
         mExpiryDateField = expiryDateField;
         mSecurityCodeField = securityCodeField;
         mHolderNameField = holderNameField;
         mIsStoredPaymentMethodEnable = isStoredPaymentMethodEnable;
+        mIsCvcHidden = isCvcHidden;
     }
 
     @NonNull
@@ -68,11 +71,11 @@ final class CardOutputData implements OutputData {
                 && mHolderNameField.isValid();
     }
 
-    public void setStoredPaymentMethodStatus(boolean storedPaymentMethodEnable) {
-        mIsStoredPaymentMethodEnable = storedPaymentMethodEnable;
-    }
-
     public boolean isStoredPaymentMethodEnable() {
         return mIsStoredPaymentMethodEnable;
+    }
+
+    public boolean isCvcHidden() {
+        return mIsCvcHidden;
     }
 }
