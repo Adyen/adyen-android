@@ -75,7 +75,7 @@ public class CardComponentProvider implements PaymentComponentProvider<CardCompo
             if (brands != null && !brands.isEmpty()) {
                 supportedCardTypes = new ArrayList<>();
                 for (String brand : brands) {
-                    final CardType brandType = CardType.getCardTypeByTxVariant(brand);
+                    final CardType brandType = CardType.getByBrandName(brand);
                     if (brandType != null) {
                         supportedCardTypes.add(brandType);
                     } else {

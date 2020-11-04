@@ -99,6 +99,7 @@ public abstract class BasePaymentComponent<
      * @param inputData {@link InputDataT}
      */
     public final void inputDataChanged(@NonNull InputDataT inputData) {
+        Logger.v(TAG, "inputDataChanged");
         final OutputDataT newOutputData = onInputDataChanged(inputData);
         if (!newOutputData.equals(mOutputData)) {
             mOutputData = newOutputData;
