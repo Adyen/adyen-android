@@ -23,7 +23,8 @@ fun createPaymentRequest(
     countryCode: String,
     merchantAccount: String,
     redirectUrl: String,
-    additionalData: AdditionalData
+    additionalData: AdditionalData,
+    force3DS2Challenge: Boolean = false
 ): JSONObject {
 
     val request = JSONObject(paymentComponentData.toString())
@@ -38,6 +39,13 @@ fun createPaymentRequest(
     request.put("channel", "android")
     request.put("additionalData", JSONObject(Gson().toJson(additionalData)))
     request.put("lineItems", JSONArray(Gson().toJson(listOf(Item()))))
+
+    if (force3DS2Challenge) {
+        val threeDS2RequestData = JSONObject()
+        threeDS2RequestData.put("deviceChannel", "app")
+        threeDS2RequestData.put("challengeIndicator", "requestChallenge")
+        request.put("threeDS2RequestData", threeDS2RequestData)
+    }
 
     return request
 }
