@@ -11,15 +11,13 @@ package com.adyen.checkout.base.component;
 import android.app.Application;
 
 import androidx.annotation.NonNull;
-import androidx.fragment.app.Fragment;
-import androidx.fragment.app.FragmentActivity;
-import androidx.lifecycle.ViewModelProviders;
+import androidx.lifecycle.ViewModelProvider;
+import androidx.lifecycle.ViewModelStoreOwner;
 
 import com.adyen.checkout.base.ComponentAvailableCallback;
 import com.adyen.checkout.base.PaymentComponentProvider;
 import com.adyen.checkout.base.component.lifecycle.PaymentComponentViewModelFactory;
 import com.adyen.checkout.base.model.paymentmethods.PaymentMethod;
-import com.adyen.checkout.core.exception.CheckoutException;
 
 public final class PaymentComponentProviderImpl<BaseComponentT extends BasePaymentComponent, ConfigurationT extends Configuration>
         implements PaymentComponentProvider<BaseComponentT, ConfigurationT> {
@@ -30,20 +28,15 @@ public final class PaymentComponentProviderImpl<BaseComponentT extends BasePayme
         mComponentClass = modelClass;
     }
 
-    @NonNull
     @Override
-    public BaseComponentT get(@NonNull FragmentActivity activity, @NonNull PaymentMethod paymentMethod, @NonNull ConfigurationT configuration)
-            throws CheckoutException {
-        final PaymentComponentViewModelFactory factory = new PaymentComponentViewModelFactory(paymentMethod, configuration);
-        return ViewModelProviders.of(activity, factory).get(mComponentClass);
-    }
-
     @NonNull
-    @Override
-    public BaseComponentT get(@NonNull Fragment fragment, @NonNull PaymentMethod paymentMethod, @NonNull ConfigurationT configuration)
-            throws CheckoutException {
+    @SuppressWarnings("LambdaLast")
+    public BaseComponentT get(
+            @NonNull ViewModelStoreOwner viewModelStoreOwner,
+            @NonNull PaymentMethod paymentMethod,
+            @NonNull ConfigurationT configuration) {
         final PaymentComponentViewModelFactory factory = new PaymentComponentViewModelFactory(paymentMethod, configuration);
-        return ViewModelProviders.of(fragment, factory).get(mComponentClass);
+        return new ViewModelProvider(viewModelStoreOwner, factory).get(mComponentClass);
     }
 
     @Override

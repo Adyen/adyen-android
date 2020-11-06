@@ -11,36 +11,24 @@ package com.adyen.checkout.wechatpay;
 import android.app.Application;
 
 import androidx.annotation.NonNull;
-import androidx.fragment.app.Fragment;
-import androidx.fragment.app.FragmentActivity;
-import androidx.lifecycle.ViewModelProviders;
+import androidx.lifecycle.ViewModelProvider;
+import androidx.lifecycle.ViewModelStoreOwner;
 
 import com.adyen.checkout.base.ComponentAvailableCallback;
 import com.adyen.checkout.base.PaymentComponentProvider;
 import com.adyen.checkout.base.component.lifecycle.PaymentComponentViewModelFactory;
 import com.adyen.checkout.base.model.paymentmethods.PaymentMethod;
-import com.adyen.checkout.core.exception.CheckoutException;
 
 public class WeChatPayProvider implements PaymentComponentProvider<WeChatPayComponent, WeChatPayConfiguration> {
 
-    @NonNull
     @Override
-    public WeChatPayComponent get(@NonNull FragmentActivity activity, @NonNull PaymentMethod paymentMethod,
-            @NonNull WeChatPayConfiguration configuration) throws CheckoutException {
-        final PaymentComponentViewModelFactory factory = new PaymentComponentViewModelFactory(paymentMethod, configuration);
-        return ViewModelProviders.of(activity, factory).get(WeChatPayComponent.class);
-    }
-
     @NonNull
-    @Override
-    public WeChatPayComponent get(@NonNull Fragment fragment, @NonNull PaymentMethod paymentMethod, @NonNull WeChatPayConfiguration configuration)
-            throws CheckoutException {
+    public WeChatPayComponent get(
+            @NonNull ViewModelStoreOwner viewModelStoreOwner,
+            @NonNull PaymentMethod paymentMethod,
+            @NonNull WeChatPayConfiguration configuration) {
         final PaymentComponentViewModelFactory factory = new PaymentComponentViewModelFactory(paymentMethod, configuration);
-        final WeChatPayComponent component = ViewModelProviders.of(fragment, factory).get(WeChatPayComponent.class);
-        if (fragment.getActivity() == null) {
-            throw new CheckoutException("WeChatPay Component needs to be initiated on a Fragment that is attached to an Activity.");
-        }
-        return component;
+        return new ViewModelProvider(viewModelStoreOwner, factory).get(WeChatPayComponent.class);
     }
 
     @Override
