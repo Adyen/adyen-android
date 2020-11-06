@@ -28,14 +28,15 @@ public class PaymentMethod extends ModelObject {
     @NonNull
     public static final Creator<PaymentMethod> CREATOR = new Creator<>(PaymentMethod.class);
 
-    private static final String CONFIGURATION = "configuration";
-    private static final String DETAILS = "details";
-    private static final String GROUP = "group";
-    private static final String NAME = "name";
-    private static final String BRANDS = "brands";
-    private static final String PAYMENT_METHOD_DATA = "paymentMethodData";
-    private static final String SUPPORTS_RECURRING = "supportsRecurring";
     private static final String TYPE = "type";
+    private static final String NAME = "name";
+    // Brands is only used for type = scheme
+    private static final String BRANDS = "brands";
+    // Brand is only used for type = giftcard
+    private static final String BRAND = "brand";
+    private static final String FUNDING_SOURCE = "fundingSource";
+    private static final String ISSUERS = "issuers";
+    private static final String CONFIGURATION = "configuration";
 
     @NonNull
     public static final Serializer<PaymentMethod> SERIALIZER = new Serializer<PaymentMethod>() {
@@ -45,14 +46,15 @@ public class PaymentMethod extends ModelObject {
         public JSONObject serialize(@NonNull PaymentMethod modelObject) {
             final JSONObject jsonObject = new JSONObject();
             try {
-                jsonObject.putOpt(CONFIGURATION, modelObject.getConfiguration());
-                jsonObject.putOpt(DETAILS, ModelUtils.serializeOptList(modelObject.getDetails(), InputDetail.SERIALIZER));
-                jsonObject.putOpt(GROUP, ModelUtils.serializeOpt(modelObject.getGroup(), Group.SERIALIZER));
+                jsonObject.putOpt(TYPE, modelObject.getType());
                 jsonObject.putOpt(NAME, modelObject.getName());
                 jsonObject.putOpt(BRANDS, JsonUtils.serializeOptStringList(modelObject.getBrands()));
-                jsonObject.putOpt(PAYMENT_METHOD_DATA, modelObject.getPaymentMethodData());
-                jsonObject.putOpt(SUPPORTS_RECURRING, modelObject.getSupportsRecurring());
-                jsonObject.putOpt(TYPE, modelObject.getType());
+                jsonObject.putOpt(BRAND, modelObject.getBrand());
+                jsonObject.putOpt(FUNDING_SOURCE, modelObject.getFundingSource());
+                jsonObject.putOpt(ISSUERS,
+                        ModelUtils.serializeOptList(modelObject.getIssuers(), Issuer.SERIALIZER)
+                );
+                jsonObject.putOpt(CONFIGURATION, modelObject.getConfiguration());
             } catch (JSONException e) {
                 throw new ModelSerializationException(PaymentMethod.class, e);
             }
@@ -63,28 +65,26 @@ public class PaymentMethod extends ModelObject {
         @NonNull
         public PaymentMethod deserialize(@NonNull JSONObject jsonObject) {
             final PaymentMethod paymentMethod = new PaymentMethod();
-            paymentMethod.setConfiguration(jsonObject.optString(CONFIGURATION, null));
-            paymentMethod.setDetails(ModelUtils.deserializeOptList(jsonObject.optJSONArray(DETAILS), InputDetail.SERIALIZER));
-            paymentMethod.setGroup(ModelUtils.deserializeOpt(jsonObject.optJSONObject(GROUP), Group.SERIALIZER));
+            paymentMethod.setType(jsonObject.optString(TYPE, null));
             paymentMethod.setName(jsonObject.optString(NAME, null));
             paymentMethod.setBrands(JsonUtils.parseOptStringList(jsonObject.optJSONArray(BRANDS)));
-            paymentMethod.setPaymentMethodData(jsonObject.optString(PAYMENT_METHOD_DATA, null));
-            paymentMethod.setSupportsRecurring(jsonObject.optBoolean(SUPPORTS_RECURRING, false));
-            paymentMethod.setType(jsonObject.optString(TYPE, null));
+            paymentMethod.setBrand(jsonObject.optString(BRAND, null));
+            paymentMethod.setFundingSource(jsonObject.optString(FUNDING_SOURCE, null));
+            paymentMethod.setIssuers(
+                    ModelUtils.deserializeOptList(jsonObject.optJSONArray(ISSUERS), Issuer.SERIALIZER)
+            );
+            paymentMethod.setConfiguration(jsonObject.optString(CONFIGURATION, null));
             return paymentMethod;
         }
     };
 
-    // TODO: 15/04/2019 how to handle the configuration??
-    // Configuration is a generic data object that can change per payment method. Save raw string to deserialize later as needed.
-    private String configuration;
-    private List<InputDetail> details;
-    private Group group;
+    private String type;
     private String name;
     private List<String> brands;
-    private String paymentMethodData;
-    private boolean supportsRecurring;
-    private String type;
+    private String brand;
+    private String fundingSource;
+    private List<Issuer> issuers;
+    private String configuration;
 
     @Override
     public void writeToParcel(@NonNull Parcel dest, int flags) {
@@ -92,18 +92,8 @@ public class PaymentMethod extends ModelObject {
     }
 
     @Nullable
-    public String getConfiguration() {
-        return configuration;
-    }
-
-    @Nullable
-    public List<InputDetail> getDetails() {
-        return details;
-    }
-
-    @Nullable
-    public Group getGroup() {
-        return group;
+    public String getType() {
+        return type;
     }
 
     @Nullable
@@ -112,29 +102,32 @@ public class PaymentMethod extends ModelObject {
     }
 
     @Nullable
-    public String getPaymentMethodData() {
-        return paymentMethodData;
-    }
-
-    public boolean getSupportsRecurring() {
-        return supportsRecurring;
+    public List<String> getBrands() {
+        return brands;
     }
 
     @Nullable
-    public String getType() {
-        return type;
+    public String getBrand() {
+        return brand;
     }
 
-    public void setConfiguration(@Nullable String configuration) {
-        this.configuration = configuration;
+    @Nullable
+    public String getFundingSource() {
+        return fundingSource;
     }
 
-    public void setDetails(@Nullable List<InputDetail> details) {
-        this.details = details;
+    @Nullable
+    public List<Issuer> getIssuers() {
+        return issuers;
     }
 
-    public void setGroup(@Nullable Group group) {
-        this.group = group;
+    @Nullable
+    public String getConfiguration() {
+        return configuration;
+    }
+
+    public void setType(@Nullable String type) {
+        this.type = type;
     }
 
     public void setName(@Nullable String name) {
@@ -145,20 +138,19 @@ public class PaymentMethod extends ModelObject {
         this.brands = brands;
     }
 
-    @Nullable
-    public List<String> getBrands() {
-        return brands;
+    public void setBrand(@Nullable String brand) {
+        this.brand = brand;
     }
 
-    public void setPaymentMethodData(@Nullable String paymentMethodData) {
-        this.paymentMethodData = paymentMethodData;
+    public void setFundingSource(@Nullable String fundingSource) {
+        this.fundingSource = fundingSource;
     }
 
-    public void setSupportsRecurring(boolean supportsRecurring) {
-        this.supportsRecurring = supportsRecurring;
+    public void setIssuers(@Nullable List<Issuer> issuers) {
+        this.issuers = issuers;
     }
 
-    public void setType(@Nullable String type) {
-        this.type = type;
+    public void setConfiguration(@Nullable String configuration) {
+        this.configuration = configuration;
     }
 }

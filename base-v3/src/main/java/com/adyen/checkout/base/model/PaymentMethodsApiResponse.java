@@ -14,7 +14,6 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 
 import com.adyen.checkout.base.model.paymentmethods.PaymentMethod;
-import com.adyen.checkout.base.model.paymentmethods.PaymentMethodsGroup;
 import com.adyen.checkout.base.model.paymentmethods.StoredPaymentMethod;
 import com.adyen.checkout.core.exception.ModelSerializationException;
 import com.adyen.checkout.core.model.JsonUtils;
@@ -34,7 +33,6 @@ public final class PaymentMethodsApiResponse extends ModelObject {
     @NonNull
     public static final Creator<PaymentMethodsApiResponse> CREATOR = new Creator<>(PaymentMethodsApiResponse.class);
 
-    private static final String GROUPS = "groups";
     private static final String STORED_PAYMENT_METHODS = "storedPaymentMethods";
     private static final String PAYMENT_METHODS = "paymentMethods";
 
@@ -45,7 +43,6 @@ public final class PaymentMethodsApiResponse extends ModelObject {
         public JSONObject serialize(@NonNull PaymentMethodsApiResponse modelObject) {
             final JSONObject jsonObject = new JSONObject();
             try {
-                jsonObject.putOpt(GROUPS, ModelUtils.serializeOptList(modelObject.getGroups(), PaymentMethodsGroup.SERIALIZER));
                 jsonObject.putOpt(STORED_PAYMENT_METHODS,
                         ModelUtils.serializeOptList(modelObject.getStoredPaymentMethods(), StoredPaymentMethod.SERIALIZER));
                 jsonObject.putOpt(PAYMENT_METHODS, ModelUtils.serializeOptList(modelObject.getPaymentMethods(), PaymentMethod.SERIALIZER));
@@ -59,7 +56,6 @@ public final class PaymentMethodsApiResponse extends ModelObject {
         @NonNull
         public PaymentMethodsApiResponse deserialize(@NonNull JSONObject jsonObject) {
             final PaymentMethodsApiResponse paymentMethodsApiResponse = new PaymentMethodsApiResponse();
-            paymentMethodsApiResponse.setGroups(ModelUtils.deserializeOptList(jsonObject.optJSONArray(GROUPS), PaymentMethodsGroup.SERIALIZER));
             paymentMethodsApiResponse.setStoredPaymentMethods(
                     ModelUtils.deserializeOptList(jsonObject.optJSONArray(STORED_PAYMENT_METHODS), StoredPaymentMethod.SERIALIZER));
             paymentMethodsApiResponse.setPaymentMethods(
@@ -68,18 +64,12 @@ public final class PaymentMethodsApiResponse extends ModelObject {
         }
     };
 
-    private List<PaymentMethodsGroup> groups;
     private List<StoredPaymentMethod> storedPaymentMethods;
     private List<PaymentMethod> paymentMethods;
 
     @Override
     public void writeToParcel(@NonNull Parcel dest, int flags) {
         JsonUtils.writeToParcel(dest, SERIALIZER.serialize(this));
-    }
-
-    @Nullable
-    public List<PaymentMethodsGroup> getGroups() {
-        return groups;
     }
 
     @Nullable
@@ -90,10 +80,6 @@ public final class PaymentMethodsApiResponse extends ModelObject {
     @Nullable
     public List<PaymentMethod> getPaymentMethods() {
         return paymentMethods;
-    }
-
-    public void setGroups(@Nullable List<PaymentMethodsGroup> groups) {
-        this.groups = groups;
     }
 
     public void setStoredPaymentMethods(@Nullable List<StoredPaymentMethod> storedPaymentMethods) {

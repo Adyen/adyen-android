@@ -132,9 +132,6 @@ class MainActivity : AppCompatActivity() {
     }
 
     private fun startDropIn(paymentMethodsApiResponse: PaymentMethodsApiResponse) {
-        val test = PaymentMethodsApiResponse()
-        test.groups = listOf()
-
         Logger.d(TAG, "startDropIn")
         setLoading(false)
 
