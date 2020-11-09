@@ -21,6 +21,7 @@ import com.adyen.checkout.base.model.paymentmethods.PaymentMethod;
 
 public class WeChatPayProvider implements PaymentComponentProvider<WeChatPayComponent, WeChatPayConfiguration> {
 
+    @SuppressWarnings("LambdaLast")
     @Override
     @NonNull
     public WeChatPayComponent get(

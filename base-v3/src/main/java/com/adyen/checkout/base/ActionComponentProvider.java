@@ -8,10 +8,11 @@
 
 package com.adyen.checkout.base;
 
+import android.app.Application;
+
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
-import androidx.fragment.app.Fragment;
-import androidx.fragment.app.FragmentActivity;
+import androidx.lifecycle.ViewModelStoreOwner;
 
 import com.adyen.checkout.base.component.Configuration;
 
@@ -20,45 +21,13 @@ public interface ActionComponentProvider<ComponentT extends ActionComponent> ext
     /**
      * Get an {@link ActionComponent}.
      *
-     * @param activity The Activity to associate lifecycle.
-     * @return The Component
-     * @deprecated in favor of{@link #get(FragmentActivity, Configuration)} with a possible configuration.
-     */
-    @Deprecated
-    @NonNull
-    ComponentT get(@NonNull FragmentActivity activity);
-
-    /**
-     * Get an {@link ActionComponent}.
-     *
-     * @param fragment The Fragment to associate lifecycle.
-     * @return The Component
-     * @deprecated in favor of{@link #get(Fragment, Configuration)} with a possible configuration.
-     */
-    @Deprecated
-    @NonNull
-    ComponentT get(@NonNull Fragment fragment);
-
-    /**
-     * Get an {@link ActionComponent}.
-     *
-     * @param activity The Activity to associate lifecycle.
+     * @param viewModelStoreOwner The Activity or Fragment to associate the lifecycle.
      * @param configuration The Configuration of the component. Can be null in most cases.
      * @return The Component
      */
+    @SuppressWarnings("LambdaLast")
     @NonNull
-    ComponentT get(@NonNull FragmentActivity activity, @Nullable Configuration configuration);
-
-
-    /**
-     * Get an {@link ActionComponent}.
-     *
-     * @param fragment The Fragment to associate lifecycle.
-     * @param configuration The Configuration of the component. Can be null in most cases.
-     * @return The Component
-     */
-    @NonNull
-    ComponentT get(@NonNull Fragment fragment, @Nullable Configuration configuration);
+    ComponentT get(@NonNull ViewModelStoreOwner viewModelStoreOwner, @NonNull Application application, @Nullable Configuration configuration);
 
     /**
      * @return If the Configuration is required for this Component.

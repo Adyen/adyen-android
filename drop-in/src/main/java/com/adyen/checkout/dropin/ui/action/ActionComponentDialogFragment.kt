@@ -8,13 +8,13 @@
 
 package com.adyen.checkout.dropin.ui.action
 
-import androidx.lifecycle.Observer
-import androidx.lifecycle.ViewModelProviders
 import android.content.DialogInterface
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.lifecycle.Observer
+import androidx.lifecycle.ViewModelProvider
 import com.adyen.checkout.await.AwaitComponent
 import com.adyen.checkout.base.ActionComponent
 import com.adyen.checkout.base.ActionComponentData
@@ -67,7 +67,7 @@ class ActionComponentDialogFragment : DropInBottomSheetDialogFragment(), Observe
         action = arguments?.getParcelable(ACTION) ?: throw IllegalArgumentException("Action not found")
         actionType = action.type ?: throw IllegalArgumentException("Action type not found")
         // Get the same instance as the Activity
-        dropInViewModel = ViewModelProviders.of(requireActivity()).get(DropInViewModel::class.java)
+        dropInViewModel = ViewModelProvider(requireActivity()).get(DropInViewModel::class.java)
     }
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
@@ -124,15 +124,23 @@ class ActionComponentDialogFragment : DropInBottomSheetDialogFragment(), Observe
      * Return the possible viewable action components
      */
     private fun getComponent(actionType: String): ViewableComponent<*, *, ActionComponentData> {
-        return when (actionType) {
-            ActionTypes.AWAIT -> {
-                AwaitComponent.PROVIDER.get(
-                    this, dropInViewModel.dropInConfiguration.getConfigurationFor(ActionTypes.AWAIT, requireContext())
-                )
+        val application = activity?.application
+
+        if (application != null) {
+            return when (actionType) {
+                ActionTypes.AWAIT -> {
+                    AwaitComponent.PROVIDER.get(
+                        this,
+                        application,
+                        dropInViewModel.dropInConfiguration.getConfigurationFor(ActionTypes.AWAIT, requireContext())
+                    )
+                }
+                else -> {
+                    throw ComponentException("Unexpected Action component type - $actionType")
+                }
             }
-            else -> {
-                throw ComponentException("Unexpected Action component type - $actionType")
-            }
+        } else {
+            throw ComponentException("Unexpected Action component type - $actionType")
         }
     }
 

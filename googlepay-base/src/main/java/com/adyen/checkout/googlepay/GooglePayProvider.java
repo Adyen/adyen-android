@@ -31,6 +31,7 @@ import java.lang.ref.WeakReference;
 
 public class GooglePayProvider implements PaymentComponentProvider<GooglePayComponent, GooglePayConfiguration> {
 
+    @SuppressWarnings("LambdaLast")
     @Override
     @NonNull
     public GooglePayComponent get(
