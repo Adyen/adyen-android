@@ -16,9 +16,10 @@ import androidx.lifecycle.ViewModelProvider;
 import androidx.lifecycle.ViewModelStoreOwner;
 
 import com.adyen.checkout.base.ComponentAvailableCallback;
-import com.adyen.checkout.base.PaymentComponentProvider;
+import com.adyen.checkout.base.StoredPaymentComponentProvider;
 import com.adyen.checkout.base.component.lifecycle.PaymentComponentViewModelFactory;
 import com.adyen.checkout.base.model.paymentmethods.PaymentMethod;
+import com.adyen.checkout.base.model.paymentmethods.StoredPaymentMethod;
 import com.adyen.checkout.card.data.CardType;
 import com.adyen.checkout.core.log.LogUtil;
 import com.adyen.checkout.core.log.Logger;
@@ -26,7 +27,7 @@ import com.adyen.checkout.core.log.Logger;
 import java.util.ArrayList;
 import java.util.List;
 
-public class CardComponentProvider implements PaymentComponentProvider<CardComponent, CardConfiguration> {
+public class CardComponentProvider implements StoredPaymentComponentProvider<CardComponent, CardConfiguration> {
     private static final String TAG = LogUtil.getTag();
 
     @SuppressWarnings("LambdaLast")
@@ -38,6 +39,17 @@ public class CardComponentProvider implements PaymentComponentProvider<CardCompo
             @NonNull CardConfiguration configuration) {
         final CardConfiguration verifiedConfiguration = checkSupportedCardTypes(paymentMethod, configuration);
         final PaymentComponentViewModelFactory factory = new PaymentComponentViewModelFactory(paymentMethod, verifiedConfiguration);
+        return new ViewModelProvider(viewModelStoreOwner, factory).get(CardComponent.class);
+    }
+
+    @SuppressWarnings("LambdaLast")
+    @Override
+    @NonNull
+    public CardComponent get(
+            @NonNull ViewModelStoreOwner viewModelStoreOwner,
+            @NonNull StoredPaymentMethod storedPaymentMethod,
+            @NonNull CardConfiguration configuration) {
+        final PaymentComponentViewModelFactory factory = new PaymentComponentViewModelFactory(storedPaymentMethod, configuration);
         return new ViewModelProvider(viewModelStoreOwner, factory).get(CardComponent.class);
     }
 

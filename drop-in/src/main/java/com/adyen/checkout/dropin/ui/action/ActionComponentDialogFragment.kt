@@ -124,23 +124,17 @@ class ActionComponentDialogFragment : DropInBottomSheetDialogFragment(), Observe
      * Return the possible viewable action components
      */
     private fun getComponent(actionType: String): ViewableComponent<*, *, ActionComponentData> {
-        val application = activity?.application
-
-        if (application != null) {
-            return when (actionType) {
-                ActionTypes.AWAIT -> {
-                    AwaitComponent.PROVIDER.get(
-                        this,
-                        application,
-                        dropInViewModel.dropInConfiguration.getConfigurationFor(ActionTypes.AWAIT, requireContext())
-                    )
-                }
-                else -> {
-                    throw ComponentException("Unexpected Action component type - $actionType")
-                }
+        return when (actionType) {
+            ActionTypes.AWAIT -> {
+                AwaitComponent.PROVIDER.get(
+                    this,
+                    requireActivity().application,
+                    dropInViewModel.dropInConfiguration.getConfigurationFor(ActionTypes.AWAIT, requireContext())
+                )
             }
-        } else {
-            throw ComponentException("Unexpected Action component type - $actionType")
+            else -> {
+                throw ComponentException("Unexpected Action component type - $actionType")
+            }
         }
     }
 
