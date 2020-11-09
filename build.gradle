@@ -63,7 +63,6 @@ allprojects {
     ext.annotation_version = "1.1.0"
     ext.fragment_version = "1.2.5"
     ext.appcompat_version = "1.2.0"
-    ext.lifecycle_extensions_version = "2.2.0"
     ext.recyclerview_version = "1.1.0"
     ext.material_version = "1.2.1"
     ext.browser_version = "1.2.0"

@@ -12,14 +12,14 @@ import android.app.Application;
 import android.text.TextUtils;
 
 import androidx.annotation.NonNull;
-import androidx.fragment.app.Fragment;
-import androidx.fragment.app.FragmentActivity;
-import androidx.lifecycle.ViewModelProviders;
+import androidx.lifecycle.ViewModelProvider;
+import androidx.lifecycle.ViewModelStoreOwner;
 
 import com.adyen.checkout.base.ComponentAvailableCallback;
-import com.adyen.checkout.base.PaymentComponentProvider;
+import com.adyen.checkout.base.StoredPaymentComponentProvider;
 import com.adyen.checkout.base.component.lifecycle.PaymentComponentViewModelFactory;
 import com.adyen.checkout.base.model.paymentmethods.PaymentMethod;
+import com.adyen.checkout.base.model.paymentmethods.StoredPaymentMethod;
 import com.adyen.checkout.card.data.CardType;
 import com.adyen.checkout.core.log.LogUtil;
 import com.adyen.checkout.core.log.Logger;
@@ -27,23 +27,30 @@ import com.adyen.checkout.core.log.Logger;
 import java.util.ArrayList;
 import java.util.List;
 
-public class CardComponentProvider implements PaymentComponentProvider<CardComponent, CardConfiguration> {
+public class CardComponentProvider implements StoredPaymentComponentProvider<CardComponent, CardConfiguration> {
     private static final String TAG = LogUtil.getTag();
 
-    @NonNull
+    @SuppressWarnings("LambdaLast")
     @Override
-    public CardComponent get(@NonNull FragmentActivity activity, @NonNull PaymentMethod paymentMethod, @NonNull CardConfiguration configuration) {
+    @NonNull
+    public CardComponent get(
+            @NonNull ViewModelStoreOwner viewModelStoreOwner,
+            @NonNull PaymentMethod paymentMethod,
+            @NonNull CardConfiguration configuration) {
         final CardConfiguration verifiedConfiguration = checkSupportedCardTypes(paymentMethod, configuration);
         final PaymentComponentViewModelFactory factory = new PaymentComponentViewModelFactory(paymentMethod, verifiedConfiguration);
-        return ViewModelProviders.of(activity, factory).get(CardComponent.class);
+        return new ViewModelProvider(viewModelStoreOwner, factory).get(CardComponent.class);
     }
 
-    @NonNull
+    @SuppressWarnings("LambdaLast")
     @Override
-    public CardComponent get(@NonNull Fragment fragment, @NonNull PaymentMethod paymentMethod, @NonNull CardConfiguration configuration) {
-        final CardConfiguration verifiedConfiguration = checkSupportedCardTypes(paymentMethod, configuration);
-        final PaymentComponentViewModelFactory factory = new PaymentComponentViewModelFactory(paymentMethod, verifiedConfiguration);
-        return ViewModelProviders.of(fragment, factory).get(CardComponent.class);
+    @NonNull
+    public CardComponent get(
+            @NonNull ViewModelStoreOwner viewModelStoreOwner,
+            @NonNull StoredPaymentMethod storedPaymentMethod,
+            @NonNull CardConfiguration configuration) {
+        final PaymentComponentViewModelFactory factory = new PaymentComponentViewModelFactory(storedPaymentMethod, configuration);
+        return new ViewModelProvider(viewModelStoreOwner, factory).get(CardComponent.class);
     }
 
     @Override

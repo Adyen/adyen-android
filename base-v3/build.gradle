@@ -50,8 +50,7 @@ dependencies {
     api project(':core-v3')
 
     // Dependencies
-    api "androidx.fragment:fragment:$fragment_version"
-    api "androidx.lifecycle:lifecycle-extensions:$lifecycle_extensions_version"
+    api "androidx.fragment:fragment-ktx:$fragment_version"
 }
 
 // This sharedTasks.gradle script is applied at the end of this build.gradle script,

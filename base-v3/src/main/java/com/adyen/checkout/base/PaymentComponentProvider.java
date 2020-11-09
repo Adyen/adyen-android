@@ -11,8 +11,7 @@ package com.adyen.checkout.base;
 import android.app.Application;
 
 import androidx.annotation.NonNull;
-import androidx.fragment.app.Fragment;
-import androidx.fragment.app.FragmentActivity;
+import androidx.lifecycle.ViewModelStoreOwner;
 
 import com.adyen.checkout.base.component.Configuration;
 import com.adyen.checkout.base.model.paymentmethods.PaymentMethod;
@@ -27,13 +26,13 @@ import com.adyen.checkout.core.exception.CheckoutException;
 public interface PaymentComponentProvider<ComponentT extends PaymentComponent, ConfigurationT extends Configuration>
         extends ComponentProvider<ComponentT> {
 
+    @SuppressWarnings("LambdaLast")
     @NonNull
-    ComponentT get(@NonNull FragmentActivity activity, @NonNull PaymentMethod paymentMethod, @NonNull ConfigurationT configuration)
-            throws CheckoutException;
-
-    @NonNull
-    ComponentT get(@NonNull Fragment fragment, @NonNull PaymentMethod paymentMethod, @NonNull ConfigurationT configuration)
-            throws CheckoutException;
+    ComponentT get(
+            @NonNull ViewModelStoreOwner viewModelStoreOwner,
+            @NonNull PaymentMethod paymentMethod,
+            @NonNull ConfigurationT configuration
+    ) throws CheckoutException;
 
     void isAvailable(
             @NonNull Application applicationContext,

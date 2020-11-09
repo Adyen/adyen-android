@@ -14,6 +14,7 @@ import androidx.annotation.NonNull;
 
 import com.adyen.checkout.base.component.Configuration;
 import com.adyen.checkout.base.model.paymentmethods.PaymentMethod;
+import com.adyen.checkout.base.model.paymentmethods.StoredPaymentMethod;
 
 /**
  * A {@link ViewModelProvider.Factory} to create {@link PaymentComponentViewModel}.
@@ -21,16 +22,30 @@ import com.adyen.checkout.base.model.paymentmethods.PaymentMethod;
 public final class PaymentComponentViewModelFactory implements ViewModelProvider.Factory {
 
     private final PaymentMethod mPaymentMethod;
+    private final StoredPaymentMethod mStoredPaymentMethod;
     private final Configuration mConfiguration;
 
     /**
      * Creates a {@code AndroidViewModelFactory}.
      *
-     * @param paymentMethod a {@link PaymentMethod} to pass in {@link PaymentComponentViewModel}
-     * @param configuration a {@link Configuration} to pass in {@link PaymentComponentViewModel}
+     * @param paymentMethod the {@link PaymentMethod} to pass in {@link PaymentComponentViewModel}
+     * @param configuration the {@link Configuration} to pass in {@link PaymentComponentViewModel}
      */
     public PaymentComponentViewModelFactory(@NonNull PaymentMethod paymentMethod, @NonNull Configuration configuration) {
         mPaymentMethod = paymentMethod;
+        mStoredPaymentMethod = null;
+        mConfiguration = configuration;
+    }
+
+    /**
+     * Creates a {@code AndroidViewModelFactory}.
+     *
+     * @param storedPaymentMethod the {@link StoredPaymentMethod} to pass in {@link PaymentComponentViewModel}
+     * @param configuration the {@link Configuration} to pass in {@link PaymentComponentViewModel}
+     */
+    public PaymentComponentViewModelFactory(@NonNull StoredPaymentMethod storedPaymentMethod, @NonNull Configuration configuration) {
+        mPaymentMethod = null;
+        mStoredPaymentMethod = storedPaymentMethod;
         mConfiguration = configuration;
     }
 
@@ -38,7 +53,17 @@ public final class PaymentComponentViewModelFactory implements ViewModelProvider
     @NonNull
     public <T extends ViewModel> T create(@NonNull Class<T> modelClass) {
         try {
-            return modelClass.getConstructor(mPaymentMethod.getClass(), mConfiguration.getClass()).newInstance(mPaymentMethod, mConfiguration);
+            if (mStoredPaymentMethod == null) {
+                return modelClass.getConstructor(
+                        mPaymentMethod.getClass(),
+                        mConfiguration.getClass()
+                ).newInstance(mPaymentMethod, mConfiguration);
+            } else {
+                return modelClass.getConstructor(
+                        mStoredPaymentMethod.getClass(),
+                        mConfiguration.getClass()
+                ).newInstance(mPaymentMethod, mConfiguration);
+            }
         } catch (Exception e) {
             throw new RuntimeException("Failed to create an instance of component: " + modelClass, e);
         }
