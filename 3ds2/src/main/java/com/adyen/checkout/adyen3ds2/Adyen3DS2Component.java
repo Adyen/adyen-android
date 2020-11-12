@@ -169,7 +169,11 @@ public final class Adyen3DS2Component extends BaseActionComponent<Adyen3DS2Confi
 
     @Override
     public void protocolError(@NonNull ProtocolErrorEvent protocolErrorEvent) {
-        Logger.d(TAG, "protocolError");
+        Logger.e(TAG, "protocolError - "
+                + protocolErrorEvent.getErrorMessage().getErrorCode() + " - "
+                + protocolErrorEvent.getErrorMessage().getErrorDescription() + " - "
+                + protocolErrorEvent.getErrorMessage().getErrorDetails()
+        );
         notifyException(new Authentication3DS2Exception("Protocol Error - " + protocolErrorEvent.getErrorMessage()));
         closeTransaction(getApplication());
     }
@@ -197,42 +201,40 @@ public final class Adyen3DS2Component extends BaseActionComponent<Adyen3DS2Confi
                 fingerprintToken.getDirectoryServerPublicKey()).build();
 
 
-        ThreadManager.EXECUTOR.submit(new Runnable() {
-            @Override
-            public void run() {
-                try {
-                    Logger.d(TAG, "initialize 3DS2 SDK");
-                    synchronized (Adyen3DS2Component.this) {
-                        ThreeDS2Service.INSTANCE.initialize(context, configParameters, null, mUiCustomization);
-                    }
-                } catch (final SDKRuntimeException e) {
-                    notifyException(new ComponentException("Failed to initialize 3DS2 SDK", e));
-                    return;
-                } catch (SDKAlreadyInitializedException e) {
-                    // This shouldn't cause any side effect.
-                    Logger.w(TAG, "3DS2 Service already initialized.");
+        ThreadManager.EXECUTOR.submit(() -> {
+            try {
+                Logger.d(TAG, "initialize 3DS2 SDK");
+                synchronized (this) {
+                    ThreeDS2Service.INSTANCE.initialize(context, configParameters, null, mUiCustomization);
                 }
-
-                try {
-                    Logger.d(TAG, "create transaction");
-                    mTransaction = ThreeDS2Service.INSTANCE.createTransaction(null, null);
-                } catch (final SDKNotInitializedException | SDKRuntimeException e) {
-                    notifyException(new ComponentException("Failed to create 3DS2 Transaction", e));
-                    return;
-                }
-
-                final AuthenticationRequestParameters authenticationRequestParameters = mTransaction.getAuthenticationRequestParameters();
-
-                final String encodedFingerprint = createEncodedFingerprint(authenticationRequestParameters);
-
-                ThreadManager.MAIN_HANDLER.post(new Runnable() {
-                        @Override
-                        public void run() {
-                            notifyDetails(createFingerprintDetails(encodedFingerprint));
-                        }
-                    }
-                );
+            } catch (final SDKRuntimeException e) {
+                notifyException(new ComponentException("Failed to initialize 3DS2 SDK", e));
+                return;
+            } catch (SDKAlreadyInitializedException e) {
+                // This shouldn't cause any side effect.
+                Logger.w(TAG, "3DS2 Service already initialized.");
             }
+
+            try {
+                Logger.d(TAG, "create transaction");
+                // TODO: 10/11/2020 Get protocol version from Checkout API instead
+                mTransaction = ThreeDS2Service.INSTANCE.createTransaction(null, getConfiguration().getProtocolVersion());
+            } catch (final SDKNotInitializedException | SDKRuntimeException e) {
+                notifyException(new ComponentException("Failed to create 3DS2 Transaction", e));
+                return;
+            }
+
+            final AuthenticationRequestParameters authenticationRequestParameters = mTransaction.getAuthenticationRequestParameters();
+
+            final String encodedFingerprint = createEncodedFingerprint(authenticationRequestParameters);
+
+            ThreadManager.MAIN_HANDLER.post(new Runnable() {
+                    @Override
+                    public void run() {
+                        notifyDetails(createFingerprintDetails(encodedFingerprint));
+                    }
+                }
+            );
         });
     }
 

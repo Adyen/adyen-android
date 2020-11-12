@@ -46,7 +46,6 @@ dependencies {
     api project(':base-v3')
 
     // Dependencies
-    // TODO update 3DS2 SDK but pass 2.1.0 protocol version in component
     api "com.adyen.threeds:adyen-3ds2:$adyen3ds2_version"
 }
 
