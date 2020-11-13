@@ -54,7 +54,7 @@ public class PaymentMethod extends ModelObject {
                 jsonObject.putOpt(ISSUERS,
                         ModelUtils.serializeOptList(modelObject.getIssuers(), Issuer.SERIALIZER)
                 );
-                jsonObject.putOpt(CONFIGURATION, modelObject.getConfiguration());
+                jsonObject.putOpt(CONFIGURATION, ModelUtils.serializeOpt(modelObject.getConfiguration(), Configuration.SERIALIZER));
             } catch (JSONException e) {
                 throw new ModelSerializationException(PaymentMethod.class, e);
             }
@@ -73,7 +73,8 @@ public class PaymentMethod extends ModelObject {
             paymentMethod.setIssuers(
                     ModelUtils.deserializeOptList(jsonObject.optJSONArray(ISSUERS), Issuer.SERIALIZER)
             );
-            paymentMethod.setConfiguration(jsonObject.optString(CONFIGURATION, null));
+            paymentMethod.setConfiguration(
+                    ModelUtils.deserializeOpt(jsonObject.optJSONObject(CONFIGURATION), Configuration.SERIALIZER));
             return paymentMethod;
         }
     };
@@ -84,7 +85,7 @@ public class PaymentMethod extends ModelObject {
     private String brand;
     private String fundingSource;
     private List<Issuer> issuers;
-    private String configuration;
+    private Configuration configuration;
 
     @Override
     public void writeToParcel(@NonNull Parcel dest, int flags) {
@@ -122,7 +123,7 @@ public class PaymentMethod extends ModelObject {
     }
 
     @Nullable
-    public String getConfiguration() {
+    public Configuration getConfiguration() {
         return configuration;
     }
 
@@ -150,7 +151,7 @@ public class PaymentMethod extends ModelObject {
         this.issuers = issuers;
     }
 
-    public void setConfiguration(@Nullable String configuration) {
+    public void setConfiguration(@Nullable Configuration configuration) {
         this.configuration = configuration;
     }
 }
