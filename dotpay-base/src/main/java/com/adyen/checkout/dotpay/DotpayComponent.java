@@ -11,8 +11,8 @@ package com.adyen.checkout.dotpay;
 import androidx.annotation.NonNull;
 
 import com.adyen.checkout.base.PaymentComponentProvider;
-import com.adyen.checkout.base.component.PaymentComponentProviderImpl;
-import com.adyen.checkout.base.model.paymentmethods.PaymentMethod;
+import com.adyen.checkout.base.component.GenericPaymentComponentProvider;
+import com.adyen.checkout.base.component.PaymentMethodDelegate;
 import com.adyen.checkout.base.model.payments.request.DotpayPaymentMethod;
 import com.adyen.checkout.base.util.PaymentMethodTypes;
 import com.adyen.checkout.issuerlist.IssuerListComponent;
@@ -25,12 +25,12 @@ import com.adyen.checkout.issuerlist.IssuerListOutputData;
 public final class DotpayComponent extends IssuerListComponent<DotpayPaymentMethod> {
 
     public static final PaymentComponentProvider<DotpayComponent, DotpayConfiguration> PROVIDER =
-            new PaymentComponentProviderImpl<>(DotpayComponent.class);
+            new GenericPaymentComponentProvider<>(DotpayComponent.class);
 
     private static final String[] PAYMENT_METHOD_TYPES = {PaymentMethodTypes.DOTPAY};
 
-    public DotpayComponent(@NonNull PaymentMethod paymentMethod, @NonNull DotpayConfiguration configuration) {
-        super(paymentMethod, configuration);
+    public DotpayComponent(@NonNull PaymentMethodDelegate paymentMethodDelegate, @NonNull DotpayConfiguration configuration) {
+        super(paymentMethodDelegate, configuration);
     }
 
     @NonNull

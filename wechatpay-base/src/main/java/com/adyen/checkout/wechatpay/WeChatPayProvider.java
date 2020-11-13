@@ -16,6 +16,7 @@ import androidx.lifecycle.ViewModelStoreOwner;
 
 import com.adyen.checkout.base.ComponentAvailableCallback;
 import com.adyen.checkout.base.PaymentComponentProvider;
+import com.adyen.checkout.base.component.GenericPaymentMethodDelegate;
 import com.adyen.checkout.base.component.lifecycle.PaymentComponentViewModelFactory;
 import com.adyen.checkout.base.model.paymentmethods.PaymentMethod;
 
@@ -28,7 +29,8 @@ public class WeChatPayProvider implements PaymentComponentProvider<WeChatPayComp
             @NonNull ViewModelStoreOwner viewModelStoreOwner,
             @NonNull PaymentMethod paymentMethod,
             @NonNull WeChatPayConfiguration configuration) {
-        final PaymentComponentViewModelFactory factory = new PaymentComponentViewModelFactory(paymentMethod, configuration);
+        final PaymentComponentViewModelFactory factory =
+                new PaymentComponentViewModelFactory(new GenericPaymentMethodDelegate(paymentMethod), configuration);
         return new ViewModelProvider(viewModelStoreOwner, factory).get(WeChatPayComponent.class);
     }
 

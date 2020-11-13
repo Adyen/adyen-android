@@ -8,52 +8,52 @@
 
 package com.adyen.checkout.issuerlist;
 
-import androidx.lifecycle.MutableLiveData;
 import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
+import androidx.lifecycle.MutableLiveData;
 
 import com.adyen.checkout.base.PaymentComponentState;
-import com.adyen.checkout.base.ViewableComponent;
 import com.adyen.checkout.base.component.BasePaymentComponent;
-import com.adyen.checkout.base.model.paymentmethods.InputDetail;
-import com.adyen.checkout.base.model.paymentmethods.Item;
-import com.adyen.checkout.base.model.paymentmethods.PaymentMethod;
+import com.adyen.checkout.base.component.PaymentMethodDelegate;
 import com.adyen.checkout.base.model.payments.request.IssuerListPaymentMethod;
 import com.adyen.checkout.base.model.payments.request.PaymentComponentData;
 
-import java.util.ArrayList;
 import java.util.List;
 
 public abstract class IssuerListComponent<IssuerListPaymentMethodT extends IssuerListPaymentMethod>
-        extends BasePaymentComponent<IssuerListConfiguration, IssuerListInputData, IssuerListOutputData, PaymentComponentState>
-        implements ViewableComponent<IssuerListOutputData, IssuerListConfiguration, PaymentComponentState> {
+        extends BasePaymentComponent<
+        IssuerListConfiguration,
+        IssuerListInputData,
+        IssuerListOutputData,
+        PaymentComponentState<IssuerListPaymentMethodT>
+        > {
 
     private final MutableLiveData<List<IssuerModel>> mIssuersLiveData = new MutableLiveData<>();
 
-    public IssuerListComponent(@NonNull PaymentMethod paymentMethod, @NonNull IssuerListConfiguration configuration) {
-        super(paymentMethod, configuration);
-        initIssuers(paymentMethod.getDetails());
+    public IssuerListComponent(@NonNull PaymentMethodDelegate paymentMethodDelegate, @NonNull IssuerListConfiguration configuration) {
+        super(paymentMethodDelegate, configuration);
+        // TODO: 13/11/2020 Refactor with new API data
+//        initIssuers(paymentMethod.getDetails());
     }
 
     MutableLiveData<List<IssuerModel>> getIssuersLiveData() {
         return mIssuersLiveData;
     }
 
-    private void initIssuers(@Nullable List<InputDetail> details) {
-        if (details != null) {
-            for (InputDetail detail : details) {
-                if (detail.getItems() != null) {
-                    final List<IssuerModel> issuers = new ArrayList<>();
-                    for (Item item : detail.getItems()) {
-
-                        final IssuerModel issuer = new IssuerModel(item);
-                        issuers.add(issuer);
-                    }
-                    mIssuersLiveData.setValue(issuers);
-                }
-            }
-        }
-    }
+//    private void initIssuers(@Nullable List<InputDetail> details) {
+//        if (details != null) {
+//            for (InputDetail detail : details) {
+//                if (detail.getItems() != null) {
+//                    final List<IssuerModel> issuers = new ArrayList<>();
+//                    for (Item item : detail.getItems()) {
+//
+//                        final IssuerModel issuer = new IssuerModel(item);
+//                        issuers.add(issuer);
+//                    }
+//                    mIssuersLiveData.setValue(issuers);
+//                }
+//            }
+//        }
+//    }
 
     @Override
     @NonNull
@@ -69,7 +69,7 @@ public abstract class IssuerListComponent<IssuerListPaymentMethodT extends Issue
 
         final IssuerModel selectedIssuer = getOutputData() != null ? getOutputData().getSelectedIssuer() : null;
 
-        issuerListPaymentMethod.setType(getPaymentMethod().getType());
+        issuerListPaymentMethod.setType(mPaymentMethodDelegate.getPaymentMethodType());
         issuerListPaymentMethod.setIssuer(selectedIssuer != null ? selectedIssuer.getId() : "");
 
         final boolean isValid = getOutputData().isValid();
@@ -82,4 +82,8 @@ public abstract class IssuerListComponent<IssuerListPaymentMethodT extends Issue
 
     @NonNull
     protected abstract IssuerListPaymentMethodT instantiateTypedPaymentMethod();
+
+    protected String getPaymentMethodType() {
+        return mPaymentMethodDelegate.getPaymentMethodType();
+    }
 }

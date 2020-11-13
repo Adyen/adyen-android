@@ -15,12 +15,13 @@ import com.adyen.checkout.base.PaymentComponentState;
 import com.adyen.checkout.base.component.BasePaymentComponent;
 import com.adyen.checkout.base.component.EmptyInputData;
 import com.adyen.checkout.base.component.EmptyOutputData;
-import com.adyen.checkout.base.model.paymentmethods.PaymentMethod;
+import com.adyen.checkout.base.component.PaymentMethodDelegate;
 import com.adyen.checkout.base.model.payments.request.GenericPaymentMethod;
 import com.adyen.checkout.base.model.payments.request.PaymentComponentData;
 import com.adyen.checkout.base.util.PaymentMethodTypes;
 
-public class WeChatPayComponent extends BasePaymentComponent<WeChatPayConfiguration, EmptyInputData, EmptyOutputData, PaymentComponentState> {
+public class WeChatPayComponent
+        extends BasePaymentComponent<WeChatPayConfiguration, EmptyInputData, EmptyOutputData, PaymentComponentState<GenericPaymentMethod>> {
 
     public static final PaymentComponentProvider<WeChatPayComponent, WeChatPayConfiguration> PROVIDER = new WeChatPayProvider();
 
@@ -29,11 +30,11 @@ public class WeChatPayComponent extends BasePaymentComponent<WeChatPayConfigurat
     /**
      * Component should not be instantiated directly. Instead use the PROVIDER object.
      *
-     * @param paymentMethod {@link PaymentMethod}
+     * @param paymentMethodDelegate {@link PaymentMethodDelegate}
      * @param configuration {@link WeChatPayConfiguration}
      */
-    public WeChatPayComponent(@NonNull PaymentMethod paymentMethod, @NonNull WeChatPayConfiguration configuration) {
-        super(paymentMethod, configuration);
+    public WeChatPayComponent(@NonNull PaymentMethodDelegate paymentMethodDelegate, @NonNull WeChatPayConfiguration configuration) {
+        super(paymentMethodDelegate, configuration);
         onInputDataChanged(new EmptyInputData());
     }
 
@@ -45,7 +46,7 @@ public class WeChatPayComponent extends BasePaymentComponent<WeChatPayConfigurat
 
     @NonNull
     @Override
-    protected PaymentComponentState createComponentState() {
+    protected PaymentComponentState<GenericPaymentMethod> createComponentState() {
         final GenericPaymentMethod paymentMethodDetails = new GenericPaymentMethod(PaymentMethodTypes.WECHAT_PAY_SDK);
         final PaymentComponentData<GenericPaymentMethod> componentData = new PaymentComponentData<>();
         componentData.setPaymentMethod(paymentMethodDetails);

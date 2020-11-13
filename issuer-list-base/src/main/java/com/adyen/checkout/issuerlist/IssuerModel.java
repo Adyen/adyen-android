@@ -10,8 +10,6 @@ package com.adyen.checkout.issuerlist;
 
 import androidx.annotation.NonNull;
 
-import com.adyen.checkout.base.model.paymentmethods.Item;
-
 
 public final class IssuerModel {
 
@@ -23,13 +21,13 @@ public final class IssuerModel {
      *
      * @param item The item source for the IssuerModel.
      */
-    public IssuerModel(@NonNull Item item) {
-        if (item.getId() == null || item.getName() == null) {
-            throw new IllegalArgumentException("Item should not have null values.");
-        }
-
-        mId = item.getId();
-        mName = item.getName();
+    public IssuerModel(/*@NonNull Item item*/) {
+//        if (item.getId() == null || item.getName() == null) {
+//            throw new IllegalArgumentException("Item should not have null values.");
+//        }
+//
+        mId = "IssuerId"; // item.getId();
+        mName = "Issuer Name"; // item.getName();
     }
 
     @NonNull

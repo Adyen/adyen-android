@@ -15,8 +15,8 @@ import androidx.annotation.NonNull;
 import com.adyen.checkout.base.PaymentComponentProvider;
 import com.adyen.checkout.base.PaymentComponentState;
 import com.adyen.checkout.base.component.BasePaymentComponent;
-import com.adyen.checkout.base.component.PaymentComponentProviderImpl;
-import com.adyen.checkout.base.model.paymentmethods.PaymentMethod;
+import com.adyen.checkout.base.component.GenericPaymentComponentProvider;
+import com.adyen.checkout.base.component.PaymentMethodDelegate;
 import com.adyen.checkout.base.model.payments.request.Address;
 import com.adyen.checkout.base.model.payments.request.AfterPayPaymentMethod;
 import com.adyen.checkout.base.model.payments.request.PaymentComponentData;
@@ -29,7 +29,12 @@ import com.adyen.checkout.core.log.LogUtil;
 import com.adyen.checkout.core.log.Logger;
 
 @SuppressWarnings("PMD.GodClass")
-public class AfterPayComponent extends BasePaymentComponent<AfterPayConfiguration, AfterPayInputData, AfterPayOutputData, PaymentComponentState> {
+public class AfterPayComponent
+        extends BasePaymentComponent<
+        AfterPayConfiguration,
+        AfterPayInputData,
+        AfterPayOutputData,
+        PaymentComponentState<AfterPayPaymentMethod>> {
     private static final String TAG = LogUtil.getTag();
 
 //    private static final String PERSONAL_DETAILS_KEY = "personalDetails";
@@ -51,7 +56,7 @@ public class AfterPayComponent extends BasePaymentComponent<AfterPayConfiguratio
 //    private static final String STATE_KEY = "stateOrProvince";
 //    private static final String COUNTRY_KEY = "country";
 
-    public static final PaymentComponentProvider<AfterPayComponent, AfterPayConfiguration> PROVIDER = new PaymentComponentProviderImpl<>(
+    public static final PaymentComponentProvider<AfterPayComponent, AfterPayConfiguration> PROVIDER = new GenericPaymentComponentProvider<>(
             AfterPayComponent.class);
 
     private static final String[] PAYMENT_METHOD_TYPES = {PaymentMethodTypes.AFTER_PAY};
@@ -64,11 +69,11 @@ public class AfterPayComponent extends BasePaymentComponent<AfterPayConfiguratio
     /**
      * Constructs a {@link AfterPayComponent} object.
      *
-     * @param paymentMethod {@link PaymentMethod} represents card payment method.
+     * @param paymentMethodDelegate {@link PaymentMethodDelegate} represents payment method.
      * @param configuration {@link AfterPayConfiguration}.
      */
-    public AfterPayComponent(@NonNull PaymentMethod paymentMethod, @NonNull AfterPayConfiguration configuration) {
-        super(paymentMethod, configuration);
+    public AfterPayComponent(@NonNull PaymentMethodDelegate paymentMethodDelegate, @NonNull AfterPayConfiguration configuration) {
+        super(paymentMethodDelegate, configuration);
 
 //        if (paymentMethod.getDetails() != null) {
 //            for (InputDetail eachDetail : paymentMethod.getDetails()) {

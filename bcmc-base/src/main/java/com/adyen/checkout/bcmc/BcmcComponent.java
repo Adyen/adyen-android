@@ -14,7 +14,7 @@ import androidx.annotation.Nullable;
 import com.adyen.checkout.base.PaymentComponentProvider;
 import com.adyen.checkout.base.PaymentComponentState;
 import com.adyen.checkout.base.component.BasePaymentComponent;
-import com.adyen.checkout.base.model.paymentmethods.PaymentMethod;
+import com.adyen.checkout.base.component.PaymentMethodDelegate;
 import com.adyen.checkout.base.model.payments.request.CardPaymentMethod;
 import com.adyen.checkout.base.model.payments.request.PaymentComponentData;
 import com.adyen.checkout.base.util.PaymentMethodTypes;
@@ -29,7 +29,8 @@ import com.adyen.checkout.cse.EncryptedCard;
 import com.adyen.checkout.cse.EncryptionException;
 import com.adyen.checkout.cse.Encryptor;
 
-public final class BcmcComponent extends BasePaymentComponent<BcmcConfiguration, BcmcInputData, BcmcOutputData, PaymentComponentState> {
+public final class BcmcComponent
+        extends BasePaymentComponent<BcmcConfiguration, BcmcInputData, BcmcOutputData, PaymentComponentState<CardPaymentMethod>> {
     private static final String TAG = LogUtil.getTag();
 
     private static final String[] PAYMENT_METHOD_TYPES = {PaymentMethodTypes.BCMC};
@@ -40,11 +41,11 @@ public final class BcmcComponent extends BasePaymentComponent<BcmcConfiguration,
     /**
      * Constructs a {@link BcmcComponent} object.
      *
-     * @param paymentMethod {@link PaymentMethod} represents card payment method.
+     * @param paymentMethodDelegate {@link PaymentMethodDelegate} represents payment method.
      * @param configuration {@link BcmcConfiguration}.
      */
-    public BcmcComponent(@NonNull PaymentMethod paymentMethod, @NonNull BcmcConfiguration configuration) {
-        super(paymentMethod, configuration);
+    public BcmcComponent(@NonNull PaymentMethodDelegate paymentMethodDelegate, @NonNull BcmcConfiguration configuration) {
+        super(paymentMethodDelegate, configuration);
     }
 
     @NonNull

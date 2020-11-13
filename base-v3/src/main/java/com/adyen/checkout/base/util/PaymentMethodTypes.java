@@ -20,6 +20,9 @@ import java.util.List;
 @SuppressWarnings("SpellCheckingInspection")
 public final class PaymentMethodTypes {
 
+    // Placeholder value if the type is not found.
+    public static final String UNKNOWN = "unknown";
+
     // Type of the payment method as received by the paymentMethods/ API
     public static final String IDEAL = "ideal";
     public static final String MOLPAY_MALAYSIA = "molpay_ebanking_fpx_MY";

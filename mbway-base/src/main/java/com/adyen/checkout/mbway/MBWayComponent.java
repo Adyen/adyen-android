@@ -13,7 +13,8 @@ import androidx.annotation.NonNull;
 import com.adyen.checkout.base.PaymentComponentProvider;
 import com.adyen.checkout.base.PaymentComponentState;
 import com.adyen.checkout.base.component.BasePaymentComponent;
-import com.adyen.checkout.base.component.PaymentComponentProviderImpl;
+import com.adyen.checkout.base.component.GenericPaymentComponentProvider;
+import com.adyen.checkout.base.component.PaymentMethodDelegate;
 import com.adyen.checkout.base.model.paymentmethods.PaymentMethod;
 import com.adyen.checkout.base.model.payments.request.MBWayPaymentMethod;
 import com.adyen.checkout.base.model.payments.request.PaymentComponentData;
@@ -22,11 +23,12 @@ import com.adyen.checkout.core.log.LogUtil;
 import com.adyen.checkout.core.log.Logger;
 
 @SuppressWarnings("AbbreviationAsWordInName")
-public class MBWayComponent extends BasePaymentComponent<MBWayConfiguration, MBWayInputData, MBWayOutputData, PaymentComponentState> {
+public class MBWayComponent
+        extends BasePaymentComponent<MBWayConfiguration, MBWayInputData, MBWayOutputData, PaymentComponentState<MBWayPaymentMethod>> {
     private static final String TAG = LogUtil.getTag();
 
     public static final PaymentComponentProvider<MBWayComponent, MBWayConfiguration> PROVIDER =
-            new PaymentComponentProviderImpl<>(MBWayComponent.class);
+            new GenericPaymentComponentProvider<>(MBWayComponent.class);
 
     private static final String[] PAYMENT_METHOD_TYPES = {PaymentMethodTypes.MB_WAY};
 
@@ -36,8 +38,8 @@ public class MBWayComponent extends BasePaymentComponent<MBWayConfiguration, MBW
      * @param paymentMethod {@link PaymentMethod}
      * @param configuration {@link MBWayConfiguration}
      */
-    public MBWayComponent(@NonNull PaymentMethod paymentMethod, @NonNull MBWayConfiguration configuration) {
-        super(paymentMethod, configuration);
+    public MBWayComponent(@NonNull PaymentMethodDelegate paymentMethodDelegate, @NonNull MBWayConfiguration configuration) {
+        super(paymentMethodDelegate, configuration);
     }
 
     @NonNull

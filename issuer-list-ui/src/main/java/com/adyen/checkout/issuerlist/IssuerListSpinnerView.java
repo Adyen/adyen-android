@@ -35,7 +35,7 @@ public abstract class IssuerListSpinnerView<
         IssuerListPaymentMethodT extends IssuerListPaymentMethod,
         IssuerListComponentT extends IssuerListComponent<IssuerListPaymentMethodT>
         >
-        extends AdyenLinearLayout<IssuerListOutputData, IssuerListConfiguration, PaymentComponentState, IssuerListComponentT>
+        extends AdyenLinearLayout<IssuerListOutputData, IssuerListConfiguration, PaymentComponentState<IssuerListPaymentMethodT>, IssuerListComponentT>
         implements AdapterView.OnItemSelectedListener {
     private static final String TAG = LogUtil.getTag();
 
@@ -76,9 +76,9 @@ public abstract class IssuerListSpinnerView<
     @Override
     public void onComponentAttached() {
         mIssuersAdapter = new IssuerListSpinnerAdapter(getContext(),
-                Collections.<IssuerModel>emptyList(),
+                Collections.emptyList(),
                 ImageLoader.getInstance(getContext(), getComponent().getConfiguration().getEnvironment()),
-                getComponent().getPaymentMethod().getType(),
+                getComponent().getPaymentMethodType(),
                 hideIssuersLogo());
     }
 
@@ -126,21 +126,7 @@ public abstract class IssuerListSpinnerView<
     }
 
     private Observer<List<IssuerModel>> createIssuersObserver() {
-        return new Observer<List<IssuerModel>>() {
-            @Override
-            public void onChanged(@NonNull List<IssuerModel> issuerList) {
-                onIssuersChanged(issuerList);
-            }
-        };
+        return this::onIssuersChanged;
     }
 
-    @NonNull
-    protected Observer<IssuerListOutputData> createOutputDataObserver() {
-        return new Observer<IssuerListOutputData>() {
-            @Override
-            public void onChanged(@Nullable IssuerListOutputData idealOutputData) {
-                // Component does not change selected IssuerModel, add validation UI here if that's needed
-            }
-        };
-    }
 }
