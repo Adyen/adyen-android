@@ -12,7 +12,7 @@ import androidx.annotation.NonNull;
 
 import com.adyen.checkout.base.PaymentComponentProvider;
 import com.adyen.checkout.base.component.GenericPaymentComponentProvider;
-import com.adyen.checkout.base.component.PaymentMethodDelegate;
+import com.adyen.checkout.base.component.GenericPaymentMethodDelegate;
 import com.adyen.checkout.base.model.payments.request.OpenBankingPaymentMethod;
 import com.adyen.checkout.base.util.PaymentMethodTypes;
 import com.adyen.checkout.issuerlist.IssuerListComponent;
@@ -29,7 +29,7 @@ public final class OpenBankingComponent extends IssuerListComponent<OpenBankingP
 
     private static final String[] PAYMENT_METHOD_TYPES = {PaymentMethodTypes.OPEN_BANKING};
 
-    public OpenBankingComponent(@NonNull PaymentMethodDelegate paymentMethodDelegate, @NonNull OpenBankingConfiguration configuration) {
+    public OpenBankingComponent(@NonNull GenericPaymentMethodDelegate paymentMethodDelegate, @NonNull OpenBankingConfiguration configuration) {
         super(paymentMethodDelegate, configuration);
     }
 

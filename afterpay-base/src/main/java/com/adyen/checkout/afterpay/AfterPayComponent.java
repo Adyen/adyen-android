@@ -16,6 +16,7 @@ import com.adyen.checkout.base.PaymentComponentProvider;
 import com.adyen.checkout.base.PaymentComponentState;
 import com.adyen.checkout.base.component.BasePaymentComponent;
 import com.adyen.checkout.base.component.GenericPaymentComponentProvider;
+import com.adyen.checkout.base.component.GenericPaymentMethodDelegate;
 import com.adyen.checkout.base.component.PaymentMethodDelegate;
 import com.adyen.checkout.base.model.payments.request.Address;
 import com.adyen.checkout.base.model.payments.request.AfterPayPaymentMethod;
@@ -72,7 +73,7 @@ public class AfterPayComponent
      * @param paymentMethodDelegate {@link PaymentMethodDelegate} represents payment method.
      * @param configuration {@link AfterPayConfiguration}.
      */
-    public AfterPayComponent(@NonNull PaymentMethodDelegate paymentMethodDelegate, @NonNull AfterPayConfiguration configuration) {
+    public AfterPayComponent(@NonNull GenericPaymentMethodDelegate paymentMethodDelegate, @NonNull AfterPayConfiguration configuration) {
         super(paymentMethodDelegate, configuration);
 
 //        if (paymentMethod.getDetails() != null) {

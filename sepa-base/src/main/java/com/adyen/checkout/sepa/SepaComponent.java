@@ -14,7 +14,7 @@ import com.adyen.checkout.base.PaymentComponentProvider;
 import com.adyen.checkout.base.PaymentComponentState;
 import com.adyen.checkout.base.component.BasePaymentComponent;
 import com.adyen.checkout.base.component.GenericPaymentComponentProvider;
-import com.adyen.checkout.base.component.PaymentMethodDelegate;
+import com.adyen.checkout.base.component.GenericPaymentMethodDelegate;
 import com.adyen.checkout.base.model.payments.request.PaymentComponentData;
 import com.adyen.checkout.base.model.payments.request.SepaPaymentMethod;
 import com.adyen.checkout.base.util.PaymentMethodTypes;
@@ -29,7 +29,7 @@ public class SepaComponent extends BasePaymentComponent<SepaConfiguration, SepaI
 
     private static final String[] PAYMENT_METHOD_TYPES = {PaymentMethodTypes.SEPA};
 
-    public SepaComponent(@NonNull PaymentMethodDelegate paymentMethodDelegate, @NonNull SepaConfiguration configuration) {
+    public SepaComponent(@NonNull GenericPaymentMethodDelegate paymentMethodDelegate, @NonNull SepaConfiguration configuration) {
         super(paymentMethodDelegate, configuration);
     }
 

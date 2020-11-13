@@ -14,7 +14,7 @@ import com.adyen.checkout.base.PaymentComponentProvider;
 import com.adyen.checkout.base.PaymentComponentState;
 import com.adyen.checkout.base.component.BasePaymentComponent;
 import com.adyen.checkout.base.component.GenericPaymentComponentProvider;
-import com.adyen.checkout.base.component.PaymentMethodDelegate;
+import com.adyen.checkout.base.component.GenericPaymentMethodDelegate;
 import com.adyen.checkout.base.model.paymentmethods.PaymentMethod;
 import com.adyen.checkout.base.model.payments.request.MBWayPaymentMethod;
 import com.adyen.checkout.base.model.payments.request.PaymentComponentData;
@@ -38,7 +38,7 @@ public class MBWayComponent
      * @param paymentMethod {@link PaymentMethod}
      * @param configuration {@link MBWayConfiguration}
      */
-    public MBWayComponent(@NonNull PaymentMethodDelegate paymentMethodDelegate, @NonNull MBWayConfiguration configuration) {
+    public MBWayComponent(@NonNull GenericPaymentMethodDelegate paymentMethodDelegate, @NonNull MBWayConfiguration configuration) {
         super(paymentMethodDelegate, configuration);
     }
 

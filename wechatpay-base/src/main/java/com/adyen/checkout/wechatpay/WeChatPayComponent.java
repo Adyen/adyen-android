@@ -15,6 +15,7 @@ import com.adyen.checkout.base.PaymentComponentState;
 import com.adyen.checkout.base.component.BasePaymentComponent;
 import com.adyen.checkout.base.component.EmptyInputData;
 import com.adyen.checkout.base.component.EmptyOutputData;
+import com.adyen.checkout.base.component.GenericPaymentMethodDelegate;
 import com.adyen.checkout.base.component.PaymentMethodDelegate;
 import com.adyen.checkout.base.model.payments.request.GenericPaymentMethod;
 import com.adyen.checkout.base.model.payments.request.PaymentComponentData;
@@ -33,7 +34,7 @@ public class WeChatPayComponent
      * @param paymentMethodDelegate {@link PaymentMethodDelegate}
      * @param configuration {@link WeChatPayConfiguration}
      */
-    public WeChatPayComponent(@NonNull PaymentMethodDelegate paymentMethodDelegate, @NonNull WeChatPayConfiguration configuration) {
+    public WeChatPayComponent(@NonNull GenericPaymentMethodDelegate paymentMethodDelegate, @NonNull WeChatPayConfiguration configuration) {
         super(paymentMethodDelegate, configuration);
         onInputDataChanged(new EmptyInputData());
     }

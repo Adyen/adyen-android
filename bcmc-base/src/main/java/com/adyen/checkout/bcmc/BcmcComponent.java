@@ -14,6 +14,7 @@ import androidx.annotation.Nullable;
 import com.adyen.checkout.base.PaymentComponentProvider;
 import com.adyen.checkout.base.PaymentComponentState;
 import com.adyen.checkout.base.component.BasePaymentComponent;
+import com.adyen.checkout.base.component.GenericPaymentMethodDelegate;
 import com.adyen.checkout.base.component.PaymentMethodDelegate;
 import com.adyen.checkout.base.model.payments.request.CardPaymentMethod;
 import com.adyen.checkout.base.model.payments.request.PaymentComponentData;
@@ -44,7 +45,7 @@ public final class BcmcComponent
      * @param paymentMethodDelegate {@link PaymentMethodDelegate} represents payment method.
      * @param configuration {@link BcmcConfiguration}.
      */
-    public BcmcComponent(@NonNull PaymentMethodDelegate paymentMethodDelegate, @NonNull BcmcConfiguration configuration) {
+    public BcmcComponent(@NonNull GenericPaymentMethodDelegate paymentMethodDelegate, @NonNull BcmcConfiguration configuration) {
         super(paymentMethodDelegate, configuration);
     }
 

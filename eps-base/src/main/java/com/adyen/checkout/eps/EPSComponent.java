@@ -12,7 +12,7 @@ import androidx.annotation.NonNull;
 
 import com.adyen.checkout.base.PaymentComponentProvider;
 import com.adyen.checkout.base.component.GenericPaymentComponentProvider;
-import com.adyen.checkout.base.component.PaymentMethodDelegate;
+import com.adyen.checkout.base.component.GenericPaymentMethodDelegate;
 import com.adyen.checkout.base.model.payments.request.EPSPaymentMethod;
 import com.adyen.checkout.base.util.PaymentMethodTypes;
 import com.adyen.checkout.issuerlist.IssuerListComponent;
@@ -30,7 +30,7 @@ public final class EPSComponent extends IssuerListComponent<EPSPaymentMethod> {
 
     private static final String[] PAYMENT_METHOD_TYPES = {PaymentMethodTypes.EPS};
 
-    public EPSComponent(@NonNull PaymentMethodDelegate paymentMethodDelegate, @NonNull EPSConfiguration configuration) {
+    public EPSComponent(@NonNull GenericPaymentMethodDelegate paymentMethodDelegate, @NonNull EPSConfiguration configuration) {
         super(paymentMethodDelegate, configuration);
     }
 
