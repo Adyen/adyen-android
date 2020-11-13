@@ -9,18 +9,17 @@
 package com.adyen.checkout.dropin.ui.paymentmethods
 
 import android.content.Context
-import androidx.recyclerview.widget.RecyclerView
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Button
 import android.widget.ImageView
 import android.widget.TextView
+import androidx.recyclerview.widget.RecyclerView
 import com.adyen.checkout.base.api.ImageLoader
 import com.adyen.checkout.base.model.paymentmethods.PaymentMethod
 import com.adyen.checkout.base.model.paymentmethods.StoredPaymentMethod
 import com.adyen.checkout.base.util.DateUtils
-import com.adyen.checkout.base.util.PaymentMethodTypes
 import com.adyen.checkout.core.log.LogUtil
 import com.adyen.checkout.dropin.R
 
@@ -88,12 +87,13 @@ class PaymentMethodAdapter(
                     holder.detail.visibility = View.GONE
                 }
 
-                var txVariant = when (paymentMethod.type) {
-                    PaymentMethodTypes.SCHEME -> if (paymentMethod is StoredPaymentMethod) paymentMethod.brand else CARD_LOGO_TYPE
-                    else -> paymentMethod.type!!
-                }
+                // TODO: 13/11/2020 refactor to add back stored
+//                var txVariant = when (paymentMethod.type) {
+//                    PaymentMethodTypes.SCHEME -> if (paymentMethod is StoredPaymentMethod) paymentMethod.brand else CARD_LOGO_TYPE
+//                    else -> paymentMethod.type!!
+//                }
 
-                imageLoader.load(txVariant, holder.logo)
+                imageLoader.load(paymentMethod.type!!, holder.logo)
 
                 holder.itemView.setOnClickListener {
                     onItemClick(getPaymentMethod(position))

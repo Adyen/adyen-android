@@ -15,7 +15,6 @@ import com.adyen.checkout.base.ComponentAvailableCallback
 import com.adyen.checkout.base.component.Configuration
 import com.adyen.checkout.base.model.PaymentMethodsApiResponse
 import com.adyen.checkout.base.model.paymentmethods.PaymentMethod
-import com.adyen.checkout.base.model.paymentmethods.StoredPaymentMethod
 import com.adyen.checkout.base.util.PaymentMethodTypes
 import com.adyen.checkout.core.log.LogUtil
 import com.adyen.checkout.core.log.Logger
@@ -36,7 +35,8 @@ class DropInViewModel(application: Application) : AndroidViewModel(application),
             if (value != paymentMethodsApiResponse) {
                 field = value
                 if (value.paymentMethods != null) {
-                    onPaymentMethodsResponseChanged(value.paymentMethods.orEmpty() + value.storedPaymentMethods.orEmpty())
+                    // TODO: 13/11/2020 refactor to add stored again
+                    onPaymentMethodsResponseChanged(value.paymentMethods.orEmpty() /*+ value.storedPaymentMethods.orEmpty()*/)
                 }
             }
         }
@@ -66,7 +66,7 @@ class DropInViewModel(application: Application) : AndroidViewModel(application),
             } else if (PaymentMethodTypes.SUPPORTED_PAYMENT_METHODS.contains(type)) {
                 checkComponentAvailability(getApplication(), paymentMethod, dropInConfiguration, this)
             } else {
-                if (!PaymentMethodTypes.UNSUPPORTED_PAYMENT_METHODS.contains(type) && !isRedirect(paymentMethod)) {
+                if (!PaymentMethodTypes.UNSUPPORTED_PAYMENT_METHODS.contains(type)) {
                     Logger.d(TAG, "No details required - $type")
                     addPaymentMethod(paymentMethod)
                 } else {
@@ -76,28 +76,18 @@ class DropInViewModel(application: Application) : AndroidViewModel(application),
         }
     }
 
-    private fun isRedirect(paymentMethod: PaymentMethod): Boolean {
-        // If details is empty or all optional, we can call payments directly and assume it's a redirect.
-        paymentMethod.details?.let {
-            for (inputDetail in it) {
-                if (!inputDetail.isOptional) {
-                    return true
-                }
-            }
-        }
-        return false
-    }
-
     private fun addPaymentMethod(paymentMethod: PaymentMethod) {
-        if (paymentMethod is StoredPaymentMethod) {
-            if (paymentMethod.isEcommerce) {
-                paymentMethodsModel.storedPaymentMethods.add(paymentMethod)
-            } else {
-                Logger.d(TAG, "Stored method ${paymentMethod.type} is not Ecommerce")
-            }
-        } else {
-            paymentMethodsModel.paymentMethods.add(paymentMethod)
-        }
+        // TODO: 13/11/2020 Refactor to add stored again
+//        if (paymentMethod is StoredPaymentMethod) {
+//            if (paymentMethod.isEcommerce) {
+//                paymentMethodsModel.storedPaymentMethods.add(paymentMethod)
+//            } else {
+//                Logger.d(TAG, "Stored method ${paymentMethod.type} is not Ecommerce")
+//            }
+//        } else {
+//            paymentMethodsModel.paymentMethods.add(paymentMethod)
+//        }
+        paymentMethodsModel.paymentMethods.add(paymentMethod)
         paymentMethodsModelLiveData.value = paymentMethodsModel
     }
 }
