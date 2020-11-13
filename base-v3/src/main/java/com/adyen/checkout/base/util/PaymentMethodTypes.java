@@ -98,7 +98,8 @@ public final class PaymentMethodTypes {
         supportedPaymentMethods.add(MOLPAY_THAILAND);
         supportedPaymentMethods.add(MOLPAY_VIETNAM);
         supportedPaymentMethods.add(OPEN_BANKING);
-        supportedPaymentMethods.add(SEPA);
+        // Sepa is not supported until we fix the Component
+//        supportedPaymentMethods.add(SEPA);
         supportedPaymentMethods.add(SCHEME);
         supportedPaymentMethods.add(WECHAT_PAY_SDK);
 
@@ -107,6 +108,10 @@ public final class PaymentMethodTypes {
         final ArrayList<String> unsupportedPaymentMethods = new ArrayList<>();
 
         // Populate unsupported list
+
+        // Sepa is not supported until we fix the Component
+        unsupportedPaymentMethods.add(SEPA);
+
         unsupportedPaymentMethods.add(BCMC_QR);
         unsupportedPaymentMethods.add(WECHAT_PAY_MINI_PROGRAM);
         unsupportedPaymentMethods.add(WECHAT_PAY_QR);
