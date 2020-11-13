@@ -59,12 +59,6 @@ public final class BcmcComponent extends BasePaymentComponent<BcmcConfiguration,
 
     @NonNull
     @Override
-    public String getPaymentMethodType() {
-        return PaymentMethodTypes.BCMC;
-    }
-
-    @NonNull
-    @Override
     public String[] getSupportedPaymentMethodTypes() {
         return PAYMENT_METHOD_TYPES;
     }

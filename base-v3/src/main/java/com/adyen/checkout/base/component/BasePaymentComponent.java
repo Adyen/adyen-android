@@ -25,6 +25,7 @@ import com.adyen.checkout.base.analytics.AnalyticEvent;
 import com.adyen.checkout.base.analytics.AnalyticsDispatcher;
 import com.adyen.checkout.base.component.lifecycle.PaymentComponentViewModel;
 import com.adyen.checkout.base.model.paymentmethods.PaymentMethod;
+import com.adyen.checkout.base.model.payments.request.PaymentMethodDetails;
 import com.adyen.checkout.core.api.ThreadManager;
 import com.adyen.checkout.core.code.Lint;
 import com.adyen.checkout.core.exception.CheckoutException;
@@ -35,7 +36,7 @@ public abstract class BasePaymentComponent<
             ConfigurationT extends Configuration,
             InputDataT extends InputData,
             OutputDataT extends OutputData,
-            ComponentStateT extends PaymentComponentState>
+            ComponentStateT extends PaymentComponentState<? extends PaymentMethodDetails>>
         extends PaymentComponentViewModel<ConfigurationT, ComponentStateT>
         implements ViewableComponent<OutputDataT, ConfigurationT, ComponentStateT> {
 
@@ -65,18 +66,6 @@ public abstract class BasePaymentComponent<
         assertSupported(paymentMethod);
     }
 
-    @SuppressWarnings("MissingDeprecated")
-    @Deprecated
-    @NonNull
-    @Override
-    public String getPaymentMethodType() {
-        if (getSupportedPaymentMethodTypes().length > 0) {
-            return getSupportedPaymentMethodTypes()[0];
-        } else {
-            throw new CheckoutException("Component supported types is empty");
-        }
-    }
-
     @Override
     public void observe(@NonNull LifecycleOwner lifecycleOwner, @NonNull Observer<ComponentStateT> observer) {
         mPaymentComponentStateLiveData.observe(lifecycleOwner, observer);
@@ -89,7 +78,7 @@ public abstract class BasePaymentComponent<
 
     @Override
     @Nullable
-    public PaymentComponentState getState() {
+    public PaymentComponentState<? extends PaymentMethodDetails> getState() {
         return mPaymentComponentStateLiveData.getValue();
     }
 

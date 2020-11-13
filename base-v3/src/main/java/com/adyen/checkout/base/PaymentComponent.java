@@ -21,18 +21,9 @@ import com.adyen.checkout.base.model.payments.request.PaymentMethodDetails;
  * <p/>
  * Should be used attached to a corresponding ComponentView to get data from.
  */
-public interface PaymentComponent<ComponentStateT extends PaymentComponentState, ConfigurationT extends Configuration>
+public interface PaymentComponent<ComponentStateT extends PaymentComponentState<? extends PaymentMethodDetails>,
+        ConfigurationT extends Configuration>
         extends Component<ComponentStateT, ConfigurationT> {
-
-    /**
-     * @deprecated Use {@link #getSupportedPaymentMethodTypes()} instead with a list of the supported payment method types.
-     *             This method will only return the first value of the list.
-     *
-     * @return The first value of "type" of payment method supported by this Component.
-     */
-    @Deprecated
-    @NonNull
-    String getPaymentMethodType();
 
     /**
      * @return An array of the supported {@link com.adyen.checkout.base.util.PaymentMethodTypes}
@@ -44,5 +35,5 @@ public interface PaymentComponent<ComponentStateT extends PaymentComponentState,
      * @return The last {@link PaymentComponentState} of this Component.
      */
     @Nullable
-    PaymentComponentState getState();
+    PaymentComponentState<? extends PaymentMethodDetails> getState();
 }
