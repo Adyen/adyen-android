@@ -33,6 +33,7 @@ public final class PaymentComponentViewModelFactory implements ViewModelProvider
      * @param paymentMethodDelegate the {@link PaymentMethod} to pass in {@link PaymentComponentViewModel}
      * @param configuration the {@link Configuration} to pass in {@link PaymentComponentViewModel}
      */
+    @SuppressWarnings("LambdaLast")
     public PaymentComponentViewModelFactory(@NonNull PaymentMethodDelegate paymentMethodDelegate, @NonNull Configuration configuration) {
         mPaymentMethodDelegate = paymentMethodDelegate;
         mStoredPaymentMethodDelegate = null;

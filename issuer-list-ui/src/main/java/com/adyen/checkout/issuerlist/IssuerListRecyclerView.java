@@ -31,9 +31,14 @@ import com.adyen.checkout.issuerlist.ui.R;
 import java.util.Collections;
 import java.util.List;
 
-public abstract class IssuerListRecyclerView
-        <IssuerListPaymentMethodT extends IssuerListPaymentMethod, IssuerListComponentT extends IssuerListComponent<IssuerListPaymentMethodT>>
-        extends AdyenLinearLayout<IssuerListOutputData, IssuerListConfiguration, PaymentComponentState<IssuerListPaymentMethodT>, IssuerListComponentT>
+public abstract class IssuerListRecyclerView<
+        IssuerListPaymentMethodT extends IssuerListPaymentMethod,
+        IssuerListComponentT extends IssuerListComponent<IssuerListPaymentMethodT>>
+        extends AdyenLinearLayout<
+            IssuerListOutputData,
+            IssuerListConfiguration,
+            PaymentComponentState<IssuerListPaymentMethodT>,
+            IssuerListComponentT>
         implements Observer<List<IssuerModel>>, ClickableListRecyclerAdapter.OnItemCLickedListener {
     private static final String TAG = LogUtil.getTag();
 

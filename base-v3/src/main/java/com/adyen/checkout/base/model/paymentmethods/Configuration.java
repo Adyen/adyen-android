@@ -20,6 +20,7 @@ import com.adyen.checkout.core.model.ModelObject;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+@SuppressWarnings({"MemberName", "PMD.DataClass"})
 class Configuration extends ModelObject {
 
     @NonNull
@@ -64,15 +65,15 @@ class Configuration extends ModelObject {
         }
     };
 
-    @Override
-    public void writeToParcel(@NonNull Parcel dest, int flags) {
-        JsonUtils.writeToParcel(dest, SERIALIZER.serialize(this));
-    }
-
     private String merchantId;
     private String gatewayMerchantId;
     private String intent;
     private String koreanAuthenticationRequired;
+
+    @Override
+    public void writeToParcel(@NonNull Parcel dest, int flags) {
+        JsonUtils.writeToParcel(dest, SERIALIZER.serialize(this));
+    }
 
     @Nullable
     public String getMerchantId() {

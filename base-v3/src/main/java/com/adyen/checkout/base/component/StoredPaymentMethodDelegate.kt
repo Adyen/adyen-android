@@ -8,5 +8,4 @@
 
 package com.adyen.checkout.base.component
 
-interface StoredPaymentMethodDelegate : PaymentMethodDelegate {
-}
+interface StoredPaymentMethodDelegate : PaymentMethodDelegate

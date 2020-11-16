@@ -12,7 +12,7 @@ import com.adyen.checkout.base.component.PaymentMethodDelegate
 import com.adyen.checkout.base.model.paymentmethods.PaymentMethod
 import com.adyen.checkout.base.util.PaymentMethodTypes
 
-class CardDelegate(private val paymentMethod: PaymentMethod): PaymentMethodDelegate {
+class CardDelegate(private val paymentMethod: PaymentMethod) : PaymentMethodDelegate {
     override fun getPaymentMethodType(): String {
         return paymentMethod.type ?: PaymentMethodTypes.UNKNOWN
     }

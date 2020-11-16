@@ -18,16 +18,15 @@ public final class IssuerModel {
 
     /**
      * Creates an IssuerModel object based on the parsed Item from the Payment Details.
-     *
-     * @param item The item source for the IssuerModel.
      */
     public IssuerModel(/*@NonNull Item item*/) {
-//        if (item.getId() == null || item.getName() == null) {
-//            throw new IllegalArgumentException("Item should not have null values.");
-//        }
-//
-        mId = "IssuerId"; // item.getId();
-        mName = "Issuer Name"; // item.getName();
+        //    if (item.getId() == null || item.getName() == null) {
+        //        throw new IllegalArgumentException("Item should not have null values.");
+        //    }
+        // item.getId();
+        mId = "IssuerId";
+        // item.getName();
+        mName = "Issuer Name";
     }
 
     @NonNull

@@ -38,24 +38,24 @@ public class AfterPayComponent
         PaymentComponentState<AfterPayPaymentMethod>> {
     private static final String TAG = LogUtil.getTag();
 
-//    private static final String PERSONAL_DETAILS_KEY = "personalDetails";
-//    private static final String BILLING_ADDRESS_KEY = "billingAddress";
-//    private static final String DELIVERY_ADDRESS_KEY = "deliveryAddress";
-//    private static final String SEPARATE_DELIVERY_ADDRESS_KEY = "separateDeliveryAddress";
-//
-//    private static final String FIRST_NAME_KEY = "firstName";
-//    private static final String LAST_NAME_KEY = "lastName";
-//    private static final String GENDER_KEY = "gender";
-//    private static final String DATE_OF_BIRTH = "dateOfBirth";
-//    private static final String SHOPPER_EMAIL_KEY = "shopperEmail";
-//    private static final String TELEPHONE_NUMBER_KEY = "telephoneNumber";
-//
-//    private static final String STREET_KEY = "street";
-//    private static final String HOUSE_NUMBER_KEY = "houseNumberOrName";
-//    private static final String CITY_KEY = "city";
-//    private static final String POSTAL_CODE_KEY = "postalCode";
-//    private static final String STATE_KEY = "stateOrProvince";
-//    private static final String COUNTRY_KEY = "country";
+    //    private static final String PERSONAL_DETAILS_KEY = "personalDetails";
+    //    private static final String BILLING_ADDRESS_KEY = "billingAddress";
+    //    private static final String DELIVERY_ADDRESS_KEY = "deliveryAddress";
+    //    private static final String SEPARATE_DELIVERY_ADDRESS_KEY = "separateDeliveryAddress";
+    //
+    //    private static final String FIRST_NAME_KEY = "firstName";
+    //    private static final String LAST_NAME_KEY = "lastName";
+    //    private static final String GENDER_KEY = "gender";
+    //    private static final String DATE_OF_BIRTH = "dateOfBirth";
+    //    private static final String SHOPPER_EMAIL_KEY = "shopperEmail";
+    //    private static final String TELEPHONE_NUMBER_KEY = "telephoneNumber";
+    //
+    //    private static final String STREET_KEY = "street";
+    //    private static final String HOUSE_NUMBER_KEY = "houseNumberOrName";
+    //    private static final String CITY_KEY = "city";
+    //    private static final String POSTAL_CODE_KEY = "postalCode";
+    //    private static final String STATE_KEY = "stateOrProvince";
+    //    private static final String COUNTRY_KEY = "country";
 
     public static final PaymentComponentProvider<AfterPayComponent, AfterPayConfiguration> PROVIDER = new GenericPaymentComponentProvider<>(
             AfterPayComponent.class);
@@ -76,21 +76,21 @@ public class AfterPayComponent
     public AfterPayComponent(@NonNull GenericPaymentMethodDelegate paymentMethodDelegate, @NonNull AfterPayConfiguration configuration) {
         super(paymentMethodDelegate, configuration);
 
-//        if (paymentMethod.getDetails() != null) {
-//            for (InputDetail eachDetail : paymentMethod.getDetails()) {
-//                final String key = eachDetail.getKey();
-//                final String value = eachDetail.getValue();
-//                List<InputDetail> inputDetails = eachDetail.getDetails();
-//
-//                if (inputDetails == null) {
-//                    inputDetails = Collections.emptyList();
-//                }
-//
-//                if (key != null) {
-//                    handleInputDetails(key, value, inputDetails);
-//                }
-//            }
-//        }
+        //    if (paymentMethod.getDetails() != null) {
+        //        for (InputDetail eachDetail : paymentMethod.getDetails()) {
+        //            final String key = eachDetail.getKey();
+        //            final String value = eachDetail.getValue();
+        //            List<InputDetail> inputDetails = eachDetail.getDetails();
+        //
+        //            if (inputDetails == null) {
+        //                inputDetails = Collections.emptyList();
+        //            }
+        //
+        //            if (key != null) {
+        //                handleInputDetails(key, value, inputDetails);
+        //            }
+        //        }
+        //    }
 
         mInitInputData.setPersonalDataInputData(mInitPersonalDataInputData);
         mInitInputData.setBillingAddressInputData(mInitBillingAddressInputData);
@@ -227,90 +227,90 @@ public class AfterPayComponent
                 !TextUtils.isEmpty(value) && otherConditionResult ? ValidatedField.Validation.VALID : ValidatedField.Validation.PARTIAL);
     }
 
-//    private void handleInputDetails(@NonNull String key, @Nullable String value, @NonNull List<InputDetail> eachInputDetails) {
-//        switch (key) {
-//            case PERSONAL_DETAILS_KEY:
-//                handlePersonalDetails(eachInputDetails);
-//                break;
-//            case BILLING_ADDRESS_KEY:
-//                handleAddressDetails(mInitBillingAddressInputData, eachInputDetails);
-//                break;
-//            case SEPARATE_DELIVERY_ADDRESS_KEY:
-//                mInitInputData.setSeparateDeliveryAddress(Boolean.parseBoolean(value));
-//                break;
-//            case DELIVERY_ADDRESS_KEY:
-//                handleAddressDetails(mInitDeliveryAddressInputData, eachInputDetails);
-//                break;
-//            default:
-//                Logger.i(TAG, "unrecognized key");
-//                break;
-//        }
-//    }
+    //    private void handleInputDetails(@NonNull String key, @Nullable String value, @NonNull List<InputDetail> eachInputDetails) {
+    //        switch (key) {
+    //            case PERSONAL_DETAILS_KEY:
+    //                handlePersonalDetails(eachInputDetails);
+    //                break;
+    //            case BILLING_ADDRESS_KEY:
+    //                handleAddressDetails(mInitBillingAddressInputData, eachInputDetails);
+    //                break;
+    //            case SEPARATE_DELIVERY_ADDRESS_KEY:
+    //                mInitInputData.setSeparateDeliveryAddress(Boolean.parseBoolean(value));
+    //                break;
+    //            case DELIVERY_ADDRESS_KEY:
+    //                handleAddressDetails(mInitDeliveryAddressInputData, eachInputDetails);
+    //                break;
+    //            default:
+    //                Logger.i(TAG, "unrecognized key");
+    //                break;
+    //        }
+    //    }
 
-//    private void handlePersonalDetails(@NonNull List<InputDetail> personalDetails) {
-//        for (InputDetail eachDetail : personalDetails) {
-//            final String key = eachDetail.getKey();
-//            final String value = eachDetail.getValue();
-//
-//            if (key != null && value != null) {
-//                switch (key) {
-//                    case FIRST_NAME_KEY:
-//                        mInitPersonalDataInputData.setFirstName(value);
-//                        break;
-//                    case LAST_NAME_KEY:
-//                        mInitPersonalDataInputData.setLastName(value);
-//                        break;
-//                    case GENDER_KEY:
-//                        mInitPersonalDataInputData.setGender(Gender.valueOf(value));
-//                        break;
-//                    case DATE_OF_BIRTH:
-//                        mInitPersonalDataInputData.setDateOfBirth(DateUtils.parseServerDateFormat(value));
-//                        break;
-//                    case SHOPPER_EMAIL_KEY:
-//                        mInitPersonalDataInputData.setShopperEmail(value);
-//                        break;
-//                    case TELEPHONE_NUMBER_KEY:
-//                        mInitPersonalDataInputData.setTelephoneNumber(value);
-//                        break;
-//                    default:
-//                        Logger.i(TAG, "unrecognized key");
-//                        break;
-//                }
-//            }
-//        }
-//    }
+    //    private void handlePersonalDetails(@NonNull List<InputDetail> personalDetails) {
+    //        for (InputDetail eachDetail : personalDetails) {
+    //            final String key = eachDetail.getKey();
+    //            final String value = eachDetail.getValue();
+    //
+    //            if (key != null && value != null) {
+    //                switch (key) {
+    //                    case FIRST_NAME_KEY:
+    //                        mInitPersonalDataInputData.setFirstName(value);
+    //                        break;
+    //                    case LAST_NAME_KEY:
+    //                        mInitPersonalDataInputData.setLastName(value);
+    //                        break;
+    //                    case GENDER_KEY:
+    //                        mInitPersonalDataInputData.setGender(Gender.valueOf(value));
+    //                        break;
+    //                    case DATE_OF_BIRTH:
+    //                        mInitPersonalDataInputData.setDateOfBirth(DateUtils.parseServerDateFormat(value));
+    //                        break;
+    //                    case SHOPPER_EMAIL_KEY:
+    //                        mInitPersonalDataInputData.setShopperEmail(value);
+    //                        break;
+    //                    case TELEPHONE_NUMBER_KEY:
+    //                        mInitPersonalDataInputData.setTelephoneNumber(value);
+    //                        break;
+    //                    default:
+    //                        Logger.i(TAG, "unrecognized key");
+    //                        break;
+    //                }
+    //            }
+    //        }
+    //    }
 
-//    private void handleAddressDetails(@NonNull AfterPayAddressInputData inputAfterPayAddressInputData,
-//            @NonNull List<InputDetail> billingAddressDetails) {
-//        for (InputDetail eachDetail : billingAddressDetails) {
-//            final String key = eachDetail.getKey();
-//            final String value = eachDetail.getValue();
-//
-//            if (key != null && value != null) {
-//                switch (key) {
-//                    case STREET_KEY:
-//                        inputAfterPayAddressInputData.setStreet(value);
-//                        break;
-//                    case HOUSE_NUMBER_KEY:
-//                        inputAfterPayAddressInputData.setHouseNumberOrName(value);
-//                        break;
-//                    case CITY_KEY:
-//                        inputAfterPayAddressInputData.setCity(value);
-//                        break;
-//                    case POSTAL_CODE_KEY:
-//                        inputAfterPayAddressInputData.setPostalCode(value);
-//                        break;
-//                    case STATE_KEY:
-//                        inputAfterPayAddressInputData.setStateOrProvince(value);
-//                        break;
-//                    case COUNTRY_KEY:
-//                        inputAfterPayAddressInputData.setLocale(getConfiguration().getCountryCode().getLocale());
-//                        break;
-//                    default:
-//                        Logger.i(TAG, "unrecognized key");
-//                        break;
-//                }
-//            }
-//        }
-//    }
+    //    private void handleAddressDetails(@NonNull AfterPayAddressInputData inputAfterPayAddressInputData,
+    //            @NonNull List<InputDetail> billingAddressDetails) {
+    //        for (InputDetail eachDetail : billingAddressDetails) {
+    //            final String key = eachDetail.getKey();
+    //            final String value = eachDetail.getValue();
+    //
+    //            if (key != null && value != null) {
+    //                switch (key) {
+    //                    case STREET_KEY:
+    //                        inputAfterPayAddressInputData.setStreet(value);
+    //                        break;
+    //                    case HOUSE_NUMBER_KEY:
+    //                        inputAfterPayAddressInputData.setHouseNumberOrName(value);
+    //                        break;
+    //                    case CITY_KEY:
+    //                        inputAfterPayAddressInputData.setCity(value);
+    //                        break;
+    //                    case POSTAL_CODE_KEY:
+    //                        inputAfterPayAddressInputData.setPostalCode(value);
+    //                        break;
+    //                    case STATE_KEY:
+    //                        inputAfterPayAddressInputData.setStateOrProvince(value);
+    //                        break;
+    //                    case COUNTRY_KEY:
+    //                        inputAfterPayAddressInputData.setLocale(getConfiguration().getCountryCode().getLocale());
+    //                        break;
+    //                    default:
+    //                        Logger.i(TAG, "unrecognized key");
+    //                        break;
+    //                }
+    //            }
+    //        }
+    //    }
 }

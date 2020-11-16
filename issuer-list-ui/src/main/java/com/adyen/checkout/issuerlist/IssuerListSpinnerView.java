@@ -33,9 +33,12 @@ import java.util.List;
 
 public abstract class IssuerListSpinnerView<
         IssuerListPaymentMethodT extends IssuerListPaymentMethod,
-        IssuerListComponentT extends IssuerListComponent<IssuerListPaymentMethodT>
-        >
-        extends AdyenLinearLayout<IssuerListOutputData, IssuerListConfiguration, PaymentComponentState<IssuerListPaymentMethodT>, IssuerListComponentT>
+        IssuerListComponentT extends IssuerListComponent<IssuerListPaymentMethodT>>
+        extends AdyenLinearLayout<
+            IssuerListOutputData,
+            IssuerListConfiguration,
+            PaymentComponentState<IssuerListPaymentMethodT>,
+            IssuerListComponentT>
         implements AdapterView.OnItemSelectedListener {
     private static final String TAG = LogUtil.getTag();
 

@@ -23,7 +23,7 @@ class StoredCardDelegate(private val storedPaymentMethod: StoredPaymentMethod) :
         return storedPaymentMethod.type ?: PaymentMethodTypes.UNKNOWN
     }
 
-    fun getStoredCardInputData() : CardInputData {
+    fun getStoredCardInputData(): CardInputData {
         val storedCardInputData = CardInputData()
         storedCardInputData.cardNumber = storedPaymentMethod.lastFour
 
@@ -38,11 +38,11 @@ class StoredCardDelegate(private val storedPaymentMethod: StoredPaymentMethod) :
         return storedCardInputData
     }
 
-    fun getCardType() : CardType? {
+    fun getCardType(): CardType? {
         return CardType.getByBrandName(storedPaymentMethod.brand)
     }
 
-    fun getId() : String {
+    fun getId(): String {
         return storedPaymentMethod.id ?: "ID_NOT_FOUND"
     }
 }

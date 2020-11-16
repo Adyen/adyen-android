@@ -60,6 +60,7 @@ public abstract class BasePaymentComponent<
      * @param paymentMethodDelegate {@link PaymentMethodDelegate}
      * @param configuration {@link ConfigurationT}
      */
+    @SuppressWarnings("LambdaLast")
     public BasePaymentComponent(@NonNull PaymentMethodDelegate paymentMethodDelegate, @NonNull ConfigurationT configuration) {
         super(paymentMethodDelegate, configuration);
         assertSupported(paymentMethodDelegate.getPaymentMethodType());

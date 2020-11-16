@@ -29,31 +29,32 @@ public abstract class IssuerListComponent<IssuerListPaymentMethodT extends Issue
 
     private final MutableLiveData<List<IssuerModel>> mIssuersLiveData = new MutableLiveData<>();
 
+    @SuppressWarnings("LambdaLast")
     public IssuerListComponent(@NonNull PaymentMethodDelegate paymentMethodDelegate, @NonNull IssuerListConfiguration configuration) {
         super(paymentMethodDelegate, configuration);
         // TODO: 13/11/2020 Refactor with new API data
-//        initIssuers(paymentMethod.getDetails());
+        //    initIssuers(paymentMethod.getDetails());
     }
 
     MutableLiveData<List<IssuerModel>> getIssuersLiveData() {
         return mIssuersLiveData;
     }
 
-//    private void initIssuers(@Nullable List<InputDetail> details) {
-//        if (details != null) {
-//            for (InputDetail detail : details) {
-//                if (detail.getItems() != null) {
-//                    final List<IssuerModel> issuers = new ArrayList<>();
-//                    for (Item item : detail.getItems()) {
-//
-//                        final IssuerModel issuer = new IssuerModel(item);
-//                        issuers.add(issuer);
-//                    }
-//                    mIssuersLiveData.setValue(issuers);
-//                }
-//            }
-//        }
-//    }
+    //    private void initIssuers(@Nullable List<InputDetail> details) {
+    //        if (details != null) {
+    //            for (InputDetail detail : details) {
+    //                if (detail.getItems() != null) {
+    //                    final List<IssuerModel> issuers = new ArrayList<>();
+    //                    for (Item item : detail.getItems()) {
+    //
+    //                        final IssuerModel issuer = new IssuerModel(item);
+    //                        issuers.add(issuer);
+    //                    }
+    //                    mIssuersLiveData.setValue(issuers);
+    //                }
+    //            }
+    //        }
+    //    }
 
     @Override
     @NonNull
@@ -83,6 +84,7 @@ public abstract class IssuerListComponent<IssuerListPaymentMethodT extends Issue
     @NonNull
     protected abstract IssuerListPaymentMethodT instantiateTypedPaymentMethod();
 
+    @NonNull
     protected String getPaymentMethodType() {
         return mPaymentMethodDelegate.getPaymentMethodType();
     }

@@ -32,6 +32,7 @@ public abstract class PaymentComponentViewModel<
     protected final PaymentMethodDelegate mPaymentMethodDelegate;
     protected final ConfigurationT mConfiguration;
 
+    @SuppressWarnings("LambdaLast")
     public PaymentComponentViewModel(@NonNull PaymentMethodDelegate paymentMethodDelegate, @NonNull ConfigurationT configuration) {
         mPaymentMethodDelegate = paymentMethodDelegate;
         mConfiguration = configuration;

@@ -15,7 +15,6 @@ import com.adyen.checkout.base.PaymentComponentState;
 import com.adyen.checkout.base.component.BasePaymentComponent;
 import com.adyen.checkout.base.component.GenericPaymentComponentProvider;
 import com.adyen.checkout.base.component.GenericPaymentMethodDelegate;
-import com.adyen.checkout.base.model.paymentmethods.PaymentMethod;
 import com.adyen.checkout.base.model.payments.request.MBWayPaymentMethod;
 import com.adyen.checkout.base.model.payments.request.PaymentComponentData;
 import com.adyen.checkout.base.util.PaymentMethodTypes;
@@ -35,7 +34,7 @@ public class MBWayComponent
     /**
      * Component should not be instantiated directly. Instead use the PROVIDER object.
      *
-     * @param paymentMethod {@link PaymentMethod}
+     * @param paymentMethodDelegate {@link GenericPaymentMethodDelegate}
      * @param configuration {@link MBWayConfiguration}
      */
     public MBWayComponent(@NonNull GenericPaymentMethodDelegate paymentMethodDelegate, @NonNull MBWayConfiguration configuration) {
