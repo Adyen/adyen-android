@@ -9,14 +9,18 @@
 package com.adyen.checkout.issuerlist;
 
 import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import androidx.lifecycle.MutableLiveData;
 
 import com.adyen.checkout.base.PaymentComponentState;
 import com.adyen.checkout.base.component.BasePaymentComponent;
-import com.adyen.checkout.base.component.PaymentMethodDelegate;
+import com.adyen.checkout.base.component.GenericPaymentMethodDelegate;
+import com.adyen.checkout.base.model.paymentmethods.Issuer;
 import com.adyen.checkout.base.model.payments.request.IssuerListPaymentMethod;
 import com.adyen.checkout.base.model.payments.request.PaymentComponentData;
+import com.adyen.checkout.core.log.Logger;
 
+import java.util.ArrayList;
 import java.util.List;
 
 public abstract class IssuerListComponent<IssuerListPaymentMethodT extends IssuerListPaymentMethod>
@@ -30,31 +34,25 @@ public abstract class IssuerListComponent<IssuerListPaymentMethodT extends Issue
     private final MutableLiveData<List<IssuerModel>> mIssuersLiveData = new MutableLiveData<>();
 
     @SuppressWarnings("LambdaLast")
-    public IssuerListComponent(@NonNull PaymentMethodDelegate paymentMethodDelegate, @NonNull IssuerListConfiguration configuration) {
-        super(paymentMethodDelegate, configuration);
-        // TODO: 13/11/2020 Refactor with new API data
-        //    initIssuers(paymentMethod.getDetails());
+    public IssuerListComponent(@NonNull GenericPaymentMethodDelegate genericPaymentMethodDelegate, @NonNull IssuerListConfiguration configuration) {
+        super(genericPaymentMethodDelegate, configuration);
+        initIssuers(genericPaymentMethodDelegate.getPaymentMethod().getIssuers());
     }
 
     MutableLiveData<List<IssuerModel>> getIssuersLiveData() {
         return mIssuersLiveData;
     }
 
-    //    private void initIssuers(@Nullable List<InputDetail> details) {
-    //        if (details != null) {
-    //            for (InputDetail detail : details) {
-    //                if (detail.getItems() != null) {
-    //                    final List<IssuerModel> issuers = new ArrayList<>();
-    //                    for (Item item : detail.getItems()) {
-    //
-    //                        final IssuerModel issuer = new IssuerModel(item);
-    //                        issuers.add(issuer);
-    //                    }
-    //                    mIssuersLiveData.setValue(issuers);
-    //                }
-    //            }
-    //        }
-    //    }
+    private void initIssuers(@Nullable List<Issuer> issuerList) {
+        if (issuerList != null) {
+            final List<IssuerModel> issuerModelList = new ArrayList<>();
+            for (Issuer issuer : issuerList) {
+                final IssuerModel issuerModel = new IssuerModel(issuer.getId(), issuer.getName());
+                issuerModelList.add(issuerModel);
+            }
+            mIssuersLiveData.setValue(issuerModelList);
+        }
+    }
 
     @Override
     @NonNull
