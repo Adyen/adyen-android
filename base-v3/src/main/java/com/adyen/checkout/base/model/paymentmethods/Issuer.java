@@ -27,7 +27,7 @@ public class Issuer extends ModelObject {
 
     private static final String ID = "id";
     private static final String NAME = "name";
-    private static final String ENABLED = "enabled";
+    private static final String DISABLED = "disabled";
 
     @NonNull
     public static final Serializer<Issuer> SERIALIZER = new Serializer<Issuer>() {
@@ -39,7 +39,7 @@ public class Issuer extends ModelObject {
             try {
                 jsonObject.putOpt(ID, modelObject.getId());
                 jsonObject.putOpt(NAME, modelObject.getName());
-                jsonObject.putOpt(ENABLED, modelObject.isEnabled());
+                jsonObject.putOpt(DISABLED, modelObject.isDisabled());
             } catch (JSONException e) {
                 throw new ModelSerializationException(PaymentMethod.class, e);
             }
@@ -52,14 +52,14 @@ public class Issuer extends ModelObject {
             final Issuer issuer = new Issuer();
             issuer.setId(jsonObject.optString(ID, null));
             issuer.setName(jsonObject.optString(NAME, null));
-            issuer.setEnabled(jsonObject.optBoolean(ENABLED, true));
+            issuer.setDisabled(jsonObject.optBoolean(DISABLED, false));
             return issuer;
         }
     };
 
     private String id;
     private String name;
-    private boolean enabled;
+    private boolean disabled;
 
     @Override
     public void writeToParcel(@NonNull Parcel dest, int flags) {
@@ -76,8 +76,8 @@ public class Issuer extends ModelObject {
         return name;
     }
 
-    public boolean isEnabled() {
-        return enabled;
+    public boolean isDisabled() {
+        return disabled;
     }
 
     public void setId(@Nullable String id) {
@@ -88,7 +88,7 @@ public class Issuer extends ModelObject {
         this.name = name;
     }
 
-    public void setEnabled(boolean enabled) {
-        this.enabled = enabled;
+    public void setDisabled(boolean disabled) {
+        this.disabled = disabled;
     }
 }

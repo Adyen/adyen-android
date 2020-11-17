@@ -18,7 +18,6 @@ import com.adyen.checkout.base.component.GenericPaymentMethodDelegate;
 import com.adyen.checkout.base.model.paymentmethods.Issuer;
 import com.adyen.checkout.base.model.payments.request.IssuerListPaymentMethod;
 import com.adyen.checkout.base.model.payments.request.PaymentComponentData;
-import com.adyen.checkout.core.log.Logger;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -47,8 +46,10 @@ public abstract class IssuerListComponent<IssuerListPaymentMethodT extends Issue
         if (issuerList != null) {
             final List<IssuerModel> issuerModelList = new ArrayList<>();
             for (Issuer issuer : issuerList) {
-                final IssuerModel issuerModel = new IssuerModel(issuer.getId(), issuer.getName());
-                issuerModelList.add(issuerModel);
+                if (!issuer.isDisabled()) {
+                    final IssuerModel issuerModel = new IssuerModel(issuer.getId(), issuer.getName());
+                    issuerModelList.add(issuerModel);
+                }
             }
             mIssuersLiveData.setValue(issuerModelList);
         }

@@ -8,7 +8,7 @@
 
 package com.adyen.checkout.issuerlist
 
-data class IssuerModel (
+data class IssuerModel(
     val id: String,
     val name: String
 )
