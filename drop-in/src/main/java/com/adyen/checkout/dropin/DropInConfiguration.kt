@@ -117,7 +117,7 @@ class DropInConfiguration : Configuration, Parcelable {
 
         private var shopperLocale: Locale
         private var environment: Environment = Environment.EUROPE
-        private var clientKey: String = DEFAULT_EMPTY_CLIENT_KEY
+        private var clientKey: String = ""
         private var serviceComponentName: ComponentName
         private var resultHandlerIntent: Intent
         private var amount: Amount = Amount.EMPTY
