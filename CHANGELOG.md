@@ -13,6 +13,10 @@
 [//]: <> (Add changes that not released yet into `Unreleased` section)
 [//]: <> (Comment `Unreleased` section if there are no changes)
 [//]: <> (## [Unreleased])
+## [3.7.3] - 2020-11-18
+### Fixed
+- Fixed exception on Drop-in when generating generic Configuration objects with empty `clientKey`
+
 ## [3.7.2] - 2020-11-03
 ### Added
 - Ability for merchants to choose not to request the CVC on `CardComponent`
