@@ -20,6 +20,7 @@ import com.adyen.checkout.base.api.ImageLoader
 import com.adyen.checkout.base.model.paymentmethods.PaymentMethod
 import com.adyen.checkout.base.model.paymentmethods.StoredPaymentMethod
 import com.adyen.checkout.base.util.DateUtils
+import com.adyen.checkout.base.util.PaymentMethodTypes
 import com.adyen.checkout.core.log.LogUtil
 import com.adyen.checkout.dropin.R
 
@@ -87,13 +88,13 @@ class PaymentMethodAdapter(
                     holder.detail.visibility = View.GONE
                 }
 
-                // TODO: 13/11/2020 refactor to add back stored
-//                var txVariant = when (paymentMethod.type) {
-//                    PaymentMethodTypes.SCHEME -> if (paymentMethod is StoredPaymentMethod) paymentMethod.brand else CARD_LOGO_TYPE
-//                    else -> paymentMethod.type!!
-//                }
+                val txVariant = when (paymentMethod.type) {
+                    // TODO: 18/11/2020 change for stored card to use storedPaymentMethod.brand
+                    PaymentMethodTypes.SCHEME -> CARD_LOGO_TYPE
+                    else -> paymentMethod.type ?: ""
+                }
 
-                imageLoader.load(paymentMethod.type!!, holder.logo)
+                imageLoader.load(txVariant, holder.logo)
 
                 holder.itemView.setOnClickListener {
                     onItemClick(getPaymentMethod(position))
