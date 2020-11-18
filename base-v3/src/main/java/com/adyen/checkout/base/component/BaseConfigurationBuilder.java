@@ -28,7 +28,7 @@ public abstract class BaseConfigurationBuilder<ConfigurationT extends Configurat
     protected Environment mBuilderEnvironment;
 
     @NonNull
-    protected String mBuilderClientKey = Configuration.DEFAULT_EMPTY_CLIENT_KEY;
+    protected String mBuilderClientKey = "";
 
     /**
      * Constructor that provides default values.
