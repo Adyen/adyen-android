@@ -20,8 +20,6 @@ import java.util.Locale;
 
 public abstract class Configuration implements Parcelable {
 
-    public static final String DEFAULT_EMPTY_CLIENT_KEY = "";
-
     private final Locale mShopperLocale;
     private final Environment mEnvironment;
     private final String mClientKey;

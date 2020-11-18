@@ -137,7 +137,9 @@ internal fun <T : Configuration> getDefaultConfigFor(
 
     builder.setShopperLocale(dropInConfiguration.shopperLocale)
     builder.setEnvironment(dropInConfiguration.environment)
-    builder.setClientKey(dropInConfiguration.clientKey)
+    if (dropInConfiguration.clientKey.isNotEmpty()) {
+        builder.setClientKey(dropInConfiguration.clientKey)
+    }
 
     @Suppress("UNCHECKED_CAST")
     return builder.build() as T
