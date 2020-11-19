@@ -8,11 +8,13 @@
 
 package com.adyen.checkout.base.component.lifecycle;
 
+import androidx.annotation.NonNull;
 import androidx.lifecycle.ViewModel;
 import androidx.lifecycle.ViewModelProvider;
-import androidx.annotation.NonNull;
 
 import com.adyen.checkout.base.component.Configuration;
+import com.adyen.checkout.base.component.PaymentMethodDelegate;
+import com.adyen.checkout.base.component.StoredPaymentMethodDelegate;
 import com.adyen.checkout.base.model.paymentmethods.PaymentMethod;
 import com.adyen.checkout.base.model.paymentmethods.StoredPaymentMethod;
 
@@ -21,31 +23,32 @@ import com.adyen.checkout.base.model.paymentmethods.StoredPaymentMethod;
  */
 public final class PaymentComponentViewModelFactory implements ViewModelProvider.Factory {
 
-    private final PaymentMethod mPaymentMethod;
-    private final StoredPaymentMethod mStoredPaymentMethod;
+    private final PaymentMethodDelegate mPaymentMethodDelegate;
+    private final StoredPaymentMethodDelegate mStoredPaymentMethodDelegate;
     private final Configuration mConfiguration;
 
     /**
      * Creates a {@code AndroidViewModelFactory}.
      *
-     * @param paymentMethod the {@link PaymentMethod} to pass in {@link PaymentComponentViewModel}
+     * @param paymentMethodDelegate the {@link PaymentMethod} to pass in {@link PaymentComponentViewModel}
      * @param configuration the {@link Configuration} to pass in {@link PaymentComponentViewModel}
      */
-    public PaymentComponentViewModelFactory(@NonNull PaymentMethod paymentMethod, @NonNull Configuration configuration) {
-        mPaymentMethod = paymentMethod;
-        mStoredPaymentMethod = null;
+    @SuppressWarnings("LambdaLast")
+    public PaymentComponentViewModelFactory(@NonNull PaymentMethodDelegate paymentMethodDelegate, @NonNull Configuration configuration) {
+        mPaymentMethodDelegate = paymentMethodDelegate;
+        mStoredPaymentMethodDelegate = null;
         mConfiguration = configuration;
     }
 
     /**
      * Creates a {@code AndroidViewModelFactory}.
      *
-     * @param storedPaymentMethod the {@link StoredPaymentMethod} to pass in {@link PaymentComponentViewModel}
+     * @param storedPaymentMethodDelegate the {@link StoredPaymentMethod} to pass in {@link PaymentComponentViewModel}
      * @param configuration the {@link Configuration} to pass in {@link PaymentComponentViewModel}
      */
-    public PaymentComponentViewModelFactory(@NonNull StoredPaymentMethod storedPaymentMethod, @NonNull Configuration configuration) {
-        mPaymentMethod = null;
-        mStoredPaymentMethod = storedPaymentMethod;
+    public PaymentComponentViewModelFactory(@NonNull StoredPaymentMethodDelegate storedPaymentMethodDelegate, @NonNull Configuration configuration) {
+        mPaymentMethodDelegate = null;
+        mStoredPaymentMethodDelegate = storedPaymentMethodDelegate;
         mConfiguration = configuration;
     }
 
@@ -53,16 +56,16 @@ public final class PaymentComponentViewModelFactory implements ViewModelProvider
     @NonNull
     public <T extends ViewModel> T create(@NonNull Class<T> modelClass) {
         try {
-            if (mStoredPaymentMethod == null) {
+            if (mStoredPaymentMethodDelegate == null) {
                 return modelClass.getConstructor(
-                        mPaymentMethod.getClass(),
+                        mPaymentMethodDelegate.getClass(),
                         mConfiguration.getClass()
-                ).newInstance(mPaymentMethod, mConfiguration);
+                ).newInstance(mPaymentMethodDelegate, mConfiguration);
             } else {
                 return modelClass.getConstructor(
-                        mStoredPaymentMethod.getClass(),
+                        mStoredPaymentMethodDelegate.getClass(),
                         mConfiguration.getClass()
-                ).newInstance(mPaymentMethod, mConfiguration);
+                ).newInstance(mStoredPaymentMethodDelegate, mConfiguration);
             }
         } catch (Exception e) {
             throw new RuntimeException("Failed to create an instance of component: " + modelClass, e);

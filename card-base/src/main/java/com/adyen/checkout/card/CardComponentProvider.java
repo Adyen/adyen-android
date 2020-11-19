@@ -38,7 +38,7 @@ public class CardComponentProvider implements StoredPaymentComponentProvider<Car
             @NonNull PaymentMethod paymentMethod,
             @NonNull CardConfiguration configuration) {
         final CardConfiguration verifiedConfiguration = checkSupportedCardTypes(paymentMethod, configuration);
-        final PaymentComponentViewModelFactory factory = new PaymentComponentViewModelFactory(paymentMethod, verifiedConfiguration);
+        final PaymentComponentViewModelFactory factory = new PaymentComponentViewModelFactory(new CardDelegate(paymentMethod), verifiedConfiguration);
         return new ViewModelProvider(viewModelStoreOwner, factory).get(CardComponent.class);
     }
 
@@ -49,7 +49,8 @@ public class CardComponentProvider implements StoredPaymentComponentProvider<Car
             @NonNull ViewModelStoreOwner viewModelStoreOwner,
             @NonNull StoredPaymentMethod storedPaymentMethod,
             @NonNull CardConfiguration configuration) {
-        final PaymentComponentViewModelFactory factory = new PaymentComponentViewModelFactory(storedPaymentMethod, configuration);
+        final PaymentComponentViewModelFactory factory =
+                new PaymentComponentViewModelFactory(new StoredCardDelegate(storedPaymentMethod), configuration);
         return new ViewModelProvider(viewModelStoreOwner, factory).get(CardComponent.class);
     }
 

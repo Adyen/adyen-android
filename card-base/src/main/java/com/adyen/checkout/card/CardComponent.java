@@ -15,8 +15,6 @@ import androidx.annotation.Nullable;
 
 import com.adyen.checkout.base.PaymentComponentProvider;
 import com.adyen.checkout.base.component.BasePaymentComponent;
-import com.adyen.checkout.base.model.paymentmethods.PaymentMethod;
-import com.adyen.checkout.base.model.paymentmethods.StoredPaymentMethod;
 import com.adyen.checkout.base.model.payments.request.CardPaymentMethod;
 import com.adyen.checkout.base.model.payments.request.PaymentComponentData;
 import com.adyen.checkout.base.util.PaymentMethodTypes;
@@ -62,27 +60,15 @@ public final class CardComponent extends BasePaymentComponent<
     /**
      * Constructs a {@link CardComponent} object.
      *
-     * @param paymentMethod {@link PaymentMethod} represents card payment method.
+     * @param storedCardDelegate {@link StoredCardDelegate} represents stored card.
      * @param configuration {@link CardConfiguration}.
      */
-    public CardComponent(@NonNull StoredPaymentMethod paymentMethod, @NonNull CardConfiguration configuration) {
-        super(paymentMethod, configuration);
+    public CardComponent(@NonNull StoredCardDelegate storedCardDelegate, @NonNull CardConfiguration configuration) {
+        super(storedCardDelegate, configuration);
 
-        mStoredPaymentInputData = new CardInputData();
-        mStoredPaymentInputData.setCardNumber(paymentMethod.getLastFour());
+        mStoredPaymentInputData = storedCardDelegate.getStoredCardInputData();
 
-        try {
-            final ExpiryDate storedDate = new ExpiryDate(
-                    Integer.parseInt(paymentMethod.getExpiryMonth()),
-                    Integer.parseInt(paymentMethod.getExpiryYear())
-            );
-            mStoredPaymentInputData.setExpiryDate(storedDate);
-        } catch (NumberFormatException e) {
-            Logger.e(TAG, "Failed to parse stored Date", e);
-            mStoredPaymentInputData.setExpiryDate(ExpiryDate.EMPTY_DATE);
-        }
-
-        final CardType cardType = CardType.getByBrandName(paymentMethod.getBrand());
+        final CardType cardType = storedCardDelegate.getCardType();
         if (cardType != null) {
             final List<CardType> storedCardType = new ArrayList<>();
             storedCardType.add(cardType);
@@ -93,11 +79,11 @@ public final class CardComponent extends BasePaymentComponent<
     /**
      * Constructs a {@link CardComponent} object.
      *
-     * @param paymentMethod {@link PaymentMethod} represents card payment method.
+     * @param cardDelegate {@link CardDelegate} represents card payment method.
      * @param configuration {@link CardConfiguration}.
      */
-    public CardComponent(@NonNull PaymentMethod paymentMethod, @NonNull CardConfiguration configuration) {
-        super(paymentMethod, configuration);
+    public CardComponent(@NonNull CardDelegate cardDelegate, @NonNull CardConfiguration configuration) {
+        super(cardDelegate, configuration);
     }
 
     public boolean isStoredPaymentMethod() {
@@ -194,7 +180,7 @@ public final class CardComponent extends BasePaymentComponent<
             cardPaymentMethod.setEncryptedExpiryMonth(encryptedCard.getEncryptedExpiryMonth());
             cardPaymentMethod.setEncryptedExpiryYear(encryptedCard.getEncryptedExpiryYear());
         } else {
-            cardPaymentMethod.setStoredPaymentMethodId(((StoredPaymentMethod) getPaymentMethod()).getId());
+            cardPaymentMethod.setStoredPaymentMethodId(((StoredCardDelegate) mPaymentMethodDelegate).getId());
         }
 
         cardPaymentMethod.setEncryptedSecurityCode(encryptedCard.getEncryptedSecurityCode());
@@ -265,17 +251,14 @@ public final class CardComponent extends BasePaymentComponent<
 
     private boolean isCvcHidden() {
         if (isStoredPaymentMethod()) {
-            return getConfiguration().isHideCvcStoredCard() || isBrandWithoutCvc(((StoredPaymentMethod) getPaymentMethod()).getBrand());
+            return getConfiguration().isHideCvcStoredCard() || isBrandWithoutCvc(((StoredCardDelegate) mPaymentMethodDelegate).getCardType());
         } else {
             return getConfiguration().isHideCvc();
         }
     }
 
-    private boolean isBrandWithoutCvc(@Nullable String brand) {
-        if (TextUtils.isEmpty(brand)) {
-            return false;
-        }
-        return NO_CVC_BRANDS.contains(CardType.getByBrandName(brand));
+    private boolean isBrandWithoutCvc(@NonNull CardType cardType) {
+        return NO_CVC_BRANDS.contains(cardType);
     }
 
     private ValidatedField<String> validateHolderName(@NonNull String holderName) {

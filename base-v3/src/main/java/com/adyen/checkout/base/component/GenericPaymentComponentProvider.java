@@ -19,12 +19,12 @@ import com.adyen.checkout.base.PaymentComponentProvider;
 import com.adyen.checkout.base.component.lifecycle.PaymentComponentViewModelFactory;
 import com.adyen.checkout.base.model.paymentmethods.PaymentMethod;
 
-public final class PaymentComponentProviderImpl<BaseComponentT extends BasePaymentComponent, ConfigurationT extends Configuration>
+public final class GenericPaymentComponentProvider<BaseComponentT extends BasePaymentComponent, ConfigurationT extends Configuration>
         implements PaymentComponentProvider<BaseComponentT, ConfigurationT> {
 
     private final Class<BaseComponentT> mComponentClass;
 
-    public PaymentComponentProviderImpl(@NonNull Class<BaseComponentT> modelClass) {
+    public GenericPaymentComponentProvider(@NonNull Class<BaseComponentT> modelClass) {
         mComponentClass = modelClass;
     }
 
@@ -35,7 +35,8 @@ public final class PaymentComponentProviderImpl<BaseComponentT extends BasePayme
             @NonNull ViewModelStoreOwner viewModelStoreOwner,
             @NonNull PaymentMethod paymentMethod,
             @NonNull ConfigurationT configuration) {
-        final PaymentComponentViewModelFactory factory = new PaymentComponentViewModelFactory(paymentMethod, configuration);
+        final PaymentComponentViewModelFactory factory =
+                new PaymentComponentViewModelFactory(new GenericPaymentMethodDelegate(paymentMethod), configuration);
         return new ViewModelProvider(viewModelStoreOwner, factory).get(mComponentClass);
     }
 

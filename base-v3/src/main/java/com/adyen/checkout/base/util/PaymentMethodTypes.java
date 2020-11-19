@@ -20,6 +20,9 @@ import java.util.List;
 @SuppressWarnings("SpellCheckingInspection")
 public final class PaymentMethodTypes {
 
+    // Placeholder value if the type is not found.
+    public static final String UNKNOWN = "unknown";
+
     // Type of the payment method as received by the paymentMethods/ API
     public static final String IDEAL = "ideal";
     public static final String MOLPAY_MALAYSIA = "molpay_ebanking_fpx_MY";
@@ -98,7 +101,8 @@ public final class PaymentMethodTypes {
         supportedPaymentMethods.add(MOLPAY_THAILAND);
         supportedPaymentMethods.add(MOLPAY_VIETNAM);
         supportedPaymentMethods.add(OPEN_BANKING);
-        supportedPaymentMethods.add(SEPA);
+        // Sepa is not supported until we fix the Component
+        //    supportedPaymentMethods.add(SEPA);
         supportedPaymentMethods.add(SCHEME);
         supportedPaymentMethods.add(WECHAT_PAY_SDK);
 
@@ -107,6 +111,10 @@ public final class PaymentMethodTypes {
         final ArrayList<String> unsupportedPaymentMethods = new ArrayList<>();
 
         // Populate unsupported list
+
+        // Sepa is not supported until we fix the Component
+        unsupportedPaymentMethods.add(SEPA);
+
         unsupportedPaymentMethods.add(BCMC_QR);
         unsupportedPaymentMethods.add(WECHAT_PAY_MINI_PROGRAM);
         unsupportedPaymentMethods.add(WECHAT_PAY_QR);

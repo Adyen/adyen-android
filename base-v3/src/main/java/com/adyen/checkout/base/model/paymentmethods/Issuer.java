@@ -1,9 +1,9 @@
 /*
- * Copyright (c) 2019 Adyen N.V.
+ * Copyright (c) 2020 Adyen N.V.
  *
  * This file is open source and available under the MIT license. See the LICENSE file for more info.
  *
- * Created by caiof on 27/5/2019.
+ * Created by caiof on 6/11/2020.
  */
 
 package com.adyen.checkout.base.model.paymentmethods;
@@ -21,40 +21,45 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 @SuppressWarnings({"MemberName", "PMD.DataClass"})
-public final class Item extends ModelObject {
+public class Issuer extends ModelObject {
     @NonNull
-    public static final Creator<Item> CREATOR = new Creator<>(Item.class);
+    public static final Creator<Issuer> CREATOR = new Creator<>(Issuer.class);
 
     private static final String ID = "id";
     private static final String NAME = "name";
+    private static final String DISABLED = "disabled";
 
     @NonNull
-    public static final Serializer<Item> SERIALIZER = new Serializer<Item>() {
-        @Override
+    public static final Serializer<Issuer> SERIALIZER = new Serializer<Issuer>() {
+
         @NonNull
-        public JSONObject serialize(@NonNull Item modelObject) {
+        @Override
+        public JSONObject serialize(@NonNull Issuer modelObject) {
             final JSONObject jsonObject = new JSONObject();
             try {
                 jsonObject.putOpt(ID, modelObject.getId());
                 jsonObject.putOpt(NAME, modelObject.getName());
+                jsonObject.putOpt(DISABLED, modelObject.isDisabled());
             } catch (JSONException e) {
-                throw new ModelSerializationException(Item.class, e);
+                throw new ModelSerializationException(PaymentMethod.class, e);
             }
             return jsonObject;
         }
 
-        @Override
         @NonNull
-        public Item deserialize(@NonNull JSONObject jsonObject) {
-            final Item item = new Item();
-            item.setId(jsonObject.optString(ID, null));
-            item.setName(jsonObject.optString(NAME, null));
-            return item;
+        @Override
+        public Issuer deserialize(@NonNull JSONObject jsonObject) {
+            final Issuer issuer = new Issuer();
+            issuer.setId(jsonObject.optString(ID, null));
+            issuer.setName(jsonObject.optString(NAME, null));
+            issuer.setDisabled(jsonObject.optBoolean(DISABLED, false));
+            return issuer;
         }
     };
 
     private String id;
     private String name;
+    private boolean disabled;
 
     @Override
     public void writeToParcel(@NonNull Parcel dest, int flags) {
@@ -71,11 +76,19 @@ public final class Item extends ModelObject {
         return name;
     }
 
+    public boolean isDisabled() {
+        return disabled;
+    }
+
     public void setId(@Nullable String id) {
         this.id = id;
     }
 
     public void setName(@Nullable String name) {
         this.name = name;
+    }
+
+    public void setDisabled(boolean disabled) {
+        this.disabled = disabled;
     }
 }

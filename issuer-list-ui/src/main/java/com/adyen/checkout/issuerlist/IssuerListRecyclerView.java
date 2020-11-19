@@ -31,9 +31,14 @@ import com.adyen.checkout.issuerlist.ui.R;
 import java.util.Collections;
 import java.util.List;
 
-public abstract class IssuerListRecyclerView
-        <IssuerListPaymentMethodT extends IssuerListPaymentMethod, IssuerListComponentT extends IssuerListComponent<IssuerListPaymentMethodT>>
-        extends AdyenLinearLayout<IssuerListOutputData, IssuerListConfiguration, PaymentComponentState, IssuerListComponentT>
+public abstract class IssuerListRecyclerView<
+        IssuerListPaymentMethodT extends IssuerListPaymentMethod,
+        IssuerListComponentT extends IssuerListComponent<IssuerListPaymentMethodT>>
+        extends AdyenLinearLayout<
+            IssuerListOutputData,
+            IssuerListConfiguration,
+            PaymentComponentState<IssuerListPaymentMethodT>,
+            IssuerListComponentT>
         implements Observer<List<IssuerModel>>, ClickableListRecyclerAdapter.OnItemCLickedListener {
     private static final String TAG = LogUtil.getTag();
 
@@ -74,9 +79,9 @@ public abstract class IssuerListRecyclerView
 
     @Override
     public void onComponentAttached() {
-        mIssuersAdapter = new IssuerListRecyclerAdapter(Collections.<IssuerModel>emptyList(),
+        mIssuersAdapter = new IssuerListRecyclerAdapter(Collections.emptyList(),
                 ImageLoader.getInstance(getContext(), getComponent().getConfiguration().getEnvironment()),
-                getComponent().getPaymentMethod().getType(),
+                getComponent().getPaymentMethodType(),
                 hideIssuersLogo());
     }
 
@@ -116,16 +121,6 @@ public abstract class IssuerListRecyclerView
         }
 
         mIssuersAdapter.updateIssuerModelList(issuerModels);
-    }
-
-    @NonNull
-    protected Observer<IssuerListOutputData> createOutputDataObserver() {
-        return new Observer<IssuerListOutputData>() {
-            @Override
-            public void onChanged(@Nullable IssuerListOutputData idealOutputData) {
-                // Component does not change selected IssuerModel, add validation UI here if that's needed
-            }
-        };
     }
 
     @Override

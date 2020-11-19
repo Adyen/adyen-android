@@ -9,13 +9,13 @@
 package com.adyen.checkout.dropin.ui.paymentmethods
 
 import android.content.Context
-import androidx.recyclerview.widget.RecyclerView
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Button
 import android.widget.ImageView
 import android.widget.TextView
+import androidx.recyclerview.widget.RecyclerView
 import com.adyen.checkout.base.api.ImageLoader
 import com.adyen.checkout.base.model.paymentmethods.PaymentMethod
 import com.adyen.checkout.base.model.paymentmethods.StoredPaymentMethod
@@ -88,9 +88,10 @@ class PaymentMethodAdapter(
                     holder.detail.visibility = View.GONE
                 }
 
-                var txVariant = when (paymentMethod.type) {
-                    PaymentMethodTypes.SCHEME -> if (paymentMethod is StoredPaymentMethod) paymentMethod.brand else CARD_LOGO_TYPE
-                    else -> paymentMethod.type!!
+                val txVariant = when (paymentMethod.type) {
+                    // TODO: 18/11/2020 change for stored card to use storedPaymentMethod.brand
+                    PaymentMethodTypes.SCHEME -> CARD_LOGO_TYPE
+                    else -> paymentMethod.type ?: ""
                 }
 
                 imageLoader.load(txVariant, holder.logo)
