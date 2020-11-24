@@ -152,9 +152,9 @@ internal fun checkComponentAvailability(
     callback: ComponentAvailableCallback<in Configuration>
 ) {
     try {
-        Logger.d(ComponentParsingProvider.TAG, "Checking availability for type - ${paymentMethod.type}")
+        Logger.v(ComponentParsingProvider.TAG, "Checking availability for type - ${paymentMethod.type}")
 
-        val type = paymentMethod.type ?: throw CheckoutException("PaymentMethod is null")
+        val type = paymentMethod.type ?: throw CheckoutException("PaymentMethod type is null")
 
         val provider = getProviderForType(type)
         val configuration = dropInConfiguration.getConfigurationFor<Configuration>(type, application)

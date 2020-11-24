@@ -11,16 +11,18 @@ package com.adyen.checkout.dropin.ui.base
 import android.app.Dialog
 import android.content.Context
 import android.os.Bundle
-import com.google.android.material.bottomsheet.BottomSheetBehavior
-import com.google.android.material.bottomsheet.BottomSheetDialog
-import com.google.android.material.bottomsheet.BottomSheetDialogFragment
 import android.view.KeyEvent
 import android.widget.FrameLayout
 import com.adyen.checkout.base.ActionComponentData
 import com.adyen.checkout.base.model.paymentmethods.PaymentMethod
 import com.adyen.checkout.base.model.payments.request.PaymentComponentData
+import com.adyen.checkout.core.log.LogUtil
+import com.adyen.checkout.core.log.Logger
 import com.adyen.checkout.dropin.R
 import com.adyen.checkout.googlepay.GooglePayConfiguration
+import com.google.android.material.bottomsheet.BottomSheetBehavior
+import com.google.android.material.bottomsheet.BottomSheetDialog
+import com.google.android.material.bottomsheet.BottomSheetDialogFragment
 
 abstract class DropInBottomSheetDialogFragment : BottomSheetDialogFragment() {
 
@@ -40,12 +42,12 @@ abstract class DropInBottomSheetDialogFragment : BottomSheetDialogFragment() {
         if (activity is Protocol) {
             protocol = activity as Protocol
         } else {
-            throw IllegalArgumentException("Host activity need to inheritance the IDropIn")
+            throw IllegalArgumentException("Host activity needs to implement DropInBottomSheetDialogFragment.Protocol")
         }
     }
 
     override fun onCreateDialog(savedInstanceState: Bundle?): Dialog {
-        var dialog = super.onCreateDialog(savedInstanceState)
+        val dialog = super.onCreateDialog(savedInstanceState)
 
         dialog.setOnKeyListener { _, keyCode, event ->
             if (keyCode == KeyEvent.KEYCODE_BACK && event.action == KeyEvent.ACTION_UP) {
@@ -55,16 +57,19 @@ abstract class DropInBottomSheetDialogFragment : BottomSheetDialogFragment() {
             }
         }
 
-        dialog.setOnShowListener { dialog ->
+        dialog.setOnShowListener {
             val bottomSheet = (dialog as BottomSheetDialog).findViewById<FrameLayout>(com.google.android.material.R.id.design_bottom_sheet)
 
-            // TODO: 11/09/2020 code smell
-            var behavior = BottomSheetBehavior.from(bottomSheet!!)
+            if (bottomSheet != null) {
+                val behavior = BottomSheetBehavior.from(bottomSheet)
 
-            if (this.dialogInitViewState == BottomSheetBehavior.STATE_EXPANDED)
-                behavior.skipCollapsed = true
-
-            behavior.state = this.dialogInitViewState
+                if (this.dialogInitViewState == BottomSheetBehavior.STATE_EXPANDED) {
+                    behavior.skipCollapsed = true
+                }
+                behavior.state = this.dialogInitViewState
+            } else {
+                Logger.e(TAG, "Failed to set BottomSheetBehavior.")
+            }
         }
 
         return dialog
@@ -72,6 +77,10 @@ abstract class DropInBottomSheetDialogFragment : BottomSheetDialogFragment() {
 
     open fun onBackPressed(): Boolean {
         return false
+    }
+
+    companion object {
+        val TAG = LogUtil.getTag()
     }
 
     /**
