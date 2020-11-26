@@ -9,7 +9,8 @@
 package com.adyen.checkout.dropin.ui.paymentmethods
 
 data class StoredPaymentMethodModel(
-    val type: String,
+    val id: String,
     val name: String,
-    val id: String
+    val details: String,
+    val imageId: String
 )

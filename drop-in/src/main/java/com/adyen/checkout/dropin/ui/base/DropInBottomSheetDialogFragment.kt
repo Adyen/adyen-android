@@ -87,8 +87,8 @@ abstract class DropInBottomSheetDialogFragment : BottomSheetDialogFragment() {
      * Interface for Drop-in fragments to interact with the main Activity
      */
     interface Protocol {
-        fun showPaymentMethodsDialog(showInExpandStatus: Boolean)
-        fun showComponentDialog(paymentMethod: PaymentMethod, wasInExpandMode: Boolean)
+        fun showPaymentMethodsDialog()
+        fun showComponentDialog(paymentMethod: PaymentMethod)
         fun requestPaymentsCall(paymentComponentData: PaymentComponentData<*>)
         fun requestDetailsCall(actionComponentData: ActionComponentData)
         fun showError(errorMessage: String, terminate: Boolean)

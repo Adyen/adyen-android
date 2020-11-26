@@ -98,7 +98,7 @@ class DropInActivity : AppCompatActivity(), DropInBottomSheetDialogFragment.Prot
 
     private val googlePayErrorObserver: Observer<ComponentError> = Observer {
         Logger.d(TAG, "GooglePay error - ${it?.errorMessage}")
-        showPaymentMethodsDialog(true)
+        showPaymentMethodsDialog()
     }
 
     override fun attachBaseContext(newBase: Context?) {
@@ -125,7 +125,7 @@ class DropInActivity : AppCompatActivity(), DropInBottomSheetDialogFragment.Prot
             getFragmentByTag(PAYMENT_METHOD_FRAGMENT_TAG) == null &&
             getFragmentByTag(ACTION_FRAGMENT_TAG) == null
         ) {
-            PaymentMethodListDialogFragment.newInstance(false).show(supportFragmentManager, PAYMENT_METHOD_FRAGMENT_TAG)
+            PaymentMethodListDialogFragment().show(supportFragmentManager, PAYMENT_METHOD_FRAGMENT_TAG)
         }
 
         // Automatically wait to collect new results from the DropInService while lifecycle is active
@@ -267,21 +267,21 @@ class DropInActivity : AppCompatActivity(), DropInBottomSheetDialogFragment.Prot
         setLoading(isWaitingResult)
     }
 
-    override fun showPaymentMethodsDialog(showInExpandStatus: Boolean) {
+    override fun showPaymentMethodsDialog() {
         Logger.d(TAG, "showPaymentMethodsDialog")
         hideFragmentDialog(COMPONENT_FRAGMENT_TAG)
         hideFragmentDialog(ACTION_FRAGMENT_TAG)
-        PaymentMethodListDialogFragment.newInstance(showInExpandStatus).show(supportFragmentManager, PAYMENT_METHOD_FRAGMENT_TAG)
+        PaymentMethodListDialogFragment().show(supportFragmentManager, PAYMENT_METHOD_FRAGMENT_TAG)
     }
 
-    override fun showComponentDialog(paymentMethod: PaymentMethod, wasInExpandMode: Boolean) {
+    override fun showComponentDialog(paymentMethod: PaymentMethod) {
         Logger.d(TAG, "showComponentDialog")
         hideFragmentDialog(PAYMENT_METHOD_FRAGMENT_TAG)
         hideFragmentDialog(ACTION_FRAGMENT_TAG)
         val dialogFragment = when (paymentMethod.type) {
             PaymentMethodTypes.SCHEME -> CardComponentDialogFragment
             else -> GenericComponentDialogFragment
-        }.newInstance(paymentMethod, dropInViewModel.dropInConfiguration, wasInExpandMode)
+        }.newInstance(paymentMethod, dropInViewModel.dropInConfiguration)
 
         dialogFragment.show(supportFragmentManager, COMPONENT_FRAGMENT_TAG)
     }

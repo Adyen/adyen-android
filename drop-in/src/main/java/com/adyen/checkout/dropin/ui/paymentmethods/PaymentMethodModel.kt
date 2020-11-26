@@ -8,10 +8,7 @@
 
 package com.adyen.checkout.dropin.ui.paymentmethods
 
-import com.adyen.checkout.base.model.paymentmethods.PaymentMethod
-
 data class PaymentMethodModel(
     val type: String,
-    val name: String,
-    val paymentMethod: PaymentMethod = PaymentMethod()
+    val name: String
 )

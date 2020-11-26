@@ -8,12 +8,12 @@
 
 package com.adyen.checkout.dropin.ui.base
 
-import androidx.lifecycle.Observer
 import android.content.DialogInterface
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.lifecycle.Observer
 import com.adyen.checkout.base.ComponentError
 import com.adyen.checkout.base.PaymentComponent
 import com.adyen.checkout.base.PaymentComponentState
@@ -41,18 +41,15 @@ open abstract class BaseComponentDialogFragment : DropInBottomSheetDialogFragmen
 
         companion object {
             const val PAYMENT_METHOD = "PAYMENT_METHOD"
-            const val WAS_IN_EXPAND_STATUS = "WAS_IN_EXPAND_STATUS"
             const val DROP_IN_CONFIGURATION = "DROP_IN_CONFIGURATION"
         }
 
         fun newInstance(
             paymentMethod: PaymentMethod,
-            dropInConfiguration: DropInConfiguration,
-            wasInExpandStatus: Boolean
+            dropInConfiguration: DropInConfiguration
         ): T {
             val args = Bundle()
             args.putParcelable(PAYMENT_METHOD, paymentMethod)
-            args.putBoolean(WAS_IN_EXPAND_STATUS, wasInExpandStatus)
             args.putParcelable(DROP_IN_CONFIGURATION, dropInConfiguration)
 
             var dialogFragment = classes.newInstance()
@@ -83,7 +80,7 @@ open abstract class BaseComponentDialogFragment : DropInBottomSheetDialogFragmen
 
     override fun onBackPressed(): Boolean {
         Logger.d(TAG, "onBackPressed")
-        protocol.showPaymentMethodsDialog(arguments?.getBoolean(BaseCompanion.WAS_IN_EXPAND_STATUS, false)!!)
+        protocol.showPaymentMethodsDialog()
         return true
     }
 
