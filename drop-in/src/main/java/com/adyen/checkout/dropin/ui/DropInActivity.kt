@@ -25,6 +25,7 @@ import com.adyen.checkout.base.analytics.AnalyticEvent
 import com.adyen.checkout.base.analytics.AnalyticsDispatcher
 import com.adyen.checkout.base.model.PaymentMethodsApiResponse
 import com.adyen.checkout.base.model.paymentmethods.PaymentMethod
+import com.adyen.checkout.base.model.paymentmethods.StoredPaymentMethod
 import com.adyen.checkout.base.model.payments.request.PaymentComponentData
 import com.adyen.checkout.base.model.payments.response.Action
 import com.adyen.checkout.base.util.PaymentMethodTypes
@@ -272,6 +273,18 @@ class DropInActivity : AppCompatActivity(), DropInBottomSheetDialogFragment.Prot
         hideFragmentDialog(COMPONENT_FRAGMENT_TAG)
         hideFragmentDialog(ACTION_FRAGMENT_TAG)
         PaymentMethodListDialogFragment().show(supportFragmentManager, PAYMENT_METHOD_FRAGMENT_TAG)
+    }
+
+    override fun showStoredComponentDialog(storedPaymentMethod: StoredPaymentMethod) {
+        Logger.d(TAG, "showStoredComponentDialog")
+        hideFragmentDialog(PAYMENT_METHOD_FRAGMENT_TAG)
+        hideFragmentDialog(ACTION_FRAGMENT_TAG)
+        val dialogFragment = when (storedPaymentMethod.type) {
+            PaymentMethodTypes.SCHEME -> CardComponentDialogFragment
+            else -> GenericComponentDialogFragment
+        }.newInstance(storedPaymentMethod, dropInViewModel.dropInConfiguration)
+
+        dialogFragment.show(supportFragmentManager, COMPONENT_FRAGMENT_TAG)
     }
 
     override fun showComponentDialog(paymentMethod: PaymentMethod) {

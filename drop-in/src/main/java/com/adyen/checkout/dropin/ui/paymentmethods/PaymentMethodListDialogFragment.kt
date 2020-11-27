@@ -76,7 +76,7 @@ class PaymentMethodListDialogFragment : DropInBottomSheetDialogFragment(), Payme
     }
 
     override fun onStoredPaymentMethodSelected(storedPaymentMethodModel: StoredPaymentMethodModel) {
-        Logger.e(TAG, "Not yet implemented, start stored payment method fragment")
+        protocol.showStoredComponentDialog(mDropInViewModel.getStoredPaymentMethod(storedPaymentMethodModel.id))
     }
 
     override fun onPaymentMethodSelected(paymentMethod: PaymentMethodModel) {
