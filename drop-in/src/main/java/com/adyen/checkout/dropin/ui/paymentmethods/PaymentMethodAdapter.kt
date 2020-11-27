@@ -15,6 +15,7 @@ import android.widget.ImageView
 import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
 import com.adyen.checkout.base.api.ImageLoader
+import com.adyen.checkout.base.util.DateUtils
 import com.adyen.checkout.base.util.PaymentMethodTypes
 import com.adyen.checkout.core.exception.CheckoutException
 import com.adyen.checkout.core.log.LogUtil
@@ -33,7 +34,7 @@ class PaymentMethodAdapter(
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): BaseViewHolder {
         return when (viewType) {
-            PAYMENT_METHODS_HEADER -> PaymentMethodsHeaderVH(getView(parent, R.layout.payment_methods_list_header))
+            PAYMENT_METHODS_HEADER -> HeaderVH(getView(parent, R.layout.payment_methods_list_header))
             STORED_PAYMENT_METHOD -> StoredPaymentMethodVH(getView(parent, R.layout.payment_methods_list_item))
             PAYMENT_METHOD -> PaymentMethodVH(getView(parent, R.layout.payment_methods_list_item))
             else -> throw CheckoutException("Unexpected viewType on onCreateViewHolder - $viewType")
@@ -41,63 +42,74 @@ class PaymentMethodAdapter(
     }
 
     override fun getItemViewType(position: Int): Int {
-        // Top is always a header
-        return if (position == 0) {
-            PAYMENT_METHODS_HEADER
-        } else {
-            if (noStored()) {
-                // only regular payment methods left
-                PAYMENT_METHOD
-            } else {
-                when {
-                    // 0 header - stored payments - 2nd header - regular payments
-                    position <= paymentMethodsListModel.storedPaymentMethods.size -> STORED_PAYMENT_METHOD
-                    position == (paymentMethodsListModel.storedPaymentMethods.size + 1) -> PAYMENT_METHODS_HEADER
-                    else -> PAYMENT_METHOD
-                }
-            }
+        return when {
+            position == 0 -> PAYMENT_METHODS_HEADER // Top is always a header
+            noStored() -> PAYMENT_METHOD // only regular payment methods left
+            // has stored payments
+            position <= paymentMethodsListModel.storedPaymentMethods.size -> STORED_PAYMENT_METHOD // 0 is header then stored payments
+            position == (paymentMethodsListModel.storedPaymentMethods.size + 1) -> PAYMENT_METHODS_HEADER // 2nd header
+            else -> PAYMENT_METHOD
         }
     }
 
     override fun onBindViewHolder(holder: BaseViewHolder, position: Int) {
-        when {
-            (holder is PaymentMethodsHeaderVH) -> {
-                if (position == 0) {
-                    holder.title.setText(
-                        if (noStored()) R.string.payment_methods_header
-                        else R.string.store_payment_methods_header
-                    )
-                } else {
-                    holder.title.setText(R.string.other_payment_methods)
-                }
-            }
-            (holder is StoredPaymentMethodVH) -> {
-                val storedPaymentMethod = getStoredPaymentMethodAt(position)
+        when (holder) {
+            is HeaderVH -> bindHeader(holder, position)
+            is StoredPaymentMethodVH -> bindStoredPaymentMethod(holder, position)
+            is PaymentMethodVH -> bindPaymentMethod(holder, position)
+        }
+    }
+
+    private fun bindHeader(holder: HeaderVH, position: Int) {
+        if (position == 0) {
+            holder.title.setText(
+                if (noStored()) R.string.payment_methods_header
+                else R.string.store_payment_methods_header
+            )
+        } else {
+            holder.title.setText(R.string.other_payment_methods)
+        }
+    }
+
+    private fun bindStoredPaymentMethod(holder: StoredPaymentMethodVH, position: Int) {
+        val storedPaymentMethod = getStoredPaymentMethodAt(position)
+
+        when (storedPaymentMethod) {
+            is StoredCardModel -> bindStoredCard(holder, storedPaymentMethod)
+            is GenericStoredModel -> {
                 holder.text.text = storedPaymentMethod.name
-                holder.detail.text = storedPaymentMethod.details
-                holder.detail.visibility = View.VISIBLE
-                imageLoader.load(storedPaymentMethod.imageId, holder.logo)
-
-                holder.itemView.setOnClickListener {
-                    onStoredPaymentMethodClick(storedPaymentMethod)
-                }
-            }
-            (holder is PaymentMethodVH) -> {
-                val paymentMethod = getPaymentMethodAt(position)
-
-                holder.text.text = paymentMethod.name
                 holder.detail.visibility = View.GONE
-
-                val txVariant =
-                    if (paymentMethod.type == PaymentMethodTypes.SCHEME) CARD_LOGO_TYPE
-                    else paymentMethod.type
-
-                imageLoader.load(txVariant, holder.logo)
-
-                holder.itemView.setOnClickListener {
-                    onPaymentMethodClick(paymentMethod)
-                }
+                imageLoader.load(storedPaymentMethod.imageId, holder.logo)
             }
+        }
+
+        holder.itemView.setOnClickListener {
+            onStoredPaymentMethodClick(storedPaymentMethod)
+        }
+    }
+
+    private fun bindStoredCard(holder: StoredPaymentMethodVH, storedCardModel: StoredCardModel) {
+        val context = holder.itemView.context
+        holder.text.text = context.getString(R.string.card_number_4digit, storedCardModel.lastFour)
+        imageLoader.load(storedCardModel.imageId, holder.logo)
+        holder.detail.text = DateUtils.parseDateToView(storedCardModel.expiryMonth, storedCardModel.expiryYear)
+        holder.detail.visibility = View.VISIBLE
+    }
+
+    private fun bindPaymentMethod(holder: PaymentMethodVH, position: Int) {
+        val paymentMethod = getPaymentMethodAt(position)
+
+        holder.text.text = paymentMethod.name
+        holder.detail.visibility = View.GONE
+
+        val txVariant =
+            if (paymentMethod.type == PaymentMethodTypes.SCHEME) CARD_LOGO_TYPE
+            else paymentMethod.type
+
+        imageLoader.load(txVariant, holder.logo)
+
+        holder.itemView.setOnClickListener {
+            onPaymentMethodClick(paymentMethod)
         }
     }
 
@@ -160,7 +172,7 @@ class PaymentMethodAdapter(
         internal val logo: ImageView = rootView.findViewById(R.id.imageView_logo)
     }
 
-    class PaymentMethodsHeaderVH(rootView: View) : BaseViewHolder(rootView) {
+    class HeaderVH(rootView: View) : BaseViewHolder(rootView) {
         internal val title: TextView = rootView.findViewById(R.id.payment_method_header)
     }
 

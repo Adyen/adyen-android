@@ -17,7 +17,5 @@
     <string name="checkout_security_code_not_valid">Formato CVC/CVV non valido</string>
     <string name="checkout_holder_name_not_valid">Nome del titolare non valido</string>
 
-    <string name="card_number_4digit">•••• %s</string>
-    <string name="expires_in">%1$s/%2$s</string>
     <string name="store_payment_method">Salva per il prossimo pagamento</string>
 </resources>

@@ -17,7 +17,5 @@
     <string name="checkout_security_code_not_valid">Virheellinen CVC / CVV-muoto</string>
     <string name="checkout_holder_name_not_valid">Haltijan nimi väärä</string>
 
-    <string name="card_number_4digit">•••• %s</string>
-    <string name="expires_in">%1$s/%2$s</string>
     <string name="store_payment_method">Tallenna seuraavaa maksuani varten</string>
 </resources>

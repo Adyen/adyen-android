@@ -17,7 +17,5 @@
     <string name="checkout_security_code_not_valid">CVC／CVV 格式無效</string>
     <string name="checkout_holder_name_not_valid">持卡人姓名無效</string>
 
-    <string name="card_number_4digit">•••• %s</string>
-    <string name="expires_in">%1$s/%2$s</string>
     <string name="store_payment_method">儲存以供下次付款使用</string>
 </resources>

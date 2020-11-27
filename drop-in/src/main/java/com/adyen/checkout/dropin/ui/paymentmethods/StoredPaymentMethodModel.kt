@@ -8,9 +8,21 @@
 
 package com.adyen.checkout.dropin.ui.paymentmethods
 
-data class StoredPaymentMethodModel(
-    val id: String,
-    val name: String,
-    val details: String,
-    val imageId: String
-)
+sealed class StoredPaymentMethodModel {
+    abstract val id: String
+    abstract val imageId: String
+}
+
+data class StoredCardModel(
+    override val id: String,
+    override val imageId: String,
+    val lastFour: String,
+    val expiryMonth: String,
+    val expiryYear: String
+) : StoredPaymentMethodModel()
+
+data class GenericStoredModel(
+    override val id: String,
+    override val imageId: String,
+    val name: String
+) : StoredPaymentMethodModel()

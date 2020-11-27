@@ -117,17 +117,17 @@ public class StoredPaymentMethod extends ModelObject {
         return name;
     }
 
-    @NonNull
+    @Nullable
     public String getBrand() {
         return brand;
     }
 
-    @NonNull
+    @Nullable
     public String getExpiryMonth() {
         return expiryMonth;
     }
 
-    @NonNull
+    @Nullable
     public String getExpiryYear() {
         return expiryYear;
     }
@@ -142,7 +142,7 @@ public class StoredPaymentMethod extends ModelObject {
         return id;
     }
 
-    @NonNull
+    @Nullable
     public String getLastFour() {
         return lastFour;
     }
@@ -152,7 +152,7 @@ public class StoredPaymentMethod extends ModelObject {
         return shopperEmail;
     }
 
-    @NonNull
+    @Nullable
     public List<String> getSupportedShopperInteractions() {
         return supportedShopperInteractions;
     }
@@ -165,7 +165,7 @@ public class StoredPaymentMethod extends ModelObject {
         this.name = name;
     }
 
-    public void setBrand(@NonNull String brand) {
+    public void setBrand(@Nullable String brand) {
         this.brand = brand;
     }
 
@@ -193,7 +193,7 @@ public class StoredPaymentMethod extends ModelObject {
         this.shopperEmail = shopperEmail;
     }
 
-    public void setSupportedShopperInteractions(@NonNull List<String> supportedShopperInteractions) {
+    public void setSupportedShopperInteractions(@Nullable List<String> supportedShopperInteractions) {
         this.supportedShopperInteractions = supportedShopperInteractions;
     }
 

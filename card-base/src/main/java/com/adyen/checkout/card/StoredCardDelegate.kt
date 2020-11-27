@@ -25,10 +25,10 @@ class StoredCardDelegate(private val storedPaymentMethod: StoredPaymentMethod) :
 
     fun getStoredCardInputData(): CardInputData {
         val storedCardInputData = CardInputData()
-        storedCardInputData.cardNumber = storedPaymentMethod.lastFour
+        storedCardInputData.cardNumber = storedPaymentMethod.lastFour.orEmpty()
 
         try {
-            val storedDate = ExpiryDate(storedPaymentMethod.expiryMonth.toInt(), storedPaymentMethod.expiryYear.toInt())
+            val storedDate = ExpiryDate(storedPaymentMethod.expiryMonth.orEmpty().toInt(), storedPaymentMethod.expiryYear.orEmpty().toInt())
             storedCardInputData.expiryDate = storedDate
         } catch (e: NumberFormatException) {
             Logger.e(logTag, "Failed to parse stored Date", e)
@@ -39,7 +39,7 @@ class StoredCardDelegate(private val storedPaymentMethod: StoredPaymentMethod) :
     }
 
     fun getCardType(): CardType? {
-        return CardType.getByBrandName(storedPaymentMethod.brand)
+        return CardType.getByBrandName(storedPaymentMethod.brand.orEmpty())
     }
 
     fun getId(): String {

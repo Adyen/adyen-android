@@ -17,15 +17,16 @@ import com.adyen.checkout.base.component.Configuration
 import com.adyen.checkout.base.model.PaymentMethodsApiResponse
 import com.adyen.checkout.base.model.paymentmethods.PaymentMethod
 import com.adyen.checkout.base.model.paymentmethods.StoredPaymentMethod
-import com.adyen.checkout.base.util.DateUtils
 import com.adyen.checkout.base.util.PaymentMethodTypes
 import com.adyen.checkout.core.exception.CheckoutException
 import com.adyen.checkout.core.log.LogUtil
 import com.adyen.checkout.core.log.Logger
 import com.adyen.checkout.dropin.DropInConfiguration
 import com.adyen.checkout.dropin.checkComponentAvailability
+import com.adyen.checkout.dropin.ui.paymentmethods.GenericStoredModel
 import com.adyen.checkout.dropin.ui.paymentmethods.PaymentMethodModel
 import com.adyen.checkout.dropin.ui.paymentmethods.PaymentMethodsListModel
+import com.adyen.checkout.dropin.ui.paymentmethods.StoredCardModel
 import com.adyen.checkout.dropin.ui.paymentmethods.StoredPaymentMethodModel
 
 class DropInViewModel(application: Application) : AndroidViewModel(application), ComponentAvailableCallback<Configuration> {
@@ -47,8 +48,6 @@ class DropInViewModel(application: Application) : AndroidViewModel(application),
 
     lateinit var dropInConfiguration: DropInConfiguration
 
-    private val nullNameFallback = "Unknown"
-
     private var availabilitySum = 0
     private var availabilitySkipSum = 0
     private var availabilityChecksum = 0
@@ -57,21 +56,11 @@ class DropInViewModel(application: Application) : AndroidViewModel(application),
     private val paymentMethodsList = mutableListOf<PaymentMethodModel>()
 
     fun getStoredPaymentMethod(id: String): StoredPaymentMethod {
-        for (storedPaymentMethod in paymentMethodsApiResponse.storedPaymentMethods.orEmpty()) {
-            if (storedPaymentMethod.id == id) {
-                return storedPaymentMethod
-            }
-        }
-        return StoredPaymentMethod()
+        return paymentMethodsApiResponse.storedPaymentMethods?.firstOrNull { it.id == id } ?: StoredPaymentMethod()
     }
 
     fun getPaymentMethod(type: String): PaymentMethod {
-        for (paymentMethod in paymentMethodsApiResponse.paymentMethods.orEmpty()) {
-            if (paymentMethod.type == type) {
-                return paymentMethod
-            }
-        }
-        return PaymentMethod()
+        return paymentMethodsApiResponse.paymentMethods?.firstOrNull { it.type == type } ?: PaymentMethod()
     }
 
     private fun onPaymentMethodsResponseChanged(paymentMethods: List<PaymentMethod>, storedPaymentMethods: List<StoredPaymentMethod>) {
@@ -97,18 +86,18 @@ class DropInViewModel(application: Application) : AndroidViewModel(application),
     private fun makeStoredModel(storedPaymentMethod: StoredPaymentMethod): StoredPaymentMethodModel {
         return when (storedPaymentMethod.type) {
             PaymentMethodTypes.SCHEME -> {
-                StoredPaymentMethodModel(
-                    storedPaymentMethod.id ?: "",
-                    "•••• ${storedPaymentMethod.lastFour}",
-                    "${storedPaymentMethod.expiryMonth}/${DateUtils.removeFirstTwoDigitFromYear(storedPaymentMethod.expiryYear)}",
-                    storedPaymentMethod.brand ?: ""
+                StoredCardModel(
+                    storedPaymentMethod.id.orEmpty(),
+                    storedPaymentMethod.brand.orEmpty(),
+                    storedPaymentMethod.lastFour.orEmpty(),
+                    storedPaymentMethod.expiryMonth.orEmpty(),
+                    storedPaymentMethod.expiryYear.orEmpty()
                 )
             }
-            else -> StoredPaymentMethodModel(
-                storedPaymentMethod.id ?: "",
-                storedPaymentMethod.name ?: "",
-                "",
-                storedPaymentMethod.type ?: ""
+            else -> GenericStoredModel(
+                storedPaymentMethod.id.orEmpty(),
+                storedPaymentMethod.type.orEmpty(),
+                storedPaymentMethod.name.orEmpty()
             )
         }
     }
@@ -136,7 +125,7 @@ class DropInViewModel(application: Application) : AndroidViewModel(application),
                     // We assume payment method is available and remove it later when the callback comes
                     // this is the overwhelming majority of cases, and we keep the list ordered this way.
                     paymentMethodsList.add(
-                        PaymentMethodModel(type, paymentMethod.name ?: nullNameFallback)
+                        PaymentMethodModel(type, paymentMethod.name.orEmpty())
                     )
                     checkComponentAvailability(getApplication(), paymentMethod, dropInConfiguration, this)
                 }
@@ -147,7 +136,7 @@ class DropInViewModel(application: Application) : AndroidViewModel(application),
                     } else {
                         Logger.d(TAG, "No details required - $type")
                         paymentMethodsList.add(
-                            PaymentMethodModel(type, paymentMethod.name ?: nullNameFallback)
+                            PaymentMethodModel(type, paymentMethod.name.orEmpty())
                         )
                     }
                     // If last payment method is redirect list might be ready now
@@ -164,11 +153,7 @@ class DropInViewModel(application: Application) : AndroidViewModel(application),
 
         if (!isAvailable) {
             Logger.e(TAG, "${paymentMethod.type} NOT AVAILABLE")
-            for ((index, paymentMethodModel) in paymentMethodsList.withIndex()) {
-                if (paymentMethodModel.type == paymentMethod.type) {
-                    paymentMethodsList.removeAt(index)
-                }
-            }
+            paymentMethodsList.removeAll { it.type == paymentMethod.type }
         }
         checkIfListIsReady()
     }
