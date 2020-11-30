@@ -27,6 +27,7 @@ import com.adyen.checkout.base.component.BaseConfigurationBuilder
 import com.adyen.checkout.base.component.Configuration
 import com.adyen.checkout.base.component.OutputData
 import com.adyen.checkout.base.model.paymentmethods.PaymentMethod
+import com.adyen.checkout.base.model.paymentmethods.StoredPaymentMethod
 import com.adyen.checkout.base.model.payments.request.PaymentMethodDetails
 import com.adyen.checkout.base.util.ActionTypes
 import com.adyen.checkout.base.util.PaymentMethodTypes
@@ -152,9 +153,9 @@ internal fun checkComponentAvailability(
     callback: ComponentAvailableCallback<in Configuration>
 ) {
     try {
-        Logger.d(ComponentParsingProvider.TAG, "Checking availability for type - ${paymentMethod.type}")
+        Logger.v(ComponentParsingProvider.TAG, "Checking availability for type - ${paymentMethod.type}")
 
-        val type = paymentMethod.type ?: throw CheckoutException("PaymentMethod is null")
+        val type = paymentMethod.type ?: throw CheckoutException("PaymentMethod type is null")
 
         val provider = getProviderForType(type)
         val configuration = dropInConfiguration.getConfigurationFor<Configuration>(type, application)
@@ -192,9 +193,36 @@ internal fun getProviderForType(type: String): PaymentComponentProvider<PaymentC
 }
 
 /**
+ * Provides a [PaymentComponent] from a [PaymentComponentProvider] using the [StoredPaymentMethod] reference.
+ *
+ * @param fragment The Fragment which the PaymentComponent lifecycle will be bound to.
+ * @param storedPaymentMethod The stored payment method to be parsed.
+ * @throws CheckoutException In case a component cannot be created.
+ */
+internal fun getComponentFor(
+    fragment: Fragment,
+    storedPaymentMethod: StoredPaymentMethod,
+    dropInConfiguration: DropInConfiguration
+): PaymentComponent<PaymentComponentState<in PaymentMethodDetails>, Configuration> {
+    val context = fragment.requireContext()
+
+    val component = when (storedPaymentMethod.type) {
+        PaymentMethodTypes.SCHEME -> {
+            val cardConfig: CardConfiguration = dropInConfiguration.getConfigurationFor(PaymentMethodTypes.SCHEME, context)
+            CardComponent.PROVIDER.get(fragment, storedPaymentMethod, cardConfig)
+        }
+        else -> {
+            throw CheckoutException("Unable to find stored component for type - ${storedPaymentMethod.type}")
+        }
+    }
+    component.setCreatedForDropIn()
+    return component as PaymentComponent<PaymentComponentState<in PaymentMethodDetails>, Configuration>
+}
+
+/**
  * Provides a [PaymentComponent] from a [PaymentComponentProvider] using the [PaymentMethod] reference.
  *
- * @param fragment The Activity/Fragment which the PaymentComponent lifecycle will be bound to.
+ * @param fragment The Fragment which the PaymentComponent lifecycle will be bound to.
  * @param paymentMethod The payment method to be parsed.
  * @throws CheckoutException In case a component cannot be created.
  */

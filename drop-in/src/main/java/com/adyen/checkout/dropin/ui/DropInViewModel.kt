@@ -10,17 +10,24 @@ package com.adyen.checkout.dropin.ui
 
 import android.app.Application
 import androidx.lifecycle.AndroidViewModel
+import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import com.adyen.checkout.base.ComponentAvailableCallback
 import com.adyen.checkout.base.component.Configuration
 import com.adyen.checkout.base.model.PaymentMethodsApiResponse
 import com.adyen.checkout.base.model.paymentmethods.PaymentMethod
+import com.adyen.checkout.base.model.paymentmethods.StoredPaymentMethod
 import com.adyen.checkout.base.util.PaymentMethodTypes
+import com.adyen.checkout.core.exception.CheckoutException
 import com.adyen.checkout.core.log.LogUtil
 import com.adyen.checkout.core.log.Logger
 import com.adyen.checkout.dropin.DropInConfiguration
 import com.adyen.checkout.dropin.checkComponentAvailability
-import com.adyen.checkout.dropin.ui.paymentmethods.PaymentMethodsModel
+import com.adyen.checkout.dropin.ui.paymentmethods.GenericStoredModel
+import com.adyen.checkout.dropin.ui.paymentmethods.PaymentMethodModel
+import com.adyen.checkout.dropin.ui.paymentmethods.PaymentMethodsListModel
+import com.adyen.checkout.dropin.ui.paymentmethods.StoredCardModel
+import com.adyen.checkout.dropin.ui.paymentmethods.StoredPaymentMethodModel
 
 class DropInViewModel(application: Application) : AndroidViewModel(application), ComponentAvailableCallback<Configuration> {
 
@@ -28,66 +35,144 @@ class DropInViewModel(application: Application) : AndroidViewModel(application),
         val TAG = LogUtil.getTag()
     }
 
-    val paymentMethodsModelLiveData: MutableLiveData<PaymentMethodsModel> = MutableLiveData()
+    private val paymentMethodsMutableLiveData: MutableLiveData<PaymentMethodsListModel> = MutableLiveData()
+    val paymentMethodsLiveData: LiveData<PaymentMethodsListModel> = paymentMethodsMutableLiveData
 
     var paymentMethodsApiResponse: PaymentMethodsApiResponse = PaymentMethodsApiResponse()
         set(value) {
             if (value != paymentMethodsApiResponse) {
                 field = value
-                if (value.paymentMethods != null) {
-                    // TODO: 13/11/2020 refactor to add stored again
-                    onPaymentMethodsResponseChanged(value.paymentMethods.orEmpty() /*+ value.storedPaymentMethods.orEmpty()*/)
-                }
+                onPaymentMethodsResponseChanged(value.paymentMethods.orEmpty(), value.storedPaymentMethods.orEmpty())
             }
         }
 
     lateinit var dropInConfiguration: DropInConfiguration
 
-    private val paymentMethodsModel = PaymentMethodsModel()
+    private var availabilitySum = 0
+    private var availabilitySkipSum = 0
+    private var availabilityChecksum = 0
 
-    override fun onAvailabilityResult(isAvailable: Boolean, paymentMethod: PaymentMethod, config: Configuration?) {
-        Logger.d(TAG, "onAvailabilityResult - ${paymentMethod.type} $isAvailable")
+    private val storedPaymentMethodsList = mutableListOf<StoredPaymentMethodModel>()
+    private val paymentMethodsList = mutableListOf<PaymentMethodModel>()
 
-        if (isAvailable) {
-            addPaymentMethod(paymentMethod)
-        }
-
-        // TODO handle unavailable and only notify when all list is checked
+    fun getStoredPaymentMethod(id: String): StoredPaymentMethod {
+        return paymentMethodsApiResponse.storedPaymentMethods?.firstOrNull { it.id == id } ?: StoredPaymentMethod()
     }
 
-    private fun onPaymentMethodsResponseChanged(paymentMethods: List<PaymentMethod>) {
+    fun getPaymentMethod(type: String): PaymentMethod {
+        return paymentMethodsApiResponse.paymentMethods?.firstOrNull { it.type == type } ?: PaymentMethod()
+    }
+
+    private fun onPaymentMethodsResponseChanged(paymentMethods: List<PaymentMethod>, storedPaymentMethods: List<StoredPaymentMethod>) {
         Logger.d(TAG, "onPaymentMethodsResponseChanged")
+        setupStoredPaymentMethods(storedPaymentMethods)
+        setupPaymentMethods(paymentMethods)
+    }
+
+    private fun setupStoredPaymentMethods(storedPaymentMethods: List<StoredPaymentMethod>) {
+        storedPaymentMethodsList.clear()
+        for (storedPaymentMethod in storedPaymentMethods) {
+            val type = storedPaymentMethod.type
+            val id = storedPaymentMethod.id
+            if (type != null && id != null && PaymentMethodTypes.SUPPORTED_PAYMENT_METHODS.contains(type)) {
+                // We don't check for availability on stored payment methods
+                storedPaymentMethodsList.add(makeStoredModel(storedPaymentMethod))
+            } else {
+                Logger.e(TAG, "Unsupported stored payment method - $type - $id")
+            }
+        }
+    }
+
+    private fun makeStoredModel(storedPaymentMethod: StoredPaymentMethod): StoredPaymentMethodModel {
+        return when (storedPaymentMethod.type) {
+            PaymentMethodTypes.SCHEME -> {
+                StoredCardModel(
+                    storedPaymentMethod.id.orEmpty(),
+                    storedPaymentMethod.brand.orEmpty(),
+                    storedPaymentMethod.lastFour.orEmpty(),
+                    storedPaymentMethod.expiryMonth.orEmpty(),
+                    storedPaymentMethod.expiryYear.orEmpty()
+                )
+            }
+            else -> GenericStoredModel(
+                storedPaymentMethod.id.orEmpty(),
+                storedPaymentMethod.type.orEmpty(),
+                storedPaymentMethod.name.orEmpty()
+            )
+        }
+    }
+
+    private fun setupPaymentMethods(paymentMethods: List<PaymentMethod>) {
+        // We can't remove availability callbacks so just for safety let's crash in case of a concurrency issue.
+        if (availabilityChecksum != 0) {
+            throw CheckoutException("Concurrency error. Cannot update Payment methods list because availability is still being checked.")
+        }
+
+        // Reset variables
+        availabilitySum = 0
+        availabilitySkipSum = 0
+        availabilityChecksum = paymentMethods.size
+        paymentMethodsList.clear()
 
         for (paymentMethod in paymentMethods) {
             val type = paymentMethod.type
-
-            if (type == null) {
-                Logger.e(TAG, "PaymentMethod type is null")
-            } else if (PaymentMethodTypes.SUPPORTED_PAYMENT_METHODS.contains(type)) {
-                checkComponentAvailability(getApplication(), paymentMethod, dropInConfiguration, this)
-            } else {
-                if (!PaymentMethodTypes.UNSUPPORTED_PAYMENT_METHODS.contains(type)) {
-                    Logger.d(TAG, "No details required - $type")
-                    addPaymentMethod(paymentMethod)
-                } else {
-                    Logger.e(TAG, "PaymentMethod not yet supported - $type")
+            when {
+                type == null -> {
+                    throw CheckoutException("PaymentMethod type is null")
+                }
+                PaymentMethodTypes.SUPPORTED_PAYMENT_METHODS.contains(type) -> {
+                    Logger.v(TAG, "Supported payment method: $type")
+                    // We assume payment method is available and remove it later when the callback comes
+                    // this is the overwhelming majority of cases, and we keep the list ordered this way.
+                    paymentMethodsList.add(
+                        PaymentMethodModel(type, paymentMethod.name.orEmpty())
+                    )
+                    checkComponentAvailability(getApplication(), paymentMethod, dropInConfiguration, this)
+                }
+                else -> {
+                    availabilitySkipSum++
+                    if (PaymentMethodTypes.UNSUPPORTED_PAYMENT_METHODS.contains(type)) {
+                        Logger.e(TAG, "PaymentMethod not yet supported - $type")
+                    } else {
+                        Logger.d(TAG, "No details required - $type")
+                        paymentMethodsList.add(
+                            PaymentMethodModel(type, paymentMethod.name.orEmpty())
+                        )
+                    }
+                    // If last payment method is redirect list might be ready now
+                    checkIfListIsReady()
                 }
             }
         }
     }
 
-    private fun addPaymentMethod(paymentMethod: PaymentMethod) {
-        // TODO: 13/11/2020 Refactor to add stored again
-//        if (paymentMethod is StoredPaymentMethod) {
-//            if (paymentMethod.isEcommerce) {
-//                paymentMethodsModel.storedPaymentMethods.add(paymentMethod)
-//            } else {
-//                Logger.d(TAG, "Stored method ${paymentMethod.type} is not Ecommerce")
-//            }
-//        } else {
-//            paymentMethodsModel.paymentMethods.add(paymentMethod)
-//        }
-        paymentMethodsModel.paymentMethods.add(paymentMethod)
-        paymentMethodsModelLiveData.value = paymentMethodsModel
+    override fun onAvailabilityResult(isAvailable: Boolean, paymentMethod: PaymentMethod, config: Configuration?) {
+        Logger.d(TAG, "onAvailabilityResult - ${paymentMethod.type}: $isAvailable")
+
+        availabilitySum++
+
+        if (!isAvailable) {
+            Logger.e(TAG, "${paymentMethod.type} NOT AVAILABLE")
+            paymentMethodsList.removeAll { it.type == paymentMethod.type }
+        }
+        checkIfListIsReady()
+    }
+
+    private fun checkIfListIsReady() {
+        // All payment methods availability have been returned or skipped.
+        if ((availabilitySum + availabilitySkipSum) == availabilityChecksum) {
+            // Reset variables
+            availabilitySum = 0
+            availabilitySkipSum = 0
+            availabilityChecksum = 0
+
+            onPaymentMethodsReady()
+        }
+    }
+
+    private fun onPaymentMethodsReady() {
+        Logger.d(TAG, "onPaymentMethodsReady: ${storedPaymentMethodsList.size} - ${paymentMethodsList.size}")
+        val paymentMethodsListModel = PaymentMethodsListModel(storedPaymentMethodsList, paymentMethodsList)
+        paymentMethodsMutableLiveData.value = paymentMethodsListModel
     }
 }

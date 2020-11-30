@@ -9,7 +9,6 @@
 package com.adyen.checkout.dropin.ui.component
 
 import android.os.Bundle
-import com.google.android.material.bottomsheet.BottomSheetBehavior
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -28,6 +27,7 @@ import com.adyen.checkout.core.log.Logger
 import com.adyen.checkout.dropin.R
 import com.adyen.checkout.dropin.getViewFor
 import com.adyen.checkout.dropin.ui.base.BaseComponentDialogFragment
+import com.google.android.material.bottomsheet.BottomSheetBehavior
 import kotlinx.android.synthetic.main.fragment_generic_component.componentContainer
 import kotlinx.android.synthetic.main.fragment_generic_component.payButton
 import kotlinx.android.synthetic.main.fragment_generic_component.view.header
@@ -62,7 +62,7 @@ class GenericComponentDialogFragment : BaseComponentDialogFragment() {
     }
 
     override fun onChanged(paymentComponentState: PaymentComponentState<in PaymentMethodDetails>?) {
-        if (!componentView.isConfirmationRequired() && component.state?.isValid == true) {
+        if (!componentView.isConfirmationRequired && component.state?.isValid == true) {
             startPayment()
         }
     }
@@ -76,7 +76,7 @@ class GenericComponentDialogFragment : BaseComponentDialogFragment() {
         componentContainer.addView(componentView as View)
         componentView.attach(component as ViewableComponent<*, *, *>, this)
 
-        if (componentView.isConfirmationRequired()) {
+        if (componentView.isConfirmationRequired) {
             payButton.setOnClickListener {
                 if (component.state?.isValid == true) {
                     startPayment()

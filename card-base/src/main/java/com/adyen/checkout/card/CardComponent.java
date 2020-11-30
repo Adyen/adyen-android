@@ -13,7 +13,7 @@ import android.text.TextUtils;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 
-import com.adyen.checkout.base.PaymentComponentProvider;
+import com.adyen.checkout.base.StoredPaymentComponentProvider;
 import com.adyen.checkout.base.component.BasePaymentComponent;
 import com.adyen.checkout.base.model.payments.request.CardPaymentMethod;
 import com.adyen.checkout.base.model.payments.request.PaymentComponentData;
@@ -41,7 +41,7 @@ public final class CardComponent extends BasePaymentComponent<
         CardComponentState> {
     private static final String TAG = LogUtil.getTag();
 
-    public static final PaymentComponentProvider<CardComponent, CardConfiguration> PROVIDER = new CardComponentProvider();
+    public static final StoredPaymentComponentProvider<CardComponent, CardConfiguration> PROVIDER = new CardComponentProvider();
 
     private static final String[] PAYMENT_METHOD_TYPES = {PaymentMethodTypes.SCHEME};
     private static final int BIN_VALUE_LENGTH = 6;

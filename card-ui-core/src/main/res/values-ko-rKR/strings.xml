@@ -17,7 +17,5 @@
     <string name="checkout_security_code_not_valid">유효하지 않은 CVC/CVV 형식</string>
     <string name="checkout_holder_name_not_valid">소유자 이름이 유효하지 않음</string>
 
-    <string name="card_number_4digit">•••• %s</string>
-    <string name="expires_in">%1$s/%2$s</string>
     <string name="store_payment_method">다음 결제를 위해 이 수단 저장</string>
 </resources>
