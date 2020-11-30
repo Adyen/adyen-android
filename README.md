@@ -81,6 +81,8 @@ resultIntent, YourDropInService::class.java)
     .build()
 ```
 
+You can find an example on how to create the `cardConfiguration` in the [Components](#components) section.
+
 After serializing the payment methods and creating the configuration, the Drop-in is ready to be initialized. Just call the `.startPayment()` method, the final result sent on the `CallResult` will be added to your `resultIntent` to start your Activity.
 
 ```kotlin
@@ -91,12 +93,10 @@ DropIn.startPayment(this@YourActivity, paymentMethodsApiResponse, dropInConfigur
 
 In order to have more flexibility over the checkout flow, you can use our Components to present each payment method individually in your own Activity.
 
-To do that you need the data of that specific payment method parsed to the `PaymentMethod` class, and to create the configuration object.
+To do that you need the data of that specific payment method parsed to the `PaymentMethod` class, and to create the configuration object (check out the [docs][docs.cardConfiguration] for a more detailed guide on how to initialize the `CardConfiguration.Builder`).
 
 ```kotlin
-val cardConfiguration =
-    CardConfiguration.Builder(Locale.getDefault(), resources.displayMetrics, Environment.TEST, "<publicKey>")
-    .build()
+val cardConfiguration = CardConfiguration.Builder(context).build()
         
 val cardComponent = CardComponent.PROVIDER.get(this@YourActivity, paymentMethod, cardConfiguration)
 ```
@@ -169,3 +169,4 @@ This repository is open source and available under the MIT license. For more inf
 [apiExplorer.payments]: https://docs.adyen.com/api-explorer/#/PaymentSetupAndVerificationService/v46/payments
 [apiExplorer.paymentsDetails]: https://docs.adyen.com/api-explorer/#/PaymentSetupAndVerificationService/v46/paymentsDetails
 [adyen.support]: https://support.adyen.com/hc/en-us/requests/new?ticket_form_id=360000705420
+[docs.cardConfiguration]: https://docs.adyen.com/checkout/android/components#step-1-set-up-components
