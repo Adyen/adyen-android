@@ -13,7 +13,6 @@ import android.content.Context
 import android.content.Intent
 import android.content.res.Configuration
 import android.os.Bundle
-import androidx.activity.viewModels
 import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.DialogFragment
@@ -81,7 +80,7 @@ class DropInActivity : AppCompatActivity(), DropInBottomSheetDialogFragment.Prot
         }
     }
 
-    private val dropInViewModel: DropInViewModel by viewModels()
+    private lateinit var dropInViewModel: DropInViewModel
 
     private lateinit var googlePayComponent: GooglePayComponent
 
@@ -167,28 +166,24 @@ class DropInActivity : AppCompatActivity(), DropInBottomSheetDialogFragment.Prot
 
     private fun initializeBundleVariables(bundle: Bundle?): Boolean {
         if (bundle == null) {
+            Logger.e(TAG, "Failed to initialize - bundle is null")
             return false
         }
-
         isWaitingResult = bundle.getBoolean(IS_WAITING_FOR_RESULT, false)
-
-        var variablesLoaded = true
-
-        if (bundle.containsKey(DROP_IN_CONFIGURATION_KEY)) {
-            dropInViewModel.dropInConfiguration = bundle.getParcelable(DROP_IN_CONFIGURATION_KEY)!!
+        val dropInConfiguration: DropInConfiguration? = bundle.getParcelable(DROP_IN_CONFIGURATION_KEY)
+        val paymentMethodsApiResponse: PaymentMethodsApiResponse? = bundle.getParcelable(PAYMENT_METHODS_RESPONSE_KEY)
+        return if (dropInConfiguration != null && paymentMethodsApiResponse != null) {
+            dropInViewModel = getViewModel { DropInViewModel(application, paymentMethodsApiResponse, dropInConfiguration) }
+            true
         } else {
-            Logger.e(TAG, "DropInConfiguration not found")
-            variablesLoaded = false
+            Logger.e(
+                TAG,
+                "Failed to initialize bundle variables " +
+                    "- dropInConfiguration: ${if (dropInConfiguration == null) "null" else "exists"} " +
+                    "- paymentMethodsApiResponse: ${if (paymentMethodsApiResponse == null) "null" else "exists"}"
+            )
+            false
         }
-
-        if (bundle.containsKey(PAYMENT_METHODS_RESPONSE_KEY)) {
-            dropInViewModel.paymentMethodsApiResponse = bundle.getParcelable(PAYMENT_METHODS_RESPONSE_KEY)!!
-        } else {
-            Logger.e(TAG, "PaymentMethods response not found")
-            variablesLoaded = false
-        }
-
-        return variablesLoaded
     }
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
