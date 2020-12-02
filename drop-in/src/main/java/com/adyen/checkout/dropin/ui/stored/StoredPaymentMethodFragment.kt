@@ -14,8 +14,6 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.LinearLayout
-import android.widget.TextView
 import androidx.fragment.app.activityViewModels
 import com.adyen.checkout.base.api.ImageLoader
 import com.adyen.checkout.base.model.paymentmethods.StoredPaymentMethod
@@ -28,6 +26,8 @@ import com.adyen.checkout.dropin.ui.base.DropInBottomSheetDialogFragment
 import com.adyen.checkout.dropin.ui.paymentmethods.GenericStoredModel
 import com.adyen.checkout.dropin.ui.paymentmethods.StoredCardModel
 import com.adyen.checkout.dropin.ui.viewModelsFactory
+import kotlinx.android.synthetic.main.fragment_stored_payment_method.stored_payment_method_container
+import kotlinx.android.synthetic.main.payment_methods_list_header.payment_method_header
 import kotlinx.android.synthetic.main.payment_methods_list_item.imageView_logo
 import kotlinx.android.synthetic.main.payment_methods_list_item.textView_detail
 import kotlinx.android.synthetic.main.payment_methods_list_item.textView_text
@@ -56,16 +56,20 @@ class StoredPaymentMethodFragment : DropInBottomSheetDialogFragment() {
         )
     }
 
-    @SuppressLint("ResourceAsColor")
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
-        val view = inflater.inflate(R.layout.fragment_stored_payment_method, container, false)
-        view.findViewById<TextView>(R.id.payment_method_header).setText(R.string.store_payment_methods_header)
-        view.findViewById<LinearLayout>(R.id.stored_payment_method_container).setBackgroundColor(android.R.color.transparent)
+        return inflater.inflate(R.layout.fragment_stored_payment_method, container, false)
+    }
+
+    @SuppressLint("ResourceAsColor")
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
+        Logger.d(TAG, "onViewCreated")
+        payment_method_header.setText(R.string.store_payment_methods_header)
+        stored_payment_method_container.setBackgroundColor(android.R.color.transparent)
         observe()
-        return view
     }
 
     override fun onCancel(dialog: DialogInterface) {

@@ -11,6 +11,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
+    android:paddingBottom="@dimen/standard_half_margin"
     android:orientation="vertical"
     tools:context=".ui.stored.StoredPaymentMethodFragment">
 
@@ -35,15 +36,12 @@
         android:layout_width="match_parent"
         android:text="@string/continue_button"/>
 
-    <TextView
+    <androidx.appcompat.widget.AppCompatButton
         android:id="@+id/others"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_gravity="center"
-        android:gravity="center"
-        android:paddingBottom="@dimen/standard_half_margin"
-        android:text="@string/change_payment_method"
-        android:textColor="@color/primaryColor"
-        android:textSize="16sp"
-        android:textStyle="normal"/>
+        style="@style/AdyenCheckout.SecondaryFlatButton"
+        android:layout_marginStart="@dimen/standard_margin"
+        android:layout_marginEnd="@dimen/standard_margin"
+        android:text="@string/change_payment_method" />
 </LinearLayout>
