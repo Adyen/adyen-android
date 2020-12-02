@@ -8,12 +8,13 @@
 
 package com.adyen.checkout.dropin.ui.paymentmethods
 
+import android.content.Context
 import android.content.DialogInterface
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import androidx.lifecycle.ViewModelProvider
+import androidx.fragment.app.activityViewModels
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.adyen.checkout.base.api.ImageLoader
@@ -27,6 +28,7 @@ import com.adyen.checkout.core.log.Logger
 import com.adyen.checkout.dropin.R
 import com.adyen.checkout.dropin.ui.DropInViewModel
 import com.adyen.checkout.dropin.ui.base.DropInBottomSheetDialogFragment
+import com.adyen.checkout.dropin.ui.getViewModel
 
 class PaymentMethodListDialogFragment : DropInBottomSheetDialogFragment(), PaymentMethodAdapter.OnPaymentMethodSelectedCallback {
 
@@ -34,19 +36,32 @@ class PaymentMethodListDialogFragment : DropInBottomSheetDialogFragment(), Payme
         private val TAG = LogUtil.getTag()
     }
 
-    private lateinit var mDropInViewModel: DropInViewModel
+    private val dropInViewModel: DropInViewModel by activityViewModels()
+    private lateinit var paymentMethodsListViewModel: PaymentMethodsListViewModel
     private lateinit var paymentMethodAdapter: PaymentMethodAdapter
+
+    override fun onAttach(context: Context) {
+        super.onAttach(context)
+        Logger.d(TAG, "onAttach")
+        paymentMethodsListViewModel = getViewModel {
+            PaymentMethodsListViewModel(
+                requireActivity().application,
+                dropInViewModel.paymentMethodsApiResponse.paymentMethods.orEmpty(),
+                dropInViewModel.paymentMethodsApiResponse.storedPaymentMethods.orEmpty(),
+                dropInViewModel.dropInConfiguration
+            )
+        }
+    }
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         Logger.d(TAG, "onCreateView")
-        mDropInViewModel = ViewModelProvider(requireActivity()).get(DropInViewModel::class.java)
         val view = inflater.inflate(R.layout.fragment_payment_methods_list, container, false)
         addObserver(view.findViewById(R.id.recyclerView_paymentMethods))
         return view
     }
 
     private fun addObserver(recyclerView: RecyclerView) {
-        mDropInViewModel.paymentMethodsLiveData.observe(
+        paymentMethodsListViewModel.paymentMethodsLiveData.observe(
             this,
             {
                 Logger.d(TAG, "paymentMethods changed")
@@ -59,7 +74,7 @@ class PaymentMethodListDialogFragment : DropInBottomSheetDialogFragment(), Payme
                     it,
                     ImageLoader.getInstance(
                         requireContext(),
-                        mDropInViewModel.dropInConfiguration.environment
+                        dropInViewModel.dropInConfiguration.environment
                     ),
                     this
                 )
@@ -76,7 +91,7 @@ class PaymentMethodListDialogFragment : DropInBottomSheetDialogFragment(), Payme
     }
 
     override fun onStoredPaymentMethodSelected(storedPaymentMethodModel: StoredPaymentMethodModel) {
-        protocol.showStoredComponentDialog(mDropInViewModel.getStoredPaymentMethod(storedPaymentMethodModel.id))
+        protocol.showStoredComponentDialog(dropInViewModel.getStoredPaymentMethod(storedPaymentMethodModel.id))
     }
 
     override fun onPaymentMethodSelected(paymentMethod: PaymentMethodModel) {
@@ -86,8 +101,8 @@ class PaymentMethodListDialogFragment : DropInBottomSheetDialogFragment(), Payme
         when (paymentMethod.type) {
             PaymentMethodTypes.GOOGLE_PAY -> {
                 protocol.startGooglePay(
-                    mDropInViewModel.getPaymentMethod(paymentMethod.type),
-                    mDropInViewModel.dropInConfiguration.getConfigurationFor(PaymentMethodTypes.GOOGLE_PAY, requireContext())
+                    dropInViewModel.getPaymentMethod(paymentMethod.type),
+                    dropInViewModel.dropInConfiguration.getConfigurationFor(PaymentMethodTypes.GOOGLE_PAY, requireContext())
                 )
             }
             PaymentMethodTypes.WECHAT_PAY_SDK -> {
@@ -95,7 +110,7 @@ class PaymentMethodListDialogFragment : DropInBottomSheetDialogFragment(), Payme
             }
             else -> {
                 if (PaymentMethodTypes.SUPPORTED_PAYMENT_METHODS.contains(paymentMethod.type)) {
-                    protocol.showComponentDialog(mDropInViewModel.getPaymentMethod(paymentMethod.type))
+                    protocol.showComponentDialog(dropInViewModel.getPaymentMethod(paymentMethod.type))
                 } else {
                     sendPayment(paymentMethod.type)
                 }
