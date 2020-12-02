@@ -19,7 +19,6 @@ import androidx.test.filters.LargeTest
 import com.adyen.checkout.dropin.DropIn
 import com.adyen.checkout.example.data.CREDIT_CARD
 import com.adyen.checkout.example.data.FIRST_STORED_PAYMENT_METHOD
-import com.adyen.checkout.example.data.FOOTER_OF_PAYEMENT_METHODS_FOOTER
 import com.adyen.checkout.example.data.IDEAL
 import com.adyen.checkout.example.data.IDEAL_WEBVIEW_REDIRECT_KEY
 import com.adyen.checkout.example.data.RESULT_KEY_AUTHORISED
@@ -29,7 +28,6 @@ import com.adyen.checkout.example.rules.OkHttpIdlingResourceRule
 import com.adyen.checkout.example.ui.main.MainActivity
 import com.adyen.checkout.example.utils.findItemByTextinRecyclerAndPerformClick
 import com.adyen.checkout.example.utils.findObjectWithText
-import com.adyen.checkout.example.utils.findViewByIdAndPerformClick
 import com.adyen.checkout.example.utils.performActionOnRecyclerItemAtPosition
 import com.adyen.checkout.example.utils.performClick
 import com.adyen.checkout.example.utils.performTypeText
@@ -104,9 +102,9 @@ class MainActivityTest : KoinTest {
     @Test
     fun e2e_normal_scheme_success() {
         R.id.startCheckoutButton.performClick()
-        R.id.recyclerView_paymentMethods.performActionOnRecyclerItemAtPosition<RecyclerView.ViewHolder>(
-            FOOTER_OF_PAYEMENT_METHODS_FOOTER, findViewByIdAndPerformClick(R.id.others)
-        )
+//        R.id.recyclerView_paymentMethods.performActionOnRecyclerItemAtPosition<RecyclerView.ViewHolder>(
+//            FOOTER_OF_PAYEMENT_METHODS_FOOTER, findViewByIdAndPerformClick(R.id.change_payment_method_button)
+//        )
 
         R.id.recyclerView_paymentMethods.findItemByTextinRecyclerAndPerformClick(R.id.textView_text, CREDIT_CARD)
 
@@ -123,11 +121,11 @@ class MainActivityTest : KoinTest {
     fun e2e_IDEAL_success() {
         R.id.startCheckoutButton.performClick()
 
-        R.id.recyclerView_paymentMethods
-            .performActionOnRecyclerItemAtPosition<RecyclerView.ViewHolder>(
-                FOOTER_OF_PAYEMENT_METHODS_FOOTER,
-                findViewByIdAndPerformClick(R.id.others)
-            )
+//        R.id.recyclerView_paymentMethods
+//            .performActionOnRecyclerItemAtPosition<RecyclerView.ViewHolder>(
+//                FOOTER_OF_PAYEMENT_METHODS_FOOTER,
+//                findViewByIdAndPerformClick(R.id.change_payment_method_button)
+//            )
 
         R.id.recyclerView_paymentMethods.findItemByTextinRecyclerAndPerformClick(R.id.textView_text, IDEAL)
 

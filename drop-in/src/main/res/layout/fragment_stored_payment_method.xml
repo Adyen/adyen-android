@@ -13,7 +13,7 @@
     android:layout_height="wrap_content"
     android:paddingBottom="@dimen/standard_half_margin"
     android:orientation="vertical"
-    tools:context=".ui.stored.StoredPaymentMethodFragment">
+    tools:context=".ui.stored.PreselectedStoredPaymentMethodFragment">
 
     <include layout="@layout/bottom_sheet_indicator"
         android:layout_width="match_parent"
@@ -37,7 +37,7 @@
         android:text="@string/continue_button"/>
 
     <androidx.appcompat.widget.AppCompatButton
-        android:id="@+id/others"
+        android:id="@+id/change_payment_method_button"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         style="@style/AdyenCheckout.SecondaryFlatButton"

@@ -26,6 +26,8 @@ import com.adyen.checkout.dropin.ui.base.DropInBottomSheetDialogFragment
 import com.adyen.checkout.dropin.ui.paymentmethods.GenericStoredModel
 import com.adyen.checkout.dropin.ui.paymentmethods.StoredCardModel
 import com.adyen.checkout.dropin.ui.viewModelsFactory
+import kotlinx.android.synthetic.main.fragment_stored_payment_method.change_payment_method_button
+import kotlinx.android.synthetic.main.fragment_stored_payment_method.payButton
 import kotlinx.android.synthetic.main.fragment_stored_payment_method.stored_payment_method_container
 import kotlinx.android.synthetic.main.payment_methods_list_header.payment_method_header
 import kotlinx.android.synthetic.main.payment_methods_list_item.imageView_logo
@@ -35,7 +37,7 @@ import kotlinx.android.synthetic.main.payment_methods_list_item.textView_text
 private val TAG = LogUtil.getTag()
 private const val STORED_PAYMENT_KEY = "STORED_PAYMENT"
 
-class StoredPaymentMethodFragment : DropInBottomSheetDialogFragment() {
+class PreselectedStoredPaymentMethodFragment : DropInBottomSheetDialogFragment() {
 
     private val dropInViewModel: DropInViewModel by activityViewModels()
     private val storedPaymentViewModel: PreselectedStoredPaymentViewModel by viewModelsFactory {
@@ -70,6 +72,14 @@ class StoredPaymentMethodFragment : DropInBottomSheetDialogFragment() {
         payment_method_header.setText(R.string.store_payment_methods_header)
         stored_payment_method_container.setBackgroundColor(android.R.color.transparent)
         observe()
+
+        payButton.setOnClickListener {
+            protocol.showStoredComponentDialog(storedPaymentMethod, true)
+        }
+
+        change_payment_method_button.setOnClickListener {
+            protocol.showPaymentMethodsDialog()
+        }
     }
 
     override fun onCancel(dialog: DialogInterface) {
@@ -99,7 +109,7 @@ class StoredPaymentMethodFragment : DropInBottomSheetDialogFragment() {
     companion object {
         @JvmStatic
         fun newInstance(storedPaymentMethod: StoredPaymentMethod) =
-            StoredPaymentMethodFragment().apply {
+            PreselectedStoredPaymentMethodFragment().apply {
                 arguments = Bundle().apply {
                     putParcelable(STORED_PAYMENT_KEY, storedPaymentMethod)
                 }

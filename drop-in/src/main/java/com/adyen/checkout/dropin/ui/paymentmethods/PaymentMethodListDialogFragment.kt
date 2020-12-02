@@ -88,8 +88,17 @@ class PaymentMethodListDialogFragment : DropInBottomSheetDialogFragment(), Payme
         protocol.terminateDropIn()
     }
 
+    override fun onBackPressed(): Boolean {
+        if (dropInViewModel.showPreselectedStored) {
+            protocol.showPreselectedDialog()
+        } else {
+            protocol.terminateDropIn()
+        }
+        return true
+    }
+
     override fun onStoredPaymentMethodSelected(storedPaymentMethodModel: StoredPaymentMethodModel) {
-        protocol.showStoredComponentDialog(dropInViewModel.getStoredPaymentMethod(storedPaymentMethodModel.id))
+        protocol.showStoredComponentDialog(dropInViewModel.getStoredPaymentMethod(storedPaymentMethodModel.id), false)
     }
 
     override fun onPaymentMethodSelected(paymentMethod: PaymentMethodModel) {
