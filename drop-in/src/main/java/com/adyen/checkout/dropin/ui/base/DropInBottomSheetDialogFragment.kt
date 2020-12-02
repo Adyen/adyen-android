@@ -25,6 +25,8 @@ import com.google.android.material.bottomsheet.BottomSheetBehavior
 import com.google.android.material.bottomsheet.BottomSheetDialog
 import com.google.android.material.bottomsheet.BottomSheetDialogFragment
 
+private val TAG = LogUtil.getTag()
+
 abstract class DropInBottomSheetDialogFragment : BottomSheetDialogFragment() {
 
     lateinit var protocol: Protocol
@@ -78,10 +80,6 @@ abstract class DropInBottomSheetDialogFragment : BottomSheetDialogFragment() {
 
     open fun onBackPressed(): Boolean {
         return false
-    }
-
-    companion object {
-        val TAG = LogUtil.getTag()
     }
 
     /**

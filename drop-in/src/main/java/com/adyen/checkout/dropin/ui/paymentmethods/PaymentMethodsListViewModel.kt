@@ -22,6 +22,7 @@ import com.adyen.checkout.core.log.LogUtil
 import com.adyen.checkout.core.log.Logger
 import com.adyen.checkout.dropin.DropInConfiguration
 import com.adyen.checkout.dropin.checkComponentAvailability
+import com.adyen.checkout.dropin.ui.stored.makeStoredModel
 
 class PaymentMethodsListViewModel(
     application: Application,
@@ -57,25 +58,6 @@ class PaymentMethodsListViewModel(
             } else {
                 Logger.e(TAG, "Unsupported stored payment method - $type - $id")
             }
-        }
-    }
-
-    private fun makeStoredModel(storedPaymentMethod: StoredPaymentMethod): StoredPaymentMethodModel {
-        return when (storedPaymentMethod.type) {
-            PaymentMethodTypes.SCHEME -> {
-                StoredCardModel(
-                    storedPaymentMethod.id.orEmpty(),
-                    storedPaymentMethod.brand.orEmpty(),
-                    storedPaymentMethod.lastFour.orEmpty(),
-                    storedPaymentMethod.expiryMonth.orEmpty(),
-                    storedPaymentMethod.expiryYear.orEmpty()
-                )
-            }
-            else -> GenericStoredModel(
-                storedPaymentMethod.id.orEmpty(),
-                storedPaymentMethod.type.orEmpty(),
-                storedPaymentMethod.name.orEmpty()
-            )
         }
     }
 

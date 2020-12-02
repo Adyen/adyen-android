@@ -43,6 +43,7 @@ import com.adyen.checkout.dropin.ui.base.DropInBottomSheetDialogFragment
 import com.adyen.checkout.dropin.ui.component.CardComponentDialogFragment
 import com.adyen.checkout.dropin.ui.component.GenericComponentDialogFragment
 import com.adyen.checkout.dropin.ui.paymentmethods.PaymentMethodListDialogFragment
+import com.adyen.checkout.dropin.ui.stored.StoredPaymentMethodFragment
 import com.adyen.checkout.googlepay.GooglePayComponent
 import com.adyen.checkout.googlepay.GooglePayComponentState
 import com.adyen.checkout.googlepay.GooglePayConfiguration
@@ -52,33 +53,25 @@ import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.collect
 import org.json.JSONObject
 
+private val TAG = LogUtil.getTag()
+
+private const val STORED_PAYMENT_METHOD_FRAGMENT_TAG = "STORED_PAYMENT_METHOD_FRAGMENT"
+private const val PAYMENT_METHOD_FRAGMENT_TAG = "PAYMENT_METHODS_DIALOG_FRAGMENT"
+private const val COMPONENT_FRAGMENT_TAG = "COMPONENT_DIALOG_FRAGMENT"
+private const val ACTION_FRAGMENT_TAG = "ACTION_DIALOG_FRAGMENT"
+private const val LOADING_FRAGMENT_TAG = "LOADING_DIALOG_FRAGMENT"
+
+private const val PAYMENT_METHODS_RESPONSE_KEY = "PAYMENT_METHODS_RESPONSE_KEY"
+private const val DROP_IN_CONFIGURATION_KEY = "DROP_IN_CONFIGURATION_KEY"
+private const val IS_WAITING_FOR_RESULT = "IS_WAITING_FOR_RESULT"
+
+private const val GOOGLE_PAY_REQUEST_CODE = 1
+
 /**
  * Activity that presents the available PaymentMethods to the Shopper.
  */
 @Suppress("TooManyFunctions", "SyntheticAccessor")
 class DropInActivity : AppCompatActivity(), DropInBottomSheetDialogFragment.Protocol, ActionHandler.ActionHandlingInterface {
-
-    companion object {
-        private val TAG = LogUtil.getTag()
-
-        private const val PAYMENT_METHOD_FRAGMENT_TAG = "PAYMENT_METHODS_DIALOG_FRAGMENT"
-        private const val COMPONENT_FRAGMENT_TAG = "COMPONENT_DIALOG_FRAGMENT"
-        private const val ACTION_FRAGMENT_TAG = "ACTION_DIALOG_FRAGMENT"
-        private const val LOADING_FRAGMENT_TAG = "LOADING_DIALOG_FRAGMENT"
-
-        private const val PAYMENT_METHODS_RESPONSE_KEY = "PAYMENT_METHODS_RESPONSE_KEY"
-        private const val DROP_IN_CONFIGURATION_KEY = "DROP_IN_CONFIGURATION_KEY"
-        private const val IS_WAITING_FOR_RESULT = "IS_WAITING_FOR_RESULT"
-
-        private const val GOOGLE_PAY_REQUEST_CODE = 1
-
-        fun createIntent(context: Context, dropInConfiguration: DropInConfiguration, paymentMethodsApiResponse: PaymentMethodsApiResponse): Intent {
-            val intent = Intent(context, DropInActivity::class.java)
-            intent.putExtra(PAYMENT_METHODS_RESPONSE_KEY, paymentMethodsApiResponse)
-            intent.putExtra(DROP_IN_CONFIGURATION_KEY, dropInConfiguration)
-            return intent
-        }
-    }
 
     private lateinit var dropInViewModel: DropInViewModel
 
@@ -121,11 +114,18 @@ class DropInActivity : AppCompatActivity(), DropInBottomSheetDialogFragment.Prot
             return
         }
 
-        if (getFragmentByTag(COMPONENT_FRAGMENT_TAG) == null &&
+        if (getFragmentByTag(STORED_PAYMENT_METHOD_FRAGMENT_TAG) == null &&
             getFragmentByTag(PAYMENT_METHOD_FRAGMENT_TAG) == null &&
+            getFragmentByTag(COMPONENT_FRAGMENT_TAG) == null &&
             getFragmentByTag(ACTION_FRAGMENT_TAG) == null
         ) {
-            PaymentMethodListDialogFragment().show(supportFragmentManager, PAYMENT_METHOD_FRAGMENT_TAG)
+
+            if (dropInViewModel.showPreselectedStored) {
+                StoredPaymentMethodFragment.newInstance(dropInViewModel.preselectedStoredPayment)
+                    .show(supportFragmentManager, STORED_PAYMENT_METHOD_FRAGMENT_TAG)
+            } else {
+                PaymentMethodListDialogFragment().show(supportFragmentManager, PAYMENT_METHOD_FRAGMENT_TAG)
+            }
         }
 
         // Automatically wait to collect new results from the DropInService while lifecycle is active
@@ -173,7 +173,7 @@ class DropInActivity : AppCompatActivity(), DropInBottomSheetDialogFragment.Prot
         val dropInConfiguration: DropInConfiguration? = bundle.getParcelable(DROP_IN_CONFIGURATION_KEY)
         val paymentMethodsApiResponse: PaymentMethodsApiResponse? = bundle.getParcelable(PAYMENT_METHODS_RESPONSE_KEY)
         return if (dropInConfiguration != null && paymentMethodsApiResponse != null) {
-            dropInViewModel = getViewModel { DropInViewModel(application, paymentMethodsApiResponse, dropInConfiguration) }
+            dropInViewModel = getViewModel { DropInViewModel(paymentMethodsApiResponse, dropInConfiguration) }
             true
         } else {
             Logger.e(
@@ -223,6 +223,7 @@ class DropInActivity : AppCompatActivity(), DropInBottomSheetDialogFragment.Prot
     }
 
     override fun showError(errorMessage: String, terminate: Boolean) {
+        Logger.d(TAG, "showError - $errorMessage")
         AlertDialog.Builder(this)
             .setTitle(R.string.error_dialog_title)
             .setMessage(errorMessage)
@@ -402,6 +403,15 @@ class DropInActivity : AppCompatActivity(), DropInBottomSheetDialogFragment.Prot
             }
         } else {
             getFragmentByTag(LOADING_FRAGMENT_TAG)?.dismiss()
+        }
+    }
+
+    companion object {
+        fun createIntent(context: Context, dropInConfiguration: DropInConfiguration, paymentMethodsApiResponse: PaymentMethodsApiResponse): Intent {
+            val intent = Intent(context, DropInActivity::class.java)
+            intent.putExtra(PAYMENT_METHODS_RESPONSE_KEY, paymentMethodsApiResponse)
+            intent.putExtra(DROP_IN_CONFIGURATION_KEY, dropInConfiguration)
+            return intent
         }
     }
 }

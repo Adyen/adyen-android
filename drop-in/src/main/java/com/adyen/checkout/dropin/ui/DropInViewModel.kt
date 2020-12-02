@@ -8,18 +8,19 @@
 
 package com.adyen.checkout.dropin.ui
 
-import android.app.Application
-import androidx.lifecycle.AndroidViewModel
+import androidx.lifecycle.ViewModel
 import com.adyen.checkout.base.model.PaymentMethodsApiResponse
 import com.adyen.checkout.base.model.paymentmethods.PaymentMethod
 import com.adyen.checkout.base.model.paymentmethods.StoredPaymentMethod
 import com.adyen.checkout.dropin.DropInConfiguration
 
 class DropInViewModel(
-    application: Application,
     val paymentMethodsApiResponse: PaymentMethodsApiResponse,
     val dropInConfiguration: DropInConfiguration
-) : AndroidViewModel(application) {
+) : ViewModel() {
+
+    val showPreselectedStored = paymentMethodsApiResponse.storedPaymentMethods?.isNotEmpty() ?: false
+    val preselectedStoredPayment = paymentMethodsApiResponse.storedPaymentMethods?.firstOrNull() ?: StoredPaymentMethod()
 
     fun getStoredPaymentMethod(id: String): StoredPaymentMethod {
         return paymentMethodsApiResponse.storedPaymentMethods?.firstOrNull { it.id == id } ?: StoredPaymentMethod()
@@ -28,4 +29,5 @@ class DropInViewModel(
     fun getPaymentMethod(type: String): PaymentMethod {
         return paymentMethodsApiResponse.paymentMethods?.firstOrNull { it.type == type } ?: PaymentMethod()
     }
+
 }
