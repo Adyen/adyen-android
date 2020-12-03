@@ -22,5 +22,4 @@ class PreselectedStoredPaymentViewModel(storedPaymentMethod: StoredPaymentMethod
     init {
         storedPaymentMethodMutableLiveData.value = makeStoredModel(storedPaymentMethod)
     }
-
 }

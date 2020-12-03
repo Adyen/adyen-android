@@ -29,5 +29,4 @@ class DropInViewModel(
     fun getPaymentMethod(type: String): PaymentMethod {
         return paymentMethodsApiResponse.paymentMethods?.firstOrNull { it.type == type } ?: PaymentMethod()
     }
-
 }

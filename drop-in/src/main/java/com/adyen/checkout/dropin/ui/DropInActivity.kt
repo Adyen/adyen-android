@@ -114,12 +114,7 @@ class DropInActivity : AppCompatActivity(), DropInBottomSheetDialogFragment.Prot
             return
         }
 
-        if (getFragmentByTag(PRESELECTED_PAYMENT_METHOD_FRAGMENT_TAG) == null &&
-            getFragmentByTag(PAYMENT_METHODS_LIST_FRAGMENT_TAG) == null &&
-            getFragmentByTag(COMPONENT_FRAGMENT_TAG) == null &&
-            getFragmentByTag(ACTION_FRAGMENT_TAG) == null
-        ) {
-
+        if (noDialogPresent()) {
             if (dropInViewModel.showPreselectedStored) {
                 showPreselectedDialog()
             } else {
@@ -140,6 +135,13 @@ class DropInActivity : AppCompatActivity(), DropInBottomSheetDialogFragment.Prot
         actionHandler.restoreState(savedInstanceState)
 
         sendAnalyticsEvent()
+    }
+
+    private fun noDialogPresent(): Boolean {
+        return getFragmentByTag(PRESELECTED_PAYMENT_METHOD_FRAGMENT_TAG) == null &&
+            getFragmentByTag(PAYMENT_METHODS_LIST_FRAGMENT_TAG) == null &&
+            getFragmentByTag(COMPONENT_FRAGMENT_TAG) == null &&
+            getFragmentByTag(ACTION_FRAGMENT_TAG) == null
     }
 
     // False positive from countryStartPosition

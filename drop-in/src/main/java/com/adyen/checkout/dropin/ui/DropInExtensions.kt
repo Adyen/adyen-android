@@ -52,5 +52,3 @@ inline fun <reified VM : ViewModel> Fragment.viewModelsFactory(
 ): Lazy<VM> {
     return viewModels { viewModelFactory(factoryProducer) }
 }
-
-

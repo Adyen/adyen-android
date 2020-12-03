@@ -58,10 +58,7 @@ class PreselectedStoredPaymentMethodFragment : DropInBottomSheetDialogFragment()
         )
     }
 
-    override fun onCreateView(
-        inflater: LayoutInflater, container: ViewGroup?,
-        savedInstanceState: Bundle?
-    ): View? {
+    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         return inflater.inflate(R.layout.fragment_stored_payment_method, container, false)
     }
 
@@ -89,21 +86,24 @@ class PreselectedStoredPaymentMethodFragment : DropInBottomSheetDialogFragment()
     }
 
     private fun observe() {
-        storedPaymentViewModel.storedPaymentLiveData.observe(this, {
-            when (it) {
-                is StoredCardModel -> {
-                    textView_text.text = requireActivity().getString(R.string.card_number_4digit, it.lastFour)
-                    imageLoader.load(it.imageId, imageView_logo)
-                    textView_detail.text = DateUtils.parseDateToView(it.expiryMonth, it.expiryYear)
-                    textView_detail.visibility = View.VISIBLE
-                }
-                is GenericStoredModel -> {
-                    textView_text.text = it.name
-                    textView_detail.visibility = View.GONE
-                    imageLoader.load(it.imageId, imageView_logo)
+        storedPaymentViewModel.storedPaymentLiveData.observe(
+            this,
+            {
+                when (it) {
+                    is StoredCardModel -> {
+                        textView_text.text = requireActivity().getString(R.string.card_number_4digit, it.lastFour)
+                        imageLoader.load(it.imageId, imageView_logo)
+                        textView_detail.text = DateUtils.parseDateToView(it.expiryMonth, it.expiryYear)
+                        textView_detail.visibility = View.VISIBLE
+                    }
+                    is GenericStoredModel -> {
+                        textView_text.text = it.name
+                        textView_detail.visibility = View.GONE
+                        imageLoader.load(it.imageId, imageView_logo)
+                    }
                 }
             }
-        })
+        )
     }
 
     companion object {
