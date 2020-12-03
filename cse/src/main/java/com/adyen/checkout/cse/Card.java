@@ -16,7 +16,6 @@ import androidx.annotation.Nullable;
 
 import com.adyen.checkout.core.util.ParcelUtils;
 
-@SuppressWarnings("SyntheticAccessor")
 public final class Card implements Parcelable {
     @NonNull
     public static final Creator<Card> CREATOR = new Creator<Card>() {

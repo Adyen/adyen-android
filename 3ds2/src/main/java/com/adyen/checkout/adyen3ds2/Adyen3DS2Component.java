@@ -32,7 +32,6 @@ import com.adyen.checkout.base.model.payments.response.Action;
 import com.adyen.checkout.base.model.payments.response.Threeds2ChallengeAction;
 import com.adyen.checkout.base.model.payments.response.Threeds2FingerprintAction;
 import com.adyen.checkout.core.api.ThreadManager;
-import com.adyen.checkout.core.code.Lint;
 import com.adyen.checkout.core.exception.CheckoutException;
 import com.adyen.checkout.core.exception.ComponentException;
 import com.adyen.checkout.core.log.LogUtil;
@@ -61,7 +60,6 @@ import java.util.Collections;
 import java.util.List;
 
 public final class Adyen3DS2Component extends BaseActionComponent<Adyen3DS2Configuration> implements ChallengeStatusReceiver {
-    @SuppressWarnings(Lint.SYNTHETIC)
     static final String TAG = LogUtil.getTag();
 
     public static final ActionComponentProvider<Adyen3DS2Component> PROVIDER =
@@ -73,10 +71,8 @@ public final class Adyen3DS2Component extends BaseActionComponent<Adyen3DS2Confi
     private static final int DEFAULT_CHALLENGE_TIME_OUT = 10;
     private static boolean sGotDestroyedWhileChallenging = false;
 
-    @SuppressWarnings(Lint.SYNTHETIC)
     Transaction mTransaction;
 
-    @SuppressWarnings(Lint.SYNTHETIC)
     UiCustomization mUiCustomization;
 
     public Adyen3DS2Component(@NonNull Application application, @Nullable Adyen3DS2Configuration configuration) {
@@ -266,7 +262,6 @@ public final class Adyen3DS2Component extends BaseActionComponent<Adyen3DS2Confi
     }
 
     @NonNull
-    @SuppressWarnings(Lint.SYNTHETIC)
     String createEncodedFingerprint(AuthenticationRequestParameters authenticationRequestParameters) throws ComponentException {
 
         final JSONObject fingerprintJson = new JSONObject();
@@ -308,7 +303,6 @@ public final class Adyen3DS2Component extends BaseActionComponent<Adyen3DS2Confi
         }
     }
 
-    @SuppressWarnings(Lint.SYNTHETIC)
     JSONObject createFingerprintDetails(String encodedFingerprint) throws ComponentException {
         final JSONObject fingerprintDetails = new JSONObject();
         try {

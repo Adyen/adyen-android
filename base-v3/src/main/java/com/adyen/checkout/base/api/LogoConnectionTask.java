@@ -14,7 +14,6 @@ import androidx.annotation.NonNull;
 
 import com.adyen.checkout.core.api.ConnectionTask;
 import com.adyen.checkout.core.api.ThreadManager;
-import com.adyen.checkout.core.code.Lint;
 import com.adyen.checkout.core.log.LogUtil;
 import com.adyen.checkout.core.log.Logger;
 
@@ -32,7 +31,6 @@ public final class LogoConnectionTask extends ConnectionTask<BitmapDrawable> {
 
     private static final int SAFETY_TIMEOUT = 100;
 
-    @SuppressWarnings(Lint.SYNTHETIC)
     LogoCallback mCallback;
     private final String mLogoUrl;
     private final LogoApi mLogoApi;
@@ -69,12 +67,10 @@ public final class LogoConnectionTask extends ConnectionTask<BitmapDrawable> {
         }
     }
 
-    @SuppressWarnings(Lint.SYNTHETIC)
     String getLogoUrl() {
         return mLogoUrl;
     }
 
-    @SuppressWarnings(Lint.SYNTHETIC)
     LogoApi getLogoApi() {
         return mLogoApi;
     }

@@ -13,7 +13,6 @@ import android.text.TextUtils;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 
-import com.adyen.checkout.core.code.Lint;
 import com.adyen.checkout.core.exception.CheckoutException;
 import com.adyen.checkout.core.model.ModelObject;
 
@@ -62,7 +61,6 @@ public abstract class Action extends ModelObject {
     private String paymentData;
     private String paymentMethodType;
 
-    @SuppressWarnings(Lint.SYNTHETIC)
     @NonNull
     static Serializer<? extends Action> getChildSerializer(@NonNull String actionType) {
         switch (actionType) {

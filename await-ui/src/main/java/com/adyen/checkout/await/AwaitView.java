@@ -8,7 +8,6 @@
 
 package com.adyen.checkout.await;
 
-import android.annotation.SuppressLint;
 import android.content.Context;
 import android.text.TextUtils;
 import android.util.AttributeSet;
@@ -26,7 +25,6 @@ import com.adyen.checkout.await.ui.R;
 import com.adyen.checkout.base.ActionComponentData;
 import com.adyen.checkout.base.api.ImageLoader;
 import com.adyen.checkout.base.ui.view.AdyenLinearLayout;
-import com.adyen.checkout.core.code.Lint;
 import com.adyen.checkout.core.log.LogUtil;
 import com.adyen.checkout.core.log.Logger;
 
@@ -34,11 +32,8 @@ public class AwaitView extends AdyenLinearLayout<AwaitOutputData, AwaitConfigura
         implements Observer<AwaitOutputData> {
     private static final String TAG = LogUtil.getTag();
 
-    @SuppressLint(Lint.SYNTHETIC)
     ImageView mImageView;
-    @SuppressLint(Lint.SYNTHETIC)
     TextView mTextViewOpenApp;
-    @SuppressLint(Lint.SYNTHETIC)
     TextView mTextViewWaitingConfirmation;
 
     private ImageLoader mImageLoader;

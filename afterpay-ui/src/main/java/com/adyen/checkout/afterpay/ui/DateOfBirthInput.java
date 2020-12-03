@@ -25,7 +25,6 @@ import com.adyen.checkout.base.ui.view.AdyenTextInputEditText;
 import java.util.ArrayList;
 import java.util.Calendar;
 
-@SuppressWarnings("SyntheticAccessor")
 public class DateOfBirthInput extends AdyenTextInputEditText implements
         DatePickerDialog.OnDateSetListener,
         DialogInterface.OnShowListener,

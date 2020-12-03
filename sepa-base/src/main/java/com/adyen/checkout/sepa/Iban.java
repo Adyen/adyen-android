@@ -11,8 +11,6 @@ package com.adyen.checkout.sepa;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 
-import com.adyen.checkout.core.code.Lint;
-
 import java.math.BigInteger;
 import java.util.Arrays;
 import java.util.Collections;
@@ -25,7 +23,6 @@ import java.util.regex.Pattern;
 @SuppressWarnings("MagicNumber")
 public final class Iban {
 
-    @SuppressWarnings(Lint.SYNTHETIC)
     static final int IBAN_BLOCK_SIZE = 4;
     private static final int COUNTRY_NAME_SIZE = 2;
     private static final int COUNTRY_CODE_POSITION_END = 2;

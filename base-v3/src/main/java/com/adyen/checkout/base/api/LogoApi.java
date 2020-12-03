@@ -35,7 +35,6 @@ public final class LogoApi {
     private static final String LOGO_PATH = "images/logos/%1$s/%2$s.png";
     private static final Size DEFAULT_SIZE = Size.SMALL;
 
-    @SuppressWarnings(Lint.SYNTHETIC)
     static final int KILO_BYTE_SIZE = 1024;
     private static final int LRU_CACHE_MAX_SIZE;
 

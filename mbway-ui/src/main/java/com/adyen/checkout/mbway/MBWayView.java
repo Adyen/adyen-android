@@ -8,7 +8,6 @@
 
 package com.adyen.checkout.mbway;
 
-import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.res.TypedArray;
 import android.util.AttributeSet;
@@ -24,7 +23,6 @@ import com.adyen.checkout.base.PaymentComponentState;
 import com.adyen.checkout.base.model.payments.request.MBWayPaymentMethod;
 import com.adyen.checkout.base.ui.view.AdyenLinearLayout;
 import com.adyen.checkout.base.ui.view.AdyenTextInputEditText;
-import com.adyen.checkout.core.code.Lint;
 import com.adyen.checkout.core.exception.CheckoutException;
 import com.adyen.checkout.core.log.LogUtil;
 import com.adyen.checkout.core.log.Logger;
@@ -37,19 +35,13 @@ public class MBWayView
         implements Observer<MBWayOutputData> {
     private static final String TAG = LogUtil.getTag();
 
-    @SuppressLint(Lint.SYNTHETIC)
     MBWayInputData mMBWayInputData = new MBWayInputData();
 
-    @SuppressLint(Lint.SYNTHETIC)
     TextInputLayout mEmailInput;
-    @SuppressLint(Lint.SYNTHETIC)
     TextInputLayout mMobileNumberInput;
 
-    @SuppressLint(Lint.SYNTHETIC)
     AdyenTextInputEditText mEmailEditText;
-    @SuppressLint(Lint.SYNTHETIC)
     AdyenTextInputEditText mMobileNumberEditText;
-
 
     public MBWayView(@NonNull Context context) {
         this(context, null);
@@ -71,7 +63,6 @@ public class MBWayView
         final int padding = (int) getResources().getDimension(R.dimen.standard_margin);
         setPadding(padding, padding, padding, 0);
     }
-
 
 
     @Override
@@ -179,7 +170,6 @@ public class MBWayView
         }
     }
 
-    @SuppressLint(Lint.SYNTHETIC)
     void notifyInputDataChanged() {
         getComponent().inputDataChanged(mMBWayInputData);
     }

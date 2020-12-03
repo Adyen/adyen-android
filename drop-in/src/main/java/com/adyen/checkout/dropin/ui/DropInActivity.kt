@@ -70,7 +70,7 @@ private const val GOOGLE_PAY_REQUEST_CODE = 1
 /**
  * Activity that presents the available PaymentMethods to the Shopper.
  */
-@Suppress("TooManyFunctions", "SyntheticAccessor")
+@Suppress("TooManyFunctions")
 class DropInActivity : AppCompatActivity(), DropInBottomSheetDialogFragment.Protocol, ActionHandler.ActionHandlingInterface {
 
     private lateinit var dropInViewModel: DropInViewModel

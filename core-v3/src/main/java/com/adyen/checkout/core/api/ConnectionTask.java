@@ -11,7 +11,6 @@ package com.adyen.checkout.core.api;
 import androidx.annotation.CallSuper;
 import androidx.annotation.NonNull;
 
-import com.adyen.checkout.core.code.Lint;
 import com.adyen.checkout.core.log.LogUtil;
 import com.adyen.checkout.core.log.Logger;
 
@@ -46,7 +45,6 @@ public abstract class ConnectionTask<T> extends FutureTask<T> {
      * @param connection The Connection to be ran.
      * @param timeOut A time out in milliseconds to cancel the connection.
      */
-    @SuppressWarnings(Lint.WEAKER_ACCESS)
     protected ConnectionTask(@NonNull Connection<T> connection, long timeOut) {
         super(connection);
         mTimeOut = timeOut;
