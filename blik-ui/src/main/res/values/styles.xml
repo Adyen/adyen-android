@@ -13,6 +13,7 @@
     <style name="AdyenCheckout.Blik.BlikCodeInput" parent="AdyenCheckout.TextInputEditText">
         <item name="android:hint">@string/checkout_blik_code</item>
         <item name="android:inputType">number</item>
+        <item name="android:maxLength">6</item>
     </style>
 
 </resources>
