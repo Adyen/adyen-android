@@ -8,6 +8,7 @@
   -->
 
 <resources>
-    <string name="checkout_await_open_app">Bekräfta din betalning i appen MB WAY</string>
+    <string name="checkout_await_message_blik">Öppna din bankapp för att bekräfta betalningen.</string>
+    <string name="checkout_await_message_mbway">Bekräfta din betalning i appen MB WAY</string>
     <string name="checkout_await_waiting_confirmation">Väntar på bekräftelse</string>
 </resources>
