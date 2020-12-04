@@ -7,7 +7,7 @@
   -->
 
 <resources>
-    <string name="checkout_blik_code">6-digit code</string>
-    <string name="checkout_blik_code_not_valid">Enter 6 numbers</string>
-    <string name="checkout_blik_helper_text">Get the code from your banking app.</string>
+    <string name="checkout_blik_code">6-numeroinen koodi</string>
+    <string name="checkout_blik_code_not_valid">Syötä 6 lukua</string>
+    <string name="checkout_blik_helper_text">Hanki koodi pankkisovelluksestasi.</string>
 </resources>
