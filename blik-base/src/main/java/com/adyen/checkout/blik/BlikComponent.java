@@ -8,7 +8,6 @@
 
 package com.adyen.checkout.blik;
 
-
 import android.support.annotation.NonNull;
 
 import com.adyen.checkout.base.PaymentComponentProvider;

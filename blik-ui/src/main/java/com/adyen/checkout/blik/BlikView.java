@@ -16,8 +16,10 @@ import android.content.res.TypedArray;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.design.widget.TextInputLayout;
+import android.text.Editable;
 import android.util.AttributeSet;
 import android.view.LayoutInflater;
+import android.view.View;
 import android.widget.LinearLayout;
 
 import com.adyen.checkout.base.PaymentComponentState;
@@ -68,9 +70,7 @@ public class BlikView
     @Override
     protected void initLocalizedStrings(@NonNull Context localizedContext) {
         final int[] myAttrs = {android.R.attr.hint};
-        TypedArray typedArray;
-
-        typedArray = localizedContext.obtainStyledAttributes(R.style.AdyenCheckout_Blik_BlikCodeInput, myAttrs);
+        final TypedArray typedArray = localizedContext.obtainStyledAttributes(R.style.AdyenCheckout_Blik_BlikCodeInput, myAttrs);
         mBlikCodeInput.setHint(typedArray.getString(0));
         typedArray.recycle();
     }
@@ -84,18 +84,24 @@ public class BlikView
             throw new CheckoutException("Could not find views inside layout.");
         }
 
-        mBlikCodeEditText.setOnChangeListener(editable -> {
-            mBlikInputData.setBlikCode(mBlikCodeEditText.getRawValue());
-            notifyInputDataChanged();
-            mBlikCodeInput.setError(null);
+        mBlikCodeEditText.setOnChangeListener(new AdyenTextInputEditText.Listener() {
+            @Override
+            public void onTextChanged(@NonNull Editable editable) {
+                mBlikInputData.setBlikCode(mBlikCodeEditText.getRawValue());
+                notifyInputDataChanged();
+                mBlikCodeInput.setError(null);
+            }
         });
 
-        mBlikCodeEditText.setOnFocusChangeListener((v, hasFocus) -> {
-            final BlikOutputData outputData = getComponent().getOutputData();
-            if (hasFocus) {
-                mBlikCodeInput.setError(null);
-            } else if (outputData != null && !outputData.getBlikCodeField().isValid()) {
-                mBlikCodeInput.setError(mLocalizedContext.getString(R.string.checkout_blik_code_not_valid));
+        mBlikCodeEditText.setOnFocusChangeListener(new OnFocusChangeListener() {
+            @Override
+            public void onFocusChange(View v, boolean hasFocus) {
+                final BlikOutputData outputData = getComponent().getOutputData();
+                if (hasFocus) {
+                    mBlikCodeInput.setError(null);
+                } else if (outputData != null && !outputData.getBlikCodeField().isValid()) {
+                    mBlikCodeInput.setError(mLocalizedContext.getString(R.string.checkout_blik_code_not_valid));
+                }
             }
         });
     }

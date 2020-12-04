@@ -12,7 +12,6 @@ ext.mavenArtifactName = "Adyen checkout blik-ui component"
 ext.mavenArtifactDescription = "Adyen checkout blik-ui component client for Adyen's Checkout API."
 
 apply plugin: 'com.android.library'
-apply plugin: 'kotlin-android'
 
 android {
     compileSdkVersion compile_sdk_version
@@ -23,16 +22,7 @@ android {
         versionCode version_code
         versionName version_name
 
-        testInstrumentationRunner 'androidx.test.runner.AndroidJUnitRunner'
-    }
-
-    compileOptions {
-        sourceCompatibility JavaVersion.VERSION_1_8
-        targetCompatibility JavaVersion.VERSION_1_8
-    }
-
-    kotlinOptions {
-        jvmTarget = JavaVersion.VERSION_1_8.toString()
+        testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
     }
 }
 
