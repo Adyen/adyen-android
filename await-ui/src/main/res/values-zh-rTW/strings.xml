@@ -8,6 +8,7 @@
   -->
 
 <resources>
-    <string name="checkout_await_open_app">在 MB WAY 應用程式上確認您的付款</string>
+    <string name="checkout_await_message_blik">開啟您的銀行應用程式以確認付款。</string>
+    <string name="checkout_await_message_mbway">在 MB WAY 應用程式上確認您的付款</string>
     <string name="checkout_await_waiting_confirmation">正在等候確認</string>
 </resources>
