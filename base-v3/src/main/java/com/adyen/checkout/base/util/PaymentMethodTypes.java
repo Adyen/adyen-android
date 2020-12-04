@@ -102,6 +102,7 @@ public final class PaymentMethodTypes {
         supportedPaymentMethods.add(SEPA);
         supportedPaymentMethods.add(SCHEME);
         supportedPaymentMethods.add(WECHAT_PAY_SDK);
+        supportedPaymentMethods.add(BLIK);
 
         SUPPORTED_PAYMENT_METHODS = Collections.unmodifiableList(supportedPaymentMethods);
 
