@@ -7,7 +7,7 @@
   -->
 
 <resources>
-    <string name="checkout_blik_code">6-digit code</string>
-    <string name="checkout_blik_code_not_valid">Enter 6 numbers</string>
-    <string name="checkout_blik_helper_text">Get the code from your banking app.</string>
+    <string name="checkout_blik_code">6 位數代碼</string>
+    <string name="checkout_blik_code_not_valid">輸入 6 個數字</string>
+    <string name="checkout_blik_helper_text">從您的銀行應用程式中獲取代碼。</string>
 </resources>

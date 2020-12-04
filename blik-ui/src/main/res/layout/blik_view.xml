@@ -13,6 +13,13 @@
     android:orientation="vertical"
     tools:parentTag="android.widget.LinearLayout">
 
+    <TextView
+        style="@style/AdyenCheckout.TextAppearance.Primary"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="@dimen/standard_margin"
+        android:text="@string/checkout_blik_helper_text" />
+
     <android.support.design.widget.TextInputLayout
         android:id="@+id/textInputLayout_blikCode"
         style="@style/AdyenCheckout.TextInputLayout"
