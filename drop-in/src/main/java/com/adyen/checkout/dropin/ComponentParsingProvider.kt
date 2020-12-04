@@ -34,6 +34,9 @@ import com.adyen.checkout.base.util.PaymentMethodTypes
 import com.adyen.checkout.bcmc.BcmcComponent
 import com.adyen.checkout.bcmc.BcmcConfiguration
 import com.adyen.checkout.bcmc.BcmcView
+import com.adyen.checkout.blik.BlikComponent
+import com.adyen.checkout.blik.BlikConfiguration
+import com.adyen.checkout.blik.BlikView
 import com.adyen.checkout.card.CardComponent
 import com.adyen.checkout.card.CardConfiguration
 import com.adyen.checkout.card.CardView
@@ -122,6 +125,9 @@ internal fun <T : Configuration> getDefaultConfigFor(
         ActionTypes.AWAIT -> {
             AwaitConfiguration.Builder(context)
         }
+        PaymentMethodTypes.BLIK -> {
+            BlikConfiguration.Builder(context)
+        }
         ActionTypes.REDIRECT -> {
             RedirectConfiguration.Builder(context)
         }
@@ -186,6 +192,7 @@ internal fun getProviderForType(type: String): PaymentComponentProvider<PaymentC
         PaymentMethodTypes.SCHEME -> CardComponent.PROVIDER
         PaymentMethodTypes.SEPA -> SepaComponent.PROVIDER
         PaymentMethodTypes.WECHAT_PAY_SDK -> WeChatPayComponent.PROVIDER
+        PaymentMethodTypes.BLIK -> BlikComponent.PROVIDER
         else -> {
             throw CheckoutException("Unable to find component for type - $type")
         }
@@ -295,6 +302,10 @@ internal fun getComponentFor(
             val weChatPayConfiguration: WeChatPayConfiguration = dropInConfiguration.getConfigurationFor(PaymentMethodTypes.WECHAT_PAY_SDK, context)
             WeChatPayComponent.PROVIDER.get(fragment, paymentMethod, weChatPayConfiguration)
         }
+        PaymentMethodTypes.BLIK -> {
+            val blikConfiguration: BlikConfiguration = dropInConfiguration.getConfigurationFor(PaymentMethodTypes.BLIK, context)
+            BlikComponent.PROVIDER.get(fragment, paymentMethod, blikConfiguration)
+        }
 
         else -> {
             throw CheckoutException("Unable to find component for type - ${paymentMethod.type}")
@@ -331,6 +342,7 @@ internal fun getViewFor(
         PaymentMethodTypes.OPEN_BANKING -> OpenBankingRecyclerView(context)
         PaymentMethodTypes.SCHEME -> CardView(context)
         PaymentMethodTypes.SEPA -> SepaView(context)
+        PaymentMethodTypes.BLIK -> BlikView(context)
         // GooglePay and WeChatPay do not require a View in Drop-in
         ActionTypes.AWAIT -> AwaitView(context)
         else -> {
