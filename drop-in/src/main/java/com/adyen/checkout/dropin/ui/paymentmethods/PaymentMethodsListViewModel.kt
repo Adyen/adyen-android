@@ -50,15 +50,20 @@ class PaymentMethodsListViewModel(
     private fun setupStoredPaymentMethods(storedPaymentMethods: List<StoredPaymentMethod>) {
         storedPaymentMethodsList.clear()
         for (storedPaymentMethod in storedPaymentMethods) {
-            val type = storedPaymentMethod.type
-            val id = storedPaymentMethod.id
-            if (type != null && id != null && PaymentMethodTypes.SUPPORTED_PAYMENT_METHODS.contains(type)) {
+            if (isStoredPaymentSupported(storedPaymentMethod)) {
                 // We don't check for availability on stored payment methods
                 storedPaymentMethodsList.add(makeStoredModel(storedPaymentMethod))
             } else {
-                Logger.e(TAG, "Unsupported stored payment method - $type - $id")
+                Logger.e(TAG, "Unsupported stored payment method - ${storedPaymentMethod.type} : ${storedPaymentMethod.name}")
             }
         }
+    }
+
+    private fun isStoredPaymentSupported(storedPaymentMethod: StoredPaymentMethod): Boolean {
+        return !storedPaymentMethod.type.isNullOrEmpty() &&
+            !storedPaymentMethod.id.isNullOrEmpty() &&
+            PaymentMethodTypes.SUPPORTED_PAYMENT_METHODS.contains(storedPaymentMethod.type) &&
+            storedPaymentMethod.isEcommerce
     }
 
     private fun setupPaymentMethods(paymentMethods: List<PaymentMethod>) {

@@ -20,7 +20,7 @@ class DropInViewModel(
 ) : ViewModel() {
 
     val showPreselectedStored = paymentMethodsApiResponse.storedPaymentMethods?.isNotEmpty() ?: false
-    val preselectedStoredPayment = paymentMethodsApiResponse.storedPaymentMethods?.firstOrNull() ?: StoredPaymentMethod()
+    val preselectedStoredPayment = paymentMethodsApiResponse.storedPaymentMethods?.firstOrNull { it.isEcommerce } ?: StoredPaymentMethod()
 
     fun getStoredPaymentMethod(id: String): StoredPaymentMethod {
         return paymentMethodsApiResponse.storedPaymentMethods?.firstOrNull { it.id == id } ?: StoredPaymentMethod()
