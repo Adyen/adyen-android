@@ -39,15 +39,21 @@ class BlikOutputData implements OutputData {
     }
 
     private ValidatedField.Validation getBlikCodeValidation(@NonNull String blikCode) {
-        if (TextUtils.isEmpty(blikCode)) return ValidatedField.Validation.PARTIAL;
+        if (TextUtils.isEmpty(blikCode)) {
+            return ValidatedField.Validation.PARTIAL;
+        }
         try {
             Integer.parseInt(blikCode);
         } catch (NumberFormatException e) {
             Logger.e(TAG, "Failed to parse blik code to Integer", e);
             return ValidatedField.Validation.INVALID;
         }
-        if (blikCode.length() == BLIK_CODE_LENGTH) return ValidatedField.Validation.VALID;
-        if (blikCode.length() < BLIK_CODE_LENGTH) return ValidatedField.Validation.PARTIAL;
+        if (blikCode.length() == BLIK_CODE_LENGTH) {
+            return ValidatedField.Validation.VALID;
+        }
+        if (blikCode.length() < BLIK_CODE_LENGTH) {
+            return ValidatedField.Validation.PARTIAL;
+        }
         return ValidatedField.Validation.INVALID;
     }
 }

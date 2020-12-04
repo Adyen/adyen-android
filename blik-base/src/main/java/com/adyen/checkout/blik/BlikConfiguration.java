@@ -17,7 +17,6 @@ import androidx.annotation.NonNull;
 import com.adyen.checkout.base.component.BaseConfigurationBuilder;
 import com.adyen.checkout.base.component.Configuration;
 import com.adyen.checkout.core.api.Environment;
-import com.adyen.checkout.core.code.Lint;
 
 import java.util.Locale;
 
@@ -33,7 +32,6 @@ public class BlikConfiguration extends Configuration {
         }
     };
 
-    @SuppressWarnings(Lint.SYNTHETIC)
     BlikConfiguration(
             @NonNull Locale shopperLocale,
             @NonNull Environment environment,
@@ -54,7 +52,7 @@ public class BlikConfiguration extends Configuration {
         /**
          * Constructor for Builder with default values.
          *
-         * @param context   A context
+         * @param context A context
          */
         public Builder(@NonNull Context context) {
             super(context);

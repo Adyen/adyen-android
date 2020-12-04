@@ -8,7 +8,6 @@
 
 package com.adyen.checkout.blik;
 
-import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.res.TypedArray;
 import android.util.AttributeSet;
@@ -25,7 +24,6 @@ import com.adyen.checkout.base.model.payments.request.BlikPaymentMethod;
 import com.adyen.checkout.base.ui.view.AdyenLinearLayout;
 import com.adyen.checkout.base.ui.view.AdyenTextInputEditText;
 import com.adyen.checkout.blik.ui.R;
-import com.adyen.checkout.core.code.Lint;
 import com.adyen.checkout.core.exception.CheckoutException;
 import com.adyen.checkout.core.log.LogUtil;
 import com.adyen.checkout.core.log.Logger;
@@ -36,13 +34,10 @@ public class BlikView
         implements Observer<BlikOutputData> {
     private static final String TAG = LogUtil.getTag();
 
-    @SuppressLint(Lint.SYNTHETIC)
     BlikInputData mBlikInputData = new BlikInputData();
 
-    @SuppressLint(Lint.SYNTHETIC)
     TextInputLayout mBlikCodeInput;
 
-    @SuppressLint(Lint.SYNTHETIC)
     AdyenTextInputEditText mBlikCodeEditText;
 
     public BlikView(@NonNull Context context) {
@@ -69,9 +64,7 @@ public class BlikView
     @Override
     protected void initLocalizedStrings(@NonNull Context localizedContext) {
         final int[] myAttrs = {android.R.attr.hint};
-        TypedArray typedArray;
-
-        typedArray = localizedContext.obtainStyledAttributes(R.style.AdyenCheckout_Blik_BlikCodeInput, myAttrs);
+        final TypedArray typedArray = localizedContext.obtainStyledAttributes(R.style.AdyenCheckout_Blik_BlikCodeInput, myAttrs);
         mBlikCodeInput.setHint(typedArray.getString(0));
         typedArray.recycle();
     }
@@ -138,7 +131,6 @@ public class BlikView
         }
     }
 
-    @SuppressLint(Lint.SYNTHETIC)
     void notifyInputDataChanged() {
         getComponent().inputDataChanged(mBlikInputData);
     }
