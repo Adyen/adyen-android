@@ -8,7 +8,6 @@
 
 package com.adyen.checkout.sepa;
 
-import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.res.TypedArray;
 import android.util.AttributeSet;
@@ -24,7 +23,6 @@ import com.adyen.checkout.base.PaymentComponentState;
 import com.adyen.checkout.base.model.payments.request.SepaPaymentMethod;
 import com.adyen.checkout.base.ui.view.AdyenLinearLayout;
 import com.adyen.checkout.base.ui.view.AdyenTextInputEditText;
-import com.adyen.checkout.core.code.Lint;
 import com.adyen.checkout.core.exception.CheckoutException;
 import com.adyen.checkout.core.log.LogUtil;
 import com.adyen.checkout.core.log.Logger;
@@ -36,17 +34,13 @@ public class SepaView
         implements Observer<SepaOutputData> {
     private static final String TAG = LogUtil.getTag();
 
-    @SuppressLint(Lint.SYNTHETIC)
     SepaInputData mSepaInputData = new SepaInputData();
 
-    @SuppressLint(Lint.SYNTHETIC)
     TextInputLayout mHolderNameInput;
-    @SuppressLint(Lint.SYNTHETIC)
+
     TextInputLayout mIbanNumberInput;
 
-    @SuppressLint(Lint.SYNTHETIC)
     AdyenTextInputEditText mHolderNameEditText;
-    @SuppressLint(Lint.SYNTHETIC)
     AdyenTextInputEditText mIbanNumberEditText;
 
     public SepaView(@NonNull Context context) {
@@ -166,7 +160,6 @@ public class SepaView
         }
     }
 
-    @SuppressLint(Lint.SYNTHETIC)
     void notifyInputDataChanged() {
         getComponent().inputDataChanged(mSepaInputData);
     }

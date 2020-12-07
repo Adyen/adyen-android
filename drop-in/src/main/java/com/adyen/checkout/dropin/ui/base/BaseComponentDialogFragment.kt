@@ -28,6 +28,11 @@ import com.adyen.checkout.dropin.DropInConfiguration
 import com.adyen.checkout.dropin.R
 import com.adyen.checkout.dropin.getComponentFor
 
+private const val DROP_IN_CONFIGURATION = "DROP_IN_CONFIGURATION"
+private const val STORED_PAYMENT_METHOD = "STORED_PAYMENT_METHOD"
+private const val NAVIGATED_FROM_PRESELECTED = "NAVIGATED_FROM_PRESELECTED"
+private const val PAYMENT_METHOD = "PAYMENT_METHOD"
+
 abstract class BaseComponentDialogFragment : DropInBottomSheetDialogFragment(), Observer<PaymentComponentState<in PaymentMethodDetails>> {
 
     companion object {
@@ -39,14 +44,9 @@ abstract class BaseComponentDialogFragment : DropInBottomSheetDialogFragment(), 
     lateinit var component: PaymentComponent<PaymentComponentState<in PaymentMethodDetails>, Configuration>
     lateinit var dropInConfiguration: DropInConfiguration
     private var isStoredPayment = false
+    private var navigatedFromPreselected = false
 
     open class BaseCompanion<T : BaseComponentDialogFragment>(private var classes: Class<T>) {
-
-        companion object {
-            const val STORED_PAYMENT_METHOD = "STORED_PAYMENT_METHOD"
-            const val PAYMENT_METHOD = "PAYMENT_METHOD"
-            const val DROP_IN_CONFIGURATION = "DROP_IN_CONFIGURATION"
-        }
 
         fun newInstance(
             paymentMethod: PaymentMethod,
@@ -63,11 +63,13 @@ abstract class BaseComponentDialogFragment : DropInBottomSheetDialogFragment(), 
 
         fun newInstance(
             storedPaymentMethod: StoredPaymentMethod,
-            dropInConfiguration: DropInConfiguration
+            dropInConfiguration: DropInConfiguration,
+            navigatedFromPreselected: Boolean
         ): T {
             val args = Bundle()
             args.putParcelable(STORED_PAYMENT_METHOD, storedPaymentMethod)
             args.putParcelable(DROP_IN_CONFIGURATION, dropInConfiguration)
+            args.putBoolean(NAVIGATED_FROM_PRESELECTED, navigatedFromPreselected)
 
             val dialogFragment = classes.newInstance()
             dialogFragment.arguments = args
@@ -83,12 +85,14 @@ abstract class BaseComponentDialogFragment : DropInBottomSheetDialogFragment(), 
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        storedPaymentMethod = arguments?.getParcelable(BaseCompanion.STORED_PAYMENT_METHOD) ?: storedPaymentMethod
-        paymentMethod = arguments?.getParcelable(BaseCompanion.PAYMENT_METHOD) ?: paymentMethod
-        isStoredPayment = !storedPaymentMethod.type.isNullOrEmpty()
-
-        dropInConfiguration = arguments?.getParcelable(BaseCompanion.DROP_IN_CONFIGURATION)
-            ?: throw IllegalArgumentException("DropIn Configuration is null")
+        arguments?.let {
+            storedPaymentMethod = it.getParcelable(STORED_PAYMENT_METHOD) ?: storedPaymentMethod
+            paymentMethod = it.getParcelable(PAYMENT_METHOD) ?: paymentMethod
+            isStoredPayment = !storedPaymentMethod.type.isNullOrEmpty()
+            navigatedFromPreselected = it.getBoolean(NAVIGATED_FROM_PRESELECTED, false)
+            dropInConfiguration = it.getParcelable(DROP_IN_CONFIGURATION)
+                ?: throw IllegalArgumentException("DropIn Configuration is null")
+        }
 
         try {
             component = if (isStoredPayment)
@@ -102,8 +106,12 @@ abstract class BaseComponentDialogFragment : DropInBottomSheetDialogFragment(), 
     }
 
     override fun onBackPressed(): Boolean {
-        Logger.d(TAG, "onBackPressed")
-        protocol.showPaymentMethodsDialog()
+        Logger.d(TAG, "onBackPressed - $navigatedFromPreselected")
+        if (navigatedFromPreselected) {
+            protocol.showPreselectedDialog()
+        } else {
+            protocol.showPaymentMethodsDialog()
+        }
         return true
     }
 

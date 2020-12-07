@@ -37,7 +37,6 @@ import com.google.android.material.textfield.TextInputLayout;
 /**
  * CardView for {@link BcmcComponent}.
  */
-@SuppressWarnings("SyntheticAccessor")
 public final class BcmcView
         extends AdyenLinearLayout<BcmcOutputData, BcmcConfiguration, PaymentComponentState<CardPaymentMethod>, BcmcComponent>
         implements Observer<BcmcOutputData> {

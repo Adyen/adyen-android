@@ -22,6 +22,7 @@ import com.adyen.checkout.core.log.LogUtil
 import com.adyen.checkout.core.log.Logger
 import com.adyen.checkout.dropin.DropInConfiguration
 import com.adyen.checkout.dropin.checkComponentAvailability
+import com.adyen.checkout.dropin.ui.stored.makeStoredModel
 
 class PaymentMethodsListViewModel(
     application: Application,
@@ -49,34 +50,20 @@ class PaymentMethodsListViewModel(
     private fun setupStoredPaymentMethods(storedPaymentMethods: List<StoredPaymentMethod>) {
         storedPaymentMethodsList.clear()
         for (storedPaymentMethod in storedPaymentMethods) {
-            val type = storedPaymentMethod.type
-            val id = storedPaymentMethod.id
-            if (type != null && id != null && PaymentMethodTypes.SUPPORTED_PAYMENT_METHODS.contains(type)) {
+            if (isStoredPaymentSupported(storedPaymentMethod)) {
                 // We don't check for availability on stored payment methods
                 storedPaymentMethodsList.add(makeStoredModel(storedPaymentMethod))
             } else {
-                Logger.e(TAG, "Unsupported stored payment method - $type - $id")
+                Logger.e(TAG, "Unsupported stored payment method - ${storedPaymentMethod.type} : ${storedPaymentMethod.name}")
             }
         }
     }
 
-    private fun makeStoredModel(storedPaymentMethod: StoredPaymentMethod): StoredPaymentMethodModel {
-        return when (storedPaymentMethod.type) {
-            PaymentMethodTypes.SCHEME -> {
-                StoredCardModel(
-                    storedPaymentMethod.id.orEmpty(),
-                    storedPaymentMethod.brand.orEmpty(),
-                    storedPaymentMethod.lastFour.orEmpty(),
-                    storedPaymentMethod.expiryMonth.orEmpty(),
-                    storedPaymentMethod.expiryYear.orEmpty()
-                )
-            }
-            else -> GenericStoredModel(
-                storedPaymentMethod.id.orEmpty(),
-                storedPaymentMethod.type.orEmpty(),
-                storedPaymentMethod.name.orEmpty()
-            )
-        }
+    private fun isStoredPaymentSupported(storedPaymentMethod: StoredPaymentMethod): Boolean {
+        return !storedPaymentMethod.type.isNullOrEmpty() &&
+            !storedPaymentMethod.id.isNullOrEmpty() &&
+            PaymentMethodTypes.SUPPORTED_PAYMENT_METHODS.contains(storedPaymentMethod.type) &&
+            storedPaymentMethod.isEcommerce
     }
 
     private fun setupPaymentMethods(paymentMethods: List<PaymentMethod>) {

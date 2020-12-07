@@ -8,7 +8,6 @@
 
 package com.adyen.checkout.afterpay;
 
-import android.annotation.SuppressLint;
 import android.content.Context;
 import android.net.Uri;
 import android.text.Editable;
@@ -37,7 +36,6 @@ import com.adyen.checkout.base.model.payments.request.AfterPayPaymentMethod;
 import com.adyen.checkout.base.ui.view.AdyenLinearLayout;
 import com.adyen.checkout.base.ui.view.AdyenTextInputEditText;
 import com.adyen.checkout.base.util.BrowserUtils;
-import com.adyen.checkout.core.code.Lint;
 import com.adyen.checkout.core.log.LogUtil;
 import com.adyen.checkout.core.log.Logger;
 import com.google.android.material.tabs.TabLayout;
@@ -49,83 +47,48 @@ public class AfterPayView
         implements Observer<AfterPayOutputData>, CompoundButton.OnCheckedChangeListener {
     private static final String TAG = LogUtil.getTag();
 
-    @SuppressLint(Lint.SYNTHETIC)
     AfterPayInputData mInputData = new AfterPayInputData();
     AfterPayPersonalDataInputData mPersonalDataInputData = new AfterPayPersonalDataInputData();
     AfterPayAddressInputData mBillingAddressInputData = new AfterPayAddressInputData();
     AfterPayAddressInputData mDeliveryAddressInputData = new AfterPayAddressInputData();
 
-    @SuppressLint(Lint.SYNTHETIC)
     TextView mPersonalDetailSummery;
-    @SuppressLint(Lint.SYNTHETIC)
     TextView mBillingAddressSummery;
-    @SuppressLint(Lint.SYNTHETIC)
     TextView mDeliveryAddressSummery;
 
-    @SuppressLint(Lint.SYNTHETIC)
     TextInputLayout mFirstNameInputLayout;
-    @SuppressLint(Lint.SYNTHETIC)
     TextInputLayout mLastNameInputLayout;
-    @SuppressLint(Lint.SYNTHETIC)
     TextInputLayout mPhoneNumberInputLayout;
-    @SuppressLint(Lint.SYNTHETIC)
     TextInputLayout mEmailAddressInputLayout;
-    @SuppressLint(Lint.SYNTHETIC)
     TextInputLayout mDateOfBirthInputLayout;
-    @SuppressLint(Lint.SYNTHETIC)
     TextInputLayout mStreetInputLayout;
-    @SuppressLint(Lint.SYNTHETIC)
     TextInputLayout mHouseNumberInputLayout;
-    @SuppressLint(Lint.SYNTHETIC)
     TextInputLayout mPostalCodeInputLayout;
-    @SuppressLint(Lint.SYNTHETIC)
     TextInputLayout mCityInputLayout;
-    @SuppressLint(Lint.SYNTHETIC)
     TextInputLayout mCountryInputLayout;
-    @SuppressLint(Lint.SYNTHETIC)
     TextInputLayout mDeliveryStreetInputLayout;
-    @SuppressLint(Lint.SYNTHETIC)
     TextInputLayout mDeliveryHouseNumberInputLayout;
-    @SuppressLint(Lint.SYNTHETIC)
     TextInputLayout mDeliveryPostalCodeInputLayout;
-    @SuppressLint(Lint.SYNTHETIC)
     TextInputLayout mDeliveryCityInputLayout;
-    @SuppressLint(Lint.SYNTHETIC)
     TextInputLayout mDeliveryCountryInputLayout;
 
-    @SuppressLint(Lint.SYNTHETIC)
     AdyenTextInputEditText mFirstNameEditText;
-    @SuppressLint(Lint.SYNTHETIC)
     AdyenTextInputEditText mLastNameEditText;
-    @SuppressLint(Lint.SYNTHETIC)
     AdyenTextInputEditText mTelephoneNumberEditText;
-    @SuppressLint(Lint.SYNTHETIC)
     AdyenTextInputEditText mEmailAddressEditText;
-    @SuppressLint(Lint.SYNTHETIC)
     AdyenTextInputEditText mStreetEditText;
-    @SuppressLint(Lint.SYNTHETIC)
     AdyenTextInputEditText mHouseNumberEditText;
-    @SuppressLint(Lint.SYNTHETIC)
     AdyenTextInputEditText mPostalCodeEditText;
-    @SuppressLint(Lint.SYNTHETIC)
     AdyenTextInputEditText mCityEditText;
-    @SuppressLint(Lint.SYNTHETIC)
     AdyenTextInputEditText mCountryInputEditText;
-    @SuppressLint(Lint.SYNTHETIC)
     AdyenTextInputEditText mDeliveryStreetEditText;
-    @SuppressLint(Lint.SYNTHETIC)
     AdyenTextInputEditText mDeliveryHouseNumberEditText;
-    @SuppressLint(Lint.SYNTHETIC)
     AdyenTextInputEditText mDeliveryPostalCodeEditText;
-    @SuppressLint(Lint.SYNTHETIC)
     AdyenTextInputEditText mDeliveryCityEditText;
-    @SuppressLint(Lint.SYNTHETIC)
     AdyenTextInputEditText mDeliveryCountryInputEditText;
 
-    @SuppressLint(Lint.SYNTHETIC)
     TabLayout mGenderTabLayout;
 
-    @SuppressLint(Lint.SYNTHETIC)
     DateOfBirthInput mDateOfBirthEditText;
 
     AppCompatCheckBox mAgreementCheckBox;
@@ -816,7 +779,6 @@ public class AfterPayView
         // TODO: 2020-01-08 IMPLEMENT
     }
 
-    @SuppressLint(Lint.SYNTHETIC)
     void notifyInputDataChanged() {
         getComponent().inputDataChanged(mInputData);
     }

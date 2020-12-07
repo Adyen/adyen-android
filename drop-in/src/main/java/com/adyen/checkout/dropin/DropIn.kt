@@ -25,7 +25,6 @@ import com.adyen.checkout.dropin.ui.DropInActivity
  *
  * After setting up the [DropInService], just call [startPayment] and the checkout process will start.
  */
-@Suppress("SyntheticAccessor")
 class DropIn private constructor() {
 
     companion object {

@@ -19,7 +19,6 @@ import com.adyen.checkout.await.api.StatusConnectionTask;
 import com.adyen.checkout.await.api.StatusResponseUtils;
 import com.adyen.checkout.await.model.StatusResponse;
 import com.adyen.checkout.core.api.Environment;
-import com.adyen.checkout.core.code.Lint;
 import com.adyen.checkout.core.exception.ApiCallException;
 import com.adyen.checkout.core.exception.ComponentException;
 import com.adyen.checkout.core.log.LogUtil;
@@ -28,7 +27,6 @@ import com.adyen.checkout.core.log.Logger;
 import java.util.concurrent.TimeUnit;
 
 final class StatusRepository {
-    @SuppressWarnings(Lint.SYNTHETIC)
     static final String TAG = LogUtil.getTag();
 
     private static final long POLLING_DELAY_FAST = TimeUnit.SECONDS.toMillis(2);
@@ -38,10 +36,8 @@ final class StatusRepository {
 
     private static StatusRepository sInstance;
 
-    @SuppressWarnings(Lint.SYNTHETIC)
     final Handler mHandler = new Handler();
 
-    @SuppressWarnings(Lint.SYNTHETIC)
     final Runnable mStatusPollingRunnable = new Runnable() {
         @Override
         public void run() {
@@ -52,14 +48,11 @@ final class StatusRepository {
         }
     };
 
-    @SuppressWarnings(Lint.SYNTHETIC)
     final StatusApi mStatusApi;
 
-    @SuppressWarnings(Lint.SYNTHETIC)
     final MutableLiveData<StatusResponse> mStatusResponseLiveData = new MutableLiveData<>();
     private final MutableLiveData<ComponentException> mStatusErrorLiveData = new MutableLiveData<>();
 
-    @SuppressWarnings(Lint.SYNTHETIC)
     final StatusConnectionTask.StatusCallback mStatusCallback = new StatusConnectionTask.StatusCallback() {
         @Override
         public void onSuccess(@NonNull StatusResponse statusResponse) {
@@ -77,12 +70,9 @@ final class StatusRepository {
         }
     };
 
-    @SuppressWarnings(Lint.SYNTHETIC)
     String mClientKey;
-    @SuppressWarnings(Lint.SYNTHETIC)
     String mPaymentData;
 
-    @SuppressWarnings(Lint.SYNTHETIC)
     long mPollingDelay;
     private long mPollingStartTime;
 
@@ -148,7 +138,6 @@ final class StatusRepository {
         mStatusErrorLiveData.setValue(null);
     }
 
-    @SuppressWarnings(Lint.SYNTHETIC)
     void updatePollingDelay() {
         final long elapsedTime = System.currentTimeMillis() - mPollingStartTime;
         if (elapsedTime <= POLLING_THRESHOLD) {

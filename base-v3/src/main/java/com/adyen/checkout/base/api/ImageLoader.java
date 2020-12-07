@@ -24,7 +24,6 @@ import java.lang.ref.WeakReference;
 import java.util.HashMap;
 import java.util.Map;
 
-@SuppressWarnings("SyntheticAccessor")
 public class ImageLoader {
     private static final String TAG = LogUtil.getTag();
 

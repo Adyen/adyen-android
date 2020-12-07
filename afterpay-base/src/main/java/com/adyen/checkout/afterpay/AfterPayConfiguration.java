@@ -17,7 +17,6 @@ import androidx.annotation.NonNull;
 import com.adyen.checkout.base.component.BaseConfigurationBuilder;
 import com.adyen.checkout.base.component.Configuration;
 import com.adyen.checkout.core.api.Environment;
-import com.adyen.checkout.core.code.Lint;
 
 import java.util.Locale;
 
@@ -60,7 +59,6 @@ public class AfterPayConfiguration extends Configuration {
         }
     };
 
-    @SuppressWarnings(Lint.SYNTHETIC)
     AfterPayConfiguration(@NonNull Locale shopperLocale,
             @NonNull Environment environment,
             @NonNull String clientKey,

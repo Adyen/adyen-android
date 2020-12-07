@@ -44,7 +44,7 @@ import java.util.List;
 /**
  * CardView for {@link CardComponent}.
  */
-@SuppressWarnings({"SyntheticAccessor", "PMD.GodClass"})
+@SuppressWarnings("PMD.GodClass")
 public final class CardView extends AdyenLinearLayout<CardOutputData, CardConfiguration, CardComponentState, CardComponent>
         implements Observer<CardOutputData> {
 

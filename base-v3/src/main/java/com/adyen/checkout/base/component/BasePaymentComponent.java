@@ -26,7 +26,6 @@ import com.adyen.checkout.base.analytics.AnalyticsDispatcher;
 import com.adyen.checkout.base.component.lifecycle.PaymentComponentViewModel;
 import com.adyen.checkout.base.model.payments.request.PaymentMethodDetails;
 import com.adyen.checkout.core.api.ThreadManager;
-import com.adyen.checkout.core.code.Lint;
 import com.adyen.checkout.core.exception.CheckoutException;
 import com.adyen.checkout.core.log.LogUtil;
 import com.adyen.checkout.core.log.Logger;
@@ -41,7 +40,6 @@ public abstract class BasePaymentComponent<
 
     private static final String TAG = LogUtil.getTag();
 
-    @SuppressWarnings(Lint.SYNTHETIC)
     final MutableLiveData<ComponentStateT> mPaymentComponentStateLiveData = new MutableLiveData<>();
 
     private final MutableLiveData<ComponentError> mComponentErrorLiveData = new MutableLiveData<>();

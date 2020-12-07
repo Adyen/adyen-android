@@ -30,11 +30,9 @@ import com.adyen.checkout.dropin.ui.DropInViewModel
 import com.adyen.checkout.dropin.ui.base.DropInBottomSheetDialogFragment
 import com.adyen.checkout.dropin.ui.getViewModel
 
-class PaymentMethodListDialogFragment : DropInBottomSheetDialogFragment(), PaymentMethodAdapter.OnPaymentMethodSelectedCallback {
+private val TAG = LogUtil.getTag()
 
-    companion object {
-        private val TAG = LogUtil.getTag()
-    }
+class PaymentMethodListDialogFragment : DropInBottomSheetDialogFragment(), PaymentMethodAdapter.OnPaymentMethodSelectedCallback {
 
     private val dropInViewModel: DropInViewModel by activityViewModels()
     private lateinit var paymentMethodsListViewModel: PaymentMethodsListViewModel
@@ -90,8 +88,17 @@ class PaymentMethodListDialogFragment : DropInBottomSheetDialogFragment(), Payme
         protocol.terminateDropIn()
     }
 
+    override fun onBackPressed(): Boolean {
+        if (dropInViewModel.showPreselectedStored) {
+            protocol.showPreselectedDialog()
+        } else {
+            protocol.terminateDropIn()
+        }
+        return true
+    }
+
     override fun onStoredPaymentMethodSelected(storedPaymentMethodModel: StoredPaymentMethodModel) {
-        protocol.showStoredComponentDialog(dropInViewModel.getStoredPaymentMethod(storedPaymentMethodModel.id))
+        protocol.showStoredComponentDialog(dropInViewModel.getStoredPaymentMethod(storedPaymentMethodModel.id), false)
     }
 
     override fun onPaymentMethodSelected(paymentMethod: PaymentMethodModel) {

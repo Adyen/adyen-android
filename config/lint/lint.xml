@@ -12,8 +12,8 @@
     <!-- We don't use App Indexing -->
     <issue id="GoogleAppIndexingApiWarning" severity="ignore"/>
 
-    <!-- We are keeping an old version of Google Wallet until we update to Android X support libs -->
-    <issue id="GradleCompatible" severity="warning"/>
+    <!-- SyntheticAccessor is a minor optimization we don't want to manually do. -->
+    <issue id="SyntheticAccessor" severity="ignore"/>
 
     <!-- Google Pay UI elements were imported from google, only file renames for clarity -->
     <issue id="UnusedAttribute" >

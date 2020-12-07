@@ -14,7 +14,6 @@ import com.adyen.checkout.await.model.StatusRequest;
 import com.adyen.checkout.await.model.StatusResponse;
 import com.adyen.checkout.core.api.ConnectionTask;
 import com.adyen.checkout.core.api.ThreadManager;
-import com.adyen.checkout.core.code.Lint;
 import com.adyen.checkout.core.exception.ApiCallException;
 import com.adyen.checkout.core.log.LogUtil;
 import com.adyen.checkout.core.log.Logger;
@@ -29,7 +28,6 @@ public class StatusConnectionTask extends ConnectionTask<StatusResponse> {
 
     private static final int SAFETY_TIMEOUT = 100;
 
-    @SuppressWarnings(Lint.SYNTHETIC)
     StatusConnectionTask.StatusCallback mCallback;
 
     private final StatusApi mStatusApi;
@@ -69,7 +67,6 @@ public class StatusConnectionTask extends ConnectionTask<StatusResponse> {
         }
     }
 
-    @SuppressWarnings(Lint.SYNTHETIC)
     StatusApi getApi() {
         return mStatusApi;
     }
