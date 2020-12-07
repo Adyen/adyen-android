@@ -93,6 +93,9 @@ internal fun <T : Configuration> getDefaultConfigFor(
 
     // get default builder for Configuration type
     val builder: BaseConfigurationBuilder<out Configuration> = when (componentType) {
+        PaymentMethodTypes.BLIK -> {
+            BlikConfiguration.Builder(context)
+        }
         PaymentMethodTypes.DOTPAY -> {
             DotpayConfiguration.Builder(context)
         }
@@ -124,9 +127,6 @@ internal fun <T : Configuration> getDefaultConfigFor(
         }
         ActionTypes.AWAIT -> {
             AwaitConfiguration.Builder(context)
-        }
-        PaymentMethodTypes.BLIK -> {
-            BlikConfiguration.Builder(context)
         }
         ActionTypes.REDIRECT -> {
             RedirectConfiguration.Builder(context)
@@ -179,6 +179,7 @@ internal fun getProviderForType(type: String): PaymentComponentProvider<PaymentC
     return when (type) {
         PaymentMethodTypes.AFTER_PAY -> AfterPayComponent.PROVIDER
         PaymentMethodTypes.BCMC -> BcmcComponent.PROVIDER
+        PaymentMethodTypes.BLIK -> BlikComponent.PROVIDER
         PaymentMethodTypes.DOTPAY -> DotpayComponent.PROVIDER
         PaymentMethodTypes.ENTERCASH -> EntercashComponent.PROVIDER
         PaymentMethodTypes.EPS -> EPSComponent.PROVIDER
@@ -192,7 +193,6 @@ internal fun getProviderForType(type: String): PaymentComponentProvider<PaymentC
         PaymentMethodTypes.SCHEME -> CardComponent.PROVIDER
         PaymentMethodTypes.SEPA -> SepaComponent.PROVIDER
         PaymentMethodTypes.WECHAT_PAY_SDK -> WeChatPayComponent.PROVIDER
-        PaymentMethodTypes.BLIK -> BlikComponent.PROVIDER
         else -> {
             throw CheckoutException("Unable to find component for type - $type")
         }
@@ -250,6 +250,10 @@ internal fun getComponentFor(
             val bcmcConfiguration: BcmcConfiguration = dropInConfiguration.getConfigurationFor(PaymentMethodTypes.BCMC, context)
             BcmcComponent.PROVIDER.get(fragment, paymentMethod, bcmcConfiguration)
         }
+        PaymentMethodTypes.BLIK -> {
+            val blikConfiguration: BlikConfiguration = dropInConfiguration.getConfigurationFor(PaymentMethodTypes.BLIK, context)
+            BlikComponent.PROVIDER.get(fragment, paymentMethod, blikConfiguration)
+        }
         PaymentMethodTypes.DOTPAY -> {
             val dotpayConfig: DotpayConfiguration = dropInConfiguration.getConfigurationFor(PaymentMethodTypes.DOTPAY, context)
             DotpayComponent.PROVIDER.get(fragment, paymentMethod, dotpayConfig)
@@ -301,10 +305,6 @@ internal fun getComponentFor(
         PaymentMethodTypes.WECHAT_PAY_SDK -> {
             val weChatPayConfiguration: WeChatPayConfiguration = dropInConfiguration.getConfigurationFor(PaymentMethodTypes.WECHAT_PAY_SDK, context)
             WeChatPayComponent.PROVIDER.get(fragment, paymentMethod, weChatPayConfiguration)
-        }
-        PaymentMethodTypes.BLIK -> {
-            val blikConfiguration: BlikConfiguration = dropInConfiguration.getConfigurationFor(PaymentMethodTypes.BLIK, context)
-            BlikComponent.PROVIDER.get(fragment, paymentMethod, blikConfiguration)
         }
 
         else -> {
