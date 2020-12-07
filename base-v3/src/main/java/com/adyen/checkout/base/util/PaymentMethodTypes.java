@@ -39,6 +39,7 @@ public final class PaymentMethodTypes {
     public static final String BCMC = "bcmc";
     public static final String WECHAT_PAY_SDK = "wechatpaySDK";
     public static final String MB_WAY = "mbway";
+    public static final String BLIK = "blik";
 
     // Voucher payment methods that are not yet supported
     public static final String MULTIBANCO = "multibanco";
@@ -105,6 +106,7 @@ public final class PaymentMethodTypes {
         //    supportedPaymentMethods.add(SEPA);
         supportedPaymentMethods.add(SCHEME);
         supportedPaymentMethods.add(WECHAT_PAY_SDK);
+        supportedPaymentMethods.add(BLIK);
 
         SUPPORTED_PAYMENT_METHODS = Collections.unmodifiableList(supportedPaymentMethods);
 
