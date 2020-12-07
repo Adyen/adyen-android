@@ -18,7 +18,7 @@ class DateUtils private constructor() {
         fun parseDateToView(month: String, year: String): String {
             // Refactor this to DateFormat if we need to localize.
             return if (year.length < 2) "$month/$year"
-            else "$month/${year.substring(0..2)}"
+            else "$month/${year.substring(0..1)}"
         }
 
         /**
