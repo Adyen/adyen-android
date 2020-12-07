@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="utf-8"?><!--
+  ~ Copyright (c) 2020 Adyen N.V.
+  ~
+  ~ This file is open source and available under the MIT license. See the LICENSE file for more info.
+  ~
+  ~ Created by josephj on 4/12/2020.
+  -->
+
+<resources>
+    <string name="checkout_blik_code">Code à 6 chiffres</string>
+    <string name="checkout_blik_code_not_valid">Saisissez les 6 chiffres</string>
+    <string name="checkout_blik_helper_text">Ouvrez votre application bancaire pour obtenir le code.</string>
+</resources>

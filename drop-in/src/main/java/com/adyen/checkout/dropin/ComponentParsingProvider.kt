@@ -34,6 +34,9 @@ import com.adyen.checkout.base.util.PaymentMethodTypes
 import com.adyen.checkout.bcmc.BcmcComponent
 import com.adyen.checkout.bcmc.BcmcConfiguration
 import com.adyen.checkout.bcmc.BcmcView
+import com.adyen.checkout.blik.BlikComponent
+import com.adyen.checkout.blik.BlikConfiguration
+import com.adyen.checkout.blik.BlikView
 import com.adyen.checkout.card.CardComponent
 import com.adyen.checkout.card.CardConfiguration
 import com.adyen.checkout.card.CardView
@@ -90,6 +93,9 @@ internal fun <T : Configuration> getDefaultConfigFor(
 
     // get default builder for Configuration type
     val builder: BaseConfigurationBuilder<out Configuration> = when (componentType) {
+        PaymentMethodTypes.BLIK -> {
+            BlikConfiguration.Builder(context)
+        }
         PaymentMethodTypes.DOTPAY -> {
             DotpayConfiguration.Builder(context)
         }
@@ -173,6 +179,7 @@ internal fun getProviderForType(type: String): PaymentComponentProvider<PaymentC
     return when (type) {
         PaymentMethodTypes.AFTER_PAY -> AfterPayComponent.PROVIDER
         PaymentMethodTypes.BCMC -> BcmcComponent.PROVIDER
+        PaymentMethodTypes.BLIK -> BlikComponent.PROVIDER
         PaymentMethodTypes.DOTPAY -> DotpayComponent.PROVIDER
         PaymentMethodTypes.ENTERCASH -> EntercashComponent.PROVIDER
         PaymentMethodTypes.EPS -> EPSComponent.PROVIDER
@@ -242,6 +249,10 @@ internal fun getComponentFor(
         PaymentMethodTypes.BCMC -> {
             val bcmcConfiguration: BcmcConfiguration = dropInConfiguration.getConfigurationFor(PaymentMethodTypes.BCMC, context)
             BcmcComponent.PROVIDER.get(fragment, paymentMethod, bcmcConfiguration)
+        }
+        PaymentMethodTypes.BLIK -> {
+            val blikConfiguration: BlikConfiguration = dropInConfiguration.getConfigurationFor(PaymentMethodTypes.BLIK, context)
+            BlikComponent.PROVIDER.get(fragment, paymentMethod, blikConfiguration)
         }
         PaymentMethodTypes.DOTPAY -> {
             val dotpayConfig: DotpayConfiguration = dropInConfiguration.getConfigurationFor(PaymentMethodTypes.DOTPAY, context)
@@ -331,6 +342,7 @@ internal fun getViewFor(
         PaymentMethodTypes.OPEN_BANKING -> OpenBankingRecyclerView(context)
         PaymentMethodTypes.SCHEME -> CardView(context)
         PaymentMethodTypes.SEPA -> SepaView(context)
+        PaymentMethodTypes.BLIK -> BlikView(context)
         // GooglePay and WeChatPay do not require a View in Drop-in
         ActionTypes.AWAIT -> AwaitView(context)
         else -> {

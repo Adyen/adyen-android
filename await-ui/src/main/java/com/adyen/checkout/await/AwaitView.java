@@ -18,6 +18,7 @@ import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.annotation.StringRes;
 import androidx.lifecycle.LifecycleOwner;
 import androidx.lifecycle.Observer;
 
@@ -25,6 +26,7 @@ import com.adyen.checkout.await.ui.R;
 import com.adyen.checkout.base.ActionComponentData;
 import com.adyen.checkout.base.api.ImageLoader;
 import com.adyen.checkout.base.ui.view.AdyenLinearLayout;
+import com.adyen.checkout.base.util.PaymentMethodTypes;
 import com.adyen.checkout.core.log.LogUtil;
 import com.adyen.checkout.core.log.Logger;
 
@@ -91,6 +93,7 @@ public class AwaitView extends AdyenLinearLayout<AwaitOutputData, AwaitConfigura
 
         if (mPaymentMethodType == null || !mPaymentMethodType.equals(awaitOutputData.getPaymentMethodType())) {
             mPaymentMethodType = awaitOutputData.getPaymentMethodType();
+            updateMessageText();
             updateLogo();
         }
     }
@@ -109,6 +112,22 @@ public class AwaitView extends AdyenLinearLayout<AwaitOutputData, AwaitConfigura
         Logger.d(TAG, "updateLogo - " + mPaymentMethodType);
         if (!TextUtils.isEmpty(mPaymentMethodType)) {
             mImageLoader.load(mPaymentMethodType, mImageView);
+        }
+    }
+
+    private void updateMessageText() {
+        mTextViewOpenApp.setText(getMessageTextResource());
+    }
+
+    @StringRes
+    private Integer getMessageTextResource() {
+        switch (mPaymentMethodType) {
+            case PaymentMethodTypes.BLIK:
+                return R.string.checkout_await_message_blik;
+            case PaymentMethodTypes.MB_WAY:
+                return R.string.checkout_await_message_mbway;
+            default:
+                return R.string.checkout_await_message_blik;
         }
     }
 }

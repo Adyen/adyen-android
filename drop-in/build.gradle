@@ -51,6 +51,7 @@ dependencies {
     api project(":afterpay-ui")
     api project(":await-ui")
     api project(":bcmc-ui")
+    api project(":blik-ui")
     api project(":card-ui")
     api project(":dotpay-ui")
     api project(":entercash-ui")

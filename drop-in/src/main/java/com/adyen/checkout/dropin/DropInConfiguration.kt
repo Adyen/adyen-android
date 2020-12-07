@@ -20,6 +20,7 @@ import com.adyen.checkout.base.util.CheckoutCurrency
 import com.adyen.checkout.base.util.PaymentMethodTypes
 import com.adyen.checkout.base.util.ValidationUtils
 import com.adyen.checkout.bcmc.BcmcConfiguration
+import com.adyen.checkout.blik.BlikConfiguration
 import com.adyen.checkout.card.CardConfiguration
 import com.adyen.checkout.core.api.Environment
 import com.adyen.checkout.core.exception.CheckoutException
@@ -288,7 +289,7 @@ class DropInConfiguration : Configuration, Parcelable {
         }
 
         /**
-         * Add configuration for Sepa payment method.
+         * Add configuration for BCMC payment method.
          */
         fun addBcmcConfiguration(bcmcConfiguration: BcmcConfiguration): Builder {
             availableConfigs[PaymentMethodTypes.BCMC] = bcmcConfiguration
@@ -296,15 +297,26 @@ class DropInConfiguration : Configuration, Parcelable {
         }
 
         /**
-         * Add configuration for Sepa payment method.
+         * Add configuration for AfterPay payment method.
          */
         fun addAfterPayConfiguration(afterPayConfiguration: AfterPayConfiguration): Builder {
             availableConfigs[PaymentMethodTypes.AFTER_PAY] = afterPayConfiguration
             return this
         }
 
+        /**
+         * Add configuration for MB WAY payment method.
+         */
         fun addMBWayConfiguration(mbwayConfiguration: MBWayConfiguration): Builder {
             availableConfigs[PaymentMethodTypes.MB_WAY] = mbwayConfiguration
+            return this
+        }
+
+        /**
+         * Add configuration for Blik payment method.
+         */
+        fun addBlikConfiguration(blikConfiguration: BlikConfiguration): Builder {
+            availableConfigs[PaymentMethodTypes.BLIK] = blikConfiguration
             return this
         }
 
