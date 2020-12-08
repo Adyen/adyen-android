@@ -1,0 +1,24 @@
+<!--
+  ~ Copyright (c) 2020 Adyen N.V.
+  ~
+  ~ This file is open source and available under the MIT license. See the LICENSE file for more info.
+  ~
+  ~ Created by josephj on 8/12/2020.
+  -->
+
+<resources>
+    <string name="pay_button">Πληρωμή</string>
+    <string name="pay_button_with_value">Πληρωμή %s</string>
+    <string name="payment_methods_header">Τρόποι πληρωμής</string>
+    <string name="error_dialog_title">Σφάλμα</string>
+    <string name="error_dialog_button">ΟΚ</string>
+    <string name="payment_failed">Error sending payment. Please try again.</string>
+    <string name="action_failed">Προέκυψε σφάλμα κατά την επεξεργασία της πληρωμής σας. Προσπαθήστε ξανά αργότερα.</string>
+    <string name="component_error">Κάτι πήγε στραβά.</string>
+    <string name="time_out_error">Request timed out. Please try again.</string>
+    <string name="store_payment_methods_header">Οι τρόποι πληρωμής σας</string>
+    <string name="other_payment_methods">Επιλέξτε άλλον τρόπο</string>
+    <string name="continue_button">Συνέχεια</string>
+    <string name="change_payment_method">Αλλαγή τρόπου πληρωμής</string>
+    <string name="credit_card">Credit Card</string>
+</resources>

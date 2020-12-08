@@ -1,0 +1,24 @@
+<!--
+  ~ Copyright (c) 2020 Adyen N.V.
+  ~
+  ~ This file is open source and available under the MIT license. See the LICENSE file for more info.
+  ~
+  ~ Created by josephj on 8/12/2020.
+  -->
+
+<resources>
+    <string name="pay_button">Platiti</string>
+    <string name="pay_button_with_value">Platiti %s</string>
+    <string name="payment_methods_header">Način plaćanja</string>
+    <string name="error_dialog_title">Greška</string>
+    <string name="error_dialog_button">U redu</string>
+    <string name="payment_failed">Error sending payment. Please try again.</string>
+    <string name="action_failed">Došlo je do pogreške prilikom obrade plaćanja. Pokušajte ponovno kasnije.</string>
+    <string name="component_error">Pojavio se problem.</string>
+    <string name="time_out_error">Request timed out. Please try again.</string>
+    <string name="store_payment_methods_header">Vaš način plaćanja</string>
+    <string name="other_payment_methods">Odaberite drugi način</string>
+    <string name="continue_button">Nastavi</string>
+    <string name="change_payment_method">Promijeni način plaćanja</string>
+    <string name="credit_card">Credit Card</string>
+</resources>

@@ -1,0 +1,24 @@
+<!--
+  ~ Copyright (c) 2020 Adyen N.V.
+  ~
+  ~ This file is open source and available under the MIT license. See the LICENSE file for more info.
+  ~
+  ~ Created by josephj on 8/12/2020.
+  -->
+
+<resources>
+    <string name="pay_button">Plătiți</string>
+    <string name="pay_button_with_value">Plătiți %s</string>
+    <string name="payment_methods_header">Metode de plată</string>
+    <string name="error_dialog_title">Eroare</string>
+    <string name="error_dialog_button">Ok</string>
+    <string name="payment_failed">Error sending payment. Please try again.</string>
+    <string name="action_failed">S-a produs o eroare la prelucrarea plății. Vă rugăm să încercați din nou mai târziu.</string>
+    <string name="component_error">A apărut o problemă.</string>
+    <string name="time_out_error">Request timed out. Please try again.</string>
+    <string name="store_payment_methods_header">Metodele dvs. de plată</string>
+    <string name="other_payment_methods">Selectați o altă metodă</string>
+    <string name="continue_button">Continuare</string>
+    <string name="change_payment_method">Schimbare metodă de plată</string>
+    <string name="credit_card">Credit Card</string>
+</resources>

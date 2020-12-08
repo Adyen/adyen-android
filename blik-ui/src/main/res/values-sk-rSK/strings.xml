@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="utf-8"?><!--
+  ~ Copyright (c) 2020 Adyen N.V.
+  ~
+  ~ This file is open source and available under the MIT license. See the LICENSE file for more info.
+  ~
+  ~ Created by josephj on 8/12/2020.
+  -->
+
+<resources>
+    <string name="checkout_blik_code">6-ciferný kód</string>
+    <string name="checkout_blik_code_not_valid">Zadajte 6 číslic</string>
+    <string name="checkout_blik_helper_text">Získajte kód zo svojej bankovej aplikácie.</string>
+</resources>

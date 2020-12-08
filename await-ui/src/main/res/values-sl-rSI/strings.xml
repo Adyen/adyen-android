@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+  ~ Copyright (c) 2020 Adyen N.V.
+  ~
+  ~ This file is open source and available under the MIT license. See the LICENSE file for more info.
+  ~
+  ~ Created by josephj on 8/12/2020.
+  -->
+
+<resources>
+    <string name="checkout_await_message_blik">Za potrditev plačila odprite svojo bančno aplikacijo.</string>
+    <string name="checkout_await_message_mbway">Potrdite svoje plačilo v aplikaciji MB WAY</string>
+    <string name="checkout_await_waiting_confirmation">Čakanje na potrditev</string>
+</resources>
