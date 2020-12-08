@@ -1,0 +1,24 @@
+<!--
+  ~ Copyright (c) 2020 Adyen N.V.
+  ~
+  ~ This file is open source and available under the MIT license. See the LICENSE file for more info.
+  ~
+  ~ Created by josephj on 8/12/2020.
+  -->
+
+<resources>
+    <string name="pay_button">Fizetés</string>
+    <string name="pay_button_with_value">Fizetendő: %s</string>
+    <string name="payment_methods_header">Fizetési módok</string>
+    <string name="error_dialog_title">Hiba</string>
+    <string name="error_dialog_button">OK</string>
+    <string name="payment_failed">Error sending payment. Please try again.</string>
+    <string name="action_failed">Fizetése feldolgozása során hiba történt. Próbálkozzon újra később.</string>
+    <string name="component_error">Hiba történt.</string>
+    <string name="time_out_error">Request timed out. Please try again.</string>
+    <string name="store_payment_methods_header">Fizetési módjai</string>
+    <string name="other_payment_methods">Másik mód választása</string>
+    <string name="continue_button">Folytatás</string>
+    <string name="change_payment_method">Fizetési mód módosítása</string>
+    <string name="credit_card">Credit Card</string>
+</resources>
