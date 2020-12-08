@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+  ~ Copyright (c) 2020 Adyen N.V.
+  ~
+  ~ This file is open source and available under the MIT license. See the LICENSE file for more info.
+  ~
+  ~ Created by josephj on 8/12/2020.
+  -->
+
+<resources>
+    <string name="checkout_sepa_holder_name">Όνομα κατόχου</string>
+    <string name="checkout_sepa_account_number">Αριθμός λογαριασμού (IBAN)</string>
+    <string name="checkout_holder_name_not_valid">Μη έγκυρο όνομα κατόχου</string>
+    <string name="checkout_iban_not_valid">Μη έγκυρος αριθμός λογαριασμού</string>
+</resources>

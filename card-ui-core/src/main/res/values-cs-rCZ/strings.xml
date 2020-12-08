@@ -1,0 +1,21 @@
+<!--
+  ~ Copyright (c) 2020 Adyen N.V.
+  ~
+  ~ This file is open source and available under the MIT license. See the LICENSE file for more info.
+  ~
+  ~ Created by josephj on 8/12/2020.
+  -->
+
+<resources>
+    <string name="checkout_card_number_hint">Číslo karty</string>
+    <string name="checkout_card_holder_hint">Jméno na kartě</string>
+    <string name="checkout_card_expiry_date_hint">Konec platnosti</string>
+    <string name="checkout_card_security_code_hint">Kód CVC/CVV</string>
+
+    <string name="checkout_card_number_not_valid">Neplatné číslo karty</string>
+    <string name="checkout_expiry_date_not_valid">Neplatné datum konce platnosti</string>
+    <string name="checkout_security_code_not_valid">Neplatný formát kódu CVC/CVV</string>
+    <string name="checkout_holder_name_not_valid">Neplatné jméno držitele</string>
+
+    <string name="store_payment_method">Uložit pro příští platby</string>
+</resources>

@@ -1,0 +1,24 @@
+<!--
+  ~ Copyright (c) 2020 Adyen N.V.
+  ~
+  ~ This file is open source and available under the MIT license. See the LICENSE file for more info.
+  ~
+  ~ Created by josephj on 8/12/2020.
+  -->
+
+<resources>
+    <string name="pay_button">Zaplatiť</string>
+    <string name="pay_button_with_value">Zaplatiť %s</string>
+    <string name="payment_methods_header">Spôsob platby</string>
+    <string name="error_dialog_title">Chyba</string>
+    <string name="error_dialog_button">OK</string>
+    <string name="payment_failed">Error sending payment. Please try again.</string>
+    <string name="action_failed">Pri spracúvaní vašej platby sa vyskytla chyba. Skúste to neskôr znova.</string>
+    <string name="component_error">Niečo sa pokazilo.</string>
+    <string name="time_out_error">Request timed out. Please try again.</string>
+    <string name="store_payment_methods_header">Vaše spôsoby platby</string>
+    <string name="other_payment_methods">Vyberte iný spôsob</string>
+    <string name="continue_button">Pokračovať</string>
+    <string name="change_payment_method">Zmeniť spôsob platby</string>
+    <string name="credit_card">Credit Card</string>
+</resources>
