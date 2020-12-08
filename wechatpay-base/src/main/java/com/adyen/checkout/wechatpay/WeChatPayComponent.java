@@ -61,4 +61,8 @@ public class WeChatPayComponent
         return PAYMENT_METHOD_TYPES;
     }
 
+    @Override
+    public boolean requiresInput() {
+        return false;
+    }
 }

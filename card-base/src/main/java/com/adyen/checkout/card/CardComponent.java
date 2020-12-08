@@ -90,6 +90,11 @@ public final class CardComponent extends BasePaymentComponent<
         return mStoredPaymentInputData != null;
     }
 
+    @Override
+    public boolean requiresInput() {
+        return !(isStoredPaymentMethod() && mConfiguration.isHideCvcStoredCard());
+    }
+
     @Nullable
     public CardInputData getStoredPaymentInputData() {
         return mStoredPaymentInputData;

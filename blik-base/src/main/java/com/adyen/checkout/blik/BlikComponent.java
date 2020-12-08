@@ -13,8 +13,9 @@ import androidx.annotation.NonNull;
 import com.adyen.checkout.base.PaymentComponentProvider;
 import com.adyen.checkout.base.PaymentComponentState;
 import com.adyen.checkout.base.component.BasePaymentComponent;
-import com.adyen.checkout.base.component.GenericPaymentComponentProvider;
 import com.adyen.checkout.base.component.GenericPaymentMethodDelegate;
+import com.adyen.checkout.base.component.GenericStoredPaymentComponentProvider;
+import com.adyen.checkout.base.component.GenericStoredPaymentDelegate;
 import com.adyen.checkout.base.model.payments.request.BlikPaymentMethod;
 import com.adyen.checkout.base.model.payments.request.PaymentComponentData;
 import com.adyen.checkout.base.util.PaymentMethodTypes;
@@ -25,12 +26,21 @@ public class BlikComponent extends BasePaymentComponent<BlikConfiguration, BlikI
     private static final String TAG = LogUtil.getTag();
 
     public static final PaymentComponentProvider<BlikComponent, BlikConfiguration> PROVIDER =
-            new GenericPaymentComponentProvider<>(BlikComponent.class);
+            new GenericStoredPaymentComponentProvider<>(BlikComponent.class);
 
     private static final String[] PAYMENT_METHOD_TYPES = {PaymentMethodTypes.BLIK};
 
     public BlikComponent(@NonNull GenericPaymentMethodDelegate paymentMethodDelegate, @NonNull BlikConfiguration configuration) {
         super(paymentMethodDelegate, configuration);
+    }
+
+    public BlikComponent(@NonNull GenericStoredPaymentDelegate paymentDelegate, BlikConfiguration configuration) {
+        super(paymentDelegate, configuration);
+    }
+
+    @Override
+    public boolean requiresInput() {
+        return mPaymentMethodDelegate instanceof GenericPaymentMethodDelegate;
     }
 
     @NonNull

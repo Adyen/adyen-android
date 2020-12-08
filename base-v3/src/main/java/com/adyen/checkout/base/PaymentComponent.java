@@ -36,4 +36,11 @@ public interface PaymentComponent<ComponentStateT extends PaymentComponentState<
      */
     @Nullable
     PaymentComponentState<? extends PaymentMethodDetails> getState();
+
+    /**
+     * Checks if the component in it's current configuration needs any input from the user to make the /payments call.
+     *
+     * @return If there is required user input or not.
+     */
+    boolean requiresInput();
 }
