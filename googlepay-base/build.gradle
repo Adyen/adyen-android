@@ -46,8 +46,7 @@ dependencies {
     api project(':base-v3')
 
     // Dependencies
-
-    implementation "com.google.android.gms:play-services-wallet:$play_services_wallet_version"
+    api "com.google.android.gms:play-services-wallet:$play_services_wallet_version"
 }
 
 // This sharedTasks.gradle script is applied at the end of this build.gradle script,
