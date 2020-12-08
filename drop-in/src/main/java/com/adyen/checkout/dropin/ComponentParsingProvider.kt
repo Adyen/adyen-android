@@ -12,9 +12,6 @@ import android.app.Application
 import android.content.Context
 import androidx.fragment.app.Fragment
 import com.adyen.checkout.adyen3ds2.Adyen3DS2Configuration
-import com.adyen.checkout.afterpay.AfterPayComponent
-import com.adyen.checkout.afterpay.AfterPayConfiguration
-import com.adyen.checkout.afterpay.AfterPayView
 import com.adyen.checkout.await.AwaitConfiguration
 import com.adyen.checkout.await.AwaitView
 import com.adyen.checkout.base.ComponentAvailableCallback
@@ -177,7 +174,6 @@ internal fun checkComponentAvailability(
 internal fun getProviderForType(type: String): PaymentComponentProvider<PaymentComponent<*, *>, Configuration> {
     @Suppress("UNCHECKED_CAST")
     return when (type) {
-        PaymentMethodTypes.AFTER_PAY -> AfterPayComponent.PROVIDER
         PaymentMethodTypes.BCMC -> BcmcComponent.PROVIDER
         PaymentMethodTypes.BLIK -> BlikComponent.PROVIDER
         PaymentMethodTypes.DOTPAY -> DotpayComponent.PROVIDER
@@ -242,10 +238,6 @@ internal fun getComponentFor(
     val context = fragment.requireContext()
 
     val component = when (paymentMethod.type) {
-        PaymentMethodTypes.AFTER_PAY -> {
-            val afterPayConfiguration: AfterPayConfiguration = dropInConfiguration.getConfigurationFor(PaymentMethodTypes.AFTER_PAY, context)
-            AfterPayComponent.PROVIDER.get(fragment, paymentMethod, afterPayConfiguration)
-        }
         PaymentMethodTypes.BCMC -> {
             val bcmcConfiguration: BcmcConfiguration = dropInConfiguration.getConfigurationFor(PaymentMethodTypes.BCMC, context)
             BcmcComponent.PROVIDER.get(fragment, paymentMethod, bcmcConfiguration)
@@ -329,7 +321,6 @@ internal fun getViewFor(
 ): ComponentView<in OutputData, ViewableComponent<*, *, *>> {
     @Suppress("UNCHECKED_CAST")
     return when (paymentType) {
-        PaymentMethodTypes.AFTER_PAY -> AfterPayView(context)
         PaymentMethodTypes.BCMC -> BcmcView(context)
         PaymentMethodTypes.DOTPAY -> DotpayRecyclerView(context)
         PaymentMethodTypes.ENTERCASH -> EntercashRecyclerView(context)

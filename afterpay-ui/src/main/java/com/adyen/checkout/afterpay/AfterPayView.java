@@ -32,7 +32,6 @@ import androidx.lifecycle.Observer;
 import com.adyen.checkout.afterpay.ui.DateOfBirthInput;
 import com.adyen.checkout.afterpay.ui.R;
 import com.adyen.checkout.base.PaymentComponentState;
-import com.adyen.checkout.base.model.payments.request.AfterPayPaymentMethod;
 import com.adyen.checkout.base.ui.view.AdyenLinearLayout;
 import com.adyen.checkout.base.ui.view.AdyenTextInputEditText;
 import com.adyen.checkout.base.util.BrowserUtils;

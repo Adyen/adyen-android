@@ -19,7 +19,6 @@ import com.adyen.checkout.base.component.GenericPaymentComponentProvider;
 import com.adyen.checkout.base.component.GenericPaymentMethodDelegate;
 import com.adyen.checkout.base.component.PaymentMethodDelegate;
 import com.adyen.checkout.base.model.payments.request.Address;
-import com.adyen.checkout.base.model.payments.request.AfterPayPaymentMethod;
 import com.adyen.checkout.base.model.payments.request.PaymentComponentData;
 import com.adyen.checkout.base.model.payments.request.ShopperName;
 import com.adyen.checkout.base.util.DateUtils;

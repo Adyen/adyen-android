@@ -35,7 +35,6 @@ public final class PaymentMethodTypes {
     public static final String SCHEME = "scheme";
     public static final String GOOGLE_PAY = "paywithgoogle";
     public static final String SEPA = "sepadirectdebit";
-    public static final String AFTER_PAY = "afterpay_default";
     public static final String BCMC = "bcmc";
     public static final String WECHAT_PAY_SDK = "wechatpaySDK";
     public static final String MB_WAY = "mbway";
@@ -90,7 +89,6 @@ public final class PaymentMethodTypes {
         final ArrayList<String> supportedPaymentMethods = new ArrayList<>();
 
         // Populate supported list
-        supportedPaymentMethods.add(AFTER_PAY);
         supportedPaymentMethods.add(BCMC);
         supportedPaymentMethods.add(DOTPAY);
         supportedPaymentMethods.add(ENTERCASH);
