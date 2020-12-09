@@ -142,6 +142,7 @@ class MainActivity : AppCompatActivity() {
             .setShopperReference(keyValueStorage.getShopperReference())
             .setShopperLocale(shopperLocale)
             .setEnvironment(Environment.TEST)
+            .setHideCvcStoredCard(true)
             .build()
 
         val googlePayConfig = GooglePayConfiguration.Builder(this@MainActivity, keyValueStorage.getMerchantAccount())

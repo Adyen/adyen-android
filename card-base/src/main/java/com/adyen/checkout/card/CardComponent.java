@@ -74,6 +74,11 @@ public final class CardComponent extends BasePaymentComponent<
             storedCardType.add(cardType);
             mFilteredSupportedCards = Collections.unmodifiableList(storedCardType);
         }
+
+        // TODO: 09/12/2020 move this logic to base component, maybe create the inputdata from the delegate?
+        if (!requiresInput()) {
+            inputDataChanged(new CardInputData());
+        }
     }
 
     /**

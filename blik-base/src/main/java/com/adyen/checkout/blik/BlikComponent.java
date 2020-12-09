@@ -10,8 +10,8 @@ package com.adyen.checkout.blik;
 
 import androidx.annotation.NonNull;
 
-import com.adyen.checkout.base.PaymentComponentProvider;
 import com.adyen.checkout.base.PaymentComponentState;
+import com.adyen.checkout.base.StoredPaymentComponentProvider;
 import com.adyen.checkout.base.component.BasePaymentComponent;
 import com.adyen.checkout.base.component.GenericPaymentMethodDelegate;
 import com.adyen.checkout.base.component.GenericStoredPaymentComponentProvider;
@@ -25,7 +25,7 @@ import com.adyen.checkout.core.log.Logger;
 public class BlikComponent extends BasePaymentComponent<BlikConfiguration, BlikInputData, BlikOutputData, PaymentComponentState<BlikPaymentMethod>> {
     private static final String TAG = LogUtil.getTag();
 
-    public static final PaymentComponentProvider<BlikComponent, BlikConfiguration> PROVIDER =
+    public static final StoredPaymentComponentProvider<BlikComponent, BlikConfiguration> PROVIDER =
             new GenericStoredPaymentComponentProvider<>(BlikComponent.class);
 
     private static final String[] PAYMENT_METHOD_TYPES = {PaymentMethodTypes.BLIK};
@@ -36,6 +36,8 @@ public class BlikComponent extends BasePaymentComponent<BlikConfiguration, BlikI
 
     public BlikComponent(@NonNull GenericStoredPaymentDelegate paymentDelegate, BlikConfiguration configuration) {
         super(paymentDelegate, configuration);
+        // TODO: 09/12/2020 move this logic to base component, maybe create the inputdata from the delegate?
+        inputDataChanged(new BlikInputData());
     }
 
     @Override
@@ -64,9 +66,18 @@ public class BlikComponent extends BasePaymentComponent<BlikConfiguration, BlikI
             paymentMethod.setBlikCode(blikOutputData.getBlikCodeField().getValue());
         }
 
+        if (mPaymentMethodDelegate instanceof GenericStoredPaymentDelegate) {
+            paymentMethod.setStoredPaymentMethodId(
+                ((GenericStoredPaymentDelegate) mPaymentMethodDelegate).getStoredPaymentMethod().getId());
+        }
+
         paymentComponentData.setPaymentMethod(paymentMethod);
 
-        return new PaymentComponentState<>(paymentComponentData, blikOutputData != null && blikOutputData.isValid());
+        final boolean isValid =
+                mPaymentMethodDelegate instanceof GenericStoredPaymentDelegate ||
+                (blikOutputData != null && blikOutputData.isValid());
+
+        return new PaymentComponentState<>(paymentComponentData, isValid);
     }
 
     @NonNull

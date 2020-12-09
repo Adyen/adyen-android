@@ -26,6 +26,7 @@ import com.adyen.checkout.core.exception.CheckoutException
 import com.adyen.checkout.core.log.LogUtil
 import com.adyen.checkout.core.log.Logger
 import com.adyen.checkout.dropin.R
+import com.adyen.checkout.dropin.getComponentFor
 import com.adyen.checkout.dropin.ui.DropInViewModel
 import com.adyen.checkout.dropin.ui.base.DropInBottomSheetDialogFragment
 import com.adyen.checkout.dropin.ui.getViewModel
@@ -98,7 +99,20 @@ class PaymentMethodListDialogFragment : DropInBottomSheetDialogFragment(), Payme
     }
 
     override fun onStoredPaymentMethodSelected(storedPaymentMethodModel: StoredPaymentMethodModel) {
-        protocol.showStoredComponentDialog(dropInViewModel.getStoredPaymentMethod(storedPaymentMethodModel.id), false)
+        Logger.d(TAG, "onStoredPaymentMethodSelected")
+        val storedPaymentMethod = dropInViewModel.getStoredPaymentMethod(storedPaymentMethodModel.id)
+        val component = getComponentFor(this, storedPaymentMethod, dropInViewModel.dropInConfiguration)
+        if (component.requiresInput()) {
+            protocol.showStoredComponentDialog(dropInViewModel.getStoredPaymentMethod(storedPaymentMethodModel.id), false)
+        } else {
+            component.observe(this) {
+                if (it.isValid) {
+                    protocol.requestPaymentsCall(it.data)
+                } else {
+                    Logger.e(TAG, "Component state is not valid")
+                }
+            }
+        }
     }
 
     override fun onPaymentMethodSelected(paymentMethod: PaymentMethodModel) {
