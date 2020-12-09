@@ -85,8 +85,6 @@ public abstract class PaymentMethodDetails extends ModelObject {
                 return GooglePayPaymentMethod.SERIALIZER;
             case SepaPaymentMethod.PAYMENT_METHOD_TYPE:
                 return SepaPaymentMethod.SERIALIZER;
-            case AfterPayPaymentMethod.PAYMENT_METHOD_TYPE:
-                return AfterPayPaymentMethod.SERIALIZER;
             case MBWayPaymentMethod.PAYMENT_METHOD_TYPE:
                 return MBWayPaymentMethod.SERIALIZER;
             case BlikPaymentMethod.PAYMENT_METHOD_TYPE:

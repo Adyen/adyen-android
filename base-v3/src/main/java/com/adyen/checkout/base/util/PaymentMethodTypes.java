@@ -90,7 +90,6 @@ public final class PaymentMethodTypes {
         final ArrayList<String> supportedPaymentMethods = new ArrayList<>();
 
         // Populate supported list
-        supportedPaymentMethods.add(AFTER_PAY);
         supportedPaymentMethods.add(BCMC);
         supportedPaymentMethods.add(DOTPAY);
         supportedPaymentMethods.add(ENTERCASH);
@@ -118,6 +117,7 @@ public final class PaymentMethodTypes {
         unsupportedPaymentMethods.add(SEPA);
 
         unsupportedPaymentMethods.add(BCMC_QR);
+        unsupportedPaymentMethods.add(AFTER_PAY);
         unsupportedPaymentMethods.add(WECHAT_PAY_MINI_PROGRAM);
         unsupportedPaymentMethods.add(WECHAT_PAY_QR);
         unsupportedPaymentMethods.add(WECHAT_PAY_WEB);

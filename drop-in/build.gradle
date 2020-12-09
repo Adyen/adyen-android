@@ -48,7 +48,6 @@ dependencies {
 
     // Checkout
     api project(":3ds2")
-    api project(":afterpay-ui")
     api project(":await-ui")
     api project(":bcmc-ui")
     api project(":blik-ui")

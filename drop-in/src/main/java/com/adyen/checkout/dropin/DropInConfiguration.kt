@@ -13,7 +13,6 @@ import android.content.Context
 import android.content.Intent
 import android.os.Parcel
 import android.os.Parcelable
-import com.adyen.checkout.afterpay.AfterPayConfiguration
 import com.adyen.checkout.base.component.Configuration
 import com.adyen.checkout.base.model.payments.Amount
 import com.adyen.checkout.base.util.CheckoutCurrency
@@ -293,14 +292,6 @@ class DropInConfiguration : Configuration, Parcelable {
          */
         fun addBcmcConfiguration(bcmcConfiguration: BcmcConfiguration): Builder {
             availableConfigs[PaymentMethodTypes.BCMC] = bcmcConfiguration
-            return this
-        }
-
-        /**
-         * Add configuration for AfterPay payment method.
-         */
-        fun addAfterPayConfiguration(afterPayConfiguration: AfterPayConfiguration): Builder {
-            availableConfigs[PaymentMethodTypes.AFTER_PAY] = afterPayConfiguration
             return this
         }
 

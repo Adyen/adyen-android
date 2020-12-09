@@ -1,6 +1,4 @@
 include ':3ds2',
-        ':afterpay-base',
-        ':afterpay-ui',
         ':await-base',
         ':await-ui',
         ':base-ui',
