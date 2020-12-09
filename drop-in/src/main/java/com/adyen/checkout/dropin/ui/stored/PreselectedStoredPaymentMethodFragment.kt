@@ -22,6 +22,7 @@ import com.adyen.checkout.base.component.Configuration
 import com.adyen.checkout.base.model.paymentmethods.StoredPaymentMethod
 import com.adyen.checkout.base.model.payments.request.PaymentComponentData
 import com.adyen.checkout.base.model.payments.request.PaymentMethodDetails
+import com.adyen.checkout.base.util.CurrencyUtils
 import com.adyen.checkout.base.util.DateUtils
 import com.adyen.checkout.core.exception.ComponentException
 import com.adyen.checkout.core.log.LogUtil
@@ -93,6 +94,16 @@ class PreselectedStoredPaymentMethodFragment : DropInBottomSheetDialogFragment()
         payment_method_header.setText(R.string.store_payment_methods_header)
         stored_payment_method_container.setBackgroundColor(android.R.color.transparent)
         observe()
+
+        if (component.requiresInput()) {
+            payButton.setText(R.string.continue_button)
+        } else {
+            val value = CurrencyUtils.formatAmount(
+                dropInViewModel.dropInConfiguration.amount,
+                dropInViewModel.dropInConfiguration.shopperLocale
+            )
+            payButton.text = getString(R.string.pay_button_with_value, value)
+        }
 
         payButton.setOnClickListener {
             if (component.requiresInput()) {
