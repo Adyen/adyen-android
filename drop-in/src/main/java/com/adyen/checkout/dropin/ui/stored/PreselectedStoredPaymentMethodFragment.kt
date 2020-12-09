@@ -14,7 +14,6 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import androidx.fragment.app.activityViewModels
 import com.adyen.checkout.base.PaymentComponent
 import com.adyen.checkout.base.PaymentComponentState
 import com.adyen.checkout.base.api.ImageLoader
@@ -29,7 +28,6 @@ import com.adyen.checkout.core.log.LogUtil
 import com.adyen.checkout.core.log.Logger
 import com.adyen.checkout.dropin.R
 import com.adyen.checkout.dropin.getComponentFor
-import com.adyen.checkout.dropin.ui.DropInViewModel
 import com.adyen.checkout.dropin.ui.base.DropInBottomSheetDialogFragment
 import com.adyen.checkout.dropin.ui.paymentmethods.GenericStoredModel
 import com.adyen.checkout.dropin.ui.paymentmethods.StoredCardModel
@@ -47,7 +45,6 @@ private const val STORED_PAYMENT_KEY = "STORED_PAYMENT"
 
 class PreselectedStoredPaymentMethodFragment : DropInBottomSheetDialogFragment() {
 
-    private val dropInViewModel: DropInViewModel by activityViewModels()
     private val storedPaymentViewModel: PreselectedStoredPaymentViewModel by viewModelsFactory {
         PreselectedStoredPaymentViewModel(storedPaymentMethod)
     }

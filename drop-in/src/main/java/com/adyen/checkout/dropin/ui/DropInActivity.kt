@@ -116,7 +116,7 @@ class DropInActivity : AppCompatActivity(), DropInBottomSheetDialogFragment.Prot
 
         if (noDialogPresent()) {
             if (dropInViewModel.showPreselectedStored) {
-                showPreselectedDialog()
+                showPreselectedDialog(dropInViewModel.preselectedStoredPayment)
             } else {
                 showPaymentMethodsDialog()
             }
@@ -264,10 +264,10 @@ class DropInActivity : AppCompatActivity(), DropInBottomSheetDialogFragment.Prot
         setLoading(isWaitingResult)
     }
 
-    override fun showPreselectedDialog() {
+    override fun showPreselectedDialog(storedPaymentMethod: StoredPaymentMethod) {
         Logger.d(TAG, "showPreselectedDialog")
         hideAllScreens()
-        PreselectedStoredPaymentMethodFragment.newInstance(dropInViewModel.preselectedStoredPayment)
+        PreselectedStoredPaymentMethodFragment.newInstance(storedPaymentMethod)
             .show(supportFragmentManager, PRESELECTED_PAYMENT_METHOD_FRAGMENT_TAG)
     }
 

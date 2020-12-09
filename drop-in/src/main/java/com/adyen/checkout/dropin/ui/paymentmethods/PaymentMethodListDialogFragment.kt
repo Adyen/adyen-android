@@ -14,7 +14,6 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import androidx.fragment.app.activityViewModels
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.adyen.checkout.base.api.ImageLoader
@@ -26,8 +25,6 @@ import com.adyen.checkout.core.exception.CheckoutException
 import com.adyen.checkout.core.log.LogUtil
 import com.adyen.checkout.core.log.Logger
 import com.adyen.checkout.dropin.R
-import com.adyen.checkout.dropin.getComponentFor
-import com.adyen.checkout.dropin.ui.DropInViewModel
 import com.adyen.checkout.dropin.ui.base.DropInBottomSheetDialogFragment
 import com.adyen.checkout.dropin.ui.getViewModel
 
@@ -35,7 +32,6 @@ private val TAG = LogUtil.getTag()
 
 class PaymentMethodListDialogFragment : DropInBottomSheetDialogFragment(), PaymentMethodAdapter.OnPaymentMethodSelectedCallback {
 
-    private val dropInViewModel: DropInViewModel by activityViewModels()
     private lateinit var paymentMethodsListViewModel: PaymentMethodsListViewModel
     private lateinit var paymentMethodAdapter: PaymentMethodAdapter
 
@@ -100,19 +96,7 @@ class PaymentMethodListDialogFragment : DropInBottomSheetDialogFragment(), Payme
 
     override fun onStoredPaymentMethodSelected(storedPaymentMethodModel: StoredPaymentMethodModel) {
         Logger.d(TAG, "onStoredPaymentMethodSelected")
-        val storedPaymentMethod = dropInViewModel.getStoredPaymentMethod(storedPaymentMethodModel.id)
-        val component = getComponentFor(this, storedPaymentMethod, dropInViewModel.dropInConfiguration)
-        if (component.requiresInput()) {
-            protocol.showStoredComponentDialog(dropInViewModel.getStoredPaymentMethod(storedPaymentMethodModel.id), false)
-        } else {
-            component.observe(this) {
-                if (it.isValid) {
-                    protocol.requestPaymentsCall(it.data)
-                } else {
-                    Logger.e(TAG, "Component state is not valid")
-                }
-            }
-        }
+        protocol.showStoredComponentDialog(dropInViewModel.getStoredPaymentMethod(storedPaymentMethodModel.id), false)
     }
 
     override fun onPaymentMethodSelected(paymentMethod: PaymentMethodModel) {
