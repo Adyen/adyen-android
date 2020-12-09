@@ -35,6 +35,7 @@ public final class PaymentMethodTypes {
     public static final String SCHEME = "scheme";
     public static final String GOOGLE_PAY = "paywithgoogle";
     public static final String SEPA = "sepadirectdebit";
+    public static final String AFTER_PAY = "afterpay_default";
     public static final String BCMC = "bcmc";
     public static final String WECHAT_PAY_SDK = "wechatpaySDK";
     public static final String MB_WAY = "mbway";
@@ -116,6 +117,7 @@ public final class PaymentMethodTypes {
         unsupportedPaymentMethods.add(SEPA);
 
         unsupportedPaymentMethods.add(BCMC_QR);
+        unsupportedPaymentMethods.add(AFTER_PAY);
         unsupportedPaymentMethods.add(WECHAT_PAY_MINI_PROGRAM);
         unsupportedPaymentMethods.add(WECHAT_PAY_QR);
         unsupportedPaymentMethods.add(WECHAT_PAY_WEB);
