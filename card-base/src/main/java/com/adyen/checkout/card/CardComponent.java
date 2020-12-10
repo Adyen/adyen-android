@@ -193,7 +193,9 @@ public final class CardComponent extends BasePaymentComponent<
             cardPaymentMethod.setStoredPaymentMethodId(((StoredCardDelegate) mPaymentMethodDelegate).getId());
         }
 
-        cardPaymentMethod.setEncryptedSecurityCode(encryptedCard.getEncryptedSecurityCode());
+        if (!isCvcHidden()) {
+            cardPaymentMethod.setEncryptedSecurityCode(encryptedCard.getEncryptedSecurityCode());
+        }
 
         if (isHolderNameRequire()) {
             cardPaymentMethod.setHolderName(outputData.getHolderNameField().getValue());
