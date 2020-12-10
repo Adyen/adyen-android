@@ -22,6 +22,7 @@ import com.adyen.checkout.base.model.payments.request.PaymentComponentData
 import com.adyen.checkout.base.model.payments.request.PaymentMethodDetails
 import com.adyen.checkout.base.util.PaymentMethodTypes
 import com.adyen.checkout.core.exception.CheckoutException
+import com.adyen.checkout.core.exception.ComponentException
 import com.adyen.checkout.core.log.LogUtil
 import com.adyen.checkout.core.log.Logger
 import com.adyen.checkout.dropin.R
@@ -96,7 +97,13 @@ class PaymentMethodListDialogFragment : DropInBottomSheetDialogFragment(), Payme
 
     override fun onStoredPaymentMethodSelected(storedPaymentMethodModel: StoredPaymentMethodModel) {
         Logger.d(TAG, "onStoredPaymentMethodSelected")
-        protocol.showStoredComponentDialog(dropInViewModel.getStoredPaymentMethod(storedPaymentMethodModel.id), false)
+        val storedPaymentMethod = dropInViewModel.getStoredPaymentMethod(storedPaymentMethodModel.id)
+        // TODO: 10/12/2020 remove this after we have UI for stored Blik component
+        if (storedPaymentMethod.type == PaymentMethodTypes.BLIK) {
+            Logger.e(TAG, "Stored Blik is not yet supported in this flow.")
+            throw ComponentException("Stored Blik is not yet supported in this flow.")
+        }
+        protocol.showStoredComponentDialog(storedPaymentMethod, false)
     }
 
     override fun onPaymentMethodSelected(paymentMethod: PaymentMethodModel) {
