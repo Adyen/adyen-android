@@ -99,36 +99,6 @@ public class BcmcConfiguration extends Configuration {
             super(shopperLocale, environment);
         }
 
-        /**
-         * Constructor of Card Configuration Builder with default values.
-         *
-         * @param context   A context
-         * @param publicKey The public key to be used for encryption. You can get it from the Customer Area.
-         * @deprecated      Constructor deprecated since publicKey is no longer always required in favor of clientKey.
-         */
-        @Deprecated
-        public Builder(@NonNull Context context, @NonNull String publicKey) {
-            super(context);
-            mBuilderPublicKey = publicKey;
-        }
-
-        /**
-         * Builder with required parameters for a {@link BcmcConfiguration}.
-         *
-         * @param shopperLocale The Locale of the shopper.
-         * @param environment   The {@link Environment} to be used for network calls to Adyen.
-         * @param publicKey     The public key used for encryption of the card data. You can get it from the Customer Area.
-         * @deprecated          Constructor deprecated since publicKey is no longer always required in favor of clientKey.
-         */
-        @Deprecated
-        public Builder(
-                @NonNull Locale shopperLocale,
-                @NonNull Environment environment,
-                @NonNull String publicKey) {
-            super(shopperLocale, environment);
-            mBuilderPublicKey = publicKey;
-        }
-
         @Override
         @NonNull
         public Builder setShopperLocale(@NonNull Locale builderShopperLocale) {

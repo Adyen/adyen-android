@@ -20,8 +20,8 @@ import com.adyen.checkout.base.component.ActionComponentProviderImpl;
 import com.adyen.checkout.base.component.BaseActionComponent;
 import com.adyen.checkout.base.model.payments.response.Action;
 import com.adyen.checkout.base.model.payments.response.SdkAction;
-import com.adyen.checkout.base.model.payments.response.WeChatPaySdkAction;
 import com.adyen.checkout.base.model.payments.response.WeChatPaySdkData;
+import com.adyen.checkout.base.util.PaymentMethodTypes;
 import com.adyen.checkout.core.exception.ComponentException;
 import com.adyen.checkout.core.log.LogUtil;
 import com.adyen.checkout.core.log.Logger;
@@ -65,7 +65,7 @@ public class WeChatPayActionComponent extends BaseActionComponent<WeChatPayActio
     }
 
     /**
-     * Pass the result Intent from the WeChatPay SDK response on {@link Activity#onNewIntent(Intent)}.
+     * Pass the result Intent from the WeChatPay SDK response on Activity#onNewIntent(Intent).
      * You can check if the Intent is correct by calling {@link WeChatPayUtils#isResultIntent(Intent)}
      *
      * @param intent The intent result from WeChatPay SDK.
@@ -79,10 +79,15 @@ public class WeChatPayActionComponent extends BaseActionComponent<WeChatPayActio
         }
     }
 
+    @Override
+    public boolean canHandleAction(@NonNull Action action) {
+        return getSupportedActionTypes().contains(action.getType()) && action.getPaymentMethodType().equals(PaymentMethodTypes.WECHAT_PAY_SDK);
+    }
+
     @NonNull
     @Override
     protected List<String> getSupportedActionTypes() {
-        final String[] supportedCodes = {SdkAction.ACTION_TYPE, WeChatPaySdkAction.ACTION_TYPE};
+        final String[] supportedCodes = {SdkAction.ACTION_TYPE};
         return Collections.unmodifiableList(Arrays.asList(supportedCodes));
     }
 

@@ -126,9 +126,6 @@ class DropInConfiguration : Configuration, Parcelable {
         private val packageName: String
         private val serviceClassName: String
 
-        @Deprecated("You need to pass resultHandlerIntent to drop-in configuration")
-        constructor(context: Context, serviceClass: Class<out Any?>) : this(context, Intent(), serviceClass)
-
         /**
          * @param context
          * @param resultHandlerIntent The Intent used with [Activity.startActivity] that will contain the payment result extra with key [RESULT_KEY].

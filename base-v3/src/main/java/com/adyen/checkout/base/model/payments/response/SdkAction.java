@@ -51,7 +51,7 @@ public class SdkAction<SdkDataT extends SdkData> extends Action {
                     jsonObject.putOpt(SDK_DATA, ModelUtils.serializeOpt(modelObject.getSdkData(), serializer));
                 }
             } catch (JSONException e) {
-                throw new ModelSerializationException(WeChatPaySdkAction.class, e);
+                throw new ModelSerializationException(SdkAction.class, e);
             }
             return jsonObject;
         }

@@ -72,25 +72,6 @@ public class GooglePayPaymentMethod extends PaymentMethodDetails {
         JsonUtils.writeToParcel(dest, SERIALIZER.serialize(this));
     }
 
-    /**
-     * @deprecated Deprecated in favor of {@link #getGooglePayToken()}.
-     * @return The token returned from Google Pay
-     */
-    @Deprecated
-    @Nullable
-    public String getToken() {
-        return googlePayToken;
-    }
-
-    /**
-     * @deprecated Deprecated in favor of {@link #setGooglePayToken(String)}.
-     * @param token The token returned from Google Pay
-     */
-    @Deprecated
-    public void setToken(@Nullable String token) {
-        googlePayToken = token;
-    }
-
     @Nullable
     public String getGooglePayToken() {
         return googlePayToken;
