@@ -183,7 +183,7 @@ public final class CardView extends AdyenLinearLayout<CardOutputData, CardConfig
             }
         }
 
-        if (getComponent().isStoredPaymentMethod()) {
+        if (getComponent().isStoredPaymentMethod() && getComponent().requiresInput()) {
             mSecurityCodeInput.getEditText().requestFocus();
         }
     }
