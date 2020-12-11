@@ -177,7 +177,7 @@ public final class CardView extends AdyenLinearLayout<CardOutputData, CardConfig
             mSecurityCodeInput.setVisibility(cardOutputData.isCvcHidden() ? GONE : VISIBLE);
             if (cardOutputData.isCvcHidden()) {
                 // We don't expect the hidden status to change back to visible, so we don't worry about putting the margin back.
-                LinearLayout.LayoutParams params = (LinearLayout.LayoutParams) mExpiryDateInput.getLayoutParams();
+                final LinearLayout.LayoutParams params = (LinearLayout.LayoutParams) mExpiryDateInput.getLayoutParams();
                 params.setMarginEnd(0);
                 mExpiryDateInput.setLayoutParams(params);
             }

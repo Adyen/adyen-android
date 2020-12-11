@@ -34,7 +34,7 @@ public class BlikComponent extends BasePaymentComponent<BlikConfiguration, BlikI
         super(paymentMethodDelegate, configuration);
     }
 
-    public BlikComponent(@NonNull GenericStoredPaymentDelegate paymentDelegate, BlikConfiguration configuration) {
+    public BlikComponent(@NonNull GenericStoredPaymentDelegate paymentDelegate, @NonNull BlikConfiguration configuration) {
         super(paymentDelegate, configuration);
         // TODO: 09/12/2020 move this logic to base component, maybe create the inputdata from the delegate?
         inputDataChanged(new BlikInputData());
@@ -68,14 +68,14 @@ public class BlikComponent extends BasePaymentComponent<BlikConfiguration, BlikI
 
         if (mPaymentMethodDelegate instanceof GenericStoredPaymentDelegate) {
             paymentMethod.setStoredPaymentMethodId(
-                ((GenericStoredPaymentDelegate) mPaymentMethodDelegate).getStoredPaymentMethod().getId());
+                    ((GenericStoredPaymentDelegate) mPaymentMethodDelegate).getStoredPaymentMethod().getId());
         }
 
         paymentComponentData.setPaymentMethod(paymentMethod);
 
-        final boolean isValid =
-                mPaymentMethodDelegate instanceof GenericStoredPaymentDelegate ||
-                (blikOutputData != null && blikOutputData.isValid());
+        final boolean isValid = mPaymentMethodDelegate instanceof GenericStoredPaymentDelegate
+                || blikOutputData != null
+                && blikOutputData.isValid();
 
         return new PaymentComponentState<>(paymentComponentData, isValid);
     }
