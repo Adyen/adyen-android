@@ -28,6 +28,8 @@ public class Threeds2Action extends Action {
 
     public static final String ACTION_TYPE = ActionTypes.THREEDS2;
 
+    private static final String SUBTYPE_FINGERPRINT = "fingerprint";
+    private static final String SUBTYPE_CHALLENGE = "challenge";
     private static final String TOKEN = "token";
     private static final String SUBTYPE = "subtype";
 
@@ -105,22 +107,12 @@ public class Threeds2Action extends Action {
             return null;
         }
         switch (type) {
-            case SubTypes.FINGERPRINT:
+            case SUBTYPE_FINGERPRINT:
                 return SubType.FINGERPRINT;
-            case SubTypes.CHALLENGE:
+            case SUBTYPE_CHALLENGE:
                 return SubType.CHALLENGE;
             default:
                 return null;
-        }
-    }
-
-    private static final class SubTypes {
-
-        public static final String FINGERPRINT = "fingerprint";
-        public static final String CHALLENGE = "challenge";
-
-        private SubTypes() {
-            throw new NoConstructorException();
         }
     }
 
