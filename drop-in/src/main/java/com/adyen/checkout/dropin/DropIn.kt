@@ -10,9 +10,9 @@ package com.adyen.checkout.dropin
 
 import android.app.Activity
 import android.content.Context
-import android.content.Intent
 import com.adyen.checkout.base.model.PaymentMethodsApiResponse
 import com.adyen.checkout.core.log.LogUtil
+import com.adyen.checkout.core.log.Logger
 import com.adyen.checkout.dropin.DropIn.Companion.startPayment
 import com.adyen.checkout.dropin.ui.DropInActivity
 
@@ -37,9 +37,6 @@ class DropIn private constructor() {
 
         const val DROP_IN_REQUEST_CODE = 529
 
-        @Deprecated("You can use `DropIn.startPayment instead`")
-        val INSTANCE: DropIn by lazy { DropIn() }
-
         /**
          * Starts the checkout flow to be handled by the Drop-In solution. Make sure you have [DropInService] set up before calling this.
          * We suggest that you set up the resultHandlerIntent with the appropriate flags to clear the stack of the checkout activities.
@@ -57,6 +54,7 @@ class DropIn private constructor() {
             paymentMethodsApiResponse: PaymentMethodsApiResponse,
             dropInConfiguration: DropInConfiguration
         ) {
+            Logger.d(TAG, "startPayment")
 
             // Add locale to prefs
             context.getSharedPreferences(DROP_IN_PREFS, Context.MODE_PRIVATE).edit()
@@ -69,29 +67,6 @@ class DropIn private constructor() {
             } else {
                 context.startActivity(intent)
             }
-        }
-
-        /**
-         * Starts the checkout flow to be handled by the Drop-In solution. Make sure you have [DropInService] set up before calling this.
-         * We suggest that you set up the resultHandlerIntent with the appropriate flags to clear the stack of the checkout activities.
-         *
-         * @param context A context to start the Checkout flow.
-         * @param paymentMethodsApiResponse The result from the paymentMethods/ endpoint.
-         * @param dropInConfiguration Additional required configuration data.
-         * @param resultHandlerIntent The Intent used with [Activity.startActivity] that will contain the payment result extra with key [RESULT_KEY].
-         *
-         */
-        @Deprecated("resultHandlerIntent need to pass with DropInConfiguration")
-        fun startPayment(
-            context: Context,
-            paymentMethodsApiResponse: PaymentMethodsApiResponse,
-            dropInConfiguration: DropInConfiguration,
-            resultHandlerIntent: Intent
-        ) {
-            val newConfigurationBuilder = DropInConfiguration.Builder(dropInConfiguration)
-            newConfigurationBuilder.setResultHandlerIntent(resultHandlerIntent)
-
-            startPayment(context, paymentMethodsApiResponse, newConfigurationBuilder.build())
         }
     }
 }

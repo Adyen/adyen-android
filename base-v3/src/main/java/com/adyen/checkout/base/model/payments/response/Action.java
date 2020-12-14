@@ -74,8 +74,6 @@ public abstract class Action extends ModelObject {
                 return QrCodeAction.SERIALIZER;
             case VoucherAction.ACTION_TYPE:
                 return VoucherAction.SERIALIZER;
-            case WeChatPaySdkAction.ACTION_TYPE:
-                return WeChatPaySdkAction.SERIALIZER;
             case SdkAction.ACTION_TYPE:
                 return SdkAction.SERIALIZER;
             case AwaitAction.ACTION_TYPE:
