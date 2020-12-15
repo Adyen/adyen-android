@@ -52,7 +52,7 @@ public class SepaComponent extends BasePaymentComponent<SepaConfiguration, SepaI
 
         if (sepaOutputData != null) {
             paymentMethod.setOwnerName(sepaOutputData.getOwnerNameField().getValue());
-            paymentMethod.setIbanNumber(sepaOutputData.getIbanNumberField().getValue());
+            paymentMethod.setIban(sepaOutputData.getIbanNumberField().getValue());
         }
 
         paymentComponentData.setPaymentMethod(paymentMethod);
