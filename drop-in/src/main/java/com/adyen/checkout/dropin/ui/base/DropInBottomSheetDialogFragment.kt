@@ -13,6 +13,7 @@ import android.content.Context
 import android.os.Bundle
 import android.view.KeyEvent
 import android.widget.FrameLayout
+import androidx.fragment.app.activityViewModels
 import com.adyen.checkout.base.ActionComponentData
 import com.adyen.checkout.base.model.paymentmethods.PaymentMethod
 import com.adyen.checkout.base.model.paymentmethods.StoredPaymentMethod
@@ -20,6 +21,7 @@ import com.adyen.checkout.base.model.payments.request.PaymentComponentData
 import com.adyen.checkout.core.log.LogUtil
 import com.adyen.checkout.core.log.Logger
 import com.adyen.checkout.dropin.R
+import com.adyen.checkout.dropin.ui.DropInViewModel
 import com.adyen.checkout.googlepay.GooglePayConfiguration
 import com.google.android.material.bottomsheet.BottomSheetBehavior
 import com.google.android.material.bottomsheet.BottomSheetDialog
@@ -32,6 +34,7 @@ abstract class DropInBottomSheetDialogFragment : BottomSheetDialogFragment() {
     lateinit var protocol: Protocol
 
     private var dialogInitViewState: Int = BottomSheetBehavior.STATE_COLLAPSED
+    protected val dropInViewModel: DropInViewModel by activityViewModels()
 
     fun setInitViewState(firstViewState: Int) {
         this.dialogInitViewState = firstViewState

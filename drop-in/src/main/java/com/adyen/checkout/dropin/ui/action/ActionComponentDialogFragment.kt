@@ -14,7 +14,6 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.lifecycle.Observer
-import androidx.lifecycle.ViewModelProvider
 import com.adyen.checkout.await.AwaitComponent
 import com.adyen.checkout.base.ActionComponent
 import com.adyen.checkout.base.ActionComponentData
@@ -30,7 +29,6 @@ import com.adyen.checkout.core.log.LogUtil
 import com.adyen.checkout.core.log.Logger
 import com.adyen.checkout.dropin.R
 import com.adyen.checkout.dropin.getViewFor
-import com.adyen.checkout.dropin.ui.DropInViewModel
 import com.adyen.checkout.dropin.ui.base.DropInBottomSheetDialogFragment
 import kotlinx.android.synthetic.main.fragment_action_component.header
 import kotlinx.android.synthetic.main.fragment_generic_component.componentContainer
@@ -56,7 +54,6 @@ class ActionComponentDialogFragment : DropInBottomSheetDialogFragment(), Observe
 
     private lateinit var action: Action
     private lateinit var actionType: String
-    private lateinit var dropInViewModel: DropInViewModel
     private lateinit var componentView: ComponentView<in OutputData, ViewableComponent<*, *, ActionComponentData>>
     private lateinit var actionComponent: ViewableComponent<*, *, ActionComponentData>
     private var isHandled = true
@@ -66,8 +63,6 @@ class ActionComponentDialogFragment : DropInBottomSheetDialogFragment(), Observe
         Logger.d(TAG, "onCreate")
         action = arguments?.getParcelable(ACTION) ?: throw IllegalArgumentException("Action not found")
         actionType = action.type ?: throw IllegalArgumentException("Action type not found")
-        // Get the same instance as the Activity
-        dropInViewModel = ViewModelProvider(requireActivity()).get(DropInViewModel::class.java)
     }
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {

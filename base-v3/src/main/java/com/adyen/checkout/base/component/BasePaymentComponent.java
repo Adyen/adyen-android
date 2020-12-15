@@ -65,6 +65,12 @@ public abstract class BasePaymentComponent<
     }
 
     @Override
+    public boolean requiresInput() {
+        // By default all components require user input.
+        return true;
+    }
+
+    @Override
     public void observe(@NonNull LifecycleOwner lifecycleOwner, @NonNull Observer<ComponentStateT> observer) {
         mPaymentComponentStateLiveData.observe(lifecycleOwner, observer);
     }

@@ -29,6 +29,7 @@ public class BlikPaymentMethod extends PaymentMethodDetails {
     public static final String PAYMENT_METHOD_TYPE = PaymentMethodTypes.BLIK;
 
     private static final String BLIK_CODE = "blikCode";
+    private static final String STORED_PAYMENT_METHOD_ID = "storedPaymentMethodId";
 
     @NonNull
     public static final Serializer<BlikPaymentMethod> SERIALIZER = new Serializer<BlikPaymentMethod>() {
@@ -42,6 +43,7 @@ public class BlikPaymentMethod extends PaymentMethodDetails {
                 jsonObject.putOpt(PaymentMethodDetails.TYPE, modelObject.getType());
 
                 jsonObject.putOpt(BLIK_CODE, modelObject.getBlikCode());
+                jsonObject.putOpt(STORED_PAYMENT_METHOD_ID, modelObject.getStoredPaymentMethodId());
             } catch (JSONException e) {
                 throw new ModelSerializationException(BlikPaymentMethod.class, e);
             }
@@ -57,12 +59,14 @@ public class BlikPaymentMethod extends PaymentMethodDetails {
             blikPaymentMethod.setType(jsonObject.optString(PaymentMethodDetails.TYPE, null));
 
             blikPaymentMethod.setBlikCode(jsonObject.optString(BLIK_CODE, null));
+            blikPaymentMethod.setStoredPaymentMethodId(jsonObject.optString(STORED_PAYMENT_METHOD_ID, null));
 
             return blikPaymentMethod;
         }
     };
 
     private String blikCode;
+    private String storedPaymentMethodId;
 
     @Override
     public void writeToParcel(@NonNull Parcel dest, int flags) {
@@ -74,7 +78,16 @@ public class BlikPaymentMethod extends PaymentMethodDetails {
         return blikCode;
     }
 
+    @Nullable
+    public String getStoredPaymentMethodId() {
+        return storedPaymentMethodId;
+    }
+
     public void setBlikCode(@Nullable String blikCode) {
         this.blikCode = blikCode;
+    }
+
+    public void setStoredPaymentMethodId(@Nullable String storedPaymentMethodId) {
+        this.storedPaymentMethodId = storedPaymentMethodId;
     }
 }
