@@ -74,6 +74,11 @@ public final class CardComponent extends BasePaymentComponent<
             storedCardType.add(cardType);
             mFilteredSupportedCards = Collections.unmodifiableList(storedCardType);
         }
+
+        // TODO: 09/12/2020 move this logic to base component, maybe create the inputdata from the delegate?
+        if (!requiresInput()) {
+            inputDataChanged(new CardInputData());
+        }
     }
 
     /**
@@ -88,6 +93,11 @@ public final class CardComponent extends BasePaymentComponent<
 
     public boolean isStoredPaymentMethod() {
         return mStoredPaymentInputData != null;
+    }
+
+    @Override
+    public boolean requiresInput() {
+        return !(isStoredPaymentMethod() && mConfiguration.isHideCvcStoredCard());
     }
 
     @Nullable
@@ -183,7 +193,9 @@ public final class CardComponent extends BasePaymentComponent<
             cardPaymentMethod.setStoredPaymentMethodId(((StoredCardDelegate) mPaymentMethodDelegate).getId());
         }
 
-        cardPaymentMethod.setEncryptedSecurityCode(encryptedCard.getEncryptedSecurityCode());
+        if (!isCvcHidden()) {
+            cardPaymentMethod.setEncryptedSecurityCode(encryptedCard.getEncryptedSecurityCode());
+        }
 
         if (isHolderNameRequire()) {
             cardPaymentMethod.setHolderName(outputData.getHolderNameField().getValue());

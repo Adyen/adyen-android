@@ -14,14 +14,20 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import androidx.fragment.app.activityViewModels
+import com.adyen.checkout.base.PaymentComponent
+import com.adyen.checkout.base.PaymentComponentState
 import com.adyen.checkout.base.api.ImageLoader
+import com.adyen.checkout.base.component.Configuration
 import com.adyen.checkout.base.model.paymentmethods.StoredPaymentMethod
+import com.adyen.checkout.base.model.payments.request.PaymentComponentData
+import com.adyen.checkout.base.model.payments.request.PaymentMethodDetails
+import com.adyen.checkout.base.util.CurrencyUtils
 import com.adyen.checkout.base.util.DateUtils
+import com.adyen.checkout.core.exception.ComponentException
 import com.adyen.checkout.core.log.LogUtil
 import com.adyen.checkout.core.log.Logger
 import com.adyen.checkout.dropin.R
-import com.adyen.checkout.dropin.ui.DropInViewModel
+import com.adyen.checkout.dropin.getComponentFor
 import com.adyen.checkout.dropin.ui.base.DropInBottomSheetDialogFragment
 import com.adyen.checkout.dropin.ui.paymentmethods.GenericStoredModel
 import com.adyen.checkout.dropin.ui.paymentmethods.StoredCardModel
@@ -39,12 +45,13 @@ private const val STORED_PAYMENT_KEY = "STORED_PAYMENT"
 
 class PreselectedStoredPaymentMethodFragment : DropInBottomSheetDialogFragment() {
 
-    private val dropInViewModel: DropInViewModel by activityViewModels()
     private val storedPaymentViewModel: PreselectedStoredPaymentViewModel by viewModelsFactory {
         PreselectedStoredPaymentViewModel(storedPaymentMethod)
     }
     private lateinit var storedPaymentMethod: StoredPaymentMethod
     private lateinit var imageLoader: ImageLoader
+    private lateinit var component: PaymentComponent<PaymentComponentState<in PaymentMethodDetails>, Configuration>
+    private lateinit var componentData: PaymentComponentData<PaymentMethodDetails>
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -52,10 +59,25 @@ class PreselectedStoredPaymentMethodFragment : DropInBottomSheetDialogFragment()
             storedPaymentMethod = it.getParcelable(STORED_PAYMENT_KEY) ?: StoredPaymentMethod()
         }
 
+        if (storedPaymentMethod.type.isNullOrEmpty()) {
+            throw ComponentException("Stored payment method is empty or not found.")
+        }
+
         imageLoader = ImageLoader.getInstance(
             requireContext(),
             dropInViewModel.dropInConfiguration.environment
         )
+
+        component = getComponentFor(this, storedPaymentMethod, dropInViewModel.dropInConfiguration)
+        if (!component.requiresInput()) {
+            component.observe(this) {
+                if (it.isValid) {
+                    componentData = it.data
+                } else {
+                    Logger.e(TAG, "Component state is not valid")
+                }
+            }
+        }
     }
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
@@ -70,8 +92,26 @@ class PreselectedStoredPaymentMethodFragment : DropInBottomSheetDialogFragment()
         stored_payment_method_container.setBackgroundColor(android.R.color.transparent)
         observe()
 
+        if (component.requiresInput()) {
+            payButton.setText(R.string.continue_button)
+        } else {
+            val value = CurrencyUtils.formatAmount(
+                dropInViewModel.dropInConfiguration.amount,
+                dropInViewModel.dropInConfiguration.shopperLocale
+            )
+            payButton.text = getString(R.string.pay_button_with_value, value)
+        }
+
         payButton.setOnClickListener {
-            protocol.showStoredComponentDialog(storedPaymentMethod, true)
+            if (component.requiresInput()) {
+                protocol.showStoredComponentDialog(storedPaymentMethod, true)
+            } else {
+                if (this::componentData.isInitialized) {
+                    protocol.requestPaymentsCall(componentData)
+                } else {
+                    Logger.e(TAG, "Component data is not initialized.")
+                }
+            }
         }
 
         change_payment_method_button.setOnClickListener {
