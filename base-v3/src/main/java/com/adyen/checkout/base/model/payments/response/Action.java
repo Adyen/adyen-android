@@ -70,6 +70,8 @@ public abstract class Action extends ModelObject {
                 return Threeds2FingerprintAction.SERIALIZER;
             case Threeds2ChallengeAction.ACTION_TYPE:
                 return Threeds2ChallengeAction.SERIALIZER;
+            case Threeds2Action.ACTION_TYPE:
+                return Threeds2Action.SERIALIZER;
             case QrCodeAction.ACTION_TYPE:
                 return QrCodeAction.SERIALIZER;
             case VoucherAction.ACTION_TYPE:

@@ -29,6 +29,7 @@ import com.adyen.checkout.base.component.ActionComponentProviderImpl;
 import com.adyen.checkout.base.component.BaseActionComponent;
 import com.adyen.checkout.base.encoding.Base64Encoder;
 import com.adyen.checkout.base.model.payments.response.Action;
+import com.adyen.checkout.base.model.payments.response.Threeds2Action;
 import com.adyen.checkout.base.model.payments.response.Threeds2ChallengeAction;
 import com.adyen.checkout.base.model.payments.response.Threeds2FingerprintAction;
 import com.adyen.checkout.core.api.ThreadManager;
@@ -59,6 +60,7 @@ import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 
+@SuppressWarnings("PMD.GodClass")
 public final class Adyen3DS2Component extends BaseActionComponent<Adyen3DS2Configuration> implements ChallengeStatusReceiver {
     static final String TAG = LogUtil.getTag();
 
@@ -114,7 +116,7 @@ public final class Adyen3DS2Component extends BaseActionComponent<Adyen3DS2Confi
     @Override
     @NonNull
     protected List<String> getSupportedActionTypes() {
-        final String[] supportedCodes = {Threeds2FingerprintAction.ACTION_TYPE, Threeds2ChallengeAction.ACTION_TYPE};
+        final String[] supportedCodes = {Threeds2FingerprintAction.ACTION_TYPE, Threeds2ChallengeAction.ACTION_TYPE, Threeds2Action.ACTION_TYPE};
         return Collections.unmodifiableList(Arrays.asList(supportedCodes));
     }
 
@@ -134,7 +136,31 @@ public final class Adyen3DS2Component extends BaseActionComponent<Adyen3DS2Confi
                 throw new ComponentException("Challenge token not found.");
             }
             challengeShopper(activity, challengeAction.getToken());
+        } else if (Threeds2Action.ACTION_TYPE.equals(action.getType())) {
+            final Threeds2Action threeds2Action = (Threeds2Action) action;
+            if (TextUtils.isEmpty(threeds2Action.getToken())) {
+                throw new ComponentException("3DS2 token not found.");
+            }
+            final Threeds2Action.SubType subtype = threeds2Action.getSubtypeEnum();
+            if (subtype == null) {
+                throw new ComponentException("3DS2 subtype not found.");
+            }
+            handleActionSubtype(activity, subtype, threeds2Action.getToken());
         }
+    }
+
+    private void handleActionSubtype(@NonNull Activity activity, Threeds2Action.SubType subtype, String token) {
+        switch (subtype) {
+            case FINGERPRINT:
+                identifyShopper(activity, token);
+                break;
+            case CHALLENGE:
+                challengeShopper(activity, token);
+                break;
+            default:
+                break;
+        }
+
     }
 
     @Override
@@ -224,13 +250,7 @@ public final class Adyen3DS2Component extends BaseActionComponent<Adyen3DS2Confi
 
             final String encodedFingerprint = createEncodedFingerprint(authenticationRequestParameters);
 
-            ThreadManager.MAIN_HANDLER.post(new Runnable() {
-                    @Override
-                    public void run() {
-                        notifyDetails(createFingerprintDetails(encodedFingerprint));
-                    }
-                }
-            );
+            ThreadManager.MAIN_HANDLER.post(() -> notifyDetails(createFingerprintDetails(encodedFingerprint)));
         });
     }
 

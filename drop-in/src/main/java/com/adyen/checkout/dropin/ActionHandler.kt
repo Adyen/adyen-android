@@ -44,7 +44,7 @@ class ActionHandler(
     private val adyen3DS2Component = Adyen3DS2Component.PROVIDER.get(
         activity,
         activity.application,
-        dropInConfiguration.getConfigurationFor(ActionTypes.THREEDS2_FINGERPRINT, activity)
+        dropInConfiguration.getConfigurationFor(ActionTypes.THREEDS2, activity)
     )
     // get config from Drop-in when available
     private val weChatPayActionComponent = WeChatPayActionComponent.PROVIDER.get(activity, activity.application, null)
