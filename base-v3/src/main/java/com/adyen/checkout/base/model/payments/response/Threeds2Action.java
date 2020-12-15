@@ -15,7 +15,6 @@ import androidx.annotation.Nullable;
 
 import com.adyen.checkout.base.util.ActionTypes;
 import com.adyen.checkout.core.exception.ModelSerializationException;
-import com.adyen.checkout.core.exception.NoConstructorException;
 import com.adyen.checkout.core.model.JsonUtils;
 
 import org.json.JSONException;
