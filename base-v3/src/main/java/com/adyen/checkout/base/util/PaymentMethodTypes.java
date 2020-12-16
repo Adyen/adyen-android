@@ -20,6 +20,9 @@ import java.util.List;
 @SuppressWarnings("SpellCheckingInspection")
 public final class PaymentMethodTypes {
 
+    // Placeholder value if the type is not found.
+    public static final String UNKNOWN = "unknown";
+
     // Type of the payment method as received by the paymentMethods/ API
     public static final String IDEAL = "ideal";
     public static final String MOLPAY_MALAYSIA = "molpay_ebanking_fpx_MY";
@@ -36,6 +39,7 @@ public final class PaymentMethodTypes {
     public static final String BCMC = "bcmc";
     public static final String WECHAT_PAY_SDK = "wechatpaySDK";
     public static final String MB_WAY = "mbway";
+    public static final String BLIK = "blik";
 
     // Voucher payment methods that are not yet supported
     public static final String MULTIBANCO = "multibanco";
@@ -86,7 +90,6 @@ public final class PaymentMethodTypes {
         final ArrayList<String> supportedPaymentMethods = new ArrayList<>();
 
         // Populate supported list
-        supportedPaymentMethods.add(AFTER_PAY);
         supportedPaymentMethods.add(BCMC);
         supportedPaymentMethods.add(DOTPAY);
         supportedPaymentMethods.add(ENTERCASH);
@@ -101,6 +104,7 @@ public final class PaymentMethodTypes {
         supportedPaymentMethods.add(SEPA);
         supportedPaymentMethods.add(SCHEME);
         supportedPaymentMethods.add(WECHAT_PAY_SDK);
+        supportedPaymentMethods.add(BLIK);
 
         SUPPORTED_PAYMENT_METHODS = Collections.unmodifiableList(supportedPaymentMethods);
 
@@ -108,6 +112,7 @@ public final class PaymentMethodTypes {
 
         // Populate unsupported list
         unsupportedPaymentMethods.add(BCMC_QR);
+        unsupportedPaymentMethods.add(AFTER_PAY);
         unsupportedPaymentMethods.add(WECHAT_PAY_MINI_PROGRAM);
         unsupportedPaymentMethods.add(WECHAT_PAY_QR);
         unsupportedPaymentMethods.add(WECHAT_PAY_WEB);

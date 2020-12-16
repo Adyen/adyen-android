@@ -30,7 +30,6 @@ import com.adyen.checkout.base.component.Configuration;
 import com.adyen.checkout.base.component.lifecycle.BaseLifecycleObserver;
 import com.adyen.checkout.base.model.payments.response.Action;
 import com.adyen.checkout.base.model.payments.response.AwaitAction;
-import com.adyen.checkout.core.code.Lint;
 import com.adyen.checkout.core.exception.CheckoutException;
 import com.adyen.checkout.core.exception.ComponentException;
 import com.adyen.checkout.core.log.LogUtil;
@@ -45,7 +44,7 @@ import java.util.List;
 
 public class AwaitComponent extends BaseActionComponent<AwaitConfiguration>
         implements ViewableComponent<AwaitOutputData, AwaitConfiguration, ActionComponentData> {
-    @SuppressWarnings(Lint.SYNTHETIC)
+
     static final String TAG = LogUtil.getTag();
 
     private static final String PAYLOAD_DETAILS_KEY = "payload";
@@ -53,7 +52,6 @@ public class AwaitComponent extends BaseActionComponent<AwaitConfiguration>
     public static final ActionComponentProvider<AwaitComponent> PROVIDER
             = new ActionComponentProviderImpl<>(AwaitComponent.class, AwaitConfiguration.class, true);
 
-    @SuppressWarnings(Lint.SYNTHETIC)
     final StatusRepository mStatusRepository;
 
     private final MutableLiveData<AwaitOutputData> mOutputLiveData = new MutableLiveData<>();
@@ -123,7 +121,6 @@ public class AwaitComponent extends BaseActionComponent<AwaitConfiguration>
         });
     }
 
-    @SuppressWarnings(Lint.SYNTHETIC)
     void onPollingSuccessful(@NonNull StatusResponse statusResponse) {
         // Not authorized status should still call /details so that merchant can get more info
         if (StatusResponseUtils.isFinalResult(statusResponse) && !TextUtils.isEmpty(statusResponse.getPayload())) {
@@ -167,7 +164,7 @@ public class AwaitComponent extends BaseActionComponent<AwaitConfiguration>
         // TODO: 28/08/2020 Do we have an event for this?
     }
 
-    @SuppressWarnings(Lint.SYNTHETIC)
+
     void createOutputData(@Nullable StatusResponse statusResponse) {
         final boolean isValid = statusResponse != null && StatusResponseUtils.isFinalResult(statusResponse);
         final AwaitOutputData outputData = new AwaitOutputData(isValid, mPaymentMethodType);

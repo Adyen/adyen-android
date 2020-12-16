@@ -8,6 +8,7 @@
   -->
 
 <resources>
-    <string name="checkout_await_open_app">Confirme su pago en la aplicación MB WAY</string>
+    <string name="checkout_await_message_blik">Abra la aplicación de su banco para confirmar el pago.</string>
+    <string name="checkout_await_message_mbway">Confirme su pago en la aplicación MB WAY</string>
     <string name="checkout_await_waiting_confirmation">Esperando confirmación</string>
 </resources>

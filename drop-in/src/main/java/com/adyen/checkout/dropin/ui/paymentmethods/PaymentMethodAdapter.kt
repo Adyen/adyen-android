@@ -8,190 +8,162 @@
 
 package com.adyen.checkout.dropin.ui.paymentmethods
 
-import android.content.Context
-import androidx.recyclerview.widget.RecyclerView
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.Button
 import android.widget.ImageView
 import android.widget.TextView
+import androidx.recyclerview.widget.RecyclerView
 import com.adyen.checkout.base.api.ImageLoader
-import com.adyen.checkout.base.model.paymentmethods.PaymentMethod
-import com.adyen.checkout.base.model.paymentmethods.StoredPaymentMethod
 import com.adyen.checkout.base.util.DateUtils
 import com.adyen.checkout.base.util.PaymentMethodTypes
+import com.adyen.checkout.core.exception.CheckoutException
 import com.adyen.checkout.core.log.LogUtil
 import com.adyen.checkout.dropin.R
 
 @SuppressWarnings("ComplexMethod", "TooManyFunctions")
 class PaymentMethodAdapter(
-    private var paymentMethodsModel: PaymentMethodsModel,
-    private var imageLoader: ImageLoader,
-    private var showInExpandStatus: Boolean,
+    private val paymentMethodsListModel: PaymentMethodsListModel,
+    private val imageLoader: ImageLoader,
     private val onPaymentMethodSelectedCallback: OnPaymentMethodSelectedCallback
 ) : RecyclerView.Adapter<PaymentMethodAdapter.BaseViewHolder>() {
 
-    private var expandListOfItem = emptyList<PaymentMethod>()
-    private var collapseListOfItem = emptyList<PaymentMethod>()
-
-    init {
-        initAdapter()
-    }
-
-    companion object {
-        internal val TAG = LogUtil.getTag()
-
-        internal const val PAYMENT_METHODS_HEADER = 1
-        internal const val PAYMENT_METHODS_FOOTER = 2
-        internal const val PAYMENT_METHOD_ITEMS = 3
-
-        internal val HEADER_PLACEHOLDER_ITEM_SP = PaymentMethod()
-        internal val HEADER_PLACEHOLDER_ITEM_P = PaymentMethod()
-        internal val FOOTER_PLACEHOLDER_ITEM = PaymentMethod()
-
-        private const val CARD_LOGO_TYPE = "card"
-    }
+    private val headerCount =
+        if (paymentMethodsListModel.storedPaymentMethods.isEmpty()) 1
+        else 2
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): BaseViewHolder {
         return when (viewType) {
-            PAYMENT_METHODS_HEADER -> PaymentMethodsHeaderVH(getView(parent, R.layout.payment_methods_list_header))
-            PAYMENT_METHODS_FOOTER -> PaymentMethodsFooterVH(getView(parent, R.layout.payment_methods_list_footer))
-            else -> PaymentMethodVH(getView(parent, R.layout.payment_methods_list_item))
+            PAYMENT_METHODS_HEADER -> HeaderVH(getView(parent, R.layout.payment_methods_list_header))
+            STORED_PAYMENT_METHOD -> StoredPaymentMethodVH(getView(parent, R.layout.payment_methods_list_item))
+            PAYMENT_METHOD -> PaymentMethodVH(getView(parent, R.layout.payment_methods_list_item))
+            else -> throw CheckoutException("Unexpected viewType on onCreateViewHolder - $viewType")
         }
     }
 
     override fun getItemViewType(position: Int): Int {
-        return when (getPaymentMethod(position)) {
-            HEADER_PLACEHOLDER_ITEM_P, HEADER_PLACEHOLDER_ITEM_SP -> PAYMENT_METHODS_HEADER
-            FOOTER_PLACEHOLDER_ITEM -> PAYMENT_METHODS_FOOTER
-            else -> PAYMENT_METHOD_ITEMS
+        return when {
+            position == 0 -> PAYMENT_METHODS_HEADER // Top is always a header
+            noStored() -> PAYMENT_METHOD // only regular payment methods left
+            // has stored payments
+            position <= paymentMethodsListModel.storedPaymentMethods.size -> STORED_PAYMENT_METHOD // 0 is header then stored payments
+            position == (paymentMethodsListModel.storedPaymentMethods.size + 1) -> PAYMENT_METHODS_HEADER // 2nd header
+            else -> PAYMENT_METHOD
         }
     }
 
     override fun onBindViewHolder(holder: BaseViewHolder, position: Int) {
-        val paymentMethod = getPaymentMethod(position)
-        val context: Context = holder.itemView.context
+        when (holder) {
+            is HeaderVH -> bindHeader(holder, position)
+            is StoredPaymentMethodVH -> bindStoredPaymentMethod(holder, position)
+            is PaymentMethodVH -> bindPaymentMethod(holder, position)
+        }
+    }
 
-        when {
-            (holder is PaymentMethodVH) -> {
-                if (paymentMethod is StoredPaymentMethod) {
-                    holder.text.text = context.getString(R.string.card_number_4digit, paymentMethod.lastFour)
-                    holder.detail.text = context.getString(
-                        R.string.expires_in,
-                        paymentMethod.expiryMonth,
-                        DateUtils.removeFirstTwoDigitFromYear(paymentMethod.expiryYear)
-                    )
-                    holder.detail.visibility = View.VISIBLE
-                } else {
-                    holder.text.text = paymentMethod?.name
-                    holder.detail.visibility = View.GONE
-                }
+    private fun bindHeader(holder: HeaderVH, position: Int) {
+        if (position == 0) {
+            holder.title.setText(
+                if (noStored()) R.string.payment_methods_header
+                else R.string.store_payment_methods_header
+            )
+        } else {
+            holder.title.setText(R.string.other_payment_methods)
+        }
+    }
 
-                var txVariant = when (paymentMethod.type) {
-                    PaymentMethodTypes.SCHEME -> if (paymentMethod is StoredPaymentMethod) paymentMethod.brand else CARD_LOGO_TYPE
-                    else -> paymentMethod.type!!
-                }
+    private fun bindStoredPaymentMethod(holder: StoredPaymentMethodVH, position: Int) {
+        val storedPaymentMethod = getStoredPaymentMethodAt(position)
 
-                imageLoader.load(txVariant, holder.logo)
-
-                holder.itemView.setOnClickListener {
-                    onItemClick(getPaymentMethod(position))
-                }
+        when (storedPaymentMethod) {
+            is StoredCardModel -> bindStoredCard(holder, storedPaymentMethod)
+            is GenericStoredModel -> {
+                holder.text.text = storedPaymentMethod.name
+                holder.detail.visibility = View.GONE
+                imageLoader.load(storedPaymentMethod.imageId, holder.logo)
             }
+        }
 
-            (holder is PaymentMethodsHeaderVH) -> {
-                when (paymentMethod) {
-                    HEADER_PLACEHOLDER_ITEM_SP -> holder.title.setText(R.string.store_payment_methods_header)
-                    HEADER_PLACEHOLDER_ITEM_P -> {
-                        holder.title.setText(
-                            if (!showInExpandStatus)
-                                R.string.other_payment_methods
-                            else
-                                R.string.payment_methods_header
-                        )
-                    }
-                }
-            }
+        holder.itemView.setOnClickListener {
+            onStoredPaymentMethodClick(storedPaymentMethod)
+        }
+    }
 
-            (holder is PaymentMethodsFooterVH) -> {
-                holder.pay.setOnClickListener {
-                    onItemClick(paymentMethodsModel.storedPaymentMethods.first())
-                }
+    private fun bindStoredCard(holder: StoredPaymentMethodVH, storedCardModel: StoredCardModel) {
+        val context = holder.itemView.context
+        holder.text.text = context.getString(R.string.card_number_4digit, storedCardModel.lastFour)
+        imageLoader.load(storedCardModel.imageId, holder.logo)
+        holder.detail.text = DateUtils.parseDateToView(storedCardModel.expiryMonth, storedCardModel.expiryYear)
+        holder.detail.visibility = View.VISIBLE
+    }
 
-                holder.others.setOnClickListener {
-                    showInExpandStatus = true
-                    it.visibility = View.GONE
-                    notifyItemRangeInserted(collapseListOfItem.size, expandListOfItem.size)
-                }
-            }
+    private fun bindPaymentMethod(holder: PaymentMethodVH, position: Int) {
+        val paymentMethod = getPaymentMethodAt(position)
+
+        holder.text.text = paymentMethod.name
+        holder.detail.visibility = View.GONE
+
+        val txVariant =
+            if (paymentMethod.type == PaymentMethodTypes.SCHEME) CARD_LOGO_TYPE
+            else paymentMethod.type
+
+        imageLoader.load(txVariant, holder.logo)
+
+        holder.itemView.setOnClickListener {
+            onPaymentMethodClick(paymentMethod)
         }
     }
 
     override fun getItemCount(): Int {
-        return getList().size
+        return headerCount + paymentMethodsListModel.storedPaymentMethods.size + paymentMethodsListModel.paymentMethods.size
     }
 
-    private fun onItemClick(paymentMethod: PaymentMethod) {
-        onPaymentMethodSelectedCallback.onPaymentMethodSelected(paymentMethod, showInExpandStatus)
+    private fun getStoredPaymentMethodAt(position: Int): StoredPaymentMethodModel {
+        return paymentMethodsListModel.storedPaymentMethods[position - 1]
     }
 
-    private fun getList(): List<PaymentMethod> {
-        if (showInExpandStatus) {
-            return expandListOfItem
-        }
-
-        return collapseListOfItem
+    private fun getPaymentMethodAt(position: Int): PaymentMethodModel {
+        return if (noStored())
+            paymentMethodsListModel.paymentMethods[position - headerCount]
+        else
+            paymentMethodsListModel.paymentMethods[position - (paymentMethodsListModel.storedPaymentMethods.size + headerCount)]
     }
 
-    private fun getPaymentMethod(position: Int): PaymentMethod {
-        return getList()[position]
+    private fun noStored(): Boolean {
+        return paymentMethodsListModel.storedPaymentMethods.isEmpty()
     }
 
-    private fun getStorePaymentMethodsList(): List<PaymentMethod> {
-        if (paymentMethodsModel.storedPaymentMethods.size > 0) {
-            return listOf(HEADER_PLACEHOLDER_ITEM_SP) + paymentMethodsModel.storedPaymentMethods
-        }
-
-        return emptyList()
+    private fun onStoredPaymentMethodClick(storedPaymentMethodModel: StoredPaymentMethodModel) {
+        onPaymentMethodSelectedCallback.onStoredPaymentMethodSelected(storedPaymentMethodModel)
     }
 
-    private fun getFirstStorePaymentMethodsList(): List<PaymentMethod> {
-        if (paymentMethodsModel.storedPaymentMethods.size > 0) {
-            return listOf(HEADER_PLACEHOLDER_ITEM_SP) + paymentMethodsModel.storedPaymentMethods.first()
-        }
-
-        return emptyList()
-    }
-
-    private fun getPaymentMethodsList(): List<PaymentMethod> {
-        if (paymentMethodsModel.paymentMethods.size > 0) {
-            return listOf(HEADER_PLACEHOLDER_ITEM_P) + paymentMethodsModel.paymentMethods
-        }
-
-        return emptyList()
+    private fun onPaymentMethodClick(paymentMethod: PaymentMethodModel) {
+        onPaymentMethodSelectedCallback.onPaymentMethodSelected(paymentMethod)
     }
 
     private fun getView(parent: ViewGroup, id: Int): View {
         return LayoutInflater.from(parent.context).inflate(id, parent, false)
     }
 
-    private fun initAdapter() {
-        expandListOfItem = getStorePaymentMethodsList() + getPaymentMethodsList()
-        collapseListOfItem = getFirstStorePaymentMethodsList() + listOf(FOOTER_PLACEHOLDER_ITEM)
+    companion object {
+        internal val TAG = LogUtil.getTag()
 
-        if (paymentMethodsModel.storedPaymentMethods.size == 0 && !showInExpandStatus) {
-            showInExpandStatus = true
-        }
-    }
+        // View types
+        internal const val PAYMENT_METHODS_HEADER = 1
+        internal const val STORED_PAYMENT_METHOD = 2
+        internal const val PAYMENT_METHOD = 3
 
-    fun updatePaymentMethodsList(paymentMethodsModel: PaymentMethodsModel) {
-        this.paymentMethodsModel = paymentMethodsModel
-        initAdapter()
+        private const val CARD_LOGO_TYPE = "card"
     }
 
     interface OnPaymentMethodSelectedCallback {
-        fun onPaymentMethodSelected(paymentMethod: PaymentMethod, isInExpandMode: Boolean)
+        fun onStoredPaymentMethodSelected(storedPaymentMethodModel: StoredPaymentMethodModel)
+        fun onPaymentMethodSelected(paymentMethod: PaymentMethodModel)
+    }
+
+    class StoredPaymentMethodVH(rootView: View) : BaseViewHolder(rootView) {
+        internal val text: TextView = rootView.findViewById(R.id.textView_text)
+        internal val detail: TextView = rootView.findViewById(R.id.textView_detail)
+        internal val logo: ImageView = rootView.findViewById(R.id.imageView_logo)
     }
 
     class PaymentMethodVH(rootView: View) : BaseViewHolder(rootView) {
@@ -200,13 +172,8 @@ class PaymentMethodAdapter(
         internal val logo: ImageView = rootView.findViewById(R.id.imageView_logo)
     }
 
-    class PaymentMethodsHeaderVH(rootView: View) : BaseViewHolder(rootView) {
+    class HeaderVH(rootView: View) : BaseViewHolder(rootView) {
         internal val title: TextView = rootView.findViewById(R.id.payment_method_header)
-    }
-
-    class PaymentMethodsFooterVH(rootView: View) : BaseViewHolder(rootView) {
-        internal val others: TextView = rootView.findViewById(R.id.others)
-        internal val pay: Button = rootView.findViewById(R.id.payButton)
     }
 
     open class BaseViewHolder(rootView: View) : RecyclerView.ViewHolder(rootView)

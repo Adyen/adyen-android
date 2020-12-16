@@ -8,9 +8,7 @@
 
 package com.adyen.checkout.dropin.ui.component
 
-import androidx.lifecycle.ViewModelProviders
 import android.os.Bundle
-import com.google.android.material.bottomsheet.BottomSheetBehavior
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -23,8 +21,8 @@ import com.adyen.checkout.core.exception.CheckoutException
 import com.adyen.checkout.core.log.LogUtil
 import com.adyen.checkout.core.log.Logger
 import com.adyen.checkout.dropin.R
-import com.adyen.checkout.dropin.ui.DropInViewModel
 import com.adyen.checkout.dropin.ui.base.BaseComponentDialogFragment
+import com.google.android.material.bottomsheet.BottomSheetBehavior
 import kotlinx.android.synthetic.main.fragment_card_component.dropInCardView
 import kotlinx.android.synthetic.main.view_card_component_dropin.view.header
 import kotlinx.android.synthetic.main.view_card_component_dropin.view.payButton
@@ -63,10 +61,7 @@ class CardComponentDialogFragment : BaseComponentDialogFragment() {
         cardComponent.observeErrors(this, createErrorHandlerObserver())
 
         // try to get the name from the payment methods response
-        activity?.let { activity ->
-            val dropInViewModel = ViewModelProviders.of(activity).get(DropInViewModel::class.java)
-            dropInCardView.header.text = dropInViewModel.paymentMethodsApiResponse.paymentMethods?.find { it.type == PaymentMethodTypes.SCHEME }?.name
-        }
+        dropInCardView.header.text = dropInViewModel.paymentMethodsApiResponse.paymentMethods?.find { it.type == PaymentMethodTypes.SCHEME }?.name
 
         dropInCardView.attach(cardComponent, this)
 

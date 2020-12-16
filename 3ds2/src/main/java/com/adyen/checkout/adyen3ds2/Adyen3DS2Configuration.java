@@ -58,6 +58,11 @@ public class Adyen3DS2Configuration extends Configuration {
         dest.writeString(mProtocolVersion);
     }
 
+    @Nullable
+    public String getProtocolVersion() {
+        return mProtocolVersion;
+    }
+
     /**
      * Builder to create a {@link Adyen3DS2Configuration}.
      */

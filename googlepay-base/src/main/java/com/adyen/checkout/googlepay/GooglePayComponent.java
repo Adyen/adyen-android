@@ -16,7 +16,7 @@ import androidx.annotation.Nullable;
 
 import com.adyen.checkout.base.PaymentComponentProvider;
 import com.adyen.checkout.base.component.BasePaymentComponent;
-import com.adyen.checkout.base.model.paymentmethods.PaymentMethod;
+import com.adyen.checkout.base.component.GenericPaymentMethodDelegate;
 import com.adyen.checkout.base.model.payments.request.GooglePayPaymentMethod;
 import com.adyen.checkout.base.model.payments.request.PaymentComponentData;
 import com.adyen.checkout.base.util.PaymentMethodTypes;
@@ -39,8 +39,8 @@ public class GooglePayComponent extends
 
     private static final String[] PAYMENT_METHOD_TYPES = {PaymentMethodTypes.GOOGLE_PAY};
 
-    public GooglePayComponent(@NonNull PaymentMethod paymentMethod, @NonNull GooglePayConfiguration configuration) {
-        super(paymentMethod, configuration);
+    public GooglePayComponent(@NonNull GenericPaymentMethodDelegate paymentMethodDelegate, @NonNull GooglePayConfiguration configuration) {
+        super(paymentMethodDelegate, configuration);
     }
 
     @NonNull

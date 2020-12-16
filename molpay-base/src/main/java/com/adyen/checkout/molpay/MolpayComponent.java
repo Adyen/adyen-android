@@ -11,8 +11,8 @@ package com.adyen.checkout.molpay;
 import androidx.annotation.NonNull;
 
 import com.adyen.checkout.base.PaymentComponentProvider;
-import com.adyen.checkout.base.component.PaymentComponentProviderImpl;
-import com.adyen.checkout.base.model.paymentmethods.PaymentMethod;
+import com.adyen.checkout.base.component.GenericPaymentComponentProvider;
+import com.adyen.checkout.base.component.GenericPaymentMethodDelegate;
 import com.adyen.checkout.base.model.payments.request.MolpayPaymentMethod;
 import com.adyen.checkout.base.util.PaymentMethodTypes;
 import com.adyen.checkout.issuerlist.IssuerListComponent;
@@ -25,7 +25,7 @@ import com.adyen.checkout.issuerlist.IssuerListOutputData;
 public final class MolpayComponent extends IssuerListComponent<MolpayPaymentMethod> {
 
     public static final PaymentComponentProvider<MolpayComponent, MolpayConfiguration> PROVIDER =
-            new PaymentComponentProviderImpl<>(MolpayComponent.class);
+            new GenericPaymentComponentProvider<>(MolpayComponent.class);
 
     public static final String[] PAYMENT_METHOD_TYPES = {
             PaymentMethodTypes.MOLPAY_THAILAND,
@@ -33,8 +33,8 @@ public final class MolpayComponent extends IssuerListComponent<MolpayPaymentMeth
             PaymentMethodTypes.MOLPAY_VIETNAM
     };
 
-    public MolpayComponent(@NonNull PaymentMethod paymentMethod, @NonNull MolpayConfiguration configuration) {
-        super(paymentMethod, configuration);
+    public MolpayComponent(@NonNull GenericPaymentMethodDelegate paymentMethodDelegate, @NonNull MolpayConfiguration configuration) {
+        super(paymentMethodDelegate, configuration);
     }
 
     @NonNull

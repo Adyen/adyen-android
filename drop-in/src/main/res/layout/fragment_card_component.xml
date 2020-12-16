@@ -10,4 +10,5 @@
     xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:id="@+id/dropInCardView"
+    android:paddingBottom="@dimen/standard_margin"
     android:layout_height="match_parent"/>

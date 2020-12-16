@@ -12,9 +12,6 @@ import android.app.Application
 import android.content.Context
 import androidx.fragment.app.Fragment
 import com.adyen.checkout.adyen3ds2.Adyen3DS2Configuration
-import com.adyen.checkout.afterpay.AfterPayComponent
-import com.adyen.checkout.afterpay.AfterPayConfiguration
-import com.adyen.checkout.afterpay.AfterPayView
 import com.adyen.checkout.await.AwaitConfiguration
 import com.adyen.checkout.await.AwaitView
 import com.adyen.checkout.base.ComponentAvailableCallback
@@ -27,12 +24,16 @@ import com.adyen.checkout.base.component.BaseConfigurationBuilder
 import com.adyen.checkout.base.component.Configuration
 import com.adyen.checkout.base.component.OutputData
 import com.adyen.checkout.base.model.paymentmethods.PaymentMethod
+import com.adyen.checkout.base.model.paymentmethods.StoredPaymentMethod
 import com.adyen.checkout.base.model.payments.request.PaymentMethodDetails
 import com.adyen.checkout.base.util.ActionTypes
 import com.adyen.checkout.base.util.PaymentMethodTypes
 import com.adyen.checkout.bcmc.BcmcComponent
 import com.adyen.checkout.bcmc.BcmcConfiguration
 import com.adyen.checkout.bcmc.BcmcView
+import com.adyen.checkout.blik.BlikComponent
+import com.adyen.checkout.blik.BlikConfiguration
+import com.adyen.checkout.blik.BlikView
 import com.adyen.checkout.card.CardComponent
 import com.adyen.checkout.card.CardConfiguration
 import com.adyen.checkout.card.CardView
@@ -89,6 +90,9 @@ internal fun <T : Configuration> getDefaultConfigFor(
 
     // get default builder for Configuration type
     val builder: BaseConfigurationBuilder<out Configuration> = when (componentType) {
+        PaymentMethodTypes.BLIK -> {
+            BlikConfiguration.Builder(context)
+        }
         PaymentMethodTypes.DOTPAY -> {
             DotpayConfiguration.Builder(context)
         }
@@ -125,7 +129,8 @@ internal fun <T : Configuration> getDefaultConfigFor(
             RedirectConfiguration.Builder(context)
         }
         ActionTypes.THREEDS2_FINGERPRINT,
-        ActionTypes.THREEDS2_CHALLENGE -> {
+        ActionTypes.THREEDS2_CHALLENGE,
+        ActionTypes.THREEDS2 -> {
             Adyen3DS2Configuration.Builder(context)
         }
         // ActionTypes.SDK is not distinguishable only by the type since we need the payment method too
@@ -137,7 +142,9 @@ internal fun <T : Configuration> getDefaultConfigFor(
 
     builder.setShopperLocale(dropInConfiguration.shopperLocale)
     builder.setEnvironment(dropInConfiguration.environment)
-    builder.setClientKey(dropInConfiguration.clientKey)
+    if (dropInConfiguration.clientKey.isNotEmpty()) {
+        builder.setClientKey(dropInConfiguration.clientKey)
+    }
 
     @Suppress("UNCHECKED_CAST")
     return builder.build() as T
@@ -150,9 +157,9 @@ internal fun checkComponentAvailability(
     callback: ComponentAvailableCallback<in Configuration>
 ) {
     try {
-        Logger.d(ComponentParsingProvider.TAG, "Checking availability for type - ${paymentMethod.type}")
+        Logger.v(ComponentParsingProvider.TAG, "Checking availability for type - ${paymentMethod.type}")
 
-        val type = paymentMethod.type ?: throw CheckoutException("PaymentMethod is null")
+        val type = paymentMethod.type ?: throw CheckoutException("PaymentMethod type is null")
 
         val provider = getProviderForType(type)
         val configuration = dropInConfiguration.getConfigurationFor<Configuration>(type, application)
@@ -168,8 +175,8 @@ internal fun checkComponentAvailability(
 internal fun getProviderForType(type: String): PaymentComponentProvider<PaymentComponent<*, *>, Configuration> {
     @Suppress("UNCHECKED_CAST")
     return when (type) {
-        PaymentMethodTypes.AFTER_PAY -> AfterPayComponent.PROVIDER
         PaymentMethodTypes.BCMC -> BcmcComponent.PROVIDER
+        PaymentMethodTypes.BLIK -> BlikComponent.PROVIDER
         PaymentMethodTypes.DOTPAY -> DotpayComponent.PROVIDER
         PaymentMethodTypes.ENTERCASH -> EntercashComponent.PROVIDER
         PaymentMethodTypes.EPS -> EPSComponent.PROVIDER
@@ -190,9 +197,40 @@ internal fun getProviderForType(type: String): PaymentComponentProvider<PaymentC
 }
 
 /**
+ * Provides a [PaymentComponent] from a [PaymentComponentProvider] using the [StoredPaymentMethod] reference.
+ *
+ * @param fragment The Fragment which the PaymentComponent lifecycle will be bound to.
+ * @param storedPaymentMethod The stored payment method to be parsed.
+ * @throws CheckoutException In case a component cannot be created.
+ */
+internal fun getComponentFor(
+    fragment: Fragment,
+    storedPaymentMethod: StoredPaymentMethod,
+    dropInConfiguration: DropInConfiguration
+): PaymentComponent<PaymentComponentState<in PaymentMethodDetails>, Configuration> {
+    val context = fragment.requireContext()
+
+    val component = when (storedPaymentMethod.type) {
+        PaymentMethodTypes.SCHEME -> {
+            val cardConfig: CardConfiguration = dropInConfiguration.getConfigurationFor(PaymentMethodTypes.SCHEME, context)
+            CardComponent.PROVIDER.get(fragment, storedPaymentMethod, cardConfig)
+        }
+        PaymentMethodTypes.BLIK -> {
+            val blikConfig: BlikConfiguration = dropInConfiguration.getConfigurationFor(PaymentMethodTypes.BLIK, context)
+            BlikComponent.PROVIDER.get(fragment, storedPaymentMethod, blikConfig)
+        }
+        else -> {
+            throw CheckoutException("Unable to find stored component for type - ${storedPaymentMethod.type}")
+        }
+    }
+    component.setCreatedForDropIn()
+    return component as PaymentComponent<PaymentComponentState<in PaymentMethodDetails>, Configuration>
+}
+
+/**
  * Provides a [PaymentComponent] from a [PaymentComponentProvider] using the [PaymentMethod] reference.
  *
- * @param fragment The Activity/Fragment which the PaymentComponent lifecycle will be bound to.
+ * @param fragment The Fragment which the PaymentComponent lifecycle will be bound to.
  * @param paymentMethod The payment method to be parsed.
  * @throws CheckoutException In case a component cannot be created.
  */
@@ -205,13 +243,13 @@ internal fun getComponentFor(
     val context = fragment.requireContext()
 
     val component = when (paymentMethod.type) {
-        PaymentMethodTypes.AFTER_PAY -> {
-            val afterPayConfiguration: AfterPayConfiguration = dropInConfiguration.getConfigurationFor(PaymentMethodTypes.AFTER_PAY, context)
-            AfterPayComponent.PROVIDER.get(fragment, paymentMethod, afterPayConfiguration)
-        }
         PaymentMethodTypes.BCMC -> {
             val bcmcConfiguration: BcmcConfiguration = dropInConfiguration.getConfigurationFor(PaymentMethodTypes.BCMC, context)
             BcmcComponent.PROVIDER.get(fragment, paymentMethod, bcmcConfiguration)
+        }
+        PaymentMethodTypes.BLIK -> {
+            val blikConfiguration: BlikConfiguration = dropInConfiguration.getConfigurationFor(PaymentMethodTypes.BLIK, context)
+            BlikComponent.PROVIDER.get(fragment, paymentMethod, blikConfiguration)
         }
         PaymentMethodTypes.DOTPAY -> {
             val dotpayConfig: DotpayConfiguration = dropInConfiguration.getConfigurationFor(PaymentMethodTypes.DOTPAY, context)
@@ -288,7 +326,6 @@ internal fun getViewFor(
 ): ComponentView<in OutputData, ViewableComponent<*, *, *>> {
     @Suppress("UNCHECKED_CAST")
     return when (paymentType) {
-        PaymentMethodTypes.AFTER_PAY -> AfterPayView(context)
         PaymentMethodTypes.BCMC -> BcmcView(context)
         PaymentMethodTypes.DOTPAY -> DotpayRecyclerView(context)
         PaymentMethodTypes.ENTERCASH -> EntercashRecyclerView(context)
@@ -301,6 +338,7 @@ internal fun getViewFor(
         PaymentMethodTypes.OPEN_BANKING -> OpenBankingRecyclerView(context)
         PaymentMethodTypes.SCHEME -> CardView(context)
         PaymentMethodTypes.SEPA -> SepaView(context)
+        PaymentMethodTypes.BLIK -> BlikView(context)
         // GooglePay and WeChatPay do not require a View in Drop-in
         ActionTypes.AWAIT -> AwaitView(context)
         else -> {

@@ -14,7 +14,6 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 
 import com.adyen.checkout.base.util.PaymentMethodTypes;
-import com.adyen.checkout.core.code.Lint;
 import com.adyen.checkout.core.exception.CheckoutException;
 import com.adyen.checkout.core.model.ModelObject;
 
@@ -62,7 +61,6 @@ public abstract class PaymentMethodDetails extends ModelObject {
 
     private String type;
 
-    @SuppressWarnings(Lint.SYNTHETIC)
     @NonNull
     static Serializer<? extends PaymentMethodDetails> getChildSerializer(@NonNull String paymentMethodType) {
         switch (paymentMethodType) {
@@ -87,10 +85,10 @@ public abstract class PaymentMethodDetails extends ModelObject {
                 return GooglePayPaymentMethod.SERIALIZER;
             case SepaPaymentMethod.PAYMENT_METHOD_TYPE:
                 return SepaPaymentMethod.SERIALIZER;
-            case AfterPayPaymentMethod.PAYMENT_METHOD_TYPE:
-                return AfterPayPaymentMethod.SERIALIZER;
             case MBWayPaymentMethod.PAYMENT_METHOD_TYPE:
                 return MBWayPaymentMethod.SERIALIZER;
+            case BlikPaymentMethod.PAYMENT_METHOD_TYPE:
+                return BlikPaymentMethod.SERIALIZER;
             default:
                 return GenericPaymentMethod.SERIALIZER;
         }

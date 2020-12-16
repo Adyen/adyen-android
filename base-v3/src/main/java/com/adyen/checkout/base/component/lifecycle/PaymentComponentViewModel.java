@@ -8,13 +8,14 @@
 
 package com.adyen.checkout.base.component.lifecycle;
 
-import androidx.lifecycle.ViewModel;
 import androidx.annotation.NonNull;
+import androidx.lifecycle.ViewModel;
 
 import com.adyen.checkout.base.PaymentComponent;
 import com.adyen.checkout.base.PaymentComponentState;
 import com.adyen.checkout.base.component.Configuration;
-import com.adyen.checkout.base.model.paymentmethods.PaymentMethod;
+import com.adyen.checkout.base.component.PaymentMethodDelegate;
+import com.adyen.checkout.base.model.payments.request.PaymentMethodDetails;
 
 /**
  * Base class of a PaymentComponent as a ViewModel.
@@ -22,21 +23,19 @@ import com.adyen.checkout.base.model.paymentmethods.PaymentMethod;
  * @param <ConfigurationT> A Configuration object although optional is required to construct a Component.
  * @param <ComponentStateT> The {@link PaymentComponentState} this Component returns as a result.
  */
-public abstract class PaymentComponentViewModel<ConfigurationT extends Configuration, ComponentStateT extends PaymentComponentState>
+public abstract class PaymentComponentViewModel<
+        ConfigurationT extends Configuration,
+        ComponentStateT extends PaymentComponentState<? extends PaymentMethodDetails>>
         extends ViewModel
         implements PaymentComponent<ComponentStateT, ConfigurationT> {
-    private final PaymentMethod mPaymentMethod;
 
-    private final ConfigurationT mConfiguration;
+    protected final PaymentMethodDelegate mPaymentMethodDelegate;
+    protected final ConfigurationT mConfiguration;
 
-    public PaymentComponentViewModel(@NonNull PaymentMethod paymentMethod, @NonNull ConfigurationT configuration) {
-        mPaymentMethod = paymentMethod;
+    @SuppressWarnings("LambdaLast")
+    public PaymentComponentViewModel(@NonNull PaymentMethodDelegate paymentMethodDelegate, @NonNull ConfigurationT configuration) {
+        mPaymentMethodDelegate = paymentMethodDelegate;
         mConfiguration = configuration;
-    }
-
-    @NonNull
-    public PaymentMethod getPaymentMethod() {
-        return mPaymentMethod;
     }
 
     @NonNull

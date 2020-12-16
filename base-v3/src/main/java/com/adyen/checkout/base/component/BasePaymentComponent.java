@@ -24,9 +24,8 @@ import com.adyen.checkout.base.ViewableComponent;
 import com.adyen.checkout.base.analytics.AnalyticEvent;
 import com.adyen.checkout.base.analytics.AnalyticsDispatcher;
 import com.adyen.checkout.base.component.lifecycle.PaymentComponentViewModel;
-import com.adyen.checkout.base.model.paymentmethods.PaymentMethod;
+import com.adyen.checkout.base.model.payments.request.PaymentMethodDetails;
 import com.adyen.checkout.core.api.ThreadManager;
-import com.adyen.checkout.core.code.Lint;
 import com.adyen.checkout.core.exception.CheckoutException;
 import com.adyen.checkout.core.log.LogUtil;
 import com.adyen.checkout.core.log.Logger;
@@ -35,13 +34,12 @@ public abstract class BasePaymentComponent<
             ConfigurationT extends Configuration,
             InputDataT extends InputData,
             OutputDataT extends OutputData,
-            ComponentStateT extends PaymentComponentState>
+            ComponentStateT extends PaymentComponentState<? extends PaymentMethodDetails>>
         extends PaymentComponentViewModel<ConfigurationT, ComponentStateT>
         implements ViewableComponent<OutputDataT, ConfigurationT, ComponentStateT> {
 
     private static final String TAG = LogUtil.getTag();
 
-    @SuppressWarnings(Lint.SYNTHETIC)
     final MutableLiveData<ComponentStateT> mPaymentComponentStateLiveData = new MutableLiveData<>();
 
     private final MutableLiveData<ComponentError> mComponentErrorLiveData = new MutableLiveData<>();
@@ -57,24 +55,19 @@ public abstract class BasePaymentComponent<
     /**
      * Component should not be instantiated directly. Instead use the PROVIDER object.
      *
-     * @param paymentMethod {@link PaymentMethod}
+     * @param paymentMethodDelegate {@link PaymentMethodDelegate}
      * @param configuration {@link ConfigurationT}
      */
-    public BasePaymentComponent(@NonNull PaymentMethod paymentMethod, @NonNull ConfigurationT configuration) {
-        super(paymentMethod, configuration);
-        assertSupported(paymentMethod);
+    @SuppressWarnings("LambdaLast")
+    public BasePaymentComponent(@NonNull PaymentMethodDelegate paymentMethodDelegate, @NonNull ConfigurationT configuration) {
+        super(paymentMethodDelegate, configuration);
+        assertSupported(paymentMethodDelegate.getPaymentMethodType());
     }
 
-    @SuppressWarnings("MissingDeprecated")
-    @Deprecated
-    @NonNull
     @Override
-    public String getPaymentMethodType() {
-        if (getSupportedPaymentMethodTypes().length > 0) {
-            return getSupportedPaymentMethodTypes()[0];
-        } else {
-            throw new CheckoutException("Component supported types is empty");
-        }
+    public boolean requiresInput() {
+        // By default all components require user input.
+        return true;
     }
 
     @Override
@@ -89,7 +82,7 @@ public abstract class BasePaymentComponent<
 
     @Override
     @Nullable
-    public PaymentComponentState getState() {
+    public PaymentComponentState<? extends PaymentMethodDetails> getState() {
         return mPaymentComponentStateLiveData.getValue();
     }
 
@@ -99,6 +92,7 @@ public abstract class BasePaymentComponent<
      * @param inputData {@link InputDataT}
      */
     public final void inputDataChanged(@NonNull InputDataT inputData) {
+        Logger.v(TAG, "inputDataChanged");
         final OutputDataT newOutputData = onInputDataChanged(inputData);
         if (!newOutputData.equals(mOutputData)) {
             mOutputData = newOutputData;
@@ -113,6 +107,7 @@ public abstract class BasePaymentComponent<
      *
      * @param isEnabled Is analytics should be enabled or not.
      */
+    // TODO: 13/11/2020 Add to Configuration instead?
     public void setAnalyticsEnabled(boolean isEnabled) {
         mIsAnalyticsEnabled = isEnabled;
     }
@@ -131,7 +126,7 @@ public abstract class BasePaymentComponent<
                 flavor = AnalyticEvent.Flavor.COMPONENT;
             }
 
-            final String type = getPaymentMethod().getType();
+            final String type = mPaymentMethodDelegate.getPaymentMethodType();
             if (TextUtils.isEmpty(type)) {
                 throw new CheckoutException("Payment method has empty or null type");
             }
@@ -173,23 +168,18 @@ public abstract class BasePaymentComponent<
     }
 
     private void notifyStateChanged() {
-        ThreadManager.EXECUTOR.submit(new Runnable() {
-            @Override
-            public void run() {
-                mPaymentComponentStateLiveData.postValue(createComponentState());
-            }
-        });
+        ThreadManager.EXECUTOR.submit(() -> mPaymentComponentStateLiveData.postValue(createComponentState()));
     }
 
-    private void assertSupported(@NonNull PaymentMethod paymentMethod) {
-        if (!isSupported(paymentMethod)) {
-            throw new IllegalArgumentException("Unsupported payment method type " + paymentMethod);
+    private void assertSupported(@NonNull String paymentMethodType) {
+        if (!isSupported(paymentMethodType)) {
+            throw new IllegalArgumentException("Unsupported payment method type " + paymentMethodType);
         }
     }
 
-    private boolean isSupported(@NonNull PaymentMethod paymentMethod) {
-        for (String paymentMethodType : getSupportedPaymentMethodTypes()) {
-            if (paymentMethodType.equals(paymentMethod.getType())) {
+    private boolean isSupported(@NonNull String paymentMethodType) {
+        for (String supportedType : getSupportedPaymentMethodTypes()) {
+            if (supportedType.equals(paymentMethodType)) {
                 return true;
             }
         }

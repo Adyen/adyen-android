@@ -57,7 +57,7 @@ abstract class DropInService : JobIntentService() {
         // This callbackFlow will stay open for new offers on the callback object
         // this is an experiment to replace LocalBroadcast to communicate with the DropInActivity
         // TODO: 27/10/2020 check if we can have a different implementation that is not an application-wide event bus
-        //  since it embraces layer violations as per deprecation note
+        // since it embraces layer violations as per deprecation note
         // https://developer.android.com/jetpack/androidx/releases/localbroadcastmanager
         @ExperimentalCoroutinesApi
         val dropInServiceFlow = callbackFlow<CallResult> {

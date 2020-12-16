@@ -8,13 +8,12 @@
 
 package com.adyen.checkout.dropin.ui.action
 
-import androidx.lifecycle.Observer
-import androidx.lifecycle.ViewModelProviders
 import android.content.DialogInterface
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.lifecycle.Observer
 import com.adyen.checkout.await.AwaitComponent
 import com.adyen.checkout.base.ActionComponent
 import com.adyen.checkout.base.ActionComponentData
@@ -30,7 +29,6 @@ import com.adyen.checkout.core.log.LogUtil
 import com.adyen.checkout.core.log.Logger
 import com.adyen.checkout.dropin.R
 import com.adyen.checkout.dropin.getViewFor
-import com.adyen.checkout.dropin.ui.DropInViewModel
 import com.adyen.checkout.dropin.ui.base.DropInBottomSheetDialogFragment
 import kotlinx.android.synthetic.main.fragment_action_component.header
 import kotlinx.android.synthetic.main.fragment_generic_component.componentContainer
@@ -56,7 +54,6 @@ class ActionComponentDialogFragment : DropInBottomSheetDialogFragment(), Observe
 
     private lateinit var action: Action
     private lateinit var actionType: String
-    private lateinit var dropInViewModel: DropInViewModel
     private lateinit var componentView: ComponentView<in OutputData, ViewableComponent<*, *, ActionComponentData>>
     private lateinit var actionComponent: ViewableComponent<*, *, ActionComponentData>
     private var isHandled = true
@@ -66,8 +63,6 @@ class ActionComponentDialogFragment : DropInBottomSheetDialogFragment(), Observe
         Logger.d(TAG, "onCreate")
         action = arguments?.getParcelable(ACTION) ?: throw IllegalArgumentException("Action not found")
         actionType = action.type ?: throw IllegalArgumentException("Action type not found")
-        // Get the same instance as the Activity
-        dropInViewModel = ViewModelProviders.of(requireActivity()).get(DropInViewModel::class.java)
     }
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
@@ -98,7 +93,7 @@ class ActionComponentDialogFragment : DropInBottomSheetDialogFragment(), Observe
 
     override fun onBackPressed(): Boolean {
         // polling will be canceled by lifecycle event
-        protocol.showPaymentMethodsDialog(true)
+        protocol.showPaymentMethodsDialog()
         return true
     }
 
@@ -127,7 +122,9 @@ class ActionComponentDialogFragment : DropInBottomSheetDialogFragment(), Observe
         return when (actionType) {
             ActionTypes.AWAIT -> {
                 AwaitComponent.PROVIDER.get(
-                    this, dropInViewModel.dropInConfiguration.getConfigurationFor(ActionTypes.AWAIT, requireContext())
+                    this,
+                    requireActivity().application,
+                    dropInViewModel.dropInConfiguration.getConfigurationFor(ActionTypes.AWAIT, requireContext())
                 )
             }
             else -> {

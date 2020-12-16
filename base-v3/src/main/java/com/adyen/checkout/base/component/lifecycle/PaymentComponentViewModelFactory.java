@@ -8,29 +8,47 @@
 
 package com.adyen.checkout.base.component.lifecycle;
 
+import androidx.annotation.NonNull;
 import androidx.lifecycle.ViewModel;
 import androidx.lifecycle.ViewModelProvider;
-import androidx.annotation.NonNull;
 
 import com.adyen.checkout.base.component.Configuration;
+import com.adyen.checkout.base.component.PaymentMethodDelegate;
+import com.adyen.checkout.base.component.StoredPaymentMethodDelegate;
 import com.adyen.checkout.base.model.paymentmethods.PaymentMethod;
+import com.adyen.checkout.base.model.paymentmethods.StoredPaymentMethod;
 
 /**
  * A {@link ViewModelProvider.Factory} to create {@link PaymentComponentViewModel}.
  */
 public final class PaymentComponentViewModelFactory implements ViewModelProvider.Factory {
 
-    private final PaymentMethod mPaymentMethod;
+    private final PaymentMethodDelegate mPaymentMethodDelegate;
+    private final StoredPaymentMethodDelegate mStoredPaymentMethodDelegate;
     private final Configuration mConfiguration;
 
     /**
      * Creates a {@code AndroidViewModelFactory}.
      *
-     * @param paymentMethod a {@link PaymentMethod} to pass in {@link PaymentComponentViewModel}
-     * @param configuration a {@link Configuration} to pass in {@link PaymentComponentViewModel}
+     * @param paymentMethodDelegate the {@link PaymentMethod} to pass in {@link PaymentComponentViewModel}
+     * @param configuration the {@link Configuration} to pass in {@link PaymentComponentViewModel}
      */
-    public PaymentComponentViewModelFactory(@NonNull PaymentMethod paymentMethod, @NonNull Configuration configuration) {
-        mPaymentMethod = paymentMethod;
+    @SuppressWarnings("LambdaLast")
+    public PaymentComponentViewModelFactory(@NonNull PaymentMethodDelegate paymentMethodDelegate, @NonNull Configuration configuration) {
+        mPaymentMethodDelegate = paymentMethodDelegate;
+        mStoredPaymentMethodDelegate = null;
+        mConfiguration = configuration;
+    }
+
+    /**
+     * Creates a {@code AndroidViewModelFactory}.
+     *
+     * @param storedPaymentMethodDelegate the {@link StoredPaymentMethod} to pass in {@link PaymentComponentViewModel}
+     * @param configuration the {@link Configuration} to pass in {@link PaymentComponentViewModel}
+     */
+    public PaymentComponentViewModelFactory(@NonNull StoredPaymentMethodDelegate storedPaymentMethodDelegate, @NonNull Configuration configuration) {
+        mPaymentMethodDelegate = null;
+        mStoredPaymentMethodDelegate = storedPaymentMethodDelegate;
         mConfiguration = configuration;
     }
 
@@ -38,7 +56,17 @@ public final class PaymentComponentViewModelFactory implements ViewModelProvider
     @NonNull
     public <T extends ViewModel> T create(@NonNull Class<T> modelClass) {
         try {
-            return modelClass.getConstructor(mPaymentMethod.getClass(), mConfiguration.getClass()).newInstance(mPaymentMethod, mConfiguration);
+            if (mStoredPaymentMethodDelegate == null) {
+                return modelClass.getConstructor(
+                        mPaymentMethodDelegate.getClass(),
+                        mConfiguration.getClass()
+                ).newInstance(mPaymentMethodDelegate, mConfiguration);
+            } else {
+                return modelClass.getConstructor(
+                        mStoredPaymentMethodDelegate.getClass(),
+                        mConfiguration.getClass()
+                ).newInstance(mStoredPaymentMethodDelegate, mConfiguration);
+            }
         } catch (Exception e) {
             throw new RuntimeException("Failed to create an instance of component: " + modelClass, e);
         }

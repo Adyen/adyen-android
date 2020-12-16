@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="utf-8"?><!--
+  ~ Copyright (c) 2020 Adyen N.V.
+  ~
+  ~ This file is open source and available under the MIT license. See the LICENSE file for more info.
+  ~
+  ~ Created by josephj on 4/12/2020.
+  -->
+
+<resources>
+    <string name="checkout_blik_code">6 位数代码</string>
+    <string name="checkout_blik_code_not_valid">输入 6 位数</string>
+    <string name="checkout_blik_helper_text">从您的银行应用中获取代码。</string>
+</resources>

@@ -12,7 +12,6 @@ import android.app.Activity;
 import android.content.Context;
 import android.content.ContextWrapper;
 import android.content.res.TypedArray;
-import android.text.Editable;
 import android.util.AttributeSet;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -44,7 +43,7 @@ import java.util.List;
 /**
  * CardView for {@link CardComponent}.
  */
-@SuppressWarnings({"SyntheticAccessor", "PMD.GodClass"})
+@SuppressWarnings("PMD.GodClass")
 public final class CardView extends AdyenLinearLayout<CardOutputData, CardConfiguration, CardComponentState, CardComponent>
         implements Observer<CardOutputData> {
 
@@ -123,12 +122,13 @@ public final class CardView extends AdyenLinearLayout<CardOutputData, CardConfig
 
 
         if (getComponent().isStoredPaymentMethod()) {
-            //noinspection ConstantConditions
             setStoredCardInterface(getComponent().getStoredPaymentInputData());
         } else {
             mCardHolderInput.setVisibility(getComponent().isHolderNameRequire() ? VISIBLE : GONE);
             mStorePaymentMethodSwitch.setVisibility(getComponent().showStorePaymentField() ? VISIBLE : GONE);
         }
+
+        notifyInputDataChanged();
     }
 
     @Override
@@ -174,10 +174,16 @@ public final class CardView extends AdyenLinearLayout<CardOutputData, CardConfig
         if (cardOutputData != null) {
             onCardNumberValidated(cardOutputData.getCardNumberField());
             onExpiryDateValidated(cardOutputData.getExpiryDateField());
+            mSecurityCodeInput.setVisibility(cardOutputData.isCvcHidden() ? GONE : VISIBLE);
+            if (cardOutputData.isCvcHidden()) {
+                // We don't expect the hidden status to change back to visible, so we don't worry about putting the margin back.
+                final LinearLayout.LayoutParams params = (LinearLayout.LayoutParams) mExpiryDateInput.getLayoutParams();
+                params.setMarginEnd(0);
+                mExpiryDateInput.setLayoutParams(params);
+            }
         }
 
-        if (getComponent().isStoredPaymentMethod()) {
-            //noinspection ConstantConditions
+        if (getComponent().isStoredPaymentMethod() && getComponent().requiresInput()) {
             mSecurityCodeInput.getEditText().requestFocus();
         }
     }
@@ -279,14 +285,10 @@ public final class CardView extends AdyenLinearLayout<CardOutputData, CardConfig
     private void initCardNumberInput() {
         mCardNumberInput = findViewById(R.id.textInputLayout_cardNumber);
         mCardNumberEditText = (CardNumberInput) mCardNumberInput.getEditText();
-        //noinspection ConstantConditions
-        mCardNumberEditText.setOnChangeListener(new AdyenTextInputEditText.Listener() {
-            @Override
-            public void onTextChanged(@NonNull Editable editable) {
-                mCardInputData.setCardNumber(mCardNumberEditText.getRawValue());
-                notifyInputDataChanged();
-                mCardNumberInput.setError(null);
-            }
+        mCardNumberEditText.setOnChangeListener(editable -> {
+            mCardInputData.setCardNumber(mCardNumberEditText.getRawValue());
+            notifyInputDataChanged();
+            mCardNumberInput.setError(null);
         });
         mCardNumberEditText.setOnFocusChangeListener(new OnFocusChangeListener() {
             @Override
@@ -306,24 +308,17 @@ public final class CardView extends AdyenLinearLayout<CardOutputData, CardConfig
     private void initExpiryDateInput() {
         mExpiryDateInput = findViewById(R.id.textInputLayout_expiryDate);
         mExpiryDateEditText = (ExpiryDateInput) mExpiryDateInput.getEditText();
-        //noinspection ConstantConditions
-        mExpiryDateEditText.setOnChangeListener(new AdyenTextInputEditText.Listener() {
-            @Override
-            public void onTextChanged(@NonNull Editable editable) {
-                mCardInputData.setExpiryDate(mExpiryDateEditText.getDate());
-                notifyInputDataChanged();
-                mExpiryDateInput.setError(null);
-            }
+        mExpiryDateEditText.setOnChangeListener(editable -> {
+            mCardInputData.setExpiryDate(mExpiryDateEditText.getDate());
+            notifyInputDataChanged();
+            mExpiryDateInput.setError(null);
         });
-        mExpiryDateEditText.setOnFocusChangeListener(new OnFocusChangeListener() {
-            @Override
-            public void onFocusChange(View v, boolean hasFocus) {
-                final CardOutputData outputData = getComponent().getOutputData();
-                if (hasFocus) {
-                    mExpiryDateInput.setError(null);
-                } else if (outputData != null && !outputData.getExpiryDateField().isValid()) {
-                    mExpiryDateInput.setError(mLocalizedContext.getString(R.string.checkout_expiry_date_not_valid));
-                }
+        mExpiryDateEditText.setOnFocusChangeListener((v, hasFocus) -> {
+            final CardOutputData outputData = getComponent().getOutputData();
+            if (hasFocus) {
+                mExpiryDateInput.setError(null);
+            } else if (outputData != null && !outputData.getExpiryDateField().isValid()) {
+                mExpiryDateInput.setError(mLocalizedContext.getString(R.string.checkout_expiry_date_not_valid));
             }
         });
     }
@@ -331,24 +326,17 @@ public final class CardView extends AdyenLinearLayout<CardOutputData, CardConfig
     private void initSecurityCodeInput() {
         mSecurityCodeInput = findViewById(R.id.textInputLayout_securityCode);
         final SecurityCodeInput securityCodeEditText = (SecurityCodeInput) mSecurityCodeInput.getEditText();
-        //noinspection ConstantConditions
-        securityCodeEditText.setOnChangeListener(new AdyenTextInputEditText.Listener() {
-            @Override
-            public void onTextChanged(@NonNull Editable editable) {
-                mCardInputData.setSecurityCode(editable.toString());
-                notifyInputDataChanged();
-                mSecurityCodeInput.setError(null);
-            }
+        securityCodeEditText.setOnChangeListener(editable -> {
+            mCardInputData.setSecurityCode(editable.toString());
+            notifyInputDataChanged();
+            mSecurityCodeInput.setError(null);
         });
-        securityCodeEditText.setOnFocusChangeListener(new OnFocusChangeListener() {
-            @Override
-            public void onFocusChange(View v, boolean hasFocus) {
-                final CardOutputData outputData = getComponent().getOutputData();
-                if (hasFocus) {
-                    mSecurityCodeInput.setError(null);
-                } else if (outputData != null && !outputData.getSecurityCodeField().isValid()) {
-                    mSecurityCodeInput.setError(mLocalizedContext.getString(R.string.checkout_security_code_not_valid));
-                }
+        securityCodeEditText.setOnFocusChangeListener((v, hasFocus) -> {
+            final CardOutputData outputData = getComponent().getOutputData();
+            if (hasFocus) {
+                mSecurityCodeInput.setError(null);
+            } else if (outputData != null && !outputData.getSecurityCodeField().isValid()) {
+                mSecurityCodeInput.setError(mLocalizedContext.getString(R.string.checkout_security_code_not_valid));
             }
         });
     }
@@ -356,24 +344,17 @@ public final class CardView extends AdyenLinearLayout<CardOutputData, CardConfig
     private void initHolderNameInput() {
         mCardHolderInput = findViewById(R.id.textInputLayout_cardHolder);
         final AdyenTextInputEditText cardHolderEditText = (AdyenTextInputEditText) mCardHolderInput.getEditText();
-        //noinspection ConstantConditions
-        cardHolderEditText.setOnChangeListener(new AdyenTextInputEditText.Listener() {
-            @Override
-            public void onTextChanged(@NonNull Editable editable) {
-                mCardInputData.setHolderName(editable.toString());
-                notifyInputDataChanged();
-                mCardHolderInput.setError(null);
-            }
+        cardHolderEditText.setOnChangeListener(editable -> {
+            mCardInputData.setHolderName(editable.toString());
+            notifyInputDataChanged();
+            mCardHolderInput.setError(null);
         });
-        cardHolderEditText.setOnFocusChangeListener(new OnFocusChangeListener() {
-            @Override
-            public void onFocusChange(View v, boolean hasFocus) {
-                final CardOutputData outputData = getComponent().getOutputData();
-                if (hasFocus) {
-                    mCardHolderInput.setError(null);
-                } else if (outputData != null && !outputData.getHolderNameField().isValid()) {
-                    mCardHolderInput.setError(mLocalizedContext.getString(R.string.checkout_holder_name_not_valid));
-                }
+        cardHolderEditText.setOnFocusChangeListener((v, hasFocus) -> {
+            final CardOutputData outputData = getComponent().getOutputData();
+            if (hasFocus) {
+                mCardHolderInput.setError(null);
+            } else if (outputData != null && !outputData.getHolderNameField().isValid()) {
+                mCardHolderInput.setError(mLocalizedContext.getString(R.string.checkout_holder_name_not_valid));
             }
         });
     }

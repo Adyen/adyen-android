@@ -17,7 +17,6 @@ import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.DialogFragment
 import androidx.lifecycle.Observer
-import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.lifecycleScope
 import com.adyen.checkout.base.ActionComponentData
 import com.adyen.checkout.base.ComponentError
@@ -25,6 +24,7 @@ import com.adyen.checkout.base.analytics.AnalyticEvent
 import com.adyen.checkout.base.analytics.AnalyticsDispatcher
 import com.adyen.checkout.base.model.PaymentMethodsApiResponse
 import com.adyen.checkout.base.model.paymentmethods.PaymentMethod
+import com.adyen.checkout.base.model.paymentmethods.StoredPaymentMethod
 import com.adyen.checkout.base.model.payments.request.PaymentComponentData
 import com.adyen.checkout.base.model.payments.response.Action
 import com.adyen.checkout.base.util.PaymentMethodTypes
@@ -43,6 +43,7 @@ import com.adyen.checkout.dropin.ui.base.DropInBottomSheetDialogFragment
 import com.adyen.checkout.dropin.ui.component.CardComponentDialogFragment
 import com.adyen.checkout.dropin.ui.component.GenericComponentDialogFragment
 import com.adyen.checkout.dropin.ui.paymentmethods.PaymentMethodListDialogFragment
+import com.adyen.checkout.dropin.ui.stored.PreselectedStoredPaymentMethodFragment
 import com.adyen.checkout.googlepay.GooglePayComponent
 import com.adyen.checkout.googlepay.GooglePayComponentState
 import com.adyen.checkout.googlepay.GooglePayConfiguration
@@ -52,33 +53,25 @@ import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.collect
 import org.json.JSONObject
 
+private val TAG = LogUtil.getTag()
+
+private const val PRESELECTED_PAYMENT_METHOD_FRAGMENT_TAG = "PRESELECTED_PAYMENT_METHOD_FRAGMENT"
+private const val PAYMENT_METHODS_LIST_FRAGMENT_TAG = "PAYMENT_METHODS_LIST_FRAGMENT"
+private const val COMPONENT_FRAGMENT_TAG = "COMPONENT_DIALOG_FRAGMENT"
+private const val ACTION_FRAGMENT_TAG = "ACTION_DIALOG_FRAGMENT"
+private const val LOADING_FRAGMENT_TAG = "LOADING_DIALOG_FRAGMENT"
+
+private const val PAYMENT_METHODS_RESPONSE_KEY = "PAYMENT_METHODS_RESPONSE_KEY"
+private const val DROP_IN_CONFIGURATION_KEY = "DROP_IN_CONFIGURATION_KEY"
+private const val IS_WAITING_FOR_RESULT = "IS_WAITING_FOR_RESULT"
+
+private const val GOOGLE_PAY_REQUEST_CODE = 1
+
 /**
  * Activity that presents the available PaymentMethods to the Shopper.
  */
-@Suppress("TooManyFunctions", "SyntheticAccessor")
+@Suppress("TooManyFunctions")
 class DropInActivity : AppCompatActivity(), DropInBottomSheetDialogFragment.Protocol, ActionHandler.ActionHandlingInterface {
-
-    companion object {
-        private val TAG = LogUtil.getTag()
-
-        private const val PAYMENT_METHOD_FRAGMENT_TAG = "PAYMENT_METHODS_DIALOG_FRAGMENT"
-        private const val COMPONENT_FRAGMENT_TAG = "COMPONENT_DIALOG_FRAGMENT"
-        private const val ACTION_FRAGMENT_TAG = "ACTION_DIALOG_FRAGMENT"
-        private const val LOADING_FRAGMENT_TAG = "LOADING_DIALOG_FRAGMENT"
-
-        private const val PAYMENT_METHODS_RESPONSE_KEY = "PAYMENT_METHODS_RESPONSE_KEY"
-        private const val DROP_IN_CONFIGURATION_KEY = "DROP_IN_CONFIGURATION_KEY"
-        private const val IS_WAITING_FOR_RESULT = "IS_WAITING_FOR_RESULT"
-
-        private const val GOOGLE_PAY_REQUEST_CODE = 1
-
-        fun createIntent(context: Context, dropInConfiguration: DropInConfiguration, paymentMethodsApiResponse: PaymentMethodsApiResponse): Intent {
-            val intent = Intent(context, DropInActivity::class.java)
-            intent.putExtra(PAYMENT_METHODS_RESPONSE_KEY, paymentMethodsApiResponse)
-            intent.putExtra(DROP_IN_CONFIGURATION_KEY, dropInConfiguration)
-            return intent
-        }
-    }
 
     private lateinit var dropInViewModel: DropInViewModel
 
@@ -98,7 +91,7 @@ class DropInActivity : AppCompatActivity(), DropInBottomSheetDialogFragment.Prot
 
     private val googlePayErrorObserver: Observer<ComponentError> = Observer {
         Logger.d(TAG, "GooglePay error - ${it?.errorMessage}")
-        showPaymentMethodsDialog(true)
+        showPaymentMethodsDialog()
     }
 
     override fun attachBaseContext(newBase: Context?) {
@@ -113,9 +106,6 @@ class DropInActivity : AppCompatActivity(), DropInBottomSheetDialogFragment.Prot
         setContentView(R.layout.activity_drop_in)
         overridePendingTransition(0, 0)
 
-        // If we add fragment-ktx dependency we can replace this with `by viewModels()` on the declaration
-        dropInViewModel = ViewModelProvider(this, defaultViewModelProviderFactory).get(DropInViewModel::class.java)
-
         val bundle = savedInstanceState ?: intent.extras
 
         val initializationSuccessful = initializeBundleVariables(bundle)
@@ -124,11 +114,12 @@ class DropInActivity : AppCompatActivity(), DropInBottomSheetDialogFragment.Prot
             return
         }
 
-        if (getFragmentByTag(COMPONENT_FRAGMENT_TAG) == null &&
-            getFragmentByTag(PAYMENT_METHOD_FRAGMENT_TAG) == null &&
-            getFragmentByTag(ACTION_FRAGMENT_TAG) == null
-        ) {
-            PaymentMethodListDialogFragment.newInstance(false).show(supportFragmentManager, PAYMENT_METHOD_FRAGMENT_TAG)
+        if (noDialogPresent()) {
+            if (dropInViewModel.showPreselectedStored) {
+                showPreselectedDialog()
+            } else {
+                showPaymentMethodsDialog()
+            }
         }
 
         // Automatically wait to collect new results from the DropInService while lifecycle is active
@@ -144,6 +135,13 @@ class DropInActivity : AppCompatActivity(), DropInBottomSheetDialogFragment.Prot
         actionHandler.restoreState(savedInstanceState)
 
         sendAnalyticsEvent()
+    }
+
+    private fun noDialogPresent(): Boolean {
+        return getFragmentByTag(PRESELECTED_PAYMENT_METHOD_FRAGMENT_TAG) == null &&
+            getFragmentByTag(PAYMENT_METHODS_LIST_FRAGMENT_TAG) == null &&
+            getFragmentByTag(COMPONENT_FRAGMENT_TAG) == null &&
+            getFragmentByTag(ACTION_FRAGMENT_TAG) == null
     }
 
     // False positive from countryStartPosition
@@ -169,28 +167,24 @@ class DropInActivity : AppCompatActivity(), DropInBottomSheetDialogFragment.Prot
 
     private fun initializeBundleVariables(bundle: Bundle?): Boolean {
         if (bundle == null) {
+            Logger.e(TAG, "Failed to initialize - bundle is null")
             return false
         }
-
         isWaitingResult = bundle.getBoolean(IS_WAITING_FOR_RESULT, false)
-
-        var variablesLoaded = true
-
-        if (bundle.containsKey(DROP_IN_CONFIGURATION_KEY)) {
-            dropInViewModel.dropInConfiguration = bundle.getParcelable(DROP_IN_CONFIGURATION_KEY)!!
+        val dropInConfiguration: DropInConfiguration? = bundle.getParcelable(DROP_IN_CONFIGURATION_KEY)
+        val paymentMethodsApiResponse: PaymentMethodsApiResponse? = bundle.getParcelable(PAYMENT_METHODS_RESPONSE_KEY)
+        return if (dropInConfiguration != null && paymentMethodsApiResponse != null) {
+            dropInViewModel = getViewModel { DropInViewModel(paymentMethodsApiResponse, dropInConfiguration) }
+            true
         } else {
-            Logger.e(TAG, "DropInConfiguration not found")
-            variablesLoaded = false
+            Logger.e(
+                TAG,
+                "Failed to initialize bundle variables " +
+                    "- dropInConfiguration: ${if (dropInConfiguration == null) "null" else "exists"} " +
+                    "- paymentMethodsApiResponse: ${if (paymentMethodsApiResponse == null) "null" else "exists"}"
+            )
+            false
         }
-
-        if (bundle.containsKey(PAYMENT_METHODS_RESPONSE_KEY)) {
-            dropInViewModel.paymentMethodsApiResponse = bundle.getParcelable(PAYMENT_METHODS_RESPONSE_KEY)!!
-        } else {
-            Logger.e(TAG, "PaymentMethods response not found")
-            variablesLoaded = false
-        }
-
-        return variablesLoaded
     }
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
@@ -230,6 +224,7 @@ class DropInActivity : AppCompatActivity(), DropInBottomSheetDialogFragment.Prot
     }
 
     override fun showError(errorMessage: String, terminate: Boolean) {
+        Logger.d(TAG, "showError - $errorMessage")
         AlertDialog.Builder(this)
             .setTitle(R.string.error_dialog_title)
             .setMessage(errorMessage)
@@ -241,8 +236,7 @@ class DropInActivity : AppCompatActivity(), DropInBottomSheetDialogFragment.Prot
     override fun displayAction(action: Action) {
         Logger.d(TAG, "showActionDialog")
         setLoading(false)
-        hideFragmentDialog(PAYMENT_METHOD_FRAGMENT_TAG)
-        hideFragmentDialog(COMPONENT_FRAGMENT_TAG)
+        hideAllScreens()
         val actionFragment = ActionComponentDialogFragment.newInstance(action)
         actionFragment.show(supportFragmentManager, ACTION_FRAGMENT_TAG)
         actionFragment.setToHandleWhenStarting()
@@ -270,23 +264,46 @@ class DropInActivity : AppCompatActivity(), DropInBottomSheetDialogFragment.Prot
         setLoading(isWaitingResult)
     }
 
-    override fun showPaymentMethodsDialog(showInExpandStatus: Boolean) {
-        Logger.d(TAG, "showPaymentMethodsDialog")
-        hideFragmentDialog(COMPONENT_FRAGMENT_TAG)
-        hideFragmentDialog(ACTION_FRAGMENT_TAG)
-        PaymentMethodListDialogFragment.newInstance(showInExpandStatus).show(supportFragmentManager, PAYMENT_METHOD_FRAGMENT_TAG)
+    override fun showPreselectedDialog() {
+        Logger.d(TAG, "showPreselectedDialog")
+        hideAllScreens()
+        PreselectedStoredPaymentMethodFragment.newInstance(dropInViewModel.preselectedStoredPayment)
+            .show(supportFragmentManager, PRESELECTED_PAYMENT_METHOD_FRAGMENT_TAG)
     }
 
-    override fun showComponentDialog(paymentMethod: PaymentMethod, wasInExpandMode: Boolean) {
+    override fun showPaymentMethodsDialog() {
+        Logger.d(TAG, "showPaymentMethodsDialog")
+        hideAllScreens()
+        PaymentMethodListDialogFragment().show(supportFragmentManager, PAYMENT_METHODS_LIST_FRAGMENT_TAG)
+    }
+
+    override fun showStoredComponentDialog(storedPaymentMethod: StoredPaymentMethod, fromPreselected: Boolean) {
+        Logger.d(TAG, "showStoredComponentDialog")
+        hideAllScreens()
+        val dialogFragment = when (storedPaymentMethod.type) {
+            PaymentMethodTypes.SCHEME -> CardComponentDialogFragment
+            else -> GenericComponentDialogFragment
+        }.newInstance(storedPaymentMethod, dropInViewModel.dropInConfiguration, fromPreselected)
+
+        dialogFragment.show(supportFragmentManager, COMPONENT_FRAGMENT_TAG)
+    }
+
+    override fun showComponentDialog(paymentMethod: PaymentMethod) {
         Logger.d(TAG, "showComponentDialog")
-        hideFragmentDialog(PAYMENT_METHOD_FRAGMENT_TAG)
-        hideFragmentDialog(ACTION_FRAGMENT_TAG)
+        hideAllScreens()
         val dialogFragment = when (paymentMethod.type) {
             PaymentMethodTypes.SCHEME -> CardComponentDialogFragment
             else -> GenericComponentDialogFragment
-        }.newInstance(paymentMethod, dropInViewModel.dropInConfiguration, wasInExpandMode)
+        }.newInstance(paymentMethod, dropInViewModel.dropInConfiguration)
 
         dialogFragment.show(supportFragmentManager, COMPONENT_FRAGMENT_TAG)
+    }
+
+    private fun hideAllScreens() {
+        hideFragmentDialog(PRESELECTED_PAYMENT_METHOD_FRAGMENT_TAG)
+        hideFragmentDialog(PAYMENT_METHODS_LIST_FRAGMENT_TAG)
+        hideFragmentDialog(COMPONENT_FRAGMENT_TAG)
+        hideFragmentDialog(ACTION_FRAGMENT_TAG)
     }
 
     override fun terminateDropIn() {
@@ -302,7 +319,7 @@ class DropInActivity : AppCompatActivity(), DropInBottomSheetDialogFragment.Prot
         googlePayComponent.observe(this@DropInActivity, googlePayObserver)
         googlePayComponent.observeErrors(this@DropInActivity, googlePayErrorObserver)
 
-        hideFragmentDialog(PAYMENT_METHOD_FRAGMENT_TAG)
+        hideFragmentDialog(PAYMENT_METHODS_LIST_FRAGMENT_TAG)
         googlePayComponent.startGooglePayScreen(this, GOOGLE_PAY_REQUEST_CODE)
     }
 
@@ -397,6 +414,15 @@ class DropInActivity : AppCompatActivity(), DropInBottomSheetDialogFragment.Prot
             }
         } else {
             getFragmentByTag(LOADING_FRAGMENT_TAG)?.dismiss()
+        }
+    }
+
+    companion object {
+        fun createIntent(context: Context, dropInConfiguration: DropInConfiguration, paymentMethodsApiResponse: PaymentMethodsApiResponse): Intent {
+            val intent = Intent(context, DropInActivity::class.java)
+            intent.putExtra(PAYMENT_METHODS_RESPONSE_KEY, paymentMethodsApiResponse)
+            intent.putExtra(DROP_IN_CONFIGURATION_KEY, dropInConfiguration)
+            return intent
         }
     }
 }

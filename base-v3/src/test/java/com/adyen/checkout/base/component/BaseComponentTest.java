@@ -11,18 +11,17 @@ package com.adyen.checkout.base.component;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
+import androidx.annotation.NonNull;
 import androidx.arch.core.executor.testing.InstantTaskExecutorRule;
 import androidx.lifecycle.Lifecycle;
 import androidx.lifecycle.LifecycleOwner;
 import androidx.lifecycle.LifecycleRegistry;
-import androidx.lifecycle.Observer;
-import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
 
 import com.adyen.checkout.base.DataProvider;
 import com.adyen.checkout.base.PaymentComponentState;
 import com.adyen.checkout.base.model.paymentmethods.PaymentMethod;
 import com.adyen.checkout.base.model.payments.request.PaymentComponentData;
+import com.adyen.checkout.base.model.payments.request.PaymentMethodDetails;
 import com.adyen.checkout.base.models.TestConfiguration;
 import com.adyen.checkout.base.models.TestInputData;
 import com.adyen.checkout.base.models.TestOutputData;
@@ -42,9 +41,10 @@ public class BaseComponentTest {
     @Rule
     public TestRule rule = new InstantTaskExecutorRule();
 
-    BasePaymentComponent<TestConfiguration, TestInputData, TestOutputData, PaymentComponentState> mBaseComponent;
+    BasePaymentComponent<TestConfiguration, TestInputData, TestOutputData, PaymentComponentState<? extends PaymentMethodDetails>> mBaseComponent;
 
     PaymentMethod paymentMethod;
+    PaymentMethodDelegateTest mPaymentMethodDelegateTest = new PaymentMethodDelegateTest();
     ClassLoader classLoader;
 
     @Before
@@ -55,10 +55,10 @@ public class BaseComponentTest {
 
     @Test(expected = IllegalArgumentException.class)
     public void initBaseComponent_notSupportedPaymentMethod_expectException() throws IOException, JSONException {
-        mBaseComponent = new BasePaymentComponent<TestConfiguration, TestInputData, TestOutputData, PaymentComponentState>(
-                DataProvider.getPaymentMethodResponse(
-                        classLoader).getPaymentMethods().get(0),
-                null) {
+        mBaseComponent = new BasePaymentComponent<
+                TestConfiguration, TestInputData, TestOutputData, PaymentComponentState<? extends PaymentMethodDetails>>(
+                    new PaymentMethodDelegateTest(),
+                    null) {
             @NonNull
             @Override
             protected TestOutputData onInputDataChanged(@NonNull TestInputData inputData) {
@@ -67,7 +67,7 @@ public class BaseComponentTest {
 
             @NonNull
             @Override
-            protected PaymentComponentState createComponentState() {
+            protected PaymentComponentState<? extends PaymentMethodDetails> createComponentState() {
                 return null;
             }
 
@@ -83,12 +83,7 @@ public class BaseComponentTest {
     public void initBaseComponent_SupportedPaymentMethod_expectOutputData() {
         mBaseComponent = getBaseComponent();
 
-        mBaseComponent.observeOutputData(mockLifecycleOwner(), new Observer<TestOutputData>() {
-            @Override
-            public void onChanged(@Nullable TestOutputData testOutputData) {
-                Assert.assertNotNull(testOutputData);
-            }
-        });
+        mBaseComponent.observeOutputData(mockLifecycleOwner(), Assert::assertNotNull);
         Assert.assertNull(mBaseComponent.getOutputData());
     }
 
@@ -97,12 +92,7 @@ public class BaseComponentTest {
         mBaseComponent = getBaseComponent();
         mBaseComponent.inputDataChanged(new TestInputData());
 
-        mBaseComponent.observe(mockLifecycleOwner(), new Observer<PaymentComponentState>() {
-            @Override
-            public void onChanged(@Nullable PaymentComponentState paymentComponentState) {
-                Assert.assertNotNull(paymentComponentState.getData());
-            }
-        });
+        mBaseComponent.observe(mockLifecycleOwner(), paymentComponentState -> Assert.assertNotNull(paymentComponentState.getData()));
     }
 
     @Test
@@ -110,17 +100,13 @@ public class BaseComponentTest {
         mBaseComponent = getBaseComponent();
         mBaseComponent.inputDataChanged(new TestInputData(false));
 
-        mBaseComponent.observe(mockLifecycleOwner(), new Observer<PaymentComponentState>() {
-            @Override
-            public void onChanged(@Nullable PaymentComponentState paymentComponentState) {
-                Assert.assertEquals(1, 1);
-            }
-        });
+        mBaseComponent.observe(mockLifecycleOwner(), paymentComponentState -> Assert.assertEquals(1, 1));
     }
 
-    private BasePaymentComponent getBaseComponent() {
-        BasePaymentComponent baseComponent = new BasePaymentComponent<TestConfiguration, TestInputData, TestOutputData, PaymentComponentState>(
-                paymentMethod, null) {
+    private BasePaymentComponent<TestConfiguration, TestInputData, TestOutputData, PaymentComponentState<? extends PaymentMethodDetails>> getBaseComponent() {
+        BasePaymentComponent<TestConfiguration, TestInputData, TestOutputData, PaymentComponentState<? extends PaymentMethodDetails>> baseComponent =
+                new BasePaymentComponent<TestConfiguration, TestInputData, TestOutputData, PaymentComponentState<? extends PaymentMethodDetails>>
+                        (mPaymentMethodDelegateTest, null) {
             @NonNull
             @Override
             protected TestOutputData onInputDataChanged(@NonNull TestInputData inputData) {
@@ -139,7 +125,7 @@ public class BaseComponentTest {
             @NonNull
             @Override
             public String[] getSupportedPaymentMethodTypes() {
-                return new String[]{paymentMethod.getType()};
+                return new String[]{""};
             }
         };
 

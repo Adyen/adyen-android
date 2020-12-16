@@ -11,15 +11,14 @@ package com.adyen.checkout.googlepay;
 import android.app.Application;
 
 import androidx.annotation.NonNull;
-import androidx.fragment.app.Fragment;
-import androidx.fragment.app.FragmentActivity;
-import androidx.lifecycle.ViewModelProviders;
+import androidx.lifecycle.ViewModelProvider;
+import androidx.lifecycle.ViewModelStoreOwner;
 
 import com.adyen.checkout.base.ComponentAvailableCallback;
 import com.adyen.checkout.base.PaymentComponentProvider;
+import com.adyen.checkout.base.component.GenericPaymentMethodDelegate;
 import com.adyen.checkout.base.component.lifecycle.PaymentComponentViewModelFactory;
 import com.adyen.checkout.base.model.paymentmethods.PaymentMethod;
-import com.adyen.checkout.core.exception.CheckoutException;
 import com.adyen.checkout.googlepay.util.GooglePayUtils;
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.GoogleApiAvailability;
@@ -33,20 +32,16 @@ import java.lang.ref.WeakReference;
 
 public class GooglePayProvider implements PaymentComponentProvider<GooglePayComponent, GooglePayConfiguration> {
 
-    @NonNull
+    @SuppressWarnings("LambdaLast")
     @Override
-    public GooglePayComponent get(@NonNull FragmentActivity activity, @NonNull PaymentMethod paymentMethod,
-            @NonNull GooglePayConfiguration configuration) throws CheckoutException {
-        final PaymentComponentViewModelFactory factory = new PaymentComponentViewModelFactory(paymentMethod, configuration);
-        return ViewModelProviders.of(activity, factory).get(GooglePayComponent.class);
-    }
-
     @NonNull
-    @Override
-    public GooglePayComponent get(@NonNull Fragment fragment, @NonNull PaymentMethod paymentMethod, @NonNull GooglePayConfiguration configuration)
-            throws CheckoutException {
-        final PaymentComponentViewModelFactory factory = new PaymentComponentViewModelFactory(paymentMethod, configuration);
-        return ViewModelProviders.of(fragment, factory).get(GooglePayComponent.class);
+    public GooglePayComponent get(
+            @NonNull ViewModelStoreOwner viewModelStoreOwner,
+            @NonNull PaymentMethod paymentMethod,
+            @NonNull GooglePayConfiguration configuration) {
+        final PaymentComponentViewModelFactory factory =
+                new PaymentComponentViewModelFactory(new GenericPaymentMethodDelegate(paymentMethod), configuration);
+        return new ViewModelProvider(viewModelStoreOwner, factory).get(GooglePayComponent.class);
     }
 
     @Override

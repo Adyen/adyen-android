@@ -8,13 +8,10 @@
 
 package com.adyen.checkout.mbway;
 
-import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.res.TypedArray;
-import android.text.Editable;
 import android.util.AttributeSet;
 import android.view.LayoutInflater;
-import android.view.View;
 import android.widget.LinearLayout;
 
 import androidx.annotation.NonNull;
@@ -23,9 +20,9 @@ import androidx.lifecycle.LifecycleOwner;
 import androidx.lifecycle.Observer;
 
 import com.adyen.checkout.base.PaymentComponentState;
+import com.adyen.checkout.base.model.payments.request.MBWayPaymentMethod;
 import com.adyen.checkout.base.ui.view.AdyenLinearLayout;
 import com.adyen.checkout.base.ui.view.AdyenTextInputEditText;
-import com.adyen.checkout.core.code.Lint;
 import com.adyen.checkout.core.exception.CheckoutException;
 import com.adyen.checkout.core.log.LogUtil;
 import com.adyen.checkout.core.log.Logger;
@@ -33,23 +30,18 @@ import com.adyen.checkout.mbway.ui.R;
 import com.google.android.material.textfield.TextInputLayout;
 
 @SuppressWarnings("AbbreviationAsWordInName")
-public class MBWayView extends AdyenLinearLayout<MBWayOutputData, MBWayConfiguration, PaymentComponentState, MBWayComponent>
+public class MBWayView
+        extends AdyenLinearLayout<MBWayOutputData, MBWayConfiguration, PaymentComponentState<MBWayPaymentMethod>, MBWayComponent>
         implements Observer<MBWayOutputData> {
     private static final String TAG = LogUtil.getTag();
 
-    @SuppressLint(Lint.SYNTHETIC)
     MBWayInputData mMBWayInputData = new MBWayInputData();
 
-    @SuppressLint(Lint.SYNTHETIC)
     TextInputLayout mEmailInput;
-    @SuppressLint(Lint.SYNTHETIC)
     TextInputLayout mMobileNumberInput;
 
-    @SuppressLint(Lint.SYNTHETIC)
     AdyenTextInputEditText mEmailEditText;
-    @SuppressLint(Lint.SYNTHETIC)
     AdyenTextInputEditText mMobileNumberEditText;
-
 
     public MBWayView(@NonNull Context context) {
         this(context, null);
@@ -71,7 +63,6 @@ public class MBWayView extends AdyenLinearLayout<MBWayOutputData, MBWayConfigura
         final int padding = (int) getResources().getDimension(R.dimen.standard_margin);
         setPadding(padding, padding, padding, 0);
     }
-
 
 
     @Override
@@ -101,45 +92,33 @@ public class MBWayView extends AdyenLinearLayout<MBWayOutputData, MBWayConfigura
             throw new CheckoutException("Could not find views inside layout.");
         }
 
-        mEmailEditText.setOnChangeListener(new AdyenTextInputEditText.Listener() {
-            @Override
-            public void onTextChanged(@NonNull Editable editable) {
-                mMBWayInputData.setEmail(mEmailEditText.getRawValue());
-                notifyInputDataChanged();
+        mEmailEditText.setOnChangeListener(editable -> {
+            mMBWayInputData.setEmail(mEmailEditText.getRawValue());
+            notifyInputDataChanged();
+            mEmailInput.setError(null);
+        });
+
+        mMobileNumberEditText.setOnChangeListener(editable -> {
+            mMBWayInputData.setMobilePhoneNumber(mMobileNumberEditText.getRawValue());
+            notifyInputDataChanged();
+            mMobileNumberInput.setError(null);
+        });
+
+        mEmailEditText.setOnFocusChangeListener((v, hasFocus) -> {
+            final MBWayOutputData outputData = getComponent().getOutputData();
+            if (hasFocus) {
                 mEmailInput.setError(null);
+            } else if (outputData != null && !outputData.getEmailField().isValid()) {
+                mEmailInput.setError(mLocalizedContext.getString(R.string.checkout_mbway_email_not_valid));
             }
         });
 
-        mMobileNumberEditText.setOnChangeListener(new AdyenTextInputEditText.Listener() {
-            @Override
-            public void onTextChanged(@NonNull Editable editable) {
-                mMBWayInputData.setMobilePhoneNumber(mMobileNumberEditText.getRawValue());
-                notifyInputDataChanged();
+        mMobileNumberEditText.setOnFocusChangeListener((v, hasFocus) -> {
+            final MBWayOutputData outputData = getComponent().getOutputData();
+            if (hasFocus) {
                 mMobileNumberInput.setError(null);
-            }
-        });
-
-        mEmailEditText.setOnFocusChangeListener(new OnFocusChangeListener() {
-            @Override
-            public void onFocusChange(View v, boolean hasFocus) {
-                final MBWayOutputData outputData = getComponent().getOutputData();
-                if (hasFocus) {
-                    mEmailInput.setError(null);
-                } else if (outputData != null && !outputData.getEmailField().isValid()) {
-                    mEmailInput.setError(mLocalizedContext.getString(R.string.checkout_mbway_email_not_valid));
-                }
-            }
-        });
-
-        mMobileNumberEditText.setOnFocusChangeListener(new OnFocusChangeListener() {
-            @Override
-            public void onFocusChange(View v, boolean hasFocus) {
-                final MBWayOutputData outputData = getComponent().getOutputData();
-                if (hasFocus) {
-                    mMobileNumberInput.setError(null);
-                } else if (outputData != null && !outputData.getMobilePhoneNumberField().isValid()) {
-                    mMobileNumberInput.setError(mLocalizedContext.getString(R.string.checkout_mbway_phone_number_not_valid));
-                }
+            } else if (outputData != null && !outputData.getMobilePhoneNumberField().isValid()) {
+                mMobileNumberInput.setError(mLocalizedContext.getString(R.string.checkout_mbway_phone_number_not_valid));
             }
         });
     }
@@ -191,7 +170,6 @@ public class MBWayView extends AdyenLinearLayout<MBWayOutputData, MBWayConfigura
         }
     }
 
-    @SuppressLint(Lint.SYNTHETIC)
     void notifyInputDataChanged() {
         getComponent().inputDataChanged(mMBWayInputData);
     }

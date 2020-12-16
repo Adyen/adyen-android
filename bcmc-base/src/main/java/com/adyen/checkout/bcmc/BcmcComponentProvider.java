@@ -12,29 +12,27 @@ import android.app.Application;
 import android.text.TextUtils;
 
 import androidx.annotation.NonNull;
-import androidx.fragment.app.Fragment;
-import androidx.fragment.app.FragmentActivity;
-import androidx.lifecycle.ViewModelProviders;
+import androidx.lifecycle.ViewModelProvider;
+import androidx.lifecycle.ViewModelStoreOwner;
 
 import com.adyen.checkout.base.ComponentAvailableCallback;
 import com.adyen.checkout.base.PaymentComponentProvider;
+import com.adyen.checkout.base.component.GenericPaymentMethodDelegate;
 import com.adyen.checkout.base.component.lifecycle.PaymentComponentViewModelFactory;
 import com.adyen.checkout.base.model.paymentmethods.PaymentMethod;
 
 public class BcmcComponentProvider implements PaymentComponentProvider<BcmcComponent, BcmcConfiguration> {
 
-    @NonNull
+    @SuppressWarnings("LambdaLast")
     @Override
-    public BcmcComponent get(@NonNull FragmentActivity activity, @NonNull PaymentMethod paymentMethod, @NonNull BcmcConfiguration configuration) {
-        final PaymentComponentViewModelFactory factory = new PaymentComponentViewModelFactory(paymentMethod, configuration);
-        return ViewModelProviders.of(activity, factory).get(BcmcComponent.class);
-    }
-
     @NonNull
-    @Override
-    public BcmcComponent get(@NonNull Fragment fragment, @NonNull PaymentMethod paymentMethod, @NonNull BcmcConfiguration configuration) {
-        final PaymentComponentViewModelFactory factory = new PaymentComponentViewModelFactory(paymentMethod, configuration);
-        return ViewModelProviders.of(fragment, factory).get(BcmcComponent.class);
+    public BcmcComponent get(
+            @NonNull ViewModelStoreOwner viewModelStoreOwner,
+            @NonNull PaymentMethod paymentMethod,
+            @NonNull BcmcConfiguration configuration) {
+        final PaymentComponentViewModelFactory factory =
+                new PaymentComponentViewModelFactory(new GenericPaymentMethodDelegate(paymentMethod), configuration);
+        return new ViewModelProvider(viewModelStoreOwner, factory).get(BcmcComponent.class);
     }
 
     @Override

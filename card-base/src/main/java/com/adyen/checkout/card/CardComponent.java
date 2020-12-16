@@ -13,11 +13,8 @@ import android.text.TextUtils;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 
-import com.adyen.checkout.base.PaymentComponentProvider;
+import com.adyen.checkout.base.StoredPaymentComponentProvider;
 import com.adyen.checkout.base.component.BasePaymentComponent;
-import com.adyen.checkout.base.model.paymentmethods.InputDetail;
-import com.adyen.checkout.base.model.paymentmethods.PaymentMethod;
-import com.adyen.checkout.base.model.paymentmethods.StoredPaymentMethod;
 import com.adyen.checkout.base.model.payments.request.CardPaymentMethod;
 import com.adyen.checkout.base.model.payments.request.PaymentComponentData;
 import com.adyen.checkout.base.util.PaymentMethodTypes;
@@ -33,7 +30,9 @@ import com.adyen.checkout.cse.Encryptor;
 
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 public final class CardComponent extends BasePaymentComponent<
         CardConfiguration,
@@ -42,10 +41,18 @@ public final class CardComponent extends BasePaymentComponent<
         CardComponentState> {
     private static final String TAG = LogUtil.getTag();
 
-    public static final PaymentComponentProvider<CardComponent, CardConfiguration> PROVIDER = new CardComponentProvider();
+    public static final StoredPaymentComponentProvider<CardComponent, CardConfiguration> PROVIDER = new CardComponentProvider();
 
     private static final String[] PAYMENT_METHOD_TYPES = {PaymentMethodTypes.SCHEME};
     private static final int BIN_VALUE_LENGTH = 6;
+
+    private static final Set<CardType> NO_CVC_BRANDS;
+
+    static {
+        final HashSet<CardType> brandSet = new HashSet<>();
+        brandSet.add(CardType.BCMC);
+        NO_CVC_BRANDS = Collections.unmodifiableSet(brandSet);
+    }
 
     private List<CardType> mFilteredSupportedCards = Collections.emptyList();
     private CardInputData mStoredPaymentInputData;
@@ -53,46 +60,44 @@ public final class CardComponent extends BasePaymentComponent<
     /**
      * Constructs a {@link CardComponent} object.
      *
-     * @param paymentMethod {@link PaymentMethod} represents card payment method.
+     * @param storedCardDelegate {@link StoredCardDelegate} represents stored card.
      * @param configuration {@link CardConfiguration}.
      */
-    public CardComponent(@NonNull StoredPaymentMethod paymentMethod, @NonNull CardConfiguration configuration) {
-        super(paymentMethod, configuration);
+    public CardComponent(@NonNull StoredCardDelegate storedCardDelegate, @NonNull CardConfiguration configuration) {
+        super(storedCardDelegate, configuration);
 
-        mStoredPaymentInputData = new CardInputData();
-        mStoredPaymentInputData.setCardNumber(paymentMethod.getLastFour());
+        mStoredPaymentInputData = storedCardDelegate.getStoredCardInputData();
 
-        try {
-            final ExpiryDate storedDate = new ExpiryDate(
-                    Integer.parseInt(paymentMethod.getExpiryMonth()),
-                    Integer.parseInt(paymentMethod.getExpiryYear())
-            );
-            mStoredPaymentInputData.setExpiryDate(storedDate);
-        } catch (NumberFormatException e) {
-            Logger.e(TAG, "Failed to parse stored Date", e);
-            mStoredPaymentInputData.setExpiryDate(ExpiryDate.EMPTY_DATE);
-        }
-
-        final CardType cardType = CardType.getCardTypeByTxVariant(paymentMethod.getBrand());
+        final CardType cardType = storedCardDelegate.getCardType();
         if (cardType != null) {
             final List<CardType> storedCardType = new ArrayList<>();
             storedCardType.add(cardType);
             mFilteredSupportedCards = Collections.unmodifiableList(storedCardType);
+        }
+
+        // TODO: 09/12/2020 move this logic to base component, maybe create the inputdata from the delegate?
+        if (!requiresInput()) {
+            inputDataChanged(new CardInputData());
         }
     }
 
     /**
      * Constructs a {@link CardComponent} object.
      *
-     * @param paymentMethod {@link PaymentMethod} represents card payment method.
+     * @param cardDelegate {@link CardDelegate} represents card payment method.
      * @param configuration {@link CardConfiguration}.
      */
-    public CardComponent(@NonNull PaymentMethod paymentMethod, @NonNull CardConfiguration configuration) {
-        super(paymentMethod, configuration);
+    public CardComponent(@NonNull CardDelegate cardDelegate, @NonNull CardConfiguration configuration) {
+        super(cardDelegate, configuration);
     }
 
     public boolean isStoredPaymentMethod() {
         return mStoredPaymentInputData != null;
+    }
+
+    @Override
+    public boolean requiresInput() {
+        return !(isStoredPaymentMethod() && mConfiguration.isHideCvcStoredCard());
     }
 
     @Nullable
@@ -123,7 +128,8 @@ public final class CardComponent extends BasePaymentComponent<
                 validateExpiryDate(inputData.getExpiryDate()),
                 validateSecurityCode(inputData.getSecurityCode()),
                 validateHolderName(inputData.getHolderName()),
-                inputData.isStorePaymentEnable()
+                inputData.isStorePaymentEnable(),
+                isCvcHidden()
         );
     }
 
@@ -163,7 +169,9 @@ public final class CardComponent extends BasePaymentComponent<
                 card.setNumber(outputData.getCardNumberField().getValue());
             }
 
-            card.setSecurityCode(outputData.getSecurityCodeField().getValue());
+            if (!isCvcHidden()) {
+                card.setSecurityCode(outputData.getSecurityCodeField().getValue());
+            }
 
             final ExpiryDate expiryDateResult = outputData.getExpiryDateField().getValue();
 
@@ -182,10 +190,12 @@ public final class CardComponent extends BasePaymentComponent<
             cardPaymentMethod.setEncryptedExpiryMonth(encryptedCard.getEncryptedExpiryMonth());
             cardPaymentMethod.setEncryptedExpiryYear(encryptedCard.getEncryptedExpiryYear());
         } else {
-            cardPaymentMethod.setStoredPaymentMethodId(((StoredPaymentMethod) getPaymentMethod()).getId());
+            cardPaymentMethod.setStoredPaymentMethodId(((StoredCardDelegate) mPaymentMethodDelegate).getId());
         }
 
-        cardPaymentMethod.setEncryptedSecurityCode(encryptedCard.getEncryptedSecurityCode());
+        if (!isCvcHidden()) {
+            cardPaymentMethod.setEncryptedSecurityCode(encryptedCard.getEncryptedSecurityCode());
+        }
 
         if (isHolderNameRequire()) {
             cardPaymentMethod.setHolderName(outputData.getHolderNameField().getValue());
@@ -243,14 +253,24 @@ public final class CardComponent extends BasePaymentComponent<
     }
 
     private ValidatedField<String> validateSecurityCode(@NonNull String securityCode) {
-        final InputDetail securityCodeInputDetail = getInputDetail("cvc");
-        final boolean isRequired = securityCodeInputDetail == null || !securityCodeInputDetail.isOptional();
-        if (isRequired) {
+        if (isCvcHidden()) {
+            return new ValidatedField<>(securityCode, ValidatedField.Validation.VALID);
+        } else {
             final CardType firstCardType = !mFilteredSupportedCards.isEmpty() ? mFilteredSupportedCards.get(0) : null;
             return CardValidationUtils.validateSecurityCode(securityCode, firstCardType);
-        } else {
-            return new ValidatedField<>(securityCode, ValidatedField.Validation.VALID);
         }
+    }
+
+    private boolean isCvcHidden() {
+        if (isStoredPaymentMethod()) {
+            return getConfiguration().isHideCvcStoredCard() || isBrandWithoutCvc(((StoredCardDelegate) mPaymentMethodDelegate).getCardType());
+        } else {
+            return getConfiguration().isHideCvc();
+        }
+    }
+
+    private boolean isBrandWithoutCvc(@NonNull CardType cardType) {
+        return NO_CVC_BRANDS.contains(cardType);
     }
 
     private ValidatedField<String> validateHolderName(@NonNull String holderName) {
@@ -259,20 +279,6 @@ public final class CardComponent extends BasePaymentComponent<
         } else {
             return new ValidatedField<>(holderName, ValidatedField.Validation.VALID);
         }
-    }
-
-    @Nullable
-    private InputDetail getInputDetail(@NonNull String key) {
-        final List<InputDetail> details = getPaymentMethod().getDetails();
-        if (details != null) {
-            for (InputDetail inputDetail : getPaymentMethod().getDetails()) {
-                if (key.equals(inputDetail.getKey())) {
-                    return inputDetail;
-                }
-            }
-        }
-
-        return null;
     }
 
     private String getBinValueFromCardNumber(String cardNumber) {

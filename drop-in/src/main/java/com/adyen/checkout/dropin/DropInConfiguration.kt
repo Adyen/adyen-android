@@ -13,13 +13,13 @@ import android.content.Context
 import android.content.Intent
 import android.os.Parcel
 import android.os.Parcelable
-import com.adyen.checkout.afterpay.AfterPayConfiguration
 import com.adyen.checkout.base.component.Configuration
 import com.adyen.checkout.base.model.payments.Amount
 import com.adyen.checkout.base.util.CheckoutCurrency
 import com.adyen.checkout.base.util.PaymentMethodTypes
 import com.adyen.checkout.base.util.ValidationUtils
 import com.adyen.checkout.bcmc.BcmcConfiguration
+import com.adyen.checkout.blik.BlikConfiguration
 import com.adyen.checkout.card.CardConfiguration
 import com.adyen.checkout.core.api.Environment
 import com.adyen.checkout.core.exception.CheckoutException
@@ -118,16 +118,13 @@ class DropInConfiguration : Configuration, Parcelable {
 
         private var shopperLocale: Locale
         private var environment: Environment = Environment.EUROPE
-        private var clientKey: String = DEFAULT_EMPTY_CLIENT_KEY
+        private var clientKey: String = ""
         private var serviceComponentName: ComponentName
         private var resultHandlerIntent: Intent
         private var amount: Amount = Amount.EMPTY
 
         private val packageName: String
         private val serviceClassName: String
-
-        @Deprecated("You need to pass resultHandlerIntent to drop-in configuration")
-        constructor(context: Context, serviceClass: Class<out Any?>) : this(context, Intent(), serviceClass)
 
         /**
          * @param context
@@ -288,7 +285,7 @@ class DropInConfiguration : Configuration, Parcelable {
         }
 
         /**
-         * Add configuration for Sepa payment method.
+         * Add configuration for BCMC payment method.
          */
         fun addBcmcConfiguration(bcmcConfiguration: BcmcConfiguration): Builder {
             availableConfigs[PaymentMethodTypes.BCMC] = bcmcConfiguration
@@ -296,15 +293,18 @@ class DropInConfiguration : Configuration, Parcelable {
         }
 
         /**
-         * Add configuration for Sepa payment method.
+         * Add configuration for MB WAY payment method.
          */
-        fun addAfterPayConfiguration(afterPayConfiguration: AfterPayConfiguration): Builder {
-            availableConfigs[PaymentMethodTypes.AFTER_PAY] = afterPayConfiguration
+        fun addMBWayConfiguration(mbwayConfiguration: MBWayConfiguration): Builder {
+            availableConfigs[PaymentMethodTypes.MB_WAY] = mbwayConfiguration
             return this
         }
 
-        fun addMBWayConfiguration(mbwayConfiguration: MBWayConfiguration): Builder {
-            availableConfigs[PaymentMethodTypes.MB_WAY] = mbwayConfiguration
+        /**
+         * Add configuration for Blik payment method.
+         */
+        fun addBlikConfiguration(blikConfiguration: BlikConfiguration): Builder {
+            availableConfigs[PaymentMethodTypes.BLIK] = blikConfiguration
             return this
         }
 

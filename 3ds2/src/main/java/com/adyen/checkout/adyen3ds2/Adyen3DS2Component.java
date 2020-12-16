@@ -29,10 +29,10 @@ import com.adyen.checkout.base.component.ActionComponentProviderImpl;
 import com.adyen.checkout.base.component.BaseActionComponent;
 import com.adyen.checkout.base.encoding.Base64Encoder;
 import com.adyen.checkout.base.model.payments.response.Action;
+import com.adyen.checkout.base.model.payments.response.Threeds2Action;
 import com.adyen.checkout.base.model.payments.response.Threeds2ChallengeAction;
 import com.adyen.checkout.base.model.payments.response.Threeds2FingerprintAction;
 import com.adyen.checkout.core.api.ThreadManager;
-import com.adyen.checkout.core.code.Lint;
 import com.adyen.checkout.core.exception.CheckoutException;
 import com.adyen.checkout.core.exception.ComponentException;
 import com.adyen.checkout.core.log.LogUtil;
@@ -60,8 +60,8 @@ import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 
+@SuppressWarnings("PMD.GodClass")
 public final class Adyen3DS2Component extends BaseActionComponent<Adyen3DS2Configuration> implements ChallengeStatusReceiver {
-    @SuppressWarnings(Lint.SYNTHETIC)
     static final String TAG = LogUtil.getTag();
 
     public static final ActionComponentProvider<Adyen3DS2Component> PROVIDER =
@@ -73,10 +73,8 @@ public final class Adyen3DS2Component extends BaseActionComponent<Adyen3DS2Confi
     private static final int DEFAULT_CHALLENGE_TIME_OUT = 10;
     private static boolean sGotDestroyedWhileChallenging = false;
 
-    @SuppressWarnings(Lint.SYNTHETIC)
     Transaction mTransaction;
 
-    @SuppressWarnings(Lint.SYNTHETIC)
     UiCustomization mUiCustomization;
 
     public Adyen3DS2Component(@NonNull Application application, @Nullable Adyen3DS2Configuration configuration) {
@@ -118,7 +116,7 @@ public final class Adyen3DS2Component extends BaseActionComponent<Adyen3DS2Confi
     @Override
     @NonNull
     protected List<String> getSupportedActionTypes() {
-        final String[] supportedCodes = {Threeds2FingerprintAction.ACTION_TYPE, Threeds2ChallengeAction.ACTION_TYPE};
+        final String[] supportedCodes = {Threeds2FingerprintAction.ACTION_TYPE, Threeds2ChallengeAction.ACTION_TYPE, Threeds2Action.ACTION_TYPE};
         return Collections.unmodifiableList(Arrays.asList(supportedCodes));
     }
 
@@ -138,7 +136,31 @@ public final class Adyen3DS2Component extends BaseActionComponent<Adyen3DS2Confi
                 throw new ComponentException("Challenge token not found.");
             }
             challengeShopper(activity, challengeAction.getToken());
+        } else if (Threeds2Action.ACTION_TYPE.equals(action.getType())) {
+            final Threeds2Action threeds2Action = (Threeds2Action) action;
+            if (TextUtils.isEmpty(threeds2Action.getToken())) {
+                throw new ComponentException("3DS2 token not found.");
+            }
+            final Threeds2Action.SubType subtype = threeds2Action.getSubtypeEnum();
+            if (subtype == null) {
+                throw new ComponentException("3DS2 subtype not found.");
+            }
+            handleActionSubtype(activity, subtype, threeds2Action.getToken());
         }
+    }
+
+    private void handleActionSubtype(@NonNull Activity activity, Threeds2Action.SubType subtype, String token) {
+        switch (subtype) {
+            case FINGERPRINT:
+                identifyShopper(activity, token);
+                break;
+            case CHALLENGE:
+                challengeShopper(activity, token);
+                break;
+            default:
+                break;
+        }
+
     }
 
     @Override
@@ -169,7 +191,11 @@ public final class Adyen3DS2Component extends BaseActionComponent<Adyen3DS2Confi
 
     @Override
     public void protocolError(@NonNull ProtocolErrorEvent protocolErrorEvent) {
-        Logger.d(TAG, "protocolError");
+        Logger.e(TAG, "protocolError - "
+                + protocolErrorEvent.getErrorMessage().getErrorCode() + " - "
+                + protocolErrorEvent.getErrorMessage().getErrorDescription() + " - "
+                + protocolErrorEvent.getErrorMessage().getErrorDetails()
+        );
         notifyException(new Authentication3DS2Exception("Protocol Error - " + protocolErrorEvent.getErrorMessage()));
         closeTransaction(getApplication());
     }
@@ -197,42 +223,34 @@ public final class Adyen3DS2Component extends BaseActionComponent<Adyen3DS2Confi
                 fingerprintToken.getDirectoryServerPublicKey()).build();
 
 
-        ThreadManager.EXECUTOR.submit(new Runnable() {
-            @Override
-            public void run() {
-                try {
-                    Logger.d(TAG, "initialize 3DS2 SDK");
-                    synchronized (Adyen3DS2Component.this) {
-                        ThreeDS2Service.INSTANCE.initialize(context, configParameters, null, mUiCustomization);
-                    }
-                } catch (final SDKRuntimeException e) {
-                    notifyException(new ComponentException("Failed to initialize 3DS2 SDK", e));
-                    return;
-                } catch (SDKAlreadyInitializedException e) {
-                    // This shouldn't cause any side effect.
-                    Logger.w(TAG, "3DS2 Service already initialized.");
+        ThreadManager.EXECUTOR.submit(() -> {
+            try {
+                Logger.d(TAG, "initialize 3DS2 SDK");
+                synchronized (this) {
+                    ThreeDS2Service.INSTANCE.initialize(context, configParameters, null, mUiCustomization);
                 }
-
-                try {
-                    Logger.d(TAG, "create transaction");
-                    mTransaction = ThreeDS2Service.INSTANCE.createTransaction(null, null);
-                } catch (final SDKNotInitializedException | SDKRuntimeException e) {
-                    notifyException(new ComponentException("Failed to create 3DS2 Transaction", e));
-                    return;
-                }
-
-                final AuthenticationRequestParameters authenticationRequestParameters = mTransaction.getAuthenticationRequestParameters();
-
-                final String encodedFingerprint = createEncodedFingerprint(authenticationRequestParameters);
-
-                ThreadManager.MAIN_HANDLER.post(new Runnable() {
-                        @Override
-                        public void run() {
-                            notifyDetails(createFingerprintDetails(encodedFingerprint));
-                        }
-                    }
-                );
+            } catch (final SDKRuntimeException e) {
+                notifyException(new ComponentException("Failed to initialize 3DS2 SDK", e));
+                return;
+            } catch (SDKAlreadyInitializedException e) {
+                // This shouldn't cause any side effect.
+                Logger.w(TAG, "3DS2 Service already initialized.");
             }
+
+            try {
+                Logger.d(TAG, "create transaction");
+                // TODO: 10/11/2020 Get protocol version from Checkout API instead
+                mTransaction = ThreeDS2Service.INSTANCE.createTransaction(null, getConfiguration().getProtocolVersion());
+            } catch (final SDKNotInitializedException | SDKRuntimeException e) {
+                notifyException(new ComponentException("Failed to create 3DS2 Transaction", e));
+                return;
+            }
+
+            final AuthenticationRequestParameters authenticationRequestParameters = mTransaction.getAuthenticationRequestParameters();
+
+            final String encodedFingerprint = createEncodedFingerprint(authenticationRequestParameters);
+
+            ThreadManager.MAIN_HANDLER.post(() -> notifyDetails(createFingerprintDetails(encodedFingerprint)));
         });
     }
 
@@ -264,7 +282,6 @@ public final class Adyen3DS2Component extends BaseActionComponent<Adyen3DS2Confi
     }
 
     @NonNull
-    @SuppressWarnings(Lint.SYNTHETIC)
     String createEncodedFingerprint(AuthenticationRequestParameters authenticationRequestParameters) throws ComponentException {
 
         final JSONObject fingerprintJson = new JSONObject();
@@ -306,7 +323,6 @@ public final class Adyen3DS2Component extends BaseActionComponent<Adyen3DS2Confi
         }
     }
 
-    @SuppressWarnings(Lint.SYNTHETIC)
     JSONObject createFingerprintDetails(String encodedFingerprint) throws ComponentException {
         final JSONObject fingerprintDetails = new JSONObject();
         try {

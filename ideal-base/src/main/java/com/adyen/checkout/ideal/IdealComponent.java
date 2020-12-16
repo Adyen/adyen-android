@@ -11,8 +11,8 @@ package com.adyen.checkout.ideal;
 import androidx.annotation.NonNull;
 
 import com.adyen.checkout.base.PaymentComponentProvider;
-import com.adyen.checkout.base.component.PaymentComponentProviderImpl;
-import com.adyen.checkout.base.model.paymentmethods.PaymentMethod;
+import com.adyen.checkout.base.component.GenericPaymentComponentProvider;
+import com.adyen.checkout.base.component.GenericPaymentMethodDelegate;
 import com.adyen.checkout.base.model.payments.request.IdealPaymentMethod;
 import com.adyen.checkout.base.util.PaymentMethodTypes;
 import com.adyen.checkout.issuerlist.IssuerListComponent;
@@ -25,12 +25,12 @@ import com.adyen.checkout.issuerlist.IssuerListOutputData;
 public final class IdealComponent extends IssuerListComponent<IdealPaymentMethod> {
 
     public static final PaymentComponentProvider<IdealComponent, IdealConfiguration> PROVIDER =
-            new PaymentComponentProviderImpl<>(IdealComponent.class);
+            new GenericPaymentComponentProvider<>(IdealComponent.class);
 
     private static final String[] PAYMENT_METHOD_TYPES = {PaymentMethodTypes.IDEAL};
 
-    public IdealComponent(@NonNull PaymentMethod paymentMethod, @NonNull IdealConfiguration configuration) {
-        super(paymentMethod, configuration);
+    public IdealComponent(@NonNull GenericPaymentMethodDelegate paymentMethodDelegate, @NonNull IdealConfiguration configuration) {
+        super(paymentMethodDelegate, configuration);
     }
 
     @NonNull

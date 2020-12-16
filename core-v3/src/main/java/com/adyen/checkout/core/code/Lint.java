@@ -15,13 +15,8 @@ import com.adyen.checkout.core.exception.NoConstructorException;
  */
 public final class Lint {
 
-    public static final String WEAKER_ACCESS = "WeakerAccess";
     // Same as WEAKER_ACCESS but lets us know is kept public for merchant visibility.
-    public static final String MERCHANT_VISIBLE = WEAKER_ACCESS;
-    // Same as WEAKER_ACCESS but lets us know is specifically to avoid Synthetic Accessor.
-    public static final String SYNTHETIC = WEAKER_ACCESS;
-    // Also used to avoid Synthetic Accessor warnings in Kotlin
-    public static final String PROTECTED_IN_FINAL = "ProtectedInFinal";
+    public static final String MERCHANT_VISIBLE = "WeakerAccess";
 
     private Lint() {
         throw new NoConstructorException();

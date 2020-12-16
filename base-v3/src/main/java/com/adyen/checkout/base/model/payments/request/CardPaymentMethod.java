@@ -134,23 +134,6 @@ public final class CardPaymentMethod extends PaymentMethodDetails {
         this.holderName = holderName;
     }
 
-    /**
-     * @deprecated use StoredPaymentMethodId instead
-     */
-    @Nullable
-    @Deprecated
-    public String getRecurringDetailReference() {
-        return storedPaymentMethodId;
-    }
-
-    /**
-     * @deprecated use StoredPaymentMethodId instead
-     */
-    @Deprecated
-    public void setRecurringDetailReference(@Nullable String recurringDetailReference) {
-        this.storedPaymentMethodId = recurringDetailReference;
-    }
-
     public void setStoredPaymentMethodId(@Nullable String storedPaymentMethodId) {
         this.storedPaymentMethodId = storedPaymentMethodId;
     }

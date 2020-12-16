@@ -8,13 +8,10 @@
 
 package com.adyen.checkout.sepa;
 
-import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.res.TypedArray;
-import android.text.Editable;
 import android.util.AttributeSet;
 import android.view.LayoutInflater;
-import android.view.View;
 import android.widget.LinearLayout;
 
 import androidx.annotation.NonNull;
@@ -23,30 +20,27 @@ import androidx.lifecycle.LifecycleOwner;
 import androidx.lifecycle.Observer;
 
 import com.adyen.checkout.base.PaymentComponentState;
+import com.adyen.checkout.base.model.payments.request.SepaPaymentMethod;
 import com.adyen.checkout.base.ui.view.AdyenLinearLayout;
 import com.adyen.checkout.base.ui.view.AdyenTextInputEditText;
-import com.adyen.checkout.core.code.Lint;
 import com.adyen.checkout.core.exception.CheckoutException;
 import com.adyen.checkout.core.log.LogUtil;
 import com.adyen.checkout.core.log.Logger;
 import com.adyen.checkout.sepa.ui.R;
 import com.google.android.material.textfield.TextInputLayout;
 
-public class SepaView extends AdyenLinearLayout<SepaOutputData, SepaConfiguration, PaymentComponentState, SepaComponent>
+public class SepaView
+        extends AdyenLinearLayout<SepaOutputData, SepaConfiguration, PaymentComponentState<SepaPaymentMethod>, SepaComponent>
         implements Observer<SepaOutputData> {
     private static final String TAG = LogUtil.getTag();
 
-    @SuppressLint(Lint.SYNTHETIC)
     SepaInputData mSepaInputData = new SepaInputData();
 
-    @SuppressLint(Lint.SYNTHETIC)
     TextInputLayout mHolderNameInput;
-    @SuppressLint(Lint.SYNTHETIC)
+
     TextInputLayout mIbanNumberInput;
 
-    @SuppressLint(Lint.SYNTHETIC)
     AdyenTextInputEditText mHolderNameEditText;
-    @SuppressLint(Lint.SYNTHETIC)
     AdyenTextInputEditText mIbanNumberEditText;
 
     public SepaView(@NonNull Context context) {
@@ -97,33 +91,24 @@ public class SepaView extends AdyenLinearLayout<SepaOutputData, SepaConfiguratio
             throw new CheckoutException("Could not find views inside layout.");
         }
 
-        mHolderNameEditText.setOnChangeListener(new AdyenTextInputEditText.Listener() {
-            @Override
-            public void onTextChanged(@NonNull Editable editable) {
-                mSepaInputData.setName(mHolderNameEditText.getRawValue());
-                notifyInputDataChanged();
-                mHolderNameInput.setError(null);
-            }
+        mHolderNameEditText.setOnChangeListener(editable -> {
+            mSepaInputData.setName(mHolderNameEditText.getRawValue());
+            notifyInputDataChanged();
+            mHolderNameInput.setError(null);
         });
 
-        mIbanNumberEditText.setOnChangeListener(new AdyenTextInputEditText.Listener() {
-            @Override
-            public void onTextChanged(@NonNull Editable editable) {
-                mSepaInputData.setIban(mIbanNumberEditText.getRawValue());
-                notifyInputDataChanged();
+        mIbanNumberEditText.setOnChangeListener(editable -> {
+            mSepaInputData.setIban(mIbanNumberEditText.getRawValue());
+            notifyInputDataChanged();
+            mIbanNumberInput.setError(null);
+        });
+
+        mIbanNumberEditText.setOnFocusChangeListener((v, hasFocus) -> {
+            final SepaOutputData outputData = getComponent().getOutputData();
+            if (hasFocus) {
                 mIbanNumberInput.setError(null);
-            }
-        });
-
-        mIbanNumberEditText.setOnFocusChangeListener(new OnFocusChangeListener() {
-            @Override
-            public void onFocusChange(View v, boolean hasFocus) {
-                final SepaOutputData outputData = getComponent().getOutputData();
-                if (hasFocus) {
-                    mIbanNumberInput.setError(null);
-                } else if (outputData != null && !outputData.getIbanNumberField().isValid()) {
-                    mIbanNumberInput.setError(mLocalizedContext.getString(R.string.checkout_iban_not_valid));
-                }
+            } else if (outputData != null && !outputData.getIbanNumberField().isValid()) {
+                mIbanNumberInput.setError(mLocalizedContext.getString(R.string.checkout_iban_not_valid));
             }
         });
     }
@@ -175,7 +160,6 @@ public class SepaView extends AdyenLinearLayout<SepaOutputData, SepaConfiguratio
         }
     }
 
-    @SuppressLint(Lint.SYNTHETIC)
     void notifyInputDataChanged() {
         getComponent().inputDataChanged(mSepaInputData);
     }

@@ -17,7 +17,5 @@
     <string name="checkout_security_code_not_valid">無効なCVC / CVV形式です</string>
     <string name="checkout_holder_name_not_valid">口座名義が無効です</string>
 
-    <string name="card_number_4digit">•••• %s</string>
-    <string name="expires_in">%1$s/%2$s</string>
     <string name="store_payment_method">次回のお支払いのため詳細を保存</string>
 </resources>

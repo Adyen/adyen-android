@@ -10,9 +10,11 @@
 
 <TextView
     xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/payment_method_header"
     style="@style/AdyenCheckout.TextAppearance.HeaderTitle"
     android:layout_width="match_parent"
     android:textIsSelectable="false"
     android:layout_height="wrap_content"
-    android:layout_marginBottom="@dimen/standard_quarter_margin"/>
+    android:layout_marginBottom="@dimen/standard_quarter_margin"
+    tools:text="Header"/>

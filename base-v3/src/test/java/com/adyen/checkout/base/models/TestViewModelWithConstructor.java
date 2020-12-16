@@ -10,15 +10,15 @@ package com.adyen.checkout.base.models;
 
 import androidx.lifecycle.ViewModel;
 
-import com.adyen.checkout.base.model.paymentmethods.PaymentMethod;
+import com.adyen.checkout.base.component.PaymentMethodDelegateTest;
 
 public class TestViewModelWithConstructor extends ViewModel {
 
-    public PaymentMethod paymentMethod;
+    public PaymentMethodDelegateTest paymentMethodDelegate;
     public TestConfiguration testConfiguration;
 
-    public TestViewModelWithConstructor(PaymentMethod paymentMethod, TestConfiguration configuration) {
-        this.paymentMethod = paymentMethod;
+    public TestViewModelWithConstructor(PaymentMethodDelegateTest paymentMethodDelegate, TestConfiguration configuration) {
+        this.paymentMethodDelegate = paymentMethodDelegate;
         this.testConfiguration = configuration;
     }
 }

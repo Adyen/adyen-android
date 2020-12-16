@@ -13,7 +13,6 @@ import android.text.TextUtils;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 
-import com.adyen.checkout.core.code.Lint;
 import com.adyen.checkout.core.exception.CheckoutException;
 import com.adyen.checkout.core.model.ModelObject;
 
@@ -62,7 +61,6 @@ public abstract class Action extends ModelObject {
     private String paymentData;
     private String paymentMethodType;
 
-    @SuppressWarnings(Lint.SYNTHETIC)
     @NonNull
     static Serializer<? extends Action> getChildSerializer(@NonNull String actionType) {
         switch (actionType) {
@@ -72,12 +70,12 @@ public abstract class Action extends ModelObject {
                 return Threeds2FingerprintAction.SERIALIZER;
             case Threeds2ChallengeAction.ACTION_TYPE:
                 return Threeds2ChallengeAction.SERIALIZER;
+            case Threeds2Action.ACTION_TYPE:
+                return Threeds2Action.SERIALIZER;
             case QrCodeAction.ACTION_TYPE:
                 return QrCodeAction.SERIALIZER;
             case VoucherAction.ACTION_TYPE:
                 return VoucherAction.SERIALIZER;
-            case WeChatPaySdkAction.ACTION_TYPE:
-                return WeChatPaySdkAction.SERIALIZER;
             case SdkAction.ACTION_TYPE:
                 return SdkAction.SERIALIZER;
             case AwaitAction.ACTION_TYPE:

@@ -9,7 +9,8 @@
 package com.adyen.checkout.base.component.lifecycle;
 
 import com.adyen.checkout.base.DataProvider;
-import com.adyen.checkout.base.model.paymentmethods.PaymentMethod;
+import com.adyen.checkout.base.component.PaymentMethodDelegate;
+import com.adyen.checkout.base.component.PaymentMethodDelegateTest;
 import com.adyen.checkout.base.model.PaymentMethodsApiResponse;
 import com.adyen.checkout.base.models.TestConfiguration;
 import com.adyen.checkout.base.models.TestViewModel;
@@ -25,7 +26,7 @@ import java.io.IOException;
 public class PaymentPaymentComponentViewModelFactoryTest {
 
     ClassLoader classLoader;
-    PaymentMethod mPaymentMethod;
+    PaymentMethodDelegate mPaymentMethodDelegate;
     PaymentMethodsApiResponse mPaymentsResponse;
     TestConfiguration mTestConfiguration;
 
@@ -33,22 +34,22 @@ public class PaymentPaymentComponentViewModelFactoryTest {
     public void init() throws IOException, JSONException {
         classLoader = this.getClass().getClassLoader();
         mPaymentsResponse = DataProvider.getPaymentMethodResponse(classLoader);
-        mPaymentMethod = mPaymentsResponse.getPaymentMethods().get(0);
+        mPaymentMethodDelegate = new PaymentMethodDelegateTest();
         mTestConfiguration = new TestConfiguration();
     }
 
     @Test(expected = RuntimeException.class)
     public void initComponentViewModel_ViewModelWithoutConstructor_expectRuntimeException() {
-        PaymentComponentViewModelFactory paymentComponentViewModelFactory = new PaymentComponentViewModelFactory(mPaymentMethod, mTestConfiguration);
+        PaymentComponentViewModelFactory paymentComponentViewModelFactory = new PaymentComponentViewModelFactory(mPaymentMethodDelegate, mTestConfiguration);
         paymentComponentViewModelFactory.create(TestViewModel.class);
     }
 
     @Test
     public void initComponentViewModel_ViewModelWithConstructor_expectSamePaymentMethodAndConfiguration() {
-        PaymentComponentViewModelFactory paymentComponentViewModelFactory = new PaymentComponentViewModelFactory(mPaymentMethod, mTestConfiguration);
+        PaymentComponentViewModelFactory paymentComponentViewModelFactory = new PaymentComponentViewModelFactory(mPaymentMethodDelegate, mTestConfiguration);
         TestViewModelWithConstructor viewModel = paymentComponentViewModelFactory.create(TestViewModelWithConstructor.class);
 
-        Assert.assertEquals(viewModel.paymentMethod, mPaymentMethod);
+        Assert.assertEquals(viewModel.paymentMethodDelegate, mPaymentMethodDelegate);
         Assert.assertEquals(viewModel.testConfiguration, mTestConfiguration);
     }
 

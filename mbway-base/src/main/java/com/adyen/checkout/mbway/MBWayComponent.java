@@ -13,8 +13,8 @@ import androidx.annotation.NonNull;
 import com.adyen.checkout.base.PaymentComponentProvider;
 import com.adyen.checkout.base.PaymentComponentState;
 import com.adyen.checkout.base.component.BasePaymentComponent;
-import com.adyen.checkout.base.component.PaymentComponentProviderImpl;
-import com.adyen.checkout.base.model.paymentmethods.PaymentMethod;
+import com.adyen.checkout.base.component.GenericPaymentComponentProvider;
+import com.adyen.checkout.base.component.GenericPaymentMethodDelegate;
 import com.adyen.checkout.base.model.payments.request.MBWayPaymentMethod;
 import com.adyen.checkout.base.model.payments.request.PaymentComponentData;
 import com.adyen.checkout.base.util.PaymentMethodTypes;
@@ -22,22 +22,23 @@ import com.adyen.checkout.core.log.LogUtil;
 import com.adyen.checkout.core.log.Logger;
 
 @SuppressWarnings("AbbreviationAsWordInName")
-public class MBWayComponent extends BasePaymentComponent<MBWayConfiguration, MBWayInputData, MBWayOutputData, PaymentComponentState> {
+public class MBWayComponent
+        extends BasePaymentComponent<MBWayConfiguration, MBWayInputData, MBWayOutputData, PaymentComponentState<MBWayPaymentMethod>> {
     private static final String TAG = LogUtil.getTag();
 
     public static final PaymentComponentProvider<MBWayComponent, MBWayConfiguration> PROVIDER =
-            new PaymentComponentProviderImpl<>(MBWayComponent.class);
+            new GenericPaymentComponentProvider<>(MBWayComponent.class);
 
     private static final String[] PAYMENT_METHOD_TYPES = {PaymentMethodTypes.MB_WAY};
 
     /**
      * Component should not be instantiated directly. Instead use the PROVIDER object.
      *
-     * @param paymentMethod {@link PaymentMethod}
+     * @param paymentMethodDelegate {@link GenericPaymentMethodDelegate}
      * @param configuration {@link MBWayConfiguration}
      */
-    public MBWayComponent(@NonNull PaymentMethod paymentMethod, @NonNull MBWayConfiguration configuration) {
-        super(paymentMethod, configuration);
+    public MBWayComponent(@NonNull GenericPaymentMethodDelegate paymentMethodDelegate, @NonNull MBWayConfiguration configuration) {
+        super(paymentMethodDelegate, configuration);
     }
 
     @NonNull

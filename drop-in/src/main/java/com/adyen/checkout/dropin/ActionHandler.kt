@@ -8,11 +8,11 @@
 
 package com.adyen.checkout.dropin
 
-import androidx.lifecycle.Observer
 import android.content.Intent
 import android.net.Uri
 import android.os.Bundle
 import androidx.fragment.app.FragmentActivity
+import androidx.lifecycle.Observer
 import com.adyen.checkout.adyen3ds2.Adyen3DS2Component
 import com.adyen.checkout.base.ActionComponentData
 import com.adyen.checkout.base.model.payments.response.Action
@@ -36,11 +36,18 @@ class ActionHandler(
     // Actions which will be handled by the Fragment with it's associated view
     private val viewableActionTypes = listOf(ActionTypes.AWAIT)
 
-    private val redirectComponent = RedirectComponent.PROVIDER.get(activity, dropInConfiguration.getConfigurationFor(ActionTypes.REDIRECT, activity))
-    private val adyen3DS2Component =
-        Adyen3DS2Component.PROVIDER.get(activity, dropInConfiguration.getConfigurationFor(ActionTypes.THREEDS2_FINGERPRINT, activity))
+    private val redirectComponent = RedirectComponent.PROVIDER.get(
+        activity,
+        activity.application,
+        dropInConfiguration.getConfigurationFor(ActionTypes.REDIRECT, activity)
+    )
+    private val adyen3DS2Component = Adyen3DS2Component.PROVIDER.get(
+        activity,
+        activity.application,
+        dropInConfiguration.getConfigurationFor(ActionTypes.THREEDS2, activity)
+    )
     // get config from Drop-in when available
-    private val weChatPayActionComponent = WeChatPayActionComponent.PROVIDER.get(activity, null)
+    private val weChatPayActionComponent = WeChatPayActionComponent.PROVIDER.get(activity, activity.application, null)
 
     init {
         redirectComponent.observe(activity, this)

@@ -16,7 +16,6 @@ import androidx.annotation.Nullable;
 
 import com.adyen.checkout.core.util.ParcelUtils;
 
-@SuppressWarnings("SyntheticAccessor")
 public final class EncryptedCard implements Parcelable {
     @NonNull
     public static final Parcelable.Creator<EncryptedCard> CREATOR = new Creator<EncryptedCard>() {

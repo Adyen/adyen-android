@@ -15,6 +15,7 @@ import androidx.annotation.Nullable;
 
 import com.adyen.checkout.core.exception.ModelSerializationException;
 import com.adyen.checkout.core.model.JsonUtils;
+import com.adyen.checkout.core.model.ModelObject;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -24,10 +25,12 @@ import java.util.Collections;
 import java.util.List;
 
 @SuppressWarnings({"MemberName", "PMD.DataClass"})
-public class StoredPaymentMethod extends PaymentMethod {
+public class StoredPaymentMethod extends ModelObject {
     @NonNull
     public static final Creator<StoredPaymentMethod> CREATOR = new Creator<>(StoredPaymentMethod.class);
 
+    private static final String TYPE = "type";
+    private static final String NAME = "name";
     private static final String BRAND = "brand";
     private static final String EXPIRY_MONTH = "expiryMonth";
     private static final String EXPIRY_YEAR = "expiryYear";
@@ -44,9 +47,10 @@ public class StoredPaymentMethod extends PaymentMethod {
         @Override
         @NonNull
         public JSONObject serialize(@NonNull StoredPaymentMethod modelObject) {
-            // Get parameters from parent class
-            final JSONObject jsonObject = PaymentMethod.SERIALIZER.serialize(modelObject);
+            final JSONObject jsonObject = new JSONObject();
             try {
+                jsonObject.putOpt(TYPE, modelObject.getType());
+                jsonObject.putOpt(NAME, modelObject.getName());
                 jsonObject.putOpt(BRAND, modelObject.getBrand());
                 jsonObject.putOpt(EXPIRY_MONTH, modelObject.getExpiryMonth());
                 jsonObject.putOpt(EXPIRY_YEAR, modelObject.getExpiryYear());
@@ -67,16 +71,8 @@ public class StoredPaymentMethod extends PaymentMethod {
         public StoredPaymentMethod deserialize(@NonNull JSONObject jsonObject) {
             final StoredPaymentMethod storedPaymentMethod = new StoredPaymentMethod();
 
-            // getting parameters from parent class
-            final PaymentMethod paymentMethod = PaymentMethod.SERIALIZER.deserialize(jsonObject);
-            storedPaymentMethod.setConfiguration(paymentMethod.getConfiguration());
-            storedPaymentMethod.setDetails(paymentMethod.getDetails());
-            storedPaymentMethod.setGroup(paymentMethod.getGroup());
-            storedPaymentMethod.setName(paymentMethod.getName());
-            storedPaymentMethod.setPaymentMethodData(paymentMethod.getPaymentMethodData());
-            storedPaymentMethod.setSupportsRecurring(paymentMethod.getSupportsRecurring());
-            storedPaymentMethod.setType(paymentMethod.getType());
-
+            storedPaymentMethod.setType(jsonObject.optString(TYPE));
+            storedPaymentMethod.setName(jsonObject.optString(NAME));
             storedPaymentMethod.setBrand(jsonObject.optString(BRAND));
             storedPaymentMethod.setExpiryMonth(jsonObject.optString(EXPIRY_MONTH));
             storedPaymentMethod.setExpiryYear(jsonObject.optString(EXPIRY_YEAR));
@@ -95,6 +91,8 @@ public class StoredPaymentMethod extends PaymentMethod {
         }
     };
 
+    private String type;
+    private String name;
     private String brand;
     private String expiryMonth;
     private String expiryYear;
@@ -110,57 +108,28 @@ public class StoredPaymentMethod extends PaymentMethod {
     }
 
     @Nullable
-    public String getId() {
-        return id;
+    public String getType() {
+        return type;
     }
 
-    public void setId(@Nullable String id) {
-        this.id = id;
+    @Nullable
+    public String getName() {
+        return name;
     }
 
-    @NonNull
-    public String getExpiryMonth() {
-        return expiryMonth;
-    }
-
-    public void setExpiryMonth(@Nullable String expiryMonth) {
-        this.expiryMonth = expiryMonth;
-    }
-
-    @NonNull
-    public String getExpiryYear() {
-        return expiryYear;
-    }
-
-    public void setExpiryYear(@Nullable String expiryYear) {
-        this.expiryYear = expiryYear;
-    }
-
-    @NonNull
-    public String getLastFour() {
-        return lastFour;
-    }
-
-    public void setLastFour(@Nullable String lastFour) {
-        this.lastFour = lastFour;
-    }
-
-    @NonNull
+    @Nullable
     public String getBrand() {
         return brand;
     }
 
-    public void setBrand(@NonNull String brand) {
-        this.brand = brand;
+    @Nullable
+    public String getExpiryMonth() {
+        return expiryMonth;
     }
 
-    @NonNull
-    public List<String> getSupportedShopperInteractions() {
-        return supportedShopperInteractions;
-    }
-
-    public void setSupportedShopperInteractions(@NonNull List<String> supportedShopperInteractions) {
-        this.supportedShopperInteractions = supportedShopperInteractions;
+    @Nullable
+    public String getExpiryYear() {
+        return expiryYear;
     }
 
     @Nullable
@@ -168,8 +137,14 @@ public class StoredPaymentMethod extends PaymentMethod {
         return holderName;
     }
 
-    public void setHolderName(@Nullable String holderName) {
-        this.holderName = holderName;
+    @Nullable
+    public String getId() {
+        return id;
+    }
+
+    @Nullable
+    public String getLastFour() {
+        return lastFour;
     }
 
     @Nullable
@@ -177,8 +152,49 @@ public class StoredPaymentMethod extends PaymentMethod {
         return shopperEmail;
     }
 
+    @Nullable
+    public List<String> getSupportedShopperInteractions() {
+        return supportedShopperInteractions;
+    }
+
+    public void setType(@Nullable String type) {
+        this.type = type;
+    }
+
+    public void setName(@Nullable String name) {
+        this.name = name;
+    }
+
+    public void setBrand(@Nullable String brand) {
+        this.brand = brand;
+    }
+
+    public void setExpiryMonth(@Nullable String expiryMonth) {
+        this.expiryMonth = expiryMonth;
+    }
+
+    public void setExpiryYear(@Nullable String expiryYear) {
+        this.expiryYear = expiryYear;
+    }
+
+    public void setHolderName(@Nullable String holderName) {
+        this.holderName = holderName;
+    }
+
+    public void setId(@Nullable String id) {
+        this.id = id;
+    }
+
+    public void setLastFour(@Nullable String lastFour) {
+        this.lastFour = lastFour;
+    }
+
     public void setShopperEmail(@Nullable String shopperEmail) {
         this.shopperEmail = shopperEmail;
+    }
+
+    public void setSupportedShopperInteractions(@Nullable List<String> supportedShopperInteractions) {
+        this.supportedShopperInteractions = supportedShopperInteractions;
     }
 
     public boolean isEcommerce() {

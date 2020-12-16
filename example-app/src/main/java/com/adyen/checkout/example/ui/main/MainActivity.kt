@@ -17,7 +17,6 @@ import android.view.View
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.app.AppCompatDelegate
-import com.adyen.checkout.afterpay.AfterPayConfiguration
 import com.adyen.checkout.base.model.PaymentMethodsApiResponse
 import com.adyen.checkout.bcmc.BcmcConfiguration
 import com.adyen.checkout.card.CardConfiguration
@@ -132,9 +131,6 @@ class MainActivity : AppCompatActivity() {
     }
 
     private fun startDropIn(paymentMethodsApiResponse: PaymentMethodsApiResponse) {
-        val test = PaymentMethodsApiResponse()
-        test.groups = listOf()
-
         Logger.d(TAG, "startDropIn")
         setLoading(false)
 
@@ -146,15 +142,11 @@ class MainActivity : AppCompatActivity() {
             .setShopperReference(keyValueStorage.getShopperReference())
             .setShopperLocale(shopperLocale)
             .setEnvironment(Environment.TEST)
+            .setHideCvcStoredCard(true)
             .build()
 
         val googlePayConfig = GooglePayConfiguration.Builder(this@MainActivity, keyValueStorage.getMerchantAccount())
             .setCountryCode(keyValueStorage.getCountry())
-            .setEnvironment(Environment.TEST)
-            .build()
-
-        val afterPayConfiguration = AfterPayConfiguration.Builder(this, AfterPayConfiguration.CountryCode.NL)
-            .setShopperLocale(shopperLocale)
             .setEnvironment(Environment.TEST)
             .build()
 
@@ -176,7 +168,6 @@ class MainActivity : AppCompatActivity() {
             .setClientKey(BuildConfig.CLIENT_KEY)
             .setShopperLocale(shopperLocale)
             .addCardConfiguration(cardConfiguration)
-            .addAfterPayConfiguration(afterPayConfiguration)
             .addBcmcConfiguration(bcmcConfiguration)
             .addGooglePayConfiguration(googlePayConfig)
 

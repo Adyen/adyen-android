@@ -13,23 +13,24 @@ import androidx.annotation.NonNull;
 import com.adyen.checkout.base.PaymentComponentProvider;
 import com.adyen.checkout.base.PaymentComponentState;
 import com.adyen.checkout.base.component.BasePaymentComponent;
-import com.adyen.checkout.base.component.PaymentComponentProviderImpl;
-import com.adyen.checkout.base.model.paymentmethods.PaymentMethod;
+import com.adyen.checkout.base.component.GenericPaymentComponentProvider;
+import com.adyen.checkout.base.component.GenericPaymentMethodDelegate;
 import com.adyen.checkout.base.model.payments.request.PaymentComponentData;
 import com.adyen.checkout.base.model.payments.request.SepaPaymentMethod;
 import com.adyen.checkout.base.util.PaymentMethodTypes;
 import com.adyen.checkout.core.log.LogUtil;
 import com.adyen.checkout.core.log.Logger;
 
-public class SepaComponent extends BasePaymentComponent<SepaConfiguration, SepaInputData, SepaOutputData, PaymentComponentState> {
+public class SepaComponent extends BasePaymentComponent<SepaConfiguration, SepaInputData, SepaOutputData, PaymentComponentState<SepaPaymentMethod>> {
     private static final String TAG = LogUtil.getTag();
 
-    public static final PaymentComponentProvider<SepaComponent, SepaConfiguration> PROVIDER = new PaymentComponentProviderImpl<>(SepaComponent.class);
+    public static final PaymentComponentProvider<SepaComponent, SepaConfiguration> PROVIDER =
+            new GenericPaymentComponentProvider<>(SepaComponent.class);
 
     private static final String[] PAYMENT_METHOD_TYPES = {PaymentMethodTypes.SEPA};
 
-    public SepaComponent(@NonNull PaymentMethod paymentMethod, @NonNull SepaConfiguration configuration) {
-        super(paymentMethod, configuration);
+    public SepaComponent(@NonNull GenericPaymentMethodDelegate paymentMethodDelegate, @NonNull SepaConfiguration configuration) {
+        super(paymentMethodDelegate, configuration);
     }
 
     @NonNull
@@ -41,7 +42,7 @@ public class SepaComponent extends BasePaymentComponent<SepaConfiguration, SepaI
 
     @NonNull
     @Override
-    protected PaymentComponentState createComponentState() {
+    protected PaymentComponentState<SepaPaymentMethod> createComponentState() {
 
         final SepaOutputData sepaOutputData = getOutputData();
 
@@ -51,7 +52,7 @@ public class SepaComponent extends BasePaymentComponent<SepaConfiguration, SepaI
 
         if (sepaOutputData != null) {
             paymentMethod.setOwnerName(sepaOutputData.getOwnerNameField().getValue());
-            paymentMethod.setIbanNumber(sepaOutputData.getIbanNumberField().getValue());
+            paymentMethod.setIban(sepaOutputData.getIbanNumberField().getValue());
         }
 
         paymentComponentData.setPaymentMethod(paymentMethod);
