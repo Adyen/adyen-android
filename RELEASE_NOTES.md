@@ -10,16 +10,19 @@
 [//]: # ( - Configurations public constructor are deprecated, please use each Configuration's builder to make a Configuration object)
 
 ### Added:
-- Updated to AndroidX libraries instead of the old Support Libs.
-- Support for Kotlin in all modules except CSE.
-- Target Java 8
-- Spotbugs in place of Findbugs
+- Blik Component
+- Translations for: cs-rCZ, el-rGR, hr-rHR, hu-rHU, ro-rRO, sk-rSK, sl-rSI
+- `hideCvc` and `hideCvcStoredCard` flags on `CardConfiguration`
+- Frictionless flow for preselected stored payment.
 
 ### Changed:
-- Min API to 21 to reduce scope of security concerns.
-- Target API to 30
-- Updated to Gradle 6.6.1
-- Updated 3DS2 SDK to version 2.2.0 with default protocol as still 2.1.0
-- Updated a bunch of libraries, including Google Pay and WeChatPay dependencies.
-- Replaced deprecated LocalBroadcast with Kotlin Flow as an experiment for communicating between DropService and DropInActivity.
-- Renamed example.local.gradle with default.local.gradle for CI builds and example app without values.
+- Change model objects to new API version
+- Removed AfterPay Component.
+- Removed all deprecated methods.
+- Refactored separation between regular and stored payment methods.
+- Refactored OneClick flow to Preselected Stored Payment Method.
+
+### Fixed:
+- Client key validation on Drop-in default generated Configurations
+- Payment methods list will only show up after all availability checks are done.
+- GooglePay SDK dependency is now visible to merchants.
