@@ -10,7 +10,7 @@ package com.adyen.checkout.blik;
 
 import androidx.annotation.NonNull;
 
-import com.adyen.checkout.base.component.InputData;
+import com.adyen.checkout.components.base.InputData;
 
 public class BlikInputData implements InputData {
 

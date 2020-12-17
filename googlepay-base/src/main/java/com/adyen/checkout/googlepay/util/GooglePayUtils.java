@@ -11,10 +11,10 @@ package com.adyen.checkout.googlepay.util;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 
-import com.adyen.checkout.base.model.payments.Amount;
-import com.adyen.checkout.base.model.payments.request.GooglePayPaymentMethod;
-import com.adyen.checkout.base.util.AmountFormat;
-import com.adyen.checkout.base.util.PaymentMethodTypes;
+import com.adyen.checkout.components.model.payments.Amount;
+import com.adyen.checkout.components.model.payments.request.GooglePayPaymentMethod;
+import com.adyen.checkout.components.util.AmountFormat;
+import com.adyen.checkout.components.util.PaymentMethodTypes;
 import com.adyen.checkout.core.exception.CheckoutException;
 import com.adyen.checkout.core.exception.NoConstructorException;
 import com.adyen.checkout.core.log.LogUtil;

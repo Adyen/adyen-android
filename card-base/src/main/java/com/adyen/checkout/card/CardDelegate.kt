@@ -8,9 +8,9 @@
 
 package com.adyen.checkout.card
 
-import com.adyen.checkout.base.component.PaymentMethodDelegate
-import com.adyen.checkout.base.model.paymentmethods.PaymentMethod
-import com.adyen.checkout.base.util.PaymentMethodTypes
+import com.adyen.checkout.components.base.PaymentMethodDelegate
+import com.adyen.checkout.components.model.paymentmethods.PaymentMethod
+import com.adyen.checkout.components.util.PaymentMethodTypes
 
 class CardDelegate(private val paymentMethod: PaymentMethod) : PaymentMethodDelegate {
     override fun getPaymentMethodType(): String {

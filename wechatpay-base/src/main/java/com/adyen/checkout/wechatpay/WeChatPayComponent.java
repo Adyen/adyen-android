@@ -10,16 +10,16 @@ package com.adyen.checkout.wechatpay;
 
 import androidx.annotation.NonNull;
 
-import com.adyen.checkout.base.PaymentComponentProvider;
-import com.adyen.checkout.base.PaymentComponentState;
-import com.adyen.checkout.base.component.BasePaymentComponent;
-import com.adyen.checkout.base.component.EmptyInputData;
-import com.adyen.checkout.base.component.EmptyOutputData;
-import com.adyen.checkout.base.component.GenericPaymentMethodDelegate;
-import com.adyen.checkout.base.component.PaymentMethodDelegate;
-import com.adyen.checkout.base.model.payments.request.GenericPaymentMethod;
-import com.adyen.checkout.base.model.payments.request.PaymentComponentData;
-import com.adyen.checkout.base.util.PaymentMethodTypes;
+import com.adyen.checkout.components.PaymentComponentProvider;
+import com.adyen.checkout.components.PaymentComponentState;
+import com.adyen.checkout.components.base.BasePaymentComponent;
+import com.adyen.checkout.components.base.EmptyInputData;
+import com.adyen.checkout.components.base.EmptyOutputData;
+import com.adyen.checkout.components.base.GenericPaymentMethodDelegate;
+import com.adyen.checkout.components.base.PaymentMethodDelegate;
+import com.adyen.checkout.components.model.payments.request.GenericPaymentMethod;
+import com.adyen.checkout.components.model.payments.request.PaymentComponentData;
+import com.adyen.checkout.components.util.PaymentMethodTypes;
 
 public class WeChatPayComponent
         extends BasePaymentComponent<WeChatPayConfiguration, EmptyInputData, EmptyOutputData, PaymentComponentState<GenericPaymentMethod>> {

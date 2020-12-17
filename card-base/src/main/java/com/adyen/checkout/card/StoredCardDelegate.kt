@@ -8,9 +8,9 @@
 
 package com.adyen.checkout.card
 
-import com.adyen.checkout.base.component.StoredPaymentMethodDelegate
-import com.adyen.checkout.base.model.paymentmethods.StoredPaymentMethod
-import com.adyen.checkout.base.util.PaymentMethodTypes
+import com.adyen.checkout.components.base.StoredPaymentMethodDelegate
+import com.adyen.checkout.components.model.paymentmethods.StoredPaymentMethod
+import com.adyen.checkout.components.util.PaymentMethodTypes
 import com.adyen.checkout.card.data.CardType
 import com.adyen.checkout.card.data.ExpiryDate
 import com.adyen.checkout.core.log.LogUtil

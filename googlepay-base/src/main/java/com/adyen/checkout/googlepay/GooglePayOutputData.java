@@ -12,7 +12,7 @@ import android.text.TextUtils;
 
 import androidx.annotation.Nullable;
 
-import com.adyen.checkout.base.component.OutputData;
+import com.adyen.checkout.components.base.OutputData;
 import com.adyen.checkout.googlepay.util.GooglePayUtils;
 import com.google.android.gms.wallet.PaymentData;
 

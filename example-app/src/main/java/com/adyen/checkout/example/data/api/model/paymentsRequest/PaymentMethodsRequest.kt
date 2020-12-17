@@ -8,7 +8,7 @@
 
 package com.adyen.checkout.example.data.api.model.paymentsRequest
 
-import com.adyen.checkout.base.model.payments.Amount
+import com.adyen.checkout.components.model.payments.Amount
 
 @Suppress("MagicNumber")
 data class PaymentMethodsRequest(

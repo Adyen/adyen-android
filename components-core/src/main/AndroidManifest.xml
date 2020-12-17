@@ -1,0 +1,20 @@
+<!--
+  ~ Copyright (c) 2019 Adyen N.V.
+  ~
+  ~ This file is open source and available under the MIT license. See the LICENSE file for more info.
+  ~
+  ~ Created by caiof on 8/2/2019.
+  -->
+
+<manifest xmlns:android="http://schemas.android.com/apk/res/android"
+          package="com.adyen.checkout.components">
+
+    <uses-permission android:name="android.permission.INTERNET"/>
+
+    <application>
+        <service
+            android:name=".analytics.AnalyticsDispatcher"
+            android:permission="android.permission.BIND_JOB_SERVICE"/>
+    </application>
+
+</manifest>

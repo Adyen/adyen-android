@@ -22,10 +22,10 @@ import androidx.annotation.StringRes;
 import androidx.lifecycle.LifecycleOwner;
 import androidx.lifecycle.Observer;
 
-import com.adyen.checkout.base.ActionComponentData;
-import com.adyen.checkout.base.api.ImageLoader;
-import com.adyen.checkout.base.ui.view.AdyenLinearLayout;
-import com.adyen.checkout.base.util.PaymentMethodTypes;
+import com.adyen.checkout.components.ActionComponentData;
+import com.adyen.checkout.components.api.ImageLoader;
+import com.adyen.checkout.components.ui.view.AdyenLinearLayout;
+import com.adyen.checkout.components.util.PaymentMethodTypes;
 import com.adyen.checkout.core.log.LogUtil;
 import com.adyen.checkout.core.log.Logger;
 

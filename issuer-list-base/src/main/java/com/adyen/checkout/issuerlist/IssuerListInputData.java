@@ -10,7 +10,7 @@ package com.adyen.checkout.issuerlist;
 
 import androidx.annotation.Nullable;
 
-import com.adyen.checkout.base.component.InputData;
+import com.adyen.checkout.components.base.InputData;
 
 public class IssuerListInputData implements InputData {
 

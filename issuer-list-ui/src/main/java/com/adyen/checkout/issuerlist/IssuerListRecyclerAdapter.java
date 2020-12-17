@@ -16,9 +16,9 @@ import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.adyen.checkout.base.api.ImageLoader;
-import com.adyen.checkout.base.ui.adapter.ClickableListRecyclerAdapter;
-import com.adyen.checkout.base.ui.view.RoundCornerImageView;
+import com.adyen.checkout.components.api.ImageLoader;
+import com.adyen.checkout.components.ui.adapter.ClickableListRecyclerAdapter;
+import com.adyen.checkout.components.ui.view.RoundCornerImageView;
 import com.adyen.checkout.issuerlist.ui.R;
 
 import java.util.List;

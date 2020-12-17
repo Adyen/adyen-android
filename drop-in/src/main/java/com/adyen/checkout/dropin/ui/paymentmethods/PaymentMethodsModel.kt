@@ -8,7 +8,7 @@
 
 package com.adyen.checkout.dropin.ui.paymentmethods
 
-import com.adyen.checkout.base.model.paymentmethods.PaymentMethod
+import com.adyen.checkout.components.model.paymentmethods.PaymentMethod
 
 // TODO: 24/11/2020 delete this class
 class PaymentMethodsModel {

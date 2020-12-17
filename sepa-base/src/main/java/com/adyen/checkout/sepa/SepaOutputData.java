@@ -13,8 +13,8 @@ import android.text.TextUtils;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 
-import com.adyen.checkout.base.component.OutputData;
-import com.adyen.checkout.base.validation.ValidatedField;
+import com.adyen.checkout.components.base.OutputData;
+import com.adyen.checkout.components.validation.ValidatedField;
 
 class SepaOutputData implements OutputData {
 

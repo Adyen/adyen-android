@@ -15,8 +15,8 @@ import android.os.Parcelable;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 
-import com.adyen.checkout.base.component.BaseConfigurationBuilder;
-import com.adyen.checkout.base.component.Configuration;
+import com.adyen.checkout.components.base.BaseConfigurationBuilder;
+import com.adyen.checkout.components.base.Configuration;
 import com.adyen.checkout.core.api.Environment;
 
 import java.util.Locale;

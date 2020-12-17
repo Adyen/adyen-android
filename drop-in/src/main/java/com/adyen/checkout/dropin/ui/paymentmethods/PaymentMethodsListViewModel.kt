@@ -12,11 +12,11 @@ import android.app.Application
 import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
-import com.adyen.checkout.base.ComponentAvailableCallback
-import com.adyen.checkout.base.component.Configuration
-import com.adyen.checkout.base.model.paymentmethods.PaymentMethod
-import com.adyen.checkout.base.model.paymentmethods.StoredPaymentMethod
-import com.adyen.checkout.base.util.PaymentMethodTypes
+import com.adyen.checkout.components.ComponentAvailableCallback
+import com.adyen.checkout.components.base.Configuration
+import com.adyen.checkout.components.model.paymentmethods.PaymentMethod
+import com.adyen.checkout.components.model.paymentmethods.StoredPaymentMethod
+import com.adyen.checkout.components.util.PaymentMethodTypes
 import com.adyen.checkout.core.exception.CheckoutException
 import com.adyen.checkout.core.log.LogUtil
 import com.adyen.checkout.core.log.Logger

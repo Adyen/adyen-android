@@ -14,7 +14,7 @@ import android.util.AttributeSet;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 
-import com.adyen.checkout.base.model.payments.request.DotpayPaymentMethod;
+import com.adyen.checkout.components.model.payments.request.DotpayPaymentMethod;
 import com.adyen.checkout.issuerlist.IssuerListRecyclerView;
 
 public class DotpayRecyclerView extends IssuerListRecyclerView<DotpayPaymentMethod, DotpayComponent> {

@@ -14,11 +14,11 @@ import androidx.annotation.NonNull;
 import androidx.lifecycle.ViewModelProvider;
 import androidx.lifecycle.ViewModelStoreOwner;
 
-import com.adyen.checkout.base.ComponentAvailableCallback;
-import com.adyen.checkout.base.PaymentComponentProvider;
-import com.adyen.checkout.base.component.GenericPaymentMethodDelegate;
-import com.adyen.checkout.base.component.lifecycle.PaymentComponentViewModelFactory;
-import com.adyen.checkout.base.model.paymentmethods.PaymentMethod;
+import com.adyen.checkout.components.ComponentAvailableCallback;
+import com.adyen.checkout.components.PaymentComponentProvider;
+import com.adyen.checkout.components.base.GenericPaymentMethodDelegate;
+import com.adyen.checkout.components.base.lifecycle.PaymentComponentViewModelFactory;
+import com.adyen.checkout.components.model.paymentmethods.PaymentMethod;
 
 public class WeChatPayProvider implements PaymentComponentProvider<WeChatPayComponent, WeChatPayConfiguration> {
 

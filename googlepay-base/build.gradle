@@ -43,7 +43,7 @@ dependencies {
     androidTestImplementation "androidx.test.espresso:espresso-core:$espresso_version"
 
     // Checkout
-    api project(':base-v3')
+    api project(':components-core')
 
     // Dependencies
     api "com.google.android.gms:play-services-wallet:$play_services_wallet_version"

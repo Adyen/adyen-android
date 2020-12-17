@@ -15,10 +15,10 @@ import android.os.Parcelable;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 
-import com.adyen.checkout.base.component.BaseConfigurationBuilder;
-import com.adyen.checkout.base.component.Configuration;
-import com.adyen.checkout.base.model.payments.Amount;
-import com.adyen.checkout.base.util.CheckoutCurrency;
+import com.adyen.checkout.components.base.BaseConfigurationBuilder;
+import com.adyen.checkout.components.base.Configuration;
+import com.adyen.checkout.components.model.payments.Amount;
+import com.adyen.checkout.components.util.CheckoutCurrency;
 import com.adyen.checkout.core.api.Environment;
 import com.adyen.checkout.core.exception.CheckoutException;
 import com.adyen.checkout.core.util.ParcelUtils;

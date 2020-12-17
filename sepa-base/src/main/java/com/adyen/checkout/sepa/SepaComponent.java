@@ -10,14 +10,14 @@ package com.adyen.checkout.sepa;
 
 import androidx.annotation.NonNull;
 
-import com.adyen.checkout.base.PaymentComponentProvider;
-import com.adyen.checkout.base.PaymentComponentState;
-import com.adyen.checkout.base.component.BasePaymentComponent;
-import com.adyen.checkout.base.component.GenericPaymentComponentProvider;
-import com.adyen.checkout.base.component.GenericPaymentMethodDelegate;
-import com.adyen.checkout.base.model.payments.request.PaymentComponentData;
-import com.adyen.checkout.base.model.payments.request.SepaPaymentMethod;
-import com.adyen.checkout.base.util.PaymentMethodTypes;
+import com.adyen.checkout.components.PaymentComponentProvider;
+import com.adyen.checkout.components.PaymentComponentState;
+import com.adyen.checkout.components.base.BasePaymentComponent;
+import com.adyen.checkout.components.base.GenericPaymentComponentProvider;
+import com.adyen.checkout.components.base.GenericPaymentMethodDelegate;
+import com.adyen.checkout.components.model.payments.request.PaymentComponentData;
+import com.adyen.checkout.components.model.payments.request.SepaPaymentMethod;
+import com.adyen.checkout.components.util.PaymentMethodTypes;
 import com.adyen.checkout.core.log.LogUtil;
 import com.adyen.checkout.core.log.Logger;
 

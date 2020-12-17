@@ -19,10 +19,10 @@ import androidx.annotation.Nullable;
 import androidx.lifecycle.LifecycleOwner;
 import androidx.lifecycle.Observer;
 
-import com.adyen.checkout.base.PaymentComponentState;
-import com.adyen.checkout.base.model.payments.request.MBWayPaymentMethod;
-import com.adyen.checkout.base.ui.view.AdyenLinearLayout;
-import com.adyen.checkout.base.ui.view.AdyenTextInputEditText;
+import com.adyen.checkout.components.PaymentComponentState;
+import com.adyen.checkout.components.model.payments.request.MBWayPaymentMethod;
+import com.adyen.checkout.components.ui.view.AdyenLinearLayout;
+import com.adyen.checkout.components.ui.view.AdyenTextInputEditText;
 import com.adyen.checkout.core.exception.CheckoutException;
 import com.adyen.checkout.core.log.LogUtil;
 import com.adyen.checkout.core.log.Logger;

@@ -19,11 +19,11 @@ import androidx.lifecycle.Observer;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.adyen.checkout.base.PaymentComponentState;
-import com.adyen.checkout.base.api.ImageLoader;
-import com.adyen.checkout.base.model.payments.request.IssuerListPaymentMethod;
-import com.adyen.checkout.base.ui.adapter.ClickableListRecyclerAdapter;
-import com.adyen.checkout.base.ui.view.AdyenLinearLayout;
+import com.adyen.checkout.components.PaymentComponentState;
+import com.adyen.checkout.components.api.ImageLoader;
+import com.adyen.checkout.components.model.payments.request.IssuerListPaymentMethod;
+import com.adyen.checkout.components.ui.adapter.ClickableListRecyclerAdapter;
+import com.adyen.checkout.components.ui.view.AdyenLinearLayout;
 import com.adyen.checkout.core.log.LogUtil;
 import com.adyen.checkout.core.log.Logger;
 import com.adyen.checkout.issuerlist.ui.R;

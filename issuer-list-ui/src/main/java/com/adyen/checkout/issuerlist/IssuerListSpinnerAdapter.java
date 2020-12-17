@@ -19,7 +19,7 @@ import androidx.annotation.Nullable;
 import androidx.appcompat.widget.AppCompatImageView;
 import androidx.appcompat.widget.AppCompatTextView;
 
-import com.adyen.checkout.base.api.ImageLoader;
+import com.adyen.checkout.components.api.ImageLoader;
 import com.adyen.checkout.issuerlist.ui.R;
 
 import java.util.List;

@@ -10,7 +10,7 @@ package com.adyen.checkout.mbway;
 
 import androidx.annotation.NonNull;
 
-import com.adyen.checkout.base.component.InputData;
+import com.adyen.checkout.components.base.InputData;
 
 @SuppressWarnings("AbbreviationAsWordInName")
 class MBWayInputData implements InputData {

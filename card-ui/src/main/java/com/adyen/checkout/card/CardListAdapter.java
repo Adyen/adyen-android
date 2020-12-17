@@ -15,8 +15,8 @@ import android.view.ViewGroup;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.adyen.checkout.base.api.ImageLoader;
-import com.adyen.checkout.base.ui.view.RoundCornerImageView;
+import com.adyen.checkout.components.api.ImageLoader;
+import com.adyen.checkout.components.ui.view.RoundCornerImageView;
 import com.adyen.checkout.card.data.CardType;
 import com.adyen.checkout.card.ui.R;
 

@@ -11,7 +11,7 @@ package com.adyen.checkout.card;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 
-import com.adyen.checkout.base.component.InputData;
+import com.adyen.checkout.components.base.InputData;
 import com.adyen.checkout.card.data.ExpiryDate;
 
 public final class CardInputData implements InputData {

@@ -19,11 +19,11 @@ import android.text.TextUtils;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 
-import com.adyen.checkout.base.ActionComponentProvider;
-import com.adyen.checkout.base.component.ActionComponentProviderImpl;
-import com.adyen.checkout.base.component.BaseActionComponent;
-import com.adyen.checkout.base.model.payments.response.Action;
-import com.adyen.checkout.base.model.payments.response.RedirectAction;
+import com.adyen.checkout.components.ActionComponentProvider;
+import com.adyen.checkout.components.base.ActionComponentProviderImpl;
+import com.adyen.checkout.components.base.BaseActionComponent;
+import com.adyen.checkout.components.model.payments.response.Action;
+import com.adyen.checkout.components.model.payments.response.RedirectAction;
 import com.adyen.checkout.core.exception.CheckoutException;
 import com.adyen.checkout.core.exception.ComponentException;
 import com.adyen.checkout.core.log.LogUtil;

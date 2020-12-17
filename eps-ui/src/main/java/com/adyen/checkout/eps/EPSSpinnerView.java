@@ -14,7 +14,7 @@ import android.util.AttributeSet;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 
-import com.adyen.checkout.base.model.payments.request.EPSPaymentMethod;
+import com.adyen.checkout.components.model.payments.request.EPSPaymentMethod;
 import com.adyen.checkout.issuerlist.IssuerListSpinnerView;
 
 @SuppressWarnings("AbbreviationAsWordInName")

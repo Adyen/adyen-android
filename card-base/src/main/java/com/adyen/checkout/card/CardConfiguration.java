@@ -15,9 +15,9 @@ import android.os.Parcelable;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 
-import com.adyen.checkout.base.component.BaseConfigurationBuilder;
-import com.adyen.checkout.base.component.Configuration;
-import com.adyen.checkout.base.util.ValidationUtils;
+import com.adyen.checkout.components.base.BaseConfigurationBuilder;
+import com.adyen.checkout.components.base.Configuration;
+import com.adyen.checkout.components.util.ValidationUtils;
 import com.adyen.checkout.card.data.CardType;
 import com.adyen.checkout.core.api.Environment;
 import com.adyen.checkout.core.exception.CheckoutException;
@@ -289,7 +289,7 @@ public class CardConfiguration extends Configuration {
 
         /**
          * Set the unique reference for the shopper doing this transaction.
-         * This value will simply be passed back to you in the {@link com.adyen.checkout.base.model.payments.request.PaymentComponentData}
+         * This value will simply be passed back to you in the {@link com.adyen.checkout.components.model.payments.request.PaymentComponentData}
          * for convenience.
          *
          * @param shopperReference The unique shopper reference

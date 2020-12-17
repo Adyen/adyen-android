@@ -14,9 +14,9 @@ import android.os.Parcelable;
 
 import androidx.annotation.NonNull;
 
-import com.adyen.checkout.base.component.BaseConfigurationBuilder;
-import com.adyen.checkout.base.component.Configuration;
-import com.adyen.checkout.base.util.ValidationUtils;
+import com.adyen.checkout.components.base.BaseConfigurationBuilder;
+import com.adyen.checkout.components.base.Configuration;
+import com.adyen.checkout.components.util.ValidationUtils;
 import com.adyen.checkout.card.CardValidationUtils;
 import com.adyen.checkout.core.api.Environment;
 import com.adyen.checkout.core.exception.CheckoutException;

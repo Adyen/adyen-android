@@ -10,7 +10,7 @@ package com.adyen.checkout.dropin
 
 import android.app.Activity
 import android.content.Context
-import com.adyen.checkout.base.model.PaymentMethodsApiResponse
+import com.adyen.checkout.components.model.PaymentMethodsApiResponse
 import com.adyen.checkout.core.log.LogUtil
 import com.adyen.checkout.core.log.Logger
 import com.adyen.checkout.dropin.DropIn.Companion.startPayment

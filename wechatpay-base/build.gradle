@@ -34,7 +34,7 @@ dependencies {
     androidTestImplementation "androidx.test.espresso:espresso-core:$espresso_version"
 
     // Checkout
-    api project(':base-v3')
+    api project(':components-core')
 
     // Dependencies
     implementation "com.tencent.mm.opensdk:wechat-sdk-android-without-mta:$wechat_pay_version"

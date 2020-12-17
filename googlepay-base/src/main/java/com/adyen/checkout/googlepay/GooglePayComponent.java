@@ -14,12 +14,12 @@ import android.content.Intent;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 
-import com.adyen.checkout.base.PaymentComponentProvider;
-import com.adyen.checkout.base.component.BasePaymentComponent;
-import com.adyen.checkout.base.component.GenericPaymentMethodDelegate;
-import com.adyen.checkout.base.model.payments.request.GooglePayPaymentMethod;
-import com.adyen.checkout.base.model.payments.request.PaymentComponentData;
-import com.adyen.checkout.base.util.PaymentMethodTypes;
+import com.adyen.checkout.components.PaymentComponentProvider;
+import com.adyen.checkout.components.base.BasePaymentComponent;
+import com.adyen.checkout.components.base.GenericPaymentMethodDelegate;
+import com.adyen.checkout.components.model.payments.request.GooglePayPaymentMethod;
+import com.adyen.checkout.components.model.payments.request.PaymentComponentData;
+import com.adyen.checkout.components.util.PaymentMethodTypes;
 import com.adyen.checkout.core.exception.ComponentException;
 import com.adyen.checkout.core.log.LogUtil;
 import com.adyen.checkout.core.log.Logger;

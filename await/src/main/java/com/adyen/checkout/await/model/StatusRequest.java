@@ -13,7 +13,7 @@ import android.os.Parcel;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 
-import com.adyen.checkout.base.model.payments.request.Address;
+import com.adyen.checkout.components.model.payments.request.Address;
 import com.adyen.checkout.core.exception.ModelSerializationException;
 import com.adyen.checkout.core.model.JsonUtils;
 import com.adyen.checkout.core.model.ModelObject;

@@ -14,7 +14,7 @@ import android.util.AttributeSet;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 
-import com.adyen.checkout.base.model.payments.request.MolpayPaymentMethod;
+import com.adyen.checkout.components.model.payments.request.MolpayPaymentMethod;
 import com.adyen.checkout.issuerlist.IssuerListRecyclerView;
 
 public class MolpayRecyclerView extends IssuerListRecyclerView<MolpayPaymentMethod, MolpayComponent> {

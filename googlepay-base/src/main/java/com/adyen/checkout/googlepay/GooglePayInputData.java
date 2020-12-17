@@ -10,7 +10,7 @@ package com.adyen.checkout.googlepay;
 
 import androidx.annotation.Nullable;
 
-import com.adyen.checkout.base.component.InputData;
+import com.adyen.checkout.components.base.InputData;
 import com.google.android.gms.wallet.PaymentData;
 
 class GooglePayInputData implements InputData {

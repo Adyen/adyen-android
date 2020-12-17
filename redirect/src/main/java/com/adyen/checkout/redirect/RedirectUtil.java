@@ -22,7 +22,7 @@ import android.net.Uri;
 import androidx.annotation.NonNull;
 import androidx.browser.customtabs.CustomTabsIntent;
 
-import com.adyen.checkout.base.ui.util.ThemeUtil;
+import com.adyen.checkout.components.ui.util.ThemeUtil;
 import com.adyen.checkout.core.code.Lint;
 import com.adyen.checkout.core.exception.CheckoutException;
 import com.adyen.checkout.core.exception.NoConstructorException;

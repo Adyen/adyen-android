@@ -10,15 +10,15 @@ package com.adyen.checkout.blik;
 
 import androidx.annotation.NonNull;
 
-import com.adyen.checkout.base.PaymentComponentState;
-import com.adyen.checkout.base.StoredPaymentComponentProvider;
-import com.adyen.checkout.base.component.BasePaymentComponent;
-import com.adyen.checkout.base.component.GenericPaymentMethodDelegate;
-import com.adyen.checkout.base.component.GenericStoredPaymentComponentProvider;
-import com.adyen.checkout.base.component.GenericStoredPaymentDelegate;
-import com.adyen.checkout.base.model.payments.request.BlikPaymentMethod;
-import com.adyen.checkout.base.model.payments.request.PaymentComponentData;
-import com.adyen.checkout.base.util.PaymentMethodTypes;
+import com.adyen.checkout.components.PaymentComponentState;
+import com.adyen.checkout.components.StoredPaymentComponentProvider;
+import com.adyen.checkout.components.base.BasePaymentComponent;
+import com.adyen.checkout.components.base.GenericPaymentMethodDelegate;
+import com.adyen.checkout.components.base.GenericStoredPaymentComponentProvider;
+import com.adyen.checkout.components.base.GenericStoredPaymentDelegate;
+import com.adyen.checkout.components.model.payments.request.BlikPaymentMethod;
+import com.adyen.checkout.components.model.payments.request.PaymentComponentData;
+import com.adyen.checkout.components.util.PaymentMethodTypes;
 import com.adyen.checkout.core.log.LogUtil;
 import com.adyen.checkout.core.log.Logger;
 

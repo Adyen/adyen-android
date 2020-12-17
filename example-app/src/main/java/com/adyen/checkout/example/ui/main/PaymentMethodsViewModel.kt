@@ -10,7 +10,7 @@ package com.adyen.checkout.example.ui.main
 
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
-import com.adyen.checkout.base.model.PaymentMethodsApiResponse
+import com.adyen.checkout.components.model.PaymentMethodsApiResponse
 import com.adyen.checkout.core.log.LogUtil
 import com.adyen.checkout.core.log.Logger
 import com.adyen.checkout.example.data.api.model.paymentsRequest.PaymentMethodsRequest

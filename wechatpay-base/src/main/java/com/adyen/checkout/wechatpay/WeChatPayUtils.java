@@ -14,7 +14,7 @@ import android.content.Intent;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 
-import com.adyen.checkout.base.model.payments.response.WeChatPaySdkData;
+import com.adyen.checkout.components.model.payments.response.WeChatPaySdkData;
 import com.adyen.checkout.core.exception.CheckoutException;
 import com.adyen.checkout.core.exception.NoConstructorException;
 import com.tencent.mm.opensdk.constants.Build;

@@ -10,11 +10,11 @@ package com.adyen.checkout.dotpay;
 
 import androidx.annotation.NonNull;
 
-import com.adyen.checkout.base.PaymentComponentProvider;
-import com.adyen.checkout.base.component.GenericPaymentComponentProvider;
-import com.adyen.checkout.base.component.GenericPaymentMethodDelegate;
-import com.adyen.checkout.base.model.payments.request.DotpayPaymentMethod;
-import com.adyen.checkout.base.util.PaymentMethodTypes;
+import com.adyen.checkout.components.PaymentComponentProvider;
+import com.adyen.checkout.components.base.GenericPaymentComponentProvider;
+import com.adyen.checkout.components.base.GenericPaymentMethodDelegate;
+import com.adyen.checkout.components.model.payments.request.DotpayPaymentMethod;
+import com.adyen.checkout.components.util.PaymentMethodTypes;
 import com.adyen.checkout.issuerlist.IssuerListComponent;
 import com.adyen.checkout.issuerlist.IssuerListInputData;
 import com.adyen.checkout.issuerlist.IssuerListOutputData;

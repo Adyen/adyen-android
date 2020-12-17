@@ -14,7 +14,7 @@ import android.graphics.drawable.Drawable;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 
-import com.adyen.checkout.base.api.LogoConnectionTask;
+import com.adyen.checkout.components.api.LogoConnectionTask;
 
 public class IssuerLogoCallback implements LogoConnectionTask.LogoCallback {
 

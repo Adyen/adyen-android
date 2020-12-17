@@ -18,7 +18,7 @@ import android.util.AttributeSet;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 
-import com.adyen.checkout.base.ui.view.AdyenTextInputEditText;
+import com.adyen.checkout.components.ui.view.AdyenTextInputEditText;
 import com.adyen.checkout.card.CardValidationUtils;
 
 import java.util.Arrays;

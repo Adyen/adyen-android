@@ -15,11 +15,11 @@ import androidx.annotation.NonNull;
 import androidx.lifecycle.ViewModelProvider;
 import androidx.lifecycle.ViewModelStoreOwner;
 
-import com.adyen.checkout.base.ComponentAvailableCallback;
-import com.adyen.checkout.base.StoredPaymentComponentProvider;
-import com.adyen.checkout.base.component.lifecycle.PaymentComponentViewModelFactory;
-import com.adyen.checkout.base.model.paymentmethods.PaymentMethod;
-import com.adyen.checkout.base.model.paymentmethods.StoredPaymentMethod;
+import com.adyen.checkout.components.ComponentAvailableCallback;
+import com.adyen.checkout.components.StoredPaymentComponentProvider;
+import com.adyen.checkout.components.base.lifecycle.PaymentComponentViewModelFactory;
+import com.adyen.checkout.components.model.paymentmethods.PaymentMethod;
+import com.adyen.checkout.components.model.paymentmethods.StoredPaymentMethod;
 import com.adyen.checkout.card.data.CardType;
 import com.adyen.checkout.core.log.LogUtil;
 import com.adyen.checkout.core.log.Logger;

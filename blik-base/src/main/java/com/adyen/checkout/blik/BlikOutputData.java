@@ -12,8 +12,8 @@ import android.text.TextUtils;
 
 import androidx.annotation.NonNull;
 
-import com.adyen.checkout.base.component.OutputData;
-import com.adyen.checkout.base.validation.ValidatedField;
+import com.adyen.checkout.components.base.OutputData;
+import com.adyen.checkout.components.validation.ValidatedField;
 import com.adyen.checkout.core.log.LogUtil;
 import com.adyen.checkout.core.log.Logger;
 

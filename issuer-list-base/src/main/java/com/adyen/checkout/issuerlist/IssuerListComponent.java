@@ -12,12 +12,12 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.lifecycle.MutableLiveData;
 
-import com.adyen.checkout.base.PaymentComponentState;
-import com.adyen.checkout.base.component.BasePaymentComponent;
-import com.adyen.checkout.base.component.GenericPaymentMethodDelegate;
-import com.adyen.checkout.base.model.paymentmethods.Issuer;
-import com.adyen.checkout.base.model.payments.request.IssuerListPaymentMethod;
-import com.adyen.checkout.base.model.payments.request.PaymentComponentData;
+import com.adyen.checkout.components.PaymentComponentState;
+import com.adyen.checkout.components.base.BasePaymentComponent;
+import com.adyen.checkout.components.base.GenericPaymentMethodDelegate;
+import com.adyen.checkout.components.model.paymentmethods.Issuer;
+import com.adyen.checkout.components.model.payments.request.IssuerListPaymentMethod;
+import com.adyen.checkout.components.model.payments.request.PaymentComponentData;
 
 import java.util.ArrayList;
 import java.util.List;

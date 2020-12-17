@@ -33,7 +33,7 @@
         </com.google.android.material.textfield.TextInputLayout>
 
 
-        <com.adyen.checkout.base.ui.view.RoundCornerImageView
+        <com.adyen.checkout.components.ui.view.RoundCornerImageView
             android:id="@+id/cardBrandLogo_imageView"
             style="@style/AdyenCheckout.Card.BrandRecognitionLogo"
             android:layout_width="@dimen/brand_logo_width"
@@ -41,7 +41,7 @@
             app:strokeColor="@color/stroke_color"
             app:strokeWidth="0dp">
 
-        </com.adyen.checkout.base.ui.view.RoundCornerImageView>
+        </com.adyen.checkout.components.ui.view.RoundCornerImageView>
     </FrameLayout>
 
     <LinearLayout
@@ -89,7 +89,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content">
 
-        <com.adyen.checkout.base.ui.view.AdyenTextInputEditText
+        <com.adyen.checkout.components.ui.view.AdyenTextInputEditText
             android:id="@+id/editText_cardHolder"
             style="@style/AdyenCheckout.Card.HolderNameInput"
             tools:ignore="RequiredSize" />

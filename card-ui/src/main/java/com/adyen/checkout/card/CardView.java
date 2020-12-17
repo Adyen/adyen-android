@@ -25,11 +25,11 @@ import androidx.appcompat.widget.SwitchCompat;
 import androidx.lifecycle.LifecycleOwner;
 import androidx.lifecycle.Observer;
 
-import com.adyen.checkout.base.api.ImageLoader;
-import com.adyen.checkout.base.ui.view.AdyenLinearLayout;
-import com.adyen.checkout.base.ui.view.AdyenTextInputEditText;
-import com.adyen.checkout.base.ui.view.RoundCornerImageView;
-import com.adyen.checkout.base.validation.ValidatedField;
+import com.adyen.checkout.components.api.ImageLoader;
+import com.adyen.checkout.components.ui.view.AdyenLinearLayout;
+import com.adyen.checkout.components.ui.view.AdyenTextInputEditText;
+import com.adyen.checkout.components.ui.view.RoundCornerImageView;
+import com.adyen.checkout.components.validation.ValidatedField;
 import com.adyen.checkout.card.data.CardType;
 import com.adyen.checkout.card.data.ExpiryDate;
 import com.adyen.checkout.card.ui.CardNumberInput;

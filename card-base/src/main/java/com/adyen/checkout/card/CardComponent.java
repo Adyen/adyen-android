@@ -13,12 +13,12 @@ import android.text.TextUtils;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 
-import com.adyen.checkout.base.StoredPaymentComponentProvider;
-import com.adyen.checkout.base.component.BasePaymentComponent;
-import com.adyen.checkout.base.model.payments.request.CardPaymentMethod;
-import com.adyen.checkout.base.model.payments.request.PaymentComponentData;
-import com.adyen.checkout.base.util.PaymentMethodTypes;
-import com.adyen.checkout.base.validation.ValidatedField;
+import com.adyen.checkout.components.StoredPaymentComponentProvider;
+import com.adyen.checkout.components.base.BasePaymentComponent;
+import com.adyen.checkout.components.model.payments.request.CardPaymentMethod;
+import com.adyen.checkout.components.model.payments.request.PaymentComponentData;
+import com.adyen.checkout.components.util.PaymentMethodTypes;
+import com.adyen.checkout.components.validation.ValidatedField;
 import com.adyen.checkout.card.data.CardType;
 import com.adyen.checkout.card.data.ExpiryDate;
 import com.adyen.checkout.core.log.LogUtil;

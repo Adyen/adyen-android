@@ -11,9 +11,9 @@ package com.adyen.checkout.card;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 
-import com.adyen.checkout.base.PaymentComponentState;
-import com.adyen.checkout.base.model.payments.request.CardPaymentMethod;
-import com.adyen.checkout.base.model.payments.request.PaymentComponentData;
+import com.adyen.checkout.components.PaymentComponentState;
+import com.adyen.checkout.components.model.payments.request.CardPaymentMethod;
+import com.adyen.checkout.components.model.payments.request.PaymentComponentData;
 import com.adyen.checkout.card.data.CardType;
 
 public class CardComponentState extends PaymentComponentState<CardPaymentMethod> {

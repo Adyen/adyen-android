@@ -10,7 +10,7 @@ package com.adyen.checkout.bcmc;
 
 import androidx.annotation.NonNull;
 
-import com.adyen.checkout.base.component.InputData;
+import com.adyen.checkout.components.base.InputData;
 import com.adyen.checkout.card.data.ExpiryDate;
 
 public final class BcmcInputData implements InputData {

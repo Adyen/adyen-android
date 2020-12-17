@@ -11,9 +11,9 @@ package com.adyen.checkout.googlepay;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 
-import com.adyen.checkout.base.PaymentComponentState;
-import com.adyen.checkout.base.model.payments.request.GooglePayPaymentMethod;
-import com.adyen.checkout.base.model.payments.request.PaymentComponentData;
+import com.adyen.checkout.components.PaymentComponentState;
+import com.adyen.checkout.components.model.payments.request.GooglePayPaymentMethod;
+import com.adyen.checkout.components.model.payments.request.PaymentComponentData;
 import com.google.android.gms.wallet.PaymentData;
 
 public class GooglePayComponentState extends PaymentComponentState<GooglePayPaymentMethod> {
