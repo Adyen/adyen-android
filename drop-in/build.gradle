@@ -55,7 +55,7 @@ dependencies {
     api project(':dotpay')
     api project(':entercash')
     api project(':eps')
-    api project(":googlepay-base")
+    api project(':googlepay')
     api project(':ideal')
     api project(':mbway')
     api project(':molpay')
