@@ -6,7 +6,7 @@
  * Created by caiof on 18/4/2019.
  */
 
-package com.adyn.checkout.core;
+package com.adyen.checkout.core;
 
 import android.os.Parcel;
 

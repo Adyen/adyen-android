@@ -6,12 +6,11 @@
  * Created by caiof on 18/4/2019.
  */
 
-package com.adyn.checkout.core.model;
+package com.adyen.checkout.core.model;
 
 import static org.junit.Assert.assertNotNull;
 
 import com.adyen.checkout.core.mock.MockModelObject;
-import com.adyen.checkout.core.model.ModelUtils;
 
 import org.json.JSONArray;
 import org.json.JSONObject;

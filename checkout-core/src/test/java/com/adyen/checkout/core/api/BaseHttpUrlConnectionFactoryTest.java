@@ -6,13 +6,11 @@
  * Created by arman on 9/4/2019.
  */
 
-package com.adyn.checkout.core.api;
+package com.adyen.checkout.core.api;
 
 import static org.junit.Assert.assertEquals;
 
 import androidx.annotation.NonNull;
-
-import com.adyen.checkout.core.api.BaseHttpUrlConnectionFactory;
 
 import org.junit.Test;
 

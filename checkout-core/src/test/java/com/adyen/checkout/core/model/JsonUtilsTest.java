@@ -6,9 +6,7 @@
  * Created by caiof on 18/4/2019.
  */
 
-package com.adyn.checkout.core.model;
-
-import com.adyen.checkout.core.model.JsonUtils;
+package com.adyen.checkout.core.model;
 
 import org.json.JSONArray;
 import org.junit.Assert;

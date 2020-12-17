@@ -6,7 +6,7 @@
  * Created by caiof on 18/4/2019.
  */
 
-package com.adyn.checkout.core.mock;
+package com.adyen.checkout.core.mock;
 
 import android.os.Parcel;
 
