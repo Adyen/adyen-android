@@ -50,7 +50,7 @@ dependencies {
     api project(":3ds2")
     api project(":await")
     api project(':bcmc')
-    api project(":blik-ui")
+    api project(':blik')
     api project(":card")
     api project(":dotpay-ui")
     api project(":entercash-ui")
