@@ -28,7 +28,7 @@ public class StatusConnectionTask extends ConnectionTask<StatusResponse> {
 
     private static final int SAFETY_TIMEOUT = 100;
 
-    StatusConnectionTask.StatusCallback mCallback;
+    StatusCallback mCallback;
 
     private final StatusApi mStatusApi;
 
@@ -36,7 +36,7 @@ public class StatusConnectionTask extends ConnectionTask<StatusResponse> {
             @NonNull StatusApi statusApi,
             @NonNull String logoUrl,
             @NonNull StatusRequest statusRequest,
-            @NonNull StatusConnectionTask.StatusCallback callback) {
+            @NonNull StatusCallback callback) {
         super(new StatusConnection(logoUrl, statusRequest));
         mStatusApi = statusApi;
         mCallback = callback;

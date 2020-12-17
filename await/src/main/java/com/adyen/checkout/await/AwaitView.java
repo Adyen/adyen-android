@@ -22,7 +22,6 @@ import androidx.annotation.StringRes;
 import androidx.lifecycle.LifecycleOwner;
 import androidx.lifecycle.Observer;
 
-import com.adyen.checkout.await.ui.R;
 import com.adyen.checkout.base.ActionComponentData;
 import com.adyen.checkout.base.api.ImageLoader;
 import com.adyen.checkout.base.ui.view.AdyenLinearLayout;

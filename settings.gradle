@@ -1,6 +1,5 @@
 include ':3ds2',
-        ':await-base',
-        ':await-ui',
+        ':await',
         ':base-ui',
         ':base-v3',
         ':bcmc-base',

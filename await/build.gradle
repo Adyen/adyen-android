@@ -1,9 +1,19 @@
-ext.mavenArtifactId = "await-ui"
-ext.mavenArtifactName = "Adyen checkout await-ui component"
-ext.mavenArtifactDescription = "Adyen checkout await-ui component client for Adyen's Checkout API."
+/*
+ * Copyright (c) 2020 Adyen N.V.
+ *
+ * This file is open source and available under the MIT license. See the LICENSE file for more info.
+ *
+ * Created by caiof on 17/12/2020.
+ */
 
-apply plugin: 'com.android.library'
-apply plugin: 'kotlin-android'
+plugins {
+    id 'com.android.library'
+    id 'kotlin-android'
+}
+
+ext.mavenArtifactId = "await"
+ext.mavenArtifactName = "Adyen Checkout Await component"
+ext.mavenArtifactDescription = "Adyen checkout await component for Adyen's Checkout API."
 
 android {
     compileSdkVersion compile_sdk_version
@@ -15,7 +25,9 @@ android {
         versionName version_name
 
         testInstrumentationRunner 'androidx.test.runner.AndroidJUnitRunner'
+        consumerProguardFiles "consumer-rules.pro"
     }
+
     compileOptions {
         sourceCompatibility JavaVersion.VERSION_1_8
         targetCompatibility JavaVersion.VERSION_1_8
@@ -33,8 +45,8 @@ dependencies {
     androidTestImplementation "androidx.test.espresso:espresso-core:$espresso_version"
 
     // Checkout
+    api project(':base-v3')
     api project(":base-ui")
-    api project(':await-base')
 }
 
 // This sharedTasks.gradle script is applied at the end of this build.gradle script,
