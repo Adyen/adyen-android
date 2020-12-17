@@ -6,13 +6,15 @@
  * Created by caiof on 8/2/2019.
  */
 
+plugins {
+    id 'com.android.library'
+    id 'kotlin-android'
+}
+
 // Maven artifact
 ext.mavenArtifactId = "3ds2"
 ext.mavenArtifactName = "Adyen checkout 3DS2 component"
 ext.mavenArtifactDescription = "Adyen Checkout 3DS2 component client for Adyen's Checkout API."
-
-apply plugin: 'com.android.library'
-apply plugin: 'kotlin-android'
 
 android {
     compileSdkVersion compile_sdk_version
@@ -24,6 +26,7 @@ android {
         versionName version_name
 
         testInstrumentationRunner 'androidx.test.runner.AndroidJUnitRunner'
+        consumerProguardFiles "consumer-rules.pro"
     }
 
     compileOptions {

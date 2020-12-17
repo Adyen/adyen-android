@@ -1,9 +1,11 @@
+plugins {
+    id 'com.android.library'
+}
+
 // Maven artifact
 ext.mavenArtifactId = "cse"
 ext.mavenArtifactName = "Adyen Client Side Encryption"
 ext.mavenArtifactDescription = "Adyen Client Side Encryption for Adyen's Checkout API."
-
-apply plugin: 'com.android.library'
 
 android {
     compileSdkVersion compile_sdk_version
@@ -15,6 +17,7 @@ android {
         versionName version_name
 
         testInstrumentationRunner 'androidx.test.runner.AndroidJUnitRunner'
+        consumerProguardFiles "consumer-rules.pro"
     }
 }
 
