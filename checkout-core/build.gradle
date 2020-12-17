@@ -1,18 +1,19 @@
 /*
- * Copyright (c) 2019 Adyen N.V.
+ * Copyright (c) 2020 Adyen N.V.
  *
  * This file is open source and available under the MIT license. See the LICENSE file for more info.
  *
- * Created by caiof on 8/2/2019.
+ * Created by caiof on 17/12/2020.
  */
 
-// Maven artifact
-ext.mavenArtifactId = "base-v3"
-ext.mavenArtifactName = "Adyen checkout base component"
-ext.mavenArtifactDescription = "Adyen checkout base component client for Adyen's Checkout API."
+plugins {
+    id 'com.android.library'
+    id 'kotlin-android'
+}
 
-apply plugin: 'com.android.library'
-apply plugin: 'kotlin-android'
+ext.mavenArtifactId = "checkout-core"
+ext.mavenArtifactName = "Adyen Checkout Core module"
+ext.mavenArtifactDescription = "Core module for Adyen Checkout products."
 
 android {
     compileSdkVersion compile_sdk_version
@@ -24,6 +25,7 @@ android {
         versionName version_name
 
         testInstrumentationRunner 'androidx.test.runner.AndroidJUnitRunner'
+        consumerProguardFiles "consumer-rules.pro"
     }
 
     compileOptions {
@@ -40,17 +42,13 @@ dependencies {
     //Tests
     testImplementation "junit:junit:$junit_version"
     testImplementation "org.json:json:$json_version"
-    testImplementation "androidx.arch.core:core-testing:$arch_core_testing_version"
-    testImplementation "org.mockito:mockito-core:$mockito_version"
-    androidTestImplementation "org.mockito:mockito-android:$mockito_version"
     androidTestImplementation "androidx.test.ext:junit:$test_ext_version"
     androidTestImplementation "androidx.test.espresso:espresso-core:$espresso_version"
 
-    // Checkout
-    api project(':checkout-core')
-
     // Dependencies
-    api "androidx.fragment:fragment-ktx:$fragment_version"
+    api "org.jetbrains.kotlin:kotlin-stdlib-jdk7:$kotlin_version"
+    api "androidx.annotation:annotation:$annotation_version"
+    api "androidx.core:core-ktx:$kotlin_ktx_version"
 }
 
 // This sharedTasks.gradle script is applied at the end of this build.gradle script,

@@ -25,7 +25,7 @@ dependencies {
     androidTestImplementation "androidx.test.espresso:espresso-core:$espresso_version"
 
     // Checkout
-    api project(':core-v3')
+    api project(':checkout-core')
 
     // Dependencies
     api "com.adyen.cse:adyen-cse:$adyen_cse_version"
