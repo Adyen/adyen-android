@@ -25,17 +25,16 @@ import androidx.appcompat.widget.SwitchCompat;
 import androidx.lifecycle.LifecycleOwner;
 import androidx.lifecycle.Observer;
 
+import com.adyen.checkout.card.data.CardType;
+import com.adyen.checkout.card.data.ExpiryDate;
+import com.adyen.checkout.card.ui.CardNumberInput;
+import com.adyen.checkout.card.ui.ExpiryDateInput;
+import com.adyen.checkout.card.ui.SecurityCodeInput;
 import com.adyen.checkout.components.api.ImageLoader;
 import com.adyen.checkout.components.ui.view.AdyenLinearLayout;
 import com.adyen.checkout.components.ui.view.AdyenTextInputEditText;
 import com.adyen.checkout.components.ui.view.RoundCornerImageView;
 import com.adyen.checkout.components.validation.ValidatedField;
-import com.adyen.checkout.card.data.CardType;
-import com.adyen.checkout.card.data.ExpiryDate;
-import com.adyen.checkout.card.ui.CardNumberInput;
-import com.adyen.checkout.card.ui.ExpiryDateInput;
-import com.adyen.checkout.card.ui.R;
-import com.adyen.checkout.card.ui.SecurityCodeInput;
 import com.google.android.material.textfield.TextInputLayout;
 
 import java.util.List;
@@ -290,7 +289,7 @@ public final class CardView extends AdyenLinearLayout<CardOutputData, CardConfig
             notifyInputDataChanged();
             mCardNumberInput.setError(null);
         });
-        mCardNumberEditText.setOnFocusChangeListener(new OnFocusChangeListener() {
+        mCardNumberEditText.setOnFocusChangeListener(new View.OnFocusChangeListener() {
             @Override
             public void onFocusChange(View v, boolean hasFocus) {
                 if (!getComponent().isStoredPaymentMethod()) {

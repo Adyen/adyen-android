@@ -43,7 +43,7 @@ dependencies {
     androidTestImplementation "androidx.test.espresso:espresso-core:$espresso_version"
 
     // Checkout
-    api project(':card-base-core')
+    api project(':card')
 }
 
 // This sharedTasks.gradle script is applied at the end of this build.gradle script,

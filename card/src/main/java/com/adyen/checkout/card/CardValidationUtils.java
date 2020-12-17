@@ -13,9 +13,9 @@ import android.text.TextUtils;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 
-import com.adyen.checkout.components.validation.ValidatedField;
 import com.adyen.checkout.card.data.CardType;
 import com.adyen.checkout.card.data.ExpiryDate;
+import com.adyen.checkout.components.validation.ValidatedField;
 import com.adyen.checkout.core.exception.NoConstructorException;
 import com.adyen.checkout.core.util.StringUtil;
 
