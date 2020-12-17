@@ -6,13 +6,15 @@
  * Created by arman on 18/9/2019.
  */
 
+plugins {
+    id 'com.android.library'
+    id 'kotlin-android'
+}
+
 // Maven artifact
 ext.mavenArtifactId = "bcmc-ui"
 ext.mavenArtifactName = "Adyen checkout bcmc UI component"
 ext.mavenArtifactDescription = "Adyen checkout bcmc UI component client for Adyen's Checkout API."
-
-apply plugin: 'com.android.library'
-apply plugin: 'kotlin-android'
 
 android {
     compileSdkVersion compile_sdk_version
@@ -24,6 +26,7 @@ android {
         versionName version_name
 
         testInstrumentationRunner 'androidx.test.runner.AndroidJUnitRunner'
+        consumerProguardFiles "consumer-rules.pro"
     }
 
     compileOptions {
@@ -44,7 +47,6 @@ dependencies {
 
     // Checkout
     api project(":card")
-    api project(":bcmc-base")
 
     // Dependencies
     implementation "com.google.android.material:material:$material_version"
