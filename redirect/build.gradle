@@ -46,7 +46,7 @@ dependencies {
     androidTestImplementation "androidx.test.espresso:espresso-core:$espresso_version"
 
     // Checkout
-    api project(":base-ui")
+    api project(':ui-core')
 
     // Dependencies
     implementation "androidx.browser:browser:$browser_version"

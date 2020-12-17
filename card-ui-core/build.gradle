@@ -44,7 +44,7 @@ dependencies {
 
     // Checkout
     api project(":card-base-core")
-    api project(":base-ui")
+    api project(':ui-core')
 
     // Dependencies
     implementation "com.google.android.material:material:$material_version"
