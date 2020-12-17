@@ -61,7 +61,7 @@ dependencies {
     api project(':molpay')
     api project(':openbanking')
     api project(":redirect")
-    api project(":sepa-ui")
+    api project(':sepa')
     api project(":wechatpay-base")
 
     // Dependencies

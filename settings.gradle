@@ -18,7 +18,6 @@ include ':3ds2',
         ':molpay',
         ':openbanking',
         ':redirect',
-        ':sepa-base',
-        ':sepa-ui',
+        ':sepa',
         ':ui-core',
         ':wechatpay-base'

@@ -6,13 +6,15 @@
  * Created by caiof on 8/2/2019.
  */
 
-// Maven artifact
-ext.mavenArtifactId = "sepa-base"
-ext.mavenArtifactName = "Adyen checkout sepa-base component"
-ext.mavenArtifactDescription = "Adyen checkout sepa-base component client for Adyen's Checkout API."
+plugins {
+    id 'com.android.library'
+    id 'kotlin-android'
+}
 
-apply plugin: 'com.android.library'
-apply plugin: 'kotlin-android'
+// Maven artifact
+ext.mavenArtifactId = "sepa"
+ext.mavenArtifactName = "Adyen checkout sepa-ui component"
+ext.mavenArtifactDescription = "Adyen checkout sepa-ui component client for Adyen's Checkout API."
 
 android {
     compileSdkVersion compile_sdk_version
@@ -24,6 +26,7 @@ android {
         versionName version_name
 
         testInstrumentationRunner 'androidx.test.runner.AndroidJUnitRunner'
+        consumerProguardFiles "consumer-rules.pro"
     }
 
     compileOptions {
@@ -44,6 +47,10 @@ dependencies {
 
     // Checkout
     api project(':components-core')
+    api project(':ui-core')
+
+    // Dependencies
+    implementation "com.google.android.material:material:$material_version"
 }
 
 // This sharedTasks.gradle script is applied at the end of this build.gradle script,
