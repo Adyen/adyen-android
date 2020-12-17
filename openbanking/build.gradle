@@ -3,17 +3,21 @@
  *
  * This file is open source and available under the MIT license. See the LICENSE file for more info.
  *
- * Created by caiof on 8/2/2019.
+ * Created by arman on 12/6/2019.
  */
 
+plugins {
+    id 'com.android.library'
+    id 'kotlin-android'
+}
+
 // Maven artifact
-ext.mavenArtifactId = "drop-in"
-ext.mavenArtifactName = "Adyen checkout drop-in component"
-ext.mavenArtifactDescription = "Adyen checkout drop-in component client for Adyen's Checkout API."
+ext.mavenArtifactId = "openbanking"
+ext.mavenArtifactName = "Adyen checkout openbanking ui component"
+ext.mavenArtifactDescription = "Adyen checkout openbanking ui component client for Adyen's Checkout API."
 
 apply plugin: 'com.android.library'
 apply plugin: 'kotlin-android'
-apply plugin: 'kotlin-android-extensions'
 
 android {
     compileSdkVersion compile_sdk_version
@@ -25,9 +29,7 @@ android {
         versionName version_name
 
         testInstrumentationRunner 'androidx.test.runner.AndroidJUnitRunner'
-
-        // Get scheme for redirect result
-        manifestPlaceholders = ["checkoutRedirectScheme": rootProject.ext.checkoutRedirectScheme]
+        consumerProguardFiles "consumer-rules.pro"
     }
 
     compileOptions {
@@ -47,30 +49,11 @@ dependencies {
     androidTestImplementation "androidx.test.espresso:espresso-core:$espresso_version"
 
     // Checkout
-    api project(":3ds2")
-    api project(":await")
-    api project(':bcmc')
-    api project(':blik')
-    api project(":card")
-    api project(':dotpay')
-    api project(':entercash')
-    api project(':eps')
-    api project(":googlepay-base")
-    api project(':ideal')
-    api project(":mbway-ui")
-    api project(':molpay')
-    api project(':openbanking')
-    api project(":redirect")
-    api project(":sepa-ui")
-    api project(":wechatpay-base")
+    api project(':issuer-list')
 
     // Dependencies
-    implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk7:$kotlin_stdlib_version"
+    implementation "androidx.appcompat:appcompat:$appcompat_version"
     implementation "androidx.recyclerview:recyclerview:$recyclerview_version"
-    implementation "com.google.android.material:material:$material_version"
-    // contains kotlinx.coroutines
-    implementation 'androidx.lifecycle:lifecycle-runtime-ktx:2.2.0'
-
 }
 
 // This sharedTasks.gradle script is applied at the end of this build.gradle script,
