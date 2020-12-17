@@ -10,7 +10,6 @@ package com.adyen.checkout.bcmc;
 
 import android.content.Context;
 import android.content.res.TypedArray;
-import android.text.Editable;
 import android.util.AttributeSet;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -21,17 +20,15 @@ import androidx.annotation.Nullable;
 import androidx.lifecycle.LifecycleOwner;
 import androidx.lifecycle.Observer;
 
+import com.adyen.checkout.card.CardValidationUtils;
+import com.adyen.checkout.card.ui.CardNumberInput;
+import com.adyen.checkout.card.ui.ExpiryDateInput;
 import com.adyen.checkout.components.PaymentComponentState;
 import com.adyen.checkout.components.api.ImageLoader;
 import com.adyen.checkout.components.model.payments.request.CardPaymentMethod;
 import com.adyen.checkout.components.ui.view.AdyenLinearLayout;
-import com.adyen.checkout.components.ui.view.AdyenTextInputEditText;
 import com.adyen.checkout.components.ui.view.RoundCornerImageView;
 import com.adyen.checkout.components.validation.ValidatedField;
-import com.adyen.checkout.bcmc.ui.R;
-import com.adyen.checkout.card.CardValidationUtils;
-import com.adyen.checkout.card.ui.CardNumberInput;
-import com.adyen.checkout.card.ui.ExpiryDateInput;
 import com.google.android.material.textfield.TextInputLayout;
 
 /**
@@ -180,23 +177,17 @@ public final class BcmcView
         mCardNumberInput = findViewById(R.id.textInputLayout_cardNumber);
         mCardNumberEditText = (CardNumberInput) mCardNumberInput.getEditText();
         //noinspection ConstantConditions
-        mCardNumberEditText.setOnChangeListener(new AdyenTextInputEditText.Listener() {
-            @Override
-            public void onTextChanged(@NonNull Editable editable) {
-                mCardInputData.setCardNumber(mCardNumberEditText.getRawValue());
-                notifyInputDataChanged();
-                mCardNumberInput.setError(null);
-            }
+        mCardNumberEditText.setOnChangeListener(editable -> {
+            mCardInputData.setCardNumber(mCardNumberEditText.getRawValue());
+            notifyInputDataChanged();
+            mCardNumberInput.setError(null);
         });
-        mCardNumberEditText.setOnFocusChangeListener(new OnFocusChangeListener() {
-            @Override
-            public void onFocusChange(View v, boolean hasFocus) {
-                final BcmcOutputData outputData = getComponent().getOutputData();
-                if (hasFocus) {
-                    mCardNumberInput.setError(null);
-                } else if (outputData != null && !outputData.getCardNumberField().isValid()) {
-                    mCardNumberInput.setError(mLocalizedContext.getString(R.string.checkout_card_number_not_valid));
-                }
+        mCardNumberEditText.setOnFocusChangeListener((v, hasFocus) -> {
+            final BcmcOutputData outputData = getComponent().getOutputData();
+            if (hasFocus) {
+                mCardNumberInput.setError(null);
+            } else if (outputData != null && !outputData.getCardNumberField().isValid()) {
+                mCardNumberInput.setError(mLocalizedContext.getString(R.string.checkout_card_number_not_valid));
             }
         });
     }
@@ -205,23 +196,17 @@ public final class BcmcView
         mExpiryDateInput = findViewById(R.id.textInputLayout_expiryDate);
         mExpiryDateEditText = (ExpiryDateInput) mExpiryDateInput.getEditText();
         //noinspection ConstantConditions
-        mExpiryDateEditText.setOnChangeListener(new AdyenTextInputEditText.Listener() {
-            @Override
-            public void onTextChanged(@NonNull Editable editable) {
-                mCardInputData.setExpiryDate(mExpiryDateEditText.getDate());
-                notifyInputDataChanged();
-                mExpiryDateInput.setError(null);
-            }
+        mExpiryDateEditText.setOnChangeListener(editable -> {
+            mCardInputData.setExpiryDate(mExpiryDateEditText.getDate());
+            notifyInputDataChanged();
+            mExpiryDateInput.setError(null);
         });
-        mExpiryDateEditText.setOnFocusChangeListener(new OnFocusChangeListener() {
-            @Override
-            public void onFocusChange(View v, boolean hasFocus) {
-                final BcmcOutputData outputData = getComponent().getOutputData();
-                if (hasFocus) {
-                    mExpiryDateInput.setError(null);
-                } else if (outputData != null && !outputData.getExpiryDateField().isValid()) {
-                    mExpiryDateInput.setError(mLocalizedContext.getString(R.string.checkout_expiry_date_not_valid));
-                }
+        mExpiryDateEditText.setOnFocusChangeListener((v, hasFocus) -> {
+            final BcmcOutputData outputData = getComponent().getOutputData();
+            if (hasFocus) {
+                mExpiryDateInput.setError(null);
+            } else if (outputData != null && !outputData.getExpiryDateField().isValid()) {
+                mExpiryDateInput.setError(mLocalizedContext.getString(R.string.checkout_expiry_date_not_valid));
             }
         });
     }

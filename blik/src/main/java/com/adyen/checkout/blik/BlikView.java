@@ -23,7 +23,6 @@ import com.adyen.checkout.components.PaymentComponentState;
 import com.adyen.checkout.components.model.payments.request.BlikPaymentMethod;
 import com.adyen.checkout.components.ui.view.AdyenLinearLayout;
 import com.adyen.checkout.components.ui.view.AdyenTextInputEditText;
-import com.adyen.checkout.blik.ui.R;
 import com.adyen.checkout.core.exception.CheckoutException;
 import com.adyen.checkout.core.log.LogUtil;
 import com.adyen.checkout.core.log.Logger;
