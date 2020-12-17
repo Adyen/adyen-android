@@ -20,4 +20,4 @@ include ':3ds2',
         ':redirect',
         ':sepa',
         ':ui-core',
-        ':wechatpay-base'
+        ':wechatpay'

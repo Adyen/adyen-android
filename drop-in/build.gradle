@@ -62,7 +62,7 @@ dependencies {
     api project(':openbanking')
     api project(":redirect")
     api project(':sepa')
-    api project(":wechatpay-base")
+    api project(':wechatpay')
 
     // Dependencies
     implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk7:$kotlin_stdlib_version"

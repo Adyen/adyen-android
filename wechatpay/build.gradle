@@ -1,9 +1,19 @@
-ext.mavenArtifactId = "wechatpay-base"
-ext.mavenArtifactName = "Adyen checkout wechatpay-base component"
-ext.mavenArtifactDescription = "Adyen checkout wechatpay-base component client for Adyen's Checkout API."
+/*
+ * Copyright (c) 2020 Adyen N.V.
+ *
+ * This file is open source and available under the MIT license. See the LICENSE file for more info.
+ *
+ * Created by caiof on 17/12/2020.
+ */
 
-apply plugin: 'com.android.library'
-apply plugin: 'kotlin-android'
+plugins {
+    id 'com.android.library'
+    id 'kotlin-android'
+}
+
+ext.mavenArtifactId = "wechatpay"
+ext.mavenArtifactName = "Adyen Checkout WeChat Pay component"
+ext.mavenArtifactDescription = "Adyen checkout wechatpay-base component client for Adyen's Checkout API."
 
 android {
     compileSdkVersion compile_sdk_version
@@ -15,6 +25,7 @@ android {
         versionName version_name
 
         testInstrumentationRunner 'androidx.test.runner.AndroidJUnitRunner'
+        consumerProguardFiles "consumer-rules.pro"
     }
 
     compileOptions {
