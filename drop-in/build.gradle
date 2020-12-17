@@ -57,7 +57,7 @@ dependencies {
     api project(':eps')
     api project(":googlepay-base")
     api project(':ideal')
-    api project(":mbway-ui")
+    api project(':mbway')
     api project(':molpay')
     api project(':openbanking')
     api project(":redirect")

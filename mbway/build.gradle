@@ -1,9 +1,19 @@
-ext.mavenArtifactId = "mbway-ui"
+/*
+ * Copyright (c) 2020 Adyen N.V.
+ *
+ * This file is open source and available under the MIT license. See the LICENSE file for more info.
+ *
+ * Created by caiof on 17/12/2020.
+ */
+
+plugins {
+    id 'com.android.library'
+    id 'kotlin-android'
+}
+
+ext.mavenArtifactId = "mbway"
 ext.mavenArtifactName = "Adyen checkout mbway-ui component"
 ext.mavenArtifactDescription = "Adyen checkout mbway-ui component client for Adyen's Checkout API."
-
-apply plugin: 'com.android.library'
-apply plugin: 'kotlin-android'
 
 android {
     compileSdkVersion compile_sdk_version
@@ -15,6 +25,7 @@ android {
         versionName version_name
 
         testInstrumentationRunner 'androidx.test.runner.AndroidJUnitRunner'
+        consumerProguardFiles "consumer-rules.pro"
     }
 
     compileOptions {
@@ -34,8 +45,8 @@ dependencies {
     androidTestImplementation "androidx.test.espresso:espresso-core:$espresso_version"
 
     // Checkout
+    api project(':components-core')
     api project(':ui-core')
-    api project(':mbway-base')
 
     // Dependencies
     implementation "com.google.android.material:material:$material_version"
