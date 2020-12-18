@@ -45,7 +45,7 @@ public class MBWayComponent
     @Override
     protected MBWayOutputData onInputDataChanged(@NonNull MBWayInputData inputData) {
         Logger.v(TAG, "onInputDataChanged");
-        return new MBWayOutputData(inputData.getEmail(), inputData.getMobilePhoneNumber());
+        return new MBWayOutputData(inputData.getMobilePhoneNumber());
     }
 
     @NonNull
@@ -59,7 +59,6 @@ public class MBWayComponent
 
         if (mbWayOutputData != null) {
             paymentMethod.setTelephoneNumber(mbWayOutputData.getMobilePhoneNumberField().getValue());
-            paymentMethod.setShopperEmail(mbWayOutputData.getEmailField().getValue());
         }
 
         paymentComponentData.setPaymentMethod(paymentMethod);

@@ -8,8 +8,6 @@
   -->
 
 <resources>
-    <string name="checkout_mbway_email">Adresse e-mail</string>
     <string name="checkout_mbway_mobile_number">Numéro de portable</string>
-    <string name="checkout_mbway_email_not_valid">Adresse e-mail incorrecte</string>
     <string name="checkout_mbway_phone_number_not_valid">Numéro de téléphone incorrect</string>
 </resources>

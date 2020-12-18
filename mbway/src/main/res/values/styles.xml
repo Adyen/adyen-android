@@ -10,14 +10,9 @@
 <resources>
     <style name="AdyenCheckout.MBWay"/>
 
-    <style name="AdyenCheckout.MBWay.EmailInput" parent="AdyenCheckout.TextInputEditText">
-        <item name="android:hint">@string/checkout_mbway_email</item>
-        <item name="android:inputType">text|textPersonName|textCapWords</item>
-    </style>
-
     <style name="AdyenCheckout.MBWay.MobileNumberInput" parent="AdyenCheckout.TextInputEditText">
         <item name="android:hint">@string/checkout_mbway_mobile_number</item>
-        <item name="android:inputType">text|textCapCharacters</item>
+        <item name="android:inputType">phone</item>
     </style>
 
 </resources>

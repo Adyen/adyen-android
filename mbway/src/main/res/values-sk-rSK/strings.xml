@@ -8,8 +8,6 @@
   -->
 
 <resources>
-    <string name="checkout_mbway_email">E-mailová adresa</string>
     <string name="checkout_mbway_mobile_number">Mobilné telefónne číslo</string>
-    <string name="checkout_mbway_email_not_valid">Neplatná emailová adresa</string>
     <string name="checkout_mbway_phone_number_not_valid">Neplatné telefónne číslo</string>
 </resources>

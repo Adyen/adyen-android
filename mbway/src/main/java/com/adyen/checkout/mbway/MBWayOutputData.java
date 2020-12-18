@@ -19,16 +19,7 @@ import com.adyen.checkout.components.validation.ValidatedField;
 @SuppressWarnings("AbbreviationAsWordInName")
 class MBWayOutputData implements OutputData {
 
-    private final ValidatedField<String> mEmailField;
     private final ValidatedField<String> mMobilePhoneNumberField;
-
-    private static ValidatedField<String> validateEmail(@NonNull String email) {
-        if (!TextUtils.isEmpty(email) && ValidationUtils.isEmailValid(email)) {
-            return new ValidatedField<>(email, ValidatedField.Validation.VALID);
-        } else {
-            return new ValidatedField<>(email, ValidatedField.Validation.INVALID);
-        }
-    }
 
     private static ValidatedField<String> validateMobileNumber(@NonNull String mobileNumber) {
         if (!TextUtils.isEmpty(mobileNumber) && ValidationUtils.isPhoneNumberValid(mobileNumber)) {
@@ -38,19 +29,13 @@ class MBWayOutputData implements OutputData {
         }
     }
 
-    MBWayOutputData(@NonNull String email, @NonNull String mobilePhoneNumber) {
-        mEmailField = validateEmail(email);
-        mMobilePhoneNumberField =  validateMobileNumber(mobilePhoneNumber);
+    MBWayOutputData(@NonNull String mobilePhoneNumber) {
+        mMobilePhoneNumberField = validateMobileNumber(mobilePhoneNumber);
     }
 
     @Override
     public boolean isValid() {
-        return mEmailField.isValid() && mMobilePhoneNumberField.isValid();
-    }
-
-    @NonNull
-    public ValidatedField<String> getEmailField() {
-        return mEmailField;
+        return mMobilePhoneNumberField.isValid();
     }
 
     @NonNull

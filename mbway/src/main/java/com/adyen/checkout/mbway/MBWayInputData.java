@@ -15,17 +15,7 @@ import com.adyen.checkout.components.base.InputData;
 @SuppressWarnings("AbbreviationAsWordInName")
 class MBWayInputData implements InputData {
 
-    private String mEmail = "";
     private String mMobilePhoneNumber = "";
-
-    @NonNull
-    public String getEmail() {
-        return mEmail;
-    }
-
-    public void setEmail(@NonNull String email) {
-        mEmail = email;
-    }
 
     @NonNull
     public String getMobilePhoneNumber() {

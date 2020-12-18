@@ -37,10 +37,8 @@ public class MBWayView
 
     MBWayInputData mMBWayInputData = new MBWayInputData();
 
-    TextInputLayout mEmailInput;
     TextInputLayout mMobileNumberInput;
 
-    AdyenTextInputEditText mEmailEditText;
     AdyenTextInputEditText mMobileNumberEditText;
 
     public MBWayView(@NonNull Context context) {
@@ -68,49 +66,25 @@ public class MBWayView
     @Override
     protected void initLocalizedStrings(@NonNull Context localizedContext) {
         final int[] myAttrs = {android.R.attr.hint};
-        TypedArray typedArray;
 
-        // Email
-        typedArray = localizedContext.obtainStyledAttributes(R.style.AdyenCheckout_MBWay_EmailInput, myAttrs);
-        mEmailInput.setHint(typedArray.getString(0));
-        typedArray.recycle();
-
-        // Mobile Number
-        typedArray = localizedContext.obtainStyledAttributes(R.style.AdyenCheckout_MBWay_MobileNumberInput, myAttrs);
+        final TypedArray typedArray = localizedContext.obtainStyledAttributes(R.style.AdyenCheckout_MBWay_MobileNumberInput, myAttrs);
         mMobileNumberInput.setHint(typedArray.getString(0));
         typedArray.recycle();
     }
 
     @Override
     public void initView() {
-        mEmailInput = findViewById(R.id.textInputLayout_email);
         mMobileNumberInput = findViewById(R.id.textInputLayout_mobileNumber);
-        mEmailEditText = (AdyenTextInputEditText) mEmailInput.getEditText();
         mMobileNumberEditText = (AdyenTextInputEditText) mMobileNumberInput.getEditText();
 
-        if (mEmailEditText == null || mMobileNumberEditText == null) {
+        if (mMobileNumberEditText == null) {
             throw new CheckoutException("Could not find views inside layout.");
         }
-
-        mEmailEditText.setOnChangeListener(editable -> {
-            mMBWayInputData.setEmail(mEmailEditText.getRawValue());
-            notifyInputDataChanged();
-            mEmailInput.setError(null);
-        });
 
         mMobileNumberEditText.setOnChangeListener(editable -> {
             mMBWayInputData.setMobilePhoneNumber(mMobileNumberEditText.getRawValue());
             notifyInputDataChanged();
             mMobileNumberInput.setError(null);
-        });
-
-        mEmailEditText.setOnFocusChangeListener((v, hasFocus) -> {
-            final MBWayOutputData outputData = getComponent().getOutputData();
-            if (hasFocus) {
-                mEmailInput.setError(null);
-            } else if (outputData != null && !outputData.getEmailField().isValid()) {
-                mEmailInput.setError(mLocalizedContext.getString(R.string.checkout_mbway_email_not_valid));
-            }
         });
 
         mMobileNumberEditText.setOnFocusChangeListener((v, hasFocus) -> {
@@ -154,18 +128,7 @@ public class MBWayView
             return;
         }
 
-        boolean errorFocused = false;
-
-        if (!outputData.getEmailField().isValid()) {
-            errorFocused = true;
-            mEmailInput.requestFocus();
-            mEmailInput.setError(mLocalizedContext.getString(R.string.checkout_mbway_email_not_valid));
-        }
-
         if (!outputData.getMobilePhoneNumberField().isValid()) {
-            if (!errorFocused) {
-                mMobileNumberInput.requestFocus();
-            }
             mMobileNumberInput.setError(mLocalizedContext.getString(R.string.checkout_mbway_phone_number_not_valid));
         }
     }

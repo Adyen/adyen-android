@@ -28,7 +28,6 @@ public class MBWayPaymentMethod extends PaymentMethodDetails {
 
     public static final String PAYMENT_METHOD_TYPE = PaymentMethodTypes.MB_WAY;
 
-    private static final String SHOPPER_EMAIL = "shopperEmail";
     private static final String TELEPHONE_NUMBER = "telephoneNumber";
 
     @NonNull
@@ -42,7 +41,6 @@ public class MBWayPaymentMethod extends PaymentMethodDetails {
                 // getting parameters from parent class
                 jsonObject.putOpt(PaymentMethodDetails.TYPE, modelObject.getType());
 
-                jsonObject.putOpt(SHOPPER_EMAIL, modelObject.getShopperEmail());
                 jsonObject.putOpt(TELEPHONE_NUMBER, modelObject.getTelephoneNumber());
             } catch (JSONException e) {
                 throw new ModelSerializationException(GooglePayPaymentMethod.class, e);
@@ -58,28 +56,17 @@ public class MBWayPaymentMethod extends PaymentMethodDetails {
             // getting parameters from parent class
             mbWayPaymentMethod.setType(jsonObject.optString(PaymentMethodDetails.TYPE, null));
 
-            mbWayPaymentMethod.setShopperEmail(jsonObject.optString(SHOPPER_EMAIL, null));
             mbWayPaymentMethod.setTelephoneNumber(jsonObject.optString(TELEPHONE_NUMBER, null));
 
             return mbWayPaymentMethod;
         }
     };
 
-    private String shopperEmail;
     private String telephoneNumber;
 
     @Override
     public void writeToParcel(@NonNull Parcel dest, int flags) {
         JsonUtils.writeToParcel(dest, SERIALIZER.serialize(this));
-    }
-
-    @Nullable
-    public String getShopperEmail() {
-        return shopperEmail;
-    }
-
-    public void setShopperEmail(@Nullable String shopperEmail) {
-        this.shopperEmail = shopperEmail;
     }
 
     @Nullable

@@ -16,17 +16,6 @@
     tools:parentTag="android.widget.LinearLayout">
 
     <com.google.android.material.textfield.TextInputLayout
-        android:id="@+id/textInputLayout_email"
-        style="@style/AdyenCheckout.TextInputLayout"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content">
-
-        <com.adyen.checkout.components.ui.view.AdyenTextInputEditText
-            tools:ignore="RequiredSize"
-            style="@style/AdyenCheckout.MBWay.EmailInput" />
-    </com.google.android.material.textfield.TextInputLayout>
-
-    <com.google.android.material.textfield.TextInputLayout
         android:id="@+id/textInputLayout_mobileNumber"
         style="@style/AdyenCheckout.TextInputLayout"
         android:layout_width="match_parent"

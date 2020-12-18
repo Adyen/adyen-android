@@ -8,8 +8,6 @@
   -->
 
 <resources>
-    <string name="checkout_mbway_email">E-mailadresse</string>
     <string name="checkout_mbway_mobile_number">Mobilnummer</string>
-    <string name="checkout_mbway_email_not_valid">Ugyldig e-mailadresse</string>
     <string name="checkout_mbway_phone_number_not_valid">Ugyldigt telefonnummer</string>
 </resources>
