@@ -5,24 +5,10 @@
  *
  * Created by caiof on 11/8/2020.
  */
+package com.adyen.checkout.mbway
 
-package com.adyen.checkout.mbway;
+import com.adyen.checkout.components.base.InputData
 
-import androidx.annotation.NonNull;
-
-import com.adyen.checkout.components.base.InputData;
-
-@SuppressWarnings("AbbreviationAsWordInName")
-class MBWayInputData implements InputData {
-
-    private String mMobilePhoneNumber = "";
-
-    @NonNull
-    public String getMobilePhoneNumber() {
-        return mMobilePhoneNumber;
-    }
-
-    public void setMobilePhoneNumber(@NonNull String mobilePhoneNumber) {
-        mMobilePhoneNumber = mobilePhoneNumber;
-    }
-}
+data class MBWayInputData(
+    var mobilePhoneNumber: String = ""
+) : InputData
