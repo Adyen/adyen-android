@@ -8,7 +8,7 @@
 
 package com.adyen.checkout.dropin.service
 
-import com.adyen.checkout.base.model.payments.response.Action
+import com.adyen.checkout.components.model.payments.response.Action
 import com.adyen.checkout.core.log.LogUtil
 import com.adyen.checkout.core.log.Logger
 import com.adyen.checkout.core.model.JsonUtils

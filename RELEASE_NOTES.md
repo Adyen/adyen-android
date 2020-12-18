@@ -9,20 +9,12 @@
 [//]: # ( ### Deprecated)
 [//]: # ( - Configurations public constructor are deprecated, please use each Configuration's builder to make a Configuration object)
 
-### Added:
-- Blik Component
-- Translations for: cs-rCZ, el-rGR, hr-rHR, hu-rHU, ro-rRO, sk-rSK, sl-rSI
-- `hideCvc` and `hideCvcStoredCard` flags on `CardConfiguration`
-- Frictionless flow for preselected stored payment.
+**WARNING** - This version has changes in dependency names and package names.
+Make sure you are using the correct dependency (for components) and re-import classes that were in the `base` package.
 
 ### Changed:
-- Change model objects to new API version
-- Removed AfterPay Component.
-- Removed all deprecated methods.
-- Refactored separation between regular and stored payment methods.
-- Refactored OneClick flow to Preselected Stored Payment Method.
+- Refactored module structure and artifact IDs. Now each payment method has only 1 module with a simplified name.
+- Renamed package `com.adyen.checkout.base` to `com.adyen.checkout.components`
+- Renamed package `com.adyen.checkout.base.component` to `com.adyen.checkout.components.base`
 
-### Fixed:
-- Client key validation on Drop-in default generated Configurations
-- Payment methods list will only show up after all availability checks are done.
-- GooglePay SDK dependency is now visible to merchants.
+

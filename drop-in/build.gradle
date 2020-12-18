@@ -6,14 +6,16 @@
  * Created by caiof on 8/2/2019.
  */
 
+plugins {
+    id 'com.android.library'
+    id 'kotlin-android'
+    id 'kotlin-android-extensions'
+}
+
 // Maven artifact
 ext.mavenArtifactId = "drop-in"
 ext.mavenArtifactName = "Adyen checkout drop-in component"
 ext.mavenArtifactDescription = "Adyen checkout drop-in component client for Adyen's Checkout API."
-
-apply plugin: 'com.android.library'
-apply plugin: 'kotlin-android'
-apply plugin: 'kotlin-android-extensions'
 
 android {
     compileSdkVersion compile_sdk_version
@@ -25,6 +27,7 @@ android {
         versionName version_name
 
         testInstrumentationRunner 'androidx.test.runner.AndroidJUnitRunner'
+        consumerProguardFiles "consumer-rules.pro"
 
         // Get scheme for redirect result
         manifestPlaceholders = ["checkoutRedirectScheme": rootProject.ext.checkoutRedirectScheme]
@@ -48,21 +51,21 @@ dependencies {
 
     // Checkout
     api project(":3ds2")
-    api project(":await-ui")
-    api project(":bcmc-ui")
-    api project(":blik-ui")
-    api project(":card-ui")
-    api project(":dotpay-ui")
-    api project(":entercash-ui")
-    api project(":eps-ui")
-    api project(":googlepay-base")
-    api project(":ideal-ui")
-    api project(":mbway-ui")
-    api project(":molpay-ui")
-    api project(":openbanking-ui")
+    api project(":await")
+    api project(':bcmc')
+    api project(':blik')
+    api project(":card")
+    api project(':dotpay')
+    api project(':entercash')
+    api project(':eps')
+    api project(':googlepay')
+    api project(':ideal')
+    api project(':mbway')
+    api project(':molpay')
+    api project(':openbanking')
     api project(":redirect")
-    api project(":sepa-ui")
-    api project(":wechatpay-base")
+    api project(':sepa')
+    api project(':wechatpay')
 
     // Dependencies
     implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk7:$kotlin_stdlib_version"

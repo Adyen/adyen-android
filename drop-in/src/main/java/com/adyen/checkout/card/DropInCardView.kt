@@ -13,8 +13,8 @@ import androidx.lifecycle.Observer
 import android.content.Context
 import android.util.AttributeSet
 import android.view.LayoutInflater
-import com.adyen.checkout.base.api.ImageLoader
-import com.adyen.checkout.base.ui.view.AdyenLinearLayout
+import com.adyen.checkout.components.api.ImageLoader
+import com.adyen.checkout.components.ui.view.AdyenLinearLayout
 import kotlinx.android.synthetic.main.view_card_component_dropin.view.cardView
 import kotlinx.android.synthetic.main.view_card_component_dropin.view.recyclerView_cardList
 import com.adyen.checkout.dropin.R as dropInR

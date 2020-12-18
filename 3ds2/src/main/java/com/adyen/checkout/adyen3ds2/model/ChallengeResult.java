@@ -10,7 +10,7 @@ package com.adyen.checkout.adyen3ds2.model;
 
 import androidx.annotation.NonNull;
 
-import com.adyen.checkout.base.encoding.Base64Encoder;
+import com.adyen.checkout.components.encoding.Base64Encoder;
 import com.adyen.threeds2.CompletionEvent;
 
 import org.json.JSONException;

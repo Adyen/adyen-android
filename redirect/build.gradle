@@ -6,13 +6,15 @@
  * Created by caiof on 9/10/2019.
  */
 
+plugins {
+    id 'com.android.library'
+    id 'kotlin-android'
+}
+
 // Maven artifact
 ext.mavenArtifactId = "redirect"
 ext.mavenArtifactName = "Adyen checkout redirect component"
 ext.mavenArtifactDescription = "Adyen checkout redirect component client for Adyen's Checkout API."
-
-apply plugin: 'com.android.library'
-apply plugin: 'kotlin-android'
 
 android {
     compileSdkVersion compile_sdk_version
@@ -24,6 +26,7 @@ android {
         versionName version_name
 
         testInstrumentationRunner 'androidx.test.runner.AndroidJUnitRunner'
+        consumerProguardFiles "consumer-rules.pro"
 
         // Get scheme for redirect result
         buildConfigField "String", "checkoutRedirectScheme", "\"$rootProject.ext.checkoutRedirectScheme\""
@@ -46,7 +49,7 @@ dependencies {
     androidTestImplementation "androidx.test.espresso:espresso-core:$espresso_version"
 
     // Checkout
-    api project(":base-ui")
+    api project(':ui-core')
 
     // Dependencies
     implementation "androidx.browser:browser:$browser_version"

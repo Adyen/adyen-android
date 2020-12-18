@@ -10,7 +10,7 @@ package com.adyen.checkout.example.data.storage
 
 import android.content.Context
 import android.content.SharedPreferences
-import com.adyen.checkout.base.model.payments.Amount
+import com.adyen.checkout.components.model.payments.Amount
 import com.adyen.checkout.example.BuildConfig
 import com.adyen.checkout.example.R
 import com.adyen.checkout.example.extensions.get

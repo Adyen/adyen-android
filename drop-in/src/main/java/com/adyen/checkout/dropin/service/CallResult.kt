@@ -44,7 +44,7 @@ class CallResult(val type: ResultType, val content: String, val dismissDropIn: B
          */
         FINISHED,
         /**
-         * Call was successful and returned with an [com.adyen.checkout.base.model.payments.Action] that needs to be handled.
+         * Call was successful and returned with an [com.adyen.checkout.components.model.payments.Action] that needs to be handled.
          * Content should have the JSON string of the Action object.
          */
         ACTION,

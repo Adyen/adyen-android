@@ -8,7 +8,7 @@
 
 package com.adyen.checkout.example.data.api
 
-import com.adyen.checkout.base.model.PaymentMethodsApiResponse
+import com.adyen.checkout.components.model.PaymentMethodsApiResponse
 import com.adyen.checkout.example.BuildConfig
 import com.adyen.checkout.example.data.api.model.paymentsRequest.PaymentMethodsRequest
 import kotlinx.coroutines.Deferred
