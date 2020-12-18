@@ -6,14 +6,16 @@
  * Created by caiof on 8/2/2019.
  */
 
+plugins {
+    id 'com.android.library'
+    id 'kotlin-android'
+    id 'kotlin-android-extensions'
+}
+
 // Maven artifact
 ext.mavenArtifactId = "drop-in"
 ext.mavenArtifactName = "Adyen checkout drop-in component"
 ext.mavenArtifactDescription = "Adyen checkout drop-in component client for Adyen's Checkout API."
-
-apply plugin: 'com.android.library'
-apply plugin: 'kotlin-android'
-apply plugin: 'kotlin-android-extensions'
 
 android {
     compileSdkVersion compile_sdk_version
@@ -25,6 +27,7 @@ android {
         versionName version_name
 
         testInstrumentationRunner 'androidx.test.runner.AndroidJUnitRunner'
+        consumerProguardFiles "consumer-rules.pro"
 
         // Get scheme for redirect result
         manifestPlaceholders = ["checkoutRedirectScheme": rootProject.ext.checkoutRedirectScheme]
