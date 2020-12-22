@@ -21,6 +21,9 @@ import com.adyen.checkout.core.log.Logger
 private val TAG = LogUtil.getTag()
 
 private val PAYMENT_METHOD_TYPES = arrayOf(PaymentMethodTypes.MB_WAY)
+private const val ISO_CODE_PORTUGAL = "PT"
+private const val ISO_CODE_SPAIN = "ES"
+private val SUPPORTED_COUNTRIES = listOf(ISO_CODE_PORTUGAL, ISO_CODE_SPAIN)
 
 /**
  * Component should not be instantiated directly. Instead use the PROVIDER object.
@@ -57,4 +60,6 @@ class MBWayComponent(paymentMethodDelegate: GenericPaymentMethodDelegate, config
     }
 
     override fun getSupportedPaymentMethodTypes(): Array<String> = PAYMENT_METHOD_TYPES
+
+    fun getSupportedCountries(): List<String> = SUPPORTED_COUNTRIES
 }

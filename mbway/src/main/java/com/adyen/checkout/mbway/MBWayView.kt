@@ -11,32 +11,43 @@ package com.adyen.checkout.mbway
 import android.content.Context
 import android.util.AttributeSet
 import android.view.LayoutInflater
+import android.view.View
 import android.view.View.OnFocusChangeListener
+import android.widget.AdapterView
+import android.widget.AutoCompleteTextView
 import androidx.lifecycle.LifecycleOwner
 import androidx.lifecycle.Observer
 import com.adyen.checkout.components.PaymentComponentState
 import com.adyen.checkout.components.model.payments.request.MBWayPaymentMethod
 import com.adyen.checkout.components.ui.view.AdyenLinearLayout
 import com.adyen.checkout.components.ui.view.AdyenTextInputEditText
+import com.adyen.checkout.components.util.CountryUtils
 import com.adyen.checkout.core.exception.CheckoutException
 import com.adyen.checkout.core.log.LogUtil
 import com.adyen.checkout.core.log.Logger
+import com.adyen.checkout.mbway.country.CountryAdapter
+import com.adyen.checkout.mbway.country.CountryModel
 import com.adyen.checkout.mbway.ui.R
 import com.google.android.material.textfield.TextInputLayout
+import java.util.*
 
+private val TAG = LogUtil.getTag()
+
+@Suppress("TooManyFunctions")
 class MBWayView :
     AdyenLinearLayout<MBWayOutputData, MBWayConfiguration, PaymentComponentState<MBWayPaymentMethod>, MBWayComponent>,
-    Observer<MBWayOutputData> {
-
-    companion object {
-        private val TAG = LogUtil.getTag()
-    }
+    Observer<MBWayOutputData>,
+    AdapterView.OnItemSelectedListener {
 
     private var mMBWayInputData = MBWayInputData()
 
     private var mMobileNumberInput: TextInputLayout? = null
+    private var mCountryAutoCompleteTextView: AutoCompleteTextView? = null
 
     private var mMobileNumberEditText: AdyenTextInputEditText? = null
+
+    private var mCountryAdapter: CountryAdapter? = null
+    private var selectedCountry: CountryModel? = null
 
     constructor(context: Context) : super(context) {
         init()
@@ -70,14 +81,15 @@ class MBWayView :
     override fun initView() {
         mMobileNumberInput = findViewById(R.id.textInputLayout_mobileNumber)
         mMobileNumberEditText = (mMobileNumberInput?.editText as? AdyenTextInputEditText)
+        mCountryAutoCompleteTextView = findViewById(R.id.autoCompleteTextView_country)
         val mMobileNumberEditText = mMobileNumberEditText
+        val mCountryAutoCompleteTextView = mCountryAutoCompleteTextView
         val mMobileNumberInput = mMobileNumberInput
-        if (mMobileNumberEditText == null || mMobileNumberInput == null) {
+        if (mMobileNumberEditText == null || mCountryAutoCompleteTextView == null || mMobileNumberInput == null) {
             throw CheckoutException("Could not find views inside layout.")
         }
         mMobileNumberEditText.setOnChangeListener {
-            mMBWayInputData.mobilePhoneNumber = mMobileNumberEditText.rawValue
-            notifyInputDataChanged()
+            mobileNumberChanged()
             mMobileNumberInput.error = null
         }
         mMobileNumberEditText.onFocusChangeListener = OnFocusChangeListener { _, hasFocus: Boolean ->
@@ -88,6 +100,40 @@ class MBWayView :
                 mMobileNumberInput.error = mLocalizedContext.getString(R.string.checkout_mbway_phone_number_not_valid)
             }
         }
+        val countries = getCountries()
+        val adapter = CountryAdapter(context)
+        adapter.setItems(countries)
+        mCountryAdapter = adapter
+        // disable editing and hide cursor
+        mCountryAutoCompleteTextView.inputType = 0
+        mCountryAutoCompleteTextView.setAdapter(adapter)
+        mCountryAutoCompleteTextView.onItemSelectedListener = this
+        val firstCountry = countries.firstOrNull()
+        if (firstCountry != null) {
+            mCountryAutoCompleteTextView.setText(firstCountry.toShortString())
+            countrySelected(firstCountry)
+        }
+    }
+
+    private fun getCountries(): List<CountryModel> {
+        val countriesInfo = CountryUtils.getCountries(component.getSupportedCountries())
+        return countriesInfo.map {
+            CountryModel(
+                isoCode = it.isoCode,
+                countryName = CountryUtils.getCountryName(it.isoCode, getShopperLocale()),
+                callingCode = it.callingCode,
+                emoji = it.emoji
+            )
+        }
+    }
+
+    private fun getShopperLocale(): Locale {
+        return component.configuration.shopperLocale
+    }
+
+    private fun countrySelected(countryModel: CountryModel) {
+        selectedCountry = countryModel
+        mobileNumberChanged()
     }
 
     override fun observeComponentChanges(lifecycleOwner: LifecycleOwner) {
@@ -114,7 +160,30 @@ class MBWayView :
         }
     }
 
+    private fun mobileNumberChanged() {
+        val fullMobileNumber = getSelectedCallingCode() + getSanitizedLocalNumber()
+        mMBWayInputData.mobilePhoneNumber = fullMobileNumber
+        notifyInputDataChanged()
+    }
+
+    private fun getSanitizedLocalNumber(): String {
+        return mMobileNumberEditText?.rawValue?.trimStart('0').orEmpty()
+    }
+
+    private fun getSelectedCallingCode(): String {
+        return selectedCountry?.callingCode.orEmpty()
+    }
+
     internal fun notifyInputDataChanged() {
         component.inputDataChanged(mMBWayInputData)
+    }
+
+    override fun onItemSelected(parent: AdapterView<*>?, view: View?, position: Int, id: Long) {
+        val country = mCountryAdapter?.getCountries()?.get(position) ?: return
+        countrySelected(country)
+    }
+
+    override fun onNothingSelected(parent: AdapterView<*>?) {
+        // do nothing
     }
 }
