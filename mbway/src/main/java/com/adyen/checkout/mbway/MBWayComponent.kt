@@ -42,7 +42,12 @@ class MBWayComponent(paymentMethodDelegate: GenericPaymentMethodDelegate, config
 
     override fun onInputDataChanged(inputData: MBWayInputData): MBWayOutputData {
         Logger.v(TAG, "onInputDataChanged")
-        return MBWayOutputData(inputData.mobilePhoneNumber)
+        return MBWayOutputData(getPhoneNumber(inputData))
+    }
+
+    private fun getPhoneNumber(inputData: MBWayInputData): String {
+        val sanitizedNumber = inputData.localPhoneNumber.trimStart('0')
+        return inputData.countryCode + sanitizedNumber
     }
 
     override fun createComponentState(): PaymentComponentState<MBWayPaymentMethod> {

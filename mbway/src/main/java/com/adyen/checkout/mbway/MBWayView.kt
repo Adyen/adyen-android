@@ -37,7 +37,7 @@ private val TAG = LogUtil.getTag()
 class MBWayView :
     AdyenLinearLayout<MBWayOutputData, MBWayConfiguration, PaymentComponentState<MBWayPaymentMethod>, MBWayComponent>,
     Observer<MBWayOutputData>,
-    AdapterView.OnItemSelectedListener {
+    AdapterView.OnItemClickListener {
 
     private var mMBWayInputData = MBWayInputData()
 
@@ -89,7 +89,7 @@ class MBWayView :
             throw CheckoutException("Could not find views inside layout.")
         }
         mMobileNumberEditText.setOnChangeListener {
-            mobileNumberChanged()
+            localNumberChanged()
             mMobileNumberInput.error = null
         }
         mMobileNumberEditText.onFocusChangeListener = OnFocusChangeListener { _, hasFocus: Boolean ->
@@ -107,7 +107,7 @@ class MBWayView :
         // disable editing and hide cursor
         mCountryAutoCompleteTextView.inputType = 0
         mCountryAutoCompleteTextView.setAdapter(adapter)
-        mCountryAutoCompleteTextView.onItemSelectedListener = this
+        mCountryAutoCompleteTextView.onItemClickListener = this
         val firstCountry = countries.firstOrNull()
         if (firstCountry != null) {
             mCountryAutoCompleteTextView.setText(firstCountry.toShortString())
@@ -133,7 +133,7 @@ class MBWayView :
 
     private fun countrySelected(countryModel: CountryModel) {
         selectedCountry = countryModel
-        mobileNumberChanged()
+        countryCodeChanged()
     }
 
     override fun observeComponentChanges(lifecycleOwner: LifecycleOwner) {
@@ -160,30 +160,22 @@ class MBWayView :
         }
     }
 
-    private fun mobileNumberChanged() {
-        val fullMobileNumber = getSelectedCallingCode() + getSanitizedLocalNumber()
-        mMBWayInputData.mobilePhoneNumber = fullMobileNumber
+    private fun localNumberChanged() {
+        mMBWayInputData.localPhoneNumber = mMobileNumberEditText?.rawValue.orEmpty()
         notifyInputDataChanged()
     }
 
-    private fun getSanitizedLocalNumber(): String {
-        return mMobileNumberEditText?.rawValue?.trimStart('0').orEmpty()
-    }
-
-    private fun getSelectedCallingCode(): String {
-        return selectedCountry?.callingCode.orEmpty()
+    private fun countryCodeChanged() {
+        mMBWayInputData.countryCode = selectedCountry?.callingCode.orEmpty()
+        notifyInputDataChanged()
     }
 
     internal fun notifyInputDataChanged() {
         component.inputDataChanged(mMBWayInputData)
     }
 
-    override fun onItemSelected(parent: AdapterView<*>?, view: View?, position: Int, id: Long) {
+    override fun onItemClick(parent: AdapterView<*>?, view: View?, position: Int, id: Long) {
         val country = mCountryAdapter?.getCountries()?.get(position) ?: return
         countrySelected(country)
-    }
-
-    override fun onNothingSelected(parent: AdapterView<*>?) {
-        // do nothing
     }
 }

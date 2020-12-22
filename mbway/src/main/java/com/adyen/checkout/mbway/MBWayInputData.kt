@@ -10,5 +10,6 @@ package com.adyen.checkout.mbway
 import com.adyen.checkout.components.base.InputData
 
 data class MBWayInputData(
-    var mobilePhoneNumber: String = ""
+    var countryCode: String = "",
+    var localPhoneNumber: String = ""
 ) : InputData
