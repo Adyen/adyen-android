@@ -31,7 +31,6 @@ private val TAG = LogUtil.getTag()
 private val PAYMENT_METHOD_TYPES = arrayOf(PaymentMethodTypes.SCHEME)
 private const val BIN_VALUE_LENGTH = 6
 
-
 @Suppress("TooManyFunctions")
 class CardComponent private constructor(
     private val cardDelegate: CardDelegate,

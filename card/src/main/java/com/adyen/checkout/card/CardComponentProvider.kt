@@ -19,7 +19,6 @@ import com.adyen.checkout.components.model.paymentmethods.PaymentMethod
 import com.adyen.checkout.components.model.paymentmethods.StoredPaymentMethod
 import com.adyen.checkout.core.log.LogUtil
 import com.adyen.checkout.core.log.Logger
-import java.util.ArrayList
 
 private val TAG = LogUtil.getTag()
 
@@ -39,7 +38,7 @@ class CardComponentProvider : StoredPaymentComponentProvider<CardComponent, Card
         storedPaymentMethod: StoredPaymentMethod,
         configuration: CardConfiguration
     ): CardComponent {
-        val factory = viewModelFactory {CardComponent(StoredCardDelegate(storedPaymentMethod), configuration)}
+        val factory = viewModelFactory { CardComponent(StoredCardDelegate(storedPaymentMethod), configuration) }
         return ViewModelProvider(viewModelStoreOwner, factory).get(CardComponent::class.java)
     }
 
@@ -62,28 +61,30 @@ class CardComponentProvider : StoredPaymentComponentProvider<CardComponent, Card
      * @return The Configuration object with possibly adjusted values.
      */
     private fun checkSupportedCardTypes(paymentMethod: PaymentMethod, cardConfiguration: CardConfiguration): CardConfiguration {
-        if (cardConfiguration.supportedCardTypes.isEmpty()) {
-            val brands = paymentMethod.brands
-            var supportedCardTypes = CardConfiguration.DEFAULT_SUPPORTED_CARDS_LIST
-
-            // Get card types from brands in PaymentMethod object
-            if (brands != null && brands.isNotEmpty()) {
-                supportedCardTypes = ArrayList()
-                for (brand in brands) {
-                    val brandType = CardType.getByBrandName(brand)
-                    if (brandType != null) {
-                        supportedCardTypes.add(brandType)
-                    } else {
-                        Logger.e(TAG, "Failed to get card type for brand: $brand")
-                    }
-                }
-            } else {
-                Logger.d(TAG, "Falling back to DEFAULT_SUPPORTED_CARDS_LIST")
-            }
-            return cardConfiguration.newBuilder()
-                .setSupportedCardTypes(*supportedCardTypes.toTypedArray())
-                .build()
+        if (cardConfiguration.supportedCardTypes.isNotEmpty()) {
+            return cardConfiguration
         }
-        return cardConfiguration
+
+        val brands = paymentMethod.brands
+        var supportedCardTypes = CardConfiguration.DEFAULT_SUPPORTED_CARDS_LIST
+
+        // Get card types from brands in PaymentMethod object
+        if (!brands.isNullOrEmpty()) {
+            supportedCardTypes = arrayListOf()
+            for (brand in brands) {
+                val brandType = CardType.getByBrandName(brand)
+                if (brandType != null) {
+                    supportedCardTypes.add(brandType)
+                } else {
+                    Logger.e(TAG, "Failed to get card type for brand: $brand")
+                }
+            }
+        } else {
+            Logger.d(TAG, "Falling back to DEFAULT_SUPPORTED_CARDS_LIST")
+        }
+        @Suppress("SpreadOperator")
+        return cardConfiguration.newBuilder()
+            .setSupportedCardTypes(*supportedCardTypes.toTypedArray())
+            .build()
     }
 }

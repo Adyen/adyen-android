@@ -35,8 +35,10 @@ class GooglePayProvider : PaymentComponentProvider<GooglePayComponent, GooglePay
     }
 
     override fun isAvailable(
-        applicationContext: Application, paymentMethod: PaymentMethod,
-        configuration: GooglePayConfiguration, callback: ComponentAvailableCallback<GooglePayConfiguration>
+        applicationContext: Application,
+        paymentMethod: PaymentMethod,
+        configuration: GooglePayConfiguration,
+        callback: ComponentAvailableCallback<GooglePayConfiguration>
     ) {
         if (GoogleApiAvailability.getInstance().isGooglePlayServicesAvailable(applicationContext) != ConnectionResult.SUCCESS) {
             callback.onAvailabilityResult(false, paymentMethod, configuration)

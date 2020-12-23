@@ -17,7 +17,6 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
 import com.adyen.checkout.components.base.lifecycle.viewModelFactory
 
-
 @MainThread
 inline fun <reified ViewModelT : ViewModel> AppCompatActivity.getViewModel(crossinline factoryProducer: () -> ViewModelT): ViewModelT {
     return ViewModelProvider(this, viewModelFactory(factoryProducer)).get(ViewModelT::class.java)

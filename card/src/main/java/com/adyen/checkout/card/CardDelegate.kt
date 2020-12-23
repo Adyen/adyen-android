@@ -31,5 +31,5 @@ interface CardDelegate : PaymentMethodDelegate {
         }
     }
 
-    fun isCvcHidden(cardConfiguration: CardConfiguration) : Boolean
+    fun isCvcHidden(cardConfiguration: CardConfiguration): Boolean
 }
