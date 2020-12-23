@@ -248,7 +248,7 @@ public final class CardView extends AdyenLinearLayout<CardOutputData, CardConfig
             changeFocusOfInput(validatedNumber.getValue());
         }
 
-        final List<CardType> supportedCardType = getComponent().getSupportedFilterCards();
+        final List<CardType> supportedCardType = getComponent().getFilteredSupportedCards();
         if (supportedCardType.isEmpty()) {
             mCardBrandLogoImageView.setStrokeWidth(0f);
             mCardBrandLogoImageView.setImageResource(R.drawable.ic_card);
