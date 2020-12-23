@@ -5,47 +5,40 @@
  *
  * Created by caiof on 4/3/2019.
  */
+package com.adyen.checkout.components.base
 
-package com.adyen.checkout.components.base;
+import android.app.Application
+import androidx.lifecycle.ViewModelProvider
+import androidx.lifecycle.ViewModelStoreOwner
+import com.adyen.checkout.components.ComponentAvailableCallback
+import com.adyen.checkout.components.PaymentComponentProvider
+import com.adyen.checkout.components.base.lifecycle.viewModelFactory
+import com.adyen.checkout.components.model.paymentmethods.PaymentMethod
 
-import android.app.Application;
+class GenericPaymentComponentProvider<BaseComponentT : BasePaymentComponent<*, *, *, *>, ConfigurationT : Configuration>(
+    private val componentClass: Class<BaseComponentT>
+) : PaymentComponentProvider<BaseComponentT, ConfigurationT> {
 
-import androidx.annotation.NonNull;
-import androidx.lifecycle.ViewModelProvider;
-import androidx.lifecycle.ViewModelStoreOwner;
-
-import com.adyen.checkout.components.ComponentAvailableCallback;
-import com.adyen.checkout.components.PaymentComponentProvider;
-import com.adyen.checkout.components.base.lifecycle.PaymentComponentViewModelFactory;
-import com.adyen.checkout.components.model.paymentmethods.PaymentMethod;
-
-public final class GenericPaymentComponentProvider<BaseComponentT extends BasePaymentComponent, ConfigurationT extends Configuration>
-        implements PaymentComponentProvider<BaseComponentT, ConfigurationT> {
-
-    private final Class<BaseComponentT> mComponentClass;
-
-    public GenericPaymentComponentProvider(@NonNull Class<BaseComponentT> modelClass) {
-        mComponentClass = modelClass;
+    override operator fun get(
+        viewModelStoreOwner: ViewModelStoreOwner,
+        paymentMethod: PaymentMethod,
+        configuration: ConfigurationT
+    ): BaseComponentT {
+        val genericFactory: ViewModelProvider.Factory = viewModelFactory {
+            componentClass.getConstructor(
+                GenericPaymentMethodDelegate::class.java,
+                configuration.javaClass
+            ).newInstance(GenericPaymentMethodDelegate(paymentMethod), configuration)
+        }
+        return ViewModelProvider(viewModelStoreOwner, genericFactory).get(componentClass)
     }
 
-    @Override
-    @NonNull
-    @SuppressWarnings("LambdaLast")
-    public BaseComponentT get(
-            @NonNull ViewModelStoreOwner viewModelStoreOwner,
-            @NonNull PaymentMethod paymentMethod,
-            @NonNull ConfigurationT configuration) {
-        final PaymentComponentViewModelFactory factory =
-                new PaymentComponentViewModelFactory(new GenericPaymentMethodDelegate(paymentMethod), configuration);
-        return new ViewModelProvider(viewModelStoreOwner, factory).get(mComponentClass);
-    }
-
-    @Override
-    public void isAvailable(
-            @NonNull Application applicationContext,
-            @NonNull PaymentMethod paymentMethod,
-            @NonNull ConfigurationT config,
-            @NonNull ComponentAvailableCallback<ConfigurationT> callback) {
-        callback.onAvailabilityResult(true, paymentMethod, config);
+    override fun isAvailable(
+        applicationContext: Application,
+        paymentMethod: PaymentMethod,
+        config: ConfigurationT,
+        callback: ComponentAvailableCallback<ConfigurationT>
+    ) {
+        callback.onAvailabilityResult(true, paymentMethod, config)
     }
 }

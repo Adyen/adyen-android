@@ -5,44 +5,34 @@
  *
  * Created by arman on 18/9/2019.
  */
+package com.adyen.checkout.bcmc
 
-package com.adyen.checkout.bcmc;
+import android.app.Application
+import androidx.lifecycle.ViewModelProvider
+import androidx.lifecycle.ViewModelStoreOwner
+import com.adyen.checkout.components.ComponentAvailableCallback
+import com.adyen.checkout.components.PaymentComponentProvider
+import com.adyen.checkout.components.base.GenericPaymentMethodDelegate
+import com.adyen.checkout.components.base.lifecycle.viewModelFactory
+import com.adyen.checkout.components.model.paymentmethods.PaymentMethod
 
-import android.app.Application;
-import android.text.TextUtils;
-
-import androidx.annotation.NonNull;
-import androidx.lifecycle.ViewModelProvider;
-import androidx.lifecycle.ViewModelStoreOwner;
-
-import com.adyen.checkout.components.ComponentAvailableCallback;
-import com.adyen.checkout.components.PaymentComponentProvider;
-import com.adyen.checkout.components.base.GenericPaymentMethodDelegate;
-import com.adyen.checkout.components.base.lifecycle.PaymentComponentViewModelFactory;
-import com.adyen.checkout.components.model.paymentmethods.PaymentMethod;
-
-public class BcmcComponentProvider implements PaymentComponentProvider<BcmcComponent, BcmcConfiguration> {
-
-    @SuppressWarnings("LambdaLast")
-    @Override
-    @NonNull
-    public BcmcComponent get(
-            @NonNull ViewModelStoreOwner viewModelStoreOwner,
-            @NonNull PaymentMethod paymentMethod,
-            @NonNull BcmcConfiguration configuration) {
-        final PaymentComponentViewModelFactory factory =
-                new PaymentComponentViewModelFactory(new GenericPaymentMethodDelegate(paymentMethod), configuration);
-        return new ViewModelProvider(viewModelStoreOwner, factory).get(BcmcComponent.class);
+class BcmcComponentProvider : PaymentComponentProvider<BcmcComponent, BcmcConfiguration> {
+    override operator fun get(
+        viewModelStoreOwner: ViewModelStoreOwner,
+        paymentMethod: PaymentMethod,
+        configuration: BcmcConfiguration
+    ): BcmcComponent {
+        val bcmcFactory = viewModelFactory { BcmcComponent(GenericPaymentMethodDelegate(paymentMethod), configuration) }
+        return ViewModelProvider(viewModelStoreOwner, bcmcFactory).get(BcmcComponent::class.java)
     }
 
-    @Override
-    public void isAvailable(
-            @NonNull Application applicationContext,
-            @NonNull PaymentMethod paymentMethod,
-            @NonNull BcmcConfiguration configuration,
-            @NonNull ComponentAvailableCallback<BcmcConfiguration> callback) {
-
-        final boolean isPubKeyAvailable = !TextUtils.isEmpty(configuration.getPublicKey());
-        callback.onAvailabilityResult(isPubKeyAvailable, paymentMethod, configuration);
+    override fun isAvailable(
+        applicationContext: Application,
+        paymentMethod: PaymentMethod,
+        configuration: BcmcConfiguration,
+        callback: ComponentAvailableCallback<BcmcConfiguration>
+    ) {
+        val isPubKeyAvailable: Boolean = configuration.publicKey.isNotEmpty()
+        callback.onAvailabilityResult(isPubKeyAvailable, paymentMethod, configuration)
     }
 }

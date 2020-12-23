@@ -5,42 +5,33 @@
  *
  * Created by caiof on 17/9/2019.
  */
+package com.adyen.checkout.wechatpay
 
-package com.adyen.checkout.wechatpay;
+import android.app.Application
+import androidx.lifecycle.ViewModelProvider
+import androidx.lifecycle.ViewModelStoreOwner
+import com.adyen.checkout.components.ComponentAvailableCallback
+import com.adyen.checkout.components.PaymentComponentProvider
+import com.adyen.checkout.components.base.GenericPaymentMethodDelegate
+import com.adyen.checkout.components.base.lifecycle.viewModelFactory
+import com.adyen.checkout.components.model.paymentmethods.PaymentMethod
 
-import android.app.Application;
-
-import androidx.annotation.NonNull;
-import androidx.lifecycle.ViewModelProvider;
-import androidx.lifecycle.ViewModelStoreOwner;
-
-import com.adyen.checkout.components.ComponentAvailableCallback;
-import com.adyen.checkout.components.PaymentComponentProvider;
-import com.adyen.checkout.components.base.GenericPaymentMethodDelegate;
-import com.adyen.checkout.components.base.lifecycle.PaymentComponentViewModelFactory;
-import com.adyen.checkout.components.model.paymentmethods.PaymentMethod;
-
-public class WeChatPayProvider implements PaymentComponentProvider<WeChatPayComponent, WeChatPayConfiguration> {
-
-    @SuppressWarnings("LambdaLast")
-    @Override
-    @NonNull
-    public WeChatPayComponent get(
-            @NonNull ViewModelStoreOwner viewModelStoreOwner,
-            @NonNull PaymentMethod paymentMethod,
-            @NonNull WeChatPayConfiguration configuration) {
-        final PaymentComponentViewModelFactory factory =
-                new PaymentComponentViewModelFactory(new GenericPaymentMethodDelegate(paymentMethod), configuration);
-        return new ViewModelProvider(viewModelStoreOwner, factory).get(WeChatPayComponent.class);
+class WeChatPayProvider : PaymentComponentProvider<WeChatPayComponent, WeChatPayConfiguration> {
+    override operator fun get(
+        viewModelStoreOwner: ViewModelStoreOwner,
+        paymentMethod: PaymentMethod,
+        configuration: WeChatPayConfiguration
+    ): WeChatPayComponent {
+        val weChatFactory = viewModelFactory { WeChatPayComponent(GenericPaymentMethodDelegate(paymentMethod), configuration) }
+        return ViewModelProvider(viewModelStoreOwner, weChatFactory).get(WeChatPayComponent::class.java)
     }
 
-    @Override
-    public void isAvailable(
-            @NonNull Application applicationContext,
-            @NonNull PaymentMethod paymentMethod,
-            @NonNull WeChatPayConfiguration configuration,
-            @NonNull ComponentAvailableCallback<WeChatPayConfiguration> callback) {
-
-        callback.onAvailabilityResult(WeChatPayUtils.isAvailable(applicationContext), paymentMethod, configuration);
+    override fun isAvailable(
+        applicationContext: Application,
+        paymentMethod: PaymentMethod,
+        configuration: WeChatPayConfiguration,
+        callback: ComponentAvailableCallback<WeChatPayConfiguration>
+    ) {
+        callback.onAvailabilityResult(WeChatPayUtils.isAvailable(applicationContext), paymentMethod, configuration)
     }
 }

@@ -8,15 +8,17 @@
 
 package com.adyen.checkout.card
 
-import com.adyen.checkout.components.base.StoredPaymentMethodDelegate
-import com.adyen.checkout.components.model.paymentmethods.StoredPaymentMethod
-import com.adyen.checkout.components.util.PaymentMethodTypes
 import com.adyen.checkout.card.data.CardType
 import com.adyen.checkout.card.data.ExpiryDate
+import com.adyen.checkout.components.model.paymentmethods.StoredPaymentMethod
+import com.adyen.checkout.components.util.PaymentMethodTypes
+import com.adyen.checkout.components.validation.ValidatedField
 import com.adyen.checkout.core.log.LogUtil
 import com.adyen.checkout.core.log.Logger
 
-class StoredCardDelegate(private val storedPaymentMethod: StoredPaymentMethod) : StoredPaymentMethodDelegate {
+private val NO_CVC_BRANDS: Set<CardType> = hashSetOf(CardType.BCMC)
+
+class StoredCardDelegate(private val storedPaymentMethod: StoredPaymentMethod) : CardDelegate {
     private val logTag = LogUtil.getTag()
 
     override fun getPaymentMethodType(): String {
@@ -44,5 +46,26 @@ class StoredCardDelegate(private val storedPaymentMethod: StoredPaymentMethod) :
 
     fun getId(): String {
         return storedPaymentMethod.id ?: "ID_NOT_FOUND"
+    }
+
+    override fun validateCardNumber(cardNumber: String): ValidatedField<String> {
+        return ValidatedField(cardNumber, ValidatedField.Validation.VALID)
+    }
+
+    override fun validateExpiryDate(expiryDate: ExpiryDate): ValidatedField<ExpiryDate> {
+        return ValidatedField(expiryDate, ValidatedField.Validation.VALID)
+    }
+
+    override fun validateSecurityCode(securityCode: String, cardConfiguration: CardConfiguration, cardType: CardType?): ValidatedField<String> {
+        return if (cardConfiguration.isHideCvcStoredCard || NO_CVC_BRANDS.contains(cardType)) {
+            ValidatedField(securityCode, ValidatedField.Validation.VALID)
+        } else {
+            CardValidationUtils.validateSecurityCode(securityCode, cardType)
+        }
+    }
+
+    override fun isCvcHidden(cardConfiguration: CardConfiguration): Boolean {
+        return cardConfiguration.isHideCvcStoredCard || NO_CVC_BRANDS.contains(getCardType())
+
     }
 }
