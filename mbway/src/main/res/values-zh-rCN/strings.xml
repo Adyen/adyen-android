@@ -8,8 +8,6 @@
   -->
 
 <resources>
-    <string name="checkout_mbway_email">电子邮件地址</string>
     <string name="checkout_mbway_mobile_number">手机号</string>
-    <string name="checkout_mbway_email_not_valid">无效的邮件地址</string>
     <string name="checkout_mbway_phone_number_not_valid">无效的电话号码</string>
 </resources>

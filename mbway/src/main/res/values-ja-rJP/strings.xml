@@ -8,8 +8,6 @@
   -->
 
 <resources>
-    <string name="checkout_mbway_email">Eメールアドレス</string>
     <string name="checkout_mbway_mobile_number">携帯番号</string>
-    <string name="checkout_mbway_email_not_valid">Eメールアドレスが無効です</string>
     <string name="checkout_mbway_phone_number_not_valid">無効な電話番号</string>
 </resources>

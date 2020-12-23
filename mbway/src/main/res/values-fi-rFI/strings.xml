@@ -8,8 +8,6 @@
   -->
 
 <resources>
-    <string name="checkout_mbway_email">Sähköpostiosoite</string>
     <string name="checkout_mbway_mobile_number">Matkapuhelinnumero</string>
-    <string name="checkout_mbway_email_not_valid">Ei-kelvollinen sähköpostiosoite</string>
     <string name="checkout_mbway_phone_number_not_valid">Ei-kelvollinen puhelinnumero</string>
 </resources>
