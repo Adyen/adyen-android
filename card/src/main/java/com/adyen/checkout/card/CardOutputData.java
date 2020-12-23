@@ -14,7 +14,7 @@ import com.adyen.checkout.components.base.OutputData;
 import com.adyen.checkout.components.validation.ValidatedField;
 import com.adyen.checkout.card.data.ExpiryDate;
 
-final class CardOutputData implements OutputData {
+public final class CardOutputData implements OutputData {
 
     private final ValidatedField<String> mHolderNameField;
     private final ValidatedField<String> mCardNumberField;
