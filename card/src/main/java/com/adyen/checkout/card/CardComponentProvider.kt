@@ -29,7 +29,7 @@ class CardComponentProvider : StoredPaymentComponentProvider<CardComponent, Card
         configuration: CardConfiguration
     ): CardComponent {
         val verifiedConfiguration = checkSupportedCardTypes(paymentMethod, configuration)
-        val factory = viewModelFactory { CardComponent(NewCardDelegate(paymentMethod), verifiedConfiguration) }
+        val factory = viewModelFactory { CardComponent(NewCardDelegate(paymentMethod, verifiedConfiguration), verifiedConfiguration) }
         return ViewModelProvider(viewModelStoreOwner, factory).get(CardComponent::class.java)
     }
 
@@ -38,7 +38,7 @@ class CardComponentProvider : StoredPaymentComponentProvider<CardComponent, Card
         storedPaymentMethod: StoredPaymentMethod,
         configuration: CardConfiguration
     ): CardComponent {
-        val factory = viewModelFactory { CardComponent(StoredCardDelegate(storedPaymentMethod), configuration) }
+        val factory = viewModelFactory { CardComponent(StoredCardDelegate(storedPaymentMethod, configuration), configuration) }
         return ViewModelProvider(viewModelStoreOwner, factory).get(CardComponent::class.java)
     }
 

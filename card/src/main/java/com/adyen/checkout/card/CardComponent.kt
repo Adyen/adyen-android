@@ -66,7 +66,7 @@ class CardComponent private constructor(
     )
 
     override fun requiresInput(): Boolean {
-        return cardDelegate.requiresInput(configuration)
+        return cardDelegate.requiresInput()
     }
 
     override fun getSupportedPaymentMethodTypes(): Array<String> {
@@ -84,10 +84,10 @@ class CardComponent private constructor(
         return CardOutputData(
             cardDelegate.validateCardNumber(inputData.cardNumber),
             cardDelegate.validateExpiryDate(inputData.expiryDate),
-            cardDelegate.validateSecurityCode(inputData.securityCode, configuration, firstCardType),
-            cardDelegate.validateHolderName(inputData.holderName, configuration),
+            cardDelegate.validateSecurityCode(inputData.securityCode, firstCardType),
+            cardDelegate.validateHolderName(inputData.holderName),
             inputData.isStorePaymentEnable,
-            cardDelegate.isCvcHidden(configuration)
+            cardDelegate.isCvcHidden()
         )
     }
 
@@ -118,7 +118,7 @@ class CardComponent private constructor(
             if (!isStoredPaymentMethod()) {
                 card.setNumber(outputData.cardNumberField.value)
             }
-            if (!cardDelegate.isCvcHidden(configuration)) {
+            if (!cardDelegate.isCvcHidden()) {
                 card.setSecurityCode(outputData.securityCodeField.value)
             }
             val expiryDateResult = outputData.expiryDateField.value
@@ -139,11 +139,11 @@ class CardComponent private constructor(
             cardPaymentMethod.storedPaymentMethodId = (mPaymentMethodDelegate as StoredCardDelegate).getId()
         }
 
-        if (!cardDelegate.isCvcHidden(configuration)) {
+        if (!cardDelegate.isCvcHidden()) {
             cardPaymentMethod.encryptedSecurityCode = encryptedCard.encryptedSecurityCode
         }
 
-        if (cardDelegate.isHolderNameRequired(configuration)) {
+        if (cardDelegate.isHolderNameRequired()) {
             cardPaymentMethod.holderName = outputData.holderNameField.value
         }
 
@@ -163,7 +163,7 @@ class CardComponent private constructor(
     }
 
     fun isHolderNameRequire(): Boolean {
-        return cardDelegate.isHolderNameRequired(configuration)
+        return cardDelegate.isHolderNameRequired()
     }
 
     fun showStorePaymentField(): Boolean {

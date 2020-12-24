@@ -14,7 +14,10 @@ import com.adyen.checkout.components.model.paymentmethods.PaymentMethod
 import com.adyen.checkout.components.util.PaymentMethodTypes
 import com.adyen.checkout.components.validation.ValidatedField
 
-class NewCardDelegate(private val paymentMethod: PaymentMethod) : CardDelegate {
+class NewCardDelegate(
+    private val paymentMethod: PaymentMethod,
+    cardConfiguration: CardConfiguration
+) : CardDelegate(cardConfiguration) {
     override fun getPaymentMethodType(): String {
         return paymentMethod.type ?: PaymentMethodTypes.UNKNOWN
     }
@@ -29,7 +32,6 @@ class NewCardDelegate(private val paymentMethod: PaymentMethod) : CardDelegate {
 
     override fun validateSecurityCode(
         securityCode: String,
-        cardConfiguration: CardConfiguration,
         cardType: CardType?
     ): ValidatedField<String> {
         return if (cardConfiguration.isHideCvc) {
@@ -39,15 +41,15 @@ class NewCardDelegate(private val paymentMethod: PaymentMethod) : CardDelegate {
         }
     }
 
-    override fun isCvcHidden(cardConfiguration: CardConfiguration): Boolean {
+    override fun isCvcHidden(): Boolean {
         return cardConfiguration.isHideCvc
     }
 
-    override fun requiresInput(cardConfiguration: CardConfiguration): Boolean {
+    override fun requiresInput(): Boolean {
         return true
     }
 
-    override fun isHolderNameRequired(cardConfiguration: CardConfiguration): Boolean {
+    override fun isHolderNameRequired(): Boolean {
         return cardConfiguration.isHolderNameRequired
     }
 }

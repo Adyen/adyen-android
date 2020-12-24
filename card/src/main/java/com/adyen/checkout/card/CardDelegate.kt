@@ -13,17 +13,13 @@ import com.adyen.checkout.card.data.ExpiryDate
 import com.adyen.checkout.components.base.PaymentMethodDelegate
 import com.adyen.checkout.components.validation.ValidatedField
 
-interface CardDelegate : PaymentMethodDelegate {
+abstract class CardDelegate(protected val cardConfiguration: CardConfiguration) : PaymentMethodDelegate {
 
-    fun validateCardNumber(cardNumber: String): ValidatedField<String>
-    fun validateExpiryDate(expiryDate: ExpiryDate): ValidatedField<ExpiryDate>
-    fun validateSecurityCode(
-        securityCode: String,
-        cardConfiguration: CardConfiguration,
-        cardType: CardType? = null
-    ): ValidatedField<String>
+    abstract fun validateCardNumber(cardNumber: String): ValidatedField<String>
+    abstract fun validateExpiryDate(expiryDate: ExpiryDate): ValidatedField<ExpiryDate>
+    abstract fun validateSecurityCode(securityCode: String, cardType: CardType? = null): ValidatedField<String>
 
-    fun validateHolderName(holderName: String, cardConfiguration: CardConfiguration): ValidatedField<String> {
+    fun validateHolderName(holderName: String): ValidatedField<String> {
         return if (cardConfiguration.isHolderNameRequired && holderName.isBlank()) {
             ValidatedField(holderName, ValidatedField.Validation.INVALID)
         } else {
@@ -31,9 +27,7 @@ interface CardDelegate : PaymentMethodDelegate {
         }
     }
 
-    fun isCvcHidden(cardConfiguration: CardConfiguration): Boolean
-
-    fun requiresInput(cardConfiguration: CardConfiguration): Boolean
-
-    fun isHolderNameRequired(cardConfiguration: CardConfiguration): Boolean
+    abstract fun isCvcHidden(): Boolean
+    abstract fun requiresInput(): Boolean
+    abstract fun isHolderNameRequired(): Boolean
 }
