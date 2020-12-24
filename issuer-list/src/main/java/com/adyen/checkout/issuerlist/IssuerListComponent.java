@@ -38,14 +38,14 @@ public abstract class IssuerListComponent<IssuerListPaymentMethodT extends Issue
     @SuppressWarnings("LambdaLast")
     public IssuerListComponent(@NonNull GenericPaymentMethodDelegate genericPaymentMethodDelegate, @NonNull IssuerListConfiguration configuration) {
         super(genericPaymentMethodDelegate, configuration);
-        initIssuers(genericPaymentMethodDelegate.getPaymentMethod());
+        initComponent(genericPaymentMethodDelegate.getPaymentMethod());
     }
 
     MutableLiveData<List<IssuerModel>> getIssuersLiveData() {
         return mIssuersLiveData;
     }
 
-    private void initIssuers(@NonNull PaymentMethod paymentMethod) {
+    private void initComponent(@NonNull PaymentMethod paymentMethod) {
         final List<Issuer> issuersList = paymentMethod.getIssuers();
         if (issuersList != null) {
             initIssuers(issuersList);

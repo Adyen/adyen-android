@@ -37,6 +37,7 @@ public class PaymentMethod extends ModelObject {
     private static final String FUNDING_SOURCE = "fundingSource";
     private static final String ISSUERS = "issuers";
     private static final String CONFIGURATION = "configuration";
+    // This field is returned in older API versions, only used to retrieve the issuers list
     private static final String DETAILS = "details";
 
     @NonNull
