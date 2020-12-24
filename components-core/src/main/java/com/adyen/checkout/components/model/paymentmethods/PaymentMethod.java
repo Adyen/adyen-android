@@ -37,6 +37,8 @@ public class PaymentMethod extends ModelObject {
     private static final String FUNDING_SOURCE = "fundingSource";
     private static final String ISSUERS = "issuers";
     private static final String CONFIGURATION = "configuration";
+    // This field is returned in older API versions, only used to retrieve the issuers list
+    private static final String DETAILS = "details";
 
     @NonNull
     public static final Serializer<PaymentMethod> SERIALIZER = new Serializer<PaymentMethod>() {
@@ -55,6 +57,7 @@ public class PaymentMethod extends ModelObject {
                         ModelUtils.serializeOptList(modelObject.getIssuers(), Issuer.SERIALIZER)
                 );
                 jsonObject.putOpt(CONFIGURATION, ModelUtils.serializeOpt(modelObject.getConfiguration(), Configuration.SERIALIZER));
+                jsonObject.putOpt(DETAILS, ModelUtils.serializeOptList(modelObject.getDetails(), InputDetail.SERIALIZER));
             } catch (JSONException e) {
                 throw new ModelSerializationException(PaymentMethod.class, e);
             }
@@ -75,6 +78,7 @@ public class PaymentMethod extends ModelObject {
             );
             paymentMethod.setConfiguration(
                     ModelUtils.deserializeOpt(jsonObject.optJSONObject(CONFIGURATION), Configuration.SERIALIZER));
+            paymentMethod.setDetails(ModelUtils.deserializeOptList(jsonObject.optJSONArray(DETAILS), InputDetail.SERIALIZER));
             return paymentMethod;
         }
     };
@@ -86,6 +90,7 @@ public class PaymentMethod extends ModelObject {
     private String fundingSource;
     private List<Issuer> issuers;
     private Configuration configuration;
+    private List<InputDetail> details;
 
     @Override
     public void writeToParcel(@NonNull Parcel dest, int flags) {
@@ -127,6 +132,11 @@ public class PaymentMethod extends ModelObject {
         return configuration;
     }
 
+    @Nullable
+    public List<InputDetail> getDetails() {
+        return details;
+    }
+
     public void setType(@Nullable String type) {
         this.type = type;
     }
@@ -153,5 +163,9 @@ public class PaymentMethod extends ModelObject {
 
     public void setConfiguration(@Nullable Configuration configuration) {
         this.configuration = configuration;
+    }
+
+    public void setDetails(@Nullable List<InputDetail> details) {
+        this.details = details;
     }
 }

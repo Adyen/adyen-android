@@ -15,7 +15,10 @@ import androidx.lifecycle.MutableLiveData;
 import com.adyen.checkout.components.PaymentComponentState;
 import com.adyen.checkout.components.base.BasePaymentComponent;
 import com.adyen.checkout.components.base.GenericPaymentMethodDelegate;
+import com.adyen.checkout.components.model.paymentmethods.InputDetail;
 import com.adyen.checkout.components.model.paymentmethods.Issuer;
+import com.adyen.checkout.components.model.paymentmethods.Item;
+import com.adyen.checkout.components.model.paymentmethods.PaymentMethod;
 import com.adyen.checkout.components.model.payments.request.IssuerListPaymentMethod;
 import com.adyen.checkout.components.model.payments.request.PaymentComponentData;
 
@@ -35,23 +38,45 @@ public abstract class IssuerListComponent<IssuerListPaymentMethodT extends Issue
     @SuppressWarnings("LambdaLast")
     public IssuerListComponent(@NonNull GenericPaymentMethodDelegate genericPaymentMethodDelegate, @NonNull IssuerListConfiguration configuration) {
         super(genericPaymentMethodDelegate, configuration);
-        initIssuers(genericPaymentMethodDelegate.getPaymentMethod().getIssuers());
+        initComponent(genericPaymentMethodDelegate.getPaymentMethod());
     }
 
     MutableLiveData<List<IssuerModel>> getIssuersLiveData() {
         return mIssuersLiveData;
     }
 
-    private void initIssuers(@Nullable List<Issuer> issuerList) {
-        if (issuerList != null) {
-            final List<IssuerModel> issuerModelList = new ArrayList<>();
-            for (Issuer issuer : issuerList) {
-                if (!issuer.isDisabled()) {
-                    final IssuerModel issuerModel = new IssuerModel(issuer.getId(), issuer.getName());
-                    issuerModelList.add(issuerModel);
+    private void initComponent(@NonNull PaymentMethod paymentMethod) {
+        final List<Issuer> issuersList = paymentMethod.getIssuers();
+        if (issuersList != null) {
+            initIssuers(issuersList);
+        } else {
+            initLegacyIssuers(paymentMethod.getDetails());
+        }
+    }
+
+    private void initIssuers(@NonNull List<Issuer> issuerList) {
+        final List<IssuerModel> issuerModelList = new ArrayList<>();
+        for (Issuer issuer : issuerList) {
+            if (!issuer.isDisabled()) {
+                final IssuerModel issuerModel = new IssuerModel(issuer.getId(), issuer.getName());
+                issuerModelList.add(issuerModel);
+            }
+        }
+        mIssuersLiveData.setValue(issuerModelList);
+    }
+
+    private void initLegacyIssuers(@Nullable List<InputDetail> details) {
+        if (details != null) {
+            for (InputDetail detail : details) {
+                if (detail.getItems() != null) {
+                    final List<IssuerModel> issuers = new ArrayList<>();
+                    for (Item item : detail.getItems()) {
+                        final IssuerModel issuer = new IssuerModel(item.getId(), item.getName());
+                        issuers.add(issuer);
+                    }
+                    mIssuersLiveData.setValue(issuers);
                 }
             }
-            mIssuersLiveData.setValue(issuerModelList);
         }
     }
 
