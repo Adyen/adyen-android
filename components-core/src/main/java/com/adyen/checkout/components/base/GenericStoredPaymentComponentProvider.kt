@@ -13,7 +13,7 @@ import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.ViewModelStoreOwner
 import com.adyen.checkout.components.ComponentAvailableCallback
 import com.adyen.checkout.components.StoredPaymentComponentProvider
-import com.adyen.checkout.components.base.lifecycle.PaymentComponentViewModelFactory
+import com.adyen.checkout.components.base.lifecycle.viewModelFactory
 import com.adyen.checkout.components.model.paymentmethods.PaymentMethod
 import com.adyen.checkout.components.model.paymentmethods.StoredPaymentMethod
 
@@ -27,8 +27,13 @@ class GenericStoredPaymentComponentProvider<
         storedPaymentMethod: StoredPaymentMethod,
         configuration: ConfigurationT
     ): BaseComponentT {
-        val factory = PaymentComponentViewModelFactory(GenericStoredPaymentDelegate(storedPaymentMethod), configuration)
-        return ViewModelProvider(viewModelStoreOwner, factory)[componentClass]
+        val genericStoredFactory: ViewModelProvider.Factory = viewModelFactory {
+            componentClass.getConstructor(
+                GenericStoredPaymentDelegate::class.java,
+                configuration.javaClass
+            ).newInstance(GenericStoredPaymentDelegate(storedPaymentMethod), configuration)
+        }
+        return ViewModelProvider(viewModelStoreOwner, genericStoredFactory)[componentClass]
     }
 
     override fun get(
@@ -36,8 +41,13 @@ class GenericStoredPaymentComponentProvider<
         paymentMethod: PaymentMethod,
         configuration: ConfigurationT
     ): BaseComponentT {
-        val factory = PaymentComponentViewModelFactory(GenericPaymentMethodDelegate(paymentMethod), configuration)
-        return ViewModelProvider(viewModelStoreOwner, factory)[componentClass]
+        val genericFactory: ViewModelProvider.Factory = viewModelFactory {
+            componentClass.getConstructor(
+                GenericPaymentMethodDelegate::class.java,
+                configuration.javaClass
+            ).newInstance(GenericPaymentMethodDelegate(paymentMethod), configuration)
+        }
+        return ViewModelProvider(viewModelStoreOwner, genericFactory)[componentClass]
     }
 
     override fun isAvailable(

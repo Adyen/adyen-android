@@ -8,16 +8,13 @@
 
 package com.adyen.checkout.card
 
-import android.text.TextUtils
 import com.adyen.checkout.card.data.CardType
 import com.adyen.checkout.card.data.ExpiryDate
 import com.adyen.checkout.components.StoredPaymentComponentProvider
 import com.adyen.checkout.components.base.BasePaymentComponent
-import com.adyen.checkout.components.base.PaymentMethodDelegate
 import com.adyen.checkout.components.model.payments.request.CardPaymentMethod
 import com.adyen.checkout.components.model.payments.request.PaymentComponentData
 import com.adyen.checkout.components.util.PaymentMethodTypes
-import com.adyen.checkout.components.validation.ValidatedField
 import com.adyen.checkout.core.log.LogUtil
 import com.adyen.checkout.core.log.Logger
 import com.adyen.checkout.cse.Card
@@ -31,11 +28,9 @@ private val TAG = LogUtil.getTag()
 
 private val PAYMENT_METHOD_TYPES = arrayOf(PaymentMethodTypes.SCHEME)
 private const val BIN_VALUE_LENGTH = 6
-private val NO_CVC_BRANDS: Set<CardType> = hashSetOf(CardType.BCMC)
 
-@Suppress("TooManyFunctions")
 class CardComponent private constructor(
-    cardDelegate: PaymentMethodDelegate,
+    private val cardDelegate: CardDelegate,
     cardConfiguration: CardConfiguration
 ) : BasePaymentComponent<CardConfiguration, CardInputData, CardOutputData, CardComponentState>(cardDelegate, cardConfiguration) {
 
@@ -43,9 +38,8 @@ class CardComponent private constructor(
         private set
     private var storedPaymentInputData: CardInputData? = null
 
-    @Suppress("unused")
     constructor(storedCardDelegate: StoredCardDelegate, cardConfiguration: CardConfiguration) : this(
-        storedCardDelegate as PaymentMethodDelegate,
+        storedCardDelegate as CardDelegate,
         cardConfiguration
     ) {
         storedPaymentInputData = storedCardDelegate.getStoredCardInputData()
@@ -63,14 +57,13 @@ class CardComponent private constructor(
         }
     }
 
-    @Suppress("unused")
-    constructor(cardDelegate: CardDelegate, cardConfiguration: CardConfiguration) : this(
-        cardDelegate as PaymentMethodDelegate,
+    constructor(cardDelegate: NewCardDelegate, cardConfiguration: CardConfiguration) : this(
+        cardDelegate as CardDelegate,
         cardConfiguration
     )
 
     override fun requiresInput(): Boolean {
-        return !(isStoredPaymentMethod() && mConfiguration.isHideCvcStoredCard)
+        return cardDelegate.requiresInput()
     }
 
     override fun getSupportedPaymentMethodTypes(): Array<String> {
@@ -79,13 +72,19 @@ class CardComponent private constructor(
 
     override fun onInputDataChanged(inputData: CardInputData): CardOutputData {
         Logger.v(TAG, "onInputDataChanged")
+        if (!isStoredPaymentMethod()) {
+            filteredSupportedCards = updateSupportedFilterCards(inputData.cardNumber)
+        }
+        val cardDelegate = mPaymentMethodDelegate as CardDelegate
+        val firstCardType: CardType? = if (filteredSupportedCards.isNotEmpty()) filteredSupportedCards[0] else null
+
         return CardOutputData(
-            validateCardNumber(inputData.cardNumber),
-            validateExpiryDate(inputData.expiryDate),
-            validateSecurityCode(inputData.securityCode),
-            validateHolderName(inputData.holderName),
+            cardDelegate.validateCardNumber(inputData.cardNumber),
+            cardDelegate.validateExpiryDate(inputData.expiryDate),
+            cardDelegate.validateSecurityCode(inputData.securityCode, firstCardType),
+            cardDelegate.validateHolderName(inputData.holderName),
             inputData.isStorePaymentEnable,
-            isCvcHidden()
+            cardDelegate.isCvcHidden()
         )
     }
 
@@ -116,7 +115,7 @@ class CardComponent private constructor(
             if (!isStoredPaymentMethod()) {
                 card.setNumber(outputData.cardNumberField.value)
             }
-            if (!isCvcHidden()) {
+            if (!cardDelegate.isCvcHidden()) {
                 card.setSecurityCode(outputData.securityCodeField.value)
             }
             val expiryDateResult = outputData.expiryDateField.value
@@ -137,11 +136,11 @@ class CardComponent private constructor(
             cardPaymentMethod.storedPaymentMethodId = (mPaymentMethodDelegate as StoredCardDelegate).getId()
         }
 
-        if (!isCvcHidden()) {
+        if (!cardDelegate.isCvcHidden()) {
             cardPaymentMethod.encryptedSecurityCode = encryptedCard.encryptedSecurityCode
         }
 
-        if (isHolderNameRequire()) {
+        if (cardDelegate.isHolderNameRequired()) {
             cardPaymentMethod.holderName = outputData.holderNameField.value
         }
 
@@ -153,7 +152,7 @@ class CardComponent private constructor(
     }
 
     fun isStoredPaymentMethod(): Boolean {
-        return storedPaymentInputData != null
+        return cardDelegate is StoredCardDelegate
     }
 
     fun getStoredPaymentInputData(): CardInputData? {
@@ -161,61 +160,11 @@ class CardComponent private constructor(
     }
 
     fun isHolderNameRequire(): Boolean {
-        return if (isStoredPaymentMethod()) {
-            false
-        } else {
-            configuration.isHolderNameRequire
-        }
+        return cardDelegate.isHolderNameRequired()
     }
 
     fun showStorePaymentField(): Boolean {
         return configuration.isShowStorePaymentFieldEnable
-    }
-
-    private fun validateCardNumber(cardNumber: String): ValidatedField<String> {
-        return if (isStoredPaymentMethod()) {
-            ValidatedField(cardNumber, ValidatedField.Validation.VALID)
-        } else {
-            filteredSupportedCards = updateSupportedFilterCards(cardNumber)
-            CardValidationUtils.validateCardNumber(cardNumber)
-        }
-    }
-
-    private fun validateExpiryDate(expiryDate: ExpiryDate): ValidatedField<ExpiryDate> {
-        return if (isStoredPaymentMethod()) {
-            ValidatedField(expiryDate, ValidatedField.Validation.VALID)
-        } else {
-            CardValidationUtils.validateExpiryDate(expiryDate)
-        }
-    }
-
-    private fun validateSecurityCode(securityCode: String): ValidatedField<String> {
-        return if (isCvcHidden()) {
-            ValidatedField(securityCode, ValidatedField.Validation.VALID)
-        } else {
-            val firstCardType: CardType? = if (filteredSupportedCards.isNotEmpty()) filteredSupportedCards[0] else null
-            CardValidationUtils.validateSecurityCode(securityCode, firstCardType)
-        }
-    }
-
-    private fun isCvcHidden(): Boolean {
-        return if (isStoredPaymentMethod()) {
-            configuration.isHideCvcStoredCard || isBrandWithoutCvc((mPaymentMethodDelegate as StoredCardDelegate).getCardType()!!)
-        } else {
-            configuration.isHideCvc
-        }
-    }
-
-    private fun isBrandWithoutCvc(cardType: CardType): Boolean {
-        return NO_CVC_BRANDS.contains(cardType)
-    }
-
-    private fun validateHolderName(holderName: String): ValidatedField<String> {
-        return if (isHolderNameRequire() && TextUtils.isEmpty(holderName)) {
-            ValidatedField(holderName, ValidatedField.Validation.INVALID)
-        } else {
-            ValidatedField(holderName, ValidatedField.Validation.VALID)
-        }
     }
 
     private fun updateSupportedFilterCards(cardNumber: String?): List<CardType> {
@@ -235,7 +184,7 @@ class CardComponent private constructor(
     }
 
     private fun getBinValueFromCardNumber(cardNumber: String): String {
-        return if (cardNumber.length < BIN_VALUE_LENGTH) cardNumber else cardNumber.substring(0, BIN_VALUE_LENGTH)
+        return if (cardNumber.length < BIN_VALUE_LENGTH) cardNumber else cardNumber.substring(0..BIN_VALUE_LENGTH)
     }
 
     companion object {

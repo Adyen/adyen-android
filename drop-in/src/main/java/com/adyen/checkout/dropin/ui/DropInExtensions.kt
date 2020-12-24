@@ -15,12 +15,7 @@ import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
-
-@MainThread
-inline fun <ViewModelT : ViewModel> viewModelFactory(crossinline factoryProducer: () -> ViewModelT) =
-    object : ViewModelProvider.Factory {
-        override fun <T : ViewModel> create(aClass: Class<T>): T = factoryProducer() as T
-    }
+import com.adyen.checkout.components.base.lifecycle.viewModelFactory
 
 @MainThread
 inline fun <reified ViewModelT : ViewModel> AppCompatActivity.getViewModel(crossinline factoryProducer: () -> ViewModelT): ViewModelT {
