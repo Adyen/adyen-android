@@ -8,7 +8,6 @@
 
 package com.adyen.checkout.card
 
-import android.text.TextUtils
 import com.adyen.checkout.card.data.CardType
 import com.adyen.checkout.card.data.ExpiryDate
 import com.adyen.checkout.components.StoredPaymentComponentProvider
@@ -16,7 +15,6 @@ import com.adyen.checkout.components.base.BasePaymentComponent
 import com.adyen.checkout.components.model.payments.request.CardPaymentMethod
 import com.adyen.checkout.components.model.payments.request.PaymentComponentData
 import com.adyen.checkout.components.util.PaymentMethodTypes
-import com.adyen.checkout.components.validation.ValidatedField
 import com.adyen.checkout.core.log.LogUtil
 import com.adyen.checkout.core.log.Logger
 import com.adyen.checkout.cse.Card
@@ -68,7 +66,7 @@ class CardComponent private constructor(
     )
 
     override fun requiresInput(): Boolean {
-        return !(isStoredPaymentMethod() && mConfiguration.isHideCvcStoredCard)
+        return cardDelegate.requiresInput(configuration)
     }
 
     override fun getSupportedPaymentMethodTypes(): Array<String> {
@@ -87,7 +85,7 @@ class CardComponent private constructor(
             cardDelegate.validateCardNumber(inputData.cardNumber),
             cardDelegate.validateExpiryDate(inputData.expiryDate),
             cardDelegate.validateSecurityCode(inputData.securityCode, configuration, firstCardType),
-            validateHolderName(inputData.holderName),
+            cardDelegate.validateHolderName(inputData.holderName, configuration),
             inputData.isStorePaymentEnable,
             cardDelegate.isCvcHidden(configuration)
         )
@@ -145,7 +143,7 @@ class CardComponent private constructor(
             cardPaymentMethod.encryptedSecurityCode = encryptedCard.encryptedSecurityCode
         }
 
-        if (isHolderNameRequire()) {
+        if (cardDelegate.isHolderNameRequired(configuration)) {
             cardPaymentMethod.holderName = outputData.holderNameField.value
         }
 
@@ -157,7 +155,7 @@ class CardComponent private constructor(
     }
 
     fun isStoredPaymentMethod(): Boolean {
-        return storedPaymentInputData != null
+        return cardDelegate is StoredCardDelegate
     }
 
     fun getStoredPaymentInputData(): CardInputData? {
@@ -165,23 +163,11 @@ class CardComponent private constructor(
     }
 
     fun isHolderNameRequire(): Boolean {
-        return if (isStoredPaymentMethod()) {
-            false
-        } else {
-            configuration.isHolderNameRequire
-        }
+        return cardDelegate.isHolderNameRequired(configuration)
     }
 
     fun showStorePaymentField(): Boolean {
         return configuration.isShowStorePaymentFieldEnable
-    }
-
-    private fun validateHolderName(holderName: String): ValidatedField<String> {
-        return if (isHolderNameRequire() && TextUtils.isEmpty(holderName)) {
-            ValidatedField(holderName, ValidatedField.Validation.INVALID)
-        } else {
-            ValidatedField(holderName, ValidatedField.Validation.VALID)
-        }
     }
 
     private fun updateSupportedFilterCards(cardNumber: String?): List<CardType> {
@@ -201,7 +187,7 @@ class CardComponent private constructor(
     }
 
     private fun getBinValueFromCardNumber(cardNumber: String): String {
-        return if (cardNumber.length < BIN_VALUE_LENGTH) cardNumber else cardNumber.substring(0, BIN_VALUE_LENGTH)
+        return if (cardNumber.length < BIN_VALUE_LENGTH) cardNumber else cardNumber.substring(0..BIN_VALUE_LENGTH)
     }
 
     companion object {

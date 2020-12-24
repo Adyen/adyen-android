@@ -24,7 +24,7 @@ interface CardDelegate : PaymentMethodDelegate {
     ): ValidatedField<String>
 
     fun validateHolderName(holderName: String, cardConfiguration: CardConfiguration): ValidatedField<String> {
-        return if (cardConfiguration.isHolderNameRequire && holderName.isBlank()) {
+        return if (cardConfiguration.isHolderNameRequired && holderName.isBlank()) {
             ValidatedField(holderName, ValidatedField.Validation.INVALID)
         } else {
             ValidatedField(holderName, ValidatedField.Validation.VALID)
@@ -32,4 +32,8 @@ interface CardDelegate : PaymentMethodDelegate {
     }
 
     fun isCvcHidden(cardConfiguration: CardConfiguration): Boolean
+
+    fun requiresInput(cardConfiguration: CardConfiguration): Boolean
+
+    fun isHolderNameRequired(cardConfiguration: CardConfiguration): Boolean
 }

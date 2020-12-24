@@ -42,4 +42,12 @@ class NewCardDelegate(private val paymentMethod: PaymentMethod) : CardDelegate {
     override fun isCvcHidden(cardConfiguration: CardConfiguration): Boolean {
         return cardConfiguration.isHideCvc
     }
+
+    override fun requiresInput(cardConfiguration: CardConfiguration): Boolean {
+        return true
+    }
+
+    override fun isHolderNameRequired(cardConfiguration: CardConfiguration): Boolean {
+        return cardConfiguration.isHolderNameRequired
+    }
 }

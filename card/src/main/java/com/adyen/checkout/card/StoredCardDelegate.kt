@@ -67,4 +67,12 @@ class StoredCardDelegate(private val storedPaymentMethod: StoredPaymentMethod) :
     override fun isCvcHidden(cardConfiguration: CardConfiguration): Boolean {
         return cardConfiguration.isHideCvcStoredCard || NO_CVC_BRANDS.contains(getCardType())
     }
+
+    override fun requiresInput(cardConfiguration: CardConfiguration): Boolean {
+        return !cardConfiguration.isHideCvcStoredCard
+    }
+
+    override fun isHolderNameRequired(cardConfiguration: CardConfiguration): Boolean {
+        return false
+    }
 }

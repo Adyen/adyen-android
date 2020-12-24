@@ -45,7 +45,7 @@ public class CardConfiguration extends Configuration {
 
     private final String mPublicKey;
     private final String mShopperReference;
-    private final boolean mHolderNameRequire;
+    private final boolean mHolderNameRequired;
     private final List<CardType> mSupportedCardTypes;
     private final boolean mShowStorePaymentField;
     private final boolean mHideCvc;
@@ -66,7 +66,7 @@ public class CardConfiguration extends Configuration {
      * @param environment           The environment to be used to make network calls.
      * @param publicKey             The public key used for encryption of the card data. You can get it from the Customer Area.
      * @param shopperReference      The unique identifier of the shopper.
-     * @param holderNameRequire     If the holder name of the card should be shown as a required field.
+     * @param holderNameRequired     If the holder name of the card should be shown as a required field.
      * @param showStorePaymentField If the component should show the option to store the card for later use.
      * @param supportCardTypes      The list of supported card brands to be shown to the user.
      * @param hideCvc               Hides the CVC field on the payment flow so that it's not required.
@@ -77,7 +77,7 @@ public class CardConfiguration extends Configuration {
             @NonNull Environment environment,
             @NonNull String clientKey,
             @NonNull String publicKey,
-            boolean holderNameRequire,
+            boolean holderNameRequired,
             @NonNull String shopperReference,
             boolean showStorePaymentField,
             @NonNull List<CardType> supportCardTypes,
@@ -87,7 +87,7 @@ public class CardConfiguration extends Configuration {
         super(shopperLocale, environment, clientKey);
 
         mPublicKey = publicKey;
-        mHolderNameRequire = holderNameRequire;
+        mHolderNameRequired = holderNameRequired;
         mSupportedCardTypes = supportCardTypes;
         mShopperReference = shopperReference;
         mShowStorePaymentField = showStorePaymentField;
@@ -99,7 +99,7 @@ public class CardConfiguration extends Configuration {
         super(in);
         mPublicKey = in.readString();
         mShopperReference = in.readString();
-        mHolderNameRequire = ParcelUtils.readBoolean(in);
+        mHolderNameRequired = ParcelUtils.readBoolean(in);
         mSupportedCardTypes = in.readArrayList(CardType.class.getClassLoader());
         mShowStorePaymentField = ParcelUtils.readBoolean(in);
         mHideCvc = ParcelUtils.readBoolean(in);
@@ -111,7 +111,7 @@ public class CardConfiguration extends Configuration {
         super.writeToParcel(dest, flags);
         dest.writeString(mPublicKey);
         dest.writeString(mShopperReference);
-        ParcelUtils.writeBoolean(dest, mHolderNameRequire);
+        ParcelUtils.writeBoolean(dest, mHolderNameRequired);
         dest.writeList(mSupportedCardTypes);
         ParcelUtils.writeBoolean(dest, mShowStorePaymentField);
         ParcelUtils.writeBoolean(dest, mHideCvc);
@@ -141,8 +141,8 @@ public class CardConfiguration extends Configuration {
     /**
      * @return If the Holder Name is required for this Card payment.
      */
-    public boolean isHolderNameRequire() {
-        return mHolderNameRequire;
+    public boolean isHolderNameRequired() {
+        return mHolderNameRequired;
     }
 
     @Nullable
@@ -177,7 +177,7 @@ public class CardConfiguration extends Configuration {
         private String mBuilderPublicKey;
 
         private List<CardType> mBuilderSupportedCardTypes = Collections.emptyList();
-        private boolean mBuilderHolderNameRequire;
+        private boolean mBuilderHolderNameRequired;
         private boolean mBuilderShowStorePaymentField = true;
         private String mShopperReference;
         private boolean mBuilderHideCvc;
@@ -192,7 +192,7 @@ public class CardConfiguration extends Configuration {
 
             mBuilderPublicKey = cardConfiguration.getPublicKey();
             mBuilderSupportedCardTypes = cardConfiguration.getSupportedCardTypes();
-            mBuilderHolderNameRequire = cardConfiguration.isHolderNameRequire();
+            mBuilderHolderNameRequired = cardConfiguration.isHolderNameRequired();
             mBuilderShowStorePaymentField = cardConfiguration.isShowStorePaymentFieldEnable();
             mShopperReference = cardConfiguration.getShopperReference();
             mBuilderHideCvc = cardConfiguration.isHideCvc();
@@ -266,12 +266,12 @@ public class CardConfiguration extends Configuration {
         /**
          * Set if the holder name is required and should be shown as an input field.
          *
-         * @param holderNameRequire {@link Boolean}
+         * @param holderNameRequired {@link Boolean}
          * @return {@link CardConfiguration.Builder}
          */
         @NonNull
-        public Builder setHolderNameRequire(boolean holderNameRequire) {
-            mBuilderHolderNameRequire = holderNameRequire;
+        public Builder setHolderNameRequired(boolean holderNameRequired) {
+            mBuilderHolderNameRequired = holderNameRequired;
             return this;
         }
 
@@ -349,7 +349,7 @@ public class CardConfiguration extends Configuration {
                     mBuilderEnvironment,
                     mBuilderClientKey,
                     mBuilderPublicKey,
-                    mBuilderHolderNameRequire,
+                    mBuilderHolderNameRequired,
                     mShopperReference,
                     mBuilderShowStorePaymentField,
                     mBuilderSupportedCardTypes,
