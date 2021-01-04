@@ -12,20 +12,18 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import com.adyen.checkout.card.CardComponent
 import com.adyen.checkout.components.PaymentComponentState
 import com.adyen.checkout.components.model.payments.request.PaymentMethodDetails
 import com.adyen.checkout.components.util.CurrencyUtils
 import com.adyen.checkout.components.util.PaymentMethodTypes
-import com.adyen.checkout.card.CardComponent
 import com.adyen.checkout.core.exception.CheckoutException
 import com.adyen.checkout.core.log.LogUtil
 import com.adyen.checkout.core.log.Logger
 import com.adyen.checkout.dropin.R
+import com.adyen.checkout.dropin.databinding.FragmentCardComponentBinding
 import com.adyen.checkout.dropin.ui.base.BaseComponentDialogFragment
 import com.google.android.material.bottomsheet.BottomSheetBehavior
-import kotlinx.android.synthetic.main.fragment_card_component.dropInCardView
-import kotlinx.android.synthetic.main.view_card_component_dropin.view.header
-import kotlinx.android.synthetic.main.view_card_component_dropin.view.payButton
 
 class CardComponentDialogFragment : BaseComponentDialogFragment() {
 
@@ -33,8 +31,11 @@ class CardComponentDialogFragment : BaseComponentDialogFragment() {
         private val TAG = LogUtil.getTag()
     }
 
+    private lateinit var binding: FragmentCardComponentBinding
+
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
-        return inflater.inflate(R.layout.fragment_card_component, container, false)
+        binding = FragmentCardComponentBinding.inflate(inflater, container, false)
+        return binding.root
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -53,7 +54,7 @@ class CardComponentDialogFragment : BaseComponentDialogFragment() {
 
         if (!dropInConfiguration.amount.isEmpty) {
             val value = CurrencyUtils.formatAmount(dropInConfiguration.amount, dropInConfiguration.shopperLocale)
-            dropInCardView.payButton.text = String.format(resources.getString(R.string.pay_button_with_value), value)
+            binding.dropInCardView.binding.payButton.text = String.format(resources.getString(R.string.pay_button_with_value), value)
         }
 
         // Keeping generic component to use the observer from the BaseComponentDialogFragment
@@ -61,23 +62,24 @@ class CardComponentDialogFragment : BaseComponentDialogFragment() {
         cardComponent.observeErrors(this, createErrorHandlerObserver())
 
         // try to get the name from the payment methods response
-        dropInCardView.header.text = dropInViewModel.paymentMethodsApiResponse.paymentMethods?.find { it.type == PaymentMethodTypes.SCHEME }?.name
+        binding.dropInCardView.binding.header.text =
+            dropInViewModel.paymentMethodsApiResponse.paymentMethods?.find { it.type == PaymentMethodTypes.SCHEME }?.name
 
-        dropInCardView.attach(cardComponent, this)
+        binding.dropInCardView.attach(cardComponent, this)
 
-        if (dropInCardView.isConfirmationRequired) {
-            dropInCardView.payButton.setOnClickListener {
+        if (binding.dropInCardView.isConfirmationRequired) {
+            binding.dropInCardView.binding.payButton.setOnClickListener {
                 if (cardComponent.state?.isValid == true) {
                     startPayment()
                 } else {
-                    dropInCardView.highlightValidationErrors()
+                    binding.dropInCardView.highlightValidationErrors()
                 }
             }
 
             setInitViewState(BottomSheetBehavior.STATE_EXPANDED)
-            dropInCardView.requestFocus()
+            binding.dropInCardView.requestFocus()
         } else {
-            dropInCardView.payButton.visibility = View.GONE
+            binding.dropInCardView.binding.payButton.visibility = View.GONE
         }
     }
 

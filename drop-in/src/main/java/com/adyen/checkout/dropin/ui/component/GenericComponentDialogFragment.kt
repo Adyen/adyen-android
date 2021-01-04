@@ -25,32 +25,32 @@ import com.adyen.checkout.core.exception.CheckoutException
 import com.adyen.checkout.core.log.LogUtil
 import com.adyen.checkout.core.log.Logger
 import com.adyen.checkout.dropin.R
+import com.adyen.checkout.dropin.databinding.FragmentGenericComponentBinding
 import com.adyen.checkout.dropin.getViewFor
 import com.adyen.checkout.dropin.ui.base.BaseComponentDialogFragment
 import com.google.android.material.bottomsheet.BottomSheetBehavior
-import kotlinx.android.synthetic.main.fragment_generic_component.componentContainer
-import kotlinx.android.synthetic.main.fragment_generic_component.payButton
-import kotlinx.android.synthetic.main.fragment_generic_component.view.header
 
 class GenericComponentDialogFragment : BaseComponentDialogFragment() {
 
     private lateinit var componentView: ComponentView<in OutputData, ViewableComponent<*, *, *>>
+    private lateinit var binding: FragmentGenericComponentBinding
 
     companion object : BaseCompanion<GenericComponentDialogFragment>(GenericComponentDialogFragment::class.java) {
         private val TAG = LogUtil.getTag()
     }
 
-    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
-        return inflater.inflate(R.layout.fragment_generic_component, container, false)
+    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View {
+        binding = FragmentGenericComponentBinding.inflate(inflater, container, false)
+        return binding.root
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         Logger.d(TAG, "onViewCreated")
-        view.header.text = paymentMethod.name
+        binding.header.text = paymentMethod.name
 
         if (!dropInConfiguration.amount.isEmpty) {
             val value = CurrencyUtils.formatAmount(dropInConfiguration.amount, dropInConfiguration.shopperLocale)
-            payButton.text = String.format(resources.getString(R.string.pay_button_with_value), value)
+            binding.payButton.text = String.format(resources.getString(R.string.pay_button_with_value), value)
         }
 
         try {
@@ -73,11 +73,11 @@ class GenericComponentDialogFragment : BaseComponentDialogFragment() {
     ) {
         component.observe(this, this)
         component.observeErrors(this, createErrorHandlerObserver())
-        componentContainer.addView(componentView as View)
+        binding.componentContainer.addView(componentView as View)
         componentView.attach(component as ViewableComponent<*, *, *>, this)
 
         if (componentView.isConfirmationRequired) {
-            payButton.setOnClickListener {
+            binding.payButton.setOnClickListener {
                 if (component.state?.isValid == true) {
                     startPayment()
                 } else {
@@ -88,7 +88,7 @@ class GenericComponentDialogFragment : BaseComponentDialogFragment() {
             setInitViewState(BottomSheetBehavior.STATE_EXPANDED)
             (componentView as View).requestFocus()
         } else {
-            payButton.visibility = View.GONE
+            binding.payButton.visibility = View.GONE
         }
     }
 }
