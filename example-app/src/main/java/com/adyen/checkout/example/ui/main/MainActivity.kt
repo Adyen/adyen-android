@@ -31,11 +31,10 @@ import com.adyen.checkout.example.BuildConfig
 import com.adyen.checkout.example.R
 import com.adyen.checkout.example.data.api.CheckoutApiService
 import com.adyen.checkout.example.data.storage.KeyValueStorage
+import com.adyen.checkout.example.databinding.ActivityMainBinding
 import com.adyen.checkout.example.service.ExampleSimplifiedDropInService
 import com.adyen.checkout.example.ui.configuration.ConfigurationActivity
 import com.adyen.checkout.googlepay.GooglePayConfiguration
-import kotlinx.android.synthetic.main.activity_main.progressBar
-import kotlinx.android.synthetic.main.activity_main.startCheckoutButton
 import org.koin.android.ext.android.inject
 import org.koin.androidx.viewmodel.ext.android.viewModel
 
@@ -45,6 +44,7 @@ class MainActivity : AppCompatActivity() {
         private val TAG: String = LogUtil.getTag()
     }
 
+    private lateinit var binding: ActivityMainBinding
     private val paymentMethodsViewModel: PaymentMethodsViewModel by viewModel()
     private val keyValueStorage: KeyValueStorage by inject()
 
@@ -55,14 +55,15 @@ class MainActivity : AppCompatActivity() {
 
         Logger.d(TAG, "onCreate")
         AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_FOLLOW_SYSTEM)
-        setContentView(R.layout.activity_main)
+        binding = ActivityMainBinding.inflate(layoutInflater)
+        setContentView(binding.root)
         setSupportActionBar(findViewById(R.id.toolbar))
 
         if (intent.hasExtra(DropIn.RESULT_KEY)) {
             Toast.makeText(this, intent.getStringExtra(DropIn.RESULT_KEY), Toast.LENGTH_SHORT).show()
         }
 
-        startCheckoutButton.setOnClickListener {
+        binding.startCheckoutButton.setOnClickListener {
             if (!CheckoutApiService.isRealUrlAvailable()) {
                 Toast.makeText(
                     this@MainActivity,
@@ -184,11 +185,11 @@ class MainActivity : AppCompatActivity() {
     private fun setLoading(isLoading: Boolean) {
         isWaitingPaymentMethods = isLoading
         if (isLoading) {
-            startCheckoutButton.visibility = View.GONE
-            progressBar.show()
+            binding.startCheckoutButton.visibility = View.GONE
+            binding.progressBar.show()
         } else {
-            startCheckoutButton.visibility = View.VISIBLE
-            progressBar.hide()
+            binding.startCheckoutButton.visibility = View.VISIBLE
+            binding.progressBar.hide()
         }
     }
 }

@@ -15,12 +15,11 @@ import androidx.lifecycle.LifecycleOwner
 import androidx.lifecycle.Observer
 import com.adyen.checkout.components.api.ImageLoader
 import com.adyen.checkout.components.ui.view.AdyenLinearLayout
-import kotlinx.android.synthetic.main.view_card_component_dropin.view.cardView
-import kotlinx.android.synthetic.main.view_card_component_dropin.view.recyclerView_cardList
-import com.adyen.checkout.dropin.R as dropInR
+import com.adyen.checkout.dropin.databinding.ViewCardComponentDropinBinding
 
 internal class DropInCardView : AdyenLinearLayout<CardOutputData, CardConfiguration, CardComponentState, CardComponent>, Observer<CardOutputData> {
 
+    val binding: ViewCardComponentDropinBinding
     private lateinit var mCardListAdapter: CardListAdapter
 
     constructor(context: Context) : this(context, null)
@@ -29,7 +28,7 @@ internal class DropInCardView : AdyenLinearLayout<CardOutputData, CardConfigurat
 
     constructor(context: Context, attrs: AttributeSet?, defStyleAttr: Int) : super(context, attrs, defStyleAttr) {
         orientation = VERTICAL
-        LayoutInflater.from(context).inflate(dropInR.layout.view_card_component_dropin, this, true)
+        binding = ViewCardComponentDropinBinding.inflate(LayoutInflater.from(context), this)
     }
 
     override fun initView() {
@@ -46,12 +45,12 @@ internal class DropInCardView : AdyenLinearLayout<CardOutputData, CardConfigurat
                 ImageLoader.getInstance(context, component.configuration.environment),
                 component.configuration.supportedCardTypes
             )
-            recyclerView_cardList.adapter = mCardListAdapter
+            binding.recyclerViewCardList.adapter = mCardListAdapter
         }
     }
 
     override fun observeComponentChanges(lifecycleOwner: LifecycleOwner) {
-        cardView.attach(component, lifecycleOwner)
+        binding.cardView.attach(component, lifecycleOwner)
         component.observeOutputData(lifecycleOwner, this)
     }
 
@@ -68,6 +67,6 @@ internal class DropInCardView : AdyenLinearLayout<CardOutputData, CardConfigurat
     }
 
     override fun highlightValidationErrors() {
-        cardView.highlightValidationErrors()
+        binding.cardView.highlightValidationErrors()
     }
 }

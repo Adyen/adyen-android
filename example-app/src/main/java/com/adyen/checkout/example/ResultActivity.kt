@@ -11,16 +11,17 @@ package com.adyen.checkout.example
 import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
 import com.adyen.checkout.dropin.DropIn
-import kotlinx.android.synthetic.main.activity_result.*
+import com.adyen.checkout.example.databinding.ActivityResultBinding
 
 class ResultActivity : AppCompatActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_result)
+        val binding = ActivityResultBinding.inflate(layoutInflater)
+        setContentView(binding.root)
 
         if (intent.hasExtra(DropIn.RESULT_KEY)) {
-            resultText.text = intent.getStringExtra(DropIn.RESULT_KEY)
+            binding.resultText.text = intent.getStringExtra(DropIn.RESULT_KEY)
         }
     }
 }
