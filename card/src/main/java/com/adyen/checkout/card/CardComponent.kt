@@ -8,6 +8,7 @@
 
 package com.adyen.checkout.card
 
+import androidx.lifecycle.viewModelScope
 import com.adyen.checkout.card.data.CardType
 import com.adyen.checkout.card.data.ExpiryDate
 import com.adyen.checkout.components.StoredPaymentComponentProvider
@@ -15,12 +16,14 @@ import com.adyen.checkout.components.base.BasePaymentComponent
 import com.adyen.checkout.components.model.payments.request.CardPaymentMethod
 import com.adyen.checkout.components.model.payments.request.PaymentComponentData
 import com.adyen.checkout.components.util.PaymentMethodTypes
+import com.adyen.checkout.core.exception.ComponentException
 import com.adyen.checkout.core.log.LogUtil
 import com.adyen.checkout.core.log.Logger
 import com.adyen.checkout.cse.Card
 import com.adyen.checkout.cse.EncryptedCard
 import com.adyen.checkout.cse.EncryptionException
 import com.adyen.checkout.cse.Encryptor
+import kotlinx.coroutines.launch
 import java.util.ArrayList
 import java.util.Collections
 
@@ -37,6 +40,16 @@ class CardComponent private constructor(
     var filteredSupportedCards: List<CardType> = emptyList()
         private set
     private var storedPaymentInputData: CardInputData? = null
+    private var publicKey = ""
+
+    init {
+        viewModelScope.launch {
+            publicKey = cardDelegate.fetchPublicKey()
+            if (publicKey.isEmpty()) {
+                notifyException(ComponentException("Unable to fetch publicKey."))
+            }
+        }
+    }
 
     constructor(storedCardDelegate: StoredCardDelegate, cardConfiguration: CardConfiguration) : this(
         storedCardDelegate as CardDelegate,
@@ -122,7 +135,8 @@ class CardComponent private constructor(
             if (expiryDateResult.expiryYear != ExpiryDate.EMPTY_VALUE && expiryDateResult.expiryMonth != ExpiryDate.EMPTY_VALUE) {
                 card.setExpiryDate(expiryDateResult.expiryMonth, expiryDateResult.expiryYear)
             }
-            Encryptor.INSTANCE.encryptFields(card.build(), configuration.publicKey)
+
+            Encryptor.INSTANCE.encryptFields(card.build(), publicKey)
         } catch (e: EncryptionException) {
             notifyException(e)
             return CardComponentState(paymentComponentData, false, firstCardType, binValue)
