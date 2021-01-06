@@ -36,7 +36,7 @@ import com.adyen.checkout.dropin.ActionHandler
 import com.adyen.checkout.dropin.DropIn
 import com.adyen.checkout.dropin.DropInConfiguration
 import com.adyen.checkout.dropin.R
-import com.adyen.checkout.dropin.service.CallResult
+import com.adyen.checkout.dropin.service.DropInServiceResult
 import com.adyen.checkout.dropin.service.DropInService
 import com.adyen.checkout.dropin.ui.action.ActionComponentDialogFragment
 import com.adyen.checkout.dropin.ui.base.DropInBottomSheetDialogFragment
@@ -127,7 +127,7 @@ class DropInActivity : AppCompatActivity(), DropInBottomSheetDialogFragment.Prot
             DropInService.dropInServiceFlow.collect {
                 Logger.d(TAG, "dropInServiceFlow collect")
                 isWaitingResult = false
-                handleCallResult(it)
+                handleDropInServiceResult(it)
             }
         }
 
@@ -323,26 +323,26 @@ class DropInActivity : AppCompatActivity(), DropInBottomSheetDialogFragment.Prot
         googlePayComponent.startGooglePayScreen(this, GOOGLE_PAY_REQUEST_CODE)
     }
 
-    private fun handleCallResult(callResult: CallResult) {
-        Logger.d(TAG, "handleCallResult - ${callResult.type.name}")
-        when (callResult.type) {
-            CallResult.ResultType.FINISHED -> {
-                this.sendResult(callResult.content)
+    private fun handleDropInServiceResult(dropInServiceResult: DropInServiceResult) {
+        Logger.d(TAG, "handleDropInServiceResult - ${dropInServiceResult.type.name}")
+        when (dropInServiceResult.type) {
+            DropInServiceResult.ResultType.FINISHED -> {
+                this.sendResult(dropInServiceResult.content)
             }
-            CallResult.ResultType.ACTION -> {
-                val action = Action.SERIALIZER.deserialize(JSONObject(callResult.content))
+            DropInServiceResult.ResultType.ACTION -> {
+                val action = Action.SERIALIZER.deserialize(JSONObject(dropInServiceResult.content))
                 actionHandler.handleAction(this, action, this::sendResult)
             }
-            CallResult.ResultType.ERROR -> {
-                Logger.d(TAG, "ERROR - ${callResult.content}")
-                showError(getString(R.string.payment_failed), callResult.dismissDropIn)
+            DropInServiceResult.ResultType.ERROR -> {
+                Logger.d(TAG, "ERROR - ${dropInServiceResult.content}")
+                showError(getString(R.string.payment_failed), dropInServiceResult.dismissDropIn)
             }
-            CallResult.ResultType.ERROR_WITH_MESSAGE -> {
-                Logger.d(TAG, "ERROR_WITH_MESSAGE - ${callResult.content}")
-                showError(callResult.content, callResult.dismissDropIn)
+            DropInServiceResult.ResultType.ERROR_WITH_MESSAGE -> {
+                Logger.d(TAG, "ERROR_WITH_MESSAGE - ${dropInServiceResult.content}")
+                showError(dropInServiceResult.content, dropInServiceResult.dismissDropIn)
             }
-            CallResult.ResultType.WAIT -> {
-                throw CheckoutException("WAIT CallResult is not expected to be propagated.")
+            DropInServiceResult.ResultType.WAIT -> {
+                throw CheckoutException("WAIT DropInServiceResult is not expected to be propagated.")
             }
         }
     }

@@ -11,7 +11,7 @@ package com.adyen.checkout.example.service
 import com.adyen.checkout.core.log.LogUtil
 import com.adyen.checkout.core.log.Logger
 import com.adyen.checkout.core.model.JsonUtils
-import com.adyen.checkout.dropin.service.CallResult
+import com.adyen.checkout.dropin.service.DropInServiceResult
 import com.adyen.checkout.dropin.service.DropInService
 import com.adyen.checkout.example.data.api.model.paymentsRequest.AdditionalData
 import com.adyen.checkout.example.data.storage.KeyValueStorage
@@ -40,7 +40,7 @@ class ExampleDropInService : DropInService() {
     private val paymentsRepository: PaymentsRepository by inject()
     private val keyValueStorage: KeyValueStorage by inject()
 
-    override fun makePaymentsCall(paymentComponentData: JSONObject): CallResult {
+    override fun makePaymentsCall(paymentComponentData: JSONObject): DropInServiceResult {
         Logger.d(TAG, "makePaymentsCall")
 
         // Check out the documentation of this method on the parent DropInService class
@@ -65,7 +65,7 @@ class ExampleDropInService : DropInService() {
         return handleResponse(call)
     }
 
-    override fun makeDetailsCall(actionComponentData: JSONObject): CallResult {
+    override fun makeDetailsCall(actionComponentData: JSONObject): DropInServiceResult {
         Logger.d(TAG, "makeDetailsCall")
 
         Logger.v(TAG, "payments/details/ - ${JsonUtils.indent(actionComponentData)}")
@@ -77,7 +77,7 @@ class ExampleDropInService : DropInService() {
     }
 
     @Suppress("NestedBlockDepth")
-    private fun handleResponse(call: Call<ResponseBody>): CallResult {
+    private fun handleResponse(call: Call<ResponseBody>): DropInServiceResult {
         return try {
             val response = call.execute()
 
@@ -89,7 +89,7 @@ class ExampleDropInService : DropInService() {
             if (response.isSuccessful) {
                 val detailsResponse = JSONObject(response.body()?.string())
                 if (detailsResponse.has("action")) {
-                    CallResult(CallResult.ResultType.ACTION, detailsResponse.get("action").toString())
+                    DropInServiceResult(DropInServiceResult.ResultType.ACTION, detailsResponse.get("action").toString())
                 } else {
                     Logger.d(TAG, "Final result - ${JsonUtils.indent(detailsResponse)}")
 
@@ -97,15 +97,15 @@ class ExampleDropInService : DropInService() {
                     if (detailsResponse.has("resultCode")) {
                         content = detailsResponse.get("resultCode").toString()
                     }
-                    CallResult(CallResult.ResultType.FINISHED, content)
+                    DropInServiceResult(DropInServiceResult.ResultType.FINISHED, content)
                 }
             } else {
                 Logger.e(TAG, "FAILED - ${response.message()}")
-                CallResult(CallResult.ResultType.ERROR, "IOException")
+                DropInServiceResult(DropInServiceResult.ResultType.ERROR, "IOException")
             }
         } catch (e: IOException) {
             Logger.e(TAG, "IOException", e)
-            CallResult(CallResult.ResultType.ERROR, "IOException")
+            DropInServiceResult(DropInServiceResult.ResultType.ERROR, "IOException")
         }
     }
 }

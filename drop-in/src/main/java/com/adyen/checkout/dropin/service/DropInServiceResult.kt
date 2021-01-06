@@ -15,7 +15,7 @@ import com.adyen.checkout.core.util.ParcelUtils
 /**
  * The result from a server call request on the [DropInService]
  */
-class CallResult(val type: ResultType, val content: String, val dismissDropIn: Boolean) : Parcelable {
+class DropInServiceResult(val type: ResultType, val content: String, val dismissDropIn: Boolean) : Parcelable {
 
     constructor(type: ResultType, content: String) : this (type, content, false)
 
@@ -62,12 +62,12 @@ class CallResult(val type: ResultType, val content: String, val dismissDropIn: B
         WAIT
     }
 
-    companion object CREATOR : Parcelable.Creator<CallResult> {
-        override fun createFromParcel(parcel: Parcel): CallResult {
-            return CallResult(parcel)
+    companion object CREATOR : Parcelable.Creator<DropInServiceResult> {
+        override fun createFromParcel(parcel: Parcel): DropInServiceResult {
+            return DropInServiceResult(parcel)
         }
 
-        override fun newArray(size: Int): Array<CallResult?> {
+        override fun newArray(size: Int): Array<DropInServiceResult?> {
             return arrayOfNulls(size)
         }
     }

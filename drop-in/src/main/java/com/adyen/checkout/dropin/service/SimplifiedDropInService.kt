@@ -22,12 +22,12 @@ abstract class SimplifiedDropInService : DropInService() {
         private const val RESULT_CODE_KEY = "resultCode"
     }
 
-    override fun makePaymentsCall(paymentComponentData: JSONObject): CallResult {
+    override fun makePaymentsCall(paymentComponentData: JSONObject): DropInServiceResult {
         val result = makePaymentsCallOrFail(paymentComponentData)
         return handleResponse(result)
     }
 
-    override fun makeDetailsCall(actionComponentData: JSONObject): CallResult {
+    override fun makeDetailsCall(actionComponentData: JSONObject): DropInServiceResult {
         val result = makeDetailsCallOrFail(actionComponentData)
         return handleResponse(result)
     }
@@ -36,32 +36,32 @@ abstract class SimplifiedDropInService : DropInService() {
 
     abstract fun makeDetailsCallOrFail(actionComponentData: JSONObject): JSONObject?
 
-    private fun handleResponse(response: JSONObject?): CallResult {
+    private fun handleResponse(response: JSONObject?): DropInServiceResult {
         Logger.v(TAG, "handleResponse - ${JsonUtils.indent(response)}")
 
         if (response != null && response.keys().hasNext()) {
             return when {
                 response.has(ACTION_KEY) -> {
                     Logger.d(TAG, "has action")
-                    CallResult(CallResult.ResultType.ACTION, response.get(ACTION_KEY).toString())
+                    DropInServiceResult(DropInServiceResult.ResultType.ACTION, response.get(ACTION_KEY).toString())
                 }
                 isAction(response) -> {
                     Logger.d(TAG, "is action")
-                    CallResult(CallResult.ResultType.ACTION, response.toString())
+                    DropInServiceResult(DropInServiceResult.ResultType.ACTION, response.toString())
                 }
                 response.has(RESULT_CODE_KEY) -> {
                     val resultCode = response.getString(RESULT_CODE_KEY)
                     Logger.d(TAG, "Final resultCode - $resultCode")
-                    CallResult(CallResult.ResultType.FINISHED, resultCode)
+                    DropInServiceResult(DropInServiceResult.ResultType.FINISHED, resultCode)
                 }
                 else -> {
                     Logger.e(TAG, "Unexpected response - ${JsonUtils.indent(response)}")
-                    CallResult(CallResult.ResultType.ERROR, "Unexpected response")
+                    DropInServiceResult(DropInServiceResult.ResultType.ERROR, "Unexpected response")
                 }
             }
         } else {
             Logger.e(TAG, "Response is empty")
-            return CallResult(CallResult.ResultType.ERROR, "Response Error")
+            return DropInServiceResult(DropInServiceResult.ResultType.ERROR, "Response Error")
         }
     }
 
