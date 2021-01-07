@@ -10,16 +10,10 @@ package com.adyen.checkout.components.api
 
 import com.adyen.checkout.core.api.Connection
 import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.supervisorScope
 import kotlinx.coroutines.withContext
 
-abstract class SuspendConnection<T>(url: String) : Connection<T>(url) {
-
-    suspend fun suspendedCall(): T {
-        return supervisorScope {
-            withContext(Dispatchers.IO) {
-                call()
-            }
-        }
+suspend inline fun <reified T> Connection<T>.suspendedCall(): T {
+    return withContext(Dispatchers.IO) {
+        call()
     }
 }

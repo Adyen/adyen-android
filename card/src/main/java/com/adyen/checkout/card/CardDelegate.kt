@@ -11,6 +11,7 @@ package com.adyen.checkout.card
 import com.adyen.checkout.card.api.PublicKeyConnection
 import com.adyen.checkout.card.data.CardType
 import com.adyen.checkout.card.data.ExpiryDate
+import com.adyen.checkout.components.api.suspendedCall
 import com.adyen.checkout.components.base.PaymentMethodDelegate
 import com.adyen.checkout.components.validation.ValidatedField
 import com.adyen.checkout.core.log.LogUtil
@@ -45,7 +46,7 @@ abstract class CardDelegate(protected val cardConfiguration: CardConfiguration) 
             cardConfiguration.publicKey
         } else {
             Logger.d(TAG, "fetching publicKey from API")
-            for (retry in 1..CONNECTION_RETRIES) {
+            repeat(CONNECTION_RETRIES) {
                 try {
                     return PublicKeyConnection(cardConfiguration.environment, cardConfiguration.clientKey).suspendedCall()
                 } catch (e: IOException) {
