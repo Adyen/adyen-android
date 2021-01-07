@@ -93,7 +93,7 @@ class ExampleDropInService : DropInService() {
                 } else {
                     Logger.d(TAG, "Final result - ${JsonUtils.indent(detailsResponse)}")
 
-                    var resultCode = if (detailsResponse.has("resultCode")) {
+                    val resultCode = if (detailsResponse.has("resultCode")) {
                         detailsResponse.get("resultCode").toString()
                     } else {
                         "EMPTY"
