@@ -87,25 +87,26 @@ class ExampleDropInService : DropInService() {
             }
 
             if (response.isSuccessful) {
-                val detailsResponse = JSONObject(response.body()?.string())
+                val detailsResponse = JSONObject(response.body()?.string() ?: "")
                 if (detailsResponse.has("action")) {
-                    DropInServiceResult(DropInServiceResult.ResultType.ACTION, detailsResponse.get("action").toString())
+                    DropInServiceResult.Action(detailsResponse.get("action").toString())
                 } else {
                     Logger.d(TAG, "Final result - ${JsonUtils.indent(detailsResponse)}")
 
-                    var content = "EMPTY"
-                    if (detailsResponse.has("resultCode")) {
-                        content = detailsResponse.get("resultCode").toString()
+                    var resultCode = if (detailsResponse.has("resultCode")) {
+                        detailsResponse.get("resultCode").toString()
+                    } else {
+                        "EMPTY"
                     }
-                    DropInServiceResult(DropInServiceResult.ResultType.FINISHED, content)
+                    DropInServiceResult.Finished(resultCode)
                 }
             } else {
                 Logger.e(TAG, "FAILED - ${response.message()}")
-                DropInServiceResult(DropInServiceResult.ResultType.ERROR, "IOException")
+                DropInServiceResult.Error(reason = "IOException")
             }
         } catch (e: IOException) {
             Logger.e(TAG, "IOException", e)
-            DropInServiceResult(DropInServiceResult.ResultType.ERROR, "IOException")
+            DropInServiceResult.Error(reason = "IOException")
         }
     }
 }

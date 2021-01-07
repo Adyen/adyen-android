@@ -36,8 +36,8 @@ import com.adyen.checkout.dropin.ActionHandler
 import com.adyen.checkout.dropin.DropIn
 import com.adyen.checkout.dropin.DropInConfiguration
 import com.adyen.checkout.dropin.R
-import com.adyen.checkout.dropin.service.DropInServiceResult
 import com.adyen.checkout.dropin.service.DropInService
+import com.adyen.checkout.dropin.service.DropInServiceResult
 import com.adyen.checkout.dropin.ui.action.ActionComponentDialogFragment
 import com.adyen.checkout.dropin.ui.base.DropInBottomSheetDialogFragment
 import com.adyen.checkout.dropin.ui.component.CardComponentDialogFragment
@@ -213,6 +213,7 @@ class DropInActivity : AppCompatActivity(), DropInBottomSheetDialogFragment.Prot
         }
         DropInService.requestPaymentsCall(this, paymentComponentData, dropInViewModel.dropInConfiguration.serviceComponentName)
     }
+
     override fun requestDetailsCall(actionComponentData: ActionComponentData) {
         isWaitingResult = true
         setLoading(true)
@@ -224,7 +225,7 @@ class DropInActivity : AppCompatActivity(), DropInBottomSheetDialogFragment.Prot
     }
 
     override fun showError(errorMessage: String, terminate: Boolean) {
-        Logger.d(TAG, "showError - $errorMessage")
+        Logger.d(TAG, "showError - message: $errorMessage")
         AlertDialog.Builder(this)
             .setTitle(R.string.error_dialog_title)
             .setMessage(errorMessage)
@@ -324,24 +325,24 @@ class DropInActivity : AppCompatActivity(), DropInBottomSheetDialogFragment.Prot
     }
 
     private fun handleDropInServiceResult(dropInServiceResult: DropInServiceResult) {
-        Logger.d(TAG, "handleDropInServiceResult - ${dropInServiceResult.type.name}")
-        when (dropInServiceResult.type) {
-            DropInServiceResult.ResultType.FINISHED -> {
-                this.sendResult(dropInServiceResult.content)
+        Logger.d(TAG, "handleDropInServiceResult - ${dropInServiceResult::class.simpleName}")
+        when (dropInServiceResult) {
+            is DropInServiceResult.Finished -> {
+                this.sendResult(dropInServiceResult.result)
             }
-            DropInServiceResult.ResultType.ACTION -> {
-                val action = Action.SERIALIZER.deserialize(JSONObject(dropInServiceResult.content))
+            is DropInServiceResult.Action -> {
+                val action = Action.SERIALIZER.deserialize(JSONObject(dropInServiceResult.actionJSON))
                 actionHandler.handleAction(this, action, this::sendResult)
             }
-            DropInServiceResult.ResultType.ERROR -> {
-                Logger.d(TAG, "ERROR - ${dropInServiceResult.content}")
-                showError(getString(R.string.payment_failed), dropInServiceResult.dismissDropIn)
+            is DropInServiceResult.Error -> {
+                Logger.d(TAG, "handleDropInServiceResult ERROR - reason: ${dropInServiceResult.reason}")
+                if (dropInServiceResult.errorMessage == null) {
+                    showError(getString(R.string.payment_failed), dropInServiceResult.dismissDropIn)
+                } else {
+                    showError(dropInServiceResult.errorMessage, dropInServiceResult.dismissDropIn)
+                }
             }
-            DropInServiceResult.ResultType.ERROR_WITH_MESSAGE -> {
-                Logger.d(TAG, "ERROR_WITH_MESSAGE - ${dropInServiceResult.content}")
-                showError(dropInServiceResult.content, dropInServiceResult.dismissDropIn)
-            }
-            DropInServiceResult.ResultType.WAIT -> {
+            is DropInServiceResult.Wait -> {
                 throw CheckoutException("WAIT DropInServiceResult is not expected to be propagated.")
             }
         }

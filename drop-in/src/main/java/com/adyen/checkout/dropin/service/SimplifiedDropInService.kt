@@ -43,25 +43,25 @@ abstract class SimplifiedDropInService : DropInService() {
             return when {
                 response.has(ACTION_KEY) -> {
                     Logger.d(TAG, "has action")
-                    DropInServiceResult(DropInServiceResult.ResultType.ACTION, response.get(ACTION_KEY).toString())
+                    DropInServiceResult.Action(response.get(ACTION_KEY).toString())
                 }
                 isAction(response) -> {
                     Logger.d(TAG, "is action")
-                    DropInServiceResult(DropInServiceResult.ResultType.ACTION, response.toString())
+                    DropInServiceResult.Action(response.toString())
                 }
                 response.has(RESULT_CODE_KEY) -> {
                     val resultCode = response.getString(RESULT_CODE_KEY)
                     Logger.d(TAG, "Final resultCode - $resultCode")
-                    DropInServiceResult(DropInServiceResult.ResultType.FINISHED, resultCode)
+                    DropInServiceResult.Finished(resultCode)
                 }
                 else -> {
                     Logger.e(TAG, "Unexpected response - ${JsonUtils.indent(response)}")
-                    DropInServiceResult(DropInServiceResult.ResultType.ERROR, "Unexpected response")
+                    DropInServiceResult.Error(reason = "Unexpected response")
                 }
             }
         } else {
             Logger.e(TAG, "Response is empty")
-            return DropInServiceResult(DropInServiceResult.ResultType.ERROR, "Response Error")
+            return DropInServiceResult.Error(reason = "Response Error")
         }
     }
 
