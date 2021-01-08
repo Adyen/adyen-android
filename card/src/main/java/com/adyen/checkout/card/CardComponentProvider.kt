@@ -8,7 +8,6 @@
 package com.adyen.checkout.card
 
 import android.app.Application
-import android.text.TextUtils
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.ViewModelStoreOwner
 import com.adyen.checkout.card.data.CardType
@@ -48,8 +47,7 @@ class CardComponentProvider : StoredPaymentComponentProvider<CardComponent, Card
         configuration: CardConfiguration,
         callback: ComponentAvailableCallback<CardConfiguration?>
     ) {
-        val isPubKeyAvailable = !TextUtils.isEmpty(configuration.publicKey)
-        callback.onAvailabilityResult(isPubKeyAvailable, paymentMethod, configuration)
+        callback.onAvailabilityResult(true, paymentMethod, configuration)
     }
 
     /**

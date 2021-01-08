@@ -18,31 +18,31 @@ import androidx.lifecycle.ViewModelProvider
 import com.adyen.checkout.components.base.lifecycle.viewModelFactory
 
 @MainThread
-inline fun <reified ViewModelT : ViewModel> AppCompatActivity.getViewModel(crossinline factoryProducer: () -> ViewModelT): ViewModelT {
+internal inline fun <reified ViewModelT : ViewModel> AppCompatActivity.getViewModel(crossinline factoryProducer: () -> ViewModelT): ViewModelT {
     return ViewModelProvider(this, viewModelFactory(factoryProducer)).get(ViewModelT::class.java)
 }
 
 @MainThread
-inline fun <reified ViewModelT : ViewModel> Fragment.getViewModel(
+internal inline fun <reified ViewModelT : ViewModel> Fragment.getViewModel(
     crossinline f: () -> ViewModelT
 ): ViewModelT {
     return ViewModelProvider(this, viewModelFactory(f)).get(ViewModelT::class.java)
 }
 
 @MainThread
-inline fun <reified ViewModelT : ViewModel> Fragment.getActivityViewModel(crossinline f: () -> ViewModelT): ViewModelT {
+internal inline fun <reified ViewModelT : ViewModel> Fragment.getActivityViewModel(crossinline f: () -> ViewModelT): ViewModelT {
     return ViewModelProvider(requireActivity(), viewModelFactory(f)).get(ViewModelT::class.java)
 }
 
 @MainThread
-inline fun <reified VM : ViewModel> AppCompatActivity.viewModelsFactory(
+internal inline fun <reified VM : ViewModel> AppCompatActivity.viewModelsFactory(
     crossinline factoryProducer: () -> VM
 ): Lazy<VM> {
     return viewModels { viewModelFactory(factoryProducer) }
 }
 
 @MainThread
-inline fun <reified VM : ViewModel> Fragment.viewModelsFactory(
+internal inline fun <reified VM : ViewModel> Fragment.viewModelsFactory(
     crossinline factoryProducer: () -> VM
 ): Lazy<VM> {
     return viewModels { viewModelFactory(factoryProducer) }

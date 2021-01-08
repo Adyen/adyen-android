@@ -174,7 +174,7 @@ public class CardConfiguration extends Configuration {
      */
     public static final class Builder extends BaseConfigurationBuilder<CardConfiguration> {
 
-        private String mBuilderPublicKey;
+        private String mBuilderPublicKey = "";
 
         private List<CardType> mBuilderSupportedCardTypes = Collections.emptyList();
         private boolean mBuilderHolderNameRequired;
@@ -243,6 +243,9 @@ public class CardConfiguration extends Configuration {
          */
         @NonNull
         public Builder setPublicKey(@NonNull String publicKey) {
+            if (!CardValidationUtils.isPublicKeyValid(mBuilderPublicKey)) {
+                throw new CheckoutException("Public key is not valid.");
+            }
             mBuilderPublicKey = publicKey;
             return this;
         }
@@ -334,14 +337,8 @@ public class CardConfiguration extends Configuration {
          */
         @NonNull
         public CardConfiguration build() {
-
-            if (!CardValidationUtils.isPublicKeyValid(mBuilderPublicKey)) {
-                throw new CheckoutException("Invalid Public Key. Please find the valid public key on the Customer Area.");
-            }
-
-            // This will not be triggered until the public key check above is removed as it takes priority.
-            if (!CardValidationUtils.isPublicKeyValid(mBuilderPublicKey) && !ValidationUtils.isClientKeyValid(mBuilderClientKey)) {
-                throw new CheckoutException("You need either a valid Client key or Public key to use the Card Component.");
+            if (!ValidationUtils.isClientKeyValid(mBuilderClientKey)) {
+                throw new CheckoutException("You need a valid Client key to use the Card Component.");
             }
 
             return new CardConfiguration(
