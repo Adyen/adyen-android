@@ -126,7 +126,7 @@ abstract class BaseComponentDialogFragment : DropInBottomSheetDialogFragment(), 
         try {
             if (componentState != null) {
                 if (componentState.isValid) {
-                    protocol.requestPaymentsCall(componentState.data)
+                    protocol.requestPaymentsCall(componentState)
                 } else {
                     throw CheckoutException("PaymentComponentState are not valid.")
                 }

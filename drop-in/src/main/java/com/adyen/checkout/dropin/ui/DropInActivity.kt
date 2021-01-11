@@ -20,12 +20,12 @@ import androidx.lifecycle.Observer
 import androidx.lifecycle.lifecycleScope
 import com.adyen.checkout.components.ActionComponentData
 import com.adyen.checkout.components.ComponentError
+import com.adyen.checkout.components.PaymentComponentState
 import com.adyen.checkout.components.analytics.AnalyticEvent
 import com.adyen.checkout.components.analytics.AnalyticsDispatcher
 import com.adyen.checkout.components.model.PaymentMethodsApiResponse
 import com.adyen.checkout.components.model.paymentmethods.PaymentMethod
 import com.adyen.checkout.components.model.paymentmethods.StoredPaymentMethod
-import com.adyen.checkout.components.model.payments.request.PaymentComponentData
 import com.adyen.checkout.components.model.payments.response.Action
 import com.adyen.checkout.components.util.PaymentMethodTypes
 import com.adyen.checkout.core.exception.CheckoutException
@@ -84,8 +84,8 @@ class DropInActivity : AppCompatActivity(), DropInBottomSheetDialogFragment.Prot
     private val loadingDialog = LoadingDialogFragment.newInstance()
 
     private val googlePayObserver: Observer<GooglePayComponentState> = Observer {
-        if (it!!.isValid) {
-            requestPaymentsCall(it.data)
+        if (it?.isValid == true) {
+            requestPaymentsCall(it)
         }
     }
 
@@ -204,14 +204,14 @@ class DropInActivity : AppCompatActivity(), DropInBottomSheetDialogFragment.Prot
         }
     }
 
-    override fun requestPaymentsCall(paymentComponentData: PaymentComponentData<*>) {
+    override fun requestPaymentsCall(paymentComponentState: PaymentComponentState<*>) {
         isWaitingResult = true
         setLoading(true)
         // include amount value if merchant passed it to the DropIn
         if (!dropInViewModel.dropInConfiguration.amount.isEmpty) {
-            paymentComponentData.amount = dropInViewModel.dropInConfiguration.amount
+            paymentComponentState.data.amount = dropInViewModel.dropInConfiguration.amount
         }
-        DropInService.requestPaymentsCall(this, paymentComponentData, dropInViewModel.dropInConfiguration.serviceComponentName)
+        DropInService.requestPaymentsCall(this, paymentComponentState, dropInViewModel.dropInConfiguration.serviceComponentName)
     }
 
     override fun requestDetailsCall(actionComponentData: ActionComponentData) {

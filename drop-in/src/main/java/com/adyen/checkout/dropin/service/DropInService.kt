@@ -12,6 +12,7 @@ import android.content.ComponentName
 import android.content.Context
 import android.content.Intent
 import androidx.core.app.JobIntentService
+import com.adyen.checkout.components.PaymentComponentState
 import com.adyen.checkout.components.model.payments.request.PaymentComponentData
 import com.adyen.checkout.components.model.payments.request.PaymentMethodDetails
 import com.adyen.checkout.core.exception.CheckoutException
@@ -42,7 +43,7 @@ abstract class DropInService : JobIntentService() {
         private const val DETAILS_REQUEST = "type_details"
 
         // Internal key of the content for the request
-        private const val PAYMENT_COMPONENT_DATA_EXTRA_KEY = "payment_component_data_extra"
+        private const val PAYMENT_COMPONENT_STATE_EXTRA_KEY = "payment_component_state_extra"
         private const val DETAILS_EXTRA_KEY = "details_method_extra"
 
         // Make it public for merchants who want to override behavior
@@ -81,14 +82,14 @@ abstract class DropInService : JobIntentService() {
         @Suppress("FunctionParameterNaming")
         fun requestPaymentsCall(
             context: Context,
-            paymentComponentData: PaymentComponentData<out PaymentMethodDetails>,
+            paymentComponentState: PaymentComponentState<out PaymentMethodDetails>,
             merchantService: ComponentName
         ) {
-            Logger.d(TAG, "requestPaymentsCall - ${paymentComponentData.paymentMethod?.type}")
+            Logger.d(TAG, "requestPaymentsCall - ${paymentComponentState.data.paymentMethod?.type}")
 
             val workIntent = Intent()
             workIntent.putExtra(REQUEST_TYPE_KEY, PAYMENTS_REQUEST)
-            workIntent.putExtra(PAYMENT_COMPONENT_DATA_EXTRA_KEY, paymentComponentData)
+            workIntent.putExtra(PAYMENT_COMPONENT_STATE_EXTRA_KEY, paymentComponentState)
 
             enqueueWork(context, merchantService, dropInJobId, workIntent)
         }
@@ -112,16 +113,16 @@ abstract class DropInService : JobIntentService() {
 
         when (intent.getStringExtra(REQUEST_TYPE_KEY)) {
             PAYMENTS_REQUEST -> {
-                val paymentComponentDataForRequest =
-                    intent.getParcelableExtra<PaymentComponentData<in PaymentMethodDetails>>(PAYMENT_COMPONENT_DATA_EXTRA_KEY)
-                if (paymentComponentDataForRequest == null) {
+                val paymentComponentStateForRequest =
+                    intent.getParcelableExtra<PaymentComponentState<in PaymentMethodDetails>>(PAYMENT_COMPONENT_STATE_EXTRA_KEY)
+                if (paymentComponentStateForRequest == null) {
                     handleDropInServiceResult(
                         DropInServiceResult.Error(
                             reason = "DropInService Error. No content in PAYMENT_COMPONENT_DATA_EXTRA_KEY"
                         )
                     )
                 } else {
-                    askPaymentsCall(paymentComponentDataForRequest)
+                    askPaymentsCall(paymentComponentStateForRequest)
                 }
             }
             DETAILS_REQUEST -> {
@@ -146,11 +147,13 @@ abstract class DropInService : JobIntentService() {
         handleDropInServiceResult(dropInServiceResult)
     }
 
-    private fun askPaymentsCall(paymentComponentData: PaymentComponentData<in PaymentMethodDetails>) {
+    private fun askPaymentsCall(paymentComponentState: PaymentComponentState<in PaymentMethodDetails>) {
         Logger.d(TAG, "askPaymentsCall")
 
         // Merchant makes network call
-        val paymentsDropInServiceResult = makePaymentsCall(PaymentComponentData.SERIALIZER.serialize(paymentComponentData))
+        val paymentsDropInServiceResult = makePaymentsCall(
+            PaymentComponentData.SERIALIZER.serialize(paymentComponentState.data)
+        )
 
         handleDropInServiceResult(paymentsDropInServiceResult)
     }
