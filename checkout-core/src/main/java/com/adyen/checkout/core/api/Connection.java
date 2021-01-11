@@ -17,6 +17,7 @@ import java.io.InputStream;
 import java.io.OutputStream;
 import java.net.HttpURLConnection;
 import java.nio.charset.Charset;
+import java.nio.charset.StandardCharsets;
 import java.util.Collections;
 import java.util.Map;
 import java.util.concurrent.Callable;
@@ -31,9 +32,7 @@ public abstract class Connection<T> implements Callable<T> {
     public static final String CONTENT_TYPE_HEADER = "Content-Type";
     public static final String APP_JSON_CONTENT_TYPE = "application/json";
 
-    // Charset class only available from API 19
-    @SuppressWarnings("CharsetObjectCanBeUsed")
-    private static final Charset CHARSET = Charset.forName("UTF-8");
+    private static final Charset CHARSET = StandardCharsets.UTF_8;
     private static final int BUFFER_SIZE = 1024;
 
     private HttpURLConnection mURLConnection;
@@ -59,7 +58,7 @@ public abstract class Connection<T> implements Callable<T> {
      */
     @NonNull
     protected byte[] get() throws IOException {
-        return get(Collections.<String, String>emptyMap());
+        return get(Collections.emptyMap());
     }
 
     /**

@@ -139,7 +139,8 @@ class MainActivity : AppCompatActivity() {
         val shopperLocale = LocaleUtil.fromLanguageTag(shopperLocaleString)
 
         val cardConfiguration = CardConfiguration.Builder(this@MainActivity)
-            .setPublicKey(BuildConfig.PUBLIC_KEY)
+//            .setPublicKey(BuildConfig.PUBLIC_KEY)
+            .setClientKey(BuildConfig.CLIENT_KEY)
             .setShopperReference(keyValueStorage.getShopperReference())
             .setShopperLocale(shopperLocale)
             .setEnvironment(Environment.TEST)
