@@ -6,9 +6,73 @@
   ~ Created by arman on 30/8/2019.
   -->
 
-<com.adyen.checkout.card.DropInCardView
+<LinearLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:id="@+id/dropInCardView"
-    android:paddingBottom="@dimen/standard_margin"
-    android:layout_height="match_parent"/>
+    android:layout_height="wrap_content"
+    android:orientation="vertical">
+
+    <include
+        layout="@layout/bottom_sheet_indicator"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"/>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:paddingLeft="@dimen/standard_margin"
+        android:paddingRight="@dimen/standard_margin"
+        android:paddingBottom="@dimen/standard_half_margin">
+
+        <TextView
+            android:id="@+id/header"
+            style="@style/AdyenCheckout.TextAppearance.HeaderTitle.Card"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textIsSelectable="false"
+            android:text="@string/credit_card" />
+
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/recyclerView_cardList"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/standard_half_margin"
+            android:layout_weight="1"
+            android:orientation="horizontal"
+            app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
+            app:reverseLayout="true"
+            tools:itemCount="8"
+            tools:listitem="@layout/brand_logo">
+
+        </androidx.recyclerview.widget.RecyclerView>
+
+    </LinearLayout>
+
+    <androidx.core.widget.NestedScrollView
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical">
+
+            <com.adyen.checkout.card.CardView
+                android:id="@+id/cardView"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent" />
+
+            <androidx.appcompat.widget.AppCompatButton
+                android:id="@+id/payButton"
+                style="@style/AdyenCheckout.Button.Colored"
+                android:layout_width="match_parent"
+                android:layout_marginBottom="@dimen/standard_half_margin"
+                android:text="@string/pay_button" />
+
+        </LinearLayout>
+    </androidx.core.widget.NestedScrollView>
+</LinearLayout>

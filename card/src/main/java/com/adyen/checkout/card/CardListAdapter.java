@@ -31,7 +31,7 @@ public class CardListAdapter extends RecyclerView.Adapter<CardListAdapter.ImageV
     private static final float ACTIVE = 1f;
     private static final float NOT_ACTIVE = 0.2f;
 
-    CardListAdapter(ImageLoader imageLoader, List<CardType> supportedCards) {
+    public CardListAdapter(@NonNull ImageLoader imageLoader, @NonNull List<CardType> supportedCards) {
         mImageLoader = imageLoader;
         mSupportedCards = supportedCards;
     }
@@ -59,7 +59,7 @@ public class CardListAdapter extends RecyclerView.Adapter<CardListAdapter.ImageV
     }
 
 
-    void setFilteredCard(@NonNull List<CardType> filteredCards) {
+    public void setFilteredCard(@NonNull List<CardType> filteredCards) {
         this.mFilteredCards = filteredCards;
         notifyDataSetChanged();
     }
