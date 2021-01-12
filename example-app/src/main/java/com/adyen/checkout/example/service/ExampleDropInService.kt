@@ -10,9 +10,9 @@ package com.adyen.checkout.example.service
 
 import com.adyen.checkout.core.log.LogUtil
 import com.adyen.checkout.core.log.Logger
-import com.adyen.checkout.core.model.JsonUtils
-import com.adyen.checkout.dropin.service.DropInServiceResult
+import com.adyen.checkout.core.model.toStringPretty
 import com.adyen.checkout.dropin.service.DropInService
+import com.adyen.checkout.dropin.service.DropInServiceResult
 import com.adyen.checkout.example.data.api.model.paymentsRequest.AdditionalData
 import com.adyen.checkout.example.data.storage.KeyValueStorage
 import com.adyen.checkout.example.repositories.paymentMethods.PaymentsRepository
@@ -57,7 +57,7 @@ class ExampleDropInService : DropInService() {
             )
         )
 
-        Logger.v(TAG, "paymentComponentData - ${JsonUtils.indent(paymentComponentData)}")
+        Logger.v(TAG, "paymentComponentData - ${paymentComponentData.toStringPretty()}")
 
         val requestBody = paymentRequest.toString().toRequestBody(CONTENT_TYPE)
         val call = paymentsRepository.paymentsRequest(requestBody)
@@ -68,7 +68,7 @@ class ExampleDropInService : DropInService() {
     override fun makeDetailsCall(actionComponentData: JSONObject): DropInServiceResult {
         Logger.d(TAG, "makeDetailsCall")
 
-        Logger.v(TAG, "payments/details/ - ${JsonUtils.indent(actionComponentData)}")
+        Logger.v(TAG, "payments/details/ - ${actionComponentData.toStringPretty()}")
 
         val requestBody = actionComponentData.toString().toRequestBody(CONTENT_TYPE)
         val call = paymentsRepository.detailsRequest(requestBody)
@@ -91,7 +91,7 @@ class ExampleDropInService : DropInService() {
                 if (detailsResponse.has("action")) {
                     DropInServiceResult.Action(detailsResponse.get("action").toString())
                 } else {
-                    Logger.d(TAG, "Final result - ${JsonUtils.indent(detailsResponse)}")
+                    Logger.d(TAG, "Final result - ${detailsResponse.toStringPretty()}")
 
                     val resultCode = if (detailsResponse.has("resultCode")) {
                         detailsResponse.get("resultCode").toString()

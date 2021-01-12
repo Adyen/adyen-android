@@ -5,134 +5,117 @@
  *
  * Created by caiof on 17/12/2020.
  */
+package com.adyen.checkout.core.model
 
-package com.adyen.checkout.core.model;
+import android.os.Parcel
+import android.text.TextUtils
+import com.adyen.checkout.core.exception.NoConstructorException
+import org.json.JSONArray
+import org.json.JSONException
+import org.json.JSONObject
+import java.util.ArrayList
+import java.util.Collections
 
-import android.os.Parcel;
-import android.text.TextUtils;
+private const val INDENTATION_SPACES = 4
+private const val PARSING_ERROR = "PARSING_ERROR"
+private const val NULL_OBJECT = "NULL"
+private const val FLAG_NULL = 0
+private const val FLAG_NON_NULL = FLAG_NULL + 1
 
-import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
+fun JSONObject.getStringOrNull(key: String): String? {
+    return if (this.has(key)) this.getString(key) else null
+}
 
-import com.adyen.checkout.core.exception.NoConstructorException;
+fun JSONObject.toStringPretty(): String {
+    return try {
+        this.toString(INDENTATION_SPACES)
+    } catch (e: JSONException) {
+        PARSING_ERROR
+    }
+}
 
-import org.json.JSONArray;
-import org.json.JSONException;
-import org.json.JSONObject;
+fun JSONObject.optStringList(key: String): List<String>? {
+    return JsonUtils.parseOptStringList(this.optJSONArray(key))
+}
 
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
+class JsonUtils private constructor() {
 
-public final class JsonUtils {
-
-    public static final int INDENTATION_SPACES = 4;
-    private static final String PARSING_ERROR = "PARSING_ERROR";
-    private static final String NULL_OBJECT = "NULL";
-
-    private static final int FLAG_NULL = 0;
-    private static final int FLAG_NON_NULL = FLAG_NULL + 1;
-
-    /**
-     * Transforms a JSONObject to an indented string form.
-     *
-     * @param jsonObject The object, can be null.
-     * @return The indented string version of the json.
-     */
-    @NonNull
-    public static String indent(@Nullable JSONObject jsonObject) {
-        if (jsonObject != null) {
-            try {
-                return jsonObject.toString(INDENTATION_SPACES);
-            } catch (JSONException e) {
-                return PARSING_ERROR;
-            }
-        } else {
-            return NULL_OBJECT;
-        }
+    init {
+        throw NoConstructorException()
     }
 
-    /**
-     * Writes a {@link JSONObject} to a {@link Parcel} as a {@link String}.
-     *
-     * @param parcel The Parcel to be written to.
-     * @param jsonObject The JSONObject to be saved in the Parcel.
-     */
-    public static void writeToParcel(@NonNull Parcel parcel, @Nullable JSONObject jsonObject) {
-        if (jsonObject == null) {
-            parcel.writeInt(FLAG_NULL);
-        } else {
-            parcel.writeInt(FLAG_NON_NULL);
-            parcel.writeString(jsonObject.toString());
-        }
-    }
-
-    /**
-     * Reads a {@link JSONObject} previously saved on a {@link Parcel}.
-     *
-     * @param parcel The Parcel to be read.
-     * @return The JSONObject that was contained in the Parcel.
-     */
-    @Nullable
-    public static JSONObject readFromParcel(@NonNull Parcel parcel) throws JSONException {
-        switch (parcel.readInt()) {
-            case FLAG_NULL:
-                return null;
-            case FLAG_NON_NULL:
-                return new JSONObject(parcel.readString());
-            default:
-                throw new IllegalArgumentException("Invalid flag.");
-        }
-    }
-
-    /**
-     * Parses a {@link JSONArray} to a list of Strings.
-     *
-     * @param jsonArray The JSONArray to be read.
-     * @return A {@link List} of strings, or null if the jsonArray was null.
-     */
-    @Nullable
-    public static List<String> parseOptStringList(@Nullable JSONArray jsonArray) {
-        if (jsonArray == null) {
-            return null;
-        }
-
-        final List<String> list = new ArrayList<>();
-
-        for (int i = 0; i < jsonArray.length(); i++) {
-            final String item = jsonArray.optString(i, null);
-            if (item != null) {
-                list.add(item);
+    companion object {
+        /**
+         * Writes a [JSONObject] to a [Parcel] as a [String].
+         *
+         * @param parcel The Parcel to be written to.
+         * @param jsonObject The JSONObject to be saved in the Parcel.
+         */
+        @JvmStatic
+        fun writeToParcel(parcel: Parcel, jsonObject: JSONObject?) {
+            if (jsonObject == null) {
+                parcel.writeInt(FLAG_NULL)
+            } else {
+                parcel.writeInt(FLAG_NON_NULL)
+                parcel.writeString(jsonObject.toString())
             }
         }
 
-        return Collections.unmodifiableList(list);
-    }
-
-    /**
-     * Serializes a List of String to a {@link JSONArray}.
-     *
-     * @param stringList The {@link List} of Strings to be serialized.
-     * @return The populated {@link JSONArray}. Could be null.
-     */
-    @Nullable
-    public static JSONArray serializeOptStringList(@Nullable List<String> stringList) {
-        if (stringList == null) {
-            return null;
-        }
-
-        final JSONArray jsonArray = new JSONArray();
-
-        for (String string : stringList) {
-            if (!TextUtils.isEmpty(string)) {
-                jsonArray.put(string);
+        /**
+         * Reads a [JSONObject] previously saved on a [Parcel].
+         *
+         * @param parcel The Parcel to be read.
+         * @return The JSONObject that was contained in the Parcel.
+         */
+        @JvmStatic
+        @Throws(JSONException::class)
+        fun readFromParcel(parcel: Parcel): JSONObject? {
+            return when (parcel.readInt()) {
+                FLAG_NULL -> null
+                FLAG_NON_NULL -> JSONObject(parcel.readString() ?: "")
+                else -> throw IllegalArgumentException("Invalid flag.")
             }
         }
 
-        return jsonArray;
-    }
+        /**
+         * Parses a [JSONArray] to a list of Strings.
+         *
+         * @param jsonArray The JSONArray to be read.
+         * @return A [List] of strings, or null if the jsonArray was null.
+         */
+        @JvmStatic
+        fun parseOptStringList(jsonArray: JSONArray?): List<String>? {
+            if (jsonArray == null) {
+                return null
+            }
+            val list: MutableList<String> = ArrayList()
+            for (i in 0 until jsonArray.length()) {
+                val item = jsonArray.optString(i, null)
+                if (item != null) {
+                    list.add(item)
+                }
+            }
+            return Collections.unmodifiableList(list)
+        }
 
-    private JsonUtils() {
-        throw new NoConstructorException();
+        /**
+         * Serializes a List of String to a [JSONArray].
+         *
+         * @param stringList The [List] of Strings to be serialized.
+         * @return The populated [JSONArray]. Could be null.
+         */
+        @JvmStatic
+        fun serializeOptStringList(stringList: List<String?>?): JSONArray? {
+            if (stringList == null) {
+                return null
+            }
+            val jsonArray = JSONArray()
+            for (string in stringList) {
+                if (!TextUtils.isEmpty(string)) {
+                    jsonArray.put(string)
+                }
+            }
+            return jsonArray
+        }
     }
 }
