@@ -35,10 +35,6 @@
         <service
             android:name=".service.ExampleDropInService"
             android:permission="android.permission.BIND_JOB_SERVICE" />
-
-        <service
-            android:name=".service.ExampleSimplifiedDropInService"
-            android:permission="android.permission.BIND_JOB_SERVICE" />
     </application>
 
 </manifest>

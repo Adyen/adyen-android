@@ -36,8 +36,8 @@ import com.adyen.checkout.dropin.ActionHandler
 import com.adyen.checkout.dropin.DropIn
 import com.adyen.checkout.dropin.DropInConfiguration
 import com.adyen.checkout.dropin.R
-import com.adyen.checkout.dropin.service.CallResult
 import com.adyen.checkout.dropin.service.DropInService
+import com.adyen.checkout.dropin.service.DropInServiceResult
 import com.adyen.checkout.dropin.ui.action.ActionComponentDialogFragment
 import com.adyen.checkout.dropin.ui.base.DropInBottomSheetDialogFragment
 import com.adyen.checkout.dropin.ui.component.CardComponentDialogFragment
@@ -127,7 +127,7 @@ class DropInActivity : AppCompatActivity(), DropInBottomSheetDialogFragment.Prot
             DropInService.dropInServiceFlow.collect {
                 Logger.d(TAG, "dropInServiceFlow collect")
                 isWaitingResult = false
-                handleCallResult(it)
+                handleDropInServiceResult(it)
             }
         }
 
@@ -213,6 +213,7 @@ class DropInActivity : AppCompatActivity(), DropInBottomSheetDialogFragment.Prot
         }
         DropInService.requestPaymentsCall(this, paymentComponentData, dropInViewModel.dropInConfiguration.serviceComponentName)
     }
+
     override fun requestDetailsCall(actionComponentData: ActionComponentData) {
         isWaitingResult = true
         setLoading(true)
@@ -224,7 +225,7 @@ class DropInActivity : AppCompatActivity(), DropInBottomSheetDialogFragment.Prot
     }
 
     override fun showError(errorMessage: String, terminate: Boolean) {
-        Logger.d(TAG, "showError - $errorMessage")
+        Logger.d(TAG, "showError - message: $errorMessage")
         AlertDialog.Builder(this)
             .setTitle(R.string.error_dialog_title)
             .setMessage(errorMessage)
@@ -323,26 +324,26 @@ class DropInActivity : AppCompatActivity(), DropInBottomSheetDialogFragment.Prot
         googlePayComponent.startGooglePayScreen(this, GOOGLE_PAY_REQUEST_CODE)
     }
 
-    private fun handleCallResult(callResult: CallResult) {
-        Logger.d(TAG, "handleCallResult - ${callResult.type.name}")
-        when (callResult.type) {
-            CallResult.ResultType.FINISHED -> {
-                this.sendResult(callResult.content)
+    private fun handleDropInServiceResult(dropInServiceResult: DropInServiceResult) {
+        Logger.d(TAG, "handleDropInServiceResult - ${dropInServiceResult::class.simpleName}")
+        when (dropInServiceResult) {
+            is DropInServiceResult.Finished -> {
+                this.sendResult(dropInServiceResult.result)
             }
-            CallResult.ResultType.ACTION -> {
-                val action = Action.SERIALIZER.deserialize(JSONObject(callResult.content))
+            is DropInServiceResult.Action -> {
+                val action = Action.SERIALIZER.deserialize(JSONObject(dropInServiceResult.actionJSON))
                 actionHandler.handleAction(this, action, this::sendResult)
             }
-            CallResult.ResultType.ERROR -> {
-                Logger.d(TAG, "ERROR - ${callResult.content}")
-                showError(getString(R.string.payment_failed), callResult.dismissDropIn)
+            is DropInServiceResult.Error -> {
+                Logger.d(TAG, "handleDropInServiceResult ERROR - reason: ${dropInServiceResult.reason}")
+                if (dropInServiceResult.errorMessage == null) {
+                    showError(getString(R.string.payment_failed), dropInServiceResult.dismissDropIn)
+                } else {
+                    showError(dropInServiceResult.errorMessage, dropInServiceResult.dismissDropIn)
+                }
             }
-            CallResult.ResultType.ERROR_WITH_MESSAGE -> {
-                Logger.d(TAG, "ERROR_WITH_MESSAGE - ${callResult.content}")
-                showError(callResult.content, callResult.dismissDropIn)
-            }
-            CallResult.ResultType.WAIT -> {
-                throw CheckoutException("WAIT CallResult is not expected to be propagated.")
+            is DropInServiceResult.Wait -> {
+                throw CheckoutException("WAIT DropInServiceResult is not expected to be propagated.")
             }
         }
     }
