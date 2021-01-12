@@ -26,8 +26,10 @@ import org.json.JSONObject
  * Base service to be extended by the merchant to provide the network calls that connect to the Adyen endpoints.
  * Calls should be made to your server, and from there to Adyen.
  *
- * The methods [makePaymentsCall] and [makeDetailsCall] are already run in the background and can return synchronously. Or async, check documentation.
- * The result [CallResult] is the result of the network call and can mean different things. Check the [CallResult.ResultType] for more information.
+ * The methods [makePaymentsCall] and [makeDetailsCall] are already run in the background and can return synchronously.
+ * For async, check documentation.
+ * The result [DropInServiceResult] is the result of the network call and can mean different things.
+ * Check the subclasses of [DropInServiceResult] for more information.
  */
 abstract class DropInService : JobIntentService() {
 
@@ -47,10 +49,10 @@ abstract class DropInService : JobIntentService() {
         @Suppress("MemberVisibilityCanBePrivate")
         const val dropInJobId = 11
 
-        // callback to handle sending the CallResult inside the callbackFlow below
+        // callback to handle sending the DropInServiceResult inside the callbackFlow below
         private var callback: DropInFlowResult = object : DropInFlowResult {
-            override fun dispatchCallResult(callResult: CallResult) {
-                Logger.e(TAG, "dispatchCallResult - callback called before flow")
+            override fun dispatchDropInServiceResult(dropInServiceResult: DropInServiceResult) {
+                Logger.e(TAG, "dispatchDropInServiceResult - callback called before flow")
             }
         }
 
@@ -60,11 +62,11 @@ abstract class DropInService : JobIntentService() {
         // since it embraces layer violations as per deprecation note
         // https://developer.android.com/jetpack/androidx/releases/localbroadcastmanager
         @ExperimentalCoroutinesApi
-        val dropInServiceFlow = callbackFlow<CallResult> {
+        val dropInServiceFlow = callbackFlow<DropInServiceResult> {
             callback = object : DropInFlowResult {
-                override fun dispatchCallResult(callResult: CallResult) {
+                override fun dispatchDropInServiceResult(dropInServiceResult: DropInServiceResult) {
                     Logger.d(TAG, "dropInServiceFlow - offer")
-                    offer(callResult)
+                    offer(dropInServiceResult)
                 }
             }
             awaitClose {
@@ -113,13 +115,17 @@ abstract class DropInService : JobIntentService() {
                 val paymentComponentDataForRequest =
                     intent.getParcelableExtra<PaymentComponentData<in PaymentMethodDetails>>(PAYMENT_COMPONENT_DATA_EXTRA_KEY)
                 if (paymentComponentDataForRequest == null) {
-                    handleCallResult(CallResult(CallResult.ResultType.ERROR, "DropInService Error. No content in PAYMENT_COMPONENT_DATA_EXTRA_KEY"))
+                    handleDropInServiceResult(
+                        DropInServiceResult.Error(
+                            reason = "DropInService Error. No content in PAYMENT_COMPONENT_DATA_EXTRA_KEY"
+                        )
+                    )
                 } else {
                     askPaymentsCall(paymentComponentDataForRequest)
                 }
             }
             DETAILS_REQUEST -> {
-                val detailsString = intent.getStringExtra(DETAILS_EXTRA_KEY)
+                val detailsString = intent.getStringExtra(DETAILS_EXTRA_KEY) ?: ""
                 val details = JSONObject(detailsString)
                 askDetailsCall(details)
             }
@@ -136,65 +142,69 @@ abstract class DropInService : JobIntentService() {
      * Call this method for asynchronous handling of [makePaymentsCall]
      */
     @Suppress("MemberVisibilityCanBePrivate")
-    protected fun asyncCallback(callResult: CallResult) {
-        handleCallResult(callResult)
+    protected fun asyncCallback(dropInServiceResult: DropInServiceResult) {
+        handleDropInServiceResult(dropInServiceResult)
     }
 
     private fun askPaymentsCall(paymentComponentData: PaymentComponentData<in PaymentMethodDetails>) {
         Logger.d(TAG, "askPaymentsCall")
 
         // Merchant makes network call
-        val paymentsCallResult = makePaymentsCall(PaymentComponentData.SERIALIZER.serialize(paymentComponentData))
+        val paymentsDropInServiceResult = makePaymentsCall(PaymentComponentData.SERIALIZER.serialize(paymentComponentData))
 
-        handleCallResult(paymentsCallResult)
+        handleDropInServiceResult(paymentsDropInServiceResult)
     }
 
     private fun askDetailsCall(details: JSONObject) {
         Logger.d(TAG, "askDetailsCall")
 
         // Merchant makes network call
-        val detailsCallResult = makeDetailsCall(details)
+        val detailsDropInServiceResult = makeDetailsCall(details)
 
-        handleCallResult(detailsCallResult)
+        handleDropInServiceResult(detailsDropInServiceResult)
     }
 
-    private fun handleCallResult(callResult: CallResult?) {
-        if (callResult == null) {
+    private fun handleDropInServiceResult(dropInServiceResult: DropInServiceResult?) {
+        if (dropInServiceResult == null) {
             // Make sure people don't return Null from Java code
-            throw CheckoutException("CallResult result from DropInService cannot be null.")
+            throw CheckoutException("DropInServiceResult result from DropInService cannot be null.")
         }
-        Logger.d(TAG, "handleCallResult - ${callResult.type.name}")
+        Logger.d(TAG, "handleDropInServiceResult - ${dropInServiceResult::class.simpleName}")
 
         // if type is WAIT do nothing and wait for async callback.
-        if (callResult.type != CallResult.ResultType.WAIT) {
+        if (dropInServiceResult !is DropInServiceResult.Wait) {
             // send response back to activity
-            Logger.d(TAG, "dropInServiceFlow - dispatchCallResult")
-            callback.dispatchCallResult(callResult)
+            Logger.d(TAG, "dropInServiceFlow - dispatchDropInServiceResult")
+            callback.dispatchDropInServiceResult(dropInServiceResult)
         }
     }
 
     /**
      * In this method you should make the network call to tell your server to make a call to the payments/ endpoint.
      *
-     * We provide a [PaymentComponentData] (as JSONObject) with the parameters we can infer from the Component [Configuration] and the user input,
+     * We provide a [PaymentComponentData] (as JSONObject) with the parameters we can infer from
+     * the Component [Configuration] and the user input,
      * specially the "paymentMethod" object with the shopper input details.
      * The rest of the payments/ call object should be filled in, on your server, according to your needs.
      *
-     * You can use [PaymentComponentData.SERIALIZER] to serialize the data between the data object and a [JSONObject] depending on what you prefer.
+     * You can use [PaymentComponentData.SERIALIZER] to serialize the data between the data
+     * object and a [JSONObject] depending on what you prefer.
      *
-     * The return of this method is expected to be a [CallResult] with the result of the network request.
-     * See expected [CallResult.ResultType] and the associated content.
+     * The return of this method is expected to be a [DropInServiceResult] with the result of the network
+     * request.
+     * See expected [DropInServiceResult] and the associated content.
      *
-     * This call is expected to be synchronous, as it already runs in a background thread, and the base class will handle messaging the UI
-     * after it finishes, based on the [CallResult]. If you want to make the call asynchronously, return [CallResult.ResultType.WAIT] on the type
-     * and call the [asyncCallback] method afterwards when it is done with the result.
+     * This call is expected to be synchronous, as it already runs in a background thread, and the
+     * base class will handle messaging the UI after it finishes, based on the [DropInServiceResult].
+     * If you want to make the call asynchronously, return [DropInServiceResult.Wait] on the type and
+     * call the [asyncCallback] method afterwards when it is done with the result.
      *
      * See https://docs.adyen.com/api-explorer/ for more information on the API documentation.
      *
      * @param paymentComponentData The result data from the [PaymentComponent] the compose your call.
      * @return The result of the network call
      */
-    abstract fun makePaymentsCall(paymentComponentData: JSONObject): CallResult
+    abstract fun makePaymentsCall(paymentComponentData: JSONObject): DropInServiceResult
 
     /**
      * In this method you should make the network call to tell your server to make a call to the payments/details/ endpoint.
@@ -202,20 +212,21 @@ abstract class DropInService : JobIntentService() {
      * We provide a [ActionComponentData] (as JSONObject) with the whole result expected by the payments/details/ endpoint
      * (if paymentData was provided).
      *
-     * You can use [ActionComponentData.SERIALIZER] to serialize the data between the data object and a [JSONObject] depending on what you prefer.
+     * You can use [ActionComponentData.SERIALIZER] to serialize the data between the data object
+     * and a [JSONObject] depending on what you prefer.
      *
      * This call is expected to be synchronous, as it already runs in the background, and the base class will handle messaging with the UI after it
-     * finishes based on the [CallResult]. If you want to make the call asynchronously, return [CallResult.ResultType.WAIT] on the type and call the
-     * [asyncCallback] method afterwards.
+     * finishes based on the [DropInServiceResult]. If you want to make the call asynchronously, return
+     * [DropInServiceResult.Wait] on the type and call the [asyncCallback] method afterwards.
      *
      * See https://docs.adyen.com/api-explorer/ for more information on the API documentation.
      *
      * @param actionComponentData The result data from the [ActionComponent] the compose your call.
      * @return The result of the network call
      */
-    abstract fun makeDetailsCall(actionComponentData: JSONObject): CallResult
+    abstract fun makeDetailsCall(actionComponentData: JSONObject): DropInServiceResult
 
     private interface DropInFlowResult {
-        fun dispatchCallResult(callResult: CallResult)
+        fun dispatchDropInServiceResult(dropInServiceResult: DropInServiceResult)
     }
 }

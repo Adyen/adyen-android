@@ -32,7 +32,7 @@ import com.adyen.checkout.example.R
 import com.adyen.checkout.example.data.api.CheckoutApiService
 import com.adyen.checkout.example.data.storage.KeyValueStorage
 import com.adyen.checkout.example.databinding.ActivityMainBinding
-import com.adyen.checkout.example.service.ExampleSimplifiedDropInService
+import com.adyen.checkout.example.service.ExampleDropInService
 import com.adyen.checkout.example.ui.configuration.ConfigurationActivity
 import com.adyen.checkout.googlepay.GooglePayConfiguration
 import org.koin.android.ext.android.inject
@@ -163,7 +163,7 @@ class MainActivity : AppCompatActivity() {
         val dropInConfigurationBuilder = DropInConfiguration.Builder(
             this@MainActivity,
             resultIntent,
-            ExampleSimplifiedDropInService::class.java
+            ExampleDropInService::class.java
         )
             .setEnvironment(Environment.TEST)
             .setClientKey(BuildConfig.CLIENT_KEY)
