@@ -15,6 +15,7 @@ import android.view.ViewGroup
 import com.adyen.checkout.card.CardComponent
 import com.adyen.checkout.card.CardComponentState
 import com.adyen.checkout.card.CardListAdapter
+import com.adyen.checkout.card.data.CardType
 import com.adyen.checkout.components.PaymentComponentState
 import com.adyen.checkout.components.api.ImageLoader
 import com.adyen.checkout.components.model.payments.request.PaymentMethodDetails
@@ -87,14 +88,17 @@ class CardComponentDialogFragment : BaseComponentDialogFragment() {
             binding.payButton.visibility = View.GONE
         }
 
-        if (!cardComponent.isStoredPaymentMethod()) {
-            cardListAdapter = CardListAdapter(
-                // TODO: 11/01/2021 Remove nullability after config is not nullable anymore
-                ImageLoader.getInstance(requireContext(), component.configuration?.environment ?: Environment.EUROPE),
-                cardComponent.configuration.supportedCardTypes
-            )
-            binding.recyclerViewCardList.adapter = cardListAdapter
+        val supportedCards = if (cardComponent.isStoredPaymentMethod()) {
+            emptyList<CardType>()
+        } else {
+            cardComponent.configuration.supportedCardTypes
         }
+        cardListAdapter = CardListAdapter(
+            // TODO: 11/01/2021 Remove nullability after config is not nullable anymore
+            ImageLoader.getInstance(requireContext(), component.configuration?.environment ?: Environment.EUROPE),
+            supportedCards
+        )
+        binding.recyclerViewCardList.adapter = cardListAdapter
     }
 
     override fun onChanged(paymentComponentState: PaymentComponentState<in PaymentMethodDetails>?) {
