@@ -32,66 +32,28 @@ public class Card {
         GENERATION_DATE_FORMAT.setTimeZone(TimeZone.getTimeZone("UTC"));
     }
 
-    /**
-     * @deprecated Use {@link com.adyen.adyencse.pojo.Card.Builder} instead.
-     */
-    @Deprecated
-    public Card() {
-
-    }
-
     public String getNumber() {
         return number;
-    }
-
-    @Deprecated
-    public void setNumber(String number) {
-        this.number = number;
     }
 
     public String getExpiryMonth() {
         return expiryMonth;
     }
 
-    @Deprecated
-    public void setExpiryMonth(String expiryMonth) {
-        this.expiryMonth = expiryMonth;
-    }
-
     public String getExpiryYear() {
         return expiryYear;
-    }
-
-    @Deprecated
-    public void setExpiryYear(String expiryYear) {
-        this.expiryYear = expiryYear;
     }
 
     public String getCardHolderName() {
         return cardHolderName;
     }
 
-    @Deprecated
-    public void setCardHolderName(String cardHolderName) {
-        this.cardHolderName = cardHolderName;
-    }
-
     public String getCvc() {
         return cvc;
     }
 
-    @Deprecated
-    public void setCvc(String cvc) {
-        this.cvc = cvc;
-    }
-
     public Date getGenerationTime() {
         return generationTime;
-    }
-
-    @Deprecated
-    public void setGenerationTime(Date generationTime) {
-        this.generationTime = generationTime;
     }
 
     /**
