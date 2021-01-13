@@ -9,9 +9,12 @@
 package com.adyen.checkout.card
 
 import androidx.lifecycle.viewModelScope
+import com.adyen.checkout.card.api.BinLookupConnection
 import com.adyen.checkout.card.data.CardType
 import com.adyen.checkout.card.data.ExpiryDate
+import com.adyen.checkout.card.model.BinLookupRequest
 import com.adyen.checkout.components.StoredPaymentComponentProvider
+import com.adyen.checkout.components.api.suspendedCall
 import com.adyen.checkout.components.base.BasePaymentComponent
 import com.adyen.checkout.components.model.payments.request.CardPaymentMethod
 import com.adyen.checkout.components.model.payments.request.PaymentComponentData
@@ -91,6 +94,22 @@ class CardComponent private constructor(
         val cardDelegate = mPaymentMethodDelegate as CardDelegate
         val firstCardType: CardType? = if (filteredSupportedCards.isNotEmpty()) filteredSupportedCards[0] else null
 
+        if (inputData.cardNumber.length == 11) {
+            viewModelScope.launch {
+                try {
+                    val card = Card.Builder()
+                    card.setNumber(inputData.cardNumber)
+                    val encryptedCard = Encryptor.INSTANCE.encryptFields(card.build(), publicKey)
+                    Logger.e(TAG, "ENCRYPTED - ${encryptedCard.encryptedNumber}")
+                    val request = BinLookupRequest(encryptedCard.encryptedNumber, "my-uuid", getCardTypes())
+                    val connect = BinLookupConnection(request, configuration.environment, configuration.clientKey).suspendedCall()
+                    Logger.e(TAG, "CONNECTED! \n$connect")
+                } catch (e: Exception) {
+                    Logger.e(TAG, "YOU ARE A FAILURE!", e)
+                }
+            }
+        }
+
         return CardOutputData(
             cardDelegate.validateCardNumber(inputData.cardNumber),
             cardDelegate.validateExpiryDate(inputData.expiryDate),
@@ -99,6 +118,14 @@ class CardComponent private constructor(
             inputData.isStorePaymentEnable,
             cardDelegate.isCvcHidden()
         )
+    }
+
+    private fun getCardTypes(): List<String> {
+        val txList = ArrayList<String>()
+        for (cardType in configuration.supportedCardTypes) {
+            txList.add(cardType.txVariant)
+        }
+        return txList
     }
 
     @Suppress("ReturnCount")
