@@ -11,9 +11,9 @@ package com.adyen.checkout.cse;
 import androidx.annotation.NonNull;
 import androidx.annotation.WorkerThread;
 
-import java.util.concurrent.Callable;
+import com.adyen.adyencse.encrypter.exception.EncrypterException;
 
-import adyen.com.adyencse.encrypter.exception.EncrypterException;
+import java.util.concurrent.Callable;
 
 public interface CardEncryptor {
 
