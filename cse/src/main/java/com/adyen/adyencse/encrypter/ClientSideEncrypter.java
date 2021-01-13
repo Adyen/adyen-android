@@ -40,14 +40,7 @@ public class ClientSideEncrypter {
     private SecureRandom srandom;
 
     public ClientSideEncrypter (String publicKeyString) throws EncrypterException {
-
-        /**
-         * Apply PRNG fixes
-         * http://android-developers.blogspot.nl/2013/08/some-securerandom-thoughts.html
-         */
-        PRNGFixes.apply();
-
-
+        
         srandom = new SecureRandom();
         String[] keyComponents = publicKeyString.split("\\|");
 
