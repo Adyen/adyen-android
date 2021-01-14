@@ -11,6 +11,9 @@ package com.adyen.checkout.bcmc;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 
+import com.adyen.checkout.card.CardValidationUtils;
+import com.adyen.checkout.card.data.CardType;
+import com.adyen.checkout.card.data.ExpiryDate;
 import com.adyen.checkout.components.PaymentComponentProvider;
 import com.adyen.checkout.components.PaymentComponentState;
 import com.adyen.checkout.components.base.BasePaymentComponent;
@@ -20,15 +23,12 @@ import com.adyen.checkout.components.model.payments.request.CardPaymentMethod;
 import com.adyen.checkout.components.model.payments.request.PaymentComponentData;
 import com.adyen.checkout.components.util.PaymentMethodTypes;
 import com.adyen.checkout.components.validation.ValidatedField;
-import com.adyen.checkout.card.CardValidationUtils;
-import com.adyen.checkout.card.data.CardType;
-import com.adyen.checkout.card.data.ExpiryDate;
 import com.adyen.checkout.core.log.LogUtil;
 import com.adyen.checkout.core.log.Logger;
-import com.adyen.checkout.cse.UnencryptedCard;
+import com.adyen.checkout.cse.CardEncryptor;
 import com.adyen.checkout.cse.EncryptedCard;
 import com.adyen.checkout.cse.EncryptionException;
-import com.adyen.checkout.cse.Encryptor;
+import com.adyen.checkout.cse.UnencryptedCard;
 
 public final class BcmcComponent
         extends BasePaymentComponent<BcmcConfiguration, BcmcInputData, BcmcOutputData, PaymentComponentState<CardPaymentMethod>> {
@@ -93,7 +93,7 @@ public final class BcmcComponent
                 card.setExpiryDate(expiryDateResult.getExpiryMonth(), expiryDateResult.getExpiryYear());
             }
 
-            encryptedCard = Encryptor.INSTANCE.encryptFields(card.build(), getConfiguration().getPublicKey());
+            encryptedCard = CardEncryptor.encryptFields(card.build(), getConfiguration().getPublicKey());
         } catch (EncryptionException e) {
             notifyException(e);
             return new PaymentComponentState<>(paymentComponentData, false);
