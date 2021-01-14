@@ -17,7 +17,6 @@ import java.security.InvalidAlgorithmParameterException;
 import java.security.InvalidKeyException;
 import java.security.KeyFactory;
 import java.security.NoSuchAlgorithmException;
-import java.security.NoSuchProviderException;
 import java.security.PublicKey;
 import java.security.SecureRandom;
 import java.security.spec.InvalidKeySpecException;
@@ -72,13 +71,11 @@ public class ClientSideEncrypter {
         }
 
         try {
-            mAesCipher = Cipher.getInstance("AES/CCM/NoPadding", "BC");
+            mAesCipher = Cipher.getInstance("AES/CCM/NoPadding");
         } catch (NoSuchAlgorithmException e) {
             throw new EncryptionException("Problem instantiation AES Cipher Algorithm", e);
         } catch (NoSuchPaddingException e) {
             throw new EncryptionException("Problem instantiation AES Cipher Padding", e);
-        } catch (NoSuchProviderException e) {
-            e.printStackTrace();
         }
 
         try {
