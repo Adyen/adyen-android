@@ -1,8 +1,16 @@
-package com.adyen.adyencse.encrypter;
+/*
+ * Copyright (c) 2021 Adyen N.V.
+ *
+ * This file is open source and available under the MIT license. See the LICENSE file for more info.
+ *
+ * Created by caiof on 14/1/2021.
+ */
+
+package com.adyen.checkout.cse;
 
 import android.util.Base64;
 
-import com.adyen.adyencse.encrypter.exception.EncrypterException;
+import com.adyen.checkout.cse.exception.EncryptionException;
 
 import java.math.BigInteger;
 import java.security.InvalidAlgorithmParameterException;
@@ -39,7 +47,7 @@ public class ClientSideEncrypter {
     private Cipher rsaCipher;
     private SecureRandom srandom;
 
-    public ClientSideEncrypter (String publicKeyString) throws EncrypterException {
+    public ClientSideEncrypter (String publicKeyString) throws EncryptionException {
 
         srandom = new SecureRandom();
         String[] keyComponents = publicKeyString.split("\\|");
@@ -60,15 +68,15 @@ public class ClientSideEncrypter {
         try {
             pubKey = keyFactory.generatePublic(pubKeySpec);
         } catch (InvalidKeySpecException e) {
-            throw new EncrypterException("Problem reading public key: " + publicKeyString, e);
+            throw new EncryptionException("Problem reading public key: " + publicKeyString, e);
         }
 
         try {
             aesCipher  = Cipher.getInstance("AES/CCM/NoPadding", "BC");
         } catch (NoSuchAlgorithmException e) {
-            throw new EncrypterException("Problem instantiation AES Cipher Algorithm", e);
+            throw new EncryptionException("Problem instantiation AES Cipher Algorithm", e);
         } catch (NoSuchPaddingException e) {
-            throw new EncrypterException("Problem instantiation AES Cipher Padding", e);
+            throw new EncryptionException("Problem instantiation AES Cipher Padding", e);
         } catch (NoSuchProviderException e) {
             e.printStackTrace();
         }
@@ -78,16 +86,16 @@ public class ClientSideEncrypter {
             rsaCipher.init(Cipher.ENCRYPT_MODE, pubKey);
 
         } catch (NoSuchAlgorithmException e) {
-            throw new EncrypterException("Problem instantiation RSA Cipher Algorithm", e);
+            throw new EncryptionException("Problem instantiation RSA Cipher Algorithm", e);
         } catch (NoSuchPaddingException e) {
-            throw new EncrypterException("Problem instantiation RSA Cipher Padding", e);
+            throw new EncryptionException("Problem instantiation RSA Cipher Padding", e);
         } catch (InvalidKeyException e) {
-            throw new EncrypterException("Invalid public key: " + publicKeyString, e);
+            throw new EncryptionException("Invalid public key: " + publicKeyString, e);
         }
 
     }
 
-    public String encrypt(String plainText) throws EncrypterException {
+    public String encrypt(String plainText) throws EncryptionException {
         SecretKey aesKey = generateAESKey(256);
 
         byte[] iv = generateIV(12);
@@ -98,13 +106,13 @@ public class ClientSideEncrypter {
             // getBytes is UTF-8 on Android by default
             encrypted = aesCipher.doFinal(plainText.getBytes());
         } catch (IllegalBlockSizeException e) {
-            throw new EncrypterException("Incorrect AES Block Size", e);
+            throw new EncryptionException("Incorrect AES Block Size", e);
         } catch (BadPaddingException e) {
-            throw new EncrypterException("Incorrect AES Padding", e);
+            throw new EncryptionException("Incorrect AES Padding", e);
         } catch (InvalidKeyException e) {
-            throw new EncrypterException("Invalid AES Key", e);
+            throw new EncryptionException("Invalid AES Key", e);
         } catch(InvalidAlgorithmParameterException e) {
-            throw new EncrypterException("Invalid AES Parameters", e);
+            throw new EncryptionException("Invalid AES Parameters", e);
         }
 
         byte[] result = new byte[iv.length + encrypted.length];
@@ -118,18 +126,18 @@ public class ClientSideEncrypter {
             encryptedAESKey = rsaCipher.doFinal(aesKey.getEncoded());
             return String.format("%s%s%s%s%s%s", PREFIX, VERSION, SEPARATOR, Base64.encodeToString(encryptedAESKey, Base64.NO_WRAP), SEPARATOR, Base64.encodeToString(result, Base64.NO_WRAP));
         } catch (IllegalBlockSizeException e) {
-            throw new EncrypterException("Incorrect RSA Block Size", e);
+            throw new EncryptionException("Incorrect RSA Block Size", e);
         } catch (BadPaddingException e) {
-            throw new EncrypterException("Incorrect RSA Padding", e);
+            throw new EncryptionException("Incorrect RSA Padding", e);
         }
     }
 
-    private SecretKey generateAESKey(int keySize) throws EncrypterException {
+    private SecretKey generateAESKey(int keySize) throws EncryptionException {
         KeyGenerator kgen = null;
         try {
             kgen = KeyGenerator.getInstance("AES");
         } catch (NoSuchAlgorithmException e) {
-            throw new EncrypterException("Unable to get AES algorithm", e);
+            throw new EncryptionException("Unable to get AES algorithm", e);
         }
         kgen.init(keySize);
         return kgen.generateKey();

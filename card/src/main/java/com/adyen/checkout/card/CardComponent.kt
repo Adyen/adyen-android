@@ -19,9 +19,9 @@ import com.adyen.checkout.components.util.PaymentMethodTypes
 import com.adyen.checkout.core.exception.ComponentException
 import com.adyen.checkout.core.log.LogUtil
 import com.adyen.checkout.core.log.Logger
-import com.adyen.checkout.cse.CardEncryptor
+import com.adyen.checkout.cse.CardEncrypter
 import com.adyen.checkout.cse.EncryptedCard
-import com.adyen.checkout.cse.EncryptionException
+import com.adyen.checkout.cse.exception.EncryptionException
 import com.adyen.checkout.cse.UnencryptedCard
 import kotlinx.coroutines.launch
 import java.util.ArrayList
@@ -136,7 +136,7 @@ class CardComponent private constructor(
                 card.setExpiryDate(expiryDateResult.expiryMonth, expiryDateResult.expiryYear)
             }
 
-            CardEncryptor.encryptFields(card.build(), publicKey)
+            CardEncrypter.encryptFields(card.build(), publicKey)
         } catch (e: EncryptionException) {
             notifyException(e)
             return CardComponentState(paymentComponentData, false, firstCardType, binValue)

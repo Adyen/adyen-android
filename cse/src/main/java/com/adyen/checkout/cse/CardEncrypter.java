@@ -11,14 +11,14 @@ package com.adyen.checkout.cse;
 import androidx.annotation.NonNull;
 import androidx.annotation.WorkerThread;
 
-import com.adyen.adyencse.encrypter.exception.EncrypterException;
 import com.adyen.checkout.core.exception.NoConstructorException;
+import com.adyen.checkout.cse.exception.EncryptionException;
 
 import java.util.Date;
 
-public final class CardEncryptor {
+public final class CardEncrypter {
 
-    private CardEncryptor() {
+    private CardEncrypter() {
         throw new NoConstructorException();
     }
 
@@ -36,7 +36,7 @@ public final class CardEncryptor {
 
             if (cardNumber != null) {
                 try {
-                    encryptedNumber = new com.adyen.adyencse.pojo.Card.Builder()
+                    encryptedNumber = new com.adyen.checkout.cse.internal.Card.Builder()
                             .setNumber(cardNumber)
                             .setGenerationTime(generationTime)
                             .build()
@@ -53,12 +53,12 @@ public final class CardEncryptor {
             final String encryptedExpiryYear;
 
             if (expiryMonth != null && expiryYear != null) {
-                encryptedExpiryMonth = new com.adyen.adyencse.pojo.Card.Builder()
+                encryptedExpiryMonth = new com.adyen.checkout.cse.internal.Card.Builder()
                         .setExpiryMonth(String.valueOf(expiryMonth))
                         .setGenerationTime(generationTime)
                         .build()
                         .serialize(publicKey);
-                encryptedExpiryYear = new com.adyen.adyencse.pojo.Card.Builder()
+                encryptedExpiryYear = new com.adyen.checkout.cse.internal.Card.Builder()
                         .setExpiryYear(String.valueOf(expiryYear))
                         .setGenerationTime(generationTime)
                         .build()
@@ -70,7 +70,7 @@ public final class CardEncryptor {
                 throw new EncryptionException("Both expiryMonth and expiryYear need to be set for encryption.", null);
             }
 
-            final String encryptedSecurityCode = new com.adyen.adyencse.pojo.Card.Builder()
+            final String encryptedSecurityCode = new com.adyen.checkout.cse.internal.Card.Builder()
                     .setCvc(unencryptedCard.getSecurityCode())
                     .setGenerationTime(generationTime)
                     .build()
@@ -87,8 +87,8 @@ public final class CardEncryptor {
             return builder
                     .setEncryptedSecurityCode(encryptedSecurityCode)
                     .build();
-        } catch (EncrypterException | IllegalStateException e) {
-            throw new EncryptionException(e.getMessage(), e.getCause());
+        } catch (EncryptionException | IllegalStateException e) {
+            throw new EncryptionException(e.getMessage() == null ? "No message." : e.getMessage(), e.getCause());
         }
     }
 
@@ -98,7 +98,7 @@ public final class CardEncryptor {
             @NonNull final String holderName,
             @NonNull final UnencryptedCard unencryptedCard,
             final @NonNull String publicKey
-    ) throws EncrypterException {
+    ) throws EncryptionException {
 
         final Date generationTime = new Date();
         final Integer expiryMonth = unencryptedCard.getExpiryMonth();
@@ -107,7 +107,7 @@ public final class CardEncryptor {
         final String expiryMonthString = expiryMonth != null ? String.valueOf(expiryMonth) : null;
         final String expiryYearString = expiryYear != null ? String.valueOf(expiryYear) : null;
 
-        return new com.adyen.adyencse.pojo.Card.Builder()
+        return new com.adyen.checkout.cse.internal.Card.Builder()
                 .setHolderName(holderName)
                 .setNumber(unencryptedCard.getNumber())
                 .setExpiryMonth(expiryMonthString)

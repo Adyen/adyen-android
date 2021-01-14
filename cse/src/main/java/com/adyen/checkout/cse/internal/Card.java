@@ -1,9 +1,17 @@
-package com.adyen.adyencse.pojo;
+/*
+ * Copyright (c) 2021 Adyen N.V.
+ *
+ * This file is open source and available under the MIT license. See the LICENSE file for more info.
+ *
+ * Created by caiof on 14/1/2021.
+ */
+
+package com.adyen.checkout.cse.internal;
 
 import android.util.Log;
 
-import com.adyen.adyencse.encrypter.ClientSideEncrypter;
-import com.adyen.adyencse.encrypter.exception.EncrypterException;
+import com.adyen.checkout.cse.ClientSideEncrypter;
+import com.adyen.checkout.cse.exception.EncryptionException;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -18,7 +26,7 @@ import java.util.TimeZone;
  */
 public class Card {
 
-    private static final String tag = com.adyen.adyencse.pojo.Card.class.getSimpleName();
+    private static final String tag = com.adyen.checkout.cse.internal.Card.class.getSimpleName();
     private static final SimpleDateFormat GENERATION_DATE_FORMAT = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSS'Z'");
 
     private String number;
@@ -57,13 +65,13 @@ public class Card {
     }
 
     /**
-     * Serializes and encrypts the data from the {@link com.adyen.adyencse.pojo.Card}.
+     * Serializes and encrypts the data from the {@link com.adyen.checkout.cse.internal.Card}.
      *
      * @param publicKey The public key to encrypt with.
-     * @return The serialized and encrypted data from the {@link com.adyen.adyencse.pojo.Card}.
-     * @throws EncrypterException If the {@link com.adyen.adyencse.pojo.Card} could not be encrypted.
+     * @return The serialized and encrypted data from the {@link com.adyen.checkout.cse.internal.Card}.
+     * @throws EncryptionException If the {@link com.adyen.checkout.cse.internal.Card} could not be encrypted.
      */
-    public String serialize(String publicKey) throws EncrypterException {
+    public String serialize(String publicKey) throws EncryptionException {
         JSONObject cardJson = new JSONObject();
         String encryptedData = null;
 
@@ -119,13 +127,13 @@ public class Card {
     /*
     * Helper method that calls the ClientSideEncrypter encrypt method
     * */
-    private String encryptData(String data, String publicKey) throws EncrypterException {
+    private String encryptData(String data, String publicKey) throws EncryptionException {
         String encryptedData = null;
 
         try {
             ClientSideEncrypter encrypter = new ClientSideEncrypter(publicKey);
             encryptedData = encrypter.encrypt(data);
-        } catch (EncrypterException e) {
+        } catch (EncryptionException e) {
             throw e;
         }
 
@@ -150,13 +158,13 @@ public class Card {
     }
 
     /**
-     * Builder for {@link com.adyen.adyencse.pojo.Card} objects.
+     * Builder for {@link com.adyen.checkout.cse.internal.Card} objects.
      */
     public static final class Builder {
-        private final com.adyen.adyencse.pojo.Card card;
+        private final com.adyen.checkout.cse.internal.Card card;
 
         public Builder() {
-            card = new com.adyen.adyencse.pojo.Card();
+            card = new com.adyen.checkout.cse.internal.Card();
         }
 
         /**
@@ -232,13 +240,13 @@ public class Card {
         }
 
         /**
-         * Performs some simple checks on the given {@link com.adyen.adyencse.pojo.Card} object and builds it.
+         * Performs some simple checks on the given {@link com.adyen.checkout.cse.internal.Card} object and builds it.
          *
-         * @return The valid {@link com.adyen.adyencse.pojo.Card} object.
+         * @return The valid {@link com.adyen.checkout.cse.internal.Card} object.
          * @throws NullPointerException If any mandatory field is null.
          * @throws IllegalStateException If any field is in an illegal state.
          */
-        public com.adyen.adyencse.pojo.Card build() throws NullPointerException, IllegalStateException {
+        public com.adyen.checkout.cse.internal.Card build() throws NullPointerException, IllegalStateException {
             requireNonNull(card.generationTime, "generationTime");
             require(card.number == null || card.number.matches("[0-9]{8,19}"), "number must be null or have 8 to 19 digits (inclusive).");
             require(card.cardHolderName == null || card.cardHolderName.length() > 0, "cardHolderName must be null or not empty.");

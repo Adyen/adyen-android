@@ -1,12 +1,12 @@
 /*
- * Copyright (c) 2019 Adyen N.V.
+ * Copyright (c) 2021 Adyen N.V.
  *
  * This file is open source and available under the MIT license. See the LICENSE file for more info.
  *
- * Created by arman on 6/6/2019.
+ * Created by caiof on 14/1/2021.
  */
 
-package com.adyen.checkout.cse;
+package com.adyen.checkout.cse.exception;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
