@@ -90,7 +90,8 @@ public final class BcmcComponent
             final ExpiryDate expiryDateResult = outputData.getExpiryDateField().getValue();
 
             if (expiryDateResult.getExpiryYear() != ExpiryDate.EMPTY_VALUE && expiryDateResult.getExpiryMonth() != ExpiryDate.EMPTY_VALUE) {
-                card.setExpiryDate(expiryDateResult.getExpiryMonth(), expiryDateResult.getExpiryYear());
+                card.setExpiryMonth(String.valueOf(expiryDateResult.getExpiryMonth()));
+                card.setExpiryYear(String.valueOf(expiryDateResult.getExpiryYear()));
             }
 
             encryptedCard = CardEncrypter.encryptFields(card.build(), getConfiguration().getPublicKey());
@@ -99,7 +100,7 @@ public final class BcmcComponent
             return new PaymentComponentState<>(paymentComponentData, false);
         }
 
-        cardPaymentMethod.setEncryptedCardNumber(encryptedCard.getEncryptedNumber());
+        cardPaymentMethod.setEncryptedCardNumber(encryptedCard.getEncryptedCardNumber());
         cardPaymentMethod.setEncryptedExpiryMonth(encryptedCard.getEncryptedExpiryMonth());
         cardPaymentMethod.setEncryptedExpiryYear(encryptedCard.getEncryptedExpiryYear());
 

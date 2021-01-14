@@ -9,20 +9,47 @@
 package com.adyen.checkout.cse;
 
 import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import androidx.annotation.WorkerThread;
 
 import com.adyen.checkout.core.exception.NoConstructorException;
 import com.adyen.checkout.cse.exception.EncryptionException;
 
+import org.json.JSONException;
+import org.json.JSONObject;
+
+import java.text.SimpleDateFormat;
 import java.util.Date;
+import java.util.Locale;
+import java.util.TimeZone;
 
 public final class CardEncrypter {
+
+    private static final String CARD_NUMBER_KEY = "number";
+    private static final String EXPIRY_MONTH_KEY = "expiryMonth";
+    private static final String EXPIRY_YEAR_KEY = "expiryYear";
+    private static final String CVC_KEY = "cvc";
+    private static final String HOLDER_NAME_KEY = "holderName";
+    private static final String GENERATION_TIME_KEY = "generationtime";
+
+    static final SimpleDateFormat GENERATION_DATE_FORMAT;
+    static {
+        GENERATION_DATE_FORMAT = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSS'Z'", Locale.US);
+        GENERATION_DATE_FORMAT.setTimeZone(TimeZone.getTimeZone("UTC"));
+    }
 
     private CardEncrypter() {
         throw new NoConstructorException();
     }
 
-    @SuppressWarnings("PMD.PreserveStackTrace")
+    /**
+     * Encrypts the available card data from {@link UnencryptedCard} into individual encrypted blocks.
+     *
+     * @param unencryptedCard The card data to be encrypted.
+     * @param publicKey     The key to be used for encryption.
+     * @return An {@link EncryptedCard} object with each encrypted field.
+     * @throws EncryptionException in case the encryption fails.
+     */
     @WorkerThread
     @NonNull
     public static EncryptedCard encryptFields(
@@ -30,91 +57,119 @@ public final class CardEncrypter {
             @NonNull final String publicKey
     ) throws EncryptionException {
         try {
-            final Date generationTime = new Date();
-            final String cardNumber = unencryptedCard.getNumber();
-            String encryptedNumber = null;
+            final String formattedGenerationTime =
+                    GENERATION_DATE_FORMAT.format(assureGenerationTime(unencryptedCard.getGenerationTime()));
+            final ClientSideEncrypter encrypter = new ClientSideEncrypter(publicKey);
 
-            if (cardNumber != null) {
-                try {
-                    encryptedNumber = new com.adyen.checkout.cse.internal.Card.Builder()
-                            .setNumber(cardNumber)
-                            .setGenerationTime(generationTime)
-                            .build()
-                            .serialize(publicKey);
-                } catch (RuntimeException e) {
-                    throw new EncryptionException("Encryption failed.", e);
-                }
-            }
-
-            final Integer expiryMonth = unencryptedCard.getExpiryMonth();
-            final Integer expiryYear = unencryptedCard.getExpiryYear();
-
+            final String encryptedNumber;
             final String encryptedExpiryMonth;
             final String encryptedExpiryYear;
+            final String encryptedSecurityCode;
 
-            if (expiryMonth != null && expiryYear != null) {
-                encryptedExpiryMonth = new com.adyen.checkout.cse.internal.Card.Builder()
-                        .setExpiryMonth(String.valueOf(expiryMonth))
-                        .setGenerationTime(generationTime)
-                        .build()
-                        .serialize(publicKey);
-                encryptedExpiryYear = new com.adyen.checkout.cse.internal.Card.Builder()
-                        .setExpiryYear(String.valueOf(expiryYear))
-                        .setGenerationTime(generationTime)
-                        .build()
-                        .serialize(publicKey);
-            } else if (expiryMonth == null && expiryYear == null) {
+            JSONObject jsonToEncrypt;
+
+            if (unencryptedCard.getNumber() != null) {
+                try {
+                    jsonToEncrypt = new JSONObject();
+                    jsonToEncrypt.put(CARD_NUMBER_KEY, unencryptedCard.getNumber());
+                    jsonToEncrypt.put(GENERATION_TIME_KEY, formattedGenerationTime);
+
+                    encryptedNumber = encrypter.encrypt(jsonToEncrypt.toString());
+                } catch (JSONException e) {
+                    throw new EncryptionException("Encryption failed.", e);
+                }
+            } else {
+                encryptedNumber = null;
+            }
+
+            if (unencryptedCard.getExpiryMonth() != null && unencryptedCard.getExpiryYear() != null) {
+                try {
+                    jsonToEncrypt = new JSONObject();
+                    jsonToEncrypt.put(EXPIRY_MONTH_KEY, unencryptedCard.getExpiryMonth());
+                    jsonToEncrypt.put(GENERATION_TIME_KEY, formattedGenerationTime);
+
+                    encryptedExpiryMonth = encrypter.encrypt(jsonToEncrypt.toString());
+                } catch (JSONException e) {
+                    throw new EncryptionException("Encryption failed.", e);
+                }
+
+                try {
+                    jsonToEncrypt = new JSONObject();
+                    jsonToEncrypt.put(EXPIRY_YEAR_KEY, unencryptedCard.getExpiryYear());
+                    jsonToEncrypt.put(GENERATION_TIME_KEY, formattedGenerationTime);
+
+                    encryptedExpiryYear = encrypter.encrypt(jsonToEncrypt.toString());
+                } catch (JSONException e) {
+                    throw new EncryptionException("Encryption failed.", e);
+                }
+            } else if (unencryptedCard.getExpiryYear() == null && unencryptedCard.getExpiryYear() == null) {
                 encryptedExpiryMonth = null;
                 encryptedExpiryYear = null;
             } else {
                 throw new EncryptionException("Both expiryMonth and expiryYear need to be set for encryption.", null);
             }
 
-            final String encryptedSecurityCode = new com.adyen.checkout.cse.internal.Card.Builder()
-                    .setCvc(unencryptedCard.getSecurityCode())
-                    .setGenerationTime(generationTime)
-                    .build()
-                    .serialize(publicKey);
+            if (unencryptedCard.getCvc() != null) {
+                try {
+                    jsonToEncrypt = new JSONObject();
+                    jsonToEncrypt.put(CVC_KEY, unencryptedCard.getCvc());
+                    jsonToEncrypt.put(GENERATION_TIME_KEY, formattedGenerationTime);
 
-            final EncryptedCard.Builder builder = new EncryptedCard.Builder().setEncryptedNumber(encryptedNumber);
-
-            if (encryptedExpiryMonth != null && encryptedExpiryYear != null) {
-                builder.setEncryptedExpiryDate(encryptedExpiryMonth, encryptedExpiryYear);
+                    encryptedSecurityCode = encrypter.encrypt(jsonToEncrypt.toString());
+                } catch (JSONException e) {
+                    throw new EncryptionException("Encryption failed.", e);
+                }
             } else {
-                builder.clearEncryptedExpiryDate();
+                encryptedSecurityCode = null;
             }
 
-            return builder
-                    .setEncryptedSecurityCode(encryptedSecurityCode)
-                    .build();
+            return new EncryptedCard(encryptedNumber, encryptedExpiryMonth, encryptedExpiryYear, encryptedSecurityCode);
+
         } catch (EncryptionException | IllegalStateException e) {
             throw new EncryptionException(e.getMessage() == null ? "No message." : e.getMessage(), e.getCause());
         }
     }
 
+    /**
+     * Encrypts all the card data present in {@link UnencryptedCard} into a single block of content.
+     *
+     * @param unencryptedCard The card data to be encrypted.
+     * @param publicKey     The key to be used for encryption.
+     * @return The encrypted card data String.
+     * @throws EncryptionException in case the encryption fails.
+     */
     @NonNull
     @WorkerThread
     public static String encrypt(
-            @NonNull final String holderName,
             @NonNull final UnencryptedCard unencryptedCard,
-            final @NonNull String publicKey
+            @NonNull final  String publicKey
     ) throws EncryptionException {
+        JSONObject cardJson = new JSONObject();
+        String encryptedData = null;
 
-        final Date generationTime = new Date();
-        final Integer expiryMonth = unencryptedCard.getExpiryMonth();
-        final Integer expiryYear = unencryptedCard.getExpiryYear();
+        try {
+            cardJson.put(CARD_NUMBER_KEY, unencryptedCard.getNumber());
+            cardJson.put(EXPIRY_MONTH_KEY, unencryptedCard.getExpiryMonth());
+            cardJson.put(EXPIRY_YEAR_KEY, unencryptedCard.getExpiryYear());
+            cardJson.put(CVC_KEY, unencryptedCard.getCvc());
+            cardJson.put(HOLDER_NAME_KEY, unencryptedCard.getCardHolderName());
+            final Date generationTime = assureGenerationTime(unencryptedCard.getGenerationTime());
+            cardJson.put(GENERATION_TIME_KEY, GENERATION_DATE_FORMAT.format(generationTime));
 
-        final String expiryMonthString = expiryMonth != null ? String.valueOf(expiryMonth) : null;
-        final String expiryYearString = expiryYear != null ? String.valueOf(expiryYear) : null;
+            ClientSideEncrypter encrypter = new ClientSideEncrypter(publicKey);
+            encryptedData = encrypter.encrypt(cardJson.toString());
+        } catch (JSONException e) {
+            throw new EncryptionException("Failed to created encrypted JSON data.", e.getCause());
+        }
 
-        return new com.adyen.checkout.cse.internal.Card.Builder()
-                .setHolderName(holderName)
-                .setNumber(unencryptedCard.getNumber())
-                .setExpiryMonth(expiryMonthString)
-                .setExpiryYear(expiryYearString)
-                .setCvc(unencryptedCard.getSecurityCode())
-                .setGenerationTime(generationTime)
-                .build()
-                .serialize(publicKey);
+        return encryptedData;
+    }
+
+    private static Date assureGenerationTime(@Nullable Date generationTime) {
+        if (generationTime == null) {
+            return new Date();
+        }
+
+        return generationTime;
     }
 }
