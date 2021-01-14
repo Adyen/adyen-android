@@ -12,7 +12,7 @@ import androidx.annotation.NonNull;
 import androidx.annotation.WorkerThread;
 
 import com.adyen.adyencse.encrypter.exception.EncrypterException;
-import com.adyen.checkout.cse.Card;
+import com.adyen.checkout.cse.UnencryptedCard;
 import com.adyen.checkout.cse.CardEncryptor;
 import com.adyen.checkout.cse.EncryptedCard;
 import com.adyen.checkout.cse.EncryptionException;
@@ -25,10 +25,10 @@ public final class CardEncryptorImpl implements CardEncryptor {
     @WorkerThread
     @NonNull
     @Override
-    public EncryptedCard encryptFields(@NonNull final Card card, @NonNull final String publicKey) throws EncryptionException {
+    public EncryptedCard encryptFields(@NonNull final UnencryptedCard unencryptedCard, @NonNull final String publicKey) throws EncryptionException {
         try {
             final Date generationTime = new Date();
-            final String cardNumber = card.getNumber();
+            final String cardNumber = unencryptedCard.getNumber();
             String encryptedNumber = null;
 
             if (cardNumber != null) {
@@ -43,8 +43,8 @@ public final class CardEncryptorImpl implements CardEncryptor {
                 }
             }
 
-            final Integer expiryMonth = card.getExpiryMonth();
-            final Integer expiryYear = card.getExpiryYear();
+            final Integer expiryMonth = unencryptedCard.getExpiryMonth();
+            final Integer expiryYear = unencryptedCard.getExpiryYear();
 
             final String encryptedExpiryMonth;
             final String encryptedExpiryYear;
@@ -68,7 +68,7 @@ public final class CardEncryptorImpl implements CardEncryptor {
             }
 
             final String encryptedSecurityCode = new com.adyen.adyencse.pojo.Card.Builder()
-                    .setCvc(card.getSecurityCode())
+                    .setCvc(unencryptedCard.getSecurityCode())
                     .setGenerationTime(generationTime)
                     .build()
                     .serialize(publicKey);
@@ -94,23 +94,23 @@ public final class CardEncryptorImpl implements CardEncryptor {
     @Override
     public String encrypt(
             @NonNull final String holderName,
-            @NonNull final Card card,
+            @NonNull final UnencryptedCard unencryptedCard,
             final @NonNull String publicKey
     ) throws EncrypterException {
 
         final Date generationTime = new Date();
-        final Integer expiryMonth = card.getExpiryMonth();
-        final Integer expiryYear = card.getExpiryYear();
+        final Integer expiryMonth = unencryptedCard.getExpiryMonth();
+        final Integer expiryYear = unencryptedCard.getExpiryYear();
 
         final String expiryMonthString = expiryMonth != null ? String.valueOf(expiryMonth) : null;
         final String expiryYearString = expiryYear != null ? String.valueOf(expiryYear) : null;
 
         return new com.adyen.adyencse.pojo.Card.Builder()
                 .setHolderName(holderName)
-                .setNumber(card.getNumber())
+                .setNumber(unencryptedCard.getNumber())
                 .setExpiryMonth(expiryMonthString)
                 .setExpiryYear(expiryYearString)
-                .setCvc(card.getSecurityCode())
+                .setCvc(unencryptedCard.getSecurityCode())
                 .setGenerationTime(generationTime)
                 .build()
                 .serialize(publicKey);

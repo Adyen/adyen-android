@@ -16,17 +16,17 @@ import androidx.annotation.Nullable;
 
 import com.adyen.checkout.core.util.ParcelUtils;
 
-public final class Card implements Parcelable {
+public final class UnencryptedCard implements Parcelable {
     @NonNull
-    public static final Creator<Card> CREATOR = new Creator<Card>() {
+    public static final Creator<UnencryptedCard> CREATOR = new Creator<UnencryptedCard>() {
         @Override
-        public Card createFromParcel(Parcel source) {
-            return new Card(source);
+        public UnencryptedCard createFromParcel(Parcel source) {
+            return new UnencryptedCard(source);
         }
 
         @Override
-        public Card[] newArray(int size) {
-            return new Card[size];
+        public UnencryptedCard[] newArray(int size) {
+            return new UnencryptedCard[size];
         }
     };
 
@@ -38,11 +38,11 @@ public final class Card implements Parcelable {
 
     private String mSecurityCode;
 
-    private Card() {
+    private UnencryptedCard() {
         // Use builder.
     }
 
-    private Card(@NonNull Parcel source) {
+    private UnencryptedCard(@NonNull Parcel source) {
         mNumber = source.readString();
         mExpiryMonth = (Integer) source.readSerializable();
         mExpiryYear = (Integer) source.readSerializable();
@@ -83,19 +83,19 @@ public final class Card implements Parcelable {
     }
 
     /**
-     * Builder for {@link Card}s.
+     * Builder for {@link UnencryptedCard}s.
      */
     public static final class Builder {
-        private final Card mCard = new Card();
+        private final UnencryptedCard mUnencryptedCard = new UnencryptedCard();
 
         /**
          * Set number of card.
          *
-         * @return {@link Card.Builder}
+         * @return {@link UnencryptedCard.Builder}
          */
         @NonNull
         public Builder setNumber(@Nullable String number) {
-            mCard.mNumber = number;
+            mUnencryptedCard.mNumber = number;
 
             return this;
         }
@@ -103,12 +103,12 @@ public final class Card implements Parcelable {
         /**
          * Set expiry date.
          *
-         * @return {@link Card.Builder}
+         * @return {@link UnencryptedCard.Builder}
          */
         @NonNull
         public Builder setExpiryDate(int expiryMonth, int expiryYear) {
-            mCard.mExpiryMonth = expiryMonth;
-            mCard.mExpiryYear = expiryYear;
+            mUnencryptedCard.mExpiryMonth = expiryMonth;
+            mUnencryptedCard.mExpiryYear = expiryYear;
 
             return this;
         }
@@ -116,11 +116,11 @@ public final class Card implements Parcelable {
         /**
          * Set security code.
          *
-         * @return {@link Card.Builder}
+         * @return {@link UnencryptedCard.Builder}
          */
         @NonNull
         public Builder setSecurityCode(@Nullable String securityCode) {
-            mCard.mSecurityCode = securityCode;
+            mUnencryptedCard.mSecurityCode = securityCode;
 
             return this;
         }
@@ -128,11 +128,11 @@ public final class Card implements Parcelable {
         /**
          * Build card object.
          *
-         * @return {@link Card}
+         * @return {@link UnencryptedCard}
          */
         @NonNull
-        public Card build() {
-            return mCard;
+        public UnencryptedCard build() {
+            return mUnencryptedCard;
         }
     }
 }

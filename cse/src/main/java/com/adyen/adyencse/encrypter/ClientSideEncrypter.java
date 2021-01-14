@@ -40,7 +40,7 @@ public class ClientSideEncrypter {
     private SecureRandom srandom;
 
     public ClientSideEncrypter (String publicKeyString) throws EncrypterException {
-        
+
         srandom = new SecureRandom();
         String[] keyComponents = publicKeyString.split("\\|");
 
@@ -142,7 +142,8 @@ public class ClientSideEncrypter {
      * @return the IV bytes
      */
     private synchronized byte[] generateIV(int ivSize) {
-        byte[] iv = new byte[ivSize];//generate random IV AES is always 16bytes, but in CCM mode this represents the NONCE
+        //generate random IV AES is always 16bytes, but in CCM mode this represents the NONCE
+        byte[] iv = new byte[ivSize];
         srandom.nextBytes(iv);
         return iv;
     }

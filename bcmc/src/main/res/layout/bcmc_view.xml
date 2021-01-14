@@ -24,7 +24,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content">
 
-            <com.adyen.checkout.card.ui.CardNumberInput
+            <com.adyen.checkout.unencryptedCard.ui.CardNumberInput
                 android:id="@+id/editText_cardNumber"
                 style="@style/AdyenCheckout.Card.CardNumberInput"
                 android:nextFocusDown="@+id/editText_expiryDate"
@@ -51,7 +51,7 @@
         android:layout_height="wrap_content"
         android:layout_weight="1">
 
-        <com.adyen.checkout.card.ui.ExpiryDateInput
+        <com.adyen.checkout.unencryptedCard.ui.ExpiryDateInput
             android:id="@+id/editText_expiryDate"
             style="@style/AdyenCheckout.Card.ExpiryDateInput"
             android:nextFocusRight="@+id/editText_securityCode"

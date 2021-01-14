@@ -25,7 +25,7 @@ import com.adyen.checkout.card.data.CardType;
 import com.adyen.checkout.card.data.ExpiryDate;
 import com.adyen.checkout.core.log.LogUtil;
 import com.adyen.checkout.core.log.Logger;
-import com.adyen.checkout.cse.Card;
+import com.adyen.checkout.cse.UnencryptedCard;
 import com.adyen.checkout.cse.EncryptedCard;
 import com.adyen.checkout.cse.EncryptionException;
 import com.adyen.checkout.cse.Encryptor;
@@ -74,7 +74,7 @@ public final class BcmcComponent
         final CardPaymentMethod cardPaymentMethod = new CardPaymentMethod();
         cardPaymentMethod.setType(CardPaymentMethod.PAYMENT_METHOD_TYPE);
 
-        final Card.Builder card = new Card.Builder();
+        final UnencryptedCard.Builder card = new UnencryptedCard.Builder();
         final BcmcOutputData outputData = getOutputData();
         final PaymentComponentData<CardPaymentMethod> paymentComponentData = new PaymentComponentData<>();
 

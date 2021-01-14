@@ -19,7 +19,7 @@ import com.adyen.checkout.components.util.PaymentMethodTypes
 import com.adyen.checkout.core.exception.ComponentException
 import com.adyen.checkout.core.log.LogUtil
 import com.adyen.checkout.core.log.Logger
-import com.adyen.checkout.cse.Card
+import com.adyen.checkout.cse.UnencryptedCard
 import com.adyen.checkout.cse.EncryptedCard
 import com.adyen.checkout.cse.EncryptionException
 import com.adyen.checkout.cse.Encryptor
@@ -108,7 +108,7 @@ class CardComponent private constructor(
         val cardPaymentMethod = CardPaymentMethod()
         cardPaymentMethod.type = CardPaymentMethod.PAYMENT_METHOD_TYPE
 
-        val card = Card.Builder()
+        val card = UnencryptedCard.Builder()
         val outputData = outputData
         val paymentComponentData = PaymentComponentData<CardPaymentMethod>()
 
