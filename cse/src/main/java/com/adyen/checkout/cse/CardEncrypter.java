@@ -23,6 +23,8 @@ import java.util.Date;
 import java.util.Locale;
 import java.util.TimeZone;
 
+// UnsynchronizedStaticDateFormatter is a deprecated check.
+@SuppressWarnings("PMD.UnsynchronizedStaticDateFormatter")
 public final class CardEncrypter {
 
     private static final String CARD_NUMBER_KEY = "number";
@@ -32,7 +34,10 @@ public final class CardEncrypter {
     private static final String HOLDER_NAME_KEY = "holderName";
     private static final String GENERATION_TIME_KEY = "generationtime";
 
+    private static final String ENCRYPTION_FAILED_MESSAGE = "Encryption failed.";
+
     static final SimpleDateFormat GENERATION_DATE_FORMAT;
+
     static {
         GENERATION_DATE_FORMAT = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSS'Z'", Locale.US);
         GENERATION_DATE_FORMAT.setTimeZone(TimeZone.getTimeZone("UTC"));
@@ -76,7 +81,7 @@ public final class CardEncrypter {
 
                     encryptedNumber = encrypter.encrypt(jsonToEncrypt.toString());
                 } catch (JSONException e) {
-                    throw new EncryptionException("Encryption failed.", e);
+                    throw new EncryptionException(ENCRYPTION_FAILED_MESSAGE, e);
                 }
             } else {
                 encryptedNumber = null;
@@ -90,7 +95,7 @@ public final class CardEncrypter {
 
                     encryptedExpiryMonth = encrypter.encrypt(jsonToEncrypt.toString());
                 } catch (JSONException e) {
-                    throw new EncryptionException("Encryption failed.", e);
+                    throw new EncryptionException(ENCRYPTION_FAILED_MESSAGE, e);
                 }
 
                 try {
@@ -100,9 +105,9 @@ public final class CardEncrypter {
 
                     encryptedExpiryYear = encrypter.encrypt(jsonToEncrypt.toString());
                 } catch (JSONException e) {
-                    throw new EncryptionException("Encryption failed.", e);
+                    throw new EncryptionException(ENCRYPTION_FAILED_MESSAGE, e);
                 }
-            } else if (unencryptedCard.getExpiryYear() == null && unencryptedCard.getExpiryYear() == null) {
+            } else if (unencryptedCard.getExpiryMonth() == null && unencryptedCard.getExpiryYear() == null) {
                 encryptedExpiryMonth = null;
                 encryptedExpiryYear = null;
             } else {
@@ -117,7 +122,7 @@ public final class CardEncrypter {
 
                     encryptedSecurityCode = encrypter.encrypt(jsonToEncrypt.toString());
                 } catch (JSONException e) {
-                    throw new EncryptionException("Encryption failed.", e);
+                    throw new EncryptionException(ENCRYPTION_FAILED_MESSAGE, e);
                 }
             } else {
                 encryptedSecurityCode = null;
@@ -126,7 +131,7 @@ public final class CardEncrypter {
             return new EncryptedCard(encryptedNumber, encryptedExpiryMonth, encryptedExpiryYear, encryptedSecurityCode);
 
         } catch (EncryptionException | IllegalStateException e) {
-            throw new EncryptionException(e.getMessage() == null ? "No message." : e.getMessage(), e.getCause());
+            throw new EncryptionException(e.getMessage() == null ? "No message." : e.getMessage(), e);
         }
     }
 
@@ -144,7 +149,7 @@ public final class CardEncrypter {
             @NonNull final UnencryptedCard unencryptedCard,
             @NonNull final  String publicKey
     ) throws EncryptionException {
-        JSONObject cardJson = new JSONObject();
+        final JSONObject cardJson = new JSONObject();
         String encryptedData = null;
 
         try {
@@ -156,10 +161,10 @@ public final class CardEncrypter {
             final Date generationTime = assureGenerationTime(unencryptedCard.getGenerationTime());
             cardJson.put(GENERATION_TIME_KEY, GENERATION_DATE_FORMAT.format(generationTime));
 
-            ClientSideEncrypter encrypter = new ClientSideEncrypter(publicKey);
+            final ClientSideEncrypter encrypter = new ClientSideEncrypter(publicKey);
             encryptedData = encrypter.encrypt(cardJson.toString());
         } catch (JSONException e) {
-            throw new EncryptionException("Failed to created encrypted JSON data.", e.getCause());
+            throw new EncryptionException("Failed to created encrypted JSON data.", e);
         }
 
         return encryptedData;

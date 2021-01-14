@@ -10,8 +10,6 @@ package com.adyen.checkout.cse;
 
 import static com.adyen.checkout.cse.CardEncrypter.GENERATION_DATE_FORMAT;
 
-import android.util.Log;
-
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 
@@ -23,14 +21,12 @@ import java.util.Date;
 
 public class UnencryptedCard {
 
-    private static final String tag = UnencryptedCard.class.getSimpleName();
-
-    private final String number;
-    private final String expiryMonth;
-    private final String expiryYear;
-    private final String cvc;
-    private final String cardHolderName;
-    private final Date generationTime;
+    private final String mNumber;
+    private final String mExpiryMonth;
+    private final String mExpiryYear;
+    private final String mCvc;
+    private final String mCardHolderName;
+    private final Date mGenerationTime;
 
     public UnencryptedCard(
             @Nullable String number,
@@ -40,60 +36,61 @@ public class UnencryptedCard {
             @Nullable String cardHolderName,
             @Nullable Date generationTime
     ) {
-        this.number = number;
-        this.expiryMonth = expiryMonth;
-        this.expiryYear = expiryYear;
-        this.cvc = cvc;
-        this.cardHolderName = cardHolderName;
-        this.generationTime = generationTime;
+        this.mNumber = number;
+        this.mExpiryMonth = expiryMonth;
+        this.mExpiryYear = expiryYear;
+        this.mCvc = cvc;
+        this.mCardHolderName = cardHolderName;
+        this.mGenerationTime = generationTime;
     }
 
     @Nullable
     public String getNumber() {
-        return number;
+        return mNumber;
     }
 
     @Nullable
     public String getExpiryMonth() {
-        return expiryMonth;
+        return mExpiryMonth;
     }
 
     @Nullable
     public String getExpiryYear() {
-        return expiryYear;
+        return mExpiryYear;
     }
 
     @Nullable
     public String getCvc() {
-        return cvc;
+        return mCvc;
     }
 
     @Nullable
     public String getCardHolderName() {
-        return cardHolderName;
+        return mCardHolderName;
     }
 
     @Nullable
     public Date getGenerationTime() {
-        return generationTime;
+        return mGenerationTime;
     }
 
     @NonNull
     @Override
     public String toString() {
-        JSONObject cardJson = new JSONObject();
+        final JSONObject cardJson = new JSONObject();
 
         try {
-            if (generationTime != null) {
-                cardJson.put("generationtime", GENERATION_DATE_FORMAT.format(generationTime));
+            if (mGenerationTime != null) {
+                cardJson.put("generationtime", GENERATION_DATE_FORMAT.format(mGenerationTime));
             }
-            if (number != null) {
+            if (mNumber != null) {
                 // Builder checks that number needs to be at least 8 digits.
-                cardJson.put("number", number.substring(0, 3));
+                final int firstThreeDigits = 3;
+                cardJson.put("number", mNumber.substring(0, firstThreeDigits));
             }
-            cardJson.putOpt("holderName", cardHolderName);
+            cardJson.putOpt("holderName", mCardHolderName);
         } catch (JSONException e) {
-            Log.e(tag, e.getMessage(), e);
+            throw new RuntimeException("UnencryptedCard toString() failed.", e);
         }
 
         return cardJson.toString();
@@ -103,12 +100,12 @@ public class UnencryptedCard {
      * Builder for {@link UnencryptedCard} objects.
      */
     public static final class Builder {
-        private String number;
-        private String expiryMonth;
-        private String expiryYear;
-        private String cardHolderName;
-        private String cvc;
-        private Date generationTime;
+        private String mNumber;
+        private String mExpiryMonth;
+        private String mExpiryYear;
+        private String mCardHolderName;
+        private String mCvc;
+        private Date mGenerationTime;
 
         /**
          * Set the optional card number.
@@ -116,8 +113,9 @@ public class UnencryptedCard {
          * @param number The card number.
          * @return The Builder instance.
          */
+        @NonNull
         public Builder setNumber(@NonNull String number) {
-            this.number = removeWhiteSpaces(number);
+            this.mNumber = removeWhiteSpaces(number);
 
             return this;
         }
@@ -128,8 +126,9 @@ public class UnencryptedCard {
          * @param expiryMonth The expiry month.
          * @return The Builder instance.
          */
+        @NonNull
         public Builder setExpiryMonth(@NonNull String expiryMonth) {
-            this.expiryMonth = removeWhiteSpaces(expiryMonth);
+            this.mExpiryMonth = removeWhiteSpaces(expiryMonth);
 
             return this;
         }
@@ -140,8 +139,9 @@ public class UnencryptedCard {
          * @param expiryYear The expiry year.
          * @return The Builder instance.
          */
+        @NonNull
         public Builder setExpiryYear(@NonNull String expiryYear) {
-            this.expiryYear = removeWhiteSpaces(expiryYear);
+            this.mExpiryYear = removeWhiteSpaces(expiryYear);
 
             return this;
         }
@@ -152,8 +152,9 @@ public class UnencryptedCard {
          * @param cvc The card security code.
          * @return The Builder instance.
          */
+        @NonNull
         public Builder setCvc(@NonNull String cvc) {
-            this.cvc = removeWhiteSpaces(cvc);
+            this.mCvc = removeWhiteSpaces(cvc);
 
             return this;
         }
@@ -164,8 +165,9 @@ public class UnencryptedCard {
          * @param holderName The holder name.
          * @return The Builder instance.
          */
+        @NonNull
         public Builder setHolderName(@NonNull String holderName) {
-            this.cardHolderName = trimAndRemoveMultipleWhiteSpaces(holderName);
+            this.mCardHolderName = trimAndRemoveMultipleWhiteSpaces(holderName);
 
             return this;
         }
@@ -176,8 +178,9 @@ public class UnencryptedCard {
          * @param generationTime The generation time.
          * @return The Builder instance.
          */
-        public Builder setGenerationTime(Date generationTime) {
-            this.generationTime = generationTime;
+        @NonNull
+        public Builder setGenerationTime(@NonNull Date generationTime) {
+            this.mGenerationTime = generationTime;
 
             return this;
         }
@@ -189,19 +192,20 @@ public class UnencryptedCard {
          * @throws NullPointerException If any mandatory field is null.
          * @throws IllegalStateException If any field is in an illegal state.
          */
+        @NonNull
         public UnencryptedCard build() throws NullPointerException, IllegalStateException {
-            require(number == null || number.matches("[0-9]{8,19}"),
+            require(mNumber == null || mNumber.matches("[0-9]{8,19}"),
                     "number must be null or have 8 to 19 digits (inclusive).");
-            require(cardHolderName == null || cardHolderName.length() > 0,
+            require(mCardHolderName == null || mCardHolderName.length() > 0,
                     "cardHolderName must be null or not empty.");
-            require(cvc == null || (cvc.matches("[0-9]{3,4}")),
+            require(mCvc == null || mCvc.matches("[0-9]{3,4}"),
                     "cvc must be null or have 3 to 4 digits.");
-            require(expiryMonth == null || expiryMonth.matches("0?[1-9]|1[0-2]"),
+            require(mExpiryMonth == null || mExpiryMonth.matches("0?[1-9]|1[0-2]"),
                     "expiryMonth must be null or between 1 and 12.");
-            require(expiryYear == null || expiryYear.matches("20\\d{2}"),
+            require(mExpiryYear == null || mExpiryYear.matches("20\\d{2}"),
                     "expiryYear must be in the second millennium and first century.");
 
-            return new UnencryptedCard(number, expiryMonth, expiryYear, cvc, cardHolderName, generationTime);
+            return new UnencryptedCard(mNumber, mExpiryMonth, mExpiryYear, mCvc, mCardHolderName, mGenerationTime);
         }
 
         private String removeWhiteSpaces(String string) {

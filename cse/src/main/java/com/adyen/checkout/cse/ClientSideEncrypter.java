@@ -10,6 +10,8 @@ package com.adyen.checkout.cse;
 
 import android.util.Base64;
 
+import androidx.annotation.NonNull;
+
 import com.adyen.checkout.cse.exception.EncryptionException;
 
 import java.math.BigInteger;
@@ -31,39 +33,40 @@ import javax.crypto.NoSuchPaddingException;
 import javax.crypto.SecretKey;
 import javax.crypto.spec.IvParameterSpec;
 
+import kotlin.text.Charsets;
+
 
 /**
  * Created by andrei on 8/8/16.
  */
 public class ClientSideEncrypter {
 
-    private static final String PREFIX="adyenan";
-    private static final String VERSION="0_1_1";
-    private static final String SEPARATOR="$";
+    private static final String PREFIX = "adyenan";
+    private static final String VERSION = "0_1_1";
+    private static final String SEPARATOR = "$";
 
-    private Cipher mAesCipher;
-    private Cipher mRsaCipher;
+    private final Cipher mAesCipher;
+    private final Cipher mRsaCipher;
     private final SecureRandom mSecureRandom;
 
-    public ClientSideEncrypter (String publicKeyString) throws EncryptionException {
-
+    public ClientSideEncrypter(@NonNull String publicKeyString) throws EncryptionException {
         mSecureRandom = new SecureRandom();
-        String[] keyComponents = publicKeyString.split("\\|");
+        final String[] keyComponents = publicKeyString.split("\\|");
 
         // The bytes can be converted back to a public key object
-        KeyFactory keyFactory;
+        final KeyFactory keyFactory;
         try {
             keyFactory = KeyFactory.getInstance("RSA");
         } catch (NoSuchAlgorithmException e) {
-            e.printStackTrace();
-            return;
+            throw new EncryptionException("RSA KeyFactory not found.", e);
         }
 
-        RSAPublicKeySpec pubKeySpec = new RSAPublicKeySpec(
-                new BigInteger(keyComponents[1].toLowerCase(Locale.getDefault()), 16),
-                new BigInteger(keyComponents[0].toLowerCase(Locale.getDefault()), 16));
+        final int radix = 16;
+        final RSAPublicKeySpec pubKeySpec = new RSAPublicKeySpec(
+                new BigInteger(keyComponents[1].toLowerCase(Locale.getDefault()), radix),
+                new BigInteger(keyComponents[0].toLowerCase(Locale.getDefault()), radix));
 
-        PublicKey pubKey;
+        final PublicKey pubKey;
         try {
             pubKey = keyFactory.generatePublic(pubKeySpec);
         } catch (InvalidKeySpecException e) {
@@ -89,39 +92,45 @@ public class ClientSideEncrypter {
         } catch (InvalidKeyException e) {
             throw new EncryptionException("Invalid public key: " + publicKeyString, e);
         }
-
     }
 
-    public String encrypt(String plainText) throws EncryptionException {
-        SecretKey aesKey = generateAESKey();
+    @NonNull
+    public String encrypt(@NonNull String plainText) throws EncryptionException {
+        final SecretKey aesKey = generateAesKey();
 
-        byte[] iv = generateIV();
+        final byte[] iv = generateIV();
 
-        byte[] encrypted;
+        final byte[] encrypted;
         try {
             mAesCipher.init(Cipher.ENCRYPT_MODE, aesKey, new IvParameterSpec(iv));
-            // getBytes is UTF-8 on Android by default
-            encrypted = mAesCipher.doFinal(plainText.getBytes());
+            encrypted = mAesCipher.doFinal(plainText.getBytes(Charsets.UTF_8));
         } catch (IllegalBlockSizeException e) {
             throw new EncryptionException("Incorrect AES Block Size", e);
         } catch (BadPaddingException e) {
             throw new EncryptionException("Incorrect AES Padding", e);
         } catch (InvalidKeyException e) {
             throw new EncryptionException("Invalid AES Key", e);
-        } catch(InvalidAlgorithmParameterException e) {
+        } catch (InvalidAlgorithmParameterException e) {
             throw new EncryptionException("Invalid AES Parameters", e);
         }
 
-        byte[] result = new byte[iv.length + encrypted.length];
+        final byte[] result = new byte[iv.length + encrypted.length];
         // copy IV to result
         System.arraycopy(iv, 0, result, 0, iv.length);
         // copy encrypted to result
         System.arraycopy(encrypted, 0, result, iv.length, encrypted.length);
 
-        byte[] encryptedAESKey;
+        final byte[] encryptedAesKey;
         try {
-            encryptedAESKey = mRsaCipher.doFinal(aesKey.getEncoded());
-            return String.format("%s%s%s%s%s%s", PREFIX, VERSION, SEPARATOR, Base64.encodeToString(encryptedAESKey, Base64.NO_WRAP), SEPARATOR, Base64.encodeToString(result, Base64.NO_WRAP));
+            encryptedAesKey = mRsaCipher.doFinal(aesKey.getEncoded());
+            return String.format(
+                    "%s%s%s%s%s%s",
+                    PREFIX,
+                    VERSION,
+                    SEPARATOR,
+                    Base64.encodeToString(encryptedAesKey, Base64.NO_WRAP), SEPARATOR,
+                    Base64.encodeToString(result, Base64.NO_WRAP)
+            );
         } catch (IllegalBlockSizeException e) {
             throw new EncryptionException("Incorrect RSA Block Size", e);
         } catch (BadPaddingException e) {
@@ -129,27 +138,27 @@ public class ClientSideEncrypter {
         }
     }
 
-    private SecretKey generateAESKey() throws EncryptionException {
+    private SecretKey generateAesKey() throws EncryptionException {
         final int keySize = 256;
-        KeyGenerator kgen;
+        final KeyGenerator keyGenerator;
         try {
-            kgen = KeyGenerator.getInstance("AES");
+            keyGenerator = KeyGenerator.getInstance("AES");
         } catch (NoSuchAlgorithmException e) {
             throw new EncryptionException("Unable to get AES algorithm", e);
         }
-        kgen.init(keySize);
-        return kgen.generateKey();
+        keyGenerator.init(keySize);
+        return keyGenerator.generateKey();
     }
 
     /**
-     * Generate a random Initialization Vector (IV)
+     * Generate a random Initialization Vector (IV).
      *
      * @return the IV bytes
      */
-    private synchronized byte[] generateIV() {
+    private byte[] generateIV() {
         final int ivSize = 12;
         //generate random IV AES is always 16bytes, but in CCM mode this represents the NONCE
-        byte[] iv = new byte[ivSize];
+        final byte[] iv = new byte[ivSize];
         mSecureRandom.nextBytes(iv);
         return iv;
     }
