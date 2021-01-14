@@ -14,6 +14,7 @@ import com.adyen.checkout.components.model.PaymentMethodsApiResponse
 import com.adyen.checkout.core.log.LogUtil
 import com.adyen.checkout.core.log.Logger
 import com.adyen.checkout.dropin.DropIn.Companion.startPayment
+import com.adyen.checkout.dropin.service.DropInServiceResult
 import com.adyen.checkout.dropin.ui.DropInActivity
 
 /**
@@ -50,6 +51,7 @@ class DropIn private constructor() {
          */
         @JvmStatic
         fun startPayment(
+            observer: DropInObserver,
             context: Context,
             paymentMethodsApiResponse: PaymentMethodsApiResponse,
             dropInConfiguration: DropInConfiguration
@@ -67,6 +69,12 @@ class DropIn private constructor() {
             } else {
                 context.startActivity(intent)
             }
+            DropInHandler.resetDropIn()
+            DropInHandler.observeDropIn(observer)
+        }
+
+        fun sendResult(result: DropInServiceResult) {
+            DropInHandler.sendResult(result)
         }
     }
 }

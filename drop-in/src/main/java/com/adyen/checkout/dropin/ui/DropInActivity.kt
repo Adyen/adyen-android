@@ -17,7 +17,6 @@ import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.DialogFragment
 import androidx.lifecycle.Observer
-import androidx.lifecycle.lifecycleScope
 import com.adyen.checkout.components.ActionComponentData
 import com.adyen.checkout.components.ComponentError
 import com.adyen.checkout.components.PaymentComponentState
@@ -26,17 +25,14 @@ import com.adyen.checkout.components.analytics.AnalyticsDispatcher
 import com.adyen.checkout.components.model.PaymentMethodsApiResponse
 import com.adyen.checkout.components.model.paymentmethods.PaymentMethod
 import com.adyen.checkout.components.model.paymentmethods.StoredPaymentMethod
+import com.adyen.checkout.components.model.payments.request.PaymentComponentData
 import com.adyen.checkout.components.model.payments.response.Action
 import com.adyen.checkout.components.util.PaymentMethodTypes
 import com.adyen.checkout.core.exception.CheckoutException
 import com.adyen.checkout.core.log.LogUtil
 import com.adyen.checkout.core.log.Logger
 import com.adyen.checkout.core.util.LocaleUtil
-import com.adyen.checkout.dropin.ActionHandler
-import com.adyen.checkout.dropin.DropIn
-import com.adyen.checkout.dropin.DropInConfiguration
-import com.adyen.checkout.dropin.R
-import com.adyen.checkout.dropin.service.DropInService
+import com.adyen.checkout.dropin.*
 import com.adyen.checkout.dropin.service.DropInServiceResult
 import com.adyen.checkout.dropin.ui.action.ActionComponentDialogFragment
 import com.adyen.checkout.dropin.ui.base.DropInBottomSheetDialogFragment
@@ -50,7 +46,6 @@ import com.adyen.checkout.googlepay.GooglePayConfiguration
 import com.adyen.checkout.redirect.RedirectUtil
 import com.adyen.checkout.wechatpay.WeChatPayUtils
 import kotlinx.coroutines.ExperimentalCoroutinesApi
-import kotlinx.coroutines.flow.collect
 import org.json.JSONObject
 
 private val TAG = LogUtil.getTag()
@@ -71,7 +66,8 @@ private const val GOOGLE_PAY_REQUEST_CODE = 1
  * Activity that presents the available PaymentMethods to the Shopper.
  */
 @Suppress("TooManyFunctions")
-class DropInActivity : AppCompatActivity(), DropInBottomSheetDialogFragment.Protocol, ActionHandler.ActionHandlingInterface {
+class DropInActivity : AppCompatActivity(), DropInBottomSheetDialogFragment.Protocol,
+    ActionHandler.ActionHandlingInterface, DropInProvider {
 
     private lateinit var dropInViewModel: DropInViewModel
 
@@ -122,14 +118,16 @@ class DropInActivity : AppCompatActivity(), DropInBottomSheetDialogFragment.Prot
             }
         }
 
+        DropInHandler.provideDropIn(this)
+
         // Automatically wait to collect new results from the DropInService while lifecycle is active
-        lifecycleScope.launchWhenCreated {
+        /*lifecycleScope.launchWhenCreated {
             DropInService.dropInServiceFlow.collect {
                 Logger.d(TAG, "dropInServiceFlow collect")
                 isWaitingResult = false
                 handleDropInServiceResult(it)
             }
-        }
+        }*/
 
         actionHandler = ActionHandler(this, this, dropInViewModel.dropInConfiguration)
         actionHandler.restoreState(savedInstanceState)
@@ -205,23 +203,35 @@ class DropInActivity : AppCompatActivity(), DropInBottomSheetDialogFragment.Prot
     }
 
     override fun requestPaymentsCall(paymentComponentState: PaymentComponentState<*>) {
+        Logger.d(TAG, "requestPaymentsCall")
         isWaitingResult = true
         setLoading(true)
         // include amount value if merchant passed it to the DropIn
         if (!dropInViewModel.dropInConfiguration.amount.isEmpty) {
             paymentComponentState.data.amount = dropInViewModel.dropInConfiguration.amount
         }
-        DropInService.requestPaymentsCall(this, paymentComponentState, dropInViewModel.dropInConfiguration.serviceComponentName)
+        //DropInService.requestPaymentsCall(this, paymentComponentState, dropInViewModel.dropInConfiguration.serviceComponentName)
+
+        val json = PaymentComponentData.SERIALIZER.serialize(paymentComponentState.data)
+
+        // Merchant makes network call
+        DropInHandler.requestPaymentsCall(json)
     }
 
     override fun requestDetailsCall(actionComponentData: ActionComponentData) {
+        Logger.d(TAG, "requestDetailsCall")
         isWaitingResult = true
         setLoading(true)
-        DropInService.requestDetailsCall(
+        /*DropInService.requestDetailsCall(
             this,
             ActionComponentData.SERIALIZER.serialize(actionComponentData),
             dropInViewModel.dropInConfiguration.serviceComponentName
-        )
+        )*/
+
+        val json = ActionComponentData.SERIALIZER.serialize(actionComponentData)
+
+        // Merchant makes network call
+        DropInHandler.requestDetailsCall(json)
     }
 
     override fun showError(errorMessage: String, terminate: Boolean) {
@@ -311,6 +321,7 @@ class DropInActivity : AppCompatActivity(), DropInBottomSheetDialogFragment.Prot
         Logger.d(TAG, "terminateDropIn")
         setResult(Activity.RESULT_CANCELED)
         finish()
+        DropInHandler.resetDropIn()
         overridePendingTransition(0, R.anim.fade_out)
     }
 
@@ -425,5 +436,11 @@ class DropInActivity : AppCompatActivity(), DropInBottomSheetDialogFragment.Prot
             intent.putExtra(DROP_IN_CONFIGURATION_KEY, dropInConfiguration)
             return intent
         }
+    }
+
+    override fun observeDropInServiceResult(result: DropInServiceResult) {
+        Logger.d(TAG, "observeDropInServiceResult")
+        isWaitingResult = false
+        handleDropInServiceResult(result)
     }
 }

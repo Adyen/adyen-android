@@ -27,6 +27,7 @@ import com.adyen.checkout.core.log.Logger
 import com.adyen.checkout.core.util.LocaleUtil
 import com.adyen.checkout.dropin.DropIn
 import com.adyen.checkout.dropin.DropInConfiguration
+import com.adyen.checkout.dropin.DropInObserver
 import com.adyen.checkout.example.BuildConfig
 import com.adyen.checkout.example.R
 import com.adyen.checkout.example.data.api.CheckoutApiService
@@ -35,10 +36,12 @@ import com.adyen.checkout.example.databinding.ActivityMainBinding
 import com.adyen.checkout.example.service.ExampleDropInService
 import com.adyen.checkout.example.ui.configuration.ConfigurationActivity
 import com.adyen.checkout.googlepay.GooglePayConfiguration
+import com.adyen.checkout.redirect.RedirectComponent
+import org.json.JSONObject
 import org.koin.android.ext.android.inject
 import org.koin.androidx.viewmodel.ext.android.viewModel
 
-class MainActivity : AppCompatActivity() {
+class MainActivity : AppCompatActivity(), DropInObserver {
 
     companion object {
         private val TAG: String = LogUtil.getTag()
@@ -180,7 +183,7 @@ class MainActivity : AppCompatActivity() {
             Logger.e(TAG, "Amount $amount not valid", e)
         }
 
-        DropIn.startPayment(this@MainActivity, paymentMethodsApiResponse, dropInConfigurationBuilder.build())
+        DropIn.startPayment(this, this, paymentMethodsApiResponse, dropInConfigurationBuilder.build())
     }
 
     private fun setLoading(isLoading: Boolean) {
@@ -192,5 +195,13 @@ class MainActivity : AppCompatActivity() {
             binding.startCheckoutButton.visibility = View.VISIBLE
             binding.progressBar.hide()
         }
+    }
+
+    override fun makePaymentsCall(paymentComponentData: JSONObject) {
+        paymentMethodsViewModel.makePaymentsCall(paymentComponentData, RedirectComponent.getReturnUrl(applicationContext))
+    }
+
+    override fun makeDetailsCall(actionComponentData: JSONObject) {
+        paymentMethodsViewModel.makeDetailsCall(actionComponentData)
     }
 }

@@ -20,6 +20,8 @@ interface PaymentsRepository {
     suspend fun getPaymentMethods(paymentMethodsRequest: PaymentMethodsRequest): PaymentMethodsApiResponse?
     fun paymentsRequest(paymentsRequest: RequestBody): Call<ResponseBody>
     fun detailsRequest(paymentsRequest: RequestBody): Call<ResponseBody>
+    suspend fun paymentsRequestAsync(paymentsRequest: RequestBody): ResponseBody?
+    suspend fun detailsRequestAsync(paymentsRequest: RequestBody): ResponseBody?
 }
 
 class PaymentsRepositoryImpl(private val checkoutApiService: CheckoutApiService) : PaymentsRepository, BaseRepository() {
@@ -36,5 +38,17 @@ class PaymentsRepositoryImpl(private val checkoutApiService: CheckoutApiService)
 
     override fun detailsRequest(paymentsRequest: RequestBody): Call<ResponseBody> {
         return checkoutApiService.details(paymentsRequest)
+    }
+
+    override suspend fun paymentsRequestAsync(paymentsRequest: RequestBody): ResponseBody? {
+        return safeApiCall(
+            call = { checkoutApiService.paymentsAsync(paymentsRequest).await() }
+        )
+    }
+
+    override suspend fun detailsRequestAsync(paymentsRequest: RequestBody): ResponseBody? {
+        return safeApiCall(
+            call = { checkoutApiService.detailsAsync(paymentsRequest).await() }
+        )
     }
 }
