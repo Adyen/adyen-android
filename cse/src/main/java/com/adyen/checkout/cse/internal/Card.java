@@ -10,6 +10,8 @@ package com.adyen.checkout.cse.internal;
 
 import android.util.Log;
 
+import androidx.annotation.NonNull;
+
 import com.adyen.checkout.cse.ClientSideEncrypter;
 import com.adyen.checkout.cse.exception.EncryptionException;
 
@@ -18,6 +20,7 @@ import org.json.JSONObject;
 
 import java.text.SimpleDateFormat;
 import java.util.Date;
+import java.util.Locale;
 import java.util.TimeZone;
 
 
@@ -27,7 +30,7 @@ import java.util.TimeZone;
 public class Card {
 
     private static final String tag = com.adyen.checkout.cse.internal.Card.class.getSimpleName();
-    private static final SimpleDateFormat GENERATION_DATE_FORMAT = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSS'Z'");
+    private static final SimpleDateFormat GENERATION_DATE_FORMAT = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSS'Z'", Locale.US);
 
     private String number;
     private String expiryMonth;
@@ -98,10 +101,8 @@ public class Card {
         if (number == null || number.length() < 14) {
             return "";
         }
-        StringBuilder sb = new StringBuilder(number.length());
 
-        sb.append(getMaskingChars(number.length())).append(getLastFourDigitsFromCardNumber(number));
-        return sb.toString();
+        return getMaskingChars(number.length()) + getLastFourDigitsFromCardNumber(number);
     }
 
     private String getLastFourDigitsFromCardNumber(final String fullCardNumber) {
@@ -128,18 +129,11 @@ public class Card {
     * Helper method that calls the ClientSideEncrypter encrypt method
     * */
     private String encryptData(String data, String publicKey) throws EncryptionException {
-        String encryptedData = null;
-
-        try {
-            ClientSideEncrypter encrypter = new ClientSideEncrypter(publicKey);
-            encryptedData = encrypter.encrypt(data);
-        } catch (EncryptionException e) {
-            throw e;
-        }
-
-        return encryptedData;
+        ClientSideEncrypter encrypter = new ClientSideEncrypter(publicKey);
+        return encrypter.encrypt(data);
     }
 
+    @NonNull
     @Override
     public String toString() {
         JSONObject cardJson = new JSONObject();
@@ -247,7 +241,7 @@ public class Card {
          * @throws IllegalStateException If any field is in an illegal state.
          */
         public com.adyen.checkout.cse.internal.Card build() throws NullPointerException, IllegalStateException {
-            requireNonNull(card.generationTime, "generationTime");
+            require(card.generationTime != null, "generationTime may not be null.");
             require(card.number == null || card.number.matches("[0-9]{8,19}"), "number must be null or have 8 to 19 digits (inclusive).");
             require(card.cardHolderName == null || card.cardHolderName.length() > 0, "cardHolderName must be null or not empty.");
             require(card.cvc == null || (card.cvc.matches("[0-9]{3,4}")), "cvc must be null or have 3 to 4 digits.");
@@ -266,16 +260,9 @@ public class Card {
             return string != null ? string.trim().replaceAll("\\s{2,}", " ") : null;
         }
 
-
         private void require(boolean condition, String message) throws IllegalStateException {
             if (!condition) {
                 throw new IllegalStateException(message);
-            }
-        }
-
-        private void requireNonNull(Object object, String objectName) throws IllegalStateException {
-            if (object == null) {
-                throw new NullPointerException(String.format("%s may not be null.", objectName));
             }
         }
     }

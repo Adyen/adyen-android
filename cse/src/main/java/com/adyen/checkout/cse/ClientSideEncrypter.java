@@ -42,14 +42,13 @@ public class ClientSideEncrypter {
     private static final String VERSION="0_1_1";
     private static final String SEPARATOR="$";
 
-    private PublicKey pubKey;
-    private Cipher aesCipher;
-    private Cipher rsaCipher;
-    private SecureRandom srandom;
+    private Cipher mAesCipher;
+    private Cipher mRsaCipher;
+    private final SecureRandom mSecureRandom;
 
     public ClientSideEncrypter (String publicKeyString) throws EncryptionException {
 
-        srandom = new SecureRandom();
+        mSecureRandom = new SecureRandom();
         String[] keyComponents = publicKeyString.split("\\|");
 
         // The bytes can be converted back to a public key object
@@ -65,6 +64,7 @@ public class ClientSideEncrypter {
                 new BigInteger(keyComponents[1].toLowerCase(Locale.getDefault()), 16),
                 new BigInteger(keyComponents[0].toLowerCase(Locale.getDefault()), 16));
 
+        PublicKey pubKey;
         try {
             pubKey = keyFactory.generatePublic(pubKeySpec);
         } catch (InvalidKeySpecException e) {
@@ -72,7 +72,7 @@ public class ClientSideEncrypter {
         }
 
         try {
-            aesCipher  = Cipher.getInstance("AES/CCM/NoPadding", "BC");
+            mAesCipher = Cipher.getInstance("AES/CCM/NoPadding", "BC");
         } catch (NoSuchAlgorithmException e) {
             throw new EncryptionException("Problem instantiation AES Cipher Algorithm", e);
         } catch (NoSuchPaddingException e) {
@@ -82,8 +82,8 @@ public class ClientSideEncrypter {
         }
 
         try {
-            rsaCipher = Cipher.getInstance("RSA/None/PKCS1Padding");
-            rsaCipher.init(Cipher.ENCRYPT_MODE, pubKey);
+            mRsaCipher = Cipher.getInstance("RSA/None/PKCS1Padding");
+            mRsaCipher.init(Cipher.ENCRYPT_MODE, pubKey);
 
         } catch (NoSuchAlgorithmException e) {
             throw new EncryptionException("Problem instantiation RSA Cipher Algorithm", e);
@@ -96,15 +96,15 @@ public class ClientSideEncrypter {
     }
 
     public String encrypt(String plainText) throws EncryptionException {
-        SecretKey aesKey = generateAESKey(256);
+        SecretKey aesKey = generateAESKey();
 
-        byte[] iv = generateIV(12);
+        byte[] iv = generateIV();
 
         byte[] encrypted;
         try {
-            aesCipher.init(Cipher.ENCRYPT_MODE, aesKey, new IvParameterSpec(iv));
+            mAesCipher.init(Cipher.ENCRYPT_MODE, aesKey, new IvParameterSpec(iv));
             // getBytes is UTF-8 on Android by default
-            encrypted = aesCipher.doFinal(plainText.getBytes());
+            encrypted = mAesCipher.doFinal(plainText.getBytes());
         } catch (IllegalBlockSizeException e) {
             throw new EncryptionException("Incorrect AES Block Size", e);
         } catch (BadPaddingException e) {
@@ -123,7 +123,7 @@ public class ClientSideEncrypter {
 
         byte[] encryptedAESKey;
         try {
-            encryptedAESKey = rsaCipher.doFinal(aesKey.getEncoded());
+            encryptedAESKey = mRsaCipher.doFinal(aesKey.getEncoded());
             return String.format("%s%s%s%s%s%s", PREFIX, VERSION, SEPARATOR, Base64.encodeToString(encryptedAESKey, Base64.NO_WRAP), SEPARATOR, Base64.encodeToString(result, Base64.NO_WRAP));
         } catch (IllegalBlockSizeException e) {
             throw new EncryptionException("Incorrect RSA Block Size", e);
@@ -132,8 +132,9 @@ public class ClientSideEncrypter {
         }
     }
 
-    private SecretKey generateAESKey(int keySize) throws EncryptionException {
-        KeyGenerator kgen = null;
+    private SecretKey generateAESKey() throws EncryptionException {
+        final int keySize = 256;
+        KeyGenerator kgen;
         try {
             kgen = KeyGenerator.getInstance("AES");
         } catch (NoSuchAlgorithmException e) {
@@ -146,13 +147,13 @@ public class ClientSideEncrypter {
     /**
      * Generate a random Initialization Vector (IV)
      *
-     * @param ivSize
      * @return the IV bytes
      */
-    private synchronized byte[] generateIV(int ivSize) {
+    private synchronized byte[] generateIV() {
+        final int ivSize = 12;
         //generate random IV AES is always 16bytes, but in CCM mode this represents the NONCE
         byte[] iv = new byte[ivSize];
-        srandom.nextBytes(iv);
+        mSecureRandom.nextBytes(iv);
         return iv;
     }
 
