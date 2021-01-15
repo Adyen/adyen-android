@@ -19,10 +19,10 @@ import com.adyen.checkout.components.util.PaymentMethodTypes
 import com.adyen.checkout.core.exception.ComponentException
 import com.adyen.checkout.core.log.LogUtil
 import com.adyen.checkout.core.log.Logger
-import com.adyen.checkout.cse.Card
+import com.adyen.checkout.cse.CardEncrypter
 import com.adyen.checkout.cse.EncryptedCard
-import com.adyen.checkout.cse.EncryptionException
-import com.adyen.checkout.cse.Encryptor
+import com.adyen.checkout.cse.UnencryptedCard
+import com.adyen.checkout.cse.exception.EncryptionException
 import kotlinx.coroutines.launch
 import java.util.ArrayList
 import java.util.Collections
@@ -108,7 +108,7 @@ class CardComponent private constructor(
         val cardPaymentMethod = CardPaymentMethod()
         cardPaymentMethod.type = CardPaymentMethod.PAYMENT_METHOD_TYPE
 
-        val card = Card.Builder()
+        val unenctryptedCardBuilder = UnencryptedCard.Builder()
         val outputData = outputData
         val paymentComponentData = PaymentComponentData<CardPaymentMethod>()
 
@@ -126,24 +126,25 @@ class CardComponent private constructor(
         val encryptedCard: EncryptedCard
         encryptedCard = try {
             if (!isStoredPaymentMethod()) {
-                card.setNumber(outputData.cardNumberField.value)
+                unenctryptedCardBuilder.setNumber(outputData.cardNumberField.value)
             }
             if (!cardDelegate.isCvcHidden()) {
-                card.setSecurityCode(outputData.securityCodeField.value)
+                unenctryptedCardBuilder.setCvc(outputData.securityCodeField.value)
             }
             val expiryDateResult = outputData.expiryDateField.value
             if (expiryDateResult.expiryYear != ExpiryDate.EMPTY_VALUE && expiryDateResult.expiryMonth != ExpiryDate.EMPTY_VALUE) {
-                card.setExpiryDate(expiryDateResult.expiryMonth, expiryDateResult.expiryYear)
+                unenctryptedCardBuilder.setExpiryMonth(expiryDateResult.expiryMonth.toString())
+                unenctryptedCardBuilder.setExpiryYear(expiryDateResult.expiryYear.toString())
             }
 
-            Encryptor.INSTANCE.encryptFields(card.build(), publicKey)
+            CardEncrypter.encryptFields(unenctryptedCardBuilder.build(), publicKey)
         } catch (e: EncryptionException) {
             notifyException(e)
             return CardComponentState(paymentComponentData, false, firstCardType, binValue)
         }
 
         if (!isStoredPaymentMethod()) {
-            cardPaymentMethod.encryptedCardNumber = encryptedCard.encryptedNumber
+            cardPaymentMethod.encryptedCardNumber = encryptedCard.encryptedCardNumber
             cardPaymentMethod.encryptedExpiryMonth = encryptedCard.encryptedExpiryMonth
             cardPaymentMethod.encryptedExpiryYear = encryptedCard.encryptedExpiryYear
         } else {

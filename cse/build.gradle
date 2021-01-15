@@ -31,7 +31,6 @@ dependencies {
     api project(':checkout-core')
 
     // Dependencies
-    api "com.adyen.cse:adyen-cse:$adyen_cse_version"
     implementation "androidx.annotation:annotation:$annotation_version"
 }
 

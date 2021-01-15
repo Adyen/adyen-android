@@ -17,6 +17,7 @@ import androidx.annotation.Nullable;
 import com.adyen.checkout.core.util.ParcelUtils;
 
 public final class EncryptedCard implements Parcelable {
+
     @NonNull
     public static final Parcelable.Creator<EncryptedCard> CREATOR = new Creator<EncryptedCard>() {
         @Override
@@ -30,20 +31,25 @@ public final class EncryptedCard implements Parcelable {
         }
     };
 
-    private String mEncryptedNumber;
+    private final String mEncryptedCardNumber;
+    private final String mEncryptedExpiryMonth;
+    private final String mEncryptedExpiryYear;
+    private final String mEncryptedSecurityCode;
 
-    private String mEncryptedExpiryMonth;
-
-    private String mEncryptedExpiryYear;
-
-    private String mEncryptedSecurityCode;
-
-    private EncryptedCard() {
-        // Use builder.
+    EncryptedCard(
+            @Nullable String encryptedCardNumber,
+            @Nullable String encryptedExpiryMonth,
+            @Nullable String encryptedExpiryYear,
+            @Nullable String encryptedSecurityCode
+    ) {
+        mEncryptedCardNumber = encryptedCardNumber;
+        mEncryptedExpiryMonth = encryptedExpiryMonth;
+        mEncryptedExpiryYear = encryptedExpiryYear;
+        mEncryptedSecurityCode = encryptedSecurityCode;
     }
 
     private EncryptedCard(@NonNull Parcel source) {
-        mEncryptedNumber = source.readString();
+        mEncryptedCardNumber = source.readString();
         mEncryptedExpiryMonth = source.readString();
         mEncryptedExpiryYear = source.readString();
         mEncryptedSecurityCode = source.readString();
@@ -56,15 +62,15 @@ public final class EncryptedCard implements Parcelable {
 
     @Override
     public void writeToParcel(@NonNull Parcel dest, int flags) {
-        dest.writeString(mEncryptedNumber);
+        dest.writeString(mEncryptedCardNumber);
         dest.writeString(mEncryptedExpiryMonth);
         dest.writeString(mEncryptedExpiryYear);
         dest.writeString(mEncryptedSecurityCode);
     }
 
     @Nullable
-    public String getEncryptedNumber() {
-        return mEncryptedNumber;
+    public String getEncryptedCardNumber() {
+        return mEncryptedCardNumber;
     }
 
     @Nullable
@@ -82,71 +88,4 @@ public final class EncryptedCard implements Parcelable {
         return mEncryptedSecurityCode;
     }
 
-    /**
-     * Builder for {@link EncryptedCard}s.
-     */
-    public static final class Builder {
-        private final EncryptedCard mEncryptedCard = new EncryptedCard();
-
-        /**
-         * Set encrypted number.
-         *
-         * @return {@link EncryptedCard.Builder}
-         */
-        @NonNull
-        public Builder setEncryptedNumber(@Nullable String encryptedNumber) {
-            mEncryptedCard.mEncryptedNumber = encryptedNumber;
-
-            return this;
-        }
-
-        /**
-         * Set encrypted expiry date.
-         *
-         * @return {@link EncryptedCard.Builder}
-         */
-        @NonNull
-        public Builder setEncryptedExpiryDate(@NonNull String encryptedExpiryMonth, @NonNull String encryptedExpiryYear) {
-            mEncryptedCard.mEncryptedExpiryMonth = encryptedExpiryMonth;
-            mEncryptedCard.mEncryptedExpiryYear = encryptedExpiryYear;
-
-            return this;
-        }
-
-        /**
-         * Clear expiry date.
-         *
-         * @return {@link EncryptedCard.Builder}
-         */
-        @SuppressWarnings("PMD.NullAssignment")
-        @NonNull
-        public Builder clearEncryptedExpiryDate() {
-            mEncryptedCard.mEncryptedExpiryMonth = null;
-            mEncryptedCard.mEncryptedExpiryYear = null;
-
-            return this;
-        }
-
-        /**
-         * Set encrypted security code.
-         *
-         * @return {@link EncryptedCard.Builder}
-         */
-        @NonNull
-        public Builder setEncryptedSecurityCode(@Nullable String encryptedSecurityCode) {
-            mEncryptedCard.mEncryptedSecurityCode = encryptedSecurityCode;
-
-            return this;
-        }
-
-        /**
-         * Build EncryptedCard object.
-         *
-         * @return {@link EncryptedCard}
-         */
-        @NonNull
-        public EncryptedCard build() {
-            return mEncryptedCard;
-        }
-    }
 }
