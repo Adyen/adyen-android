@@ -34,6 +34,8 @@ public final class CardEncrypter {
     private static final String HOLDER_NAME_KEY = "holderName";
     private static final String GENERATION_TIME_KEY = "generationtime";
 
+    private static final String BIN_KEY = "binValue";
+
     private static final String ENCRYPTION_FAILED_MESSAGE = "Encryption failed.";
 
     static final SimpleDateFormat GENERATION_DATE_FORMAT;
@@ -150,7 +152,6 @@ public final class CardEncrypter {
             @NonNull final  String publicKey
     ) throws EncryptionException {
         final JSONObject cardJson = new JSONObject();
-        String encryptedData = null;
 
         try {
             cardJson.put(CARD_NUMBER_KEY, unencryptedCard.getNumber());
@@ -162,12 +163,33 @@ public final class CardEncrypter {
             cardJson.put(GENERATION_TIME_KEY, GENERATION_DATE_FORMAT.format(generationTime));
 
             final ClientSideEncrypter encrypter = new ClientSideEncrypter(publicKey);
-            encryptedData = encrypter.encrypt(cardJson.toString());
+            return encrypter.encrypt(cardJson.toString());
         } catch (JSONException e) {
             throw new EncryptionException("Failed to created encrypted JSON data.", e);
         }
+    }
 
-        return encryptedData;
+    /**
+     * Encrypts the BIN of the card to be used in the Bin Lookup endpoint.
+     *
+     * @param bin The BIN value to be encrypted.
+     * @param publicKey The key to be used for encryption.
+     * @return The encrypted bin String.
+     * @throws EncryptionException in case the encryption fails.
+     */
+    @NonNull
+    @WorkerThread
+    public static String encryptBin(@NonNull String bin, @NonNull String publicKey) throws EncryptionException {
+        try {
+            final JSONObject binJson = new JSONObject();
+            binJson.put(BIN_KEY, bin);
+            binJson.put(GENERATION_TIME_KEY, GENERATION_DATE_FORMAT.format(assureGenerationTime(new Date())));
+
+            final ClientSideEncrypter encrypter = new ClientSideEncrypter(publicKey);
+            return encrypter.encrypt(binJson.toString());
+        } catch (JSONException e) {
+            throw new EncryptionException("Failed to created encrypted JSON data.", e);
+        }
     }
 
     private static Date assureGenerationTime(@Nullable Date generationTime) {
