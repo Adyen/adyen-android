@@ -8,8 +8,8 @@
 
 package com.adyen.checkout.example
 
-import androidx.multidex.MultiDexApplication
 import android.util.Log
+import androidx.multidex.MultiDexApplication
 import com.adyen.checkout.core.log.Logger
 import com.adyen.checkout.example.di.appModule
 import org.koin.android.ext.koin.androidContext
@@ -19,7 +19,7 @@ class CheckoutExampleApplication : MultiDexApplication() {
 
     companion object {
         init {
-            Logger.setLogcatLevel(Log.DEBUG)
+            Logger.setLogcatLevel(Log.VERBOSE)
         }
     }
 

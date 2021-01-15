@@ -11,6 +11,10 @@ package com.adyen.checkout.core.api;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 
+import com.adyen.checkout.core.BuildConfig;
+import com.adyen.checkout.core.log.LogUtil;
+import com.adyen.checkout.core.log.Logger;
+
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
@@ -18,7 +22,9 @@ import java.io.OutputStream;
 import java.net.HttpURLConnection;
 import java.nio.charset.Charset;
 import java.nio.charset.StandardCharsets;
+import java.util.Arrays;
 import java.util.Collections;
+import java.util.List;
 import java.util.Map;
 import java.util.concurrent.Callable;
 
@@ -28,9 +34,11 @@ import java.util.concurrent.Callable;
  * @param <T> The type of the connection return.
  */
 public abstract class Connection<T> implements Callable<T> {
+    private static final String TAG = LogUtil.getTag();
 
-    public static final String CONTENT_TYPE_HEADER = "Content-Type";
-    public static final String APP_JSON_CONTENT_TYPE = "application/json";
+    private static final String CONTENT_TYPE_HEADER = "Content-Type";
+    private static final String APP_JSON_CONTENT_TYPE = "application/json";
+    public static final Map<String, String> CONTENT_TYPE_JSON_HEADER = Collections.singletonMap(CONTENT_TYPE_HEADER, APP_JSON_CONTENT_TYPE);
 
     private static final Charset CHARSET = StandardCharsets.UTF_8;
     private static final int BUFFER_SIZE = 1024;
@@ -145,6 +153,15 @@ public abstract class Connection<T> implements Callable<T> {
 
     @NonNull
     private byte[] handleResponse(@NonNull HttpURLConnection urlConnection) throws IOException {
+        if (BuildConfig.DEBUG) {
+            Logger.v(TAG, "Connection HEADERS");
+            Map<String, List<String>> responseHeaders = mURLConnection.getHeaderFields();
+            for (String key : responseHeaders.keySet()) {
+                Logger.v(TAG, key + ": " + Arrays.toString(responseHeaders.get(key).toArray()));
+            }
+            Logger.v(TAG, "Connection HEADERS - END");
+        }
+
         try (InputStream errorStream = urlConnection.getErrorStream()) {
             if (errorStream == null) {
                 try (InputStream inputStream = urlConnection.getInputStream()) {

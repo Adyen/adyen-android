@@ -17,7 +17,7 @@ import com.adyen.checkout.core.model.toStringPretty
 import org.json.JSONObject
 
 private val TAG = LogUtil.getTag()
-private const val ENDPOINT = "v1/bin/binLookup?token="
+private const val ENDPOINT = "v2/bin/binLookup?clientKey="
 
 class BinLookupConnection(
     private val request: BinLookupRequest,
@@ -29,7 +29,7 @@ class BinLookupConnection(
         Logger.e(TAG, "call - $url")
         Logger.e(TAG, "request - ${BinLookupRequest.SERIALIZER.serialize(request).toStringPretty()}")
         val requestString = BinLookupRequest.SERIALIZER.serialize(request).toString()
-        val result = post(emptyMap(), requestString.toByteArray(Charsets.UTF_8))
+        val result = post(CONTENT_TYPE_JSON_HEADER, requestString.toByteArray(Charsets.UTF_8))
         val resultString = String(result, Charsets.UTF_8)
         val resultJson = JSONObject(String(result, Charsets.UTF_8))
         Logger.e(TAG, "response: ${resultJson.toStringPretty()}")
