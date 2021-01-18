@@ -11,6 +11,9 @@ package com.adyen.checkout.bcmc;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 
+import com.adyen.checkout.card.CardValidationUtils;
+import com.adyen.checkout.card.data.CardType;
+import com.adyen.checkout.card.data.ExpiryDate;
 import com.adyen.checkout.components.PaymentComponentProvider;
 import com.adyen.checkout.components.PaymentComponentState;
 import com.adyen.checkout.components.base.BasePaymentComponent;
@@ -20,15 +23,12 @@ import com.adyen.checkout.components.model.payments.request.CardPaymentMethod;
 import com.adyen.checkout.components.model.payments.request.PaymentComponentData;
 import com.adyen.checkout.components.util.PaymentMethodTypes;
 import com.adyen.checkout.components.validation.ValidatedField;
-import com.adyen.checkout.card.CardValidationUtils;
-import com.adyen.checkout.card.data.CardType;
-import com.adyen.checkout.card.data.ExpiryDate;
 import com.adyen.checkout.core.log.LogUtil;
 import com.adyen.checkout.core.log.Logger;
-import com.adyen.checkout.cse.Card;
+import com.adyen.checkout.cse.CardEncrypter;
 import com.adyen.checkout.cse.EncryptedCard;
-import com.adyen.checkout.cse.EncryptionException;
-import com.adyen.checkout.cse.Encryptor;
+import com.adyen.checkout.cse.exception.EncryptionException;
+import com.adyen.checkout.cse.UnencryptedCard;
 
 public final class BcmcComponent
         extends BasePaymentComponent<BcmcConfiguration, BcmcInputData, BcmcOutputData, PaymentComponentState<CardPaymentMethod>> {
@@ -74,7 +74,7 @@ public final class BcmcComponent
         final CardPaymentMethod cardPaymentMethod = new CardPaymentMethod();
         cardPaymentMethod.setType(CardPaymentMethod.PAYMENT_METHOD_TYPE);
 
-        final Card.Builder card = new Card.Builder();
+        final UnencryptedCard.Builder card = new UnencryptedCard.Builder();
         final BcmcOutputData outputData = getOutputData();
         final PaymentComponentData<CardPaymentMethod> paymentComponentData = new PaymentComponentData<>();
 
@@ -90,16 +90,17 @@ public final class BcmcComponent
             final ExpiryDate expiryDateResult = outputData.getExpiryDateField().getValue();
 
             if (expiryDateResult.getExpiryYear() != ExpiryDate.EMPTY_VALUE && expiryDateResult.getExpiryMonth() != ExpiryDate.EMPTY_VALUE) {
-                card.setExpiryDate(expiryDateResult.getExpiryMonth(), expiryDateResult.getExpiryYear());
+                card.setExpiryMonth(String.valueOf(expiryDateResult.getExpiryMonth()));
+                card.setExpiryYear(String.valueOf(expiryDateResult.getExpiryYear()));
             }
 
-            encryptedCard = Encryptor.INSTANCE.encryptFields(card.build(), getConfiguration().getPublicKey());
+            encryptedCard = CardEncrypter.encryptFields(card.build(), getConfiguration().getPublicKey());
         } catch (EncryptionException e) {
             notifyException(e);
             return new PaymentComponentState<>(paymentComponentData, false);
         }
 
-        cardPaymentMethod.setEncryptedCardNumber(encryptedCard.getEncryptedNumber());
+        cardPaymentMethod.setEncryptedCardNumber(encryptedCard.getEncryptedCardNumber());
         cardPaymentMethod.setEncryptedExpiryMonth(encryptedCard.getEncryptedExpiryMonth());
         cardPaymentMethod.setEncryptedExpiryYear(encryptedCard.getEncryptedExpiryYear());
 
