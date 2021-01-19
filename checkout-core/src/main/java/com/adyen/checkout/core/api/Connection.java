@@ -155,7 +155,7 @@ public abstract class Connection<T> implements Callable<T> {
     private byte[] handleResponse(@NonNull HttpURLConnection urlConnection) throws IOException {
         if (BuildConfig.DEBUG) {
             Logger.v(TAG, "Connection HEADERS");
-            Map<String, List<String>> responseHeaders = mURLConnection.getHeaderFields();
+            final Map<String, List<String>> responseHeaders = mURLConnection.getHeaderFields();
             for (String key : responseHeaders.keySet()) {
                 Logger.v(TAG, key + ": " + Arrays.toString(responseHeaders.get(key).toArray()));
             }

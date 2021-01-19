@@ -33,12 +33,14 @@ import kotlinx.coroutines.launch
 import java.io.IOException
 import java.util.ArrayList
 import java.util.Collections
+import java.util.UUID
 
 private val TAG = LogUtil.getTag()
 
 private val PAYMENT_METHOD_TYPES = arrayOf(PaymentMethodTypes.SCHEME)
 private const val BIN_VALUE_LENGTH = 6
 
+@Suppress("TooManyFunctions")
 class CardComponent private constructor(
     private val cardDelegate: CardDelegate,
     cardConfiguration: CardConfiguration
@@ -119,7 +121,7 @@ class CardComponent private constructor(
             }
             try {
                 val encryptedBin = deferredEncryption.await()
-                val request = BinLookupRequest(encryptedBin, "my-uuid", getCardTypes())
+                val request = BinLookupRequest(encryptedBin, UUID.randomUUID().toString(), getCardTypes())
                 val response = BinLookupConnection(request, configuration.environment, configuration.clientKey).suspendedCall()
                 cardTypeReceived(response)
             } catch (e: EncryptionException) {

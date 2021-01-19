@@ -36,7 +36,7 @@ data class BinLookupResponse(
     }
 
     companion object {
-        @JvmStatic
+        @JvmField
         val CREATOR: Parcelable.Creator<BinLookupResponse> = Creator(BinLookupResponse::class.java)
 
         @JvmStatic
@@ -47,7 +47,6 @@ data class BinLookupResponse(
                     jsonObject.putOpt(BRANDS, ModelUtils.serializeOptList(modelObject.brands, Brand.SERIALIZER))
                     jsonObject.putOpt(ISSUING_COUNTRY_CODE, modelObject.issuingCountryCode)
                     jsonObject.putOpt(REQUEST_ID, modelObject.requestId)
-
                 } catch (e: JSONException) {
                     throw ModelSerializationException(BinLookupResponse::class.java, e)
                 }

@@ -18,7 +18,6 @@ import java.util.Collections
 
 private const val INDENTATION_SPACES = 4
 private const val PARSING_ERROR = "PARSING_ERROR"
-private const val NULL_OBJECT = "NULL"
 private const val FLAG_NULL = 0
 private const val FLAG_NON_NULL = FLAG_NULL + 1
 

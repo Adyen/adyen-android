@@ -36,7 +36,7 @@ data class BinLookupRequest(
     }
 
     companion object {
-        @JvmStatic
+        @JvmField
         val CREATOR: Parcelable.Creator<BinLookupRequest> = Creator(BinLookupRequest::class.java)
 
         @JvmStatic
@@ -67,4 +67,3 @@ data class BinLookupRequest(
         }
     }
 }
-

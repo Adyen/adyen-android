@@ -18,7 +18,6 @@ import com.adyen.checkout.core.model.getStringOrNull
 import org.json.JSONException
 import org.json.JSONObject
 
-
 private const val BRAND = "brand"
 private const val SHOW_EXPIRY_DATE = "showExpiryDate"
 private const val ENABLE_LUHN_CHECK = "enableLuhnCheck"
@@ -38,7 +37,7 @@ data class Brand(
     }
 
     companion object {
-        @JvmStatic
+        @JvmField
         val CREATOR: Parcelable.Creator<Brand> = Creator(Brand::class.java)
 
         @JvmStatic
@@ -51,7 +50,6 @@ data class Brand(
                     jsonObject.putOpt(ENABLE_LUHN_CHECK, modelObject.enableLuhnCheck)
                     jsonObject.putOpt(SUPPORTED, modelObject.supported)
                     jsonObject.putOpt(CVC_POLICY, modelObject.cvcPolicy)
-
                 } catch (e: JSONException) {
                     throw ModelSerializationException(Brand::class.java, e)
                 }
