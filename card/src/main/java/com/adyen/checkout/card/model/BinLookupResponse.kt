@@ -10,13 +10,25 @@ package com.adyen.checkout.card.model
 
 import android.os.Parcel
 import android.os.Parcelable
+import com.adyen.checkout.core.exception.ModelSerializationException
+import com.adyen.checkout.core.log.LogUtil
 import com.adyen.checkout.core.model.JsonUtils
 import com.adyen.checkout.core.model.ModelObject
+import com.adyen.checkout.core.model.ModelUtils
+import com.adyen.checkout.core.model.getStringOrNull
+import org.json.JSONException
 import org.json.JSONObject
 
+private const val BRANDS = "brands"
+private const val ISSUING_COUNTRY_CODE = "issuingCountryCode"
+private const val REQUEST_ID = "requestId"
+
+private val TAG = LogUtil.getTag()
+
 data class BinLookupResponse(
-    val todo: String?
-    // TODO: 12/01/2021 check response JSON structure
+    val brands: List<Brand>? = null,
+    val issuingCountryCode: String? = null,
+    val requestId: String? = null
 ) : ModelObject() {
 
     override fun writeToParcel(parcel: Parcel, flags: Int) {
@@ -27,13 +39,31 @@ data class BinLookupResponse(
         @JvmStatic
         val CREATOR: Parcelable.Creator<BinLookupResponse> = Creator(BinLookupResponse::class.java)
 
+        @JvmStatic
         val SERIALIZER: Serializer<BinLookupResponse> = object : Serializer<BinLookupResponse> {
             override fun serialize(modelObject: BinLookupResponse): JSONObject {
-                TODO("Not yet implemented")
+                val jsonObject = JSONObject()
+                try {
+                    jsonObject.putOpt(BRANDS, ModelUtils.serializeOptList(modelObject.brands, Brand.SERIALIZER))
+                    jsonObject.putOpt(ISSUING_COUNTRY_CODE, modelObject.issuingCountryCode)
+                    jsonObject.putOpt(REQUEST_ID, modelObject.requestId)
+
+                } catch (e: JSONException) {
+                    throw ModelSerializationException(BinLookupResponse::class.java, e)
+                }
+                return jsonObject
             }
 
             override fun deserialize(jsonObject: JSONObject): BinLookupResponse {
-                TODO("Not yet implemented")
+                return try {
+                    BinLookupResponse(
+                        brands = ModelUtils.deserializeOptList(jsonObject.optJSONArray(BRANDS), Brand.SERIALIZER),
+                        issuingCountryCode = jsonObject.getStringOrNull(ISSUING_COUNTRY_CODE),
+                        requestId = jsonObject.getStringOrNull(REQUEST_ID)
+                    )
+                } catch (e: JSONException) {
+                    throw ModelSerializationException(BinLookupResponse::class.java, e)
+                }
             }
         }
     }

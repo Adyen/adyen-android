@@ -10,8 +10,8 @@ package com.adyen.checkout.card.model
 
 import android.os.Parcel
 import android.os.Parcelable
-import com.adyen.checkout.components.model.payments.request.Address
 import com.adyen.checkout.core.exception.ModelSerializationException
+import com.adyen.checkout.core.log.LogUtil
 import com.adyen.checkout.core.model.JsonUtils
 import com.adyen.checkout.core.model.ModelObject
 import com.adyen.checkout.core.model.getStringOrNull
@@ -22,6 +22,8 @@ import org.json.JSONObject
 private const val ENCRYPTED_BIN = "encryptedBin"
 private const val REQUEST_ID = "requestId"
 private const val SUPPORTED_BRANDS = "supportedBrands"
+
+private val TAG = LogUtil.getTag()
 
 data class BinLookupRequest(
     val encryptedBin: String? = null,
@@ -46,17 +48,21 @@ data class BinLookupRequest(
                     jsonObject.putOpt(REQUEST_ID, modelObject.requestId)
                     jsonObject.putOpt(SUPPORTED_BRANDS, JsonUtils.serializeOptStringList(modelObject.supportedBrands))
                 } catch (e: JSONException) {
-                    throw ModelSerializationException(Address::class.java, e)
+                    throw ModelSerializationException(BinLookupRequest::class.java, e)
                 }
                 return jsonObject
             }
 
             override fun deserialize(jsonObject: JSONObject): BinLookupRequest {
-                return BinLookupRequest(
-                    encryptedBin = jsonObject.getStringOrNull(ENCRYPTED_BIN),
-                    requestId = jsonObject.getStringOrNull(REQUEST_ID),
-                    supportedBrands = jsonObject.optStringList(SUPPORTED_BRANDS)
-                )
+                return try {
+                    BinLookupRequest(
+                        encryptedBin = jsonObject.getStringOrNull(ENCRYPTED_BIN),
+                        requestId = jsonObject.getStringOrNull(REQUEST_ID),
+                        supportedBrands = jsonObject.optStringList(SUPPORTED_BRANDS)
+                    )
+                } catch (e: JSONException) {
+                    throw ModelSerializationException(BinLookupRequest::class.java, e)
+                }
             }
         }
     }

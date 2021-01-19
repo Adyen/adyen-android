@@ -26,7 +26,10 @@ import com.adyen.checkout.cse.CardEncrypter
 import com.adyen.checkout.cse.EncryptedCard
 import com.adyen.checkout.cse.UnencryptedCard
 import com.adyen.checkout.cse.exception.EncryptionException
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.async
 import kotlinx.coroutines.launch
+import java.io.IOException
 import java.util.ArrayList
 import java.util.Collections
 
@@ -96,16 +99,20 @@ class CardComponent private constructor(
 
         if (inputData.cardNumber.length == 11) {
             viewModelScope.launch {
+                val deferredEncryption = viewModelScope.async(Dispatchers.Default) {
+                    CardEncrypter.encryptBin(inputData.cardNumber, publicKey)
+                }
                 try {
-                    val card = Card.Builder()
-                    card.setNumber(inputData.cardNumber)
-                    val encryptedCard = Encryptor.INSTANCE.encryptFields(card.build(), publicKey)
-                    Logger.e(TAG, "ENCRYPTED - ${encryptedCard.encryptedNumber}")
-                    val request = BinLookupRequest(encryptedCard.encryptedNumber, "my-uuid", getCardTypes())
+                    val encryptedBin = deferredEncryption.await()
+                    val request = BinLookupRequest(encryptedBin, "my-uuid", getCardTypes())
                     val connect = BinLookupConnection(request, configuration.environment, configuration.clientKey).suspendedCall()
-                    Logger.e(TAG, "CONNECTED! \n$connect")
-                } catch (e: Exception) {
-                    Logger.e(TAG, "YOU ARE A FAILURE!", e)
+                    Logger.e(TAG, "RESULT! - $connect")
+                } catch (e: EncryptionException) {
+                    Logger.e(TAG, "Failed to encrypt BIN", e)
+                    return@launch
+                } catch (e: IOException) {
+                    Logger.e(TAG, "Failed to call binLookup API.", e)
+                    return@launch
                 }
             }
         }
