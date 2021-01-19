@@ -21,6 +21,7 @@ import android.widget.LinearLayout;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.annotation.StringRes;
 import androidx.appcompat.widget.SwitchCompat;
 import androidx.lifecycle.LifecycleOwner;
 import androidx.lifecycle.Observer;
@@ -212,7 +213,7 @@ public final class CardView extends AdyenLinearLayout<CardOutputData, CardConfig
         if (!outputData.getCardNumberField().isValid()) {
             isErrorFocused = true;
             mCardNumberEditText.requestFocus();
-            mCardNumberInput.setError(mLocalizedContext.getString(R.string.checkout_card_number_not_valid));
+            setCardNumberError(R.string.checkout_card_number_not_valid);
         }
 
         if (!outputData.getExpiryDateField().isValid()) {
@@ -287,21 +288,28 @@ public final class CardView extends AdyenLinearLayout<CardOutputData, CardConfig
         mCardNumberEditText.setOnChangeListener(editable -> {
             mCardInputData.setCardNumber(mCardNumberEditText.getRawValue());
             notifyInputDataChanged();
-            mCardNumberInput.setError(null);
+            setCardNumberError(null);
         });
-        mCardNumberEditText.setOnFocusChangeListener(new View.OnFocusChangeListener() {
-            @Override
-            public void onFocusChange(View v, boolean hasFocus) {
-                if (!getComponent().isStoredPaymentMethod()) {
-                    final CardOutputData outputData = getComponent().getOutputData();
-                    if (hasFocus) {
-                        mCardNumberInput.setError(null);
-                    } else if (outputData != null && !outputData.getCardNumberField().isValid()) {
-                        mCardNumberInput.setError(mLocalizedContext.getString(R.string.checkout_card_number_not_valid));
-                    }
+        mCardNumberEditText.setOnFocusChangeListener((v, hasFocus) -> {
+            if (!getComponent().isStoredPaymentMethod()) {
+                final CardOutputData outputData = getComponent().getOutputData();
+                if (hasFocus) {
+                    setCardNumberError(null);
+                } else if (outputData != null && !outputData.getCardNumberField().isValid()) {
+                    setCardNumberError(R.string.checkout_card_number_not_valid);
                 }
             }
         });
+    }
+
+    private void setCardNumberError(@StringRes Integer stringResId) {
+        if (stringResId == null) {
+            mCardNumberInput.setError(null);
+            mCardBrandLogoImageView.setVisibility(View.VISIBLE);
+        } else {
+            mCardNumberInput.setError(mLocalizedContext.getString(stringResId));
+            mCardBrandLogoImageView.setVisibility(View.GONE);
+        }
     }
 
     private void initExpiryDateInput() {
