@@ -13,6 +13,7 @@ import com.adyen.checkout.card.api.BinLookupConnection
 import com.adyen.checkout.card.data.CardType
 import com.adyen.checkout.card.data.ExpiryDate
 import com.adyen.checkout.card.model.BinLookupRequest
+import com.adyen.checkout.card.model.BinLookupResponse
 import com.adyen.checkout.components.StoredPaymentComponentProvider
 import com.adyen.checkout.components.api.suspendedCall
 import com.adyen.checkout.components.base.BasePaymentComponent
@@ -97,24 +98,8 @@ class CardComponent private constructor(
         val cardDelegate = mPaymentMethodDelegate as CardDelegate
         val firstCardType: CardType? = if (filteredSupportedCards.isNotEmpty()) filteredSupportedCards[0] else null
 
-        if (inputData.cardNumber.length == 11) {
-            viewModelScope.launch {
-                val deferredEncryption = viewModelScope.async(Dispatchers.Default) {
-                    CardEncrypter.encryptBin(inputData.cardNumber, publicKey)
-                }
-                try {
-                    val encryptedBin = deferredEncryption.await()
-                    val request = BinLookupRequest(encryptedBin, "my-uuid", getCardTypes())
-                    val connect = BinLookupConnection(request, configuration.environment, configuration.clientKey).suspendedCall()
-                    Logger.e(TAG, "RESULT! - $connect")
-                } catch (e: EncryptionException) {
-                    Logger.e(TAG, "Failed to encrypt BIN", e)
-                    return@launch
-                } catch (e: IOException) {
-                    Logger.e(TAG, "Failed to call binLookup API.", e)
-                    return@launch
-                }
-            }
+        if (inputData.cardNumber.length == BinLookupConnection.REQUIRED_BIN_SIZE) {
+            fetchCardType(inputData.cardNumber)
         }
 
         return CardOutputData(
@@ -125,6 +110,47 @@ class CardComponent private constructor(
             inputData.isStorePaymentEnable,
             cardDelegate.isCvcHidden()
         )
+    }
+
+    private fun fetchCardType(cardNumber: String) {
+        viewModelScope.launch {
+            val deferredEncryption = viewModelScope.async(Dispatchers.Default) {
+                CardEncrypter.encryptBin(cardNumber, publicKey)
+            }
+            try {
+                val encryptedBin = deferredEncryption.await()
+                val request = BinLookupRequest(encryptedBin, "my-uuid", getCardTypes())
+                val response = BinLookupConnection(request, configuration.environment, configuration.clientKey).suspendedCall()
+                cardTypeReceived(response)
+            } catch (e: EncryptionException) {
+                Logger.e(TAG, "Failed to encrypt BIN", e)
+                return@launch
+            } catch (e: IOException) {
+                Logger.e(TAG, "Failed to call binLookup API.", e)
+                return@launch
+            }
+        }
+    }
+
+    private fun cardTypeReceived(binLookupResponse: BinLookupResponse) {
+        Logger.d(TAG, "cardBrandReceived")
+        val brands = binLookupResponse.brands
+        when {
+            brands == null || brands.isEmpty() -> {
+                Logger.d(TAG, "Card brand not found.")
+                // TODO: 19/01/2021 Keep regexes prediction and don't apply business rules
+            }
+            brands.size > 1 -> {
+                Logger.d(TAG, "Multiple brands found.")
+                // TODO: 19/01/2021 use first brand
+            }
+            else -> {
+                Logger.d(TAG, "Card brand: ${brands[0].brand}")
+                val cardType = CardType.getByBrandName(brands[0].brand ?: "")
+                Logger.d(TAG, "CardType: ${cardType?.name}")
+                // TODO: 19/01/2021 trigger brand specific business logic
+            }
+        }
     }
 
     private fun getCardTypes(): List<String> {

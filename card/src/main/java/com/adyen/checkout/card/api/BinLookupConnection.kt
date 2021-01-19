@@ -35,4 +35,8 @@ class BinLookupConnection(
         Logger.v(TAG, "response: ${resultJson.toStringPretty()}")
         return BinLookupResponse.SERIALIZER.deserialize(resultJson)
     }
+
+    companion object {
+        const val REQUIRED_BIN_SIZE = 11
+    }
 }
