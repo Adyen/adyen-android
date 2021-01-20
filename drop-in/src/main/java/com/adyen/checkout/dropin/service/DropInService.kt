@@ -8,19 +8,28 @@
 
 package com.adyen.checkout.dropin.service
 
+import android.app.Service
 import android.content.ComponentName
 import android.content.Context
 import android.content.Intent
-import androidx.core.app.JobIntentService
+import android.content.ServiceConnection
+import android.os.Binder
+import android.os.IBinder
+import androidx.lifecycle.LifecycleOwner
+import androidx.lifecycle.MutableLiveData
+import androidx.lifecycle.Observer
 import com.adyen.checkout.components.model.payments.request.PaymentComponentData
-import com.adyen.checkout.components.model.payments.request.PaymentMethodDetails
-import com.adyen.checkout.core.exception.CheckoutException
 import com.adyen.checkout.core.log.LogUtil
 import com.adyen.checkout.core.log.Logger
-import kotlinx.coroutines.ExperimentalCoroutinesApi
-import kotlinx.coroutines.channels.awaitClose
-import kotlinx.coroutines.flow.callbackFlow
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.Job
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 import org.json.JSONObject
+import kotlin.coroutines.CoroutineContext
+
+private val TAG = LogUtil.getTag()
 
 /**
  * Base service to be extended by the merchant to provide the network calls that connect to the Adyen endpoints.
@@ -31,152 +40,62 @@ import org.json.JSONObject
  * The result [DropInServiceResult] is the result of the network call and can mean different things.
  * Check the subclasses of [DropInServiceResult] for more information.
  */
-abstract class DropInService : JobIntentService() {
+abstract class DropInService : Service(), CoroutineScope {
 
-    companion object {
-        protected val TAG = LogUtil.getTag()
+    private var coroutineJob: Job = Job()
+    override val coroutineContext: CoroutineContext get() = Dispatchers.Main + coroutineJob
 
-        // Define the type of request the service needs to perform
-        private const val REQUEST_TYPE_KEY = "request_type"
-        private const val PAYMENTS_REQUEST = "type_payments"
-        private const val DETAILS_REQUEST = "type_details"
+    private val binder = DropInBinder()
 
-        // Internal key of the content for the request
-        private const val PAYMENT_COMPONENT_DATA_EXTRA_KEY = "payment_component_data_extra"
-        private const val DETAILS_EXTRA_KEY = "details_method_extra"
+    private val resultLiveData: MutableLiveData<DropInServiceResult> = MutableLiveData()
 
-        // Make it public for merchants who want to override behavior
-        @Suppress("MemberVisibilityCanBePrivate")
-        const val dropInJobId = 11
-
-        // callback to handle sending the DropInServiceResult inside the callbackFlow below
-        private var callback: DropInFlowResult = object : DropInFlowResult {
-            override fun dispatchDropInServiceResult(dropInServiceResult: DropInServiceResult) {
-                Logger.e(TAG, "dispatchDropInServiceResult - callback called before flow")
-            }
-        }
-
-        // This callbackFlow will stay open for new offers on the callback object
-        // this is an experiment to replace LocalBroadcast to communicate with the DropInActivity
-        // TODO: 27/10/2020 check if we can have a different implementation that is not an application-wide event bus
-        // since it embraces layer violations as per deprecation note
-        // https://developer.android.com/jetpack/androidx/releases/localbroadcastmanager
-        @ExperimentalCoroutinesApi
-        val dropInServiceFlow = callbackFlow<DropInServiceResult> {
-            callback = object : DropInFlowResult {
-                override fun dispatchDropInServiceResult(dropInServiceResult: DropInServiceResult) {
-                    Logger.d(TAG, "dropInServiceFlow - offer")
-                    offer(dropInServiceResult)
-                }
-            }
-            awaitClose {
-                Logger.d(TAG, "dropInServiceFlow - flow closed")
-            }
-        }
-
-        /**
-         * Helper function that sends a request for the merchant to make the payments call.
-         */
-        // False positive
-        @Suppress("FunctionParameterNaming")
-        fun requestPaymentsCall(
-            context: Context,
-            paymentComponentData: PaymentComponentData<out PaymentMethodDetails>,
-            merchantService: ComponentName
-        ) {
-            Logger.d(TAG, "requestPaymentsCall - ${paymentComponentData.paymentMethod?.type}")
-
-            val workIntent = Intent()
-            workIntent.putExtra(REQUEST_TYPE_KEY, PAYMENTS_REQUEST)
-            workIntent.putExtra(PAYMENT_COMPONENT_DATA_EXTRA_KEY, paymentComponentData)
-
-            enqueueWork(context, merchantService, dropInJobId, workIntent)
-        }
-
-        /**
-         * Helper function that sends a request for the merchant to make the details call.
-         */
-        fun requestDetailsCall(context: Context, details: JSONObject, merchantService: ComponentName) {
-            Logger.d(TAG, "requestDetailsCall")
-
-            val workIntent = Intent()
-            workIntent.putExtra(REQUEST_TYPE_KEY, DETAILS_REQUEST)
-            workIntent.putExtra(DETAILS_EXTRA_KEY, details.toString())
-
-            enqueueWork(context, merchantService, dropInJobId, workIntent)
-        }
+    override fun onBind(intent: Intent?): IBinder {
+        Logger.d(TAG, "onBind")
+        return binder
     }
 
-    override fun onHandleWork(intent: Intent) {
-        Logger.d(TAG, "onHandleWork")
+    override fun onUnbind(intent: Intent?): Boolean {
+        Logger.d(TAG, "onUnbind")
+        return super.onUnbind(intent)
+    }
 
-        when (intent.getStringExtra(REQUEST_TYPE_KEY)) {
-            PAYMENTS_REQUEST -> {
-                val paymentComponentDataForRequest =
-                    intent.getParcelableExtra<PaymentComponentData<in PaymentMethodDetails>>(PAYMENT_COMPONENT_DATA_EXTRA_KEY)
-                if (paymentComponentDataForRequest == null) {
-                    handleDropInServiceResult(
-                        DropInServiceResult.Error(
-                            reason = "DropInService Error. No content in PAYMENT_COMPONENT_DATA_EXTRA_KEY"
-                        )
-                    )
-                } else {
-                    askPaymentsCall(paymentComponentDataForRequest)
-                }
-            }
-            DETAILS_REQUEST -> {
-                val detailsString = intent.getStringExtra(DETAILS_EXTRA_KEY) ?: ""
-                val details = JSONObject(detailsString)
-                askDetailsCall(details)
-            }
-        }
+    override fun onRebind(intent: Intent?) {
+        Logger.d(TAG, "onRebind")
+        super.onRebind(intent)
+    }
+
+    override fun onCreate() {
+        Logger.d(TAG, "onCreate")
+        super.onCreate()
     }
 
     override fun onDestroy() {
-        super.onDestroy()
-        // Android will only call new tasks from enqueueWork if the previous one has finished nas the service is destroyed
         Logger.d(TAG, "onDestroy")
+        super.onDestroy()
     }
 
-    /**
-     * Call this method for asynchronous handling of [makePaymentsCall]
-     */
-    @Suppress("MemberVisibilityCanBePrivate")
-    protected fun asyncCallback(dropInServiceResult: DropInServiceResult) {
-        handleDropInServiceResult(dropInServiceResult)
-    }
-
-    private fun askPaymentsCall(paymentComponentData: PaymentComponentData<in PaymentMethodDetails>) {
-        Logger.d(TAG, "askPaymentsCall")
-
-        // Merchant makes network call
-        val paymentsDropInServiceResult = makePaymentsCall(PaymentComponentData.SERIALIZER.serialize(paymentComponentData))
-
-        handleDropInServiceResult(paymentsDropInServiceResult)
-    }
-
-    private fun askDetailsCall(details: JSONObject) {
-        Logger.d(TAG, "askDetailsCall")
-
-        // Merchant makes network call
-        val detailsDropInServiceResult = makeDetailsCall(details)
-
-        handleDropInServiceResult(detailsDropInServiceResult)
-    }
-
-    private fun handleDropInServiceResult(dropInServiceResult: DropInServiceResult?) {
-        if (dropInServiceResult == null) {
-            // Make sure people don't return Null from Java code
-            throw CheckoutException("DropInServiceResult result from DropInService cannot be null.")
+    internal fun requestPaymentsCall(paymentComponentData: PaymentComponentData<*>) = launch {
+        Logger.d(TAG, "requestPaymentsCall")
+        val result = withContext(Dispatchers.IO) {
+            // Merchant makes network call
+            return@withContext makePaymentsCall(PaymentComponentData.SERIALIZER.serialize(paymentComponentData))
         }
-        Logger.d(TAG, "handleDropInServiceResult - ${dropInServiceResult::class.simpleName}")
+        sendResult(result)
+    }
 
-        // if type is WAIT do nothing and wait for async callback.
-        if (dropInServiceResult !is DropInServiceResult.Wait) {
-            // send response back to activity
-            Logger.d(TAG, "dropInServiceFlow - dispatchDropInServiceResult")
-            callback.dispatchDropInServiceResult(dropInServiceResult)
+    internal fun requestDetailsCall(details: JSONObject) = launch {
+        Logger.d(TAG, "requestDetailsCall")
+        val result = withContext(Dispatchers.IO) {
+            // Merchant makes network call
+            return@withContext makeDetailsCall(details)
         }
+        sendResult(result)
+    }
+
+    protected fun sendResult(result: DropInServiceResult) {
+        // send response back to activity
+        Logger.d(TAG, "dispatching DropInServiceResult")
+        resultLiveData.postValue(result)
     }
 
     /**
@@ -226,7 +145,26 @@ abstract class DropInService : JobIntentService() {
      */
     abstract fun makeDetailsCall(actionComponentData: JSONObject): DropInServiceResult
 
-    private interface DropInFlowResult {
-        fun dispatchDropInServiceResult(dropInServiceResult: DropInServiceResult)
+    internal fun observeResult(owner: LifecycleOwner, observer: Observer<DropInServiceResult>) {
+        this.resultLiveData.observe(owner, observer)
+    }
+
+    inner class DropInBinder : Binder() {
+        fun getService(): DropInService = this@DropInService
+    }
+
+    companion object {
+        internal fun bindService(context: Context, connection: ServiceConnection, merchantService: ComponentName) {
+            Logger.d(TAG, "bindService - ${context::class.simpleName}")
+            Intent().also { intent ->
+                intent.component = merchantService
+                context.bindService(intent, connection, Context.BIND_AUTO_CREATE)
+            }
+        }
+
+        internal fun unbindService(context: Context, connection: ServiceConnection) {
+            Logger.d(TAG, "unbindService - ${context::class.simpleName}")
+            context.unbindService(connection)
+        }
     }
 }

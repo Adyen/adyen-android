@@ -29,9 +29,4 @@ sealed class DropInServiceResult {
      * in an Alert Dialog, otherwise a generic error message will be shown.
      */
     class Error(val errorMessage: String? = null, val reason: String? = null, val dismissDropIn: Boolean = false) : DropInServiceResult()
-
-    /**
-     * Call wants to wait for asynchronous processing.
-     */
-    class Wait : DropInServiceResult()
 }

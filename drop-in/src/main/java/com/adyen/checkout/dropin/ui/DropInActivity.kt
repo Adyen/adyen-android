@@ -9,15 +9,17 @@
 package com.adyen.checkout.dropin.ui
 
 import android.app.Activity
+import android.content.ComponentName
 import android.content.Context
 import android.content.Intent
+import android.content.ServiceConnection
 import android.content.res.Configuration
 import android.os.Bundle
+import android.os.IBinder
 import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.DialogFragment
 import androidx.lifecycle.Observer
-import androidx.lifecycle.lifecycleScope
 import com.adyen.checkout.components.ActionComponentData
 import com.adyen.checkout.components.ComponentError
 import com.adyen.checkout.components.analytics.AnalyticEvent
@@ -28,7 +30,6 @@ import com.adyen.checkout.components.model.paymentmethods.StoredPaymentMethod
 import com.adyen.checkout.components.model.payments.request.PaymentComponentData
 import com.adyen.checkout.components.model.payments.response.Action
 import com.adyen.checkout.components.util.PaymentMethodTypes
-import com.adyen.checkout.core.exception.CheckoutException
 import com.adyen.checkout.core.log.LogUtil
 import com.adyen.checkout.core.log.Logger
 import com.adyen.checkout.core.util.LocaleUtil
@@ -50,7 +51,6 @@ import com.adyen.checkout.googlepay.GooglePayConfiguration
 import com.adyen.checkout.redirect.RedirectUtil
 import com.adyen.checkout.wechatpay.WeChatPayUtils
 import kotlinx.coroutines.ExperimentalCoroutinesApi
-import kotlinx.coroutines.flow.collect
 import org.json.JSONObject
 
 private val TAG = LogUtil.getTag()
@@ -94,6 +94,25 @@ class DropInActivity : AppCompatActivity(), DropInBottomSheetDialogFragment.Prot
         showPaymentMethodsDialog()
     }
 
+    private lateinit var dropInService: DropInService
+    private var serviceBound: Boolean = false
+
+    private val serviceConnection = object : ServiceConnection {
+
+        override fun onServiceConnected(className: ComponentName, service: IBinder) {
+            Logger.d(TAG, "onServiceConnected")
+            val binder = service as DropInService.DropInBinder
+            dropInService = binder.getService()
+            dropInService.observeResult(this@DropInActivity) { handleDropInServiceResult(it) }
+            serviceBound = true
+        }
+
+        override fun onServiceDisconnected(className: ComponentName) {
+            Logger.d(TAG, "onServiceDisconnected")
+            serviceBound = false
+        }
+    }
+
     override fun attachBaseContext(newBase: Context?) {
         Logger.d(TAG, "attachBaseContext")
         super.attachBaseContext(createLocalizedContext(newBase))
@@ -119,15 +138,6 @@ class DropInActivity : AppCompatActivity(), DropInBottomSheetDialogFragment.Prot
                 showPreselectedDialog()
             } else {
                 showPaymentMethodsDialog()
-            }
-        }
-
-        // Automatically wait to collect new results from the DropInService while lifecycle is active
-        lifecycleScope.launchWhenCreated {
-            DropInService.dropInServiceFlow.collect {
-                Logger.d(TAG, "dropInServiceFlow collect")
-                isWaitingResult = false
-                handleDropInServiceResult(it)
             }
         }
 
@@ -204,6 +214,23 @@ class DropInActivity : AppCompatActivity(), DropInBottomSheetDialogFragment.Prot
         }
     }
 
+    override fun onStart() {
+        super.onStart()
+        DropInService.bindService(this, serviceConnection, dropInViewModel.dropInConfiguration.serviceComponentName)
+    }
+
+    override fun onStop() {
+        super.onStop()
+        unbindService()
+    }
+
+    private fun unbindService() {
+        if (serviceBound) {
+            DropInService.unbindService(this, serviceConnection)
+            serviceBound = false
+        }
+    }
+
     override fun requestPaymentsCall(paymentComponentData: PaymentComponentData<*>) {
         isWaitingResult = true
         setLoading(true)
@@ -211,17 +238,13 @@ class DropInActivity : AppCompatActivity(), DropInBottomSheetDialogFragment.Prot
         if (!dropInViewModel.dropInConfiguration.amount.isEmpty) {
             paymentComponentData.amount = dropInViewModel.dropInConfiguration.amount
         }
-        DropInService.requestPaymentsCall(this, paymentComponentData, dropInViewModel.dropInConfiguration.serviceComponentName)
+        dropInService.requestPaymentsCall(paymentComponentData)
     }
 
     override fun requestDetailsCall(actionComponentData: ActionComponentData) {
         isWaitingResult = true
         setLoading(true)
-        DropInService.requestDetailsCall(
-            this,
-            ActionComponentData.SERIALIZER.serialize(actionComponentData),
-            dropInViewModel.dropInConfiguration.serviceComponentName
-        )
+        dropInService.requestDetailsCall(ActionComponentData.SERIALIZER.serialize(actionComponentData))
     }
 
     override fun showError(errorMessage: String, terminate: Boolean) {
@@ -326,6 +349,7 @@ class DropInActivity : AppCompatActivity(), DropInBottomSheetDialogFragment.Prot
 
     private fun handleDropInServiceResult(dropInServiceResult: DropInServiceResult) {
         Logger.d(TAG, "handleDropInServiceResult - ${dropInServiceResult::class.simpleName}")
+        isWaitingResult = false
         when (dropInServiceResult) {
             is DropInServiceResult.Finished -> {
                 this.sendResult(dropInServiceResult.result)
@@ -341,9 +365,6 @@ class DropInActivity : AppCompatActivity(), DropInBottomSheetDialogFragment.Prot
                 } else {
                     showError(dropInServiceResult.errorMessage, dropInServiceResult.dismissDropIn)
                 }
-            }
-            is DropInServiceResult.Wait -> {
-                throw CheckoutException("WAIT DropInServiceResult is not expected to be propagated.")
             }
         }
     }
