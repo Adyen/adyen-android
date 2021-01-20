@@ -77,12 +77,15 @@ data class Brand(
         OPTIONAL("optional"),
         HIDDEN("hidden");
 
-        fun parse(value: String): CvcPolicy {
-            return when (value) {
-                REQUIRED.value -> REQUIRED
-                OPTIONAL.value -> OPTIONAL
-                HIDDEN.value -> HIDDEN
-                else -> throw IllegalArgumentException("No CvcPolicy matches the value of: $value")
+        companion object {
+            @JvmStatic
+            fun parse(value: String): CvcPolicy {
+                return when (value) {
+                    REQUIRED.value -> REQUIRED
+                    OPTIONAL.value -> OPTIONAL
+                    HIDDEN.value -> HIDDEN
+                    else -> throw IllegalArgumentException("No CvcPolicy matches the value of: $value")
+                }
             }
         }
     }
