@@ -25,7 +25,6 @@ import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.launch
-import kotlinx.coroutines.withContext
 import org.json.JSONObject
 import kotlin.coroutines.CoroutineContext
 
@@ -74,22 +73,31 @@ abstract class DropInService : Service(), CoroutineScope {
         super.onDestroy()
     }
 
-    internal fun requestPaymentsCall(paymentComponentData: PaymentComponentData<*>) = launch {
+    internal fun requestPaymentsCall(paymentComponentData: PaymentComponentData<*>) {
         Logger.d(TAG, "requestPaymentsCall")
-        val result = withContext(Dispatchers.IO) {
-            // Merchant makes network call
-            return@withContext makePaymentsCall(PaymentComponentData.SERIALIZER.serialize(paymentComponentData))
-        }
-        sendResult(result)
+        val json = PaymentComponentData.SERIALIZER.serialize(paymentComponentData)
+        onPaymentsCallRequested(json)
     }
 
-    internal fun requestDetailsCall(details: JSONObject) = launch {
-        Logger.d(TAG, "requestDetailsCall")
-        val result = withContext(Dispatchers.IO) {
+    protected open fun onPaymentsCallRequested(paymentComponentData: JSONObject) {
+        launch(Dispatchers.IO) {
             // Merchant makes network call
-            return@withContext makeDetailsCall(details)
+            val result = makePaymentsCall(paymentComponentData)
+            sendResult(result)
         }
-        sendResult(result)
+    }
+
+    internal fun requestDetailsCall(actionComponentData: JSONObject) {
+        Logger.d(TAG, "requestDetailsCall")
+        onDetailsCallRequested(actionComponentData)
+    }
+
+    protected open fun onDetailsCallRequested(actionComponentData: JSONObject) {
+        launch(Dispatchers.IO) {
+            // Merchant makes network call
+            val result = makeDetailsCall(actionComponentData)
+            sendResult(result)
+        }
     }
 
     protected fun sendResult(result: DropInServiceResult) {
@@ -123,7 +131,9 @@ abstract class DropInService : Service(), CoroutineScope {
      * @param paymentComponentData The result data from the [PaymentComponent] the compose your call.
      * @return The result of the network call
      */
-    abstract fun makePaymentsCall(paymentComponentData: JSONObject): DropInServiceResult
+    open fun makePaymentsCall(paymentComponentData: JSONObject): DropInServiceResult {
+        throw NotImplementedError("Neither makePaymentsCall nor onPaymentsCallRequested is implemented")
+    }
 
     /**
      * In this method you should make the network call to tell your server to make a call to the payments/details/ endpoint.
@@ -143,7 +153,9 @@ abstract class DropInService : Service(), CoroutineScope {
      * @param actionComponentData The result data from the [ActionComponent] the compose your call.
      * @return The result of the network call
      */
-    abstract fun makeDetailsCall(actionComponentData: JSONObject): DropInServiceResult
+    open fun makeDetailsCall(actionComponentData: JSONObject): DropInServiceResult {
+        throw NotImplementedError("Neither makeDetailsCall nor onDetailsCallRequested is implemented")
+    }
 
     internal fun observeResult(owner: LifecycleOwner, observer: Observer<DropInServiceResult>) {
         this.resultLiveData.observe(owner, observer)
