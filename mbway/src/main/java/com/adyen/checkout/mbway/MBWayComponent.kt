@@ -7,8 +7,8 @@
  */
 package com.adyen.checkout.mbway
 
+import com.adyen.checkout.components.GenericComponentState
 import com.adyen.checkout.components.PaymentComponentProvider
-import com.adyen.checkout.components.PaymentComponentState
 import com.adyen.checkout.components.base.BasePaymentComponent
 import com.adyen.checkout.components.base.GenericPaymentComponentProvider
 import com.adyen.checkout.components.base.GenericPaymentMethodDelegate
@@ -33,7 +33,7 @@ private val SUPPORTED_COUNTRIES = listOf(ISO_CODE_PORTUGAL, ISO_CODE_SPAIN)
  */
 class MBWayComponent(paymentMethodDelegate: GenericPaymentMethodDelegate, configuration: MBWayConfiguration) :
     BasePaymentComponent<MBWayConfiguration, MBWayInputData, MBWayOutputData,
-        PaymentComponentState<MBWayPaymentMethod>>(paymentMethodDelegate, configuration) {
+        GenericComponentState<MBWayPaymentMethod>>(paymentMethodDelegate, configuration) {
 
     companion object {
         @JvmStatic
@@ -50,7 +50,7 @@ class MBWayComponent(paymentMethodDelegate: GenericPaymentMethodDelegate, config
         return inputData.countryCode + sanitizedNumber
     }
 
-    override fun createComponentState(): PaymentComponentState<MBWayPaymentMethod> {
+    override fun createComponentState(): GenericComponentState<MBWayPaymentMethod> {
         val paymentComponentData = PaymentComponentData<MBWayPaymentMethod>()
         val paymentMethod = MBWayPaymentMethod().apply {
             type = MBWayPaymentMethod.PAYMENT_METHOD_TYPE
@@ -61,7 +61,7 @@ class MBWayComponent(paymentMethodDelegate: GenericPaymentMethodDelegate, config
             paymentMethod.telephoneNumber = mbWayOutputData.mobilePhoneNumberField.value
         }
         paymentComponentData.paymentMethod = paymentMethod
-        return PaymentComponentState(paymentComponentData, mbWayOutputData?.isValid == true)
+        return GenericComponentState(paymentComponentData, mbWayOutputData?.isValid == true)
     }
 
     override fun getSupportedPaymentMethodTypes(): Array<String> = PAYMENT_METHOD_TYPES

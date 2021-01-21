@@ -14,8 +14,8 @@ import androidx.annotation.Nullable;
 import com.adyen.checkout.card.CardValidationUtils;
 import com.adyen.checkout.card.data.CardType;
 import com.adyen.checkout.card.data.ExpiryDate;
+import com.adyen.checkout.components.GenericComponentState;
 import com.adyen.checkout.components.PaymentComponentProvider;
-import com.adyen.checkout.components.PaymentComponentState;
 import com.adyen.checkout.components.base.BasePaymentComponent;
 import com.adyen.checkout.components.base.GenericPaymentMethodDelegate;
 import com.adyen.checkout.components.base.PaymentMethodDelegate;
@@ -31,7 +31,7 @@ import com.adyen.checkout.cse.exception.EncryptionException;
 import com.adyen.checkout.cse.UnencryptedCard;
 
 public final class BcmcComponent
-        extends BasePaymentComponent<BcmcConfiguration, BcmcInputData, BcmcOutputData, PaymentComponentState<CardPaymentMethod>> {
+        extends BasePaymentComponent<BcmcConfiguration, BcmcInputData, BcmcOutputData, GenericComponentState<CardPaymentMethod>> {
     private static final String TAG = LogUtil.getTag();
 
     private static final String[] PAYMENT_METHOD_TYPES = {PaymentMethodTypes.BCMC};
@@ -67,7 +67,7 @@ public final class BcmcComponent
 
     @NonNull
     @Override
-    protected PaymentComponentState<CardPaymentMethod> createComponentState() {
+    protected GenericComponentState<CardPaymentMethod> createComponentState() {
         Logger.v(TAG, "createComponentState");
 
         // BCMC payment method is scheme type.
@@ -80,7 +80,7 @@ public final class BcmcComponent
 
         // If data is not valid we just return empty object, encryption would fail and we don't pass unencrypted data.
         if (outputData == null || !outputData.isValid()) {
-            return new PaymentComponentState<>(paymentComponentData, false);
+            return new GenericComponentState<>(paymentComponentData, false);
         }
 
         final EncryptedCard encryptedCard;
@@ -97,7 +97,7 @@ public final class BcmcComponent
             encryptedCard = CardEncrypter.encryptFields(card.build(), getConfiguration().getPublicKey());
         } catch (EncryptionException e) {
             notifyException(e);
-            return new PaymentComponentState<>(paymentComponentData, false);
+            return new GenericComponentState<>(paymentComponentData, false);
         }
 
         cardPaymentMethod.setEncryptedCardNumber(encryptedCard.getEncryptedCardNumber());
@@ -106,7 +106,7 @@ public final class BcmcComponent
 
         paymentComponentData.setPaymentMethod(cardPaymentMethod);
 
-        return new PaymentComponentState<>(paymentComponentData, outputData.isValid());
+        return new GenericComponentState<>(paymentComponentData, outputData.isValid());
     }
 
     protected boolean isCardNumberSupported(@Nullable String cardNumber) {

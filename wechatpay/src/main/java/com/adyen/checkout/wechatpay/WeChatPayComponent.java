@@ -10,8 +10,8 @@ package com.adyen.checkout.wechatpay;
 
 import androidx.annotation.NonNull;
 
+import com.adyen.checkout.components.GenericComponentState;
 import com.adyen.checkout.components.PaymentComponentProvider;
-import com.adyen.checkout.components.PaymentComponentState;
 import com.adyen.checkout.components.base.BasePaymentComponent;
 import com.adyen.checkout.components.base.EmptyInputData;
 import com.adyen.checkout.components.base.EmptyOutputData;
@@ -22,7 +22,7 @@ import com.adyen.checkout.components.model.payments.request.PaymentComponentData
 import com.adyen.checkout.components.util.PaymentMethodTypes;
 
 public class WeChatPayComponent
-        extends BasePaymentComponent<WeChatPayConfiguration, EmptyInputData, EmptyOutputData, PaymentComponentState<GenericPaymentMethod>> {
+        extends BasePaymentComponent<WeChatPayConfiguration, EmptyInputData, EmptyOutputData, GenericComponentState<GenericPaymentMethod>> {
 
     public static final PaymentComponentProvider<WeChatPayComponent, WeChatPayConfiguration> PROVIDER = new WeChatPayProvider();
 
@@ -47,12 +47,12 @@ public class WeChatPayComponent
 
     @NonNull
     @Override
-    protected PaymentComponentState<GenericPaymentMethod> createComponentState() {
+    protected GenericComponentState<GenericPaymentMethod> createComponentState() {
         final GenericPaymentMethod paymentMethodDetails = new GenericPaymentMethod(PaymentMethodTypes.WECHAT_PAY_SDK);
         final PaymentComponentData<GenericPaymentMethod> componentData = new PaymentComponentData<>();
         componentData.setPaymentMethod(paymentMethodDetails);
 
-        return new PaymentComponentState<>(componentData, true);
+        return new GenericComponentState<>(componentData, true);
     }
 
     @NonNull

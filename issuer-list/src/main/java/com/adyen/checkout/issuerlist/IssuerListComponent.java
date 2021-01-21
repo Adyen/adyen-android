@@ -12,7 +12,7 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.lifecycle.MutableLiveData;
 
-import com.adyen.checkout.components.PaymentComponentState;
+import com.adyen.checkout.components.GenericComponentState;
 import com.adyen.checkout.components.base.BasePaymentComponent;
 import com.adyen.checkout.components.base.GenericPaymentMethodDelegate;
 import com.adyen.checkout.components.model.paymentmethods.InputDetail;
@@ -30,7 +30,7 @@ public abstract class IssuerListComponent<IssuerListPaymentMethodT extends Issue
         IssuerListConfiguration,
         IssuerListInputData,
         IssuerListOutputData,
-        PaymentComponentState<IssuerListPaymentMethodT>
+        GenericComponentState<IssuerListPaymentMethodT>
         > {
 
     private final MutableLiveData<List<IssuerModel>> mIssuersLiveData = new MutableLiveData<>();
@@ -89,7 +89,7 @@ public abstract class IssuerListComponent<IssuerListPaymentMethodT extends Issue
 
     @NonNull
     @Override
-    protected PaymentComponentState<IssuerListPaymentMethodT> createComponentState() {
+    protected GenericComponentState<IssuerListPaymentMethodT> createComponentState() {
         final IssuerListPaymentMethodT issuerListPaymentMethod = instantiateTypedPaymentMethod();
 
         final IssuerModel selectedIssuer = getOutputData() != null ? getOutputData().getSelectedIssuer() : null;
@@ -102,7 +102,7 @@ public abstract class IssuerListComponent<IssuerListPaymentMethodT extends Issue
         final PaymentComponentData<IssuerListPaymentMethodT> paymentComponentData = new PaymentComponentData<>();
         paymentComponentData.setPaymentMethod(issuerListPaymentMethod);
 
-        return new PaymentComponentState<>(paymentComponentData, isValid);
+        return new GenericComponentState<>(paymentComponentData, isValid);
     }
 
     @NonNull

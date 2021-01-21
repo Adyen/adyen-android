@@ -16,7 +16,7 @@ import com.adyen.checkout.components.model.payments.request.PaymentMethodDetails
 /**
  * The current state of a PaymentComponent.
  */
-public class PaymentComponentState<PaymentMethodDetailsT extends PaymentMethodDetails> {
+public abstract class PaymentComponentState<PaymentMethodDetailsT extends PaymentMethodDetails> {
 
     private final PaymentComponentData<PaymentMethodDetailsT> mPaymentComponentData;
     private final boolean mIsValid;

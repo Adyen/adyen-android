@@ -17,7 +17,7 @@ import android.widget.AdapterView
 import android.widget.AutoCompleteTextView
 import androidx.lifecycle.LifecycleOwner
 import androidx.lifecycle.Observer
-import com.adyen.checkout.components.PaymentComponentState
+import com.adyen.checkout.components.GenericComponentState
 import com.adyen.checkout.components.model.payments.request.MBWayPaymentMethod
 import com.adyen.checkout.components.ui.view.AdyenLinearLayout
 import com.adyen.checkout.components.ui.view.AdyenTextInputEditText
@@ -35,7 +35,7 @@ private val TAG = LogUtil.getTag()
 
 @Suppress("TooManyFunctions")
 class MBWayView :
-    AdyenLinearLayout<MBWayOutputData, MBWayConfiguration, PaymentComponentState<MBWayPaymentMethod>, MBWayComponent>,
+    AdyenLinearLayout<MBWayOutputData, MBWayConfiguration, GenericComponentState<MBWayPaymentMethod>, MBWayComponent>,
     Observer<MBWayOutputData>,
     AdapterView.OnItemClickListener {
 
