@@ -19,7 +19,6 @@ import com.adyen.checkout.components.PaymentComponentState
 import com.adyen.checkout.components.api.ImageLoader
 import com.adyen.checkout.components.base.Configuration
 import com.adyen.checkout.components.model.paymentmethods.StoredPaymentMethod
-import com.adyen.checkout.components.model.payments.request.PaymentComponentData
 import com.adyen.checkout.components.model.payments.request.PaymentMethodDetails
 import com.adyen.checkout.components.util.CurrencyUtils
 import com.adyen.checkout.components.util.DateUtils
@@ -46,7 +45,7 @@ class PreselectedStoredPaymentMethodFragment : DropInBottomSheetDialogFragment()
     private lateinit var storedPaymentMethod: StoredPaymentMethod
     private lateinit var imageLoader: ImageLoader
     private lateinit var component: PaymentComponent<PaymentComponentState<in PaymentMethodDetails>, Configuration>
-    private lateinit var componentData: PaymentComponentData<PaymentMethodDetails>
+    private lateinit var componentState: PaymentComponentState<PaymentMethodDetails>
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -67,7 +66,7 @@ class PreselectedStoredPaymentMethodFragment : DropInBottomSheetDialogFragment()
         if (!component.requiresInput()) {
             component.observe(this) {
                 if (it.isValid) {
-                    componentData = it.data
+                    componentState = it
                 } else {
                     Logger.e(TAG, "Component state is not valid")
                 }
@@ -102,8 +101,8 @@ class PreselectedStoredPaymentMethodFragment : DropInBottomSheetDialogFragment()
             if (component.requiresInput()) {
                 protocol.showStoredComponentDialog(storedPaymentMethod, true)
             } else {
-                if (this::componentData.isInitialized) {
-                    protocol.requestPaymentsCall(componentData)
+                if (this::componentState.isInitialized) {
+                    protocol.requestPaymentsCall(componentState)
                 } else {
                     Logger.e(TAG, "Component data is not initialized.")
                 }

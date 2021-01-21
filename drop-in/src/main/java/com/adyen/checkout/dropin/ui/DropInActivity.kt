@@ -22,12 +22,12 @@ import androidx.fragment.app.DialogFragment
 import androidx.lifecycle.Observer
 import com.adyen.checkout.components.ActionComponentData
 import com.adyen.checkout.components.ComponentError
+import com.adyen.checkout.components.PaymentComponentState
 import com.adyen.checkout.components.analytics.AnalyticEvent
 import com.adyen.checkout.components.analytics.AnalyticsDispatcher
 import com.adyen.checkout.components.model.PaymentMethodsApiResponse
 import com.adyen.checkout.components.model.paymentmethods.PaymentMethod
 import com.adyen.checkout.components.model.paymentmethods.StoredPaymentMethod
-import com.adyen.checkout.components.model.payments.request.PaymentComponentData
 import com.adyen.checkout.components.model.payments.response.Action
 import com.adyen.checkout.components.util.PaymentMethodTypes
 import com.adyen.checkout.core.log.LogUtil
@@ -85,7 +85,7 @@ class DropInActivity : AppCompatActivity(), DropInBottomSheetDialogFragment.Prot
 
     private val googlePayObserver: Observer<GooglePayComponentState> = Observer {
         if (it!!.isValid) {
-            requestPaymentsCall(it.data)
+            requestPaymentsCall(it)
         }
     }
 
@@ -231,14 +231,14 @@ class DropInActivity : AppCompatActivity(), DropInBottomSheetDialogFragment.Prot
         }
     }
 
-    override fun requestPaymentsCall(paymentComponentData: PaymentComponentData<*>) {
+    override fun requestPaymentsCall(paymentComponentState: PaymentComponentState<*>) {
         isWaitingResult = true
         setLoading(true)
         // include amount value if merchant passed it to the DropIn
         if (!dropInViewModel.dropInConfiguration.amount.isEmpty) {
-            paymentComponentData.amount = dropInViewModel.dropInConfiguration.amount
+            paymentComponentState.data.amount = dropInViewModel.dropInConfiguration.amount
         }
-        dropInService.requestPaymentsCall(paymentComponentData)
+        dropInService.requestPaymentsCall(paymentComponentState)
     }
 
     override fun requestDetailsCall(actionComponentData: ActionComponentData) {

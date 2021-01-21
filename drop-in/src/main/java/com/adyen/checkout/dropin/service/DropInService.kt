@@ -18,6 +18,7 @@ import android.os.IBinder
 import androidx.lifecycle.LifecycleOwner
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.Observer
+import com.adyen.checkout.components.PaymentComponentState
 import com.adyen.checkout.components.model.payments.request.PaymentComponentData
 import com.adyen.checkout.core.log.LogUtil
 import com.adyen.checkout.core.log.Logger
@@ -73,16 +74,17 @@ abstract class DropInService : Service(), CoroutineScope {
         super.onDestroy()
     }
 
-    internal fun requestPaymentsCall(paymentComponentData: PaymentComponentData<*>) {
+    internal fun requestPaymentsCall(paymentComponentState: PaymentComponentState<*>) {
         Logger.d(TAG, "requestPaymentsCall")
-        val json = PaymentComponentData.SERIALIZER.serialize(paymentComponentData)
-        onPaymentsCallRequested(json)
+        val json = PaymentComponentData.SERIALIZER.serialize(paymentComponentState.data)
+        onPaymentsCallRequested(paymentComponentState, json)
     }
 
-    protected open fun onPaymentsCallRequested(paymentComponentData: JSONObject) {
+    protected open fun onPaymentsCallRequested(paymentComponentState: PaymentComponentState<*>,
+                                               paymentComponentJson: JSONObject) {
         launch(Dispatchers.IO) {
             // Merchant makes network call
-            val result = makePaymentsCall(paymentComponentData)
+            val result = makePaymentsCall(paymentComponentState, paymentComponentJson)
             sendResult(result)
         }
     }
@@ -128,10 +130,11 @@ abstract class DropInService : Service(), CoroutineScope {
      *
      * See https://docs.adyen.com/api-explorer/ for more information on the API documentation.
      *
-     * @param paymentComponentData The result data from the [PaymentComponent] the compose your call.
+     * @param paymentComponentJson The result data from the [PaymentComponent] the compose your call.
      * @return The result of the network call
      */
-    open fun makePaymentsCall(paymentComponentData: JSONObject): DropInServiceResult {
+    open fun makePaymentsCall(paymentComponentState: PaymentComponentState<*>,
+                              paymentComponentJson: JSONObject): DropInServiceResult {
         throw NotImplementedError("Neither makePaymentsCall nor onPaymentsCallRequested is implemented")
     }
 
@@ -150,10 +153,10 @@ abstract class DropInService : Service(), CoroutineScope {
      *
      * See https://docs.adyen.com/api-explorer/ for more information on the API documentation.
      *
-     * @param actionComponentData The result data from the [ActionComponent] the compose your call.
+     * @param actionComponentJson The result data from the [ActionComponent] the compose your call.
      * @return The result of the network call
      */
-    open fun makeDetailsCall(actionComponentData: JSONObject): DropInServiceResult {
+    open fun makeDetailsCall(actionComponentJson: JSONObject): DropInServiceResult {
         throw NotImplementedError("Neither makeDetailsCall nor onDetailsCallRequested is implemented")
     }
 

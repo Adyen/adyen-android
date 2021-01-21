@@ -8,6 +8,7 @@
 
 package com.adyen.checkout.example.service
 
+import com.adyen.checkout.components.PaymentComponentState
 import com.adyen.checkout.core.log.LogUtil
 import com.adyen.checkout.core.log.Logger
 import com.adyen.checkout.core.model.JsonUtils
@@ -40,13 +41,13 @@ class ExampleAsyncDropInService : DropInService() {
     private val paymentsRepository: PaymentsRepository by inject()
     private val keyValueStorage: KeyValueStorage by inject()
 
-    override fun onPaymentsCallRequested(paymentComponentData: JSONObject) {
+    override fun onPaymentsCallRequested(paymentComponentState: PaymentComponentState<*>, paymentComponentJson: JSONObject) {
         launch(Dispatchers.IO) {
             Logger.d(TAG, "onPaymentsCallRequested")
 
             // Check out the documentation of this method on the parent DropInService class
             val paymentRequest = createPaymentRequest(
-                paymentComponentData,
+                paymentComponentJson,
                 keyValueStorage.getShopperReference(),
                 keyValueStorage.getAmount(),
                 keyValueStorage.getCountry(),
@@ -58,7 +59,7 @@ class ExampleAsyncDropInService : DropInService() {
                 )
             )
 
-            Logger.v(TAG, "paymentComponentData - ${JsonUtils.indent(paymentComponentData)}")
+            Logger.v(TAG, "paymentComponentData - ${JsonUtils.indent(paymentComponentJson)}")
 
             val requestBody = paymentRequest.toString().toRequestBody(CONTENT_TYPE)
             val response = paymentsRepository.paymentsRequestAsync(requestBody)
