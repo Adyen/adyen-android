@@ -18,6 +18,7 @@ import androidx.lifecycle.LifecycleOwner;
 import androidx.lifecycle.LifecycleRegistry;
 
 import com.adyen.checkout.components.DataProvider;
+import com.adyen.checkout.components.GenericComponentState;
 import com.adyen.checkout.components.PaymentComponentState;
 import com.adyen.checkout.components.model.paymentmethods.PaymentMethod;
 import com.adyen.checkout.components.model.payments.request.PaymentComponentData;
@@ -119,7 +120,7 @@ public class BaseComponentTest {
             protected PaymentComponentState<TestPaymentMethod> createComponentState() {
                 final PaymentComponentData<TestPaymentMethod> paymentComponentData = new PaymentComponentData<>();
                 paymentComponentData.setPaymentMethod(new TestPaymentMethod());
-                return new PaymentComponentState<>(paymentComponentData, true);
+                return new GenericComponentState<>(paymentComponentData, true);
             }
 
             @NonNull

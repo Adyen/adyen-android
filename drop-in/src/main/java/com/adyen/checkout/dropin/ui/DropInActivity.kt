@@ -84,7 +84,7 @@ class DropInActivity : AppCompatActivity(), DropInBottomSheetDialogFragment.Prot
     private val loadingDialog = LoadingDialogFragment.newInstance()
 
     private val googlePayObserver: Observer<GooglePayComponentState> = Observer {
-        if (it!!.isValid) {
+        if (it?.isValid == true) {
             requestPaymentsCall(it)
         }
     }

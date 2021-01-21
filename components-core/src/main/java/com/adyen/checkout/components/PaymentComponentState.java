@@ -16,6 +16,7 @@ import com.adyen.checkout.components.model.payments.request.PaymentMethodDetails
 /**
  * The current state of a PaymentComponent.
  */
+@SuppressWarnings("PMD.AbstractClassWithoutAbstractMethod")
 public abstract class PaymentComponentState<PaymentMethodDetailsT extends PaymentMethodDetails> {
 
     private final PaymentComponentData<PaymentMethodDetailsT> mPaymentComponentData;

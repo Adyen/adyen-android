@@ -40,9 +40,10 @@ private val TAG = LogUtil.getTag()
  * The result [DropInServiceResult] is the result of the network call and can mean different things.
  * Check the subclasses of [DropInServiceResult] for more information.
  */
+@Suppress("TooManyFunctions")
 abstract class DropInService : Service(), CoroutineScope {
 
-    private var coroutineJob: Job = Job()
+    private val coroutineJob: Job = Job()
     override val coroutineContext: CoroutineContext get() = Dispatchers.Main + coroutineJob
 
     private val binder = DropInBinder()
@@ -80,8 +81,10 @@ abstract class DropInService : Service(), CoroutineScope {
         onPaymentsCallRequested(paymentComponentState, json)
     }
 
-    protected open fun onPaymentsCallRequested(paymentComponentState: PaymentComponentState<*>,
-                                               paymentComponentJson: JSONObject) {
+    protected open fun onPaymentsCallRequested(
+        paymentComponentState: PaymentComponentState<*>,
+        paymentComponentJson: JSONObject
+    ) {
         launch(Dispatchers.IO) {
             // Merchant makes network call
             val result = makePaymentsCall(paymentComponentState, paymentComponentJson)
@@ -133,8 +136,10 @@ abstract class DropInService : Service(), CoroutineScope {
      * @param paymentComponentJson The result data from the [PaymentComponent] the compose your call.
      * @return The result of the network call
      */
-    open fun makePaymentsCall(paymentComponentState: PaymentComponentState<*>,
-                              paymentComponentJson: JSONObject): DropInServiceResult {
+    open fun makePaymentsCall(
+        paymentComponentState: PaymentComponentState<*>,
+        paymentComponentJson: JSONObject
+    ): DropInServiceResult {
         throw NotImplementedError("Neither makePaymentsCall nor onPaymentsCallRequested is implemented")
     }
 
