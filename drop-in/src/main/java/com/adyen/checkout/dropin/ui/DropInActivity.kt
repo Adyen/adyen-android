@@ -94,22 +94,21 @@ class DropInActivity : AppCompatActivity(), DropInBottomSheetDialogFragment.Prot
         showPaymentMethodsDialog()
     }
 
-    private lateinit var dropInService: DropInService
+    private var dropInService: DropInService? = null
     private var serviceBound: Boolean = false
 
     private val serviceConnection = object : ServiceConnection {
 
-        override fun onServiceConnected(className: ComponentName, service: IBinder) {
+        override fun onServiceConnected(className: ComponentName, binder: IBinder) {
             Logger.d(TAG, "onServiceConnected")
-            val binder = service as DropInService.DropInBinder
-            dropInService = binder.getService()
-            dropInService.observeResult(this@DropInActivity) { handleDropInServiceResult(it) }
-            serviceBound = true
+            val dropInBinder = binder as? DropInService.DropInBinder ?: return
+            dropInService = dropInBinder.getService()
+            dropInService?.observeResult(this@DropInActivity) { handleDropInServiceResult(it) }
         }
 
         override fun onServiceDisconnected(className: ComponentName) {
             Logger.d(TAG, "onServiceDisconnected")
-            serviceBound = false
+            dropInService = null
         }
     }
 
@@ -216,7 +215,12 @@ class DropInActivity : AppCompatActivity(), DropInBottomSheetDialogFragment.Prot
 
     override fun onStart() {
         super.onStart()
-        DropInService.bindService(this, serviceConnection, dropInViewModel.dropInConfiguration.serviceComponentName)
+        bindService()
+    }
+
+    private fun bindService() {
+        val bound = DropInService.bindService(this, serviceConnection, dropInViewModel.dropInConfiguration.serviceComponentName)
+        if (bound) serviceBound = true
     }
 
     override fun onStop() {
@@ -232,19 +236,21 @@ class DropInActivity : AppCompatActivity(), DropInBottomSheetDialogFragment.Prot
     }
 
     override fun requestPaymentsCall(paymentComponentState: PaymentComponentState<*>) {
+        if (dropInService == null) return
         isWaitingResult = true
         setLoading(true)
         // include amount value if merchant passed it to the DropIn
         if (!dropInViewModel.dropInConfiguration.amount.isEmpty) {
             paymentComponentState.data.amount = dropInViewModel.dropInConfiguration.amount
         }
-        dropInService.requestPaymentsCall(paymentComponentState)
+        dropInService?.requestPaymentsCall(paymentComponentState)
     }
 
     override fun requestDetailsCall(actionComponentData: ActionComponentData) {
+        if (dropInService == null) return
         isWaitingResult = true
         setLoading(true)
-        dropInService.requestDetailsCall(ActionComponentData.SERIALIZER.serialize(actionComponentData))
+        dropInService?.requestDetailsCall(ActionComponentData.SERIALIZER.serialize(actionComponentData))
     }
 
     override fun showError(errorMessage: String, terminate: Boolean) {

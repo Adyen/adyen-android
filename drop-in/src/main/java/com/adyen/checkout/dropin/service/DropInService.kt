@@ -174,12 +174,14 @@ abstract class DropInService : Service(), CoroutineScope {
     }
 
     companion object {
-        internal fun bindService(context: Context, connection: ServiceConnection, merchantService: ComponentName) {
+        internal fun bindService(
+            context: Context,
+            connection: ServiceConnection,
+            merchantService: ComponentName
+        ): Boolean {
             Logger.d(TAG, "bindService - ${context::class.simpleName}")
-            Intent().also { intent ->
-                intent.component = merchantService
-                context.bindService(intent, connection, Context.BIND_AUTO_CREATE)
-            }
+            val intent = Intent().apply { component = merchantService }
+            return context.bindService(intent, connection, Context.BIND_AUTO_CREATE)
         }
 
         internal fun unbindService(context: Context, connection: ServiceConnection) {
