@@ -13,6 +13,10 @@
 [//]: <> (Add changes that not released yet into `Unreleased` section)
 [//]: <> (Comment `Unreleased` section if there are no changes)
 [//]: <> (## [Unreleased])
+## [3.8.1] - 2021-01-26
+### Fixed
+- Uncaught Exception failing silently when initializing 3DS2 Component.
+
 ## [3.8.0] - 2020-12-15
 ### Added
 - Blik Component
