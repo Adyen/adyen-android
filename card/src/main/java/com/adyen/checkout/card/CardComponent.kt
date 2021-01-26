@@ -116,7 +116,7 @@ class CardComponent private constructor(
 
     private fun fetchCardType(cardNumber: String) {
         viewModelScope.launch {
-            val deferredEncryption = viewModelScope.async(Dispatchers.Default) {
+            val deferredEncryption = async(Dispatchers.Default) {
                 CardEncrypter.encryptBin(cardNumber, publicKey)
             }
             try {
@@ -138,7 +138,7 @@ class CardComponent private constructor(
         Logger.d(TAG, "cardBrandReceived")
         val brands = binLookupResponse.brands
         when {
-            brands == null || brands.isEmpty() -> {
+            brands.isNullOrEmpty() -> {
                 Logger.d(TAG, "Card brand not found.")
                 // TODO: 19/01/2021 Keep regexes prediction and don't apply business rules
             }
@@ -147,8 +147,8 @@ class CardComponent private constructor(
                 // TODO: 19/01/2021 use first brand
             }
             else -> {
-                Logger.d(TAG, "Card brand: ${brands[0].brand}")
-                val cardType = CardType.getByBrandName(brands[0].brand ?: "")
+                Logger.d(TAG, "Card brand: ${brands.first().brand}")
+                val cardType = CardType.getByBrandName(brands.first().brand.orEmpty())
                 Logger.d(TAG, "CardType: ${cardType?.name}")
                 // TODO: 19/01/2021 trigger brand specific business logic
             }
@@ -156,11 +156,7 @@ class CardComponent private constructor(
     }
 
     private fun getCardTypes(): List<String> {
-        val txList = ArrayList<String>()
-        for (cardType in configuration.supportedCardTypes) {
-            txList.add(cardType.txVariant)
-        }
-        return txList
+        return configuration.supportedCardTypes.map { it.txVariant }
     }
 
     @Suppress("ReturnCount")
