@@ -137,9 +137,7 @@ public final class ModelUtils {
 
             return (ModelObject.Serializer<?>) field.get(null);
 
-        } catch (NoSuchFieldException e) {
-            throw new BadModelException(modelClass, e);
-        } catch (IllegalAccessException e) {
+        } catch (NoSuchFieldException | IllegalAccessException e) {
             throw new BadModelException(modelClass, e);
         }
     }
