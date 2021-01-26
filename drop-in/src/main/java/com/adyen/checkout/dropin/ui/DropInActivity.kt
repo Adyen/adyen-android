@@ -250,7 +250,7 @@ class DropInActivity : AppCompatActivity(), DropInBottomSheetDialogFragment.Prot
         if (dropInService == null) return
         isWaitingResult = true
         setLoading(true)
-        dropInService?.requestDetailsCall(ActionComponentData.SERIALIZER.serialize(actionComponentData))
+        dropInService?.requestDetailsCall(actionComponentData)
     }
 
     override fun showError(errorMessage: String, terminate: Boolean) {

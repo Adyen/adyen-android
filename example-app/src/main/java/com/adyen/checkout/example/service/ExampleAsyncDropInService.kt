@@ -8,6 +8,8 @@
 
 package com.adyen.checkout.example.service
 
+import com.adyen.checkout.card.CardComponentState
+import com.adyen.checkout.components.ActionComponentData
 import com.adyen.checkout.components.PaymentComponentState
 import com.adyen.checkout.core.log.LogUtil
 import com.adyen.checkout.core.log.Logger
@@ -45,6 +47,8 @@ class ExampleAsyncDropInService : DropInService() {
         launch(Dispatchers.IO) {
             Logger.d(TAG, "onPaymentsCallRequested")
 
+            checkPaymentState(paymentComponentState)
+
             // Check out the documentation of this method on the parent DropInService class
             val paymentRequest = createPaymentRequest(
                 paymentComponentJson,
@@ -59,7 +63,7 @@ class ExampleAsyncDropInService : DropInService() {
                 )
             )
 
-            Logger.v(TAG, "paymentComponentData - ${JsonUtils.indent(paymentComponentJson)}")
+            Logger.v(TAG, "paymentComponentJson - ${JsonUtils.indent(paymentComponentJson)}")
 
             val requestBody = paymentRequest.toString().toRequestBody(CONTENT_TYPE)
             val response = paymentsRepository.paymentsRequestAsync(requestBody)
@@ -69,13 +73,22 @@ class ExampleAsyncDropInService : DropInService() {
         }
     }
 
-    override fun onDetailsCallRequested(actionComponentData: JSONObject) {
+    /**
+     * This is an example on how to handle the PaymentComponentState
+     */
+    private fun checkPaymentState(paymentComponentState: PaymentComponentState<*>) {
+        if (paymentComponentState is CardComponentState) {
+            // a card payment is being made, handle accordingly
+        }
+    }
+
+    override fun onDetailsCallRequested(actionComponentData: ActionComponentData, actionComponentJson: JSONObject) {
         launch(Dispatchers.IO) {
             Logger.d(TAG, "onDetailsCallRequested")
 
-            Logger.v(TAG, "payments/details/ - ${JsonUtils.indent(actionComponentData)}")
+            Logger.v(TAG, "payments/details/ - ${JsonUtils.indent(actionComponentJson)}")
 
-            val requestBody = actionComponentData.toString().toRequestBody(CONTENT_TYPE)
+            val requestBody = actionComponentJson.toString().toRequestBody(CONTENT_TYPE)
             val response = paymentsRepository.detailsRequestAsync(requestBody)
 
             val result = handleResponse(response)

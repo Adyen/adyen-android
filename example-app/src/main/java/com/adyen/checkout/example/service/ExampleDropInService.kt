@@ -8,7 +8,6 @@
 
 package com.adyen.checkout.example.service
 
-import com.adyen.checkout.components.PaymentComponentState
 import com.adyen.checkout.core.log.LogUtil
 import com.adyen.checkout.core.log.Logger
 import com.adyen.checkout.core.model.JsonUtils
@@ -41,7 +40,7 @@ class ExampleDropInService : DropInService() {
     private val paymentsRepository: PaymentsRepository by inject()
     private val keyValueStorage: KeyValueStorage by inject()
 
-    override fun makePaymentsCall(paymentComponentState: PaymentComponentState<*>, paymentComponentJson: JSONObject): DropInServiceResult {
+    override fun makePaymentsCall(paymentComponentJson: JSONObject): DropInServiceResult {
         Logger.d(TAG, "makePaymentsCall")
 
         // Check out the documentation of this method on the parent DropInService class
@@ -58,7 +57,7 @@ class ExampleDropInService : DropInService() {
             )
         )
 
-        Logger.v(TAG, "paymentComponentData - ${JsonUtils.indent(paymentComponentJson)}")
+        Logger.v(TAG, "paymentComponentJson - ${JsonUtils.indent(paymentComponentJson)}")
 
         val requestBody = paymentRequest.toString().toRequestBody(CONTENT_TYPE)
         val call = paymentsRepository.paymentsRequest(requestBody)
@@ -66,12 +65,12 @@ class ExampleDropInService : DropInService() {
         return handleResponse(call)
     }
 
-    override fun makeDetailsCall(actionComponentData: JSONObject): DropInServiceResult {
+    override fun makeDetailsCall(actionComponentJson: JSONObject): DropInServiceResult {
         Logger.d(TAG, "makeDetailsCall")
 
-        Logger.v(TAG, "payments/details/ - ${JsonUtils.indent(actionComponentData)}")
+        Logger.v(TAG, "payments/details/ - ${JsonUtils.indent(actionComponentJson)}")
 
-        val requestBody = actionComponentData.toString().toRequestBody(CONTENT_TYPE)
+        val requestBody = actionComponentJson.toString().toRequestBody(CONTENT_TYPE)
         val call = paymentsRepository.detailsRequest(requestBody)
 
         return handleResponse(call)

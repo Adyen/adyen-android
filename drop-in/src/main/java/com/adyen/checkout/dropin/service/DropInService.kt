@@ -18,6 +18,7 @@ import android.os.IBinder
 import androidx.lifecycle.LifecycleOwner
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.Observer
+import com.adyen.checkout.components.ActionComponentData
 import com.adyen.checkout.components.PaymentComponentState
 import com.adyen.checkout.components.model.payments.request.PaymentComponentData
 import com.adyen.checkout.core.log.LogUtil
@@ -87,20 +88,24 @@ abstract class DropInService : Service(), CoroutineScope {
     ) {
         launch(Dispatchers.IO) {
             // Merchant makes network call
-            val result = makePaymentsCall(paymentComponentState, paymentComponentJson)
+            val result = makePaymentsCall(paymentComponentJson)
             sendResult(result)
         }
     }
 
-    internal fun requestDetailsCall(actionComponentData: JSONObject) {
+    internal fun requestDetailsCall(actionComponentData: ActionComponentData) {
         Logger.d(TAG, "requestDetailsCall")
-        onDetailsCallRequested(actionComponentData)
+        val json = ActionComponentData.SERIALIZER.serialize(actionComponentData)
+        onDetailsCallRequested(actionComponentData, json)
     }
 
-    protected open fun onDetailsCallRequested(actionComponentData: JSONObject) {
+    protected open fun onDetailsCallRequested(
+        actionComponentData: ActionComponentData,
+        actionComponentJson: JSONObject
+    ) {
         launch(Dispatchers.IO) {
             // Merchant makes network call
-            val result = makeDetailsCall(actionComponentData)
+            val result = makeDetailsCall(actionComponentJson)
             sendResult(result)
         }
     }
@@ -136,10 +141,7 @@ abstract class DropInService : Service(), CoroutineScope {
      * @param paymentComponentJson The result data from the [PaymentComponent] the compose your call.
      * @return The result of the network call
      */
-    open fun makePaymentsCall(
-        paymentComponentState: PaymentComponentState<*>,
-        paymentComponentJson: JSONObject
-    ): DropInServiceResult {
+    open fun makePaymentsCall(paymentComponentJson: JSONObject): DropInServiceResult {
         throw NotImplementedError("Neither makePaymentsCall nor onPaymentsCallRequested is implemented")
     }
 
