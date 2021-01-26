@@ -195,10 +195,16 @@ public final class Adyen3DS2Component extends BaseActionComponent<Adyen3DS2Confi
         final ConfigParameters configParameters = new AdyenConfigParameters.Builder(fingerprintToken.getDirectoryServerId(),
                 fingerprintToken.getDirectoryServerPublicKey()).build();
 
-
-        ThreadManager.EXECUTOR.submit(new Runnable() {
+        ThreadManager.EXECUTOR.execute(new Runnable() {
             @Override
             public void run() {
+                Thread.currentThread().setUncaughtExceptionHandler(new Thread.UncaughtExceptionHandler() {
+                    public void uncaughtException(Thread paramThread, Throwable paramThrowable) {
+                        Logger.e(TAG, "Unexpected uncaught Exception", paramThrowable);
+                        notifyException(new CheckoutException("Unexpected 3DS2 exception.", paramThrowable));
+                    }
+                });
+
                 try {
                     Logger.d(TAG, "initialize 3DS2 SDK");
                     synchronized (Adyen3DS2Component.this) {
@@ -231,6 +237,9 @@ public final class Adyen3DS2Component extends BaseActionComponent<Adyen3DS2Confi
                         }
                     }
                 );
+
+                // setting back an empty handler since this thread might outlive the component and be reused.
+                Thread.currentThread().setUncaughtExceptionHandler(Thread.getDefaultUncaughtExceptionHandler());
             }
         });
     }
