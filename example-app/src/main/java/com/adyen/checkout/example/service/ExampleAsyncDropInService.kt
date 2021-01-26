@@ -13,7 +13,7 @@ import com.adyen.checkout.components.ActionComponentData
 import com.adyen.checkout.components.PaymentComponentState
 import com.adyen.checkout.core.log.LogUtil
 import com.adyen.checkout.core.log.Logger
-import com.adyen.checkout.core.model.JsonUtils
+import com.adyen.checkout.core.model.toStringPretty
 import com.adyen.checkout.dropin.service.DropInService
 import com.adyen.checkout.dropin.service.DropInServiceResult
 import com.adyen.checkout.example.data.api.model.paymentsRequest.AdditionalData
@@ -63,7 +63,7 @@ class ExampleAsyncDropInService : DropInService() {
                 )
             )
 
-            Logger.v(TAG, "paymentComponentJson - ${JsonUtils.indent(paymentComponentJson)}")
+            Logger.v(TAG, "paymentComponentJson - ${paymentComponentJson.toStringPretty()}")
 
             val requestBody = paymentRequest.toString().toRequestBody(CONTENT_TYPE)
             val response = paymentsRepository.paymentsRequestAsync(requestBody)
@@ -86,7 +86,7 @@ class ExampleAsyncDropInService : DropInService() {
         launch(Dispatchers.IO) {
             Logger.d(TAG, "onDetailsCallRequested")
 
-            Logger.v(TAG, "payments/details/ - ${JsonUtils.indent(actionComponentJson)}")
+            Logger.v(TAG, "payments/details/ - ${actionComponentJson.toStringPretty()}")
 
             val requestBody = actionComponentJson.toString().toRequestBody(CONTENT_TYPE)
             val response = paymentsRepository.detailsRequestAsync(requestBody)
@@ -103,7 +103,7 @@ class ExampleAsyncDropInService : DropInService() {
             if (detailsResponse.has("action")) {
                 DropInServiceResult.Action(detailsResponse.get("action").toString())
             } else {
-                Logger.d(TAG, "Final result - ${JsonUtils.indent(detailsResponse)}")
+                Logger.d(TAG, "Final result - ${detailsResponse.toStringPretty()}")
 
                 val resultCode = if (detailsResponse.has("resultCode")) {
                     detailsResponse.get("resultCode").toString()

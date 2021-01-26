@@ -21,8 +21,6 @@ import org.json.JSONObject;
 
 import java.io.IOException;
 import java.nio.charset.Charset;
-import java.util.HashMap;
-import java.util.Map;
 
 class StatusConnection extends Connection<StatusResponse> {
     private static final String TAG = LogUtil.getTag();
@@ -37,10 +35,8 @@ class StatusConnection extends Connection<StatusResponse> {
     @Override
     public StatusResponse call() throws IOException, JSONException {
         Logger.v(TAG, "call - " + getUrl());
-        final Map<String, String> headers = new HashMap<>();
-        headers.put(Connection.CONTENT_TYPE_HEADER, Connection.APP_JSON_CONTENT_TYPE);
         final byte[] body = StatusRequest.SERIALIZER.serialize(mStatusRequest).toString().getBytes(Charset.defaultCharset());
-        final byte[] bytes = post(headers, body);
+        final byte[] bytes = post(CONTENT_TYPE_JSON_HEADER, body);
         final String result = new String(bytes, Charset.defaultCharset());
         final JSONObject jsonObject = new JSONObject(result);
         return StatusResponse.SERIALIZER.deserialize(jsonObject);
