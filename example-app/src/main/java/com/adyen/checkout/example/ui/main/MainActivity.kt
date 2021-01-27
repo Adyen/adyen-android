@@ -126,12 +126,18 @@ class MainActivity : AppCompatActivity() {
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         super.onActivityResult(requestCode, resultCode, data)
-        if (requestCode == DropIn.DROP_IN_REQUEST_CODE && resultCode == Activity.RESULT_CANCELED) {
-            Logger.d(TAG, "DropIn CANCELED")
-            if (data?.hasExtra(DropIn.RESULT_ERROR_REASON) == true) {
-                Toast.makeText(this, data.getStringExtra(DropIn.RESULT_ERROR_REASON), Toast.LENGTH_SHORT).show()
+        if (requestCode == DropIn.DROP_IN_REQUEST_CODE)
+            if (resultCode == Activity.RESULT_CANCELED) {
+                Logger.d(TAG, "DropIn CANCELED")
+                if (data?.hasExtra(DropIn.RESULT_ERROR_REASON) == true) {
+                    Toast.makeText(this, data.getStringExtra(DropIn.RESULT_ERROR_REASON), Toast.LENGTH_SHORT).show()
+                }
+            } else if (resultCode == Activity.RESULT_OK) {
+                Logger.d(TAG, "DropIn COMPLETED")
+                if (data?.hasExtra(DropIn.RESULT_KEY) == true) {
+                    Toast.makeText(this, data.getStringExtra(DropIn.RESULT_KEY), Toast.LENGTH_SHORT).show()
+                }
             }
-        }
     }
 
     private fun startDropIn(paymentMethodsApiResponse: PaymentMethodsApiResponse) {

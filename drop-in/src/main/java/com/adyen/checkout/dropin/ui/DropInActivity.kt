@@ -398,15 +398,22 @@ class DropInActivity : AppCompatActivity(), DropInBottomSheetDialogFragment.Prot
     }
 
     private fun sendResult(content: String) {
-        dropInViewModel.dropInConfiguration.resultHandlerIntent.putExtra(DropIn.RESULT_KEY, content).let { intent ->
-            startActivity(intent)
-            terminateSuccessfully()
+        val resultHandlerIntent = dropInViewModel.dropInConfiguration.resultHandlerIntent
+        // Merchant requested the result to be sent back with a result intent
+        if (resultHandlerIntent != null) {
+            resultHandlerIntent.putExtra(DropIn.RESULT_KEY, content)
+            startActivity(resultHandlerIntent)
         }
+        // Merchant did not specify a result intent and should handle the result in onActivityResult
+        else {
+            val resultIntent = Intent().putExtra(DropIn.RESULT_KEY, content)
+            setResult(Activity.RESULT_OK, resultIntent)
+        }
+        terminateSuccessfully()
     }
 
     private fun terminateSuccessfully() {
         Logger.d(TAG, "terminateSuccessfully")
-        setResult(Activity.RESULT_OK)
         terminate()
     }
 

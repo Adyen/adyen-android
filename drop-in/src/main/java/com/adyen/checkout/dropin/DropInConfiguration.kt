@@ -49,7 +49,7 @@ class DropInConfiguration : Configuration, Parcelable {
 
     private val availableConfigs: HashMap<String, Configuration>
     val serviceComponentName: ComponentName
-    val resultHandlerIntent: Intent
+    val resultHandlerIntent: Intent?
     val amount: Amount
 
     companion object {
@@ -67,7 +67,7 @@ class DropInConfiguration : Configuration, Parcelable {
         clientKey: String,
         availableConfigs: HashMap<String, Configuration>,
         serviceComponentName: ComponentName,
-        resultHandlerIntent: Intent,
+        resultHandlerIntent: Intent?,
         amount: Amount
     ) : super(shopperLocale, environment, clientKey) {
         this.availableConfigs = availableConfigs
@@ -80,7 +80,7 @@ class DropInConfiguration : Configuration, Parcelable {
         @Suppress("UNCHECKED_CAST")
         availableConfigs = parcel.readHashMap(Configuration::class.java.classLoader) as HashMap<String, Configuration>
         serviceComponentName = parcel.readParcelable(ComponentName::class.java.classLoader)!!
-        resultHandlerIntent = parcel.readParcelable(Intent::class.java.classLoader)!!
+        resultHandlerIntent = parcel.readParcelable(Intent::class.java.classLoader)
         amount = Amount.CREATOR.createFromParcel(parcel)
     }
 
@@ -120,15 +120,19 @@ class DropInConfiguration : Configuration, Parcelable {
         private var environment: Environment = Environment.EUROPE
         private var clientKey: String = ""
         private var serviceComponentName: ComponentName
-        private var resultHandlerIntent: Intent
+        private var resultHandlerIntent: Intent? = null
         private var amount: Amount = Amount.EMPTY
 
         private val packageName: String
         private val serviceClassName: String
 
         /**
+         *
+         * Create a [DropInConfiguration] with a [resultHandlerIntent] which will be launched after the Drop-In is finished
+         *
          * @param context
-         * @param resultHandlerIntent The Intent used with [Activity.startActivity] that will contain the payment result extra with key [RESULT_KEY].
+         * @param resultHandlerIntent The Intent used with [Context.startActivity] that will contain
+         * the payment result extra with key [DropIn.RESULT_KEY].
          * @param serviceClass Service that extended from [DropInService] that would handle network requests.
          */
         constructor(context: Context, resultHandlerIntent: Intent, serviceClass: Class<out Any?>) {
@@ -136,6 +140,21 @@ class DropInConfiguration : Configuration, Parcelable {
             this.serviceClassName = serviceClass.name
 
             this.resultHandlerIntent = resultHandlerIntent
+            this.serviceComponentName = ComponentName(packageName, serviceClassName)
+            this.shopperLocale = LocaleUtil.getLocale(context)
+        }
+
+        /**
+         *
+         * Create a [DropInConfiguration] without a [resultHandlerIntent], the payment result should be handled in [Activity.onActivityResult]
+         *
+         * @param context
+         * @param serviceClass Service that extended from [DropInService] that would handle network requests.
+         */
+        constructor(context: Context, serviceClass: Class<out Any?>) {
+            this.packageName = context.packageName
+            this.serviceClassName = serviceClass.name
+
             this.serviceComponentName = ComponentName(packageName, serviceClassName)
             this.shopperLocale = LocaleUtil.getLocale(context)
         }
