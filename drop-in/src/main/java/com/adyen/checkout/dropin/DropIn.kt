@@ -10,6 +10,7 @@ package com.adyen.checkout.dropin
 
 import android.app.Activity
 import android.content.Context
+import androidx.fragment.app.Fragment
 import com.adyen.checkout.components.model.PaymentMethodsApiResponse
 import com.adyen.checkout.core.log.LogUtil
 import com.adyen.checkout.core.log.Logger
@@ -63,10 +64,10 @@ class DropIn private constructor() {
                 .apply()
 
             val intent = DropInActivity.createIntent(context, dropInConfiguration, paymentMethodsApiResponse)
-            if (context is Activity) {
-                context.startActivityForResult(intent, DROP_IN_REQUEST_CODE)
-            } else {
-                context.startActivity(intent)
+            when (context) {
+                is Activity -> context.startActivityForResult(intent, DROP_IN_REQUEST_CODE)
+                is Fragment -> context.startActivityForResult(intent, DROP_IN_REQUEST_CODE)
+                else -> context.startActivity(intent)
             }
         }
     }
