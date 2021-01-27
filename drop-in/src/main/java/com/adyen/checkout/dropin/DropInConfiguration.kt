@@ -8,11 +8,13 @@
 
 package com.adyen.checkout.dropin
 
+import android.app.Activity
 import android.content.ComponentName
 import android.content.Context
 import android.content.Intent
 import android.os.Parcel
 import android.os.Parcelable
+import androidx.fragment.app.Fragment
 import com.adyen.checkout.components.base.Configuration
 import com.adyen.checkout.components.model.payments.Amount
 import com.adyen.checkout.components.util.CheckoutCurrency
@@ -148,15 +150,31 @@ class DropInConfiguration : Configuration, Parcelable {
          *
          * Create a [DropInConfiguration] without a [resultHandlerIntent], the payment result should be handled in [Activity.onActivityResult]
          *
-         * @param context
+         * @param activity
          * @param serviceClass Service that extended from [DropInService] that would handle network requests.
          */
-        constructor(context: Context, serviceClass: Class<out Any?>) {
-            this.packageName = context.packageName
+        constructor(activity: Activity, serviceClass: Class<out Any?>) {
+            this.packageName = activity.packageName
             this.serviceClassName = serviceClass.name
 
             this.serviceComponentName = ComponentName(packageName, serviceClassName)
-            this.shopperLocale = LocaleUtil.getLocale(context)
+            this.shopperLocale = LocaleUtil.getLocale(activity)
+        }
+
+        /**
+         *
+         * Create a [DropInConfiguration] without a [resultHandlerIntent], the payment result should be handled in [Fragment.onActivityResult]
+         *
+         * @param fragment
+         * @param serviceClass Service that extended from [DropInService] that would handle network requests.
+         */
+        constructor(fragment: Fragment, serviceClass: Class<out Any?>) {
+            val activity = fragment.requireActivity()
+            this.packageName = activity.packageName
+            this.serviceClassName = serviceClass.name
+
+            this.serviceComponentName = ComponentName(packageName, serviceClassName)
+            this.shopperLocale = LocaleUtil.getLocale(activity)
         }
 
         /**
