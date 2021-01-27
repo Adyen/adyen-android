@@ -42,7 +42,7 @@ private val TAG = LogUtil.getTag()
  * Check the subclasses of [DropInServiceResult] for more information.
  */
 @Suppress("TooManyFunctions")
-abstract class DropInService : Service(), CoroutineScope {
+abstract class DropInService : Service(), CoroutineScope, DropInServiceInterface {
 
     private val coroutineJob: Job = Job()
     override val coroutineContext: CoroutineContext get() = Dispatchers.Main + coroutineJob
@@ -76,7 +76,7 @@ abstract class DropInService : Service(), CoroutineScope {
         super.onDestroy()
     }
 
-    internal fun requestPaymentsCall(paymentComponentState: PaymentComponentState<*>) {
+    override fun requestPaymentsCall(paymentComponentState: PaymentComponentState<*>) {
         Logger.d(TAG, "requestPaymentsCall")
         val json = PaymentComponentData.SERIALIZER.serialize(paymentComponentState.data)
         onPaymentsCallRequested(paymentComponentState, json)
@@ -93,7 +93,7 @@ abstract class DropInService : Service(), CoroutineScope {
         }
     }
 
-    internal fun requestDetailsCall(actionComponentData: ActionComponentData) {
+    override fun requestDetailsCall(actionComponentData: ActionComponentData) {
         Logger.d(TAG, "requestDetailsCall")
         val json = ActionComponentData.SERIALIZER.serialize(actionComponentData)
         onDetailsCallRequested(actionComponentData, json)
@@ -167,12 +167,12 @@ abstract class DropInService : Service(), CoroutineScope {
         throw NotImplementedError("Neither makeDetailsCall nor onDetailsCallRequested is implemented")
     }
 
-    internal fun observeResult(owner: LifecycleOwner, observer: Observer<DropInServiceResult>) {
+    override fun observeResult(owner: LifecycleOwner, observer: Observer<DropInServiceResult>) {
         this.resultLiveData.observe(owner, observer)
     }
 
-    inner class DropInBinder : Binder() {
-        fun getService(): DropInService = this@DropInService
+    internal inner class DropInBinder : Binder() {
+        fun getService(): DropInServiceInterface = this@DropInService
     }
 
     companion object {
@@ -191,4 +191,10 @@ abstract class DropInService : Service(), CoroutineScope {
             context.unbindService(connection)
         }
     }
+}
+
+internal interface DropInServiceInterface {
+    fun observeResult(owner: LifecycleOwner, observer: Observer<DropInServiceResult>)
+    fun requestPaymentsCall(paymentComponentState: PaymentComponentState<*>)
+    fun requestDetailsCall(actionComponentData: ActionComponentData)
 }

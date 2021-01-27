@@ -38,6 +38,7 @@ import com.adyen.checkout.dropin.DropIn
 import com.adyen.checkout.dropin.DropInConfiguration
 import com.adyen.checkout.dropin.R
 import com.adyen.checkout.dropin.service.DropInService
+import com.adyen.checkout.dropin.service.DropInServiceInterface
 import com.adyen.checkout.dropin.service.DropInServiceResult
 import com.adyen.checkout.dropin.ui.action.ActionComponentDialogFragment
 import com.adyen.checkout.dropin.ui.base.DropInBottomSheetDialogFragment
@@ -94,7 +95,7 @@ class DropInActivity : AppCompatActivity(), DropInBottomSheetDialogFragment.Prot
         showPaymentMethodsDialog()
     }
 
-    private var dropInService: DropInService? = null
+    private var dropInService: DropInServiceInterface? = null
     private var serviceBound: Boolean = false
 
     private val serviceConnection = object : ServiceConnection {
@@ -220,7 +221,15 @@ class DropInActivity : AppCompatActivity(), DropInBottomSheetDialogFragment.Prot
 
     private fun bindService() {
         val bound = DropInService.bindService(this, serviceConnection, dropInViewModel.dropInConfiguration.serviceComponentName)
-        if (bound) serviceBound = true
+        if (bound) {
+            serviceBound = true
+        } else {
+            Logger.e(
+                TAG,
+                "Error binding to ${dropInViewModel.dropInConfiguration.serviceComponentName.className}. " +
+                    "The system couldn't find the service or your client doesn't have permission to bind to it"
+            )
+        }
     }
 
     override fun onStop() {
@@ -236,7 +245,10 @@ class DropInActivity : AppCompatActivity(), DropInBottomSheetDialogFragment.Prot
     }
 
     override fun requestPaymentsCall(paymentComponentState: PaymentComponentState<*>) {
-        if (dropInService == null) return
+        if (dropInService == null) {
+            Logger.e(TAG, "requestPaymentsCall failed - service is disconnected")
+            return
+        }
         isWaitingResult = true
         setLoading(true)
         // include amount value if merchant passed it to the DropIn
@@ -247,7 +259,10 @@ class DropInActivity : AppCompatActivity(), DropInBottomSheetDialogFragment.Prot
     }
 
     override fun requestDetailsCall(actionComponentData: ActionComponentData) {
-        if (dropInService == null) return
+        if (dropInService == null) {
+            Logger.e(TAG, "requestPaymentsCall failed - service is disconnected")
+            return
+        }
         isWaitingResult = true
         setLoading(true)
         dropInService?.requestDetailsCall(actionComponentData)
