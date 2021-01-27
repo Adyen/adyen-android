@@ -19,7 +19,9 @@ import retrofit2.Call
 interface PaymentsRepository {
     suspend fun getPaymentMethods(paymentMethodsRequest: PaymentMethodsRequest): PaymentMethodsApiResponse?
     fun paymentsRequest(paymentsRequest: RequestBody): Call<ResponseBody>
+    suspend fun paymentsRequestAsync(paymentsRequest: RequestBody): ResponseBody?
     fun detailsRequest(paymentsRequest: RequestBody): Call<ResponseBody>
+    suspend fun detailsRequestAsync(paymentsRequest: RequestBody): ResponseBody?
 }
 
 class PaymentsRepositoryImpl(private val checkoutApiService: CheckoutApiService) : PaymentsRepository, BaseRepository() {
@@ -34,7 +36,19 @@ class PaymentsRepositoryImpl(private val checkoutApiService: CheckoutApiService)
         return checkoutApiService.payments(paymentsRequest)
     }
 
+    override suspend fun paymentsRequestAsync(paymentsRequest: RequestBody): ResponseBody? {
+        return safeApiCall(
+            call = { checkoutApiService.paymentsAsync(paymentsRequest).await() }
+        )
+    }
+
     override fun detailsRequest(paymentsRequest: RequestBody): Call<ResponseBody> {
         return checkoutApiService.details(paymentsRequest)
+    }
+
+    override suspend fun detailsRequestAsync(paymentsRequest: RequestBody): ResponseBody? {
+        return safeApiCall(
+            call = { checkoutApiService.detailsAsync(paymentsRequest).await() }
+        )
     }
 }

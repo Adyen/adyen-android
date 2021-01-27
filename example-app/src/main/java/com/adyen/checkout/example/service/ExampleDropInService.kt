@@ -40,12 +40,12 @@ class ExampleDropInService : DropInService() {
     private val paymentsRepository: PaymentsRepository by inject()
     private val keyValueStorage: KeyValueStorage by inject()
 
-    override fun makePaymentsCall(paymentComponentData: JSONObject): DropInServiceResult {
+    override fun makePaymentsCall(paymentComponentJson: JSONObject): DropInServiceResult {
         Logger.d(TAG, "makePaymentsCall")
 
         // Check out the documentation of this method on the parent DropInService class
         val paymentRequest = createPaymentRequest(
-            paymentComponentData,
+            paymentComponentJson,
             keyValueStorage.getShopperReference(),
             keyValueStorage.getAmount(),
             keyValueStorage.getCountry(),
@@ -57,7 +57,7 @@ class ExampleDropInService : DropInService() {
             )
         )
 
-        Logger.v(TAG, "paymentComponentData - ${paymentComponentData.toStringPretty()}")
+        Logger.v(TAG, "paymentComponentJson - ${paymentComponentJson.toStringPretty()}")
 
         val requestBody = paymentRequest.toString().toRequestBody(CONTENT_TYPE)
         val call = paymentsRepository.paymentsRequest(requestBody)
@@ -65,12 +65,12 @@ class ExampleDropInService : DropInService() {
         return handleResponse(call)
     }
 
-    override fun makeDetailsCall(actionComponentData: JSONObject): DropInServiceResult {
+    override fun makeDetailsCall(actionComponentJson: JSONObject): DropInServiceResult {
         Logger.d(TAG, "makeDetailsCall")
 
-        Logger.v(TAG, "payments/details/ - ${actionComponentData.toStringPretty()}")
+        Logger.v(TAG, "payments/details/ - ${actionComponentJson.toStringPretty()}")
 
-        val requestBody = actionComponentData.toString().toRequestBody(CONTENT_TYPE)
+        val requestBody = actionComponentJson.toString().toRequestBody(CONTENT_TYPE)
         val call = paymentsRepository.detailsRequest(requestBody)
 
         return handleResponse(call)

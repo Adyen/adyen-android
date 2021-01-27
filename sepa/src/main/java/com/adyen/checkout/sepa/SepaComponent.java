@@ -10,8 +10,8 @@ package com.adyen.checkout.sepa;
 
 import androidx.annotation.NonNull;
 
+import com.adyen.checkout.components.GenericComponentState;
 import com.adyen.checkout.components.PaymentComponentProvider;
-import com.adyen.checkout.components.PaymentComponentState;
 import com.adyen.checkout.components.base.BasePaymentComponent;
 import com.adyen.checkout.components.base.GenericPaymentComponentProvider;
 import com.adyen.checkout.components.base.GenericPaymentMethodDelegate;
@@ -21,7 +21,7 @@ import com.adyen.checkout.components.util.PaymentMethodTypes;
 import com.adyen.checkout.core.log.LogUtil;
 import com.adyen.checkout.core.log.Logger;
 
-public class SepaComponent extends BasePaymentComponent<SepaConfiguration, SepaInputData, SepaOutputData, PaymentComponentState<SepaPaymentMethod>> {
+public class SepaComponent extends BasePaymentComponent<SepaConfiguration, SepaInputData, SepaOutputData, GenericComponentState<SepaPaymentMethod>> {
     private static final String TAG = LogUtil.getTag();
 
     public static final PaymentComponentProvider<SepaComponent, SepaConfiguration> PROVIDER =
@@ -42,7 +42,7 @@ public class SepaComponent extends BasePaymentComponent<SepaConfiguration, SepaI
 
     @NonNull
     @Override
-    protected PaymentComponentState<SepaPaymentMethod> createComponentState() {
+    protected GenericComponentState<SepaPaymentMethod> createComponentState() {
 
         final SepaOutputData sepaOutputData = getOutputData();
 
@@ -57,7 +57,7 @@ public class SepaComponent extends BasePaymentComponent<SepaConfiguration, SepaI
 
         paymentComponentData.setPaymentMethod(paymentMethod);
 
-        return new PaymentComponentState<>(paymentComponentData, sepaOutputData != null && sepaOutputData.isValid());
+        return new GenericComponentState<>(paymentComponentData, sepaOutputData != null && sepaOutputData.isValid());
     }
 
     @NonNull

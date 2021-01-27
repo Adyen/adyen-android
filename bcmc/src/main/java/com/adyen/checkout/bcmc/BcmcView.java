@@ -24,7 +24,7 @@ import androidx.lifecycle.Observer;
 import com.adyen.checkout.card.CardValidationUtils;
 import com.adyen.checkout.card.ui.CardNumberInput;
 import com.adyen.checkout.card.ui.ExpiryDateInput;
-import com.adyen.checkout.components.PaymentComponentState;
+import com.adyen.checkout.components.GenericComponentState;
 import com.adyen.checkout.components.api.ImageLoader;
 import com.adyen.checkout.components.model.payments.request.CardPaymentMethod;
 import com.adyen.checkout.components.ui.view.AdyenLinearLayout;
@@ -36,7 +36,7 @@ import com.google.android.material.textfield.TextInputLayout;
  * CardView for {@link BcmcComponent}.
  */
 public final class BcmcView
-        extends AdyenLinearLayout<BcmcOutputData, BcmcConfiguration, PaymentComponentState<CardPaymentMethod>, BcmcComponent>
+        extends AdyenLinearLayout<BcmcOutputData, BcmcConfiguration, GenericComponentState<CardPaymentMethod>, BcmcComponent>
         implements Observer<BcmcOutputData> {
 
     private RoundCornerImageView mCardBrandLogoImageView;

@@ -32,9 +32,8 @@
             </intent-filter>
         </activity>
 
-        <service
-            android:name=".service.ExampleDropInService"
-            android:permission="android.permission.BIND_JOB_SERVICE" />
+        <service android:name=".service.ExampleDropInService" />
+        <service android:name=".service.ExampleAsyncDropInService" />
     </application>
 
 </manifest>

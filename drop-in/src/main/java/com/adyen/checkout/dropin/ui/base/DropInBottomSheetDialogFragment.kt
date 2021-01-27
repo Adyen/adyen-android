@@ -15,9 +15,9 @@ import android.view.KeyEvent
 import android.widget.FrameLayout
 import androidx.fragment.app.activityViewModels
 import com.adyen.checkout.components.ActionComponentData
+import com.adyen.checkout.components.PaymentComponentState
 import com.adyen.checkout.components.model.paymentmethods.PaymentMethod
 import com.adyen.checkout.components.model.paymentmethods.StoredPaymentMethod
-import com.adyen.checkout.components.model.payments.request.PaymentComponentData
 import com.adyen.checkout.core.log.LogUtil
 import com.adyen.checkout.core.log.Logger
 import com.adyen.checkout.dropin.R
@@ -93,7 +93,7 @@ abstract class DropInBottomSheetDialogFragment : BottomSheetDialogFragment() {
         fun showPaymentMethodsDialog()
         fun showStoredComponentDialog(storedPaymentMethod: StoredPaymentMethod, fromPreselected: Boolean)
         fun showComponentDialog(paymentMethod: PaymentMethod)
-        fun requestPaymentsCall(paymentComponentData: PaymentComponentData<*>)
+        fun requestPaymentsCall(paymentComponentState: PaymentComponentState<*>)
         fun requestDetailsCall(actionComponentData: ActionComponentData)
         fun showError(errorMessage: String, terminate: Boolean)
         fun terminateDropIn()
