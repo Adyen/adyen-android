@@ -109,7 +109,7 @@ class CardComponent private constructor(
             cardDelegate.validateExpiryDate(inputData.expiryDate),
             cardDelegate.validateSecurityCode(inputData.securityCode, firstCardType),
             cardDelegate.validateHolderName(inputData.holderName),
-            inputData.isStorePaymentEnable,
+            inputData.isStorePaymentSelected,
             cardDelegate.isCvcHidden()
         )
     }

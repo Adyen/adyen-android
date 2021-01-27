@@ -115,7 +115,7 @@ public final class CardView extends AdyenLinearLayout<CardOutputData, CardConfig
         mStorePaymentMethodSwitch.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             @Override
             public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
-                mCardInputData.setStorePayment(isChecked);
+                mCardInputData.setStorePaymentSelected(isChecked);
                 notifyInputDataChanged();
             }
         });
