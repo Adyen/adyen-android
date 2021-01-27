@@ -95,7 +95,7 @@ abstract class DropInBottomSheetDialogFragment : BottomSheetDialogFragment() {
         fun showComponentDialog(paymentMethod: PaymentMethod)
         fun requestPaymentsCall(paymentComponentState: PaymentComponentState<*>)
         fun requestDetailsCall(actionComponentData: ActionComponentData)
-        fun showError(errorMessage: String, terminate: Boolean)
+        fun showError(errorMessage: String, reason: String, terminate: Boolean)
         fun terminateDropIn()
         fun startGooglePay(paymentMethod: PaymentMethod, googlePayConfiguration: GooglePayConfiguration)
     }

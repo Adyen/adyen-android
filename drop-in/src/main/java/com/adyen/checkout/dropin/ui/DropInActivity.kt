@@ -129,7 +129,7 @@ class DropInActivity : AppCompatActivity(), DropInBottomSheetDialogFragment.Prot
 
         val initializationSuccessful = initializeBundleVariables(bundle)
         if (!initializationSuccessful) {
-            showError(getString(R.string.action_failed), true)
+            showError(getString(R.string.action_failed), "Initialization failed", true)
             return
         }
 
@@ -268,14 +268,22 @@ class DropInActivity : AppCompatActivity(), DropInBottomSheetDialogFragment.Prot
         dropInService?.requestDetailsCall(actionComponentData)
     }
 
-    override fun showError(errorMessage: String, terminate: Boolean) {
+    override fun showError(errorMessage: String, reason: String, terminate: Boolean) {
         Logger.d(TAG, "showError - message: $errorMessage")
         AlertDialog.Builder(this)
             .setTitle(R.string.error_dialog_title)
             .setMessage(errorMessage)
-            .setOnDismissListener { this@DropInActivity.shouldFinish(terminate) }
+            .setOnDismissListener { this@DropInActivity.errorDialogDismissed(reason, terminate) }
             .setPositiveButton(R.string.error_dialog_button) { dialog, _ -> dialog.dismiss() }
             .show()
+    }
+
+    private fun errorDialogDismissed(reason: String, terminateDropIn: Boolean) {
+        if (terminateDropIn) {
+            terminateWithError(reason)
+        } else {
+            setLoading(false)
+        }
     }
 
     override fun displayAction(action: Action) {
@@ -288,7 +296,7 @@ class DropInActivity : AppCompatActivity(), DropInBottomSheetDialogFragment.Prot
     }
 
     override fun onActionError(errorMessage: String) {
-        showError(getString(R.string.action_failed), true)
+        showError(getString(R.string.action_failed), errorMessage, true)
     }
 
     override fun onSaveInstanceState(outState: Bundle) {
@@ -353,9 +361,7 @@ class DropInActivity : AppCompatActivity(), DropInBottomSheetDialogFragment.Prot
 
     override fun terminateDropIn() {
         Logger.d(TAG, "terminateDropIn")
-        setResult(Activity.RESULT_CANCELED)
-        finish()
-        overridePendingTransition(0, R.anim.fade_out)
+        terminateWithError("Canceled by user")
     }
 
     override fun startGooglePay(paymentMethod: PaymentMethod, googlePayConfiguration: GooglePayConfiguration) {
@@ -373,36 +379,48 @@ class DropInActivity : AppCompatActivity(), DropInBottomSheetDialogFragment.Prot
         isWaitingResult = false
         when (dropInServiceResult) {
             is DropInServiceResult.Finished -> {
-                this.sendResult(dropInServiceResult.result)
+                sendResult(dropInServiceResult.result)
             }
             is DropInServiceResult.Action -> {
                 val action = Action.SERIALIZER.deserialize(JSONObject(dropInServiceResult.actionJSON))
-                actionHandler.handleAction(this, action, this::sendResult)
+                actionHandler.handleAction(this, action, ::sendResult)
             }
             is DropInServiceResult.Error -> {
                 Logger.d(TAG, "handleDropInServiceResult ERROR - reason: ${dropInServiceResult.reason}")
+                val reason = dropInServiceResult.reason ?: "Unspecified reason"
                 if (dropInServiceResult.errorMessage == null) {
-                    showError(getString(R.string.payment_failed), dropInServiceResult.dismissDropIn)
+                    showError(getString(R.string.payment_failed), reason, dropInServiceResult.dismissDropIn)
                 } else {
-                    showError(dropInServiceResult.errorMessage, dropInServiceResult.dismissDropIn)
+                    showError(dropInServiceResult.errorMessage, reason, dropInServiceResult.dismissDropIn)
                 }
             }
-        }
-    }
-
-    private fun shouldFinish(dismissDropIn: Boolean) {
-        if (dismissDropIn) {
-            terminateDropIn()
-        } else {
-            setLoading(false)
         }
     }
 
     private fun sendResult(content: String) {
         dropInViewModel.dropInConfiguration.resultHandlerIntent.putExtra(DropIn.RESULT_KEY, content).let { intent ->
             startActivity(intent)
-            terminateDropIn()
+            terminateSuccessfully()
         }
+    }
+
+    private fun terminateSuccessfully() {
+        Logger.d(TAG, "terminateSuccessfully")
+        setResult(Activity.RESULT_OK)
+        terminate()
+    }
+
+    private fun terminateWithError(reason: String) {
+        Logger.d(TAG, "terminateWithError")
+        val resultIntent = Intent().putExtra(DropIn.RESULT_ERROR_REASON, reason)
+        setResult(Activity.RESULT_CANCELED, resultIntent)
+        terminate()
+    }
+
+    private fun terminate() {
+        Logger.d(TAG, "terminate")
+        finish()
+        overridePendingTransition(0, R.anim.fade_out)
     }
 
     private fun handleIntent(intent: Intent) {

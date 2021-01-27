@@ -155,6 +155,6 @@ class ActionComponentDialogFragment : DropInBottomSheetDialogFragment(), Observe
 
     private fun handleError(componentError: ComponentError) {
         Logger.e(TAG, componentError.errorMessage)
-        protocol.showError(getString(R.string.action_failed), true)
+        protocol.showError(getString(R.string.action_failed), componentError.errorMessage, true)
     }
 }

@@ -128,6 +128,9 @@ class MainActivity : AppCompatActivity() {
         super.onActivityResult(requestCode, resultCode, data)
         if (requestCode == DropIn.DROP_IN_REQUEST_CODE && resultCode == Activity.RESULT_CANCELED) {
             Logger.d(TAG, "DropIn CANCELED")
+            if (data?.hasExtra(DropIn.RESULT_ERROR_REASON) == true) {
+                Toast.makeText(this, data.getStringExtra(DropIn.RESULT_ERROR_REASON), Toast.LENGTH_SHORT).show()
+            }
         }
     }
 
