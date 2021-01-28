@@ -11,7 +11,7 @@ ext {
 buildscript {
     // Build Script
     ext.android_gradle_plugin_version = '4.0.0'
-    ext.kotlin_version = '1.4.10'
+    ext.kotlin_version = '1.4.21'
     ext.detekt_gradle_plugin_version = "1.13.1"
     ext.bintray_gradle_plugin_version = "1.8.5"
     ext.spotbugs_gradle_plugin_version = "4.5.1"
