@@ -30,7 +30,7 @@ if (!hasProperty("checksums")) {
             "androidx.appcompat:appcompat:1.2.0:f867895f07fa53e100f5de03da7fa412:MD5",
             "androidx.databinding:viewbinding:4.0.0:3d374767653c1e3892d067f57a2c969e:MD5",
             "androidx.recyclerview:recyclerview:1.1.0:b34afe47d8523d52ca130267cc0776df:MD5",
-            "androidx.browser:browser:1.2.0:a14a7a87791b06a4dc46594f65e4e5f2:MD5",
+            "androidx.browser:browser:1.3.0:f4bd0b4782e1a25c4c3fae304aa982c2:MD5",
 
             // Google
             "com.google.android.material:material:1.2.1:6411dc90c9afe66ab7f7e471d9d51311:MD5",
