@@ -53,7 +53,7 @@ dependencies {
     api project(':checkout-core')
 
     // Dependencies
-    api "org.jetbrains.kotlinx:kotlinx-coroutines-core:$coroutines_version"
+    api "org.jetbrains.kotlinx:kotlinx-coroutines-android:$coroutines_version"
     api "androidx.fragment:fragment-ktx:$fragment_version"
 }
 
