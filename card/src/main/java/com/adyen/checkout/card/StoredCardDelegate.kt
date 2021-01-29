@@ -9,14 +9,15 @@
 package com.adyen.checkout.card
 
 import com.adyen.checkout.card.data.CardType
+import com.adyen.checkout.card.data.DetectedCardType
 import com.adyen.checkout.card.data.ExpiryDate
+import com.adyen.checkout.card.model.Brand
 import com.adyen.checkout.components.model.paymentmethods.StoredPaymentMethod
 import com.adyen.checkout.components.util.PaymentMethodTypes
 import com.adyen.checkout.components.validation.ValidatedField
 import com.adyen.checkout.core.log.LogUtil
 import com.adyen.checkout.core.log.Logger
-
-private val NO_CVC_BRANDS: Set<CardType> = hashSetOf(CardType.BCMC)
+import kotlinx.coroutines.CoroutineScope
 
 class StoredCardDelegate(
     private val storedPaymentMethod: StoredPaymentMethod,
@@ -37,7 +38,7 @@ class StoredCardDelegate(
     }
 
     override fun validateSecurityCode(securityCode: String, cardType: CardType?): ValidatedField<String> {
-        return if (cardConfiguration.isHideCvcStoredCard || NO_CVC_BRANDS.contains(cardType)) {
+        return if (cardConfiguration.isHideCvcStoredCard || noCvcBrands.contains(cardType)) {
             ValidatedField(securityCode, ValidatedField.Validation.VALID)
         } else {
             CardValidationUtils.validateSecurityCode(securityCode, cardType)
@@ -45,7 +46,7 @@ class StoredCardDelegate(
     }
 
     override fun isCvcHidden(): Boolean {
-        return cardConfiguration.isHideCvcStoredCard || NO_CVC_BRANDS.contains(getCardType())
+        return cardConfiguration.isHideCvcStoredCard || noCvcBrands.contains(getCardType())
     }
 
     override fun requiresInput(): Boolean {
@@ -54,6 +55,36 @@ class StoredCardDelegate(
 
     override fun isHolderNameRequired(): Boolean {
         return false
+    }
+
+    override fun detectCardType(
+        cardNumber: String,
+        publicKey: String,
+        coroutineScope: CoroutineScope
+    ): List<DetectedCardType> {
+        val cardType = getCardType()
+        return if (cardType != null) {
+            listOf(localDetectedCard(cardType))
+        } else {
+            emptyList()
+        }
+    }
+
+    override fun localDetectedCard(cardType: CardType): DetectedCardType {
+        return DetectedCardType(
+            cardType,
+            isReliable = true,
+            showExpiryDate = true,
+            enableLuhnCheck = true,
+            cvcPolicy = getCvcPolicy(cardType.txVariant)
+        )
+    }
+
+    override fun getCvcPolicy(brand: String): Brand.CvcPolicy {
+        return when {
+            cardConfiguration.isHideCvcStoredCard || noCvcBrands.contains(brand) -> Brand.CvcPolicy.HIDDEN
+            else -> Brand.CvcPolicy.REQUIRED
+        }
     }
 
     fun getStoredCardInputData(): CardInputData {

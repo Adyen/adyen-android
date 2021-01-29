@@ -10,12 +10,15 @@ package com.adyen.checkout.card
 
 import com.adyen.checkout.card.api.PublicKeyConnection
 import com.adyen.checkout.card.data.CardType
+import com.adyen.checkout.card.data.DetectedCardType
 import com.adyen.checkout.card.data.ExpiryDate
+import com.adyen.checkout.card.model.Brand
 import com.adyen.checkout.components.api.suspendedCall
 import com.adyen.checkout.components.base.PaymentMethodDelegate
 import com.adyen.checkout.components.validation.ValidatedField
 import com.adyen.checkout.core.log.LogUtil
 import com.adyen.checkout.core.log.Logger
+import kotlinx.coroutines.CoroutineScope
 import org.json.JSONException
 import java.io.IOException
 
@@ -23,6 +26,8 @@ private val TAG = LogUtil.getTag()
 private const val CONNECTION_RETRIES = 3
 
 abstract class CardDelegate(protected val cardConfiguration: CardConfiguration) : PaymentMethodDelegate {
+
+    protected val noCvcBrands: Set<CardType> = hashSetOf(CardType.BCMC)
 
     abstract fun validateCardNumber(cardNumber: String): ValidatedField<String>
     abstract fun validateExpiryDate(expiryDate: ExpiryDate): ValidatedField<ExpiryDate>
@@ -39,6 +44,10 @@ abstract class CardDelegate(protected val cardConfiguration: CardConfiguration) 
     abstract fun isCvcHidden(): Boolean
     abstract fun requiresInput(): Boolean
     abstract fun isHolderNameRequired(): Boolean
+    abstract fun detectCardType(cardNumber: String, publicKey: String, coroutineScope: CoroutineScope): List<DetectedCardType>
+
+    protected abstract fun localDetectedCard(cardType: CardType) : DetectedCardType
+    protected abstract fun getCvcPolicy(brand: String): Brand.CvcPolicy
 
     suspend fun fetchPublicKey(): String {
         return if (cardConfiguration.publicKey.isNotEmpty() && CardValidationUtils.isPublicKeyValid(cardConfiguration.publicKey)) {
