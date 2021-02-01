@@ -19,6 +19,7 @@ import com.adyen.checkout.core.log.LogUtil
 import com.adyen.checkout.core.log.Logger
 import kotlinx.coroutines.CoroutineScope
 
+@Suppress("TooManyFunctions")
 class StoredCardDelegate(
     private val storedPaymentMethod: StoredPaymentMethod,
     cardConfiguration: CardConfiguration

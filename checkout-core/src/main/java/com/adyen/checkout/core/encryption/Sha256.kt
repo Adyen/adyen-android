@@ -15,13 +15,13 @@ object Sha256 {
     private const val SHA_256 = "SHA-256"
     private val digest = MessageDigest.getInstance(SHA_256)
 
-    fun hash(byteArray: ByteArray) : ByteArray {
+    fun hash(byteArray: ByteArray): ByteArray {
         digest.reset()
         digest.update(byteArray)
         return digest.digest()
     }
 
-    fun hashString(string: String) : String {
+    fun hashString(string: String): String {
         return String(hash(string.toByteArray(Charsets.UTF_8)), Charsets.UTF_8)
     }
 }

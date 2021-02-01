@@ -12,7 +12,6 @@ import com.adyen.checkout.card.data.ExpiryDate
 import com.adyen.checkout.components.base.OutputData
 import com.adyen.checkout.components.validation.ValidatedField
 
-
 data class CardOutputData(
     val cardNumberField: ValidatedField<String>,
     val expiryDateField: ValidatedField<ExpiryDate>,
@@ -23,9 +22,9 @@ data class CardOutputData(
     val detectedCardTypes: List<DetectedCardType>
 ) : OutputData {
     override fun isValid(): Boolean {
-        return (cardNumberField.isValid
-            && expiryDateField.isValid
-            && securityCodeField.isValid
-            && holderNameField.isValid)
+        return cardNumberField.isValid &&
+            expiryDateField.isValid &&
+            securityCodeField.isValid &&
+            holderNameField.isValid
     }
 }

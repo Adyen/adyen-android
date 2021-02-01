@@ -34,10 +34,21 @@ import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.rules.TestRule;
+import org.junit.runner.RunWith;
+import org.robolectric.RobolectricTestRunner;
+import org.robolectric.annotation.Config;
+import org.robolectric.shadows.ShadowLog;
 
 import java.io.IOException;
 
+@RunWith(RobolectricTestRunner.class)
+@Config(shadows = ShadowLog.class)
 public class BaseComponentTest {
+
+    @Before
+    public void setUp() {
+        ShadowLog.setupLogging();
+    }
 
     @Rule
     public TestRule rule = new InstantTaskExecutorRule();

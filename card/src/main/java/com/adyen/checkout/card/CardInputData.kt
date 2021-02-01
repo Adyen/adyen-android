@@ -16,5 +16,4 @@ data class CardInputData(
     var securityCode: String = "",
     var holderName: String = "",
     var isStorePaymentSelected: Boolean = false,
-) : InputData {
-}
+) : InputData

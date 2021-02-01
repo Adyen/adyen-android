@@ -40,6 +40,7 @@ public abstract class BasePaymentComponent<
 
     private static final String TAG = LogUtil.getTag();
 
+    @Nullable
     protected InputDataT mLatestInputData;
 
     private final MutableLiveData<ComponentStateT> mPaymentComponentStateLiveData = new MutableLiveData<>();

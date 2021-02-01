@@ -25,6 +25,7 @@ import java.io.IOException
 private val TAG = LogUtil.getTag()
 private const val CONNECTION_RETRIES = 3
 
+@Suppress("TooManyFunctions")
 abstract class CardDelegate(protected val cardConfiguration: CardConfiguration) : PaymentMethodDelegate {
 
     protected val noCvcBrands: Set<CardType> = hashSetOf(CardType.BCMC)
@@ -46,7 +47,7 @@ abstract class CardDelegate(protected val cardConfiguration: CardConfiguration) 
     abstract fun isHolderNameRequired(): Boolean
     abstract fun detectCardType(cardNumber: String, publicKey: String, coroutineScope: CoroutineScope): List<DetectedCardType>
 
-    protected abstract fun localDetectedCard(cardType: CardType) : DetectedCardType
+    protected abstract fun localDetectedCard(cardType: CardType): DetectedCardType
     protected abstract fun getCvcPolicy(brand: String): Brand.CvcPolicy
 
     suspend fun fetchPublicKey(): String {

@@ -33,6 +33,7 @@ import java.util.UUID
 
 private val TAG = LogUtil.getTag()
 
+@Suppress("TooManyFunctions")
 class NewCardDelegate(
     private val paymentMethod: PaymentMethod,
     cardConfiguration: CardConfiguration
@@ -109,7 +110,7 @@ class NewCardDelegate(
         }
         val supportedCardTypes = cardConfiguration.supportedCardTypes
         val estimateCardTypes = CardType.estimate(cardNumber)
-        val detectedCardTypes = supportedCardTypes.filter{ estimateCardTypes.contains(it) }
+        val detectedCardTypes = supportedCardTypes.filter { estimateCardTypes.contains(it) }
         return detectedCardTypes.map { localDetectedCard(it) }
     }
 
