@@ -49,8 +49,13 @@ val networkModule = module {
     }
 
     fun provideApi(httpClient: OkHttpClient): CheckoutApiService {
+        val baseUrl =
+            if (CheckoutApiService.isRealUrlAvailable())
+                BuildConfig.MERCHANT_SERVER_URL
+            else
+                "http://myserver.com/my/endpoint/"
         return Retrofit.Builder()
-            .baseUrl(BuildConfig.MERCHANT_SERVER_URL)
+            .baseUrl(baseUrl)
             .client(httpClient)
             .addConverterFactory(MoshiConverterFactory.create())
             .addCallAdapterFactory(CoroutineCallAdapterFactory())
