@@ -9,13 +9,13 @@
 package com.adyen.checkout.card
 
 import androidx.lifecycle.viewModelScope
-import com.adyen.checkout.card.data.CardType
 import com.adyen.checkout.card.data.ExpiryDate
 import com.adyen.checkout.components.StoredPaymentComponentProvider
 import com.adyen.checkout.components.base.BasePaymentComponent
 import com.adyen.checkout.components.model.payments.request.CardPaymentMethod
 import com.adyen.checkout.components.model.payments.request.PaymentComponentData
 import com.adyen.checkout.components.util.PaymentMethodTypes
+import com.adyen.checkout.core.exception.CheckoutException
 import com.adyen.checkout.core.exception.ComponentException
 import com.adyen.checkout.core.log.LogUtil
 import com.adyen.checkout.core.log.Logger
@@ -24,8 +24,6 @@ import com.adyen.checkout.cse.EncryptedCard
 import com.adyen.checkout.cse.UnencryptedCard
 import com.adyen.checkout.cse.exception.EncryptionException
 import kotlinx.coroutines.launch
-import java.util.ArrayList
-import java.util.Collections
 
 private val TAG = LogUtil.getTag()
 
@@ -38,8 +36,6 @@ class CardComponent private constructor(
     cardConfiguration: CardConfiguration
 ) : BasePaymentComponent<CardConfiguration, CardInputData, CardOutputData, CardComponentState>(cardDelegate, cardConfiguration) {
 
-    var filteredSupportedCards: List<CardType> = emptyList()
-        private set
     private var storedPaymentInputData: CardInputData? = null
     private var publicKey = ""
 
@@ -57,13 +53,6 @@ class CardComponent private constructor(
         cardConfiguration
     ) {
         storedPaymentInputData = storedCardDelegate.getStoredCardInputData()
-
-        val cardType = storedCardDelegate.getCardType()
-        if (cardType != null) {
-            val storedCardType: MutableList<CardType> = ArrayList()
-            storedCardType.add(cardType)
-            filteredSupportedCards = Collections.unmodifiableList(storedCardType)
-        }
 
         // TODO: 09/12/2020 move this logic to base component, maybe create the inputdata from the delegate?
         if (!requiresInput()) {
@@ -87,21 +76,17 @@ class CardComponent private constructor(
     override fun onInputDataChanged(inputData: CardInputData): CardOutputData {
         Logger.v(TAG, "onInputDataChanged")
 
-        cardDelegate.detectCardType(inputData.cardNumber, publicKey, viewModelScope)
-
-        // TODO: 28/01/2021 swap this for cardDelegate.detectCardType
-        if (!isStoredPaymentMethod()) {
-//            filteredSupportedCards = updateSupportedFilterCards(inputData.cardNumber)
-        }
-        val firstCardType: CardType? = if (filteredSupportedCards.isNotEmpty()) filteredSupportedCards[0] else null
+        val detectedCardTypes = cardDelegate.detectCardType(inputData.cardNumber, publicKey, viewModelScope)
 
         return CardOutputData(
             cardDelegate.validateCardNumber(inputData.cardNumber),
             cardDelegate.validateExpiryDate(inputData.expiryDate),
-            cardDelegate.validateSecurityCode(inputData.securityCode, firstCardType),
+            // TODO: 29/01/2021 move validation logic using detected object
+            cardDelegate.validateSecurityCode(inputData.securityCode, detectedCardTypes.firstOrNull()?.cardType),
             cardDelegate.validateHolderName(inputData.holderName),
             inputData.isStorePaymentSelected,
-            cardDelegate.isCvcHidden()
+            cardDelegate.isCvcHidden(),
+            detectedCardTypes
         )
     }
 
@@ -109,33 +94,36 @@ class CardComponent private constructor(
     override fun createComponentState(): CardComponentState {
         Logger.v(TAG, "createComponentState")
 
+        // TODO: 29/01/2021 pass outputData as non null parameter
+        val stateOutputData = outputData ?: throw CheckoutException("Cannot create state with null outputData")
+
         val cardPaymentMethod = CardPaymentMethod()
         cardPaymentMethod.type = CardPaymentMethod.PAYMENT_METHOD_TYPE
 
         val unenctryptedCardBuilder = UnencryptedCard.Builder()
-        val outputData = outputData
+
         val paymentComponentData = PaymentComponentData<CardPaymentMethod>()
 
-        val cardNumber = outputData!!.cardNumberField.value
+        val cardNumber = stateOutputData.cardNumberField.value
 
-        val firstCardType: CardType? = if (filteredSupportedCards.isNotEmpty()) filteredSupportedCards[0] else null
+        val firstCardType = stateOutputData.detectedCardTypes.firstOrNull()?.cardType
 
         val binValue: String = getBinValueFromCardNumber(cardNumber)
 
         // If data is not valid we just return empty object, encryption would fail and we don't pass unencrypted data.
-        if (!outputData.isValid) {
+        if (!stateOutputData.isValid) {
             return CardComponentState(paymentComponentData, false, firstCardType, binValue)
         }
 
         val encryptedCard: EncryptedCard
         encryptedCard = try {
             if (!isStoredPaymentMethod()) {
-                unenctryptedCardBuilder.setNumber(outputData.cardNumberField.value)
+                unenctryptedCardBuilder.setNumber(stateOutputData.cardNumberField.value)
             }
             if (!cardDelegate.isCvcHidden()) {
-                unenctryptedCardBuilder.setCvc(outputData.securityCodeField.value)
+                unenctryptedCardBuilder.setCvc(stateOutputData.securityCodeField.value)
             }
-            val expiryDateResult = outputData.expiryDateField.value
+            val expiryDateResult = stateOutputData.expiryDateField.value
             if (expiryDateResult.expiryYear != ExpiryDate.EMPTY_VALUE && expiryDateResult.expiryMonth != ExpiryDate.EMPTY_VALUE) {
                 unenctryptedCardBuilder.setExpiryMonth(expiryDateResult.expiryMonth.toString())
                 unenctryptedCardBuilder.setExpiryYear(expiryDateResult.expiryYear.toString())
@@ -160,14 +148,14 @@ class CardComponent private constructor(
         }
 
         if (cardDelegate.isHolderNameRequired()) {
-            cardPaymentMethod.holderName = outputData.holderNameField.value
+            cardPaymentMethod.holderName = stateOutputData.holderNameField.value
         }
 
         paymentComponentData.paymentMethod = cardPaymentMethod
-        paymentComponentData.setStorePaymentMethod(outputData.isStoredPaymentMethodEnable)
+        paymentComponentData.setStorePaymentMethod(stateOutputData.isStoredPaymentMethodEnable)
         paymentComponentData.shopperReference = configuration.shopperReference
 
-        return CardComponentState(paymentComponentData, outputData.isValid, firstCardType, binValue)
+        return CardComponentState(paymentComponentData, stateOutputData.isValid, firstCardType, binValue)
     }
 
     fun isStoredPaymentMethod(): Boolean {
@@ -185,22 +173,6 @@ class CardComponent private constructor(
     fun showStorePaymentField(): Boolean {
         return configuration.isShowStorePaymentFieldEnable
     }
-
-//    private fun updateSupportedFilterCards(cardNumber: String?): List<CardType> {
-//        Logger.d(TAG, "updateSupportedFilterCards")
-//        if (cardNumber.isNullOrEmpty()) {
-//            return emptyList()
-//        }
-//        val supportedCardTypes = configuration.supportedCardTypes
-//        val estimateCardTypes = CardType.estimate(cardNumber)
-//        val filteredCards: MutableList<CardType> = ArrayList()
-//        for (supportedCard in supportedCardTypes) {
-//            if (estimateCardTypes.contains(supportedCard)) {
-//                filteredCards.add(supportedCard)
-//            }
-//        }
-//        return Collections.unmodifiableList(filteredCards)
-//    }
 
     private fun getBinValueFromCardNumber(cardNumber: String): String {
         return if (cardNumber.length < BIN_VALUE_LENGTH) cardNumber else cardNumber.substring(0..BIN_VALUE_LENGTH)

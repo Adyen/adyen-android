@@ -7,6 +7,7 @@
  */
 package com.adyen.checkout.card
 
+import com.adyen.checkout.card.data.DetectedCardType
 import com.adyen.checkout.card.data.ExpiryDate
 import com.adyen.checkout.components.base.OutputData
 import com.adyen.checkout.components.validation.ValidatedField
@@ -18,7 +19,8 @@ data class CardOutputData(
     val securityCodeField: ValidatedField<String>,
     val holderNameField: ValidatedField<String>,
     val isStoredPaymentMethodEnable: Boolean,
-    val isCvcHidden: Boolean
+    val isCvcHidden: Boolean,
+    val detectedCardTypes: List<DetectedCardType>
 ) : OutputData {
     override fun isValid(): Boolean {
         return (cardNumberField.isValid

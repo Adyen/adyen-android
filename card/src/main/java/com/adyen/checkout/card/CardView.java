@@ -27,6 +27,7 @@ import androidx.lifecycle.LifecycleOwner;
 import androidx.lifecycle.Observer;
 
 import com.adyen.checkout.card.data.CardType;
+import com.adyen.checkout.card.data.DetectedCardType;
 import com.adyen.checkout.card.data.ExpiryDate;
 import com.adyen.checkout.card.ui.CardNumberInput;
 import com.adyen.checkout.card.ui.ExpiryDateInput;
@@ -172,7 +173,7 @@ public final class CardView extends AdyenLinearLayout<CardOutputData, CardConfig
     @Override
     public void onChanged(@Nullable CardOutputData cardOutputData) {
         if (cardOutputData != null) {
-            onCardNumberValidated(cardOutputData.getCardNumberField());
+            onCardNumberValidated(cardOutputData.getCardNumberField(), cardOutputData.getDetectedCardTypes());
             onExpiryDateValidated(cardOutputData.getExpiryDateField());
             mSecurityCodeInput.setVisibility(cardOutputData.isCvcHidden() ? GONE : VISIBLE);
             if (cardOutputData.isCvcHidden()) {
@@ -244,20 +245,26 @@ public final class CardView extends AdyenLinearLayout<CardOutputData, CardConfig
         getComponent().inputDataChanged(mCardInputData);
     }
 
-    private void onCardNumberValidated(@NonNull ValidatedField<String> validatedNumber) {
+    private void onCardNumberValidated(@NonNull ValidatedField<String> validatedNumber, @NonNull List<DetectedCardType> detectedCardTypes) {
         if (validatedNumber.getValidation() == ValidatedField.Validation.VALID) {
             changeFocusOfInput(validatedNumber.getValue());
         }
 
-        final List<CardType> supportedCardType = getComponent().getFilteredSupportedCards();
-        if (supportedCardType.isEmpty()) {
+        if (detectedCardTypes.isEmpty()) {
             mCardBrandLogoImageView.setStrokeWidth(0f);
             mCardBrandLogoImageView.setImageResource(R.drawable.ic_card);
             mCardNumberEditText.setAmexCardFormat(false);
         } else {
             mCardBrandLogoImageView.setStrokeWidth(RoundCornerImageView.DEFAULT_STROKE_WIDTH);
-            mImageLoader.load(supportedCardType.get(0).getTxVariant(), mCardBrandLogoImageView);
-            mCardNumberEditText.setAmexCardFormat(supportedCardType.contains(CardType.AMERICAN_EXPRESS));
+            mImageLoader.load(detectedCardTypes.get(0).getCardType().getTxVariant(), mCardBrandLogoImageView);
+            // TODO: 29/01/2021 get this logic from OutputData
+            boolean isAmex = false;
+            for (DetectedCardType detectedCardType : detectedCardTypes) {
+                if (detectedCardType.getCardType() == CardType.AMERICAN_EXPRESS) {
+                    isAmex = true;
+                }
+            }
+            mCardNumberEditText.setAmexCardFormat(isAmex);
         }
     }
 
