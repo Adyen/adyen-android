@@ -28,6 +28,7 @@ import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.async
 import kotlinx.coroutines.coroutineScope
+import kotlinx.coroutines.launch
 import java.io.IOException
 import java.util.UUID
 
@@ -81,16 +82,22 @@ class NewCardDelegate(
         publicKey: String,
         coroutineScope: CoroutineScope
     ): List<DetectedCardType> {
-        if (cardNumber.length == BinLookupConnection.REQUIRED_BIN_SIZE) {
-            // trigger BIN lookup
-            // on response - trigger output data
-            // cache BIN  lookup response
-        }
 
-        // Check if we have a cached value
         if (cardNumber.length >= BinLookupConnection.REQUIRED_BIN_SIZE) {
             val bin = cardNumber.substring(0, BinLookupConnection.REQUIRED_BIN_SIZE)
             val hashedBin = Sha256.hashString(bin)
+
+            // if length is exactly the size, we call bin lookup API
+            if (cardNumber.length == BinLookupConnection.REQUIRED_BIN_SIZE) {
+                coroutineScope.launch {
+                    val binLookupResponse = makeBinLookup(cardNumber, publicKey)
+                    if (binLookupResponse != null) {
+                        handleBinLookupResponse(hashedBin, binLookupResponse)
+                    }
+                }
+            }
+
+            // Check if we have a cached value
             if (cachedBinLookup.containsKey(hashedBin)) {
                 val cashedResult = cachedBinLookup[hashedBin]
                 if (cashedResult != null) {
@@ -131,43 +138,43 @@ class NewCardDelegate(
         }
     }
 
-    private suspend fun makeBinLookup(cardNumber: String, publicKey: String) {
-        coroutineScope {
-            val deferredEncryption = async(Dispatchers.Default) {
-                CardEncrypter.encryptBin(cardNumber, publicKey)
-            }
-            try {
-                val encryptedBin = deferredEncryption.await()
-                val cardTypes = cardConfiguration.supportedCardTypes.map { it.txVariant }
-                val request = BinLookupRequest(encryptedBin, UUID.randomUUID().toString(), cardTypes)
-                val response = BinLookupConnection(request, cardConfiguration.environment, cardConfiguration.clientKey).suspendedCall()
-                // TODO: 28/01/2021 send response to flow/callback/livedata
-            } catch (e: EncryptionException) {
-                Logger.e(TAG, "checkCardType - Failed to encrypt BIN", e)
-            } catch (e: IOException) {
-                Logger.e(TAG, "checkCardType - Failed to call binLookup API.", e)
-            }
+    private suspend fun makeBinLookup(cardNumber: String, publicKey: String): BinLookupResponse? = coroutineScope {
+        val deferredEncryption = async(Dispatchers.Default) {
+            CardEncrypter.encryptBin(cardNumber, publicKey)
+        }
+        return@coroutineScope try {
+            val encryptedBin = deferredEncryption.await()
+            val cardTypes = cardConfiguration.supportedCardTypes.map { it.txVariant }
+            val request = BinLookupRequest(encryptedBin, UUID.randomUUID().toString(), cardTypes)
+            BinLookupConnection(request, cardConfiguration.environment, cardConfiguration.clientKey).suspendedCall()
+        } catch (e: EncryptionException) {
+            Logger.e(TAG, "checkCardType - Failed to encrypt BIN", e)
+            null
+        } catch (e: IOException) {
+            Logger.e(TAG, "checkCardType - Failed to call binLookup API.", e)
+            null
         }
     }
 
-    private fun cardTypeReceived(binLookupResponse: BinLookupResponse) {
-        Logger.d(TAG, "cardBrandReceived")
-        val brands = binLookupResponse.brands
-        when {
-            brands.isNullOrEmpty() -> {
-                Logger.d(TAG, "Card brand not found.")
-                // TODO: 19/01/2021 Keep regexes prediction and don't apply business rules
-            }
-            brands.size > 1 -> {
-                Logger.d(TAG, "Multiple brands found.")
-                // TODO: 19/01/2021 use first brand
-            }
-            else -> {
-                Logger.d(TAG, "Card brand: ${brands.first().brand}")
-                val cardType = CardType.getByBrandName(brands.first().brand.orEmpty())
-                Logger.d(TAG, "CardType: ${cardType?.name}")
-                // TODO: 19/01/2021 trigger brand specific business logic
-            }
+    private fun handleBinLookupResponse(hashedBin: String, binLookupResponse: BinLookupResponse) {
+        Logger.d(TAG, "handleBinLookupResponse")
+
+        // map result to DetectedCardType
+        val detectedCardTypes = binLookupResponse.brands.orEmpty().mapNotNull {
+            if (it.brand == null) return@mapNotNull null
+            val cardType = CardType.getByBrandName(it.brand) ?: return@mapNotNull null
+            DetectedCardType(
+                cardType,
+                isReliable = true,
+                showExpiryDate = it.showExpiryDate == true,
+                enableLuhnCheck = it.enableLuhnCheck == true,
+                cvcPolicy = Brand.CvcPolicy.parse(it.cvcPolicy ?: Brand.CvcPolicy.REQUIRED.value)
+            )
         }
+
+        // cache result
+        cachedBinLookup[hashedBin] = detectedCardTypes
+
+        // TODO: 01/02/2021 trigger FLow to the CardComponent to update State
     }
 }
