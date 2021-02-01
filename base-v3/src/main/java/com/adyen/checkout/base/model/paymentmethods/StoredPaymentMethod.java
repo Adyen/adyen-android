@@ -68,7 +68,6 @@ public class StoredPaymentMethod extends PaymentMethod {
 
             // getting parameters from parent class
             final PaymentMethod paymentMethod = PaymentMethod.SERIALIZER.deserialize(jsonObject);
-            storedPaymentMethod.setConfiguration(paymentMethod.getConfiguration());
             storedPaymentMethod.setDetails(paymentMethod.getDetails());
             storedPaymentMethod.setGroup(paymentMethod.getGroup());
             storedPaymentMethod.setName(paymentMethod.getName());
