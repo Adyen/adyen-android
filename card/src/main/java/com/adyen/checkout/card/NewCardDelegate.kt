@@ -27,7 +27,10 @@ import com.adyen.checkout.cse.exception.EncryptionException
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.async
+import kotlinx.coroutines.channels.BufferOverflow
 import kotlinx.coroutines.coroutineScope
+import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.launch
 import java.io.IOException
 import java.util.UUID
@@ -41,6 +44,9 @@ class NewCardDelegate(
 ) : CardDelegate(cardConfiguration) {
 
     private val cachedBinLookup = HashMap<String, List<DetectedCardType>>()
+
+    private val _binLookupFlow: MutableSharedFlow<List<DetectedCardType>> = MutableSharedFlow(0, 1, BufferOverflow.DROP_OLDEST)
+    internal val binLookupFlow: Flow<List<DetectedCardType>> = _binLookupFlow
 
     override fun getPaymentMethodType(): String {
         return paymentMethod.type ?: PaymentMethodTypes.UNKNOWN
@@ -82,13 +88,14 @@ class NewCardDelegate(
         publicKey: String,
         coroutineScope: CoroutineScope
     ): List<DetectedCardType> {
-
+        Logger.d(TAG, "detectCardType")
         if (cardNumber.length >= BinLookupConnection.REQUIRED_BIN_SIZE) {
             val bin = cardNumber.substring(0, BinLookupConnection.REQUIRED_BIN_SIZE)
             val hashedBin = Sha256.hashString(bin)
 
             // if length is exactly the size, we call bin lookup API
             if (cardNumber.length == BinLookupConnection.REQUIRED_BIN_SIZE) {
+                Logger.d(TAG, "Launching Bin Lookup")
                 coroutineScope.launch {
                     val binLookupResponse = makeBinLookup(cardNumber, publicKey)
                     if (binLookupResponse != null) {
@@ -99,6 +106,7 @@ class NewCardDelegate(
 
             // Check if we have a cached value
             if (cachedBinLookup.containsKey(hashedBin)) {
+                Logger.d(TAG, "Returning cashed result.")
                 val cashedResult = cachedBinLookup[hashedBin]
                 if (cashedResult != null) {
                     return cashedResult
@@ -158,23 +166,26 @@ class NewCardDelegate(
 
     private fun handleBinLookupResponse(hashedBin: String, binLookupResponse: BinLookupResponse) {
         Logger.d(TAG, "handleBinLookupResponse")
+        Logger.v(TAG, "Brands: ${binLookupResponse.brands}")
 
         // map result to DetectedCardType
-        val detectedCardTypes = binLookupResponse.brands.orEmpty().mapNotNull {
-            if (it.brand == null) return@mapNotNull null
-            val cardType = CardType.getByBrandName(it.brand) ?: return@mapNotNull null
-            DetectedCardType(
-                cardType,
-                isReliable = true,
-                showExpiryDate = it.showExpiryDate == true,
-                enableLuhnCheck = it.enableLuhnCheck == true,
-                cvcPolicy = Brand.CvcPolicy.parse(it.cvcPolicy ?: Brand.CvcPolicy.REQUIRED.value)
-            )
+        binLookupResponse.brands?.let { brands ->
+            val detectedCardTypes = brands.mapNotNull {
+                if (it.brand == null) return@mapNotNull null
+                val cardType = CardType.getByBrandName(it.brand) ?: return@mapNotNull null
+                DetectedCardType(
+                    cardType,
+                    isReliable = true,
+                    showExpiryDate = it.showExpiryDate == true,
+                    enableLuhnCheck = it.enableLuhnCheck == true,
+                    cvcPolicy = Brand.CvcPolicy.parse(it.cvcPolicy ?: Brand.CvcPolicy.REQUIRED.value)
+                )
+            }
+
+            // Caching result for future requests
+            Logger.d(TAG, "Emitting new detectedCardTypes")
+            cachedBinLookup[hashedBin] = detectedCardTypes
+            _binLookupFlow.tryEmit(detectedCardTypes)
         }
-
-        // cache result
-        cachedBinLookup[hashedBin] = detectedCardTypes
-
-        // TODO: 01/02/2021 trigger FLow to the CardComponent to update State
     }
 }

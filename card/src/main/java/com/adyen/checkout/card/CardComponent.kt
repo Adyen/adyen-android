@@ -23,6 +23,8 @@ import com.adyen.checkout.cse.CardEncrypter
 import com.adyen.checkout.cse.EncryptedCard
 import com.adyen.checkout.cse.UnencryptedCard
 import com.adyen.checkout.cse.exception.EncryptionException
+import kotlinx.coroutines.flow.launchIn
+import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.launch
 
 private val TAG = LogUtil.getTag()
@@ -45,6 +47,27 @@ class CardComponent private constructor(
             if (publicKey.isEmpty()) {
                 notifyException(ComponentException("Unable to fetch publicKey."))
             }
+        }
+
+        if (cardDelegate is NewCardDelegate) {
+            cardDelegate.binLookupFlow
+                .onEach {
+                    Logger.d(TAG, "New binLookupFlow emitted")
+                    val oldOutputData = outputData
+                    if (oldOutputData != null) {
+                        val newOutputData = CardOutputData(
+                            oldOutputData.cardNumberField,
+                            oldOutputData.expiryDateField,
+                            oldOutputData.securityCodeField,
+                            oldOutputData.holderNameField,
+                            oldOutputData.isStoredPaymentMethodEnable,
+                            oldOutputData.isCvcHidden,
+                            it
+                        )
+                        notifyStateChanged(newOutputData)
+                    }
+                }
+                .launchIn(viewModelScope)
         }
     }
 
