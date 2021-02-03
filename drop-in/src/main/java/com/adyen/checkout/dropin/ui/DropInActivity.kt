@@ -361,7 +361,7 @@ class DropInActivity : AppCompatActivity(), DropInBottomSheetDialogFragment.Prot
 
     override fun terminateDropIn() {
         Logger.d(TAG, "terminateDropIn")
-        terminateWithError("Canceled by user")
+        terminateWithError(DropIn.ERROR_REASON_USER_CANCELED)
     }
 
     override fun startGooglePay(paymentMethod: PaymentMethod, googlePayConfiguration: GooglePayConfiguration) {
@@ -419,7 +419,7 @@ class DropInActivity : AppCompatActivity(), DropInBottomSheetDialogFragment.Prot
 
     private fun terminateWithError(reason: String) {
         Logger.d(TAG, "terminateWithError")
-        val resultIntent = Intent().putExtra(DropIn.RESULT_ERROR_REASON, reason)
+        val resultIntent = Intent().putExtra(DropIn.ERROR_REASON_KEY, reason)
         setResult(Activity.RESULT_CANCELED, resultIntent)
         terminate()
     }

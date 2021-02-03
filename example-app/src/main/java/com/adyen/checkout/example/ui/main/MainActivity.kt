@@ -129,8 +129,12 @@ class MainActivity : AppCompatActivity() {
         if (requestCode == DropIn.DROP_IN_REQUEST_CODE)
             if (resultCode == Activity.RESULT_CANCELED) {
                 Logger.d(TAG, "DropIn CANCELED")
-                if (data?.hasExtra(DropIn.RESULT_ERROR_REASON) == true) {
-                    Toast.makeText(this, data.getStringExtra(DropIn.RESULT_ERROR_REASON), Toast.LENGTH_SHORT).show()
+                if (data?.hasExtra(DropIn.ERROR_REASON_KEY) == true) {
+                    val reason = data.getStringExtra(DropIn.ERROR_REASON_KEY)
+                    if (reason == DropIn.ERROR_REASON_USER_CANCELED) {
+                        Logger.d(TAG, "DropIn canceled by the user")
+                    }
+                    Toast.makeText(this, reason, Toast.LENGTH_SHORT).show()
                 }
             } else if (resultCode == Activity.RESULT_OK) {
                 Logger.d(TAG, "DropIn COMPLETED")

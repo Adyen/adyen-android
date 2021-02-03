@@ -33,7 +33,8 @@ class DropIn private constructor() {
         private val TAG = LogUtil.getTag()
 
         const val RESULT_KEY = "payment_result"
-        const val RESULT_ERROR_REASON = "error_reason"
+        const val ERROR_REASON_KEY = "error_reason"
+        const val ERROR_REASON_USER_CANCELED = "Canceled by user"
 
         const val DROP_IN_PREFS = "drop-in-shared-prefs"
         const val LOCALE_PREF = "drop-in-locale"
