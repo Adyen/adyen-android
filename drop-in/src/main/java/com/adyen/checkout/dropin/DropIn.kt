@@ -15,7 +15,7 @@ import androidx.fragment.app.Fragment
 import com.adyen.checkout.components.model.PaymentMethodsApiResponse
 import com.adyen.checkout.core.log.LogUtil
 import com.adyen.checkout.core.log.Logger
-import com.adyen.checkout.dropin.DropIn.Companion.startPayment
+import com.adyen.checkout.dropin.DropIn.startPayment
 import com.adyen.checkout.dropin.ui.DropInActivity
 
 /**
@@ -27,81 +27,78 @@ import com.adyen.checkout.dropin.ui.DropInActivity
  *
  * After setting up the [DropInService], just call [startPayment] and the checkout process will start.
  */
-class DropIn private constructor() {
+object DropIn {
+    private val TAG = LogUtil.getTag()
 
-    companion object {
-        private val TAG = LogUtil.getTag()
+    const val RESULT_KEY = "payment_result"
+    const val ERROR_REASON_KEY = "error_reason"
+    const val ERROR_REASON_USER_CANCELED = "Canceled by user"
 
-        const val RESULT_KEY = "payment_result"
-        const val ERROR_REASON_KEY = "error_reason"
-        const val ERROR_REASON_USER_CANCELED = "Canceled by user"
+    const val DROP_IN_PREFS = "drop-in-shared-prefs"
+    const val LOCALE_PREF = "drop-in-locale"
 
-        const val DROP_IN_PREFS = "drop-in-shared-prefs"
-        const val LOCALE_PREF = "drop-in-locale"
+    const val DROP_IN_REQUEST_CODE = 529
 
-        const val DROP_IN_REQUEST_CODE = 529
+    /**
+     * Starts the checkout flow to be handled by the Drop-In solution. Make sure you have [DropInService] set up before calling this.
+     * We suggest that you set up the resultHandlerIntent with the appropriate flags to clear the stack of the checkout activities.
+     *
+     * @param activity An activity to start the Checkout flow.
+     * @param paymentMethodsApiResponse The result from the paymentMethods/ endpoint.
+     * @param dropInConfiguration Additional required configuration data.
+     *
+     */
+    @JvmStatic
+    fun startPayment(
+        activity: Activity,
+        paymentMethodsApiResponse: PaymentMethodsApiResponse,
+        dropInConfiguration: DropInConfiguration
+    ) {
+        Logger.d(TAG, "startPayment from Activity")
 
-        /**
-         * Starts the checkout flow to be handled by the Drop-In solution. Make sure you have [DropInService] set up before calling this.
-         * We suggest that you set up the resultHandlerIntent with the appropriate flags to clear the stack of the checkout activities.
-         *
-         * @param activity An activity to start the Checkout flow.
-         * @param paymentMethodsApiResponse The result from the paymentMethods/ endpoint.
-         * @param dropInConfiguration Additional required configuration data.
-         *
-         */
-        @JvmStatic
-        fun startPayment(
-            activity: Activity,
-            paymentMethodsApiResponse: PaymentMethodsApiResponse,
-            dropInConfiguration: DropInConfiguration
-        ) {
-            Logger.d(TAG, "startPayment from Activity")
+        val intent = preparePayment(
+            activity,
+            paymentMethodsApiResponse,
+            dropInConfiguration
+        )
+        activity.startActivityForResult(intent, DROP_IN_REQUEST_CODE)
+    }
 
-            val intent = preparePayment(
-                activity,
-                paymentMethodsApiResponse,
-                dropInConfiguration
-            )
-            activity.startActivityForResult(intent, DROP_IN_REQUEST_CODE)
-        }
+    /**
+     * Starts the checkout flow to be handled by the Drop-In solution. Make sure you have [DropInService] set up before calling this.
+     * We suggest that you set up the resultHandlerIntent with the appropriate flags to clear the stack of the checkout activities.
+     *
+     * @param fragment An Fragment to start the Checkout flow.
+     * @param paymentMethodsApiResponse The result from the paymentMethods/ endpoint.
+     * @param dropInConfiguration Additional required configuration data.
+     *
+     */
+    @JvmStatic
+    fun startPayment(
+        fragment: Fragment,
+        paymentMethodsApiResponse: PaymentMethodsApiResponse,
+        dropInConfiguration: DropInConfiguration
+    ) {
+        Logger.d(TAG, "startPayment from Fragment")
 
-        /**
-         * Starts the checkout flow to be handled by the Drop-In solution. Make sure you have [DropInService] set up before calling this.
-         * We suggest that you set up the resultHandlerIntent with the appropriate flags to clear the stack of the checkout activities.
-         *
-         * @param fragment An Fragment to start the Checkout flow.
-         * @param paymentMethodsApiResponse The result from the paymentMethods/ endpoint.
-         * @param dropInConfiguration Additional required configuration data.
-         *
-         */
-        @JvmStatic
-        fun startPayment(
-            fragment: Fragment,
-            paymentMethodsApiResponse: PaymentMethodsApiResponse,
-            dropInConfiguration: DropInConfiguration
-        ) {
-            Logger.d(TAG, "startPayment from Fragment")
+        val intent = preparePayment(
+            fragment.requireContext(),
+            paymentMethodsApiResponse,
+            dropInConfiguration
+        )
+        fragment.startActivityForResult(intent, DROP_IN_REQUEST_CODE)
+    }
 
-            val intent = preparePayment(
-                fragment.requireContext(),
-                paymentMethodsApiResponse,
-                dropInConfiguration
-            )
-            fragment.startActivityForResult(intent, DROP_IN_REQUEST_CODE)
-        }
+    private fun preparePayment(
+        context: Context,
+        paymentMethodsApiResponse: PaymentMethodsApiResponse,
+        dropInConfiguration: DropInConfiguration
+    ): Intent {
+        // Add locale to prefs
+        context.getSharedPreferences(DROP_IN_PREFS, Context.MODE_PRIVATE).edit()
+            .putString(LOCALE_PREF, dropInConfiguration.shopperLocale.toString())
+            .apply()
 
-        private fun preparePayment(
-            context: Context,
-            paymentMethodsApiResponse: PaymentMethodsApiResponse,
-            dropInConfiguration: DropInConfiguration
-        ): Intent {
-            // Add locale to prefs
-            context.getSharedPreferences(DROP_IN_PREFS, Context.MODE_PRIVATE).edit()
-                .putString(LOCALE_PREF, dropInConfiguration.shopperLocale.toString())
-                .apply()
-
-            return DropInActivity.createIntent(context, dropInConfiguration, paymentMethodsApiResponse)
-        }
+        return DropInActivity.createIntent(context, dropInConfiguration, paymentMethodsApiResponse)
     }
 }
