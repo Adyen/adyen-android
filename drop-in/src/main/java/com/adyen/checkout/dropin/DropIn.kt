@@ -52,14 +52,16 @@ object DropIn {
     fun startPayment(
         activity: Activity,
         paymentMethodsApiResponse: PaymentMethodsApiResponse,
-        dropInConfiguration: DropInConfiguration
+        dropInConfiguration: DropInConfiguration,
+        resultHandlerIntent: Intent? = null
     ) {
         Logger.d(TAG, "startPayment from Activity")
 
         val intent = preparePayment(
             activity,
             paymentMethodsApiResponse,
-            dropInConfiguration
+            dropInConfiguration,
+            resultHandlerIntent
         )
         activity.startActivityForResult(intent, DROP_IN_REQUEST_CODE)
     }
@@ -77,14 +79,16 @@ object DropIn {
     fun startPayment(
         fragment: Fragment,
         paymentMethodsApiResponse: PaymentMethodsApiResponse,
-        dropInConfiguration: DropInConfiguration
+        dropInConfiguration: DropInConfiguration,
+        resultHandlerIntent: Intent? = null
     ) {
         Logger.d(TAG, "startPayment from Fragment")
 
         val intent = preparePayment(
             fragment.requireContext(),
             paymentMethodsApiResponse,
-            dropInConfiguration
+            dropInConfiguration,
+            resultHandlerIntent
         )
         fragment.startActivityForResult(intent, DROP_IN_REQUEST_CODE)
     }
@@ -92,13 +96,19 @@ object DropIn {
     private fun preparePayment(
         context: Context,
         paymentMethodsApiResponse: PaymentMethodsApiResponse,
-        dropInConfiguration: DropInConfiguration
+        dropInConfiguration: DropInConfiguration,
+        resultHandlerIntent: Intent?
     ): Intent {
         // Add locale to prefs
         context.getSharedPreferences(DROP_IN_PREFS, Context.MODE_PRIVATE).edit()
             .putString(LOCALE_PREF, dropInConfiguration.shopperLocale.toString())
             .apply()
 
-        return DropInActivity.createIntent(context, dropInConfiguration, paymentMethodsApiResponse)
+        return DropInActivity.createIntent(
+            context,
+            dropInConfiguration,
+            paymentMethodsApiResponse,
+            resultHandlerIntent
+        )
     }
 }

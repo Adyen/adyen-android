@@ -64,6 +64,7 @@ private const val LOADING_FRAGMENT_TAG = "LOADING_DIALOG_FRAGMENT"
 
 private const val PAYMENT_METHODS_RESPONSE_KEY = "PAYMENT_METHODS_RESPONSE_KEY"
 private const val DROP_IN_CONFIGURATION_KEY = "DROP_IN_CONFIGURATION_KEY"
+private const val DROP_IN_RESULT_INTENT = "DROP_IN_RESULT_INTENT"
 private const val IS_WAITING_FOR_RESULT = "IS_WAITING_FOR_RESULT"
 
 private const val GOOGLE_PAY_REQUEST_CODE = 1
@@ -183,8 +184,15 @@ class DropInActivity : AppCompatActivity(), DropInBottomSheetDialogFragment.Prot
         isWaitingResult = bundle.getBoolean(IS_WAITING_FOR_RESULT, false)
         val dropInConfiguration: DropInConfiguration? = bundle.getParcelable(DROP_IN_CONFIGURATION_KEY)
         val paymentMethodsApiResponse: PaymentMethodsApiResponse? = bundle.getParcelable(PAYMENT_METHODS_RESPONSE_KEY)
+        val resultHandlerIntent: Intent? = bundle.getParcelable(DROP_IN_RESULT_INTENT)
         return if (dropInConfiguration != null && paymentMethodsApiResponse != null) {
-            dropInViewModel = getViewModel { DropInViewModel(paymentMethodsApiResponse, dropInConfiguration) }
+            dropInViewModel = getViewModel {
+                DropInViewModel(
+                    paymentMethodsApiResponse,
+                    dropInConfiguration,
+                    resultHandlerIntent
+                )
+            }
             true
         } else {
             Logger.e(
@@ -398,7 +406,7 @@ class DropInActivity : AppCompatActivity(), DropInBottomSheetDialogFragment.Prot
     }
 
     private fun sendResult(content: String) {
-        val resultHandlerIntent = dropInViewModel.dropInConfiguration.resultHandlerIntent
+        val resultHandlerIntent = dropInViewModel.resultHandlerIntent
         // Merchant requested the result to be sent back with a result intent
         if (resultHandlerIntent != null) {
             resultHandlerIntent.putExtra(DropIn.RESULT_KEY, content)
@@ -486,10 +494,16 @@ class DropInActivity : AppCompatActivity(), DropInBottomSheetDialogFragment.Prot
     }
 
     companion object {
-        fun createIntent(context: Context, dropInConfiguration: DropInConfiguration, paymentMethodsApiResponse: PaymentMethodsApiResponse): Intent {
+        fun createIntent(
+            context: Context,
+            dropInConfiguration: DropInConfiguration,
+            paymentMethodsApiResponse: PaymentMethodsApiResponse,
+            resultHandlerIntent: Intent?
+        ): Intent {
             val intent = Intent(context, DropInActivity::class.java)
             intent.putExtra(PAYMENT_METHODS_RESPONSE_KEY, paymentMethodsApiResponse)
             intent.putExtra(DROP_IN_CONFIGURATION_KEY, dropInConfiguration)
+            intent.putExtra(DROP_IN_RESULT_INTENT, resultHandlerIntent)
             return intent
         }
     }

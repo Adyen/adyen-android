@@ -170,14 +170,10 @@ class MainActivity : AppCompatActivity() {
             .setEnvironment(Environment.TEST)
             .build()
 
-        val resultIntent = Intent(this, MainActivity::class.java)
-        resultIntent.flags = Intent.FLAG_ACTIVITY_CLEAR_TOP
-
         val dropInConfigurationBuilder = DropInConfiguration.Builder(
             this@MainActivity,
             ExampleDropInService::class.java
         )
-            .setResultHandlerIntent(resultIntent)
             .setEnvironment(Environment.TEST)
             .setClientKey(BuildConfig.CLIENT_KEY)
             .setShopperLocale(shopperLocale)
@@ -193,7 +189,10 @@ class MainActivity : AppCompatActivity() {
             Logger.e(TAG, "Amount $amount not valid", e)
         }
 
-        DropIn.startPayment(this, paymentMethodsApiResponse, dropInConfigurationBuilder.build())
+        val resultIntent = Intent(this, MainActivity::class.java)
+        resultIntent.flags = Intent.FLAG_ACTIVITY_CLEAR_TOP
+
+        DropIn.startPayment(this, paymentMethodsApiResponse, dropInConfigurationBuilder.build(), resultIntent)
     }
 
     private fun setLoading(isLoading: Boolean) {
