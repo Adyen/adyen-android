@@ -14,7 +14,9 @@ package com.adyen.checkout.dropin.service
 sealed class DropInServiceResult {
 
     /**
-     * Call was successful and payment is finished.
+     * Call was successful and payment is finished. This does not necessarily mean that the
+     * payment was authorized, it can simply indicate that all the necessary network calls were
+     * made without any exceptions or unexpected errors.
      */
     class Finished(val result: String) : DropInServiceResult()
 
