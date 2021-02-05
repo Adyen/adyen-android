@@ -30,14 +30,14 @@ import com.adyen.checkout.dropin.ui.DropInActivity
 object DropIn {
     private val TAG = LogUtil.getTag()
 
+    const val DROP_IN_REQUEST_CODE = 529
+
     const val RESULT_KEY = "payment_result"
     const val ERROR_REASON_KEY = "error_reason"
     const val ERROR_REASON_USER_CANCELED = "Canceled by user"
 
-    const val DROP_IN_PREFS = "drop-in-shared-prefs"
-    const val LOCALE_PREF = "drop-in-locale"
-
-    const val DROP_IN_REQUEST_CODE = 529
+    internal const val DROP_IN_PREFS = "drop-in-shared-prefs"
+    internal const val LOCALE_PREF = "drop-in-locale"
 
     /**
      * Starts the checkout flow to be handled by the Drop-In solution. Make sure you have [DropInService] set up before calling this.
@@ -110,5 +110,26 @@ object DropIn {
             paymentMethodsApiResponse,
             resultHandlerIntent
         )
+    }
+
+    @JvmStatic
+    fun handleActivityResult(requestCode: Int, resultCode: Int, data: Intent?): DropInResult? {
+        return when {
+            requestCode != DROP_IN_REQUEST_CODE || data == null -> null
+            resultCode == Activity.RESULT_CANCELED && data.hasExtra(ERROR_REASON_KEY) -> {
+                val reason = data.getStringExtra(ERROR_REASON_KEY) ?: ""
+                if (reason == ERROR_REASON_USER_CANCELED) DropInResult.CancelledByUser()
+                else DropInResult.Error(reason)
+            }
+            resultCode == Activity.RESULT_OK && data.hasExtra(RESULT_KEY) -> {
+                DropInResult.Finished(data.getStringExtra(RESULT_KEY) ?: "")
+            }
+            else -> null
+        }
+    }
+
+    @JvmStatic
+    fun getDropInResultFromIntent(intent: Intent): String? {
+        return intent.getStringExtra(RESULT_KEY)
     }
 }
