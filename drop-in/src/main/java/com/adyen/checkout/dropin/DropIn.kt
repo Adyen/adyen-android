@@ -50,10 +50,10 @@ object DropIn {
      * the stack of the checkout activities.
      *
      * 3 states can occur from this operation:
-     * * Cancelled by user: the user dismissed the Drop-in before it has completed.
-     * * Error: a [DropInServiceResult.Error] was returned in the [DropInService], or an error
+     * - Cancelled by user: the user dismissed the Drop-in before it has completed.
+     * - Error: a [DropInServiceResult.Error] was returned in the [DropInService], or an error
      * has occurred.
-     * * Finished: a [DropInServiceResult.Finished] was returned in the [DropInService].
+     * - Finished: a [DropInServiceResult.Finished] was returned in the [DropInService].
      *
      * You should always handle the cases of cancellation and error in [Activity.onActivityResult]
      * (request code [DROP_IN_REQUEST_CODE]).
@@ -67,7 +67,8 @@ object DropIn {
      * also receive the result in [Activity.onActivityResult]. You can make use of the
      * [handleActivityResult] helper method. If you prefer to handle the activity result
      * manually, you should expect an [Activity.RESULT_OK] result code. The data intent will
-     * contain the result string extra with key [RESULT_KEY].
+     * contain the result string extra with key [RESULT_KEY] and will hold the same value as the
+     * [DropInServiceResult.Finished.result] returned inside the [DropInService].
      *
      * However, if you do specify a [resultHandlerIntent], [Activity.onActivityResult] will not
      * receive the result. Instead, that [resultHandlerIntent] will be launched when the
@@ -108,10 +109,10 @@ object DropIn {
      * the stack of the checkout activities.
      *
      * 3 states can occur from this operation:
-     * * Cancelled by user: the user dismissed the Drop-in before it has completed.
-     * * Error: a [DropInServiceResult.Error] was returned in the [DropInService], or an error
+     * - Cancelled by user: the user dismissed the Drop-in before it has completed.
+     * - Error: a [DropInServiceResult.Error] was returned in the [DropInService], or an error
      * has occurred.
-     * * Finished: a [DropInServiceResult.Finished] was returned in the [DropInService].
+     * - Finished: a [DropInServiceResult.Finished] was returned in the [DropInService].
      *
      * You should always handle the cases of cancellation and error in [Fragment.onActivityResult]
      * (request code [DROP_IN_REQUEST_CODE]).
@@ -125,7 +126,8 @@ object DropIn {
      * also receive the result in [Fragment.onActivityResult]. You can make use of the
      * [handleActivityResult] helper method. If you prefer to handle the activity result
      * manually, you should expect an [Activity.RESULT_OK] result code. The data intent will
-     * contain the result string extra with key [RESULT_KEY].
+     * contain the result string extra with key [RESULT_KEY] and will hold the same value as the
+     * [DropInServiceResult.Finished.result] returned inside the [DropInService].
      *
      * However, if you do specify a [resultHandlerIntent], [Fragment.onActivityResult] will not
      * receive the result. Instead, that [resultHandlerIntent] will be launched when the
