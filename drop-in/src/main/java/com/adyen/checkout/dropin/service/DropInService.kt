@@ -95,19 +95,26 @@ abstract class DropInService : Service(), CoroutineScope, DropInServiceInterface
      * payment component JSON and might also contain more details about the state of the
      * component at the moment in which the payment is confirmed by the user.
      *
-     * This method does not have a return type and therefore allows asynchronous handling of the
-     * payment data. However you must eventually call [sendResult] with a [DropInServiceResult]
-     * containing the result of the network request. The base class will handle messaging the UI
-     * afterwards, based on the [DropInServiceResult].
+     * - Asynchronous handling:
      *
-     * This method runs on the main thread, you should make sure the payments/ call and any other
-     * long running operation is made on a background thread.
+     *     Since this method runs on the main thread, you should make sure the payments/ call and
+     * any other long running operation is made on a background thread. You should eventually call
+     * [sendResult] with a [DropInServiceResult] containing the result of the network request.
+     * The base class will handle messaging the UI afterwards, based on the [DropInServiceResult].
      *
-     * Note that overriding this method means that the [makePaymentsCall] method will not be
-     * called anymore and therefore you should only implement one of these 2 methods depending on
-     * which behavior you prefer.
+     *     Note that overriding this method means that the [makePaymentsCall] method will not be
+     * called anymore and therefore you can disregard it.
      *
-     * Also note that the [PaymentComponentState] is a abstract class, you can check and cast to
+     * - Synchronous handling:
+     *
+     *     Alternatively, if you don't need asynchronous handling but you still want to access
+     * the [PaymentComponentState], you will still need to implement [makePaymentsCall]. After you
+     * are done handling the [PaymentComponentState] inside [onPaymentsCallRequested], call
+     * [super.onPaymentsCallRequested] to proceed. This will internally invoke your
+     * implementation of [makePaymentsCall] in a background thread so you won't need to
+     * manage the threads yourself.
+     *
+     * Note that the [PaymentComponentState] is a abstract class, you can check and cast to
      * one of its child classes for a more component specific state.
      *
      * See https://docs.adyen.com/api-explorer/ for more information on the API documentation.
@@ -143,17 +150,25 @@ abstract class DropInService : Service(), CoroutineScope, DropInServiceInterface
      * We also provide an [ActionComponentData] that contains a non-serialized version of the
      * action component JSON.
      *
-     * This method does not have a return type and therefore allows asynchronous handling of the
-     * action data. However you must eventually call [sendResult] with a [DropInServiceResult]
-     * containing the result of the network request. The base class will handle messaging the UI
-     * afterwards, based on the [DropInServiceResult].
+     * - Asynchronous handling:
      *
-     * This method runs on the main thread, you should make sure the payments/details/ call and
-     * any other long running operation is made on a background thread.
+     *     Since this method runs on the main thread, you should make sure the payments/details/
+     * call and any other long running operation is made on a background thread. You should
+     * eventually call [sendResult] with a [DropInServiceResult] containing the result of the
+     * network request. The base class will handle messaging the UI afterwards, based on the
+     * [DropInServiceResult].
      *
-     * Note that overriding this method means that the [makeDetailsCall] method will not be
-     * called anymore and therefore you should only implement one of these 2 methods depending on
-     * which behavior you prefer.
+     *     Note that overriding this method means that the [makeDetailsCall] method will not be
+     * called anymore and therefore you can disregard it.
+     *
+     * - Synchronous handling:
+     *
+     *     Alternatively, if you don't need asynchronous handling but you still want to access
+     * the [ActionComponentData], you will still need to implement [makeDetailsCall]. After you
+     * are done handling the [ActionComponentData] inside [onDetailsCallRequested], call
+     * [super.onDetailsCallRequested] to proceed. This will internally invoke your
+     * implementation of [makeDetailsCall] in a background thread so you won't need to
+     * manage the threads yourself.
      *
      * See https://docs.adyen.com/api-explorer/ for more information on the API documentation.
      *
@@ -207,9 +222,7 @@ abstract class DropInService : Service(), CoroutineScope, DropInServiceInterface
      * [DropInServiceResult].
      *
      * If you want to make the call asynchronously, or get a more detailed, non-serialized
-     * version of the payment component data, override [onPaymentsCallRequested] instead (note
-     * that you should either override [makePaymentsCall] or [onPaymentsCallRequested]
-     * not both at the same time).
+     * version of the payment component data, override [onPaymentsCallRequested] instead.
      *
      * See https://docs.adyen.com/api-explorer/ for more information on the API documentation.
      *
@@ -237,8 +250,7 @@ abstract class DropInService : Service(), CoroutineScope, DropInServiceInterface
      * [DropInServiceResult].
      *
      * If you want to make the call asynchronously, or get a non-serialized version of the action
-     * component data, override [onDetailsCallRequested] instead (note that you should either
-     * override [makeDetailsCall] or [onDetailsCallRequested] not both at the same time).
+     * component data, override [onDetailsCallRequested] instead.
      *
      * See https://docs.adyen.com/api-explorer/ for more information on the API documentation.
      *
