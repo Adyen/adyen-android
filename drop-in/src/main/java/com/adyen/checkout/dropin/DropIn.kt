@@ -21,13 +21,12 @@ import com.adyen.checkout.dropin.service.DropInServiceResult
 import com.adyen.checkout.dropin.ui.DropInActivity
 
 /**
- * Drop-in is the easy solution to using components. The Merchant only needs to provide the response of the paymentMethods/ endpoint
- * and some configuration data. Then we will handle the UI flow to get all the needed payment information.
+ * Drop-in is our pre-built checkout UI for accepting payments. You only need to provide
+ * the /paymentMethods response and some configuration data - Drop-in will handle the rest of the
+ * payment flow.
  *
- * Merchant needs to extend [DropInService] and put it in the manifest. That service is where the merchant will make the calls to the
- * server for the payments/ and payments/details/ endpoints/.
- *
- * After setting up the [DropInService], just call [startPayment] and the checkout process will start.
+ * To start the payment flow, first extend the [DropInService] class, and add it to your manifest
+ * file. Then call [startPayment].
  */
 object DropIn {
     private val TAG = LogUtil.getTag()
