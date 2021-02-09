@@ -1,2 +1,2 @@
 ### Fixed
-- Uncaught Exception failing silently when initializing 3DS2 Component.
+- Remove configuration object from /paymentmethods model breaking serialization in some API versions.
