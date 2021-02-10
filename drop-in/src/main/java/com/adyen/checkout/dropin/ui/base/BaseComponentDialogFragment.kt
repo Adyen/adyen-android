@@ -149,6 +149,6 @@ abstract class BaseComponentDialogFragment : DropInBottomSheetDialogFragment(), 
 
     fun handleError(componentError: ComponentError) {
         Logger.e(TAG, componentError.errorMessage)
-        protocol.showError(getString(R.string.component_error), true)
+        protocol.showError(getString(R.string.component_error), componentError.errorMessage, true)
     }
 }

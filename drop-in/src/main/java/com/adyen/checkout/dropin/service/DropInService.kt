@@ -37,7 +37,8 @@ private val TAG = LogUtil.getTag()
  * Calls should be made to your server, and from there to Adyen.
  *
  * The methods [makePaymentsCall] and [makeDetailsCall] are already run in the background and can return synchronously.
- * For async, check documentation.
+ * For async, you can override [onPaymentsCallRequested] and [onDetailsCallRequested] instead.
+ * Check the documentation for more details.
  * The result [DropInServiceResult] is the result of the network call and can mean different things.
  * Check the subclasses of [DropInServiceResult] for more information.
  */
@@ -82,6 +83,47 @@ abstract class DropInService : Service(), CoroutineScope, DropInServiceInterface
         onPaymentsCallRequested(paymentComponentState, json)
     }
 
+    /**
+     * In this method you should make the network call to tell your server to make a call to the payments/ endpoint.
+     *
+     * We provide a [PaymentComponentData] (as JSONObject) with the parameters we can infer from
+     * the Component [Configuration] and the user input,
+     * specially the "paymentMethod" object with the shopper input details.
+     * The rest of the payments/ call object should be filled in, on your server, according to your needs.
+     *
+     * We also provide a [PaymentComponentState] that contains a non-serialized version of the
+     * payment component JSON and might also contain more details about the state of the
+     * component at the moment in which the payment is confirmed by the user.
+     *
+     * - Asynchronous handling:
+     *
+     *     Since this method runs on the main thread, you should make sure the payments/ call and
+     * any other long running operation is made on a background thread. You should eventually call
+     * [sendResult] with a [DropInServiceResult] containing the result of the network request.
+     * The base class will handle messaging the UI afterwards, based on the [DropInServiceResult].
+     *
+     *     Note that overriding this method means that the [makePaymentsCall] method will not be
+     * called anymore and therefore you can disregard it.
+     *
+     * - Synchronous handling:
+     *
+     *     Alternatively, if you don't need asynchronous handling but you still want to access
+     * the [PaymentComponentState], you will still need to implement [makePaymentsCall]. After you
+     * are done handling the [PaymentComponentState] inside [onPaymentsCallRequested], call
+     * [super.onPaymentsCallRequested] to proceed. This will internally invoke your
+     * implementation of [makePaymentsCall] in a background thread so you won't need to
+     * manage the threads yourself.
+     *
+     * Note that the [PaymentComponentState] is a abstract class, you can check and cast to
+     * one of its child classes for a more component specific state.
+     *
+     * See https://docs.adyen.com/api-explorer/ for more information on the API documentation.
+     *
+     * @param paymentComponentState The state of the [PaymentComponent] at the moment the user
+     * submits the payment.
+     * @param paymentComponentJson The serialized data from the [PaymentComponent] the compose your
+     * call.
+     */
     protected open fun onPaymentsCallRequested(
         paymentComponentState: PaymentComponentState<*>,
         paymentComponentJson: JSONObject
@@ -99,6 +141,41 @@ abstract class DropInService : Service(), CoroutineScope, DropInServiceInterface
         onDetailsCallRequested(actionComponentData, json)
     }
 
+    /**
+     * In this method you should make the network call to tell your server to make a call to the payments/details/ endpoint.
+     *
+     * We provide an [ActionComponentData] (as JSONObject) with the whole result expected by the
+     * payments/details/ endpoint (if paymentData was provided).
+     *
+     * We also provide an [ActionComponentData] that contains a non-serialized version of the
+     * action component JSON.
+     *
+     * - Asynchronous handling:
+     *
+     *     Since this method runs on the main thread, you should make sure the payments/details/
+     * call and any other long running operation is made on a background thread. You should
+     * eventually call [sendResult] with a [DropInServiceResult] containing the result of the
+     * network request. The base class will handle messaging the UI afterwards, based on the
+     * [DropInServiceResult].
+     *
+     *     Note that overriding this method means that the [makeDetailsCall] method will not be
+     * called anymore and therefore you can disregard it.
+     *
+     * - Synchronous handling:
+     *
+     *     Alternatively, if you don't need asynchronous handling but you still want to access
+     * the [ActionComponentData], you will still need to implement [makeDetailsCall]. After you
+     * are done handling the [ActionComponentData] inside [onDetailsCallRequested], call
+     * [super.onDetailsCallRequested] to proceed. This will internally invoke your
+     * implementation of [makeDetailsCall] in a background thread so you won't need to
+     * manage the threads yourself.
+     *
+     * See https://docs.adyen.com/api-explorer/ for more information on the API documentation.
+     *
+     * @param actionComponentData The data from the [ActionComponent].
+     * @param actionComponentJson The serialized data from the [ActionComponent] the compose your
+     * call.
+     */
     protected open fun onDetailsCallRequested(
         actionComponentData: ActionComponentData,
         actionComponentJson: JSONObject
@@ -110,6 +187,16 @@ abstract class DropInService : Service(), CoroutineScope, DropInServiceInterface
         }
     }
 
+    /**
+     * Allow asynchronously sending the results of the payments/ and payments/details/ network
+     * calls.
+     *
+     * Call this method when using [onPaymentsCallRequested] and [onDetailsCallRequested] with a
+     * [DropInServiceResult] depending on the response of the corresponding network call.
+     * Check the subclasses of [DropInServiceResult] for more information.
+     *
+     * @param result the result of the network request.
+     */
     protected fun sendResult(result: DropInServiceResult) {
         // send response back to activity
         Logger.d(TAG, "dispatching DropInServiceResult")
@@ -128,13 +215,14 @@ abstract class DropInService : Service(), CoroutineScope, DropInServiceInterface
      * object and a [JSONObject] depending on what you prefer.
      *
      * The return of this method is expected to be a [DropInServiceResult] with the result of the network
-     * request.
-     * See expected [DropInServiceResult] and the associated content.
+     * request. Check the subclasses of [DropInServiceResult] for more information.
      *
      * This call is expected to be synchronous, as it already runs in a background thread, and the
-     * base class will handle messaging the UI after it finishes, based on the [DropInServiceResult].
-     * If you want to make the call asynchronously, return [DropInServiceResult.Wait] on the type and
-     * call the [asyncCallback] method afterwards when it is done with the result.
+     * base class will handle messaging the UI after it finishes, based on the
+     * [DropInServiceResult].
+     *
+     * If you want to make the call asynchronously, or get a more detailed, non-serialized
+     * version of the payment component data, override [onPaymentsCallRequested] instead.
      *
      * See https://docs.adyen.com/api-explorer/ for more information on the API documentation.
      *
@@ -148,15 +236,21 @@ abstract class DropInService : Service(), CoroutineScope, DropInServiceInterface
     /**
      * In this method you should make the network call to tell your server to make a call to the payments/details/ endpoint.
      *
-     * We provide a [ActionComponentData] (as JSONObject) with the whole result expected by the payments/details/ endpoint
-     * (if paymentData was provided).
+     * We provide an [ActionComponentData] (as JSONObject) with the whole result expected by the
+     * payments/details/ endpoint (if paymentData was provided).
      *
      * You can use [ActionComponentData.SERIALIZER] to serialize the data between the data object
      * and a [JSONObject] depending on what you prefer.
      *
-     * This call is expected to be synchronous, as it already runs in the background, and the base class will handle messaging with the UI after it
-     * finishes based on the [DropInServiceResult]. If you want to make the call asynchronously, return
-     * [DropInServiceResult.Wait] on the type and call the [asyncCallback] method afterwards.
+     * The return of this method is expected to be a [DropInServiceResult] with the result of the network
+     * request. Check the subclasses of [DropInServiceResult] for more information.
+     *
+     * This call is expected to be synchronous, as it already runs in the background, and the
+     * base class will handle messaging with the UI after it finishes based on the
+     * [DropInServiceResult].
+     *
+     * If you want to make the call asynchronously, or get a non-serialized version of the action
+     * component data, override [onDetailsCallRequested] instead.
      *
      * See https://docs.adyen.com/api-explorer/ for more information on the API documentation.
      *

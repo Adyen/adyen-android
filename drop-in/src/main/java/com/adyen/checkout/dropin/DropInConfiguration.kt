@@ -10,7 +10,6 @@ package com.adyen.checkout.dropin
 
 import android.content.ComponentName
 import android.content.Context
-import android.content.Intent
 import android.os.Parcel
 import android.os.Parcelable
 import com.adyen.checkout.components.base.Configuration
@@ -49,7 +48,6 @@ class DropInConfiguration : Configuration, Parcelable {
 
     private val availableConfigs: HashMap<String, Configuration>
     val serviceComponentName: ComponentName
-    val resultHandlerIntent: Intent
     val amount: Amount
 
     companion object {
@@ -67,12 +65,10 @@ class DropInConfiguration : Configuration, Parcelable {
         clientKey: String,
         availableConfigs: HashMap<String, Configuration>,
         serviceComponentName: ComponentName,
-        resultHandlerIntent: Intent,
         amount: Amount
     ) : super(shopperLocale, environment, clientKey) {
         this.availableConfigs = availableConfigs
         this.serviceComponentName = serviceComponentName
-        this.resultHandlerIntent = resultHandlerIntent
         this.amount = amount
     }
 
@@ -80,7 +76,6 @@ class DropInConfiguration : Configuration, Parcelable {
         @Suppress("UNCHECKED_CAST")
         availableConfigs = parcel.readHashMap(Configuration::class.java.classLoader) as HashMap<String, Configuration>
         serviceComponentName = parcel.readParcelable(ComponentName::class.java.classLoader)!!
-        resultHandlerIntent = parcel.readParcelable(Intent::class.java.classLoader)!!
         amount = Amount.CREATOR.createFromParcel(parcel)
     }
 
@@ -88,7 +83,6 @@ class DropInConfiguration : Configuration, Parcelable {
         super.writeToParcel(dest, flags)
         dest.writeMap(availableConfigs)
         dest.writeParcelable(serviceComponentName, flags)
-        dest.writeParcelable(resultHandlerIntent, flags)
         JsonUtils.writeToParcel(dest, Amount.SERIALIZER.serialize(amount))
     }
 
@@ -120,22 +114,22 @@ class DropInConfiguration : Configuration, Parcelable {
         private var environment: Environment = Environment.EUROPE
         private var clientKey: String = ""
         private var serviceComponentName: ComponentName
-        private var resultHandlerIntent: Intent
         private var amount: Amount = Amount.EMPTY
 
         private val packageName: String
         private val serviceClassName: String
 
         /**
+         *
+         * Create a [DropInConfiguration]
+         *
          * @param context
-         * @param resultHandlerIntent The Intent used with [Activity.startActivity] that will contain the payment result extra with key [RESULT_KEY].
          * @param serviceClass Service that extended from [DropInService] that would handle network requests.
          */
-        constructor(context: Context, resultHandlerIntent: Intent, serviceClass: Class<out Any?>) {
+        constructor(context: Context, serviceClass: Class<out Any?>) {
             this.packageName = context.packageName
             this.serviceClassName = serviceClass.name
 
-            this.resultHandlerIntent = resultHandlerIntent
             this.serviceComponentName = ComponentName(packageName, serviceClassName)
             this.shopperLocale = LocaleUtil.getLocale(context)
         }
@@ -150,7 +144,6 @@ class DropInConfiguration : Configuration, Parcelable {
             this.serviceComponentName = dropInConfiguration.serviceComponentName
             this.shopperLocale = dropInConfiguration.shopperLocale
             this.environment = dropInConfiguration.environment
-            this.resultHandlerIntent = dropInConfiguration.resultHandlerIntent
             this.amount = dropInConfiguration.amount
         }
 
@@ -180,11 +173,6 @@ class DropInConfiguration : Configuration, Parcelable {
             }
 
             this.clientKey = clientKey
-            return this
-        }
-
-        fun setResultHandlerIntent(resultHandlerIntent: Intent): Builder {
-            this.resultHandlerIntent = resultHandlerIntent
             return this
         }
 
@@ -318,7 +306,6 @@ class DropInConfiguration : Configuration, Parcelable {
                 clientKey,
                 availableConfigs,
                 serviceComponentName,
-                resultHandlerIntent,
                 amount
             )
         }

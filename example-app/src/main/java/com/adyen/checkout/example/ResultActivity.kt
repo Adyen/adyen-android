@@ -20,8 +20,9 @@ class ResultActivity : AppCompatActivity() {
         val binding = ActivityResultBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
-        if (intent.hasExtra(DropIn.RESULT_KEY)) {
-            binding.resultText.text = intent.getStringExtra(DropIn.RESULT_KEY)
+        val result = DropIn.getDropInResultFromIntent(intent)
+        if (result != null) {
+            binding.resultText.text = result
         }
     }
 }

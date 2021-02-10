@@ -8,7 +8,6 @@
 
 package com.adyen.checkout.example.ui.main
 
-import android.app.Activity
 import android.content.Intent
 import android.os.Bundle
 import android.view.Menu
@@ -27,6 +26,7 @@ import com.adyen.checkout.core.log.Logger
 import com.adyen.checkout.core.util.LocaleUtil
 import com.adyen.checkout.dropin.DropIn
 import com.adyen.checkout.dropin.DropInConfiguration
+import com.adyen.checkout.dropin.DropInResult
 import com.adyen.checkout.example.BuildConfig
 import com.adyen.checkout.example.R
 import com.adyen.checkout.example.data.api.CheckoutApiService
@@ -59,8 +59,9 @@ class MainActivity : AppCompatActivity() {
         setContentView(binding.root)
         setSupportActionBar(findViewById(R.id.toolbar))
 
-        if (intent.hasExtra(DropIn.RESULT_KEY)) {
-            Toast.makeText(this, intent.getStringExtra(DropIn.RESULT_KEY), Toast.LENGTH_SHORT).show()
+        val result = DropIn.getDropInResultFromIntent(intent)
+        if (result != null) {
+            Toast.makeText(this, result, Toast.LENGTH_SHORT).show()
         }
 
         binding.startCheckoutButton.setOnClickListener {
@@ -119,15 +120,19 @@ class MainActivity : AppCompatActivity() {
     override fun onNewIntent(intent: Intent?) {
         super.onNewIntent(intent)
         Logger.d(TAG, "onNewIntent")
-        if (intent?.hasExtra(DropIn.RESULT_KEY) == true) {
-            Toast.makeText(this, intent.getStringExtra(DropIn.RESULT_KEY), Toast.LENGTH_SHORT).show()
-        }
+        if (intent == null) return
+        val result = DropIn.getDropInResultFromIntent(intent) ?: return
+        Toast.makeText(this, result, Toast.LENGTH_SHORT).show()
     }
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         super.onActivityResult(requestCode, resultCode, data)
-        if (requestCode == DropIn.DROP_IN_REQUEST_CODE && resultCode == Activity.RESULT_CANCELED) {
-            Logger.d(TAG, "DropIn CANCELED")
+        Logger.d(TAG, "onActivityResult")
+        val dropInResult = DropIn.handleActivityResult(requestCode, resultCode, data) ?: return
+        when (dropInResult) {
+            is DropInResult.CancelledByUser -> Toast.makeText(this, "Canceled by user", Toast.LENGTH_SHORT).show()
+            is DropInResult.Error -> Toast.makeText(this, dropInResult.reason, Toast.LENGTH_SHORT).show()
+            is DropInResult.Finished -> Toast.makeText(this, dropInResult.result, Toast.LENGTH_SHORT).show()
         }
     }
 
@@ -157,12 +162,8 @@ class MainActivity : AppCompatActivity() {
             .setEnvironment(Environment.TEST)
             .build()
 
-        val resultIntent = Intent(this, MainActivity::class.java)
-        resultIntent.flags = Intent.FLAG_ACTIVITY_CLEAR_TOP
-
         val dropInConfigurationBuilder = DropInConfiguration.Builder(
             this@MainActivity,
-            resultIntent,
             ExampleDropInService::class.java
         )
             .setEnvironment(Environment.TEST)
@@ -180,7 +181,10 @@ class MainActivity : AppCompatActivity() {
             Logger.e(TAG, "Amount $amount not valid", e)
         }
 
-        DropIn.startPayment(this@MainActivity, paymentMethodsApiResponse, dropInConfigurationBuilder.build())
+        val resultIntent = Intent(this, MainActivity::class.java)
+        resultIntent.flags = Intent.FLAG_ACTIVITY_CLEAR_TOP
+
+        DropIn.startPayment(this, paymentMethodsApiResponse, dropInConfigurationBuilder.build(), resultIntent)
     }
 
     private fun setLoading(isLoading: Boolean) {

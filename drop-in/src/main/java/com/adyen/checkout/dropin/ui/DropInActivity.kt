@@ -64,6 +64,7 @@ private const val LOADING_FRAGMENT_TAG = "LOADING_DIALOG_FRAGMENT"
 
 private const val PAYMENT_METHODS_RESPONSE_KEY = "PAYMENT_METHODS_RESPONSE_KEY"
 private const val DROP_IN_CONFIGURATION_KEY = "DROP_IN_CONFIGURATION_KEY"
+private const val DROP_IN_RESULT_INTENT = "DROP_IN_RESULT_INTENT"
 private const val IS_WAITING_FOR_RESULT = "IS_WAITING_FOR_RESULT"
 
 private const val GOOGLE_PAY_REQUEST_CODE = 1
@@ -129,7 +130,7 @@ class DropInActivity : AppCompatActivity(), DropInBottomSheetDialogFragment.Prot
 
         val initializationSuccessful = initializeBundleVariables(bundle)
         if (!initializationSuccessful) {
-            showError(getString(R.string.action_failed), true)
+            showError(getString(R.string.action_failed), "Initialization failed", true)
             return
         }
 
@@ -183,8 +184,15 @@ class DropInActivity : AppCompatActivity(), DropInBottomSheetDialogFragment.Prot
         isWaitingResult = bundle.getBoolean(IS_WAITING_FOR_RESULT, false)
         val dropInConfiguration: DropInConfiguration? = bundle.getParcelable(DROP_IN_CONFIGURATION_KEY)
         val paymentMethodsApiResponse: PaymentMethodsApiResponse? = bundle.getParcelable(PAYMENT_METHODS_RESPONSE_KEY)
+        val resultHandlerIntent: Intent? = bundle.getParcelable(DROP_IN_RESULT_INTENT)
         return if (dropInConfiguration != null && paymentMethodsApiResponse != null) {
-            dropInViewModel = getViewModel { DropInViewModel(paymentMethodsApiResponse, dropInConfiguration) }
+            dropInViewModel = getViewModel {
+                DropInViewModel(
+                    paymentMethodsApiResponse,
+                    dropInConfiguration,
+                    resultHandlerIntent
+                )
+            }
             true
         } else {
             Logger.e(
@@ -268,14 +276,22 @@ class DropInActivity : AppCompatActivity(), DropInBottomSheetDialogFragment.Prot
         dropInService?.requestDetailsCall(actionComponentData)
     }
 
-    override fun showError(errorMessage: String, terminate: Boolean) {
+    override fun showError(errorMessage: String, reason: String, terminate: Boolean) {
         Logger.d(TAG, "showError - message: $errorMessage")
         AlertDialog.Builder(this)
             .setTitle(R.string.error_dialog_title)
             .setMessage(errorMessage)
-            .setOnDismissListener { this@DropInActivity.shouldFinish(terminate) }
+            .setOnDismissListener { this@DropInActivity.errorDialogDismissed(reason, terminate) }
             .setPositiveButton(R.string.error_dialog_button) { dialog, _ -> dialog.dismiss() }
             .show()
+    }
+
+    private fun errorDialogDismissed(reason: String, terminateDropIn: Boolean) {
+        if (terminateDropIn) {
+            terminateWithError(reason)
+        } else {
+            setLoading(false)
+        }
     }
 
     override fun displayAction(action: Action) {
@@ -288,7 +304,7 @@ class DropInActivity : AppCompatActivity(), DropInBottomSheetDialogFragment.Prot
     }
 
     override fun onActionError(errorMessage: String) {
-        showError(getString(R.string.action_failed), true)
+        showError(getString(R.string.action_failed), errorMessage, true)
     }
 
     override fun onSaveInstanceState(outState: Bundle) {
@@ -353,9 +369,7 @@ class DropInActivity : AppCompatActivity(), DropInBottomSheetDialogFragment.Prot
 
     override fun terminateDropIn() {
         Logger.d(TAG, "terminateDropIn")
-        setResult(Activity.RESULT_CANCELED)
-        finish()
-        overridePendingTransition(0, R.anim.fade_out)
+        terminateWithError(DropIn.ERROR_REASON_USER_CANCELED)
     }
 
     override fun startGooglePay(paymentMethod: PaymentMethod, googlePayConfiguration: GooglePayConfiguration) {
@@ -373,36 +387,55 @@ class DropInActivity : AppCompatActivity(), DropInBottomSheetDialogFragment.Prot
         isWaitingResult = false
         when (dropInServiceResult) {
             is DropInServiceResult.Finished -> {
-                this.sendResult(dropInServiceResult.result)
+                sendResult(dropInServiceResult.result)
             }
             is DropInServiceResult.Action -> {
                 val action = Action.SERIALIZER.deserialize(JSONObject(dropInServiceResult.actionJSON))
-                actionHandler.handleAction(this, action, this::sendResult)
+                actionHandler.handleAction(this, action, ::sendResult)
             }
             is DropInServiceResult.Error -> {
                 Logger.d(TAG, "handleDropInServiceResult ERROR - reason: ${dropInServiceResult.reason}")
+                val reason = dropInServiceResult.reason ?: "Unspecified reason"
                 if (dropInServiceResult.errorMessage == null) {
-                    showError(getString(R.string.payment_failed), dropInServiceResult.dismissDropIn)
+                    showError(getString(R.string.payment_failed), reason, dropInServiceResult.dismissDropIn)
                 } else {
-                    showError(dropInServiceResult.errorMessage, dropInServiceResult.dismissDropIn)
+                    showError(dropInServiceResult.errorMessage, reason, dropInServiceResult.dismissDropIn)
                 }
             }
         }
     }
 
-    private fun shouldFinish(dismissDropIn: Boolean) {
-        if (dismissDropIn) {
-            terminateDropIn()
-        } else {
-            setLoading(false)
+    private fun sendResult(content: String) {
+        val resultHandlerIntent = dropInViewModel.resultHandlerIntent
+        // Merchant requested the result to be sent back with a result intent
+        if (resultHandlerIntent != null) {
+            resultHandlerIntent.putExtra(DropIn.RESULT_KEY, content)
+            startActivity(resultHandlerIntent)
         }
+        // Merchant did not specify a result intent and should handle the result in onActivityResult
+        else {
+            val resultIntent = Intent().putExtra(DropIn.RESULT_KEY, content)
+            setResult(Activity.RESULT_OK, resultIntent)
+        }
+        terminateSuccessfully()
     }
 
-    private fun sendResult(content: String) {
-        dropInViewModel.dropInConfiguration.resultHandlerIntent.putExtra(DropIn.RESULT_KEY, content).let { intent ->
-            startActivity(intent)
-            terminateDropIn()
-        }
+    private fun terminateSuccessfully() {
+        Logger.d(TAG, "terminateSuccessfully")
+        terminate()
+    }
+
+    private fun terminateWithError(reason: String) {
+        Logger.d(TAG, "terminateWithError")
+        val resultIntent = Intent().putExtra(DropIn.ERROR_REASON_KEY, reason)
+        setResult(Activity.RESULT_CANCELED, resultIntent)
+        terminate()
+    }
+
+    private fun terminate() {
+        Logger.d(TAG, "terminate")
+        finish()
+        overridePendingTransition(0, R.anim.fade_out)
     }
 
     private fun handleIntent(intent: Intent) {
@@ -461,10 +494,16 @@ class DropInActivity : AppCompatActivity(), DropInBottomSheetDialogFragment.Prot
     }
 
     companion object {
-        fun createIntent(context: Context, dropInConfiguration: DropInConfiguration, paymentMethodsApiResponse: PaymentMethodsApiResponse): Intent {
+        fun createIntent(
+            context: Context,
+            dropInConfiguration: DropInConfiguration,
+            paymentMethodsApiResponse: PaymentMethodsApiResponse,
+            resultHandlerIntent: Intent?
+        ): Intent {
             val intent = Intent(context, DropInActivity::class.java)
             intent.putExtra(PAYMENT_METHODS_RESPONSE_KEY, paymentMethodsApiResponse)
             intent.putExtra(DROP_IN_CONFIGURATION_KEY, dropInConfiguration)
+            intent.putExtra(DROP_IN_RESULT_INTENT, resultHandlerIntent)
             return intent
         }
     }
