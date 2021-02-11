@@ -45,6 +45,10 @@ class BinLookupRepository {
         }
     }
 
+    private fun hashBin(cardNumber: String): String {
+        return Sha256.hashString(cardNumber.take(BinLookupConnection.REQUIRED_BIN_SIZE))
+    }
+
     fun get(cardNumber: String): List<DetectedCardType> {
         if (isRequiredSize(cardNumber)) {
             return cachedBinLookup[hashBin(cardNumber)] ?: throw IllegalArgumentException("BinLookupRepository does not contain card number")
@@ -62,14 +66,6 @@ class BinLookupRepository {
         val detectedCardTypes = mapResponse(binLookupResponse)
         cachedBinLookup[hashBin(cardNumber)] = detectedCardTypes
         return detectedCardTypes
-    }
-
-    private fun hashBin(cardNumber: String): String {
-        return Sha256.hashString(getBin(cardNumber))
-    }
-
-    private fun getBin(cardNumber: String): String {
-        return cardNumber.substring(0, BinLookupConnection.REQUIRED_BIN_SIZE)
     }
 
     private suspend fun makeBinLookup(

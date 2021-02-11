@@ -53,15 +53,15 @@ class CardComponent private constructor(
             cardDelegate.binLookupFlow
                 .onEach {
                     Logger.d(TAG, "New binLookupFlow emitted")
-                    val oldOutputData = outputData
-                    if (oldOutputData != null) {
+                    with(outputData) {
+                        this ?: return@with
                         val newOutputData = CardOutputData(
-                            oldOutputData.cardNumberField,
-                            oldOutputData.expiryDateField,
-                            oldOutputData.securityCodeField,
-                            oldOutputData.holderNameField,
-                            oldOutputData.isStoredPaymentMethodEnable,
-                            oldOutputData.isCvcHidden,
+                            cardNumberField,
+                            expiryDateField,
+                            securityCodeField,
+                            holderNameField,
+                            isStoredPaymentMethodEnable,
+                            isCvcHidden,
                             it
                         )
                         notifyStateChanged(newOutputData)
@@ -123,7 +123,7 @@ class CardComponent private constructor(
         val cardPaymentMethod = CardPaymentMethod()
         cardPaymentMethod.type = CardPaymentMethod.PAYMENT_METHOD_TYPE
 
-        val unenctryptedCardBuilder = UnencryptedCard.Builder()
+        val unencryptedCardBuilder = UnencryptedCard.Builder()
 
         val paymentComponentData = PaymentComponentData<CardPaymentMethod>()
 
@@ -141,18 +141,18 @@ class CardComponent private constructor(
         val encryptedCard: EncryptedCard
         encryptedCard = try {
             if (!isStoredPaymentMethod()) {
-                unenctryptedCardBuilder.setNumber(stateOutputData.cardNumberField.value)
+                unencryptedCardBuilder.setNumber(stateOutputData.cardNumberField.value)
             }
             if (!cardDelegate.isCvcHidden()) {
-                unenctryptedCardBuilder.setCvc(stateOutputData.securityCodeField.value)
+                unencryptedCardBuilder.setCvc(stateOutputData.securityCodeField.value)
             }
             val expiryDateResult = stateOutputData.expiryDateField.value
             if (expiryDateResult.expiryYear != ExpiryDate.EMPTY_VALUE && expiryDateResult.expiryMonth != ExpiryDate.EMPTY_VALUE) {
-                unenctryptedCardBuilder.setExpiryMonth(expiryDateResult.expiryMonth.toString())
-                unenctryptedCardBuilder.setExpiryYear(expiryDateResult.expiryYear.toString())
+                unencryptedCardBuilder.setExpiryMonth(expiryDateResult.expiryMonth.toString())
+                unencryptedCardBuilder.setExpiryYear(expiryDateResult.expiryYear.toString())
             }
 
-            CardEncrypter.encryptFields(unenctryptedCardBuilder.build(), publicKey)
+            CardEncrypter.encryptFields(unencryptedCardBuilder.build(), publicKey)
         } catch (e: EncryptionException) {
             notifyException(e)
             return CardComponentState(paymentComponentData, false, firstCardType, binValue)
