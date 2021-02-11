@@ -8,7 +8,7 @@
 
 package com.adyen.checkout.card.data
 
-import com.adyen.checkout.card.model.Brand
+import com.adyen.checkout.card.api.model.Brand
 
 data class DetectedCardType(
     val cardType: CardType,

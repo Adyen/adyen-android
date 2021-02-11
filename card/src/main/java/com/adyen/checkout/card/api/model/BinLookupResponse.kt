@@ -6,12 +6,11 @@
  * Created by caiof on 12/1/2021.
  */
 
-package com.adyen.checkout.card.model
+package com.adyen.checkout.card.api.model
 
 import android.os.Parcel
 import android.os.Parcelable
 import com.adyen.checkout.core.exception.ModelSerializationException
-import com.adyen.checkout.core.log.LogUtil
 import com.adyen.checkout.core.model.JsonUtils
 import com.adyen.checkout.core.model.ModelObject
 import com.adyen.checkout.core.model.ModelUtils
@@ -22,8 +21,6 @@ import org.json.JSONObject
 private const val BRANDS = "brands"
 private const val ISSUING_COUNTRY_CODE = "issuingCountryCode"
 private const val REQUEST_ID = "requestId"
-
-private val TAG = LogUtil.getTag()
 
 data class BinLookupResponse(
     val brands: List<Brand>? = null,

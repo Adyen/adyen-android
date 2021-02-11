@@ -11,6 +11,7 @@ import android.app.Application
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.ViewModelStoreOwner
 import com.adyen.checkout.card.data.CardType
+import com.adyen.checkout.card.repository.BinLookupRepository
 import com.adyen.checkout.components.ComponentAvailableCallback
 import com.adyen.checkout.components.StoredPaymentComponentProvider
 import com.adyen.checkout.components.base.lifecycle.viewModelFactory
@@ -28,7 +29,13 @@ class CardComponentProvider : StoredPaymentComponentProvider<CardComponent, Card
         configuration: CardConfiguration
     ): CardComponent {
         val verifiedConfiguration = checkSupportedCardTypes(paymentMethod, configuration)
-        val factory = viewModelFactory { CardComponent(NewCardDelegate(paymentMethod, verifiedConfiguration), verifiedConfiguration) }
+        val binLookupRepository = BinLookupRepository()
+        val factory = viewModelFactory {
+            CardComponent(
+                NewCardDelegate(paymentMethod, verifiedConfiguration, binLookupRepository),
+                verifiedConfiguration
+            )
+        }
         return ViewModelProvider(viewModelStoreOwner, factory).get(CardComponent::class.java)
     }
 

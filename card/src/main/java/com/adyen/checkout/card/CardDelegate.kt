@@ -12,7 +12,6 @@ import com.adyen.checkout.card.api.PublicKeyConnection
 import com.adyen.checkout.card.data.CardType
 import com.adyen.checkout.card.data.DetectedCardType
 import com.adyen.checkout.card.data.ExpiryDate
-import com.adyen.checkout.card.model.Brand
 import com.adyen.checkout.components.api.suspendedCall
 import com.adyen.checkout.components.base.PaymentMethodDelegate
 import com.adyen.checkout.components.validation.ValidatedField
@@ -46,9 +45,6 @@ abstract class CardDelegate(protected val cardConfiguration: CardConfiguration) 
     abstract fun requiresInput(): Boolean
     abstract fun isHolderNameRequired(): Boolean
     abstract fun detectCardType(cardNumber: String, publicKey: String, coroutineScope: CoroutineScope): List<DetectedCardType>
-
-    protected abstract fun localDetectedCard(cardType: CardType): DetectedCardType
-    protected abstract fun getCvcPolicy(brand: String): Brand.CvcPolicy
 
     suspend fun fetchPublicKey(): String {
         return if (cardConfiguration.publicKey.isNotEmpty() && CardValidationUtils.isPublicKeyValid(cardConfiguration.publicKey)) {

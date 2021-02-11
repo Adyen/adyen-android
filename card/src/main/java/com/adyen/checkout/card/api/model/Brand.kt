@@ -6,7 +6,7 @@
  * Created by caiof on 18/1/2021.
  */
 
-package com.adyen.checkout.card.model
+package com.adyen.checkout.card.api.model
 
 import android.os.Parcel
 import android.os.Parcelable

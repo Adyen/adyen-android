@@ -8,10 +8,10 @@
 
 package com.adyen.checkout.card
 
+import com.adyen.checkout.card.api.model.Brand
 import com.adyen.checkout.card.data.CardType
 import com.adyen.checkout.card.data.DetectedCardType
 import com.adyen.checkout.card.data.ExpiryDate
-import com.adyen.checkout.card.model.Brand
 import com.adyen.checkout.components.model.paymentmethods.StoredPaymentMethod
 import com.adyen.checkout.components.util.PaymentMethodTypes
 import com.adyen.checkout.components.validation.ValidatedField
@@ -19,12 +19,31 @@ import com.adyen.checkout.core.log.LogUtil
 import com.adyen.checkout.core.log.Logger
 import kotlinx.coroutines.CoroutineScope
 
+private val TAG = LogUtil.getTag()
+
 @Suppress("TooManyFunctions")
 class StoredCardDelegate(
     private val storedPaymentMethod: StoredPaymentMethod,
     cardConfiguration: CardConfiguration
 ) : CardDelegate(cardConfiguration) {
-    private val logTag = LogUtil.getTag()
+
+    private val cardType = CardType.getByBrandName(storedPaymentMethod.brand.orEmpty())
+    private val storedDetectedCardTypes = if (cardType != null) {
+        listOf(
+            DetectedCardType(
+                cardType,
+                isReliable = true,
+                showExpiryDate = true,
+                enableLuhnCheck = true,
+                cvcPolicy = when {
+                    cardConfiguration.isHideCvcStoredCard || noCvcBrands.contains(cardType) -> Brand.CvcPolicy.HIDDEN
+                    else -> Brand.CvcPolicy.REQUIRED
+                }
+            )
+        )
+    } else {
+        emptyList()
+    }
 
     override fun getPaymentMethodType(): String {
         return storedPaymentMethod.type ?: PaymentMethodTypes.UNKNOWN
@@ -47,7 +66,7 @@ class StoredCardDelegate(
     }
 
     override fun isCvcHidden(): Boolean {
-        return cardConfiguration.isHideCvcStoredCard || noCvcBrands.contains(getCardType())
+        return cardConfiguration.isHideCvcStoredCard || noCvcBrands.contains(cardType)
     }
 
     override fun requiresInput(): Boolean {
@@ -63,29 +82,7 @@ class StoredCardDelegate(
         publicKey: String,
         coroutineScope: CoroutineScope
     ): List<DetectedCardType> {
-        val cardType = getCardType()
-        return if (cardType != null) {
-            listOf(localDetectedCard(cardType))
-        } else {
-            emptyList()
-        }
-    }
-
-    override fun localDetectedCard(cardType: CardType): DetectedCardType {
-        return DetectedCardType(
-            cardType,
-            isReliable = true,
-            showExpiryDate = true,
-            enableLuhnCheck = true,
-            cvcPolicy = getCvcPolicy(cardType.txVariant)
-        )
-    }
-
-    override fun getCvcPolicy(brand: String): Brand.CvcPolicy {
-        return when {
-            cardConfiguration.isHideCvcStoredCard || noCvcBrands.contains(brand) -> Brand.CvcPolicy.HIDDEN
-            else -> Brand.CvcPolicy.REQUIRED
-        }
+        return storedDetectedCardTypes
     }
 
     fun getStoredCardInputData(): CardInputData {
@@ -96,15 +93,11 @@ class StoredCardDelegate(
             val storedDate = ExpiryDate(storedPaymentMethod.expiryMonth.orEmpty().toInt(), storedPaymentMethod.expiryYear.orEmpty().toInt())
             storedCardInputData.expiryDate = storedDate
         } catch (e: NumberFormatException) {
-            Logger.e(logTag, "Failed to parse stored Date", e)
+            Logger.e(TAG, "Failed to parse stored Date", e)
             storedCardInputData.expiryDate = ExpiryDate.EMPTY_DATE
         }
 
         return storedCardInputData
-    }
-
-    fun getCardType(): CardType? {
-        return CardType.getByBrandName(storedPaymentMethod.brand.orEmpty())
     }
 
     fun getId(): String {
