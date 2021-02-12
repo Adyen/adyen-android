@@ -40,12 +40,11 @@ public abstract class BasePaymentComponent<
 
     private static final String TAG = LogUtil.getTag();
 
-    final MutableLiveData<ComponentStateT> mPaymentComponentStateLiveData = new MutableLiveData<>();
-
-    private final MutableLiveData<ComponentError> mComponentErrorLiveData = new MutableLiveData<>();
-
     @Nullable
-    private OutputDataT mOutputData;
+    protected InputDataT mLatestInputData;
+
+    private final MutableLiveData<ComponentStateT> mPaymentComponentStateLiveData = new MutableLiveData<>();
+    private final MutableLiveData<ComponentError> mComponentErrorLiveData = new MutableLiveData<>();
 
     private final MutableLiveData<OutputDataT> mOutputLiveData = new MutableLiveData<>();
 
@@ -93,12 +92,8 @@ public abstract class BasePaymentComponent<
      */
     public final void inputDataChanged(@NonNull InputDataT inputData) {
         Logger.v(TAG, "inputDataChanged");
-        final OutputDataT newOutputData = onInputDataChanged(inputData);
-        if (!newOutputData.equals(mOutputData)) {
-            mOutputData = newOutputData;
-            mOutputLiveData.setValue(mOutputData);
-            notifyStateChanged();
-        }
+        mLatestInputData = inputData;
+        notifyStateChanged(onInputDataChanged(inputData));
     }
 
     /**
@@ -146,7 +141,7 @@ public abstract class BasePaymentComponent<
     @Nullable
     @Override
     public OutputDataT getOutputData() {
-        return mOutputData;
+        return mOutputLiveData.getValue();
     }
 
     /**
@@ -167,8 +162,14 @@ public abstract class BasePaymentComponent<
         mComponentErrorLiveData.postValue(new ComponentError(e));
     }
 
-    private void notifyStateChanged() {
-        ThreadManager.EXECUTOR.submit(() -> mPaymentComponentStateLiveData.postValue(createComponentState()));
+    protected void notifyStateChanged(@NonNull OutputDataT outputData) {
+        Logger.d(TAG, "notifyStateChanged");
+        if (!outputData.equals(mOutputLiveData.getValue())) {
+            mOutputLiveData.setValue(outputData);
+            ThreadManager.EXECUTOR.submit(() -> mPaymentComponentStateLiveData.postValue(createComponentState()));
+        } else {
+            Logger.d(TAG, "state has not changed");
+        }
     }
 
     private void assertSupported(@NonNull String paymentMethodType) {
