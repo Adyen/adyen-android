@@ -15,11 +15,13 @@ buildscript {
     ext.detekt_gradle_plugin_version = "1.13.1"
     ext.bintray_gradle_plugin_version = "1.8.5"
     ext.spotbugs_gradle_plugin_version = "4.5.1"
+    ext.dokka_version = "1.4.20"
 
     repositories {
         google()
         jcenter()
         maven { url "https://plugins.gradle.org/m2/" }
+        maven { url "https://dl.bintray.com/kotlin/dokka/" }
     }
 
     dependencies {
@@ -28,8 +30,11 @@ buildscript {
         classpath "io.gitlab.arturbosch.detekt:detekt-gradle-plugin:$detekt_gradle_plugin_version"
         classpath "org.jetbrains.kotlin:kotlin-gradle-plugin:$kotlin_version"
         classpath "gradle.plugin.com.github.spotbugs.snom:spotbugs-gradle-plugin:$spotbugs_gradle_plugin_version"
+        classpath "org.jetbrains.dokka:dokka-gradle-plugin:$dokka_version"
     }
 }
+
+apply from: "config/gradle/dokkaRoot.gradle"
 
 allprojects {
     // SDK

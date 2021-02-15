@@ -38,7 +38,6 @@ project.afterEvaluate {
                 artifactId theArtifactId
                 version theVersion
 
-                artifact androidJavadocsJar
                 artifact androidSourcesJar
                 artifact bundleReleaseAar
 
