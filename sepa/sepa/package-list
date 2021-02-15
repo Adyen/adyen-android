@@ -1,0 +1,6 @@
+$dokka.format:html-v1
+$dokka.linkExtension:html
+
+com.adyen.checkout.sepa
+com.adyen.checkout.sepa.ui
+

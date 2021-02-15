@@ -1,0 +1,12 @@
+$dokka.format:html-v1
+$dokka.linkExtension:html
+
+com.adyen.checkout.dropin
+com.adyen.checkout.dropin.service
+com.adyen.checkout.dropin.ui
+com.adyen.checkout.dropin.ui.action
+com.adyen.checkout.dropin.ui.base
+com.adyen.checkout.dropin.ui.component
+com.adyen.checkout.dropin.ui.paymentmethods
+com.adyen.checkout.dropin.ui.stored
+

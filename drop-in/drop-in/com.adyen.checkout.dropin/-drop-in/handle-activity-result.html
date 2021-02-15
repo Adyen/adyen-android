@@ -1,0 +1,50 @@
+<html>
+  <head>
+    <meta name="viewport" content="width=device-width, initial-scale=1" charset="UTF-8">
+    <title>handleActivityResult</title>
+    <link href="../../../images/logo-icon.svg" rel="icon" type="image/svg">
+    <script>var pathToRoot = "../../../";</script>
+    <script type="text/javascript" src="../../../scripts/sourceset_dependencies.js" async="async"></script>
+    <link href="../../../styles/style.css" rel="Stylesheet">
+    <link href="../../../styles/logo-styles.css" rel="Stylesheet">
+    <link href="../../../styles/jetbrains-mono.css" rel="Stylesheet">
+    <link href="../../../styles/main.css" rel="Stylesheet">
+    <script type="text/javascript" src="../../../scripts/clipboard.js" async="async"></script>
+    <script type="text/javascript" src="../../../scripts/navigation-loader.js" async="async"></script>
+    <script type="text/javascript" src="../../../scripts/platform-content-handler.js" async="async"></script>
+    <script type="text/javascript" src="../../../scripts/main.js" async="async"></script>
+  </head>
+  <body>
+    <div id="container">
+      <div id="leftColumn">
+        <div id="logo"></div>
+        <div id="paneSearch"></div>
+        <div id="sideMenu"></div>
+      </div>
+      <div id="main">
+        <div id="leftToggler"><span class="icon-toggler"></span></div>
+        <script type="text/javascript" src="../../../scripts/pages.js"></script>
+        <script type="text/javascript" src="../../../scripts/main.js"></script>
+        <div class="main-content" id="content" pageIds="com.adyen.checkout.dropin/DropIn/handleActivityResult/#kotlin.Int#kotlin.Int#android.content.Intent?/PointingToDeclaration//1938839132">
+          <div class="navigation-wrapper" id="navigation-wrapper">
+            <div class="breadcrumbs"><a href="../../index.html">drop-in</a>/<a href="../index.html">com.adyen.checkout.dropin</a>/<a href="index.html">DropIn</a>/<a href="handle-activity-result.html">handleActivityResult</a></div>
+            <div class="pull-right d-flex">
+              <div id="searchBar"></div>
+            </div>
+          </div>
+          <div class="cover ">
+            <h1 class="cover"><span>handle</span><wbr></wbr><span>Activity</span><wbr></wbr><span>Result</span></h1>
+          </div>
+<div class="divergent-group" data-filterable-current=":drop-in:dokkaHtml/release" data-filterable-set=":drop-in:dokkaHtml/release"><div class="with-platform-tags"><span class="pull-right"></span></div>
+
+  <div>
+    <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-depenent-content" data-active="" data-togglable=":drop-in:dokkaHtml/release"><div class="symbol monospace"><div class="block"><div class="block">@<a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin.jvm/-jvm-static/index.html">JvmStatic</a>()</div></div>fun <a href="handle-activity-result.html">handleActivityResult</a>(requestCode: <a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-int/index.html">Int</a>, resultCode: <a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-int/index.html">Int</a>, data: <a href="https://developer.android.com/reference/kotlin/android/content/Intent.html">Intent</a>?): <a href="../-drop-in-result/index.html">DropInResult</a>?<span class="top-right-position"><span class="copy-icon"></span><div class="copy-popup-wrapper popup-to-left"><span class="copy-popup-icon"></span><span>Content copied to clipboard</span></div></span></div></div></div>
+  </div>
+<p class="paragraph">Helper method to transform the activity result into a <a href="../-drop-in-result/index.html">DropInResult</a>.</p><p class="paragraph">The returned value could be:</p><ul><li><p class="paragraph"><a href="../-drop-in-result/-cancelled-by-user/index.html">DropInResult.CancelledByUser</a> if the operation was cancelled by the user.</p></li><li><p class="paragraph"><a href="../-drop-in-result/-error/index.html">DropInResult.Error</a> if an unexpected error has occurred during Drop-in, the <a href="../-drop-in-result/-error/reason.html">DropInResult.Error.reason</a> field will contain the error detail.</p></li><li><p class="paragraph"><a href="../-drop-in-result/-error/index.html">DropInResult.Error</a> if a <a href="../../com.adyen.checkout.dropin.service/-drop-in-service-result/-error/index.html">DropInServiceResult.Error</a> was returned to the <a href="../../com.adyen.checkout.dropin.service/-drop-in-service/index.html">DropInService</a>. The <a href="../-drop-in-result/-error/reason.html">DropInResult.Error.reason</a> field will hold the same value as <a href="../../com.adyen.checkout.dropin.service/-drop-in-service-result/-error/reason.html">DropInServiceResult.Error.reason</a>.</p></li><li><p class="paragraph"><a href="../-drop-in-result/-finished/index.html">DropInResult.Finished</a> if a <a href="../../com.adyen.checkout.dropin.service/-drop-in-service-result/-finished/index.html">DropInServiceResult.Finished</a> was returned to the <a href="../../com.adyen.checkout.dropin.service/-drop-in-service/index.html">DropInService</a>. The <a href="../-drop-in-result/-finished/result.html">DropInResult.Finished.result</a> field will hold the same value as <a href="../../com.adyen.checkout.dropin.service/-drop-in-service-result/-finished/result.html">DropInServiceResult.Finished.result</a>.</p></li><li><p class="paragraph">null if the activity result does not correspond to the Drop-in.</p></li></ul><p class="paragraph">Note that <a href="../-drop-in-result/-finished/index.html">DropInResult.Finished</a> will be returned here only if a result intent was provided to the <a href="start-payment.html">startPayment</a> method.</p><h4 class="">Return</h4><p class="paragraph">the result of the Drop-in.</p></div>
+        </div>
+        <div class="footer"><span class="go-to-top-icon"><a href="#content"></a></span><span>© 2020 Copyright</span><span class="pull-right"><span>Sponsored and developed by dokka</span><a href="https://github.com/Kotlin/dokka"><span class="padded-icon"></span></a></span></div>
+      </div>
+    </div>
+  </body>
+</html>
+

@@ -1,0 +1,10 @@
+$dokka.format:html-v1
+$dokka.linkExtension:html
+
+com.adyen.checkout.core.api
+com.adyen.checkout.core.code
+com.adyen.checkout.core.exception
+com.adyen.checkout.core.log
+com.adyen.checkout.core.model
+com.adyen.checkout.core.util
+

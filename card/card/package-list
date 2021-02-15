@@ -1,0 +1,9 @@
+$dokka.format:html-v1
+$dokka.linkExtension:html
+
+com.adyen.checkout.card
+com.adyen.checkout.card.api
+com.adyen.checkout.card.data
+com.adyen.checkout.card.model
+com.adyen.checkout.card.ui
+

@@ -1,0 +1,7 @@
+$dokka.format:html-v1
+$dokka.linkExtension:html
+
+com.adyen.checkout.await
+com.adyen.checkout.await.api
+com.adyen.checkout.await.model
+

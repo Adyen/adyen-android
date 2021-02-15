@@ -1,0 +1,17 @@
+$dokka.format:html-v1
+$dokka.linkExtension:html
+
+com.adyen.checkout.components
+com.adyen.checkout.components.analytics
+com.adyen.checkout.components.api
+com.adyen.checkout.components.base
+com.adyen.checkout.components.base.lifecycle
+com.adyen.checkout.components.encoding
+com.adyen.checkout.components.model
+com.adyen.checkout.components.model.paymentmethods
+com.adyen.checkout.components.model.payments
+com.adyen.checkout.components.model.payments.request
+com.adyen.checkout.components.model.payments.response
+com.adyen.checkout.components.util
+com.adyen.checkout.components.validation
+

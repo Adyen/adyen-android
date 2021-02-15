@@ -1,0 +1,6 @@
+$dokka.format:html-v1
+$dokka.linkExtension:html
+
+com.adyen.checkout.mbway
+com.adyen.checkout.mbway.country
+

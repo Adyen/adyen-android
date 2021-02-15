@@ -1,0 +1,7 @@
+$dokka.format:html-v1
+$dokka.linkExtension:html
+
+com.adyen.checkout.adyen3ds2
+com.adyen.checkout.adyen3ds2.exception
+com.adyen.checkout.adyen3ds2.model
+
