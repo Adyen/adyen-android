@@ -8,8 +8,8 @@
 
 package com.adyen.checkout.card.api
 
-import com.adyen.checkout.card.model.BinLookupRequest
-import com.adyen.checkout.card.model.BinLookupResponse
+import com.adyen.checkout.card.api.model.BinLookupRequest
+import com.adyen.checkout.card.api.model.BinLookupResponse
 import com.adyen.checkout.core.api.Connection
 import com.adyen.checkout.core.api.Environment
 import com.adyen.checkout.core.log.LogUtil
