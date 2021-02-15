@@ -16,6 +16,8 @@ ext.mavenArtifactId = "drop-in"
 ext.mavenArtifactName = "Adyen checkout drop-in component"
 ext.mavenArtifactDescription = "Adyen checkout drop-in component client for Adyen's Checkout API."
 
+apply from: "../config/gradle/sharedTasks.gradle"
+
 android {
     compileSdkVersion compile_sdk_version
 
@@ -79,8 +81,3 @@ dependencies {
     implementation 'androidx.lifecycle:lifecycle-runtime-ktx:2.2.0'
 
 }
-
-// This sharedTasks.gradle script is applied at the end of this build.gradle script,
-// since javadocs.gradle script is dependent on android.compileSdkVersion property,
-// which is set on the android block above.
-apply from: "../config/gradle/sharedTasks.gradle"

@@ -16,6 +16,8 @@ ext.mavenArtifactId = "components-core"
 ext.mavenArtifactName = "Adyen Checkout Components Core"
 ext.mavenArtifactDescription = "Adyen checkout Components Core module."
 
+apply from: "../config/gradle/sharedTasks.gradle"
+
 android {
     compileSdkVersion compile_sdk_version
 
@@ -56,8 +58,3 @@ dependencies {
     api "org.jetbrains.kotlinx:kotlinx-coroutines-android:$coroutines_version"
     api "androidx.fragment:fragment-ktx:$fragment_version"
 }
-
-// This sharedTasks.gradle script is applied at the end of this build.gradle script,
-// since javadocs.gradle script is dependent on android.compileSdkVersion property,
-// which is set on the android block above.
-apply from: "../config/gradle/sharedTasks.gradle"
