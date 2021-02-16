@@ -34,6 +34,7 @@ import com.adyen.checkout.components.validation.ValidatedField
 /**
  * CardView for [CardComponent].
  */
+@Suppress("TooManyFunctions")
 class CardView @JvmOverloads constructor(context: Context, attrs: AttributeSet? = null, defStyleAttr: Int = 0) :
     AdyenLinearLayout<CardOutputData?, CardConfiguration?, CardComponentState?, CardComponent?>(context, attrs, defStyleAttr),
     Observer<CardOutputData?> {
@@ -43,9 +44,6 @@ class CardView @JvmOverloads constructor(context: Context, attrs: AttributeSet? 
     private val mCardInputData = CardInputData()
     private var mImageLoader: ImageLoader? = null
 
-    /**
-     * View for CardComponent.
-     */
     init {
         orientation = VERTICAL
         val padding = resources.getDimension(R.dimen.standard_margin).toInt()
@@ -68,7 +66,7 @@ class CardView @JvmOverloads constructor(context: Context, attrs: AttributeSet? 
         initExpiryDateInput()
         initSecurityCodeInput()
         initHolderNameInput()
-        
+
         binding.switchStorePaymentMethod.setOnCheckedChangeListener { _, isChecked ->
             mCardInputData.isStorePaymentSelected = isChecked
             notifyInputDataChanged()
@@ -77,9 +75,7 @@ class CardView @JvmOverloads constructor(context: Context, attrs: AttributeSet? 
             component.getStoredPaymentInputData()?.let {
                 setStoredCardInterface(it)
             }
-
         } else {
-            
             binding.textInputLayoutCardHolder.visibility = if (component.isHolderNameRequire()) VISIBLE else GONE
             binding.switchStorePaymentMethod.visibility = if (component.showStorePaymentField()) VISIBLE else GONE
         }
@@ -88,10 +84,9 @@ class CardView @JvmOverloads constructor(context: Context, attrs: AttributeSet? 
 
     override fun initLocalizedStrings(localizedContext: Context) {
         var myAttrs = intArrayOf(android.R.attr.hint)
-        var typedArray: TypedArray
 
         // Card Number
-        typedArray = localizedContext.obtainStyledAttributes(R.style.AdyenCheckout_Card_CardNumberInput, myAttrs)
+        var typedArray: TypedArray = localizedContext.obtainStyledAttributes(R.style.AdyenCheckout_Card_CardNumberInput, myAttrs)
         binding.textInputLayoutCardNumber.hint = typedArray.getString(0)
         typedArray.recycle()
 
@@ -147,36 +142,33 @@ class CardView @JvmOverloads constructor(context: Context, attrs: AttributeSet? 
     }
 
     override fun highlightValidationErrors() {
-        val outputData: CardOutputData? = if (component.outputData != null) {
-            component.outputData
-        } else {
-            return
-        }
-        var isErrorFocused = false
-        if (outputData?.cardNumberField?.isValid == false) {
-            isErrorFocused = true
-            binding.editTextCardNumber.requestFocus()
-            setCardNumberError(R.string.checkout_card_number_not_valid)
-        }
-        if (outputData?.expiryDateField?.isValid == false) {
-            if (!isErrorFocused) {
+        component.outputData?.let {
+            var isErrorFocused = false
+            if (!it.cardNumberField.isValid) {
                 isErrorFocused = true
-                binding.textInputLayoutExpiryDate.requestFocus()
+                binding.editTextCardNumber.requestFocus()
+                setCardNumberError(R.string.checkout_card_number_not_valid)
             }
-            binding.textInputLayoutExpiryDate.error = mLocalizedContext.getString(R.string.checkout_expiry_date_not_valid)
-        }
-        if (outputData?.securityCodeField?.isValid == false) {
-            if (!isErrorFocused) {
-                isErrorFocused = true
-                binding.textInputLayoutSecurityCode.requestFocus()
+            if (!it.expiryDateField.isValid) {
+                if (!isErrorFocused) {
+                    isErrorFocused = true
+                    binding.textInputLayoutExpiryDate.requestFocus()
+                }
+                binding.textInputLayoutExpiryDate.error = mLocalizedContext.getString(R.string.checkout_expiry_date_not_valid)
             }
-            binding.textInputLayoutSecurityCode.error = mLocalizedContext.getString(R.string.checkout_security_code_not_valid)
-        }
-        if (binding.textInputLayoutCardHolder.visibility == VISIBLE && outputData?.holderNameField?.isValid == false) {
-            if (!isErrorFocused) {
-                binding.textInputLayoutCardHolder.requestFocus()
+            if (!it.securityCodeField.isValid) {
+                if (!isErrorFocused) {
+                    isErrorFocused = true
+                    binding.textInputLayoutSecurityCode.requestFocus()
+                }
+                binding.textInputLayoutSecurityCode.error = mLocalizedContext.getString(R.string.checkout_security_code_not_valid)
             }
-            binding.textInputLayoutCardHolder.error = mLocalizedContext.getString(R.string.checkout_holder_name_not_valid)
+            if (binding.textInputLayoutCardHolder.visibility == VISIBLE && !it.holderNameField.isValid) {
+                if (!isErrorFocused) {
+                    binding.textInputLayoutCardHolder.requestFocus()
+                }
+                binding.textInputLayoutCardHolder.error = mLocalizedContext.getString(R.string.checkout_holder_name_not_valid)
+            }
         }
     }
 
@@ -189,7 +181,6 @@ class CardView @JvmOverloads constructor(context: Context, attrs: AttributeSet? 
             changeFocusOfInput(validatedNumber.value)
         }
         if (detectedCardTypes.isEmpty()) {
-            
             binding.cardBrandLogoImageView.setStrokeWidth(0f)
             binding.cardBrandLogoImageView.setImageResource(R.drawable.ic_card)
             binding.editTextCardNumber.setAmexCardFormat(false)
@@ -215,8 +206,9 @@ class CardView @JvmOverloads constructor(context: Context, attrs: AttributeSet? 
 
     private fun changeFocusOfInput(numberValue: String) {
         val length = numberValue.length
-        if (length == CardValidationUtils.GENERAL_CARD_NUMBER_LENGTH
-            || length == CardValidationUtils.AMEX_CARD_NUMBER_LENGTH && CardType.estimate(numberValue).contains(CardType.AMERICAN_EXPRESS)
+        if (length == CardValidationUtils.GENERAL_CARD_NUMBER_LENGTH ||
+            length == CardValidationUtils.AMEX_CARD_NUMBER_LENGTH &&
+            CardType.estimate(numberValue).contains(CardType.AMERICAN_EXPRESS)
         ) {
             goToNextInputIfFocus(binding.editTextCardNumber)
         }
@@ -274,7 +266,6 @@ class CardView @JvmOverloads constructor(context: Context, attrs: AttributeSet? 
     }
 
     private fun initSecurityCodeInput() {
-        
         val securityCodeEditText = binding.textInputLayoutSecurityCode.editText as SecurityCodeInput?
         securityCodeEditText?.setOnChangeListener { editable: Editable ->
             mCardInputData.securityCode = editable.toString()
