@@ -7,6 +7,8 @@ ext.mavenArtifactId = "cse"
 ext.mavenArtifactName = "Adyen Client Side Encryption"
 ext.mavenArtifactDescription = "Adyen Client Side Encryption for Adyen's Checkout API."
 
+apply from: "../config/gradle/sharedTasks.gradle"
+
 android {
     compileSdkVersion compile_sdk_version
 
@@ -33,8 +35,3 @@ dependencies {
     // Dependencies
     implementation "androidx.annotation:annotation:$annotation_version"
 }
-
-// This sharedTasks.gradle script is applied at the end of this build.gradle script,
-// since javadocs.gradle script is dependent on android.compileSdkVersion property,
-// which is set on the android block above.
-apply from: "../config/gradle/sharedTasks.gradle"

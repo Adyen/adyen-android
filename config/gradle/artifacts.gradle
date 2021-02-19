@@ -6,10 +6,9 @@
  * Created by ran on 6/2/2019.
  */
 
-apply from: "../config/gradle/javadocs.gradle"
+apply from: "../config/gradle/dokka.gradle"
 apply from: "../config/gradle/sources.gradle"
 
 artifacts {
-    archives androidJavadocsJar
     archives androidSourcesJar
 }

@@ -16,6 +16,8 @@ ext.mavenArtifactId = "googlepay"
 ext.mavenArtifactName = "Adyen checkout Google Pay component"
 ext.mavenArtifactDescription = "Adyen checkout Google Pay component client for Adyen's Checkout API."
 
+apply from: "../config/gradle/sharedTasks.gradle"
+
 android {
     compileSdkVersion compile_sdk_version
 
@@ -51,8 +53,3 @@ dependencies {
     // Dependencies
     api "com.google.android.gms:play-services-wallet:$play_services_wallet_version"
 }
-
-// This sharedTasks.gradle script is applied at the end of this build.gradle script,
-// since javadocs.gradle script is dependent on android.compileSdkVersion property,
-// which is set on the android block above.
-apply from: "../config/gradle/sharedTasks.gradle"
