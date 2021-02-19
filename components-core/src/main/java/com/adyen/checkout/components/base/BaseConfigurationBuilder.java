@@ -28,15 +28,16 @@ public abstract class BaseConfigurationBuilder<ConfigurationT extends Configurat
     protected Environment mBuilderEnvironment;
 
     @NonNull
-    protected String mBuilderClientKey = "";
+    protected String mBuilderClientKey;
 
     /**
      * Constructor that provides default values.
      *
      * @param context A Context
+     * @param clientKey Your Client Key used for network calls from the SDK to Adyen.
      */
-    public BaseConfigurationBuilder(@NonNull Context context) {
-        this(LocaleUtil.getLocale(context), Environment.TEST);
+    public BaseConfigurationBuilder(@NonNull Context context, @NonNull String clientKey) {
+        this(LocaleUtil.getLocale(context), Environment.TEST, clientKey);
     }
 
     /**
@@ -44,10 +45,16 @@ public abstract class BaseConfigurationBuilder<ConfigurationT extends Configurat
      *
      * @param shopperLocale The Locale of the shopper.
      * @param environment   The {@link Environment} to be used for network calls to Adyen.
+     * @param clientKey Your Client Key used for network calls from the SDK to Adyen.
      */
-    public BaseConfigurationBuilder(@NonNull Locale shopperLocale, @NonNull Environment environment) {
+    public BaseConfigurationBuilder(@NonNull Locale shopperLocale, @NonNull Environment environment, @NonNull String clientKey) {
         mBuilderShopperLocale = shopperLocale;
         mBuilderEnvironment = environment;
+
+        if (!ValidationUtils.isClientKeyValid(clientKey)) {
+            throw new CheckoutException("Client key is not valid.");
+        }
+        mBuilderClientKey = clientKey;
     }
 
     /**
@@ -67,20 +74,6 @@ public abstract class BaseConfigurationBuilder<ConfigurationT extends Configurat
     @NonNull
     public BaseConfigurationBuilder<ConfigurationT> setEnvironment(@NonNull Environment builderEnvironment) {
         mBuilderEnvironment = builderEnvironment;
-        return this;
-    }
-
-    /**
-     * @param builderClientKey Your Client Key used for network calls from the SDK to Adyen.
-     * @return The builder instance to chain calls.
-     */
-    @NonNull
-    public BaseConfigurationBuilder<ConfigurationT> setClientKey(@NonNull String builderClientKey) {
-        if (!ValidationUtils.isClientKeyValid(builderClientKey)) {
-            throw new CheckoutException("Client key is not valid.");
-        }
-
-        mBuilderClientKey = builderClientKey;
         return this;
     }
 

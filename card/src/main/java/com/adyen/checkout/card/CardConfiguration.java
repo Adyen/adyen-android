@@ -66,7 +66,7 @@ public class CardConfiguration extends Configuration {
      * @param environment           The environment to be used to make network calls.
      * @param publicKey             The public key used for encryption of the card data. You can get it from the Customer Area.
      * @param shopperReference      The unique identifier of the shopper.
-     * @param holderNameRequired     If the holder name of the card should be shown as a required field.
+     * @param holderNameRequired    If the holder name of the card should be shown as a required field.
      * @param showStorePaymentField If the component should show the option to store the card for later use.
      * @param supportCardTypes      The list of supported card brands to be shown to the user.
      * @param hideCvc               Hides the CVC field on the payment flow so that it's not required.
@@ -187,7 +187,7 @@ public class CardConfiguration extends Configuration {
          * Constructor of Card Configuration Builder with instance of CardConfiguration.
          */
         public Builder(@NonNull CardConfiguration cardConfiguration) {
-            super(cardConfiguration.getShopperLocale(), cardConfiguration.getEnvironment());
+            super(cardConfiguration.getShopperLocale(), cardConfiguration.getEnvironment(), cardConfiguration.getClientKey());
             mBuilderClientKey = cardConfiguration.getClientKey();
 
             mBuilderPublicKey = cardConfiguration.getPublicKey();
@@ -202,10 +202,11 @@ public class CardConfiguration extends Configuration {
         /**
          * Constructor of Card Configuration Builder with default values from Context.
          *
-         * @param context   A context
+         * @param context A context
+         * @param clientKey Your Client Key used for network calls from the SDK to Adyen.
          */
-        public Builder(@NonNull Context context) {
-            super(context);
+        public Builder(@NonNull Context context, @NonNull String clientKey) {
+            super(context, clientKey);
         }
 
         /**
@@ -213,11 +214,14 @@ public class CardConfiguration extends Configuration {
          *
          * @param shopperLocale The Locale of the shopper.
          * @param environment   The {@link Environment} to be used for network calls to Adyen.
+         * @param clientKey Your Client Key used for network calls from the SDK to Adyen.
          */
         public Builder(
                 @NonNull Locale shopperLocale,
-                @NonNull Environment environment) {
-            super(shopperLocale, environment);
+                @NonNull Environment environment,
+                @NonNull String clientKey
+        ) {
+            super(shopperLocale, environment, clientKey);
         }
 
         @Override
@@ -230,12 +234,6 @@ public class CardConfiguration extends Configuration {
         @NonNull
         public Builder setEnvironment(@NonNull Environment builderEnvironment) {
             return (Builder) super.setEnvironment(builderEnvironment);
-        }
-
-        @NonNull
-        @Override
-        public Builder setClientKey(@NonNull String builderClientKey) {
-            return (Builder) super.setClientKey(builderClientKey);
         }
 
         /**
@@ -337,10 +335,6 @@ public class CardConfiguration extends Configuration {
          */
         @NonNull
         public CardConfiguration build() {
-            if (!ValidationUtils.isClientKeyValid(mBuilderClientKey)) {
-                throw new CheckoutException("You need a valid Client key to use the Card Component.");
-            }
-
             return new CardConfiguration(
                     mBuilderShopperLocale,
                     mBuilderEnvironment,

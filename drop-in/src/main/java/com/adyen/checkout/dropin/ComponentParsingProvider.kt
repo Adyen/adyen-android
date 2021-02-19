@@ -88,50 +88,52 @@ internal fun <T : Configuration> getDefaultConfigFor(
         throw CheckoutException("Cannot provide default config for $componentType. Please add it to the DropInConfiguration with required fields.")
     }
 
+    val clientKey = dropInConfiguration.clientKey
+
     // get default builder for Configuration type
     val builder: BaseConfigurationBuilder<out Configuration> = when (componentType) {
         PaymentMethodTypes.BLIK -> {
-            BlikConfiguration.Builder(context)
+            BlikConfiguration.Builder(context, clientKey)
         }
         PaymentMethodTypes.DOTPAY -> {
-            DotpayConfiguration.Builder(context)
+            DotpayConfiguration.Builder(context, clientKey)
         }
         PaymentMethodTypes.ENTERCASH -> {
-            EntercashConfiguration.Builder(context)
+            EntercashConfiguration.Builder(context, clientKey)
         }
         PaymentMethodTypes.EPS -> {
-            EPSConfiguration.Builder(context)
+            EPSConfiguration.Builder(context, clientKey)
         }
         PaymentMethodTypes.IDEAL -> {
-            IdealConfiguration.Builder(context)
+            IdealConfiguration.Builder(context, clientKey)
         }
         PaymentMethodTypes.MB_WAY -> {
-            MBWayConfiguration.Builder(context)
+            MBWayConfiguration.Builder(context, clientKey)
         }
         PaymentMethodTypes.MOLPAY_THAILAND,
         PaymentMethodTypes.MOLPAY_MALAYSIA,
         PaymentMethodTypes.MOLPAY_VIETNAM -> {
-            MolpayConfiguration.Builder(context)
+            MolpayConfiguration.Builder(context, clientKey)
         }
         PaymentMethodTypes.OPEN_BANKING -> {
-            OpenBankingConfiguration.Builder(context)
+            OpenBankingConfiguration.Builder(context, clientKey)
         }
         PaymentMethodTypes.SEPA -> {
-            SepaConfiguration.Builder(context)
+            SepaConfiguration.Builder(context, clientKey)
         }
         PaymentMethodTypes.WECHAT_PAY_SDK -> {
-            WeChatPayConfiguration.Builder(context)
+            WeChatPayConfiguration.Builder(context, clientKey)
         }
         ActionTypes.AWAIT -> {
-            AwaitConfiguration.Builder(context)
+            AwaitConfiguration.Builder(context, clientKey)
         }
         ActionTypes.REDIRECT -> {
-            RedirectConfiguration.Builder(context)
+            RedirectConfiguration.Builder(context, clientKey)
         }
         ActionTypes.THREEDS2_FINGERPRINT,
         ActionTypes.THREEDS2_CHALLENGE,
         ActionTypes.THREEDS2 -> {
-            Adyen3DS2Configuration.Builder(context)
+            Adyen3DS2Configuration.Builder(context, clientKey)
         }
         // ActionTypes.SDK is not distinguishable only by the type since we need the payment method too
 
@@ -142,9 +144,6 @@ internal fun <T : Configuration> getDefaultConfigFor(
 
     builder.setShopperLocale(dropInConfiguration.shopperLocale)
     builder.setEnvironment(dropInConfiguration.environment)
-    if (dropInConfiguration.clientKey.isNotEmpty()) {
-        builder.setClientKey(dropInConfiguration.clientKey)
-    }
 
     @Suppress("UNCHECKED_CAST")
     return builder.build() as T
