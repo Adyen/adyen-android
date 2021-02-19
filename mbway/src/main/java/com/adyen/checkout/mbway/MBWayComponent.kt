@@ -58,7 +58,7 @@ class MBWayComponent(paymentMethodDelegate: GenericPaymentMethodDelegate, config
 
         val mbWayOutputData = outputData
         if (mbWayOutputData != null) {
-            paymentMethod.telephoneNumber = mbWayOutputData.mobilePhoneNumberField.value
+            paymentMethod.telephoneNumber = mbWayOutputData.mobilePhoneNumberFieldState.value
         }
         paymentComponentData.paymentMethod = paymentMethod
         return GenericComponentState(paymentComponentData, mbWayOutputData?.isValid == true)

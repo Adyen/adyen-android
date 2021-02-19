@@ -13,7 +13,8 @@ import com.adyen.checkout.card.data.DetectedCardType
 import com.adyen.checkout.card.data.ExpiryDate
 import com.adyen.checkout.card.repository.PublicKeyRepository
 import com.adyen.checkout.components.base.PaymentMethodDelegate
-import com.adyen.checkout.components.validation.ValidatedField
+import com.adyen.checkout.components.ui.FieldState
+import com.adyen.checkout.components.ui.Validation
 import kotlinx.coroutines.CoroutineScope
 
 @Suppress("TooManyFunctions")
@@ -24,15 +25,21 @@ abstract class CardDelegate(
 
     protected val noCvcBrands: Set<CardType> = hashSetOf(CardType.BCMC)
 
-    abstract fun validateCardNumber(cardNumber: String): ValidatedField<String>
-    abstract fun validateExpiryDate(expiryDate: ExpiryDate): ValidatedField<ExpiryDate>
-    abstract fun validateSecurityCode(securityCode: String, cardType: CardType? = null): ValidatedField<String>
+    abstract fun validateCardNumber(cardNumber: String): FieldState<String>
+    abstract fun validateExpiryDate(expiryDate: ExpiryDate): FieldState<ExpiryDate>
+    abstract fun validateSecurityCode(securityCode: String, cardType: CardType? = null): FieldState<String>
 
-    fun validateHolderName(holderName: String): ValidatedField<String> {
+    fun validateHolderName(holderName: String): FieldState<String> {
         return if (cardConfiguration.isHolderNameRequired && holderName.isBlank()) {
-            ValidatedField(holderName, ValidatedField.Validation.INVALID)
+            FieldState(
+                holderName,
+                Validation.Invalid(R.string.checkout_holder_name_not_valid)
+            )
         } else {
-            ValidatedField(holderName, ValidatedField.Validation.VALID)
+            FieldState(
+                holderName,
+                Validation.Valid
+            )
         }
     }
 

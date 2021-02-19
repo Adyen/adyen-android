@@ -13,7 +13,8 @@ import android.text.TextUtils;
 import androidx.annotation.NonNull;
 
 import com.adyen.checkout.components.base.OutputData;
-import com.adyen.checkout.components.validation.ValidatedField;
+import com.adyen.checkout.components.ui.FieldState;
+import com.adyen.checkout.components.ui.Validation;
 import com.adyen.checkout.core.log.LogUtil;
 import com.adyen.checkout.core.log.Logger;
 
@@ -22,38 +23,38 @@ class BlikOutputData implements OutputData {
 
     private static final int BLIK_CODE_LENGTH = 6;
 
-    private final ValidatedField<String> mBlikCodeField;
+    private final FieldState<String> mBlikCodeField;
 
     BlikOutputData(@NonNull String blikCode) {
-        mBlikCodeField = new ValidatedField<>(blikCode, getBlikCodeValidation(blikCode));
+        mBlikCodeField = new FieldState<>(blikCode, getBlikCodeValidation(blikCode));
     }
 
     @Override
     public boolean isValid() {
-        return mBlikCodeField.isValid();
+        return mBlikCodeField.getValidation().isValid();
     }
 
     @NonNull
-    public ValidatedField<String> getBlikCodeField() {
+    public FieldState<String> getBlikCodeField() {
         return mBlikCodeField;
     }
 
-    private ValidatedField.Validation getBlikCodeValidation(@NonNull String blikCode) {
+    private Validation getBlikCodeValidation(@NonNull String blikCode) {
         if (TextUtils.isEmpty(blikCode)) {
-            return ValidatedField.Validation.PARTIAL;
+            return Validation.Partial.INSTANCE;
         }
         try {
             Integer.parseInt(blikCode);
         } catch (NumberFormatException e) {
             Logger.e(TAG, "Failed to parse blik code to Integer", e);
-            return ValidatedField.Validation.INVALID;
+            return new Validation.Invalid(R.string.checkout_blik_code_not_valid);
         }
         if (blikCode.length() == BLIK_CODE_LENGTH) {
-            return ValidatedField.Validation.VALID;
+            return Validation.Valid.INSTANCE;
         }
         if (blikCode.length() < BLIK_CODE_LENGTH) {
-            return ValidatedField.Validation.PARTIAL;
+            return Validation.Partial.INSTANCE;
         }
-        return ValidatedField.Validation.INVALID;
+        return new Validation.Invalid(R.string.checkout_blik_code_not_valid);
     }
 }

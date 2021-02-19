@@ -18,8 +18,8 @@ import com.adyen.checkout.components.base.BasePaymentComponent
 import com.adyen.checkout.components.base.GenericPaymentMethodDelegate
 import com.adyen.checkout.components.model.payments.request.CardPaymentMethod
 import com.adyen.checkout.components.model.payments.request.PaymentComponentData
+import com.adyen.checkout.components.ui.FieldState
 import com.adyen.checkout.components.util.PaymentMethodTypes
-import com.adyen.checkout.components.validation.ValidatedField
 import com.adyen.checkout.core.exception.ComponentException
 import com.adyen.checkout.core.log.LogUtil
 import com.adyen.checkout.core.log.Logger
@@ -35,7 +35,7 @@ private val PAYMENT_METHOD_TYPES = arrayOf(PaymentMethodTypes.BCMC)
 /**
  * Constructs a [BcmcComponent] object.
  *
- * @param paymentMethodDelegate [PaymentMethodDelegate] represents payment method.
+ * @param paymentMethodDelegate [GenericPaymentMethodDelegate] represents payment method.
  * @param configuration [BcmcConfiguration].
  */
 class BcmcComponent(
@@ -124,11 +124,11 @@ class BcmcComponent(
         return CardType.estimate(cardNumber).contains(SUPPORTED_CARD_TYPE)
     }
 
-    private fun validateCardNumber(cardNumber: String): ValidatedField<String> {
+    private fun validateCardNumber(cardNumber: String): FieldState<String> {
         return CardValidationUtils.validateCardNumber(cardNumber)
     }
 
-    private fun validateExpiryDate(expiryDate: ExpiryDate): ValidatedField<ExpiryDate> {
+    private fun validateExpiryDate(expiryDate: ExpiryDate): FieldState<ExpiryDate> {
         return CardValidationUtils.validateExpiryDate(expiryDate)
     }
 }

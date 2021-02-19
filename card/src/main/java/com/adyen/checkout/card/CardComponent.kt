@@ -56,10 +56,10 @@ class CardComponent private constructor(
                     with(outputData) {
                         this ?: return@with
                         val newOutputData = CardOutputData(
-                            cardNumberField,
-                            expiryDateField,
-                            securityCodeField,
-                            holderNameField,
+                            cardNumberState,
+                            expiryDateState,
+                            securityCodeState,
+                            holderNameState,
                             isStoredPaymentMethodEnable,
                             isCvcHidden,
                             it
@@ -127,7 +127,7 @@ class CardComponent private constructor(
 
         val paymentComponentData = PaymentComponentData<CardPaymentMethod>()
 
-        val cardNumber = stateOutputData.cardNumberField.value
+        val cardNumber = stateOutputData.cardNumberState.value
 
         val firstCardType = stateOutputData.detectedCardTypes.firstOrNull()?.cardType
 
@@ -138,15 +138,14 @@ class CardComponent private constructor(
             return CardComponentState(paymentComponentData, false, firstCardType, binValue)
         }
 
-        val encryptedCard: EncryptedCard
-        encryptedCard = try {
+        val encryptedCard: EncryptedCard = try {
             if (!isStoredPaymentMethod()) {
-                unencryptedCardBuilder.setNumber(stateOutputData.cardNumberField.value)
+                unencryptedCardBuilder.setNumber(stateOutputData.cardNumberState.value)
             }
             if (!cardDelegate.isCvcHidden()) {
-                unencryptedCardBuilder.setCvc(stateOutputData.securityCodeField.value)
+                unencryptedCardBuilder.setCvc(stateOutputData.securityCodeState.value)
             }
-            val expiryDateResult = stateOutputData.expiryDateField.value
+            val expiryDateResult = stateOutputData.expiryDateState.value
             if (expiryDateResult.expiryYear != ExpiryDate.EMPTY_VALUE && expiryDateResult.expiryMonth != ExpiryDate.EMPTY_VALUE) {
                 unencryptedCardBuilder.setExpiryMonth(expiryDateResult.expiryMonth.toString())
                 unencryptedCardBuilder.setExpiryYear(expiryDateResult.expiryYear.toString())
@@ -171,7 +170,7 @@ class CardComponent private constructor(
         }
 
         if (cardDelegate.isHolderNameRequired()) {
-            cardPaymentMethod.holderName = stateOutputData.holderNameField.value
+            cardPaymentMethod.holderName = stateOutputData.holderNameState.value
         }
 
         paymentComponentData.paymentMethod = cardPaymentMethod

@@ -5,164 +5,138 @@
  *
  * Created by arman on 18/9/2019.
  */
+package com.adyen.checkout.card
 
-package com.adyen.checkout.card;
+import com.adyen.checkout.card.data.CardType
+import com.adyen.checkout.card.data.ExpiryDate
+import com.adyen.checkout.components.ui.FieldState
+import com.adyen.checkout.components.ui.Validation
+import com.adyen.checkout.core.util.StringUtil
+import java.util.Calendar
+import java.util.GregorianCalendar
 
-import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
-
-import com.adyen.checkout.card.data.CardType;
-import com.adyen.checkout.card.data.ExpiryDate;
-import com.adyen.checkout.components.validation.ValidatedField;
-import com.adyen.checkout.core.exception.NoConstructorException;
-import com.adyen.checkout.core.util.StringUtil;
-
-import java.util.Calendar;
-import java.util.GregorianCalendar;
-
-public final class CardValidationUtils {
+object CardValidationUtils {
 
     // Luhn Check
-    private static final int RADIX = 10;
-    private static final int FIVE_DIGIT = 5;
+    private const val RADIX = 10
+    private const val FIVE_DIGIT = 5
+
     // Card Number
-    private static final int MINIMUM_CARD_NUMBER_LENGTH = 8;
-    public static final int MAXIMUM_CARD_NUMBER_LENGTH = 19;
-    public static final int GENERAL_CARD_NUMBER_LENGTH = 16;
-    public static final int AMEX_CARD_NUMBER_LENGTH = 15;
+    private const val MINIMUM_CARD_NUMBER_LENGTH = 8
+    const val MAXIMUM_CARD_NUMBER_LENGTH = 19
+    const val GENERAL_CARD_NUMBER_LENGTH = 16
+    const val AMEX_CARD_NUMBER_LENGTH = 15
+
     // Security Code
-    private static final int GENERAL_CARD_SECURITY_CODE_SIZE = 3;
-    private static final int AMEX_SECURITY_CODE_SIZE = 4;
+    private const val GENERAL_CARD_SECURITY_CODE_SIZE = 3
+    private const val AMEX_SECURITY_CODE_SIZE = 4
+
     // Date
-    private static final int MONTHS_IN_YEAR = 12;
-    private static final int MAXIMUM_YEARS_IN_FUTURE = 30;
-    private static final int MAXIMUM_EXPIRED_MONTHS = 3;
+    private const val MONTHS_IN_YEAR = 12
+    private const val MAXIMUM_YEARS_IN_FUTURE = 30
+    private const val MAXIMUM_EXPIRED_MONTHS = 3
 
     /**
      * Validate card number.
      */
-    @NonNull
-    public static ValidatedField<String> validateCardNumber(@NonNull String number) {
-
-        final String normalizedNumber = StringUtil.normalize(number);
-        final int length = normalizedNumber.length();
-
-        final ValidatedField.Validation validation;
-
-        if (!StringUtil.isDigitsAndSeparatorsOnly(normalizedNumber)) {
-            validation = ValidatedField.Validation.INVALID;
+    fun validateCardNumber(number: String): FieldState<String> {
+        val normalizedNumber = StringUtil.normalize(number)
+        val length = normalizedNumber.length
+        val validation: Validation = if (!StringUtil.isDigitsAndSeparatorsOnly(normalizedNumber)) {
+            Validation.Invalid(R.string.checkout_card_number_not_valid)
         } else if (length > MAXIMUM_CARD_NUMBER_LENGTH) {
-            validation = ValidatedField.Validation.INVALID;
+            Validation.Invalid(R.string.checkout_card_number_not_valid)
         } else if (length < MINIMUM_CARD_NUMBER_LENGTH) {
-            validation = ValidatedField.Validation.PARTIAL;
+            Validation.Partial
         } else if (isLuhnChecksumValid(normalizedNumber)) {
-            validation = ValidatedField.Validation.VALID;
+            Validation.Valid
         } else if (length == MAXIMUM_CARD_NUMBER_LENGTH) {
-            validation = ValidatedField.Validation.INVALID;
+            Validation.Invalid(R.string.checkout_card_number_not_valid)
         } else {
-            validation = ValidatedField.Validation.PARTIAL;
+            Validation.Partial
         }
 
-        return new ValidatedField<>(number, validation);
+        return FieldState(number, validation)
     }
 
-    @SuppressWarnings("checkstyle:MagicNumber")
-    private static boolean isLuhnChecksumValid(@NonNull String normalizedNumber) {
-        int s1 = 0;
-        int s2 = 0;
-        final String reverse = new StringBuffer(normalizedNumber).reverse().toString();
-
-        for (int i = 0; i < reverse.length(); i++) {
-
-            final int digit = Character.digit(reverse.charAt(i), RADIX);
-
+    @Suppress("MagicNumber")
+    private fun isLuhnChecksumValid(normalizedNumber: String): Boolean {
+        var s1 = 0
+        var s2 = 0
+        val reverse = StringBuffer(normalizedNumber).reverse().toString()
+        for (i in reverse.indices) {
+            val digit = Character.digit(reverse[i], RADIX)
             if (i % 2 == 0) {
-                s1 += digit;
+                s1 += digit
             } else {
-                s2 += 2 * digit;
-
+                s2 += 2 * digit
                 if (digit >= FIVE_DIGIT) {
-                    s2 -= 9;
+                    s2 -= 9
                 }
             }
         }
-
-        return (s1 + s2) % 10 == 0;
+        return (s1 + s2) % 10 == 0
     }
 
     /**
      * Validate Expiry Date.
      */
-    @NonNull
-    public static ValidatedField<ExpiryDate> validateExpiryDate(@NonNull ExpiryDate expiryDate) {
-
+    fun validateExpiryDate(expiryDate: ExpiryDate): FieldState<ExpiryDate> {
         if (dateExists(expiryDate)) {
-            final Calendar expiryDateCalendar = getExpiryCalendar(expiryDate);
-
-            final Calendar maxFutureCalendar = GregorianCalendar.getInstance();
-            maxFutureCalendar.add(Calendar.YEAR, MAXIMUM_YEARS_IN_FUTURE);
-
-            final Calendar maxPastCalendar = GregorianCalendar.getInstance();
-            maxPastCalendar.add(Calendar.MONTH, -MAXIMUM_EXPIRED_MONTHS);
+            val expiryDateCalendar = getExpiryCalendar(expiryDate)
+            val maxFutureCalendar = GregorianCalendar.getInstance()
+            maxFutureCalendar.add(Calendar.YEAR, MAXIMUM_YEARS_IN_FUTURE)
+            val maxPastCalendar = GregorianCalendar.getInstance()
+            maxPastCalendar.add(Calendar.MONTH, -MAXIMUM_EXPIRED_MONTHS)
 
             // higher than maxPast and lower than maxFuture
-            if (expiryDateCalendar.compareTo(maxPastCalendar) >= 0 && expiryDateCalendar.compareTo(maxFutureCalendar) <= 0) {
-                return new ValidatedField<>(expiryDate, ValidatedField.Validation.VALID);
+            if (expiryDateCalendar >= maxPastCalendar && expiryDateCalendar <= maxFutureCalendar) {
+                return FieldState(expiryDate, Validation.Valid)
             }
         }
-
-        return new ValidatedField<>(expiryDate, ValidatedField.Validation.INVALID);
+        return FieldState(expiryDate, Validation.Invalid(R.string.checkout_expiry_date_not_valid))
     }
 
     /**
      * Validate Security Code.
      * We always pass CardType null, but we can enforce size validation for Amex or otherwise if necessary.
      */
-    @SuppressWarnings("SameParameterValue")
-    @NonNull
-    public static ValidatedField<String> validateSecurityCode(@NonNull String securityCode, @Nullable CardType cardType) {
-        final String normalizedSecurityCode = StringUtil.normalize(securityCode);
-        final int length = normalizedSecurityCode.length();
-
-        ValidatedField.Validation validation = ValidatedField.Validation.INVALID;
-
+    fun validateSecurityCode(securityCode: String, cardType: CardType?): FieldState<String> {
+        val normalizedSecurityCode = StringUtil.normalize(securityCode)
+        val length = normalizedSecurityCode.length
+        var validation: Validation = Validation.Invalid(R.string.checkout_security_code_not_valid)
         if (StringUtil.isDigitsAndSeparatorsOnly(normalizedSecurityCode)) {
             if (cardType == CardType.AMERICAN_EXPRESS && length == AMEX_SECURITY_CODE_SIZE) {
-                validation = ValidatedField.Validation.VALID;
+                validation = Validation.Valid
             } else if (length == GENERAL_CARD_SECURITY_CODE_SIZE && cardType != CardType.AMERICAN_EXPRESS) {
-                validation = ValidatedField.Validation.VALID;
+                validation = Validation.Valid
             }
         }
-
-        return new ValidatedField<>(normalizedSecurityCode, validation);
+        return FieldState(normalizedSecurityCode, validation)
     }
 
-    private static boolean dateExists(@NonNull ExpiryDate expiryDate) {
-        return expiryDate != ExpiryDate.EMPTY_DATE
-                && expiryDate.getExpiryMonth() != ExpiryDate.EMPTY_VALUE
-                && expiryDate.getExpiryYear() != ExpiryDate.EMPTY_VALUE
-                && isValidMonth(expiryDate.getExpiryMonth())
-                && expiryDate.getExpiryYear() > 0;
+    private fun dateExists(expiryDate: ExpiryDate): Boolean {
+        return (
+            expiryDate !== ExpiryDate.EMPTY_DATE &&
+                expiryDate.expiryMonth != ExpiryDate.EMPTY_VALUE &&
+                expiryDate.expiryYear != ExpiryDate.EMPTY_VALUE &&
+                isValidMonth(expiryDate.expiryMonth) &&
+                expiryDate.expiryYear > 0
+            )
     }
 
-    private static boolean isValidMonth(int month) {
-        return month > 0 && month <= MONTHS_IN_YEAR;
+    private fun isValidMonth(month: Int): Boolean {
+        return month in 1..MONTHS_IN_YEAR
     }
 
-    private static Calendar getExpiryCalendar(@NonNull ExpiryDate expiryDate) {
-
-        final Calendar expiryCalendar = GregorianCalendar.getInstance();
-        expiryCalendar.clear();
+    private fun getExpiryCalendar(expiryDate: ExpiryDate): Calendar {
+        val expiryCalendar = GregorianCalendar.getInstance()
+        expiryCalendar.clear()
         // First day of the expiry month. Calendar.MONTH is zero-based.
-        expiryCalendar.set(expiryDate.getExpiryYear(), expiryDate.getExpiryMonth() - 1, 1);
+        expiryCalendar[expiryDate.expiryYear, expiryDate.expiryMonth - 1] = 1
         // Go to next month and remove 1 day to be on the last day of the expiry month.
-        expiryCalendar.add(Calendar.MONTH, 1);
-        expiryCalendar.add(Calendar.DAY_OF_MONTH, -1);
-
-        return expiryCalendar;
-    }
-
-    private CardValidationUtils() {
-        throw new NoConstructorException();
+        expiryCalendar.add(Calendar.MONTH, 1)
+        expiryCalendar.add(Calendar.DAY_OF_MONTH, -1)
+        return expiryCalendar
     }
 }

@@ -14,33 +14,35 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 
 import com.adyen.checkout.components.base.OutputData;
-import com.adyen.checkout.components.validation.ValidatedField;
+import com.adyen.checkout.components.ui.FieldState;
+import com.adyen.checkout.components.ui.Validation;
+import com.adyen.checkout.sepa.ui.R;
 
 class SepaOutputData implements OutputData {
 
-    private final ValidatedField<String> mOwnerNameField;
-    private final ValidatedField<String> mIbanNumberField;
+    private final FieldState<String> mOwnerNameField;
+    private final FieldState<String> mIbanNumberField;
     private final Iban mIban;
 
     SepaOutputData(@NonNull String ownerName, @NonNull String ibanNumber) {
-        mOwnerNameField = new ValidatedField<>(ownerName,
-                TextUtils.isEmpty(ownerName) ? ValidatedField.Validation.PARTIAL : ValidatedField.Validation.VALID);
+        mOwnerNameField = new FieldState<>(ownerName,
+                TextUtils.isEmpty(ownerName) ? Validation.Partial.INSTANCE : Validation.Valid.INSTANCE);
         mIban = Iban.parse(ibanNumber);
         mIbanNumberField = validateIbanNumber(ibanNumber, mIban);
     }
 
     @Override
     public boolean isValid() {
-        return mOwnerNameField.isValid() && mIbanNumberField.isValid();
+        return mOwnerNameField.getValidation().isValid() && mIbanNumberField.getValidation().isValid();
     }
 
     @NonNull
-    public ValidatedField<String> getOwnerNameField() {
+    public FieldState<String> getOwnerNameField() {
         return mOwnerNameField;
     }
 
     @NonNull
-    public ValidatedField<String> getIbanNumberField() {
+    public FieldState<String> getIbanNumberField() {
         return mIbanNumberField;
     }
 
@@ -49,16 +51,16 @@ class SepaOutputData implements OutputData {
         return mIban;
     }
 
-    private ValidatedField<String> validateIbanNumber(@NonNull String ibanNumber, @Nullable Iban iban) {
-        final ValidatedField.Validation validation;
+    private FieldState<String> validateIbanNumber(@NonNull String ibanNumber, @Nullable Iban iban) {
+        final Validation validation;
         if (iban != null) {
-            validation = ValidatedField.Validation.VALID;
+            validation = Validation.Valid.INSTANCE;
         } else if (Iban.isPartial(ibanNumber)) {
-            validation = ValidatedField.Validation.PARTIAL;
+            validation = Validation.Partial.INSTANCE;
         } else {
-            validation = ValidatedField.Validation.INVALID;
+            validation = new Validation.Invalid(R.string.checkout_iban_not_valid);
         }
 
-        return new ValidatedField<>(ibanNumber, validation);
+        return new FieldState<>(ibanNumber, validation);
     }
 }

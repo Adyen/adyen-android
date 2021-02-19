@@ -29,7 +29,7 @@ import com.adyen.checkout.mbway.country.CountryAdapter
 import com.adyen.checkout.mbway.country.CountryModel
 import com.adyen.checkout.mbway.ui.R
 import com.google.android.material.textfield.TextInputLayout
-import java.util.*
+import java.util.Locale
 
 private val TAG = LogUtil.getTag()
 
@@ -96,7 +96,7 @@ class MBWayView :
             val outputData = component.outputData
             if (hasFocus) {
                 mMobileNumberInput.error = null
-            } else if (outputData != null && !outputData.mobilePhoneNumberField.isValid) {
+            } else if (outputData != null && !outputData.mobilePhoneNumberFieldState.validation.isValid()) {
                 mMobileNumberInput.error = mLocalizedContext.getString(R.string.checkout_mbway_phone_number_not_valid)
             }
         }
@@ -155,7 +155,7 @@ class MBWayView :
     override fun highlightValidationErrors() {
         Logger.d(TAG, "highlightValidationErrors")
         val outputData: MBWayOutputData = component.outputData ?: return
-        if (!outputData.mobilePhoneNumberField.isValid) {
+        if (!outputData.mobilePhoneNumberFieldState.validation.isValid()) {
             mMobileNumberInput?.error = mLocalizedContext.getString(R.string.checkout_mbway_phone_number_not_valid)
         }
     }
@@ -170,7 +170,7 @@ class MBWayView :
         notifyInputDataChanged()
     }
 
-    internal fun notifyInputDataChanged() {
+    private fun notifyInputDataChanged() {
         component.inputDataChanged(mMBWayInputData)
     }
 

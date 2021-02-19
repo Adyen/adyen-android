@@ -16,8 +16,9 @@ import com.adyen.checkout.card.data.ExpiryDate
 import com.adyen.checkout.card.repository.BinLookupRepository
 import com.adyen.checkout.card.repository.PublicKeyRepository
 import com.adyen.checkout.components.model.paymentmethods.PaymentMethod
+import com.adyen.checkout.components.ui.FieldState
+import com.adyen.checkout.components.ui.Validation
 import com.adyen.checkout.components.util.PaymentMethodTypes
-import com.adyen.checkout.components.validation.ValidatedField
 import com.adyen.checkout.core.log.LogUtil
 import com.adyen.checkout.core.log.Logger
 import kotlinx.coroutines.CoroutineScope
@@ -43,20 +44,23 @@ class NewCardDelegate(
         return paymentMethod.type ?: PaymentMethodTypes.UNKNOWN
     }
 
-    override fun validateCardNumber(cardNumber: String): ValidatedField<String> {
+    override fun validateCardNumber(cardNumber: String): FieldState<String> {
         return CardValidationUtils.validateCardNumber(cardNumber)
     }
 
-    override fun validateExpiryDate(expiryDate: ExpiryDate): ValidatedField<ExpiryDate> {
+    override fun validateExpiryDate(expiryDate: ExpiryDate): FieldState<ExpiryDate> {
         return CardValidationUtils.validateExpiryDate(expiryDate)
     }
 
     override fun validateSecurityCode(
         securityCode: String,
         cardType: CardType?
-    ): ValidatedField<String> {
+    ): FieldState<String> {
         return if (cardConfiguration.isHideCvc) {
-            ValidatedField(securityCode, ValidatedField.Validation.VALID)
+            FieldState(
+                securityCode,
+                Validation.Valid
+            )
         } else {
             CardValidationUtils.validateSecurityCode(securityCode, cardType)
         }
