@@ -16,10 +16,7 @@ import androidx.annotation.NonNull;
 
 import com.adyen.checkout.components.base.BaseConfigurationBuilder;
 import com.adyen.checkout.components.base.Configuration;
-import com.adyen.checkout.components.util.ValidationUtils;
-import com.adyen.checkout.card.CardValidationUtils;
 import com.adyen.checkout.core.api.Environment;
-import com.adyen.checkout.core.exception.CheckoutException;
 
 import java.util.Locale;
 
@@ -27,8 +24,6 @@ import java.util.Locale;
  * {@link Configuration} class required by {@link BcmcComponent} to change it's behavior. Pass it to the {@link BcmcComponent#PROVIDER}.
  */
 public class BcmcConfiguration extends Configuration {
-
-    private final String mPublicKey;
 
     public static final Parcelable.Creator<BcmcConfiguration> CREATOR = new Parcelable.Creator<BcmcConfiguration>() {
         public BcmcConfiguration createFromParcel(@NonNull Parcel in) {
@@ -43,40 +38,23 @@ public class BcmcConfiguration extends Configuration {
     BcmcConfiguration(
             @NonNull Locale shopperLocale,
             @NonNull Environment environment,
-            @NonNull String clientKey,
-            @NonNull String publicKey) {
+            @NonNull String clientKey) {
         super(shopperLocale, environment, clientKey);
-
-        mPublicKey = publicKey;
     }
 
     BcmcConfiguration(@NonNull Parcel in) {
         super(in);
-        mPublicKey = in.readString();
     }
 
     @Override
     public void writeToParcel(@NonNull Parcel dest, int flags) {
         super.writeToParcel(dest, flags);
-        dest.writeString(mPublicKey);
-    }
-
-    /**
-     * Get public key.
-     *
-     * @return {@link String}
-     */
-    @NonNull
-    public String getPublicKey() {
-        return mPublicKey;
     }
 
     /**
      * Builder to create a {@link BcmcConfiguration}.
      */
     public static final class Builder extends BaseConfigurationBuilder<BcmcConfiguration> {
-
-        private String mBuilderPublicKey;
 
         /**
          * Constructor of Card Configuration Builder with default values.
@@ -116,36 +94,16 @@ public class BcmcConfiguration extends Configuration {
         }
 
         /**
-         * @param publicKey The public key to be used for encryption. You can get it from the Customer Area.
-         */
-        @NonNull
-        public Builder setPublicKey(@NonNull String publicKey) {
-            mBuilderPublicKey = publicKey;
-            return this;
-        }
-
-        /**
          * Build {@link BcmcConfiguration} object from {@link BcmcConfiguration.Builder} inputs.
          *
          * @return {@link BcmcConfiguration}
          */
         @NonNull
         public BcmcConfiguration build() {
-
-            if (!CardValidationUtils.isPublicKeyValid(mBuilderPublicKey)) {
-                throw new CheckoutException("Invalid Public Key. Please find the valid public key on the Customer Area.");
-            }
-
-            // This will not be triggered until the public key check above is removed as it takes prioriy.
-            if (!CardValidationUtils.isPublicKeyValid(mBuilderPublicKey) && !ValidationUtils.isClientKeyValid(mBuilderClientKey)) {
-                throw new CheckoutException("You need either a valid Client key or Public key to use the Card Component.");
-            }
-
             return new BcmcConfiguration(
                     mBuilderShopperLocale,
                     mBuilderEnvironment,
-                    mBuilderClientKey,
-                    mBuilderPublicKey
+                    mBuilderClientKey
             );
         }
     }

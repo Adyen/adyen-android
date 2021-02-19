@@ -15,12 +15,10 @@ import android.os.Parcelable;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 
+import com.adyen.checkout.card.data.CardType;
 import com.adyen.checkout.components.base.BaseConfigurationBuilder;
 import com.adyen.checkout.components.base.Configuration;
-import com.adyen.checkout.components.util.ValidationUtils;
-import com.adyen.checkout.card.data.CardType;
 import com.adyen.checkout.core.api.Environment;
-import com.adyen.checkout.core.exception.CheckoutException;
 import com.adyen.checkout.core.util.ParcelUtils;
 
 import java.util.ArrayList;
@@ -43,7 +41,6 @@ public class CardConfiguration extends Configuration {
     public static final List<CardType> DEFAULT_SUPPORTED_CARDS_LIST =
             Collections.unmodifiableList(Arrays.asList(DEFAULT_SUPPORTED_CARDS));
 
-    private final String mPublicKey;
     private final String mShopperReference;
     private final boolean mHolderNameRequired;
     private final List<CardType> mSupportedCardTypes;
@@ -64,7 +61,6 @@ public class CardConfiguration extends Configuration {
     /**
      * @param shopperLocale         The locale that should be used to display strings and layouts. Can differ from device default.
      * @param environment           The environment to be used to make network calls.
-     * @param publicKey             The public key used for encryption of the card data. You can get it from the Customer Area.
      * @param shopperReference      The unique identifier of the shopper.
      * @param holderNameRequired    If the holder name of the card should be shown as a required field.
      * @param showStorePaymentField If the component should show the option to store the card for later use.
@@ -76,7 +72,6 @@ public class CardConfiguration extends Configuration {
             @NonNull Locale shopperLocale,
             @NonNull Environment environment,
             @NonNull String clientKey,
-            @NonNull String publicKey,
             boolean holderNameRequired,
             @NonNull String shopperReference,
             boolean showStorePaymentField,
@@ -86,7 +81,6 @@ public class CardConfiguration extends Configuration {
     ) {
         super(shopperLocale, environment, clientKey);
 
-        mPublicKey = publicKey;
         mHolderNameRequired = holderNameRequired;
         mSupportedCardTypes = supportCardTypes;
         mShopperReference = shopperReference;
@@ -97,7 +91,6 @@ public class CardConfiguration extends Configuration {
 
     CardConfiguration(@NonNull Parcel in) {
         super(in);
-        mPublicKey = in.readString();
         mShopperReference = in.readString();
         mHolderNameRequired = ParcelUtils.readBoolean(in);
         mSupportedCardTypes = in.readArrayList(CardType.class.getClassLoader());
@@ -109,23 +102,12 @@ public class CardConfiguration extends Configuration {
     @Override
     public void writeToParcel(@NonNull Parcel dest, int flags) {
         super.writeToParcel(dest, flags);
-        dest.writeString(mPublicKey);
         dest.writeString(mShopperReference);
         ParcelUtils.writeBoolean(dest, mHolderNameRequired);
         dest.writeList(mSupportedCardTypes);
         ParcelUtils.writeBoolean(dest, mShowStorePaymentField);
         ParcelUtils.writeBoolean(dest, mHideCvc);
         ParcelUtils.writeBoolean(dest, mHideCvcStoredCard);
-    }
-
-    /**
-     * Get public key.
-     *
-     * @return {@link String}
-     */
-    @NonNull
-    public String getPublicKey() {
-        return mPublicKey;
     }
 
     /**
@@ -174,8 +156,6 @@ public class CardConfiguration extends Configuration {
      */
     public static final class Builder extends BaseConfigurationBuilder<CardConfiguration> {
 
-        private String mBuilderPublicKey = "";
-
         private List<CardType> mBuilderSupportedCardTypes = Collections.emptyList();
         private boolean mBuilderHolderNameRequired;
         private boolean mBuilderShowStorePaymentField = true;
@@ -190,7 +170,6 @@ public class CardConfiguration extends Configuration {
             super(cardConfiguration.getShopperLocale(), cardConfiguration.getEnvironment(), cardConfiguration.getClientKey());
             mBuilderClientKey = cardConfiguration.getClientKey();
 
-            mBuilderPublicKey = cardConfiguration.getPublicKey();
             mBuilderSupportedCardTypes = cardConfiguration.getSupportedCardTypes();
             mBuilderHolderNameRequired = cardConfiguration.isHolderNameRequired();
             mBuilderShowStorePaymentField = cardConfiguration.isShowStorePaymentFieldEnable();
@@ -234,18 +213,6 @@ public class CardConfiguration extends Configuration {
         @NonNull
         public Builder setEnvironment(@NonNull Environment builderEnvironment) {
             return (Builder) super.setEnvironment(builderEnvironment);
-        }
-
-        /**
-         * @param publicKey The public key to be used for encryption. You can get it from the Customer Area.
-         */
-        @NonNull
-        public Builder setPublicKey(@NonNull String publicKey) {
-            if (!CardValidationUtils.isPublicKeyValid(mBuilderPublicKey)) {
-                throw new CheckoutException("Public key is not valid.");
-            }
-            mBuilderPublicKey = publicKey;
-            return this;
         }
 
         /**
@@ -339,7 +306,6 @@ public class CardConfiguration extends Configuration {
                     mBuilderShopperLocale,
                     mBuilderEnvironment,
                     mBuilderClientKey,
-                    mBuilderPublicKey,
                     mBuilderHolderNameRequired,
                     mShopperReference,
                     mBuilderShowStorePaymentField,

@@ -8,8 +8,6 @@
 
 package com.adyen.checkout.card;
 
-import android.text.TextUtils;
-
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 
@@ -21,12 +19,8 @@ import com.adyen.checkout.core.util.StringUtil;
 
 import java.util.Calendar;
 import java.util.GregorianCalendar;
-import java.util.regex.Pattern;
 
 public final class CardValidationUtils {
-
-    private static final String PUBLIC_KEY_PATTERN = "([0-9]){5}\\|([A-Z]|[0-9]){512}";
-    private static final int PUBLIC_KEY_SIZE = 5 + 1 + 512;
 
     // Luhn Check
     private static final int RADIX = 10;
@@ -43,17 +37,6 @@ public final class CardValidationUtils {
     private static final int MONTHS_IN_YEAR = 12;
     private static final int MAXIMUM_YEARS_IN_FUTURE = 30;
     private static final int MAXIMUM_EXPIRED_MONTHS = 3;
-
-    /**
-     * Checks if the public key for encryption is valid.
-     * @param publicKey The public key string
-     * @return True if valid, False if not.
-     */
-    public static boolean isPublicKeyValid(@Nullable String publicKey) {
-        // TODO After moving CSE code to the repo we can make a better validation
-        final Pattern pubKeyPattern = Pattern.compile(PUBLIC_KEY_PATTERN);
-        return !TextUtils.isEmpty(publicKey) && pubKeyPattern.matcher(publicKey).find() && publicKey.length() == PUBLIC_KEY_SIZE;
-    }
 
     /**
      * Validate card number.

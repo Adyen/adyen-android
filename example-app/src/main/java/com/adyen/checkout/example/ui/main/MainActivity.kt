@@ -155,7 +155,6 @@ class MainActivity : AppCompatActivity() {
             .build()
 
         val bcmcConfiguration = BcmcConfiguration.Builder(this@MainActivity, BuildConfig.CLIENT_KEY)
-            .setPublicKey(BuildConfig.PUBLIC_KEY)
             .setShopperLocale(shopperLocale)
             .setEnvironment(Environment.TEST)
             .build()

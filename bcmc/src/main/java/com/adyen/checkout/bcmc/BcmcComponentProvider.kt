@@ -40,7 +40,6 @@ class BcmcComponentProvider : PaymentComponentProvider<BcmcComponent, BcmcConfig
         configuration: BcmcConfiguration,
         callback: ComponentAvailableCallback<BcmcConfiguration>
     ) {
-        val isPubKeyAvailable: Boolean = configuration.publicKey.isNotEmpty()
-        callback.onAvailabilityResult(isPubKeyAvailable, paymentMethod, configuration)
+        callback.onAvailabilityResult(true, paymentMethod, configuration)
     }
 }

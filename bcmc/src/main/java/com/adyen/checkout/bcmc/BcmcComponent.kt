@@ -67,8 +67,7 @@ class BcmcComponent(
     private suspend fun fetchPublicKey(): String {
         return publicKeyRepository.fetchPublicKey(
             environment = configuration.environment,
-            clientKey = configuration.clientKey,
-            configurationPublicKey = configuration.publicKey
+            clientKey = configuration.clientKey
         )
     }
 
