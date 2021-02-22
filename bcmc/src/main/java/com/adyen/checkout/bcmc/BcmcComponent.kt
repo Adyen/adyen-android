@@ -7,9 +7,11 @@
  */
 package com.adyen.checkout.bcmc
 
+import androidx.lifecycle.viewModelScope
 import com.adyen.checkout.card.CardValidationUtils
 import com.adyen.checkout.card.data.CardType
 import com.adyen.checkout.card.data.ExpiryDate
+import com.adyen.checkout.card.repository.PublicKeyRepository
 import com.adyen.checkout.components.GenericComponentState
 import com.adyen.checkout.components.PaymentComponentProvider
 import com.adyen.checkout.components.base.BasePaymentComponent
@@ -18,11 +20,13 @@ import com.adyen.checkout.components.model.payments.request.CardPaymentMethod
 import com.adyen.checkout.components.model.payments.request.PaymentComponentData
 import com.adyen.checkout.components.util.PaymentMethodTypes
 import com.adyen.checkout.components.validation.ValidatedField
+import com.adyen.checkout.core.exception.ComponentException
 import com.adyen.checkout.core.log.LogUtil
 import com.adyen.checkout.core.log.Logger
 import com.adyen.checkout.cse.CardEncrypter
 import com.adyen.checkout.cse.UnencryptedCard
 import com.adyen.checkout.cse.exception.EncryptionException
+import kotlinx.coroutines.launch
 
 private val TAG = LogUtil.getTag()
 
@@ -34,8 +38,9 @@ private val PAYMENT_METHOD_TYPES = arrayOf(PaymentMethodTypes.BCMC)
  * @param paymentMethodDelegate [PaymentMethodDelegate] represents payment method.
  * @param configuration [BcmcConfiguration].
  */
-class BcmcComponent(paymentMethodDelegate: GenericPaymentMethodDelegate, configuration: BcmcConfiguration)
-    : BasePaymentComponent<BcmcConfiguration, BcmcInputData, BcmcOutputData, GenericComponentState<CardPaymentMethod>>(paymentMethodDelegate, configuration) {
+class BcmcComponent(paymentMethodDelegate: GenericPaymentMethodDelegate, configuration: BcmcConfiguration) :
+    BasePaymentComponent<BcmcConfiguration, BcmcInputData, BcmcOutputData,
+        GenericComponentState<CardPaymentMethod>>(paymentMethodDelegate, configuration) {
 
     companion object {
         @JvmField
@@ -43,6 +48,26 @@ class BcmcComponent(paymentMethodDelegate: GenericPaymentMethodDelegate, configu
 
         @JvmField
         val SUPPORTED_CARD_TYPE = CardType.BCMC
+    }
+
+    private val publicKeyRepository: PublicKeyRepository = PublicKeyRepository()
+    private var publicKey = ""
+
+    init {
+        viewModelScope.launch {
+            publicKey = fetchPublicKey()
+            if (publicKey.isEmpty()) {
+                notifyException(ComponentException("Unable to fetch publicKey."))
+            }
+        }
+    }
+
+    private suspend fun fetchPublicKey(): String {
+        return publicKeyRepository.fetchPublicKey(
+            environment = configuration.environment,
+            clientKey = configuration.clientKey,
+            configurationPublicKey = configuration.publicKey
+        )
     }
 
     override fun onInputDataChanged(inputData: BcmcInputData): BcmcOutputData {
@@ -57,10 +82,11 @@ class BcmcComponent(paymentMethodDelegate: GenericPaymentMethodDelegate, configu
         return PAYMENT_METHOD_TYPES
     }
 
+    @SuppressWarnings("ReturnCount")
     override fun createComponentState(): GenericComponentState<CardPaymentMethod> {
         Logger.v(TAG, "createComponentState")
 
-        val card = UnencryptedCard.Builder()
+        val unencryptedCardBuilder = UnencryptedCard.Builder()
         val outputData = outputData
         val paymentComponentData = PaymentComponentData<CardPaymentMethod>()
 
@@ -69,13 +95,13 @@ class BcmcComponent(paymentMethodDelegate: GenericPaymentMethodDelegate, configu
             return GenericComponentState(paymentComponentData, false)
         }
         val encryptedCard = try {
-            card.setNumber(outputData.cardNumberField.value)
+            unencryptedCardBuilder.setNumber(outputData.cardNumberField.value)
             val expiryDateResult = outputData.expiryDateField.value
             if (expiryDateResult.expiryYear != ExpiryDate.EMPTY_VALUE && expiryDateResult.expiryMonth != ExpiryDate.EMPTY_VALUE) {
-                card.setExpiryMonth(expiryDateResult.expiryMonth.toString())
-                card.setExpiryYear(expiryDateResult.expiryYear.toString())
+                unencryptedCardBuilder.setExpiryMonth(expiryDateResult.expiryMonth.toString())
+                unencryptedCardBuilder.setExpiryYear(expiryDateResult.expiryYear.toString())
             }
-            CardEncrypter.encryptFields(card.build(), configuration.publicKey)
+            CardEncrypter.encryptFields(unencryptedCardBuilder.build(), publicKey)
         } catch (e: EncryptionException) {
             notifyException(e)
             return GenericComponentState(paymentComponentData, false)
