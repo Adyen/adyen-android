@@ -9,11 +9,12 @@
 package com.adyen.checkout.card
 
 import com.adyen.checkout.card.api.BinLookupConnection
+import com.adyen.checkout.card.api.model.Brand
 import com.adyen.checkout.card.data.CardType
 import com.adyen.checkout.card.data.DetectedCardType
 import com.adyen.checkout.card.data.ExpiryDate
 import com.adyen.checkout.card.repository.BinLookupRepository
-import com.adyen.checkout.card.api.model.Brand
+import com.adyen.checkout.card.repository.PublicKeyRepository
 import com.adyen.checkout.components.model.paymentmethods.PaymentMethod
 import com.adyen.checkout.components.util.PaymentMethodTypes
 import com.adyen.checkout.components.validation.ValidatedField
@@ -31,8 +32,9 @@ private val TAG = LogUtil.getTag()
 class NewCardDelegate(
     private val paymentMethod: PaymentMethod,
     cardConfiguration: CardConfiguration,
-    private val binLookupRepository: BinLookupRepository
-) : CardDelegate(cardConfiguration) {
+    private val binLookupRepository: BinLookupRepository,
+    publicKeyRepository: PublicKeyRepository
+) : CardDelegate(cardConfiguration, publicKeyRepository) {
 
     private val _binLookupFlow: MutableSharedFlow<List<DetectedCardType>> = MutableSharedFlow(0, 1, BufferOverflow.DROP_OLDEST)
     internal val binLookupFlow: Flow<List<DetectedCardType>> = _binLookupFlow
