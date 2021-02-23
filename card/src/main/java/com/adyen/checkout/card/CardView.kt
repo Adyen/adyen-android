@@ -29,6 +29,7 @@ import com.adyen.checkout.components.api.ImageLoader
 import com.adyen.checkout.components.ui.view.AdyenLinearLayout
 import com.adyen.checkout.components.ui.view.AdyenTextInputEditText
 import com.adyen.checkout.components.ui.view.RoundCornerImageView
+import com.adyen.checkout.components.ui.visible
 import com.adyen.checkout.components.validation.ValidatedField
 
 /**
@@ -76,8 +77,8 @@ class CardView @JvmOverloads constructor(context: Context, attrs: AttributeSet? 
                 setStoredCardInterface(it)
             }
         } else {
-            binding.textInputLayoutCardHolder.visibility = if (component.isHolderNameRequire()) VISIBLE else GONE
-            binding.switchStorePaymentMethod.visibility = if (component.showStorePaymentField()) VISIBLE else GONE
+            binding.textInputLayoutCardHolder.visible = component.isHolderNameRequire()
+            binding.switchStorePaymentMethod.visible = component.showStorePaymentField()
         }
         notifyInputDataChanged()
     }
@@ -120,7 +121,7 @@ class CardView @JvmOverloads constructor(context: Context, attrs: AttributeSet? 
         if (cardOutputData != null) {
             onCardNumberValidated(cardOutputData.cardNumberField, cardOutputData.detectedCardTypes)
             onExpiryDateValidated(cardOutputData.expiryDateField)
-            binding.textInputLayoutSecurityCode.visibility = if (cardOutputData.isCvcHidden) GONE else VISIBLE
+            binding.textInputLayoutSecurityCode.visible = !cardOutputData.isCvcHidden
             if (cardOutputData.isCvcHidden) {
                 // We don't expect the hidden status to change back to visible, so we don't worry about putting the margin back.
                 val params = binding.textInputLayoutExpiryDate.layoutParams as LayoutParams
@@ -163,7 +164,7 @@ class CardView @JvmOverloads constructor(context: Context, attrs: AttributeSet? 
                 }
                 binding.textInputLayoutSecurityCode.error = mLocalizedContext.getString(R.string.checkout_security_code_not_valid)
             }
-            if (binding.textInputLayoutCardHolder.visibility == VISIBLE && !it.holderNameField.isValid) {
+            if (binding.textInputLayoutCardHolder.visible && !it.holderNameField.isValid) {
                 if (!isErrorFocused) {
                     binding.textInputLayoutCardHolder.requestFocus()
                 }
@@ -241,10 +242,10 @@ class CardView @JvmOverloads constructor(context: Context, attrs: AttributeSet? 
     private fun setCardNumberError(@StringRes stringResId: Int?) {
         if (stringResId == null) {
             binding.textInputLayoutCardNumber.error = null
-            binding.cardBrandLogoImageView.visibility = VISIBLE
+            binding.cardBrandLogoImageView.visible = true
         } else {
             binding.textInputLayoutCardNumber.error = mLocalizedContext.getString(stringResId)
-            binding.cardBrandLogoImageView.visibility = GONE
+            binding.cardBrandLogoImageView.visible = false
         }
     }
 
@@ -304,8 +305,8 @@ class CardView @JvmOverloads constructor(context: Context, attrs: AttributeSet? 
         binding.editTextCardNumber.isEnabled = false
         binding.editTextExpiryDate.setDate(storedCardInput.expiryDate)
         binding.editTextExpiryDate.isEnabled = false
-        binding.switchStorePaymentMethod.visibility = GONE
-        binding.textInputLayoutCardHolder.visibility = GONE
+        binding.switchStorePaymentMethod.visible = false
+        binding.textInputLayoutCardHolder.visible = false
     }
 
     private fun getActivity(context: Context): Activity? {
