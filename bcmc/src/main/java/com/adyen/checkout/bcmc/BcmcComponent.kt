@@ -38,9 +38,12 @@ private val PAYMENT_METHOD_TYPES = arrayOf(PaymentMethodTypes.BCMC)
  * @param paymentMethodDelegate [PaymentMethodDelegate] represents payment method.
  * @param configuration [BcmcConfiguration].
  */
-class BcmcComponent(paymentMethodDelegate: GenericPaymentMethodDelegate, configuration: BcmcConfiguration) :
-    BasePaymentComponent<BcmcConfiguration, BcmcInputData, BcmcOutputData,
-        GenericComponentState<CardPaymentMethod>>(paymentMethodDelegate, configuration) {
+class BcmcComponent(
+    paymentMethodDelegate: GenericPaymentMethodDelegate,
+    configuration: BcmcConfiguration,
+    private val publicKeyRepository: PublicKeyRepository
+) : BasePaymentComponent<BcmcConfiguration, BcmcInputData, BcmcOutputData,
+    GenericComponentState<CardPaymentMethod>>(paymentMethodDelegate, configuration) {
 
     companion object {
         @JvmField
@@ -50,7 +53,6 @@ class BcmcComponent(paymentMethodDelegate: GenericPaymentMethodDelegate, configu
         val SUPPORTED_CARD_TYPE = CardType.BCMC
     }
 
-    private val publicKeyRepository: PublicKeyRepository = PublicKeyRepository()
     private var publicKey = ""
 
     init {

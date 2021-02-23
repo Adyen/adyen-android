@@ -17,11 +17,12 @@ import com.adyen.checkout.components.validation.ValidatedField
 import kotlinx.coroutines.CoroutineScope
 
 @Suppress("TooManyFunctions")
-abstract class CardDelegate(protected val cardConfiguration: CardConfiguration) : PaymentMethodDelegate {
+abstract class CardDelegate(
+    protected val cardConfiguration: CardConfiguration,
+    private val publicKeyRepository: PublicKeyRepository
+) : PaymentMethodDelegate {
 
     protected val noCvcBrands: Set<CardType> = hashSetOf(CardType.BCMC)
-
-    private val publicKeyRepository: PublicKeyRepository = PublicKeyRepository()
 
     abstract fun validateCardNumber(cardNumber: String): ValidatedField<String>
     abstract fun validateExpiryDate(expiryDate: ExpiryDate): ValidatedField<ExpiryDate>
