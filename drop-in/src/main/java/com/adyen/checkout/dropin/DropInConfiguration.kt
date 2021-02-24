@@ -112,7 +112,7 @@ class DropInConfiguration : Configuration, Parcelable {
 
         private var shopperLocale: Locale
         private var environment: Environment = Environment.EUROPE
-        private var clientKey: String = ""
+        private var clientKey: String
         private var serviceComponentName: ComponentName
         private var amount: Amount = Amount.EMPTY
 
@@ -125,13 +125,19 @@ class DropInConfiguration : Configuration, Parcelable {
          *
          * @param context
          * @param serviceClass Service that extended from [DropInService] that would handle network requests.
+         * @param clientKey Your Client Key used for network calls from the SDK to Adyen.
          */
-        constructor(context: Context, serviceClass: Class<out Any?>) {
+        constructor(context: Context, serviceClass: Class<out Any?>, clientKey: String) {
             this.packageName = context.packageName
             this.serviceClassName = serviceClass.name
 
             this.serviceComponentName = ComponentName(packageName, serviceClassName)
             this.shopperLocale = LocaleUtil.getLocale(context)
+
+            if (!ValidationUtils.isClientKeyValid(clientKey)) {
+                throw CheckoutException("Client key is not valid.")
+            }
+            this.clientKey = clientKey
         }
 
         /**
@@ -145,6 +151,7 @@ class DropInConfiguration : Configuration, Parcelable {
             this.shopperLocale = dropInConfiguration.shopperLocale
             this.environment = dropInConfiguration.environment
             this.amount = dropInConfiguration.amount
+            this.clientKey = dropInConfiguration.clientKey
         }
 
         fun setServiceComponentName(serviceComponentName: ComponentName): Builder {
@@ -164,15 +171,6 @@ class DropInConfiguration : Configuration, Parcelable {
 
         fun setEnvironment(environment: Environment): Builder {
             this.environment = environment
-            return this
-        }
-
-        fun setClientKey(clientKey: String): Builder {
-            if (!ValidationUtils.isClientKeyValid(clientKey)) {
-                throw CheckoutException("Client key is not valid.")
-            }
-
-            this.clientKey = clientKey
             return this
         }
 

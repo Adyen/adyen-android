@@ -37,12 +37,12 @@ public abstract class IssuerListConfiguration extends Configuration {
     public abstract static class IssuerListBuilder<IssuerListConfigurationT extends IssuerListConfiguration>
             extends BaseConfigurationBuilder<IssuerListConfigurationT> {
 
-        protected IssuerListBuilder(@NonNull Context context) {
-            super(context);
+        protected IssuerListBuilder(@NonNull Context context, @NonNull String clientKey) {
+            super(context, clientKey);
         }
 
-        protected IssuerListBuilder(@NonNull Locale shopperLocale, @NonNull Environment environment) {
-            super(shopperLocale, environment);
+        protected IssuerListBuilder(@NonNull Locale shopperLocale, @NonNull Environment environment, @NonNull String clientKey) {
+            super(shopperLocale, environment, clientKey);
         }
     }
 }

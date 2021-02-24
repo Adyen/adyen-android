@@ -53,9 +53,10 @@ public class BlikConfiguration extends Configuration {
          * Constructor for Builder with default values.
          *
          * @param context A context
+         * @param clientKey Your Client Key used for network calls from the SDK to Adyen.
          */
-        public Builder(@NonNull Context context) {
-            super(context);
+        public Builder(@NonNull Context context, @NonNull String clientKey) {
+            super(context, clientKey);
         }
 
         /**
@@ -63,9 +64,10 @@ public class BlikConfiguration extends Configuration {
          *
          * @param shopperLocale The Locale of the shopper.
          * @param environment   The {@link Environment} to be used for network calls to Adyen.
+         * @param clientKey Your Client Key used for network calls from the SDK to Adyen.
          */
-        public Builder(@NonNull Locale shopperLocale, @NonNull Environment environment) {
-            super(shopperLocale, environment);
+        public Builder(@NonNull Locale shopperLocale, @NonNull Environment environment, @NonNull String clientKey) {
+            super(shopperLocale, environment, clientKey);
         }
 
         @Override
@@ -78,12 +80,6 @@ public class BlikConfiguration extends Configuration {
         @NonNull
         public Builder setEnvironment(@NonNull Environment builderEnvironment) {
             return (Builder) super.setEnvironment(builderEnvironment);
-        }
-
-        @NonNull
-        @Override
-        public Builder setClientKey(@NonNull String builderClientKey) {
-            return (Builder) super.setClientKey(builderClientKey);
         }
 
         @NonNull

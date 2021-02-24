@@ -44,8 +44,7 @@ abstract class CardDelegate(
     suspend fun fetchPublicKey(): String {
         return publicKeyRepository.fetchPublicKey(
             environment = cardConfiguration.environment,
-            clientKey = cardConfiguration.clientKey,
-            configurationPublicKey = cardConfiguration.publicKey
+            clientKey = cardConfiguration.clientKey
         )
     }
 }

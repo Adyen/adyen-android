@@ -42,16 +42,18 @@ class MBWayConfiguration : Configuration {
          * Constructor for Builder with default values.
          *
          * @param context   A context
+         * @param clientKey Your Client Key used for network calls from the SDK to Adyen.
          */
-        constructor(context: Context) : super(context)
+        constructor(context: Context, clientKey: String) : super(context, clientKey)
 
         /**
          * Builder with required parameters.
          *
          * @param shopperLocale The Locale of the shopper.
          * @param environment   The [Environment] to be used for network calls to Adyen.
+         * @param clientKey Your Client Key used for network calls from the SDK to Adyen.
          */
-        constructor(shopperLocale: Locale, environment: Environment) : super(shopperLocale, environment)
+        constructor(shopperLocale: Locale, environment: Environment, clientKey: String) : super(shopperLocale, environment, clientKey)
 
         override fun setShopperLocale(builderShopperLocale: Locale): Builder {
             return super.setShopperLocale(builderShopperLocale) as Builder
@@ -59,10 +61,6 @@ class MBWayConfiguration : Configuration {
 
         override fun setEnvironment(builderEnvironment: Environment): Builder {
             return super.setEnvironment(builderEnvironment) as Builder
-        }
-
-        override fun setClientKey(builderClientKey: String): Builder {
-            return super.setClientKey(builderClientKey) as Builder
         }
 
         override fun build(): MBWayConfiguration {
