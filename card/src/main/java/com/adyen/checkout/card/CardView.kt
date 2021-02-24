@@ -18,6 +18,7 @@ import android.view.View
 import android.view.View.OnFocusChangeListener
 import android.view.WindowManager
 import androidx.annotation.StringRes
+import androidx.core.view.isVisible
 import androidx.lifecycle.LifecycleOwner
 import androidx.lifecycle.Observer
 import com.adyen.checkout.card.data.CardType
@@ -29,7 +30,6 @@ import com.adyen.checkout.components.api.ImageLoader
 import com.adyen.checkout.components.ui.view.AdyenLinearLayout
 import com.adyen.checkout.components.ui.view.AdyenTextInputEditText
 import com.adyen.checkout.components.ui.view.RoundCornerImageView
-import com.adyen.checkout.components.ui.visible
 import com.adyen.checkout.components.validation.ValidatedField
 
 /**
@@ -77,8 +77,8 @@ class CardView @JvmOverloads constructor(context: Context, attrs: AttributeSet? 
                 setStoredCardInterface(it)
             }
         } else {
-            binding.textInputLayoutCardHolder.visible = component.isHolderNameRequire()
-            binding.switchStorePaymentMethod.visible = component.showStorePaymentField()
+            binding.textInputLayoutCardHolder.isVisible = component.isHolderNameRequire()
+            binding.switchStorePaymentMethod.isVisible = component.showStorePaymentField()
         }
         notifyInputDataChanged()
     }
@@ -121,9 +121,9 @@ class CardView @JvmOverloads constructor(context: Context, attrs: AttributeSet? 
         if (cardOutputData != null) {
             onCardNumberValidated(cardOutputData.cardNumberField, cardOutputData.detectedCardTypes)
             onExpiryDateValidated(cardOutputData.expiryDateField)
-            binding.textInputLayoutSecurityCode.visible = !cardOutputData.isCvcHidden
+            binding.textInputLayoutSecurityCode.isVisible = !cardOutputData.isCvcHidden
             if (cardOutputData.isCvcHidden) {
-                // We don't expect the hidden status to change back to visible, so we don't worry about putting the margin back.
+                // We don't expect the hidden status to change back to isVisible, so we don't worry about putting the margin back.
                 val params = binding.textInputLayoutExpiryDate.layoutParams as LayoutParams
                 params.marginEnd = 0
                 binding.textInputLayoutExpiryDate.layoutParams = params
@@ -164,7 +164,7 @@ class CardView @JvmOverloads constructor(context: Context, attrs: AttributeSet? 
                 }
                 binding.textInputLayoutSecurityCode.error = mLocalizedContext.getString(R.string.checkout_security_code_not_valid)
             }
-            if (binding.textInputLayoutCardHolder.visible && !it.holderNameField.isValid) {
+            if (binding.textInputLayoutCardHolder.isVisible && !it.holderNameField.isValid) {
                 if (!isErrorFocused) {
                     binding.textInputLayoutCardHolder.requestFocus()
                 }
@@ -242,10 +242,10 @@ class CardView @JvmOverloads constructor(context: Context, attrs: AttributeSet? 
     private fun setCardNumberError(@StringRes stringResId: Int?) {
         if (stringResId == null) {
             binding.textInputLayoutCardNumber.error = null
-            binding.cardBrandLogoImageView.visible = true
+            binding.cardBrandLogoImageView.isVisible = true
         } else {
             binding.textInputLayoutCardNumber.error = mLocalizedContext.getString(stringResId)
-            binding.cardBrandLogoImageView.visible = false
+            binding.cardBrandLogoImageView.isVisible = false
         }
     }
 
@@ -305,8 +305,8 @@ class CardView @JvmOverloads constructor(context: Context, attrs: AttributeSet? 
         binding.editTextCardNumber.isEnabled = false
         binding.editTextExpiryDate.setDate(storedCardInput.expiryDate)
         binding.editTextExpiryDate.isEnabled = false
-        binding.switchStorePaymentMethod.visible = false
-        binding.textInputLayoutCardHolder.visible = false
+        binding.switchStorePaymentMethod.isVisible = false
+        binding.textInputLayoutCardHolder.isVisible = false
     }
 
     private fun getActivity(context: Context): Activity? {
