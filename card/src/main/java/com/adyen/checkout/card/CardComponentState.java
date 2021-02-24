@@ -20,6 +20,7 @@ public class CardComponentState extends PaymentComponentState<CardPaymentMethod>
 
     private final CardType mCardType;
     private final String mBinValue;
+    private final String mLastFourDigits;
 
     /**
      * PaymentComponentState for CardComponent with additional data.
@@ -28,10 +29,12 @@ public class CardComponentState extends PaymentComponentState<CardPaymentMethod>
             @NonNull PaymentComponentData<CardPaymentMethod> paymentComponentData,
             boolean isValid,
             @Nullable CardType cardType,
-            @NonNull String binValue) {
+            @NonNull String binValue,
+            @Nullable String lastFourDigits) {
         super(paymentComponentData, isValid);
         this.mBinValue = binValue;
         this.mCardType = cardType;
+        this.mLastFourDigits = lastFourDigits;
     }
 
     @Nullable
@@ -42,5 +45,10 @@ public class CardComponentState extends PaymentComponentState<CardPaymentMethod>
     @NonNull
     public String getBinValue() {
         return mBinValue;
+    }
+
+    @NonNull
+    public String getLastFourDigits() {
+        return mLastFourDigits;
     }
 }

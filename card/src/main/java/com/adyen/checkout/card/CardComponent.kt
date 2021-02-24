@@ -31,6 +31,7 @@ private val TAG = LogUtil.getTag()
 
 private val PAYMENT_METHOD_TYPES = arrayOf(PaymentMethodTypes.SCHEME)
 private const val BIN_VALUE_LENGTH = 6
+private const val LAST_FOUR_LENGTH = 4
 
 @Suppress("TooManyFunctions")
 class CardComponent private constructor(
@@ -135,7 +136,7 @@ class CardComponent private constructor(
 
         // If data is not valid we just return empty object, encryption would fail and we don't pass unencrypted data.
         if (!stateOutputData.isValid) {
-            return CardComponentState(paymentComponentData, false, firstCardType, binValue)
+            return CardComponentState(paymentComponentData, false, firstCardType, binValue, null)
         }
 
         val encryptedCard: EncryptedCard = try {
@@ -154,7 +155,7 @@ class CardComponent private constructor(
             CardEncrypter.encryptFields(unencryptedCardBuilder.build(), publicKey)
         } catch (e: EncryptionException) {
             notifyException(e)
-            return CardComponentState(paymentComponentData, false, firstCardType, binValue)
+            return CardComponentState(paymentComponentData, false, firstCardType, binValue, null)
         }
 
         if (!isStoredPaymentMethod()) {
@@ -177,7 +178,9 @@ class CardComponent private constructor(
         paymentComponentData.setStorePaymentMethod(stateOutputData.isStoredPaymentMethodEnable)
         paymentComponentData.shopperReference = configuration.shopperReference
 
-        return CardComponentState(paymentComponentData, stateOutputData.isValid, firstCardType, binValue)
+        val lastFour = getLastFourDigitsFromCardNumber(cardNumber)
+
+        return CardComponentState(paymentComponentData, stateOutputData.isValid, firstCardType, binValue, lastFour)
     }
 
     fun isStoredPaymentMethod(): Boolean {
@@ -198,6 +201,10 @@ class CardComponent private constructor(
 
     private fun getBinValueFromCardNumber(cardNumber: String): String {
         return if (cardNumber.length < BIN_VALUE_LENGTH) cardNumber else cardNumber.substring(0..BIN_VALUE_LENGTH)
+    }
+
+    private fun getLastFourDigitsFromCardNumber(cardNumber: String): String {
+        return cardNumber.takeLast(LAST_FOUR_LENGTH)
     }
 
     companion object {
