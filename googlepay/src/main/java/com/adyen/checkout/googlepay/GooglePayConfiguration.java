@@ -228,10 +228,11 @@ public class GooglePayConfiguration extends Configuration {
          * Builder with required parameters.
          *
          * @param context         A context to get some information.
+         * @param clientKey Your Client Key used for network calls from the SDK to Adyen.
          * @param merchantAccount Your merchant account with Adyen.
          */
-        public Builder(@NonNull Context context, @NonNull String merchantAccount) {
-            super(context);
+        public Builder(@NonNull Context context, @NonNull String clientKey, @NonNull String merchantAccount) {
+            super(context, clientKey);
             mBuilderMerchantAccount = merchantAccount;
         }
 
@@ -240,10 +241,11 @@ public class GooglePayConfiguration extends Configuration {
          *
          * @param shopperLocale   The locale of the Shopper for translation.
          * @param environment     TThe {@link Environment} to be used for network calls to Adyen.
+         * @param clientKey Your Client Key used for network calls from the SDK to Adyen.
          * @param merchantAccount Your merchant account with Adyen.
          */
-        public Builder(@NonNull Locale shopperLocale, @NonNull Environment environment, @NonNull String merchantAccount) {
-            super(shopperLocale, environment);
+        public Builder(@NonNull Locale shopperLocale, @NonNull Environment environment, @NonNull String clientKey, @NonNull String merchantAccount) {
+            super(shopperLocale, environment, clientKey);
             mBuilderMerchantAccount = merchantAccount;
         }
 
@@ -257,12 +259,6 @@ public class GooglePayConfiguration extends Configuration {
         @NonNull
         public Builder setEnvironment(@NonNull Environment builderEnvironment) {
             return (Builder) super.setEnvironment(builderEnvironment);
-        }
-
-        @NonNull
-        @Override
-        public Builder setClientKey(@NonNull String builderClientKey) {
-            return (Builder) super.setClientKey(builderClientKey);
         }
 
         @NonNull

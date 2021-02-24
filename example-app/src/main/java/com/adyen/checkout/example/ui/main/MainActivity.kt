@@ -143,31 +143,28 @@ class MainActivity : AppCompatActivity() {
         val shopperLocaleString = keyValueStorage.getShopperLocale()
         val shopperLocale = LocaleUtil.fromLanguageTag(shopperLocaleString)
 
-        val cardConfiguration = CardConfiguration.Builder(this@MainActivity)
-//            .setPublicKey(BuildConfig.PUBLIC_KEY)
-            .setClientKey(BuildConfig.CLIENT_KEY)
+        val cardConfiguration = CardConfiguration.Builder(this@MainActivity, BuildConfig.CLIENT_KEY)
             .setShopperReference(keyValueStorage.getShopperReference())
             .setShopperLocale(shopperLocale)
             .setEnvironment(Environment.TEST)
             .build()
 
-        val googlePayConfig = GooglePayConfiguration.Builder(this@MainActivity, keyValueStorage.getMerchantAccount())
+        val googlePayConfig = GooglePayConfiguration.Builder(this@MainActivity, BuildConfig.CLIENT_KEY, keyValueStorage.getMerchantAccount())
             .setCountryCode(keyValueStorage.getCountry())
             .setEnvironment(Environment.TEST)
             .build()
 
-        val bcmcConfiguration = BcmcConfiguration.Builder(this@MainActivity)
-            .setPublicKey(BuildConfig.PUBLIC_KEY)
+        val bcmcConfiguration = BcmcConfiguration.Builder(this@MainActivity, BuildConfig.CLIENT_KEY)
             .setShopperLocale(shopperLocale)
             .setEnvironment(Environment.TEST)
             .build()
 
         val dropInConfigurationBuilder = DropInConfiguration.Builder(
             this@MainActivity,
-            ExampleDropInService::class.java
+            ExampleDropInService::class.java,
+            BuildConfig.CLIENT_KEY
         )
             .setEnvironment(Environment.TEST)
-            .setClientKey(BuildConfig.CLIENT_KEY)
             .setShopperLocale(shopperLocale)
             .addCardConfiguration(cardConfiguration)
             .addBcmcConfiguration(bcmcConfiguration)

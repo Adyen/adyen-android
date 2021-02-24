@@ -11,7 +11,6 @@ android {
             buildConfigField "String", "MERCHANT_SERVER_URL", "\"<YOUR_SERVER_URL>\""
             buildConfigField "String", "API_KEY_HEADER_NAME", "\"<API_KEY_HEADER>\""
             buildConfigField "String", "CHECKOUT_API_KEY", "\"<YOUR_API_KEY>\""
-            buildConfigField "String", "PUBLIC_KEY", "\"<PUBLIC_KEY>\""
             buildConfigField "String", "CLIENT_KEY", "\"<YOUR_CLIENT_KEY>\""
             buildConfigField "String", "SHOPPER_REFERENCE", "\"<SHOPPER_REFERENCE>\""
         }
