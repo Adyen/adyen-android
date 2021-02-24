@@ -12,6 +12,7 @@ import com.adyen.checkout.card.api.model.Brand
 import com.adyen.checkout.card.data.CardType
 import com.adyen.checkout.card.data.DetectedCardType
 import com.adyen.checkout.card.data.ExpiryDate
+import com.adyen.checkout.card.repository.PublicKeyRepository
 import com.adyen.checkout.components.model.paymentmethods.StoredPaymentMethod
 import com.adyen.checkout.components.util.PaymentMethodTypes
 import com.adyen.checkout.components.validation.ValidatedField
@@ -24,8 +25,9 @@ private val TAG = LogUtil.getTag()
 @Suppress("TooManyFunctions")
 class StoredCardDelegate(
     private val storedPaymentMethod: StoredPaymentMethod,
-    cardConfiguration: CardConfiguration
-) : CardDelegate(cardConfiguration) {
+    cardConfiguration: CardConfiguration,
+    publicKeyRepository: PublicKeyRepository
+) : CardDelegate(cardConfiguration, publicKeyRepository) {
 
     private val cardType = CardType.getByBrandName(storedPaymentMethod.brand.orEmpty())
     private val storedDetectedCardTypes = if (cardType != null) {
