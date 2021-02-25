@@ -10,7 +10,6 @@ package com.adyen.checkout.adyen3ds2
 import android.app.Activity
 import android.app.Application
 import android.content.Context
-import android.text.TextUtils
 import androidx.lifecycle.LifecycleOwner
 import androidx.lifecycle.Observer
 import com.adyen.checkout.adyen3ds2.exception.Authentication3DS2Exception
@@ -96,33 +95,33 @@ class Adyen3DS2Component(application: Application, configuration: Adyen3DS2Confi
         when (action.type) {
             Threeds2FingerprintAction.ACTION_TYPE -> {
                 val fingerprintAction = action as Threeds2FingerprintAction
-                if (TextUtils.isEmpty(fingerprintAction.token)) {
+                if (fingerprintAction.token.isNullOrEmpty()) {
                     throw ComponentException("Fingerprint token not found.")
                 }
-                identifyShopper(activity, fingerprintAction.token)
+                identifyShopper(activity, fingerprintAction.token.orEmpty())
             }
             Threeds2ChallengeAction.ACTION_TYPE -> {
                 val challengeAction = action as Threeds2ChallengeAction
-                if (TextUtils.isEmpty(challengeAction.token)) {
+                if (challengeAction.token.isNullOrEmpty()) {
                     throw ComponentException("Challenge token not found.")
                 }
-                challengeShopper(activity, challengeAction.token)
+                challengeShopper(activity, challengeAction.token.orEmpty())
             }
             Threeds2Action.ACTION_TYPE -> {
                 val threeds2Action = action as Threeds2Action
-                if (TextUtils.isEmpty(threeds2Action.token)) {
+                if (threeds2Action.token.isNullOrEmpty()) {
                     throw ComponentException("3DS2 token not found.")
                 }
                 if (threeds2Action.subtype == null) {
                     throw ComponentException("3DS2 Action subtype not found.")
                 }
-                val subtype = parse(threeds2Action.subtype!!)
-                handleActionSubtype(activity, subtype, threeds2Action.token)
+                val subtype = parse(threeds2Action.subtype.orEmpty())
+                handleActionSubtype(activity, subtype, threeds2Action.token.orEmpty())
             }
         }
     }
 
-    private fun handleActionSubtype(activity: Activity, subtype: SubType, token: String?) {
+    private fun handleActionSubtype(activity: Activity, subtype: SubType, token: String) {
         when (subtype) {
             SubType.FINGERPRINT -> identifyShopper(activity, token)
             SubType.CHALLENGE -> challengeShopper(activity, token)
@@ -172,9 +171,9 @@ class Adyen3DS2Component(application: Application, configuration: Adyen3DS2Confi
     }
 
     @Throws(ComponentException::class)
-    private fun identifyShopper(context: Context, encodedFingerprintToken: String?) {
+    private fun identifyShopper(context: Context, encodedFingerprintToken: String) {
         Logger.d(TAG, "identifyShopper")
-        val decodedFingerprintToken = Base64Encoder.decode(encodedFingerprintToken!!)
+        val decodedFingerprintToken = Base64Encoder.decode(encodedFingerprintToken)
 
         val fingerprintJson: JSONObject = try {
             JSONObject(decodedFingerprintToken)
@@ -220,13 +219,13 @@ class Adyen3DS2Component(application: Application, configuration: Adyen3DS2Confi
     }
 
     @Throws(ComponentException::class)
-    private fun challengeShopper(activity: Activity, encodedChallengeToken: String?) {
+    private fun challengeShopper(activity: Activity, encodedChallengeToken: String) {
         Logger.d(TAG, "challengeShopper")
         if (mTransaction == null) {
             notifyException(Authentication3DS2Exception("Failed to make challenge, missing reference to initial transaction."))
             return
         }
-        val decodedChallengeToken = Base64Encoder.decode(encodedChallengeToken!!)
+        val decodedChallengeToken = Base64Encoder.decode(encodedChallengeToken)
         val challengeTokenJson: JSONObject = try {
             JSONObject(decodedChallengeToken)
         } catch (e: JSONException) {
@@ -235,7 +234,7 @@ class Adyen3DS2Component(application: Application, configuration: Adyen3DS2Confi
         val challengeToken = ChallengeToken.SERIALIZER.deserialize(challengeTokenJson)
         val challengeParameters = createChallengeParameters(challengeToken)
         try {
-            mTransaction!!.doChallenge(activity, challengeParameters, this, DEFAULT_CHALLENGE_TIME_OUT)
+            mTransaction?.doChallenge(activity, challengeParameters, this, DEFAULT_CHALLENGE_TIME_OUT)
         } catch (e: InvalidInputException) {
             notifyException(CheckoutException("Error starting challenge", e))
         }
@@ -268,14 +267,12 @@ class Adyen3DS2Component(application: Application, configuration: Adyen3DS2Confi
     }
 
     private fun closeTransaction(context: Context) {
-        if (mTransaction != null) {
-            mTransaction!!.close()
-            mTransaction = null
-            try {
-                ThreeDS2Service.INSTANCE.cleanup(context)
-            } catch (e: SDKNotInitializedException) {
-                // no problem
-            }
+        mTransaction?.close()
+        mTransaction = null
+        try {
+            ThreeDS2Service.INSTANCE.cleanup(context)
+        } catch (e: SDKNotInitializedException) {
+            // no problem
         }
     }
 
