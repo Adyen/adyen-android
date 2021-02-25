@@ -175,16 +175,19 @@ class Adyen3DS2Component(application: Application, configuration: Adyen3DS2Confi
     private fun identifyShopper(context: Context, encodedFingerprintToken: String?) {
         Logger.d(TAG, "identifyShopper")
         val decodedFingerprintToken = Base64Encoder.decode(encodedFingerprintToken!!)
+
         val fingerprintJson: JSONObject = try {
             JSONObject(decodedFingerprintToken)
         } catch (e: JSONException) {
             throw ComponentException("JSON parsing of FingerprintToken failed", e)
         }
-        val (directoryServerId, directoryServerPublicKey) = FingerprintToken.SERIALIZER.deserialize(fingerprintJson)
+
+        val fingerprintToken = FingerprintToken.SERIALIZER.deserialize(fingerprintJson)
         val configParameters = AdyenConfigParameters.Builder(
-            directoryServerId,
-            directoryServerPublicKey
+            fingerprintToken.directoryServerId,
+            fingerprintToken.directoryServerPublicKey
         ).build()
+
         ThreadManager.EXECUTOR.submit {
             try {
                 Logger.d(TAG, "initialize 3DS2 SDK")
@@ -196,10 +199,10 @@ class Adyen3DS2Component(application: Application, configuration: Adyen3DS2Confi
                 // This shouldn't cause any side effect.
                 Logger.w(TAG, "3DS2 Service already initialized.")
             }
+
             mTransaction = try {
                 Logger.d(TAG, "create transaction")
-                // TODO: 10/11/2020 Get protocol version from Checkout API instead
-                ThreeDS2Service.INSTANCE.createTransaction(null, configuration!!.protocolVersion)
+                ThreeDS2Service.INSTANCE.createTransaction(null, fingerprintToken.threeDSMessageVersion)
             } catch (e: SDKNotInitializedException) {
                 notifyException(ComponentException("Failed to create 3DS2 Transaction", e))
                 return@submit
@@ -207,6 +210,7 @@ class Adyen3DS2Component(application: Application, configuration: Adyen3DS2Confi
                 notifyException(ComponentException("Failed to create 3DS2 Transaction", e))
                 return@submit
             }
+
             val authenticationRequestParameters = mTransaction?.authenticationRequestParameters
             if (authenticationRequestParameters != null) {
                 val encodedFingerprint = createEncodedFingerprint(authenticationRequestParameters)

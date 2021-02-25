@@ -16,31 +16,19 @@ import com.adyen.checkout.core.api.Environment
 import java.util.Locale
 
 class Adyen3DS2Configuration : Configuration {
-    val protocolVersion: String?
 
     private constructor(
         shopperLocale: Locale,
         environment: Environment,
-        clientKey: String,
-        protocolVersion: String?
-    ) : super(shopperLocale, environment, clientKey) {
-        this.protocolVersion = protocolVersion
-    }
+        clientKey: String
+    ) : super(shopperLocale, environment, clientKey)
 
-    private constructor(`in`: Parcel) : super(`in`) {
-        protocolVersion = `in`.readString()
-    }
-
-    override fun writeToParcel(dest: Parcel, flags: Int) {
-        super.writeToParcel(dest, flags)
-        dest.writeString(protocolVersion)
-    }
+    private constructor(`in`: Parcel) : super(`in`)
 
     /**
      * Builder to create a [Adyen3DS2Configuration].
      */
     class Builder : BaseConfigurationBuilder<Adyen3DS2Configuration?> {
-        private var mBuilderProtocolVersion: String? = PROTOCOL_2_1_0
 
         /**
          * Constructor for Builder with default values.
@@ -67,20 +55,12 @@ class Adyen3DS2Configuration : Configuration {
             return super.setEnvironment(builderEnvironment) as Builder
         }
 
-        fun setProtocolVersion(builderProtocolVersion: String?): Builder {
-            mBuilderProtocolVersion = builderProtocolVersion
-            return this
-        }
-
         override fun build(): Adyen3DS2Configuration {
-            return Adyen3DS2Configuration(mBuilderShopperLocale, mBuilderEnvironment, mBuilderClientKey, mBuilderProtocolVersion)
+            return Adyen3DS2Configuration(mBuilderShopperLocale, mBuilderEnvironment, mBuilderClientKey)
         }
     }
 
     companion object {
-        const val PROTOCOL_2_1_0 = "2.1.0"
-        const val PROTOCOL_2_2_0 = "2.2.0"
-
         @JvmField
         val CREATOR: Parcelable.Creator<Adyen3DS2Configuration> = object : Parcelable.Creator<Adyen3DS2Configuration> {
             override fun createFromParcel(`in`: Parcel): Adyen3DS2Configuration {
