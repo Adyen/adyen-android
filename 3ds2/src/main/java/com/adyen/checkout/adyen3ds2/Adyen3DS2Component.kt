@@ -5,342 +5,310 @@
  *
  * Created by caiof on 7/5/2019.
  */
+package com.adyen.checkout.adyen3ds2
 
-package com.adyen.checkout.adyen3ds2;
+import android.app.Activity
+import android.app.Application
+import android.content.Context
+import android.text.TextUtils
+import androidx.lifecycle.LifecycleOwner
+import androidx.lifecycle.Observer
+import com.adyen.checkout.adyen3ds2.exception.Authentication3DS2Exception
+import com.adyen.checkout.adyen3ds2.exception.Cancelled3DS2Exception
+import com.adyen.checkout.adyen3ds2.model.ChallengeResult
+import com.adyen.checkout.adyen3ds2.model.ChallengeToken
+import com.adyen.checkout.adyen3ds2.model.FingerprintToken
+import com.adyen.checkout.components.ActionComponentData
+import com.adyen.checkout.components.ActionComponentProvider
+import com.adyen.checkout.components.base.ActionComponentProviderImpl
+import com.adyen.checkout.components.base.BaseActionComponent
+import com.adyen.checkout.components.encoding.Base64Encoder
+import com.adyen.checkout.components.model.payments.response.Action
+import com.adyen.checkout.components.model.payments.response.Threeds2Action
+import com.adyen.checkout.components.model.payments.response.Threeds2Action.SubType
+import com.adyen.checkout.components.model.payments.response.Threeds2Action.SubType.Companion.parse
+import com.adyen.checkout.components.model.payments.response.Threeds2ChallengeAction
+import com.adyen.checkout.components.model.payments.response.Threeds2FingerprintAction
+import com.adyen.checkout.core.api.ThreadManager
+import com.adyen.checkout.core.exception.CheckoutException
+import com.adyen.checkout.core.exception.ComponentException
+import com.adyen.checkout.core.log.LogUtil
+import com.adyen.checkout.core.log.Logger
+import com.adyen.threeds2.AuthenticationRequestParameters
+import com.adyen.threeds2.ChallengeStatusReceiver
+import com.adyen.threeds2.CompletionEvent
+import com.adyen.threeds2.ProtocolErrorEvent
+import com.adyen.threeds2.RuntimeErrorEvent
+import com.adyen.threeds2.ThreeDS2Service
+import com.adyen.threeds2.Transaction
+import com.adyen.threeds2.customization.UiCustomization
+import com.adyen.threeds2.exception.InvalidInputException
+import com.adyen.threeds2.exception.SDKAlreadyInitializedException
+import com.adyen.threeds2.exception.SDKNotInitializedException
+import com.adyen.threeds2.exception.SDKRuntimeException
+import com.adyen.threeds2.parameters.ChallengeParameters
+import com.adyen.threeds2.util.AdyenConfigParameters
+import org.json.JSONException
+import org.json.JSONObject
+import java.util.Collections
 
-import android.app.Activity;
-import android.app.Application;
-import android.content.Context;
-import android.text.TextUtils;
+class Adyen3DS2Component(application: Application, configuration: Adyen3DS2Configuration) :
+    BaseActionComponent<Adyen3DS2Configuration>(application, configuration), ChallengeStatusReceiver {
 
-import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
-import androidx.lifecycle.LifecycleOwner;
-import androidx.lifecycle.Observer;
+    private var mTransaction: Transaction? = null
+    private var mUiCustomization: UiCustomization? = null
 
-import com.adyen.checkout.adyen3ds2.exception.Authentication3DS2Exception;
-import com.adyen.checkout.adyen3ds2.exception.Cancelled3DS2Exception;
-import com.adyen.checkout.adyen3ds2.model.ChallengeResult;
-import com.adyen.checkout.adyen3ds2.model.ChallengeToken;
-import com.adyen.checkout.adyen3ds2.model.FingerprintToken;
-import com.adyen.checkout.components.ActionComponentData;
-import com.adyen.checkout.components.ActionComponentProvider;
-import com.adyen.checkout.components.base.ActionComponentProviderImpl;
-import com.adyen.checkout.components.base.BaseActionComponent;
-import com.adyen.checkout.components.encoding.Base64Encoder;
-import com.adyen.checkout.components.model.payments.response.Action;
-import com.adyen.checkout.components.model.payments.response.Threeds2Action;
-import com.adyen.checkout.components.model.payments.response.Threeds2ChallengeAction;
-import com.adyen.checkout.components.model.payments.response.Threeds2FingerprintAction;
-import com.adyen.checkout.core.api.ThreadManager;
-import com.adyen.checkout.core.exception.CheckoutException;
-import com.adyen.checkout.core.exception.ComponentException;
-import com.adyen.checkout.core.log.LogUtil;
-import com.adyen.checkout.core.log.Logger;
-import com.adyen.threeds2.AuthenticationRequestParameters;
-import com.adyen.threeds2.ChallengeStatusReceiver;
-import com.adyen.threeds2.CompletionEvent;
-import com.adyen.threeds2.ProtocolErrorEvent;
-import com.adyen.threeds2.RuntimeErrorEvent;
-import com.adyen.threeds2.ThreeDS2Service;
-import com.adyen.threeds2.Transaction;
-import com.adyen.threeds2.customization.UiCustomization;
-import com.adyen.threeds2.exception.InvalidInputException;
-import com.adyen.threeds2.exception.SDKAlreadyInitializedException;
-import com.adyen.threeds2.exception.SDKNotInitializedException;
-import com.adyen.threeds2.exception.SDKRuntimeException;
-import com.adyen.threeds2.parameters.ChallengeParameters;
-import com.adyen.threeds2.parameters.ConfigParameters;
-import com.adyen.threeds2.util.AdyenConfigParameters;
-
-import org.json.JSONException;
-import org.json.JSONObject;
-
-import java.util.Arrays;
-import java.util.Collections;
-import java.util.List;
-
-@SuppressWarnings("PMD.GodClass")
-public final class Adyen3DS2Component extends BaseActionComponent<Adyen3DS2Configuration> implements ChallengeStatusReceiver {
-    static final String TAG = LogUtil.getTag();
-
-    public static final ActionComponentProvider<Adyen3DS2Component> PROVIDER =
-            new ActionComponentProviderImpl<>(Adyen3DS2Component.class, Adyen3DS2Configuration.class);
-
-    private static final String FINGERPRINT_DETAILS_KEY = "threeds2.fingerprint";
-    private static final String CHALLENGE_DETAILS_KEY = "threeds2.challengeResult";
-
-    private static final int DEFAULT_CHALLENGE_TIME_OUT = 10;
-    private static boolean sGotDestroyedWhileChallenging = false;
-
-    Transaction mTransaction;
-
-    UiCustomization mUiCustomization;
-
-    public Adyen3DS2Component(@NonNull Application application, @Nullable Adyen3DS2Configuration configuration) {
-        super(application, configuration);
-    }
-
-    @Override
-    protected void onCleared() {
-        super.onCleared();
-        Logger.d(TAG, "onCleared");
+    override fun onCleared() {
+        super.onCleared()
+        Logger.d(TAG, "onCleared")
         if (mTransaction != null) {
             // We don't save the mTransaction reference if the ViewModel gets cleared.
-            sGotDestroyedWhileChallenging = true;
+            sGotDestroyedWhileChallenging = true
         }
     }
 
-    @Override
-    public void observe(@NonNull LifecycleOwner lifecycleOwner, @NonNull Observer<ActionComponentData> observer) {
-        super.observe(lifecycleOwner, observer);
+    override fun observe(lifecycleOwner: LifecycleOwner, observer: Observer<ActionComponentData>) {
+        super.observe(lifecycleOwner, observer)
         if (sGotDestroyedWhileChallenging) {
             // This is OK if the user goes back and starts a new payment.
             // TODO notify error to activity?
-            Logger.e(TAG, "Lost challenge result reference.");
+            Logger.e(TAG, "Lost challenge result reference.")
         }
     }
 
     /**
-     * Set a {@link UiCustomization} object to be passed to the 3DS2 SDK for customizing the challenge screen.
+     * Set a [UiCustomization] object to be passed to the 3DS2 SDK for customizing the challenge screen.
      * Needs to be set before handling any action.
      *
      * @param uiCustomization The customization object.
      */
-    public void setUiCustomization(@Nullable UiCustomization uiCustomization) {
-        synchronized (this) {
-            mUiCustomization = uiCustomization;
-        }
+    fun setUiCustomization(uiCustomization: UiCustomization?) {
+        synchronized(this) { mUiCustomization = uiCustomization }
     }
 
-    @Override
-    @NonNull
-    protected List<String> getSupportedActionTypes() {
-        final String[] supportedCodes = {Threeds2FingerprintAction.ACTION_TYPE, Threeds2ChallengeAction.ACTION_TYPE, Threeds2Action.ACTION_TYPE};
-        return Collections.unmodifiableList(Arrays.asList(supportedCodes));
+    override fun getSupportedActionTypes(): List<String> {
+        val supportedCodes = arrayOf(Threeds2FingerprintAction.ACTION_TYPE, Threeds2ChallengeAction.ACTION_TYPE, Threeds2Action.ACTION_TYPE)
+        return Collections.unmodifiableList(listOf(*supportedCodes))
     }
 
-    @Override
-    protected void handleActionInternal(@NonNull Activity activity, @NonNull Action action) throws ComponentException {
-        if (Threeds2FingerprintAction.ACTION_TYPE.equals(action.getType())) {
-            final Threeds2FingerprintAction fingerprintAction = (Threeds2FingerprintAction) action;
-            if (TextUtils.isEmpty(fingerprintAction.getToken())) {
-                throw new ComponentException("Fingerprint token not found.");
-            }
-
-            identifyShopper(activity, fingerprintAction.getToken());
-
-        } else if (Threeds2ChallengeAction.ACTION_TYPE.equals(action.getType())) {
-            final Threeds2ChallengeAction challengeAction = (Threeds2ChallengeAction) action;
-            if (TextUtils.isEmpty(challengeAction.getToken())) {
-                throw new ComponentException("Challenge token not found.");
-            }
-            challengeShopper(activity, challengeAction.getToken());
-        } else if (Threeds2Action.ACTION_TYPE.equals(action.getType())) {
-            final Threeds2Action threeds2Action = (Threeds2Action) action;
-            if (TextUtils.isEmpty(threeds2Action.getToken())) {
-                throw new ComponentException("3DS2 token not found.");
-            }
-            if (threeds2Action.getSubtype() == null) {
-                throw new ComponentException("3DS2 Action subtype not found.");
-            }
-            final Threeds2Action.SubType subtype = Threeds2Action.SubType.parse(threeds2Action.getSubtype());
-            handleActionSubtype(activity, subtype, threeds2Action.getToken());
-        }
-    }
-
-    private void handleActionSubtype(@NonNull Activity activity, Threeds2Action.SubType subtype, String token) {
-        switch (subtype) {
-            case FINGERPRINT:
-                identifyShopper(activity, token);
-                break;
-            case CHALLENGE:
-                challengeShopper(activity, token);
-                break;
-            default:
-                break;
-        }
-
-    }
-
-    @Override
-    public void completed(@NonNull CompletionEvent completionEvent) {
-        Logger.d(TAG, "challenge completed");
-        try {
-            notifyDetails(createChallengeDetails(completionEvent));
-        } catch (CheckoutException e) {
-            notifyException(e);
-        } finally {
-            closeTransaction(getApplication());
-        }
-    }
-
-    @Override
-    public void cancelled() {
-        Logger.d(TAG, "challenge cancelled");
-        notifyException(new Cancelled3DS2Exception("Challenge canceled."));
-        closeTransaction(getApplication());
-    }
-
-    @Override
-    public void timedout() {
-        Logger.d(TAG, "challenge timed out");
-        notifyException(new Authentication3DS2Exception("Challenge timed out."));
-        closeTransaction(getApplication());
-    }
-
-    @Override
-    public void protocolError(@NonNull ProtocolErrorEvent protocolErrorEvent) {
-        Logger.e(TAG, "protocolError - "
-                + protocolErrorEvent.getErrorMessage().getErrorCode() + " - "
-                + protocolErrorEvent.getErrorMessage().getErrorDescription() + " - "
-                + protocolErrorEvent.getErrorMessage().getErrorDetails()
-        );
-        notifyException(new Authentication3DS2Exception("Protocol Error - " + protocolErrorEvent.getErrorMessage()));
-        closeTransaction(getApplication());
-    }
-
-    @Override
-    public void runtimeError(@NonNull RuntimeErrorEvent runtimeErrorEvent) {
-        Logger.d(TAG, "runtimeError");
-        notifyException(new Authentication3DS2Exception("Runtime Error - " + runtimeErrorEvent.getErrorMessage()));
-        closeTransaction(getApplication());
-    }
-
-    private void identifyShopper(final Context context, final String encodedFingerprintToken) throws ComponentException {
-        Logger.d(TAG, "identifyShopper");
-        final String decodedFingerprintToken = Base64Encoder.decode(encodedFingerprintToken);
-
-        final JSONObject fingerprintJson;
-        try {
-            fingerprintJson = new JSONObject(decodedFingerprintToken);
-        } catch (JSONException e) {
-            throw new ComponentException("JSON parsing of FingerprintToken failed", e);
-        }
-
-        final FingerprintToken fingerprintToken = FingerprintToken.SERIALIZER.deserialize(fingerprintJson);
-        final ConfigParameters configParameters = new AdyenConfigParameters.Builder(fingerprintToken.getDirectoryServerId(),
-                fingerprintToken.getDirectoryServerPublicKey()).build();
-
-
-        ThreadManager.EXECUTOR.submit(() -> {
-            try {
-                Logger.d(TAG, "initialize 3DS2 SDK");
-                synchronized (this) {
-                    ThreeDS2Service.INSTANCE.initialize(context, configParameters, null, mUiCustomization);
+    @Throws(ComponentException::class)
+    override fun handleActionInternal(activity: Activity, action: Action) {
+        when (action.type) {
+            Threeds2FingerprintAction.ACTION_TYPE -> {
+                val fingerprintAction = action as Threeds2FingerprintAction
+                if (TextUtils.isEmpty(fingerprintAction.token)) {
+                    throw ComponentException("Fingerprint token not found.")
                 }
-            } catch (final SDKRuntimeException e) {
-                notifyException(new ComponentException("Failed to initialize 3DS2 SDK", e));
-                return;
-            } catch (SDKAlreadyInitializedException e) {
-                // This shouldn't cause any side effect.
-                Logger.w(TAG, "3DS2 Service already initialized.");
+                identifyShopper(activity, fingerprintAction.token)
             }
+            Threeds2ChallengeAction.ACTION_TYPE -> {
+                val challengeAction = action as Threeds2ChallengeAction
+                if (TextUtils.isEmpty(challengeAction.token)) {
+                    throw ComponentException("Challenge token not found.")
+                }
+                challengeShopper(activity, challengeAction.token)
+            }
+            Threeds2Action.ACTION_TYPE -> {
+                val threeds2Action = action as Threeds2Action
+                if (TextUtils.isEmpty(threeds2Action.token)) {
+                    throw ComponentException("3DS2 token not found.")
+                }
+                if (threeds2Action.subtype == null) {
+                    throw ComponentException("3DS2 Action subtype not found.")
+                }
+                val subtype = parse(threeds2Action.subtype!!)
+                handleActionSubtype(activity, subtype, threeds2Action.token)
+            }
+        }
+    }
 
+    private fun handleActionSubtype(activity: Activity, subtype: SubType, token: String?) {
+        when (subtype) {
+            SubType.FINGERPRINT -> identifyShopper(activity, token)
+            SubType.CHALLENGE -> challengeShopper(activity, token)
+            else -> {
+            }
+        }
+    }
+
+    override fun completed(completionEvent: CompletionEvent) {
+        Logger.d(TAG, "challenge completed")
+        try {
+            notifyDetails(createChallengeDetails(completionEvent))
+        } catch (e: CheckoutException) {
+            notifyException(e)
+        } finally {
+            closeTransaction(getApplication())
+        }
+    }
+
+    override fun cancelled() {
+        Logger.d(TAG, "challenge cancelled")
+        notifyException(Cancelled3DS2Exception("Challenge canceled."))
+        closeTransaction(getApplication())
+    }
+
+    override fun timedout() {
+        Logger.d(TAG, "challenge timed out")
+        notifyException(Authentication3DS2Exception("Challenge timed out."))
+        closeTransaction(getApplication())
+    }
+
+    override fun protocolError(protocolErrorEvent: ProtocolErrorEvent) {
+        Logger.e(
+            TAG, "protocolError - "
+                + protocolErrorEvent.errorMessage.errorCode + " - "
+                + protocolErrorEvent.errorMessage.errorDescription + " - "
+                + protocolErrorEvent.errorMessage.errorDetails
+        )
+        notifyException(Authentication3DS2Exception("Protocol Error - " + protocolErrorEvent.errorMessage))
+        closeTransaction(getApplication())
+    }
+
+    override fun runtimeError(runtimeErrorEvent: RuntimeErrorEvent) {
+        Logger.d(TAG, "runtimeError")
+        notifyException(Authentication3DS2Exception("Runtime Error - " + runtimeErrorEvent.errorMessage))
+        closeTransaction(getApplication())
+    }
+
+    @Throws(ComponentException::class)
+    private fun identifyShopper(context: Context, encodedFingerprintToken: String?) {
+        Logger.d(TAG, "identifyShopper")
+        val decodedFingerprintToken = Base64Encoder.decode(encodedFingerprintToken!!)
+        val fingerprintJson: JSONObject = try {
+            JSONObject(decodedFingerprintToken)
+        } catch (e: JSONException) {
+            throw ComponentException("JSON parsing of FingerprintToken failed", e)
+        }
+        val (directoryServerId, directoryServerPublicKey) = FingerprintToken.SERIALIZER.deserialize(fingerprintJson)
+        val configParameters = AdyenConfigParameters.Builder(
+            directoryServerId,
+            directoryServerPublicKey
+        ).build()
+        ThreadManager.EXECUTOR.submit {
             try {
-                Logger.d(TAG, "create transaction");
-                // TODO: 10/11/2020 Get protocol version from Checkout API instead
-                mTransaction = ThreeDS2Service.INSTANCE.createTransaction(null, getConfiguration().getProtocolVersion());
-            } catch (final SDKNotInitializedException | SDKRuntimeException e) {
-                notifyException(new ComponentException("Failed to create 3DS2 Transaction", e));
-                return;
+                Logger.d(TAG, "initialize 3DS2 SDK")
+                synchronized(this) { ThreeDS2Service.INSTANCE.initialize(context, configParameters, null, mUiCustomization) }
+            } catch (e: SDKRuntimeException) {
+                notifyException(ComponentException("Failed to initialize 3DS2 SDK", e))
+                return@submit
+            } catch (e: SDKAlreadyInitializedException) {
+                // This shouldn't cause any side effect.
+                Logger.w(TAG, "3DS2 Service already initialized.")
             }
-
-            final AuthenticationRequestParameters authenticationRequestParameters = mTransaction.getAuthenticationRequestParameters();
-
-            final String encodedFingerprint = createEncodedFingerprint(authenticationRequestParameters);
-
-            ThreadManager.MAIN_HANDLER.post(() -> notifyDetails(createFingerprintDetails(encodedFingerprint)));
-        });
+            mTransaction = try {
+                Logger.d(TAG, "create transaction")
+                // TODO: 10/11/2020 Get protocol version from Checkout API instead
+                ThreeDS2Service.INSTANCE.createTransaction(null, configuration!!.protocolVersion)
+            } catch (e: SDKNotInitializedException) {
+                notifyException(ComponentException("Failed to create 3DS2 Transaction", e))
+                return@submit
+            } catch (e: SDKRuntimeException) {
+                notifyException(ComponentException("Failed to create 3DS2 Transaction", e))
+                return@submit
+            }
+            val authenticationRequestParameters = mTransaction?.authenticationRequestParameters
+            if (authenticationRequestParameters != null) {
+                val encodedFingerprint = createEncodedFingerprint(authenticationRequestParameters)
+                ThreadManager.MAIN_HANDLER.post { notifyDetails(createFingerprintDetails(encodedFingerprint)) }
+            }
+        }
     }
 
-    private void challengeShopper(Activity activity, String encodedChallengeToken) throws ComponentException {
-        Logger.d(TAG, "challengeShopper");
-
+    @Throws(ComponentException::class)
+    private fun challengeShopper(activity: Activity, encodedChallengeToken: String?) {
+        Logger.d(TAG, "challengeShopper")
         if (mTransaction == null) {
-            notifyException(new Authentication3DS2Exception("Failed to make challenge, missing reference to initial transaction."));
-            return;
+            notifyException(Authentication3DS2Exception("Failed to make challenge, missing reference to initial transaction."))
+            return
         }
-
-        final String decodedChallengeToken = Base64Encoder.decode(encodedChallengeToken);
-
-        final JSONObject challengeTokenJson;
-        try {
-            challengeTokenJson = new JSONObject(decodedChallengeToken);
-        } catch (JSONException e) {
-            throw new ComponentException("JSON parsing of FingerprintToken failed", e);
+        val decodedChallengeToken = Base64Encoder.decode(encodedChallengeToken!!)
+        val challengeTokenJson: JSONObject = try {
+            JSONObject(decodedChallengeToken)
+        } catch (e: JSONException) {
+            throw ComponentException("JSON parsing of FingerprintToken failed", e)
         }
-
-        final ChallengeToken challengeToken = ChallengeToken.SERIALIZER.deserialize(challengeTokenJson);
-        final ChallengeParameters challengeParameters = createChallengeParameters(challengeToken);
-
+        val challengeToken = ChallengeToken.SERIALIZER.deserialize(challengeTokenJson)
+        val challengeParameters = createChallengeParameters(challengeToken)
         try {
-            mTransaction.doChallenge(activity, challengeParameters, this, DEFAULT_CHALLENGE_TIME_OUT);
-        } catch (InvalidInputException e) {
-            notifyException(new CheckoutException("Error starting challenge", e));
+            mTransaction!!.doChallenge(activity, challengeParameters, this, DEFAULT_CHALLENGE_TIME_OUT)
+        } catch (e: InvalidInputException) {
+            notifyException(CheckoutException("Error starting challenge", e))
         }
     }
 
-    @NonNull
-    String createEncodedFingerprint(AuthenticationRequestParameters authenticationRequestParameters) throws ComponentException {
-
-        final JSONObject fingerprintJson = new JSONObject();
+    @Throws(ComponentException::class)
+    fun createEncodedFingerprint(authenticationRequestParameters: AuthenticationRequestParameters): String {
+        val fingerprintJson = JSONObject()
         try {
             // TODO getMessageVersion is not used?
-            fingerprintJson.put("sdkAppID", authenticationRequestParameters.getSDKAppID());
-            fingerprintJson.put("sdkEncData", authenticationRequestParameters.getDeviceData());
-            fingerprintJson.put("sdkEphemPubKey", new JSONObject(authenticationRequestParameters.getSDKEphemeralPublicKey()));
-            fingerprintJson.put("sdkReferenceNumber", authenticationRequestParameters.getSDKReferenceNumber());
-            fingerprintJson.put("sdkTransID", authenticationRequestParameters.getSDKTransactionID());
-        } catch (JSONException e) {
-            throw new ComponentException("Failed to create encoded fingerprint", e);
+            fingerprintJson.put("sdkAppID", authenticationRequestParameters.sdkAppID)
+            fingerprintJson.put("sdkEncData", authenticationRequestParameters.deviceData)
+            fingerprintJson.put("sdkEphemPubKey", JSONObject(authenticationRequestParameters.sdkEphemeralPublicKey))
+            fingerprintJson.put("sdkReferenceNumber", authenticationRequestParameters.sdkReferenceNumber)
+            fingerprintJson.put("sdkTransID", authenticationRequestParameters.sdkTransactionID)
+        } catch (e: JSONException) {
+            throw ComponentException("Failed to create encoded fingerprint", e)
         }
-
-        return Base64Encoder.encode(fingerprintJson.toString());
+        return Base64Encoder.encode(fingerprintJson.toString())
     }
 
-    @NonNull
-    private ChallengeParameters createChallengeParameters(@NonNull ChallengeToken challenge) {
+    private fun createChallengeParameters(challenge: ChallengeToken): ChallengeParameters {
         // TODO referenceNumber, URL and version are not used?
-        final ChallengeParameters challengeParameters = new ChallengeParameters();
-        challengeParameters.set3DSServerTransactionID(challenge.getThreeDSServerTransID());
-        challengeParameters.setAcsTransactionID(challenge.getAcsTransID());
-        challengeParameters.setAcsRefNumber(challenge.getAcsReferenceNumber());
-        challengeParameters.setAcsSignedContent(challenge.getAcsSignedContent());
-        return challengeParameters;
+        val challengeParameters = ChallengeParameters()
+        challengeParameters.set3DSServerTransactionID(challenge.threeDSServerTransID)
+        challengeParameters.acsTransactionID = challenge.acsTransID
+        challengeParameters.acsRefNumber = challenge.acsReferenceNumber
+        challengeParameters.acsSignedContent = challenge.acsSignedContent
+        return challengeParameters
     }
 
-    @SuppressWarnings("PMD.NullAssignment")
-    private void closeTransaction(Context context) {
+    private fun closeTransaction(context: Context) {
         if (mTransaction != null) {
-            mTransaction.close();
-            mTransaction = null;
+            mTransaction!!.close()
+            mTransaction = null
             try {
-                ThreeDS2Service.INSTANCE.cleanup(context);
-            } catch (SDKNotInitializedException e) {
+                ThreeDS2Service.INSTANCE.cleanup(context)
+            } catch (e: SDKNotInitializedException) {
                 // no problem
             }
         }
     }
 
-    JSONObject createFingerprintDetails(String encodedFingerprint) throws ComponentException {
-        final JSONObject fingerprintDetails = new JSONObject();
+    @Throws(ComponentException::class)
+    fun createFingerprintDetails(encodedFingerprint: String?): JSONObject {
+        val fingerprintDetails = JSONObject()
         try {
-            fingerprintDetails.put(FINGERPRINT_DETAILS_KEY, encodedFingerprint);
-        } catch (JSONException e) {
-            throw new ComponentException("Failed to create fingerprint details", e);
+            fingerprintDetails.put(FINGERPRINT_DETAILS_KEY, encodedFingerprint)
+        } catch (e: JSONException) {
+            throw ComponentException("Failed to create fingerprint details", e)
         }
-        return fingerprintDetails;
+        return fingerprintDetails
     }
 
-    private JSONObject createChallengeDetails(@NonNull CompletionEvent completionEvent) throws ComponentException {
-        final JSONObject challengeDetails = new JSONObject();
+    @Throws(ComponentException::class)
+    private fun createChallengeDetails(completionEvent: CompletionEvent): JSONObject {
+        val challengeDetails = JSONObject()
         try {
-            final ChallengeResult challengeResult = ChallengeResult.from(completionEvent);
-            challengeDetails.put(CHALLENGE_DETAILS_KEY, challengeResult.getPayload());
-        } catch (JSONException e) {
-            throw new ComponentException("Failed to create challenge details", e);
+            val challengeResult = ChallengeResult.from(completionEvent)
+            challengeDetails.put(CHALLENGE_DETAILS_KEY, challengeResult.payload)
+        } catch (e: JSONException) {
+            throw ComponentException("Failed to create challenge details", e)
         }
-        return challengeDetails;
+        return challengeDetails
+    }
+
+    companion object {
+        val TAG = LogUtil.getTag()
+
+        val PROVIDER: ActionComponentProvider<Adyen3DS2Component> = ActionComponentProviderImpl(
+            Adyen3DS2Component::class.java, Adyen3DS2Configuration::class.java
+        )
+
+        private const val FINGERPRINT_DETAILS_KEY = "threeds2.fingerprint"
+        private const val CHALLENGE_DETAILS_KEY = "threeds2.challengeResult"
+        private const val DEFAULT_CHALLENGE_TIME_OUT = 10
+
+        private var sGotDestroyedWhileChallenging = false
     }
 }
