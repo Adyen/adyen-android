@@ -5,131 +5,70 @@
  *
  * Created by caiof on 10/5/2019.
  */
+package com.adyen.checkout.adyen3ds2.model
 
-package com.adyen.checkout.adyen3ds2.model;
+import android.os.Parcel
+import com.adyen.checkout.core.exception.ModelSerializationException
+import com.adyen.checkout.core.model.JsonUtils
+import com.adyen.checkout.core.model.ModelObject
+import com.adyen.checkout.core.model.getStringOrNull
+import org.json.JSONException
+import org.json.JSONObject
 
-import android.os.Parcel;
+data class ChallengeToken(
+    var acsReferenceNumber: String? = null,
+    var acsSignedContent: String? = null,
+    var acsTransID: String? = null,
+    var acsURL: String? = null,
+    var messageVersion: String? = null,
+    var threeDSServerTransID: String? = null
+) : ModelObject() {
+    
+    override fun writeToParcel(dest: Parcel, flags: Int) {
+        JsonUtils.writeToParcel(dest, SERIALIZER.serialize(this))
+    }
 
-import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
-
-import com.adyen.checkout.core.exception.ModelSerializationException;
-import com.adyen.checkout.core.model.JsonUtils;
-import com.adyen.checkout.core.model.ModelObject;
-
-import org.json.JSONException;
-import org.json.JSONObject;
-
-@SuppressWarnings({"MemberName", "PMD.DataClass", "AbbreviationAsWordInName"})
-public class ChallengeToken extends ModelObject {
-    @NonNull
-    public static final Creator<ChallengeToken> CREATOR = new Creator<>(ChallengeToken.class);
-
-    private static final String ACS_REFERENCE_NUMBER = "acsReferenceNumber";
-    private static final String ACS_SIGNED_CONTENT = "acsSignedContent";
-    private static final String ACS_TRANS_ID = "acsTransID";
-    private static final String ACS_URL = "acsURL";
-    private static final String MESSAGE_VERSION = "messageVersion";
-    private static final String THREEDS_SERVER_TRANS_ID = "threeDSServerTransID";
-
-    @NonNull
-    public static final Serializer<ChallengeToken> SERIALIZER = new Serializer<ChallengeToken>() {
-
-        @NonNull
-        @Override
-        public JSONObject serialize(@NonNull ChallengeToken modelObject) {
-            final JSONObject jsonObject = new JSONObject();
-            try {
-                jsonObject.putOpt(ACS_REFERENCE_NUMBER, modelObject.getAcsReferenceNumber());
-                jsonObject.putOpt(ACS_SIGNED_CONTENT, modelObject.getAcsSignedContent());
-                jsonObject.putOpt(ACS_TRANS_ID, modelObject.getAcsTransID());
-                jsonObject.putOpt(ACS_URL, modelObject.getAcsURL());
-                jsonObject.putOpt(MESSAGE_VERSION, modelObject.getMessageVersion());
-                jsonObject.putOpt(THREEDS_SERVER_TRANS_ID, modelObject.getThreeDSServerTransID());
-
-            } catch (JSONException e) {
-                throw new ModelSerializationException(ChallengeToken.class, e);
+    companion object {
+        private const val ACS_REFERENCE_NUMBER = "acsReferenceNumber"
+        private const val ACS_SIGNED_CONTENT = "acsSignedContent"
+        private const val ACS_TRANS_ID = "acsTransID"
+        private const val ACS_URL = "acsURL"
+        private const val MESSAGE_VERSION = "messageVersion"
+        private const val THREEDS_SERVER_TRANS_ID = "threeDSServerTransID"
+        
+        @JvmField
+        val CREATOR = Creator(ChallengeToken::class.java)
+        
+        val SERIALIZER: Serializer<ChallengeToken> = object : Serializer<ChallengeToken> {
+            override fun serialize(modelObject: ChallengeToken): JSONObject {
+                val jsonObject = JSONObject()
+                try {
+                    jsonObject.putOpt(ACS_REFERENCE_NUMBER, modelObject.acsReferenceNumber)
+                    jsonObject.putOpt(ACS_SIGNED_CONTENT, modelObject.acsSignedContent)
+                    jsonObject.putOpt(ACS_TRANS_ID, modelObject.acsTransID)
+                    jsonObject.putOpt(ACS_URL, modelObject.acsURL)
+                    jsonObject.putOpt(MESSAGE_VERSION, modelObject.messageVersion)
+                    jsonObject.putOpt(THREEDS_SERVER_TRANS_ID, modelObject.threeDSServerTransID)
+                } catch (e: JSONException) {
+                    throw ModelSerializationException(ChallengeToken::class.java, e)
+                }
+                return jsonObject
             }
-            return jsonObject;
+
+            override fun deserialize(jsonObject: JSONObject): ChallengeToken {
+                return try {
+                    ChallengeToken(
+                        acsReferenceNumber = jsonObject.getStringOrNull(ACS_REFERENCE_NUMBER),
+                        acsSignedContent = jsonObject.getStringOrNull(ACS_SIGNED_CONTENT),
+                        acsTransID = jsonObject.getStringOrNull(ACS_TRANS_ID),
+                        acsURL = jsonObject.getStringOrNull(ACS_URL),
+                        messageVersion = jsonObject.getStringOrNull(MESSAGE_VERSION),
+                        threeDSServerTransID = jsonObject.getStringOrNull(THREEDS_SERVER_TRANS_ID)
+                    )
+                }  catch (e: JSONException) {
+                    throw ModelSerializationException(ChallengeToken::class.java, e)
+                }
+            }
         }
-
-        @NonNull
-        @Override
-        public ChallengeToken deserialize(@NonNull JSONObject jsonObject) {
-            final ChallengeToken challengeToken = new ChallengeToken();
-            challengeToken.setAcsReferenceNumber(jsonObject.optString(ACS_REFERENCE_NUMBER, null));
-            challengeToken.setAcsSignedContent(jsonObject.optString(ACS_SIGNED_CONTENT, null));
-            challengeToken.setAcsTransID(jsonObject.optString(ACS_TRANS_ID, null));
-            challengeToken.setAcsURL(jsonObject.optString(ACS_URL, null));
-            challengeToken.setMessageVersion(jsonObject.optString(MESSAGE_VERSION, null));
-            challengeToken.setThreeDSServerTransID(jsonObject.optString(THREEDS_SERVER_TRANS_ID, null));
-            return challengeToken;
-        }
-    };
-
-    private String acsReferenceNumber;
-    private String acsSignedContent;
-    private String acsTransID;
-    private String acsURL;
-    private String messageVersion;
-    private String threeDSServerTransID;
-
-    @Override
-    public void writeToParcel(@NonNull Parcel dest, int flags) {
-        JsonUtils.writeToParcel(dest, SERIALIZER.serialize(this));
-    }
-
-    @Nullable
-    public String getAcsReferenceNumber() {
-        return acsReferenceNumber;
-    }
-
-    public void setAcsReferenceNumber(@Nullable String acsReferenceNumber) {
-        this.acsReferenceNumber = acsReferenceNumber;
-    }
-
-    @Nullable
-    public String getAcsSignedContent() {
-        return acsSignedContent;
-    }
-
-    public void setAcsSignedContent(@Nullable String acsSignedContent) {
-        this.acsSignedContent = acsSignedContent;
-    }
-
-    @Nullable
-    public String getAcsTransID() {
-        return acsTransID;
-    }
-
-    public void setAcsTransID(@Nullable String acsTransID) {
-        this.acsTransID = acsTransID;
-    }
-
-    @Nullable
-    public String getAcsURL() {
-        return acsURL;
-    }
-
-    public void setAcsURL(@Nullable String acsURL) {
-        this.acsURL = acsURL;
-    }
-
-    @Nullable
-    public String getMessageVersion() {
-        return messageVersion;
-    }
-
-    public void setMessageVersion(@Nullable String messageVersion) {
-        this.messageVersion = messageVersion;
-    }
-
-    @Nullable
-    public String getThreeDSServerTransID() {
-        return threeDSServerTransID;
-    }
-
-    public void setThreeDSServerTransID(@Nullable String threeDSServerTransID) {
-        this.threeDSServerTransID = threeDSServerTransID;
     }
 }
