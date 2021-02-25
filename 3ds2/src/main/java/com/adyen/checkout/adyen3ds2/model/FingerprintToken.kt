@@ -19,7 +19,8 @@ import org.json.JSONObject
 data class FingerprintToken(
     val directoryServerId: String? = null,
     val directoryServerPublicKey: String? = null,
-    val threeDSServerTransID: String? = null
+    val threeDSServerTransID: String? = null,
+    val threeDSMessageVersion: String? = null
 ) : ModelObject() {
 
     override fun writeToParcel(dest: Parcel, flags: Int) {
@@ -30,6 +31,7 @@ data class FingerprintToken(
         private const val DIRECTORY_SERVER_ID = "directoryServerId"
         private const val DIRECTORY_SERVER_PUBLIC_KEY = "directoryServerPublicKey"
         private const val THREEDS_SERVER_TRANS_ID = "threeDSServerTransID"
+        private const val THREEDS_MESSAGE_VERSION = "threeDSMessageVersion"
 
         @JvmField
         val CREATOR: Parcelable.Creator<FingerprintToken> = Creator(FingerprintToken::class.java)
@@ -42,6 +44,7 @@ data class FingerprintToken(
                     jsonObject.putOpt(DIRECTORY_SERVER_ID, modelObject.directoryServerId)
                     jsonObject.putOpt(DIRECTORY_SERVER_PUBLIC_KEY, modelObject.directoryServerPublicKey)
                     jsonObject.putOpt(THREEDS_SERVER_TRANS_ID, modelObject.threeDSServerTransID)
+                    jsonObject.putOpt(THREEDS_MESSAGE_VERSION, modelObject.threeDSMessageVersion)
                 } catch (e: JSONException) {
                     throw ModelSerializationException(FingerprintToken::class.java, e)
                 }
@@ -53,7 +56,8 @@ data class FingerprintToken(
                     FingerprintToken(
                         directoryServerId = jsonObject.getStringOrNull(DIRECTORY_SERVER_ID),
                         directoryServerPublicKey = jsonObject.getStringOrNull(DIRECTORY_SERVER_PUBLIC_KEY),
-                        threeDSServerTransID = jsonObject.getStringOrNull(THREEDS_SERVER_TRANS_ID)
+                        threeDSServerTransID = jsonObject.getStringOrNull(THREEDS_SERVER_TRANS_ID),
+                        threeDSMessageVersion = jsonObject.getStringOrNull(THREEDS_MESSAGE_VERSION)
                     )
                 } catch (e: JSONException) {
                     throw ModelSerializationException(FingerprintToken::class.java, e)

@@ -19,6 +19,7 @@ import org.json.JSONObject
 class Threeds2Action(
     val token: String? = null,
     val subtype: String? = null,
+    val authorisationToken: String? = null
 ) : Action() {
 
     override fun writeToParcel(dest: Parcel, flags: Int) {
@@ -30,6 +31,7 @@ class Threeds2Action(
 
         private const val TOKEN = "token"
         private const val SUBTYPE = "subtype"
+        private const val AUTHORISATION_TOKEN = "authorisationToken"
 
         @JvmField
         val CREATOR: Parcelable.Creator<Threeds2Action> = Creator(Threeds2Action::class.java)
@@ -46,6 +48,7 @@ class Threeds2Action(
 
                     jsonObject.putOpt(TOKEN, modelObject.token)
                     jsonObject.putOpt(SUBTYPE, modelObject.subtype)
+                    jsonObject.putOpt(AUTHORISATION_TOKEN, modelObject.authorisationToken)
                 } catch (e: JSONException) {
                     throw ModelSerializationException(Threeds2Action::class.java, e)
                 }
@@ -56,7 +59,8 @@ class Threeds2Action(
                 return try {
                     Threeds2Action(
                         token = jsonObject.getStringOrNull(TOKEN),
-                        subtype = jsonObject.getStringOrNull(SUBTYPE)
+                        subtype = jsonObject.getStringOrNull(SUBTYPE),
+                        authorisationToken = jsonObject.getStringOrNull(AUTHORISATION_TOKEN)
                     ).apply {
                         type = jsonObject.getStringOrNull(TYPE)
                         paymentData = jsonObject.getStringOrNull(PAYMENT_DATA)
