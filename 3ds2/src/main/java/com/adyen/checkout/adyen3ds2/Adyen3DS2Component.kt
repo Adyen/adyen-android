@@ -12,6 +12,7 @@ import android.app.Application
 import android.content.Context
 import androidx.lifecycle.LifecycleOwner
 import androidx.lifecycle.Observer
+import androidx.lifecycle.viewModelScope
 import com.adyen.checkout.adyen3ds2.exception.Authentication3DS2Exception
 import com.adyen.checkout.adyen3ds2.exception.Cancelled3DS2Exception
 import com.adyen.checkout.adyen3ds2.model.ChallengeResult
@@ -28,7 +29,6 @@ import com.adyen.checkout.components.model.payments.response.Threeds2Action.SubT
 import com.adyen.checkout.components.model.payments.response.Threeds2Action.SubType.Companion.parse
 import com.adyen.checkout.components.model.payments.response.Threeds2ChallengeAction
 import com.adyen.checkout.components.model.payments.response.Threeds2FingerprintAction
-import com.adyen.checkout.core.api.ThreadManager
 import com.adyen.checkout.core.exception.CheckoutException
 import com.adyen.checkout.core.exception.ComponentException
 import com.adyen.checkout.core.log.LogUtil
@@ -47,6 +47,9 @@ import com.adyen.threeds2.exception.SDKNotInitializedException
 import com.adyen.threeds2.exception.SDKRuntimeException
 import com.adyen.threeds2.parameters.ChallengeParameters
 import com.adyen.threeds2.util.AdyenConfigParameters
+import kotlinx.coroutines.CoroutineExceptionHandler
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
 import org.json.JSONException
 import org.json.JSONObject
 import java.util.Collections
@@ -82,7 +85,7 @@ class Adyen3DS2Component(application: Application, configuration: Adyen3DS2Confi
      * @param uiCustomization The customization object.
      */
     fun setUiCustomization(uiCustomization: UiCustomization?) {
-        synchronized(this) { mUiCustomization = uiCustomization }
+        mUiCustomization = uiCustomization
     }
 
     override fun getSupportedActionTypes(): List<String> {
@@ -125,8 +128,6 @@ class Adyen3DS2Component(application: Application, configuration: Adyen3DS2Confi
         when (subtype) {
             SubType.FINGERPRINT -> identifyShopper(activity, token)
             SubType.CHALLENGE -> challengeShopper(activity, token)
-            else -> {
-            }
         }
     }
 
@@ -187,13 +188,18 @@ class Adyen3DS2Component(application: Application, configuration: Adyen3DS2Confi
             fingerprintToken.directoryServerPublicKey
         ).build()
 
-        ThreadManager.EXECUTOR.submit {
+
+        val coroutineExceptionHandler = CoroutineExceptionHandler { _, throwable ->
+            Logger.e(TAG, "Unexpected uncaught Exception", throwable)
+            notifyException(CheckoutException("Unexpected 3DS2 exception.", throwable))
+        }
+        viewModelScope.launch(Dispatchers.Default + coroutineExceptionHandler) {
             try {
                 Logger.d(TAG, "initialize 3DS2 SDK")
-                synchronized(this) { ThreeDS2Service.INSTANCE.initialize(context, configParameters, null, mUiCustomization) }
+                ThreeDS2Service.INSTANCE.initialize(context, configParameters, null, mUiCustomization)
             } catch (e: SDKRuntimeException) {
                 notifyException(ComponentException("Failed to initialize 3DS2 SDK", e))
-                return@submit
+                return@launch
             } catch (e: SDKAlreadyInitializedException) {
                 // This shouldn't cause any side effect.
                 Logger.w(TAG, "3DS2 Service already initialized.")
@@ -204,16 +210,18 @@ class Adyen3DS2Component(application: Application, configuration: Adyen3DS2Confi
                 ThreeDS2Service.INSTANCE.createTransaction(null, fingerprintToken.threeDSMessageVersion)
             } catch (e: SDKNotInitializedException) {
                 notifyException(ComponentException("Failed to create 3DS2 Transaction", e))
-                return@submit
+                return@launch
             } catch (e: SDKRuntimeException) {
                 notifyException(ComponentException("Failed to create 3DS2 Transaction", e))
-                return@submit
+                return@launch
             }
 
             val authenticationRequestParameters = mTransaction?.authenticationRequestParameters
             if (authenticationRequestParameters != null) {
                 val encodedFingerprint = createEncodedFingerprint(authenticationRequestParameters)
-                ThreadManager.MAIN_HANDLER.post { notifyDetails(createFingerprintDetails(encodedFingerprint)) }
+                launch(Dispatchers.Main) {
+                    notifyDetails(createFingerprintDetails(encodedFingerprint))
+                }
             }
         }
     }
