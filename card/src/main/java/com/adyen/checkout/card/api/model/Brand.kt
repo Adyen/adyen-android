@@ -18,12 +18,6 @@ import com.adyen.checkout.core.model.getStringOrNull
 import org.json.JSONException
 import org.json.JSONObject
 
-private const val BRAND = "brand"
-private const val SHOW_EXPIRY_DATE = "showExpiryDate"
-private const val ENABLE_LUHN_CHECK = "enableLuhnCheck"
-private const val SUPPORTED = "supported"
-private const val CVC_POLICY = "cvcPolicy"
-
 data class Brand(
     val brand: String? = null,
     val showExpiryDate: Boolean? = null,
@@ -37,6 +31,12 @@ data class Brand(
     }
 
     companion object {
+        private const val BRAND = "brand"
+        private const val SHOW_EXPIRY_DATE = "showExpiryDate"
+        private const val ENABLE_LUHN_CHECK = "enableLuhnCheck"
+        private const val SUPPORTED = "supported"
+        private const val CVC_POLICY = "cvcPolicy"
+        
         @JvmField
         val CREATOR: Parcelable.Creator<Brand> = Creator(Brand::class.java)
 
