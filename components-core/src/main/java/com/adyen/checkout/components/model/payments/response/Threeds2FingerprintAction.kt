@@ -5,78 +5,63 @@
  *
  * Created by caiof on 4/6/2019.
  */
+package com.adyen.checkout.components.model.payments.response
 
-package com.adyen.checkout.components.model.payments.response;
+import android.os.Parcel
+import android.os.Parcelable
+import com.adyen.checkout.components.util.ActionTypes
+import com.adyen.checkout.core.exception.ModelSerializationException
+import com.adyen.checkout.core.model.JsonUtils
+import com.adyen.checkout.core.model.getStringOrNull
+import org.json.JSONException
+import org.json.JSONObject
 
-import android.os.Parcel;
+class Threeds2FingerprintAction(
+    val token: String? = null
+) : Action() {
 
-import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
+    override fun writeToParcel(dest: Parcel, flags: Int) {
+        JsonUtils.writeToParcel(dest, SERIALIZER.serialize(this))
+    }
 
-import com.adyen.checkout.components.util.ActionTypes;
-import com.adyen.checkout.core.exception.ModelSerializationException;
-import com.adyen.checkout.core.model.JsonUtils;
+    companion object {
+        const val ACTION_TYPE = ActionTypes.THREEDS2_FINGERPRINT
 
-import org.json.JSONException;
-import org.json.JSONObject;
+        private const val TOKEN = "token"
 
-@SuppressWarnings("MemberName")
-public class Threeds2FingerprintAction extends Action {
-    @NonNull
-    public static final Creator<Threeds2FingerprintAction> CREATOR = new Creator<>(Threeds2FingerprintAction.class);
+        @JvmField
+        val CREATOR: Parcelable.Creator<Threeds2FingerprintAction> = Creator(Threeds2FingerprintAction::class.java)
 
-    public static final String ACTION_TYPE = ActionTypes.THREEDS2_FINGERPRINT;
+        @JvmField
+        val SERIALIZER: Serializer<Threeds2FingerprintAction> = object : Serializer<Threeds2FingerprintAction> {
+            override fun serialize(modelObject: Threeds2FingerprintAction): JSONObject {
+                val jsonObject = JSONObject()
+                try {
+                    // Get parameters from parent class
+                    jsonObject.putOpt(TYPE, modelObject.type)
+                    jsonObject.putOpt(PAYMENT_DATA, modelObject.paymentData)
+                    jsonObject.putOpt(PAYMENT_METHOD_TYPE, modelObject.paymentMethodType)
 
-    private static final String TOKEN = "token";
-
-    @NonNull
-    public static final Serializer<Threeds2FingerprintAction> SERIALIZER = new Serializer<Threeds2FingerprintAction>() {
-
-        @NonNull
-        @Override
-        public JSONObject serialize(@NonNull Threeds2FingerprintAction modelObject) {
-            final JSONObject jsonObject = new JSONObject();
-            try {
-                // Get parameters from parent class
-                jsonObject.putOpt(Action.TYPE, modelObject.getType());
-                jsonObject.putOpt(Action.PAYMENT_DATA, modelObject.getPaymentData());
-                jsonObject.putOpt(Action.PAYMENT_METHOD_TYPE, modelObject.getPaymentMethodType());
-
-                jsonObject.putOpt(TOKEN, modelObject.getToken());
-            } catch (JSONException e) {
-                throw new ModelSerializationException(Threeds2FingerprintAction.class, e);
+                    jsonObject.putOpt(TOKEN, modelObject.token)
+                } catch (e: JSONException) {
+                    throw ModelSerializationException(Threeds2FingerprintAction::class.java, e)
+                }
+                return jsonObject
             }
-            return jsonObject;
+
+            override fun deserialize(jsonObject: JSONObject): Threeds2FingerprintAction {
+                return try {
+                    Threeds2FingerprintAction(
+                        token = jsonObject.getStringOrNull(TOKEN),
+                    ).apply {
+                        type = jsonObject.getStringOrNull(TYPE)
+                        paymentData = jsonObject.getStringOrNull(PAYMENT_DATA)
+                        paymentMethodType = jsonObject.getStringOrNull(PAYMENT_METHOD_TYPE)
+                    }
+                } catch (e: JSONException) {
+                    throw ModelSerializationException(Threeds2Action::class.java, e)
+                }
+            }
         }
-
-        @NonNull
-        @Override
-        public Threeds2FingerprintAction deserialize(@NonNull JSONObject jsonObject) {
-            final Threeds2FingerprintAction threeds2FingerprintAction = new Threeds2FingerprintAction();
-
-            // getting parameters from parent class
-            threeds2FingerprintAction.setType(jsonObject.optString(Action.TYPE, null));
-            threeds2FingerprintAction.setPaymentData(jsonObject.optString(Action.PAYMENT_DATA, null));
-            threeds2FingerprintAction.setPaymentMethodType(jsonObject.optString(Action.PAYMENT_METHOD_TYPE, null));
-
-            threeds2FingerprintAction.setToken(jsonObject.optString(TOKEN));
-            return threeds2FingerprintAction;
-        }
-    };
-
-    private String token;
-
-    @Override
-    public void writeToParcel(@NonNull Parcel dest, int flags) {
-        JsonUtils.writeToParcel(dest, SERIALIZER.serialize(this));
-    }
-
-    @Nullable
-    public String getToken() {
-        return token;
-    }
-
-    public void setToken(@Nullable String token) {
-        this.token = token;
     }
 }

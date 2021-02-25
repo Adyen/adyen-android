@@ -141,10 +141,10 @@ public final class Adyen3DS2Component extends BaseActionComponent<Adyen3DS2Confi
             if (TextUtils.isEmpty(threeds2Action.getToken())) {
                 throw new ComponentException("3DS2 token not found.");
             }
-            final Threeds2Action.SubType subtype = threeds2Action.getSubtypeEnum();
-            if (subtype == null) {
-                throw new ComponentException("3DS2 subtype not found.");
+            if (threeds2Action.getSubtype() == null) {
+                throw new ComponentException("3DS2 Action subtype not found.");
             }
+            final Threeds2Action.SubType subtype = Threeds2Action.SubType.parse(threeds2Action.getSubtype());
             handleActionSubtype(activity, subtype, threeds2Action.getToken());
         }
     }

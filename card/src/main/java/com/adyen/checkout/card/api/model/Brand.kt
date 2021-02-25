@@ -31,12 +31,13 @@ data class Brand(
     }
 
     companion object {
+        @Suppress("MemberNameEqualsClassName")
         private const val BRAND = "brand"
         private const val SHOW_EXPIRY_DATE = "showExpiryDate"
         private const val ENABLE_LUHN_CHECK = "enableLuhnCheck"
         private const val SUPPORTED = "supported"
         private const val CVC_POLICY = "cvcPolicy"
-        
+
         @JvmField
         val CREATOR: Parcelable.Creator<Brand> = Creator(Brand::class.java)
 

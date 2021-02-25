@@ -5,92 +5,60 @@
  *
  * Created by caiof on 7/5/2019.
  */
+package com.adyen.checkout.adyen3ds2.model
 
-package com.adyen.checkout.adyen3ds2.model;
+import android.os.Parcel
+import android.os.Parcelable
+import com.adyen.checkout.core.exception.ModelSerializationException
+import com.adyen.checkout.core.model.JsonUtils
+import com.adyen.checkout.core.model.ModelObject
+import com.adyen.checkout.core.model.getStringOrNull
+import org.json.JSONException
+import org.json.JSONObject
 
-import android.os.Parcel;
+data class FingerprintToken(
+    val directoryServerId: String? = null,
+    val directoryServerPublicKey: String? = null,
+    val threeDSServerTransID: String? = null
+) : ModelObject() {
 
-import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
+    override fun writeToParcel(dest: Parcel, flags: Int) {
+        JsonUtils.writeToParcel(dest, SERIALIZER.serialize(this))
+    }
 
-import com.adyen.checkout.core.exception.ModelSerializationException;
-import com.adyen.checkout.core.model.JsonUtils;
-import com.adyen.checkout.core.model.ModelObject;
+    companion object {
+        private const val DIRECTORY_SERVER_ID = "directoryServerId"
+        private const val DIRECTORY_SERVER_PUBLIC_KEY = "directoryServerPublicKey"
+        private const val THREEDS_SERVER_TRANS_ID = "threeDSServerTransID"
 
-import org.json.JSONException;
-import org.json.JSONObject;
+        @JvmField
+        val CREATOR: Parcelable.Creator<FingerprintToken> = Creator(FingerprintToken::class.java)
 
-@SuppressWarnings({"MemberName", "PMD.DataClass", "AbbreviationAsWordInName"})
-public class FingerprintToken extends ModelObject {
-    @NonNull
-    public static final Creator<FingerprintToken> CREATOR = new Creator<>(FingerprintToken.class);
-
-    private static final String DIRECTORY_SERVER_ID = "directoryServerId";
-    private static final String DIRECTORY_SERVER_PUBLIC_KEY = "directoryServerPublicKey";
-    private static final String THREEDS_SERVER_TRANS_ID = "threeDSServerTransID";
-
-    @NonNull
-    public static final Serializer<FingerprintToken> SERIALIZER = new Serializer<FingerprintToken>() {
-
-        @NonNull
-        @Override
-        public JSONObject serialize(@NonNull FingerprintToken modelObject) {
-            final JSONObject jsonObject = new JSONObject();
-            try {
-                jsonObject.putOpt(DIRECTORY_SERVER_ID, modelObject.getDirectoryServerId());
-                jsonObject.putOpt(DIRECTORY_SERVER_PUBLIC_KEY, modelObject.getDirectoryServerPublicKey());
-                jsonObject.putOpt(THREEDS_SERVER_TRANS_ID, modelObject.getThreeDSServerTransID());
-
-            } catch (JSONException e) {
-                throw new ModelSerializationException(FingerprintToken.class, e);
+        @JvmField
+        val SERIALIZER: Serializer<FingerprintToken> = object : Serializer<FingerprintToken> {
+            override fun serialize(modelObject: FingerprintToken): JSONObject {
+                val jsonObject = JSONObject()
+                try {
+                    jsonObject.putOpt(DIRECTORY_SERVER_ID, modelObject.directoryServerId)
+                    jsonObject.putOpt(DIRECTORY_SERVER_PUBLIC_KEY, modelObject.directoryServerPublicKey)
+                    jsonObject.putOpt(THREEDS_SERVER_TRANS_ID, modelObject.threeDSServerTransID)
+                } catch (e: JSONException) {
+                    throw ModelSerializationException(FingerprintToken::class.java, e)
+                }
+                return jsonObject
             }
-            return jsonObject;
+
+            override fun deserialize(jsonObject: JSONObject): FingerprintToken {
+                return try {
+                    FingerprintToken(
+                        directoryServerId = jsonObject.getStringOrNull(DIRECTORY_SERVER_ID),
+                        directoryServerPublicKey = jsonObject.getStringOrNull(DIRECTORY_SERVER_PUBLIC_KEY),
+                        threeDSServerTransID = jsonObject.getStringOrNull(THREEDS_SERVER_TRANS_ID)
+                    )
+                } catch (e: JSONException) {
+                    throw ModelSerializationException(FingerprintToken::class.java, e)
+                }
+            }
         }
-
-        @NonNull
-        @Override
-        public FingerprintToken deserialize(@NonNull JSONObject jsonObject) {
-            final FingerprintToken fingerprintToken = new FingerprintToken();
-            fingerprintToken.setDirectoryServerId(jsonObject.optString(DIRECTORY_SERVER_ID, null));
-            fingerprintToken.setDirectoryServerPublicKey(jsonObject.optString(DIRECTORY_SERVER_PUBLIC_KEY, null));
-            fingerprintToken.setThreeDSServerTransID(jsonObject.optString(THREEDS_SERVER_TRANS_ID, null));
-            return fingerprintToken;
-        }
-    };
-
-    private String directoryServerId;
-    private String directoryServerPublicKey;
-    private String threeDSServerTransID;
-
-    @Override
-    public void writeToParcel(@NonNull Parcel dest, int flags) {
-        JsonUtils.writeToParcel(dest, SERIALIZER.serialize(this));
-    }
-
-    @Nullable
-    public String getDirectoryServerId() {
-        return directoryServerId;
-    }
-
-    public void setDirectoryServerId(@Nullable String directoryServerId) {
-        this.directoryServerId = directoryServerId;
-    }
-
-    @Nullable
-    public String getDirectoryServerPublicKey() {
-        return directoryServerPublicKey;
-    }
-
-    public void setDirectoryServerPublicKey(@Nullable String directoryServerPublicKey) {
-        this.directoryServerPublicKey = directoryServerPublicKey;
-    }
-
-    @Nullable
-    public String getThreeDSServerTransID() {
-        return threeDSServerTransID;
-    }
-
-    public void setThreeDSServerTransID(@Nullable String threeDSServerTransID) {
-        this.threeDSServerTransID = threeDSServerTransID;
     }
 }

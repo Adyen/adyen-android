@@ -5,78 +5,63 @@
  *
  * Created by caiof on 4/6/2019.
  */
+package com.adyen.checkout.components.model.payments.response
 
-package com.adyen.checkout.components.model.payments.response;
+import android.os.Parcel
+import android.os.Parcelable
+import com.adyen.checkout.components.util.ActionTypes
+import com.adyen.checkout.core.exception.ModelSerializationException
+import com.adyen.checkout.core.model.JsonUtils
+import com.adyen.checkout.core.model.getStringOrNull
+import org.json.JSONException
+import org.json.JSONObject
 
-import android.os.Parcel;
+class Threeds2ChallengeAction(
+    val token: String? = null
+) : Action() {
 
-import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
+    override fun writeToParcel(dest: Parcel, flags: Int) {
+        JsonUtils.writeToParcel(dest, SERIALIZER.serialize(this))
+    }
 
-import com.adyen.checkout.components.util.ActionTypes;
-import com.adyen.checkout.core.exception.ModelSerializationException;
-import com.adyen.checkout.core.model.JsonUtils;
+    companion object {
+        const val ACTION_TYPE = ActionTypes.THREEDS2_CHALLENGE
 
-import org.json.JSONException;
-import org.json.JSONObject;
+        private const val TOKEN = "token"
 
-@SuppressWarnings("MemberName")
-public class Threeds2ChallengeAction extends Action {
-    @NonNull
-    public static final Creator<Threeds2ChallengeAction> CREATOR = new Creator<>(Threeds2ChallengeAction.class);
+        @JvmField
+        val CREATOR: Parcelable.Creator<Threeds2ChallengeAction> = Creator(Threeds2ChallengeAction::class.java)
 
-    public static final String ACTION_TYPE = ActionTypes.THREEDS2_CHALLENGE;
+        @JvmField
+        val SERIALIZER: Serializer<Threeds2ChallengeAction> = object : Serializer<Threeds2ChallengeAction> {
+            override fun serialize(modelObject: Threeds2ChallengeAction): JSONObject {
+                val jsonObject = JSONObject()
+                try {
+                    // Get parameters from parent class
+                    jsonObject.putOpt(TYPE, modelObject.type)
+                    jsonObject.putOpt(PAYMENT_DATA, modelObject.paymentData)
+                    jsonObject.putOpt(PAYMENT_METHOD_TYPE, modelObject.paymentMethodType)
 
-    private static final String TOKEN = "token";
-
-    @NonNull
-    public static final Serializer<Threeds2ChallengeAction> SERIALIZER = new Serializer<Threeds2ChallengeAction>() {
-
-        @NonNull
-        @Override
-        public JSONObject serialize(@NonNull Threeds2ChallengeAction modelObject) {
-            final JSONObject jsonObject = new JSONObject();
-            try {
-                // Get parameters from parent class
-                jsonObject.putOpt(Action.TYPE, modelObject.getType());
-                jsonObject.putOpt(Action.PAYMENT_DATA, modelObject.getPaymentData());
-                jsonObject.putOpt(Action.PAYMENT_METHOD_TYPE, modelObject.getPaymentMethodType());
-
-                jsonObject.putOpt(TOKEN, modelObject.getToken());
-            } catch (JSONException e) {
-                throw new ModelSerializationException(Threeds2ChallengeAction.class, e);
+                    jsonObject.putOpt(TOKEN, modelObject.token)
+                } catch (e: JSONException) {
+                    throw ModelSerializationException(Threeds2ChallengeAction::class.java, e)
+                }
+                return jsonObject
             }
-            return jsonObject;
+
+            override fun deserialize(jsonObject: JSONObject): Threeds2ChallengeAction {
+                return try {
+                    Threeds2ChallengeAction(
+                        token = jsonObject.getStringOrNull(TOKEN),
+                    ).apply {
+                        type = jsonObject.getStringOrNull(TYPE)
+                        paymentData = jsonObject.getStringOrNull(PAYMENT_DATA)
+                        paymentMethodType = jsonObject.getStringOrNull(PAYMENT_METHOD_TYPE)
+                    }
+                } catch (e: JSONException) {
+                    throw ModelSerializationException(Threeds2Action::class.java, e)
+                }
+            }
         }
-
-        @NonNull
-        @Override
-        public Threeds2ChallengeAction deserialize(@NonNull JSONObject jsonObject) {
-            final Threeds2ChallengeAction threeds2ChallengeAction = new Threeds2ChallengeAction();
-
-            // getting parameters from parent class
-            threeds2ChallengeAction.setType(jsonObject.optString(Action.TYPE, null));
-            threeds2ChallengeAction.setPaymentData(jsonObject.optString(Action.PAYMENT_DATA, null));
-            threeds2ChallengeAction.setPaymentMethodType(jsonObject.optString(Action.PAYMENT_METHOD_TYPE, null));
-
-            threeds2ChallengeAction.setToken(jsonObject.optString(TOKEN, null));
-            return threeds2ChallengeAction;
-        }
-    };
-
-    private String token;
-
-    @Override
-    public void writeToParcel(@NonNull Parcel dest, int flags) {
-        JsonUtils.writeToParcel(dest, SERIALIZER.serialize(this));
-    }
-
-    @Nullable
-    public String getToken() {
-        return token;
-    }
-
-    public void setToken(@Nullable String token) {
-        this.token = token;
     }
 }

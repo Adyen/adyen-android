@@ -5,118 +5,83 @@
  *
  * Created by josephj on 9/12/2020.
  */
+package com.adyen.checkout.components.model.payments.response
 
-package com.adyen.checkout.components.model.payments.response;
+import android.os.Parcel
+import android.os.Parcelable
+import com.adyen.checkout.components.util.ActionTypes
+import com.adyen.checkout.core.exception.ModelSerializationException
+import com.adyen.checkout.core.model.JsonUtils
+import com.adyen.checkout.core.model.getStringOrNull
+import org.json.JSONException
+import org.json.JSONObject
 
-import android.os.Parcel;
+class Threeds2Action(
+    val token: String? = null,
+    val subtype: String? = null,
+) : Action() {
 
-import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
+    override fun writeToParcel(dest: Parcel, flags: Int) {
+        JsonUtils.writeToParcel(dest, SERIALIZER.serialize(this))
+    }
 
-import com.adyen.checkout.components.util.ActionTypes;
-import com.adyen.checkout.core.exception.ModelSerializationException;
-import com.adyen.checkout.core.model.JsonUtils;
+    companion object {
+        const val ACTION_TYPE = ActionTypes.THREEDS2
 
-import org.json.JSONException;
-import org.json.JSONObject;
+        private const val TOKEN = "token"
+        private const val SUBTYPE = "subtype"
 
-@SuppressWarnings("MemberName")
-public class Threeds2Action extends Action {
-    @NonNull
-    public static final Creator<Threeds2Action> CREATOR = new Creator<>(Threeds2Action.class);
+        @JvmField
+        val CREATOR: Parcelable.Creator<Threeds2Action> = Creator(Threeds2Action::class.java)
 
-    public static final String ACTION_TYPE = ActionTypes.THREEDS2;
+        @JvmField
+        val SERIALIZER: Serializer<Threeds2Action> = object : Serializer<Threeds2Action> {
+            override fun serialize(modelObject: Threeds2Action): JSONObject {
+                val jsonObject = JSONObject()
+                try {
+                    // Get parameters from parent class
+                    jsonObject.putOpt(TYPE, modelObject.type)
+                    jsonObject.putOpt(PAYMENT_DATA, modelObject.paymentData)
+                    jsonObject.putOpt(PAYMENT_METHOD_TYPE, modelObject.paymentMethodType)
 
-    private static final String SUBTYPE_FINGERPRINT = "fingerprint";
-    private static final String SUBTYPE_CHALLENGE = "challenge";
-    private static final String TOKEN = "token";
-    private static final String SUBTYPE = "subtype";
-
-    @NonNull
-    public static final Serializer<Threeds2Action> SERIALIZER = new Serializer<Threeds2Action>() {
-
-        @NonNull
-        @Override
-        public JSONObject serialize(@NonNull Threeds2Action modelObject) {
-            final JSONObject jsonObject = new JSONObject();
-            try {
-                // Get parameters from parent class
-                jsonObject.putOpt(Action.TYPE, modelObject.getType());
-                jsonObject.putOpt(Action.PAYMENT_DATA, modelObject.getPaymentData());
-                jsonObject.putOpt(Action.PAYMENT_METHOD_TYPE, modelObject.getPaymentMethodType());
-
-                jsonObject.putOpt(TOKEN, modelObject.getToken());
-                jsonObject.putOpt(SUBTYPE, modelObject.getSubtype());
-            } catch (JSONException e) {
-                throw new ModelSerializationException(Threeds2Action.class, e);
+                    jsonObject.putOpt(TOKEN, modelObject.token)
+                    jsonObject.putOpt(SUBTYPE, modelObject.subtype)
+                } catch (e: JSONException) {
+                    throw ModelSerializationException(Threeds2Action::class.java, e)
+                }
+                return jsonObject
             }
-            return jsonObject;
-        }
 
-        @NonNull
-        @Override
-        public Threeds2Action deserialize(@NonNull JSONObject jsonObject) {
-            final Threeds2Action threeds2ChallengeAction = new Threeds2Action();
-
-            // getting parameters from parent class
-            threeds2ChallengeAction.setType(jsonObject.optString(Action.TYPE, null));
-            threeds2ChallengeAction.setPaymentData(jsonObject.optString(Action.PAYMENT_DATA, null));
-            threeds2ChallengeAction.setPaymentMethodType(jsonObject.optString(Action.PAYMENT_METHOD_TYPE, null));
-
-            threeds2ChallengeAction.setToken(jsonObject.optString(TOKEN, null));
-            threeds2ChallengeAction.setSubtype(jsonObject.optString(SUBTYPE, null));
-            return threeds2ChallengeAction;
-        }
-    };
-
-    private String token;
-    private String subtype;
-
-    @Override
-    public void writeToParcel(@NonNull Parcel dest, int flags) {
-        JsonUtils.writeToParcel(dest, SERIALIZER.serialize(this));
-    }
-
-    @Nullable
-    public String getToken() {
-        return token;
-    }
-
-    public void setToken(@Nullable String token) {
-        this.token = token;
-    }
-
-    @Nullable
-    public String getSubtype() {
-        return subtype;
-    }
-
-    public void setSubtype(@Nullable String subtype) {
-        this.subtype = subtype;
-    }
-
-    @Nullable
-    public SubType getSubtypeEnum() {
-        return parseStringToSubType(subtype);
-    }
-
-    @Nullable
-    private SubType parseStringToSubType(@Nullable String type) {
-        if (type == null) {
-            return null;
-        }
-        switch (type) {
-            case SUBTYPE_FINGERPRINT:
-                return SubType.FINGERPRINT;
-            case SUBTYPE_CHALLENGE:
-                return SubType.CHALLENGE;
-            default:
-                return null;
+            override fun deserialize(jsonObject: JSONObject): Threeds2Action {
+                return try {
+                    Threeds2Action(
+                        token = jsonObject.getStringOrNull(TOKEN),
+                        subtype = jsonObject.getStringOrNull(SUBTYPE)
+                    ).apply {
+                        type = jsonObject.getStringOrNull(TYPE)
+                        paymentData = jsonObject.getStringOrNull(PAYMENT_DATA)
+                        paymentMethodType = jsonObject.getStringOrNull(PAYMENT_METHOD_TYPE)
+                    }
+                } catch (e: JSONException) {
+                    throw ModelSerializationException(Threeds2Action::class.java, e)
+                }
+            }
         }
     }
 
-    public enum SubType {
-        FINGERPRINT,
-        CHALLENGE
+    enum class SubType(val value: String) {
+        FINGERPRINT("fingerprint"),
+        CHALLENGE("challenge");
+
+        companion object {
+            @JvmStatic
+            fun parse(value: String): SubType {
+                return when (value) {
+                    FINGERPRINT.value -> FINGERPRINT
+                    CHALLENGE.value -> CHALLENGE
+                    else -> throw IllegalArgumentException("No Subtype matches the value of: $value")
+                }
+            }
+        }
     }
 }
