@@ -23,12 +23,12 @@ class Adyen3DS2Configuration : Configuration {
         clientKey: String
     ) : super(shopperLocale, environment, clientKey)
 
-    private constructor(`in`: Parcel) : super(`in`)
+    private constructor(inputParcel: Parcel) : super(inputParcel)
 
     /**
      * Builder to create a [Adyen3DS2Configuration].
      */
-    class Builder : BaseConfigurationBuilder<Adyen3DS2Configuration?> {
+    class Builder : BaseConfigurationBuilder<Adyen3DS2Configuration> {
 
         /**
          * Constructor for Builder with default values.
@@ -36,7 +36,7 @@ class Adyen3DS2Configuration : Configuration {
          * @param context   A context
          * @param clientKey Your Client Key used for network calls from the SDK to Adyen.
          */
-        constructor(context: Context, clientKey: String) : super(context, clientKey) {}
+        constructor(context: Context, clientKey: String) : super(context, clientKey)
 
         /**
          * Builder with required parameters.
@@ -45,7 +45,7 @@ class Adyen3DS2Configuration : Configuration {
          * @param environment   The [Environment] to be used for network calls to Adyen.
          * @param clientKey Your Client Key used for network calls from the SDK to Adyen.
          */
-        constructor(shopperLocale: Locale, environment: Environment, clientKey: String) : super(shopperLocale, environment, clientKey) {}
+        constructor(shopperLocale: Locale, environment: Environment, clientKey: String) : super(shopperLocale, environment, clientKey)
 
         override fun setShopperLocale(builderShopperLocale: Locale): Builder {
             return super.setShopperLocale(builderShopperLocale) as Builder

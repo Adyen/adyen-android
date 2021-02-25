@@ -23,7 +23,7 @@ data class ChallengeToken(
     var messageVersion: String? = null,
     var threeDSServerTransID: String? = null
 ) : ModelObject() {
-    
+
     override fun writeToParcel(dest: Parcel, flags: Int) {
         JsonUtils.writeToParcel(dest, SERIALIZER.serialize(this))
     }
@@ -35,10 +35,10 @@ data class ChallengeToken(
         private const val ACS_URL = "acsURL"
         private const val MESSAGE_VERSION = "messageVersion"
         private const val THREEDS_SERVER_TRANS_ID = "threeDSServerTransID"
-        
+
         @JvmField
         val CREATOR = Creator(ChallengeToken::class.java)
-        
+
         val SERIALIZER: Serializer<ChallengeToken> = object : Serializer<ChallengeToken> {
             override fun serialize(modelObject: ChallengeToken): JSONObject {
                 val jsonObject = JSONObject()
@@ -65,7 +65,7 @@ data class ChallengeToken(
                         messageVersion = jsonObject.getStringOrNull(MESSAGE_VERSION),
                         threeDSServerTransID = jsonObject.getStringOrNull(THREEDS_SERVER_TRANS_ID)
                     )
-                }  catch (e: JSONException) {
+                } catch (e: JSONException) {
                     throw ModelSerializationException(ChallengeToken::class.java, e)
                 }
             }

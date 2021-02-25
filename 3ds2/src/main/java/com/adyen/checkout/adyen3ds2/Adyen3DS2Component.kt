@@ -54,6 +54,7 @@ import org.json.JSONException
 import org.json.JSONObject
 import java.util.Collections
 
+@Suppress("TooManyFunctions")
 class Adyen3DS2Component(application: Application, configuration: Adyen3DS2Configuration) :
     BaseActionComponent<Adyen3DS2Configuration>(application, configuration), ChallengeStatusReceiver {
 
@@ -89,8 +90,9 @@ class Adyen3DS2Component(application: Application, configuration: Adyen3DS2Confi
     }
 
     override fun getSupportedActionTypes(): List<String> {
-        val supportedCodes = arrayOf(Threeds2FingerprintAction.ACTION_TYPE, Threeds2ChallengeAction.ACTION_TYPE, Threeds2Action.ACTION_TYPE)
-        return Collections.unmodifiableList(listOf(*supportedCodes))
+        return Collections.unmodifiableList(
+            listOf(Threeds2FingerprintAction.ACTION_TYPE, Threeds2ChallengeAction.ACTION_TYPE, Threeds2Action.ACTION_TYPE)
+        )
     }
 
     @Throws(ComponentException::class)
@@ -156,10 +158,11 @@ class Adyen3DS2Component(application: Application, configuration: Adyen3DS2Confi
 
     override fun protocolError(protocolErrorEvent: ProtocolErrorEvent) {
         Logger.e(
-            TAG, "protocolError - "
-                + protocolErrorEvent.errorMessage.errorCode + " - "
-                + protocolErrorEvent.errorMessage.errorDescription + " - "
-                + protocolErrorEvent.errorMessage.errorDetails
+            TAG,
+            "protocolError - " +
+                protocolErrorEvent.errorMessage.errorCode + " - " +
+                protocolErrorEvent.errorMessage.errorDescription + " - " +
+                protocolErrorEvent.errorMessage.errorDetails
         )
         notifyException(Authentication3DS2Exception("Protocol Error - " + protocolErrorEvent.errorMessage))
         closeTransaction(getApplication())
@@ -188,9 +191,8 @@ class Adyen3DS2Component(application: Application, configuration: Adyen3DS2Confi
             fingerprintToken.directoryServerPublicKey
         ).build()
 
-
         val coroutineExceptionHandler = CoroutineExceptionHandler { _, throwable ->
-            Logger.e(TAG, "Unexpected uncaught Exception", throwable)
+            Logger.e(TAG, "Unexpected uncaught 3DS2 Exception", throwable)
             notifyException(CheckoutException("Unexpected 3DS2 exception.", throwable))
         }
         viewModelScope.launch(Dispatchers.Default + coroutineExceptionHandler) {
