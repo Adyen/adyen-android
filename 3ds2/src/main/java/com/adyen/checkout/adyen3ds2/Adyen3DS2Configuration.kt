@@ -5,70 +5,42 @@
  *
  * Created by caiof on 25/8/2020.
  */
+package com.adyen.checkout.adyen3ds2
 
-package com.adyen.checkout.adyen3ds2;
+import android.content.Context
+import android.os.Parcel
+import android.os.Parcelable
+import com.adyen.checkout.components.base.BaseConfigurationBuilder
+import com.adyen.checkout.components.base.Configuration
+import com.adyen.checkout.core.api.Environment
+import java.util.Locale
 
-import android.content.Context;
-import android.os.Parcel;
-import android.os.Parcelable;
+class Adyen3DS2Configuration : Configuration {
+    val protocolVersion: String?
 
-import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
-
-import com.adyen.checkout.components.base.BaseConfigurationBuilder;
-import com.adyen.checkout.components.base.Configuration;
-import com.adyen.checkout.core.api.Environment;
-
-import java.util.Locale;
-
-public class Adyen3DS2Configuration extends Configuration {
-
-    public static final String PROTOCOL_2_1_0 = "2.1.0";
-    public static final String PROTOCOL_2_2_0 = "2.2.0";
-
-    public static final Parcelable.Creator<Adyen3DS2Configuration> CREATOR = new Parcelable.Creator<Adyen3DS2Configuration>() {
-        public Adyen3DS2Configuration createFromParcel(@NonNull Parcel in) {
-            return new Adyen3DS2Configuration(in);
-        }
-
-        public Adyen3DS2Configuration[] newArray(int size) {
-            return new Adyen3DS2Configuration[size];
-        }
-    };
-
-    private final String mProtocolVersion;
-
-    protected Adyen3DS2Configuration(@NonNull Locale shopperLocale,
-            @NonNull Environment environment,
-            @NonNull String clientKey,
-            @Nullable String protocolVersion
-    ) {
-        super(shopperLocale, environment, clientKey);
-        mProtocolVersion = protocolVersion;
+    private constructor(
+        shopperLocale: Locale,
+        environment: Environment,
+        clientKey: String,
+        protocolVersion: String?
+    ) : super(shopperLocale, environment, clientKey) {
+        this.protocolVersion = protocolVersion
     }
 
-    protected Adyen3DS2Configuration(@NonNull Parcel in) {
-        super(in);
-        mProtocolVersion = in.readString();
+    private constructor(`in`: Parcel) : super(`in`) {
+        protocolVersion = `in`.readString()
     }
 
-    @Override
-    public void writeToParcel(@NonNull Parcel dest, int flags) {
-        super.writeToParcel(dest, flags);
-        dest.writeString(mProtocolVersion);
-    }
-
-    @Nullable
-    public String getProtocolVersion() {
-        return mProtocolVersion;
+    override fun writeToParcel(dest: Parcel, flags: Int) {
+        super.writeToParcel(dest, flags)
+        dest.writeString(protocolVersion)
     }
 
     /**
-     * Builder to create a {@link Adyen3DS2Configuration}.
+     * Builder to create a [Adyen3DS2Configuration].
      */
-    public static final class Builder extends BaseConfigurationBuilder<Adyen3DS2Configuration> {
-
-        private String mBuilderProtocolVersion = PROTOCOL_2_1_0;
+    class Builder : BaseConfigurationBuilder<Adyen3DS2Configuration?> {
+        private var mBuilderProtocolVersion: String? = PROTOCOL_2_1_0
 
         /**
          * Constructor for Builder with default values.
@@ -76,43 +48,48 @@ public class Adyen3DS2Configuration extends Configuration {
          * @param context   A context
          * @param clientKey Your Client Key used for network calls from the SDK to Adyen.
          */
-        public Builder(@NonNull Context context, @NonNull String clientKey) {
-            super(context, clientKey);
-        }
+        constructor(context: Context, clientKey: String) : super(context, clientKey) {}
 
         /**
          * Builder with required parameters.
          *
          * @param shopperLocale The Locale of the shopper.
-         * @param environment   The {@link Environment} to be used for network calls to Adyen.
+         * @param environment   The [Environment] to be used for network calls to Adyen.
          * @param clientKey Your Client Key used for network calls from the SDK to Adyen.
          */
-        public Builder(@NonNull Locale shopperLocale, @NonNull Environment environment, @NonNull String clientKey) {
-            super(shopperLocale, environment, clientKey);
+        constructor(shopperLocale: Locale, environment: Environment, clientKey: String) : super(shopperLocale, environment, clientKey) {}
+
+        override fun setShopperLocale(builderShopperLocale: Locale): Builder {
+            return super.setShopperLocale(builderShopperLocale) as Builder
         }
 
-        @Override
-        @NonNull
-        public Builder setShopperLocale(@NonNull Locale builderShopperLocale) {
-            return (Builder) super.setShopperLocale(builderShopperLocale);
+        override fun setEnvironment(builderEnvironment: Environment): Builder {
+            return super.setEnvironment(builderEnvironment) as Builder
         }
 
-        @Override
-        @NonNull
-        public Builder setEnvironment(@NonNull Environment builderEnvironment) {
-            return (Builder) super.setEnvironment(builderEnvironment);
+        fun setProtocolVersion(builderProtocolVersion: String?): Builder {
+            mBuilderProtocolVersion = builderProtocolVersion
+            return this
         }
 
-        @NonNull
-        public Builder setProtocolVersion(@Nullable String builderProtocolVersion) {
-            mBuilderProtocolVersion = builderProtocolVersion;
-            return this;
+        override fun build(): Adyen3DS2Configuration {
+            return Adyen3DS2Configuration(mBuilderShopperLocale, mBuilderEnvironment, mBuilderClientKey, mBuilderProtocolVersion)
         }
+    }
 
-        @NonNull
-        @Override
-        public Adyen3DS2Configuration build() {
-            return new Adyen3DS2Configuration(mBuilderShopperLocale, mBuilderEnvironment, mBuilderClientKey, mBuilderProtocolVersion);
+    companion object {
+        const val PROTOCOL_2_1_0 = "2.1.0"
+        const val PROTOCOL_2_2_0 = "2.2.0"
+
+        @JvmField
+        val CREATOR: Parcelable.Creator<Adyen3DS2Configuration> = object : Parcelable.Creator<Adyen3DS2Configuration> {
+            override fun createFromParcel(`in`: Parcel): Adyen3DS2Configuration {
+                return Adyen3DS2Configuration(`in`)
+            }
+
+            override fun newArray(size: Int): Array<Adyen3DS2Configuration?> {
+                return arrayOfNulls(size)
+            }
         }
     }
 }
