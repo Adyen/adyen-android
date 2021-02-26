@@ -39,20 +39,21 @@ data class ChallengeToken(
         @JvmField
         val CREATOR = Creator(ChallengeToken::class.java)
 
+        @JvmField
         val SERIALIZER: Serializer<ChallengeToken> = object : Serializer<ChallengeToken> {
             override fun serialize(modelObject: ChallengeToken): JSONObject {
-                val jsonObject = JSONObject()
-                try {
-                    jsonObject.putOpt(ACS_REFERENCE_NUMBER, modelObject.acsReferenceNumber)
-                    jsonObject.putOpt(ACS_SIGNED_CONTENT, modelObject.acsSignedContent)
-                    jsonObject.putOpt(ACS_TRANS_ID, modelObject.acsTransID)
-                    jsonObject.putOpt(ACS_URL, modelObject.acsURL)
-                    jsonObject.putOpt(MESSAGE_VERSION, modelObject.messageVersion)
-                    jsonObject.putOpt(THREEDS_SERVER_TRANS_ID, modelObject.threeDSServerTransID)
+                return try {
+                    JSONObject().apply {
+                        putOpt(ACS_REFERENCE_NUMBER, modelObject.acsReferenceNumber)
+                        putOpt(ACS_SIGNED_CONTENT, modelObject.acsSignedContent)
+                        putOpt(ACS_TRANS_ID, modelObject.acsTransID)
+                        putOpt(ACS_URL, modelObject.acsURL)
+                        putOpt(MESSAGE_VERSION, modelObject.messageVersion)
+                        putOpt(THREEDS_SERVER_TRANS_ID, modelObject.threeDSServerTransID)
+                    }
                 } catch (e: JSONException) {
                     throw ModelSerializationException(ChallengeToken::class.java, e)
                 }
-                return jsonObject
             }
 
             override fun deserialize(jsonObject: JSONObject): ChallengeToken {

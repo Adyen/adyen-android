@@ -26,7 +26,6 @@ import com.adyen.checkout.components.encoding.Base64Encoder
 import com.adyen.checkout.components.model.payments.response.Action
 import com.adyen.checkout.components.model.payments.response.Threeds2Action
 import com.adyen.checkout.components.model.payments.response.Threeds2Action.SubType
-import com.adyen.checkout.components.model.payments.response.Threeds2Action.SubType.Companion.parse
 import com.adyen.checkout.components.model.payments.response.Threeds2ChallengeAction
 import com.adyen.checkout.components.model.payments.response.Threeds2FingerprintAction
 import com.adyen.checkout.core.exception.CheckoutException
@@ -120,7 +119,7 @@ class Adyen3DS2Component(application: Application, configuration: Adyen3DS2Confi
                 if (threeds2Action.subtype == null) {
                     throw ComponentException("3DS2 Action subtype not found.")
                 }
-                val subtype = parse(threeds2Action.subtype.orEmpty())
+                val subtype = SubType.parse(threeds2Action.subtype.orEmpty())
                 handleActionSubtype(activity, subtype, threeds2Action.token.orEmpty())
             }
         }
@@ -157,14 +156,10 @@ class Adyen3DS2Component(application: Application, configuration: Adyen3DS2Confi
     }
 
     override fun protocolError(protocolErrorEvent: ProtocolErrorEvent) {
-        Logger.e(
-            TAG,
-            "protocolError - " +
-                protocolErrorEvent.errorMessage.errorCode + " - " +
-                protocolErrorEvent.errorMessage.errorDescription + " - " +
-                protocolErrorEvent.errorMessage.errorDetails
-        )
-        notifyException(Authentication3DS2Exception("Protocol Error - " + protocolErrorEvent.errorMessage))
+        with(protocolErrorEvent.errorMessage) {
+            Logger.e(TAG, "protocolError - $errorCode - $errorDescription - $errorDetails")
+            notifyException(Authentication3DS2Exception("Protocol Error - $this"))
+        }
         closeTransaction(getApplication())
     }
 
@@ -254,12 +249,14 @@ class Adyen3DS2Component(application: Application, configuration: Adyen3DS2Confi
     fun createEncodedFingerprint(authenticationRequestParameters: AuthenticationRequestParameters): String {
         val fingerprintJson = JSONObject()
         try {
-            // TODO getMessageVersion is not used?
-            fingerprintJson.put("sdkAppID", authenticationRequestParameters.sdkAppID)
-            fingerprintJson.put("sdkEncData", authenticationRequestParameters.deviceData)
-            fingerprintJson.put("sdkEphemPubKey", JSONObject(authenticationRequestParameters.sdkEphemeralPublicKey))
-            fingerprintJson.put("sdkReferenceNumber", authenticationRequestParameters.sdkReferenceNumber)
-            fingerprintJson.put("sdkTransID", authenticationRequestParameters.sdkTransactionID)
+            with(authenticationRequestParameters) {
+                fingerprintJson.put("sdkAppID", sdkAppID)
+                fingerprintJson.put("sdkEncData", deviceData)
+                fingerprintJson.put("sdkEphemPubKey", JSONObject(sdkEphemeralPublicKey))
+                fingerprintJson.put("sdkReferenceNumber", sdkReferenceNumber)
+                fingerprintJson.put("sdkTransID", sdkTransactionID)
+                fingerprintJson.put("messageVersion", messageVersion)
+            }
         } catch (e: JSONException) {
             throw ComponentException("Failed to create encoded fingerprint", e)
         }
@@ -267,13 +264,13 @@ class Adyen3DS2Component(application: Application, configuration: Adyen3DS2Confi
     }
 
     private fun createChallengeParameters(challenge: ChallengeToken): ChallengeParameters {
-        // TODO referenceNumber, URL and version are not used?
-        val challengeParameters = ChallengeParameters()
-        challengeParameters.set3DSServerTransactionID(challenge.threeDSServerTransID)
-        challengeParameters.acsTransactionID = challenge.acsTransID
-        challengeParameters.acsRefNumber = challenge.acsReferenceNumber
-        challengeParameters.acsSignedContent = challenge.acsSignedContent
-        return challengeParameters
+        return ChallengeParameters().apply {
+            set3DSServerTransactionID(challenge.threeDSServerTransID)
+            acsTransactionID = challenge.acsTransID
+            acsRefNumber = challenge.acsReferenceNumber
+            acsSignedContent = challenge.acsSignedContent
+            threeDSRequestorAppURL = ChallengeParameters.getEmbeddedRequestorAppURL(getApplication())
+        }
     }
 
     private fun closeTransaction(context: Context) {
@@ -312,6 +309,7 @@ class Adyen3DS2Component(application: Application, configuration: Adyen3DS2Confi
     companion object {
         val TAG = LogUtil.getTag()
 
+        @JvmField
         val PROVIDER: ActionComponentProvider<Adyen3DS2Component> = ActionComponentProviderImpl(
             Adyen3DS2Component::class.java, Adyen3DS2Configuration::class.java
         )

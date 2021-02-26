@@ -39,16 +39,16 @@ data class FingerprintToken(
         @JvmField
         val SERIALIZER: Serializer<FingerprintToken> = object : Serializer<FingerprintToken> {
             override fun serialize(modelObject: FingerprintToken): JSONObject {
-                val jsonObject = JSONObject()
-                try {
-                    jsonObject.putOpt(DIRECTORY_SERVER_ID, modelObject.directoryServerId)
-                    jsonObject.putOpt(DIRECTORY_SERVER_PUBLIC_KEY, modelObject.directoryServerPublicKey)
-                    jsonObject.putOpt(THREEDS_SERVER_TRANS_ID, modelObject.threeDSServerTransID)
-                    jsonObject.putOpt(THREEDS_MESSAGE_VERSION, modelObject.threeDSMessageVersion)
+                return try {
+                    JSONObject().apply {
+                        putOpt(DIRECTORY_SERVER_ID, modelObject.directoryServerId)
+                        putOpt(DIRECTORY_SERVER_PUBLIC_KEY, modelObject.directoryServerPublicKey)
+                        putOpt(THREEDS_SERVER_TRANS_ID, modelObject.threeDSServerTransID)
+                        putOpt(THREEDS_MESSAGE_VERSION, modelObject.threeDSMessageVersion)
+                    }
                 } catch (e: JSONException) {
                     throw ModelSerializationException(FingerprintToken::class.java, e)
                 }
-                return jsonObject
             }
 
             override fun deserialize(jsonObject: JSONObject): FingerprintToken {
