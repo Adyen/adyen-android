@@ -29,7 +29,7 @@ import com.adyen.checkout.components.api.ImageLoader;
 import com.adyen.checkout.components.model.payments.request.CardPaymentMethod;
 import com.adyen.checkout.components.ui.view.AdyenLinearLayout;
 import com.adyen.checkout.components.ui.view.RoundCornerImageView;
-import com.adyen.checkout.components.validation.ValidatedField;
+import com.adyen.checkout.components.ui.FieldState;
 import com.google.android.material.textfield.TextInputLayout;
 
 /**
@@ -128,13 +128,13 @@ public final class BcmcView
 
         boolean isErrorFocused = false;
 
-        if (!outputData.getCardNumberField().isValid()) {
+        if (!outputData.getCardNumberField().getValidation().isValid()) {
             isErrorFocused = true;
             mCardNumberEditText.requestFocus();
             setCardNumberError(R.string.checkout_card_number_not_valid);
         }
 
-        if (!outputData.getExpiryDateField().isValid()) {
+        if (!outputData.getExpiryDateField().getValidation().isValid()) {
             if (!isErrorFocused) {
                 mExpiryDateInput.requestFocus();
             }
@@ -146,8 +146,8 @@ public final class BcmcView
         getComponent().inputDataChanged(mCardInputData);
     }
 
-    private void onCardNumberValidated(@NonNull ValidatedField<String> validatedNumber) {
-        if (validatedNumber.getValidation() == ValidatedField.Validation.VALID) {
+    private void onCardNumberValidated(@NonNull FieldState<String> validatedNumber) {
+        if (validatedNumber.getValidation().isValid()) {
             changeFocusOfInput(validatedNumber.getValue());
         }
 
@@ -187,7 +187,7 @@ public final class BcmcView
             final BcmcOutputData outputData = getComponent().getOutputData();
             if (hasFocus) {
                 setCardNumberError(null);
-            } else if (outputData != null && !outputData.getCardNumberField().isValid()) {
+            } else if (outputData != null && !outputData.getCardNumberField().getValidation().isValid()) {
                 setCardNumberError(R.string.checkout_card_number_not_valid);
             }
         });
@@ -216,7 +216,7 @@ public final class BcmcView
             final BcmcOutputData outputData = getComponent().getOutputData();
             if (hasFocus) {
                 mExpiryDateInput.setError(null);
-            } else if (outputData != null && !outputData.getExpiryDateField().isValid()) {
+            } else if (outputData != null && !outputData.getExpiryDateField().getValidation().isValid()) {
                 mExpiryDateInput.setError(mLocalizedContext.getString(R.string.checkout_expiry_date_not_valid));
             }
         });

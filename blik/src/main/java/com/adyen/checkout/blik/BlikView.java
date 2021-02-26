@@ -87,7 +87,7 @@ public class BlikView
             final BlikOutputData outputData = getComponent().getOutputData();
             if (hasFocus) {
                 mBlikCodeInput.setError(null);
-            } else if (outputData != null && !outputData.getBlikCodeField().isValid()) {
+            } else if (outputData != null && !outputData.getBlikCodeField().getValidation().isValid()) {
                 mBlikCodeInput.setError(mLocalizedContext.getString(R.string.checkout_blik_code_not_valid));
             }
         });
@@ -124,7 +124,7 @@ public class BlikView
             return;
         }
 
-        if (!outputData.getBlikCodeField().isValid()) {
+        if (!outputData.getBlikCodeField().getValidation().isValid()) {
             mBlikCodeInput.requestFocus();
             mBlikCodeInput.setError(mLocalizedContext.getString(R.string.checkout_blik_code_not_valid));
         }

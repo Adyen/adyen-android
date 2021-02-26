@@ -11,35 +11,35 @@ package com.adyen.checkout.bcmc;
 import androidx.annotation.NonNull;
 
 import com.adyen.checkout.components.base.OutputData;
-import com.adyen.checkout.components.validation.ValidatedField;
+import com.adyen.checkout.components.ui.FieldState;
 import com.adyen.checkout.card.data.ExpiryDate;
 
 public final class BcmcOutputData implements OutputData {
 
-    private final ValidatedField<String> mCardNumberField;
-    private final ValidatedField<ExpiryDate> mExpiryDateField;
+    private final FieldState<String> mCardNumberField;
+    private final FieldState<ExpiryDate> mExpiryDateField;
 
     BcmcOutputData(
-            @NonNull ValidatedField<String> cardNumberField,
-            @NonNull ValidatedField<ExpiryDate> expiryDateField
+            @NonNull FieldState<String> cardNumberField,
+            @NonNull FieldState<ExpiryDate> expiryDateField
     ) {
         mCardNumberField = cardNumberField;
         mExpiryDateField = expiryDateField;
     }
 
     @NonNull
-    public ValidatedField<String> getCardNumberField() {
+    public FieldState<String> getCardNumberField() {
         return mCardNumberField;
     }
 
     @NonNull
-    public ValidatedField<ExpiryDate> getExpiryDateField() {
+    public FieldState<ExpiryDate> getExpiryDateField() {
         return mExpiryDateField;
     }
 
     @Override
     public boolean isValid() {
-        return mCardNumberField.isValid()
-                && mExpiryDateField.isValid();
+        return mCardNumberField.getValidation().isValid()
+                && mExpiryDateField.getValidation().isValid();
     }
 }

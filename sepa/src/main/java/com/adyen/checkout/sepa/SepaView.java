@@ -107,7 +107,7 @@ public class SepaView
             final SepaOutputData outputData = getComponent().getOutputData();
             if (hasFocus) {
                 mIbanNumberInput.setError(null);
-            } else if (outputData != null && !outputData.getIbanNumberField().isValid()) {
+            } else if (outputData != null && !outputData.getIbanNumberField().getValidation().isValid()) {
                 mIbanNumberInput.setError(mLocalizedContext.getString(R.string.checkout_iban_not_valid));
             }
         });
@@ -146,13 +146,13 @@ public class SepaView
 
         boolean errorFocused = false;
 
-        if (!outputData.getOwnerNameField().isValid()) {
+        if (!outputData.getOwnerNameField().getValidation().isValid()) {
             errorFocused = true;
             mHolderNameInput.requestFocus();
             mHolderNameInput.setError(mLocalizedContext.getString(R.string.checkout_holder_name_not_valid));
         }
 
-        if (!outputData.getIbanNumberField().isValid()) {
+        if (!outputData.getIbanNumberField().getValidation().isValid()) {
             if (!errorFocused) {
                 mIbanNumberInput.requestFocus();
             }

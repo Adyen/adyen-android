@@ -9,23 +9,32 @@ package com.adyen.checkout.mbway
 
 import android.text.TextUtils
 import com.adyen.checkout.components.base.OutputData
+import com.adyen.checkout.components.ui.FieldState
+import com.adyen.checkout.components.ui.Validation
 import com.adyen.checkout.components.util.ValidationUtils
-import com.adyen.checkout.components.validation.ValidatedField
+import com.adyen.checkout.mbway.ui.R
 
 class MBWayOutputData(mobilePhoneNumber: String) : OutputData {
 
     companion object {
-        private fun validateMobileNumber(mobileNumber: String): ValidatedField<String> {
+        private fun validateMobileNumber(mobileNumber: String): FieldState<String> {
             return if (!TextUtils.isEmpty(mobileNumber) && ValidationUtils.isPhoneNumberValid(mobileNumber)) {
-                ValidatedField(mobileNumber, ValidatedField.Validation.VALID)
+                FieldState(
+                    mobileNumber,
+                    Validation.Valid
+                )
             } else {
-                ValidatedField(mobileNumber, ValidatedField.Validation.INVALID)
+                FieldState(
+                    mobileNumber,
+                    Validation.Invalid(R.string.checkout_mbway_phone_number_not_valid)
+                )
             }
         }
     }
 
-    val mobilePhoneNumberField: ValidatedField<String> = validateMobileNumber(mobilePhoneNumber)
+    val mobilePhoneNumberFieldState: FieldState<String> = validateMobileNumber(mobilePhoneNumber)
+
     override fun isValid(): Boolean {
-        return mobilePhoneNumberField.isValid
+        return mobilePhoneNumberFieldState.validation.isValid()
     }
 }
