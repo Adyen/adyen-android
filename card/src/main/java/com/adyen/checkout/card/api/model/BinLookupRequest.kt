@@ -18,10 +18,6 @@ import com.adyen.checkout.core.model.optStringList
 import org.json.JSONException
 import org.json.JSONObject
 
-private const val ENCRYPTED_BIN = "encryptedBin"
-private const val REQUEST_ID = "requestId"
-private const val SUPPORTED_BRANDS = "supportedBrands"
-
 data class BinLookupRequest(
     val encryptedBin: String? = null,
     val requestId: String? = null,
@@ -33,6 +29,10 @@ data class BinLookupRequest(
     }
 
     companion object {
+        private const val ENCRYPTED_BIN = "encryptedBin"
+        private const val REQUEST_ID = "requestId"
+        private const val SUPPORTED_BRANDS = "supportedBrands"
+
         @JvmField
         val CREATOR: Parcelable.Creator<BinLookupRequest> = Creator(BinLookupRequest::class.java)
 
