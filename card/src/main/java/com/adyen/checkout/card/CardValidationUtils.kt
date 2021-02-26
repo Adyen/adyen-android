@@ -42,18 +42,13 @@ object CardValidationUtils {
     fun validateCardNumber(number: String): FieldState<String> {
         val normalizedNumber = StringUtil.normalize(number)
         val length = normalizedNumber.length
-        val validation: Validation = if (!StringUtil.isDigitsAndSeparatorsOnly(normalizedNumber)) {
-            Validation.Invalid(R.string.checkout_card_number_not_valid)
-        } else if (length > MAXIMUM_CARD_NUMBER_LENGTH) {
-            Validation.Invalid(R.string.checkout_card_number_not_valid)
-        } else if (length < MINIMUM_CARD_NUMBER_LENGTH) {
-            Validation.Partial
-        } else if (isLuhnChecksumValid(normalizedNumber)) {
-            Validation.Valid
-        } else if (length == MAXIMUM_CARD_NUMBER_LENGTH) {
-            Validation.Invalid(R.string.checkout_card_number_not_valid)
-        } else {
-            Validation.Partial
+        val validation = when {
+            !StringUtil.isDigitsAndSeparatorsOnly(normalizedNumber) -> Validation.Invalid(R.string.checkout_card_number_not_valid)
+            length > MAXIMUM_CARD_NUMBER_LENGTH -> Validation.Invalid(R.string.checkout_card_number_not_valid)
+            length < MINIMUM_CARD_NUMBER_LENGTH -> Validation.Partial
+            isLuhnChecksumValid(normalizedNumber) -> Validation.Valid
+            length == MAXIMUM_CARD_NUMBER_LENGTH -> Validation.Invalid(R.string.checkout_card_number_not_valid)
+            else -> Validation.Partial
         }
 
         return FieldState(number, validation)
