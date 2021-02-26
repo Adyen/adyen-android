@@ -178,7 +178,7 @@ class CardComponent private constructor(
         paymentComponentData.setStorePaymentMethod(stateOutputData.isStoredPaymentMethodEnable)
         paymentComponentData.shopperReference = configuration.shopperReference
 
-        val lastFour = getLastFourDigitsFromCardNumber(cardNumber)
+        val lastFour = cardNumber.takeLast(LAST_FOUR_LENGTH)
 
         return CardComponentState(paymentComponentData, stateOutputData.isValid, firstCardType, binValue, lastFour)
     }
@@ -201,10 +201,6 @@ class CardComponent private constructor(
 
     private fun getBinValueFromCardNumber(cardNumber: String): String {
         return if (cardNumber.length < BIN_VALUE_LENGTH) cardNumber else cardNumber.substring(0..BIN_VALUE_LENGTH)
-    }
-
-    private fun getLastFourDigitsFromCardNumber(cardNumber: String): String {
-        return cardNumber.takeLast(LAST_FOUR_LENGTH)
     }
 
     companion object {
