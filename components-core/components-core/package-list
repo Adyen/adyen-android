@@ -12,6 +12,6 @@ com.adyen.checkout.components.model.paymentmethods
 com.adyen.checkout.components.model.payments
 com.adyen.checkout.components.model.payments.request
 com.adyen.checkout.components.model.payments.response
+com.adyen.checkout.components.ui
 com.adyen.checkout.components.util
-com.adyen.checkout.components.validation
 
