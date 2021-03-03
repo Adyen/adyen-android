@@ -16,11 +16,12 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
-import com.adyen.checkout.base.api.ImageLoader
-import com.adyen.checkout.base.model.payments.request.GenericPaymentMethod
-import com.adyen.checkout.base.model.payments.request.PaymentComponentData
-import com.adyen.checkout.base.model.payments.request.PaymentMethodDetails
-import com.adyen.checkout.base.util.PaymentMethodTypes
+import com.adyen.checkout.components.GenericComponentState
+import com.adyen.checkout.components.api.ImageLoader
+import com.adyen.checkout.components.model.payments.request.GenericPaymentMethod
+import com.adyen.checkout.components.model.payments.request.PaymentComponentData
+import com.adyen.checkout.components.model.payments.request.PaymentMethodDetails
+import com.adyen.checkout.components.util.PaymentMethodTypes
 import com.adyen.checkout.core.exception.CheckoutException
 import com.adyen.checkout.core.exception.ComponentException
 import com.adyen.checkout.core.log.LogUtil
@@ -133,6 +134,7 @@ class PaymentMethodListDialogFragment : DropInBottomSheetDialogFragment(), Payme
     private fun sendPayment(type: String) {
         val paymentComponentData = PaymentComponentData<PaymentMethodDetails>()
         paymentComponentData.paymentMethod = GenericPaymentMethod(type)
-        protocol.requestPaymentsCall(paymentComponentData)
+        val paymentComponentState = GenericComponentState(paymentComponentData, true)
+        protocol.requestPaymentsCall(paymentComponentState)
     }
 }

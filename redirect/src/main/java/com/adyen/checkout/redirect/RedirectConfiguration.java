@@ -14,8 +14,8 @@ import android.os.Parcelable;
 
 import androidx.annotation.NonNull;
 
-import com.adyen.checkout.base.component.BaseConfigurationBuilder;
-import com.adyen.checkout.base.component.Configuration;
+import com.adyen.checkout.components.base.BaseConfigurationBuilder;
+import com.adyen.checkout.components.base.Configuration;
 import com.adyen.checkout.core.api.Environment;
 
 import java.util.Locale;
@@ -52,9 +52,10 @@ public class RedirectConfiguration extends Configuration {
          * Constructor for Builder with default values.
          *
          * @param context   A context
+         * @param clientKey Your Client Key used for network calls from the SDK to Adyen.
          */
-        public Builder(@NonNull Context context) {
-            super(context);
+        public Builder(@NonNull Context context, @NonNull String clientKey) {
+            super(context, clientKey);
         }
 
         /**
@@ -62,9 +63,10 @@ public class RedirectConfiguration extends Configuration {
          *
          * @param shopperLocale The Locale of the shopper.
          * @param environment   The {@link Environment} to be used for network calls to Adyen.
+         * @param clientKey Your Client Key used for network calls from the SDK to Adyen.
          */
-        public Builder(@NonNull Locale shopperLocale, @NonNull Environment environment) {
-            super(shopperLocale, environment);
+        public Builder(@NonNull Locale shopperLocale, @NonNull Environment environment, @NonNull String clientKey) {
+            super(shopperLocale, environment, clientKey);
         }
 
         @Override

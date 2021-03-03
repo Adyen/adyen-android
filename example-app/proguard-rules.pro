@@ -20,7 +20,7 @@
 # hide the original source file name.
 #-renamesourcefileattribute SourceFile
 
--keep class com.adyen.checkout.base.model.** { *; }
--keepclassmembers public class * implements com.adyen.checkout.base.PaymentComponent {
+-keep class com.adyen.checkout.components.model.** { *; }
+-keepclassmembers public class * implements com.adyen.checkout.components.PaymentComponent {
    public <init>(...);
 }

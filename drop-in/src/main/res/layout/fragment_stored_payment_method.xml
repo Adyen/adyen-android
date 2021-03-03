@@ -15,17 +15,21 @@
     android:orientation="vertical"
     tools:context=".ui.stored.PreselectedStoredPaymentMethodFragment">
 
-    <include layout="@layout/bottom_sheet_indicator"
+    <include
+        android:id="@+id/bottom_sheet_indicator"
+        layout="@layout/bottom_sheet_indicator"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"/>
 
-    <include layout="@layout/payment_methods_list_header"
+    <include
+        android:id="@+id/payment_methods_list_header"
+        layout="@layout/payment_methods_list_header"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         tools:text="@string/store_payment_methods_header"/>
 
     <include
-        android:id="@+id/stored_payment_method_container"
+        android:id="@+id/stored_payment_method_item"
         layout="@layout/payment_methods_list_item"
         android:layout_width="match_parent"
         android:layout_height="wrap_content" />

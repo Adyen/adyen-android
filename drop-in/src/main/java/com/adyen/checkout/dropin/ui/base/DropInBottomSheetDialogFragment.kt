@@ -14,10 +14,10 @@ import android.os.Bundle
 import android.view.KeyEvent
 import android.widget.FrameLayout
 import androidx.fragment.app.activityViewModels
-import com.adyen.checkout.base.ActionComponentData
-import com.adyen.checkout.base.model.paymentmethods.PaymentMethod
-import com.adyen.checkout.base.model.paymentmethods.StoredPaymentMethod
-import com.adyen.checkout.base.model.payments.request.PaymentComponentData
+import com.adyen.checkout.components.ActionComponentData
+import com.adyen.checkout.components.PaymentComponentState
+import com.adyen.checkout.components.model.paymentmethods.PaymentMethod
+import com.adyen.checkout.components.model.paymentmethods.StoredPaymentMethod
 import com.adyen.checkout.core.log.LogUtil
 import com.adyen.checkout.core.log.Logger
 import com.adyen.checkout.dropin.R
@@ -93,9 +93,9 @@ abstract class DropInBottomSheetDialogFragment : BottomSheetDialogFragment() {
         fun showPaymentMethodsDialog()
         fun showStoredComponentDialog(storedPaymentMethod: StoredPaymentMethod, fromPreselected: Boolean)
         fun showComponentDialog(paymentMethod: PaymentMethod)
-        fun requestPaymentsCall(paymentComponentData: PaymentComponentData<*>)
+        fun requestPaymentsCall(paymentComponentState: PaymentComponentState<*>)
         fun requestDetailsCall(actionComponentData: ActionComponentData)
-        fun showError(errorMessage: String, terminate: Boolean)
+        fun showError(errorMessage: String, reason: String, terminate: Boolean)
         fun terminateDropIn()
         fun startGooglePay(paymentMethod: PaymentMethod, googlePayConfiguration: GooglePayConfiguration)
     }

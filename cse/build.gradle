@@ -1,9 +1,13 @@
+plugins {
+    id 'com.android.library'
+}
+
 // Maven artifact
 ext.mavenArtifactId = "cse"
 ext.mavenArtifactName = "Adyen Client Side Encryption"
 ext.mavenArtifactDescription = "Adyen Client Side Encryption for Adyen's Checkout API."
 
-apply plugin: 'com.android.library'
+apply from: "../config/gradle/sharedTasks.gradle"
 
 android {
     compileSdkVersion compile_sdk_version
@@ -15,6 +19,7 @@ android {
         versionName version_name
 
         testInstrumentationRunner 'androidx.test.runner.AndroidJUnitRunner'
+        consumerProguardFiles "consumer-rules.pro"
     }
 }
 
@@ -25,14 +30,8 @@ dependencies {
     androidTestImplementation "androidx.test.espresso:espresso-core:$espresso_version"
 
     // Checkout
-    api project(':core-v3')
+    api project(':checkout-core')
 
     // Dependencies
-    api "com.adyen.cse:adyen-cse:$adyen_cse_version"
     implementation "androidx.annotation:annotation:$annotation_version"
 }
-
-// This sharedTasks.gradle script is applied at the end of this build.gradle script,
-// since javadocs.gradle script is dependent on android.compileSdkVersion property,
-// which is set on the android block above.
-apply from: "../config/gradle/sharedTasks.gradle"

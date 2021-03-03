@@ -8,7 +8,7 @@
 
 package com.adyen.checkout.example.service
 
-import com.adyen.checkout.base.model.payments.Amount
+import com.adyen.checkout.components.model.payments.Amount
 import com.adyen.checkout.example.data.api.model.paymentsRequest.AdditionalData
 import com.adyen.checkout.example.data.api.model.paymentsRequest.Item
 import com.google.gson.Gson

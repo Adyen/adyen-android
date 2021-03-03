@@ -6,13 +6,17 @@
  * Created by caiof on 9/10/2019.
  */
 
+plugins {
+    id 'com.android.library'
+    id 'kotlin-android'
+}
+
 // Maven artifact
 ext.mavenArtifactId = "redirect"
 ext.mavenArtifactName = "Adyen checkout redirect component"
 ext.mavenArtifactDescription = "Adyen checkout redirect component client for Adyen's Checkout API."
 
-apply plugin: 'com.android.library'
-apply plugin: 'kotlin-android'
+apply from: "../config/gradle/sharedTasks.gradle"
 
 android {
     compileSdkVersion compile_sdk_version
@@ -24,6 +28,7 @@ android {
         versionName version_name
 
         testInstrumentationRunner 'androidx.test.runner.AndroidJUnitRunner'
+        consumerProguardFiles "consumer-rules.pro"
 
         // Get scheme for redirect result
         buildConfigField "String", "checkoutRedirectScheme", "\"$rootProject.ext.checkoutRedirectScheme\""
@@ -46,13 +51,8 @@ dependencies {
     androidTestImplementation "androidx.test.espresso:espresso-core:$espresso_version"
 
     // Checkout
-    api project(":base-ui")
+    api project(':ui-core')
 
     // Dependencies
     implementation "androidx.browser:browser:$browser_version"
 }
-
-// This sharedTasks.gradle script is applied at the end of this build.gradle script,
-// since javadocs.gradle script is dependent on android.compileSdkVersion property,
-// which is set on the android block above.
-apply from: "../config/gradle/sharedTasks.gradle"

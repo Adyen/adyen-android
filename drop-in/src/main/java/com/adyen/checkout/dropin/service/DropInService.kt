@@ -8,214 +8,287 @@
 
 package com.adyen.checkout.dropin.service
 
+import android.app.Service
 import android.content.ComponentName
 import android.content.Context
 import android.content.Intent
-import androidx.core.app.JobIntentService
-import com.adyen.checkout.base.model.payments.request.PaymentComponentData
-import com.adyen.checkout.base.model.payments.request.PaymentMethodDetails
-import com.adyen.checkout.core.exception.CheckoutException
+import android.content.ServiceConnection
+import android.os.Binder
+import android.os.IBinder
+import androidx.lifecycle.LifecycleOwner
+import androidx.lifecycle.MutableLiveData
+import androidx.lifecycle.Observer
+import com.adyen.checkout.components.ActionComponentData
+import com.adyen.checkout.components.PaymentComponentState
+import com.adyen.checkout.components.model.payments.request.PaymentComponentData
 import com.adyen.checkout.core.log.LogUtil
 import com.adyen.checkout.core.log.Logger
-import kotlinx.coroutines.ExperimentalCoroutinesApi
-import kotlinx.coroutines.channels.awaitClose
-import kotlinx.coroutines.flow.callbackFlow
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.Job
+import kotlinx.coroutines.launch
 import org.json.JSONObject
+import kotlin.coroutines.CoroutineContext
+
+private val TAG = LogUtil.getTag()
 
 /**
  * Base service to be extended by the merchant to provide the network calls that connect to the Adyen endpoints.
  * Calls should be made to your server, and from there to Adyen.
  *
- * The methods [makePaymentsCall] and [makeDetailsCall] are already run in the background and can return synchronously. Or async, check documentation.
- * The result [CallResult] is the result of the network call and can mean different things. Check the [CallResult.ResultType] for more information.
+ * The methods [makePaymentsCall] and [makeDetailsCall] are already run in the background and can return synchronously.
+ * For async, you can override [onPaymentsCallRequested] and [onDetailsCallRequested] instead.
+ * Check the documentation for more details.
+ * The result [DropInServiceResult] is the result of the network call and can mean different things.
+ * Check the subclasses of [DropInServiceResult] for more information.
  */
-abstract class DropInService : JobIntentService() {
+@Suppress("TooManyFunctions")
+abstract class DropInService : Service(), CoroutineScope, DropInServiceInterface {
 
-    companion object {
-        protected val TAG = LogUtil.getTag()
+    private val coroutineJob: Job = Job()
+    override val coroutineContext: CoroutineContext get() = Dispatchers.Main + coroutineJob
 
-        // Define the type of request the service needs to perform
-        private const val REQUEST_TYPE_KEY = "request_type"
-        private const val PAYMENTS_REQUEST = "type_payments"
-        private const val DETAILS_REQUEST = "type_details"
+    private val binder = DropInBinder()
 
-        // Internal key of the content for the request
-        private const val PAYMENT_COMPONENT_DATA_EXTRA_KEY = "payment_component_data_extra"
-        private const val DETAILS_EXTRA_KEY = "details_method_extra"
+    private val resultLiveData: MutableLiveData<DropInServiceResult> = MutableLiveData()
 
-        // Make it public for merchants who want to override behavior
-        @Suppress("MemberVisibilityCanBePrivate")
-        const val dropInJobId = 11
-
-        // callback to handle sending the CallResult inside the callbackFlow below
-        private var callback: DropInFlowResult = object : DropInFlowResult {
-            override fun dispatchCallResult(callResult: CallResult) {
-                Logger.e(TAG, "dispatchCallResult - callback called before flow")
-            }
-        }
-
-        // This callbackFlow will stay open for new offers on the callback object
-        // this is an experiment to replace LocalBroadcast to communicate with the DropInActivity
-        // TODO: 27/10/2020 check if we can have a different implementation that is not an application-wide event bus
-        // since it embraces layer violations as per deprecation note
-        // https://developer.android.com/jetpack/androidx/releases/localbroadcastmanager
-        @ExperimentalCoroutinesApi
-        val dropInServiceFlow = callbackFlow<CallResult> {
-            callback = object : DropInFlowResult {
-                override fun dispatchCallResult(callResult: CallResult) {
-                    Logger.d(TAG, "dropInServiceFlow - offer")
-                    offer(callResult)
-                }
-            }
-            awaitClose {
-                Logger.d(TAG, "dropInServiceFlow - flow closed")
-            }
-        }
-
-        /**
-         * Helper function that sends a request for the merchant to make the payments call.
-         */
-        // False positive
-        @Suppress("FunctionParameterNaming")
-        fun requestPaymentsCall(
-            context: Context,
-            paymentComponentData: PaymentComponentData<out PaymentMethodDetails>,
-            merchantService: ComponentName
-        ) {
-            Logger.d(TAG, "requestPaymentsCall - ${paymentComponentData.paymentMethod?.type}")
-
-            val workIntent = Intent()
-            workIntent.putExtra(REQUEST_TYPE_KEY, PAYMENTS_REQUEST)
-            workIntent.putExtra(PAYMENT_COMPONENT_DATA_EXTRA_KEY, paymentComponentData)
-
-            enqueueWork(context, merchantService, dropInJobId, workIntent)
-        }
-
-        /**
-         * Helper function that sends a request for the merchant to make the details call.
-         */
-        fun requestDetailsCall(context: Context, details: JSONObject, merchantService: ComponentName) {
-            Logger.d(TAG, "requestDetailsCall")
-
-            val workIntent = Intent()
-            workIntent.putExtra(REQUEST_TYPE_KEY, DETAILS_REQUEST)
-            workIntent.putExtra(DETAILS_EXTRA_KEY, details.toString())
-
-            enqueueWork(context, merchantService, dropInJobId, workIntent)
-        }
+    override fun onBind(intent: Intent?): IBinder {
+        Logger.d(TAG, "onBind")
+        return binder
     }
 
-    override fun onHandleWork(intent: Intent) {
-        Logger.d(TAG, "onHandleWork")
+    override fun onUnbind(intent: Intent?): Boolean {
+        Logger.d(TAG, "onUnbind")
+        return super.onUnbind(intent)
+    }
 
-        when (intent.getStringExtra(REQUEST_TYPE_KEY)) {
-            PAYMENTS_REQUEST -> {
-                val paymentComponentDataForRequest =
-                    intent.getParcelableExtra<PaymentComponentData<in PaymentMethodDetails>>(PAYMENT_COMPONENT_DATA_EXTRA_KEY)
-                if (paymentComponentDataForRequest == null) {
-                    handleCallResult(CallResult(CallResult.ResultType.ERROR, "DropInService Error. No content in PAYMENT_COMPONENT_DATA_EXTRA_KEY"))
-                } else {
-                    askPaymentsCall(paymentComponentDataForRequest)
-                }
-            }
-            DETAILS_REQUEST -> {
-                val detailsString = intent.getStringExtra(DETAILS_EXTRA_KEY)
-                val details = JSONObject(detailsString)
-                askDetailsCall(details)
-            }
-        }
+    override fun onRebind(intent: Intent?) {
+        Logger.d(TAG, "onRebind")
+        super.onRebind(intent)
+    }
+
+    override fun onCreate() {
+        Logger.d(TAG, "onCreate")
+        super.onCreate()
     }
 
     override fun onDestroy() {
-        super.onDestroy()
-        // Android will only call new tasks from enqueueWork if the previous one has finished nas the service is destroyed
         Logger.d(TAG, "onDestroy")
+        super.onDestroy()
     }
 
-    /**
-     * Call this method for asynchronous handling of [makePaymentsCall]
-     */
-    @Suppress("MemberVisibilityCanBePrivate")
-    protected fun asyncCallback(callResult: CallResult) {
-        handleCallResult(callResult)
-    }
-
-    private fun askPaymentsCall(paymentComponentData: PaymentComponentData<in PaymentMethodDetails>) {
-        Logger.d(TAG, "askPaymentsCall")
-
-        // Merchant makes network call
-        val paymentsCallResult = makePaymentsCall(PaymentComponentData.SERIALIZER.serialize(paymentComponentData))
-
-        handleCallResult(paymentsCallResult)
-    }
-
-    private fun askDetailsCall(details: JSONObject) {
-        Logger.d(TAG, "askDetailsCall")
-
-        // Merchant makes network call
-        val detailsCallResult = makeDetailsCall(details)
-
-        handleCallResult(detailsCallResult)
-    }
-
-    private fun handleCallResult(callResult: CallResult?) {
-        if (callResult == null) {
-            // Make sure people don't return Null from Java code
-            throw CheckoutException("CallResult result from DropInService cannot be null.")
-        }
-        Logger.d(TAG, "handleCallResult - ${callResult.type.name}")
-
-        // if type is WAIT do nothing and wait for async callback.
-        if (callResult.type != CallResult.ResultType.WAIT) {
-            // send response back to activity
-            Logger.d(TAG, "dropInServiceFlow - dispatchCallResult")
-            callback.dispatchCallResult(callResult)
-        }
+    override fun requestPaymentsCall(paymentComponentState: PaymentComponentState<*>) {
+        Logger.d(TAG, "requestPaymentsCall")
+        val json = PaymentComponentData.SERIALIZER.serialize(paymentComponentState.data)
+        onPaymentsCallRequested(paymentComponentState, json)
     }
 
     /**
      * In this method you should make the network call to tell your server to make a call to the payments/ endpoint.
      *
-     * We provide a [PaymentComponentData] (as JSONObject) with the parameters we can infer from the Component [Configuration] and the user input,
+     * We provide a [PaymentComponentData] (as JSONObject) with the parameters we can infer from
+     * the Component [Configuration] and the user input,
      * specially the "paymentMethod" object with the shopper input details.
      * The rest of the payments/ call object should be filled in, on your server, according to your needs.
      *
-     * You can use [PaymentComponentData.SERIALIZER] to serialize the data between the data object and a [JSONObject] depending on what you prefer.
+     * We also provide a [PaymentComponentState] that contains a non-serialized version of the
+     * payment component JSON and might also contain more details about the state of the
+     * component at the moment in which the payment is confirmed by the user.
      *
-     * The return of this method is expected to be a [CallResult] with the result of the network request.
-     * See expected [CallResult.ResultType] and the associated content.
+     * - Asynchronous handling:
      *
-     * This call is expected to be synchronous, as it already runs in a background thread, and the base class will handle messaging the UI
-     * after it finishes, based on the [CallResult]. If you want to make the call asynchronously, return [CallResult.ResultType.WAIT] on the type
-     * and call the [asyncCallback] method afterwards when it is done with the result.
+     *     Since this method runs on the main thread, you should make sure the payments/ call and
+     * any other long running operation is made on a background thread. You should eventually call
+     * [sendResult] with a [DropInServiceResult] containing the result of the network request.
+     * The base class will handle messaging the UI afterwards, based on the [DropInServiceResult].
+     *
+     *     Note that overriding this method means that the [makePaymentsCall] method will not be
+     * called anymore and therefore you can disregard it.
+     *
+     * - Synchronous handling:
+     *
+     *     Alternatively, if you don't need asynchronous handling but you still want to access
+     * the [PaymentComponentState], you will still need to implement [makePaymentsCall]. After you
+     * are done handling the [PaymentComponentState] inside [onPaymentsCallRequested], call
+     * [super.onPaymentsCallRequested] to proceed. This will internally invoke your
+     * implementation of [makePaymentsCall] in a background thread so you won't need to
+     * manage the threads yourself.
+     *
+     * Note that the [PaymentComponentState] is a abstract class, you can check and cast to
+     * one of its child classes for a more component specific state.
      *
      * See https://docs.adyen.com/api-explorer/ for more information on the API documentation.
      *
-     * @param paymentComponentData The result data from the [PaymentComponent] the compose your call.
-     * @return The result of the network call
+     * @param paymentComponentState The state of the [PaymentComponent] at the moment the user
+     * submits the payment.
+     * @param paymentComponentJson The serialized data from the [PaymentComponent] the compose your
+     * call.
      */
-    abstract fun makePaymentsCall(paymentComponentData: JSONObject): CallResult
+    protected open fun onPaymentsCallRequested(
+        paymentComponentState: PaymentComponentState<*>,
+        paymentComponentJson: JSONObject
+    ) {
+        launch(Dispatchers.IO) {
+            // Merchant makes network call
+            val result = makePaymentsCall(paymentComponentJson)
+            sendResult(result)
+        }
+    }
+
+    override fun requestDetailsCall(actionComponentData: ActionComponentData) {
+        Logger.d(TAG, "requestDetailsCall")
+        val json = ActionComponentData.SERIALIZER.serialize(actionComponentData)
+        onDetailsCallRequested(actionComponentData, json)
+    }
 
     /**
      * In this method you should make the network call to tell your server to make a call to the payments/details/ endpoint.
      *
-     * We provide a [ActionComponentData] (as JSONObject) with the whole result expected by the payments/details/ endpoint
-     * (if paymentData was provided).
+     * We provide an [ActionComponentData] (as JSONObject) with the whole result expected by the
+     * payments/details/ endpoint (if paymentData was provided).
      *
-     * You can use [ActionComponentData.SERIALIZER] to serialize the data between the data object and a [JSONObject] depending on what you prefer.
+     * We also provide an [ActionComponentData] that contains a non-serialized version of the
+     * action component JSON.
      *
-     * This call is expected to be synchronous, as it already runs in the background, and the base class will handle messaging with the UI after it
-     * finishes based on the [CallResult]. If you want to make the call asynchronously, return [CallResult.ResultType.WAIT] on the type and call the
-     * [asyncCallback] method afterwards.
+     * - Asynchronous handling:
+     *
+     *     Since this method runs on the main thread, you should make sure the payments/details/
+     * call and any other long running operation is made on a background thread. You should
+     * eventually call [sendResult] with a [DropInServiceResult] containing the result of the
+     * network request. The base class will handle messaging the UI afterwards, based on the
+     * [DropInServiceResult].
+     *
+     *     Note that overriding this method means that the [makeDetailsCall] method will not be
+     * called anymore and therefore you can disregard it.
+     *
+     * - Synchronous handling:
+     *
+     *     Alternatively, if you don't need asynchronous handling but you still want to access
+     * the [ActionComponentData], you will still need to implement [makeDetailsCall]. After you
+     * are done handling the [ActionComponentData] inside [onDetailsCallRequested], call
+     * [super.onDetailsCallRequested] to proceed. This will internally invoke your
+     * implementation of [makeDetailsCall] in a background thread so you won't need to
+     * manage the threads yourself.
      *
      * See https://docs.adyen.com/api-explorer/ for more information on the API documentation.
      *
-     * @param actionComponentData The result data from the [ActionComponent] the compose your call.
+     * @param actionComponentData The data from the [ActionComponent].
+     * @param actionComponentJson The serialized data from the [ActionComponent] the compose your
+     * call.
+     */
+    protected open fun onDetailsCallRequested(
+        actionComponentData: ActionComponentData,
+        actionComponentJson: JSONObject
+    ) {
+        launch(Dispatchers.IO) {
+            // Merchant makes network call
+            val result = makeDetailsCall(actionComponentJson)
+            sendResult(result)
+        }
+    }
+
+    /**
+     * Allow asynchronously sending the results of the payments/ and payments/details/ network
+     * calls.
+     *
+     * Call this method when using [onPaymentsCallRequested] and [onDetailsCallRequested] with a
+     * [DropInServiceResult] depending on the response of the corresponding network call.
+     * Check the subclasses of [DropInServiceResult] for more information.
+     *
+     * @param result the result of the network request.
+     */
+    protected fun sendResult(result: DropInServiceResult) {
+        // send response back to activity
+        Logger.d(TAG, "dispatching DropInServiceResult")
+        resultLiveData.postValue(result)
+    }
+
+    /**
+     * In this method you should make the network call to tell your server to make a call to the payments/ endpoint.
+     *
+     * We provide a [PaymentComponentData] (as JSONObject) with the parameters we can infer from
+     * the Component [Configuration] and the user input,
+     * specially the "paymentMethod" object with the shopper input details.
+     * The rest of the payments/ call object should be filled in, on your server, according to your needs.
+     *
+     * You can use [PaymentComponentData.SERIALIZER] to serialize the data between the data
+     * object and a [JSONObject] depending on what you prefer.
+     *
+     * The return of this method is expected to be a [DropInServiceResult] with the result of the network
+     * request. Check the subclasses of [DropInServiceResult] for more information.
+     *
+     * This call is expected to be synchronous, as it already runs in a background thread, and the
+     * base class will handle messaging the UI after it finishes, based on the
+     * [DropInServiceResult].
+     *
+     * If you want to make the call asynchronously, or get a more detailed, non-serialized
+     * version of the payment component data, override [onPaymentsCallRequested] instead.
+     *
+     * See https://docs.adyen.com/api-explorer/ for more information on the API documentation.
+     *
+     * @param paymentComponentJson The result data from the [PaymentComponent] the compose your call.
      * @return The result of the network call
      */
-    abstract fun makeDetailsCall(actionComponentData: JSONObject): CallResult
-
-    private interface DropInFlowResult {
-        fun dispatchCallResult(callResult: CallResult)
+    open fun makePaymentsCall(paymentComponentJson: JSONObject): DropInServiceResult {
+        throw NotImplementedError("Neither makePaymentsCall nor onPaymentsCallRequested is implemented")
     }
+
+    /**
+     * In this method you should make the network call to tell your server to make a call to the payments/details/ endpoint.
+     *
+     * We provide an [ActionComponentData] (as JSONObject) with the whole result expected by the
+     * payments/details/ endpoint (if paymentData was provided).
+     *
+     * You can use [ActionComponentData.SERIALIZER] to serialize the data between the data object
+     * and a [JSONObject] depending on what you prefer.
+     *
+     * The return of this method is expected to be a [DropInServiceResult] with the result of the network
+     * request. Check the subclasses of [DropInServiceResult] for more information.
+     *
+     * This call is expected to be synchronous, as it already runs in the background, and the
+     * base class will handle messaging with the UI after it finishes based on the
+     * [DropInServiceResult].
+     *
+     * If you want to make the call asynchronously, or get a non-serialized version of the action
+     * component data, override [onDetailsCallRequested] instead.
+     *
+     * See https://docs.adyen.com/api-explorer/ for more information on the API documentation.
+     *
+     * @param actionComponentJson The result data from the [ActionComponent] the compose your call.
+     * @return The result of the network call
+     */
+    open fun makeDetailsCall(actionComponentJson: JSONObject): DropInServiceResult {
+        throw NotImplementedError("Neither makeDetailsCall nor onDetailsCallRequested is implemented")
+    }
+
+    override fun observeResult(owner: LifecycleOwner, observer: Observer<DropInServiceResult>) {
+        this.resultLiveData.observe(owner, observer)
+    }
+
+    internal inner class DropInBinder : Binder() {
+        fun getService(): DropInServiceInterface = this@DropInService
+    }
+
+    companion object {
+        internal fun bindService(
+            context: Context,
+            connection: ServiceConnection,
+            merchantService: ComponentName
+        ): Boolean {
+            Logger.d(TAG, "bindService - ${context::class.simpleName}")
+            val intent = Intent().apply { component = merchantService }
+            return context.bindService(intent, connection, Context.BIND_AUTO_CREATE)
+        }
+
+        internal fun unbindService(context: Context, connection: ServiceConnection) {
+            Logger.d(TAG, "unbindService - ${context::class.simpleName}")
+            context.unbindService(connection)
+        }
+    }
+}
+
+internal interface DropInServiceInterface {
+    fun observeResult(owner: LifecycleOwner, observer: Observer<DropInServiceResult>)
+    fun requestPaymentsCall(paymentComponentState: PaymentComponentState<*>)
+    fun requestDetailsCall(actionComponentData: ActionComponentData)
 }

@@ -6,13 +6,17 @@
  * Created by caiof on 8/2/2019.
  */
 
+plugins {
+    id 'com.android.library'
+    id 'kotlin-android'
+}
+
 // Maven artifact
 ext.mavenArtifactId = "3ds2"
 ext.mavenArtifactName = "Adyen checkout 3DS2 component"
 ext.mavenArtifactDescription = "Adyen Checkout 3DS2 component client for Adyen's Checkout API."
 
-apply plugin: 'com.android.library'
-apply plugin: 'kotlin-android'
+apply from: "../config/gradle/sharedTasks.gradle"
 
 android {
     compileSdkVersion compile_sdk_version
@@ -24,6 +28,7 @@ android {
         versionName version_name
 
         testInstrumentationRunner 'androidx.test.runner.AndroidJUnitRunner'
+        consumerProguardFiles "consumer-rules.pro"
     }
 
     compileOptions {
@@ -43,13 +48,8 @@ dependencies {
     androidTestImplementation "androidx.test.espresso:espresso-core:$espresso_version"
 
     // Checkout
-    api project(':base-v3')
+    api project(':components-core')
 
     // Dependencies
     api "com.adyen.threeds:adyen-3ds2:$adyen3ds2_version"
 }
-
-// This sharedTasks.gradle script is applied at the end of this build.gradle script,
-// since javadocs.gradle script is dependent on android.compileSdkVersion property,
-// which is set on the android block above.
-apply from: "../config/gradle/sharedTasks.gradle"

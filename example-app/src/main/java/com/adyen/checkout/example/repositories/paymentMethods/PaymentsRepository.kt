@@ -8,7 +8,7 @@
 
 package com.adyen.checkout.example.repositories.paymentMethods
 
-import com.adyen.checkout.base.model.PaymentMethodsApiResponse
+import com.adyen.checkout.components.model.PaymentMethodsApiResponse
 import com.adyen.checkout.example.data.api.CheckoutApiService
 import com.adyen.checkout.example.data.api.model.paymentsRequest.PaymentMethodsRequest
 import com.adyen.checkout.example.repositories.BaseRepository
@@ -19,7 +19,9 @@ import retrofit2.Call
 interface PaymentsRepository {
     suspend fun getPaymentMethods(paymentMethodsRequest: PaymentMethodsRequest): PaymentMethodsApiResponse?
     fun paymentsRequest(paymentsRequest: RequestBody): Call<ResponseBody>
+    suspend fun paymentsRequestAsync(paymentsRequest: RequestBody): ResponseBody?
     fun detailsRequest(paymentsRequest: RequestBody): Call<ResponseBody>
+    suspend fun detailsRequestAsync(paymentsRequest: RequestBody): ResponseBody?
 }
 
 class PaymentsRepositoryImpl(private val checkoutApiService: CheckoutApiService) : PaymentsRepository, BaseRepository() {
@@ -34,7 +36,19 @@ class PaymentsRepositoryImpl(private val checkoutApiService: CheckoutApiService)
         return checkoutApiService.payments(paymentsRequest)
     }
 
+    override suspend fun paymentsRequestAsync(paymentsRequest: RequestBody): ResponseBody? {
+        return safeApiCall(
+            call = { checkoutApiService.paymentsAsync(paymentsRequest).await() }
+        )
+    }
+
     override fun detailsRequest(paymentsRequest: RequestBody): Call<ResponseBody> {
         return checkoutApiService.details(paymentsRequest)
+    }
+
+    override suspend fun detailsRequestAsync(paymentsRequest: RequestBody): ResponseBody? {
+        return safeApiCall(
+            call = { checkoutApiService.detailsAsync(paymentsRequest).await() }
+        )
     }
 }

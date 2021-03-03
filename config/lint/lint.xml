@@ -19,9 +19,17 @@
     <issue id="UnusedAttribute" >
         <ignore regexp=".*src\/main\/res\/.*googlepay.*"/>
     </issue>
-    <issue id="ContentDescription" >
+
+    <issue id="UnusedAttribute" >
         <ignore regexp=".*src\/main\/res\/.*googlepay.*"/>
     </issue>
+
+    <!-- False positive because of ViewBinding -->
+    <issue id="UnusedIds" >
+        <ignore path="src/main/res/layout/activity_main.xml"/>
+        <ignore path="src/main/res/layout/activity_result.xml"/>
+    </issue>
+
     <issue id="NegativeMargin">
         <ignore path="src/main/res/values/styles.xml"/>
     </issue>

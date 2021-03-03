@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+  ~ Copyright (c) 2019 Adyen N.V.
+  ~
+  ~ This file is open source and available under the MIT license. See the LICENSE file for more info.
+  ~
+  ~ Created by caiof on 25/4/2019.
+  -->
+
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    style="@style/AdyenCheckout.RecyclerListItem"
+    android:clickable="true"
+    android:focusable="true"
+    android:orientation="horizontal" >
+
+    <com.adyen.checkout.components.ui.view.RoundCornerImageView
+        android:id="@+id/imageView_logo"
+        style="@style/AdyenCheckout.Image.Logo"
+        app:strokeColor="@color/stroke_color"/>
+
+    <androidx.appcompat.widget.AppCompatTextView
+        android:id="@+id/textView_text"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        style="@style/AdyenCheckout.ListItemText"
+        tools:text="Test"/>
+
+</LinearLayout>

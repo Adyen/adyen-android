@@ -15,23 +15,22 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.lifecycle.Observer
 import com.adyen.checkout.await.AwaitComponent
-import com.adyen.checkout.base.ActionComponent
-import com.adyen.checkout.base.ActionComponentData
-import com.adyen.checkout.base.ComponentError
-import com.adyen.checkout.base.ComponentView
-import com.adyen.checkout.base.ViewableComponent
-import com.adyen.checkout.base.component.OutputData
-import com.adyen.checkout.base.model.payments.response.Action
-import com.adyen.checkout.base.util.ActionTypes
+import com.adyen.checkout.components.ActionComponent
+import com.adyen.checkout.components.ActionComponentData
+import com.adyen.checkout.components.ComponentError
+import com.adyen.checkout.components.ComponentView
+import com.adyen.checkout.components.ViewableComponent
+import com.adyen.checkout.components.base.OutputData
+import com.adyen.checkout.components.model.payments.response.Action
+import com.adyen.checkout.components.util.ActionTypes
 import com.adyen.checkout.core.exception.CheckoutException
 import com.adyen.checkout.core.exception.ComponentException
 import com.adyen.checkout.core.log.LogUtil
 import com.adyen.checkout.core.log.Logger
 import com.adyen.checkout.dropin.R
+import com.adyen.checkout.dropin.databinding.FragmentActionComponentBinding
 import com.adyen.checkout.dropin.getViewFor
 import com.adyen.checkout.dropin.ui.base.DropInBottomSheetDialogFragment
-import kotlinx.android.synthetic.main.fragment_action_component.header
-import kotlinx.android.synthetic.main.fragment_generic_component.componentContainer
 
 @SuppressWarnings("TooManyFunctions")
 class ActionComponentDialogFragment : DropInBottomSheetDialogFragment(), Observer<ActionComponentData> {
@@ -52,6 +51,7 @@ class ActionComponentDialogFragment : DropInBottomSheetDialogFragment(), Observe
         }
     }
 
+    private lateinit var binding: FragmentActionComponentBinding
     private lateinit var action: Action
     private lateinit var actionType: String
     private lateinit var componentView: ComponentView<in OutputData, ViewableComponent<*, *, ActionComponentData>>
@@ -65,14 +65,15 @@ class ActionComponentDialogFragment : DropInBottomSheetDialogFragment(), Observe
         actionType = action.type ?: throw IllegalArgumentException("Action type not found")
     }
 
-    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
-        return inflater.inflate(R.layout.fragment_action_component, container, false)
+    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View {
+        binding = FragmentActionComponentBinding.inflate(inflater)
+        return binding.root
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         Logger.d(TAG, "onViewCreated")
-        header.visibility = View.GONE
+        binding.header.visibility = View.GONE
 
         try {
             @Suppress("UNCHECKED_CAST")
@@ -139,7 +140,7 @@ class ActionComponentDialogFragment : DropInBottomSheetDialogFragment(), Observe
     ) {
         component.observe(this, this)
         component.observeErrors(this, createErrorHandlerObserver())
-        componentContainer.addView(componentView as View)
+        binding.componentContainer.addView(componentView as View)
         @Suppress("UNCHECKED_CAST")
         componentView.attach(component, this)
     }
@@ -154,6 +155,6 @@ class ActionComponentDialogFragment : DropInBottomSheetDialogFragment(), Observe
 
     private fun handleError(componentError: ComponentError) {
         Logger.e(TAG, componentError.errorMessage)
-        protocol.showError(getString(R.string.action_failed), true)
+        protocol.showError(getString(R.string.action_failed), componentError.errorMessage, true)
     }
 }

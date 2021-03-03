@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="utf-8"?><!--
+  ~ Copyright (c) 2019 Adyen N.V.
+  ~
+  ~ This file is open source and available under the MIT license. See the LICENSE file for more info.
+  ~
+  ~ Created by caiof on 26/8/2019.
+  -->
+
+<com.adyen.checkout.components.ui.view.RoundCornerImageView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    style="@style/AdyenCheckout.Image.CardLogo"
+    android:layout_width="@dimen/brand_logo_width"
+    android:layout_height="@dimen/brand_logo_height"
+    android:layout_marginStart="@dimen/standard_quarter_margin"
+    app:strokeColor="@color/stroke_color" />

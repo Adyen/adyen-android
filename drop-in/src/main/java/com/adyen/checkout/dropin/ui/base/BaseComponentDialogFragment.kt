@@ -14,13 +14,13 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.lifecycle.Observer
-import com.adyen.checkout.base.ComponentError
-import com.adyen.checkout.base.PaymentComponent
-import com.adyen.checkout.base.PaymentComponentState
-import com.adyen.checkout.base.component.Configuration
-import com.adyen.checkout.base.model.paymentmethods.PaymentMethod
-import com.adyen.checkout.base.model.paymentmethods.StoredPaymentMethod
-import com.adyen.checkout.base.model.payments.request.PaymentMethodDetails
+import com.adyen.checkout.components.ComponentError
+import com.adyen.checkout.components.PaymentComponent
+import com.adyen.checkout.components.PaymentComponentState
+import com.adyen.checkout.components.base.Configuration
+import com.adyen.checkout.components.model.paymentmethods.PaymentMethod
+import com.adyen.checkout.components.model.paymentmethods.StoredPaymentMethod
+import com.adyen.checkout.components.model.payments.request.PaymentMethodDetails
 import com.adyen.checkout.core.exception.CheckoutException
 import com.adyen.checkout.core.log.LogUtil
 import com.adyen.checkout.core.log.Logger
@@ -126,7 +126,7 @@ abstract class BaseComponentDialogFragment : DropInBottomSheetDialogFragment(), 
         try {
             if (componentState != null) {
                 if (componentState.isValid) {
-                    protocol.requestPaymentsCall(componentState.data)
+                    protocol.requestPaymentsCall(componentState)
                 } else {
                     throw CheckoutException("PaymentComponentState are not valid.")
                 }
@@ -149,6 +149,6 @@ abstract class BaseComponentDialogFragment : DropInBottomSheetDialogFragment(), 
 
     fun handleError(componentError: ComponentError) {
         Logger.e(TAG, componentError.errorMessage)
-        protocol.showError(getString(R.string.component_error), true)
+        protocol.showError(getString(R.string.component_error), componentError.errorMessage, true)
     }
 }

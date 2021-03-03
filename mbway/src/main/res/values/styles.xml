@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+  ~ Copyright (c) 2020 Adyen N.V.
+  ~
+  ~ This file is open source and available under the MIT license. See the LICENSE file for more info.
+  ~
+  ~ Created by caiof on 14/8/2020.
+  -->
+
+<resources>
+    <style name="AdyenCheckout.MBWay"/>
+
+    <style name="AdyenCheckout.MBWay.MobileNumberInput" parent="AdyenCheckout.TextInputEditText">
+        <item name="android:hint">@string/checkout_mbway_mobile_number</item>
+        <item name="android:inputType">phone</item>
+    </style>
+
+</resources>

@@ -6,9 +6,10 @@
  * Created by caiof on 8/2/2019.
  */
 
-apply plugin: 'com.android.application'
-apply plugin: 'kotlin-android'
-apply plugin: 'kotlin-android-extensions'
+plugins {
+    id 'com.android.application'
+    id 'kotlin-android'
+}
 
 apply from: "../config/gradle/codeQuality.gradle"
 apply from: "../config/gradle/ci.gradle"
@@ -60,6 +61,11 @@ android {
             proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
         }
     }
+
+    buildFeatures {
+        viewBinding true
+    }
+
 }
 
 dependencies {

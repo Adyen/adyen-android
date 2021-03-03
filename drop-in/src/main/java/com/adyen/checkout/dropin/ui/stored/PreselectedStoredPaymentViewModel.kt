@@ -11,7 +11,7 @@ package com.adyen.checkout.dropin.ui.stored
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
-import com.adyen.checkout.base.model.paymentmethods.StoredPaymentMethod
+import com.adyen.checkout.components.model.paymentmethods.StoredPaymentMethod
 import com.adyen.checkout.dropin.ui.paymentmethods.StoredPaymentMethodModel
 
 class PreselectedStoredPaymentViewModel(storedPaymentMethod: StoredPaymentMethod) : ViewModel() {

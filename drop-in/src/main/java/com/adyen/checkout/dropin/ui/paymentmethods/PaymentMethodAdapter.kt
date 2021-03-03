@@ -14,9 +14,9 @@ import android.view.ViewGroup
 import android.widget.ImageView
 import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
-import com.adyen.checkout.base.api.ImageLoader
-import com.adyen.checkout.base.util.DateUtils
-import com.adyen.checkout.base.util.PaymentMethodTypes
+import com.adyen.checkout.components.api.ImageLoader
+import com.adyen.checkout.components.util.DateUtils
+import com.adyen.checkout.components.util.PaymentMethodTypes
 import com.adyen.checkout.core.exception.CheckoutException
 import com.adyen.checkout.core.log.LogUtil
 import com.adyen.checkout.dropin.R

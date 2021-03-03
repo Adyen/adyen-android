@@ -10,14 +10,13 @@ package com.adyen.checkout.dropin
 
 import android.content.ComponentName
 import android.content.Context
-import android.content.Intent
 import android.os.Parcel
 import android.os.Parcelable
-import com.adyen.checkout.base.component.Configuration
-import com.adyen.checkout.base.model.payments.Amount
-import com.adyen.checkout.base.util.CheckoutCurrency
-import com.adyen.checkout.base.util.PaymentMethodTypes
-import com.adyen.checkout.base.util.ValidationUtils
+import com.adyen.checkout.components.base.Configuration
+import com.adyen.checkout.components.model.payments.Amount
+import com.adyen.checkout.components.util.CheckoutCurrency
+import com.adyen.checkout.components.util.PaymentMethodTypes
+import com.adyen.checkout.components.util.ValidationUtils
 import com.adyen.checkout.bcmc.BcmcConfiguration
 import com.adyen.checkout.blik.BlikConfiguration
 import com.adyen.checkout.card.CardConfiguration
@@ -49,7 +48,6 @@ class DropInConfiguration : Configuration, Parcelable {
 
     private val availableConfigs: HashMap<String, Configuration>
     val serviceComponentName: ComponentName
-    val resultHandlerIntent: Intent
     val amount: Amount
 
     companion object {
@@ -67,12 +65,10 @@ class DropInConfiguration : Configuration, Parcelable {
         clientKey: String,
         availableConfigs: HashMap<String, Configuration>,
         serviceComponentName: ComponentName,
-        resultHandlerIntent: Intent,
         amount: Amount
     ) : super(shopperLocale, environment, clientKey) {
         this.availableConfigs = availableConfigs
         this.serviceComponentName = serviceComponentName
-        this.resultHandlerIntent = resultHandlerIntent
         this.amount = amount
     }
 
@@ -80,7 +76,6 @@ class DropInConfiguration : Configuration, Parcelable {
         @Suppress("UNCHECKED_CAST")
         availableConfigs = parcel.readHashMap(Configuration::class.java.classLoader) as HashMap<String, Configuration>
         serviceComponentName = parcel.readParcelable(ComponentName::class.java.classLoader)!!
-        resultHandlerIntent = parcel.readParcelable(Intent::class.java.classLoader)!!
         amount = Amount.CREATOR.createFromParcel(parcel)
     }
 
@@ -88,7 +83,6 @@ class DropInConfiguration : Configuration, Parcelable {
         super.writeToParcel(dest, flags)
         dest.writeMap(availableConfigs)
         dest.writeParcelable(serviceComponentName, flags)
-        dest.writeParcelable(resultHandlerIntent, flags)
         JsonUtils.writeToParcel(dest, Amount.SERIALIZER.serialize(amount))
     }
 
@@ -118,26 +112,32 @@ class DropInConfiguration : Configuration, Parcelable {
 
         private var shopperLocale: Locale
         private var environment: Environment = Environment.EUROPE
-        private var clientKey: String = ""
+        private var clientKey: String
         private var serviceComponentName: ComponentName
-        private var resultHandlerIntent: Intent
         private var amount: Amount = Amount.EMPTY
 
         private val packageName: String
         private val serviceClassName: String
 
         /**
+         *
+         * Create a [DropInConfiguration]
+         *
          * @param context
-         * @param resultHandlerIntent The Intent used with [Activity.startActivity] that will contain the payment result extra with key [RESULT_KEY].
          * @param serviceClass Service that extended from [DropInService] that would handle network requests.
+         * @param clientKey Your Client Key used for network calls from the SDK to Adyen.
          */
-        constructor(context: Context, resultHandlerIntent: Intent, serviceClass: Class<out Any?>) {
+        constructor(context: Context, serviceClass: Class<out Any?>, clientKey: String) {
             this.packageName = context.packageName
             this.serviceClassName = serviceClass.name
 
-            this.resultHandlerIntent = resultHandlerIntent
             this.serviceComponentName = ComponentName(packageName, serviceClassName)
             this.shopperLocale = LocaleUtil.getLocale(context)
+
+            if (!ValidationUtils.isClientKeyValid(clientKey)) {
+                throw CheckoutException("Client key is not valid.")
+            }
+            this.clientKey = clientKey
         }
 
         /**
@@ -150,8 +150,8 @@ class DropInConfiguration : Configuration, Parcelable {
             this.serviceComponentName = dropInConfiguration.serviceComponentName
             this.shopperLocale = dropInConfiguration.shopperLocale
             this.environment = dropInConfiguration.environment
-            this.resultHandlerIntent = dropInConfiguration.resultHandlerIntent
             this.amount = dropInConfiguration.amount
+            this.clientKey = dropInConfiguration.clientKey
         }
 
         fun setServiceComponentName(serviceComponentName: ComponentName): Builder {
@@ -171,20 +171,6 @@ class DropInConfiguration : Configuration, Parcelable {
 
         fun setEnvironment(environment: Environment): Builder {
             this.environment = environment
-            return this
-        }
-
-        fun setClientKey(clientKey: String): Builder {
-            if (!ValidationUtils.isClientKeyValid(clientKey)) {
-                throw CheckoutException("Client key is not valid.")
-            }
-
-            this.clientKey = clientKey
-            return this
-        }
-
-        fun setResultHandlerIntent(resultHandlerIntent: Intent): Builder {
-            this.resultHandlerIntent = resultHandlerIntent
             return this
         }
 
@@ -318,7 +304,6 @@ class DropInConfiguration : Configuration, Parcelable {
                 clientKey,
                 availableConfigs,
                 serviceComponentName,
-                resultHandlerIntent,
                 amount
             )
         }

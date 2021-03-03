@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+  ~ Copyright (c) 2020 Adyen N.V.
+  ~
+  ~ This file is open source and available under the MIT license. See the LICENSE file for more info.
+  ~
+  ~ Created by caiof on 15/10/2020.
+  -->
+
+<resources>
+    <string name="checkout_mbway_mobile_number">Mobile number</string>
+    <string name="checkout_mbway_phone_number_not_valid">Invalid telephone number</string>
+    <string name="checkout_mbway_country_name_format" translatable="false">%1$s (%2$s)</string>
+</resources>

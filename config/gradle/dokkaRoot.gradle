@@ -1,0 +1,22 @@
+/*
+ * Copyright (c) 2021 Adyen N.V.
+ *
+ * This file is open source and available under the MIT license. See the LICENSE file for more info.
+ *
+ * Created by josephj on 15/2/2021.
+ */
+
+apply plugin: "org.jetbrains.dokka"
+
+tasks.named("dokkaHtmlMultiModule") {
+    def dokkaDir = "$rootProject.buildDir/docs"
+    outputDirectory.set(file(dokkaDir))
+    doLast {
+        copy {
+            from dokkaDir
+            into dokkaDir
+            include "-modules.html"
+            rename("-modules.html", "index.html")
+        }
+    }
+}
