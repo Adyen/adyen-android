@@ -18,10 +18,6 @@ import com.adyen.checkout.core.model.getStringOrNull
 import org.json.JSONException
 import org.json.JSONObject
 
-private const val BRANDS = "brands"
-private const val ISSUING_COUNTRY_CODE = "issuingCountryCode"
-private const val REQUEST_ID = "requestId"
-
 data class BinLookupResponse(
     val brands: List<Brand>? = null,
     val issuingCountryCode: String? = null,
@@ -33,6 +29,10 @@ data class BinLookupResponse(
     }
 
     companion object {
+        private const val BRANDS = "brands"
+        private const val ISSUING_COUNTRY_CODE = "issuingCountryCode"
+        private const val REQUEST_ID = "requestId"
+
         @JvmField
         val CREATOR: Parcelable.Creator<BinLookupResponse> = Creator(BinLookupResponse::class.java)
 
