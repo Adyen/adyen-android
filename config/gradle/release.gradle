@@ -6,12 +6,34 @@
  * Created by ran on 6/2/2019.
  */
 apply plugin: "maven-publish"
-// https://github.com/bintray/gradle-bintray-plugin
-apply plugin: "com.jfrog.bintray"
+apply plugin: "signing"
 
 apply from: "../config/gradle/artifacts.gradle"
 
-// TODO: 03/01/2019 add support for signing of artifacts.
+ext["signing.keyId"] = ''
+ext["signing.password"] = ''
+ext["signing.secretKeyRingFile"] = ''
+ext["ossrhUsername"] = ''
+ext["ossrhPassword"] = ''
+ext["sonatypeStagingProfileId"] = ''
+
+File secretPropsFile = project.rootProject.file('local.properties')
+if (secretPropsFile.exists()) {
+    logger.lifecycle("\n-- Getting Secrets from local.properties --\n")
+    Properties p = new Properties()
+    p.load(new FileInputStream(secretPropsFile))
+    p.each { name, value ->
+        ext[name] = value
+    }
+} else {
+    logger.lifecycle("\n-- Getting Secrets from System Env --\n")
+    ext["signing.keyId"] = System.getenv('SIGNING_KEY_ID')
+    ext["signing.password"] = System.getenv('SIGNING_PASSWORD')
+    ext["signing.secretKeyRingFile"] = System.getenv('SIGNING_SECRET_KEY_RING_FILE')
+    ext["ossrhUsername"] = System.getenv('OSSRH_USERNAME')
+    ext["ossrhPassword"] = System.getenv('OSSRH_PASSWORD')
+    ext["sonatypeStagingProfileId"] = System.getenv('SONATYPE_STAGING_PROFILE_ID')
+}
 
 final theGroupId = "com.adyen.checkout"
 final theArtifactId = project.mavenArtifactId
@@ -33,12 +55,13 @@ final theScmUrl = "https://github.com/Adyen/adyen-android"
 project.afterEvaluate {
     publishing {
         publications {
-            bintrayMavenPublication(MavenPublication) {
+            release(MavenPublication) {
                 groupId theGroupId
                 artifactId theArtifactId
                 version theVersion
 
                 artifact androidSourcesJar
+                artifact javadocJar
                 artifact bundleReleaseAar
 
                 pom {
@@ -101,37 +124,23 @@ project.afterEvaluate {
                 }
             }
         }
-    }
-}
 
-bintray {
-    user = System.env.BINTRAY_USER
-    key = System.env.BINTRAY_KEY
-
-    publications = ["bintrayMavenPublication"]
-
-    dryRun = false
-    publish = false
-    override = true
-
-    pkg {
-        repo = "adyen-checkout-v3"
-        name = theArtifactId
-
-        websiteUrl = "https://github.com/Adyen/adyen-android"
-        issueTrackerUrl = "https://github.com/adyen-android/issues"
-        vcsUrl = "https://github.com/Adyen/adyen-android.git"
-        licenses = ["MIT"]
-
-        version {
-            name = theVersion
-            released = new Date()
-            vcsTag = theVersion
-
-            gpg {
-                sign = false
-//                passphrase = System.env.BINTRAY_GPG_PASSPHRASE
+        // The repository to publish to, Sonatype/MavenCentral
+        repositories {
+            maven {
+                // This is an arbitrary name, you may also use "mavencentral" or
+                // any other name that's descriptive for you
+                name = "sonatype"
+                url = "https://oss.sonatype.org/service/local/staging/deploy/maven2/"
+                credentials {
+                    username ossrhUsername
+                    password ossrhPassword
+                }
             }
         }
+    }
+
+    signing {
+        sign publishing.publications
     }
 }

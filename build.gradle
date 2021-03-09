@@ -25,7 +25,6 @@ buildscript {
 
     dependencies {
         classpath "com.android.tools.build:gradle:$android_gradle_plugin_version"
-        classpath "com.jfrog.bintray.gradle:gradle-bintray-plugin:$bintray_gradle_plugin_version"
         classpath "io.gitlab.arturbosch.detekt:detekt-gradle-plugin:$detekt_gradle_plugin_version"
         classpath "org.jetbrains.kotlin:kotlin-gradle-plugin:$kotlin_version"
         classpath "gradle.plugin.com.github.spotbugs.snom:spotbugs-gradle-plugin:$spotbugs_gradle_plugin_version"

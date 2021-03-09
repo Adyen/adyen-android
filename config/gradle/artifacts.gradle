@@ -11,4 +11,5 @@ apply from: "../config/gradle/sources.gradle"
 
 artifacts {
     archives androidSourcesJar
+    archives javadocJar
 }
