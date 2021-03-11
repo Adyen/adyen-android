@@ -47,8 +47,7 @@ class PreselectedStoredPaymentMethodFragment : DropInBottomSheetDialogFragment()
     private lateinit var component: PaymentComponent<PaymentComponentState<in PaymentMethodDetails>, Configuration>
     private lateinit var componentState: PaymentComponentState<PaymentMethodDetails>
 
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
+    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View {
         arguments?.let {
             storedPaymentMethod = it.getParcelable(STORED_PAYMENT_KEY) ?: StoredPaymentMethod()
         }
@@ -72,9 +71,7 @@ class PreselectedStoredPaymentMethodFragment : DropInBottomSheetDialogFragment()
                 }
             }
         }
-    }
 
-    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View {
         binding = FragmentStoredPaymentMethodBinding.inflate(inflater, container, false)
         return binding.root
     }
