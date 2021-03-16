@@ -40,13 +40,15 @@ class CardComponent private constructor(
 ) : BasePaymentComponent<CardConfiguration, CardInputData, CardOutputData, CardComponentState>(cardDelegate, cardConfiguration) {
 
     private var storedPaymentInputData: CardInputData? = null
-    private var publicKey = ""
+    private var publicKey: String? = null
 
     init {
         viewModelScope.launch {
             publicKey = cardDelegate.fetchPublicKey()
-            if (publicKey.isEmpty()) {
+            if (publicKey == null) {
                 notifyException(ComponentException("Unable to fetch publicKey."))
+            } else {
+                notifyStateChanged()
             }
         }
 
@@ -134,8 +136,10 @@ class CardComponent private constructor(
 
         val binValue: String = getBinValueFromCardNumber(cardNumber)
 
+        val publicKey = publicKey
+
         // If data is not valid we just return empty object, encryption would fail and we don't pass unencrypted data.
-        if (!stateOutputData.isValid) {
+        if (!stateOutputData.isValid || publicKey == null) {
             return CardComponentState(paymentComponentData, false, firstCardType, binValue, null)
         }
 

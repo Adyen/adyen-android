@@ -20,7 +20,7 @@ private val TAG = LogUtil.getTag()
 private const val CONNECTION_RETRIES = 3
 
 class PublicKeyRepository {
-    suspend fun fetchPublicKey(environment: Environment, clientKey: String): String {
+    suspend fun fetchPublicKey(environment: Environment, clientKey: String): String? {
         Logger.d(TAG, "fetching publicKey from API")
         repeat(CONNECTION_RETRIES) {
             try {
@@ -31,6 +31,6 @@ class PublicKeyRepository {
                 Logger.e(TAG, "PublicKeyConnection unexpected result", e)
             }
         }
-        return ""
+        return null
     }
 }

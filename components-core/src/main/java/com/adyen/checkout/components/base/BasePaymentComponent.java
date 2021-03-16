@@ -162,14 +162,27 @@ public abstract class BasePaymentComponent<
         mComponentErrorLiveData.postValue(new ComponentError(e));
     }
 
+    /**
+     * Indicates that the output data has changed and the component should recreate its state
+     * and notify its observers.
+     * @param outputData the new output data
+     */
     protected void notifyStateChanged(@NonNull OutputDataT outputData) {
-        Logger.d(TAG, "notifyStateChanged");
+        Logger.d(TAG, "notifyStateChanged with OutputData");
         if (!outputData.equals(mOutputLiveData.getValue())) {
             mOutputLiveData.setValue(outputData);
-            ThreadManager.EXECUTOR.submit(() -> mPaymentComponentStateLiveData.postValue(createComponentState()));
+            notifyStateChanged();
         } else {
             Logger.d(TAG, "state has not changed");
         }
+    }
+
+    /**
+     * Asks the component to recreate its state and notify its observers.
+     */
+    protected void notifyStateChanged() {
+        Logger.d(TAG, "notifyStateChanged");
+        ThreadManager.EXECUTOR.submit(() -> mPaymentComponentStateLiveData.postValue(createComponentState()));
     }
 
     private void assertSupported(@NonNull String paymentMethodType) {

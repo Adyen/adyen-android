@@ -53,18 +53,20 @@ class BcmcComponent(
         val SUPPORTED_CARD_TYPE = CardType.BCMC
     }
 
-    private var publicKey = ""
+    private var publicKey: String? = null
 
     init {
         viewModelScope.launch {
             publicKey = fetchPublicKey()
-            if (publicKey.isEmpty()) {
+            if (publicKey == null) {
                 notifyException(ComponentException("Unable to fetch publicKey."))
+            } else {
+                notifyStateChanged()
             }
         }
     }
 
-    private suspend fun fetchPublicKey(): String {
+    private suspend fun fetchPublicKey(): String? {
         return publicKeyRepository.fetchPublicKey(
             environment = configuration.environment,
             clientKey = configuration.clientKey
@@ -91,8 +93,10 @@ class BcmcComponent(
         val outputData = outputData
         val paymentComponentData = PaymentComponentData<CardPaymentMethod>()
 
+        val publicKey = publicKey
+
         // If data is not valid we just return empty object, encryption would fail and we don't pass unencrypted data.
-        if (outputData == null || !outputData.isValid) {
+        if (outputData == null || !outputData.isValid || publicKey == null) {
             return GenericComponentState(paymentComponentData, false)
         }
         val encryptedCard = try {
