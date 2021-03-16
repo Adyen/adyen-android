@@ -134,7 +134,7 @@ class CardComponent private constructor(
 
         val firstCardType = stateOutputData.detectedCardTypes.firstOrNull()?.cardType
 
-        val binValue: String = getBinValueFromCardNumber(cardNumber)
+        val binValue = cardNumber.take(BIN_VALUE_LENGTH)
 
         val publicKey = publicKey
 
@@ -201,10 +201,6 @@ class CardComponent private constructor(
 
     fun showStorePaymentField(): Boolean {
         return configuration.isShowStorePaymentFieldEnable
-    }
-
-    private fun getBinValueFromCardNumber(cardNumber: String): String {
-        return if (cardNumber.length < BIN_VALUE_LENGTH) cardNumber else cardNumber.substring(0..BIN_VALUE_LENGTH)
     }
 
     companion object {

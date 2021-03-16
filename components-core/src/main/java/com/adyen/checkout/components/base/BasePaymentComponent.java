@@ -27,6 +27,7 @@ import com.adyen.checkout.components.base.lifecycle.PaymentComponentViewModel;
 import com.adyen.checkout.components.model.payments.request.PaymentMethodDetails;
 import com.adyen.checkout.core.api.ThreadManager;
 import com.adyen.checkout.core.exception.CheckoutException;
+import com.adyen.checkout.core.exception.ComponentException;
 import com.adyen.checkout.core.log.LogUtil;
 import com.adyen.checkout.core.log.Logger;
 
@@ -165,6 +166,7 @@ public abstract class BasePaymentComponent<
     /**
      * Indicates that the output data has changed and the component should recreate its state
      * and notify its observers.
+     *
      * @param outputData the new output data
      */
     protected void notifyStateChanged(@NonNull OutputDataT outputData) {
@@ -182,7 +184,14 @@ public abstract class BasePaymentComponent<
      */
     protected void notifyStateChanged() {
         Logger.d(TAG, "notifyStateChanged");
-        ThreadManager.EXECUTOR.submit(() -> mPaymentComponentStateLiveData.postValue(createComponentState()));
+        ThreadManager.EXECUTOR.submit(() -> {
+            try {
+                mPaymentComponentStateLiveData.postValue(createComponentState());
+            } catch (Exception e) {
+                Logger.e(TAG, "notifyStateChanged - error:" + e.getMessage());
+                notifyException(new ComponentException("Unexpected error", e));
+            }
+        });
     }
 
     private void assertSupported(@NonNull String paymentMethodType) {
