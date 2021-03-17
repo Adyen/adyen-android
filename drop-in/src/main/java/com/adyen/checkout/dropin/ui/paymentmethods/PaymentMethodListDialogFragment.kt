@@ -40,6 +40,10 @@ class PaymentMethodListDialogFragment : DropInBottomSheetDialogFragment(), Payme
     override fun onAttach(context: Context) {
         super.onAttach(context)
         Logger.d(TAG, "onAttach")
+    }
+
+    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
+        Logger.d(TAG, "onCreateView")
         paymentMethodsListViewModel = getViewModel {
             PaymentMethodsListViewModel(
                 requireActivity().application,
@@ -48,10 +52,6 @@ class PaymentMethodListDialogFragment : DropInBottomSheetDialogFragment(), Payme
                 dropInViewModel.dropInConfiguration
             )
         }
-    }
-
-    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
-        Logger.d(TAG, "onCreateView")
         val view = inflater.inflate(R.layout.fragment_payment_methods_list, container, false)
         addObserver(view.findViewById(R.id.recyclerView_paymentMethods))
         return view
