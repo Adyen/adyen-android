@@ -17,9 +17,9 @@ import com.adyen.checkout.components.model.payments.request.PaymentComponentData
  */
 class CardComponentState(
     paymentComponentData: PaymentComponentData<CardPaymentMethod>,
-    isValid: Boolean,
+    isInputValid: Boolean,
     isReady: Boolean,
     val cardType: CardType?,
     val binValue: String,
     val lastFourDigits: String?
-) : PaymentComponentState<CardPaymentMethod>(paymentComponentData, isValid, isReady)
+) : PaymentComponentState<CardPaymentMethod>(paymentComponentData, isInputValid, isReady)

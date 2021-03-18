@@ -142,7 +142,7 @@ class CardComponent private constructor(
         if (!stateOutputData.isValid || publicKey == null) {
             return CardComponentState(
                 paymentComponentData = paymentComponentData,
-                isValid = stateOutputData.isValid,
+                isInputValid = stateOutputData.isValid,
                 isReady = publicKey != null,
                 cardType = firstCardType,
                 binValue = binValue,
@@ -168,7 +168,7 @@ class CardComponent private constructor(
             notifyException(e)
             return CardComponentState(
                 paymentComponentData = paymentComponentData,
-                isValid = false,
+                isInputValid = false,
                 isReady = true,
                 cardType = firstCardType,
                 binValue = binValue,
@@ -200,7 +200,7 @@ class CardComponent private constructor(
 
         return CardComponentState(
             paymentComponentData = paymentComponentData,
-            isValid = true,
+            isInputValid = true,
             isReady = true,
             cardType = firstCardType,
             binValue = binValue,

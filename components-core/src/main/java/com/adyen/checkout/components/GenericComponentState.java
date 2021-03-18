@@ -20,9 +20,9 @@ public class GenericComponentState<PaymentMethodDetailsT extends PaymentMethodDe
      */
     public GenericComponentState(
             @NonNull PaymentComponentData<PaymentMethodDetailsT> paymentComponentData,
-            boolean isValid,
+            boolean isInputValid,
             boolean isReady
     ) {
-        super(paymentComponentData, isValid, isReady);
+        super(paymentComponentData, isInputValid, isReady);
     }
 }

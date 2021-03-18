@@ -73,11 +73,11 @@ public class BlikComponent extends BasePaymentComponent<BlikConfiguration, BlikI
 
         paymentComponentData.setPaymentMethod(paymentMethod);
 
-        final boolean isValid = mPaymentMethodDelegate instanceof GenericStoredPaymentDelegate
+        final boolean isInputValid = mPaymentMethodDelegate instanceof GenericStoredPaymentDelegate
                 || blikOutputData != null
                 && blikOutputData.isValid();
 
-        return new GenericComponentState<>(paymentComponentData, isValid, true);
+        return new GenericComponentState<>(paymentComponentData, isInputValid, true);
     }
 
     @NonNull

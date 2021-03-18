@@ -97,9 +97,9 @@ class BcmcComponent(
 
         // If data is not valid we just return empty object, encryption would fail and we don't pass unencrypted data.
         if (outputData?.isValid != true || publicKey == null) {
-            val isValid = outputData?.isValid ?: false
+            val isInputValid = outputData?.isValid ?: false
             val isReady = publicKey != null
-            return GenericComponentState(paymentComponentData, isValid, isReady)
+            return GenericComponentState(paymentComponentData, isInputValid, isReady)
         }
         val encryptedCard = try {
             unencryptedCardBuilder.setNumber(outputData.cardNumberField.value)

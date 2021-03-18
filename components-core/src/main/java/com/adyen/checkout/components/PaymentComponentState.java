@@ -20,12 +20,12 @@ import com.adyen.checkout.components.model.payments.request.PaymentMethodDetails
 public abstract class PaymentComponentState<PaymentMethodDetailsT extends PaymentMethodDetails> {
 
     private final PaymentComponentData<PaymentMethodDetailsT> mPaymentComponentData;
-    private final boolean mIsValid;
+    private final boolean mIsInputValid;
     private final boolean mIsReady;
 
-    public PaymentComponentState(@NonNull PaymentComponentData<PaymentMethodDetailsT> paymentComponentData, boolean isValid, boolean isReady) {
+    public PaymentComponentState(@NonNull PaymentComponentData<PaymentMethodDetailsT> paymentComponentData, boolean isInputValid, boolean isReady) {
         mPaymentComponentData = paymentComponentData;
-        mIsValid = isValid;
+        mIsInputValid = isInputValid;
         mIsReady = isReady;
     }
 
@@ -41,7 +41,14 @@ public abstract class PaymentComponentState<PaymentMethodDetailsT extends Paymen
      * @return If the collected data is valid to be sent to the backend.
      */
     public boolean isValid() {
-        return mIsValid;
+        return mIsInputValid && mIsReady;
+    }
+
+    /**
+     * @return If the component UI data is valid.
+     */
+    public boolean isInputValid() {
+        return mIsInputValid;
     }
 
     /**
