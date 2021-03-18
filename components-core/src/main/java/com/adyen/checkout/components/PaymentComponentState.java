@@ -21,10 +21,12 @@ public abstract class PaymentComponentState<PaymentMethodDetailsT extends Paymen
 
     private final PaymentComponentData<PaymentMethodDetailsT> mPaymentComponentData;
     private final boolean mIsValid;
+    private final boolean mIsReady;
 
-    public PaymentComponentState(@NonNull PaymentComponentData<PaymentMethodDetailsT> paymentComponentData, boolean isValid) {
+    public PaymentComponentState(@NonNull PaymentComponentData<PaymentMethodDetailsT> paymentComponentData, boolean isValid, boolean isReady) {
         mPaymentComponentData = paymentComponentData;
         mIsValid = isValid;
+        mIsReady = isReady;
     }
 
     /**
@@ -40,5 +42,12 @@ public abstract class PaymentComponentState<PaymentMethodDetailsT extends Paymen
      */
     public boolean isValid() {
         return mIsValid;
+    }
+
+    /**
+     * @return If the component initialisation is done and data can be sent to the backend when valid.
+     */
+    public boolean isReady() {
+        return mIsReady;
     }
 }

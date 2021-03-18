@@ -23,8 +23,9 @@ public class GooglePayComponentState extends PaymentComponentState<GooglePayPaym
     public GooglePayComponentState(
             @NonNull PaymentComponentData<GooglePayPaymentMethod> paymentComponentData,
             boolean isValid,
+            boolean isReady,
             @Nullable PaymentData paymentData) {
-        super(paymentComponentData, isValid);
+        super(paymentComponentData, isValid, isReady);
         mPaymentData = paymentData;
     }
 

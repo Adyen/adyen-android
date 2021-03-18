@@ -77,7 +77,7 @@ public class BlikComponent extends BasePaymentComponent<BlikConfiguration, BlikI
                 || blikOutputData != null
                 && blikOutputData.isValid();
 
-        return new GenericComponentState<>(paymentComponentData, isValid);
+        return new GenericComponentState<>(paymentComponentData, isValid, true);
     }
 
     @NonNull

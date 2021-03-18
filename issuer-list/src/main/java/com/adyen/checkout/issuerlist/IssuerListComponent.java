@@ -102,7 +102,7 @@ public abstract class IssuerListComponent<IssuerListPaymentMethodT extends Issue
         final PaymentComponentData<IssuerListPaymentMethodT> paymentComponentData = new PaymentComponentData<>();
         paymentComponentData.setPaymentMethod(issuerListPaymentMethod);
 
-        return new GenericComponentState<>(paymentComponentData, isValid);
+        return new GenericComponentState<>(paymentComponentData, isValid, true);
     }
 
     @NonNull

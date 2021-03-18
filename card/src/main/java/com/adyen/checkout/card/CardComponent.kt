@@ -140,7 +140,14 @@ class CardComponent private constructor(
 
         // If data is not valid we just return empty object, encryption would fail and we don't pass unencrypted data.
         if (!stateOutputData.isValid || publicKey == null) {
-            return CardComponentState(paymentComponentData, false, firstCardType, binValue, null)
+            return CardComponentState(
+                paymentComponentData = paymentComponentData,
+                isValid = stateOutputData.isValid,
+                isReady = publicKey != null,
+                cardType = firstCardType,
+                binValue = binValue,
+                lastFourDigits = null
+            )
         }
 
         val encryptedCard: EncryptedCard = try {
@@ -159,7 +166,14 @@ class CardComponent private constructor(
             CardEncrypter.encryptFields(unencryptedCardBuilder.build(), publicKey)
         } catch (e: EncryptionException) {
             notifyException(e)
-            return CardComponentState(paymentComponentData, false, firstCardType, binValue, null)
+            return CardComponentState(
+                paymentComponentData = paymentComponentData,
+                isValid = false,
+                isReady = true,
+                cardType = firstCardType,
+                binValue = binValue,
+                lastFourDigits = null
+            )
         }
 
         if (!isStoredPaymentMethod()) {
@@ -184,7 +198,14 @@ class CardComponent private constructor(
 
         val lastFour = cardNumber.takeLast(LAST_FOUR_LENGTH)
 
-        return CardComponentState(paymentComponentData, stateOutputData.isValid, firstCardType, binValue, lastFour)
+        return CardComponentState(
+            paymentComponentData = paymentComponentData,
+            isValid = true,
+            isReady = true,
+            cardType = firstCardType,
+            binValue = binValue,
+            lastFourDigits = lastFour
+        )
     }
 
     fun isStoredPaymentMethod(): Boolean {
