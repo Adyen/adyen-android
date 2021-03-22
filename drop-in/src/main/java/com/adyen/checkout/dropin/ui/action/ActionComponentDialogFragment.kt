@@ -138,11 +138,11 @@ class ActionComponentDialogFragment : DropInBottomSheetDialogFragment(), Observe
         component: ViewableComponent<*, *, ActionComponentData>,
         componentView: ComponentView<in OutputData, ViewableComponent<*, *, ActionComponentData>>
     ) {
-        component.observe(this, this)
-        component.observeErrors(this, createErrorHandlerObserver())
+        component.observe(viewLifecycleOwner, this)
+        component.observeErrors(viewLifecycleOwner, createErrorHandlerObserver())
         binding.componentContainer.addView(componentView as View)
         @Suppress("UNCHECKED_CAST")
-        componentView.attach(component, this)
+        componentView.attach(component, viewLifecycleOwner)
     }
 
     private fun createErrorHandlerObserver(): Observer<ComponentError> {

@@ -59,7 +59,7 @@ class PaymentMethodListDialogFragment : DropInBottomSheetDialogFragment(), Payme
 
     private fun addObserver(recyclerView: RecyclerView) {
         paymentMethodsListViewModel.paymentMethodsLiveData.observe(
-            this,
+            viewLifecycleOwner,
             {
                 Logger.d(TAG, "paymentMethods changed")
                 if (it == null) {
