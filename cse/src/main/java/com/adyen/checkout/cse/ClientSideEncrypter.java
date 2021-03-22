@@ -50,6 +50,10 @@ public class ClientSideEncrypter {
     private final SecureRandom mSecureRandom;
 
     public ClientSideEncrypter(@NonNull String publicKeyString) throws EncryptionException {
+        if (!ValidationUtils.isPublicKeyValid(publicKeyString)) {
+            throw new EncryptionException("Invalid public key: " + publicKeyString, null);
+        }
+
         mSecureRandom = new SecureRandom();
         final String[] keyComponents = publicKeyString.split("\\|");
 
