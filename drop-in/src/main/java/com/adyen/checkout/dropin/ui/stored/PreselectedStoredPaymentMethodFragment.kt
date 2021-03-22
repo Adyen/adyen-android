@@ -63,7 +63,7 @@ class PreselectedStoredPaymentMethodFragment : DropInBottomSheetDialogFragment()
 
         component = getComponentFor(this, storedPaymentMethod, dropInViewModel.dropInConfiguration)
         if (!component.requiresInput()) {
-            component.observe(this) {
+            component.observe(viewLifecycleOwner) {
                 if (it.isValid) {
                     componentState = it
                 } else {
@@ -119,7 +119,7 @@ class PreselectedStoredPaymentMethodFragment : DropInBottomSheetDialogFragment()
 
     private fun observe() {
         storedPaymentViewModel.storedPaymentLiveData.observe(
-            this,
+            viewLifecycleOwner,
             {
                 when (it) {
                     is StoredCardModel -> {

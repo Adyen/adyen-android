@@ -64,14 +64,14 @@ class CardComponentDialogFragment : BaseComponentDialogFragment() {
         }
 
         // Keeping generic component to use the observer from the BaseComponentDialogFragment
-        component.observe(this, this)
-        cardComponent.observeErrors(this, createErrorHandlerObserver())
+        component.observe(viewLifecycleOwner, this)
+        cardComponent.observeErrors(viewLifecycleOwner, createErrorHandlerObserver())
 
         // try to get the name from the payment methods response
         binding.header.text =
             dropInViewModel.paymentMethodsApiResponse.paymentMethods?.find { it.type == PaymentMethodTypes.SCHEME }?.name
 
-        binding.cardView.attach(cardComponent, this)
+        binding.cardView.attach(cardComponent, viewLifecycleOwner)
 
         if (binding.cardView.isConfirmationRequired) {
             binding.payButton.setOnClickListener {
