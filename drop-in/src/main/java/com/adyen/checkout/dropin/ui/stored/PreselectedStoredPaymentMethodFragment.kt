@@ -11,9 +11,11 @@ package com.adyen.checkout.dropin.ui.stored
 import android.annotation.SuppressLint
 import android.content.DialogInterface
 import android.os.Bundle
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.core.view.isVisible
 import com.adyen.checkout.components.PaymentComponent
 import com.adyen.checkout.components.PaymentComponentState
 import com.adyen.checkout.components.api.ImageLoader
@@ -31,6 +33,9 @@ import com.adyen.checkout.dropin.getComponentFor
 import com.adyen.checkout.dropin.ui.base.DropInBottomSheetDialogFragment
 import com.adyen.checkout.dropin.ui.paymentmethods.GenericStoredModel
 import com.adyen.checkout.dropin.ui.paymentmethods.StoredCardModel
+import com.adyen.checkout.dropin.ui.stored.PreselectedStoredState.AwaitingComponentInitialization
+import com.adyen.checkout.dropin.ui.stored.PreselectedStoredState.RequestPayment
+import com.adyen.checkout.dropin.ui.stored.PreselectedStoredState.ShowStoredPaymentDialog
 import com.adyen.checkout.dropin.ui.viewModelsFactory
 
 private val TAG = LogUtil.getTag()
@@ -39,18 +44,39 @@ private const val STORED_PAYMENT_KEY = "STORED_PAYMENT"
 class PreselectedStoredPaymentMethodFragment : DropInBottomSheetDialogFragment() {
 
     private val storedPaymentViewModel: PreselectedStoredPaymentViewModel by viewModelsFactory {
-        PreselectedStoredPaymentViewModel(storedPaymentMethod)
+        PreselectedStoredPaymentViewModel(storedPaymentMethod, component.requiresInput())
     }
     private lateinit var binding: FragmentStoredPaymentMethodBinding
     private lateinit var storedPaymentMethod: StoredPaymentMethod
     private lateinit var imageLoader: ImageLoader
     private lateinit var component: PaymentComponent<PaymentComponentState<in PaymentMethodDetails>, Configuration>
-    private lateinit var componentState: PaymentComponentState<PaymentMethodDetails>
+
+    override fun onActivityCreated(savedInstanceState: Bundle?) {
+        observeState()
+        super.onActivityCreated(savedInstanceState)
+    }
+
+    private fun observeState() {
+        storedPaymentViewModel.componentFragmentState.observe(viewLifecycleOwner) {
+            Log.d(TAG, "state: $it")
+            setPaymentPendingInitialization(it is AwaitingComponentInitialization)
+            when (it) {
+                is ShowStoredPaymentDialog -> protocol.showStoredComponentDialog(storedPaymentMethod, true)
+                is RequestPayment -> protocol.requestPaymentsCall(it.componentState)
+                else -> { //do nothing
+                }
+            }
+        }
+    }
+
+    private fun setPaymentPendingInitialization(pending: Boolean) {
+        binding.payButton.isVisible = !pending
+        if (pending) binding.progressBar.show()
+        else binding.progressBar.hide()
+    }
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View {
-        arguments?.let {
-            storedPaymentMethod = it.getParcelable(STORED_PAYMENT_KEY) ?: StoredPaymentMethod()
-        }
+        storedPaymentMethod = arguments?.getParcelable(STORED_PAYMENT_KEY) ?: StoredPaymentMethod()
 
         if (storedPaymentMethod.type.isNullOrEmpty()) {
             throw ComponentException("Stored payment method is empty or not found.")
@@ -62,15 +88,7 @@ class PreselectedStoredPaymentMethodFragment : DropInBottomSheetDialogFragment()
         )
 
         component = getComponentFor(this, storedPaymentMethod, dropInViewModel.dropInConfiguration)
-        if (!component.requiresInput()) {
-            component.observe(viewLifecycleOwner) {
-                if (it.isValid) {
-                    componentState = it
-                } else {
-                    Logger.e(TAG, "Component state is not valid")
-                }
-            }
-        }
+        component.observe(viewLifecycleOwner, storedPaymentViewModel::componentStateChanged)
 
         binding = FragmentStoredPaymentMethodBinding.inflate(inflater, container, false)
         return binding.root
@@ -95,15 +113,7 @@ class PreselectedStoredPaymentMethodFragment : DropInBottomSheetDialogFragment()
         }
 
         binding.payButton.setOnClickListener {
-            if (component.requiresInput()) {
-                protocol.showStoredComponentDialog(storedPaymentMethod, true)
-            } else {
-                if (this::componentState.isInitialized) {
-                    protocol.requestPaymentsCall(componentState)
-                } else {
-                    Logger.e(TAG, "Component data is not initialized.")
-                }
-            }
+            storedPaymentViewModel.payButtonClicked()
         }
 
         binding.changePaymentMethodButton.setOnClickListener {
