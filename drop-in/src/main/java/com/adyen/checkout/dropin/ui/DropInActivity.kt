@@ -145,6 +145,8 @@ class DropInActivity : AppCompatActivity(), DropInBottomSheetDialogFragment.Prot
         actionHandler = ActionHandler(this, this, dropInViewModel.dropInConfiguration)
         actionHandler.restoreState(savedInstanceState)
 
+        handleIntent(intent)
+
         sendAnalyticsEvent()
     }
 
