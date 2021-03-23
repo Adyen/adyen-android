@@ -99,6 +99,10 @@ class DropInActivity : AppCompatActivity(), DropInBottomSheetDialogFragment.Prot
     private var dropInService: DropInServiceInterface? = null
     private var serviceBound: Boolean = false
 
+    // these queues exist for when a call is requested before the service is bound
+    private var paymentDataQueue: PaymentComponentState<*>? = null
+    private var actionDataQueue: ActionComponentData? = null
+
     private val serviceConnection = object : ServiceConnection {
 
         override fun onServiceConnected(className: ComponentName, binder: IBinder) {
@@ -106,6 +110,18 @@ class DropInActivity : AppCompatActivity(), DropInBottomSheetDialogFragment.Prot
             val dropInBinder = binder as? DropInService.DropInBinder ?: return
             dropInService = dropInBinder.getService()
             dropInService?.observeResult(this@DropInActivity) { handleDropInServiceResult(it) }
+
+            paymentDataQueue?.let {
+                Logger.d(TAG, "Sending queued payment request")
+                requestPaymentsCall(it)
+                paymentDataQueue = null
+            }
+
+            actionDataQueue?.let {
+                Logger.d(TAG, "Sending queued action request")
+                requestDetailsCall(it)
+                actionDataQueue = null
+            }
         }
 
         override fun onServiceDisconnected(className: ComponentName) {
@@ -255,8 +271,10 @@ class DropInActivity : AppCompatActivity(), DropInBottomSheetDialogFragment.Prot
     }
 
     override fun requestPaymentsCall(paymentComponentState: PaymentComponentState<*>) {
+        Logger.d(TAG, "requestPaymentsCall")
         if (dropInService == null) {
-            Logger.e(TAG, "requestPaymentsCall failed - service is disconnected")
+            Logger.e(TAG, "service is disconnected, adding to queue")
+            paymentDataQueue = paymentComponentState
             return
         }
         isWaitingResult = true
@@ -269,8 +287,10 @@ class DropInActivity : AppCompatActivity(), DropInBottomSheetDialogFragment.Prot
     }
 
     override fun requestDetailsCall(actionComponentData: ActionComponentData) {
+        Logger.d(TAG, "requestDetailsCall")
         if (dropInService == null) {
-            Logger.e(TAG, "requestPaymentsCall failed - service is disconnected")
+            Logger.e(TAG, "service is disconnected, adding to queue")
+            actionDataQueue = actionComponentData
             return
         }
         isWaitingResult = true
