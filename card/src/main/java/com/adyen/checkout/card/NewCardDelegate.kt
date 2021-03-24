@@ -80,7 +80,7 @@ class NewCardDelegate(
 
     override fun detectCardType(
         cardNumber: String,
-        publicKey: String,
+        publicKey: String?,
         coroutineScope: CoroutineScope
     ): List<DetectedCardType> {
         Logger.d(TAG, "detectCardType")
@@ -91,7 +91,7 @@ class NewCardDelegate(
             }
 
             // if length is exactly the size, we call bin lookup API
-            if (cardNumber.length == BinLookupConnection.REQUIRED_BIN_SIZE) {
+            if (cardNumber.length == BinLookupConnection.REQUIRED_BIN_SIZE && publicKey != null) {
                 Logger.d(TAG, "Launching Bin Lookup")
                 coroutineScope.launch {
                     val detectedCardTypes = binLookupRepository.fetch(cardNumber, publicKey, cardConfiguration)

@@ -134,7 +134,7 @@ class PaymentMethodListDialogFragment : DropInBottomSheetDialogFragment(), Payme
     private fun sendPayment(type: String) {
         val paymentComponentData = PaymentComponentData<PaymentMethodDetails>()
         paymentComponentData.paymentMethod = GenericPaymentMethod(type)
-        val paymentComponentState = GenericComponentState(paymentComponentData, true)
+        val paymentComponentState = GenericComponentState(paymentComponentData, true, true)
         protocol.requestPaymentsCall(paymentComponentState)
     }
 }

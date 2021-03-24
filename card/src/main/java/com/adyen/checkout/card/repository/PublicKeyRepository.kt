@@ -11,6 +11,7 @@ package com.adyen.checkout.card.repository
 import com.adyen.checkout.card.api.PublicKeyConnection
 import com.adyen.checkout.components.api.suspendedCall
 import com.adyen.checkout.core.api.Environment
+import com.adyen.checkout.core.exception.CheckoutException
 import com.adyen.checkout.core.log.LogUtil
 import com.adyen.checkout.core.log.Logger
 import org.json.JSONException
@@ -31,6 +32,6 @@ class PublicKeyRepository {
                 Logger.e(TAG, "PublicKeyConnection unexpected result", e)
             }
         }
-        return ""
+        throw CheckoutException("Unable to fetch public key")
     }
 }

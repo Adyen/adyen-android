@@ -57,7 +57,7 @@ public class SepaComponent extends BasePaymentComponent<SepaConfiguration, SepaI
 
         paymentComponentData.setPaymentMethod(paymentMethod);
 
-        return new GenericComponentState<>(paymentComponentData, sepaOutputData != null && sepaOutputData.isValid());
+        return new GenericComponentState<>(paymentComponentData, sepaOutputData != null && sepaOutputData.isValid(), true);
     }
 
     @NonNull

@@ -91,7 +91,7 @@ class StoredCardDelegate(
 
     override fun detectCardType(
         cardNumber: String,
-        publicKey: String,
+        publicKey: String?,
         coroutineScope: CoroutineScope
     ): List<DetectedCardType> {
         return storedDetectedCardTypes

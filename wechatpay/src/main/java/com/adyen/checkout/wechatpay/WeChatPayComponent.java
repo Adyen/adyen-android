@@ -52,7 +52,7 @@ public class WeChatPayComponent
         final PaymentComponentData<GenericPaymentMethod> componentData = new PaymentComponentData<>();
         componentData.setPaymentMethod(paymentMethodDetails);
 
-        return new GenericComponentState<>(componentData, true);
+        return new GenericComponentState<>(componentData, true, true);
     }
 
     @NonNull

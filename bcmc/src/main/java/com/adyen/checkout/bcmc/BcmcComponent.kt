@@ -20,6 +20,7 @@ import com.adyen.checkout.components.model.payments.request.CardPaymentMethod
 import com.adyen.checkout.components.model.payments.request.PaymentComponentData
 import com.adyen.checkout.components.ui.FieldState
 import com.adyen.checkout.components.util.PaymentMethodTypes
+import com.adyen.checkout.core.exception.CheckoutException
 import com.adyen.checkout.core.exception.ComponentException
 import com.adyen.checkout.core.log.LogUtil
 import com.adyen.checkout.core.log.Logger
@@ -53,13 +54,15 @@ class BcmcComponent(
         val SUPPORTED_CARD_TYPE = CardType.BCMC
     }
 
-    private var publicKey = ""
+    private var publicKey: String? = null
 
     init {
         viewModelScope.launch {
-            publicKey = fetchPublicKey()
-            if (publicKey.isEmpty()) {
-                notifyException(ComponentException("Unable to fetch publicKey."))
+            try {
+                publicKey = fetchPublicKey()
+                notifyStateChanged()
+            } catch (e: CheckoutException) {
+                notifyException(ComponentException("Unable to fetch publicKey.", e))
             }
         }
     }
@@ -91,9 +94,13 @@ class BcmcComponent(
         val outputData = outputData
         val paymentComponentData = PaymentComponentData<CardPaymentMethod>()
 
+        val publicKey = publicKey
+
         // If data is not valid we just return empty object, encryption would fail and we don't pass unencrypted data.
-        if (outputData == null || !outputData.isValid) {
-            return GenericComponentState(paymentComponentData, false)
+        if (outputData?.isValid != true || publicKey == null) {
+            val isInputValid = outputData?.isValid ?: false
+            val isReady = publicKey != null
+            return GenericComponentState(paymentComponentData, isInputValid, isReady)
         }
         val encryptedCard = try {
             unencryptedCardBuilder.setNumber(outputData.cardNumberField.value)
@@ -105,7 +112,7 @@ class BcmcComponent(
             CardEncrypter.encryptFields(unencryptedCardBuilder.build(), publicKey)
         } catch (e: EncryptionException) {
             notifyException(e)
-            return GenericComponentState(paymentComponentData, false)
+            return GenericComponentState(paymentComponentData, false, true)
         }
 
         // BCMC payment method is scheme type.
@@ -116,7 +123,7 @@ class BcmcComponent(
             encryptedExpiryYear = encryptedCard.encryptedExpiryYear
         }
         paymentComponentData.paymentMethod = cardPaymentMethod
-        return GenericComponentState(paymentComponentData, outputData.isValid)
+        return GenericComponentState(paymentComponentData, true, true)
     }
 
     fun isCardNumberSupported(cardNumber: String?): Boolean {
