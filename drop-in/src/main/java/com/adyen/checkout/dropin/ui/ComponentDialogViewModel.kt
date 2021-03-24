@@ -8,13 +8,13 @@
 
 package com.adyen.checkout.dropin.ui
 
-import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import com.adyen.checkout.components.PaymentComponentState
 import com.adyen.checkout.components.model.payments.request.PaymentMethodDetails
 import com.adyen.checkout.core.log.LogUtil
+import com.adyen.checkout.core.log.Logger
 
 class ComponentDialogViewModel(private val savedStateHandle: SavedStateHandle) : ViewModel() {
     companion object {
@@ -35,26 +35,32 @@ class ComponentDialogViewModel(private val savedStateHandle: SavedStateHandle) :
 
     fun payButtonClicked() {
         val componentState = componentState
-        Log.d(TAG, "payButtonClicked - componentState.isInputValid: ${componentState?.isInputValid} - " +
-            "componentState.isReady: ${componentState?.isReady}")
+        Logger.v(
+            TAG,
+            "payButtonClicked - componentState.isInputValid: ${componentState?.isInputValid} - " +
+                "componentState.isReady: ${componentState?.isReady}"
+        )
         val paymentState = when {
             componentState == null -> ComponentFragmentState.INVALID_UI
             componentState.isValid -> ComponentFragmentState.PAYMENT_READY
             componentState.isInputValid && !componentState.isReady -> ComponentFragmentState.AWAITING_COMPONENT_INITIALIZATION
             else -> ComponentFragmentState.INVALID_UI
         }
-        Log.d(TAG, "payButtonClicked - setting state $paymentState")
+        Logger.v(TAG, "payButtonClicked - setting state $paymentState")
         setComponentFragmentState(paymentState)
     }
 
     fun paymentStarted() {
-        Log.d(TAG, "paymentStarted")
+        Logger.v(TAG, "paymentStarted")
         setComponentFragmentState(ComponentFragmentState.IDLE)
     }
 
     fun componentStateChanged(componentState: PaymentComponentState<out PaymentMethodDetails>?, confirmationRequired: Boolean = true) {
-        Log.v(TAG, "componentStateChanged - componentState.isInputValid: ${componentState?.isInputValid} - " +
-            "componentState.isReady: ${componentState?.isReady} - confirmationRequired: $confirmationRequired")
+        Logger.v(
+            TAG,
+            "componentStateChanged - componentState.isInputValid: ${componentState?.isInputValid} - " +
+                "componentState.isReady: ${componentState?.isReady} - confirmationRequired: $confirmationRequired"
+        )
         this.componentState = componentState
         val currentState = getComponentFragmentState()
         if (currentState == ComponentFragmentState.AWAITING_COMPONENT_INITIALIZATION) {

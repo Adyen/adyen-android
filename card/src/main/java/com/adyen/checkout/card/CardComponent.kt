@@ -9,6 +9,7 @@
 package com.adyen.checkout.card
 
 import androidx.lifecycle.viewModelScope
+import com.adyen.checkout.card.data.CardType
 import com.adyen.checkout.card.data.ExpiryDate
 import com.adyen.checkout.components.StoredPaymentComponentProvider
 import com.adyen.checkout.components.base.BasePaymentComponent
@@ -123,13 +124,6 @@ class CardComponent private constructor(
         // TODO: 29/01/2021 pass outputData as non null parameter
         val stateOutputData = outputData ?: throw CheckoutException("Cannot create state with null outputData")
 
-        val cardPaymentMethod = CardPaymentMethod()
-        cardPaymentMethod.type = CardPaymentMethod.PAYMENT_METHOD_TYPE
-
-        val unencryptedCardBuilder = UnencryptedCard.Builder()
-
-        val paymentComponentData = PaymentComponentData<CardPaymentMethod>()
-
         val cardNumber = stateOutputData.cardNumberState.value
 
         val firstCardType = stateOutputData.detectedCardTypes.firstOrNull()?.cardType
@@ -141,7 +135,7 @@ class CardComponent private constructor(
         // If data is not valid we just return empty object, encryption would fail and we don't pass unencrypted data.
         if (!stateOutputData.isValid || publicKey == null) {
             return CardComponentState(
-                paymentComponentData = paymentComponentData,
+                paymentComponentData = PaymentComponentData<CardPaymentMethod>(),
                 isInputValid = stateOutputData.isValid,
                 isReady = publicKey != null,
                 cardType = firstCardType,
@@ -149,6 +143,8 @@ class CardComponent private constructor(
                 lastFourDigits = null
             )
         }
+
+        val unencryptedCardBuilder = UnencryptedCard.Builder()
 
         val encryptedCard: EncryptedCard = try {
             if (!isStoredPaymentMethod()) {
@@ -167,7 +163,7 @@ class CardComponent private constructor(
         } catch (e: EncryptionException) {
             notifyException(e)
             return CardComponentState(
-                paymentComponentData = paymentComponentData,
+                paymentComponentData = PaymentComponentData<CardPaymentMethod>(),
                 isInputValid = false,
                 isReady = true,
                 cardType = firstCardType,
@@ -175,6 +171,25 @@ class CardComponent private constructor(
                 lastFourDigits = null
             )
         }
+
+        return mapComponentState(
+            encryptedCard,
+            stateOutputData,
+            cardNumber,
+            firstCardType,
+            binValue
+        )
+    }
+
+    private fun mapComponentState(
+        encryptedCard: EncryptedCard,
+        stateOutputData: CardOutputData,
+        cardNumber: String,
+        firstCardType: CardType?,
+        binValue: String
+    ): CardComponentState {
+        val cardPaymentMethod = CardPaymentMethod()
+        cardPaymentMethod.type = CardPaymentMethod.PAYMENT_METHOD_TYPE
 
         if (!isStoredPaymentMethod()) {
             cardPaymentMethod.encryptedCardNumber = encryptedCard.encryptedCardNumber
@@ -192,9 +207,11 @@ class CardComponent private constructor(
             cardPaymentMethod.holderName = stateOutputData.holderNameState.value
         }
 
-        paymentComponentData.paymentMethod = cardPaymentMethod
-        paymentComponentData.setStorePaymentMethod(stateOutputData.isStoredPaymentMethodEnable)
-        paymentComponentData.shopperReference = configuration.shopperReference
+        val paymentComponentData = PaymentComponentData<CardPaymentMethod>().apply {
+            paymentMethod = cardPaymentMethod
+            setStorePaymentMethod(stateOutputData.isStoredPaymentMethodEnable)
+            shopperReference = configuration.shopperReference
+        }
 
         val lastFour = cardNumber.takeLast(LAST_FOUR_LENGTH)
 

@@ -11,7 +11,6 @@ package com.adyen.checkout.dropin.ui.stored
 import android.annotation.SuppressLint
 import android.content.DialogInterface
 import android.os.Bundle
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -58,12 +57,12 @@ class PreselectedStoredPaymentMethodFragment : DropInBottomSheetDialogFragment()
 
     private fun observeState() {
         storedPaymentViewModel.componentFragmentState.observe(viewLifecycleOwner) {
-            Log.d(TAG, "state: $it")
+            Logger.v(TAG, "state: $it")
             setPaymentPendingInitialization(it is AwaitingComponentInitialization)
             when (it) {
                 is ShowStoredPaymentDialog -> protocol.showStoredComponentDialog(storedPaymentMethod, true)
                 is RequestPayment -> protocol.requestPaymentsCall(it.componentState)
-                else -> { //do nothing
+                else -> { // do nothing
                 }
             }
         }

@@ -10,7 +10,6 @@ package com.adyen.checkout.dropin.ui.base
 
 import android.content.DialogInterface
 import android.os.Bundle
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -37,6 +36,7 @@ private const val STORED_PAYMENT_METHOD = "STORED_PAYMENT_METHOD"
 private const val NAVIGATED_FROM_PRESELECTED = "NAVIGATED_FROM_PRESELECTED"
 private const val PAYMENT_METHOD = "PAYMENT_METHOD"
 
+@Suppress("TooManyFunctions")
 abstract class BaseComponentDialogFragment : DropInBottomSheetDialogFragment(), Observer<PaymentComponentState<in PaymentMethodDetails>> {
 
     companion object {
@@ -122,7 +122,7 @@ abstract class BaseComponentDialogFragment : DropInBottomSheetDialogFragment(), 
 
     private fun observeState() {
         componentDialogViewModel.componentFragmentState.observe(viewLifecycleOwner) {
-            Log.d(TAG, "state: $it")
+            Logger.v(TAG, "state: $it")
             setPaymentPendingInitialization(it == ComponentFragmentState.AWAITING_COMPONENT_INITIALIZATION)
             when (it) {
                 ComponentFragmentState.INVALID_UI -> highlightValidationErrors()
@@ -130,7 +130,7 @@ abstract class BaseComponentDialogFragment : DropInBottomSheetDialogFragment(), 
                     startPayment()
                     componentDialogViewModel.paymentStarted()
                 }
-                else -> { //do nothing
+                else -> { // do nothing
                 }
             }
         }

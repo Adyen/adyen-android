@@ -8,7 +8,6 @@
 
 package com.adyen.checkout.dropin.ui.stored
 
-import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
@@ -16,6 +15,7 @@ import com.adyen.checkout.components.PaymentComponentState
 import com.adyen.checkout.components.model.paymentmethods.StoredPaymentMethod
 import com.adyen.checkout.components.model.payments.request.PaymentMethodDetails
 import com.adyen.checkout.core.log.LogUtil
+import com.adyen.checkout.core.log.Logger
 import com.adyen.checkout.dropin.ui.paymentmethods.StoredPaymentMethodModel
 import com.adyen.checkout.dropin.ui.stored.PreselectedStoredState.AwaitingComponentInitialization
 import com.adyen.checkout.dropin.ui.stored.PreselectedStoredState.Idle
@@ -45,12 +45,15 @@ class PreselectedStoredPaymentViewModel(
 
     fun componentStateChanged(componentState: PaymentComponentState<in PaymentMethodDetails>) {
         val fragmentState = componentFragmentStateMutable.value
-        Log.d(TAG, "componentStateChanged - componentState.isReady: ${componentState.isReady} - " +
-            "fragmentState: $fragmentState")
+        Logger.v(
+            TAG,
+            "componentStateChanged - componentState.isReady: ${componentState.isReady} - " +
+                "fragmentState: $fragmentState"
+        )
         this.componentState = componentState
         if (!componentRequiresInput && componentState.isReady && fragmentState is AwaitingComponentInitialization) {
             val state = RequestPayment(componentState)
-            Log.d(TAG, "componentStateChanged - setting fragment state $state")
+            Logger.v(TAG, "componentStateChanged - setting fragment state $state")
             componentFragmentStateMutable.value = state
         }
     }
@@ -58,14 +61,17 @@ class PreselectedStoredPaymentViewModel(
     fun payButtonClicked() {
         val fragmentState = componentFragmentStateMutable.value
         val componentState = componentState
-        Log.d(TAG, "payButtonClicked - componentState.isReady: ${componentState?.isReady} - " +
-            "fragmentState: $fragmentState")
+        Logger.v(
+            TAG,
+            "payButtonClicked - componentState.isReady: ${componentState?.isReady} - " +
+                "fragmentState: $fragmentState"
+        )
         val state = when {
             componentRequiresInput -> ShowStoredPaymentDialog
             componentState?.isReady == true -> RequestPayment(componentState)
             else -> AwaitingComponentInitialization
         }
-        Log.d(TAG, "payButtonClicked - setting fragment state $state")
+        Logger.v(TAG, "payButtonClicked - setting fragment state $state")
         componentFragmentStateMutable.value = state
     }
 }
