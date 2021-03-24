@@ -48,7 +48,7 @@ abstract class CardDelegate(
     abstract fun isHolderNameRequired(): Boolean
     abstract fun detectCardType(cardNumber: String, publicKey: String?, coroutineScope: CoroutineScope): List<DetectedCardType>
 
-    suspend fun fetchPublicKey(): String? {
+    suspend fun fetchPublicKey(): String {
         return publicKeyRepository.fetchPublicKey(
             environment = cardConfiguration.environment,
             clientKey = cardConfiguration.clientKey

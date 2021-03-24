@@ -45,11 +45,11 @@ class CardComponent private constructor(
 
     init {
         viewModelScope.launch {
-            publicKey = cardDelegate.fetchPublicKey()
-            if (publicKey == null) {
-                notifyException(ComponentException("Unable to fetch publicKey."))
-            } else {
+            try {
+                publicKey = cardDelegate.fetchPublicKey()
                 notifyStateChanged()
+            } catch (e: CheckoutException) {
+                notifyException(ComponentException("Unable to fetch publicKey.", e))
             }
         }
 
