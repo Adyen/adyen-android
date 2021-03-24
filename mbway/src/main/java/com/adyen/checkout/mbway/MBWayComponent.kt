@@ -61,7 +61,7 @@ class MBWayComponent(paymentMethodDelegate: GenericPaymentMethodDelegate, config
             paymentMethod.telephoneNumber = mbWayOutputData.mobilePhoneNumberFieldState.value
         }
         paymentComponentData.paymentMethod = paymentMethod
-        return GenericComponentState(paymentComponentData, mbWayOutputData?.isValid == true)
+        return GenericComponentState(paymentComponentData, mbWayOutputData?.isValid == true, true)
     }
 
     override fun getSupportedPaymentMethodTypes(): Array<String> = PAYMENT_METHOD_TYPES

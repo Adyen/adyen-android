@@ -46,7 +46,7 @@ abstract class CardDelegate(
     abstract fun isCvcHidden(): Boolean
     abstract fun requiresInput(): Boolean
     abstract fun isHolderNameRequired(): Boolean
-    abstract fun detectCardType(cardNumber: String, publicKey: String, coroutineScope: CoroutineScope): List<DetectedCardType>
+    abstract fun detectCardType(cardNumber: String, publicKey: String?, coroutineScope: CoroutineScope): List<DetectedCardType>
 
     suspend fun fetchPublicKey(): String {
         return publicKeyRepository.fetchPublicKey(

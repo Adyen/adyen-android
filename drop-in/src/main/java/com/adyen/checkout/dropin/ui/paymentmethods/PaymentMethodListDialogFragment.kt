@@ -40,6 +40,10 @@ class PaymentMethodListDialogFragment : DropInBottomSheetDialogFragment(), Payme
     override fun onAttach(context: Context) {
         super.onAttach(context)
         Logger.d(TAG, "onAttach")
+    }
+
+    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
+        Logger.d(TAG, "onCreateView")
         paymentMethodsListViewModel = getViewModel {
             PaymentMethodsListViewModel(
                 requireActivity().application,
@@ -48,10 +52,6 @@ class PaymentMethodListDialogFragment : DropInBottomSheetDialogFragment(), Payme
                 dropInViewModel.dropInConfiguration
             )
         }
-    }
-
-    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
-        Logger.d(TAG, "onCreateView")
         val view = inflater.inflate(R.layout.fragment_payment_methods_list, container, false)
         addObserver(view.findViewById(R.id.recyclerView_paymentMethods))
         return view
@@ -59,7 +59,7 @@ class PaymentMethodListDialogFragment : DropInBottomSheetDialogFragment(), Payme
 
     private fun addObserver(recyclerView: RecyclerView) {
         paymentMethodsListViewModel.paymentMethodsLiveData.observe(
-            this,
+            viewLifecycleOwner,
             {
                 Logger.d(TAG, "paymentMethods changed")
                 if (it == null) {
@@ -134,7 +134,7 @@ class PaymentMethodListDialogFragment : DropInBottomSheetDialogFragment(), Payme
     private fun sendPayment(type: String) {
         val paymentComponentData = PaymentComponentData<PaymentMethodDetails>()
         paymentComponentData.paymentMethod = GenericPaymentMethod(type)
-        val paymentComponentState = GenericComponentState(paymentComponentData, true)
+        val paymentComponentState = GenericComponentState(paymentComponentData, true, true)
         protocol.requestPaymentsCall(paymentComponentState)
     }
 }

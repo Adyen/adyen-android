@@ -12,6 +12,7 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.core.view.isVisible
 import com.adyen.checkout.components.ComponentError
 import com.adyen.checkout.components.ComponentView
 import com.adyen.checkout.components.PaymentComponent
@@ -44,6 +45,17 @@ class GenericComponentDialogFragment : BaseComponentDialogFragment() {
         return binding.root
     }
 
+    override fun setPaymentPendingInitialization(pending: Boolean) {
+        if (!componentView.isConfirmationRequired) return
+        binding.payButton.isVisible = !pending
+        if (pending) binding.progressBar.show()
+        else binding.progressBar.hide()
+    }
+
+    override fun highlightValidationErrors() {
+        componentView.highlightValidationErrors()
+    }
+
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         Logger.d(TAG, "onViewCreated")
         binding.header.text = paymentMethod.name
@@ -62,29 +74,20 @@ class GenericComponentDialogFragment : BaseComponentDialogFragment() {
     }
 
     override fun onChanged(paymentComponentState: PaymentComponentState<in PaymentMethodDetails>?) {
-        if (!componentView.isConfirmationRequired && component.state?.isValid == true) {
-            startPayment()
-        }
+        componentDialogViewModel.componentStateChanged(component.state, componentView.isConfirmationRequired)
     }
 
     private fun attachComponent(
         component: PaymentComponent<PaymentComponentState<in PaymentMethodDetails>, Configuration>,
         componentView: ComponentView<in OutputData, ViewableComponent<*, *, *>>
     ) {
-        component.observe(this, this)
-        component.observeErrors(this, createErrorHandlerObserver())
+        component.observe(viewLifecycleOwner, this)
+        component.observeErrors(viewLifecycleOwner, createErrorHandlerObserver())
         binding.componentContainer.addView(componentView as View)
-        componentView.attach(component as ViewableComponent<*, *, *>, this)
+        componentView.attach(component as ViewableComponent<*, *, *>, viewLifecycleOwner)
 
         if (componentView.isConfirmationRequired) {
-            binding.payButton.setOnClickListener {
-                if (component.state?.isValid == true) {
-                    startPayment()
-                } else {
-                    componentView.highlightValidationErrors()
-                }
-            }
-
+            binding.payButton.setOnClickListener { componentDialogViewModel.payButtonClicked() }
             setInitViewState(BottomSheetBehavior.STATE_EXPANDED)
             (componentView as View).requestFocus()
         } else {

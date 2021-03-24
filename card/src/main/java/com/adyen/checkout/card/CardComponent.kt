@@ -9,6 +9,7 @@
 package com.adyen.checkout.card
 
 import androidx.lifecycle.viewModelScope
+import com.adyen.checkout.card.data.CardType
 import com.adyen.checkout.card.data.ExpiryDate
 import com.adyen.checkout.components.StoredPaymentComponentProvider
 import com.adyen.checkout.components.base.BasePaymentComponent
@@ -40,13 +41,15 @@ class CardComponent private constructor(
 ) : BasePaymentComponent<CardConfiguration, CardInputData, CardOutputData, CardComponentState>(cardDelegate, cardConfiguration) {
 
     private var storedPaymentInputData: CardInputData? = null
-    private var publicKey = ""
+    private var publicKey: String? = null
 
     init {
         viewModelScope.launch {
-            publicKey = cardDelegate.fetchPublicKey()
-            if (publicKey.isEmpty()) {
-                notifyException(ComponentException("Unable to fetch publicKey."))
+            try {
+                publicKey = cardDelegate.fetchPublicKey()
+                notifyStateChanged()
+            } catch (e: CheckoutException) {
+                notifyException(ComponentException("Unable to fetch publicKey.", e))
             }
         }
 
@@ -121,23 +124,27 @@ class CardComponent private constructor(
         // TODO: 29/01/2021 pass outputData as non null parameter
         val stateOutputData = outputData ?: throw CheckoutException("Cannot create state with null outputData")
 
-        val cardPaymentMethod = CardPaymentMethod()
-        cardPaymentMethod.type = CardPaymentMethod.PAYMENT_METHOD_TYPE
-
-        val unencryptedCardBuilder = UnencryptedCard.Builder()
-
-        val paymentComponentData = PaymentComponentData<CardPaymentMethod>()
-
         val cardNumber = stateOutputData.cardNumberState.value
 
         val firstCardType = stateOutputData.detectedCardTypes.firstOrNull()?.cardType
 
-        val binValue: String = getBinValueFromCardNumber(cardNumber)
+        val binValue = cardNumber.take(BIN_VALUE_LENGTH)
+
+        val publicKey = publicKey
 
         // If data is not valid we just return empty object, encryption would fail and we don't pass unencrypted data.
-        if (!stateOutputData.isValid) {
-            return CardComponentState(paymentComponentData, false, firstCardType, binValue, null)
+        if (!stateOutputData.isValid || publicKey == null) {
+            return CardComponentState(
+                paymentComponentData = PaymentComponentData<CardPaymentMethod>(),
+                isInputValid = stateOutputData.isValid,
+                isReady = publicKey != null,
+                cardType = firstCardType,
+                binValue = binValue,
+                lastFourDigits = null
+            )
         }
+
+        val unencryptedCardBuilder = UnencryptedCard.Builder()
 
         val encryptedCard: EncryptedCard = try {
             if (!isStoredPaymentMethod()) {
@@ -155,8 +162,34 @@ class CardComponent private constructor(
             CardEncrypter.encryptFields(unencryptedCardBuilder.build(), publicKey)
         } catch (e: EncryptionException) {
             notifyException(e)
-            return CardComponentState(paymentComponentData, false, firstCardType, binValue, null)
+            return CardComponentState(
+                paymentComponentData = PaymentComponentData<CardPaymentMethod>(),
+                isInputValid = false,
+                isReady = true,
+                cardType = firstCardType,
+                binValue = binValue,
+                lastFourDigits = null
+            )
         }
+
+        return mapComponentState(
+            encryptedCard,
+            stateOutputData,
+            cardNumber,
+            firstCardType,
+            binValue
+        )
+    }
+
+    private fun mapComponentState(
+        encryptedCard: EncryptedCard,
+        stateOutputData: CardOutputData,
+        cardNumber: String,
+        firstCardType: CardType?,
+        binValue: String
+    ): CardComponentState {
+        val cardPaymentMethod = CardPaymentMethod()
+        cardPaymentMethod.type = CardPaymentMethod.PAYMENT_METHOD_TYPE
 
         if (!isStoredPaymentMethod()) {
             cardPaymentMethod.encryptedCardNumber = encryptedCard.encryptedCardNumber
@@ -174,13 +207,22 @@ class CardComponent private constructor(
             cardPaymentMethod.holderName = stateOutputData.holderNameState.value
         }
 
-        paymentComponentData.paymentMethod = cardPaymentMethod
-        paymentComponentData.setStorePaymentMethod(stateOutputData.isStoredPaymentMethodEnable)
-        paymentComponentData.shopperReference = configuration.shopperReference
+        val paymentComponentData = PaymentComponentData<CardPaymentMethod>().apply {
+            paymentMethod = cardPaymentMethod
+            setStorePaymentMethod(stateOutputData.isStoredPaymentMethodEnable)
+            shopperReference = configuration.shopperReference
+        }
 
         val lastFour = cardNumber.takeLast(LAST_FOUR_LENGTH)
 
-        return CardComponentState(paymentComponentData, stateOutputData.isValid, firstCardType, binValue, lastFour)
+        return CardComponentState(
+            paymentComponentData = paymentComponentData,
+            isInputValid = true,
+            isReady = true,
+            cardType = firstCardType,
+            binValue = binValue,
+            lastFourDigits = lastFour
+        )
     }
 
     fun isStoredPaymentMethod(): Boolean {
@@ -197,10 +239,6 @@ class CardComponent private constructor(
 
     fun showStorePaymentField(): Boolean {
         return configuration.isShowStorePaymentFieldEnable
-    }
-
-    private fun getBinValueFromCardNumber(cardNumber: String): String {
-        return if (cardNumber.length < BIN_VALUE_LENGTH) cardNumber else cardNumber.substring(0..BIN_VALUE_LENGTH)
     }
 
     companion object {

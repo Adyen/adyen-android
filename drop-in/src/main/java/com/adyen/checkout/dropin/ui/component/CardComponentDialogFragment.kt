@@ -12,6 +12,7 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.core.view.isVisible
 import com.adyen.checkout.card.CardComponent
 import com.adyen.checkout.card.CardComponentState
 import com.adyen.checkout.card.CardListAdapter
@@ -44,6 +45,16 @@ class CardComponentDialogFragment : BaseComponentDialogFragment() {
         return binding.root
     }
 
+    override fun setPaymentPendingInitialization(pending: Boolean) {
+        binding.payButton.isVisible = !pending
+        if (pending) binding.progressBar.show()
+        else binding.progressBar.hide()
+    }
+
+    override fun highlightValidationErrors() {
+        binding.cardView.highlightValidationErrors()
+    }
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         try {
@@ -64,24 +75,17 @@ class CardComponentDialogFragment : BaseComponentDialogFragment() {
         }
 
         // Keeping generic component to use the observer from the BaseComponentDialogFragment
-        component.observe(this, this)
-        cardComponent.observeErrors(this, createErrorHandlerObserver())
+        component.observe(viewLifecycleOwner, this)
+        cardComponent.observeErrors(viewLifecycleOwner, createErrorHandlerObserver())
 
         // try to get the name from the payment methods response
         binding.header.text =
             dropInViewModel.paymentMethodsApiResponse.paymentMethods?.find { it.type == PaymentMethodTypes.SCHEME }?.name
 
-        binding.cardView.attach(cardComponent, this)
+        binding.cardView.attach(cardComponent, viewLifecycleOwner)
 
         if (binding.cardView.isConfirmationRequired) {
-            binding.payButton.setOnClickListener {
-                if (cardComponent.state?.isValid == true) {
-                    startPayment()
-                } else {
-                    binding.cardView.highlightValidationErrors()
-                }
-            }
-
+            binding.payButton.setOnClickListener { componentDialogViewModel.payButtonClicked() }
             setInitViewState(BottomSheetBehavior.STATE_EXPANDED)
             binding.cardView.requestFocus()
         } else {
@@ -110,5 +114,7 @@ class CardComponentDialogFragment : BaseComponentDialogFragment() {
         } else {
             cardListAdapter.setFilteredCard(emptyList())
         }
+
+        componentDialogViewModel.componentStateChanged(component.state)
     }
 }

@@ -131,7 +131,7 @@ public class BaseComponentTest {
             protected PaymentComponentState<TestPaymentMethod> createComponentState() {
                 final PaymentComponentData<TestPaymentMethod> paymentComponentData = new PaymentComponentData<>();
                 paymentComponentData.setPaymentMethod(new TestPaymentMethod());
-                return new GenericComponentState<>(paymentComponentData, true);
+                return new GenericComponentState<>(paymentComponentData, true, true);
             }
 
             @NonNull

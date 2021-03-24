@@ -26,6 +26,7 @@ android {
 dependencies {
     //Tests
     testImplementation "junit:junit:$junit_version"
+    testImplementation "org.json:json:20201115"
     androidTestImplementation "androidx.test.ext:junit:$test_ext_version"
     androidTestImplementation "androidx.test.espresso:espresso-core:$espresso_version"
 
