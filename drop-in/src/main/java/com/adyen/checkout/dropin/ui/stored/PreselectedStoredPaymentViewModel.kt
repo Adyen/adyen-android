@@ -11,6 +11,7 @@ package com.adyen.checkout.dropin.ui.stored
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
+import com.adyen.checkout.components.ComponentError
 import com.adyen.checkout.components.PaymentComponentState
 import com.adyen.checkout.components.model.paymentmethods.StoredPaymentMethod
 import com.adyen.checkout.components.model.payments.request.PaymentMethodDetails
@@ -19,6 +20,7 @@ import com.adyen.checkout.core.log.Logger
 import com.adyen.checkout.dropin.ui.paymentmethods.StoredPaymentMethodModel
 import com.adyen.checkout.dropin.ui.stored.PreselectedStoredState.AwaitingComponentInitialization
 import com.adyen.checkout.dropin.ui.stored.PreselectedStoredState.Idle
+import com.adyen.checkout.dropin.ui.stored.PreselectedStoredState.PaymentError
 import com.adyen.checkout.dropin.ui.stored.PreselectedStoredState.RequestPayment
 import com.adyen.checkout.dropin.ui.stored.PreselectedStoredState.ShowStoredPaymentDialog
 
@@ -38,6 +40,7 @@ class PreselectedStoredPaymentViewModel(
     val componentFragmentState: LiveData<PreselectedStoredState> = componentFragmentStateMutable
 
     private var componentState: PaymentComponentState<PaymentMethodDetails>? = null
+    private var lastComponentError: ComponentError? = null
 
     init {
         storedPaymentMethodMutableLiveData.value = makeStoredModel(storedPaymentMethod)
@@ -66,13 +69,31 @@ class PreselectedStoredPaymentViewModel(
             "payButtonClicked - componentState.isReady: ${componentState?.isReady} - " +
                 "fragmentState: $fragmentState"
         )
+        val componentError = lastComponentError
         val state = when {
             componentRequiresInput -> ShowStoredPaymentDialog
+            componentError != null -> PaymentError(componentError)
             componentState?.isReady == true -> RequestPayment(componentState)
             else -> AwaitingComponentInitialization
         }
         Logger.v(TAG, "payButtonClicked - setting fragment state $state")
         componentFragmentStateMutable.value = state
+    }
+
+    fun componentErrorOccurred(componentError: ComponentError) {
+        lastComponentError = componentError
+        val fragmentState = componentFragmentStateMutable.value
+        val componentState = componentState
+        Logger.v(
+            TAG,
+            "componentErrorOccurred - componentState.isReady: ${componentState?.isReady} - " +
+                "fragmentState: $fragmentState"
+        )
+        if (fragmentState is AwaitingComponentInitialization) {
+            val state = PaymentError(componentError)
+            Logger.v(TAG, "componentErrorOccurred - setting fragment state $state")
+            componentFragmentStateMutable.value = state
+        }
     }
 }
 
@@ -81,6 +102,7 @@ sealed class PreselectedStoredState {
     object ShowStoredPaymentDialog : PreselectedStoredState()
     object AwaitingComponentInitialization : PreselectedStoredState()
     class RequestPayment(val componentState: PaymentComponentState<PaymentMethodDetails>) : PreselectedStoredState()
+    class PaymentError(val componentError: ComponentError) : PreselectedStoredState()
 
     override fun toString(): String = this::class.simpleName ?: ""
 }
