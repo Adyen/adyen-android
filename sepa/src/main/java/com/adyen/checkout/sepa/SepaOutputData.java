@@ -16,7 +16,6 @@ import androidx.annotation.Nullable;
 import com.adyen.checkout.components.base.OutputData;
 import com.adyen.checkout.components.ui.FieldState;
 import com.adyen.checkout.components.ui.Validation;
-import com.adyen.checkout.sepa.ui.R;
 
 class SepaOutputData implements OutputData {
 

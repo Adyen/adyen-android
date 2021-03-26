@@ -13,8 +13,8 @@ plugins {
 
 // Maven artifact
 ext.mavenArtifactId = "bcmc"
-ext.mavenArtifactName = "Adyen checkout bcmc UI component"
-ext.mavenArtifactDescription = "Adyen checkout bcmc UI component client for Adyen's Checkout API."
+ext.mavenArtifactName = "Adyen checkout BCMC component"
+ext.mavenArtifactDescription = "Adyen checkout BCMC component client for Adyen's Checkout API."
 
 apply from: "../config/gradle/sharedTasks.gradle"
 

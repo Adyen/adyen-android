@@ -11,7 +11,7 @@ package com.adyen.checkout.mbway.country
 import android.view.View
 import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
-import com.adyen.checkout.mbway.ui.R
+import com.adyen.checkout.mbway.R
 
 class CountryViewHolder(private val rootView: View) : RecyclerView.ViewHolder(rootView) {
     private val flagTextView: TextView = rootView.findViewById(R.id.textView_flag)

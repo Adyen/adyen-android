@@ -13,8 +13,8 @@ plugins {
 
 // Maven artifact
 ext.mavenArtifactId = "sepa"
-ext.mavenArtifactName = "Adyen checkout sepa-ui component"
-ext.mavenArtifactDescription = "Adyen checkout sepa-ui component client for Adyen's Checkout API."
+ext.mavenArtifactName = "Adyen checkout SEPA component"
+ext.mavenArtifactDescription = "Adyen checkout SEPA component client for Adyen's Checkout API."
 
 apply from: "../config/gradle/sharedTasks.gradle"
 
