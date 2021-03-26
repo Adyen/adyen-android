@@ -13,7 +13,7 @@ plugins {
 
 ext.mavenArtifactId = "wechatpay"
 ext.mavenArtifactName = "Adyen Checkout WeChat Pay component"
-ext.mavenArtifactDescription = "Adyen checkout wechatpay-base component client for Adyen's Checkout API."
+ext.mavenArtifactDescription = "Adyen checkout WeChat Pay component client for Adyen's Checkout API."
 
 apply from: "../config/gradle/sharedTasks.gradle"
 
