@@ -12,7 +12,6 @@ import com.adyen.checkout.components.base.OutputData
 import com.adyen.checkout.components.ui.FieldState
 import com.adyen.checkout.components.ui.Validation
 import com.adyen.checkout.components.util.ValidationUtils
-import com.adyen.checkout.mbway.ui.R
 
 class MBWayOutputData(mobilePhoneNumber: String) : OutputData {
 

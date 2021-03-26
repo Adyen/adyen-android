@@ -26,7 +26,6 @@ import com.adyen.checkout.components.ui.view.AdyenTextInputEditText;
 import com.adyen.checkout.core.exception.CheckoutException;
 import com.adyen.checkout.core.log.LogUtil;
 import com.adyen.checkout.core.log.Logger;
-import com.adyen.checkout.sepa.ui.R;
 import com.google.android.material.textfield.TextInputLayout;
 
 public class SepaView
