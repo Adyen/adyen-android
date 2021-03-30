@@ -69,6 +69,7 @@ class PreselectedStoredPaymentViewModel(
             "payButtonClicked - componentState.isReady: ${componentState?.isReady} - " +
                 "fragmentState: $fragmentState"
         )
+        // check whether an error has occurred already before Pay was clicked
         val componentError = lastComponentError
         val state = when {
             componentRequiresInput -> ShowStoredPaymentDialog
