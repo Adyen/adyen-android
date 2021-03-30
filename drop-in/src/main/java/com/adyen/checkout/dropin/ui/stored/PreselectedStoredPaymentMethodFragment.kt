@@ -15,6 +15,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.core.view.isVisible
+import com.adyen.checkout.components.ComponentError
 import com.adyen.checkout.components.PaymentComponent
 import com.adyen.checkout.components.PaymentComponentState
 import com.adyen.checkout.components.api.ImageLoader
@@ -33,6 +34,7 @@ import com.adyen.checkout.dropin.ui.base.DropInBottomSheetDialogFragment
 import com.adyen.checkout.dropin.ui.paymentmethods.GenericStoredModel
 import com.adyen.checkout.dropin.ui.paymentmethods.StoredCardModel
 import com.adyen.checkout.dropin.ui.stored.PreselectedStoredState.AwaitingComponentInitialization
+import com.adyen.checkout.dropin.ui.stored.PreselectedStoredState.PaymentError
 import com.adyen.checkout.dropin.ui.stored.PreselectedStoredState.RequestPayment
 import com.adyen.checkout.dropin.ui.stored.PreselectedStoredState.ShowStoredPaymentDialog
 import com.adyen.checkout.dropin.ui.viewModelsFactory
@@ -62,6 +64,7 @@ class PreselectedStoredPaymentMethodFragment : DropInBottomSheetDialogFragment()
             when (it) {
                 is ShowStoredPaymentDialog -> protocol.showStoredComponentDialog(storedPaymentMethod, true)
                 is RequestPayment -> protocol.requestPaymentsCall(it.componentState)
+                is PaymentError -> handleError(it.componentError)
                 else -> { // do nothing
                 }
             }
@@ -72,6 +75,11 @@ class PreselectedStoredPaymentMethodFragment : DropInBottomSheetDialogFragment()
         binding.payButton.isVisible = !pending
         if (pending) binding.progressBar.show()
         else binding.progressBar.hide()
+    }
+
+    private fun handleError(componentError: ComponentError) {
+        Logger.e(TAG, componentError.errorMessage)
+        protocol.showError(getString(R.string.component_error), componentError.errorMessage, true)
     }
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View {
@@ -88,6 +96,7 @@ class PreselectedStoredPaymentMethodFragment : DropInBottomSheetDialogFragment()
 
         component = getComponentFor(this, storedPaymentMethod, dropInViewModel.dropInConfiguration)
         component.observe(viewLifecycleOwner, storedPaymentViewModel::componentStateChanged)
+        component.observeErrors(viewLifecycleOwner, storedPaymentViewModel::componentErrorOccurred)
 
         binding = FragmentStoredPaymentMethodBinding.inflate(inflater, container, false)
         return binding.root
