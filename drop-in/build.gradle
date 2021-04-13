@@ -68,6 +68,7 @@ dependencies {
     api project(':ideal')
     api project(':mbway')
     api project(':molpay')
+    api project(':qr-code')
     api project(':openbanking')
     api project(":redirect")
     api project(':sepa')
