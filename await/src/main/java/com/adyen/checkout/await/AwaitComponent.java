@@ -19,8 +19,8 @@ import androidx.lifecycle.LifecycleOwner;
 import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.Observer;
 
-import com.adyen.checkout.await.api.StatusResponseUtils;
-import com.adyen.checkout.await.model.StatusResponse;
+import com.adyen.checkout.components.status.api.StatusResponseUtils;
+import com.adyen.checkout.components.status.model.StatusResponse;
 import com.adyen.checkout.components.ActionComponentData;
 import com.adyen.checkout.components.ActionComponentProvider;
 import com.adyen.checkout.components.ViewableComponent;
@@ -30,6 +30,7 @@ import com.adyen.checkout.components.base.Configuration;
 import com.adyen.checkout.components.base.lifecycle.BaseLifecycleObserver;
 import com.adyen.checkout.components.model.payments.response.Action;
 import com.adyen.checkout.components.model.payments.response.AwaitAction;
+import com.adyen.checkout.components.status.StatusRepository;
 import com.adyen.checkout.core.exception.CheckoutException;
 import com.adyen.checkout.core.exception.ComponentException;
 import com.adyen.checkout.core.log.LogUtil;

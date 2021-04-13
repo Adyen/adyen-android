@@ -6,11 +6,11 @@
  * Created by caiof on 28/8/2020.
  */
 
-package com.adyen.checkout.await.api;
+package com.adyen.checkout.components.status.api;
 
 import androidx.annotation.NonNull;
 
-import com.adyen.checkout.await.model.StatusRequest;
+import com.adyen.checkout.components.status.model.StatusRequest;
 import com.adyen.checkout.core.api.Environment;
 import com.adyen.checkout.core.api.ThreadManager;
 import com.adyen.checkout.core.exception.ApiCallException;

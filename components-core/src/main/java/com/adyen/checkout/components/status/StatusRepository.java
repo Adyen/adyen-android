@@ -6,7 +6,7 @@
  * Created by caiof on 18/8/2020.
  */
 
-package com.adyen.checkout.await;
+package com.adyen.checkout.components.status;
 
 import android.os.Handler;
 
@@ -14,10 +14,10 @@ import androidx.annotation.NonNull;
 import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
 
-import com.adyen.checkout.await.api.StatusApi;
-import com.adyen.checkout.await.api.StatusConnectionTask;
-import com.adyen.checkout.await.api.StatusResponseUtils;
-import com.adyen.checkout.await.model.StatusResponse;
+import com.adyen.checkout.components.status.api.StatusApi;
+import com.adyen.checkout.components.status.api.StatusConnectionTask;
+import com.adyen.checkout.components.status.api.StatusResponseUtils;
+import com.adyen.checkout.components.status.model.StatusResponse;
 import com.adyen.checkout.core.api.Environment;
 import com.adyen.checkout.core.exception.ApiCallException;
 import com.adyen.checkout.core.exception.ComponentException;
@@ -26,7 +26,7 @@ import com.adyen.checkout.core.log.Logger;
 
 import java.util.concurrent.TimeUnit;
 
-final class StatusRepository {
+public final class StatusRepository {
     static final String TAG = LogUtil.getTag();
 
     private static final long POLLING_DELAY_FAST = TimeUnit.SECONDS.toMillis(2);
@@ -104,7 +104,7 @@ final class StatusRepository {
      * @param clientKey The client key that identifies the merchant.
      * @param paymentData The payment data of the payment we are requesting.
      */
-    void startPolling(@NonNull String clientKey, @NonNull String paymentData) {
+    public void startPolling(@NonNull String clientKey, @NonNull String paymentData) {
         if (clientKey.equals(mClientKey) && paymentData.equals(mPaymentData)) {
             Logger.e(TAG, "Already polling for this payment.");
             return;
@@ -120,7 +120,7 @@ final class StatusRepository {
     /**
      * Immediately request a status update instead of waiting for the next poll result.
      */
-    void updateStatus() {
+    public void updateStatus() {
         Logger.d(TAG, "updateStatus");
         mHandler.removeCallbacks(mStatusPollingRunnable);
         mHandler.post(mStatusPollingRunnable);
@@ -129,7 +129,7 @@ final class StatusRepository {
     /**
      * Stops the polling process.
      */
-    void stopPolling() {
+    public void stopPolling() {
         Logger.d(TAG, "stopPolling");
         mHandler.removeCallbacksAndMessages(null);
         // Set null so that new observers don't get the status from the previous result
