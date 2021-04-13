@@ -63,6 +63,8 @@ import com.adyen.checkout.molpay.MolpayRecyclerView
 import com.adyen.checkout.openbanking.OpenBankingComponent
 import com.adyen.checkout.openbanking.OpenBankingConfiguration
 import com.adyen.checkout.openbanking.OpenBankingRecyclerView
+import com.adyen.checkout.qrcode.QRCodeConfiguration
+import com.adyen.checkout.qrcode.QRCodeView
 import com.adyen.checkout.redirect.RedirectConfiguration
 import com.adyen.checkout.sepa.SepaComponent
 import com.adyen.checkout.sepa.SepaConfiguration
@@ -129,6 +131,9 @@ internal fun <T : Configuration> getDefaultConfigFor(
         }
         ActionTypes.REDIRECT -> {
             RedirectConfiguration.Builder(context, clientKey)
+        }
+        ActionTypes.QR_CODE -> {
+            QRCodeConfiguration.Builder(context, clientKey)
         }
         ActionTypes.THREEDS2_FINGERPRINT,
         ActionTypes.THREEDS2_CHALLENGE,
@@ -340,6 +345,7 @@ internal fun getViewFor(
         PaymentMethodTypes.BLIK -> BlikView(context)
         // GooglePay and WeChatPay do not require a View in Drop-in
         ActionTypes.AWAIT -> AwaitView(context)
+        ActionTypes.QR_CODE -> QRCodeView(context)
         else -> {
             throw CheckoutException("Unable to find view for type - $paymentType")
         }
