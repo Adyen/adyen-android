@@ -9,4 +9,7 @@
 
 <resources>
     <dimen name="copy_button_height">52dp</dimen>
+    <dimen name="progress_track_width">150dp</dimen>
+    <dimen name="progress_track_height">4dp</dimen>
+    <dimen name="progress_track_radius">2dp</dimen>
 </resources>

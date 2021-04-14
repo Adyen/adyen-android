@@ -148,4 +148,8 @@ public final class StatusRepository {
             mStatusErrorLiveData.setValue(new ComponentException("Status requesting timed out with no result"));
         }
     }
+
+    public long getMaxPollingDurationMillis() {
+        return POLLING_MAX_COUNT;
+    }
 }

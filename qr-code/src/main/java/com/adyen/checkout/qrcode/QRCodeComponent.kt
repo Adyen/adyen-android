@@ -10,6 +10,7 @@ package com.adyen.checkout.qrcode
 import android.app.Activity
 import android.app.Application
 import android.content.Context
+import android.os.CountDownTimer
 import androidx.lifecycle.LifecycleOwner
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.Observer
@@ -29,10 +30,12 @@ import com.adyen.checkout.core.log.LogUtil
 import com.adyen.checkout.core.log.Logger
 import org.json.JSONException
 import org.json.JSONObject
+import java.util.concurrent.TimeUnit
 
 private val TAG = LogUtil.getTag()
 private val ACTION_TYPES = listOf(QrCodeAction.ACTION_TYPE)
 private const val PAYLOAD_DETAILS_KEY = "payload"
+private val STATUS_POLLING_INTERVAL_MILLIS = TimeUnit.SECONDS.toMillis(1L) //1 second
 
 class QRCodeComponent(application: Application, configuration: QRCodeConfiguration) :
     BaseActionComponent<QRCodeConfiguration>(application, configuration),
@@ -42,6 +45,16 @@ class QRCodeComponent(application: Application, configuration: QRCodeConfigurati
     private var paymentMethodType: String? = null
     private var qrCodeData: String? = null
     private val statusRepository: StatusRepository = StatusRepository.getInstance(configuration.environment)
+    private val timerLiveData = MutableLiveData<TimerData>()
+    private var statusCountDownTimer: CountDownTimer = object : CountDownTimer(statusRepository.maxPollingDurationMillis, STATUS_POLLING_INTERVAL_MILLIS) {
+        override fun onTick(millisUntilFinished: Long) {
+            onTimerTick(millisUntilFinished)
+        }
+
+        override fun onFinish() {
+            // do nothing, StatusRepository will finish the polling automatically
+        }
+    }
 
     private val responseObserver: Observer<StatusResponse> = Observer { statusResponse ->
         Logger.v(TAG, "onChanged - " + if (statusResponse == null) "null" else statusResponse.resultCode)
@@ -68,6 +81,7 @@ class QRCodeComponent(application: Application, configuration: QRCodeConfigurati
         createOutputData(null)
         val data = paymentData ?: return
         statusRepository.startPolling(configuration.clientKey, data)
+        statusCountDownTimer.start()
     }
 
     override fun observe(lifecycleOwner: LifecycleOwner, observer: Observer<ActionComponentData>) {
@@ -113,6 +127,10 @@ class QRCodeComponent(application: Application, configuration: QRCodeConfigurati
         outputLiveData.observe(lifecycleOwner, observer)
     }
 
+    fun observeTimer(lifecycleOwner: LifecycleOwner, observer: Observer<TimerData>) {
+        timerLiveData.observe(lifecycleOwner, observer)
+    }
+
     override fun getOutputData(): QRCodeOutputData? {
         return outputLiveData.value
     }
@@ -131,6 +149,11 @@ class QRCodeComponent(application: Application, configuration: QRCodeConfigurati
         return qrCodeData
     }
 
+    private fun onTimerTick(millisUntilFinished: Long) {
+        val progressPercentage = (100 * millisUntilFinished / statusRepository.maxPollingDurationMillis).toInt()
+        timerLiveData.postValue(TimerData(millisUntilFinished, progressPercentage))
+    }
+
     override fun getSupportedActionTypes(): List<String> = ACTION_TYPES
 
     companion object {
@@ -138,3 +161,8 @@ class QRCodeComponent(application: Application, configuration: QRCodeConfigurati
         val PROVIDER: ActionComponentProvider<QRCodeComponent> = ActionComponentProviderImpl(QRCodeComponent::class.java, QRCodeConfiguration::class.java, true)
     }
 }
+
+data class TimerData(
+    val millisUntilFinished: Long,
+    val progress: Int
+)

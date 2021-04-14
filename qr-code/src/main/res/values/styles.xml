@@ -24,4 +24,13 @@
         <item name="android:buttonStyle">@style/Widget.AppCompat.Button.Borderless.Colored</item>
         <item name="colorAccent">@color/primaryColor</item>
     </style>
+
+    <style name="AdyenCheckout.QrCode.ProgressIndicator" parent="Widget.MaterialComponents.LinearProgressIndicator">
+        <item name="android:layout_width">@dimen/progress_track_width</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="indicatorColor">@color/progressIndicatorColor</item>
+        <item name="trackColor">@color/progressTrackColor</item>
+        <item name="trackThickness">@dimen/progress_track_height</item>
+        <item name="trackCornerRadius">@dimen/progress_track_radius</item>
+    </style>
 </resources>

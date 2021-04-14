@@ -23,6 +23,9 @@ import com.adyen.checkout.components.ui.view.AdyenLinearLayout
 import com.adyen.checkout.core.exception.ComponentException
 import com.adyen.checkout.core.log.LogUtil
 import com.adyen.checkout.core.log.Logger
+import com.google.android.material.progressindicator.LinearProgressIndicator
+import java.util.concurrent.TimeUnit
+
 
 private val TAG = LogUtil.getTag()
 
@@ -30,6 +33,8 @@ class QRCodeView : AdyenLinearLayout<QRCodeOutputData, QRCodeConfiguration, Acti
 
     private lateinit var imageView: ImageView
     private lateinit var topLabelTextView: TextView
+    private lateinit var timerTextView: TextView
+    private lateinit var progressIndicator: LinearProgressIndicator
     private lateinit var copyButton: Button
 
     private lateinit var imageLoader: ImageLoader
@@ -65,6 +70,8 @@ class QRCodeView : AdyenLinearLayout<QRCodeOutputData, QRCodeConfiguration, Acti
     override fun initView() {
         imageView = findViewById(R.id.imageView_logo)
         topLabelTextView = findViewById(R.id.textView_top_label)
+        timerTextView = findViewById(R.id.textView_timer)
+        progressIndicator = findViewById(R.id.progress_indicator_horizontal)
         copyButton = findViewById(R.id.copyButton)
         copyButton.setOnClickListener { copyCode() }
     }
@@ -85,6 +92,7 @@ class QRCodeView : AdyenLinearLayout<QRCodeOutputData, QRCodeConfiguration, Acti
 
     override fun observeComponentChanges(lifecycleOwner: LifecycleOwner) {
         component.observeOutputData(lifecycleOwner, this)
+        component.observeTimer(lifecycleOwner, ::onTimerTick)
     }
 
     override fun onChanged(outputData: QRCodeOutputData?) {
@@ -96,6 +104,14 @@ class QRCodeView : AdyenLinearLayout<QRCodeOutputData, QRCodeConfiguration, Acti
             paymentMethodType = outputData.paymentMethodType
             updateLogo()
         }
+    }
+
+    private fun onTimerTick(timerData: TimerData) {
+        val minutes = TimeUnit.MILLISECONDS.toMinutes(timerData.millisUntilFinished)
+        val seconds = TimeUnit.MILLISECONDS.toSeconds(timerData.millisUntilFinished) % TimeUnit.MINUTES.toSeconds(1)
+        val minutesSecondsString = resources.getString(R.string.checkout_qr_code_time_left_format, minutes, seconds)
+        timerTextView.text = "You have $minutesSecondsString to pay"
+        progressIndicator.progress = timerData.progress
     }
 
     private fun updateLogo() {
