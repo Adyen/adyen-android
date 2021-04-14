@@ -27,23 +27,24 @@
         android:layout_gravity="center_horizontal"
         android:layout_margin="@dimen/standard_margin"
         android:gravity="center"
-        android:text="Copy the code, then open the app with the registered PIX key, choose Pay with PIX and paste the code there." />
+        tools:text="@string/checkout_qr_code_pix" />
 
     <com.google.android.material.progressindicator.LinearProgressIndicator
-        android:id="@+id/progress_indicator_horizontal"
+        android:id="@+id/progress_indicator"
         style="@style/AdyenCheckout.QrCode.ProgressIndicator"
         android:layout_gravity="center_horizontal"
-        android:layout_margin="@dimen/standard_margin"
+        android:layout_marginHorizontal="@dimen/standard_margin"
+        android:layout_marginTop="@dimen/standard_margin"
         android:gravity="center" />
 
     <TextView
         android:id="@+id/textView_timer"
-        style="@style/AdyenCheckout.TextAppearance.Secondary"
+        style="@style/AdyenCheckout.QrCode.TimerTextAppearance"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_gravity="center_horizontal"
-        android:layout_marginStart="@dimen/standard_margin"
-        android:layout_marginEnd="@dimen/standard_margin"
+        android:layout_marginHorizontal="@dimen/standard_margin"
+        android:layout_marginTop="@dimen/standard_three_quarters_margin"
         android:layout_marginBottom="@dimen/standard_margin"
         android:gravity="center"
         tools:text="You have 13:46 to pay" />
@@ -52,6 +53,6 @@
         android:id="@+id/copyButton"
         style="@style/AdyenCheckout.QrCode.CopyButton"
         android:layout_width="match_parent"
-        android:text="Copy code" />
+        android:text="@string/checkout_qr_code_copy_button" />
 
 </merge>

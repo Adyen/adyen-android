@@ -9,4 +9,5 @@
 <resources>
     <color name="progressTrackColor">#E6E9EB</color>
     <color name="progressIndicatorColor">#0066FF</color>
+    <color name="qrCodeTimerTextColor">#687282</color>
 </resources>

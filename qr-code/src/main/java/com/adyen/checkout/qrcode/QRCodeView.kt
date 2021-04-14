@@ -11,31 +11,25 @@ package com.adyen.checkout.qrcode
 import android.content.Context
 import android.util.AttributeSet
 import android.view.LayoutInflater
-import android.widget.Button
-import android.widget.ImageView
-import android.widget.TextView
+import androidx.annotation.StringRes
 import androidx.lifecycle.LifecycleOwner
 import androidx.lifecycle.Observer
 import com.adyen.checkout.components.ActionComponentData
 import com.adyen.checkout.components.api.ImageLoader
 import com.adyen.checkout.components.extensions.copyTextToClipboard
 import com.adyen.checkout.components.ui.view.AdyenLinearLayout
+import com.adyen.checkout.components.util.PaymentMethodTypes
 import com.adyen.checkout.core.exception.ComponentException
 import com.adyen.checkout.core.log.LogUtil
 import com.adyen.checkout.core.log.Logger
-import com.google.android.material.progressindicator.LinearProgressIndicator
+import com.adyen.checkout.qrcode.databinding.QrcodeViewBinding
 import java.util.concurrent.TimeUnit
-
 
 private val TAG = LogUtil.getTag()
 
 class QRCodeView : AdyenLinearLayout<QRCodeOutputData, QRCodeConfiguration, ActionComponentData, QRCodeComponent>, Observer<QRCodeOutputData> {
 
-    private lateinit var imageView: ImageView
-    private lateinit var topLabelTextView: TextView
-    private lateinit var timerTextView: TextView
-    private lateinit var progressIndicator: LinearProgressIndicator
-    private lateinit var copyButton: Button
+    private val binding: QrcodeViewBinding = QrcodeViewBinding.inflate(LayoutInflater.from(context), this)
 
     private lateinit var imageLoader: ImageLoader
     private var paymentMethodType: String? = null
@@ -54,9 +48,6 @@ class QRCodeView : AdyenLinearLayout<QRCodeOutputData, QRCodeConfiguration, Acti
 
     private fun init() {
         orientation = VERTICAL
-
-        LayoutInflater.from(context).inflate(R.layout.qrcode_view, this, true)
-
         val padding = resources.getDimension(R.dimen.standard_double_margin).toInt()
         setPadding(padding, padding, padding, padding)
     }
@@ -68,17 +59,12 @@ class QRCodeView : AdyenLinearLayout<QRCodeOutputData, QRCodeConfiguration, Acti
     }
 
     override fun initView() {
-        imageView = findViewById(R.id.imageView_logo)
-        topLabelTextView = findViewById(R.id.textView_top_label)
-        timerTextView = findViewById(R.id.textView_timer)
-        progressIndicator = findViewById(R.id.progress_indicator_horizontal)
-        copyButton = findViewById(R.id.copyButton)
-        copyButton.setOnClickListener { copyCode() }
+        binding.copyButton.setOnClickListener { copyCode() }
     }
 
     private fun copyCode() {
         val code = component.getCodeString() ?: return
-        context.copyTextToClipboard("Pix Code", code, "Code copied to clipboard")
+        context.copyTextToClipboard("Pix Code", code, resources.getString(R.string.checkout_qr_code_copied_toast))
     }
 
     override fun isConfirmationRequired(): Boolean = false
@@ -102,6 +88,7 @@ class QRCodeView : AdyenLinearLayout<QRCodeOutputData, QRCodeConfiguration, Acti
         val type = paymentMethodType
         if (type == null || type != outputData.paymentMethodType) {
             paymentMethodType = outputData.paymentMethodType
+            updateMessageText()
             updateLogo()
         }
     }
@@ -110,15 +97,28 @@ class QRCodeView : AdyenLinearLayout<QRCodeOutputData, QRCodeConfiguration, Acti
         val minutes = TimeUnit.MILLISECONDS.toMinutes(timerData.millisUntilFinished)
         val seconds = TimeUnit.MILLISECONDS.toSeconds(timerData.millisUntilFinished) % TimeUnit.MINUTES.toSeconds(1)
         val minutesSecondsString = resources.getString(R.string.checkout_qr_code_time_left_format, minutes, seconds)
-        timerTextView.text = "You have $minutesSecondsString to pay"
-        progressIndicator.progress = timerData.progress
+        binding.textViewTimer.text = resources.getString(R.string.checkout_qr_code_timer_text, minutesSecondsString)
+        binding.progressIndicator.progress = timerData.progress
     }
 
     private fun updateLogo() {
         Logger.d(TAG, "updateLogo - $paymentMethodType")
         val type = paymentMethodType
         if (!type.isNullOrEmpty()) {
-            imageLoader.load(type, imageView)
+            imageLoader.load(type, binding.imageViewLogo)
+        }
+    }
+
+    private fun updateMessageText() {
+        val resId = getMessageTextResource() ?: return
+        binding.textViewTopLabel.setText(resId)
+    }
+
+    @StringRes
+    private fun getMessageTextResource(): Int? {
+        return when (paymentMethodType) {
+            PaymentMethodTypes.PIX -> R.string.checkout_qr_code_pix
+            else -> null
         }
     }
 

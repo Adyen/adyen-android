@@ -33,4 +33,9 @@
         <item name="trackThickness">@dimen/progress_track_height</item>
         <item name="trackCornerRadius">@dimen/progress_track_radius</item>
     </style>
+
+    <style name="AdyenCheckout.QrCode.TimerTextAppearance" parent="AdyenCheckout.TextAppearance">
+        <item name="android:textSize">@dimen/qr_code_timer_text_size</item>
+        <item name="android:textColor">@color/qrCodeTimerTextColor</item>
+    </style>
 </resources>
