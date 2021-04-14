@@ -10,7 +10,6 @@ package com.adyen.checkout.qrcode
 import android.app.Activity
 import android.app.Application
 import android.content.Context
-import android.text.TextUtils
 import androidx.lifecycle.LifecycleOwner
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.Observer
@@ -41,6 +40,7 @@ class QRCodeComponent(application: Application, configuration: QRCodeConfigurati
 
     private val outputLiveData = MutableLiveData<QRCodeOutputData>()
     private var paymentMethodType: String? = null
+    private var qrCodeData: String? = null
     private val statusRepository: StatusRepository = StatusRepository.getInstance(configuration.environment)
 
     private val responseObserver: Observer<StatusResponse> = Observer { statusResponse ->
@@ -61,7 +61,9 @@ class QRCodeComponent(application: Application, configuration: QRCodeConfigurati
     override fun handleActionInternal(activity: Activity, action: Action) {
         val configuration = configuration
             ?: throw ComponentException("Configuration not found")
+        if (action !is QrCodeAction) throw ComponentException("Unsupported action")
         paymentMethodType = action.paymentMethodType
+        qrCodeData = action.qrCodeData
         // Notify UI to get the logo.
         createOutputData(null)
         val data = paymentData ?: return
@@ -82,9 +84,10 @@ class QRCodeComponent(application: Application, configuration: QRCodeConfigurati
     }
 
     private fun onPollingSuccessful(statusResponse: StatusResponse) {
+        val payload = statusResponse.payload
         // Not authorized status should still call /details so that merchant can get more info
-        if (StatusResponseUtils.isFinalResult(statusResponse) && !TextUtils.isEmpty(statusResponse.payload)) {
-            notifyDetails(createDetail(statusResponse.payload!!))
+        if (StatusResponseUtils.isFinalResult(statusResponse) && !payload.isNullOrEmpty()) {
+            notifyDetails(createDetail(payload))
         } else {
             notifyException(ComponentException("Payment was not completed. - " + statusResponse.resultCode))
         }
@@ -122,6 +125,10 @@ class QRCodeComponent(application: Application, configuration: QRCodeConfigurati
         val isValid = statusResponse != null && StatusResponseUtils.isFinalResult(statusResponse)
         val outputData = QRCodeOutputData(isValid, paymentMethodType)
         outputLiveData.value = outputData
+    }
+
+    fun getCodeString(): String? {
+        return qrCodeData
     }
 
     override fun getSupportedActionTypes(): List<String> = ACTION_TYPES

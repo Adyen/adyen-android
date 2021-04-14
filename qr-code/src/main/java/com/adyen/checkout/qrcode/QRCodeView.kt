@@ -18,6 +18,7 @@ import androidx.lifecycle.LifecycleOwner
 import androidx.lifecycle.Observer
 import com.adyen.checkout.components.ActionComponentData
 import com.adyen.checkout.components.api.ImageLoader
+import com.adyen.checkout.components.extensions.copyTextToClipboard
 import com.adyen.checkout.components.ui.view.AdyenLinearLayout
 import com.adyen.checkout.core.exception.ComponentException
 import com.adyen.checkout.core.log.LogUtil
@@ -65,6 +66,12 @@ class QRCodeView : AdyenLinearLayout<QRCodeOutputData, QRCodeConfiguration, Acti
         imageView = findViewById(R.id.imageView_logo)
         topLabelTextView = findViewById(R.id.textView_top_label)
         copyButton = findViewById(R.id.copyButton)
+        copyButton.setOnClickListener { copyCode() }
+    }
+
+    private fun copyCode() {
+        val code = component.getCodeString() ?: return
+        context.copyTextToClipboard("Pix Code", code, "Code copied to clipboard")
     }
 
     override fun isConfirmationRequired(): Boolean = false
