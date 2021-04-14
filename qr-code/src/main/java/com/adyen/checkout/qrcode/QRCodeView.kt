@@ -27,6 +27,7 @@ import java.util.concurrent.TimeUnit
 
 private val TAG = LogUtil.getTag()
 
+@Suppress("TooManyFunctions")
 class QRCodeView : AdyenLinearLayout<QRCodeOutputData, QRCodeConfiguration, ActionComponentData, QRCodeComponent>, Observer<QRCodeOutputData> {
 
     private val binding: QrcodeViewBinding = QrcodeViewBinding.inflate(LayoutInflater.from(context), this)
@@ -74,6 +75,7 @@ class QRCodeView : AdyenLinearLayout<QRCodeOutputData, QRCodeConfiguration, Acti
     }
 
     override fun initLocalizedStrings(localizedContext: Context) {
+        // TODO: 14/04/2021 IMPLEMENT
     }
 
     override fun observeComponentChanges(lifecycleOwner: LifecycleOwner) {
@@ -121,5 +123,4 @@ class QRCodeView : AdyenLinearLayout<QRCodeOutputData, QRCodeConfiguration, Acti
             else -> null
         }
     }
-
 }

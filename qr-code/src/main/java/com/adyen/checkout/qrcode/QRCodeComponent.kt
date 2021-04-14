@@ -35,8 +35,10 @@ import java.util.concurrent.TimeUnit
 private val TAG = LogUtil.getTag()
 private val ACTION_TYPES = listOf(QrCodeAction.ACTION_TYPE)
 private const val PAYLOAD_DETAILS_KEY = "payload"
-private val STATUS_POLLING_INTERVAL_MILLIS = TimeUnit.SECONDS.toMillis(1L) //1 second
+private val STATUS_POLLING_INTERVAL_MILLIS = TimeUnit.SECONDS.toMillis(1L) // 1 second
+private const val HUNDRED = 100
 
+@Suppress("TooManyFunctions")
 class QRCodeComponent(application: Application, configuration: QRCodeConfiguration) :
     BaseActionComponent<QRCodeConfiguration>(application, configuration),
     ViewableComponent<QRCodeOutputData, QRCodeConfiguration, ActionComponentData> {
@@ -46,7 +48,10 @@ class QRCodeComponent(application: Application, configuration: QRCodeConfigurati
     private var qrCodeData: String? = null
     private val statusRepository: StatusRepository = StatusRepository.getInstance(configuration.environment)
     private val timerLiveData = MutableLiveData<TimerData>()
-    private var statusCountDownTimer: CountDownTimer = object : CountDownTimer(statusRepository.maxPollingDurationMillis, STATUS_POLLING_INTERVAL_MILLIS) {
+    private var statusCountDownTimer: CountDownTimer = object : CountDownTimer(
+        statusRepository.maxPollingDurationMillis,
+        STATUS_POLLING_INTERVAL_MILLIS
+    ) {
         override fun onTick(millisUntilFinished: Long) {
             onTimerTick(millisUntilFinished)
         }
@@ -63,7 +68,8 @@ class QRCodeComponent(application: Application, configuration: QRCodeConfigurati
             onPollingSuccessful(statusResponse)
         }
     }
-    private val mErrorObserver: Observer<ComponentException> = Observer { e -> // StatusRepository will post null errors to reset it's status. We can ignore.
+    private val mErrorObserver: Observer<ComponentException> = Observer { e ->
+        // StatusRepository will post null errors to reset it's status. We can ignore.
         if (e != null) {
             Logger.e(TAG, "onError")
             notifyException(e)
@@ -150,7 +156,7 @@ class QRCodeComponent(application: Application, configuration: QRCodeConfigurati
     }
 
     private fun onTimerTick(millisUntilFinished: Long) {
-        val progressPercentage = (100 * millisUntilFinished / statusRepository.maxPollingDurationMillis).toInt()
+        val progressPercentage = (HUNDRED * millisUntilFinished / statusRepository.maxPollingDurationMillis).toInt()
         timerLiveData.postValue(TimerData(millisUntilFinished, progressPercentage))
     }
 
@@ -158,7 +164,11 @@ class QRCodeComponent(application: Application, configuration: QRCodeConfigurati
 
     companion object {
         @JvmField
-        val PROVIDER: ActionComponentProvider<QRCodeComponent> = ActionComponentProviderImpl(QRCodeComponent::class.java, QRCodeConfiguration::class.java, true)
+        val PROVIDER: ActionComponentProvider<QRCodeComponent> = ActionComponentProviderImpl(
+            QRCodeComponent::class.java,
+            QRCodeConfiguration::class.java,
+            true
+        )
     }
 }
 

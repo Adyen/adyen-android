@@ -76,6 +76,7 @@ public final class StatusRepository {
     long mPollingDelay;
     private long mPollingStartTime;
 
+    @NonNull
     public static StatusRepository getInstance(@NonNull Environment environment) {
         synchronized (StatusRepository.class) {
             if (sInstance == null) {
@@ -90,10 +91,12 @@ public final class StatusRepository {
         mStatusApi = StatusApi.getInstance(environment);
     }
 
+    @NonNull
     public LiveData<StatusResponse> getStatusResponseLiveData() {
         return mStatusResponseLiveData;
     }
 
+    @NonNull
     public LiveData<ComponentException> getErrorLiveData() {
         return mStatusErrorLiveData;
     }

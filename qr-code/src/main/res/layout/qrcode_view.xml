@@ -17,7 +17,8 @@
         android:id="@+id/imageView_logo"
         style="@style/AdyenCheckout.Image.Logo.Large"
         android:layout_gravity="center_horizontal"
-        android:contentDescription="@null" />
+        android:contentDescription="@null"
+        tools:ignore="RequiredSize" />
 
     <TextView
         android:id="@+id/textView_top_label"
@@ -27,6 +28,7 @@
         android:layout_gravity="center_horizontal"
         android:layout_margin="@dimen/standard_margin"
         android:gravity="center"
+        android:textIsSelectable="false"
         tools:text="@string/checkout_qr_code_pix" />
 
     <com.google.android.material.progressindicator.LinearProgressIndicator
@@ -47,6 +49,7 @@
         android:layout_marginTop="@dimen/standard_three_quarters_margin"
         android:layout_marginBottom="@dimen/standard_margin"
         android:gravity="center"
+        android:textIsSelectable="false"
         tools:text="You have 13:46 to pay" />
 
     <androidx.appcompat.widget.AppCompatButton
