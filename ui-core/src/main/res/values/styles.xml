@@ -140,7 +140,7 @@
         <item name="android:theme">@style/AdyenCheckout.PrimaryFlatButton</item>
     </style>
 
-    <style name="AdyenCheckout.PrimaryFlatButton" parent="Theme.AppCompat.Light">
+    <style name="AdyenCheckout.PrimaryFlatButton" parent="AdyenCheckout">
         <item name="android:buttonStyle">@style/Widget.AppCompat.Button.Borderless.Colored</item>
         <item name="colorAccent">@color/primaryColor</item>
     </style>
