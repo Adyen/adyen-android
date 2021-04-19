@@ -45,7 +45,6 @@ android {
 }
 
 dependencies {
-    implementation "com.google.android.material:material:$material_version"
     //Tests
     testImplementation "junit:junit:$junit_version"
     androidTestImplementation "androidx.test.ext:junit:$test_ext_version"
@@ -54,4 +53,7 @@ dependencies {
     // Checkout
     api project(':components-core')
     api project(':ui-core')
+
+    // Dependencies
+    implementation "com.google.android.material:material:$material_version"
 }

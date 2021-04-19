@@ -10,19 +10,9 @@
 
     <style name="AdyenCheckout.QrCode" />
 
-    <style name="AdyenCheckout.QrCode.CopyButton" parent="Widget.AppCompat.Button.Colored">
-        <item name="android:layout_width">match_parent</item>
+    <style name="AdyenCheckout.QrCode.CopyButton" parent="AdyenCheckout.Button.Colored">
         <item name="android:layout_height">@dimen/copy_button_height</item>
-        <item name="android:layout_marginLeft">@dimen/standard_margin</item>
-        <item name="android:layout_marginRight">@dimen/standard_margin</item>
-        <item name="android:textColor">@color/white</item>
-        <item name="android:theme">@style/AdyenCheckout.QrCode.CopyButton.Theme</item>
         <item name="android:textAllCaps">false</item>
-    </style>
-
-    <style name="AdyenCheckout.QrCode.CopyButton.Theme" parent="Theme.AppCompat.Light">
-        <item name="android:buttonStyle">@style/Widget.AppCompat.Button.Borderless.Colored</item>
-        <item name="colorAccent">@color/primaryColor</item>
     </style>
 
     <style name="AdyenCheckout.QrCode.ProgressIndicator" parent="Widget.MaterialComponents.LinearProgressIndicator">

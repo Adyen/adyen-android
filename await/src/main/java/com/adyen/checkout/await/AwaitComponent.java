@@ -162,7 +162,7 @@ public class AwaitComponent extends BaseActionComponent<AwaitConfiguration>
 
     @Override
     public void sendAnalyticsEvent(@NonNull Context context) {
-        // TODO: 28/08/2020 Do we have an event for this?
+        // noop
     }
 
 

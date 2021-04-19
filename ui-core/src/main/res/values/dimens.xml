@@ -24,4 +24,6 @@
     <dimen name="input_layout_height">82dp</dimen>
     <dimen name="input_height">55dp</dimen>
 
+    <dimen name="primary_button_height">60dp</dimen>
+
 </resources>
