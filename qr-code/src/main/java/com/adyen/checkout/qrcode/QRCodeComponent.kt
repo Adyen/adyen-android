@@ -164,7 +164,7 @@ class QRCodeComponent(application: Application, configuration: QRCodeConfigurati
 
     companion object {
         @JvmField
-        val PROVIDER: ActionComponentProvider<QRCodeComponent> = ActionComponentProviderImpl(
+        val PROVIDER: ActionComponentProvider<QRCodeComponent, QRCodeConfiguration> = ActionComponentProviderImpl(
             QRCodeComponent::class.java,
             QRCodeConfiguration::class.java,
             true

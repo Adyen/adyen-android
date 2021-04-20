@@ -50,7 +50,7 @@ public class AwaitComponent extends BaseActionComponent<AwaitConfiguration>
 
     private static final String PAYLOAD_DETAILS_KEY = "payload";
 
-    public static final ActionComponentProvider<AwaitComponent> PROVIDER
+    public static final ActionComponentProvider<AwaitComponent, AwaitConfiguration> PROVIDER
             = new ActionComponentProviderImpl<>(AwaitComponent.class, AwaitConfiguration.class, true);
 
     final StatusRepository mStatusRepository;

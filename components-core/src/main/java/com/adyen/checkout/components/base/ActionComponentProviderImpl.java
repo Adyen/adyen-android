@@ -20,7 +20,7 @@ import com.adyen.checkout.components.base.lifecycle.ActionComponentViewModel;
 import com.adyen.checkout.components.base.lifecycle.ActionComponentViewModelFactory;
 
 public class ActionComponentProviderImpl<ConfigurationT extends Configuration, ComponentT extends ActionComponentViewModel<ConfigurationT>>
-        implements ActionComponentProvider<ComponentT> {
+        implements ActionComponentProvider<ComponentT, ConfigurationT> {
 
     private final Class<ComponentT> mComponentClass;
     private final Class<ConfigurationT> mConfigurationClass;

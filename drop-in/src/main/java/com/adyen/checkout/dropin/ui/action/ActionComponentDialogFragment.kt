@@ -15,7 +15,6 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.lifecycle.Observer
 import com.adyen.checkout.await.AwaitComponent
-import com.adyen.checkout.await.AwaitConfiguration
 import com.adyen.checkout.components.ActionComponent
 import com.adyen.checkout.components.ActionComponentData
 import com.adyen.checkout.components.ComponentError
@@ -33,7 +32,6 @@ import com.adyen.checkout.dropin.databinding.FragmentActionComponentBinding
 import com.adyen.checkout.dropin.getViewFor
 import com.adyen.checkout.dropin.ui.base.DropInBottomSheetDialogFragment
 import com.adyen.checkout.qrcode.QRCodeComponent
-import com.adyen.checkout.qrcode.QRCodeConfiguration
 
 @SuppressWarnings("TooManyFunctions")
 class ActionComponentDialogFragment : DropInBottomSheetDialogFragment(), Observer<ActionComponentData> {
@@ -128,14 +126,14 @@ class ActionComponentDialogFragment : DropInBottomSheetDialogFragment(), Observe
                 AwaitComponent.PROVIDER.get(
                     this,
                     requireActivity().application,
-                    dropInViewModel.dropInConfiguration.getConfigurationForAction<AwaitConfiguration>(requireContext())
+                    dropInViewModel.dropInConfiguration.getConfigurationForAction(requireContext())
                 )
             }
             ActionTypes.QR_CODE -> {
                 QRCodeComponent.PROVIDER.get(
                     this,
                     requireActivity().application,
-                    dropInViewModel.dropInConfiguration.getConfigurationForAction<QRCodeConfiguration>(requireContext())
+                    dropInViewModel.dropInConfiguration.getConfigurationForAction(requireContext())
                 )
             }
             else -> {

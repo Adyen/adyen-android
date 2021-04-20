@@ -38,7 +38,7 @@ import java.util.List;
 public class WeChatPayActionComponent extends BaseActionComponent<WeChatPayActionConfiguration> {
     private static final String TAG = LogUtil.getTag();
 
-    public static final ActionComponentProvider<WeChatPayActionComponent> PROVIDER =
+    public static final ActionComponentProvider<WeChatPayActionComponent, WeChatPayActionConfiguration> PROVIDER =
             new ActionComponentProviderImpl<>(WeChatPayActionComponent.class, WeChatPayActionConfiguration.class);
 
     private final IWXAPI mApi;

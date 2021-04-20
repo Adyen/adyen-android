@@ -39,7 +39,7 @@ import java.util.List;
 public final class RedirectComponent extends BaseActionComponent<RedirectConfiguration> {
     private static final String TAG = LogUtil.getTag();
 
-    public static final ActionComponentProvider<RedirectComponent> PROVIDER =
+    public static final ActionComponentProvider<RedirectComponent, RedirectConfiguration> PROVIDER =
             new ActionComponentProviderImpl<>(RedirectComponent.class, RedirectConfiguration.class);
 
     public RedirectComponent(@NonNull Application application, @Nullable RedirectConfiguration configuration) {
