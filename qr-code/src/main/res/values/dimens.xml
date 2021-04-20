@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+  ~ Copyright (c) 2021 Adyen N.V.
+  ~
+  ~ This file is open source and available under the MIT license. See the LICENSE file for more info.
+  ~
+  ~ Created by josephj on 14/4/2021.
+  -->
+
+<resources>
+    <dimen name="copy_button_height">52dp</dimen>
+    <dimen name="progress_track_width">150dp</dimen>
+    <dimen name="progress_track_height">4dp</dimen>
+    <dimen name="progress_track_radius">2dp</dimen>
+    <dimen name="qr_code_timer_text_size">12sp</dimen>
+</resources>

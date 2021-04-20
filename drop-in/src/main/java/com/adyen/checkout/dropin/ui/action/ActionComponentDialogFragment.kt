@@ -31,6 +31,7 @@ import com.adyen.checkout.dropin.R
 import com.adyen.checkout.dropin.databinding.FragmentActionComponentBinding
 import com.adyen.checkout.dropin.getViewFor
 import com.adyen.checkout.dropin.ui.base.DropInBottomSheetDialogFragment
+import com.adyen.checkout.qrcode.QRCodeComponent
 
 @SuppressWarnings("TooManyFunctions")
 class ActionComponentDialogFragment : DropInBottomSheetDialogFragment(), Observer<ActionComponentData> {
@@ -126,6 +127,13 @@ class ActionComponentDialogFragment : DropInBottomSheetDialogFragment(), Observe
                     this,
                     requireActivity().application,
                     dropInViewModel.dropInConfiguration.getConfigurationFor(ActionTypes.AWAIT, requireContext())
+                )
+            }
+            ActionTypes.QR_CODE -> {
+                QRCodeComponent.PROVIDER.get(
+                    this,
+                    requireActivity().application,
+                    dropInViewModel.dropInConfiguration.getConfigurationFor(ActionTypes.QR_CODE, requireContext())
                 )
             }
             else -> {

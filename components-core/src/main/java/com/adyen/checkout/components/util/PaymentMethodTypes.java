@@ -40,6 +40,7 @@ public final class PaymentMethodTypes {
     public static final String WECHAT_PAY_SDK = "wechatpaySDK";
     public static final String MB_WAY = "mbway";
     public static final String BLIK = "blik";
+    public static final String PIX = "pix";
 
     // Voucher payment methods that are not yet supported
     public static final String MULTIBANCO = "multibanco";

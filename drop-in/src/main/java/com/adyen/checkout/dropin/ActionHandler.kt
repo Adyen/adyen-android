@@ -34,7 +34,7 @@ class ActionHandler(
     }
 
     // Actions which will be handled by the Fragment with it's associated view
-    private val viewableActionTypes = listOf(ActionTypes.AWAIT)
+    private val viewableActionTypes = listOf(ActionTypes.AWAIT, ActionTypes.QR_CODE)
 
     private val redirectComponent = RedirectComponent.PROVIDER.get(
         activity,

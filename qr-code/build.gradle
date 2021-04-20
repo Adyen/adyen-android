@@ -1,9 +1,9 @@
 /*
- * Copyright (c) 2019 Adyen N.V.
+ * Copyright (c) 2021 Adyen N.V.
  *
  * This file is open source and available under the MIT license. See the LICENSE file for more info.
  *
- * Created by caiof on 8/2/2019.
+ * Created by josephj on 26/3/2021.
  */
 
 plugins {
@@ -11,10 +11,9 @@ plugins {
     id 'kotlin-android'
 }
 
-// Maven artifact
-ext.mavenArtifactId = "drop-in"
-ext.mavenArtifactName = "Adyen checkout drop-in component"
-ext.mavenArtifactDescription = "Adyen checkout drop-in component client for Adyen's Checkout API."
+ext.mavenArtifactId = "qr-code"
+ext.mavenArtifactName = "Adyen checkout QR code component"
+ext.mavenArtifactDescription = "Adyen checkout QR code component client for Adyen's Checkout API."
 
 apply from: "../config/gradle/sharedTasks.gradle"
 
@@ -29,9 +28,6 @@ android {
 
         testInstrumentationRunner 'androidx.test.runner.AndroidJUnitRunner'
         consumerProguardFiles "consumer-rules.pro"
-
-        // Get scheme for redirect result
-        manifestPlaceholders = ["checkoutRedirectScheme": rootProject.ext.checkoutRedirectScheme]
     }
 
     compileOptions {
@@ -46,7 +42,6 @@ android {
     buildFeatures {
         viewBinding true
     }
-
 }
 
 dependencies {
@@ -56,29 +51,9 @@ dependencies {
     androidTestImplementation "androidx.test.espresso:espresso-core:$espresso_version"
 
     // Checkout
-    api project(":3ds2")
-    api project(":await")
-    api project(':bcmc')
-    api project(':blik')
-    api project(":card")
-    api project(':dotpay')
-    api project(':entercash')
-    api project(':eps')
-    api project(':googlepay')
-    api project(':ideal')
-    api project(':mbway')
-    api project(':molpay')
-    api project(':qr-code')
-    api project(':openbanking')
-    api project(":redirect")
-    api project(':sepa')
-    api project(':wechatpay')
+    api project(':components-core')
+    api project(':ui-core')
 
     // Dependencies
-    implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk7:$kotlin_stdlib_version"
-    implementation "androidx.recyclerview:recyclerview:$recyclerview_version"
     implementation "com.google.android.material:material:$material_version"
-    // contains kotlinx.coroutines
-    implementation 'androidx.lifecycle:lifecycle-runtime-ktx:2.2.0'
-
 }

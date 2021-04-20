@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="utf-8"?><!--
+  ~ Copyright (c) 2021 Adyen N.V.
+  ~
+  ~ This file is open source and available under the MIT license. See the LICENSE file for more info.
+  ~
+  ~ Created by josephj on 26/3/2021.
+  -->
+
+<resources>
+
+    <style name="AdyenCheckout.QrCode" />
+
+    <style name="AdyenCheckout.QrCode.CopyButton" parent="AdyenCheckout.Button.Colored">
+        <item name="android:layout_height">@dimen/copy_button_height</item>
+        <item name="android:textAllCaps">false</item>
+    </style>
+
+    <style name="AdyenCheckout.QrCode.ProgressIndicator" parent="Widget.MaterialComponents.LinearProgressIndicator">
+        <item name="android:layout_width">@dimen/progress_track_width</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="indicatorColor">@color/progressIndicatorColor</item>
+        <item name="trackColor">@color/progressTrackColor</item>
+        <item name="trackThickness">@dimen/progress_track_height</item>
+        <item name="trackCornerRadius">@dimen/progress_track_radius</item>
+    </style>
+
+    <style name="AdyenCheckout.QrCode.TimerTextAppearance" parent="AdyenCheckout.TextAppearance">
+        <item name="android:textSize">@dimen/qr_code_timer_text_size</item>
+        <item name="android:textColor">@color/qrCodeTimerTextColor</item>
+    </style>
+</resources>

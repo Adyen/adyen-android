@@ -6,11 +6,11 @@
  * Created by caiof on 8/9/2020.
  */
 
-package com.adyen.checkout.await.api;
+package com.adyen.checkout.components.status.api;
 
 import androidx.annotation.NonNull;
 
-import com.adyen.checkout.await.model.StatusResponse;
+import com.adyen.checkout.components.status.model.StatusResponse;
 import com.adyen.checkout.core.exception.NoConstructorException;
 
 public final class StatusResponseUtils {

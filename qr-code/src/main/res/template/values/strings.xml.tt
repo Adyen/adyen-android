@@ -1,13 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!--
-  ~ Copyright (c) 2020 Adyen N.V.
+  ~ Copyright (c) 2021 Adyen N.V.
   ~
   ~ This file is open source and available under the MIT license. See the LICENSE file for more info.
   ~
-  ~ Created by caiof on 2/9/2020.
+  ~ Created by josephj on 26/3/2021.
   -->
 
 <resources>
-    <dimen name="logo_large_width">80dp</dimen>
-    <dimen name="logo_large_height">52dp</dimen>
 </resources>
