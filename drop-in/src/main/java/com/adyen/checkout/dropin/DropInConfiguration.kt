@@ -101,9 +101,9 @@ class DropInConfiguration : Configuration, Parcelable {
         }
     }
 
-    internal fun <T : Configuration> getConfigurationForAction(action: String, context: Context): T {
+    internal inline fun <reified T : Configuration> getConfigurationForAction(context: Context): T {
         // TODO fetch from availableConfigs after we support action configs
-        return getDefaultConfigForAction(action, context, this)
+        return getDefaultConfigForAction(context, this)
     }
 
     /**

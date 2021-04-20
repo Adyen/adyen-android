@@ -69,6 +69,7 @@ import com.adyen.checkout.redirect.RedirectConfiguration
 import com.adyen.checkout.sepa.SepaComponent
 import com.adyen.checkout.sepa.SepaConfiguration
 import com.adyen.checkout.sepa.SepaView
+import com.adyen.checkout.wechatpay.WeChatPayActionConfiguration
 import com.adyen.checkout.wechatpay.WeChatPayComponent
 import com.adyen.checkout.wechatpay.WeChatPayConfiguration
 
@@ -117,23 +118,20 @@ internal fun <T : Configuration> getDefaultConfigForPaymentMethod(
 }
 
 @Suppress("ComplexMethod", "LongMethod")
-internal fun <T : Configuration> getDefaultConfigForAction(
-    action: String,
+internal inline fun <reified T : Configuration> getDefaultConfigForAction(
     context: Context,
     dropInConfiguration: DropInConfiguration
 ): T {
     val clientKey = dropInConfiguration.clientKey
 
     // get default builder for Configuration type
-    val builder: BaseConfigurationBuilder<out Configuration> = when (action) {
-        ActionTypes.AWAIT -> AwaitConfiguration.Builder(context, clientKey)
-        ActionTypes.REDIRECT -> RedirectConfiguration.Builder(context, clientKey)
-        ActionTypes.QR_CODE -> QRCodeConfiguration.Builder(context, clientKey)
-        ActionTypes.THREEDS2_FINGERPRINT,
-        ActionTypes.THREEDS2_CHALLENGE,
-        ActionTypes.THREEDS2 -> Adyen3DS2Configuration.Builder(context, clientKey)
-        // ActionTypes.SDK is not distinguishable only by the type since we need the payment method too
-        else -> throw CheckoutException("Unable to find component configuration for action - $action")
+    val builder: BaseConfigurationBuilder<out Configuration> = when (T::class) {
+        AwaitConfiguration::class -> AwaitConfiguration.Builder(context, clientKey)
+        RedirectConfiguration::class -> RedirectConfiguration.Builder(context, clientKey)
+        QRCodeConfiguration::class -> QRCodeConfiguration.Builder(context, clientKey)
+        Adyen3DS2Configuration::class -> Adyen3DS2Configuration.Builder(context, clientKey)
+        WeChatPayActionConfiguration::class -> WeChatPayActionConfiguration.Builder(context, clientKey)
+        else -> throw CheckoutException("Unable to find component configuration for class - ${T::class}")
     }
 
     builder.setShopperLocale(dropInConfiguration.shopperLocale)

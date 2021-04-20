@@ -14,13 +14,16 @@ import android.os.Bundle
 import androidx.fragment.app.FragmentActivity
 import androidx.lifecycle.Observer
 import com.adyen.checkout.adyen3ds2.Adyen3DS2Component
+import com.adyen.checkout.adyen3ds2.Adyen3DS2Configuration
 import com.adyen.checkout.components.ActionComponentData
 import com.adyen.checkout.components.model.payments.response.Action
 import com.adyen.checkout.components.util.ActionTypes
 import com.adyen.checkout.core.log.LogUtil
 import com.adyen.checkout.core.log.Logger
 import com.adyen.checkout.redirect.RedirectComponent
+import com.adyen.checkout.redirect.RedirectConfiguration
 import com.adyen.checkout.wechatpay.WeChatPayActionComponent
+import com.adyen.checkout.wechatpay.WeChatPayActionConfiguration
 
 class ActionHandler(
     activity: FragmentActivity,
@@ -39,15 +42,18 @@ class ActionHandler(
     private val redirectComponent = RedirectComponent.PROVIDER.get(
         activity,
         activity.application,
-        dropInConfiguration.getConfigurationForAction(ActionTypes.REDIRECT, activity)
+        dropInConfiguration.getConfigurationForAction<RedirectConfiguration>(activity)
     )
     private val adyen3DS2Component = Adyen3DS2Component.PROVIDER.get(
         activity,
         activity.application,
-        dropInConfiguration.getConfigurationForAction(ActionTypes.THREEDS2, activity)
+        dropInConfiguration.getConfigurationForAction<Adyen3DS2Configuration>(activity)
     )
-    // get config from Drop-in when available
-    private val weChatPayActionComponent = WeChatPayActionComponent.PROVIDER.get(activity, activity.application, null)
+    private val weChatPayActionComponent = WeChatPayActionComponent.PROVIDER.get(
+        activity,
+        activity.application,
+        dropInConfiguration.getConfigurationForAction<WeChatPayActionConfiguration>(activity)
+    )
 
     init {
         redirectComponent.observe(activity, this)
