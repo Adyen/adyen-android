@@ -115,7 +115,7 @@ class PaymentMethodListDialogFragment : DropInBottomSheetDialogFragment(), Payme
             PaymentMethodTypes.GOOGLE_PAY -> {
                 protocol.startGooglePay(
                     dropInViewModel.getPaymentMethod(paymentMethod.type),
-                    dropInViewModel.dropInConfiguration.getConfigurationFor(PaymentMethodTypes.GOOGLE_PAY, requireContext())
+                    dropInViewModel.dropInConfiguration.getConfigurationForPaymentMethod(PaymentMethodTypes.GOOGLE_PAY, requireContext())
                 )
             }
             PaymentMethodTypes.WECHAT_PAY_SDK -> {

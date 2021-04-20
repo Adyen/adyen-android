@@ -126,14 +126,14 @@ class ActionComponentDialogFragment : DropInBottomSheetDialogFragment(), Observe
                 AwaitComponent.PROVIDER.get(
                     this,
                     requireActivity().application,
-                    dropInViewModel.dropInConfiguration.getConfigurationFor(ActionTypes.AWAIT, requireContext())
+                    dropInViewModel.dropInConfiguration.getConfigurationForAction(ActionTypes.AWAIT, requireContext())
                 )
             }
             ActionTypes.QR_CODE -> {
                 QRCodeComponent.PROVIDER.get(
                     this,
                     requireActivity().application,
-                    dropInViewModel.dropInConfiguration.getConfigurationFor(ActionTypes.QR_CODE, requireContext())
+                    dropInViewModel.dropInConfiguration.getConfigurationForAction(ActionTypes.QR_CODE, requireContext())
                 )
             }
             else -> {
