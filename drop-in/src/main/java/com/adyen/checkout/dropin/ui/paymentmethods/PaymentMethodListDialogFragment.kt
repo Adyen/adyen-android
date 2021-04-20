@@ -111,22 +111,25 @@ class PaymentMethodListDialogFragment : DropInBottomSheetDialogFragment(), Payme
         Logger.d(TAG, "onPaymentMethodSelected - ${paymentMethod.type}")
 
         // Check some specific payment methods that don't need to show a view
-        when (paymentMethod.type) {
-            PaymentMethodTypes.GOOGLE_PAY -> {
+        when {
+            paymentMethod.type == PaymentMethodTypes.GOOGLE_PAY -> {
+                Logger.d(TAG, "onPaymentMethodSelected: starting Google Pay")
                 protocol.startGooglePay(
                     dropInViewModel.getPaymentMethod(paymentMethod.type),
                     dropInViewModel.dropInConfiguration.getConfigurationForPaymentMethod(PaymentMethodTypes.GOOGLE_PAY, requireContext())
                 )
             }
-            PaymentMethodTypes.WECHAT_PAY_SDK -> {
+            PaymentMethodTypes.SUPPORTED_ACTION_ONLY_PAYMENT_METHODS.contains(paymentMethod.type) -> {
+                Logger.d(TAG, "onPaymentMethodSelected: payment method does not need a component, sending payment")
                 sendPayment(paymentMethod.type)
             }
+            PaymentMethodTypes.SUPPORTED_PAYMENT_METHODS.contains(paymentMethod.type) -> {
+                Logger.d(TAG, "onPaymentMethodSelected: payment method is supported")
+                protocol.showComponentDialog(dropInViewModel.getPaymentMethod(paymentMethod.type))
+            }
             else -> {
-                if (PaymentMethodTypes.SUPPORTED_PAYMENT_METHODS.contains(paymentMethod.type)) {
-                    protocol.showComponentDialog(dropInViewModel.getPaymentMethod(paymentMethod.type))
-                } else {
-                    sendPayment(paymentMethod.type)
-                }
+                Logger.d(TAG, "onPaymentMethodSelected: unidentified payment method, sending payment in case of redirect")
+                sendPayment(paymentMethod.type)
             }
         }
     }

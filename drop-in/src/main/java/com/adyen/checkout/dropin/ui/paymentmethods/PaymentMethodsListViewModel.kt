@@ -84,7 +84,8 @@ class PaymentMethodsListViewModel(
                 type == null -> {
                     throw CheckoutException("PaymentMethod type is null")
                 }
-                PaymentMethodTypes.SUPPORTED_PAYMENT_METHODS.contains(type) -> {
+                PaymentMethodTypes.SUPPORTED_PAYMENT_METHODS.contains(type)
+                    && !PaymentMethodTypes.SUPPORTED_ACTION_ONLY_PAYMENT_METHODS.contains(type) -> {
                     Logger.v(TAG, "Supported payment method: $type")
                     // We assume payment method is available and remove it later when the callback comes
                     // this is the overwhelming majority of cases, and we keep the list ordered this way.
