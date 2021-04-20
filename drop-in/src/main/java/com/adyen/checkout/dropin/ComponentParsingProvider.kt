@@ -300,7 +300,10 @@ internal fun getComponentFor(
             SepaComponent.PROVIDER.get(fragment, paymentMethod, sepaConfiguration)
         }
         PaymentMethodTypes.WECHAT_PAY_SDK -> {
-            val weChatPayConfiguration: WeChatPayConfiguration = dropInConfiguration.getConfigurationForPaymentMethod(PaymentMethodTypes.WECHAT_PAY_SDK, context)
+            val weChatPayConfiguration: WeChatPayConfiguration = dropInConfiguration.getConfigurationForPaymentMethod(
+                PaymentMethodTypes.WECHAT_PAY_SDK,
+                context
+            )
             WeChatPayComponent.PROVIDER.get(fragment, paymentMethod, weChatPayConfiguration)
         }
 

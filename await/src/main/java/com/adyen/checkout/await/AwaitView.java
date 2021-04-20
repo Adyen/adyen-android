@@ -115,7 +115,9 @@ public class AwaitView extends AdyenLinearLayout<AwaitOutputData, AwaitConfigura
     }
 
     private void updateMessageText() {
-        if(getMessageTextResource() == null) return;
+        if (getMessageTextResource() == null) {
+            return;
+        }
         mTextViewOpenApp.setText(getMessageTextResource());
     }
 

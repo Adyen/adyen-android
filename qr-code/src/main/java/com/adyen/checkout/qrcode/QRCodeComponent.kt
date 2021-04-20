@@ -164,7 +164,7 @@ class QRCodeComponent(application: Application, configuration: QRCodeConfigurati
 
     override fun getSupportedActionTypes(): List<String> = ACTION_TYPES
 
-    override fun getSupportedPaymentMethodTypes(): List<String>  = PAYMENT_METHODS
+    override fun getSupportedPaymentMethodTypes(): List<String> = PAYMENT_METHODS
 
     companion object {
         @JvmField
