@@ -31,6 +31,7 @@ import com.adyen.checkout.components.base.lifecycle.BaseLifecycleObserver;
 import com.adyen.checkout.components.model.payments.response.Action;
 import com.adyen.checkout.components.model.payments.response.AwaitAction;
 import com.adyen.checkout.components.status.StatusRepository;
+import com.adyen.checkout.components.util.PaymentMethodTypes;
 import com.adyen.checkout.core.exception.CheckoutException;
 import com.adyen.checkout.core.exception.ComponentException;
 import com.adyen.checkout.core.log.LogUtil;
@@ -93,6 +94,13 @@ public class AwaitComponent extends BaseActionComponent<AwaitConfiguration>
     protected List<String> getSupportedActionTypes() {
         final String[] supportedCodes = {AwaitAction.ACTION_TYPE};
         return Collections.unmodifiableList(Arrays.asList(supportedCodes));
+    }
+
+    @NonNull
+    @Override
+    protected List<String> getSupportedPaymentMethodTypes() {
+        final String[] supportedPaymentMethods = {PaymentMethodTypes.BLIK, PaymentMethodTypes.MB_WAY};
+        return Collections.unmodifiableList(Arrays.asList(supportedPaymentMethods));
     }
 
     @Override

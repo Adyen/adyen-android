@@ -85,6 +85,12 @@ public final class RedirectComponent extends BaseActionComponent<RedirectConfigu
         return Collections.unmodifiableList(Arrays.asList(supportedCodes));
     }
 
+    @Nullable
+    @Override
+    protected List<String> getSupportedPaymentMethodTypes() {
+        return null;
+    }
+
     @Override
     protected void handleActionInternal(@NonNull Activity activity, @NonNull Action action) throws ComponentException {
         final RedirectAction redirectAction = (RedirectAction) action;

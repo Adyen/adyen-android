@@ -94,6 +94,8 @@ class Adyen3DS2Component(application: Application, configuration: Adyen3DS2Confi
         )
     }
 
+    override fun getSupportedPaymentMethodTypes(): List<String>? = null
+
     @Throws(ComponentException::class)
     override fun handleActionInternal(activity: Activity, action: Action) {
         when (action.type) {
