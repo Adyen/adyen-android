@@ -39,15 +39,18 @@ class ActionHandler(
     private val redirectComponent = RedirectComponent.PROVIDER.get(
         activity,
         activity.application,
-        dropInConfiguration.getConfigurationFor(ActionTypes.REDIRECT, activity)
+        dropInConfiguration.getConfigurationForAction(activity)
     )
     private val adyen3DS2Component = Adyen3DS2Component.PROVIDER.get(
         activity,
         activity.application,
-        dropInConfiguration.getConfigurationFor(ActionTypes.THREEDS2, activity)
+        dropInConfiguration.getConfigurationForAction(activity)
     )
-    // get config from Drop-in when available
-    private val weChatPayActionComponent = WeChatPayActionComponent.PROVIDER.get(activity, activity.application, null)
+    private val weChatPayActionComponent = WeChatPayActionComponent.PROVIDER.get(
+        activity,
+        activity.application,
+        dropInConfiguration.getConfigurationForAction(activity)
+    )
 
     init {
         redirectComponent.observe(activity, this)

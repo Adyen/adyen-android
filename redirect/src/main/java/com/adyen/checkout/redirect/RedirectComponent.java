@@ -39,7 +39,7 @@ import java.util.List;
 public final class RedirectComponent extends BaseActionComponent<RedirectConfiguration> {
     private static final String TAG = LogUtil.getTag();
 
-    public static final ActionComponentProvider<RedirectComponent> PROVIDER =
+    public static final ActionComponentProvider<RedirectComponent, RedirectConfiguration> PROVIDER =
             new ActionComponentProviderImpl<>(RedirectComponent.class, RedirectConfiguration.class);
 
     public RedirectComponent(@NonNull Application application, @Nullable RedirectConfiguration configuration) {
@@ -83,6 +83,12 @@ public final class RedirectComponent extends BaseActionComponent<RedirectConfigu
     protected List<String> getSupportedActionTypes() {
         final String[] supportedCodes = {RedirectAction.ACTION_TYPE};
         return Collections.unmodifiableList(Arrays.asList(supportedCodes));
+    }
+
+    @Nullable
+    @Override
+    protected List<String> getSupportedPaymentMethodTypes() {
+        return null;
     }
 
     @Override

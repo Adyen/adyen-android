@@ -12,14 +12,14 @@ import android.content.ComponentName
 import android.content.Context
 import android.os.Parcel
 import android.os.Parcelable
+import com.adyen.checkout.bcmc.BcmcConfiguration
+import com.adyen.checkout.blik.BlikConfiguration
+import com.adyen.checkout.card.CardConfiguration
 import com.adyen.checkout.components.base.Configuration
 import com.adyen.checkout.components.model.payments.Amount
 import com.adyen.checkout.components.util.CheckoutCurrency
 import com.adyen.checkout.components.util.PaymentMethodTypes
 import com.adyen.checkout.components.util.ValidationUtils
-import com.adyen.checkout.bcmc.BcmcConfiguration
-import com.adyen.checkout.blik.BlikConfiguration
-import com.adyen.checkout.card.CardConfiguration
 import com.adyen.checkout.core.api.Environment
 import com.adyen.checkout.core.exception.CheckoutException
 import com.adyen.checkout.core.log.LogUtil
@@ -36,7 +36,9 @@ import com.adyen.checkout.mbway.MBWayConfiguration
 import com.adyen.checkout.molpay.MolpayConfiguration
 import com.adyen.checkout.openbanking.OpenBankingConfiguration
 import com.adyen.checkout.sepa.SepaConfiguration
-import java.util.Locale
+import java.util.*
+import kotlin.collections.HashMap
+import kotlin.collections.set
 
 /**
  * This is the base configuration for the Drop-In solution. You need to use the [Builder] to instantiate this class.
@@ -90,13 +92,18 @@ class DropInConfiguration : Configuration, Parcelable {
         return ParcelUtils.NO_FILE_DESCRIPTOR
     }
 
-    fun <T : Configuration> getConfigurationFor(componentType: String, context: Context): T {
-        return if (availableConfigs.containsKey(componentType)) {
+    internal fun <T : Configuration> getConfigurationForPaymentMethod(paymentMethod: String, context: Context): T {
+        return if (availableConfigs.containsKey(paymentMethod)) {
             @Suppress("UNCHECKED_CAST")
-            availableConfigs[componentType] as T
+            availableConfigs[paymentMethod] as T
         } else {
-            getDefaultConfigFor(componentType, context, this)
+            getDefaultConfigForPaymentMethod(paymentMethod, context, this)
         }
+    }
+
+    internal inline fun <reified T : Configuration> getConfigurationForAction(context: Context): T {
+        // TODO fetch from availableConfigs after we support action configs
+        return getDefaultConfigForAction(context, this)
     }
 
     /**

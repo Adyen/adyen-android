@@ -94,6 +94,8 @@ class Adyen3DS2Component(application: Application, configuration: Adyen3DS2Confi
         )
     }
 
+    override fun getSupportedPaymentMethodTypes(): List<String>? = null
+
     @Throws(ComponentException::class)
     override fun handleActionInternal(activity: Activity, action: Action) {
         when (action.type) {
@@ -310,7 +312,7 @@ class Adyen3DS2Component(application: Application, configuration: Adyen3DS2Confi
         val TAG = LogUtil.getTag()
 
         @JvmField
-        val PROVIDER: ActionComponentProvider<Adyen3DS2Component> = ActionComponentProviderImpl(
+        val PROVIDER: ActionComponentProvider<Adyen3DS2Component, Adyen3DS2Configuration> = ActionComponentProviderImpl(
             Adyen3DS2Component::class.java, Adyen3DS2Configuration::class.java
         )
 
