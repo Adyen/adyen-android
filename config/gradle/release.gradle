@@ -49,6 +49,8 @@ final theLicenseUrl = "https://opensource.org/licenses/MIT"
 final theOrganizationName = "Adyen N.V."
 final theOrganizationUrl = "https://www.adyen.com/"
 
+final theTeamName = "Checkout"
+
 final theScmConnection = "scm:git:git://github.com/Adyen/adyen-android.git"
 final theScmUrl = "https://github.com/Adyen/adyen-android"
 
@@ -77,6 +79,13 @@ project.afterEvaluate {
                     organization {
                         name = theOrganizationName
                         url = theOrganizationUrl
+                    }
+                    developers {
+                        developer {
+                            name = theTeamName
+                            organization = theOrganizationName
+                            organizationUrl = theOrganizationUrl
+                        }
                     }
                     scm {
                         connection = theScmConnection
@@ -125,11 +134,8 @@ project.afterEvaluate {
             }
         }
 
-        // The repository to publish to, Sonatype/MavenCentral
         repositories {
             maven {
-                // This is an arbitrary name, you may also use "mavencentral" or
-                // any other name that's descriptive for you
                 name = "sonatype"
                 url = "https://oss.sonatype.org/service/local/staging/deploy/maven2/"
                 credentials {
