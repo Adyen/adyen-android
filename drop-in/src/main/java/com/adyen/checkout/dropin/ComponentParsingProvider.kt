@@ -70,8 +70,6 @@ import com.adyen.checkout.sepa.SepaComponent
 import com.adyen.checkout.sepa.SepaConfiguration
 import com.adyen.checkout.sepa.SepaView
 import com.adyen.checkout.wechatpay.WeChatPayActionConfiguration
-import com.adyen.checkout.wechatpay.WeChatPayComponent
-import com.adyen.checkout.wechatpay.WeChatPayConfiguration
 
 object ComponentParsingProvider {
     val TAG = LogUtil.getTag()
@@ -106,7 +104,6 @@ internal fun <T : Configuration> getDefaultConfigForPaymentMethod(
         PaymentMethodTypes.MOLPAY_VIETNAM -> MolpayConfiguration.Builder(context, clientKey)
         PaymentMethodTypes.OPEN_BANKING -> OpenBankingConfiguration.Builder(context, clientKey)
         PaymentMethodTypes.SEPA -> SepaConfiguration.Builder(context, clientKey)
-        PaymentMethodTypes.WECHAT_PAY_SDK -> WeChatPayConfiguration.Builder(context, clientKey)
         else -> throw CheckoutException("Unable to find component configuration for paymentMethod - $paymentMethod")
     }
 
@@ -180,7 +177,6 @@ internal fun getProviderForType(type: String): PaymentComponentProvider<PaymentC
         PaymentMethodTypes.OPEN_BANKING -> OpenBankingComponent.PROVIDER
         PaymentMethodTypes.SCHEME -> CardComponent.PROVIDER
         PaymentMethodTypes.SEPA -> SepaComponent.PROVIDER
-        PaymentMethodTypes.WECHAT_PAY_SDK -> WeChatPayComponent.PROVIDER
         else -> {
             throw CheckoutException("Unable to find component for type - $type")
         }
@@ -298,13 +294,6 @@ internal fun getComponentFor(
         PaymentMethodTypes.SEPA -> {
             val sepaConfiguration: SepaConfiguration = dropInConfiguration.getConfigurationForPaymentMethod(PaymentMethodTypes.SEPA, context)
             SepaComponent.PROVIDER.get(fragment, paymentMethod, sepaConfiguration)
-        }
-        PaymentMethodTypes.WECHAT_PAY_SDK -> {
-            val weChatPayConfiguration: WeChatPayConfiguration = dropInConfiguration.getConfigurationForPaymentMethod(
-                PaymentMethodTypes.WECHAT_PAY_SDK,
-                context
-            )
-            WeChatPayComponent.PROVIDER.get(fragment, paymentMethod, weChatPayConfiguration)
         }
 
         else -> {
