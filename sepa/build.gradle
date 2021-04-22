@@ -16,7 +16,7 @@ ext.mavenArtifactId = "sepa"
 ext.mavenArtifactName = "Adyen checkout SEPA component"
 ext.mavenArtifactDescription = "Adyen checkout SEPA component client for Adyen's Checkout API."
 
-apply from: "../config/gradle/sharedTasks.gradle"
+apply from: "${rootDir}/config/gradle/sharedTasks.gradle"
 
 android {
     compileSdkVersion compile_sdk_version

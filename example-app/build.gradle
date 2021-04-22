@@ -11,8 +11,8 @@ plugins {
     id 'kotlin-android'
 }
 
-apply from: "../config/gradle/codeQuality.gradle"
-apply from: "../config/gradle/ci.gradle"
+apply from: "${rootDir}/config/gradle/codeQuality.gradle"
+apply from: "${rootDir}/config/gradle/ci.gradle"
 
 if (file("local.gradle").exists()) {
     apply from: "local.gradle"
@@ -24,7 +24,7 @@ if (file("local.gradle").exists()) {
 // This runConnectedAndroidTest.gradle script is applied,
 // so it will be possible to run the example app connected android tests
 // in Jenkins release process.
-apply from: "../config/gradle/runConnectedAndroidTest.gradle"
+apply from: "${rootDir}/config/gradle/runConnectedAndroidTest.gradle"
 
 android {
     compileSdkVersion compile_sdk_version

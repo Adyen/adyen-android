@@ -9,9 +9,9 @@
 final kotlinSupport = new FileNameFinder().getFileNames("$project.projectDir/src", "**/*.kt").size() > 0
 
 apply from: "${rootDir}/config/gradle/versionName.gradle"
-apply from: "../config/gradle/checksums.gradle"
-apply from: "../config/gradle/dependenciesCheck.gradle"
-apply from: "../config/gradle/codeQuality.gradle"
-apply from: "../config/gradle/ci.gradle"
-apply from: "../config/gradle/release.gradle"
-apply from: "../config/gradle/runConnectedAndroidTest.gradle"
+apply from: "${rootDir}/config/gradle/checksums.gradle"
+apply from: "${rootDir}/config/gradle/dependenciesCheck.gradle"
+apply from: "${rootDir}/config/gradle/codeQuality.gradle"
+apply from: "${rootDir}/config/gradle/ci.gradle"
+apply from: "${rootDir}/config/gradle/release.gradle"
+apply from: "${rootDir}/config/gradle/runConnectedAndroidTest.gradle"
