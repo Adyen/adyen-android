@@ -7,7 +7,10 @@
  */
 
 task androidSourcesJar(type: Jar) {
-    classifier = "sources"
-    from android.sourceSets.main.java.srcDirs
-    exclude("**/internal/**")
+    archiveClassifier.set('sources')
+    if (project.plugins.findPlugin("com.android.library")) {
+        from android.sourceSets.main.java.srcDirs
+    } else {
+        from sourceSets.main.java.srcDirs
+    }
 }

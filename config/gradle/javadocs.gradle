@@ -9,12 +9,11 @@
 task androidJavadocs(type: Javadoc) {
     failOnError = false
     source = android.sourceSets.main.java.srcDirs
-    exclude("**/internal/**")
     classpath += project.files(android.getBootClasspath())
     classpath += configurations.compile
 }
 
 task androidJavadocsJar(type: Jar, dependsOn: androidJavadocs) {
-    classifier = 'javadoc'
+    archiveClassifier.set('javadoc')
     from androidJavadocs.destinationDir
 }
