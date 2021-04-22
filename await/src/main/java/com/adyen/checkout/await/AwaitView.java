@@ -115,6 +115,9 @@ public class AwaitView extends AdyenLinearLayout<AwaitOutputData, AwaitConfigura
     }
 
     private void updateMessageText() {
+        if (getMessageTextResource() == null) {
+            return;
+        }
         mTextViewOpenApp.setText(getMessageTextResource());
     }
 
@@ -126,7 +129,7 @@ public class AwaitView extends AdyenLinearLayout<AwaitOutputData, AwaitConfigura
             case PaymentMethodTypes.MB_WAY:
                 return R.string.checkout_await_message_mbway;
             default:
-                return R.string.checkout_await_message_blik;
+                return null;
         }
     }
 }
