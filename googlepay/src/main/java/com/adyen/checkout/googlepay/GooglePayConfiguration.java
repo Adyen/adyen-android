@@ -203,7 +203,7 @@ public class GooglePayConfiguration extends Configuration {
     public static final class Builder extends BaseConfigurationBuilder<GooglePayConfiguration> {
 
         private String mBuilderMerchantAccount;
-        private int mBuilderGooglePayEnvironment = WalletConstants.ENVIRONMENT_TEST;
+        private int mBuilderGooglePayEnvironment = getDefaultGooglePayEnvironment();
         private Amount mBuilderAmount = createDefaultAmount();
         private MerchantInfo mBuilderMerchantInfo = null;
         private String mBuilderCountryCode = null;
@@ -217,6 +217,13 @@ public class GooglePayConfiguration extends Configuration {
         private boolean mBuilderBillingAddressRequired;
         private BillingAddressParameters mBuilderBillingAddressParameters;
 
+        private int getDefaultGooglePayEnvironment() {
+            if (mBuilderEnvironment == Environment.TEST) {
+                return WalletConstants.ENVIRONMENT_TEST;
+            }
+            return WalletConstants.ENVIRONMENT_PRODUCTION;
+        }
+
         private static Amount createDefaultAmount() {
             final Amount defaultAmount = new Amount();
             defaultAmount.setValue(0);
@@ -227,7 +234,7 @@ public class GooglePayConfiguration extends Configuration {
         /**
          * Builder with required parameters.
          *
-         * @param context         A context to get some information.
+         * @param context   A context to get some information.
          * @param clientKey Your Client Key used for network calls from the SDK to Adyen.
          */
         public Builder(@NonNull Context context, @NonNull String clientKey) {
@@ -237,9 +244,9 @@ public class GooglePayConfiguration extends Configuration {
         /**
          * Builder with required parameters.
          *
-         * @param shopperLocale   The locale of the Shopper for translation.
-         * @param environment     TThe {@link Environment} to be used for network calls to Adyen.
-         * @param clientKey Your Client Key used for network calls from the SDK to Adyen.
+         * @param shopperLocale The locale of the Shopper for translation.
+         * @param environment   The {@link Environment} to be used for network calls to Adyen.
+         * @param clientKey     Your Client Key used for network calls from the SDK to Adyen.
          */
         public Builder(@NonNull Locale shopperLocale, @NonNull Environment environment, @NonNull String clientKey) {
             super(shopperLocale, environment, clientKey);
