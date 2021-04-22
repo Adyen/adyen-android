@@ -17,12 +17,14 @@ import androidx.annotation.Nullable;
 import com.adyen.checkout.components.PaymentComponentProvider;
 import com.adyen.checkout.components.base.BasePaymentComponent;
 import com.adyen.checkout.components.base.GenericPaymentMethodDelegate;
+import com.adyen.checkout.components.model.paymentmethods.Configuration;
 import com.adyen.checkout.components.model.payments.request.GooglePayPaymentMethod;
 import com.adyen.checkout.components.model.payments.request.PaymentComponentData;
 import com.adyen.checkout.components.util.PaymentMethodTypes;
 import com.adyen.checkout.core.exception.ComponentException;
 import com.adyen.checkout.core.log.LogUtil;
 import com.adyen.checkout.core.log.Logger;
+import com.adyen.checkout.googlepay.model.GooglePayParams;
 import com.adyen.checkout.googlepay.util.GooglePayUtils;
 import com.google.android.gms.common.api.Status;
 import com.google.android.gms.wallet.AutoResolveHelper;
@@ -75,10 +77,23 @@ public class GooglePayComponent extends
     @SuppressWarnings("JavadocReference")
     public void startGooglePayScreen(@NonNull Activity activity, int requestCode) {
         Logger.d(TAG, "startGooglePayScreen");
-        final PaymentsClient paymentsClient = Wallet.getPaymentsClient(activity, GooglePayUtils.createWalletOptions(getConfiguration()));
-        final PaymentDataRequest paymentDataRequest = GooglePayUtils.createPaymentDataRequest(getConfiguration());
+        final GooglePayParams googlePayParams = getGooglePayParams();
+        final PaymentsClient paymentsClient = Wallet.getPaymentsClient(activity, GooglePayUtils.createWalletOptions(googlePayParams));
+        final PaymentDataRequest paymentDataRequest = GooglePayUtils.createPaymentDataRequest(googlePayParams);
         AutoResolveHelper.resolveTask(paymentsClient.loadPaymentData(paymentDataRequest), activity, requestCode);
+    }
 
+    private GooglePayParams getGooglePayParams() {
+        final Configuration configuration = ((GenericPaymentMethodDelegate) mPaymentMethodDelegate)
+                .getPaymentMethod()
+                .getConfiguration();
+        final String serverGatewayMerchantId;
+        if (configuration == null) {
+            serverGatewayMerchantId = null;
+        } else {
+            serverGatewayMerchantId = configuration.getGatewayMerchantId();
+        }
+        return new GooglePayParams(getConfiguration(), serverGatewayMerchantId);
     }
 
     /**
