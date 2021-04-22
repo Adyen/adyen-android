@@ -16,6 +16,7 @@ import android.view.View
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.app.AppCompatDelegate
+import com.adyen.checkout.adyen3ds2.Adyen3DS2Configuration
 import com.adyen.checkout.bcmc.BcmcConfiguration
 import com.adyen.checkout.card.CardConfiguration
 import com.adyen.checkout.components.model.PaymentMethodsApiResponse
@@ -159,6 +160,11 @@ class MainActivity : AppCompatActivity() {
             .setEnvironment(Environment.TEST)
             .build()
 
+        val adyen3DS2Configuration = Adyen3DS2Configuration.Builder(this@MainActivity, BuildConfig.CLIENT_KEY)
+            .setShopperLocale(shopperLocale)
+            .setEnvironment(Environment.TEST)
+            .build()
+
         val dropInConfigurationBuilder = DropInConfiguration.Builder(
             this@MainActivity,
             ExampleDropInService::class.java,
@@ -169,6 +175,7 @@ class MainActivity : AppCompatActivity() {
             .addCardConfiguration(cardConfiguration)
             .addBcmcConfiguration(bcmcConfiguration)
             .addGooglePayConfiguration(googlePayConfig)
+            .add3ds2ActionConfiguration(adyen3DS2Configuration)
 
         val amount = keyValueStorage.getAmount()
 
