@@ -13,7 +13,6 @@ buildscript {
     ext.android_gradle_plugin_version = '4.0.0'
     ext.kotlin_version = '1.4.21'
     ext.detekt_gradle_plugin_version = "1.13.1"
-    ext.bintray_gradle_plugin_version = "1.8.5"
     ext.spotbugs_gradle_plugin_version = "4.5.1"
     ext.dokka_version = "1.4.20"
 
@@ -25,7 +24,6 @@ buildscript {
 
     dependencies {
         classpath "com.android.tools.build:gradle:$android_gradle_plugin_version"
-        classpath "com.jfrog.bintray.gradle:gradle-bintray-plugin:$bintray_gradle_plugin_version"
         classpath "io.gitlab.arturbosch.detekt:detekt-gradle-plugin:$detekt_gradle_plugin_version"
         classpath "org.jetbrains.kotlin:kotlin-gradle-plugin:$kotlin_version"
         classpath "gradle.plugin.com.github.spotbugs.snom:spotbugs-gradle-plugin:$spotbugs_gradle_plugin_version"
