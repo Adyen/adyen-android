@@ -64,7 +64,7 @@ public class GooglePayConfiguration extends Configuration {
             @NonNull Locale shopperLocale,
             @NonNull Environment environment,
             @NonNull String clientKey,
-            @NonNull String merchantAccount,
+            @Nullable String merchantAccount,
             int googlePayEnvironment,
             @NonNull Amount amount,
             @Nullable String countryCode,
@@ -133,7 +133,7 @@ public class GooglePayConfiguration extends Configuration {
         dest.writeParcelable(mBillingAddressParameters, flags);
     }
 
-    @NonNull
+    @Nullable
     public String getMerchantAccount() {
         return mMerchantAccount;
     }
@@ -229,11 +229,9 @@ public class GooglePayConfiguration extends Configuration {
          *
          * @param context         A context to get some information.
          * @param clientKey Your Client Key used for network calls from the SDK to Adyen.
-         * @param merchantAccount Your merchant account with Adyen.
          */
-        public Builder(@NonNull Context context, @NonNull String clientKey, @NonNull String merchantAccount) {
+        public Builder(@NonNull Context context, @NonNull String clientKey) {
             super(context, clientKey);
-            mBuilderMerchantAccount = merchantAccount;
         }
 
         /**
@@ -242,11 +240,9 @@ public class GooglePayConfiguration extends Configuration {
          * @param shopperLocale   The locale of the Shopper for translation.
          * @param environment     TThe {@link Environment} to be used for network calls to Adyen.
          * @param clientKey Your Client Key used for network calls from the SDK to Adyen.
-         * @param merchantAccount Your merchant account with Adyen.
          */
-        public Builder(@NonNull Locale shopperLocale, @NonNull Environment environment, @NonNull String clientKey, @NonNull String merchantAccount) {
+        public Builder(@NonNull Locale shopperLocale, @NonNull Environment environment, @NonNull String clientKey) {
             super(shopperLocale, environment, clientKey);
-            mBuilderMerchantAccount = merchantAccount;
         }
 
         @Override
