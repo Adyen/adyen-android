@@ -81,14 +81,6 @@ internal fun <T : Configuration> getDefaultConfigForPaymentMethod(
     context: Context,
     dropInConfiguration: DropInConfiguration
 ): T {
-
-    // TODO after fetching public key is enabled, build scheme if client key is present
-    val specificRequirementConfigs = listOf(PaymentMethodTypes.SCHEME, PaymentMethodTypes.GOOGLE_PAY)
-
-    if (specificRequirementConfigs.contains(paymentMethod)) {
-        throw CheckoutException("Cannot provide default config for $paymentMethod. Please add it to the DropInConfiguration with required fields.")
-    }
-
     val clientKey = dropInConfiguration.clientKey
 
     // get default builder for Configuration type
@@ -97,6 +89,7 @@ internal fun <T : Configuration> getDefaultConfigForPaymentMethod(
         PaymentMethodTypes.DOTPAY -> DotpayConfiguration.Builder(context, clientKey)
         PaymentMethodTypes.ENTERCASH -> EntercashConfiguration.Builder(context, clientKey)
         PaymentMethodTypes.EPS -> EPSConfiguration.Builder(context, clientKey)
+        PaymentMethodTypes.GOOGLE_PAY -> GooglePayConfiguration.Builder(context, clientKey)
         PaymentMethodTypes.IDEAL -> IdealConfiguration.Builder(context, clientKey)
         PaymentMethodTypes.MB_WAY -> MBWayConfiguration.Builder(context, clientKey)
         PaymentMethodTypes.MOLPAY_THAILAND,
@@ -104,6 +97,7 @@ internal fun <T : Configuration> getDefaultConfigForPaymentMethod(
         PaymentMethodTypes.MOLPAY_VIETNAM -> MolpayConfiguration.Builder(context, clientKey)
         PaymentMethodTypes.OPEN_BANKING -> OpenBankingConfiguration.Builder(context, clientKey)
         PaymentMethodTypes.SEPA -> SepaConfiguration.Builder(context, clientKey)
+        PaymentMethodTypes.SCHEME -> CardConfiguration.Builder(context, clientKey)
         else -> throw CheckoutException("Unable to find component configuration for paymentMethod - $paymentMethod")
     }
 
