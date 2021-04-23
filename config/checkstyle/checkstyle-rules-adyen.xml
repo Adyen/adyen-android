@@ -129,10 +129,10 @@
         <module name="JavadocMethod">
             <property name="scope" value="public"/>
             <property name="allowMissingParamTags" value="true"/>
-            <property name="allowMissingThrowsTags" value="true"/>
+            <!--<property name="allowMissingThrowsTags" value="true"/>-->
             <property name="allowMissingReturnTag" value="true"/>
             <property name="allowedAnnotations" value="Override, Test"/>
-            <property name="allowThrowsTagsForSubclasses" value="true"/>
+            <!--<property name="allowThrowsTagsForSubclasses" value="true"/>-->
         </module>
         <module name="FinalLocalVariable"/>
 
