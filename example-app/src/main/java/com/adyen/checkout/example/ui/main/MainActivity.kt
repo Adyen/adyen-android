@@ -150,7 +150,7 @@ class MainActivity : AppCompatActivity() {
             .setEnvironment(Environment.TEST)
             .build()
 
-        val googlePayConfig = GooglePayConfiguration.Builder(this@MainActivity, BuildConfig.CLIENT_KEY, keyValueStorage.getMerchantAccount())
+        val googlePayConfig = GooglePayConfiguration.Builder(this@MainActivity, BuildConfig.CLIENT_KEY)
             .setCountryCode(keyValueStorage.getCountry())
             .setEnvironment(Environment.TEST)
             .build()
