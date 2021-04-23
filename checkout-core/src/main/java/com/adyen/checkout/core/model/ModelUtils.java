@@ -65,7 +65,7 @@ public final class ModelUtils {
      * @param jsonArray The JSONArray to be parsed.
      * @param serializer The serializer of the ModelObject class to be used.
      * @param <T> The type o the ModelObject class to be parse to.
-     * @return
+     * @return The List of objects from the JSONArray.
      */
     @Nullable
     public static <T extends ModelObject> List<T> deserializeOptList(@Nullable JSONArray jsonArray, @NonNull ModelObject.Serializer<T> serializer) {
