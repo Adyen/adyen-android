@@ -19,8 +19,8 @@ import com.adyen.checkout.core.exception.CheckoutException;
 import com.adyen.checkout.core.exception.NoConstructorException;
 import com.adyen.checkout.core.log.LogUtil;
 import com.adyen.checkout.core.log.Logger;
-import com.adyen.checkout.googlepay.GooglePayConfiguration;
 import com.adyen.checkout.googlepay.model.CardParameters;
+import com.adyen.checkout.googlepay.model.GooglePayParams;
 import com.adyen.checkout.googlepay.model.GooglePayPaymentMethodModel;
 import com.adyen.checkout.googlepay.model.IsReadyToPayRequestModel;
 import com.adyen.checkout.googlepay.model.PaymentDataRequestModel;
@@ -74,25 +74,25 @@ public final class GooglePayUtils {
     /**
      * Create a {@link com.google.android.gms.wallet.Wallet.WalletOptions} based on the component configuration.
      *
-     * @param configuration The configuration of the Google Pay component.
+     * @param params The parameters based on the Google Pay component configuration.
      * @return The WalletOptions object.
      */
     @NonNull
-    public static Wallet.WalletOptions createWalletOptions(@NonNull GooglePayConfiguration configuration) {
+    public static Wallet.WalletOptions createWalletOptions(@NonNull GooglePayParams params) {
         return new Wallet.WalletOptions.Builder()
-                .setEnvironment(configuration.getGooglePayEnvironment())
+                .setEnvironment(params.getGooglePayEnvironment())
                 .build();
     }
 
     /**
      * Create a {@link IsReadyToPayRequest} based on the component configuration that can be used to verify Google Pay availability.
      *
-     * @param configuration The configuration of the Google Pay component.
+     * @param params The parameters based on the Google Pay component configuration.
      * @return The IsReadyToPayRequest to start the task to verify Google Pay availability
      */
     @NonNull
-    public static IsReadyToPayRequest createIsReadyToPayRequest(@NonNull GooglePayConfiguration configuration) {
-        final IsReadyToPayRequestModel isReadyToPayRequestModel = createIsReadyToPayRequestModel(configuration);
+    public static IsReadyToPayRequest createIsReadyToPayRequest(@NonNull GooglePayParams params) {
+        final IsReadyToPayRequestModel isReadyToPayRequestModel = createIsReadyToPayRequestModel(params);
         final String requestJsonString = IsReadyToPayRequestModel.SERIALIZER.serialize(isReadyToPayRequestModel).toString();
         return IsReadyToPayRequest.fromJson(requestJsonString);
     }
@@ -100,12 +100,12 @@ public final class GooglePayUtils {
     /**
      * Create a {@link PaymentDataRequest} based on the component configuration that can be used to start the Google Pay payment.
      *
-     * @param configuration The configuration of the Google Pay component.
+     * @param params The parameters based on the Google Pay component configuration.
      * @return The PaymentDataRequest to start the Google Pay payment flow.
      */
     @NonNull
-    public static PaymentDataRequest createPaymentDataRequest(@NonNull GooglePayConfiguration configuration) {
-        final PaymentDataRequestModel paymentDataRequestModel = createPaymentDataRequestModel(configuration);
+    public static PaymentDataRequest createPaymentDataRequest(@NonNull GooglePayParams params) {
+        final PaymentDataRequestModel paymentDataRequestModel = createPaymentDataRequestModel(params);
         final String requestJsonString = PaymentDataRequestModel.SERIALIZER.serialize(paymentDataRequestModel).toString();
         return PaymentDataRequest.fromJson(requestJsonString);
     }
@@ -163,69 +163,69 @@ public final class GooglePayUtils {
         }
     }
 
-    private static IsReadyToPayRequestModel createIsReadyToPayRequestModel(@NonNull GooglePayConfiguration configuration) {
+    private static IsReadyToPayRequestModel createIsReadyToPayRequestModel(@NonNull GooglePayParams params) {
         final IsReadyToPayRequestModel isReadyToPayRequestModel = new IsReadyToPayRequestModel();
         isReadyToPayRequestModel.setApiVersion(MAJOR_API_VERSION);
         isReadyToPayRequestModel.setApiVersionMinor(MINOT_API_VERSION);
-        isReadyToPayRequestModel.setExistingPaymentMethodRequired(configuration.isExistingPaymentMethodRequired());
+        isReadyToPayRequestModel.setExistingPaymentMethodRequired(params.isExistingPaymentMethodRequired());
 
         final ArrayList<GooglePayPaymentMethodModel> allowedPaymentMethods = new ArrayList<>();
-        allowedPaymentMethods.add(createCardPaymentMethod(configuration));
+        allowedPaymentMethods.add(createCardPaymentMethod(params));
         isReadyToPayRequestModel.setAllowedPaymentMethods(allowedPaymentMethods);
 
         return isReadyToPayRequestModel;
     }
 
-    private static PaymentDataRequestModel createPaymentDataRequestModel(@NonNull GooglePayConfiguration configuration) {
+    private static PaymentDataRequestModel createPaymentDataRequestModel(@NonNull GooglePayParams params) {
         final PaymentDataRequestModel paymentDataRequestModel = new PaymentDataRequestModel();
 
         paymentDataRequestModel.setApiVersion(MAJOR_API_VERSION);
         paymentDataRequestModel.setApiVersionMinor(MINOT_API_VERSION);
-        paymentDataRequestModel.setMerchantInfo(configuration.getMerchantInfo());
-        paymentDataRequestModel.setTransactionInfo(createTransactionInfo(configuration.getAmount(), configuration.getCountryCode()));
+        paymentDataRequestModel.setMerchantInfo(params.getMerchantInfo());
+        paymentDataRequestModel.setTransactionInfo(createTransactionInfo(params.getAmount(), params.getCountryCode()));
 
         final ArrayList<GooglePayPaymentMethodModel> allowedPaymentMethods = new ArrayList<>();
-        allowedPaymentMethods.add(createCardPaymentMethod(configuration));
+        allowedPaymentMethods.add(createCardPaymentMethod(params));
         paymentDataRequestModel.setAllowedPaymentMethods(allowedPaymentMethods);
 
-        paymentDataRequestModel.setEmailRequired(configuration.isEmailRequired());
-        paymentDataRequestModel.setShippingAddressRequired(configuration.isShippingAddressRequired());
-        paymentDataRequestModel.setShippingAddressParameters(configuration.getShippingAddressParameters());
+        paymentDataRequestModel.setEmailRequired(params.isEmailRequired());
+        paymentDataRequestModel.setShippingAddressRequired(params.isShippingAddressRequired());
+        paymentDataRequestModel.setShippingAddressParameters(params.getShippingAddressParameters());
 
 
 
         return paymentDataRequestModel;
     }
 
-    private static GooglePayPaymentMethodModel createCardPaymentMethod(@NonNull GooglePayConfiguration configuration) {
+    private static GooglePayPaymentMethodModel createCardPaymentMethod(@NonNull GooglePayParams params) {
         final GooglePayPaymentMethodModel cardPaymentMethod = new GooglePayPaymentMethodModel();
         cardPaymentMethod.setType(PAYMENT_TYPE_CARD);
-        cardPaymentMethod.setParameters(createCardParameters(configuration));
-        cardPaymentMethod.setTokenizationSpecification(createTokenizationSpecification(configuration));
+        cardPaymentMethod.setParameters(createCardParameters(params));
+        cardPaymentMethod.setTokenizationSpecification(createTokenizationSpecification(params));
         return cardPaymentMethod;
     }
 
-    private static CardParameters createCardParameters(@NonNull GooglePayConfiguration configuration) {
+    private static CardParameters createCardParameters(@NonNull GooglePayParams params) {
         final CardParameters cardParameters = new CardParameters();
-        cardParameters.setAllowedAuthMethods(configuration.getAllowedAuthMethods());
-        cardParameters.setAllowedCardNetworks(configuration.getAllowedCardNetworks());
-        cardParameters.setAllowPrepaidCards(configuration.isAllowPrepaidCards());
-        cardParameters.setBillingAddressRequired(configuration.isBillingAddressRequired());
-        cardParameters.setBillingAddressParameters(configuration.getBillingAddressParameters());
+        cardParameters.setAllowedAuthMethods(params.getAllowedAuthMethods());
+        cardParameters.setAllowedCardNetworks(params.getAllowedCardNetworks());
+        cardParameters.setAllowPrepaidCards(params.isAllowPrepaidCards());
+        cardParameters.setBillingAddressRequired(params.isBillingAddressRequired());
+        cardParameters.setBillingAddressParameters(params.getBillingAddressParameters());
         return cardParameters;
     }
 
-    private static PaymentMethodTokenizationSpecification createTokenizationSpecification(@NonNull GooglePayConfiguration configuration) {
+    private static PaymentMethodTokenizationSpecification createTokenizationSpecification(@NonNull GooglePayParams params) {
         final PaymentMethodTokenizationSpecification tokenizationSpecification = new PaymentMethodTokenizationSpecification();
         tokenizationSpecification.setType(PAYMENT_GATEWAY);
-        tokenizationSpecification.setParameters(createGatewayParameters(configuration));
+        tokenizationSpecification.setParameters(createGatewayParameters(params));
         return tokenizationSpecification;
     }
 
-    private static TokenizationParameters createGatewayParameters(@NonNull GooglePayConfiguration configuration) {
+    private static TokenizationParameters createGatewayParameters(@NonNull GooglePayParams params) {
         final TokenizationParameters tokenizationParameters = new TokenizationParameters();
         tokenizationParameters.setGateway(ADYEN_GATEWAY);
-        tokenizationParameters.setGatewayMerchantId(configuration.getMerchantAccount());
+        tokenizationParameters.setGatewayMerchantId(params.getGatewayMerchantId());
         return tokenizationParameters;
     }
 

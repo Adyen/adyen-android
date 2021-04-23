@@ -168,8 +168,6 @@ public class CardConfiguration extends Configuration {
          */
         public Builder(@NonNull CardConfiguration cardConfiguration) {
             super(cardConfiguration.getShopperLocale(), cardConfiguration.getEnvironment(), cardConfiguration.getClientKey());
-            mBuilderClientKey = cardConfiguration.getClientKey();
-
             mBuilderSupportedCardTypes = cardConfiguration.getSupportedCardTypes();
             mBuilderHolderNameRequired = cardConfiguration.isHolderNameRequired();
             mBuilderShowStorePaymentField = cardConfiguration.isShowStorePaymentFieldEnable();

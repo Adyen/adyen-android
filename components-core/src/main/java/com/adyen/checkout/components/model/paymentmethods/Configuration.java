@@ -21,7 +21,7 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 @SuppressWarnings({"MemberName", "PMD.DataClass"})
-class Configuration extends ModelObject {
+public class Configuration extends ModelObject {
 
     @NonNull
     public static final Creator<Configuration> CREATOR = new Creator<>(Configuration.class);
