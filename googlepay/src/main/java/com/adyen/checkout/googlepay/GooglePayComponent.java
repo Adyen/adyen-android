@@ -87,12 +87,7 @@ public class GooglePayComponent extends
         final Configuration configuration = ((GenericPaymentMethodDelegate) mPaymentMethodDelegate)
                 .getPaymentMethod()
                 .getConfiguration();
-        final String serverGatewayMerchantId;
-        if (configuration == null) {
-            serverGatewayMerchantId = null;
-        } else {
-            serverGatewayMerchantId = configuration.getGatewayMerchantId();
-        }
+        final String serverGatewayMerchantId = (configuration != null) ? configuration.getGatewayMerchantId() : null;
         return new GooglePayParams(getConfiguration(), serverGatewayMerchantId);
     }
 
