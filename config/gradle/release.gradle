@@ -8,7 +8,7 @@
 apply plugin: "maven-publish"
 apply plugin: "signing"
 
-apply from: "../config/gradle/artifacts.gradle"
+apply from: "${rootDir}/config/gradle/artifacts.gradle"
 
 ext["signing.keyId"] = ''
 ext["signing.password"] = ''

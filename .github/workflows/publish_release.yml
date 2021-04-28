@@ -38,7 +38,7 @@ jobs:
           git fetch --unshallow
           sudo bash -c "echo '$GPG_KEY_CONTENTS' | base64 -d > '$SIGNING_SECRET_KEY_RING_FILE'"
 
-      # Packages and publishes the AARs to Bintray
+      # Packages and publishes to Maven Central
       - name: Publish to Maven Central
         run: ./gradlew publishReleasePublicationToSonatypeRepository --max-workers 1 --stacktrace
         env:

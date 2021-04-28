@@ -6,11 +6,11 @@
  * Created by ran on 6/2/2019.
  */
 
-apply from: "../config/gradle/checkstyle.gradle"
-apply from: "../config/gradle/lint.gradle"
-apply from: "../config/gradle/ktlint.gradle"
-apply from: "../config/gradle/pmd.gradle"
-apply from:"../config/gradle/spotbugs.gradle"
-apply from: "../config/gradle/detekt.gradle"
+apply from: "${rootDir}/config/gradle/checkstyle.gradle"
+apply from: "${rootDir}/config/gradle/lint.gradle"
+apply from: "${rootDir}/config/gradle/ktlint.gradle"
+apply from: "${rootDir}/config/gradle/pmd.gradle"
+apply from:"${rootDir}/config/gradle/spotbugs.gradle"
+apply from: "${rootDir}/config/gradle/detekt.gradle"
 
 check.dependsOn "checkstyle", "lint", "ktlint", "pmd", "detekt", "spotbugsDebug", "spotbugsRelease"
