@@ -32,6 +32,7 @@ object RedirectUtil {
     private const val REDIRECT_RESULT_PARAMETER = "redirectResult"
     private const val PAYMENT_RESULT_PARAMETER = "PaRes"
     private const val MD_PARAMETER = "MD"
+    private const val QUERY_STRING_RESULT = "returnUrlQueryString"
 
     private const val RESOLVER_ACTIVITY_PACKAGE_NAME = "android"
 
@@ -78,6 +79,7 @@ object RedirectUtil {
                     put(MD_PARAMETER, md)
                 }
             }
+            data.encodedQuery?.let { put(QUERY_STRING_RESULT, it) }
         }
 
         if (extractedParams.size == 0) {
