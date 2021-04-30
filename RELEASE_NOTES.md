@@ -8,6 +8,9 @@
 [//]: # ( ### Deprecated)
 [//]: # ( - Configurations public constructor are deprecated, please use each Configuration's builder to make a Configuration object)
 
+## Added
+- Return `returnUrlQueryString` from redirect URL for some redirect payment methods like Swish.
+
 ## Changed
 - Updated Material Components dependency to 1.3.0.
 - Provided default `GooglePayConfiguration` and `CardConfiguration` in Drop-in. It's not required to manually set these configurations in `DropInConfiguration.Builder` anymore.
