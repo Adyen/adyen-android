@@ -8,15 +8,8 @@
 [//]: # ( ### Deprecated)
 [//]: # ( - Configurations public constructor are deprecated, please use each Configuration's builder to make a Configuration object)
 
-## Added
-- Validation of PublicKey in CSE module if it's used standalone.
-- 'isReady' flag to ComponentState because some components might require some initialization time even if all the inputs are valid.
-- 'isValid' now checks both 'isInputValid' and 'isReady' to be true.
-
-## Fixed
-- Handle Intent results if DropInActivity got destroyed.
-- Queue API request if DropInService is not yet bound to DropInActivity
-
-
-
-
+## Changed
+- Updated Material Components dependency to 1.3.0.
+- Provided default `GooglePayConfiguration` and `CardConfiguration` in Drop-in. It's not required to manually set these configurations in `DropInConfiguration.Builder` anymore.
+- The default Google Pay environment will automatically follow the Adyen environment. It will be initialized as `ENVIRONMENT_TEST` when using Adyen's `TEST` environment, otherwise it will be set to `ENVIRONMENT_PRODUCTION`.
+- The `merchantAccount` parameter in `GooglePayConfiguration.Builder` is now optional. You can remove it from the builder constructor, or use `GooglePayConfiguration.Builder.setMerchantAccount` if you need to pass it manually.
