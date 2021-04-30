@@ -19,7 +19,6 @@ import com.adyen.checkout.components.api.ImageLoader
 import com.adyen.checkout.components.extensions.copyTextToClipboard
 import com.adyen.checkout.components.ui.view.AdyenLinearLayout
 import com.adyen.checkout.components.util.PaymentMethodTypes
-import com.adyen.checkout.core.exception.ComponentException
 import com.adyen.checkout.core.log.LogUtil
 import com.adyen.checkout.core.log.Logger
 import com.adyen.checkout.qrcode.databinding.QrcodeViewBinding
@@ -54,9 +53,7 @@ class QRCodeView : AdyenLinearLayout<QRCodeOutputData, QRCodeConfiguration, Acti
     }
 
     override fun onComponentAttached() {
-        val configuration = component.configuration
-            ?: throw ComponentException("Configuration cannot be null")
-        imageLoader = ImageLoader.getInstance(context, configuration.environment)
+        imageLoader = ImageLoader.getInstance(context, component.configuration.environment)
     }
 
     override fun initView() {

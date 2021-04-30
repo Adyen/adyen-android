@@ -59,7 +59,7 @@ public class WeChatPayActionComponent extends BaseActionComponent<WeChatPayActio
         }
     };
 
-    public WeChatPayActionComponent(@NonNull Application application, @Nullable WeChatPayActionConfiguration configuration) {
+    public WeChatPayActionComponent(@NonNull Application application, @NonNull WeChatPayActionConfiguration configuration) {
         super(application, configuration);
         mApi = WXAPIFactory.createWXAPI(application, null, true);
     }

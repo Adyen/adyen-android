@@ -11,7 +11,6 @@ package com.adyen.checkout.components.base.lifecycle;
 import android.app.Application;
 
 import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
 import androidx.lifecycle.ViewModel;
 import androidx.lifecycle.ViewModelProvider;
 
@@ -31,7 +30,7 @@ public final class ActionComponentViewModelFactory implements ViewModelProvider.
     public ActionComponentViewModelFactory(
             @NonNull Application application,
             @NonNull Class<?> configurationClass,
-            @Nullable Configuration configuration
+            @NonNull Configuration configuration
     ) {
         mApplication = application;
         mConfigurationClass = configurationClass;

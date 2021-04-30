@@ -22,7 +22,6 @@ import com.adyen.checkout.components.api.ImageLoader
 import com.adyen.checkout.components.model.payments.request.PaymentMethodDetails
 import com.adyen.checkout.components.util.CurrencyUtils
 import com.adyen.checkout.components.util.PaymentMethodTypes
-import com.adyen.checkout.core.api.Environment
 import com.adyen.checkout.core.exception.CheckoutException
 import com.adyen.checkout.core.log.LogUtil
 import com.adyen.checkout.core.log.Logger
@@ -98,8 +97,7 @@ class CardComponentDialogFragment : BaseComponentDialogFragment() {
             cardComponent.configuration.supportedCardTypes
         }
         cardListAdapter = CardListAdapter(
-            // TODO: 11/01/2021 Remove nullability after config is not nullable anymore
-            ImageLoader.getInstance(requireContext(), component.configuration?.environment ?: Environment.EUROPE),
+            ImageLoader.getInstance(requireContext(), component.configuration.environment),
             supportedCards
         )
         binding.recyclerViewCardList.adapter = cardListAdapter

@@ -80,7 +80,7 @@ public class AwaitComponent extends BaseActionComponent<AwaitConfiguration>
         }
     };
 
-    public AwaitComponent(@NonNull Application application, @Nullable AwaitConfiguration configuration) {
+    public AwaitComponent(@NonNull Application application, @NonNull AwaitConfiguration configuration) {
         super(application, configuration);
         if (configuration == null) {
             // This component requires the client key from the configuration to work.
@@ -106,9 +106,6 @@ public class AwaitComponent extends BaseActionComponent<AwaitConfiguration>
     @Override
     protected void handleActionInternal(@NonNull Activity activity, @NonNull Action action) throws ComponentException {
         final Configuration configuration = getConfiguration();
-        if (configuration == null) {
-            throw new ComponentException("Configuration not found");
-        }
         mPaymentMethodType = action.getPaymentMethodType();
         // Notify UI to get the logo.
         createOutputData(null);
