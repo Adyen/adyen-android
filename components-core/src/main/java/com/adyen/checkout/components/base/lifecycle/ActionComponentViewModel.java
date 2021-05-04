@@ -11,7 +11,6 @@ package com.adyen.checkout.components.base.lifecycle;
 import android.app.Application;
 
 import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
 import androidx.lifecycle.AndroidViewModel;
 
 import com.adyen.checkout.components.ActionComponent;
@@ -28,12 +27,12 @@ public abstract class ActionComponentViewModel<ConfigurationT extends Configurat
 
     private final ConfigurationT mConfiguration;
 
-    public ActionComponentViewModel(@NonNull Application application, @Nullable ConfigurationT configuration) {
+    public ActionComponentViewModel(@NonNull Application application, @NonNull ConfigurationT configuration) {
         super(application);
         mConfiguration = configuration;
     }
 
-    @Nullable
+    @NonNull
     public ConfigurationT getConfiguration() {
         return mConfiguration;
     }

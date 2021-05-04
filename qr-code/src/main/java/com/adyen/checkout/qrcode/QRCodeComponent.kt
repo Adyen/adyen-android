@@ -80,8 +80,6 @@ class QRCodeComponent(application: Application, configuration: QRCodeConfigurati
 
     @Throws(ComponentException::class)
     override fun handleActionInternal(activity: Activity, action: Action) {
-        val configuration = configuration
-            ?: throw ComponentException("Configuration not found")
         if (action !is QrCodeAction) throw ComponentException("Unsupported action")
         paymentMethodType = action.paymentMethodType
         qrCodeData = action.qrCodeData

@@ -11,7 +11,6 @@ package com.adyen.checkout.components.base;
 import android.app.Application;
 
 import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
 import androidx.lifecycle.ViewModelProvider;
 import androidx.lifecycle.ViewModelStoreOwner;
 
@@ -53,7 +52,7 @@ public class ActionComponentProviderImpl<ConfigurationT extends Configuration, C
     @NonNull
     @Override
     @SuppressWarnings("LambdaLast")
-    public ComponentT get(@NonNull ViewModelStoreOwner viewModelStoreOwner, @NonNull Application application, @Nullable Configuration configuration) {
+    public ComponentT get(@NonNull ViewModelStoreOwner viewModelStoreOwner, @NonNull Application application, @NonNull Configuration configuration) {
         final ActionComponentViewModelFactory factory = new ActionComponentViewModelFactory(application, mConfigurationClass, configuration);
         return new ViewModelProvider(viewModelStoreOwner, factory).get(mComponentClass);
     }
