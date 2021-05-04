@@ -11,7 +11,6 @@ package com.adyen.checkout.components;
 import androidx.lifecycle.LifecycleOwner;
 import androidx.lifecycle.Observer;
 import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
 
 import com.adyen.checkout.components.base.Configuration;
 
@@ -44,6 +43,6 @@ public interface Component<ComponentResultT, ConfigurationT extends Configuratio
     /**
      * @return The {@link Configuration} object used to initialize this Component.
      */
-    @Nullable
+    @NonNull
     ConfigurationT getConfiguration();
 }

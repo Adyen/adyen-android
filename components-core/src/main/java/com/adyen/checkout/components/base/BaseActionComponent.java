@@ -43,7 +43,7 @@ public abstract class BaseActionComponent<ConfigurationT extends Configuration> 
 
     private String mPaymentData;
 
-    public BaseActionComponent(@NonNull Application application, @Nullable ConfigurationT configuration) {
+    public BaseActionComponent(@NonNull Application application, @NonNull ConfigurationT configuration) {
         super(application, configuration);
     }
 

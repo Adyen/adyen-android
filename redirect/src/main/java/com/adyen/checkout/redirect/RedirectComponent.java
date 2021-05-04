@@ -42,7 +42,7 @@ public final class RedirectComponent extends BaseActionComponent<RedirectConfigu
     public static final ActionComponentProvider<RedirectComponent, RedirectConfiguration> PROVIDER =
             new ActionComponentProviderImpl<>(RedirectComponent.class, RedirectConfiguration.class);
 
-    public RedirectComponent(@NonNull Application application, @Nullable RedirectConfiguration configuration) {
+    public RedirectComponent(@NonNull Application application, @NonNull RedirectConfiguration configuration) {
         super(application, configuration);
     }
 
