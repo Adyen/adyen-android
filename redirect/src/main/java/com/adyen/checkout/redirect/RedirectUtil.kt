@@ -79,10 +79,13 @@ object RedirectUtil {
                     put(MD_PARAMETER, md)
                 }
             }
-            data.encodedQuery?.let { put(QUERY_STRING_RESULT, it) }
         }
 
-        if (extractedParams.size == 0) {
+        if (extractedParams.isEmpty()) {
+            data.encodedQuery?.let { extractedParams.put(QUERY_STRING_RESULT, it) }
+        }
+
+        if (extractedParams.isEmpty()) {
             throw CheckoutException("Error parsing redirect result, could not any query parameters")
         }
 

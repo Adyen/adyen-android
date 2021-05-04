@@ -26,9 +26,8 @@ class RedirectUtilTest {
         val uri = Uri.parse("http://www.example.com?p1=value1&payload=YOUR_PAYLOAD&p2=value2")
         val response = RedirectUtil.parseRedirectResult(uri)
 
-        assertEquals(Iterators.size(response.keys()), 2)
+        assertEquals(Iterators.size(response.keys()), 1)
         assertEquals(response.getString("payload"), "YOUR_PAYLOAD")
-        assertEquals(response.getString("returnUrlQueryString"), "p1=value1&payload=YOUR_PAYLOAD&p2=value2")
     }
 
     @Test
@@ -36,9 +35,8 @@ class RedirectUtilTest {
         val uri = Uri.parse("url://domain?param1=dfgsd&redirectResult=ZXdxcjQzMnI0Zg%3D%3D&param2=1464")
         val response = RedirectUtil.parseRedirectResult(uri)
 
-        assertEquals(Iterators.size(response.keys()), 2)
+        assertEquals(Iterators.size(response.keys()), 1)
         assertEquals(response.getString("redirectResult"), "ZXdxcjQzMnI0Zg==")
-        assertEquals(response.getString("returnUrlQueryString"), "param1=dfgsd&redirectResult=ZXdxcjQzMnI0Zg%3D%3D&param2=1464")
     }
 
     @Test
@@ -46,10 +44,9 @@ class RedirectUtilTest {
         val uri = Uri.parse("https://example.com/actor/board?param=abcfd&PaRes=paymentresult&MD=lorem")
         val response = RedirectUtil.parseRedirectResult(uri)
 
-        assertEquals(Iterators.size(response.keys()), 3)
+        assertEquals(Iterators.size(response.keys()), 2)
         assertEquals(response.getString("MD"), "lorem")
         assertEquals(response.getString("PaRes"), "paymentresult")
-        assertEquals(response.getString("returnUrlQueryString"), "param=abcfd&PaRes=paymentresult&MD=lorem")
     }
 
     @Test
@@ -66,9 +63,8 @@ class RedirectUtilTest {
         val uri = Uri.parse("https://www.example.net/airport.htm/?payload=some&param1=rtgt&PaRes=PA_RES")
         val response = RedirectUtil.parseRedirectResult(uri)
 
-        assertEquals(Iterators.size(response.keys()), 2)
+        assertEquals(Iterators.size(response.keys()), 1)
         assertEquals(response.getString("payload"), "some")
-        assertEquals(response.getString("returnUrlQueryString"), "payload=some&param1=rtgt&PaRes=PA_RES")
     }
 
     @Test
