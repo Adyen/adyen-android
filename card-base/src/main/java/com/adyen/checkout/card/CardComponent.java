@@ -16,6 +16,7 @@ import com.adyen.checkout.base.PaymentComponentProvider;
 import com.adyen.checkout.base.component.BasePaymentComponent;
 import com.adyen.checkout.base.model.paymentmethods.PaymentMethod;
 import com.adyen.checkout.base.model.paymentmethods.StoredPaymentMethod;
+import com.adyen.checkout.base.model.payments.request.Address;
 import com.adyen.checkout.base.model.payments.request.CardPaymentMethod;
 import com.adyen.checkout.base.model.payments.request.PaymentComponentData;
 import com.adyen.checkout.base.util.PaymentMethodTypes;
@@ -213,11 +214,26 @@ public final class CardComponent extends BasePaymentComponent<
             cardPaymentMethod.setHolderName(outputData.getHolderNameField().getValue());
         }
 
+        if (isPostalCodeVisible()) {
+            paymentComponentData.setBillingAddress(getAddressFromOutputData(outputData));
+        }
+
         paymentComponentData.setPaymentMethod(cardPaymentMethod);
         paymentComponentData.setStorePaymentMethod(outputData.isStoredPaymentMethodEnable());
         paymentComponentData.setShopperReference(getConfiguration().getShopperReference());
 
         return new CardComponentState(paymentComponentData, outputData.isValid(), firstCardType, binValue);
+    }
+
+    private Address getAddressFromOutputData(CardOutputData outputData) {
+        final Address address = new Address();
+        address.setPostalCode(outputData.getPostalCodeField().getValue());
+        address.setStreet(Address.ADDRESS_NULL_PLACEHOLDER);
+        address.setStateOrProvince(Address.ADDRESS_NULL_PLACEHOLDER);
+        address.setHouseNumberOrName(Address.ADDRESS_NULL_PLACEHOLDER);
+        address.setCity(Address.ADDRESS_NULL_PLACEHOLDER);
+        address.setCountry(Address.ADDRESS_COUNTRY_NULL_PLACEHOLDER);
+        return address;
     }
 
     @NonNull
