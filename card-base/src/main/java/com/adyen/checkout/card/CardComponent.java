@@ -122,6 +122,16 @@ public final class CardComponent extends BasePaymentComponent<
         return getConfiguration().isShowStorePaymentFieldEnable();
     }
 
+    /**
+     * Return false when {@link #isStoredPaymentMethod()} is true.
+     */
+    public boolean isPostalCodeVisible() {
+        if (isStoredPaymentMethod()) {
+            return false;
+        }
+        return getConfiguration().getAddressVisibility() == CardConfiguration.AddressVisibility.POSTAL_CODE;
+    }
+
     @NonNull
     @Override
     protected CardOutputData onInputDataChanged(@NonNull CardInputData inputData) {
@@ -131,6 +141,7 @@ public final class CardComponent extends BasePaymentComponent<
                 validateExpiryDate(inputData.getExpiryDate()),
                 validateSecurityCode(inputData.getSecurityCode()),
                 validateHolderName(inputData.getHolderName()),
+                validatePostalCode(inputData.getPostalCode()),
                 inputData.isStorePaymentEnable(),
                 isCvcHidden()
         );
@@ -282,6 +293,14 @@ public final class CardComponent extends BasePaymentComponent<
             return new ValidatedField<>(holderName, ValidatedField.Validation.INVALID);
         } else {
             return new ValidatedField<>(holderName, ValidatedField.Validation.VALID);
+        }
+    }
+
+    private ValidatedField<String> validatePostalCode(@NonNull String postalCode) {
+        if (isPostalCodeVisible() && TextUtils.isEmpty(postalCode)) {
+            return new ValidatedField<>(postalCode, ValidatedField.Validation.INVALID);
+        } else {
+            return new ValidatedField<>(postalCode, ValidatedField.Validation.VALID);
         }
     }
 

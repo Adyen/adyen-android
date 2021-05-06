@@ -20,6 +20,7 @@ public final class CardInputData implements InputData {
     private String mSecurityCode = "";
     private String mHolderName = "";
     private boolean mStorePayment;
+    private String mPostalCode = "";
 
     @NonNull
     public String getCardNumber() {
@@ -63,5 +64,14 @@ public final class CardInputData implements InputData {
 
     public void setStorePayment(boolean storePayment) {
         mStorePayment = storePayment;
+    }
+
+    @NonNull
+    public String getPostalCode() {
+        return mPostalCode;
+    }
+
+    public void setPostalCode(@Nullable String postalCode) {
+        mPostalCode = postalCode;
     }
 }
