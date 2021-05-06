@@ -63,6 +63,7 @@
                 style="@style/AdyenCheckout.Card.ExpiryDateInput"
                 android:nextFocusRight="@+id/editText_securityCode"
                 android:nextFocusForward="@+id/editText_securityCode"
+                android:nextFocusDown="@id/editText_securityCode"
                 tools:ignore="RequiredSize" />
         </com.google.android.material.textfield.TextInputLayout>
 
@@ -92,6 +93,20 @@
         <com.adyen.checkout.components.ui.view.AdyenTextInputEditText
             android:id="@+id/editText_cardHolder"
             style="@style/AdyenCheckout.Card.HolderNameInput"
+            android:nextFocusDown="@+id/editText_postalCode"
+            android:nextFocusForward="@+id/editText_postalCode"
+            tools:ignore="RequiredSize" />
+    </com.google.android.material.textfield.TextInputLayout>
+
+    <com.google.android.material.textfield.TextInputLayout
+        android:id="@+id/textInputLayout_postalCode"
+        style="@style/AdyenCheckout.TextInputLayout"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+        <com.adyen.checkout.components.ui.view.AdyenTextInputEditText
+            android:id="@+id/editText_postalCode"
+            style="@style/AdyenCheckout.Card.PostalCodeInput"
             tools:ignore="RequiredSize" />
     </com.google.android.material.textfield.TextInputLayout>
 
