@@ -32,6 +32,11 @@ import java.util.Locale;
  */
 public class CardConfiguration extends Configuration {
 
+    public enum AddressVisibility {
+        POSTAL_CODE,
+        NONE
+    }
+
     private static final CardType[] DEFAULT_SUPPORTED_CARDS =
             new CardType[]{CardType.VISA, CardType.AMERICAN_EXPRESS, CardType.MASTERCARD};
 
@@ -49,6 +54,7 @@ public class CardConfiguration extends Configuration {
     private final boolean mHideCvcStoredCard;
     private final SocialSecurityNumberVisibility mSocialSecurityNumberVisibility;
     private final KCPAuthVisibility mKcpAuthVisibility;
+    private final AddressVisibility mAddressVisibility;
 
     public static final Parcelable.Creator<CardConfiguration> CREATOR = new Parcelable.Creator<CardConfiguration>() {
         public CardConfiguration createFromParcel(@NonNull Parcel in) {
@@ -76,6 +82,7 @@ public class CardConfiguration extends Configuration {
         mHideCvcStoredCard = builder.mBuilderHideCvcStoredCard;
         mSocialSecurityNumberVisibility = builder.mBuilderSocialSecurityNumberVisibility;
         mKcpAuthVisibility = builder.mBuilderKcpAuthVisibility;
+        mAddressVisibility = builder.mBuilderAddressVisibility;
     }
 
     CardConfiguration(@NonNull Parcel in) {
@@ -88,6 +95,7 @@ public class CardConfiguration extends Configuration {
         mHideCvcStoredCard = ParcelUtils.readBoolean(in);
         mSocialSecurityNumberVisibility = SocialSecurityNumberVisibility.valueOf(in.readString());
         mKcpAuthVisibility = KCPAuthVisibility.valueOf(in.readString());
+        mAddressVisibility = (AddressVisibility) in.readSerializable();
     }
 
     @Override
@@ -101,6 +109,7 @@ public class CardConfiguration extends Configuration {
         ParcelUtils.writeBoolean(dest, mHideCvcStoredCard);
         dest.writeString(mSocialSecurityNumberVisibility.name());
         dest.writeString(mKcpAuthVisibility.name());
+        dest.writeSerializable(mAddressVisibility);
     }
 
     /**
@@ -134,12 +143,10 @@ public class CardConfiguration extends Configuration {
         return new Builder(this);
     }
 
-    @Nullable
     public boolean isHideCvc() {
         return mHideCvc;
     }
 
-    @Nullable
     public boolean isHideCvcStoredCard() {
         return mHideCvcStoredCard;
     }
@@ -152,6 +159,11 @@ public class CardConfiguration extends Configuration {
     @Nullable
     public KCPAuthVisibility getKcpAuthVisibility() {
         return mKcpAuthVisibility;
+    }
+
+    @NonNull
+    public AddressVisibility getAddressVisibility() {
+        return mAddressVisibility;
     }
 
     /**
@@ -167,6 +179,7 @@ public class CardConfiguration extends Configuration {
         private boolean mBuilderHideCvcStoredCard;
         private SocialSecurityNumberVisibility mBuilderSocialSecurityNumberVisibility = SocialSecurityNumberVisibility.HIDE;
         private KCPAuthVisibility mBuilderKcpAuthVisibility = KCPAuthVisibility.HIDE;
+        private AddressVisibility mBuilderAddressVisibility = AddressVisibility.NONE;
 
         /**
          * Constructor of Card Configuration Builder with instance of CardConfiguration.
@@ -181,6 +194,7 @@ public class CardConfiguration extends Configuration {
             mBuilderHideCvcStoredCard = cardConfiguration.isHideCvcStoredCard();
             mBuilderSocialSecurityNumberVisibility = cardConfiguration.getSocialSecurityNumberVisibility();
             mBuilderKcpAuthVisibility = cardConfiguration.getKcpAuthVisibility();
+            mBuilderAddressVisibility = cardConfiguration.getAddressVisibility();
         }
 
         /**
@@ -315,6 +329,18 @@ public class CardConfiguration extends Configuration {
         @NonNull
         public Builder setKcpAuthVisibility(@NonNull KCPAuthVisibility kcpAuthVisibility) {
             mBuilderKcpAuthVisibility = kcpAuthVisibility;
+            return this;
+        }
+
+        /**
+         * Specifies whether address input fields should be shown or not and in which form.
+         *
+         * @param addressVisibility The visibility state of the address input fields.
+         * @return {@link CardConfiguration.Builder}
+         */
+        @NonNull
+        public Builder setAddressVisibility(@NonNull AddressVisibility addressVisibility) {
+            mBuilderAddressVisibility = addressVisibility;
             return this;
         }
 
