@@ -20,6 +20,7 @@ final class CardOutputData implements OutputData {
     private final ValidatedField<String> mCardNumberField;
     private final ValidatedField<ExpiryDate> mExpiryDateField;
     private final ValidatedField<String> mSecurityCodeField;
+    private final ValidatedField<String> mPostalCodeField;
 
     private final boolean mIsStoredPaymentMethodEnable;
     private final boolean mIsCvcHidden;
@@ -32,6 +33,7 @@ final class CardOutputData implements OutputData {
             @NonNull ValidatedField<ExpiryDate> expiryDateField,
             @NonNull ValidatedField<String> securityCodeField,
             @NonNull ValidatedField<String> holderNameField,
+            @NonNull ValidatedField<String> postalCodeField,
             boolean isStoredPaymentMethodEnable,
             boolean isCvcHidden
     ) {
@@ -41,6 +43,7 @@ final class CardOutputData implements OutputData {
         mHolderNameField = holderNameField;
         mIsStoredPaymentMethodEnable = isStoredPaymentMethodEnable;
         mIsCvcHidden = isCvcHidden;
+        mPostalCodeField = postalCodeField;
     }
 
     @NonNull
@@ -63,12 +66,18 @@ final class CardOutputData implements OutputData {
         return mHolderNameField;
     }
 
+    @NonNull
+    public ValidatedField<String> getPostalCodeField() {
+        return mPostalCodeField;
+    }
+
     @Override
     public boolean isValid() {
         return mCardNumberField.isValid()
                 && mExpiryDateField.isValid()
                 && mSecurityCodeField.isValid()
-                && mHolderNameField.isValid();
+                && mHolderNameField.isValid()
+                && mPostalCodeField.isValid();
     }
 
     public boolean isStoredPaymentMethodEnable() {

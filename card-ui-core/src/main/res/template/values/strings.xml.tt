@@ -11,11 +11,13 @@
     <string name="checkout_card_holder_hint">%%creditCard.holderName%%</string>
     <string name="checkout_card_expiry_date_hint">%%creditCard.expiryDateField.title%%</string>
     <string name="checkout_card_security_code_hint">%%creditCard.cvcField.title%%</string>
+    <string name="checkout_card_postal_code_hint">%%postalCode%%</string>
 
     <string name="checkout_card_number_not_valid">%%creditCard.numberField.invalid%%</string>
     <string name="checkout_expiry_date_not_valid">%%creditCard.expiryDateField.invalid%%</string>
     <string name="checkout_security_code_not_valid">%%creditCard.oneClickVerification.invalidInput.title%%</string>
     <string name="checkout_holder_name_not_valid">%%sepa.ownerName.invalid%%</string>
+    <string name="checkout_card_postal_not_valid">%%openInvoice.errorFeedback.incorrectFormat%%</string>
 
     <string name="card_number_4digit">•••• %s</string>
     <string name="expires_in">%1$s/%2$s</string>

@@ -33,6 +33,11 @@ import java.util.Locale;
  */
 public class CardConfiguration extends Configuration {
 
+    public enum AddressVisibility {
+        POSTAL_CODE,
+        NONE
+    }
+
     private static final CardType[] DEFAULT_SUPPORTED_CARDS =
             new CardType[]{CardType.VISA, CardType.AMERICAN_EXPRESS, CardType.MASTERCARD};
 
@@ -49,6 +54,7 @@ public class CardConfiguration extends Configuration {
     private final boolean mShowStorePaymentField;
     private final boolean mHideCvc;
     private final boolean mHideCvcStoredCard;
+    private final AddressVisibility mAddressVisibility;
 
     public static final Parcelable.Creator<CardConfiguration> CREATOR = new Parcelable.Creator<CardConfiguration>() {
         public CardConfiguration createFromParcel(@NonNull Parcel in) {
@@ -70,7 +76,9 @@ public class CardConfiguration extends Configuration {
      * @param supportCardTypes      The list of supported card brands to be shown to the user.
      * @param hideCvc               Hides the CVC field on the payment flow so that it's not required.
      * @param hideCvcStoredCard     Hides the CVC field on the stored payment flow so that it's not required.
+     * @param addressVisibility     Specifies whether address input fields are visible and in which form.
      */
+    @SuppressWarnings("ParameterNumber")
     CardConfiguration(
             @NonNull Locale shopperLocale,
             @NonNull Environment environment,
@@ -81,7 +89,8 @@ public class CardConfiguration extends Configuration {
             boolean showStorePaymentField,
             @NonNull List<CardType> supportCardTypes,
             boolean hideCvc,
-            boolean hideCvcStoredCard
+            boolean hideCvcStoredCard,
+            @NonNull AddressVisibility addressVisibility
     ) {
         super(shopperLocale, environment, clientKey);
 
@@ -92,6 +101,7 @@ public class CardConfiguration extends Configuration {
         mShowStorePaymentField = showStorePaymentField;
         mHideCvc = hideCvc;
         mHideCvcStoredCard = hideCvcStoredCard;
+        mAddressVisibility = addressVisibility;
     }
 
     CardConfiguration(@NonNull Parcel in) {
@@ -103,6 +113,7 @@ public class CardConfiguration extends Configuration {
         mShowStorePaymentField = ParcelUtils.readBoolean(in);
         mHideCvc = ParcelUtils.readBoolean(in);
         mHideCvcStoredCard = ParcelUtils.readBoolean(in);
+        mAddressVisibility = (AddressVisibility) in.readSerializable();
     }
 
     @Override
@@ -115,6 +126,7 @@ public class CardConfiguration extends Configuration {
         ParcelUtils.writeBoolean(dest, mShowStorePaymentField);
         ParcelUtils.writeBoolean(dest, mHideCvc);
         ParcelUtils.writeBoolean(dest, mHideCvcStoredCard);
+        dest.writeSerializable(mAddressVisibility);
     }
 
     /**
@@ -158,14 +170,17 @@ public class CardConfiguration extends Configuration {
         return new Builder(this);
     }
 
-    @Nullable
     public boolean isHideCvc() {
         return mHideCvc;
     }
 
-    @Nullable
     public boolean isHideCvcStoredCard() {
         return mHideCvcStoredCard;
+    }
+
+    @NonNull
+    public AddressVisibility getAddressVisibility() {
+        return mAddressVisibility;
     }
 
     /**
@@ -181,6 +196,7 @@ public class CardConfiguration extends Configuration {
         private String mShopperReference;
         private boolean mBuilderHideCvc;
         private boolean mBuilderHideCvcStoredCard;
+        private AddressVisibility mBuilderAddressVisibility = AddressVisibility.NONE;
 
         /**
          * Constructor of Card Configuration Builder with instance of CardConfiguration.
@@ -196,12 +212,13 @@ public class CardConfiguration extends Configuration {
             mShopperReference = cardConfiguration.getShopperReference();
             mBuilderHideCvc = cardConfiguration.isHideCvc();
             mBuilderHideCvcStoredCard = cardConfiguration.isHideCvcStoredCard();
+            mBuilderAddressVisibility = cardConfiguration.getAddressVisibility();
         }
 
         /**
          * Constructor of Card Configuration Builder with default values from Context.
          *
-         * @param context   A context
+         * @param context A context
          */
         public Builder(@NonNull Context context) {
             super(context);
@@ -224,7 +241,7 @@ public class CardConfiguration extends Configuration {
          *
          * @param context   A context
          * @param publicKey The public key to be used for encryption. You can get it from the Customer Area.
-         * @deprecated      Constructor deprecated since publicKey is no longer always required in favor of clientKey.
+         * @deprecated Constructor deprecated since publicKey is no longer always required in favor of clientKey.
          */
         @Deprecated
         public Builder(@NonNull Context context, @NonNull String publicKey) {
@@ -238,7 +255,7 @@ public class CardConfiguration extends Configuration {
          * @param shopperLocale The Locale of the shopper.
          * @param environment   The {@link Environment} to be used for network calls to Adyen.
          * @param publicKey     The public key used for encryption of the card data. You can get it from the Customer Area.
-         * @deprecated          Constructor deprecated since publicKey is no longer always required in favor of clientKey.
+         * @deprecated Constructor deprecated since publicKey is no longer always required in favor of clientKey.
          */
         @Deprecated
         public Builder(
@@ -357,6 +374,18 @@ public class CardConfiguration extends Configuration {
         }
 
         /**
+         * Specifies whether address input fields should be shown or not and in which form.
+         *
+         * @param addressVisibility The visibility state of the address input fields.
+         * @return {@link CardConfiguration.Builder}
+         */
+        @NonNull
+        public Builder setAddressVisibility(@NonNull AddressVisibility addressVisibility) {
+            mBuilderAddressVisibility = addressVisibility;
+            return this;
+        }
+
+        /**
          * Build {@link CardConfiguration} object from {@link CardConfiguration.Builder} inputs.
          *
          * @return {@link CardConfiguration}
@@ -383,7 +412,8 @@ public class CardConfiguration extends Configuration {
                     mBuilderShowStorePaymentField,
                     mBuilderSupportedCardTypes,
                     mBuilderHideCvc,
-                    mBuilderHideCvcStoredCard
+                    mBuilderHideCvcStoredCard,
+                    mBuilderAddressVisibility
             );
         }
     }

@@ -57,6 +57,7 @@ public final class CardView extends AdyenLinearLayout<CardOutputData, CardConfig
     private TextInputLayout mCardNumberInput;
     private SwitchCompat mStorePaymentMethodSwitch;
     private TextInputLayout mCardHolderInput;
+    private TextInputLayout mPostalCodeInput;
 
     private final CardInputData mCardInputData = new CardInputData();
 
@@ -108,6 +109,7 @@ public final class CardView extends AdyenLinearLayout<CardOutputData, CardConfig
         initExpiryDateInput();
         initSecurityCodeInput();
         initHolderNameInput();
+        initPostalCodeInput();
 
         mCardBrandLogoImageView = findViewById(R.id.cardBrandLogo_imageView);
 
@@ -127,6 +129,7 @@ public final class CardView extends AdyenLinearLayout<CardOutputData, CardConfig
         } else {
             mCardHolderInput.setVisibility(getComponent().isHolderNameRequire() ? VISIBLE : GONE);
             mStorePaymentMethodSwitch.setVisibility(getComponent().showStorePaymentField() ? VISIBLE : GONE);
+            mPostalCodeInput.setVisibility(getComponent().isPostalCodeVisible() ? VISIBLE : GONE);
         }
 
         notifyInputDataChanged();
@@ -158,8 +161,13 @@ public final class CardView extends AdyenLinearLayout<CardOutputData, CardConfig
         mCardHolderInput.setHint(typedArray.getString(0));
         typedArray.recycle();
 
+        // Postal code
+        typedArray = localizedContext.obtainStyledAttributes(R.style.AdyenCheckout_Card_PostalCodeInput, myAttrs);
+        mPostalCodeInput.setHint(typedArray.getString(0));
+        typedArray.recycle();
+
         // Store Switch
-        myAttrs = new int[] {android.R.attr.text};
+        myAttrs = new int[]{android.R.attr.text};
         typedArray = localizedContext.obtainStyledAttributes(R.style.AdyenCheckout_Card_StorePaymentSwitch, myAttrs);
         mStorePaymentMethodSwitch.setText(typedArray.getString(0));
         typedArray.recycle();
@@ -233,6 +241,13 @@ public final class CardView extends AdyenLinearLayout<CardOutputData, CardConfig
                 mCardHolderInput.requestFocus();
             }
             mCardHolderInput.setError(mLocalizedContext.getString(R.string.checkout_holder_name_not_valid));
+        }
+
+        if (mPostalCodeInput.getVisibility() == VISIBLE && !outputData.getPostalCodeField().isValid()) {
+            if (!isErrorFocused) {
+                mPostalCodeInput.requestFocus();
+            }
+            mPostalCodeInput.setError(mLocalizedContext.getString(R.string.checkout_card_postal_not_valid));
         }
     }
 
@@ -380,6 +395,31 @@ public final class CardView extends AdyenLinearLayout<CardOutputData, CardConfig
         });
     }
 
+    private void initPostalCodeInput() {
+        mPostalCodeInput = findViewById(R.id.textInputLayout_postalCode);
+        final AdyenTextInputEditText postalCodeEditText = (AdyenTextInputEditText) mPostalCodeInput.getEditText();
+        //noinspection ConstantConditions
+        postalCodeEditText.setOnChangeListener(new AdyenTextInputEditText.Listener() {
+            @Override
+            public void onTextChanged(@NonNull Editable editable) {
+                mCardInputData.setPostalCode(editable.toString());
+                notifyInputDataChanged();
+                mPostalCodeInput.setError(null);
+            }
+        });
+        postalCodeEditText.setOnFocusChangeListener(new OnFocusChangeListener() {
+            @Override
+            public void onFocusChange(View v, boolean hasFocus) {
+                final CardOutputData outputData = getComponent().getOutputData();
+                if (hasFocus) {
+                    mPostalCodeInput.setError(null);
+                } else if (outputData != null && !outputData.getPostalCodeField().isValid()) {
+                    mPostalCodeInput.setError(mLocalizedContext.getString(R.string.checkout_card_postal_not_valid));
+                }
+            }
+        });
+    }
+
     private void setStoredCardInterface(@NonNull CardInputData storedCardInput) {
         mCardNumberEditText.setText(mLocalizedContext.getString(R.string.card_number_4digit, storedCardInput.getCardNumber()));
         mCardNumberEditText.setEnabled(false);
@@ -389,6 +429,7 @@ public final class CardView extends AdyenLinearLayout<CardOutputData, CardConfig
 
         mStorePaymentMethodSwitch.setVisibility(GONE);
         mCardHolderInput.setVisibility(GONE);
+        mPostalCodeInput.setVisibility(GONE);
     }
 
     @Nullable
