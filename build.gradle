@@ -18,7 +18,7 @@ buildscript {
 
     repositories {
         google()
-        jcenter()
+        mavenCentral()
         maven { url "https://plugins.gradle.org/m2/" }
     }
 
@@ -72,7 +72,7 @@ allprojects {
 
     // Adyen Dependencies
     ext.adyen_cse_version = "1.0.5"
-    ext.adyen3ds2_version = "2.2.0"
+    ext.adyen3ds2_version = "2.2.2"
 
     // External Dependencies
     ext.play_services_wallet_version = '18.1.2'
@@ -97,7 +97,8 @@ allprojects {
 
     repositories {
         google()
-        jcenter()
+        mavenCentral()
+        jcenter() // Koin is still not migrated
     }
 }
 
