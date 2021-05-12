@@ -9,7 +9,7 @@
 if (!hasProperty("checksums")) {
     final checksums = [
             // Adyen dependencies
-            "com.adyen.threeds:adyen-3ds2:2.2.0:42314ec7f7f54b5fd9a77c12e59ae78d:MD5",
+            "com.adyen.threeds:adyen-3ds2:2.2.2:3cfb727e53792118335d1632f2455870:MD5",
 
             // Kotlin
             "org.jetbrains.kotlin:kotlin-stdlib:1.4.32:3be731bc74b5d1737559299a94b9248f:MD5",
@@ -37,7 +37,7 @@ if (!hasProperty("checksums")) {
             "com.google.android.gms:play-services-wallet:18.1.2:4e75fd00d8ed34fb55620d35f403ccb2:MD5",
 
             // WeChatPay
-            "com.tencent.mm.opensdk:wechat-sdk-android-without-mta:6.6.4:50848e74e4937bf113ad8a44c44cec80:MD5"
+            "com.tencent.mm.opensdk:wechat-sdk-android-without-mta:6.6.4:8ae40b8665f98587e716b4593401aef2:MD5"
     ]
 
     ext.checksums = checksums
