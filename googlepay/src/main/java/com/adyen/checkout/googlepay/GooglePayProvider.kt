@@ -10,11 +10,13 @@ package com.adyen.checkout.googlepay
 import android.app.Application
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.ViewModelStoreOwner
+import com.adyen.checkout.components.ComponentAvailabilityCheck
 import com.adyen.checkout.components.ComponentAvailableCallback
 import com.adyen.checkout.components.PaymentComponentProvider
 import com.adyen.checkout.components.base.GenericPaymentMethodDelegate
 import com.adyen.checkout.components.base.lifecycle.viewModelFactory
 import com.adyen.checkout.components.model.paymentmethods.PaymentMethod
+import com.adyen.checkout.core.exception.CheckoutException
 import com.adyen.checkout.googlepay.model.GooglePayParams
 import com.adyen.checkout.googlepay.util.GooglePayUtils
 import com.google.android.gms.common.ConnectionResult
@@ -25,7 +27,7 @@ import com.google.android.gms.wallet.PaymentsClient
 import com.google.android.gms.wallet.Wallet
 import java.lang.ref.WeakReference
 
-class GooglePayProvider : PaymentComponentProvider<GooglePayComponent, GooglePayConfiguration> {
+class GooglePayProvider : PaymentComponentProvider<GooglePayComponent, GooglePayConfiguration>, ComponentAvailabilityCheck<GooglePayConfiguration> {
     override operator fun get(
         viewModelStoreOwner: ViewModelStoreOwner,
         paymentMethod: PaymentMethod,
@@ -38,9 +40,12 @@ class GooglePayProvider : PaymentComponentProvider<GooglePayComponent, GooglePay
     override fun isAvailable(
         applicationContext: Application,
         paymentMethod: PaymentMethod,
-        configuration: GooglePayConfiguration,
+        configuration: GooglePayConfiguration?,
         callback: ComponentAvailableCallback<GooglePayConfiguration>
     ) {
+        if (configuration == null) {
+            throw CheckoutException("GooglePayConfiguration cannot be null")
+        }
         if (GoogleApiAvailability.getInstance().isGooglePlayServicesAvailable(applicationContext) != ConnectionResult.SUCCESS) {
             callback.onAvailabilityResult(false, paymentMethod, configuration)
             return

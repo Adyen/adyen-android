@@ -7,13 +7,11 @@
  */
 package com.adyen.checkout.card
 
-import android.app.Application
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.ViewModelStoreOwner
 import com.adyen.checkout.card.data.CardType
 import com.adyen.checkout.card.repository.BinLookupRepository
 import com.adyen.checkout.card.repository.PublicKeyRepository
-import com.adyen.checkout.components.ComponentAvailableCallback
 import com.adyen.checkout.components.StoredPaymentComponentProvider
 import com.adyen.checkout.components.base.lifecycle.viewModelFactory
 import com.adyen.checkout.components.model.paymentmethods.PaymentMethod
@@ -58,15 +56,6 @@ class CardComponentProvider : StoredPaymentComponentProvider<CardComponent, Card
             )
         }
         return ViewModelProvider(viewModelStoreOwner, factory).get(CardComponent::class.java)
-    }
-
-    override fun isAvailable(
-        applicationContext: Application,
-        paymentMethod: PaymentMethod,
-        configuration: CardConfiguration,
-        callback: ComponentAvailableCallback<CardConfiguration?>
-    ) {
-        callback.onAvailabilityResult(true, paymentMethod, configuration)
     }
 
     /**

@@ -8,8 +8,6 @@
 
 package com.adyen.checkout.components;
 
-import android.app.Application;
-
 import androidx.annotation.NonNull;
 import androidx.lifecycle.ViewModelStoreOwner;
 
@@ -18,9 +16,9 @@ import com.adyen.checkout.components.model.paymentmethods.PaymentMethod;
 import com.adyen.checkout.core.exception.CheckoutException;
 
 /**
- * Provides an instance of te associated Component linked to provided lifecycle and config.
+ * Provides an instance of the associated Component linked to provided lifecycle and config.
  *
- * @param <ComponentT> The Component to be provided
+ * @param <ComponentT>     The Component to be provided
  * @param <ConfigurationT> The Configuration for the Component to be provided
  */
 public interface PaymentComponentProvider<ComponentT extends PaymentComponent, ConfigurationT extends Configuration>
@@ -33,10 +31,4 @@ public interface PaymentComponentProvider<ComponentT extends PaymentComponent, C
             @NonNull PaymentMethod paymentMethod,
             @NonNull ConfigurationT configuration
     ) throws CheckoutException;
-
-    void isAvailable(
-            @NonNull Application applicationContext,
-            @NonNull PaymentMethod paymentMethod,
-            @NonNull ConfigurationT configuration,
-            @NonNull ComponentAvailableCallback<ConfigurationT> callback);
 }
