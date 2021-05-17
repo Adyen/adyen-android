@@ -23,6 +23,7 @@ import com.adyen.checkout.blik.BlikView
 import com.adyen.checkout.card.CardComponent
 import com.adyen.checkout.card.CardConfiguration
 import com.adyen.checkout.card.CardView
+import com.adyen.checkout.components.ComponentAvailabilityCheck
 import com.adyen.checkout.components.ComponentAvailableCallback
 import com.adyen.checkout.components.ComponentView
 import com.adyen.checkout.components.PaymentComponent
@@ -51,6 +52,7 @@ import com.adyen.checkout.eps.EPSConfiguration
 import com.adyen.checkout.eps.EPSRecyclerView
 import com.adyen.checkout.googlepay.GooglePayComponent
 import com.adyen.checkout.googlepay.GooglePayConfiguration
+import com.adyen.checkout.googlepay.GooglePayProvider
 import com.adyen.checkout.ideal.IdealComponent
 import com.adyen.checkout.ideal.IdealConfiguration
 import com.adyen.checkout.ideal.IdealRecyclerView
@@ -70,6 +72,7 @@ import com.adyen.checkout.sepa.SepaComponent
 import com.adyen.checkout.sepa.SepaConfiguration
 import com.adyen.checkout.sepa.SepaView
 import com.adyen.checkout.wechatpay.WeChatPayActionConfiguration
+import com.adyen.checkout.wechatpay.WeChatPayProvider
 
 object ComponentParsingProvider {
     val TAG = LogUtil.getTag()
@@ -143,38 +146,30 @@ internal fun checkComponentAvailability(
 
         val type = paymentMethod.type ?: throw CheckoutException("PaymentMethod type is null")
 
-        val provider = getProviderForType(type)
-        val configuration = dropInConfiguration.getConfigurationForPaymentMethod<Configuration>(type, application)
+        val availabilityCheck = getComponentAvailabilityCheckForType(type)
+        if (availabilityCheck == null) {
+            callback.onAvailabilityResult(true, paymentMethod, null)
+            return
+        }
+        val configuration = dropInConfiguration.getConfigurationForPaymentMethodOrNull<Configuration>(type, application)
 
-        provider.isAvailable(application, paymentMethod, configuration, callback)
+        availabilityCheck.isAvailable(application, paymentMethod, configuration, callback)
     } catch (e: CheckoutException) {
         Logger.e(ComponentParsingProvider.TAG, "Unable to initiate ${paymentMethod.type}", e)
         callback.onAvailabilityResult(false, paymentMethod, null)
     }
 }
 
-@Suppress("ComplexMethod")
-internal fun getProviderForType(type: String): PaymentComponentProvider<PaymentComponent<*, *>, Configuration> {
+/**
+ * Provides the [ComponentAvailabilityCheck] class for the specified [paymentMethodType], if available.
+ */
+internal fun getComponentAvailabilityCheckForType(paymentMethodType: String): ComponentAvailabilityCheck<Configuration>? {
     @Suppress("UNCHECKED_CAST")
-    return when (type) {
-        PaymentMethodTypes.BCMC -> BcmcComponent.PROVIDER
-        PaymentMethodTypes.BLIK -> BlikComponent.PROVIDER
-        PaymentMethodTypes.DOTPAY -> DotpayComponent.PROVIDER
-        PaymentMethodTypes.ENTERCASH -> EntercashComponent.PROVIDER
-        PaymentMethodTypes.EPS -> EPSComponent.PROVIDER
-        PaymentMethodTypes.GOOGLE_PAY -> GooglePayComponent.PROVIDER
-        PaymentMethodTypes.IDEAL -> IdealComponent.PROVIDER
-        PaymentMethodTypes.MB_WAY -> MBWayComponent.PROVIDER
-        PaymentMethodTypes.MOLPAY_THAILAND,
-        PaymentMethodTypes.MOLPAY_MALAYSIA,
-        PaymentMethodTypes.MOLPAY_VIETNAM -> MolpayComponent.PROVIDER
-        PaymentMethodTypes.OPEN_BANKING -> OpenBankingComponent.PROVIDER
-        PaymentMethodTypes.SCHEME -> CardComponent.PROVIDER
-        PaymentMethodTypes.SEPA -> SepaComponent.PROVIDER
-        else -> {
-            throw CheckoutException("Unable to find component for type - $type")
-        }
-    } as PaymentComponentProvider<PaymentComponent<*, *>, Configuration>
+    return when (paymentMethodType) {
+        PaymentMethodTypes.GOOGLE_PAY -> GooglePayProvider()
+        PaymentMethodTypes.WECHAT_PAY_SDK -> WeChatPayProvider()
+        else -> null
+    } as ComponentAvailabilityCheck<Configuration>?
 }
 
 /**

@@ -103,6 +103,14 @@ class DropInConfiguration : Configuration, Parcelable {
         return ParcelUtils.NO_FILE_DESCRIPTOR
     }
 
+    internal fun <T : Configuration> getConfigurationForPaymentMethodOrNull(paymentMethod: String, context: Context): T? {
+        return try {
+            getConfigurationForPaymentMethod(paymentMethod, context)
+        } catch (e: CheckoutException) {
+            null
+        }
+    }
+
     internal fun <T : Configuration> getConfigurationForPaymentMethod(paymentMethod: String, context: Context): T {
         return if (availablePaymentConfigs.containsKey(paymentMethod)) {
             @Suppress("UNCHECKED_CAST")
