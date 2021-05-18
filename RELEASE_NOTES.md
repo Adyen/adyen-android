@@ -22,10 +22,12 @@
 - The `merchantAccount` parameter in `GooglePayConfiguration.Builder` is now optional. You can remove it from the builder constructor, or use `GooglePayConfiguration.Builder.setMerchantAccount` if you need to pass it manually.
 - Updated 3DS2 SDK to version 2.2.2
 - Updated Material Components dependency to 1.3.0.
+- Screenshots are now allowed in Debug builds, when the Card component is displayed.
 
 ## Fixed
 - Passing `threeDSRequestorAppURL` to the SDK in the 3DS2 Component only when protocol version is 2.2.0 or higher since this is not expected in 2.1.0
 - Style in TextInputLayout where in some scenarios text color would be too light and hard to see.
 
 ## Removed
-- `WeChatPayComponent` since it didn't have any function. Instead you can simply check if the App is available by calling: `WeChatPayUtils.isAvailable(applicationContext)`
+- `WeChatPayComponent` since it didn't have any function. Instead you can simply check if the App is available by calling: `WeChatPayProvider.isAvailable`.
+- `PaymentComponentProvider.isAvailable` since most payment methods are always available. Replaced it with `PaymentMethodAvailabilityCheck`, only implemented for methods that need to check for availability.
