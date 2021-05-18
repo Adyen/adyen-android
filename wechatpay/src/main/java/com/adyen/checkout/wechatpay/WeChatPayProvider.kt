@@ -9,8 +9,8 @@
 package com.adyen.checkout.wechatpay
 
 import android.app.Application
-import com.adyen.checkout.components.PaymentMethodAvailabilityCheck
 import com.adyen.checkout.components.ComponentAvailableCallback
+import com.adyen.checkout.components.PaymentMethodAvailabilityCheck
 import com.adyen.checkout.components.base.Configuration
 import com.adyen.checkout.components.model.paymentmethods.PaymentMethod
 

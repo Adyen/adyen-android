@@ -10,9 +10,9 @@ package com.adyen.checkout.googlepay
 import android.app.Application
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.ViewModelStoreOwner
-import com.adyen.checkout.components.PaymentMethodAvailabilityCheck
 import com.adyen.checkout.components.ComponentAvailableCallback
 import com.adyen.checkout.components.PaymentComponentProvider
+import com.adyen.checkout.components.PaymentMethodAvailabilityCheck
 import com.adyen.checkout.components.base.GenericPaymentMethodDelegate
 import com.adyen.checkout.components.base.lifecycle.viewModelFactory
 import com.adyen.checkout.components.model.paymentmethods.PaymentMethod
@@ -27,7 +27,9 @@ import com.google.android.gms.wallet.PaymentsClient
 import com.google.android.gms.wallet.Wallet
 import java.lang.ref.WeakReference
 
-class GooglePayProvider : PaymentComponentProvider<GooglePayComponent, GooglePayConfiguration>, PaymentMethodAvailabilityCheck<GooglePayConfiguration> {
+class GooglePayProvider :
+    PaymentComponentProvider<GooglePayComponent, GooglePayConfiguration>,
+    PaymentMethodAvailabilityCheck<GooglePayConfiguration> {
     override operator fun get(
         viewModelStoreOwner: ViewModelStoreOwner,
         paymentMethod: PaymentMethod,
