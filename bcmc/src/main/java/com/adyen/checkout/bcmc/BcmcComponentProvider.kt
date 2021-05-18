@@ -7,11 +7,9 @@
  */
 package com.adyen.checkout.bcmc
 
-import android.app.Application
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.ViewModelStoreOwner
 import com.adyen.checkout.card.repository.PublicKeyRepository
-import com.adyen.checkout.components.ComponentAvailableCallback
 import com.adyen.checkout.components.PaymentComponentProvider
 import com.adyen.checkout.components.base.GenericPaymentMethodDelegate
 import com.adyen.checkout.components.base.lifecycle.viewModelFactory
@@ -32,14 +30,5 @@ class BcmcComponentProvider : PaymentComponentProvider<BcmcComponent, BcmcConfig
             )
         }
         return ViewModelProvider(viewModelStoreOwner, bcmcFactory).get(BcmcComponent::class.java)
-    }
-
-    override fun isAvailable(
-        applicationContext: Application,
-        paymentMethod: PaymentMethod,
-        configuration: BcmcConfiguration,
-        callback: ComponentAvailableCallback<BcmcConfiguration>
-    ) {
-        callback.onAvailabilityResult(true, paymentMethod, configuration)
     }
 }

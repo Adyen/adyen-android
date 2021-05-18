@@ -14,7 +14,6 @@ import android.content.Intent;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 
-import com.adyen.checkout.components.PaymentComponentProvider;
 import com.adyen.checkout.components.base.BasePaymentComponent;
 import com.adyen.checkout.components.base.GenericPaymentMethodDelegate;
 import com.adyen.checkout.components.model.paymentmethods.Configuration;
@@ -37,7 +36,7 @@ public class GooglePayComponent extends
         BasePaymentComponent<GooglePayConfiguration, GooglePayInputData, GooglePayOutputData, GooglePayComponentState> {
     private static final String TAG = LogUtil.getTag();
 
-    public static final PaymentComponentProvider<GooglePayComponent, GooglePayConfiguration> PROVIDER = new GooglePayProvider();
+    public static final GooglePayProvider PROVIDER = new GooglePayProvider();
 
     private static final String[] PAYMENT_METHOD_TYPES = {PaymentMethodTypes.GOOGLE_PAY};
 

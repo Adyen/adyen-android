@@ -21,7 +21,7 @@ import com.adyen.checkout.core.exception.CheckoutException
 import com.adyen.checkout.core.log.LogUtil
 import com.adyen.checkout.core.log.Logger
 import com.adyen.checkout.dropin.DropInConfiguration
-import com.adyen.checkout.dropin.checkComponentAvailability
+import com.adyen.checkout.dropin.checkPaymentMethodAvailability
 import com.adyen.checkout.dropin.ui.stored.makeStoredModel
 
 class PaymentMethodsListViewModel(
@@ -84,15 +84,14 @@ class PaymentMethodsListViewModel(
                 type == null -> {
                     throw CheckoutException("PaymentMethod type is null")
                 }
-                PaymentMethodTypes.SUPPORTED_PAYMENT_METHODS.contains(type)
-                    && !PaymentMethodTypes.SUPPORTED_ACTION_ONLY_PAYMENT_METHODS.contains(type) -> {
+                PaymentMethodTypes.SUPPORTED_PAYMENT_METHODS.contains(type) -> {
                     Logger.v(TAG, "Supported payment method: $type")
                     // We assume payment method is available and remove it later when the callback comes
                     // this is the overwhelming majority of cases, and we keep the list ordered this way.
                     paymentMethodsList.add(
                         PaymentMethodModel(type, paymentMethod.name.orEmpty())
                     )
-                    checkComponentAvailability(getApplication(), paymentMethod, dropInConfiguration, this)
+                    checkPaymentMethodAvailability(getApplication(), paymentMethod, dropInConfiguration, this)
                 }
                 else -> {
                     availabilitySkipSum++
