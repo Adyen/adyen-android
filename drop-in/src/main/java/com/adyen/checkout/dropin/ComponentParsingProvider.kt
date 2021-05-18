@@ -23,7 +23,7 @@ import com.adyen.checkout.blik.BlikView
 import com.adyen.checkout.card.CardComponent
 import com.adyen.checkout.card.CardConfiguration
 import com.adyen.checkout.card.CardView
-import com.adyen.checkout.components.ComponentAvailabilityCheck
+import com.adyen.checkout.components.PaymentMethodAvailabilityCheck
 import com.adyen.checkout.components.ComponentAvailableCallback
 import com.adyen.checkout.components.ComponentView
 import com.adyen.checkout.components.PaymentComponent
@@ -135,7 +135,7 @@ internal inline fun <reified T : Configuration> getDefaultConfigForAction(
     return builder.build() as T
 }
 
-internal fun checkComponentAvailability(
+internal fun checkPaymentMethodAvailability(
     application: Application,
     paymentMethod: PaymentMethod,
     dropInConfiguration: DropInConfiguration,
@@ -146,7 +146,7 @@ internal fun checkComponentAvailability(
 
         val type = paymentMethod.type ?: throw CheckoutException("PaymentMethod type is null")
 
-        val availabilityCheck = getComponentAvailabilityCheckForType(type)
+        val availabilityCheck = getPaymentMethodAvailabilityCheck(type)
         if (availabilityCheck == null) {
             callback.onAvailabilityResult(true, paymentMethod, null)
             return
@@ -161,15 +161,15 @@ internal fun checkComponentAvailability(
 }
 
 /**
- * Provides the [ComponentAvailabilityCheck] class for the specified [paymentMethodType], if available.
+ * Provides the [PaymentMethodAvailabilityCheck] class for the specified [paymentMethodType], if available.
  */
-internal fun getComponentAvailabilityCheckForType(paymentMethodType: String): ComponentAvailabilityCheck<Configuration>? {
+internal fun getPaymentMethodAvailabilityCheck(paymentMethodType: String): PaymentMethodAvailabilityCheck<Configuration>? {
     @Suppress("UNCHECKED_CAST")
     return when (paymentMethodType) {
         PaymentMethodTypes.GOOGLE_PAY -> GooglePayProvider()
         PaymentMethodTypes.WECHAT_PAY_SDK -> WeChatPayProvider()
         else -> null
-    } as ComponentAvailabilityCheck<Configuration>?
+    } as PaymentMethodAvailabilityCheck<Configuration>?
 }
 
 /**

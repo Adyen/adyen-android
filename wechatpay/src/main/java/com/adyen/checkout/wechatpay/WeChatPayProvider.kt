@@ -9,7 +9,7 @@
 package com.adyen.checkout.wechatpay
 
 import android.app.Application
-import com.adyen.checkout.components.ComponentAvailabilityCheck
+import com.adyen.checkout.components.PaymentMethodAvailabilityCheck
 import com.adyen.checkout.components.ComponentAvailableCallback
 import com.adyen.checkout.components.base.Configuration
 import com.adyen.checkout.components.model.paymentmethods.PaymentMethod
@@ -20,7 +20,7 @@ import com.adyen.checkout.components.model.paymentmethods.PaymentMethod
  * You can directly call /payments after you receive a callback from [isAvailable].
  * You can use [WeChatPayActionComponent] to handle the returned action.
  */
-class WeChatPayProvider : ComponentAvailabilityCheck<Configuration> {
+class WeChatPayProvider : PaymentMethodAvailabilityCheck<Configuration> {
 
     override fun isAvailable(
         applicationContext: Application,
