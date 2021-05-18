@@ -23,6 +23,7 @@ import com.adyen.checkout.blik.BlikView
 import com.adyen.checkout.card.CardComponent
 import com.adyen.checkout.card.CardConfiguration
 import com.adyen.checkout.card.CardView
+import com.adyen.checkout.components.AlwaysAvailablePaymentMethod
 import com.adyen.checkout.components.PaymentMethodAvailabilityCheck
 import com.adyen.checkout.components.ComponentAvailableCallback
 import com.adyen.checkout.components.ComponentView
@@ -147,10 +148,6 @@ internal fun checkPaymentMethodAvailability(
         val type = paymentMethod.type ?: throw CheckoutException("PaymentMethod type is null")
 
         val availabilityCheck = getPaymentMethodAvailabilityCheck(type)
-        if (availabilityCheck == null) {
-            callback.onAvailabilityResult(true, paymentMethod, null)
-            return
-        }
         val configuration = dropInConfiguration.getConfigurationForPaymentMethodOrNull<Configuration>(type, application)
 
         availabilityCheck.isAvailable(application, paymentMethod, configuration, callback)
@@ -163,13 +160,13 @@ internal fun checkPaymentMethodAvailability(
 /**
  * Provides the [PaymentMethodAvailabilityCheck] class for the specified [paymentMethodType], if available.
  */
-internal fun getPaymentMethodAvailabilityCheck(paymentMethodType: String): PaymentMethodAvailabilityCheck<Configuration>? {
+internal fun getPaymentMethodAvailabilityCheck(paymentMethodType: String): PaymentMethodAvailabilityCheck<Configuration> {
     @Suppress("UNCHECKED_CAST")
     return when (paymentMethodType) {
         PaymentMethodTypes.GOOGLE_PAY -> GooglePayProvider()
         PaymentMethodTypes.WECHAT_PAY_SDK -> WeChatPayProvider()
-        else -> null
-    } as PaymentMethodAvailabilityCheck<Configuration>?
+        else -> AlwaysAvailablePaymentMethod()
+    } as PaymentMethodAvailabilityCheck<Configuration>
 }
 
 /**
