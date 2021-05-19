@@ -2,6 +2,7 @@ $dokka.format:html-v1
 $dokka.linkExtension:html
 
 com.adyen.checkout.components
+com.adyen.checkout.components.extensions
 com.adyen.checkout.components.ui.adapter
 com.adyen.checkout.components.ui.util
 com.adyen.checkout.components.ui.view

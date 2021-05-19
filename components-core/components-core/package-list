@@ -12,6 +12,9 @@ com.adyen.checkout.components.model.paymentmethods
 com.adyen.checkout.components.model.payments
 com.adyen.checkout.components.model.payments.request
 com.adyen.checkout.components.model.payments.response
+com.adyen.checkout.components.status
+com.adyen.checkout.components.status.api
+com.adyen.checkout.components.status.model
 com.adyen.checkout.components.ui
 com.adyen.checkout.components.util
 

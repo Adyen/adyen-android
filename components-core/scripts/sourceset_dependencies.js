@@ -1,1 +1,1 @@
-sourceset_dependencies = '{":components-core:dokkaHtml/debug": [], ":components-core:dokkaHtml/main": [], ":components-core:dokkaHtml/release": []}'
+sourceset_dependencies = '{":components-core:dokkaHtml/androidTestRelease": [], ":components-core:dokkaHtml/debug": [], ":components-core:dokkaHtml/main": [], ":components-core:dokkaHtml/release": []}'
