@@ -8,8 +8,6 @@
   -->
 
 <resources>
-    <dimen name="primary_button_height">60dp</dimen>
-
     <dimen name="bottom_sheet_corner_radius">16dp</dimen>
     <dimen name="bottom_sheet_top_padding">8dp</dimen>
     <dimen name="indicator_width">26dp</dimen>

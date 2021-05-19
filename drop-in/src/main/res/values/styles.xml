@@ -11,24 +11,6 @@
     <!-- Override 3DS2 Theme to match Checkout theme -->
     <style name="ThreeDS2Theme" parent="AdyenCheckout" tools:ignore="PrivateResource" />
 
-    <style name="AdyenCheckout.Button.Colored" parent="Widget.AppCompat.Button.Colored">
-        <item name="android:layout_width">match_parent</item>
-        <item name="android:layout_height">@dimen/primary_button_height</item>
-        <item name="android:layout_marginLeft">@dimen/standard_margin</item>
-        <item name="android:layout_marginRight">@dimen/standard_margin</item>
-        <item name="android:textColor">@color/white</item>
-        <item name="android:theme">@style/AdyenCheckout.PrimaryFlatButton</item>
-    </style>
-
-    <style name="AdyenCheckout.PrimaryFlatButton" parent="Theme.AppCompat.Light">
-        <item name="android:buttonStyle">@style/Widget.AppCompat.Button.Borderless.Colored</item>
-        <item name="colorAccent">@color/primaryColor</item>
-    </style>
-
-    <style name="AdyenCheckout.SecondaryFlatButton" parent="Widget.AppCompat.Button.Borderless">
-        <item name="android:textColor">@color/primaryColor</item>
-    </style>
-
     <style name="AdyenCheckout.BottomSheet" parent="@style/Widget.Design.BottomSheet.Modal">
         <item name="android:background">@drawable/bg_bottom_sheet_dialog_fragment</item>
     </style>

@@ -1,5 +1,6 @@
 plugins {
     id 'com.android.library'
+    id 'kotlin-android'
 }
 
 // Maven artifact
@@ -7,7 +8,7 @@ ext.mavenArtifactId = "cse"
 ext.mavenArtifactName = "Adyen Client Side Encryption"
 ext.mavenArtifactDescription = "Adyen Client Side Encryption for Adyen's Checkout API."
 
-apply from: "../config/gradle/sharedTasks.gradle"
+apply from: "${rootDir}/config/gradle/sharedTasks.gradle"
 
 android {
     compileSdkVersion compile_sdk_version

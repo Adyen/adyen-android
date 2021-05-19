@@ -11,13 +11,12 @@ package com.adyen.checkout.components;
 import android.app.Application;
 
 import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
 import androidx.lifecycle.ViewModelStoreOwner;
 
 import com.adyen.checkout.components.base.Configuration;
 
-public interface ActionComponentProvider<ComponentT extends ActionComponent> extends ComponentProvider<ComponentT> {
-
+public interface ActionComponentProvider<ComponentT extends ActionComponent, ConfigurationT extends Configuration>
+        extends ComponentProvider<ComponentT> {
     /**
      * Get an {@link ActionComponent}.
      *
@@ -27,7 +26,7 @@ public interface ActionComponentProvider<ComponentT extends ActionComponent> ext
      */
     @SuppressWarnings("LambdaLast")
     @NonNull
-    ComponentT get(@NonNull ViewModelStoreOwner viewModelStoreOwner, @NonNull Application application, @Nullable Configuration configuration);
+    ComponentT get(@NonNull ViewModelStoreOwner viewModelStoreOwner, @NonNull Application application, @NonNull ConfigurationT configuration);
 
     /**
      * @return If the Configuration is required for this Component.

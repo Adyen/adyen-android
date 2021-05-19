@@ -6,7 +6,7 @@
  * Created by caiof on 28/8/2020.
  */
 
-package com.adyen.checkout.await.model;
+package com.adyen.checkout.components.status.model;
 
 import android.os.Parcel;
 

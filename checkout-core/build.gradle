@@ -15,7 +15,7 @@ ext.mavenArtifactId = "checkout-core"
 ext.mavenArtifactName = "Adyen Checkout Core module"
 ext.mavenArtifactDescription = "Core module for Adyen Checkout products."
 
-apply from: "../config/gradle/sharedTasks.gradle"
+apply from: "${rootDir}/config/gradle/sharedTasks.gradle"
 
 android {
     compileSdkVersion compile_sdk_version

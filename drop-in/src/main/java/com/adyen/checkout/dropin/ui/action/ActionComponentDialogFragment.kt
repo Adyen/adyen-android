@@ -31,6 +31,7 @@ import com.adyen.checkout.dropin.R
 import com.adyen.checkout.dropin.databinding.FragmentActionComponentBinding
 import com.adyen.checkout.dropin.getViewFor
 import com.adyen.checkout.dropin.ui.base.DropInBottomSheetDialogFragment
+import com.adyen.checkout.qrcode.QRCodeComponent
 
 @SuppressWarnings("TooManyFunctions")
 class ActionComponentDialogFragment : DropInBottomSheetDialogFragment(), Observer<ActionComponentData> {
@@ -78,7 +79,7 @@ class ActionComponentDialogFragment : DropInBottomSheetDialogFragment(), Observe
         try {
             @Suppress("UNCHECKED_CAST")
             componentView = getViewFor(requireContext(), actionType) as ComponentView<in OutputData, ViewableComponent<*, *, ActionComponentData>>
-            actionComponent = getComponent(actionType)
+            actionComponent = getComponent(action)
             attachComponent(actionComponent, componentView)
 
             if (!isHandled) {
@@ -119,19 +120,32 @@ class ActionComponentDialogFragment : DropInBottomSheetDialogFragment(), Observe
     /**
      * Return the possible viewable action components
      */
-    private fun getComponent(actionType: String): ViewableComponent<*, *, ActionComponentData> {
-        return when (actionType) {
+    private fun getComponent(action: Action): ViewableComponent<*, *, ActionComponentData> {
+        val component = when (action.type) {
             ActionTypes.AWAIT -> {
                 AwaitComponent.PROVIDER.get(
                     this,
                     requireActivity().application,
-                    dropInViewModel.dropInConfiguration.getConfigurationFor(ActionTypes.AWAIT, requireContext())
+                    dropInViewModel.dropInConfiguration.getConfigurationForAction(requireContext())
+                )
+            }
+            ActionTypes.QR_CODE -> {
+                QRCodeComponent.PROVIDER.get(
+                    this,
+                    requireActivity().application,
+                    dropInViewModel.dropInConfiguration.getConfigurationForAction(requireContext())
                 )
             }
             else -> {
                 throw ComponentException("Unexpected Action component type - $actionType")
             }
         }
+
+        if (!component.canHandleAction(action)) {
+            throw ComponentException("Unexpected Action component type - action: ${action.type} - paymentMethod: ${action.paymentMethodType}")
+        }
+
+        return component
     }
 
     private fun attachComponent(

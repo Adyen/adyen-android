@@ -13,10 +13,10 @@ plugins {
 
 // Maven artifact
 ext.mavenArtifactId = "ideal"
-ext.mavenArtifactName = "Adyen checkout ideal ui component"
-ext.mavenArtifactDescription = "Adyen checkout ideal ui component client for Adyen's Checkout API."
+ext.mavenArtifactName = "Adyen checkout iDEAL component"
+ext.mavenArtifactDescription = "Adyen checkout iDEAL component client for Adyen's Checkout API."
 
-apply from: "../config/gradle/sharedTasks.gradle"
+apply from: "${rootDir}/config/gradle/sharedTasks.gradle"
 
 android {
     compileSdkVersion compile_sdk_version

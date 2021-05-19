@@ -19,8 +19,8 @@ import androidx.lifecycle.LifecycleOwner;
 import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.Observer;
 
-import com.adyen.checkout.await.api.StatusResponseUtils;
-import com.adyen.checkout.await.model.StatusResponse;
+import com.adyen.checkout.components.status.api.StatusResponseUtils;
+import com.adyen.checkout.components.status.model.StatusResponse;
 import com.adyen.checkout.components.ActionComponentData;
 import com.adyen.checkout.components.ActionComponentProvider;
 import com.adyen.checkout.components.ViewableComponent;
@@ -30,6 +30,8 @@ import com.adyen.checkout.components.base.Configuration;
 import com.adyen.checkout.components.base.lifecycle.BaseLifecycleObserver;
 import com.adyen.checkout.components.model.payments.response.Action;
 import com.adyen.checkout.components.model.payments.response.AwaitAction;
+import com.adyen.checkout.components.status.StatusRepository;
+import com.adyen.checkout.components.util.PaymentMethodTypes;
 import com.adyen.checkout.core.exception.CheckoutException;
 import com.adyen.checkout.core.exception.ComponentException;
 import com.adyen.checkout.core.log.LogUtil;
@@ -49,7 +51,7 @@ public class AwaitComponent extends BaseActionComponent<AwaitConfiguration>
 
     private static final String PAYLOAD_DETAILS_KEY = "payload";
 
-    public static final ActionComponentProvider<AwaitComponent> PROVIDER
+    public static final ActionComponentProvider<AwaitComponent, AwaitConfiguration> PROVIDER
             = new ActionComponentProviderImpl<>(AwaitComponent.class, AwaitConfiguration.class, true);
 
     final StatusRepository mStatusRepository;
@@ -78,7 +80,7 @@ public class AwaitComponent extends BaseActionComponent<AwaitConfiguration>
         }
     };
 
-    public AwaitComponent(@NonNull Application application, @Nullable AwaitConfiguration configuration) {
+    public AwaitComponent(@NonNull Application application, @NonNull AwaitConfiguration configuration) {
         super(application, configuration);
         if (configuration == null) {
             // This component requires the client key from the configuration to work.
@@ -94,12 +96,16 @@ public class AwaitComponent extends BaseActionComponent<AwaitConfiguration>
         return Collections.unmodifiableList(Arrays.asList(supportedCodes));
     }
 
+    @NonNull
+    @Override
+    protected List<String> getSupportedPaymentMethodTypes() {
+        final String[] supportedPaymentMethods = {PaymentMethodTypes.BLIK, PaymentMethodTypes.MB_WAY};
+        return Collections.unmodifiableList(Arrays.asList(supportedPaymentMethods));
+    }
+
     @Override
     protected void handleActionInternal(@NonNull Activity activity, @NonNull Action action) throws ComponentException {
         final Configuration configuration = getConfiguration();
-        if (configuration == null) {
-            throw new ComponentException("Configuration not found");
-        }
         mPaymentMethodType = action.getPaymentMethodType();
         // Notify UI to get the logo.
         createOutputData(null);
@@ -161,7 +167,7 @@ public class AwaitComponent extends BaseActionComponent<AwaitConfiguration>
 
     @Override
     public void sendAnalyticsEvent(@NonNull Context context) {
-        // TODO: 28/08/2020 Do we have an event for this?
+        // noop
     }
 
 

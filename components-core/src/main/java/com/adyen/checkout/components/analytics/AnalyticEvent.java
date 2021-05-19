@@ -52,7 +52,7 @@ public class AnalyticEvent implements Parcelable {
     }
 
     private final String mPayloadVersion = CURRENT_PAYLOAD_VERSION;
-    private final String mVersion = BuildConfig.VERSION_NAME;
+    private final String mVersion = BuildConfig.CHECKOUT_VERSION;
     // e.g: 'dropin', 'component'
     private final String mFlavor;
     // e.g: dropin, paymentType

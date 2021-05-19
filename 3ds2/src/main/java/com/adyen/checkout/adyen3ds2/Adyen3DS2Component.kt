@@ -94,6 +94,8 @@ class Adyen3DS2Component(application: Application, configuration: Adyen3DS2Confi
         )
     }
 
+    override fun getSupportedPaymentMethodTypes(): List<String>? = null
+
     @Throws(ComponentException::class)
     override fun handleActionInternal(activity: Activity, action: Action) {
         when (action.type) {
@@ -269,7 +271,10 @@ class Adyen3DS2Component(application: Application, configuration: Adyen3DS2Confi
             acsTransactionID = challenge.acsTransID
             acsRefNumber = challenge.acsReferenceNumber
             acsSignedContent = challenge.acsSignedContent
-            threeDSRequestorAppURL = ChallengeParameters.getEmbeddedRequestorAppURL(getApplication())
+            // This field was introduced in version 2.2.0 so older protocols don't expect it to be present and might throw an error.
+            if (challenge.messageVersion != PROTOCOL_VERSION_2_1_0) {
+                threeDSRequestorAppURL = ChallengeParameters.getEmbeddedRequestorAppURL(getApplication())
+            }
         }
     }
 
@@ -310,13 +315,14 @@ class Adyen3DS2Component(application: Application, configuration: Adyen3DS2Confi
         val TAG = LogUtil.getTag()
 
         @JvmField
-        val PROVIDER: ActionComponentProvider<Adyen3DS2Component> = ActionComponentProviderImpl(
+        val PROVIDER: ActionComponentProvider<Adyen3DS2Component, Adyen3DS2Configuration> = ActionComponentProviderImpl(
             Adyen3DS2Component::class.java, Adyen3DS2Configuration::class.java
         )
 
         private const val FINGERPRINT_DETAILS_KEY = "threeds2.fingerprint"
         private const val CHALLENGE_DETAILS_KEY = "threeds2.challengeResult"
         private const val DEFAULT_CHALLENGE_TIME_OUT = 10
+        private const val PROTOCOL_VERSION_2_1_0 = "2.1.0"
 
         private var sGotDestroyedWhileChallenging = false
     }

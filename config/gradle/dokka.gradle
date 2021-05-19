@@ -6,4 +6,13 @@
  * Created by josephj on 8/2/2021.
  */
 
-apply plugin: "org.jetbrains.dokka"
+// only apply dokka if module supports kotlin
+project.plugins.withId("kotlin-android") {
+    apply plugin: "org.jetbrains.dokka"
+
+    task javadocJar(type: Jar, dependsOn: dokkaJavadoc) {
+        archiveClassifier.set('javadoc')
+        from dokkaJavadoc.outputDirectory
+    }
+}
+

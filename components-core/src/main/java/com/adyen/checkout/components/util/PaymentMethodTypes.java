@@ -10,7 +10,7 @@ package com.adyen.checkout.components.util;
 
 import com.adyen.checkout.core.exception.NoConstructorException;
 
-import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 
@@ -35,11 +35,13 @@ public final class PaymentMethodTypes {
     public static final String SCHEME = "scheme";
     public static final String GOOGLE_PAY = "paywithgoogle";
     public static final String SEPA = "sepadirectdebit";
-    public static final String AFTER_PAY = "afterpay_default";
     public static final String BCMC = "bcmc";
-    public static final String WECHAT_PAY_SDK = "wechatpaySDK";
     public static final String MB_WAY = "mbway";
     public static final String BLIK = "blik";
+
+    // Payment methods that do not need a payment component, but only an action component
+    public static final String WECHAT_PAY_SDK = "wechatpaySDK";
+    public static final String PIX = "pix";
 
     // Voucher payment methods that are not yet supported
     public static final String MULTIBANCO = "multibanco";
@@ -78,79 +80,81 @@ public final class PaymentMethodTypes {
 
     // Payment methods that might be interpreted as redirect, but are actually not supported
     public static final String BCMC_QR = "bcmc_mobile_QR";
+    public static final String AFTER_PAY = "afterpay_default";
     public static final String WECHAT_PAY_MINI_PROGRAM = "wechatpayMiniProgram";
     public static final String WECHAT_PAY_QR = "wechatpayQR";
     public static final String WECHAT_PAY_WEB = "wechatpayWeb";
 
     // List of all payment method types.
     public static final List<String> SUPPORTED_PAYMENT_METHODS;
+    public static final List<String> SUPPORTED_ACTION_ONLY_PAYMENT_METHODS;
     public static final List<String> UNSUPPORTED_PAYMENT_METHODS;
 
     static {
-        final ArrayList<String> supportedPaymentMethods = new ArrayList<>();
+        SUPPORTED_PAYMENT_METHODS = Collections.unmodifiableList(Arrays.asList(
+                BCMC,
+                DOTPAY,
+                ENTERCASH,
+                EPS,
+                GOOGLE_PAY,
+                IDEAL,
+                MB_WAY,
+                MOLPAY_MALAYSIA,
+                MOLPAY_THAILAND,
+                MOLPAY_VIETNAM,
+                OPEN_BANKING,
+                SEPA,
+                SCHEME,
+                BLIK,
+                WECHAT_PAY_SDK,
+                PIX
+        ));
 
-        // Populate supported list
-        supportedPaymentMethods.add(BCMC);
-        supportedPaymentMethods.add(DOTPAY);
-        supportedPaymentMethods.add(ENTERCASH);
-        supportedPaymentMethods.add(EPS);
-        supportedPaymentMethods.add(GOOGLE_PAY);
-        supportedPaymentMethods.add(IDEAL);
-        supportedPaymentMethods.add(MB_WAY);
-        supportedPaymentMethods.add(MOLPAY_MALAYSIA);
-        supportedPaymentMethods.add(MOLPAY_THAILAND);
-        supportedPaymentMethods.add(MOLPAY_VIETNAM);
-        supportedPaymentMethods.add(OPEN_BANKING);
-        supportedPaymentMethods.add(SEPA);
-        supportedPaymentMethods.add(SCHEME);
-        supportedPaymentMethods.add(WECHAT_PAY_SDK);
-        supportedPaymentMethods.add(BLIK);
+        SUPPORTED_ACTION_ONLY_PAYMENT_METHODS = Collections.unmodifiableList(Arrays.asList(
+                WECHAT_PAY_SDK,
+                PIX
+        ));
 
-        SUPPORTED_PAYMENT_METHODS = Collections.unmodifiableList(supportedPaymentMethods);
+        UNSUPPORTED_PAYMENT_METHODS = Collections.unmodifiableList(Arrays.asList(
+                BCMC_QR,
+                AFTER_PAY,
+                WECHAT_PAY_MINI_PROGRAM,
+                WECHAT_PAY_QR,
+                WECHAT_PAY_WEB,
 
-        final ArrayList<String> unsupportedPaymentMethods = new ArrayList<>();
+                MULTIBANCO,
+                OXXO,
+                DOKU,
+                DOKU_ALFMART,
+                DOKU_PERMATA_LITE_ATM,
+                DOKU_INDOMARET,
+                DOKU_ATM_MANDIRI_VA,
+                DOKU_SINARMAS_VA,
+                DOKU_MANDIRI_VA,
+                DOKU_CIMB_VA,
+                DOKU_DANAMON_VA,
+                DOKU_BRI_VA,
+                DOKU_BNI_VA,
+                DOKU_BCA_VA,
+                DOKU_WALLET,
 
-        // Populate unsupported list
-        unsupportedPaymentMethods.add(BCMC_QR);
-        unsupportedPaymentMethods.add(AFTER_PAY);
-        unsupportedPaymentMethods.add(WECHAT_PAY_MINI_PROGRAM);
-        unsupportedPaymentMethods.add(WECHAT_PAY_QR);
-        unsupportedPaymentMethods.add(WECHAT_PAY_WEB);
+                BOLETOBANCARIO,
+                BOLETOBANCARIO_BANCODOBRASIL,
+                BOLETOBANCARIO_BRADESCO,
+                BOLETOBANCARIO_HSBC,
+                BOLETOBANCARIO_ITAU,
+                BOLETOBANCARIO_SANTANDER,
 
-        unsupportedPaymentMethods.add(MULTIBANCO);
-        unsupportedPaymentMethods.add(OXXO);
-        unsupportedPaymentMethods.add(DOKU);
-        unsupportedPaymentMethods.add(DOKU_ALFMART);
-        unsupportedPaymentMethods.add(DOKU_PERMATA_LITE_ATM);
-        unsupportedPaymentMethods.add(DOKU_INDOMARET);
-        unsupportedPaymentMethods.add(DOKU_ATM_MANDIRI_VA);
-        unsupportedPaymentMethods.add(DOKU_SINARMAS_VA);
-        unsupportedPaymentMethods.add(DOKU_MANDIRI_VA);
-        unsupportedPaymentMethods.add(DOKU_CIMB_VA);
-        unsupportedPaymentMethods.add(DOKU_DANAMON_VA);
-        unsupportedPaymentMethods.add(DOKU_BRI_VA);
-        unsupportedPaymentMethods.add(DOKU_BNI_VA);
-        unsupportedPaymentMethods.add(DOKU_BCA_VA);
-        unsupportedPaymentMethods.add(DOKU_WALLET);
+                DRAGONPAY_EBANKING,
+                DRAGONPAY_OTC_BANKING,
+                DRAGONPAY_OTC_NON_BANKING,
+                DRAGONPAY_OTC_PHILIPPINES,
 
-        unsupportedPaymentMethods.add(BOLETOBANCARIO);
-        unsupportedPaymentMethods.add(BOLETOBANCARIO_BANCODOBRASIL);
-        unsupportedPaymentMethods.add(BOLETOBANCARIO_BRADESCO);
-        unsupportedPaymentMethods.add(BOLETOBANCARIO_HSBC);
-        unsupportedPaymentMethods.add(BOLETOBANCARIO_ITAU);
-        unsupportedPaymentMethods.add(BOLETOBANCARIO_SANTANDER);
-
-        unsupportedPaymentMethods.add(DRAGONPAY_EBANKING);
-        unsupportedPaymentMethods.add(DRAGONPAY_OTC_BANKING);
-        unsupportedPaymentMethods.add(DRAGONPAY_OTC_NON_BANKING);
-        unsupportedPaymentMethods.add(DRAGONPAY_OTC_PHILIPPINES);
-
-        unsupportedPaymentMethods.add(ECONTEXT_SEVEN_ELEVEN);
-        unsupportedPaymentMethods.add(ECONTEXT_ATM);
-        unsupportedPaymentMethods.add(ECONTEXT_STORES);
-        unsupportedPaymentMethods.add(ECONTEXT_ONLINE);
-
-        UNSUPPORTED_PAYMENT_METHODS = Collections.unmodifiableList(unsupportedPaymentMethods);
+                ECONTEXT_SEVEN_ELEVEN,
+                ECONTEXT_ATM,
+                ECONTEXT_STORES,
+                ECONTEXT_ONLINE
+        ));
     }
 
     private PaymentMethodTypes() {

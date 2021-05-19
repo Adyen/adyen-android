@@ -32,13 +32,9 @@
         <item name="windowActionBar">false</item>
     </style>
 
-    <style name="AdyenCheckout.HintTextStyle" parent="TextAppearance.AppCompat">
-        <item name="android:textColor">@color/primaryColor</item>
-    </style>
-
     <style name="AdyenCheckout.TextInputLayout" parent="Widget.MaterialComponents.TextInputLayout.OutlinedBox">
         <item name="boxStrokeColor">@color/primaryColor</item>
-        <item name="hintTextAppearance">@style/AdyenCheckout.HintTextStyle</item>
+        <item name="hintTextColor">@color/primaryColor</item>
         <item name="android:minHeight">@dimen/input_layout_height</item>
     </style>
 
@@ -90,6 +86,15 @@
         <item name="android:contentDescription">@null</item>
     </style>
 
+    <style name="AdyenCheckout.Image.Logo.Large" parent="AdyenCheckout.Image.Logo">
+        <item name="android:layout_width">@dimen/logo_large_width</item>
+        <item name="android:layout_height">@dimen/logo_large_height</item>
+        <item name="android:minHeight">@dimen/logo_large_width</item>
+        <item name="android:maxHeight">@dimen/logo_large_height</item>
+        <item name="android:layout_marginRight">0dp</item>
+        <item name="android:layout_marginEnd">0dp</item>
+    </style>
+
     <style name="AdyenCheckout.ListItemText">
         <item name="android:layout_gravity">center_vertical</item>
         <item name="android:maxHeight">@dimen/logo_width</item>
@@ -120,6 +125,24 @@
 
     <style name="AdyenCheckout.CheckBoxTheme" parent="Widget.AppCompat.CompoundButton.Switch">
         <item name="colorAccent">@color/primaryColor</item>
+    </style>
+
+    <style name="AdyenCheckout.Button.Colored" parent="Widget.AppCompat.Button.Colored">
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:layout_height">@dimen/primary_button_height</item>
+        <item name="android:layout_marginLeft">@dimen/standard_margin</item>
+        <item name="android:layout_marginRight">@dimen/standard_margin</item>
+        <item name="android:textColor">@color/white</item>
+        <item name="android:theme">@style/AdyenCheckout.PrimaryFlatButton</item>
+    </style>
+
+    <style name="AdyenCheckout.PrimaryFlatButton" parent="AdyenCheckout">
+        <item name="android:buttonStyle">@style/Widget.AppCompat.Button.Borderless.Colored</item>
+        <item name="colorAccent">@color/primaryColor</item>
+    </style>
+
+    <style name="AdyenCheckout.SecondaryFlatButton" parent="Widget.AppCompat.Button.Borderless">
+        <item name="android:textColor">@color/primaryColor</item>
     </style>
 
 </resources>

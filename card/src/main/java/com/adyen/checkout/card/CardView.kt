@@ -53,13 +53,17 @@ class CardView @JvmOverloads constructor(context: Context, attrs: AttributeSet? 
 
     override fun onAttachedToWindow() {
         super.onAttachedToWindow()
-        // Prevent taking screenshot and screen on recents.
-        getActivity(context)?.window?.addFlags(WindowManager.LayoutParams.FLAG_SECURE)
+        if (!BuildConfig.DEBUG) {
+            // Prevent taking screenshot and screen on recents.
+            getActivity(context)?.window?.addFlags(WindowManager.LayoutParams.FLAG_SECURE)
+        }
     }
 
     override fun onDetachedFromWindow() {
         super.onDetachedFromWindow()
-        getActivity(context)?.window?.clearFlags(WindowManager.LayoutParams.FLAG_SECURE)
+        if (!BuildConfig.DEBUG) {
+            getActivity(context)?.window?.clearFlags(WindowManager.LayoutParams.FLAG_SECURE)
+        }
     }
 
     override fun initView() {

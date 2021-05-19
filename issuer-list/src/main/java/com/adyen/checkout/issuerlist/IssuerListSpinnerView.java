@@ -26,7 +26,6 @@ import com.adyen.checkout.components.model.payments.request.IssuerListPaymentMet
 import com.adyen.checkout.components.ui.view.AdyenLinearLayout;
 import com.adyen.checkout.core.log.LogUtil;
 import com.adyen.checkout.core.log.Logger;
-import com.adyen.checkout.issuerlist.ui.R;
 
 import java.util.Collections;
 import java.util.List;

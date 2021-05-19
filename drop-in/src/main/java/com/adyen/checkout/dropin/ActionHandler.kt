@@ -34,20 +34,23 @@ class ActionHandler(
     }
 
     // Actions which will be handled by the Fragment with it's associated view
-    private val viewableActionTypes = listOf(ActionTypes.AWAIT)
+    private val viewableActionTypes = listOf(ActionTypes.AWAIT, ActionTypes.QR_CODE)
 
     private val redirectComponent = RedirectComponent.PROVIDER.get(
         activity,
         activity.application,
-        dropInConfiguration.getConfigurationFor(ActionTypes.REDIRECT, activity)
+        dropInConfiguration.getConfigurationForAction(activity)
     )
     private val adyen3DS2Component = Adyen3DS2Component.PROVIDER.get(
         activity,
         activity.application,
-        dropInConfiguration.getConfigurationFor(ActionTypes.THREEDS2, activity)
+        dropInConfiguration.getConfigurationForAction(activity)
     )
-    // get config from Drop-in when available
-    private val weChatPayActionComponent = WeChatPayActionComponent.PROVIDER.get(activity, activity.application, null)
+    private val weChatPayActionComponent = WeChatPayActionComponent.PROVIDER.get(
+        activity,
+        activity.application,
+        dropInConfiguration.getConfigurationForAction(activity)
+    )
 
     init {
         redirectComponent.observe(activity, this)

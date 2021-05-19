@@ -12,14 +12,16 @@ import android.content.ComponentName
 import android.content.Context
 import android.os.Parcel
 import android.os.Parcelable
+import com.adyen.checkout.adyen3ds2.Adyen3DS2Configuration
+import com.adyen.checkout.await.AwaitConfiguration
+import com.adyen.checkout.bcmc.BcmcConfiguration
+import com.adyen.checkout.blik.BlikConfiguration
+import com.adyen.checkout.card.CardConfiguration
 import com.adyen.checkout.components.base.Configuration
 import com.adyen.checkout.components.model.payments.Amount
 import com.adyen.checkout.components.util.CheckoutCurrency
 import com.adyen.checkout.components.util.PaymentMethodTypes
 import com.adyen.checkout.components.util.ValidationUtils
-import com.adyen.checkout.bcmc.BcmcConfiguration
-import com.adyen.checkout.blik.BlikConfiguration
-import com.adyen.checkout.card.CardConfiguration
 import com.adyen.checkout.core.api.Environment
 import com.adyen.checkout.core.exception.CheckoutException
 import com.adyen.checkout.core.log.LogUtil
@@ -35,8 +37,13 @@ import com.adyen.checkout.ideal.IdealConfiguration
 import com.adyen.checkout.mbway.MBWayConfiguration
 import com.adyen.checkout.molpay.MolpayConfiguration
 import com.adyen.checkout.openbanking.OpenBankingConfiguration
+import com.adyen.checkout.qrcode.QRCodeConfiguration
+import com.adyen.checkout.redirect.RedirectConfiguration
 import com.adyen.checkout.sepa.SepaConfiguration
-import java.util.Locale
+import com.adyen.checkout.wechatpay.WeChatPayActionConfiguration
+import java.util.*
+import kotlin.collections.HashMap
+import kotlin.collections.set
 
 /**
  * This is the base configuration for the Drop-In solution. You need to use the [Builder] to instantiate this class.
@@ -46,7 +53,8 @@ import java.util.Locale
 @SuppressWarnings("TooManyFunctions")
 class DropInConfiguration : Configuration, Parcelable {
 
-    private val availableConfigs: HashMap<String, Configuration>
+    private val availablePaymentConfigs: HashMap<String, Configuration>
+    private val availableActionConfigs: HashMap<Class<*>, Configuration>
     val serviceComponentName: ComponentName
     val amount: Amount
 
@@ -63,25 +71,30 @@ class DropInConfiguration : Configuration, Parcelable {
         shopperLocale: Locale,
         environment: Environment,
         clientKey: String,
-        availableConfigs: HashMap<String, Configuration>,
+        availablePaymentConfigs: HashMap<String, Configuration>,
+        availableActionConfigs: HashMap<Class<*>, Configuration>,
         serviceComponentName: ComponentName,
         amount: Amount
     ) : super(shopperLocale, environment, clientKey) {
-        this.availableConfigs = availableConfigs
+        this.availablePaymentConfigs = availablePaymentConfigs
+        this.availableActionConfigs = availableActionConfigs
         this.serviceComponentName = serviceComponentName
         this.amount = amount
     }
 
     constructor(parcel: Parcel) : super(parcel) {
         @Suppress("UNCHECKED_CAST")
-        availableConfigs = parcel.readHashMap(Configuration::class.java.classLoader) as HashMap<String, Configuration>
+        availablePaymentConfigs = parcel.readHashMap(Configuration::class.java.classLoader) as HashMap<String, Configuration>
+        @Suppress("UNCHECKED_CAST")
+        availableActionConfigs = parcel.readHashMap(Configuration::class.java.classLoader) as HashMap<Class<*>, Configuration>
         serviceComponentName = parcel.readParcelable(ComponentName::class.java.classLoader)!!
         amount = Amount.CREATOR.createFromParcel(parcel)
     }
 
     override fun writeToParcel(dest: Parcel, flags: Int) {
         super.writeToParcel(dest, flags)
-        dest.writeMap(availableConfigs)
+        dest.writeMap(availablePaymentConfigs)
+        dest.writeMap(availableActionConfigs)
         dest.writeParcelable(serviceComponentName, flags)
         JsonUtils.writeToParcel(dest, Amount.SERIALIZER.serialize(amount))
     }
@@ -90,12 +103,30 @@ class DropInConfiguration : Configuration, Parcelable {
         return ParcelUtils.NO_FILE_DESCRIPTOR
     }
 
-    fun <T : Configuration> getConfigurationFor(componentType: String, context: Context): T {
-        return if (availableConfigs.containsKey(componentType)) {
+    internal fun <T : Configuration> getConfigurationForPaymentMethodOrNull(paymentMethod: String, context: Context): T? {
+        return try {
+            getConfigurationForPaymentMethod(paymentMethod, context)
+        } catch (e: CheckoutException) {
+            null
+        }
+    }
+
+    internal fun <T : Configuration> getConfigurationForPaymentMethod(paymentMethod: String, context: Context): T {
+        return if (availablePaymentConfigs.containsKey(paymentMethod)) {
             @Suppress("UNCHECKED_CAST")
-            availableConfigs[componentType] as T
+            availablePaymentConfigs[paymentMethod] as T
         } else {
-            getDefaultConfigFor(componentType, context, this)
+            getDefaultConfigForPaymentMethod(paymentMethod, context, this)
+        }
+    }
+
+    internal inline fun <reified T : Configuration> getConfigurationForAction(context: Context): T {
+        val actionClass = T::class.java
+        return if (availableActionConfigs.containsKey(actionClass)) {
+            @Suppress("UNCHECKED_CAST")
+            availableActionConfigs[actionClass] as T
+        } else {
+            getDefaultConfigForAction(context, this)
         }
     }
 
@@ -108,7 +139,8 @@ class DropInConfiguration : Configuration, Parcelable {
             val TAG = LogUtil.getTag()
         }
 
-        private val availableConfigs = HashMap<String, Configuration>()
+        private val availablePaymentConfigs = HashMap<String, Configuration>()
+        private val availableActionConfigs = HashMap<Class<*>, Configuration>()
 
         private var shopperLocale: Locale
         private var environment: Environment = Environment.EUROPE
@@ -186,7 +218,7 @@ class DropInConfiguration : Configuration, Parcelable {
          * Add configuration for Credit Card payment method.
          */
         fun addCardConfiguration(cardConfiguration: CardConfiguration): Builder {
-            availableConfigs[PaymentMethodTypes.SCHEME] = cardConfiguration
+            availablePaymentConfigs[PaymentMethodTypes.SCHEME] = cardConfiguration
             return this
         }
 
@@ -194,7 +226,7 @@ class DropInConfiguration : Configuration, Parcelable {
          * Add configuration for iDeal payment method.
          */
         fun addIdealConfiguration(idealConfiguration: IdealConfiguration): Builder {
-            availableConfigs[PaymentMethodTypes.IDEAL] = idealConfiguration
+            availablePaymentConfigs[PaymentMethodTypes.IDEAL] = idealConfiguration
             return this
         }
 
@@ -202,7 +234,7 @@ class DropInConfiguration : Configuration, Parcelable {
          * Add configuration for MolPay Thailand payment method.
          */
         fun addMolpayThailandConfiguration(molpayConfiguration: MolpayConfiguration): Builder {
-            availableConfigs[PaymentMethodTypes.MOLPAY_THAILAND] = molpayConfiguration
+            availablePaymentConfigs[PaymentMethodTypes.MOLPAY_THAILAND] = molpayConfiguration
             return this
         }
 
@@ -210,7 +242,7 @@ class DropInConfiguration : Configuration, Parcelable {
          * Add configuration for MolPay Malasya payment method.
          */
         fun addMolpayMalasyaConfiguration(molpayConfiguration: MolpayConfiguration): Builder {
-            availableConfigs[PaymentMethodTypes.MOLPAY_MALAYSIA] = molpayConfiguration
+            availablePaymentConfigs[PaymentMethodTypes.MOLPAY_MALAYSIA] = molpayConfiguration
             return this
         }
 
@@ -218,7 +250,7 @@ class DropInConfiguration : Configuration, Parcelable {
          * Add configuration for MolPay Vietnam payment method.
          */
         fun addMolpayVietnamConfiguration(molpayConfiguration: MolpayConfiguration): Builder {
-            availableConfigs[PaymentMethodTypes.MOLPAY_VIETNAM] = molpayConfiguration
+            availablePaymentConfigs[PaymentMethodTypes.MOLPAY_VIETNAM] = molpayConfiguration
             return this
         }
 
@@ -226,7 +258,7 @@ class DropInConfiguration : Configuration, Parcelable {
          * Add configuration for DotPay payment method.
          */
         fun addDotpayConfiguration(dotpayConfiguration: DotpayConfiguration): Builder {
-            availableConfigs[PaymentMethodTypes.DOTPAY] = dotpayConfiguration
+            availablePaymentConfigs[PaymentMethodTypes.DOTPAY] = dotpayConfiguration
             return this
         }
 
@@ -234,7 +266,7 @@ class DropInConfiguration : Configuration, Parcelable {
          * Add configuration for EPS payment method.
          */
         fun addEpsConfiguration(epsConfiguration: EPSConfiguration): Builder {
-            availableConfigs[PaymentMethodTypes.EPS] = epsConfiguration
+            availablePaymentConfigs[PaymentMethodTypes.EPS] = epsConfiguration
             return this
         }
 
@@ -242,7 +274,7 @@ class DropInConfiguration : Configuration, Parcelable {
          * Add configuration for EnterCash payment method.
          */
         fun addEntercashConfiguration(entercashConfiguration: EntercashConfiguration): Builder {
-            availableConfigs[PaymentMethodTypes.ENTERCASH] = entercashConfiguration
+            availablePaymentConfigs[PaymentMethodTypes.ENTERCASH] = entercashConfiguration
             return this
         }
 
@@ -250,7 +282,7 @@ class DropInConfiguration : Configuration, Parcelable {
          * Add configuration for Open Banking payment method.
          */
         fun addOpenBankingConfiguration(openBankingConfiguration: OpenBankingConfiguration): Builder {
-            availableConfigs[PaymentMethodTypes.OPEN_BANKING] = openBankingConfiguration
+            availablePaymentConfigs[PaymentMethodTypes.OPEN_BANKING] = openBankingConfiguration
             return this
         }
 
@@ -258,7 +290,7 @@ class DropInConfiguration : Configuration, Parcelable {
          * Add configuration for Google Pay payment method.
          */
         fun addGooglePayConfiguration(googlePayConfiguration: GooglePayConfiguration): Builder {
-            availableConfigs[PaymentMethodTypes.GOOGLE_PAY] = googlePayConfiguration
+            availablePaymentConfigs[PaymentMethodTypes.GOOGLE_PAY] = googlePayConfiguration
             return this
         }
 
@@ -266,7 +298,7 @@ class DropInConfiguration : Configuration, Parcelable {
          * Add configuration for Sepa payment method.
          */
         fun addSepaConfiguration(sepaConfiguration: SepaConfiguration): Builder {
-            availableConfigs[PaymentMethodTypes.SEPA] = sepaConfiguration
+            availablePaymentConfigs[PaymentMethodTypes.SEPA] = sepaConfiguration
             return this
         }
 
@@ -274,7 +306,7 @@ class DropInConfiguration : Configuration, Parcelable {
          * Add configuration for BCMC payment method.
          */
         fun addBcmcConfiguration(bcmcConfiguration: BcmcConfiguration): Builder {
-            availableConfigs[PaymentMethodTypes.BCMC] = bcmcConfiguration
+            availablePaymentConfigs[PaymentMethodTypes.BCMC] = bcmcConfiguration
             return this
         }
 
@@ -282,7 +314,7 @@ class DropInConfiguration : Configuration, Parcelable {
          * Add configuration for MB WAY payment method.
          */
         fun addMBWayConfiguration(mbwayConfiguration: MBWayConfiguration): Builder {
-            availableConfigs[PaymentMethodTypes.MB_WAY] = mbwayConfiguration
+            availablePaymentConfigs[PaymentMethodTypes.MB_WAY] = mbwayConfiguration
             return this
         }
 
@@ -290,7 +322,47 @@ class DropInConfiguration : Configuration, Parcelable {
          * Add configuration for Blik payment method.
          */
         fun addBlikConfiguration(blikConfiguration: BlikConfiguration): Builder {
-            availableConfigs[PaymentMethodTypes.BLIK] = blikConfiguration
+            availablePaymentConfigs[PaymentMethodTypes.BLIK] = blikConfiguration
+            return this
+        }
+
+        /**
+         * Add configuration for 3DS2 action.
+         */
+        fun add3ds2ActionConfiguration(configuration: Adyen3DS2Configuration): Builder {
+            availableActionConfigs[configuration::class.java] = configuration
+            return this
+        }
+
+        /**
+         * Add configuration for Await action.
+         */
+        fun addAwaitActionConfiguration(configuration: AwaitConfiguration): Builder {
+            availableActionConfigs[configuration::class.java] = configuration
+            return this
+        }
+
+        /**
+         * Add configuration for QR code action.
+         */
+        fun addQRCodeActionConfiguration(configuration: QRCodeConfiguration): Builder {
+            availableActionConfigs[configuration::class.java] = configuration
+            return this
+        }
+
+        /**
+         * Add configuration for Redirect action.
+         */
+        fun addRedirectActionConfiguration(configuration: RedirectConfiguration): Builder {
+            availableActionConfigs[configuration::class.java] = configuration
+            return this
+        }
+
+        /**
+         * Add configuration for WeChat Pay action.
+         */
+        fun addWeChatPayActionConfiguration(configuration: WeChatPayActionConfiguration): Builder {
+            availableActionConfigs[configuration::class.java] = configuration
             return this
         }
 
@@ -302,7 +374,8 @@ class DropInConfiguration : Configuration, Parcelable {
                 shopperLocale,
                 environment,
                 clientKey,
-                availableConfigs,
+                availablePaymentConfigs,
+                availableActionConfigs,
                 serviceComponentName,
                 amount
             )

@@ -21,8 +21,8 @@
         android:id="@+id/imageView_logo"
         style="@style/AdyenCheckout.Image.Logo.Large"
         android:layout_gravity="center_horizontal"
-
-        android:contentDescription="@null" />
+        android:contentDescription="@null"
+        tools:ignore="RequiredSize" />
 
     <TextView
         android:id="@+id/textView_open_app"

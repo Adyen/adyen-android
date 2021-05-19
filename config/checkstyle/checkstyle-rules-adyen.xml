@@ -79,12 +79,12 @@
             <property name="arrayInitIndent" value="2"/>
         </module>
 
-        <module name="CustomImportOrder">
-            <property name="separateLineBetweenGroups" value="true"/>
-            <property name="customImportOrderRules"
-                value="STATIC###SPECIAL_IMPORTS###THIRD_PARTY_PACKAGE"/>
-            <property name="specialImportsRegExp" value="^android\."/>
-        </module>
+        <!-- False positive on separator lines -->
+<!--        <module name="CustomImportOrder">-->
+<!--            <property name="separateLineBetweenGroups" value="true"/>-->
+<!--            <property name="customImportOrderRules" value="STATIC###SPECIAL_IMPORTS###THIRD_PARTY_PACKAGE"/>-->
+<!--            <property name="specialImportsRegExp" value="^android\."/>-->
+<!--        </module>-->
 
         <module name="RedundantImport"/>
         <module name="UnusedImports"/>
@@ -129,10 +129,10 @@
         <module name="JavadocMethod">
             <property name="scope" value="public"/>
             <property name="allowMissingParamTags" value="true"/>
-            <property name="allowMissingThrowsTags" value="true"/>
+            <!--<property name="allowMissingThrowsTags" value="true"/>-->
             <property name="allowMissingReturnTag" value="true"/>
             <property name="allowedAnnotations" value="Override, Test"/>
-            <property name="allowThrowsTagsForSubclasses" value="true"/>
+            <!--<property name="allowThrowsTagsForSubclasses" value="true"/>-->
         </module>
         <module name="FinalLocalVariable"/>
 

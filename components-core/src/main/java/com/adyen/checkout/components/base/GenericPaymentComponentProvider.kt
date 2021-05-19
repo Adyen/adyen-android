@@ -7,10 +7,8 @@
  */
 package com.adyen.checkout.components.base
 
-import android.app.Application
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.ViewModelStoreOwner
-import com.adyen.checkout.components.ComponentAvailableCallback
 import com.adyen.checkout.components.PaymentComponentProvider
 import com.adyen.checkout.components.base.lifecycle.viewModelFactory
 import com.adyen.checkout.components.model.paymentmethods.PaymentMethod
@@ -31,14 +29,5 @@ class GenericPaymentComponentProvider<BaseComponentT : BasePaymentComponent<*, *
             ).newInstance(GenericPaymentMethodDelegate(paymentMethod), configuration)
         }
         return ViewModelProvider(viewModelStoreOwner, genericFactory).get(componentClass)
-    }
-
-    override fun isAvailable(
-        applicationContext: Application,
-        paymentMethod: PaymentMethod,
-        config: ConfigurationT,
-        callback: ComponentAvailableCallback<ConfigurationT>
-    ) {
-        callback.onAvailabilityResult(true, paymentMethod, config)
     }
 }

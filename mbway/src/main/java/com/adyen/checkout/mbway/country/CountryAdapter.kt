@@ -15,7 +15,7 @@ import android.view.ViewGroup
 import android.widget.BaseAdapter
 import android.widget.Filter
 import android.widget.Filterable
-import com.adyen.checkout.mbway.ui.R
+import com.adyen.checkout.mbway.R
 
 class CountryAdapter(private val context: Context) : BaseAdapter(), Filterable {
 

@@ -38,7 +38,7 @@ import java.util.List;
 public class WeChatPayActionComponent extends BaseActionComponent<WeChatPayActionConfiguration> {
     private static final String TAG = LogUtil.getTag();
 
-    public static final ActionComponentProvider<WeChatPayActionComponent> PROVIDER =
+    public static final ActionComponentProvider<WeChatPayActionComponent, WeChatPayActionConfiguration> PROVIDER =
             new ActionComponentProviderImpl<>(WeChatPayActionComponent.class, WeChatPayActionConfiguration.class);
 
     private final IWXAPI mApi;
@@ -59,7 +59,7 @@ public class WeChatPayActionComponent extends BaseActionComponent<WeChatPayActio
         }
     };
 
-    public WeChatPayActionComponent(@NonNull Application application, @Nullable WeChatPayActionConfiguration configuration) {
+    public WeChatPayActionComponent(@NonNull Application application, @NonNull WeChatPayActionConfiguration configuration) {
         super(application, configuration);
         mApi = WXAPIFactory.createWXAPI(application, null, true);
     }
@@ -79,16 +79,18 @@ public class WeChatPayActionComponent extends BaseActionComponent<WeChatPayActio
         }
     }
 
-    @Override
-    public boolean canHandleAction(@NonNull Action action) {
-        return getSupportedActionTypes().contains(action.getType()) && action.getPaymentMethodType().equals(PaymentMethodTypes.WECHAT_PAY_SDK);
-    }
-
     @NonNull
     @Override
     protected List<String> getSupportedActionTypes() {
         final String[] supportedCodes = {SdkAction.ACTION_TYPE};
         return Collections.unmodifiableList(Arrays.asList(supportedCodes));
+    }
+
+    @NonNull
+    @Override
+    protected List<String> getSupportedPaymentMethodTypes() {
+        final String[] supportedPaymentMethods = {PaymentMethodTypes.WECHAT_PAY_SDK};
+        return Collections.unmodifiableList(Arrays.asList(supportedPaymentMethods));
     }
 
     @Override

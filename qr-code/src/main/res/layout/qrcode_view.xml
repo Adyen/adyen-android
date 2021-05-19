@@ -1,0 +1,61 @@
+<?xml version="1.0" encoding="utf-8"?><!--
+  ~ Copyright (c) 2021 Adyen N.V.
+  ~
+  ~ This file is open source and available under the MIT license. See the LICENSE file for more info.
+  ~
+  ~ Created by josephj on 13/4/2021.
+  -->
+
+<merge xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    tools:parentTag="android.widget.LinearLayout">
+
+    <ImageView
+        android:id="@+id/imageView_logo"
+        style="@style/AdyenCheckout.Image.Logo.Large"
+        android:layout_gravity="center_horizontal"
+        android:contentDescription="@null"
+        tools:ignore="RequiredSize" />
+
+    <TextView
+        android:id="@+id/textView_top_label"
+        style="@style/AdyenCheckout.TextAppearance.Primary"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center_horizontal"
+        android:layout_margin="@dimen/standard_margin"
+        android:gravity="center"
+        android:textIsSelectable="false"
+        tools:text="@string/checkout_qr_code_pix" />
+
+    <com.google.android.material.progressindicator.LinearProgressIndicator
+        android:id="@+id/progress_indicator"
+        style="@style/AdyenCheckout.QrCode.ProgressIndicator"
+        android:layout_gravity="center_horizontal"
+        android:layout_marginHorizontal="@dimen/standard_margin"
+        android:layout_marginTop="@dimen/standard_margin"
+        android:gravity="center" />
+
+    <TextView
+        android:id="@+id/textView_timer"
+        style="@style/AdyenCheckout.QrCode.TimerTextAppearance"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center_horizontal"
+        android:layout_marginHorizontal="@dimen/standard_margin"
+        android:layout_marginTop="@dimen/standard_three_quarters_margin"
+        android:layout_marginBottom="@dimen/standard_margin"
+        android:gravity="center"
+        android:textIsSelectable="false"
+        tools:text="You have 13:46 to pay" />
+
+    <androidx.appcompat.widget.AppCompatButton
+        android:id="@+id/copyButton"
+        style="@style/AdyenCheckout.QrCode.CopyButton"
+        android:layout_width="match_parent"
+        android:text="@string/checkout_qr_code_copy_button" />
+
+</merge>

@@ -16,7 +16,7 @@ ext.mavenArtifactId = "blik"
 ext.mavenArtifactName = "Adyen Checkout Blik Component"
 ext.mavenArtifactDescription = "Adyen Checkout Blik Component"
 
-apply from: "../config/gradle/sharedTasks.gradle"
+apply from: "${rootDir}/config/gradle/sharedTasks.gradle"
 
 android {
     compileSdkVersion compile_sdk_version
