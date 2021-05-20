@@ -10,11 +10,9 @@ package com.adyen.checkout.redirect;
 
 import android.app.Activity;
 import android.app.Application;
-import android.content.ActivityNotFoundException;
 import android.content.Context;
 import android.content.Intent;
 import android.net.Uri;
-import android.text.TextUtils;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -27,7 +25,6 @@ import com.adyen.checkout.components.model.payments.response.RedirectAction;
 import com.adyen.checkout.core.exception.CheckoutException;
 import com.adyen.checkout.core.exception.ComponentException;
 import com.adyen.checkout.core.log.LogUtil;
-import com.adyen.checkout.core.log.Logger;
 
 import org.json.JSONObject;
 
@@ -60,22 +57,12 @@ public final class RedirectComponent extends BaseActionComponent<RedirectConfigu
     /**
      * Make a redirect from the provided Activity to the target of the Redirect object.
      *
-     * @param activity The Activity starting the redirect.
+     * @param activity       The Activity starting the redirect.
      * @param redirectAction The object from the server response defining where to redirect to.
      */
     public static void makeRedirect(@NonNull Activity activity, @NonNull RedirectAction redirectAction) throws ComponentException {
-        Logger.d(TAG, "makeRedirect - " + redirectAction.getUrl());
-        if (!TextUtils.isEmpty(redirectAction.getUrl())) {
-            final Uri redirectUri = Uri.parse(redirectAction.getUrl());
-            final Intent redirectIntent = RedirectUtil.createRedirectIntent(activity, redirectUri);
-            try {
-                activity.startActivity(redirectIntent);
-            } catch (ActivityNotFoundException e) {
-                throw new ComponentException("Redirect to app failed.", e);
-            }
-        } else {
-            throw new ComponentException("Redirect URL is empty.");
-        }
+        final RedirectDelegate delegate = new RedirectDelegate();
+        delegate.makeRedirect(activity, redirectAction);
     }
 
     @Override
@@ -105,12 +92,11 @@ public final class RedirectComponent extends BaseActionComponent<RedirectConfigu
      */
     public void handleRedirectResponse(@NonNull Uri data) {
         try {
-            final JSONObject parsedResult = RedirectUtil.parseRedirectResult(data);
+            final RedirectDelegate delegate = new RedirectDelegate();
+            final JSONObject parsedResult = delegate.handleRedirectResponse(data);
             notifyDetails(parsedResult);
         } catch (CheckoutException e) {
             notifyException(e);
         }
     }
-
-
 }
