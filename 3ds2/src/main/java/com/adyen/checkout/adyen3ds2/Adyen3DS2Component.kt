@@ -60,7 +60,8 @@ class Adyen3DS2Component(
     application: Application,
     configuration: Adyen3DS2Configuration,
     private val submitFingerprintRepository: SubmitFingerprintRepository,
-    private val adyen3DS2Serializer: Adyen3DS2Serializer
+    private val adyen3DS2Serializer: Adyen3DS2Serializer,
+    private val redirectDelegate: RedirectDelegate
 ) : BaseActionComponent<Adyen3DS2Configuration>(application, configuration), ChallengeStatusReceiver {
 
     private var mTransaction: Transaction? = null
@@ -248,7 +249,7 @@ class Adyen3DS2Component(
                     }
                 }
                 is SubmitFingerprintResult.Redirect -> {
-                    RedirectDelegate().makeRedirect(activity, result.action)
+                    redirectDelegate.makeRedirect(activity, result.action)
                 }
                 is SubmitFingerprintResult.Threeds2 -> {
                     handleAction(activity, result.action)

@@ -15,6 +15,7 @@ import com.adyen.checkout.adyen3ds2.model.Adyen3DS2Serializer
 import com.adyen.checkout.adyen3ds2.repository.SubmitFingerprintRepository
 import com.adyen.checkout.components.ActionComponentProvider
 import com.adyen.checkout.components.base.lifecycle.viewModelFactory
+import com.adyen.checkout.redirect.RedirectDelegate
 
 class Adyen3DS2ComponentProvider : ActionComponentProvider<Adyen3DS2Component, Adyen3DS2Configuration> {
     override fun get(
@@ -24,12 +25,14 @@ class Adyen3DS2ComponentProvider : ActionComponentProvider<Adyen3DS2Component, A
     ): Adyen3DS2Component {
         val submitFingerprintRepository = SubmitFingerprintRepository()
         val adyen3DS2DetailsParser = Adyen3DS2Serializer()
+        val redirectDelegate = RedirectDelegate()
         val threeDS2Factory = viewModelFactory {
             Adyen3DS2Component(
                 application,
                 configuration,
                 submitFingerprintRepository,
-                adyen3DS2DetailsParser
+                adyen3DS2DetailsParser,
+                redirectDelegate
             )
         }
         return ViewModelProvider(viewModelStoreOwner, threeDS2Factory).get(Adyen3DS2Component::class.java)
