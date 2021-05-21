@@ -15,7 +15,7 @@ import androidx.lifecycle.Observer
 import androidx.lifecycle.viewModelScope
 import com.adyen.checkout.adyen3ds2.exception.Authentication3DS2Exception
 import com.adyen.checkout.adyen3ds2.exception.Cancelled3DS2Exception
-import com.adyen.checkout.adyen3ds2.model.ChallengeResult
+import com.adyen.checkout.adyen3ds2.model.Adyen3DS2Serializer
 import com.adyen.checkout.adyen3ds2.model.ChallengeToken
 import com.adyen.checkout.adyen3ds2.model.FingerprintToken
 import com.adyen.checkout.adyen3ds2.repository.SubmitFingerprintRepository
@@ -59,7 +59,8 @@ import org.json.JSONObject
 class Adyen3DS2Component(
     application: Application,
     configuration: Adyen3DS2Configuration,
-    private val submitFingerprintRepository: SubmitFingerprintRepository
+    private val submitFingerprintRepository: SubmitFingerprintRepository,
+    private val adyen3DS2Serializer: Adyen3DS2Serializer
 ) : BaseActionComponent<Adyen3DS2Configuration>(application, configuration), ChallengeStatusReceiver {
 
     private var mTransaction: Transaction? = null
@@ -144,12 +145,9 @@ class Adyen3DS2Component(
     override fun completed(completionEvent: CompletionEvent) {
         Logger.d(TAG, "challenge completed")
         try {
-            val authorizationToken = authorizationToken
-            if (authorizationToken == null) {
-                notifyDetails(createChallengeDetails(completionEvent), true)
-            } else {
-                notifyDetails(createThreeDsResultDetails(completionEvent, authorizationToken))
-            }
+            val details = adyen3DS2Serializer.createDetailsJson(completionEvent, authorizationToken)
+            val omitPaymentData = authorizationToken != null
+            notifyDetails(details, omitPaymentData)
         } catch (e: CheckoutException) {
             notifyException(e)
         } finally {
@@ -237,7 +235,7 @@ class Adyen3DS2Component(
                 submitFingerprint(activity, encodedFingerprint)
             } else {
                 launch(Dispatchers.Main) {
-                    notifyDetails(createFingerprintDetails(encodedFingerprint))
+                    notifyDetails(adyen3DS2Serializer.createDetailsJson(encodedFingerprint))
                 }
             }
         }
@@ -327,50 +325,12 @@ class Adyen3DS2Component(
         }
     }
 
-    @Throws(ComponentException::class)
-    fun createFingerprintDetails(encodedFingerprint: String?): JSONObject {
-        val fingerprintDetails = JSONObject()
-        try {
-            fingerprintDetails.put(FINGERPRINT_DETAILS_KEY, encodedFingerprint)
-        } catch (e: JSONException) {
-            throw ComponentException("Failed to create fingerprint details", e)
-        }
-        return fingerprintDetails
-    }
-
-    @Throws(ComponentException::class)
-    private fun createChallengeDetails(completionEvent: CompletionEvent): JSONObject {
-        val challengeDetails = JSONObject()
-        try {
-            val challengeResult = ChallengeResult.from(completionEvent)
-            challengeDetails.put(CHALLENGE_DETAILS_KEY, challengeResult.payload)
-        } catch (e: JSONException) {
-            throw ComponentException("Failed to create challenge details", e)
-        }
-        return challengeDetails
-    }
-
-    @Throws(ComponentException::class)
-    private fun createThreeDsResultDetails(completionEvent: CompletionEvent, authorisationToken: String): JSONObject {
-        val threeDsDetails = JSONObject()
-        try {
-            val challengeResult = ChallengeResult.from(completionEvent, authorisationToken)
-            threeDsDetails.put(THREEDS_RESULT_KEY, challengeResult.payload)
-        } catch (e: JSONException) {
-            throw ComponentException("Failed to create ThreeDs Result details", e)
-        }
-        return threeDsDetails
-    }
-
     companion object {
         private val TAG = LogUtil.getTag()
 
         @JvmField
         val PROVIDER: ActionComponentProvider<Adyen3DS2Component, Adyen3DS2Configuration> = Adyen3DS2ComponentProvider()
 
-        private const val FINGERPRINT_DETAILS_KEY = "threeds2.fingerprint"
-        private const val CHALLENGE_DETAILS_KEY = "threeds2.challengeResult"
-        private const val THREEDS_RESULT_KEY = "threeDSResult"
         private const val DEFAULT_CHALLENGE_TIME_OUT = 10
         private const val PROTOCOL_VERSION_2_1_0 = "2.1.0"
 
