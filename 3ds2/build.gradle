@@ -49,6 +49,7 @@ dependencies {
 
     // Checkout
     api project(':components-core')
+    api project(':redirect')
 
     // Dependencies
     api "com.adyen.threeds:adyen-3ds2:$adyen3ds2_version"

@@ -117,9 +117,15 @@ public abstract class BaseActionComponent<ConfigurationT extends Configuration> 
     protected abstract void handleActionInternal(@NonNull Activity activity, @NonNull Action action) throws ComponentException;
 
     protected void notifyDetails(@NonNull JSONObject details) throws ComponentException {
+        notifyDetails(details, false);
+    }
+
+    protected void notifyDetails(@NonNull JSONObject details, @NonNull Boolean omitPaymentData) throws ComponentException {
         final ActionComponentData actionComponentData = new ActionComponentData();
         actionComponentData.setDetails(details);
-        actionComponentData.setPaymentData(mPaymentData);
+        if (!omitPaymentData) {
+            actionComponentData.setPaymentData(mPaymentData);
+        }
 
         mResultLiveData.setValue(actionComponentData);
     }
