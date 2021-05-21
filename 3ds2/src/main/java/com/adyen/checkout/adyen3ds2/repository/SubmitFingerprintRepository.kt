@@ -42,18 +42,18 @@ class SubmitFingerprintRepository {
             environment = configuration.environment,
             clientKey = configuration.clientKey
         ).suspendedCall()
-        when {
+        return when {
             response.type == RESPONSE_TYPE_COMPLETED && response.details != null -> {
                 Logger.d(TAG, "submitFingerprint: challenge completed")
-                return SubmitFingerprintResult.Completed(JSONObject(response.details))
+                SubmitFingerprintResult.Completed(JSONObject(response.details))
             }
             response.type == RESPONSE_TYPE_ACTION && response.action is RedirectAction -> {
                 Logger.d(TAG, "submitFingerprint: received new RedirectAction")
-                return SubmitFingerprintResult.Redirect(response.action)
+                SubmitFingerprintResult.Redirect(response.action)
             }
             response.type == RESPONSE_TYPE_ACTION && response.action is Threeds2Action -> {
                 Logger.d(TAG, "submitFingerprint: received new Threeds2Action")
-                return SubmitFingerprintResult.Threeds2(response.action)
+                SubmitFingerprintResult.Threeds2(response.action)
             }
             else -> {
                 Logger.e(TAG, "submitFingerprint: unexpected response $response")

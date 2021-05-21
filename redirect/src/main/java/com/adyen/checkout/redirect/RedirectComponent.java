@@ -24,7 +24,6 @@ import com.adyen.checkout.components.model.payments.response.Action;
 import com.adyen.checkout.components.model.payments.response.RedirectAction;
 import com.adyen.checkout.core.exception.CheckoutException;
 import com.adyen.checkout.core.exception.ComponentException;
-import com.adyen.checkout.core.log.LogUtil;
 
 import org.json.JSONObject;
 
@@ -34,8 +33,6 @@ import java.util.List;
 
 
 public final class RedirectComponent extends BaseActionComponent<RedirectConfiguration> {
-    private static final String TAG = LogUtil.getTag();
-
     public static final ActionComponentProvider<RedirectComponent, RedirectConfiguration> PROVIDER =
             new ActionComponentProviderImpl<>(RedirectComponent.class, RedirectConfiguration.class);
 
