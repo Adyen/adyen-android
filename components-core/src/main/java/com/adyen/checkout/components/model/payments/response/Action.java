@@ -13,6 +13,7 @@ import android.text.TextUtils;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 
+import com.adyen.checkout.components.util.PaymentMethodTypes;
 import com.adyen.checkout.core.exception.CheckoutException;
 import com.adyen.checkout.core.model.ModelObject;
 
@@ -28,6 +29,20 @@ public abstract class Action extends ModelObject {
     public static final String TYPE = "type";
     public static final String PAYMENT_DATA = "paymentData";
     public static final String PAYMENT_METHOD_TYPE = "paymentMethodType";
+
+    public static String getActionType(@NonNull String actionType, @NonNull String method) {
+        // Replace QR actions for methods that should use redirect in mobile
+        if (actionType.equals(QrCodeAction.ACTION_TYPE)) {
+            switch (method) {
+                case(PaymentMethodTypes.SWISH):
+                    return RedirectAction.ACTION_TYPE;
+                default:
+                    return actionType;
+            }
+        }
+
+        return actionType;
+    }
 
     @NonNull
     public static final Serializer<Action> SERIALIZER = new Serializer<Action>() {
@@ -47,7 +62,10 @@ public abstract class Action extends ModelObject {
         @NonNull
         @Override
         public Action deserialize(@NonNull JSONObject jsonObject) {
-            final String actionType = jsonObject.optString(TYPE);
+            final String actionType = Action.getActionType(
+                    jsonObject.optString(TYPE),
+                    jsonObject.optString(PAYMENT_METHOD_TYPE)
+            );
             if (TextUtils.isEmpty(actionType)) {
                 throw new CheckoutException("Action type not found");
             }
@@ -91,7 +109,11 @@ public abstract class Action extends ModelObject {
     }
 
     public void setType(@Nullable String type) {
-        this.type = type;
+        if (this.paymentMethodType != null && type != null) {
+            this.type = Action.getActionType(type, this.paymentMethodType);
+        } else {
+            this.type = type;
+        }
     }
 
     @Nullable
@@ -109,6 +131,10 @@ public abstract class Action extends ModelObject {
     }
 
     public void setPaymentMethodType(@Nullable String paymentMethodType) {
+        if (this.type != null && paymentMethodType != null) {
+            this.type = Action.getActionType(this.type, paymentMethodType);
+        }
+
         this.paymentMethodType = paymentMethodType;
     }
 }
