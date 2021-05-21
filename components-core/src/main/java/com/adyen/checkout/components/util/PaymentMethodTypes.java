@@ -42,6 +42,7 @@ public final class PaymentMethodTypes {
     // Payment methods that do not need a payment component, but only an action component
     public static final String WECHAT_PAY_SDK = "wechatpaySDK";
     public static final String PIX = "pix";
+    public static final String SWISH = "swish";
 
     // Voucher payment methods that are not yet supported
     public static final String MULTIBANCO = "multibanco";
@@ -107,12 +108,14 @@ public final class PaymentMethodTypes {
                 SCHEME,
                 BLIK,
                 WECHAT_PAY_SDK,
-                PIX
+                PIX,
+                SWISH
         ));
 
         SUPPORTED_ACTION_ONLY_PAYMENT_METHODS = Collections.unmodifiableList(Arrays.asList(
                 WECHAT_PAY_SDK,
-                PIX
+                PIX,
+                SWISH
         ));
 
         UNSUPPORTED_PAYMENT_METHODS = Collections.unmodifiableList(Arrays.asList(
