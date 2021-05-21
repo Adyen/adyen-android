@@ -105,39 +105,36 @@ class Adyen3DS2Component(
 
     @Throws(ComponentException::class)
     override fun handleActionInternal(activity: Activity, action: Action) {
-        when (action.type) {
-            Threeds2FingerprintAction.ACTION_TYPE -> {
-                val fingerprintAction = action as Threeds2FingerprintAction
-                if (fingerprintAction.token.isNullOrEmpty()) {
+        when (action) {
+            is Threeds2FingerprintAction -> {
+                if (action.token.isNullOrEmpty()) {
                     throw ComponentException("Fingerprint token not found.")
                 }
-                identifyShopper(activity, fingerprintAction.token.orEmpty(), false)
+                identifyShopper(activity, action.token.orEmpty(), false)
             }
-            Threeds2ChallengeAction.ACTION_TYPE -> {
-                val challengeAction = action as Threeds2ChallengeAction
-                if (challengeAction.token.isNullOrEmpty()) {
+            is Threeds2ChallengeAction -> {
+                if (action.token.isNullOrEmpty()) {
                     throw ComponentException("Challenge token not found.")
                 }
-                challengeShopper(activity, challengeAction.token.orEmpty())
+                challengeShopper(activity, action.token.orEmpty())
             }
-            Threeds2Action.ACTION_TYPE -> {
-                val threeds2Action = action as Threeds2Action
-                if (threeds2Action.token.isNullOrEmpty()) {
+            is Threeds2Action -> {
+                if (action.token.isNullOrEmpty()) {
                     throw ComponentException("3DS2 token not found.")
                 }
-                if (threeds2Action.subtype == null) {
+                if (action.subtype == null) {
                     throw ComponentException("3DS2 Action subtype not found.")
                 }
-                val subtype = SubType.parse(threeds2Action.subtype.orEmpty())
-                authorizationToken = threeds2Action.authorisationToken
-                handleActionSubtype(activity, subtype, threeds2Action.token.orEmpty())
+                val subtype = SubType.parse(action.subtype.orEmpty())
+                authorizationToken = action.authorisationToken
+                handleActionSubtype(activity, subtype, action.token.orEmpty())
             }
         }
     }
 
     private fun handleActionSubtype(activity: Activity, subtype: SubType, token: String) {
         when (subtype) {
-            SubType.FINGERPRINT -> identifyShopper(activity, token, true)
+            SubType.FINGERPRINT -> identifyShopper(activity, token, submitFingerprint = true)
             SubType.CHALLENGE -> challengeShopper(activity, token)
         }
     }
