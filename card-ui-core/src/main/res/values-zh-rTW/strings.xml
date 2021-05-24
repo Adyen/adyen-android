@@ -19,5 +19,4 @@
 
     <string name="card_number_4digit">•••• %s</string>
     <string name="expires_in">%1$s/%2$s</string>
-    <string name="store_payment_method">儲存以供下次付款使用</string>
 </resources>
