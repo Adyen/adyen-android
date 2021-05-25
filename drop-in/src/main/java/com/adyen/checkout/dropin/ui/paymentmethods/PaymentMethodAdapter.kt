@@ -51,6 +51,7 @@ class PaymentMethodAdapter(
         internal val FOOTER_PLACEHOLDER_ITEM = PaymentMethod()
 
         private const val CARD_LOGO_TYPE = "card"
+        private const val GOOGLE_PAY_LOGO_TYPE = "googlepay"
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): BaseViewHolder {
@@ -87,6 +88,7 @@ class PaymentMethodAdapter(
 
                 var txVariant = when (paymentMethod.type) {
                     PaymentMethodTypes.SCHEME -> if (paymentMethod is StoredPaymentMethod) paymentMethod.brand else CARD_LOGO_TYPE
+                    PaymentMethodTypes.GOOGLE_PAY -> GOOGLE_PAY_LOGO_TYPE
                     else -> paymentMethod.type!!
                 }
 
