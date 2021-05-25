@@ -35,6 +35,7 @@ public class RoundCornerImageView extends AppCompatImageView {
     private final Paint mStrokePaint = new Paint();
     private float mStrokeWidth;
     private int mStrokeColor;
+    private boolean mIsRoundingDisabled = false;
 
     public RoundCornerImageView(@NonNull Context context) {
         this(context, null);
@@ -70,6 +71,11 @@ public class RoundCornerImageView extends AppCompatImageView {
         invalidate();
     }
 
+    public void setRoundingDisabled(boolean disabled) {
+        this.mIsRoundingDisabled = disabled;
+        invalidate();
+    }
+
     private void applyAttrs(TypedArray typedArrayAttrs) {
         try {
             mStrokeColor = typedArrayAttrs.getColor(R.styleable.RoundCornerImageView_strokeColor, DEFAULT_STROKE_COLOR);
@@ -88,6 +94,10 @@ public class RoundCornerImageView extends AppCompatImageView {
     @SuppressLint("DrawAllocation")
     @Override
     protected void onDraw(@NonNull Canvas canvas) {
+        if (mIsRoundingDisabled) {
+            super.onDraw(canvas);
+            return;
+        }
         final RectF rect = new RectF(mStrokeWidth / 2, mStrokeWidth / 2,
                 getWidth() - (mStrokeWidth / 2),
                 getHeight() - (mStrokeWidth / 2));
