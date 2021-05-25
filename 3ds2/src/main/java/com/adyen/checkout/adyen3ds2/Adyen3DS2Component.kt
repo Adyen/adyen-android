@@ -10,6 +10,8 @@ package com.adyen.checkout.adyen3ds2
 import android.app.Activity
 import android.app.Application
 import android.content.Context
+import android.content.Intent
+import android.net.Uri
 import androidx.lifecycle.LifecycleOwner
 import androidx.lifecycle.Observer
 import androidx.lifecycle.viewModelScope
@@ -320,6 +322,21 @@ class Adyen3DS2Component(
             ThreeDS2Service.INSTANCE.cleanup(context)
         } catch (e: SDKNotInitializedException) {
             // no problem
+        }
+    }
+
+    /**
+     * Call this method when receiving the return URL from the 3DS redirect with the result data.
+     * This result will be in the [Intent.getData] and begins with the returnUrl you specified on the payments/ call.
+     *
+     * @param data The Uri from the response.
+     */
+    fun handleRedirectResponse(data: Uri) {
+        try {
+            val parsedResult = redirectDelegate.handleRedirectResponse(data)
+            notifyDetails(parsedResult)
+        } catch (e: CheckoutException) {
+            notifyException(e)
         }
     }
 
