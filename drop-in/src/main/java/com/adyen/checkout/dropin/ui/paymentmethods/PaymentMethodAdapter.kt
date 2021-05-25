@@ -102,9 +102,11 @@ class PaymentMethodAdapter(
         holder.text.text = paymentMethod.name
         holder.detail.visibility = View.GONE
 
-        val txVariant =
-            if (paymentMethod.type == PaymentMethodTypes.SCHEME) CARD_LOGO_TYPE
-            else paymentMethod.type
+        val txVariant = when (paymentMethod.type) {
+            PaymentMethodTypes.SCHEME -> CARD_LOGO_TYPE
+            PaymentMethodTypes.GOOGLE_PAY -> GOOGLE_PAY_LOGO_TYPE
+            else -> paymentMethod.type
+        }
 
         imageLoader.load(txVariant, holder.logo)
 
@@ -153,6 +155,7 @@ class PaymentMethodAdapter(
         internal const val PAYMENT_METHOD = 3
 
         private const val CARD_LOGO_TYPE = "card"
+        private const val GOOGLE_PAY_LOGO_TYPE = "googlepay"
     }
 
     interface OnPaymentMethodSelectedCallback {
