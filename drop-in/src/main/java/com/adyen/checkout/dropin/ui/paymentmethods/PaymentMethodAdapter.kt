@@ -14,11 +14,11 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Button
-import android.widget.ImageView
 import android.widget.TextView
 import com.adyen.checkout.base.api.ImageLoader
 import com.adyen.checkout.base.model.paymentmethods.PaymentMethod
 import com.adyen.checkout.base.model.paymentmethods.StoredPaymentMethod
+import com.adyen.checkout.base.ui.view.RoundCornerImageView
 import com.adyen.checkout.base.util.DateUtils
 import com.adyen.checkout.base.util.PaymentMethodTypes
 import com.adyen.checkout.core.log.LogUtil
@@ -92,6 +92,7 @@ class PaymentMethodAdapter(
                     else -> paymentMethod.type!!
                 }
 
+                holder.logo.setRoundingDisabled(paymentMethod.type == PaymentMethodTypes.GOOGLE_PAY)
                 imageLoader.load(txVariant, holder.logo)
 
                 holder.itemView.setOnClickListener {
@@ -192,7 +193,7 @@ class PaymentMethodAdapter(
     class PaymentMethodVH(rootView: View) : BaseViewHolder(rootView) {
         internal val text: TextView = rootView.findViewById(R.id.textView_text)
         internal val detail: TextView = rootView.findViewById(R.id.textView_detail)
-        internal val logo: ImageView = rootView.findViewById(R.id.imageView_logo)
+        internal val logo: RoundCornerImageView = rootView.findViewById(R.id.imageView_logo)
     }
 
     class PaymentMethodsHeaderVH(rootView: View) : BaseViewHolder(rootView) {
