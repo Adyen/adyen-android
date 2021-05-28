@@ -14,6 +14,7 @@ import android.content.Intent;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 
+import com.adyen.checkout.components.base.ActivityResultHandlingComponent;
 import com.adyen.checkout.components.base.BasePaymentComponent;
 import com.adyen.checkout.components.base.GenericPaymentMethodDelegate;
 import com.adyen.checkout.components.model.paymentmethods.Configuration;
@@ -33,7 +34,8 @@ import com.google.android.gms.wallet.PaymentsClient;
 import com.google.android.gms.wallet.Wallet;
 
 public class GooglePayComponent extends
-        BasePaymentComponent<GooglePayConfiguration, GooglePayInputData, GooglePayOutputData, GooglePayComponentState> {
+        BasePaymentComponent<GooglePayConfiguration, GooglePayInputData, GooglePayOutputData, GooglePayComponentState>
+        implements ActivityResultHandlingComponent {
     private static final String TAG = LogUtil.getTag();
 
     public static final GooglePayProvider PROVIDER = new GooglePayProvider();
@@ -96,7 +98,7 @@ public class GooglePayComponent extends
      * @param resultCode The result code from the {@link Activity#onActivityResult(int, int, Intent)}
      * @param data       The data intent from the {@link Activity#onActivityResult(int, int, Intent)}
      */
-    @SuppressWarnings("JavadocReference")
+    @Override
     public void handleActivityResult(int resultCode, @Nullable Intent data) {
         switch (resultCode) {
             case Activity.RESULT_OK:

@@ -11,7 +11,6 @@ import android.app.Activity
 import android.app.Application
 import android.content.Context
 import android.content.Intent
-import android.net.Uri
 import androidx.lifecycle.LifecycleOwner
 import androidx.lifecycle.Observer
 import androidx.lifecycle.viewModelScope
@@ -25,6 +24,7 @@ import com.adyen.checkout.adyen3ds2.repository.SubmitFingerprintResult
 import com.adyen.checkout.components.ActionComponentData
 import com.adyen.checkout.components.ActionComponentProvider
 import com.adyen.checkout.components.base.BaseActionComponent
+import com.adyen.checkout.components.base.IntentHandlingComponent
 import com.adyen.checkout.components.encoding.Base64Encoder
 import com.adyen.checkout.components.model.payments.response.Action
 import com.adyen.checkout.components.model.payments.response.Threeds2Action
@@ -64,7 +64,7 @@ class Adyen3DS2Component(
     private val submitFingerprintRepository: SubmitFingerprintRepository,
     private val adyen3DS2Serializer: Adyen3DS2Serializer,
     private val redirectDelegate: RedirectDelegate
-) : BaseActionComponent<Adyen3DS2Configuration>(application, configuration), ChallengeStatusReceiver {
+) : BaseActionComponent<Adyen3DS2Configuration>(application, configuration), ChallengeStatusReceiver, IntentHandlingComponent {
 
     private var mTransaction: Transaction? = null
     private var mUiCustomization: UiCustomization? = null
@@ -329,11 +329,11 @@ class Adyen3DS2Component(
      * Call this method when receiving the return URL from the 3DS redirect with the result data.
      * This result will be in the [Intent.getData] and begins with the returnUrl you specified on the payments/ call.
      *
-     * @param data The Uri from the response.
+     * @param intent The received [Intent].
      */
-    fun handleRedirectResponse(data: Uri) {
+    override fun handleIntent(intent: Intent) {
         try {
-            val parsedResult = redirectDelegate.handleRedirectResponse(data)
+            val parsedResult = redirectDelegate.handleRedirectResponse(intent.data)
             notifyDetails(parsedResult)
         } catch (e: CheckoutException) {
             notifyException(e)

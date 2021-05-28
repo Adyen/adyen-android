@@ -12,14 +12,13 @@ import android.app.Activity;
 import android.app.Application;
 import android.content.Context;
 import android.content.Intent;
-import android.net.Uri;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 
 import com.adyen.checkout.components.ActionComponentProvider;
-import com.adyen.checkout.components.base.ActionComponentProviderImpl;
 import com.adyen.checkout.components.base.BaseActionComponent;
+import com.adyen.checkout.components.base.IntentHandlingComponent;
 import com.adyen.checkout.components.model.payments.response.Action;
 import com.adyen.checkout.components.model.payments.response.RedirectAction;
 import com.adyen.checkout.core.exception.CheckoutException;
@@ -31,13 +30,18 @@ import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 
+public final class RedirectComponent extends BaseActionComponent<RedirectConfiguration> implements IntentHandlingComponent {
+    public static final ActionComponentProvider<RedirectComponent, RedirectConfiguration> PROVIDER = new RedirectComponentProvider();
 
-public final class RedirectComponent extends BaseActionComponent<RedirectConfiguration> {
-    public static final ActionComponentProvider<RedirectComponent, RedirectConfiguration> PROVIDER =
-            new ActionComponentProviderImpl<>(RedirectComponent.class, RedirectConfiguration.class);
+    private final RedirectDelegate mRedirectDelegate;
 
-    public RedirectComponent(@NonNull Application application, @NonNull RedirectConfiguration configuration) {
+    public RedirectComponent(
+            @NonNull Application application,
+            @NonNull RedirectConfiguration configuration,
+            @NonNull RedirectDelegate redirectDelegate
+    ) {
         super(application, configuration);
+        mRedirectDelegate = redirectDelegate;
     }
 
     /**
@@ -49,17 +53,6 @@ public final class RedirectComponent extends BaseActionComponent<RedirectConfigu
     @NonNull
     public static String getReturnUrl(@NonNull Context context) {
         return RedirectUtil.REDIRECT_RESULT_SCHEME + context.getPackageName();
-    }
-
-    /**
-     * Make a redirect from the provided Activity to the target of the Redirect object.
-     *
-     * @param activity       The Activity starting the redirect.
-     * @param redirectAction The object from the server response defining where to redirect to.
-     */
-    public static void makeRedirect(@NonNull Activity activity, @NonNull RedirectAction redirectAction) throws ComponentException {
-        final RedirectDelegate delegate = new RedirectDelegate();
-        delegate.makeRedirect(activity, redirectAction);
     }
 
     @Override
@@ -78,19 +71,19 @@ public final class RedirectComponent extends BaseActionComponent<RedirectConfigu
     @Override
     protected void handleActionInternal(@NonNull Activity activity, @NonNull Action action) throws ComponentException {
         final RedirectAction redirectAction = (RedirectAction) action;
-        makeRedirect(activity, redirectAction);
+        mRedirectDelegate.makeRedirect(activity, redirectAction);
     }
 
     /**
      * Call this method when receiving the return URL from the redirect with the result data.
      * This result will be in the {@link Intent#getData()} and begins with the returnUrl you specified on the payments/ call.
      *
-     * @param data The Uri from the response.
+     * @param intent The received {@link Intent}.
      */
-    public void handleRedirectResponse(@NonNull Uri data) {
+    @Override
+    public void handleIntent(@NonNull Intent intent) {
         try {
-            final RedirectDelegate delegate = new RedirectDelegate();
-            final JSONObject parsedResult = delegate.handleRedirectResponse(data);
+            final JSONObject parsedResult = mRedirectDelegate.handleRedirectResponse(intent.getData());
             notifyDetails(parsedResult);
         } catch (CheckoutException e) {
             notifyException(e);

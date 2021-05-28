@@ -8,8 +8,6 @@ import com.adyen.checkout.components.model.payments.response.RedirectAction
 import com.adyen.checkout.core.exception.ComponentException
 import com.adyen.checkout.core.log.LogUtil
 import com.adyen.checkout.core.log.Logger
-import com.adyen.checkout.redirect.RedirectUtil.createRedirectIntent
-import com.adyen.checkout.redirect.RedirectUtil.parseRedirectResult
 import org.json.JSONObject
 
 private val TAG = LogUtil.getTag()
@@ -26,7 +24,7 @@ class RedirectDelegate {
         Logger.d(TAG, "makeRedirect - " + redirectAction.url)
         if (!TextUtils.isEmpty(redirectAction.url)) {
             val redirectUri = Uri.parse(redirectAction.url)
-            val redirectIntent = createRedirectIntent(activity, redirectUri)
+            val redirectIntent = RedirectUtil.createRedirectIntent(activity, redirectUri)
             try {
                 activity.startActivity(redirectIntent)
             } catch (e: ActivityNotFoundException) {
@@ -43,7 +41,8 @@ class RedirectDelegate {
      *
      * @param data The Uri from the response.
      */
-    fun handleRedirectResponse(data: Uri): JSONObject {
-        return parseRedirectResult(data)
+    fun handleRedirectResponse(data: Uri?): JSONObject {
+        if (data == null) throw ComponentException("Received a null redirect Uri")
+        return RedirectUtil.parseRedirectResult(data)
     }
 }
