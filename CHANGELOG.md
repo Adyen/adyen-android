@@ -13,6 +13,17 @@
 [//]: <> (Add changes that not released yet into `Unreleased` section)
 [//]: <> (Comment `Unreleased` section if there are no changes)
 [//]: <> (## [Unreleased])
+## [3.8.3] - 2021-06-01
+### Added
+- Enable showing Postal Code input in Card component.
+- Release to Maven Central.
+
+### Fixed
+- Update Google Pay logo.
+
+### Changed
+- Update 3DS2 SDK to version `2.1.0-rc09` which fixes restricted security exceptions on Android 10.
+
 ## [3.8.2] - 2021-02-09
 ### Fixed
 - Remove configuration object from /paymentmethods model breaking serialization in some API versions.
