@@ -3,11 +3,12 @@
  *
  * This file is open source and available under the MIT license. See the LICENSE file for more info.
  *
- * Created by josephj on 21/5/2021.
+ * Created by josephj on 31/5/2021.
  */
 
-package com.adyen.checkout.adyen3ds2.model
+package com.adyen.checkout.adyen3ds2
 
+import com.adyen.checkout.adyen3ds2.model.ChallengeResult
 import com.adyen.checkout.core.exception.ComponentException
 import com.adyen.threeds2.CompletionEvent
 import org.json.JSONException
@@ -21,17 +22,7 @@ class Adyen3DS2Serializer {
     }
 
     @Throws(ComponentException::class)
-    fun createDetailsJson(encodedFingerprint: String): JSONObject {
-        return createFingerprintDetails(encodedFingerprint)
-    }
-
-    @Throws(ComponentException::class)
-    fun createDetailsJson(completionEvent: CompletionEvent, authorisationToken: String?): JSONObject {
-        return if (authorisationToken == null) createChallengeDetails(completionEvent)
-        else createThreeDsResultDetails(completionEvent, authorisationToken)
-    }
-
-    private fun createFingerprintDetails(encodedFingerprint: String): JSONObject {
+    fun createFingerprintDetails(encodedFingerprint: String): JSONObject {
         val fingerprintDetails = JSONObject()
         try {
             fingerprintDetails.put(FINGERPRINT_DETAILS_KEY, encodedFingerprint)
@@ -41,7 +32,8 @@ class Adyen3DS2Serializer {
         return fingerprintDetails
     }
 
-    private fun createChallengeDetails(completionEvent: CompletionEvent): JSONObject {
+    @Throws(ComponentException::class)
+    fun createChallengeDetails(completionEvent: CompletionEvent): JSONObject {
         val challengeDetails = JSONObject()
         try {
             val challengeResult = ChallengeResult.from(completionEvent)
@@ -52,7 +44,11 @@ class Adyen3DS2Serializer {
         return challengeDetails
     }
 
-    private fun createThreeDsResultDetails(completionEvent: CompletionEvent, authorisationToken: String): JSONObject {
+    @Throws(ComponentException::class)
+    fun createThreeDsResultDetails(
+        completionEvent: CompletionEvent,
+        authorisationToken: String
+    ): JSONObject {
         val threeDsDetails = JSONObject()
         try {
             val challengeResult = ChallengeResult.from(completionEvent, authorisationToken)
