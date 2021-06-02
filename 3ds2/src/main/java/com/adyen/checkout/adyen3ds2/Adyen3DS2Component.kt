@@ -17,7 +17,6 @@ import androidx.lifecycle.Observer
 import androidx.lifecycle.viewModelScope
 import com.adyen.checkout.adyen3ds2.exception.Authentication3DS2Exception
 import com.adyen.checkout.adyen3ds2.exception.Cancelled3DS2Exception
-import com.adyen.checkout.adyen3ds2.model.Adyen3DS2Serializer
 import com.adyen.checkout.adyen3ds2.model.ChallengeToken
 import com.adyen.checkout.adyen3ds2.model.FingerprintToken
 import com.adyen.checkout.adyen3ds2.repository.SubmitFingerprintRepository
@@ -51,7 +50,7 @@ import com.adyen.threeds2.exception.SDKNotInitializedException
 import com.adyen.threeds2.exception.SDKRuntimeException
 import com.adyen.threeds2.parameters.ChallengeParameters
 import com.adyen.threeds2.util.AdyenConfigParameters
-import java.util.*
+import java.util.Collections
 import kotlinx.coroutines.CoroutineExceptionHandler
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
@@ -131,7 +130,7 @@ class Adyen3DS2Component(
                 if (action.token.isNullOrEmpty()) {
                     throw ComponentException("Fingerprint token not found.")
                 }
-                identifyShopper(activity, action.token.orEmpty(), false)
+                identifyShopper(activity, action.token.orEmpty(), submitFingerprintAutomatically = false)
             }
             is Threeds2ChallengeAction -> {
                 if (action.token.isNullOrEmpty()) {
@@ -147,6 +146,7 @@ class Adyen3DS2Component(
                     throw ComponentException("3DS2 Action subtype not found.")
                 }
                 val subtype = SubType.parse(action.subtype.orEmpty())
+                // We need to keep authorizationToken in memory to access it later when the 3DS2 challenge is done
                 authorizationToken = action.authorisationToken
                 handleActionSubtype(activity, subtype, action.token.orEmpty())
             }
@@ -155,7 +155,7 @@ class Adyen3DS2Component(
 
     private fun handleActionSubtype(activity: Activity, subtype: SubType, token: String) {
         when (subtype) {
-            SubType.FINGERPRINT -> identifyShopper(activity, token, submitFingerprint = true)
+            SubType.FINGERPRINT -> identifyShopper(activity, token, submitFingerprintAutomatically = true)
             SubType.CHALLENGE -> challengeShopper(activity, token)
         }
     }
@@ -163,9 +163,12 @@ class Adyen3DS2Component(
     override fun completed(completionEvent: CompletionEvent) {
         Logger.d(TAG, "challenge completed")
         try {
-            val details = adyen3DS2Serializer.createDetailsJson(completionEvent, authorizationToken)
-            val omitPaymentData = authorizationToken != null
-            notifyDetails(details, omitPaymentData)
+            // Check whether authorizationToken was set and create the corresponding details object
+            val token = authorizationToken
+            val details =
+                if (token == null) adyen3DS2Serializer.createChallengeDetails(completionEvent)
+                else adyen3DS2Serializer.createThreeDsResultDetails(completionEvent, token)
+            notifyDetails(details)
         } catch (e: CheckoutException) {
             notifyException(e)
         } finally {
@@ -200,8 +203,8 @@ class Adyen3DS2Component(
     }
 
     @Throws(ComponentException::class)
-    private fun identifyShopper(activity: Activity, encodedFingerprintToken: String, submitFingerprint: Boolean) {
-        Logger.d(TAG, "identifyShopper")
+    private fun identifyShopper(activity: Activity, encodedFingerprintToken: String, submitFingerprintAutomatically: Boolean) {
+        Logger.d(TAG, "identifyShopper - submitFingerprintAutomatically: $submitFingerprintAutomatically")
         val decodedFingerprintToken = Base64Encoder.decode(encodedFingerprintToken)
 
         val fingerprintJson: JSONObject = try {
@@ -249,23 +252,26 @@ class Adyen3DS2Component(
                 return@launch
             }
             val encodedFingerprint = createEncodedFingerprint(authenticationRequestParameters)
-            if (submitFingerprint) {
-                submitFingerprint(activity, encodedFingerprint)
+            if (submitFingerprintAutomatically) {
+                submitFingerprintAutomatically(activity, encodedFingerprint)
             } else {
                 launch(Dispatchers.Main) {
-                    notifyDetails(adyen3DS2Serializer.createDetailsJson(encodedFingerprint))
+                    notifyDetails(adyen3DS2Serializer.createFingerprintDetails(encodedFingerprint))
                 }
             }
         }
     }
 
-    private suspend fun submitFingerprint(activity: Activity, encodedFingerprint: String) {
+    private suspend fun submitFingerprintAutomatically(activity: Activity, encodedFingerprint: String) {
         try {
             val result = submitFingerprintRepository.submitFingerprint(encodedFingerprint, configuration, paymentData)
+            // This flow (calling the internal submitFingerprint endpoint) requires that we do not send paymentData back to the merchant.
+            // Setting it to null ensures that when the flow ends and notifyDetails is called, paymentData will not be included in the response.
+            paymentData = null
             when (result) {
                 is SubmitFingerprintResult.Completed -> {
                     viewModelScope.launch(Dispatchers.Main) {
-                        notifyDetails(result.details, true)
+                        notifyDetails(result.details)
                     }
                 }
                 is SubmitFingerprintResult.Redirect -> {

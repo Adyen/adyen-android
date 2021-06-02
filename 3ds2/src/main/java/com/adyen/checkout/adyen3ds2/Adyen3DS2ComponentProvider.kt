@@ -11,7 +11,6 @@ package com.adyen.checkout.adyen3ds2
 import android.app.Application
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.ViewModelStoreOwner
-import com.adyen.checkout.adyen3ds2.model.Adyen3DS2Serializer
 import com.adyen.checkout.adyen3ds2.repository.SubmitFingerprintRepository
 import com.adyen.checkout.components.ActionComponentProvider
 import com.adyen.checkout.components.base.lifecycle.viewModelFactory
