@@ -11,6 +11,7 @@ import android.app.Activity
 import android.app.Application
 import android.content.Context
 import android.content.Intent
+import android.os.Bundle
 import androidx.lifecycle.LifecycleOwner
 import androidx.lifecycle.Observer
 import androidx.lifecycle.viewModelScope
@@ -105,6 +106,23 @@ class Adyen3DS2Component(
     }
 
     override fun getSupportedPaymentMethodTypes(): List<String>? = null
+
+    override fun saveState(bundle: Bundle?) {
+        if (bundle != null && authorizationToken != null) {
+            if (bundle.containsKey(AUTHORIZATION_TOKEN_KEY)) {
+                Logger.d(TAG, "bundle already has authorizationToken, overriding")
+            }
+            bundle.putString(AUTHORIZATION_TOKEN_KEY, authorizationToken)
+        }
+        super.saveState(bundle)
+    }
+
+    override fun restoreState(bundle: Bundle?) {
+        if (bundle != null && bundle.containsKey(AUTHORIZATION_TOKEN_KEY) && authorizationToken == null) {
+            authorizationToken = bundle.getString(AUTHORIZATION_TOKEN_KEY)
+        }
+        super.restoreState(bundle)
+    }
 
     @Throws(ComponentException::class)
     override fun handleActionInternal(activity: Activity, action: Action) {
@@ -342,6 +360,8 @@ class Adyen3DS2Component(
 
     companion object {
         private val TAG = LogUtil.getTag()
+
+        private const val AUTHORIZATION_TOKEN_KEY = "authorization_token"
 
         @JvmField
         val PROVIDER: ActionComponentProvider<Adyen3DS2Component, Adyen3DS2Configuration> = Adyen3DS2ComponentProvider()
