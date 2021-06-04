@@ -10,18 +10,21 @@ package com.adyen.checkout.adyen3ds2
 import android.app.Activity
 import android.app.Application
 import android.content.Context
+import android.content.Intent
+import android.os.Bundle
 import androidx.lifecycle.LifecycleOwner
 import androidx.lifecycle.Observer
 import androidx.lifecycle.viewModelScope
 import com.adyen.checkout.adyen3ds2.exception.Authentication3DS2Exception
 import com.adyen.checkout.adyen3ds2.exception.Cancelled3DS2Exception
-import com.adyen.checkout.adyen3ds2.model.ChallengeResult
 import com.adyen.checkout.adyen3ds2.model.ChallengeToken
 import com.adyen.checkout.adyen3ds2.model.FingerprintToken
+import com.adyen.checkout.adyen3ds2.repository.SubmitFingerprintRepository
+import com.adyen.checkout.adyen3ds2.repository.SubmitFingerprintResult
 import com.adyen.checkout.components.ActionComponentData
 import com.adyen.checkout.components.ActionComponentProvider
-import com.adyen.checkout.components.base.ActionComponentProviderImpl
 import com.adyen.checkout.components.base.BaseActionComponent
+import com.adyen.checkout.components.base.IntentHandlingComponent
 import com.adyen.checkout.components.encoding.Base64Encoder
 import com.adyen.checkout.components.model.payments.response.Action
 import com.adyen.checkout.components.model.payments.response.Threeds2Action
@@ -32,6 +35,7 @@ import com.adyen.checkout.core.exception.CheckoutException
 import com.adyen.checkout.core.exception.ComponentException
 import com.adyen.checkout.core.log.LogUtil
 import com.adyen.checkout.core.log.Logger
+import com.adyen.checkout.redirect.RedirectDelegate
 import com.adyen.threeds2.AuthenticationRequestParameters
 import com.adyen.threeds2.ChallengeStatusReceiver
 import com.adyen.threeds2.CompletionEvent
@@ -46,19 +50,25 @@ import com.adyen.threeds2.exception.SDKNotInitializedException
 import com.adyen.threeds2.exception.SDKRuntimeException
 import com.adyen.threeds2.parameters.ChallengeParameters
 import com.adyen.threeds2.util.AdyenConfigParameters
+import java.util.Collections
 import kotlinx.coroutines.CoroutineExceptionHandler
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import org.json.JSONException
 import org.json.JSONObject
-import java.util.Collections
 
 @Suppress("TooManyFunctions")
-class Adyen3DS2Component(application: Application, configuration: Adyen3DS2Configuration) :
-    BaseActionComponent<Adyen3DS2Configuration>(application, configuration), ChallengeStatusReceiver {
+class Adyen3DS2Component(
+    application: Application,
+    configuration: Adyen3DS2Configuration,
+    private val submitFingerprintRepository: SubmitFingerprintRepository,
+    private val adyen3DS2Serializer: Adyen3DS2Serializer,
+    private val redirectDelegate: RedirectDelegate
+) : BaseActionComponent<Adyen3DS2Configuration>(application, configuration), ChallengeStatusReceiver, IntentHandlingComponent {
 
     private var mTransaction: Transaction? = null
     private var mUiCustomization: UiCustomization? = null
+    private var authorizationToken: String? = null
 
     override fun onCleared() {
         super.onCleared()
@@ -96,40 +106,56 @@ class Adyen3DS2Component(application: Application, configuration: Adyen3DS2Confi
 
     override fun getSupportedPaymentMethodTypes(): List<String>? = null
 
+    override fun saveState(bundle: Bundle?) {
+        if (bundle != null && authorizationToken != null) {
+            if (bundle.containsKey(AUTHORIZATION_TOKEN_KEY)) {
+                Logger.d(TAG, "bundle already has authorizationToken, overriding")
+            }
+            bundle.putString(AUTHORIZATION_TOKEN_KEY, authorizationToken)
+        }
+        super.saveState(bundle)
+    }
+
+    override fun restoreState(bundle: Bundle?) {
+        if (bundle != null && bundle.containsKey(AUTHORIZATION_TOKEN_KEY) && authorizationToken == null) {
+            authorizationToken = bundle.getString(AUTHORIZATION_TOKEN_KEY)
+        }
+        super.restoreState(bundle)
+    }
+
     @Throws(ComponentException::class)
     override fun handleActionInternal(activity: Activity, action: Action) {
-        when (action.type) {
-            Threeds2FingerprintAction.ACTION_TYPE -> {
-                val fingerprintAction = action as Threeds2FingerprintAction
-                if (fingerprintAction.token.isNullOrEmpty()) {
+        when (action) {
+            is Threeds2FingerprintAction -> {
+                if (action.token.isNullOrEmpty()) {
                     throw ComponentException("Fingerprint token not found.")
                 }
-                identifyShopper(activity, fingerprintAction.token.orEmpty())
+                identifyShopper(activity, action.token.orEmpty(), submitFingerprintAutomatically = false)
             }
-            Threeds2ChallengeAction.ACTION_TYPE -> {
-                val challengeAction = action as Threeds2ChallengeAction
-                if (challengeAction.token.isNullOrEmpty()) {
+            is Threeds2ChallengeAction -> {
+                if (action.token.isNullOrEmpty()) {
                     throw ComponentException("Challenge token not found.")
                 }
-                challengeShopper(activity, challengeAction.token.orEmpty())
+                challengeShopper(activity, action.token.orEmpty())
             }
-            Threeds2Action.ACTION_TYPE -> {
-                val threeds2Action = action as Threeds2Action
-                if (threeds2Action.token.isNullOrEmpty()) {
+            is Threeds2Action -> {
+                if (action.token.isNullOrEmpty()) {
                     throw ComponentException("3DS2 token not found.")
                 }
-                if (threeds2Action.subtype == null) {
+                if (action.subtype == null) {
                     throw ComponentException("3DS2 Action subtype not found.")
                 }
-                val subtype = SubType.parse(threeds2Action.subtype.orEmpty())
-                handleActionSubtype(activity, subtype, threeds2Action.token.orEmpty())
+                val subtype = SubType.parse(action.subtype.orEmpty())
+                // We need to keep authorizationToken in memory to access it later when the 3DS2 challenge is done
+                authorizationToken = action.authorisationToken
+                handleActionSubtype(activity, subtype, action.token.orEmpty())
             }
         }
     }
 
     private fun handleActionSubtype(activity: Activity, subtype: SubType, token: String) {
         when (subtype) {
-            SubType.FINGERPRINT -> identifyShopper(activity, token)
+            SubType.FINGERPRINT -> identifyShopper(activity, token, submitFingerprintAutomatically = true)
             SubType.CHALLENGE -> challengeShopper(activity, token)
         }
     }
@@ -137,7 +163,12 @@ class Adyen3DS2Component(application: Application, configuration: Adyen3DS2Confi
     override fun completed(completionEvent: CompletionEvent) {
         Logger.d(TAG, "challenge completed")
         try {
-            notifyDetails(createChallengeDetails(completionEvent))
+            // Check whether authorizationToken was set and create the corresponding details object
+            val token = authorizationToken
+            val details =
+                if (token == null) adyen3DS2Serializer.createChallengeDetails(completionEvent)
+                else adyen3DS2Serializer.createThreeDsResultDetails(completionEvent, token)
+            notifyDetails(details)
         } catch (e: CheckoutException) {
             notifyException(e)
         } finally {
@@ -172,8 +203,8 @@ class Adyen3DS2Component(application: Application, configuration: Adyen3DS2Confi
     }
 
     @Throws(ComponentException::class)
-    private fun identifyShopper(context: Context, encodedFingerprintToken: String) {
-        Logger.d(TAG, "identifyShopper")
+    private fun identifyShopper(activity: Activity, encodedFingerprintToken: String, submitFingerprintAutomatically: Boolean) {
+        Logger.d(TAG, "identifyShopper - submitFingerprintAutomatically: $submitFingerprintAutomatically")
         val decodedFingerprintToken = Base64Encoder.decode(encodedFingerprintToken)
 
         val fingerprintJson: JSONObject = try {
@@ -195,7 +226,7 @@ class Adyen3DS2Component(application: Application, configuration: Adyen3DS2Confi
         viewModelScope.launch(Dispatchers.Default + coroutineExceptionHandler) {
             try {
                 Logger.d(TAG, "initialize 3DS2 SDK")
-                ThreeDS2Service.INSTANCE.initialize(context, configParameters, null, mUiCustomization)
+                ThreeDS2Service.INSTANCE.initialize(activity, configParameters, null, mUiCustomization)
             } catch (e: SDKRuntimeException) {
                 notifyException(ComponentException("Failed to initialize 3DS2 SDK", e))
                 return@launch
@@ -216,12 +247,42 @@ class Adyen3DS2Component(application: Application, configuration: Adyen3DS2Confi
             }
 
             val authenticationRequestParameters = mTransaction?.authenticationRequestParameters
-            if (authenticationRequestParameters != null) {
-                val encodedFingerprint = createEncodedFingerprint(authenticationRequestParameters)
+            if (authenticationRequestParameters == null) {
+                notifyException(ComponentException("Failed to retrieve 3DS2 authentication parameters"))
+                return@launch
+            }
+            val encodedFingerprint = createEncodedFingerprint(authenticationRequestParameters)
+            if (submitFingerprintAutomatically) {
+                submitFingerprintAutomatically(activity, encodedFingerprint)
+            } else {
                 launch(Dispatchers.Main) {
-                    notifyDetails(createFingerprintDetails(encodedFingerprint))
+                    notifyDetails(adyen3DS2Serializer.createFingerprintDetails(encodedFingerprint))
                 }
             }
+        }
+    }
+
+    private suspend fun submitFingerprintAutomatically(activity: Activity, encodedFingerprint: String) {
+        try {
+            val result = submitFingerprintRepository.submitFingerprint(encodedFingerprint, configuration, paymentData)
+            // This flow (calling the internal submitFingerprint endpoint) requires that we do not send paymentData back to the merchant.
+            // Setting it to null ensures that when the flow ends and notifyDetails is called, paymentData will not be included in the response.
+            paymentData = null
+            when (result) {
+                is SubmitFingerprintResult.Completed -> {
+                    viewModelScope.launch(Dispatchers.Main) {
+                        notifyDetails(result.details)
+                    }
+                }
+                is SubmitFingerprintResult.Redirect -> {
+                    redirectDelegate.makeRedirect(activity, result.action)
+                }
+                is SubmitFingerprintResult.Threeds2 -> {
+                    handleAction(activity, result.action)
+                }
+            }
+        } catch (e: ComponentException) {
+            notifyException(e)
         }
     }
 
@@ -288,39 +349,29 @@ class Adyen3DS2Component(application: Application, configuration: Adyen3DS2Confi
         }
     }
 
-    @Throws(ComponentException::class)
-    fun createFingerprintDetails(encodedFingerprint: String?): JSONObject {
-        val fingerprintDetails = JSONObject()
+    /**
+     * Call this method when receiving the return URL from the 3DS redirect with the result data.
+     * This result will be in the [Intent.getData] and begins with the returnUrl you specified on the payments/ call.
+     *
+     * @param intent The received [Intent].
+     */
+    override fun handleIntent(intent: Intent) {
         try {
-            fingerprintDetails.put(FINGERPRINT_DETAILS_KEY, encodedFingerprint)
-        } catch (e: JSONException) {
-            throw ComponentException("Failed to create fingerprint details", e)
+            val parsedResult = redirectDelegate.handleRedirectResponse(intent.data)
+            notifyDetails(parsedResult)
+        } catch (e: CheckoutException) {
+            notifyException(e)
         }
-        return fingerprintDetails
-    }
-
-    @Throws(ComponentException::class)
-    private fun createChallengeDetails(completionEvent: CompletionEvent): JSONObject {
-        val challengeDetails = JSONObject()
-        try {
-            val challengeResult = ChallengeResult.from(completionEvent)
-            challengeDetails.put(CHALLENGE_DETAILS_KEY, challengeResult.payload)
-        } catch (e: JSONException) {
-            throw ComponentException("Failed to create challenge details", e)
-        }
-        return challengeDetails
     }
 
     companion object {
-        val TAG = LogUtil.getTag()
+        private val TAG = LogUtil.getTag()
+
+        private const val AUTHORIZATION_TOKEN_KEY = "authorization_token"
 
         @JvmField
-        val PROVIDER: ActionComponentProvider<Adyen3DS2Component, Adyen3DS2Configuration> = ActionComponentProviderImpl(
-            Adyen3DS2Component::class.java, Adyen3DS2Configuration::class.java
-        )
+        val PROVIDER: ActionComponentProvider<Adyen3DS2Component, Adyen3DS2Configuration> = Adyen3DS2ComponentProvider()
 
-        private const val FINGERPRINT_DETAILS_KEY = "threeds2.fingerprint"
-        private const val CHALLENGE_DETAILS_KEY = "threeds2.challengeResult"
         private const val DEFAULT_CHALLENGE_TIME_OUT = 10
         private const val PROTOCOL_VERSION_2_1_0 = "2.1.0"
 

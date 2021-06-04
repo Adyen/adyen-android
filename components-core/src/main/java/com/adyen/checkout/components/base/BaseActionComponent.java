@@ -132,4 +132,8 @@ public abstract class BaseActionComponent<ConfigurationT extends Configuration> 
     protected String getPaymentData() {
         return mPaymentData;
     }
+
+    protected void setPaymentData(@Nullable String paymentData) {
+        mPaymentData = paymentData;
+    }
 }
