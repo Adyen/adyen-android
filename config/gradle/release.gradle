@@ -10,7 +10,6 @@ import groovy.json.JsonSlurper
 
 apply plugin: "maven-publish"
 apply plugin: "com.jfrog.bintray"
-apply plugin: "com.jfrog.artifactory"
 
 apply from: "../config/gradle/artifacts.gradle"
 
@@ -18,7 +17,7 @@ apply from: "../config/gradle/artifacts.gradle"
 
 final theGroupId = "com.adyen.checkout"
 final theArtifactId = project.mavenArtifactId
-final theVersion = "${current_version}"
+final theVersion = project.version_name
 
 final theName = project.mavenArtifactName
 final theDescription = project.mavenArtifactDescription
@@ -104,29 +103,6 @@ project.afterEvaluate {
                     configurations.implementation.dependencies.each { dep -> addDependency(dep, "runtime") }
                 }
             }
-        }
-    }
-
-    artifactoryPublish {
-        publications(publishing.publications.bintrayMavenPublication)
-    }
-}
-
-
-artifactory {
-    contextUrl = 'https://spin.jfrog.io/artifactory'
-    publish {
-        repository {
-            repoKey = 'default-maven-local' // The Artifactory repository key to publish to
-            username = "${artifactory_user}" // The publisher user name
-            password = "${artifactory_password}" // The publisher password
-        }
-        defaults {
-            // Reference to Gradle publications defined in the build script.
-            // This is how we tell the Artifactory Plugin which artifacts should be
-            // published to Artifactory.
-            publishArtifacts = true
-            publishPom = true // Publish generated POM files to Artifactory (true by default)
         }
     }
 }

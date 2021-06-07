@@ -7,7 +7,7 @@
  */
 
 // Maven artifact
-ext.mavenArtifactId = "spin-drop-in"
+ext.mavenArtifactId = "drop-in"
 ext.mavenArtifactName = "Adyen checkout drop-in component"
 ext.mavenArtifactDescription = "Adyen checkout drop-in component client for Adyen's Checkout API."
 
