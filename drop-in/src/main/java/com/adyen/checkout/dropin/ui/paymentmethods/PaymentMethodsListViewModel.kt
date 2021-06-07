@@ -113,10 +113,12 @@ class PaymentMethodsListViewModel(
             PaymentMethodTypes.GIFTCARD -> brand
             else -> type
         }
+        val isBorderDisabled = type == PaymentMethodTypes.GOOGLE_PAY
         return PaymentMethodModel(
             type = type,
             name = name.orEmpty(),
             icon = icon.orEmpty(),
+            isBorderDisabled = isBorderDisabled
         )
     }
 

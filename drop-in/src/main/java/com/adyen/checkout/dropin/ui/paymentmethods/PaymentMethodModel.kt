@@ -11,5 +11,6 @@ package com.adyen.checkout.dropin.ui.paymentmethods
 data class PaymentMethodModel(
     val type: String?,
     val name: String,
-    val icon: String
+    val icon: String,
+    val isBorderDisabled: Boolean
 )

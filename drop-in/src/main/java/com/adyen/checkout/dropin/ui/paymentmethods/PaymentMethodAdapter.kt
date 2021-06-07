@@ -11,10 +11,10 @@ package com.adyen.checkout.dropin.ui.paymentmethods
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.ImageView
 import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
 import com.adyen.checkout.components.api.ImageLoader
+import com.adyen.checkout.components.ui.view.RoundCornerImageView
 import com.adyen.checkout.components.util.DateUtils
 import com.adyen.checkout.core.exception.CheckoutException
 import com.adyen.checkout.core.log.LogUtil
@@ -101,6 +101,7 @@ class PaymentMethodAdapter(
         holder.text.text = paymentMethod.name
         holder.detail.visibility = View.GONE
 
+        holder.logo.setRoundingDisabled(paymentMethod.isBorderDisabled)
         imageLoader.load(paymentMethod.icon, holder.logo)
 
         holder.itemView.setOnClickListener {
@@ -156,13 +157,13 @@ class PaymentMethodAdapter(
     class StoredPaymentMethodVH(rootView: View) : BaseViewHolder(rootView) {
         internal val text: TextView = rootView.findViewById(R.id.textView_text)
         internal val detail: TextView = rootView.findViewById(R.id.textView_detail)
-        internal val logo: ImageView = rootView.findViewById(R.id.imageView_logo)
+        internal val logo: RoundCornerImageView = rootView.findViewById(R.id.imageView_logo)
     }
 
     class PaymentMethodVH(rootView: View) : BaseViewHolder(rootView) {
         internal val text: TextView = rootView.findViewById(R.id.textView_text)
         internal val detail: TextView = rootView.findViewById(R.id.textView_detail)
-        internal val logo: ImageView = rootView.findViewById(R.id.imageView_logo)
+        internal val logo: RoundCornerImageView = rootView.findViewById(R.id.imageView_logo)
     }
 
     class HeaderVH(rootView: View) : BaseViewHolder(rootView) {
