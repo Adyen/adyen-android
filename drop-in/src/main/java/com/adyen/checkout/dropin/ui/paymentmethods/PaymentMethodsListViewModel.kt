@@ -109,6 +109,8 @@ class PaymentMethodsListViewModel(
     private fun PaymentMethod.mapToModel(): PaymentMethodModel {
         val icon = when (type) {
             PaymentMethodTypes.SCHEME -> CARD_LOGO_TYPE
+            PaymentMethodTypes.GOOGLE_PAY -> GOOGLE_PAY_LOGO_TYPE
+            PaymentMethodTypes.GIFTCARD -> brand
             else -> type
         }
         return PaymentMethodModel(
@@ -152,5 +154,6 @@ class PaymentMethodsListViewModel(
         val TAG = LogUtil.getTag()
 
         private const val CARD_LOGO_TYPE = "card"
+        private const val GOOGLE_PAY_LOGO_TYPE = "googlepay"
     }
 }
