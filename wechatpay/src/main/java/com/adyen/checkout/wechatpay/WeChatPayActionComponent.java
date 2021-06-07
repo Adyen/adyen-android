@@ -86,11 +86,9 @@ public class WeChatPayActionComponent extends BaseActionComponent<WeChatPayActio
         return Collections.unmodifiableList(Arrays.asList(supportedCodes));
     }
 
-    @NonNull
     @Override
-    protected List<String> getSupportedPaymentMethodTypes() {
-        final String[] supportedPaymentMethods = {PaymentMethodTypes.WECHAT_PAY_SDK};
-        return Collections.unmodifiableList(Arrays.asList(supportedPaymentMethods));
+    public boolean canHandleAction(@NonNull Action action) {
+        return getSupportedActionTypes().contains(action.getType()) && PaymentMethodTypes.WECHAT_PAY_SDK.equals(action.getPaymentMethodType());
     }
 
     @Override

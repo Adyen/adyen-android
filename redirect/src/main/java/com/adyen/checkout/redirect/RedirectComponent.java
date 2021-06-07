@@ -14,7 +14,6 @@ import android.content.Context;
 import android.content.Intent;
 
 import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
 
 import com.adyen.checkout.components.ActionComponentProvider;
 import com.adyen.checkout.components.base.BaseActionComponent;
@@ -62,10 +61,9 @@ public final class RedirectComponent extends BaseActionComponent<RedirectConfigu
         return Collections.unmodifiableList(Arrays.asList(supportedCodes));
     }
 
-    @Nullable
     @Override
-    protected List<String> getSupportedPaymentMethodTypes() {
-        return null;
+    public boolean canHandleAction(@NonNull Action action) {
+        return getSupportedActionTypes().contains(action.getType());
     }
 
     @Override

@@ -19,8 +19,6 @@ import androidx.lifecycle.LifecycleOwner;
 import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.Observer;
 
-import com.adyen.checkout.components.status.api.StatusResponseUtils;
-import com.adyen.checkout.components.status.model.StatusResponse;
 import com.adyen.checkout.components.ActionComponentData;
 import com.adyen.checkout.components.ActionComponentProvider;
 import com.adyen.checkout.components.ViewableComponent;
@@ -31,8 +29,9 @@ import com.adyen.checkout.components.base.lifecycle.BaseLifecycleObserver;
 import com.adyen.checkout.components.model.payments.response.Action;
 import com.adyen.checkout.components.model.payments.response.AwaitAction;
 import com.adyen.checkout.components.status.StatusRepository;
+import com.adyen.checkout.components.status.api.StatusResponseUtils;
+import com.adyen.checkout.components.status.model.StatusResponse;
 import com.adyen.checkout.components.util.PaymentMethodTypes;
-import com.adyen.checkout.core.exception.CheckoutException;
 import com.adyen.checkout.core.exception.ComponentException;
 import com.adyen.checkout.core.log.LogUtil;
 import com.adyen.checkout.core.log.Logger;
@@ -50,6 +49,7 @@ public class AwaitComponent extends BaseActionComponent<AwaitConfiguration>
     static final String TAG = LogUtil.getTag();
 
     private static final String PAYLOAD_DETAILS_KEY = "payload";
+    private final List<String> PAYMENT_METHODS = Collections.unmodifiableList(Arrays.asList(PaymentMethodTypes.BLIK, PaymentMethodTypes.MB_WAY));
 
     public static final ActionComponentProvider<AwaitComponent, AwaitConfiguration> PROVIDER
             = new ActionComponentProviderImpl<>(AwaitComponent.class, AwaitConfiguration.class, true);
@@ -82,10 +82,6 @@ public class AwaitComponent extends BaseActionComponent<AwaitConfiguration>
 
     public AwaitComponent(@NonNull Application application, @NonNull AwaitConfiguration configuration) {
         super(application, configuration);
-        if (configuration == null) {
-            // This component requires the client key from the configuration to work.
-            throw new CheckoutException("AwaitConfiguration cannot be null for AwaitComponent");
-        }
         mStatusRepository = StatusRepository.getInstance(configuration.getEnvironment());
     }
 
@@ -96,11 +92,9 @@ public class AwaitComponent extends BaseActionComponent<AwaitConfiguration>
         return Collections.unmodifiableList(Arrays.asList(supportedCodes));
     }
 
-    @NonNull
     @Override
-    protected List<String> getSupportedPaymentMethodTypes() {
-        final String[] supportedPaymentMethods = {PaymentMethodTypes.BLIK, PaymentMethodTypes.MB_WAY};
-        return Collections.unmodifiableList(Arrays.asList(supportedPaymentMethods));
+    public boolean canHandleAction(@NonNull Action action) {
+        return getSupportedActionTypes().contains(action.getType()) && PAYMENT_METHODS.contains(action.getPaymentMethodType());
     }
 
     @Override

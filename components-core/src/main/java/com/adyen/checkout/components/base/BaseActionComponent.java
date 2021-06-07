@@ -47,22 +47,8 @@ public abstract class BaseActionComponent<ConfigurationT extends Configuration> 
         super(application, configuration);
     }
 
-    @Override
-    public boolean canHandleAction(@NonNull Action action) {
-        return getSupportedActionTypes().contains(action.getType())
-                && (getSupportedPaymentMethodTypes() == null || getSupportedPaymentMethodTypes().contains(action.getPaymentMethodType()));
-    }
-
     @NonNull
     protected abstract List<String> getSupportedActionTypes();
-
-    /**
-     * Indicates which payment methods can be handled by this action component.
-     *
-     * @return the list of supported payment method types, or null if all types are supported.
-     */
-    @Nullable
-    protected abstract List<String> getSupportedPaymentMethodTypes();
 
     @Override
     public void handleAction(@NonNull Activity activity, @NonNull Action action) {

@@ -25,17 +25,14 @@ import com.adyen.checkout.components.model.payments.response.QrCodeAction
 import com.adyen.checkout.components.status.StatusRepository
 import com.adyen.checkout.components.status.api.StatusResponseUtils
 import com.adyen.checkout.components.status.model.StatusResponse
-import com.adyen.checkout.components.util.PaymentMethodTypes
 import com.adyen.checkout.core.exception.ComponentException
 import com.adyen.checkout.core.log.LogUtil
 import com.adyen.checkout.core.log.Logger
+import java.util.concurrent.TimeUnit
 import org.json.JSONException
 import org.json.JSONObject
-import java.util.concurrent.TimeUnit
 
 private val TAG = LogUtil.getTag()
-private val ACTION_TYPES = listOf(QrCodeAction.ACTION_TYPE)
-private val PAYMENT_METHODS = listOf(PaymentMethodTypes.PIX)
 private const val PAYLOAD_DETAILS_KEY = "payload"
 private val STATUS_POLLING_INTERVAL_MILLIS = TimeUnit.SECONDS.toMillis(1L) // 1 second
 private const val HUNDRED = 100
@@ -160,9 +157,13 @@ class QRCodeComponent(application: Application, configuration: QRCodeConfigurati
         timerLiveData.postValue(TimerData(millisUntilFinished, progressPercentage))
     }
 
-    override fun getSupportedActionTypes(): List<String> = ACTION_TYPES
+    override fun getSupportedActionTypes(): List<String> {
+        return listOf(QrCodeAction.ACTION_TYPE)
+    }
 
-    override fun getSupportedPaymentMethodTypes(): List<String> = PAYMENT_METHODS
+    override fun canHandleAction(action: Action): Boolean {
+        return supportedActionTypes.contains(action.type)
+    }
 
     companion object {
         @JvmField

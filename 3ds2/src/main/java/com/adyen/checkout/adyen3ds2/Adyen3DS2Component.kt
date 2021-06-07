@@ -104,7 +104,9 @@ class Adyen3DS2Component(
         )
     }
 
-    override fun getSupportedPaymentMethodTypes(): List<String>? = null
+    override fun canHandleAction(action: Action): Boolean {
+        return supportedActionTypes.contains(action.type)
+    }
 
     override fun saveState(bundle: Bundle?) {
         if (bundle != null && authorizationToken != null) {
