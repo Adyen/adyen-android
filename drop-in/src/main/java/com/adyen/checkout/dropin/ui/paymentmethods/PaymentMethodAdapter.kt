@@ -16,7 +16,6 @@ import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
 import com.adyen.checkout.components.api.ImageLoader
 import com.adyen.checkout.components.util.DateUtils
-import com.adyen.checkout.components.util.PaymentMethodTypes
 import com.adyen.checkout.core.exception.CheckoutException
 import com.adyen.checkout.core.log.LogUtil
 import com.adyen.checkout.dropin.R
@@ -102,11 +101,7 @@ class PaymentMethodAdapter(
         holder.text.text = paymentMethod.name
         holder.detail.visibility = View.GONE
 
-        val txVariant =
-            if (paymentMethod.type == PaymentMethodTypes.SCHEME) CARD_LOGO_TYPE
-            else paymentMethod.type
-
-        imageLoader.load(txVariant, holder.logo)
+        imageLoader.load(paymentMethod.icon, holder.logo)
 
         holder.itemView.setOnClickListener {
             onPaymentMethodClick(paymentMethod)
@@ -151,8 +146,6 @@ class PaymentMethodAdapter(
         internal const val PAYMENT_METHODS_HEADER = 1
         internal const val STORED_PAYMENT_METHOD = 2
         internal const val PAYMENT_METHOD = 3
-
-        private const val CARD_LOGO_TYPE = "card"
     }
 
     interface OnPaymentMethodSelectedCallback {

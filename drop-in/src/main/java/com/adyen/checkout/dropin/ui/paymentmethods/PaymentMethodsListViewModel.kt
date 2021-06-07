@@ -88,9 +88,7 @@ class PaymentMethodsListViewModel(
                     Logger.v(TAG, "Supported payment method: $type")
                     // We assume payment method is available and remove it later when the callback comes
                     // this is the overwhelming majority of cases, and we keep the list ordered this way.
-                    paymentMethodsList.add(
-                        PaymentMethodModel(type, paymentMethod.name.orEmpty())
-                    )
+                    paymentMethodsList.add(paymentMethod.mapToModel())
                     checkPaymentMethodAvailability(getApplication(), paymentMethod, dropInConfiguration, this)
                 }
                 else -> {
@@ -99,15 +97,25 @@ class PaymentMethodsListViewModel(
                         Logger.e(TAG, "PaymentMethod not yet supported - $type")
                     } else {
                         Logger.d(TAG, "No details required - $type")
-                        paymentMethodsList.add(
-                            PaymentMethodModel(type, paymentMethod.name.orEmpty())
-                        )
+                        paymentMethodsList.add(paymentMethod.mapToModel())
                     }
                     // If last payment method is redirect list might be ready now
                     checkIfListIsReady()
                 }
             }
         }
+    }
+
+    private fun PaymentMethod.mapToModel(): PaymentMethodModel {
+        val icon = when (type) {
+            PaymentMethodTypes.SCHEME -> CARD_LOGO_TYPE
+            else -> type
+        }
+        return PaymentMethodModel(
+            type = type,
+            name = name.orEmpty(),
+            icon = icon.orEmpty(),
+        )
     }
 
     override fun onAvailabilityResult(isAvailable: Boolean, paymentMethod: PaymentMethod, config: Configuration?) {
@@ -142,5 +150,7 @@ class PaymentMethodsListViewModel(
 
     companion object {
         val TAG = LogUtil.getTag()
+
+        private const val CARD_LOGO_TYPE = "card"
     }
 }
