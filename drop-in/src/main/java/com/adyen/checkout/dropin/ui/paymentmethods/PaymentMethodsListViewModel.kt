@@ -31,8 +31,8 @@ class PaymentMethodsListViewModel(
     val dropInConfiguration: DropInConfiguration
 ) : AndroidViewModel(application), ComponentAvailableCallback<Configuration> {
 
-    private val paymentMethodsMutableLiveData: MutableLiveData<PaymentMethodsListModel> = MutableLiveData()
-    val paymentMethodsLiveData: LiveData<PaymentMethodsListModel> = paymentMethodsMutableLiveData
+    private val paymentMethodsMutableLiveData: MutableLiveData<List<PaymentMethodListItem>> = MutableLiveData()
+    val paymentMethodsLiveData: LiveData<List<PaymentMethodListItem>> = paymentMethodsMutableLiveData
 
     private var availabilitySum = 0
     private var availabilitySkipSum = 0
@@ -148,8 +148,19 @@ class PaymentMethodsListViewModel(
 
     private fun onPaymentMethodsReady() {
         Logger.d(TAG, "onPaymentMethodsReady: ${storedPaymentMethodsList.size} - ${paymentMethodsList.size}")
-        val paymentMethodsListModel = PaymentMethodsListModel(storedPaymentMethodsList, paymentMethodsList)
-        paymentMethodsMutableLiveData.value = paymentMethodsListModel
+        paymentMethodsMutableLiveData.value = mutableListOf<PaymentMethodListItem>().apply {
+            if (storedPaymentMethodsList.isNotEmpty()) {
+                add(PaymentMethodHeader(PaymentMethodHeader.TYPE_STORED_HEADER))
+                addAll(storedPaymentMethodsList)
+            }
+            if (paymentMethodsList.isNotEmpty()) {
+                val headerType =
+                    if (storedPaymentMethodsList.isEmpty()) PaymentMethodHeader.TYPE_REGULAR_HEADER_WITHOUT_STORED
+                    else PaymentMethodHeader.TYPE_REGULAR_HEADER_WITH_STORED
+                add(PaymentMethodHeader(headerType))
+                addAll(paymentMethodsList)
+            }
+        }
     }
 
     companion object {

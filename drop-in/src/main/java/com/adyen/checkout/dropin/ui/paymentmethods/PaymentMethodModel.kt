@@ -13,4 +13,6 @@ data class PaymentMethodModel(
     val name: String,
     val icon: String,
     val isBorderDisabled: Boolean
-)
+) : PaymentMethodListItem {
+    override fun getViewType(): Int = PaymentMethodListItem.PAYMENT_METHOD
+}
