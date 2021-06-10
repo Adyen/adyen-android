@@ -54,7 +54,7 @@ class NewCardDelegate(
 
     override fun validateSecurityCode(
         securityCode: String,
-        cardType: CardType?
+        cardType: DetectedCardType?
     ): FieldState<String> {
         return if (cardConfiguration.isHideCvc) {
             FieldState(

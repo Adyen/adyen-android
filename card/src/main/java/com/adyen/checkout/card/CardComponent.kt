@@ -104,12 +104,13 @@ class CardComponent private constructor(
         Logger.v(TAG, "onInputDataChanged")
 
         val detectedCardTypes = cardDelegate.detectCardType(inputData.cardNumber, publicKey, viewModelScope)
+        val firstDetectedType = detectedCardTypes.firstOrNull()
 
         return CardOutputData(
             cardDelegate.validateCardNumber(inputData.cardNumber),
             cardDelegate.validateExpiryDate(inputData.expiryDate),
             // TODO: 29/01/2021 move validation logic using detected object
-            cardDelegate.validateSecurityCode(inputData.securityCode, detectedCardTypes.firstOrNull()?.cardType),
+            cardDelegate.validateSecurityCode(inputData.securityCode, firstDetectedType),
             cardDelegate.validateHolderName(inputData.holderName),
             inputData.isStorePaymentSelected,
             cardDelegate.isCvcHidden(),
@@ -151,7 +152,8 @@ class CardComponent private constructor(
                 unencryptedCardBuilder.setNumber(stateOutputData.cardNumberState.value)
             }
             if (!cardDelegate.isCvcHidden()) {
-                unencryptedCardBuilder.setCvc(stateOutputData.securityCodeState.value)
+                val cvc = stateOutputData.securityCodeState.value
+                if (cvc.isNotEmpty()) unencryptedCardBuilder.setCvc(cvc)
             }
             val expiryDateResult = stateOutputData.expiryDateState.value
             if (expiryDateResult.expiryYear != ExpiryDate.EMPTY_VALUE && expiryDateResult.expiryMonth != ExpiryDate.EMPTY_VALUE) {
