@@ -11,6 +11,7 @@
     <string name="checkout_card_holder_hint">Όνομα στην κάρτα</string>
     <string name="checkout_card_expiry_date_hint">Ημερομηνία λήξης</string>
     <string name="checkout_card_security_code_hint">CVC/CVV</string>
+    <string name="checkout_card_security_code_optional_hint">CVC/CVV (προαιρετικά)</string>
 
     <string name="checkout_card_number_not_valid">Μη έγκυρος αριθμός κάρτας</string>
     <string name="checkout_expiry_date_not_valid">Μη έγκυρη ημερομηνία λήξης</string>

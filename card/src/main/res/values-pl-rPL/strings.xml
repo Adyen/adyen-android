@@ -11,6 +11,7 @@
     <string name="checkout_card_holder_hint">Imię i nazwisko na karcie</string>
     <string name="checkout_card_expiry_date_hint">Data ważności</string>
     <string name="checkout_card_security_code_hint">CVC / CVV</string>
+    <string name="checkout_card_security_code_optional_hint">CVC / CVV (opcjonalnie)</string>
 
     <string name="checkout_card_number_not_valid">Nieprawidłowy numer karty</string>
     <string name="checkout_expiry_date_not_valid">Nieprawidłowa data wygaśnięcia</string>
