@@ -25,10 +25,6 @@ import com.adyen.checkout.core.exception.ComponentException;
 
 import org.json.JSONObject;
 
-import java.util.Arrays;
-import java.util.Collections;
-import java.util.List;
-
 public final class RedirectComponent extends BaseActionComponent<RedirectConfiguration> implements IntentHandlingComponent {
     public static final ActionComponentProvider<RedirectComponent, RedirectConfiguration> PROVIDER = new RedirectComponentProvider();
 
@@ -55,15 +51,8 @@ public final class RedirectComponent extends BaseActionComponent<RedirectConfigu
     }
 
     @Override
-    @NonNull
-    protected List<String> getSupportedActionTypes() {
-        final String[] supportedCodes = {RedirectAction.ACTION_TYPE};
-        return Collections.unmodifiableList(Arrays.asList(supportedCodes));
-    }
-
-    @Override
     public boolean canHandleAction(@NonNull Action action) {
-        return getSupportedActionTypes().contains(action.getType());
+        return PROVIDER.canHandleAction(action);
     }
 
     @Override

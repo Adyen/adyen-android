@@ -30,8 +30,6 @@ import com.adyen.checkout.core.log.Logger;
 
 import org.json.JSONObject;
 
-import java.util.List;
-
 public abstract class BaseActionComponent<ConfigurationT extends Configuration> extends ActionComponentViewModel<ConfigurationT> {
     private static final String TAG = LogUtil.getTag();
 
@@ -46,9 +44,6 @@ public abstract class BaseActionComponent<ConfigurationT extends Configuration> 
     public BaseActionComponent(@NonNull Application application, @NonNull ConfigurationT configuration) {
         super(application, configuration);
     }
-
-    @NonNull
-    protected abstract List<String> getSupportedActionTypes();
 
     @Override
     public void handleAction(@NonNull Activity activity, @NonNull Action action) {

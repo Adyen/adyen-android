@@ -13,6 +13,8 @@ import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.ViewModelStoreOwner
 import com.adyen.checkout.components.ActionComponentProvider
 import com.adyen.checkout.components.base.lifecycle.viewModelFactory
+import com.adyen.checkout.components.model.payments.response.Action
+import com.adyen.checkout.components.model.payments.response.QrCodeAction
 import com.adyen.checkout.redirect.RedirectDelegate
 
 class QRCodeComponentProvider : ActionComponentProvider<QRCodeComponent, QRCodeConfiguration> {
@@ -33,4 +35,17 @@ class QRCodeComponentProvider : ActionComponentProvider<QRCodeComponent, QRCodeC
     }
 
     override fun requiresConfiguration(): Boolean = false
+
+    override fun getSupportedActionTypes(): List<String> {
+        return listOf(QrCodeAction.ACTION_TYPE)
+    }
+
+    override fun canHandleAction(action: Action): Boolean {
+        return supportedActionTypes.contains(action.type)
+    }
+
+    override fun requiresView(action: Action): Boolean {
+        //QR code actions that contain a url are actually redirect actions
+        return (action is QrCodeAction && action.url != null)
+    }
 }

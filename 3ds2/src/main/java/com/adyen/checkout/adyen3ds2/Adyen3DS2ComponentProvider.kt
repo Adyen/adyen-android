@@ -14,6 +14,10 @@ import androidx.lifecycle.ViewModelStoreOwner
 import com.adyen.checkout.adyen3ds2.repository.SubmitFingerprintRepository
 import com.adyen.checkout.components.ActionComponentProvider
 import com.adyen.checkout.components.base.lifecycle.viewModelFactory
+import com.adyen.checkout.components.model.payments.response.Action
+import com.adyen.checkout.components.model.payments.response.Threeds2Action
+import com.adyen.checkout.components.model.payments.response.Threeds2ChallengeAction
+import com.adyen.checkout.components.model.payments.response.Threeds2FingerprintAction
 import com.adyen.checkout.redirect.RedirectDelegate
 
 class Adyen3DS2ComponentProvider : ActionComponentProvider<Adyen3DS2Component, Adyen3DS2Configuration> {
@@ -38,4 +42,14 @@ class Adyen3DS2ComponentProvider : ActionComponentProvider<Adyen3DS2Component, A
     }
 
     override fun requiresConfiguration(): Boolean = false
+
+    override fun requiresView(action: Action): Boolean = false
+
+    override fun getSupportedActionTypes(): List<String> {
+        return listOf(Threeds2FingerprintAction.ACTION_TYPE, Threeds2ChallengeAction.ACTION_TYPE, Threeds2Action.ACTION_TYPE)
+    }
+
+    override fun canHandleAction(action: Action): Boolean {
+        return supportedActionTypes.contains(action.type)
+    }
 }

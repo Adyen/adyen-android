@@ -172,12 +172,8 @@ class QRCodeComponent(
         timerLiveData.postValue(TimerData(millisUntilFinished, progressPercentage))
     }
 
-    override fun getSupportedActionTypes(): List<String> {
-        return listOf(QrCodeAction.ACTION_TYPE)
-    }
-
     override fun canHandleAction(action: Action): Boolean {
-        return supportedActionTypes.contains(action.type)
+        return PROVIDER.canHandleAction(action)
     }
 
     /**

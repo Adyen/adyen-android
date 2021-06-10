@@ -50,7 +50,6 @@ import com.adyen.threeds2.exception.SDKNotInitializedException
 import com.adyen.threeds2.exception.SDKRuntimeException
 import com.adyen.threeds2.parameters.ChallengeParameters
 import com.adyen.threeds2.util.AdyenConfigParameters
-import java.util.Collections
 import kotlinx.coroutines.CoroutineExceptionHandler
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
@@ -98,14 +97,8 @@ class Adyen3DS2Component(
         mUiCustomization = uiCustomization
     }
 
-    override fun getSupportedActionTypes(): List<String> {
-        return Collections.unmodifiableList(
-            listOf(Threeds2FingerprintAction.ACTION_TYPE, Threeds2ChallengeAction.ACTION_TYPE, Threeds2Action.ACTION_TYPE)
-        )
-    }
-
     override fun canHandleAction(action: Action): Boolean {
-        return supportedActionTypes.contains(action.type)
+        return PROVIDER.canHandleAction(action)
     }
 
     override fun saveState(bundle: Bundle?) {
