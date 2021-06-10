@@ -9,6 +9,7 @@
 package com.adyen.checkout.card
 
 import androidx.lifecycle.viewModelScope
+import com.adyen.checkout.card.api.model.Brand
 import com.adyen.checkout.card.data.CardType
 import com.adyen.checkout.card.data.ExpiryDate
 import com.adyen.checkout.components.StoredPaymentComponentProvider
@@ -65,7 +66,7 @@ class CardComponent private constructor(
                             securityCodeState,
                             holderNameState,
                             isStoredPaymentMethodEnable,
-                            isCvcHidden,
+                            cvcUIState,
                             it
                         )
                         notifyStateChanged(newOutputData)
@@ -106,6 +107,13 @@ class CardComponent private constructor(
         val detectedCardTypes = cardDelegate.detectCardType(inputData.cardNumber, publicKey, viewModelScope)
         val firstDetectedType = detectedCardTypes.firstOrNull()
 
+        // TODO: check Brand.CvcPolicy.HIDDEN and restore margin between expiry date and cvc fields
+        val cvcUIState = when {
+            cardDelegate.isCvcHidden() -> CvcUIState.HIDDEN
+            firstDetectedType?.cvcPolicy == Brand.CvcPolicy.OPTIONAL -> CvcUIState.OPTIONAL
+            else -> CvcUIState.REQUIRED
+        }
+
         return CardOutputData(
             cardDelegate.validateCardNumber(inputData.cardNumber),
             cardDelegate.validateExpiryDate(inputData.expiryDate),
@@ -113,7 +121,7 @@ class CardComponent private constructor(
             cardDelegate.validateSecurityCode(inputData.securityCode, firstDetectedType),
             cardDelegate.validateHolderName(inputData.holderName),
             inputData.isStorePaymentSelected,
-            cardDelegate.isCvcHidden(),
+            cvcUIState,
             detectedCardTypes
         )
     }

@@ -18,7 +18,7 @@ data class CardOutputData(
     val securityCodeState: FieldState<String>,
     val holderNameState: FieldState<String>,
     val isStoredPaymentMethodEnable: Boolean,
-    val isCvcHidden: Boolean,
+    val cvcUIState: CvcUIState,
     val detectedCardTypes: List<DetectedCardType>
 ) : OutputData {
     override fun isValid(): Boolean {
