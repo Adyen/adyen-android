@@ -86,11 +86,13 @@ class ActionHandler(
     fun saveState(bundle: Bundle?) {
         redirectComponent.saveState(bundle)
         adyen3DS2Component.saveState(bundle)
+        weChatPayActionComponent.saveState(bundle)
     }
 
     fun restoreState(bundle: Bundle?) {
         redirectComponent.restoreState(bundle)
         adyen3DS2Component.restoreState(bundle)
+        weChatPayActionComponent.restoreState(bundle)
     }
 
     fun handleAction(activity: FragmentActivity, action: Action, sendResult: (String) -> Unit) {
