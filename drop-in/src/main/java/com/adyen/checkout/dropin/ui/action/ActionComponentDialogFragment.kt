@@ -14,7 +14,6 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.lifecycle.Observer
-import com.adyen.checkout.await.AwaitComponent
 import com.adyen.checkout.components.ActionComponent
 import com.adyen.checkout.components.ActionComponentData
 import com.adyen.checkout.components.ComponentError
@@ -22,16 +21,16 @@ import com.adyen.checkout.components.ComponentView
 import com.adyen.checkout.components.ViewableComponent
 import com.adyen.checkout.components.base.OutputData
 import com.adyen.checkout.components.model.payments.response.Action
-import com.adyen.checkout.components.util.ActionTypes
 import com.adyen.checkout.core.exception.CheckoutException
 import com.adyen.checkout.core.exception.ComponentException
 import com.adyen.checkout.core.log.LogUtil
 import com.adyen.checkout.core.log.Logger
 import com.adyen.checkout.dropin.R
 import com.adyen.checkout.dropin.databinding.FragmentActionComponentBinding
+import com.adyen.checkout.dropin.getActionComponentFor
+import com.adyen.checkout.dropin.getActionProviderFor
 import com.adyen.checkout.dropin.getViewFor
 import com.adyen.checkout.dropin.ui.base.DropInBottomSheetDialogFragment
-import com.adyen.checkout.qrcode.QRCodeComponent
 
 @SuppressWarnings("TooManyFunctions")
 class ActionComponentDialogFragment : DropInBottomSheetDialogFragment(), Observer<ActionComponentData> {
@@ -121,31 +120,17 @@ class ActionComponentDialogFragment : DropInBottomSheetDialogFragment(), Observe
      * Return the possible viewable action components
      */
     private fun getComponent(action: Action): ViewableComponent<*, *, ActionComponentData> {
-        val component = when (action.type) {
-            ActionTypes.AWAIT -> {
-                AwaitComponent.PROVIDER.get(
-                    this,
-                    requireActivity().application,
-                    dropInViewModel.dropInConfiguration.getConfigurationForAction(requireContext())
-                )
-            }
-            ActionTypes.QR_CODE -> {
-                QRCodeComponent.PROVIDER.get(
-                    this,
-                    requireActivity().application,
-                    dropInViewModel.dropInConfiguration.getConfigurationForAction(requireContext())
-                )
-            }
-            else -> {
-                throw ComponentException("Unexpected Action component type - $actionType")
-            }
+        val provider = getActionProviderFor(action) ?: throw ComponentException("Unexpected Action component type - $actionType")
+        if (!provider.requiresView(action)) {
+            throw ComponentException("Action is not viewable- action: ${action.type} - paymentMethod: ${action.paymentMethodType}")
         }
-
+        val component = getActionComponentFor(requireActivity(), provider, dropInViewModel.dropInConfiguration)
         if (!component.canHandleAction(action)) {
             throw ComponentException("Unexpected Action component type - action: ${action.type} - paymentMethod: ${action.paymentMethodType}")
         }
 
-        return component
+        @Suppress("UNCHECKED_CAST")
+        return component as ViewableComponent<*, *, ActionComponentData>
     }
 
     private fun attachComponent(

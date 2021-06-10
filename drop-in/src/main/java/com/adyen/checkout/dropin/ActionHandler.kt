@@ -12,17 +12,16 @@ import android.content.Intent
 import android.os.Bundle
 import androidx.fragment.app.FragmentActivity
 import androidx.lifecycle.Observer
-import com.adyen.checkout.adyen3ds2.Adyen3DS2Component
 import com.adyen.checkout.components.ActionComponentData
+import com.adyen.checkout.components.base.BaseActionComponent
+import com.adyen.checkout.components.base.IntentHandlingComponent
 import com.adyen.checkout.components.model.payments.response.Action
-import com.adyen.checkout.components.util.ActionTypes
+import com.adyen.checkout.core.exception.CheckoutException
 import com.adyen.checkout.core.log.LogUtil
 import com.adyen.checkout.core.log.Logger
-import com.adyen.checkout.redirect.RedirectComponent
 import com.adyen.checkout.wechatpay.WeChatPayActionComponent
 
 class ActionHandler(
-    activity: FragmentActivity,
     private val callback: ActionHandlingInterface,
     private val dropInConfiguration: DropInConfiguration
 ) : Observer<ActionComponentData> {
@@ -32,50 +31,7 @@ class ActionHandler(
         const val UNKNOWN_ACTION = "UNKNOWN ACTION"
     }
 
-    // Actions which will be handled by the Fragment with it's associated view
-    private val viewableActionTypes = listOf(ActionTypes.AWAIT, ActionTypes.QR_CODE)
-
-    private val redirectComponent = RedirectComponent.PROVIDER.get(
-        activity,
-        activity.application,
-        dropInConfiguration.getConfigurationForAction(activity)
-    )
-    private val adyen3DS2Component = Adyen3DS2Component.PROVIDER.get(
-        activity,
-        activity.application,
-        dropInConfiguration.getConfigurationForAction(activity)
-    )
-    private val weChatPayActionComponent = WeChatPayActionComponent.PROVIDER.get(
-        activity,
-        activity.application,
-        dropInConfiguration.getConfigurationForAction(activity)
-    )
-
-    init {
-        redirectComponent.observe(activity, this)
-        adyen3DS2Component.observe(activity, this)
-        weChatPayActionComponent.observe(activity, this)
-
-        redirectComponent.observeErrors(
-            activity,
-            {
-                callback.onActionError(it?.errorMessage ?: "Redirect Error.")
-            }
-        )
-
-        adyen3DS2Component.observeErrors(
-            activity,
-            {
-                callback.onActionError(it?.errorMessage ?: "3DS2 Error.")
-            }
-        )
-        weChatPayActionComponent.observeErrors(
-            activity,
-            {
-                callback.onActionError(it?.errorMessage ?: "WechatPay Error.")
-            }
-        )
-    }
+    private var loadedComponent: BaseActionComponent<*>? = null
 
     override fun onChanged(componentData: ActionComponentData?) {
         if (componentData != null) {
@@ -84,48 +40,47 @@ class ActionHandler(
     }
 
     fun saveState(bundle: Bundle?) {
-        redirectComponent.saveState(bundle)
-        adyen3DS2Component.saveState(bundle)
-        weChatPayActionComponent.saveState(bundle)
+        loadedComponent?.saveState(bundle)
     }
 
     fun restoreState(bundle: Bundle?) {
-        redirectComponent.restoreState(bundle)
-        adyen3DS2Component.restoreState(bundle)
-        weChatPayActionComponent.restoreState(bundle)
+        loadedComponent?.restoreState(bundle)
     }
 
     fun handleAction(activity: FragmentActivity, action: Action, sendResult: (String) -> Unit) {
-        when {
-            viewableActionTypes.contains(action.type) -> {
-                callback.displayAction(action)
-            }
-            redirectComponent.canHandleAction(action) -> {
-                redirectComponent.handleAction(activity, action)
-            }
-            adyen3DS2Component.canHandleAction(action) -> {
-                adyen3DS2Component.handleAction(activity, action)
-            }
-            weChatPayActionComponent.canHandleAction(action) -> {
-                weChatPayActionComponent.handleAction(activity, action)
-            }
-            else -> {
-                Logger.e(TAG, "Unknown Action - ${action.type}")
-                sendResult("$UNKNOWN_ACTION.${action.type}")
-            }
+        val provider = getActionProviderFor(action)
+        if (provider == null) {
+            Logger.e(TAG, "Unknown Action - ${action.type}")
+            sendResult("$UNKNOWN_ACTION.${action.type}")
+            return
+        }
+
+        if (provider.requiresView(action)) {
+            callback.displayAction(action)
+        } else {
+            val component = getActionComponentFor(activity, provider, dropInConfiguration)
+            loadedComponent = component
+            component.handleAction(activity, action)
+            component.observe(activity, this)
+            component.observeErrors(activity, { callback.onActionError(it?.errorMessage ?: "Error handling action") })
         }
     }
 
     fun handleRedirectResponse(intent: Intent) {
-        redirectComponent.handleIntent(intent)
+        val component = loadedComponent ?: throw CheckoutException("Action component is not loaded")
+        if (component !is IntentHandlingComponent) throw CheckoutException("Loaded component cannot handle intents")
+        component.handleIntent(intent)
     }
 
     fun handleWeChatPayResponse(intent: Intent) {
-        weChatPayActionComponent.handleResultIntent(intent)
+        val component = loadedComponent ?: throw CheckoutException("WeChatPay Action component is not loaded")
+        if (component !is WeChatPayActionComponent) throw CheckoutException("Loaded component is not WeChatPay Action component")
+        component.handleResultIntent(intent)
     }
 
     interface ActionHandlingInterface {
         fun displayAction(action: Action)
+
         // Same signature as the Fragment Protocol interface
         fun requestDetailsCall(actionComponentData: ActionComponentData)
         fun onActionError(errorMessage: String)

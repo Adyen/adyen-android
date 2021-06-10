@@ -46,6 +46,6 @@ class QRCodeComponentProvider : ActionComponentProvider<QRCodeComponent, QRCodeC
 
     override fun requiresView(action: Action): Boolean {
         //QR code actions that contain a url are actually redirect actions
-        return (action is QrCodeAction && action.url != null)
+        return (action as? QrCodeAction)?.url.isNullOrEmpty()
     }
 }
