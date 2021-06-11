@@ -13,10 +13,10 @@ import android.app.Application;
 import android.content.Intent;
 
 import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
 
 import com.adyen.checkout.components.ActionComponentProvider;
 import com.adyen.checkout.components.base.BaseActionComponent;
+import com.adyen.checkout.components.base.IntentHandlingComponent;
 import com.adyen.checkout.components.model.payments.response.Action;
 import com.adyen.checkout.components.model.payments.response.SdkAction;
 import com.adyen.checkout.components.model.payments.response.WeChatPaySdkData;
@@ -29,7 +29,10 @@ import com.tencent.mm.opensdk.openapi.IWXAPI;
 import com.tencent.mm.opensdk.openapi.IWXAPIEventHandler;
 import com.tencent.mm.opensdk.openapi.WXAPIFactory;
 
-public class WeChatPayActionComponent extends BaseActionComponent<WeChatPayActionConfiguration> {
+import org.jetbrains.annotations.NotNull;
+
+public class WeChatPayActionComponent extends BaseActionComponent<WeChatPayActionConfiguration>
+        implements IntentHandlingComponent {
     private static final String TAG = LogUtil.getTag();
 
     public static final ActionComponentProvider<WeChatPayActionComponent, WeChatPayActionConfiguration> PROVIDER =
@@ -64,13 +67,10 @@ public class WeChatPayActionComponent extends BaseActionComponent<WeChatPayActio
      *
      * @param intent The intent result from WeChatPay SDK.
      */
-    public void handleResultIntent(@Nullable Intent intent) {
+    @Override
+    public void handleIntent(@NotNull Intent intent) {
         // TODO check intent identifiers
-        if (intent != null) {
-            mApi.handleIntent(intent, mEventHandler);
-        } else {
-            throw new ComponentException("Intent result is null.");
-        }
+        mApi.handleIntent(intent, mEventHandler);
     }
 
     @Override

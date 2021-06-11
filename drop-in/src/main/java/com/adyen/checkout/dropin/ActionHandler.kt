@@ -19,7 +19,6 @@ import com.adyen.checkout.components.model.payments.response.Action
 import com.adyen.checkout.core.exception.CheckoutException
 import com.adyen.checkout.core.log.LogUtil
 import com.adyen.checkout.core.log.Logger
-import com.adyen.checkout.wechatpay.WeChatPayActionComponent
 
 class ActionHandler(
     private val callback: ActionHandlingInterface,
@@ -67,15 +66,17 @@ class ActionHandler(
     }
 
     fun handleRedirectResponse(intent: Intent) {
-        val component = loadedComponent ?: throw CheckoutException("Action component is not loaded")
-        if (component !is IntentHandlingComponent) throw CheckoutException("Loaded component cannot handle intents")
-        component.handleIntent(intent)
+        handleIntent(intent)
     }
 
     fun handleWeChatPayResponse(intent: Intent) {
-        val component = loadedComponent ?: throw CheckoutException("WeChatPay Action component is not loaded")
-        if (component !is WeChatPayActionComponent) throw CheckoutException("Loaded component is not WeChatPay Action component")
-        component.handleResultIntent(intent)
+        handleIntent(intent)
+    }
+
+    private fun handleIntent(intent: Intent) {
+        val component = loadedComponent ?: throw CheckoutException("Action component is not loaded")
+        if (component !is IntentHandlingComponent) throw CheckoutException("Loaded component cannot handle intents")
+        component.handleIntent(intent)
     }
 
     interface ActionHandlingInterface {
