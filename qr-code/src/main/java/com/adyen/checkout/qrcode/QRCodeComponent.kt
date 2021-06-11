@@ -87,8 +87,8 @@ class QRCodeComponent(
     @Throws(ComponentException::class)
     override fun handleActionInternal(activity: Activity, action: Action) {
         if (action !is QrCodeAction) throw ComponentException("Unsupported action")
-        //QR code actions that contain a url are actually redirect actions
-        if (!action.url.isNullOrEmpty()) {
+        if (!PROVIDER.requiresView(action)) {
+            Logger.d(TAG, "Action does not require a view, redirecting.")
             isPollingEnabled = false
             redirectDelegate.makeRedirect(activity, action.url)
             return

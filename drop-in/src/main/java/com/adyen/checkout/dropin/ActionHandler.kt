@@ -47,6 +47,7 @@ class ActionHandler(
     }
 
     fun handleAction(activity: FragmentActivity, action: Action, sendResult: (String) -> Unit) {
+        Logger.d(TAG, "handleAction - ${action.type}")
         val provider = getActionProviderFor(action)
         if (provider == null) {
             Logger.e(TAG, "Unknown Action - ${action.type}")
@@ -55,13 +56,16 @@ class ActionHandler(
         }
 
         if (provider.requiresView(action)) {
+            Logger.d(TAG, "handleAction - action is viewable, requesting displayAction callback")
             callback.displayAction(action)
         } else {
-            val component = getActionComponentFor(activity, provider, dropInConfiguration)
-            loadedComponent = component
-            component.handleAction(activity, action)
-            component.observe(activity, this)
-            component.observeErrors(activity, { callback.onActionError(it?.errorMessage ?: "Error handling action") })
+            getActionComponentFor(activity, provider, dropInConfiguration).apply {
+                loadedComponent = this
+                handleAction(activity, action)
+                observe(activity, this@ActionHandler)
+                observeErrors(activity, { callback.onActionError(it?.errorMessage ?: "Error handling action") })
+                Logger.d(TAG, "handleAction - loaded a new component - ${this::class.java.simpleName}")
+            }
         }
     }
 
@@ -75,6 +79,7 @@ class ActionHandler(
 
     private fun handleIntent(intent: Intent) {
         val component = loadedComponent ?: throw CheckoutException("Action component is not loaded")
+        Logger.d(TAG, "handleAction - loaded a new component - ${component::class.java.simpleName}")
         if (component !is IntentHandlingComponent) throw CheckoutException("Loaded component cannot handle intents")
         component.handleIntent(intent)
     }

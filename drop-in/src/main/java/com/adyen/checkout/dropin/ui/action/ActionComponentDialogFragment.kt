@@ -119,10 +119,11 @@ class ActionComponentDialogFragment : DropInBottomSheetDialogFragment(), Observe
     /**
      * Return the possible viewable action components
      */
+    @SuppressWarnings("ThrowsCount")
     private fun getComponent(action: Action): ViewableComponent<*, *, ActionComponentData> {
         val provider = getActionProviderFor(action) ?: throw ComponentException("Unexpected Action component type - $actionType")
         if (!provider.requiresView(action)) {
-            throw ComponentException("Action is not viewable- action: ${action.type} - paymentMethod: ${action.paymentMethodType}")
+            throw ComponentException("Action is not viewable - action: ${action.type} - paymentMethod: ${action.paymentMethodType}")
         }
         val component = getActionComponentFor(requireActivity(), provider, dropInViewModel.dropInConfiguration)
         if (!component.canHandleAction(action)) {

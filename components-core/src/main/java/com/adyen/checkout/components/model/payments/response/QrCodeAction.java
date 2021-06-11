@@ -20,7 +20,7 @@ import com.adyen.checkout.core.model.JsonUtils;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-@SuppressWarnings("MemberName")
+@SuppressWarnings({"MemberName", "PMD.DataClass"})
 public class QrCodeAction extends Action {
     @NonNull
     public static final Creator<QrCodeAction> CREATOR = new Creator<>(QrCodeAction.class);
