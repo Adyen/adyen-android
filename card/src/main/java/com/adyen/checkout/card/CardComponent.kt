@@ -110,7 +110,8 @@ class CardComponent private constructor(
         // TODO: check Brand.CvcPolicy.HIDDEN and restore margin between expiry date and cvc fields
         val cvcUIState = when {
             cardDelegate.isCvcHidden() -> CvcUIState.HIDDEN
-            firstDetectedType?.cvcPolicy == Brand.CvcPolicy.OPTIONAL -> CvcUIState.OPTIONAL
+            // we treat CvcPolicy.HIDDEN as OPTIONAL for now to avoid hiding and showing the cvc field while the user is typing the card number
+            firstDetectedType?.cvcPolicy == Brand.CvcPolicy.OPTIONAL || firstDetectedType?.cvcPolicy == Brand.CvcPolicy.HIDDEN -> CvcUIState.OPTIONAL
             else -> CvcUIState.REQUIRED
         }
 

@@ -122,7 +122,7 @@ class NewCardDelegate(
             showExpiryDate = true,
             enableLuhnCheck = true,
             cvcPolicy = when {
-                cardConfiguration.isHideCvc || noCvcBrands.contains(cardType) -> Brand.CvcPolicy.HIDDEN
+                noCvcBrands.contains(cardType) -> Brand.CvcPolicy.HIDDEN
                 else -> Brand.CvcPolicy.REQUIRED
             }
         )
