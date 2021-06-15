@@ -35,7 +35,7 @@ public class RoundCornerImageView extends AppCompatImageView {
     private final Paint mStrokePaint = new Paint();
     private float mStrokeWidth;
     private int mStrokeColor;
-    private boolean mIsRoundingDisabled = false;
+    private boolean mIsBorderEnabled = true;
 
     public RoundCornerImageView(@NonNull Context context) {
         this(context, null);
@@ -71,8 +71,8 @@ public class RoundCornerImageView extends AppCompatImageView {
         invalidate();
     }
 
-    public void setRoundingDisabled(boolean disabled) {
-        this.mIsRoundingDisabled = disabled;
+    public void setBorderEnabled(boolean enabled) {
+        this.mIsBorderEnabled = enabled;
         invalidate();
     }
 
@@ -94,7 +94,7 @@ public class RoundCornerImageView extends AppCompatImageView {
     @SuppressLint("DrawAllocation")
     @Override
     protected void onDraw(@NonNull Canvas canvas) {
-        if (mIsRoundingDisabled) {
+        if (!mIsBorderEnabled) {
             super.onDraw(canvas);
             return;
         }
