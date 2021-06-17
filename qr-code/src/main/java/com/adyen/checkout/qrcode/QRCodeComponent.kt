@@ -53,7 +53,6 @@ class QRCodeComponent(
     private val outputLiveData = MutableLiveData<QRCodeOutputData>()
     private var paymentMethodType: String? = null
     private var qrCodeData: String? = null
-    private var isPollingEnabled = true
     private val statusRepository: StatusRepository = StatusRepository.getInstance(configuration.environment)
     private val timerLiveData = MutableLiveData<TimerData>()
     private var statusCountDownTimer: CountDownTimer = object : CountDownTimer(
@@ -89,7 +88,6 @@ class QRCodeComponent(
         if (action !is QrCodeAction) throw ComponentException("Unsupported action")
         if (!PROVIDER.requiresView(action)) {
             Logger.d(TAG, "Action does not require a view, redirecting.")
-            isPollingEnabled = false
             redirectDelegate.makeRedirect(activity, action.url)
             return
         }
@@ -110,7 +108,7 @@ class QRCodeComponent(
         // Immediately request a new status if the user resumes the app
         lifecycleOwner.lifecycle.addObserver(object : BaseLifecycleObserver() {
             override fun onResume() {
-                if (isPollingEnabled) statusRepository.updateStatus()
+                statusRepository.updateStatus()
             }
         })
     }

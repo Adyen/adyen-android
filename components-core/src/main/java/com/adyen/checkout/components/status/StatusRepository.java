@@ -72,6 +72,7 @@ public final class StatusRepository {
 
     String mClientKey;
     String mPaymentData;
+    Boolean mIsPolling = false;
 
     long mPollingDelay;
     private long mPollingStartTime;
@@ -108,13 +109,15 @@ public final class StatusRepository {
      * @param paymentData The payment data of the payment we are requesting.
      */
     public void startPolling(@NonNull String clientKey, @NonNull String paymentData) {
-        if (clientKey.equals(mClientKey) && paymentData.equals(mPaymentData)) {
+        Logger.d(TAG, "startPolling");
+        if (mIsPolling && clientKey.equals(mClientKey) && paymentData.equals(mPaymentData)) {
             Logger.e(TAG, "Already polling for this payment.");
             return;
         }
+        stopPolling();
+        mIsPolling = true;
         mClientKey = clientKey;
         mPaymentData = paymentData;
-        stopPolling();
         mPollingStartTime = System.currentTimeMillis();
 
         mHandler.post(mStatusPollingRunnable);
@@ -125,6 +128,10 @@ public final class StatusRepository {
      */
     public void updateStatus() {
         Logger.d(TAG, "updateStatus");
+        if (!mIsPolling) {
+            Logger.d(TAG, "No polling in progress");
+            return;
+        }
         mHandler.removeCallbacks(mStatusPollingRunnable);
         mHandler.post(mStatusPollingRunnable);
     }
@@ -134,6 +141,11 @@ public final class StatusRepository {
      */
     public void stopPolling() {
         Logger.d(TAG, "stopPolling");
+        if (!mIsPolling) {
+            Logger.d(TAG, "No polling in progress");
+            return;
+        }
+        mIsPolling = false;
         mHandler.removeCallbacksAndMessages(null);
         // Set null so that new observers don't get the status from the previous result
         // This could be replaced by other types of observable like Kotlin Flow
