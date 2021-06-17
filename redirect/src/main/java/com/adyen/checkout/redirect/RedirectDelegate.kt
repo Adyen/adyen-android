@@ -3,7 +3,6 @@ package com.adyen.checkout.redirect
 import android.app.Activity
 import android.content.ActivityNotFoundException
 import android.net.Uri
-import android.text.TextUtils
 import com.adyen.checkout.components.model.payments.response.RedirectAction
 import com.adyen.checkout.core.exception.ComponentException
 import com.adyen.checkout.core.log.LogUtil
@@ -32,7 +31,7 @@ class RedirectDelegate {
      */
     fun makeRedirect(activity: Activity, url: String?) {
         Logger.d(TAG, "makeRedirect - $url")
-        if (!TextUtils.isEmpty(url)) {
+        if (!url.isNullOrEmpty()) {
             val redirectUri = Uri.parse(url)
             val redirectIntent = RedirectUtil.createRedirectIntent(activity, redirectUri)
             try {
