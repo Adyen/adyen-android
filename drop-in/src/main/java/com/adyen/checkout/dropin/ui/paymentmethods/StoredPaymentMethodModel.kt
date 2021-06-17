@@ -8,9 +8,11 @@
 
 package com.adyen.checkout.dropin.ui.paymentmethods
 
-sealed class StoredPaymentMethodModel {
+sealed class StoredPaymentMethodModel : PaymentMethodListItem {
     abstract val id: String
     abstract val imageId: String
+
+    override fun getViewType(): Int = PaymentMethodListItem.STORED_PAYMENT_METHOD
 }
 
 data class StoredCardModel(
