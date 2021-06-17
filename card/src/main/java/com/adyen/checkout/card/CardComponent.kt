@@ -66,7 +66,7 @@ class CardComponent private constructor(
                             securityCodeState,
                             holderNameState,
                             isStoredPaymentMethodEnable,
-                            cvcUIState,
+                            makeCvcUIState(it.firstOrNull()?.cvcPolicy),
                             it
                         )
                         notifyStateChanged(newOutputData)
@@ -107,14 +107,6 @@ class CardComponent private constructor(
         val detectedCardTypes = cardDelegate.detectCardType(inputData.cardNumber, publicKey, viewModelScope)
         val firstDetectedType = detectedCardTypes.firstOrNull()
 
-        // TODO: check Brand.CvcPolicy.HIDDEN and restore margin between expiry date and cvc fields
-        val cvcUIState = when {
-            cardDelegate.isCvcHidden() -> CvcUIState.HIDDEN
-            // we treat CvcPolicy.HIDDEN as OPTIONAL for now to avoid hiding and showing the cvc field while the user is typing the card number
-            firstDetectedType?.cvcPolicy == Brand.CvcPolicy.OPTIONAL || firstDetectedType?.cvcPolicy == Brand.CvcPolicy.HIDDEN -> CvcUIState.OPTIONAL
-            else -> CvcUIState.REQUIRED
-        }
-
         return CardOutputData(
             cardDelegate.validateCardNumber(inputData.cardNumber),
             cardDelegate.validateExpiryDate(inputData.expiryDate),
@@ -122,9 +114,18 @@ class CardComponent private constructor(
             cardDelegate.validateSecurityCode(inputData.securityCode, firstDetectedType),
             cardDelegate.validateHolderName(inputData.holderName),
             inputData.isStorePaymentSelected,
-            cvcUIState,
+            makeCvcUIState(firstDetectedType?.cvcPolicy),
             detectedCardTypes
         )
+    }
+
+    private fun makeCvcUIState(cvcPolicy: Brand.CvcPolicy?): CvcUIState {
+        return when {
+            cardDelegate.isCvcHidden() -> CvcUIState.HIDDEN
+            // we treat CvcPolicy.HIDDEN as OPTIONAL for now to avoid hiding and showing the cvc field while the user is typing the card number
+            cvcPolicy == Brand.CvcPolicy.OPTIONAL || cvcPolicy == Brand.CvcPolicy.HIDDEN -> CvcUIState.OPTIONAL
+            else -> CvcUIState.REQUIRED
+        }
     }
 
     @Suppress("ReturnCount")
