@@ -8,7 +8,6 @@
 
 package com.adyen.checkout.card
 
-import com.adyen.checkout.card.api.BinLookupConnection
 import com.adyen.checkout.card.api.model.Brand
 import com.adyen.checkout.card.data.CardType
 import com.adyen.checkout.card.data.DetectedCardType
@@ -90,8 +89,7 @@ class NewCardDelegate(
                 return binLookupRepository.get(cardNumber)
             }
 
-            // if length is exactly the size, we call bin lookup API
-            if (cardNumber.length == BinLookupConnection.REQUIRED_BIN_SIZE && publicKey != null) {
+            if (publicKey != null) {
                 Logger.d(TAG, "Launching Bin Lookup")
                 coroutineScope.launch {
                     val detectedCardTypes = binLookupRepository.fetch(cardNumber, publicKey, cardConfiguration)

@@ -34,7 +34,7 @@ class BinLookupRepository {
     private val cachedBinLookup = HashMap<String, List<DetectedCardType>>()
 
     fun isRequiredSize(cardNumber: String): Boolean {
-        return cardNumber.length >= BinLookupConnection.REQUIRED_BIN_SIZE
+        return cardNumber.length >= REQUIRED_BIN_SIZE
     }
 
     fun contains(cardNumber: String): Boolean {
@@ -46,7 +46,7 @@ class BinLookupRepository {
     }
 
     private fun hashBin(cardNumber: String): String {
-        return Sha256.hashString(cardNumber.take(BinLookupConnection.REQUIRED_BIN_SIZE))
+        return Sha256.hashString(cardNumber.take(REQUIRED_BIN_SIZE))
     }
 
     fun get(cardNumber: String): List<DetectedCardType> {
@@ -106,5 +106,9 @@ class BinLookupRepository {
                 cvcPolicy = Brand.CvcPolicy.parse(it.cvcPolicy ?: Brand.CvcPolicy.REQUIRED.value)
             )
         }
+    }
+
+    companion object {
+        private const val REQUIRED_BIN_SIZE = 11
     }
 }
