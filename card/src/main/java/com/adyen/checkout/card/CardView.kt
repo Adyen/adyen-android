@@ -125,12 +125,23 @@ class CardView @JvmOverloads constructor(context: Context, attrs: AttributeSet? 
         if (cardOutputData != null) {
             onCardNumberValidated(cardOutputData.cardNumberState, cardOutputData.detectedCardTypes)
             onExpiryDateValidated(cardOutputData.expiryDateState)
-            binding.textInputLayoutSecurityCode.isVisible = !cardOutputData.isCvcHidden
-            if (cardOutputData.isCvcHidden) {
-                // We don't expect the hidden status to change back to isVisible, so we don't worry about putting the margin back.
-                val params = binding.textInputLayoutExpiryDate.layoutParams as LayoutParams
-                params.marginEnd = 0
-                binding.textInputLayoutExpiryDate.layoutParams = params
+
+            when (cardOutputData.cvcUIState) {
+                CvcUIState.REQUIRED -> {
+                    binding.textInputLayoutSecurityCode.isVisible = true
+                    binding.textInputLayoutSecurityCode.setHint(R.string.checkout_card_security_code_hint)
+                }
+                CvcUIState.OPTIONAL -> {
+                    binding.textInputLayoutSecurityCode.isVisible = true
+                    binding.textInputLayoutSecurityCode.setHint(R.string.checkout_card_security_code_optional_hint)
+                }
+                CvcUIState.HIDDEN -> {
+                    binding.textInputLayoutSecurityCode.isVisible = false
+                    // We don't expect the hidden status to change back to isVisible, so we don't worry about putting the margin back.
+                    val params = binding.textInputLayoutExpiryDate.layoutParams as LayoutParams
+                    params.marginEnd = 0
+                    binding.textInputLayoutExpiryDate.layoutParams = params
+                }
             }
         }
         if (component.isStoredPaymentMethod() && component.requiresInput()) {

@@ -27,7 +27,7 @@ abstract class CardDelegate(
 
     abstract fun validateCardNumber(cardNumber: String): FieldState<String>
     abstract fun validateExpiryDate(expiryDate: ExpiryDate): FieldState<ExpiryDate>
-    abstract fun validateSecurityCode(securityCode: String, cardType: CardType? = null): FieldState<String>
+    abstract fun validateSecurityCode(securityCode: String, cardType: DetectedCardType? = null): FieldState<String>
 
     fun validateHolderName(holderName: String): FieldState<String> {
         return if (cardConfiguration.isHolderNameRequired && holderName.isBlank()) {

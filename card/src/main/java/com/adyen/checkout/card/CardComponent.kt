@@ -9,6 +9,7 @@
 package com.adyen.checkout.card
 
 import androidx.lifecycle.viewModelScope
+import com.adyen.checkout.card.api.model.Brand
 import com.adyen.checkout.card.data.CardType
 import com.adyen.checkout.card.data.ExpiryDate
 import com.adyen.checkout.components.StoredPaymentComponentProvider
@@ -65,7 +66,7 @@ class CardComponent private constructor(
                             securityCodeState,
                             holderNameState,
                             isStoredPaymentMethodEnable,
-                            isCvcHidden,
+                            cvcUIState,
                             it
                         )
                         notifyStateChanged(newOutputData)
@@ -104,15 +105,24 @@ class CardComponent private constructor(
         Logger.v(TAG, "onInputDataChanged")
 
         val detectedCardTypes = cardDelegate.detectCardType(inputData.cardNumber, publicKey, viewModelScope)
+        val firstDetectedType = detectedCardTypes.firstOrNull()
+
+        // TODO: check Brand.CvcPolicy.HIDDEN and restore margin between expiry date and cvc fields
+        val cvcUIState = when {
+            cardDelegate.isCvcHidden() -> CvcUIState.HIDDEN
+            // we treat CvcPolicy.HIDDEN as OPTIONAL for now to avoid hiding and showing the cvc field while the user is typing the card number
+            firstDetectedType?.cvcPolicy == Brand.CvcPolicy.OPTIONAL || firstDetectedType?.cvcPolicy == Brand.CvcPolicy.HIDDEN -> CvcUIState.OPTIONAL
+            else -> CvcUIState.REQUIRED
+        }
 
         return CardOutputData(
             cardDelegate.validateCardNumber(inputData.cardNumber),
             cardDelegate.validateExpiryDate(inputData.expiryDate),
             // TODO: 29/01/2021 move validation logic using detected object
-            cardDelegate.validateSecurityCode(inputData.securityCode, detectedCardTypes.firstOrNull()?.cardType),
+            cardDelegate.validateSecurityCode(inputData.securityCode, firstDetectedType),
             cardDelegate.validateHolderName(inputData.holderName),
             inputData.isStorePaymentSelected,
-            cardDelegate.isCvcHidden(),
+            cvcUIState,
             detectedCardTypes
         )
     }
@@ -151,7 +161,8 @@ class CardComponent private constructor(
                 unencryptedCardBuilder.setNumber(stateOutputData.cardNumberState.value)
             }
             if (!cardDelegate.isCvcHidden()) {
-                unencryptedCardBuilder.setCvc(stateOutputData.securityCodeState.value)
+                val cvc = stateOutputData.securityCodeState.value
+                if (cvc.isNotEmpty()) unencryptedCardBuilder.setCvc(cvc)
             }
             val expiryDateResult = stateOutputData.expiryDateState.value
             if (expiryDateResult.expiryYear != ExpiryDate.EMPTY_VALUE && expiryDateResult.expiryMonth != ExpiryDate.EMPTY_VALUE) {

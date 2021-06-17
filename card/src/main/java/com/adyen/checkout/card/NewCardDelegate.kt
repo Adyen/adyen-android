@@ -54,7 +54,7 @@ class NewCardDelegate(
 
     override fun validateSecurityCode(
         securityCode: String,
-        cardType: CardType?
+        cardType: DetectedCardType?
     ): FieldState<String> {
         return if (cardConfiguration.isHideCvc) {
             FieldState(
@@ -122,7 +122,7 @@ class NewCardDelegate(
             showExpiryDate = true,
             enableLuhnCheck = true,
             cvcPolicy = when {
-                cardConfiguration.isHideCvc || noCvcBrands.contains(cardType) -> Brand.CvcPolicy.HIDDEN
+                noCvcBrands.contains(cardType) -> Brand.CvcPolicy.HIDDEN
                 else -> Brand.CvcPolicy.REQUIRED
             }
         )

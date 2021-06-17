@@ -66,8 +66,8 @@ class StoredCardDelegate(
         )
     }
 
-    override fun validateSecurityCode(securityCode: String, cardType: CardType?): FieldState<String> {
-        return if (cardConfiguration.isHideCvcStoredCard || noCvcBrands.contains(cardType)) {
+    override fun validateSecurityCode(securityCode: String, cardType: DetectedCardType?): FieldState<String> {
+        return if (cardConfiguration.isHideCvcStoredCard || noCvcBrands.contains(cardType?.cardType)) {
             FieldState(
                 securityCode,
                 Validation.Valid

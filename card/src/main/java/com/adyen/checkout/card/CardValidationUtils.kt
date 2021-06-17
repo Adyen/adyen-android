@@ -7,7 +7,9 @@
  */
 package com.adyen.checkout.card
 
+import com.adyen.checkout.card.api.model.Brand
 import com.adyen.checkout.card.data.CardType
+import com.adyen.checkout.card.data.DetectedCardType
 import com.adyen.checkout.card.data.ExpiryDate
 import com.adyen.checkout.components.ui.FieldState
 import com.adyen.checkout.components.ui.Validation
@@ -94,18 +96,17 @@ object CardValidationUtils {
 
     /**
      * Validate Security Code.
-     * We always pass CardType null, but we can enforce size validation for Amex or otherwise if necessary.
      */
-    fun validateSecurityCode(securityCode: String, cardType: CardType?): FieldState<String> {
+    fun validateSecurityCode(securityCode: String, cardType: DetectedCardType?): FieldState<String> {
         val normalizedSecurityCode = StringUtil.normalize(securityCode)
         val length = normalizedSecurityCode.length
-        var validation: Validation = Validation.Invalid(R.string.checkout_security_code_not_valid)
-        if (StringUtil.isDigitsAndSeparatorsOnly(normalizedSecurityCode)) {
-            if (cardType == CardType.AMERICAN_EXPRESS && length == AMEX_SECURITY_CODE_SIZE) {
-                validation = Validation.Valid
-            } else if (length == GENERAL_CARD_SECURITY_CODE_SIZE && cardType != CardType.AMERICAN_EXPRESS) {
-                validation = Validation.Valid
-            }
+        val invalidState = Validation.Invalid(R.string.checkout_security_code_not_valid)
+        val validation = when {
+            !StringUtil.isDigitsAndSeparatorsOnly(normalizedSecurityCode) -> invalidState
+            cardType?.cvcPolicy == Brand.CvcPolicy.OPTIONAL && length == 0 -> Validation.Valid
+            cardType?.cardType == CardType.AMERICAN_EXPRESS && length == AMEX_SECURITY_CODE_SIZE -> Validation.Valid
+            cardType?.cardType != CardType.AMERICAN_EXPRESS && length == GENERAL_CARD_SECURITY_CODE_SIZE -> Validation.Valid
+            else -> invalidState
         }
         return FieldState(normalizedSecurityCode, validation)
     }
