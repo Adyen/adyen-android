@@ -142,8 +142,7 @@ public final class StatusRepository {
     public void stopPolling() {
         Logger.d(TAG, "stopPolling");
         if (!mIsPolling) {
-            Logger.d(TAG, "No polling in progress");
-            return;
+            Logger.w(TAG, "Stop called with no polling in progress, stopping anyway");
         }
         mIsPolling = false;
         mHandler.removeCallbacksAndMessages(null);
