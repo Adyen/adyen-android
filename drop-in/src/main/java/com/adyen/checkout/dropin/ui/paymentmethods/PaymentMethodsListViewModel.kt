@@ -113,7 +113,7 @@ class PaymentMethodsListViewModel(
             PaymentMethodTypes.GIFTCARD -> brand
             else -> type
         }
-        val drawIconBorder = type != PaymentMethodTypes.GOOGLE_PAY_LEGACY
+        val drawIconBorder = icon != GOOGLE_PAY_LOGO_TYPE
         return PaymentMethodModel(
             type = type.orEmpty(),
             name = name.orEmpty(),
@@ -167,6 +167,6 @@ class PaymentMethodsListViewModel(
         val TAG = LogUtil.getTag()
 
         private const val CARD_LOGO_TYPE = "card"
-        private const val GOOGLE_PAY_LOGO_TYPE = "googlepay"
+        private const val GOOGLE_PAY_LOGO_TYPE = PaymentMethodTypes.GOOGLE_PAY
     }
 }
