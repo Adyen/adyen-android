@@ -109,11 +109,11 @@ class PaymentMethodsListViewModel(
     private fun PaymentMethod.mapToModel(): PaymentMethodModel {
         val icon = when (type) {
             PaymentMethodTypes.SCHEME -> CARD_LOGO_TYPE
-            PaymentMethodTypes.GOOGLE_PAY -> GOOGLE_PAY_LOGO_TYPE
+            PaymentMethodTypes.GOOGLE_PAY_LEGACY -> GOOGLE_PAY_LOGO_TYPE
             PaymentMethodTypes.GIFTCARD -> brand
             else -> type
         }
-        val drawIconBorder = type != PaymentMethodTypes.GOOGLE_PAY
+        val drawIconBorder = type != PaymentMethodTypes.GOOGLE_PAY_LEGACY
         return PaymentMethodModel(
             type = type.orEmpty(),
             name = name.orEmpty(),

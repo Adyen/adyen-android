@@ -26,7 +26,7 @@ public class GooglePayPaymentMethod extends PaymentMethodDetails {
     @NonNull
     public static final Creator<GooglePayPaymentMethod> CREATOR = new Creator<>(GooglePayPaymentMethod.class);
 
-    public static final String PAYMENT_METHOD_TYPE = PaymentMethodTypes.GOOGLE_PAY;
+    public static final String PAYMENT_METHOD_TYPE = PaymentMethodTypes.GOOGLE_PAY_LEGACY;
 
     private static final String GOOGLE_PAY_TOKEN = "googlePayToken";
     private static final String GOOGLE_PAY_CARD_NETWORK = "googlePayCardNetwork";

@@ -142,7 +142,7 @@ public final class GooglePayUtils {
         }
 
         final GooglePayPaymentMethod paymentMethod = new GooglePayPaymentMethod();
-        paymentMethod.setType(PaymentMethodTypes.GOOGLE_PAY);
+        paymentMethod.setType(PaymentMethodTypes.GOOGLE_PAY_LEGACY);
 
         try {
             final JSONObject paymentDataJson = new JSONObject(paymentData.toJson());
