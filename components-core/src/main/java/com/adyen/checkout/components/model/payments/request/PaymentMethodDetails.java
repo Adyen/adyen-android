@@ -68,7 +68,7 @@ public abstract class PaymentMethodDetails extends ModelObject {
                 return IdealPaymentMethod.SERIALIZER;
             case CardPaymentMethod.PAYMENT_METHOD_TYPE:
                 return CardPaymentMethod.SERIALIZER;
-            //Intentional fallthrough of different flavors o Molpay
+            //Intentional fallthrough of different flavors of Molpay
             case PaymentMethodTypes.MOLPAY_MALAYSIA:
             case PaymentMethodTypes.MOLPAY_THAILAND:
             case PaymentMethodTypes.MOLPAY_VIETNAM:
@@ -81,7 +81,9 @@ public abstract class PaymentMethodDetails extends ModelObject {
                 return OpenBankingPaymentMethod.SERIALIZER;
             case EntercashPaymentMethod.PAYMENT_METHOD_TYPE:
                 return EntercashPaymentMethod.SERIALIZER;
-            case GooglePayPaymentMethod.PAYMENT_METHOD_TYPE:
+            //Intentional fallthrough of the new and legacy google pay txVariants
+            case PaymentMethodTypes.GOOGLE_PAY:
+            case PaymentMethodTypes.GOOGLE_PAY_LEGACY:
                 return GooglePayPaymentMethod.SERIALIZER;
             case SepaPaymentMethod.PAYMENT_METHOD_TYPE:
                 return SepaPaymentMethod.SERIALIZER;

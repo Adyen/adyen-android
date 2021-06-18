@@ -102,6 +102,7 @@ internal fun <T : Configuration> getDefaultConfigForPaymentMethod(
         PaymentMethodTypes.DOTPAY -> DotpayConfiguration.Builder(context, clientKey)
         PaymentMethodTypes.ENTERCASH -> EntercashConfiguration.Builder(context, clientKey)
         PaymentMethodTypes.EPS -> EPSConfiguration.Builder(context, clientKey)
+        PaymentMethodTypes.GOOGLE_PAY,
         PaymentMethodTypes.GOOGLE_PAY_LEGACY -> GooglePayConfiguration.Builder(context, clientKey)
         PaymentMethodTypes.IDEAL -> IdealConfiguration.Builder(context, clientKey)
         PaymentMethodTypes.MB_WAY -> MBWayConfiguration.Builder(context, clientKey)
@@ -172,6 +173,7 @@ internal fun checkPaymentMethodAvailability(
 internal fun getPaymentMethodAvailabilityCheck(paymentMethodType: String): PaymentMethodAvailabilityCheck<Configuration> {
     @Suppress("UNCHECKED_CAST")
     return when (paymentMethodType) {
+        PaymentMethodTypes.GOOGLE_PAY,
         PaymentMethodTypes.GOOGLE_PAY_LEGACY -> GooglePayProvider()
         PaymentMethodTypes.WECHAT_PAY_SDK -> WeChatPayProvider()
         else -> AlwaysAvailablePaymentMethod()
@@ -244,6 +246,13 @@ internal fun getComponentFor(
         PaymentMethodTypes.EPS -> {
             val epsConfig: EPSConfiguration = dropInConfiguration.getConfigurationForPaymentMethod(PaymentMethodTypes.EPS, context)
             EPSComponent.PROVIDER.get(fragment, paymentMethod, epsConfig)
+        }
+        PaymentMethodTypes.GOOGLE_PAY -> {
+            val googlePayConfiguration: GooglePayConfiguration = dropInConfiguration.getConfigurationForPaymentMethod(
+                PaymentMethodTypes.GOOGLE_PAY,
+                context
+            )
+            GooglePayComponent.PROVIDER.get(fragment, paymentMethod, googlePayConfiguration)
         }
         PaymentMethodTypes.GOOGLE_PAY_LEGACY -> {
             val googlePayConfiguration: GooglePayConfiguration = dropInConfiguration.getConfigurationForPaymentMethod(

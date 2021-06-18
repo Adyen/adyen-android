@@ -112,11 +112,11 @@ class PaymentMethodListDialogFragment : DropInBottomSheetDialogFragment(), Payme
 
         // Check some specific payment methods that don't need to show a view
         when {
-            paymentMethod.type == PaymentMethodTypes.GOOGLE_PAY_LEGACY -> {
+            paymentMethod.type == PaymentMethodTypes.GOOGLE_PAY || paymentMethod.type == PaymentMethodTypes.GOOGLE_PAY_LEGACY -> {
                 Logger.d(TAG, "onPaymentMethodSelected: starting Google Pay")
                 protocol.startGooglePay(
                     dropInViewModel.getPaymentMethod(paymentMethod.type),
-                    dropInViewModel.dropInConfiguration.getConfigurationForPaymentMethod(PaymentMethodTypes.GOOGLE_PAY_LEGACY, requireContext())
+                    dropInViewModel.dropInConfiguration.getConfigurationForPaymentMethod(paymentMethod.type, requireContext())
                 )
             }
             PaymentMethodTypes.SUPPORTED_ACTION_ONLY_PAYMENT_METHODS.contains(paymentMethod.type) -> {
