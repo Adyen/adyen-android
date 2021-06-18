@@ -13,15 +13,13 @@ import android.app.Application;
 import android.content.Intent;
 
 import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
 
 import com.adyen.checkout.components.ActionComponentProvider;
-import com.adyen.checkout.components.base.ActionComponentProviderImpl;
 import com.adyen.checkout.components.base.BaseActionComponent;
+import com.adyen.checkout.components.base.IntentHandlingComponent;
 import com.adyen.checkout.components.model.payments.response.Action;
 import com.adyen.checkout.components.model.payments.response.SdkAction;
 import com.adyen.checkout.components.model.payments.response.WeChatPaySdkData;
-import com.adyen.checkout.components.util.PaymentMethodTypes;
 import com.adyen.checkout.core.exception.ComponentException;
 import com.adyen.checkout.core.log.LogUtil;
 import com.adyen.checkout.core.log.Logger;
@@ -31,15 +29,14 @@ import com.tencent.mm.opensdk.openapi.IWXAPI;
 import com.tencent.mm.opensdk.openapi.IWXAPIEventHandler;
 import com.tencent.mm.opensdk.openapi.WXAPIFactory;
 
-import java.util.Arrays;
-import java.util.Collections;
-import java.util.List;
+import org.jetbrains.annotations.NotNull;
 
-public class WeChatPayActionComponent extends BaseActionComponent<WeChatPayActionConfiguration> {
+public class WeChatPayActionComponent extends BaseActionComponent<WeChatPayActionConfiguration>
+        implements IntentHandlingComponent {
     private static final String TAG = LogUtil.getTag();
 
     public static final ActionComponentProvider<WeChatPayActionComponent, WeChatPayActionConfiguration> PROVIDER =
-            new ActionComponentProviderImpl<>(WeChatPayActionComponent.class, WeChatPayActionConfiguration.class);
+            new WeChatPayActionComponentProvider();
 
     private final IWXAPI mApi;
 
@@ -70,27 +67,15 @@ public class WeChatPayActionComponent extends BaseActionComponent<WeChatPayActio
      *
      * @param intent The intent result from WeChatPay SDK.
      */
-    public void handleResultIntent(@Nullable Intent intent) {
+    @Override
+    public void handleIntent(@NotNull Intent intent) {
         // TODO check intent identifiers
-        if (intent != null) {
-            mApi.handleIntent(intent, mEventHandler);
-        } else {
-            throw new ComponentException("Intent result is null.");
-        }
+        mApi.handleIntent(intent, mEventHandler);
     }
 
-    @NonNull
     @Override
-    protected List<String> getSupportedActionTypes() {
-        final String[] supportedCodes = {SdkAction.ACTION_TYPE};
-        return Collections.unmodifiableList(Arrays.asList(supportedCodes));
-    }
-
-    @NonNull
-    @Override
-    protected List<String> getSupportedPaymentMethodTypes() {
-        final String[] supportedPaymentMethods = {PaymentMethodTypes.WECHAT_PAY_SDK};
-        return Collections.unmodifiableList(Arrays.asList(supportedPaymentMethods));
+    public boolean canHandleAction(@NonNull Action action) {
+        return PROVIDER.canHandleAction(action);
     }
 
     @Override

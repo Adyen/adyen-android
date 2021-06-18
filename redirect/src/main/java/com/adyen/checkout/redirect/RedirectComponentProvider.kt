@@ -13,6 +13,8 @@ import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.ViewModelStoreOwner
 import com.adyen.checkout.components.ActionComponentProvider
 import com.adyen.checkout.components.base.lifecycle.viewModelFactory
+import com.adyen.checkout.components.model.payments.response.Action
+import com.adyen.checkout.components.model.payments.response.RedirectAction
 
 class RedirectComponentProvider : ActionComponentProvider<RedirectComponent, RedirectConfiguration> {
     override fun get(
@@ -32,4 +34,14 @@ class RedirectComponentProvider : ActionComponentProvider<RedirectComponent, Red
     }
 
     override fun requiresConfiguration(): Boolean = false
+
+    override fun requiresView(action: Action): Boolean = false
+
+    override fun getSupportedActionTypes(): List<String> {
+        return listOf(RedirectAction.ACTION_TYPE)
+    }
+
+    override fun canHandleAction(action: Action): Boolean {
+        return supportedActionTypes.contains(action.type)
+    }
 }

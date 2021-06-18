@@ -10,6 +10,7 @@ package com.adyen.checkout.qrcode
 import android.app.Activity
 import android.app.Application
 import android.content.Context
+import android.content.Intent
 import android.os.CountDownTimer
 import androidx.lifecycle.LifecycleOwner
 import androidx.lifecycle.MutableLiveData
@@ -17,33 +18,37 @@ import androidx.lifecycle.Observer
 import com.adyen.checkout.components.ActionComponentData
 import com.adyen.checkout.components.ActionComponentProvider
 import com.adyen.checkout.components.ViewableComponent
-import com.adyen.checkout.components.base.ActionComponentProviderImpl
 import com.adyen.checkout.components.base.BaseActionComponent
+import com.adyen.checkout.components.base.IntentHandlingComponent
 import com.adyen.checkout.components.base.lifecycle.BaseLifecycleObserver
 import com.adyen.checkout.components.model.payments.response.Action
 import com.adyen.checkout.components.model.payments.response.QrCodeAction
 import com.adyen.checkout.components.status.StatusRepository
 import com.adyen.checkout.components.status.api.StatusResponseUtils
 import com.adyen.checkout.components.status.model.StatusResponse
-import com.adyen.checkout.components.util.PaymentMethodTypes
+import com.adyen.checkout.core.exception.CheckoutException
 import com.adyen.checkout.core.exception.ComponentException
 import com.adyen.checkout.core.log.LogUtil
 import com.adyen.checkout.core.log.Logger
+import com.adyen.checkout.redirect.RedirectDelegate
+import java.util.concurrent.TimeUnit
 import org.json.JSONException
 import org.json.JSONObject
-import java.util.concurrent.TimeUnit
 
 private val TAG = LogUtil.getTag()
-private val ACTION_TYPES = listOf(QrCodeAction.ACTION_TYPE)
-private val PAYMENT_METHODS = listOf(PaymentMethodTypes.PIX)
 private const val PAYLOAD_DETAILS_KEY = "payload"
 private val STATUS_POLLING_INTERVAL_MILLIS = TimeUnit.SECONDS.toMillis(1L) // 1 second
 private const val HUNDRED = 100
 
 @Suppress("TooManyFunctions")
-class QRCodeComponent(application: Application, configuration: QRCodeConfiguration) :
+class QRCodeComponent(
+    application: Application,
+    configuration: QRCodeConfiguration,
+    private val redirectDelegate: RedirectDelegate
+) :
     BaseActionComponent<QRCodeConfiguration>(application, configuration),
-    ViewableComponent<QRCodeOutputData, QRCodeConfiguration, ActionComponentData> {
+    ViewableComponent<QRCodeOutputData, QRCodeConfiguration, ActionComponentData>,
+    IntentHandlingComponent {
 
     private val outputLiveData = MutableLiveData<QRCodeOutputData>()
     private var paymentMethodType: String? = null
@@ -81,6 +86,11 @@ class QRCodeComponent(application: Application, configuration: QRCodeConfigurati
     @Throws(ComponentException::class)
     override fun handleActionInternal(activity: Activity, action: Action) {
         if (action !is QrCodeAction) throw ComponentException("Unsupported action")
+        if (!PROVIDER.requiresView(action)) {
+            Logger.d(TAG, "Action does not require a view, redirecting.")
+            redirectDelegate.makeRedirect(activity, action.url)
+            return
+        }
         paymentMethodType = action.paymentMethodType
         qrCodeData = action.qrCodeData
         // Notify UI to get the logo.
@@ -160,17 +170,28 @@ class QRCodeComponent(application: Application, configuration: QRCodeConfigurati
         timerLiveData.postValue(TimerData(millisUntilFinished, progressPercentage))
     }
 
-    override fun getSupportedActionTypes(): List<String> = ACTION_TYPES
+    override fun canHandleAction(action: Action): Boolean {
+        return PROVIDER.canHandleAction(action)
+    }
 
-    override fun getSupportedPaymentMethodTypes(): List<String> = PAYMENT_METHODS
+    /**
+     * Call this method when receiving the return URL from the 3DS redirect with the result data.
+     * This result will be in the [Intent.getData] and begins with the returnUrl you specified on the payments/ call.
+     *
+     * @param intent The received [Intent].
+     */
+    override fun handleIntent(intent: Intent) {
+        try {
+            val parsedResult = redirectDelegate.handleRedirectResponse(intent.data)
+            notifyDetails(parsedResult)
+        } catch (e: CheckoutException) {
+            notifyException(e)
+        }
+    }
 
     companion object {
         @JvmField
-        val PROVIDER: ActionComponentProvider<QRCodeComponent, QRCodeConfiguration> = ActionComponentProviderImpl(
-            QRCodeComponent::class.java,
-            QRCodeConfiguration::class.java,
-            true
-        )
+        val PROVIDER: ActionComponentProvider<QRCodeComponent, QRCodeConfiguration> = QRCodeComponentProvider()
     }
 }
 

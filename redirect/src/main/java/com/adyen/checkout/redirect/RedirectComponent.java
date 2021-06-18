@@ -14,7 +14,6 @@ import android.content.Context;
 import android.content.Intent;
 
 import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
 
 import com.adyen.checkout.components.ActionComponentProvider;
 import com.adyen.checkout.components.base.BaseActionComponent;
@@ -25,10 +24,6 @@ import com.adyen.checkout.core.exception.CheckoutException;
 import com.adyen.checkout.core.exception.ComponentException;
 
 import org.json.JSONObject;
-
-import java.util.Arrays;
-import java.util.Collections;
-import java.util.List;
 
 public final class RedirectComponent extends BaseActionComponent<RedirectConfiguration> implements IntentHandlingComponent {
     public static final ActionComponentProvider<RedirectComponent, RedirectConfiguration> PROVIDER = new RedirectComponentProvider();
@@ -56,16 +51,8 @@ public final class RedirectComponent extends BaseActionComponent<RedirectConfigu
     }
 
     @Override
-    @NonNull
-    protected List<String> getSupportedActionTypes() {
-        final String[] supportedCodes = {RedirectAction.ACTION_TYPE};
-        return Collections.unmodifiableList(Arrays.asList(supportedCodes));
-    }
-
-    @Nullable
-    @Override
-    protected List<String> getSupportedPaymentMethodTypes() {
-        return null;
+    public boolean canHandleAction(@NonNull Action action) {
+        return PROVIDER.canHandleAction(action);
     }
 
     @Override

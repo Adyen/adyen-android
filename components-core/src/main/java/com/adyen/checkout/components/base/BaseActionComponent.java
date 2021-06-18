@@ -30,8 +30,6 @@ import com.adyen.checkout.core.log.Logger;
 
 import org.json.JSONObject;
 
-import java.util.List;
-
 public abstract class BaseActionComponent<ConfigurationT extends Configuration> extends ActionComponentViewModel<ConfigurationT> {
     private static final String TAG = LogUtil.getTag();
 
@@ -46,23 +44,6 @@ public abstract class BaseActionComponent<ConfigurationT extends Configuration> 
     public BaseActionComponent(@NonNull Application application, @NonNull ConfigurationT configuration) {
         super(application, configuration);
     }
-
-    @Override
-    public boolean canHandleAction(@NonNull Action action) {
-        return getSupportedActionTypes().contains(action.getType())
-                && (getSupportedPaymentMethodTypes() == null || getSupportedPaymentMethodTypes().contains(action.getPaymentMethodType()));
-    }
-
-    @NonNull
-    protected abstract List<String> getSupportedActionTypes();
-
-    /**
-     * Indicates which payment methods can be handled by this action component.
-     *
-     * @return the list of supported payment method types, or null if all types are supported.
-     */
-    @Nullable
-    protected abstract List<String> getSupportedPaymentMethodTypes();
 
     @Override
     public void handleAction(@NonNull Activity activity, @NonNull Action action) {

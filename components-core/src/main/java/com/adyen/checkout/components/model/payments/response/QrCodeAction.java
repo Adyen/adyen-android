@@ -20,7 +20,7 @@ import com.adyen.checkout.core.model.JsonUtils;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-@SuppressWarnings("MemberName")
+@SuppressWarnings({"MemberName", "PMD.DataClass"})
 public class QrCodeAction extends Action {
     @NonNull
     public static final Creator<QrCodeAction> CREATOR = new Creator<>(QrCodeAction.class);
@@ -28,6 +28,7 @@ public class QrCodeAction extends Action {
     public static final String ACTION_TYPE = ActionTypes.QR_CODE;
 
     private static final String QR_CODE_DATA = "qrCodeData";
+    private static final String URL = "url";
 
     @NonNull
     public static final Serializer<QrCodeAction> SERIALIZER = new Serializer<QrCodeAction>() {
@@ -43,6 +44,7 @@ public class QrCodeAction extends Action {
                 jsonObject.putOpt(Action.PAYMENT_METHOD_TYPE, modelObject.getPaymentMethodType());
 
                 jsonObject.putOpt(QR_CODE_DATA, modelObject.getQrCodeData());
+                jsonObject.putOpt(URL, modelObject.getUrl());
             } catch (JSONException e) {
                 throw new ModelSerializationException(QrCodeAction.class, e);
             }
@@ -60,11 +62,13 @@ public class QrCodeAction extends Action {
             qrCodeAction.setPaymentMethodType(jsonObject.optString(Action.PAYMENT_METHOD_TYPE, null));
 
             qrCodeAction.setQrCodeData(jsonObject.optString(QR_CODE_DATA));
+            qrCodeAction.setUrl(jsonObject.optString(URL));
             return qrCodeAction;
         }
     };
 
     private String qrCodeData;
+    private String url;
 
     @Override
     public void writeToParcel(@NonNull Parcel dest, int flags) {
@@ -78,5 +82,14 @@ public class QrCodeAction extends Action {
 
     public void setQrCodeData(@Nullable String qrCodeData) {
         this.qrCodeData = qrCodeData;
+    }
+
+    @Nullable
+    public String getUrl() {
+        return url;
+    }
+
+    public void setUrl(@Nullable String url) {
+        this.url = url;
     }
 }

@@ -19,30 +19,22 @@ import androidx.lifecycle.LifecycleOwner;
 import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.Observer;
 
-import com.adyen.checkout.components.status.api.StatusResponseUtils;
-import com.adyen.checkout.components.status.model.StatusResponse;
 import com.adyen.checkout.components.ActionComponentData;
 import com.adyen.checkout.components.ActionComponentProvider;
 import com.adyen.checkout.components.ViewableComponent;
-import com.adyen.checkout.components.base.ActionComponentProviderImpl;
 import com.adyen.checkout.components.base.BaseActionComponent;
 import com.adyen.checkout.components.base.Configuration;
 import com.adyen.checkout.components.base.lifecycle.BaseLifecycleObserver;
 import com.adyen.checkout.components.model.payments.response.Action;
-import com.adyen.checkout.components.model.payments.response.AwaitAction;
 import com.adyen.checkout.components.status.StatusRepository;
-import com.adyen.checkout.components.util.PaymentMethodTypes;
-import com.adyen.checkout.core.exception.CheckoutException;
+import com.adyen.checkout.components.status.api.StatusResponseUtils;
+import com.adyen.checkout.components.status.model.StatusResponse;
 import com.adyen.checkout.core.exception.ComponentException;
 import com.adyen.checkout.core.log.LogUtil;
 import com.adyen.checkout.core.log.Logger;
 
 import org.json.JSONException;
 import org.json.JSONObject;
-
-import java.util.Arrays;
-import java.util.Collections;
-import java.util.List;
 
 public class AwaitComponent extends BaseActionComponent<AwaitConfiguration>
         implements ViewableComponent<AwaitOutputData, AwaitConfiguration, ActionComponentData> {
@@ -51,8 +43,7 @@ public class AwaitComponent extends BaseActionComponent<AwaitConfiguration>
 
     private static final String PAYLOAD_DETAILS_KEY = "payload";
 
-    public static final ActionComponentProvider<AwaitComponent, AwaitConfiguration> PROVIDER
-            = new ActionComponentProviderImpl<>(AwaitComponent.class, AwaitConfiguration.class, true);
+    public static final ActionComponentProvider<AwaitComponent, AwaitConfiguration> PROVIDER = new AwaitComponentProvider();
 
     final StatusRepository mStatusRepository;
 
@@ -82,25 +73,12 @@ public class AwaitComponent extends BaseActionComponent<AwaitConfiguration>
 
     public AwaitComponent(@NonNull Application application, @NonNull AwaitConfiguration configuration) {
         super(application, configuration);
-        if (configuration == null) {
-            // This component requires the client key from the configuration to work.
-            throw new CheckoutException("AwaitConfiguration cannot be null for AwaitComponent");
-        }
         mStatusRepository = StatusRepository.getInstance(configuration.getEnvironment());
     }
 
-    @NonNull
     @Override
-    protected List<String> getSupportedActionTypes() {
-        final String[] supportedCodes = {AwaitAction.ACTION_TYPE};
-        return Collections.unmodifiableList(Arrays.asList(supportedCodes));
-    }
-
-    @NonNull
-    @Override
-    protected List<String> getSupportedPaymentMethodTypes() {
-        final String[] supportedPaymentMethods = {PaymentMethodTypes.BLIK, PaymentMethodTypes.MB_WAY};
-        return Collections.unmodifiableList(Arrays.asList(supportedPaymentMethods));
+    public boolean canHandleAction(@NonNull Action action) {
+        return PROVIDER.canHandleAction(action);
     }
 
     @Override
