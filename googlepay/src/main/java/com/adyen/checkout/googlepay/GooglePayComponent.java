@@ -41,7 +41,7 @@ public class GooglePayComponent extends
 
     public static final GooglePayProvider PROVIDER = new GooglePayProvider();
 
-    private static final String[] PAYMENT_METHOD_TYPES = {PaymentMethodTypes.GOOGLE_PAY, PaymentMethodTypes.GOOGLE_PAY_LEGACY};
+    public static final String[] PAYMENT_METHOD_TYPES = {PaymentMethodTypes.GOOGLE_PAY, PaymentMethodTypes.GOOGLE_PAY_LEGACY};
 
     public GooglePayComponent(@NonNull GenericPaymentMethodDelegate paymentMethodDelegate, @NonNull GooglePayConfiguration configuration) {
         super(paymentMethodDelegate, configuration);
