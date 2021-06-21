@@ -33,7 +33,8 @@ public final class PaymentMethodTypes {
     public static final String ENTERCASH = "entercash";
     public static final String OPEN_BANKING = "openbanking_UK";
     public static final String SCHEME = "scheme";
-    public static final String GOOGLE_PAY = "paywithgoogle";
+    public static final String GOOGLE_PAY = "googlepay";
+    public static final String GOOGLE_PAY_LEGACY = "paywithgoogle";
     public static final String SEPA = "sepadirectdebit";
     public static final String BCMC = "bcmc";
     public static final String MB_WAY = "mbway";
@@ -99,6 +100,7 @@ public final class PaymentMethodTypes {
                 ENTERCASH,
                 EPS,
                 GOOGLE_PAY,
+                GOOGLE_PAY_LEGACY,
                 IDEAL,
                 MB_WAY,
                 MOLPAY_MALAYSIA,

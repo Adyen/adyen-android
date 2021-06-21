@@ -14,7 +14,6 @@ import androidx.annotation.Nullable;
 import com.adyen.checkout.components.model.payments.Amount;
 import com.adyen.checkout.components.model.payments.request.GooglePayPaymentMethod;
 import com.adyen.checkout.components.util.AmountFormat;
-import com.adyen.checkout.components.util.PaymentMethodTypes;
 import com.adyen.checkout.core.exception.CheckoutException;
 import com.adyen.checkout.core.exception.NoConstructorException;
 import com.adyen.checkout.core.log.LogUtil;
@@ -133,16 +132,17 @@ public final class GooglePayUtils {
      * Create the PaymentMethod object from Google Pay based on the response from the SDK.
      *
      * @param paymentData The response from Google Pay SDK.
+     * @param paymentMethodType the type of the payment method.
      * @return The object matching the data for the API call to Adyen.
      */
     @Nullable
-    public static GooglePayPaymentMethod createGooglePayPaymentMethod(@Nullable PaymentData paymentData) {
+    public static GooglePayPaymentMethod createGooglePayPaymentMethod(@Nullable PaymentData paymentData, @Nullable String paymentMethodType) {
         if (paymentData == null) {
             return null;
         }
 
         final GooglePayPaymentMethod paymentMethod = new GooglePayPaymentMethod();
-        paymentMethod.setType(PaymentMethodTypes.GOOGLE_PAY);
+        paymentMethod.setType(paymentMethodType);
 
         try {
             final JSONObject paymentDataJson = new JSONObject(paymentData.toJson());

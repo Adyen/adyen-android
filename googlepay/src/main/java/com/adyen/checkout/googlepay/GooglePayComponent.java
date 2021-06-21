@@ -18,6 +18,7 @@ import com.adyen.checkout.components.base.ActivityResultHandlingComponent;
 import com.adyen.checkout.components.base.BasePaymentComponent;
 import com.adyen.checkout.components.base.GenericPaymentMethodDelegate;
 import com.adyen.checkout.components.model.paymentmethods.Configuration;
+import com.adyen.checkout.components.model.paymentmethods.PaymentMethod;
 import com.adyen.checkout.components.model.payments.request.GooglePayPaymentMethod;
 import com.adyen.checkout.components.model.payments.request.PaymentComponentData;
 import com.adyen.checkout.components.util.PaymentMethodTypes;
@@ -40,7 +41,7 @@ public class GooglePayComponent extends
 
     public static final GooglePayProvider PROVIDER = new GooglePayProvider();
 
-    private static final String[] PAYMENT_METHOD_TYPES = {PaymentMethodTypes.GOOGLE_PAY};
+    public static final String[] PAYMENT_METHOD_TYPES = {PaymentMethodTypes.GOOGLE_PAY, PaymentMethodTypes.GOOGLE_PAY_LEGACY};
 
     public GooglePayComponent(@NonNull GenericPaymentMethodDelegate paymentMethodDelegate, @NonNull GooglePayConfiguration configuration) {
         super(paymentMethodDelegate, configuration);
@@ -57,8 +58,9 @@ public class GooglePayComponent extends
     protected GooglePayComponentState createComponentState() {
         final PaymentData paymentData = getOutputData() != null ? getOutputData().getPaymentData() : null;
 
+        final String paymentMethodType = getPaymentMethod().getType();
         final PaymentComponentData<GooglePayPaymentMethod> paymentComponentData = new PaymentComponentData<>();
-        final GooglePayPaymentMethod paymentMethod = GooglePayUtils.createGooglePayPaymentMethod(paymentData);
+        final GooglePayPaymentMethod paymentMethod = GooglePayUtils.createGooglePayPaymentMethod(paymentData, paymentMethodType);
         paymentComponentData.setPaymentMethod(paymentMethod);
         return new GooglePayComponentState(paymentComponentData, getOutputData().isValid(), true, getOutputData().getPaymentData());
     }
@@ -85,11 +87,13 @@ public class GooglePayComponent extends
     }
 
     private GooglePayParams getGooglePayParams() {
-        final Configuration configuration = ((GenericPaymentMethodDelegate) mPaymentMethodDelegate)
-                .getPaymentMethod()
-                .getConfiguration();
+        final Configuration configuration = getPaymentMethod().getConfiguration();
         final String serverGatewayMerchantId = (configuration != null) ? configuration.getGatewayMerchantId() : null;
         return new GooglePayParams(getConfiguration(), serverGatewayMerchantId);
+    }
+
+    private PaymentMethod getPaymentMethod() {
+        return ((GenericPaymentMethodDelegate) mPaymentMethodDelegate).getPaymentMethod();
     }
 
     /**
