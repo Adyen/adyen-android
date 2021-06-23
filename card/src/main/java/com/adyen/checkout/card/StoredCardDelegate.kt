@@ -77,6 +77,13 @@ class StoredCardDelegate(
         }
     }
 
+    override fun validateHolderName(holderName: String): FieldState<String> {
+        return FieldState(
+            holderName,
+            Validation.Valid
+        )
+    }
+
     override fun isCvcHidden(): Boolean {
         return cardConfiguration.isHideCvcStoredCard || noCvcBrands.contains(cardType)
     }
