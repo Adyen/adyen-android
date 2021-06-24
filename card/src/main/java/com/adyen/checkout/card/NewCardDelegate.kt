@@ -65,6 +65,20 @@ class NewCardDelegate(
         }
     }
 
+    override fun validateHolderName(holderName: String): FieldState<String> {
+        return if (cardConfiguration.isHolderNameRequired && holderName.isBlank()) {
+            FieldState(
+                holderName,
+                Validation.Invalid(R.string.checkout_holder_name_not_valid)
+            )
+        } else {
+            FieldState(
+                holderName,
+                Validation.Valid
+            )
+        }
+    }
+
     override fun isCvcHidden(): Boolean {
         return cardConfiguration.isHideCvc
     }
