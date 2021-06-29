@@ -151,8 +151,8 @@ public final class GooglePayUtils {
             paymentMethod.setGooglePayToken(tokenizationDataJson.getString(TOKEN));
 
             final JSONObject infoJson = paymentMethodDataJson.optJSONObject(INFO);
-            if (infoJson != null) {
-                paymentMethod.setGooglePayCardNetwork(infoJson.optString(CARD_NETWORK, null));
+            if (infoJson != null && infoJson.has(CARD_NETWORK)) {
+                paymentMethod.setGooglePayCardNetwork(infoJson.getString(CARD_NETWORK));
             }
 
             return paymentMethod;
