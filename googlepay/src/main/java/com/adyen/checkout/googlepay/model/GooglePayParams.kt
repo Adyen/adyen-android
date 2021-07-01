@@ -22,6 +22,7 @@ data class GooglePayParams(
     val gatewayMerchantId: String = getPreferredGatewayMerchantId()
     val googlePayEnvironment: Int = googlePayConfiguration.googlePayEnvironment
     val amount: Amount = googlePayConfiguration.amount
+    val totalPriceStatus = googlePayConfiguration.totalPriceStatus
     val countryCode: String? = googlePayConfiguration.countryCode
     val merchantInfo: MerchantInfo? = googlePayConfiguration.merchantInfo
     val allowedAuthMethods: List<String>? = googlePayConfiguration.allowedAuthMethods

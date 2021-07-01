@@ -37,6 +37,7 @@ public class GooglePayConfiguration extends Configuration {
     private final String mMerchantAccount;
     private final int mGooglePayEnvironment;
     private final Amount mAmount;
+    private final String mTotalPriceStatus;
     private final String mCountryCode;
     private final MerchantInfo mMerchantInfo;
     private final List<String> mAllowedAuthMethods;
@@ -67,6 +68,7 @@ public class GooglePayConfiguration extends Configuration {
             @Nullable String merchantAccount,
             int googlePayEnvironment,
             @NonNull Amount amount,
+            @NonNull String totalPriceStatus,
             @Nullable String countryCode,
             @Nullable MerchantInfo merchantInfo,
             @NonNull List<String> allowedAuthMethods,
@@ -83,6 +85,7 @@ public class GooglePayConfiguration extends Configuration {
         mMerchantAccount = merchantAccount;
         mGooglePayEnvironment = googlePayEnvironment;
         mAmount = amount;
+        mTotalPriceStatus = totalPriceStatus;
         mCountryCode = countryCode;
         mMerchantInfo = merchantInfo;
         mAllowedAuthMethods = allowedAuthMethods;
@@ -101,6 +104,7 @@ public class GooglePayConfiguration extends Configuration {
         mMerchantAccount = in.readString();
         mGooglePayEnvironment = in.readInt();
         mAmount = in.readParcelable(Amount.class.getClassLoader());
+        mTotalPriceStatus = in.readString();
         mCountryCode = in.readString();
         mMerchantInfo = in.readParcelable(MerchantInfo.class.getClassLoader());
         mAllowedAuthMethods = in.readArrayList(String.class.getClassLoader());
@@ -120,6 +124,7 @@ public class GooglePayConfiguration extends Configuration {
         dest.writeString(mMerchantAccount);
         dest.writeInt(mGooglePayEnvironment);
         dest.writeParcelable(mAmount, flags);
+        dest.writeString(mTotalPriceStatus);
         dest.writeString(mCountryCode);
         dest.writeParcelable(mMerchantInfo, flags);
         dest.writeList(mAllowedAuthMethods);
@@ -141,6 +146,11 @@ public class GooglePayConfiguration extends Configuration {
     @NonNull
     public Amount getAmount() {
         return mAmount;
+    }
+
+    @NonNull
+    public String getTotalPriceStatus() {
+        return mTotalPriceStatus;
     }
 
     @Nullable
@@ -202,6 +212,8 @@ public class GooglePayConfiguration extends Configuration {
      */
     public static final class Builder extends BaseConfigurationBuilder<GooglePayConfiguration> {
 
+        private static final String DEFAULT_TOTAL_PRICE_STATUS = "FINAL";
+
         private String mBuilderMerchantAccount;
         private int mBuilderGooglePayEnvironment = getDefaultGooglePayEnvironment();
         private Amount mBuilderAmount = createDefaultAmount();
@@ -216,6 +228,7 @@ public class GooglePayConfiguration extends Configuration {
         private ShippingAddressParameters mBuilderShippingAddressParameters;
         private boolean mBuilderBillingAddressRequired;
         private BillingAddressParameters mBuilderBillingAddressParameters;
+        private String mBuilderTotalPriceStatus = DEFAULT_TOTAL_PRICE_STATUS;
 
         private int getDefaultGooglePayEnvironment() {
             if (mBuilderEnvironment == Environment.TEST) {
@@ -264,6 +277,10 @@ public class GooglePayConfiguration extends Configuration {
             return (Builder) super.setEnvironment(builderEnvironment);
         }
 
+        public void setTotalPriceStatus(@Nullable String builderTotalPriceStatus) {
+            mBuilderTotalPriceStatus = builderTotalPriceStatus;
+        }
+
         @NonNull
         @Override
         public GooglePayConfiguration build() {
@@ -274,6 +291,7 @@ public class GooglePayConfiguration extends Configuration {
                     mBuilderMerchantAccount,
                     mBuilderGooglePayEnvironment,
                     mBuilderAmount,
+                    mBuilderTotalPriceStatus,
                     mBuilderCountryCode,
                     mBuilderMerchantInfo,
                     mBuilderAllowedAuthMethods,
