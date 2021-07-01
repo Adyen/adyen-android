@@ -103,7 +103,11 @@ internal fun <T : Configuration> getDefaultConfigForPaymentMethod(
         PaymentMethodTypes.ENTERCASH -> EntercashConfiguration.Builder(context, clientKey)
         PaymentMethodTypes.EPS -> EPSConfiguration.Builder(context, clientKey)
         PaymentMethodTypes.GOOGLE_PAY,
-        PaymentMethodTypes.GOOGLE_PAY_LEGACY -> GooglePayConfiguration.Builder(context, clientKey).setAmount(dropInConfiguration.amount)
+        PaymentMethodTypes.GOOGLE_PAY_LEGACY -> {
+            GooglePayConfiguration.Builder(context, clientKey).apply {
+                if (!dropInConfiguration.amount.isEmpty) setAmount(dropInConfiguration.amount)
+            }
+        }
         PaymentMethodTypes.IDEAL -> IdealConfiguration.Builder(context, clientKey)
         PaymentMethodTypes.MB_WAY -> MBWayConfiguration.Builder(context, clientKey)
         PaymentMethodTypes.MOLPAY_THAILAND,
