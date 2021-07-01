@@ -144,6 +144,8 @@ class MainActivity : AppCompatActivity() {
         val shopperLocaleString = keyValueStorage.getShopperLocale()
         val shopperLocale = LocaleUtil.fromLanguageTag(shopperLocaleString)
 
+        val amount = keyValueStorage.getAmount()
+
         val cardConfiguration = CardConfiguration.Builder(this@MainActivity, BuildConfig.CLIENT_KEY)
             .setShopperReference(keyValueStorage.getShopperReference())
             .setShopperLocale(shopperLocale)
@@ -152,6 +154,7 @@ class MainActivity : AppCompatActivity() {
 
         val googlePayConfig = GooglePayConfiguration.Builder(this@MainActivity, BuildConfig.CLIENT_KEY)
             .setCountryCode(keyValueStorage.getCountry())
+            .setAmount(amount)
             .setEnvironment(Environment.TEST)
             .build()
 
@@ -176,8 +179,6 @@ class MainActivity : AppCompatActivity() {
             .addBcmcConfiguration(bcmcConfiguration)
             .addGooglePayConfiguration(googlePayConfig)
             .add3ds2ActionConfiguration(adyen3DS2Configuration)
-
-        val amount = keyValueStorage.getAmount()
 
         try {
             dropInConfigurationBuilder.setAmount(amount)
