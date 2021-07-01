@@ -14,3 +14,6 @@
 
 ## Changed
 - `WeChatPayActionComponent` is now an `IntentHandlingComponent`, the method `handleResultIntent` is renamed to `handleIntent`.
+
+## Fixed
+- If `GooglePayConfiguration` is not provided manually to Drop-in, Google Pay will use the amount specified in `DropInConfiguration`.
