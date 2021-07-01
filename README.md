@@ -16,18 +16,18 @@ If you have a feature request, or spotted a bug or a technical problem, create a
 
 ## Installation
 
-The Components are available through [jcenter][dl], you only need to add the Gradle dependency.
+The Components are available through [Maven Central][dl], you only need to add the Gradle dependency.
 
 ### Import with Gradle
 
 Import the Component module for the Payment Method you want to use by adding it to your `build.gradle` file.
 For example, for the Drop-in solution you should add:
 ```groovy
-implementation "com.adyen.checkout:drop-in:3.8.0"
+implementation "com.adyen.checkout:drop-in:4.0.0"
 ```
 For a Credit Card component you should add:
 ```groovy
-implementation "com.adyen.checkout:card-ui:3.8.0"
+implementation "com.adyen.checkout:card:4.0.0"
 ```
 
 ## Drop-in
@@ -46,48 +46,89 @@ val paymentMethodsApiResponse = PaymentMethodsApiResponse.SERIALIZER.deserialize
 The Drop-in relies on you to implement the calls to your server.
 When calling [`/payments`][apiExplorer.payments] or [`/payments/details`][apiExplorer.paymentsDetails] is required, it will trigger an intent to the `DropInService` which you need to extend.
 The data comes as a `JSONObject` that you can use to compose your final `/payments` call on your back end.
-After the call, you return a `CallResult` with a type and message, each type expects a certain message.
-- ACTION - If the result contains an `action` object, return it in the message to continue the payment flow.
-- FINISHED - If there is no `action` the payment flow is finished, the message will be passed along as the result.
-- ERROR - If an error happened during the connection.
+After the call, you return a `DropInServiceResult` with a certain type, each type expects different parameters.
+- `DropInServiceResult.Action` - If the result contains an `action` object, return it in the `actionJSON` param to continue the payment flow.
+- `DropInServiceResult.Finished` - If there is no `action` the payment flow is finished, the `result` will be passed along.
+- `DropInServiceResult.Error` - If an error happened during the connection.
  
 ```kotlin
 class YourDropInService : DropInService() {
-    override fun makePaymentsCall(paymentComponentData: JSONObject): CallResult {
-        // make /payments call with the component data
-        return CallResult(CallResult.ResultType.ACTION, "action JSON object")
-    }
-    
-    override fun makeDetailsCall(actionComponentData: JSONObject): CallResult {
-        // make /payments/details call with the component data
-        return CallResult(CallResult.ResultType.FINISHED, "Success")
-    }
+   // Submitting a payment request
+   override fun makePaymentsCall(paymentComponentJson: JSONObject): DropInServiceResult {
+       // Your server should make a /payments call containing the `paymentComponentJson`
+       // Create the `DropInServiceResult` based on the /payments response
+       return DropInServiceResult.Action("action JSON object")
+   }
+   // Submitting additional payment details
+   override fun makeDetailsCall(actionComponentJson: JSONObject): DropInServiceResult {
+       // Your server should make a /payments/details call containing the `actionComponentJson`
+       // Create the `DropInServiceResult` based on the /payments/details response
+       return DropInServiceResult.Finished("Authorised")
+   }
 }
 ```
 
 Don't forget to also add the service your manifest.
 ```xml
-<service
-    android:name=".YourDropInService"
-    android:permission="android.permission.BIND_JOB_SERVICE"/>
+<service android:name=".YourDropInService"/>
 ```
 
-Some payment methods need additional configuration. For example, to enable the card form, the Drop-in needs a public key from the Customer Area to be used for encryption. These payment method specific configuration parameters can be set in the `DropInConfiguration`:
+Some payment methods need additional configuration. For example, to enable the card form, the Drop-in needs a client key from the Customer Area. These payment method specific configuration parameters can be set in the `DropInConfiguration`:
 
 ```kotlin
-val dropInConfiguration = DropInConfiguration.Builder(this@MainActivity,
-resultIntent, YourDropInService::class.java)
-    .addCardConfiguration(cardConfiguration)
+// Optional, if you want to display the amount and currency. In this example, the Pay button will display 10 EUR.
+val amount = Amount().apply {
+    currency = "EUR"
+    value = 10_00
+}
+
+val dropInConfiguration = DropInConfiguration.Builder(YourContext, YourIntent, "YOUR_CLIENT_KEY")
+    .setAmount(amount)
+    .setShopperLocale(shopperLocale)
     .build()
 ```
 
 You can find an example on how to create the `cardConfiguration` in the [Components](#components) section.
 
-After serializing the payment methods and creating the configuration, the Drop-in is ready to be initialized. Just call the `.startPayment()` method, the final result sent on the `CallResult` will be added to your `resultIntent` to start your Activity.
+After serializing the payment methods and creating the configuration, the Drop-in is ready to be initialized. Just call the `DropIn.startPayment()` method. Optionally, you can pass a `resultIntent` to be launched after Drop-in finishes (for example, a `ResultActivity`).
 
 ```kotlin
-DropIn.startPayment(this@YourActivity, paymentMethodsApiResponse, dropInConfiguration)
+//Optional. In this example, ResultActivity will be launched after Drop-in finishes
+val resultIntent = Intent(YourContext, ResultActivity::class.java)
+
+DropIn.startPayment(YourContext, paymentMethodsApiResponse, dropInConfiguration, resultIntent)
 ```
+
+After the shopper completes the payment, you can obtain the the `result` you previously passed with the `DropInServiceResult.Finished`. To obtain the `result`:
+
+* If you specified a `resultIntent` when calling `DropIn.startPayment`, simply call `DropIn.getDropInResultFromIntent` inside  `onCreate` within the newly launched activity:
+
+```kotlin
+class ResultActivity : Activity() {
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+        val result = DropIn.getDropInResultFromIntent(intent)
+    }
+}
+```
+
+* If you did not specify a `resultIntent` when calling `DropIn.startPayment`, call `DropIn.handleActivityResult` inside `onActivityResult` within the activity that initiated the payment (`DropIn.startPayment`). The result is obtained in the `DropInResult` wrapper class:
+
+```kotlin
+class CheckoutActivity : Activity() {
+    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
+        super.onActivityResult(requestCode, resultCode, data)
+        val dropInResult = DropIn.handleActivityResult(requestCode, resultCode, data) ?: return
+        when (dropInResult) {
+            is DropInResult.Finished -> handleFinished(dropInResult.result)
+            is DropInResult.Error -> handleError(dropInResult.reason)
+            is DropInResult.CancelledByUser -> handleCancelled()
+        }
+    }
+}
+```
+    
+Note that in both cases, you should use `DropIn.handleActivityResult` (the code sample above) to handle the error and cancelled by user scenarios.
 
 ## Components
 
@@ -96,14 +137,15 @@ In order to have more flexibility over the checkout flow, you can use our Compon
 To do that you need the data of that specific payment method parsed to the `PaymentMethod` class, and to create the configuration object (check out the [docs][docs.cardConfiguration] for a more detailed guide on how to initialize the `CardConfiguration.Builder`).
 
 ```kotlin
-val cardConfiguration = CardConfiguration.Builder(context).build()
-        
+val cardConfiguration = CardConfiguration.Builder(context, "YOUR_CLIENT_KEY") .build()
+
 val cardComponent = CardComponent.PROVIDER.get(this@YourActivity, paymentMethod, cardConfiguration)
 ```
 
 Then you need to add the Component View to your layout.
 ```xml
 <com.adyen.checkout.card.CardView 
+        android:id="@+id/cardView"
         android:layout_width="wrap_content" 
         android:layout_height="wrap_content"/>
 ```
@@ -115,11 +157,12 @@ cardView.attach(cardComponent, this@YourActivity)
 
 From this moment you will start receiving updates when the user inputs data. When the data is valid, you can send it to the `/payments` endpoint.
 ```kotlin
-cardComponent.observe(this@MainActivity, Observer { 
-    if (it?.isValid == true) {
-        // you can now use it.data to send your payments/ request
-    }
-})
+cardComponent.observe(this) { paymentComponentState ->
+   if (paymentComponentState?.isValid == true) {
+      // When the shopper proceeds to pay, pass the `paymentComponentState.data` to your server to send a /payments request
+      sendPayment(paymentComponentState.data)
+   }
+}
 ```
 
 ## ProGuard
@@ -138,35 +181,23 @@ Please let us know if you find any issues.
 }
 ```
 
-## Common Issues
-
-- Our `TextInputLayout` uses a MaterialComponents style, so it requires your app theme to extend `Theme.MaterialComponents`.
-If you use a `Theme.AppCompat` you might need to override this style. But note that this will also change the appearance of the TextInputLayout.
-```xml
-<style name="AdyenCheckout.TextInputLayout" >
-    <item name="boxStrokeColor">@color/colorAccent</item>
-    <item name="hintTextAppearance">@style/AdyenCheckout.HintTextStyle</item>
-    <item name="android:minHeight">@dimen/input_layout_height</item>
-</style>
-```
-
 ## See also
 
 * [Android Documentation][docs.android]
 
 * [Adyen Checkout Documentation][docs.checkout]
 
-* [API Reference](https://docs.adyen.com/checkout/api-only/)
+* [API Reference](https://docs.adyen.com/online-payments/api-only/)
 
 ## License
 
 This repository is open source and available under the MIT license. For more information, see the LICENSE file.
 
-[docs.checkout]: https://docs.adyen.com/checkout/
-[docs.android]: https://docs.adyen.com/checkout/android/
-[dl]: https://jcenter.bintray.com/com/adyen/checkout/
-[apiExplorer.paymentMethods]: https://docs.adyen.com/api-explorer/#/PaymentSetupAndVerificationService/v46/paymentMethods
-[apiExplorer.payments]: https://docs.adyen.com/api-explorer/#/PaymentSetupAndVerificationService/v46/payments
-[apiExplorer.paymentsDetails]: https://docs.adyen.com/api-explorer/#/PaymentSetupAndVerificationService/v46/paymentsDetails
+[docs.checkout]: https://docs.adyen.com/online-payments/
+[docs.android]: https://docs.adyen.com/online-payments/android/
+[dl]: https://repo1.maven.org/maven2/com/adyen/checkout/
+[apiExplorer.paymentMethods]: https://docs.adyen.com/api-explorer/#/CheckoutService/v67/post/paymentMethods
+[apiExplorer.payments]: https://docs.adyen.com/api-explorer/#/CheckoutService/v67/post/payments
+[apiExplorer.paymentsDetails]: https://docs.adyen.com/api-explorer/#/CheckoutService/v67/post/payments/details
 [adyen.support]: https://support.adyen.com/hc/en-us/requests/new?ticket_form_id=360000705420
-[docs.cardConfiguration]: https://docs.adyen.com/checkout/android/components#step-1-set-up-components
+[docs.cardConfiguration]: https://docs.adyen.com/online-payments/android/components#step-1-set-up-components
