@@ -13,12 +13,11 @@
 - `Adyen3DS2Component`, `QRCodeComponent`, `RedirectComponent` and `WeChatPayActionComponent` now implement `IntentHandlingComponent` and will have a `handleIntent` method. This method replaces `handleRedirectResponse` in `RedirectComponent` and `handleResultIntent` in `WeChatPayActionComponent`.  
 - `QRCodeComponent` will now redirect QR Code actions that should work as a redirect on Android (e.g. `bcmc_mobile`). Use the `handleIntent` method to handle the result of the redirect.
 - `Adyen3DS2Component` now supports the new 3DS2 frictionless flow (requires API v67). In some cases the component will now make a redirect, use the `handleIntent` method to handle the result of the redirect.
-- `GooglePayComponent` is now an `ActivityResultHandlingComponent`, no methods are affected by this change.
-- For certain BINs, the BIN lookup will indicate the CVC field is optional.
+- For certain card types, the CVC field will be marked as optional. The `CardComponent` performs a BIN lookup call which uses the card number to try and identify the corresponding card type and  whether the CVC is required or not.
 - Support new `"googlepay"` txVariant.
 - `TotalPriceStatus` to the `GooglePayConfiguration`.
 
-### Fixed
+## Fixed
 - Update Google Pay logo. 
 - Pay button not working when paying with a stored card with holder name required. 
 - If `GooglePayConfiguration` is not provided manually to Drop-in, Google Pay will use the amount specified in `DropInConfiguration`.
