@@ -24,7 +24,8 @@ fun createPaymentRequest(
     merchantAccount: String,
     redirectUrl: String,
     additionalData: AdditionalData,
-    force3DS2Challenge: Boolean = false
+    force3DS2Challenge: Boolean = true,
+    threeDSAuthenticationOnly: Boolean = false
 ): JSONObject {
 
     val request = JSONObject(paymentComponentData.toString())
@@ -39,6 +40,7 @@ fun createPaymentRequest(
     request.put("channel", "android")
     request.put("additionalData", JSONObject(Gson().toJson(additionalData)))
     request.put("lineItems", JSONArray(Gson().toJson(listOf(Item()))))
+    request.put("threeDSAuthenticationOnly", threeDSAuthenticationOnly)
 
     if (force3DS2Challenge) {
         val threeDS2RequestData = JSONObject()
