@@ -11,6 +11,7 @@
     <string name="checkout_card_holder_hint">Nombre en la tarjeta</string>
     <string name="checkout_card_expiry_date_hint">Fecha de expiración</string>
     <string name="checkout_card_security_code_hint">CVC / CVV</string>
+    <string name="checkout_card_security_code_optional_hint">CVC / CVV (opcional)</string>
 
     <string name="checkout_card_number_not_valid">Número de tarjeta no válido</string>
     <string name="checkout_expiry_date_not_valid">La fecha de caducidad no es válida</string>

@@ -11,7 +11,10 @@ package com.adyen.checkout.dropin
 import android.app.Application
 import android.content.Context
 import androidx.fragment.app.Fragment
+import androidx.fragment.app.FragmentActivity
+import com.adyen.checkout.adyen3ds2.Adyen3DS2Component
 import com.adyen.checkout.adyen3ds2.Adyen3DS2Configuration
+import com.adyen.checkout.await.AwaitComponent
 import com.adyen.checkout.await.AwaitConfiguration
 import com.adyen.checkout.await.AwaitView
 import com.adyen.checkout.bcmc.BcmcComponent
@@ -23,6 +26,7 @@ import com.adyen.checkout.blik.BlikView
 import com.adyen.checkout.card.CardComponent
 import com.adyen.checkout.card.CardConfiguration
 import com.adyen.checkout.card.CardView
+import com.adyen.checkout.components.ActionComponentProvider
 import com.adyen.checkout.components.AlwaysAvailablePaymentMethod
 import com.adyen.checkout.components.ComponentAvailableCallback
 import com.adyen.checkout.components.ComponentView
@@ -31,12 +35,14 @@ import com.adyen.checkout.components.PaymentComponentProvider
 import com.adyen.checkout.components.PaymentComponentState
 import com.adyen.checkout.components.PaymentMethodAvailabilityCheck
 import com.adyen.checkout.components.ViewableComponent
+import com.adyen.checkout.components.base.BaseActionComponent
 import com.adyen.checkout.components.base.BaseConfigurationBuilder
 import com.adyen.checkout.components.base.Configuration
 import com.adyen.checkout.components.base.OutputData
 import com.adyen.checkout.components.model.paymentmethods.PaymentMethod
 import com.adyen.checkout.components.model.paymentmethods.StoredPaymentMethod
 import com.adyen.checkout.components.model.payments.request.PaymentMethodDetails
+import com.adyen.checkout.components.model.payments.response.Action
 import com.adyen.checkout.components.util.ActionTypes
 import com.adyen.checkout.components.util.PaymentMethodTypes
 import com.adyen.checkout.core.exception.CheckoutException
@@ -66,12 +72,15 @@ import com.adyen.checkout.molpay.MolpayRecyclerView
 import com.adyen.checkout.openbanking.OpenBankingComponent
 import com.adyen.checkout.openbanking.OpenBankingConfiguration
 import com.adyen.checkout.openbanking.OpenBankingRecyclerView
+import com.adyen.checkout.qrcode.QRCodeComponent
 import com.adyen.checkout.qrcode.QRCodeConfiguration
 import com.adyen.checkout.qrcode.QRCodeView
+import com.adyen.checkout.redirect.RedirectComponent
 import com.adyen.checkout.redirect.RedirectConfiguration
 import com.adyen.checkout.sepa.SepaComponent
 import com.adyen.checkout.sepa.SepaConfiguration
 import com.adyen.checkout.sepa.SepaView
+import com.adyen.checkout.wechatpay.WeChatPayActionComponent
 import com.adyen.checkout.wechatpay.WeChatPayActionConfiguration
 import com.adyen.checkout.wechatpay.WeChatPayProvider
 
@@ -93,7 +102,12 @@ internal fun <T : Configuration> getDefaultConfigForPaymentMethod(
         PaymentMethodTypes.DOTPAY -> DotpayConfiguration.Builder(context, clientKey)
         PaymentMethodTypes.ENTERCASH -> EntercashConfiguration.Builder(context, clientKey)
         PaymentMethodTypes.EPS -> EPSConfiguration.Builder(context, clientKey)
-        PaymentMethodTypes.GOOGLE_PAY -> GooglePayConfiguration.Builder(context, clientKey)
+        PaymentMethodTypes.GOOGLE_PAY,
+        PaymentMethodTypes.GOOGLE_PAY_LEGACY -> {
+            GooglePayConfiguration.Builder(context, clientKey).apply {
+                if (!dropInConfiguration.amount.isEmpty) setAmount(dropInConfiguration.amount)
+            }
+        }
         PaymentMethodTypes.IDEAL -> IdealConfiguration.Builder(context, clientKey)
         PaymentMethodTypes.MB_WAY -> MBWayConfiguration.Builder(context, clientKey)
         PaymentMethodTypes.MOLPAY_THAILAND,
@@ -163,7 +177,8 @@ internal fun checkPaymentMethodAvailability(
 internal fun getPaymentMethodAvailabilityCheck(paymentMethodType: String): PaymentMethodAvailabilityCheck<Configuration> {
     @Suppress("UNCHECKED_CAST")
     return when (paymentMethodType) {
-        PaymentMethodTypes.GOOGLE_PAY -> GooglePayProvider()
+        PaymentMethodTypes.GOOGLE_PAY,
+        PaymentMethodTypes.GOOGLE_PAY_LEGACY -> GooglePayProvider()
         PaymentMethodTypes.WECHAT_PAY_SDK -> WeChatPayProvider()
         else -> AlwaysAvailablePaymentMethod()
     } as PaymentMethodAvailabilityCheck<Configuration>
@@ -239,6 +254,13 @@ internal fun getComponentFor(
         PaymentMethodTypes.GOOGLE_PAY -> {
             val googlePayConfiguration: GooglePayConfiguration = dropInConfiguration.getConfigurationForPaymentMethod(
                 PaymentMethodTypes.GOOGLE_PAY,
+                context
+            )
+            GooglePayComponent.PROVIDER.get(fragment, paymentMethod, googlePayConfiguration)
+        }
+        PaymentMethodTypes.GOOGLE_PAY_LEGACY -> {
+            val googlePayConfiguration: GooglePayConfiguration = dropInConfiguration.getConfigurationForPaymentMethod(
+                PaymentMethodTypes.GOOGLE_PAY_LEGACY,
                 context
             )
             GooglePayComponent.PROVIDER.get(fragment, paymentMethod, googlePayConfiguration)
@@ -325,4 +347,55 @@ internal fun getViewFor(
         }
         // TODO check if this generic approach can be improved
     } as ComponentView<in OutputData, ViewableComponent<*, *, *>>
+}
+
+/**
+ * @param action The action to be handled
+ *
+ * @return The provider able to handle the action.
+ */
+internal fun getActionProviderFor(action: Action): ActionComponentProvider<out BaseActionComponent<out Configuration>, out Configuration>? {
+    val allActionProviders = listOf(
+        RedirectComponent.PROVIDER,
+        Adyen3DS2Component.PROVIDER,
+        WeChatPayActionComponent.PROVIDER,
+        AwaitComponent.PROVIDER,
+        QRCodeComponent.PROVIDER
+    )
+    return allActionProviders.firstOrNull { it.canHandleAction(action) }
+}
+
+/**
+ * Provides a [BaseActionComponent] from an [ActionComponentProvider].
+ *
+ * @param activity The Action which the ActionComponent lifecycle will be bound to.
+ * @param provider The component provider.
+ * @throws CheckoutException In case a component cannot be created.
+ */
+@Suppress("ComplexMethod", "LongMethod")
+internal fun getActionComponentFor(
+    activity: FragmentActivity,
+    provider: ActionComponentProvider<out BaseActionComponent<out Configuration>, out Configuration>,
+    dropInConfiguration: DropInConfiguration
+): BaseActionComponent<out Configuration> {
+    return when (provider) {
+        RedirectComponent.PROVIDER -> {
+            RedirectComponent.PROVIDER.get(activity, activity.application, dropInConfiguration.getConfigurationForAction(activity))
+        }
+        Adyen3DS2Component.PROVIDER -> {
+            Adyen3DS2Component.PROVIDER.get(activity, activity.application, dropInConfiguration.getConfigurationForAction(activity))
+        }
+        WeChatPayActionComponent.PROVIDER -> {
+            WeChatPayActionComponent.PROVIDER.get(activity, activity.application, dropInConfiguration.getConfigurationForAction(activity))
+        }
+        AwaitComponent.PROVIDER -> {
+            AwaitComponent.PROVIDER.get(activity, activity.application, dropInConfiguration.getConfigurationForAction(activity))
+        }
+        QRCodeComponent.PROVIDER -> {
+            QRCodeComponent.PROVIDER.get(activity, activity.application, dropInConfiguration.getConfigurationForAction(activity))
+        }
+        else -> {
+            throw CheckoutException("Unable to find component for provider - $provider")
+        }
+    }
 }

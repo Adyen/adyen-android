@@ -11,10 +11,8 @@ package com.adyen.checkout.googlepay.util;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 
-import com.adyen.checkout.components.model.payments.Amount;
 import com.adyen.checkout.components.model.payments.request.GooglePayPaymentMethod;
 import com.adyen.checkout.components.util.AmountFormat;
-import com.adyen.checkout.components.util.PaymentMethodTypes;
 import com.adyen.checkout.core.exception.CheckoutException;
 import com.adyen.checkout.core.exception.NoConstructorException;
 import com.adyen.checkout.core.log.LogUtil;
@@ -62,7 +60,7 @@ public final class GooglePayUtils {
     private static final String ADYEN_GATEWAY = "adyen";
 
     // TransactionInfoModel
-    private static final String DEFAULT_TOTAL_PRICE_STATUS = "FINAL";
+
 
     // PaymentData result JSON keys
     private static final String PAYMENT_METHOD_DATA = "paymentMethodData";
@@ -133,16 +131,17 @@ public final class GooglePayUtils {
      * Create the PaymentMethod object from Google Pay based on the response from the SDK.
      *
      * @param paymentData The response from Google Pay SDK.
+     * @param paymentMethodType the type of the payment method.
      * @return The object matching the data for the API call to Adyen.
      */
     @Nullable
-    public static GooglePayPaymentMethod createGooglePayPaymentMethod(@Nullable PaymentData paymentData) {
+    public static GooglePayPaymentMethod createGooglePayPaymentMethod(@Nullable PaymentData paymentData, @Nullable String paymentMethodType) {
         if (paymentData == null) {
             return null;
         }
 
         final GooglePayPaymentMethod paymentMethod = new GooglePayPaymentMethod();
-        paymentMethod.setType(PaymentMethodTypes.GOOGLE_PAY);
+        paymentMethod.setType(paymentMethodType);
 
         try {
             final JSONObject paymentDataJson = new JSONObject(paymentData.toJson());
@@ -152,8 +151,8 @@ public final class GooglePayUtils {
             paymentMethod.setGooglePayToken(tokenizationDataJson.getString(TOKEN));
 
             final JSONObject infoJson = paymentMethodDataJson.optJSONObject(INFO);
-            if (infoJson != null) {
-                paymentMethod.setGooglePayCardNetwork(infoJson.optString(CARD_NETWORK, null));
+            if (infoJson != null && infoJson.has(CARD_NETWORK)) {
+                paymentMethod.setGooglePayCardNetwork(infoJson.getString(CARD_NETWORK));
             }
 
             return paymentMethod;
@@ -182,7 +181,7 @@ public final class GooglePayUtils {
         paymentDataRequestModel.setApiVersion(MAJOR_API_VERSION);
         paymentDataRequestModel.setApiVersionMinor(MINOT_API_VERSION);
         paymentDataRequestModel.setMerchantInfo(params.getMerchantInfo());
-        paymentDataRequestModel.setTransactionInfo(createTransactionInfo(params.getAmount(), params.getCountryCode()));
+        paymentDataRequestModel.setTransactionInfo(createTransactionInfo(params));
 
         final ArrayList<GooglePayPaymentMethodModel> allowedPaymentMethods = new ArrayList<>();
         allowedPaymentMethods.add(createCardPaymentMethod(params));
@@ -230,16 +229,16 @@ public final class GooglePayUtils {
     }
 
     @NonNull
-    private static TransactionInfoModel createTransactionInfo(@NonNull Amount amount, @Nullable String countryCode) {
-        BigDecimal bigDecimal = AmountFormat.toBigDecimal(amount);
+    private static TransactionInfoModel createTransactionInfo(@NonNull GooglePayParams params) {
+        BigDecimal bigDecimal = AmountFormat.toBigDecimal(params.getAmount());
         bigDecimal = bigDecimal.setScale(GOOGLE_PAY_DECIMAL_SCALE, RoundingMode.HALF_UP);
         final String displayAmount = GOOGLE_PAY_DECIMAL_FORMAT.format(bigDecimal);
 
         final TransactionInfoModel transactionInfoModel = new TransactionInfoModel();
         transactionInfoModel.setTotalPrice(displayAmount);
-        transactionInfoModel.setCountryCode(countryCode);
-        transactionInfoModel.setTotalPriceStatus(DEFAULT_TOTAL_PRICE_STATUS);
-        transactionInfoModel.setCurrencyCode(amount.getCurrency());
+        transactionInfoModel.setCountryCode(params.getCountryCode());
+        transactionInfoModel.setTotalPriceStatus(params.getTotalPriceStatus());
+        transactionInfoModel.setCurrencyCode(params.getAmount().getCurrency());
 
         return transactionInfoModel;
     }

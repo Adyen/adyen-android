@@ -158,7 +158,7 @@ class DropInActivity : AppCompatActivity(), DropInBottomSheetDialogFragment.Prot
             }
         }
 
-        actionHandler = ActionHandler(this, this, dropInViewModel.dropInConfiguration)
+        actionHandler = ActionHandler(this, dropInViewModel.dropInConfiguration)
         actionHandler.restoreState(savedInstanceState)
 
         handleIntent(intent)
@@ -474,7 +474,7 @@ class DropInActivity : AppCompatActivity(), DropInBottomSheetDialogFragment.Prot
             Intent.ACTION_VIEW -> {
                 val data = intent.data
                 if (data != null && data.toString().startsWith(RedirectUtil.REDIRECT_RESULT_SCHEME)) {
-                    actionHandler.handleRedirectResponse(data)
+                    actionHandler.handleRedirectResponse(intent)
                 } else {
                     Logger.e(TAG, "Unexpected response from ACTION_VIEW - ${intent.data}")
                 }

@@ -8,7 +8,6 @@
 
 package com.adyen.checkout.card
 
-import com.adyen.checkout.card.api.BinLookupConnection
 import com.adyen.checkout.card.api.model.Brand
 import com.adyen.checkout.card.data.CardType
 import com.adyen.checkout.card.data.DetectedCardType
@@ -54,7 +53,7 @@ class NewCardDelegate(
 
     override fun validateSecurityCode(
         securityCode: String,
-        cardType: CardType?
+        cardType: DetectedCardType?
     ): FieldState<String> {
         return if (cardConfiguration.isHideCvc) {
             FieldState(
@@ -63,6 +62,20 @@ class NewCardDelegate(
             )
         } else {
             CardValidationUtils.validateSecurityCode(securityCode, cardType)
+        }
+    }
+
+    override fun validateHolderName(holderName: String): FieldState<String> {
+        return if (cardConfiguration.isHolderNameRequired && holderName.isBlank()) {
+            FieldState(
+                holderName,
+                Validation.Invalid(R.string.checkout_holder_name_not_valid)
+            )
+        } else {
+            FieldState(
+                holderName,
+                Validation.Valid
+            )
         }
     }
 
@@ -90,8 +103,7 @@ class NewCardDelegate(
                 return binLookupRepository.get(cardNumber)
             }
 
-            // if length is exactly the size, we call bin lookup API
-            if (cardNumber.length == BinLookupConnection.REQUIRED_BIN_SIZE && publicKey != null) {
+            if (publicKey != null) {
                 Logger.d(TAG, "Launching Bin Lookup")
                 coroutineScope.launch {
                     val detectedCardTypes = binLookupRepository.fetch(cardNumber, publicKey, cardConfiguration)
@@ -122,7 +134,7 @@ class NewCardDelegate(
             showExpiryDate = true,
             enableLuhnCheck = true,
             cvcPolicy = when {
-                cardConfiguration.isHideCvc || noCvcBrands.contains(cardType) -> Brand.CvcPolicy.HIDDEN
+                noCvcBrands.contains(cardType) -> Brand.CvcPolicy.HIDDEN
                 else -> Brand.CvcPolicy.REQUIRED
             }
         )

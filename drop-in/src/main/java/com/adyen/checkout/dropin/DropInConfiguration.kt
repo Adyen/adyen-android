@@ -291,6 +291,7 @@ class DropInConfiguration : Configuration, Parcelable {
          */
         fun addGooglePayConfiguration(googlePayConfiguration: GooglePayConfiguration): Builder {
             availablePaymentConfigs[PaymentMethodTypes.GOOGLE_PAY] = googlePayConfiguration
+            availablePaymentConfigs[PaymentMethodTypes.GOOGLE_PAY_LEGACY] = googlePayConfiguration
             return this
         }
 

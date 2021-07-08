@@ -13,7 +13,6 @@ import android.os.Parcel;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 
-import com.adyen.checkout.components.util.PaymentMethodTypes;
 import com.adyen.checkout.core.exception.ModelSerializationException;
 import com.adyen.checkout.core.model.JsonUtils;
 
@@ -25,8 +24,6 @@ public class GooglePayPaymentMethod extends PaymentMethodDetails {
 
     @NonNull
     public static final Creator<GooglePayPaymentMethod> CREATOR = new Creator<>(GooglePayPaymentMethod.class);
-
-    public static final String PAYMENT_METHOD_TYPE = PaymentMethodTypes.GOOGLE_PAY;
 
     private static final String GOOGLE_PAY_TOKEN = "googlePayToken";
     private static final String GOOGLE_PAY_CARD_NETWORK = "googlePayCardNetwork";

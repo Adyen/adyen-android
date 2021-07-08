@@ -9,25 +9,15 @@
 [//]: # ( - Configurations public constructor are deprecated, please use each Configuration's builder to make a Configuration object)
 
 ## Added
-- Support for Pix payment method.
-- `QRCodeComponent` to handle action type `qrCode` from payment method `pix`.
-    - Support for other payment methods with a qrCode action will be added in the future.
-- Support for returning `returnUrlQueryString` from redirect URL for some redirect payment methods like Swish.
-
-## Changed
-- New releases are now published to [Maven Central](https://repo1.maven.org/maven2/com/adyen/checkout/)
-- A `Configuration` object is now required when initializing any component. Action Components did not require it previously.
-- Provided default `GooglePayConfiguration` and `CardConfiguration` in Drop-in. It's not required to manually set these configurations in `DropInConfiguration.Builder` anymore.
-- The default Google Pay environment will automatically follow the Adyen environment. It will be initialized as `ENVIRONMENT_TEST` when using Adyen's `TEST` environment, otherwise it will be set to `ENVIRONMENT_PRODUCTION`.
-- The `merchantAccount` parameter in `GooglePayConfiguration.Builder` is now optional. You can remove it from the builder constructor, or use `GooglePayConfiguration.Builder.setMerchantAccount` if you need to pass it manually.
-- Updated 3DS2 SDK to version 2.2.2
-- Updated Material Components dependency to 1.3.0.
-- Screenshots are now allowed in Debug builds, when the Card component is displayed.
+- 3 new methods to `ActionComponentProvider`: `canHandleAction`, `requiresView` and `getSupportedActionTypes`.
+- `Adyen3DS2Component`, `QRCodeComponent`, `RedirectComponent` and `WeChatPayActionComponent` now implement `IntentHandlingComponent` and will have a `handleIntent` method. This method replaces `handleRedirectResponse` in `RedirectComponent` and `handleResultIntent` in `WeChatPayActionComponent`.  
+- `QRCodeComponent` will now redirect QR Code actions that should work as a redirect on Android (e.g. `bcmc_mobile`). Use the `handleIntent` method to handle the result of the redirect.
+- `Adyen3DS2Component` now supports the new 3DS2 frictionless flow (requires API v67). In some cases the component will now make a redirect, use the `handleIntent` method to handle the result of the redirect.
+- For certain card types, the CVC field will be marked as optional. The `CardComponent` performs a BIN lookup call which uses the card number to try and identify the corresponding card type and  whether the CVC is required or not.
+- Support new `"googlepay"` txVariant.
+- `TotalPriceStatus` to the `GooglePayConfiguration`.
 
 ## Fixed
-- Passing `threeDSRequestorAppURL` to the SDK in the 3DS2 Component only when protocol version is 2.2.0 or higher since this is not expected in 2.1.0
-- Style in TextInputLayout where in some scenarios text color would be too light and hard to see.
-
-## Removed
-- `WeChatPayComponent` since it didn't have any function. Instead you can simply check if the App is available by calling: `WeChatPayProvider.isAvailable`.
-- `PaymentComponentProvider.isAvailable` since most payment methods are always available. Replaced it with `PaymentMethodAvailabilityCheck`, only implemented for methods that need to check for availability.
+- Update Google Pay logo. 
+- Pay button not working when paying with a stored card with holder name required. 
+- If `GooglePayConfiguration` is not provided manually to Drop-in, Google Pay will use the amount specified in `DropInConfiguration`.

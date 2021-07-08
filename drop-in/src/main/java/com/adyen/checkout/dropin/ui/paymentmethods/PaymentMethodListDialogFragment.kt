@@ -29,6 +29,7 @@ import com.adyen.checkout.core.log.Logger
 import com.adyen.checkout.dropin.R
 import com.adyen.checkout.dropin.ui.base.DropInBottomSheetDialogFragment
 import com.adyen.checkout.dropin.ui.getViewModel
+import com.adyen.checkout.googlepay.GooglePayComponent
 
 private val TAG = LogUtil.getTag()
 
@@ -112,11 +113,11 @@ class PaymentMethodListDialogFragment : DropInBottomSheetDialogFragment(), Payme
 
         // Check some specific payment methods that don't need to show a view
         when {
-            paymentMethod.type == PaymentMethodTypes.GOOGLE_PAY -> {
+            GooglePayComponent.PAYMENT_METHOD_TYPES.contains(paymentMethod.type) -> {
                 Logger.d(TAG, "onPaymentMethodSelected: starting Google Pay")
                 protocol.startGooglePay(
                     dropInViewModel.getPaymentMethod(paymentMethod.type),
-                    dropInViewModel.dropInConfiguration.getConfigurationForPaymentMethod(PaymentMethodTypes.GOOGLE_PAY, requireContext())
+                    dropInViewModel.dropInConfiguration.getConfigurationForPaymentMethod(paymentMethod.type, requireContext())
                 )
             }
             PaymentMethodTypes.SUPPORTED_ACTION_ONLY_PAYMENT_METHODS.contains(paymentMethod.type) -> {
