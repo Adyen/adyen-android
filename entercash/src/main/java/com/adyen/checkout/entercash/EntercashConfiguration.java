@@ -87,8 +87,8 @@ public class EntercashConfiguration extends IssuerListConfiguration {
 
         @NonNull
         @Override
-        public EntercashConfiguration build() {
-            return new EntercashConfiguration(mBuilderShopperLocale, mBuilderEnvironment, mBuilderClientKey);
+        protected EntercashConfiguration buildInternal() {
+            return new EntercashConfiguration(getBuilderShopperLocale(), getBuilderEnvironment(), getBuilderClientKey());
         }
     }
 }

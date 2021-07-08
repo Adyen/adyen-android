@@ -99,11 +99,11 @@ public class BcmcConfiguration extends Configuration {
          * @return {@link BcmcConfiguration}
          */
         @NonNull
-        public BcmcConfiguration build() {
+        protected BcmcConfiguration buildInternal() {
             return new BcmcConfiguration(
-                    mBuilderShopperLocale,
-                    mBuilderEnvironment,
-                    mBuilderClientKey
+                    getBuilderShopperLocale(),
+                    getBuilderEnvironment(),
+                    getBuilderClientKey()
             );
         }
     }

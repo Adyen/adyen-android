@@ -87,8 +87,8 @@ public class MolpayConfiguration extends IssuerListConfiguration {
 
         @NonNull
         @Override
-        public MolpayConfiguration build() {
-            return new MolpayConfiguration(mBuilderShopperLocale, mBuilderEnvironment, mBuilderClientKey);
+        protected MolpayConfiguration buildInternal() {
+            return new MolpayConfiguration(getBuilderShopperLocale(), getBuilderEnvironment(), getBuilderClientKey());
         }
     }
 }

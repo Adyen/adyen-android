@@ -88,8 +88,8 @@ public class EPSConfiguration extends IssuerListConfiguration {
 
         @NonNull
         @Override
-        public EPSConfiguration build() {
-            return new EPSConfiguration(mBuilderShopperLocale, mBuilderEnvironment, mBuilderClientKey);
+        public EPSConfiguration buildInternal() {
+            return new EPSConfiguration(getBuilderShopperLocale(), getBuilderEnvironment(), getBuilderClientKey());
         }
     }
 }

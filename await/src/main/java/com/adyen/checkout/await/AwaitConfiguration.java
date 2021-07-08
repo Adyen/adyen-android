@@ -83,8 +83,8 @@ public class AwaitConfiguration extends Configuration {
 
         @NonNull
         @Override
-        public AwaitConfiguration build() {
-            return new AwaitConfiguration(mBuilderShopperLocale, mBuilderEnvironment, mBuilderClientKey);
+        protected AwaitConfiguration buildInternal() {
+            return new AwaitConfiguration(getBuilderShopperLocale(), getBuilderEnvironment(), getBuilderClientKey());
         }
     }
 }

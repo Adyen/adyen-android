@@ -299,11 +299,11 @@ public class CardConfiguration extends Configuration {
          * @return {@link CardConfiguration}
          */
         @NonNull
-        public CardConfiguration build() {
+        protected CardConfiguration buildInternal() {
             return new CardConfiguration(
-                    mBuilderShopperLocale,
-                    mBuilderEnvironment,
-                    mBuilderClientKey,
+                    getBuilderShopperLocale(),
+                    getBuilderEnvironment(),
+                    getBuilderClientKey(),
                     mBuilderHolderNameRequired,
                     mShopperReference,
                     mBuilderShowStorePaymentField,

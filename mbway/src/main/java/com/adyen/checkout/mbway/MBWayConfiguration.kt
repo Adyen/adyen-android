@@ -63,8 +63,8 @@ class MBWayConfiguration : Configuration {
             return super.setEnvironment(builderEnvironment) as Builder
         }
 
-        override fun build(): MBWayConfiguration {
-            return MBWayConfiguration(mBuilderShopperLocale, mBuilderEnvironment, mBuilderClientKey)
+        override fun buildInternal(): MBWayConfiguration {
+            return MBWayConfiguration(builderShopperLocale, builderEnvironment, builderClientKey)
         }
     }
 }

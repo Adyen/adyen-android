@@ -231,7 +231,7 @@ public class GooglePayConfiguration extends Configuration {
         private String mBuilderTotalPriceStatus = DEFAULT_TOTAL_PRICE_STATUS;
 
         private int getDefaultGooglePayEnvironment() {
-            if (mBuilderEnvironment == Environment.TEST) {
+            if (getBuilderEnvironment() == Environment.TEST) {
                 return WalletConstants.ENVIRONMENT_TEST;
             }
             return WalletConstants.ENVIRONMENT_PRODUCTION;
@@ -283,11 +283,11 @@ public class GooglePayConfiguration extends Configuration {
 
         @NonNull
         @Override
-        public GooglePayConfiguration build() {
+        protected GooglePayConfiguration buildInternal() {
             return new GooglePayConfiguration(
-                    mBuilderShopperLocale,
-                    mBuilderEnvironment,
-                    mBuilderClientKey,
+                    getBuilderShopperLocale(),
+                    getBuilderEnvironment(),
+                    getBuilderClientKey(),
                     mBuilderMerchantAccount,
                     mBuilderGooglePayEnvironment,
                     mBuilderAmount,

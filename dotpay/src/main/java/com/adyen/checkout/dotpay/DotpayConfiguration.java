@@ -87,8 +87,8 @@ public class DotpayConfiguration extends IssuerListConfiguration {
 
         @NonNull
         @Override
-        public DotpayConfiguration build() {
-            return new DotpayConfiguration(mBuilderShopperLocale, mBuilderEnvironment, mBuilderClientKey);
+        protected DotpayConfiguration buildInternal() {
+            return new DotpayConfiguration(getBuilderShopperLocale(), getBuilderEnvironment(), getBuilderClientKey());
         }
     }
 }

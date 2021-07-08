@@ -83,8 +83,8 @@ public class RedirectConfiguration extends Configuration {
 
         @NonNull
         @Override
-        public RedirectConfiguration build() {
-            return new RedirectConfiguration(mBuilderShopperLocale, mBuilderEnvironment, mBuilderClientKey);
+        protected RedirectConfiguration buildInternal() {
+            return new RedirectConfiguration(getBuilderShopperLocale(), getBuilderEnvironment(), getBuilderClientKey());
         }
     }
 }
