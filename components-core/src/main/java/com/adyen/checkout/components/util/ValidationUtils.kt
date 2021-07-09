@@ -55,11 +55,9 @@ object ValidationUtils {
      * @return If Client Key is preceded with correct prefix
      */
     fun doesClientKeyMatchEnvironment(clientKey: String, environment: Environment): Boolean {
-        val isLiveEnvironment = environment == Environment.AUSTRALIA || environment == Environment.UNITED_STATES || environment == Environment.EUROPE
         val isTestEnvironment = environment == Environment.TEST
 
-        return isLiveEnvironment && clientKey.startsWith(CLIENT_KEY_LIVE_PREFIX) ||
-            isTestEnvironment && clientKey.startsWith(CLIENT_KEY_TEST_PREFIX) ||
-            !isTestEnvironment && !isLiveEnvironment
+        return (!isTestEnvironment && clientKey.startsWith(CLIENT_KEY_LIVE_PREFIX)) ||
+            (isTestEnvironment && clientKey.startsWith(CLIENT_KEY_TEST_PREFIX))
     }
 }

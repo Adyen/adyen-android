@@ -18,6 +18,7 @@ import com.adyen.checkout.core.util.ParcelUtils;
 
 import java.net.MalformedURLException;
 import java.net.URL;
+import java.util.Objects;
 
 /**
  * Identifies which host URL to be used for network calls.
@@ -76,5 +77,22 @@ public final class Environment implements Parcelable {
     @NonNull
     public String getBaseUrl() {
         return mBaseUrl.toString();
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) {
+            return true;
+        }
+        if (o == null || getClass() != o.getClass()) {
+            return false;
+        }
+        final Environment that = (Environment) o;
+        return mBaseUrl.toString().equals(that.toString());
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(mBaseUrl);
     }
 }
