@@ -41,16 +41,25 @@ object ValidationUtils {
      * Check if the Client Key is valid.
      *
      * @param clientKey A string to check if is a client key.
-     * @param environment Selected environment in the configuration.
      * @return If we consider it a valid client key or not.
      */
-    fun isClientKeyValid(clientKey: String, environment: Environment): Boolean {
+    fun isClientKeyValid(clientKey: String): Boolean {
+        return CLIENT_KEY_PATTERN.matcher(clientKey).matches()
+    }
+
+    /**
+     * Check if the Client Key matches the Environment
+     *
+     * @param clientKey A string to check if is a client key.
+     * @param environment Selected environment in the configuration.
+     * @return If Client Key is preceded with correct prefix
+     */
+    fun doesClientKeyMatchEnvironment(clientKey: String, environment: Environment): Boolean {
         val isLiveEnvironment = environment == Environment.AUSTRALIA || environment == Environment.UNITED_STATES || environment == Environment.EUROPE
         val isTestEnvironment = environment == Environment.TEST
 
-        val hasCorrectPrefix = isLiveEnvironment && clientKey.startsWith(CLIENT_KEY_LIVE_PREFIX) ||
+        return isLiveEnvironment && clientKey.startsWith(CLIENT_KEY_LIVE_PREFIX) ||
             isTestEnvironment && clientKey.startsWith(CLIENT_KEY_TEST_PREFIX) ||
             !isTestEnvironment && !isLiveEnvironment
-        return hasCorrectPrefix && CLIENT_KEY_PATTERN.matcher(clientKey).matches()
     }
 }

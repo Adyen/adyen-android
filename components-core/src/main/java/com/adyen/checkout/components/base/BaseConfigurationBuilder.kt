@@ -1,7 +1,7 @@
 package com.adyen.checkout.components.base
 
 import android.content.Context
-import com.adyen.checkout.components.util.ValidationUtils.isClientKeyValid
+import com.adyen.checkout.components.util.ValidationUtils
 import com.adyen.checkout.core.api.Environment
 import com.adyen.checkout.core.exception.CheckoutException
 import com.adyen.checkout.core.util.LocaleUtil
@@ -19,6 +19,12 @@ abstract class BaseConfigurationBuilder<ConfigurationT : Configuration>(
     var builderEnvironment: Environment,
     var builderClientKey: String
 ) {
+
+    init {
+        if (!ValidationUtils.isClientKeyValid(builderClientKey)) {
+            throw CheckoutException("Client key is not valid.")
+        }
+    }
 
     /**
      * Constructor that provides default values.
@@ -49,8 +55,8 @@ abstract class BaseConfigurationBuilder<ConfigurationT : Configuration>(
     protected abstract fun buildInternal(): ConfigurationT
 
     fun build(): ConfigurationT {
-        if (!isClientKeyValid(builderClientKey, builderEnvironment)) {
-            throw CheckoutException("Client key is not valid.")
+        if (!ValidationUtils.doesClientKeyMatchEnvironment(builderClientKey, builderEnvironment)) {
+            throw CheckoutException("Client key does not match the environment.")
         }
         return buildInternal()
     }

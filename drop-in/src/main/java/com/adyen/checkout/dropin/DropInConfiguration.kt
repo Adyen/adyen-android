@@ -166,6 +166,10 @@ class DropInConfiguration : Configuration, Parcelable {
             this.serviceComponentName = ComponentName(packageName, serviceClassName)
             this.shopperLocale = LocaleUtil.getLocale(context)
 
+            if (!ValidationUtils.isClientKeyValid(clientKey)) {
+                throw CheckoutException("Client key is not valid.")
+            }
+
             this.clientKey = clientKey
         }
 
@@ -368,9 +372,8 @@ class DropInConfiguration : Configuration, Parcelable {
          * Create the [DropInConfiguration] instance.
          */
         fun build(): DropInConfiguration {
-
-            if (!ValidationUtils.isClientKeyValid(clientKey, environment)) {
-                throw CheckoutException("Client key is not valid.")
+            if (!ValidationUtils.doesClientKeyMatchEnvironment(clientKey, environment)) {
+                throw CheckoutException("Client key does not match the environment.")
             }
 
             return DropInConfiguration(
