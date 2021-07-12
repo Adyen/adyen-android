@@ -15,9 +15,9 @@ import java.util.*
  * @param clientKey Your Client Key used for network calls from the SDK to Adyen.
  */
 abstract class BaseConfigurationBuilder<ConfigurationT : Configuration>(
-    var builderShopperLocale: Locale,
-    var builderEnvironment: Environment,
-    var builderClientKey: String
+    protected var builderShopperLocale: Locale,
+    protected var builderEnvironment: Environment,
+    protected var builderClientKey: String
 ) {
 
     init {
