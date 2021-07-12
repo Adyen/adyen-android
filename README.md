@@ -99,9 +99,23 @@ val resultIntent = Intent(YourContext, ResultActivity::class.java)
 DropIn.startPayment(YourContext, paymentMethodsApiResponse, dropInConfiguration, resultIntent)
 ```
 
-After the shopper completes the payment, you can obtain the the `result` you previously passed with the `DropInServiceResult.Finished`. To obtain the `result`:
+To handle the Drop-in result, call `DropIn.handleActivityResult` inside `onActivityResult` within the activity that initiated the payment (`DropIn.startPayment`). The result is obtained in the `DropInResult` wrapper class:
 
-* If you specified a `resultIntent` when calling `DropIn.startPayment`, simply call `DropIn.getDropInResultFromIntent` inside  `onCreate` within the newly launched activity:
+```kotlin
+class CheckoutActivity : Activity() {
+    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
+        super.onActivityResult(requestCode, resultCode, data)
+        val dropInResult = DropIn.handleActivityResult(requestCode, resultCode, data) ?: return
+        when (dropInResult) {
+            is DropInResult.Finished -> handleFinished(dropInResult.result) // will not be called if a resultIntent was passed to DropIn.startPayment
+            is DropInResult.Error -> handleError(dropInResult.reason)
+            is DropInResult.CancelledByUser -> handleCancelled()
+        }
+    }
+}
+```
+
+Additionally, if you specified a `resultIntent` when calling `DropIn.startPayment`, simply call `DropIn.getDropInResultFromIntent` inside  `onCreate` within the newly launched activity:
 
 ```kotlin
 class ResultActivity : Activity() {
@@ -111,24 +125,6 @@ class ResultActivity : Activity() {
     }
 }
 ```
-
-* If you did not specify a `resultIntent` when calling `DropIn.startPayment`, call `DropIn.handleActivityResult` inside `onActivityResult` within the activity that initiated the payment (`DropIn.startPayment`). The result is obtained in the `DropInResult` wrapper class:
-
-```kotlin
-class CheckoutActivity : Activity() {
-    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
-        super.onActivityResult(requestCode, resultCode, data)
-        val dropInResult = DropIn.handleActivityResult(requestCode, resultCode, data) ?: return
-        when (dropInResult) {
-            is DropInResult.Finished -> handleFinished(dropInResult.result)
-            is DropInResult.Error -> handleError(dropInResult.reason)
-            is DropInResult.CancelledByUser -> handleCancelled()
-        }
-    }
-}
-```
-    
-Note that in both cases, you should use `DropIn.handleActivityResult` (the code sample above) to handle the error and cancelled by user scenarios.
 
 ## Components
 
