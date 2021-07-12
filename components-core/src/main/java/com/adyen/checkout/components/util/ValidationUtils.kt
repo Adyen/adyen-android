@@ -56,8 +56,12 @@ object ValidationUtils {
      */
     fun doesClientKeyMatchEnvironment(clientKey: String, environment: Environment): Boolean {
         val isTestEnvironment = environment == Environment.TEST
+        val isLiveEnvironment = environment == Environment.EUROPE ||
+            environment == Environment.AUSTRALIA ||
+            environment == Environment.UNITED_STATES
 
-        return (!isTestEnvironment && clientKey.startsWith(CLIENT_KEY_LIVE_PREFIX)) ||
-            (isTestEnvironment && clientKey.startsWith(CLIENT_KEY_TEST_PREFIX))
+        return (isLiveEnvironment && clientKey.startsWith(CLIENT_KEY_LIVE_PREFIX)) ||
+            (isTestEnvironment && clientKey.startsWith(CLIENT_KEY_TEST_PREFIX)) ||
+            (!isLiveEnvironment && !isTestEnvironment)
     }
 }
