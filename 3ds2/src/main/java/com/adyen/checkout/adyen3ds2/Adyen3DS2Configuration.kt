@@ -55,8 +55,8 @@ class Adyen3DS2Configuration : Configuration {
             return super.setEnvironment(builderEnvironment) as Builder
         }
 
-        override fun build(): Adyen3DS2Configuration {
-            return Adyen3DS2Configuration(mBuilderShopperLocale, mBuilderEnvironment, mBuilderClientKey)
+        override fun buildInternal(): Adyen3DS2Configuration {
+            return Adyen3DS2Configuration(builderShopperLocale, builderEnvironment, builderClientKey)
         }
     }
 

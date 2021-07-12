@@ -91,36 +91,34 @@ object ComponentParsingProvider {
 @Suppress("ComplexMethod", "LongMethod")
 internal fun <T : Configuration> getDefaultConfigForPaymentMethod(
     paymentMethod: String,
-    context: Context,
     dropInConfiguration: DropInConfiguration
 ): T {
+    val shopperLocale = dropInConfiguration.shopperLocale
+    val environment = dropInConfiguration.environment
     val clientKey = dropInConfiguration.clientKey
 
     // get default builder for Configuration type
     val builder: BaseConfigurationBuilder<out Configuration> = when (paymentMethod) {
-        PaymentMethodTypes.BLIK -> BlikConfiguration.Builder(context, clientKey)
-        PaymentMethodTypes.DOTPAY -> DotpayConfiguration.Builder(context, clientKey)
-        PaymentMethodTypes.ENTERCASH -> EntercashConfiguration.Builder(context, clientKey)
-        PaymentMethodTypes.EPS -> EPSConfiguration.Builder(context, clientKey)
+        PaymentMethodTypes.BLIK -> BlikConfiguration.Builder(shopperLocale, environment, clientKey)
+        PaymentMethodTypes.DOTPAY -> DotpayConfiguration.Builder(shopperLocale, environment, clientKey)
+        PaymentMethodTypes.ENTERCASH -> EntercashConfiguration.Builder(shopperLocale, environment, clientKey)
+        PaymentMethodTypes.EPS -> EPSConfiguration.Builder(shopperLocale, environment, clientKey)
         PaymentMethodTypes.GOOGLE_PAY,
         PaymentMethodTypes.GOOGLE_PAY_LEGACY -> {
-            GooglePayConfiguration.Builder(context, clientKey).apply {
+            GooglePayConfiguration.Builder(shopperLocale, environment, clientKey).apply {
                 if (!dropInConfiguration.amount.isEmpty) setAmount(dropInConfiguration.amount)
             }
         }
-        PaymentMethodTypes.IDEAL -> IdealConfiguration.Builder(context, clientKey)
-        PaymentMethodTypes.MB_WAY -> MBWayConfiguration.Builder(context, clientKey)
+        PaymentMethodTypes.IDEAL -> IdealConfiguration.Builder(shopperLocale, environment, clientKey)
+        PaymentMethodTypes.MB_WAY -> MBWayConfiguration.Builder(shopperLocale, environment, clientKey)
         PaymentMethodTypes.MOLPAY_THAILAND,
         PaymentMethodTypes.MOLPAY_MALAYSIA,
-        PaymentMethodTypes.MOLPAY_VIETNAM -> MolpayConfiguration.Builder(context, clientKey)
-        PaymentMethodTypes.OPEN_BANKING -> OpenBankingConfiguration.Builder(context, clientKey)
-        PaymentMethodTypes.SEPA -> SepaConfiguration.Builder(context, clientKey)
-        PaymentMethodTypes.SCHEME -> CardConfiguration.Builder(context, clientKey)
+        PaymentMethodTypes.MOLPAY_VIETNAM -> MolpayConfiguration.Builder(shopperLocale, environment, clientKey)
+        PaymentMethodTypes.OPEN_BANKING -> OpenBankingConfiguration.Builder(shopperLocale, environment, clientKey)
+        PaymentMethodTypes.SEPA -> SepaConfiguration.Builder(shopperLocale, environment, clientKey)
+        PaymentMethodTypes.SCHEME -> CardConfiguration.Builder(shopperLocale, environment, clientKey)
         else -> throw CheckoutException("Unable to find component configuration for paymentMethod - $paymentMethod")
     }
-
-    builder.setShopperLocale(dropInConfiguration.shopperLocale)
-    builder.setEnvironment(dropInConfiguration.environment)
 
     @Suppress("UNCHECKED_CAST")
     return builder.build() as T
@@ -128,23 +126,21 @@ internal fun <T : Configuration> getDefaultConfigForPaymentMethod(
 
 @Suppress("ComplexMethod", "LongMethod")
 internal inline fun <reified T : Configuration> getDefaultConfigForAction(
-    context: Context,
     dropInConfiguration: DropInConfiguration
 ): T {
+    val shopperLocale = dropInConfiguration.shopperLocale
+    val environment = dropInConfiguration.environment
     val clientKey = dropInConfiguration.clientKey
 
     // get default builder for Configuration type
     val builder: BaseConfigurationBuilder<out Configuration> = when (T::class) {
-        AwaitConfiguration::class -> AwaitConfiguration.Builder(context, clientKey)
-        RedirectConfiguration::class -> RedirectConfiguration.Builder(context, clientKey)
-        QRCodeConfiguration::class -> QRCodeConfiguration.Builder(context, clientKey)
-        Adyen3DS2Configuration::class -> Adyen3DS2Configuration.Builder(context, clientKey)
-        WeChatPayActionConfiguration::class -> WeChatPayActionConfiguration.Builder(context, clientKey)
+        AwaitConfiguration::class -> AwaitConfiguration.Builder(shopperLocale, environment, clientKey)
+        RedirectConfiguration::class -> RedirectConfiguration.Builder(shopperLocale, environment, clientKey)
+        QRCodeConfiguration::class -> QRCodeConfiguration.Builder(shopperLocale, environment, clientKey)
+        Adyen3DS2Configuration::class -> Adyen3DS2Configuration.Builder(shopperLocale, environment, clientKey)
+        WeChatPayActionConfiguration::class -> WeChatPayActionConfiguration.Builder(shopperLocale, environment, clientKey)
         else -> throw CheckoutException("Unable to find component configuration for class - ${T::class}")
     }
-
-    builder.setShopperLocale(dropInConfiguration.shopperLocale)
-    builder.setEnvironment(dropInConfiguration.environment)
 
     @Suppress("UNCHECKED_CAST")
     return builder.build() as T

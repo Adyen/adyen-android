@@ -84,8 +84,8 @@ public class BlikConfiguration extends Configuration {
 
         @NonNull
         @Override
-        public BlikConfiguration build() {
-            return new BlikConfiguration(mBuilderShopperLocale, mBuilderEnvironment, mBuilderClientKey);
+        protected BlikConfiguration buildInternal() {
+            return new BlikConfiguration(getBuilderShopperLocale(), getBuilderEnvironment(), getBuilderClientKey());
         }
     }
 }

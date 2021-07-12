@@ -83,8 +83,8 @@ public class WeChatPayActionConfiguration extends Configuration {
 
         @NonNull
         @Override
-        public WeChatPayActionConfiguration build() {
-            return new WeChatPayActionConfiguration(mBuilderShopperLocale, mBuilderEnvironment, mBuilderClientKey);
+        protected WeChatPayActionConfiguration buildInternal() {
+            return new WeChatPayActionConfiguration(getBuilderShopperLocale(), getBuilderEnvironment(), getBuilderClientKey());
         }
     }
 }

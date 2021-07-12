@@ -87,8 +87,8 @@ public class OpenBankingConfiguration extends IssuerListConfiguration {
 
         @NonNull
         @Override
-        public OpenBankingConfiguration build() {
-            return new OpenBankingConfiguration(mBuilderShopperLocale, mBuilderEnvironment, mBuilderClientKey);
+        protected OpenBankingConfiguration buildInternal() {
+            return new OpenBankingConfiguration(getBuilderShopperLocale(), getBuilderEnvironment(), getBuilderClientKey());
         }
     }
 }

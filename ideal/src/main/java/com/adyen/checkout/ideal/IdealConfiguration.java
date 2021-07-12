@@ -87,8 +87,8 @@ public class IdealConfiguration extends IssuerListConfiguration {
 
         @NonNull
         @Override
-        public IdealConfiguration build() {
-            return new IdealConfiguration(mBuilderShopperLocale, mBuilderEnvironment, mBuilderClientKey);
+        protected IdealConfiguration buildInternal() {
+            return new IdealConfiguration(getBuilderShopperLocale(), getBuilderEnvironment(), getBuilderClientKey());
         }
     }
 }

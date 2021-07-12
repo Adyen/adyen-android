@@ -63,8 +63,8 @@ class QRCodeConfiguration : Configuration {
             return super.setEnvironment(builderEnvironment) as Builder
         }
 
-        override fun build(): QRCodeConfiguration {
-            return QRCodeConfiguration(mBuilderShopperLocale, mBuilderEnvironment, mBuilderClientKey)
+        override fun buildInternal(): QRCodeConfiguration {
+            return QRCodeConfiguration(builderShopperLocale, builderEnvironment, builderClientKey)
         }
     }
 }

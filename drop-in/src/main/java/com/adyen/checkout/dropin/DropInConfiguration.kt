@@ -116,7 +116,7 @@ class DropInConfiguration : Configuration, Parcelable {
             @Suppress("UNCHECKED_CAST")
             availablePaymentConfigs[paymentMethod] as T
         } else {
-            getDefaultConfigForPaymentMethod(paymentMethod, context, this)
+            getDefaultConfigForPaymentMethod(paymentMethod, this)
         }
     }
 
@@ -126,7 +126,7 @@ class DropInConfiguration : Configuration, Parcelable {
             @Suppress("UNCHECKED_CAST")
             availableActionConfigs[actionClass] as T
         } else {
-            getDefaultConfigForAction(context, this)
+            getDefaultConfigForAction(this)
         }
     }
 
@@ -169,6 +169,7 @@ class DropInConfiguration : Configuration, Parcelable {
             if (!ValidationUtils.isClientKeyValid(clientKey)) {
                 throw CheckoutException("Client key is not valid.")
             }
+
             this.clientKey = clientKey
         }
 
@@ -371,6 +372,10 @@ class DropInConfiguration : Configuration, Parcelable {
          * Create the [DropInConfiguration] instance.
          */
         fun build(): DropInConfiguration {
+            if (!ValidationUtils.doesClientKeyMatchEnvironment(clientKey, environment)) {
+                throw CheckoutException("Client key does not match the environment.")
+            }
+
             return DropInConfiguration(
                 shopperLocale,
                 environment,

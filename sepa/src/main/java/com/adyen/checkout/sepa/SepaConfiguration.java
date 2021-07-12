@@ -84,8 +84,8 @@ public class SepaConfiguration extends Configuration {
 
         @NonNull
         @Override
-        public SepaConfiguration build() {
-            return new SepaConfiguration(mBuilderShopperLocale, mBuilderEnvironment, mBuilderClientKey);
+        protected SepaConfiguration buildInternal() {
+            return new SepaConfiguration(getBuilderShopperLocale(), getBuilderEnvironment(), getBuilderClientKey());
         }
     }
 }
