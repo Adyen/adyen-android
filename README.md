@@ -18,6 +18,10 @@ If you have a feature request, or spotted a bug or a technical problem, create a
 
 The Components are available through [Maven Central][dl], you only need to add the Gradle dependency.
 
+### Migrate from v3
+
+If you are upgrading from 3.x.x to a current release, check out our [migration guide][migration.guide].
+
 ### Import with Gradle
 
 Import the Component module for the Payment Method you want to use by adding it to your `build.gradle` file.
@@ -214,3 +218,4 @@ This repository is open source and available under the MIT license. For more inf
 [adyen.support]: https://support.adyen.com/hc/en-us/requests/new?ticket_form_id=360000705420
 [docs.cardConfiguration]: https://docs.adyen.com/online-payments/android/components#step-1-set-up-components
 [client.key]: https://docs.adyen.com/online-payments/android/drop-in#client-key
+[migration.guide]: https://docs.adyen.com/online-payments/android/migrate-to-android-4-0-0
