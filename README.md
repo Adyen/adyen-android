@@ -30,6 +30,10 @@ For a Credit Card component you should add:
 implementation "com.adyen.checkout:card:4.0.0"
 ```
 
+### Client Key
+
+Drop-in and Components require a [client key][client.key], that should be provided in the `Configuration.Builder` constructors.
+
 ## Drop-in
 
 The Drop-in is the implementation that handles the presentation of all available payment methods and the subsequent entry of a customer's payment details. It is initialized with the response of [`/paymentMethods`][apiExplorer.paymentMethods], and provides everything you need to make an API call to [`/payments`][apiExplorer.payments] and [`/payments/details`][apiExplorer.paymentsDetails].
@@ -73,7 +77,7 @@ Don't forget to also add the service your manifest.
 <service android:name=".YourDropInService"/>
 ```
 
-Some payment methods need additional configuration. For example, to enable the card form, the Drop-in needs a client key from the Customer Area. These payment method specific configuration parameters can be set in the `DropInConfiguration`:
+Configure Drop-in:
 
 ```kotlin
 // Optional, if you want to display the amount and currency. In this example, the Pay button will display 10 EUR.
@@ -82,9 +86,21 @@ val amount = Amount().apply {
     value = 10_00
 }
 
-val dropInConfiguration = DropInConfiguration.Builder(YourContext, YourIntent, "YOUR_CLIENT_KEY")
+val dropInConfiguration = DropInConfiguration.Builder(YourContext, YourDropInService::class.java, "YOUR_CLIENT_KEY")
     .setAmount(amount)
     .setShopperLocale(shopperLocale)
+    .build()
+```
+
+Optional - Configure specific payment methods:
+
+```kotlin
+val cardConfiguration = CardConfiguration.Builder(YourContext, "YOUR_CLIENT_KEY")
+    .build()
+
+val dropInConfiguration = DropInConfiguration.Builder(YourContext, YourDropInService::class.java, "YOUR_CLIENT_KEY")
+    // ...
+    .addCardConfiguration(cardConfiguration)
     .build()
 ```
 
@@ -197,3 +213,4 @@ This repository is open source and available under the MIT license. For more inf
 [apiExplorer.paymentsDetails]: https://docs.adyen.com/api-explorer/#/CheckoutService/v67/post/payments/details
 [adyen.support]: https://support.adyen.com/hc/en-us/requests/new?ticket_form_id=360000705420
 [docs.cardConfiguration]: https://docs.adyen.com/online-payments/android/components#step-1-set-up-components
+[client.key]: https://docs.adyen.com/online-payments/android/drop-in#client-key
