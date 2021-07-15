@@ -5,125 +5,101 @@
  *
  * Created by caiof on 8/3/2019.
  */
+package com.adyen.checkout.components.api
 
-package com.adyen.checkout.components.api;
+import android.graphics.drawable.BitmapDrawable
+import android.util.DisplayMetrics
+import android.util.LruCache
+import com.adyen.checkout.components.api.LogoConnectionTask.LogoCallback
+import com.adyen.checkout.core.api.Environment
+import com.adyen.checkout.core.api.ThreadManager
+import com.adyen.checkout.core.log.LogUtil
+import com.adyen.checkout.core.log.Logger
+import java.util.HashMap
+import java.util.Locale
 
-import android.graphics.drawable.BitmapDrawable;
-import android.graphics.drawable.Drawable;
-import android.util.DisplayMetrics;
-import android.util.LruCache;
+class LogoApi(host: String, displayMetrics: DisplayMetrics) {
+    companion object {
+        private val TAG = LogUtil.getTag()
 
-import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
+        // %1$s = size, %2$s = txVariant(/txSubVariant)-densityExtension
+        private const val LOGO_PATH = "images/logos/%1\$s/%2\$s.png"
+        private val DEFAULT_SIZE = Size.SMALL
+        const val KILO_BYTE_SIZE = 1024
+        private const val CACHE_FRACTION_SIZE = 8
+        private val LRU_CACHE_MAX_SIZE = getMaxCacheSize()
+        private var sInstance: LogoApi? = null
 
-import com.adyen.checkout.core.api.Environment;
-import com.adyen.checkout.core.api.ThreadManager;
-import com.adyen.checkout.core.code.Lint;
-import com.adyen.checkout.core.log.LogUtil;
-import com.adyen.checkout.core.log.Logger;
+        /**
+         * Get the instance of the [LogoApi] for the specified environment.
+         *
+         * @param environment The URL of the server for fetching the images. For optimization it should be the closest to the shopper.
+         * @param displayMetrics The [DisplayMetrics] of the device to fetch the correct size images.
+         * @return The instance of the [LogoApi].
+         */
+        @JvmStatic
+        fun getInstance(environment: Environment, displayMetrics: DisplayMetrics): LogoApi {
+            val hostUrl = environment.baseUrl
+            synchronized(LogoApi::class.java) {
+                val currentInstance = sInstance
+                if (currentInstance == null || currentInstance.isDifferentHost(hostUrl)) {
+                    currentInstance?.clearCache()
+                    val newInstance = LogoApi(hostUrl, displayMetrics)
+                    sInstance = newInstance
+                    return newInstance
+                }
+                return currentInstance
+            }
+        }
 
-import java.util.HashMap;
-import java.util.Locale;
-import java.util.Map;
-
-public final class LogoApi {
-    private static final String TAG = LogUtil.getTag();
-
-
-    //%1$s = size, %2$s = txVariant(/txSubVariant)-densityExtension
-    private static final String LOGO_PATH = "images/logos/%1$s/%2$s.png";
-    private static final Size DEFAULT_SIZE = Size.SMALL;
-
-    static final int KILO_BYTE_SIZE = 1024;
-    private static final int LRU_CACHE_MAX_SIZE;
-
-    static {
-        final int availableMemory = (int) (Runtime.getRuntime().maxMemory() / KILO_BYTE_SIZE);
-        final int cacheFractionSize = 8;
-        LRU_CACHE_MAX_SIZE = availableMemory / cacheFractionSize;
+        private fun getMaxCacheSize(): Int {
+            val availableMemory = (Runtime.getRuntime().maxMemory() / KILO_BYTE_SIZE).toInt()
+            return availableMemory / CACHE_FRACTION_SIZE
+        }
     }
 
-    private static LogoApi sInstance;
-
-    private final String mLogoUrlFormat;
-    private final String mDensityExtension;
-    private final LruCache<String, BitmapDrawable> mCache;
-
-    private final Map<String, LogoConnectionTask> mConnectionsMap = new HashMap<>();
-
-    /**
-     * Get the instance of the {@link LogoApi} for the specified environment.
-     *
-     * @param environment The URL of the server for fetching the images. For optimization it should be the closest to the shopper.
-     * @param displayMetrics The {@link DisplayMetrics} of the device to fetch the correct size images.
-     * @return The instance of the {@link LogoApi}.
-     */
-    @NonNull
-    public static LogoApi getInstance(@NonNull Environment environment, @NonNull DisplayMetrics displayMetrics) {
-        final String hostUrl = environment.getBaseUrl();
-        synchronized (LogoApi.class) {
-            if (sInstance == null || isDifferentHost(sInstance, hostUrl)) {
-                LogoApi.clearCache(sInstance);
-                sInstance = new LogoApi(hostUrl, displayMetrics);
-            }
-            return sInstance;
+    private val mConnectionsMap: MutableMap<String, LogoConnectionTask> = HashMap()
+    private val mLogoUrlFormat: String = host + LOGO_PATH
+    private val mDensityExtension: String = getDensityExtension(displayMetrics.densityDpi)
+    private val mCache: LruCache<String, BitmapDrawable> = object : LruCache<String, BitmapDrawable>(LRU_CACHE_MAX_SIZE) {
+        override fun sizeOf(key: String, drawable: BitmapDrawable): Int {
+            // The cache size will be measured in kilobytes rather than number of items.
+            return drawable.bitmap.byteCount / KILO_BYTE_SIZE
         }
     }
 
     /**
-     * This method can be called if there is a need to release memory usage.
-     *
-     * @param instance The instance of the Api that will have it's cache cleared.
-     */
-    @SuppressWarnings(Lint.MERCHANT_VISIBLE)
-    public static void clearCache(@Nullable LogoApi instance) {
-        if (instance != null) {
-            instance.mCache.evictAll();
-        }
-    }
-
-    private static boolean isDifferentHost(@NonNull LogoApi logoApi, @NonNull String hostUrl) {
-        return !logoApi.mLogoUrlFormat.startsWith(hostUrl);
-    }
-
-    private LogoApi(@NonNull String host, @NonNull DisplayMetrics displayMetrics) {
-        Logger.v(TAG, "Environment URL - " + host);
-        mLogoUrlFormat = host + LOGO_PATH;
-        mDensityExtension = getDensityExtension(displayMetrics.densityDpi);
-        mCache = new LruCache<String, BitmapDrawable>(LRU_CACHE_MAX_SIZE) {
-            @Override
-            protected int sizeOf(String key, BitmapDrawable drawable) {
-                // The cache size will be measured in kilobytes rather than number of items.
-                return drawable.getBitmap().getByteCount() / KILO_BYTE_SIZE;
-            }
-        };
-    }
-
-    /**
-     * Starts a request to get the {@link Drawable} of a Logo from the web.
+     * Starts a request to get the [Drawable] of a Logo from the web.
      *
      * @param txVariant The identifier of the transaction variant.
      * @param txSubVariant The identifier of the transaction sub variant.
      * @param size The size if the desired logo;
      * @param callback The callback for when the request is completed.
      */
-    public void getLogo(@NonNull String txVariant, @Nullable String txSubVariant, @Nullable Size size,
-            @NonNull LogoConnectionTask.LogoCallback callback) {
-        Logger.v(TAG, "getLogo - " + txVariant + ", " + txSubVariant + ", " + size);
-        final String logoUrl = buildUrl(txVariant, txSubVariant, size);
-
-        synchronized (this) {
-            final BitmapDrawable cachedLogo = mCache.get(logoUrl);
-            if (cachedLogo != null) {
-                Logger.v(TAG, "returning cached logo");
-                callback.onLogoReceived(cachedLogo);
-            } else if (!mConnectionsMap.containsKey(logoUrl)) {
-                final LogoConnectionTask logoConnectionTask = new LogoConnectionTask(this, logoUrl, callback);
-                mConnectionsMap.put(logoUrl, logoConnectionTask);
-                ThreadManager.EXECUTOR.submit(logoConnectionTask);
-            } else {
-                final LogoConnectionTask existingLogoConnectionTask = mConnectionsMap.get(logoUrl);
-                existingLogoConnectionTask.addCallback(callback);
+    fun getLogo(
+        txVariant: String,
+        txSubVariant: String?,
+        size: Size?,
+        callback: LogoCallback
+    ) {
+        Logger.v(TAG, "getLogo - $txVariant, $txSubVariant, $size")
+        val logoUrl = buildUrl(txVariant, txSubVariant, size)
+        synchronized(this) {
+            val cachedLogo = mCache[logoUrl]
+            when {
+                cachedLogo != null -> {
+                    Logger.v(TAG, "returning cached logo")
+                    callback.onLogoReceived(cachedLogo)
+                }
+                !mConnectionsMap.containsKey(logoUrl) -> {
+                    val logoConnectionTask = LogoConnectionTask(this, logoUrl, callback)
+                    mConnectionsMap[logoUrl] = logoConnectionTask
+                    ThreadManager.EXECUTOR.submit(logoConnectionTask)
+                }
+                else -> {
+                    val existingLogoConnectionTask = mConnectionsMap[logoUrl]
+                    existingLogoConnectionTask?.addCallback(callback)
+                }
             }
         }
     }
@@ -136,15 +112,14 @@ public final class LogoApi {
      * @param txSubVariant The identifier of the transaction sub variant.
      * @param size The size if the desired logo;
      */
-    public void cancelLogoRequest(@NonNull String txVariant, @Nullable String txSubVariant, @Nullable Size size) {
-        Logger.d(TAG, "cancelLogoRequest");
-        final String logoUrl = buildUrl(txVariant, txSubVariant, size);
-
-        synchronized (this) {
-            final LogoConnectionTask taskToCancel = mConnectionsMap.remove(logoUrl);
+    fun cancelLogoRequest(txVariant: String, txSubVariant: String?, size: Size?) {
+        Logger.d(TAG, "cancelLogoRequest")
+        val logoUrl = buildUrl(txVariant, txSubVariant, size)
+        synchronized(this) {
+            val taskToCancel = mConnectionsMap.remove(logoUrl)
             if (taskToCancel != null) {
-                taskToCancel.cancel(true);
-                Logger.d(TAG, "canceled");
+                taskToCancel.cancel(true)
+                Logger.d(TAG, "canceled")
             }
         }
     }
@@ -152,80 +127,74 @@ public final class LogoApi {
     /**
      * Cancels all current requests.
      */
-    public void cancellAll() {
-        synchronized (this) {
-            for (LogoConnectionTask task : mConnectionsMap.values()) {
-                task.cancel(true);
-            }
-            mConnectionsMap.clear();
+    fun cancelAll() {
+        synchronized(this) {
+            mConnectionsMap.values.forEach { it.cancel(true) }
+            mConnectionsMap.clear()
         }
     }
 
-    void taskFinished(@NonNull String logoUrl, @Nullable BitmapDrawable logo) {
-        synchronized (this) {
-            mConnectionsMap.remove(logoUrl);
-            if (logo != null) {
-                mCache.put(logoUrl, logo);
-            }
+    fun taskFinished(logoUrl: String, logo: BitmapDrawable?) {
+        synchronized(this) {
+            mConnectionsMap.remove(logoUrl)
+            if (logo != null) mCache.put(logoUrl, logo)
         }
     }
 
-    @NonNull
-    private String getDensityExtension(int densityDpi) {
-        if (densityDpi <= DisplayMetrics.DENSITY_LOW) {
-            return "-ldpi";
-        } else if (densityDpi <= DisplayMetrics.DENSITY_MEDIUM) {
-            // no extension
-            return "";
-        } else if (densityDpi <= DisplayMetrics.DENSITY_HIGH) {
-            return "-hdpi";
-        } else if (densityDpi <= DisplayMetrics.DENSITY_XHIGH) {
-            return "-xhdpi";
-        } else if (densityDpi <= DisplayMetrics.DENSITY_XXHIGH) {
-            return "-xxhdpi";
-        } else {
-            return "-xxxhdpi";
+    private fun getDensityExtension(densityDpi: Int): String {
+        return when {
+            densityDpi <= DisplayMetrics.DENSITY_LOW -> "-ldpi"
+            densityDpi <= DisplayMetrics.DENSITY_MEDIUM -> "" // no extension
+            densityDpi <= DisplayMetrics.DENSITY_HIGH -> "-hdpi"
+            densityDpi <= DisplayMetrics.DENSITY_XHIGH -> "-xhdpi"
+            densityDpi <= DisplayMetrics.DENSITY_XXHIGH -> "-xxhdpi"
+            else -> "-xxxhdpi"
         }
     }
 
-    @NonNull
-    private String buildUrl(@NonNull String txVariant, @Nullable String txSubVariant, @Nullable Size size) {
-        if (txSubVariant != null && !txSubVariant.isEmpty()) {
-            return String.format(mLogoUrlFormat, getSizeVariant(size), txVariant + "/" + txSubVariant + mDensityExtension);
-        } else {
-            return String.format(mLogoUrlFormat, getSizeVariant(size), txVariant + mDensityExtension);
-        }
+    private fun buildUrl(txVariant: String, txSubVariant: String?, size: Size?): String {
+        val txString =
+            if (txSubVariant.isNullOrEmpty()) txVariant
+            else "$txVariant/$txSubVariant"
+        return String.format(mLogoUrlFormat, getSizeVariant(size), txString + mDensityExtension)
     }
 
-    @NonNull
-    private String getSizeVariant(@Nullable Size size) {
-        if (size == null) {
-            return DEFAULT_SIZE.toString();
-        } else {
-            return size.toString();
-        }
+    private fun getSizeVariant(size: Size?): String {
+        return (size ?: DEFAULT_SIZE).toString()
+    }
+
+    /**
+     * This method can be called if there is a need to release memory usage.
+     */
+    private fun clearCache() {
+        mCache.evictAll()
+    }
+
+    private fun isDifferentHost(hostUrl: String): Boolean {
+        return !mLogoUrlFormat.startsWith(hostUrl)
     }
 
     /**
      * The logo size.
      */
-    public enum Size {
+    enum class Size {
         /**
          * Size for small logos (height: 26dp).
          */
         SMALL,
+
         /**
          * Size for medium logos (height: 50dp).
          */
         MEDIUM,
+
         /**
          * Size for large logos (height: 100dp).
          */
         LARGE;
 
-        @Override
-        public String toString() {
-            return name().toLowerCase(Locale.ROOT);
+        override fun toString(): String {
+            return name.toLowerCase(Locale.ROOT)
         }
     }
 }

@@ -5,114 +5,93 @@
  *
  * Created by arman on 26/7/2019.
  */
+package com.adyen.checkout.components.api
 
-package com.adyen.checkout.components.api;
+import android.content.Context
+import android.graphics.drawable.BitmapDrawable
+import android.widget.ImageView
+import androidx.annotation.DrawableRes
+import com.adyen.checkout.components.api.LogoApi.Companion.getInstance
+import com.adyen.checkout.components.api.LogoConnectionTask.LogoCallback
+import com.adyen.checkout.core.api.Environment
+import com.adyen.checkout.core.log.LogUtil
+import com.adyen.checkout.core.log.Logger
+import java.lang.ref.WeakReference
+import java.util.HashMap
 
-import android.content.Context;
-import android.graphics.drawable.BitmapDrawable;
-import android.widget.ImageView;
-
-import androidx.annotation.DrawableRes;
-import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
-
-import com.adyen.checkout.core.api.Environment;
-import com.adyen.checkout.core.log.LogUtil;
-import com.adyen.checkout.core.log.Logger;
-
-import java.lang.ref.WeakReference;
-import java.util.HashMap;
-import java.util.Map;
-
-public class ImageLoader {
-    private static final String TAG = LogUtil.getTag();
-
-    private final LogoApi mLogoApi;
-    private final Map<String, LogoConnectionTask.LogoCallback> mCallbacks = new HashMap<>();
-    private final Map<String, WeakReference<ImageView>> mImageViews = new HashMap<>();
-
-    @SuppressWarnings("PMD.SingletonClassReturningNewInstance")
-    @NonNull
-    public static ImageLoader getInstance(@NonNull Context context, @NonNull Environment environment) {
-        return new ImageLoader(LogoApi.getInstance(environment, context.getResources().getDisplayMetrics()));
-    }
+/**
+ * Loading Image from LogoApi.
+ */
+class ImageLoader(private val mLogoApi: LogoApi) {
+    private val mCallbacks: MutableMap<String, LogoCallback> = HashMap()
+    private val mImageViews: MutableMap<String, WeakReference<ImageView>> = HashMap()
 
     /**
-     * Loading Image from LogoApi.
+     * Load image to ImageView with place holder before load and error fallback image.
      */
-    public ImageLoader(@NonNull LogoApi logoApi) {
-        this.mLogoApi = logoApi;
-    }
-
-    /**
-     * Load image to ImageView.
-     */
-    public void load(@NonNull String txVariant, @NonNull ImageView view) {
-        this.load(txVariant, view, 0, 0);
-    }
-
-    /**
-     * Load image to ImageView.
-     */
-    public void load(@NonNull String txVariant, @NonNull String txSubVariant, @NonNull ImageView view) {
-        this.load(txVariant, txSubVariant, view, 0, 0);
+    @JvmOverloads
+    fun load(
+        txVariant: String,
+        view: ImageView,
+        @DrawableRes placeholder: Int = 0,
+        @DrawableRes errorFallback: Int = 0
+    ) {
+        load(txVariant, "", view, placeholder, errorFallback)
     }
 
     /**
      * Load image to ImageView with place holder before load and error fallback image.
      */
-    public void load(@NonNull String txVariant, @NonNull ImageView view, @Nullable @DrawableRes int placeholder,
-            @Nullable @DrawableRes final int errorFallback) {
-        this.load(txVariant, "", view, placeholder, errorFallback);
-    }
-
-    /**
-     * Load image to ImageView with place holder before load and error fallback image.
-     */
-    public void load(@NonNull String txVariant, @NonNull String txSubVariant, @NonNull ImageView view, @DrawableRes int placeholder,
-            @DrawableRes final int errorFallback) {
-
+    @JvmOverloads
+    fun load(
+        txVariant: String,
+        txSubVariant: String,
+        view: ImageView,
+        @DrawableRes placeholder: Int = 0,
+        @DrawableRes errorFallback: Int = 0
+    ) {
         if (placeholder != 0) {
-            view.setImageResource(placeholder);
+            view.setImageResource(placeholder)
         }
-
-        final String id = txVariant + txSubVariant + view.hashCode();
-
+        val id = txVariant + txSubVariant + view.hashCode()
         if (mCallbacks.containsKey(id)) {
-            mCallbacks.remove(id);
-            mImageViews.remove(id);
+            mCallbacks.remove(id)
+            mImageViews.remove(id)
         }
-
-        final LogoConnectionTask.LogoCallback callback = new LogoConnectionTask.LogoCallback() {
-            @Override
-            public void onLogoReceived(@NonNull BitmapDrawable drawable) {
-                if (mImageViews.containsKey(id)) {
-                    final ImageView imageView = mImageViews.get(id).get();
-                    if (imageView != null) {
-                        imageView.setImageDrawable(drawable);
-                    } else {
-                        Logger.e(TAG, "ImageView is null for received Logo - " + id);
-                    }
-
-                    mCallbacks.remove(id);
-                    mImageViews.remove(id);
-                }
-            }
-
-            @Override
-            public void onReceiveFailed() {
-                final ImageView imageView = mImageViews.get(id).get();
+        val callback: LogoCallback = object : LogoCallback {
+            override fun onLogoReceived(drawable: BitmapDrawable) {
+                val imageView = mImageViews[id]?.get()
                 if (imageView != null) {
-                    imageView.setImageResource(errorFallback);
+                    imageView.setImageDrawable(drawable)
+                } else {
+                    Logger.e(TAG, "ImageView is null for received Logo - $id")
                 }
-
-                mCallbacks.remove(id);
-                mImageViews.remove(id);
+                mCallbacks.remove(id)
+                mImageViews.remove(id)
             }
-        };
 
-        mImageViews.put(id, new WeakReference<>(view));
-        mCallbacks.put(id, callback);
-        mLogoApi.getLogo(txVariant, txSubVariant, null, callback);
+            override fun onReceiveFailed() {
+                val imageView = mImageViews[id]?.get()
+                if (imageView != null) {
+                    imageView.setImageResource(errorFallback)
+                } else {
+                    Logger.e(TAG, "ImageView is null for failed Logo - $id")
+                }
+                mCallbacks.remove(id)
+                mImageViews.remove(id)
+            }
+        }
+        mImageViews[id] = WeakReference(view)
+        mCallbacks[id] = callback
+        mLogoApi.getLogo(txVariant, txSubVariant, null, callback)
+    }
+
+    companion object {
+        private val TAG = LogUtil.getTag()
+
+        @JvmStatic
+        fun getInstance(context: Context, environment: Environment): ImageLoader {
+            return ImageLoader(getInstance(environment, context.resources.displayMetrics))
+        }
     }
 }

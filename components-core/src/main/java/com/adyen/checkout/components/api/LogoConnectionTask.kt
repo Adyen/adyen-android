@@ -5,131 +5,105 @@
  *
  * Created by caiof on 11/3/2019.
  */
+package com.adyen.checkout.components.api
 
-package com.adyen.checkout.components.api;
-
-import android.graphics.drawable.BitmapDrawable;
-
-import androidx.annotation.NonNull;
-
-import com.adyen.checkout.core.api.ConnectionTask;
-import com.adyen.checkout.core.api.ThreadManager;
-import com.adyen.checkout.core.log.LogUtil;
-import com.adyen.checkout.core.log.Logger;
-
-import java.util.ArrayList;
-import java.util.List;
-import java.util.concurrent.ExecutionException;
-import java.util.concurrent.TimeUnit;
-import java.util.concurrent.TimeoutException;
+import android.graphics.drawable.BitmapDrawable
+import com.adyen.checkout.core.api.ConnectionTask
+import com.adyen.checkout.core.api.ThreadManager
+import com.adyen.checkout.core.log.LogUtil
+import com.adyen.checkout.core.log.Logger
+import java.util.ArrayList
+import java.util.concurrent.ExecutionException
+import java.util.concurrent.TimeUnit
+import java.util.concurrent.TimeoutException
 
 /**
  * Task that wraps a Connection to get a Logo.
  */
-// We are assigning null to mCallback to avoid memory leaks.
-@SuppressWarnings("PMD.NullAssignment")
-public final class LogoConnectionTask extends ConnectionTask<BitmapDrawable> {
-    private static final String TAG = LogUtil.getTag();
+class LogoConnectionTask(
+    private val logoApi: LogoApi,
+    val logoUrl: String,
+    callback: LogoCallback
+) : ConnectionTask<BitmapDrawable>(
+    LogoConnection(logoUrl)
+) {
 
-    private static final int SAFETY_TIMEOUT = 100;
+    var mCallbacks: MutableList<LogoCallback> = ArrayList()
 
-    List<LogoCallback> mCallbacks = new ArrayList<>();
-    private final String mLogoUrl;
-    private final LogoApi mLogoApi;
-
-    LogoConnectionTask(@NonNull LogoApi logoApi, @NonNull String logoUrl, @NonNull LogoCallback callback) {
-        super(new LogoConnection(logoUrl));
-        mLogoApi = logoApi;
-        mLogoUrl = logoUrl;
-        mCallbacks.add(callback);
+    init {
+        mCallbacks.add(callback)
     }
 
-    @Override
-    protected void done() {
-        Logger.v(TAG, "done");
-
-        if (isCancelled()) {
-            Logger.d(TAG, "canceled");
-            notifyFailed();
-        } else {
-            try {
-                // timeout just to make sure we don't get stuck, get call is blocking but should be finished or canceled by now.
-                final BitmapDrawable result = get(SAFETY_TIMEOUT, TimeUnit.MILLISECONDS);
-                notifyLogo(result);
-            } catch (ExecutionException e) {
-                Logger.e(TAG, "Execution failed for logo  - " + getLogoUrl());
-                notifyFailed();
-            } catch (InterruptedException e) {
-                Logger.e(TAG, "Execution interrupted.", e);
-                notifyFailed();
-            } catch (TimeoutException e) {
-                Logger.e(TAG, "Execution timed out.", e);
-                notifyFailed();
-            }
+    override fun done() {
+        Logger.v(TAG, "done")
+        if (isCancelled) {
+            Logger.d(TAG, "canceled")
+            notifyFailed()
+            return
+        }
+        try {
+            // timeout just to make sure we don't get stuck, get call is blocking but should be finished or canceled by now.
+            val result = get(SAFETY_TIMEOUT.toLong(), TimeUnit.MILLISECONDS)
+            notifyLogo(result)
+        } catch (e: ExecutionException) {
+            Logger.e(TAG, "Execution failed for logo  - $logoUrl")
+            notifyFailed()
+        } catch (e: InterruptedException) {
+            Logger.e(TAG, "Execution interrupted.", e)
+            notifyFailed()
+        } catch (e: TimeoutException) {
+            Logger.e(TAG, "Execution timed out.", e)
+            notifyFailed()
         }
     }
 
-    public void addCallback(@NonNull LogoCallback callback) {
-        mCallbacks.add(callback);
+    fun addCallback(callback: LogoCallback) {
+        mCallbacks.add(callback)
     }
 
-    String getLogoUrl() {
-        return mLogoUrl;
-    }
-
-    LogoApi getLogoApi() {
-        return mLogoApi;
-    }
-
-    private void notifyLogo(@NonNull final BitmapDrawable drawable) {
-        ThreadManager.MAIN_HANDLER.post(new Runnable() {
-            @Override
-            public void run() {
-                getLogoApi().taskFinished(getLogoUrl(), drawable);
-                notifyCallbacksReceived(drawable);
-            }
-        });
-    }
-
-    private void notifyFailed() {
-        ThreadManager.MAIN_HANDLER.post(new Runnable() {
-            @Override
-            public void run() {
-                getLogoApi().taskFinished(getLogoUrl(), null);
-                notifyCallbacksFailed();
-            }
-        });
-    }
-
-    private void notifyCallbacksReceived(BitmapDrawable drawable) {
-        for (LogoCallback callback : mCallbacks) {
-            callback.onLogoReceived(drawable);
+    private fun notifyLogo(drawable: BitmapDrawable) {
+        ThreadManager.MAIN_HANDLER.post {
+            logoApi.taskFinished(logoUrl, drawable)
+            notifyCallbacksReceived(drawable)
         }
-        mCallbacks.clear();
     }
 
-    private void notifyCallbacksFailed() {
-        for (LogoCallback callback : mCallbacks) {
-            callback.onReceiveFailed();
+    private fun notifyFailed() {
+        ThreadManager.MAIN_HANDLER.post {
+            logoApi.taskFinished(logoUrl, null)
+            notifyCallbacksFailed()
         }
-        mCallbacks.clear();
+    }
+
+    private fun notifyCallbacksReceived(drawable: BitmapDrawable) {
+        mCallbacks.forEach { it.onLogoReceived(drawable) }
+        mCallbacks.clear() // Clearing mCallbacks to avoid memory leaks.
+    }
+
+    private fun notifyCallbacksFailed() {
+        mCallbacks.forEach { it.onReceiveFailed() }
+        mCallbacks.clear() // Clearing mCallbacks to avoid memory leaks.
     }
 
     /**
      * Interface to receive events on logo task completion.
      */
-    public interface LogoCallback {
-
+    interface LogoCallback {
         /**
          * This method will be called on the Main Thread when the logo is received.
          *
          * @param drawable The requested logo, or an instance of Placeholder logo if the request failed.
          */
-        void onLogoReceived(@NonNull BitmapDrawable drawable);
+        fun onLogoReceived(drawable: BitmapDrawable)
 
         /**
          * This method will be called on the Main Thread if there was an error retrieving the logo.
          */
-        void onReceiveFailed();
+        fun onReceiveFailed()
+    }
+
+    companion object {
+        private val TAG = LogUtil.getTag()
+        private const val SAFETY_TIMEOUT = 100
     }
 }
