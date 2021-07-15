@@ -76,7 +76,7 @@ public class ImageLoader {
             view.setImageResource(placeholder);
         }
 
-        final String id = txVariant + txSubVariant + view.getId();
+        final String id = txVariant + txSubVariant + view.hashCode();
 
         if (mCallbacks.containsKey(id)) {
             mCallbacks.remove(id);
