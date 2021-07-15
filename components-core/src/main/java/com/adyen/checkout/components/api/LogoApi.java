@@ -10,7 +10,6 @@ package com.adyen.checkout.components.api;
 
 import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
-import android.text.TextUtils;
 import android.util.DisplayMetrics;
 import android.util.LruCache;
 
@@ -123,8 +122,8 @@ public final class LogoApi {
                 mConnectionsMap.put(logoUrl, logoConnectionTask);
                 ThreadManager.EXECUTOR.submit(logoConnectionTask);
             } else {
-                Logger.d(TAG,
-                        "Execution for " + txVariant + (TextUtils.isEmpty(txSubVariant) ? "" : "/" + txSubVariant) + " is already running.");
+                final LogoConnectionTask existingLogoConnectionTask = mConnectionsMap.get(logoUrl);
+                existingLogoConnectionTask.addCallback(callback);
             }
         }
     }
@@ -191,7 +190,7 @@ public final class LogoApi {
 
     @NonNull
     private String buildUrl(@NonNull String txVariant, @Nullable String txSubVariant, @Nullable Size size) {
-        if (txSubVariant != null && !txSubVariant.isEmpty())  {
+        if (txSubVariant != null && !txSubVariant.isEmpty()) {
             return String.format(mLogoUrlFormat, getSizeVariant(size), txVariant + "/" + txSubVariant + mDensityExtension);
         } else {
             return String.format(mLogoUrlFormat, getSizeVariant(size), txVariant + mDensityExtension);

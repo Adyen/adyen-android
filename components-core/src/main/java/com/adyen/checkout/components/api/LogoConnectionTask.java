@@ -17,6 +17,8 @@ import com.adyen.checkout.core.api.ThreadManager;
 import com.adyen.checkout.core.log.LogUtil;
 import com.adyen.checkout.core.log.Logger;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.TimeoutException;
@@ -31,7 +33,7 @@ public final class LogoConnectionTask extends ConnectionTask<BitmapDrawable> {
 
     private static final int SAFETY_TIMEOUT = 100;
 
-    LogoCallback mCallback;
+    List<LogoCallback> mCallbacks = new ArrayList<>();
     private final String mLogoUrl;
     private final LogoApi mLogoApi;
 
@@ -39,7 +41,7 @@ public final class LogoConnectionTask extends ConnectionTask<BitmapDrawable> {
         super(new LogoConnection(logoUrl));
         mLogoApi = logoApi;
         mLogoUrl = logoUrl;
-        mCallback = callback;
+        mCallbacks.add(callback);
     }
 
     @Override
@@ -67,6 +69,10 @@ public final class LogoConnectionTask extends ConnectionTask<BitmapDrawable> {
         }
     }
 
+    public void addCallback(@NonNull LogoCallback callback) {
+        mCallbacks.add(callback);
+    }
+
     String getLogoUrl() {
         return mLogoUrl;
     }
@@ -80,8 +86,7 @@ public final class LogoConnectionTask extends ConnectionTask<BitmapDrawable> {
             @Override
             public void run() {
                 getLogoApi().taskFinished(getLogoUrl(), drawable);
-                mCallback.onLogoReceived(drawable);
-                mCallback = null;
+                notifyCallbacksReceived(drawable);
             }
         });
     }
@@ -91,10 +96,23 @@ public final class LogoConnectionTask extends ConnectionTask<BitmapDrawable> {
             @Override
             public void run() {
                 getLogoApi().taskFinished(getLogoUrl(), null);
-                mCallback.onReceiveFailed();
-                mCallback = null;
+                notifyCallbacksFailed();
             }
         });
+    }
+
+    private void notifyCallbacksReceived(BitmapDrawable drawable) {
+        for (LogoCallback callback : mCallbacks) {
+            callback.onLogoReceived(drawable);
+        }
+        mCallbacks.clear();
+    }
+
+    private void notifyCallbacksFailed() {
+        for (LogoCallback callback : mCallbacks) {
+            callback.onReceiveFailed();
+        }
+        mCallbacks.clear();
     }
 
     /**
