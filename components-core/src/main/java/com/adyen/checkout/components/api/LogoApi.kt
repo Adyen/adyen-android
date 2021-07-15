@@ -58,10 +58,10 @@ class LogoApi(host: String, displayMetrics: DisplayMetrics) {
         }
     }
 
-    private val mConnectionsMap: MutableMap<String, LogoConnectionTask> = HashMap()
-    private val mLogoUrlFormat: String = host + LOGO_PATH
-    private val mDensityExtension: String = getDensityExtension(displayMetrics.densityDpi)
-    private val mCache: LruCache<String, BitmapDrawable> = object : LruCache<String, BitmapDrawable>(LRU_CACHE_MAX_SIZE) {
+    private val connectionsMap: MutableMap<String, LogoConnectionTask> = HashMap()
+    private val logoUrlFormat: String = host + LOGO_PATH
+    private val densityExtension: String = getDensityExtension(displayMetrics.densityDpi)
+    private val cache: LruCache<String, BitmapDrawable> = object : LruCache<String, BitmapDrawable>(LRU_CACHE_MAX_SIZE) {
         override fun sizeOf(key: String, drawable: BitmapDrawable): Int {
             // The cache size will be measured in kilobytes rather than number of items.
             return drawable.bitmap.byteCount / KILO_BYTE_SIZE
@@ -85,19 +85,19 @@ class LogoApi(host: String, displayMetrics: DisplayMetrics) {
         Logger.v(TAG, "getLogo - $txVariant, $txSubVariant, $size")
         val logoUrl = buildUrl(txVariant, txSubVariant, size)
         synchronized(this) {
-            val cachedLogo = mCache[logoUrl]
+            val cachedLogo = cache[logoUrl]
             when {
                 cachedLogo != null -> {
                     Logger.v(TAG, "returning cached logo")
                     callback.onLogoReceived(cachedLogo)
                 }
-                !mConnectionsMap.containsKey(logoUrl) -> {
+                !connectionsMap.containsKey(logoUrl) -> {
                     val logoConnectionTask = LogoConnectionTask(this, logoUrl, callback)
-                    mConnectionsMap[logoUrl] = logoConnectionTask
+                    connectionsMap[logoUrl] = logoConnectionTask
                     ThreadManager.EXECUTOR.submit(logoConnectionTask)
                 }
                 else -> {
-                    val existingLogoConnectionTask = mConnectionsMap[logoUrl]
+                    val existingLogoConnectionTask = connectionsMap[logoUrl]
                     existingLogoConnectionTask?.addCallback(callback)
                 }
             }
@@ -116,7 +116,7 @@ class LogoApi(host: String, displayMetrics: DisplayMetrics) {
         Logger.d(TAG, "cancelLogoRequest")
         val logoUrl = buildUrl(txVariant, txSubVariant, size)
         synchronized(this) {
-            val taskToCancel = mConnectionsMap.remove(logoUrl)
+            val taskToCancel = connectionsMap.remove(logoUrl)
             if (taskToCancel != null) {
                 taskToCancel.cancel(true)
                 Logger.d(TAG, "canceled")
@@ -129,15 +129,15 @@ class LogoApi(host: String, displayMetrics: DisplayMetrics) {
      */
     fun cancelAll() {
         synchronized(this) {
-            mConnectionsMap.values.forEach { it.cancel(true) }
-            mConnectionsMap.clear()
+            connectionsMap.values.forEach { it.cancel(true) }
+            connectionsMap.clear()
         }
     }
 
     fun taskFinished(logoUrl: String, logo: BitmapDrawable?) {
         synchronized(this) {
-            mConnectionsMap.remove(logoUrl)
-            if (logo != null) mCache.put(logoUrl, logo)
+            connectionsMap.remove(logoUrl)
+            if (logo != null) cache.put(logoUrl, logo)
         }
     }
 
@@ -156,7 +156,7 @@ class LogoApi(host: String, displayMetrics: DisplayMetrics) {
         val txString =
             if (txSubVariant.isNullOrEmpty()) txVariant
             else "$txVariant/$txSubVariant"
-        return String.format(mLogoUrlFormat, getSizeVariant(size), txString + mDensityExtension)
+        return String.format(logoUrlFormat, getSizeVariant(size), txString + densityExtension)
     }
 
     private fun getSizeVariant(size: Size?): String {
@@ -167,11 +167,11 @@ class LogoApi(host: String, displayMetrics: DisplayMetrics) {
      * This method can be called if there is a need to release memory usage.
      */
     private fun clearCache() {
-        mCache.evictAll()
+        cache.evictAll()
     }
 
     private fun isDifferentHost(hostUrl: String): Boolean {
-        return !mLogoUrlFormat.startsWith(hostUrl)
+        return !logoUrlFormat.startsWith(hostUrl)
     }
 
     /**

@@ -28,10 +28,10 @@ class LogoConnectionTask(
     LogoConnection(logoUrl)
 ) {
 
-    var mCallbacks: MutableList<LogoCallback> = ArrayList()
+    var callbacks: MutableList<LogoCallback> = ArrayList()
 
     init {
-        mCallbacks.add(callback)
+        callbacks.add(callback)
     }
 
     override fun done() {
@@ -58,7 +58,7 @@ class LogoConnectionTask(
     }
 
     fun addCallback(callback: LogoCallback) {
-        mCallbacks.add(callback)
+        callbacks.add(callback)
     }
 
     private fun notifyLogo(drawable: BitmapDrawable) {
@@ -76,13 +76,13 @@ class LogoConnectionTask(
     }
 
     private fun notifyCallbacksReceived(drawable: BitmapDrawable) {
-        mCallbacks.forEach { it.onLogoReceived(drawable) }
-        mCallbacks.clear() // Clearing mCallbacks to avoid memory leaks.
+        callbacks.forEach { it.onLogoReceived(drawable) }
+        callbacks.clear() // Clearing callbacks to avoid memory leaks.
     }
 
     private fun notifyCallbacksFailed() {
-        mCallbacks.forEach { it.onReceiveFailed() }
-        mCallbacks.clear() // Clearing mCallbacks to avoid memory leaks.
+        callbacks.forEach { it.onReceiveFailed() }
+        callbacks.clear() // Clearing callbacks to avoid memory leaks.
     }
 
     /**

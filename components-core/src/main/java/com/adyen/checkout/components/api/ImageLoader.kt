@@ -22,9 +22,9 @@ import java.util.HashMap
 /**
  * Loading Image from LogoApi.
  */
-class ImageLoader(private val mLogoApi: LogoApi) {
-    private val mCallbacks: MutableMap<String, LogoCallback> = HashMap()
-    private val mImageViews: MutableMap<String, WeakReference<ImageView>> = HashMap()
+class ImageLoader(private val logoApi: LogoApi) {
+    private val callbacks: MutableMap<String, LogoCallback> = HashMap()
+    private val imageViews: MutableMap<String, WeakReference<ImageView>> = HashMap()
 
     /**
      * Load image to ImageView with place holder before load and error fallback image.
@@ -54,36 +54,36 @@ class ImageLoader(private val mLogoApi: LogoApi) {
             view.setImageResource(placeholder)
         }
         val id = txVariant + txSubVariant + view.hashCode()
-        if (mCallbacks.containsKey(id)) {
-            mCallbacks.remove(id)
-            mImageViews.remove(id)
+        if (callbacks.containsKey(id)) {
+            callbacks.remove(id)
+            imageViews.remove(id)
         }
         val callback: LogoCallback = object : LogoCallback {
             override fun onLogoReceived(drawable: BitmapDrawable) {
-                val imageView = mImageViews[id]?.get()
+                val imageView = imageViews[id]?.get()
                 if (imageView != null) {
                     imageView.setImageDrawable(drawable)
                 } else {
                     Logger.e(TAG, "ImageView is null for received Logo - $id")
                 }
-                mCallbacks.remove(id)
-                mImageViews.remove(id)
+                callbacks.remove(id)
+                imageViews.remove(id)
             }
 
             override fun onReceiveFailed() {
-                val imageView = mImageViews[id]?.get()
+                val imageView = imageViews[id]?.get()
                 if (imageView != null) {
                     imageView.setImageResource(errorFallback)
                 } else {
                     Logger.e(TAG, "ImageView is null for failed Logo - $id")
                 }
-                mCallbacks.remove(id)
-                mImageViews.remove(id)
+                callbacks.remove(id)
+                imageViews.remove(id)
             }
         }
-        mImageViews[id] = WeakReference(view)
-        mCallbacks[id] = callback
-        mLogoApi.getLogo(txVariant, txSubVariant, null, callback)
+        imageViews[id] = WeakReference(view)
+        callbacks[id] = callback
+        logoApi.getLogo(txVariant, txSubVariant, null, callback)
     }
 
     companion object {
