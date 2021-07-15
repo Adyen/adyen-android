@@ -12,3 +12,5 @@
 - `showPreselectedStoredPaymentMethod` flag to `DropInConfiguration` to allow choosing to skip to the payment method selection screen.
 - Any `Configuration` will check if the `clientKey` matches the `environment` it will be used on.
 
+## Fixed
+- Logos not loading when multiple icons in the same screen have the same logo.
