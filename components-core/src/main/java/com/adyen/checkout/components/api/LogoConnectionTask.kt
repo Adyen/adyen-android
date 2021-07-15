@@ -12,7 +12,6 @@ import com.adyen.checkout.core.api.ConnectionTask
 import com.adyen.checkout.core.api.ThreadManager
 import com.adyen.checkout.core.log.LogUtil
 import com.adyen.checkout.core.log.Logger
-import java.util.ArrayList
 import java.util.concurrent.ExecutionException
 import java.util.concurrent.TimeUnit
 import java.util.concurrent.TimeoutException
@@ -28,11 +27,7 @@ class LogoConnectionTask(
     LogoConnection(logoUrl)
 ) {
 
-    var callbacks: MutableList<LogoCallback> = ArrayList()
-
-    init {
-        callbacks.add(callback)
-    }
+    var callbacks: HashSet<LogoCallback> = hashSetOf(callback)
 
     override fun done() {
         Logger.v(TAG, "done")
@@ -58,7 +53,9 @@ class LogoConnectionTask(
     }
 
     fun addCallback(callback: LogoCallback) {
-        callbacks.add(callback)
+        synchronized(this) {
+            callbacks.add(callback)
+        }
     }
 
     private fun notifyLogo(drawable: BitmapDrawable) {
@@ -76,13 +73,17 @@ class LogoConnectionTask(
     }
 
     private fun notifyCallbacksReceived(drawable: BitmapDrawable) {
-        callbacks.forEach { it.onLogoReceived(drawable) }
-        callbacks.clear() // Clearing callbacks to avoid memory leaks.
+        synchronized(this) {
+            callbacks.forEach { it.onLogoReceived(drawable) }
+            callbacks.clear() // Clearing callbacks to avoid memory leaks.
+        }
     }
 
     private fun notifyCallbacksFailed() {
-        callbacks.forEach { it.onReceiveFailed() }
-        callbacks.clear() // Clearing callbacks to avoid memory leaks.
+        synchronized(this) {
+            callbacks.forEach { it.onReceiveFailed() }
+            callbacks.clear() // Clearing callbacks to avoid memory leaks.
+        }
     }
 
     /**
