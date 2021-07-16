@@ -14,3 +14,4 @@
 
 ## Fixed
 - Logos not loading when multiple icons in the same screen have the same logo.
+- Crashes when returning from a redirect, after drop-in activity is killed in the background.
