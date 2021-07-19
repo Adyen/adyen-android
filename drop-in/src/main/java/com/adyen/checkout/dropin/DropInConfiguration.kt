@@ -57,6 +57,7 @@ class DropInConfiguration : Configuration, Parcelable {
     private val availableActionConfigs: HashMap<Class<*>, Configuration>
     val serviceComponentName: ComponentName
     val amount: Amount
+    val showPreselectedStoredPaymentMethod: Boolean
 
     companion object {
         @JvmField
@@ -74,12 +75,14 @@ class DropInConfiguration : Configuration, Parcelable {
         availablePaymentConfigs: HashMap<String, Configuration>,
         availableActionConfigs: HashMap<Class<*>, Configuration>,
         serviceComponentName: ComponentName,
-        amount: Amount
+        amount: Amount,
+        showPreselectedStoredPaymentMethod: Boolean
     ) : super(shopperLocale, environment, clientKey) {
         this.availablePaymentConfigs = availablePaymentConfigs
         this.availableActionConfigs = availableActionConfigs
         this.serviceComponentName = serviceComponentName
         this.amount = amount
+        this.showPreselectedStoredPaymentMethod = showPreselectedStoredPaymentMethod
     }
 
     constructor(parcel: Parcel) : super(parcel) {
@@ -89,6 +92,7 @@ class DropInConfiguration : Configuration, Parcelable {
         availableActionConfigs = parcel.readHashMap(Configuration::class.java.classLoader) as HashMap<Class<*>, Configuration>
         serviceComponentName = parcel.readParcelable(ComponentName::class.java.classLoader)!!
         amount = Amount.CREATOR.createFromParcel(parcel)
+        showPreselectedStoredPaymentMethod = ParcelUtils.readBoolean(parcel)
     }
 
     override fun writeToParcel(dest: Parcel, flags: Int) {
@@ -97,6 +101,7 @@ class DropInConfiguration : Configuration, Parcelable {
         dest.writeMap(availableActionConfigs)
         dest.writeParcelable(serviceComponentName, flags)
         JsonUtils.writeToParcel(dest, Amount.SERIALIZER.serialize(amount))
+        ParcelUtils.writeBoolean(dest, showPreselectedStoredPaymentMethod)
     }
 
     override fun describeContents(): Int {
@@ -147,6 +152,7 @@ class DropInConfiguration : Configuration, Parcelable {
         private var clientKey: String
         private var serviceComponentName: ComponentName
         private var amount: Amount = Amount.EMPTY
+        private var showPreselectedStoredPaymentMethod: Boolean = true
 
         private val packageName: String
         private val serviceClassName: String
@@ -185,6 +191,7 @@ class DropInConfiguration : Configuration, Parcelable {
             this.environment = dropInConfiguration.environment
             this.amount = dropInConfiguration.amount
             this.clientKey = dropInConfiguration.clientKey
+            this.showPreselectedStoredPaymentMethod = dropInConfiguration.showPreselectedStoredPaymentMethod
         }
 
         fun setServiceComponentName(serviceComponentName: ComponentName): Builder {
@@ -212,6 +219,11 @@ class DropInConfiguration : Configuration, Parcelable {
                 throw CheckoutException("Currency is not valid.")
             }
             this.amount = amount
+            return this
+        }
+
+        fun setShowPreselectedStoredPaymentMethod(showStoredPaymentMethod: Boolean): Builder {
+            this.showPreselectedStoredPaymentMethod = showStoredPaymentMethod
             return this
         }
 
@@ -383,7 +395,8 @@ class DropInConfiguration : Configuration, Parcelable {
                 availablePaymentConfigs,
                 availableActionConfigs,
                 serviceComponentName,
-                amount
+                amount,
+                showPreselectedStoredPaymentMethod
             )
         }
     }
