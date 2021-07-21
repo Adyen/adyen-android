@@ -329,7 +329,7 @@ class CardView @JvmOverloads constructor(context: Context, attrs: AttributeSet? 
             if (hasFocus) {
                 binding.textInputLayoutSocialSecurityNumber.error = null
             } else if (outputData != null && !outputData.socialSecurityNumberState.validation.isValid()) {
-                binding.textInputLayoutSocialSecurityNumber.error = mLocalizedContext.getString(R.string.checkout_card_number_not_valid)
+                binding.textInputLayoutSocialSecurityNumber.error = mLocalizedContext.getString(R.string.checkout_social_security_number_not_valid)
             }
         }
     }

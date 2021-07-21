@@ -69,7 +69,7 @@ class NewCardDelegate(
         return if (cardConfiguration.isHolderNameRequired && holderName.isBlank()) {
             FieldState(
                 holderName,
-                Validation.Invalid(R.string.checkout_holder_name_not_valid)
+                Validation.Invalid
             )
         } else {
             FieldState(

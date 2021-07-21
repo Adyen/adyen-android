@@ -19,6 +19,7 @@ import androidx.appcompat.app.AppCompatDelegate
 import com.adyen.checkout.adyen3ds2.Adyen3DS2Configuration
 import com.adyen.checkout.bcmc.BcmcConfiguration
 import com.adyen.checkout.card.CardConfiguration
+import com.adyen.checkout.card.SocialSecurityNumberVisibility
 import com.adyen.checkout.components.model.PaymentMethodsApiResponse
 import com.adyen.checkout.core.api.Environment
 import com.adyen.checkout.core.exception.CheckoutException
@@ -148,6 +149,7 @@ class MainActivity : AppCompatActivity() {
 
         val cardConfiguration = CardConfiguration.Builder(shopperLocale, Environment.TEST, BuildConfig.CLIENT_KEY)
             .setShopperReference(keyValueStorage.getShopperReference())
+            .setSocialSecurityNumberVisibility(SocialSecurityNumberVisibility.SHOW)
             .build()
 
         val googlePayConfig = GooglePayConfiguration.Builder(shopperLocale, Environment.TEST, BuildConfig.CLIENT_KEY)

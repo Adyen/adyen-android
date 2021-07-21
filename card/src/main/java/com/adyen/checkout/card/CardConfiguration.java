@@ -172,7 +172,7 @@ public class CardConfiguration extends Configuration {
         private String mShopperReference;
         private boolean mBuilderHideCvc;
         private boolean mBuilderHideCvcStoredCard;
-        private SocialSecurityNumberVisibility mBuilderSocialSecurityNumberVisibility;
+        private SocialSecurityNumberVisibility mBuilderSocialSecurityNumberVisibility = SocialSecurityNumberVisibility.HIDE;
 
         /**
          * Constructor of Card Configuration Builder with instance of CardConfiguration.
