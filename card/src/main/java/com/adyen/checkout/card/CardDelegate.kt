@@ -28,6 +28,7 @@ abstract class CardDelegate(
     abstract fun validateExpiryDate(expiryDate: ExpiryDate): FieldState<ExpiryDate>
     abstract fun validateSecurityCode(securityCode: String, cardType: DetectedCardType? = null): FieldState<String>
     abstract fun validateHolderName(holderName: String): FieldState<String>
+    abstract fun validateSocialSecurityNumber(socialSecurityNumber: String): FieldState<String>
     abstract fun isCvcHidden(): Boolean
     abstract fun requiresInput(): Boolean
     abstract fun isHolderNameRequired(): Boolean

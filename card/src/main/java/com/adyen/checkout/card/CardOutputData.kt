@@ -17,6 +17,7 @@ data class CardOutputData(
     val expiryDateState: FieldState<ExpiryDate>,
     val securityCodeState: FieldState<String>,
     val holderNameState: FieldState<String>,
+    val socialSecurityNumberState: FieldState<String>,
     val isStoredPaymentMethodEnable: Boolean,
     val cvcUIState: CvcUIState,
     val detectedCardTypes: List<DetectedCardType>

@@ -79,6 +79,10 @@ class NewCardDelegate(
         }
     }
 
+    override fun validateSocialSecurityNumber(socialSecurityNumber: String): FieldState<String> {
+        return CardValidationUtils.validateSocialSecurityNumber(socialSecurityNumber)
+    }
+
     override fun isCvcHidden(): Boolean {
         return cardConfiguration.isHideCvc
     }

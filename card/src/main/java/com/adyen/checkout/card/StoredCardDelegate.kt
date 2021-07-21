@@ -84,6 +84,10 @@ class StoredCardDelegate(
         )
     }
 
+    override fun validateSocialSecurityNumber(socialSecurityNumber: String): FieldState<String> {
+        return CardValidationUtils.validateSocialSecurityNumber(socialSecurityNumber)
+    }
+
     override fun isCvcHidden(): Boolean {
         return cardConfiguration.isHideCvcStoredCard || noCvcBrands.contains(cardType)
     }

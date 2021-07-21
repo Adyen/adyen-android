@@ -16,6 +16,7 @@ import com.adyen.checkout.components.ui.Validation
 import com.adyen.checkout.core.util.StringUtil
 import java.util.Calendar
 import java.util.GregorianCalendar
+import java.util.regex.Pattern
 
 object CardValidationUtils {
 
@@ -37,6 +38,14 @@ object CardValidationUtils {
     private const val MONTHS_IN_YEAR = 12
     private const val MAXIMUM_YEARS_IN_FUTURE = 30
     private const val MAXIMUM_EXPIRED_MONTHS = 3
+
+    private const val CPF_DIGIT_LIMIT = 11
+    private const val CPF_REGEX = "\\d{3}\\.\\d{3}\\.\\d{3}-\\d{2}"
+    private val CPF_PATTERN = Pattern.compile(CPF_REGEX)
+
+    private const val CNPJ_DIGIT_LIMIT = 14
+    private const val CNPJ_REGEX = "\\d{2}\\.\\d{3}\\.\\d{3}/\\d{4}-\\d{2}"
+    private val CNPJ_PATTERN = Pattern.compile(CNPJ_REGEX)
 
     /**
      * Validate card number.
@@ -109,6 +118,18 @@ object CardValidationUtils {
             else -> invalidState
         }
         return FieldState(normalizedSecurityCode, validation)
+    }
+
+    fun validateSocialSecurityNumber(socialSecurityNumber: String): FieldState<String> {
+        val digitLength = socialSecurityNumber.filter { it.isDigit() }.length
+        val validation = when {
+            digitLength < CPF_DIGIT_LIMIT -> Validation.Invalid(R.string.checkout_card_number_not_valid)
+            digitLength == CPF_DIGIT_LIMIT && CPF_PATTERN.matcher(socialSecurityNumber).matches() -> Validation.Valid
+            digitLength < CNPJ_DIGIT_LIMIT -> Validation.Invalid(R.string.checkout_card_number_not_valid)
+            digitLength == CNPJ_DIGIT_LIMIT && CNPJ_PATTERN.matcher(socialSecurityNumber).matches() -> Validation.Valid
+            else -> Validation.Partial
+        }
+        return FieldState(socialSecurityNumber, validation)
     }
 
     private fun dateExists(expiryDate: ExpiryDate): Boolean {

@@ -71,6 +71,7 @@ class CardView @JvmOverloads constructor(context: Context, attrs: AttributeSet? 
         initExpiryDateInput()
         initSecurityCodeInput()
         initHolderNameInput()
+        initSocialSecurityNumberInput()
 
         binding.switchStorePaymentMethod.setOnCheckedChangeListener { _, isChecked ->
             mCardInputData.isStorePaymentSelected = isChecked
@@ -282,7 +283,7 @@ class CardView @JvmOverloads constructor(context: Context, attrs: AttributeSet? 
     }
 
     private fun initSecurityCodeInput() {
-        val securityCodeEditText = binding.textInputLayoutSecurityCode.editText as SecurityCodeInput?
+        val securityCodeEditText = binding.textInputLayoutSecurityCode.editText as? SecurityCodeInput
         securityCodeEditText?.setOnChangeListener { editable: Editable ->
             mCardInputData.securityCode = editable.toString()
             notifyInputDataChanged()
@@ -299,7 +300,7 @@ class CardView @JvmOverloads constructor(context: Context, attrs: AttributeSet? 
     }
 
     private fun initHolderNameInput() {
-        val cardHolderEditText = binding.textInputLayoutCardHolder.editText as AdyenTextInputEditText?
+        val cardHolderEditText = binding.textInputLayoutCardHolder.editText as? AdyenTextInputEditText
         cardHolderEditText?.setOnChangeListener { editable: Editable ->
             mCardInputData.holderName = editable.toString()
             notifyInputDataChanged()
@@ -311,6 +312,23 @@ class CardView @JvmOverloads constructor(context: Context, attrs: AttributeSet? 
                 binding.textInputLayoutCardHolder.error = null
             } else if (outputData != null && !outputData.holderNameState.validation.isValid()) {
                 binding.textInputLayoutCardHolder.error = mLocalizedContext.getString(R.string.checkout_holder_name_not_valid)
+            }
+        }
+    }
+
+    private fun initSocialSecurityNumberInput() {
+        val socialSecurityNumberEditText = binding.textInputLayoutSocialSecurityNumber.editText as? AdyenTextInputEditText
+        socialSecurityNumberEditText?.setOnChangeListener { editable ->
+            mCardInputData.socialSecurityNumber = editable.toString()
+            notifyInputDataChanged()
+            binding.textInputLayoutSocialSecurityNumber.error = null
+        }
+        socialSecurityNumberEditText?.onFocusChangeListener = OnFocusChangeListener { v, hasFocus ->
+            val outputData = component.outputData
+            if (hasFocus) {
+                binding.textInputLayoutSocialSecurityNumber.error = null
+            } else if (outputData != null && !outputData.socialSecurityNumberState.validation.isValid()) {
+                binding.textInputLayoutSocialSecurityNumber.error = mLocalizedContext.getString(R.string.checkout_card_number_not_valid)
             }
         }
     }
