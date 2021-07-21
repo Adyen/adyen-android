@@ -52,7 +52,7 @@
     </style>
 
     <style name="AdyenCheckout.Card.SocialSecurityNumberInput" parent="AdyenCheckout.TextInputEditText">
-        <item name="android:hint">CPF/CNPJ</item>
+        <item name="android:hint">@string/checkout_social_security_number_hint</item>
         <item name="android:inputType">text</item>
     </style>
 
