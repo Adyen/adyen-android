@@ -248,6 +248,7 @@ class CardComponent private constructor(
             paymentMethod = cardPaymentMethod
             setStorePaymentMethod(stateOutputData.isStoredPaymentMethodEnable)
             shopperReference = configuration.shopperReference
+            socialSecurityNumber = stateOutputData.socialSecurityNumberState.value
         }
 
         val lastFour = cardNumber.takeLast(LAST_FOUR_LENGTH)
