@@ -138,7 +138,8 @@ class CardComponent private constructor(
             cardDelegate.validateSocialSecurityNumber(socialSecurityNumber),
             isStorePaymentSelected,
             makeCvcUIState(firstDetectedType?.cvcPolicy),
-            detectedCardTypes
+            detectedCardTypes,
+            cardDelegate.getSocialSecurityNumberVisibility()
         )
     }
 

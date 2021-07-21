@@ -20,7 +20,8 @@ data class CardOutputData(
     val socialSecurityNumberState: FieldState<String>,
     val isStoredPaymentMethodEnable: Boolean,
     val cvcUIState: CvcUIState,
-    val detectedCardTypes: List<DetectedCardType>
+    val detectedCardTypes: List<DetectedCardType>,
+    val socialSecurityNumberVisibility: SocialSecurityNumberVisibility?
 ) : OutputData {
     override fun isValid(): Boolean {
         return cardNumberState.validation.isValid() &&

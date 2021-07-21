@@ -126,6 +126,7 @@ class CardView @JvmOverloads constructor(context: Context, attrs: AttributeSet? 
         if (cardOutputData != null) {
             onCardNumberValidated(cardOutputData.cardNumberState, cardOutputData.detectedCardTypes)
             onExpiryDateValidated(cardOutputData.expiryDateState)
+            setSocialSecurityNumberVisibility(cardOutputData.socialSecurityNumberVisibility)
 
             when (cardOutputData.cvcUIState) {
                 CvcUIState.REQUIRED -> {
@@ -331,6 +332,10 @@ class CardView @JvmOverloads constructor(context: Context, attrs: AttributeSet? 
                 binding.textInputLayoutSocialSecurityNumber.error = mLocalizedContext.getString(R.string.checkout_card_number_not_valid)
             }
         }
+    }
+
+    private fun setSocialSecurityNumberVisibility(socialSecurityNumberVisibility: SocialSecurityNumberVisibility?) {
+        binding.textInputLayoutSocialSecurityNumber.isVisible = socialSecurityNumberVisibility == SocialSecurityNumberVisibility.SHOW
     }
 
     private fun setStoredCardInterface(storedCardInput: CardInputData) {

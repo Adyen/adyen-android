@@ -92,6 +92,10 @@ class StoredCardDelegate(
         return cardConfiguration.isHideCvcStoredCard || noCvcBrands.contains(cardType)
     }
 
+    override fun getSocialSecurityNumberVisibility(): SocialSecurityNumberVisibility? {
+        return cardConfiguration.socialSecurityNumberVisibility
+    }
+
     override fun requiresInput(): Boolean {
         return !cardConfiguration.isHideCvcStoredCard
     }

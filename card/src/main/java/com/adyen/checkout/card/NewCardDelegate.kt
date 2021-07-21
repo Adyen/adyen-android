@@ -87,6 +87,10 @@ class NewCardDelegate(
         return cardConfiguration.isHideCvc
     }
 
+    override fun getSocialSecurityNumberVisibility(): SocialSecurityNumberVisibility? {
+        return cardConfiguration.socialSecurityNumberVisibility
+    }
+
     override fun requiresInput(): Boolean {
         return true
     }
