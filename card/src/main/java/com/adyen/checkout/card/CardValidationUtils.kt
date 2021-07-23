@@ -26,8 +26,6 @@ object CardValidationUtils {
     // Card Number
     private const val MINIMUM_CARD_NUMBER_LENGTH = 8
     const val MAXIMUM_CARD_NUMBER_LENGTH = 19
-    const val GENERAL_CARD_NUMBER_LENGTH = 16
-    const val AMEX_CARD_NUMBER_LENGTH = 15
 
     // Security Code
     private const val GENERAL_CARD_SECURITY_CODE_SIZE = 3
