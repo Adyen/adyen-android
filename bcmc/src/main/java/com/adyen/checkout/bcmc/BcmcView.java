@@ -21,7 +21,6 @@ import androidx.annotation.StringRes;
 import androidx.lifecycle.LifecycleOwner;
 import androidx.lifecycle.Observer;
 
-import com.adyen.checkout.card.CardValidationUtils;
 import com.adyen.checkout.card.ui.CardNumberInput;
 import com.adyen.checkout.card.ui.ExpiryDateInput;
 import com.adyen.checkout.components.GenericComponentState;
@@ -147,30 +146,12 @@ public final class BcmcView
     }
 
     private void onCardNumberValidated(@NonNull FieldState<String> validatedNumber) {
-        if (validatedNumber.getValidation().isValid()) {
-            changeFocusOfInput(validatedNumber.getValue());
-        }
-
         if (!getComponent().isCardNumberSupported(validatedNumber.getValue())) {
             mCardBrandLogoImageView.setStrokeWidth(0f);
             mCardBrandLogoImageView.setImageResource(R.drawable.ic_card);
         } else {
             mCardBrandLogoImageView.setStrokeWidth(RoundCornerImageView.DEFAULT_STROKE_WIDTH);
             mImageLoader.load(BcmcComponent.SUPPORTED_CARD_TYPE.getTxVariant(), mCardBrandLogoImageView);
-        }
-    }
-
-    private void changeFocusOfInput(String numberValue) {
-        final int length = numberValue.length();
-
-        if (length == CardValidationUtils.MAXIMUM_CARD_NUMBER_LENGTH) {
-            goToNextInputIfFocus(mCardNumberEditText);
-        }
-    }
-
-    private void goToNextInputIfFocus(View view) {
-        if (getRootView().findFocus() == view) {
-            findViewById(view.getNextFocusForwardId()).requestFocus();
         }
     }
 
