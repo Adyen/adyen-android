@@ -8,6 +8,8 @@
 
 package com.adyen.checkout.components.ui
 
+import androidx.annotation.StringRes
+
 sealed class Validation {
 
     /**
@@ -17,7 +19,7 @@ sealed class Validation {
     /**
      * Field is not valid.
      */
-    object Invalid : Validation()
+    class Invalid(@StringRes val reason: Int) : Validation()
     /**
      * Field is not fully valid.
      * Could be incomplete or unable to fully validate.

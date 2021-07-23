@@ -25,7 +25,7 @@ class MBWayOutputData(mobilePhoneNumber: String) : OutputData {
             } else {
                 FieldState(
                     mobileNumber,
-                    Validation.Invalid
+                    Validation.Invalid(R.string.checkout_mbway_phone_number_not_valid)
                 )
             }
         }

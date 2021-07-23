@@ -47,7 +47,7 @@ class BlikOutputData implements OutputData {
             Integer.parseInt(blikCode);
         } catch (NumberFormatException e) {
             Logger.e(TAG, "Failed to parse blik code to Integer", e);
-            return Validation.Invalid.INSTANCE;
+            return new Validation.Invalid(R.string.checkout_blik_code_not_valid);
         }
         if (blikCode.length() == BLIK_CODE_LENGTH) {
             return Validation.Valid.INSTANCE;
@@ -55,6 +55,6 @@ class BlikOutputData implements OutputData {
         if (blikCode.length() < BLIK_CODE_LENGTH) {
             return Validation.Partial.INSTANCE;
         }
-        return Validation.Invalid.INSTANCE;
+        return new Validation.Invalid(R.string.checkout_blik_code_not_valid);
     }
 }

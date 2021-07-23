@@ -57,7 +57,7 @@ class SepaOutputData implements OutputData {
         } else if (Iban.isPartial(ibanNumber)) {
             validation = Validation.Partial.INSTANCE;
         } else {
-            validation = Validation.Invalid.INSTANCE;
+            validation = new Validation.Invalid(R.string.checkout_iban_not_valid);
         }
 
         return new FieldState<>(ibanNumber, validation);

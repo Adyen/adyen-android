@@ -54,11 +54,11 @@ object CardValidationUtils {
         val normalizedNumber = StringUtil.normalize(number)
         val length = normalizedNumber.length
         val validation = when {
-            !StringUtil.isDigitsAndSeparatorsOnly(normalizedNumber) -> Validation.Invalid
-            length > MAXIMUM_CARD_NUMBER_LENGTH -> Validation.Invalid
+            !StringUtil.isDigitsAndSeparatorsOnly(normalizedNumber) -> Validation.Invalid(R.string.checkout_card_number_not_valid)
+            length > MAXIMUM_CARD_NUMBER_LENGTH -> Validation.Invalid(R.string.checkout_card_number_not_valid)
             length < MINIMUM_CARD_NUMBER_LENGTH -> Validation.Partial
             isLuhnChecksumValid(normalizedNumber) -> Validation.Valid
-            length == MAXIMUM_CARD_NUMBER_LENGTH -> Validation.Invalid
+            length == MAXIMUM_CARD_NUMBER_LENGTH -> Validation.Invalid(R.string.checkout_card_number_not_valid)
             else -> Validation.Partial
         }
 
@@ -100,7 +100,7 @@ object CardValidationUtils {
                 return FieldState(expiryDate, Validation.Valid)
             }
         }
-        return FieldState(expiryDate, Validation.Invalid)
+        return FieldState(expiryDate, Validation.Invalid(R.string.checkout_expiry_date_not_valid))
     }
 
     /**
@@ -109,22 +109,24 @@ object CardValidationUtils {
     fun validateSecurityCode(securityCode: String, cardType: DetectedCardType?): FieldState<String> {
         val normalizedSecurityCode = StringUtil.normalize(securityCode)
         val length = normalizedSecurityCode.length
+        val invalidState = Validation.Invalid(R.string.checkout_security_code_not_valid)
         val validation = when {
-            !StringUtil.isDigitsAndSeparatorsOnly(normalizedSecurityCode) -> Validation.Invalid
+            !StringUtil.isDigitsAndSeparatorsOnly(normalizedSecurityCode) -> invalidState
             cardType?.cvcPolicy == Brand.CvcPolicy.OPTIONAL && length == 0 -> Validation.Valid
             cardType?.cardType == CardType.AMERICAN_EXPRESS && length == AMEX_SECURITY_CODE_SIZE -> Validation.Valid
             cardType?.cardType != CardType.AMERICAN_EXPRESS && length == GENERAL_CARD_SECURITY_CODE_SIZE -> Validation.Valid
-            else -> Validation.Invalid
+            else -> invalidState
         }
         return FieldState(normalizedSecurityCode, validation)
     }
 
     fun validateSocialSecurityNumber(socialSecurityNumber: String): FieldState<String> {
         val digitLength = socialSecurityNumber.filter { it.isDigit() }.length
+        val invalidState = Validation.Invalid(R.string.checkout_social_security_number_not_valid)
         val validation = when {
-            digitLength < CPF_DIGIT_LIMIT -> Validation.Invalid
+            digitLength < CPF_DIGIT_LIMIT -> invalidState
             digitLength == CPF_DIGIT_LIMIT && CPF_PATTERN.matcher(socialSecurityNumber).matches() -> Validation.Valid
-            digitLength < CNPJ_DIGIT_LIMIT -> Validation.Invalid
+            digitLength < CNPJ_DIGIT_LIMIT -> invalidState
             digitLength == CNPJ_DIGIT_LIMIT && CNPJ_PATTERN.matcher(socialSecurityNumber).matches() -> Validation.Valid
             else -> Validation.Partial
         }
