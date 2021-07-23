@@ -27,6 +27,7 @@ import com.adyen.checkout.card.ui.ExpiryDateInput;
 import com.adyen.checkout.components.GenericComponentState;
 import com.adyen.checkout.components.api.ImageLoader;
 import com.adyen.checkout.components.model.payments.request.CardPaymentMethod;
+import com.adyen.checkout.components.ui.Validation;
 import com.adyen.checkout.components.ui.view.AdyenLinearLayout;
 import com.adyen.checkout.components.ui.view.RoundCornerImageView;
 import com.adyen.checkout.components.ui.FieldState;
@@ -131,14 +132,16 @@ public final class BcmcView
         if (!outputData.getCardNumberField().getValidation().isValid()) {
             isErrorFocused = true;
             mCardNumberEditText.requestFocus();
-            setCardNumberError(R.string.checkout_card_number_not_valid);
+            final int errorReasonResId = ((Validation.Invalid) outputData.getCardNumberField().getValidation()).getReason();
+            setCardNumberError(errorReasonResId);
         }
 
         if (!outputData.getExpiryDateField().getValidation().isValid()) {
             if (!isErrorFocused) {
                 mExpiryDateInput.requestFocus();
             }
-            mExpiryDateInput.setError(mLocalizedContext.getString(R.string.checkout_expiry_date_not_valid));
+            final int errorReasonResId = ((Validation.Invalid) outputData.getExpiryDateField().getValidation()).getReason();
+            mExpiryDateInput.setError(mLocalizedContext.getString(errorReasonResId));
         }
     }
 
@@ -188,7 +191,8 @@ public final class BcmcView
             if (hasFocus) {
                 setCardNumberError(null);
             } else if (outputData != null && !outputData.getCardNumberField().getValidation().isValid()) {
-                setCardNumberError(R.string.checkout_card_number_not_valid);
+                final int errorReasonResId = ((Validation.Invalid) outputData.getCardNumberField().getValidation()).getReason();
+                setCardNumberError(errorReasonResId);
             }
         });
     }
@@ -217,7 +221,8 @@ public final class BcmcView
             if (hasFocus) {
                 mExpiryDateInput.setError(null);
             } else if (outputData != null && !outputData.getExpiryDateField().getValidation().isValid()) {
-                mExpiryDateInput.setError(mLocalizedContext.getString(R.string.checkout_expiry_date_not_valid));
+                final int errorReasonResId = ((Validation.Invalid) outputData.getExpiryDateField().getValidation()).getReason();
+                mExpiryDateInput.setError(mLocalizedContext.getString(errorReasonResId));
             }
         });
     }

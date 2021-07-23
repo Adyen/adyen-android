@@ -21,6 +21,7 @@ import androidx.lifecycle.Observer;
 
 import com.adyen.checkout.components.GenericComponentState;
 import com.adyen.checkout.components.model.payments.request.BlikPaymentMethod;
+import com.adyen.checkout.components.ui.Validation;
 import com.adyen.checkout.components.ui.view.AdyenLinearLayout;
 import com.adyen.checkout.components.ui.view.AdyenTextInputEditText;
 import com.adyen.checkout.core.exception.CheckoutException;
@@ -88,7 +89,8 @@ public class BlikView
             if (hasFocus) {
                 mBlikCodeInput.setError(null);
             } else if (outputData != null && !outputData.getBlikCodeField().getValidation().isValid()) {
-                mBlikCodeInput.setError(mLocalizedContext.getString(R.string.checkout_blik_code_not_valid));
+                final int errorReasonResId = ((Validation.Invalid) outputData.getBlikCodeField().getValidation()).getReason();
+                mBlikCodeInput.setError(mLocalizedContext.getString(errorReasonResId));
             }
         });
     }
@@ -126,7 +128,8 @@ public class BlikView
 
         if (!outputData.getBlikCodeField().getValidation().isValid()) {
             mBlikCodeInput.requestFocus();
-            mBlikCodeInput.setError(mLocalizedContext.getString(R.string.checkout_blik_code_not_valid));
+            final int errorReasonResId = ((Validation.Invalid) outputData.getBlikCodeField().getValidation()).getReason();
+            mBlikCodeInput.setError(mLocalizedContext.getString(errorReasonResId));
         }
     }
 

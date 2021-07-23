@@ -8,8 +8,6 @@
 
 package com.adyen.checkout.blik;
 
-import android.text.TextUtils;
-
 import androidx.annotation.NonNull;
 
 import com.adyen.checkout.components.base.OutputData;
@@ -40,9 +38,6 @@ class BlikOutputData implements OutputData {
     }
 
     private Validation getBlikCodeValidation(@NonNull String blikCode) {
-        if (TextUtils.isEmpty(blikCode)) {
-            return Validation.Partial.INSTANCE;
-        }
         try {
             Integer.parseInt(blikCode);
         } catch (NumberFormatException e) {
@@ -51,9 +46,6 @@ class BlikOutputData implements OutputData {
         }
         if (blikCode.length() == BLIK_CODE_LENGTH) {
             return Validation.Valid.INSTANCE;
-        }
-        if (blikCode.length() < BLIK_CODE_LENGTH) {
-            return Validation.Partial.INSTANCE;
         }
         return new Validation.Invalid(R.string.checkout_blik_code_not_valid);
     }

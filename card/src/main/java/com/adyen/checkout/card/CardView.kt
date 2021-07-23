@@ -28,6 +28,7 @@ import com.adyen.checkout.card.databinding.CardViewBinding
 import com.adyen.checkout.card.ui.SecurityCodeInput
 import com.adyen.checkout.components.api.ImageLoader
 import com.adyen.checkout.components.ui.FieldState
+import com.adyen.checkout.components.ui.Validation
 import com.adyen.checkout.components.ui.view.AdyenLinearLayout
 import com.adyen.checkout.components.ui.view.AdyenTextInputEditText
 import com.adyen.checkout.components.ui.view.RoundCornerImageView
@@ -165,27 +166,30 @@ class CardView @JvmOverloads constructor(context: Context, attrs: AttributeSet? 
             if (!it.cardNumberState.validation.isValid()) {
                 isErrorFocused = true
                 binding.editTextCardNumber.requestFocus()
-                setCardNumberError(R.string.checkout_card_number_not_valid)
+                setCardNumberError((it.cardNumberState.validation as Validation.Invalid).reason)
             }
             if (!it.expiryDateState.validation.isValid()) {
                 if (!isErrorFocused) {
                     isErrorFocused = true
                     binding.textInputLayoutExpiryDate.requestFocus()
                 }
-                binding.textInputLayoutExpiryDate.error = mLocalizedContext.getString(R.string.checkout_expiry_date_not_valid)
+                val errorReasonResId = (it.expiryDateState.validation as Validation.Invalid).reason
+                binding.textInputLayoutExpiryDate.error = mLocalizedContext.getString(errorReasonResId)
             }
             if (!it.securityCodeState.validation.isValid()) {
                 if (!isErrorFocused) {
                     isErrorFocused = true
                     binding.textInputLayoutSecurityCode.requestFocus()
                 }
-                binding.textInputLayoutSecurityCode.error = mLocalizedContext.getString(R.string.checkout_security_code_not_valid)
+                val errorReasonResId = (it.securityCodeState.validation as Validation.Invalid).reason
+                binding.textInputLayoutSecurityCode.error = mLocalizedContext.getString(errorReasonResId)
             }
             if (binding.textInputLayoutCardHolder.isVisible && !it.holderNameState.validation.isValid()) {
                 if (!isErrorFocused) {
                     binding.textInputLayoutCardHolder.requestFocus()
                 }
-                binding.textInputLayoutCardHolder.error = mLocalizedContext.getString(R.string.checkout_holder_name_not_valid)
+                val errorReasonResId = (it.holderNameState.validation as Validation.Invalid).reason
+                binding.textInputLayoutCardHolder.error = mLocalizedContext.getString(errorReasonResId)
             }
         }
     }
@@ -250,7 +254,7 @@ class CardView @JvmOverloads constructor(context: Context, attrs: AttributeSet? 
                 if (hasFocus) {
                     setCardNumberError(null)
                 } else if (outputData != null && !outputData.cardNumberState.validation.isValid()) {
-                    setCardNumberError(R.string.checkout_card_number_not_valid)
+                    setCardNumberError((outputData.cardNumberState.validation as Validation.Invalid).reason)
                 }
             }
         }
@@ -278,7 +282,8 @@ class CardView @JvmOverloads constructor(context: Context, attrs: AttributeSet? 
             if (hasFocus) {
                 binding.textInputLayoutExpiryDate.error = null
             } else if (outputData != null && !outputData.expiryDateState.validation.isValid()) {
-                binding.textInputLayoutExpiryDate.error = mLocalizedContext.getString(R.string.checkout_expiry_date_not_valid)
+                val errorReasonResId = (outputData.expiryDateState.validation as Validation.Invalid).reason
+                binding.textInputLayoutExpiryDate.error = mLocalizedContext.getString(errorReasonResId)
             }
         }
     }
@@ -295,7 +300,8 @@ class CardView @JvmOverloads constructor(context: Context, attrs: AttributeSet? 
             if (hasFocus) {
                 binding.textInputLayoutSecurityCode.error = null
             } else if (outputData != null && !outputData.securityCodeState.validation.isValid()) {
-                binding.textInputLayoutSecurityCode.error = mLocalizedContext.getString(R.string.checkout_security_code_not_valid)
+                val errorReasonResId = (outputData.securityCodeState.validation as Validation.Invalid).reason
+                binding.textInputLayoutSecurityCode.error = mLocalizedContext.getString(errorReasonResId)
             }
         }
     }
@@ -312,7 +318,8 @@ class CardView @JvmOverloads constructor(context: Context, attrs: AttributeSet? 
             if (hasFocus) {
                 binding.textInputLayoutCardHolder.error = null
             } else if (outputData != null && !outputData.holderNameState.validation.isValid()) {
-                binding.textInputLayoutCardHolder.error = mLocalizedContext.getString(R.string.checkout_holder_name_not_valid)
+                val errorReasonResId = (outputData.holderNameState.validation as Validation.Invalid).reason
+                binding.textInputLayoutCardHolder.error = mLocalizedContext.getString(errorReasonResId)
             }
         }
     }
@@ -329,7 +336,8 @@ class CardView @JvmOverloads constructor(context: Context, attrs: AttributeSet? 
             if (hasFocus) {
                 binding.textInputLayoutSocialSecurityNumber.error = null
             } else if (outputData != null && !outputData.socialSecurityNumberState.validation.isValid()) {
-                binding.textInputLayoutSocialSecurityNumber.error = mLocalizedContext.getString(R.string.checkout_card_number_not_valid)
+                val errorReasonResId = (outputData.socialSecurityNumberState.validation as Validation.Invalid).reason
+                binding.textInputLayoutSocialSecurityNumber.error = mLocalizedContext.getString(errorReasonResId)
             }
         }
     }

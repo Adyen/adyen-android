@@ -20,11 +20,6 @@ sealed class Validation {
      * Field is not valid.
      */
     class Invalid(@StringRes val reason: Int) : Validation()
-    /**
-     * Field is not fully valid.
-     * Could be incomplete or unable to fully validate.
-     */
-    object Partial : Validation()
 
     fun isValid(): Boolean {
         return this is Valid

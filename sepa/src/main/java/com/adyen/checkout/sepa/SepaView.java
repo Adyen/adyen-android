@@ -21,6 +21,7 @@ import androidx.lifecycle.Observer;
 
 import com.adyen.checkout.components.GenericComponentState;
 import com.adyen.checkout.components.model.payments.request.SepaPaymentMethod;
+import com.adyen.checkout.components.ui.Validation;
 import com.adyen.checkout.components.ui.view.AdyenLinearLayout;
 import com.adyen.checkout.components.ui.view.AdyenTextInputEditText;
 import com.adyen.checkout.core.exception.CheckoutException;
@@ -107,7 +108,8 @@ public class SepaView
             if (hasFocus) {
                 mIbanNumberInput.setError(null);
             } else if (outputData != null && !outputData.getIbanNumberField().getValidation().isValid()) {
-                mIbanNumberInput.setError(mLocalizedContext.getString(R.string.checkout_iban_not_valid));
+                final int errorReasonResId = ((Validation.Invalid) outputData.getIbanNumberField().getValidation()).getReason();
+                mIbanNumberInput.setError(mLocalizedContext.getString(errorReasonResId));
             }
         });
     }
@@ -148,14 +150,16 @@ public class SepaView
         if (!outputData.getOwnerNameField().getValidation().isValid()) {
             errorFocused = true;
             mHolderNameInput.requestFocus();
-            mHolderNameInput.setError(mLocalizedContext.getString(R.string.checkout_holder_name_not_valid));
+            final int errorReasonResId = ((Validation.Invalid) outputData.getOwnerNameField().getValidation()).getReason();
+            mHolderNameInput.setError(mLocalizedContext.getString(errorReasonResId));
         }
 
         if (!outputData.getIbanNumberField().getValidation().isValid()) {
             if (!errorFocused) {
                 mIbanNumberInput.requestFocus();
             }
-            mIbanNumberInput.setError(mLocalizedContext.getString(R.string.checkout_iban_not_valid));
+            final int errorReasonResId = ((Validation.Invalid) outputData.getIbanNumberField().getValidation()).getReason();
+            mIbanNumberInput.setError(mLocalizedContext.getString(errorReasonResId));
         }
     }
 

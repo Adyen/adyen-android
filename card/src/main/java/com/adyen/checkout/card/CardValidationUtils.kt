@@ -55,11 +55,10 @@ object CardValidationUtils {
         val length = normalizedNumber.length
         val validation = when {
             !StringUtil.isDigitsAndSeparatorsOnly(normalizedNumber) -> Validation.Invalid(R.string.checkout_card_number_not_valid)
-            length > MAXIMUM_CARD_NUMBER_LENGTH -> Validation.Invalid(R.string.checkout_card_number_not_valid)
-            length < MINIMUM_CARD_NUMBER_LENGTH -> Validation.Partial
+            length > MAXIMUM_CARD_NUMBER_LENGTH || length < MINIMUM_CARD_NUMBER_LENGTH -> Validation.Invalid(R.string.checkout_card_number_not_valid)
             isLuhnChecksumValid(normalizedNumber) -> Validation.Valid
             length == MAXIMUM_CARD_NUMBER_LENGTH -> Validation.Invalid(R.string.checkout_card_number_not_valid)
-            else -> Validation.Partial
+            else -> Validation.Invalid(R.string.checkout_card_number_not_valid)
         }
 
         return FieldState(number, validation)
@@ -128,7 +127,7 @@ object CardValidationUtils {
             digitLength == CPF_DIGIT_LIMIT && CPF_PATTERN.matcher(socialSecurityNumber).matches() -> Validation.Valid
             digitLength < CNPJ_DIGIT_LIMIT -> invalidState
             digitLength == CNPJ_DIGIT_LIMIT && CNPJ_PATTERN.matcher(socialSecurityNumber).matches() -> Validation.Valid
-            else -> Validation.Partial
+            else -> invalidState
         }
         return FieldState(socialSecurityNumber, validation)
     }

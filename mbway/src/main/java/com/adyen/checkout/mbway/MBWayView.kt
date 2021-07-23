@@ -19,6 +19,7 @@ import androidx.lifecycle.LifecycleOwner
 import androidx.lifecycle.Observer
 import com.adyen.checkout.components.GenericComponentState
 import com.adyen.checkout.components.model.payments.request.MBWayPaymentMethod
+import com.adyen.checkout.components.ui.Validation
 import com.adyen.checkout.components.ui.view.AdyenLinearLayout
 import com.adyen.checkout.components.ui.view.AdyenTextInputEditText
 import com.adyen.checkout.components.util.CountryUtils
@@ -96,7 +97,8 @@ class MBWayView :
             if (hasFocus) {
                 mMobileNumberInput.error = null
             } else if (outputData != null && !outputData.mobilePhoneNumberFieldState.validation.isValid()) {
-                mMobileNumberInput.error = mLocalizedContext.getString(R.string.checkout_mbway_phone_number_not_valid)
+                val errorReasonResId = (outputData.mobilePhoneNumberFieldState.validation as Validation.Invalid).reason
+                mMobileNumberInput.error = mLocalizedContext.getString(errorReasonResId)
             }
         }
         val countries = getCountries()
@@ -155,7 +157,8 @@ class MBWayView :
         Logger.d(TAG, "highlightValidationErrors")
         val outputData: MBWayOutputData = component.outputData ?: return
         if (!outputData.mobilePhoneNumberFieldState.validation.isValid()) {
-            mMobileNumberInput?.error = mLocalizedContext.getString(R.string.checkout_mbway_phone_number_not_valid)
+            val errorReasonResId = (outputData.mobilePhoneNumberFieldState.validation as Validation.Invalid).reason
+            mMobileNumberInput?.error = mLocalizedContext.getString(errorReasonResId)
         }
     }
 

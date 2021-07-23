@@ -25,7 +25,9 @@ class SepaOutputData implements OutputData {
 
     SepaOutputData(@NonNull String ownerName, @NonNull String ibanNumber) {
         mOwnerNameField = new FieldState<>(ownerName,
-                TextUtils.isEmpty(ownerName) ? Validation.Partial.INSTANCE : Validation.Valid.INSTANCE);
+                TextUtils.isEmpty(ownerName)
+                        ? new Validation.Invalid(R.string.checkout_holder_name_not_valid)
+                        : Validation.Valid.INSTANCE);
         mIban = Iban.parse(ibanNumber);
         mIbanNumberField = validateIbanNumber(ibanNumber, mIban);
     }
@@ -54,8 +56,6 @@ class SepaOutputData implements OutputData {
         final Validation validation;
         if (iban != null) {
             validation = Validation.Valid.INSTANCE;
-        } else if (Iban.isPartial(ibanNumber)) {
-            validation = Validation.Partial.INSTANCE;
         } else {
             validation = new Validation.Invalid(R.string.checkout_iban_not_valid);
         }
