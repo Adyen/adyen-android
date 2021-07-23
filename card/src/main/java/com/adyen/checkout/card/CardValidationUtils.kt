@@ -16,7 +16,6 @@ import com.adyen.checkout.components.ui.Validation
 import com.adyen.checkout.core.util.StringUtil
 import java.util.Calendar
 import java.util.GregorianCalendar
-import java.util.regex.Pattern
 
 object CardValidationUtils {
 
