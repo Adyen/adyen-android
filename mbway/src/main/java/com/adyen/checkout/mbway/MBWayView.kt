@@ -94,11 +94,11 @@ class MBWayView :
         }
         mMobileNumberEditText.onFocusChangeListener = OnFocusChangeListener { _, hasFocus: Boolean ->
             val outputData = component.outputData
+            val mobilePhoneNumberValidation = outputData?.mobilePhoneNumberFieldState?.validation
             if (hasFocus) {
                 mMobileNumberInput.error = null
-            } else if (outputData != null && !outputData.mobilePhoneNumberFieldState.validation.isValid()) {
-                val errorReasonResId = (outputData.mobilePhoneNumberFieldState.validation as Validation.Invalid).reason
-                mMobileNumberInput.error = mLocalizedContext.getString(errorReasonResId)
+            } else if (outputData != null && mobilePhoneNumberValidation is Validation.Invalid) {
+                mMobileNumberInput.error = mLocalizedContext.getString(mobilePhoneNumberValidation.reason)
             }
         }
         val countries = getCountries()
@@ -155,10 +155,9 @@ class MBWayView :
 
     override fun highlightValidationErrors() {
         Logger.d(TAG, "highlightValidationErrors")
-        val outputData: MBWayOutputData = component.outputData ?: return
-        if (!outputData.mobilePhoneNumberFieldState.validation.isValid()) {
-            val errorReasonResId = (outputData.mobilePhoneNumberFieldState.validation as Validation.Invalid).reason
-            mMobileNumberInput?.error = mLocalizedContext.getString(errorReasonResId)
+        val mobilePhoneNumberValidation = component.outputData?.mobilePhoneNumberFieldState?.validation
+        if (mobilePhoneNumberValidation is Validation.Invalid) {
+            mMobileNumberInput?.error = mLocalizedContext.getString(mobilePhoneNumberValidation.reason)
         }
     }
 

@@ -105,10 +105,13 @@ public class SepaView
 
         mIbanNumberEditText.setOnFocusChangeListener((v, hasFocus) -> {
             final SepaOutputData outputData = getComponent().getOutputData();
+            final Validation ibanNumberValidation = outputData != null
+                    ? outputData.getIbanNumberField().getValidation()
+                    : null;
             if (hasFocus) {
                 mIbanNumberInput.setError(null);
-            } else if (outputData != null && !outputData.getIbanNumberField().getValidation().isValid()) {
-                final int errorReasonResId = ((Validation.Invalid) outputData.getIbanNumberField().getValidation()).getReason();
+            } else if (ibanNumberValidation != null && !ibanNumberValidation.isValid()) {
+                final int errorReasonResId = ((Validation.Invalid) ibanNumberValidation).getReason();
                 mIbanNumberInput.setError(mLocalizedContext.getString(errorReasonResId));
             }
         });
@@ -147,18 +150,20 @@ public class SepaView
 
         boolean errorFocused = false;
 
-        if (!outputData.getOwnerNameField().getValidation().isValid()) {
+        final Validation ownerNameValidation = outputData.getOwnerNameField().getValidation();
+        if (!ownerNameValidation.isValid()) {
             errorFocused = true;
             mHolderNameInput.requestFocus();
-            final int errorReasonResId = ((Validation.Invalid) outputData.getOwnerNameField().getValidation()).getReason();
+            final int errorReasonResId = ((Validation.Invalid) ownerNameValidation).getReason();
             mHolderNameInput.setError(mLocalizedContext.getString(errorReasonResId));
         }
 
-        if (!outputData.getIbanNumberField().getValidation().isValid()) {
+        final Validation ibanNumberValidation = outputData.getIbanNumberField().getValidation();
+        if (!ibanNumberValidation.isValid()) {
             if (!errorFocused) {
                 mIbanNumberInput.requestFocus();
             }
-            final int errorReasonResId = ((Validation.Invalid) outputData.getIbanNumberField().getValidation()).getReason();
+            final int errorReasonResId = ((Validation.Invalid) ibanNumberValidation).getReason();
             mIbanNumberInput.setError(mLocalizedContext.getString(errorReasonResId));
         }
     }

@@ -86,10 +86,13 @@ public class BlikView
 
         mBlikCodeEditText.setOnFocusChangeListener((v, hasFocus) -> {
             final BlikOutputData outputData = getComponent().getOutputData();
+            final Validation blikCodeValidation = outputData != null
+                    ? outputData.getBlikCodeField().getValidation()
+                    : null;
             if (hasFocus) {
                 mBlikCodeInput.setError(null);
-            } else if (outputData != null && !outputData.getBlikCodeField().getValidation().isValid()) {
-                final int errorReasonResId = ((Validation.Invalid) outputData.getBlikCodeField().getValidation()).getReason();
+            } else if (blikCodeValidation != null && !blikCodeValidation.isValid()) {
+                final int errorReasonResId = ((Validation.Invalid) blikCodeValidation).getReason();
                 mBlikCodeInput.setError(mLocalizedContext.getString(errorReasonResId));
             }
         });
@@ -126,9 +129,11 @@ public class BlikView
             return;
         }
 
-        if (!outputData.getBlikCodeField().getValidation().isValid()) {
+        final Validation blikCodeValidation = outputData.getBlikCodeField().getValidation();
+
+        if (!blikCodeValidation.isValid()) {
             mBlikCodeInput.requestFocus();
-            final int errorReasonResId = ((Validation.Invalid) outputData.getBlikCodeField().getValidation()).getReason();
+            final int errorReasonResId = ((Validation.Invalid) blikCodeValidation).getReason();
             mBlikCodeInput.setError(mLocalizedContext.getString(errorReasonResId));
         }
     }

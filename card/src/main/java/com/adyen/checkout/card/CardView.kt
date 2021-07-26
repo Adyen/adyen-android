@@ -163,33 +163,34 @@ class CardView @JvmOverloads constructor(context: Context, attrs: AttributeSet? 
     override fun highlightValidationErrors() {
         component.outputData?.let {
             var isErrorFocused = false
-            if (!it.cardNumberState.validation.isValid()) {
+            val cardNumberValidation = it.cardNumberState.validation
+            if (cardNumberValidation is Validation.Invalid) {
                 isErrorFocused = true
                 binding.editTextCardNumber.requestFocus()
-                setCardNumberError((it.cardNumberState.validation as Validation.Invalid).reason)
+                setCardNumberError(cardNumberValidation.reason)
             }
-            if (!it.expiryDateState.validation.isValid()) {
+            val expiryDateValidation = it.expiryDateState.validation
+            if (expiryDateValidation is Validation.Invalid) {
                 if (!isErrorFocused) {
                     isErrorFocused = true
                     binding.textInputLayoutExpiryDate.requestFocus()
                 }
-                val errorReasonResId = (it.expiryDateState.validation as Validation.Invalid).reason
-                binding.textInputLayoutExpiryDate.error = mLocalizedContext.getString(errorReasonResId)
+                binding.textInputLayoutExpiryDate.error = mLocalizedContext.getString(expiryDateValidation.reason)
             }
-            if (!it.securityCodeState.validation.isValid()) {
+            val securityCodeValidation = it.securityCodeState.validation
+            if (securityCodeValidation is Validation.Invalid) {
                 if (!isErrorFocused) {
                     isErrorFocused = true
                     binding.textInputLayoutSecurityCode.requestFocus()
                 }
-                val errorReasonResId = (it.securityCodeState.validation as Validation.Invalid).reason
-                binding.textInputLayoutSecurityCode.error = mLocalizedContext.getString(errorReasonResId)
+                binding.textInputLayoutSecurityCode.error = mLocalizedContext.getString(securityCodeValidation.reason)
             }
-            if (binding.textInputLayoutCardHolder.isVisible && !it.holderNameState.validation.isValid()) {
+            val holderNameValidation = it.holderNameState.validation
+            if (binding.textInputLayoutCardHolder.isVisible && holderNameValidation is Validation.Invalid) {
                 if (!isErrorFocused) {
                     binding.textInputLayoutCardHolder.requestFocus()
                 }
-                val errorReasonResId = (it.holderNameState.validation as Validation.Invalid).reason
-                binding.textInputLayoutCardHolder.error = mLocalizedContext.getString(errorReasonResId)
+                binding.textInputLayoutCardHolder.error = mLocalizedContext.getString(holderNameValidation.reason)
             }
         }
     }
@@ -250,11 +251,11 @@ class CardView @JvmOverloads constructor(context: Context, attrs: AttributeSet? 
         }
         binding.editTextCardNumber.onFocusChangeListener = OnFocusChangeListener { _: View?, hasFocus: Boolean ->
             if (!component.isStoredPaymentMethod()) {
-                val outputData = component.outputData
+                val cardNumberValidation = component.outputData?.cardNumberState?.validation
                 if (hasFocus) {
                     setCardNumberError(null)
-                } else if (outputData != null && !outputData.cardNumberState.validation.isValid()) {
-                    setCardNumberError((outputData.cardNumberState.validation as Validation.Invalid).reason)
+                } else if (cardNumberValidation != null && cardNumberValidation is Validation.Invalid) {
+                    setCardNumberError(cardNumberValidation.reason)
                 }
             }
         }
@@ -278,12 +279,11 @@ class CardView @JvmOverloads constructor(context: Context, attrs: AttributeSet? 
             binding.textInputLayoutExpiryDate.error = null
         }
         binding.editTextExpiryDate.onFocusChangeListener = OnFocusChangeListener { _: View?, hasFocus: Boolean ->
-            val outputData = component.outputData
+            val expiryDateValidation = component.outputData?.expiryDateState?.validation
             if (hasFocus) {
                 binding.textInputLayoutExpiryDate.error = null
-            } else if (outputData != null && !outputData.expiryDateState.validation.isValid()) {
-                val errorReasonResId = (outputData.expiryDateState.validation as Validation.Invalid).reason
-                binding.textInputLayoutExpiryDate.error = mLocalizedContext.getString(errorReasonResId)
+            } else if (expiryDateValidation != null && expiryDateValidation is Validation.Invalid) {
+                binding.textInputLayoutExpiryDate.error = mLocalizedContext.getString(expiryDateValidation.reason)
             }
         }
     }
@@ -296,12 +296,11 @@ class CardView @JvmOverloads constructor(context: Context, attrs: AttributeSet? 
             binding.textInputLayoutSecurityCode.error = null
         }
         securityCodeEditText?.onFocusChangeListener = OnFocusChangeListener { _: View?, hasFocus: Boolean ->
-            val outputData = component.outputData
+            val securityCodeValidation = component.outputData?.securityCodeState?.validation
             if (hasFocus) {
                 binding.textInputLayoutSecurityCode.error = null
-            } else if (outputData != null && !outputData.securityCodeState.validation.isValid()) {
-                val errorReasonResId = (outputData.securityCodeState.validation as Validation.Invalid).reason
-                binding.textInputLayoutSecurityCode.error = mLocalizedContext.getString(errorReasonResId)
+            } else if (securityCodeValidation != null && securityCodeValidation is Validation.Invalid) {
+                binding.textInputLayoutSecurityCode.error = mLocalizedContext.getString(securityCodeValidation.reason)
             }
         }
     }
@@ -314,12 +313,11 @@ class CardView @JvmOverloads constructor(context: Context, attrs: AttributeSet? 
             binding.textInputLayoutCardHolder.error = null
         }
         cardHolderEditText?.onFocusChangeListener = OnFocusChangeListener { _: View?, hasFocus: Boolean ->
-            val outputData = component.outputData
+            val holderNameValidation = component.outputData?.holderNameState?.validation
             if (hasFocus) {
                 binding.textInputLayoutCardHolder.error = null
-            } else if (outputData != null && !outputData.holderNameState.validation.isValid()) {
-                val errorReasonResId = (outputData.holderNameState.validation as Validation.Invalid).reason
-                binding.textInputLayoutCardHolder.error = mLocalizedContext.getString(errorReasonResId)
+            } else if (holderNameValidation != null && holderNameValidation is Validation.Invalid) {
+                binding.textInputLayoutCardHolder.error = mLocalizedContext.getString(holderNameValidation.reason)
             }
         }
     }
@@ -332,12 +330,11 @@ class CardView @JvmOverloads constructor(context: Context, attrs: AttributeSet? 
             binding.textInputLayoutSocialSecurityNumber.error = null
         }
         socialSecurityNumberEditText?.onFocusChangeListener = OnFocusChangeListener { v, hasFocus ->
-            val outputData = component.outputData
+            val socialSecurityNumberValidation = component.outputData?.socialSecurityNumberState?.validation
             if (hasFocus) {
                 binding.textInputLayoutSocialSecurityNumber.error = null
-            } else if (outputData != null && !outputData.socialSecurityNumberState.validation.isValid()) {
-                val errorReasonResId = (outputData.socialSecurityNumberState.validation as Validation.Invalid).reason
-                binding.textInputLayoutSocialSecurityNumber.error = mLocalizedContext.getString(errorReasonResId)
+            } else if (socialSecurityNumberValidation != null && socialSecurityNumberValidation is Validation.Invalid) {
+                binding.textInputLayoutSocialSecurityNumber.error = mLocalizedContext.getString(socialSecurityNumberValidation.reason)
             }
         }
     }

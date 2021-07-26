@@ -21,13 +21,10 @@ object SocialSecurityNumberUtils {
 
     fun validateSocialSecurityNumber(socialSecurityNumber: String): FieldState<String> {
         val digitLength = socialSecurityNumber.filter { it.isDigit() }.length
-        val invalidState = Validation.Invalid(R.string.checkout_social_security_number_not_valid)
         val validation = when {
-            digitLength < CPF_DIGIT_LIMIT -> invalidState
             digitLength == CPF_DIGIT_LIMIT && CPF_PATTERN.matcher(socialSecurityNumber).matches() -> Validation.Valid
-            digitLength < CNPJ_DIGIT_LIMIT -> invalidState
             digitLength == CNPJ_DIGIT_LIMIT && CNPJ_PATTERN.matcher(socialSecurityNumber).matches() -> Validation.Valid
-            else -> invalidState
+            else -> Validation.Invalid(R.string.checkout_social_security_number_not_valid)
         }
         return FieldState(socialSecurityNumber, validation)
     }
@@ -45,7 +42,7 @@ object SocialSecurityNumberUtils {
 
         for (index in grouping.indices) {
             if (trimmedInput.length >= grouping[index]) {
-                result.add(trimmedInput.substring(0, grouping[index]))
+                result.add(trimmedInput.take(grouping[index]))
                 trimmedInput = trimmedInput.substring(grouping[index])
             } else if (trimmedInput.isNotEmpty()) {
                 result.add(trimmedInput)

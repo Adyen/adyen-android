@@ -27,6 +27,7 @@ data class CardOutputData(
         return cardNumberState.validation.isValid() &&
             expiryDateState.validation.isValid() &&
             securityCodeState.validation.isValid() &&
-            holderNameState.validation.isValid()
+            holderNameState.validation.isValid() &&
+            socialSecurityNumberState.validation.isValid()
     }
 }
