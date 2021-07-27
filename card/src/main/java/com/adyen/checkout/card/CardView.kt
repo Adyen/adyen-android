@@ -125,7 +125,7 @@ class CardView @JvmOverloads constructor(context: Context, attrs: AttributeSet? 
 
     override fun onChanged(cardOutputData: CardOutputData?) {
         if (cardOutputData != null) {
-            onCardNumberValidated(cardOutputData.cardNumberState, cardOutputData.detectedCardTypes)
+            onCardNumberValidated(cardOutputData.detectedCardTypes)
             onExpiryDateValidated(cardOutputData.expiryDateState)
             setSocialSecurityNumberVisibility(cardOutputData.socialSecurityNumberVisibility)
 
@@ -199,10 +199,7 @@ class CardView @JvmOverloads constructor(context: Context, attrs: AttributeSet? 
         component.inputDataChanged(mCardInputData)
     }
 
-    private fun onCardNumberValidated(numberState: FieldState<String>, detectedCardTypes: List<DetectedCardType>) {
-        if (numberState.validation.isValid()) {
-            changeFocusOfInput(numberState.value)
-        }
+    private fun onCardNumberValidated(detectedCardTypes: List<DetectedCardType>) {
         if (detectedCardTypes.isEmpty()) {
             binding.cardBrandLogoImageView.setStrokeWidth(0f)
             binding.cardBrandLogoImageView.setImageResource(R.drawable.ic_card)
@@ -224,16 +221,6 @@ class CardView @JvmOverloads constructor(context: Context, attrs: AttributeSet? 
     private fun onExpiryDateValidated(expiryDateState: FieldState<ExpiryDate>) {
         if (expiryDateState.validation.isValid()) {
             goToNextInputIfFocus(binding.editTextExpiryDate)
-        }
-    }
-
-    private fun changeFocusOfInput(numberValue: String) {
-        val length = numberValue.length
-        if (length == CardValidationUtils.GENERAL_CARD_NUMBER_LENGTH ||
-            length == CardValidationUtils.AMEX_CARD_NUMBER_LENGTH &&
-            CardType.estimate(numberValue).contains(CardType.AMERICAN_EXPRESS)
-        ) {
-            goToNextInputIfFocus(binding.editTextCardNumber)
         }
     }
 
