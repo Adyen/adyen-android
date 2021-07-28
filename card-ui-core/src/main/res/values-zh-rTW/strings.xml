@@ -20,4 +20,7 @@
     <string name="card_number_4digit">•••• %s</string>
     <string name="expires_in">%1$s/%2$s</string>
     <string name="store_payment_method">儲存以供下次付款使用</string>
+
+    <string name="spin_auth_terms">我授權 Spin 依照 Spin 條款，向我的發卡金融機構收取款項。</string>
+    <string name="spin_terms">Spin 條款</string>
 </resources>

@@ -17,6 +17,10 @@ import android.support.annotation.Nullable;
 import android.support.design.widget.TextInputLayout;
 import android.support.v7.widget.SwitchCompat;
 import android.text.Editable;
+import android.text.SpannableString;
+import android.text.Spanned;
+import android.text.method.LinkMovementMethod;
+import android.text.style.URLSpan;
 import android.util.AttributeSet;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -99,7 +103,6 @@ public final class CardView extends AdyenLinearLayout<CardComponent> implements 
             }
         });
 
-
         if (getComponent().isStoredPaymentMethod()) {
             //noinspection ConstantConditions
             setStoredCardInterface(getComponent().getStoredPaymentInputData());
@@ -138,7 +141,14 @@ public final class CardView extends AdyenLinearLayout<CardComponent> implements 
         // Store Switch
         myAttrs = new int[] {android.R.attr.text};
         typedArray = localizedContext.obtainStyledAttributes(R.style.AdyenCheckout_Card_StorePaymentSwitch, myAttrs);
-        mStorePaymentMethodSwitch.setText(typedArray.getString(0));
+        String termString = getContext().getString(R.string.spin_terms);
+        String authorizeString = typedArray.getString(0);
+        int termStringLocation = authorizeString.indexOf(termString);
+        SpannableString spannableString = new SpannableString(authorizeString);
+        String url = "https://www.spin.pm/legal?tab=terms#terms-tab";
+        spannableString.setSpan(new URLSpan(url), termStringLocation, termStringLocation + termString.length(), Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
+        mStorePaymentMethodSwitch.setText(spannableString);
+        mStorePaymentMethodSwitch.setMovementMethod(LinkMovementMethod.getInstance());
         typedArray.recycle();
     }
 

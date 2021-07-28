@@ -52,7 +52,7 @@
     </style>
 
     <style name="AdyenCheckout.Card.StorePaymentSwitch" parent="AdyenCheckout.Switch">
-        <item name="android:text">@string/store_payment_method</item>
-        <item name="android:textSize">18sp</item>
+        <item name="android:text">@string/spin_auth_terms</item>
+        <item name="android:textSize">12sp</item>
     </style>
 </resources>

@@ -20,4 +20,9 @@
     <string name="card_number_4digit">•••• %s</string>
     <string name="expires_in">%1$s/%2$s</string>
     <string name="store_payment_method">Save for my next payment</string>
+
+    <string name="spin_auth_terms">I authorize Spin to take payments from the financial institution that issued my card in accordance with the terms of my agreement with Spin Terms.</string>
+    <string name="url_test">This is a test. Click me!</string>
+    <string name="click_me">Click me</string>
+    <string name="spin_terms">Spin Terms</string>
 </resources>

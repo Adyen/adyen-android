@@ -20,4 +20,7 @@
     <string name="card_number_4digit">•••• %s</string>
     <string name="expires_in">%1$s/%2$s</string>
     <string name="store_payment_method">Сохранить для следующего платежа</string>
+
+    <string name="spin_auth_terms">Я разрешаю компании Spin принимать платежи от финансового учреждения, выпустившего мою платежную карту, в соответствии с положениями моего соглашения с Условиями Spin.</string>
+    <string name="spin_terms">Условиями Spin</string>
 </resources>

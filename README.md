@@ -153,7 +153,7 @@ This repository is open source and available under the MIT license. For more inf
 
 # Publish artifactory to JFrog
 ```
- ./gradlew clean :drop-in:artifactoryPublish -Pcurrent_version='<VERSION>' -Partifactory_user='<USER>' -Partifactory_password='<PASSWORD>'
+ ./gradlew clean :drop-in:artifactoryPublish -Partifactory_user='<USER>' -Partifactory_password='<PASSWORD>'
 ```
 
 _NOTE:_ Use single quotes for parameters.

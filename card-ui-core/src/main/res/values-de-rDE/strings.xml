@@ -20,4 +20,7 @@
     <string name="card_number_4digit">•••• %s</string>
     <string name="expires_in">%1$s/%2$s</string>
     <string name="store_payment_method">Für zukünftige Zahlvorgänge speichern</string>
+
+    <string name="spin_auth_terms">Ich gestatte Spin, Zahlungen von dem Kreditinstitut entgegenzunehmen, das meine Karte ausgestellt hat – gemäß den Bedingungen meiner Zustimmung zu den Geschäftsbedingungen von Spin.</string>
+    <string name="spin_terms">Geschäftsbedingungen von Spin</string>
 </resources>
