@@ -15,5 +15,6 @@ data class CardInputData(
     var expiryDate: ExpiryDate = ExpiryDate.EMPTY_DATE,
     var securityCode: String = "",
     var holderName: String = "",
+    var socialSecurityNumber: String = "",
     var isStorePaymentSelected: Boolean = false,
 ) : InputData

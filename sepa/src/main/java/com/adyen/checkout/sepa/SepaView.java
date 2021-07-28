@@ -21,6 +21,7 @@ import androidx.lifecycle.Observer;
 
 import com.adyen.checkout.components.GenericComponentState;
 import com.adyen.checkout.components.model.payments.request.SepaPaymentMethod;
+import com.adyen.checkout.components.ui.Validation;
 import com.adyen.checkout.components.ui.view.AdyenLinearLayout;
 import com.adyen.checkout.components.ui.view.AdyenTextInputEditText;
 import com.adyen.checkout.core.exception.CheckoutException;
@@ -104,10 +105,14 @@ public class SepaView
 
         mIbanNumberEditText.setOnFocusChangeListener((v, hasFocus) -> {
             final SepaOutputData outputData = getComponent().getOutputData();
+            final Validation ibanNumberValidation = outputData != null
+                    ? outputData.getIbanNumberField().getValidation()
+                    : null;
             if (hasFocus) {
                 mIbanNumberInput.setError(null);
-            } else if (outputData != null && !outputData.getIbanNumberField().getValidation().isValid()) {
-                mIbanNumberInput.setError(mLocalizedContext.getString(R.string.checkout_iban_not_valid));
+            } else if (ibanNumberValidation != null && !ibanNumberValidation.isValid()) {
+                final int errorReasonResId = ((Validation.Invalid) ibanNumberValidation).getReason();
+                mIbanNumberInput.setError(mLocalizedContext.getString(errorReasonResId));
             }
         });
     }
@@ -145,17 +150,21 @@ public class SepaView
 
         boolean errorFocused = false;
 
-        if (!outputData.getOwnerNameField().getValidation().isValid()) {
+        final Validation ownerNameValidation = outputData.getOwnerNameField().getValidation();
+        if (!ownerNameValidation.isValid()) {
             errorFocused = true;
             mHolderNameInput.requestFocus();
-            mHolderNameInput.setError(mLocalizedContext.getString(R.string.checkout_holder_name_not_valid));
+            final int errorReasonResId = ((Validation.Invalid) ownerNameValidation).getReason();
+            mHolderNameInput.setError(mLocalizedContext.getString(errorReasonResId));
         }
 
-        if (!outputData.getIbanNumberField().getValidation().isValid()) {
+        final Validation ibanNumberValidation = outputData.getIbanNumberField().getValidation();
+        if (!ibanNumberValidation.isValid()) {
             if (!errorFocused) {
                 mIbanNumberInput.requestFocus();
             }
-            mIbanNumberInput.setError(mLocalizedContext.getString(R.string.checkout_iban_not_valid));
+            final int errorReasonResId = ((Validation.Invalid) ibanNumberValidation).getReason();
+            mIbanNumberInput.setError(mLocalizedContext.getString(errorReasonResId));
         }
     }
 

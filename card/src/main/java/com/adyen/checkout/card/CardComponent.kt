@@ -67,6 +67,7 @@ class CardComponent private constructor(
                             expiryDate = expiryDateState.value,
                             securityCode = securityCodeState.value,
                             holderName = holderNameState.value,
+                            socialSecurityNumber = socialSecurityNumberState.value,
                             isStorePaymentSelected = isStoredPaymentMethodEnable,
                             detectedCardTypes = it
                         )
@@ -112,6 +113,7 @@ class CardComponent private constructor(
             expiryDate = inputData.expiryDate,
             securityCode = inputData.securityCode,
             holderName = inputData.holderName,
+            socialSecurityNumber = inputData.socialSecurityNumber,
             isStorePaymentSelected = inputData.isStorePaymentSelected,
             detectedCardTypes = detectedCardTypes
         )
@@ -123,6 +125,7 @@ class CardComponent private constructor(
         expiryDate: ExpiryDate,
         securityCode: String,
         holderName: String,
+        socialSecurityNumber: String,
         isStorePaymentSelected: Boolean,
         detectedCardTypes: List<DetectedCardType>
     ): CardOutputData {
@@ -132,9 +135,11 @@ class CardComponent private constructor(
             cardDelegate.validateExpiryDate(expiryDate),
             cardDelegate.validateSecurityCode(securityCode, firstDetectedType),
             cardDelegate.validateHolderName(holderName),
+            cardDelegate.validateSocialSecurityNumber(socialSecurityNumber),
             isStorePaymentSelected,
             makeCvcUIState(firstDetectedType?.cvcPolicy),
-            detectedCardTypes
+            detectedCardTypes,
+            cardDelegate.getSocialSecurityNumberVisibility()
         )
     }
 
@@ -243,6 +248,7 @@ class CardComponent private constructor(
             paymentMethod = cardPaymentMethod
             setStorePaymentMethod(stateOutputData.isStoredPaymentMethodEnable)
             shopperReference = configuration.shopperReference
+            socialSecurityNumber = stateOutputData.socialSecurityNumberState.value
         }
 
         val lastFour = cardNumber.takeLast(LAST_FOUR_LENGTH)

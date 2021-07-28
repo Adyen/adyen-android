@@ -51,6 +51,11 @@
         <item name="android:inputType">text</item>
     </style>
 
+    <style name="AdyenCheckout.Card.SocialSecurityNumberInput" parent="AdyenCheckout.TextInputEditText">
+        <item name="android:hint">@string/checkout_social_security_number_hint</item>
+        <item name="android:inputType">text</item>
+    </style>
+
     <style name="AdyenCheckout.Card.StorePaymentSwitch" parent="AdyenCheckout.Switch">
         <item name="android:text">@string/store_payment_method</item>
         <item name="android:textSize">18sp</item>

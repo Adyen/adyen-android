@@ -28,6 +28,7 @@ import com.adyen.checkout.card.databinding.CardViewBinding
 import com.adyen.checkout.card.ui.SecurityCodeInput
 import com.adyen.checkout.components.api.ImageLoader
 import com.adyen.checkout.components.ui.FieldState
+import com.adyen.checkout.components.ui.Validation
 import com.adyen.checkout.components.ui.view.AdyenLinearLayout
 import com.adyen.checkout.components.ui.view.AdyenTextInputEditText
 import com.adyen.checkout.components.ui.view.RoundCornerImageView
@@ -71,6 +72,7 @@ class CardView @JvmOverloads constructor(context: Context, attrs: AttributeSet? 
         initExpiryDateInput()
         initSecurityCodeInput()
         initHolderNameInput()
+        initSocialSecurityNumberInput()
 
         binding.switchStorePaymentMethod.setOnCheckedChangeListener { _, isChecked ->
             mCardInputData.isStorePaymentSelected = isChecked
@@ -125,6 +127,7 @@ class CardView @JvmOverloads constructor(context: Context, attrs: AttributeSet? 
         if (cardOutputData != null) {
             onCardNumberValidated(cardOutputData.detectedCardTypes)
             onExpiryDateValidated(cardOutputData.expiryDateState)
+            setSocialSecurityNumberVisibility(cardOutputData.socialSecurityNumberVisibility)
 
             when (cardOutputData.cvcUIState) {
                 CvcUIState.REQUIRED -> {
@@ -160,30 +163,34 @@ class CardView @JvmOverloads constructor(context: Context, attrs: AttributeSet? 
     override fun highlightValidationErrors() {
         component.outputData?.let {
             var isErrorFocused = false
-            if (!it.cardNumberState.validation.isValid()) {
+            val cardNumberValidation = it.cardNumberState.validation
+            if (cardNumberValidation is Validation.Invalid) {
                 isErrorFocused = true
                 binding.editTextCardNumber.requestFocus()
-                setCardNumberError(R.string.checkout_card_number_not_valid)
+                setCardNumberError(cardNumberValidation.reason)
             }
-            if (!it.expiryDateState.validation.isValid()) {
+            val expiryDateValidation = it.expiryDateState.validation
+            if (expiryDateValidation is Validation.Invalid) {
                 if (!isErrorFocused) {
                     isErrorFocused = true
                     binding.textInputLayoutExpiryDate.requestFocus()
                 }
-                binding.textInputLayoutExpiryDate.error = mLocalizedContext.getString(R.string.checkout_expiry_date_not_valid)
+                binding.textInputLayoutExpiryDate.error = mLocalizedContext.getString(expiryDateValidation.reason)
             }
-            if (!it.securityCodeState.validation.isValid()) {
+            val securityCodeValidation = it.securityCodeState.validation
+            if (securityCodeValidation is Validation.Invalid) {
                 if (!isErrorFocused) {
                     isErrorFocused = true
                     binding.textInputLayoutSecurityCode.requestFocus()
                 }
-                binding.textInputLayoutSecurityCode.error = mLocalizedContext.getString(R.string.checkout_security_code_not_valid)
+                binding.textInputLayoutSecurityCode.error = mLocalizedContext.getString(securityCodeValidation.reason)
             }
-            if (binding.textInputLayoutCardHolder.isVisible && !it.holderNameState.validation.isValid()) {
+            val holderNameValidation = it.holderNameState.validation
+            if (binding.textInputLayoutCardHolder.isVisible && holderNameValidation is Validation.Invalid) {
                 if (!isErrorFocused) {
                     binding.textInputLayoutCardHolder.requestFocus()
                 }
-                binding.textInputLayoutCardHolder.error = mLocalizedContext.getString(R.string.checkout_holder_name_not_valid)
+                binding.textInputLayoutCardHolder.error = mLocalizedContext.getString(holderNameValidation.reason)
             }
         }
     }
@@ -231,11 +238,11 @@ class CardView @JvmOverloads constructor(context: Context, attrs: AttributeSet? 
         }
         binding.editTextCardNumber.onFocusChangeListener = OnFocusChangeListener { _: View?, hasFocus: Boolean ->
             if (!component.isStoredPaymentMethod()) {
-                val outputData = component.outputData
+                val cardNumberValidation = component.outputData?.cardNumberState?.validation
                 if (hasFocus) {
                     setCardNumberError(null)
-                } else if (outputData != null && !outputData.cardNumberState.validation.isValid()) {
-                    setCardNumberError(R.string.checkout_card_number_not_valid)
+                } else if (cardNumberValidation != null && cardNumberValidation is Validation.Invalid) {
+                    setCardNumberError(cardNumberValidation.reason)
                 }
             }
         }
@@ -259,47 +266,68 @@ class CardView @JvmOverloads constructor(context: Context, attrs: AttributeSet? 
             binding.textInputLayoutExpiryDate.error = null
         }
         binding.editTextExpiryDate.onFocusChangeListener = OnFocusChangeListener { _: View?, hasFocus: Boolean ->
-            val outputData = component.outputData
+            val expiryDateValidation = component.outputData?.expiryDateState?.validation
             if (hasFocus) {
                 binding.textInputLayoutExpiryDate.error = null
-            } else if (outputData != null && !outputData.expiryDateState.validation.isValid()) {
-                binding.textInputLayoutExpiryDate.error = mLocalizedContext.getString(R.string.checkout_expiry_date_not_valid)
+            } else if (expiryDateValidation != null && expiryDateValidation is Validation.Invalid) {
+                binding.textInputLayoutExpiryDate.error = mLocalizedContext.getString(expiryDateValidation.reason)
             }
         }
     }
 
     private fun initSecurityCodeInput() {
-        val securityCodeEditText = binding.textInputLayoutSecurityCode.editText as SecurityCodeInput?
+        val securityCodeEditText = binding.textInputLayoutSecurityCode.editText as? SecurityCodeInput
         securityCodeEditText?.setOnChangeListener { editable: Editable ->
             mCardInputData.securityCode = editable.toString()
             notifyInputDataChanged()
             binding.textInputLayoutSecurityCode.error = null
         }
         securityCodeEditText?.onFocusChangeListener = OnFocusChangeListener { _: View?, hasFocus: Boolean ->
-            val outputData = component.outputData
+            val securityCodeValidation = component.outputData?.securityCodeState?.validation
             if (hasFocus) {
                 binding.textInputLayoutSecurityCode.error = null
-            } else if (outputData != null && !outputData.securityCodeState.validation.isValid()) {
-                binding.textInputLayoutSecurityCode.error = mLocalizedContext.getString(R.string.checkout_security_code_not_valid)
+            } else if (securityCodeValidation != null && securityCodeValidation is Validation.Invalid) {
+                binding.textInputLayoutSecurityCode.error = mLocalizedContext.getString(securityCodeValidation.reason)
             }
         }
     }
 
     private fun initHolderNameInput() {
-        val cardHolderEditText = binding.textInputLayoutCardHolder.editText as AdyenTextInputEditText?
+        val cardHolderEditText = binding.textInputLayoutCardHolder.editText as? AdyenTextInputEditText
         cardHolderEditText?.setOnChangeListener { editable: Editable ->
             mCardInputData.holderName = editable.toString()
             notifyInputDataChanged()
             binding.textInputLayoutCardHolder.error = null
         }
         cardHolderEditText?.onFocusChangeListener = OnFocusChangeListener { _: View?, hasFocus: Boolean ->
-            val outputData = component.outputData
+            val holderNameValidation = component.outputData?.holderNameState?.validation
             if (hasFocus) {
                 binding.textInputLayoutCardHolder.error = null
-            } else if (outputData != null && !outputData.holderNameState.validation.isValid()) {
-                binding.textInputLayoutCardHolder.error = mLocalizedContext.getString(R.string.checkout_holder_name_not_valid)
+            } else if (holderNameValidation != null && holderNameValidation is Validation.Invalid) {
+                binding.textInputLayoutCardHolder.error = mLocalizedContext.getString(holderNameValidation.reason)
             }
         }
+    }
+
+    private fun initSocialSecurityNumberInput() {
+        val socialSecurityNumberEditText = binding.textInputLayoutSocialSecurityNumber.editText as? AdyenTextInputEditText
+        socialSecurityNumberEditText?.setOnChangeListener { editable ->
+            mCardInputData.socialSecurityNumber = editable.toString()
+            notifyInputDataChanged()
+            binding.textInputLayoutSocialSecurityNumber.error = null
+        }
+        socialSecurityNumberEditText?.onFocusChangeListener = OnFocusChangeListener { v, hasFocus ->
+            val socialSecurityNumberValidation = component.outputData?.socialSecurityNumberState?.validation
+            if (hasFocus) {
+                binding.textInputLayoutSocialSecurityNumber.error = null
+            } else if (socialSecurityNumberValidation != null && socialSecurityNumberValidation is Validation.Invalid) {
+                binding.textInputLayoutSocialSecurityNumber.error = mLocalizedContext.getString(socialSecurityNumberValidation.reason)
+            }
+        }
+    }
+
+    private fun setSocialSecurityNumberVisibility(socialSecurityNumberVisibility: SocialSecurityNumberVisibility?) {
+        binding.textInputLayoutSocialSecurityNumber.isVisible = socialSecurityNumberVisibility == SocialSecurityNumberVisibility.SHOW
     }
 
     private fun setStoredCardInterface(storedCardInput: CardInputData) {

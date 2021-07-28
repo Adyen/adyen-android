@@ -19,6 +19,7 @@ import androidx.lifecycle.LifecycleOwner
 import androidx.lifecycle.Observer
 import com.adyen.checkout.components.GenericComponentState
 import com.adyen.checkout.components.model.payments.request.MBWayPaymentMethod
+import com.adyen.checkout.components.ui.Validation
 import com.adyen.checkout.components.ui.view.AdyenLinearLayout
 import com.adyen.checkout.components.ui.view.AdyenTextInputEditText
 import com.adyen.checkout.components.util.CountryUtils
@@ -93,10 +94,11 @@ class MBWayView :
         }
         mMobileNumberEditText.onFocusChangeListener = OnFocusChangeListener { _, hasFocus: Boolean ->
             val outputData = component.outputData
+            val mobilePhoneNumberValidation = outputData?.mobilePhoneNumberFieldState?.validation
             if (hasFocus) {
                 mMobileNumberInput.error = null
-            } else if (outputData != null && !outputData.mobilePhoneNumberFieldState.validation.isValid()) {
-                mMobileNumberInput.error = mLocalizedContext.getString(R.string.checkout_mbway_phone_number_not_valid)
+            } else if (outputData != null && mobilePhoneNumberValidation is Validation.Invalid) {
+                mMobileNumberInput.error = mLocalizedContext.getString(mobilePhoneNumberValidation.reason)
             }
         }
         val countries = getCountries()
@@ -153,9 +155,9 @@ class MBWayView :
 
     override fun highlightValidationErrors() {
         Logger.d(TAG, "highlightValidationErrors")
-        val outputData: MBWayOutputData = component.outputData ?: return
-        if (!outputData.mobilePhoneNumberFieldState.validation.isValid()) {
-            mMobileNumberInput?.error = mLocalizedContext.getString(R.string.checkout_mbway_phone_number_not_valid)
+        val mobilePhoneNumberValidation = component.outputData?.mobilePhoneNumberFieldState?.validation
+        if (mobilePhoneNumberValidation is Validation.Invalid) {
+            mMobileNumberInput?.error = mLocalizedContext.getString(mobilePhoneNumberValidation.reason)
         }
     }
 

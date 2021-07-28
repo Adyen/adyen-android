@@ -17,14 +17,17 @@ data class CardOutputData(
     val expiryDateState: FieldState<ExpiryDate>,
     val securityCodeState: FieldState<String>,
     val holderNameState: FieldState<String>,
+    val socialSecurityNumberState: FieldState<String>,
     val isStoredPaymentMethodEnable: Boolean,
     val cvcUIState: CvcUIState,
-    val detectedCardTypes: List<DetectedCardType>
+    val detectedCardTypes: List<DetectedCardType>,
+    val socialSecurityNumberVisibility: SocialSecurityNumberVisibility?
 ) : OutputData {
     override fun isValid(): Boolean {
         return cardNumberState.validation.isValid() &&
             expiryDateState.validation.isValid() &&
             securityCodeState.validation.isValid() &&
-            holderNameState.validation.isValid()
+            holderNameState.validation.isValid() &&
+            socialSecurityNumberState.validation.isValid()
     }
 }
