@@ -42,11 +42,6 @@ android {
 }
 
 dependencies {
-    //Tests
-    testImplementation "junit:junit:$junit_version"
-    androidTestImplementation "androidx.test.ext:junit:$test_ext_version"
-    androidTestImplementation "androidx.test.espresso:espresso-core:$espresso_version"
-
     // Checkout
     api project(':components-core')
     api project(':ui-core')
@@ -54,4 +49,9 @@ dependencies {
     // Dependencies
     implementation "androidx.appcompat:appcompat:$appcompat_version"
     implementation "androidx.recyclerview:recyclerview:$recyclerview_version"
+
+    //Tests
+    testImplementation "junit:junit:$junit_version"
+    androidTestImplementation "androidx.test.ext:junit:$test_ext_version"
+    androidTestImplementation "androidx.test.espresso:espresso-core:$espresso_version"
 }

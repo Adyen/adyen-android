@@ -50,11 +50,6 @@ android {
 }
 
 dependencies {
-    //Tests
-    testImplementation "junit:junit:$junit_version"
-    androidTestImplementation "androidx.test.ext:junit:$test_ext_version"
-    androidTestImplementation "androidx.test.espresso:espresso-core:$espresso_version"
-
     // Checkout
     api project(":3ds2")
     api project(":await")
@@ -77,7 +72,9 @@ dependencies {
     // Dependencies
     implementation "androidx.recyclerview:recyclerview:$recyclerview_version"
     implementation "com.google.android.material:material:$material_version"
-    // contains kotlinx.coroutines
-    implementation 'androidx.lifecycle:lifecycle-runtime-ktx:2.2.0'
 
+    //Tests
+    testImplementation "junit:junit:$junit_version"
+    androidTestImplementation "androidx.test.ext:junit:$test_ext_version"
+    androidTestImplementation "androidx.test.espresso:espresso-core:$espresso_version"
 }

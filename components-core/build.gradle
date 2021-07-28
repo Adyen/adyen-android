@@ -42,6 +42,13 @@ android {
 }
 
 dependencies {
+    // Checkout
+    api project(':checkout-core')
+
+    // Dependencies
+    api "org.jetbrains.kotlinx:kotlinx-coroutines-android:$coroutines_version"
+    api "androidx.fragment:fragment-ktx:$fragment_version"
+
     //Tests
     testImplementation "junit:junit:$junit_version"
     testImplementation "org.json:json:$json_version"
@@ -52,11 +59,4 @@ dependencies {
     androidTestImplementation "org.mockito:mockito-android:$mockito_version"
     androidTestImplementation "androidx.test.ext:junit:$test_ext_version"
     androidTestImplementation "androidx.test.espresso:espresso-core:$espresso_version"
-
-    // Checkout
-    api project(':checkout-core')
-
-    // Dependencies
-    api "org.jetbrains.kotlinx:kotlinx-coroutines-android:$coroutines_version"
-    api "androidx.fragment:fragment-ktx:$fragment_version"
 }

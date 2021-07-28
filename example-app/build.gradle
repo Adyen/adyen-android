@@ -69,16 +69,6 @@ android {
 }
 
 dependencies {
-    // Tests
-    testImplementation "junit:junit:$junit_version"
-    androidTestImplementation "androidx.test.ext:junit:$test_ext_version"
-    androidTestImplementation "androidx.test:rules:$test_rules_version"
-    androidTestImplementation "androidx.test.espresso:espresso-core:$espresso_version"
-    androidTestImplementation "androidx.test.espresso:espresso-contrib:$espresso_version"
-    androidTestImplementation "androidx.test.espresso:espresso-intents:$espresso_version"
-    androidTestImplementation "com.jakewharton.espresso:okhttp3-idling-resource:$okhttp_idling_resource_version"
-    androidTestImplementation "androidx.test.uiautomator:uiautomator:$uiautomator_version"
-
     // Checkout
     implementation project(':drop-in')
 
@@ -106,4 +96,14 @@ dependencies {
     implementation "org.koin:koin-android:$koin_version"
     implementation "org.koin:koin-test:$koin_version"
     implementation "org.koin:koin-androidx-viewmodel:$koin_version"
+
+    // Tests
+    testImplementation "junit:junit:$junit_version"
+    androidTestImplementation "androidx.test.ext:junit:$test_ext_version"
+    androidTestImplementation "androidx.test:rules:$test_rules_version"
+    androidTestImplementation "androidx.test.espresso:espresso-core:$espresso_version"
+    androidTestImplementation "androidx.test.espresso:espresso-contrib:$espresso_version"
+    androidTestImplementation "androidx.test.espresso:espresso-intents:$espresso_version"
+    androidTestImplementation "com.jakewharton.espresso:okhttp3-idling-resource:$okhttp_idling_resource_version"
+    androidTestImplementation "androidx.test.uiautomator:uiautomator:$uiautomator_version"
 }
