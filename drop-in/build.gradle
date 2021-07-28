@@ -75,7 +75,6 @@ dependencies {
     api project(':wechatpay')
 
     // Dependencies
-    implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk7:$kotlin_stdlib_version"
     implementation "androidx.recyclerview:recyclerview:$recyclerview_version"
     implementation "com.google.android.material:material:$material_version"
     // contains kotlinx.coroutines
