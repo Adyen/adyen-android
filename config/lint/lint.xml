@@ -25,10 +25,7 @@
     </issue>
 
     <!-- False positive because of ViewBinding -->
-    <issue id="UnusedIds" >
-        <ignore path="src/main/res/layout/activity_main.xml"/>
-        <ignore path="src/main/res/layout/activity_result.xml"/>
-    </issue>
+    <issue id="UnusedIds" severity="warning"/>
 
     <issue id="NegativeMargin">
         <ignore path="src/main/res/values/styles.xml"/>

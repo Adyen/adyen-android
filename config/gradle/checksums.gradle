@@ -12,29 +12,28 @@ if (!hasProperty("checksums")) {
             "com.adyen.threeds:adyen-3ds2:2.2.2:3cfb727e53792118335d1632f2455870:MD5",
 
             // Kotlin
-            "org.jetbrains.kotlin:kotlin-stdlib:1.4.32:3be731bc74b5d1737559299a94b9248f:MD5",
-            "org.jetbrains.kotlin:kotlin-stdlib-jdk7:1.4.32:859460a9d6807e2627f366b14326b8d6:MD5",
-            "org.jetbrains.kotlin:kotlin-android-extensions:1.4.32:d368e15fe6b52cdc7d552e601d2fabb0:MD5",
-            "org.jetbrains.kotlin:kotlin-android-extensions-runtime:1.4.32:b60cf62e1d1ee16982940063dfa7b4ff:MD5",
-            "org.jetbrains.kotlin:kotlin-compiler-embeddable:1.4.32:2b2fbc3503ec020d81673333d837d72f:MD5",
-            "org.jetbrains.kotlin:kotlin-klib-commonizer-embeddable:1.4.32:65d251d11636b869c10333a7bd01800c:MD5",
+            "org.jetbrains.kotlin:kotlin-stdlib-jdk7:1.5.21:02ff117102ed2651e8ad98b39e9dbe50:MD5",
+            "org.jetbrains.kotlin:kotlin-stdlib-jdk8:1.5.21:4f74db0220f534e0c746fc2a89a50304:MD5",
+            "org.jetbrains.kotlin:kotlin-compiler-embeddable:1.5.21:5bb547be66e8cd76d1a9c1f5387c24ac:MD5",
+            "org.jetbrains.kotlin:kotlin-klib-commonizer-embeddable:1.5.21:662cdacfac64a3a16cda4dddcd6a8cba:MD5",
 
             // Coroutines
-            "org.jetbrains.kotlinx:kotlinx-coroutines-android:1.4.2:caff3d53c3f68b5ba4855c4dcdc2df95:MD5",
+            "org.jetbrains.kotlinx:kotlinx-coroutines-android:1.5.0:111a33c5f32964013d38e0d78bbdf9f3:MD5",
+
+            // Android Gradle Plugin
+            "androidx.databinding:viewbinding:4.2.2:80a29d43e530c7475f9d192bbb57b21c:MD5",
 
             // AndroidX
-            "androidx.annotation:annotation:1.1.0:959a76b836fff5d8cd80877c2626b79f:MD5",
-            "androidx.fragment:fragment-ktx:1.2.5:74c89cc334ecf2ec6ac5df33e628ee2e:MD5",
-            "androidx.lifecycle:lifecycle-runtime-ktx:2.2.0:6193a70163950a928f5acaf98e7dd282:MD5",
-            "androidx.appcompat:appcompat:1.2.0:f867895f07fa53e100f5de03da7fa412:MD5",
-            "androidx.databinding:viewbinding:4.0.0:3d374767653c1e3892d067f57a2c969e:MD5",
-            "androidx.recyclerview:recyclerview:1.1.0:b34afe47d8523d52ca130267cc0776df:MD5",
+            "androidx.annotation:annotation:1.2.0:9120b153f33a2d61a6252935839f6d4e:MD5",
+            "androidx.fragment:fragment-ktx:1.3.6:216a94bd16a352d33f7290fbb54a80c4:MD5",
+            "androidx.lifecycle:lifecycle-runtime-ktx:2.3.1:c428105e833da1a710e8fa2d72002867:MD5",
+            "androidx.appcompat:appcompat:1.3.1:19cb8c81e85229a2d43fc770278b7dbe:MD5",
+            "androidx.recyclerview:recyclerview:1.2.1:4c7c87151df88efe8e3b25d634874896:MD5",
             "androidx.browser:browser:1.3.0:f4bd0b4782e1a25c4c3fae304aa982c2:MD5",
-            "androidx.databinding:viewbinding:4.1.0:6e16accfd0607f2d149ef1a58c74dd1f:MD5",
 
             // Google
-            "com.google.android.material:material:1.3.0:5909e7762bdbf3704c7fe8a0ed71ee40:MD5",
-            "com.google.android.gms:play-services-wallet:18.1.2:4e75fd00d8ed34fb55620d35f403ccb2:MD5",
+            "com.google.android.material:material:1.4.0:78381e0a7541f6480b22b202d1ba2fbd:MD5",
+            "com.google.android.gms:play-services-wallet:18.1.3:2314339d19e7fe101ae793085ed08863:MD5",
 
             // WeChatPay
             "com.tencent.mm.opensdk:wechat-sdk-android-without-mta:6.6.4:8ae40b8665f98587e716b4593401aef2:MD5"

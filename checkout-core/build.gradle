@@ -41,13 +41,12 @@ android {
 }
 
 dependencies {
+    // Dependencies
+    api "androidx.annotation:annotation:$annotation_version"
+
     //Tests
     testImplementation "junit:junit:$junit_version"
     testImplementation "org.json:json:$json_version"
     androidTestImplementation "androidx.test.ext:junit:$test_ext_version"
     androidTestImplementation "androidx.test.espresso:espresso-core:$espresso_version"
-
-    // Dependencies
-    api "org.jetbrains.kotlin:kotlin-stdlib-jdk7:$kotlin_version"
-    api "androidx.annotation:annotation:$annotation_version"
 }
