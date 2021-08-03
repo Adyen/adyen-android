@@ -11,6 +11,8 @@ package com.adyen.checkout.dropin
 import android.app.Activity
 import android.content.Context
 import android.content.Intent
+import androidx.activity.ComponentActivity
+import androidx.activity.result.ActivityResultLauncher
 import androidx.fragment.app.Fragment
 import com.adyen.checkout.components.model.PaymentMethodsApiResponse
 import com.adyen.checkout.core.log.LogUtil
@@ -39,6 +41,35 @@ object DropIn {
 
     internal const val DROP_IN_PREFS = "drop-in-shared-prefs"
     internal const val LOCALE_PREF = "drop-in-locale"
+
+    @JvmStatic
+    fun registerForDropInResult(activity: ComponentActivity, callback: DropInCallback): ActivityResultLauncher<Intent> {
+        return activity.registerForActivityResult(DropInResultContract(), callback::onDropInResult)
+    }
+
+    @JvmStatic
+    fun registerForDropInResult(fragment: Fragment, callback: DropInCallback): ActivityResultLauncher<Intent> {
+        return fragment.registerForActivityResult(DropInResultContract(), callback::onDropInResult)
+    }
+
+    @JvmStatic
+    fun startPayment(
+        activity: ComponentActivity,
+        paymentMethodsApiResponse: PaymentMethodsApiResponse,
+        dropInConfiguration: DropInConfiguration,
+        dropInLauncher: ActivityResultLauncher<Intent>,
+        resultHandlerIntent: Intent? = null
+    ) {
+        Logger.d(TAG, "startPayment from Activity")
+
+        val intent = preparePayment(
+            activity,
+            paymentMethodsApiResponse,
+            dropInConfiguration,
+            resultHandlerIntent
+        )
+        dropInLauncher.launch(intent)
+    }
 
     /**
      * Starts the checkout flow to be handled by the Drop-in solution.
@@ -97,6 +128,25 @@ object DropIn {
             resultHandlerIntent
         )
         activity.startActivityForResult(intent, DROP_IN_REQUEST_CODE)
+    }
+
+    @JvmStatic
+    fun startPayment(
+        fragment: Fragment,
+        paymentMethodsApiResponse: PaymentMethodsApiResponse,
+        dropInConfiguration: DropInConfiguration,
+        dropInLauncher: ActivityResultLauncher<Intent>,
+        resultHandlerIntent: Intent? = null
+    ) {
+        Logger.d(TAG, "startPayment from Fragment")
+
+        val intent = preparePayment(
+            fragment.requireContext(),
+            paymentMethodsApiResponse,
+            dropInConfiguration,
+            resultHandlerIntent
+        )
+        dropInLauncher.launch(intent)
     }
 
     /**

@@ -26,6 +26,7 @@ import com.adyen.checkout.core.log.LogUtil
 import com.adyen.checkout.core.log.Logger
 import com.adyen.checkout.core.util.LocaleUtil
 import com.adyen.checkout.dropin.DropIn
+import com.adyen.checkout.dropin.DropInCallback
 import com.adyen.checkout.dropin.DropInConfiguration
 import com.adyen.checkout.dropin.DropInResult
 import com.adyen.checkout.example.BuildConfig
@@ -39,7 +40,7 @@ import com.adyen.checkout.googlepay.GooglePayConfiguration
 import org.koin.android.ext.android.inject
 import org.koin.androidx.viewmodel.ext.android.viewModel
 
-class MainActivity : AppCompatActivity() {
+class MainActivity : AppCompatActivity(), DropInCallback {
 
     companion object {
         private val TAG: String = LogUtil.getTag()
@@ -48,6 +49,8 @@ class MainActivity : AppCompatActivity() {
     private lateinit var binding: ActivityMainBinding
     private val paymentMethodsViewModel: PaymentMethodsViewModel by viewModel()
     private val keyValueStorage: KeyValueStorage by inject()
+
+    private val dropInLauncher = DropIn.registerForDropInResult(this, this)
 
     private var isWaitingPaymentMethods = false
 
@@ -126,10 +129,8 @@ class MainActivity : AppCompatActivity() {
         Toast.makeText(this, result, Toast.LENGTH_SHORT).show()
     }
 
-    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
-        super.onActivityResult(requestCode, resultCode, data)
-        Logger.d(TAG, "onActivityResult")
-        val dropInResult = DropIn.handleActivityResult(requestCode, resultCode, data) ?: return
+    override fun onDropInResult(dropInResult: DropInResult?) {
+        if (dropInResult == null) return
         when (dropInResult) {
             is DropInResult.CancelledByUser -> Toast.makeText(this, "Canceled by user", Toast.LENGTH_SHORT).show()
             is DropInResult.Error -> Toast.makeText(this, dropInResult.reason, Toast.LENGTH_SHORT).show()
@@ -182,7 +183,7 @@ class MainActivity : AppCompatActivity() {
         val resultIntent = Intent(this, MainActivity::class.java)
         resultIntent.flags = Intent.FLAG_ACTIVITY_CLEAR_TOP
 
-        DropIn.startPayment(this, paymentMethodsApiResponse, dropInConfigurationBuilder.build(), resultIntent)
+        DropIn.startPayment(this, paymentMethodsApiResponse, dropInConfigurationBuilder.build(), dropInLauncher, resultIntent)
     }
 
     private fun setLoading(isLoading: Boolean) {
