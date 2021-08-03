@@ -8,6 +8,7 @@
 
 package com.adyen.checkout.card
 
+import androidx.annotation.StringRes
 import androidx.lifecycle.viewModelScope
 import com.adyen.checkout.card.api.model.Brand
 import com.adyen.checkout.card.data.CardType
@@ -286,6 +287,13 @@ class CardComponent private constructor(
 
     fun showStorePaymentField(): Boolean {
         return configuration.isShowStorePaymentFieldEnable
+    }
+
+    @StringRes fun getKcpBirthDateOrTaxNumberHint(input: String): Int {
+        return when {
+            input.length > CardValidationUtils.KCP_BIRTH_DATE_LENGTH -> R.string.checkout_kcp_tax_number_hint
+            else -> R.string.checkout_kcp_birth_date_or_tax_number_hint
+        }
     }
 
     companion object {
