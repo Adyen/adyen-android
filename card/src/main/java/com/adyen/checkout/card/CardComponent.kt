@@ -68,6 +68,8 @@ class CardComponent private constructor(
                             securityCode = securityCodeState.value,
                             holderName = holderNameState.value,
                             socialSecurityNumber = socialSecurityNumberState.value,
+                            kcpBirthDateOrTaxNumber = kcpBirthDateOrTaxNumberState.value,
+                            kcpCardPassword = kcpCardPasswordState.value,
                             isStorePaymentSelected = isStoredPaymentMethodEnable,
                             detectedCardTypes = it
                         )
@@ -114,6 +116,8 @@ class CardComponent private constructor(
             securityCode = inputData.securityCode,
             holderName = inputData.holderName,
             socialSecurityNumber = inputData.socialSecurityNumber,
+            kcpBirthDateOrTaxNumber = inputData.kcpBirthDateOrTaxNumber,
+            kcpCardPassword = inputData.kcpCardPassword,
             isStorePaymentSelected = inputData.isStorePaymentSelected,
             detectedCardTypes = detectedCardTypes
         )
@@ -126,6 +130,8 @@ class CardComponent private constructor(
         securityCode: String,
         holderName: String,
         socialSecurityNumber: String,
+        kcpBirthDateOrTaxNumber: String,
+        kcpCardPassword: String,
         isStorePaymentSelected: Boolean,
         detectedCardTypes: List<DetectedCardType>
     ): CardOutputData {
@@ -136,10 +142,13 @@ class CardComponent private constructor(
             cardDelegate.validateSecurityCode(securityCode, firstDetectedType),
             cardDelegate.validateHolderName(holderName),
             cardDelegate.validateSocialSecurityNumber(socialSecurityNumber),
+            cardDelegate.validateKcpBirthDateOrTaxNumber(kcpBirthDateOrTaxNumber),
+            cardDelegate.validateKcpCardPassword(kcpCardPassword),
             isStorePaymentSelected,
             makeCvcUIState(firstDetectedType?.cvcPolicy),
             detectedCardTypes,
-            cardDelegate.getSocialSecurityNumberVisibility()
+            cardDelegate.getSocialSecurityNumberVisibility(),
+            cardDelegate.getKcpAuthVisibility()
         )
     }
 
@@ -271,7 +280,7 @@ class CardComponent private constructor(
         return storedPaymentInputData
     }
 
-    fun isHolderNameRequire(): Boolean {
+    fun isHolderNameRequired(): Boolean {
         return cardDelegate.isHolderNameRequired()
     }
 
