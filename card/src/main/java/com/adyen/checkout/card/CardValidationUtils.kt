@@ -13,6 +13,7 @@ import com.adyen.checkout.card.data.DetectedCardType
 import com.adyen.checkout.card.data.ExpiryDate
 import com.adyen.checkout.components.ui.FieldState
 import com.adyen.checkout.components.ui.Validation
+import com.adyen.checkout.components.util.DateUtils
 import com.adyen.checkout.core.util.StringUtil
 import java.util.Calendar
 import java.util.GregorianCalendar
@@ -35,6 +36,12 @@ object CardValidationUtils {
     private const val MONTHS_IN_YEAR = 12
     private const val MAXIMUM_YEARS_IN_FUTURE = 30
     private const val MAXIMUM_EXPIRED_MONTHS = 3
+
+    //KCP
+    const val KCP_BIRTH_DATE_LENGTH = 6
+    private const val KCP_BIRTH_DATE_FORMAT = "yyMMdd"
+    private const val KCP_TAX_NUMBER_LENGTH = 10
+    private const val KCP_CARD_PASSWORD_REQUIRED_LENGTH = 2
 
     /**
      * Validate card number.
@@ -106,6 +113,24 @@ object CardValidationUtils {
             else -> invalidState
         }
         return FieldState(normalizedSecurityCode, validation)
+    }
+
+    fun validateKcpBirthDateOrTaxNumber(birthDateOrTaxNumber: String): FieldState<String> {
+        val inputLength = birthDateOrTaxNumber.length
+        val validation = when {
+            inputLength == KCP_BIRTH_DATE_LENGTH && DateUtils.matchesFormat(birthDateOrTaxNumber, KCP_BIRTH_DATE_FORMAT) -> Validation.Valid
+            inputLength == KCP_TAX_NUMBER_LENGTH -> Validation.Valid
+            else -> Validation.Invalid(R.string.checkout_kcp_birth_date_or_tax_number_invalid)
+        }
+        return FieldState(birthDateOrTaxNumber, validation)
+    }
+
+    fun validateKcpCardPassword(cardPassword: String): FieldState<String> {
+        val validation = when (cardPassword.length) {
+            KCP_CARD_PASSWORD_REQUIRED_LENGTH -> Validation.Valid
+            else -> Validation.Invalid(R.string.checkout_kcp_password_invalid)
+        }
+        return FieldState(cardPassword, validation)
     }
 
     private fun dateExists(expiryDate: ExpiryDate): Boolean {

@@ -88,6 +88,14 @@ class StoredCardDelegate(
         return SocialSecurityNumberUtils.validateSocialSecurityNumber(socialSecurityNumber)
     }
 
+    override fun validateKcpBirthDateOrTaxNumber(kcpBirthDateOrTaxNumber: String): FieldState<String> {
+        return CardValidationUtils.validateKcpBirthDateOrTaxNumber(kcpBirthDateOrTaxNumber)
+    }
+
+    override fun validateKcpCardPassword(kcpCardPassword: String): FieldState<String> {
+        return CardValidationUtils.validateKcpCardPassword(kcpCardPassword)
+    }
+
     override fun isCvcHidden(): Boolean {
         return cardConfiguration.isHideCvcStoredCard || noCvcBrands.contains(cardType)
     }
