@@ -12,11 +12,18 @@
     <string name="checkout_card_expiry_date_hint">Utløpsdato</string>
     <string name="checkout_card_security_code_hint">CVC / CVV</string>
     <string name="checkout_card_security_code_optional_hint">CVC / CVV (valgfritt)</string>
+    <string name="checkout_social_security_number_hint"></string>
+    <string name="checkout_kcp_birth_date_or_tax_number_hint">Kortholders fødselsdato (YYMMDD) eller bedriftsregistreringsnummer (10 siffer)</string>
+    <string name="checkout_kcp_tax_number_hint">Bedriftsregistreringsnummer (10 siffer)</string>
+    <string name="checkout_kcp_password_hint">Første 2 sifre av kortpassord</string>
 
     <string name="checkout_card_number_not_valid">Ugyldig kortnummer</string>
     <string name="checkout_expiry_date_not_valid">Ugyldig utløpsdato</string>
     <string name="checkout_security_code_not_valid">Ugyldig CVC-/CVV-format</string>
     <string name="checkout_holder_name_not_valid">Kortholders navn ugyldig</string>
+    <string name="checkout_social_security_number_not_valid">Ugyldige inndata</string>
+    <string name="checkout_kcp_birth_date_or_tax_number_invalid">Ugyldig kortholders fødselsdato eller bedriftsregistreringsnummer</string>
+    <string name="checkout_kcp_password_invalid">Ugyldig passord</string>
 
     <string name="store_payment_method">Lagre til min neste betaling</string>
 </resources>
