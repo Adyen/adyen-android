@@ -27,6 +27,8 @@ public class UnencryptedCard {
     private final String mCvc;
     private final String mCardHolderName;
     private final Date mGenerationTime;
+    private final String mCardPassword;
+    private final String mTaxNumber;
 
     public UnencryptedCard(
             @Nullable String number,
@@ -34,7 +36,9 @@ public class UnencryptedCard {
             @Nullable String expiryYear,
             @Nullable String cvc,
             @Nullable String cardHolderName,
-            @Nullable Date generationTime
+            @Nullable Date generationTime,
+            @Nullable String cardPassword,
+            @Nullable String taxNumber
     ) {
         this.mNumber = number;
         this.mExpiryMonth = expiryMonth;
@@ -42,6 +46,8 @@ public class UnencryptedCard {
         this.mCvc = cvc;
         this.mCardHolderName = cardHolderName;
         this.mGenerationTime = generationTime;
+        this.mCardPassword = cardPassword;
+        this.mTaxNumber = taxNumber;
     }
 
     @Nullable
@@ -72,6 +78,16 @@ public class UnencryptedCard {
     @Nullable
     public Date getGenerationTime() {
         return mGenerationTime;
+    }
+
+    @Nullable
+    public String getCardPassword() {
+        return mCardPassword;
+    }
+
+    @Nullable
+    public String getTaxNumber() {
+        return mTaxNumber;
     }
 
     @NonNull
@@ -106,6 +122,8 @@ public class UnencryptedCard {
         private String mCardHolderName;
         private String mCvc;
         private Date mGenerationTime;
+        private String mCardPassword;
+        private String mTaxNumber;
 
         /**
          * Set the optional card number.
@@ -116,7 +134,6 @@ public class UnencryptedCard {
         @NonNull
         public Builder setNumber(@NonNull String number) {
             this.mNumber = removeWhiteSpaces(number);
-
             return this;
         }
 
@@ -129,7 +146,6 @@ public class UnencryptedCard {
         @NonNull
         public Builder setExpiryMonth(@NonNull String expiryMonth) {
             this.mExpiryMonth = removeWhiteSpaces(expiryMonth);
-
             return this;
         }
 
@@ -142,7 +158,6 @@ public class UnencryptedCard {
         @NonNull
         public Builder setExpiryYear(@NonNull String expiryYear) {
             this.mExpiryYear = removeWhiteSpaces(expiryYear);
-
             return this;
         }
 
@@ -155,7 +170,6 @@ public class UnencryptedCard {
         @NonNull
         public Builder setCvc(@NonNull String cvc) {
             this.mCvc = removeWhiteSpaces(cvc);
-
             return this;
         }
 
@@ -168,7 +182,6 @@ public class UnencryptedCard {
         @NonNull
         public Builder setHolderName(@NonNull String holderName) {
             this.mCardHolderName = trimAndRemoveMultipleWhiteSpaces(holderName);
-
             return this;
         }
 
@@ -181,7 +194,30 @@ public class UnencryptedCard {
         @NonNull
         public Builder setGenerationTime(@NonNull Date generationTime) {
             this.mGenerationTime = generationTime;
+            return this;
+        }
 
+        /**
+         * Set the card password (First two digits).
+         *
+         * @param cardPassword The card password.
+         * @return The Builder instance
+         */
+        @NonNull
+        public Builder setCardPassword(@NonNull String cardPassword) {
+            this.mCardPassword = cardPassword;
+            return this;
+        }
+
+        /**
+         * Set the tax number.
+         *
+         * @param taxNumber The tax number.
+         * @return The Builder instance.
+         */
+        @NonNull
+        public Builder setTaxNumber(@NonNull String taxNumber) {
+            this.mTaxNumber = taxNumber;
             return this;
         }
 
@@ -205,7 +241,7 @@ public class UnencryptedCard {
             require(mExpiryYear == null || mExpiryYear.matches("20\\d{2}"),
                     "expiryYear must be in the second millennium and first century.");
 
-            return new UnencryptedCard(mNumber, mExpiryMonth, mExpiryYear, mCvc, mCardHolderName, mGenerationTime);
+            return new UnencryptedCard(mNumber, mExpiryMonth, mExpiryYear, mCvc, mCardHolderName, mGenerationTime, mCardPassword, mTaxNumber);
         }
 
         private String removeWhiteSpaces(String string) {

@@ -35,17 +35,20 @@ public final class EncryptedCard implements Parcelable {
     private final String mEncryptedExpiryMonth;
     private final String mEncryptedExpiryYear;
     private final String mEncryptedSecurityCode;
+    private final String mEncryptedCardPassword;
 
     EncryptedCard(
             @Nullable String encryptedCardNumber,
             @Nullable String encryptedExpiryMonth,
             @Nullable String encryptedExpiryYear,
-            @Nullable String encryptedSecurityCode
+            @Nullable String encryptedSecurityCode,
+            @Nullable String encryptedCardPassword
     ) {
         mEncryptedCardNumber = encryptedCardNumber;
         mEncryptedExpiryMonth = encryptedExpiryMonth;
         mEncryptedExpiryYear = encryptedExpiryYear;
         mEncryptedSecurityCode = encryptedSecurityCode;
+        mEncryptedCardPassword = encryptedCardPassword;
     }
 
     private EncryptedCard(@NonNull Parcel source) {
@@ -53,6 +56,7 @@ public final class EncryptedCard implements Parcelable {
         mEncryptedExpiryMonth = source.readString();
         mEncryptedExpiryYear = source.readString();
         mEncryptedSecurityCode = source.readString();
+        mEncryptedCardPassword = source.readString();
     }
 
     @Override
@@ -66,6 +70,7 @@ public final class EncryptedCard implements Parcelable {
         dest.writeString(mEncryptedExpiryMonth);
         dest.writeString(mEncryptedExpiryYear);
         dest.writeString(mEncryptedSecurityCode);
+        dest.writeString(mEncryptedCardPassword);
     }
 
     @Nullable
@@ -86,6 +91,11 @@ public final class EncryptedCard implements Parcelable {
     @Nullable
     public String getEncryptedSecurityCode() {
         return mEncryptedSecurityCode;
+    }
+
+    @Nullable
+    public String getEncryptedCardPassword() {
+        return mEncryptedCardPassword;
     }
 
 }

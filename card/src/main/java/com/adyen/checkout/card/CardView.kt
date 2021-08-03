@@ -129,7 +129,7 @@ class CardView @JvmOverloads constructor(context: Context, attrs: AttributeSet? 
             onCardNumberValidated(cardOutputData.detectedCardTypes)
             onExpiryDateValidated(cardOutputData.expiryDateState)
             setSocialSecurityNumberVisibility(cardOutputData.socialSecurityNumberVisibility)
-            setKcpAuthVisibility(cardOutputData.kcpAuthVisibility)
+            setKcpAuthVisibility(cardOutputData.isKCPAuthRequired)
 
             when (cardOutputData.cvcUIState) {
                 CvcUIState.REQUIRED -> {
@@ -375,10 +375,9 @@ class CardView @JvmOverloads constructor(context: Context, attrs: AttributeSet? 
         binding.textInputLayoutSocialSecurityNumber.isVisible = socialSecurityNumberVisibility == SocialSecurityNumberVisibility.SHOW
     }
 
-    private fun setKcpAuthVisibility(kcpAuthVisibility: KCPAuthVisibility?) {
-        val shouldShowKcpAuth = kcpAuthVisibility == KCPAuthVisibility.SHOW
-        binding.textInputLayoutKcpBirthDateOrTaxNumber.isVisible = shouldShowKcpAuth
-        binding.textInputLayoutKcpCardPassword.isVisible = shouldShowKcpAuth
+    private fun setKcpAuthVisibility(shouldShowKCPAuth: Boolean) {
+        binding.textInputLayoutKcpBirthDateOrTaxNumber.isVisible = shouldShowKCPAuth
+        binding.textInputLayoutKcpCardPassword.isVisible = shouldShowKCPAuth
     }
 
     private fun setStoredCardInterface(storedCardInput: CardInputData) {

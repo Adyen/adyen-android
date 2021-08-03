@@ -149,7 +149,7 @@ class CardComponent private constructor(
             makeCvcUIState(firstDetectedType?.cvcPolicy),
             detectedCardTypes,
             cardDelegate.getSocialSecurityNumberVisibility(),
-            cardDelegate.getKcpAuthVisibility()
+            cardDelegate.isKCPAuthRequired()
         )
     }
 
@@ -206,6 +206,10 @@ class CardComponent private constructor(
                 unencryptedCardBuilder.setExpiryYear(expiryDateResult.expiryYear.toString())
             }
 
+            if (cardDelegate.isKCPAuthRequired()) {
+                unencryptedCardBuilder.setCardPassword(stateOutputData.kcpCardPasswordState.value)
+            }
+
             CardEncrypter.encryptFields(unencryptedCardBuilder.build(), publicKey)
         } catch (e: EncryptionException) {
             notifyException(e)
@@ -252,6 +256,11 @@ class CardComponent private constructor(
 
         if (cardDelegate.isHolderNameRequired()) {
             cardPaymentMethod.holderName = stateOutputData.holderNameState.value
+        }
+
+        if (cardDelegate.isKCPAuthRequired()) {
+            cardPaymentMethod.encryptedPassword = encryptedCard.encryptedCardPassword
+            cardPaymentMethod.taxNumber = stateOutputData.kcpBirthDateOrTaxNumberState.value
         }
 
         val paymentComponentData = PaymentComponentData<CardPaymentMethod>().apply {

@@ -99,8 +99,8 @@ class NewCardDelegate(
         return cardConfiguration.socialSecurityNumberVisibility
     }
 
-    override fun getKcpAuthVisibility(): KCPAuthVisibility? {
-        return cardConfiguration.kcpAuthVisibility
+    override fun isKCPAuthRequired(): Boolean {
+        return cardConfiguration.kcpAuthVisibility == KCPAuthVisibility.SHOW
     }
 
     override fun requiresInput(): Boolean {

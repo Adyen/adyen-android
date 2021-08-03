@@ -32,6 +32,8 @@ public final class CardEncrypter {
     private static final String EXPIRY_YEAR_KEY = "expiryYear";
     private static final String CVC_KEY = "cvc";
     private static final String HOLDER_NAME_KEY = "holderName";
+    private static final String PASSWORD_KEY = "password";
+    private static final String TAX_NUMBER_KEY = "taxNumber";
     private static final String GENERATION_TIME_KEY = "generationtime";
 
     private static final String BIN_KEY = "binValue";
@@ -72,6 +74,7 @@ public final class CardEncrypter {
             final String encryptedExpiryMonth;
             final String encryptedExpiryYear;
             final String encryptedSecurityCode;
+            final String encryptedPassword;
 
             JSONObject jsonToEncrypt;
 
@@ -130,7 +133,21 @@ public final class CardEncrypter {
                 encryptedSecurityCode = null;
             }
 
-            return new EncryptedCard(encryptedNumber, encryptedExpiryMonth, encryptedExpiryYear, encryptedSecurityCode);
+            if (unencryptedCard.getCardPassword() != null) {
+                try {
+                    jsonToEncrypt = new JSONObject();
+                    jsonToEncrypt.put(PASSWORD_KEY, unencryptedCard.getCardPassword());
+                    jsonToEncrypt.put(GENERATION_TIME_KEY, formattedGenerationTime);
+
+                    encryptedPassword = encrypter.encrypt(jsonToEncrypt.toString());
+                } catch (JSONException e) {
+                    throw new EncryptionException(ENCRYPTION_FAILED_MESSAGE, e);
+                }
+            } else {
+                encryptedPassword = null;
+            }
+
+            return new EncryptedCard(encryptedNumber, encryptedExpiryMonth, encryptedExpiryYear, encryptedSecurityCode, encryptedPassword);
 
         } catch (EncryptionException | IllegalStateException e) {
             throw new EncryptionException(e.getMessage() == null ? "No message." : e.getMessage(), e);
@@ -159,6 +176,9 @@ public final class CardEncrypter {
             cardJson.put(EXPIRY_YEAR_KEY, unencryptedCard.getExpiryYear());
             cardJson.put(CVC_KEY, unencryptedCard.getCvc());
             cardJson.put(HOLDER_NAME_KEY, unencryptedCard.getCardHolderName());
+            cardJson.put(PASSWORD_KEY, unencryptedCard.getCardPassword());
+            cardJson.put(TAX_NUMBER_KEY, unencryptedCard.getTaxNumber());
+            // TODO ask caio why this is necessary
             final Date generationTime = assureGenerationTime(unencryptedCard.getGenerationTime());
             cardJson.put(GENERATION_TIME_KEY, GENERATION_DATE_FORMAT.format(generationTime));
 

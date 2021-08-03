@@ -33,7 +33,7 @@ abstract class CardDelegate(
     abstract fun validateKcpCardPassword(kcpCardPassword: String): FieldState<String>
     abstract fun isCvcHidden(): Boolean
     abstract fun getSocialSecurityNumberVisibility(): SocialSecurityNumberVisibility?
-    abstract fun getKcpAuthVisibility(): KCPAuthVisibility?
+    abstract fun isKCPAuthRequired(): Boolean
     abstract fun requiresInput(): Boolean
     abstract fun isHolderNameRequired(): Boolean
     abstract fun detectCardType(cardNumber: String, publicKey: String?, coroutineScope: CoroutineScope): List<DetectedCardType>

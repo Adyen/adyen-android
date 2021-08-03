@@ -104,8 +104,8 @@ class StoredCardDelegate(
         return SocialSecurityNumberVisibility.HIDE
     }
 
-    override fun getKcpAuthVisibility(): KCPAuthVisibility {
-        return KCPAuthVisibility.HIDE
+    override fun isKCPAuthRequired(): Boolean {
+        return false
     }
 
     override fun requiresInput(): Boolean {
