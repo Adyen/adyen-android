@@ -104,6 +104,10 @@ class StoredCardDelegate(
         return SocialSecurityNumberVisibility.HIDE
     }
 
+    override fun getKcpAuthVisibility(): KCPAuthVisibility {
+        return KCPAuthVisibility.HIDE
+    }
+
     override fun requiresInput(): Boolean {
         return !cardConfiguration.isHideCvcStoredCard
     }
