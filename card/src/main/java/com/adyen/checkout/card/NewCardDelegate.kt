@@ -80,15 +80,19 @@ class NewCardDelegate(
     }
 
     override fun validateSocialSecurityNumber(socialSecurityNumber: String): FieldState<String> {
-        return SocialSecurityNumberUtils.validateSocialSecurityNumber(socialSecurityNumber)
+        return if (isSocialSecurityNumberRequired()) {
+            SocialSecurityNumberUtils.validateSocialSecurityNumber(socialSecurityNumber)
+        } else {
+            FieldState(socialSecurityNumber, Validation.Valid)
+        }
     }
 
     override fun isCvcHidden(): Boolean {
         return cardConfiguration.isHideCvc
     }
 
-    override fun getSocialSecurityNumberVisibility(): SocialSecurityNumberVisibility? {
-        return cardConfiguration.socialSecurityNumberVisibility
+    override fun isSocialSecurityNumberRequired(): Boolean {
+        return cardConfiguration.socialSecurityNumberVisibility == SocialSecurityNumberVisibility.SHOW
     }
 
     override fun requiresInput(): Boolean {
