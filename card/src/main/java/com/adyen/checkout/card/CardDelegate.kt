@@ -30,7 +30,7 @@ abstract class CardDelegate(
     abstract fun validateHolderName(holderName: String): FieldState<String>
     abstract fun validateSocialSecurityNumber(socialSecurityNumber: String): FieldState<String>
     abstract fun isCvcHidden(): Boolean
-    abstract fun getSocialSecurityNumberVisibility(): SocialSecurityNumberVisibility?
+    abstract fun isSocialSecurityNumberRequired(): Boolean
     abstract fun requiresInput(): Boolean
     abstract fun isHolderNameRequired(): Boolean
     abstract fun detectCardType(cardNumber: String, publicKey: String?, coroutineScope: CoroutineScope): List<DetectedCardType>
