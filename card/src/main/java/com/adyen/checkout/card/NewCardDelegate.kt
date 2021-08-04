@@ -84,11 +84,19 @@ class NewCardDelegate(
     }
 
     override fun validateKcpBirthDateOrTaxNumber(kcpBirthDateOrTaxNumber: String): FieldState<String> {
-        return CardValidationUtils.validateKcpBirthDateOrTaxNumber(kcpBirthDateOrTaxNumber)
+        return if (isKCPAuthRequired()) {
+            CardValidationUtils.validateKcpBirthDateOrTaxNumber(kcpBirthDateOrTaxNumber)
+        } else {
+            FieldState(kcpBirthDateOrTaxNumber, Validation.Valid)
+        }
     }
 
     override fun validateKcpCardPassword(kcpCardPassword: String): FieldState<String> {
-        return CardValidationUtils.validateKcpCardPassword(kcpCardPassword)
+        return if (isKCPAuthRequired()) {
+            CardValidationUtils.validateKcpCardPassword(kcpCardPassword)
+        } else {
+            FieldState(kcpCardPassword, Validation.Valid)
+        }
     }
 
     override fun isCvcHidden(): Boolean {
