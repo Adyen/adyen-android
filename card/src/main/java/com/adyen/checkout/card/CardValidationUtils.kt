@@ -37,7 +37,7 @@ object CardValidationUtils {
     private const val MAXIMUM_YEARS_IN_FUTURE = 30
     private const val MAXIMUM_EXPIRED_MONTHS = 3
 
-    //KCP
+    // KCP
     const val KCP_BIRTH_DATE_LENGTH = 6
     private const val KCP_BIRTH_DATE_FORMAT = "yyMMdd"
     private const val KCP_TAX_NUMBER_LENGTH = 10
