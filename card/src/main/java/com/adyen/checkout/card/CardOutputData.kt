@@ -31,6 +31,8 @@ data class CardOutputData(
             expiryDateState.validation.isValid() &&
             securityCodeState.validation.isValid() &&
             holderNameState.validation.isValid() &&
-            socialSecurityNumberState.validation.isValid()
+            socialSecurityNumberState.validation.isValid() &&
+            kcpBirthDateOrTaxNumberState.validation.isValid() &&
+            kcpCardPasswordState.validation.isValid()
     }
 }
