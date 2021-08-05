@@ -11,7 +11,7 @@ package com.adyen.checkout.dropin
 import android.app.Activity
 import android.content.Context
 import android.content.Intent
-import androidx.activity.ComponentActivity
+import androidx.activity.result.ActivityResultCaller
 import androidx.activity.result.ActivityResultLauncher
 import androidx.fragment.app.Fragment
 import com.adyen.checkout.components.model.PaymentMethodsApiResponse
@@ -43,18 +43,13 @@ object DropIn {
     internal const val LOCALE_PREF = "drop-in-locale"
 
     @JvmStatic
-    fun registerForDropInResult(activity: ComponentActivity, callback: DropInCallback): ActivityResultLauncher<Intent> {
-        return activity.registerForActivityResult(DropInResultContract(), callback::onDropInResult)
-    }
-
-    @JvmStatic
-    fun registerForDropInResult(fragment: Fragment, callback: DropInCallback): ActivityResultLauncher<Intent> {
-        return fragment.registerForActivityResult(DropInResultContract(), callback::onDropInResult)
+    fun registerForDropInResult(caller: ActivityResultCaller, callback: DropInCallback): ActivityResultLauncher<Intent> {
+        return caller.registerForActivityResult(DropInResultContract(), callback::onDropInResult)
     }
 
     @JvmStatic
     fun startPayment(
-        activity: ComponentActivity,
+        activity: Activity,
         paymentMethodsApiResponse: PaymentMethodsApiResponse,
         dropInConfiguration: DropInConfiguration,
         dropInLauncher: ActivityResultLauncher<Intent>,
