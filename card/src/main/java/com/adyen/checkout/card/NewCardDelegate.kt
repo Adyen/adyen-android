@@ -80,7 +80,7 @@ class NewCardDelegate(
     }
 
     override fun validateSocialSecurityNumber(socialSecurityNumber: String): FieldState<String> {
-        return SocialSecurityNumberUtils.validateSocialSecurityNumber(socialSecurityNumber)
+        return FieldState(socialSecurityNumber, Validation.Valid)
     }
 
     override fun validateKcpBirthDateOrTaxNumber(kcpBirthDateOrTaxNumber: String): FieldState<String> {

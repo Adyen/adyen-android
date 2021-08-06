@@ -25,6 +25,7 @@ import com.adyen.checkout.core.log.LogUtil
 import com.adyen.checkout.core.log.Logger
 import com.adyen.checkout.cse.CardEncrypter
 import com.adyen.checkout.cse.EncryptedCard
+import com.adyen.checkout.cse.GenericEncrypter
 import com.adyen.checkout.cse.UnencryptedCard
 import com.adyen.checkout.cse.exception.EncryptionException
 import kotlinx.coroutines.flow.launchIn
@@ -206,10 +207,6 @@ class CardComponent private constructor(
                 unencryptedCardBuilder.setExpiryYear(expiryDateResult.expiryYear.toString())
             }
 
-            if (cardDelegate.isKCPAuthRequired()) {
-                unencryptedCardBuilder.setCardPassword(stateOutputData.kcpCardPasswordState.value)
-            }
-
             CardEncrypter.encryptFields(unencryptedCardBuilder.build(), publicKey)
         } catch (e: EncryptionException) {
             notifyException(e)
@@ -259,7 +256,14 @@ class CardComponent private constructor(
         }
 
         if (cardDelegate.isKCPAuthRequired()) {
-            cardPaymentMethod.encryptedPassword = encryptedCard.encryptedCardPassword
+            publicKey?.let { publicKey ->
+                cardPaymentMethod.encryptedPassword = GenericEncrypter.encryptField(
+                    GenericEncrypter.KCP_PASSWORD_KEY,
+                    stateOutputData.kcpCardPasswordState.value,
+                    publicKey
+                )
+            } ?: throw CheckoutException("Encryption failed because public key cannot be found.")
+
             cardPaymentMethod.taxNumber = stateOutputData.kcpBirthDateOrTaxNumberState.value
         }
 

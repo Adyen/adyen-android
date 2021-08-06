@@ -27,8 +27,6 @@ public class UnencryptedCard {
     private final String mCvc;
     private final String mCardHolderName;
     private final Date mGenerationTime;
-    private final String mCardPassword;
-    private final String mTaxNumber;
 
     public UnencryptedCard(
             @Nullable String number,
@@ -36,9 +34,7 @@ public class UnencryptedCard {
             @Nullable String expiryYear,
             @Nullable String cvc,
             @Nullable String cardHolderName,
-            @Nullable Date generationTime,
-            @Nullable String cardPassword,
-            @Nullable String taxNumber
+            @Nullable Date generationTime
     ) {
         this.mNumber = number;
         this.mExpiryMonth = expiryMonth;
@@ -46,8 +42,6 @@ public class UnencryptedCard {
         this.mCvc = cvc;
         this.mCardHolderName = cardHolderName;
         this.mGenerationTime = generationTime;
-        this.mCardPassword = cardPassword;
-        this.mTaxNumber = taxNumber;
     }
 
     @Nullable
@@ -78,16 +72,6 @@ public class UnencryptedCard {
     @Nullable
     public Date getGenerationTime() {
         return mGenerationTime;
-    }
-
-    @Nullable
-    public String getCardPassword() {
-        return mCardPassword;
-    }
-
-    @Nullable
-    public String getTaxNumber() {
-        return mTaxNumber;
     }
 
     @NonNull
@@ -122,8 +106,6 @@ public class UnencryptedCard {
         private String mCardHolderName;
         private String mCvc;
         private Date mGenerationTime;
-        private String mCardPassword;
-        private String mTaxNumber;
 
         /**
          * Set the optional card number.
@@ -198,30 +180,6 @@ public class UnencryptedCard {
         }
 
         /**
-         * Set the card password (First two digits).
-         *
-         * @param cardPassword The card password.
-         * @return The Builder instance
-         */
-        @NonNull
-        public Builder setCardPassword(@NonNull String cardPassword) {
-            this.mCardPassword = cardPassword;
-            return this;
-        }
-
-        /**
-         * Set the tax number.
-         *
-         * @param taxNumber The tax number.
-         * @return The Builder instance.
-         */
-        @NonNull
-        public Builder setTaxNumber(@NonNull String taxNumber) {
-            this.mTaxNumber = taxNumber;
-            return this;
-        }
-
-        /**
          * Performs some simple checks on the given {@link UnencryptedCard} object and builds it.
          *
          * @return The valid {@link UnencryptedCard} object.
@@ -241,7 +199,7 @@ public class UnencryptedCard {
             require(mExpiryYear == null || mExpiryYear.matches("20\\d{2}"),
                     "expiryYear must be in the second millennium and first century.");
 
-            return new UnencryptedCard(mNumber, mExpiryMonth, mExpiryYear, mCvc, mCardHolderName, mGenerationTime, mCardPassword, mTaxNumber);
+            return new UnencryptedCard(mNumber, mExpiryMonth, mExpiryYear, mCvc, mCardHolderName, mGenerationTime);
         }
 
         private String removeWhiteSpaces(String string) {
