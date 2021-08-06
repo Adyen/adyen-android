@@ -128,24 +128,8 @@ class CardView @JvmOverloads constructor(context: Context, attrs: AttributeSet? 
             onCardNumberValidated(cardOutputData.detectedCardTypes)
             onExpiryDateValidated(cardOutputData.expiryDateState)
             setSocialSecurityNumberVisibility(cardOutputData.isSocialSecurityNumberRequired)
-
-            when (cardOutputData.cvcUIState) {
-                CvcUIState.REQUIRED -> {
-                    binding.textInputLayoutSecurityCode.isVisible = true
-                    binding.textInputLayoutSecurityCode.setHint(R.string.checkout_card_security_code_hint)
-                }
-                CvcUIState.OPTIONAL -> {
-                    binding.textInputLayoutSecurityCode.isVisible = true
-                    binding.textInputLayoutSecurityCode.setHint(R.string.checkout_card_security_code_optional_hint)
-                }
-                CvcUIState.HIDDEN -> {
-                    binding.textInputLayoutSecurityCode.isVisible = false
-                    // We don't expect the hidden status to change back to isVisible, so we don't worry about putting the margin back.
-                    val params = binding.textInputLayoutExpiryDate.layoutParams as LayoutParams
-                    params.marginEnd = 0
-                    binding.textInputLayoutExpiryDate.layoutParams = params
-                }
-            }
+            handleCvcUIState(cardOutputData.cvcUIState)
+            handleExpiryDateUIState(cardOutputData.expiryDateUIState)
         }
         if (component.isStoredPaymentMethod() && component.requiresInput()) {
             binding.textInputLayoutSecurityCode.editText?.requestFocus()
@@ -322,6 +306,45 @@ class CardView @JvmOverloads constructor(context: Context, attrs: AttributeSet? 
                 binding.textInputLayoutSocialSecurityNumber.error = null
             } else if (socialSecurityNumberValidation != null && socialSecurityNumberValidation is Validation.Invalid) {
                 binding.textInputLayoutSocialSecurityNumber.error = mLocalizedContext.getString(socialSecurityNumberValidation.reason)
+            }
+        }
+    }
+
+    private fun handleCvcUIState(cvcUIState: InputFieldUIState) {
+        when (cvcUIState) {
+            InputFieldUIState.REQUIRED -> {
+                binding.textInputLayoutSecurityCode.isVisible = true
+                binding.textInputLayoutSecurityCode.setHint(R.string.checkout_card_security_code_hint)
+            }
+            InputFieldUIState.OPTIONAL -> {
+                binding.textInputLayoutSecurityCode.isVisible = true
+                binding.textInputLayoutSecurityCode.setHint(R.string.checkout_card_security_code_optional_hint)
+            }
+            InputFieldUIState.HIDDEN -> {
+                binding.textInputLayoutSecurityCode.isVisible = false
+                // We don't expect the hidden status to change back to isVisible, so we don't worry about putting the margin back.
+                val params = binding.textInputLayoutExpiryDate.layoutParams as LayoutParams
+                params.marginEnd = 0
+                binding.textInputLayoutExpiryDate.layoutParams = params
+            }
+        }
+    }
+
+    private fun handleExpiryDateUIState(expiryDateUIState: InputFieldUIState) {
+        when (expiryDateUIState) {
+            InputFieldUIState.REQUIRED -> {
+                binding.textInputLayoutExpiryDate.isVisible = true
+                binding.textInputLayoutExpiryDate.setHint(R.string.checkout_card_expiry_date_hint)
+            }
+            InputFieldUIState.OPTIONAL -> {
+                binding.textInputLayoutExpiryDate.isVisible = true
+                binding.textInputLayoutExpiryDate.setHint(R.string.checkout_card_security_code_optional_hint)
+            }
+            InputFieldUIState.HIDDEN -> {
+                binding.textInputLayoutExpiryDate.isVisible = false
+                val params = binding.textInputLayoutSecurityCode.layoutParams as LayoutParams
+                params.marginStart = 0
+                binding.textInputLayoutSecurityCode.layoutParams = params
             }
         }
     }

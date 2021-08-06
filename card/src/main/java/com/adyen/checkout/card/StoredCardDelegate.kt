@@ -39,9 +39,10 @@ class StoredCardDelegate(
                 showExpiryDate = true,
                 enableLuhnCheck = true,
                 cvcPolicy = when {
-                    cardConfiguration.isHideCvcStoredCard || noCvcBrands.contains(cardType) -> Brand.CvcPolicy.HIDDEN
-                    else -> Brand.CvcPolicy.REQUIRED
-                }
+                    cardConfiguration.isHideCvcStoredCard || noCvcBrands.contains(cardType) -> Brand.FieldPolicy.HIDDEN
+                    else -> Brand.FieldPolicy.REQUIRED
+                },
+                expiryDatePolicy = Brand.FieldPolicy.REQUIRED
             )
         )
     } else {

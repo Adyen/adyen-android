@@ -100,7 +100,7 @@ object CardValidationUtils {
         val invalidState = Validation.Invalid(R.string.checkout_security_code_not_valid)
         val validation = when {
             !StringUtil.isDigitsAndSeparatorsOnly(normalizedSecurityCode) -> invalidState
-            cardType?.cvcPolicy == Brand.CvcPolicy.OPTIONAL && length == 0 -> Validation.Valid
+            cardType?.cvcPolicy == Brand.FieldPolicy.OPTIONAL && length == 0 -> Validation.Valid
             cardType?.cardType == CardType.AMERICAN_EXPRESS && length == AMEX_SECURITY_CODE_SIZE -> Validation.Valid
             cardType?.cardType != CardType.AMERICAN_EXPRESS && length == GENERAL_CARD_SECURITY_CODE_SIZE -> Validation.Valid
             else -> invalidState

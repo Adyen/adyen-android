@@ -23,7 +23,8 @@ data class Brand(
     val showExpiryDate: Boolean? = null,
     val enableLuhnCheck: Boolean? = null,
     val supported: Boolean? = null,
-    val cvcPolicy: String? = null
+    val cvcPolicy: String? = null,
+    val expiryDatePolicy: String? = null
 ) : ModelObject() {
 
     override fun writeToParcel(parcel: Parcel, flags: Int) {
@@ -37,6 +38,7 @@ data class Brand(
         private const val ENABLE_LUHN_CHECK = "enableLuhnCheck"
         private const val SUPPORTED = "supported"
         private const val CVC_POLICY = "cvcPolicy"
+        private const val EXPIRY_DATE_POLICY = "expiryDatePolicy"
 
         @JvmField
         val CREATOR: Parcelable.Creator<Brand> = Creator(Brand::class.java)
@@ -51,6 +53,7 @@ data class Brand(
                     jsonObject.putOpt(ENABLE_LUHN_CHECK, modelObject.enableLuhnCheck)
                     jsonObject.putOpt(SUPPORTED, modelObject.supported)
                     jsonObject.putOpt(CVC_POLICY, modelObject.cvcPolicy)
+                    jsonObject.putOpt(EXPIRY_DATE_POLICY, modelObject.expiryDatePolicy)
                 } catch (e: JSONException) {
                     throw ModelSerializationException(Brand::class.java, e)
                 }
@@ -65,6 +68,7 @@ data class Brand(
                         enableLuhnCheck = jsonObject.getBooleanOrNull(ENABLE_LUHN_CHECK),
                         supported = jsonObject.getBooleanOrNull(SUPPORTED),
                         cvcPolicy = jsonObject.getStringOrNull(CVC_POLICY),
+                        expiryDatePolicy = jsonObject.getStringOrNull(EXPIRY_DATE_POLICY)
                     )
                 } catch (e: JSONException) {
                     throw ModelSerializationException(Brand::class.java, e)
@@ -73,14 +77,14 @@ data class Brand(
         }
     }
 
-    enum class CvcPolicy(val value: String) {
+    enum class FieldPolicy(val value: String) {
         REQUIRED("required"),
         OPTIONAL("optional"),
         HIDDEN("hidden");
 
         companion object {
             @JvmStatic
-            fun parse(value: String): CvcPolicy {
+            fun parse(value: String): FieldPolicy {
                 return when (value) {
                     REQUIRED.value -> REQUIRED
                     OPTIONAL.value -> OPTIONAL

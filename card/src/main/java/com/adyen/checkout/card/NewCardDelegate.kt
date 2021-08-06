@@ -146,9 +146,10 @@ class NewCardDelegate(
             showExpiryDate = true,
             enableLuhnCheck = true,
             cvcPolicy = when {
-                noCvcBrands.contains(cardType) -> Brand.CvcPolicy.HIDDEN
-                else -> Brand.CvcPolicy.REQUIRED
-            }
+                noCvcBrands.contains(cardType) -> Brand.FieldPolicy.HIDDEN
+                else -> Brand.FieldPolicy.REQUIRED
+            },
+            expiryDatePolicy = Brand.FieldPolicy.REQUIRED
         )
     }
 }
