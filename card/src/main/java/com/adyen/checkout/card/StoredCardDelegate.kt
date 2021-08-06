@@ -89,11 +89,11 @@ class StoredCardDelegate(
     }
 
     override fun validateKcpBirthDateOrTaxNumber(kcpBirthDateOrTaxNumber: String): FieldState<String> {
-        return CardValidationUtils.validateKcpBirthDateOrTaxNumber(kcpBirthDateOrTaxNumber)
+        return FieldState(kcpBirthDateOrTaxNumber, Validation.Valid)
     }
 
     override fun validateKcpCardPassword(kcpCardPassword: String): FieldState<String> {
-        return CardValidationUtils.validateKcpCardPassword(kcpCardPassword)
+        return FieldState(kcpCardPassword, Validation.Valid)
     }
 
     override fun isCvcHidden(): Boolean {
