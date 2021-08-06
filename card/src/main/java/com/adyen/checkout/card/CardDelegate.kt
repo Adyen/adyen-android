@@ -32,7 +32,7 @@ abstract class CardDelegate(
     abstract fun validateKcpBirthDateOrTaxNumber(kcpBirthDateOrTaxNumber: String): FieldState<String>
     abstract fun validateKcpCardPassword(kcpCardPassword: String): FieldState<String>
     abstract fun isCvcHidden(): Boolean
-    abstract fun getSocialSecurityNumberVisibility(): SocialSecurityNumberVisibility?
+    abstract fun isSocialSecurityNumberRequired(): Boolean
     abstract fun isKCPAuthRequired(): Boolean
     abstract fun requiresInput(): Boolean
     abstract fun isHolderNameRequired(): Boolean

@@ -23,7 +23,7 @@ data class CardOutputData(
     val isStoredPaymentMethodEnable: Boolean,
     val cvcUIState: CvcUIState,
     val detectedCardTypes: List<DetectedCardType>,
-    val socialSecurityNumberVisibility: SocialSecurityNumberVisibility?,
+    val isSocialSecurityNumberRequired: Boolean,
     val isKCPAuthRequired: Boolean
 ) : OutputData {
     override fun isValid(): Boolean {

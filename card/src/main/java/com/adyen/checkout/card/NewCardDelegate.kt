@@ -80,7 +80,11 @@ class NewCardDelegate(
     }
 
     override fun validateSocialSecurityNumber(socialSecurityNumber: String): FieldState<String> {
-        return FieldState(socialSecurityNumber, Validation.Valid)
+        return if (isSocialSecurityNumberRequired()) {
+            SocialSecurityNumberUtils.validateSocialSecurityNumber(socialSecurityNumber)
+        } else {
+            FieldState(socialSecurityNumber, Validation.Valid)
+        }
     }
 
     override fun validateKcpBirthDateOrTaxNumber(kcpBirthDateOrTaxNumber: String): FieldState<String> {
@@ -103,8 +107,8 @@ class NewCardDelegate(
         return cardConfiguration.isHideCvc
     }
 
-    override fun getSocialSecurityNumberVisibility(): SocialSecurityNumberVisibility? {
-        return cardConfiguration.socialSecurityNumberVisibility
+    override fun isSocialSecurityNumberRequired(): Boolean {
+        return cardConfiguration.socialSecurityNumberVisibility == SocialSecurityNumberVisibility.SHOW
     }
 
     override fun isKCPAuthRequired(): Boolean {

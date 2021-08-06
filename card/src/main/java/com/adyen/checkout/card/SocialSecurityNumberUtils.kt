@@ -26,7 +26,7 @@ object SocialSecurityNumberUtils {
             digitLength == CNPJ_DIGIT_LIMIT && CNPJ_PATTERN.matcher(socialSecurityNumber).matches() -> Validation.Valid
             else -> Validation.Invalid(R.string.checkout_social_security_number_not_valid)
         }
-        return FieldState(socialSecurityNumber, validation)
+        return FieldState(socialSecurityNumber.filter { it.isDigit() }, validation)
     }
 
     fun formatInput(inputString: String): String {

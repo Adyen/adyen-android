@@ -1,3 +1,4 @@
+
 /*
  * Copyright (c) 2019 Adyen N.V.
  *
@@ -5,8 +6,6 @@
  *
  * Created by caiof on 11/2/2019.
  */
-
-final kotlinSupport = new FileNameFinder().getFileNames("$project.projectDir/src", "**/*.kt").size() > 0
 
 apply from: "${rootDir}/config/gradle/versionName.gradle"
 apply from: "${rootDir}/config/gradle/checksums.gradle"
