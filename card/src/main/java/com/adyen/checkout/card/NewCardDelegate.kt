@@ -44,7 +44,7 @@ class NewCardDelegate(
     }
 
     override fun validateCardNumber(cardNumber: String, enableLuhnCheck: Boolean?): FieldState<String> {
-        return CardValidationUtils.validateCardNumber(cardNumber, enableLuhnCheck ?: true)
+        return CardValidationUtils.validateCardNumber(cardNumber, enableLuhnCheck)
     }
 
     override fun validateExpiryDate(expiryDate: ExpiryDate): FieldState<ExpiryDate> {
