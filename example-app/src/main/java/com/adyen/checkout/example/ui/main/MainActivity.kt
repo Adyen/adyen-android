@@ -183,7 +183,7 @@ class MainActivity : AppCompatActivity(), DropInCallback {
         val resultIntent = Intent(this, MainActivity::class.java)
         resultIntent.flags = Intent.FLAG_ACTIVITY_CLEAR_TOP
 
-        DropIn.startPayment(this, paymentMethodsApiResponse, dropInConfigurationBuilder.build(), dropInLauncher, resultIntent)
+        DropIn.startPayment(this, dropInLauncher, paymentMethodsApiResponse, dropInConfigurationBuilder.build(), resultIntent)
     }
 
     private fun setLoading(isLoading: Boolean) {
