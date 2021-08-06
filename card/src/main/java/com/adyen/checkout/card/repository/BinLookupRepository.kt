@@ -97,7 +97,7 @@ class BinLookupRepository {
         // Any null or unmapped values are ignored, a null response becomes an empty list
         return binLookupResponse?.brands.orEmpty().mapNotNull { brandResponse ->
             if (brandResponse.brand == null) return@mapNotNull null
-            val cardType = CardType.getByBrandName(brandResponse.brand) ?: CardType.UNKNOWN.apply { txVariant = brandResponse.brand}
+            val cardType = CardType.getByBrandName(brandResponse.brand) ?: CardType.UNKNOWN.apply { txVariant = brandResponse.brand }
             DetectedCardType(
                 cardType,
                 isReliable = true,
