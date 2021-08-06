@@ -89,7 +89,7 @@ class NewCardDelegate(
 
     override fun validateKcpBirthDateOrTaxNumber(kcpBirthDateOrTaxNumber: String): FieldState<String> {
         return if (isKCPAuthRequired()) {
-            CardValidationUtils.validateKcpBirthDateOrTaxNumber(kcpBirthDateOrTaxNumber)
+            KcpValidationUtils.validateKcpBirthDateOrTaxNumber(kcpBirthDateOrTaxNumber)
         } else {
             FieldState(kcpBirthDateOrTaxNumber, Validation.Valid)
         }
@@ -97,7 +97,7 @@ class NewCardDelegate(
 
     override fun validateKcpCardPassword(kcpCardPassword: String): FieldState<String> {
         return if (isKCPAuthRequired()) {
-            CardValidationUtils.validateKcpCardPassword(kcpCardPassword)
+            KcpValidationUtils.validateKcpCardPassword(kcpCardPassword)
         } else {
             FieldState(kcpCardPassword, Validation.Valid)
         }
