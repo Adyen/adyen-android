@@ -33,15 +33,10 @@ public class EPSConfiguration extends IssuerListConfiguration {
     };
 
     /**
-     * @param shopperLocale The locale that should be used to display strings and layouts. Can differ from device default.
-     * @param environment   The environment to be used to make network calls.
+     * @param builder The Builder instance to create the configuration.
      */
-    EPSConfiguration(
-            @NonNull Locale shopperLocale,
-            @NonNull Environment environment,
-            @NonNull String clientKey
-    ) {
-        super(shopperLocale, environment, clientKey);
+    EPSConfiguration(@NonNull Builder builder) {
+        super(builder.getBuilderShopperLocale(), builder.getBuilderEnvironment(), builder.getBuilderClientKey());
     }
 
     EPSConfiguration(@NonNull Parcel in) {
@@ -89,7 +84,7 @@ public class EPSConfiguration extends IssuerListConfiguration {
         @NonNull
         @Override
         public EPSConfiguration buildInternal() {
-            return new EPSConfiguration(getBuilderShopperLocale(), getBuilderEnvironment(), getBuilderClientKey());
+            return new EPSConfiguration(this);
         }
     }
 }

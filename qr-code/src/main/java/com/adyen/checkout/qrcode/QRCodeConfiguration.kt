@@ -31,7 +31,7 @@ class QRCodeConfiguration : Configuration {
         }
     }
 
-    internal constructor(shopperLocale: Locale, environment: Environment, clientKey: String) : super(shopperLocale, environment, clientKey)
+    internal constructor(builder: Builder) : super(builder.builderShopperLocale, builder.builderEnvironment, builder.builderClientKey)
     internal constructor(parcel: Parcel) : super(parcel)
 
     /**
@@ -64,7 +64,7 @@ class QRCodeConfiguration : Configuration {
         }
 
         override fun buildInternal(): QRCodeConfiguration {
-            return QRCodeConfiguration(builderShopperLocale, builderEnvironment, builderClientKey)
+            return QRCodeConfiguration(this)
         }
     }
 }
