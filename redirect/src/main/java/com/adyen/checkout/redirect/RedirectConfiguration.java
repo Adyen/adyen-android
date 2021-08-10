@@ -32,11 +32,8 @@ public class RedirectConfiguration extends Configuration {
         }
     };
 
-    protected RedirectConfiguration(
-            @NonNull Locale shopperLocale,
-            @NonNull Environment environment,
-            @NonNull String clientKey) {
-        super(shopperLocale, environment, clientKey);
+    protected RedirectConfiguration(@NonNull Builder builder) {
+        super(builder.getBuilderShopperLocale(), builder.getBuilderEnvironment(), builder.getBuilderClientKey());
     }
 
     protected RedirectConfiguration(@NonNull Parcel in) {
@@ -84,7 +81,7 @@ public class RedirectConfiguration extends Configuration {
         @NonNull
         @Override
         protected RedirectConfiguration buildInternal() {
-            return new RedirectConfiguration(getBuilderShopperLocale(), getBuilderEnvironment(), getBuilderClientKey());
+            return new RedirectConfiguration(this);
         }
     }
 }

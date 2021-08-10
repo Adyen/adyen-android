@@ -61,41 +61,21 @@ public class CardConfiguration extends Configuration {
     };
 
     /**
-     * @param shopperLocale                     The locale that should be used to display strings and layouts. Can differ from device default.
-     * @param environment                       The environment to be used to make network calls.
-     * @param shopperReference                  The unique identifier of the shopper.
-     * @param holderNameRequired                If the holder name of the card should be shown as a required field.
-     * @param showStorePaymentField             If the component should show the option to store the card for later use.
-     * @param supportCardTypes                  The list of supported card brands to be shown to the user.
-     * @param hideCvc                           Hides the CVC field on the payment flow so that it's not required.
-     * @param hideCvcStoredCard                 Hides the CVC field on the stored payment flow so that it's not required.
-     * @param socialSecurityNumberVisibility    Visibility of CPF/CNPJ field
-     * @param kcpAuthVisibility                 Visibility of KCP Authentication fields
+     * @param builder The Builder instance to create the configuration.
      */
-    @SuppressWarnings("checkstyle:ParameterNumber")
     CardConfiguration(
-            @NonNull Locale shopperLocale,
-            @NonNull Environment environment,
-            @NonNull String clientKey,
-            boolean holderNameRequired,
-            @NonNull String shopperReference,
-            boolean showStorePaymentField,
-            @NonNull List<CardType> supportCardTypes,
-            boolean hideCvc,
-            boolean hideCvcStoredCard,
-            SocialSecurityNumberVisibility socialSecurityNumberVisibility,
-            KCPAuthVisibility kcpAuthVisibility
+            Builder builder
     ) {
-        super(shopperLocale, environment, clientKey);
+        super(builder.getBuilderShopperLocale(), builder.getBuilderEnvironment(), builder.getBuilderClientKey());
 
-        mHolderNameRequired = holderNameRequired;
-        mSupportedCardTypes = supportCardTypes;
-        mShopperReference = shopperReference;
-        mShowStorePaymentField = showStorePaymentField;
-        mHideCvc = hideCvc;
-        mHideCvcStoredCard = hideCvcStoredCard;
-        mSocialSecurityNumberVisibility = socialSecurityNumberVisibility;
-        mKcpAuthVisibility = kcpAuthVisibility;
+        mHolderNameRequired = builder.mBuilderHolderNameRequired;
+        mSupportedCardTypes = builder.mBuilderSupportedCardTypes;
+        mShopperReference = builder.mShopperReference;
+        mShowStorePaymentField = builder.mBuilderShowStorePaymentField;
+        mHideCvc = builder.mBuilderHideCvc;
+        mHideCvcStoredCard = builder.mBuilderHideCvcStoredCard;
+        mSocialSecurityNumberVisibility = builder.mBuilderSocialSecurityNumberVisibility;
+        mKcpAuthVisibility = builder.mBuilderKcpAuthVisibility;
     }
 
     CardConfiguration(@NonNull Parcel in) {
@@ -345,19 +325,7 @@ public class CardConfiguration extends Configuration {
          */
         @NonNull
         protected CardConfiguration buildInternal() {
-            return new CardConfiguration(
-                    getBuilderShopperLocale(),
-                    getBuilderEnvironment(),
-                    getBuilderClientKey(),
-                    mBuilderHolderNameRequired,
-                    mShopperReference,
-                    mBuilderShowStorePaymentField,
-                    mBuilderSupportedCardTypes,
-                    mBuilderHideCvc,
-                    mBuilderHideCvcStoredCard,
-                    mBuilderSocialSecurityNumberVisibility,
-                    mBuilderKcpAuthVisibility
-            );
+            return new CardConfiguration(this);
         }
     }
 

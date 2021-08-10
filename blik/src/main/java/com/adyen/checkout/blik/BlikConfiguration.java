@@ -32,12 +32,8 @@ public class BlikConfiguration extends Configuration {
         }
     };
 
-    BlikConfiguration(
-            @NonNull Locale shopperLocale,
-            @NonNull Environment environment,
-            @NonNull String clientKey
-    ) {
-        super(shopperLocale, environment, clientKey);
+    BlikConfiguration(@NonNull Builder builder) {
+        super(builder.getBuilderShopperLocale(), builder.getBuilderEnvironment(), builder.getBuilderClientKey());
     }
 
     BlikConfiguration(@NonNull Parcel in) {
@@ -85,7 +81,7 @@ public class BlikConfiguration extends Configuration {
         @NonNull
         @Override
         protected BlikConfiguration buildInternal() {
-            return new BlikConfiguration(getBuilderShopperLocale(), getBuilderEnvironment(), getBuilderClientKey());
+            return new BlikConfiguration(this);
         }
     }
 }

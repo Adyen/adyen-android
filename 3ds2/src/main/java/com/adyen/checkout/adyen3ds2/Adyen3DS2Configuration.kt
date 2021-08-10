@@ -17,11 +17,7 @@ import java.util.Locale
 
 class Adyen3DS2Configuration : Configuration {
 
-    private constructor(
-        shopperLocale: Locale,
-        environment: Environment,
-        clientKey: String
-    ) : super(shopperLocale, environment, clientKey)
+    private constructor(builder: Builder) : super(builder.builderShopperLocale, builder.builderEnvironment, builder.builderClientKey)
 
     private constructor(inputParcel: Parcel) : super(inputParcel)
 
@@ -56,7 +52,7 @@ class Adyen3DS2Configuration : Configuration {
         }
 
         override fun buildInternal(): Adyen3DS2Configuration {
-            return Adyen3DS2Configuration(builderShopperLocale, builderEnvironment, builderClientKey)
+            return Adyen3DS2Configuration(this)
         }
     }
 
