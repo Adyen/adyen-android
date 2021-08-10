@@ -12,12 +12,12 @@ import java.util.*
  *
  * @param shopperLocale The Locale of the shopper.
  * @param environment   The {@link Environment} to be used for network calls to Adyen.
- * @param clientKey Your Client Key used for network calls from the SDK to Adyen.
+ * @param clientKey     Your Client Key used for network calls from the SDK to Adyen.
  */
 abstract class BaseConfigurationBuilder<ConfigurationT : Configuration>(
-    protected var builderShopperLocale: Locale,
-    protected var builderEnvironment: Environment,
-    protected var builderClientKey: String
+    var builderShopperLocale: Locale,
+    var builderEnvironment: Environment,
+    var builderClientKey: String
 ) {
 
     init {
