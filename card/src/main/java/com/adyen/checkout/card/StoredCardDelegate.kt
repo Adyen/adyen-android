@@ -36,7 +36,6 @@ class StoredCardDelegate(
             DetectedCardType(
                 cardType,
                 isReliable = true,
-                showExpiryDate = true,
                 enableLuhnCheck = true,
                 cvcPolicy = when {
                     cardConfiguration.isHideCvcStoredCard || noCvcBrands.contains(cardType) -> Brand.FieldPolicy.HIDDEN

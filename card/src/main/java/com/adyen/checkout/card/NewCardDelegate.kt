@@ -143,7 +143,6 @@ class NewCardDelegate(
         return DetectedCardType(
             cardType,
             isReliable = false,
-            showExpiryDate = true,
             enableLuhnCheck = true,
             cvcPolicy = when {
                 noCvcBrands.contains(cardType) -> Brand.FieldPolicy.HIDDEN
