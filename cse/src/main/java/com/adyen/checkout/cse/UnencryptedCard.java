@@ -116,7 +116,6 @@ public class UnencryptedCard {
         @NonNull
         public Builder setNumber(@NonNull String number) {
             this.mNumber = removeWhiteSpaces(number);
-
             return this;
         }
 
@@ -129,7 +128,6 @@ public class UnencryptedCard {
         @NonNull
         public Builder setExpiryMonth(@NonNull String expiryMonth) {
             this.mExpiryMonth = removeWhiteSpaces(expiryMonth);
-
             return this;
         }
 
@@ -142,7 +140,6 @@ public class UnencryptedCard {
         @NonNull
         public Builder setExpiryYear(@NonNull String expiryYear) {
             this.mExpiryYear = removeWhiteSpaces(expiryYear);
-
             return this;
         }
 
@@ -155,7 +152,6 @@ public class UnencryptedCard {
         @NonNull
         public Builder setCvc(@NonNull String cvc) {
             this.mCvc = removeWhiteSpaces(cvc);
-
             return this;
         }
 
@@ -168,7 +164,6 @@ public class UnencryptedCard {
         @NonNull
         public Builder setHolderName(@NonNull String holderName) {
             this.mCardHolderName = trimAndRemoveMultipleWhiteSpaces(holderName);
-
             return this;
         }
 
@@ -181,7 +176,6 @@ public class UnencryptedCard {
         @NonNull
         public Builder setGenerationTime(@NonNull Date generationTime) {
             this.mGenerationTime = generationTime;
-
             return this;
         }
 

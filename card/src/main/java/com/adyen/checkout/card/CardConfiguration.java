@@ -48,6 +48,7 @@ public class CardConfiguration extends Configuration {
     private final boolean mHideCvc;
     private final boolean mHideCvcStoredCard;
     private final SocialSecurityNumberVisibility mSocialSecurityNumberVisibility;
+    private final KCPAuthVisibility mKcpAuthVisibility;
 
     public static final Parcelable.Creator<CardConfiguration> CREATOR = new Parcelable.Creator<CardConfiguration>() {
         public CardConfiguration createFromParcel(@NonNull Parcel in) {
@@ -74,6 +75,7 @@ public class CardConfiguration extends Configuration {
         mHideCvc = builder.mBuilderHideCvc;
         mHideCvcStoredCard = builder.mBuilderHideCvcStoredCard;
         mSocialSecurityNumberVisibility = builder.mBuilderSocialSecurityNumberVisibility;
+        mKcpAuthVisibility = builder.mBuilderKcpAuthVisibility;
     }
 
     CardConfiguration(@NonNull Parcel in) {
@@ -85,6 +87,7 @@ public class CardConfiguration extends Configuration {
         mHideCvc = ParcelUtils.readBoolean(in);
         mHideCvcStoredCard = ParcelUtils.readBoolean(in);
         mSocialSecurityNumberVisibility = SocialSecurityNumberVisibility.valueOf(in.readString());
+        mKcpAuthVisibility = KCPAuthVisibility.valueOf(in.readString());
     }
 
     @Override
@@ -97,6 +100,7 @@ public class CardConfiguration extends Configuration {
         ParcelUtils.writeBoolean(dest, mHideCvc);
         ParcelUtils.writeBoolean(dest, mHideCvcStoredCard);
         dest.writeString(mSocialSecurityNumberVisibility.name());
+        dest.writeString(mKcpAuthVisibility.name());
     }
 
     /**
@@ -145,6 +149,11 @@ public class CardConfiguration extends Configuration {
         return mSocialSecurityNumberVisibility;
     }
 
+    @Nullable
+    public KCPAuthVisibility getKcpAuthVisibility() {
+        return mKcpAuthVisibility;
+    }
+
     /**
      * Builder to create a {@link CardConfiguration}.
      */
@@ -157,6 +166,7 @@ public class CardConfiguration extends Configuration {
         private boolean mBuilderHideCvc;
         private boolean mBuilderHideCvcStoredCard;
         private SocialSecurityNumberVisibility mBuilderSocialSecurityNumberVisibility = SocialSecurityNumberVisibility.HIDE;
+        private KCPAuthVisibility mBuilderKcpAuthVisibility = KCPAuthVisibility.HIDE;
 
         /**
          * Constructor of Card Configuration Builder with instance of CardConfiguration.
@@ -170,6 +180,7 @@ public class CardConfiguration extends Configuration {
             mBuilderHideCvc = cardConfiguration.isHideCvc();
             mBuilderHideCvcStoredCard = cardConfiguration.isHideCvcStoredCard();
             mBuilderSocialSecurityNumberVisibility = cardConfiguration.getSocialSecurityNumberVisibility();
+            mBuilderKcpAuthVisibility = cardConfiguration.getKcpAuthVisibility();
         }
 
         /**
@@ -298,6 +309,12 @@ public class CardConfiguration extends Configuration {
         @NonNull
         public Builder setSocialSecurityNumberVisibility(@NonNull SocialSecurityNumberVisibility socialSecurityNumberVisibility) {
             mBuilderSocialSecurityNumberVisibility = socialSecurityNumberVisibility;
+            return this;
+        }
+
+        @NonNull
+        public Builder setKcpAuthVisibility(@NonNull KCPAuthVisibility kcpAuthVisibility) {
+            mBuilderKcpAuthVisibility = kcpAuthVisibility;
             return this;
         }
 

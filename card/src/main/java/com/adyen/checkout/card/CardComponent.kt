@@ -8,6 +8,7 @@
 
 package com.adyen.checkout.card
 
+import androidx.annotation.StringRes
 import androidx.lifecycle.viewModelScope
 import com.adyen.checkout.card.api.model.Brand
 import com.adyen.checkout.card.data.CardType
@@ -24,6 +25,7 @@ import com.adyen.checkout.core.log.LogUtil
 import com.adyen.checkout.core.log.Logger
 import com.adyen.checkout.cse.CardEncrypter
 import com.adyen.checkout.cse.EncryptedCard
+import com.adyen.checkout.cse.GenericEncrypter
 import com.adyen.checkout.cse.UnencryptedCard
 import com.adyen.checkout.cse.exception.EncryptionException
 import kotlinx.coroutines.flow.launchIn
@@ -68,6 +70,8 @@ class CardComponent private constructor(
                             securityCode = securityCodeState.value,
                             holderName = holderNameState.value,
                             socialSecurityNumber = socialSecurityNumberState.value,
+                            kcpBirthDateOrTaxNumber = kcpBirthDateOrTaxNumberState.value,
+                            kcpCardPassword = kcpCardPasswordState.value,
                             isStorePaymentSelected = isStoredPaymentMethodEnable,
                             detectedCardTypes = it
                         )
@@ -114,6 +118,8 @@ class CardComponent private constructor(
             securityCode = inputData.securityCode,
             holderName = inputData.holderName,
             socialSecurityNumber = inputData.socialSecurityNumber,
+            kcpBirthDateOrTaxNumber = inputData.kcpBirthDateOrTaxNumber,
+            kcpCardPassword = inputData.kcpCardPassword,
             isStorePaymentSelected = inputData.isStorePaymentSelected,
             detectedCardTypes = detectedCardTypes
         )
@@ -126,6 +132,8 @@ class CardComponent private constructor(
         securityCode: String,
         holderName: String,
         socialSecurityNumber: String,
+        kcpBirthDateOrTaxNumber: String,
+        kcpCardPassword: String,
         isStorePaymentSelected: Boolean,
         detectedCardTypes: List<DetectedCardType>
     ): CardOutputData {
@@ -136,10 +144,13 @@ class CardComponent private constructor(
             cardDelegate.validateSecurityCode(securityCode, firstDetectedType),
             cardDelegate.validateHolderName(holderName),
             cardDelegate.validateSocialSecurityNumber(socialSecurityNumber),
+            cardDelegate.validateKcpBirthDateOrTaxNumber(kcpBirthDateOrTaxNumber),
+            cardDelegate.validateKcpCardPassword(kcpCardPassword),
             isStorePaymentSelected,
             makeCvcUIState(firstDetectedType?.cvcPolicy),
             detectedCardTypes,
-            cardDelegate.isSocialSecurityNumberRequired()
+            cardDelegate.isSocialSecurityNumberRequired(),
+            cardDelegate.isKCPAuthRequired()
         )
     }
 
@@ -244,6 +255,18 @@ class CardComponent private constructor(
             cardPaymentMethod.holderName = stateOutputData.holderNameState.value
         }
 
+        if (cardDelegate.isKCPAuthRequired()) {
+            publicKey?.let { publicKey ->
+                cardPaymentMethod.encryptedPassword = GenericEncrypter.encryptField(
+                    GenericEncrypter.KCP_PASSWORD_KEY,
+                    stateOutputData.kcpCardPasswordState.value,
+                    publicKey
+                )
+            } ?: throw CheckoutException("Encryption failed because public key cannot be found.")
+
+            cardPaymentMethod.taxNumber = stateOutputData.kcpBirthDateOrTaxNumberState.value
+        }
+
         val paymentComponentData = PaymentComponentData<CardPaymentMethod>().apply {
             paymentMethod = cardPaymentMethod
             setStorePaymentMethod(stateOutputData.isStoredPaymentMethodEnable)
@@ -274,12 +297,19 @@ class CardComponent private constructor(
         return storedPaymentInputData
     }
 
-    fun isHolderNameRequire(): Boolean {
+    fun isHolderNameRequired(): Boolean {
         return cardDelegate.isHolderNameRequired()
     }
 
     fun showStorePaymentField(): Boolean {
         return configuration.isShowStorePaymentFieldEnable
+    }
+
+    @StringRes fun getKcpBirthDateOrTaxNumberHint(input: String): Int {
+        return when {
+            input.length > KcpValidationUtils.KCP_BIRTH_DATE_LENGTH -> R.string.checkout_kcp_tax_number_hint
+            else -> R.string.checkout_kcp_birth_date_or_tax_number_hint
+        }
     }
 
     companion object {

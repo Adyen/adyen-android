@@ -9,7 +9,6 @@
 package com.adyen.checkout.cse;
 
 import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
 import androidx.annotation.WorkerThread;
 
 import com.adyen.checkout.core.exception.NoConstructorException;
@@ -32,11 +31,9 @@ public final class CardEncrypter {
     private static final String EXPIRY_YEAR_KEY = "expiryYear";
     private static final String CVC_KEY = "cvc";
     private static final String HOLDER_NAME_KEY = "holderName";
-    private static final String GENERATION_TIME_KEY = "generationtime";
+    static final String GENERATION_TIME_KEY = "generationtime";
 
     private static final String BIN_KEY = "binValue";
-
-    private static final String ENCRYPTION_FAILED_MESSAGE = "Encryption failed.";
 
     static final SimpleDateFormat GENERATION_DATE_FORMAT;
 
@@ -64,51 +61,33 @@ public final class CardEncrypter {
             @NonNull final String publicKey
     ) throws EncryptionException {
         try {
-            final String formattedGenerationTime =
-                    GENERATION_DATE_FORMAT.format(assureGenerationTime(unencryptedCard.getGenerationTime()));
-            final ClientSideEncrypter encrypter = new ClientSideEncrypter(publicKey);
-
             final String encryptedNumber;
             final String encryptedExpiryMonth;
             final String encryptedExpiryYear;
             final String encryptedSecurityCode;
 
-            JSONObject jsonToEncrypt;
-
             if (unencryptedCard.getNumber() != null) {
-                try {
-                    jsonToEncrypt = new JSONObject();
-                    jsonToEncrypt.put(CARD_NUMBER_KEY, unencryptedCard.getNumber());
-                    jsonToEncrypt.put(GENERATION_TIME_KEY, formattedGenerationTime);
-
-                    encryptedNumber = encrypter.encrypt(jsonToEncrypt.toString());
-                } catch (JSONException e) {
-                    throw new EncryptionException(ENCRYPTION_FAILED_MESSAGE, e);
-                }
+                encryptedNumber = GenericEncrypter.encryptField(
+                        CARD_NUMBER_KEY,
+                        unencryptedCard.getNumber(),
+                        publicKey
+                );
             } else {
                 encryptedNumber = null;
             }
 
             if (unencryptedCard.getExpiryMonth() != null && unencryptedCard.getExpiryYear() != null) {
-                try {
-                    jsonToEncrypt = new JSONObject();
-                    jsonToEncrypt.put(EXPIRY_MONTH_KEY, unencryptedCard.getExpiryMonth());
-                    jsonToEncrypt.put(GENERATION_TIME_KEY, formattedGenerationTime);
+                encryptedExpiryMonth = GenericEncrypter.encryptField(
+                        EXPIRY_MONTH_KEY,
+                        unencryptedCard.getExpiryMonth(),
+                        publicKey
+                );
 
-                    encryptedExpiryMonth = encrypter.encrypt(jsonToEncrypt.toString());
-                } catch (JSONException e) {
-                    throw new EncryptionException(ENCRYPTION_FAILED_MESSAGE, e);
-                }
-
-                try {
-                    jsonToEncrypt = new JSONObject();
-                    jsonToEncrypt.put(EXPIRY_YEAR_KEY, unencryptedCard.getExpiryYear());
-                    jsonToEncrypt.put(GENERATION_TIME_KEY, formattedGenerationTime);
-
-                    encryptedExpiryYear = encrypter.encrypt(jsonToEncrypt.toString());
-                } catch (JSONException e) {
-                    throw new EncryptionException(ENCRYPTION_FAILED_MESSAGE, e);
-                }
+                encryptedExpiryYear = GenericEncrypter.encryptField(
+                        EXPIRY_YEAR_KEY,
+                        unencryptedCard.getExpiryYear(),
+                        publicKey
+                );
             } else if (unencryptedCard.getExpiryMonth() == null && unencryptedCard.getExpiryYear() == null) {
                 encryptedExpiryMonth = null;
                 encryptedExpiryYear = null;
@@ -117,15 +96,7 @@ public final class CardEncrypter {
             }
 
             if (unencryptedCard.getCvc() != null) {
-                try {
-                    jsonToEncrypt = new JSONObject();
-                    jsonToEncrypt.put(CVC_KEY, unencryptedCard.getCvc());
-                    jsonToEncrypt.put(GENERATION_TIME_KEY, formattedGenerationTime);
-
-                    encryptedSecurityCode = encrypter.encrypt(jsonToEncrypt.toString());
-                } catch (JSONException e) {
-                    throw new EncryptionException(ENCRYPTION_FAILED_MESSAGE, e);
-                }
+                encryptedSecurityCode = GenericEncrypter.encryptField(CVC_KEY, unencryptedCard.getCvc(), publicKey);
             } else {
                 encryptedSecurityCode = null;
             }
@@ -159,8 +130,9 @@ public final class CardEncrypter {
             cardJson.put(EXPIRY_YEAR_KEY, unencryptedCard.getExpiryYear());
             cardJson.put(CVC_KEY, unencryptedCard.getCvc());
             cardJson.put(HOLDER_NAME_KEY, unencryptedCard.getCardHolderName());
-            final Date generationTime = assureGenerationTime(unencryptedCard.getGenerationTime());
-            cardJson.put(GENERATION_TIME_KEY, GENERATION_DATE_FORMAT.format(generationTime));
+
+            final String formattedGenerationTime = GenericEncrypter.makeGenerationTime(unencryptedCard.getGenerationTime());
+            cardJson.put(GENERATION_TIME_KEY, formattedGenerationTime);
 
             final ClientSideEncrypter encrypter = new ClientSideEncrypter(publicKey);
             return encrypter.encrypt(cardJson.toString());
@@ -183,20 +155,12 @@ public final class CardEncrypter {
         try {
             final JSONObject binJson = new JSONObject();
             binJson.put(BIN_KEY, bin);
-            binJson.put(GENERATION_TIME_KEY, GENERATION_DATE_FORMAT.format(assureGenerationTime(new Date())));
+            binJson.put(GENERATION_TIME_KEY, GenericEncrypter.makeGenerationTime(new Date()));
 
             final ClientSideEncrypter encrypter = new ClientSideEncrypter(publicKey);
             return encrypter.encrypt(binJson.toString());
         } catch (JSONException e) {
             throw new EncryptionException("Failed to created encrypted JSON data.", e);
         }
-    }
-
-    private static Date assureGenerationTime(@Nullable Date generationTime) {
-        if (generationTime == null) {
-            return new Date();
-        }
-
-        return generationTime;
     }
 }
