@@ -8,6 +8,7 @@
 
 package com.adyen.checkout.card
 
+import com.adyen.checkout.card.api.model.Brand
 import com.adyen.checkout.card.data.CardType
 import com.adyen.checkout.card.data.DetectedCardType
 import com.adyen.checkout.card.data.ExpiryDate
@@ -25,7 +26,7 @@ abstract class CardDelegate(
     protected val noCvcBrands: Set<CardType> = hashSetOf(CardType.BCMC)
 
     abstract fun validateCardNumber(cardNumber: String): FieldState<String>
-    abstract fun validateExpiryDate(expiryDate: ExpiryDate): FieldState<ExpiryDate>
+    abstract fun validateExpiryDate(expiryDate: ExpiryDate, expiryDatePolicy: Brand.FieldPolicy?): FieldState<ExpiryDate>
     abstract fun validateSecurityCode(securityCode: String, cardType: DetectedCardType? = null): FieldState<String>
     abstract fun validateHolderName(holderName: String): FieldState<String>
     abstract fun validateSocialSecurityNumber(socialSecurityNumber: String): FieldState<String>

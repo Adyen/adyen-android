@@ -47,15 +47,20 @@ class NewCardDelegate(
         return CardValidationUtils.validateCardNumber(cardNumber)
     }
 
-    override fun validateExpiryDate(expiryDate: ExpiryDate): FieldState<ExpiryDate> {
-        return CardValidationUtils.validateExpiryDate(expiryDate)
+    override fun validateExpiryDate(expiryDate: ExpiryDate, expiryDatePolicy: Brand.FieldPolicy?): FieldState<ExpiryDate> {
+        val isEmptyInput = expiryDate == ExpiryDate.EMPTY_DATE
+        return if (isFieldRequired(expiryDatePolicy) || !isEmptyInput) {
+            CardValidationUtils.validateExpiryDate(expiryDate)
+        } else {
+            FieldState(expiryDate, Validation.Valid)
+        }
     }
 
     override fun validateSecurityCode(
         securityCode: String,
         cardType: DetectedCardType?
     ): FieldState<String> {
-        return if (cardConfiguration.isHideCvc) {
+        return if (cardConfiguration.isHideCvc || (!isFieldRequired(cardType?.cvcPolicy) && securityCode.isEmpty())) {
             FieldState(
                 securityCode,
                 Validation.Valid
@@ -150,5 +155,9 @@ class NewCardDelegate(
             },
             expiryDatePolicy = Brand.FieldPolicy.REQUIRED
         )
+    }
+
+    private fun isFieldRequired(fieldPolicy: Brand.FieldPolicy?): Boolean {
+        return fieldPolicy == Brand.FieldPolicy.REQUIRED
     }
 }

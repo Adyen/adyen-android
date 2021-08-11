@@ -59,7 +59,7 @@ class StoredCardDelegate(
         )
     }
 
-    override fun validateExpiryDate(expiryDate: ExpiryDate): FieldState<ExpiryDate> {
+    override fun validateExpiryDate(expiryDate: ExpiryDate, expiryDatePolicy: Brand.FieldPolicy?): FieldState<ExpiryDate> {
         return FieldState(
             expiryDate,
             Validation.Valid
@@ -117,7 +117,7 @@ class StoredCardDelegate(
         storedCardInputData.cardNumber = storedPaymentMethod.lastFour.orEmpty()
 
         try {
-            val storedDate = ExpiryDate(storedPaymentMethod.expiryMonth.orEmpty().toInt(), storedPaymentMethod.expiryYear.orEmpty().toInt())
+            val storedDate = ExpiryDate(storedPaymentMethod.expiryMonth.orEmpty().toInt(), storedPaymentMethod.expiryYear.orEmpty().toInt(), true)
             storedCardInputData.expiryDate = storedDate
         } catch (e: NumberFormatException) {
             Logger.e(TAG, "Failed to parse stored Date", e)
