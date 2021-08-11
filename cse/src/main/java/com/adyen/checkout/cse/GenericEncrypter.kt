@@ -8,7 +8,7 @@ import java.util.*
 
 object GenericEncrypter {
 
-    const val ENCRYPTION_FAILED_MESSAGE = "Encryption failed."
+    private const val ENCRYPTION_FAILED_MESSAGE = "Encryption failed."
     private val GENERATION_DATE_FORMAT = SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSS'Z'", Locale.US).apply {
         timeZone = TimeZone.getTimeZone("UTC")
     }
@@ -19,14 +19,13 @@ object GenericEncrypter {
     fun encryptField(
         encryptionKey: String,
         fieldToEncrypt: Any,
-        publicKey: String,
-        generationTime: String = makeGenerationTime()
+        publicKey: String
     ): String {
         val encrypter = ClientSideEncrypter(publicKey)
         return try {
             val jsonToEncrypt = JSONObject()
             jsonToEncrypt.put(encryptionKey, fieldToEncrypt)
-            jsonToEncrypt.put(CardEncrypter.GENERATION_TIME_KEY, generationTime)
+            jsonToEncrypt.put(CardEncrypter.GENERATION_TIME_KEY, makeGenerationTime())
             encrypter.encrypt(jsonToEncrypt.toString())
         } catch (e: JSONException) {
             throw EncryptionException(ENCRYPTION_FAILED_MESSAGE, e)

@@ -61,8 +61,6 @@ public final class CardEncrypter {
             @NonNull final String publicKey
     ) throws EncryptionException {
         try {
-            final String formattedGenerationTime = GenericEncrypter.makeGenerationTime(unencryptedCard.getGenerationTime());
-
             final String encryptedNumber;
             final String encryptedExpiryMonth;
             final String encryptedExpiryYear;
@@ -72,8 +70,7 @@ public final class CardEncrypter {
                 encryptedNumber = GenericEncrypter.encryptField(
                         CARD_NUMBER_KEY,
                         unencryptedCard.getNumber(),
-                        publicKey,
-                        formattedGenerationTime
+                        publicKey
                 );
             } else {
                 encryptedNumber = null;
@@ -83,15 +80,13 @@ public final class CardEncrypter {
                 encryptedExpiryMonth = GenericEncrypter.encryptField(
                         EXPIRY_MONTH_KEY,
                         unencryptedCard.getExpiryMonth(),
-                        publicKey,
-                        formattedGenerationTime
+                        publicKey
                 );
 
                 encryptedExpiryYear = GenericEncrypter.encryptField(
                         EXPIRY_YEAR_KEY,
                         unencryptedCard.getExpiryYear(),
-                        publicKey,
-                        formattedGenerationTime
+                        publicKey
                 );
             } else if (unencryptedCard.getExpiryMonth() == null && unencryptedCard.getExpiryYear() == null) {
                 encryptedExpiryMonth = null;
@@ -101,7 +96,7 @@ public final class CardEncrypter {
             }
 
             if (unencryptedCard.getCvc() != null) {
-                encryptedSecurityCode = GenericEncrypter.encryptField(CVC_KEY, unencryptedCard.getCvc(), publicKey, formattedGenerationTime);
+                encryptedSecurityCode = GenericEncrypter.encryptField(CVC_KEY, unencryptedCard.getCvc(), publicKey);
             } else {
                 encryptedSecurityCode = null;
             }
