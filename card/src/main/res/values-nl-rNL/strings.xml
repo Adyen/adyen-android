@@ -6,7 +6,7 @@
   ~ Created by ran on 13/3/2019.
   -->
 
-<resources>
+<resources xmlns:tools="http://schemas.android.com/tools">
     <string name="checkout_card_number_hint">Kaartnummer</string>
     <string name="checkout_card_holder_hint">Naam op kaart</string>
     <string name="checkout_card_expiry_date_hint">Vervaldatum</string>
@@ -21,7 +21,7 @@
     <string name="checkout_expiry_date_not_valid">Ongeldige vervaldatum</string>
     <string name="checkout_security_code_not_valid">Ongeldige CVC-/CVV-indeling</string>
     <string name="checkout_holder_name_not_valid">Naam houder ongeldig</string>
-    <string name="checkout_social_security_number_not_valid">Ongeldige invoer</string>
+    <string name="checkout_social_security_number_not_valid" tools:ignore="DuplicateStrings">Ongeldige invoer</string>
     <string name="checkout_kcp_birth_date_or_tax_number_invalid">Geboortedatum of bedrijfsregistratienummer van kaarthouder is ongeldig</string>
     <string name="checkout_kcp_password_invalid">Ongeldig wachtwoord</string>
     <string name="checkout_card_postal_not_valid">Ongeldige invoer</string>
