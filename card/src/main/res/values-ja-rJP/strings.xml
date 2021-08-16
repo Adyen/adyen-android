@@ -10,6 +10,7 @@
     <string name="checkout_card_number_hint">カード番号</string>
     <string name="checkout_card_holder_hint">カード上の名前</string>
     <string name="checkout_card_expiry_date_hint">有効期限</string>
+    <string name="checkout_card_expiry_date_optional_hint">有効期限（任意）</string>
     <string name="checkout_card_security_code_hint">セキュリティーコード (CVC)</string>
     <string name="checkout_card_security_code_optional_hint">セキュリティーコード(任意)</string>
 

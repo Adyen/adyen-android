@@ -10,7 +10,8 @@
     <string name="checkout_card_number_hint">Kaartnummer</string>
     <string name="checkout_card_holder_hint">Naam op kaart</string>
     <string name="checkout_card_expiry_date_hint">Vervaldatum</string>
-    <string name="checkout_card_security_code_hint">Verificatiecode</string>
+    <string name="checkout_card_expiry_date_optional_hint">Vervaldatum (optioneel)</string>
+    <string name="checkout_card_security_code_hint">CVC / CVV</string>
     <string name="checkout_card_security_code_optional_hint">CVC / CVV (optioneel)</string>
 
     <string name="checkout_card_number_not_valid">Ongeldig kaartnummer</string>

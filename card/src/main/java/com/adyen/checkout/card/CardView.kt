@@ -338,8 +338,7 @@ class CardView @JvmOverloads constructor(context: Context, attrs: AttributeSet? 
             }
             InputFieldUIState.OPTIONAL -> {
                 binding.textInputLayoutExpiryDate.isVisible = true
-                // FIXME update it after adding translations
-                binding.textInputLayoutExpiryDate.setHint(R.string.checkout_card_security_code_optional_hint)
+                binding.textInputLayoutExpiryDate.setHint(R.string.checkout_card_expiry_date_optional_hint)
             }
             InputFieldUIState.HIDDEN -> {
                 binding.textInputLayoutExpiryDate.isVisible = false

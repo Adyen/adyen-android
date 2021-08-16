@@ -10,6 +10,7 @@
     <string name="checkout_card_number_hint">Kortnummer</string>
     <string name="checkout_card_holder_hint">Navn på kort</string>
     <string name="checkout_card_expiry_date_hint">Udløbsdato</string>
+    <string name="checkout_card_expiry_date_optional_hint">Udløbsdato (valgfrit)</string>
     <string name="checkout_card_security_code_hint">CVC / CVV</string>
     <string name="checkout_card_security_code_optional_hint">CVC / CVV (valgfrit)</string>
 
