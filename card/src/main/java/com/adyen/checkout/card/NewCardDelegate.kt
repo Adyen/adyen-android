@@ -132,6 +132,10 @@ class NewCardDelegate(
         return cardConfiguration.isHolderNameRequired
     }
 
+    override fun isPostalCodeRequired(): Boolean {
+        return cardConfiguration.addressVisibility == CardConfiguration.AddressVisibility.POSTAL_CODE
+    }
+
     override fun detectCardType(
         cardNumber: String,
         publicKey: String?,

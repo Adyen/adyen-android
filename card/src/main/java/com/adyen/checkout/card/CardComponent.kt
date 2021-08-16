@@ -16,6 +16,7 @@ import com.adyen.checkout.card.data.DetectedCardType
 import com.adyen.checkout.card.data.ExpiryDate
 import com.adyen.checkout.components.StoredPaymentComponentProvider
 import com.adyen.checkout.components.base.BasePaymentComponent
+import com.adyen.checkout.components.model.payments.request.Address
 import com.adyen.checkout.components.model.payments.request.CardPaymentMethod
 import com.adyen.checkout.components.model.payments.request.PaymentComponentData
 import com.adyen.checkout.components.util.PaymentMethodTypes
@@ -279,6 +280,10 @@ class CardComponent private constructor(
             if (cardDelegate.isSocialSecurityNumberRequired()) {
                 socialSecurityNumber = stateOutputData.socialSecurityNumberState.value
             }
+
+            if (cardDelegate.isPostalCodeRequired()) {
+                billingAddress = makeAddressData(stateOutputData)
+            }
         }
 
         val lastFour = cardNumber.takeLast(LAST_FOUR_LENGTH)
@@ -307,6 +312,17 @@ class CardComponent private constructor(
 
     fun showStorePaymentField(): Boolean {
         return configuration.isShowStorePaymentFieldEnable
+    }
+
+    fun makeAddressData(outputData: CardOutputData): Address {
+        return Address().apply {
+            postalCode = outputData.postalCodeState.value
+            street = Address.ADDRESS_NULL_PLACEHOLDER
+            stateOrProvince = Address.ADDRESS_NULL_PLACEHOLDER
+            houseNumberOrName = Address.ADDRESS_NULL_PLACEHOLDER
+            city = Address.ADDRESS_NULL_PLACEHOLDER
+            country = Address.ADDRESS_COUNTRY_NULL_PLACEHOLDER
+        }
     }
 
     @StringRes fun getKcpBirthDateOrTaxNumberHint(input: String): Int {

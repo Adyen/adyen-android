@@ -37,6 +37,7 @@ abstract class CardDelegate(
     abstract fun isKCPAuthRequired(): Boolean
     abstract fun requiresInput(): Boolean
     abstract fun isHolderNameRequired(): Boolean
+    abstract fun isPostalCodeRequired(): Boolean
     abstract fun detectCardType(cardNumber: String, publicKey: String?, coroutineScope: CoroutineScope): List<DetectedCardType>
 
     suspend fun fetchPublicKey(): String {

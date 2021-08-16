@@ -120,6 +120,10 @@ class StoredCardDelegate(
         return false
     }
 
+    override fun isPostalCodeRequired(): Boolean {
+        return false
+    }
+
     override fun detectCardType(
         cardNumber: String,
         publicKey: String?,
