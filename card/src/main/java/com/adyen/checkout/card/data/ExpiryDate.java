@@ -11,7 +11,7 @@ package com.adyen.checkout.card.data;
 public class ExpiryDate {
     public static final int EMPTY_VALUE = 0;
     public static final ExpiryDate EMPTY_DATE = new ExpiryDate(EMPTY_VALUE, EMPTY_VALUE, false);
-    public static final ExpiryDate EMPTY_DATE_WITH_INPUT = new ExpiryDate(EMPTY_VALUE, EMPTY_VALUE, true);
+    public static final ExpiryDate INVALID_DATE = new ExpiryDate(EMPTY_VALUE, EMPTY_VALUE, true);
 
     private final int mExpiryMonth;
     private final int mExpiryYear;

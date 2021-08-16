@@ -92,7 +92,7 @@ public class ExpiryDateInput extends AdyenTextInputEditText {
             return new ExpiryDate(calendar.get(Calendar.MONTH) + 1, calendar.get(Calendar.YEAR), true);
         } catch (ParseException e) {
             Logger.d(TAG, "getDate - value does not match expected pattern. " + e.getLocalizedMessage());
-            return getRawValue().isEmpty() ? ExpiryDate.EMPTY_DATE : ExpiryDate.EMPTY_DATE_WITH_INPUT;
+            return getRawValue().isEmpty() ? ExpiryDate.EMPTY_DATE : ExpiryDate.INVALID_DATE;
         }
     }
 
