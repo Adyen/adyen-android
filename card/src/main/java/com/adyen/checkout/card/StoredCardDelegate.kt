@@ -96,6 +96,10 @@ class StoredCardDelegate(
         return FieldState(kcpCardPassword, Validation.Valid)
     }
 
+    override fun validatePostalCode(postalCode: String): FieldState<String> {
+        return FieldState(postalCode, Validation.Valid)
+    }
+
     override fun isCvcHidden(): Boolean {
         return cardConfiguration.isHideCvcStoredCard || noCvcBrands.contains(cardType)
     }

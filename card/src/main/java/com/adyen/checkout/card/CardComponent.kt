@@ -72,6 +72,7 @@ class CardComponent private constructor(
                             socialSecurityNumber = socialSecurityNumberState.value,
                             kcpBirthDateOrTaxNumber = kcpBirthDateOrTaxNumberState.value,
                             kcpCardPassword = kcpCardPasswordState.value,
+                            postalCode = postalCodeState.value,
                             isStorePaymentSelected = isStoredPaymentMethodEnable,
                             detectedCardTypes = it
                         )
@@ -121,6 +122,7 @@ class CardComponent private constructor(
             kcpBirthDateOrTaxNumber = inputData.kcpBirthDateOrTaxNumber,
             kcpCardPassword = inputData.kcpCardPassword,
             isStorePaymentSelected = inputData.isStorePaymentSelected,
+            postalCode = inputData.postalCode,
             detectedCardTypes = detectedCardTypes
         )
     }
@@ -135,6 +137,7 @@ class CardComponent private constructor(
         kcpBirthDateOrTaxNumber: String,
         kcpCardPassword: String,
         isStorePaymentSelected: Boolean,
+        postalCode: String,
         detectedCardTypes: List<DetectedCardType>
     ): CardOutputData {
         val firstDetectedType = detectedCardTypes.firstOrNull()
@@ -146,6 +149,7 @@ class CardComponent private constructor(
             cardDelegate.validateSocialSecurityNumber(socialSecurityNumber),
             cardDelegate.validateKcpBirthDateOrTaxNumber(kcpBirthDateOrTaxNumber),
             cardDelegate.validateKcpCardPassword(kcpCardPassword),
+            cardDelegate.validatePostalCode(postalCode),
             isStorePaymentSelected,
             makeCvcUIState(firstDetectedType?.cvcPolicy),
             detectedCardTypes,
