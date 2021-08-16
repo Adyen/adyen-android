@@ -69,20 +69,13 @@ class DropInConfiguration : Configuration, Parcelable {
 
     @Suppress("LongParameterList")
     constructor(
-        shopperLocale: Locale,
-        environment: Environment,
-        clientKey: String,
-        availablePaymentConfigs: HashMap<String, Configuration>,
-        availableActionConfigs: HashMap<Class<*>, Configuration>,
-        serviceComponentName: ComponentName,
-        amount: Amount,
-        showPreselectedStoredPaymentMethod: Boolean
-    ) : super(shopperLocale, environment, clientKey) {
-        this.availablePaymentConfigs = availablePaymentConfigs
-        this.availableActionConfigs = availableActionConfigs
-        this.serviceComponentName = serviceComponentName
-        this.amount = amount
-        this.showPreselectedStoredPaymentMethod = showPreselectedStoredPaymentMethod
+        builder: Builder
+    ) : super(builder.shopperLocale, builder.environment, builder.clientKey) {
+        this.availablePaymentConfigs = builder.availablePaymentConfigs
+        this.availableActionConfigs = builder.availableActionConfigs
+        this.serviceComponentName = builder.serviceComponentName
+        this.amount = builder.amount
+        this.showPreselectedStoredPaymentMethod = builder.showPreselectedStoredPaymentMethod
     }
 
     constructor(parcel: Parcel) : super(parcel) {
@@ -144,15 +137,21 @@ class DropInConfiguration : Configuration, Parcelable {
             val TAG = LogUtil.getTag()
         }
 
-        private val availablePaymentConfigs = HashMap<String, Configuration>()
-        private val availableActionConfigs = HashMap<Class<*>, Configuration>()
+        val availablePaymentConfigs = HashMap<String, Configuration>()
+        val availableActionConfigs = HashMap<Class<*>, Configuration>()
 
-        private var shopperLocale: Locale
-        private var environment: Environment = Environment.EUROPE
-        private var clientKey: String
-        private var serviceComponentName: ComponentName
-        private var amount: Amount = Amount.EMPTY
-        private var showPreselectedStoredPaymentMethod: Boolean = true
+        var shopperLocale: Locale
+            private set
+        var environment: Environment = Environment.EUROPE
+            private set
+        var clientKey: String
+            private set
+        var serviceComponentName: ComponentName
+            private set
+        var amount: Amount = Amount.EMPTY
+            private set
+        var showPreselectedStoredPaymentMethod: Boolean = true
+            private set
 
         private val packageName: String
         private val serviceClassName: String
@@ -388,16 +387,7 @@ class DropInConfiguration : Configuration, Parcelable {
                 throw CheckoutException("Client key does not match the environment.")
             }
 
-            return DropInConfiguration(
-                shopperLocale,
-                environment,
-                clientKey,
-                availablePaymentConfigs,
-                availableActionConfigs,
-                serviceComponentName,
-                amount,
-                showPreselectedStoredPaymentMethod
-            )
+            return DropInConfiguration(this)
         }
     }
 }

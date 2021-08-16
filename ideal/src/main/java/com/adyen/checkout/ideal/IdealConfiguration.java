@@ -32,15 +32,10 @@ public class IdealConfiguration extends IssuerListConfiguration {
     };
 
     /**
-     * @param shopperLocale The locale that should be used to display strings and layouts. Can differ from device default.
-     * @param environment   The environment to be used to make network calls.
+     * @param builder The Builder instance to create the configuration.
      */
-    IdealConfiguration(
-            @NonNull Locale shopperLocale,
-            @NonNull Environment environment,
-            @NonNull String clientKey
-    ) {
-        super(shopperLocale, environment, clientKey);
+    IdealConfiguration(@NonNull Builder builder) {
+        super(builder.getBuilderShopperLocale(), builder.getBuilderEnvironment(), builder.getBuilderClientKey());
     }
 
     IdealConfiguration(@NonNull Parcel in) {
@@ -88,7 +83,7 @@ public class IdealConfiguration extends IssuerListConfiguration {
         @NonNull
         @Override
         protected IdealConfiguration buildInternal() {
-            return new IdealConfiguration(getBuilderShopperLocale(), getBuilderEnvironment(), getBuilderClientKey());
+            return new IdealConfiguration(this);
         }
     }
 }

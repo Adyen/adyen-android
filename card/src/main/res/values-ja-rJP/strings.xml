@@ -13,11 +13,17 @@
     <string name="checkout_card_expiry_date_optional_hint">有効期限（任意）</string>
     <string name="checkout_card_security_code_hint">セキュリティーコード (CVC)</string>
     <string name="checkout_card_security_code_optional_hint">セキュリティーコード(任意)</string>
+    <string name="checkout_kcp_birth_date_or_tax_number_hint">カード所有者の生年月日（YYMMDD）または法人登録番号（10桁）</string>
+    <string name="checkout_kcp_tax_number_hint">法人登録番号（10桁）</string>
+    <string name="checkout_kcp_password_hint">カードのパスワードの最初の2桁</string>
 
     <string name="checkout_card_number_not_valid">カード番号が無効です</string>
     <string name="checkout_expiry_date_not_valid">有効期限が無効です</string>
     <string name="checkout_security_code_not_valid">無効なCVC / CVV形式です</string>
     <string name="checkout_holder_name_not_valid">口座名義が無効です</string>
+    <string name="checkout_social_security_number_not_valid">無効な入力</string>
+    <string name="checkout_kcp_birth_date_or_tax_number_invalid">カード所有者の生年月日または法人登録番号が無効です</string>
+    <string name="checkout_kcp_password_invalid">パスワードが無効です</string>
 
     <string name="store_payment_method">次回のお支払いのため詳細を保存</string>
 </resources>

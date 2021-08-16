@@ -13,11 +13,17 @@
     <string name="checkout_card_expiry_date_optional_hint">Ημερομηνία λήξης (προαιρετικό)</string>
     <string name="checkout_card_security_code_hint">CVC/CVV</string>
     <string name="checkout_card_security_code_optional_hint">CVC/CVV (προαιρετικά)</string>
+    <string name="checkout_kcp_birth_date_or_tax_number_hint">Ημερομηνία γέννησης κατόχου κάρτας (YYMMDD) ή αριθμός μητρώου εταιρειών (10 ψηφία)</string>
+    <string name="checkout_kcp_tax_number_hint">Αριθμός μητρώου εταιρειών (10 ψηφία)</string>
+    <string name="checkout_kcp_password_hint">Τα πρώτα 2 ψηφία του κωδικού πρόσβασης της κάρτας</string>
 
     <string name="checkout_card_number_not_valid">Μη έγκυρος αριθμός κάρτας</string>
     <string name="checkout_expiry_date_not_valid">Μη έγκυρη ημερομηνία λήξης</string>
     <string name="checkout_security_code_not_valid">Μη έγκυρη μορφή κωδικού CVC/CVV</string>
     <string name="checkout_holder_name_not_valid">Μη έγκυρο όνομα κατόχου</string>
+    <string name="checkout_social_security_number_not_valid">Μη έγκυρη είσοδος</string>
+    <string name="checkout_kcp_birth_date_or_tax_number_invalid">Μη έγκυρη ημερομηνία γέννησης κατόχου κάρτας ή αριθμός μητρώου εταιρειών</string>
+    <string name="checkout_kcp_password_invalid">Μη έγκυρος κωδικός πρόσβασης</string>
 
     <string name="store_payment_method">Αποθήκευση για την επόμενη πληρωμή μου</string>
 </resources>

@@ -13,11 +13,17 @@
     <string name="checkout_card_expiry_date_optional_hint">Viimeinen voimassaolopäivä (valinnainen)</string>
     <string name="checkout_card_security_code_hint">CVC / CVV</string>
     <string name="checkout_card_security_code_optional_hint">CVC / CVV (valinnainen)</string>
+    <string name="checkout_kcp_birth_date_or_tax_number_hint">Kortinhaltijan syntymäpäivä (VVKKPP) tai yrityksen rekisterinumero (10 lukua)</string>
+    <string name="checkout_kcp_tax_number_hint">Yrityksen rekisterinumero (10 lukua)</string>
+    <string name="checkout_kcp_password_hint">Kortin salasanan ensimmäiset 2 lukua</string>
 
     <string name="checkout_card_number_not_valid">Väärä kortin numero</string>
     <string name="checkout_expiry_date_not_valid">Virheellinen vanhenemispäivämäärä</string>
     <string name="checkout_security_code_not_valid">Virheellinen CVC / CVV-muoto</string>
     <string name="checkout_holder_name_not_valid">Haltijan nimi väärä</string>
+    <string name="checkout_social_security_number_not_valid">Ei-kelvollinen syöte</string>
+    <string name="checkout_kcp_birth_date_or_tax_number_invalid">Kelpaamaton kortinhaltijan syntymäpäivä (VVKKPP) tai yrityksen rekisterinumero</string>
+    <string name="checkout_kcp_password_invalid">Kelpaamaton salasana</string>
 
     <string name="store_payment_method">Tallenna seuraavaa maksuani varten</string>
 </resources>

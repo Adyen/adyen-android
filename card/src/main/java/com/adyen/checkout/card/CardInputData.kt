@@ -16,5 +16,7 @@ data class CardInputData(
     var securityCode: String = "",
     var holderName: String = "",
     var socialSecurityNumber: String = "",
+    var kcpBirthDateOrTaxNumber: String = "",
+    var kcpCardPassword: String = "",
     var isStorePaymentSelected: Boolean = false,
 ) : InputData

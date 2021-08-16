@@ -48,6 +48,7 @@ public class CardConfiguration extends Configuration {
     private final boolean mHideCvc;
     private final boolean mHideCvcStoredCard;
     private final SocialSecurityNumberVisibility mSocialSecurityNumberVisibility;
+    private final KCPAuthVisibility mKcpAuthVisibility;
 
     public static final Parcelable.Creator<CardConfiguration> CREATOR = new Parcelable.Creator<CardConfiguration>() {
         public CardConfiguration createFromParcel(@NonNull Parcel in) {
@@ -60,36 +61,21 @@ public class CardConfiguration extends Configuration {
     };
 
     /**
-     * @param shopperLocale         The locale that should be used to display strings and layouts. Can differ from device default.
-     * @param environment           The environment to be used to make network calls.
-     * @param shopperReference      The unique identifier of the shopper.
-     * @param holderNameRequired    If the holder name of the card should be shown as a required field.
-     * @param showStorePaymentField If the component should show the option to store the card for later use.
-     * @param supportCardTypes      The list of supported card brands to be shown to the user.
-     * @param hideCvc               Hides the CVC field on the payment flow so that it's not required.
-     * @param hideCvcStoredCard     Hides the CVC field on the stored payment flow so that it's not required.
+     * @param builder The Builder instance to create the configuration.
      */
     CardConfiguration(
-            @NonNull Locale shopperLocale,
-            @NonNull Environment environment,
-            @NonNull String clientKey,
-            boolean holderNameRequired,
-            @NonNull String shopperReference,
-            boolean showStorePaymentField,
-            @NonNull List<CardType> supportCardTypes,
-            boolean hideCvc,
-            boolean hideCvcStoredCard,
-            SocialSecurityNumberVisibility socialSecurityNumberVisibility
+            Builder builder
     ) {
-        super(shopperLocale, environment, clientKey);
+        super(builder.getBuilderShopperLocale(), builder.getBuilderEnvironment(), builder.getBuilderClientKey());
 
-        mHolderNameRequired = holderNameRequired;
-        mSupportedCardTypes = supportCardTypes;
-        mShopperReference = shopperReference;
-        mShowStorePaymentField = showStorePaymentField;
-        mHideCvc = hideCvc;
-        mHideCvcStoredCard = hideCvcStoredCard;
-        mSocialSecurityNumberVisibility = socialSecurityNumberVisibility;
+        mHolderNameRequired = builder.mBuilderHolderNameRequired;
+        mSupportedCardTypes = builder.mBuilderSupportedCardTypes;
+        mShopperReference = builder.mShopperReference;
+        mShowStorePaymentField = builder.mBuilderShowStorePaymentField;
+        mHideCvc = builder.mBuilderHideCvc;
+        mHideCvcStoredCard = builder.mBuilderHideCvcStoredCard;
+        mSocialSecurityNumberVisibility = builder.mBuilderSocialSecurityNumberVisibility;
+        mKcpAuthVisibility = builder.mBuilderKcpAuthVisibility;
     }
 
     CardConfiguration(@NonNull Parcel in) {
@@ -101,6 +87,7 @@ public class CardConfiguration extends Configuration {
         mHideCvc = ParcelUtils.readBoolean(in);
         mHideCvcStoredCard = ParcelUtils.readBoolean(in);
         mSocialSecurityNumberVisibility = SocialSecurityNumberVisibility.valueOf(in.readString());
+        mKcpAuthVisibility = KCPAuthVisibility.valueOf(in.readString());
     }
 
     @Override
@@ -113,6 +100,7 @@ public class CardConfiguration extends Configuration {
         ParcelUtils.writeBoolean(dest, mHideCvc);
         ParcelUtils.writeBoolean(dest, mHideCvcStoredCard);
         dest.writeString(mSocialSecurityNumberVisibility.name());
+        dest.writeString(mKcpAuthVisibility.name());
     }
 
     /**
@@ -161,6 +149,11 @@ public class CardConfiguration extends Configuration {
         return mSocialSecurityNumberVisibility;
     }
 
+    @Nullable
+    public KCPAuthVisibility getKcpAuthVisibility() {
+        return mKcpAuthVisibility;
+    }
+
     /**
      * Builder to create a {@link CardConfiguration}.
      */
@@ -173,6 +166,7 @@ public class CardConfiguration extends Configuration {
         private boolean mBuilderHideCvc;
         private boolean mBuilderHideCvcStoredCard;
         private SocialSecurityNumberVisibility mBuilderSocialSecurityNumberVisibility = SocialSecurityNumberVisibility.HIDE;
+        private KCPAuthVisibility mBuilderKcpAuthVisibility = KCPAuthVisibility.HIDE;
 
         /**
          * Constructor of Card Configuration Builder with instance of CardConfiguration.
@@ -186,6 +180,7 @@ public class CardConfiguration extends Configuration {
             mBuilderHideCvc = cardConfiguration.isHideCvc();
             mBuilderHideCvcStoredCard = cardConfiguration.isHideCvcStoredCard();
             mBuilderSocialSecurityNumberVisibility = cardConfiguration.getSocialSecurityNumberVisibility();
+            mBuilderKcpAuthVisibility = cardConfiguration.getKcpAuthVisibility();
         }
 
         /**
@@ -317,6 +312,12 @@ public class CardConfiguration extends Configuration {
             return this;
         }
 
+        @NonNull
+        public Builder setKcpAuthVisibility(@NonNull KCPAuthVisibility kcpAuthVisibility) {
+            mBuilderKcpAuthVisibility = kcpAuthVisibility;
+            return this;
+        }
+
         /**
          * Build {@link CardConfiguration} object from {@link CardConfiguration.Builder} inputs.
          *
@@ -324,18 +325,7 @@ public class CardConfiguration extends Configuration {
          */
         @NonNull
         protected CardConfiguration buildInternal() {
-            return new CardConfiguration(
-                    getBuilderShopperLocale(),
-                    getBuilderEnvironment(),
-                    getBuilderClientKey(),
-                    mBuilderHolderNameRequired,
-                    mShopperReference,
-                    mBuilderShowStorePaymentField,
-                    mBuilderSupportedCardTypes,
-                    mBuilderHideCvc,
-                    mBuilderHideCvcStoredCard,
-                    mBuilderSocialSecurityNumberVisibility
-            );
+            return new CardConfiguration(this);
         }
     }
 

@@ -14,12 +14,17 @@
     <string name="checkout_card_security_code_hint">CVC / CVV</string>
     <string name="checkout_card_security_code_optional_hint">CVC / CVV (optional)</string>
     <string name="checkout_social_security_number_hint" translatable="false">CPF/CNPJ</string>
+    <string name="checkout_kcp_birth_date_or_tax_number_hint">Cardholder birthdate (YYMMDD) or Corporate registration number (10 digits)</string>
+    <string name="checkout_kcp_tax_number_hint">Corporate registration number (10 digits)</string>
+    <string name="checkout_kcp_password_hint">First 2 digits of card password</string>
 
     <string name="checkout_card_number_not_valid">Invalid card number</string>
     <string name="checkout_expiry_date_not_valid">Invalid expiry date</string>
     <string name="checkout_security_code_not_valid">Invalid CVC / CVV format</string>
     <string name="checkout_holder_name_not_valid">Holder name invalid</string>
-    <string name="checkout_social_security_number_not_valid" translatable="false">Invalid Input</string>
+    <string name="checkout_social_security_number_not_valid">Invalid Input</string>
+    <string name="checkout_kcp_birth_date_or_tax_number_invalid">Invalid Cardholder birthdate or Corporate registration number</string>
+    <string name="checkout_kcp_password_invalid">Invalid password</string>
 
     <string name="card_number_4digit" translatable="false">•••• %s</string>
 
