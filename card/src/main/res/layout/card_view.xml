@@ -107,6 +107,30 @@
             tools:ignore="RequiredSize" />
     </com.google.android.material.textfield.TextInputLayout>
 
+    <com.google.android.material.textfield.TextInputLayout
+        android:id="@+id/textInputLayout_kcpBirthDateOrTaxNumber"
+        style="@style/AdyenCheckout.TextInputLayout"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+        <com.adyen.checkout.components.ui.view.AdyenTextInputEditText
+            android:id="@+id/editText_kcpBirthDateOrTaxNumber"
+            style="@style/AdyenCheckout.Card.KcpBirthDateOrTaxNumber"
+            tools:ignore="RequiredSize" />
+    </com.google.android.material.textfield.TextInputLayout>
+
+    <com.google.android.material.textfield.TextInputLayout
+        android:id="@+id/textInputLayout_kcpCardPassword"
+        style="@style/AdyenCheckout.TextInputLayout"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+        <com.adyen.checkout.components.ui.view.AdyenTextInputEditText
+            android:id="@+id/editText_kcpCardPassword"
+            style="@style/AdyenCheckout.Card.KcpCardPassword"
+            tools:ignore="RequiredSize" />
+    </com.google.android.material.textfield.TextInputLayout>
+
     <androidx.appcompat.widget.SwitchCompat
         android:id="@+id/switch_storePaymentMethod"
         style="@style/AdyenCheckout.Card.StorePaymentSwitch"

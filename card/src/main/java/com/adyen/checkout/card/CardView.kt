@@ -73,6 +73,7 @@ class CardView @JvmOverloads constructor(context: Context, attrs: AttributeSet? 
         initSecurityCodeInput()
         initHolderNameInput()
         initSocialSecurityNumberInput()
+        initKcpAuthenticationInput()
 
         binding.switchStorePaymentMethod.setOnCheckedChangeListener { _, isChecked ->
             mCardInputData.isStorePaymentSelected = isChecked
@@ -83,7 +84,7 @@ class CardView @JvmOverloads constructor(context: Context, attrs: AttributeSet? 
                 setStoredCardInterface(it)
             }
         } else {
-            binding.textInputLayoutCardHolder.isVisible = component.isHolderNameRequire()
+            binding.textInputLayoutCardHolder.isVisible = component.isHolderNameRequired()
             binding.switchStorePaymentMethod.isVisible = component.showStorePaymentField()
         }
         notifyInputDataChanged()
@@ -128,6 +129,7 @@ class CardView @JvmOverloads constructor(context: Context, attrs: AttributeSet? 
             onCardNumberValidated(cardOutputData.detectedCardTypes)
             onExpiryDateValidated(cardOutputData.expiryDateState)
             setSocialSecurityNumberVisibility(cardOutputData.isSocialSecurityNumberRequired)
+            setKcpAuthVisibility(cardOutputData.isKCPAuthRequired)
 
             when (cardOutputData.cvcUIState) {
                 CvcUIState.REQUIRED -> {
@@ -326,8 +328,56 @@ class CardView @JvmOverloads constructor(context: Context, attrs: AttributeSet? 
         }
     }
 
+    private fun initKcpAuthenticationInput() {
+        initKcpBirthDateOrTaxNumberInput()
+        initKcpCardPasswordInput()
+    }
+
+    private fun initKcpBirthDateOrTaxNumberInput() {
+        val kcpBirthDateOrRegistrationNumberEditText = binding.textInputLayoutKcpBirthDateOrTaxNumber.editText as? AdyenTextInputEditText
+        kcpBirthDateOrRegistrationNumberEditText?.setOnChangeListener {
+            mCardInputData.kcpBirthDateOrTaxNumber = it.toString()
+            notifyInputDataChanged()
+            binding.textInputLayoutKcpBirthDateOrTaxNumber.error = null
+            val hintResourceId = component.getKcpBirthDateOrTaxNumberHint(it.toString())
+            binding.textInputLayoutKcpBirthDateOrTaxNumber.hint = mLocalizedContext.getString(hintResourceId)
+        }
+
+        kcpBirthDateOrRegistrationNumberEditText?.onFocusChangeListener = OnFocusChangeListener { _, hasFocus ->
+            val kcpBirthDateOrTaxNumberValidation = component.outputData?.kcpBirthDateOrTaxNumberState?.validation
+            if (hasFocus) {
+                binding.textInputLayoutKcpBirthDateOrTaxNumber.error = null
+            } else if (kcpBirthDateOrTaxNumberValidation != null && kcpBirthDateOrTaxNumberValidation is Validation.Invalid) {
+                binding.textInputLayoutKcpBirthDateOrTaxNumber.error = mLocalizedContext.getString(kcpBirthDateOrTaxNumberValidation.reason)
+            }
+        }
+    }
+
+    private fun initKcpCardPasswordInput() {
+        val kcpPasswordEditText = binding.textInputLayoutKcpCardPassword.editText as? AdyenTextInputEditText
+        kcpPasswordEditText?.setOnChangeListener {
+            mCardInputData.kcpCardPassword = it.toString()
+            notifyInputDataChanged()
+            binding.textInputLayoutKcpCardPassword.error = null
+        }
+
+        kcpPasswordEditText?.onFocusChangeListener = OnFocusChangeListener { v, hasFocus ->
+            val kcpBirthDateOrRegistrationNumberValidation = component.outputData?.kcpCardPasswordState?.validation
+            if (hasFocus) {
+                binding.textInputLayoutKcpCardPassword.error = null
+            } else if (kcpBirthDateOrRegistrationNumberValidation != null && kcpBirthDateOrRegistrationNumberValidation is Validation.Invalid) {
+                binding.textInputLayoutKcpCardPassword.error = mLocalizedContext.getString(kcpBirthDateOrRegistrationNumberValidation.reason)
+            }
+        }
+    }
+
     private fun setSocialSecurityNumberVisibility(shouldShowSocialSecurityNumber: Boolean) {
         binding.textInputLayoutSocialSecurityNumber.isVisible = shouldShowSocialSecurityNumber
+    }
+
+    private fun setKcpAuthVisibility(shouldShowKCPAuth: Boolean) {
+        binding.textInputLayoutKcpBirthDateOrTaxNumber.isVisible = shouldShowKCPAuth
+        binding.textInputLayoutKcpCardPassword.isVisible = shouldShowKCPAuth
     }
 
     private fun setStoredCardInterface(storedCardInput: CardInputData) {

@@ -34,6 +34,8 @@ public final class CardPaymentMethod extends PaymentMethodDetails {
     private static final String ENCRYPTED_SECURITY_CODE = "encryptedSecurityCode";
     private static final String HOLDER_NAME = "holderName";
     private static final String STORED_PAYMENT_METHOD_ID = "storedPaymentMethodId";
+    private static final String ENCRYPTED_PASSWORD = "encryptedPassword";
+    private static final String TAX_NUMBER = "taxNumber";
 
     @NonNull
     public static final Serializer<CardPaymentMethod> SERIALIZER = new Serializer<CardPaymentMethod>() {
@@ -52,6 +54,8 @@ public final class CardPaymentMethod extends PaymentMethodDetails {
                 jsonObject.putOpt(ENCRYPTED_SECURITY_CODE, modelObject.getEncryptedSecurityCode());
                 jsonObject.putOpt(STORED_PAYMENT_METHOD_ID, modelObject.getStoredPaymentMethodId());
                 jsonObject.putOpt(HOLDER_NAME, modelObject.getHolderName());
+                jsonObject.putOpt(ENCRYPTED_PASSWORD, modelObject.getEncryptedPassword());
+                jsonObject.putOpt(TAX_NUMBER, modelObject.getTaxNumber());
             } catch (JSONException e) {
                 throw new ModelSerializationException(IdealPaymentMethod.class, e);
             }
@@ -72,6 +76,8 @@ public final class CardPaymentMethod extends PaymentMethodDetails {
             cardPaymentMethod.setStoredPaymentMethodId(jsonObject.optString(STORED_PAYMENT_METHOD_ID));
             cardPaymentMethod.setEncryptedSecurityCode(jsonObject.optString(ENCRYPTED_SECURITY_CODE, null));
             cardPaymentMethod.setHolderName(jsonObject.optString(HOLDER_NAME, null));
+            cardPaymentMethod.setEncryptedPassword(jsonObject.optString(ENCRYPTED_PASSWORD, null));
+            cardPaymentMethod.setTaxNumber(jsonObject.optString(TAX_NUMBER));
 
             return cardPaymentMethod;
         }
@@ -81,8 +87,10 @@ public final class CardPaymentMethod extends PaymentMethodDetails {
     private String encryptedExpiryMonth;
     private String encryptedExpiryYear;
     private String encryptedSecurityCode;
+    private String encryptedPassword;
     private String holderName;
     private String storedPaymentMethodId;
+    private String taxNumber;
 
     @Override
     public void writeToParcel(@NonNull Parcel dest, int flags) {
@@ -123,6 +131,24 @@ public final class CardPaymentMethod extends PaymentMethodDetails {
 
     public void setEncryptedSecurityCode(@Nullable String encryptedSecurityCode) {
         this.encryptedSecurityCode = encryptedSecurityCode;
+    }
+
+    @Nullable
+    public String getEncryptedPassword() {
+        return encryptedPassword;
+    }
+
+    public void setEncryptedPassword(@Nullable String encryptedPassword) {
+        this.encryptedPassword = encryptedPassword;
+    }
+
+    @Nullable
+    public String getTaxNumber() {
+        return taxNumber;
+    }
+
+    public void setTaxNumber(@Nullable String taxNumber) {
+        this.taxNumber = taxNumber;
     }
 
     @Nullable
