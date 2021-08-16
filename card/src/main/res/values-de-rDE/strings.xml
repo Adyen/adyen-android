@@ -15,6 +15,7 @@
     <string name="checkout_kcp_birth_date_or_tax_number_hint">Geburtsdatum des Karteninhabers (JJMMTT) oder Unternehmensregistrierungsnummer (10-stellig)</string>
     <string name="checkout_kcp_tax_number_hint">Unternehmensregistrierungsnummer (10-stellig)</string>
     <string name="checkout_kcp_password_hint">Die ersten zwei Ziffern des Kartenpassworts</string>
+    <string name="checkout_card_postal_code_hint">Postleitzahl</string>
 
     <string name="checkout_card_number_not_valid">Ungültige Kartennummer</string>
     <string name="checkout_expiry_date_not_valid">Ungültiges Ablaufdatum</string>
@@ -23,6 +24,7 @@
     <string name="checkout_social_security_number_not_valid">Ungültige Eingabe</string>
     <string name="checkout_kcp_birth_date_or_tax_number_invalid">Ungültiges Geburtsdatum des Karteninhabers oder ungültige Unternehmensregistrierungsnummer</string>
     <string name="checkout_kcp_password_invalid">Ungültiges Passwort</string>
+    <string name="checkout_card_postal_not_valid">Das Eingabeformat ist ungültig.</string>
 
     <string name="store_payment_method">Für zukünftige Zahlvorgänge speichern</string>
 </resources>

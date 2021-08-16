@@ -15,6 +15,7 @@
     <string name="checkout_kcp_birth_date_or_tax_number_hint">Kortinhaltijan syntymäpäivä (VVKKPP) tai yrityksen rekisterinumero (10 lukua)</string>
     <string name="checkout_kcp_tax_number_hint">Yrityksen rekisterinumero (10 lukua)</string>
     <string name="checkout_kcp_password_hint">Kortin salasanan ensimmäiset 2 lukua</string>
+    <string name="checkout_card_postal_code_hint">Postinumero</string>
 
     <string name="checkout_card_number_not_valid">Väärä kortin numero</string>
     <string name="checkout_expiry_date_not_valid">Virheellinen vanhenemispäivämäärä</string>
@@ -23,6 +24,7 @@
     <string name="checkout_social_security_number_not_valid">Ei-kelvollinen syöte</string>
     <string name="checkout_kcp_birth_date_or_tax_number_invalid">Kelpaamaton kortinhaltijan syntymäpäivä (VVKKPP) tai yrityksen rekisterinumero</string>
     <string name="checkout_kcp_password_invalid">Kelpaamaton salasana</string>
+    <string name="checkout_card_postal_not_valid">Syöttömuoto ei ole kelvollinen.</string>
 
     <string name="store_payment_method">Tallenna seuraavaa maksuani varten</string>
 </resources>

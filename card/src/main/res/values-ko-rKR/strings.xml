@@ -15,6 +15,7 @@
     <string name="checkout_kcp_birth_date_or_tax_number_hint">카드 소유자 생년월일(예: 870130) 또는 법인 등록 번호(10자리)</string>
     <string name="checkout_kcp_tax_number_hint">법인 등록 번호(10자리)</string>
     <string name="checkout_kcp_password_hint">카드 비밀번호 첫 2자리</string>
+    <string name="checkout_card_postal_code_hint">우편번호</string>
 
     <string name="checkout_card_number_not_valid">유효하지 않은 카드 번호</string>
     <string name="checkout_expiry_date_not_valid">유효하지 않은 만료일</string>
@@ -23,6 +24,7 @@
     <string name="checkout_social_security_number_not_valid">유효하지 않은 입력</string>
     <string name="checkout_kcp_birth_date_or_tax_number_invalid">유효하지 않은 카드 소유자 생년월일 또는 법인 등록 번호</string>
     <string name="checkout_kcp_password_invalid">유효하지 않은 번호</string>
+    <string name="checkout_card_postal_not_valid">입력 형식이 유효하지 않습니다.</string>
 
     <string name="store_payment_method">다음 결제를 위해 이 수단 저장</string>
 </resources>

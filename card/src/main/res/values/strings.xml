@@ -16,6 +16,7 @@
     <string name="checkout_kcp_birth_date_or_tax_number_hint">Cardholder birthdate (YYMMDD) or Corporate registration number (10 digits)</string>
     <string name="checkout_kcp_tax_number_hint">Corporate registration number (10 digits)</string>
     <string name="checkout_kcp_password_hint">First 2 digits of card password</string>
+    <string name="checkout_card_postal_code_hint">Postal code</string>
 
     <string name="checkout_card_number_not_valid">Invalid card number</string>
     <string name="checkout_expiry_date_not_valid">Invalid expiry date</string>
@@ -24,6 +25,7 @@
     <string name="checkout_social_security_number_not_valid">Invalid Input</string>
     <string name="checkout_kcp_birth_date_or_tax_number_invalid">Invalid Cardholder birthdate or Corporate registration number</string>
     <string name="checkout_kcp_password_invalid">Invalid password</string>
+    <string name="checkout_card_postal_not_valid">Input format is not valid.</string>
 
     <string name="card_number_4digit" translatable="false">•••• %s</string>
 

@@ -15,6 +15,7 @@
     <string name="checkout_kcp_birth_date_or_tax_number_hint">Geboortedatum (JJ-MM-DD) of bedrijfsregistratienummer (10 cijfers) van kaarthouder</string>
     <string name="checkout_kcp_tax_number_hint">Bedrijfsregistratienummer (10 cijfers)</string>
     <string name="checkout_kcp_password_hint">Eerste twee cijfers van het wachtwoord van de kaart</string>
+    <string name="checkout_card_postal_code_hint">Postcode</string>
 
     <string name="checkout_card_number_not_valid">Ongeldig kaartnummer</string>
     <string name="checkout_expiry_date_not_valid">Ongeldige vervaldatum</string>
@@ -23,6 +24,7 @@
     <string name="checkout_social_security_number_not_valid">Ongeldige invoer</string>
     <string name="checkout_kcp_birth_date_or_tax_number_invalid">Geboortedatum of bedrijfsregistratienummer van kaarthouder is ongeldig</string>
     <string name="checkout_kcp_password_invalid">Ongeldig wachtwoord</string>
+    <string name="checkout_card_postal_not_valid">Ongeldige invoer</string>
 
     <string name="store_payment_method">Bewaar voor mijn volgende betaling</string>
 </resources>

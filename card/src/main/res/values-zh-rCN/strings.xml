@@ -15,6 +15,7 @@
     <string name="checkout_kcp_birth_date_or_tax_number_hint">持卡人生日 (YYMMDD) 或公司注册号（10 位数）</string>
     <string name="checkout_kcp_tax_number_hint">公司注册号（10 位数）</string>
     <string name="checkout_kcp_password_hint">卡片密码的前 2 位数</string>
+    <string name="checkout_card_postal_code_hint">邮政编码</string>
 
     <string name="checkout_card_number_not_valid">无效的卡号</string>
     <string name="checkout_expiry_date_not_valid">无效的到期日期</string>
@@ -23,6 +24,7 @@
     <string name="checkout_social_security_number_not_valid">无效的输入</string>
     <string name="checkout_kcp_birth_date_or_tax_number_invalid">无效的持卡人生日或公司注册号</string>
     <string name="checkout_kcp_password_invalid">无效的密码</string>
+    <string name="checkout_card_postal_not_valid">输入格式无效。</string>
 
     <string name="store_payment_method">保存以便下次支付使用</string>
 </resources>

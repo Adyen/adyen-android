@@ -15,6 +15,7 @@
     <string name="checkout_kcp_birth_date_or_tax_number_hint">Дата рождения владельца карты (ГГММДД) или регистрационный номер предприятия (10 цифр)</string>
     <string name="checkout_kcp_tax_number_hint">Регистрационный номер предприятия (10 цифр)</string>
     <string name="checkout_kcp_password_hint">Первые 2 цифры пароля карты</string>
+    <string name="checkout_card_postal_code_hint">Почтовый индекс</string>
 
     <string name="checkout_card_number_not_valid">Недействительный номер карты</string>
     <string name="checkout_expiry_date_not_valid">Указан неверный срок действия</string>
@@ -23,6 +24,7 @@
     <string name="checkout_social_security_number_not_valid">Неверные данные</string>
     <string name="checkout_kcp_birth_date_or_tax_number_invalid">Неверная дата рождения владельца карты или регистрационного номера предприятия</string>
     <string name="checkout_kcp_password_invalid">Неверный пароль</string>
+    <string name="checkout_card_postal_not_valid">Неверный формат ввода.</string>
 
     <string name="store_payment_method">Сохранить для следующего платежа</string>
 </resources>
