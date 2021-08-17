@@ -201,12 +201,12 @@ class CardView @JvmOverloads constructor(context: Context, attrs: AttributeSet? 
 
     private fun onCardNumberValidated(detectedCardTypes: List<DetectedCardType>) {
         if (detectedCardTypes.isEmpty()) {
-            binding.cardBrandLogoImageView.setStrokeWidth(0f)
-            binding.cardBrandLogoImageView.setImageResource(R.drawable.ic_card)
+            binding.cardBrandLogoImageViewPrimary.setStrokeWidth(0f)
+            binding.cardBrandLogoImageViewPrimary.setImageResource(R.drawable.ic_card)
             binding.editTextCardNumber.setAmexCardFormat(false)
         } else {
-            binding.cardBrandLogoImageView.setStrokeWidth(RoundCornerImageView.DEFAULT_STROKE_WIDTH)
-            mImageLoader?.load(detectedCardTypes[0].cardType.txVariant, binding.cardBrandLogoImageView, 0, R.drawable.ic_card)
+            binding.cardBrandLogoImageViewPrimary.setStrokeWidth(RoundCornerImageView.DEFAULT_STROKE_WIDTH)
+            mImageLoader?.load(detectedCardTypes[0].cardType.txVariant, binding.cardBrandLogoImageViewPrimary, 0, R.drawable.ic_card)
             // TODO: 29/01/2021 get this logic from OutputData
             var isAmex = false
             for ((cardType) in detectedCardTypes) {
@@ -251,10 +251,10 @@ class CardView @JvmOverloads constructor(context: Context, attrs: AttributeSet? 
     private fun setCardNumberError(@StringRes stringResId: Int?) {
         if (stringResId == null) {
             binding.textInputLayoutCardNumber.error = null
-            binding.cardBrandLogoImageView.isVisible = true
+            binding.cardBrandLogoImageViewPrimary.isVisible = true
         } else {
             binding.textInputLayoutCardNumber.error = mLocalizedContext.getString(stringResId)
-            binding.cardBrandLogoImageView.isVisible = false
+            binding.cardBrandLogoImageViewPrimary.isVisible = false
         }
     }
 

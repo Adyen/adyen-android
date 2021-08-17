@@ -20,13 +20,16 @@
         <item name="android:layout_marginLeft">@dimen/standard_quarter_margin</item>
     </style>
 
-    <style name="AdyenCheckout.Card.BrandRecognitionLogo" parent="AdyenCheckout.Image.CardLogo">
+    <style name="AdyenCheckout.Card.BrandRecognitionLogoContainer">
         <item name="android:layout_marginStart">@dimen/standard_quarter_margin</item>
         <item name="android:layout_marginLeft">@dimen/standard_quarter_margin</item>
         <item name="android:layout_gravity">end|top</item>
         <item name="android:layout_marginTop">@dimen/cardList_top_margin</item>
         <item name="android:layout_marginEnd">@dimen/standard_margin</item>
         <item name="android:layout_marginRight">@dimen/standard_margin</item>
+    </style>
+
+    <style name="AdyenCheckout.Card.BrandRecognitionLogo" parent="AdyenCheckout.Image.CardLogo">
         <item name="android:src">@drawable/ic_card</item>
     </style>
 
