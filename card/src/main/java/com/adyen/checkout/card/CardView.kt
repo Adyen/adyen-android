@@ -203,10 +203,17 @@ class CardView @JvmOverloads constructor(context: Context, attrs: AttributeSet? 
         if (detectedCardTypes.isEmpty()) {
             binding.cardBrandLogoImageViewPrimary.setStrokeWidth(0f)
             binding.cardBrandLogoImageViewPrimary.setImageResource(R.drawable.ic_card)
+            binding.cardBrandLogoImageViewSecondary.isVisible = false
             binding.editTextCardNumber.setAmexCardFormat(false)
         } else {
             binding.cardBrandLogoImageViewPrimary.setStrokeWidth(RoundCornerImageView.DEFAULT_STROKE_WIDTH)
             mImageLoader?.load(detectedCardTypes[0].cardType.txVariant, binding.cardBrandLogoImageViewPrimary, 0, R.drawable.ic_card)
+
+            detectedCardTypes.getOrNull(1)?.takeIf { it.isReliable }?.let {
+                binding.cardBrandLogoImageViewSecondary.isVisible = true
+                binding.cardBrandLogoImageViewSecondary.setStrokeWidth(RoundCornerImageView.DEFAULT_STROKE_WIDTH)
+                mImageLoader?.load(it.cardType.txVariant, binding.cardBrandLogoImageViewSecondary, 0, R.drawable.ic_card)
+            } ?: run { binding.cardBrandLogoImageViewSecondary.isVisible = false }
             // TODO: 29/01/2021 get this logic from OutputData
             var isAmex = false
             for ((cardType) in detectedCardTypes) {
