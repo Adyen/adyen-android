@@ -75,7 +75,7 @@ class CardComponent private constructor(
                             kcpCardPassword = kcpCardPasswordState.value,
                             postalCode = postalCodeState.value,
                             isStorePaymentSelected = isStoredPaymentMethodEnable,
-                            detectedCardTypes = it
+                            detectedCardTypes = it.map { item -> if (item == it.first()) item.copy(isSelected = true) else item }
                         )
                         notifyStateChanged(newOutputData)
                     }
@@ -112,7 +112,13 @@ class CardComponent private constructor(
     override fun onInputDataChanged(inputData: CardInputData): CardOutputData {
         Logger.v(TAG, "onInputDataChanged")
 
-        val detectedCardTypes = cardDelegate.detectCardType(inputData.cardNumber, publicKey, viewModelScope)
+        val detectedCardTypes = cardDelegate.detectCardType(inputData.cardNumber, publicKey, viewModelScope).mapIndexed { index, detectedCardType ->
+            if (index == inputData.selectedCardIndex) {
+                detectedCardType.copy(isSelected = true)
+            } else {
+                detectedCardType.copy(isSelected = false)
+            }
+        }
 
         return makeOutputData(
             cardNumber = inputData.cardNumber,
@@ -141,19 +147,20 @@ class CardComponent private constructor(
         postalCode: String,
         detectedCardTypes: List<DetectedCardType>
     ): CardOutputData {
-        val firstDetectedType = detectedCardTypes.firstOrNull()
+        val detectedType = detectedCardTypes.firstOrNull { it.isSelected } ?: detectedCardTypes.firstOrNull()
+
         return CardOutputData(
-            cardDelegate.validateCardNumber(cardNumber, firstDetectedType?.enableLuhnCheck),
-            cardDelegate.validateExpiryDate(expiryDate, firstDetectedType?.expiryDatePolicy),
-            cardDelegate.validateSecurityCode(securityCode, firstDetectedType),
+            cardDelegate.validateCardNumber(cardNumber, detectedType?.enableLuhnCheck),
+            cardDelegate.validateExpiryDate(expiryDate, detectedType?.expiryDatePolicy),
+            cardDelegate.validateSecurityCode(securityCode, detectedType),
             cardDelegate.validateHolderName(holderName),
             cardDelegate.validateSocialSecurityNumber(socialSecurityNumber),
             cardDelegate.validateKcpBirthDateOrTaxNumber(kcpBirthDateOrTaxNumber),
             cardDelegate.validateKcpCardPassword(kcpCardPassword),
             cardDelegate.validatePostalCode(postalCode),
             isStorePaymentSelected,
-            makeCvcUIState(firstDetectedType?.cvcPolicy),
-            makeExpiryDateUIState(firstDetectedType?.expiryDatePolicy),
+            makeCvcUIState(detectedType?.cvcPolicy),
+            makeExpiryDateUIState(detectedType?.expiryDatePolicy),
             detectedCardTypes,
             cardDelegate.isSocialSecurityNumberRequired(),
             cardDelegate.isKCPAuthRequired(),

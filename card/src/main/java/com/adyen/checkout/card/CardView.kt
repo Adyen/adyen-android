@@ -32,6 +32,7 @@ import com.adyen.checkout.components.ui.Validation
 import com.adyen.checkout.components.ui.view.AdyenLinearLayout
 import com.adyen.checkout.components.ui.view.AdyenTextInputEditText
 import com.adyen.checkout.components.ui.view.RoundCornerImageView
+import com.adyen.checkout.core.exception.CheckoutException
 
 /**
  * CardView for [CardComponent].
@@ -203,8 +204,10 @@ class CardView @JvmOverloads constructor(context: Context, attrs: AttributeSet? 
         if (detectedCardTypes.isEmpty()) {
             binding.cardBrandLogoImageViewPrimary.setStrokeWidth(0f)
             binding.cardBrandLogoImageViewPrimary.setImageResource(R.drawable.ic_card)
+            binding.cardBrandLogoImageViewPrimary.alpha = 1f
             binding.cardBrandLogoImageViewSecondary.isVisible = false
             binding.editTextCardNumber.setAmexCardFormat(false)
+            resetBrandSelectionInput()
         } else {
             binding.cardBrandLogoImageViewPrimary.setStrokeWidth(RoundCornerImageView.DEFAULT_STROKE_WIDTH)
             mImageLoader?.load(detectedCardTypes[0].cardType.txVariant, binding.cardBrandLogoImageViewPrimary, 0, R.drawable.ic_card)
@@ -213,7 +216,14 @@ class CardView @JvmOverloads constructor(context: Context, attrs: AttributeSet? 
                 binding.cardBrandLogoImageViewSecondary.isVisible = true
                 binding.cardBrandLogoImageViewSecondary.setStrokeWidth(RoundCornerImageView.DEFAULT_STROKE_WIDTH)
                 mImageLoader?.load(it.cardType.txVariant, binding.cardBrandLogoImageViewSecondary, 0, R.drawable.ic_card)
-            } ?: run { binding.cardBrandLogoImageViewSecondary.isVisible = false }
+                initCardBrandLogoViews(detectedCardTypes.indexOfFirst { it.isSelected })
+                initBrandSelectionListeners()
+            } ?: run {
+                binding.cardBrandLogoImageViewPrimary.alpha = 1f
+                binding.cardBrandLogoImageViewSecondary.isVisible = false
+                resetBrandSelectionInput()
+            }
+
             // TODO: 29/01/2021 get this logic from OutputData
             var isAmex = false
             for ((cardType) in detectedCardTypes) {
@@ -263,6 +273,43 @@ class CardView @JvmOverloads constructor(context: Context, attrs: AttributeSet? 
             binding.textInputLayoutCardNumber.error = mLocalizedContext.getString(stringResId)
             binding.cardBrandLogoImageViewPrimary.isVisible = false
         }
+    }
+
+    private fun initCardBrandLogoViews(selectedIndex: Int) {
+        when (selectedIndex) {
+            0 -> selectPrimaryBrand()
+            1 -> selectSecondaryBrand()
+            else -> throw CheckoutException("")
+        }
+    }
+
+    private fun initBrandSelectionListeners() {
+        binding.cardBrandLogoImageViewPrimary.setOnClickListener {
+            mCardInputData.selectedCardIndex = 0
+            notifyInputDataChanged()
+            selectPrimaryBrand()
+        }
+
+        binding.cardBrandLogoImageViewSecondary.setOnClickListener {
+            mCardInputData.selectedCardIndex = 1
+            notifyInputDataChanged()
+            selectSecondaryBrand()
+        }
+    }
+
+    private fun resetBrandSelectionInput() {
+        binding.cardBrandLogoImageViewPrimary.setOnClickListener(null)
+        binding.cardBrandLogoImageViewSecondary.setOnClickListener(null)
+    }
+
+    private fun selectPrimaryBrand() {
+        binding.cardBrandLogoImageViewPrimary.alpha = 1f
+        binding.cardBrandLogoImageViewSecondary.alpha = 0.2f
+    }
+
+    private fun selectSecondaryBrand() {
+        binding.cardBrandLogoImageViewPrimary.alpha = 0.2f
+        binding.cardBrandLogoImageViewSecondary.alpha = 1f
     }
 
     private fun initExpiryDateInput() {
