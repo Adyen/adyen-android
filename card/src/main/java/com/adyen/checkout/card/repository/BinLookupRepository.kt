@@ -101,9 +101,9 @@ class BinLookupRepository {
             DetectedCardType(
                 cardType,
                 isReliable = true,
-                showExpiryDate = brandResponse.showExpiryDate == true,
                 enableLuhnCheck = brandResponse.enableLuhnCheck == true,
-                cvcPolicy = Brand.CvcPolicy.parse(brandResponse.cvcPolicy ?: Brand.CvcPolicy.REQUIRED.value)
+                cvcPolicy = Brand.FieldPolicy.parse(brandResponse.cvcPolicy ?: Brand.FieldPolicy.REQUIRED.value),
+                expiryDatePolicy = Brand.FieldPolicy.parse(brandResponse.expiryDatePolicy ?: Brand.FieldPolicy.REQUIRED.value)
             )
         }
     }

@@ -13,7 +13,7 @@ import com.adyen.checkout.card.api.model.Brand
 data class DetectedCardType(
     val cardType: CardType,
     val isReliable: Boolean,
-    val showExpiryDate: Boolean,
     val enableLuhnCheck: Boolean,
-    val cvcPolicy: Brand.CvcPolicy
+    val cvcPolicy: Brand.FieldPolicy,
+    val expiryDatePolicy: Brand.FieldPolicy
 )

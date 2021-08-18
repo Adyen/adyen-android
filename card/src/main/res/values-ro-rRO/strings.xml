@@ -10,6 +10,7 @@
     <string name="checkout_card_number_hint">Număr card</string>
     <string name="checkout_card_holder_hint">Numele de pe card</string>
     <string name="checkout_card_expiry_date_hint">Data expirării</string>
+    <string name="checkout_card_expiry_date_optional_hint">Data de expirare (opțional)</string>
     <string name="checkout_card_security_code_hint">CVC/CVV</string>
     <string name="checkout_card_security_code_optional_hint">CVC/CVV (opțional)</string>
     <string name="checkout_kcp_birth_date_or_tax_number_hint">Data de naștere a posesorului de card (AALLZZ) sau numărul de înregistrare al societății (10 cifre).</string>
