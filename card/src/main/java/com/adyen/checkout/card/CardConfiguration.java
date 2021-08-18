@@ -16,6 +16,7 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 
 import com.adyen.checkout.card.data.CardType;
+import com.adyen.checkout.components.base.AddressVisibility;
 import com.adyen.checkout.components.base.BaseConfigurationBuilder;
 import com.adyen.checkout.components.base.Configuration;
 import com.adyen.checkout.core.api.Environment;
@@ -31,11 +32,6 @@ import java.util.Locale;
  * {@link Configuration} class required by {@link CardComponent} to change it's behavior. Pass it to the {@link CardComponent#PROVIDER}.
  */
 public class CardConfiguration extends Configuration {
-
-    public enum AddressVisibility {
-        POSTAL_CODE,
-        NONE
-    }
 
     private static final CardType[] DEFAULT_SUPPORTED_CARDS =
             new CardType[]{CardType.VISA, CardType.AMERICAN_EXPRESS, CardType.MASTERCARD};

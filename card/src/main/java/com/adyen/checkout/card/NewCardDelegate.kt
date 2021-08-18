@@ -14,6 +14,7 @@ import com.adyen.checkout.card.data.DetectedCardType
 import com.adyen.checkout.card.data.ExpiryDate
 import com.adyen.checkout.card.repository.BinLookupRepository
 import com.adyen.checkout.card.repository.PublicKeyRepository
+import com.adyen.checkout.components.base.AddressVisibility
 import com.adyen.checkout.components.model.paymentmethods.PaymentMethod
 import com.adyen.checkout.components.ui.FieldState
 import com.adyen.checkout.components.ui.Validation
@@ -133,7 +134,7 @@ class NewCardDelegate(
     }
 
     override fun isPostalCodeRequired(): Boolean {
-        return cardConfiguration.addressVisibility == CardConfiguration.AddressVisibility.POSTAL_CODE
+        return cardConfiguration.addressVisibility == AddressVisibility.POSTAL_CODE
     }
 
     override fun detectCardType(
