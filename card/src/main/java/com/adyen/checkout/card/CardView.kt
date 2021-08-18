@@ -192,7 +192,7 @@ class CardView @JvmOverloads constructor(context: Context, attrs: AttributeSet? 
             binding.editTextCardNumber.setAmexCardFormat(false)
         } else {
             binding.cardBrandLogoImageView.setStrokeWidth(RoundCornerImageView.DEFAULT_STROKE_WIDTH)
-            mImageLoader?.load(detectedCardTypes[0].cardType.txVariant, binding.cardBrandLogoImageView)
+            mImageLoader?.load(detectedCardTypes[0].cardType.txVariant, binding.cardBrandLogoImageView, 0, R.drawable.ic_card)
             // TODO: 29/01/2021 get this logic from OutputData
             var isAmex = false
             for ((cardType) in detectedCardTypes) {

@@ -132,7 +132,7 @@ class BcmcComponent(
     }
 
     private fun validateCardNumber(cardNumber: String): FieldState<String> {
-        return CardValidationUtils.validateCardNumber(cardNumber)
+        return CardValidationUtils.validateCardNumber(cardNumber, enableLuhnCheck = true)
     }
 
     private fun validateExpiryDate(expiryDate: ExpiryDate): FieldState<ExpiryDate> {

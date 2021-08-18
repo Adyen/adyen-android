@@ -139,7 +139,7 @@ class CardComponent private constructor(
     ): CardOutputData {
         val firstDetectedType = detectedCardTypes.firstOrNull()
         return CardOutputData(
-            cardDelegate.validateCardNumber(cardNumber),
+            cardDelegate.validateCardNumber(cardNumber, firstDetectedType?.enableLuhnCheck),
             cardDelegate.validateExpiryDate(expiryDate, firstDetectedType?.expiryDatePolicy),
             cardDelegate.validateSecurityCode(securityCode, firstDetectedType),
             cardDelegate.validateHolderName(holderName),
