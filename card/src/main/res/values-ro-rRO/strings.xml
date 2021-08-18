@@ -16,6 +16,7 @@
     <string name="checkout_kcp_birth_date_or_tax_number_hint">Data de naștere a posesorului de card (AALLZZ) sau numărul de înregistrare al societății (10 cifre).</string>
     <string name="checkout_kcp_tax_number_hint">Numărul de înregistrare al societății (10 cifre)</string>
     <string name="checkout_kcp_password_hint">Primele 2 cifre ale parolei aferente cardului</string>
+    <string name="checkout_card_postal_code_hint">Cod poștal</string>
 
     <string name="checkout_card_number_not_valid">Număr de card incorect</string>
     <string name="checkout_expiry_date_not_valid">Data de expirare este incorectă</string>
@@ -24,6 +25,7 @@
     <string name="checkout_social_security_number_not_valid">Informațiile sunt incorecte</string>
     <string name="checkout_kcp_birth_date_or_tax_number_invalid">Data de naștere a posesorului de card sau numărul de înregistrare al societății este incorect</string>
     <string name="checkout_kcp_password_invalid">Parolă incorectă</string>
+    <string name="checkout_card_postal_not_valid">Formatul de completare nu este acceptat.</string>
 
     <string name="store_payment_method">Salvează pentru următoarea mea plată</string>
 </resources>

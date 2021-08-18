@@ -32,11 +32,13 @@ abstract class CardDelegate(
     abstract fun validateSocialSecurityNumber(socialSecurityNumber: String): FieldState<String>
     abstract fun validateKcpBirthDateOrTaxNumber(kcpBirthDateOrTaxNumber: String): FieldState<String>
     abstract fun validateKcpCardPassword(kcpCardPassword: String): FieldState<String>
+    abstract fun validatePostalCode(postalCode: String): FieldState<String>
     abstract fun isCvcHidden(): Boolean
     abstract fun isSocialSecurityNumberRequired(): Boolean
     abstract fun isKCPAuthRequired(): Boolean
     abstract fun requiresInput(): Boolean
     abstract fun isHolderNameRequired(): Boolean
+    abstract fun isPostalCodeRequired(): Boolean
     abstract fun detectCardType(cardNumber: String, publicKey: String?, coroutineScope: CoroutineScope): List<DetectedCardType>
 
     suspend fun fetchPublicKey(): String {

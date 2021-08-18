@@ -16,6 +16,7 @@
     <string name="checkout_kcp_birth_date_or_tax_number_hint">Kortholders fødselsdato (YYMMDD) eller bedriftsregistreringsnummer (10 siffer)</string>
     <string name="checkout_kcp_tax_number_hint">Bedriftsregistreringsnummer (10 siffer)</string>
     <string name="checkout_kcp_password_hint">Første 2 sifre av kortpassord</string>
+    <string name="checkout_card_postal_code_hint">Postnummer</string>
 
     <string name="checkout_card_number_not_valid">Ugyldig kortnummer</string>
     <string name="checkout_expiry_date_not_valid">Ugyldig utløpsdato</string>
@@ -24,6 +25,7 @@
     <string name="checkout_social_security_number_not_valid">Ugyldige inndata</string>
     <string name="checkout_kcp_birth_date_or_tax_number_invalid">Ugyldig kortholders fødselsdato eller bedriftsregistreringsnummer</string>
     <string name="checkout_kcp_password_invalid">Ugyldig passord</string>
+    <string name="checkout_card_postal_not_valid">Inndataformat er ikke gyldig.</string>
 
     <string name="store_payment_method">Lagre til min neste betaling</string>
 </resources>

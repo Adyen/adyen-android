@@ -17,6 +17,7 @@
     <string name="checkout_kcp_birth_date_or_tax_number_hint">%%creditCard.taxNumber.label%%</string>
     <string name="checkout_kcp_tax_number_hint">%%creditCard.taxNumber.labelAlt%%</string>
     <string name="checkout_kcp_password_hint">%%creditCard.encryptedPassword.label%%</string>
+    <string name="checkout_card_postal_code_hint">%%postalCode%%</string>
 
     <string name="checkout_card_number_not_valid">%%creditCard.numberField.invalid%%</string>
     <string name="checkout_expiry_date_not_valid">%%creditCard.expiryDateField.invalid%%</string>
@@ -25,6 +26,7 @@
     <string name="checkout_social_security_number_not_valid">%%validationAlert.title%%</string>
     <string name="checkout_kcp_birth_date_or_tax_number_invalid">%%creditCard.taxNumber.invalid%%</string>
     <string name="checkout_kcp_password_invalid">%%creditCard.encryptedPassword.invalid%%</string>
+    <string name="checkout_card_postal_not_valid">%%openInvoice.errorFeedback.incorrectFormat%%</string>
 
     <string name="store_payment_method">%%storeDetails%%</string>
 </resources>

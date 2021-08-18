@@ -16,6 +16,7 @@
     <string name="checkout_kcp_birth_date_or_tax_number_hint">Datum rojstva imetnika kartice (LLMMDD) ali registracijska številka podjetja (10 števk)</string>
     <string name="checkout_kcp_tax_number_hint">Matična številka podjetja (10 števk)</string>
     <string name="checkout_kcp_password_hint">Prvi dve števki gesla za kartico</string>
+    <string name="checkout_card_postal_code_hint">Poštna številka</string>
 
     <string name="checkout_card_number_not_valid">Neveljavna številka kartice</string>
     <string name="checkout_expiry_date_not_valid">Neveljaven datum poteka veljavnosti</string>
@@ -24,6 +25,7 @@
     <string name="checkout_social_security_number_not_valid">Neveljaven vnos</string>
     <string name="checkout_kcp_birth_date_or_tax_number_invalid">Neveljaven datum rojstva imetnika kartice ali matična številka podjetja</string>
     <string name="checkout_kcp_password_invalid">Neveljavno geslo</string>
+    <string name="checkout_card_postal_not_valid">Neveljavna oblika vnosa.</string>
 
     <string name="store_payment_method">Shrani za moje naslednje plačilo</string>
 </resources>

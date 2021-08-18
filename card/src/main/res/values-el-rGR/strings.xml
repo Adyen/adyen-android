@@ -16,6 +16,7 @@
     <string name="checkout_kcp_birth_date_or_tax_number_hint">Ημερομηνία γέννησης κατόχου κάρτας (YYMMDD) ή αριθμός μητρώου εταιρειών (10 ψηφία)</string>
     <string name="checkout_kcp_tax_number_hint">Αριθμός μητρώου εταιρειών (10 ψηφία)</string>
     <string name="checkout_kcp_password_hint">Τα πρώτα 2 ψηφία του κωδικού πρόσβασης της κάρτας</string>
+    <string name="checkout_card_postal_code_hint">Ταχυδρομικός κωδικός</string>
 
     <string name="checkout_card_number_not_valid">Μη έγκυρος αριθμός κάρτας</string>
     <string name="checkout_expiry_date_not_valid">Μη έγκυρη ημερομηνία λήξης</string>
@@ -24,6 +25,7 @@
     <string name="checkout_social_security_number_not_valid">Μη έγκυρη είσοδος</string>
     <string name="checkout_kcp_birth_date_or_tax_number_invalid">Μη έγκυρη ημερομηνία γέννησης κατόχου κάρτας ή αριθμός μητρώου εταιρειών</string>
     <string name="checkout_kcp_password_invalid">Μη έγκυρος κωδικός πρόσβασης</string>
+    <string name="checkout_card_postal_not_valid">Η μορφή εισόδου δεν είναι έγκυρη.</string>
 
     <string name="store_payment_method">Αποθήκευση για την επόμενη πληρωμή μου</string>
 </resources>

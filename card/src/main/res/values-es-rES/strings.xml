@@ -16,6 +16,7 @@
     <string name="checkout_kcp_birth_date_or_tax_number_hint">Fecha de nacimiento del titular de la tarjeta (AAMMDD) o número de registro comercial (10 dígitos)</string>
     <string name="checkout_kcp_tax_number_hint">Número de registro comercial (10 dígitos)</string>
     <string name="checkout_kcp_password_hint">Primeros 2 dígitos de la contraseña de la tarjeta</string>
+    <string name="checkout_card_postal_code_hint">Código postal</string>
 
     <string name="checkout_card_number_not_valid">Número de tarjeta no válido</string>
     <string name="checkout_expiry_date_not_valid">La fecha de caducidad no es válida</string>
@@ -24,6 +25,7 @@
     <string name="checkout_social_security_number_not_valid">Entrada no válida</string>
     <string name="checkout_kcp_birth_date_or_tax_number_invalid">Fecha de nacimiento del titular o número de registro comercial incorrectos</string>
     <string name="checkout_kcp_password_invalid">Contraseña incorrecta</string>
+    <string name="checkout_card_postal_not_valid">El formato no es válido.</string>
 
     <string name="store_payment_method">Recordar para mi próximo pago</string>
 </resources>

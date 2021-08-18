@@ -16,6 +16,7 @@
     <string name="checkout_kcp_birth_date_or_tax_number_hint">持卡人生日（年月日）或公司註冊號碼（10 位數）</string>
     <string name="checkout_kcp_tax_number_hint">公司註冊號碼（10 位數）</string>
     <string name="checkout_kcp_password_hint">卡密碼的前 2 位數字</string>
+    <string name="checkout_card_postal_code_hint">郵遞區號</string>
 
     <string name="checkout_card_number_not_valid">信用卡號碼無效</string>
     <string name="checkout_expiry_date_not_valid">到期日期無效</string>
@@ -24,6 +25,7 @@
     <string name="checkout_social_security_number_not_valid">輸入無效</string>
     <string name="checkout_kcp_birth_date_or_tax_number_invalid">持卡人生日或公司註冊號碼無效</string>
     <string name="checkout_kcp_password_invalid">密碼無效</string>
+    <string name="checkout_card_postal_not_valid">輸入的格式無效。</string>
 
     <string name="store_payment_method">儲存以供下次付款使用</string>
 </resources>

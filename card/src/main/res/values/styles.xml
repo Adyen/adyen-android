@@ -68,6 +68,11 @@
         <item name="android:maxLength">2</item>
     </style>
 
+    <style name="AdyenCheckout.Card.PostalCodeInput" parent="AdyenCheckout.TextInputEditText">
+        <item name="android:hint">@string/checkout_card_postal_code_hint</item>
+        <item name="android:inputType">textPostalAddress</item>
+    </style>
+
     <style name="AdyenCheckout.Card.StorePaymentSwitch" parent="AdyenCheckout.Switch">
         <item name="android:text">@string/store_payment_method</item>
         <item name="android:textSize">18sp</item>

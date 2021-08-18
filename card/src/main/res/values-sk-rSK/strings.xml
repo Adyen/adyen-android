@@ -16,6 +16,7 @@
     <string name="checkout_kcp_birth_date_or_tax_number_hint">Dátum narodenia držiteľa karty (RRRMMDD) alebo identifikačné číslo organizácie (10 číslic)</string>
     <string name="checkout_kcp_tax_number_hint">Identifikačné číslo organizácie (10 číslic)</string>
     <string name="checkout_kcp_password_hint">Prvé 2 číslice hesla karty</string>
+    <string name="checkout_card_postal_code_hint">PSČ</string>
 
     <string name="checkout_card_number_not_valid">Neplatné číslo karty</string>
     <string name="checkout_expiry_date_not_valid">Neplatný dátum vypršania platnosti</string>
@@ -24,6 +25,7 @@
     <string name="checkout_social_security_number_not_valid">Neplatný vstup</string>
     <string name="checkout_kcp_birth_date_or_tax_number_invalid">Neplatný dátum narodenia držiteľa karty alebo identifikačné číslo organizácie</string>
     <string name="checkout_kcp_password_invalid">Neplané heslo</string>
+    <string name="checkout_card_postal_not_valid">Vstupný formát je neplatný.</string>
 
     <string name="store_payment_method">Uložiť pre moju ďalšiu platbu</string>
 </resources>

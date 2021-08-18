@@ -14,6 +14,7 @@ import com.adyen.checkout.card.data.DetectedCardType
 import com.adyen.checkout.card.data.ExpiryDate
 import com.adyen.checkout.card.repository.BinLookupRepository
 import com.adyen.checkout.card.repository.PublicKeyRepository
+import com.adyen.checkout.components.base.AddressVisibility
 import com.adyen.checkout.components.model.paymentmethods.PaymentMethod
 import com.adyen.checkout.components.ui.FieldState
 import com.adyen.checkout.components.ui.Validation
@@ -108,6 +109,15 @@ class NewCardDelegate(
         }
     }
 
+    override fun validatePostalCode(postalCode: String): FieldState<String> {
+        val validation = if (postalCode.isNotEmpty()) {
+            Validation.Valid
+        } else {
+            Validation.Invalid(R.string.checkout_card_postal_not_valid)
+        }
+        return FieldState(postalCode, validation)
+    }
+
     override fun isCvcHidden(): Boolean {
         return cardConfiguration.isHideCvc
     }
@@ -126,6 +136,10 @@ class NewCardDelegate(
 
     override fun isHolderNameRequired(): Boolean {
         return cardConfiguration.isHolderNameRequired
+    }
+
+    override fun isPostalCodeRequired(): Boolean {
+        return cardConfiguration.addressVisibility == AddressVisibility.POSTAL_CODE
     }
 
     override fun detectCardType(
