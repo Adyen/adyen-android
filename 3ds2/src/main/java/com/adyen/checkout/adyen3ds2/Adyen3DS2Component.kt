@@ -232,7 +232,12 @@ class Adyen3DS2Component(
 
             mTransaction = try {
                 Logger.d(TAG, "create transaction")
-                ThreeDS2Service.INSTANCE.createTransaction(null, fingerprintToken.threeDSMessageVersion)
+                if (fingerprintToken.threeDSMessageVersion != null) {
+                    ThreeDS2Service.INSTANCE.createTransaction(null, fingerprintToken.threeDSMessageVersion)
+                } else {
+                    notifyException(ComponentException("Failed to create 3DS2 Transaction. Missing threeDSMessageVersion inside fingerprintToken."))
+                    return@launch
+                }
             } catch (e: SDKNotInitializedException) {
                 notifyException(ComponentException("Failed to create 3DS2 Transaction", e))
                 return@launch
