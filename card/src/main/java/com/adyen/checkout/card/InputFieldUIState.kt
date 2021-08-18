@@ -8,6 +8,6 @@
 
 package com.adyen.checkout.card
 
-enum class CvcUIState {
+enum class InputFieldUIState {
     REQUIRED, OPTIONAL, HIDDEN
 }

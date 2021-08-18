@@ -140,7 +140,7 @@ class CardComponent private constructor(
         val firstDetectedType = detectedCardTypes.firstOrNull()
         return CardOutputData(
             cardDelegate.validateCardNumber(cardNumber, firstDetectedType?.enableLuhnCheck),
-            cardDelegate.validateExpiryDate(expiryDate),
+            cardDelegate.validateExpiryDate(expiryDate, firstDetectedType?.expiryDatePolicy),
             cardDelegate.validateSecurityCode(securityCode, firstDetectedType),
             cardDelegate.validateHolderName(holderName),
             cardDelegate.validateSocialSecurityNumber(socialSecurityNumber),
@@ -148,19 +148,27 @@ class CardComponent private constructor(
             cardDelegate.validateKcpCardPassword(kcpCardPassword),
             isStorePaymentSelected,
             makeCvcUIState(firstDetectedType?.cvcPolicy),
+            makeExpiryDateUIState(firstDetectedType?.expiryDatePolicy),
             detectedCardTypes,
             cardDelegate.isSocialSecurityNumberRequired(),
             cardDelegate.isKCPAuthRequired()
         )
     }
 
-    private fun makeCvcUIState(cvcPolicy: Brand.CvcPolicy?): CvcUIState {
+    private fun makeCvcUIState(cvcPolicy: Brand.FieldPolicy?): InputFieldUIState {
         Logger.d(TAG, "makeCvcUIState: $cvcPolicy")
         return when {
-            cardDelegate.isCvcHidden() -> CvcUIState.HIDDEN
+            cardDelegate.isCvcHidden() -> InputFieldUIState.HIDDEN
             // we treat CvcPolicy.HIDDEN as OPTIONAL for now to avoid hiding and showing the cvc field while the user is typing the card number
-            cvcPolicy == Brand.CvcPolicy.OPTIONAL || cvcPolicy == Brand.CvcPolicy.HIDDEN -> CvcUIState.OPTIONAL
-            else -> CvcUIState.REQUIRED
+            cvcPolicy == Brand.FieldPolicy.OPTIONAL || cvcPolicy == Brand.FieldPolicy.HIDDEN -> InputFieldUIState.OPTIONAL
+            else -> InputFieldUIState.REQUIRED
+        }
+    }
+
+    private fun makeExpiryDateUIState(expiryDatePolicy: Brand.FieldPolicy?): InputFieldUIState {
+        return when (expiryDatePolicy) {
+            Brand.FieldPolicy.OPTIONAL, Brand.FieldPolicy.HIDDEN -> InputFieldUIState.OPTIONAL
+            else -> InputFieldUIState.REQUIRED
         }
     }
 

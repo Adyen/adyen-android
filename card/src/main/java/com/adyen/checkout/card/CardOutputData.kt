@@ -21,7 +21,8 @@ data class CardOutputData(
     val kcpBirthDateOrTaxNumberState: FieldState<String>,
     val kcpCardPasswordState: FieldState<String>,
     val isStoredPaymentMethodEnable: Boolean,
-    val cvcUIState: CvcUIState,
+    val cvcUIState: InputFieldUIState,
+    val expiryDateUIState: InputFieldUIState,
     val detectedCardTypes: List<DetectedCardType>,
     val isSocialSecurityNumberRequired: Boolean,
     val isKCPAuthRequired: Boolean

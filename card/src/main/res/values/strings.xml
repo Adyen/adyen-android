@@ -10,6 +10,7 @@
     <string name="checkout_card_number_hint">Card number</string>
     <string name="checkout_card_holder_hint">Name on card</string>
     <string name="checkout_card_expiry_date_hint">Expiry date</string>
+    <string name="checkout_card_expiry_date_optional_hint">Expiry date (optional)</string>
     <string name="checkout_card_security_code_hint">CVC / CVV</string>
     <string name="checkout_card_security_code_optional_hint">CVC / CVV (optional)</string>
     <string name="checkout_social_security_number_hint" translatable="false">CPF/CNPJ</string>
