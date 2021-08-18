@@ -35,11 +35,8 @@ public class BcmcConfiguration extends Configuration {
         }
     };
 
-    BcmcConfiguration(
-            @NonNull Locale shopperLocale,
-            @NonNull Environment environment,
-            @NonNull String clientKey) {
-        super(shopperLocale, environment, clientKey);
+    BcmcConfiguration(@NonNull Builder builder) {
+        super(builder.getBuilderShopperLocale(), builder.getBuilderEnvironment(), builder.getBuilderClientKey());
     }
 
     BcmcConfiguration(@NonNull Parcel in) {
@@ -99,12 +96,8 @@ public class BcmcConfiguration extends Configuration {
          * @return {@link BcmcConfiguration}
          */
         @NonNull
-        public BcmcConfiguration build() {
-            return new BcmcConfiguration(
-                    mBuilderShopperLocale,
-                    mBuilderEnvironment,
-                    mBuilderClientKey
-            );
+        protected BcmcConfiguration buildInternal() {
+            return new BcmcConfiguration(this);
         }
     }
 

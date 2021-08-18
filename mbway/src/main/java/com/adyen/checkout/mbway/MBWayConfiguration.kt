@@ -31,7 +31,7 @@ class MBWayConfiguration : Configuration {
         }
     }
 
-    internal constructor(shopperLocale: Locale, environment: Environment, clientKey: String) : super(shopperLocale, environment, clientKey)
+    internal constructor(builder: Builder) : super(builder.builderShopperLocale, builder.builderEnvironment, builder.builderClientKey)
     internal constructor(parcel: Parcel) : super(parcel)
 
     /**
@@ -63,8 +63,8 @@ class MBWayConfiguration : Configuration {
             return super.setEnvironment(builderEnvironment) as Builder
         }
 
-        override fun build(): MBWayConfiguration {
-            return MBWayConfiguration(mBuilderShopperLocale, mBuilderEnvironment, mBuilderClientKey)
+        override fun buildInternal(): MBWayConfiguration {
+            return MBWayConfiguration(this)
         }
     }
 }

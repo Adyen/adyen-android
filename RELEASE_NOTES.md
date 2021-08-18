@@ -9,15 +9,20 @@
 [//]: # ( - Configurations public constructor are deprecated, please use each Configuration's builder to make a Configuration object)
 
 ## Added
-- 3 new methods to `ActionComponentProvider`: `canHandleAction`, `requiresView` and `getSupportedActionTypes`.
-- `Adyen3DS2Component`, `QRCodeComponent`, `RedirectComponent` and `WeChatPayActionComponent` now implement `IntentHandlingComponent` and will have a `handleIntent` method. This method replaces `handleRedirectResponse` in `RedirectComponent` and `handleResultIntent` in `WeChatPayActionComponent`.  
-- `QRCodeComponent` will now redirect QR Code actions that should work as a redirect on Android (e.g. `bcmc_mobile`). Use the `handleIntent` method to handle the result of the redirect.
-- `Adyen3DS2Component` now supports the new 3DS2 frictionless flow (requires API v67). In some cases the component will now make a redirect, use the `handleIntent` method to handle the result of the redirect.
-- For certain card types, the CVC field will be marked as optional. The `CardComponent` performs a BIN lookup call which uses the card number to try and identify the corresponding card type and  whether the CVC is required or not.
-- Support new `"googlepay"` txVariant.
-- `TotalPriceStatus` to the `GooglePayConfiguration`.
+- `showPreselectedStoredPaymentMethod` flag to `DropInConfiguration` to allow choosing to skip to the payment method selection screen.
+- Any `Configuration` will check if the `clientKey` matches the `environment` it will be used on.
+- Postal Code input field to Card Component.
+- KCP Authentication input field support to Card Component.
+- Social Security Number (CPF/CNPJ) input field support to Card Component.
+- Android 12 support.
+
+## Changed
+- Adyen 3DS2 SDK version to 2.2.4.
+
+## Removed
+- Switching to next input field automatically after card number has been filled in.
 
 ## Fixed
-- Update Google Pay logo. 
-- Pay button not working when paying with a stored card with holder name required. 
-- If `GooglePayConfiguration` is not provided manually to Drop-in, Google Pay will use the amount specified in `DropInConfiguration`.
+- Logos not loading when multiple icons in the same screen have the same logo.
+- Crashes when returning from a redirect, after drop-in activity is killed in the background.
+- Card number validation changed for cards where the number doesn't pass the Luhn check but is still valid.

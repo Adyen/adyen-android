@@ -146,26 +146,19 @@ class MainActivity : AppCompatActivity() {
 
         val amount = keyValueStorage.getAmount()
 
-        val cardConfiguration = CardConfiguration.Builder(this@MainActivity, BuildConfig.CLIENT_KEY)
+        val cardConfiguration = CardConfiguration.Builder(shopperLocale, Environment.TEST, BuildConfig.CLIENT_KEY)
             .setShopperReference(keyValueStorage.getShopperReference())
-            .setShopperLocale(shopperLocale)
-            .setEnvironment(Environment.TEST)
             .build()
 
-        val googlePayConfig = GooglePayConfiguration.Builder(this@MainActivity, BuildConfig.CLIENT_KEY)
+        val googlePayConfig = GooglePayConfiguration.Builder(shopperLocale, Environment.TEST, BuildConfig.CLIENT_KEY)
             .setCountryCode(keyValueStorage.getCountry())
             .setAmount(amount)
-            .setEnvironment(Environment.TEST)
             .build()
 
-        val bcmcConfiguration = BcmcConfiguration.Builder(this@MainActivity, BuildConfig.CLIENT_KEY)
-            .setShopperLocale(shopperLocale)
-            .setEnvironment(Environment.TEST)
+        val bcmcConfiguration = BcmcConfiguration.Builder(shopperLocale, Environment.TEST, BuildConfig.CLIENT_KEY)
             .build()
 
-        val adyen3DS2Configuration = Adyen3DS2Configuration.Builder(this@MainActivity, BuildConfig.CLIENT_KEY)
-            .setShopperLocale(shopperLocale)
-            .setEnvironment(Environment.TEST)
+        val adyen3DS2Configuration = Adyen3DS2Configuration.Builder(shopperLocale, Environment.TEST, BuildConfig.CLIENT_KEY)
             .build()
 
         val dropInConfigurationBuilder = DropInConfiguration.Builder(

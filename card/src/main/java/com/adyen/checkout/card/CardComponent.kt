@@ -8,6 +8,7 @@
 
 package com.adyen.checkout.card
 
+import androidx.annotation.StringRes
 import androidx.lifecycle.viewModelScope
 import com.adyen.checkout.card.api.model.Brand
 import com.adyen.checkout.card.data.CardType
@@ -15,6 +16,7 @@ import com.adyen.checkout.card.data.DetectedCardType
 import com.adyen.checkout.card.data.ExpiryDate
 import com.adyen.checkout.components.StoredPaymentComponentProvider
 import com.adyen.checkout.components.base.BasePaymentComponent
+import com.adyen.checkout.components.model.payments.request.Address
 import com.adyen.checkout.components.model.payments.request.CardPaymentMethod
 import com.adyen.checkout.components.model.payments.request.PaymentComponentData
 import com.adyen.checkout.components.util.PaymentMethodTypes
@@ -24,6 +26,7 @@ import com.adyen.checkout.core.log.LogUtil
 import com.adyen.checkout.core.log.Logger
 import com.adyen.checkout.cse.CardEncrypter
 import com.adyen.checkout.cse.EncryptedCard
+import com.adyen.checkout.cse.GenericEncrypter
 import com.adyen.checkout.cse.UnencryptedCard
 import com.adyen.checkout.cse.exception.EncryptionException
 import kotlinx.coroutines.flow.launchIn
@@ -67,6 +70,10 @@ class CardComponent private constructor(
                             expiryDate = expiryDateState.value,
                             securityCode = securityCodeState.value,
                             holderName = holderNameState.value,
+                            socialSecurityNumber = socialSecurityNumberState.value,
+                            kcpBirthDateOrTaxNumber = kcpBirthDateOrTaxNumberState.value,
+                            kcpCardPassword = kcpCardPasswordState.value,
+                            postalCode = postalCodeState.value,
                             isStorePaymentSelected = isStoredPaymentMethodEnable,
                             detectedCardTypes = it
                         )
@@ -112,7 +119,11 @@ class CardComponent private constructor(
             expiryDate = inputData.expiryDate,
             securityCode = inputData.securityCode,
             holderName = inputData.holderName,
+            socialSecurityNumber = inputData.socialSecurityNumber,
+            kcpBirthDateOrTaxNumber = inputData.kcpBirthDateOrTaxNumber,
+            kcpCardPassword = inputData.kcpCardPassword,
             isStorePaymentSelected = inputData.isStorePaymentSelected,
+            postalCode = inputData.postalCode,
             detectedCardTypes = detectedCardTypes
         )
     }
@@ -123,28 +134,46 @@ class CardComponent private constructor(
         expiryDate: ExpiryDate,
         securityCode: String,
         holderName: String,
+        socialSecurityNumber: String,
+        kcpBirthDateOrTaxNumber: String,
+        kcpCardPassword: String,
         isStorePaymentSelected: Boolean,
+        postalCode: String,
         detectedCardTypes: List<DetectedCardType>
     ): CardOutputData {
         val firstDetectedType = detectedCardTypes.firstOrNull()
         return CardOutputData(
-            cardDelegate.validateCardNumber(cardNumber),
-            cardDelegate.validateExpiryDate(expiryDate),
+            cardDelegate.validateCardNumber(cardNumber, firstDetectedType?.enableLuhnCheck),
+            cardDelegate.validateExpiryDate(expiryDate, firstDetectedType?.expiryDatePolicy),
             cardDelegate.validateSecurityCode(securityCode, firstDetectedType),
             cardDelegate.validateHolderName(holderName),
+            cardDelegate.validateSocialSecurityNumber(socialSecurityNumber),
+            cardDelegate.validateKcpBirthDateOrTaxNumber(kcpBirthDateOrTaxNumber),
+            cardDelegate.validateKcpCardPassword(kcpCardPassword),
+            cardDelegate.validatePostalCode(postalCode),
             isStorePaymentSelected,
             makeCvcUIState(firstDetectedType?.cvcPolicy),
-            detectedCardTypes
+            makeExpiryDateUIState(firstDetectedType?.expiryDatePolicy),
+            detectedCardTypes,
+            cardDelegate.isSocialSecurityNumberRequired(),
+            cardDelegate.isKCPAuthRequired()
         )
     }
 
-    private fun makeCvcUIState(cvcPolicy: Brand.CvcPolicy?): CvcUIState {
+    private fun makeCvcUIState(cvcPolicy: Brand.FieldPolicy?): InputFieldUIState {
         Logger.d(TAG, "makeCvcUIState: $cvcPolicy")
         return when {
-            cardDelegate.isCvcHidden() -> CvcUIState.HIDDEN
+            cardDelegate.isCvcHidden() -> InputFieldUIState.HIDDEN
             // we treat CvcPolicy.HIDDEN as OPTIONAL for now to avoid hiding and showing the cvc field while the user is typing the card number
-            cvcPolicy == Brand.CvcPolicy.OPTIONAL || cvcPolicy == Brand.CvcPolicy.HIDDEN -> CvcUIState.OPTIONAL
-            else -> CvcUIState.REQUIRED
+            cvcPolicy == Brand.FieldPolicy.OPTIONAL || cvcPolicy == Brand.FieldPolicy.HIDDEN -> InputFieldUIState.OPTIONAL
+            else -> InputFieldUIState.REQUIRED
+        }
+    }
+
+    private fun makeExpiryDateUIState(expiryDatePolicy: Brand.FieldPolicy?): InputFieldUIState {
+        return when (expiryDatePolicy) {
+            Brand.FieldPolicy.OPTIONAL, Brand.FieldPolicy.HIDDEN -> InputFieldUIState.OPTIONAL
+            else -> InputFieldUIState.REQUIRED
         }
     }
 
@@ -239,10 +268,30 @@ class CardComponent private constructor(
             cardPaymentMethod.holderName = stateOutputData.holderNameState.value
         }
 
+        if (cardDelegate.isKCPAuthRequired()) {
+            publicKey?.let { publicKey ->
+                cardPaymentMethod.encryptedPassword = GenericEncrypter.encryptField(
+                    GenericEncrypter.KCP_PASSWORD_KEY,
+                    stateOutputData.kcpCardPasswordState.value,
+                    publicKey
+                )
+            } ?: throw CheckoutException("Encryption failed because public key cannot be found.")
+
+            cardPaymentMethod.taxNumber = stateOutputData.kcpBirthDateOrTaxNumberState.value
+        }
+
         val paymentComponentData = PaymentComponentData<CardPaymentMethod>().apply {
             paymentMethod = cardPaymentMethod
             setStorePaymentMethod(stateOutputData.isStoredPaymentMethodEnable)
             shopperReference = configuration.shopperReference
+
+            if (cardDelegate.isSocialSecurityNumberRequired()) {
+                socialSecurityNumber = stateOutputData.socialSecurityNumberState.value
+            }
+
+            if (cardDelegate.isPostalCodeRequired()) {
+                billingAddress = makeAddressData(stateOutputData)
+            }
         }
 
         val lastFour = cardNumber.takeLast(LAST_FOUR_LENGTH)
@@ -265,12 +314,30 @@ class CardComponent private constructor(
         return storedPaymentInputData
     }
 
-    fun isHolderNameRequire(): Boolean {
+    fun isHolderNameRequired(): Boolean {
         return cardDelegate.isHolderNameRequired()
     }
 
     fun showStorePaymentField(): Boolean {
         return configuration.isShowStorePaymentFieldEnable
+    }
+
+    fun makeAddressData(outputData: CardOutputData): Address {
+        return Address().apply {
+            postalCode = outputData.postalCodeState.value
+            street = Address.ADDRESS_NULL_PLACEHOLDER
+            stateOrProvince = Address.ADDRESS_NULL_PLACEHOLDER
+            houseNumberOrName = Address.ADDRESS_NULL_PLACEHOLDER
+            city = Address.ADDRESS_NULL_PLACEHOLDER
+            country = Address.ADDRESS_COUNTRY_NULL_PLACEHOLDER
+        }
+    }
+
+    @StringRes fun getKcpBirthDateOrTaxNumberHint(input: String): Int {
+        return when {
+            input.length > KcpValidationUtils.KCP_BIRTH_DATE_LENGTH -> R.string.checkout_kcp_tax_number_hint
+            else -> R.string.checkout_kcp_birth_date_or_tax_number_hint
+        }
     }
 
     companion object {

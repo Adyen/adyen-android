@@ -17,14 +17,25 @@ data class CardOutputData(
     val expiryDateState: FieldState<ExpiryDate>,
     val securityCodeState: FieldState<String>,
     val holderNameState: FieldState<String>,
+    val socialSecurityNumberState: FieldState<String>,
+    val kcpBirthDateOrTaxNumberState: FieldState<String>,
+    val kcpCardPasswordState: FieldState<String>,
+    val postalCodeState: FieldState<String>,
     val isStoredPaymentMethodEnable: Boolean,
-    val cvcUIState: CvcUIState,
-    val detectedCardTypes: List<DetectedCardType>
+    val cvcUIState: InputFieldUIState,
+    val expiryDateUIState: InputFieldUIState,
+    val detectedCardTypes: List<DetectedCardType>,
+    val isSocialSecurityNumberRequired: Boolean,
+    val isKCPAuthRequired: Boolean
 ) : OutputData {
     override fun isValid(): Boolean {
         return cardNumberState.validation.isValid() &&
             expiryDateState.validation.isValid() &&
             securityCodeState.validation.isValid() &&
-            holderNameState.validation.isValid()
+            holderNameState.validation.isValid() &&
+            socialSecurityNumberState.validation.isValid() &&
+            kcpBirthDateOrTaxNumberState.validation.isValid() &&
+            kcpCardPasswordState.validation.isValid() &&
+            postalCodeState.validation.isValid()
     }
 }

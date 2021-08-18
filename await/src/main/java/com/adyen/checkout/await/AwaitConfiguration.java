@@ -32,11 +32,8 @@ public class AwaitConfiguration extends Configuration {
         }
     };
 
-    protected AwaitConfiguration(
-            @NonNull Locale shopperLocale,
-            @NonNull Environment environment,
-            @NonNull String clientKey) {
-        super(shopperLocale, environment, clientKey);
+    protected AwaitConfiguration(@NonNull Builder builder) {
+        super(builder.getBuilderShopperLocale(), builder.getBuilderEnvironment(), builder.getBuilderClientKey());
     }
 
     protected AwaitConfiguration(@NonNull Parcel in) {
@@ -83,8 +80,8 @@ public class AwaitConfiguration extends Configuration {
 
         @NonNull
         @Override
-        public AwaitConfiguration build() {
-            return new AwaitConfiguration(mBuilderShopperLocale, mBuilderEnvironment, mBuilderClientKey);
+        protected AwaitConfiguration buildInternal() {
+            return new AwaitConfiguration(this);
         }
     }
 }

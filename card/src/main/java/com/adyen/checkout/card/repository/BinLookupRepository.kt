@@ -95,15 +95,15 @@ class BinLookupRepository {
         Logger.v(TAG, "Brands: ${binLookupResponse?.brands}")
 
         // Any null or unmapped values are ignored, a null response becomes an empty list
-        return binLookupResponse?.brands.orEmpty().mapNotNull {
-            if (it.brand == null) return@mapNotNull null
-            val cardType = CardType.getByBrandName(it.brand) ?: return@mapNotNull null
+        return binLookupResponse?.brands.orEmpty().mapNotNull { brandResponse ->
+            if (brandResponse.brand == null) return@mapNotNull null
+            val cardType = CardType.getByBrandName(brandResponse.brand) ?: CardType.UNKNOWN.apply { txVariant = brandResponse.brand }
             DetectedCardType(
                 cardType,
                 isReliable = true,
-                showExpiryDate = it.showExpiryDate == true,
-                enableLuhnCheck = it.enableLuhnCheck == true,
-                cvcPolicy = Brand.CvcPolicy.parse(it.cvcPolicy ?: Brand.CvcPolicy.REQUIRED.value)
+                enableLuhnCheck = brandResponse.enableLuhnCheck == true,
+                cvcPolicy = Brand.FieldPolicy.parse(brandResponse.cvcPolicy ?: Brand.FieldPolicy.REQUIRED.value),
+                expiryDatePolicy = Brand.FieldPolicy.parse(brandResponse.expiryDatePolicy ?: Brand.FieldPolicy.REQUIRED.value)
             )
         }
     }

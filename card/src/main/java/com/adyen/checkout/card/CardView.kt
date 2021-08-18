@@ -28,6 +28,7 @@ import com.adyen.checkout.card.databinding.CardViewBinding
 import com.adyen.checkout.card.ui.SecurityCodeInput
 import com.adyen.checkout.components.api.ImageLoader
 import com.adyen.checkout.components.ui.FieldState
+import com.adyen.checkout.components.ui.Validation
 import com.adyen.checkout.components.ui.view.AdyenLinearLayout
 import com.adyen.checkout.components.ui.view.AdyenTextInputEditText
 import com.adyen.checkout.components.ui.view.RoundCornerImageView
@@ -71,6 +72,9 @@ class CardView @JvmOverloads constructor(context: Context, attrs: AttributeSet? 
         initExpiryDateInput()
         initSecurityCodeInput()
         initHolderNameInput()
+        initSocialSecurityNumberInput()
+        initKcpAuthenticationInput()
+        initPostalCodeInput()
 
         binding.switchStorePaymentMethod.setOnCheckedChangeListener { _, isChecked ->
             mCardInputData.isStorePaymentSelected = isChecked
@@ -81,7 +85,7 @@ class CardView @JvmOverloads constructor(context: Context, attrs: AttributeSet? 
                 setStoredCardInterface(it)
             }
         } else {
-            binding.textInputLayoutCardHolder.isVisible = component.isHolderNameRequire()
+            binding.textInputLayoutCardHolder.isVisible = component.isHolderNameRequired()
             binding.switchStorePaymentMethod.isVisible = component.showStorePaymentField()
         }
         notifyInputDataChanged()
@@ -110,6 +114,11 @@ class CardView @JvmOverloads constructor(context: Context, attrs: AttributeSet? 
         binding.textInputLayoutCardHolder.hint = typedArray.getString(0)
         typedArray.recycle()
 
+        // Postal code
+        typedArray = localizedContext.obtainStyledAttributes(R.style.AdyenCheckout_Card_PostalCodeInput, myAttrs)
+        binding.textInputLayoutPostalCode.hint = typedArray.getString(0)
+        typedArray.recycle()
+
         // Store Switch
         myAttrs = intArrayOf(android.R.attr.text)
         typedArray = localizedContext.obtainStyledAttributes(R.style.AdyenCheckout_Card_StorePaymentSwitch, myAttrs)
@@ -123,26 +132,12 @@ class CardView @JvmOverloads constructor(context: Context, attrs: AttributeSet? 
 
     override fun onChanged(cardOutputData: CardOutputData?) {
         if (cardOutputData != null) {
-            onCardNumberValidated(cardOutputData.cardNumberState, cardOutputData.detectedCardTypes)
+            onCardNumberValidated(cardOutputData.detectedCardTypes)
             onExpiryDateValidated(cardOutputData.expiryDateState)
-
-            when (cardOutputData.cvcUIState) {
-                CvcUIState.REQUIRED -> {
-                    binding.textInputLayoutSecurityCode.isVisible = true
-                    binding.textInputLayoutSecurityCode.setHint(R.string.checkout_card_security_code_hint)
-                }
-                CvcUIState.OPTIONAL -> {
-                    binding.textInputLayoutSecurityCode.isVisible = true
-                    binding.textInputLayoutSecurityCode.setHint(R.string.checkout_card_security_code_optional_hint)
-                }
-                CvcUIState.HIDDEN -> {
-                    binding.textInputLayoutSecurityCode.isVisible = false
-                    // We don't expect the hidden status to change back to isVisible, so we don't worry about putting the margin back.
-                    val params = binding.textInputLayoutExpiryDate.layoutParams as LayoutParams
-                    params.marginEnd = 0
-                    binding.textInputLayoutExpiryDate.layoutParams = params
-                }
-            }
+            setSocialSecurityNumberVisibility(cardOutputData.isSocialSecurityNumberRequired)
+            setKcpAuthVisibility(cardOutputData.isKCPAuthRequired)
+            handleCvcUIState(cardOutputData.cvcUIState)
+            handleExpiryDateUIState(cardOutputData.expiryDateUIState)
         }
         if (component.isStoredPaymentMethod() && component.requiresInput()) {
             binding.textInputLayoutSecurityCode.editText?.requestFocus()
@@ -160,30 +155,41 @@ class CardView @JvmOverloads constructor(context: Context, attrs: AttributeSet? 
     override fun highlightValidationErrors() {
         component.outputData?.let {
             var isErrorFocused = false
-            if (!it.cardNumberState.validation.isValid()) {
+            val cardNumberValidation = it.cardNumberState.validation
+            if (cardNumberValidation is Validation.Invalid) {
                 isErrorFocused = true
                 binding.editTextCardNumber.requestFocus()
-                setCardNumberError(R.string.checkout_card_number_not_valid)
+                setCardNumberError(cardNumberValidation.reason)
             }
-            if (!it.expiryDateState.validation.isValid()) {
+            val expiryDateValidation = it.expiryDateState.validation
+            if (expiryDateValidation is Validation.Invalid) {
                 if (!isErrorFocused) {
                     isErrorFocused = true
                     binding.textInputLayoutExpiryDate.requestFocus()
                 }
-                binding.textInputLayoutExpiryDate.error = mLocalizedContext.getString(R.string.checkout_expiry_date_not_valid)
+                binding.textInputLayoutExpiryDate.error = mLocalizedContext.getString(expiryDateValidation.reason)
             }
-            if (!it.securityCodeState.validation.isValid()) {
+            val securityCodeValidation = it.securityCodeState.validation
+            if (securityCodeValidation is Validation.Invalid) {
                 if (!isErrorFocused) {
                     isErrorFocused = true
                     binding.textInputLayoutSecurityCode.requestFocus()
                 }
-                binding.textInputLayoutSecurityCode.error = mLocalizedContext.getString(R.string.checkout_security_code_not_valid)
+                binding.textInputLayoutSecurityCode.error = mLocalizedContext.getString(securityCodeValidation.reason)
             }
-            if (binding.textInputLayoutCardHolder.isVisible && !it.holderNameState.validation.isValid()) {
+            val holderNameValidation = it.holderNameState.validation
+            if (binding.textInputLayoutCardHolder.isVisible && holderNameValidation is Validation.Invalid) {
                 if (!isErrorFocused) {
                     binding.textInputLayoutCardHolder.requestFocus()
                 }
-                binding.textInputLayoutCardHolder.error = mLocalizedContext.getString(R.string.checkout_holder_name_not_valid)
+                binding.textInputLayoutCardHolder.error = mLocalizedContext.getString(holderNameValidation.reason)
+            }
+            val postalCodeValidation = it.postalCodeState.validation
+            if (binding.textInputLayoutPostalCode.isVisible && postalCodeValidation is Validation.Invalid) {
+                if (!isErrorFocused) {
+                    binding.textInputLayoutPostalCode.requestFocus()
+                }
+                binding.textInputLayoutPostalCode.error = mLocalizedContext.getString(postalCodeValidation.reason)
             }
         }
     }
@@ -192,17 +198,14 @@ class CardView @JvmOverloads constructor(context: Context, attrs: AttributeSet? 
         component.inputDataChanged(mCardInputData)
     }
 
-    private fun onCardNumberValidated(numberState: FieldState<String>, detectedCardTypes: List<DetectedCardType>) {
-        if (numberState.validation.isValid()) {
-            changeFocusOfInput(numberState.value)
-        }
+    private fun onCardNumberValidated(detectedCardTypes: List<DetectedCardType>) {
         if (detectedCardTypes.isEmpty()) {
             binding.cardBrandLogoImageView.setStrokeWidth(0f)
             binding.cardBrandLogoImageView.setImageResource(R.drawable.ic_card)
             binding.editTextCardNumber.setAmexCardFormat(false)
         } else {
             binding.cardBrandLogoImageView.setStrokeWidth(RoundCornerImageView.DEFAULT_STROKE_WIDTH)
-            mImageLoader?.load(detectedCardTypes[0].cardType.txVariant, binding.cardBrandLogoImageView)
+            mImageLoader?.load(detectedCardTypes[0].cardType.txVariant, binding.cardBrandLogoImageView, 0, R.drawable.ic_card)
             // TODO: 29/01/2021 get this logic from OutputData
             var isAmex = false
             for ((cardType) in detectedCardTypes) {
@@ -220,16 +223,6 @@ class CardView @JvmOverloads constructor(context: Context, attrs: AttributeSet? 
         }
     }
 
-    private fun changeFocusOfInput(numberValue: String) {
-        val length = numberValue.length
-        if (length == CardValidationUtils.GENERAL_CARD_NUMBER_LENGTH ||
-            length == CardValidationUtils.AMEX_CARD_NUMBER_LENGTH &&
-            CardType.estimate(numberValue).contains(CardType.AMERICAN_EXPRESS)
-        ) {
-            goToNextInputIfFocus(binding.editTextCardNumber)
-        }
-    }
-
     private fun goToNextInputIfFocus(view: View?) {
         if (rootView.findFocus() === view && view != null) {
             findViewById<View>(view.nextFocusForwardId).requestFocus()
@@ -244,11 +237,11 @@ class CardView @JvmOverloads constructor(context: Context, attrs: AttributeSet? 
         }
         binding.editTextCardNumber.onFocusChangeListener = OnFocusChangeListener { _: View?, hasFocus: Boolean ->
             if (!component.isStoredPaymentMethod()) {
-                val outputData = component.outputData
+                val cardNumberValidation = component.outputData?.cardNumberState?.validation
                 if (hasFocus) {
                     setCardNumberError(null)
-                } else if (outputData != null && !outputData.cardNumberState.validation.isValid()) {
-                    setCardNumberError(R.string.checkout_card_number_not_valid)
+                } else if (cardNumberValidation != null && cardNumberValidation is Validation.Invalid) {
+                    setCardNumberError(cardNumberValidation.reason)
                 }
             }
         }
@@ -271,48 +264,174 @@ class CardView @JvmOverloads constructor(context: Context, attrs: AttributeSet? 
             notifyInputDataChanged()
             binding.textInputLayoutExpiryDate.error = null
         }
-        binding.editTextExpiryDate.onFocusChangeListener = OnFocusChangeListener { _: View?, hasFocus: Boolean ->
-            val outputData = component.outputData
+        binding.editTextExpiryDate.onFocusChangeListener = OnFocusChangeListener { _, hasFocus ->
+            val expiryDateValidation = component.outputData?.expiryDateState?.validation
             if (hasFocus) {
                 binding.textInputLayoutExpiryDate.error = null
-            } else if (outputData != null && !outputData.expiryDateState.validation.isValid()) {
-                binding.textInputLayoutExpiryDate.error = mLocalizedContext.getString(R.string.checkout_expiry_date_not_valid)
+            } else if (expiryDateValidation != null && expiryDateValidation is Validation.Invalid) {
+                binding.textInputLayoutExpiryDate.error = mLocalizedContext.getString(expiryDateValidation.reason)
             }
         }
     }
 
     private fun initSecurityCodeInput() {
-        val securityCodeEditText = binding.textInputLayoutSecurityCode.editText as SecurityCodeInput?
+        val securityCodeEditText = binding.textInputLayoutSecurityCode.editText as? SecurityCodeInput
         securityCodeEditText?.setOnChangeListener { editable: Editable ->
             mCardInputData.securityCode = editable.toString()
             notifyInputDataChanged()
             binding.textInputLayoutSecurityCode.error = null
         }
-        securityCodeEditText?.onFocusChangeListener = OnFocusChangeListener { _: View?, hasFocus: Boolean ->
-            val outputData = component.outputData
+        securityCodeEditText?.onFocusChangeListener = OnFocusChangeListener { _, hasFocus ->
+            val securityCodeValidation = component.outputData?.securityCodeState?.validation
             if (hasFocus) {
                 binding.textInputLayoutSecurityCode.error = null
-            } else if (outputData != null && !outputData.securityCodeState.validation.isValid()) {
-                binding.textInputLayoutSecurityCode.error = mLocalizedContext.getString(R.string.checkout_security_code_not_valid)
+            } else if (securityCodeValidation != null && securityCodeValidation is Validation.Invalid) {
+                binding.textInputLayoutSecurityCode.error = mLocalizedContext.getString(securityCodeValidation.reason)
             }
         }
     }
 
     private fun initHolderNameInput() {
-        val cardHolderEditText = binding.textInputLayoutCardHolder.editText as AdyenTextInputEditText?
+        val cardHolderEditText = binding.textInputLayoutCardHolder.editText as? AdyenTextInputEditText
         cardHolderEditText?.setOnChangeListener { editable: Editable ->
             mCardInputData.holderName = editable.toString()
             notifyInputDataChanged()
             binding.textInputLayoutCardHolder.error = null
         }
-        cardHolderEditText?.onFocusChangeListener = OnFocusChangeListener { _: View?, hasFocus: Boolean ->
-            val outputData = component.outputData
+        cardHolderEditText?.onFocusChangeListener = OnFocusChangeListener { _, hasFocus ->
+            val holderNameValidation = component.outputData?.holderNameState?.validation
             if (hasFocus) {
                 binding.textInputLayoutCardHolder.error = null
-            } else if (outputData != null && !outputData.holderNameState.validation.isValid()) {
-                binding.textInputLayoutCardHolder.error = mLocalizedContext.getString(R.string.checkout_holder_name_not_valid)
+            } else if (holderNameValidation != null && holderNameValidation is Validation.Invalid) {
+                binding.textInputLayoutCardHolder.error = mLocalizedContext.getString(holderNameValidation.reason)
             }
         }
+    }
+
+    private fun initSocialSecurityNumberInput() {
+        val socialSecurityNumberEditText = binding.textInputLayoutSocialSecurityNumber.editText as? AdyenTextInputEditText
+        socialSecurityNumberEditText?.setOnChangeListener { editable ->
+            mCardInputData.socialSecurityNumber = editable.toString()
+            notifyInputDataChanged()
+            binding.textInputLayoutSocialSecurityNumber.error = null
+        }
+        socialSecurityNumberEditText?.onFocusChangeListener = OnFocusChangeListener { _, hasFocus ->
+            val socialSecurityNumberValidation = component.outputData?.socialSecurityNumberState?.validation
+            if (hasFocus) {
+                binding.textInputLayoutSocialSecurityNumber.error = null
+            } else if (socialSecurityNumberValidation != null && socialSecurityNumberValidation is Validation.Invalid) {
+                binding.textInputLayoutSocialSecurityNumber.error = mLocalizedContext.getString(socialSecurityNumberValidation.reason)
+            }
+        }
+    }
+
+    private fun initKcpAuthenticationInput() {
+        initKcpBirthDateOrTaxNumberInput()
+        initKcpCardPasswordInput()
+    }
+
+    private fun initKcpBirthDateOrTaxNumberInput() {
+        val kcpBirthDateOrRegistrationNumberEditText = binding.textInputLayoutKcpBirthDateOrTaxNumber.editText as? AdyenTextInputEditText
+        kcpBirthDateOrRegistrationNumberEditText?.setOnChangeListener {
+            mCardInputData.kcpBirthDateOrTaxNumber = it.toString()
+            notifyInputDataChanged()
+            binding.textInputLayoutKcpBirthDateOrTaxNumber.error = null
+            val hintResourceId = component.getKcpBirthDateOrTaxNumberHint(it.toString())
+            binding.textInputLayoutKcpBirthDateOrTaxNumber.hint = mLocalizedContext.getString(hintResourceId)
+        }
+
+        kcpBirthDateOrRegistrationNumberEditText?.onFocusChangeListener = OnFocusChangeListener { _, hasFocus ->
+            val kcpBirthDateOrTaxNumberValidation = component.outputData?.kcpBirthDateOrTaxNumberState?.validation
+            if (hasFocus) {
+                binding.textInputLayoutKcpBirthDateOrTaxNumber.error = null
+            } else if (kcpBirthDateOrTaxNumberValidation != null && kcpBirthDateOrTaxNumberValidation is Validation.Invalid) {
+                binding.textInputLayoutKcpBirthDateOrTaxNumber.error = mLocalizedContext.getString(kcpBirthDateOrTaxNumberValidation.reason)
+            }
+        }
+    }
+
+    private fun initKcpCardPasswordInput() {
+        val kcpPasswordEditText = binding.textInputLayoutKcpCardPassword.editText as? AdyenTextInputEditText
+        kcpPasswordEditText?.setOnChangeListener {
+            mCardInputData.kcpCardPassword = it.toString()
+            notifyInputDataChanged()
+            binding.textInputLayoutKcpCardPassword.error = null
+        }
+
+        kcpPasswordEditText?.onFocusChangeListener = OnFocusChangeListener { _, hasFocus ->
+            val kcpBirthDateOrRegistrationNumberValidation = component.outputData?.kcpCardPasswordState?.validation
+            if (hasFocus) {
+                binding.textInputLayoutKcpCardPassword.error = null
+            } else if (kcpBirthDateOrRegistrationNumberValidation != null && kcpBirthDateOrRegistrationNumberValidation is Validation.Invalid) {
+                binding.textInputLayoutKcpCardPassword.error = mLocalizedContext.getString(kcpBirthDateOrRegistrationNumberValidation.reason)
+            }
+        }
+    }
+
+    private fun initPostalCodeInput() {
+        val postalCodeEditText = binding.textInputLayoutPostalCode.editText as? AdyenTextInputEditText
+        postalCodeEditText?.setOnChangeListener {
+            mCardInputData.postalCode = it.toString()
+            notifyInputDataChanged()
+            binding.textInputLayoutPostalCode.error = null
+        }
+
+        postalCodeEditText?.onFocusChangeListener = OnFocusChangeListener { _, hasFocus ->
+            val postalCodeValidation = component.outputData?.postalCodeState?.validation
+            if (hasFocus) {
+                binding.textInputLayoutPostalCode.error = null
+            } else if (postalCodeValidation != null && postalCodeValidation is Validation.Invalid) {
+                binding.textInputLayoutPostalCode.error = mLocalizedContext.getString(postalCodeValidation.reason)
+            }
+        }
+    }
+
+    private fun handleCvcUIState(cvcUIState: InputFieldUIState) {
+        when (cvcUIState) {
+            InputFieldUIState.REQUIRED -> {
+                binding.textInputLayoutSecurityCode.isVisible = true
+                binding.textInputLayoutSecurityCode.setHint(R.string.checkout_card_security_code_hint)
+            }
+            InputFieldUIState.OPTIONAL -> {
+                binding.textInputLayoutSecurityCode.isVisible = true
+                binding.textInputLayoutSecurityCode.setHint(R.string.checkout_card_security_code_optional_hint)
+            }
+            InputFieldUIState.HIDDEN -> {
+                binding.textInputLayoutSecurityCode.isVisible = false
+                // We don't expect the hidden status to change back to isVisible, so we don't worry about putting the margin back.
+                val params = binding.textInputLayoutExpiryDate.layoutParams as LayoutParams
+                params.marginEnd = 0
+                binding.textInputLayoutExpiryDate.layoutParams = params
+            }
+        }
+    }
+
+    private fun handleExpiryDateUIState(expiryDateUIState: InputFieldUIState) {
+        when (expiryDateUIState) {
+            InputFieldUIState.REQUIRED -> {
+                binding.textInputLayoutExpiryDate.isVisible = true
+                binding.textInputLayoutExpiryDate.setHint(R.string.checkout_card_expiry_date_hint)
+            }
+            InputFieldUIState.OPTIONAL -> {
+                binding.textInputLayoutExpiryDate.isVisible = true
+                binding.textInputLayoutExpiryDate.setHint(R.string.checkout_card_expiry_date_optional_hint)
+            }
+            InputFieldUIState.HIDDEN -> {
+                binding.textInputLayoutExpiryDate.isVisible = false
+                val params = binding.textInputLayoutSecurityCode.layoutParams as LayoutParams
+                params.marginStart = 0
+                binding.textInputLayoutSecurityCode.layoutParams = params
+            }
+        }
+    }
+
+    private fun setSocialSecurityNumberVisibility(shouldShowSocialSecurityNumber: Boolean) {
+        binding.textInputLayoutSocialSecurityNumber.isVisible = shouldShowSocialSecurityNumber
+    }
+
+    private fun setKcpAuthVisibility(shouldShowKCPAuth: Boolean) {
+        binding.textInputLayoutKcpBirthDateOrTaxNumber.isVisible = shouldShowKCPAuth
+        binding.textInputLayoutKcpCardPassword.isVisible = shouldShowKCPAuth
     }
 
     private fun setStoredCardInterface(storedCardInput: CardInputData) {
@@ -322,6 +441,7 @@ class CardView @JvmOverloads constructor(context: Context, attrs: AttributeSet? 
         binding.editTextExpiryDate.isEnabled = false
         binding.switchStorePaymentMethod.isVisible = false
         binding.textInputLayoutCardHolder.isVisible = false
+        binding.textInputLayoutPostalCode.isVisible = false
     }
 
     private fun getActivity(context: Context): Activity? {

@@ -38,6 +38,7 @@ public class PaymentComponentData<PaymentMethodDetailsT extends PaymentMethodDet
     private static final String TELEPHONE_NUMBER = "telephoneNumber";
     private static final String SHOPPER_EMAIL = "shopperEmail";
     private static final String DATE_OF_BIRTH = "dateOfBirth";
+    private static final String SOCIAL_SECURITY_NUMBER = "socialSecurityNumber";
 
     @NonNull
     public static final Serializer<PaymentComponentData> SERIALIZER = new Serializer<PaymentComponentData>() {
@@ -57,6 +58,7 @@ public class PaymentComponentData<PaymentMethodDetailsT extends PaymentMethodDet
                 jsonObject.putOpt(TELEPHONE_NUMBER, modelObject.getTelephoneNumber());
                 jsonObject.putOpt(SHOPPER_EMAIL, modelObject.getShopperEmail());
                 jsonObject.putOpt(DATE_OF_BIRTH, modelObject.getDateOfBirth());
+                jsonObject.putOpt(SOCIAL_SECURITY_NUMBER, modelObject.getSocialSecurityNumber());
             } catch (JSONException e) {
                 throw new ModelSerializationException(PaymentComponentData.class, e);
             }
@@ -82,6 +84,7 @@ public class PaymentComponentData<PaymentMethodDetailsT extends PaymentMethodDet
             paymentComponentData.setTelephoneNumber(jsonObject.optString(TELEPHONE_NUMBER));
             paymentComponentData.setShopperEmail(jsonObject.optString(SHOPPER_EMAIL));
             paymentComponentData.setDateOfBirth(jsonObject.optString(DATE_OF_BIRTH));
+            paymentComponentData.setSocialSecurityNumber(jsonObject.optString(SOCIAL_SECURITY_NUMBER));
 
             return paymentComponentData;
         }
@@ -97,6 +100,7 @@ public class PaymentComponentData<PaymentMethodDetailsT extends PaymentMethodDet
     private String telephoneNumber;
     private String shopperEmail;
     private String dateOfBirth;
+    private String socialSecurityNumber;
 
     @Override
     public void writeToParcel(@NonNull Parcel dest, int flags) {
@@ -190,5 +194,14 @@ public class PaymentComponentData<PaymentMethodDetailsT extends PaymentMethodDet
 
     public void setDateOfBirth(@Nullable String dateOfBirth) {
         this.dateOfBirth = dateOfBirth;
+    }
+
+    @Nullable
+    public String getSocialSecurityNumber() {
+        return socialSecurityNumber;
+    }
+
+    public void setSocialSecurityNumber(@Nullable String socialSecurityNumber) {
+        this.socialSecurityNumber = socialSecurityNumber;
     }
 }

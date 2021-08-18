@@ -10,13 +10,22 @@
     <string name="checkout_card_number_hint">Broj kartice</string>
     <string name="checkout_card_holder_hint">Ime na kartici</string>
     <string name="checkout_card_expiry_date_hint">Datum isteka</string>
+    <string name="checkout_card_expiry_date_optional_hint">Datum isteka (neobavezno)</string>
     <string name="checkout_card_security_code_hint">CVC/CVV</string>
     <string name="checkout_card_security_code_optional_hint">CVC/CVV (nije obavezno)</string>
+    <string name="checkout_kcp_birth_date_or_tax_number_hint">Datum rođenja vlasnika kartice (GGMMDD) ili registracijski broj tvrtke (10 znamenki)</string>
+    <string name="checkout_kcp_tax_number_hint">Registracijski broj tvrtke (10 znamenki)</string>
+    <string name="checkout_kcp_password_hint">Prve 2 znamenke lozinke kartice</string>
+    <string name="checkout_card_postal_code_hint">Poštanski broj</string>
 
     <string name="checkout_card_number_not_valid">Nevažeći broj kartice</string>
     <string name="checkout_expiry_date_not_valid">Nevažeći datum isteka</string>
     <string name="checkout_security_code_not_valid">Nevažeći CVC/CVV format</string>
     <string name="checkout_holder_name_not_valid">Ime vlasnika nije valjano</string>
+    <string name="checkout_social_security_number_not_valid">Pogrešan unos</string>
+    <string name="checkout_kcp_birth_date_or_tax_number_invalid">Netočan datum rođenja vlasnika kartice (GGMMDD) ili registracijski broj tvrtke (10 znamenki)</string>
+    <string name="checkout_kcp_password_invalid">Lozinka je netočna</string>
+    <string name="checkout_card_postal_not_valid">Format unosa nije važeći.</string>
 
     <string name="store_payment_method">Pohrani za moje sljedeće plaćanje</string>
 </resources>

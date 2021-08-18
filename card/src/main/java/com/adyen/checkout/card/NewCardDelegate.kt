@@ -14,6 +14,7 @@ import com.adyen.checkout.card.data.DetectedCardType
 import com.adyen.checkout.card.data.ExpiryDate
 import com.adyen.checkout.card.repository.BinLookupRepository
 import com.adyen.checkout.card.repository.PublicKeyRepository
+import com.adyen.checkout.components.base.AddressVisibility
 import com.adyen.checkout.components.model.paymentmethods.PaymentMethod
 import com.adyen.checkout.components.ui.FieldState
 import com.adyen.checkout.components.ui.Validation
@@ -43,19 +44,24 @@ class NewCardDelegate(
         return paymentMethod.type ?: PaymentMethodTypes.UNKNOWN
     }
 
-    override fun validateCardNumber(cardNumber: String): FieldState<String> {
-        return CardValidationUtils.validateCardNumber(cardNumber)
+    override fun validateCardNumber(cardNumber: String, enableLuhnCheck: Boolean?): FieldState<String> {
+        return CardValidationUtils.validateCardNumber(cardNumber, enableLuhnCheck)
     }
 
-    override fun validateExpiryDate(expiryDate: ExpiryDate): FieldState<ExpiryDate> {
-        return CardValidationUtils.validateExpiryDate(expiryDate)
+    override fun validateExpiryDate(expiryDate: ExpiryDate, expiryDatePolicy: Brand.FieldPolicy?): FieldState<ExpiryDate> {
+        val isEmptyInput = expiryDate == ExpiryDate.EMPTY_DATE
+        return if (isFieldRequired(expiryDatePolicy) || !isEmptyInput) {
+            CardValidationUtils.validateExpiryDate(expiryDate)
+        } else {
+            FieldState(expiryDate, Validation.Valid)
+        }
     }
 
     override fun validateSecurityCode(
         securityCode: String,
         cardType: DetectedCardType?
     ): FieldState<String> {
-        return if (cardConfiguration.isHideCvc) {
+        return if (cardConfiguration.isHideCvc || (!isFieldRequired(cardType?.cvcPolicy) && securityCode.isEmpty())) {
             FieldState(
                 securityCode,
                 Validation.Valid
@@ -79,8 +85,49 @@ class NewCardDelegate(
         }
     }
 
+    override fun validateSocialSecurityNumber(socialSecurityNumber: String): FieldState<String> {
+        return if (isSocialSecurityNumberRequired()) {
+            SocialSecurityNumberUtils.validateSocialSecurityNumber(socialSecurityNumber)
+        } else {
+            FieldState(socialSecurityNumber, Validation.Valid)
+        }
+    }
+
+    override fun validateKcpBirthDateOrTaxNumber(kcpBirthDateOrTaxNumber: String): FieldState<String> {
+        return if (isKCPAuthRequired()) {
+            KcpValidationUtils.validateKcpBirthDateOrTaxNumber(kcpBirthDateOrTaxNumber)
+        } else {
+            FieldState(kcpBirthDateOrTaxNumber, Validation.Valid)
+        }
+    }
+
+    override fun validateKcpCardPassword(kcpCardPassword: String): FieldState<String> {
+        return if (isKCPAuthRequired()) {
+            KcpValidationUtils.validateKcpCardPassword(kcpCardPassword)
+        } else {
+            FieldState(kcpCardPassword, Validation.Valid)
+        }
+    }
+
+    override fun validatePostalCode(postalCode: String): FieldState<String> {
+        val validation = if (postalCode.isNotEmpty()) {
+            Validation.Valid
+        } else {
+            Validation.Invalid(R.string.checkout_card_postal_not_valid)
+        }
+        return FieldState(postalCode, validation)
+    }
+
     override fun isCvcHidden(): Boolean {
         return cardConfiguration.isHideCvc
+    }
+
+    override fun isSocialSecurityNumberRequired(): Boolean {
+        return cardConfiguration.socialSecurityNumberVisibility == SocialSecurityNumberVisibility.SHOW
+    }
+
+    override fun isKCPAuthRequired(): Boolean {
+        return cardConfiguration.kcpAuthVisibility == KCPAuthVisibility.SHOW
     }
 
     override fun requiresInput(): Boolean {
@@ -89,6 +136,10 @@ class NewCardDelegate(
 
     override fun isHolderNameRequired(): Boolean {
         return cardConfiguration.isHolderNameRequired
+    }
+
+    override fun isPostalCodeRequired(): Boolean {
+        return cardConfiguration.addressVisibility == AddressVisibility.POSTAL_CODE
     }
 
     override fun detectCardType(
@@ -131,12 +182,16 @@ class NewCardDelegate(
         return DetectedCardType(
             cardType,
             isReliable = false,
-            showExpiryDate = true,
             enableLuhnCheck = true,
             cvcPolicy = when {
-                noCvcBrands.contains(cardType) -> Brand.CvcPolicy.HIDDEN
-                else -> Brand.CvcPolicy.REQUIRED
-            }
+                noCvcBrands.contains(cardType) -> Brand.FieldPolicy.HIDDEN
+                else -> Brand.FieldPolicy.REQUIRED
+            },
+            expiryDatePolicy = Brand.FieldPolicy.REQUIRED
         )
+    }
+
+    private fun isFieldRequired(fieldPolicy: Brand.FieldPolicy?): Boolean {
+        return fieldPolicy == Brand.FieldPolicy.REQUIRED
     }
 }

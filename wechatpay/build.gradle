@@ -41,14 +41,14 @@ android {
 }
 
 dependencies {
-    //Tests
-    testImplementation "junit:junit:$junit_version"
-    androidTestImplementation "androidx.test.ext:junit:$test_ext_version"
-    androidTestImplementation "androidx.test.espresso:espresso-core:$espresso_version"
-
     // Checkout
     api project(':components-core')
 
     // Dependencies
     implementation "com.tencent.mm.opensdk:wechat-sdk-android-without-mta:$wechat_pay_version"
+
+    //Tests
+    testImplementation "junit:junit:$junit_version"
+    androidTestImplementation "androidx.test.ext:junit:$test_ext_version"
+    androidTestImplementation "androidx.test.espresso:espresso-core:$espresso_version"
 }

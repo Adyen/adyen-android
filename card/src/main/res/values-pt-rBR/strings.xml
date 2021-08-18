@@ -10,13 +10,22 @@
     <string name="checkout_card_number_hint">Número do cartão</string>
     <string name="checkout_card_holder_hint">Nome no cartão</string>
     <string name="checkout_card_expiry_date_hint">Data de validade</string>
-    <string name="checkout_card_security_code_hint">CVC / CVV</string>
+    <string name="checkout_card_expiry_date_optional_hint">Data de validade (opcional)</string>
+    <string name="checkout_card_security_code_hint">CVC/CVV</string>
     <string name="checkout_card_security_code_optional_hint">CVC / CVV (opcional)</string>
+    <string name="checkout_kcp_birth_date_or_tax_number_hint">Data de nascimento do titular do cartão (AAMMDD) ou número de registro corporativo (10 dígitos)</string>
+    <string name="checkout_kcp_tax_number_hint">Número de registro corporativo (10 dígitos)</string>
+    <string name="checkout_kcp_password_hint">Primeiros dois dígitos da senha do cartão</string>
+    <string name="checkout_card_postal_code_hint">CEP</string>
 
     <string name="checkout_card_number_not_valid">Número de cartão inválido</string>
     <string name="checkout_expiry_date_not_valid">Data de vencimento inválida</string>
     <string name="checkout_security_code_not_valid">Formato de CVC/CVV inválido</string>
     <string name="checkout_holder_name_not_valid">Nome do titular inválido</string>
+    <string name="checkout_social_security_number_not_valid">Entrada inválida</string>
+    <string name="checkout_kcp_birth_date_or_tax_number_invalid">Data de nascimento do titular do cartão ou número de registro corporativo inválidos</string>
+    <string name="checkout_kcp_password_invalid">Senha inválida</string>
+    <string name="checkout_card_postal_not_valid">O formato de entrada não é válido.</string>
 
     <string name="store_payment_method">Salvar para meu próximo pagamento</string>
 </resources>

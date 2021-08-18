@@ -36,12 +36,12 @@ class StoredCardDelegate(
             DetectedCardType(
                 cardType,
                 isReliable = true,
-                showExpiryDate = true,
                 enableLuhnCheck = true,
                 cvcPolicy = when {
-                    cardConfiguration.isHideCvcStoredCard || noCvcBrands.contains(cardType) -> Brand.CvcPolicy.HIDDEN
-                    else -> Brand.CvcPolicy.REQUIRED
-                }
+                    cardConfiguration.isHideCvcStoredCard || noCvcBrands.contains(cardType) -> Brand.FieldPolicy.HIDDEN
+                    else -> Brand.FieldPolicy.REQUIRED
+                },
+                expiryDatePolicy = Brand.FieldPolicy.REQUIRED
             )
         )
     } else {
@@ -52,14 +52,14 @@ class StoredCardDelegate(
         return storedPaymentMethod.type ?: PaymentMethodTypes.UNKNOWN
     }
 
-    override fun validateCardNumber(cardNumber: String): FieldState<String> {
+    override fun validateCardNumber(cardNumber: String, enableLuhnCheck: Boolean?): FieldState<String> {
         return FieldState(
             cardNumber,
             Validation.Valid
         )
     }
 
-    override fun validateExpiryDate(expiryDate: ExpiryDate): FieldState<ExpiryDate> {
+    override fun validateExpiryDate(expiryDate: ExpiryDate, expiryDatePolicy: Brand.FieldPolicy?): FieldState<ExpiryDate> {
         return FieldState(
             expiryDate,
             Validation.Valid
@@ -84,8 +84,32 @@ class StoredCardDelegate(
         )
     }
 
+    override fun validateSocialSecurityNumber(socialSecurityNumber: String): FieldState<String> {
+        return FieldState(socialSecurityNumber, Validation.Valid)
+    }
+
+    override fun validateKcpBirthDateOrTaxNumber(kcpBirthDateOrTaxNumber: String): FieldState<String> {
+        return FieldState(kcpBirthDateOrTaxNumber, Validation.Valid)
+    }
+
+    override fun validateKcpCardPassword(kcpCardPassword: String): FieldState<String> {
+        return FieldState(kcpCardPassword, Validation.Valid)
+    }
+
+    override fun validatePostalCode(postalCode: String): FieldState<String> {
+        return FieldState(postalCode, Validation.Valid)
+    }
+
     override fun isCvcHidden(): Boolean {
         return cardConfiguration.isHideCvcStoredCard || noCvcBrands.contains(cardType)
+    }
+
+    override fun isSocialSecurityNumberRequired(): Boolean {
+        return false
+    }
+
+    override fun isKCPAuthRequired(): Boolean {
+        return false
     }
 
     override fun requiresInput(): Boolean {
@@ -93,6 +117,10 @@ class StoredCardDelegate(
     }
 
     override fun isHolderNameRequired(): Boolean {
+        return false
+    }
+
+    override fun isPostalCodeRequired(): Boolean {
         return false
     }
 
@@ -109,7 +137,7 @@ class StoredCardDelegate(
         storedCardInputData.cardNumber = storedPaymentMethod.lastFour.orEmpty()
 
         try {
-            val storedDate = ExpiryDate(storedPaymentMethod.expiryMonth.orEmpty().toInt(), storedPaymentMethod.expiryYear.orEmpty().toInt())
+            val storedDate = ExpiryDate(storedPaymentMethod.expiryMonth.orEmpty().toInt(), storedPaymentMethod.expiryYear.orEmpty().toInt(), true)
             storedCardInputData.expiryDate = storedDate
         } catch (e: NumberFormatException) {
             Logger.e(TAG, "Failed to parse stored Date", e)

@@ -18,17 +18,25 @@ If you have a feature request, or spotted a bug or a technical problem, create a
 
 The Components are available through [Maven Central][dl], you only need to add the Gradle dependency.
 
+### Migrate from v3
+
+If you are upgrading from 3.x.x to a current release, check out our [migration guide][migration.guide].
+
 ### Import with Gradle
 
 Import the Component module for the Payment Method you want to use by adding it to your `build.gradle` file.
 For example, for the Drop-in solution you should add:
 ```groovy
-implementation "com.adyen.checkout:drop-in:4.0.0"
+implementation "com.adyen.checkout:drop-in:4.1.0"
 ```
 For a Credit Card component you should add:
 ```groovy
-implementation "com.adyen.checkout:card:4.0.0"
+implementation "com.adyen.checkout:card:4.1.0"
 ```
+
+### Client Key
+
+Drop-in and Components require a [client key][client.key], that should be provided in the `Configuration.Builder` constructors.
 
 ## Drop-in
 
@@ -73,7 +81,7 @@ Don't forget to also add the service your manifest.
 <service android:name=".YourDropInService"/>
 ```
 
-Some payment methods need additional configuration. For example, to enable the card form, the Drop-in needs a client key from the Customer Area. These payment method specific configuration parameters can be set in the `DropInConfiguration`:
+Configure Drop-in:
 
 ```kotlin
 // Optional, if you want to display the amount and currency. In this example, the Pay button will display 10 EUR.
@@ -82,9 +90,21 @@ val amount = Amount().apply {
     value = 10_00
 }
 
-val dropInConfiguration = DropInConfiguration.Builder(YourContext, YourIntent, "YOUR_CLIENT_KEY")
+val dropInConfiguration = DropInConfiguration.Builder(YourContext, YourDropInService::class.java, "YOUR_CLIENT_KEY")
     .setAmount(amount)
     .setShopperLocale(shopperLocale)
+    .build()
+```
+
+Optional - Configure specific payment methods:
+
+```kotlin
+val cardConfiguration = CardConfiguration.Builder(YourContext, "YOUR_CLIENT_KEY")
+    .build()
+
+val dropInConfiguration = DropInConfiguration.Builder(YourContext, YourDropInService::class.java, "YOUR_CLIENT_KEY")
+    // ...
+    .addCardConfiguration(cardConfiguration)
     .build()
 ```
 
@@ -99,9 +119,23 @@ val resultIntent = Intent(YourContext, ResultActivity::class.java)
 DropIn.startPayment(YourContext, paymentMethodsApiResponse, dropInConfiguration, resultIntent)
 ```
 
-After the shopper completes the payment, you can obtain the the `result` you previously passed with the `DropInServiceResult.Finished`. To obtain the `result`:
+To handle the Drop-in result, call `DropIn.handleActivityResult` inside `onActivityResult` within the activity that initiated the payment (`DropIn.startPayment`). The result is obtained in the `DropInResult` wrapper class:
 
-* If you specified a `resultIntent` when calling `DropIn.startPayment`, simply call `DropIn.getDropInResultFromIntent` inside  `onCreate` within the newly launched activity:
+```kotlin
+class CheckoutActivity : Activity() {
+    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
+        super.onActivityResult(requestCode, resultCode, data)
+        val dropInResult = DropIn.handleActivityResult(requestCode, resultCode, data) ?: return
+        when (dropInResult) {
+            is DropInResult.Finished -> handleFinished(dropInResult.result) // will not be called if a resultIntent was passed to DropIn.startPayment
+            is DropInResult.Error -> handleError(dropInResult.reason)
+            is DropInResult.CancelledByUser -> handleCancelled()
+        }
+    }
+}
+```
+
+Additionally, if you specified a `resultIntent` when calling `DropIn.startPayment`, simply call `DropIn.getDropInResultFromIntent` inside  `onCreate` within the newly launched activity:
 
 ```kotlin
 class ResultActivity : Activity() {
@@ -111,24 +145,6 @@ class ResultActivity : Activity() {
     }
 }
 ```
-
-* If you did not specify a `resultIntent` when calling `DropIn.startPayment`, call `DropIn.handleActivityResult` inside `onActivityResult` within the activity that initiated the payment (`DropIn.startPayment`). The result is obtained in the `DropInResult` wrapper class:
-
-```kotlin
-class CheckoutActivity : Activity() {
-    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
-        super.onActivityResult(requestCode, resultCode, data)
-        val dropInResult = DropIn.handleActivityResult(requestCode, resultCode, data) ?: return
-        when (dropInResult) {
-            is DropInResult.Finished -> handleFinished(dropInResult.result)
-            is DropInResult.Error -> handleError(dropInResult.reason)
-            is DropInResult.CancelledByUser -> handleCancelled()
-        }
-    }
-}
-```
-    
-Note that in both cases, you should use `DropIn.handleActivityResult` (the code sample above) to handle the error and cancelled by user scenarios.
 
 ## Components
 
@@ -171,12 +187,13 @@ If you use ProGuard or R8, the following rules should be enough to maintain all 
 Please let us know if you find any issues.
 
 ```
--keep class com.adyen.checkout.base.model.** { *; }
+-keep class com.adyen.checkout.core.model.** { * ;}
+-keep class com.adyen.checkout.components.model.** { *; }
 -keep class com.adyen.threeds2.** { *; }
--keepclassmembers public class * implements com.adyen.checkout.base.PaymentComponent {
+-keepclassmembers public class * implements com.adyen.checkout.components.PaymentComponent {
    public <init>(...);
 }
--keepclassmembers public class * implements com.adyen.checkout.base.ActionComponent {
+-keepclassmembers public class * implements com.adyen.checkout.components.ActionComponent {
    public <init>(...);
 }
 ```
@@ -201,3 +218,5 @@ This repository is open source and available under the MIT license. For more inf
 [apiExplorer.paymentsDetails]: https://docs.adyen.com/api-explorer/#/CheckoutService/v67/post/payments/details
 [adyen.support]: https://support.adyen.com/hc/en-us/requests/new?ticket_form_id=360000705420
 [docs.cardConfiguration]: https://docs.adyen.com/online-payments/android/components#step-1-set-up-components
+[client.key]: https://docs.adyen.com/online-payments/android/drop-in#client-key
+[migration.guide]: https://docs.adyen.com/online-payments/android/migrate-to-android-4-0-0

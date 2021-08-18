@@ -31,6 +31,9 @@ public class Address extends ModelObject {
     private static final String STATE_OR_PROVINCE = "stateOrProvince";
     private static final String STREET = "street";
 
+    public static final String ADDRESS_NULL_PLACEHOLDER = "null";
+    public static final String ADDRESS_COUNTRY_NULL_PLACEHOLDER = "ZZ";
+
     @NonNull
     public static final Serializer<Address> SERIALIZER = new Serializer<Address>() {
         @Override

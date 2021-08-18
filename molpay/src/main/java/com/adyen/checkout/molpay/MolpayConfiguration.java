@@ -32,15 +32,10 @@ public class MolpayConfiguration extends IssuerListConfiguration {
     };
 
     /**
-     * @param shopperLocale The locale that should be used to display strings and layouts. Can differ from device default.
-     * @param environment   The environment to be used to make network calls.
+     * @param builder The Builder instance to create the configuration.
      */
-    MolpayConfiguration(
-            @NonNull Locale shopperLocale,
-            @NonNull Environment environment,
-            @NonNull String clientKey
-    ) {
-        super(shopperLocale, environment, clientKey);
+    MolpayConfiguration(@NonNull Builder builder) {
+        super(builder.getBuilderShopperLocale(), builder.getBuilderEnvironment(), builder.getBuilderClientKey());
     }
 
     MolpayConfiguration(@NonNull Parcel in) {
@@ -87,8 +82,8 @@ public class MolpayConfiguration extends IssuerListConfiguration {
 
         @NonNull
         @Override
-        public MolpayConfiguration build() {
-            return new MolpayConfiguration(mBuilderShopperLocale, mBuilderEnvironment, mBuilderClientKey);
+        protected MolpayConfiguration buildInternal() {
+            return new MolpayConfiguration(this);
         }
     }
 }

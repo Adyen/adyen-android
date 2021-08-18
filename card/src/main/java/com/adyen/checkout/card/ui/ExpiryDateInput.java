@@ -89,10 +89,10 @@ public class ExpiryDateInput extends AdyenTextInputEditText {
             calendar.setTime(parsedDate);
             fixCalendarYear(calendar);
             // GregorianCalendar is 0 based
-            return new ExpiryDate(calendar.get(Calendar.MONTH) + 1, calendar.get(Calendar.YEAR));
+            return new ExpiryDate(calendar.get(Calendar.MONTH) + 1, calendar.get(Calendar.YEAR), true);
         } catch (ParseException e) {
             Logger.d(TAG, "getDate - value does not match expected pattern. " + e.getLocalizedMessage());
-            return ExpiryDate.EMPTY_DATE;
+            return getRawValue().isEmpty() ? ExpiryDate.EMPTY_DATE : ExpiryDate.INVALID_DATE;
         }
     }
 

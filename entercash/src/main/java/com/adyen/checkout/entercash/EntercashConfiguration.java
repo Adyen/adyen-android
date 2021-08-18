@@ -32,15 +32,10 @@ public class EntercashConfiguration extends IssuerListConfiguration {
     };
 
     /**
-     * @param shopperLocale The locale that should be used to display strings and layouts. Can differ from device default.
-     * @param environment   The environment to be used to make network calls.
+     * @param builder The Builder instance to create the configuration.
      */
-    EntercashConfiguration(
-            @NonNull Locale shopperLocale,
-            @NonNull Environment environment,
-            @NonNull String clientKey
-    ) {
-        super(shopperLocale, environment, clientKey);
+    EntercashConfiguration(@NonNull Builder builder) {
+        super(builder.getBuilderShopperLocale(), builder.getBuilderEnvironment(), builder.getBuilderClientKey());
     }
 
     EntercashConfiguration(@NonNull Parcel in) {
@@ -87,8 +82,8 @@ public class EntercashConfiguration extends IssuerListConfiguration {
 
         @NonNull
         @Override
-        public EntercashConfiguration build() {
-            return new EntercashConfiguration(mBuilderShopperLocale, mBuilderEnvironment, mBuilderClientKey);
+        protected EntercashConfiguration buildInternal() {
+            return new EntercashConfiguration(this);
         }
     }
 }

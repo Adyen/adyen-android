@@ -32,11 +32,8 @@ public class WeChatPayActionConfiguration extends Configuration {
         }
     };
 
-    protected WeChatPayActionConfiguration(
-            @NonNull Locale shopperLocale,
-            @NonNull Environment environment,
-            @NonNull String clientKey) {
-        super(shopperLocale, environment, clientKey);
+    protected WeChatPayActionConfiguration(@NonNull Builder builder) {
+        super(builder.getBuilderShopperLocale(), builder.getBuilderEnvironment(), builder.getBuilderClientKey());
     }
 
     protected WeChatPayActionConfiguration(@NonNull Parcel in) {
@@ -83,8 +80,8 @@ public class WeChatPayActionConfiguration extends Configuration {
 
         @NonNull
         @Override
-        public WeChatPayActionConfiguration build() {
-            return new WeChatPayActionConfiguration(mBuilderShopperLocale, mBuilderEnvironment, mBuilderClientKey);
+        protected WeChatPayActionConfiguration buildInternal() {
+            return new WeChatPayActionConfiguration(this);
         }
     }
 }

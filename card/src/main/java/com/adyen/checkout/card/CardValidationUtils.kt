@@ -26,8 +26,6 @@ object CardValidationUtils {
     // Card Number
     private const val MINIMUM_CARD_NUMBER_LENGTH = 8
     const val MAXIMUM_CARD_NUMBER_LENGTH = 19
-    const val GENERAL_CARD_NUMBER_LENGTH = 16
-    const val AMEX_CARD_NUMBER_LENGTH = 15
 
     // Security Code
     private const val GENERAL_CARD_SECURITY_CODE_SIZE = 3
@@ -41,16 +39,15 @@ object CardValidationUtils {
     /**
      * Validate card number.
      */
-    fun validateCardNumber(number: String): FieldState<String> {
+    fun validateCardNumber(number: String, enableLuhnCheck: Boolean?): FieldState<String> {
         val normalizedNumber = StringUtil.normalize(number)
         val length = normalizedNumber.length
         val validation = when {
             !StringUtil.isDigitsAndSeparatorsOnly(normalizedNumber) -> Validation.Invalid(R.string.checkout_card_number_not_valid)
-            length > MAXIMUM_CARD_NUMBER_LENGTH -> Validation.Invalid(R.string.checkout_card_number_not_valid)
-            length < MINIMUM_CARD_NUMBER_LENGTH -> Validation.Partial
+            length > MAXIMUM_CARD_NUMBER_LENGTH || length < MINIMUM_CARD_NUMBER_LENGTH -> Validation.Invalid(R.string.checkout_card_number_not_valid)
+            enableLuhnCheck == false -> Validation.Valid
             isLuhnChecksumValid(normalizedNumber) -> Validation.Valid
-            length == MAXIMUM_CARD_NUMBER_LENGTH -> Validation.Invalid(R.string.checkout_card_number_not_valid)
-            else -> Validation.Partial
+            else -> Validation.Invalid(R.string.checkout_card_number_not_valid)
         }
 
         return FieldState(number, validation)
@@ -103,7 +100,7 @@ object CardValidationUtils {
         val invalidState = Validation.Invalid(R.string.checkout_security_code_not_valid)
         val validation = when {
             !StringUtil.isDigitsAndSeparatorsOnly(normalizedSecurityCode) -> invalidState
-            cardType?.cvcPolicy == Brand.CvcPolicy.OPTIONAL && length == 0 -> Validation.Valid
+            cardType?.cvcPolicy == Brand.FieldPolicy.OPTIONAL && length == 0 -> Validation.Valid
             cardType?.cardType == CardType.AMERICAN_EXPRESS && length == AMEX_SECURITY_CODE_SIZE -> Validation.Valid
             cardType?.cardType != CardType.AMERICAN_EXPRESS && length == GENERAL_CARD_SECURITY_CODE_SIZE -> Validation.Valid
             else -> invalidState

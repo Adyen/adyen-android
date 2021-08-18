@@ -10,13 +10,22 @@
     <string name="checkout_card_number_hint">Kártyaszám</string>
     <string name="checkout_card_holder_hint">A kártyán szereplő név</string>
     <string name="checkout_card_expiry_date_hint">Lejárati dátum</string>
+    <string name="checkout_card_expiry_date_optional_hint">Lejárati dátum (nem kötelező)</string>
     <string name="checkout_card_security_code_hint">CVC/CVV</string>
     <string name="checkout_card_security_code_optional_hint">CVC/CVV (opcionális)</string>
+    <string name="checkout_kcp_birth_date_or_tax_number_hint">Kártyatulajdonos születési dátuma (ÉÉHHNN) vagy cégjegyzékszám (10 számjegyű)</string>
+    <string name="checkout_kcp_tax_number_hint">Cégjegyzékszám (10 számjegyű)</string>
+    <string name="checkout_kcp_password_hint">Kártya jelszavának első 2 számjegye</string>
+    <string name="checkout_card_postal_code_hint">Irányítószám</string>
 
     <string name="checkout_card_number_not_valid">Érvénytelen kártyaszám</string>
     <string name="checkout_expiry_date_not_valid">Érvénytelen lejárati dátum</string>
     <string name="checkout_security_code_not_valid">A CVC/CVV formátuma érvénytelen</string>
     <string name="checkout_holder_name_not_valid">A tulajdonos neve érvénytelen</string>
+    <string name="checkout_social_security_number_not_valid">Érvénytelen bevitel</string>
+    <string name="checkout_kcp_birth_date_or_tax_number_invalid">A kártyatulajdonos születési dátuma vagy a cégjegyzékszám érvénytelen</string>
+    <string name="checkout_kcp_password_invalid">Érvénytelen jelszó</string>
+    <string name="checkout_card_postal_not_valid">A megadott adatok formátuma érvénytelen.</string>
 
     <string name="store_payment_method">Mentés a következő fizetéshez</string>
 </resources>

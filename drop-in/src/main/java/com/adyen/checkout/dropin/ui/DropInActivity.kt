@@ -146,7 +146,7 @@ class DropInActivity : AppCompatActivity(), DropInBottomSheetDialogFragment.Prot
 
         val initializationSuccessful = initializeBundleVariables(bundle)
         if (!initializationSuccessful) {
-            showError(getString(R.string.action_failed), "Initialization failed", true)
+            terminateWithError("Initialization failed")
             return
         }
 
@@ -159,7 +159,7 @@ class DropInActivity : AppCompatActivity(), DropInBottomSheetDialogFragment.Prot
         }
 
         actionHandler = ActionHandler(this, dropInViewModel.dropInConfiguration)
-        actionHandler.restoreState(savedInstanceState)
+        actionHandler.restoreState(this, savedInstanceState)
 
         handleIntent(intent)
 

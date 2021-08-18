@@ -32,15 +32,10 @@ public class OpenBankingConfiguration extends IssuerListConfiguration {
     };
 
     /**
-     * @param shopperLocale The locale that should be used to display strings and layouts. Can differ from device default.
-     * @param environment   The environment to be used to make network calls.
+     * @param builder The Builder instance to create the configuration.
      */
-    OpenBankingConfiguration(
-            @NonNull Locale shopperLocale,
-            @NonNull Environment environment,
-            @NonNull String clientKey
-    ) {
-        super(shopperLocale, environment, clientKey);
+    OpenBankingConfiguration(@NonNull Builder builder) {
+        super(builder.getBuilderShopperLocale(), builder.getBuilderEnvironment(), builder.getBuilderClientKey());
     }
 
     OpenBankingConfiguration(@NonNull Parcel in) {
@@ -87,8 +82,8 @@ public class OpenBankingConfiguration extends IssuerListConfiguration {
 
         @NonNull
         @Override
-        public OpenBankingConfiguration build() {
-            return new OpenBankingConfiguration(mBuilderShopperLocale, mBuilderEnvironment, mBuilderClientKey);
+        protected OpenBankingConfiguration buildInternal() {
+            return new OpenBankingConfiguration(this);
         }
     }
 }

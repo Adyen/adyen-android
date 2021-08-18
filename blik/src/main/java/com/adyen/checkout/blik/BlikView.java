@@ -21,6 +21,7 @@ import androidx.lifecycle.Observer;
 
 import com.adyen.checkout.components.GenericComponentState;
 import com.adyen.checkout.components.model.payments.request.BlikPaymentMethod;
+import com.adyen.checkout.components.ui.Validation;
 import com.adyen.checkout.components.ui.view.AdyenLinearLayout;
 import com.adyen.checkout.components.ui.view.AdyenTextInputEditText;
 import com.adyen.checkout.core.exception.CheckoutException;
@@ -85,10 +86,14 @@ public class BlikView
 
         mBlikCodeEditText.setOnFocusChangeListener((v, hasFocus) -> {
             final BlikOutputData outputData = getComponent().getOutputData();
+            final Validation blikCodeValidation = outputData != null
+                    ? outputData.getBlikCodeField().getValidation()
+                    : null;
             if (hasFocus) {
                 mBlikCodeInput.setError(null);
-            } else if (outputData != null && !outputData.getBlikCodeField().getValidation().isValid()) {
-                mBlikCodeInput.setError(mLocalizedContext.getString(R.string.checkout_blik_code_not_valid));
+            } else if (blikCodeValidation != null && !blikCodeValidation.isValid()) {
+                final int errorReasonResId = ((Validation.Invalid) blikCodeValidation).getReason();
+                mBlikCodeInput.setError(mLocalizedContext.getString(errorReasonResId));
             }
         });
     }
@@ -124,9 +129,12 @@ public class BlikView
             return;
         }
 
-        if (!outputData.getBlikCodeField().getValidation().isValid()) {
+        final Validation blikCodeValidation = outputData.getBlikCodeField().getValidation();
+
+        if (!blikCodeValidation.isValid()) {
             mBlikCodeInput.requestFocus();
-            mBlikCodeInput.setError(mLocalizedContext.getString(R.string.checkout_blik_code_not_valid));
+            final int errorReasonResId = ((Validation.Invalid) blikCodeValidation).getReason();
+            mBlikCodeInput.setError(mLocalizedContext.getString(errorReasonResId));
         }
     }
 

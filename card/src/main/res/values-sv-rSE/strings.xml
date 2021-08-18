@@ -10,13 +10,22 @@
     <string name="checkout_card_number_hint">Kortnummer</string>
     <string name="checkout_card_holder_hint">Namn på kort</string>
     <string name="checkout_card_expiry_date_hint">Utgångsdatum</string>
+    <string name="checkout_card_expiry_date_optional_hint">Utgångsdatum (valfritt)</string>
     <string name="checkout_card_security_code_hint">CVC / CVV</string>
     <string name="checkout_card_security_code_optional_hint">CVC/CVV (tillval)</string>
+    <string name="checkout_kcp_birth_date_or_tax_number_hint">Kortinnehavarens födelsedatum (ÅÅMMDD) eller företagets organisationsnummer (10 siffror)</string>
+    <string name="checkout_kcp_tax_number_hint">Företagets organisationsnummer (10 siffror)</string>
+    <string name="checkout_kcp_password_hint">De två första siffrorna i kortets lösenord</string>
+    <string name="checkout_card_postal_code_hint">Postnummer</string>
 
     <string name="checkout_card_number_not_valid">Ogiltigt kortnummer</string>
     <string name="checkout_expiry_date_not_valid">Ogiltigt utgångsdatum</string>
     <string name="checkout_security_code_not_valid">Ogiltigt CVC/CVV-format</string>
     <string name="checkout_holder_name_not_valid">Ogiltigt namn på innehavare</string>
+    <string name="checkout_social_security_number_not_valid">Ogiltig inmatning</string>
+    <string name="checkout_kcp_birth_date_or_tax_number_invalid">Ogiltigt födelsedatum eller organisationsnummer</string>
+    <string name="checkout_kcp_password_invalid">Ogiltigt lösenord</string>
+    <string name="checkout_card_postal_not_valid">Ogiltigt format på inmatning.</string>
 
     <string name="store_payment_method">Spara till min nästa betalning</string>
 </resources>

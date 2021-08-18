@@ -51,6 +51,28 @@
         <item name="android:inputType">text</item>
     </style>
 
+    <style name="AdyenCheckout.Card.SocialSecurityNumberInput" parent="AdyenCheckout.TextInputEditText">
+        <item name="android:hint">@string/checkout_social_security_number_hint</item>
+        <item name="android:inputType">text</item>
+    </style>
+
+    <style name="AdyenCheckout.Card.KcpBirthDateOrTaxNumber" parent="AdyenCheckout.TextInputEditText">
+        <item name="android:hint">@string/checkout_kcp_birth_date_or_tax_number_hint</item>
+        <item name="android:inputType">number</item>
+        <item name="android:maxLength">10</item>
+    </style>
+
+    <style name="AdyenCheckout.Card.KcpCardPassword" parent="AdyenCheckout.TextInputEditText">
+        <item name="android:hint">@string/checkout_kcp_password_hint</item>
+        <item name="android:inputType">numberPassword</item>
+        <item name="android:maxLength">2</item>
+    </style>
+
+    <style name="AdyenCheckout.Card.PostalCodeInput" parent="AdyenCheckout.TextInputEditText">
+        <item name="android:hint">@string/checkout_card_postal_code_hint</item>
+        <item name="android:inputType">textPostalAddress</item>
+    </style>
+
     <style name="AdyenCheckout.Card.StorePaymentSwitch" parent="AdyenCheckout.Switch">
         <item name="android:text">@string/store_payment_method</item>
         <item name="android:textSize">18sp</item>
