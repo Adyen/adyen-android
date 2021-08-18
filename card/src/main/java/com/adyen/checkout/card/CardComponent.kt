@@ -38,6 +38,8 @@ private val TAG = LogUtil.getTag()
 private val PAYMENT_METHOD_TYPES = arrayOf(PaymentMethodTypes.SCHEME)
 private const val BIN_VALUE_LENGTH = 6
 private const val LAST_FOUR_LENGTH = 4
+private const val FIRST_CARD_INDEX = 0
+private const val SINGLE_CARD_LIST_SIZE = 1
 
 @Suppress("TooManyFunctions")
 class CardComponent private constructor(
@@ -75,7 +77,7 @@ class CardComponent private constructor(
                             kcpCardPassword = kcpCardPasswordState.value,
                             postalCode = postalCodeState.value,
                             isStorePaymentSelected = isStoredPaymentMethodEnable,
-                            detectedCardTypes = it.map { item -> if (item == it.first()) item.copy(isSelected = true) else item }
+                            detectedCardTypes = markSelectedCard(it, 0)
                         )
                         notifyStateChanged(newOutputData)
                     }
@@ -112,13 +114,10 @@ class CardComponent private constructor(
     override fun onInputDataChanged(inputData: CardInputData): CardOutputData {
         Logger.v(TAG, "onInputDataChanged")
 
-        val detectedCardTypes = cardDelegate.detectCardType(inputData.cardNumber, publicKey, viewModelScope).mapIndexed { index, detectedCardType ->
-            if (index == inputData.selectedCardIndex) {
-                detectedCardType.copy(isSelected = true)
-            } else {
-                detectedCardType.copy(isSelected = false)
-            }
-        }
+        val detectedCardTypes = markSelectedCard(
+            cardDelegate.detectCardType(inputData.cardNumber, publicKey, viewModelScope),
+            inputData.selectedCardIndex
+        )
 
         return makeOutputData(
             cardNumber = inputData.cardNumber,
@@ -182,6 +181,20 @@ class CardComponent private constructor(
         return when (expiryDatePolicy) {
             Brand.FieldPolicy.OPTIONAL, Brand.FieldPolicy.HIDDEN -> InputFieldUIState.OPTIONAL
             else -> InputFieldUIState.REQUIRED
+        }
+    }
+
+    private fun markSelectedCard(cards: List<DetectedCardType>, selectedIndex: Int?): List<DetectedCardType> {
+        return if (cards.size > SINGLE_CARD_LIST_SIZE) {
+            cards.mapIndexed { index, card ->
+                if (index == selectedIndex) {
+                    card.copy(isSelected = true)
+                } else {
+                    card
+                }
+            }
+        } else {
+            cards
         }
     }
 
