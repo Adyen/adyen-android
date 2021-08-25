@@ -63,6 +63,7 @@ class CardComponent private constructor(
         if (cardDelegate is NewCardDelegate) {
             cardDelegate.binLookupFlow
                 .onEach {
+                    val sortedCardList = DualBrandedCardUtils.sortBrands(it)
                     Logger.d(TAG, "New binLookupFlow emitted")
                     Logger.d(TAG, "Brands: $it")
                     with(outputData) {
@@ -77,7 +78,7 @@ class CardComponent private constructor(
                             kcpCardPassword = kcpCardPasswordState.value,
                             postalCode = postalCodeState.value,
                             isStorePaymentSelected = isStoredPaymentMethodEnable,
-                            detectedCardTypes = markSelectedCard(it, 0)
+                            detectedCardTypes = markSelectedCard(sortedCardList, 0)
                         )
                         notifyStateChanged(newOutputData)
                     }
@@ -114,8 +115,10 @@ class CardComponent private constructor(
     override fun onInputDataChanged(inputData: CardInputData): CardOutputData {
         Logger.v(TAG, "onInputDataChanged")
 
+        val sortedCardList = DualBrandedCardUtils.sortBrands(cardDelegate.detectCardType(inputData.cardNumber, publicKey, viewModelScope))
+
         val detectedCardTypes = markSelectedCard(
-            cardDelegate.detectCardType(inputData.cardNumber, publicKey, viewModelScope),
+            sortedCardList,
             inputData.selectedCardIndex
         )
 
