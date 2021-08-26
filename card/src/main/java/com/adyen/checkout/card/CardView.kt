@@ -205,7 +205,7 @@ class CardView @JvmOverloads constructor(context: Context, attrs: AttributeSet? 
             binding.cardBrandLogoImageViewPrimary.setStrokeWidth(0f)
             binding.cardBrandLogoImageViewPrimary.setImageResource(R.drawable.ic_card)
             binding.cardBrandLogoImageViewPrimary.alpha = 1f
-            binding.cardBrandLogoImageViewSecondary.isVisible = false
+            binding.cardBrandLogoContainerSecondary.isVisible = false
             binding.editTextCardNumber.setAmexCardFormat(false)
             resetBrandSelectionInput()
         } else {
@@ -213,14 +213,14 @@ class CardView @JvmOverloads constructor(context: Context, attrs: AttributeSet? 
             mImageLoader?.load(detectedCardTypes[0].cardType.txVariant, binding.cardBrandLogoImageViewPrimary, 0, R.drawable.ic_card)
 
             detectedCardTypes.getOrNull(1)?.takeIf { it.isReliable }?.let {
-                binding.cardBrandLogoImageViewSecondary.isVisible = true
+                binding.cardBrandLogoContainerSecondary.isVisible = true
                 binding.cardBrandLogoImageViewSecondary.setStrokeWidth(RoundCornerImageView.DEFAULT_STROKE_WIDTH)
                 mImageLoader?.load(it.cardType.txVariant, binding.cardBrandLogoImageViewSecondary, 0, R.drawable.ic_card)
                 initCardBrandLogoViews(detectedCardTypes.indexOfFirst { it.isSelected })
                 initBrandSelectionListeners()
             } ?: run {
                 binding.cardBrandLogoImageViewPrimary.alpha = 1f
-                binding.cardBrandLogoImageViewSecondary.isVisible = false
+                binding.cardBrandLogoContainerSecondary.isVisible = false
                 resetBrandSelectionInput()
             }
 
@@ -268,10 +268,10 @@ class CardView @JvmOverloads constructor(context: Context, attrs: AttributeSet? 
     private fun setCardNumberError(@StringRes stringResId: Int?) {
         if (stringResId == null) {
             binding.textInputLayoutCardNumber.error = null
-            binding.cardBrandLogoImageViewPrimary.isVisible = true
+            binding.cardBrandLogoContainerPrimary.isVisible = true
         } else {
             binding.textInputLayoutCardNumber.error = mLocalizedContext.getString(stringResId)
-            binding.cardBrandLogoImageViewPrimary.isVisible = false
+            binding.cardBrandLogoContainerPrimary.isVisible = false
         }
     }
 
@@ -284,13 +284,13 @@ class CardView @JvmOverloads constructor(context: Context, attrs: AttributeSet? 
     }
 
     private fun initBrandSelectionListeners() {
-        binding.cardBrandLogoImageViewPrimary.setOnClickListener {
+        binding.cardBrandLogoContainerPrimary.setOnClickListener {
             mCardInputData.selectedCardIndex = 0
             notifyInputDataChanged()
             selectPrimaryBrand()
         }
 
-        binding.cardBrandLogoImageViewSecondary.setOnClickListener {
+        binding.cardBrandLogoContainerSecondary.setOnClickListener {
             mCardInputData.selectedCardIndex = 1
             notifyInputDataChanged()
             selectSecondaryBrand()
@@ -298,8 +298,8 @@ class CardView @JvmOverloads constructor(context: Context, attrs: AttributeSet? 
     }
 
     private fun resetBrandSelectionInput() {
-        binding.cardBrandLogoImageViewPrimary.setOnClickListener(null)
-        binding.cardBrandLogoImageViewSecondary.setOnClickListener(null)
+        binding.cardBrandLogoContainerPrimary.setOnClickListener(null)
+        binding.cardBrandLogoContainerSecondary.setOnClickListener(null)
     }
 
     private fun selectPrimaryBrand() {

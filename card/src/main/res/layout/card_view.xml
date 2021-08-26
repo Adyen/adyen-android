@@ -35,25 +35,38 @@
 
         <LinearLayout
             android:id="@+id/cardBrandLogo_container"
-            style="@style/AdyenCheckout.Card.BrandRecognitionLogoContainer"
+            style="@style/AdyenCheckout.Card.BrandRecognitionLogoContainerGroup"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:orientation="horizontal">
 
-            <com.adyen.checkout.components.ui.view.RoundCornerImageView
-                android:id="@+id/cardBrandLogo_imageView_primary"
-                style="@style/AdyenCheckout.Card.BrandRecognitionLogo"
-                app:strokeColor="@color/stroke_color"
-                app:strokeWidth="0dp" />
+            <FrameLayout
+                android:id="@+id/cardBrandLogo_container_primary"
+                style="@style/AdyenCheckout.Card.BrandRecognitionLogoContainer"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content">
 
-            <com.adyen.checkout.components.ui.view.RoundCornerImageView
-                android:id="@+id/cardBrandLogo_imageView_secondary"
-                style="@style/AdyenCheckout.Card.BrandRecognitionLogo"
-                android:layout_marginStart="@dimen/standard_half_margin"
-                app:strokeColor="@color/stroke_color"
+                <com.adyen.checkout.components.ui.view.RoundCornerImageView
+                    android:id="@+id/cardBrandLogo_imageView_primary"
+                    style="@style/AdyenCheckout.Card.BrandRecognitionLogo"
+                    app:strokeColor="@color/stroke_color"
+                    app:strokeWidth="0dp" />
+            </FrameLayout>
+
+            <FrameLayout
+                android:id="@+id/cardBrandLogo_container_secondary"
+                style="@style/AdyenCheckout.Card.BrandRecognitionLogoContainer"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
                 android:visibility="gone"
-                app:strokeWidth="0dp" />
+                tools:visibility="visible">
 
+                <com.adyen.checkout.components.ui.view.RoundCornerImageView
+                    android:id="@+id/cardBrandLogo_imageView_secondary"
+                    style="@style/AdyenCheckout.Card.BrandRecognitionLogo"
+                    app:strokeColor="@color/stroke_color"
+                    app:strokeWidth="0dp" />
+            </FrameLayout>
         </LinearLayout>
     </FrameLayout>
 
