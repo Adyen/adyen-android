@@ -136,6 +136,7 @@ class CardView @JvmOverloads constructor(context: Context, attrs: AttributeSet? 
             onExpiryDateValidated(cardOutputData.expiryDateState)
             setSocialSecurityNumberVisibility(cardOutputData.isSocialSecurityNumberRequired)
             setKcpAuthVisibility(cardOutputData.isKCPAuthRequired)
+            setPostalCodeVisibility(cardOutputData.isPostalCodeRequired)
             handleCvcUIState(cardOutputData.cvcUIState)
             handleExpiryDateUIState(cardOutputData.expiryDateUIState)
         }
@@ -432,6 +433,10 @@ class CardView @JvmOverloads constructor(context: Context, attrs: AttributeSet? 
     private fun setKcpAuthVisibility(shouldShowKCPAuth: Boolean) {
         binding.textInputLayoutKcpBirthDateOrTaxNumber.isVisible = shouldShowKCPAuth
         binding.textInputLayoutKcpCardPassword.isVisible = shouldShowKCPAuth
+    }
+
+    private fun setPostalCodeVisibility(shouldShowPostalCode: Boolean) {
+        binding.textInputLayoutPostalCode.isVisible = shouldShowPostalCode
     }
 
     private fun setStoredCardInterface(storedCardInput: CardInputData) {

@@ -156,7 +156,8 @@ class CardComponent private constructor(
             makeExpiryDateUIState(firstDetectedType?.expiryDatePolicy),
             detectedCardTypes,
             cardDelegate.isSocialSecurityNumberRequired(),
-            cardDelegate.isKCPAuthRequired()
+            cardDelegate.isKCPAuthRequired(),
+            cardDelegate.isPostalCodeRequired()
         )
     }
 
