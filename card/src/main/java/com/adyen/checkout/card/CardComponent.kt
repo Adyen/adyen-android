@@ -187,7 +187,7 @@ class CardComponent private constructor(
         }
     }
 
-    private fun markSelectedCard(cards: List<DetectedCardType>, selectedIndex: Int?): List<DetectedCardType> {
+    private fun markSelectedCard(cards: List<DetectedCardType>, selectedIndex: Int): List<DetectedCardType> {
         return if (cards.size > SINGLE_CARD_LIST_SIZE) {
             cards.mapIndexed { index, card ->
                 if (index == selectedIndex) {
@@ -304,6 +304,10 @@ class CardComponent private constructor(
             cardPaymentMethod.taxNumber = stateOutputData.kcpBirthDateOrTaxNumberState.value
         }
 
+        if (isDualBrandedFlow(stateOutputData)) {
+            cardPaymentMethod.brand = stateOutputData.detectedCardTypes.first { it.isSelected }.cardType.txVariant
+        }
+
         val paymentComponentData = PaymentComponentData<CardPaymentMethod>().apply {
             paymentMethod = cardPaymentMethod
             setStorePaymentMethod(stateOutputData.isStoredPaymentMethodEnable)
@@ -346,7 +350,18 @@ class CardComponent private constructor(
         return configuration.isShowStorePaymentFieldEnable
     }
 
-    fun makeAddressData(outputData: CardOutputData): Address {
+    @StringRes fun getKcpBirthDateOrTaxNumberHint(input: String): Int {
+        return when {
+            input.length > KcpValidationUtils.KCP_BIRTH_DATE_LENGTH -> R.string.checkout_kcp_tax_number_hint
+            else -> R.string.checkout_kcp_birth_date_or_tax_number_hint
+        }
+    }
+
+    private fun isDualBrandedFlow(cardOutputData: CardOutputData): Boolean {
+        return cardOutputData.detectedCardTypes.size > 1 && cardOutputData.detectedCardTypes.any { it.isSelected }
+    }
+
+    private fun makeAddressData(outputData: CardOutputData): Address {
         return Address().apply {
             postalCode = outputData.postalCodeState.value
             street = Address.ADDRESS_NULL_PLACEHOLDER
@@ -354,13 +369,6 @@ class CardComponent private constructor(
             houseNumberOrName = Address.ADDRESS_NULL_PLACEHOLDER
             city = Address.ADDRESS_NULL_PLACEHOLDER
             country = Address.ADDRESS_COUNTRY_NULL_PLACEHOLDER
-        }
-    }
-
-    @StringRes fun getKcpBirthDateOrTaxNumberHint(input: String): Int {
-        return when {
-            input.length > KcpValidationUtils.KCP_BIRTH_DATE_LENGTH -> R.string.checkout_kcp_tax_number_hint
-            else -> R.string.checkout_kcp_birth_date_or_tax_number_hint
         }
     }
 
