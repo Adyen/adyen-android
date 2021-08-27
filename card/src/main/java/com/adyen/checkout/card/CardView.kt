@@ -42,6 +42,13 @@ class CardView @JvmOverloads constructor(context: Context, attrs: AttributeSet? 
     AdyenLinearLayout<CardOutputData?, CardConfiguration?, CardComponentState?, CardComponent?>(context, attrs, defStyleAttr),
     Observer<CardOutputData?> {
 
+    companion object {
+        private const val UNSELECTED_BRAND_LOGO_ALPHA = 0.2f
+        private const val SELECTED_BRAND_LOGO_ALPHA = 1f
+        private const val PRIMARY_BRAND_INDEX = 0
+        private const val SECONDARY_BRAND_INDEX = 1
+    }
+
     private val binding: CardViewBinding = CardViewBinding.inflate(LayoutInflater.from(context), this)
 
     private val mCardInputData = CardInputData()
@@ -277,21 +284,21 @@ class CardView @JvmOverloads constructor(context: Context, attrs: AttributeSet? 
 
     private fun initCardBrandLogoViews(selectedIndex: Int) {
         when (selectedIndex) {
-            0 -> selectPrimaryBrand()
-            1 -> selectSecondaryBrand()
-            else -> throw CheckoutException("")
+            PRIMARY_BRAND_INDEX -> selectPrimaryBrand()
+            SECONDARY_BRAND_INDEX -> selectSecondaryBrand()
+            else -> throw CheckoutException("Illegal brand index selected. Selected index must be either 0 or 1.")
         }
     }
 
     private fun initBrandSelectionListeners() {
         binding.cardBrandLogoContainerPrimary.setOnClickListener {
-            mCardInputData.selectedCardIndex = 0
+            mCardInputData.selectedCardIndex = PRIMARY_BRAND_INDEX
             notifyInputDataChanged()
             selectPrimaryBrand()
         }
 
         binding.cardBrandLogoContainerSecondary.setOnClickListener {
-            mCardInputData.selectedCardIndex = 1
+            mCardInputData.selectedCardIndex = SECONDARY_BRAND_INDEX
             notifyInputDataChanged()
             selectSecondaryBrand()
         }
@@ -303,13 +310,13 @@ class CardView @JvmOverloads constructor(context: Context, attrs: AttributeSet? 
     }
 
     private fun selectPrimaryBrand() {
-        binding.cardBrandLogoImageViewPrimary.alpha = 1f
-        binding.cardBrandLogoImageViewSecondary.alpha = 0.2f
+        binding.cardBrandLogoImageViewPrimary.alpha = SELECTED_BRAND_LOGO_ALPHA
+        binding.cardBrandLogoImageViewSecondary.alpha = UNSELECTED_BRAND_LOGO_ALPHA
     }
 
     private fun selectSecondaryBrand() {
-        binding.cardBrandLogoImageViewPrimary.alpha = 0.2f
-        binding.cardBrandLogoImageViewSecondary.alpha = 1f
+        binding.cardBrandLogoImageViewPrimary.alpha = UNSELECTED_BRAND_LOGO_ALPHA
+        binding.cardBrandLogoImageViewSecondary.alpha = SELECTED_BRAND_LOGO_ALPHA
     }
 
     private fun initExpiryDateInput() {
