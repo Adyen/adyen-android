@@ -113,7 +113,6 @@ object DropIn {
         dropInLauncher.launch(intent)
     }
 
-
     /**
      * Starts the checkout flow to be handled by the Drop-in solution.
      * Make sure you have [DropInService] set up before calling this.
