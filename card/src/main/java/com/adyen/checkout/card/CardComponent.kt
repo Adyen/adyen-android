@@ -188,16 +188,13 @@ class CardComponent private constructor(
     }
 
     private fun markSelectedCard(cards: List<DetectedCardType>, selectedIndex: Int): List<DetectedCardType> {
-        return if (cards.size > SINGLE_CARD_LIST_SIZE) {
-            cards.mapIndexed { index, card ->
-                if (index == selectedIndex) {
-                    card.copy(isSelected = true)
-                } else {
-                    card
-                }
+        if (cards.size <= SINGLE_CARD_LIST_SIZE) cards
+        return cards.mapIndexed { index, card ->
+            if (index == selectedIndex) {
+                card.copy(isSelected = true)
+            } else {
+                card
             }
-        } else {
-            cards
         }
     }
 
@@ -357,8 +354,9 @@ class CardComponent private constructor(
         }
     }
 
-    private fun isDualBrandedFlow(cardOutputData: CardOutputData): Boolean {
-        return cardOutputData.detectedCardTypes.size > 1 && cardOutputData.detectedCardTypes.any { it.isSelected }
+    fun isDualBrandedFlow(cardOutputData: CardOutputData): Boolean {
+        return cardOutputData.detectedCardTypes.filter { it.isReliable }.size > 1 &&
+            cardOutputData.detectedCardTypes.filter { it.isReliable }.any { it.isSelected }
     }
 
     private fun makeAddressData(outputData: CardOutputData): Address {

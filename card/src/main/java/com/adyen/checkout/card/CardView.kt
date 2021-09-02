@@ -258,13 +258,15 @@ class CardView @JvmOverloads constructor(context: Context, attrs: AttributeSet? 
         binding.editTextCardNumber.setOnChangeListener {
             mCardInputData.cardNumber = binding.editTextCardNumber.rawValue
             notifyInputDataChanged()
-            setCardNumberError(null)
+            val shouldShowSecondaryLogo = component.outputData?.let { component.isDualBrandedFlow(it) } ?: false
+            setCardNumberError(null, shouldShowSecondaryLogo)
         }
         binding.editTextCardNumber.onFocusChangeListener = OnFocusChangeListener { _: View?, hasFocus: Boolean ->
             if (!component.isStoredPaymentMethod()) {
                 val cardNumberValidation = component.outputData?.cardNumberState?.validation
                 if (hasFocus) {
-                    setCardNumberError(null)
+                    val shouldShowSecondaryLogo = component.outputData?.let { component.isDualBrandedFlow(it) } ?: false
+                    setCardNumberError(null, shouldShowSecondaryLogo)
                 } else if (cardNumberValidation != null && cardNumberValidation is Validation.Invalid) {
                     setCardNumberError(cardNumberValidation.reason)
                 }
@@ -272,13 +274,15 @@ class CardView @JvmOverloads constructor(context: Context, attrs: AttributeSet? 
         }
     }
 
-    private fun setCardNumberError(@StringRes stringResId: Int?) {
+    private fun setCardNumberError(@StringRes stringResId: Int?, shouldShowSecondaryLogo: Boolean = false) {
         if (stringResId == null) {
             binding.textInputLayoutCardNumber.error = null
             binding.cardBrandLogoContainerPrimary.isVisible = true
+            binding.cardBrandLogoContainerSecondary.isVisible = shouldShowSecondaryLogo
         } else {
             binding.textInputLayoutCardNumber.error = mLocalizedContext.getString(stringResId)
             binding.cardBrandLogoContainerPrimary.isVisible = false
+            binding.cardBrandLogoContainerSecondary.isVisible = false
         }
     }
 
