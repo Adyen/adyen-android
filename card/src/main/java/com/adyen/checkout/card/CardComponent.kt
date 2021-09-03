@@ -355,8 +355,8 @@ class CardComponent private constructor(
     }
 
     fun isDualBrandedFlow(cardOutputData: CardOutputData): Boolean {
-        return cardOutputData.detectedCardTypes.filter { it.isReliable }.size > 1 &&
-            cardOutputData.detectedCardTypes.filter { it.isReliable }.any { it.isSelected }
+        val reliableDetectedCards = cardOutputData.detectedCardTypes.filter { it.isReliable }
+        return reliableDetectedCards.size > 1 && reliableDetectedCards.any { it.isSelected }
     }
 
     private fun makeAddressData(outputData: CardOutputData): Address {
