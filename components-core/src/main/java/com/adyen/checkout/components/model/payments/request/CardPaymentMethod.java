@@ -36,6 +36,7 @@ public final class CardPaymentMethod extends PaymentMethodDetails {
     private static final String STORED_PAYMENT_METHOD_ID = "storedPaymentMethodId";
     private static final String ENCRYPTED_PASSWORD = "encryptedPassword";
     private static final String TAX_NUMBER = "taxNumber";
+    private static final String BRAND = "brand";
 
     @NonNull
     public static final Serializer<CardPaymentMethod> SERIALIZER = new Serializer<CardPaymentMethod>() {
@@ -56,6 +57,7 @@ public final class CardPaymentMethod extends PaymentMethodDetails {
                 jsonObject.putOpt(HOLDER_NAME, modelObject.getHolderName());
                 jsonObject.putOpt(ENCRYPTED_PASSWORD, modelObject.getEncryptedPassword());
                 jsonObject.putOpt(TAX_NUMBER, modelObject.getTaxNumber());
+                jsonObject.putOpt(BRAND, modelObject.getBrand());
             } catch (JSONException e) {
                 throw new ModelSerializationException(IdealPaymentMethod.class, e);
             }
@@ -78,6 +80,7 @@ public final class CardPaymentMethod extends PaymentMethodDetails {
             cardPaymentMethod.setHolderName(jsonObject.optString(HOLDER_NAME, null));
             cardPaymentMethod.setEncryptedPassword(jsonObject.optString(ENCRYPTED_PASSWORD, null));
             cardPaymentMethod.setTaxNumber(jsonObject.optString(TAX_NUMBER));
+            cardPaymentMethod.setBrand(jsonObject.optString(BRAND));
 
             return cardPaymentMethod;
         }
@@ -91,6 +94,7 @@ public final class CardPaymentMethod extends PaymentMethodDetails {
     private String holderName;
     private String storedPaymentMethodId;
     private String taxNumber;
+    private String brand;
 
     @Override
     public void writeToParcel(@NonNull Parcel dest, int flags) {
@@ -158,6 +162,15 @@ public final class CardPaymentMethod extends PaymentMethodDetails {
 
     public void setHolderName(@Nullable String holderName) {
         this.holderName = holderName;
+    }
+
+    @Nullable
+    public String getBrand() {
+        return brand;
+    }
+
+    public void setBrand(@Nullable String brand) {
+        this.brand = brand;
     }
 
     public void setStoredPaymentMethodId(@Nullable String storedPaymentMethodId) {
