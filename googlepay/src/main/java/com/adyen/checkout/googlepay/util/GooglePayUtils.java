@@ -69,6 +69,8 @@ public final class GooglePayUtils {
     private static final String TOKENIZATION_DATA = "tokenizationData";
     private static final String TOKEN = "token";
 
+    private static final String NOT_CURRENTLY_KNOWN = "NOT_CURRENTLY_KNOWN";
+
     /**
      * Create a {@link com.google.android.gms.wallet.Wallet.WalletOptions} based on the component configuration.
      *
@@ -235,7 +237,10 @@ public final class GooglePayUtils {
         final String displayAmount = GOOGLE_PAY_DECIMAL_FORMAT.format(bigDecimal);
 
         final TransactionInfoModel transactionInfoModel = new TransactionInfoModel();
-        transactionInfoModel.setTotalPrice(displayAmount);
+        // Google requires to not pass the price when the price status is NOT_CURRENTLY_KNOWN
+        if (!params.getTotalPriceStatus().equals(NOT_CURRENTLY_KNOWN)) {
+            transactionInfoModel.setTotalPrice(displayAmount);
+        }
         transactionInfoModel.setCountryCode(params.getCountryCode());
         transactionInfoModel.setTotalPriceStatus(params.getTotalPriceStatus());
         transactionInfoModel.setCurrencyCode(params.getAmount().getCurrency());
