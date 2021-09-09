@@ -26,7 +26,6 @@ import com.adyen.checkout.googlepay.model.BillingAddressParameters;
 import com.adyen.checkout.googlepay.model.MerchantInfo;
 import com.adyen.checkout.googlepay.model.ShippingAddressParameters;
 import com.adyen.checkout.googlepay.util.AllowedAuthMethods;
-import com.adyen.checkout.googlepay.util.AllowedCardNetworks;
 import com.google.android.gms.wallet.WalletConstants;
 
 import java.util.List;
@@ -200,7 +199,7 @@ public class GooglePayConfiguration extends Configuration {
         private MerchantInfo mBuilderMerchantInfo = null;
         private String mBuilderCountryCode = null;
         private List<String> mBuilderAllowedAuthMethods = AllowedAuthMethods.getAllAllowedAuthMethods();
-        private List<String> mBuilderAllowedCardNetworks = AllowedCardNetworks.getAllAllowedCardNetworks();
+        private List<String> mBuilderAllowedCardNetworks = null;
         private boolean mBuilderAllowPrepaidCards = false;
         private boolean mBuilderEmailRequired;
         private boolean mBuilderExistingPaymentMethodRequired;

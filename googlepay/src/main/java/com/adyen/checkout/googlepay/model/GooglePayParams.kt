@@ -11,13 +11,15 @@ package com.adyen.checkout.googlepay.model
 import com.adyen.checkout.components.model.payments.Amount
 import com.adyen.checkout.core.exception.ComponentException
 import com.adyen.checkout.googlepay.GooglePayConfiguration
+import com.adyen.checkout.googlepay.util.AllowedCardNetworks
 
 /**
  * Model class holding the parameters required to build requests for GooglePay
  */
 data class GooglePayParams(
     private val googlePayConfiguration: GooglePayConfiguration,
-    private val serverGatewayMerchantId: String?
+    private val serverGatewayMerchantId: String?,
+    private val availableCardNetworksFromApi: List<String>?
 ) {
     val gatewayMerchantId: String = getPreferredGatewayMerchantId()
     val googlePayEnvironment: Int = googlePayConfiguration.googlePayEnvironment
@@ -26,7 +28,7 @@ data class GooglePayParams(
     val countryCode: String? = googlePayConfiguration.countryCode
     val merchantInfo: MerchantInfo? = googlePayConfiguration.merchantInfo
     val allowedAuthMethods: List<String>? = googlePayConfiguration.allowedAuthMethods
-    val allowedCardNetworks: List<String>? = googlePayConfiguration.allowedCardNetworks
+    val allowedCardNetworks: List<String> = getAvailableCardNetworks()
     val isAllowPrepaidCards: Boolean = googlePayConfiguration.isAllowPrepaidCards
     val isEmailRequired: Boolean = googlePayConfiguration.isEmailRequired
     val isExistingPaymentMethodRequired: Boolean = googlePayConfiguration.isExistingPaymentMethodRequired
@@ -44,5 +46,13 @@ data class GooglePayParams(
             ?: throw ComponentException(
                 "GooglePay merchantAccount not found. Update your API version or pass it manually inside your GooglePayConfiguration"
             )
+    }
+
+    private fun getAvailableCardNetworks(): List<String> {
+        return googlePayConfiguration.allowedCardNetworks
+            ?: availableCardNetworksFromApi
+                ?.map { GooglePayParamUtils.mapTxVariantToGooglePayCode(it) }
+                ?.filter { code -> AllowedCardNetworks.getAllAllowedCardNetworks().any { it == code } }
+            ?: AllowedCardNetworks.getAllAllowedCardNetworks()
     }
 }
