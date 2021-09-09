@@ -237,6 +237,7 @@ public final class GooglePayUtils {
         final String displayAmount = GOOGLE_PAY_DECIMAL_FORMAT.format(bigDecimal);
 
         final TransactionInfoModel transactionInfoModel = new TransactionInfoModel();
+        // Google requires to not pass the price when the price status is NOT_CURRENTLY_KNOWN
         if (!params.getTotalPriceStatus().equals(NOT_CURRENTLY_KNOWN)) {
             transactionInfoModel.setTotalPrice(displayAmount);
         }
