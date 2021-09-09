@@ -8,9 +8,9 @@
   -->
 
 <resources>
-    <string name="checkout_giftcard_redeem_button">Redeem</string>
-    <string name="checkout_giftcard_number_hint">Card number</string>
+    <string name="checkout_giftcard_redeem_button">Riscatta</string>
+    <string name="checkout_giftcard_number_hint">Numero carta</string>
     <string name="checkout_giftcard_pin_hint">Pin</string>
-    <string name="checkout_giftcard_number_not_valid">Invalid card number</string>
-    <string name="checkout_giftcard_pin_not_valid">Invalid Input</string>
+    <string name="checkout_giftcard_number_not_valid">Numero carta non valido</string>
+    <string name="checkout_giftcard_pin_not_valid">Dati inseriti non validi</string>
 </resources>
