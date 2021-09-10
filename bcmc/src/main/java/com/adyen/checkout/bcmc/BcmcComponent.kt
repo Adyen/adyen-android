@@ -27,6 +27,7 @@ import com.adyen.checkout.core.log.Logger
 import com.adyen.checkout.cse.CardEncrypter
 import com.adyen.checkout.cse.UnencryptedCard
 import com.adyen.checkout.cse.exception.EncryptionException
+import com.adyen.threeds2.ThreeDS2Service
 import kotlinx.coroutines.launch
 
 private val TAG = LogUtil.getTag()
@@ -121,6 +122,11 @@ class BcmcComponent(
             encryptedCardNumber = encryptedCard.encryptedCardNumber
             encryptedExpiryMonth = encryptedCard.encryptedExpiryMonth
             encryptedExpiryYear = encryptedCard.encryptedExpiryYear
+            try {
+                threeDS2SdkVersion = ThreeDS2Service.INSTANCE.sdkVersion
+            } catch (e: ClassNotFoundException) {
+                Logger.e(TAG, "threeDS2SdkVersion not set because 3DS2 SDK is not present in project.")
+            }
         }
         paymentComponentData.paymentMethod = cardPaymentMethod
         return GenericComponentState(paymentComponentData, true, true)

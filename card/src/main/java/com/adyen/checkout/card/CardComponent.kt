@@ -29,6 +29,7 @@ import com.adyen.checkout.cse.EncryptedCard
 import com.adyen.checkout.cse.GenericEncrypter
 import com.adyen.checkout.cse.UnencryptedCard
 import com.adyen.checkout.cse.exception.EncryptionException
+import com.adyen.threeds2.ThreeDS2Service
 import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.launch
@@ -303,6 +304,12 @@ class CardComponent private constructor(
 
         if (isDualBrandedFlow(stateOutputData)) {
             cardPaymentMethod.brand = stateOutputData.detectedCardTypes.first { it.isSelected }.cardType.txVariant
+        }
+
+        try {
+            cardPaymentMethod.threeDS2SdkVersion = ThreeDS2Service.INSTANCE.sdkVersion
+        } catch (e: ClassNotFoundException) {
+            Logger.e(TAG, "threeDS2SdkVersion not set because 3DS2 SDK is not present in project.")
         }
 
         val paymentComponentData = PaymentComponentData<CardPaymentMethod>().apply {
