@@ -51,6 +51,9 @@ dependencies {
     api project(':ui-core')
     api project(':cse')
 
+    // If 3DS2 SDK is present.
+    compileOnly "com.adyen.threeds:adyen-3ds2:$adyen3ds2_version"
+
     // Dependencies
     implementation "com.google.android.material:material:$material_version"
 
