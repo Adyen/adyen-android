@@ -39,7 +39,6 @@ public final class PaymentMethodTypes {
     public static final String BCMC = "bcmc";
     public static final String MB_WAY = "mbway";
     public static final String BLIK = "blik";
-    // TODO: not supported yet but needed in PaymentMethodAdapter, add to SUPPORTED_PAYMENT_METHODS when supported
     public static final String GIFTCARD = "giftcard";
 
     // Payment methods that do not need a payment component, but only an action component
@@ -99,6 +98,7 @@ public final class PaymentMethodTypes {
                 DOTPAY,
                 ENTERCASH,
                 EPS,
+                GIFTCARD,
                 GOOGLE_PAY,
                 GOOGLE_PAY_LEGACY,
                 IDEAL,

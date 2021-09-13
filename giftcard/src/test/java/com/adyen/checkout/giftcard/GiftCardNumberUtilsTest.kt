@@ -53,6 +53,6 @@ class GiftCardNumberUtilsTest {
 
     @Test
     fun formatAlphanumericInputWithSpaces() {
-        assertEquals("1247 8453 3", GiftCardNumberUtils.formatInput("hioj rfg1247fds gd8453 h3h"))
+        assertEquals("hioj rfg1 247f dsgd 8453 h3h", GiftCardNumberUtils.formatInput("hioj rfg1247fds gd8453 h3h"))
     }
 }

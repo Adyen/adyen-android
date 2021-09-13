@@ -57,6 +57,9 @@ import com.adyen.checkout.entercash.EntercashRecyclerView
 import com.adyen.checkout.eps.EPSComponent
 import com.adyen.checkout.eps.EPSConfiguration
 import com.adyen.checkout.eps.EPSRecyclerView
+import com.adyen.checkout.giftcard.GiftCardComponent
+import com.adyen.checkout.giftcard.GiftCardConfiguration
+import com.adyen.checkout.giftcard.GiftCardView
 import com.adyen.checkout.googlepay.GooglePayComponent
 import com.adyen.checkout.googlepay.GooglePayConfiguration
 import com.adyen.checkout.googlepay.GooglePayProvider
@@ -104,6 +107,7 @@ internal fun <T : Configuration> getDefaultConfigForPaymentMethod(
         PaymentMethodTypes.DOTPAY -> DotpayConfiguration.Builder(shopperLocale, environment, clientKey)
         PaymentMethodTypes.ENTERCASH -> EntercashConfiguration.Builder(shopperLocale, environment, clientKey)
         PaymentMethodTypes.EPS -> EPSConfiguration.Builder(shopperLocale, environment, clientKey)
+        PaymentMethodTypes.GIFTCARD -> GiftCardConfiguration.Builder(shopperLocale, environment, clientKey)
         PaymentMethodTypes.GOOGLE_PAY,
         PaymentMethodTypes.GOOGLE_PAY_LEGACY -> {
             GooglePayConfiguration.Builder(shopperLocale, environment, clientKey).apply {
@@ -248,6 +252,10 @@ internal fun getComponentFor(
             val epsConfig: EPSConfiguration = dropInConfiguration.getConfigurationForPaymentMethod(PaymentMethodTypes.EPS, context)
             EPSComponent.PROVIDER.get(fragment, paymentMethod, epsConfig)
         }
+        PaymentMethodTypes.GIFTCARD -> {
+            val giftcardConfiguration: GiftCardConfiguration = dropInConfiguration.getConfigurationForPaymentMethod(PaymentMethodTypes.GIFTCARD, context)
+            GiftCardComponent.PROVIDER.get(fragment, paymentMethod, giftcardConfiguration)
+        }
         PaymentMethodTypes.GOOGLE_PAY -> {
             val googlePayConfiguration: GooglePayConfiguration = dropInConfiguration.getConfigurationForPaymentMethod(
                 PaymentMethodTypes.GOOGLE_PAY,
@@ -327,6 +335,7 @@ internal fun getViewFor(
         PaymentMethodTypes.DOTPAY -> DotpayRecyclerView(context)
         PaymentMethodTypes.ENTERCASH -> EntercashRecyclerView(context)
         PaymentMethodTypes.EPS -> EPSRecyclerView(context)
+        PaymentMethodTypes.GIFTCARD -> GiftCardView(context)
         PaymentMethodTypes.IDEAL -> IdealRecyclerView(context)
         PaymentMethodTypes.MB_WAY -> MBWayView(context)
         PaymentMethodTypes.MOLPAY_THAILAND,
