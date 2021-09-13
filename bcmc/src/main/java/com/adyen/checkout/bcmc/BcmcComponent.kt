@@ -13,13 +13,13 @@ import com.adyen.checkout.card.CardValidationMapper
 import com.adyen.checkout.card.CardValidationUtils
 import com.adyen.checkout.card.data.CardType
 import com.adyen.checkout.card.data.ExpiryDate
-import com.adyen.checkout.card.repository.PublicKeyRepository
 import com.adyen.checkout.components.GenericComponentState
 import com.adyen.checkout.components.PaymentComponentProvider
 import com.adyen.checkout.components.base.BasePaymentComponent
 import com.adyen.checkout.components.base.GenericPaymentMethodDelegate
 import com.adyen.checkout.components.model.payments.request.CardPaymentMethod
 import com.adyen.checkout.components.model.payments.request.PaymentComponentData
+import com.adyen.checkout.components.repository.PublicKeyRepository
 import com.adyen.checkout.components.ui.FieldState
 import com.adyen.checkout.components.util.PaymentMethodTypes
 import com.adyen.checkout.core.exception.CheckoutException
