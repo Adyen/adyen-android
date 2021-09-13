@@ -28,7 +28,10 @@ private val PAYMENT_METHOD_TYPES = arrayOf(PaymentMethodTypes.GIFTCARD)
  * @param paymentMethodDelegate [GenericPaymentMethodDelegate]
  * @param configuration [GiftCardConfiguration]
  */
-class GiftCardComponent(paymentMethodDelegate: GenericPaymentMethodDelegate, configuration: GiftCardConfiguration) :
+class GiftCardComponent(
+    private val paymentMethodDelegate: GenericPaymentMethodDelegate,
+    configuration: GiftCardConfiguration
+) :
     BasePaymentComponent<GiftCardConfiguration, GiftCardInputData, GiftCardOutputData,
         GenericComponentState<GiftCardPaymentMethod>>(paymentMethodDelegate, configuration) {
 
@@ -51,7 +54,9 @@ class GiftCardComponent(paymentMethodDelegate: GenericPaymentMethodDelegate, con
 
         val giftcardOutputData = outputData
         if (giftcardOutputData != null) {
-            // TODO encrypt and set up paymentMethod
+            paymentMethod.encryptedCardNumber = giftcardOutputData.giftcardNumberFieldState.value
+            paymentMethod.encryptedSecurityCode = giftcardOutputData.giftcardPinFieldState.value
+            paymentMethod.brand = paymentMethodDelegate.paymentMethod.brand
         }
         paymentComponentData.paymentMethod = paymentMethod
         return GenericComponentState(paymentComponentData, giftcardOutputData?.isValid == true, true)
