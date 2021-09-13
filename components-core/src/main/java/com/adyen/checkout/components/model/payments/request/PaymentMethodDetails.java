@@ -81,6 +81,8 @@ public abstract class PaymentMethodDetails extends ModelObject {
                 return OpenBankingPaymentMethod.SERIALIZER;
             case EntercashPaymentMethod.PAYMENT_METHOD_TYPE:
                 return EntercashPaymentMethod.SERIALIZER;
+            case GiftCardPaymentMethod.PAYMENT_METHOD_TYPE:
+                return GiftCardPaymentMethod.SERIALIZER;
             //Intentional fallthrough of the new and legacy google pay txVariants
             case PaymentMethodTypes.GOOGLE_PAY:
             case PaymentMethodTypes.GOOGLE_PAY_LEGACY:

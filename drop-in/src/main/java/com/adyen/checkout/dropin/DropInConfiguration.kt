@@ -32,6 +32,7 @@ import com.adyen.checkout.dotpay.DotpayConfiguration
 import com.adyen.checkout.dropin.DropInConfiguration.Builder
 import com.adyen.checkout.entercash.EntercashConfiguration
 import com.adyen.checkout.eps.EPSConfiguration
+import com.adyen.checkout.giftcard.GiftCardConfiguration
 import com.adyen.checkout.googlepay.GooglePayConfiguration
 import com.adyen.checkout.ideal.IdealConfiguration
 import com.adyen.checkout.mbway.MBWayConfiguration
@@ -376,6 +377,14 @@ class DropInConfiguration : Configuration, Parcelable {
          */
         fun addWeChatPayActionConfiguration(configuration: WeChatPayActionConfiguration): Builder {
             availableActionConfigs[configuration::class.java] = configuration
+            return this
+        }
+
+        /**
+         * Add configuration for Gift Card payment method.
+         */
+        fun addGiftCardConfiguration(giftCardConfiguration: GiftCardConfiguration): Builder {
+            availablePaymentConfigs[PaymentMethodTypes.GIFTCARD] = giftCardConfiguration
             return this
         }
 
