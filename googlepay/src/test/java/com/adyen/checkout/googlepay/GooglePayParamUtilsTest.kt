@@ -1,28 +1,28 @@
 package com.adyen.checkout.googlepay
 
-import com.adyen.checkout.core.exception.CheckoutException
 import com.adyen.checkout.googlepay.model.GooglePayParamUtils
 import com.adyen.checkout.googlepay.util.AllowedCardNetworks
 import org.junit.Assert.assertEquals
+import org.junit.Assert.assertNull
 import org.junit.Test
 
 class GooglePayParamUtilsTest {
 
     @Test
-    fun testMasterCardTxVariantToGooglePayCodeMapping() {
+    fun testMasterCardToGooglePayNetworkMapping() {
         val mc = "mc"
-        assertEquals(AllowedCardNetworks.MASTERCARD, GooglePayParamUtils.mapTxVariantToGooglePayCode(mc))
+        assertEquals(AllowedCardNetworks.MASTERCARD, GooglePayParamUtils.mapBrandToGooglePayNetwork(mc))
     }
 
     @Test
-    fun testOtherTxVariantToGooglePayCodeMapping() {
+    fun testOtherBrandToGooglePayNetworkMapping() {
         val amex = "amex"
-        assertEquals(AllowedCardNetworks.AMEX, GooglePayParamUtils.mapTxVariantToGooglePayCode(amex))
+        assertEquals(AllowedCardNetworks.AMEX, GooglePayParamUtils.mapBrandToGooglePayNetwork(amex))
     }
 
-    @Test(expected = CheckoutException::class)
-    fun testUnsupportedTxVariantToGooglePayCodeMapping() {
+    @Test
+    fun testUnsupportedBrandToGooglePayNetworkMapping() {
         val maestro = "maestro"
-        GooglePayParamUtils.mapTxVariantToGooglePayCode(maestro)
+        assertNull(GooglePayParamUtils.mapBrandToGooglePayNetwork(maestro))
     }
 }

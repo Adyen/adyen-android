@@ -10,8 +10,12 @@ package com.adyen.checkout.googlepay.model
 
 import com.adyen.checkout.components.model.payments.Amount
 import com.adyen.checkout.core.exception.ComponentException
+import com.adyen.checkout.core.log.LogUtil
+import com.adyen.checkout.core.log.Logger
 import com.adyen.checkout.googlepay.GooglePayConfiguration
 import com.adyen.checkout.googlepay.util.AllowedCardNetworks
+
+private val TAG = LogUtil.getTag()
 
 /**
  * Model class holding the parameters required to build requests for GooglePay
@@ -50,9 +54,16 @@ data class GooglePayParams(
 
     private fun getAvailableCardNetworks(): List<String> {
         return googlePayConfiguration.allowedCardNetworks
-            ?: availableCardNetworksFromApi
-                ?.map { GooglePayParamUtils.mapTxVariantToGooglePayCode(it) }
-                ?.filter { code -> AllowedCardNetworks.getAllAllowedCardNetworks().any { it == code } }
+            ?: getAvailableCardNetworksFromApi()
             ?: AllowedCardNetworks.getAllAllowedCardNetworks()
+    }
+
+    private fun getAvailableCardNetworksFromApi(): List<String>? {
+        if (availableCardNetworksFromApi == null) return null
+        return availableCardNetworksFromApi.mapNotNull { brand ->
+            val network = GooglePayParamUtils.mapBrandToGooglePayNetwork(brand)
+            if (network == null) Logger.e(TAG, "skipping brand $brand, as it is not an allowed card network.")
+            return@mapNotNull network
+        }
     }
 }
