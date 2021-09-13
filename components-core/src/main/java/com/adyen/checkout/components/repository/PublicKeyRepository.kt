@@ -6,9 +6,9 @@
  * Created by josephj on 22/2/2021.
  */
 
-package com.adyen.checkout.card.repository
+package com.adyen.checkout.components.repository
 
-import com.adyen.checkout.card.api.PublicKeyConnection
+import com.adyen.checkout.components.api.PublicKeyConnection
 import com.adyen.checkout.components.api.suspendedCall
 import com.adyen.checkout.core.api.Environment
 import com.adyen.checkout.core.exception.CheckoutException
