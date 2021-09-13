@@ -39,6 +39,13 @@ public interface Component<ComponentResultT, ConfigurationT extends Configuratio
     void removeObservers(@NonNull LifecycleOwner lifecycleOwner);
 
     /**
+     * Remove a specific observer attached to this component using {@link #observe(LifecycleOwner, Observer)}.
+     *
+     * @param observer The observer to be removed.
+     */
+    void removeObserver(@NonNull Observer<ComponentResultT> observer);
+
+    /**
      * Observe if an unexpected error happens during the processing of the Component.
      * Error handling might need to fail the payment process, retry or show UI feedback.
      *
@@ -53,6 +60,13 @@ public interface Component<ComponentResultT, ConfigurationT extends Configuratio
      * @param lifecycleOwner The lifecycle for which the observer is active.
      */
     void removeErrorObservers(@NonNull LifecycleOwner lifecycleOwner);
+
+    /**
+     * Remove a specific error observer attached to this component using {@link #observeErrors(LifecycleOwner, Observer)}.
+     *
+     * @param observer The observer to be removed.
+     */
+    void removeErrorObserver(@NonNull Observer<ComponentError> observer);
 
     /**
      * @return The {@link Configuration} object used to initialize this Component.

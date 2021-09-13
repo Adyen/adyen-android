@@ -81,6 +81,11 @@ public abstract class BasePaymentComponent<
     }
 
     @Override
+    public void removeObserver(@NonNull final Observer<ComponentStateT> observer) {
+        mPaymentComponentStateLiveData.removeObserver(observer);
+    }
+
+    @Override
     public void observeErrors(@NonNull LifecycleOwner lifecycleOwner, @NonNull Observer<ComponentError> observer) {
         mComponentErrorLiveData.observe(lifecycleOwner, observer);
     }
@@ -88,6 +93,11 @@ public abstract class BasePaymentComponent<
     @Override
     public void removeErrorObservers(@NonNull LifecycleOwner lifecycleOwner) {
         mComponentErrorLiveData.removeObservers(lifecycleOwner);
+    }
+
+    @Override
+    public void removeErrorObserver(@NonNull final Observer<ComponentError> observer) {
+        mComponentErrorLiveData.removeObserver(observer);
     }
 
     @Override

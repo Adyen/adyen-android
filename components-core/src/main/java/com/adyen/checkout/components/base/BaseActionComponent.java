@@ -71,6 +71,11 @@ public abstract class BaseActionComponent<ConfigurationT extends Configuration> 
     }
 
     @Override
+    public void removeObserver(@NonNull final Observer<ActionComponentData> observer) {
+        mResultLiveData.removeObserver(observer);
+    }
+
+    @Override
     public void observeErrors(@NonNull LifecycleOwner lifecycleOwner, @NonNull Observer<ComponentError> observer) {
         mErrorMutableLiveData.observe(lifecycleOwner, observer);
     }
@@ -78,6 +83,11 @@ public abstract class BaseActionComponent<ConfigurationT extends Configuration> 
     @Override
     public void removeErrorObservers(@NonNull LifecycleOwner lifecycleOwner) {
         mErrorMutableLiveData.removeObservers(lifecycleOwner);
+    }
+
+    @Override
+    public void removeErrorObserver(@NonNull final Observer<ComponentError> observer) {
+        mErrorMutableLiveData.removeObserver(observer);
     }
 
     /**
