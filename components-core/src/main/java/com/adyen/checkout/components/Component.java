@@ -24,12 +24,26 @@ public interface Component<ComponentResultT, ConfigurationT extends Configuratio
 
     /**
      * Observe changes on the result of this component.
-     * A valid results contains data that can be sent to the payments API to make a payment.
+     * A valid result contains data that can be sent to the payments API to make a payment.
      *
      * @param lifecycleOwner The lifecycle for which the observer will be active.
      * @param observer The observer that will receive the updates.
      */
     void observe(@NonNull LifecycleOwner lifecycleOwner, @NonNull Observer<ComponentResultT> observer);
+
+    /**
+     * Remove all observers attached to this component using {@link #observe(LifecycleOwner, Observer)}.
+     *
+     * @param lifecycleOwner The lifecycle for which the observer is active.
+     */
+    void removeObservers(@NonNull LifecycleOwner lifecycleOwner);
+
+    /**
+     * Remove a specific observer attached to this component using {@link #observe(LifecycleOwner, Observer)}.
+     *
+     * @param observer The observer to be removed.
+     */
+    void removeObserver(@NonNull Observer<ComponentResultT> observer);
 
     /**
      * Observe if an unexpected error happens during the processing of the Component.
@@ -39,6 +53,20 @@ public interface Component<ComponentResultT, ConfigurationT extends Configuratio
      * @param observer The observer that will receive the updates.
      */
     void observeErrors(@NonNull LifecycleOwner lifecycleOwner, @NonNull Observer<ComponentError> observer);
+
+    /**
+     * Remove all error observers attached to this component using {@link #observeErrors(LifecycleOwner, Observer)}.
+     *
+     * @param lifecycleOwner The lifecycle for which the observer is active.
+     */
+    void removeErrorObservers(@NonNull LifecycleOwner lifecycleOwner);
+
+    /**
+     * Remove a specific error observer attached to this component using {@link #observeErrors(LifecycleOwner, Observer)}.
+     *
+     * @param observer The observer to be removed.
+     */
+    void removeErrorObserver(@NonNull Observer<ComponentError> observer);
 
     /**
      * @return The {@link Configuration} object used to initialize this Component.
