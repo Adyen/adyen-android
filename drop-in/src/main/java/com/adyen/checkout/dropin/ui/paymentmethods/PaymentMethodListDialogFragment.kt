@@ -26,6 +26,7 @@ import com.adyen.checkout.core.exception.CheckoutException
 import com.adyen.checkout.core.exception.ComponentException
 import com.adyen.checkout.core.log.LogUtil
 import com.adyen.checkout.core.log.Logger
+import com.adyen.checkout.dropin.PaymentSelectionHandler
 import com.adyen.checkout.dropin.R
 import com.adyen.checkout.dropin.ui.base.DropInBottomSheetDialogFragment
 import com.adyen.checkout.dropin.ui.getViewModel
@@ -37,6 +38,7 @@ class PaymentMethodListDialogFragment : DropInBottomSheetDialogFragment(), Payme
 
     private lateinit var paymentMethodsListViewModel: PaymentMethodsListViewModel
     private lateinit var paymentMethodAdapter: PaymentMethodAdapter
+    private lateinit var paymentSelectionHandler: PaymentSelectionHandler
 
     override fun onAttach(context: Context) {
         super.onAttach(context)
@@ -53,6 +55,7 @@ class PaymentMethodListDialogFragment : DropInBottomSheetDialogFragment(), Payme
                 dropInViewModel.dropInConfiguration
             )
         }
+        paymentSelectionHandler = PaymentSelectionHandler(dropInViewModel, protocol)
         val view = inflater.inflate(R.layout.fragment_payment_methods_list, container, false)
         addObserver(view.findViewById(R.id.recyclerView_paymentMethods))
         return view
@@ -110,35 +113,7 @@ class PaymentMethodListDialogFragment : DropInBottomSheetDialogFragment(), Payme
 
     override fun onPaymentMethodSelected(paymentMethod: PaymentMethodModel) {
         Logger.d(TAG, "onPaymentMethodSelected - ${paymentMethod.type}")
-
         // Check some specific payment methods that don't need to show a view
-        when {
-            GooglePayComponent.PAYMENT_METHOD_TYPES.contains(paymentMethod.type) -> {
-                Logger.d(TAG, "onPaymentMethodSelected: starting Google Pay")
-                protocol.startGooglePay(
-                    dropInViewModel.getPaymentMethod(paymentMethod.type),
-                    dropInViewModel.dropInConfiguration.getConfigurationForPaymentMethod(paymentMethod.type, requireContext())
-                )
-            }
-            PaymentMethodTypes.SUPPORTED_ACTION_ONLY_PAYMENT_METHODS.contains(paymentMethod.type) -> {
-                Logger.d(TAG, "onPaymentMethodSelected: payment method does not need a component, sending payment")
-                sendPayment(paymentMethod.type)
-            }
-            PaymentMethodTypes.SUPPORTED_PAYMENT_METHODS.contains(paymentMethod.type) -> {
-                Logger.d(TAG, "onPaymentMethodSelected: payment method is supported")
-                protocol.showComponentDialog(dropInViewModel.getPaymentMethod(paymentMethod.type))
-            }
-            else -> {
-                Logger.d(TAG, "onPaymentMethodSelected: unidentified payment method, sending payment in case of redirect")
-                sendPayment(paymentMethod.type)
-            }
-        }
-    }
-
-    private fun sendPayment(type: String) {
-        val paymentComponentData = PaymentComponentData<PaymentMethodDetails>()
-        paymentComponentData.paymentMethod = GenericPaymentMethod(type)
-        val paymentComponentState = GenericComponentState(paymentComponentData, true, true)
-        protocol.requestPaymentsCall(paymentComponentState)
+        paymentSelectionHandler.handlePaymentSelection(paymentMethod.type)
     }
 }

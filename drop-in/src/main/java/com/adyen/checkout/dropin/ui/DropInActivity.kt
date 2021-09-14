@@ -33,10 +33,7 @@ import com.adyen.checkout.components.util.PaymentMethodTypes
 import com.adyen.checkout.core.log.LogUtil
 import com.adyen.checkout.core.log.Logger
 import com.adyen.checkout.core.util.LocaleUtil
-import com.adyen.checkout.dropin.ActionHandler
-import com.adyen.checkout.dropin.DropIn
-import com.adyen.checkout.dropin.DropInConfiguration
-import com.adyen.checkout.dropin.R
+import com.adyen.checkout.dropin.*
 import com.adyen.checkout.dropin.service.DropInService
 import com.adyen.checkout.dropin.service.DropInServiceInterface
 import com.adyen.checkout.dropin.service.DropInServiceResult
@@ -85,6 +82,8 @@ class DropInActivity : AppCompatActivity(), DropInBottomSheetDialogFragment.Prot
 
     private val loadingDialog = LoadingDialogFragment.newInstance()
 
+    private lateinit var paymentSelectionHandler: PaymentSelectionHandler
+
     private val googlePayObserver: Observer<GooglePayComponentState> = Observer {
         if (it?.isValid == true) {
             requestPaymentsCall(it)
@@ -93,7 +92,11 @@ class DropInActivity : AppCompatActivity(), DropInBottomSheetDialogFragment.Prot
 
     private val googlePayErrorObserver: Observer<ComponentError> = Observer {
         Logger.d(TAG, "GooglePay error - ${it?.errorMessage}")
-        showPaymentMethodsDialog()
+        if (dropInViewModel.hasOnlyOnePaymentMethod()) {
+            terminateWithError(it.errorMessage)
+        } else {
+            showPaymentMethodsDialog()
+        }
     }
 
     private var dropInService: DropInServiceInterface? = null
@@ -150,11 +153,18 @@ class DropInActivity : AppCompatActivity(), DropInBottomSheetDialogFragment.Prot
             return
         }
 
+        paymentSelectionHandler = PaymentSelectionHandler(dropInViewModel, this)
+
         if (noDialogPresent()) {
-            if (dropInViewModel.showPreselectedStored) {
-                showPreselectedDialog()
+            if (dropInViewModel.hasOnlyOnePaymentMethod()) {
+                val paymentMethodType = dropInViewModel.getOnlyOnePaymentMethodType()
+                paymentSelectionHandler.handlePaymentSelection(paymentMethodType)
             } else {
-                showPaymentMethodsDialog()
+                if (dropInViewModel.showPreselectedStored) {
+                    showPreselectedDialog()
+                } else {
+                    showPaymentMethodsDialog()
+                }
             }
         }
 

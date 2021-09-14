@@ -138,10 +138,14 @@ abstract class BaseComponentDialogFragment : DropInBottomSheetDialogFragment(), 
 
     override fun onBackPressed(): Boolean {
         Logger.d(TAG, "onBackPressed - $navigatedFromPreselected")
-        if (navigatedFromPreselected) {
-            protocol.showPreselectedDialog()
+        if (dropInViewModel.hasOnlyOnePaymentMethod()) {
+            protocol.terminateDropIn()
         } else {
-            protocol.showPaymentMethodsDialog()
+            if (navigatedFromPreselected) {
+                protocol.showPreselectedDialog()
+            } else {
+                protocol.showPaymentMethodsDialog()
+            }
         }
         return true
     }
