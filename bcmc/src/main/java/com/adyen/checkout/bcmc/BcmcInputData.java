@@ -40,7 +40,7 @@ public final class BcmcInputData implements InputData {
         return mIsStorePaymentSelected;
     }
 
-    public void setStorePaymentSelected( boolean storePaymentSelected) {
+    public void setStorePaymentSelected(boolean storePaymentSelected) {
         mIsStorePaymentSelected = storePaymentSelected;
     }
 }
