@@ -229,7 +229,7 @@ public final class BcmcView
     private void initStorePaymentMethodSwitch() {
         mSwitchStorePaymentMethod = findViewById(R.id.switch_storePaymentMethod);
 
-        mSwitchStorePaymentMethod.setVisibility(getComponent().getConfiguration().isShowStorePaymentField() ? VISIBLE : GONE);
+        mSwitchStorePaymentMethod.setVisibility(getComponent().getConfiguration().isStorePaymentFieldVisible() ? VISIBLE : GONE);
         mSwitchStorePaymentMethod.setOnCheckedChangeListener((buttonView, isChecked) -> {
             mCardInputData.setStorePaymentSelected(isChecked);
             notifyInputDataChanged();
