@@ -16,6 +16,7 @@ import com.adyen.checkout.card.data.ExpiryDate;
 public final class BcmcInputData implements InputData {
     private String mCardNumber = "";
     private ExpiryDate mExpiryDate = ExpiryDate.EMPTY_DATE;
+    private boolean mIsStorePaymentSelected = false;
 
     @NonNull
     public String getCardNumber() {
@@ -33,5 +34,13 @@ public final class BcmcInputData implements InputData {
 
     public void setExpiryDate(@NonNull ExpiryDate expiryDate) {
         mExpiryDate = expiryDate;
+    }
+
+    public boolean isStorePaymentSelected() {
+        return mIsStorePaymentSelected;
+    }
+
+    public void setStorePaymentSelected( boolean storePaymentSelected) {
+        mIsStorePaymentSelected = storePaymentSelected;
     }
 }

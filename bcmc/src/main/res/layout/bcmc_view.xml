@@ -59,4 +59,10 @@
             tools:ignore="RequiredSize" />
     </com.google.android.material.textfield.TextInputLayout>
 
+    <androidx.appcompat.widget.SwitchCompat
+        android:id="@+id/switch_storePaymentMethod"
+        style="@style/AdyenCheckout.Card.StorePaymentSwitch"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content" />
+
 </merge>

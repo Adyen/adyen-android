@@ -65,7 +65,7 @@ public class BcmcConfiguration extends Configuration {
         return mShopperReference;
     }
 
-    public boolean isShowStorePaymentFieldEnable() {
+    public boolean isShowStorePaymentField() {
         return mShowStorePaymentField;
     }
 
