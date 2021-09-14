@@ -48,6 +48,7 @@ dependencies {
     // Checkout
     api project(':components-core')
     api project(':ui-core')
+    api project(':cse')
 
     // Dependencies
     implementation "com.google.android.material:material:$material_version"
