@@ -90,7 +90,7 @@ public class GooglePayComponent extends
     private GooglePayParams getGooglePayParams() {
         final Configuration configuration = getPaymentMethod().getConfiguration();
         final String serverGatewayMerchantId = (configuration != null) ? configuration.getGatewayMerchantId() : null;
-        return new GooglePayParams(getConfiguration(), serverGatewayMerchantId);
+        return new GooglePayParams(getConfiguration(), serverGatewayMerchantId, getPaymentMethod().getBrands());
     }
 
     private PaymentMethod getPaymentMethod() {
