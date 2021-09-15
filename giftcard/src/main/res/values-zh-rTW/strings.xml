@@ -8,7 +8,6 @@
   -->
 
 <resources>
-    <string name="checkout_giftcard_redeem_button">兌換</string>
     <string name="checkout_giftcard_number_hint">信用卡號碼</string>
     <string name="checkout_giftcard_pin_hint">數字密碼</string>
     <string name="checkout_giftcard_number_not_valid">信用卡號碼無效</string>

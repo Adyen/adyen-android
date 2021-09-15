@@ -21,4 +21,5 @@
     <string name="continue_button">계속</string>
     <string name="change_payment_method">결제 수단 변경</string>
     <string name="credit_card">Credit Card</string>
+    <string name="checkout_giftcard_redeem_button">기프트 카드로 결제</string>
 </resources>
