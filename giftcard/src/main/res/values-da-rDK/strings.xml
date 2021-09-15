@@ -8,7 +8,6 @@
   -->
 
 <resources>
-    <string name="checkout_giftcard_redeem_button">Indløs</string>
     <string name="checkout_giftcard_number_hint">Kortnummer</string>
     <string name="checkout_giftcard_pin_hint">Pinkode</string>
     <string name="checkout_giftcard_number_not_valid">Ugyldigt kortnummer</string>
