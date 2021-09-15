@@ -11,7 +11,7 @@
     <string name="pay_button_with_value">Payer %s</string>
     <string name="payment_methods_header">Méthodes de paiement</string>
     <string name="error_dialog_title">Erreur</string>
-    <string name="error_dialog_button">OK</string>
+    <string name="error_dialog_button">Ok</string>
     <string name="payment_failed">Error sending payment. Please try again.</string>
     <string name="action_failed">Une erreur s\'est produite lors du traitement de votre paiement. Veuillez réessayer plus tard.</string>
     <string name="component_error">Un problème s\'est produit.</string>
@@ -21,4 +21,5 @@
     <string name="continue_button">Continuer</string>
     <string name="change_payment_method">Changer de moyen de paiement</string>
     <string name="credit_card">Credit Card</string>
+    <string name="checkout_giftcard_redeem_button">Utiliser</string>
 </resources>

@@ -21,4 +21,5 @@
     <string name="continue_button">Continuar</string>
     <string name="change_payment_method">Alterar método de pagamento</string>
     <string name="credit_card">Credit Card</string>
+    <string name="checkout_giftcard_redeem_button">Resgatar</string>
 </resources>
