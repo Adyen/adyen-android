@@ -32,16 +32,21 @@
                 tools:ignore="RequiredSize" />
         </com.google.android.material.textfield.TextInputLayout>
 
+        <FrameLayout
+            android:id="@+id/cardBrandLogo_container"
+            style="@style/AdyenCheckout.Card.BrandRecognitionLogoContainerGroup"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content">
 
-        <com.adyen.checkout.components.ui.view.RoundCornerImageView
-            android:id="@+id/cardBrandLogo_imageView"
-            style="@style/AdyenCheckout.Card.BrandRecognitionLogo"
-            android:layout_width="@dimen/brand_logo_width"
-            android:layout_height="@dimen/brand_logo_height"
-            app:strokeColor="@color/stroke_color"
-            app:strokeWidth="0dp">
+            <com.adyen.checkout.components.ui.view.RoundCornerImageView
+                android:id="@+id/cardBrandLogo_imageView"
+                style="@style/AdyenCheckout.Card.BrandRecognitionLogo"
+                android:layout_width="@dimen/brand_logo_width"
+                android:layout_height="@dimen/brand_logo_height"
+                app:strokeColor="@color/stroke_color"
+                app:strokeWidth="0dp"/>
+        </FrameLayout>
 
-        </com.adyen.checkout.components.ui.view.RoundCornerImageView>
     </FrameLayout>
 
     <com.google.android.material.textfield.TextInputLayout
@@ -58,5 +63,11 @@
             android:nextFocusForward="@+id/editText_securityCode"
             tools:ignore="RequiredSize" />
     </com.google.android.material.textfield.TextInputLayout>
+
+    <androidx.appcompat.widget.SwitchCompat
+        android:id="@+id/switch_storePaymentMethod"
+        style="@style/AdyenCheckout.Card.StorePaymentSwitch"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content" />
 
 </merge>

@@ -18,6 +18,7 @@ import android.widget.LinearLayout;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.annotation.StringRes;
+import androidx.appcompat.widget.SwitchCompat;
 import androidx.lifecycle.LifecycleOwner;
 import androidx.lifecycle.Observer;
 
@@ -26,10 +27,10 @@ import com.adyen.checkout.card.ui.ExpiryDateInput;
 import com.adyen.checkout.components.GenericComponentState;
 import com.adyen.checkout.components.api.ImageLoader;
 import com.adyen.checkout.components.model.payments.request.CardPaymentMethod;
+import com.adyen.checkout.components.ui.FieldState;
 import com.adyen.checkout.components.ui.Validation;
 import com.adyen.checkout.components.ui.view.AdyenLinearLayout;
 import com.adyen.checkout.components.ui.view.RoundCornerImageView;
-import com.adyen.checkout.components.ui.FieldState;
 import com.google.android.material.textfield.TextInputLayout;
 
 /**
@@ -46,6 +47,8 @@ public final class BcmcView
 
     private TextInputLayout mExpiryDateInput;
     private TextInputLayout mCardNumberInput;
+
+    private SwitchCompat mSwitchStorePaymentMethod;
 
     private final BcmcInputData mCardInputData = new BcmcInputData();
 
@@ -73,7 +76,7 @@ public final class BcmcView
 
     @Override
     protected void initLocalizedStrings(@NonNull Context localizedContext) {
-        final int[] myAttrs = {android.R.attr.hint};
+        int[] myAttrs = {android.R.attr.hint};
         TypedArray typedArray;
 
         // Card Number
@@ -85,6 +88,12 @@ public final class BcmcView
         typedArray = localizedContext.obtainStyledAttributes(R.style.AdyenCheckout_Card_ExpiryDateInput, myAttrs);
         mExpiryDateInput.setHint(typedArray.getString(0));
         typedArray.recycle();
+
+        // Store Switch
+        myAttrs = new int[] {android.R.attr.text};
+        typedArray = localizedContext.obtainStyledAttributes(R.style.AdyenCheckout_Card_StorePaymentSwitch, myAttrs);
+        mSwitchStorePaymentMethod.setText(typedArray.getString(0));
+        typedArray.recycle();
     }
 
     @Override
@@ -93,6 +102,7 @@ public final class BcmcView
 
         initCardNumberInput();
         initExpiryDateInput();
+        initStorePaymentMethodSwitch();
     }
 
     @Override
@@ -213,6 +223,16 @@ public final class BcmcView
                 final int errorReasonResId = ((Validation.Invalid) expiryDateValidation).getReason();
                 mExpiryDateInput.setError(mLocalizedContext.getString(errorReasonResId));
             }
+        });
+    }
+
+    private void initStorePaymentMethodSwitch() {
+        mSwitchStorePaymentMethod = findViewById(R.id.switch_storePaymentMethod);
+
+        mSwitchStorePaymentMethod.setVisibility(getComponent().getConfiguration().isStorePaymentFieldVisible() ? VISIBLE : GONE);
+        mSwitchStorePaymentMethod.setOnCheckedChangeListener((buttonView, isChecked) -> {
+            mCardInputData.setStorePaymentSelected(isChecked);
+            notifyInputDataChanged();
         });
     }
 }

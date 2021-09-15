@@ -13,10 +13,12 @@ import android.os.Parcel;
 import android.os.Parcelable;
 
 import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 
 import com.adyen.checkout.components.base.BaseConfigurationBuilder;
 import com.adyen.checkout.components.base.Configuration;
 import com.adyen.checkout.core.api.Environment;
+import com.adyen.checkout.core.util.ParcelUtils;
 
 import java.util.Locale;
 
@@ -24,6 +26,9 @@ import java.util.Locale;
  * {@link Configuration} class required by {@link BcmcComponent} to change it's behavior. Pass it to the {@link BcmcComponent#PROVIDER}.
  */
 public class BcmcConfiguration extends Configuration {
+
+    private final String mShopperReference;
+    private final boolean mShowStorePaymentField;
 
     public static final Parcelable.Creator<BcmcConfiguration> CREATOR = new Parcelable.Creator<BcmcConfiguration>() {
         public BcmcConfiguration createFromParcel(@NonNull Parcel in) {
@@ -37,21 +42,40 @@ public class BcmcConfiguration extends Configuration {
 
     BcmcConfiguration(@NonNull Builder builder) {
         super(builder.getBuilderShopperLocale(), builder.getBuilderEnvironment(), builder.getBuilderClientKey());
+
+        mShopperReference = builder.mShopperReference;
+        mShowStorePaymentField = builder.mBuilderShowStorePaymentField;
     }
 
     BcmcConfiguration(@NonNull Parcel in) {
         super(in);
+        mShopperReference = in.readString();
+        mShowStorePaymentField = ParcelUtils.readBoolean(in);
     }
 
     @Override
     public void writeToParcel(@NonNull Parcel dest, int flags) {
         super.writeToParcel(dest, flags);
+        dest.writeString(mShopperReference);
+        ParcelUtils.writeBoolean(dest, mShowStorePaymentField);
+    }
+
+    @Nullable
+    public String getShopperReference() {
+        return mShopperReference;
+    }
+
+    public boolean isStorePaymentFieldVisible() {
+        return mShowStorePaymentField;
     }
 
     /**
      * Builder to create a {@link BcmcConfiguration}.
      */
     public static final class Builder extends BaseConfigurationBuilder<BcmcConfiguration> {
+
+        private boolean mBuilderShowStorePaymentField = false;
+        private String mShopperReference;
 
         /**
          * Constructor of Card Configuration Builder with default values.
@@ -88,6 +112,32 @@ public class BcmcConfiguration extends Configuration {
         @NonNull
         public Builder setEnvironment(@NonNull Environment builderEnvironment) {
             return (Builder) super.setEnvironment(builderEnvironment);
+        }
+
+        /**
+         * Set if the option to store the card for future payments should be shown as an input field.
+         *
+         * @param showStorePaymentField {@link Boolean}
+         * @return {@link BcmcConfiguration.Builder}
+         */
+        @NonNull
+        public BcmcConfiguration.Builder setShowStorePaymentField(boolean showStorePaymentField) {
+            mBuilderShowStorePaymentField = showStorePaymentField;
+            return this;
+        }
+
+        /**
+         * Set the unique reference for the shopper doing this transaction.
+         * This value will simply be passed back to you in the {@link com.adyen.checkout.components.model.payments.request.PaymentComponentData}
+         * for convenience.
+         *
+         * @param shopperReference The unique shopper reference
+         * @return {@link BcmcConfiguration.Builder}
+         */
+        @NonNull
+        public BcmcConfiguration.Builder setShopperReference(@NonNull String shopperReference) {
+            mShopperReference = shopperReference;
+            return this;
         }
 
         /**
