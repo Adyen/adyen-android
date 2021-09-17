@@ -92,7 +92,7 @@ class DropInActivity : AppCompatActivity(), DropInBottomSheetDialogFragment.Prot
 
     private val googlePayErrorObserver: Observer<ComponentError> = Observer {
         Logger.d(TAG, "GooglePay error - ${it?.errorMessage}")
-        if (dropInViewModel.hasOnlyOnePaymentMethod()) {
+        if (dropInViewModel.skipPaymentMethodDialog()) {
             terminateWithError(it.errorMessage)
         } else {
             showPaymentMethodsDialog()
@@ -156,8 +156,8 @@ class DropInActivity : AppCompatActivity(), DropInBottomSheetDialogFragment.Prot
         paymentSelectionHandler = PaymentSelectionHandler(dropInViewModel, this)
 
         if (noDialogPresent()) {
-            if (dropInViewModel.hasOnlyOnePaymentMethod()) {
-                val paymentMethodType = dropInViewModel.getOnlyOnePaymentMethodType()
+            if (dropInViewModel.skipPaymentMethodDialog()) {
+                val paymentMethodType = dropInViewModel.getOneAndOnlyPaymentMethodType()
                 paymentSelectionHandler.handlePaymentSelection(paymentMethodType)
             } else {
                 if (dropInViewModel.showPreselectedStored) {

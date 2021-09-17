@@ -58,6 +58,7 @@ class DropInConfiguration : Configuration, Parcelable {
     val serviceComponentName: ComponentName
     val amount: Amount
     val showPreselectedStoredPaymentMethod: Boolean
+    val skipPaymentMethodsDialogWhenOnlyOnePaymentMethodIsAvailable: Boolean
 
     companion object {
         @JvmField
@@ -76,6 +77,7 @@ class DropInConfiguration : Configuration, Parcelable {
         this.serviceComponentName = builder.serviceComponentName
         this.amount = builder.amount
         this.showPreselectedStoredPaymentMethod = builder.showPreselectedStoredPaymentMethod
+        this.skipPaymentMethodsDialogWhenOnlyOnePaymentMethodIsAvailable = builder.skipPaymentMethodsDialogWhenOnlyOnePaymentMethodIsAvailable
     }
 
     constructor(parcel: Parcel) : super(parcel) {
@@ -86,6 +88,7 @@ class DropInConfiguration : Configuration, Parcelable {
         serviceComponentName = parcel.readParcelable(ComponentName::class.java.classLoader)!!
         amount = Amount.CREATOR.createFromParcel(parcel)
         showPreselectedStoredPaymentMethod = ParcelUtils.readBoolean(parcel)
+        skipPaymentMethodsDialogWhenOnlyOnePaymentMethodIsAvailable = ParcelUtils.readBoolean(parcel)
     }
 
     override fun writeToParcel(dest: Parcel, flags: Int) {
@@ -95,6 +98,7 @@ class DropInConfiguration : Configuration, Parcelable {
         dest.writeParcelable(serviceComponentName, flags)
         JsonUtils.writeToParcel(dest, Amount.SERIALIZER.serialize(amount))
         ParcelUtils.writeBoolean(dest, showPreselectedStoredPaymentMethod)
+        ParcelUtils.writeBoolean(dest, skipPaymentMethodsDialogWhenOnlyOnePaymentMethodIsAvailable)
     }
 
     override fun describeContents(): Int {
@@ -152,6 +156,8 @@ class DropInConfiguration : Configuration, Parcelable {
             private set
         var showPreselectedStoredPaymentMethod: Boolean = true
             private set
+        var skipPaymentMethodsDialogWhenOnlyOnePaymentMethodIsAvailable: Boolean = false
+            private set
 
         private val packageName: String
         private val serviceClassName: String
@@ -191,6 +197,7 @@ class DropInConfiguration : Configuration, Parcelable {
             this.amount = dropInConfiguration.amount
             this.clientKey = dropInConfiguration.clientKey
             this.showPreselectedStoredPaymentMethod = dropInConfiguration.showPreselectedStoredPaymentMethod
+            this.skipPaymentMethodsDialogWhenOnlyOnePaymentMethodIsAvailable = dropInConfiguration.skipPaymentMethodsDialogWhenOnlyOnePaymentMethodIsAvailable
         }
 
         fun setServiceComponentName(serviceComponentName: ComponentName): Builder {
@@ -223,6 +230,11 @@ class DropInConfiguration : Configuration, Parcelable {
 
         fun setShowPreselectedStoredPaymentMethod(showStoredPaymentMethod: Boolean): Builder {
             this.showPreselectedStoredPaymentMethod = showStoredPaymentMethod
+            return this
+        }
+
+        fun setSkipPaymentMethodsDialogWhenOnlyOnePaymentMethodIsAvailable(skipPaymentMethodsDialog: Boolean): Builder {
+            this.skipPaymentMethodsDialogWhenOnlyOnePaymentMethodIsAvailable = skipPaymentMethodsDialog
             return this
         }
 

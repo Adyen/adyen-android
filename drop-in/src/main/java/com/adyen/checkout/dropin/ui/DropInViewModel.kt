@@ -36,13 +36,17 @@ class DropInViewModel(
         return paymentMethodsApiResponse.paymentMethods?.firstOrNull { it.type == type } ?: PaymentMethod()
     }
 
-    fun hasOnlyOnePaymentMethod(): Boolean {
+    fun skipPaymentMethodDialog(): Boolean {
+        return dropInConfiguration.skipPaymentMethodsDialogWhenOnlyOnePaymentMethodIsAvailable && hasOnlyOnePaymentMethod()
+    }
+
+    private fun hasOnlyOnePaymentMethod(): Boolean {
         val paymentMethodsSize = paymentMethodsApiResponse.paymentMethods?.size ?: 0
         val storedPaymentMethodsSize = paymentMethodsApiResponse.storedPaymentMethods?.size ?: 0
         return paymentMethodsSize + storedPaymentMethodsSize == 1
     }
 
-    fun getOnlyOnePaymentMethodType(): String {
+    fun getOneAndOnlyPaymentMethodType(): String {
         if (!hasOnlyOnePaymentMethod()) {
             return ""
         }
