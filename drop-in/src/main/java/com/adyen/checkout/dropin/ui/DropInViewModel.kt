@@ -11,7 +11,6 @@ package com.adyen.checkout.dropin.ui
 import android.content.Intent
 import androidx.lifecycle.ViewModel
 import com.adyen.checkout.components.model.PaymentMethodsApiResponse
-import com.adyen.checkout.components.model.paymentmethods.PaymentMethod
 import com.adyen.checkout.components.model.paymentmethods.StoredPaymentMethod
 import com.adyen.checkout.components.util.PaymentMethodTypes
 import com.adyen.checkout.dropin.DropInConfiguration
@@ -30,9 +29,5 @@ class DropInViewModel(
 
     fun getStoredPaymentMethod(id: String): StoredPaymentMethod {
         return paymentMethodsApiResponse.storedPaymentMethods?.firstOrNull { it.id == id } ?: StoredPaymentMethod()
-    }
-
-    fun getPaymentMethod(type: String): PaymentMethod {
-        return paymentMethodsApiResponse.paymentMethods?.firstOrNull { it.type == type } ?: PaymentMethod()
     }
 }
