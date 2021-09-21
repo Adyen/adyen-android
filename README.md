@@ -183,20 +183,8 @@ cardComponent.observe(this) { paymentComponentState ->
 
 ## ProGuard
 
-If you use ProGuard or R8, the following rules should be enough to maintain all expected functionality.
+If you use ProGuard or R8, you do not need to manually add any rules, as they are automatically embedded in the artifacts.
 Please let us know if you find any issues.
-
-```
--keep class com.adyen.checkout.core.model.** { * ;}
--keep class com.adyen.checkout.components.model.** { *; }
--keep class com.adyen.threeds2.** { *; }
--keepclassmembers public class * implements com.adyen.checkout.components.PaymentComponent {
-   public <init>(...);
-}
--keepclassmembers public class * implements com.adyen.checkout.components.ActionComponent {
-   public <init>(...);
-}
-```
 
 ## See also
 
