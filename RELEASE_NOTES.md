@@ -11,6 +11,7 @@
 ## Added
 - Dual-branded card flow: shoppers can now select their card's brand when two brands are detected.
 - Ability to store BCMC cards.
+- Support for new Activity Result API.
 - Ability to stop observing components.
 - 3DS2 SDK version in `CardComponent`'s output.
 - Read list of supported card networks for Google Pay from the payment methods API response.
