@@ -28,26 +28,34 @@ fun createPaymentRequest(
     threeDSAuthenticationOnly: Boolean = false
 ): JSONObject {
 
-    val request = JSONObject(paymentComponentData.toString())
+    return JSONObject(paymentComponentData.toString()).apply {
+        put("shopperReference", shopperReference)
+        put("amount", JSONObject(Gson().toJson(amount)))
+        put("merchantAccount", merchantAccount)
+        put("returnUrl", redirectUrl)
+        put("countryCode", countryCode)
+        put("shopperIP", "142.12.31.22")
+        put("reference", "android-test-components_${System.currentTimeMillis()}")
+        put("channel", "android")
+        put("additionalData", JSONObject(Gson().toJson(additionalData)))
+        put("lineItems", JSONArray(Gson().toJson(listOf(Item()))))
+        put("threeDSAuthenticationOnly", threeDSAuthenticationOnly)
 
-    request.put("shopperReference", shopperReference)
-    request.put("amount", JSONObject(Gson().toJson(amount)))
-    request.put("merchantAccount", merchantAccount)
-    request.put("returnUrl", redirectUrl)
-    request.put("countryCode", countryCode)
-    request.put("shopperIP", "142.12.31.22")
-    request.put("reference", "android-test-components_${System.currentTimeMillis()}")
-    request.put("channel", "android")
-    request.put("additionalData", JSONObject(Gson().toJson(additionalData)))
-    request.put("lineItems", JSONArray(Gson().toJson(listOf(Item()))))
-    request.put("threeDSAuthenticationOnly", threeDSAuthenticationOnly)
-
-    if (force3DS2Challenge) {
-        val threeDS2RequestData = JSONObject()
-        threeDS2RequestData.put("deviceChannel", "app")
-        threeDS2RequestData.put("challengeIndicator", "requestChallenge")
-        request.put("threeDS2RequestData", threeDS2RequestData)
+        if (force3DS2Challenge) {
+            val threeDS2RequestData = JSONObject()
+            threeDS2RequestData.put("deviceChannel", "app")
+            threeDS2RequestData.put("challengeIndicator", "requestChallenge")
+            put("threeDS2RequestData", threeDS2RequestData)
+        }
     }
+}
 
-    return request
+fun createBalanceRequest(
+    paymentComponentData: JSONObject,
+    merchantAccount: String,
+): JSONObject {
+    return JSONObject().apply {
+        put("paymentMethod", paymentComponentData)
+        put("merchantAccount", merchantAccount)
+    }
 }

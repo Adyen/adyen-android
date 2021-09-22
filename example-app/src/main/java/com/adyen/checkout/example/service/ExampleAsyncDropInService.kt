@@ -11,8 +11,10 @@ package com.adyen.checkout.example.service
 import com.adyen.checkout.card.CardComponentState
 import com.adyen.checkout.components.ActionComponentData
 import com.adyen.checkout.components.PaymentComponentState
+import com.adyen.checkout.components.model.payments.request.PaymentMethodDetails
 import com.adyen.checkout.core.log.LogUtil
 import com.adyen.checkout.core.log.Logger
+import com.adyen.checkout.core.model.getStringOrNull
 import com.adyen.checkout.core.model.toStringPretty
 import com.adyen.checkout.dropin.service.DropInService
 import com.adyen.checkout.dropin.service.DropInServiceResult
@@ -115,6 +117,42 @@ class ExampleAsyncDropInService : DropInService() {
         } else {
             Logger.e(TAG, "FAILED")
             DropInServiceResult.Error(reason = "IOException")
+        }
+    }
+
+    override fun checkBalance(paymentMethodData: PaymentMethodDetails, paymentMethodJson: JSONObject) {
+        launch(Dispatchers.IO) {
+            Logger.d(TAG, "checkBalance")
+
+            Logger.v(TAG, "paymentMethods/balance/ - ${paymentMethodJson.toStringPretty()}")
+
+            val paymentRequest = createBalanceRequest(
+                paymentMethodJson,
+                keyValueStorage.getMerchantAccount()
+            )
+
+            val requestBody = paymentRequest.toString().toRequestBody(CONTENT_TYPE)
+            val response = paymentsRepository.balanceRequestAsync(requestBody)
+
+            handleBalanceResponse(response)
+        }
+    }
+
+    @Suppress("NestedBlockDepth")
+    private fun handleBalanceResponse(response: ResponseBody?) {
+        if (response != null) {
+            val jsonResponse = JSONObject(response.string())
+            val resultCode = jsonResponse.getStringOrNull("resultCode")
+            val balance = jsonResponse.getStringOrNull("balance")
+            val transactionLimit = jsonResponse.getStringOrNull("transactionLimit")
+            when {
+                resultCode == "Success" && balance != null -> onBalanceChecked(balance, transactionLimit)
+                resultCode == "NotEnoughBalance" -> sendResult(DropInServiceResult.Error(reason = "Not enough balance", dismissDropIn = false))
+                else -> sendResult(DropInServiceResult.Error(reason = resultCode, dismissDropIn = false))
+            }
+        } else {
+            Logger.e(TAG, "FAILED")
+            sendResult(DropInServiceResult.Error(reason = "IOException"))
         }
     }
 }
