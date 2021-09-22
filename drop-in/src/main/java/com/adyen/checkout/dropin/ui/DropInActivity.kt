@@ -29,6 +29,7 @@ import com.adyen.checkout.components.analytics.AnalyticsDispatcher
 import com.adyen.checkout.components.model.PaymentMethodsApiResponse
 import com.adyen.checkout.components.model.paymentmethods.PaymentMethod
 import com.adyen.checkout.components.model.paymentmethods.StoredPaymentMethod
+import com.adyen.checkout.components.model.payments.Amount
 import com.adyen.checkout.components.model.payments.response.Action
 import com.adyen.checkout.components.util.PaymentMethodTypes
 import com.adyen.checkout.core.exception.CheckoutException
@@ -39,6 +40,7 @@ import com.adyen.checkout.dropin.DropIn
 import com.adyen.checkout.dropin.DropInConfiguration
 import com.adyen.checkout.dropin.DropInPrefs
 import com.adyen.checkout.dropin.R
+import com.adyen.checkout.dropin.service.BalanceResult
 import com.adyen.checkout.dropin.service.DropInService
 import com.adyen.checkout.dropin.service.DropInServiceInterface
 import com.adyen.checkout.dropin.service.DropInServiceResult
@@ -46,6 +48,7 @@ import com.adyen.checkout.dropin.ui.action.ActionComponentDialogFragment
 import com.adyen.checkout.dropin.ui.base.DropInBottomSheetDialogFragment
 import com.adyen.checkout.dropin.ui.component.CardComponentDialogFragment
 import com.adyen.checkout.dropin.ui.component.GenericComponentDialogFragment
+import com.adyen.checkout.dropin.ui.component.GiftCardComponentDialogFragment
 import com.adyen.checkout.dropin.ui.paymentmethods.PaymentMethodListDialogFragment
 import com.adyen.checkout.dropin.ui.stored.PreselectedStoredPaymentMethodFragment
 import com.adyen.checkout.googlepay.GooglePayComponent
@@ -97,6 +100,7 @@ class DropInActivity : AppCompatActivity(), DropInBottomSheetDialogFragment.Prot
     // these queues exist for when a call is requested before the service is bound
     private var paymentDataQueue: PaymentComponentState<*>? = null
     private var actionDataQueue: ActionComponentData? = null
+    private var balanceDataQueue: PaymentComponentState<*>? = null
 
     private val serviceConnection = object : ServiceConnection {
 
@@ -105,6 +109,7 @@ class DropInActivity : AppCompatActivity(), DropInBottomSheetDialogFragment.Prot
             val dropInBinder = binder as? DropInService.DropInBinder ?: return
             dropInService = dropInBinder.getService()
             dropInService?.observeResult(this@DropInActivity) { handleDropInServiceResult(it) }
+            dropInService?.observeBalanceResult(this@DropInActivity) { handleBalanceResult(it) }
 
             paymentDataQueue?.let {
                 Logger.d(TAG, "Sending queued payment request")
@@ -116,6 +121,11 @@ class DropInActivity : AppCompatActivity(), DropInBottomSheetDialogFragment.Prot
                 Logger.d(TAG, "Sending queued action request")
                 requestDetailsCall(it)
                 actionDataQueue = null
+            }
+            balanceDataQueue?.let {
+                Logger.d(TAG, "Sending queued action request")
+                requestBalanceCall(it)
+                balanceDataQueue = null
             }
         }
 
@@ -339,6 +349,7 @@ class DropInActivity : AppCompatActivity(), DropInBottomSheetDialogFragment.Prot
         hideAllScreens()
         val dialogFragment = when (paymentMethod.type) {
             PaymentMethodTypes.SCHEME -> CardComponentDialogFragment
+            PaymentMethodTypes.GIFTCARD -> GiftCardComponentDialogFragment
             else -> GenericComponentDialogFragment
         }.newInstance(paymentMethod, dropInViewModel.dropInConfiguration)
 
@@ -365,6 +376,23 @@ class DropInActivity : AppCompatActivity(), DropInBottomSheetDialogFragment.Prot
 
         hideFragmentDialog(PAYMENT_METHODS_LIST_FRAGMENT_TAG)
         googlePayComponent.startGooglePayScreen(this, GOOGLE_PAY_REQUEST_CODE)
+    }
+
+    override fun requestBalanceCall(paymentComponentState: PaymentComponentState<*>) {
+        Logger.d(TAG, "requestCheckBalanceCall")
+        val paymentMethod = paymentComponentState.data.paymentMethod
+        if (paymentMethod == null) {
+            Logger.e(TAG, "requestBalanceCall - paymentMethod is null")
+            return
+        }
+        if (dropInService == null) {
+            Logger.e(TAG, "requestBalanceCall - service is disconnected")
+            balanceDataQueue = paymentComponentState
+            return
+        }
+        isWaitingResult = true
+        setLoading(true)
+        dropInService?.requestBalanceCall(paymentMethod)
     }
 
     private fun handleDropInServiceResult(dropInServiceResult: DropInServiceResult) {
@@ -476,6 +504,19 @@ class DropInActivity : AppCompatActivity(), DropInBottomSheetDialogFragment.Prot
         } else {
             getFragmentByTag(LOADING_FRAGMENT_TAG)?.dismiss()
         }
+    }
+
+    private fun handleBalanceResult(balanceResult: BalanceResult) {
+        Logger.d(TAG, "handleBalanceResult - balance: ${balanceResult.balance} - transactionLimit: ${balanceResult.transactionLimit}")
+        isWaitingResult = false
+        // TODO move this somewhere else later?
+        setLoading(false)
+        val balance = Amount.SERIALIZER.deserialize(JSONObject(balanceResult.balance))
+        val transactionLimit =
+            if (balanceResult.transactionLimit == null) null
+            else Amount.SERIALIZER.deserialize(JSONObject(balanceResult.transactionLimit))
+        balance
+        // TODO handle balance and transactionLimit
     }
 
     companion object {
