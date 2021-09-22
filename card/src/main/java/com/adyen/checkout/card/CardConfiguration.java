@@ -130,7 +130,15 @@ public class CardConfiguration extends Configuration {
         return mShopperReference;
     }
 
+    /**
+     * @deprecated in favor of isStorePaymentFieldVisible because it had a typo.
+     */
+    @Deprecated
     public boolean isShowStorePaymentFieldEnable() {
+        return mShowStorePaymentField;
+    }
+
+    public boolean isStorePaymentFieldVisible() {
         return mShowStorePaymentField;
     }
 
@@ -184,7 +192,7 @@ public class CardConfiguration extends Configuration {
             super(cardConfiguration.getShopperLocale(), cardConfiguration.getEnvironment(), cardConfiguration.getClientKey());
             mBuilderSupportedCardTypes = cardConfiguration.getSupportedCardTypes();
             mBuilderHolderNameRequired = cardConfiguration.isHolderNameRequired();
-            mBuilderShowStorePaymentField = cardConfiguration.isShowStorePaymentFieldEnable();
+            mBuilderShowStorePaymentField = cardConfiguration.isStorePaymentFieldVisible();
             mShopperReference = cardConfiguration.getShopperReference();
             mBuilderHideCvc = cardConfiguration.isHideCvc();
             mBuilderHideCvcStoredCard = cardConfiguration.isHideCvcStoredCard();

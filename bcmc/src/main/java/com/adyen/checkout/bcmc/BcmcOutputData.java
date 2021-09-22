@@ -18,13 +18,16 @@ public final class BcmcOutputData implements OutputData {
 
     private final FieldState<String> mCardNumberField;
     private final FieldState<ExpiryDate> mExpiryDateField;
+    private final boolean mIsStoredPaymentMethodEnabled;
 
     BcmcOutputData(
             @NonNull FieldState<String> cardNumberField,
-            @NonNull FieldState<ExpiryDate> expiryDateField
+            @NonNull FieldState<ExpiryDate> expiryDateField,
+            boolean isStoredPaymentMethodEnabled
     ) {
         mCardNumberField = cardNumberField;
         mExpiryDateField = expiryDateField;
+        mIsStoredPaymentMethodEnabled = isStoredPaymentMethodEnabled;
     }
 
     @NonNull
@@ -35,6 +38,10 @@ public final class BcmcOutputData implements OutputData {
     @NonNull
     public FieldState<ExpiryDate> getExpiryDateField() {
         return mExpiryDateField;
+    }
+
+    public boolean isStoredPaymentMethodEnabled() {
+        return mIsStoredPaymentMethodEnabled;
     }
 
     @Override

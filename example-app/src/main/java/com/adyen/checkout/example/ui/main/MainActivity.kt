@@ -157,6 +157,8 @@ class MainActivity : AppCompatActivity(), DropInCallback {
             .build()
 
         val bcmcConfiguration = BcmcConfiguration.Builder(shopperLocale, Environment.TEST, BuildConfig.CLIENT_KEY)
+            .setShopperReference(keyValueStorage.getShopperReference())
+            .setShowStorePaymentField(true)
             .build()
 
         val adyen3DS2Configuration = Adyen3DS2Configuration.Builder(shopperLocale, Environment.TEST, BuildConfig.CLIENT_KEY)

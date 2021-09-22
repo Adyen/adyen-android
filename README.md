@@ -27,11 +27,11 @@ If you are upgrading from 3.x.x to a current release, check out our [migration g
 Import the Component module for the Payment Method you want to use by adding it to your `build.gradle` file.
 For example, for the Drop-in solution you should add:
 ```groovy
-implementation "com.adyen.checkout:drop-in:4.1.1"
+implementation "com.adyen.checkout:drop-in:4.2.0"
 ```
 For a Credit Card component you should add:
 ```groovy
-implementation "com.adyen.checkout:card:4.1.1"
+implementation "com.adyen.checkout:card:4.2.0"
 ```
 
 ### Client Key
@@ -183,20 +183,8 @@ cardComponent.observe(this) { paymentComponentState ->
 
 ## ProGuard
 
-If you use ProGuard or R8, the following rules should be enough to maintain all expected functionality.
+If you use ProGuard or R8, you do not need to manually add any rules, as they are automatically embedded in the artifacts.
 Please let us know if you find any issues.
-
-```
--keep class com.adyen.checkout.core.model.** { * ;}
--keep class com.adyen.checkout.components.model.** { *; }
--keep class com.adyen.threeds2.** { *; }
--keepclassmembers public class * implements com.adyen.checkout.components.PaymentComponent {
-   public <init>(...);
-}
--keepclassmembers public class * implements com.adyen.checkout.components.ActionComponent {
-   public <init>(...);
-}
-```
 
 ## See also
 

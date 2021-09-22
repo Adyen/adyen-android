@@ -79,7 +79,8 @@ class BcmcComponent(
         Logger.v(TAG, "onInputDataChanged")
         return BcmcOutputData(
             validateCardNumber(inputData.cardNumber),
-            validateExpiryDate(inputData.expiryDate)
+            validateExpiryDate(inputData.expiryDate),
+            inputData.isStorePaymentSelected
         )
     }
 
@@ -129,6 +130,8 @@ class BcmcComponent(
             }
         }
         paymentComponentData.paymentMethod = cardPaymentMethod
+        paymentComponentData.setStorePaymentMethod(outputData.isStoredPaymentMethodEnabled)
+        paymentComponentData.shopperReference = configuration.shopperReference
         return GenericComponentState(paymentComponentData, true, true)
     }
 

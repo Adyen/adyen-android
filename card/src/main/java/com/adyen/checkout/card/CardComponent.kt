@@ -351,7 +351,7 @@ class CardComponent private constructor(
     }
 
     fun showStorePaymentField(): Boolean {
-        return configuration.isShowStorePaymentFieldEnable
+        return configuration.isStorePaymentFieldVisible
     }
 
     @StringRes fun getKcpBirthDateOrTaxNumberHint(input: String): Int {
