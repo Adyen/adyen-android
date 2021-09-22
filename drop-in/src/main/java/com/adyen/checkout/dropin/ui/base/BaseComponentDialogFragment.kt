@@ -152,7 +152,7 @@ abstract class BaseComponentDialogFragment : DropInBottomSheetDialogFragment(), 
         protocol.terminateDropIn()
     }
 
-    private fun startPayment() {
+    open fun startPayment() {
         val componentState = component.state
         try {
             if (componentState != null) {
