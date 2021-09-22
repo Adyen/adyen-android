@@ -83,13 +83,14 @@ public class GooglePayComponent extends
         final GooglePayParams googlePayParams = getGooglePayParams();
         final PaymentsClient paymentsClient = Wallet.getPaymentsClient(activity, GooglePayUtils.createWalletOptions(googlePayParams));
         final PaymentDataRequest paymentDataRequest = GooglePayUtils.createPaymentDataRequest(googlePayParams);
+        // TODO this forces us to use the deprecated onActivityResult. Look into alternatives when/if Google provides any later.
         AutoResolveHelper.resolveTask(paymentsClient.loadPaymentData(paymentDataRequest), activity, requestCode);
     }
 
     private GooglePayParams getGooglePayParams() {
         final Configuration configuration = getPaymentMethod().getConfiguration();
         final String serverGatewayMerchantId = (configuration != null) ? configuration.getGatewayMerchantId() : null;
-        return new GooglePayParams(getConfiguration(), serverGatewayMerchantId);
+        return new GooglePayParams(getConfiguration(), serverGatewayMerchantId, getPaymentMethod().getBrands());
     }
 
     private PaymentMethod getPaymentMethod() {

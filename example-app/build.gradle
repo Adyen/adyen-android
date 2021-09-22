@@ -57,7 +57,7 @@ android {
 
     buildTypes {
         release {
-            minifyEnabled false
+            minifyEnabled true
             proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
         }
     }
@@ -71,6 +71,7 @@ android {
 dependencies {
     // Checkout
     implementation project(':drop-in')
+//    implementation "com.adyen.checkout:drop-in:4.2.0"
 
     // Dependencies
     implementation "org.jetbrains.kotlinx:kotlinx-coroutines-android:$kotlinx_version"

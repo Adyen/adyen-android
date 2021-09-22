@@ -32,6 +32,7 @@ import com.adyen.checkout.components.ui.Validation
 import com.adyen.checkout.components.ui.view.AdyenLinearLayout
 import com.adyen.checkout.components.ui.view.AdyenTextInputEditText
 import com.adyen.checkout.components.ui.view.RoundCornerImageView
+import com.adyen.checkout.core.exception.CheckoutException
 
 /**
  * CardView for [CardComponent].
@@ -40,6 +41,13 @@ import com.adyen.checkout.components.ui.view.RoundCornerImageView
 class CardView @JvmOverloads constructor(context: Context, attrs: AttributeSet? = null, defStyleAttr: Int = 0) :
     AdyenLinearLayout<CardOutputData?, CardConfiguration?, CardComponentState?, CardComponent?>(context, attrs, defStyleAttr),
     Observer<CardOutputData?> {
+
+    companion object {
+        private const val UNSELECTED_BRAND_LOGO_ALPHA = 0.2f
+        private const val SELECTED_BRAND_LOGO_ALPHA = 1f
+        private const val PRIMARY_BRAND_INDEX = 0
+        private const val SECONDARY_BRAND_INDEX = 1
+    }
 
     private val binding: CardViewBinding = CardViewBinding.inflate(LayoutInflater.from(context), this)
 
@@ -201,12 +209,28 @@ class CardView @JvmOverloads constructor(context: Context, attrs: AttributeSet? 
 
     private fun onCardNumberValidated(detectedCardTypes: List<DetectedCardType>) {
         if (detectedCardTypes.isEmpty()) {
-            binding.cardBrandLogoImageView.setStrokeWidth(0f)
-            binding.cardBrandLogoImageView.setImageResource(R.drawable.ic_card)
+            binding.cardBrandLogoImageViewPrimary.setStrokeWidth(0f)
+            binding.cardBrandLogoImageViewPrimary.setImageResource(R.drawable.ic_card)
+            binding.cardBrandLogoImageViewPrimary.alpha = 1f
+            binding.cardBrandLogoContainerSecondary.isVisible = false
             binding.editTextCardNumber.setAmexCardFormat(false)
+            resetBrandSelectionInput()
         } else {
-            binding.cardBrandLogoImageView.setStrokeWidth(RoundCornerImageView.DEFAULT_STROKE_WIDTH)
-            mImageLoader?.load(detectedCardTypes[0].cardType.txVariant, binding.cardBrandLogoImageView, 0, R.drawable.ic_card)
+            binding.cardBrandLogoImageViewPrimary.setStrokeWidth(RoundCornerImageView.DEFAULT_STROKE_WIDTH)
+            mImageLoader?.load(detectedCardTypes[0].cardType.txVariant, binding.cardBrandLogoImageViewPrimary, 0, R.drawable.ic_card)
+
+            detectedCardTypes.getOrNull(1)?.takeIf { it.isReliable }?.let {
+                binding.cardBrandLogoContainerSecondary.isVisible = true
+                binding.cardBrandLogoImageViewSecondary.setStrokeWidth(RoundCornerImageView.DEFAULT_STROKE_WIDTH)
+                mImageLoader?.load(it.cardType.txVariant, binding.cardBrandLogoImageViewSecondary, 0, R.drawable.ic_card)
+                initCardBrandLogoViews(detectedCardTypes.indexOfFirst { it.isSelected })
+                initBrandSelectionListeners()
+            } ?: run {
+                binding.cardBrandLogoImageViewPrimary.alpha = 1f
+                binding.cardBrandLogoContainerSecondary.isVisible = false
+                resetBrandSelectionInput()
+            }
+
             // TODO: 29/01/2021 get this logic from OutputData
             var isAmex = false
             for ((cardType) in detectedCardTypes) {
@@ -234,13 +258,15 @@ class CardView @JvmOverloads constructor(context: Context, attrs: AttributeSet? 
         binding.editTextCardNumber.setOnChangeListener {
             mCardInputData.cardNumber = binding.editTextCardNumber.rawValue
             notifyInputDataChanged()
-            setCardNumberError(null)
+            val shouldShowSecondaryLogo = component.outputData?.let { component.isDualBrandedFlow(it) } ?: false
+            setCardNumberError(null, shouldShowSecondaryLogo)
         }
         binding.editTextCardNumber.onFocusChangeListener = OnFocusChangeListener { _: View?, hasFocus: Boolean ->
             if (!component.isStoredPaymentMethod()) {
                 val cardNumberValidation = component.outputData?.cardNumberState?.validation
                 if (hasFocus) {
-                    setCardNumberError(null)
+                    val shouldShowSecondaryLogo = component.outputData?.let { component.isDualBrandedFlow(it) } ?: false
+                    setCardNumberError(null, shouldShowSecondaryLogo)
                 } else if (cardNumberValidation != null && cardNumberValidation is Validation.Invalid) {
                     setCardNumberError(cardNumberValidation.reason)
                 }
@@ -248,14 +274,53 @@ class CardView @JvmOverloads constructor(context: Context, attrs: AttributeSet? 
         }
     }
 
-    private fun setCardNumberError(@StringRes stringResId: Int?) {
+    private fun setCardNumberError(@StringRes stringResId: Int?, shouldShowSecondaryLogo: Boolean = false) {
         if (stringResId == null) {
             binding.textInputLayoutCardNumber.error = null
-            binding.cardBrandLogoImageView.isVisible = true
+            binding.cardBrandLogoContainerPrimary.isVisible = true
+            binding.cardBrandLogoContainerSecondary.isVisible = shouldShowSecondaryLogo
         } else {
             binding.textInputLayoutCardNumber.error = mLocalizedContext.getString(stringResId)
-            binding.cardBrandLogoImageView.isVisible = false
+            binding.cardBrandLogoContainerPrimary.isVisible = false
+            binding.cardBrandLogoContainerSecondary.isVisible = false
         }
+    }
+
+    private fun initCardBrandLogoViews(selectedIndex: Int) {
+        when (selectedIndex) {
+            PRIMARY_BRAND_INDEX -> selectPrimaryBrand()
+            SECONDARY_BRAND_INDEX -> selectSecondaryBrand()
+            else -> throw CheckoutException("Illegal brand index selected. Selected index must be either 0 or 1.")
+        }
+    }
+
+    private fun initBrandSelectionListeners() {
+        binding.cardBrandLogoContainerPrimary.setOnClickListener {
+            mCardInputData.selectedCardIndex = PRIMARY_BRAND_INDEX
+            notifyInputDataChanged()
+            selectPrimaryBrand()
+        }
+
+        binding.cardBrandLogoContainerSecondary.setOnClickListener {
+            mCardInputData.selectedCardIndex = SECONDARY_BRAND_INDEX
+            notifyInputDataChanged()
+            selectSecondaryBrand()
+        }
+    }
+
+    private fun resetBrandSelectionInput() {
+        binding.cardBrandLogoContainerPrimary.setOnClickListener(null)
+        binding.cardBrandLogoContainerSecondary.setOnClickListener(null)
+    }
+
+    private fun selectPrimaryBrand() {
+        binding.cardBrandLogoImageViewPrimary.alpha = SELECTED_BRAND_LOGO_ALPHA
+        binding.cardBrandLogoImageViewSecondary.alpha = UNSELECTED_BRAND_LOGO_ALPHA
+    }
+
+    private fun selectSecondaryBrand() {
+        binding.cardBrandLogoImageViewPrimary.alpha = UNSELECTED_BRAND_LOGO_ALPHA
+        binding.cardBrandLogoImageViewSecondary.alpha = SELECTED_BRAND_LOGO_ALPHA
     }
 
     private fun initExpiryDateInput() {

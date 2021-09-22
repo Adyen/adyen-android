@@ -55,7 +55,7 @@ class GooglePayProvider :
         val callbackWeakReference: WeakReference<ComponentAvailableCallback<GooglePayConfiguration>> =
             WeakReference<ComponentAvailableCallback<GooglePayConfiguration>>(callback)
         val serverGatewayMerchantId = paymentMethod.configuration?.gatewayMerchantId
-        val params = GooglePayParams(configuration, serverGatewayMerchantId)
+        val params = GooglePayParams(configuration, serverGatewayMerchantId, paymentMethod.brands)
         val paymentsClient: PaymentsClient = Wallet.getPaymentsClient(applicationContext, GooglePayUtils.createWalletOptions(params))
         val readyToPayRequest: IsReadyToPayRequest = GooglePayUtils.createIsReadyToPayRequest(params)
         val readyToPayTask: Task<Boolean> = paymentsClient.isReadyToPay(readyToPayRequest)

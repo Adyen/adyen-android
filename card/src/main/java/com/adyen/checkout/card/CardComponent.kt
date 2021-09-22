@@ -29,6 +29,7 @@ import com.adyen.checkout.cse.EncryptedCard
 import com.adyen.checkout.cse.GenericEncrypter
 import com.adyen.checkout.cse.UnencryptedCard
 import com.adyen.checkout.cse.exception.EncryptionException
+import com.adyen.threeds2.ThreeDS2Service
 import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.launch
@@ -38,6 +39,8 @@ private val TAG = LogUtil.getTag()
 private val PAYMENT_METHOD_TYPES = arrayOf(PaymentMethodTypes.SCHEME)
 private const val BIN_VALUE_LENGTH = 6
 private const val LAST_FOUR_LENGTH = 4
+private const val FIRST_CARD_INDEX = 0
+private const val SINGLE_CARD_LIST_SIZE = 1
 
 @Suppress("TooManyFunctions")
 class CardComponent private constructor(
@@ -61,6 +64,7 @@ class CardComponent private constructor(
         if (cardDelegate is NewCardDelegate) {
             cardDelegate.binLookupFlow
                 .onEach {
+                    val sortedCardList = DualBrandedCardUtils.sortBrands(it)
                     Logger.d(TAG, "New binLookupFlow emitted")
                     Logger.d(TAG, "Brands: $it")
                     with(outputData) {
@@ -75,7 +79,7 @@ class CardComponent private constructor(
                             kcpCardPassword = kcpCardPasswordState.value,
                             postalCode = postalCodeState.value,
                             isStorePaymentSelected = isStoredPaymentMethodEnable,
-                            detectedCardTypes = it
+                            detectedCardTypes = markSelectedCard(sortedCardList, 0)
                         )
                         notifyStateChanged(newOutputData)
                     }
@@ -112,7 +116,12 @@ class CardComponent private constructor(
     override fun onInputDataChanged(inputData: CardInputData): CardOutputData {
         Logger.v(TAG, "onInputDataChanged")
 
-        val detectedCardTypes = cardDelegate.detectCardType(inputData.cardNumber, publicKey, viewModelScope)
+        val sortedCardList = DualBrandedCardUtils.sortBrands(cardDelegate.detectCardType(inputData.cardNumber, publicKey, viewModelScope))
+
+        val detectedCardTypes = markSelectedCard(
+            sortedCardList,
+            inputData.selectedCardIndex
+        )
 
         return makeOutputData(
             cardNumber = inputData.cardNumber,
@@ -141,19 +150,20 @@ class CardComponent private constructor(
         postalCode: String,
         detectedCardTypes: List<DetectedCardType>
     ): CardOutputData {
-        val firstDetectedType = detectedCardTypes.firstOrNull()
+        val detectedType = detectedCardTypes.firstOrNull { it.isSelected } ?: detectedCardTypes.firstOrNull()
+
         return CardOutputData(
-            cardDelegate.validateCardNumber(cardNumber, firstDetectedType?.enableLuhnCheck),
-            cardDelegate.validateExpiryDate(expiryDate, firstDetectedType?.expiryDatePolicy),
-            cardDelegate.validateSecurityCode(securityCode, firstDetectedType),
+            cardDelegate.validateCardNumber(cardNumber, detectedType?.enableLuhnCheck),
+            cardDelegate.validateExpiryDate(expiryDate, detectedType?.expiryDatePolicy),
+            cardDelegate.validateSecurityCode(securityCode, detectedType),
             cardDelegate.validateHolderName(holderName),
             cardDelegate.validateSocialSecurityNumber(socialSecurityNumber),
             cardDelegate.validateKcpBirthDateOrTaxNumber(kcpBirthDateOrTaxNumber),
             cardDelegate.validateKcpCardPassword(kcpCardPassword),
             cardDelegate.validatePostalCode(postalCode),
             isStorePaymentSelected,
-            makeCvcUIState(firstDetectedType?.cvcPolicy),
-            makeExpiryDateUIState(firstDetectedType?.expiryDatePolicy),
+            makeCvcUIState(detectedType?.cvcPolicy),
+            makeExpiryDateUIState(detectedType?.expiryDatePolicy),
             detectedCardTypes,
             cardDelegate.isSocialSecurityNumberRequired(),
             cardDelegate.isKCPAuthRequired(),
@@ -175,6 +185,17 @@ class CardComponent private constructor(
         return when (expiryDatePolicy) {
             Brand.FieldPolicy.OPTIONAL, Brand.FieldPolicy.HIDDEN -> InputFieldUIState.OPTIONAL
             else -> InputFieldUIState.REQUIRED
+        }
+    }
+
+    private fun markSelectedCard(cards: List<DetectedCardType>, selectedIndex: Int): List<DetectedCardType> {
+        if (cards.size <= SINGLE_CARD_LIST_SIZE) cards
+        return cards.mapIndexed { index, card ->
+            if (index == selectedIndex) {
+                card.copy(isSelected = true)
+            } else {
+                card
+            }
         }
     }
 
@@ -281,6 +302,16 @@ class CardComponent private constructor(
             cardPaymentMethod.taxNumber = stateOutputData.kcpBirthDateOrTaxNumberState.value
         }
 
+        if (isDualBrandedFlow(stateOutputData)) {
+            cardPaymentMethod.brand = stateOutputData.detectedCardTypes.first { it.isSelected }.cardType.txVariant
+        }
+
+        try {
+            cardPaymentMethod.threeDS2SdkVersion = ThreeDS2Service.INSTANCE.sdkVersion
+        } catch (e: ClassNotFoundException) {
+            Logger.e(TAG, "threeDS2SdkVersion not set because 3DS2 SDK is not present in project.")
+        }
+
         val paymentComponentData = PaymentComponentData<CardPaymentMethod>().apply {
             paymentMethod = cardPaymentMethod
             setStorePaymentMethod(stateOutputData.isStoredPaymentMethodEnable)
@@ -320,10 +351,22 @@ class CardComponent private constructor(
     }
 
     fun showStorePaymentField(): Boolean {
-        return configuration.isShowStorePaymentFieldEnable
+        return configuration.isStorePaymentFieldVisible
     }
 
-    fun makeAddressData(outputData: CardOutputData): Address {
+    @StringRes fun getKcpBirthDateOrTaxNumberHint(input: String): Int {
+        return when {
+            input.length > KcpValidationUtils.KCP_BIRTH_DATE_LENGTH -> R.string.checkout_kcp_tax_number_hint
+            else -> R.string.checkout_kcp_birth_date_or_tax_number_hint
+        }
+    }
+
+    fun isDualBrandedFlow(cardOutputData: CardOutputData): Boolean {
+        val reliableDetectedCards = cardOutputData.detectedCardTypes.filter { it.isReliable }
+        return reliableDetectedCards.size > 1 && reliableDetectedCards.any { it.isSelected }
+    }
+
+    private fun makeAddressData(outputData: CardOutputData): Address {
         return Address().apply {
             postalCode = outputData.postalCodeState.value
             street = Address.ADDRESS_NULL_PLACEHOLDER
@@ -331,13 +374,6 @@ class CardComponent private constructor(
             houseNumberOrName = Address.ADDRESS_NULL_PLACEHOLDER
             city = Address.ADDRESS_NULL_PLACEHOLDER
             country = Address.ADDRESS_COUNTRY_NULL_PLACEHOLDER
-        }
-    }
-
-    @StringRes fun getKcpBirthDateOrTaxNumberHint(input: String): Int {
-        return when {
-            input.length > KcpValidationUtils.KCP_BIRTH_DATE_LENGTH -> R.string.checkout_kcp_tax_number_hint
-            else -> R.string.checkout_kcp_birth_date_or_tax_number_hint
         }
     }
 

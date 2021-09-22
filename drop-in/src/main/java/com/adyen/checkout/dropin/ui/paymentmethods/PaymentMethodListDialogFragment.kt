@@ -116,7 +116,7 @@ class PaymentMethodListDialogFragment : DropInBottomSheetDialogFragment(), Payme
             GooglePayComponent.PAYMENT_METHOD_TYPES.contains(paymentMethod.type) -> {
                 Logger.d(TAG, "onPaymentMethodSelected: starting Google Pay")
                 protocol.startGooglePay(
-                    dropInViewModel.getPaymentMethod(paymentMethod.type),
+                    paymentMethodsListViewModel.getPaymentMethod(paymentMethod),
                     dropInViewModel.dropInConfiguration.getConfigurationForPaymentMethod(paymentMethod.type, requireContext())
                 )
             }
@@ -126,7 +126,7 @@ class PaymentMethodListDialogFragment : DropInBottomSheetDialogFragment(), Payme
             }
             PaymentMethodTypes.SUPPORTED_PAYMENT_METHODS.contains(paymentMethod.type) -> {
                 Logger.d(TAG, "onPaymentMethodSelected: payment method is supported")
-                protocol.showComponentDialog(dropInViewModel.getPaymentMethod(paymentMethod.type))
+                protocol.showComponentDialog(paymentMethodsListViewModel.getPaymentMethod(paymentMethod))
             }
             else -> {
                 Logger.d(TAG, "onPaymentMethodSelected: unidentified payment method, sending payment in case of redirect")

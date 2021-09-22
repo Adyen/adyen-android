@@ -19,5 +19,6 @@ data class CardInputData(
     var kcpBirthDateOrTaxNumber: String = "",
     var kcpCardPassword: String = "",
     var postalCode: String = "",
-    var isStorePaymentSelected: Boolean = false
+    var isStorePaymentSelected: Boolean = false,
+    var selectedCardIndex: Int = 0
 ) : InputData

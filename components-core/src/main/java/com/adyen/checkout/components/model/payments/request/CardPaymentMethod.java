@@ -36,6 +36,8 @@ public final class CardPaymentMethod extends PaymentMethodDetails {
     private static final String STORED_PAYMENT_METHOD_ID = "storedPaymentMethodId";
     private static final String ENCRYPTED_PASSWORD = "encryptedPassword";
     private static final String TAX_NUMBER = "taxNumber";
+    private static final String BRAND = "brand";
+    private static final String THREEDS2_SDK_VERSION = "threeDS2SdkVersion";
 
     @NonNull
     public static final Serializer<CardPaymentMethod> SERIALIZER = new Serializer<CardPaymentMethod>() {
@@ -56,6 +58,8 @@ public final class CardPaymentMethod extends PaymentMethodDetails {
                 jsonObject.putOpt(HOLDER_NAME, modelObject.getHolderName());
                 jsonObject.putOpt(ENCRYPTED_PASSWORD, modelObject.getEncryptedPassword());
                 jsonObject.putOpt(TAX_NUMBER, modelObject.getTaxNumber());
+                jsonObject.putOpt(BRAND, modelObject.getBrand());
+                jsonObject.putOpt(THREEDS2_SDK_VERSION, modelObject.getThreeDS2SdkVersion());
             } catch (JSONException e) {
                 throw new ModelSerializationException(IdealPaymentMethod.class, e);
             }
@@ -78,6 +82,8 @@ public final class CardPaymentMethod extends PaymentMethodDetails {
             cardPaymentMethod.setHolderName(jsonObject.optString(HOLDER_NAME, null));
             cardPaymentMethod.setEncryptedPassword(jsonObject.optString(ENCRYPTED_PASSWORD, null));
             cardPaymentMethod.setTaxNumber(jsonObject.optString(TAX_NUMBER));
+            cardPaymentMethod.setBrand(jsonObject.optString(BRAND));
+            cardPaymentMethod.setThreeDS2SdkVersion(jsonObject.optString(THREEDS2_SDK_VERSION, null));
 
             return cardPaymentMethod;
         }
@@ -91,6 +97,8 @@ public final class CardPaymentMethod extends PaymentMethodDetails {
     private String holderName;
     private String storedPaymentMethodId;
     private String taxNumber;
+    private String brand;
+    private String threeDS2SdkVersion;
 
     @Override
     public void writeToParcel(@NonNull Parcel dest, int flags) {
@@ -160,12 +168,30 @@ public final class CardPaymentMethod extends PaymentMethodDetails {
         this.holderName = holderName;
     }
 
+    @Nullable
+    public String getBrand() {
+        return brand;
+    }
+
+    public void setBrand(@Nullable String brand) {
+        this.brand = brand;
+    }
+
     public void setStoredPaymentMethodId(@Nullable String storedPaymentMethodId) {
         this.storedPaymentMethodId = storedPaymentMethodId;
     }
 
     @Nullable
     public String getStoredPaymentMethodId() {
-        return this.storedPaymentMethodId;
+        return storedPaymentMethodId;
+    }
+
+    @Nullable
+    public String getThreeDS2SdkVersion() {
+        return threeDS2SdkVersion;
+    }
+
+    public void setThreeDS2SdkVersion(@Nullable String threeDS2SdkVersion) {
+        this.threeDS2SdkVersion = threeDS2SdkVersion;
     }
 }
