@@ -98,5 +98,6 @@ abstract class DropInBottomSheetDialogFragment : BottomSheetDialogFragment() {
         fun showError(errorMessage: String, reason: String, terminate: Boolean)
         fun terminateDropIn()
         fun startGooglePay(paymentMethod: PaymentMethod, googlePayConfiguration: GooglePayConfiguration)
+        fun requestBalanceCall(paymentComponentState: PaymentComponentState<*>)
     }
 }

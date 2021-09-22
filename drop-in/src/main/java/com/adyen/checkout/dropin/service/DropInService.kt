@@ -21,14 +21,15 @@ import androidx.lifecycle.Observer
 import com.adyen.checkout.components.ActionComponentData
 import com.adyen.checkout.components.PaymentComponentState
 import com.adyen.checkout.components.model.payments.request.PaymentComponentData
+import com.adyen.checkout.components.model.payments.request.PaymentMethodDetails
 import com.adyen.checkout.core.log.LogUtil
 import com.adyen.checkout.core.log.Logger
+import kotlin.coroutines.CoroutineContext
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.launch
 import org.json.JSONObject
-import kotlin.coroutines.CoroutineContext
 
 private val TAG = LogUtil.getTag()
 
@@ -51,6 +52,7 @@ abstract class DropInService : Service(), CoroutineScope, DropInServiceInterface
     private val binder = DropInBinder()
 
     private val resultLiveData: MutableLiveData<DropInServiceResult> = MutableLiveData()
+    private val balanceLiveData: MutableLiveData<BalanceResult> = MutableLiveData()
 
     override fun onBind(intent: Intent?): IBinder {
         Logger.d(TAG, "onBind")
@@ -261,8 +263,30 @@ abstract class DropInService : Service(), CoroutineScope, DropInServiceInterface
         throw NotImplementedError("Neither makeDetailsCall nor onDetailsCallRequested is implemented")
     }
 
+    override fun requestBalanceCall(paymentMethodData: PaymentMethodDetails) {
+        Logger.d(TAG, "requestBalanceCall")
+        val json = PaymentMethodDetails.SERIALIZER.serialize(paymentMethodData)
+        checkBalance(paymentMethodData, json)
+    }
+
+    // TODO docs
+    open fun checkBalance(paymentMethodData: PaymentMethodDetails, paymentMethodJson: JSONObject) {
+        throw NotImplementedError("Method checkBalance is not implemented")
+    }
+
+    // TODO docs
+    protected fun onBalanceChecked(balanceJson: String, transactionLimitJson: String?) {
+        // send response back to activity
+        Logger.d(TAG, "onBalanceChecked called")
+        balanceLiveData.postValue(BalanceResult(balanceJson, transactionLimitJson))
+    }
+
     override fun observeResult(owner: LifecycleOwner, observer: Observer<DropInServiceResult>) {
-        this.resultLiveData.observe(owner, observer)
+        resultLiveData.observe(owner, observer)
+    }
+
+    override fun observeBalanceResult(owner: LifecycleOwner, observer: Observer<BalanceResult>) {
+        balanceLiveData.observe(owner, observer)
     }
 
     internal inner class DropInBinder : Binder() {
@@ -291,4 +315,6 @@ internal interface DropInServiceInterface {
     fun observeResult(owner: LifecycleOwner, observer: Observer<DropInServiceResult>)
     fun requestPaymentsCall(paymentComponentState: PaymentComponentState<*>)
     fun requestDetailsCall(actionComponentData: ActionComponentData)
+    fun observeBalanceResult(owner: LifecycleOwner, observer: Observer<BalanceResult>)
+    fun requestBalanceCall(paymentMethodData: PaymentMethodDetails)
 }

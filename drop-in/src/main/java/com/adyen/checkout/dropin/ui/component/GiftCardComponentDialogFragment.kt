@@ -93,7 +93,7 @@ class GiftCardComponentDialogFragment : BaseComponentDialogFragment() {
         try {
             if (componentState != null) {
                 if (componentState.isValid) {
-                    // request balance
+                    protocol.requestBalanceCall(componentState)
                 } else {
                     throw CheckoutException("PaymentComponentState is not valid.")
                 }
