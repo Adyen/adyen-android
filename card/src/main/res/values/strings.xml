@@ -27,6 +27,7 @@
     <string name="checkout_kcp_birth_date_or_tax_number_invalid">Invalid Cardholder birthdate or Corporate registration number</string>
     <string name="checkout_kcp_password_invalid">Invalid password</string>
     <string name="checkout_card_postal_not_valid">Input format is not valid.</string>
+    <string name="checkout_card_brand_not_supported">The entered card brand isn\'t supported</string>
 
     <string name="card_number_4digit" translatable="false">•••• %s</string>
 
