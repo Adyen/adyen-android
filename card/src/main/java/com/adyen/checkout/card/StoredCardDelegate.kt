@@ -41,7 +41,8 @@ class StoredCardDelegate(
                     cardConfiguration.isHideCvcStoredCard || noCvcBrands.contains(cardType) -> Brand.FieldPolicy.HIDDEN
                     else -> Brand.FieldPolicy.REQUIRED
                 },
-                expiryDatePolicy = Brand.FieldPolicy.REQUIRED
+                expiryDatePolicy = Brand.FieldPolicy.REQUIRED,
+                isSupported = true
             )
         )
     } else {

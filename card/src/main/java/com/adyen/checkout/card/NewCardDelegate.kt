@@ -183,11 +183,10 @@ class NewCardDelegate(
         }
         val supportedCardTypes = cardConfiguration.supportedCardTypes
         val estimateCardTypes = CardType.estimate(cardNumber)
-        val detectedCardTypes = supportedCardTypes.filter { estimateCardTypes.contains(it) }
-        return detectedCardTypes.map { localDetectedCard(it) }
+        return estimateCardTypes.map { localDetectedCard(it, supportedCardTypes) }
     }
 
-    private fun localDetectedCard(cardType: CardType): DetectedCardType {
+    private fun localDetectedCard(cardType: CardType, supportedCardTypes: List<CardType>): DetectedCardType {
         return DetectedCardType(
             cardType,
             isReliable = false,
@@ -196,7 +195,8 @@ class NewCardDelegate(
                 noCvcBrands.contains(cardType) -> Brand.FieldPolicy.HIDDEN
                 else -> Brand.FieldPolicy.REQUIRED
             },
-            expiryDatePolicy = Brand.FieldPolicy.REQUIRED
+            expiryDatePolicy = Brand.FieldPolicy.REQUIRED,
+            isSupported = supportedCardTypes.contains(cardType)
         )
     }
 
