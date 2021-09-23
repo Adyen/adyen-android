@@ -44,7 +44,7 @@ class NewCardDelegate(
         return paymentMethod.type ?: PaymentMethodTypes.UNKNOWN
     }
 
-    override fun validateCardNumber(cardNumber: String, enableLuhnCheck: Boolean?, isBrandSupported: Boolean?): FieldState<String> {
+    override fun validateCardNumber(cardNumber: String, enableLuhnCheck: Boolean, isBrandSupported: Boolean): FieldState<String> {
         return CardValidationUtils.validateCardNumber(cardNumber, enableLuhnCheck, isBrandSupported)
     }
 

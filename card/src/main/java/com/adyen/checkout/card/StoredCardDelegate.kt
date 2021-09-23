@@ -53,7 +53,7 @@ class StoredCardDelegate(
         return storedPaymentMethod.type ?: PaymentMethodTypes.UNKNOWN
     }
 
-    override fun validateCardNumber(cardNumber: String, enableLuhnCheck: Boolean?, isBrandSupported: Boolean?): FieldState<String> {
+    override fun validateCardNumber(cardNumber: String, enableLuhnCheck: Boolean, isBrandSupported: Boolean): FieldState<String> {
         return FieldState(
             cardNumber,
             Validation.Valid

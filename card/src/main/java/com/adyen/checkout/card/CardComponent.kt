@@ -64,7 +64,6 @@ class CardComponent private constructor(
         if (cardDelegate is NewCardDelegate) {
             cardDelegate.binLookupFlow
                 .onEach {
-                    val sortedCardList = DualBrandedCardUtils.sortBrands(it)
                     Logger.d(TAG, "New binLookupFlow emitted")
                     Logger.d(TAG, "Brands: $it")
                     with(outputData) {
@@ -79,7 +78,8 @@ class CardComponent private constructor(
                             kcpCardPassword = kcpCardPasswordState.value,
                             postalCode = postalCodeState.value,
                             isStorePaymentSelected = isStoredPaymentMethodEnable,
-                            detectedCardTypes = markSelectedCard(sortedCardList, 0)
+                            detectedCardTypes = it,
+                            selectedCardIndex = 0
                         )
                         notifyStateChanged(newOutputData)
                     }
@@ -116,12 +116,7 @@ class CardComponent private constructor(
     override fun onInputDataChanged(inputData: CardInputData): CardOutputData {
         Logger.v(TAG, "onInputDataChanged")
 
-        val sortedCardList = DualBrandedCardUtils.sortBrands(cardDelegate.detectCardType(inputData.cardNumber, publicKey, viewModelScope))
-
-        val detectedCardTypes = markSelectedCard(
-            sortedCardList,
-            inputData.selectedCardIndex
-        )
+        val detectedCardTypes = cardDelegate.detectCardType(inputData.cardNumber, publicKey, viewModelScope)
 
         return makeOutputData(
             cardNumber = inputData.cardNumber,
@@ -133,7 +128,8 @@ class CardComponent private constructor(
             kcpCardPassword = inputData.kcpCardPassword,
             isStorePaymentSelected = inputData.isStorePaymentSelected,
             postalCode = inputData.postalCode,
-            detectedCardTypes = detectedCardTypes
+            detectedCardTypes = detectedCardTypes,
+            selectedCardIndex = inputData.selectedCardIndex
         )
     }
 
@@ -148,23 +144,36 @@ class CardComponent private constructor(
         kcpCardPassword: String,
         isStorePaymentSelected: Boolean,
         postalCode: String,
-        detectedCardTypes: List<DetectedCardType>
+        detectedCardTypes: List<DetectedCardType>,
+        selectedCardIndex: Int
     ): CardOutputData {
-        val detectedType = detectedCardTypes.firstOrNull { it.isSelected } ?: detectedCardTypes.firstOrNull()
+
+        val isReliable = detectedCardTypes.any { it.isReliable }
+        val supportedCardTypes = detectedCardTypes.filter { it.isSupported }
+        val sortedCardTypes = DualBrandedCardUtils.sortBrands(supportedCardTypes)
+        val outputCardTypes = markSelectedCard(sortedCardTypes, selectedCardIndex)
+
+        val selectedOrFirstCardType = outputCardTypes.firstOrNull { it.isSelected } ?: outputCardTypes.firstOrNull()
+
+        // perform a Luhn Check if no brands are detected
+        val enableLuhnCheck = selectedOrFirstCardType?.enableLuhnCheck ?: true
+
+        // when no supported cards are detected, only show an error if the brand detection was reliable
+        val isBrandSupported = selectedOrFirstCardType?.isSupported ?: !isReliable
 
         return CardOutputData(
-            cardDelegate.validateCardNumber(cardNumber, detectedType?.enableLuhnCheck, detectedType?.isSupported),
-            cardDelegate.validateExpiryDate(expiryDate, detectedType?.expiryDatePolicy),
-            cardDelegate.validateSecurityCode(securityCode, detectedType),
+            cardDelegate.validateCardNumber(cardNumber, enableLuhnCheck, isBrandSupported),
+            cardDelegate.validateExpiryDate(expiryDate, selectedOrFirstCardType?.expiryDatePolicy),
+            cardDelegate.validateSecurityCode(securityCode, selectedOrFirstCardType),
             cardDelegate.validateHolderName(holderName),
             cardDelegate.validateSocialSecurityNumber(socialSecurityNumber),
             cardDelegate.validateKcpBirthDateOrTaxNumber(kcpBirthDateOrTaxNumber),
             cardDelegate.validateKcpCardPassword(kcpCardPassword),
             cardDelegate.validatePostalCode(postalCode),
             isStorePaymentSelected,
-            makeCvcUIState(detectedType?.cvcPolicy),
-            makeExpiryDateUIState(detectedType?.expiryDatePolicy),
-            detectedCardTypes,
+            makeCvcUIState(selectedOrFirstCardType?.cvcPolicy),
+            makeExpiryDateUIState(selectedOrFirstCardType?.expiryDatePolicy),
+            outputCardTypes,
             cardDelegate.isSocialSecurityNumberRequired(),
             cardDelegate.isKCPAuthRequired(),
             cardDelegate.isPostalCodeRequired()
@@ -189,7 +198,7 @@ class CardComponent private constructor(
     }
 
     private fun markSelectedCard(cards: List<DetectedCardType>, selectedIndex: Int): List<DetectedCardType> {
-        if (cards.size <= SINGLE_CARD_LIST_SIZE) cards
+        if (cards.size <= SINGLE_CARD_LIST_SIZE) return cards
         return cards.mapIndexed { index, card ->
             if (index == selectedIndex) {
                 card.copy(isSelected = true)

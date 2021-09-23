@@ -25,7 +25,7 @@ abstract class CardDelegate(
 
     protected val noCvcBrands: Set<CardType> = hashSetOf(CardType.BCMC)
 
-    abstract fun validateCardNumber(cardNumber: String, enableLuhnCheck: Boolean?, isBrandSupported: Boolean?): FieldState<String>
+    abstract fun validateCardNumber(cardNumber: String, enableLuhnCheck: Boolean, isBrandSupported: Boolean): FieldState<String>
     abstract fun validateExpiryDate(expiryDate: ExpiryDate, expiryDatePolicy: Brand.FieldPolicy?): FieldState<ExpiryDate>
     abstract fun validateSecurityCode(securityCode: String, cardType: DetectedCardType? = null): FieldState<String>
     abstract fun validateHolderName(holderName: String): FieldState<String>

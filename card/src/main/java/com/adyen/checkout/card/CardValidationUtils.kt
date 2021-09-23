@@ -39,15 +39,15 @@ object CardValidationUtils {
     /**
      * Validate card number.
      */
-    fun validateCardNumber(number: String, enableLuhnCheck: Boolean?, isBrandSupported: Boolean?): FieldState<String> {
+    fun validateCardNumber(number: String, enableLuhnCheck: Boolean, isBrandSupported: Boolean): FieldState<String> {
         val normalizedNumber = StringUtil.normalize(number)
         val length = normalizedNumber.length
         val validation = when {
             !StringUtil.isDigitsAndSeparatorsOnly(normalizedNumber) -> Validation.Invalid(R.string.checkout_card_number_not_valid)
             length > MAXIMUM_CARD_NUMBER_LENGTH || length < MINIMUM_CARD_NUMBER_LENGTH -> Validation.Invalid(R.string.checkout_card_number_not_valid)
             // TODO add string translations
-            isBrandSupported == false -> Validation.Invalid(R.string.checkout_card_brand_not_supported, showErrorWhileEditing = true)
-            enableLuhnCheck == false -> Validation.Valid
+            !isBrandSupported -> Validation.Invalid(R.string.checkout_card_brand_not_supported, showErrorWhileEditing = true)
+            !enableLuhnCheck -> Validation.Valid
             isLuhnChecksumValid(normalizedNumber) -> Validation.Valid
             else -> Validation.Invalid(R.string.checkout_card_number_not_valid)
         }
