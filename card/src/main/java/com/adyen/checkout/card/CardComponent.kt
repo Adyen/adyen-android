@@ -153,7 +153,7 @@ class CardComponent private constructor(
         val detectedType = detectedCardTypes.firstOrNull { it.isSelected } ?: detectedCardTypes.firstOrNull()
 
         return CardOutputData(
-            cardDelegate.validateCardNumber(cardNumber, detectedType?.enableLuhnCheck),
+            cardDelegate.validateCardNumber(cardNumber, detectedType?.enableLuhnCheck, detectedType?.isSupported),
             cardDelegate.validateExpiryDate(expiryDate, detectedType?.expiryDatePolicy),
             cardDelegate.validateSecurityCode(securityCode, detectedType),
             cardDelegate.validateHolderName(holderName),
