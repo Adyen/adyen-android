@@ -264,18 +264,23 @@ class CardView @JvmOverloads constructor(context: Context, attrs: AttributeSet? 
         binding.editTextCardNumber.setOnChangeListener {
             mCardInputData.cardNumber = binding.editTextCardNumber.rawValue
             notifyInputDataChanged()
-            val shouldShowSecondaryLogo = component.outputData?.let { component.isDualBrandedFlow(it) } ?: false
-            setCardNumberError(null, shouldShowSecondaryLogo)
+            setCardErrorState(true)
         }
         binding.editTextCardNumber.onFocusChangeListener = OnFocusChangeListener { _: View?, hasFocus: Boolean ->
-            if (!component.isStoredPaymentMethod()) {
-                val cardNumberValidation = component.outputData?.cardNumberState?.validation
-                if (hasFocus) {
-                    val shouldShowSecondaryLogo = component.outputData?.let { component.isDualBrandedFlow(it) } ?: false
-                    setCardNumberError(null, shouldShowSecondaryLogo)
-                } else if (cardNumberValidation != null && cardNumberValidation is Validation.Invalid) {
-                    setCardNumberError(cardNumberValidation.reason)
-                }
+            setCardErrorState(hasFocus)
+        }
+    }
+
+    private fun setCardErrorState(hasFocus: Boolean) {
+        if (!component.isStoredPaymentMethod()) {
+            val cardNumberValidation = component.outputData?.cardNumberState?.validation
+            val showErrorWhileEditing = (cardNumberValidation as? Validation.Invalid)?.showErrorWhileEditing ?: false
+            val shouldNotShowError = hasFocus && !showErrorWhileEditing
+            if (shouldNotShowError) {
+                val shouldShowSecondaryLogo = component.outputData?.let { component.isDualBrandedFlow(it) } ?: false
+                setCardNumberError(null, shouldShowSecondaryLogo)
+            } else if (cardNumberValidation is Validation.Invalid) {
+                setCardNumberError(cardNumberValidation.reason)
             }
         }
     }

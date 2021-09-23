@@ -46,7 +46,7 @@ object CardValidationUtils {
             !StringUtil.isDigitsAndSeparatorsOnly(normalizedNumber) -> Validation.Invalid(R.string.checkout_card_number_not_valid)
             length > MAXIMUM_CARD_NUMBER_LENGTH || length < MINIMUM_CARD_NUMBER_LENGTH -> Validation.Invalid(R.string.checkout_card_number_not_valid)
             // TODO add string translations
-            isBrandSupported == false -> Validation.Invalid(R.string.checkout_card_brand_not_supported)
+            isBrandSupported == false -> Validation.Invalid(R.string.checkout_card_brand_not_supported, showErrorWhileEditing = true)
             enableLuhnCheck == false -> Validation.Valid
             isLuhnChecksumValid(normalizedNumber) -> Validation.Valid
             else -> Validation.Invalid(R.string.checkout_card_number_not_valid)
