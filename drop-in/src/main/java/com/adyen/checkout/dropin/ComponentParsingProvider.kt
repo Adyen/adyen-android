@@ -31,7 +31,6 @@ import com.adyen.checkout.components.AlwaysAvailablePaymentMethod
 import com.adyen.checkout.components.ComponentAvailableCallback
 import com.adyen.checkout.components.ComponentView
 import com.adyen.checkout.components.PaymentComponent
-import com.adyen.checkout.components.PaymentComponentProvider
 import com.adyen.checkout.components.PaymentComponentState
 import com.adyen.checkout.components.PaymentMethodAvailabilityCheck
 import com.adyen.checkout.components.ViewableComponent
@@ -159,7 +158,7 @@ internal fun checkPaymentMethodAvailability(
         val type = paymentMethod.type ?: throw CheckoutException("PaymentMethod type is null")
 
         val availabilityCheck = getPaymentMethodAvailabilityCheck(type)
-        val configuration = dropInConfiguration.getConfigurationForPaymentMethodOrNull<Configuration>(type, application)
+        val configuration = dropInConfiguration.getConfigurationForPaymentMethodOrNull<Configuration>(type)
 
         availabilityCheck.isAvailable(application, paymentMethod, configuration, callback)
     } catch (e: CheckoutException) {
@@ -193,15 +192,14 @@ internal fun getComponentFor(
     storedPaymentMethod: StoredPaymentMethod,
     dropInConfiguration: DropInConfiguration
 ): PaymentComponent<PaymentComponentState<in PaymentMethodDetails>, Configuration> {
-    val context = fragment.requireContext()
 
     val component = when (storedPaymentMethod.type) {
         PaymentMethodTypes.SCHEME -> {
-            val cardConfig: CardConfiguration = dropInConfiguration.getConfigurationForPaymentMethod(PaymentMethodTypes.SCHEME, context)
+            val cardConfig: CardConfiguration = dropInConfiguration.getConfigurationForPaymentMethod(PaymentMethodTypes.SCHEME)
             CardComponent.PROVIDER.get(fragment, storedPaymentMethod, cardConfig)
         }
         PaymentMethodTypes.BLIK -> {
-            val blikConfig: BlikConfiguration = dropInConfiguration.getConfigurationForPaymentMethod(PaymentMethodTypes.BLIK, context)
+            val blikConfig: BlikConfiguration = dropInConfiguration.getConfigurationForPaymentMethod(PaymentMethodTypes.BLIK)
             BlikComponent.PROVIDER.get(fragment, storedPaymentMethod, blikConfig)
         }
         else -> {
@@ -225,79 +223,68 @@ internal fun getComponentFor(
     paymentMethod: PaymentMethod,
     dropInConfiguration: DropInConfiguration
 ): PaymentComponent<PaymentComponentState<in PaymentMethodDetails>, Configuration> {
-    val context = fragment.requireContext()
 
     val component = when (paymentMethod.type) {
         PaymentMethodTypes.BCMC -> {
-            val bcmcConfiguration: BcmcConfiguration = dropInConfiguration.getConfigurationForPaymentMethod(PaymentMethodTypes.BCMC, context)
+            val bcmcConfiguration: BcmcConfiguration = dropInConfiguration.getConfigurationForPaymentMethod(PaymentMethodTypes.BCMC)
             BcmcComponent.PROVIDER.get(fragment, paymentMethod, bcmcConfiguration)
         }
         PaymentMethodTypes.BLIK -> {
-            val blikConfiguration: BlikConfiguration = dropInConfiguration.getConfigurationForPaymentMethod(PaymentMethodTypes.BLIK, context)
+            val blikConfiguration: BlikConfiguration = dropInConfiguration.getConfigurationForPaymentMethod(PaymentMethodTypes.BLIK)
             BlikComponent.PROVIDER.get(fragment, paymentMethod, blikConfiguration)
         }
         PaymentMethodTypes.DOTPAY -> {
-            val dotpayConfig: DotpayConfiguration = dropInConfiguration.getConfigurationForPaymentMethod(PaymentMethodTypes.DOTPAY, context)
+            val dotpayConfig: DotpayConfiguration = dropInConfiguration.getConfigurationForPaymentMethod(PaymentMethodTypes.DOTPAY)
             DotpayComponent.PROVIDER.get(fragment, paymentMethod, dotpayConfig)
         }
         PaymentMethodTypes.ENTERCASH -> {
-            val entercashConfig: EntercashConfiguration = dropInConfiguration.getConfigurationForPaymentMethod(PaymentMethodTypes.ENTERCASH, context)
+            val entercashConfig: EntercashConfiguration = dropInConfiguration.getConfigurationForPaymentMethod(PaymentMethodTypes.ENTERCASH)
             EntercashComponent.PROVIDER.get(fragment, paymentMethod, entercashConfig)
         }
         PaymentMethodTypes.EPS -> {
-            val epsConfig: EPSConfiguration = dropInConfiguration.getConfigurationForPaymentMethod(PaymentMethodTypes.EPS, context)
+            val epsConfig: EPSConfiguration = dropInConfiguration.getConfigurationForPaymentMethod(PaymentMethodTypes.EPS)
             EPSComponent.PROVIDER.get(fragment, paymentMethod, epsConfig)
         }
         PaymentMethodTypes.GOOGLE_PAY -> {
-            val googlePayConfiguration: GooglePayConfiguration = dropInConfiguration.getConfigurationForPaymentMethod(
-                PaymentMethodTypes.GOOGLE_PAY,
-                context
-            )
+            val googlePayConfiguration: GooglePayConfiguration = dropInConfiguration.getConfigurationForPaymentMethod(PaymentMethodTypes.GOOGLE_PAY)
             GooglePayComponent.PROVIDER.get(fragment, paymentMethod, googlePayConfiguration)
         }
         PaymentMethodTypes.GOOGLE_PAY_LEGACY -> {
             val googlePayConfiguration: GooglePayConfiguration = dropInConfiguration.getConfigurationForPaymentMethod(
-                PaymentMethodTypes.GOOGLE_PAY_LEGACY,
-                context
+                PaymentMethodTypes.GOOGLE_PAY_LEGACY
             )
             GooglePayComponent.PROVIDER.get(fragment, paymentMethod, googlePayConfiguration)
         }
         PaymentMethodTypes.IDEAL -> {
-            val idealConfig: IdealConfiguration = dropInConfiguration.getConfigurationForPaymentMethod(PaymentMethodTypes.IDEAL, context)
+            val idealConfig: IdealConfiguration = dropInConfiguration.getConfigurationForPaymentMethod(PaymentMethodTypes.IDEAL)
             IdealComponent.PROVIDER.get(fragment, paymentMethod, idealConfig)
         }
         PaymentMethodTypes.MB_WAY -> {
-            val mbWayConfiguration: MBWayConfiguration = dropInConfiguration.getConfigurationForPaymentMethod(PaymentMethodTypes.MB_WAY, context)
+            val mbWayConfiguration: MBWayConfiguration = dropInConfiguration.getConfigurationForPaymentMethod(PaymentMethodTypes.MB_WAY)
             MBWayComponent.PROVIDER.get(fragment, paymentMethod, mbWayConfiguration)
         }
         PaymentMethodTypes.MOLPAY_THAILAND -> {
-            val molpayConfig: MolpayConfiguration = dropInConfiguration.getConfigurationForPaymentMethod(PaymentMethodTypes.MOLPAY_THAILAND, context)
+            val molpayConfig: MolpayConfiguration = dropInConfiguration.getConfigurationForPaymentMethod(PaymentMethodTypes.MOLPAY_THAILAND)
             MolpayComponent.PROVIDER.get(fragment, paymentMethod, molpayConfig)
         }
         PaymentMethodTypes.MOLPAY_MALAYSIA -> {
-            val molpayConfig: MolpayConfiguration = dropInConfiguration.getConfigurationForPaymentMethod(PaymentMethodTypes.MOLPAY_MALAYSIA, context)
+            val molpayConfig: MolpayConfiguration = dropInConfiguration.getConfigurationForPaymentMethod(PaymentMethodTypes.MOLPAY_MALAYSIA)
             MolpayComponent.PROVIDER.get(fragment, paymentMethod, molpayConfig)
         }
         PaymentMethodTypes.MOLPAY_VIETNAM -> {
-            val molpayConfig: MolpayConfiguration = dropInConfiguration.getConfigurationForPaymentMethod(
-                PaymentMethodTypes.MOLPAY_VIETNAM,
-                context
-            )
+            val molpayConfig: MolpayConfiguration = dropInConfiguration.getConfigurationForPaymentMethod(PaymentMethodTypes.MOLPAY_VIETNAM)
             MolpayComponent.PROVIDER.get(fragment, paymentMethod, molpayConfig)
         }
         PaymentMethodTypes.OPEN_BANKING -> {
-            val openBankingConfig: OpenBankingConfiguration = dropInConfiguration.getConfigurationForPaymentMethod(
-                PaymentMethodTypes.OPEN_BANKING,
-                context
-            )
+            val openBankingConfig: OpenBankingConfiguration = dropInConfiguration.getConfigurationForPaymentMethod(PaymentMethodTypes.OPEN_BANKING)
             OpenBankingComponent.PROVIDER.get(fragment, paymentMethod, openBankingConfig)
         }
         PaymentMethodTypes.SCHEME -> {
-            val cardConfig: CardConfiguration = dropInConfiguration.getConfigurationForPaymentMethod(PaymentMethodTypes.SCHEME, context)
+            val cardConfig: CardConfiguration = dropInConfiguration.getConfigurationForPaymentMethod(PaymentMethodTypes.SCHEME)
             CardComponent.PROVIDER.get(fragment, paymentMethod, cardConfig)
         }
         PaymentMethodTypes.SEPA -> {
-            val sepaConfiguration: SepaConfiguration = dropInConfiguration.getConfigurationForPaymentMethod(PaymentMethodTypes.SEPA, context)
+            val sepaConfiguration: SepaConfiguration = dropInConfiguration.getConfigurationForPaymentMethod(PaymentMethodTypes.SEPA)
             SepaComponent.PROVIDER.get(fragment, paymentMethod, sepaConfiguration)
         }
 
@@ -377,19 +364,19 @@ internal fun getActionComponentFor(
 ): BaseActionComponent<out Configuration> {
     return when (provider) {
         RedirectComponent.PROVIDER -> {
-            RedirectComponent.PROVIDER.get(activity, activity.application, dropInConfiguration.getConfigurationForAction(activity))
+            RedirectComponent.PROVIDER.get(activity, activity.application, dropInConfiguration.getConfigurationForAction())
         }
         Adyen3DS2Component.PROVIDER -> {
-            Adyen3DS2Component.PROVIDER.get(activity, activity.application, dropInConfiguration.getConfigurationForAction(activity))
+            Adyen3DS2Component.PROVIDER.get(activity, activity.application, dropInConfiguration.getConfigurationForAction())
         }
         WeChatPayActionComponent.PROVIDER -> {
-            WeChatPayActionComponent.PROVIDER.get(activity, activity.application, dropInConfiguration.getConfigurationForAction(activity))
+            WeChatPayActionComponent.PROVIDER.get(activity, activity.application, dropInConfiguration.getConfigurationForAction())
         }
         AwaitComponent.PROVIDER -> {
-            AwaitComponent.PROVIDER.get(activity, activity.application, dropInConfiguration.getConfigurationForAction(activity))
+            AwaitComponent.PROVIDER.get(activity, activity.application, dropInConfiguration.getConfigurationForAction())
         }
         QRCodeComponent.PROVIDER -> {
-            QRCodeComponent.PROVIDER.get(activity, activity.application, dropInConfiguration.getConfigurationForAction(activity))
+            QRCodeComponent.PROVIDER.get(activity, activity.application, dropInConfiguration.getConfigurationForAction())
         }
         else -> {
             throw CheckoutException("Unable to find component for provider - $provider")

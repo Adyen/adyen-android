@@ -101,15 +101,15 @@ class DropInConfiguration : Configuration, Parcelable {
         return ParcelUtils.NO_FILE_DESCRIPTOR
     }
 
-    internal fun <T : Configuration> getConfigurationForPaymentMethodOrNull(paymentMethod: String, context: Context): T? {
+    internal fun <T : Configuration> getConfigurationForPaymentMethodOrNull(paymentMethod: String): T? {
         return try {
-            getConfigurationForPaymentMethod(paymentMethod, context)
+            getConfigurationForPaymentMethod(paymentMethod)
         } catch (e: CheckoutException) {
             null
         }
     }
 
-    internal fun <T : Configuration> getConfigurationForPaymentMethod(paymentMethod: String, context: Context): T {
+    internal fun <T : Configuration> getConfigurationForPaymentMethod(paymentMethod: String): T {
         return if (availablePaymentConfigs.containsKey(paymentMethod)) {
             @Suppress("UNCHECKED_CAST")
             availablePaymentConfigs[paymentMethod] as T
@@ -118,7 +118,7 @@ class DropInConfiguration : Configuration, Parcelable {
         }
     }
 
-    internal inline fun <reified T : Configuration> getConfigurationForAction(context: Context): T {
+    internal inline fun <reified T : Configuration> getConfigurationForAction(): T {
         val actionClass = T::class.java
         return if (availableActionConfigs.containsKey(actionClass)) {
             @Suppress("UNCHECKED_CAST")

@@ -117,7 +117,7 @@ class PaymentMethodListDialogFragment : DropInBottomSheetDialogFragment(), Payme
                 Logger.d(TAG, "onPaymentMethodSelected: starting Google Pay")
                 protocol.startGooglePay(
                     paymentMethodsListViewModel.getPaymentMethod(paymentMethod),
-                    dropInViewModel.dropInConfiguration.getConfigurationForPaymentMethod(paymentMethod.type, requireContext())
+                    dropInViewModel.dropInConfiguration.getConfigurationForPaymentMethod(paymentMethod.type)
                 )
             }
             PaymentMethodTypes.SUPPORTED_ACTION_ONLY_PAYMENT_METHODS.contains(paymentMethod.type) -> {
