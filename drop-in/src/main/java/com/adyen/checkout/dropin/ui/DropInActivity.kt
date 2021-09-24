@@ -151,10 +151,15 @@ class DropInActivity : AppCompatActivity(), DropInBottomSheetDialogFragment.Prot
         }
 
         if (noDialogPresent()) {
-            if (dropInViewModel.showPreselectedStored) {
-                showPreselectedDialog()
-            } else {
-                showPaymentMethodsDialog()
+            when {
+                dropInViewModel.shouldSkipToSinglePaymentMethod() -> {
+                    val firstPaymentMethod = dropInViewModel.paymentMethodsApiResponse.paymentMethods?.get(0)
+                    if (firstPaymentMethod != null) {
+                        showComponentDialog(firstPaymentMethod)
+                    }
+                }
+                dropInViewModel.showPreselectedStored -> showPreselectedDialog()
+                else -> showPaymentMethodsDialog()
             }
         }
 
