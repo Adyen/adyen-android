@@ -30,6 +30,7 @@ import com.adyen.checkout.components.model.paymentmethods.PaymentMethod
 import com.adyen.checkout.components.model.paymentmethods.StoredPaymentMethod
 import com.adyen.checkout.components.model.payments.response.Action
 import com.adyen.checkout.components.util.PaymentMethodTypes
+import com.adyen.checkout.core.exception.CheckoutException
 import com.adyen.checkout.core.log.LogUtil
 import com.adyen.checkout.core.log.Logger
 import com.adyen.checkout.core.util.LocaleUtil
@@ -153,9 +154,11 @@ class DropInActivity : AppCompatActivity(), DropInBottomSheetDialogFragment.Prot
         if (noDialogPresent()) {
             when {
                 dropInViewModel.shouldSkipToSinglePaymentMethod() -> {
-                    val firstPaymentMethod = dropInViewModel.paymentMethodsApiResponse.paymentMethods?.get(0)
+                    val firstPaymentMethod = dropInViewModel.paymentMethodsApiResponse.paymentMethods?.firstOrNull()
                     if (firstPaymentMethod != null) {
                         showComponentDialog(firstPaymentMethod)
+                    } else {
+                        throw CheckoutException("First payment method is null")
                     }
                 }
                 dropInViewModel.showPreselectedStored -> showPreselectedDialog()
