@@ -101,10 +101,6 @@ class DropInConfiguration : Configuration, Parcelable {
         ParcelUtils.writeBoolean(dest, skipListWhenSinglePaymentMethod)
     }
 
-    override fun describeContents(): Int {
-        return ParcelUtils.NO_FILE_DESCRIPTOR
-    }
-
     internal fun <T : Configuration> getConfigurationForPaymentMethodOrNull(paymentMethod: String): T? {
         return try {
             getConfigurationForPaymentMethod(paymentMethod)

@@ -15,8 +15,7 @@ import com.adyen.checkout.core.api.Environment
 import com.adyen.checkout.core.api.ThreadManager
 import com.adyen.checkout.core.log.LogUtil
 import com.adyen.checkout.core.log.Logger
-import java.util.HashMap
-import java.util.Locale
+import java.util.*
 
 class LogoApi(host: String, displayMetrics: DisplayMetrics) {
     companion object {
@@ -194,7 +193,7 @@ class LogoApi(host: String, displayMetrics: DisplayMetrics) {
         LARGE;
 
         override fun toString(): String {
-            return name.toLowerCase(Locale.ROOT)
+            return name.lowercase()
         }
     }
 }

@@ -38,7 +38,7 @@ class DropInViewModel(
 
         val firstPaymentMethod = paymentMethodsApiResponse.paymentMethods?.get(0)
         val paymentMethodHasComponent = PaymentMethodTypes.SUPPORTED_PAYMENT_METHODS.contains(firstPaymentMethod?.type) &&
-                !GooglePayComponent.PAYMENT_METHOD_TYPES.contains(firstPaymentMethod?.type)
+            !GooglePayComponent.PAYMENT_METHOD_TYPES.contains(firstPaymentMethod?.type)
 
         return noStored && singlePm && paymentMethodHasComponent && dropInConfiguration.skipListWhenSinglePaymentMethod
     }
