@@ -140,7 +140,7 @@ class CardView @JvmOverloads constructor(context: Context, attrs: AttributeSet? 
 
     override fun onChanged(cardOutputData: CardOutputData?) {
         if (cardOutputData != null) {
-            onCardNumberValidated(cardOutputData.detectedCardTypes)
+            onCardNumberValidated(cardOutputData)
             onExpiryDateValidated(cardOutputData.expiryDateState)
             setSocialSecurityNumberVisibility(cardOutputData.isSocialSecurityNumberRequired)
             setKcpAuthVisibility(cardOutputData.isKCPAuthRequired)
@@ -207,18 +207,33 @@ class CardView @JvmOverloads constructor(context: Context, attrs: AttributeSet? 
         component.inputDataChanged(mCardInputData)
     }
 
-    private fun onCardNumberValidated(detectedCardTypes: List<DetectedCardType>) {
+    private fun onCardNumberValidated(cardOutputData: CardOutputData) {
+        val detectedCardTypes = cardOutputData.detectedCardTypes
         if (detectedCardTypes.isEmpty()) {
-            binding.cardBrandLogoImageViewPrimary.setStrokeWidth(0f)
-            binding.cardBrandLogoImageViewPrimary.setImageResource(R.drawable.ic_card)
-            binding.cardBrandLogoImageViewPrimary.alpha = 1f
+            binding.cardBrandLogoImageViewPrimary.apply {
+                setStrokeWidth(0f)
+                setImageResource(R.drawable.ic_card)
+                alpha = 1f
+            }
             binding.cardBrandLogoContainerSecondary.isVisible = false
             binding.editTextCardNumber.setAmexCardFormat(false)
             resetBrandSelectionInput()
         } else {
             binding.cardBrandLogoImageViewPrimary.setStrokeWidth(RoundCornerImageView.DEFAULT_STROKE_WIDTH)
             mImageLoader?.load(detectedCardTypes[0].cardType.txVariant, binding.cardBrandLogoImageViewPrimary, 0, R.drawable.ic_card)
+            setDualBrandedCardImages(detectedCardTypes, cardOutputData.cardNumberState.validation)
 
+            // TODO: 29/01/2021 get this logic from OutputData
+            val isAmex = detectedCardTypes.any { it.cardType == CardType.AMERICAN_EXPRESS }
+            binding.editTextCardNumber.setAmexCardFormat(isAmex)
+        }
+    }
+
+    private fun setDualBrandedCardImages(detectedCardTypes: List<DetectedCardType>, validation: Validation) {
+        val cardNumberHasFocus = binding.textInputLayoutCardNumber.hasFocus()
+        if (validation is Validation.Invalid && !cardNumberHasFocus) {
+            setCardNumberError(validation.reason)
+        } else {
             detectedCardTypes.getOrNull(1)?.takeIf { it.isReliable }?.let {
                 binding.cardBrandLogoContainerSecondary.isVisible = true
                 binding.cardBrandLogoImageViewSecondary.setStrokeWidth(RoundCornerImageView.DEFAULT_STROKE_WIDTH)
@@ -230,15 +245,6 @@ class CardView @JvmOverloads constructor(context: Context, attrs: AttributeSet? 
                 binding.cardBrandLogoContainerSecondary.isVisible = false
                 resetBrandSelectionInput()
             }
-
-            // TODO: 29/01/2021 get this logic from OutputData
-            var isAmex = false
-            for ((cardType) in detectedCardTypes) {
-                if (cardType == CardType.AMERICAN_EXPRESS) {
-                    isAmex = true
-                }
-            }
-            binding.editTextCardNumber.setAmexCardFormat(isAmex)
         }
     }
 
