@@ -22,4 +22,6 @@
     <string name="change_payment_method">Ändra betalningssätt</string>
     <string name="credit_card">Credit Card</string>
     <string name="checkout_giftcard_redeem_button">Lös in</string>
+    <string name="checkout_giftcard_error_zero_balance">Saldot för detta presentkort är noll</string>
+    <string name="checkout_giftcard_error_currency">Presentkort är endast giltiga i den valuta som de utfärdades i</string>
 </resources>

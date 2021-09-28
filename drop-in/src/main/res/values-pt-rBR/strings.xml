@@ -22,4 +22,6 @@
     <string name="change_payment_method">Alterar método de pagamento</string>
     <string name="credit_card">Credit Card</string>
     <string name="checkout_giftcard_redeem_button">Resgatar</string>
+    <string name="checkout_giftcard_error_zero_balance">Este vale-presente tem saldo zero</string>
+    <string name="checkout_giftcard_error_currency">Os vales-presente são válidos somente na moeda em que foram emitidos</string>
 </resources>

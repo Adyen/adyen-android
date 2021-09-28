@@ -22,4 +22,6 @@
     <string name="change_payment_method">Changer de moyen de paiement</string>
     <string name="credit_card">Credit Card</string>
     <string name="checkout_giftcard_redeem_button">Utiliser</string>
+    <string name="checkout_giftcard_error_zero_balance">Aucun solde n\'est disponible sur cette carte cadeau</string>
+    <string name="checkout_giftcard_error_currency">Les cartes cadeaux sont valables uniquement dans la devise dans laquelle elles ont été émises</string>
 </resources>
