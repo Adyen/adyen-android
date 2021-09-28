@@ -22,4 +22,6 @@
     <string name="change_payment_method">Promijeni način plaćanja</string>
     <string name="credit_card">Credit Card</string>
     <string name="checkout_giftcard_redeem_button">Iskoristite</string>
+    <string name="checkout_giftcard_error_zero_balance">Stanje na ovoj poklon-kartici iznosi nula</string>
+    <string name="checkout_giftcard_error_currency">Poklon-kartice vrijede samo u valuti u kojoj su izdane</string>
 </resources>

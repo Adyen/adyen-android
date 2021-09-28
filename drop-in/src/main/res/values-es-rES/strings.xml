@@ -22,4 +22,6 @@
     <string name="change_payment_method">Cambiar método de pago</string>
     <string name="credit_card">Credit Card</string>
     <string name="checkout_giftcard_redeem_button">Canjear</string>
+    <string name="checkout_giftcard_error_zero_balance">Esta tarjeta regalo no tiene saldo</string>
+    <string name="checkout_giftcard_error_currency">Las tarjetas regalo solo son válidas en la moneda en que fueron emitidas</string>
 </resources>

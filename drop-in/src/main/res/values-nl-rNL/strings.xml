@@ -22,4 +22,6 @@
     <string name="change_payment_method">Betalingsmethode wijzigen</string>
     <string name="credit_card">Credit Card</string>
     <string name="checkout_giftcard_redeem_button">Inwisselen</string>
+    <string name="checkout_giftcard_error_zero_balance">Deze cadeaukaart heeft geen saldo</string>
+    <string name="checkout_giftcard_error_currency">Cadeaukaarten zijn alleen geldig in de valuta waarin ze zijn uitgegeven</string>
 </resources>

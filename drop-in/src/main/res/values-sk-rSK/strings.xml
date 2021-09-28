@@ -22,4 +22,6 @@
     <string name="change_payment_method">Zmeniť spôsob platby</string>
     <string name="credit_card">Credit Card</string>
     <string name="checkout_giftcard_redeem_button">Uplatniť</string>
+    <string name="checkout_giftcard_error_zero_balance">Táto darčeková karta má nulový zostatok</string>
+    <string name="checkout_giftcard_error_currency">Darčekové karty sú platné iba v mene, v ktorej boli vydané</string>
 </resources>

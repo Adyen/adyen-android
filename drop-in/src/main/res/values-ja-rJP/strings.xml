@@ -22,4 +22,6 @@
     <string name="change_payment_method">お支払方法を変更する</string>
     <string name="credit_card">Credit Card</string>
     <string name="checkout_giftcard_redeem_button">利用する</string>
+    <string name="checkout_giftcard_error_zero_balance">このギフトカードの残高はゼロです</string>
+    <string name="checkout_giftcard_error_currency">ギフトカードは、発行された通貨でのみ有効です。</string>
 </resources>

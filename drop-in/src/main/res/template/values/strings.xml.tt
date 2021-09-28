@@ -22,4 +22,6 @@
     <string name="change_payment_method">%%preselectedPaymentMethod.changeButton.accessibilityLabel%%</string>
     <string name="credit_card">Credit Card</string>
     <string name="checkout_giftcard_redeem_button">%%applyGiftcard%%</string>
+    <string name="checkout_giftcard_error_zero_balance">%%error.giftcard.no-balance%%</string>
+    <string name="checkout_giftcard_error_currency">%%error.giftcard.currency-error%%</string>
 </resources>

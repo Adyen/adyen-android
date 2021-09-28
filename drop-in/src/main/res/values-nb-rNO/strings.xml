@@ -22,4 +22,6 @@
     <string name="change_payment_method">Endre betalingsmetode</string>
     <string name="credit_card">Credit Card</string>
     <string name="checkout_giftcard_redeem_button">Løs inn</string>
+    <string name="checkout_giftcard_error_zero_balance">Dette gavekortet har en saldo på null</string>
+    <string name="checkout_giftcard_error_currency">Gavekort er kun gyldige i den valutaen de ble utstedt i</string>
 </resources>

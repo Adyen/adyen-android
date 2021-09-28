@@ -22,4 +22,6 @@
     <string name="change_payment_method">Zahlungsmethode wechseln</string>
     <string name="credit_card">Credit Card</string>
     <string name="checkout_giftcard_redeem_button">Einlösen</string>
+    <string name="checkout_giftcard_error_zero_balance">Auf dieser Geschenkkarte ist kein Guthaben vorhanden</string>
+    <string name="checkout_giftcard_error_currency">Geschenkkarten sind nur in der Währung gültig, in der sie ausgestellt wurden</string>
 </resources>
