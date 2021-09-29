@@ -27,6 +27,7 @@ import java.util.Objects;
 public final class Environment implements Parcelable {
 
     public static final Environment TEST;
+    public static final Environment LIVE;
     public static final Environment EUROPE;
     public static final Environment UNITED_STATES;
     public static final Environment AUSTRALIA;
@@ -49,6 +50,7 @@ public final class Environment implements Parcelable {
             EUROPE = new Environment(new URL("https://checkoutshopper-live.adyen.com/checkoutshopper/"));
             UNITED_STATES = new Environment(new URL("https://checkoutshopper-live-us.adyen.com/checkoutshopper/"));
             AUSTRALIA = new Environment(new URL("https://checkoutshopper-live-au.adyen.com/checkoutshopper/"));
+            LIVE = EUROPE;
         } catch (MalformedURLException e) {
             throw new CheckoutException("Failed to parse Environment URL.", e);
         }
