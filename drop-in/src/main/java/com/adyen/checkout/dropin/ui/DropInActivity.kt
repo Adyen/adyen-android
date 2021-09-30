@@ -29,7 +29,6 @@ import com.adyen.checkout.components.analytics.AnalyticsDispatcher
 import com.adyen.checkout.components.model.PaymentMethodsApiResponse
 import com.adyen.checkout.components.model.paymentmethods.PaymentMethod
 import com.adyen.checkout.components.model.paymentmethods.StoredPaymentMethod
-import com.adyen.checkout.components.model.payments.Amount
 import com.adyen.checkout.components.model.payments.response.Action
 import com.adyen.checkout.components.util.PaymentMethodTypes
 import com.adyen.checkout.core.exception.CheckoutException
@@ -509,14 +508,24 @@ class DropInActivity : AppCompatActivity(), DropInBottomSheetDialogFragment.Prot
     private fun handleBalanceResult(balanceResult: BalanceResult) {
         Logger.d(TAG, "handleBalanceResult - balance: ${balanceResult.balance} - transactionLimit: ${balanceResult.transactionLimit}")
         isWaitingResult = false
+        val result = dropInViewModel.handleBalanceResult(balanceResult)
+        when (result) {
+            is GiftCardResult.Error -> showError(getString(result.errorMessage), result.reason, result.terminateDropIn)
+            is GiftCardResult.FullPayment -> handleGiftCardFullPayment(result)
+            is GiftCardResult.PartialPayment -> handleGiftCardPartialPayment(result)
+        }
+    }
+
+    private fun handleGiftCardFullPayment(fullPayment: GiftCardResult.FullPayment) {
         // TODO move this somewhere else later?
         setLoading(false)
-        val balance = Amount.SERIALIZER.deserialize(JSONObject(balanceResult.balance))
-        val transactionLimit =
-            if (balanceResult.transactionLimit == null) null
-            else Amount.SERIALIZER.deserialize(JSONObject(balanceResult.transactionLimit))
-        balance
-        // TODO handle balance and transactionLimit
+        // TODO handle full payment
+    }
+
+    private fun handleGiftCardPartialPayment(partialPayment: GiftCardResult.PartialPayment) {
+        // TODO move this somewhere else later?
+        setLoading(false)
+        // TODO handle partial payment
     }
 
     companion object {
