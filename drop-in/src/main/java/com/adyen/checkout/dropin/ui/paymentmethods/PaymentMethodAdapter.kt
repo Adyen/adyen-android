@@ -26,9 +26,14 @@ import com.adyen.checkout.dropin.ui.paymentmethods.PaymentMethodListItem.Compani
 @SuppressWarnings("TooManyFunctions")
 class PaymentMethodAdapter(
     private val paymentMethods: List<PaymentMethodListItem>,
-    private val imageLoader: ImageLoader,
-    private val onPaymentMethodSelectedCallback: OnPaymentMethodSelectedCallback
+    private val imageLoader: ImageLoader
 ) : RecyclerView.Adapter<PaymentMethodAdapter.BaseViewHolder>() {
+
+    private var onPaymentMethodSelectedCallback: OnPaymentMethodSelectedCallback? = null
+
+    fun setPaymentMethodSelectedCallback(onPaymentMethodSelectedCallback: OnPaymentMethodSelectedCallback) {
+        this.onPaymentMethodSelectedCallback = onPaymentMethodSelectedCallback
+    }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): BaseViewHolder {
         return when (viewType) {
@@ -114,11 +119,11 @@ class PaymentMethodAdapter(
     }
 
     private fun onStoredPaymentMethodClick(storedPaymentMethodModel: StoredPaymentMethodModel) {
-        onPaymentMethodSelectedCallback.onStoredPaymentMethodSelected(storedPaymentMethodModel)
+        onPaymentMethodSelectedCallback?.onStoredPaymentMethodSelected(storedPaymentMethodModel)
     }
 
     private fun onPaymentMethodClick(paymentMethod: PaymentMethodModel) {
-        onPaymentMethodSelectedCallback.onPaymentMethodSelected(paymentMethod)
+        onPaymentMethodSelectedCallback?.onPaymentMethodSelected(paymentMethod)
     }
 
     private fun getView(parent: ViewGroup, id: Int): View {
