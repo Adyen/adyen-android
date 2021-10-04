@@ -62,5 +62,11 @@ class GooglePayProvider :
         readyToPayTask.addOnCompleteListener { task ->
             callbackWeakReference.get()?.onAvailabilityResult(task.result == true, paymentMethod, configuration)
         }
+        readyToPayTask.addOnCanceledListener {
+            callbackWeakReference.get()?.onAvailabilityResult(false, paymentMethod, configuration)
+        }
+        readyToPayTask.addOnFailureListener {
+            callbackWeakReference.get()?.onAvailabilityResult(false, paymentMethod, configuration)
+        }
     }
 }
