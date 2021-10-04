@@ -38,6 +38,7 @@ public final class CardPaymentMethod extends PaymentMethodDetails {
     private static final String TAX_NUMBER = "taxNumber";
     private static final String BRAND = "brand";
     private static final String THREEDS2_SDK_VERSION = "threeDS2SdkVersion";
+    private static final String FUNDING_SOURCE = "fundingSource";
 
     @NonNull
     public static final Serializer<CardPaymentMethod> SERIALIZER = new Serializer<CardPaymentMethod>() {
@@ -60,6 +61,7 @@ public final class CardPaymentMethod extends PaymentMethodDetails {
                 jsonObject.putOpt(TAX_NUMBER, modelObject.getTaxNumber());
                 jsonObject.putOpt(BRAND, modelObject.getBrand());
                 jsonObject.putOpt(THREEDS2_SDK_VERSION, modelObject.getThreeDS2SdkVersion());
+                jsonObject.putOpt(FUNDING_SOURCE, modelObject.getFundingSource());
             } catch (JSONException e) {
                 throw new ModelSerializationException(IdealPaymentMethod.class, e);
             }
@@ -84,6 +86,7 @@ public final class CardPaymentMethod extends PaymentMethodDetails {
             cardPaymentMethod.setTaxNumber(jsonObject.optString(TAX_NUMBER));
             cardPaymentMethod.setBrand(jsonObject.optString(BRAND));
             cardPaymentMethod.setThreeDS2SdkVersion(jsonObject.optString(THREEDS2_SDK_VERSION, null));
+            cardPaymentMethod.setFundingSource(jsonObject.optString(FUNDING_SOURCE, null));
 
             return cardPaymentMethod;
         }
@@ -99,6 +102,7 @@ public final class CardPaymentMethod extends PaymentMethodDetails {
     private String taxNumber;
     private String brand;
     private String threeDS2SdkVersion;
+    private String fundingSource;
 
     @Override
     public void writeToParcel(@NonNull Parcel dest, int flags) {
@@ -193,5 +197,14 @@ public final class CardPaymentMethod extends PaymentMethodDetails {
 
     public void setThreeDS2SdkVersion(@Nullable String threeDS2SdkVersion) {
         this.threeDS2SdkVersion = threeDS2SdkVersion;
+    }
+
+    @Nullable
+    public String getFundingSource() {
+        return fundingSource;
+    }
+
+    public void setFundingSource(@Nullable String fundingSource) {
+        this.fundingSource = fundingSource;
     }
 }
