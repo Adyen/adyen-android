@@ -26,7 +26,8 @@ data class PaymentMethodsRequest(
     val shopperEmail: String = "shopper@mystoredemo.io",
     val shopperName: ShopperName = ShopperName(),
     val billingAddress: Address = Address(),
-    val deliveryAddress: Address = Address()
+    val deliveryAddress: Address = Address(),
+    val splitCardFundingSources: Boolean = false
 )
 
 @SuppressWarnings("MemberName")

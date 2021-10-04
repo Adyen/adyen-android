@@ -57,6 +57,10 @@
             android:key="@string/execute3D_key"
             android:title="@string/execute3D_key_title" />
 
+        <SwitchPreference
+            android:key="@string/split_card_funding_sources_key"
+            android:title="@string/split_card_funding_sources_title" />
+
     </PreferenceCategory>
 
 </PreferenceScreen>
