@@ -132,6 +132,10 @@ class StoredCardDelegate(
         return storedDetectedCardTypes
     }
 
+    override fun getFundingSource(): String? {
+        return null
+    }
+
     fun getStoredCardInputData(): CardInputData {
         val storedCardInputData = CardInputData()
         storedCardInputData.cardNumber = storedPaymentMethod.lastFour.orEmpty()
