@@ -306,6 +306,8 @@ class CardComponent private constructor(
             cardPaymentMethod.brand = stateOutputData.detectedCardTypes.first { it.isSelected }.cardType.txVariant
         }
 
+        cardPaymentMethod.fundingSource = cardDelegate.getFundingSource()
+
         try {
             cardPaymentMethod.threeDS2SdkVersion = ThreeDS2Service.INSTANCE.sdkVersion
         } catch (e: ClassNotFoundException) {

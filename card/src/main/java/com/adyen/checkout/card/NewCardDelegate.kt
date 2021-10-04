@@ -172,6 +172,10 @@ class NewCardDelegate(
         return detectCardLocally(cardNumber)
     }
 
+    override fun getFundingSource(): String? {
+        return paymentMethod.fundingSource
+    }
+
     private fun detectCardLocally(cardNumber: String): List<DetectedCardType> {
         Logger.d(TAG, "detectCardLocally")
         if (cardNumber.isEmpty()) {
