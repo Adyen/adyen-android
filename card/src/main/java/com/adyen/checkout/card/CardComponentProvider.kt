@@ -30,9 +30,16 @@ class CardComponentProvider : StoredPaymentComponentProvider<CardComponent, Card
         val verifiedConfiguration = checkSupportedCardTypes(paymentMethod, configuration)
         val binLookupRepository = BinLookupRepository()
         val publicKeyRepository = PublicKeyRepository()
+        val cardValidationMapper = CardValidationMapper()
         val factory = viewModelFactory {
             CardComponent(
-                NewCardDelegate(paymentMethod, verifiedConfiguration, binLookupRepository, publicKeyRepository),
+                NewCardDelegate(
+                    paymentMethod,
+                    verifiedConfiguration,
+                    binLookupRepository,
+                    publicKeyRepository,
+                    cardValidationMapper
+                ),
                 verifiedConfiguration
             )
         }

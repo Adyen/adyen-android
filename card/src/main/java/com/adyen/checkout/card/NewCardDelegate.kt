@@ -34,7 +34,8 @@ class NewCardDelegate(
     private val paymentMethod: PaymentMethod,
     cardConfiguration: CardConfiguration,
     private val binLookupRepository: BinLookupRepository,
-    publicKeyRepository: PublicKeyRepository
+    publicKeyRepository: PublicKeyRepository,
+    private val cardValidationMapper: CardValidationMapper
 ) : CardDelegate(cardConfiguration, publicKeyRepository) {
 
     private val _binLookupFlow: MutableSharedFlow<List<DetectedCardType>> = MutableSharedFlow(0, 1, BufferOverflow.DROP_OLDEST)
@@ -45,7 +46,8 @@ class NewCardDelegate(
     }
 
     override fun validateCardNumber(cardNumber: String, enableLuhnCheck: Boolean, isBrandSupported: Boolean): FieldState<String> {
-        return CardValidationUtils.validateCardNumber(cardNumber, enableLuhnCheck, isBrandSupported)
+        val validation = CardValidationUtils.validateCardNumber(cardNumber, enableLuhnCheck, isBrandSupported)
+        return cardValidationMapper.mapCardNumberValidation(cardNumber, validation)
     }
 
     override fun validateExpiryDate(expiryDate: ExpiryDate, expiryDatePolicy: Brand.FieldPolicy?): FieldState<ExpiryDate> {
