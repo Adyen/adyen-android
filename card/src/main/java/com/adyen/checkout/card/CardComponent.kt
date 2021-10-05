@@ -159,10 +159,10 @@ class CardComponent private constructor(
         val enableLuhnCheck = selectedOrFirstCardType?.enableLuhnCheck ?: true
 
         // when no supported cards are detected, only show an error if the brand detection was reliable
-        val isBrandSupported = selectedOrFirstCardType?.isSupported ?: !isReliable
+        val shouldFailWithUnsupportedBrand = selectedOrFirstCardType == null && isReliable
 
         return CardOutputData(
-            cardDelegate.validateCardNumber(cardNumber, enableLuhnCheck, isBrandSupported),
+            cardDelegate.validateCardNumber(cardNumber, enableLuhnCheck, isBrandSupported = !shouldFailWithUnsupportedBrand),
             cardDelegate.validateExpiryDate(expiryDate, selectedOrFirstCardType?.expiryDatePolicy),
             cardDelegate.validateSecurityCode(securityCode, selectedOrFirstCardType),
             cardDelegate.validateHolderName(holderName),
