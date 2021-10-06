@@ -14,7 +14,6 @@ import android.os.Parcelable;
 import androidx.annotation.NonNull;
 
 import com.adyen.checkout.core.exception.CheckoutException;
-import com.adyen.checkout.core.util.ParcelUtils;
 
 import java.net.MalformedURLException;
 import java.net.URL;
@@ -73,7 +72,7 @@ public final class Environment implements Parcelable {
 
     @Override
     public int describeContents() {
-        return ParcelUtils.NO_FILE_DESCRIPTOR;
+        return Parcelable.CONTENTS_FILE_DESCRIPTOR;
     }
 
     @NonNull

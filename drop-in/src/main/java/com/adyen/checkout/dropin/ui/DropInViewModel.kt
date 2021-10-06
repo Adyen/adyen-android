@@ -14,6 +14,7 @@ import com.adyen.checkout.components.model.PaymentMethodsApiResponse
 import com.adyen.checkout.components.model.paymentmethods.StoredPaymentMethod
 import com.adyen.checkout.components.util.PaymentMethodTypes
 import com.adyen.checkout.dropin.DropInConfiguration
+import com.adyen.checkout.googlepay.GooglePayComponent
 
 class DropInViewModel(
     val paymentMethodsApiResponse: PaymentMethodsApiResponse,
@@ -29,5 +30,17 @@ class DropInViewModel(
 
     fun getStoredPaymentMethod(id: String): StoredPaymentMethod {
         return paymentMethodsApiResponse.storedPaymentMethods?.firstOrNull { it.id == id } ?: StoredPaymentMethod()
+    }
+
+    fun shouldSkipToSinglePaymentMethod(): Boolean {
+        val noStored = paymentMethodsApiResponse.storedPaymentMethods.isNullOrEmpty()
+        val singlePm = paymentMethodsApiResponse.paymentMethods?.size == 1
+
+        val firstPaymentMethod = paymentMethodsApiResponse.paymentMethods?.firstOrNull()
+        val paymentMethodHasComponent = PaymentMethodTypes.SUPPORTED_PAYMENT_METHODS.contains(firstPaymentMethod?.type) &&
+            !GooglePayComponent.PAYMENT_METHOD_TYPES.contains(firstPaymentMethod?.type) &&
+            !PaymentMethodTypes.SUPPORTED_ACTION_ONLY_PAYMENT_METHODS.contains(firstPaymentMethod?.type)
+
+        return noStored && singlePm && paymentMethodHasComponent && dropInConfiguration.skipListWhenSinglePaymentMethod
     }
 }

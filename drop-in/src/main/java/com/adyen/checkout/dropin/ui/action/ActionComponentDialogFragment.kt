@@ -94,7 +94,11 @@ class ActionComponentDialogFragment : DropInBottomSheetDialogFragment(), Observe
 
     override fun onBackPressed(): Boolean {
         // polling will be canceled by lifecycle event
-        protocol.showPaymentMethodsDialog()
+        if (dropInViewModel.shouldSkipToSinglePaymentMethod()) {
+            protocol.terminateDropIn()
+        } else {
+            protocol.showPaymentMethodsDialog()
+        }
         return true
     }
 
