@@ -10,6 +10,7 @@ package com.adyen.checkout.card
 import android.app.Activity
 import android.content.Context
 import android.content.ContextWrapper
+import android.content.pm.ApplicationInfo
 import android.content.res.TypedArray
 import android.text.Editable
 import android.util.AttributeSet
@@ -62,7 +63,8 @@ class CardView @JvmOverloads constructor(context: Context, attrs: AttributeSet? 
 
     override fun onAttachedToWindow() {
         super.onAttachedToWindow()
-        if (!BuildConfig.DEBUG) {
+        val isDebugBuild = context.applicationInfo.flags and ApplicationInfo.FLAG_DEBUGGABLE != 0
+        if (!isDebugBuild) {
             // Prevent taking screenshot and screen on recents.
             getActivity(context)?.window?.addFlags(WindowManager.LayoutParams.FLAG_SECURE)
         }
@@ -70,7 +72,8 @@ class CardView @JvmOverloads constructor(context: Context, attrs: AttributeSet? 
 
     override fun onDetachedFromWindow() {
         super.onDetachedFromWindow()
-        if (!BuildConfig.DEBUG) {
+        val isDebugBuild = context.applicationInfo.flags and ApplicationInfo.FLAG_DEBUGGABLE != 0
+        if (!isDebugBuild) {
             getActivity(context)?.window?.clearFlags(WindowManager.LayoutParams.FLAG_SECURE)
         }
     }
