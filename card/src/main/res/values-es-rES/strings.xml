@@ -26,6 +26,8 @@
     <string name="checkout_kcp_birth_date_or_tax_number_invalid">Fecha de nacimiento del titular o número de registro comercial incorrectos</string>
     <string name="checkout_kcp_password_invalid">Contraseña incorrecta</string>
     <string name="checkout_card_postal_not_valid">El formato no es válido.</string>
+    <string name="checkout_card_brand_not_supported">La marca de la tarjeta introducida no es compatible</string>
+    <string name="checkout_card_formatted_brand_name_not_supported">No admitimos tarjetas de %s</string>
 
     <string name="store_payment_method">Recordar para mi próximo pago</string>
 </resources>

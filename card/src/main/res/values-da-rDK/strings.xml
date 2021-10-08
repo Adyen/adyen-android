@@ -26,6 +26,8 @@
     <string name="checkout_kcp_birth_date_or_tax_number_invalid">Ugyldig fødselsdato for kortholder eller virksomheds registreringsnummer</string>
     <string name="checkout_kcp_password_invalid">Ugyldig adgangskode</string>
     <string name="checkout_card_postal_not_valid">Indtastningsformatet er ugyldigt.</string>
+    <string name="checkout_card_brand_not_supported">Det angivne kortmærke understøttes ikke</string>
+    <string name="checkout_card_formatted_brand_name_not_supported">%s understøttes ikke</string>
 
     <string name="store_payment_method">Gem til min næste betaling</string>
 </resources>
