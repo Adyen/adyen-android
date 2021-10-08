@@ -26,6 +26,8 @@
     <string name="checkout_kcp_birth_date_or_tax_number_invalid">Neplatný dátum narodenia držiteľa karty alebo identifikačné číslo organizácie</string>
     <string name="checkout_kcp_password_invalid">Neplané heslo</string>
     <string name="checkout_card_postal_not_valid">Vstupný formát je neplatný.</string>
+    <string name="checkout_card_brand_not_supported">Zadaná značka karty nie je podporovaná</string>
+    <string name="checkout_card_formatted_brand_name_not_supported">Značka %s nie je podporovaná</string>
 
     <string name="store_payment_method">Uložiť pre moju ďalšiu platbu</string>
 </resources>

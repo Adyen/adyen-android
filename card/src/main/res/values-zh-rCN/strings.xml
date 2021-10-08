@@ -26,6 +26,8 @@
     <string name="checkout_kcp_birth_date_or_tax_number_invalid">无效的持卡人生日或公司注册号</string>
     <string name="checkout_kcp_password_invalid">无效的密码</string>
     <string name="checkout_card_postal_not_valid">输入格式无效。</string>
+    <string name="checkout_card_brand_not_supported">不支持输入的卡片品牌</string>
+    <string name="checkout_card_formatted_brand_name_not_supported">不支持 %s</string>
 
     <string name="store_payment_method">保存以便下次支付使用</string>
 </resources>

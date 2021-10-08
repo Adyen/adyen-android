@@ -26,6 +26,8 @@
     <string name="checkout_kcp_birth_date_or_tax_number_invalid">Kelpaamaton kortinhaltijan syntymäpäivä (VVKKPP) tai yrityksen rekisterinumero</string>
     <string name="checkout_kcp_password_invalid">Kelpaamaton salasana</string>
     <string name="checkout_card_postal_not_valid">Syöttömuoto ei ole kelvollinen.</string>
+    <string name="checkout_card_brand_not_supported">Syötettyä tuotemerkkikorttia ei tueta</string>
+    <string name="checkout_card_formatted_brand_name_not_supported">%s ei tueta</string>
 
     <string name="store_payment_method">Tallenna seuraavaa maksuani varten</string>
 </resources>

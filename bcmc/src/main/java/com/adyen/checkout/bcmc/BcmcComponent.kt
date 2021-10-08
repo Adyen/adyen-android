@@ -8,6 +8,7 @@
 package com.adyen.checkout.bcmc
 
 import androidx.lifecycle.viewModelScope
+import com.adyen.checkout.card.CardValidationMapper
 import com.adyen.checkout.card.CardValidationUtils
 import com.adyen.checkout.card.data.CardType
 import com.adyen.checkout.card.data.ExpiryDate
@@ -43,7 +44,8 @@ private val PAYMENT_METHOD_TYPES = arrayOf(PaymentMethodTypes.BCMC)
 class BcmcComponent(
     paymentMethodDelegate: GenericPaymentMethodDelegate,
     configuration: BcmcConfiguration,
-    private val publicKeyRepository: PublicKeyRepository
+    private val publicKeyRepository: PublicKeyRepository,
+    private val cardValidationMapper: CardValidationMapper
 ) : BasePaymentComponent<BcmcConfiguration, BcmcInputData, BcmcOutputData,
     GenericComponentState<CardPaymentMethod>>(paymentMethodDelegate, configuration) {
 
@@ -141,7 +143,8 @@ class BcmcComponent(
     }
 
     private fun validateCardNumber(cardNumber: String): FieldState<String> {
-        return CardValidationUtils.validateCardNumber(cardNumber, enableLuhnCheck = true)
+        val validation = CardValidationUtils.validateCardNumber(cardNumber, enableLuhnCheck = true, isBrandSupported = true)
+        return cardValidationMapper.mapCardNumberValidation(cardNumber, validation)
     }
 
     private fun validateExpiryDate(expiryDate: ExpiryDate): FieldState<ExpiryDate> {

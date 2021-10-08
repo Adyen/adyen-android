@@ -26,6 +26,8 @@
     <string name="checkout_kcp_birth_date_or_tax_number_invalid">Date de naissance du porteur de carte ou numéro d\'identification de l\'entreprise incorrect(e)</string>
     <string name="checkout_kcp_password_invalid">Code incorrect</string>
     <string name="checkout_card_postal_not_valid">Le format de saisie n’est pas valide.</string>
+    <string name="checkout_card_brand_not_supported">L\'émetteur de cette carte n\'est pas pris en charge</string>
+    <string name="checkout_card_formatted_brand_name_not_supported">%s n\'est pas pris en charge</string>
 
     <string name="store_payment_method">Sauvegarder pour mon prochain paiement</string>
 </resources>

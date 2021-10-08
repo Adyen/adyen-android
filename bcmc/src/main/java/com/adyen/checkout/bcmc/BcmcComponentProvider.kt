@@ -9,6 +9,7 @@ package com.adyen.checkout.bcmc
 
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.ViewModelStoreOwner
+import com.adyen.checkout.card.CardValidationMapper
 import com.adyen.checkout.card.repository.PublicKeyRepository
 import com.adyen.checkout.components.PaymentComponentProvider
 import com.adyen.checkout.components.base.GenericPaymentMethodDelegate
@@ -22,11 +23,13 @@ class BcmcComponentProvider : PaymentComponentProvider<BcmcComponent, BcmcConfig
         configuration: BcmcConfiguration
     ): BcmcComponent {
         val publicKeyRepository = PublicKeyRepository()
+        val cardValidationMapper = CardValidationMapper()
         val bcmcFactory = viewModelFactory {
             BcmcComponent(
                 GenericPaymentMethodDelegate(paymentMethod),
                 configuration,
-                publicKeyRepository
+                publicKeyRepository,
+                cardValidationMapper
             )
         }
         return ViewModelProvider(viewModelStoreOwner, bcmcFactory).get(BcmcComponent::class.java)

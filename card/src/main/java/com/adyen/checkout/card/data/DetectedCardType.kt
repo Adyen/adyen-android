@@ -16,5 +16,6 @@ data class DetectedCardType(
     val enableLuhnCheck: Boolean,
     val cvcPolicy: Brand.FieldPolicy,
     val expiryDatePolicy: Brand.FieldPolicy,
+    val isSupported: Boolean,
     val isSelected: Boolean = false
 )

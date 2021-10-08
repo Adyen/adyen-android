@@ -9,5 +9,5 @@
 <resources>
     <string name="checkout_blik_code">6-значный код</string>
     <string name="checkout_blik_code_not_valid">Введите 6 цифр</string>
-    <string name="checkout_blik_helper_text">Получите код из банковского приложения.</string>
+    <string name="checkout_blik_helper_text">Получите код из приложения вашего банка.</string>
 </resources>

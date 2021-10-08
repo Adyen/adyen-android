@@ -39,18 +39,17 @@ object CardValidationUtils {
     /**
      * Validate card number.
      */
-    fun validateCardNumber(number: String, enableLuhnCheck: Boolean?): FieldState<String> {
+    fun validateCardNumber(number: String, enableLuhnCheck: Boolean, isBrandSupported: Boolean): CardNumberValidation {
         val normalizedNumber = StringUtil.normalize(number)
         val length = normalizedNumber.length
-        val validation = when {
-            !StringUtil.isDigitsAndSeparatorsOnly(normalizedNumber) -> Validation.Invalid(R.string.checkout_card_number_not_valid)
-            length > MAXIMUM_CARD_NUMBER_LENGTH || length < MINIMUM_CARD_NUMBER_LENGTH -> Validation.Invalid(R.string.checkout_card_number_not_valid)
-            enableLuhnCheck == false -> Validation.Valid
-            isLuhnChecksumValid(normalizedNumber) -> Validation.Valid
-            else -> Validation.Invalid(R.string.checkout_card_number_not_valid)
+        return when {
+            !StringUtil.isDigitsAndSeparatorsOnly(normalizedNumber) -> CardNumberValidation.INVALID_ILLEGAL_CHARACTERS
+            length > MAXIMUM_CARD_NUMBER_LENGTH -> CardNumberValidation.INVALID_TOO_LONG
+            length < MINIMUM_CARD_NUMBER_LENGTH -> CardNumberValidation.INVALID_TOO_SHORT
+            !isBrandSupported -> CardNumberValidation.INVALID_UNSUPPORTED_BRAND
+            enableLuhnCheck && !isLuhnChecksumValid(normalizedNumber) -> CardNumberValidation.INVALID_LUHN_CHECK
+            else -> CardNumberValidation.VALID
         }
-
-        return FieldState(number, validation)
     }
 
     @Suppress("MagicNumber")
@@ -132,4 +131,13 @@ object CardValidationUtils {
         expiryCalendar.add(Calendar.DAY_OF_MONTH, -1)
         return expiryCalendar
     }
+}
+
+enum class CardNumberValidation {
+    VALID,
+    INVALID_ILLEGAL_CHARACTERS,
+    INVALID_LUHN_CHECK,
+    INVALID_TOO_SHORT,
+    INVALID_TOO_LONG,
+    INVALID_UNSUPPORTED_BRAND
 }

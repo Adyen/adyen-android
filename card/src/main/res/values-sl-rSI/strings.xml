@@ -26,6 +26,8 @@
     <string name="checkout_kcp_birth_date_or_tax_number_invalid">Neveljaven datum rojstva imetnika kartice ali matična številka podjetja</string>
     <string name="checkout_kcp_password_invalid">Neveljavno geslo</string>
     <string name="checkout_card_postal_not_valid">Neveljavna oblika vnosa.</string>
+    <string name="checkout_card_brand_not_supported">Vnesena znamka kartice ni podprta</string>
+    <string name="checkout_card_formatted_brand_name_not_supported">%s ni podprta znamka</string>
 
     <string name="store_payment_method">Shrani za moje naslednje plačilo</string>
 </resources>
