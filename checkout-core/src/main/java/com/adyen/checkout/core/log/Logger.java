@@ -44,6 +44,10 @@ public final class Logger {
     @Retention(RetentionPolicy.SOURCE)
     public @interface LogLevel{}
 
+    public static void setLogcatLevel(boolean isDebugBuild) {
+        setLogcatLevel(isDebugBuild ? Log.DEBUG : NONE);
+    }
+
     public static void setLogcatLevel(@LogLevel int logcatLevel) {
         sLogcatLevel = logcatLevel;
     }

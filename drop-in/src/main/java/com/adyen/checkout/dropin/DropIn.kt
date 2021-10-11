@@ -17,6 +17,7 @@ import androidx.fragment.app.Fragment
 import com.adyen.checkout.components.model.PaymentMethodsApiResponse
 import com.adyen.checkout.core.log.LogUtil
 import com.adyen.checkout.core.log.Logger
+import com.adyen.checkout.core.util.BuildUtils
 import com.adyen.checkout.dropin.DropIn.startPayment
 import com.adyen.checkout.dropin.service.DropInService
 import com.adyen.checkout.dropin.service.DropInServiceResult
@@ -102,6 +103,7 @@ object DropIn {
         dropInConfiguration: DropInConfiguration,
         resultHandlerIntent: Intent? = null
     ) {
+        initializeLogLevel(activity)
         Logger.d(TAG, "startPayment from Activity")
 
         val intent = preparePayment(
@@ -156,6 +158,7 @@ object DropIn {
         dropInConfiguration: DropInConfiguration,
         resultHandlerIntent: Intent? = null
     ) {
+        initializeLogLevel(fragment.requireContext())
         Logger.d(TAG, "startPayment from Fragment")
 
         val intent = preparePayment(
@@ -215,6 +218,7 @@ object DropIn {
         dropInConfiguration: DropInConfiguration,
         resultHandlerIntent: Intent? = null
     ) {
+        initializeLogLevel(activity)
         Logger.d(TAG, "startPayment from Activity")
 
         val intent = preparePayment(
@@ -274,6 +278,7 @@ object DropIn {
         dropInConfiguration: DropInConfiguration,
         resultHandlerIntent: Intent? = null
     ) {
+        initializeLogLevel(fragment.requireContext())
         Logger.d(TAG, "startPayment from Fragment")
 
         val intent = preparePayment(
@@ -302,6 +307,10 @@ object DropIn {
             paymentMethodsApiResponse,
             resultHandlerIntent
         )
+    }
+
+    private fun initializeLogLevel(context: Context) {
+        Logger.setLogcatLevel(BuildUtils.isDebugBuild(context))
     }
 
     /**

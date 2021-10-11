@@ -10,7 +10,6 @@ package com.adyen.checkout.card
 import android.app.Activity
 import android.content.Context
 import android.content.ContextWrapper
-import android.content.pm.ApplicationInfo
 import android.content.res.TypedArray
 import android.text.Editable
 import android.util.AttributeSet
@@ -34,6 +33,7 @@ import com.adyen.checkout.components.ui.view.AdyenLinearLayout
 import com.adyen.checkout.components.ui.view.AdyenTextInputEditText
 import com.adyen.checkout.components.ui.view.RoundCornerImageView
 import com.adyen.checkout.core.exception.CheckoutException
+import com.adyen.checkout.core.util.BuildUtils
 
 /**
  * CardView for [CardComponent].
@@ -63,8 +63,7 @@ class CardView @JvmOverloads constructor(context: Context, attrs: AttributeSet? 
 
     override fun onAttachedToWindow() {
         super.onAttachedToWindow()
-        val isDebugBuild = context.applicationInfo.flags and ApplicationInfo.FLAG_DEBUGGABLE != 0
-        if (!isDebugBuild) {
+        if (!BuildUtils.isDebugBuild(context)) {
             // Prevent taking screenshot and screen on recents.
             getActivity(context)?.window?.addFlags(WindowManager.LayoutParams.FLAG_SECURE)
         }
@@ -72,8 +71,7 @@ class CardView @JvmOverloads constructor(context: Context, attrs: AttributeSet? 
 
     override fun onDetachedFromWindow() {
         super.onDetachedFromWindow()
-        val isDebugBuild = context.applicationInfo.flags and ApplicationInfo.FLAG_DEBUGGABLE != 0
-        if (!isDebugBuild) {
+        if (!BuildUtils.isDebugBuild(context)) {
             getActivity(context)?.window?.clearFlags(WindowManager.LayoutParams.FLAG_SECURE)
         }
     }
