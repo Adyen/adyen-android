@@ -38,17 +38,22 @@ public final class Logger {
     private static final int MAX_LOGCAT_MSG_SIZE = 2048;
 
     @LogLevel
-    private static int sLogcatLevel = BuildConfig.DEBUG ?  Log.DEBUG : NONE;
+    private static int sLogcatLevel = BuildConfig.DEBUG ? Log.DEBUG : NONE;
+
+    private static boolean sIsLogcatLevelInitialized = false;
 
     @IntDef({SENSITIVE, Log.VERBOSE, Log.DEBUG, Log.INFO, Log.WARN, Log.ERROR, NONE})
     @Retention(RetentionPolicy.SOURCE)
     public @interface LogLevel{}
 
-    public static void setLogcatLevel(boolean isDebugBuild) {
-        setLogcatLevel(isDebugBuild ? Log.DEBUG : NONE);
+    public static void updateDefaultLogcatLevel(boolean isDebugBuild) {
+        if (!sIsLogcatLevelInitialized) {
+            sLogcatLevel = isDebugBuild ? Log.DEBUG : NONE;
+        }
     }
 
     public static void setLogcatLevel(@LogLevel int logcatLevel) {
+        sIsLogcatLevelInitialized = true;
         sLogcatLevel = logcatLevel;
     }
 

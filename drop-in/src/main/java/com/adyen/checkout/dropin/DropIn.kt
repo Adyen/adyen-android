@@ -103,7 +103,7 @@ object DropIn {
         dropInConfiguration: DropInConfiguration,
         resultHandlerIntent: Intent? = null
     ) {
-        initializeLogLevel(activity)
+        updateDefaultLogcatLevel(activity)
         Logger.d(TAG, "startPayment from Activity")
 
         val intent = preparePayment(
@@ -158,7 +158,7 @@ object DropIn {
         dropInConfiguration: DropInConfiguration,
         resultHandlerIntent: Intent? = null
     ) {
-        initializeLogLevel(fragment.requireContext())
+        updateDefaultLogcatLevel(fragment.requireContext())
         Logger.d(TAG, "startPayment from Fragment")
 
         val intent = preparePayment(
@@ -218,7 +218,7 @@ object DropIn {
         dropInConfiguration: DropInConfiguration,
         resultHandlerIntent: Intent? = null
     ) {
-        initializeLogLevel(activity)
+        updateDefaultLogcatLevel(activity)
         Logger.d(TAG, "startPayment from Activity")
 
         val intent = preparePayment(
@@ -278,7 +278,7 @@ object DropIn {
         dropInConfiguration: DropInConfiguration,
         resultHandlerIntent: Intent? = null
     ) {
-        initializeLogLevel(fragment.requireContext())
+        updateDefaultLogcatLevel(fragment.requireContext())
         Logger.d(TAG, "startPayment from Fragment")
 
         val intent = preparePayment(
@@ -309,8 +309,8 @@ object DropIn {
         )
     }
 
-    private fun initializeLogLevel(context: Context) {
-        Logger.setLogcatLevel(BuildUtils.isDebugBuild(context))
+    private fun updateDefaultLogcatLevel(context: Context) {
+        Logger.updateDefaultLogcatLevel(BuildUtils.isDebugBuild(context))
     }
 
     /**
