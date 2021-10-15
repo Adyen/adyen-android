@@ -37,7 +37,6 @@ import com.adyen.checkout.dropin.ActionHandler
 import com.adyen.checkout.dropin.DropIn
 import com.adyen.checkout.dropin.DropInConfiguration
 import com.adyen.checkout.dropin.R
-import com.adyen.checkout.dropin.service.BalanceResult
 import com.adyen.checkout.dropin.service.DropInService
 import com.adyen.checkout.dropin.service.DropInServiceInterface
 import com.adyen.checkout.dropin.service.DropInServiceResult
@@ -542,10 +541,10 @@ class DropInActivity : AppCompatActivity(), DropInBottomSheetDialogFragment.Prot
         }
     }
 
-    private fun handleBalanceResult(balanceResult: BalanceResult) {
-        Logger.d(TAG, "handleBalanceResult - balance: ${balanceResult.balance} - transactionLimit: ${balanceResult.transactionLimit}")
+    private fun handleBalanceResult(balanceJson: String) {
+        Logger.d(TAG, "handleBalanceResult")
         isWaitingResult = false
-        val result = dropInViewModel.handleBalanceResult(balanceResult)
+        val result = dropInViewModel.handleBalanceResult(balanceJson)
         when (result) {
             is GiftCardResult.Error -> showError(getString(result.errorMessage), result.reason, result.terminateDropIn)
             is GiftCardResult.FullPayment -> handleGiftCardFullPayment(result)

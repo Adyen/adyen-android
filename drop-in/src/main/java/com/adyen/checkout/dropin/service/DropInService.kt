@@ -52,7 +52,7 @@ abstract class DropInService : Service(), CoroutineScope, DropInServiceInterface
     private val binder = DropInBinder()
 
     private val resultLiveData: MutableLiveData<DropInServiceResult> = MutableLiveData()
-    private val balanceLiveData: MutableLiveData<BalanceResult> = MutableLiveData()
+    private val balanceLiveData: MutableLiveData<String> = MutableLiveData()
 
     override fun onBind(intent: Intent?): IBinder {
         Logger.d(TAG, "onBind")
@@ -275,17 +275,17 @@ abstract class DropInService : Service(), CoroutineScope, DropInServiceInterface
     }
 
     // TODO docs
-    protected fun onBalanceChecked(balanceJson: String, transactionLimitJson: String?) {
+    protected fun onBalanceChecked(balanceJson: String) {
         // send response back to activity
         Logger.d(TAG, "onBalanceChecked called")
-        balanceLiveData.postValue(BalanceResult(balanceJson, transactionLimitJson))
+        balanceLiveData.postValue(balanceJson)
     }
 
     override fun observeResult(owner: LifecycleOwner, observer: Observer<DropInServiceResult>) {
         resultLiveData.observe(owner, observer)
     }
 
-    override fun observeBalanceResult(owner: LifecycleOwner, observer: Observer<BalanceResult>) {
+    override fun observeBalanceResult(owner: LifecycleOwner, observer: Observer<String>) {
         balanceLiveData.observe(owner, observer)
     }
 
@@ -315,6 +315,6 @@ internal interface DropInServiceInterface {
     fun observeResult(owner: LifecycleOwner, observer: Observer<DropInServiceResult>)
     fun requestPaymentsCall(paymentComponentState: PaymentComponentState<*>)
     fun requestDetailsCall(actionComponentData: ActionComponentData)
-    fun observeBalanceResult(owner: LifecycleOwner, observer: Observer<BalanceResult>)
+    fun observeBalanceResult(owner: LifecycleOwner, observer: Observer<String>)
     fun requestBalanceCall(paymentMethodData: PaymentMethodDetails)
 }
