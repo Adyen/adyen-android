@@ -141,13 +141,12 @@ class ExampleAsyncDropInService : DropInService() {
     @Suppress("NestedBlockDepth")
     private fun handleBalanceResponse(response: ResponseBody?) {
         if (response != null) {
-            val jsonResponse = JSONObject(response.string())
+            val balanceJson = response.string()
+            val jsonResponse = JSONObject(balanceJson)
             val resultCode = jsonResponse.getStringOrNull("resultCode")
-            val balance = jsonResponse.getStringOrNull("balance")
-            val transactionLimit = jsonResponse.getStringOrNull("transactionLimit")
-            when {
-                resultCode == "Success" && balance != null -> onBalanceChecked(balance, transactionLimit)
-                resultCode == "NotEnoughBalance" -> sendResult(DropInServiceResult.Error(reason = "Not enough balance", dismissDropIn = false))
+            when (resultCode) {
+                "Success" -> onBalanceChecked(balanceJson)
+                "NotEnoughBalance" -> sendResult(DropInServiceResult.Error(reason = "Not enough balance", dismissDropIn = false))
                 else -> sendResult(DropInServiceResult.Error(reason = resultCode, dismissDropIn = false))
             }
         } else {

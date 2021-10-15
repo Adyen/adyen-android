@@ -15,16 +15,17 @@ import androidx.lifecycle.ViewModel
 import com.adyen.checkout.components.model.PaymentMethodsApiResponse
 import com.adyen.checkout.components.model.paymentmethods.StoredPaymentMethod
 import com.adyen.checkout.components.model.payments.Amount
+import com.adyen.checkout.components.model.payments.response.BalanceResult
 import com.adyen.checkout.components.util.PaymentMethodTypes
 import com.adyen.checkout.core.exception.CheckoutException
 import com.adyen.checkout.core.log.LogUtil
 import com.adyen.checkout.core.log.Logger
 import com.adyen.checkout.dropin.DropInConfiguration
 import com.adyen.checkout.dropin.R
-import com.adyen.checkout.dropin.service.BalanceResult
 import com.adyen.checkout.giftcard.util.GiftCardBalanceResult
 import com.adyen.checkout.giftcard.util.GiftCardBalanceUtils
 import com.adyen.checkout.googlepay.GooglePayComponent
+import org.json.JSONException
 import org.json.JSONObject
 
 private val TAG = LogUtil.getTag()
@@ -79,12 +80,20 @@ class DropInViewModel(private val savedStateHandle: SavedStateHandle) : ViewMode
         return noStored && singlePm && paymentMethodHasComponent && dropInConfiguration.skipListWhenSinglePaymentMethod
     }
 
-    fun handleBalanceResult(balanceResult: BalanceResult): GiftCardResult {
+    fun handleBalanceResult(balanceJson: String): GiftCardResult {
+        val balanceJSONObject = try {
+            JSONObject(balanceJson)
+        } catch (e: JSONException) {
+            throw CheckoutException("Provided balance is not a JSON object")
+        }
+        val balanceResult = BalanceResult.SERIALIZER.deserialize(balanceJSONObject)
         Logger.d(TAG, "handleBalanceResult - balance: ${balanceResult.balance} - transactionLimit: ${balanceResult.transactionLimit}")
+
         val balance = Amount.SERIALIZER.deserialize(JSONObject(balanceResult.balance))
+        val transactionLimitString = balanceResult.transactionLimit
         val transactionLimit =
-            if (balanceResult.transactionLimit == null) null
-            else Amount.SERIALIZER.deserialize(JSONObject(balanceResult.transactionLimit))
+            if (transactionLimitString == null) null
+            else Amount.SERIALIZER.deserialize(JSONObject(transactionLimitString))
         val giftCardBalanceResult = GiftCardBalanceUtils.checkBalance(
             balance = balance,
             transactionLimit = transactionLimit,
