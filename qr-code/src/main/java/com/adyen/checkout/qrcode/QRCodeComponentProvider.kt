@@ -50,8 +50,6 @@ class QRCodeComponentProvider : ActionComponentProvider<QRCodeComponent, QRCodeC
         return ViewModelProvider(viewModelStoreOwner, qrCodeFactory).get(QRCodeComponent::class.java)
     }
 
-    override fun requiresConfiguration(): Boolean = false
-
     override fun getSupportedActionTypes(): List<String> {
         return listOf(QrCodeAction.ACTION_TYPE)
     }

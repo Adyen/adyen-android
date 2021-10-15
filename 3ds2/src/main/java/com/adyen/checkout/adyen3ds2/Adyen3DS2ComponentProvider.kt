@@ -55,8 +55,6 @@ class Adyen3DS2ComponentProvider : ActionComponentProvider<Adyen3DS2Component, A
         return ViewModelProvider(viewModelStoreOwner, threeDS2Factory).get(Adyen3DS2Component::class.java)
     }
 
-    override fun requiresConfiguration(): Boolean = false
-
     override fun requiresView(action: Action): Boolean = false
 
     override fun getSupportedActionTypes(): List<String> {

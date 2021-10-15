@@ -30,7 +30,7 @@ public interface ActionComponentProvider<ComponentT extends ActionComponent, Con
      *
      * @param owner         The Activity or Fragment to associate the lifecycle.
      * @param application   Your main application class.
-     * @param configuration The Configuration of the component. Can be null in most cases.
+     * @param configuration The Configuration of the component.
      * @return The Component
      */
     @SuppressWarnings("LambdaLast")
@@ -47,7 +47,7 @@ public interface ActionComponentProvider<ComponentT extends ActionComponent, Con
      * @param savedStateRegistryOwner The owner of the SavedStateRegistry, normally an Activity or Fragment.
      * @param viewModelStoreOwner     A scope that owns ViewModelStore, normally an Activity or Fragment.
      * @param application             Your main application class.
-     * @param configuration           The Configuration of the component. Can be null in most cases.
+     * @param configuration           The Configuration of the component.
      * @param defaultArgs             Values from this {@code Bundle} will be used as defaults by {@link SavedStateHandle} passed in {@link ViewModel
      *                                ViewModels} if there is no previously saved state or previously saved state misses a value by such key
      * @return The Component
@@ -61,11 +61,6 @@ public interface ActionComponentProvider<ComponentT extends ActionComponent, Con
             @NonNull ConfigurationT configuration,
             @Nullable Bundle defaultArgs
     );
-
-    /**
-     * @return If the Configuration is required for this Component.
-     */
-    boolean requiresConfiguration();
 
     /**
      * Checks if the provided component can handle the specific action type.

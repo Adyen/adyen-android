@@ -46,8 +46,6 @@ class RedirectComponentProvider : ActionComponentProvider<RedirectComponent, Red
         return ViewModelProvider(viewModelStoreOwner, redirectFactory).get(RedirectComponent::class.java)
     }
 
-    override fun requiresConfiguration(): Boolean = false
-
     override fun requiresView(action: Action): Boolean = false
 
     override fun getSupportedActionTypes(): List<String> {

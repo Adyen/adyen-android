@@ -47,8 +47,6 @@ class AwaitComponentProvider : ActionComponentProvider<AwaitComponent, AwaitConf
         return ViewModelProvider(viewModelStoreOwner, awaitFactory).get(AwaitComponent::class.java)
     }
 
-    override fun requiresConfiguration(): Boolean = true
-
     override fun getSupportedActionTypes(): List<String> {
         return listOf(AwaitAction.ACTION_TYPE)
     }
