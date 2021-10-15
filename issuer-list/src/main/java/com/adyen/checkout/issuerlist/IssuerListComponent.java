@@ -11,6 +11,7 @@ package com.adyen.checkout.issuerlist;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.lifecycle.MutableLiveData;
+import androidx.lifecycle.SavedStateHandle;
 
 import com.adyen.checkout.components.GenericComponentState;
 import com.adyen.checkout.components.base.BasePaymentComponent;
@@ -36,8 +37,12 @@ public abstract class IssuerListComponent<IssuerListPaymentMethodT extends Issue
     private final MutableLiveData<List<IssuerModel>> mIssuersLiveData = new MutableLiveData<>();
 
     @SuppressWarnings("LambdaLast")
-    public IssuerListComponent(@NonNull GenericPaymentMethodDelegate genericPaymentMethodDelegate, @NonNull IssuerListConfiguration configuration) {
-        super(genericPaymentMethodDelegate, configuration);
+    public IssuerListComponent(
+            @NonNull SavedStateHandle savedStateHandle,
+            @NonNull GenericPaymentMethodDelegate genericPaymentMethodDelegate,
+            @NonNull IssuerListConfiguration configuration
+    ) {
+        super(savedStateHandle, genericPaymentMethodDelegate, configuration);
         initComponent(genericPaymentMethodDelegate.getPaymentMethod());
     }
 

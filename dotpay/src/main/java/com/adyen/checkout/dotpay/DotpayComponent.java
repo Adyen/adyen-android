@@ -9,6 +9,7 @@
 package com.adyen.checkout.dotpay;
 
 import androidx.annotation.NonNull;
+import androidx.lifecycle.SavedStateHandle;
 
 import com.adyen.checkout.components.PaymentComponentProvider;
 import com.adyen.checkout.components.base.GenericPaymentComponentProvider;
@@ -29,8 +30,12 @@ public final class DotpayComponent extends IssuerListComponent<DotpayPaymentMeth
 
     private static final String[] PAYMENT_METHOD_TYPES = {PaymentMethodTypes.DOTPAY};
 
-    public DotpayComponent(@NonNull GenericPaymentMethodDelegate paymentMethodDelegate, @NonNull DotpayConfiguration configuration) {
-        super(paymentMethodDelegate, configuration);
+    public DotpayComponent(
+            @NonNull SavedStateHandle savedStateHandle,
+            @NonNull GenericPaymentMethodDelegate paymentMethodDelegate,
+            @NonNull DotpayConfiguration configuration
+    ) {
+        super(savedStateHandle, paymentMethodDelegate, configuration);
     }
 
     @NonNull

@@ -7,6 +7,7 @@
  */
 package com.adyen.checkout.bcmc
 
+import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.viewModelScope
 import com.adyen.checkout.card.CardValidationMapper
 import com.adyen.checkout.card.CardValidationUtils
@@ -42,12 +43,13 @@ private val PAYMENT_METHOD_TYPES = arrayOf(PaymentMethodTypes.BCMC)
  * @param configuration [BcmcConfiguration].
  */
 class BcmcComponent(
+    savedStateHandle: SavedStateHandle,
     paymentMethodDelegate: GenericPaymentMethodDelegate,
     configuration: BcmcConfiguration,
     private val publicKeyRepository: PublicKeyRepository,
     private val cardValidationMapper: CardValidationMapper
 ) : BasePaymentComponent<BcmcConfiguration, BcmcInputData, BcmcOutputData,
-    GenericComponentState<CardPaymentMethod>>(paymentMethodDelegate, configuration) {
+    GenericComponentState<CardPaymentMethod>>(savedStateHandle, paymentMethodDelegate, configuration) {
 
     companion object {
         @JvmField

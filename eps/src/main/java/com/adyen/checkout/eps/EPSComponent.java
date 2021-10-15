@@ -9,6 +9,7 @@
 package com.adyen.checkout.eps;
 
 import androidx.annotation.NonNull;
+import androidx.lifecycle.SavedStateHandle;
 
 import com.adyen.checkout.components.PaymentComponentProvider;
 import com.adyen.checkout.components.base.GenericPaymentComponentProvider;
@@ -30,8 +31,12 @@ public final class EPSComponent extends IssuerListComponent<EPSPaymentMethod> {
 
     private static final String[] PAYMENT_METHOD_TYPES = {PaymentMethodTypes.EPS};
 
-    public EPSComponent(@NonNull GenericPaymentMethodDelegate paymentMethodDelegate, @NonNull EPSConfiguration configuration) {
-        super(paymentMethodDelegate, configuration);
+    public EPSComponent(
+            @NonNull SavedStateHandle savedStateHandle,
+            @NonNull GenericPaymentMethodDelegate paymentMethodDelegate,
+            @NonNull EPSConfiguration configuration
+    ) {
+        super(savedStateHandle, paymentMethodDelegate, configuration);
     }
 
     @NonNull

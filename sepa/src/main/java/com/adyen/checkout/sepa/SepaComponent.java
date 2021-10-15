@@ -9,6 +9,7 @@
 package com.adyen.checkout.sepa;
 
 import androidx.annotation.NonNull;
+import androidx.lifecycle.SavedStateHandle;
 
 import com.adyen.checkout.components.GenericComponentState;
 import com.adyen.checkout.components.PaymentComponentProvider;
@@ -29,8 +30,12 @@ public class SepaComponent extends BasePaymentComponent<SepaConfiguration, SepaI
 
     private static final String[] PAYMENT_METHOD_TYPES = {PaymentMethodTypes.SEPA};
 
-    public SepaComponent(@NonNull GenericPaymentMethodDelegate paymentMethodDelegate, @NonNull SepaConfiguration configuration) {
-        super(paymentMethodDelegate, configuration);
+    public SepaComponent(
+            @NonNull SavedStateHandle savedStateHandle,
+            @NonNull GenericPaymentMethodDelegate paymentMethodDelegate,
+            @NonNull SepaConfiguration configuration
+    ) {
+        super(savedStateHandle, paymentMethodDelegate, configuration);
     }
 
     @NonNull
