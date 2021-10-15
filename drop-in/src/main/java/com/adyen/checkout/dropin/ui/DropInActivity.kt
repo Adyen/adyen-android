@@ -16,6 +16,7 @@ import android.content.ServiceConnection
 import android.content.res.Configuration
 import android.os.Bundle
 import android.os.IBinder
+import androidx.activity.viewModels
 import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.DialogFragment
@@ -63,11 +64,6 @@ private const val COMPONENT_FRAGMENT_TAG = "COMPONENT_DIALOG_FRAGMENT"
 private const val ACTION_FRAGMENT_TAG = "ACTION_DIALOG_FRAGMENT"
 private const val LOADING_FRAGMENT_TAG = "LOADING_DIALOG_FRAGMENT"
 
-private const val PAYMENT_METHODS_RESPONSE_KEY = "PAYMENT_METHODS_RESPONSE_KEY"
-private const val DROP_IN_CONFIGURATION_KEY = "DROP_IN_CONFIGURATION_KEY"
-private const val DROP_IN_RESULT_INTENT = "DROP_IN_RESULT_INTENT"
-private const val IS_WAITING_FOR_RESULT = "IS_WAITING_FOR_RESULT"
-
 private const val GOOGLE_PAY_REQUEST_CODE = 1
 
 /**
@@ -76,13 +72,11 @@ private const val GOOGLE_PAY_REQUEST_CODE = 1
 @Suppress("TooManyFunctions")
 class DropInActivity : AppCompatActivity(), DropInBottomSheetDialogFragment.Protocol, ActionHandler.ActionHandlingInterface {
 
-    private lateinit var dropInViewModel: DropInViewModel
+    private val dropInViewModel: DropInViewModel by viewModels()
 
     private lateinit var googlePayComponent: GooglePayComponent
 
     private lateinit var actionHandler: ActionHandler
-
-    private var isWaitingResult = false
 
     private val loadingDialog = LoadingDialogFragment.newInstance()
 
@@ -145,7 +139,7 @@ class DropInActivity : AppCompatActivity(), DropInBottomSheetDialogFragment.Prot
 
         val bundle = savedInstanceState ?: intent.extras
 
-        val initializationSuccessful = initializeBundleVariables(bundle)
+        val initializationSuccessful = assertBundleExists(bundle)
         if (!initializationSuccessful) {
             terminateWithError("Initialization failed")
             return
@@ -202,33 +196,12 @@ class DropInActivity : AppCompatActivity(), DropInBottomSheetDialogFragment.Prot
         }
     }
 
-    private fun initializeBundleVariables(bundle: Bundle?): Boolean {
+    private fun assertBundleExists(bundle: Bundle?): Boolean {
         if (bundle == null) {
             Logger.e(TAG, "Failed to initialize - bundle is null")
             return false
         }
-        isWaitingResult = bundle.getBoolean(IS_WAITING_FOR_RESULT, false)
-        val dropInConfiguration: DropInConfiguration? = bundle.getParcelable(DROP_IN_CONFIGURATION_KEY)
-        val paymentMethodsApiResponse: PaymentMethodsApiResponse? = bundle.getParcelable(PAYMENT_METHODS_RESPONSE_KEY)
-        val resultHandlerIntent: Intent? = bundle.getParcelable(DROP_IN_RESULT_INTENT)
-        return if (dropInConfiguration != null && paymentMethodsApiResponse != null) {
-            dropInViewModel = getViewModel {
-                DropInViewModel(
-                    paymentMethodsApiResponse,
-                    dropInConfiguration,
-                    resultHandlerIntent
-                )
-            }
-            true
-        } else {
-            Logger.e(
-                TAG,
-                "Failed to initialize bundle variables " +
-                    "- dropInConfiguration: ${if (dropInConfiguration == null) "null" else "exists"} " +
-                    "- paymentMethodsApiResponse: ${if (paymentMethodsApiResponse == null) "null" else "exists"}"
-            )
-            false
-        }
+        return true
     }
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
@@ -285,7 +258,7 @@ class DropInActivity : AppCompatActivity(), DropInBottomSheetDialogFragment.Prot
             paymentDataQueue = paymentComponentState
             return
         }
-        isWaitingResult = true
+        dropInViewModel.isWaitingResult = true
         setLoading(true)
         // include amount value if merchant passed it to the DropIn
         if (!dropInViewModel.dropInConfiguration.amount.isEmpty) {
@@ -301,7 +274,7 @@ class DropInActivity : AppCompatActivity(), DropInBottomSheetDialogFragment.Prot
             actionDataQueue = actionComponentData
             return
         }
-        isWaitingResult = true
+        dropInViewModel.isWaitingResult = true
         setLoading(true)
         dropInService?.requestDetailsCall(actionComponentData)
     }
@@ -340,19 +313,12 @@ class DropInActivity : AppCompatActivity(), DropInBottomSheetDialogFragment.Prot
     override fun onSaveInstanceState(outState: Bundle) {
         super.onSaveInstanceState(outState)
         Logger.d(TAG, "onSaveInstanceState")
-
-        outState.run {
-            putParcelable(PAYMENT_METHODS_RESPONSE_KEY, dropInViewModel.paymentMethodsApiResponse)
-            putParcelable(DROP_IN_CONFIGURATION_KEY, dropInViewModel.dropInConfiguration)
-            putBoolean(IS_WAITING_FOR_RESULT, isWaitingResult)
-
-            actionHandler.saveState(this)
-        }
+        actionHandler.saveState(outState)
     }
 
     override fun onResume() {
         super.onResume()
-        setLoading(isWaitingResult)
+        setLoading(dropInViewModel.isWaitingResult)
     }
 
     override fun showPreselectedDialog() {
@@ -414,7 +380,7 @@ class DropInActivity : AppCompatActivity(), DropInBottomSheetDialogFragment.Prot
 
     private fun handleDropInServiceResult(dropInServiceResult: DropInServiceResult) {
         Logger.d(TAG, "handleDropInServiceResult - ${dropInServiceResult::class.simpleName}")
-        isWaitingResult = false
+        dropInViewModel.isWaitingResult = false
         when (dropInServiceResult) {
             is DropInServiceResult.Finished -> {
                 sendResult(dropInServiceResult.result)
@@ -470,7 +436,7 @@ class DropInActivity : AppCompatActivity(), DropInBottomSheetDialogFragment.Prot
 
     private fun handleIntent(intent: Intent) {
         Logger.d(TAG, "handleIntent: action - ${intent.action}")
-        isWaitingResult = false
+        dropInViewModel.isWaitingResult = false
 
         if (WeChatPayUtils.isResultIntent(intent)) {
             Logger.d(TAG, "isResultIntent")
@@ -531,9 +497,7 @@ class DropInActivity : AppCompatActivity(), DropInBottomSheetDialogFragment.Prot
             resultHandlerIntent: Intent?
         ): Intent {
             val intent = Intent(context, DropInActivity::class.java)
-            intent.putExtra(PAYMENT_METHODS_RESPONSE_KEY, paymentMethodsApiResponse)
-            intent.putExtra(DROP_IN_CONFIGURATION_KEY, dropInConfiguration)
-            intent.putExtra(DROP_IN_RESULT_INTENT, resultHandlerIntent)
+            DropInViewModel.putIntentExtras(intent, dropInConfiguration, paymentMethodsApiResponse, resultHandlerIntent)
             return intent
         }
     }
