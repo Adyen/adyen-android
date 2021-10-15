@@ -88,20 +88,7 @@ class GiftCardComponentDialogFragment : BaseComponentDialogFragment() {
         }
     }
 
-    override fun startPayment() {
-        val componentState = component.state
-        try {
-            if (componentState != null) {
-                if (componentState.isValid) {
-                    protocol.requestBalanceCall(componentState)
-                } else {
-                    throw CheckoutException("PaymentComponentState is not valid.")
-                }
-            } else {
-                throw CheckoutException("PaymentComponentState is null.")
-            }
-        } catch (e: CheckoutException) {
-            handleError(ComponentError(e))
-        }
+    override fun requestProtocolCall(componentState: PaymentComponentState<out PaymentMethodDetails>) {
+        protocol.requestBalanceCall(componentState)
     }
 }
