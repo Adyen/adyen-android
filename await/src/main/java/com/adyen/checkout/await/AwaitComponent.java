@@ -18,6 +18,7 @@ import androidx.annotation.Nullable;
 import androidx.lifecycle.LifecycleOwner;
 import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.Observer;
+import androidx.lifecycle.SavedStateHandle;
 
 import com.adyen.checkout.components.ActionComponentData;
 import com.adyen.checkout.components.ActionComponentProvider;
@@ -71,8 +72,8 @@ public class AwaitComponent extends BaseActionComponent<AwaitConfiguration>
         }
     };
 
-    public AwaitComponent(@NonNull Application application, @NonNull AwaitConfiguration configuration) {
-        super(application, configuration);
+    public AwaitComponent(@NonNull SavedStateHandle savedStateHandle, @NonNull Application application, @NonNull AwaitConfiguration configuration) {
+        super(savedStateHandle, application, configuration);
         mStatusRepository = StatusRepository.getInstance(configuration.getEnvironment());
     }
 

@@ -9,8 +9,10 @@
 package com.adyen.checkout.wechatpay
 
 import android.app.Application
+import android.os.Bundle
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.ViewModelStoreOwner
+import androidx.savedstate.SavedStateRegistryOwner
 import com.adyen.checkout.components.ActionComponentProvider
 import com.adyen.checkout.components.base.lifecycle.viewModelFactory
 import com.adyen.checkout.components.model.payments.response.Action
@@ -20,13 +22,24 @@ import com.adyen.checkout.components.util.PaymentMethodTypes
 private val PAYMENT_METHODS = listOf(PaymentMethodTypes.WECHAT_PAY_SDK)
 
 class WeChatPayActionComponentProvider : ActionComponentProvider<WeChatPayActionComponent, WeChatPayActionConfiguration> {
-    override fun get(
-        viewModelStoreOwner: ViewModelStoreOwner,
+    override fun <T> get(
+        owner: T,
         application: Application,
         configuration: WeChatPayActionConfiguration
+    ): WeChatPayActionComponent where T : SavedStateRegistryOwner, T : ViewModelStoreOwner {
+        return get(owner, owner, application, configuration, null)
+    }
+
+    override fun get(
+        savedStateRegistryOwner: SavedStateRegistryOwner,
+        viewModelStoreOwner: ViewModelStoreOwner,
+        application: Application,
+        configuration: WeChatPayActionConfiguration,
+        defaultArgs: Bundle?
     ): WeChatPayActionComponent {
-        val weChatFactory = viewModelFactory {
+        val weChatFactory = viewModelFactory(savedStateRegistryOwner, defaultArgs) { savedStateHandle ->
             WeChatPayActionComponent(
+                savedStateHandle,
                 application,
                 configuration
             )

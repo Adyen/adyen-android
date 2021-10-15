@@ -11,9 +11,9 @@ import android.app.Activity
 import android.app.Application
 import android.content.Context
 import android.content.Intent
-import android.os.Bundle
 import androidx.lifecycle.LifecycleOwner
 import androidx.lifecycle.Observer
+import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.viewModelScope
 import com.adyen.checkout.adyen3ds2.exception.Authentication3DS2Exception
 import com.adyen.checkout.adyen3ds2.exception.Cancelled3DS2Exception
@@ -58,16 +58,23 @@ import org.json.JSONObject
 
 @Suppress("TooManyFunctions")
 class Adyen3DS2Component(
+    savedStateHandle: SavedStateHandle,
     application: Application,
     configuration: Adyen3DS2Configuration,
     private val submitFingerprintRepository: SubmitFingerprintRepository,
     private val adyen3DS2Serializer: Adyen3DS2Serializer,
     private val redirectDelegate: RedirectDelegate
-) : BaseActionComponent<Adyen3DS2Configuration>(application, configuration), ChallengeStatusReceiver, IntentHandlingComponent {
+) : BaseActionComponent<Adyen3DS2Configuration>(savedStateHandle, application, configuration), ChallengeStatusReceiver, IntentHandlingComponent {
 
     private var mTransaction: Transaction? = null
     private var mUiCustomization: UiCustomization? = null
-    private var authorizationToken: String? = null
+    private var authorizationToken: String?
+        get() {
+            return savedStateHandle[AUTHORIZATION_TOKEN_KEY]
+        }
+        set(value) {
+            savedStateHandle[AUTHORIZATION_TOKEN_KEY] = value
+        }
 
     override fun onCleared() {
         super.onCleared()
@@ -99,23 +106,6 @@ class Adyen3DS2Component(
 
     override fun canHandleAction(action: Action): Boolean {
         return PROVIDER.canHandleAction(action)
-    }
-
-    override fun saveState(bundle: Bundle?) {
-        if (bundle != null && authorizationToken != null) {
-            if (bundle.containsKey(AUTHORIZATION_TOKEN_KEY)) {
-                Logger.d(TAG, "bundle already has authorizationToken, overriding")
-            }
-            bundle.putString(AUTHORIZATION_TOKEN_KEY, authorizationToken)
-        }
-        super.saveState(bundle)
-    }
-
-    override fun restoreState(bundle: Bundle?) {
-        if (bundle != null && bundle.containsKey(AUTHORIZATION_TOKEN_KEY) && authorizationToken == null) {
-            authorizationToken = bundle.getString(AUTHORIZATION_TOKEN_KEY)
-        }
-        super.restoreState(bundle)
     }
 
     @Throws(ComponentException::class)

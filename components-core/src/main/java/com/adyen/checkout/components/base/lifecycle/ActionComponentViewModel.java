@@ -12,6 +12,7 @@ import android.app.Application;
 
 import androidx.annotation.NonNull;
 import androidx.lifecycle.AndroidViewModel;
+import androidx.lifecycle.SavedStateHandle;
 
 import com.adyen.checkout.components.ActionComponent;
 import com.adyen.checkout.components.base.Configuration;
@@ -26,14 +27,25 @@ public abstract class ActionComponentViewModel<ConfigurationT extends Configurat
         implements ActionComponent<ConfigurationT> {
 
     private final ConfigurationT mConfiguration;
+    private final SavedStateHandle mSavedStateHandle;
 
-    public ActionComponentViewModel(@NonNull Application application, @NonNull ConfigurationT configuration) {
+    public ActionComponentViewModel(
+            @NonNull SavedStateHandle savedStateHandle,
+            @NonNull Application application,
+            @NonNull ConfigurationT configuration
+    ) {
         super(application);
         mConfiguration = configuration;
+        mSavedStateHandle = savedStateHandle;
     }
 
     @NonNull
     public ConfigurationT getConfiguration() {
         return mConfiguration;
+    }
+
+    @NonNull
+    public SavedStateHandle getSavedStateHandle() {
+        return mSavedStateHandle;
     }
 }

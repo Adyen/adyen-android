@@ -14,6 +14,7 @@ import android.content.Context;
 import android.content.Intent;
 
 import androidx.annotation.NonNull;
+import androidx.lifecycle.SavedStateHandle;
 
 import com.adyen.checkout.components.ActionComponentProvider;
 import com.adyen.checkout.components.base.BaseActionComponent;
@@ -31,11 +32,12 @@ public final class RedirectComponent extends BaseActionComponent<RedirectConfigu
     private final RedirectDelegate mRedirectDelegate;
 
     public RedirectComponent(
+            @NonNull SavedStateHandle savedStateHandle,
             @NonNull Application application,
             @NonNull RedirectConfiguration configuration,
             @NonNull RedirectDelegate redirectDelegate
     ) {
-        super(application, configuration);
+        super(savedStateHandle, application, configuration);
         mRedirectDelegate = redirectDelegate;
     }
 
