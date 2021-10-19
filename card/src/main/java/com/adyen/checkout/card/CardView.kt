@@ -33,6 +33,7 @@ import com.adyen.checkout.components.ui.view.AdyenLinearLayout
 import com.adyen.checkout.components.ui.view.AdyenTextInputEditText
 import com.adyen.checkout.components.ui.view.RoundCornerImageView
 import com.adyen.checkout.core.exception.CheckoutException
+import com.adyen.checkout.core.util.BuildUtils
 
 /**
  * CardView for [CardComponent].
@@ -62,7 +63,7 @@ class CardView @JvmOverloads constructor(context: Context, attrs: AttributeSet? 
 
     override fun onAttachedToWindow() {
         super.onAttachedToWindow()
-        if (!BuildConfig.DEBUG) {
+        if (!BuildUtils.isDebugBuild(context)) {
             // Prevent taking screenshot and screen on recents.
             getActivity(context)?.window?.addFlags(WindowManager.LayoutParams.FLAG_SECURE)
         }
@@ -70,7 +71,7 @@ class CardView @JvmOverloads constructor(context: Context, attrs: AttributeSet? 
 
     override fun onDetachedFromWindow() {
         super.onDetachedFromWindow()
-        if (!BuildConfig.DEBUG) {
+        if (!BuildUtils.isDebugBuild(context)) {
             getActivity(context)?.window?.clearFlags(WindowManager.LayoutParams.FLAG_SECURE)
         }
     }
