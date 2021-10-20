@@ -7,6 +7,8 @@ import android.view.ViewGroup
 import android.widget.BaseAdapter
 import android.widget.Filter
 import android.widget.Filterable
+import android.widget.TextView
+import androidx.recyclerview.widget.RecyclerView
 
 class InstallmentListAdapter(private val context: Context): BaseAdapter(), Filterable {
 
@@ -62,10 +64,20 @@ class InstallmentFilter(private val installmentOptions: List<InstallmentModel>):
     }
 
     override fun publishResults(constraint: CharSequence?, results: FilterResults?) {
-
+        // do nothing
     }
 
     override fun convertResultToString(resultValue: Any?): CharSequence {
         return (resultValue as? InstallmentModel)?.text.orEmpty()
     }
+}
+
+class InstallmentViewHolder(rootView: View): RecyclerView.ViewHolder(rootView) {
+
+    private val installmentTextView: TextView = rootView.findViewById(R.id.textView_installmentOption)
+
+    fun bindItem(installmentModel: InstallmentModel) {
+        installmentTextView.text = installmentModel.text
+    }
+
 }
