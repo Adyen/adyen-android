@@ -27,7 +27,8 @@ data class CardOutputData(
     val detectedCardTypes: List<DetectedCardType>,
     val isSocialSecurityNumberRequired: Boolean,
     val isKCPAuthRequired: Boolean,
-    val isPostalCodeRequired: Boolean
+    val isPostalCodeRequired: Boolean,
+    val installmentOptions: List<InstallmentModel>
 ) : OutputData {
     override fun isValid(): Boolean {
         return cardNumberState.validation.isValid() &&

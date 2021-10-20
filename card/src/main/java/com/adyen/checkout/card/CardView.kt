@@ -148,6 +148,7 @@ class CardView @JvmOverloads constructor(context: Context, attrs: AttributeSet? 
             setPostalCodeVisibility(cardOutputData.isPostalCodeRequired)
             handleCvcUIState(cardOutputData.cvcUIState)
             handleExpiryDateUIState(cardOutputData.expiryDateUIState)
+            initInstallments(cardOutputData?.installmentOptions)
         }
         if (component.isStoredPaymentMethod() && component.requiresInput()) {
             binding.textInputLayoutSecurityCode.editText?.requestFocus()
@@ -461,6 +462,22 @@ class CardView @JvmOverloads constructor(context: Context, attrs: AttributeSet? 
             } else if (postalCodeValidation != null && postalCodeValidation is Validation.Invalid) {
                 binding.textInputLayoutPostalCode.error = mLocalizedContext.getString(postalCodeValidation.reason)
             }
+        }
+    }
+
+    private fun initInstallments(installmentOptions: List<InstallmentModel>) {
+        val mInstallmentAutoCompleteTextView = binding.autoCompleteTextViewInstallments
+        if (installmentOptions.isNotEmpty()) {
+            val adapter = InstallmentListAdapter(context)
+            adapter.setItems(installmentOptions)
+            mInstallmentAutoCompleteTextView.apply {
+                isVisible = true
+                inputType = 0
+                setAdapter(adapter)
+                setText(installmentOptions.firstOrNull()?.text.orEmpty())
+            }
+        } else {
+            mInstallmentAutoCompleteTextView.isVisible = false
         }
     }
 

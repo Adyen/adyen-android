@@ -5,10 +5,13 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.BaseAdapter
+import android.widget.Filter
+import android.widget.Filterable
 
-class InstallmentListAdapter(private val context: Context): BaseAdapter() {
+class InstallmentListAdapter(private val context: Context): BaseAdapter(), Filterable {
 
     private val installmentOptions: MutableList<InstallmentModel> = mutableListOf()
+    private val installmentFilter = InstallmentFilter(installmentOptions)
 
     fun setItems(installmentOptions: List<InstallmentModel>) {
         this.installmentOptions.clear()
@@ -37,6 +40,10 @@ class InstallmentListAdapter(private val context: Context): BaseAdapter() {
         return view
     }
 
+    override fun getFilter(): Filter {
+        return installmentFilter
+    }
+
 }
 
 data class InstallmentModel(
@@ -44,3 +51,21 @@ data class InstallmentModel(
     val value: Int?,
     val option: InstallmentOption
 )
+
+class InstallmentFilter(private val installmentOptions: List<InstallmentModel>): Filter() {
+
+    override fun performFiltering(constraint: CharSequence?): FilterResults {
+        return FilterResults().apply {
+            values = installmentOptions
+            count = installmentOptions.size
+        }
+    }
+
+    override fun publishResults(constraint: CharSequence?, results: FilterResults?) {
+
+    }
+
+    override fun convertResultToString(resultValue: Any?): CharSequence {
+        return (resultValue as? InstallmentModel)?.text.orEmpty()
+    }
+}

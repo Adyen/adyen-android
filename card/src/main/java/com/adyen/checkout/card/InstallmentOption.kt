@@ -19,7 +19,7 @@ data class InstallmentConfiguration(
     @Suppress("UNCHECKED_CAST")
     private constructor(parcel: Parcel): this(
         parcel.readParcelable(InstallmentOptions.DefaultInstallmentOptions::class.java.classLoader),
-        parcel.readArrayList(InstallmentOptions.CardBasedInstallmentOptions::class.java.classLoader) as List<InstallmentOptions.CardBasedInstallmentOptions>
+        parcel.readArrayList(InstallmentOptions.CardBasedInstallmentOptions::class.java.classLoader) as? List<InstallmentOptions.CardBasedInstallmentOptions>
     )
 
     companion object {

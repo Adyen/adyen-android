@@ -20,5 +20,6 @@ data class CardInputData(
     var kcpCardPassword: String = "",
     var postalCode: String = "",
     var isStorePaymentSelected: Boolean = false,
-    var selectedCardIndex: Int = 0
+    var selectedCardIndex: Int = 0,
+    var installmentOption: Pair<InstallmentOption, Int?> = InstallmentOption.ONE_TIME to null
 ) : InputData
