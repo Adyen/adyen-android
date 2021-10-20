@@ -29,5 +29,10 @@
     <string name="checkout_card_brand_not_supported">L\'émetteur de cette carte n\'est pas pris en charge</string>
     <string name="checkout_card_formatted_brand_name_not_supported">%s n\'est pas pris en charge</string>
 
+    <string name="checkout_card_installments_title">Nombre de versements</string>
+    <string name="checkout_card_installments_option_regular">%s mois</string>
+    <string name="checkout_card_installments_option_one_time">Paiement unique</string>
+    <string name="checkout_card_installments_option_revolving">Paiement en plusieurs fois</string>
+
     <string name="store_payment_method">Sauvegarder pour mon prochain paiement</string>
 </resources>

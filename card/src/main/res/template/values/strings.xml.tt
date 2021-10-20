@@ -29,5 +29,10 @@
     <string name="checkout_card_brand_not_supported">%%creditCard.numberField.unknownBrand%%</string>
     <string name="checkout_card_formatted_brand_name_not_supported">%%creditCard.numberField.unsupportedBrand%%</string>
 
+    <string name="checkout_card_installments_title">%%installments%%</string>
+    <string name="checkout_card_installments_option_regular">%%installmentOptionMonths%%</string>
+    <string name="checkout_card_installments_option_one_time">%%installments.oneTime%%</string>
+    <string name="checkout_card_installments_option_revolving">%%installments.revolving%%</string>
+
     <string name="store_payment_method">%%storeDetails%%</string>
 </resources>

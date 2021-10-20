@@ -29,5 +29,10 @@
     <string name="checkout_card_brand_not_supported">Vnesena znamka kartice ni podprta</string>
     <string name="checkout_card_formatted_brand_name_not_supported">%s ni podprta znamka</string>
 
+    <string name="checkout_card_installments_title">Število obrokov</string>
+    <string name="checkout_card_installments_option_regular">Št. mesecev: %s</string>
+    <string name="checkout_card_installments_option_one_time">Enkratno plačilo</string>
+    <string name="checkout_card_installments_option_revolving">Revolving plačilo</string>
+
     <string name="store_payment_method">Shrani za moje naslednje plačilo</string>
 </resources>

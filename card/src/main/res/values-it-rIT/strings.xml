@@ -29,5 +29,10 @@
     <string name="checkout_card_brand_not_supported">Il brand della carta inserita non è supportato</string>
     <string name="checkout_card_formatted_brand_name_not_supported">%s non è supportata</string>
 
+    <string name="checkout_card_installments_title">Numero di rate</string>
+    <string name="checkout_card_installments_option_regular">%s mesi</string>
+    <string name="checkout_card_installments_option_one_time">Pagamento una tantum</string>
+    <string name="checkout_card_installments_option_revolving">Pagamento ricorrente</string>
+
     <string name="store_payment_method">Salva per il prossimo pagamento</string>
 </resources>

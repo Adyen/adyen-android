@@ -29,5 +29,10 @@
     <string name="checkout_card_brand_not_supported">不支持输入的卡片品牌</string>
     <string name="checkout_card_formatted_brand_name_not_supported">不支持 %s</string>
 
+    <string name="checkout_card_installments_title">分期付款期数</string>
+    <string name="checkout_card_installments_option_regular">%s 个月</string>
+    <string name="checkout_card_installments_option_one_time">全款支付</string>
+    <string name="checkout_card_installments_option_revolving">循环支付</string>
+
     <string name="store_payment_method">保存以便下次支付使用</string>
 </resources>

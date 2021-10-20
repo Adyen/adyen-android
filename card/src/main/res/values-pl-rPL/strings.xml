@@ -29,5 +29,10 @@
     <string name="checkout_card_brand_not_supported">Wprowadzona marka karty nie jest obsługiwana</string>
     <string name="checkout_card_formatted_brand_name_not_supported">Marka %s nie jest obsługiwana</string>
 
+    <string name="checkout_card_installments_title">Liczba rat</string>
+    <string name="checkout_card_installments_option_regular">%s miesięcy</string>
+    <string name="checkout_card_installments_option_one_time">Płatność jednorazowa</string>
+    <string name="checkout_card_installments_option_revolving">Płatność odnawialna</string>
+
     <string name="store_payment_method">Zapisz na potrzeby następnej płatności</string>
 </resources>
