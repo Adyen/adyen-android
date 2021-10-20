@@ -38,7 +38,7 @@
         <item name="android:minHeight">@dimen/input_layout_height</item>
     </style>
 
-    <style name="AdyenCheckout.MBWay.DropdownTextInputLayout" parent="Widget.MaterialComponents.TextInputLayout.OutlinedBox.ExposedDropdownMenu">
+    <style name="AdyenCheckout.DropdownTextInputLayout" parent="Widget.MaterialComponents.TextInputLayout.OutlinedBox.ExposedDropdownMenu">
         <item name="boxStrokeColor">@color/primaryColor</item>
         <item name="android:minHeight">@dimen/input_layout_height</item>
     </style>

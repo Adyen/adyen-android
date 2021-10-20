@@ -174,10 +174,9 @@
 
     <com.google.android.material.textfield.TextInputLayout
         android:id="@+id/textInputLayout_installments"
-        style="@style/AdyenCheckout.MBWay.DropdownTextInputLayout"
+        style="@style/AdyenCheckout.DropdownTextInputLayout.Installments"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:hint="@string/checkout_card_installments_title"
         android:visibility="gone"
         tools:visibility="visible">
 
@@ -186,8 +185,7 @@
             style="@style/AdyenCheckout.DropdownTextInputEditText"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:dropDownAnchor="@id/textInputLayout_installments"
-            android:minEms="7" />
+            android:dropDownAnchor="@id/textInputLayout_installments" />
     </com.google.android.material.textfield.TextInputLayout>
 
     <androidx.appcompat.widget.SwitchCompat
