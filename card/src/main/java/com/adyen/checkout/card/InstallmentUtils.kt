@@ -1,5 +1,6 @@
 package com.adyen.checkout.card
 
+import android.content.Context
 import com.adyen.checkout.card.data.CardType
 
 object InstallmentUtils {
@@ -25,7 +26,7 @@ object InstallmentUtils {
     private fun makeInstallmentModelList(installmentOptions: InstallmentOptions): List<InstallmentModel> {
         val installmentOptionsList = mutableListOf<InstallmentModel>()
         val oneTimeOption = InstallmentModel(
-            text = "one time", //TODO translations
+            textResId = R.string.checkout_card_installments_option_one_time,
             value = null,
             option = InstallmentOption.ONE_TIME
         )
@@ -33,7 +34,7 @@ object InstallmentUtils {
 
         if (installmentOptions.includeRevolving) {
             val revolvingOption = InstallmentModel(
-                text = "revolving", //TODO translations
+                textResId = R.string.checkout_card_installments_option_revolving,
                 value = 1,
                 option = InstallmentOption.REVOLVING
             )
@@ -42,12 +43,19 @@ object InstallmentUtils {
 
         val regularOptions = installmentOptions.values.map {
             InstallmentModel(
-                text = "regular $it",//TODO translations
+                textResId = R.string.checkout_card_installments_option_regular,
                 value = it,
                 option = InstallmentOption.REGULAR
             )
         }
         installmentOptionsList.addAll(regularOptions)
         return installmentOptionsList
+    }
+
+    fun getTextForInstallmentOption(context: Context, installmentModel: InstallmentModel): String {
+        return when (installmentModel.option) {
+            InstallmentOption.REGULAR -> context.getString(installmentModel.textResId, installmentModel.value)
+            else -> context.getString(installmentModel.textResId)
+        }
     }
 }

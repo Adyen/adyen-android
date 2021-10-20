@@ -88,8 +88,8 @@
                 android:id="@+id/editText_expiryDate"
                 style="@style/AdyenCheckout.Card.ExpiryDateInput"
                 android:nextFocusRight="@+id/editText_securityCode"
-                android:nextFocusForward="@+id/editText_securityCode"
                 android:nextFocusDown="@id/editText_securityCode"
+                android:nextFocusForward="@+id/editText_securityCode"
                 tools:ignore="RequiredSize" />
         </com.google.android.material.textfield.TextInputLayout>
 
@@ -177,7 +177,9 @@
         style="@style/AdyenCheckout.MBWay.DropdownTextInputLayout"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:visibility="gone">
+        android:hint="@string/checkout_card_installments_title"
+        android:visibility="gone"
+        tools:visibility="visible">
 
         <androidx.appcompat.widget.AppCompatAutoCompleteTextView
             android:id="@+id/autoCompleteTextView_installments"

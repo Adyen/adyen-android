@@ -8,12 +8,13 @@ import android.widget.BaseAdapter
 import android.widget.Filter
 import android.widget.Filterable
 import android.widget.TextView
+import androidx.annotation.StringRes
 import androidx.recyclerview.widget.RecyclerView
 
 class InstallmentListAdapter(private val context: Context): BaseAdapter(), Filterable {
 
     private val installmentOptions: MutableList<InstallmentModel> = mutableListOf()
-    private val installmentFilter = InstallmentFilter(installmentOptions)
+    private val installmentFilter = InstallmentFilter(context, installmentOptions)
 
     fun setItems(installmentOptions: List<InstallmentModel>) {
         this.installmentOptions.clear()
@@ -49,12 +50,14 @@ class InstallmentListAdapter(private val context: Context): BaseAdapter(), Filte
 }
 
 data class InstallmentModel(
-    val text: String,
+    @StringRes val textResId: Int,
     val value: Int?,
     val option: InstallmentOption
 )
 
-class InstallmentFilter(private val installmentOptions: List<InstallmentModel>): Filter() {
+class InstallmentFilter(
+    private val context: Context,
+    private val installmentOptions: List<InstallmentModel>): Filter() {
 
     override fun performFiltering(constraint: CharSequence?): FilterResults {
         return FilterResults().apply {
@@ -68,16 +71,18 @@ class InstallmentFilter(private val installmentOptions: List<InstallmentModel>):
     }
 
     override fun convertResultToString(resultValue: Any?): CharSequence {
-        return (resultValue as? InstallmentModel)?.text.orEmpty()
+        return (resultValue as? InstallmentModel)?.let {
+            InstallmentUtils.getTextForInstallmentOption(context, it)
+        }.orEmpty()
     }
 }
 
-class InstallmentViewHolder(rootView: View): RecyclerView.ViewHolder(rootView) {
+class InstallmentViewHolder(private val rootView: View): RecyclerView.ViewHolder(rootView) {
 
     private val installmentTextView: TextView = rootView.findViewById(R.id.textView_installmentOption)
 
     fun bindItem(installmentModel: InstallmentModel) {
-        installmentTextView.text = installmentModel.text
+        installmentTextView.text = InstallmentUtils.getTextForInstallmentOption(rootView.context, installmentModel)
     }
 
 }
