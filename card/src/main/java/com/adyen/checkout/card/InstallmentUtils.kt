@@ -4,10 +4,10 @@ import com.adyen.checkout.card.data.CardType
 
 object InstallmentUtils {
 
-    fun makeInstallmentOptions(configuration: InstallmentConfiguration?, cardType: CardType?): List<InstallmentModel> {
+    fun makeInstallmentOptions(configuration: InstallmentConfiguration?, cardType: CardType?, isCardTypeReliable: Boolean): List<InstallmentModel> {
         val hasCardBasedInstallmentOptions = configuration?.cardBasedOptions != null
         val hasDefaultInstallmentOptions = configuration?.defaultOptions != null
-        val hasOptionsForCardType = hasCardBasedInstallmentOptions && (configuration?.cardBasedOptions?.any { it.cardType == cardType } ?: false)
+        val hasOptionsForCardType = hasCardBasedInstallmentOptions && isCardTypeReliable && (configuration?.cardBasedOptions?.any { it.cardType == cardType } ?: false)
 
         return when {
             hasOptionsForCardType -> {

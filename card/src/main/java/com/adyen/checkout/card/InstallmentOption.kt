@@ -45,9 +45,9 @@ sealed class InstallmentOptions(
 ): Parcelable {
 
     data class CardBasedInstallmentOptions(
-        val cardType: CardType,
         override val values: List<Int>,
-        override val includeRevolving: Boolean
+        override val includeRevolving: Boolean,
+        val cardType: CardType
     ): InstallmentOptions(values, includeRevolving) {
 
         companion object {
@@ -60,9 +60,9 @@ sealed class InstallmentOptions(
 
         @Suppress("UNCHECKED_CAST")
         private constructor(parcel: Parcel): this(
-            parcel.readSerializable() as CardType,
             parcel.readArrayList(Int::class.java.classLoader) as List<Int>,
-            ParcelUtils.readBoolean(parcel)
+            ParcelUtils.readBoolean(parcel),
+            parcel.readSerializable() as CardType
         )
 
         override fun writeToParcel(dest: Parcel, flags: Int) {

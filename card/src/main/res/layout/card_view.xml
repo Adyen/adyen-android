@@ -176,7 +176,8 @@
         android:id="@+id/textInputLayout_installments"
         style="@style/AdyenCheckout.MBWay.DropdownTextInputLayout"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content">
+        android:layout_height="wrap_content"
+        android:visibility="gone">
 
         <androidx.appcompat.widget.AppCompatAutoCompleteTextView
             android:id="@+id/autoCompleteTextView_installments"

@@ -193,7 +193,7 @@ class CardComponent private constructor(
             cardDelegate.isSocialSecurityNumberRequired(),
             cardDelegate.isKCPAuthRequired(),
             cardDelegate.isPostalCodeRequired(),
-            InstallmentUtils.makeInstallmentOptions(configuration.installmentConfiguration, selectedOrFirstCardType?.cardType)
+            InstallmentUtils.makeInstallmentOptions(configuration.installmentConfiguration, selectedOrFirstCardType?.cardType, isReliable)
         )
     }
 

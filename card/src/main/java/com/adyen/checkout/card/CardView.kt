@@ -466,18 +466,18 @@ class CardView @JvmOverloads constructor(context: Context, attrs: AttributeSet? 
     }
 
     private fun initInstallments(installmentOptions: List<InstallmentModel>) {
-        val mInstallmentAutoCompleteTextView = binding.autoCompleteTextViewInstallments
+        val mInstallmentTextInputLayout = binding.textInputLayoutInstallments
         if (installmentOptions.isNotEmpty()) {
             val adapter = InstallmentListAdapter(context)
             adapter.setItems(installmentOptions)
-            mInstallmentAutoCompleteTextView.apply {
-                isVisible = true
+            binding.autoCompleteTextViewInstallments.apply {
                 inputType = 0
                 setAdapter(adapter)
                 setText(installmentOptions.firstOrNull()?.text.orEmpty())
             }
+            mInstallmentTextInputLayout.isVisible = true
         } else {
-            mInstallmentAutoCompleteTextView.isVisible = false
+            mInstallmentTextInputLayout.isVisible = false
         }
     }
 
