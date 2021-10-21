@@ -88,7 +88,7 @@ class CardComponent private constructor(
                             isStorePaymentSelected = isStoredPaymentMethodEnable,
                             detectedCardTypes = it,
                             selectedCardIndex = 0,
-                            selectedInstallmentOption = installmentState.value
+                            selectedInstallmentOption = null
                         )
                         notifyStateChanged(newOutputData)
                     }
@@ -411,9 +411,9 @@ class CardComponent private constructor(
     private fun isInstallmentsRequired(cardOutputData: CardOutputData): Boolean {
         val selectedCard = cardOutputData.detectedCardTypes.firstOrNull { it.isSelected } ?: cardOutputData.detectedCardTypes.firstOrNull()
         val installmentConfiguration = configuration.installmentConfiguration
-        return installmentConfiguration?.defaultOptions != null ||
-            (installmentConfiguration?.cardBasedOptions != null &&
-                installmentConfiguration.cardBasedOptions.any { it.cardType == selectedCard?.cardType })
+        val areInstallmentsApplicableForCardType = installmentConfiguration?.cardBasedOptions != null &&
+            installmentConfiguration.cardBasedOptions.any { it.cardType == selectedCard?.cardType }
+        return installmentConfiguration?.defaultOptions != null || areInstallmentsApplicableForCardType
     }
 
     private fun makeAddressData(outputData: CardOutputData): Address {

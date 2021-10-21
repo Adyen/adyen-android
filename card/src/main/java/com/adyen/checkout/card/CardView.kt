@@ -476,13 +476,18 @@ class CardView @JvmOverloads constructor(context: Context, attrs: AttributeSet? 
                 installmentAutoCompleteTextView.apply {
                     inputType = 0
                     setAdapter(installmentListAdapter!!)
-                    if (cardOutputData.installmentState.value == null) {
-                        setText(InstallmentUtils.getTextForInstallmentOption(context, cardOutputData.installmentOptions.first()))
-                    }
                     onItemClickListener = AdapterView.OnItemClickListener { _, _, position, _ ->
                         updateInstallmentSelection(installmentListAdapter?.getItem(position))
                     }
                 }
+            }
+            if (cardOutputData.installmentState.value == null) {
+                updateInstallmentSelection(cardOutputData.installmentOptions.first())
+                val installmentOptionText = InstallmentUtils.getTextForInstallmentOption(
+                    context,
+                    cardOutputData.installmentOptions.first()
+                )
+                installmentAutoCompleteTextView.setText(installmentOptionText)
             }
             installmentListAdapter?.setItems(cardOutputData.installmentOptions)
             installmentTextInputLayout.isVisible = true

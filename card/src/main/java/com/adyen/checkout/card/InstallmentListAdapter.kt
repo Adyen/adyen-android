@@ -11,7 +11,7 @@ import android.widget.TextView
 import androidx.annotation.StringRes
 import androidx.recyclerview.widget.RecyclerView
 
-class InstallmentListAdapter(private val context: Context): BaseAdapter(), Filterable {
+class InstallmentListAdapter(private val context: Context) : BaseAdapter(), Filterable {
 
     private val installmentOptions: MutableList<InstallmentModel> = mutableListOf()
     private val installmentFilter = InstallmentFilter(context, installmentOptions)
@@ -46,7 +46,6 @@ class InstallmentListAdapter(private val context: Context): BaseAdapter(), Filte
     override fun getFilter(): Filter {
         return installmentFilter
     }
-
 }
 
 data class InstallmentModel(
@@ -57,7 +56,8 @@ data class InstallmentModel(
 
 class InstallmentFilter(
     private val context: Context,
-    private val installmentOptions: List<InstallmentModel>): Filter() {
+    private val installmentOptions: List<InstallmentModel>
+) : Filter() {
 
     override fun performFiltering(constraint: CharSequence?): FilterResults {
         return FilterResults().apply {
@@ -77,12 +77,11 @@ class InstallmentFilter(
     }
 }
 
-class InstallmentViewHolder(private val rootView: View): RecyclerView.ViewHolder(rootView) {
+class InstallmentViewHolder(private val rootView: View) : RecyclerView.ViewHolder(rootView) {
 
     private val installmentTextView: TextView = rootView.findViewById(R.id.textView_installmentOption)
 
     fun bindItem(installmentModel: InstallmentModel) {
         installmentTextView.text = InstallmentUtils.getTextForInstallmentOption(rootView.context, installmentModel)
     }
-
 }

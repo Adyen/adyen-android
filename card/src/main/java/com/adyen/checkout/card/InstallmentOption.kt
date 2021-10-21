@@ -14,12 +14,13 @@ enum class InstallmentOption(val type: String?) {
 data class InstallmentConfiguration(
     val defaultOptions: InstallmentOptions.DefaultInstallmentOptions?,
     val cardBasedOptions: List<InstallmentOptions.CardBasedInstallmentOptions>?
-): Parcelable {
+) : Parcelable {
 
     @Suppress("UNCHECKED_CAST")
-    private constructor(parcel: Parcel): this(
+    private constructor(parcel: Parcel) : this(
         parcel.readParcelable(InstallmentOptions.DefaultInstallmentOptions::class.java.classLoader),
-        parcel.readArrayList(InstallmentOptions.CardBasedInstallmentOptions::class.java.classLoader) as? List<InstallmentOptions.CardBasedInstallmentOptions>
+        parcel.readArrayList(InstallmentOptions.CardBasedInstallmentOptions::class.java.classLoader)
+            as? List<InstallmentOptions.CardBasedInstallmentOptions>
     )
 
     companion object {
@@ -36,19 +37,18 @@ data class InstallmentConfiguration(
     }
 
     override fun describeContents() = Parcelable.CONTENTS_FILE_DESCRIPTOR
-
 }
 
 sealed class InstallmentOptions(
     open val values: List<Int>,
     open val includeRevolving: Boolean
-): Parcelable {
+) : Parcelable {
 
     data class CardBasedInstallmentOptions(
         override val values: List<Int>,
         override val includeRevolving: Boolean,
         val cardType: CardType
-    ): InstallmentOptions(values, includeRevolving) {
+    ) : InstallmentOptions(values, includeRevolving) {
 
         companion object {
             @JvmField
@@ -59,7 +59,7 @@ sealed class InstallmentOptions(
         }
 
         @Suppress("UNCHECKED_CAST")
-        private constructor(parcel: Parcel): this(
+        private constructor(parcel: Parcel) : this(
             parcel.readArrayList(Int::class.java.classLoader) as List<Int>,
             ParcelUtils.readBoolean(parcel),
             parcel.readSerializable() as CardType
@@ -76,7 +76,7 @@ sealed class InstallmentOptions(
     data class DefaultInstallmentOptions(
         override val values: List<Int>,
         override val includeRevolving: Boolean
-    ): InstallmentOptions(values, includeRevolving) {
+    ) : InstallmentOptions(values, includeRevolving) {
 
         companion object {
             @JvmField
@@ -87,7 +87,7 @@ sealed class InstallmentOptions(
         }
 
         @Suppress("UNCHECKED_CAST")
-        private constructor(parcel: Parcel): this(
+        private constructor(parcel: Parcel) : this(
             parcel.readArrayList(Int::class.java.classLoader) as List<Int>,
             ParcelUtils.readBoolean(parcel)
         )
@@ -97,12 +97,10 @@ sealed class InstallmentOptions(
         }
 
         override fun describeContents() = Parcelable.CONTENTS_FILE_DESCRIPTOR
-
     }
 
     override fun writeToParcel(dest: Parcel, flags: Int) {
         dest.writeList(values)
         ParcelUtils.writeBoolean(dest, includeRevolving)
     }
-
 }

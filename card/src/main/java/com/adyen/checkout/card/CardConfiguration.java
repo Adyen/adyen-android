@@ -352,6 +352,7 @@ public class CardConfiguration extends Configuration {
         }
 
         // TODO docs
+        @NonNull
         public Builder setInstallmentConfigurations(@NonNull InstallmentConfiguration installmentConfiguration) {
             mBuilderInstallmentConfiguration = installmentConfiguration;
             return this;

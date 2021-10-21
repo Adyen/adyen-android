@@ -30,7 +30,7 @@
     <string name="checkout_card_formatted_brand_name_not_supported">%s ei tueta</string>
 
     <string name="checkout_card_installments_title">Asennusten määrä</string>
-    <string name="checkout_card_installments_option_regular">% {kertaa} kuukautta</string>
+    <string name="checkout_card_installments_option_regular">%s kuukautta</string>
     <string name="checkout_card_installments_option_one_time">Kertamaksu</string>
     <string name="checkout_card_installments_option_revolving">Toistuva maksu</string>
 

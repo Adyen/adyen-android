@@ -4,12 +4,16 @@ import android.content.Context
 import com.adyen.checkout.card.data.CardType
 import com.adyen.checkout.components.model.payments.request.Installments
 
+private const val REVOLVING_INSTALLMENT_VALUE = 1
+
 object InstallmentUtils {
 
     fun makeInstallmentOptions(configuration: InstallmentConfiguration?, cardType: CardType?, isCardTypeReliable: Boolean): List<InstallmentModel> {
         val hasCardBasedInstallmentOptions = configuration?.cardBasedOptions != null
         val hasDefaultInstallmentOptions = configuration?.defaultOptions != null
-        val hasOptionsForCardType = hasCardBasedInstallmentOptions && isCardTypeReliable && (configuration?.cardBasedOptions?.any { it.cardType == cardType } ?: false)
+        val hasOptionsForCardType = hasCardBasedInstallmentOptions &&
+            isCardTypeReliable &&
+            (configuration?.cardBasedOptions?.any { it.cardType == cardType } ?: false)
 
         return when {
             hasOptionsForCardType -> {
@@ -36,7 +40,7 @@ object InstallmentUtils {
         if (installmentOptions.includeRevolving) {
             val revolvingOption = InstallmentModel(
                 textResId = R.string.checkout_card_installments_option_revolving,
-                value = 1,
+                value = REVOLVING_INSTALLMENT_VALUE,
                 option = InstallmentOption.REVOLVING
             )
             installmentOptionsList.add(revolvingOption)
@@ -68,6 +72,5 @@ object InstallmentUtils {
             }
             else -> null
         }
-
     }
 }

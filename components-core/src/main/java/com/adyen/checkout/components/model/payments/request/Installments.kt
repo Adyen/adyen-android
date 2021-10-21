@@ -5,14 +5,13 @@ import android.os.Parcelable
 import com.adyen.checkout.core.exception.ModelSerializationException
 import com.adyen.checkout.core.model.JsonUtils
 import com.adyen.checkout.core.model.ModelObject
-import com.adyen.checkout.core.model.getStringOrNull
 import org.json.JSONException
 import org.json.JSONObject
 
 data class Installments(
     val plan: String?,
     val value: Int?
-): ModelObject() {
+) : ModelObject() {
 
     override fun writeToParcel(parcel: Parcel, flags: Int) {
         JsonUtils.writeToParcel(parcel, SERIALIZER.serialize(this))
@@ -49,6 +48,5 @@ data class Installments(
                 }
             }
         }
-
     }
 }
