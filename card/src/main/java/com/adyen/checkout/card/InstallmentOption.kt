@@ -5,7 +5,7 @@ import android.os.Parcelable
 import com.adyen.checkout.card.data.CardType
 import com.adyen.checkout.core.util.ParcelUtils
 
-enum class InstallmentOption(type: String?) {
+enum class InstallmentOption(val type: String?) {
     ONE_TIME(null),
     REGULAR("regular"),
     REVOLVING("revolving")

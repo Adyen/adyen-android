@@ -1,4 +1,4 @@
-package com.adyen.checkout.card.api.model
+package com.adyen.checkout.components.model.payments.request
 
 import android.os.Parcel
 import android.os.Parcelable
@@ -10,8 +10,8 @@ import org.json.JSONException
 import org.json.JSONObject
 
 data class Installments(
-    val plan: String? = null,
-    val value: Int = 1
+    val plan: String?,
+    val value: Int?
 ): ModelObject() {
 
     override fun writeToParcel(parcel: Parcel, flags: Int) {
@@ -25,7 +25,7 @@ data class Installments(
         @JvmField
         val CREATOR: Parcelable.Creator<Installments> = Creator(Installments::class.java)
 
-        @JvmStatic
+        @JvmField
         val SERIALIZER: Serializer<Installments> = object : Serializer<Installments> {
             override fun serialize(modelObject: Installments): JSONObject {
                 val jsonObject = JSONObject()
@@ -41,7 +41,7 @@ data class Installments(
             override fun deserialize(jsonObject: JSONObject): Installments {
                 return try {
                     Installments(
-                        plan = jsonObject.getStringOrNull(PLAN),
+                        plan = jsonObject.getString(PLAN),
                         value = jsonObject.optInt(VALUE, 1)
                     )
                 } catch (e: JSONException) {

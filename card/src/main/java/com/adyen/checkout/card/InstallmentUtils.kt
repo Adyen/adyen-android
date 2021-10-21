@@ -2,6 +2,7 @@ package com.adyen.checkout.card
 
 import android.content.Context
 import com.adyen.checkout.card.data.CardType
+import com.adyen.checkout.components.model.payments.request.Installments
 
 object InstallmentUtils {
 
@@ -52,10 +53,21 @@ object InstallmentUtils {
         return installmentOptionsList
     }
 
-    fun getTextForInstallmentOption(context: Context, installmentModel: InstallmentModel): String {
-        return when (installmentModel.option) {
+    fun getTextForInstallmentOption(context: Context, installmentModel: InstallmentModel?): String {
+        return when (installmentModel?.option) {
             InstallmentOption.REGULAR -> context.getString(installmentModel.textResId, installmentModel.value)
-            else -> context.getString(installmentModel.textResId)
+            InstallmentOption.REVOLVING, InstallmentOption.ONE_TIME -> context.getString(installmentModel.textResId)
+            else -> ""
         }
+    }
+
+    fun makeInstallmentModelObject(installmentModel: InstallmentModel?): Installments? {
+        return when (installmentModel?.option) {
+            InstallmentOption.REGULAR, InstallmentOption.REVOLVING -> {
+                Installments(installmentModel.option.type, installmentModel.value)
+            }
+            else -> null
+        }
+
     }
 }

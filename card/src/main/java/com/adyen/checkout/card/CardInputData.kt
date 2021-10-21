@@ -21,5 +21,5 @@ data class CardInputData(
     var postalCode: String = "",
     var isStorePaymentSelected: Boolean = false,
     var selectedCardIndex: Int = 0,
-    var installmentOption: Pair<InstallmentOption, Int?> = InstallmentOption.ONE_TIME to null
+    var installmentOption: InstallmentModel? = null
 ) : InputData

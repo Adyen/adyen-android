@@ -17,6 +17,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.View.OnFocusChangeListener
 import android.view.WindowManager
+import android.widget.AdapterView
 import androidx.annotation.StringRes
 import androidx.core.view.isVisible
 import androidx.lifecycle.LifecycleOwner
@@ -54,6 +55,7 @@ class CardView @JvmOverloads constructor(context: Context, attrs: AttributeSet? 
 
     private val mCardInputData = CardInputData()
     private var mImageLoader: ImageLoader? = null
+    private var installmentListAdapter: InstallmentListAdapter? = null
 
     init {
         orientation = VERTICAL
@@ -148,7 +150,7 @@ class CardView @JvmOverloads constructor(context: Context, attrs: AttributeSet? 
             setPostalCodeVisibility(cardOutputData.isPostalCodeRequired)
             handleCvcUIState(cardOutputData.cvcUIState)
             handleExpiryDateUIState(cardOutputData.expiryDateUIState)
-            initInstallments(cardOutputData.installmentOptions)
+            initInstallments(cardOutputData)
         }
         if (component.isStoredPaymentMethod() && component.requiresInput()) {
             binding.textInputLayoutSecurityCode.editText?.requestFocus()
@@ -465,19 +467,27 @@ class CardView @JvmOverloads constructor(context: Context, attrs: AttributeSet? 
         }
     }
 
-    private fun initInstallments(installmentOptions: List<InstallmentModel>) {
-        val mInstallmentTextInputLayout = binding.textInputLayoutInstallments
-        if (installmentOptions.isNotEmpty()) {
-            val adapter = InstallmentListAdapter(context)
-            adapter.setItems(installmentOptions)
-            binding.autoCompleteTextViewInstallments.apply {
-                inputType = 0
-                setAdapter(adapter)
-                setText(installmentOptions.firstOrNull()?.let { InstallmentUtils.getTextForInstallmentOption(context, it) })
+    private fun initInstallments(cardOutputData: CardOutputData) {
+        val installmentTextInputLayout = binding.textInputLayoutInstallments
+        val installmentAutoCompleteTextView = binding.autoCompleteTextViewInstallments
+        if (cardOutputData.installmentOptions.isNotEmpty()) {
+            if (installmentListAdapter == null) {
+                installmentListAdapter = InstallmentListAdapter(context)
+                installmentAutoCompleteTextView.apply {
+                    inputType = 0
+                    setAdapter(installmentListAdapter!!)
+                    if (cardOutputData.installmentState.value == null) {
+                        setText(InstallmentUtils.getTextForInstallmentOption(context, cardOutputData.installmentOptions.first()))
+                    }
+                    onItemClickListener = AdapterView.OnItemClickListener { _, _, position, _ ->
+                        updateInstallmentSelection(installmentListAdapter?.getItem(position))
+                    }
+                }
             }
-            mInstallmentTextInputLayout.isVisible = true
+            installmentListAdapter?.setItems(cardOutputData.installmentOptions)
+            installmentTextInputLayout.isVisible = true
         } else {
-            mInstallmentTextInputLayout.isVisible = false
+            installmentTextInputLayout.isVisible = false
         }
     }
 
@@ -541,6 +551,13 @@ class CardView @JvmOverloads constructor(context: Context, attrs: AttributeSet? 
         binding.switchStorePaymentMethod.isVisible = false
         binding.textInputLayoutCardHolder.isVisible = false
         binding.textInputLayoutPostalCode.isVisible = false
+    }
+
+    private fun updateInstallmentSelection(installmentModel: InstallmentModel?) {
+        installmentModel?.let {
+            mCardInputData.installmentOption = it
+            notifyInputDataChanged()
+        }
     }
 
     private fun getActivity(context: Context): Activity? {
