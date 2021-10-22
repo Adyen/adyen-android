@@ -20,7 +20,6 @@ import com.adyen.checkout.components.base.AddressVisibility;
 import com.adyen.checkout.components.base.BaseConfigurationBuilder;
 import com.adyen.checkout.components.base.Configuration;
 import com.adyen.checkout.core.api.Environment;
-import com.adyen.checkout.core.exception.CheckoutException;
 import com.adyen.checkout.core.util.ParcelUtils;
 
 import java.util.Arrays;
@@ -352,7 +351,12 @@ public class CardConfiguration extends Configuration {
             return this;
         }
 
-        // TODO docs
+        /**
+         * Configures the installment options to be provided to the shopper.
+         *
+         * @param installmentConfiguration The configuration object for installment options.
+         * @return {@link CardConfiguration.Builder}
+         */
         @NonNull
         public Builder setInstallmentConfigurations(@NonNull InstallmentConfiguration installmentConfiguration) {
             mBuilderInstallmentConfiguration = installmentConfiguration;

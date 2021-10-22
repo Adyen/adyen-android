@@ -8,6 +8,9 @@ private const val REVOLVING_INSTALLMENT_VALUE = 1
 
 internal object InstallmentUtils {
 
+    /**
+     * Create a list of installment options from [InstallmentConfiguration].
+     */
     fun makeInstallmentOptions(configuration: InstallmentConfiguration?, cardType: CardType?, isCardTypeReliable: Boolean): List<InstallmentModel> {
         val hasCardBasedInstallmentOptions = configuration?.cardBasedOptions != null
         val hasDefaultInstallmentOptions = configuration?.defaultOptions != null
@@ -57,6 +60,9 @@ internal object InstallmentUtils {
         return installmentOptionsList
     }
 
+    /**
+     * Get the text to be shown for different types of [InstallmentOption].
+     */
     fun getTextForInstallmentOption(context: Context, installmentModel: InstallmentModel?): String {
         return when (installmentModel?.option) {
             InstallmentOption.REGULAR -> context.getString(installmentModel.textResId, installmentModel.value)
@@ -65,6 +71,9 @@ internal object InstallmentUtils {
         }
     }
 
+    /**
+     * Populate the [Installments] model object from [InstallmentModel].
+     */
     fun makeInstallmentModelObject(installmentModel: InstallmentModel?): Installments? {
         return when (installmentModel?.option) {
             InstallmentOption.REGULAR, InstallmentOption.REVOLVING -> {
@@ -74,6 +83,9 @@ internal object InstallmentUtils {
         }
     }
 
+    /**
+     * Check whether the card based options contain only one option defined per card type.
+     */
     fun isCardBasedOptionsValid(cardBasedInstallmentOptions: List<InstallmentOptions.CardBasedInstallmentOptions>?): Boolean {
         val hasMultipleOptionsForSameCard = cardBasedInstallmentOptions
             ?.groupBy { it.cardType }
@@ -82,7 +94,10 @@ internal object InstallmentUtils {
         return !hasMultipleOptionsForSameCard
     }
 
-
+    /**
+     * Check whether [InstallmentOptions.values] in installment options defined in
+     * [InstallmentConfiguration] are valid (i.e. all the values are greater than 1).
+     */
     fun areInstallmentValuesValid(installmentConfiguration: InstallmentConfiguration): Boolean {
         val installmentOptions = mutableListOf<InstallmentOptions?>()
         installmentOptions.add(installmentConfiguration.defaultOptions)
