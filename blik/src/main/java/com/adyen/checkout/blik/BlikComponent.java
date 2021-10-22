@@ -9,6 +9,7 @@
 package com.adyen.checkout.blik;
 
 import androidx.annotation.NonNull;
+import androidx.lifecycle.SavedStateHandle;
 
 import com.adyen.checkout.components.GenericComponentState;
 import com.adyen.checkout.components.StoredPaymentComponentProvider;
@@ -30,12 +31,20 @@ public class BlikComponent extends BasePaymentComponent<BlikConfiguration, BlikI
 
     private static final String[] PAYMENT_METHOD_TYPES = {PaymentMethodTypes.BLIK};
 
-    public BlikComponent(@NonNull GenericPaymentMethodDelegate paymentMethodDelegate, @NonNull BlikConfiguration configuration) {
-        super(paymentMethodDelegate, configuration);
+    public BlikComponent(
+            @NonNull SavedStateHandle savedStateHandle,
+            @NonNull GenericPaymentMethodDelegate paymentMethodDelegate,
+            @NonNull BlikConfiguration configuration
+    ) {
+        super(savedStateHandle, paymentMethodDelegate, configuration);
     }
 
-    public BlikComponent(@NonNull GenericStoredPaymentDelegate paymentDelegate, @NonNull BlikConfiguration configuration) {
-        super(paymentDelegate, configuration);
+    public BlikComponent(
+            @NonNull SavedStateHandle savedStateHandle,
+            @NonNull GenericStoredPaymentDelegate paymentDelegate,
+            @NonNull BlikConfiguration configuration
+    ) {
+        super(savedStateHandle, paymentDelegate, configuration);
         // TODO: 09/12/2020 move this logic to base component, maybe create the inputdata from the delegate?
         inputDataChanged(new BlikInputData());
     }

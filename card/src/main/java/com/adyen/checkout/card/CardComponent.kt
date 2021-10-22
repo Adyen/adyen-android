@@ -9,6 +9,7 @@
 package com.adyen.checkout.card
 
 import androidx.annotation.StringRes
+import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.viewModelScope
 import com.adyen.checkout.card.api.model.Brand
 import com.adyen.checkout.card.data.CardType
@@ -44,9 +45,14 @@ private const val SINGLE_CARD_LIST_SIZE = 1
 
 @Suppress("TooManyFunctions")
 class CardComponent private constructor(
+    savedStateHandle: SavedStateHandle,
     private val cardDelegate: CardDelegate,
     cardConfiguration: CardConfiguration
-) : BasePaymentComponent<CardConfiguration, CardInputData, CardOutputData, CardComponentState>(cardDelegate, cardConfiguration) {
+) : BasePaymentComponent<CardConfiguration, CardInputData, CardOutputData, CardComponentState>(
+    savedStateHandle,
+    cardDelegate,
+    cardConfiguration
+) {
 
     private var storedPaymentInputData: CardInputData? = null
     private var publicKey: String? = null
@@ -88,7 +94,12 @@ class CardComponent private constructor(
         }
     }
 
-    constructor(storedCardDelegate: StoredCardDelegate, cardConfiguration: CardConfiguration) : this(
+    constructor(
+        savedStateHandle: SavedStateHandle,
+        storedCardDelegate: StoredCardDelegate,
+        cardConfiguration: CardConfiguration
+    ) : this(
+        savedStateHandle,
         storedCardDelegate as CardDelegate,
         cardConfiguration
     ) {
@@ -100,7 +111,12 @@ class CardComponent private constructor(
         }
     }
 
-    constructor(cardDelegate: NewCardDelegate, cardConfiguration: CardConfiguration) : this(
+    constructor(
+        savedStateHandle: SavedStateHandle,
+        cardDelegate: NewCardDelegate,
+        cardConfiguration: CardConfiguration
+    ) : this(
+        savedStateHandle,
         cardDelegate as CardDelegate,
         cardConfiguration
     )

@@ -8,8 +8,10 @@
 package com.adyen.checkout.googlepay
 
 import android.app.Application
+import android.os.Bundle
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.ViewModelStoreOwner
+import androidx.savedstate.SavedStateRegistryOwner
 import com.adyen.checkout.components.ComponentAvailableCallback
 import com.adyen.checkout.components.PaymentComponentProvider
 import com.adyen.checkout.components.PaymentMethodAvailabilityCheck
@@ -34,12 +36,25 @@ private val TAG = LogUtil.getTag()
 class GooglePayProvider :
     PaymentComponentProvider<GooglePayComponent, GooglePayConfiguration>,
     PaymentMethodAvailabilityCheck<GooglePayConfiguration> {
-    override operator fun get(
-        viewModelStoreOwner: ViewModelStoreOwner,
+
+    override fun <T> get(
+        owner: T,
         paymentMethod: PaymentMethod,
         configuration: GooglePayConfiguration
+    ): GooglePayComponent where T : ViewModelStoreOwner, T : SavedStateRegistryOwner {
+        return get(owner, owner, paymentMethod, configuration, null)
+    }
+
+    override fun get(
+        savedStateRegistryOwner: SavedStateRegistryOwner,
+        viewModelStoreOwner: ViewModelStoreOwner,
+        paymentMethod: PaymentMethod,
+        configuration: GooglePayConfiguration,
+        defaultArgs: Bundle?
     ): GooglePayComponent {
-        val googlePayFactory = viewModelFactory { GooglePayComponent(GenericPaymentMethodDelegate(paymentMethod), configuration) }
+        val googlePayFactory = viewModelFactory(savedStateRegistryOwner, defaultArgs) { savedStateHandle ->
+            GooglePayComponent(savedStateHandle, GenericPaymentMethodDelegate(paymentMethod), configuration)
+        }
         return ViewModelProvider(viewModelStoreOwner, googlePayFactory).get(GooglePayComponent::class.java)
     }
 

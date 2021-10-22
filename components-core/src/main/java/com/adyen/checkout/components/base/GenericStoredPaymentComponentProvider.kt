@@ -8,8 +8,11 @@
 
 package com.adyen.checkout.components.base
 
+import android.os.Bundle
+import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.ViewModelStoreOwner
+import androidx.savedstate.SavedStateRegistryOwner
 import com.adyen.checkout.components.StoredPaymentComponentProvider
 import com.adyen.checkout.components.base.lifecycle.viewModelFactory
 import com.adyen.checkout.components.model.paymentmethods.PaymentMethod
@@ -20,30 +23,52 @@ class GenericStoredPaymentComponentProvider<
     ConfigurationT : Configuration
     >(private val componentClass: Class<BaseComponentT>) : StoredPaymentComponentProvider<BaseComponentT, ConfigurationT> {
 
-    override fun get(
-        viewModelStoreOwner: ViewModelStoreOwner,
+    override fun <T> get(
+        owner: T,
         storedPaymentMethod: StoredPaymentMethod,
         configuration: ConfigurationT
+    ): BaseComponentT where T : ViewModelStoreOwner, T : SavedStateRegistryOwner {
+        return get(owner, owner, storedPaymentMethod, configuration, null)
+    }
+
+    override fun get(
+        savedStateRegistryOwner: SavedStateRegistryOwner,
+        viewModelStoreOwner: ViewModelStoreOwner,
+        storedPaymentMethod: StoredPaymentMethod,
+        configuration: ConfigurationT,
+        defaultArgs: Bundle?
     ): BaseComponentT {
-        val genericStoredFactory: ViewModelProvider.Factory = viewModelFactory {
+        val genericStoredFactory: ViewModelProvider.Factory = viewModelFactory(savedStateRegistryOwner, defaultArgs) { savedStateHandle ->
             componentClass.getConstructor(
+                SavedStateHandle::class.java,
                 GenericStoredPaymentDelegate::class.java,
                 configuration.javaClass
-            ).newInstance(GenericStoredPaymentDelegate(storedPaymentMethod), configuration)
+            ).newInstance(savedStateHandle, GenericStoredPaymentDelegate(storedPaymentMethod), configuration)
         }
         return ViewModelProvider(viewModelStoreOwner, genericStoredFactory)[componentClass]
     }
 
-    override fun get(
-        viewModelStoreOwner: ViewModelStoreOwner,
+    override fun <T> get(
+        owner: T,
         paymentMethod: PaymentMethod,
         configuration: ConfigurationT
+    ): BaseComponentT where T : ViewModelStoreOwner, T : SavedStateRegistryOwner {
+        return get(owner, owner, paymentMethod, configuration, null)
+    }
+
+    override fun get(
+        savedStateRegistryOwner: SavedStateRegistryOwner,
+        viewModelStoreOwner: ViewModelStoreOwner,
+        paymentMethod: PaymentMethod,
+        configuration: ConfigurationT,
+        defaultArgs: Bundle?
     ): BaseComponentT {
-        val genericFactory: ViewModelProvider.Factory = viewModelFactory {
+        val genericFactory: ViewModelProvider.Factory = viewModelFactory(savedStateRegistryOwner, defaultArgs) { savedStateHandle ->
             componentClass.getConstructor(
+                SavedStateHandle::class.java,
                 GenericPaymentMethodDelegate::class.java,
                 configuration.javaClass
-            ).newInstance(GenericPaymentMethodDelegate(paymentMethod), configuration)
+            ).newInstance(savedStateHandle, GenericPaymentMethodDelegate(paymentMethod), configuration)
         }
         return ViewModelProvider(viewModelStoreOwner, genericFactory)[componentClass]
     }

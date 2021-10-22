@@ -13,6 +13,7 @@ import android.app.Application;
 import android.content.Intent;
 
 import androidx.annotation.NonNull;
+import androidx.lifecycle.SavedStateHandle;
 
 import com.adyen.checkout.components.ActionComponentProvider;
 import com.adyen.checkout.components.base.BaseActionComponent;
@@ -56,8 +57,12 @@ public class WeChatPayActionComponent extends BaseActionComponent<WeChatPayActio
         }
     };
 
-    public WeChatPayActionComponent(@NonNull Application application, @NonNull WeChatPayActionConfiguration configuration) {
-        super(application, configuration);
+    public WeChatPayActionComponent(
+            @NonNull SavedStateHandle savedStateHandle,
+            @NonNull Application application,
+            @NonNull WeChatPayActionConfiguration configuration
+    ) {
+        super(savedStateHandle, application, configuration);
         mApi = WXAPIFactory.createWXAPI(application, null, true);
     }
 

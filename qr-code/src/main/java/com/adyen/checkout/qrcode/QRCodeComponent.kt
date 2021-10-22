@@ -15,6 +15,7 @@ import android.os.CountDownTimer
 import androidx.lifecycle.LifecycleOwner
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.Observer
+import androidx.lifecycle.SavedStateHandle
 import com.adyen.checkout.components.ActionComponentData
 import com.adyen.checkout.components.ActionComponentProvider
 import com.adyen.checkout.components.ViewableComponent
@@ -42,11 +43,12 @@ private const val HUNDRED = 100
 
 @Suppress("TooManyFunctions")
 class QRCodeComponent(
+    savedStateHandle: SavedStateHandle,
     application: Application,
     configuration: QRCodeConfiguration,
     private val redirectDelegate: RedirectDelegate
 ) :
-    BaseActionComponent<QRCodeConfiguration>(application, configuration),
+    BaseActionComponent<QRCodeConfiguration>(savedStateHandle, application, configuration),
     ViewableComponent<QRCodeOutputData, QRCodeConfiguration, ActionComponentData>,
     IntentHandlingComponent {
 

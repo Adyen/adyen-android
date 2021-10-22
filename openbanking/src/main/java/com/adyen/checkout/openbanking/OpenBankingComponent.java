@@ -9,6 +9,7 @@
 package com.adyen.checkout.openbanking;
 
 import androidx.annotation.NonNull;
+import androidx.lifecycle.SavedStateHandle;
 
 import com.adyen.checkout.components.PaymentComponentProvider;
 import com.adyen.checkout.components.base.GenericPaymentComponentProvider;
@@ -29,8 +30,12 @@ public final class OpenBankingComponent extends IssuerListComponent<OpenBankingP
 
     private static final String[] PAYMENT_METHOD_TYPES = {PaymentMethodTypes.OPEN_BANKING};
 
-    public OpenBankingComponent(@NonNull GenericPaymentMethodDelegate paymentMethodDelegate, @NonNull OpenBankingConfiguration configuration) {
-        super(paymentMethodDelegate, configuration);
+    public OpenBankingComponent(
+            @NonNull SavedStateHandle savedStateHandle,
+            @NonNull GenericPaymentMethodDelegate paymentMethodDelegate,
+            @NonNull OpenBankingConfiguration configuration
+    ) {
+        super(savedStateHandle, paymentMethodDelegate, configuration);
     }
 
     @NonNull

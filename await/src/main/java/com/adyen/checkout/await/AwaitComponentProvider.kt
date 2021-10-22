@@ -9,8 +9,10 @@
 package com.adyen.checkout.await
 
 import android.app.Application
+import android.os.Bundle
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.ViewModelStoreOwner
+import androidx.savedstate.SavedStateRegistryOwner
 import com.adyen.checkout.components.ActionComponentProvider
 import com.adyen.checkout.components.base.lifecycle.viewModelFactory
 import com.adyen.checkout.components.model.payments.response.Action
@@ -20,21 +22,30 @@ import com.adyen.checkout.components.util.PaymentMethodTypes
 private val PAYMENT_METHODS = listOf(PaymentMethodTypes.BLIK, PaymentMethodTypes.MB_WAY)
 
 class AwaitComponentProvider : ActionComponentProvider<AwaitComponent, AwaitConfiguration> {
-    override fun get(
-        viewModelStoreOwner: ViewModelStoreOwner,
+    override fun <T> get(
+        owner: T,
         application: Application,
         configuration: AwaitConfiguration
+    ): AwaitComponent where T : SavedStateRegistryOwner, T : ViewModelStoreOwner {
+        return get(owner, owner, application, configuration, null)
+    }
+
+    override fun get(
+        savedStateRegistryOwner: SavedStateRegistryOwner,
+        viewModelStoreOwner: ViewModelStoreOwner,
+        application: Application,
+        configuration: AwaitConfiguration,
+        defaultArgs: Bundle?
     ): AwaitComponent {
-        val awaitFactory = viewModelFactory {
+        val awaitFactory = viewModelFactory(savedStateRegistryOwner, defaultArgs) { savedStateHandle ->
             AwaitComponent(
+                savedStateHandle,
                 application,
                 configuration
             )
         }
         return ViewModelProvider(viewModelStoreOwner, awaitFactory).get(AwaitComponent::class.java)
     }
-
-    override fun requiresConfiguration(): Boolean = true
 
     override fun getSupportedActionTypes(): List<String> {
         return listOf(AwaitAction.ACTION_TYPE)

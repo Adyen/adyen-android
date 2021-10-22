@@ -44,13 +44,11 @@ class ActionHandler(
 
     fun saveState(bundle: Bundle?) {
         bundle?.putParcelable(BUNDLE_ACTION, loadedAction)
-        loadedComponent?.saveState(bundle)
     }
 
     fun restoreState(activity: FragmentActivity, bundle: Bundle?) {
         loadedAction = bundle?.getParcelable(BUNDLE_ACTION)
         loadComponent(activity, loadedAction)
-        loadedComponent?.restoreState(bundle)
     }
 
     @SuppressWarnings("ReturnCount")

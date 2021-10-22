@@ -13,6 +13,7 @@ import android.content.Intent;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.lifecycle.SavedStateHandle;
 
 import com.adyen.checkout.components.base.ActivityResultHandlingComponent;
 import com.adyen.checkout.components.base.BasePaymentComponent;
@@ -43,8 +44,12 @@ public class GooglePayComponent extends
 
     public static final String[] PAYMENT_METHOD_TYPES = {PaymentMethodTypes.GOOGLE_PAY, PaymentMethodTypes.GOOGLE_PAY_LEGACY};
 
-    public GooglePayComponent(@NonNull GenericPaymentMethodDelegate paymentMethodDelegate, @NonNull GooglePayConfiguration configuration) {
-        super(paymentMethodDelegate, configuration);
+    public GooglePayComponent(
+            @NonNull SavedStateHandle savedStateHandle,
+            @NonNull GenericPaymentMethodDelegate paymentMethodDelegate,
+            @NonNull GooglePayConfiguration configuration
+    ) {
+        super(savedStateHandle, paymentMethodDelegate, configuration);
     }
 
     @NonNull

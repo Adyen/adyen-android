@@ -7,8 +7,10 @@
  */
 package com.adyen.checkout.card
 
+import android.os.Bundle
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.ViewModelStoreOwner
+import androidx.savedstate.SavedStateRegistryOwner
 import com.adyen.checkout.card.data.CardType
 import com.adyen.checkout.card.repository.BinLookupRepository
 import com.adyen.checkout.card.repository.PublicKeyRepository
@@ -22,17 +24,28 @@ import com.adyen.checkout.core.log.Logger
 private val TAG = LogUtil.getTag()
 
 class CardComponentProvider : StoredPaymentComponentProvider<CardComponent, CardConfiguration> {
-    override fun get(
-        viewModelStoreOwner: ViewModelStoreOwner,
+    override fun <T> get(
+        owner: T,
         paymentMethod: PaymentMethod,
         configuration: CardConfiguration
+    ): CardComponent where T : SavedStateRegistryOwner, T : ViewModelStoreOwner {
+        return get(owner, owner, paymentMethod, configuration, null)
+    }
+
+    override fun get(
+        savedStateRegistryOwner: SavedStateRegistryOwner,
+        viewModelStoreOwner: ViewModelStoreOwner,
+        paymentMethod: PaymentMethod,
+        configuration: CardConfiguration,
+        defaultArgs: Bundle?
     ): CardComponent {
         val verifiedConfiguration = checkSupportedCardTypes(paymentMethod, configuration)
         val binLookupRepository = BinLookupRepository()
         val publicKeyRepository = PublicKeyRepository()
         val cardValidationMapper = CardValidationMapper()
-        val factory = viewModelFactory {
+        val factory = viewModelFactory(savedStateRegistryOwner, defaultArgs) { savedStateHandle ->
             CardComponent(
+                savedStateHandle,
                 NewCardDelegate(
                     paymentMethod,
                     verifiedConfiguration,
@@ -46,14 +59,25 @@ class CardComponentProvider : StoredPaymentComponentProvider<CardComponent, Card
         return ViewModelProvider(viewModelStoreOwner, factory).get(CardComponent::class.java)
     }
 
-    override fun get(
-        viewModelStoreOwner: ViewModelStoreOwner,
+    override fun <T> get(
+        owner: T,
         storedPaymentMethod: StoredPaymentMethod,
         configuration: CardConfiguration
+    ): CardComponent where T : SavedStateRegistryOwner, T : ViewModelStoreOwner {
+        return get(owner, owner, storedPaymentMethod, configuration, null)
+    }
+
+    override fun get(
+        savedStateRegistryOwner: SavedStateRegistryOwner,
+        viewModelStoreOwner: ViewModelStoreOwner,
+        storedPaymentMethod: StoredPaymentMethod,
+        configuration: CardConfiguration,
+        defaultArgs: Bundle?
     ): CardComponent {
         val publicKeyRepository = PublicKeyRepository()
-        val factory = viewModelFactory {
+        val factory = viewModelFactory(savedStateRegistryOwner, defaultArgs) { savedStateHandle ->
             CardComponent(
+                savedStateHandle,
                 StoredCardDelegate(
                     storedPaymentMethod,
                     configuration,
