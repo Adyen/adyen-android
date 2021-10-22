@@ -6,7 +6,7 @@ import com.adyen.checkout.components.model.payments.request.Installments
 
 private const val REVOLVING_INSTALLMENT_VALUE = 1
 
-object InstallmentUtils {
+internal object InstallmentUtils {
 
     fun makeInstallmentOptions(configuration: InstallmentConfiguration?, cardType: CardType?, isCardTypeReliable: Boolean): List<InstallmentModel> {
         val hasCardBasedInstallmentOptions = configuration?.cardBasedOptions != null
@@ -72,5 +72,22 @@ object InstallmentUtils {
             }
             else -> null
         }
+    }
+
+    fun isCardBasedOptionsValid(cardBasedInstallmentOptions: List<InstallmentOptions.CardBasedInstallmentOptions>?): Boolean {
+        val hasMultipleOptionsForSameCard = cardBasedInstallmentOptions
+            ?.groupBy { it.cardType }
+            ?.values
+            ?.any { it.size > 1 } ?: false
+        return !hasMultipleOptionsForSameCard
+    }
+
+
+    fun areInstallmentValuesValid(installmentConfiguration: InstallmentConfiguration): Boolean {
+        val installmentOptions = mutableListOf<InstallmentOptions?>()
+        installmentOptions.add(installmentConfiguration.defaultOptions)
+        installmentOptions.addAll(installmentConfiguration.cardBasedOptions)
+        val hasInvalidValue = installmentOptions.filterNotNull().any { it.values.any { it <= 1 } }
+        return !hasInvalidValue
     }
 }

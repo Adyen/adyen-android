@@ -20,6 +20,7 @@ import com.adyen.checkout.components.base.AddressVisibility;
 import com.adyen.checkout.components.base.BaseConfigurationBuilder;
 import com.adyen.checkout.components.base.Configuration;
 import com.adyen.checkout.core.api.Environment;
+import com.adyen.checkout.core.exception.CheckoutException;
 import com.adyen.checkout.core.util.ParcelUtils;
 
 import java.util.Arrays;

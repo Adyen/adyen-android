@@ -3,6 +3,7 @@ package com.adyen.checkout.card
 import android.os.Parcel
 import android.os.Parcelable
 import com.adyen.checkout.card.data.CardType
+import com.adyen.checkout.core.exception.CheckoutException
 import com.adyen.checkout.core.util.ParcelUtils
 
 enum class InstallmentOption(val type: String?) {
@@ -12,15 +13,24 @@ enum class InstallmentOption(val type: String?) {
 }
 
 data class InstallmentConfiguration(
-    val defaultOptions: InstallmentOptions.DefaultInstallmentOptions?,
-    val cardBasedOptions: List<InstallmentOptions.CardBasedInstallmentOptions>?
+    val defaultOptions: InstallmentOptions.DefaultInstallmentOptions? = null,
+    val cardBasedOptions: List<InstallmentOptions.CardBasedInstallmentOptions> = emptyList()
 ) : Parcelable {
+
+    init {
+        if (!InstallmentUtils.isCardBasedOptionsValid(cardBasedOptions)) {
+            throw CheckoutException("Installment Configuration has multiple rules for same card type.")
+        }
+        if (!InstallmentUtils.areInstallmentValuesValid(this)) {
+            throw CheckoutException("Installment Configuration contains invalid values for options. Values must be greater than 1.")
+        }
+    }
 
     @Suppress("UNCHECKED_CAST")
     private constructor(parcel: Parcel) : this(
         parcel.readParcelable(InstallmentOptions.DefaultInstallmentOptions::class.java.classLoader),
         parcel.readArrayList(InstallmentOptions.CardBasedInstallmentOptions::class.java.classLoader)
-            as? List<InstallmentOptions.CardBasedInstallmentOptions>
+            as List<InstallmentOptions.CardBasedInstallmentOptions>
     )
 
     companion object {
