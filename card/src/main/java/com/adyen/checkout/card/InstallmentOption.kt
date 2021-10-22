@@ -39,11 +39,24 @@ data class InstallmentConfiguration(
     override fun describeContents() = Parcelable.CONTENTS_FILE_DESCRIPTOR
 }
 
+/**
+ * @param values Monthly installment options (e.g. {2, 3, 4, 6})
+ * @param includeRevolving Whether revolving installment should be included as an option
+ */
 sealed class InstallmentOptions(
     open val values: List<Int>,
     open val includeRevolving: Boolean
 ) : Parcelable {
 
+    companion object {
+        private const val STARTING_INSTALLMENT_VALUE = 2
+    }
+
+    /**
+     * @param values see [InstallmentOptions.values]
+     * @param includeRevolving see [InstallmentOptions.includeRevolving]
+     * @param cardType a [CardType] to apply the given options
+     */
     data class CardBasedInstallmentOptions(
         override val values: List<Int>,
         override val includeRevolving: Boolean,
@@ -57,6 +70,14 @@ sealed class InstallmentOptions(
                 override fun newArray(size: Int) = arrayOfNulls<CardBasedInstallmentOptions>(size)
             }
         }
+
+        /**
+         * @param maxInstallments Maximum number of installments
+         *
+         * Creates a [DefaultInstallmentOptions] instance with values in range [2, maxInstallments]
+         */
+        constructor(maxInstallments: Int, includeRevolving: Boolean, cardType: CardType):
+            this((STARTING_INSTALLMENT_VALUE..maxInstallments).toList(), includeRevolving, cardType)
 
         @Suppress("UNCHECKED_CAST")
         private constructor(parcel: Parcel) : this(
@@ -73,6 +94,10 @@ sealed class InstallmentOptions(
         override fun describeContents() = Parcelable.CONTENTS_FILE_DESCRIPTOR
     }
 
+    /**
+     * @param values see [InstallmentOptions.values]
+     * @param includeRevolving see [InstallmentOptions.includeRevolving]
+     */
     data class DefaultInstallmentOptions(
         override val values: List<Int>,
         override val includeRevolving: Boolean
@@ -85,6 +110,14 @@ sealed class InstallmentOptions(
                 override fun newArray(size: Int) = arrayOfNulls<DefaultInstallmentOptions>(size)
             }
         }
+
+        /**
+         * @param maxInstallments Maximum number of installments
+         *
+         * Creates a [DefaultInstallmentOptions] instance with values in range [2, maxInstallments]
+         */
+        constructor(maxInstallments: Int, includeRevolving: Boolean):
+            this((STARTING_INSTALLMENT_VALUE..maxInstallments).toList(), includeRevolving)
 
         @Suppress("UNCHECKED_CAST")
         private constructor(parcel: Parcel) : this(
