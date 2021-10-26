@@ -7,6 +7,7 @@
  */
 package com.adyen.checkout.giftcard
 
+import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.viewModelScope
 import com.adyen.checkout.components.GenericComponentState
 import com.adyen.checkout.components.PaymentComponentProvider
@@ -36,12 +37,13 @@ private val PAYMENT_METHOD_TYPES = arrayOf(PaymentMethodTypes.GIFTCARD)
  * @param configuration [GiftCardConfiguration]
  */
 class GiftCardComponent(
+    savedStateHandle: SavedStateHandle,
     private val paymentMethodDelegate: GenericPaymentMethodDelegate,
     configuration: GiftCardConfiguration,
     private val publicKeyRepository: PublicKeyRepository
 ) :
     BasePaymentComponent<GiftCardConfiguration, GiftCardInputData, GiftCardOutputData,
-        GenericComponentState<GiftCardPaymentMethod>>(paymentMethodDelegate, configuration) {
+        GenericComponentState<GiftCardPaymentMethod>>(savedStateHandle, paymentMethodDelegate, configuration) {
 
     companion object {
         @JvmStatic

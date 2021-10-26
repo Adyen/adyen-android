@@ -250,7 +250,7 @@ internal fun getComponentFor(
             EPSComponent.PROVIDER.get(fragment, paymentMethod, epsConfig)
         }
         PaymentMethodTypes.GIFTCARD -> {
-            val giftcardConfiguration: GiftCardConfiguration = dropInConfiguration.getConfigurationForPaymentMethod(PaymentMethodTypes.GIFTCARD, context)
+            val giftcardConfiguration: GiftCardConfiguration = dropInConfiguration.getConfigurationForPaymentMethod(PaymentMethodTypes.GIFTCARD)
             GiftCardComponent.PROVIDER.get(fragment, paymentMethod, giftcardConfiguration)
         }
         PaymentMethodTypes.GOOGLE_PAY -> {

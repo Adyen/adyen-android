@@ -388,7 +388,7 @@ class DropInActivity : AppCompatActivity(), DropInBottomSheetDialogFragment.Prot
             balanceDataQueue = paymentComponentState
             return
         }
-        isWaitingResult = true
+        dropInViewModel.isWaitingResult = true
         setLoading(true)
         dropInService?.requestBalanceCall(paymentMethod)
     }
@@ -506,7 +506,7 @@ class DropInActivity : AppCompatActivity(), DropInBottomSheetDialogFragment.Prot
 
     private fun handleBalanceResult(balanceJson: String) {
         Logger.d(TAG, "handleBalanceResult")
-        isWaitingResult = false
+        dropInViewModel.isWaitingResult = false
         val result = dropInViewModel.handleBalanceResult(balanceJson)
         when (result) {
             is GiftCardResult.Error -> showError(getString(result.errorMessage), result.reason, result.terminateDropIn)
