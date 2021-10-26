@@ -20,10 +20,10 @@ internal object InstallmentUtils {
 
         return when {
             hasOptionsForCardType -> {
-                makeInstallmentModelList(configuration?.cardBasedOptions?.firstOrNull { it.cardType == cardType }!!)
+                makeInstallmentModelList(configuration?.cardBasedOptions?.firstOrNull { it.cardType == cardType })
             }
             hasDefaultInstallmentOptions -> {
-                makeInstallmentModelList(configuration?.defaultOptions!!)
+                makeInstallmentModelList(configuration?.defaultOptions)
             }
             else -> {
                 emptyList()
@@ -31,7 +31,8 @@ internal object InstallmentUtils {
         }
     }
 
-    private fun makeInstallmentModelList(installmentOptions: InstallmentOptions): List<InstallmentModel> {
+    private fun makeInstallmentModelList(installmentOptions: InstallmentOptions?): List<InstallmentModel> {
+        if (installmentOptions == null) return emptyList()
         val installmentOptionsList = mutableListOf<InstallmentModel>()
         val oneTimeOption = InstallmentModel(
             textResId = R.string.checkout_card_installments_option_one_time,

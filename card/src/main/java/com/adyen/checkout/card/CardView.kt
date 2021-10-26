@@ -473,11 +473,13 @@ class CardView @JvmOverloads constructor(context: Context, attrs: AttributeSet? 
         if (cardOutputData.installmentOptions.isNotEmpty()) {
             if (installmentListAdapter == null) {
                 installmentListAdapter = InstallmentListAdapter(context)
-                installmentAutoCompleteTextView.apply {
-                    inputType = 0
-                    setAdapter(installmentListAdapter!!)
-                    onItemClickListener = AdapterView.OnItemClickListener { _, _, position, _ ->
-                        updateInstallmentSelection(installmentListAdapter?.getItem(position))
+                installmentListAdapter?.let {
+                    installmentAutoCompleteTextView.apply {
+                        inputType = 0
+                        setAdapter(it)
+                        onItemClickListener = AdapterView.OnItemClickListener { _, _, position, _ ->
+                            updateInstallmentSelection(installmentListAdapter?.getItem(position))
+                        }
                     }
                 }
             }
