@@ -181,7 +181,8 @@ class NewCardDelegate(
     override fun getInstallmentOptions(
         installmentConfiguration: InstallmentConfiguration?,
         cardType: CardType?,
-        isCardTypeReliable: Boolean): List<InstallmentModel> {
+        isCardTypeReliable: Boolean
+    ): List<InstallmentModel> {
         return InstallmentUtils.makeInstallmentOptions(installmentConfiguration, cardType, isCardTypeReliable)
     }
 

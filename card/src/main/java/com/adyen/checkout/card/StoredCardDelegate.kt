@@ -140,7 +140,8 @@ class StoredCardDelegate(
     override fun getInstallmentOptions(
         installmentConfiguration: InstallmentConfiguration?,
         cardType: CardType?,
-        isCardTypeReliable: Boolean): List<InstallmentModel> {
+        isCardTypeReliable: Boolean
+    ): List<InstallmentModel> {
         return emptyList()
     }
 

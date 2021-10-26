@@ -150,7 +150,7 @@ class CardView @JvmOverloads constructor(context: Context, attrs: AttributeSet? 
             setPostalCodeVisibility(cardOutputData.isPostalCodeRequired)
             handleCvcUIState(cardOutputData.cvcUIState)
             handleExpiryDateUIState(cardOutputData.expiryDateUIState)
-            initInstallments(cardOutputData)
+            updateInstallments(cardOutputData)
         }
         if (component.isStoredPaymentMethod() && component.requiresInput()) {
             binding.textInputLayoutSecurityCode.editText?.requestFocus()
@@ -467,21 +467,12 @@ class CardView @JvmOverloads constructor(context: Context, attrs: AttributeSet? 
         }
     }
 
-    private fun initInstallments(cardOutputData: CardOutputData) {
+    private fun updateInstallments(cardOutputData: CardOutputData) {
         val installmentTextInputLayout = binding.textInputLayoutInstallments
         val installmentAutoCompleteTextView = binding.autoCompleteTextViewInstallments
         if (cardOutputData.installmentOptions.isNotEmpty()) {
             if (installmentListAdapter == null) {
-                installmentListAdapter = InstallmentListAdapter(context)
-                installmentListAdapter?.let {
-                    installmentAutoCompleteTextView.apply {
-                        inputType = 0
-                        setAdapter(it)
-                        onItemClickListener = AdapterView.OnItemClickListener { _, _, position, _ ->
-                            updateInstallmentSelection(installmentListAdapter?.getItem(position))
-                        }
-                    }
-                }
+                initInstallments()
             }
             if (cardOutputData.installmentState.value == null) {
                 updateInstallmentSelection(cardOutputData.installmentOptions.first())
@@ -495,6 +486,19 @@ class CardView @JvmOverloads constructor(context: Context, attrs: AttributeSet? 
             installmentTextInputLayout.isVisible = true
         } else {
             installmentTextInputLayout.isVisible = false
+        }
+    }
+
+    private fun initInstallments() {
+        installmentListAdapter = InstallmentListAdapter(context)
+        installmentListAdapter?.let {
+            binding.autoCompleteTextViewInstallments.apply {
+                inputType = 0
+                setAdapter(it)
+                onItemClickListener = AdapterView.OnItemClickListener { _, _, position, _ ->
+                    updateInstallmentSelection(installmentListAdapter?.getItem(position))
+                }
+            }
         }
     }
 
