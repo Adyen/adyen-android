@@ -42,8 +42,8 @@ private val TAG = LogUtil.getTag()
 private val PAYMENT_METHOD_TYPES = arrayOf(PaymentMethodTypes.SCHEME)
 private const val BIN_VALUE_LENGTH = 6
 private const val LAST_FOUR_LENGTH = 4
-private const val FIRST_CARD_INDEX = 0
 private const val SINGLE_CARD_LIST_SIZE = 1
+private const val DEBIT_FUNDING_SOURCE = "debit"
 
 @Suppress("TooManyFunctions")
 class CardComponent private constructor(
@@ -409,11 +409,12 @@ class CardComponent private constructor(
     }
 
     private fun isInstallmentsRequired(cardOutputData: CardOutputData): Boolean {
+        val isDebit = cardDelegate.getFundingSource() == DEBIT_FUNDING_SOURCE
         val selectedCard = cardOutputData.detectedCardTypes.firstOrNull { it.isSelected } ?: cardOutputData.detectedCardTypes.firstOrNull()
         val installmentConfiguration = configuration.installmentConfiguration
         val areInstallmentsApplicableForCardType = installmentConfiguration?.cardBasedOptions != null &&
             installmentConfiguration.cardBasedOptions.any { it.cardType == selectedCard?.cardType }
-        return installmentConfiguration?.defaultOptions != null || areInstallmentsApplicableForCardType
+        return (installmentConfiguration?.defaultOptions != null || areInstallmentsApplicableForCardType) && !isDebit
     }
 
     private fun makeAddressData(outputData: CardOutputData): Address {
