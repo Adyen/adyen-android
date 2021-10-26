@@ -15,12 +15,10 @@
 
     <androidx.appcompat.widget.AppCompatTextView
         android:id="@+id/textView_installmentOption"
+        style="@style/AdyenCheckout.InstallmentOptionTextView"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:layout_gravity="center_vertical"
         android:layout_weight="1"
-        android:textColor="@color/textColor"
-        android:textSize="16sp"
         tools:text="One time payment" />
 
 </LinearLayout>
