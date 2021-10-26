@@ -28,6 +28,7 @@ import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.launch
 
 private val TAG = LogUtil.getTag()
+private const val DEBIT_FUNDING_SOURCE = "debit"
 
 @Suppress("TooManyFunctions")
 class NewCardDelegate(
@@ -183,7 +184,12 @@ class NewCardDelegate(
         cardType: CardType?,
         isCardTypeReliable: Boolean
     ): List<InstallmentModel> {
-        return InstallmentUtils.makeInstallmentOptions(installmentConfiguration, cardType, isCardTypeReliable)
+        val isDebit = getFundingSource() == DEBIT_FUNDING_SOURCE
+        return if (isDebit) {
+            emptyList()
+        } else {
+            InstallmentUtils.makeInstallmentOptions(installmentConfiguration, cardType, isCardTypeReliable)
+        }
     }
 
     private fun detectCardLocally(cardNumber: String): List<DetectedCardType> {
