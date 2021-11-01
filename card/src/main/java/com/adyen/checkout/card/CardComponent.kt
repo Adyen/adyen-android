@@ -351,6 +351,8 @@ class CardComponent private constructor(
             cardPaymentMethod.threeDS2SdkVersion = ThreeDS2Service.INSTANCE.sdkVersion
         } catch (e: ClassNotFoundException) {
             Logger.e(TAG, "threeDS2SdkVersion not set because 3DS2 SDK is not present in project.")
+        } catch (e: NoClassDefFoundError) {
+            Logger.e(TAG, "threeDS2SdkVersion not set because 3DS2 SDK is not present in project.")
         }
 
         val paymentComponentData = PaymentComponentData<CardPaymentMethod>().apply {
