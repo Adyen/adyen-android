@@ -337,7 +337,6 @@ class CardComponent private constructor(
                     publicKey
                 )
             } ?: throw CheckoutException("Encryption failed because public key cannot be found.")
-
             cardPaymentMethod.taxNumber = stateOutputData.kcpBirthDateOrTaxNumberState.value
         }
 
@@ -351,25 +350,11 @@ class CardComponent private constructor(
             cardPaymentMethod.threeDS2SdkVersion = ThreeDS2Service.INSTANCE.sdkVersion
         } catch (e: ClassNotFoundException) {
             Logger.e(TAG, "threeDS2SdkVersion not set because 3DS2 SDK is not present in project.")
+        } catch (e: NoClassDefFoundError) {
+            Logger.e(TAG, "threeDS2SdkVersion not set because 3DS2 SDK is not present in project.")
         }
 
-        val paymentComponentData = PaymentComponentData<CardPaymentMethod>().apply {
-            paymentMethod = cardPaymentMethod
-            setStorePaymentMethod(stateOutputData.isStoredPaymentMethodEnable)
-            shopperReference = configuration.shopperReference
-
-            if (cardDelegate.isSocialSecurityNumberRequired()) {
-                socialSecurityNumber = stateOutputData.socialSecurityNumberState.value
-            }
-
-            if (cardDelegate.isPostalCodeRequired()) {
-                billingAddress = makeAddressData(stateOutputData)
-            }
-
-            if (isInstallmentsRequired(stateOutputData)) {
-                installments = InstallmentUtils.makeInstallmentModelObject(stateOutputData.installmentState.value)
-            }
-        }
+        val paymentComponentData = makePaymentComponentData(cardPaymentMethod, stateOutputData)
 
         val lastFour = cardNumber.takeLast(LAST_FOUR_LENGTH)
 
@@ -403,6 +388,26 @@ class CardComponent private constructor(
         return when {
             input.length > KcpValidationUtils.KCP_BIRTH_DATE_LENGTH -> R.string.checkout_kcp_tax_number_hint
             else -> R.string.checkout_kcp_birth_date_or_tax_number_hint
+        }
+    }
+
+    private fun makePaymentComponentData(
+        cardPaymentMethod: CardPaymentMethod,
+        stateOutputData: CardOutputData
+    ): PaymentComponentData<CardPaymentMethod> {
+        return PaymentComponentData<CardPaymentMethod>().apply {
+            paymentMethod = cardPaymentMethod
+            setStorePaymentMethod(stateOutputData.isStoredPaymentMethodEnable)
+            shopperReference = configuration.shopperReference
+            if (cardDelegate.isSocialSecurityNumberRequired()) {
+                socialSecurityNumber = stateOutputData.socialSecurityNumberState.value
+            }
+            if (cardDelegate.isPostalCodeRequired()) {
+                billingAddress = makeAddressData(stateOutputData)
+            }
+            if (isInstallmentsRequired(stateOutputData)) {
+                installments = InstallmentUtils.makeInstallmentModelObject(stateOutputData.installmentState.value)
+            }
         }
     }
 

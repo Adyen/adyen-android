@@ -131,6 +131,8 @@ class BcmcComponent(
                 threeDS2SdkVersion = ThreeDS2Service.INSTANCE.sdkVersion
             } catch (e: ClassNotFoundException) {
                 Logger.e(TAG, "threeDS2SdkVersion not set because 3DS2 SDK is not present in project.")
+            } catch (e: NoClassDefFoundError) {
+                Logger.e(TAG, "threeDS2SdkVersion not set because 3DS2 SDK is not present in project.")
             }
         }
         paymentComponentData.paymentMethod = cardPaymentMethod
