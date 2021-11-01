@@ -41,6 +41,11 @@ abstract class CardDelegate(
     abstract fun isPostalCodeRequired(): Boolean
     abstract fun detectCardType(cardNumber: String, publicKey: String?, coroutineScope: CoroutineScope): List<DetectedCardType>
     abstract fun getFundingSource(): String?
+    abstract fun getInstallmentOptions(
+        installmentConfiguration: InstallmentConfiguration?,
+        cardType: CardType?,
+        isCardTypeReliable: Boolean
+    ): List<InstallmentModel>
 
     suspend fun fetchPublicKey(): String {
         return publicKeyRepository.fetchPublicKey(

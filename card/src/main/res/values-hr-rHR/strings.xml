@@ -29,5 +29,10 @@
     <string name="checkout_card_brand_not_supported">Unesena marka kartice nije podržana</string>
     <string name="checkout_card_formatted_brand_name_not_supported">Kartica %s nije podržana</string>
 
+    <string name="checkout_card_installments_title">Broj rata</string>
+    <string name="checkout_card_installments_option_regular">Mjeseci: %s</string>
+    <string name="checkout_card_installments_option_one_time">Jednokratno plaćanje</string>
+    <string name="checkout_card_installments_option_revolving">Obnovljivo plaćanje</string>
+
     <string name="store_payment_method">Pohrani za moje sljedeće plaćanje</string>
 </resources>

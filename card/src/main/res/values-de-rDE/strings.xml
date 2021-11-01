@@ -29,5 +29,10 @@
     <string name="checkout_card_brand_not_supported">Die eingegebene Kartenmarke wird nicht unterstützt</string>
     <string name="checkout_card_formatted_brand_name_not_supported">%s wird nicht unterstützt</string>
 
+    <string name="checkout_card_installments_title">Anzahl der Raten</string>
+    <string name="checkout_card_installments_option_regular">%s Monate</string>
+    <string name="checkout_card_installments_option_one_time">Einmalige Zahlung</string>
+    <string name="checkout_card_installments_option_revolving">Ratenzahlung</string>
+
     <string name="store_payment_method">Für zukünftige Zahlvorgänge speichern</string>
 </resources>

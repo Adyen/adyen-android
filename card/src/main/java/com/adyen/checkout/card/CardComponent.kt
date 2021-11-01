@@ -20,6 +20,8 @@ import com.adyen.checkout.components.base.BasePaymentComponent
 import com.adyen.checkout.components.model.payments.request.Address
 import com.adyen.checkout.components.model.payments.request.CardPaymentMethod
 import com.adyen.checkout.components.model.payments.request.PaymentComponentData
+import com.adyen.checkout.components.ui.FieldState
+import com.adyen.checkout.components.ui.Validation
 import com.adyen.checkout.components.util.PaymentMethodTypes
 import com.adyen.checkout.core.exception.CheckoutException
 import com.adyen.checkout.core.exception.ComponentException
@@ -40,7 +42,6 @@ private val TAG = LogUtil.getTag()
 private val PAYMENT_METHOD_TYPES = arrayOf(PaymentMethodTypes.SCHEME)
 private const val BIN_VALUE_LENGTH = 6
 private const val LAST_FOUR_LENGTH = 4
-private const val FIRST_CARD_INDEX = 0
 private const val SINGLE_CARD_LIST_SIZE = 1
 
 @Suppress("TooManyFunctions")
@@ -85,7 +86,8 @@ class CardComponent private constructor(
                             postalCode = postalCodeState.value,
                             isStorePaymentSelected = isStoredPaymentMethodEnable,
                             detectedCardTypes = it,
-                            selectedCardIndex = 0
+                            selectedCardIndex = 0,
+                            selectedInstallmentOption = null
                         )
                         notifyStateChanged(newOutputData)
                     }
@@ -145,7 +147,8 @@ class CardComponent private constructor(
             isStorePaymentSelected = inputData.isStorePaymentSelected,
             postalCode = inputData.postalCode,
             detectedCardTypes = detectedCardTypes,
-            selectedCardIndex = inputData.selectedCardIndex
+            selectedCardIndex = inputData.selectedCardIndex,
+            selectedInstallmentOption = inputData.installmentOption
         )
     }
 
@@ -161,7 +164,8 @@ class CardComponent private constructor(
         isStorePaymentSelected: Boolean,
         postalCode: String,
         detectedCardTypes: List<DetectedCardType>,
-        selectedCardIndex: Int
+        selectedCardIndex: Int,
+        selectedInstallmentOption: InstallmentModel?
     ): CardOutputData {
 
         val isReliable = detectedCardTypes.any { it.isReliable }
@@ -186,13 +190,19 @@ class CardComponent private constructor(
             cardDelegate.validateKcpBirthDateOrTaxNumber(kcpBirthDateOrTaxNumber),
             cardDelegate.validateKcpCardPassword(kcpCardPassword),
             cardDelegate.validatePostalCode(postalCode),
+            makeInstallmentFieldState(selectedInstallmentOption),
             isStorePaymentSelected,
             makeCvcUIState(selectedOrFirstCardType?.cvcPolicy),
             makeExpiryDateUIState(selectedOrFirstCardType?.expiryDatePolicy),
             outputCardTypes,
             cardDelegate.isSocialSecurityNumberRequired(),
             cardDelegate.isKCPAuthRequired(),
-            cardDelegate.isPostalCodeRequired()
+            cardDelegate.isPostalCodeRequired(),
+            cardDelegate.getInstallmentOptions(
+                configuration.installmentConfiguration,
+                selectedOrFirstCardType?.cardType,
+                isReliable
+            )
         )
     }
 
@@ -222,6 +232,10 @@ class CardComponent private constructor(
                 card
             }
         }
+    }
+
+    private fun makeInstallmentFieldState(installmentModel: InstallmentModel?): FieldState<InstallmentModel?> {
+        return FieldState(installmentModel, Validation.Valid)
     }
 
     @Suppress("ReturnCount")
@@ -351,6 +365,10 @@ class CardComponent private constructor(
             if (cardDelegate.isPostalCodeRequired()) {
                 billingAddress = makeAddressData(stateOutputData)
             }
+
+            if (isInstallmentsRequired(stateOutputData)) {
+                installments = InstallmentUtils.makeInstallmentModelObject(stateOutputData.installmentState.value)
+            }
         }
 
         val lastFour = cardNumber.takeLast(LAST_FOUR_LENGTH)
@@ -391,6 +409,10 @@ class CardComponent private constructor(
     fun isDualBrandedFlow(cardOutputData: CardOutputData): Boolean {
         val reliableDetectedCards = cardOutputData.detectedCardTypes.filter { it.isReliable }
         return reliableDetectedCards.size > 1 && reliableDetectedCards.any { it.isSelected }
+    }
+
+    private fun isInstallmentsRequired(cardOutputData: CardOutputData): Boolean {
+        return cardOutputData.installmentOptions.isNotEmpty()
     }
 
     private fun makeAddressData(outputData: CardOutputData): Address {

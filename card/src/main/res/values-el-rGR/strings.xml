@@ -29,5 +29,10 @@
     <string name="checkout_card_brand_not_supported">Η επωνυμία κάρτας που εισαγάγατε δεν υποστηρίζεται</string>
     <string name="checkout_card_formatted_brand_name_not_supported">%s: δεν υποστηρίζεται</string>
 
+    <string name="checkout_card_installments_title">Αριθμός δόσεων</string>
+    <string name="checkout_card_installments_option_regular">%s μήνες</string>
+    <string name="checkout_card_installments_option_one_time">Εφάπαξ πληρωμή</string>
+    <string name="checkout_card_installments_option_revolving">Ανακυκλούμενη πληρωμή</string>
+
     <string name="store_payment_method">Αποθήκευση για την επόμενη πληρωμή μου</string>
 </resources>

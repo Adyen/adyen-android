@@ -29,5 +29,10 @@
     <string name="checkout_card_brand_not_supported">La marca de la tarjeta introducida no es compatible</string>
     <string name="checkout_card_formatted_brand_name_not_supported">No admitimos tarjetas de %s</string>
 
+    <string name="checkout_card_installments_title">Número de plazos</string>
+    <string name="checkout_card_installments_option_regular">%s meses</string>
+    <string name="checkout_card_installments_option_one_time">Pago único</string>
+    <string name="checkout_card_installments_option_revolving">Pago rotativo</string>
+
     <string name="store_payment_method">Recordar para mi próximo pago</string>
 </resources>

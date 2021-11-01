@@ -39,6 +39,7 @@ public class PaymentComponentData<PaymentMethodDetailsT extends PaymentMethodDet
     private static final String SHOPPER_EMAIL = "shopperEmail";
     private static final String DATE_OF_BIRTH = "dateOfBirth";
     private static final String SOCIAL_SECURITY_NUMBER = "socialSecurityNumber";
+    private static final String INSTALLMENTS = "installments";
 
     @NonNull
     public static final Serializer<PaymentComponentData> SERIALIZER = new Serializer<PaymentComponentData>() {
@@ -59,6 +60,7 @@ public class PaymentComponentData<PaymentMethodDetailsT extends PaymentMethodDet
                 jsonObject.putOpt(SHOPPER_EMAIL, modelObject.getShopperEmail());
                 jsonObject.putOpt(DATE_OF_BIRTH, modelObject.getDateOfBirth());
                 jsonObject.putOpt(SOCIAL_SECURITY_NUMBER, modelObject.getSocialSecurityNumber());
+                jsonObject.putOpt(INSTALLMENTS, ModelUtils.serializeOpt(modelObject.getInstallments(), Installments.SERIALIZER));
             } catch (JSONException e) {
                 throw new ModelSerializationException(PaymentComponentData.class, e);
             }
@@ -85,6 +87,9 @@ public class PaymentComponentData<PaymentMethodDetailsT extends PaymentMethodDet
             paymentComponentData.setShopperEmail(jsonObject.optString(SHOPPER_EMAIL));
             paymentComponentData.setDateOfBirth(jsonObject.optString(DATE_OF_BIRTH));
             paymentComponentData.setSocialSecurityNumber(jsonObject.optString(SOCIAL_SECURITY_NUMBER));
+            paymentComponentData.setInstallments(
+                    ModelUtils.deserializeOpt(jsonObject.optJSONObject(INSTALLMENTS), Installments.SERIALIZER)
+            );
 
             return paymentComponentData;
         }
@@ -101,6 +106,7 @@ public class PaymentComponentData<PaymentMethodDetailsT extends PaymentMethodDet
     private String shopperEmail;
     private String dateOfBirth;
     private String socialSecurityNumber;
+    private Installments installments;
 
     @Override
     public void writeToParcel(@NonNull Parcel dest, int flags) {
@@ -203,5 +209,14 @@ public class PaymentComponentData<PaymentMethodDetailsT extends PaymentMethodDet
 
     public void setSocialSecurityNumber(@Nullable String socialSecurityNumber) {
         this.socialSecurityNumber = socialSecurityNumber;
+    }
+
+    @Nullable
+    public Installments getInstallments() {
+        return installments;
+    }
+
+    public void setInstallments(@Nullable Installments installments) {
+        this.installments = installments;
     }
 }

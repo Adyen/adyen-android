@@ -24,7 +24,7 @@
 
         <com.google.android.material.textfield.TextInputLayout
             android:id="@+id/textInputLayout_country"
-            style="@style/AdyenCheckout.MBWay.DropdownTextInputLayout"
+            style="@style/AdyenCheckout.DropdownTextInputLayout"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginEnd="@dimen/standard_half_margin">

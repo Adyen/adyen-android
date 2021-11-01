@@ -29,5 +29,10 @@
     <string name="checkout_card_brand_not_supported">입력한 카드 브랜드는 지원되지 않습니다</string>
     <string name="checkout_card_formatted_brand_name_not_supported">%s은(는) 지원되지 않습니다</string>
 
+    <string name="checkout_card_installments_title">할부 개월 수</string>
+    <string name="checkout_card_installments_option_regular">%s개월</string>
+    <string name="checkout_card_installments_option_one_time">일시불 결제</string>
+    <string name="checkout_card_installments_option_revolving">리볼빙 결제</string>
+
     <string name="store_payment_method">다음 결제를 위해 이 수단 저장</string>
 </resources>

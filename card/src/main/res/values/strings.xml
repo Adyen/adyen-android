@@ -30,6 +30,11 @@
     <string name="checkout_card_brand_not_supported">The entered card brand isn\'t supported</string>
     <string name="checkout_card_formatted_brand_name_not_supported">%s isn\'t supported</string>
 
+    <string name="checkout_card_installments_title">Number of installments</string>
+    <string name="checkout_card_installments_option_regular">%s months</string>
+    <string name="checkout_card_installments_option_one_time">One time payment</string>
+    <string name="checkout_card_installments_option_revolving">Revolving payment</string>
+
     <string name="card_number_4digit" translatable="false">•••• %s</string>
 
     <string name="store_payment_method">Save for my next payment</string>

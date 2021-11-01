@@ -137,6 +137,14 @@ class StoredCardDelegate(
         return null
     }
 
+    override fun getInstallmentOptions(
+        installmentConfiguration: InstallmentConfiguration?,
+        cardType: CardType?,
+        isCardTypeReliable: Boolean
+    ): List<InstallmentModel> {
+        return emptyList()
+    }
+
     fun getStoredCardInputData(): CardInputData {
         val storedCardInputData = CardInputData()
         storedCardInputData.cardNumber = storedPaymentMethod.lastFour.orEmpty()

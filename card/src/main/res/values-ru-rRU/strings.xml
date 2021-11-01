@@ -29,5 +29,10 @@
     <string name="checkout_card_brand_not_supported">Карты введенной платежной системы не поддерживаются</string>
     <string name="checkout_card_formatted_brand_name_not_supported">%s не поддерживается</string>
 
+    <string name="checkout_card_installments_title">Количество платежей</string>
+    <string name="checkout_card_installments_option_regular">%s мес.</string>
+    <string name="checkout_card_installments_option_one_time">Одноразовый платеж</string>
+    <string name="checkout_card_installments_option_revolving">Повторяющаяся оплата</string>
+
     <string name="store_payment_method">Сохранить для следующего платежа</string>
 </resources>
