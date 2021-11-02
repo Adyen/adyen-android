@@ -152,7 +152,7 @@ class DropInConfiguration : Configuration, Parcelable {
             private set
         var showPreselectedStoredPaymentMethod: Boolean = true
             private set
-        var skipListWhenSinglePaymentMethod: Boolean = true
+        var skipListWhenSinglePaymentMethod: Boolean = false
             private set
 
         private val packageName: String
@@ -184,15 +184,16 @@ class DropInConfiguration : Configuration, Parcelable {
          * Create a Builder with the same values of an existing Configuration object.
          */
         constructor(dropInConfiguration: DropInConfiguration) {
-            this.packageName = dropInConfiguration.serviceComponentName.packageName
-            this.serviceClassName = dropInConfiguration.serviceComponentName.className
+            packageName = dropInConfiguration.serviceComponentName.packageName
+            serviceClassName = dropInConfiguration.serviceComponentName.className
 
-            this.serviceComponentName = dropInConfiguration.serviceComponentName
-            this.shopperLocale = dropInConfiguration.shopperLocale
-            this.environment = dropInConfiguration.environment
-            this.amount = dropInConfiguration.amount
-            this.clientKey = dropInConfiguration.clientKey
-            this.showPreselectedStoredPaymentMethod = dropInConfiguration.showPreselectedStoredPaymentMethod
+            serviceComponentName = dropInConfiguration.serviceComponentName
+            shopperLocale = dropInConfiguration.shopperLocale
+            environment = dropInConfiguration.environment
+            amount = dropInConfiguration.amount
+            clientKey = dropInConfiguration.clientKey
+            showPreselectedStoredPaymentMethod = dropInConfiguration.showPreselectedStoredPaymentMethod
+            skipListWhenSinglePaymentMethod = dropInConfiguration.skipListWhenSinglePaymentMethod
         }
 
         fun setServiceComponentName(serviceComponentName: ComponentName): Builder {
