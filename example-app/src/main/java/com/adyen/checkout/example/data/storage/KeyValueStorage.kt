@@ -31,7 +31,7 @@ class KeyValueStorageImpl(private val appContext: Context, private val sharedPre
 
     companion object {
         private const val DEFAULT_COUNTRY = "NL"
-        private const val DEFAULT_LOCALE = "en_US"
+        private const val DEFAULT_LOCALE = "en-US"
         private const val DEFAULT_VALUE = "1337"
         private const val DEFAULT_CURRENCY = "EUR"
         private const val DEFAULT_THREEDS2_ENABLE = true
