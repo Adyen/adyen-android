@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="utf-8"?><!--
+  ~ Copyright (c) 2021 Adyen N.V.
+  ~
+  ~ This file is open source and available under the MIT license. See the LICENSE file for more info.
+  ~
+  ~ Created by ozgur on 5/11/2021.
+  -->
+
+<resources>
+    <style name="AdyenCheckout.Bacs"/>
+
+    <!-- TODO use translated strings -->
+
+    <style name="AdyenCheckout.Bacs.HolderNameInput" parent="AdyenCheckout.TextInputEditText">
+        <item name="android:hint">Holder name</item>
+        <item name="android:inputType">text|textPersonName|textCapWords</item>
+    </style>
+
+    <style name="AdyenCheckout.Bacs.AccountNumberInput" parent="AdyenCheckout.TextInputEditText">
+        <item name="android:hint">Bank account number</item>
+        <item name="android:inputType">number</item>
+    </style>
+
+    <style name="AdyenCheckout.Bacs.SortCodeInput" parent="AdyenCheckout.TextInputEditText">
+        <item name="android:hint">Sort code</item>
+        <item name="android:inputType">number</item>
+    </style>
+
+    <style name="AdyenCheckout.Bacs.ShopperEmailInput" parent="AdyenCheckout.TextInputEditText">
+        <item name="android:hint">Email</item>
+        <item name="android:inputType">textEmailAddress</item>
+    </style>
+</resources>
