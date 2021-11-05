@@ -40,9 +40,6 @@ object DropIn {
     const val ERROR_REASON_KEY = "error_reason"
     const val ERROR_REASON_USER_CANCELED = "Canceled by user"
 
-    internal const val DROP_IN_PREFS = "drop-in-shared-prefs"
-    internal const val LOCALE_PREF = "drop-in-locale"
-
     /**
      * Register your Activity or Fragment with the Activity Result API and receive the final
      * Drop-in result using the [DropInCallback].
@@ -297,9 +294,7 @@ object DropIn {
         resultHandlerIntent: Intent?
     ): Intent {
         // Add locale to prefs
-        context.getSharedPreferences(DROP_IN_PREFS, Context.MODE_PRIVATE).edit()
-            .putString(LOCALE_PREF, dropInConfiguration.shopperLocale.toString())
-            .apply()
+        DropInPrefs.setShopperLocale(context, dropInConfiguration.shopperLocale)
 
         return DropInActivity.createIntent(
             context,

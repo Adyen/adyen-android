@@ -17,16 +17,15 @@ import com.adyen.checkout.await.AwaitConfiguration
 import com.adyen.checkout.bcmc.BcmcConfiguration
 import com.adyen.checkout.blik.BlikConfiguration
 import com.adyen.checkout.card.CardConfiguration
+import com.adyen.checkout.components.base.BaseConfigurationBuilder
 import com.adyen.checkout.components.base.Configuration
 import com.adyen.checkout.components.model.payments.Amount
 import com.adyen.checkout.components.util.CheckoutCurrency
 import com.adyen.checkout.components.util.PaymentMethodTypes
-import com.adyen.checkout.components.util.ValidationUtils
 import com.adyen.checkout.core.api.Environment
 import com.adyen.checkout.core.exception.CheckoutException
 import com.adyen.checkout.core.log.LogUtil
 import com.adyen.checkout.core.model.JsonUtils
-import com.adyen.checkout.core.util.LocaleUtil
 import com.adyen.checkout.core.util.ParcelUtils
 import com.adyen.checkout.dotpay.DotpayConfiguration
 import com.adyen.checkout.dropin.DropInConfiguration.Builder
@@ -71,7 +70,7 @@ class DropInConfiguration : Configuration, Parcelable {
     @Suppress("LongParameterList")
     constructor(
         builder: Builder
-    ) : super(builder.shopperLocale, builder.environment, builder.clientKey) {
+    ) : super(builder.builderShopperLocale, builder.builderEnvironment, builder.builderClientKey) {
         this.availablePaymentConfigs = builder.availablePaymentConfigs
         this.availableActionConfigs = builder.availableActionConfigs
         this.serviceComponentName = builder.serviceComponentName
@@ -131,7 +130,7 @@ class DropInConfiguration : Configuration, Parcelable {
     /**
      * Builder for creating a [DropInConfiguration] where you can set specific Configurations for a Payment Method
      */
-    class Builder {
+    class Builder : BaseConfigurationBuilder<DropInConfiguration> {
 
         companion object {
             val TAG = LogUtil.getTag()
@@ -140,12 +139,6 @@ class DropInConfiguration : Configuration, Parcelable {
         val availablePaymentConfigs = HashMap<String, Configuration>()
         val availableActionConfigs = HashMap<Class<*>, Configuration>()
 
-        var shopperLocale: Locale
-            private set
-        var environment: Environment = Environment.EUROPE
-            private set
-        var clientKey: String
-            private set
         var serviceComponentName: ComponentName
             private set
         var amount: Amount = Amount.EMPTY
@@ -166,32 +159,25 @@ class DropInConfiguration : Configuration, Parcelable {
          * @param serviceClass Service that extended from [DropInService] that would handle network requests.
          * @param clientKey Your Client Key used for network calls from the SDK to Adyen.
          */
-        constructor(context: Context, serviceClass: Class<out Any?>, clientKey: String) {
+        constructor(context: Context, serviceClass: Class<out Any?>, clientKey: String) : super(context, clientKey) {
             this.packageName = context.packageName
             this.serviceClassName = serviceClass.name
-
             this.serviceComponentName = ComponentName(packageName, serviceClassName)
-            this.shopperLocale = LocaleUtil.getLocale(context)
-
-            if (!ValidationUtils.isClientKeyValid(clientKey)) {
-                throw CheckoutException("Client key is not valid.")
-            }
-
-            this.clientKey = clientKey
         }
 
         /**
          * Create a Builder with the same values of an existing Configuration object.
          */
-        constructor(dropInConfiguration: DropInConfiguration) {
+        constructor(dropInConfiguration: DropInConfiguration) : super(
+            dropInConfiguration.shopperLocale,
+            dropInConfiguration.environment,
+            dropInConfiguration.clientKey
+        ) {
             packageName = dropInConfiguration.serviceComponentName.packageName
             serviceClassName = dropInConfiguration.serviceComponentName.className
 
             serviceComponentName = dropInConfiguration.serviceComponentName
-            shopperLocale = dropInConfiguration.shopperLocale
-            environment = dropInConfiguration.environment
             amount = dropInConfiguration.amount
-            clientKey = dropInConfiguration.clientKey
             showPreselectedStoredPaymentMethod = dropInConfiguration.showPreselectedStoredPaymentMethod
             skipListWhenSinglePaymentMethod = dropInConfiguration.skipListWhenSinglePaymentMethod
         }
@@ -201,19 +187,12 @@ class DropInConfiguration : Configuration, Parcelable {
             return this
         }
 
-        /**
-         * Sets the [Locale] to be used for localization on the Drop-in flow.<br>
-         * Note that the [Locale] on the specific component configuration will still take priority and can cause inconsistency in the UI.<br>
-         * Also, due to technical limitations, this Locale will be converted to String and lose additional variants other than language and country.
-         */
-        fun setShopperLocale(shopperLocale: Locale): Builder {
-            this.shopperLocale = shopperLocale
-            return this
+        override fun setShopperLocale(builderShopperLocale: Locale): Builder {
+            return super.setShopperLocale(builderShopperLocale) as Builder
         }
 
-        fun setEnvironment(environment: Environment): Builder {
-            this.environment = environment
-            return this
+        override fun setEnvironment(builderEnvironment: Environment): Builder {
+            return super.setEnvironment(builderEnvironment) as Builder
         }
 
         fun setAmount(amount: Amount): Builder {
@@ -393,14 +372,7 @@ class DropInConfiguration : Configuration, Parcelable {
             return this
         }
 
-        /**
-         * Create the [DropInConfiguration] instance.
-         */
-        fun build(): DropInConfiguration {
-            if (!ValidationUtils.doesClientKeyMatchEnvironment(clientKey, environment)) {
-                throw CheckoutException("Client key does not match the environment.")
-            }
-
+        override fun buildInternal(): DropInConfiguration {
             return DropInConfiguration(this)
         }
     }

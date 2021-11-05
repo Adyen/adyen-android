@@ -34,10 +34,10 @@ import com.adyen.checkout.components.util.PaymentMethodTypes
 import com.adyen.checkout.core.exception.CheckoutException
 import com.adyen.checkout.core.log.LogUtil
 import com.adyen.checkout.core.log.Logger
-import com.adyen.checkout.core.util.LocaleUtil
 import com.adyen.checkout.dropin.ActionHandler
 import com.adyen.checkout.dropin.DropIn
 import com.adyen.checkout.dropin.DropInConfiguration
+import com.adyen.checkout.dropin.DropInPrefs
 import com.adyen.checkout.dropin.R
 import com.adyen.checkout.dropin.service.DropInService
 import com.adyen.checkout.dropin.service.DropInServiceInterface
@@ -175,25 +175,14 @@ class DropInActivity : AppCompatActivity(), DropInBottomSheetDialogFragment.Prot
             getFragmentByTag(ACTION_FRAGMENT_TAG) == null
     }
 
-    // False positive from countryStartPosition
-    @Suppress("MagicNumber")
     private fun createLocalizedContext(baseContext: Context?): Context? {
-        if (baseContext == null) {
-            return baseContext
-        }
+        if (baseContext == null) return baseContext
 
-        // We needs to get the Locale from sharedPrefs because attachBaseContext is called before onCreate, so we don't have the Config object yet.
-        val localeString = baseContext.getSharedPreferences(DropIn.DROP_IN_PREFS, Context.MODE_PRIVATE).getString(DropIn.LOCALE_PREF, "")
+        // We need to get the Locale from sharedPrefs because attachBaseContext is called before onCreate, so we don't have the Config object yet.
+        val locale = DropInPrefs.getShopperLocale(baseContext)
         val config = Configuration(baseContext.resources.configuration)
-
-        return try {
-            val locale = LocaleUtil.fromLanguageTag(localeString)
-            config.setLocale(locale)
-            baseContext.createConfigurationContext(config)
-        } catch (e: IllegalArgumentException) {
-            Logger.e(TAG, "Failed to parse locale $localeString")
-            baseContext
-        }
+        config.setLocale(locale)
+        return baseContext.createConfigurationContext(config)
     }
 
     private fun assertBundleExists(bundle: Bundle?): Boolean {

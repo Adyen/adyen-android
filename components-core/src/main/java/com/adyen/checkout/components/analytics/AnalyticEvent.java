@@ -19,7 +19,6 @@ import androidx.annotation.NonNull;
 
 import com.adyen.checkout.components.BuildConfig;
 import com.adyen.checkout.core.exception.CheckoutException;
-import com.adyen.checkout.core.util.LocaleUtil;
 
 import java.net.MalformedURLException;
 import java.net.URL;
@@ -100,7 +99,7 @@ public class AnalyticEvent implements Parcelable {
             default:
                 throw new CheckoutException("Unexpected flavor - " + flavor.name());
         }
-        return new AnalyticEvent(context.getPackageName(), flavorName, components, LocaleUtil.toLanguageTag(locale));
+        return new AnalyticEvent(context.getPackageName(), flavorName, components, locale.toString());
     }
 
     AnalyticEvent(@NonNull Parcel in) {

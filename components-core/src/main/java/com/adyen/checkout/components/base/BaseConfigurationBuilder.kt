@@ -58,6 +58,11 @@ abstract class BaseConfigurationBuilder<ConfigurationT : Configuration>(
         if (!ValidationUtils.doesClientKeyMatchEnvironment(builderClientKey, builderEnvironment)) {
             throw CheckoutException("Client key does not match the environment.")
         }
+
+        if (!LocaleUtil.isValidLocale(builderShopperLocale)) {
+            throw CheckoutException("Invalid shopper locale: $builderShopperLocale.")
+        }
+
         return buildInternal()
     }
 }
