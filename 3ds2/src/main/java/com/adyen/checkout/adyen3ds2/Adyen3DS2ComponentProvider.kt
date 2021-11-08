@@ -55,6 +55,12 @@ class Adyen3DS2ComponentProvider : ActionComponentProvider<Adyen3DS2Component, A
         return ViewModelProvider(viewModelStoreOwner, threeDS2Factory).get(Adyen3DS2Component::class.java)
     }
 
+    @Deprecated(
+        "You can safely remove this method, it will always return true as all action components require a configuration.",
+        ReplaceWith("true")
+    )
+    override fun requiresConfiguration(): Boolean = true
+
     override fun requiresView(action: Action): Boolean = false
 
     override fun getSupportedActionTypes(): List<String> {

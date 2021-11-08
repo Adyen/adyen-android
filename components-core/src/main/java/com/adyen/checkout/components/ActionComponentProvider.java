@@ -63,6 +63,13 @@ public interface ActionComponentProvider<ComponentT extends ActionComponent, Con
     );
 
     /**
+     * @return If the Configuration is required for this Component.
+     * @deprecated You can safely remove this method, it will always return true as all action components require a configuration.
+     */
+    @Deprecated
+    boolean requiresConfiguration();
+
+    /**
      * Checks if the provided component can handle the specific action type.
      *
      * @param action The Action object from the API response.

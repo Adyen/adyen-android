@@ -47,6 +47,12 @@ class AwaitComponentProvider : ActionComponentProvider<AwaitComponent, AwaitConf
         return ViewModelProvider(viewModelStoreOwner, awaitFactory).get(AwaitComponent::class.java)
     }
 
+    @Deprecated(
+        "You can safely remove this method, it will always return true as all action components require a configuration.",
+        ReplaceWith("true")
+    )
+    override fun requiresConfiguration(): Boolean = true
+
     override fun getSupportedActionTypes(): List<String> {
         return listOf(AwaitAction.ACTION_TYPE)
     }
