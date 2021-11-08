@@ -46,6 +46,12 @@ class RedirectComponentProvider : ActionComponentProvider<RedirectComponent, Red
         return ViewModelProvider(viewModelStoreOwner, redirectFactory).get(RedirectComponent::class.java)
     }
 
+    @Deprecated(
+        "You can safely remove this method, it will always return true as all action components require a configuration.",
+        ReplaceWith("true")
+    )
+    override fun requiresConfiguration(): Boolean = true
+
     override fun requiresView(action: Action): Boolean = false
 
     override fun getSupportedActionTypes(): List<String> {

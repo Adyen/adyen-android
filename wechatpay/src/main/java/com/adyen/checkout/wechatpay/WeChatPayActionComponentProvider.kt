@@ -47,6 +47,12 @@ class WeChatPayActionComponentProvider : ActionComponentProvider<WeChatPayAction
         return ViewModelProvider(viewModelStoreOwner, weChatFactory).get(WeChatPayActionComponent::class.java)
     }
 
+    @Deprecated(
+        "You can safely remove this method, it will always return true as all action components require a configuration.",
+        ReplaceWith("true")
+    )
+    override fun requiresConfiguration(): Boolean = true
+
     override fun getSupportedActionTypes(): List<String> {
         return listOf(SdkAction.ACTION_TYPE)
     }

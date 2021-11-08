@@ -50,6 +50,12 @@ class QRCodeComponentProvider : ActionComponentProvider<QRCodeComponent, QRCodeC
         return ViewModelProvider(viewModelStoreOwner, qrCodeFactory).get(QRCodeComponent::class.java)
     }
 
+    @Deprecated(
+        "You can safely remove this method, it will always return true as all action components require a configuration.",
+        ReplaceWith("true")
+    )
+    override fun requiresConfiguration(): Boolean = true
+
     override fun getSupportedActionTypes(): List<String> {
         return listOf(QrCodeAction.ACTION_TYPE)
     }
