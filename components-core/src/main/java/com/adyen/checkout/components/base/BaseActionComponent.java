@@ -25,10 +25,14 @@ import com.adyen.checkout.components.base.lifecycle.ActionComponentViewModel;
 import com.adyen.checkout.components.model.payments.response.Action;
 import com.adyen.checkout.core.exception.CheckoutException;
 import com.adyen.checkout.core.exception.ComponentException;
+import com.adyen.checkout.core.log.LogUtil;
+import com.adyen.checkout.core.log.Logger;
 
 import org.json.JSONObject;
 
 public abstract class BaseActionComponent<ConfigurationT extends Configuration> extends ActionComponentViewModel<ConfigurationT> {
+
+    private static final String TAG = LogUtil.getTag();
 
     private static final String PAYMENT_DATA_KEY = "payment_data";
 
@@ -93,7 +97,7 @@ public abstract class BaseActionComponent<ConfigurationT extends Configuration> 
      */
     @Deprecated
     public void saveState(@Nullable Bundle bundle) {
-        // unused method
+        Logger.w(TAG, "Calling saveState is not necessary anymore, you can safely remove this method.");
     }
 
     /**
@@ -104,7 +108,7 @@ public abstract class BaseActionComponent<ConfigurationT extends Configuration> 
      */
     @Deprecated
     public void restoreState(@Nullable Bundle bundle) {
-        // unused method
+        Logger.w(TAG, "Calling restoreState is not necessary anymore, you can safely remove this method.");
     }
 
     protected abstract void handleActionInternal(@NonNull Activity activity, @NonNull Action action) throws ComponentException;
