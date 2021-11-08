@@ -10,6 +10,7 @@ package com.adyen.checkout.components.base;
 
 import android.app.Activity;
 import android.app.Application;
+import android.os.Bundle;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -82,6 +83,28 @@ public abstract class BaseActionComponent<ConfigurationT extends Configuration> 
     @Override
     public void removeErrorObserver(@NonNull final Observer<ComponentError> observer) {
         mErrorMutableLiveData.removeObserver(observer);
+    }
+
+    /**
+     * Call this method to save the current data of the Component to the Bundle from {@link Activity#onSaveInstanceState(Bundle)}.
+     *
+     * @param bundle The bundle to save the sate into.
+     * @deprecated You can safely remove this method, we rely on {@link SavedStateHandle} to handle the state.
+     */
+    @Deprecated
+    public void saveState(@Nullable Bundle bundle) {
+        // unused method
+    }
+
+    /**
+     * Call this method to restore the current data of the Component from the savedInstanceState Bundle from {@link Activity#onCreate(Bundle)}}.
+     *
+     * @param bundle The bundle to restore the sate from.
+     * @deprecated You can safely remove this method, we rely on {@link SavedStateHandle} to handle the state.
+     */
+    @Deprecated
+    public void restoreState(@Nullable Bundle bundle) {
+        // unused method
     }
 
     protected abstract void handleActionInternal(@NonNull Activity activity, @NonNull Action action) throws ComponentException;
