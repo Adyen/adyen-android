@@ -14,7 +14,7 @@ buildscript {
     ext.kotlin_version = '1.5.21'
     ext.detekt_gradle_plugin_version = "1.17.1"
     ext.spotbugs_gradle_plugin_version = "4.5.1"
-    ext.dokka_version = "1.4.20"
+    ext.dokka_version = "1.4.32"
 
     repositories {
         google()
