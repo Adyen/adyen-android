@@ -3,7 +3,6 @@ package com.adyen.checkout.components.base
 import android.os.Parcel
 import android.os.Parcelable
 import com.adyen.checkout.core.api.Environment
-import com.adyen.checkout.core.util.ParcelUtils
 import java.util.*
 
 abstract class Configuration protected constructor(
@@ -25,6 +24,6 @@ abstract class Configuration protected constructor(
     }
 
     override fun describeContents(): Int {
-        return ParcelUtils.NO_FILE_DESCRIPTOR
+        return Parcelable.CONTENTS_FILE_DESCRIPTOR
     }
 }

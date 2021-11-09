@@ -1,3 +1,5 @@
+![Checkout Android Logo](https://user-images.githubusercontent.com/6615094/140908736-7573739a-0ab9-4fd1-b6d8-b2e780b6e3c8.png)
+
 # Adyen Components for Android
 
 Adyen Components for Android allows you to accept in-app payments by providing you with the building blocks you need to create a checkout experience.
@@ -27,11 +29,11 @@ If you are upgrading from 3.x.x to a current release, check out our [migration g
 Import the Component module for the Payment Method you want to use by adding it to your `build.gradle` file.
 For example, for the Drop-in solution you should add:
 ```groovy
-implementation "com.adyen.checkout:drop-in:4.2.0"
+implementation "com.adyen.checkout:drop-in:4.3.0"
 ```
 For a Credit Card component you should add:
 ```groovy
-implementation "com.adyen.checkout:card:4.2.0"
+implementation "com.adyen.checkout:card:4.3.0"
 ```
 
 ### Client Key

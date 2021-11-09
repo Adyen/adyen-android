@@ -26,6 +26,13 @@
     <string name="checkout_kcp_birth_date_or_tax_number_invalid">Data de naștere a posesorului de card sau numărul de înregistrare al societății este incorect</string>
     <string name="checkout_kcp_password_invalid">Parolă incorectă</string>
     <string name="checkout_card_postal_not_valid">Formatul de completare nu este acceptat.</string>
+    <string name="checkout_card_brand_not_supported">Marca de card introdusă nu este acceptată</string>
+    <string name="checkout_card_formatted_brand_name_not_supported">%s nu este acceptată</string>
+
+    <string name="checkout_card_installments_title">Număr de rate</string>
+    <string name="checkout_card_installments_option_regular">%s luni</string>
+    <string name="checkout_card_installments_option_one_time">Plată unică</string>
+    <string name="checkout_card_installments_option_revolving">Plată recurentă</string>
 
     <string name="store_payment_method">Salvează pentru următoarea mea plată</string>
 </resources>

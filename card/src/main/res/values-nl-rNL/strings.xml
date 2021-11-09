@@ -26,6 +26,13 @@
     <string name="checkout_kcp_birth_date_or_tax_number_invalid">Geboortedatum of bedrijfsregistratienummer van kaarthouder is ongeldig</string>
     <string name="checkout_kcp_password_invalid">Ongeldig wachtwoord</string>
     <string name="checkout_card_postal_not_valid">Ongeldige invoer</string>
+    <string name="checkout_card_brand_not_supported">Het ingevoerde kaartmerk wordt niet ondersteund</string>
+    <string name="checkout_card_formatted_brand_name_not_supported">%s wordt niet ondersteund</string>
+
+    <string name="checkout_card_installments_title">Aantal termijnen</string>
+    <string name="checkout_card_installments_option_regular">%s maanden</string>
+    <string name="checkout_card_installments_option_one_time">Eenmalige betaling</string>
+    <string name="checkout_card_installments_option_revolving">Terugkerende betaling</string>
 
     <string name="store_payment_method">Bewaar voor mijn volgende betaling</string>
 </resources>

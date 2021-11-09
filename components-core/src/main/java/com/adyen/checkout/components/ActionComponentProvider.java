@@ -9,9 +9,14 @@
 package com.adyen.checkout.components;
 
 import android.app.Application;
+import android.os.Bundle;
 
 import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
+import androidx.lifecycle.SavedStateHandle;
+import androidx.lifecycle.ViewModel;
 import androidx.lifecycle.ViewModelStoreOwner;
+import androidx.savedstate.SavedStateRegistryOwner;
 
 import com.adyen.checkout.components.base.Configuration;
 import com.adyen.checkout.components.model.payments.response.Action;
@@ -23,17 +28,45 @@ public interface ActionComponentProvider<ComponentT extends ActionComponent, Con
     /**
      * Get an {@link ActionComponent}.
      *
-     * @param viewModelStoreOwner The Activity or Fragment to associate the lifecycle.
-     * @param configuration       The Configuration of the component. Can be null in most cases.
+     * @param owner         The Activity or Fragment to associate the lifecycle.
+     * @param application   Your main application class.
+     * @param configuration The Configuration of the component.
      * @return The Component
      */
     @SuppressWarnings("LambdaLast")
     @NonNull
-    ComponentT get(@NonNull ViewModelStoreOwner viewModelStoreOwner, @NonNull Application application, @NonNull ConfigurationT configuration);
+    <T extends SavedStateRegistryOwner & ViewModelStoreOwner> ComponentT get(
+            @NonNull T owner,
+            @NonNull Application application,
+            @NonNull ConfigurationT configuration
+    );
+
+    /**
+     * Get an {@link ActionComponent}.
+     *
+     * @param savedStateRegistryOwner The owner of the SavedStateRegistry, normally an Activity or Fragment.
+     * @param viewModelStoreOwner     A scope that owns ViewModelStore, normally an Activity or Fragment.
+     * @param application             Your main application class.
+     * @param configuration           The Configuration of the component.
+     * @param defaultArgs             Values from this {@code Bundle} will be used as defaults by {@link SavedStateHandle} passed in {@link ViewModel
+     *                                ViewModels} if there is no previously saved state or previously saved state misses a value by such key
+     * @return The Component
+     */
+    @SuppressWarnings("LambdaLast")
+    @NonNull
+    ComponentT get(
+            @NonNull SavedStateRegistryOwner savedStateRegistryOwner,
+            @NonNull ViewModelStoreOwner viewModelStoreOwner,
+            @NonNull Application application,
+            @NonNull ConfigurationT configuration,
+            @Nullable Bundle defaultArgs
+    );
 
     /**
      * @return If the Configuration is required for this Component.
+     * @deprecated You can safely remove this method, it will always return true as all action components require a configuration.
      */
+    @Deprecated
     boolean requiresConfiguration();
 
     /**

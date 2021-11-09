@@ -71,7 +71,7 @@ android {
 dependencies {
     // Checkout
     implementation project(':drop-in')
-//    implementation "com.adyen.checkout:drop-in:4.2.0"
+//    implementation "com.adyen.checkout:drop-in:4.3.0"
 
     // Dependencies
     implementation "org.jetbrains.kotlinx:kotlinx-coroutines-android:$kotlinx_version"
@@ -94,9 +94,9 @@ dependencies {
 
     implementation "com.jakewharton.retrofit:retrofit2-kotlin-coroutines-adapter:$coroutines_adapter_version"
 
-    implementation "org.koin:koin-android:$koin_version"
-    implementation "org.koin:koin-test:$koin_version"
-    implementation "org.koin:koin-androidx-viewmodel:$koin_version"
+    implementation "io.insert-koin:koin-android:$koin_version"
+    implementation "io.insert-koin:koin-test:$koin_version"
+    implementation "io.insert-koin:koin-androidx-viewmodel:$koin_version"
 
     // Tests
     testImplementation "junit:junit:$junit_version"

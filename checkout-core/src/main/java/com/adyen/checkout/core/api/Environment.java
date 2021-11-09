@@ -14,7 +14,6 @@ import android.os.Parcelable;
 import androidx.annotation.NonNull;
 
 import com.adyen.checkout.core.exception.CheckoutException;
-import com.adyen.checkout.core.util.ParcelUtils;
 
 import java.net.MalformedURLException;
 import java.net.URL;
@@ -27,6 +26,7 @@ import java.util.Objects;
 public final class Environment implements Parcelable {
 
     public static final Environment TEST;
+    public static final Environment LIVE;
     public static final Environment EUROPE;
     public static final Environment UNITED_STATES;
     public static final Environment AUSTRALIA;
@@ -49,6 +49,7 @@ public final class Environment implements Parcelable {
             EUROPE = new Environment(new URL("https://checkoutshopper-live.adyen.com/checkoutshopper/"));
             UNITED_STATES = new Environment(new URL("https://checkoutshopper-live-us.adyen.com/checkoutshopper/"));
             AUSTRALIA = new Environment(new URL("https://checkoutshopper-live-au.adyen.com/checkoutshopper/"));
+            LIVE = EUROPE;
         } catch (MalformedURLException e) {
             throw new CheckoutException("Failed to parse Environment URL.", e);
         }
@@ -71,7 +72,7 @@ public final class Environment implements Parcelable {
 
     @Override
     public int describeContents() {
-        return ParcelUtils.NO_FILE_DESCRIPTOR;
+        return Parcelable.CONTENTS_FILE_DESCRIPTOR;
     }
 
     @NonNull

@@ -8,9 +8,13 @@
 
 package com.adyen.checkout.components.base.lifecycle
 
+import android.os.Bundle
 import androidx.annotation.MainThread
+import androidx.lifecycle.AbstractSavedStateViewModelFactory
+import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
+import androidx.savedstate.SavedStateRegistryOwner
 
 @MainThread
 inline fun <ViewModelT : ViewModel> viewModelFactory(crossinline factoryProducer: () -> ViewModelT) =
@@ -20,3 +24,17 @@ inline fun <ViewModelT : ViewModel> viewModelFactory(crossinline factoryProducer
             return factoryProducer() as T
         }
     }
+
+@MainThread
+inline fun <ViewModelT : ViewModel> viewModelFactory(
+    owner: SavedStateRegistryOwner,
+    defaultArgs: Bundle?,
+    crossinline factoryProducer: (SavedStateHandle) -> ViewModelT
+): AbstractSavedStateViewModelFactory {
+    return object : AbstractSavedStateViewModelFactory(owner, defaultArgs) {
+        override fun <T : ViewModel?> create(key: String, modelClass: Class<T>, handle: SavedStateHandle): T {
+            @Suppress("UNCHECKED_CAST")
+            return factoryProducer(handle) as T
+        }
+    }
+}

@@ -26,6 +26,13 @@
     <string name="checkout_kcp_birth_date_or_tax_number_invalid">Ogiltigt födelsedatum eller organisationsnummer</string>
     <string name="checkout_kcp_password_invalid">Ogiltigt lösenord</string>
     <string name="checkout_card_postal_not_valid">Ogiltigt format på inmatning.</string>
+    <string name="checkout_card_brand_not_supported">Den angivna kortutgivaren stöds inte</string>
+    <string name="checkout_card_formatted_brand_name_not_supported">%s stöds inte</string>
+
+    <string name="checkout_card_installments_title">Antal delbetalningar</string>
+    <string name="checkout_card_installments_option_regular">%s månader</string>
+    <string name="checkout_card_installments_option_one_time">Engångsbetalning</string>
+    <string name="checkout_card_installments_option_revolving">Uppdelad betalning</string>
 
     <string name="store_payment_method">Spara till min nästa betalning</string>
 </resources>

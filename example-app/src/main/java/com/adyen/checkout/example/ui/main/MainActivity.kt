@@ -24,7 +24,6 @@ import com.adyen.checkout.core.api.Environment
 import com.adyen.checkout.core.exception.CheckoutException
 import com.adyen.checkout.core.log.LogUtil
 import com.adyen.checkout.core.log.Logger
-import com.adyen.checkout.core.util.LocaleUtil
 import com.adyen.checkout.dropin.DropIn
 import com.adyen.checkout.dropin.DropInCallback
 import com.adyen.checkout.dropin.DropInConfiguration
@@ -37,6 +36,7 @@ import com.adyen.checkout.example.databinding.ActivityMainBinding
 import com.adyen.checkout.example.service.ExampleDropInService
 import com.adyen.checkout.example.ui.configuration.ConfigurationActivity
 import com.adyen.checkout.googlepay.GooglePayConfiguration
+import java.util.Locale
 import org.koin.android.ext.android.inject
 import org.koin.androidx.viewmodel.ext.android.viewModel
 
@@ -143,7 +143,7 @@ class MainActivity : AppCompatActivity(), DropInCallback {
         setLoading(false)
 
         val shopperLocaleString = keyValueStorage.getShopperLocale()
-        val shopperLocale = LocaleUtil.fromLanguageTag(shopperLocaleString)
+        val shopperLocale = Locale.forLanguageTag(shopperLocaleString)
 
         val amount = keyValueStorage.getAmount()
 

@@ -22,7 +22,6 @@ import com.adyen.checkout.components.base.Configuration;
 import com.adyen.checkout.core.api.Environment;
 import com.adyen.checkout.core.util.ParcelUtils;
 
-import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
@@ -36,9 +35,6 @@ public class CardConfiguration extends Configuration {
     private static final CardType[] DEFAULT_SUPPORTED_CARDS =
             new CardType[]{CardType.VISA, CardType.AMERICAN_EXPRESS, CardType.MASTERCARD};
 
-    // BCMC is only supported in it's own component.
-    private static final CardType[] UNSUPPORTED_CARDS = new CardType[]{CardType.BCMC};
-
     public static final List<CardType> DEFAULT_SUPPORTED_CARDS_LIST =
             Collections.unmodifiableList(Arrays.asList(DEFAULT_SUPPORTED_CARDS));
 
@@ -51,6 +47,7 @@ public class CardConfiguration extends Configuration {
     private final SocialSecurityNumberVisibility mSocialSecurityNumberVisibility;
     private final KCPAuthVisibility mKcpAuthVisibility;
     private final AddressVisibility mAddressVisibility;
+    private final InstallmentConfiguration mInstallmentConfiguration;
 
     public static final Parcelable.Creator<CardConfiguration> CREATOR = new Parcelable.Creator<CardConfiguration>() {
         public CardConfiguration createFromParcel(@NonNull Parcel in) {
@@ -79,6 +76,7 @@ public class CardConfiguration extends Configuration {
         mSocialSecurityNumberVisibility = builder.mBuilderSocialSecurityNumberVisibility;
         mKcpAuthVisibility = builder.mBuilderKcpAuthVisibility;
         mAddressVisibility = builder.mBuilderAddressVisibility;
+        mInstallmentConfiguration = builder.mBuilderInstallmentConfiguration;
     }
 
     CardConfiguration(@NonNull Parcel in) {
@@ -92,6 +90,7 @@ public class CardConfiguration extends Configuration {
         mSocialSecurityNumberVisibility = SocialSecurityNumberVisibility.valueOf(in.readString());
         mKcpAuthVisibility = KCPAuthVisibility.valueOf(in.readString());
         mAddressVisibility = (AddressVisibility) in.readSerializable();
+        mInstallmentConfiguration = in.readParcelable(InstallmentConfiguration.class.getClassLoader());
     }
 
     @Override
@@ -106,6 +105,7 @@ public class CardConfiguration extends Configuration {
         dest.writeString(mSocialSecurityNumberVisibility.name());
         dest.writeString(mKcpAuthVisibility.name());
         dest.writeSerializable(mAddressVisibility);
+        dest.writeParcelable(mInstallmentConfiguration, flags);
     }
 
     /**
@@ -170,6 +170,11 @@ public class CardConfiguration extends Configuration {
         return mAddressVisibility;
     }
 
+    @Nullable
+    public InstallmentConfiguration getInstallmentConfiguration() {
+        return mInstallmentConfiguration;
+    }
+
     /**
      * Builder to create a {@link CardConfiguration}.
      */
@@ -184,6 +189,7 @@ public class CardConfiguration extends Configuration {
         private SocialSecurityNumberVisibility mBuilderSocialSecurityNumberVisibility = SocialSecurityNumberVisibility.HIDE;
         private KCPAuthVisibility mBuilderKcpAuthVisibility = KCPAuthVisibility.HIDE;
         private AddressVisibility mBuilderAddressVisibility = AddressVisibility.NONE;
+        private InstallmentConfiguration mBuilderInstallmentConfiguration;
 
         /**
          * Constructor of Card Configuration Builder with instance of CardConfiguration.
@@ -199,6 +205,7 @@ public class CardConfiguration extends Configuration {
             mBuilderSocialSecurityNumberVisibility = cardConfiguration.getSocialSecurityNumberVisibility();
             mBuilderKcpAuthVisibility = cardConfiguration.getKcpAuthVisibility();
             mBuilderAddressVisibility = cardConfiguration.getAddressVisibility();
+            mBuilderInstallmentConfiguration = cardConfiguration.getInstallmentConfiguration();
         }
 
         /**
@@ -246,11 +253,7 @@ public class CardConfiguration extends Configuration {
          */
         @NonNull
         public Builder setSupportedCardTypes(@NonNull CardType... supportCardTypes) {
-
-            final List<CardType> supportedCards = new ArrayList<>(Arrays.asList(supportCardTypes));
-            supportedCards.removeAll(Arrays.asList(UNSUPPORTED_CARDS));
-
-            mBuilderSupportedCardTypes = supportedCards;
+            mBuilderSupportedCardTypes = Arrays.asList(supportCardTypes);
             return this;
         }
 
@@ -345,6 +348,18 @@ public class CardConfiguration extends Configuration {
         @NonNull
         public Builder setAddressVisibility(@NonNull AddressVisibility addressVisibility) {
             mBuilderAddressVisibility = addressVisibility;
+            return this;
+        }
+
+        /**
+         * Configures the installment options to be provided to the shopper.
+         *
+         * @param installmentConfiguration The configuration object for installment options.
+         * @return {@link CardConfiguration.Builder}
+         */
+        @NonNull
+        public Builder setInstallmentConfigurations(@NonNull InstallmentConfiguration installmentConfiguration) {
+            mBuilderInstallmentConfiguration = installmentConfiguration;
             return this;
         }
 

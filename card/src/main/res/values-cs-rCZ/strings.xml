@@ -26,6 +26,13 @@
     <string name="checkout_kcp_birth_date_or_tax_number_invalid">Neplatné datum narození držitele karty nebo registrační číslo společnosti</string>
     <string name="checkout_kcp_password_invalid">Neplatné heslo</string>
     <string name="checkout_card_postal_not_valid">Vstupní formát není platný.</string>
+    <string name="checkout_card_brand_not_supported">Zadaná značka karet není podporovaná</string>
+    <string name="checkout_card_formatted_brand_name_not_supported">Karty %s nejsou podporované</string>
+
+    <string name="checkout_card_installments_title">Počet splátek</string>
+    <string name="checkout_card_installments_option_regular">%s měsíců</string>
+    <string name="checkout_card_installments_option_one_time">Jednorázová platba</string>
+    <string name="checkout_card_installments_option_revolving">Opakující se platba</string>
 
     <string name="store_payment_method">Uložit pro příští platby</string>
 </resources>

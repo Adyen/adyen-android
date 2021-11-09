@@ -9,6 +9,7 @@
 package com.adyen.checkout.components.base.lifecycle;
 
 import androidx.annotation.NonNull;
+import androidx.lifecycle.SavedStateHandle;
 import androidx.lifecycle.ViewModel;
 
 import com.adyen.checkout.components.PaymentComponent;
@@ -20,7 +21,7 @@ import com.adyen.checkout.components.model.payments.request.PaymentMethodDetails
 /**
  * Base class of a PaymentComponent as a ViewModel.
  *
- * @param <ConfigurationT> A Configuration object although optional is required to construct a Component.
+ * @param <ConfigurationT>  A Configuration object although optional is required to construct a Component.
  * @param <ComponentStateT> The {@link PaymentComponentState} this Component returns as a result.
  */
 public abstract class PaymentComponentViewModel<
@@ -31,15 +32,26 @@ public abstract class PaymentComponentViewModel<
 
     protected final PaymentMethodDelegate mPaymentMethodDelegate;
     protected final ConfigurationT mConfiguration;
+    private final SavedStateHandle mSavedStateHandle;
 
     @SuppressWarnings("LambdaLast")
-    public PaymentComponentViewModel(@NonNull PaymentMethodDelegate paymentMethodDelegate, @NonNull ConfigurationT configuration) {
+    public PaymentComponentViewModel(
+            @NonNull SavedStateHandle savedStateHandle,
+            @NonNull PaymentMethodDelegate paymentMethodDelegate,
+            @NonNull ConfigurationT configuration
+    ) {
         mPaymentMethodDelegate = paymentMethodDelegate;
         mConfiguration = configuration;
+        mSavedStateHandle = savedStateHandle;
     }
 
     @NonNull
     public ConfigurationT getConfiguration() {
         return mConfiguration;
+    }
+
+    @NonNull
+    public SavedStateHandle getSavedStateHandle() {
+        return mSavedStateHandle;
     }
 }

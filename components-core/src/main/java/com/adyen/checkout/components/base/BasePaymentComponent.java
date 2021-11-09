@@ -17,6 +17,7 @@ import androidx.annotation.WorkerThread;
 import androidx.lifecycle.LifecycleOwner;
 import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.Observer;
+import androidx.lifecycle.SavedStateHandle;
 
 import com.adyen.checkout.components.ComponentError;
 import com.adyen.checkout.components.PaymentComponentState;
@@ -32,10 +33,10 @@ import com.adyen.checkout.core.log.LogUtil;
 import com.adyen.checkout.core.log.Logger;
 
 public abstract class BasePaymentComponent<
-            ConfigurationT extends Configuration,
-            InputDataT extends InputData,
-            OutputDataT extends OutputData,
-            ComponentStateT extends PaymentComponentState<? extends PaymentMethodDetails>>
+        ConfigurationT extends Configuration,
+        InputDataT extends InputData,
+        OutputDataT extends OutputData,
+        ComponentStateT extends PaymentComponentState<? extends PaymentMethodDetails>>
         extends PaymentComponentViewModel<ConfigurationT, ComponentStateT>
         implements ViewableComponent<OutputDataT, ConfigurationT, ComponentStateT> {
 
@@ -55,12 +56,17 @@ public abstract class BasePaymentComponent<
     /**
      * Component should not be instantiated directly. Instead use the PROVIDER object.
      *
+     * @param savedStateHandle      {@link SavedStateHandle}
      * @param paymentMethodDelegate {@link PaymentMethodDelegate}
-     * @param configuration {@link ConfigurationT}
+     * @param configuration         {@link ConfigurationT}
      */
     @SuppressWarnings("LambdaLast")
-    public BasePaymentComponent(@NonNull PaymentMethodDelegate paymentMethodDelegate, @NonNull ConfigurationT configuration) {
-        super(paymentMethodDelegate, configuration);
+    public BasePaymentComponent(
+            @NonNull SavedStateHandle savedStateHandle,
+            @NonNull PaymentMethodDelegate paymentMethodDelegate,
+            @NonNull ConfigurationT configuration
+    ) {
+        super(savedStateHandle, paymentMethodDelegate, configuration);
         assertSupported(paymentMethodDelegate.getPaymentMethodType());
     }
 

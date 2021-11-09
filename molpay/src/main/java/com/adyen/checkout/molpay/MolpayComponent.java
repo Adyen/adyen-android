@@ -9,6 +9,7 @@
 package com.adyen.checkout.molpay;
 
 import androidx.annotation.NonNull;
+import androidx.lifecycle.SavedStateHandle;
 
 import com.adyen.checkout.components.PaymentComponentProvider;
 import com.adyen.checkout.components.base.GenericPaymentComponentProvider;
@@ -33,8 +34,12 @@ public final class MolpayComponent extends IssuerListComponent<MolpayPaymentMeth
             PaymentMethodTypes.MOLPAY_VIETNAM
     };
 
-    public MolpayComponent(@NonNull GenericPaymentMethodDelegate paymentMethodDelegate, @NonNull MolpayConfiguration configuration) {
-        super(paymentMethodDelegate, configuration);
+    public MolpayComponent(
+            @NonNull SavedStateHandle savedStateHandle,
+            @NonNull GenericPaymentMethodDelegate paymentMethodDelegate,
+            @NonNull MolpayConfiguration configuration
+    ) {
+        super(savedStateHandle, paymentMethodDelegate, configuration);
     }
 
     @NonNull

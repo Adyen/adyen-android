@@ -8,8 +8,10 @@
 package com.adyen.checkout.googlepay
 
 import android.app.Application
+import android.os.Bundle
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.ViewModelStoreOwner
+import androidx.savedstate.SavedStateRegistryOwner
 import com.adyen.checkout.components.ComponentAvailableCallback
 import com.adyen.checkout.components.PaymentComponentProvider
 import com.adyen.checkout.components.PaymentMethodAvailabilityCheck
@@ -17,6 +19,8 @@ import com.adyen.checkout.components.base.GenericPaymentMethodDelegate
 import com.adyen.checkout.components.base.lifecycle.viewModelFactory
 import com.adyen.checkout.components.model.paymentmethods.PaymentMethod
 import com.adyen.checkout.core.exception.CheckoutException
+import com.adyen.checkout.core.log.LogUtil
+import com.adyen.checkout.core.log.Logger
 import com.adyen.checkout.googlepay.model.GooglePayParams
 import com.adyen.checkout.googlepay.util.GooglePayUtils
 import com.google.android.gms.common.ConnectionResult
@@ -27,15 +31,30 @@ import com.google.android.gms.wallet.PaymentsClient
 import com.google.android.gms.wallet.Wallet
 import java.lang.ref.WeakReference
 
+private val TAG = LogUtil.getTag()
+
 class GooglePayProvider :
     PaymentComponentProvider<GooglePayComponent, GooglePayConfiguration>,
     PaymentMethodAvailabilityCheck<GooglePayConfiguration> {
-    override operator fun get(
-        viewModelStoreOwner: ViewModelStoreOwner,
+
+    override fun <T> get(
+        owner: T,
         paymentMethod: PaymentMethod,
         configuration: GooglePayConfiguration
+    ): GooglePayComponent where T : ViewModelStoreOwner, T : SavedStateRegistryOwner {
+        return get(owner, owner, paymentMethod, configuration, null)
+    }
+
+    override fun get(
+        savedStateRegistryOwner: SavedStateRegistryOwner,
+        viewModelStoreOwner: ViewModelStoreOwner,
+        paymentMethod: PaymentMethod,
+        configuration: GooglePayConfiguration,
+        defaultArgs: Bundle?
     ): GooglePayComponent {
-        val googlePayFactory = viewModelFactory { GooglePayComponent(GenericPaymentMethodDelegate(paymentMethod), configuration) }
+        val googlePayFactory = viewModelFactory(savedStateRegistryOwner, defaultArgs) { savedStateHandle ->
+            GooglePayComponent(savedStateHandle, GenericPaymentMethodDelegate(paymentMethod), configuration)
+        }
         return ViewModelProvider(viewModelStoreOwner, googlePayFactory).get(GooglePayComponent::class.java)
     }
 
@@ -61,6 +80,14 @@ class GooglePayProvider :
         val readyToPayTask: Task<Boolean> = paymentsClient.isReadyToPay(readyToPayRequest)
         readyToPayTask.addOnCompleteListener { task ->
             callbackWeakReference.get()?.onAvailabilityResult(task.result == true, paymentMethod, configuration)
+        }
+        readyToPayTask.addOnCanceledListener {
+            Logger.e(TAG, "GooglePay readyToPay task is cancelled.")
+            callbackWeakReference.get()?.onAvailabilityResult(false, paymentMethod, configuration)
+        }
+        readyToPayTask.addOnFailureListener {
+            Logger.e(TAG, "GooglePay readyToPay task is failed.", it)
+            callbackWeakReference.get()?.onAvailabilityResult(false, paymentMethod, configuration)
         }
     }
 }

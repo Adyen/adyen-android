@@ -41,7 +41,8 @@ class StoredCardDelegate(
                     cardConfiguration.isHideCvcStoredCard || noCvcBrands.contains(cardType) -> Brand.FieldPolicy.HIDDEN
                     else -> Brand.FieldPolicy.REQUIRED
                 },
-                expiryDatePolicy = Brand.FieldPolicy.REQUIRED
+                expiryDatePolicy = Brand.FieldPolicy.REQUIRED,
+                isSupported = true
             )
         )
     } else {
@@ -52,7 +53,7 @@ class StoredCardDelegate(
         return storedPaymentMethod.type ?: PaymentMethodTypes.UNKNOWN
     }
 
-    override fun validateCardNumber(cardNumber: String, enableLuhnCheck: Boolean?): FieldState<String> {
+    override fun validateCardNumber(cardNumber: String, enableLuhnCheck: Boolean, isBrandSupported: Boolean): FieldState<String> {
         return FieldState(
             cardNumber,
             Validation.Valid
@@ -130,6 +131,18 @@ class StoredCardDelegate(
         coroutineScope: CoroutineScope
     ): List<DetectedCardType> {
         return storedDetectedCardTypes
+    }
+
+    override fun getFundingSource(): String? {
+        return null
+    }
+
+    override fun getInstallmentOptions(
+        installmentConfiguration: InstallmentConfiguration?,
+        cardType: CardType?,
+        isCardTypeReliable: Boolean
+    ): List<InstallmentModel> {
+        return emptyList()
     }
 
     fun getStoredCardInputData(): CardInputData {

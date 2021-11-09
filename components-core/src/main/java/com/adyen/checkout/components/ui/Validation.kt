@@ -19,7 +19,10 @@ sealed class Validation {
     /**
      * Field is not valid.
      */
-    class Invalid(@StringRes val reason: Int) : Validation()
+    class Invalid(@StringRes val reason: Int, val showErrorWhileEditing: Boolean) : Validation() {
+        // Java doesn't understand optional params
+        constructor(reason: Int) : this(reason, false)
+    }
 
     fun isValid(): Boolean {
         return this is Valid

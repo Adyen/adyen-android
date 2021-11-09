@@ -11,13 +11,13 @@ package com.adyen.checkout.components.base;
 import android.app.Activity;
 import android.app.Application;
 import android.os.Bundle;
-import android.text.TextUtils;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.lifecycle.LifecycleOwner;
 import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.Observer;
+import androidx.lifecycle.SavedStateHandle;
 
 import com.adyen.checkout.components.ActionComponentData;
 import com.adyen.checkout.components.ComponentError;
@@ -31,6 +31,7 @@ import com.adyen.checkout.core.log.Logger;
 import org.json.JSONObject;
 
 public abstract class BaseActionComponent<ConfigurationT extends Configuration> extends ActionComponentViewModel<ConfigurationT> {
+
     private static final String TAG = LogUtil.getTag();
 
     private static final String PAYMENT_DATA_KEY = "payment_data";
@@ -39,10 +40,8 @@ public abstract class BaseActionComponent<ConfigurationT extends Configuration> 
 
     private final MutableLiveData<ComponentError> mErrorMutableLiveData = new MutableLiveData<>();
 
-    private String mPaymentData;
-
-    public BaseActionComponent(@NonNull Application application, @NonNull ConfigurationT configuration) {
-        super(application, configuration);
+    public BaseActionComponent(@NonNull SavedStateHandle savedStateHandle, @NonNull Application application, @NonNull ConfigurationT configuration) {
+        super(savedStateHandle, application, configuration);
     }
 
     @Override
@@ -52,7 +51,7 @@ public abstract class BaseActionComponent<ConfigurationT extends Configuration> 
             return;
         }
 
-        mPaymentData = action.getPaymentData();
+        setPaymentData(action.getPaymentData());
         try {
             handleActionInternal(activity, action);
         } catch (ComponentException e) {
@@ -94,25 +93,22 @@ public abstract class BaseActionComponent<ConfigurationT extends Configuration> 
      * Call this method to save the current data of the Component to the Bundle from {@link Activity#onSaveInstanceState(Bundle)}.
      *
      * @param bundle The bundle to save the sate into.
+     * @deprecated You can safely remove this method, we rely on {@link SavedStateHandle} to handle the state.
      */
+    @Deprecated
     public void saveState(@Nullable Bundle bundle) {
-        if (bundle != null && !TextUtils.isEmpty(mPaymentData)) {
-            if (bundle.containsKey(PAYMENT_DATA_KEY)) {
-                Logger.d(TAG, "bundle already has paymentData, overriding");
-            }
-            bundle.putString(PAYMENT_DATA_KEY, mPaymentData);
-        }
+        Logger.w(TAG, "Calling saveState is not necessary anymore, you can safely remove this method.");
     }
 
     /**
      * Call this method to restore the current data of the Component from the savedInstanceState Bundle from {@link Activity#onCreate(Bundle)}}.
      *
      * @param bundle The bundle to restore the sate from.
+     * @deprecated You can safely remove this method, we rely on {@link SavedStateHandle} to handle the state.
      */
+    @Deprecated
     public void restoreState(@Nullable Bundle bundle) {
-        if (bundle != null && bundle.containsKey(PAYMENT_DATA_KEY) && TextUtils.isEmpty(mPaymentData)) {
-            mPaymentData = bundle.getString(PAYMENT_DATA_KEY);
-        }
+        Logger.w(TAG, "Calling restoreState is not necessary anymore, you can safely remove this method.");
     }
 
     protected abstract void handleActionInternal(@NonNull Activity activity, @NonNull Action action) throws ComponentException;
@@ -120,7 +116,7 @@ public abstract class BaseActionComponent<ConfigurationT extends Configuration> 
     protected void notifyDetails(@NonNull JSONObject details) throws ComponentException {
         final ActionComponentData actionComponentData = new ActionComponentData();
         actionComponentData.setDetails(details);
-        actionComponentData.setPaymentData(mPaymentData);
+        actionComponentData.setPaymentData(getPaymentData());
 
         mResultLiveData.setValue(actionComponentData);
     }
@@ -131,10 +127,10 @@ public abstract class BaseActionComponent<ConfigurationT extends Configuration> 
 
     @Nullable
     protected String getPaymentData() {
-        return mPaymentData;
+        return getSavedStateHandle().get(PAYMENT_DATA_KEY);
     }
 
     protected void setPaymentData(@Nullable String paymentData) {
-        mPaymentData = paymentData;
+        getSavedStateHandle().set(PAYMENT_DATA_KEY, paymentData);
     }
 }

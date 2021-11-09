@@ -24,17 +24,19 @@ interface KeyValueStorage {
     fun isExecuteThreeD(): Boolean
     fun getShopperEmail(): String
     fun getMerchantAccount(): String
+    fun isSplitCardFundingSources(): Boolean
 }
 
 class KeyValueStorageImpl(private val appContext: Context, private val sharedPreferences: SharedPreferences) : KeyValueStorage {
 
     companion object {
         private const val DEFAULT_COUNTRY = "NL"
-        private const val DEFAULT_LOCALE = "en_US"
+        private const val DEFAULT_LOCALE = "en-US"
         private const val DEFAULT_VALUE = "1337"
         private const val DEFAULT_CURRENCY = "EUR"
         private const val DEFAULT_THREEDS2_ENABLE = true
         private const val DEFAULT_EXECUTE_3D = false
+        private const val DEFAULT_SPLIT_CARD_FUNDING_SOURCES = false
     }
 
     override fun getShopperReference(): String {
@@ -75,5 +77,9 @@ class KeyValueStorageImpl(private val appContext: Context, private val sharedPre
 
     override fun getMerchantAccount(): String {
         return sharedPreferences.get(appContext, R.string.merchant_account_key, BuildConfig.MERCHANT_ACCOUNT)
+    }
+
+    override fun isSplitCardFundingSources(): Boolean {
+        return sharedPreferences.get(appContext, R.string.split_card_funding_sources_key, DEFAULT_SPLIT_CARD_FUNDING_SOURCES)
     }
 }

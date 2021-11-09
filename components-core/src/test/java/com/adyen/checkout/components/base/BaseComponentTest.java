@@ -16,6 +16,7 @@ import androidx.arch.core.executor.testing.InstantTaskExecutorRule;
 import androidx.lifecycle.Lifecycle;
 import androidx.lifecycle.LifecycleOwner;
 import androidx.lifecycle.LifecycleRegistry;
+import androidx.lifecycle.SavedStateHandle;
 
 import com.adyen.checkout.components.DataProvider;
 import com.adyen.checkout.components.GenericComponentState;
@@ -69,8 +70,10 @@ public class BaseComponentTest {
     public void initBaseComponent_notSupportedPaymentMethod_expectException() throws IOException, JSONException {
         mBaseComponent = new BasePaymentComponent<
                 TestConfiguration, TestInputData, TestOutputData, PaymentComponentState<? extends PaymentMethodDetails>>(
-                    new PaymentMethodDelegateTest(),
-                    null) {
+                new SavedStateHandle(),
+                new PaymentMethodDelegateTest(),
+                null
+        ) {
             @NonNull
             @Override
             protected TestOutputData onInputDataChanged(@NonNull TestInputData inputData) {
@@ -118,7 +121,7 @@ public class BaseComponentTest {
     private BasePaymentComponent<TestConfiguration, TestInputData, TestOutputData, PaymentComponentState<? extends PaymentMethodDetails>> getBaseComponent() {
         BasePaymentComponent<TestConfiguration, TestInputData, TestOutputData, PaymentComponentState<? extends PaymentMethodDetails>> baseComponent =
                 new BasePaymentComponent<TestConfiguration, TestInputData, TestOutputData, PaymentComponentState<? extends PaymentMethodDetails>>
-                        (mPaymentMethodDelegateTest, null) {
+                        (new SavedStateHandle(), mPaymentMethodDelegateTest, null) {
             @NonNull
             @Override
             protected TestOutputData onInputDataChanged(@NonNull TestInputData inputData) {

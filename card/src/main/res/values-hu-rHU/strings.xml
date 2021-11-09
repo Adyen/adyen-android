@@ -26,6 +26,13 @@
     <string name="checkout_kcp_birth_date_or_tax_number_invalid">A kártyatulajdonos születési dátuma vagy a cégjegyzékszám érvénytelen</string>
     <string name="checkout_kcp_password_invalid">Érvénytelen jelszó</string>
     <string name="checkout_card_postal_not_valid">A megadott adatok formátuma érvénytelen.</string>
+    <string name="checkout_card_brand_not_supported">A megadott kártyamárka nem támogatott</string>
+    <string name="checkout_card_formatted_brand_name_not_supported">A(z) %s nem támogatott</string>
+
+    <string name="checkout_card_installments_title">Részletek száma</string>
+    <string name="checkout_card_installments_option_regular">%s hónap</string>
+    <string name="checkout_card_installments_option_one_time">Egyösszegű fizetés</string>
+    <string name="checkout_card_installments_option_revolving">Többösszegű fizetés</string>
 
     <string name="store_payment_method">Mentés a következő fizetéshez</string>
 </resources>

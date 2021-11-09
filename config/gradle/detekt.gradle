@@ -9,7 +9,7 @@
 /**
  * This is a static code analysis for Kotlin.
  *
- * Docs: https://arturbosch.github.io/detekt/
+ * Docs: https://github.com/detekt/detekt/
  */
 
 apply plugin: 'io.gitlab.arturbosch.detekt'

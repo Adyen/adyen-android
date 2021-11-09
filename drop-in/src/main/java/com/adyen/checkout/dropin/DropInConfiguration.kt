@@ -17,16 +17,15 @@ import com.adyen.checkout.await.AwaitConfiguration
 import com.adyen.checkout.bcmc.BcmcConfiguration
 import com.adyen.checkout.blik.BlikConfiguration
 import com.adyen.checkout.card.CardConfiguration
+import com.adyen.checkout.components.base.BaseConfigurationBuilder
 import com.adyen.checkout.components.base.Configuration
 import com.adyen.checkout.components.model.payments.Amount
 import com.adyen.checkout.components.util.CheckoutCurrency
 import com.adyen.checkout.components.util.PaymentMethodTypes
-import com.adyen.checkout.components.util.ValidationUtils
 import com.adyen.checkout.core.api.Environment
 import com.adyen.checkout.core.exception.CheckoutException
 import com.adyen.checkout.core.log.LogUtil
 import com.adyen.checkout.core.model.JsonUtils
-import com.adyen.checkout.core.util.LocaleUtil
 import com.adyen.checkout.core.util.ParcelUtils
 import com.adyen.checkout.dotpay.DotpayConfiguration
 import com.adyen.checkout.dropin.DropInConfiguration.Builder
@@ -58,6 +57,7 @@ class DropInConfiguration : Configuration, Parcelable {
     val serviceComponentName: ComponentName
     val amount: Amount
     val showPreselectedStoredPaymentMethod: Boolean
+    val skipListWhenSinglePaymentMethod: Boolean
 
     companion object {
         @JvmField
@@ -70,12 +70,13 @@ class DropInConfiguration : Configuration, Parcelable {
     @Suppress("LongParameterList")
     constructor(
         builder: Builder
-    ) : super(builder.shopperLocale, builder.environment, builder.clientKey) {
+    ) : super(builder.builderShopperLocale, builder.builderEnvironment, builder.builderClientKey) {
         this.availablePaymentConfigs = builder.availablePaymentConfigs
         this.availableActionConfigs = builder.availableActionConfigs
         this.serviceComponentName = builder.serviceComponentName
         this.amount = builder.amount
         this.showPreselectedStoredPaymentMethod = builder.showPreselectedStoredPaymentMethod
+        this.skipListWhenSinglePaymentMethod = builder.skipListWhenSinglePaymentMethod
     }
 
     constructor(parcel: Parcel) : super(parcel) {
@@ -86,6 +87,7 @@ class DropInConfiguration : Configuration, Parcelable {
         serviceComponentName = parcel.readParcelable(ComponentName::class.java.classLoader)!!
         amount = Amount.CREATOR.createFromParcel(parcel)
         showPreselectedStoredPaymentMethod = ParcelUtils.readBoolean(parcel)
+        skipListWhenSinglePaymentMethod = ParcelUtils.readBoolean(parcel)
     }
 
     override fun writeToParcel(dest: Parcel, flags: Int) {
@@ -95,21 +97,18 @@ class DropInConfiguration : Configuration, Parcelable {
         dest.writeParcelable(serviceComponentName, flags)
         JsonUtils.writeToParcel(dest, Amount.SERIALIZER.serialize(amount))
         ParcelUtils.writeBoolean(dest, showPreselectedStoredPaymentMethod)
+        ParcelUtils.writeBoolean(dest, skipListWhenSinglePaymentMethod)
     }
 
-    override fun describeContents(): Int {
-        return ParcelUtils.NO_FILE_DESCRIPTOR
-    }
-
-    internal fun <T : Configuration> getConfigurationForPaymentMethodOrNull(paymentMethod: String, context: Context): T? {
+    internal fun <T : Configuration> getConfigurationForPaymentMethodOrNull(paymentMethod: String): T? {
         return try {
-            getConfigurationForPaymentMethod(paymentMethod, context)
+            getConfigurationForPaymentMethod(paymentMethod)
         } catch (e: CheckoutException) {
             null
         }
     }
 
-    internal fun <T : Configuration> getConfigurationForPaymentMethod(paymentMethod: String, context: Context): T {
+    internal fun <T : Configuration> getConfigurationForPaymentMethod(paymentMethod: String): T {
         return if (availablePaymentConfigs.containsKey(paymentMethod)) {
             @Suppress("UNCHECKED_CAST")
             availablePaymentConfigs[paymentMethod] as T
@@ -118,7 +117,7 @@ class DropInConfiguration : Configuration, Parcelable {
         }
     }
 
-    internal inline fun <reified T : Configuration> getConfigurationForAction(context: Context): T {
+    internal inline fun <reified T : Configuration> getConfigurationForAction(): T {
         val actionClass = T::class.java
         return if (availableActionConfigs.containsKey(actionClass)) {
             @Suppress("UNCHECKED_CAST")
@@ -131,7 +130,7 @@ class DropInConfiguration : Configuration, Parcelable {
     /**
      * Builder for creating a [DropInConfiguration] where you can set specific Configurations for a Payment Method
      */
-    class Builder {
+    class Builder : BaseConfigurationBuilder<DropInConfiguration> {
 
         companion object {
             val TAG = LogUtil.getTag()
@@ -140,17 +139,13 @@ class DropInConfiguration : Configuration, Parcelable {
         val availablePaymentConfigs = HashMap<String, Configuration>()
         val availableActionConfigs = HashMap<Class<*>, Configuration>()
 
-        var shopperLocale: Locale
-            private set
-        var environment: Environment = Environment.EUROPE
-            private set
-        var clientKey: String
-            private set
         var serviceComponentName: ComponentName
             private set
         var amount: Amount = Amount.EMPTY
             private set
         var showPreselectedStoredPaymentMethod: Boolean = true
+            private set
+        var skipListWhenSinglePaymentMethod: Boolean = false
             private set
 
         private val packageName: String
@@ -164,33 +159,27 @@ class DropInConfiguration : Configuration, Parcelable {
          * @param serviceClass Service that extended from [DropInService] that would handle network requests.
          * @param clientKey Your Client Key used for network calls from the SDK to Adyen.
          */
-        constructor(context: Context, serviceClass: Class<out Any?>, clientKey: String) {
+        constructor(context: Context, serviceClass: Class<out Any?>, clientKey: String) : super(context, clientKey) {
             this.packageName = context.packageName
             this.serviceClassName = serviceClass.name
-
             this.serviceComponentName = ComponentName(packageName, serviceClassName)
-            this.shopperLocale = LocaleUtil.getLocale(context)
-
-            if (!ValidationUtils.isClientKeyValid(clientKey)) {
-                throw CheckoutException("Client key is not valid.")
-            }
-
-            this.clientKey = clientKey
         }
 
         /**
          * Create a Builder with the same values of an existing Configuration object.
          */
-        constructor(dropInConfiguration: DropInConfiguration) {
-            this.packageName = dropInConfiguration.serviceComponentName.packageName
-            this.serviceClassName = dropInConfiguration.serviceComponentName.className
+        constructor(dropInConfiguration: DropInConfiguration) : super(
+            dropInConfiguration.shopperLocale,
+            dropInConfiguration.environment,
+            dropInConfiguration.clientKey
+        ) {
+            packageName = dropInConfiguration.serviceComponentName.packageName
+            serviceClassName = dropInConfiguration.serviceComponentName.className
 
-            this.serviceComponentName = dropInConfiguration.serviceComponentName
-            this.shopperLocale = dropInConfiguration.shopperLocale
-            this.environment = dropInConfiguration.environment
-            this.amount = dropInConfiguration.amount
-            this.clientKey = dropInConfiguration.clientKey
-            this.showPreselectedStoredPaymentMethod = dropInConfiguration.showPreselectedStoredPaymentMethod
+            serviceComponentName = dropInConfiguration.serviceComponentName
+            amount = dropInConfiguration.amount
+            showPreselectedStoredPaymentMethod = dropInConfiguration.showPreselectedStoredPaymentMethod
+            skipListWhenSinglePaymentMethod = dropInConfiguration.skipListWhenSinglePaymentMethod
         }
 
         fun setServiceComponentName(serviceComponentName: ComponentName): Builder {
@@ -198,19 +187,12 @@ class DropInConfiguration : Configuration, Parcelable {
             return this
         }
 
-        /**
-         * Sets the [Locale] to be used for localization on the Drop-in flow.<br>
-         * Note that the [Locale] on the specific component configuration will still take priority and can cause inconsistency in the UI.<br>
-         * Also, due to technical limitations, this Locale will be converted to String and lose additional variants other than language and country.
-         */
-        fun setShopperLocale(shopperLocale: Locale): Builder {
-            this.shopperLocale = shopperLocale
-            return this
+        override fun setShopperLocale(builderShopperLocale: Locale): Builder {
+            return super.setShopperLocale(builderShopperLocale) as Builder
         }
 
-        fun setEnvironment(environment: Environment): Builder {
-            this.environment = environment
-            return this
+        override fun setEnvironment(builderEnvironment: Environment): Builder {
+            return super.setEnvironment(builderEnvironment) as Builder
         }
 
         fun setAmount(amount: Amount): Builder {
@@ -221,8 +203,23 @@ class DropInConfiguration : Configuration, Parcelable {
             return this
         }
 
+        /**
+         * When set to false, Drop-in will skip the preselected screen and go straight to the payment methods list.
+         */
         fun setShowPreselectedStoredPaymentMethod(showStoredPaymentMethod: Boolean): Builder {
             this.showPreselectedStoredPaymentMethod = showStoredPaymentMethod
+            return this
+        }
+
+        /**
+         * When set to true, Drop-in will skip the payment methods list screen if there is only a single payment method available and no stored
+         * payment methods.
+         *
+         * This only applies to payment methods that require a component (user input). Which means redirect payment methods, SDK payment methods,
+         * etc will not be skipped even if this flag is set to true and a single payment method is present.
+         */
+        fun setSkipListWhenSinglePaymentMethod(skipListWhenSinglePaymentMethod: Boolean): Builder {
+            this.skipListWhenSinglePaymentMethod = skipListWhenSinglePaymentMethod
             return this
         }
 
@@ -379,14 +376,7 @@ class DropInConfiguration : Configuration, Parcelable {
             return this
         }
 
-        /**
-         * Create the [DropInConfiguration] instance.
-         */
-        fun build(): DropInConfiguration {
-            if (!ValidationUtils.doesClientKeyMatchEnvironment(clientKey, environment)) {
-                throw CheckoutException("Client key does not match the environment.")
-            }
-
+        override fun buildInternal(): DropInConfiguration {
             return DropInConfiguration(this)
         }
     }

@@ -26,6 +26,13 @@
     <string name="checkout_kcp_birth_date_or_tax_number_invalid">Data de nascimento do titular do cartão ou número de registro corporativo inválidos</string>
     <string name="checkout_kcp_password_invalid">Senha inválida</string>
     <string name="checkout_card_postal_not_valid">O formato de entrada não é válido.</string>
+    <string name="checkout_card_brand_not_supported">A bandeira do cartão inserido não é aceita</string>
+    <string name="checkout_card_formatted_brand_name_not_supported">Não aceitamos %s</string>
+
+    <string name="checkout_card_installments_title">Opções de Parcelamento</string>
+    <string name="checkout_card_installments_option_regular">%s meses</string>
+    <string name="checkout_card_installments_option_one_time">Pagamento à vista</string>
+    <string name="checkout_card_installments_option_revolving">Pagamento rotativo</string>
 
     <string name="store_payment_method">Salvar para meu próximo pagamento</string>
 </resources>

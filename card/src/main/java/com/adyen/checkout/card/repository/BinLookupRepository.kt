@@ -103,7 +103,8 @@ class BinLookupRepository {
                 isReliable = true,
                 enableLuhnCheck = brandResponse.enableLuhnCheck == true,
                 cvcPolicy = Brand.FieldPolicy.parse(brandResponse.cvcPolicy ?: Brand.FieldPolicy.REQUIRED.value),
-                expiryDatePolicy = Brand.FieldPolicy.parse(brandResponse.expiryDatePolicy ?: Brand.FieldPolicy.REQUIRED.value)
+                expiryDatePolicy = Brand.FieldPolicy.parse(brandResponse.expiryDatePolicy ?: Brand.FieldPolicy.REQUIRED.value),
+                isSupported = brandResponse.supported != false
             )
         }
     }

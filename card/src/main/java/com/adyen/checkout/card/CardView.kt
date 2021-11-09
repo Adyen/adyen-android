@@ -17,6 +17,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.View.OnFocusChangeListener
 import android.view.WindowManager
+import android.widget.AdapterView
 import androidx.annotation.StringRes
 import androidx.core.view.isVisible
 import androidx.lifecycle.LifecycleOwner
@@ -33,6 +34,7 @@ import com.adyen.checkout.components.ui.view.AdyenLinearLayout
 import com.adyen.checkout.components.ui.view.AdyenTextInputEditText
 import com.adyen.checkout.components.ui.view.RoundCornerImageView
 import com.adyen.checkout.core.exception.CheckoutException
+import com.adyen.checkout.core.util.BuildUtils
 
 /**
  * CardView for [CardComponent].
@@ -53,6 +55,7 @@ class CardView @JvmOverloads constructor(context: Context, attrs: AttributeSet? 
 
     private val mCardInputData = CardInputData()
     private var mImageLoader: ImageLoader? = null
+    private var installmentListAdapter: InstallmentListAdapter? = null
 
     init {
         orientation = VERTICAL
@@ -62,7 +65,7 @@ class CardView @JvmOverloads constructor(context: Context, attrs: AttributeSet? 
 
     override fun onAttachedToWindow() {
         super.onAttachedToWindow()
-        if (!BuildConfig.DEBUG) {
+        if (!BuildUtils.isDebugBuild(context)) {
             // Prevent taking screenshot and screen on recents.
             getActivity(context)?.window?.addFlags(WindowManager.LayoutParams.FLAG_SECURE)
         }
@@ -70,7 +73,7 @@ class CardView @JvmOverloads constructor(context: Context, attrs: AttributeSet? 
 
     override fun onDetachedFromWindow() {
         super.onDetachedFromWindow()
-        if (!BuildConfig.DEBUG) {
+        if (!BuildUtils.isDebugBuild(context)) {
             getActivity(context)?.window?.clearFlags(WindowManager.LayoutParams.FLAG_SECURE)
         }
     }
@@ -140,13 +143,14 @@ class CardView @JvmOverloads constructor(context: Context, attrs: AttributeSet? 
 
     override fun onChanged(cardOutputData: CardOutputData?) {
         if (cardOutputData != null) {
-            onCardNumberValidated(cardOutputData.detectedCardTypes)
+            onCardNumberValidated(cardOutputData)
             onExpiryDateValidated(cardOutputData.expiryDateState)
             setSocialSecurityNumberVisibility(cardOutputData.isSocialSecurityNumberRequired)
             setKcpAuthVisibility(cardOutputData.isKCPAuthRequired)
             setPostalCodeVisibility(cardOutputData.isPostalCodeRequired)
             handleCvcUIState(cardOutputData.cvcUIState)
             handleExpiryDateUIState(cardOutputData.expiryDateUIState)
+            updateInstallments(cardOutputData)
         }
         if (component.isStoredPaymentMethod() && component.requiresInput()) {
             binding.textInputLayoutSecurityCode.editText?.requestFocus()
@@ -207,18 +211,33 @@ class CardView @JvmOverloads constructor(context: Context, attrs: AttributeSet? 
         component.inputDataChanged(mCardInputData)
     }
 
-    private fun onCardNumberValidated(detectedCardTypes: List<DetectedCardType>) {
+    private fun onCardNumberValidated(cardOutputData: CardOutputData) {
+        val detectedCardTypes = cardOutputData.detectedCardTypes
         if (detectedCardTypes.isEmpty()) {
-            binding.cardBrandLogoImageViewPrimary.setStrokeWidth(0f)
-            binding.cardBrandLogoImageViewPrimary.setImageResource(R.drawable.ic_card)
-            binding.cardBrandLogoImageViewPrimary.alpha = 1f
+            binding.cardBrandLogoImageViewPrimary.apply {
+                setStrokeWidth(0f)
+                setImageResource(R.drawable.ic_card)
+                alpha = 1f
+            }
             binding.cardBrandLogoContainerSecondary.isVisible = false
             binding.editTextCardNumber.setAmexCardFormat(false)
             resetBrandSelectionInput()
         } else {
             binding.cardBrandLogoImageViewPrimary.setStrokeWidth(RoundCornerImageView.DEFAULT_STROKE_WIDTH)
             mImageLoader?.load(detectedCardTypes[0].cardType.txVariant, binding.cardBrandLogoImageViewPrimary, 0, R.drawable.ic_card)
+            setDualBrandedCardImages(detectedCardTypes, cardOutputData.cardNumberState.validation)
 
+            // TODO: 29/01/2021 get this logic from OutputData
+            val isAmex = detectedCardTypes.any { it.cardType == CardType.AMERICAN_EXPRESS }
+            binding.editTextCardNumber.setAmexCardFormat(isAmex)
+        }
+    }
+
+    private fun setDualBrandedCardImages(detectedCardTypes: List<DetectedCardType>, validation: Validation) {
+        val cardNumberHasFocus = binding.textInputLayoutCardNumber.hasFocus()
+        if (validation is Validation.Invalid && !cardNumberHasFocus) {
+            setCardNumberError(validation.reason)
+        } else {
             detectedCardTypes.getOrNull(1)?.takeIf { it.isReliable }?.let {
                 binding.cardBrandLogoContainerSecondary.isVisible = true
                 binding.cardBrandLogoImageViewSecondary.setStrokeWidth(RoundCornerImageView.DEFAULT_STROKE_WIDTH)
@@ -230,15 +249,6 @@ class CardView @JvmOverloads constructor(context: Context, attrs: AttributeSet? 
                 binding.cardBrandLogoContainerSecondary.isVisible = false
                 resetBrandSelectionInput()
             }
-
-            // TODO: 29/01/2021 get this logic from OutputData
-            var isAmex = false
-            for ((cardType) in detectedCardTypes) {
-                if (cardType == CardType.AMERICAN_EXPRESS) {
-                    isAmex = true
-                }
-            }
-            binding.editTextCardNumber.setAmexCardFormat(isAmex)
         }
     }
 
@@ -258,18 +268,23 @@ class CardView @JvmOverloads constructor(context: Context, attrs: AttributeSet? 
         binding.editTextCardNumber.setOnChangeListener {
             mCardInputData.cardNumber = binding.editTextCardNumber.rawValue
             notifyInputDataChanged()
-            val shouldShowSecondaryLogo = component.outputData?.let { component.isDualBrandedFlow(it) } ?: false
-            setCardNumberError(null, shouldShowSecondaryLogo)
+            setCardErrorState(true)
         }
         binding.editTextCardNumber.onFocusChangeListener = OnFocusChangeListener { _: View?, hasFocus: Boolean ->
-            if (!component.isStoredPaymentMethod()) {
-                val cardNumberValidation = component.outputData?.cardNumberState?.validation
-                if (hasFocus) {
-                    val shouldShowSecondaryLogo = component.outputData?.let { component.isDualBrandedFlow(it) } ?: false
-                    setCardNumberError(null, shouldShowSecondaryLogo)
-                } else if (cardNumberValidation != null && cardNumberValidation is Validation.Invalid) {
-                    setCardNumberError(cardNumberValidation.reason)
-                }
+            setCardErrorState(hasFocus)
+        }
+    }
+
+    private fun setCardErrorState(hasFocus: Boolean) {
+        if (!component.isStoredPaymentMethod()) {
+            val cardNumberValidation = component.outputData?.cardNumberState?.validation
+            val showErrorWhileEditing = (cardNumberValidation as? Validation.Invalid)?.showErrorWhileEditing ?: false
+            val shouldNotShowError = hasFocus && !showErrorWhileEditing
+            if (shouldNotShowError) {
+                val shouldShowSecondaryLogo = component.outputData?.let { component.isDualBrandedFlow(it) } ?: false
+                setCardNumberError(null, shouldShowSecondaryLogo)
+            } else if (cardNumberValidation is Validation.Invalid) {
+                setCardNumberError(cardNumberValidation.reason)
             }
         }
     }
@@ -452,6 +467,41 @@ class CardView @JvmOverloads constructor(context: Context, attrs: AttributeSet? 
         }
     }
 
+    private fun updateInstallments(cardOutputData: CardOutputData) {
+        val installmentTextInputLayout = binding.textInputLayoutInstallments
+        val installmentAutoCompleteTextView = binding.autoCompleteTextViewInstallments
+        if (cardOutputData.installmentOptions.isNotEmpty()) {
+            if (installmentListAdapter == null) {
+                initInstallments()
+            }
+            if (cardOutputData.installmentState.value == null) {
+                updateInstallmentSelection(cardOutputData.installmentOptions.first())
+                val installmentOptionText = InstallmentUtils.getTextForInstallmentOption(
+                    context,
+                    cardOutputData.installmentOptions.first()
+                )
+                installmentAutoCompleteTextView.setText(installmentOptionText)
+            }
+            installmentListAdapter?.setItems(cardOutputData.installmentOptions)
+            installmentTextInputLayout.isVisible = true
+        } else {
+            installmentTextInputLayout.isVisible = false
+        }
+    }
+
+    private fun initInstallments() {
+        installmentListAdapter = InstallmentListAdapter(context)
+        installmentListAdapter?.let {
+            binding.autoCompleteTextViewInstallments.apply {
+                inputType = 0
+                setAdapter(it)
+                onItemClickListener = AdapterView.OnItemClickListener { _, _, position, _ ->
+                    updateInstallmentSelection(installmentListAdapter?.getItem(position))
+                }
+            }
+        }
+    }
+
     private fun handleCvcUIState(cvcUIState: InputFieldUIState) {
         when (cvcUIState) {
             InputFieldUIState.REQUIRED -> {
@@ -512,6 +562,13 @@ class CardView @JvmOverloads constructor(context: Context, attrs: AttributeSet? 
         binding.switchStorePaymentMethod.isVisible = false
         binding.textInputLayoutCardHolder.isVisible = false
         binding.textInputLayoutPostalCode.isVisible = false
+    }
+
+    private fun updateInstallmentSelection(installmentModel: InstallmentModel?) {
+        installmentModel?.let {
+            mCardInputData.installmentOption = it
+            notifyInputDataChanged()
+        }
     }
 
     private fun getActivity(context: Context): Activity? {

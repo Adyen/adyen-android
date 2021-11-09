@@ -25,7 +25,7 @@ abstract class CardDelegate(
 
     protected val noCvcBrands: Set<CardType> = hashSetOf(CardType.BCMC)
 
-    abstract fun validateCardNumber(cardNumber: String, enableLuhnCheck: Boolean?): FieldState<String>
+    abstract fun validateCardNumber(cardNumber: String, enableLuhnCheck: Boolean, isBrandSupported: Boolean): FieldState<String>
     abstract fun validateExpiryDate(expiryDate: ExpiryDate, expiryDatePolicy: Brand.FieldPolicy?): FieldState<ExpiryDate>
     abstract fun validateSecurityCode(securityCode: String, cardType: DetectedCardType? = null): FieldState<String>
     abstract fun validateHolderName(holderName: String): FieldState<String>
@@ -40,6 +40,12 @@ abstract class CardDelegate(
     abstract fun isHolderNameRequired(): Boolean
     abstract fun isPostalCodeRequired(): Boolean
     abstract fun detectCardType(cardNumber: String, publicKey: String?, coroutineScope: CoroutineScope): List<DetectedCardType>
+    abstract fun getFundingSource(): String?
+    abstract fun getInstallmentOptions(
+        installmentConfiguration: InstallmentConfiguration?,
+        cardType: CardType?,
+        isCardTypeReliable: Boolean
+    ): List<InstallmentModel>
 
     suspend fun fetchPublicKey(): String {
         return publicKeyRepository.fetchPublicKey(

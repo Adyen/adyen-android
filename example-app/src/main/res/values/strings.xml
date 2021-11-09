@@ -21,6 +21,8 @@
     <string name="shopper_locale_title">Shopper Locale</string>
     <string name="shopper_email_key">shopper_email</string>
     <string name="shopper_email_title">Shopper Email</string>
+    <string name="split_card_funding_sources_key">split_card_funding_sources</string>
+    <string name="split_card_funding_sources_title">Split Card Funding Sources</string>
 
     <string name="payment_information">Payment Information</string>
     <string name="currency_key">amount_currency</string>

@@ -7,6 +7,7 @@
  */
 package com.adyen.checkout.mbway
 
+import androidx.lifecycle.SavedStateHandle
 import com.adyen.checkout.components.GenericComponentState
 import com.adyen.checkout.components.PaymentComponentProvider
 import com.adyen.checkout.components.base.BasePaymentComponent
@@ -31,9 +32,13 @@ private val SUPPORTED_COUNTRIES = listOf(ISO_CODE_PORTUGAL, ISO_CODE_SPAIN)
  * @param paymentMethodDelegate [GenericPaymentMethodDelegate]
  * @param configuration [MBWayConfiguration]
  */
-class MBWayComponent(paymentMethodDelegate: GenericPaymentMethodDelegate, configuration: MBWayConfiguration) :
+class MBWayComponent(
+    savedStateHandle: SavedStateHandle,
+    paymentMethodDelegate: GenericPaymentMethodDelegate,
+    configuration: MBWayConfiguration
+) :
     BasePaymentComponent<MBWayConfiguration, MBWayInputData, MBWayOutputData,
-        GenericComponentState<MBWayPaymentMethod>>(paymentMethodDelegate, configuration) {
+        GenericComponentState<MBWayPaymentMethod>>(savedStateHandle, paymentMethodDelegate, configuration) {
 
     companion object {
         @JvmStatic

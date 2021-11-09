@@ -9,6 +9,7 @@
 package com.adyen.checkout.ideal;
 
 import androidx.annotation.NonNull;
+import androidx.lifecycle.SavedStateHandle;
 
 import com.adyen.checkout.components.PaymentComponentProvider;
 import com.adyen.checkout.components.base.GenericPaymentComponentProvider;
@@ -29,8 +30,12 @@ public final class IdealComponent extends IssuerListComponent<IdealPaymentMethod
 
     private static final String[] PAYMENT_METHOD_TYPES = {PaymentMethodTypes.IDEAL};
 
-    public IdealComponent(@NonNull GenericPaymentMethodDelegate paymentMethodDelegate, @NonNull IdealConfiguration configuration) {
-        super(paymentMethodDelegate, configuration);
+    public IdealComponent(
+            @NonNull SavedStateHandle savedStateHandle,
+            @NonNull GenericPaymentMethodDelegate paymentMethodDelegate,
+            @NonNull IdealConfiguration configuration
+    ) {
+        super(savedStateHandle, paymentMethodDelegate, configuration);
     }
 
     @NonNull

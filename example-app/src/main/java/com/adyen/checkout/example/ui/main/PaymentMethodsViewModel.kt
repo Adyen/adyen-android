@@ -48,11 +48,12 @@ class PaymentMethodsViewModel(
 
     private fun getPaymentMethodRequest(): PaymentMethodsRequest {
         return PaymentMethodsRequest(
-            keyValueStorage.getMerchantAccount(),
-            keyValueStorage.getShopperReference(),
-            keyValueStorage.getAmount(),
-            keyValueStorage.getCountry(),
-            keyValueStorage.getShopperLocale()
+            merchantAccount = keyValueStorage.getMerchantAccount(),
+            shopperReference = keyValueStorage.getShopperReference(),
+            amount = keyValueStorage.getAmount(),
+            countryCode = keyValueStorage.getCountry(),
+            shopperLocale = keyValueStorage.getShopperLocale(),
+            splitCardFundingSources = keyValueStorage.isSplitCardFundingSources()
         )
     }
 

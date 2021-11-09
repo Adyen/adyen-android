@@ -9,6 +9,7 @@
 package com.adyen.checkout.entercash;
 
 import androidx.annotation.NonNull;
+import androidx.lifecycle.SavedStateHandle;
 
 import com.adyen.checkout.components.PaymentComponentProvider;
 import com.adyen.checkout.components.base.GenericPaymentComponentProvider;
@@ -29,8 +30,11 @@ public final class EntercashComponent extends IssuerListComponent<EntercashPayme
 
     private static final String[] PAYMENT_METHOD_TYPES = {PaymentMethodTypes.ENTERCASH};
 
-    public EntercashComponent(@NonNull GenericPaymentMethodDelegate paymentMethodDelegate, @NonNull EntercashConfiguration configuration) {
-        super(paymentMethodDelegate, configuration);
+    public EntercashComponent(@NonNull SavedStateHandle savedStateHandle,
+            @NonNull GenericPaymentMethodDelegate paymentMethodDelegate,
+            @NonNull EntercashConfiguration configuration
+    ) {
+        super(savedStateHandle, paymentMethodDelegate, configuration);
     }
 
     @NonNull

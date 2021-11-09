@@ -16,8 +16,6 @@ import com.adyen.checkout.core.exception.NoConstructorException;
 
 public final class ParcelUtils {
 
-    public static final int NO_FILE_DESCRIPTOR = 0;
-
     private static final int BOOLEAN_TRUE_VALUE = 1;
     private static final int BOOLEAN_FALSE_VALUE = 0;
 

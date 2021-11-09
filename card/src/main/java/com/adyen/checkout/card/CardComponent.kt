@@ -9,6 +9,7 @@
 package com.adyen.checkout.card
 
 import androidx.annotation.StringRes
+import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.viewModelScope
 import com.adyen.checkout.card.api.model.Brand
 import com.adyen.checkout.card.data.CardType
@@ -19,6 +20,8 @@ import com.adyen.checkout.components.base.BasePaymentComponent
 import com.adyen.checkout.components.model.payments.request.Address
 import com.adyen.checkout.components.model.payments.request.CardPaymentMethod
 import com.adyen.checkout.components.model.payments.request.PaymentComponentData
+import com.adyen.checkout.components.ui.FieldState
+import com.adyen.checkout.components.ui.Validation
 import com.adyen.checkout.components.util.PaymentMethodTypes
 import com.adyen.checkout.core.exception.CheckoutException
 import com.adyen.checkout.core.exception.ComponentException
@@ -39,14 +42,18 @@ private val TAG = LogUtil.getTag()
 private val PAYMENT_METHOD_TYPES = arrayOf(PaymentMethodTypes.SCHEME)
 private const val BIN_VALUE_LENGTH = 6
 private const val LAST_FOUR_LENGTH = 4
-private const val FIRST_CARD_INDEX = 0
 private const val SINGLE_CARD_LIST_SIZE = 1
 
 @Suppress("TooManyFunctions")
 class CardComponent private constructor(
+    savedStateHandle: SavedStateHandle,
     private val cardDelegate: CardDelegate,
     cardConfiguration: CardConfiguration
-) : BasePaymentComponent<CardConfiguration, CardInputData, CardOutputData, CardComponentState>(cardDelegate, cardConfiguration) {
+) : BasePaymentComponent<CardConfiguration, CardInputData, CardOutputData, CardComponentState>(
+    savedStateHandle,
+    cardDelegate,
+    cardConfiguration
+) {
 
     private var storedPaymentInputData: CardInputData? = null
     private var publicKey: String? = null
@@ -64,7 +71,6 @@ class CardComponent private constructor(
         if (cardDelegate is NewCardDelegate) {
             cardDelegate.binLookupFlow
                 .onEach {
-                    val sortedCardList = DualBrandedCardUtils.sortBrands(it)
                     Logger.d(TAG, "New binLookupFlow emitted")
                     Logger.d(TAG, "Brands: $it")
                     with(outputData) {
@@ -79,7 +85,9 @@ class CardComponent private constructor(
                             kcpCardPassword = kcpCardPasswordState.value,
                             postalCode = postalCodeState.value,
                             isStorePaymentSelected = isStoredPaymentMethodEnable,
-                            detectedCardTypes = markSelectedCard(sortedCardList, 0)
+                            detectedCardTypes = it,
+                            selectedCardIndex = 0,
+                            selectedInstallmentOption = null
                         )
                         notifyStateChanged(newOutputData)
                     }
@@ -88,7 +96,12 @@ class CardComponent private constructor(
         }
     }
 
-    constructor(storedCardDelegate: StoredCardDelegate, cardConfiguration: CardConfiguration) : this(
+    constructor(
+        savedStateHandle: SavedStateHandle,
+        storedCardDelegate: StoredCardDelegate,
+        cardConfiguration: CardConfiguration
+    ) : this(
+        savedStateHandle,
         storedCardDelegate as CardDelegate,
         cardConfiguration
     ) {
@@ -100,7 +113,12 @@ class CardComponent private constructor(
         }
     }
 
-    constructor(cardDelegate: NewCardDelegate, cardConfiguration: CardConfiguration) : this(
+    constructor(
+        savedStateHandle: SavedStateHandle,
+        cardDelegate: NewCardDelegate,
+        cardConfiguration: CardConfiguration
+    ) : this(
+        savedStateHandle,
         cardDelegate as CardDelegate,
         cardConfiguration
     )
@@ -116,12 +134,7 @@ class CardComponent private constructor(
     override fun onInputDataChanged(inputData: CardInputData): CardOutputData {
         Logger.v(TAG, "onInputDataChanged")
 
-        val sortedCardList = DualBrandedCardUtils.sortBrands(cardDelegate.detectCardType(inputData.cardNumber, publicKey, viewModelScope))
-
-        val detectedCardTypes = markSelectedCard(
-            sortedCardList,
-            inputData.selectedCardIndex
-        )
+        val detectedCardTypes = cardDelegate.detectCardType(inputData.cardNumber, publicKey, viewModelScope)
 
         return makeOutputData(
             cardNumber = inputData.cardNumber,
@@ -133,7 +146,9 @@ class CardComponent private constructor(
             kcpCardPassword = inputData.kcpCardPassword,
             isStorePaymentSelected = inputData.isStorePaymentSelected,
             postalCode = inputData.postalCode,
-            detectedCardTypes = detectedCardTypes
+            detectedCardTypes = detectedCardTypes,
+            selectedCardIndex = inputData.selectedCardIndex,
+            selectedInstallmentOption = inputData.installmentOption
         )
     }
 
@@ -148,26 +163,46 @@ class CardComponent private constructor(
         kcpCardPassword: String,
         isStorePaymentSelected: Boolean,
         postalCode: String,
-        detectedCardTypes: List<DetectedCardType>
+        detectedCardTypes: List<DetectedCardType>,
+        selectedCardIndex: Int,
+        selectedInstallmentOption: InstallmentModel?
     ): CardOutputData {
-        val detectedType = detectedCardTypes.firstOrNull { it.isSelected } ?: detectedCardTypes.firstOrNull()
+
+        val isReliable = detectedCardTypes.any { it.isReliable }
+        val supportedCardTypes = detectedCardTypes.filter { it.isSupported }
+        val sortedCardTypes = DualBrandedCardUtils.sortBrands(supportedCardTypes)
+        val outputCardTypes = markSelectedCard(sortedCardTypes, selectedCardIndex)
+
+        val selectedOrFirstCardType = outputCardTypes.firstOrNull { it.isSelected } ?: outputCardTypes.firstOrNull()
+
+        // perform a Luhn Check if no brands are detected
+        val enableLuhnCheck = selectedOrFirstCardType?.enableLuhnCheck ?: true
+
+        // when no supported cards are detected, only show an error if the brand detection was reliable
+        val shouldFailWithUnsupportedBrand = selectedOrFirstCardType == null && isReliable
 
         return CardOutputData(
-            cardDelegate.validateCardNumber(cardNumber, detectedType?.enableLuhnCheck),
-            cardDelegate.validateExpiryDate(expiryDate, detectedType?.expiryDatePolicy),
-            cardDelegate.validateSecurityCode(securityCode, detectedType),
+            cardDelegate.validateCardNumber(cardNumber, enableLuhnCheck, isBrandSupported = !shouldFailWithUnsupportedBrand),
+            cardDelegate.validateExpiryDate(expiryDate, selectedOrFirstCardType?.expiryDatePolicy),
+            cardDelegate.validateSecurityCode(securityCode, selectedOrFirstCardType),
             cardDelegate.validateHolderName(holderName),
             cardDelegate.validateSocialSecurityNumber(socialSecurityNumber),
             cardDelegate.validateKcpBirthDateOrTaxNumber(kcpBirthDateOrTaxNumber),
             cardDelegate.validateKcpCardPassword(kcpCardPassword),
             cardDelegate.validatePostalCode(postalCode),
+            makeInstallmentFieldState(selectedInstallmentOption),
             isStorePaymentSelected,
-            makeCvcUIState(detectedType?.cvcPolicy),
-            makeExpiryDateUIState(detectedType?.expiryDatePolicy),
-            detectedCardTypes,
+            makeCvcUIState(selectedOrFirstCardType?.cvcPolicy),
+            makeExpiryDateUIState(selectedOrFirstCardType?.expiryDatePolicy),
+            outputCardTypes,
             cardDelegate.isSocialSecurityNumberRequired(),
             cardDelegate.isKCPAuthRequired(),
-            cardDelegate.isPostalCodeRequired()
+            cardDelegate.isPostalCodeRequired(),
+            cardDelegate.getInstallmentOptions(
+                configuration.installmentConfiguration,
+                selectedOrFirstCardType?.cardType,
+                isReliable
+            )
         )
     }
 
@@ -189,7 +224,7 @@ class CardComponent private constructor(
     }
 
     private fun markSelectedCard(cards: List<DetectedCardType>, selectedIndex: Int): List<DetectedCardType> {
-        if (cards.size <= SINGLE_CARD_LIST_SIZE) cards
+        if (cards.size <= SINGLE_CARD_LIST_SIZE) return cards
         return cards.mapIndexed { index, card ->
             if (index == selectedIndex) {
                 card.copy(isSelected = true)
@@ -197,6 +232,10 @@ class CardComponent private constructor(
                 card
             }
         }
+    }
+
+    private fun makeInstallmentFieldState(installmentModel: InstallmentModel?): FieldState<InstallmentModel?> {
+        return FieldState(installmentModel, Validation.Valid)
     }
 
     @Suppress("ReturnCount")
@@ -298,7 +337,6 @@ class CardComponent private constructor(
                     publicKey
                 )
             } ?: throw CheckoutException("Encryption failed because public key cannot be found.")
-
             cardPaymentMethod.taxNumber = stateOutputData.kcpBirthDateOrTaxNumberState.value
         }
 
@@ -306,25 +344,17 @@ class CardComponent private constructor(
             cardPaymentMethod.brand = stateOutputData.detectedCardTypes.first { it.isSelected }.cardType.txVariant
         }
 
+        cardPaymentMethod.fundingSource = cardDelegate.getFundingSource()
+
         try {
             cardPaymentMethod.threeDS2SdkVersion = ThreeDS2Service.INSTANCE.sdkVersion
         } catch (e: ClassNotFoundException) {
             Logger.e(TAG, "threeDS2SdkVersion not set because 3DS2 SDK is not present in project.")
+        } catch (e: NoClassDefFoundError) {
+            Logger.e(TAG, "threeDS2SdkVersion not set because 3DS2 SDK is not present in project.")
         }
 
-        val paymentComponentData = PaymentComponentData<CardPaymentMethod>().apply {
-            paymentMethod = cardPaymentMethod
-            setStorePaymentMethod(stateOutputData.isStoredPaymentMethodEnable)
-            shopperReference = configuration.shopperReference
-
-            if (cardDelegate.isSocialSecurityNumberRequired()) {
-                socialSecurityNumber = stateOutputData.socialSecurityNumberState.value
-            }
-
-            if (cardDelegate.isPostalCodeRequired()) {
-                billingAddress = makeAddressData(stateOutputData)
-            }
-        }
+        val paymentComponentData = makePaymentComponentData(cardPaymentMethod, stateOutputData)
 
         val lastFour = cardNumber.takeLast(LAST_FOUR_LENGTH)
 
@@ -361,9 +391,33 @@ class CardComponent private constructor(
         }
     }
 
+    private fun makePaymentComponentData(
+        cardPaymentMethod: CardPaymentMethod,
+        stateOutputData: CardOutputData
+    ): PaymentComponentData<CardPaymentMethod> {
+        return PaymentComponentData<CardPaymentMethod>().apply {
+            paymentMethod = cardPaymentMethod
+            setStorePaymentMethod(stateOutputData.isStoredPaymentMethodEnable)
+            shopperReference = configuration.shopperReference
+            if (cardDelegate.isSocialSecurityNumberRequired()) {
+                socialSecurityNumber = stateOutputData.socialSecurityNumberState.value
+            }
+            if (cardDelegate.isPostalCodeRequired()) {
+                billingAddress = makeAddressData(stateOutputData)
+            }
+            if (isInstallmentsRequired(stateOutputData)) {
+                installments = InstallmentUtils.makeInstallmentModelObject(stateOutputData.installmentState.value)
+            }
+        }
+    }
+
     fun isDualBrandedFlow(cardOutputData: CardOutputData): Boolean {
         val reliableDetectedCards = cardOutputData.detectedCardTypes.filter { it.isReliable }
         return reliableDetectedCards.size > 1 && reliableDetectedCards.any { it.isSelected }
+    }
+
+    private fun isInstallmentsRequired(cardOutputData: CardOutputData): Boolean {
+        return cardOutputData.installmentOptions.isNotEmpty()
     }
 
     private fun makeAddressData(outputData: CardOutputData): Address {

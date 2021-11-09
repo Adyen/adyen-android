@@ -17,6 +17,7 @@ import androidx.fragment.app.Fragment
 import com.adyen.checkout.components.model.PaymentMethodsApiResponse
 import com.adyen.checkout.core.log.LogUtil
 import com.adyen.checkout.core.log.Logger
+import com.adyen.checkout.core.util.BuildUtils
 import com.adyen.checkout.dropin.DropIn.startPayment
 import com.adyen.checkout.dropin.service.DropInService
 import com.adyen.checkout.dropin.service.DropInServiceResult
@@ -38,9 +39,6 @@ object DropIn {
     const val RESULT_KEY = "payment_result"
     const val ERROR_REASON_KEY = "error_reason"
     const val ERROR_REASON_USER_CANCELED = "Canceled by user"
-
-    internal const val DROP_IN_PREFS = "drop-in-shared-prefs"
-    internal const val LOCALE_PREF = "drop-in-locale"
 
     /**
      * Register your Activity or Fragment with the Activity Result API and receive the final
@@ -102,6 +100,7 @@ object DropIn {
         dropInConfiguration: DropInConfiguration,
         resultHandlerIntent: Intent? = null
     ) {
+        updateDefaultLogcatLevel(activity)
         Logger.d(TAG, "startPayment from Activity")
 
         val intent = preparePayment(
@@ -156,6 +155,7 @@ object DropIn {
         dropInConfiguration: DropInConfiguration,
         resultHandlerIntent: Intent? = null
     ) {
+        updateDefaultLogcatLevel(fragment.requireContext())
         Logger.d(TAG, "startPayment from Fragment")
 
         val intent = preparePayment(
@@ -215,6 +215,7 @@ object DropIn {
         dropInConfiguration: DropInConfiguration,
         resultHandlerIntent: Intent? = null
     ) {
+        updateDefaultLogcatLevel(activity)
         Logger.d(TAG, "startPayment from Activity")
 
         val intent = preparePayment(
@@ -274,6 +275,7 @@ object DropIn {
         dropInConfiguration: DropInConfiguration,
         resultHandlerIntent: Intent? = null
     ) {
+        updateDefaultLogcatLevel(fragment.requireContext())
         Logger.d(TAG, "startPayment from Fragment")
 
         val intent = preparePayment(
@@ -292,9 +294,7 @@ object DropIn {
         resultHandlerIntent: Intent?
     ): Intent {
         // Add locale to prefs
-        context.getSharedPreferences(DROP_IN_PREFS, Context.MODE_PRIVATE).edit()
-            .putString(LOCALE_PREF, dropInConfiguration.shopperLocale.toString())
-            .apply()
+        DropInPrefs.setShopperLocale(context, dropInConfiguration.shopperLocale)
 
         return DropInActivity.createIntent(
             context,
@@ -302,6 +302,10 @@ object DropIn {
             paymentMethodsApiResponse,
             resultHandlerIntent
         )
+    }
+
+    private fun updateDefaultLogcatLevel(context: Context) {
+        Logger.updateDefaultLogcatLevel(BuildUtils.isDebugBuild(context))
     }
 
     /**

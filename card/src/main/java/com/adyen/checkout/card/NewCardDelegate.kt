@@ -28,13 +28,15 @@ import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.launch
 
 private val TAG = LogUtil.getTag()
+private const val DEBIT_FUNDING_SOURCE = "debit"
 
 @Suppress("TooManyFunctions")
 class NewCardDelegate(
     private val paymentMethod: PaymentMethod,
     cardConfiguration: CardConfiguration,
     private val binLookupRepository: BinLookupRepository,
-    publicKeyRepository: PublicKeyRepository
+    publicKeyRepository: PublicKeyRepository,
+    private val cardValidationMapper: CardValidationMapper
 ) : CardDelegate(cardConfiguration, publicKeyRepository) {
 
     private val _binLookupFlow: MutableSharedFlow<List<DetectedCardType>> = MutableSharedFlow(0, 1, BufferOverflow.DROP_OLDEST)
@@ -44,8 +46,9 @@ class NewCardDelegate(
         return paymentMethod.type ?: PaymentMethodTypes.UNKNOWN
     }
 
-    override fun validateCardNumber(cardNumber: String, enableLuhnCheck: Boolean?): FieldState<String> {
-        return CardValidationUtils.validateCardNumber(cardNumber, enableLuhnCheck)
+    override fun validateCardNumber(cardNumber: String, enableLuhnCheck: Boolean, isBrandSupported: Boolean): FieldState<String> {
+        val validation = CardValidationUtils.validateCardNumber(cardNumber, enableLuhnCheck, isBrandSupported)
+        return cardValidationMapper.mapCardNumberValidation(cardNumber, validation)
     }
 
     override fun validateExpiryDate(expiryDate: ExpiryDate, expiryDatePolicy: Brand.FieldPolicy?): FieldState<ExpiryDate> {
@@ -172,6 +175,23 @@ class NewCardDelegate(
         return detectCardLocally(cardNumber)
     }
 
+    override fun getFundingSource(): String? {
+        return paymentMethod.fundingSource
+    }
+
+    override fun getInstallmentOptions(
+        installmentConfiguration: InstallmentConfiguration?,
+        cardType: CardType?,
+        isCardTypeReliable: Boolean
+    ): List<InstallmentModel> {
+        val isDebit = getFundingSource() == DEBIT_FUNDING_SOURCE
+        return if (isDebit) {
+            emptyList()
+        } else {
+            InstallmentUtils.makeInstallmentOptions(installmentConfiguration, cardType, isCardTypeReliable)
+        }
+    }
+
     private fun detectCardLocally(cardNumber: String): List<DetectedCardType> {
         Logger.d(TAG, "detectCardLocally")
         if (cardNumber.isEmpty()) {
@@ -179,11 +199,10 @@ class NewCardDelegate(
         }
         val supportedCardTypes = cardConfiguration.supportedCardTypes
         val estimateCardTypes = CardType.estimate(cardNumber)
-        val detectedCardTypes = supportedCardTypes.filter { estimateCardTypes.contains(it) }
-        return detectedCardTypes.map { localDetectedCard(it) }
+        return estimateCardTypes.map { localDetectedCard(it, supportedCardTypes) }
     }
 
-    private fun localDetectedCard(cardType: CardType): DetectedCardType {
+    private fun localDetectedCard(cardType: CardType, supportedCardTypes: List<CardType>): DetectedCardType {
         return DetectedCardType(
             cardType,
             isReliable = false,
@@ -192,7 +211,8 @@ class NewCardDelegate(
                 noCvcBrands.contains(cardType) -> Brand.FieldPolicy.HIDDEN
                 else -> Brand.FieldPolicy.REQUIRED
             },
-            expiryDatePolicy = Brand.FieldPolicy.REQUIRED
+            expiryDatePolicy = Brand.FieldPolicy.REQUIRED,
+            isSupported = supportedCardTypes.contains(cardType)
         )
     }
 
