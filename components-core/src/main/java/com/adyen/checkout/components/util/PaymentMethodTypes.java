@@ -108,6 +108,7 @@ public final class PaymentMethodTypes {
                 MOLPAY_VIETNAM,
                 OPEN_BANKING,
                 SEPA,
+                BACS,
                 SCHEME,
                 BLIK,
                 WECHAT_PAY_SDK,
