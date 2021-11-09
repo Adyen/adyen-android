@@ -1,6 +1,47 @@
 $dokka.format:html-v1
 $dokka.linkExtension:html
-
+$dokka.location:com.adyen.checkout.cse.exception////PointingToDeclaration/cse/com.adyen.checkout.cse.exception/index.html
+$dokka.location:com.adyen.checkout.cse.exception/EncryptionException///PointingToDeclaration/cse/com.adyen.checkout.cse.exception/-encryption-exception/index.html
+$dokka.location:com.adyen.checkout.cse.exception/EncryptionException/EncryptionException/#java.lang.String#java.lang.Throwable/PointingToDeclaration/cse/com.adyen.checkout.cse.exception/-encryption-exception/-encryption-exception.html
+$dokka.location:com.adyen.checkout.cse////PointingToDeclaration/cse/com.adyen.checkout.cse/index.html
+$dokka.location:com.adyen.checkout.cse/CardEncrypter///PointingToDeclaration/cse/com.adyen.checkout.cse/-card-encrypter/index.html
+$dokka.location:com.adyen.checkout.cse/CardEncrypter/encrypt/#com.adyen.checkout.cse.UnencryptedCard#java.lang.String/PointingToDeclaration/cse/com.adyen.checkout.cse/-card-encrypter/encrypt.html
+$dokka.location:com.adyen.checkout.cse/CardEncrypter/encryptBin/#java.lang.String#java.lang.String/PointingToDeclaration/cse/com.adyen.checkout.cse/-card-encrypter/encrypt-bin.html
+$dokka.location:com.adyen.checkout.cse/CardEncrypter/encryptFields/#com.adyen.checkout.cse.UnencryptedCard#java.lang.String/PointingToDeclaration/cse/com.adyen.checkout.cse/-card-encrypter/encrypt-fields.html
+$dokka.location:com.adyen.checkout.cse/ClientSideEncrypter///PointingToDeclaration/cse/com.adyen.checkout.cse/-client-side-encrypter/index.html
+$dokka.location:com.adyen.checkout.cse/ClientSideEncrypter/ClientSideEncrypter/#java.lang.String/PointingToDeclaration/cse/com.adyen.checkout.cse/-client-side-encrypter/-client-side-encrypter.html
+$dokka.location:com.adyen.checkout.cse/ClientSideEncrypter/encrypt/#java.lang.String/PointingToDeclaration/cse/com.adyen.checkout.cse/-client-side-encrypter/encrypt.html
+$dokka.location:com.adyen.checkout.cse/EncryptedCard///PointingToDeclaration/cse/com.adyen.checkout.cse/-encrypted-card/index.html
+$dokka.location:com.adyen.checkout.cse/EncryptedCard/CREATOR/#/PointingToDeclaration/cse/com.adyen.checkout.cse/-encrypted-card/-c-r-e-a-t-o-r.html
+$dokka.location:com.adyen.checkout.cse/EncryptedCard/describeContents/#/PointingToDeclaration/cse/com.adyen.checkout.cse/-encrypted-card/describe-contents.html
+$dokka.location:com.adyen.checkout.cse/EncryptedCard/getEncryptedCardNumber/#/PointingToDeclaration/cse/com.adyen.checkout.cse/-encrypted-card/get-encrypted-card-number.html
+$dokka.location:com.adyen.checkout.cse/EncryptedCard/getEncryptedExpiryMonth/#/PointingToDeclaration/cse/com.adyen.checkout.cse/-encrypted-card/get-encrypted-expiry-month.html
+$dokka.location:com.adyen.checkout.cse/EncryptedCard/getEncryptedExpiryYear/#/PointingToDeclaration/cse/com.adyen.checkout.cse/-encrypted-card/get-encrypted-expiry-year.html
+$dokka.location:com.adyen.checkout.cse/EncryptedCard/getEncryptedSecurityCode/#/PointingToDeclaration/cse/com.adyen.checkout.cse/-encrypted-card/get-encrypted-security-code.html
+$dokka.location:com.adyen.checkout.cse/EncryptedCard/writeToParcel/#android.os.Parcel#int/PointingToDeclaration/cse/com.adyen.checkout.cse/-encrypted-card/write-to-parcel.html
+$dokka.location:com.adyen.checkout.cse/GenericEncrypter///PointingToDeclaration/cse/com.adyen.checkout.cse/-generic-encrypter/index.html
+$dokka.location:com.adyen.checkout.cse/GenericEncrypter/KCP_PASSWORD_KEY/#/PointingToDeclaration/cse/com.adyen.checkout.cse/-generic-encrypter/-k-c-p_-p-a-s-s-w-o-r-d_-k-e-y.html
+$dokka.location:com.adyen.checkout.cse/GenericEncrypter/encryptField/#kotlin.String#kotlin.Any#kotlin.String/PointingToDeclaration/cse/com.adyen.checkout.cse/-generic-encrypter/encrypt-field.html
+$dokka.location:com.adyen.checkout.cse/GenericEncrypter/makeGenerationTime/#java.util.Date?/PointingToDeclaration/cse/com.adyen.checkout.cse/-generic-encrypter/make-generation-time.html
+$dokka.location:com.adyen.checkout.cse/UnencryptedCard.Builder///PointingToDeclaration/cse/com.adyen.checkout.cse/-unencrypted-card/-builder/index.html
+$dokka.location:com.adyen.checkout.cse/UnencryptedCard.Builder/build/#/PointingToDeclaration/cse/com.adyen.checkout.cse/-unencrypted-card/-builder/build.html
+$dokka.location:com.adyen.checkout.cse/UnencryptedCard.Builder/setCvc/#java.lang.String/PointingToDeclaration/cse/com.adyen.checkout.cse/-unencrypted-card/-builder/set-cvc.html
+$dokka.location:com.adyen.checkout.cse/UnencryptedCard.Builder/setExpiryMonth/#java.lang.String/PointingToDeclaration/cse/com.adyen.checkout.cse/-unencrypted-card/-builder/set-expiry-month.html
+$dokka.location:com.adyen.checkout.cse/UnencryptedCard.Builder/setExpiryYear/#java.lang.String/PointingToDeclaration/cse/com.adyen.checkout.cse/-unencrypted-card/-builder/set-expiry-year.html
+$dokka.location:com.adyen.checkout.cse/UnencryptedCard.Builder/setGenerationTime/#java.util.Date/PointingToDeclaration/cse/com.adyen.checkout.cse/-unencrypted-card/-builder/set-generation-time.html
+$dokka.location:com.adyen.checkout.cse/UnencryptedCard.Builder/setHolderName/#java.lang.String/PointingToDeclaration/cse/com.adyen.checkout.cse/-unencrypted-card/-builder/set-holder-name.html
+$dokka.location:com.adyen.checkout.cse/UnencryptedCard.Builder/setNumber/#java.lang.String/PointingToDeclaration/cse/com.adyen.checkout.cse/-unencrypted-card/-builder/set-number.html
+$dokka.location:com.adyen.checkout.cse/UnencryptedCard///PointingToDeclaration/cse/com.adyen.checkout.cse/-unencrypted-card/index.html
+$dokka.location:com.adyen.checkout.cse/UnencryptedCard/UnencryptedCard/#java.lang.String#java.lang.String#java.lang.String#java.lang.String#java.lang.String#java.util.Date/PointingToDeclaration/cse/com.adyen.checkout.cse/-unencrypted-card/-unencrypted-card.html
+$dokka.location:com.adyen.checkout.cse/UnencryptedCard/getCardHolderName/#/PointingToDeclaration/cse/com.adyen.checkout.cse/-unencrypted-card/get-card-holder-name.html
+$dokka.location:com.adyen.checkout.cse/UnencryptedCard/getCvc/#/PointingToDeclaration/cse/com.adyen.checkout.cse/-unencrypted-card/get-cvc.html
+$dokka.location:com.adyen.checkout.cse/UnencryptedCard/getExpiryMonth/#/PointingToDeclaration/cse/com.adyen.checkout.cse/-unencrypted-card/get-expiry-month.html
+$dokka.location:com.adyen.checkout.cse/UnencryptedCard/getExpiryYear/#/PointingToDeclaration/cse/com.adyen.checkout.cse/-unencrypted-card/get-expiry-year.html
+$dokka.location:com.adyen.checkout.cse/UnencryptedCard/getGenerationTime/#/PointingToDeclaration/cse/com.adyen.checkout.cse/-unencrypted-card/get-generation-time.html
+$dokka.location:com.adyen.checkout.cse/UnencryptedCard/getNumber/#/PointingToDeclaration/cse/com.adyen.checkout.cse/-unencrypted-card/get-number.html
+$dokka.location:com.adyen.checkout.cse/UnencryptedCard/toString/#/PointingToDeclaration/cse/com.adyen.checkout.cse/-unencrypted-card/to-string.html
+$dokka.location:com.adyen.checkout.cse/ValidationUtils///PointingToDeclaration/cse/com.adyen.checkout.cse/-validation-utils/index.html
+$dokka.location:com.adyen.checkout.cse/ValidationUtils/isPublicKeyValid/#java.lang.String/PointingToDeclaration/cse/com.adyen.checkout.cse/-validation-utils/is-public-key-valid.html
 com.adyen.checkout.cse
 com.adyen.checkout.cse.exception
 

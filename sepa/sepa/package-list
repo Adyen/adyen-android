@@ -1,6 +1,49 @@
 $dokka.format:html-v1
 $dokka.linkExtension:html
-
+$dokka.location:com.adyen.checkout.sepa.ui////PointingToDeclaration/sepa/com.adyen.checkout.sepa.ui/index.html
+$dokka.location:com.adyen.checkout.sepa.ui/IbanInput///PointingToDeclaration/sepa/com.adyen.checkout.sepa.ui/-iban-input/index.html
+$dokka.location:com.adyen.checkout.sepa.ui/IbanInput/IbanInput/#android.content.Context#android.util.AttributeSet#int/PointingToDeclaration/sepa/com.adyen.checkout.sepa.ui/-iban-input/-iban-input.html
+$dokka.location:com.adyen.checkout.sepa.ui/IbanInput/IbanInput/#android.content.Context#android.util.AttributeSet/PointingToDeclaration/sepa/com.adyen.checkout.sepa.ui/-iban-input/-iban-input.html
+$dokka.location:com.adyen.checkout.sepa.ui/IbanInput/IbanInput/#android.content.Context/PointingToDeclaration/sepa/com.adyen.checkout.sepa.ui/-iban-input/-iban-input.html
+$dokka.location:com.adyen.checkout.sepa////PointingToDeclaration/sepa/com.adyen.checkout.sepa/index.html
+$dokka.location:com.adyen.checkout.sepa/Iban///PointingToDeclaration/sepa/com.adyen.checkout.sepa/-iban/index.html
+$dokka.location:com.adyen.checkout.sepa/Iban/format/#java.lang.String/PointingToDeclaration/sepa/com.adyen.checkout.sepa/-iban/format.html
+$dokka.location:com.adyen.checkout.sepa/Iban/getBban/#/PointingToDeclaration/sepa/com.adyen.checkout.sepa/-iban/get-bban.html
+$dokka.location:com.adyen.checkout.sepa/Iban/getCheckDigits/#/PointingToDeclaration/sepa/com.adyen.checkout.sepa/-iban/get-check-digits.html
+$dokka.location:com.adyen.checkout.sepa/Iban/getCountryCode/#/PointingToDeclaration/sepa/com.adyen.checkout.sepa/-iban/get-country-code.html
+$dokka.location:com.adyen.checkout.sepa/Iban/getFormattedMaxLength/#/PointingToDeclaration/sepa/com.adyen.checkout.sepa/-iban/get-formatted-max-length.html
+$dokka.location:com.adyen.checkout.sepa/Iban/getValue/#/PointingToDeclaration/sepa/com.adyen.checkout.sepa/-iban/get-value.html
+$dokka.location:com.adyen.checkout.sepa/Iban/isPartial/#java.lang.String/PointingToDeclaration/sepa/com.adyen.checkout.sepa/-iban/is-partial.html
+$dokka.location:com.adyen.checkout.sepa/Iban/isSepa/#/PointingToDeclaration/sepa/com.adyen.checkout.sepa/-iban/is-sepa.html
+$dokka.location:com.adyen.checkout.sepa/Iban/mask/#java.lang.String/PointingToDeclaration/sepa/com.adyen.checkout.sepa/-iban/mask.html
+$dokka.location:com.adyen.checkout.sepa/Iban/parse/#java.lang.String/PointingToDeclaration/sepa/com.adyen.checkout.sepa/-iban/parse.html
+$dokka.location:com.adyen.checkout.sepa/Iban/parseByAddingMissingZeros/#java.lang.String/PointingToDeclaration/sepa/com.adyen.checkout.sepa/-iban/parse-by-adding-missing-zeros.html
+$dokka.location:com.adyen.checkout.sepa/Iban/startsWithSepaCountryCode/#java.lang.String/PointingToDeclaration/sepa/com.adyen.checkout.sepa/-iban/starts-with-sepa-country-code.html
+$dokka.location:com.adyen.checkout.sepa/SepaComponent///PointingToDeclaration/sepa/com.adyen.checkout.sepa/-sepa-component/index.html
+$dokka.location:com.adyen.checkout.sepa/SepaComponent/PROVIDER/#/PointingToDeclaration/sepa/com.adyen.checkout.sepa/-sepa-component/-p-r-o-v-i-d-e-r.html
+$dokka.location:com.adyen.checkout.sepa/SepaComponent/SepaComponent/#androidx.lifecycle.SavedStateHandle#com.adyen.checkout.components.base.GenericPaymentMethodDelegate#com.adyen.checkout.sepa.SepaConfiguration/PointingToDeclaration/sepa/com.adyen.checkout.sepa/-sepa-component/-sepa-component.html
+$dokka.location:com.adyen.checkout.sepa/SepaComponent/getSupportedPaymentMethodTypes/#/PointingToDeclaration/sepa/com.adyen.checkout.sepa/-sepa-component/get-supported-payment-method-types.html
+$dokka.location:com.adyen.checkout.sepa/SepaConfiguration.Builder///PointingToDeclaration/sepa/com.adyen.checkout.sepa/-sepa-configuration/-builder/index.html
+$dokka.location:com.adyen.checkout.sepa/SepaConfiguration.Builder/Builder/#android.content.Context#java.lang.String/PointingToDeclaration/sepa/com.adyen.checkout.sepa/-sepa-configuration/-builder/-builder.html
+$dokka.location:com.adyen.checkout.sepa/SepaConfiguration.Builder/Builder/#java.util.Locale#com.adyen.checkout.core.api.Environment#java.lang.String/PointingToDeclaration/sepa/com.adyen.checkout.sepa/-sepa-configuration/-builder/-builder.html
+$dokka.location:com.adyen.checkout.sepa/SepaConfiguration.Builder/setEnvironment/#com.adyen.checkout.core.api.Environment/PointingToDeclaration/sepa/com.adyen.checkout.sepa/-sepa-configuration/-builder/set-environment.html
+$dokka.location:com.adyen.checkout.sepa/SepaConfiguration.Builder/setShopperLocale/#java.util.Locale/PointingToDeclaration/sepa/com.adyen.checkout.sepa/-sepa-configuration/-builder/set-shopper-locale.html
+$dokka.location:com.adyen.checkout.sepa/SepaConfiguration///PointingToDeclaration/sepa/com.adyen.checkout.sepa/-sepa-configuration/index.html
+$dokka.location:com.adyen.checkout.sepa/SepaConfiguration/CREATOR/#/PointingToDeclaration/sepa/com.adyen.checkout.sepa/-sepa-configuration/-c-r-e-a-t-o-r.html
+$dokka.location:com.adyen.checkout.sepa/SepaInputData///PointingToDeclaration/sepa/com.adyen.checkout.sepa/-sepa-input-data/index.html
+$dokka.location:com.adyen.checkout.sepa/SepaInputData/getIban/#/PointingToDeclaration/sepa/com.adyen.checkout.sepa/-sepa-input-data/get-iban.html
+$dokka.location:com.adyen.checkout.sepa/SepaInputData/getName/#/PointingToDeclaration/sepa/com.adyen.checkout.sepa/-sepa-input-data/get-name.html
+$dokka.location:com.adyen.checkout.sepa/SepaInputData/setIban/#java.lang.String/PointingToDeclaration/sepa/com.adyen.checkout.sepa/-sepa-input-data/set-iban.html
+$dokka.location:com.adyen.checkout.sepa/SepaInputData/setName/#java.lang.String/PointingToDeclaration/sepa/com.adyen.checkout.sepa/-sepa-input-data/set-name.html
+$dokka.location:com.adyen.checkout.sepa/SepaView///PointingToDeclaration/sepa/com.adyen.checkout.sepa/-sepa-view/index.html
+$dokka.location:com.adyen.checkout.sepa/SepaView/SepaView/#android.content.Context#android.util.AttributeSet#int/PointingToDeclaration/sepa/com.adyen.checkout.sepa/-sepa-view/-sepa-view.html
+$dokka.location:com.adyen.checkout.sepa/SepaView/SepaView/#android.content.Context#android.util.AttributeSet/PointingToDeclaration/sepa/com.adyen.checkout.sepa/-sepa-view/-sepa-view.html
+$dokka.location:com.adyen.checkout.sepa/SepaView/SepaView/#android.content.Context/PointingToDeclaration/sepa/com.adyen.checkout.sepa/-sepa-view/-sepa-view.html
+$dokka.location:com.adyen.checkout.sepa/SepaView/highlightValidationErrors/#/PointingToDeclaration/sepa/com.adyen.checkout.sepa/-sepa-view/highlight-validation-errors.html
+$dokka.location:com.adyen.checkout.sepa/SepaView/initView/#/PointingToDeclaration/sepa/com.adyen.checkout.sepa/-sepa-view/init-view.html
+$dokka.location:com.adyen.checkout.sepa/SepaView/isConfirmationRequired/#/PointingToDeclaration/sepa/com.adyen.checkout.sepa/-sepa-view/is-confirmation-required.html
+$dokka.location:com.adyen.checkout.sepa/SepaView/onChanged/#com.adyen.checkout.sepa.SepaOutputData/PointingToDeclaration/sepa/com.adyen.checkout.sepa/-sepa-view/on-changed.html
+$dokka.location:com.adyen.checkout.sepa/SepaView/onComponentAttached/#/PointingToDeclaration/sepa/com.adyen.checkout.sepa/-sepa-view/on-component-attached.html
 com.adyen.checkout.sepa
 com.adyen.checkout.sepa.ui
 

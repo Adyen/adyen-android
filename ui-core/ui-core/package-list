@@ -1,6 +1,58 @@
 $dokka.format:html-v1
 $dokka.linkExtension:html
-
+$dokka.location:com.adyen.checkout.components.extensions////PointingToDeclaration/ui-core/com.adyen.checkout.components.extensions/index.html
+$dokka.location:com.adyen.checkout.components.extensions//copyTextToClipboard/android.content.Context#kotlin.String#kotlin.String#kotlin.String?/PointingToDeclaration/ui-core/com.adyen.checkout.components.extensions/copy-text-to-clipboard.html
+$dokka.location:com.adyen.checkout.components.extensions//toast/android.content.Context#kotlin.String#kotlin.Int/PointingToDeclaration/ui-core/com.adyen.checkout.components.extensions/toast.html
+$dokka.location:com.adyen.checkout.components.ui.adapter////PointingToDeclaration/ui-core/com.adyen.checkout.components.ui.adapter/index.html
+$dokka.location:com.adyen.checkout.components.ui.adapter/ClickableListRecyclerAdapter.OnItemCLickedListener///PointingToDeclaration/ui-core/com.adyen.checkout.components.ui.adapter/-clickable-list-recycler-adapter/-on-item-c-licked-listener/index.html
+$dokka.location:com.adyen.checkout.components.ui.adapter/ClickableListRecyclerAdapter.OnItemCLickedListener/onItemClicked/#int/PointingToDeclaration/ui-core/com.adyen.checkout.components.ui.adapter/-clickable-list-recycler-adapter/-on-item-c-licked-listener/on-item-clicked.html
+$dokka.location:com.adyen.checkout.components.ui.adapter/ClickableListRecyclerAdapter///PointingToDeclaration/ui-core/com.adyen.checkout.components.ui.adapter/-clickable-list-recycler-adapter/index.html
+$dokka.location:com.adyen.checkout.components.ui.adapter/ClickableListRecyclerAdapter/onBindViewHolder/#ViewHolderT#int/PointingToDeclaration/ui-core/com.adyen.checkout.components.ui.adapter/-clickable-list-recycler-adapter/on-bind-view-holder.html
+$dokka.location:com.adyen.checkout.components.ui.adapter/ClickableListRecyclerAdapter/setItemCLickListener/#com.adyen.checkout.components.ui.adapter.ClickableListRecyclerAdapter.OnItemCLickedListener/PointingToDeclaration/ui-core/com.adyen.checkout.components.ui.adapter/-clickable-list-recycler-adapter/set-item-c-lick-listener.html
+$dokka.location:com.adyen.checkout.components.ui.util////PointingToDeclaration/ui-core/com.adyen.checkout.components.ui.util/index.html
+$dokka.location:com.adyen.checkout.components.ui.util/ThemeUtil///PointingToDeclaration/ui-core/com.adyen.checkout.components.ui.util/-theme-util/index.html
+$dokka.location:com.adyen.checkout.components.ui.util/ThemeUtil/getPrimaryThemeColor/#android.content.Context/PointingToDeclaration/ui-core/com.adyen.checkout.components.ui.util/-theme-util/get-primary-theme-color.html
+$dokka.location:com.adyen.checkout.components.ui.view////PointingToDeclaration/ui-core/com.adyen.checkout.components.ui.view/index.html
+$dokka.location:com.adyen.checkout.components.ui.view/AdyenLinearLayout///PointingToDeclaration/ui-core/com.adyen.checkout.components.ui.view/-adyen-linear-layout/index.html
+$dokka.location:com.adyen.checkout.components.ui.view/AdyenLinearLayout/AdyenLinearLayout/#android.content.Context#android.util.AttributeSet#int/PointingToDeclaration/ui-core/com.adyen.checkout.components.ui.view/-adyen-linear-layout/-adyen-linear-layout.html
+$dokka.location:com.adyen.checkout.components.ui.view/AdyenLinearLayout/AdyenLinearLayout/#android.content.Context#android.util.AttributeSet/PointingToDeclaration/ui-core/com.adyen.checkout.components.ui.view/-adyen-linear-layout/-adyen-linear-layout.html
+$dokka.location:com.adyen.checkout.components.ui.view/AdyenLinearLayout/AdyenLinearLayout/#android.content.Context/PointingToDeclaration/ui-core/com.adyen.checkout.components.ui.view/-adyen-linear-layout/-adyen-linear-layout.html
+$dokka.location:com.adyen.checkout.components.ui.view/AdyenLinearLayout/attach/#ComponentT#androidx.lifecycle.LifecycleOwner/PointingToDeclaration/ui-core/com.adyen.checkout.components.ui.view/-adyen-linear-layout/attach.html
+$dokka.location:com.adyen.checkout.components.ui.view/AdyenTextInputEditText.Listener///PointingToDeclaration/ui-core/com.adyen.checkout.components.ui.view/-adyen-text-input-edit-text/-listener/index.html
+$dokka.location:com.adyen.checkout.components.ui.view/AdyenTextInputEditText.Listener/onTextChanged/#android.text.Editable/PointingToDeclaration/ui-core/com.adyen.checkout.components.ui.view/-adyen-text-input-edit-text/-listener/on-text-changed.html
+$dokka.location:com.adyen.checkout.components.ui.view/AdyenTextInputEditText///PointingToDeclaration/ui-core/com.adyen.checkout.components.ui.view/-adyen-text-input-edit-text/index.html
+$dokka.location:com.adyen.checkout.components.ui.view/AdyenTextInputEditText/AdyenTextInputEditText/#android.content.Context#android.util.AttributeSet#int/PointingToDeclaration/ui-core/com.adyen.checkout.components.ui.view/-adyen-text-input-edit-text/-adyen-text-input-edit-text.html
+$dokka.location:com.adyen.checkout.components.ui.view/AdyenTextInputEditText/AdyenTextInputEditText/#android.content.Context#android.util.AttributeSet/PointingToDeclaration/ui-core/com.adyen.checkout.components.ui.view/-adyen-text-input-edit-text/-adyen-text-input-edit-text.html
+$dokka.location:com.adyen.checkout.components.ui.view/AdyenTextInputEditText/AdyenTextInputEditText/#android.content.Context/PointingToDeclaration/ui-core/com.adyen.checkout.components.ui.view/-adyen-text-input-edit-text/-adyen-text-input-edit-text.html
+$dokka.location:com.adyen.checkout.components.ui.view/AdyenTextInputEditText/getRawValue/#/PointingToDeclaration/ui-core/com.adyen.checkout.components.ui.view/-adyen-text-input-edit-text/get-raw-value.html
+$dokka.location:com.adyen.checkout.components.ui.view/AdyenTextInputEditText/setOnChangeListener/#com.adyen.checkout.components.ui.view.AdyenTextInputEditText.Listener/PointingToDeclaration/ui-core/com.adyen.checkout.components.ui.view/-adyen-text-input-edit-text/set-on-change-listener.html
+$dokka.location:com.adyen.checkout.components.ui.view/RoundCornerImageView///PointingToDeclaration/ui-core/com.adyen.checkout.components.ui.view/-round-corner-image-view/index.html
+$dokka.location:com.adyen.checkout.components.ui.view/RoundCornerImageView/DEFAULT_RADIUS/#/PointingToDeclaration/ui-core/com.adyen.checkout.components.ui.view/-round-corner-image-view/-d-e-f-a-u-l-t_-r-a-d-i-u-s.html
+$dokka.location:com.adyen.checkout.components.ui.view/RoundCornerImageView/DEFAULT_STROKE_COLOR/#/PointingToDeclaration/ui-core/com.adyen.checkout.components.ui.view/-round-corner-image-view/-d-e-f-a-u-l-t_-s-t-r-o-k-e_-c-o-l-o-r.html
+$dokka.location:com.adyen.checkout.components.ui.view/RoundCornerImageView/DEFAULT_STROKE_WIDTH/#/PointingToDeclaration/ui-core/com.adyen.checkout.components.ui.view/-round-corner-image-view/-d-e-f-a-u-l-t_-s-t-r-o-k-e_-w-i-d-t-h.html
+$dokka.location:com.adyen.checkout.components.ui.view/RoundCornerImageView/RoundCornerImageView/#android.content.Context#android.util.AttributeSet#int/PointingToDeclaration/ui-core/com.adyen.checkout.components.ui.view/-round-corner-image-view/-round-corner-image-view.html
+$dokka.location:com.adyen.checkout.components.ui.view/RoundCornerImageView/RoundCornerImageView/#android.content.Context#android.util.AttributeSet/PointingToDeclaration/ui-core/com.adyen.checkout.components.ui.view/-round-corner-image-view/-round-corner-image-view.html
+$dokka.location:com.adyen.checkout.components.ui.view/RoundCornerImageView/RoundCornerImageView/#android.content.Context/PointingToDeclaration/ui-core/com.adyen.checkout.components.ui.view/-round-corner-image-view/-round-corner-image-view.html
+$dokka.location:com.adyen.checkout.components.ui.view/RoundCornerImageView/setBorderEnabled/#boolean/PointingToDeclaration/ui-core/com.adyen.checkout.components.ui.view/-round-corner-image-view/set-border-enabled.html
+$dokka.location:com.adyen.checkout.components.ui.view/RoundCornerImageView/setRadius/#float/PointingToDeclaration/ui-core/com.adyen.checkout.components.ui.view/-round-corner-image-view/set-radius.html
+$dokka.location:com.adyen.checkout.components.ui.view/RoundCornerImageView/setStrokeColor/#int/PointingToDeclaration/ui-core/com.adyen.checkout.components.ui.view/-round-corner-image-view/set-stroke-color.html
+$dokka.location:com.adyen.checkout.components.ui.view/RoundCornerImageView/setStrokeWidth/#float/PointingToDeclaration/ui-core/com.adyen.checkout.components.ui.view/-round-corner-image-view/set-stroke-width.html
+$dokka.location:com.adyen.checkout.components.util////PointingToDeclaration/ui-core/com.adyen.checkout.components.util/index.html
+$dokka.location:com.adyen.checkout.components.util/CustomTextWatcher///PointingToDeclaration/ui-core/com.adyen.checkout.components.util/-custom-text-watcher/index.html
+$dokka.location:com.adyen.checkout.components.util/CustomTextWatcher/afterTextChanged/#android.text.Editable/PointingToDeclaration/ui-core/com.adyen.checkout.components.util/-custom-text-watcher/after-text-changed.html
+$dokka.location:com.adyen.checkout.components.util/CustomTextWatcher/afterTextChangedByUser/#android.text.Editable/PointingToDeclaration/ui-core/com.adyen.checkout.components.util/-custom-text-watcher/after-text-changed-by-user.html
+$dokka.location:com.adyen.checkout.components.util/CustomTextWatcher/onTextChanged/#java.lang.CharSequence#int#int#int/PointingToDeclaration/ui-core/com.adyen.checkout.components.util/-custom-text-watcher/on-text-changed.html
+$dokka.location:com.adyen.checkout.components.util/SimpleTextWatcher///PointingToDeclaration/ui-core/com.adyen.checkout.components.util/-simple-text-watcher/index.html
+$dokka.location:com.adyen.checkout.components.util/SimpleTextWatcher/afterTextChanged/#android.text.Editable/PointingToDeclaration/ui-core/com.adyen.checkout.components.util/-simple-text-watcher/after-text-changed.html
+$dokka.location:com.adyen.checkout.components.util/SimpleTextWatcher/beforeTextChanged/#java.lang.CharSequence#int#int#int/PointingToDeclaration/ui-core/com.adyen.checkout.components.util/-simple-text-watcher/before-text-changed.html
+$dokka.location:com.adyen.checkout.components.util/SimpleTextWatcher/onTextChanged/#java.lang.CharSequence#int#int#int/PointingToDeclaration/ui-core/com.adyen.checkout.components.util/-simple-text-watcher/on-text-changed.html
+$dokka.location:com.adyen.checkout.components////PointingToDeclaration/ui-core/com.adyen.checkout.components/index.html
+$dokka.location:com.adyen.checkout.components/ComponentView///PointingToDeclaration/ui-core/com.adyen.checkout.components/-component-view/index.html
+$dokka.location:com.adyen.checkout.components/ComponentView/attach/#ComponentT#androidx.lifecycle.LifecycleOwner/PointingToDeclaration/ui-core/com.adyen.checkout.components/-component-view/attach.html
+$dokka.location:com.adyen.checkout.components/ComponentView/highlightValidationErrors/#/PointingToDeclaration/ui-core/com.adyen.checkout.components/-component-view/highlight-validation-errors.html
+$dokka.location:com.adyen.checkout.components/ComponentView/initView/#/PointingToDeclaration/ui-core/com.adyen.checkout.components/-component-view/init-view.html
+$dokka.location:com.adyen.checkout.components/ComponentView/isConfirmationRequired/#/PointingToDeclaration/ui-core/com.adyen.checkout.components/-component-view/is-confirmation-required.html
+$dokka.location:com.adyen.checkout.components/ComponentView/onComponentAttached/#/PointingToDeclaration/ui-core/com.adyen.checkout.components/-component-view/on-component-attached.html
 com.adyen.checkout.components
 com.adyen.checkout.components.extensions
 com.adyen.checkout.components.ui.adapter

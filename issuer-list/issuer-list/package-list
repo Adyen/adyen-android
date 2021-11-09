@@ -1,5 +1,50 @@
 $dokka.format:html-v1
 $dokka.linkExtension:html
-
+$dokka.location:com.adyen.checkout.issuerlist////PointingToDeclaration/issuer-list/com.adyen.checkout.issuerlist/index.html
+$dokka.location:com.adyen.checkout.issuerlist/IssuerListComponent///PointingToDeclaration/issuer-list/com.adyen.checkout.issuerlist/-issuer-list-component/index.html
+$dokka.location:com.adyen.checkout.issuerlist/IssuerListComponent/IssuerListComponent/#androidx.lifecycle.SavedStateHandle#com.adyen.checkout.components.base.GenericPaymentMethodDelegate#com.adyen.checkout.issuerlist.IssuerListConfiguration/PointingToDeclaration/issuer-list/com.adyen.checkout.issuerlist/-issuer-list-component/-issuer-list-component.html
+$dokka.location:com.adyen.checkout.issuerlist/IssuerListConfiguration.IssuerListBuilder///PointingToDeclaration/issuer-list/com.adyen.checkout.issuerlist/-issuer-list-configuration/-issuer-list-builder/index.html
+$dokka.location:com.adyen.checkout.issuerlist/IssuerListConfiguration///PointingToDeclaration/issuer-list/com.adyen.checkout.issuerlist/-issuer-list-configuration/index.html
+$dokka.location:com.adyen.checkout.issuerlist/IssuerListInputData///PointingToDeclaration/issuer-list/com.adyen.checkout.issuerlist/-issuer-list-input-data/index.html
+$dokka.location:com.adyen.checkout.issuerlist/IssuerListOutputData///PointingToDeclaration/issuer-list/com.adyen.checkout.issuerlist/-issuer-list-output-data/index.html
+$dokka.location:com.adyen.checkout.issuerlist/IssuerListOutputData/IssuerListOutputData/#com.adyen.checkout.issuerlist.IssuerModel/PointingToDeclaration/issuer-list/com.adyen.checkout.issuerlist/-issuer-list-output-data/-issuer-list-output-data.html
+$dokka.location:com.adyen.checkout.issuerlist/IssuerListOutputData/getSelectedIssuer/#/PointingToDeclaration/issuer-list/com.adyen.checkout.issuerlist/-issuer-list-output-data/get-selected-issuer.html
+$dokka.location:com.adyen.checkout.issuerlist/IssuerListOutputData/isValid/#/PointingToDeclaration/issuer-list/com.adyen.checkout.issuerlist/-issuer-list-output-data/is-valid.html
+$dokka.location:com.adyen.checkout.issuerlist/IssuerListRecyclerView///PointingToDeclaration/issuer-list/com.adyen.checkout.issuerlist/-issuer-list-recycler-view/index.html
+$dokka.location:com.adyen.checkout.issuerlist/IssuerListRecyclerView/IssuerListRecyclerView/#android.content.Context#android.util.AttributeSet#int/PointingToDeclaration/issuer-list/com.adyen.checkout.issuerlist/-issuer-list-recycler-view/-issuer-list-recycler-view.html
+$dokka.location:com.adyen.checkout.issuerlist/IssuerListRecyclerView/IssuerListRecyclerView/#android.content.Context#android.util.AttributeSet/PointingToDeclaration/issuer-list/com.adyen.checkout.issuerlist/-issuer-list-recycler-view/-issuer-list-recycler-view.html
+$dokka.location:com.adyen.checkout.issuerlist/IssuerListRecyclerView/IssuerListRecyclerView/#android.content.Context/PointingToDeclaration/issuer-list/com.adyen.checkout.issuerlist/-issuer-list-recycler-view/-issuer-list-recycler-view.html
+$dokka.location:com.adyen.checkout.issuerlist/IssuerListRecyclerView/hideIssuersLogo/#/PointingToDeclaration/issuer-list/com.adyen.checkout.issuerlist/-issuer-list-recycler-view/hide-issuers-logo.html
+$dokka.location:com.adyen.checkout.issuerlist/IssuerListRecyclerView/highlightValidationErrors/#/PointingToDeclaration/issuer-list/com.adyen.checkout.issuerlist/-issuer-list-recycler-view/highlight-validation-errors.html
+$dokka.location:com.adyen.checkout.issuerlist/IssuerListRecyclerView/initView/#/PointingToDeclaration/issuer-list/com.adyen.checkout.issuerlist/-issuer-list-recycler-view/init-view.html
+$dokka.location:com.adyen.checkout.issuerlist/IssuerListRecyclerView/isConfirmationRequired/#/PointingToDeclaration/issuer-list/com.adyen.checkout.issuerlist/-issuer-list-recycler-view/is-confirmation-required.html
+$dokka.location:com.adyen.checkout.issuerlist/IssuerListRecyclerView/onChanged/#java.util.List<com.adyen.checkout.issuerlist.IssuerModel>/PointingToDeclaration/issuer-list/com.adyen.checkout.issuerlist/-issuer-list-recycler-view/on-changed.html
+$dokka.location:com.adyen.checkout.issuerlist/IssuerListRecyclerView/onComponentAttached/#/PointingToDeclaration/issuer-list/com.adyen.checkout.issuerlist/-issuer-list-recycler-view/on-component-attached.html
+$dokka.location:com.adyen.checkout.issuerlist/IssuerListRecyclerView/onItemClicked/#int/PointingToDeclaration/issuer-list/com.adyen.checkout.issuerlist/-issuer-list-recycler-view/on-item-clicked.html
+$dokka.location:com.adyen.checkout.issuerlist/IssuerListRecyclerView/setEnabled/#boolean/PointingToDeclaration/issuer-list/com.adyen.checkout.issuerlist/-issuer-list-recycler-view/set-enabled.html
+$dokka.location:com.adyen.checkout.issuerlist/IssuerListSpinnerAdapter///PointingToDeclaration/issuer-list/com.adyen.checkout.issuerlist/-issuer-list-spinner-adapter/index.html
+$dokka.location:com.adyen.checkout.issuerlist/IssuerListSpinnerAdapter/getCount/#/PointingToDeclaration/issuer-list/com.adyen.checkout.issuerlist/-issuer-list-spinner-adapter/get-count.html
+$dokka.location:com.adyen.checkout.issuerlist/IssuerListSpinnerAdapter/getItem/#int/PointingToDeclaration/issuer-list/com.adyen.checkout.issuerlist/-issuer-list-spinner-adapter/get-item.html
+$dokka.location:com.adyen.checkout.issuerlist/IssuerListSpinnerAdapter/getItemId/#int/PointingToDeclaration/issuer-list/com.adyen.checkout.issuerlist/-issuer-list-spinner-adapter/get-item-id.html
+$dokka.location:com.adyen.checkout.issuerlist/IssuerListSpinnerAdapter/getView/#int#android.view.View#android.view.ViewGroup/PointingToDeclaration/issuer-list/com.adyen.checkout.issuerlist/-issuer-list-spinner-adapter/get-view.html
+$dokka.location:com.adyen.checkout.issuerlist/IssuerListSpinnerView///PointingToDeclaration/issuer-list/com.adyen.checkout.issuerlist/-issuer-list-spinner-view/index.html
+$dokka.location:com.adyen.checkout.issuerlist/IssuerListSpinnerView/IssuerListSpinnerView/#android.content.Context#android.util.AttributeSet#int/PointingToDeclaration/issuer-list/com.adyen.checkout.issuerlist/-issuer-list-spinner-view/-issuer-list-spinner-view.html
+$dokka.location:com.adyen.checkout.issuerlist/IssuerListSpinnerView/IssuerListSpinnerView/#android.content.Context#android.util.AttributeSet/PointingToDeclaration/issuer-list/com.adyen.checkout.issuerlist/-issuer-list-spinner-view/-issuer-list-spinner-view.html
+$dokka.location:com.adyen.checkout.issuerlist/IssuerListSpinnerView/IssuerListSpinnerView/#android.content.Context/PointingToDeclaration/issuer-list/com.adyen.checkout.issuerlist/-issuer-list-spinner-view/-issuer-list-spinner-view.html
+$dokka.location:com.adyen.checkout.issuerlist/IssuerListSpinnerView/hideIssuersLogo/#/PointingToDeclaration/issuer-list/com.adyen.checkout.issuerlist/-issuer-list-spinner-view/hide-issuers-logo.html
+$dokka.location:com.adyen.checkout.issuerlist/IssuerListSpinnerView/highlightValidationErrors/#/PointingToDeclaration/issuer-list/com.adyen.checkout.issuerlist/-issuer-list-spinner-view/highlight-validation-errors.html
+$dokka.location:com.adyen.checkout.issuerlist/IssuerListSpinnerView/initView/#/PointingToDeclaration/issuer-list/com.adyen.checkout.issuerlist/-issuer-list-spinner-view/init-view.html
+$dokka.location:com.adyen.checkout.issuerlist/IssuerListSpinnerView/isConfirmationRequired/#/PointingToDeclaration/issuer-list/com.adyen.checkout.issuerlist/-issuer-list-spinner-view/is-confirmation-required.html
+$dokka.location:com.adyen.checkout.issuerlist/IssuerListSpinnerView/onComponentAttached/#/PointingToDeclaration/issuer-list/com.adyen.checkout.issuerlist/-issuer-list-spinner-view/on-component-attached.html
+$dokka.location:com.adyen.checkout.issuerlist/IssuerListSpinnerView/onItemSelected/#android.widget.AdapterView<?>#android.view.View#int#long/PointingToDeclaration/issuer-list/com.adyen.checkout.issuerlist/-issuer-list-spinner-view/on-item-selected.html
+$dokka.location:com.adyen.checkout.issuerlist/IssuerListSpinnerView/onNothingSelected/#android.widget.AdapterView<?>/PointingToDeclaration/issuer-list/com.adyen.checkout.issuerlist/-issuer-list-spinner-view/on-nothing-selected.html
+$dokka.location:com.adyen.checkout.issuerlist/IssuerListSpinnerView/setEnabled/#boolean/PointingToDeclaration/issuer-list/com.adyen.checkout.issuerlist/-issuer-list-spinner-view/set-enabled.html
+$dokka.location:com.adyen.checkout.issuerlist/IssuerLogoCallback///PointingToDeclaration/issuer-list/com.adyen.checkout.issuerlist/-issuer-logo-callback/index.html
+$dokka.location:com.adyen.checkout.issuerlist/IssuerLogoCallback/onLogoReceived/#android.graphics.drawable.BitmapDrawable/PointingToDeclaration/issuer-list/com.adyen.checkout.issuerlist/-issuer-logo-callback/on-logo-received.html
+$dokka.location:com.adyen.checkout.issuerlist/IssuerLogoCallback/onReceiveFailed/#/PointingToDeclaration/issuer-list/com.adyen.checkout.issuerlist/-issuer-logo-callback/on-receive-failed.html
+$dokka.location:com.adyen.checkout.issuerlist/IssuerModel///PointingToDeclaration/issuer-list/com.adyen.checkout.issuerlist/-issuer-model/index.html
+$dokka.location:com.adyen.checkout.issuerlist/IssuerModel/IssuerModel/#kotlin.String#kotlin.String/PointingToDeclaration/issuer-list/com.adyen.checkout.issuerlist/-issuer-model/-issuer-model.html
+$dokka.location:com.adyen.checkout.issuerlist/IssuerModel/id/#/PointingToDeclaration/issuer-list/com.adyen.checkout.issuerlist/-issuer-model/id.html
+$dokka.location:com.adyen.checkout.issuerlist/IssuerModel/name/#/PointingToDeclaration/issuer-list/com.adyen.checkout.issuerlist/-issuer-model/name.html
 com.adyen.checkout.issuerlist
 

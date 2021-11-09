@@ -1,5 +1,37 @@
 $dokka.format:html-v1
 $dokka.linkExtension:html
-
+$dokka.location:com.adyen.checkout.await////PointingToDeclaration/await/com.adyen.checkout.await/index.html
+$dokka.location:com.adyen.checkout.await/AwaitComponent///PointingToDeclaration/await/com.adyen.checkout.await/-await-component/index.html
+$dokka.location:com.adyen.checkout.await/AwaitComponent/AwaitComponent/#androidx.lifecycle.SavedStateHandle#android.app.Application#com.adyen.checkout.await.AwaitConfiguration/PointingToDeclaration/await/com.adyen.checkout.await/-await-component/-await-component.html
+$dokka.location:com.adyen.checkout.await/AwaitComponent/PROVIDER/#/PointingToDeclaration/await/com.adyen.checkout.await/-await-component/-p-r-o-v-i-d-e-r.html
+$dokka.location:com.adyen.checkout.await/AwaitComponent/canHandleAction/#com.adyen.checkout.components.model.payments.response.Action/PointingToDeclaration/await/com.adyen.checkout.await/-await-component/can-handle-action.html
+$dokka.location:com.adyen.checkout.await/AwaitComponent/getOutputData/#/PointingToDeclaration/await/com.adyen.checkout.await/-await-component/get-output-data.html
+$dokka.location:com.adyen.checkout.await/AwaitComponent/observe/#androidx.lifecycle.LifecycleOwner#androidx.lifecycle.Observer<com.adyen.checkout.components.ActionComponentData>/PointingToDeclaration/await/com.adyen.checkout.await/-await-component/observe.html
+$dokka.location:com.adyen.checkout.await/AwaitComponent/observeOutputData/#androidx.lifecycle.LifecycleOwner#androidx.lifecycle.Observer<com.adyen.checkout.await.AwaitOutputData>/PointingToDeclaration/await/com.adyen.checkout.await/-await-component/observe-output-data.html
+$dokka.location:com.adyen.checkout.await/AwaitComponent/sendAnalyticsEvent/#android.content.Context/PointingToDeclaration/await/com.adyen.checkout.await/-await-component/send-analytics-event.html
+$dokka.location:com.adyen.checkout.await/AwaitComponentProvider///PointingToDeclaration/await/com.adyen.checkout.await/-await-component-provider/index.html
+$dokka.location:com.adyen.checkout.await/AwaitComponentProvider/AwaitComponentProvider/#/PointingToDeclaration/await/com.adyen.checkout.await/-await-component-provider/-await-component-provider.html
+$dokka.location:com.adyen.checkout.await/AwaitComponentProvider/canHandleAction/#com.adyen.checkout.components.model.payments.response.Action/PointingToDeclaration/await/com.adyen.checkout.await/-await-component-provider/can-handle-action.html
+$dokka.location:com.adyen.checkout.await/AwaitComponentProvider/get/#TypeParam(bounds=[androidx.savedstate.SavedStateRegistryOwner, androidx.lifecycle.ViewModelStoreOwner])#android.app.Application#com.adyen.checkout.await.AwaitConfiguration/PointingToDeclaration/await/com.adyen.checkout.await/-await-component-provider/get.html
+$dokka.location:com.adyen.checkout.await/AwaitComponentProvider/get/#androidx.savedstate.SavedStateRegistryOwner#androidx.lifecycle.ViewModelStoreOwner#android.app.Application#com.adyen.checkout.await.AwaitConfiguration#android.os.Bundle?/PointingToDeclaration/await/com.adyen.checkout.await/-await-component-provider/get.html
+$dokka.location:com.adyen.checkout.await/AwaitComponentProvider/getSupportedActionTypes/#/PointingToDeclaration/await/com.adyen.checkout.await/-await-component-provider/get-supported-action-types.html
+$dokka.location:com.adyen.checkout.await/AwaitComponentProvider/requiresConfiguration/#/PointingToDeclaration/await/com.adyen.checkout.await/-await-component-provider/requires-configuration.html
+$dokka.location:com.adyen.checkout.await/AwaitComponentProvider/requiresView/#com.adyen.checkout.components.model.payments.response.Action/PointingToDeclaration/await/com.adyen.checkout.await/-await-component-provider/requires-view.html
+$dokka.location:com.adyen.checkout.await/AwaitConfiguration.Builder///PointingToDeclaration/await/com.adyen.checkout.await/-await-configuration/-builder/index.html
+$dokka.location:com.adyen.checkout.await/AwaitConfiguration.Builder/Builder/#android.content.Context#java.lang.String/PointingToDeclaration/await/com.adyen.checkout.await/-await-configuration/-builder/-builder.html
+$dokka.location:com.adyen.checkout.await/AwaitConfiguration.Builder/Builder/#java.util.Locale#com.adyen.checkout.core.api.Environment#java.lang.String/PointingToDeclaration/await/com.adyen.checkout.await/-await-configuration/-builder/-builder.html
+$dokka.location:com.adyen.checkout.await/AwaitConfiguration.Builder/setEnvironment/#com.adyen.checkout.core.api.Environment/PointingToDeclaration/await/com.adyen.checkout.await/-await-configuration/-builder/set-environment.html
+$dokka.location:com.adyen.checkout.await/AwaitConfiguration.Builder/setShopperLocale/#java.util.Locale/PointingToDeclaration/await/com.adyen.checkout.await/-await-configuration/-builder/set-shopper-locale.html
+$dokka.location:com.adyen.checkout.await/AwaitConfiguration///PointingToDeclaration/await/com.adyen.checkout.await/-await-configuration/index.html
+$dokka.location:com.adyen.checkout.await/AwaitConfiguration/CREATOR/#/PointingToDeclaration/await/com.adyen.checkout.await/-await-configuration/-c-r-e-a-t-o-r.html
+$dokka.location:com.adyen.checkout.await/AwaitView///PointingToDeclaration/await/com.adyen.checkout.await/-await-view/index.html
+$dokka.location:com.adyen.checkout.await/AwaitView/AwaitView/#android.content.Context#android.util.AttributeSet#int/PointingToDeclaration/await/com.adyen.checkout.await/-await-view/-await-view.html
+$dokka.location:com.adyen.checkout.await/AwaitView/AwaitView/#android.content.Context#android.util.AttributeSet/PointingToDeclaration/await/com.adyen.checkout.await/-await-view/-await-view.html
+$dokka.location:com.adyen.checkout.await/AwaitView/AwaitView/#android.content.Context/PointingToDeclaration/await/com.adyen.checkout.await/-await-view/-await-view.html
+$dokka.location:com.adyen.checkout.await/AwaitView/highlightValidationErrors/#/PointingToDeclaration/await/com.adyen.checkout.await/-await-view/highlight-validation-errors.html
+$dokka.location:com.adyen.checkout.await/AwaitView/initView/#/PointingToDeclaration/await/com.adyen.checkout.await/-await-view/init-view.html
+$dokka.location:com.adyen.checkout.await/AwaitView/isConfirmationRequired/#/PointingToDeclaration/await/com.adyen.checkout.await/-await-view/is-confirmation-required.html
+$dokka.location:com.adyen.checkout.await/AwaitView/onChanged/#com.adyen.checkout.await.AwaitOutputData/PointingToDeclaration/await/com.adyen.checkout.await/-await-view/on-changed.html
+$dokka.location:com.adyen.checkout.await/AwaitView/onComponentAttached/#/PointingToDeclaration/await/com.adyen.checkout.await/-await-view/on-component-attached.html
 com.adyen.checkout.await
 

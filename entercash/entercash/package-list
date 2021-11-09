@@ -1,5 +1,24 @@
 $dokka.format:html-v1
 $dokka.linkExtension:html
-
+$dokka.location:com.adyen.checkout.entercash////PointingToDeclaration/entercash/com.adyen.checkout.entercash/index.html
+$dokka.location:com.adyen.checkout.entercash/EntercashComponent///PointingToDeclaration/entercash/com.adyen.checkout.entercash/-entercash-component/index.html
+$dokka.location:com.adyen.checkout.entercash/EntercashComponent/EntercashComponent/#androidx.lifecycle.SavedStateHandle#com.adyen.checkout.components.base.GenericPaymentMethodDelegate#com.adyen.checkout.entercash.EntercashConfiguration/PointingToDeclaration/entercash/com.adyen.checkout.entercash/-entercash-component/-entercash-component.html
+$dokka.location:com.adyen.checkout.entercash/EntercashComponent/PROVIDER/#/PointingToDeclaration/entercash/com.adyen.checkout.entercash/-entercash-component/-p-r-o-v-i-d-e-r.html
+$dokka.location:com.adyen.checkout.entercash/EntercashComponent/getSupportedPaymentMethodTypes/#/PointingToDeclaration/entercash/com.adyen.checkout.entercash/-entercash-component/get-supported-payment-method-types.html
+$dokka.location:com.adyen.checkout.entercash/EntercashConfiguration.Builder///PointingToDeclaration/entercash/com.adyen.checkout.entercash/-entercash-configuration/-builder/index.html
+$dokka.location:com.adyen.checkout.entercash/EntercashConfiguration.Builder/Builder/#android.content.Context#java.lang.String/PointingToDeclaration/entercash/com.adyen.checkout.entercash/-entercash-configuration/-builder/-builder.html
+$dokka.location:com.adyen.checkout.entercash/EntercashConfiguration.Builder/Builder/#java.util.Locale#com.adyen.checkout.core.api.Environment#java.lang.String/PointingToDeclaration/entercash/com.adyen.checkout.entercash/-entercash-configuration/-builder/-builder.html
+$dokka.location:com.adyen.checkout.entercash/EntercashConfiguration.Builder/setEnvironment/#com.adyen.checkout.core.api.Environment/PointingToDeclaration/entercash/com.adyen.checkout.entercash/-entercash-configuration/-builder/set-environment.html
+$dokka.location:com.adyen.checkout.entercash/EntercashConfiguration.Builder/setShopperLocale/#java.util.Locale/PointingToDeclaration/entercash/com.adyen.checkout.entercash/-entercash-configuration/-builder/set-shopper-locale.html
+$dokka.location:com.adyen.checkout.entercash/EntercashConfiguration///PointingToDeclaration/entercash/com.adyen.checkout.entercash/-entercash-configuration/index.html
+$dokka.location:com.adyen.checkout.entercash/EntercashConfiguration/CREATOR/#/PointingToDeclaration/entercash/com.adyen.checkout.entercash/-entercash-configuration/-c-r-e-a-t-o-r.html
+$dokka.location:com.adyen.checkout.entercash/EntercashRecyclerView///PointingToDeclaration/entercash/com.adyen.checkout.entercash/-entercash-recycler-view/index.html
+$dokka.location:com.adyen.checkout.entercash/EntercashRecyclerView/EntercashRecyclerView/#android.content.Context#android.util.AttributeSet#int/PointingToDeclaration/entercash/com.adyen.checkout.entercash/-entercash-recycler-view/-entercash-recycler-view.html
+$dokka.location:com.adyen.checkout.entercash/EntercashRecyclerView/EntercashRecyclerView/#android.content.Context#android.util.AttributeSet/PointingToDeclaration/entercash/com.adyen.checkout.entercash/-entercash-recycler-view/-entercash-recycler-view.html
+$dokka.location:com.adyen.checkout.entercash/EntercashRecyclerView/EntercashRecyclerView/#android.content.Context/PointingToDeclaration/entercash/com.adyen.checkout.entercash/-entercash-recycler-view/-entercash-recycler-view.html
+$dokka.location:com.adyen.checkout.entercash/EntercashSpinnerView///PointingToDeclaration/entercash/com.adyen.checkout.entercash/-entercash-spinner-view/index.html
+$dokka.location:com.adyen.checkout.entercash/EntercashSpinnerView/EntercashSpinnerView/#android.content.Context#android.util.AttributeSet#int/PointingToDeclaration/entercash/com.adyen.checkout.entercash/-entercash-spinner-view/-entercash-spinner-view.html
+$dokka.location:com.adyen.checkout.entercash/EntercashSpinnerView/EntercashSpinnerView/#android.content.Context#android.util.AttributeSet/PointingToDeclaration/entercash/com.adyen.checkout.entercash/-entercash-spinner-view/-entercash-spinner-view.html
+$dokka.location:com.adyen.checkout.entercash/EntercashSpinnerView/EntercashSpinnerView/#android.content.Context/PointingToDeclaration/entercash/com.adyen.checkout.entercash/-entercash-spinner-view/-entercash-spinner-view.html
 com.adyen.checkout.entercash
 
