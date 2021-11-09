@@ -17,6 +17,9 @@ import com.adyen.checkout.adyen3ds2.Adyen3DS2Configuration
 import com.adyen.checkout.await.AwaitComponent
 import com.adyen.checkout.await.AwaitConfiguration
 import com.adyen.checkout.await.AwaitView
+import com.adyen.checkout.bacs.BacsDirectDebitComponent
+import com.adyen.checkout.bacs.BacsDirectDebitConfiguration
+import com.adyen.checkout.bacs.BacsDirectDebitView
 import com.adyen.checkout.bcmc.BcmcComponent
 import com.adyen.checkout.bcmc.BcmcConfiguration
 import com.adyen.checkout.bcmc.BcmcView
@@ -123,6 +126,7 @@ internal fun <T : Configuration> getDefaultConfigForPaymentMethod(
         PaymentMethodTypes.MOLPAY_VIETNAM -> MolpayConfiguration.Builder(shopperLocale, environment, clientKey)
         PaymentMethodTypes.OPEN_BANKING -> OpenBankingConfiguration.Builder(shopperLocale, environment, clientKey)
         PaymentMethodTypes.SEPA -> SepaConfiguration.Builder(shopperLocale, environment, clientKey)
+        PaymentMethodTypes.BACS -> BacsDirectDebitConfiguration.Builder(shopperLocale, environment, clientKey)
         PaymentMethodTypes.SCHEME -> CardConfiguration.Builder(shopperLocale, environment, clientKey)
         else -> throw CheckoutException("Unable to find component configuration for paymentMethod - $paymentMethod")
     }
@@ -299,7 +303,10 @@ internal fun getComponentFor(
             val sepaConfiguration: SepaConfiguration = dropInConfiguration.getConfigurationForPaymentMethod(PaymentMethodTypes.SEPA)
             SepaComponent.PROVIDER.get(fragment, paymentMethod, sepaConfiguration)
         }
-
+        PaymentMethodTypes.BACS -> {
+            val bacsConfiguration: BacsDirectDebitConfiguration = dropInConfiguration.getConfigurationForPaymentMethod(PaymentMethodTypes.BACS)
+            BacsDirectDebitComponent.PROVIDER.get(fragment, paymentMethod, bacsConfiguration)
+        }
         else -> {
             throw CheckoutException("Unable to find component for type - ${paymentMethod.type}")
         }
@@ -335,6 +342,7 @@ internal fun getViewFor(
         PaymentMethodTypes.OPEN_BANKING -> OpenBankingRecyclerView(context)
         PaymentMethodTypes.SCHEME -> CardView(context)
         PaymentMethodTypes.SEPA -> SepaView(context)
+        PaymentMethodTypes.BACS -> BacsDirectDebitView(context)
         PaymentMethodTypes.BLIK -> BlikView(context)
         // GooglePay and WeChatPay do not require a View in Drop-in
         ActionTypes.AWAIT -> AwaitView(context)
