@@ -96,7 +96,6 @@ allprojects {
     repositories {
         google()
         mavenCentral()
-        jcenter() // Koin is still not migrated
     }
 }
 
