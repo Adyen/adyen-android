@@ -10,9 +10,14 @@ package com.adyen.checkout.bacs
 
 import androidx.lifecycle.SavedStateHandle
 import com.adyen.checkout.components.GenericComponentState
+import com.adyen.checkout.components.PaymentComponentProvider
 import com.adyen.checkout.components.base.BasePaymentComponent
+import com.adyen.checkout.components.base.GenericPaymentComponentProvider
 import com.adyen.checkout.components.base.GenericPaymentMethodDelegate
 import com.adyen.checkout.components.model.payments.request.BacsDirectDebitPaymentMethod
+import com.adyen.checkout.components.model.payments.request.PaymentComponentData
+import com.adyen.checkout.components.ui.FieldState
+import com.adyen.checkout.components.ui.Validation
 import com.adyen.checkout.components.util.PaymentMethodTypes
 
 private val PAYMENT_METHOD_TYPES = arrayOf(PaymentMethodTypes.BACS)
@@ -28,10 +33,27 @@ class BacsDirectDebitComponent(
     override fun getSupportedPaymentMethodTypes() = PAYMENT_METHOD_TYPES
 
     override fun onInputDataChanged(inputData: BacsDirectDebitInputData): BacsDirectDebitOutputData {
-        TODO("Not yet implemented")
+        // TODO
+        return BacsDirectDebitOutputData(
+            FieldState("", Validation.Valid),
+            FieldState("", Validation.Valid),
+            FieldState("", Validation.Valid),
+            FieldState("", Validation.Valid)
+        )
     }
 
     override fun createComponentState(): GenericComponentState<BacsDirectDebitPaymentMethod> {
-        TODO("Not yet implemented")
+        // TODO
+        return GenericComponentState(
+            PaymentComponentData(),
+            true,
+            true
+        )
+    }
+
+    companion object {
+        @JvmStatic
+        val PROVIDER: PaymentComponentProvider<BacsDirectDebitComponent, BacsDirectDebitConfiguration> =
+            GenericPaymentComponentProvider(BacsDirectDebitComponent::class.java)
     }
 }

@@ -13,6 +13,6 @@ import com.adyen.checkout.components.base.InputData
 data class BacsDirectDebitInputData(
     var holderName: String = "",
     var bankAccountNumber: String = "",
-    var bankLocationId: String = "",
+    var sortCode: String = "",
     var shopperEmail: String = ""
-): InputData
+) : InputData

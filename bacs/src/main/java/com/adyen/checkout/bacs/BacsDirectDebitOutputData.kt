@@ -14,15 +14,14 @@ import com.adyen.checkout.components.ui.FieldState
 class BacsDirectDebitOutputData(
     val holderNameState: FieldState<String>,
     val bankAccountNumberState: FieldState<String>,
-    val bankLocationIdState: FieldState<String>,
+    val sortCodeState: FieldState<String>,
     val shopperEmailState: FieldState<String>
-): OutputData {
+) : OutputData {
 
     override fun isValid(): Boolean {
         return holderNameState.validation.isValid() &&
             bankAccountNumberState.validation.isValid() &&
-            bankLocationIdState.validation.isValid() &&
+            sortCodeState.validation.isValid() &&
             shopperEmailState.validation.isValid()
     }
-
 }

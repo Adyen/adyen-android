@@ -16,7 +16,7 @@ import com.adyen.checkout.components.base.Configuration
 import com.adyen.checkout.core.api.Environment
 import java.util.*
 
-class BacsDirectDebitConfiguration: Configuration {
+class BacsDirectDebitConfiguration : Configuration {
 
     companion object {
         @JvmField
@@ -35,9 +35,9 @@ class BacsDirectDebitConfiguration: Configuration {
     internal constructor(builder: Builder) : super(builder.builderShopperLocale, builder.builderEnvironment, builder.builderClientKey)
     internal constructor(parcel: Parcel) : super(parcel)
 
-    class Builder: BaseConfigurationBuilder<BacsDirectDebitConfiguration> {
+    class Builder : BaseConfigurationBuilder<BacsDirectDebitConfiguration> {
 
-        constructor(context: Context, clientKey: String): super(context, clientKey)
+        constructor(context: Context, clientKey: String) : super(context, clientKey)
 
         /**
          * Builder with required parameters.
