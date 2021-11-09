@@ -212,7 +212,11 @@ class DropInConfiguration : Configuration, Parcelable {
         }
 
         /**
-         * When set to false, Drop-in will show the payment methods list even when there is only one payment method available.
+         * When set to true, Drop-in will skip the payment methods list screen if there is only a single payment method available and no stored
+         * payment methods.
+         *
+         * This only applies to payment methods that require a component (user input). Which means redirect payment methods, SDK payment methods,
+         * etc will not be skipped even if this flag is set to true and a single payment method is present.
          */
         fun setSkipListWhenSinglePaymentMethod(skipListWhenSinglePaymentMethod: Boolean): Builder {
             this.skipListWhenSinglePaymentMethod = skipListWhenSinglePaymentMethod
