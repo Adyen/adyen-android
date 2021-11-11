@@ -47,7 +47,7 @@ import com.adyen.checkout.dropin.ui.base.DropInBottomSheetDialogFragment
 import com.adyen.checkout.dropin.ui.component.CardComponentDialogFragment
 import com.adyen.checkout.dropin.ui.component.GenericComponentDialogFragment
 import com.adyen.checkout.dropin.ui.component.GiftCardComponentDialogFragment
-import com.adyen.checkout.dropin.ui.giftcard.GiftCardBalanceUIState
+import com.adyen.checkout.dropin.ui.giftcard.GiftCardBalanceResult
 import com.adyen.checkout.dropin.ui.giftcard.GiftCardPaymentConfirmationData
 import com.adyen.checkout.dropin.ui.giftcard.GiftCardPaymentConfirmationDialogFragment
 import com.adyen.checkout.dropin.ui.paymentmethods.PaymentMethodListDialogFragment
@@ -513,13 +513,13 @@ class DropInActivity : AppCompatActivity(), DropInBottomSheetDialogFragment.Prot
         val result = dropInViewModel.handleBalanceResult(balanceJson)
         Logger.d(TAG, "handleBalanceResult: ${result::class.java.simpleName}")
         when (result) {
-            is GiftCardBalanceUIState.Error -> showError(getString(result.errorMessage), result.reason, result.terminateDropIn)
-            is GiftCardBalanceUIState.FullPayment -> handleGiftCardFullPayment(result)
-            is GiftCardBalanceUIState.PartialPayment -> handleGiftCardPartialPayment(result)
+            is GiftCardBalanceResult.Error -> showError(getString(result.errorMessage), result.reason, result.terminateDropIn)
+            is GiftCardBalanceResult.FullPayment -> handleGiftCardFullPayment(result)
+            is GiftCardBalanceResult.PartialPayment -> handleGiftCardPartialPayment(result)
         }
     }
 
-    private fun handleGiftCardFullPayment(fullPayment: GiftCardBalanceUIState.FullPayment) {
+    private fun handleGiftCardFullPayment(fullPayment: GiftCardBalanceResult.FullPayment) {
         Logger.d(TAG, "handleGiftCardFullPayment")
         setLoading(false)
         showGiftCardPaymentConfirmationDialog(fullPayment.data)
@@ -532,7 +532,7 @@ class DropInActivity : AppCompatActivity(), DropInBottomSheetDialogFragment.Prot
             .show(supportFragmentManager, GIFT_CARD_PAYMENT_CONFIRMATION_FRAGMENT_TAG)
     }
 
-    private fun handleGiftCardPartialPayment(partialPayment: GiftCardBalanceUIState.PartialPayment) {
+    private fun handleGiftCardPartialPayment(partialPayment: GiftCardBalanceResult.PartialPayment) {
         Logger.d(TAG, "handleGiftCardPartialPayment")
         setLoading(false)
         // TODO handle partial payment

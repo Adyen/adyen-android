@@ -22,10 +22,10 @@ import com.adyen.checkout.core.log.LogUtil
 import com.adyen.checkout.core.log.Logger
 import com.adyen.checkout.dropin.DropInConfiguration
 import com.adyen.checkout.dropin.R
-import com.adyen.checkout.dropin.ui.giftcard.GiftCardBalanceUIState
+import com.adyen.checkout.dropin.ui.giftcard.GiftCardBalanceResult
 import com.adyen.checkout.dropin.ui.giftcard.GiftCardPaymentConfirmationData
 import com.adyen.checkout.giftcard.GiftCardComponentState
-import com.adyen.checkout.giftcard.util.GiftCardBalanceResult
+import com.adyen.checkout.giftcard.util.GiftCardBalanceStatus
 import com.adyen.checkout.giftcard.util.GiftCardBalanceUtils
 import com.adyen.checkout.googlepay.GooglePayComponent
 import org.json.JSONException
@@ -105,7 +105,7 @@ class DropInViewModel(private val savedStateHandle: SavedStateHandle) : ViewMode
         return paymentMethod
     }
 
-    fun handleBalanceResult(balanceJson: String): GiftCardBalanceUIState {
+    fun handleBalanceResult(balanceJson: String): GiftCardBalanceResult {
         val balanceJSONObject = try {
             JSONObject(balanceJson)
         } catch (e: JSONException) {
@@ -126,36 +126,36 @@ class DropInViewModel(private val savedStateHandle: SavedStateHandle) : ViewMode
         )
         val cachedGiftCardComponentState = cachedGiftCardComponentState ?: throw CheckoutException("Failed to retrieved cached gift card object")
         return when (giftCardBalanceResult) {
-            is GiftCardBalanceResult.ZeroBalance -> {
+            is GiftCardBalanceStatus.ZeroBalance -> {
                 Logger.i(TAG, "handleBalanceResult - Gift Card has zero balance")
-                GiftCardBalanceUIState.Error(R.string.checkout_giftcard_error_zero_balance, "Gift Card has zero balance", false)
+                GiftCardBalanceResult.Error(R.string.checkout_giftcard_error_zero_balance, "Gift Card has zero balance", false)
             }
-            is GiftCardBalanceResult.NonMatchingCurrencies -> {
+            is GiftCardBalanceStatus.NonMatchingCurrencies -> {
                 Logger.e(TAG, "handleBalanceResult - Gift Card currency mismatch")
-                GiftCardBalanceUIState.Error(R.string.checkout_giftcard_error_currency, "Gift Card currency mismatch", false)
+                GiftCardBalanceResult.Error(R.string.checkout_giftcard_error_currency, "Gift Card currency mismatch", false)
             }
-            is GiftCardBalanceResult.ZeroAmountToBePaid -> {
+            is GiftCardBalanceStatus.ZeroAmountToBePaid -> {
                 Logger.e(TAG, "handleBalanceResult - You must set an amount in DropInConfiguration.Builder to enable gift card payments")
-                GiftCardBalanceUIState.Error(R.string.payment_failed, "Drop-in amount is not set", true)
+                GiftCardBalanceResult.Error(R.string.payment_failed, "Drop-in amount is not set", true)
             }
-            is GiftCardBalanceResult.FullPayment -> {
-                GiftCardBalanceUIState.FullPayment(
+            is GiftCardBalanceStatus.FullPayment -> {
+                GiftCardBalanceResult.FullPayment(
                     createGiftCardPaymentConfirmationData(giftCardBalanceResult, cachedGiftCardComponentState)
                 )
             }
-            is GiftCardBalanceResult.PartialPayment -> {
-                GiftCardBalanceUIState.PartialPayment(giftCardBalanceResult.amountPaid, giftCardBalanceResult.remainingBalance)
+            is GiftCardBalanceStatus.PartialPayment -> {
+                GiftCardBalanceResult.PartialPayment(giftCardBalanceResult.amountPaid, giftCardBalanceResult.remainingBalance)
             }
         }
     }
 
     private fun createGiftCardPaymentConfirmationData(
-        giftCardBalanceResult: GiftCardBalanceResult.FullPayment,
+        giftCardBalanceStatus: GiftCardBalanceStatus.FullPayment,
         giftCardComponentState: GiftCardComponentState
     ): GiftCardPaymentConfirmationData {
         return GiftCardPaymentConfirmationData(
-            amountPaid = giftCardBalanceResult.amountPaid,
-            remainingBalance = giftCardBalanceResult.remainingBalance,
+            amountPaid = giftCardBalanceStatus.amountPaid,
+            remainingBalance = giftCardBalanceStatus.remainingBalance,
             shopperLocale = dropInConfiguration.shopperLocale,
             brand = giftCardComponentState.data.paymentMethod?.brand.orEmpty(),
             lastFourDigits = giftCardComponentState.lastFourDigits.orEmpty()

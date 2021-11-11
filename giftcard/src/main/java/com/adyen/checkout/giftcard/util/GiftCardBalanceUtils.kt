@@ -15,17 +15,17 @@ import kotlin.math.min
 object GiftCardBalanceUtils {
 
     // TODO docs
-    fun checkBalance(balance: Amount, transactionLimit: Amount?, amountToBePaid: Amount): GiftCardBalanceResult {
+    fun checkBalance(balance: Amount, transactionLimit: Amount?, amountToBePaid: Amount): GiftCardBalanceStatus {
         return when {
-            amountToBePaid.isEmpty || amountToBePaid.value <= 0 -> GiftCardBalanceResult.ZeroAmountToBePaid
-            balance.isEmpty || balance.value <= 0 -> GiftCardBalanceResult.ZeroBalance
-            amountToBePaid.currency != balance.currency -> GiftCardBalanceResult.NonMatchingCurrencies
-            transactionLimit != null && amountToBePaid.currency != transactionLimit.currency -> GiftCardBalanceResult.NonMatchingCurrencies
+            amountToBePaid.isEmpty || amountToBePaid.value <= 0 -> GiftCardBalanceStatus.ZeroAmountToBePaid
+            balance.isEmpty || balance.value <= 0 -> GiftCardBalanceStatus.ZeroBalance
+            amountToBePaid.currency != balance.currency -> GiftCardBalanceStatus.NonMatchingCurrencies
+            transactionLimit != null && amountToBePaid.currency != transactionLimit.currency -> GiftCardBalanceStatus.NonMatchingCurrencies
             else -> calculateRemainingAmount(balance, transactionLimit, amountToBePaid)
         }
     }
 
-    private fun calculateRemainingAmount(balance: Amount, transactionLimit: Amount?, amountToBePaid: Amount): GiftCardBalanceResult {
+    private fun calculateRemainingAmount(balance: Amount, transactionLimit: Amount?, amountToBePaid: Amount): GiftCardBalanceStatus {
         val maxPayableAmount =
             if (transactionLimit == null || transactionLimit.isEmpty) balance.value
             else min(balance.value, transactionLimit.value)
@@ -43,17 +43,17 @@ object GiftCardBalanceUtils {
         }
 
         return if (maxPayableAmount >= amountToBePaid.value) {
-            GiftCardBalanceResult.FullPayment(amountPaid = amountPaid, remainingBalance = remainingBalance)
+            GiftCardBalanceStatus.FullPayment(amountPaid = amountPaid, remainingBalance = remainingBalance)
         } else {
-            GiftCardBalanceResult.PartialPayment(amountPaid = amountPaid, remainingBalance = remainingBalance)
+            GiftCardBalanceStatus.PartialPayment(amountPaid = amountPaid, remainingBalance = remainingBalance)
         }
     }
 }
 
-sealed class GiftCardBalanceResult {
-    class FullPayment(val amountPaid: Amount, val remainingBalance: Amount) : GiftCardBalanceResult()
-    class PartialPayment(val amountPaid: Amount, val remainingBalance: Amount) : GiftCardBalanceResult()
-    object NonMatchingCurrencies : GiftCardBalanceResult()
-    object ZeroAmountToBePaid : GiftCardBalanceResult()
-    object ZeroBalance : GiftCardBalanceResult()
+sealed class GiftCardBalanceStatus {
+    class FullPayment(val amountPaid: Amount, val remainingBalance: Amount) : GiftCardBalanceStatus()
+    class PartialPayment(val amountPaid: Amount, val remainingBalance: Amount) : GiftCardBalanceStatus()
+    object NonMatchingCurrencies : GiftCardBalanceStatus()
+    object ZeroAmountToBePaid : GiftCardBalanceStatus()
+    object ZeroBalance : GiftCardBalanceStatus()
 }
