@@ -47,8 +47,10 @@ import com.adyen.checkout.dropin.ui.base.DropInBottomSheetDialogFragment
 import com.adyen.checkout.dropin.ui.component.CardComponentDialogFragment
 import com.adyen.checkout.dropin.ui.component.GenericComponentDialogFragment
 import com.adyen.checkout.dropin.ui.component.GiftCardComponentDialogFragment
+import com.adyen.checkout.dropin.ui.giftcard.GiftCardBalanceUIState
 import com.adyen.checkout.dropin.ui.paymentmethods.PaymentMethodListDialogFragment
 import com.adyen.checkout.dropin.ui.stored.PreselectedStoredPaymentMethodFragment
+import com.adyen.checkout.giftcard.GiftCardComponentState
 import com.adyen.checkout.googlepay.GooglePayComponent
 import com.adyen.checkout.googlepay.GooglePayComponentState
 import com.adyen.checkout.googlepay.GooglePayConfiguration
@@ -98,7 +100,7 @@ class DropInActivity : AppCompatActivity(), DropInBottomSheetDialogFragment.Prot
     // these queues exist for when a call is requested before the service is bound
     private var paymentDataQueue: PaymentComponentState<*>? = null
     private var actionDataQueue: ActionComponentData? = null
-    private var balanceDataQueue: PaymentComponentState<*>? = null
+    private var balanceDataQueue: GiftCardComponentState? = null
 
     private val serviceConnection = object : ServiceConnection {
 
@@ -376,16 +378,12 @@ class DropInActivity : AppCompatActivity(), DropInBottomSheetDialogFragment.Prot
         googlePayComponent.startGooglePayScreen(this, GOOGLE_PAY_REQUEST_CODE)
     }
 
-    override fun requestBalanceCall(paymentComponentState: PaymentComponentState<*>) {
+    override fun requestBalanceCall(giftCardComponentState: GiftCardComponentState) {
         Logger.d(TAG, "requestCheckBalanceCall")
-        val paymentMethod = paymentComponentState.data.paymentMethod
-        if (paymentMethod == null) {
-            Logger.e(TAG, "requestBalanceCall - paymentMethod is null")
-            return
-        }
+        val paymentMethod = dropInViewModel.onBalanceCallRequested(giftCardComponentState) ?: return
         if (dropInService == null) {
             Logger.e(TAG, "requestBalanceCall - service is disconnected")
-            balanceDataQueue = paymentComponentState
+            balanceDataQueue = giftCardComponentState
             return
         }
         dropInViewModel.isWaitingResult = true
@@ -509,19 +507,19 @@ class DropInActivity : AppCompatActivity(), DropInBottomSheetDialogFragment.Prot
         dropInViewModel.isWaitingResult = false
         val result = dropInViewModel.handleBalanceResult(balanceJson)
         when (result) {
-            is GiftCardResult.Error -> showError(getString(result.errorMessage), result.reason, result.terminateDropIn)
-            is GiftCardResult.FullPayment -> handleGiftCardFullPayment(result)
-            is GiftCardResult.PartialPayment -> handleGiftCardPartialPayment(result)
+            is GiftCardBalanceUIState.Error -> showError(getString(result.errorMessage), result.reason, result.terminateDropIn)
+            is GiftCardBalanceUIState.FullPayment -> handleGiftCardFullPayment(result)
+            is GiftCardBalanceUIState.PartialPayment -> handleGiftCardPartialPayment(result)
         }
     }
 
-    private fun handleGiftCardFullPayment(fullPayment: GiftCardResult.FullPayment) {
+    private fun handleGiftCardFullPayment(fullPayment: GiftCardBalanceUIState.FullPayment) {
         // TODO move this somewhere else later?
         setLoading(false)
         // TODO handle full payment
     }
 
-    private fun handleGiftCardPartialPayment(partialPayment: GiftCardResult.PartialPayment) {
+    private fun handleGiftCardPartialPayment(partialPayment: GiftCardBalanceUIState.PartialPayment) {
         // TODO move this somewhere else later?
         setLoading(false)
         // TODO handle partial payment
