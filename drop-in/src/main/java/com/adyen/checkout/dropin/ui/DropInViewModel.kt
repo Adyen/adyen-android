@@ -23,6 +23,7 @@ import com.adyen.checkout.core.log.Logger
 import com.adyen.checkout.dropin.DropInConfiguration
 import com.adyen.checkout.dropin.R
 import com.adyen.checkout.dropin.ui.giftcard.GiftCardBalanceUIState
+import com.adyen.checkout.dropin.ui.giftcard.GiftCardPaymentConfirmationData
 import com.adyen.checkout.giftcard.GiftCardComponentState
 import com.adyen.checkout.giftcard.util.GiftCardBalanceResult
 import com.adyen.checkout.giftcard.util.GiftCardBalanceUtils
@@ -123,6 +124,7 @@ class DropInViewModel(private val savedStateHandle: SavedStateHandle) : ViewMode
             transactionLimit = transactionLimit,
             amountToBePaid = dropInConfiguration.amount
         )
+        val cachedGiftCardComponentState = cachedGiftCardComponentState ?: throw CheckoutException("Failed to retrieved cached gift card object")
         return when (giftCardBalanceResult) {
             is GiftCardBalanceResult.ZeroBalance -> {
                 Logger.i(TAG, "handleBalanceResult - Gift Card has zero balance")
@@ -137,12 +139,27 @@ class DropInViewModel(private val savedStateHandle: SavedStateHandle) : ViewMode
                 GiftCardBalanceUIState.Error(R.string.payment_failed, "Drop-in amount is not set", true)
             }
             is GiftCardBalanceResult.FullPayment -> {
-                GiftCardBalanceUIState.FullPayment(giftCardBalanceResult.amountPaid, giftCardBalanceResult.remainingBalance)
+                GiftCardBalanceUIState.FullPayment(
+                    createGiftCardPaymentConfirmationData(giftCardBalanceResult, cachedGiftCardComponentState)
+                )
             }
             is GiftCardBalanceResult.PartialPayment -> {
                 GiftCardBalanceUIState.PartialPayment(giftCardBalanceResult.amountPaid, giftCardBalanceResult.remainingBalance)
             }
         }
+    }
+
+    private fun createGiftCardPaymentConfirmationData(
+        giftCardBalanceResult: GiftCardBalanceResult.FullPayment,
+        giftCardComponentState: GiftCardComponentState
+    ): GiftCardPaymentConfirmationData {
+        return GiftCardPaymentConfirmationData(
+            amountPaid = giftCardBalanceResult.amountPaid,
+            remainingBalance = giftCardBalanceResult.remainingBalance,
+            shopperLocale = dropInConfiguration.shopperLocale,
+            brand = giftCardComponentState.data.paymentMethod?.brand.orEmpty(),
+            lastFourDigits = giftCardComponentState.lastFourDigits.orEmpty()
+        )
     }
 
     companion object {

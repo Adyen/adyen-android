@@ -12,7 +12,7 @@ import androidx.annotation.StringRes
 import com.adyen.checkout.components.model.payments.Amount
 
 sealed class GiftCardBalanceUIState {
-    class FullPayment(val amountPaid: Amount, val remainingBalance: Amount) : GiftCardBalanceUIState()
+    class FullPayment(val data: GiftCardPaymentConfirmationData) : GiftCardBalanceUIState()
     class PartialPayment(val amountPaid: Amount, val remainingBalance: Amount) : GiftCardBalanceUIState()
     class Error(@StringRes val errorMessage: Int, val reason: String, val terminateDropIn: Boolean) : GiftCardBalanceUIState()
 }

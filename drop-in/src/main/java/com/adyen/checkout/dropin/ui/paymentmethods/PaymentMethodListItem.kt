@@ -17,5 +17,6 @@ interface PaymentMethodListItem {
         const val PAYMENT_METHODS_HEADER = 1
         const val STORED_PAYMENT_METHOD = 2
         const val PAYMENT_METHOD = 3
+        const val GIFT_CARD_PAYMENT_METHOD = 4
     }
 }

@@ -48,6 +48,8 @@ import com.adyen.checkout.dropin.ui.component.CardComponentDialogFragment
 import com.adyen.checkout.dropin.ui.component.GenericComponentDialogFragment
 import com.adyen.checkout.dropin.ui.component.GiftCardComponentDialogFragment
 import com.adyen.checkout.dropin.ui.giftcard.GiftCardBalanceUIState
+import com.adyen.checkout.dropin.ui.giftcard.GiftCardPaymentConfirmationData
+import com.adyen.checkout.dropin.ui.giftcard.GiftCardPaymentConfirmationDialogFragment
 import com.adyen.checkout.dropin.ui.paymentmethods.PaymentMethodListDialogFragment
 import com.adyen.checkout.dropin.ui.stored.PreselectedStoredPaymentMethodFragment
 import com.adyen.checkout.giftcard.GiftCardComponentState
@@ -66,6 +68,7 @@ private const val PAYMENT_METHODS_LIST_FRAGMENT_TAG = "PAYMENT_METHODS_LIST_FRAG
 private const val COMPONENT_FRAGMENT_TAG = "COMPONENT_DIALOG_FRAGMENT"
 private const val ACTION_FRAGMENT_TAG = "ACTION_DIALOG_FRAGMENT"
 private const val LOADING_FRAGMENT_TAG = "LOADING_DIALOG_FRAGMENT"
+private const val GIFT_CARD_PAYMENT_CONFIRMATION_FRAGMENT_TAG = "GIFT_CARD_PAYMENT_CONFIRMATION_FRAGMENT"
 
 private const val GOOGLE_PAY_REQUEST_CODE = 1
 
@@ -182,7 +185,8 @@ class DropInActivity : AppCompatActivity(), DropInBottomSheetDialogFragment.Prot
         return getFragmentByTag(PRESELECTED_PAYMENT_METHOD_FRAGMENT_TAG) == null &&
             getFragmentByTag(PAYMENT_METHODS_LIST_FRAGMENT_TAG) == null &&
             getFragmentByTag(COMPONENT_FRAGMENT_TAG) == null &&
-            getFragmentByTag(ACTION_FRAGMENT_TAG) == null
+            getFragmentByTag(ACTION_FRAGMENT_TAG) == null &&
+            getFragmentByTag(GIFT_CARD_PAYMENT_CONFIRMATION_FRAGMENT_TAG) == null
     }
 
     private fun createLocalizedContext(baseContext: Context?): Context? {
@@ -361,6 +365,7 @@ class DropInActivity : AppCompatActivity(), DropInBottomSheetDialogFragment.Prot
         hideFragmentDialog(PAYMENT_METHODS_LIST_FRAGMENT_TAG)
         hideFragmentDialog(COMPONENT_FRAGMENT_TAG)
         hideFragmentDialog(ACTION_FRAGMENT_TAG)
+        hideFragmentDialog(GIFT_CARD_PAYMENT_CONFIRMATION_FRAGMENT_TAG)
     }
 
     override fun terminateDropIn() {
@@ -516,7 +521,15 @@ class DropInActivity : AppCompatActivity(), DropInBottomSheetDialogFragment.Prot
     private fun handleGiftCardFullPayment(fullPayment: GiftCardBalanceUIState.FullPayment) {
         // TODO move this somewhere else later?
         setLoading(false)
+        showGiftCardPaymentConfirmationDialog(fullPayment.data)
         // TODO handle full payment
+    }
+
+    private fun showGiftCardPaymentConfirmationDialog(data: GiftCardPaymentConfirmationData) {
+        Logger.d(TAG, "showGiftCardPaymentConfirmationDialog")
+        hideAllScreens()
+        GiftCardPaymentConfirmationDialogFragment.newInstance(data)
+            .show(supportFragmentManager, GIFT_CARD_PAYMENT_CONFIRMATION_FRAGMENT_TAG)
     }
 
     private fun handleGiftCardPartialPayment(partialPayment: GiftCardBalanceUIState.PartialPayment) {
