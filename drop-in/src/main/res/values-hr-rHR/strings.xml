@@ -24,4 +24,5 @@
     <string name="checkout_giftcard_redeem_button">Iskoristite</string>
     <string name="checkout_giftcard_error_zero_balance">Stanje na ovoj poklon-kartici iznosi nula</string>
     <string name="checkout_giftcard_error_currency">Poklon-kartice vrijede samo u valuti u kojoj su izdane</string>
+    <string name="checkout_giftcard_remaining_balance_text">Preostalo stanje na računu iznosit će %s</string>
 </resources>

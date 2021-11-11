@@ -24,4 +24,5 @@
     <string name="checkout_giftcard_redeem_button">Resgatar</string>
     <string name="checkout_giftcard_error_zero_balance">Este vale-presente tem saldo zero</string>
     <string name="checkout_giftcard_error_currency">Os vales-presente são válidos somente na moeda em que foram emitidos</string>
+    <string name="checkout_giftcard_remaining_balance_text">O saldo restante será %s</string>
 </resources>

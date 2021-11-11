@@ -24,4 +24,5 @@
     <string name="checkout_giftcard_redeem_button">Unovči</string>
     <string name="checkout_giftcard_error_zero_balance">Na tej darilni kartici ni sredstev</string>
     <string name="checkout_giftcard_error_currency">Darilne kartice so veljavne samo za valuto, za katero so bile izdane</string>
+    <string name="checkout_giftcard_remaining_balance_text">Preostalo stanje bo %s</string>
 </resources>

@@ -24,4 +24,5 @@
     <string name="checkout_giftcard_redeem_button">Canjear</string>
     <string name="checkout_giftcard_error_zero_balance">Esta tarjeta regalo no tiene saldo</string>
     <string name="checkout_giftcard_error_currency">Las tarjetas regalo solo son válidas en la moneda en que fueron emitidas</string>
+    <string name="checkout_giftcard_remaining_balance_text">El saldo restante será %s</string>
 </resources>

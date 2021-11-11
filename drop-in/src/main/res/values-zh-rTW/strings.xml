@@ -24,4 +24,5 @@
     <string name="checkout_giftcard_redeem_button">兌換</string>
     <string name="checkout_giftcard_error_zero_balance">此禮品卡的餘額為零</string>
     <string name="checkout_giftcard_error_currency">禮品卡只能以其簽發時所使用的貨幣進行結算</string>
+    <string name="checkout_giftcard_remaining_balance_text">餘額將為 %s</string>
 </resources>
