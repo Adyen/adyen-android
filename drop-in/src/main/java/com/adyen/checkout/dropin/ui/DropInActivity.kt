@@ -508,9 +508,10 @@ class DropInActivity : AppCompatActivity(), DropInBottomSheetDialogFragment.Prot
     }
 
     private fun handleBalanceResult(balanceJson: String) {
-        Logger.d(TAG, "handleBalanceResult")
+        Logger.v(TAG, "handleBalanceResult")
         dropInViewModel.isWaitingResult = false
         val result = dropInViewModel.handleBalanceResult(balanceJson)
+        Logger.d(TAG, "handleBalanceResult: ${result::class.java.simpleName}")
         when (result) {
             is GiftCardBalanceUIState.Error -> showError(getString(result.errorMessage), result.reason, result.terminateDropIn)
             is GiftCardBalanceUIState.FullPayment -> handleGiftCardFullPayment(result)
@@ -519,10 +520,9 @@ class DropInActivity : AppCompatActivity(), DropInBottomSheetDialogFragment.Prot
     }
 
     private fun handleGiftCardFullPayment(fullPayment: GiftCardBalanceUIState.FullPayment) {
-        // TODO move this somewhere else later?
+        Logger.d(TAG, "handleGiftCardFullPayment")
         setLoading(false)
         showGiftCardPaymentConfirmationDialog(fullPayment.data)
-        // TODO handle full payment
     }
 
     private fun showGiftCardPaymentConfirmationDialog(data: GiftCardPaymentConfirmationData) {
@@ -533,7 +533,7 @@ class DropInActivity : AppCompatActivity(), DropInBottomSheetDialogFragment.Prot
     }
 
     private fun handleGiftCardPartialPayment(partialPayment: GiftCardBalanceUIState.PartialPayment) {
-        // TODO move this somewhere else later?
+        Logger.d(TAG, "handleGiftCardPartialPayment")
         setLoading(false)
         // TODO handle partial payment
     }

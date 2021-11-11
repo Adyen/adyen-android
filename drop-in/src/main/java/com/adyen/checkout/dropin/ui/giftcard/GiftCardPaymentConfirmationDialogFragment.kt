@@ -17,6 +17,7 @@ import android.view.ViewGroup
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.adyen.checkout.components.api.ImageLoader
 import com.adyen.checkout.components.util.CurrencyUtils
+import com.adyen.checkout.core.exception.CheckoutException
 import com.adyen.checkout.core.log.LogUtil
 import com.adyen.checkout.core.log.Logger
 import com.adyen.checkout.dropin.R
@@ -70,6 +71,12 @@ class GiftCardPaymentConfirmationDialogFragment : DropInBottomSheetDialogFragmen
         }
 
         initRecyclerView()
+
+        binding.payButton.setOnClickListener {
+            val paymentComponentState = dropInViewModel.cachedGiftCardComponentState
+                ?: throw CheckoutException("Lost reference to cached GiftCardComponentState")
+            protocol.requestPaymentsCall(paymentComponentState)
+        }
     }
 
     private fun initRecyclerView() {

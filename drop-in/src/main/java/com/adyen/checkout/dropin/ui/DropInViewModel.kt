@@ -53,11 +53,11 @@ class DropInViewModel(private val savedStateHandle: SavedStateHandle) : ViewMode
             savedStateHandle[IS_WAITING_FOR_RESULT_KEY] = value
         }
 
-    private var cachedGiftCardComponentState: GiftCardComponentState?
+    var cachedGiftCardComponentState: GiftCardComponentState?
         get() {
             return savedStateHandle.get<GiftCardComponentState>(CACHED_GIFT_CARD)
         }
-        set(value) {
+        private set(value) {
             savedStateHandle[CACHED_GIFT_CARD] = value
         }
 
