@@ -16,10 +16,7 @@ import com.adyen.checkout.components.base.GenericPaymentComponentProvider
 import com.adyen.checkout.components.base.GenericPaymentMethodDelegate
 import com.adyen.checkout.components.model.payments.request.BacsDirectDebitPaymentMethod
 import com.adyen.checkout.components.model.payments.request.PaymentComponentData
-import com.adyen.checkout.components.ui.FieldState
-import com.adyen.checkout.components.ui.Validation
 import com.adyen.checkout.components.util.PaymentMethodTypes
-import com.adyen.checkout.components.util.ValidationUtils
 
 private val PAYMENT_METHOD_TYPES = arrayOf(PaymentMethodTypes.BACS)
 
@@ -43,10 +40,22 @@ class BacsDirectDebitComponent(
     }
 
     override fun createComponentState(): GenericComponentState<BacsDirectDebitPaymentMethod> {
-        // TODO
+        val paymentComponentData = PaymentComponentData<BacsDirectDebitPaymentMethod>()
+        val bacsDirectDebitPaymentMethod = BacsDirectDebitPaymentMethod().apply {
+            type = BacsDirectDebitPaymentMethod.PAYMENT_METHOD_TYPE
+            holderName = outputData?.holderNameState?.value
+            bankAccountNumber = outputData?.bankAccountNumberState?.value
+            bankLocationId = outputData?.sortCodeState?.value
+        }
+
+        paymentComponentData.apply {
+            shopperEmail = outputData?.shopperEmailState?.value
+            paymentMethod = bacsDirectDebitPaymentMethod
+        }
+
         return GenericComponentState(
-            PaymentComponentData(),
-            true,
+            paymentComponentData,
+            outputData?.isValid ?: false,
             true
         )
     }
