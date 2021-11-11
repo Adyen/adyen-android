@@ -19,6 +19,7 @@ import com.adyen.checkout.components.model.payments.request.PaymentComponentData
 import com.adyen.checkout.components.ui.FieldState
 import com.adyen.checkout.components.ui.Validation
 import com.adyen.checkout.components.util.PaymentMethodTypes
+import com.adyen.checkout.components.util.ValidationUtils
 
 private val PAYMENT_METHOD_TYPES = arrayOf(PaymentMethodTypes.BACS)
 
@@ -33,12 +34,11 @@ class BacsDirectDebitComponent(
     override fun getSupportedPaymentMethodTypes() = PAYMENT_METHOD_TYPES
 
     override fun onInputDataChanged(inputData: BacsDirectDebitInputData): BacsDirectDebitOutputData {
-        // TODO
         return BacsDirectDebitOutputData(
-            FieldState("", Validation.Valid),
-            FieldState("", Validation.Valid),
-            FieldState("", Validation.Valid),
-            FieldState("", Validation.Valid)
+            BacsDirectDebitValidationUtils.validateHolderName(inputData.holderName),
+            BacsDirectDebitValidationUtils.validateBankAccountNumber(inputData.bankAccountNumber),
+            BacsDirectDebitValidationUtils.validateSortCode(inputData.sortCode),
+            BacsDirectDebitValidationUtils.validateShopperEmail(inputData.shopperEmail)
         )
     }
 

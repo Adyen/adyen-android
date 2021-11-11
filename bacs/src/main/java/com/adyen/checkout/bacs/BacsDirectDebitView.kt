@@ -19,6 +19,10 @@ import com.adyen.checkout.components.model.payments.request.BacsDirectDebitPayme
 import com.adyen.checkout.components.ui.Validation
 import com.adyen.checkout.components.ui.view.AdyenLinearLayout
 import com.adyen.checkout.components.ui.view.AdyenTextInputEditText
+import com.adyen.checkout.core.log.LogUtil
+import com.adyen.checkout.core.log.Logger
+
+private val TAG = LogUtil.getTag()
 
 @Suppress("TooManyFunctions")
 class BacsDirectDebitView @JvmOverloads constructor(context: Context, attrs: AttributeSet? = null, defStyleAttr: Int = 0) :
@@ -26,7 +30,7 @@ class BacsDirectDebitView @JvmOverloads constructor(context: Context, attrs: Att
         BacsDirectDebitConfiguration,
         GenericComponentState<BacsDirectDebitPaymentMethod>,
         BacsDirectDebitComponent>(context, attrs, defStyleAttr),
-    Observer<BacsDirectDebitOutputData?> {
+    Observer<BacsDirectDebitOutputData> {
 
     private val binding: BacsDirectDebitViewBinding = BacsDirectDebitViewBinding.inflate(LayoutInflater.from(context), this)
 
@@ -117,8 +121,8 @@ class BacsDirectDebitView @JvmOverloads constructor(context: Context, attrs: Att
         component.observeOutputData(lifecycleOwner, this)
     }
 
-    override fun onChanged(t: BacsDirectDebitOutputData?) {
-        //
+    override fun onChanged(bacsDirectDebitOutputData: BacsDirectDebitOutputData) {
+        Logger.v(TAG, "bacsDirectDebitOutputData changed")
     }
 
     private fun notifyInputDataChanged() {
@@ -134,6 +138,7 @@ class BacsDirectDebitView @JvmOverloads constructor(context: Context, attrs: Att
         }
         holderNameEditText?.onFocusChangeListener = OnFocusChangeListener { _, hasFocus ->
             val holderNameValidation = component.outputData?.holderNameState?.validation
+            Logger.d(TAG, "outputData ${component.outputData.toString()}")
             if (hasFocus) {
                 binding.textInputLayoutHolderName.error = null
             } else if (holderNameValidation != null && holderNameValidation is Validation.Invalid) {
@@ -154,7 +159,7 @@ class BacsDirectDebitView @JvmOverloads constructor(context: Context, attrs: Att
             if (hasFocus) {
                 binding.textInputLayoutBankAccountNumber.error = null
             } else if (bankAccountNumberValidation != null && bankAccountNumberValidation is Validation.Invalid) {
-                binding.editTextBankAccountNumber.error = mLocalizedContext.getString(bankAccountNumberValidation.reason)
+                binding.textInputLayoutBankAccountNumber.error = mLocalizedContext.getString(bankAccountNumberValidation.reason)
             }
         }
     }
