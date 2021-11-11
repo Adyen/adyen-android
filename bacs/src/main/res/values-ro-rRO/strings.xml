@@ -1,0 +1,19 @@
+<!--
+  ~ Copyright (c) 2021 Adyen N.V.
+  ~
+  ~ This file is open source and available under the MIT license. See the LICENSE file for more info.
+  ~
+  ~ Created by ozgur on 5/11/2021.
+  -->
+
+<resources>
+    <string name="bacs_holder_name_hint">Numele titularului contului bancar</string>
+    <string name="bacs_account_number_hint">Numărul contului bancar</string>
+    <string name="bacs_sort_code_hint">Cod de identificare bancară</string>
+    <string name="bacs_shopper_email_hint">Adresă de e-mail</string>
+
+    <string name="bacs_holder_name_invalid">Numele titularului contului bancar este incorect</string>
+    <string name="bacs_account_number_invalid">Numărul contului bancar este incorect</string>
+    <string name="bacs_sort_code_invalid">Cod de identificare bancară incorect</string>
+    <string name="bacs_shopper_email_invalid">Adresă de e-mail incorectă</string>
+</resources>

@@ -1,0 +1,19 @@
+<!--
+  ~ Copyright (c) 2021 Adyen N.V.
+  ~
+  ~ This file is open source and available under the MIT license. See the LICENSE file for more info.
+  ~
+  ~ Created by ozgur on 5/11/2021.
+  -->
+
+<resources>
+    <string name="bacs_holder_name_hint">예금주 이름</string>
+    <string name="bacs_account_number_hint">계좌 번호</string>
+    <string name="bacs_sort_code_hint">은행 식별 코드</string>
+    <string name="bacs_shopper_email_hint">이메일 주소</string>
+
+    <string name="bacs_holder_name_invalid">예금주 이름이 유효하지 않습니다</string>
+    <string name="bacs_account_number_invalid">계좌 번호가 유효하지 않습니다</string>
+    <string name="bacs_sort_code_invalid">은행 식별 코드가 유효하지 않습니다</string>
+    <string name="bacs_shopper_email_invalid">유효하지 않은 이메일 주소</string>
+</resources>

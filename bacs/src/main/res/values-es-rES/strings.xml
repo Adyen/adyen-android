@@ -1,0 +1,19 @@
+<!--
+  ~ Copyright (c) 2021 Adyen N.V.
+  ~
+  ~ This file is open source and available under the MIT license. See the LICENSE file for more info.
+  ~
+  ~ Created by ozgur on 5/11/2021.
+  -->
+
+<resources>
+    <string name="bacs_holder_name_hint">Nombre del titular de la cuenta bancaria</string>
+    <string name="bacs_account_number_hint">Número de cuenta bancaria</string>
+    <string name="bacs_sort_code_hint">Código de sucursal</string>
+    <string name="bacs_shopper_email_hint">Dirección de correo electrónico</string>
+
+    <string name="bacs_holder_name_invalid">El nombre del titular de la cuenta bancaria no es válido</string>
+    <string name="bacs_account_number_invalid">El número de cuenta bancaria no es válido</string>
+    <string name="bacs_sort_code_invalid">El código de sucursal no es válido</string>
+    <string name="bacs_shopper_email_invalid">La dirección de correo electrónico no es válida</string>
+</resources>

@@ -1,0 +1,19 @@
+<!--
+  ~ Copyright (c) 2021 Adyen N.V.
+  ~
+  ~ This file is open source and available under the MIT license. See the LICENSE file for more info.
+  ~
+  ~ Created by ozgur on 5/11/2021.
+  -->
+
+<resources>
+    <string name="bacs_holder_name_hint">Bankkontoinnehavarens namn</string>
+    <string name="bacs_account_number_hint">Bankkontonummer</string>
+    <string name="bacs_sort_code_hint">Clearingnummer</string>
+    <string name="bacs_shopper_email_hint">E-postadress</string>
+
+    <string name="bacs_holder_name_invalid">Ogiltigt namn på bankkontoinnehavare</string>
+    <string name="bacs_account_number_invalid">Ogiltigt bankkontonummer</string>
+    <string name="bacs_sort_code_invalid">Ogiltigt clearingnummer</string>
+    <string name="bacs_shopper_email_invalid">Ogiltig e-postadress</string>
+</resources>
