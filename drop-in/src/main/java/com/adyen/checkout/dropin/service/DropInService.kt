@@ -51,6 +51,7 @@ abstract class DropInService : Service(), CoroutineScope, DropInServiceInterface
 
     private val binder = DropInBinder()
 
+    // TODO change LiveData into channel/flow to support single events?
     private val resultLiveData: MutableLiveData<DropInServiceResult> = MutableLiveData()
     private val balanceLiveData: MutableLiveData<String> = MutableLiveData()
 
