@@ -207,7 +207,13 @@ abstract class DropInService : Service(), CoroutineScope, DropInServiceInterface
 
     protected fun sendBalanceResult(result: BalanceDropInServiceResult) {
         // send response back to activity
-        Logger.d(TAG, "dispatching DropInServiceResult")
+        Logger.d(TAG, "dispatching BalanceDropInServiceResult")
+        mResultLiveData.postValue(result)
+    }
+
+    protected fun sendOrderResult(result: OrderDropInServiceResult) {
+        // send response back to activity
+        Logger.d(TAG, "dispatching OrderDropInServiceResult")
         mResultLiveData.postValue(result)
     }
 
@@ -280,6 +286,16 @@ abstract class DropInService : Service(), CoroutineScope, DropInServiceInterface
         throw NotImplementedError("Method checkBalance is not implemented")
     }
 
+    override fun requestOrdersCall() {
+        Logger.d(TAG, "requestOrdersCall")
+        createOrder()
+    }
+
+    // TODO docs
+    open fun createOrder() {
+        throw NotImplementedError("Method createOrder is not implemented")
+    }
+
     override fun observeResult(owner: LifecycleOwner, observer: Observer<BaseDropInServiceResult>) {
         mResultLiveData.observe(owner, observer)
     }
@@ -311,4 +327,5 @@ internal interface DropInServiceInterface {
     fun requestPaymentsCall(paymentComponentState: PaymentComponentState<*>)
     fun requestDetailsCall(actionComponentData: ActionComponentData)
     fun requestBalanceCall(paymentMethodData: PaymentMethodDetails)
+    fun requestOrdersCall()
 }

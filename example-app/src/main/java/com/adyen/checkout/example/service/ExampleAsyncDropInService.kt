@@ -14,6 +14,7 @@ import com.adyen.checkout.components.PaymentComponentState
 import com.adyen.checkout.components.model.payments.request.PaymentMethodDetails
 import com.adyen.checkout.components.model.payments.response.Action
 import com.adyen.checkout.components.model.payments.response.BalanceResult
+import com.adyen.checkout.components.model.payments.response.OrderResponse
 import com.adyen.checkout.core.log.LogUtil
 import com.adyen.checkout.core.log.Logger
 import com.adyen.checkout.core.model.getStringOrNull
@@ -21,6 +22,7 @@ import com.adyen.checkout.core.model.toStringPretty
 import com.adyen.checkout.dropin.service.BalanceDropInServiceResult
 import com.adyen.checkout.dropin.service.DropInService
 import com.adyen.checkout.dropin.service.DropInServiceResult
+import com.adyen.checkout.dropin.service.OrderDropInServiceResult
 import com.adyen.checkout.example.data.api.model.paymentsRequest.AdditionalData
 import com.adyen.checkout.example.data.storage.KeyValueStorage
 import com.adyen.checkout.example.repositories.paymentMethods.PaymentsRepository
@@ -158,6 +160,39 @@ class ExampleAsyncDropInService : DropInService() {
         } else {
             Logger.e(TAG, "FAILED")
             BalanceDropInServiceResult.Error(reason = "IOException")
+        }
+    }
+
+    override fun createOrder() {
+        launch(Dispatchers.IO) {
+            Logger.d(TAG, "createOrder")
+
+            val paymentRequest = createOrderRequest(
+                keyValueStorage.getAmount(),
+                keyValueStorage.getMerchantAccount()
+            )
+
+            val requestBody = paymentRequest.toString().toRequestBody(CONTENT_TYPE)
+            val response = paymentsRepository.createOrderAsync(requestBody)
+
+            val result = handleOrderResponse(response)
+            sendOrderResult(result)
+        }
+    }
+
+    @Suppress("NestedBlockDepth")
+    private fun handleOrderResponse(response: ResponseBody?): OrderDropInServiceResult {
+        return if (response != null) {
+            val orderJson = response.string()
+            val jsonResponse = JSONObject(orderJson)
+            val resultCode = jsonResponse.getStringOrNull("resultCode")
+            when (resultCode) {
+                "Success" -> OrderDropInServiceResult.OrderCreated(OrderResponse.SERIALIZER.deserialize(jsonResponse))
+                else -> OrderDropInServiceResult.Error(reason = resultCode, dismissDropIn = false)
+            }
+        } else {
+            Logger.e(TAG, "FAILED")
+            OrderDropInServiceResult.Error(reason = "IOException")
         }
     }
 }

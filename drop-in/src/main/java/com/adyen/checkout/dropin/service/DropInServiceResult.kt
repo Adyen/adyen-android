@@ -9,6 +9,7 @@
 package com.adyen.checkout.dropin.service
 
 import com.adyen.checkout.components.model.payments.response.BalanceResult
+import com.adyen.checkout.components.model.payments.response.OrderResponse
 import com.adyen.checkout.core.exception.CheckoutException
 import org.json.JSONException
 import org.json.JSONObject
@@ -89,4 +90,27 @@ sealed class BalanceDropInServiceResult : BaseDropInServiceResult() {
         override val reason: String? = null,
         override val dismissDropIn: Boolean = false
     ) : BalanceDropInServiceResult(), DropInServiceResultError
+}
+
+sealed class OrderDropInServiceResult : BaseDropInServiceResult() {
+
+    /**
+     * Only applicable for gift card flow.
+     *
+     * A call to create a new order was successful and returned with a
+     * [OrderResponse] that needs to be handled.
+     *
+     * Use [OrderResponse.SERIALIZER] to serialize your JSON response string.
+     */
+    class OrderCreated(val order: OrderResponse) : OrderDropInServiceResult()
+
+    /**
+     * Call failed with an error. Can have the localized error message which will be shown
+     * in an Alert Dialog, otherwise a generic error message will be shown.
+     */
+    class Error(
+        override val errorMessage: String? = null,
+        override val reason: String? = null,
+        override val dismissDropIn: Boolean = false
+    ) : OrderDropInServiceResult(), DropInServiceResultError
 }

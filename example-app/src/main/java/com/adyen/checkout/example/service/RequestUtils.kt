@@ -59,3 +59,14 @@ fun createBalanceRequest(
         put("merchantAccount", merchantAccount)
     }
 }
+
+fun createOrderRequest(
+    amount: Amount,
+    merchantAccount: String
+): JSONObject {
+    return JSONObject().apply {
+        put("amount", JSONObject(Gson().toJson(amount)))
+        put("merchantAccount", merchantAccount)
+        put("reference", "android-test-components_${System.currentTimeMillis()}")
+    }
+}

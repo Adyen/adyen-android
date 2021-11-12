@@ -31,6 +31,7 @@ import com.adyen.checkout.components.model.paymentmethods.PaymentMethod
 import com.adyen.checkout.components.model.paymentmethods.StoredPaymentMethod
 import com.adyen.checkout.components.model.payments.response.Action
 import com.adyen.checkout.components.model.payments.response.BalanceResult
+import com.adyen.checkout.components.model.payments.response.OrderResponse
 import com.adyen.checkout.components.util.PaymentMethodTypes
 import com.adyen.checkout.core.exception.CheckoutException
 import com.adyen.checkout.core.log.LogUtil
@@ -46,6 +47,7 @@ import com.adyen.checkout.dropin.service.DropInService
 import com.adyen.checkout.dropin.service.DropInServiceInterface
 import com.adyen.checkout.dropin.service.DropInServiceResult
 import com.adyen.checkout.dropin.service.DropInServiceResultError
+import com.adyen.checkout.dropin.service.OrderDropInServiceResult
 import com.adyen.checkout.dropin.ui.action.ActionComponentDialogFragment
 import com.adyen.checkout.dropin.ui.base.DropInBottomSheetDialogFragment
 import com.adyen.checkout.dropin.ui.component.CardComponentDialogFragment
@@ -107,6 +109,7 @@ class DropInActivity : AppCompatActivity(), DropInBottomSheetDialogFragment.Prot
     private var paymentDataQueue: PaymentComponentState<*>? = null
     private var actionDataQueue: ActionComponentData? = null
     private var balanceDataQueue: GiftCardComponentState? = null
+    private var orderDataQueue: Unit? = null
 
     private val serviceConnection = object : ServiceConnection {
 
@@ -131,6 +134,11 @@ class DropInActivity : AppCompatActivity(), DropInBottomSheetDialogFragment.Prot
                 Logger.d(TAG, "Sending queued action request")
                 requestBalanceCall(it)
                 balanceDataQueue = null
+            }
+            orderDataQueue?.let {
+                Logger.d(TAG, "Sending queued order request")
+                requestOrdersCall()
+                orderDataQueue = null
             }
         }
 
@@ -398,12 +406,25 @@ class DropInActivity : AppCompatActivity(), DropInBottomSheetDialogFragment.Prot
         dropInService?.requestBalanceCall(paymentMethod)
     }
 
+    private fun requestOrdersCall() {
+        Logger.d(TAG, "requestOrdersCall")
+        if (dropInService == null) {
+            Logger.e(TAG, "requestOrdersCall - service is disconnected")
+            orderDataQueue = Unit
+            return
+        }
+        dropInViewModel.isWaitingResult = true
+        setLoading(true)
+        dropInService?.requestOrdersCall()
+    }
+
     private fun handleDropInServiceResult(dropInServiceResult: BaseDropInServiceResult) {
         Logger.d(TAG, "handleDropInServiceResult - ${dropInServiceResult::class.simpleName}")
         dropInViewModel.isWaitingResult = false
         when (dropInServiceResult) {
             is DropInServiceResult -> handleDropInServiceResult(dropInServiceResult)
             is BalanceDropInServiceResult -> handleDropInServiceResult(dropInServiceResult)
+            is OrderDropInServiceResult -> handleDropInServiceResult(dropInServiceResult)
         }
     }
 
@@ -419,6 +440,13 @@ class DropInActivity : AppCompatActivity(), DropInBottomSheetDialogFragment.Prot
         when (dropInServiceResult) {
             is BalanceDropInServiceResult.Balance -> handleBalanceResult(dropInServiceResult.balance)
             is BalanceDropInServiceResult.Error -> handleErrorDropInServiceResult(dropInServiceResult)
+        }
+    }
+
+    private fun handleDropInServiceResult(dropInServiceResult: OrderDropInServiceResult) {
+        when (dropInServiceResult) {
+            is OrderDropInServiceResult.OrderCreated -> handleOrderResult(dropInServiceResult.order)
+            is OrderDropInServiceResult.Error -> handleErrorDropInServiceResult(dropInServiceResult)
         }
     }
 
@@ -548,7 +576,12 @@ class DropInActivity : AppCompatActivity(), DropInBottomSheetDialogFragment.Prot
     private fun handleGiftCardPartialPayment(partialPayment: GiftCardBalanceResult.PartialPayment) {
         Logger.d(TAG, "handleGiftCardPartialPayment")
         setLoading(false)
-        // TODO handle partial payment
+        requestOrdersCall()
+    }
+
+    private fun handleOrderResult(order: OrderResponse) {
+        Logger.v(TAG, "handleOrderResult")
+        // TODO handle order
     }
 
     companion object {
