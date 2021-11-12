@@ -273,10 +273,7 @@ class DropInActivity : AppCompatActivity(), DropInBottomSheetDialogFragment.Prot
         }
         dropInViewModel.isWaitingResult = true
         setLoading(true)
-        // include amount value if merchant passed it to the DropIn
-        if (!dropInViewModel.dropInConfiguration.amount.isEmpty) {
-            paymentComponentState.data.amount = dropInViewModel.dropInConfiguration.amount
-        }
+        dropInViewModel.updatePaymentComponentStateForPaymentsCall(paymentComponentState)
         dropInService?.requestPaymentsCall(paymentComponentState)
     }
 
@@ -581,7 +578,10 @@ class DropInActivity : AppCompatActivity(), DropInBottomSheetDialogFragment.Prot
 
     private fun handleOrderResult(order: OrderResponse) {
         Logger.v(TAG, "handleOrderResult")
-        // TODO handle order
+        dropInViewModel.handleOrderResponse(order)
+        val paymentComponentState = dropInViewModel.cachedGiftCardComponentState
+            ?: throw CheckoutException("Lost reference to cached GiftCardComponentState")
+        requestPaymentsCall(paymentComponentState)
     }
 
     companion object {

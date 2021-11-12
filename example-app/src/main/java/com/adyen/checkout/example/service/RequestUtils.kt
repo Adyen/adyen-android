@@ -30,7 +30,7 @@ fun createPaymentRequest(
 
     return JSONObject(paymentComponentData.toString()).apply {
         put("shopperReference", shopperReference)
-        put("amount", JSONObject(Gson().toJson(amount)))
+        if (!has("amount")) put("amount", JSONObject(Gson().toJson(amount)))
         put("merchantAccount", merchantAccount)
         put("returnUrl", redirectUrl)
         put("countryCode", countryCode)

@@ -11,11 +11,14 @@ package com.adyen.checkout.dropin.ui
 import android.content.Intent
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
+import com.adyen.checkout.components.PaymentComponentState
 import com.adyen.checkout.components.model.PaymentMethodsApiResponse
 import com.adyen.checkout.components.model.paymentmethods.StoredPaymentMethod
 import com.adyen.checkout.components.model.payments.Amount
+import com.adyen.checkout.components.model.payments.request.Order
 import com.adyen.checkout.components.model.payments.request.PaymentMethodDetails
 import com.adyen.checkout.components.model.payments.response.BalanceResult
+import com.adyen.checkout.components.model.payments.response.OrderResponse
 import com.adyen.checkout.components.util.PaymentMethodTypes
 import com.adyen.checkout.core.exception.CheckoutException
 import com.adyen.checkout.core.log.LogUtil
@@ -38,6 +41,8 @@ private const val DROP_IN_CONFIGURATION_KEY = "DROP_IN_CONFIGURATION_KEY"
 private const val DROP_IN_RESULT_INTENT_KEY = "DROP_IN_RESULT_INTENT_KEY"
 private const val IS_WAITING_FOR_RESULT_KEY = "IS_WAITING_FOR_RESULT_KEY"
 private const val CACHED_GIFT_CARD = "CACHED_GIFT_CARD"
+private const val CURRENT_ORDER = "CURRENT_ORDER"
+private const val PARTIAL_PAYMENT_AMOUNT = "PARTIAL_PAYMENT_AMOUNT"
 
 class DropInViewModel(private val savedStateHandle: SavedStateHandle) : ViewModel() {
 
@@ -59,6 +64,22 @@ class DropInViewModel(private val savedStateHandle: SavedStateHandle) : ViewMode
         }
         private set(value) {
             savedStateHandle[CACHED_GIFT_CARD] = value
+        }
+
+    private var cachedPartialPaymentAmount: Amount?
+        get() {
+            return savedStateHandle.get<Amount>(PARTIAL_PAYMENT_AMOUNT)
+        }
+        private set(value) {
+            savedStateHandle[PARTIAL_PAYMENT_AMOUNT] = value
+        }
+
+    private var currentOrder: OrderResponse?
+        get() {
+            return savedStateHandle.get<OrderResponse>(CURRENT_ORDER)
+        }
+        private set(value) {
+            savedStateHandle[CURRENT_ORDER] = value
         }
 
     private fun <T> getStateValueOrFail(key: String): T {
@@ -133,6 +154,7 @@ class DropInViewModel(private val savedStateHandle: SavedStateHandle) : ViewMode
                 )
             }
             is GiftCardBalanceStatus.PartialPayment -> {
+                cachedPartialPaymentAmount = giftCardBalanceResult.amountPaid
                 GiftCardBalanceResult.PartialPayment(giftCardBalanceResult.amountPaid, giftCardBalanceResult.remainingBalance)
             }
         }
@@ -148,6 +170,33 @@ class DropInViewModel(private val savedStateHandle: SavedStateHandle) : ViewMode
             shopperLocale = dropInConfiguration.shopperLocale,
             brand = giftCardComponentState.data.paymentMethod?.brand.orEmpty(),
             lastFourDigits = giftCardComponentState.lastFourDigits.orEmpty()
+        )
+    }
+
+    fun handleOrderResponse(orderResponse: OrderResponse) {
+        currentOrder = orderResponse
+        Logger.d(TAG, "handleOrderResponse - Order cached")
+    }
+
+    fun updatePaymentComponentStateForPaymentsCall(paymentComponentState: PaymentComponentState<*>) {
+        // include amount value if merchant passed it to the DropIn
+        val amount = when {
+            cachedPartialPaymentAmount != null -> cachedPartialPaymentAmount
+            !dropInConfiguration.amount.isEmpty -> dropInConfiguration.amount
+            else -> null
+        }
+        if (amount != null) {
+            paymentComponentState.data.amount = amount
+        }
+        currentOrder?.let {
+            paymentComponentState.data.order = createOrder(it)
+        }
+    }
+
+    private fun createOrder(orderResponse: OrderResponse): Order {
+        return Order(
+            pspReference = orderResponse.pspReference,
+            orderData = orderResponse.orderData
         )
     }
 
