@@ -3,7 +3,8 @@ name: Check PR
 # Every PR should be checked for static analysis
 on:
   pull_request:
-    branches: [ develop ]
+    branches-ignore:
+      - 'master'
     types: [ opened, synchronize, reopened ]
 
 jobs:
