@@ -31,4 +31,12 @@ sealed class DropInServiceResult {
      * in an Alert Dialog, otherwise a generic error message will be shown.
      */
     class Error(val errorMessage: String? = null, val reason: String? = null, val dismissDropIn: Boolean = false) : DropInServiceResult()
+
+    /**
+     * Only applicable for gift card flow.
+     *
+     * A call to fetch a gift card balance was successful and returned with a
+     * [com.adyen.checkout.components.model.payments.response.BalanceResult] that needs to be handled.
+     */
+    class Balance(val balanceJSON: String) : DropInServiceResult()
 }

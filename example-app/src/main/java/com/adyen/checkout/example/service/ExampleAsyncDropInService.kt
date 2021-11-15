@@ -98,7 +98,6 @@ class ExampleAsyncDropInService : DropInService() {
         }
     }
 
-    @Suppress("NestedBlockDepth")
     private fun handleResponse(response: ResponseBody?): DropInServiceResult {
         return if (response != null) {
             val detailsResponse = JSONObject(response.string())
@@ -133,25 +132,24 @@ class ExampleAsyncDropInService : DropInService() {
 
             val requestBody = paymentRequest.toString().toRequestBody(CONTENT_TYPE)
             val response = paymentsRepository.balanceRequestAsync(requestBody)
-
-            handleBalanceResponse(response)
+            val result = handleBalanceResponse(response)
+            sendResult(result)
         }
     }
 
-    @Suppress("NestedBlockDepth")
-    private fun handleBalanceResponse(response: ResponseBody?) {
-        if (response != null) {
+    private fun handleBalanceResponse(response: ResponseBody?): DropInServiceResult {
+        return if (response != null) {
             val balanceJson = response.string()
             val jsonResponse = JSONObject(balanceJson)
             val resultCode = jsonResponse.getStringOrNull("resultCode")
             when (resultCode) {
-                "Success" -> onBalanceChecked(balanceJson)
-                "NotEnoughBalance" -> sendResult(DropInServiceResult.Error(reason = "Not enough balance", dismissDropIn = false))
-                else -> sendResult(DropInServiceResult.Error(reason = resultCode, dismissDropIn = false))
+                "Success" -> DropInServiceResult.Balance(balanceJson)
+                "NotEnoughBalance" -> DropInServiceResult.Error(reason = "Not enough balance", dismissDropIn = false)
+                else -> DropInServiceResult.Error(reason = resultCode, dismissDropIn = false)
             }
         } else {
             Logger.e(TAG, "FAILED")
-            sendResult(DropInServiceResult.Error(reason = "IOException"))
+            DropInServiceResult.Error(reason = "IOException")
         }
     }
 }

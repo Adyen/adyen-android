@@ -53,7 +53,6 @@ abstract class DropInService : Service(), CoroutineScope, DropInServiceInterface
 
     // TODO change LiveData into channel/flow to support single events?
     private val resultLiveData: MutableLiveData<DropInServiceResult> = MutableLiveData()
-    private val balanceLiveData: MutableLiveData<String> = MutableLiveData()
 
     override fun onBind(intent: Intent?): IBinder {
         Logger.d(TAG, "onBind")
@@ -275,19 +274,8 @@ abstract class DropInService : Service(), CoroutineScope, DropInServiceInterface
         throw NotImplementedError("Method checkBalance is not implemented")
     }
 
-    // TODO docs
-    protected fun onBalanceChecked(balanceJson: String) {
-        // send response back to activity
-        Logger.d(TAG, "onBalanceChecked called")
-        balanceLiveData.postValue(balanceJson)
-    }
-
     override fun observeResult(owner: LifecycleOwner, observer: Observer<DropInServiceResult>) {
         resultLiveData.observe(owner, observer)
-    }
-
-    override fun observeBalanceResult(owner: LifecycleOwner, observer: Observer<String>) {
-        balanceLiveData.observe(owner, observer)
     }
 
     internal inner class DropInBinder : Binder() {
@@ -316,6 +304,5 @@ internal interface DropInServiceInterface {
     fun observeResult(owner: LifecycleOwner, observer: Observer<DropInServiceResult>)
     fun requestPaymentsCall(paymentComponentState: PaymentComponentState<*>)
     fun requestDetailsCall(actionComponentData: ActionComponentData)
-    fun observeBalanceResult(owner: LifecycleOwner, observer: Observer<String>)
     fun requestBalanceCall(paymentMethodData: PaymentMethodDetails)
 }

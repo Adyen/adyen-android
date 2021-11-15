@@ -112,7 +112,6 @@ class DropInActivity : AppCompatActivity(), DropInBottomSheetDialogFragment.Prot
             val dropInBinder = binder as? DropInService.DropInBinder ?: return
             dropInService = dropInBinder.getService()
             dropInService?.observeResult(this@DropInActivity) { handleDropInServiceResult(it) }
-            dropInService?.observeBalanceResult(this@DropInActivity) { handleBalanceResult(it) }
 
             paymentDataQueue?.let {
                 Logger.d(TAG, "Sending queued payment request")
@@ -407,6 +406,9 @@ class DropInActivity : AppCompatActivity(), DropInBottomSheetDialogFragment.Prot
                 val action = Action.SERIALIZER.deserialize(JSONObject(dropInServiceResult.actionJSON))
                 actionHandler.handleAction(this, action, ::sendResult)
             }
+            is DropInServiceResult.Balance -> {
+                handleBalanceResult(dropInServiceResult.balanceJSON)
+            }
             is DropInServiceResult.Error -> {
                 Logger.d(TAG, "handleDropInServiceResult ERROR - reason: ${dropInServiceResult.reason}")
                 val reason = dropInServiceResult.reason ?: "Unspecified reason"
@@ -509,7 +511,6 @@ class DropInActivity : AppCompatActivity(), DropInBottomSheetDialogFragment.Prot
 
     private fun handleBalanceResult(balanceJson: String) {
         Logger.v(TAG, "handleBalanceResult")
-        dropInViewModel.isWaitingResult = false
         val result = dropInViewModel.handleBalanceResult(balanceJson)
         Logger.d(TAG, "handleBalanceResult: ${result::class.java.simpleName}")
         when (result) {
