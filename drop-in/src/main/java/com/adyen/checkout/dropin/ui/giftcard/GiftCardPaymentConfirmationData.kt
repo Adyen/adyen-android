@@ -38,7 +38,6 @@ data class GiftCardPaymentConfirmationData(
 
     override fun describeContents() = Parcelable.CONTENTS_FILE_DESCRIPTOR
 
-
     companion object {
         @JvmField
         val CREATOR = object : Parcelable.Creator<GiftCardPaymentConfirmationData> {

@@ -79,6 +79,7 @@ class GiftCardComponent(
         return GiftCardOutputData(cardNumber = inputData.cardNumber, pin = inputData.pin)
     }
 
+    @Suppress("ReturnCount")
     override fun createComponentState(): GiftCardComponentState {
         val unencryptedCardBuilder = UnencryptedCard.Builder()
         val outputData = outputData
