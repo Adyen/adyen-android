@@ -15,13 +15,16 @@ class BacsDirectDebitOutputData(
     val holderNameState: FieldState<String>,
     val bankAccountNumberState: FieldState<String>,
     val sortCodeState: FieldState<String>,
-    val shopperEmailState: FieldState<String>
+    val shopperEmailState: FieldState<String>,
+    val isAmountConsentChecked: Boolean,
+    val isAccountConsentChecked: Boolean
 ) : OutputData {
 
     override fun isValid(): Boolean {
         return holderNameState.validation.isValid() &&
             bankAccountNumberState.validation.isValid() &&
             sortCodeState.validation.isValid() &&
-            shopperEmailState.validation.isValid()
+            shopperEmailState.validation.isValid() &&
+            isAmountConsentChecked && isAccountConsentChecked
     }
 }

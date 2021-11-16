@@ -14,5 +14,7 @@ data class BacsDirectDebitInputData(
     var holderName: String = "",
     var bankAccountNumber: String = "",
     var sortCode: String = "",
-    var shopperEmail: String = ""
+    var shopperEmail: String = "",
+    var isAmountConsentChecked: Boolean = false,
+    var isAccountConsentChecked: Boolean = false
 ) : InputData

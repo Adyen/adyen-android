@@ -32,10 +32,12 @@ class BacsDirectDebitComponent(
 
     override fun onInputDataChanged(inputData: BacsDirectDebitInputData): BacsDirectDebitOutputData {
         return BacsDirectDebitOutputData(
-            BacsDirectDebitValidationUtils.validateHolderName(inputData.holderName),
-            BacsDirectDebitValidationUtils.validateBankAccountNumber(inputData.bankAccountNumber),
-            BacsDirectDebitValidationUtils.validateSortCode(inputData.sortCode),
-            BacsDirectDebitValidationUtils.validateShopperEmail(inputData.shopperEmail)
+            holderNameState = BacsDirectDebitValidationUtils.validateHolderName(inputData.holderName),
+            bankAccountNumberState = BacsDirectDebitValidationUtils.validateBankAccountNumber(inputData.bankAccountNumber),
+            sortCodeState = BacsDirectDebitValidationUtils.validateSortCode(inputData.sortCode),
+            shopperEmailState = BacsDirectDebitValidationUtils.validateShopperEmail(inputData.shopperEmail),
+            isAmountConsentChecked = inputData.isAmountConsentChecked,
+            isAccountConsentChecked = inputData.isAccountConsentChecked
         )
     }
 

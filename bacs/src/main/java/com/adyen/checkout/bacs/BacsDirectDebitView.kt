@@ -51,6 +51,7 @@ class BacsDirectDebitView @JvmOverloads constructor(context: Context, attrs: Att
         initBankAccountNumberInput()
         initSortCodeInput()
         initShopperEmailInput()
+        initConsentSwitches()
     }
 
     override fun isConfirmationRequired(): Boolean {
@@ -195,6 +196,18 @@ class BacsDirectDebitView @JvmOverloads constructor(context: Context, attrs: Att
             } else if (shopperEmailValidation != null && shopperEmailValidation is Validation.Invalid) {
                 binding.textInputLayoutShopperEmail.error = mLocalizedContext.getString(shopperEmailValidation.reason)
             }
+        }
+    }
+
+    private fun initConsentSwitches() {
+        binding.switchConsentAmount.setOnCheckedChangeListener { _, isChecked ->
+            mBacsDirectDebitInputData.isAmountConsentChecked = isChecked
+            notifyInputDataChanged()
+        }
+
+        binding.switchConsentAccount.setOnCheckedChangeListener { _, isChecked ->
+            mBacsDirectDebitInputData.isAccountConsentChecked = isChecked
+            notifyInputDataChanged()
         }
     }
 }

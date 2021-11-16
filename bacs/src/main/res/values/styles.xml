@@ -30,4 +30,14 @@
         <item name="android:hint">@string/bacs_shopper_email_hint</item>
         <item name="android:inputType">textEmailAddress</item>
     </style>
+
+    <!-- TODO translated strings -->
+
+    <style name="AdyenCheckout.Bacs.Switch.Amount" parent="AdyenCheckout.Switch">
+        <item name="android:text">I agree that the amount will be deducted from my bank account.</item>
+    </style>
+
+    <style name="AdyenCheckout.Bacs.Switch.Account" parent="AdyenCheckout.Switch">
+        <item name="android:text">I confirm the account is in my name and I am the only signatory required to authorize the Direct Debit on this account.</item>
+    </style>
 </resources>
