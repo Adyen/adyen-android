@@ -52,7 +52,7 @@ abstract class DropInService : Service(), CoroutineScope, DropInServiceInterface
     private val binder = DropInBinder()
 
     // TODO change LiveData into channel/flow to support single events?
-    private val resultLiveData: MutableLiveData<DropInServiceResult> = MutableLiveData()
+    private val mResultLiveData: MutableLiveData<BaseDropInServiceResult> = MutableLiveData()
 
     override fun onBind(intent: Intent?): IBinder {
         Logger.d(TAG, "onBind")
@@ -202,7 +202,13 @@ abstract class DropInService : Service(), CoroutineScope, DropInServiceInterface
     protected fun sendResult(result: DropInServiceResult) {
         // send response back to activity
         Logger.d(TAG, "dispatching DropInServiceResult")
-        resultLiveData.postValue(result)
+        mResultLiveData.postValue(result)
+    }
+
+    protected fun sendBalanceResult(result: BalanceDropInServiceResult) {
+        // send response back to activity
+        Logger.d(TAG, "dispatching DropInServiceResult")
+        mResultLiveData.postValue(result)
     }
 
     /**
@@ -274,8 +280,8 @@ abstract class DropInService : Service(), CoroutineScope, DropInServiceInterface
         throw NotImplementedError("Method checkBalance is not implemented")
     }
 
-    override fun observeResult(owner: LifecycleOwner, observer: Observer<DropInServiceResult>) {
-        resultLiveData.observe(owner, observer)
+    override fun observeResult(owner: LifecycleOwner, observer: Observer<BaseDropInServiceResult>) {
+        mResultLiveData.observe(owner, observer)
     }
 
     internal inner class DropInBinder : Binder() {
@@ -301,7 +307,7 @@ abstract class DropInService : Service(), CoroutineScope, DropInServiceInterface
 }
 
 internal interface DropInServiceInterface {
-    fun observeResult(owner: LifecycleOwner, observer: Observer<DropInServiceResult>)
+    fun observeResult(owner: LifecycleOwner, observer: Observer<BaseDropInServiceResult>)
     fun requestPaymentsCall(paymentComponentState: PaymentComponentState<*>)
     fun requestDetailsCall(actionComponentData: ActionComponentData)
     fun requestBalanceCall(paymentMethodData: PaymentMethodDetails)

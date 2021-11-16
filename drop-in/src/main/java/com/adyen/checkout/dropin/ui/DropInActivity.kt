@@ -39,9 +39,12 @@ import com.adyen.checkout.dropin.DropIn
 import com.adyen.checkout.dropin.DropInConfiguration
 import com.adyen.checkout.dropin.DropInPrefs
 import com.adyen.checkout.dropin.R
+import com.adyen.checkout.dropin.service.BalanceDropInServiceResult
+import com.adyen.checkout.dropin.service.BaseDropInServiceResult
 import com.adyen.checkout.dropin.service.DropInService
 import com.adyen.checkout.dropin.service.DropInServiceInterface
 import com.adyen.checkout.dropin.service.DropInServiceResult
+import com.adyen.checkout.dropin.service.DropInServiceResultError
 import com.adyen.checkout.dropin.ui.action.ActionComponentDialogFragment
 import com.adyen.checkout.dropin.ui.base.DropInBottomSheetDialogFragment
 import com.adyen.checkout.dropin.ui.component.CardComponentDialogFragment
@@ -395,30 +398,40 @@ class DropInActivity : AppCompatActivity(), DropInBottomSheetDialogFragment.Prot
         dropInService?.requestBalanceCall(paymentMethod)
     }
 
-    private fun handleDropInServiceResult(dropInServiceResult: DropInServiceResult) {
+    private fun handleDropInServiceResult(dropInServiceResult: BaseDropInServiceResult) {
         Logger.d(TAG, "handleDropInServiceResult - ${dropInServiceResult::class.simpleName}")
         dropInViewModel.isWaitingResult = false
         when (dropInServiceResult) {
-            is DropInServiceResult.Finished -> {
-                sendResult(dropInServiceResult.result)
-            }
-            is DropInServiceResult.Action -> {
-                val action = Action.SERIALIZER.deserialize(JSONObject(dropInServiceResult.actionJSON))
-                actionHandler.handleAction(this, action, ::sendResult)
-            }
-            is DropInServiceResult.Balance -> {
-                handleBalanceResult(dropInServiceResult.balanceJSON)
-            }
-            is DropInServiceResult.Error -> {
-                Logger.d(TAG, "handleDropInServiceResult ERROR - reason: ${dropInServiceResult.reason}")
-                val reason = dropInServiceResult.reason ?: "Unspecified reason"
-                if (dropInServiceResult.errorMessage == null) {
-                    showError(getString(R.string.payment_failed), reason, dropInServiceResult.dismissDropIn)
-                } else {
-                    showError(dropInServiceResult.errorMessage, reason, dropInServiceResult.dismissDropIn)
-                }
-            }
+            is DropInServiceResult -> handleDropInServiceResult(dropInServiceResult)
+            is BalanceDropInServiceResult -> handleDropInServiceResult(dropInServiceResult)
         }
+    }
+
+    private fun handleDropInServiceResult(dropInServiceResult: DropInServiceResult) {
+        when (dropInServiceResult) {
+            is DropInServiceResult.Finished -> sendResult(dropInServiceResult.result)
+            is DropInServiceResult.Action -> handleAction(dropInServiceResult.actionJSON)
+            is DropInServiceResult.Error -> handleErrorDropInServiceResult(dropInServiceResult)
+        }
+    }
+
+    private fun handleDropInServiceResult(dropInServiceResult: BalanceDropInServiceResult) {
+        when (dropInServiceResult) {
+            is BalanceDropInServiceResult.Balance -> handleBalanceResult(dropInServiceResult.balanceJSON)
+            is BalanceDropInServiceResult.Error -> handleErrorDropInServiceResult(dropInServiceResult)
+        }
+    }
+
+    private fun handleErrorDropInServiceResult(dropInServiceResult: DropInServiceResultError) {
+        Logger.d(TAG, "handleDropInServiceResult ERROR - reason: ${dropInServiceResult.reason}")
+        val reason = dropInServiceResult.reason ?: "Unspecified reason"
+        val errorMessage = dropInServiceResult.errorMessage ?: getString(R.string.payment_failed)
+        showError(errorMessage, reason, dropInServiceResult.dismissDropIn)
+    }
+
+    private fun handleAction(actionJSON: String) {
+        val action = Action.SERIALIZER.deserialize(JSONObject(actionJSON))
+        actionHandler.handleAction(this, action, ::sendResult)
     }
 
     private fun sendResult(content: String) {

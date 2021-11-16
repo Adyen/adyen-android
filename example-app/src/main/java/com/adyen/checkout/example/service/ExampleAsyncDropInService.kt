@@ -16,6 +16,7 @@ import com.adyen.checkout.core.log.LogUtil
 import com.adyen.checkout.core.log.Logger
 import com.adyen.checkout.core.model.getStringOrNull
 import com.adyen.checkout.core.model.toStringPretty
+import com.adyen.checkout.dropin.service.BalanceDropInServiceResult
 import com.adyen.checkout.dropin.service.DropInService
 import com.adyen.checkout.dropin.service.DropInServiceResult
 import com.adyen.checkout.example.data.api.model.paymentsRequest.AdditionalData
@@ -133,23 +134,23 @@ class ExampleAsyncDropInService : DropInService() {
             val requestBody = paymentRequest.toString().toRequestBody(CONTENT_TYPE)
             val response = paymentsRepository.balanceRequestAsync(requestBody)
             val result = handleBalanceResponse(response)
-            sendResult(result)
+            sendBalanceResult(result)
         }
     }
 
-    private fun handleBalanceResponse(response: ResponseBody?): DropInServiceResult {
+    private fun handleBalanceResponse(response: ResponseBody?): BalanceDropInServiceResult {
         return if (response != null) {
             val balanceJson = response.string()
             val jsonResponse = JSONObject(balanceJson)
             val resultCode = jsonResponse.getStringOrNull("resultCode")
             when (resultCode) {
-                "Success" -> DropInServiceResult.Balance(balanceJson)
-                "NotEnoughBalance" -> DropInServiceResult.Error(reason = "Not enough balance", dismissDropIn = false)
-                else -> DropInServiceResult.Error(reason = resultCode, dismissDropIn = false)
+                "Success" -> BalanceDropInServiceResult.Balance(balanceJson)
+                "NotEnoughBalance" -> BalanceDropInServiceResult.Error(reason = "Not enough balance", dismissDropIn = false)
+                else -> BalanceDropInServiceResult.Error(reason = resultCode, dismissDropIn = false)
             }
         } else {
             Logger.e(TAG, "FAILED")
-            DropInServiceResult.Error(reason = "IOException")
+            BalanceDropInServiceResult.Error(reason = "IOException")
         }
     }
 }
