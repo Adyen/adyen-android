@@ -17,19 +17,21 @@ import com.adyen.checkout.example.data.api.model.paymentsRequest.AdditionalData
 import com.adyen.checkout.example.data.storage.KeyValueStorage
 import com.adyen.checkout.example.repositories.paymentMethods.PaymentsRepository
 import com.adyen.checkout.redirect.RedirectComponent
+import dagger.hilt.android.AndroidEntryPoint
+import java.io.IOException
+import javax.inject.Inject
 import okhttp3.MediaType
 import okhttp3.MediaType.Companion.toMediaType
 import okhttp3.RequestBody.Companion.toRequestBody
 import okhttp3.ResponseBody
 import org.json.JSONObject
-import org.koin.android.ext.android.inject
 import retrofit2.Call
-import java.io.IOException
 
 /**
  * This is just an example on how to make networkModule calls on the [DropInService].
  * You should make the calls to your own servers and have additional data or processing if necessary.
  */
+@AndroidEntryPoint
 class ExampleDropInService : DropInService() {
 
     companion object {
@@ -37,8 +39,10 @@ class ExampleDropInService : DropInService() {
         private val CONTENT_TYPE: MediaType = "application/json".toMediaType()
     }
 
-    private val paymentsRepository: PaymentsRepository by inject()
-    private val keyValueStorage: KeyValueStorage by inject()
+    @Inject
+    lateinit var paymentsRepository: PaymentsRepository
+    @Inject
+    lateinit var keyValueStorage: KeyValueStorage
 
     override fun makePaymentsCall(paymentComponentJson: JSONObject): DropInServiceResult {
         Logger.d(TAG, "makePaymentsCall")
