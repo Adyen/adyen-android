@@ -19,7 +19,6 @@ import com.adyen.checkout.await.AwaitConfiguration
 import com.adyen.checkout.await.AwaitView
 import com.adyen.checkout.bacs.BacsDirectDebitComponent
 import com.adyen.checkout.bacs.BacsDirectDebitConfiguration
-import com.adyen.checkout.bacs.BacsDirectDebitView
 import com.adyen.checkout.bcmc.BcmcComponent
 import com.adyen.checkout.bcmc.BcmcConfiguration
 import com.adyen.checkout.bcmc.BcmcView
@@ -342,7 +341,6 @@ internal fun getViewFor(
         PaymentMethodTypes.OPEN_BANKING -> OpenBankingRecyclerView(context)
         PaymentMethodTypes.SCHEME -> CardView(context)
         PaymentMethodTypes.SEPA -> SepaView(context)
-        PaymentMethodTypes.BACS -> BacsDirectDebitView(context)
         PaymentMethodTypes.BLIK -> BlikView(context)
         // GooglePay and WeChatPay do not require a View in Drop-in
         ActionTypes.AWAIT -> AwaitView(context)
