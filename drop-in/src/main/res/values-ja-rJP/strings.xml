@@ -24,4 +24,5 @@
     <string name="checkout_giftcard_redeem_button">利用する</string>
     <string name="checkout_giftcard_error_zero_balance">このギフトカードの残高はゼロです</string>
     <string name="checkout_giftcard_error_currency">ギフトカードは、発行された通貨でのみ有効です。</string>
+    <string name="checkout_giftcard_remaining_balance_text">残りの残高は%sになります</string>
 </resources>

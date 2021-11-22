@@ -24,4 +24,5 @@
     <string name="checkout_giftcard_redeem_button">Beváltás</string>
     <string name="checkout_giftcard_error_zero_balance">Az ajándékkártya egyenlege nulla</string>
     <string name="checkout_giftcard_error_currency">Az ajándékkártyák csak abban a pénznemben érvényesek, amelyre kiállították azokat</string>
+    <string name="checkout_giftcard_remaining_balance_text">A fennmaradó egyenleg %s lesz</string>
 </resources>

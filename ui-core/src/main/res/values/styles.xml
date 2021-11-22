@@ -130,8 +130,8 @@
     <style name="AdyenCheckout.Button.Colored" parent="Widget.AppCompat.Button.Colored">
         <item name="android:layout_width">match_parent</item>
         <item name="android:layout_height">@dimen/primary_button_height</item>
-        <item name="android:layout_marginLeft">@dimen/standard_margin</item>
-        <item name="android:layout_marginRight">@dimen/standard_margin</item>
+        <item name="android:layout_marginStart">@dimen/standard_margin</item>
+        <item name="android:layout_marginEnd">@dimen/standard_margin</item>
         <item name="android:textColor">@color/white</item>
         <item name="android:theme">@style/AdyenCheckout.PrimaryFlatButton</item>
     </style>
@@ -143,6 +143,8 @@
 
     <style name="AdyenCheckout.SecondaryFlatButton" parent="Widget.AppCompat.Button.Borderless">
         <item name="android:textColor">@color/primaryColor</item>
+        <item name="android:layout_marginStart">@dimen/standard_margin</item>
+        <item name="android:layout_marginEnd">@dimen/standard_margin</item>
     </style>
 
 </resources>

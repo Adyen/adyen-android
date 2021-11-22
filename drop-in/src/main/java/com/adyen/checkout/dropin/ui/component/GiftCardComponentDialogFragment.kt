@@ -27,6 +27,7 @@ import com.adyen.checkout.core.log.Logger
 import com.adyen.checkout.dropin.databinding.FragmentGiftcardComponentBinding
 import com.adyen.checkout.dropin.getViewFor
 import com.adyen.checkout.dropin.ui.base.BaseComponentDialogFragment
+import com.adyen.checkout.giftcard.GiftCardComponentState
 import com.google.android.material.bottomsheet.BottomSheetBehavior
 
 class GiftCardComponentDialogFragment : BaseComponentDialogFragment() {
@@ -89,6 +90,9 @@ class GiftCardComponentDialogFragment : BaseComponentDialogFragment() {
     }
 
     override fun requestProtocolCall(componentState: PaymentComponentState<out PaymentMethodDetails>) {
+        if (componentState !is GiftCardComponentState) {
+            throw CheckoutException("Unsupported payment method, not a gift card: $componentState")
+        }
         protocol.requestBalanceCall(componentState)
     }
 }

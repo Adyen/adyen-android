@@ -1,7 +1,7 @@
 package com.adyen.checkout.giftcard
 
 import com.adyen.checkout.components.model.payments.Amount
-import com.adyen.checkout.giftcard.util.GiftCardBalanceResult
+import com.adyen.checkout.giftcard.util.GiftCardBalanceStatus
 import com.adyen.checkout.giftcard.util.GiftCardBalanceUtils
 import org.junit.Assert.assertEquals
 import org.junit.Test
@@ -16,8 +16,8 @@ class GiftCardBalanceUtilsTest {
             amountToBePaid = createAmount(10)
         )
 
-        assert(result is GiftCardBalanceResult.FullPayment)
-        require(result is GiftCardBalanceResult.FullPayment)
+        assert(result is GiftCardBalanceStatus.FullPayment)
+        require(result is GiftCardBalanceStatus.FullPayment)
         assertEquals(10, result.amountPaid.value)
         assertEquals(90, result.remainingBalance.value)
     }
@@ -30,8 +30,8 @@ class GiftCardBalanceUtilsTest {
             amountToBePaid = createAmount(10)
         )
 
-        assert(result is GiftCardBalanceResult.FullPayment)
-        require(result is GiftCardBalanceResult.FullPayment)
+        assert(result is GiftCardBalanceStatus.FullPayment)
+        require(result is GiftCardBalanceStatus.FullPayment)
         assertEquals(10, result.amountPaid.value)
         assertEquals(990, result.remainingBalance.value)
     }
@@ -44,8 +44,8 @@ class GiftCardBalanceUtilsTest {
             amountToBePaid = createAmount(10)
         )
 
-        assert(result is GiftCardBalanceResult.FullPayment)
-        require(result is GiftCardBalanceResult.FullPayment)
+        assert(result is GiftCardBalanceStatus.FullPayment)
+        require(result is GiftCardBalanceStatus.FullPayment)
         assertEquals(10, result.amountPaid.value)
         assertEquals(90, result.remainingBalance.value)
     }
@@ -58,8 +58,8 @@ class GiftCardBalanceUtilsTest {
             amountToBePaid = createAmount(100)
         )
 
-        assert(result is GiftCardBalanceResult.FullPayment)
-        require(result is GiftCardBalanceResult.FullPayment)
+        assert(result is GiftCardBalanceStatus.FullPayment)
+        require(result is GiftCardBalanceStatus.FullPayment)
         assertEquals(100, result.amountPaid.value)
         assertEquals(0, result.remainingBalance.value)
     }
@@ -72,8 +72,8 @@ class GiftCardBalanceUtilsTest {
             amountToBePaid = createAmount(1000)
         )
 
-        assert(result is GiftCardBalanceResult.PartialPayment)
-        require(result is GiftCardBalanceResult.PartialPayment)
+        assert(result is GiftCardBalanceStatus.PartialPayment)
+        require(result is GiftCardBalanceStatus.PartialPayment)
         assertEquals(100, result.amountPaid.value)
         assertEquals(0, result.remainingBalance.value)
     }
@@ -86,8 +86,8 @@ class GiftCardBalanceUtilsTest {
             amountToBePaid = createAmount(1000)
         )
 
-        assert(result is GiftCardBalanceResult.PartialPayment)
-        require(result is GiftCardBalanceResult.PartialPayment)
+        assert(result is GiftCardBalanceStatus.PartialPayment)
+        require(result is GiftCardBalanceStatus.PartialPayment)
         assertEquals(100, result.amountPaid.value)
         assertEquals(100, result.remainingBalance.value)
     }
@@ -100,8 +100,8 @@ class GiftCardBalanceUtilsTest {
             amountToBePaid = createAmount(1000)
         )
 
-        assert(result is GiftCardBalanceResult.PartialPayment)
-        require(result is GiftCardBalanceResult.PartialPayment)
+        assert(result is GiftCardBalanceStatus.PartialPayment)
+        require(result is GiftCardBalanceStatus.PartialPayment)
         assertEquals(100, result.amountPaid.value)
         assertEquals(0, result.remainingBalance.value)
     }
@@ -114,8 +114,8 @@ class GiftCardBalanceUtilsTest {
             amountToBePaid = createAmount(200)
         )
 
-        assert(result is GiftCardBalanceResult.PartialPayment)
-        require(result is GiftCardBalanceResult.PartialPayment)
+        assert(result is GiftCardBalanceStatus.PartialPayment)
+        require(result is GiftCardBalanceStatus.PartialPayment)
         assertEquals(100, result.amountPaid.value)
         assertEquals(0, result.remainingBalance.value)
     }
@@ -128,7 +128,7 @@ class GiftCardBalanceUtilsTest {
             amountToBePaid = createAmount(200)
         )
 
-        assert(result is GiftCardBalanceResult.NonMatchingCurrencies)
+        assert(result is GiftCardBalanceStatus.NonMatchingCurrencies)
     }
 
     @Test
@@ -139,7 +139,7 @@ class GiftCardBalanceUtilsTest {
             amountToBePaid = createAmount(200)
         )
 
-        assert(result is GiftCardBalanceResult.NonMatchingCurrencies)
+        assert(result is GiftCardBalanceStatus.NonMatchingCurrencies)
     }
 
     @Test
@@ -150,7 +150,7 @@ class GiftCardBalanceUtilsTest {
             amountToBePaid = createAmount(200, "USD")
         )
 
-        assert(result is GiftCardBalanceResult.NonMatchingCurrencies)
+        assert(result is GiftCardBalanceStatus.NonMatchingCurrencies)
     }
 
     @Test
@@ -161,7 +161,7 @@ class GiftCardBalanceUtilsTest {
             amountToBePaid = Amount.EMPTY
         )
 
-        assert(result is GiftCardBalanceResult.ZeroAmountToBePaid)
+        assert(result is GiftCardBalanceStatus.ZeroAmountToBePaid)
     }
 
     @Test
@@ -172,7 +172,7 @@ class GiftCardBalanceUtilsTest {
             amountToBePaid = createAmount(0)
         )
 
-        assert(result is GiftCardBalanceResult.ZeroAmountToBePaid)
+        assert(result is GiftCardBalanceStatus.ZeroAmountToBePaid)
     }
 
     @Test
@@ -183,7 +183,7 @@ class GiftCardBalanceUtilsTest {
             amountToBePaid = createAmount(100)
         )
 
-        assert(result is GiftCardBalanceResult.ZeroBalance)
+        assert(result is GiftCardBalanceStatus.ZeroBalance)
     }
 
     @Test
@@ -194,7 +194,7 @@ class GiftCardBalanceUtilsTest {
             amountToBePaid = createAmount(100)
         )
 
-        assert(result is GiftCardBalanceResult.ZeroBalance)
+        assert(result is GiftCardBalanceStatus.ZeroBalance)
     }
 
     private fun createAmount(value: Int, currency: String = "EUR"): Amount {

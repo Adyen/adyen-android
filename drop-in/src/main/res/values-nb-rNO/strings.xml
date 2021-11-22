@@ -24,4 +24,5 @@
     <string name="checkout_giftcard_redeem_button">Løs inn</string>
     <string name="checkout_giftcard_error_zero_balance">Dette gavekortet har en saldo på null</string>
     <string name="checkout_giftcard_error_currency">Gavekort er kun gyldige i den valutaen de ble utstedt i</string>
+    <string name="checkout_giftcard_remaining_balance_text">Gjenværende saldo vil være %s</string>
 </resources>

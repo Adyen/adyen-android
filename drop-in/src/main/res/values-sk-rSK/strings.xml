@@ -24,4 +24,5 @@
     <string name="checkout_giftcard_redeem_button">Uplatniť</string>
     <string name="checkout_giftcard_error_zero_balance">Táto darčeková karta má nulový zostatok</string>
     <string name="checkout_giftcard_error_currency">Darčekové karty sú platné iba v mene, v ktorej boli vydané</string>
+    <string name="checkout_giftcard_remaining_balance_text">Zvyšný zostatok bude %s</string>
 </resources>

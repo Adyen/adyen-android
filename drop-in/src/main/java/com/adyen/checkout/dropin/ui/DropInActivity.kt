@@ -39,16 +39,23 @@ import com.adyen.checkout.dropin.DropIn
 import com.adyen.checkout.dropin.DropInConfiguration
 import com.adyen.checkout.dropin.DropInPrefs
 import com.adyen.checkout.dropin.R
+import com.adyen.checkout.dropin.service.BalanceDropInServiceResult
+import com.adyen.checkout.dropin.service.BaseDropInServiceResult
 import com.adyen.checkout.dropin.service.DropInService
 import com.adyen.checkout.dropin.service.DropInServiceInterface
 import com.adyen.checkout.dropin.service.DropInServiceResult
+import com.adyen.checkout.dropin.service.DropInServiceResultError
 import com.adyen.checkout.dropin.ui.action.ActionComponentDialogFragment
 import com.adyen.checkout.dropin.ui.base.DropInBottomSheetDialogFragment
 import com.adyen.checkout.dropin.ui.component.CardComponentDialogFragment
 import com.adyen.checkout.dropin.ui.component.GenericComponentDialogFragment
 import com.adyen.checkout.dropin.ui.component.GiftCardComponentDialogFragment
+import com.adyen.checkout.dropin.ui.giftcard.GiftCardBalanceResult
+import com.adyen.checkout.dropin.ui.giftcard.GiftCardPaymentConfirmationData
+import com.adyen.checkout.dropin.ui.giftcard.GiftCardPaymentConfirmationDialogFragment
 import com.adyen.checkout.dropin.ui.paymentmethods.PaymentMethodListDialogFragment
 import com.adyen.checkout.dropin.ui.stored.PreselectedStoredPaymentMethodFragment
+import com.adyen.checkout.giftcard.GiftCardComponentState
 import com.adyen.checkout.googlepay.GooglePayComponent
 import com.adyen.checkout.googlepay.GooglePayComponentState
 import com.adyen.checkout.googlepay.GooglePayConfiguration
@@ -64,6 +71,7 @@ private const val PAYMENT_METHODS_LIST_FRAGMENT_TAG = "PAYMENT_METHODS_LIST_FRAG
 private const val COMPONENT_FRAGMENT_TAG = "COMPONENT_DIALOG_FRAGMENT"
 private const val ACTION_FRAGMENT_TAG = "ACTION_DIALOG_FRAGMENT"
 private const val LOADING_FRAGMENT_TAG = "LOADING_DIALOG_FRAGMENT"
+private const val GIFT_CARD_PAYMENT_CONFIRMATION_FRAGMENT_TAG = "GIFT_CARD_PAYMENT_CONFIRMATION_FRAGMENT"
 
 private const val GOOGLE_PAY_REQUEST_CODE = 1
 
@@ -98,7 +106,7 @@ class DropInActivity : AppCompatActivity(), DropInBottomSheetDialogFragment.Prot
     // these queues exist for when a call is requested before the service is bound
     private var paymentDataQueue: PaymentComponentState<*>? = null
     private var actionDataQueue: ActionComponentData? = null
-    private var balanceDataQueue: PaymentComponentState<*>? = null
+    private var balanceDataQueue: GiftCardComponentState? = null
 
     private val serviceConnection = object : ServiceConnection {
 
@@ -107,7 +115,6 @@ class DropInActivity : AppCompatActivity(), DropInBottomSheetDialogFragment.Prot
             val dropInBinder = binder as? DropInService.DropInBinder ?: return
             dropInService = dropInBinder.getService()
             dropInService?.observeResult(this@DropInActivity) { handleDropInServiceResult(it) }
-            dropInService?.observeBalanceResult(this@DropInActivity) { handleBalanceResult(it) }
 
             paymentDataQueue?.let {
                 Logger.d(TAG, "Sending queued payment request")
@@ -180,7 +187,8 @@ class DropInActivity : AppCompatActivity(), DropInBottomSheetDialogFragment.Prot
         return getFragmentByTag(PRESELECTED_PAYMENT_METHOD_FRAGMENT_TAG) == null &&
             getFragmentByTag(PAYMENT_METHODS_LIST_FRAGMENT_TAG) == null &&
             getFragmentByTag(COMPONENT_FRAGMENT_TAG) == null &&
-            getFragmentByTag(ACTION_FRAGMENT_TAG) == null
+            getFragmentByTag(ACTION_FRAGMENT_TAG) == null &&
+            getFragmentByTag(GIFT_CARD_PAYMENT_CONFIRMATION_FRAGMENT_TAG) == null
     }
 
     private fun createLocalizedContext(baseContext: Context?): Context? {
@@ -359,6 +367,7 @@ class DropInActivity : AppCompatActivity(), DropInBottomSheetDialogFragment.Prot
         hideFragmentDialog(PAYMENT_METHODS_LIST_FRAGMENT_TAG)
         hideFragmentDialog(COMPONENT_FRAGMENT_TAG)
         hideFragmentDialog(ACTION_FRAGMENT_TAG)
+        hideFragmentDialog(GIFT_CARD_PAYMENT_CONFIRMATION_FRAGMENT_TAG)
     }
 
     override fun terminateDropIn() {
@@ -376,16 +385,12 @@ class DropInActivity : AppCompatActivity(), DropInBottomSheetDialogFragment.Prot
         googlePayComponent.startGooglePayScreen(this, GOOGLE_PAY_REQUEST_CODE)
     }
 
-    override fun requestBalanceCall(paymentComponentState: PaymentComponentState<*>) {
+    override fun requestBalanceCall(giftCardComponentState: GiftCardComponentState) {
         Logger.d(TAG, "requestCheckBalanceCall")
-        val paymentMethod = paymentComponentState.data.paymentMethod
-        if (paymentMethod == null) {
-            Logger.e(TAG, "requestBalanceCall - paymentMethod is null")
-            return
-        }
+        val paymentMethod = dropInViewModel.onBalanceCallRequested(giftCardComponentState) ?: return
         if (dropInService == null) {
             Logger.e(TAG, "requestBalanceCall - service is disconnected")
-            balanceDataQueue = paymentComponentState
+            balanceDataQueue = giftCardComponentState
             return
         }
         dropInViewModel.isWaitingResult = true
@@ -393,27 +398,40 @@ class DropInActivity : AppCompatActivity(), DropInBottomSheetDialogFragment.Prot
         dropInService?.requestBalanceCall(paymentMethod)
     }
 
-    private fun handleDropInServiceResult(dropInServiceResult: DropInServiceResult) {
+    private fun handleDropInServiceResult(dropInServiceResult: BaseDropInServiceResult) {
         Logger.d(TAG, "handleDropInServiceResult - ${dropInServiceResult::class.simpleName}")
         dropInViewModel.isWaitingResult = false
         when (dropInServiceResult) {
-            is DropInServiceResult.Finished -> {
-                sendResult(dropInServiceResult.result)
-            }
-            is DropInServiceResult.Action -> {
-                val action = Action.SERIALIZER.deserialize(JSONObject(dropInServiceResult.actionJSON))
-                actionHandler.handleAction(this, action, ::sendResult)
-            }
-            is DropInServiceResult.Error -> {
-                Logger.d(TAG, "handleDropInServiceResult ERROR - reason: ${dropInServiceResult.reason}")
-                val reason = dropInServiceResult.reason ?: "Unspecified reason"
-                if (dropInServiceResult.errorMessage == null) {
-                    showError(getString(R.string.payment_failed), reason, dropInServiceResult.dismissDropIn)
-                } else {
-                    showError(dropInServiceResult.errorMessage, reason, dropInServiceResult.dismissDropIn)
-                }
-            }
+            is DropInServiceResult -> handleDropInServiceResult(dropInServiceResult)
+            is BalanceDropInServiceResult -> handleDropInServiceResult(dropInServiceResult)
         }
+    }
+
+    private fun handleDropInServiceResult(dropInServiceResult: DropInServiceResult) {
+        when (dropInServiceResult) {
+            is DropInServiceResult.Finished -> sendResult(dropInServiceResult.result)
+            is DropInServiceResult.Action -> handleAction(dropInServiceResult.actionJSON)
+            is DropInServiceResult.Error -> handleErrorDropInServiceResult(dropInServiceResult)
+        }
+    }
+
+    private fun handleDropInServiceResult(dropInServiceResult: BalanceDropInServiceResult) {
+        when (dropInServiceResult) {
+            is BalanceDropInServiceResult.Balance -> handleBalanceResult(dropInServiceResult.balanceJSON)
+            is BalanceDropInServiceResult.Error -> handleErrorDropInServiceResult(dropInServiceResult)
+        }
+    }
+
+    private fun handleErrorDropInServiceResult(dropInServiceResult: DropInServiceResultError) {
+        Logger.d(TAG, "handleDropInServiceResult ERROR - reason: ${dropInServiceResult.reason}")
+        val reason = dropInServiceResult.reason ?: "Unspecified reason"
+        val errorMessage = dropInServiceResult.errorMessage ?: getString(R.string.payment_failed)
+        showError(errorMessage, reason, dropInServiceResult.dismissDropIn)
+    }
+
+    private fun handleAction(actionJSON: String) {
+        val action = Action.SERIALIZER.deserialize(JSONObject(actionJSON))
+        actionHandler.handleAction(this, action, ::sendResult)
     }
 
     private fun sendResult(content: String) {
@@ -505,24 +523,31 @@ class DropInActivity : AppCompatActivity(), DropInBottomSheetDialogFragment.Prot
     }
 
     private fun handleBalanceResult(balanceJson: String) {
-        Logger.d(TAG, "handleBalanceResult")
-        dropInViewModel.isWaitingResult = false
+        Logger.v(TAG, "handleBalanceResult")
         val result = dropInViewModel.handleBalanceResult(balanceJson)
+        Logger.d(TAG, "handleBalanceResult: ${result::class.java.simpleName}")
         when (result) {
-            is GiftCardResult.Error -> showError(getString(result.errorMessage), result.reason, result.terminateDropIn)
-            is GiftCardResult.FullPayment -> handleGiftCardFullPayment(result)
-            is GiftCardResult.PartialPayment -> handleGiftCardPartialPayment(result)
+            is GiftCardBalanceResult.Error -> showError(getString(result.errorMessage), result.reason, result.terminateDropIn)
+            is GiftCardBalanceResult.FullPayment -> handleGiftCardFullPayment(result)
+            is GiftCardBalanceResult.PartialPayment -> handleGiftCardPartialPayment(result)
         }
     }
 
-    private fun handleGiftCardFullPayment(fullPayment: GiftCardResult.FullPayment) {
-        // TODO move this somewhere else later?
+    private fun handleGiftCardFullPayment(fullPayment: GiftCardBalanceResult.FullPayment) {
+        Logger.d(TAG, "handleGiftCardFullPayment")
         setLoading(false)
-        // TODO handle full payment
+        showGiftCardPaymentConfirmationDialog(fullPayment.data)
     }
 
-    private fun handleGiftCardPartialPayment(partialPayment: GiftCardResult.PartialPayment) {
-        // TODO move this somewhere else later?
+    private fun showGiftCardPaymentConfirmationDialog(data: GiftCardPaymentConfirmationData) {
+        Logger.d(TAG, "showGiftCardPaymentConfirmationDialog")
+        hideAllScreens()
+        GiftCardPaymentConfirmationDialogFragment.newInstance(data)
+            .show(supportFragmentManager, GIFT_CARD_PAYMENT_CONFIRMATION_FRAGMENT_TAG)
+    }
+
+    private fun handleGiftCardPartialPayment(partialPayment: GiftCardBalanceResult.PartialPayment) {
+        Logger.d(TAG, "handleGiftCardPartialPayment")
         setLoading(false)
         // TODO handle partial payment
     }

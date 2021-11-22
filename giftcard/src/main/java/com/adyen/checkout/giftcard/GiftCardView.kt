@@ -16,8 +16,6 @@ import android.view.View
 import android.view.View.OnFocusChangeListener
 import androidx.lifecycle.LifecycleOwner
 import androidx.lifecycle.Observer
-import com.adyen.checkout.components.GenericComponentState
-import com.adyen.checkout.components.model.payments.request.GiftCardPaymentMethod
 import com.adyen.checkout.components.ui.Validation
 import com.adyen.checkout.components.ui.view.AdyenLinearLayout
 import com.adyen.checkout.core.log.LogUtil
@@ -27,7 +25,7 @@ import com.adyen.checkout.giftcard.databinding.GiftcardViewBinding
 private val TAG = LogUtil.getTag()
 
 class GiftCardView :
-    AdyenLinearLayout<GiftCardOutputData, GiftCardConfiguration, GenericComponentState<GiftCardPaymentMethod>, GiftCardComponent>,
+    AdyenLinearLayout<GiftCardOutputData, GiftCardConfiguration, GiftCardComponentState, GiftCardComponent>,
     Observer<GiftCardOutputData> {
 
     private val binding: GiftcardViewBinding = GiftcardViewBinding.inflate(LayoutInflater.from(context), this)

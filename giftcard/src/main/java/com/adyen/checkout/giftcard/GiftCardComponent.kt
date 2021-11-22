@@ -9,7 +9,6 @@ package com.adyen.checkout.giftcard
 
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.viewModelScope
-import com.adyen.checkout.components.GenericComponentState
 import com.adyen.checkout.components.PaymentComponentProvider
 import com.adyen.checkout.components.base.BasePaymentComponent
 import com.adyen.checkout.components.base.GenericPaymentMethodDelegate
@@ -30,6 +29,8 @@ private val TAG = LogUtil.getTag()
 
 private val PAYMENT_METHOD_TYPES = arrayOf(PaymentMethodTypes.GIFTCARD)
 
+private const val LAST_FOUR_LENGTH = 4
+
 /**
  * Component should not be instantiated directly. Instead use the PROVIDER object.
  *
@@ -42,8 +43,11 @@ class GiftCardComponent(
     configuration: GiftCardConfiguration,
     private val publicKeyRepository: PublicKeyRepository
 ) :
-    BasePaymentComponent<GiftCardConfiguration, GiftCardInputData, GiftCardOutputData,
-        GenericComponentState<GiftCardPaymentMethod>>(savedStateHandle, paymentMethodDelegate, configuration) {
+    BasePaymentComponent<GiftCardConfiguration, GiftCardInputData, GiftCardOutputData, GiftCardComponentState>(
+        savedStateHandle,
+        paymentMethodDelegate,
+        configuration
+    ) {
 
     companion object {
         @JvmStatic
@@ -75,7 +79,8 @@ class GiftCardComponent(
         return GiftCardOutputData(cardNumber = inputData.cardNumber, pin = inputData.pin)
     }
 
-    override fun createComponentState(): GenericComponentState<GiftCardPaymentMethod> {
+    @Suppress("ReturnCount")
+    override fun createComponentState(): GiftCardComponentState {
         val unencryptedCardBuilder = UnencryptedCard.Builder()
         val outputData = outputData
         val paymentComponentData = PaymentComponentData<GiftCardPaymentMethod>()
@@ -86,7 +91,12 @@ class GiftCardComponent(
         if (outputData?.isValid != true || publicKey == null) {
             val isInputValid = outputData?.isValid ?: false
             val isReady = publicKey != null
-            return GenericComponentState(paymentComponentData, isInputValid, isReady)
+            return GiftCardComponentState(
+                paymentComponentData = paymentComponentData,
+                isInputValid = isInputValid,
+                isReady = isReady,
+                lastFourDigits = null
+            )
         }
         val encryptedCard = try {
             unencryptedCardBuilder.setNumber(outputData.giftcardNumberFieldState.value)
@@ -94,7 +104,12 @@ class GiftCardComponent(
             CardEncrypter.encryptFields(unencryptedCardBuilder.build(), publicKey)
         } catch (e: EncryptionException) {
             notifyException(e)
-            return GenericComponentState(paymentComponentData, false, true)
+            return GiftCardComponentState(
+                paymentComponentData = paymentComponentData,
+                isInputValid = false,
+                isReady = true,
+                lastFourDigits = null
+            )
         }
 
         val giftCardPaymentMethod = GiftCardPaymentMethod().apply {
@@ -104,7 +119,13 @@ class GiftCardComponent(
             brand = paymentMethodDelegate.paymentMethod.brand
         }
         paymentComponentData.paymentMethod = giftCardPaymentMethod
-        return GenericComponentState(paymentComponentData, true, true)
+        val lastFour = outputData.giftcardNumberFieldState.value.takeLast(LAST_FOUR_LENGTH)
+        return GiftCardComponentState(
+            paymentComponentData = paymentComponentData,
+            isInputValid = true,
+            isReady = true,
+            lastFourDigits = lastFour
+        )
     }
 
     override fun getSupportedPaymentMethodTypes(): Array<String> = PAYMENT_METHOD_TYPES

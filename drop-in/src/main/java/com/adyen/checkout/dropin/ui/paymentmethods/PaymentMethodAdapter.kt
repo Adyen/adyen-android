@@ -19,6 +19,7 @@ import com.adyen.checkout.components.util.DateUtils
 import com.adyen.checkout.core.exception.CheckoutException
 import com.adyen.checkout.core.log.LogUtil
 import com.adyen.checkout.dropin.R
+import com.adyen.checkout.dropin.ui.paymentmethods.PaymentMethodListItem.Companion.GIFT_CARD_PAYMENT_METHOD
 import com.adyen.checkout.dropin.ui.paymentmethods.PaymentMethodListItem.Companion.PAYMENT_METHOD
 import com.adyen.checkout.dropin.ui.paymentmethods.PaymentMethodListItem.Companion.PAYMENT_METHODS_HEADER
 import com.adyen.checkout.dropin.ui.paymentmethods.PaymentMethodListItem.Companion.STORED_PAYMENT_METHOD
@@ -26,15 +27,21 @@ import com.adyen.checkout.dropin.ui.paymentmethods.PaymentMethodListItem.Compani
 @SuppressWarnings("TooManyFunctions")
 class PaymentMethodAdapter(
     private val paymentMethods: List<PaymentMethodListItem>,
-    private val imageLoader: ImageLoader,
-    private val onPaymentMethodSelectedCallback: OnPaymentMethodSelectedCallback
+    private val imageLoader: ImageLoader
 ) : RecyclerView.Adapter<PaymentMethodAdapter.BaseViewHolder>() {
+
+    private var onPaymentMethodSelectedCallback: OnPaymentMethodSelectedCallback? = null
+
+    fun setPaymentMethodSelectedCallback(onPaymentMethodSelectedCallback: OnPaymentMethodSelectedCallback) {
+        this.onPaymentMethodSelectedCallback = onPaymentMethodSelectedCallback
+    }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): BaseViewHolder {
         return when (viewType) {
             PAYMENT_METHODS_HEADER -> HeaderVH(getView(parent, R.layout.payment_methods_list_header))
             STORED_PAYMENT_METHOD -> StoredPaymentMethodVH(getView(parent, R.layout.payment_methods_list_item))
             PAYMENT_METHOD -> PaymentMethodVH(getView(parent, R.layout.payment_methods_list_item))
+            GIFT_CARD_PAYMENT_METHOD -> GiftCardPaymentMethodVH(getView(parent, R.layout.payment_methods_list_item))
             else -> throw CheckoutException("Unexpected viewType on onCreateViewHolder - $viewType")
         }
     }
@@ -48,6 +55,7 @@ class PaymentMethodAdapter(
             is HeaderVH -> bindHeader(holder, position)
             is StoredPaymentMethodVH -> bindStoredPaymentMethod(holder, position)
             is PaymentMethodVH -> bindPaymentMethod(holder, position)
+            is GiftCardPaymentMethodVH -> bindGiftCardPaymentMethod(holder, position)
         }
     }
 
@@ -97,6 +105,17 @@ class PaymentMethodAdapter(
         }
     }
 
+    private fun bindGiftCardPaymentMethod(holder: GiftCardPaymentMethodVH, position: Int) {
+        val giftCardPaymentMethod = getGiftCardPaymentMethodAt(position)
+
+        val context = holder.itemView.context
+        holder.text.text = context.getString(R.string.card_number_4digit, giftCardPaymentMethod.lastFour)
+        imageLoader.load(giftCardPaymentMethod.imageId, holder.logo)
+        holder.detail.visibility = View.GONE
+
+        holder.itemView.setOnClickListener(null)
+    }
+
     override fun getItemCount(): Int {
         return paymentMethods.size
     }
@@ -113,12 +132,16 @@ class PaymentMethodAdapter(
         return paymentMethods[position] as PaymentMethodModel
     }
 
+    private fun getGiftCardPaymentMethodAt(position: Int): GiftCardPaymentMethodModel {
+        return paymentMethods[position] as GiftCardPaymentMethodModel
+    }
+
     private fun onStoredPaymentMethodClick(storedPaymentMethodModel: StoredPaymentMethodModel) {
-        onPaymentMethodSelectedCallback.onStoredPaymentMethodSelected(storedPaymentMethodModel)
+        onPaymentMethodSelectedCallback?.onStoredPaymentMethodSelected(storedPaymentMethodModel)
     }
 
     private fun onPaymentMethodClick(paymentMethod: PaymentMethodModel) {
-        onPaymentMethodSelectedCallback.onPaymentMethodSelected(paymentMethod)
+        onPaymentMethodSelectedCallback?.onPaymentMethodSelected(paymentMethod)
     }
 
     private fun getView(parent: ViewGroup, id: Int): View {
@@ -141,6 +164,12 @@ class PaymentMethodAdapter(
     }
 
     class PaymentMethodVH(rootView: View) : BaseViewHolder(rootView) {
+        internal val text: TextView = rootView.findViewById(R.id.textView_text)
+        internal val detail: TextView = rootView.findViewById(R.id.textView_detail)
+        internal val logo: RoundCornerImageView = rootView.findViewById(R.id.imageView_logo)
+    }
+
+    class GiftCardPaymentMethodVH(rootView: View) : BaseViewHolder(rootView) {
         internal val text: TextView = rootView.findViewById(R.id.textView_text)
         internal val detail: TextView = rootView.findViewById(R.id.textView_detail)
         internal val logo: RoundCornerImageView = rootView.findViewById(R.id.imageView_logo)
