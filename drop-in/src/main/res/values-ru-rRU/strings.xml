@@ -21,4 +21,8 @@
     <string name="continue_button">Продолжить</string>
     <string name="change_payment_method">Изменить способ оплаты</string>
     <string name="credit_card">Credit Card</string>
+    <string name="checkout_giftcard_redeem_button">Использовать</string>
+    <string name="checkout_giftcard_error_zero_balance">На этой подарочной карте нет средств</string>
+    <string name="checkout_giftcard_error_currency">Принимаются только подарочные карты соответствующей валюты</string>
+    <string name="checkout_giftcard_remaining_balance_text">Остаток на балансе составит %s</string>
 </resources>

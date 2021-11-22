@@ -11,9 +11,12 @@ package com.adyen.checkout.example.service
 import com.adyen.checkout.card.CardComponentState
 import com.adyen.checkout.components.ActionComponentData
 import com.adyen.checkout.components.PaymentComponentState
+import com.adyen.checkout.components.model.payments.request.PaymentMethodDetails
 import com.adyen.checkout.core.log.LogUtil
 import com.adyen.checkout.core.log.Logger
+import com.adyen.checkout.core.model.getStringOrNull
 import com.adyen.checkout.core.model.toStringPretty
+import com.adyen.checkout.dropin.service.BalanceDropInServiceResult
 import com.adyen.checkout.dropin.service.DropInService
 import com.adyen.checkout.dropin.service.DropInServiceResult
 import com.adyen.checkout.example.data.api.model.paymentsRequest.AdditionalData
@@ -96,7 +99,6 @@ class ExampleAsyncDropInService : DropInService() {
         }
     }
 
-    @Suppress("NestedBlockDepth")
     private fun handleResponse(response: ResponseBody?): DropInServiceResult {
         return if (response != null) {
             val detailsResponse = JSONObject(response.string())
@@ -115,6 +117,40 @@ class ExampleAsyncDropInService : DropInService() {
         } else {
             Logger.e(TAG, "FAILED")
             DropInServiceResult.Error(reason = "IOException")
+        }
+    }
+
+    override fun checkBalance(paymentMethodData: PaymentMethodDetails, paymentMethodJson: JSONObject) {
+        launch(Dispatchers.IO) {
+            Logger.d(TAG, "checkBalance")
+
+            Logger.v(TAG, "paymentMethods/balance/ - ${paymentMethodJson.toStringPretty()}")
+
+            val paymentRequest = createBalanceRequest(
+                paymentMethodJson,
+                keyValueStorage.getMerchantAccount()
+            )
+
+            val requestBody = paymentRequest.toString().toRequestBody(CONTENT_TYPE)
+            val response = paymentsRepository.balanceRequestAsync(requestBody)
+            val result = handleBalanceResponse(response)
+            sendBalanceResult(result)
+        }
+    }
+
+    private fun handleBalanceResponse(response: ResponseBody?): BalanceDropInServiceResult {
+        return if (response != null) {
+            val balanceJson = response.string()
+            val jsonResponse = JSONObject(balanceJson)
+            val resultCode = jsonResponse.getStringOrNull("resultCode")
+            when (resultCode) {
+                "Success" -> BalanceDropInServiceResult.Balance(balanceJson)
+                "NotEnoughBalance" -> BalanceDropInServiceResult.Error(reason = "Not enough balance", dismissDropIn = false)
+                else -> BalanceDropInServiceResult.Error(reason = resultCode, dismissDropIn = false)
+            }
+        } else {
+            Logger.e(TAG, "FAILED")
+            BalanceDropInServiceResult.Error(reason = "IOException")
         }
     }
 }

@@ -21,4 +21,8 @@
     <string name="continue_button">继续</string>
     <string name="change_payment_method">更改支付方式</string>
     <string name="credit_card">Credit Card</string>
+    <string name="checkout_giftcard_redeem_button">兑换</string>
+    <string name="checkout_giftcard_error_zero_balance">礼品卡余额为零</string>
+    <string name="checkout_giftcard_error_currency">礼品卡仅以其发行的货币为有效货币</string>
+    <string name="checkout_giftcard_remaining_balance_text">剩余额度为 %s</string>
 </resources>

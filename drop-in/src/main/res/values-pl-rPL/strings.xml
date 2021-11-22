@@ -21,4 +21,8 @@
     <string name="continue_button">Kontynuuj</string>
     <string name="change_payment_method">Zmień metodę płatności</string>
     <string name="credit_card">Credit Card</string>
+    <string name="checkout_giftcard_redeem_button">Wykorzystaj</string>
+    <string name="checkout_giftcard_error_zero_balance">Saldo karty podarunkowej jest puste</string>
+    <string name="checkout_giftcard_error_currency">Karty podarunkowe są ważne tylko w walucie, w której zostały wydane</string>
+    <string name="checkout_giftcard_remaining_balance_text">Pozostałe saldo wynosi %s</string>
 </resources>

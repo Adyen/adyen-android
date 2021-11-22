@@ -21,4 +21,8 @@
     <string name="continue_button">Continuare</string>
     <string name="change_payment_method">Schimbare metodă de plată</string>
     <string name="credit_card">Credit Card</string>
+    <string name="checkout_giftcard_redeem_button">Valorificare</string>
+    <string name="checkout_giftcard_error_zero_balance">Acest card cadou are soldul zero</string>
+    <string name="checkout_giftcard_error_currency">Cardurile cadou sunt valabile numai în moneda în care au fost emise</string>
+    <string name="checkout_giftcard_remaining_balance_text">Soldul rămas va fi de %s</string>
 </resources>

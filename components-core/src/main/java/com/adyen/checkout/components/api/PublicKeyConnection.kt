@@ -6,7 +6,7 @@
  * Created by caiof on 5/1/2021.
  */
 
-package com.adyen.checkout.card.api
+package com.adyen.checkout.components.api
 
 import com.adyen.checkout.core.api.Connection
 import com.adyen.checkout.core.api.Environment

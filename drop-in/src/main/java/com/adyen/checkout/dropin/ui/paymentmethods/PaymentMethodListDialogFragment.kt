@@ -61,21 +61,20 @@ class PaymentMethodListDialogFragment : DropInBottomSheetDialogFragment(), Payme
     private fun addObserver(recyclerView: RecyclerView) {
         paymentMethodsListViewModel.paymentMethodsLiveData.observe(
             viewLifecycleOwner,
-            {
+            { paymentMethods ->
                 Logger.d(TAG, "paymentMethods changed")
-                if (it == null) {
+                if (paymentMethods == null) {
                     throw CheckoutException("List of PaymentMethodModel is null.")
                 }
 
-                // We expect the list of payment methods to be updated only once, so we just set the adapter
-                paymentMethodAdapter = PaymentMethodAdapter(
-                    it,
-                    ImageLoader.getInstance(
-                        requireContext(),
-                        dropInViewModel.dropInConfiguration.environment
-                    ),
-                    this
+                val imageLoader = ImageLoader.getInstance(
+                    requireContext(),
+                    dropInViewModel.dropInConfiguration.environment
                 )
+
+                // We expect the list of payment methods to be updated only once, so we just set the adapter
+                paymentMethodAdapter = PaymentMethodAdapter(paymentMethods, imageLoader)
+                paymentMethodAdapter.setPaymentMethodSelectedCallback(this)
                 recyclerView.layoutManager = LinearLayoutManager(requireContext())
                 recyclerView.adapter = paymentMethodAdapter
             }

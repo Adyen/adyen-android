@@ -21,4 +21,8 @@
     <string name="continue_button">Continua</string>
     <string name="change_payment_method">Cambia metodo di pagamento</string>
     <string name="credit_card">Credit Card</string>
+    <string name="checkout_giftcard_redeem_button">Riscatta</string>
+    <string name="checkout_giftcard_error_zero_balance">Questo buono regalo ha un saldo pari a zero</string>
+    <string name="checkout_giftcard_error_currency">I buono regalo sono validi solo nella valuta in cui sono state emessi</string>
+    <string name="checkout_giftcard_remaining_balance_text">Il saldo rimanente sarà di %s</string>
 </resources>
