@@ -11,6 +11,7 @@ package com.adyen.checkout.example.service
 import com.adyen.checkout.card.CardComponentState
 import com.adyen.checkout.components.ActionComponentData
 import com.adyen.checkout.components.PaymentComponentState
+import com.adyen.checkout.components.model.payments.request.Order
 import com.adyen.checkout.components.model.payments.request.PaymentMethodDetails
 import com.adyen.checkout.components.model.payments.response.Action
 import com.adyen.checkout.components.model.payments.response.BalanceResult
@@ -51,6 +52,7 @@ class ExampleAsyncDropInService : DropInService() {
 
     @Inject
     lateinit var paymentsRepository: PaymentsRepository
+
     @Inject
     lateinit var keyValueStorage: KeyValueStorage
 
@@ -79,7 +81,7 @@ class ExampleAsyncDropInService : DropInService() {
             val requestBody = paymentRequest.toString().toRequestBody(CONTENT_TYPE)
             val response = paymentsRepository.paymentsRequestAsync(requestBody)
 
-            val result = handleResponse(response)
+            val result = handleResponse(response) ?: return@launch
             sendResult(result)
         }
     }
@@ -102,30 +104,72 @@ class ExampleAsyncDropInService : DropInService() {
             val requestBody = actionComponentJson.toString().toRequestBody(CONTENT_TYPE)
             val response = paymentsRepository.detailsRequestAsync(requestBody)
 
-            val result = handleResponse(response)
+            val result = handleResponse(response) ?: return@launch
             sendResult(result)
         }
     }
 
-    private fun handleResponse(response: ResponseBody?): DropInServiceResult {
-        return if (response != null) {
-            val detailsResponse = JSONObject(response.string())
-            if (detailsResponse.has("action")) {
-                val action = Action.SERIALIZER.deserialize(detailsResponse.getJSONObject("action"))
+    private fun handleResponse(response: ResponseBody?): DropInServiceResult? {
+        val jsonResponse = if (response == null) null else JSONObject(response.string())
+        return when {
+            jsonResponse == null -> {
+                Logger.e(TAG, "FAILED")
+                DropInServiceResult.Error(reason = "IOException")
+            }
+            isAction(jsonResponse) -> {
+                Logger.d(TAG, "Received action")
+                val action = Action.SERIALIZER.deserialize(jsonResponse.getJSONObject("action"))
                 DropInServiceResult.Action(action)
-            } else {
-                Logger.d(TAG, "Final result - ${detailsResponse.toStringPretty()}")
-
-                val resultCode = if (detailsResponse.has("resultCode")) {
-                    detailsResponse.get("resultCode").toString()
+            }
+            isNonFullyPaidOrder(jsonResponse) -> {
+                Logger.d(TAG, "Received a non fully paid order")
+                fetchPaymentMethods(jsonResponse)
+                null
+            }
+            else -> {
+                Logger.d(TAG, "Final result - ${jsonResponse.toStringPretty()}")
+                val resultCode = if (jsonResponse.has("resultCode")) {
+                    jsonResponse.get("resultCode").toString()
                 } else {
                     "EMPTY"
                 }
                 DropInServiceResult.Finished(resultCode)
             }
-        } else {
-            Logger.e(TAG, "FAILED")
-            DropInServiceResult.Error(reason = "IOException")
+        }
+    }
+
+    private fun isAction(jsonResponse: JSONObject): Boolean {
+        return jsonResponse.has("action")
+    }
+
+    private fun isNonFullyPaidOrder(jsonResponse: JSONObject): Boolean {
+        return jsonResponse.has("order") && getOrderFromResponse(jsonResponse).remainingAmount?.value ?: 0 > 0
+    }
+
+    private fun getOrderFromResponse(jsonResponse: JSONObject): OrderResponse {
+        val orderJSON = jsonResponse.getJSONObject("order")
+        return OrderResponse.SERIALIZER.deserialize(orderJSON)
+    }
+
+    private fun fetchPaymentMethods(jsonResponse: JSONObject) {
+        launch(Dispatchers.IO) {
+            val order = getOrderFromResponse(jsonResponse)
+            val paymentMethods = paymentsRepository.getPaymentMethods(
+                getPaymentMethodRequest(
+                    keyValueStorage,
+                    Order(
+                        pspReference = order.pspReference,
+                        orderData = order.orderData
+                    )
+                )
+            )
+            val result = if (paymentMethods != null) {
+                DropInServiceResult.Update(paymentMethods, order)
+            } else {
+                Logger.e(TAG, "FAILED")
+                DropInServiceResult.Error(reason = "IOException")
+            }
+            sendResult(result)
         }
     }
 

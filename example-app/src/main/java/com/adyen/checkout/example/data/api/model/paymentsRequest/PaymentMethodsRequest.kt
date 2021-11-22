@@ -9,16 +9,18 @@
 package com.adyen.checkout.example.data.api.model.paymentsRequest
 
 import com.adyen.checkout.components.model.payments.Amount
+import com.adyen.checkout.components.model.payments.request.Order
 
 data class PaymentMethodsRequest(
     val merchantAccount: String,
     val shopperReference: String,
 //    val additionalData: Any,
 //    val allowedPaymentMethods: ArrayList<String>,
-    val amount: Amount,
+    val amount: Amount?,
 //    val blockedPaymentMethods: ArrayList<String>,
     val countryCode: String = "NL",
     val shopperLocale: String = "en_US",
     val channel: String = "android",
-    val splitCardFundingSources: Boolean = false
+    val splitCardFundingSources: Boolean = false,
+    val order: Order?
 )

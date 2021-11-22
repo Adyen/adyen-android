@@ -13,11 +13,11 @@ import androidx.lifecycle.ViewModel
 import com.adyen.checkout.components.model.PaymentMethodsApiResponse
 import com.adyen.checkout.core.log.LogUtil
 import com.adyen.checkout.core.log.Logger
-import com.adyen.checkout.example.data.api.model.paymentsRequest.PaymentMethodsRequest
 import com.adyen.checkout.example.data.storage.KeyValueStorage
 import com.adyen.checkout.example.repositories.paymentMethods.PaymentsRepository
 import dagger.hilt.android.lifecycle.HiltViewModel
 import javax.inject.Inject
+import com.adyen.checkout.example.service.getPaymentMethodRequest
 import kotlin.coroutines.CoroutineContext
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
@@ -45,19 +45,12 @@ class PaymentMethodsViewModel @Inject constructor(
 
     fun requestPaymentMethods() {
         scope.launch {
-            paymentMethodResponseLiveData.postValue(paymentsRepository.getPaymentMethods(getPaymentMethodRequest()))
+            paymentMethodResponseLiveData.postValue(
+                paymentsRepository.getPaymentMethods(
+                    getPaymentMethodRequest(keyValueStorage)
+                )
+            )
         }
-    }
-
-    private fun getPaymentMethodRequest(): PaymentMethodsRequest {
-        return PaymentMethodsRequest(
-            merchantAccount = keyValueStorage.getMerchantAccount(),
-            shopperReference = keyValueStorage.getShopperReference(),
-            amount = keyValueStorage.getAmount(),
-            countryCode = keyValueStorage.getCountry(),
-            shopperLocale = keyValueStorage.getShopperLocale(),
-            splitCardFundingSources = keyValueStorage.isSplitCardFundingSources()
-        )
     }
 
     override fun onCleared() {

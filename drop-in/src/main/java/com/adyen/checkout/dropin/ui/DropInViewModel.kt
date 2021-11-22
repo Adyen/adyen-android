@@ -31,8 +31,6 @@ import com.adyen.checkout.giftcard.GiftCardComponentState
 import com.adyen.checkout.giftcard.util.GiftCardBalanceStatus
 import com.adyen.checkout.giftcard.util.GiftCardBalanceUtils
 import com.adyen.checkout.googlepay.GooglePayComponent
-import org.json.JSONException
-import org.json.JSONObject
 
 private val TAG = LogUtil.getTag()
 
@@ -173,9 +171,14 @@ class DropInViewModel(private val savedStateHandle: SavedStateHandle) : ViewMode
         )
     }
 
-    fun handleOrderResponse(orderResponse: OrderResponse) {
-        currentOrder = orderResponse
-        Logger.d(TAG, "handleOrderResponse - Order cached")
+    fun handleOrderResponse(orderResponse: OrderResponse?) {
+        if (orderResponse == null) {
+            currentOrder = null
+            Logger.d(TAG, "handleOrderResponse - Order cancelled")
+        } else {
+            currentOrder = orderResponse
+            Logger.d(TAG, "handleOrderResponse - Order cached")
+        }
     }
 
     fun updatePaymentComponentStateForPaymentsCall(paymentComponentState: PaymentComponentState<*>) {
@@ -198,6 +201,11 @@ class DropInViewModel(private val savedStateHandle: SavedStateHandle) : ViewMode
             pspReference = orderResponse.pspReference,
             orderData = orderResponse.orderData
         )
+    }
+
+    fun handlePaymentMethodsUpdate(paymentMethodsApiResponse: PaymentMethodsApiResponse, order: OrderResponse?) {
+        handleOrderResponse(order)
+        // TODO handle paymentMethodsApiResponse
     }
 
     companion object {

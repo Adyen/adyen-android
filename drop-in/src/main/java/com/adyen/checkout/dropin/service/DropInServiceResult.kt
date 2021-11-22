@@ -8,6 +8,7 @@
 
 package com.adyen.checkout.dropin.service
 
+import com.adyen.checkout.components.model.PaymentMethodsApiResponse
 import com.adyen.checkout.components.model.payments.response.BalanceResult
 import com.adyen.checkout.components.model.payments.response.OrderResponse
 import com.adyen.checkout.core.exception.CheckoutException
@@ -58,6 +59,24 @@ sealed class DropInServiceResult : BaseDropInServiceResult() {
             action = com.adyen.checkout.components.model.payments.response.Action.SERIALIZER.deserialize(actionJSONObject)
         }
     }
+
+    /**
+     * Only applicable for gift card flow.
+     *
+     * Update drop-in with a new list of payment methods and optionally an order.
+     *
+     * After submitting a partial payment, you need to call /paymentMethods again with the new remaining payment amount, and
+     * pass the updated payment methods list, alongside the latest order object.
+     *
+     * Also after cancelling an order, you need to call /paymentMethods again with the original payment amount, and pass the
+     * updated payment methods list, with a null order object.
+     *
+     * Use [OrderResponse.SERIALIZER] to serialize your JSON response string.
+     *
+     * @param paymentMethodsApiResponse the updated payment methods list.
+     * @param order the order object returned from the backend, or null if an order was cancelled.
+     */
+    class Update(val paymentMethodsApiResponse: PaymentMethodsApiResponse, val order: OrderResponse?) : DropInServiceResult()
 
     /**
      * Call failed with an error. Can have the localized error message which will be shown

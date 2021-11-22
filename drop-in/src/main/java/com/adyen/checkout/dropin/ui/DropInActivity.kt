@@ -429,6 +429,7 @@ class DropInActivity : AppCompatActivity(), DropInBottomSheetDialogFragment.Prot
         when (dropInServiceResult) {
             is DropInServiceResult.Finished -> sendResult(dropInServiceResult.result)
             is DropInServiceResult.Action -> handleAction(dropInServiceResult.action)
+            is DropInServiceResult.Update -> handlePaymentMethodsUpdate(dropInServiceResult)
             is DropInServiceResult.Error -> handleErrorDropInServiceResult(dropInServiceResult)
         }
     }
@@ -456,6 +457,13 @@ class DropInActivity : AppCompatActivity(), DropInBottomSheetDialogFragment.Prot
 
     private fun handleAction(action: Action) {
         actionHandler.handleAction(this, action, ::sendResult)
+    }
+
+    private fun handlePaymentMethodsUpdate(dropInServiceResult: DropInServiceResult.Update) {
+        dropInViewModel.handlePaymentMethodsUpdate(
+            dropInServiceResult.paymentMethodsApiResponse,
+            dropInServiceResult.order
+        )
     }
 
     private fun sendResult(content: String) {
