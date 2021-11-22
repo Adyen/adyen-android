@@ -8,6 +8,11 @@
 
 package com.adyen.checkout.dropin.service
 
+import com.adyen.checkout.components.model.payments.response.BalanceResult
+import com.adyen.checkout.core.exception.CheckoutException
+import org.json.JSONException
+import org.json.JSONObject
+
 sealed class BaseDropInServiceResult
 
 internal interface DropInServiceResultError {
@@ -31,8 +36,27 @@ sealed class DropInServiceResult : BaseDropInServiceResult() {
     /**
      * Call was successful and returned with an
      * [com.adyen.checkout.components.model.payments.response.Action] that needs to be handled.
+     *
+     * Use [com.adyen.checkout.components.model.payments.response.Action.SERIALIZER] to serialize
+     * your JSON response string.
      */
-    class Action(val actionJSON: String) : DropInServiceResult()
+    class Action : DropInServiceResult {
+        val action: com.adyen.checkout.components.model.payments.response.Action
+
+        constructor(action: com.adyen.checkout.components.model.payments.response.Action) {
+            this.action = action
+        }
+
+        @Deprecated("Use the new constructor which takes an Action object as parameter")
+        constructor(actionJSON: String) {
+            val actionJSONObject = try {
+                JSONObject(actionJSON)
+            } catch (e: JSONException) {
+                throw CheckoutException("Provided action is not a JSON object")
+            }
+            action = com.adyen.checkout.components.model.payments.response.Action.SERIALIZER.deserialize(actionJSONObject)
+        }
+    }
 
     /**
      * Call failed with an error. Can have the localized error message which will be shown
@@ -50,10 +74,11 @@ sealed class BalanceDropInServiceResult : BaseDropInServiceResult() {
     /**
      * Only applicable for gift card flow.
      *
-     * A call to fetch a gift card balance was successful and returned with a
-     * [com.adyen.checkout.components.model.payments.response.BalanceResult] that needs to be handled.
+     * A call to fetch a gift card balance was successful and returned with a [BalanceResult] that needs to be handled.
+     *
+     * Use [BalanceResult.SERIALIZER] to serialize your JSON response string.
      */
-    class Balance(val balanceJSON: String) : BalanceDropInServiceResult()
+    class Balance(val balance: BalanceResult) : BalanceDropInServiceResult()
 
     /**
      * Call failed with an error. Can have the localized error message which will be shown

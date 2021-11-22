@@ -30,6 +30,7 @@ import com.adyen.checkout.components.model.PaymentMethodsApiResponse
 import com.adyen.checkout.components.model.paymentmethods.PaymentMethod
 import com.adyen.checkout.components.model.paymentmethods.StoredPaymentMethod
 import com.adyen.checkout.components.model.payments.response.Action
+import com.adyen.checkout.components.model.payments.response.BalanceResult
 import com.adyen.checkout.components.util.PaymentMethodTypes
 import com.adyen.checkout.core.exception.CheckoutException
 import com.adyen.checkout.core.log.LogUtil
@@ -62,7 +63,6 @@ import com.adyen.checkout.googlepay.GooglePayConfiguration
 import com.adyen.checkout.redirect.RedirectUtil
 import com.adyen.checkout.wechatpay.WeChatPayUtils
 import kotlinx.coroutines.ExperimentalCoroutinesApi
-import org.json.JSONObject
 
 private val TAG = LogUtil.getTag()
 
@@ -410,14 +410,14 @@ class DropInActivity : AppCompatActivity(), DropInBottomSheetDialogFragment.Prot
     private fun handleDropInServiceResult(dropInServiceResult: DropInServiceResult) {
         when (dropInServiceResult) {
             is DropInServiceResult.Finished -> sendResult(dropInServiceResult.result)
-            is DropInServiceResult.Action -> handleAction(dropInServiceResult.actionJSON)
+            is DropInServiceResult.Action -> handleAction(dropInServiceResult.action)
             is DropInServiceResult.Error -> handleErrorDropInServiceResult(dropInServiceResult)
         }
     }
 
     private fun handleDropInServiceResult(dropInServiceResult: BalanceDropInServiceResult) {
         when (dropInServiceResult) {
-            is BalanceDropInServiceResult.Balance -> handleBalanceResult(dropInServiceResult.balanceJSON)
+            is BalanceDropInServiceResult.Balance -> handleBalanceResult(dropInServiceResult.balance)
             is BalanceDropInServiceResult.Error -> handleErrorDropInServiceResult(dropInServiceResult)
         }
     }
@@ -429,8 +429,7 @@ class DropInActivity : AppCompatActivity(), DropInBottomSheetDialogFragment.Prot
         showError(errorMessage, reason, dropInServiceResult.dismissDropIn)
     }
 
-    private fun handleAction(actionJSON: String) {
-        val action = Action.SERIALIZER.deserialize(JSONObject(actionJSON))
+    private fun handleAction(action: Action) {
         actionHandler.handleAction(this, action, ::sendResult)
     }
 
@@ -522,9 +521,9 @@ class DropInActivity : AppCompatActivity(), DropInBottomSheetDialogFragment.Prot
         }
     }
 
-    private fun handleBalanceResult(balanceJson: String) {
+    private fun handleBalanceResult(balanceResult: BalanceResult) {
         Logger.v(TAG, "handleBalanceResult")
-        val result = dropInViewModel.handleBalanceResult(balanceJson)
+        val result = dropInViewModel.handleBalanceResult(balanceResult)
         Logger.d(TAG, "handleBalanceResult: ${result::class.java.simpleName}")
         when (result) {
             is GiftCardBalanceResult.Error -> showError(getString(result.errorMessage), result.reason, result.terminateDropIn)

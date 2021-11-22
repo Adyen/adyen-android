@@ -105,23 +105,12 @@ class DropInViewModel(private val savedStateHandle: SavedStateHandle) : ViewMode
         return paymentMethod
     }
 
-    fun handleBalanceResult(balanceJson: String): GiftCardBalanceResult {
-        val balanceJSONObject = try {
-            JSONObject(balanceJson)
-        } catch (e: JSONException) {
-            throw CheckoutException("Provided balance is not a JSON object")
-        }
-        val balanceResult = BalanceResult.SERIALIZER.deserialize(balanceJSONObject)
+    fun handleBalanceResult(balanceResult: BalanceResult): GiftCardBalanceResult {
         Logger.d(TAG, "handleBalanceResult - balance: ${balanceResult.balance} - transactionLimit: ${balanceResult.transactionLimit}")
 
-        val balance = Amount.SERIALIZER.deserialize(JSONObject(balanceResult.balance))
-        val transactionLimitString = balanceResult.transactionLimit
-        val transactionLimit =
-            if (transactionLimitString == null) null
-            else Amount.SERIALIZER.deserialize(JSONObject(transactionLimitString))
         val giftCardBalanceResult = GiftCardBalanceUtils.checkBalance(
-            balance = balance,
-            transactionLimit = transactionLimit,
+            balance = balanceResult.balance,
+            transactionLimit = balanceResult.transactionLimit,
             amountToBePaid = dropInConfiguration.amount
         )
         val cachedGiftCardComponentState = cachedGiftCardComponentState ?: throw CheckoutException("Failed to retrieved cached gift card object")

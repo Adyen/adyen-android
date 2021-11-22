@@ -8,15 +8,18 @@
 package com.adyen.checkout.components.model.payments.response
 
 import android.os.Parcel
+import com.adyen.checkout.components.model.payments.Amount
+import com.adyen.checkout.core.exception.CheckoutException
 import com.adyen.checkout.core.exception.ModelSerializationException
 import com.adyen.checkout.core.model.JsonUtils.writeToParcel
 import com.adyen.checkout.core.model.ModelObject
+import com.adyen.checkout.core.model.ModelUtils
 import org.json.JSONException
 import org.json.JSONObject
 
 data class BalanceResult(
-    val balance: String,
-    val transactionLimit: String?
+    val balance: Amount,
+    val transactionLimit: Amount?
 ) : ModelObject() {
 
     override fun writeToParcel(dest: Parcel, flags: Int) {
@@ -35,8 +38,8 @@ data class BalanceResult(
             override fun serialize(modelObject: BalanceResult): JSONObject {
                 return JSONObject().apply {
                     try {
-                        putOpt(BALANCE, modelObject.balance)
-                        putOpt(TRANSACTION_LIMIT, modelObject.transactionLimit)
+                        putOpt(BALANCE, ModelUtils.serializeOpt(modelObject.balance, Amount.SERIALIZER))
+                        putOpt(TRANSACTION_LIMIT, ModelUtils.serializeOpt(modelObject.transactionLimit, Amount.SERIALIZER))
                     } catch (e: JSONException) {
                         throw ModelSerializationException(BalanceResult::class.java, e)
                     }
@@ -45,8 +48,9 @@ data class BalanceResult(
 
             override fun deserialize(jsonObject: JSONObject): BalanceResult {
                 return BalanceResult(
-                    balance = jsonObject.optString(BALANCE, null),
-                    transactionLimit = jsonObject.optString(TRANSACTION_LIMIT, null)
+                    balance = ModelUtils.deserializeOpt(jsonObject.optJSONObject(BALANCE), Amount.SERIALIZER)
+                        ?: throw CheckoutException("Balance not found"),
+                    transactionLimit = ModelUtils.deserializeOpt(jsonObject.optJSONObject(TRANSACTION_LIMIT), Amount.SERIALIZER)
                 )
             }
         }
