@@ -114,7 +114,7 @@ class PreselectedStoredPaymentMethodFragment : DropInBottomSheetDialogFragment()
             binding.payButton.setText(R.string.continue_button)
         } else {
             val value = CurrencyUtils.formatAmount(
-                dropInViewModel.dropInConfiguration.amount,
+                dropInViewModel.amount,
                 dropInViewModel.dropInConfiguration.shopperLocale
             )
             binding.payButton.text = getString(R.string.pay_button_with_value, value)

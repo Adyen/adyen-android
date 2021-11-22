@@ -382,7 +382,8 @@ class DropInActivity : AppCompatActivity(), DropInBottomSheetDialogFragment.Prot
 
     override fun startGooglePay(paymentMethod: PaymentMethod, googlePayConfiguration: GooglePayConfiguration) {
         Logger.d(TAG, "startGooglePay")
-        googlePayComponent = GooglePayComponent.PROVIDER.get(this, paymentMethod, googlePayConfiguration)
+        val configuration = dropInViewModel.updateGooglePayConfiguration(googlePayConfiguration)
+        googlePayComponent = GooglePayComponent.PROVIDER.get(this, paymentMethod, configuration)
         googlePayComponent.observe(this@DropInActivity, googlePayObserver)
         googlePayComponent.observeErrors(this@DropInActivity, googlePayErrorObserver)
 
@@ -464,6 +465,8 @@ class DropInActivity : AppCompatActivity(), DropInBottomSheetDialogFragment.Prot
             dropInServiceResult.paymentMethodsApiResponse,
             dropInServiceResult.order
         )
+        setLoading(false)
+        showPaymentMethodsDialog()
     }
 
     private fun sendResult(content: String) {
