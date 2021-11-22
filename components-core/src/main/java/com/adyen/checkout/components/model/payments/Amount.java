@@ -95,4 +95,10 @@ public class Amount extends ModelObject {
     public boolean isEmpty() {
         return EMPTY_CURRENCY.equals(currency) || value == EMPTY_VALUE;
     }
+
+    @NonNull
+    @Override
+    public String toString() {
+        return value + " " + currency;
+    }
 }
