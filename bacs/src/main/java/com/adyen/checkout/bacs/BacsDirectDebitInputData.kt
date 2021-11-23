@@ -16,5 +16,6 @@ data class BacsDirectDebitInputData(
     var sortCode: String = "",
     var shopperEmail: String = "",
     var isAmountConsentChecked: Boolean = false,
-    var isAccountConsentChecked: Boolean = false
+    var isAccountConsentChecked: Boolean = false,
+    var mode: BacsDirectDebitMode = BacsDirectDebitMode.INPUT
 ) : InputData

@@ -9,7 +9,6 @@
 package com.adyen.checkout.bacs
 
 import androidx.lifecycle.SavedStateHandle
-import com.adyen.checkout.components.GenericComponentState
 import com.adyen.checkout.components.PaymentComponentProvider
 import com.adyen.checkout.components.base.BasePaymentComponent
 import com.adyen.checkout.components.base.GenericPaymentComponentProvider
@@ -26,7 +25,7 @@ class BacsDirectDebitComponent(
     configuration: BacsDirectDebitConfiguration
 ) :
     BasePaymentComponent<BacsDirectDebitConfiguration, BacsDirectDebitInputData, BacsDirectDebitOutputData,
-        GenericComponentState<BacsDirectDebitPaymentMethod>>(savedStateHandle, paymentMethodDelegate, configuration) {
+        BacsDirectDebitComponentState>(savedStateHandle, paymentMethodDelegate, configuration) {
 
     override fun getSupportedPaymentMethodTypes() = PAYMENT_METHOD_TYPES
 
@@ -41,7 +40,7 @@ class BacsDirectDebitComponent(
         )
     }
 
-    override fun createComponentState(): GenericComponentState<BacsDirectDebitPaymentMethod> {
+    override fun createComponentState(): BacsDirectDebitComponentState {
         val paymentComponentData = PaymentComponentData<BacsDirectDebitPaymentMethod>()
         val bacsDirectDebitPaymentMethod = BacsDirectDebitPaymentMethod().apply {
             type = BacsDirectDebitPaymentMethod.PAYMENT_METHOD_TYPE
@@ -55,11 +54,22 @@ class BacsDirectDebitComponent(
             paymentMethod = bacsDirectDebitPaymentMethod
         }
 
-        return GenericComponentState(
+        return BacsDirectDebitComponentState(
             paymentComponentData,
             outputData?.isValid ?: false,
-            true
+            mLatestInputData?.mode == BacsDirectDebitMode.CONFIRMATION,
+            mLatestInputData?.mode ?: BacsDirectDebitMode.INPUT
         )
+    }
+
+    fun handleContinueClick() {
+        mLatestInputData?.mode = BacsDirectDebitMode.CONFIRMATION
+        notifyStateChanged()
+    }
+
+    fun handleBackPress() {
+        mLatestInputData?.mode = BacsDirectDebitMode.INPUT
+        notifyStateChanged()
     }
 
     companion object {

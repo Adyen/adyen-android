@@ -14,8 +14,6 @@ import android.view.LayoutInflater
 import androidx.lifecycle.LifecycleOwner
 import androidx.lifecycle.Observer
 import com.adyen.checkout.bacs.databinding.BacsDirectDebitViewBinding
-import com.adyen.checkout.components.GenericComponentState
-import com.adyen.checkout.components.model.payments.request.BacsDirectDebitPaymentMethod
 import com.adyen.checkout.components.ui.Validation
 import com.adyen.checkout.components.ui.view.AdyenLinearLayout
 import com.adyen.checkout.components.ui.view.AdyenTextInputEditText
@@ -28,7 +26,7 @@ private val TAG = LogUtil.getTag()
 class BacsDirectDebitView @JvmOverloads constructor(context: Context, attrs: AttributeSet? = null, defStyleAttr: Int = 0) :
     AdyenLinearLayout<BacsDirectDebitOutputData,
         BacsDirectDebitConfiguration,
-        GenericComponentState<BacsDirectDebitPaymentMethod>,
+        BacsDirectDebitComponentState,
         BacsDirectDebitComponent>(context, attrs, defStyleAttr),
     Observer<BacsDirectDebitOutputData> {
 
@@ -139,7 +137,6 @@ class BacsDirectDebitView @JvmOverloads constructor(context: Context, attrs: Att
         }
         holderNameEditText?.onFocusChangeListener = OnFocusChangeListener { _, hasFocus ->
             val holderNameValidation = component.outputData?.holderNameState?.validation
-            Logger.d(TAG, "outputData ${component.outputData.toString()}")
             if (hasFocus) {
                 binding.textInputLayoutHolderName.error = null
             } else if (holderNameValidation != null && holderNameValidation is Validation.Invalid) {
