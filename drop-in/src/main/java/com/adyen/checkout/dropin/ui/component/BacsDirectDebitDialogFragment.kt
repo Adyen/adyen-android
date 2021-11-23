@@ -101,14 +101,18 @@ class BacsDirectDebitDialogFragment: BaseComponentDialogFragment() {
     }
 
     override fun highlightValidationErrors() {
-        TODO("Not yet implemented")
+        binding.viewContainer.children.firstOrNull { it is BacsDirectDebitView }?.let {
+            (it as BacsDirectDebitView).highlightValidationErrors()
+        }
     }
 
     private fun handlePayClick() {
+        componentDialogViewModel.payButtonClicked()
         val bacsDirectDebitComponent = component as BacsDirectDebitComponent
-        when ((bacsDirectDebitComponent.state as? BacsDirectDebitComponentState)?.mode) {
-            BacsDirectDebitMode.INPUT -> bacsDirectDebitComponent.handleContinueClick()
-            BacsDirectDebitMode.CONFIRMATION -> componentDialogViewModel.payButtonClicked()
+        val mode = (bacsDirectDebitComponent.state as? BacsDirectDebitComponentState)?.mode
+        val isInputMode = mode == BacsDirectDebitMode.INPUT
+        if (isInputMode && bacsDirectDebitComponent.state?.isInputValid == true) {
+            bacsDirectDebitComponent.handleContinueClick()
         }
     }
 }

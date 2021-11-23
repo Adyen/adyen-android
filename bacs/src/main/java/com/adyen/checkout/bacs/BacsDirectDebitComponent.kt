@@ -57,7 +57,7 @@ class BacsDirectDebitComponent(
         return BacsDirectDebitComponentState(
             paymentComponentData,
             outputData?.isValid ?: false,
-            mLatestInputData?.mode == BacsDirectDebitMode.CONFIRMATION,
+            true,
             mLatestInputData?.mode ?: BacsDirectDebitMode.INPUT
         )
     }

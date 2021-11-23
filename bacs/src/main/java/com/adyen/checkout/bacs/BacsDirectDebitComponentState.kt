@@ -17,4 +17,8 @@ class BacsDirectDebitComponentState(
     isInputValid: Boolean,
     isReady: Boolean,
     val mode: BacsDirectDebitMode = BacsDirectDebitMode.INPUT
-) : PaymentComponentState<BacsDirectDebitPaymentMethod>(paymentComponentData, isInputValid, isReady)
+) : PaymentComponentState<BacsDirectDebitPaymentMethod>(paymentComponentData, isInputValid, isReady) {
+    override fun isValid(): Boolean {
+        return super.isValid() && mode == BacsDirectDebitMode.CONFIRMATION
+    }
+}
