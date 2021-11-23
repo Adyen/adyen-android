@@ -14,7 +14,11 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.core.view.children
 import androidx.core.view.isVisible
-import com.adyen.checkout.bacs.*
+import com.adyen.checkout.bacs.BacsDirectDebitComponent
+import com.adyen.checkout.bacs.BacsDirectDebitComponentState
+import com.adyen.checkout.bacs.BacsDirectDebitConfirmationView
+import com.adyen.checkout.bacs.BacsDirectDebitMode
+import com.adyen.checkout.bacs.BacsDirectDebitView
 import com.adyen.checkout.components.PaymentComponentState
 import com.adyen.checkout.components.model.payments.request.PaymentMethodDetails
 import com.adyen.checkout.core.log.LogUtil
@@ -23,7 +27,7 @@ import com.adyen.checkout.dropin.databinding.FragmentBacsDirectDebitComponentBin
 import com.adyen.checkout.dropin.ui.base.BaseComponentDialogFragment
 import com.google.android.material.bottomsheet.BottomSheetBehavior
 
-class BacsDirectDebitDialogFragment: BaseComponentDialogFragment() {
+class BacsDirectDebitDialogFragment : BaseComponentDialogFragment() {
 
     private lateinit var binding: FragmentBacsDirectDebitComponentBinding
 
@@ -66,28 +70,8 @@ class BacsDirectDebitDialogFragment: BaseComponentDialogFragment() {
 
         if (bacsDirectDebitComponentState != null) {
             when (bacsDirectDebitComponentState.mode) {
-                BacsDirectDebitMode.INPUT -> {
-                    val isInputViewAttached = binding.viewContainer.children.any { it is BacsDirectDebitView }
-                    if (!isInputViewAttached) {
-                        val bacsDirectDebitView = BacsDirectDebitView(requireContext())
-                        binding.viewContainer.apply {
-                            removeAllViews()
-                            addView(bacsDirectDebitView)
-                            bacsDirectDebitView.attach(bacsDirectDebitComponent, viewLifecycleOwner)
-                        }
-                    }
-                }
-                BacsDirectDebitMode.CONFIRMATION -> {
-                    val isConfirmationViewAttached = binding.viewContainer.children.any { it is BacsDirectDebitConfirmationView }
-                    if (!isConfirmationViewAttached) {
-                        val bacsDirectDebitConfirmationView = BacsDirectDebitConfirmationView(requireContext())
-                        binding.viewContainer.apply {
-                            removeAllViews()
-                            addView(bacsDirectDebitConfirmationView)
-                            bacsDirectDebitConfirmationView.attach(bacsDirectDebitComponent, viewLifecycleOwner)
-                        }
-                    }
-                }
+                BacsDirectDebitMode.INPUT -> attachInputView()
+                BacsDirectDebitMode.CONFIRMATION -> attachConfirmationView()
             }
         }
 
@@ -106,6 +90,18 @@ class BacsDirectDebitDialogFragment: BaseComponentDialogFragment() {
         }
     }
 
+    override fun onBackPressed(): Boolean {
+        val bacsDirectDebitComponent = component as BacsDirectDebitComponent
+        val mode = (bacsDirectDebitComponent.state as? BacsDirectDebitComponentState)?.mode
+        val isConfirmationMode = mode == BacsDirectDebitMode.CONFIRMATION
+        return if (isConfirmationMode) {
+            bacsDirectDebitComponent.handleBackPress()
+            true
+        } else {
+            super.onBackPressed()
+        }
+    }
+
     private fun handlePayClick() {
         componentDialogViewModel.payButtonClicked()
         val bacsDirectDebitComponent = component as BacsDirectDebitComponent
@@ -113,6 +109,32 @@ class BacsDirectDebitDialogFragment: BaseComponentDialogFragment() {
         val isInputMode = mode == BacsDirectDebitMode.INPUT
         if (isInputMode && bacsDirectDebitComponent.state?.isInputValid == true) {
             bacsDirectDebitComponent.handleContinueClick()
+        }
+    }
+
+    private fun attachInputView() {
+        val bacsDirectDebitComponent = component as BacsDirectDebitComponent
+        val isInputViewAttached = binding.viewContainer.children.any { it is BacsDirectDebitView }
+        if (!isInputViewAttached) {
+            val bacsDirectDebitView = BacsDirectDebitView(requireContext())
+            binding.viewContainer.apply {
+                removeAllViews()
+                addView(bacsDirectDebitView)
+                bacsDirectDebitView.attach(bacsDirectDebitComponent, viewLifecycleOwner)
+            }
+        }
+    }
+
+    private fun attachConfirmationView() {
+        val bacsDirectDebitComponent = component as BacsDirectDebitComponent
+        val isConfirmationViewAttached = binding.viewContainer.children.any { it is BacsDirectDebitConfirmationView }
+        if (!isConfirmationViewAttached) {
+            val bacsDirectDebitConfirmationView = BacsDirectDebitConfirmationView(requireContext())
+            binding.viewContainer.apply {
+                removeAllViews()
+                addView(bacsDirectDebitConfirmationView)
+                bacsDirectDebitConfirmationView.attach(bacsDirectDebitComponent, viewLifecycleOwner)
+            }
         }
     }
 }

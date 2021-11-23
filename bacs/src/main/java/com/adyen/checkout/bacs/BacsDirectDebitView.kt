@@ -41,7 +41,14 @@ class BacsDirectDebitView @JvmOverloads constructor(context: Context, attrs: Att
     }
 
     override fun onComponentAttached() {
-        // no ops
+        component.outputData?.let {
+            binding.editTextHolderName.setText(it.holderNameState.value)
+            binding.editTextBankAccountNumber.setText(it.bankAccountNumberState.value)
+            binding.editTextSortCode.setText(it.sortCodeState.value)
+            binding.editTextShopperEmail.setText(it.shopperEmailState.value)
+            binding.switchConsentAmount.isChecked = it.isAmountConsentChecked
+            binding.switchConsentAccount.isChecked = it.isAccountConsentChecked
+        }
     }
 
     override fun initView() {
