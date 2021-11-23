@@ -8,12 +8,24 @@
 
 package com.adyen.checkout.example.di
 
+import android.app.Application
+import android.content.SharedPreferences
 import androidx.preference.PreferenceManager
 import com.adyen.checkout.example.data.storage.KeyValueStorage
 import com.adyen.checkout.example.data.storage.KeyValueStorageImpl
-import org.koin.dsl.module
+import dagger.Module
+import dagger.Provides
+import dagger.hilt.InstallIn
+import dagger.hilt.components.SingletonComponent
 
-val storageManager = module {
-    single { PreferenceManager.getDefaultSharedPreferences(get()) }
-    single<KeyValueStorage> { KeyValueStorageImpl(get(), get()) }
+@Module
+@InstallIn(SingletonComponent::class)
+object StorageModule {
+
+    @Provides
+    fun provideSharedPreferences(appContext: Application): SharedPreferences = PreferenceManager.getDefaultSharedPreferences(appContext)
+
+    @Provides
+    fun provideKeyValueStorage(appContext: Application, sharedPreferences: SharedPreferences): KeyValueStorage =
+        KeyValueStorageImpl(appContext, sharedPreferences)
 }

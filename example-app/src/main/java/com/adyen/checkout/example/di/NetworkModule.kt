@@ -15,27 +15,42 @@ import com.adyen.checkout.example.data.api.CheckoutApiService
 import com.jakewharton.retrofit2.adapter.kotlin.coroutines.CoroutineCallAdapterFactory
 import com.squareup.moshi.Moshi
 import com.squareup.moshi.kotlin.reflect.KotlinJsonAdapterFactory
-import okhttp3.OkHttpClient
-import okhttp3.logging.HttpLoggingInterceptor
-import org.koin.dsl.module
-import retrofit2.Retrofit
-import retrofit2.converter.moshi.MoshiConverterFactory
+import dagger.Module
+import dagger.Provides
+import dagger.hilt.InstallIn
+import dagger.hilt.components.SingletonComponent
 import java.security.KeyStore
-import java.util.Arrays
+import java.util.*
+import javax.inject.Singleton
 import javax.net.ssl.TrustManagerFactory
 import javax.net.ssl.X509TrustManager
+import okhttp3.OkHttpClient
+import okhttp3.logging.HttpLoggingInterceptor
+import retrofit2.Converter
+import retrofit2.Retrofit
+import retrofit2.converter.moshi.MoshiConverterFactory
 
-val networkModule = module {
+@Module
+@InstallIn(SingletonComponent::class)
+object NetworkModule {
 
-    fun provideHttpClient(): OkHttpClient {
-        val builder = OkHttpClient.Builder().let {
+    private val BASE_URL = if (CheckoutApiService.isRealUrlAvailable())
+        BuildConfig.MERCHANT_SERVER_URL
+    else
+        "http://myserver.com/my/endpoint/"
+
+    @Singleton
+    @Provides
+    fun provideOkHttpClient(): OkHttpClient {
+        val builder = OkHttpClient.Builder()
+
+        if (BuildConfig.DEBUG) {
             val interceptor = HttpLoggingInterceptor()
             interceptor.level = HttpLoggingInterceptor.Level.BODY
-            it.addNetworkInterceptor(interceptor)
+            builder.addNetworkInterceptor(interceptor)
         }
 
         if (Build.VERSION_CODES.JELLY_BEAN <= Build.VERSION.SDK_INT && Build.VERSION.SDK_INT < Build.VERSION_CODES.LOLLIPOP_MR1) {
-
             val trustManagerFactory = TrustManagerFactory.getInstance(TrustManagerFactory.getDefaultAlgorithm())
             trustManagerFactory.init(null as KeyStore?)
             val trustManagers = trustManagerFactory.trustManagers
@@ -50,25 +65,26 @@ val networkModule = module {
         return builder.build()
     }
 
-    fun provideApi(httpClient: OkHttpClient): CheckoutApiService {
-        val baseUrl =
-            if (CheckoutApiService.isRealUrlAvailable())
-                BuildConfig.MERCHANT_SERVER_URL
-            else
-                "http://myserver.com/my/endpoint/"
-        return Retrofit.Builder()
-            .baseUrl(baseUrl)
-            .client(httpClient)
-            .addConverterFactory(
-                MoshiConverterFactory.create(
-                    Moshi.Builder().add(KotlinJsonAdapterFactory()).build()
-                )
-            )
+    @Singleton
+    @Provides
+    fun provideConverterFactory(): Converter.Factory = MoshiConverterFactory.create(
+        Moshi.Builder().add(KotlinJsonAdapterFactory()).build()
+    )
+
+    @Singleton
+    @Provides
+    fun provideRetrofit(
+        okHttpClient: OkHttpClient,
+        converterFactory: Converter.Factory,
+    ): Retrofit =
+        Retrofit.Builder()
+            .baseUrl(BASE_URL)
+            .client(okHttpClient)
+            .addConverterFactory(converterFactory)
             .addCallAdapterFactory(CoroutineCallAdapterFactory())
             .build()
-            .create(CheckoutApiService::class.java)
-    }
 
-    single { provideHttpClient() }
-    single { provideApi(get()) }
+    @Provides
+    fun provideApiService(retrofit: Retrofit): CheckoutApiService =
+        retrofit.create(CheckoutApiService::class.java)
 }

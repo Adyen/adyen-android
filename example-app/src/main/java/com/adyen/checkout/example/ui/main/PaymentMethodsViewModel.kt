@@ -16,14 +16,17 @@ import com.adyen.checkout.core.log.Logger
 import com.adyen.checkout.example.data.api.model.paymentsRequest.PaymentMethodsRequest
 import com.adyen.checkout.example.data.storage.KeyValueStorage
 import com.adyen.checkout.example.repositories.paymentMethods.PaymentsRepository
+import dagger.hilt.android.lifecycle.HiltViewModel
+import javax.inject.Inject
+import kotlin.coroutines.CoroutineContext
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.cancel
 import kotlinx.coroutines.launch
-import kotlin.coroutines.CoroutineContext
 
-class PaymentMethodsViewModel(
+@HiltViewModel
+class PaymentMethodsViewModel @Inject constructor(
     private val paymentsRepository: PaymentsRepository,
     private val keyValueStorage: KeyValueStorage
 ) : ViewModel() {
