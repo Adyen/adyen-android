@@ -42,6 +42,7 @@ sealed class DropInServiceResult : BaseDropInServiceResult() {
      * Use [com.adyen.checkout.components.model.payments.response.Action.SERIALIZER] to serialize
      * your JSON response string.
      */
+    @Suppress("MemberNameEqualsClassName")
     class Action : DropInServiceResult {
         val action: com.adyen.checkout.components.model.payments.response.Action
 

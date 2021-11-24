@@ -42,6 +42,7 @@ import org.json.JSONObject
  * This is just an example on how to make networkModule calls on the [DropInService].
  * You should make the calls to your own servers and have additional data or processing if necessary.
  */
+@Suppress("TooManyFunctions")
 @AndroidEntryPoint
 class ExampleAsyncDropInService : DropInService() {
 

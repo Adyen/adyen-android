@@ -44,6 +44,7 @@ private const val CURRENT_ORDER = "CURRENT_ORDER"
 private const val PARTIAL_PAYMENT_AMOUNT = "PARTIAL_PAYMENT_AMOUNT"
 private const val AMOUNT = "AMOUNT"
 
+@Suppress("TooManyFunctions")
 class DropInViewModel(private val savedStateHandle: SavedStateHandle) : ViewModel() {
 
     val dropInConfiguration: DropInConfiguration = getStateValueOrFail(DROP_IN_CONFIGURATION_KEY)
