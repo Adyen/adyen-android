@@ -174,7 +174,8 @@ class DropInViewModel(private val savedStateHandle: SavedStateHandle) : ViewMode
             }
             is GiftCardBalanceStatus.PartialPayment -> {
                 cachedPartialPaymentAmount = giftCardBalanceResult.amountPaid
-                GiftCardBalanceResult.PartialPayment(giftCardBalanceResult.amountPaid, giftCardBalanceResult.remainingBalance)
+                if (currentOrder == null) GiftCardBalanceResult.RequestOrderCreation
+                else GiftCardBalanceResult.RequestPartialPayment
             }
         }
     }

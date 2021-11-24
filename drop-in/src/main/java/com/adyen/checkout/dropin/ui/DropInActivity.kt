@@ -564,7 +564,8 @@ class DropInActivity : AppCompatActivity(), DropInBottomSheetDialogFragment.Prot
         when (result) {
             is GiftCardBalanceResult.Error -> showError(getString(result.errorMessage), result.reason, result.terminateDropIn)
             is GiftCardBalanceResult.FullPayment -> handleGiftCardFullPayment(result)
-            is GiftCardBalanceResult.PartialPayment -> handleGiftCardPartialPayment(result)
+            is GiftCardBalanceResult.RequestOrderCreation -> requestOrdersCall()
+            is GiftCardBalanceResult.RequestPartialPayment -> requestPartialPayment()
         }
     }
 
@@ -581,15 +582,13 @@ class DropInActivity : AppCompatActivity(), DropInBottomSheetDialogFragment.Prot
             .show(supportFragmentManager, GIFT_CARD_PAYMENT_CONFIRMATION_FRAGMENT_TAG)
     }
 
-    private fun handleGiftCardPartialPayment(partialPayment: GiftCardBalanceResult.PartialPayment) {
-        Logger.d(TAG, "handleGiftCardPartialPayment")
-        setLoading(false)
-        requestOrdersCall()
-    }
-
     private fun handleOrderResult(order: OrderResponse) {
         Logger.v(TAG, "handleOrderResult")
         dropInViewModel.handleOrderResponse(order)
+        requestPartialPayment()
+    }
+
+    private fun requestPartialPayment() {
         val paymentComponentState = dropInViewModel.cachedGiftCardComponentState
             ?: throw CheckoutException("Lost reference to cached GiftCardComponentState")
         requestPaymentsCall(paymentComponentState)

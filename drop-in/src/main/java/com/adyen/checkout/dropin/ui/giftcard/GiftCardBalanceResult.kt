@@ -9,10 +9,10 @@
 package com.adyen.checkout.dropin.ui.giftcard
 
 import androidx.annotation.StringRes
-import com.adyen.checkout.components.model.payments.Amount
 
 sealed class GiftCardBalanceResult {
     class FullPayment(val data: GiftCardPaymentConfirmationData) : GiftCardBalanceResult()
-    class PartialPayment(val amountPaid: Amount, val remainingBalance: Amount) : GiftCardBalanceResult()
+    object RequestOrderCreation : GiftCardBalanceResult()
+    object RequestPartialPayment : GiftCardBalanceResult()
     class Error(@StringRes val errorMessage: Int, val reason: String, val terminateDropIn: Boolean) : GiftCardBalanceResult()
 }
