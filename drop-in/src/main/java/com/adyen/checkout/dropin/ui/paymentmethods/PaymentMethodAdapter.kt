@@ -23,6 +23,7 @@ import com.adyen.checkout.dropin.R
 import com.adyen.checkout.dropin.ui.paymentmethods.PaymentMethodListItem.Companion.GIFT_CARD_PAYMENT_METHOD
 import com.adyen.checkout.dropin.ui.paymentmethods.PaymentMethodListItem.Companion.PAYMENT_METHOD
 import com.adyen.checkout.dropin.ui.paymentmethods.PaymentMethodListItem.Companion.PAYMENT_METHODS_HEADER
+import com.adyen.checkout.dropin.ui.paymentmethods.PaymentMethodListItem.Companion.PAYMENT_METHODS_NOTE
 import com.adyen.checkout.dropin.ui.paymentmethods.PaymentMethodListItem.Companion.STORED_PAYMENT_METHOD
 
 @SuppressWarnings("TooManyFunctions")
@@ -43,6 +44,7 @@ class PaymentMethodAdapter(
             STORED_PAYMENT_METHOD -> StoredPaymentMethodVH(getView(parent, R.layout.payment_methods_list_item))
             PAYMENT_METHOD -> PaymentMethodVH(getView(parent, R.layout.payment_methods_list_item))
             GIFT_CARD_PAYMENT_METHOD -> GiftCardPaymentMethodVH(getView(parent, R.layout.payment_methods_list_item))
+            PAYMENT_METHODS_NOTE -> NoteVH(getView(parent, R.layout.payment_methods_list_note))
             else -> throw CheckoutException("Unexpected viewType on onCreateViewHolder - $viewType")
         }
     }
@@ -57,6 +59,7 @@ class PaymentMethodAdapter(
             is StoredPaymentMethodVH -> bindStoredPaymentMethod(holder, position)
             is PaymentMethodVH -> bindPaymentMethod(holder, position)
             is GiftCardPaymentMethodVH -> bindGiftCardPaymentMethod(holder, position)
+            is NoteVH -> bindNote(holder, position)
         }
     }
 
@@ -133,6 +136,11 @@ class PaymentMethodAdapter(
         holder.itemView.setOnClickListener(null)
     }
 
+    private fun bindNote(holder: NoteVH, position: Int) {
+        val header = getNoteAt(position)
+        holder.note.text = header.note
+    }
+
     override fun getItemCount(): Int {
         return paymentMethods.size
     }
@@ -151,6 +159,10 @@ class PaymentMethodAdapter(
 
     private fun getGiftCardPaymentMethodAt(position: Int): GiftCardPaymentMethodModel {
         return paymentMethods[position] as GiftCardPaymentMethodModel
+    }
+
+    private fun getNoteAt(position: Int): PaymentMethodNote {
+        return paymentMethods[position] as PaymentMethodNote
     }
 
     private fun onStoredPaymentMethodClick(storedPaymentMethodModel: StoredPaymentMethodModel) {
@@ -197,6 +209,10 @@ class PaymentMethodAdapter(
 
     class HeaderVH(rootView: View) : BaseViewHolder(rootView) {
         internal val title: TextView = rootView.findViewById(R.id.payment_method_header)
+    }
+
+    class NoteVH(rootView: View) : BaseViewHolder(rootView) {
+        internal val note: TextView = rootView.findViewById(R.id.payment_method_note)
     }
 
     open class BaseViewHolder(rootView: View) : RecyclerView.ViewHolder(rootView)

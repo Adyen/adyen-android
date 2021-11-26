@@ -16,11 +16,13 @@ import com.adyen.checkout.components.ComponentAvailableCallback
 import com.adyen.checkout.components.base.Configuration
 import com.adyen.checkout.components.model.paymentmethods.PaymentMethod
 import com.adyen.checkout.components.model.paymentmethods.StoredPaymentMethod
+import com.adyen.checkout.components.util.CurrencyUtils
 import com.adyen.checkout.components.util.PaymentMethodTypes
 import com.adyen.checkout.core.exception.CheckoutException
 import com.adyen.checkout.core.log.LogUtil
 import com.adyen.checkout.core.log.Logger
 import com.adyen.checkout.dropin.DropInConfiguration
+import com.adyen.checkout.dropin.R
 import com.adyen.checkout.dropin.checkPaymentMethodAvailability
 import com.adyen.checkout.dropin.ui.order.OrderModel
 import com.adyen.checkout.dropin.ui.stored.makeStoredModel
@@ -29,7 +31,7 @@ class PaymentMethodsListViewModel(
     application: Application,
     private val paymentMethods: List<PaymentMethod>,
     storedPaymentMethods: List<StoredPaymentMethod>,
-    order: OrderModel?,
+    private val order: OrderModel?,
     val dropInConfiguration: DropInConfiguration
 ) : AndroidViewModel(application), ComponentAvailableCallback<Configuration> {
 
@@ -159,7 +161,14 @@ class PaymentMethodsListViewModel(
         paymentMethodsMutableLiveData.value = mutableListOf<PaymentMethodListItem>().apply {
             if (orderPaymentMethodsList.isNotEmpty()) {
                 addAll(orderPaymentMethodsList)
-                // TODO add header
+                order?.remainingAmount?.let { remainingAmount ->
+                    val value = CurrencyUtils.formatAmount(remainingAmount, dropInConfiguration.shopperLocale)
+                    add(
+                        PaymentMethodNote(
+                            getApplication<Application>().getString(R.string.checkout_giftcard_pay_remaining_amount, value)
+                        )
+                    )
+                }
             }
             if (storedPaymentMethodsList.isNotEmpty()) {
                 add(PaymentMethodHeader(PaymentMethodHeader.TYPE_STORED_HEADER))
