@@ -19,7 +19,14 @@ data class PaymentMethodHeader(
         TYPE_STORED_HEADER -> R.string.store_payment_methods_header
         TYPE_REGULAR_HEADER_WITH_STORED -> R.string.other_payment_methods
         TYPE_REGULAR_HEADER_WITHOUT_STORED -> R.string.payment_methods_header
+        TYPE_GIFT_CARD_HEADER -> R.string.checkout_giftcard_payment_methods_header
         else -> R.string.payment_methods_header
+    }
+
+    @StringRes
+    val actionResId: Int? = when (type) {
+        TYPE_GIFT_CARD_HEADER -> R.string.checkout_giftcard_remove_button
+        else -> null
     }
 
     override fun getViewType(): Int = PaymentMethodListItem.PAYMENT_METHODS_HEADER
@@ -28,5 +35,6 @@ data class PaymentMethodHeader(
         const val TYPE_STORED_HEADER = 0
         const val TYPE_REGULAR_HEADER_WITH_STORED = 1
         const val TYPE_REGULAR_HEADER_WITHOUT_STORED = 2
+        const val TYPE_GIFT_CARD_HEADER = 3
     }
 }

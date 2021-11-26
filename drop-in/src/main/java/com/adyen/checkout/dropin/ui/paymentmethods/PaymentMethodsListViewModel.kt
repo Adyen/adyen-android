@@ -160,6 +160,7 @@ class PaymentMethodsListViewModel(
         Logger.d(TAG, "onPaymentMethodsReady: ${storedPaymentMethodsList.size} - ${paymentMethodsList.size}")
         paymentMethodsMutableLiveData.value = mutableListOf<PaymentMethodListItem>().apply {
             if (orderPaymentMethodsList.isNotEmpty()) {
+                add(PaymentMethodHeader(PaymentMethodHeader.TYPE_GIFT_CARD_HEADER))
                 addAll(orderPaymentMethodsList)
                 order?.remainingAmount?.let { remainingAmount ->
                     val value = CurrencyUtils.formatAmount(remainingAmount, dropInConfiguration.shopperLocale)

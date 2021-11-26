@@ -66,6 +66,15 @@ class PaymentMethodAdapter(
     private fun bindHeader(holder: HeaderVH, position: Int) {
         val header = getHeaderAt(position)
         holder.title.setText(header.titleResId)
+        if (header.actionResId == null) {
+            holder.action.visibility = View.GONE
+        } else {
+            holder.action.visibility = View.VISIBLE
+            holder.action.setText(header.actionResId)
+            holder.action.setOnClickListener {
+                onHeaderActionClick(header)
+            }
+        }
     }
 
     private fun bindStoredPaymentMethod(holder: StoredPaymentMethodVH, position: Int) {
@@ -173,6 +182,10 @@ class PaymentMethodAdapter(
         onPaymentMethodSelectedCallback?.onPaymentMethodSelected(paymentMethod)
     }
 
+    private fun onHeaderActionClick(header: PaymentMethodHeader) {
+        onPaymentMethodSelectedCallback?.onHeaderActionSelected(header)
+    }
+
     private fun getView(parent: ViewGroup, id: Int): View {
         return LayoutInflater.from(parent.context).inflate(id, parent, false)
     }
@@ -184,6 +197,7 @@ class PaymentMethodAdapter(
     interface OnPaymentMethodSelectedCallback {
         fun onStoredPaymentMethodSelected(storedPaymentMethodModel: StoredPaymentMethodModel)
         fun onPaymentMethodSelected(paymentMethod: PaymentMethodModel)
+        fun onHeaderActionSelected(header: PaymentMethodHeader)
     }
 
     class StoredPaymentMethodVH(rootView: View) : BaseViewHolder(rootView) {
@@ -208,7 +222,8 @@ class PaymentMethodAdapter(
     }
 
     class HeaderVH(rootView: View) : BaseViewHolder(rootView) {
-        internal val title: TextView = rootView.findViewById(R.id.payment_method_header)
+        internal val title: TextView = rootView.findViewById(R.id.payment_method_header_title)
+        internal val action: TextView = rootView.findViewById(R.id.payment_method_header_action)
     }
 
     class NoteVH(rootView: View) : BaseViewHolder(rootView) {

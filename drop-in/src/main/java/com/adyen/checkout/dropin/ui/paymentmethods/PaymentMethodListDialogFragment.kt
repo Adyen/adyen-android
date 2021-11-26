@@ -135,6 +135,16 @@ class PaymentMethodListDialogFragment : DropInBottomSheetDialogFragment(), Payme
         }
     }
 
+    override fun onHeaderActionSelected(header: PaymentMethodHeader) {
+        when (header.type) {
+            PaymentMethodHeader.TYPE_GIFT_CARD_HEADER -> showCancelOrderAlert()
+        }
+    }
+
+    private fun showCancelOrderAlert() {
+        // TODO show alert and cancel order
+    }
+
     private fun sendPayment(type: String) {
         val paymentComponentData = PaymentComponentData<PaymentMethodDetails>()
         paymentComponentData.paymentMethod = GenericPaymentMethod(type)

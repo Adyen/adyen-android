@@ -1,5 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?>
-<!--
+<?xml version="1.0" encoding="utf-8"?><!--
   ~ Copyright (c) 2019 Adyen N.V.
   ~
   ~ This file is open source and available under the MIT license. See the LICENSE file for more info.
@@ -7,14 +6,28 @@
   ~ Created by arman on 29/7/2019.
   -->
 
-
-<TextView
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
-    android:id="@+id/payment_method_header"
-    style="@style/AdyenCheckout.TextAppearance.HeaderTitle"
     android:layout_width="match_parent"
-    android:textIsSelectable="false"
     android:layout_height="wrap_content"
-    android:layout_marginBottom="@dimen/standard_quarter_margin"
-    tools:text="Header"/>
+    android:orientation="horizontal">
+
+    <TextView
+        android:id="@+id/payment_method_header_title"
+        style="@style/AdyenCheckout.TextAppearance.HeaderTitle"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_weight="1"
+        android:textIsSelectable="false"
+        tools:text="Header" />
+
+    <TextView
+        android:id="@+id/payment_method_header_action"
+        style="@style/AdyenCheckout.TextAppearance.HeaderAction"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textIsSelectable="false"
+        android:visibility="gone"
+        tools:text="Remove"
+        tools:visibility="visible" />
+</LinearLayout>
