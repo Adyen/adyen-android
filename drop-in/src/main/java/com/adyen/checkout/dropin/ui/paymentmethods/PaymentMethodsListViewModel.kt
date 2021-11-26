@@ -22,12 +22,14 @@ import com.adyen.checkout.core.log.LogUtil
 import com.adyen.checkout.core.log.Logger
 import com.adyen.checkout.dropin.DropInConfiguration
 import com.adyen.checkout.dropin.checkPaymentMethodAvailability
+import com.adyen.checkout.dropin.ui.order.OrderModel
 import com.adyen.checkout.dropin.ui.stored.makeStoredModel
 
 class PaymentMethodsListViewModel(
     application: Application,
     private val paymentMethods: List<PaymentMethod>,
     storedPaymentMethods: List<StoredPaymentMethod>,
+    order: OrderModel?,
     val dropInConfiguration: DropInConfiguration
 ) : AndroidViewModel(application), ComponentAvailableCallback<Configuration> {
 
@@ -40,11 +42,13 @@ class PaymentMethodsListViewModel(
 
     private val storedPaymentMethodsList = mutableListOf<StoredPaymentMethodModel>()
     private val paymentMethodsList = mutableListOf<PaymentMethodModel>()
+    private val orderPaymentMethodsList: List<GiftCardPaymentMethodModel>
 
     init {
         Logger.d(TAG, "onPaymentMethodsResponseChanged")
         setupStoredPaymentMethods(storedPaymentMethods)
         setupPaymentMethods(paymentMethods)
+        orderPaymentMethodsList = setupOrderPaymentMethods(order)
     }
 
     fun getPaymentMethod(model: PaymentMethodModel): PaymentMethod {
@@ -154,6 +158,10 @@ class PaymentMethodsListViewModel(
     private fun onPaymentMethodsReady() {
         Logger.d(TAG, "onPaymentMethodsReady: ${storedPaymentMethodsList.size} - ${paymentMethodsList.size}")
         paymentMethodsMutableLiveData.value = mutableListOf<PaymentMethodListItem>().apply {
+            if (orderPaymentMethodsList.isNotEmpty()) {
+                addAll(orderPaymentMethodsList)
+                // TODO add header
+            }
             if (storedPaymentMethodsList.isNotEmpty()) {
                 add(PaymentMethodHeader(PaymentMethodHeader.TYPE_STORED_HEADER))
                 addAll(storedPaymentMethodsList)
@@ -165,6 +173,17 @@ class PaymentMethodsListViewModel(
                 add(PaymentMethodHeader(headerType))
                 addAll(paymentMethodsList)
             }
+        }
+    }
+
+    private fun setupOrderPaymentMethods(order: OrderModel?): List<GiftCardPaymentMethodModel> {
+        return order?.paymentMethods.orEmpty().map {
+            GiftCardPaymentMethodModel(
+                imageId = it.type,
+                lastFour = it.lastFour,
+                amount = it.amount,
+                transactionLimit = it.transactionLimit
+            )
         }
     }
 

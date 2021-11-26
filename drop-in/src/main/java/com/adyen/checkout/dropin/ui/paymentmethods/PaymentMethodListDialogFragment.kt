@@ -50,6 +50,7 @@ class PaymentMethodListDialogFragment : DropInBottomSheetDialogFragment(), Payme
                 requireActivity().application,
                 dropInViewModel.paymentMethodsApiResponse.paymentMethods.orEmpty(),
                 dropInViewModel.paymentMethodsApiResponse.storedPaymentMethods.orEmpty(),
+                dropInViewModel.currentOrder,
                 dropInViewModel.dropInConfiguration
             )
         }
