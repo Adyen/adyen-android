@@ -15,6 +15,7 @@ import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
 import com.adyen.checkout.components.api.ImageLoader
 import com.adyen.checkout.components.ui.view.RoundCornerImageView
+import com.adyen.checkout.components.util.CurrencyUtils
 import com.adyen.checkout.components.util.DateUtils
 import com.adyen.checkout.core.exception.CheckoutException
 import com.adyen.checkout.core.log.LogUtil
@@ -83,12 +84,14 @@ class PaymentMethodAdapter(
         imageLoader.load(storedCardModel.imageId, holder.logo)
         holder.detail.text = DateUtils.parseDateToView(storedCardModel.expiryMonth, storedCardModel.expiryYear)
         holder.detail.visibility = View.VISIBLE
+        holder.endText.visibility = View.GONE
     }
 
     private fun bindGenericStored(holder: StoredPaymentMethodVH, genericStoredModel: GenericStoredModel) {
         holder.text.text = genericStoredModel.name
         holder.detail.visibility = View.GONE
         imageLoader.load(genericStoredModel.imageId, holder.logo)
+        holder.endText.visibility = View.GONE
     }
 
     private fun bindPaymentMethod(holder: PaymentMethodVH, position: Int) {
@@ -103,6 +106,7 @@ class PaymentMethodAdapter(
         holder.itemView.setOnClickListener {
             onPaymentMethodClick(paymentMethod)
         }
+        holder.endText.visibility = View.GONE
     }
 
     private fun bindGiftCardPaymentMethod(holder: GiftCardPaymentMethodVH, position: Int) {
@@ -111,7 +115,20 @@ class PaymentMethodAdapter(
         val context = holder.itemView.context
         holder.text.text = context.getString(R.string.card_number_4digit, giftCardPaymentMethod.lastFour)
         imageLoader.load(giftCardPaymentMethod.imageId, holder.logo)
-        holder.detail.visibility = View.GONE
+        if (giftCardPaymentMethod.transactionLimit == null || giftCardPaymentMethod.shopperLocale == null) {
+            holder.detail.visibility = View.GONE
+        } else {
+            holder.detail.visibility = View.VISIBLE
+            val value = CurrencyUtils.formatAmount(giftCardPaymentMethod.transactionLimit, giftCardPaymentMethod.shopperLocale)
+            holder.detail.text = context.getString(R.string.checkout_giftcard_max_transaction_limit, value)
+        }
+        if (giftCardPaymentMethod.amount == null || giftCardPaymentMethod.shopperLocale == null) {
+            holder.endText.visibility = View.GONE
+        } else {
+            holder.endText.visibility = View.VISIBLE
+            val value = CurrencyUtils.formatAmount(giftCardPaymentMethod.amount, giftCardPaymentMethod.shopperLocale)
+            holder.endText.text = context.getString(R.string.checkout_negative_amount, value)
+        }
 
         holder.itemView.setOnClickListener(null)
     }
@@ -161,18 +178,21 @@ class PaymentMethodAdapter(
         internal val text: TextView = rootView.findViewById(R.id.textView_text)
         internal val detail: TextView = rootView.findViewById(R.id.textView_detail)
         internal val logo: RoundCornerImageView = rootView.findViewById(R.id.imageView_logo)
+        internal val endText: TextView = rootView.findViewById(R.id.textView_endText)
     }
 
     class PaymentMethodVH(rootView: View) : BaseViewHolder(rootView) {
         internal val text: TextView = rootView.findViewById(R.id.textView_text)
         internal val detail: TextView = rootView.findViewById(R.id.textView_detail)
         internal val logo: RoundCornerImageView = rootView.findViewById(R.id.imageView_logo)
+        internal val endText: TextView = rootView.findViewById(R.id.textView_endText)
     }
 
     class GiftCardPaymentMethodVH(rootView: View) : BaseViewHolder(rootView) {
         internal val text: TextView = rootView.findViewById(R.id.textView_text)
         internal val detail: TextView = rootView.findViewById(R.id.textView_detail)
         internal val logo: RoundCornerImageView = rootView.findViewById(R.id.imageView_logo)
+        internal val endText: TextView = rootView.findViewById(R.id.textView_endText)
     }
 
     class HeaderVH(rootView: View) : BaseViewHolder(rootView) {

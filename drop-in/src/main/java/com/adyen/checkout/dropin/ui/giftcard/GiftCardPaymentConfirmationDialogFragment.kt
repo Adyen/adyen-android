@@ -82,7 +82,8 @@ class GiftCardPaymentConfirmationDialogFragment : DropInBottomSheetDialogFragmen
                 imageId = giftCardPaymentConfirmationData.brand,
                 lastFour = giftCardPaymentConfirmationData.lastFourDigits,
                 amount = null,
-                transactionLimit = null
+                transactionLimit = null,
+                shopperLocale = null
             )
         )
 

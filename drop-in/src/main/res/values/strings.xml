@@ -29,4 +29,5 @@
     <string name="checkout_giftcard_payment_methods_header">Added giftcard</string>
     <string name="checkout_giftcard_remove_button">Remove</string>
     <string name="checkout_giftcard_max_transaction_limit">Max. %s allowed per transaction on this gift card</string>
+    <string name="checkout_negative_amount" translatable="false">- %s</string>
 </resources>

@@ -42,13 +42,12 @@ class PaymentMethodsListViewModel(
 
     private val storedPaymentMethodsList = mutableListOf<StoredPaymentMethodModel>()
     private val paymentMethodsList = mutableListOf<PaymentMethodModel>()
-    private val orderPaymentMethodsList: List<GiftCardPaymentMethodModel>
+    private val orderPaymentMethodsList: List<GiftCardPaymentMethodModel> = setupOrderPaymentMethods(order)
 
     init {
         Logger.d(TAG, "onPaymentMethodsResponseChanged")
         setupStoredPaymentMethods(storedPaymentMethods)
         setupPaymentMethods(paymentMethods)
-        orderPaymentMethodsList = setupOrderPaymentMethods(order)
     }
 
     fun getPaymentMethod(model: PaymentMethodModel): PaymentMethod {
@@ -182,7 +181,8 @@ class PaymentMethodsListViewModel(
                 imageId = it.type,
                 lastFour = it.lastFour,
                 amount = it.amount,
-                transactionLimit = it.transactionLimit
+                transactionLimit = it.transactionLimit,
+                shopperLocale = dropInConfiguration.shopperLocale
             )
         }
     }
