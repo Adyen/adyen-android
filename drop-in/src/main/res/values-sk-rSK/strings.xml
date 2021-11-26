@@ -25,4 +25,8 @@
     <string name="checkout_giftcard_error_zero_balance">Táto darčeková karta má nulový zostatok</string>
     <string name="checkout_giftcard_error_currency">Darčekové karty sú platné iba v mene, v ktorej boli vydané</string>
     <string name="checkout_giftcard_remaining_balance_text">Zvyšný zostatok bude %s</string>
+    <string name="checkout_giftcard_pay_remaining_amount">Vyberte spôsob platby pre zvyšné %s</string>
+    <string name="checkout_giftcard_payment_methods_header">Pridaná darčeková karta</string>
+    <string name="checkout_giftcard_remove_button">Odstrániť</string>
+    <string name="checkout_giftcard_max_transaction_limit">Pre transakciu s touto darčekovou kartou je povolené maximum %s</string>
 </resources>

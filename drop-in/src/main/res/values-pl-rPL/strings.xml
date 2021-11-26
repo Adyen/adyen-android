@@ -25,4 +25,8 @@
     <string name="checkout_giftcard_error_zero_balance">Saldo karty podarunkowej jest puste</string>
     <string name="checkout_giftcard_error_currency">Karty podarunkowe są ważne tylko w walucie, w której zostały wydane</string>
     <string name="checkout_giftcard_remaining_balance_text">Pozostałe saldo wynosi %s</string>
+    <string name="checkout_giftcard_pay_remaining_amount">Wybierz metodę płatności dla pozostałych %s</string>
+    <string name="checkout_giftcard_payment_methods_header">Dodano kartę podarunkową</string>
+    <string name="checkout_giftcard_remove_button">Usuń</string>
+    <string name="checkout_giftcard_max_transaction_limit">Maks. dozwolona kwota (%s) na transakcję tą kartą upominkową</string>
 </resources>
