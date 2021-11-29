@@ -77,15 +77,24 @@ class GiftCardPaymentConfirmationDialogFragment : DropInBottomSheetDialogFragmen
     }
 
     private fun initRecyclerView() {
-        val paymentMethods = listOf(
+        val alreadyPaidMethods = dropInViewModel.currentOrder?.paymentMethods.orEmpty().map {
             GiftCardPaymentMethodModel(
-                imageId = giftCardPaymentConfirmationData.brand,
-                lastFour = giftCardPaymentConfirmationData.lastFourDigits,
-                amount = null,
-                transactionLimit = null,
-                shopperLocale = null
+                imageId = it.type,
+                lastFour = it.lastFour,
+                amount = it.amount,
+                transactionLimit = it.transactionLimit,
+                shopperLocale = giftCardPaymentConfirmationData.shopperLocale
             )
+        }
+        val currentPaymentMethod = GiftCardPaymentMethodModel(
+            imageId = giftCardPaymentConfirmationData.brand,
+            lastFour = giftCardPaymentConfirmationData.lastFourDigits,
+            amount = null,
+            transactionLimit = null,
+            shopperLocale = null
         )
+
+        val paymentMethods = alreadyPaidMethods + currentPaymentMethod
 
         val imageLoader = ImageLoader.getInstance(
             requireContext(),
