@@ -10,8 +10,12 @@ package com.adyen.checkout.voucher
 
 import com.adyen.checkout.components.base.OutputData
 
-class VoucherOutputData : OutputData {
+data class VoucherOutputData(
+    private val isValid: Boolean,
+    val paymentMethodType: String?,
+    val url: String?
+) : OutputData {
     override fun isValid(): Boolean {
-        return true
+        return isValid
     }
 }

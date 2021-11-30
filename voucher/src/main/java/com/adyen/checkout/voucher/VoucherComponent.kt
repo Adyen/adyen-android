@@ -47,7 +47,12 @@ class VoucherComponent(
     }
 
     override fun handleActionInternal(activity: Activity, action: Action) {
-        TODO("Not yet implemented")
+        mOutputLiveData.postValue(
+            VoucherOutputData(
+                true,
+                action.paymentMethodType
+            )
+        )
     }
 
     companion object {

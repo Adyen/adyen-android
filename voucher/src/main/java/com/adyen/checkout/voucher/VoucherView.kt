@@ -14,6 +14,7 @@ import android.view.LayoutInflater
 import androidx.lifecycle.LifecycleOwner
 import androidx.lifecycle.Observer
 import com.adyen.checkout.components.ActionComponentData
+import com.adyen.checkout.components.api.ImageLoader
 import com.adyen.checkout.components.ui.view.AdyenLinearLayout
 import com.adyen.checkout.voucher.databinding.VoucherViewBinding
 
@@ -23,6 +24,8 @@ class VoucherView @JvmOverloads constructor(context: Context, attrs: AttributeSe
 
     private val binding: VoucherViewBinding = VoucherViewBinding.inflate(LayoutInflater.from(context), this)
 
+    private lateinit var imageLoader: ImageLoader
+
     init {
         orientation = VERTICAL
         val padding = resources.getDimension(R.dimen.standard_double_margin).toInt()
@@ -30,7 +33,7 @@ class VoucherView @JvmOverloads constructor(context: Context, attrs: AttributeSe
     }
 
     override fun onComponentAttached() {
-        // no ops
+        imageLoader = ImageLoader.getInstance(context, component.configuration.environment)
     }
 
     override fun initView() {
@@ -55,6 +58,10 @@ class VoucherView @JvmOverloads constructor(context: Context, attrs: AttributeSe
 
     override fun onChanged(outputData: VoucherOutputData?) {
         if (outputData == null) return
+
+        if (!outputData.paymentMethodType.isNullOrEmpty()) {
+            imageLoader.load(outputData.paymentMethodType, binding.imageViewLogo)
+        }
     }
 
 }
