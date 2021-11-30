@@ -69,6 +69,7 @@ dependencies {
     api project(":redirect")
     api project(':sepa')
     api project(':wechatpay')
+    api project(':voucher')
 
     // Dependencies
     implementation "androidx.recyclerview:recyclerview:$recyclerview_version"

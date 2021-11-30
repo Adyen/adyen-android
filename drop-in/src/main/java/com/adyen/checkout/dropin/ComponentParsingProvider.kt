@@ -82,6 +82,9 @@ import com.adyen.checkout.redirect.RedirectConfiguration
 import com.adyen.checkout.sepa.SepaComponent
 import com.adyen.checkout.sepa.SepaConfiguration
 import com.adyen.checkout.sepa.SepaView
+import com.adyen.checkout.voucher.VoucherComponent
+import com.adyen.checkout.voucher.VoucherConfiguration
+import com.adyen.checkout.voucher.VoucherView
 import com.adyen.checkout.wechatpay.WeChatPayActionComponent
 import com.adyen.checkout.wechatpay.WeChatPayActionConfiguration
 import com.adyen.checkout.wechatpay.WeChatPayProvider
@@ -143,6 +146,7 @@ internal inline fun <reified T : Configuration> getDefaultConfigForAction(
         QRCodeConfiguration::class -> QRCodeConfiguration.Builder(shopperLocale, environment, clientKey)
         Adyen3DS2Configuration::class -> Adyen3DS2Configuration.Builder(shopperLocale, environment, clientKey)
         WeChatPayActionConfiguration::class -> WeChatPayActionConfiguration.Builder(shopperLocale, environment, clientKey)
+        VoucherConfiguration::class -> VoucherConfiguration.Builder(shopperLocale, environment, clientKey)
         else -> throw CheckoutException("Unable to find component configuration for class - ${T::class}")
     }
 
@@ -335,6 +339,7 @@ internal fun getViewFor(
         // GooglePay and WeChatPay do not require a View in Drop-in
         ActionTypes.AWAIT -> AwaitView(context)
         ActionTypes.QR_CODE -> QRCodeView(context)
+        ActionTypes.VOUCHER -> VoucherView(context)
         else -> {
             throw CheckoutException("Unable to find view for type - $paymentType")
         }
@@ -353,7 +358,8 @@ internal fun getActionProviderFor(action: Action): ActionComponentProvider<out B
         Adyen3DS2Component.PROVIDER,
         WeChatPayActionComponent.PROVIDER,
         AwaitComponent.PROVIDER,
-        QRCodeComponent.PROVIDER
+        QRCodeComponent.PROVIDER,
+        VoucherComponent.PROVIDER
     )
     return allActionProviders.firstOrNull { it.canHandleAction(action) }
 }
@@ -386,6 +392,9 @@ internal fun getActionComponentFor(
         }
         QRCodeComponent.PROVIDER -> {
             QRCodeComponent.PROVIDER.get(activity, activity.application, dropInConfiguration.getConfigurationForAction())
+        }
+        VoucherComponent.PROVIDER -> {
+            VoucherComponent.PROVIDER.get(activity, activity.application, dropInConfiguration.getConfigurationForAction())
         }
         else -> {
             throw CheckoutException("Unable to find component for provider - $provider")
