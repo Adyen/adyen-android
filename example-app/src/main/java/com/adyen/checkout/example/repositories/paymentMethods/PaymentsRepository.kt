@@ -24,6 +24,7 @@ interface PaymentsRepository {
     suspend fun detailsRequestAsync(paymentsRequest: RequestBody): ResponseBody?
     suspend fun balanceRequestAsync(balanceRequest: RequestBody): ResponseBody?
     suspend fun createOrderAsync(orderRequest: RequestBody): ResponseBody?
+    suspend fun cancelOrderAsync(orderRequest: RequestBody): ResponseBody?
 }
 
 class PaymentsRepositoryImpl(private val checkoutApiService: CheckoutApiService) : PaymentsRepository, BaseRepository() {
@@ -63,6 +64,12 @@ class PaymentsRepositoryImpl(private val checkoutApiService: CheckoutApiService)
     override suspend fun createOrderAsync(orderRequest: RequestBody): ResponseBody? {
         return safeApiCall(
             call = { checkoutApiService.createOrderAsync(orderRequest).await() }
+        )
+    }
+
+    override suspend fun cancelOrderAsync(orderRequest: RequestBody): ResponseBody? {
+        return safeApiCall(
+            call = { checkoutApiService.cancelOrderAsync(orderRequest).await() }
         )
     }
 }

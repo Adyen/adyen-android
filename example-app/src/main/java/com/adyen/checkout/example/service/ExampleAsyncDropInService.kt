@@ -124,7 +124,8 @@ class ExampleAsyncDropInService : DropInService() {
             }
             isNonFullyPaidOrder(jsonResponse) -> {
                 Logger.d(TAG, "Received a non fully paid order")
-                fetchPaymentMethods(jsonResponse)
+                val order = getOrderFromResponse(jsonResponse)
+                fetchPaymentMethods(order)
                 null
             }
             else -> {
@@ -152,18 +153,14 @@ class ExampleAsyncDropInService : DropInService() {
         return OrderResponse.SERIALIZER.deserialize(orderJSON)
     }
 
-    private fun fetchPaymentMethods(jsonResponse: JSONObject) {
+    private fun fetchPaymentMethods(order: OrderResponse? = null) {
         launch(Dispatchers.IO) {
-            val order = getOrderFromResponse(jsonResponse)
-            val paymentMethods = paymentsRepository.getPaymentMethods(
-                getPaymentMethodRequest(
-                    keyValueStorage,
-                    OrderRequest(
-                        pspReference = order.pspReference,
-                        orderData = order.orderData
-                    )
-                )
+            val orderRequest = if (order == null) null else OrderRequest(
+                pspReference = order.pspReference,
+                orderData = order.orderData
             )
+            val paymentMethodRequest = getPaymentMethodRequest(keyValueStorage, orderRequest)
+            val paymentMethods = paymentsRepository.getPaymentMethods(paymentMethodRequest)
             val result = if (paymentMethods != null) {
                 DropInServiceResult.Update(paymentMethods, order)
             } else {
@@ -238,6 +235,40 @@ class ExampleAsyncDropInService : DropInService() {
         } else {
             Logger.e(TAG, "FAILED")
             OrderDropInServiceResult.Error(reason = "IOException")
+        }
+    }
+
+    override fun cancelOrder(order: OrderRequest) {
+        launch(Dispatchers.IO) {
+            Logger.d(TAG, "cancelOrder")
+            val cancelOrderRequest = createCancelOrderRequest(
+                order,
+                keyValueStorage.getMerchantAccount()
+            )
+            val requestBody = cancelOrderRequest.toString().toRequestBody(CONTENT_TYPE)
+            val response = paymentsRepository.cancelOrderAsync(requestBody)
+
+            val result = handleCancelOrderResponse(response) ?: return@launch
+            sendResult(result)
+        }
+    }
+
+    @Suppress("NestedBlockDepth")
+    private fun handleCancelOrderResponse(response: ResponseBody?): DropInServiceResult? {
+        return if (response != null) {
+            val orderJson = response.string()
+            val jsonResponse = JSONObject(orderJson)
+            val resultCode = jsonResponse.getStringOrNull("resultCode")
+            when (resultCode) {
+                "Received" -> {
+                    fetchPaymentMethods()
+                    null
+                }
+                else -> DropInServiceResult.Error(reason = resultCode, dismissDropIn = false)
+            }
+        } else {
+            Logger.e(TAG, "FAILED")
+            DropInServiceResult.Error(reason = "IOException")
         }
     }
 }

@@ -85,3 +85,13 @@ fun createOrderRequest(
         put("reference", "android-test-components_${System.currentTimeMillis()}")
     }
 }
+
+fun createCancelOrderRequest(
+    order: OrderRequest,
+    merchantAccount: String
+): JSONObject {
+    return JSONObject().apply {
+        put("order", OrderRequest.SERIALIZER.serialize(order))
+        put("merchantAccount", merchantAccount)
+    }
+}
