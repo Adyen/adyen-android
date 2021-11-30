@@ -37,6 +37,7 @@ public class VoucherAction extends Action {
     private static final String REFERENCE = "reference";
     private static final String ALTERNATIVE_REFERENCE = "alternativeReference";
     private static final String MERCHANT_NAME = "merchantName";
+    private static final String URL = "url";
 
     @NonNull
     public static final Serializer<VoucherAction> SERIALIZER = new Serializer<VoucherAction>() {
@@ -59,6 +60,7 @@ public class VoucherAction extends Action {
                 jsonObject.putOpt(REFERENCE, modelObject.getReference());
                 jsonObject.putOpt(ALTERNATIVE_REFERENCE, modelObject.getAlternativeReference());
                 jsonObject.putOpt(MERCHANT_NAME, modelObject.getMerchantName());
+                jsonObject.putOpt(URL, modelObject.getUrl());
             } catch (JSONException e) {
                 throw new ModelSerializationException(VoucherAction.class, e);
             }
@@ -83,6 +85,7 @@ public class VoucherAction extends Action {
             voucherAction.setReference(jsonObject.optString(REFERENCE));
             voucherAction.setAlternativeReference(jsonObject.optString(ALTERNATIVE_REFERENCE));
             voucherAction.setMerchantName(jsonObject.optString(MERCHANT_NAME));
+            voucherAction.setUrl(jsonObject.optString(URL));
             return voucherAction;
         }
     };
@@ -95,6 +98,7 @@ public class VoucherAction extends Action {
     private String reference;
     private String alternativeReference;
     private String merchantName;
+    private String url;
 
     @Override
     public void writeToParcel(@NonNull Parcel dest, int flags) {
@@ -171,5 +175,14 @@ public class VoucherAction extends Action {
 
     public void setMerchantName(@Nullable String merchantName) {
         this.merchantName = merchantName;
+    }
+
+    @Nullable
+    public String getUrl() {
+        return url;
+    }
+
+    public void setUrl(@Nullable String url) {
+        this.url = url;
     }
 }

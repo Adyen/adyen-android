@@ -36,6 +36,7 @@ public final class PaymentMethodTypes {
     public static final String GOOGLE_PAY = "googlepay";
     public static final String GOOGLE_PAY_LEGACY = "paywithgoogle";
     public static final String SEPA = "sepadirectdebit";
+    public static final String BACS = "directdebit_GB";
     public static final String BCMC = "bcmc";
     public static final String MB_WAY = "mbway";
     public static final String BLIK = "blik";
