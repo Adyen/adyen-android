@@ -16,7 +16,7 @@ import com.adyen.checkout.components.PaymentComponentState
 import com.adyen.checkout.components.model.PaymentMethodsApiResponse
 import com.adyen.checkout.components.model.paymentmethods.StoredPaymentMethod
 import com.adyen.checkout.components.model.payments.Amount
-import com.adyen.checkout.components.model.payments.request.Order
+import com.adyen.checkout.components.model.payments.request.OrderRequest
 import com.adyen.checkout.components.model.payments.request.PaymentMethodDetails
 import com.adyen.checkout.components.model.payments.response.BalanceResult
 import com.adyen.checkout.components.model.payments.response.OrderResponse
@@ -250,8 +250,8 @@ class DropInViewModel(
         }
     }
 
-    private fun createOrder(order: OrderModel): Order {
-        return Order(
+    private fun createOrder(order: OrderModel): OrderRequest {
+        return OrderRequest(
             pspReference = order.pspReference,
             orderData = order.orderData
         )

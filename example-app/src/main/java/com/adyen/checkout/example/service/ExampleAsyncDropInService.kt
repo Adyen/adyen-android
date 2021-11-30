@@ -11,7 +11,7 @@ package com.adyen.checkout.example.service
 import com.adyen.checkout.card.CardComponentState
 import com.adyen.checkout.components.ActionComponentData
 import com.adyen.checkout.components.PaymentComponentState
-import com.adyen.checkout.components.model.payments.request.Order
+import com.adyen.checkout.components.model.payments.request.OrderRequest
 import com.adyen.checkout.components.model.payments.request.PaymentMethodDetails
 import com.adyen.checkout.components.model.payments.response.Action
 import com.adyen.checkout.components.model.payments.response.BalanceResult
@@ -158,7 +158,7 @@ class ExampleAsyncDropInService : DropInService() {
             val paymentMethods = paymentsRepository.getPaymentMethods(
                 getPaymentMethodRequest(
                     keyValueStorage,
-                    Order(
+                    OrderRequest(
                         pspReference = order.pspReference,
                         orderData = order.orderData
                     )

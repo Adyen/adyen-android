@@ -62,7 +62,7 @@ public class PaymentComponentData<PaymentMethodDetailsT extends PaymentMethodDet
                 jsonObject.putOpt(DATE_OF_BIRTH, modelObject.getDateOfBirth());
                 jsonObject.putOpt(SOCIAL_SECURITY_NUMBER, modelObject.getSocialSecurityNumber());
                 jsonObject.putOpt(INSTALLMENTS, ModelUtils.serializeOpt(modelObject.getInstallments(), Installments.SERIALIZER));
-                jsonObject.putOpt(ORDER, ModelUtils.serializeOpt(modelObject.getOrder(), Order.SERIALIZER));
+                jsonObject.putOpt(ORDER, ModelUtils.serializeOpt(modelObject.getOrder(), OrderRequest.SERIALIZER));
             } catch (JSONException e) {
                 throw new ModelSerializationException(PaymentComponentData.class, e);
             }
@@ -92,7 +92,7 @@ public class PaymentComponentData<PaymentMethodDetailsT extends PaymentMethodDet
             paymentComponentData.setInstallments(
                     ModelUtils.deserializeOpt(jsonObject.optJSONObject(INSTALLMENTS), Installments.SERIALIZER)
             );
-            paymentComponentData.setOrder(ModelUtils.deserializeOpt(jsonObject.optJSONObject(ORDER), Order.SERIALIZER));
+            paymentComponentData.setOrder(ModelUtils.deserializeOpt(jsonObject.optJSONObject(ORDER), OrderRequest.SERIALIZER));
 
             return paymentComponentData;
         }
@@ -110,7 +110,7 @@ public class PaymentComponentData<PaymentMethodDetailsT extends PaymentMethodDet
     private String dateOfBirth;
     private String socialSecurityNumber;
     private Installments installments;
-    private Order order;
+    private OrderRequest order;
 
     @Override
     public void writeToParcel(@NonNull Parcel dest, int flags) {
@@ -225,11 +225,11 @@ public class PaymentComponentData<PaymentMethodDetailsT extends PaymentMethodDet
     }
 
     @Nullable
-    public Order getOrder() {
+    public OrderRequest getOrder() {
         return order;
     }
 
-    public void setOrder(@Nullable Order order) {
+    public void setOrder(@Nullable OrderRequest order) {
         this.order = order;
     }
 }
