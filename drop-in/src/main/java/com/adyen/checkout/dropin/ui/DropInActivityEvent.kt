@@ -9,8 +9,10 @@
 package com.adyen.checkout.dropin.ui
 
 import com.adyen.checkout.components.PaymentComponentState
+import com.adyen.checkout.components.model.payments.request.OrderRequest
 
 sealed class DropInActivityEvent {
     data class MakePartialPayment(val paymentComponentState: PaymentComponentState<*>) : DropInActivityEvent()
     object ShowPaymentMethods : DropInActivityEvent()
+    class CancelOrder(val order: OrderRequest) : DropInActivityEvent()
 }

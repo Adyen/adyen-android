@@ -143,6 +143,7 @@ class PaymentMethodListDialogFragment : DropInBottomSheetDialogFragment(), Payme
 
     private fun showCancelOrderAlert() {
         // TODO show alert and cancel order
+        protocol.requestOrderCancellation()
     }
 
     private fun sendPayment(type: String) {

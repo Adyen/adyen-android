@@ -292,6 +292,16 @@ class DropInViewModel(
         sendEvent(DropInActivityEvent.MakePartialPayment(paymentComponentState))
     }
 
+    fun orderCancellationRequested() {
+        val order = currentOrder
+            ?: throw CheckoutException("No order in progress")
+        val orderRequest = OrderRequest(
+            pspReference = order.pspReference,
+            orderData = order.orderData
+        )
+        sendEvent(DropInActivityEvent.CancelOrder(orderRequest))
+    }
+
     private fun sendEvent(event: DropInActivityEvent) {
         viewModelScope.launch {
             Logger.d(TAG, "sendEvent - ${event::class.simpleName}")

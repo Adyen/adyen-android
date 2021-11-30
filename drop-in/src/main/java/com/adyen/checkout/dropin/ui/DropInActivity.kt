@@ -30,6 +30,7 @@ import com.adyen.checkout.components.analytics.AnalyticsDispatcher
 import com.adyen.checkout.components.model.PaymentMethodsApiResponse
 import com.adyen.checkout.components.model.paymentmethods.PaymentMethod
 import com.adyen.checkout.components.model.paymentmethods.StoredPaymentMethod
+import com.adyen.checkout.components.model.payments.request.OrderRequest
 import com.adyen.checkout.components.model.payments.response.Action
 import com.adyen.checkout.components.model.payments.response.BalanceResult
 import com.adyen.checkout.components.model.payments.response.OrderResponse
@@ -113,6 +114,7 @@ class DropInActivity : AppCompatActivity(), DropInBottomSheetDialogFragment.Prot
     private var actionDataQueue: ActionComponentData? = null
     private var balanceDataQueue: GiftCardComponentState? = null
     private var orderDataQueue: Unit? = null
+    private var orderCancellationQueue: OrderRequest? = null
 
     private val serviceConnection = object : ServiceConnection {
 
@@ -142,6 +144,11 @@ class DropInActivity : AppCompatActivity(), DropInBottomSheetDialogFragment.Prot
                 Logger.d(TAG, "Sending queued order request")
                 requestOrdersCall()
                 orderDataQueue = null
+            }
+            orderCancellationQueue?.let {
+                Logger.d(TAG, "Sending queued cancel order request")
+                requestCancelOrderCall(it)
+                orderCancellationQueue = null
             }
         }
 
@@ -422,6 +429,18 @@ class DropInActivity : AppCompatActivity(), DropInBottomSheetDialogFragment.Prot
         dropInService?.requestOrdersCall()
     }
 
+    private fun requestCancelOrderCall(order: OrderRequest) {
+        Logger.d(TAG, "requestCancelOrderCall")
+        if (dropInService == null) {
+            Logger.e(TAG, "requestOrdersCall - service is disconnected")
+            orderCancellationQueue = order
+            return
+        }
+        dropInViewModel.isWaitingResult = true
+        setLoading(true)
+        dropInService?.requestCancelOrder(order)
+    }
+
     override fun finishWithAction() {
         Logger.d(TAG, "finishWithActionCall")
         sendResult(DropIn.FINISHED_WITH_ACTION)
@@ -562,6 +581,9 @@ class DropInActivity : AppCompatActivity(), DropInBottomSheetDialogFragment.Prot
                 setLoading(false)
                 showPaymentMethodsDialog()
             }
+            is DropInActivityEvent.CancelOrder -> {
+                requestCancelOrderCall(event.order)
+            }
         }
     }
 
@@ -616,6 +638,10 @@ class DropInActivity : AppCompatActivity(), DropInBottomSheetDialogFragment.Prot
 
     override fun requestPartialPayment() {
         dropInViewModel.partialPaymentRequested()
+    }
+
+    override fun requestOrderCancellation() {
+        dropInViewModel.orderCancellationRequested()
     }
 
     companion object {

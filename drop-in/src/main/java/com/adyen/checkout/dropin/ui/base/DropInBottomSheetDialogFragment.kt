@@ -104,6 +104,7 @@ abstract class DropInBottomSheetDialogFragment : BottomSheetDialogFragment() {
         fun startGooglePay(paymentMethod: PaymentMethod, googlePayConfiguration: GooglePayConfiguration)
         fun requestBalanceCall(giftCardComponentState: GiftCardComponentState)
         fun requestPartialPayment()
+        fun requestOrderCancellation()
         fun finishWithAction()
     }
 }
