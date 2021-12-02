@@ -50,7 +50,8 @@ class VoucherComponent(
         mOutputLiveData.postValue(
             VoucherOutputData(
                 true,
-                action.paymentMethodType
+                action.paymentMethodType,
+                null
             )
         )
     }

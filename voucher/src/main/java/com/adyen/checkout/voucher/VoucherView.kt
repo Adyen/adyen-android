@@ -15,6 +15,7 @@ import androidx.lifecycle.LifecycleOwner
 import androidx.lifecycle.Observer
 import com.adyen.checkout.components.ActionComponentData
 import com.adyen.checkout.components.api.ImageLoader
+import com.adyen.checkout.components.api.LogoApi
 import com.adyen.checkout.components.ui.view.AdyenLinearLayout
 import com.adyen.checkout.voucher.databinding.VoucherViewBinding
 
@@ -60,7 +61,7 @@ class VoucherView @JvmOverloads constructor(context: Context, attrs: AttributeSe
         if (outputData == null) return
 
         if (!outputData.paymentMethodType.isNullOrEmpty()) {
-            imageLoader.load(outputData.paymentMethodType, binding.imageViewLogo)
+            imageLoader.load(outputData.paymentMethodType, binding.imageViewLogo, LogoApi.Size.MEDIUM)
         }
     }
 

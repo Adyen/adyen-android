@@ -45,8 +45,37 @@ class ImageLoader(private val logoApi: LogoApi) {
     @JvmOverloads
     fun load(
         txVariant: String,
+        view: ImageView,
+        size: LogoApi.Size?,
+        @DrawableRes placeholder: Int = 0,
+        @DrawableRes errorFallback: Int = 0
+    ) {
+        load(txVariant, "", view, size, placeholder, errorFallback)
+    }
+
+    /**
+     * Load image to ImageView with place holder before load and error fallback image.
+     */
+    @JvmOverloads
+    fun load(
+        txVariant: String,
         txSubVariant: String,
         view: ImageView,
+        @DrawableRes placeholder: Int = 0,
+        @DrawableRes errorFallback: Int = 0
+    ) {
+        load(txVariant, txSubVariant, view, null, placeholder, errorFallback)
+    }
+
+    /**
+     * Load image to ImageView with place holder before load and error fallback image.
+     */
+    @JvmOverloads
+    fun load(
+        txVariant: String,
+        txSubVariant: String,
+        view: ImageView,
+        size: LogoApi.Size?,
         @DrawableRes placeholder: Int = 0,
         @DrawableRes errorFallback: Int = 0
     ) {
@@ -83,7 +112,7 @@ class ImageLoader(private val logoApi: LogoApi) {
         }
         imageViews[id] = WeakReference(view)
         callbacks[id] = callback
-        logoApi.getLogo(txVariant, txSubVariant, null, callback)
+        logoApi.getLogo(txVariant, txSubVariant, size, callback)
     }
 
     companion object {
