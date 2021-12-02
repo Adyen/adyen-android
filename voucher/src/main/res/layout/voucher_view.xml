@@ -13,31 +13,22 @@
     android:orientation="vertical"
     tools:parentTag="android.widget.LinearLayout">
 
-    <!-- TODO replace placeholders -->
-
     <ImageView
         android:id="@+id/imageView_logo"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginTop="@dimen/standard_double_margin"
-        android:src="@drawable/ic_placeholder_image" />
+        tools:src="@drawable/ic_placeholder_image" />
 
     <TextView
         android:id="@+id/textView_description"
+        style="@style/AdyenCheckout.Voucher.DescriptionTextAppearance"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="@dimen/standard_double_margin"
-        android:layout_marginTop="@dimen/standard_margin"
-        android:layout_marginEnd="@dimen/standard_double_margin"
-        android:text="Please download your Direct Debit Instruction (DDI / Mandate)" />
+        android:layout_height="wrap_content" />
 
     <TextView
         android:id="@+id/textView_download"
+        style="@style/AdyenCheckout.Voucher.DownloadTextAppearance"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginTop="@dimen/standard_margin"
-        android:gravity="center_horizontal"
-        android:layout_marginBottom="@dimen/standard_double_margin"
-        android:textColor="@color/primaryColor"
-        android:text="Download Mandate" />
+        android:gravity="center_horizontal" />
 </merge>

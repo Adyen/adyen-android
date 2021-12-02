@@ -9,13 +9,16 @@
 package com.adyen.checkout.voucher
 
 import android.content.Context
+import android.net.Uri
 import android.util.AttributeSet
 import android.view.LayoutInflater
+import androidx.browser.customtabs.CustomTabsIntent
 import androidx.lifecycle.LifecycleOwner
 import androidx.lifecycle.Observer
 import com.adyen.checkout.components.ActionComponentData
 import com.adyen.checkout.components.api.ImageLoader
 import com.adyen.checkout.components.api.LogoApi
+import com.adyen.checkout.components.ui.util.ThemeUtil
 import com.adyen.checkout.components.ui.view.AdyenLinearLayout
 import com.adyen.checkout.voucher.databinding.VoucherViewBinding
 
