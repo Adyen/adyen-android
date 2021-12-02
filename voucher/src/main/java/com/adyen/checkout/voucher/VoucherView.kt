@@ -41,7 +41,9 @@ class VoucherView @JvmOverloads constructor(context: Context, attrs: AttributeSe
     }
 
     override fun initView() {
-        // TODO implement
+        binding.textViewDownload.setOnClickListener {
+            launchDownloadIntent()
+        }
     }
 
     override fun isConfirmationRequired(): Boolean {
@@ -66,6 +68,15 @@ class VoucherView @JvmOverloads constructor(context: Context, attrs: AttributeSe
         if (!outputData.paymentMethodType.isNullOrEmpty()) {
             imageLoader.load(outputData.paymentMethodType, binding.imageViewLogo, LogoApi.Size.MEDIUM)
         }
+    }
+
+    private fun launchDownloadIntent() {
+        val url = component.getDownloadUrl() ?: return
+        val intent = CustomTabsIntent.Builder()
+            .setShowTitle(true)
+            .setToolbarColor(ThemeUtil.getPrimaryThemeColor(context))
+            .build()
+        intent.launchUrl(context, Uri.parse(url))
     }
 
 }

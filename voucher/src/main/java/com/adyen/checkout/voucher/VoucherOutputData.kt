@@ -12,8 +12,7 @@ import com.adyen.checkout.components.base.OutputData
 
 data class VoucherOutputData(
     private val isValid: Boolean,
-    val paymentMethodType: String?,
-    val url: String?
+    val paymentMethodType: String?
 ) : OutputData {
     override fun isValid(): Boolean {
         return isValid

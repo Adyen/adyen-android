@@ -46,4 +46,7 @@ dependencies {
     // Checkout
     api project(':components-core')
     api project(':ui-core')
+
+    // Dependencies
+    implementation "androidx.browser:browser:$browser_version"
 }

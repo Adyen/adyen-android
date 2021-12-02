@@ -20,6 +20,8 @@ import com.adyen.checkout.components.ActionComponentProvider
 import com.adyen.checkout.components.ViewableComponent
 import com.adyen.checkout.components.base.BaseActionComponent
 import com.adyen.checkout.components.model.payments.response.Action
+import com.adyen.checkout.components.model.payments.response.VoucherAction
+import com.adyen.checkout.core.exception.ComponentException
 
 class VoucherComponent(
     savedStateHandle: SavedStateHandle,
@@ -29,6 +31,7 @@ class VoucherComponent(
     ViewableComponent<VoucherOutputData, VoucherConfiguration, ActionComponentData> {
 
     private val mOutputLiveData = MutableLiveData<VoucherOutputData>()
+    private var url: String? = null
 
     override fun canHandleAction(action: Action): Boolean {
         return PROVIDER.canHandleAction(action)
@@ -46,14 +49,21 @@ class VoucherComponent(
         // no ops
     }
 
+    @Throws(ComponentException::class)
     override fun handleActionInternal(activity: Activity, action: Action) {
+        if (action !is VoucherAction) throw ComponentException("Unsupported action")
+        url = action.url
+
         mOutputLiveData.postValue(
             VoucherOutputData(
                 true,
-                action.paymentMethodType,
-                null
+                action.paymentMethodType
             )
         )
+    }
+
+    fun getDownloadUrl(): String? {
+        return url
     }
 
     companion object {
