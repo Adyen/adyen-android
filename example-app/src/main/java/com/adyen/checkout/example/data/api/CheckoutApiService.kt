@@ -55,4 +55,8 @@ interface CheckoutApiService {
     @Headers(BuildConfig.API_KEY_HEADER_NAME + ":" + BuildConfig.CHECKOUT_API_KEY)
     @POST("paymentMethods/balance")
     fun checkBalanceAsync(@Body balanceRequest: RequestBody): Deferred<Response<ResponseBody>>
+
+    @Headers(BuildConfig.API_KEY_HEADER_NAME + ":" + BuildConfig.CHECKOUT_API_KEY)
+    @POST("orders")
+    fun createOrderAsync(@Body orderRequest: RequestBody): Deferred<Response<ResponseBody>>
 }

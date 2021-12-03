@@ -30,6 +30,8 @@ import com.adyen.checkout.components.model.PaymentMethodsApiResponse
 import com.adyen.checkout.components.model.paymentmethods.PaymentMethod
 import com.adyen.checkout.components.model.paymentmethods.StoredPaymentMethod
 import com.adyen.checkout.components.model.payments.response.Action
+import com.adyen.checkout.components.model.payments.response.BalanceResult
+import com.adyen.checkout.components.model.payments.response.OrderResponse
 import com.adyen.checkout.components.util.PaymentMethodTypes
 import com.adyen.checkout.core.exception.CheckoutException
 import com.adyen.checkout.core.log.LogUtil
@@ -45,6 +47,7 @@ import com.adyen.checkout.dropin.service.DropInService
 import com.adyen.checkout.dropin.service.DropInServiceInterface
 import com.adyen.checkout.dropin.service.DropInServiceResult
 import com.adyen.checkout.dropin.service.DropInServiceResultError
+import com.adyen.checkout.dropin.service.OrderDropInServiceResult
 import com.adyen.checkout.dropin.ui.action.ActionComponentDialogFragment
 import com.adyen.checkout.dropin.ui.base.DropInBottomSheetDialogFragment
 import com.adyen.checkout.dropin.ui.component.CardComponentDialogFragment
@@ -62,7 +65,6 @@ import com.adyen.checkout.googlepay.GooglePayConfiguration
 import com.adyen.checkout.redirect.RedirectUtil
 import com.adyen.checkout.wechatpay.WeChatPayUtils
 import kotlinx.coroutines.ExperimentalCoroutinesApi
-import org.json.JSONObject
 
 private val TAG = LogUtil.getTag()
 
@@ -107,6 +109,7 @@ class DropInActivity : AppCompatActivity(), DropInBottomSheetDialogFragment.Prot
     private var paymentDataQueue: PaymentComponentState<*>? = null
     private var actionDataQueue: ActionComponentData? = null
     private var balanceDataQueue: GiftCardComponentState? = null
+    private var orderDataQueue: Unit? = null
 
     private val serviceConnection = object : ServiceConnection {
 
@@ -131,6 +134,11 @@ class DropInActivity : AppCompatActivity(), DropInBottomSheetDialogFragment.Prot
                 Logger.d(TAG, "Sending queued action request")
                 requestBalanceCall(it)
                 balanceDataQueue = null
+            }
+            orderDataQueue?.let {
+                Logger.d(TAG, "Sending queued order request")
+                requestOrdersCall()
+                orderDataQueue = null
             }
         }
 
@@ -265,10 +273,7 @@ class DropInActivity : AppCompatActivity(), DropInBottomSheetDialogFragment.Prot
         }
         dropInViewModel.isWaitingResult = true
         setLoading(true)
-        // include amount value if merchant passed it to the DropIn
-        if (!dropInViewModel.dropInConfiguration.amount.isEmpty) {
-            paymentComponentState.data.amount = dropInViewModel.dropInConfiguration.amount
-        }
+        dropInViewModel.updatePaymentComponentStateForPaymentsCall(paymentComponentState)
         dropInService?.requestPaymentsCall(paymentComponentState)
     }
 
@@ -377,7 +382,8 @@ class DropInActivity : AppCompatActivity(), DropInBottomSheetDialogFragment.Prot
 
     override fun startGooglePay(paymentMethod: PaymentMethod, googlePayConfiguration: GooglePayConfiguration) {
         Logger.d(TAG, "startGooglePay")
-        googlePayComponent = GooglePayComponent.PROVIDER.get(this, paymentMethod, googlePayConfiguration)
+        val configuration = dropInViewModel.updateGooglePayConfiguration(googlePayConfiguration)
+        googlePayComponent = GooglePayComponent.PROVIDER.get(this, paymentMethod, configuration)
         googlePayComponent.observe(this@DropInActivity, googlePayObserver)
         googlePayComponent.observeErrors(this@DropInActivity, googlePayErrorObserver)
 
@@ -398,27 +404,48 @@ class DropInActivity : AppCompatActivity(), DropInBottomSheetDialogFragment.Prot
         dropInService?.requestBalanceCall(paymentMethod)
     }
 
+    private fun requestOrdersCall() {
+        Logger.d(TAG, "requestOrdersCall")
+        if (dropInService == null) {
+            Logger.e(TAG, "requestOrdersCall - service is disconnected")
+            orderDataQueue = Unit
+            return
+        }
+        dropInViewModel.isWaitingResult = true
+        setLoading(true)
+        dropInService?.requestOrdersCall()
+    }
+
     private fun handleDropInServiceResult(dropInServiceResult: BaseDropInServiceResult) {
         Logger.d(TAG, "handleDropInServiceResult - ${dropInServiceResult::class.simpleName}")
         dropInViewModel.isWaitingResult = false
         when (dropInServiceResult) {
             is DropInServiceResult -> handleDropInServiceResult(dropInServiceResult)
             is BalanceDropInServiceResult -> handleDropInServiceResult(dropInServiceResult)
+            is OrderDropInServiceResult -> handleDropInServiceResult(dropInServiceResult)
         }
     }
 
     private fun handleDropInServiceResult(dropInServiceResult: DropInServiceResult) {
         when (dropInServiceResult) {
             is DropInServiceResult.Finished -> sendResult(dropInServiceResult.result)
-            is DropInServiceResult.Action -> handleAction(dropInServiceResult.actionJSON)
+            is DropInServiceResult.Action -> handleAction(dropInServiceResult.action)
+            is DropInServiceResult.Update -> handlePaymentMethodsUpdate(dropInServiceResult)
             is DropInServiceResult.Error -> handleErrorDropInServiceResult(dropInServiceResult)
         }
     }
 
     private fun handleDropInServiceResult(dropInServiceResult: BalanceDropInServiceResult) {
         when (dropInServiceResult) {
-            is BalanceDropInServiceResult.Balance -> handleBalanceResult(dropInServiceResult.balanceJSON)
+            is BalanceDropInServiceResult.Balance -> handleBalanceResult(dropInServiceResult.balance)
             is BalanceDropInServiceResult.Error -> handleErrorDropInServiceResult(dropInServiceResult)
+        }
+    }
+
+    private fun handleDropInServiceResult(dropInServiceResult: OrderDropInServiceResult) {
+        when (dropInServiceResult) {
+            is OrderDropInServiceResult.OrderCreated -> handleOrderResult(dropInServiceResult.order)
+            is OrderDropInServiceResult.Error -> handleErrorDropInServiceResult(dropInServiceResult)
         }
     }
 
@@ -429,9 +456,17 @@ class DropInActivity : AppCompatActivity(), DropInBottomSheetDialogFragment.Prot
         showError(errorMessage, reason, dropInServiceResult.dismissDropIn)
     }
 
-    private fun handleAction(actionJSON: String) {
-        val action = Action.SERIALIZER.deserialize(JSONObject(actionJSON))
+    private fun handleAction(action: Action) {
         actionHandler.handleAction(this, action, ::sendResult)
+    }
+
+    private fun handlePaymentMethodsUpdate(dropInServiceResult: DropInServiceResult.Update) {
+        dropInViewModel.handlePaymentMethodsUpdate(
+            dropInServiceResult.paymentMethodsApiResponse,
+            dropInServiceResult.order
+        )
+        setLoading(false)
+        showPaymentMethodsDialog()
     }
 
     private fun sendResult(content: String) {
@@ -522,14 +557,15 @@ class DropInActivity : AppCompatActivity(), DropInBottomSheetDialogFragment.Prot
         }
     }
 
-    private fun handleBalanceResult(balanceJson: String) {
+    private fun handleBalanceResult(balanceResult: BalanceResult) {
         Logger.v(TAG, "handleBalanceResult")
-        val result = dropInViewModel.handleBalanceResult(balanceJson)
+        val result = dropInViewModel.handleBalanceResult(balanceResult)
         Logger.d(TAG, "handleBalanceResult: ${result::class.java.simpleName}")
         when (result) {
             is GiftCardBalanceResult.Error -> showError(getString(result.errorMessage), result.reason, result.terminateDropIn)
             is GiftCardBalanceResult.FullPayment -> handleGiftCardFullPayment(result)
-            is GiftCardBalanceResult.PartialPayment -> handleGiftCardPartialPayment(result)
+            is GiftCardBalanceResult.RequestOrderCreation -> requestOrdersCall()
+            is GiftCardBalanceResult.RequestPartialPayment -> requestPartialPayment()
         }
     }
 
@@ -546,10 +582,16 @@ class DropInActivity : AppCompatActivity(), DropInBottomSheetDialogFragment.Prot
             .show(supportFragmentManager, GIFT_CARD_PAYMENT_CONFIRMATION_FRAGMENT_TAG)
     }
 
-    private fun handleGiftCardPartialPayment(partialPayment: GiftCardBalanceResult.PartialPayment) {
-        Logger.d(TAG, "handleGiftCardPartialPayment")
-        setLoading(false)
-        // TODO handle partial payment
+    private fun handleOrderResult(order: OrderResponse) {
+        Logger.v(TAG, "handleOrderResult")
+        dropInViewModel.handleOrderResponse(order)
+        requestPartialPayment()
+    }
+
+    private fun requestPartialPayment() {
+        val paymentComponentState = dropInViewModel.cachedGiftCardComponentState
+            ?: throw CheckoutException("Lost reference to cached GiftCardComponentState")
+        requestPaymentsCall(paymentComponentState)
     }
 
     companion object {

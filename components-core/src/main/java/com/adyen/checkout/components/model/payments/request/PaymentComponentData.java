@@ -40,6 +40,7 @@ public class PaymentComponentData<PaymentMethodDetailsT extends PaymentMethodDet
     private static final String DATE_OF_BIRTH = "dateOfBirth";
     private static final String SOCIAL_SECURITY_NUMBER = "socialSecurityNumber";
     private static final String INSTALLMENTS = "installments";
+    private static final String ORDER = "order";
 
     @NonNull
     public static final Serializer<PaymentComponentData> SERIALIZER = new Serializer<PaymentComponentData>() {
@@ -61,6 +62,7 @@ public class PaymentComponentData<PaymentMethodDetailsT extends PaymentMethodDet
                 jsonObject.putOpt(DATE_OF_BIRTH, modelObject.getDateOfBirth());
                 jsonObject.putOpt(SOCIAL_SECURITY_NUMBER, modelObject.getSocialSecurityNumber());
                 jsonObject.putOpt(INSTALLMENTS, ModelUtils.serializeOpt(modelObject.getInstallments(), Installments.SERIALIZER));
+                jsonObject.putOpt(ORDER, ModelUtils.serializeOpt(modelObject.getOrder(), Order.SERIALIZER));
             } catch (JSONException e) {
                 throw new ModelSerializationException(PaymentComponentData.class, e);
             }
@@ -90,6 +92,7 @@ public class PaymentComponentData<PaymentMethodDetailsT extends PaymentMethodDet
             paymentComponentData.setInstallments(
                     ModelUtils.deserializeOpt(jsonObject.optJSONObject(INSTALLMENTS), Installments.SERIALIZER)
             );
+            paymentComponentData.setOrder(ModelUtils.deserializeOpt(jsonObject.optJSONObject(ORDER), Order.SERIALIZER));
 
             return paymentComponentData;
         }
@@ -107,6 +110,7 @@ public class PaymentComponentData<PaymentMethodDetailsT extends PaymentMethodDet
     private String dateOfBirth;
     private String socialSecurityNumber;
     private Installments installments;
+    private Order order;
 
     @Override
     public void writeToParcel(@NonNull Parcel dest, int flags) {
@@ -218,5 +222,14 @@ public class PaymentComponentData<PaymentMethodDetailsT extends PaymentMethodDet
 
     public void setInstallments(@Nullable Installments installments) {
         this.installments = installments;
+    }
+
+    @Nullable
+    public Order getOrder() {
+        return order;
+    }
+
+    public void setOrder(@Nullable Order order) {
+        this.order = order;
     }
 }

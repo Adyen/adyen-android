@@ -9,11 +9,26 @@
 package com.adyen.checkout.example.service
 
 import com.adyen.checkout.components.model.payments.Amount
+import com.adyen.checkout.components.model.payments.request.Order
 import com.adyen.checkout.example.data.api.model.paymentsRequest.AdditionalData
 import com.adyen.checkout.example.data.api.model.paymentsRequest.Item
+import com.adyen.checkout.example.data.api.model.paymentsRequest.PaymentMethodsRequest
+import com.adyen.checkout.example.data.storage.KeyValueStorage
 import com.google.gson.Gson
 import org.json.JSONArray
 import org.json.JSONObject
+
+fun getPaymentMethodRequest(keyValueStorage: KeyValueStorage, order: Order? = null): PaymentMethodsRequest {
+    return PaymentMethodsRequest(
+        merchantAccount = keyValueStorage.getMerchantAccount(),
+        shopperReference = keyValueStorage.getShopperReference(),
+        amount = if (order == null) keyValueStorage.getAmount() else null,
+        countryCode = keyValueStorage.getCountry(),
+        shopperLocale = keyValueStorage.getShopperLocale(),
+        splitCardFundingSources = keyValueStorage.isSplitCardFundingSources(),
+        order = order
+    )
+}
 
 @Suppress("LongParameterList")
 fun createPaymentRequest(
@@ -30,7 +45,7 @@ fun createPaymentRequest(
 
     return JSONObject(paymentComponentData.toString()).apply {
         put("shopperReference", shopperReference)
-        put("amount", JSONObject(Gson().toJson(amount)))
+        if (!has("amount")) put("amount", JSONObject(Gson().toJson(amount)))
         put("merchantAccount", merchantAccount)
         put("returnUrl", redirectUrl)
         put("countryCode", countryCode)
@@ -57,5 +72,16 @@ fun createBalanceRequest(
     return JSONObject().apply {
         put("paymentMethod", paymentComponentData)
         put("merchantAccount", merchantAccount)
+    }
+}
+
+fun createOrderRequest(
+    amount: Amount,
+    merchantAccount: String
+): JSONObject {
+    return JSONObject().apply {
+        put("amount", JSONObject(Gson().toJson(amount)))
+        put("merchantAccount", merchantAccount)
+        put("reference", "android-test-components_${System.currentTimeMillis()}")
     }
 }

@@ -8,6 +8,7 @@
 
 package com.adyen.checkout.example.service
 
+import com.adyen.checkout.components.model.payments.response.Action
 import com.adyen.checkout.core.log.LogUtil
 import com.adyen.checkout.core.log.Logger
 import com.adyen.checkout.core.model.toStringPretty
@@ -93,7 +94,8 @@ class ExampleDropInService : DropInService() {
             if (response.isSuccessful) {
                 val detailsResponse = JSONObject(response.body()?.string() ?: "")
                 if (detailsResponse.has("action")) {
-                    DropInServiceResult.Action(detailsResponse.get("action").toString())
+                    val action = Action.SERIALIZER.deserialize(detailsResponse.getJSONObject("action"))
+                    DropInServiceResult.Action(action)
                 } else {
                     Logger.d(TAG, "Final result - ${detailsResponse.toStringPretty()}")
 

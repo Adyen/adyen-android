@@ -11,7 +11,11 @@ package com.adyen.checkout.example.service
 import com.adyen.checkout.card.CardComponentState
 import com.adyen.checkout.components.ActionComponentData
 import com.adyen.checkout.components.PaymentComponentState
+import com.adyen.checkout.components.model.payments.request.Order
 import com.adyen.checkout.components.model.payments.request.PaymentMethodDetails
+import com.adyen.checkout.components.model.payments.response.Action
+import com.adyen.checkout.components.model.payments.response.BalanceResult
+import com.adyen.checkout.components.model.payments.response.OrderResponse
 import com.adyen.checkout.core.log.LogUtil
 import com.adyen.checkout.core.log.Logger
 import com.adyen.checkout.core.model.getStringOrNull
@@ -19,6 +23,7 @@ import com.adyen.checkout.core.model.toStringPretty
 import com.adyen.checkout.dropin.service.BalanceDropInServiceResult
 import com.adyen.checkout.dropin.service.DropInService
 import com.adyen.checkout.dropin.service.DropInServiceResult
+import com.adyen.checkout.dropin.service.OrderDropInServiceResult
 import com.adyen.checkout.example.data.api.model.paymentsRequest.AdditionalData
 import com.adyen.checkout.example.data.storage.KeyValueStorage
 import com.adyen.checkout.example.repositories.paymentMethods.PaymentsRepository
@@ -37,6 +42,7 @@ import org.json.JSONObject
  * This is just an example on how to make networkModule calls on the [DropInService].
  * You should make the calls to your own servers and have additional data or processing if necessary.
  */
+@Suppress("TooManyFunctions")
 @AndroidEntryPoint
 class ExampleAsyncDropInService : DropInService() {
 
@@ -47,6 +53,7 @@ class ExampleAsyncDropInService : DropInService() {
 
     @Inject
     lateinit var paymentsRepository: PaymentsRepository
+
     @Inject
     lateinit var keyValueStorage: KeyValueStorage
 
@@ -75,7 +82,7 @@ class ExampleAsyncDropInService : DropInService() {
             val requestBody = paymentRequest.toString().toRequestBody(CONTENT_TYPE)
             val response = paymentsRepository.paymentsRequestAsync(requestBody)
 
-            val result = handleResponse(response)
+            val result = handleResponse(response) ?: return@launch
             sendResult(result)
         }
     }
@@ -98,29 +105,72 @@ class ExampleAsyncDropInService : DropInService() {
             val requestBody = actionComponentJson.toString().toRequestBody(CONTENT_TYPE)
             val response = paymentsRepository.detailsRequestAsync(requestBody)
 
-            val result = handleResponse(response)
+            val result = handleResponse(response) ?: return@launch
             sendResult(result)
         }
     }
 
-    private fun handleResponse(response: ResponseBody?): DropInServiceResult {
-        return if (response != null) {
-            val detailsResponse = JSONObject(response.string())
-            if (detailsResponse.has("action")) {
-                DropInServiceResult.Action(detailsResponse.get("action").toString())
-            } else {
-                Logger.d(TAG, "Final result - ${detailsResponse.toStringPretty()}")
-
-                val resultCode = if (detailsResponse.has("resultCode")) {
-                    detailsResponse.get("resultCode").toString()
+    private fun handleResponse(response: ResponseBody?): DropInServiceResult? {
+        val jsonResponse = if (response == null) null else JSONObject(response.string())
+        return when {
+            jsonResponse == null -> {
+                Logger.e(TAG, "FAILED")
+                DropInServiceResult.Error(reason = "IOException")
+            }
+            isAction(jsonResponse) -> {
+                Logger.d(TAG, "Received action")
+                val action = Action.SERIALIZER.deserialize(jsonResponse.getJSONObject("action"))
+                DropInServiceResult.Action(action)
+            }
+            isNonFullyPaidOrder(jsonResponse) -> {
+                Logger.d(TAG, "Received a non fully paid order")
+                fetchPaymentMethods(jsonResponse)
+                null
+            }
+            else -> {
+                Logger.d(TAG, "Final result - ${jsonResponse.toStringPretty()}")
+                val resultCode = if (jsonResponse.has("resultCode")) {
+                    jsonResponse.get("resultCode").toString()
                 } else {
                     "EMPTY"
                 }
                 DropInServiceResult.Finished(resultCode)
             }
-        } else {
-            Logger.e(TAG, "FAILED")
-            DropInServiceResult.Error(reason = "IOException")
+        }
+    }
+
+    private fun isAction(jsonResponse: JSONObject): Boolean {
+        return jsonResponse.has("action")
+    }
+
+    private fun isNonFullyPaidOrder(jsonResponse: JSONObject): Boolean {
+        return jsonResponse.has("order") && getOrderFromResponse(jsonResponse).remainingAmount?.value ?: 0 > 0
+    }
+
+    private fun getOrderFromResponse(jsonResponse: JSONObject): OrderResponse {
+        val orderJSON = jsonResponse.getJSONObject("order")
+        return OrderResponse.SERIALIZER.deserialize(orderJSON)
+    }
+
+    private fun fetchPaymentMethods(jsonResponse: JSONObject) {
+        launch(Dispatchers.IO) {
+            val order = getOrderFromResponse(jsonResponse)
+            val paymentMethods = paymentsRepository.getPaymentMethods(
+                getPaymentMethodRequest(
+                    keyValueStorage,
+                    Order(
+                        pspReference = order.pspReference,
+                        orderData = order.orderData
+                    )
+                )
+            )
+            val result = if (paymentMethods != null) {
+                DropInServiceResult.Update(paymentMethods, order)
+            } else {
+                Logger.e(TAG, "FAILED")
+                DropInServiceResult.Error(reason = "IOException")
+            }
+            sendResult(result)
         }
     }
 
@@ -148,13 +198,46 @@ class ExampleAsyncDropInService : DropInService() {
             val jsonResponse = JSONObject(balanceJson)
             val resultCode = jsonResponse.getStringOrNull("resultCode")
             when (resultCode) {
-                "Success" -> BalanceDropInServiceResult.Balance(balanceJson)
+                "Success" -> BalanceDropInServiceResult.Balance(BalanceResult.SERIALIZER.deserialize(jsonResponse))
                 "NotEnoughBalance" -> BalanceDropInServiceResult.Error(reason = "Not enough balance", dismissDropIn = false)
                 else -> BalanceDropInServiceResult.Error(reason = resultCode, dismissDropIn = false)
             }
         } else {
             Logger.e(TAG, "FAILED")
             BalanceDropInServiceResult.Error(reason = "IOException")
+        }
+    }
+
+    override fun createOrder() {
+        launch(Dispatchers.IO) {
+            Logger.d(TAG, "createOrder")
+
+            val paymentRequest = createOrderRequest(
+                keyValueStorage.getAmount(),
+                keyValueStorage.getMerchantAccount()
+            )
+
+            val requestBody = paymentRequest.toString().toRequestBody(CONTENT_TYPE)
+            val response = paymentsRepository.createOrderAsync(requestBody)
+
+            val result = handleOrderResponse(response)
+            sendOrderResult(result)
+        }
+    }
+
+    @Suppress("NestedBlockDepth")
+    private fun handleOrderResponse(response: ResponseBody?): OrderDropInServiceResult {
+        return if (response != null) {
+            val orderJson = response.string()
+            val jsonResponse = JSONObject(orderJson)
+            val resultCode = jsonResponse.getStringOrNull("resultCode")
+            when (resultCode) {
+                "Success" -> OrderDropInServiceResult.OrderCreated(OrderResponse.SERIALIZER.deserialize(jsonResponse))
+                else -> OrderDropInServiceResult.Error(reason = resultCode, dismissDropIn = false)
+            }
+        } else {
+            Logger.e(TAG, "FAILED")
+            OrderDropInServiceResult.Error(reason = "IOException")
         }
     }
 }

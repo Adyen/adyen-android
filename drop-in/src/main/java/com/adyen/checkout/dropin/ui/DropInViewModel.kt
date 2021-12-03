@@ -11,11 +11,14 @@ package com.adyen.checkout.dropin.ui
 import android.content.Intent
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
+import com.adyen.checkout.components.PaymentComponentState
 import com.adyen.checkout.components.model.PaymentMethodsApiResponse
 import com.adyen.checkout.components.model.paymentmethods.StoredPaymentMethod
 import com.adyen.checkout.components.model.payments.Amount
+import com.adyen.checkout.components.model.payments.request.Order
 import com.adyen.checkout.components.model.payments.request.PaymentMethodDetails
 import com.adyen.checkout.components.model.payments.response.BalanceResult
+import com.adyen.checkout.components.model.payments.response.OrderResponse
 import com.adyen.checkout.components.util.PaymentMethodTypes
 import com.adyen.checkout.core.exception.CheckoutException
 import com.adyen.checkout.core.log.LogUtil
@@ -28,8 +31,7 @@ import com.adyen.checkout.giftcard.GiftCardComponentState
 import com.adyen.checkout.giftcard.util.GiftCardBalanceStatus
 import com.adyen.checkout.giftcard.util.GiftCardBalanceUtils
 import com.adyen.checkout.googlepay.GooglePayComponent
-import org.json.JSONException
-import org.json.JSONObject
+import com.adyen.checkout.googlepay.GooglePayConfiguration
 
 private val TAG = LogUtil.getTag()
 
@@ -38,12 +40,31 @@ private const val DROP_IN_CONFIGURATION_KEY = "DROP_IN_CONFIGURATION_KEY"
 private const val DROP_IN_RESULT_INTENT_KEY = "DROP_IN_RESULT_INTENT_KEY"
 private const val IS_WAITING_FOR_RESULT_KEY = "IS_WAITING_FOR_RESULT_KEY"
 private const val CACHED_GIFT_CARD = "CACHED_GIFT_CARD"
+private const val CURRENT_ORDER = "CURRENT_ORDER"
+private const val PARTIAL_PAYMENT_AMOUNT = "PARTIAL_PAYMENT_AMOUNT"
+private const val AMOUNT = "AMOUNT"
 
+@Suppress("TooManyFunctions")
 class DropInViewModel(private val savedStateHandle: SavedStateHandle) : ViewModel() {
 
-    val paymentMethodsApiResponse: PaymentMethodsApiResponse = getStateValueOrFail(PAYMENT_METHODS_RESPONSE_KEY)
     val dropInConfiguration: DropInConfiguration = getStateValueOrFail(DROP_IN_CONFIGURATION_KEY)
     val resultHandlerIntent: Intent? = savedStateHandle[DROP_IN_RESULT_INTENT_KEY]
+
+    var amount: Amount
+        get() {
+            return getStateValueOrFail(AMOUNT)
+        }
+        private set(value) {
+            savedStateHandle[AMOUNT] = value
+        }
+
+    var paymentMethodsApiResponse: PaymentMethodsApiResponse
+        get() {
+            return getStateValueOrFail(PAYMENT_METHODS_RESPONSE_KEY)
+        }
+        private set(value) {
+            savedStateHandle[PAYMENT_METHODS_RESPONSE_KEY] = value
+        }
 
     var isWaitingResult: Boolean
         get() {
@@ -61,6 +82,22 @@ class DropInViewModel(private val savedStateHandle: SavedStateHandle) : ViewMode
             savedStateHandle[CACHED_GIFT_CARD] = value
         }
 
+    private var cachedPartialPaymentAmount: Amount?
+        get() {
+            return savedStateHandle.get<Amount>(PARTIAL_PAYMENT_AMOUNT)
+        }
+        private set(value) {
+            savedStateHandle[PARTIAL_PAYMENT_AMOUNT] = value
+        }
+
+    private var currentOrder: OrderResponse?
+        get() {
+            return savedStateHandle.get<OrderResponse>(CURRENT_ORDER)
+        }
+        private set(value) {
+            savedStateHandle[CURRENT_ORDER] = value
+        }
+
     private fun <T> getStateValueOrFail(key: String): T {
         val value: T? = savedStateHandle[key]
         if (value == null) {
@@ -68,6 +105,10 @@ class DropInViewModel(private val savedStateHandle: SavedStateHandle) : ViewMode
             throw CheckoutException("Failed to initialize Drop-in, did you manually launch DropInActivity?")
         }
         return value
+    }
+
+    init {
+        amount = dropInConfiguration.amount
     }
 
     val showPreselectedStored = paymentMethodsApiResponse.storedPaymentMethods?.any { it.isEcommerce } == true &&
@@ -105,24 +146,13 @@ class DropInViewModel(private val savedStateHandle: SavedStateHandle) : ViewMode
         return paymentMethod
     }
 
-    fun handleBalanceResult(balanceJson: String): GiftCardBalanceResult {
-        val balanceJSONObject = try {
-            JSONObject(balanceJson)
-        } catch (e: JSONException) {
-            throw CheckoutException("Provided balance is not a JSON object")
-        }
-        val balanceResult = BalanceResult.SERIALIZER.deserialize(balanceJSONObject)
+    fun handleBalanceResult(balanceResult: BalanceResult): GiftCardBalanceResult {
         Logger.d(TAG, "handleBalanceResult - balance: ${balanceResult.balance} - transactionLimit: ${balanceResult.transactionLimit}")
 
-        val balance = Amount.SERIALIZER.deserialize(JSONObject(balanceResult.balance))
-        val transactionLimitString = balanceResult.transactionLimit
-        val transactionLimit =
-            if (transactionLimitString == null) null
-            else Amount.SERIALIZER.deserialize(JSONObject(transactionLimitString))
         val giftCardBalanceResult = GiftCardBalanceUtils.checkBalance(
-            balance = balance,
-            transactionLimit = transactionLimit,
-            amountToBePaid = dropInConfiguration.amount
+            balance = balanceResult.balance,
+            transactionLimit = balanceResult.transactionLimit,
+            amountToBePaid = amount
         )
         val cachedGiftCardComponentState = cachedGiftCardComponentState ?: throw CheckoutException("Failed to retrieved cached gift card object")
         return when (giftCardBalanceResult) {
@@ -144,7 +174,9 @@ class DropInViewModel(private val savedStateHandle: SavedStateHandle) : ViewMode
                 )
             }
             is GiftCardBalanceStatus.PartialPayment -> {
-                GiftCardBalanceResult.PartialPayment(giftCardBalanceResult.amountPaid, giftCardBalanceResult.remainingBalance)
+                cachedPartialPaymentAmount = giftCardBalanceResult.amountPaid
+                if (currentOrder == null) GiftCardBalanceResult.RequestOrderCreation
+                else GiftCardBalanceResult.RequestPartialPayment
             }
         }
     }
@@ -160,6 +192,55 @@ class DropInViewModel(private val savedStateHandle: SavedStateHandle) : ViewMode
             brand = giftCardComponentState.data.paymentMethod?.brand.orEmpty(),
             lastFourDigits = giftCardComponentState.lastFourDigits.orEmpty()
         )
+    }
+
+    fun handleOrderResponse(orderResponse: OrderResponse?) {
+        if (orderResponse == null) {
+            currentOrder = null
+            amount = dropInConfiguration.amount
+            Logger.d(TAG, "handleOrderResponse - Amount reverted: $amount")
+            Logger.d(TAG, "handleOrderResponse - Order cancelled")
+        } else {
+            currentOrder = orderResponse
+            amount = orderResponse.remainingAmount ?: throw CheckoutException("Provided order does not have a remainingAmount")
+            Logger.d(TAG, "handleOrderResponse - New amount set: $amount")
+            Logger.d(TAG, "handleOrderResponse - Order cached")
+        }
+    }
+
+    fun updatePaymentComponentStateForPaymentsCall(paymentComponentState: PaymentComponentState<*>) {
+        // include amount value if merchant passed it to the DropIn
+        val amount = when {
+            cachedPartialPaymentAmount != null -> cachedPartialPaymentAmount
+            !amount.isEmpty -> amount
+            else -> null
+        }
+        cachedPartialPaymentAmount = null
+        amount?.let {
+            paymentComponentState.data.amount = it
+            Logger.d(TAG, "Payment amount set: $it")
+        }
+        currentOrder?.let {
+            paymentComponentState.data.order = createOrder(it)
+            Logger.d(TAG, "Order appended to payment")
+        }
+    }
+
+    private fun createOrder(orderResponse: OrderResponse): Order {
+        return Order(
+            pspReference = orderResponse.pspReference,
+            orderData = orderResponse.orderData
+        )
+    }
+
+    fun handlePaymentMethodsUpdate(paymentMethodsApiResponse: PaymentMethodsApiResponse, order: OrderResponse?) {
+        handleOrderResponse(order)
+        this.paymentMethodsApiResponse = paymentMethodsApiResponse
+    }
+
+    fun updateGooglePayConfiguration(googlePayConfiguration: GooglePayConfiguration): GooglePayConfiguration {
+        if (currentOrder == null) return googlePayConfiguration
+        return GooglePayConfiguration.Builder(googlePayConfiguration).setAmount(amount).build()
     }
 
     companion object {
