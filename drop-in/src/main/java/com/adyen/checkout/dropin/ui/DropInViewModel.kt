@@ -198,12 +198,12 @@ class DropInViewModel(private val savedStateHandle: SavedStateHandle) : ViewMode
         if (orderResponse == null) {
             currentOrder = null
             amount = dropInConfiguration.amount
-            Logger.d(TAG, "handleOrderResponse - Amount reverted: ${amount.value}")
+            Logger.d(TAG, "handleOrderResponse - Amount reverted: $amount")
             Logger.d(TAG, "handleOrderResponse - Order cancelled")
         } else {
             currentOrder = orderResponse
             amount = orderResponse.remainingAmount ?: throw CheckoutException("Provided order does not have a remainingAmount")
-            Logger.d(TAG, "handleOrderResponse - New amount set: ${amount.value}")
+            Logger.d(TAG, "handleOrderResponse - New amount set: $amount")
             Logger.d(TAG, "handleOrderResponse - Order cached")
         }
     }
@@ -216,9 +216,9 @@ class DropInViewModel(private val savedStateHandle: SavedStateHandle) : ViewMode
             else -> null
         }
         cachedPartialPaymentAmount = null
-        if (amount != null) {
-            paymentComponentState.data.amount = amount
-            Logger.d(TAG, "Payment amount set: ${amount.value}")
+        amount?.let {
+            paymentComponentState.data.amount = it
+            Logger.d(TAG, "Payment amount set: $it")
         }
         currentOrder?.let {
             paymentComponentState.data.order = createOrder(it)

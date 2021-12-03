@@ -96,9 +96,9 @@ public class Amount extends ModelObject {
         return EMPTY_CURRENCY.equals(currency) || value == EMPTY_VALUE;
     }
 
-    @NonNull
     @Override
+    @NonNull
     public String toString() {
-        return value + " " + currency;
+        return "Amount(" + currency + ", " + value + ")";
     }
 }
