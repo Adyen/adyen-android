@@ -10,4 +10,5 @@
 <resources>
     <string name="checkout_voucher_introduction_bacs">Téléchargez votre mandat de prélèvement (DDI)</string>
     <string name="checkout_voucher_download_pdf">Télécharger le PDF</string>
+    <string name="checkout_voucher_finish">Terminer</string>
 </resources>

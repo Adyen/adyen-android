@@ -39,6 +39,7 @@ object DropIn {
     const val RESULT_KEY = "payment_result"
     const val ERROR_REASON_KEY = "error_reason"
     const val ERROR_REASON_USER_CANCELED = "Canceled by user"
+    const val FINISHED_WITH_ACTION = "finish_with_action"
 
     /**
      * Register your Activity or Fragment with the Activity Result API and receive the final

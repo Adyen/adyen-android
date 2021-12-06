@@ -10,4 +10,5 @@
 <resources>
     <string name="checkout_voucher_introduction_bacs">Κατεβάστε την Εντολή Άμεσης Χρέωσης (DDI/Εντολή)</string>
     <string name="checkout_voucher_download_pdf">Λήψη PDF</string>
+    <string name="checkout_voucher_finish">Τέλος</string>
 </resources>

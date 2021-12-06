@@ -10,4 +10,5 @@
 <resources>
     <string name="checkout_voucher_introduction_bacs">Descărcați instrucțiunile de debitare directă (DDI/mandat)</string>
     <string name="checkout_voucher_download_pdf">Descărcați PDF</string>
+    <string name="checkout_voucher_finish">Finalizați</string>
 </resources>

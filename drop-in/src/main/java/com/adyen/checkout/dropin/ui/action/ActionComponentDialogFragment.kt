@@ -13,6 +13,7 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.core.view.isVisible
 import androidx.lifecycle.Observer
 import com.adyen.checkout.components.ActionComponent
 import com.adyen.checkout.components.ActionComponentData
@@ -80,6 +81,14 @@ class ActionComponentDialogFragment : DropInBottomSheetDialogFragment(), Observe
             componentView = getViewFor(requireContext(), actionType) as ComponentView<in OutputData, ViewableComponent<*, *, ActionComponentData>>
             actionComponent = getComponent(action)
             attachComponent(actionComponent, componentView)
+
+            val shouldShowFinishButton = getActionProviderFor(action)?.providesDetails() == false
+            if (shouldShowFinishButton) {
+                with(binding.buttonFinish) {
+                    isVisible = true
+                    setOnClickListener { protocol.finishWithAction() }
+                }
+            }
 
             if (!isHandled) {
                 (actionComponent as ActionComponent<*>).handleAction(requireActivity(), action)

@@ -416,6 +416,11 @@ class DropInActivity : AppCompatActivity(), DropInBottomSheetDialogFragment.Prot
         dropInService?.requestOrdersCall()
     }
 
+    override fun finishWithAction() {
+        Logger.d(TAG, "finishWithActionCall")
+        sendResult(DropIn.FINISHED_WITH_ACTION)
+    }
+
     private fun handleDropInServiceResult(dropInServiceResult: BaseDropInServiceResult) {
         Logger.d(TAG, "handleDropInServiceResult - ${dropInServiceResult::class.simpleName}")
         dropInViewModel.isWaitingResult = false

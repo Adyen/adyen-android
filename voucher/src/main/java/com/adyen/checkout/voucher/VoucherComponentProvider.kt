@@ -59,4 +59,8 @@ class VoucherComponentProvider : ActionComponentProvider<VoucherComponent, Vouch
     override fun getSupportedActionTypes(): List<String> {
         return listOf(VoucherAction.ACTION_TYPE)
     }
+
+    override fun providesDetails(): Boolean {
+        return false
+    }
 }

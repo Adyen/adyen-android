@@ -10,4 +10,5 @@
 <resources>
     <string name="checkout_voucher_introduction_bacs">Pobierz dyspozycję polecenia zapłaty (DDI/upoważnienie)</string>
     <string name="checkout_voucher_download_pdf">Pobierz PDF</string>
+    <string name="checkout_voucher_finish">Zakończ</string>
 </resources>

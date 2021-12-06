@@ -72,4 +72,8 @@ class QRCodeComponentProvider : ActionComponentProvider<QRCodeComponent, QRCodeC
     override fun requiresView(action: Action): Boolean {
         return VIEWABLE_PAYMENT_METHODS.contains(action.paymentMethodType)
     }
+
+    override fun providesDetails(): Boolean {
+        return true
+    }
 }

@@ -8,20 +8,22 @@
 
 <resources>
 
+    <style name="AdyenCheckout.Voucher" />
+
     <style name="AdyenCheckout.Voucher.DescriptionTextAppearance" parent="AdyenCheckout.TextAppearance.Primary">
         <item name="android:layout_marginStart">@dimen/standard_double_margin</item>
         <item name="android:layout_marginEnd">@dimen/standard_double_margin</item>
         <item name="android:layout_marginTop">@dimen/standard_margin</item>
         <item name="android:text">@string/checkout_voucher_introduction_bacs</item>
         <item name="android:gravity">center_horizontal</item>
-        <item name="android:textColor">@color/black</item>
+        <item name="android:textColor">@color/textColor</item>
     </style>
 
     <style name="AdyenCheckout.Voucher.DownloadTextAppearance" parent="AdyenCheckout.TextAppearance.Primary">
         <item name="android:textColor">@color/primaryColor</item>
         <item name="android:layout_marginTop">@dimen/standard_margin</item>
         <item name="android:gravity">center_horizontal</item>
-        <item name="android:layout_marginBottom">@dimen/standard_double_margin</item>
+        <item name="android:layout_marginBottom">@dimen/standard_half_margin</item>
         <item name="android:text">@string/checkout_voucher_download_pdf</item>
     </style>
 </resources>

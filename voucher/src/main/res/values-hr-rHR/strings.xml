@@ -10,4 +10,5 @@
 <resources>
     <string name="checkout_voucher_introduction_bacs">Preuzmite upute za izravno terećenje (DDI / mandat)</string>
     <string name="checkout_voucher_download_pdf">Preuzmite PDF</string>
+    <string name="checkout_voucher_finish">Završi</string>
 </resources>

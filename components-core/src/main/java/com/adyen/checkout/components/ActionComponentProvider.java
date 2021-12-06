@@ -87,4 +87,9 @@ public interface ActionComponentProvider<ComponentT extends ActionComponent, Con
      */
     @NonNull
     List<String> getSupportedActionTypes();
+
+    /**
+     * @return If the provided component provides details to make an API call to /payments/detail end point.
+     */
+    boolean providesDetails();
 }

@@ -10,4 +10,5 @@
 <resources>
     <string name="checkout_voucher_introduction_bacs">自動引き落としの説明 (DDI/委任状) をダウンロードする</string>
     <string name="checkout_voucher_download_pdf">PDFをダウンロード</string>
+    <string name="checkout_voucher_finish">完了</string>
 </resources>

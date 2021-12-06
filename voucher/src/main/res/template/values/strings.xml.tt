@@ -10,4 +10,5 @@
 <resources>
     <string name="checkout_voucher_introduction_bacs">%%bacs.result.introduction%%</string>
     <string name="checkout_voucher_download_pdf">%%download.pdf%%</string>
+    <string name="checkout_voucher_finish">%%voucher.finish%%</string>
 </resources>
