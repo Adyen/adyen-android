@@ -70,6 +70,7 @@ class ImageLoader(private val logoApi: LogoApi) {
     /**
      * Load image to ImageView with place holder before load and error fallback image.
      */
+    @Suppress("LongParameterList")
     @JvmOverloads
     fun load(
         txVariant: String,
