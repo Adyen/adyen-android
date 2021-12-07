@@ -11,9 +11,11 @@ package com.adyen.checkout.bacs
 import android.content.Context
 import android.util.AttributeSet
 import android.view.LayoutInflater
+import android.view.View
 import androidx.lifecycle.LifecycleOwner
 import androidx.lifecycle.Observer
 import com.adyen.checkout.bacs.databinding.BacsDirectDebitViewBinding
+import com.adyen.checkout.components.ui.FieldState
 import com.adyen.checkout.components.ui.Validation
 import com.adyen.checkout.components.ui.view.AdyenLinearLayout
 import com.adyen.checkout.components.ui.view.AdyenTextInputEditText
@@ -129,6 +131,8 @@ class BacsDirectDebitView @JvmOverloads constructor(context: Context, attrs: Att
 
     override fun onChanged(bacsDirectDebitOutputData: BacsDirectDebitOutputData) {
         Logger.v(TAG, "bacsDirectDebitOutputData changed")
+        onBankAccountNumberValidated(bacsDirectDebitOutputData.bankAccountNumberState)
+        onSortCodeValidated(bacsDirectDebitOutputData.sortCodeState)
     }
 
     private fun notifyInputDataChanged() {
@@ -212,6 +216,24 @@ class BacsDirectDebitView @JvmOverloads constructor(context: Context, attrs: Att
         binding.switchConsentAccount.setOnCheckedChangeListener { _, isChecked ->
             mBacsDirectDebitInputData.isAccountConsentChecked = isChecked
             notifyInputDataChanged()
+        }
+    }
+
+    private fun onBankAccountNumberValidated(bankAccountNumberFieldState: FieldState<String>) {
+        if (bankAccountNumberFieldState.validation.isValid()) {
+            goToNextInputIfFocus(binding.editTextBankAccountNumber)
+        }
+    }
+
+    private fun onSortCodeValidated(sortCodeFieldState: FieldState<String>) {
+        if (sortCodeFieldState.validation.isValid()) {
+            goToNextInputIfFocus(binding.editTextSortCode)
+        }
+    }
+
+    private fun goToNextInputIfFocus(view: View?) {
+        if (rootView.findFocus() === view && view != null) {
+            findViewById<View>(view.nextFocusForwardId).requestFocus()
         }
     }
 }
