@@ -55,7 +55,7 @@ class VoucherView @JvmOverloads constructor(context: Context, attrs: AttributeSe
     }
 
     override fun initLocalizedStrings(localizedContext: Context) {
-        // TODO implement
+        // no ops
     }
 
     override fun observeComponentChanges(lifecycleOwner: LifecycleOwner) {
@@ -64,10 +64,7 @@ class VoucherView @JvmOverloads constructor(context: Context, attrs: AttributeSe
 
     override fun onChanged(outputData: VoucherOutputData?) {
         if (outputData == null) return
-
-        if (!outputData.paymentMethodType.isNullOrEmpty()) {
-            imageLoader.load(outputData.paymentMethodType, binding.imageViewLogo, LogoApi.Size.MEDIUM)
-        }
+        loadLogo(outputData.paymentMethodType)
     }
 
     private fun launchDownloadIntent() {
@@ -77,6 +74,12 @@ class VoucherView @JvmOverloads constructor(context: Context, attrs: AttributeSe
             .setToolbarColor(ThemeUtil.getPrimaryThemeColor(context))
             .build()
         intent.launchUrl(context, Uri.parse(url))
+    }
+
+    private fun loadLogo(paymentMethodType: String?) {
+        if (!paymentMethodType.isNullOrEmpty()) {
+            imageLoader.load(paymentMethodType, binding.imageViewLogo, LogoApi.Size.MEDIUM)
+        }
     }
 
 }

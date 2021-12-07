@@ -32,6 +32,7 @@ class VoucherComponent(
 
     private val mOutputLiveData = MutableLiveData<VoucherOutputData>()
     private var url: String? = null
+    private var paymentMethodType: String? = null
 
     override fun canHandleAction(action: Action): Boolean {
         return PROVIDER.canHandleAction(action)
