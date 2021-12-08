@@ -16,4 +16,7 @@
     <string name="bacs_account_number_invalid">Nevažeći broj bankovnog računa</string>
     <string name="bacs_sort_code_invalid">Nevažeći identifikacijski kôd banke (UK)</string>
     <string name="bacs_shopper_email_invalid">Nevažeća adresa e-pošte</string>
+
+    <string name="bacs_continue">Nastavi</string>
+    <string name="bacs_confirm_and_pay">Potvrdi i plati</string>
 </resources>

@@ -16,4 +16,7 @@
     <string name="bacs_account_number_invalid">Μη έγκυρος αριθμός τραπεζικού λογαριασμού</string>
     <string name="bacs_sort_code_invalid">Μη έγκυρος κωδικός τράπεζας</string>
     <string name="bacs_shopper_email_invalid">Μη έγκυρη διεύθυνση email</string>
+
+    <string name="bacs_continue">Συνέχεια</string>
+    <string name="bacs_confirm_and_pay">Επιβεβαίωση και πληρωμή</string>
 </resources>

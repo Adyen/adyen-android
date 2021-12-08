@@ -16,4 +16,7 @@
     <string name="bacs_account_number_invalid">Ungültige Bankkontonummer</string>
     <string name="bacs_sort_code_invalid">Ungültige Bankleitzahl</string>
     <string name="bacs_shopper_email_invalid">Ungültige E-Mail-Adresse</string>
+
+    <string name="bacs_continue">Weiter</string>
+    <string name="bacs_confirm_and_pay">Bestätigen und bezahlen</string>
 </resources>

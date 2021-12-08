@@ -16,4 +16,7 @@
     <string name="bacs_account_number_invalid">Numărul contului bancar este incorect</string>
     <string name="bacs_sort_code_invalid">Cod de identificare bancară incorect</string>
     <string name="bacs_shopper_email_invalid">Adresă de e-mail incorectă</string>
+
+    <string name="bacs_continue">Continuare</string>
+    <string name="bacs_confirm_and_pay">Confirmați și plătiți</string>
 </resources>

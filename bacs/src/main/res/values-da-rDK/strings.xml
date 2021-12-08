@@ -16,4 +16,7 @@
     <string name="bacs_account_number_invalid">Ugyldigt bankkontonummer</string>
     <string name="bacs_sort_code_invalid">Ugyldigt registreringsnummer</string>
     <string name="bacs_shopper_email_invalid">Ugyldig e-mailadresse</string>
+
+    <string name="bacs_continue">Fortsæt</string>
+    <string name="bacs_confirm_and_pay">Bekræft, og betal</string>
 </resources>

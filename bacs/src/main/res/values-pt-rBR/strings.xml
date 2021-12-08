@@ -16,4 +16,7 @@
     <string name="bacs_account_number_invalid">Número da conta bancária inválido</string>
     <string name="bacs_sort_code_invalid">Código de classificação inválido</string>
     <string name="bacs_shopper_email_invalid">Endereço de e-mail inválido</string>
+
+    <string name="bacs_continue">Continuar</string>
+    <string name="bacs_confirm_and_pay">Confirmar e pagar</string>
 </resources>

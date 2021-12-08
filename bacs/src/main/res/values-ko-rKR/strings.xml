@@ -16,4 +16,7 @@
     <string name="bacs_account_number_invalid">계좌 번호가 유효하지 않습니다</string>
     <string name="bacs_sort_code_invalid">은행 식별 코드가 유효하지 않습니다</string>
     <string name="bacs_shopper_email_invalid">유효하지 않은 이메일 주소</string>
+
+    <string name="bacs_continue">계속</string>
+    <string name="bacs_confirm_and_pay">확인 및 결제</string>
 </resources>

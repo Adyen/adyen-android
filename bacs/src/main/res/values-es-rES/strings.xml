@@ -16,4 +16,7 @@
     <string name="bacs_account_number_invalid">El número de cuenta bancaria no es válido</string>
     <string name="bacs_sort_code_invalid">El código de sucursal no es válido</string>
     <string name="bacs_shopper_email_invalid">La dirección de correo electrónico no es válida</string>
+
+    <string name="bacs_continue">Continuar</string>
+    <string name="bacs_confirm_and_pay">Confirmar y pagar</string>
 </resources>

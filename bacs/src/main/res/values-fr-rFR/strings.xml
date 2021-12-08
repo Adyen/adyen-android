@@ -16,4 +16,7 @@
     <string name="bacs_account_number_invalid">Numéro du compte bancaire incorrect</string>
     <string name="bacs_sort_code_invalid">Code de tri (sort code) non valide</string>
     <string name="bacs_shopper_email_invalid">Adresse e-mail incorrecte</string>
+
+    <string name="bacs_continue">Continuer</string>
+    <string name="bacs_confirm_and_pay">Confirmer et payer</string>
 </resources>

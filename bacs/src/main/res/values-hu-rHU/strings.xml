@@ -16,4 +16,7 @@
     <string name="bacs_account_number_invalid">Érvénytelen bankszámlaszám</string>
     <string name="bacs_sort_code_invalid">Érvénytelen banki azonosító</string>
     <string name="bacs_shopper_email_invalid">Érvénytelen e-mail-cím</string>
+
+    <string name="bacs_continue">Folytatás</string>
+    <string name="bacs_confirm_and_pay">Megerősítés és fizetés</string>
 </resources>

@@ -16,4 +16,7 @@
     <string name="bacs_account_number_invalid">銀行帳戶號碼無效</string>
     <string name="bacs_sort_code_invalid">銀行代碼無效</string>
     <string name="bacs_shopper_email_invalid">電子郵件地址無效</string>
+
+    <string name="bacs_continue">繼續</string>
+    <string name="bacs_confirm_and_pay">確認並支付</string>
 </resources>

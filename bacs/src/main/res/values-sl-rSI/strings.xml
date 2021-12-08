@@ -16,4 +16,7 @@
     <string name="bacs_account_number_invalid">Neveljavna številka bančnega računa</string>
     <string name="bacs_sort_code_invalid">Neveljavna številka banke</string>
     <string name="bacs_shopper_email_invalid">Neveljaven elektronski naslov</string>
+
+    <string name="bacs_continue">Nadaljuj</string>
+    <string name="bacs_confirm_and_pay">Potrdi in plačaj</string>
 </resources>

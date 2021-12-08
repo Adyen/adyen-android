@@ -16,4 +16,7 @@
     <string name="bacs_account_number_invalid">无效的银行账号</string>
     <string name="bacs_sort_code_invalid">无效的分类代码</string>
     <string name="bacs_shopper_email_invalid">无效的邮件地址</string>
+
+    <string name="bacs_continue">继续</string>
+    <string name="bacs_confirm_and_pay">确认并支付</string>
 </resources>
