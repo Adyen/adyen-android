@@ -38,6 +38,7 @@ class BacsDirectDebitConfirmationView @JvmOverloads constructor(context: Context
             binding.editTextSortCode.setText(it.sortCodeState.value)
             binding.editTextShopperEmail.setText(it.shopperEmailState.value)
         }
+        component.setConfirmationMode()
     }
 
     override fun initView() {

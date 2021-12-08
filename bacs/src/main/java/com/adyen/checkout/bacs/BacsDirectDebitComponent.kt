@@ -62,13 +62,13 @@ class BacsDirectDebitComponent(
         )
     }
 
-    fun handleContinueClick() {
-        mLatestInputData?.mode = BacsDirectDebitMode.CONFIRMATION
+    fun setInputMode() {
+        mLatestInputData?.mode = BacsDirectDebitMode.INPUT
         notifyStateChanged()
     }
 
-    fun handleBackPress() {
-        mLatestInputData?.mode = BacsDirectDebitMode.INPUT
+    fun setConfirmationMode() {
+        mLatestInputData?.mode = BacsDirectDebitMode.CONFIRMATION
         notifyStateChanged()
     }
 

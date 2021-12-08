@@ -51,6 +51,7 @@ class BacsDirectDebitInputView @JvmOverloads constructor(context: Context, attrs
             binding.switchConsentAmount.isChecked = it.isAmountConsentChecked
             binding.switchConsentAccount.isChecked = it.isAccountConsentChecked
         }
+        component.setInputMode()
     }
 
     override fun initView() {

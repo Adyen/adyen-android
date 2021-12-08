@@ -23,6 +23,7 @@ import com.adyen.checkout.components.PaymentComponentState
 import com.adyen.checkout.components.model.payments.request.PaymentMethodDetails
 import com.adyen.checkout.core.log.LogUtil
 import com.adyen.checkout.core.log.Logger
+import com.adyen.checkout.dropin.R
 import com.adyen.checkout.dropin.databinding.FragmentBacsDirectDebitComponentBinding
 import com.adyen.checkout.dropin.ui.base.BaseComponentDialogFragment
 import com.google.android.material.bottomsheet.BottomSheetBehavior
@@ -55,7 +56,7 @@ class BacsDirectDebitDialogFragment : BaseComponentDialogFragment() {
 
         if (bacsDirectDebitInputView.isConfirmationRequired) {
             binding.payButton.setOnClickListener {
-                handlePayClick()
+                handleContinueClick()
             }
             setInitViewState(BottomSheetBehavior.STATE_EXPANDED)
             bacsDirectDebitInputView.requestFocus()
@@ -69,10 +70,11 @@ class BacsDirectDebitDialogFragment : BaseComponentDialogFragment() {
         val bacsDirectDebitComponentState = paymentComponentState as? BacsDirectDebitComponentState
 
         if (bacsDirectDebitComponentState != null) {
-            when (bacsDirectDebitComponentState.mode) {
-                BacsDirectDebitMode.INPUT -> attachInputView()
-                BacsDirectDebitMode.CONFIRMATION -> attachConfirmationView()
+            val payButtonText = when (bacsDirectDebitComponentState.mode) {
+                BacsDirectDebitMode.INPUT -> R.string.bacs_continue
+                BacsDirectDebitMode.CONFIRMATION -> R.string.bacs_confirm_and_pay
             }
+            binding.payButton.setText(payButtonText)
         }
 
         componentDialogViewModel.componentStateChanged(bacsDirectDebitComponent.state)
@@ -95,20 +97,20 @@ class BacsDirectDebitDialogFragment : BaseComponentDialogFragment() {
         val mode = (bacsDirectDebitComponent.state as? BacsDirectDebitComponentState)?.mode
         val isConfirmationMode = mode == BacsDirectDebitMode.CONFIRMATION
         return if (isConfirmationMode) {
-            bacsDirectDebitComponent.handleBackPress()
+            attachInputView()
             true
         } else {
             super.onBackPressed()
         }
     }
 
-    private fun handlePayClick() {
+    private fun handleContinueClick() {
         componentDialogViewModel.payButtonClicked()
         val bacsDirectDebitComponent = component as BacsDirectDebitComponent
         val mode = (bacsDirectDebitComponent.state as? BacsDirectDebitComponentState)?.mode
         val isInputMode = mode == BacsDirectDebitMode.INPUT
         if (isInputMode && bacsDirectDebitComponent.state?.isInputValid == true) {
-            bacsDirectDebitComponent.handleContinueClick()
+            attachConfirmationView()
         }
     }
 
