@@ -18,7 +18,7 @@ import com.adyen.checkout.bacs.BacsDirectDebitComponent
 import com.adyen.checkout.bacs.BacsDirectDebitComponentState
 import com.adyen.checkout.bacs.BacsDirectDebitConfirmationView
 import com.adyen.checkout.bacs.BacsDirectDebitMode
-import com.adyen.checkout.bacs.BacsDirectDebitView
+import com.adyen.checkout.bacs.BacsDirectDebitInputView
 import com.adyen.checkout.components.PaymentComponentState
 import com.adyen.checkout.components.model.payments.request.PaymentMethodDetails
 import com.adyen.checkout.core.log.LogUtil
@@ -49,16 +49,16 @@ class BacsDirectDebitDialogFragment : BaseComponentDialogFragment() {
         component.observe(viewLifecycleOwner, this)
         bacsDirectDebitComponent.observeErrors(viewLifecycleOwner, createErrorHandlerObserver())
 
-        val bacsDirectDebitView = BacsDirectDebitView(requireContext())
-        binding.viewContainer.addView(bacsDirectDebitView)
-        bacsDirectDebitView.attach(bacsDirectDebitComponent, viewLifecycleOwner)
+        val bacsDirectDebitInputView = BacsDirectDebitInputView(requireContext())
+        binding.viewContainer.addView(bacsDirectDebitInputView)
+        bacsDirectDebitInputView.attach(bacsDirectDebitComponent, viewLifecycleOwner)
 
-        if (bacsDirectDebitView.isConfirmationRequired) {
+        if (bacsDirectDebitInputView.isConfirmationRequired) {
             binding.payButton.setOnClickListener {
                 handlePayClick()
             }
             setInitViewState(BottomSheetBehavior.STATE_EXPANDED)
-            bacsDirectDebitView.requestFocus()
+            bacsDirectDebitInputView.requestFocus()
         } else {
             binding.payButton.isVisible = false
         }
@@ -85,8 +85,8 @@ class BacsDirectDebitDialogFragment : BaseComponentDialogFragment() {
     }
 
     override fun highlightValidationErrors() {
-        binding.viewContainer.children.firstOrNull { it is BacsDirectDebitView }?.let {
-            (it as BacsDirectDebitView).highlightValidationErrors()
+        binding.viewContainer.children.firstOrNull { it is BacsDirectDebitInputView }?.let {
+            (it as BacsDirectDebitInputView).highlightValidationErrors()
         }
     }
 
@@ -114,13 +114,13 @@ class BacsDirectDebitDialogFragment : BaseComponentDialogFragment() {
 
     private fun attachInputView() {
         val bacsDirectDebitComponent = component as BacsDirectDebitComponent
-        val isInputViewAttached = binding.viewContainer.children.any { it is BacsDirectDebitView }
+        val isInputViewAttached = binding.viewContainer.children.any { it is BacsDirectDebitInputView }
         if (!isInputViewAttached) {
-            val bacsDirectDebitView = BacsDirectDebitView(requireContext())
+            val bacsDirectDebitInputView = BacsDirectDebitInputView(requireContext())
             binding.viewContainer.apply {
                 removeAllViews()
-                addView(bacsDirectDebitView)
-                bacsDirectDebitView.attach(bacsDirectDebitComponent, viewLifecycleOwner)
+                addView(bacsDirectDebitInputView)
+                bacsDirectDebitInputView.attach(bacsDirectDebitComponent, viewLifecycleOwner)
             }
         }
     }

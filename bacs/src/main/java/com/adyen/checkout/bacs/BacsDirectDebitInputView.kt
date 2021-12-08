@@ -14,7 +14,7 @@ import android.view.LayoutInflater
 import android.view.View
 import androidx.lifecycle.LifecycleOwner
 import androidx.lifecycle.Observer
-import com.adyen.checkout.bacs.databinding.BacsDirectDebitViewBinding
+import com.adyen.checkout.bacs.databinding.BacsDirectDebitInputViewBinding
 import com.adyen.checkout.components.ui.FieldState
 import com.adyen.checkout.components.ui.Validation
 import com.adyen.checkout.components.ui.view.AdyenLinearLayout
@@ -25,14 +25,14 @@ import com.adyen.checkout.core.log.Logger
 private val TAG = LogUtil.getTag()
 
 @Suppress("TooManyFunctions")
-class BacsDirectDebitView @JvmOverloads constructor(context: Context, attrs: AttributeSet? = null, defStyleAttr: Int = 0) :
+class BacsDirectDebitInputView @JvmOverloads constructor(context: Context, attrs: AttributeSet? = null, defStyleAttr: Int = 0) :
     AdyenLinearLayout<BacsDirectDebitOutputData,
         BacsDirectDebitConfiguration,
         BacsDirectDebitComponentState,
         BacsDirectDebitComponent>(context, attrs, defStyleAttr),
     Observer<BacsDirectDebitOutputData> {
 
-    private val binding: BacsDirectDebitViewBinding = BacsDirectDebitViewBinding.inflate(LayoutInflater.from(context), this)
+    private val binding: BacsDirectDebitInputViewBinding = BacsDirectDebitInputViewBinding.inflate(LayoutInflater.from(context), this)
 
     private val mBacsDirectDebitInputData = BacsDirectDebitInputData()
 
