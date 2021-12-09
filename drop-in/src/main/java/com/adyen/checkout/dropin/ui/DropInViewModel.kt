@@ -218,7 +218,7 @@ class DropInViewModel(
     }
 
     private suspend fun handleOrderResponse(orderResponse: OrderResponse?) {
-        val orderModel = getOrderStatus(orderResponse)
+        val orderModel = getOrderDetails(orderResponse)
         if (orderModel == null) {
             currentOrder = null
             amount = dropInConfiguration.amount
@@ -270,7 +270,7 @@ class DropInViewModel(
         return GooglePayConfiguration.Builder(googlePayConfiguration).setAmount(amount).build()
     }
 
-    private suspend fun getOrderStatus(orderResponse: OrderResponse?): OrderModel? {
+    private suspend fun getOrderDetails(orderResponse: OrderResponse?): OrderModel? {
         if (orderResponse == null) return null
         return try {
             val orderStatus = orderStatusRepository.getOrderStatus(dropInConfiguration, orderResponse.orderData)

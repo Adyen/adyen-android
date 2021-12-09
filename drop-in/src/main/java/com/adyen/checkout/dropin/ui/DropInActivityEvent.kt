@@ -11,6 +11,6 @@ package com.adyen.checkout.dropin.ui
 import com.adyen.checkout.components.PaymentComponentState
 
 sealed class DropInActivityEvent {
-    class MakePartialPayment(val paymentComponentState: PaymentComponentState<*>) : DropInActivityEvent()
+    data class MakePartialPayment(val paymentComponentState: PaymentComponentState<*>) : DropInActivityEvent()
     object ShowPaymentMethods : DropInActivityEvent()
 }

@@ -66,13 +66,15 @@ class PaymentMethodAdapter(
     private fun bindHeader(holder: HeaderVH, position: Int) {
         val header = getHeaderAt(position)
         holder.title.setText(header.titleResId)
-        if (header.actionResId == null) {
-            holder.action.visibility = View.GONE
-        } else {
-            holder.action.visibility = View.VISIBLE
-            holder.action.setText(header.actionResId)
-            holder.action.setOnClickListener {
-                onHeaderActionClick(header)
+        with(holder.action) {
+            if (header.actionResId == null) {
+                visibility = View.GONE
+            } else {
+                visibility = View.VISIBLE
+                setText(header.actionResId)
+                setOnClickListener {
+                    onHeaderActionClick(header)
+                }
             }
         }
     }
