@@ -13,6 +13,8 @@ import android.os.Bundle;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.lifecycle.LifecycleOwner;
+import androidx.lifecycle.Observer;
 import androidx.lifecycle.SavedStateHandle;
 import androidx.lifecycle.ViewModel;
 import androidx.lifecycle.ViewModelStoreOwner;
@@ -89,7 +91,10 @@ public interface ActionComponentProvider<ComponentT extends ActionComponent, Con
     List<String> getSupportedActionTypes();
 
     /**
-     * @return If the provided component provides details to make an API call to /payments/detail end point.
+     * Checks if the provided component will trigger updates that can be observed using
+     * {@link Component#observe(LifecycleOwner, Observer)}. If returns false, no events will be fired.
+     *
+     * @return If the provided component provides details to make an API call to /payments/details end point.
      */
     boolean providesDetails();
 }
