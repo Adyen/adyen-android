@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="utf-8"?><!--
+  ~ Copyright (c) 2021 Adyen N.V.
+  ~
+  ~ This file is open source and available under the MIT license. See the LICENSE file for more info.
+  ~
+  ~ Created by ozgur on 8/12/2021.
+  -->
+
+<translate xmlns:android="http://schemas.android.com/apk/res/android"
+    android:duration="@android:integer/config_shortAnimTime"
+    android:fromXDelta="0"
+    android:toXDelta="100%" />

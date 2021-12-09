@@ -8,10 +8,15 @@
 
 package com.adyen.checkout.dropin.ui.component
 
+import android.app.Dialog
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.view.WindowManager
+import android.view.animation.Animation
+import android.view.animation.AnimationUtils
+import android.widget.FrameLayout
 import androidx.core.view.children
 import androidx.core.view.isVisible
 import com.adyen.checkout.bacs.BacsDirectDebitComponent
@@ -27,7 +32,9 @@ import com.adyen.checkout.dropin.R
 import com.adyen.checkout.dropin.databinding.FragmentBacsDirectDebitComponentBinding
 import com.adyen.checkout.dropin.ui.base.BaseComponentDialogFragment
 import com.google.android.material.bottomsheet.BottomSheetBehavior
+import com.google.android.material.bottomsheet.BottomSheetDialog
 
+@Suppress("TooManyFunctions")
 class BacsDirectDebitDialogFragment : BaseComponentDialogFragment() {
 
     private lateinit var binding: FragmentBacsDirectDebitComponentBinding
@@ -63,6 +70,13 @@ class BacsDirectDebitDialogFragment : BaseComponentDialogFragment() {
         } else {
             binding.payButton.isVisible = false
         }
+    }
+
+    override fun onCreateDialog(savedInstanceState: Bundle?): Dialog {
+        Logger.d(TAG, "onCreateDialog")
+        val dialog = super.onCreateDialog(savedInstanceState)
+        setDialogToFullScreen(dialog)
+        return dialog
     }
 
     override fun onChanged(paymentComponentState: PaymentComponentState<in PaymentMethodDetails>?) {
@@ -118,11 +132,24 @@ class BacsDirectDebitDialogFragment : BaseComponentDialogFragment() {
         val bacsDirectDebitComponent = component as BacsDirectDebitComponent
         val isInputViewAttached = binding.viewContainer.children.any { it is BacsDirectDebitInputView }
         if (!isInputViewAttached) {
-            val bacsDirectDebitInputView = BacsDirectDebitInputView(requireContext())
+            val inputView = BacsDirectDebitInputView(requireContext())
+            val confirmationRemoveAnimation = AnimationUtils.loadAnimation(requireContext(), R.anim.slide_out_left_to_right)
+            val inputAddAnimation = AnimationUtils.loadAnimation(requireContext(), R.anim.slide_in_left_to_right)
             binding.viewContainer.apply {
-                removeAllViews()
-                addView(bacsDirectDebitInputView)
-                bacsDirectDebitInputView.attach(bacsDirectDebitComponent, viewLifecycleOwner)
+                val confirmationView = children.firstOrNull { it is BacsDirectDebitConfirmationView }
+                confirmationRemoveAnimation.setAnimationListener(object : Animation.AnimationListener {
+                    override fun onAnimationStart(animation: Animation?) {
+                        // no ops
+                    }
+                    override fun onAnimationEnd(animation: Animation?) { removeView(confirmationView) }
+                    override fun onAnimationRepeat(animation: Animation?) {
+                        // no ops
+                    }
+                })
+                addView(inputView)
+                confirmationView?.startAnimation(confirmationRemoveAnimation)
+                inputView.startAnimation(inputAddAnimation)
+                inputView.attach(bacsDirectDebitComponent, viewLifecycleOwner)
             }
         }
     }
@@ -131,12 +158,38 @@ class BacsDirectDebitDialogFragment : BaseComponentDialogFragment() {
         val bacsDirectDebitComponent = component as BacsDirectDebitComponent
         val isConfirmationViewAttached = binding.viewContainer.children.any { it is BacsDirectDebitConfirmationView }
         if (!isConfirmationViewAttached) {
-            val bacsDirectDebitConfirmationView = BacsDirectDebitConfirmationView(requireContext())
+            val confirmationView = BacsDirectDebitConfirmationView(requireContext())
+            val confirmationAddAnimation = AnimationUtils.loadAnimation(requireContext(), R.anim.slide_in_right_to_left)
+            val inputRemoveAnimation = AnimationUtils.loadAnimation(requireContext(), R.anim.slide_out_right_to_left)
             binding.viewContainer.apply {
-                removeAllViews()
-                addView(bacsDirectDebitConfirmationView)
-                bacsDirectDebitConfirmationView.attach(bacsDirectDebitComponent, viewLifecycleOwner)
+                val inputView = children.firstOrNull { it is BacsDirectDebitInputView }
+                inputRemoveAnimation.setAnimationListener(object : Animation.AnimationListener {
+                    override fun onAnimationStart(animation: Animation?) {
+                        // no ops
+                    }
+                    override fun onAnimationEnd(animation: Animation?) { removeView(inputView) }
+                    override fun onAnimationRepeat(animation: Animation?) {
+                        // no ops
+                    }
+                })
+                addView(confirmationView)
+                inputView?.startAnimation(inputRemoveAnimation)
+                confirmationView.startAnimation(confirmationAddAnimation)
+                confirmationView.attach(bacsDirectDebitComponent, viewLifecycleOwner)
             }
+        }
+    }
+
+    private fun setDialogToFullScreen(dialog: Dialog) {
+        dialog.setOnShowListener {
+            val bottomSheetDialog = dialog as BottomSheetDialog
+            val bottomSheet = bottomSheetDialog.findViewById<FrameLayout>(com.google.android.material.R.id.design_bottom_sheet)
+            val layoutParams = bottomSheet?.layoutParams
+            val behavior = bottomSheet?.let { BottomSheetBehavior.from(it) }
+            behavior?.isDraggable = false
+            layoutParams?.height = WindowManager.LayoutParams.MATCH_PARENT
+            bottomSheet?.layoutParams = layoutParams
+            behavior?.state = BottomSheetBehavior.STATE_EXPANDED
         }
     }
 }
