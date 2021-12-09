@@ -295,11 +295,20 @@ class DropInViewModel(
     fun orderCancellationRequested() {
         val order = currentOrder
             ?: throw CheckoutException("No order in progress")
+        sendCancelOrderEvent(order, false)
+    }
+
+    fun cancelDropIn() {
+        currentOrder?.let { sendCancelOrderEvent(it, true) }
+        sendEvent(DropInActivityEvent.CancelDropIn)
+    }
+
+    private fun sendCancelOrderEvent(order: OrderModel, isDropInCancelledByUser: Boolean) {
         val orderRequest = OrderRequest(
             pspReference = order.pspReference,
             orderData = order.orderData
         )
-        sendEvent(DropInActivityEvent.CancelOrder(orderRequest))
+        sendEvent(DropInActivityEvent.CancelOrder(orderRequest, isDropInCancelledByUser))
     }
 
     private fun sendEvent(event: DropInActivityEvent) {

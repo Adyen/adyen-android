@@ -154,6 +154,7 @@ class ExampleAsyncDropInService : DropInService() {
     }
 
     private fun fetchPaymentMethods(order: OrderResponse? = null) {
+        Logger.d(TAG, "fetchPaymentMethods")
         launch(Dispatchers.IO) {
             val orderRequest = if (order == null) null else OrderRequest(
                 pspReference = order.pspReference,
@@ -238,7 +239,7 @@ class ExampleAsyncDropInService : DropInService() {
         }
     }
 
-    override fun cancelOrder(order: OrderRequest) {
+    override fun cancelOrder(order: OrderRequest, isDropInCancelledByUser: Boolean) {
         launch(Dispatchers.IO) {
             Logger.d(TAG, "cancelOrder")
             val cancelOrderRequest = createCancelOrderRequest(
@@ -248,20 +249,21 @@ class ExampleAsyncDropInService : DropInService() {
             val requestBody = cancelOrderRequest.toString().toRequestBody(CONTENT_TYPE)
             val response = paymentsRepository.cancelOrderAsync(requestBody)
 
-            val result = handleCancelOrderResponse(response) ?: return@launch
+            val result = handleCancelOrderResponse(response, isDropInCancelledByUser) ?: return@launch
             sendResult(result)
         }
     }
 
     @Suppress("NestedBlockDepth")
-    private fun handleCancelOrderResponse(response: ResponseBody?): DropInServiceResult? {
+    private fun handleCancelOrderResponse(response: ResponseBody?, isDropInCancelledByUser: Boolean): DropInServiceResult? {
         return if (response != null) {
             val orderJson = response.string()
             val jsonResponse = JSONObject(orderJson)
+            Logger.v(TAG, "cancelOrder response - ${jsonResponse.toStringPretty()}")
             val resultCode = jsonResponse.getStringOrNull("resultCode")
             when (resultCode) {
                 "Received" -> {
-                    fetchPaymentMethods()
+                    if (!isDropInCancelledByUser) fetchPaymentMethods()
                     null
                 }
                 else -> DropInServiceResult.Error(reason = resultCode, dismissDropIn = false)

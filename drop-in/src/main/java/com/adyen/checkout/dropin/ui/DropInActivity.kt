@@ -147,7 +147,7 @@ class DropInActivity : AppCompatActivity(), DropInBottomSheetDialogFragment.Prot
             }
             orderCancellationQueue?.let {
                 Logger.d(TAG, "Sending queued cancel order request")
-                requestCancelOrderCall(it)
+                requestCancelOrderCall(it, true)
                 orderCancellationQueue = null
             }
         }
@@ -247,6 +247,7 @@ class DropInActivity : AppCompatActivity(), DropInBottomSheetDialogFragment.Prot
     }
 
     override fun onStart() {
+        Logger.v(TAG, "onStart")
         super.onStart()
         bindService()
     }
@@ -265,6 +266,7 @@ class DropInActivity : AppCompatActivity(), DropInBottomSheetDialogFragment.Prot
     }
 
     override fun onStop() {
+        Logger.v(TAG, "onStop")
         super.onStop()
         unbindService()
     }
@@ -339,8 +341,14 @@ class DropInActivity : AppCompatActivity(), DropInBottomSheetDialogFragment.Prot
     }
 
     override fun onResume() {
+        Logger.v(TAG, "onResume")
         super.onResume()
         setLoading(dropInViewModel.isWaitingResult)
+    }
+
+    override fun onDestroy() {
+        Logger.v(TAG, "onDestroy")
+        super.onDestroy()
     }
 
     override fun showPreselectedDialog() {
@@ -390,7 +398,7 @@ class DropInActivity : AppCompatActivity(), DropInBottomSheetDialogFragment.Prot
 
     override fun terminateDropIn() {
         Logger.d(TAG, "terminateDropIn")
-        terminateWithError(DropIn.ERROR_REASON_USER_CANCELED)
+        dropInViewModel.cancelDropIn()
     }
 
     override fun startGooglePay(paymentMethod: PaymentMethod, googlePayConfiguration: GooglePayConfiguration) {
@@ -429,7 +437,7 @@ class DropInActivity : AppCompatActivity(), DropInBottomSheetDialogFragment.Prot
         dropInService?.requestOrdersCall()
     }
 
-    private fun requestCancelOrderCall(order: OrderRequest) {
+    private fun requestCancelOrderCall(order: OrderRequest, isDropInCancelledByUser: Boolean) {
         Logger.d(TAG, "requestCancelOrderCall")
         if (dropInService == null) {
             Logger.e(TAG, "requestOrdersCall - service is disconnected")
@@ -438,7 +446,7 @@ class DropInActivity : AppCompatActivity(), DropInBottomSheetDialogFragment.Prot
         }
         dropInViewModel.isWaitingResult = true
         setLoading(true)
-        dropInService?.requestCancelOrder(order)
+        dropInService?.requestCancelOrder(order, isDropInCancelledByUser)
     }
 
     override fun finishWithAction() {
@@ -582,7 +590,10 @@ class DropInActivity : AppCompatActivity(), DropInBottomSheetDialogFragment.Prot
                 showPaymentMethodsDialog()
             }
             is DropInActivityEvent.CancelOrder -> {
-                requestCancelOrderCall(event.order)
+                requestCancelOrderCall(event.order, event.isDropInCancelledByUser)
+            }
+            is DropInActivityEvent.CancelDropIn -> {
+                terminateWithError(DropIn.ERROR_REASON_USER_CANCELED)
             }
         }
     }

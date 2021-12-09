@@ -297,13 +297,13 @@ abstract class DropInService : Service(), CoroutineScope, DropInServiceInterface
         throw NotImplementedError("Method createOrder is not implemented")
     }
 
-    override fun requestCancelOrder(order: OrderRequest) {
+    override fun requestCancelOrder(order: OrderRequest, isDropInCancelledByUser: Boolean) {
         Logger.d(TAG, "requestCancelOrder")
-        cancelOrder(order)
+        cancelOrder(order, isDropInCancelledByUser)
     }
 
     // TODO docs
-    open fun cancelOrder(order: OrderRequest) {
+    open fun cancelOrder(order: OrderRequest, isDropInCancelledByUser: Boolean) {
         throw NotImplementedError("Method cancelOrder is not implemented")
     }
 
@@ -339,5 +339,5 @@ internal interface DropInServiceInterface {
     fun requestDetailsCall(actionComponentData: ActionComponentData)
     fun requestBalanceCall(paymentMethodData: PaymentMethodDetails)
     fun requestOrdersCall()
-    fun requestCancelOrder(order: OrderRequest)
+    fun requestCancelOrder(order: OrderRequest, isDropInCancelledByUser: Boolean)
 }
