@@ -64,7 +64,7 @@ class ImageLoader(private val logoApi: LogoApi) {
         @DrawableRes placeholder: Int = 0,
         @DrawableRes errorFallback: Int = 0
     ) {
-        load(txVariant, txSubVariant, view, null, placeholder, errorFallback)
+        load(txVariant, txSubVariant, view, LogoApi.DEFAULT_SIZE, placeholder, errorFallback)
     }
 
     /**
