@@ -13,6 +13,7 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.core.view.isVisible
 import androidx.lifecycle.Observer
 import com.adyen.checkout.components.ActionComponent
 import com.adyen.checkout.components.ActionComponentData
@@ -81,6 +82,14 @@ class ActionComponentDialogFragment : DropInBottomSheetDialogFragment(), Observe
             actionComponent = getComponent(action)
             attachComponent(actionComponent, componentView)
 
+            val shouldShowFinishButton = getActionProviderFor(action)?.providesDetails() == false
+            if (shouldShowFinishButton) {
+                with(binding.buttonFinish) {
+                    isVisible = true
+                    setOnClickListener { protocol.finishWithAction() }
+                }
+            }
+
             if (!isHandled) {
                 (actionComponent as ActionComponent<*>).handleAction(requireActivity(), action)
                 isHandled = true
@@ -93,12 +102,7 @@ class ActionComponentDialogFragment : DropInBottomSheetDialogFragment(), Observe
     }
 
     override fun onBackPressed(): Boolean {
-        // polling will be canceled by lifecycle event
-        if (dropInViewModel.shouldSkipToSinglePaymentMethod()) {
-            protocol.terminateDropIn()
-        } else {
-            protocol.showPaymentMethodsDialog()
-        }
+        protocol.terminateDropIn()
         return true
     }
 

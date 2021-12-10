@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+  ~ Copyright (c) 2021 Adyen N.V.
+  ~
+  ~ This file is open source and available under the MIT license. See the LICENSE file for more info.
+  ~
+  ~ Created by ozgur on 02/12/2021.
+  -->
+
+<resources>
+    <string name="checkout_voucher_introduction_bacs">자동 이체 안내(DDI/필수) 다운로드</string>
+    <string name="checkout_voucher_download_pdf">PDF 다운로드</string>
+    <string name="checkout_voucher_finish">완료</string>
+</resources>

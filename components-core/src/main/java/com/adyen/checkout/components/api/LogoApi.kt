@@ -23,7 +23,7 @@ class LogoApi(host: String, displayMetrics: DisplayMetrics) {
 
         // %1$s = size, %2$s = txVariant(/txSubVariant)-densityExtension
         private const val LOGO_PATH = "images/logos/%1\$s/%2\$s.png"
-        private val DEFAULT_SIZE = Size.SMALL
+        val DEFAULT_SIZE = Size.SMALL
         const val KILO_BYTE_SIZE = 1024
         private const val CACHE_FRACTION_SIZE = 8
         private val LRU_CACHE_MAX_SIZE = getMaxCacheSize()
