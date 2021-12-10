@@ -25,4 +25,8 @@
     <string name="checkout_giftcard_error_zero_balance">礼品卡余额为零</string>
     <string name="checkout_giftcard_error_currency">礼品卡仅以其发行的货币为有效货币</string>
     <string name="checkout_giftcard_remaining_balance_text">剩余额度为 %s</string>
+    <string name="checkout_giftcard_pay_remaining_amount">选择支付方式支付剩余的 %s</string>
+    <string name="checkout_giftcard_payment_methods_header">已添加礼品卡</string>
+    <string name="checkout_giftcard_remove_button">删除</string>
+    <string name="checkout_giftcard_max_transaction_limit">此礼品卡上每笔交易允许的最大金额为 %s</string>
 </resources>

@@ -8,9 +8,15 @@
 
 package com.adyen.checkout.dropin.ui.paymentmethods
 
+import com.adyen.checkout.components.model.payments.Amount
+import java.util.Locale
+
 data class GiftCardPaymentMethodModel(
     val imageId: String,
-    val lastFour: String
+    val lastFour: String,
+    val amount: Amount?,
+    val transactionLimit: Amount?,
+    val shopperLocale: Locale?
 ) : PaymentMethodListItem {
     override fun getViewType(): Int = PaymentMethodListItem.GIFT_CARD_PAYMENT_METHOD
 }

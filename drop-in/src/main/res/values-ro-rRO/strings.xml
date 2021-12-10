@@ -25,4 +25,8 @@
     <string name="checkout_giftcard_error_zero_balance">Acest card cadou are soldul zero</string>
     <string name="checkout_giftcard_error_currency">Cardurile cadou sunt valabile numai în moneda în care au fost emise</string>
     <string name="checkout_giftcard_remaining_balance_text">Soldul rămas va fi de %s</string>
+    <string name="checkout_giftcard_pay_remaining_amount">Selectați metoda de plată pentru suma de %s rămasă</string>
+    <string name="checkout_giftcard_payment_methods_header">Card cadou adăugat</string>
+    <string name="checkout_giftcard_remove_button">Ștergere</string>
+    <string name="checkout_giftcard_max_transaction_limit">Pentru acest card cadou, suma maximă permisă per tranzacție este de %s</string>
 </resources>

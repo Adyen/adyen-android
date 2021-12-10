@@ -89,6 +89,7 @@ abstract class DropInBottomSheetDialogFragment : BottomSheetDialogFragment() {
     /**
      * Interface for Drop-in fragments to interact with the main Activity
      */
+    @Suppress("TooManyFunctions")
     interface Protocol {
         fun showPreselectedDialog()
         fun showPaymentMethodsDialog()
@@ -100,5 +101,6 @@ abstract class DropInBottomSheetDialogFragment : BottomSheetDialogFragment() {
         fun terminateDropIn()
         fun startGooglePay(paymentMethod: PaymentMethod, googlePayConfiguration: GooglePayConfiguration)
         fun requestBalanceCall(giftCardComponentState: GiftCardComponentState)
+        fun requestPartialPayment()
     }
 }

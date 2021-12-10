@@ -25,4 +25,8 @@
     <string name="checkout_giftcard_error_zero_balance">Saldot för detta presentkort är noll</string>
     <string name="checkout_giftcard_error_currency">Presentkort är endast giltiga i den valuta som de utfärdades i</string>
     <string name="checkout_giftcard_remaining_balance_text">Återstående saldo blir %s</string>
+    <string name="checkout_giftcard_pay_remaining_amount">Välj betalningssätt för återstående %s</string>
+    <string name="checkout_giftcard_payment_methods_header">Tillagt presentkort</string>
+    <string name="checkout_giftcard_remove_button">Ta bort</string>
+    <string name="checkout_giftcard_max_transaction_limit">Maximalt %s per transaktion är tillåtet på detta presentkort</string>
 </resources>
