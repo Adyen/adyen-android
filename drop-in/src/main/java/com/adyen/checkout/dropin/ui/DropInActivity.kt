@@ -21,6 +21,7 @@ import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.DialogFragment
 import androidx.lifecycle.Observer
+import androidx.lifecycle.lifecycleScope
 import com.adyen.checkout.components.ActionComponentData
 import com.adyen.checkout.components.ComponentError
 import com.adyen.checkout.components.PaymentComponentState
@@ -65,6 +66,7 @@ import com.adyen.checkout.googlepay.GooglePayConfiguration
 import com.adyen.checkout.redirect.RedirectUtil
 import com.adyen.checkout.wechatpay.WeChatPayUtils
 import kotlinx.coroutines.ExperimentalCoroutinesApi
+import kotlinx.coroutines.flow.collect
 
 private val TAG = LogUtil.getTag()
 
@@ -83,7 +85,7 @@ private const val GOOGLE_PAY_REQUEST_CODE = 1
 @Suppress("TooManyFunctions")
 class DropInActivity : AppCompatActivity(), DropInBottomSheetDialogFragment.Protocol, ActionHandler.ActionHandlingInterface {
 
-    private val dropInViewModel: DropInViewModel by viewModels()
+    private val dropInViewModel: DropInViewModel by viewModels { DropInViewModelFactory(this, intent.extras) }
 
     private lateinit var googlePayComponent: GooglePayComponent
 
@@ -189,6 +191,8 @@ class DropInActivity : AppCompatActivity(), DropInBottomSheetDialogFragment.Prot
         handleIntent(intent)
 
         sendAnalyticsEvent()
+
+        initObservers()
     }
 
     private fun noDialogPresent(): Boolean {
@@ -470,8 +474,6 @@ class DropInActivity : AppCompatActivity(), DropInBottomSheetDialogFragment.Prot
             dropInServiceResult.paymentMethodsApiResponse,
             dropInServiceResult.order
         )
-        setLoading(false)
-        showPaymentMethodsDialog()
     }
 
     private fun sendResult(content: String) {
@@ -543,6 +545,24 @@ class DropInActivity : AppCompatActivity(), DropInBottomSheetDialogFragment.Prot
         AnalyticsDispatcher.dispatchEvent(this, dropInViewModel.dropInConfiguration.environment, analyticEvent)
     }
 
+    private fun initObservers() {
+        lifecycleScope.launchWhenStarted {
+            dropInViewModel.eventsFlow.collect { handleEvent(it) }
+        }
+    }
+
+    private fun handleEvent(event: DropInActivityEvent) {
+        when (event) {
+            is DropInActivityEvent.MakePartialPayment -> {
+                requestPaymentsCall(event.paymentComponentState)
+            }
+            is DropInActivityEvent.ShowPaymentMethods -> {
+                setLoading(false)
+                showPaymentMethodsDialog()
+            }
+        }
+    }
+
     private fun hideFragmentDialog(tag: String) {
         getFragmentByTag(tag)?.dismiss()
     }
@@ -589,14 +609,11 @@ class DropInActivity : AppCompatActivity(), DropInBottomSheetDialogFragment.Prot
 
     private fun handleOrderResult(order: OrderResponse) {
         Logger.v(TAG, "handleOrderResult")
-        dropInViewModel.handleOrderResponse(order)
-        requestPartialPayment()
+        dropInViewModel.handleOrderCreated(order)
     }
 
-    private fun requestPartialPayment() {
-        val paymentComponentState = dropInViewModel.cachedGiftCardComponentState
-            ?: throw CheckoutException("Lost reference to cached GiftCardComponentState")
-        requestPaymentsCall(paymentComponentState)
+    override fun requestPartialPayment() {
+        dropInViewModel.partialPaymentRequested()
     }
 
     companion object {

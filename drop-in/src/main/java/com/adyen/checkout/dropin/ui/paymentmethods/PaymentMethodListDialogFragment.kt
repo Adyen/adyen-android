@@ -50,6 +50,7 @@ class PaymentMethodListDialogFragment : DropInBottomSheetDialogFragment(), Payme
                 requireActivity().application,
                 dropInViewModel.paymentMethodsApiResponse.paymentMethods.orEmpty(),
                 dropInViewModel.paymentMethodsApiResponse.storedPaymentMethods.orEmpty(),
+                dropInViewModel.currentOrder,
                 dropInViewModel.dropInConfiguration
             )
         }
@@ -132,6 +133,16 @@ class PaymentMethodListDialogFragment : DropInBottomSheetDialogFragment(), Payme
                 sendPayment(paymentMethod.type)
             }
         }
+    }
+
+    override fun onHeaderActionSelected(header: PaymentMethodHeader) {
+        when (header.type) {
+            PaymentMethodHeader.TYPE_GIFT_CARD_HEADER -> showCancelOrderAlert()
+        }
+    }
+
+    private fun showCancelOrderAlert() {
+        // TODO show alert and cancel order
     }
 
     private fun sendPayment(type: String) {

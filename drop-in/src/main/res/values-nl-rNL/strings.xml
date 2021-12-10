@@ -25,4 +25,8 @@
     <string name="checkout_giftcard_error_zero_balance">Deze cadeaukaart heeft geen saldo</string>
     <string name="checkout_giftcard_error_currency">Cadeaukaarten zijn alleen geldig in de valuta waarin ze zijn uitgegeven</string>
     <string name="checkout_giftcard_remaining_balance_text">Het resterende saldo is %s</string>
+    <string name="checkout_giftcard_pay_remaining_amount">Selecteer betaalmethode voor de resterende %s</string>
+    <string name="checkout_giftcard_payment_methods_header">Cadeaukaart toegevoegd</string>
+    <string name="checkout_giftcard_remove_button">Verwijderen</string>
+    <string name="checkout_giftcard_max_transaction_limit">Max. %s toegestaan per transactie met deze cadeaubon</string>
 </resources>

@@ -25,4 +25,8 @@
     <string name="checkout_giftcard_error_zero_balance">Az ajándékkártya egyenlege nulla</string>
     <string name="checkout_giftcard_error_currency">Az ajándékkártyák csak abban a pénznemben érvényesek, amelyre kiállították azokat</string>
     <string name="checkout_giftcard_remaining_balance_text">A fennmaradó egyenleg %s lesz</string>
+    <string name="checkout_giftcard_pay_remaining_amount">Fizetési mód választása a fennmaradó %s számára</string>
+    <string name="checkout_giftcard_payment_methods_header">Hozzáadott ajándékkártya</string>
+    <string name="checkout_giftcard_remove_button">Eltávolítás</string>
+    <string name="checkout_giftcard_max_transaction_limit">Ezen az ajándékkártyán a tranzakciónként engedélyezett maximális összeg %s</string>
 </resources>
