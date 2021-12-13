@@ -210,7 +210,7 @@ public class GooglePayConfiguration extends Configuration {
         private String mBuilderTotalPriceStatus = DEFAULT_TOTAL_PRICE_STATUS;
 
         private int getDefaultGooglePayEnvironment() {
-            if (getBuilderEnvironment() == Environment.TEST) {
+            if (getBuilderEnvironment().equals(Environment.TEST)) {
                 return WalletConstants.ENVIRONMENT_TEST;
             }
             return WalletConstants.ENVIRONMENT_PRODUCTION;
