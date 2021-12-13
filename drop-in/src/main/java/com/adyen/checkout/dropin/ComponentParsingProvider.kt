@@ -125,7 +125,9 @@ internal fun <T : Configuration> getDefaultConfigForPaymentMethod(
         PaymentMethodTypes.MOLPAY_VIETNAM -> MolpayConfiguration.Builder(shopperLocale, environment, clientKey)
         PaymentMethodTypes.OPEN_BANKING -> OpenBankingConfiguration.Builder(shopperLocale, environment, clientKey)
         PaymentMethodTypes.SEPA -> SepaConfiguration.Builder(shopperLocale, environment, clientKey)
-        PaymentMethodTypes.BACS -> BacsDirectDebitConfiguration.Builder(shopperLocale, environment, clientKey)
+        PaymentMethodTypes.BACS -> BacsDirectDebitConfiguration.Builder(shopperLocale, environment, clientKey).apply {
+            if (!dropInConfiguration.amount.isEmpty) setAmount(dropInConfiguration.amount)
+        }
         PaymentMethodTypes.SCHEME -> CardConfiguration.Builder(shopperLocale, environment, clientKey)
         else -> throw CheckoutException("Unable to find component configuration for paymentMethod - $paymentMethod")
     }

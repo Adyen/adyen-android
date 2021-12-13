@@ -13,10 +13,16 @@ import android.os.Parcel
 import android.os.Parcelable
 import com.adyen.checkout.components.base.BaseConfigurationBuilder
 import com.adyen.checkout.components.base.Configuration
+import com.adyen.checkout.components.model.payments.Amount
+import com.adyen.checkout.components.util.CheckoutCurrency
 import com.adyen.checkout.core.api.Environment
+import com.adyen.checkout.core.exception.CheckoutException
+import com.adyen.checkout.core.model.JsonUtils
 import java.util.*
 
 class BacsDirectDebitConfiguration : Configuration {
+
+    val amount: Amount
 
     companion object {
         @JvmField
@@ -32,10 +38,23 @@ class BacsDirectDebitConfiguration : Configuration {
         }
     }
 
-    internal constructor(builder: Builder) : super(builder.builderShopperLocale, builder.builderEnvironment, builder.builderClientKey)
-    internal constructor(parcel: Parcel) : super(parcel)
+    internal constructor(builder: Builder) : super(builder.builderShopperLocale, builder.builderEnvironment, builder.builderClientKey) {
+        this.amount = builder.amount
+    }
+
+    internal constructor(parcel: Parcel) : super(parcel) {
+        amount = Amount.CREATOR.createFromParcel(parcel)
+    }
+
+    override fun writeToParcel(parcel: Parcel, flags: Int) {
+        super.writeToParcel(parcel, flags)
+        JsonUtils.writeToParcel(parcel, Amount.SERIALIZER.serialize(amount))
+    }
 
     class Builder : BaseConfigurationBuilder<BacsDirectDebitConfiguration> {
+
+        var amount: Amount = Amount.EMPTY
+            private set
 
         constructor(context: Context, clientKey: String) : super(context, clientKey)
 
@@ -58,6 +77,14 @@ class BacsDirectDebitConfiguration : Configuration {
 
         override fun buildInternal(): BacsDirectDebitConfiguration {
             return BacsDirectDebitConfiguration(this)
+        }
+
+        fun setAmount(amount: Amount): Builder {
+            if (!CheckoutCurrency.isSupported(amount.currency) || amount.value < 0) {
+                throw CheckoutException("Currency is not valid.")
+            }
+            this.amount = amount
+            return this
         }
     }
 }
