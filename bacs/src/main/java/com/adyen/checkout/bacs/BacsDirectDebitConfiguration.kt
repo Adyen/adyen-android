@@ -53,7 +53,7 @@ class BacsDirectDebitConfiguration : Configuration {
 
     class Builder : BaseConfigurationBuilder<BacsDirectDebitConfiguration> {
 
-        var amount: Amount = Amount.EMPTY
+        internal var amount: Amount = Amount.EMPTY
             private set
 
         constructor(context: Context, clientKey: String) : super(context, clientKey)

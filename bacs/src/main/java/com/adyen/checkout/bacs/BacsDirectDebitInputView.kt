@@ -19,6 +19,7 @@ import com.adyen.checkout.components.ui.FieldState
 import com.adyen.checkout.components.ui.Validation
 import com.adyen.checkout.components.ui.view.AdyenLinearLayout
 import com.adyen.checkout.components.ui.view.AdyenTextInputEditText
+import com.adyen.checkout.components.util.CurrencyUtils
 import com.adyen.checkout.core.log.LogUtil
 import com.adyen.checkout.core.log.Logger
 
@@ -52,6 +53,11 @@ class BacsDirectDebitInputView @JvmOverloads constructor(context: Context, attrs
             binding.switchConsentAccount.isChecked = it.isAccountConsentChecked
         }
         component.setInputMode()
+        if (!component.configuration.amount.isEmpty) {
+            val formattedAmount = CurrencyUtils.formatAmount(component.configuration.amount, component.configuration.shopperLocale)
+            // TODO update translations
+            // binding.switchConsentAmount.text = resources.getString(R.string.bacs_consent_amount_specified, formattedAmount)
+        }
     }
 
     override fun initView() {
