@@ -17,6 +17,10 @@
     <string name="bacs_sort_code_invalid">Érvénytelen banki azonosító</string>
     <string name="bacs_shopper_email_invalid">Érvénytelen e-mail-cím</string>
 
+    <string name="bacs_consent_account">Megerősítem, hogy a bankszámla az én nevemen van, és én vagyok a bankszámlát érintő beszedési megbízás jóváhagyásához szükséges egyetlen aláíró.</string>
+    <string name="bacs_consent_amount">Elfogadom, hogy a fenti összeget levonják a bankszámlámról.</string>
+    <string name="bacs_consent_amount_specified">Elfogadom, hogy %s levonásra kerüljön a bankszámlámról.</string>
+
     <string name="bacs_continue">Folytatás</string>
     <string name="bacs_confirm_and_pay">Megerősítés és fizetés</string>
 </resources>

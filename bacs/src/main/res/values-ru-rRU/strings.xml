@@ -17,6 +17,10 @@
     <string name="bacs_sort_code_invalid">Неверный код банка</string>
     <string name="bacs_shopper_email_invalid">Недействительный адрес эл. почты</string>
 
+    <string name="bacs_consent_account">Подтверждаю, что счет оформлен на мое имя и что я – единственное лицо, имеющее право подписи, разрешающей прямое дебетование средств со счета.</string>
+    <string name="bacs_consent_amount">Выражаю согласие на списание вышеуказанной суммы с моего банковского счета.</string>
+    <string name="bacs_consent_amount_specified">Выражаю согласие на списание %s с моего банковского счета.</string>
+
     <string name="bacs_continue">Продолжить</string>
     <string name="bacs_confirm_and_pay">Подтвердить и оплатить</string>
 </resources>

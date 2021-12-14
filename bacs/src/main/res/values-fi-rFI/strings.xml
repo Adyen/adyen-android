@@ -17,6 +17,10 @@
     <string name="bacs_sort_code_invalid">Ei-kelvollinen lajittelukoodi</string>
     <string name="bacs_shopper_email_invalid">Ei-kelvollinen sähköpostiosoite</string>
 
+    <string name="bacs_consent_account">Vahvistan, että tili on nimessäni ja olen ainoa allekirjoittaja, joka vaaditaan valtuuttamaan suoraveloitus tällä tilillä.</string>
+    <string name="bacs_consent_amount">Hyväksyn, että alla oleva summa veloitetaan pankkitililtäni.</string>
+    <string name="bacs_consent_amount_specified">Hyväksyn, että %s veloitetaan pankkitililtäni.</string>
+
     <string name="bacs_continue">Jatka</string>
     <string name="bacs_confirm_and_pay">Vahvista ja maksa</string>
 </resources>

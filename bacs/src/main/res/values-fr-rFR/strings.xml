@@ -17,6 +17,10 @@
     <string name="bacs_sort_code_invalid">Code de tri (sort code) non valide</string>
     <string name="bacs_shopper_email_invalid">Adresse e-mail incorrecte</string>
 
+    <string name="bacs_consent_account">Je confirme être le titulaire du compte et qu\'aucune autre signature que la mienne n\'est requise pour autoriser un prélèvement sur ce compte.</string>
+    <string name="bacs_consent_amount">J\'accepte que le montant ci-dessus soit déduit de mon compte bancaire.</string>
+    <string name="bacs_consent_amount_specified">J\'accepte que le montant de %s soit prélevé sur mon compte bancaire.</string>
+
     <string name="bacs_continue">Continuer</string>
     <string name="bacs_confirm_and_pay">Confirmer et payer</string>
 </resources>

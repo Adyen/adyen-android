@@ -17,6 +17,10 @@
     <string name="bacs_sort_code_invalid">Neplatný kód Sort</string>
     <string name="bacs_shopper_email_invalid">Neplatná e-mailová adresa</string>
 
+    <string name="bacs_consent_account">Potvrzuji, že účet je veden na moje jméno a jsem jediným disponentem, jehož podpis je nutný ke schválení přímého inkasa.</string>
+    <string name="bacs_consent_amount">Souhlasím s tím, že mi bude následující částka odečtena z bankovního účtu.</string>
+    <string name="bacs_consent_amount_specified">Souhlasím, aby mi částka %s byla odečtena z bankovního účtu.</string>
+
     <string name="bacs_continue">Pokračovat</string>
     <string name="bacs_confirm_and_pay">Potvrdit a zaplatit</string>
 </resources>

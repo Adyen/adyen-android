@@ -17,6 +17,10 @@
     <string name="bacs_sort_code_invalid">ソートコードが無効です</string>
     <string name="bacs_shopper_email_invalid">Eメールアドレスが無効です</string>
 
+    <string name="bacs_consent_account">口座が私の名義であることを確認し、この口座からの自動引き落としを承認するために必要な唯一の署名者であることを確認します。</string>
+    <string name="bacs_consent_amount">上記の金額が私の銀行口座から引き落とされることに同意します。</string>
+    <string name="bacs_consent_amount_specified">%sが私の銀行口座から引き落とされることに同意します。</string>
+
     <string name="bacs_continue">続ける</string>
     <string name="bacs_confirm_and_pay">確認して支払う</string>
 </resources>

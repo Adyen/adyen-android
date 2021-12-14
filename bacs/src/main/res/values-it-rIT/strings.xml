@@ -17,6 +17,10 @@
     <string name="bacs_sort_code_invalid">Sort code non valido</string>
     <string name="bacs_shopper_email_invalid">Indirizzo e-mail non valido</string>
 
+    <string name="bacs_consent_account">Confermo che il conto è intestato al sottoscritto e che sono l\'unico firmatario a dover autorizzare l\'addebito diretto su questo conto.</string>
+    <string name="bacs_consent_amount">Accetto che l\'importo sopra indicato venga detratto dal mio conto bancario.</string>
+    <string name="bacs_consent_amount_specified">Accetto che l\'importo di %s venga detratto dal mio conto bancario.</string>
+
     <string name="bacs_continue">Continua</string>
     <string name="bacs_confirm_and_pay">Conferma e paga</string>
 </resources>

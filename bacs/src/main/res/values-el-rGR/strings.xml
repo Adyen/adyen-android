@@ -17,6 +17,10 @@
     <string name="bacs_sort_code_invalid">Μη έγκυρος κωδικός τράπεζας</string>
     <string name="bacs_shopper_email_invalid">Μη έγκυρη διεύθυνση email</string>
 
+    <string name="bacs_consent_account">Επιβεβαιώνω ότι ο λογαριασμός είναι στο όνομά μου και πως είμαι ο/η μοναδικός/μοναδική υπογράφων/υπογράφουσα που απαιτείται για εξουσιοδότηση της Άμεσης Χρέωσης σε αυτόν τον λογαριασμό.</string>
+    <string name="bacs_consent_amount">Αποδέχομαι ότι το πιο πάνω ποσό θα αφαιρεθεί από τον τραπεζικό λογαριασμό μου.</string>
+    <string name="bacs_consent_amount_specified">Αποδέχομαι ότι το ποσό %s θα αφαιρεθεί από τον τραπεζικό λογαριασμό μου.</string>
+
     <string name="bacs_continue">Συνέχεια</string>
     <string name="bacs_confirm_and_pay">Επιβεβαίωση και πληρωμή</string>
 </resources>

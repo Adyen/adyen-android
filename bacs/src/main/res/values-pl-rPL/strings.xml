@@ -17,6 +17,10 @@
     <string name="bacs_sort_code_invalid">Nieprawidłowy numer rozliczeniowy SORT</string>
     <string name="bacs_shopper_email_invalid">Niepoprawny adres email</string>
 
+    <string name="bacs_consent_account">Potwierdzam, że konto jest zarejestrowane na moje nazwisko i jestem jedynym sygnatariuszem wymaganym do autoryzacji polecenia zapłaty na tym koncie.</string>
+    <string name="bacs_consent_amount">Wyrażam zgodę na pobranie powyższej kwoty z mojego rachunku bankowego.</string>
+    <string name="bacs_consent_amount_specified">Wyrażam zgodę na pobranie kwoty %s z mojego rachunku bankowego.</string>
+
     <string name="bacs_continue">Kontynuuj</string>
     <string name="bacs_confirm_and_pay">Potwierdź i zapłać</string>
 </resources>

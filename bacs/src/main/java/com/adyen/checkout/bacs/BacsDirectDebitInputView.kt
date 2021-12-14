@@ -55,8 +55,7 @@ class BacsDirectDebitInputView @JvmOverloads constructor(context: Context, attrs
         component.setInputMode()
         if (!component.configuration.amount.isEmpty) {
             val formattedAmount = CurrencyUtils.formatAmount(component.configuration.amount, component.configuration.shopperLocale)
-            // TODO update translations
-            // binding.switchConsentAmount.text = resources.getString(R.string.bacs_consent_amount_specified, formattedAmount)
+            binding.switchConsentAmount.text = resources.getString(R.string.bacs_consent_amount_specified, formattedAmount)
         }
     }
 
