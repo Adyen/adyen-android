@@ -45,6 +45,8 @@ class BacsDirectDebitInputView @JvmOverloads constructor(context: Context, attrs
 
     override fun onComponentAttached() {
         component.outputData?.let {
+            updateInputData(it)
+
             binding.editTextHolderName.setText(it.holderNameState.value)
             binding.editTextBankAccountNumber.setText(it.bankAccountNumberState.value)
             binding.editTextSortCode.setText(it.sortCodeState.value)
@@ -222,6 +224,17 @@ class BacsDirectDebitInputView @JvmOverloads constructor(context: Context, attrs
         binding.switchConsentAccount.setOnCheckedChangeListener { _, isChecked ->
             mBacsDirectDebitInputData.isAccountConsentChecked = isChecked
             notifyInputDataChanged()
+        }
+    }
+
+    private fun updateInputData(outputData: BacsDirectDebitOutputData) {
+        mBacsDirectDebitInputData.apply {
+            holderName = outputData.holderNameState.value
+            bankAccountNumber = outputData.bankAccountNumberState.value
+            sortCode = outputData.sortCodeState.value
+            shopperEmail = outputData.shopperEmailState.value
+            isAccountConsentChecked = outputData.isAccountConsentChecked
+            isAmountConsentChecked = outputData.isAmountConsentChecked
         }
     }
 
