@@ -354,7 +354,6 @@ class DropInActivity : AppCompatActivity(), DropInBottomSheetDialogFragment.Prot
         hideAllScreens()
         val dialogFragment = when (storedPaymentMethod.type) {
             PaymentMethodTypes.SCHEME -> CardComponentDialogFragment
-            PaymentMethodTypes.BACS -> BacsDirectDebitDialogFragment
             else -> GenericComponentDialogFragment
         }.newInstance(storedPaymentMethod, dropInViewModel.dropInConfiguration, fromPreselected)
 

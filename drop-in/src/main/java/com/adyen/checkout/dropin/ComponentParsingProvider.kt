@@ -106,6 +106,9 @@ internal fun <T : Configuration> getDefaultConfigForPaymentMethod(
 
     // get default builder for Configuration type
     val builder: BaseConfigurationBuilder<out Configuration> = when (paymentMethod) {
+        PaymentMethodTypes.BACS -> BacsDirectDebitConfiguration.Builder(shopperLocale, environment, clientKey).apply {
+            if (!dropInConfiguration.amount.isEmpty) setAmount(dropInConfiguration.amount)
+        }
         PaymentMethodTypes.BCMC -> BcmcConfiguration.Builder(shopperLocale, environment, clientKey)
         PaymentMethodTypes.BLIK -> BlikConfiguration.Builder(shopperLocale, environment, clientKey)
         PaymentMethodTypes.DOTPAY -> DotpayConfiguration.Builder(shopperLocale, environment, clientKey)
@@ -125,9 +128,6 @@ internal fun <T : Configuration> getDefaultConfigForPaymentMethod(
         PaymentMethodTypes.MOLPAY_VIETNAM -> MolpayConfiguration.Builder(shopperLocale, environment, clientKey)
         PaymentMethodTypes.OPEN_BANKING -> OpenBankingConfiguration.Builder(shopperLocale, environment, clientKey)
         PaymentMethodTypes.SEPA -> SepaConfiguration.Builder(shopperLocale, environment, clientKey)
-        PaymentMethodTypes.BACS -> BacsDirectDebitConfiguration.Builder(shopperLocale, environment, clientKey).apply {
-            if (!dropInConfiguration.amount.isEmpty) setAmount(dropInConfiguration.amount)
-        }
         PaymentMethodTypes.SCHEME -> CardConfiguration.Builder(shopperLocale, environment, clientKey)
         else -> throw CheckoutException("Unable to find component configuration for paymentMethod - $paymentMethod")
     }
@@ -238,6 +238,10 @@ internal fun getComponentFor(
 ): PaymentComponent<PaymentComponentState<in PaymentMethodDetails>, Configuration> {
 
     val component = when (paymentMethod.type) {
+        PaymentMethodTypes.BACS -> {
+            val bacsConfiguration: BacsDirectDebitConfiguration = dropInConfiguration.getConfigurationForPaymentMethod(PaymentMethodTypes.BACS)
+            BacsDirectDebitComponent.PROVIDER.get(fragment, paymentMethod, bacsConfiguration)
+        }
         PaymentMethodTypes.BCMC -> {
             val bcmcConfiguration: BcmcConfiguration = dropInConfiguration.getConfigurationForPaymentMethod(PaymentMethodTypes.BCMC)
             BcmcComponent.PROVIDER.get(fragment, paymentMethod, bcmcConfiguration)
@@ -303,10 +307,6 @@ internal fun getComponentFor(
         PaymentMethodTypes.SEPA -> {
             val sepaConfiguration: SepaConfiguration = dropInConfiguration.getConfigurationForPaymentMethod(PaymentMethodTypes.SEPA)
             SepaComponent.PROVIDER.get(fragment, paymentMethod, sepaConfiguration)
-        }
-        PaymentMethodTypes.BACS -> {
-            val bacsConfiguration: BacsDirectDebitConfiguration = dropInConfiguration.getConfigurationForPaymentMethod(PaymentMethodTypes.BACS)
-            BacsDirectDebitComponent.PROVIDER.get(fragment, paymentMethod, bacsConfiguration)
         }
         else -> {
             throw CheckoutException("Unable to find component for type - ${paymentMethod.type}")
