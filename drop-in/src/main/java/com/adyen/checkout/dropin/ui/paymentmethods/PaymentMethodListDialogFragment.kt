@@ -14,6 +14,7 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.appcompat.app.AlertDialog
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.adyen.checkout.components.GenericComponentState
@@ -142,8 +143,15 @@ class PaymentMethodListDialogFragment : DropInBottomSheetDialogFragment(), Payme
     }
 
     private fun showCancelOrderAlert() {
-        // TODO show alert and cancel order
-        protocol.requestOrderCancellation()
+        AlertDialog.Builder(requireContext())
+            .setTitle(R.string.checkout_giftcard_remove_gift_cards_title)
+            .setMessage(R.string.checkout_giftcard_remove_gift_cards_body)
+            .setNegativeButton(R.string.checkout_giftcard_remove_gift_cards_negative_button) { dialog, _ -> dialog.dismiss() }
+            .setPositiveButton(R.string.checkout_giftcard_remove_gift_cards_positive_button) { dialog, _ ->
+                dialog.dismiss()
+                protocol.requestOrderCancellation()
+            }
+            .show()
     }
 
     private fun sendPayment(type: String) {
