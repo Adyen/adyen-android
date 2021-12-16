@@ -57,16 +57,20 @@ class BacsDirectDebitDialogFragment : BaseComponentDialogFragment() {
         component.observe(viewLifecycleOwner, this)
         bacsDirectDebitComponent.observeErrors(viewLifecycleOwner, createErrorHandlerObserver())
 
-        val bacsDirectDebitInputView = BacsDirectDebitInputView(requireContext())
-        binding.viewContainer.addView(bacsDirectDebitInputView)
-        bacsDirectDebitInputView.attach(bacsDirectDebitComponent, viewLifecycleOwner)
+        val bacsView = when ((bacsDirectDebitComponent.state as? BacsDirectDebitComponentState)?.mode) {
+            BacsDirectDebitMode.CONFIRMATION -> BacsDirectDebitConfirmationView(requireContext())
+            else -> BacsDirectDebitInputView(requireContext())
+        }
 
-        if (bacsDirectDebitInputView.isConfirmationRequired) {
+        binding.viewContainer.addView(bacsView)
+        bacsView.attach(bacsDirectDebitComponent, viewLifecycleOwner)
+
+        if (bacsView.isConfirmationRequired) {
             binding.payButton.setOnClickListener {
                 handleContinueClick()
             }
             setInitViewState(BottomSheetBehavior.STATE_EXPANDED)
-            bacsDirectDebitInputView.requestFocus()
+            bacsView.requestFocus()
         } else {
             binding.payButton.isVisible = false
         }
