@@ -186,7 +186,7 @@ public enum CheckoutCurrency {
      * Find the instance of {@link CheckoutCurrency} based on the currency code.
      *
      * @param currency The currency code.
-     * @return The CheckoutCurrency instance, or throws a {@link com.adyen.checkout.core.exeption.CheckoutException} if the code is not supported.
+     * @return The CheckoutCurrency instance, or throws a {@link com.adyen.checkout.core.exception.CheckoutException} if the code is not supported.
      */
     @NonNull
     public static CheckoutCurrency find(@Nullable String currency) {

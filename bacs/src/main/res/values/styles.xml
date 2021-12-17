@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="utf-8"?><!--
+  ~ Copyright (c) 2021 Adyen N.V.
+  ~
+  ~ This file is open source and available under the MIT license. See the LICENSE file for more info.
+  ~
+  ~ Created by ozgur on 5/11/2021.
+  -->
+
+<resources>
+    <style name="AdyenCheckout.Bacs"/>
+
+    <style name="AdyenCheckout.Bacs.HolderNameInput" parent="AdyenCheckout.TextInputEditText">
+        <item name="android:hint">@string/bacs_holder_name_hint</item>
+        <item name="android:inputType">text|textPersonName|textCapWords</item>
+    </style>
+
+    <style name="AdyenCheckout.Bacs.AccountNumberInput" parent="AdyenCheckout.TextInputEditText">
+        <item name="android:hint">@string/bacs_account_number_hint</item>
+        <item name="android:inputType">number</item>
+        <item name="android:maxLength">8</item>
+    </style>
+
+    <style name="AdyenCheckout.Bacs.SortCodeInput" parent="AdyenCheckout.TextInputEditText">
+        <item name="android:hint">@string/bacs_sort_code_hint</item>
+        <item name="android:inputType">number</item>
+        <item name="android:maxLength">6</item>
+    </style>
+
+    <style name="AdyenCheckout.Bacs.ShopperEmailInput" parent="AdyenCheckout.TextInputEditText">
+        <item name="android:hint">@string/bacs_shopper_email_hint</item>
+        <item name="android:inputType">textEmailAddress</item>
+    </style>
+
+    <style name="AdyenCheckout.Bacs.Switch.Amount" parent="AdyenCheckout.Switch">
+        <item name="android:text">@string/bacs_consent_amount</item>
+    </style>
+
+    <style name="AdyenCheckout.Bacs.Switch.Account" parent="AdyenCheckout.Switch">
+        <item name="android:text">@string/bacs_consent_account</item>
+    </style>
+</resources>

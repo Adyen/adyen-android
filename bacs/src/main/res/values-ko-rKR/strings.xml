@@ -1,0 +1,26 @@
+<!--
+  ~ Copyright (c) 2021 Adyen N.V.
+  ~
+  ~ This file is open source and available under the MIT license. See the LICENSE file for more info.
+  ~
+  ~ Created by ozgur on 5/11/2021.
+  -->
+
+<resources>
+    <string name="bacs_holder_name_hint">예금주 이름</string>
+    <string name="bacs_account_number_hint">계좌 번호</string>
+    <string name="bacs_sort_code_hint">은행 식별 코드</string>
+    <string name="bacs_shopper_email_hint">이메일 주소</string>
+
+    <string name="bacs_holder_name_invalid">예금주 이름이 유효하지 않습니다</string>
+    <string name="bacs_account_number_invalid">계좌 번호가 유효하지 않습니다</string>
+    <string name="bacs_sort_code_invalid">은행 식별 코드가 유효하지 않습니다</string>
+    <string name="bacs_shopper_email_invalid">유효하지 않은 이메일 주소</string>
+
+    <string name="bacs_consent_account">본인이 이 계좌의 예금주이며, 이 계좌에서의 자동 이체를 승인하기 위해 필요한 유일한 서명인입니다.</string>
+    <string name="bacs_consent_amount">계좌에서 위의 금액을 이체하는 것에 동의합니다.</string>
+    <string name="bacs_consent_amount_specified">은행 계좌에서 %s이(가) 출금되는 것에 동의합니다.</string>
+
+    <string name="bacs_continue">계속</string>
+    <string name="bacs_confirm_and_pay">확인 및 결제</string>
+</resources>

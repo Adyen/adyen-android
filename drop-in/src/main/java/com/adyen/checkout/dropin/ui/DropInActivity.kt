@@ -51,6 +51,7 @@ import com.adyen.checkout.dropin.service.DropInServiceResultError
 import com.adyen.checkout.dropin.service.OrderDropInServiceResult
 import com.adyen.checkout.dropin.ui.action.ActionComponentDialogFragment
 import com.adyen.checkout.dropin.ui.base.DropInBottomSheetDialogFragment
+import com.adyen.checkout.dropin.ui.component.BacsDirectDebitDialogFragment
 import com.adyen.checkout.dropin.ui.component.CardComponentDialogFragment
 import com.adyen.checkout.dropin.ui.component.GenericComponentDialogFragment
 import com.adyen.checkout.dropin.ui.component.GiftCardComponentDialogFragment
@@ -364,6 +365,7 @@ class DropInActivity : AppCompatActivity(), DropInBottomSheetDialogFragment.Prot
         hideAllScreens()
         val dialogFragment = when (paymentMethod.type) {
             PaymentMethodTypes.SCHEME -> CardComponentDialogFragment
+            PaymentMethodTypes.BACS -> BacsDirectDebitDialogFragment
             PaymentMethodTypes.GIFTCARD -> GiftCardComponentDialogFragment
             else -> GenericComponentDialogFragment
         }.newInstance(paymentMethod, dropInViewModel.dropInConfiguration)

@@ -1,0 +1,26 @@
+<!--
+  ~ Copyright (c) 2021 Adyen N.V.
+  ~
+  ~ This file is open source and available under the MIT license. See the LICENSE file for more info.
+  ~
+  ~ Created by ozgur on 5/11/2021.
+  -->
+
+<resources>
+    <string name="bacs_holder_name_hint">Naam bankrekeninghouder</string>
+    <string name="bacs_account_number_hint">Bankrekeningnummer</string>
+    <string name="bacs_sort_code_hint">Bankcode</string>
+    <string name="bacs_shopper_email_hint">E-mailadres</string>
+
+    <string name="bacs_holder_name_invalid">Ongeldige naam bankrekeninghouder</string>
+    <string name="bacs_account_number_invalid">Ongeldig bankrekeningnummer</string>
+    <string name="bacs_sort_code_invalid">Ongeldige bankcode</string>
+    <string name="bacs_shopper_email_invalid">Ongeldig e-mailadres</string>
+
+    <string name="bacs_consent_account">Ik bevestig dat de rekening op mijn naam staat en dat ik de enige ondertekenaar ben die toestemming kan geven voor automatische incasso\'s vanaf deze rekening.</string>
+    <string name="bacs_consent_amount">Ik ga ermee akkoord dat het bovengenoemde bedrag van mijn bankrekening wordt afgeschreven.</string>
+    <string name="bacs_consent_amount_specified">Ik ga ermee akkoord dat er %s van mijn bankrekening wordt afgeschreven.</string>
+
+    <string name="bacs_continue">Doorgaan</string>
+    <string name="bacs_confirm_and_pay">Bevestigen en betalen</string>
+</resources>

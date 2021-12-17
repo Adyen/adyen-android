@@ -1,0 +1,26 @@
+<!--
+  ~ Copyright (c) 2021 Adyen N.V.
+  ~
+  ~ This file is open source and available under the MIT license. See the LICENSE file for more info.
+  ~
+  ~ Created by ozgur on 5/11/2021.
+  -->
+
+<resources>
+    <string name="bacs_holder_name_hint">Nom du titulaire du compte bancaire</string>
+    <string name="bacs_account_number_hint">Numéro du compte bancaire</string>
+    <string name="bacs_sort_code_hint">Code de tri (sort code)</string>
+    <string name="bacs_shopper_email_hint">Adresse e-mail</string>
+
+    <string name="bacs_holder_name_invalid">Nom du titulaire du compte bancaire incorrect</string>
+    <string name="bacs_account_number_invalid">Numéro du compte bancaire incorrect</string>
+    <string name="bacs_sort_code_invalid">Code de tri (sort code) non valide</string>
+    <string name="bacs_shopper_email_invalid">Adresse e-mail incorrecte</string>
+
+    <string name="bacs_consent_account">Je confirme être le titulaire du compte et qu\'aucune autre signature que la mienne n\'est requise pour autoriser un prélèvement sur ce compte.</string>
+    <string name="bacs_consent_amount">J\'accepte que le montant ci-dessus soit déduit de mon compte bancaire.</string>
+    <string name="bacs_consent_amount_specified">J\'accepte que le montant de %s soit prélevé sur mon compte bancaire.</string>
+
+    <string name="bacs_continue">Continuer</string>
+    <string name="bacs_confirm_and_pay">Confirmer et payer</string>
+</resources>

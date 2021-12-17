@@ -1,0 +1,26 @@
+<!--
+  ~ Copyright (c) 2021 Adyen N.V.
+  ~
+  ~ This file is open source and available under the MIT license. See the LICENSE file for more info.
+  ~
+  ~ Created by ozgur on 5/11/2021.
+  -->
+
+<resources>
+    <string name="bacs_holder_name_hint">Bankszámla-tulajdonos neve</string>
+    <string name="bacs_account_number_hint">Bankszámlaszám</string>
+    <string name="bacs_sort_code_hint">Banki azonosító</string>
+    <string name="bacs_shopper_email_hint">E-mail-cím</string>
+
+    <string name="bacs_holder_name_invalid">A bankszámla-tulajdonos neve érvénytelen</string>
+    <string name="bacs_account_number_invalid">Érvénytelen bankszámlaszám</string>
+    <string name="bacs_sort_code_invalid">Érvénytelen banki azonosító</string>
+    <string name="bacs_shopper_email_invalid">Érvénytelen e-mail-cím</string>
+
+    <string name="bacs_consent_account">Megerősítem, hogy a bankszámla az én nevemen van, és én vagyok a bankszámlát érintő beszedési megbízás jóváhagyásához szükséges egyetlen aláíró.</string>
+    <string name="bacs_consent_amount">Elfogadom, hogy a fenti összeget levonják a bankszámlámról.</string>
+    <string name="bacs_consent_amount_specified">Elfogadom, hogy %s levonásra kerüljön a bankszámlámról.</string>
+
+    <string name="bacs_continue">Folytatás</string>
+    <string name="bacs_confirm_and_pay">Megerősítés és fizetés</string>
+</resources>

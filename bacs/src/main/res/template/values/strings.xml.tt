@@ -1,0 +1,26 @@
+<!--
+  ~ Copyright (c) 2021 Adyen N.V.
+  ~
+  ~ This file is open source and available under the MIT license. See the LICENSE file for more info.
+  ~
+  ~ Created by ozgur on 5/11/2021.
+  -->
+
+<resources>
+    <string name="bacs_holder_name_hint">%%bacs.accountHolderName%%</string>
+    <string name="bacs_account_number_hint">%%bacs.accountNumber%%</string>
+    <string name="bacs_sort_code_hint">%%bacs.bankLocationId%%</string>
+    <string name="bacs_shopper_email_hint">%%shopperEmail%%</string>
+
+    <string name="bacs_holder_name_invalid">%%bacs.accountHolderName.invalid%%</string>
+    <string name="bacs_account_number_invalid">%%bacs.accountNumber.invalid%%</string>
+    <string name="bacs_sort_code_invalid">%%bacs.bankLocationId.invalid%%</string>
+    <string name="bacs_shopper_email_invalid">%%shopperEmail.invalid%%</string>
+
+    <string name="bacs_consent_account">%%bacs.consent.account%%</string>
+    <string name="bacs_consent_amount">%%bacs.consent.amount%%</string>
+    <string name="bacs_consent_amount_specified">%%bacs.consent.amount.specified%%</string>
+
+    <string name="bacs_continue">%%continue%%</string>
+    <string name="bacs_confirm_and_pay">%%bacs.confirm%%</string>
+</resources>

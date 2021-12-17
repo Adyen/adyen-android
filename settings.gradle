@@ -1,6 +1,7 @@
 include ':3ds2',
         ':await',
         ':components-core',
+        ':bacs',
         ':bcmc',
         ':blik',
         ':checkout-core',
@@ -22,5 +23,6 @@ include ':3ds2',
         ':redirect',
         ':sepa',
         ':ui-core',
-        ':wechatpay',
-        ':voucher'
+        ':voucher',
+        ':wechatpay'
+

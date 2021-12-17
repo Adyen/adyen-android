@@ -1,0 +1,26 @@
+<!--
+  ~ Copyright (c) 2021 Adyen N.V.
+  ~
+  ~ This file is open source and available under the MIT license. See the LICENSE file for more info.
+  ~
+  ~ Created by ozgur on 5/11/2021.
+  -->
+
+<resources>
+    <string name="bacs_holder_name_hint">Meno majiteľa bankového účtu</string>
+    <string name="bacs_account_number_hint">Číslo bankového účtu</string>
+    <string name="bacs_sort_code_hint">Variabilný symbol</string>
+    <string name="bacs_shopper_email_hint">E-mailová adresa</string>
+
+    <string name="bacs_holder_name_invalid">Neplatné meno majiteľa bankového účtu</string>
+    <string name="bacs_account_number_invalid">Neplatné číslo bankového účtu</string>
+    <string name="bacs_sort_code_invalid">Neplatný variabilný symbol</string>
+    <string name="bacs_shopper_email_invalid">Neplatná emailová adresa</string>
+
+    <string name="bacs_consent_account">Potvrdzujem, že účet je na moje meno a som jediný podpisovateľ, ktorý je povinný autorizovať inkaso v tomto účte.</string>
+    <string name="bacs_consent_amount">Súhlasím s tým, že nižšie uvedená čiastka bude odpísaná z môjho bankového účtu.</string>
+    <string name="bacs_consent_amount_specified">Súhlasím s úhradou čiastky %s z môjho bankového účtu.</string>
+
+    <string name="bacs_continue">Pokračovať</string>
+    <string name="bacs_confirm_and_pay">Potvrdiť a zaplatiť</string>
+</resources>

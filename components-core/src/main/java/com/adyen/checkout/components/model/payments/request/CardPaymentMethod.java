@@ -63,7 +63,7 @@ public final class CardPaymentMethod extends PaymentMethodDetails {
                 jsonObject.putOpt(THREEDS2_SDK_VERSION, modelObject.getThreeDS2SdkVersion());
                 jsonObject.putOpt(FUNDING_SOURCE, modelObject.getFundingSource());
             } catch (JSONException e) {
-                throw new ModelSerializationException(IdealPaymentMethod.class, e);
+                throw new ModelSerializationException(CardPaymentMethod.class, e);
             }
             return jsonObject;
         }
