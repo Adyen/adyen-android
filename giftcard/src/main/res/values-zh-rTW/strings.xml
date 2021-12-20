@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+  ~ Copyright (c) 2021 Adyen N.V.
+  ~
+  ~ This file is open source and available under the MIT license. See the LICENSE file for more info.
+  ~
+  ~ Created by josephj on 9/9/2021.
+  -->
+
+<resources>
+    <string name="checkout_giftcard_number_hint">信用卡號碼</string>
+    <string name="checkout_giftcard_pin_hint">數字密碼</string>
+    <string name="checkout_giftcard_number_not_valid">信用卡號碼無效</string>
+    <string name="checkout_giftcard_pin_not_valid">輸入無效</string>
+</resources>

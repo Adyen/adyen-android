@@ -1,0 +1,26 @@
+<!--
+  ~ Copyright (c) 2021 Adyen N.V.
+  ~
+  ~ This file is open source and available under the MIT license. See the LICENSE file for more info.
+  ~
+  ~ Created by ozgur on 5/11/2021.
+  -->
+
+<resources>
+    <string name="bacs_holder_name_hint">Name des Bankkontoinhabers</string>
+    <string name="bacs_account_number_hint">Bankkontonummer</string>
+    <string name="bacs_sort_code_hint">Bankleitzahl</string>
+    <string name="bacs_shopper_email_hint">E-Mail-Adresse</string>
+
+    <string name="bacs_holder_name_invalid">Ungültiger Bankkontoinhabername</string>
+    <string name="bacs_account_number_invalid">Ungültige Bankkontonummer</string>
+    <string name="bacs_sort_code_invalid">Ungültige Bankleitzahl</string>
+    <string name="bacs_shopper_email_invalid">Ungültige E-Mail-Adresse</string>
+
+    <string name="bacs_consent_account">Ich bestätige, dass das Konto unter meinem Namen läuft und ich der einzige erforderliche Unterzeichner bin, um die Lastschrift für dieses Konto zu autorisieren.</string>
+    <string name="bacs_consent_amount">Ich bin damit einverstanden, dass der oben genannte Betrag von meinem Bankkonto abgebucht wird.</string>
+    <string name="bacs_consent_amount_specified">Ich bin damit einverstanden, dass %s von meinem Bankkonto abgebucht wird.</string>
+
+    <string name="bacs_continue">Weiter</string>
+    <string name="bacs_confirm_and_pay">Bestätigen und bezahlen</string>
+</resources>

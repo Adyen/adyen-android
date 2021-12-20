@@ -13,6 +13,7 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.core.view.isVisible
 import androidx.lifecycle.Observer
 import com.adyen.checkout.components.ActionComponent
 import com.adyen.checkout.components.ActionComponentData
@@ -81,6 +82,13 @@ class ActionComponentDialogFragment : DropInBottomSheetDialogFragment(), Observe
             actionComponent = getComponent(action)
             attachComponent(actionComponent, componentView)
 
+            if (shouldFinishWithAction()) {
+                with(binding.buttonFinish) {
+                    isVisible = true
+                    setOnClickListener { protocol.finishWithAction() }
+                }
+            }
+
             if (!isHandled) {
                 (actionComponent as ActionComponent<*>).handleAction(requireActivity(), action)
                 isHandled = true
@@ -94,10 +102,10 @@ class ActionComponentDialogFragment : DropInBottomSheetDialogFragment(), Observe
 
     override fun onBackPressed(): Boolean {
         // polling will be canceled by lifecycle event
-        if (dropInViewModel.shouldSkipToSinglePaymentMethod()) {
-            protocol.terminateDropIn()
-        } else {
-            protocol.showPaymentMethodsDialog()
+        when {
+            shouldFinishWithAction() -> { protocol.finishWithAction() }
+            dropInViewModel.shouldSkipToSinglePaymentMethod() -> { protocol.terminateDropIn() }
+            else -> { protocol.showPaymentMethodsDialog() }
         }
         return true
     }
@@ -105,7 +113,11 @@ class ActionComponentDialogFragment : DropInBottomSheetDialogFragment(), Observe
     override fun onCancel(dialog: DialogInterface) {
         super.onCancel(dialog)
         Logger.d(TAG, "onCancel")
-        protocol.terminateDropIn()
+        if (shouldFinishWithAction()) {
+            protocol.finishWithAction()
+        } else {
+            protocol.terminateDropIn()
+        }
     }
 
     override fun onChanged(actionComponentData: ActionComponentData?) {
@@ -160,5 +172,9 @@ class ActionComponentDialogFragment : DropInBottomSheetDialogFragment(), Observe
     private fun handleError(componentError: ComponentError) {
         Logger.e(TAG, componentError.errorMessage)
         protocol.showError(getString(R.string.action_failed), componentError.errorMessage, true)
+    }
+
+    private fun shouldFinishWithAction(): Boolean {
+        return getActionProviderFor(action)?.providesDetails() == false
     }
 }

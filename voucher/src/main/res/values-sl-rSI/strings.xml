@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+  ~ Copyright (c) 2021 Adyen N.V.
+  ~
+  ~ This file is open source and available under the MIT license. See the LICENSE file for more info.
+  ~
+  ~ Created by ozgur on 02/12/2021.
+  -->
+
+<resources>
+    <string name="checkout_voucher_introduction_bacs">Prenesite navodila za neposredno bremenitev (DDI/mandat)</string>
+    <string name="checkout_voucher_download_pdf">Prenos datoteke PDF</string>
+    <string name="checkout_voucher_finish">Zaključi</string>
+</resources>

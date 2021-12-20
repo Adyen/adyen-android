@@ -21,4 +21,12 @@
     <string name="continue_button">계속</string>
     <string name="change_payment_method">결제 수단 변경</string>
     <string name="credit_card">Credit Card</string>
+    <string name="checkout_giftcard_redeem_button">기프트 카드로 결제</string>
+    <string name="checkout_giftcard_error_zero_balance">이 기프트 카드에는 잔액이 없습니다</string>
+    <string name="checkout_giftcard_error_currency">기프트 카드는 발급된 통화로만 사용하실 수 있습니다</string>
+    <string name="checkout_giftcard_remaining_balance_text">남은 잔액은 %s입니다</string>
+    <string name="checkout_giftcard_pay_remaining_amount">남은 %s에 대한 결제 수단 선택</string>
+    <string name="checkout_giftcard_payment_methods_header">추가된 기프트카드</string>
+    <string name="checkout_giftcard_remove_button">삭제</string>
+    <string name="checkout_giftcard_max_transaction_limit">이 기프트카드로 건당 결제 가능한 최고 액수는 %s</string>
 </resources>

@@ -158,7 +158,7 @@ abstract class BaseComponentDialogFragment : DropInBottomSheetDialogFragment(), 
         try {
             if (componentState != null) {
                 if (componentState.isValid) {
-                    protocol.requestPaymentsCall(componentState)
+                    requestProtocolCall(componentState)
                 } else {
                     throw CheckoutException("PaymentComponentState are not valid.")
                 }
@@ -168,6 +168,10 @@ abstract class BaseComponentDialogFragment : DropInBottomSheetDialogFragment(), 
         } catch (e: CheckoutException) {
             handleError(ComponentError(e))
         }
+    }
+
+    open fun requestProtocolCall(componentState: PaymentComponentState<out PaymentMethodDetails>) {
+        protocol.requestPaymentsCall(componentState)
     }
 
     protected fun createErrorHandlerObserver(): Observer<ComponentError> {

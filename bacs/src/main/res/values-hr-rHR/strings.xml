@@ -1,0 +1,26 @@
+<!--
+  ~ Copyright (c) 2021 Adyen N.V.
+  ~
+  ~ This file is open source and available under the MIT license. See the LICENSE file for more info.
+  ~
+  ~ Created by ozgur on 5/11/2021.
+  -->
+
+<resources>
+    <string name="bacs_holder_name_hint">Ime vlasnika bankovnog računa</string>
+    <string name="bacs_account_number_hint">Broj bankovnog računa</string>
+    <string name="bacs_sort_code_hint">Identifikacijski kôd banke (UK)</string>
+    <string name="bacs_shopper_email_hint">Adresa e-pošte</string>
+
+    <string name="bacs_holder_name_invalid">Nevažeće ime vlasnika bankovnog računa</string>
+    <string name="bacs_account_number_invalid">Nevažeći broj bankovnog računa</string>
+    <string name="bacs_sort_code_invalid">Nevažeći identifikacijski kôd banke (UK)</string>
+    <string name="bacs_shopper_email_invalid">Nevažeća adresa e-pošte</string>
+
+    <string name="bacs_consent_account">Potvrđujem da je račun na moje ime i da sam jedini potpisnik potreban za autorizaciju izravnog terećenja na ovom računu.</string>
+    <string name="bacs_consent_amount">Slažem se da se gore navedeni iznos oduzme s mog bankovnog računa.</string>
+    <string name="bacs_consent_amount_specified">Slažem se da će moj bankovni račun biti terećen za %s.</string>
+
+    <string name="bacs_continue">Nastavi</string>
+    <string name="bacs_confirm_and_pay">Potvrdi i plati</string>
+</resources>

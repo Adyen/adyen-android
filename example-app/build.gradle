@@ -9,6 +9,9 @@
 plugins {
     id 'com.android.application'
     id 'kotlin-android'
+    id 'kotlin-kapt'
+    id 'dagger.hilt.android.plugin'
+
 }
 
 apply from: "${rootDir}/config/gradle/codeQuality.gradle"
@@ -71,7 +74,7 @@ android {
 dependencies {
     // Checkout
     implementation project(':drop-in')
-//    implementation "com.adyen.checkout:drop-in:4.3.0"
+//    implementation "com.adyen.checkout:drop-in:4.4.0"
 
     // Dependencies
     implementation "org.jetbrains.kotlinx:kotlinx-coroutines-android:$kotlinx_version"
@@ -94,9 +97,8 @@ dependencies {
 
     implementation "com.jakewharton.retrofit:retrofit2-kotlin-coroutines-adapter:$coroutines_adapter_version"
 
-    implementation "io.insert-koin:koin-android:$koin_version"
-    implementation "io.insert-koin:koin-test:$koin_version"
-    implementation "io.insert-koin:koin-androidx-viewmodel:$koin_version"
+    implementation "com.google.dagger:hilt-android:$hilt_version"
+    kapt "com.google.dagger:hilt-compiler:$hilt_version"
 
     // Tests
     testImplementation "junit:junit:$junit_version"

@@ -21,4 +21,12 @@
     <string name="continue_button">Nadaljuj</string>
     <string name="change_payment_method">Spremeni način plačila</string>
     <string name="credit_card">Credit Card</string>
+    <string name="checkout_giftcard_redeem_button">Unovči</string>
+    <string name="checkout_giftcard_error_zero_balance">Na tej darilni kartici ni sredstev</string>
+    <string name="checkout_giftcard_error_currency">Darilne kartice so veljavne samo za valuto, za katero so bile izdane</string>
+    <string name="checkout_giftcard_remaining_balance_text">Preostalo stanje bo %s</string>
+    <string name="checkout_giftcard_pay_remaining_amount">Izberite vrsto plačila za preostali znesek %s</string>
+    <string name="checkout_giftcard_payment_methods_header">Dodana darilna kartica</string>
+    <string name="checkout_giftcard_remove_button">Odstrani</string>
+    <string name="checkout_giftcard_max_transaction_limit">Za posamezno transakcijo na tej darilni kartici je dovoljeno največ %s</string>
 </resources>

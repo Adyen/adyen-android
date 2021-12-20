@@ -50,6 +50,7 @@ class PaymentMethodListDialogFragment : DropInBottomSheetDialogFragment(), Payme
                 requireActivity().application,
                 dropInViewModel.paymentMethodsApiResponse.paymentMethods.orEmpty(),
                 dropInViewModel.paymentMethodsApiResponse.storedPaymentMethods.orEmpty(),
+                dropInViewModel.currentOrder,
                 dropInViewModel.dropInConfiguration
             )
         }
@@ -61,21 +62,20 @@ class PaymentMethodListDialogFragment : DropInBottomSheetDialogFragment(), Payme
     private fun addObserver(recyclerView: RecyclerView) {
         paymentMethodsListViewModel.paymentMethodsLiveData.observe(
             viewLifecycleOwner,
-            {
+            { paymentMethods ->
                 Logger.d(TAG, "paymentMethods changed")
-                if (it == null) {
+                if (paymentMethods == null) {
                     throw CheckoutException("List of PaymentMethodModel is null.")
                 }
 
-                // We expect the list of payment methods to be updated only once, so we just set the adapter
-                paymentMethodAdapter = PaymentMethodAdapter(
-                    it,
-                    ImageLoader.getInstance(
-                        requireContext(),
-                        dropInViewModel.dropInConfiguration.environment
-                    ),
-                    this
+                val imageLoader = ImageLoader.getInstance(
+                    requireContext(),
+                    dropInViewModel.dropInConfiguration.environment
                 )
+
+                // We expect the list of payment methods to be updated only once, so we just set the adapter
+                paymentMethodAdapter = PaymentMethodAdapter(paymentMethods, imageLoader)
+                paymentMethodAdapter.setPaymentMethodSelectedCallback(this)
                 recyclerView.layoutManager = LinearLayoutManager(requireContext())
                 recyclerView.adapter = paymentMethodAdapter
             }
@@ -133,6 +133,16 @@ class PaymentMethodListDialogFragment : DropInBottomSheetDialogFragment(), Payme
                 sendPayment(paymentMethod.type)
             }
         }
+    }
+
+    override fun onHeaderActionSelected(header: PaymentMethodHeader) {
+        when (header.type) {
+            PaymentMethodHeader.TYPE_GIFT_CARD_HEADER -> showCancelOrderAlert()
+        }
+    }
+
+    private fun showCancelOrderAlert() {
+        // TODO show alert and cancel order
     }
 
     private fun sendPayment(type: String) {

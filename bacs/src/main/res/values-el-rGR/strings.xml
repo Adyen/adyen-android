@@ -1,0 +1,26 @@
+<!--
+  ~ Copyright (c) 2021 Adyen N.V.
+  ~
+  ~ This file is open source and available under the MIT license. See the LICENSE file for more info.
+  ~
+  ~ Created by ozgur on 5/11/2021.
+  -->
+
+<resources>
+    <string name="bacs_holder_name_hint">Όνομα δικαιούχου τραπεζικού λογαριασμού</string>
+    <string name="bacs_account_number_hint">Αριθμός τραπεζικού λογαριασμού</string>
+    <string name="bacs_sort_code_hint">Κωδικός τράπεζας</string>
+    <string name="bacs_shopper_email_hint">Διεύθυνση email</string>
+
+    <string name="bacs_holder_name_invalid">Μη έγκυρο όνομα δικαιούχου τραπεζικού λογαριασμού</string>
+    <string name="bacs_account_number_invalid">Μη έγκυρος αριθμός τραπεζικού λογαριασμού</string>
+    <string name="bacs_sort_code_invalid">Μη έγκυρος κωδικός τράπεζας</string>
+    <string name="bacs_shopper_email_invalid">Μη έγκυρη διεύθυνση email</string>
+
+    <string name="bacs_consent_account">Επιβεβαιώνω ότι ο λογαριασμός είναι στο όνομά μου και πως είμαι ο/η μοναδικός/μοναδική υπογράφων/υπογράφουσα που απαιτείται για εξουσιοδότηση της Άμεσης Χρέωσης σε αυτόν τον λογαριασμό.</string>
+    <string name="bacs_consent_amount">Αποδέχομαι ότι το πιο πάνω ποσό θα αφαιρεθεί από τον τραπεζικό λογαριασμό μου.</string>
+    <string name="bacs_consent_amount_specified">Αποδέχομαι ότι το ποσό %s θα αφαιρεθεί από τον τραπεζικό λογαριασμό μου.</string>
+
+    <string name="bacs_continue">Συνέχεια</string>
+    <string name="bacs_confirm_and_pay">Επιβεβαίωση και πληρωμή</string>
+</resources>

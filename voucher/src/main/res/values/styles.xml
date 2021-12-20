@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="utf-8"?><!--
+  ~ Copyright (c) 2021 Adyen N.V.
+  ~
+  ~ This file is open source and available under the MIT license. See the LICENSE file for more info.
+  ~
+  ~ Created by ozgur on 2/12/2021.
+  -->
+
+<resources>
+
+    <style name="AdyenCheckout.Voucher" />
+
+    <style name="AdyenCheckout.Voucher.DescriptionTextAppearance" parent="AdyenCheckout.TextAppearance.Primary">
+        <item name="android:layout_marginStart">@dimen/standard_double_margin</item>
+        <item name="android:layout_marginEnd">@dimen/standard_double_margin</item>
+        <item name="android:layout_marginTop">@dimen/standard_margin</item>
+        <item name="android:text">@string/checkout_voucher_introduction_bacs</item>
+        <item name="android:gravity">center_horizontal</item>
+        <item name="android:textColor">@color/textColor</item>
+    </style>
+
+    <style name="AdyenCheckout.Voucher.DownloadTextAppearance" parent="AdyenCheckout.TextAppearance.Primary">
+        <item name="android:textColor">@color/primaryColor</item>
+        <item name="android:layout_marginTop">@dimen/standard_margin</item>
+        <item name="android:gravity">center_horizontal</item>
+        <item name="android:layout_marginBottom">@dimen/standard_half_margin</item>
+        <item name="android:text">@string/checkout_voucher_download_pdf</item>
+    </style>
+</resources>

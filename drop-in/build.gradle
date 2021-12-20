@@ -59,6 +59,7 @@ dependencies {
     api project(':dotpay')
     api project(':entercash')
     api project(':eps')
+    api project(':giftcard')
     api project(':googlepay')
     api project(':ideal')
     api project(':mbway')
@@ -67,7 +68,9 @@ dependencies {
     api project(':openbanking')
     api project(":redirect")
     api project(':sepa')
+    api project(':bacs')
     api project(':wechatpay')
+    api project(':voucher')
 
     // Dependencies
     implementation "androidx.recyclerview:recyclerview:$recyclerview_version"

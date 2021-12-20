@@ -106,7 +106,7 @@ class PreselectedStoredPaymentMethodFragment : DropInBottomSheetDialogFragment()
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         Logger.d(TAG, "onViewCreated")
-        binding.paymentMethodsListHeader.paymentMethodHeader.setText(R.string.store_payment_methods_header)
+        binding.paymentMethodsListHeader.paymentMethodHeaderTitle.setText(R.string.store_payment_methods_header)
         binding.storedPaymentMethodItem.root.setBackgroundColor(android.R.color.transparent)
         observe()
 
@@ -114,7 +114,7 @@ class PreselectedStoredPaymentMethodFragment : DropInBottomSheetDialogFragment()
             binding.payButton.setText(R.string.continue_button)
         } else {
             val value = CurrencyUtils.formatAmount(
-                dropInViewModel.dropInConfiguration.amount,
+                dropInViewModel.amount,
                 dropInViewModel.dropInConfiguration.shopperLocale
             )
             binding.payButton.text = getString(R.string.pay_button_with_value, value)

@@ -210,7 +210,7 @@ public class GooglePayConfiguration extends Configuration {
         private String mBuilderTotalPriceStatus = DEFAULT_TOTAL_PRICE_STATUS;
 
         private int getDefaultGooglePayEnvironment() {
-            if (getBuilderEnvironment() == Environment.TEST) {
+            if (getBuilderEnvironment().equals(Environment.TEST)) {
                 return WalletConstants.ENVIRONMENT_TEST;
             }
             return WalletConstants.ENVIRONMENT_PRODUCTION;
@@ -242,6 +242,25 @@ public class GooglePayConfiguration extends Configuration {
          */
         public Builder(@NonNull Locale shopperLocale, @NonNull Environment environment, @NonNull String clientKey) {
             super(shopperLocale, environment, clientKey);
+        }
+
+        public Builder(@NonNull GooglePayConfiguration configuration) {
+            super(configuration.getShopperLocale(), configuration.getEnvironment(), configuration.getClientKey());
+            mBuilderMerchantAccount = configuration.getMerchantAccount();
+            mBuilderGooglePayEnvironment = configuration.getGooglePayEnvironment();
+            mBuilderAmount = configuration.getAmount();
+            mBuilderTotalPriceStatus = configuration.getTotalPriceStatus();
+            mBuilderCountryCode = configuration.getCountryCode();
+            mBuilderMerchantInfo = configuration.getMerchantInfo();
+            mBuilderAllowedAuthMethods = configuration.getAllowedAuthMethods();
+            mBuilderAllowedCardNetworks = configuration.getAllowedCardNetworks();
+            mBuilderAllowPrepaidCards = configuration.isAllowPrepaidCards();
+            mBuilderEmailRequired = configuration.isEmailRequired();
+            mBuilderExistingPaymentMethodRequired = configuration.isExistingPaymentMethodRequired();
+            mBuilderShippingAddressRequired = configuration.isShippingAddressRequired();
+            mBuilderShippingAddressParameters = configuration.getShippingAddressParameters();
+            mBuilderBillingAddressRequired = configuration.isBillingAddressRequired();
+            mBuilderBillingAddressParameters = configuration.getBillingAddressParameters();
         }
 
         @Override

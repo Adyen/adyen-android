@@ -8,10 +8,18 @@
 
 package com.adyen.checkout.example.di
 
+import com.adyen.checkout.example.data.api.CheckoutApiService
 import com.adyen.checkout.example.repositories.paymentMethods.PaymentsRepository
 import com.adyen.checkout.example.repositories.paymentMethods.PaymentsRepositoryImpl
-import org.koin.dsl.module
+import dagger.Module
+import dagger.Provides
+import dagger.hilt.InstallIn
+import dagger.hilt.components.SingletonComponent
 
-val repositoryModule = module {
-    factory<PaymentsRepository> { PaymentsRepositoryImpl(get()) }
+@Module
+@InstallIn(SingletonComponent::class)
+object RepositoryModule {
+
+    @Provides
+    fun providePaymentsRepository(checkoutApiService: CheckoutApiService): PaymentsRepository = PaymentsRepositoryImpl(checkoutApiService)
 }

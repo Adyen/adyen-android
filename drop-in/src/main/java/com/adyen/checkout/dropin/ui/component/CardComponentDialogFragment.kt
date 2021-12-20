@@ -68,8 +68,8 @@ class CardComponentDialogFragment : BaseComponentDialogFragment() {
 
         val cardComponent = component as CardComponent
 
-        if (!dropInConfiguration.amount.isEmpty) {
-            val value = CurrencyUtils.formatAmount(dropInConfiguration.amount, dropInConfiguration.shopperLocale)
+        if (!dropInViewModel.amount.isEmpty) {
+            val value = CurrencyUtils.formatAmount(dropInViewModel.amount, dropInConfiguration.shopperLocale)
             binding.payButton.text = String.format(resources.getString(R.string.pay_button_with_value), value)
         }
 

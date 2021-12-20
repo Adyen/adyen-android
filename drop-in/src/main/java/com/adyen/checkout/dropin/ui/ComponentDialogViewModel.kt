@@ -41,10 +41,11 @@ class ComponentDialogViewModel(private val savedStateHandle: SavedStateHandle) :
                 "componentState.isReady: ${componentState?.isReady}"
         )
         val paymentState = when {
-            componentState == null -> ComponentFragmentState.INVALID_UI
+            componentState == null -> ComponentFragmentState.IDLE
+            !componentState.isInputValid -> ComponentFragmentState.INVALID_UI
             componentState.isValid -> ComponentFragmentState.PAYMENT_READY
-            componentState.isInputValid && !componentState.isReady -> ComponentFragmentState.AWAITING_COMPONENT_INITIALIZATION
-            else -> ComponentFragmentState.INVALID_UI
+            !componentState.isReady -> ComponentFragmentState.AWAITING_COMPONENT_INITIALIZATION
+            else -> ComponentFragmentState.IDLE
         }
         Logger.v(TAG, "payButtonClicked - setting state $paymentState")
         setComponentFragmentState(paymentState)

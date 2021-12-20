@@ -21,4 +21,12 @@
     <string name="continue_button">Fortsæt</string>
     <string name="change_payment_method">Skift betalingsmåde</string>
     <string name="credit_card">Credit Card</string>
+    <string name="checkout_giftcard_redeem_button">Indløs</string>
+    <string name="checkout_giftcard_error_zero_balance">Saldoen på gavekortet er 0</string>
+    <string name="checkout_giftcard_error_currency">Gavekort er kun gyldige i udstedelsesvalutaen</string>
+    <string name="checkout_giftcard_remaining_balance_text">Restbeløbet vil være %s</string>
+    <string name="checkout_giftcard_pay_remaining_amount">Vælg betalingsmåden for de resterende %s</string>
+    <string name="checkout_giftcard_payment_methods_header">Gavekort tilføjet</string>
+    <string name="checkout_giftcard_remove_button">Fjern</string>
+    <string name="checkout_giftcard_max_transaction_limit">Maks. %s tilladt pr. transaktion på dette gavekort</string>
 </resources>

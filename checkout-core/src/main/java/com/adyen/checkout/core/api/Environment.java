@@ -89,7 +89,7 @@ public final class Environment implements Parcelable {
             return false;
         }
         final Environment that = (Environment) o;
-        return mBaseUrl.toString().equals(that.toString());
+        return mBaseUrl.toString().equals(that.mBaseUrl.toString());
     }
 
     @Override

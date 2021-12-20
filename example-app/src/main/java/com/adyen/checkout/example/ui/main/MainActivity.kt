@@ -14,6 +14,7 @@ import android.view.Menu
 import android.view.MenuItem
 import android.view.View
 import android.widget.Toast
+import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.app.AppCompatDelegate
 import com.adyen.checkout.adyen3ds2.Adyen3DS2Configuration
@@ -33,13 +34,14 @@ import com.adyen.checkout.example.R
 import com.adyen.checkout.example.data.api.CheckoutApiService
 import com.adyen.checkout.example.data.storage.KeyValueStorage
 import com.adyen.checkout.example.databinding.ActivityMainBinding
-import com.adyen.checkout.example.service.ExampleDropInService
+import com.adyen.checkout.example.service.ExampleAsyncDropInService
 import com.adyen.checkout.example.ui.configuration.ConfigurationActivity
 import com.adyen.checkout.googlepay.GooglePayConfiguration
-import java.util.Locale
-import org.koin.android.ext.android.inject
-import org.koin.androidx.viewmodel.ext.android.viewModel
+import dagger.hilt.android.AndroidEntryPoint
+import java.util.*
+import javax.inject.Inject
 
+@AndroidEntryPoint
 class MainActivity : AppCompatActivity(), DropInCallback {
 
     companion object {
@@ -47,8 +49,8 @@ class MainActivity : AppCompatActivity(), DropInCallback {
     }
 
     private lateinit var binding: ActivityMainBinding
-    private val paymentMethodsViewModel: PaymentMethodsViewModel by viewModel()
-    private val keyValueStorage: KeyValueStorage by inject()
+    private val paymentMethodsViewModel: PaymentMethodsViewModel by viewModels()
+    @Inject lateinit var keyValueStorage: KeyValueStorage
 
     private val dropInLauncher = DropIn.registerForDropInResult(this, this)
 
@@ -166,7 +168,7 @@ class MainActivity : AppCompatActivity(), DropInCallback {
 
         val dropInConfigurationBuilder = DropInConfiguration.Builder(
             this@MainActivity,
-            ExampleDropInService::class.java,
+            ExampleAsyncDropInService::class.java,
             BuildConfig.CLIENT_KEY
         )
             .setEnvironment(Environment.TEST)

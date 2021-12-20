@@ -36,10 +36,10 @@ public final class PaymentMethodTypes {
     public static final String GOOGLE_PAY = "googlepay";
     public static final String GOOGLE_PAY_LEGACY = "paywithgoogle";
     public static final String SEPA = "sepadirectdebit";
+    public static final String BACS = "directdebit_GB";
     public static final String BCMC = "bcmc";
     public static final String MB_WAY = "mbway";
     public static final String BLIK = "blik";
-    // TODO: not supported yet but needed in PaymentMethodAdapter, add to SUPPORTED_PAYMENT_METHODS when supported
     public static final String GIFTCARD = "giftcard";
 
     // Payment methods that do not need a payment component, but only an action component
@@ -108,6 +108,7 @@ public final class PaymentMethodTypes {
                 MOLPAY_VIETNAM,
                 OPEN_BANKING,
                 SEPA,
+                BACS,
                 SCHEME,
                 BLIK,
                 WECHAT_PAY_SDK,
@@ -157,7 +158,9 @@ public final class PaymentMethodTypes {
                 ECONTEXT_SEVEN_ELEVEN,
                 ECONTEXT_ATM,
                 ECONTEXT_STORES,
-                ECONTEXT_ONLINE
+                ECONTEXT_ONLINE,
+
+                GIFTCARD
         ));
     }
 

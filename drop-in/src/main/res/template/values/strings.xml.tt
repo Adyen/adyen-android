@@ -21,4 +21,12 @@
     <string name="continue_button">%%continue%%</string>
     <string name="change_payment_method">%%preselectedPaymentMethod.changeButton.accessibilityLabel%%</string>
     <string name="credit_card">Credit Card</string>
+    <string name="checkout_giftcard_redeem_button">%%applyGiftcard%%</string>
+    <string name="checkout_giftcard_error_zero_balance">%%error.giftcard.no-balance%%</string>
+    <string name="checkout_giftcard_error_currency">%%error.giftcard.currency-error%%</string>
+    <string name="checkout_giftcard_remaining_balance_text">%%partialPayment.remainingBalance%%</string>
+    <string name="checkout_giftcard_pay_remaining_amount">%%partialPayment.payRemainingAmount%%</string>
+    <string name="checkout_giftcard_payment_methods_header">%%paymentmethods.giftcard%%</string>
+    <string name="checkout_giftcard_remove_button">%%storedPaymentMethod.disable.button%%</string>
+    <string name="checkout_giftcard_max_transaction_limit">%%giftcardTransactionLimit%%</string>
 </resources>

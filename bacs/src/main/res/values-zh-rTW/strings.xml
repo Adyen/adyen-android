@@ -1,0 +1,26 @@
+<!--
+  ~ Copyright (c) 2021 Adyen N.V.
+  ~
+  ~ This file is open source and available under the MIT license. See the LICENSE file for more info.
+  ~
+  ~ Created by ozgur on 5/11/2021.
+  -->
+
+<resources>
+    <string name="bacs_holder_name_hint">銀行帳戶持有人姓名</string>
+    <string name="bacs_account_number_hint">銀行帳戶號碼</string>
+    <string name="bacs_sort_code_hint">銀行代碼</string>
+    <string name="bacs_shopper_email_hint">電子郵件地址</string>
+
+    <string name="bacs_holder_name_invalid">銀行帳戶持有人姓名無效</string>
+    <string name="bacs_account_number_invalid">銀行帳戶號碼無效</string>
+    <string name="bacs_sort_code_invalid">銀行代碼無效</string>
+    <string name="bacs_shopper_email_invalid">電子郵件地址無效</string>
+
+    <string name="bacs_consent_account">我確認該帳戶以我的名義開設，並且我是授權從該帳戶直接扣款的唯一簽署人。</string>
+    <string name="bacs_consent_amount">我同意從我的銀行帳戶扣除上述金額。</string>
+    <string name="bacs_consent_amount_specified">我同意從我的銀行帳戶扣除 %s。</string>
+
+    <string name="bacs_continue">繼續</string>
+    <string name="bacs_confirm_and_pay">確認並支付</string>
+</resources>

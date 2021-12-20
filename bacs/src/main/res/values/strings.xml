@@ -1,0 +1,26 @@
+<!--
+  ~ Copyright (c) 2021 Adyen N.V.
+  ~
+  ~ This file is open source and available under the MIT license. See the LICENSE file for more info.
+  ~
+  ~ Created by ozgur on 5/11/2021.
+  -->
+
+<resources>
+    <string name="bacs_holder_name_hint">Bank account holder name</string>
+    <string name="bacs_account_number_hint">Bank account number</string>
+    <string name="bacs_sort_code_hint">Sort code</string>
+    <string name="bacs_shopper_email_hint">Email address</string>
+
+    <string name="bacs_holder_name_invalid">Invalid bank account holder name</string>
+    <string name="bacs_account_number_invalid">Invalid bank account number</string>
+    <string name="bacs_sort_code_invalid">Invalid sort code</string>
+    <string name="bacs_shopper_email_invalid">Invalid email address</string>
+
+    <string name="bacs_consent_account">I confirm the account is in my name and I am the only signatory required to authorise the Direct Debit on this account.</string>
+    <string name="bacs_consent_amount">I agree that the above amount will be deducted from my bank account.</string>
+    <string name="bacs_consent_amount_specified">I agree that %s will be deducted from my bank account.</string>
+
+    <string name="bacs_continue">Continue</string>
+    <string name="bacs_confirm_and_pay">Confirm and pay</string>
+</resources>

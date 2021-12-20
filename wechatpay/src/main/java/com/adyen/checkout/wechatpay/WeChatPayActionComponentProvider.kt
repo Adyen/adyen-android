@@ -62,4 +62,8 @@ class WeChatPayActionComponentProvider : ActionComponentProvider<WeChatPayAction
     }
 
     override fun requiresView(action: Action): Boolean = false
+
+    override fun providesDetails(): Boolean {
+        return true
+    }
 }

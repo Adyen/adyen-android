@@ -21,4 +21,12 @@
     <string name="continue_button">Continuar</string>
     <string name="change_payment_method">Alterar método de pagamento</string>
     <string name="credit_card">Credit Card</string>
+    <string name="checkout_giftcard_redeem_button">Resgatar</string>
+    <string name="checkout_giftcard_error_zero_balance">Este vale-presente tem saldo zero</string>
+    <string name="checkout_giftcard_error_currency">Os vales-presente são válidos somente na moeda em que foram emitidos</string>
+    <string name="checkout_giftcard_remaining_balance_text">O saldo restante será %s</string>
+    <string name="checkout_giftcard_pay_remaining_amount">Selecione o método de pagamento dos %s restantes</string>
+    <string name="checkout_giftcard_payment_methods_header">Vale presentes</string>
+    <string name="checkout_giftcard_remove_button">Remover</string>
+    <string name="checkout_giftcard_max_transaction_limit">Máximo de %s permitido por transação neste cartão-presente</string>
 </resources>

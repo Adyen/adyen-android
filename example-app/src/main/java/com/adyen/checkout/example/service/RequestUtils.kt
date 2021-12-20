@@ -9,11 +9,26 @@
 package com.adyen.checkout.example.service
 
 import com.adyen.checkout.components.model.payments.Amount
+import com.adyen.checkout.components.model.payments.request.Order
 import com.adyen.checkout.example.data.api.model.paymentsRequest.AdditionalData
 import com.adyen.checkout.example.data.api.model.paymentsRequest.Item
+import com.adyen.checkout.example.data.api.model.paymentsRequest.PaymentMethodsRequest
+import com.adyen.checkout.example.data.storage.KeyValueStorage
 import com.google.gson.Gson
 import org.json.JSONArray
 import org.json.JSONObject
+
+fun getPaymentMethodRequest(keyValueStorage: KeyValueStorage, order: Order? = null): PaymentMethodsRequest {
+    return PaymentMethodsRequest(
+        merchantAccount = keyValueStorage.getMerchantAccount(),
+        shopperReference = keyValueStorage.getShopperReference(),
+        amount = if (order == null) keyValueStorage.getAmount() else null,
+        countryCode = keyValueStorage.getCountry(),
+        shopperLocale = keyValueStorage.getShopperLocale(),
+        splitCardFundingSources = keyValueStorage.isSplitCardFundingSources(),
+        order = order
+    )
+}
 
 @Suppress("LongParameterList")
 fun createPaymentRequest(
@@ -28,26 +43,45 @@ fun createPaymentRequest(
     threeDSAuthenticationOnly: Boolean = false
 ): JSONObject {
 
-    val request = JSONObject(paymentComponentData.toString())
+    return JSONObject(paymentComponentData.toString()).apply {
+        put("shopperReference", shopperReference)
+        if (!has("amount")) put("amount", JSONObject(Gson().toJson(amount)))
+        put("merchantAccount", merchantAccount)
+        put("returnUrl", redirectUrl)
+        put("countryCode", countryCode)
+        put("shopperIP", "142.12.31.22")
+        put("reference", "android-test-components_${System.currentTimeMillis()}")
+        put("channel", "android")
+        put("additionalData", JSONObject(Gson().toJson(additionalData)))
+        put("lineItems", JSONArray(Gson().toJson(listOf(Item()))))
+        put("threeDSAuthenticationOnly", threeDSAuthenticationOnly)
 
-    request.put("shopperReference", shopperReference)
-    request.put("amount", JSONObject(Gson().toJson(amount)))
-    request.put("merchantAccount", merchantAccount)
-    request.put("returnUrl", redirectUrl)
-    request.put("countryCode", countryCode)
-    request.put("shopperIP", "142.12.31.22")
-    request.put("reference", "android-test-components_${System.currentTimeMillis()}")
-    request.put("channel", "android")
-    request.put("additionalData", JSONObject(Gson().toJson(additionalData)))
-    request.put("lineItems", JSONArray(Gson().toJson(listOf(Item()))))
-    request.put("threeDSAuthenticationOnly", threeDSAuthenticationOnly)
-
-    if (force3DS2Challenge) {
-        val threeDS2RequestData = JSONObject()
-        threeDS2RequestData.put("deviceChannel", "app")
-        threeDS2RequestData.put("challengeIndicator", "requestChallenge")
-        request.put("threeDS2RequestData", threeDS2RequestData)
+        if (force3DS2Challenge) {
+            val threeDS2RequestData = JSONObject()
+            threeDS2RequestData.put("deviceChannel", "app")
+            threeDS2RequestData.put("challengeIndicator", "requestChallenge")
+            put("threeDS2RequestData", threeDS2RequestData)
+        }
     }
+}
 
-    return request
+fun createBalanceRequest(
+    paymentComponentData: JSONObject,
+    merchantAccount: String,
+): JSONObject {
+    return JSONObject().apply {
+        put("paymentMethod", paymentComponentData)
+        put("merchantAccount", merchantAccount)
+    }
+}
+
+fun createOrderRequest(
+    amount: Amount,
+    merchantAccount: String
+): JSONObject {
+    return JSONObject().apply {
+        put("amount", JSONObject(Gson().toJson(amount)))
+        put("merchantAccount", merchantAccount)
+        put("reference", "android-test-components_${System.currentTimeMillis()}")
+    }
 }

@@ -21,4 +21,12 @@
     <string name="continue_button">Nastavi</string>
     <string name="change_payment_method">Promijeni način plaćanja</string>
     <string name="credit_card">Credit Card</string>
+    <string name="checkout_giftcard_redeem_button">Iskoristite</string>
+    <string name="checkout_giftcard_error_zero_balance">Stanje na ovoj poklon-kartici iznosi nula</string>
+    <string name="checkout_giftcard_error_currency">Poklon-kartice vrijede samo u valuti u kojoj su izdane</string>
+    <string name="checkout_giftcard_remaining_balance_text">Preostalo stanje na računu iznosit će %s</string>
+    <string name="checkout_giftcard_pay_remaining_amount">Odaberite način plaćanja za preostali iznos %s</string>
+    <string name="checkout_giftcard_payment_methods_header">Dodana poklon-kartica</string>
+    <string name="checkout_giftcard_remove_button">Ukloni</string>
+    <string name="checkout_giftcard_max_transaction_limit">Na ovoj je poklon-kartici maks. dopušteno %s po transakciji</string>
 </resources>

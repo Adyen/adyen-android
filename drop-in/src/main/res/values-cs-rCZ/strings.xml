@@ -21,4 +21,12 @@
     <string name="continue_button">Pokračovat</string>
     <string name="change_payment_method">Změnit způsob platby</string>
     <string name="credit_card">Credit Card</string>
+    <string name="checkout_giftcard_redeem_button">Uplatnit</string>
+    <string name="checkout_giftcard_error_zero_balance">Na dárkové kartě je nulový zůstatek</string>
+    <string name="checkout_giftcard_error_currency">Dárkové karty jsou platné jenom v měně, ve které byly vystavené</string>
+    <string name="checkout_giftcard_remaining_balance_text">Zbývající zůstatek bude %s</string>
+    <string name="checkout_giftcard_pay_remaining_amount">Zvolte, jakým způsobem se má %s zaplatit</string>
+    <string name="checkout_giftcard_payment_methods_header">Přidaná dárková karta</string>
+    <string name="checkout_giftcard_remove_button">Odebrat</string>
+    <string name="checkout_giftcard_max_transaction_limit">Maximální povolená částka za jednu transakci touto dárkovou kartou je %s.</string>
 </resources>

@@ -14,6 +14,7 @@ import android.os.Parcel
 import android.os.Parcelable
 import com.adyen.checkout.adyen3ds2.Adyen3DS2Configuration
 import com.adyen.checkout.await.AwaitConfiguration
+import com.adyen.checkout.bacs.BacsDirectDebitConfiguration
 import com.adyen.checkout.bcmc.BcmcConfiguration
 import com.adyen.checkout.blik.BlikConfiguration
 import com.adyen.checkout.card.CardConfiguration
@@ -39,6 +40,7 @@ import com.adyen.checkout.openbanking.OpenBankingConfiguration
 import com.adyen.checkout.qrcode.QRCodeConfiguration
 import com.adyen.checkout.redirect.RedirectConfiguration
 import com.adyen.checkout.sepa.SepaConfiguration
+import com.adyen.checkout.voucher.VoucherConfiguration
 import com.adyen.checkout.wechatpay.WeChatPayActionConfiguration
 import java.util.*
 import kotlin.collections.HashMap
@@ -337,6 +339,14 @@ class DropInConfiguration : Configuration, Parcelable {
         }
 
         /**
+         * Add configuration for BACS Direct Debit payment method.
+         */
+        fun addBacsDirectDebitConfiguration(bacsDirectDebitConfiguration: BacsDirectDebitConfiguration): Builder {
+            availablePaymentConfigs[PaymentMethodTypes.BACS] = bacsDirectDebitConfiguration
+            return this
+        }
+
+        /**
          * Add configuration for 3DS2 action.
          */
         fun add3ds2ActionConfiguration(configuration: Adyen3DS2Configuration): Builder {
@@ -372,6 +382,14 @@ class DropInConfiguration : Configuration, Parcelable {
          * Add configuration for WeChat Pay action.
          */
         fun addWeChatPayActionConfiguration(configuration: WeChatPayActionConfiguration): Builder {
+            availableActionConfigs[configuration::class.java] = configuration
+            return this
+        }
+
+        /**
+         * Add configuration for Voucher action.
+         */
+        fun addVoucherActionConfiguration(configuration: VoucherConfiguration): Builder {
             availableActionConfigs[configuration::class.java] = configuration
             return this
         }

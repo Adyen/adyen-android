@@ -180,25 +180,12 @@ public class UnencryptedCard {
         }
 
         /**
-         * Performs some simple checks on the given {@link UnencryptedCard} object and builds it.
+         * Builds the given {@link UnencryptedCard} object.
          *
-         * @return The valid {@link UnencryptedCard} object.
-         * @throws NullPointerException If any mandatory field is null.
-         * @throws IllegalStateException If any field is in an illegal state.
+         * @return The {@link UnencryptedCard} object.
          */
         @NonNull
         public UnencryptedCard build() throws NullPointerException, IllegalStateException {
-            require(mNumber == null || mNumber.matches("[0-9]{8,19}"),
-                    "number must be null or have 8 to 19 digits (inclusive).");
-            require(mCardHolderName == null || mCardHolderName.length() > 0,
-                    "cardHolderName must be null or not empty.");
-            require(mCvc == null || mCvc.matches("[0-9]{3,4}"),
-                    "cvc must be null or have 3 to 4 digits.");
-            require(mExpiryMonth == null || mExpiryMonth.matches("0?[1-9]|1[0-2]"),
-                    "expiryMonth must be null or between 1 and 12.");
-            require(mExpiryYear == null || mExpiryYear.matches("20\\d{2}"),
-                    "expiryYear must be in the second millennium and first century.");
-
             return new UnencryptedCard(mNumber, mExpiryMonth, mExpiryYear, mCvc, mCardHolderName, mGenerationTime);
         }
 
@@ -208,12 +195,6 @@ public class UnencryptedCard {
 
         private String trimAndRemoveMultipleWhiteSpaces(String string) {
             return string != null ? string.trim().replaceAll("\\s{2,}", " ") : null;
-        }
-
-        private void require(boolean condition, String message) throws IllegalStateException {
-            if (!condition) {
-                throw new IllegalStateException(message);
-            }
         }
     }
 }

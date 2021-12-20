@@ -70,4 +70,8 @@ class Adyen3DS2ComponentProvider : ActionComponentProvider<Adyen3DS2Component, A
     override fun canHandleAction(action: Action): Boolean {
         return supportedActionTypes.contains(action.type)
     }
+
+    override fun providesDetails(): Boolean {
+        return true
+    }
 }

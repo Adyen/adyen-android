@@ -1,0 +1,26 @@
+<!--
+  ~ Copyright (c) 2021 Adyen N.V.
+  ~
+  ~ This file is open source and available under the MIT license. See the LICENSE file for more info.
+  ~
+  ~ Created by ozgur on 5/11/2021.
+  -->
+
+<resources>
+    <string name="bacs_holder_name_hint">Bankkontohavers navn</string>
+    <string name="bacs_account_number_hint">Bankkontonummer</string>
+    <string name="bacs_sort_code_hint">Registreringsnummer</string>
+    <string name="bacs_shopper_email_hint">E-mailadresse</string>
+
+    <string name="bacs_holder_name_invalid">Ugyldigt navn på bankkontohaver</string>
+    <string name="bacs_account_number_invalid">Ugyldigt bankkontonummer</string>
+    <string name="bacs_sort_code_invalid">Ugyldigt registreringsnummer</string>
+    <string name="bacs_shopper_email_invalid">Ugyldig e-mailadresse</string>
+
+    <string name="bacs_consent_account">Jeg bekræfter, at kontoen er i mit navn, og at jeg er den eneste underskriver, der kræves for at godkende direkte debitering af kontoen.</string>
+    <string name="bacs_consent_amount">Jeg accepterer, at beløbet ovenfor trækkes på min bankkonto.</string>
+    <string name="bacs_consent_amount_specified">Jeg accepterer, at %s hæves på min bankkonto.</string>
+
+    <string name="bacs_continue">Fortsæt</string>
+    <string name="bacs_confirm_and_pay">Bekræft, og betal</string>
+</resources>

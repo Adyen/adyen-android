@@ -17,6 +17,8 @@ import com.adyen.checkout.adyen3ds2.Adyen3DS2Configuration
 import com.adyen.checkout.await.AwaitComponent
 import com.adyen.checkout.await.AwaitConfiguration
 import com.adyen.checkout.await.AwaitView
+import com.adyen.checkout.bacs.BacsDirectDebitComponent
+import com.adyen.checkout.bacs.BacsDirectDebitConfiguration
 import com.adyen.checkout.bcmc.BcmcComponent
 import com.adyen.checkout.bcmc.BcmcConfiguration
 import com.adyen.checkout.bcmc.BcmcView
@@ -56,6 +58,9 @@ import com.adyen.checkout.entercash.EntercashRecyclerView
 import com.adyen.checkout.eps.EPSComponent
 import com.adyen.checkout.eps.EPSConfiguration
 import com.adyen.checkout.eps.EPSRecyclerView
+import com.adyen.checkout.giftcard.GiftCardComponent
+import com.adyen.checkout.giftcard.GiftCardConfiguration
+import com.adyen.checkout.giftcard.GiftCardView
 import com.adyen.checkout.googlepay.GooglePayComponent
 import com.adyen.checkout.googlepay.GooglePayConfiguration
 import com.adyen.checkout.googlepay.GooglePayProvider
@@ -79,6 +84,9 @@ import com.adyen.checkout.redirect.RedirectConfiguration
 import com.adyen.checkout.sepa.SepaComponent
 import com.adyen.checkout.sepa.SepaConfiguration
 import com.adyen.checkout.sepa.SepaView
+import com.adyen.checkout.voucher.VoucherComponent
+import com.adyen.checkout.voucher.VoucherConfiguration
+import com.adyen.checkout.voucher.VoucherView
 import com.adyen.checkout.wechatpay.WeChatPayActionComponent
 import com.adyen.checkout.wechatpay.WeChatPayActionConfiguration
 import com.adyen.checkout.wechatpay.WeChatPayProvider
@@ -98,11 +106,15 @@ internal fun <T : Configuration> getDefaultConfigForPaymentMethod(
 
     // get default builder for Configuration type
     val builder: BaseConfigurationBuilder<out Configuration> = when (paymentMethod) {
+        PaymentMethodTypes.BACS -> BacsDirectDebitConfiguration.Builder(shopperLocale, environment, clientKey).apply {
+            if (!dropInConfiguration.amount.isEmpty) setAmount(dropInConfiguration.amount)
+        }
         PaymentMethodTypes.BCMC -> BcmcConfiguration.Builder(shopperLocale, environment, clientKey)
         PaymentMethodTypes.BLIK -> BlikConfiguration.Builder(shopperLocale, environment, clientKey)
         PaymentMethodTypes.DOTPAY -> DotpayConfiguration.Builder(shopperLocale, environment, clientKey)
         PaymentMethodTypes.ENTERCASH -> EntercashConfiguration.Builder(shopperLocale, environment, clientKey)
         PaymentMethodTypes.EPS -> EPSConfiguration.Builder(shopperLocale, environment, clientKey)
+        PaymentMethodTypes.GIFTCARD -> GiftCardConfiguration.Builder(shopperLocale, environment, clientKey)
         PaymentMethodTypes.GOOGLE_PAY,
         PaymentMethodTypes.GOOGLE_PAY_LEGACY -> {
             GooglePayConfiguration.Builder(shopperLocale, environment, clientKey).apply {
@@ -139,6 +151,7 @@ internal inline fun <reified T : Configuration> getDefaultConfigForAction(
         QRCodeConfiguration::class -> QRCodeConfiguration.Builder(shopperLocale, environment, clientKey)
         Adyen3DS2Configuration::class -> Adyen3DS2Configuration.Builder(shopperLocale, environment, clientKey)
         WeChatPayActionConfiguration::class -> WeChatPayActionConfiguration.Builder(shopperLocale, environment, clientKey)
+        VoucherConfiguration::class -> VoucherConfiguration.Builder(shopperLocale, environment, clientKey)
         else -> throw CheckoutException("Unable to find component configuration for class - ${T::class}")
     }
 
@@ -225,6 +238,10 @@ internal fun getComponentFor(
 ): PaymentComponent<PaymentComponentState<in PaymentMethodDetails>, Configuration> {
 
     val component = when (paymentMethod.type) {
+        PaymentMethodTypes.BACS -> {
+            val bacsConfiguration: BacsDirectDebitConfiguration = dropInConfiguration.getConfigurationForPaymentMethod(PaymentMethodTypes.BACS)
+            BacsDirectDebitComponent.PROVIDER.get(fragment, paymentMethod, bacsConfiguration)
+        }
         PaymentMethodTypes.BCMC -> {
             val bcmcConfiguration: BcmcConfiguration = dropInConfiguration.getConfigurationForPaymentMethod(PaymentMethodTypes.BCMC)
             BcmcComponent.PROVIDER.get(fragment, paymentMethod, bcmcConfiguration)
@@ -244,6 +261,10 @@ internal fun getComponentFor(
         PaymentMethodTypes.EPS -> {
             val epsConfig: EPSConfiguration = dropInConfiguration.getConfigurationForPaymentMethod(PaymentMethodTypes.EPS)
             EPSComponent.PROVIDER.get(fragment, paymentMethod, epsConfig)
+        }
+        PaymentMethodTypes.GIFTCARD -> {
+            val giftcardConfiguration: GiftCardConfiguration = dropInConfiguration.getConfigurationForPaymentMethod(PaymentMethodTypes.GIFTCARD)
+            GiftCardComponent.PROVIDER.get(fragment, paymentMethod, giftcardConfiguration)
         }
         PaymentMethodTypes.GOOGLE_PAY -> {
             val googlePayConfiguration: GooglePayConfiguration = dropInConfiguration.getConfigurationForPaymentMethod(PaymentMethodTypes.GOOGLE_PAY)
@@ -287,7 +308,6 @@ internal fun getComponentFor(
             val sepaConfiguration: SepaConfiguration = dropInConfiguration.getConfigurationForPaymentMethod(PaymentMethodTypes.SEPA)
             SepaComponent.PROVIDER.get(fragment, paymentMethod, sepaConfiguration)
         }
-
         else -> {
             throw CheckoutException("Unable to find component for type - ${paymentMethod.type}")
         }
@@ -314,6 +334,7 @@ internal fun getViewFor(
         PaymentMethodTypes.DOTPAY -> DotpayRecyclerView(context)
         PaymentMethodTypes.ENTERCASH -> EntercashRecyclerView(context)
         PaymentMethodTypes.EPS -> EPSRecyclerView(context)
+        PaymentMethodTypes.GIFTCARD -> GiftCardView(context)
         PaymentMethodTypes.IDEAL -> IdealRecyclerView(context)
         PaymentMethodTypes.MB_WAY -> MBWayView(context)
         PaymentMethodTypes.MOLPAY_THAILAND,
@@ -326,6 +347,7 @@ internal fun getViewFor(
         // GooglePay and WeChatPay do not require a View in Drop-in
         ActionTypes.AWAIT -> AwaitView(context)
         ActionTypes.QR_CODE -> QRCodeView(context)
+        ActionTypes.VOUCHER -> VoucherView(context)
         else -> {
             throw CheckoutException("Unable to find view for type - $paymentType")
         }
@@ -344,7 +366,8 @@ internal fun getActionProviderFor(action: Action): ActionComponentProvider<out B
         Adyen3DS2Component.PROVIDER,
         WeChatPayActionComponent.PROVIDER,
         AwaitComponent.PROVIDER,
-        QRCodeComponent.PROVIDER
+        QRCodeComponent.PROVIDER,
+        VoucherComponent.PROVIDER
     )
     return allActionProviders.firstOrNull { it.canHandleAction(action) }
 }
@@ -377,6 +400,9 @@ internal fun getActionComponentFor(
         }
         QRCodeComponent.PROVIDER -> {
             QRCodeComponent.PROVIDER.get(activity, activity.application, dropInConfiguration.getConfigurationForAction())
+        }
+        VoucherComponent.PROVIDER -> {
+            VoucherComponent.PROVIDER.get(activity, activity.application, dropInConfiguration.getConfigurationForAction())
         }
         else -> {
             throw CheckoutException("Unable to find component for provider - $provider")

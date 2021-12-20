@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="utf-8"?><!--
+  ~ Copyright (c) 2021 Adyen N.V.
+  ~
+  ~ This file is open source and available under the MIT license. See the LICENSE file for more info.
+  ~
+  ~ Created by josephj on 9/9/2021.
+  -->
+
+<resources>
+
+    <style name="AdyenCheckout.GiftCard" />
+
+    <style name="AdyenCheckout.GiftCard.GiftCardNumberInput" parent="AdyenCheckout.TextInputEditText">
+        <item name="android:hint">@string/checkout_giftcard_number_hint</item>
+    </style>
+
+    <style name="AdyenCheckout.GiftCard.GiftCardPinInput" parent="AdyenCheckout.TextInputEditText">
+        <item name="android:hint">@string/checkout_giftcard_pin_hint</item>
+        <item name="android:inputType">number</item>
+        <item name="android:maxLength">10</item>
+    </style>
+</resources>

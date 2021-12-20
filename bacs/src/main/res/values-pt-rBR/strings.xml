@@ -1,0 +1,26 @@
+<!--
+  ~ Copyright (c) 2021 Adyen N.V.
+  ~
+  ~ This file is open source and available under the MIT license. See the LICENSE file for more info.
+  ~
+  ~ Created by ozgur on 5/11/2021.
+  -->
+
+<resources>
+    <string name="bacs_holder_name_hint">Nome do titular da conta bancária</string>
+    <string name="bacs_account_number_hint">Número da conta bancária</string>
+    <string name="bacs_sort_code_hint">Código de classificação</string>
+    <string name="bacs_shopper_email_hint">Endereço de e-mail</string>
+
+    <string name="bacs_holder_name_invalid">Nome do titular da conta bancária inválido</string>
+    <string name="bacs_account_number_invalid">Número da conta bancária inválido</string>
+    <string name="bacs_sort_code_invalid">Código de classificação inválido</string>
+    <string name="bacs_shopper_email_invalid">Endereço de e-mail inválido</string>
+
+    <string name="bacs_consent_account">Confirmo que a conta está em meu nome e que sou o único signatário que deve autorizar o débito direto nessa conta.</string>
+    <string name="bacs_consent_amount">Concordo que o valor acima seja deduzido da minha conta bancária.</string>
+    <string name="bacs_consent_amount_specified">Concordo que o valor de %s seja deduzido da minha conta bancária.</string>
+
+    <string name="bacs_continue">Continuar</string>
+    <string name="bacs_confirm_and_pay">Confirmar e pagar</string>
+</resources>

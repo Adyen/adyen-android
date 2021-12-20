@@ -22,6 +22,7 @@ import com.adyen.checkout.core.log.LogUtil
 import com.adyen.checkout.core.log.Logger
 import com.adyen.checkout.dropin.R
 import com.adyen.checkout.dropin.ui.DropInViewModel
+import com.adyen.checkout.giftcard.GiftCardComponentState
 import com.adyen.checkout.googlepay.GooglePayConfiguration
 import com.google.android.material.bottomsheet.BottomSheetBehavior
 import com.google.android.material.bottomsheet.BottomSheetDialog
@@ -88,6 +89,7 @@ abstract class DropInBottomSheetDialogFragment : BottomSheetDialogFragment() {
     /**
      * Interface for Drop-in fragments to interact with the main Activity
      */
+    @Suppress("TooManyFunctions")
     interface Protocol {
         fun showPreselectedDialog()
         fun showPaymentMethodsDialog()
@@ -98,5 +100,8 @@ abstract class DropInBottomSheetDialogFragment : BottomSheetDialogFragment() {
         fun showError(errorMessage: String, reason: String, terminate: Boolean)
         fun terminateDropIn()
         fun startGooglePay(paymentMethod: PaymentMethod, googlePayConfiguration: GooglePayConfiguration)
+        fun requestBalanceCall(giftCardComponentState: GiftCardComponentState)
+        fun requestPartialPayment()
+        fun finishWithAction()
     }
 }

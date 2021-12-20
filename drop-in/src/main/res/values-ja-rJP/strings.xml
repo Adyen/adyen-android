@@ -21,4 +21,12 @@
     <string name="continue_button">続ける</string>
     <string name="change_payment_method">お支払方法を変更する</string>
     <string name="credit_card">Credit Card</string>
+    <string name="checkout_giftcard_redeem_button">利用する</string>
+    <string name="checkout_giftcard_error_zero_balance">このギフトカードの残高はゼロです</string>
+    <string name="checkout_giftcard_error_currency">ギフトカードは、発行された通貨でのみ有効です。</string>
+    <string name="checkout_giftcard_remaining_balance_text">残りの残高は%sになります</string>
+    <string name="checkout_giftcard_pay_remaining_amount">残りの%sの支払方法を選択してください</string>
+    <string name="checkout_giftcard_payment_methods_header">追加したギフトカード</string>
+    <string name="checkout_giftcard_remove_button">削除</string>
+    <string name="checkout_giftcard_max_transaction_limit">このギフトカードでの取引ごとに許可される最大%s</string>
 </resources>

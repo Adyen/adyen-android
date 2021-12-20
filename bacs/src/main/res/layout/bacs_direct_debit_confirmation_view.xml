@@ -1,0 +1,78 @@
+<?xml version="1.0" encoding="utf-8"?><!--
+  ~ Copyright (c) 2021 Adyen N.V.
+  ~
+  ~ This file is open source and available under the MIT license. See the LICENSE file for more info.
+  ~
+  ~ Created by ozgur on 18/11/2021.
+  -->
+
+<merge xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="vertical"
+    tools:parentTag="android.widget.LinearLayout">
+
+    <com.google.android.material.textfield.TextInputLayout
+        android:id="@+id/textInputLayout_holderName"
+        style="@style/AdyenCheckout.TextInputLayout"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+        <com.adyen.checkout.components.ui.view.AdyenTextInputEditText
+            android:id="@+id/editText_holderName"
+            style="@style/AdyenCheckout.Bacs.HolderNameInput"
+            android:enabled="false"
+            android:nextFocusDown="@id/editText_bankAccountNumber"
+            android:nextFocusForward="@id/editText_bankAccountNumber"
+            tools:ignore="RequiredSize"
+            tools:text="O. Tasoluk" />
+    </com.google.android.material.textfield.TextInputLayout>
+
+    <com.google.android.material.textfield.TextInputLayout
+        android:id="@+id/textInputLayout_bankAccountNumber"
+        style="@style/AdyenCheckout.TextInputLayout"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+        <com.adyen.checkout.components.ui.view.AdyenTextInputEditText
+            android:id="@+id/editText_bankAccountNumber"
+            style="@style/AdyenCheckout.Bacs.AccountNumberInput"
+            android:enabled="false"
+            android:nextFocusDown="@id/editText_sortCode"
+            android:nextFocusForward="@id/editText_sortCode"
+            tools:ignore="RequiredSize"
+            tools:text="12345678" />
+    </com.google.android.material.textfield.TextInputLayout>
+
+    <com.google.android.material.textfield.TextInputLayout
+        android:id="@+id/textInputLayout_sortCode"
+        style="@style/AdyenCheckout.TextInputLayout"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+        <com.adyen.checkout.components.ui.view.AdyenTextInputEditText
+            android:id="@+id/editText_sortCode"
+            style="@style/AdyenCheckout.Bacs.SortCodeInput"
+            android:enabled="false"
+            android:nextFocusDown="@id/editText_shopperEmail"
+            android:nextFocusForward="@id/editText_shopperEmail"
+            tools:ignore="RequiredSize"
+            tools:text="123456" />
+    </com.google.android.material.textfield.TextInputLayout>
+
+    <com.google.android.material.textfield.TextInputLayout
+        android:id="@+id/textInputLayout_shopperEmail"
+        style="@style/AdyenCheckout.TextInputLayout"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+        <com.adyen.checkout.components.ui.view.AdyenTextInputEditText
+            android:id="@+id/editText_shopperEmail"
+            style="@style/AdyenCheckout.Bacs.ShopperEmailInput"
+            android:enabled="false"
+            tools:ignore="RequiredSize"
+            tools:text="example@mail.com" />
+    </com.google.android.material.textfield.TextInputLayout>
+
+</merge>
