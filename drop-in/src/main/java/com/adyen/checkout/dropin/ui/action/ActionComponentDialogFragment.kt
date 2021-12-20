@@ -82,8 +82,7 @@ class ActionComponentDialogFragment : DropInBottomSheetDialogFragment(), Observe
             actionComponent = getComponent(action)
             attachComponent(actionComponent, componentView)
 
-            val shouldShowFinishButton = getActionProviderFor(action)?.providesDetails() == false
-            if (shouldShowFinishButton) {
+            if (shouldFinishWithAction()) {
                 with(binding.buttonFinish) {
                     isVisible = true
                     setOnClickListener { protocol.finishWithAction() }
@@ -102,14 +101,23 @@ class ActionComponentDialogFragment : DropInBottomSheetDialogFragment(), Observe
     }
 
     override fun onBackPressed(): Boolean {
-        protocol.terminateDropIn()
+        // polling will be canceled by lifecycle event
+        when {
+            shouldFinishWithAction() -> { protocol.finishWithAction() }
+            dropInViewModel.shouldSkipToSinglePaymentMethod() -> { protocol.terminateDropIn() }
+            else -> { protocol.showPaymentMethodsDialog() }
+        }
         return true
     }
 
     override fun onCancel(dialog: DialogInterface) {
         super.onCancel(dialog)
         Logger.d(TAG, "onCancel")
-        protocol.terminateDropIn()
+        if (shouldFinishWithAction()) {
+            protocol.finishWithAction()
+        } else {
+            protocol.terminateDropIn()
+        }
     }
 
     override fun onChanged(actionComponentData: ActionComponentData?) {
@@ -164,5 +172,9 @@ class ActionComponentDialogFragment : DropInBottomSheetDialogFragment(), Observe
     private fun handleError(componentError: ComponentError) {
         Logger.e(TAG, componentError.errorMessage)
         protocol.showError(getString(R.string.action_failed), componentError.errorMessage, true)
+    }
+
+    private fun shouldFinishWithAction(): Boolean {
+        return getActionProviderFor(action)?.providesDetails() == false
     }
 }
