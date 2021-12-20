@@ -14,5 +14,5 @@
 ## Fixed
 - Google Pay Environment being set incorrectly to `WalletConstants.ENVIRONMENT_PRODUCTION`.
 
-##Deprecated
+## Deprecated
 - `DropInServiceResult.Action(actionJSON: String)` is deprecated in favor of `DropInServiceResult.Action(action: com.adyen.checkout.components.model.payments.response.Action)`. Use `com.adyen.checkout.components.model.payments.response.Action.SERIALIZER` to serialize your JSON response string.
