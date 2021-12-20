@@ -81,5 +81,4 @@ class VoucherView @JvmOverloads constructor(context: Context, attrs: AttributeSe
             imageLoader.load(paymentMethodType, binding.imageViewLogo, LogoApi.Size.MEDIUM)
         }
     }
-
 }

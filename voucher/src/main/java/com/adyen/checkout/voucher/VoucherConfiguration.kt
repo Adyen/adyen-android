@@ -16,14 +16,13 @@ import com.adyen.checkout.components.base.Configuration
 import com.adyen.checkout.core.api.Environment
 import java.util.Locale
 
-class VoucherConfiguration: Configuration {
+class VoucherConfiguration : Configuration {
 
     private constructor(builder: Builder) : super(builder.builderShopperLocale, builder.builderEnvironment, builder.builderClientKey)
 
     private constructor(parcel: Parcel) : super(parcel)
 
-
-    class Builder: BaseConfigurationBuilder<VoucherConfiguration> {
+    class Builder : BaseConfigurationBuilder<VoucherConfiguration> {
         /**
          * Constructor for Builder with default values.
          *

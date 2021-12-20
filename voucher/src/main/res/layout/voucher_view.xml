@@ -17,18 +17,21 @@
         android:id="@+id/imageView_logo"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:contentDescription="@null"
         tools:src="@drawable/ic_placeholder_image" />
 
     <TextView
         android:id="@+id/textView_description"
         style="@style/AdyenCheckout.Voucher.DescriptionTextAppearance"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content" />
+        android:layout_height="wrap_content"
+        android:textIsSelectable="false" />
 
     <TextView
         android:id="@+id/textView_download"
         style="@style/AdyenCheckout.Voucher.DownloadTextAppearance"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:gravity="center_horizontal" />
+        android:gravity="center_horizontal"
+        android:textIsSelectable="false" />
 </merge>
