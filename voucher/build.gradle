@@ -11,9 +11,12 @@ plugins {
     id 'kotlin-android'
 }
 
+// Maven artifact
 ext.mavenArtifactId = "voucher"
 ext.mavenArtifactName = "Adyen Checkout Voucher component"
 ext.mavenArtifactDescription = "Adyen checkout voucher component for Adyen's Checkout API."
+
+apply from: "${rootDir}/config/gradle/sharedTasks.gradle"
 
 android {
     compileSdkVersion compile_sdk_version

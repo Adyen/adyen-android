@@ -27,11 +27,17 @@ class VoucherComponentProvider : ActionComponentProvider<VoucherComponent, Vouch
         owner: T,
         application: Application,
         configuration: VoucherConfiguration
-    ): VoucherComponent where T: SavedStateRegistryOwner, T : ViewModelStoreOwner {
+    ): VoucherComponent where T : SavedStateRegistryOwner, T : ViewModelStoreOwner {
         return get(owner, owner, application, configuration, null)
     }
 
-    override fun get(savedStateRegistryOwner: SavedStateRegistryOwner, viewModelStoreOwner: ViewModelStoreOwner, application: Application, configuration: VoucherConfiguration, defaultArgs: Bundle?): VoucherComponent {
+    override fun get(
+        savedStateRegistryOwner: SavedStateRegistryOwner,
+        viewModelStoreOwner: ViewModelStoreOwner,
+        application: Application,
+        configuration: VoucherConfiguration,
+        defaultArgs: Bundle?
+    ): VoucherComponent {
         val voucherFactory = viewModelFactory(savedStateRegistryOwner, defaultArgs) { savedStateHandle ->
             VoucherComponent(
                 savedStateHandle,
