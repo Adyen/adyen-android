@@ -50,9 +50,6 @@ $dokka.location:com.adyen.checkout.card.api////PointingToDeclaration/card/com.a
 $dokka.location:com.adyen.checkout.card.api/BinLookupConnection///PointingToDeclaration/card/com.adyen.checkout.card.api/-bin-lookup-connection/index.html
 $dokka.location:com.adyen.checkout.card.api/BinLookupConnection/BinLookupConnection/#com.adyen.checkout.card.api.model.BinLookupRequest#com.adyen.checkout.core.api.Environment#kotlin.String/PointingToDeclaration/card/com.adyen.checkout.card.api/-bin-lookup-connection/-bin-lookup-connection.html
 $dokka.location:com.adyen.checkout.card.api/BinLookupConnection/call/#/PointingToDeclaration/card/com.adyen.checkout.card.api/-bin-lookup-connection/call.html
-$dokka.location:com.adyen.checkout.card.api/PublicKeyConnection///PointingToDeclaration/card/com.adyen.checkout.card.api/-public-key-connection/index.html
-$dokka.location:com.adyen.checkout.card.api/PublicKeyConnection/PublicKeyConnection/#com.adyen.checkout.core.api.Environment#kotlin.String/PointingToDeclaration/card/com.adyen.checkout.card.api/-public-key-connection/-public-key-connection.html
-$dokka.location:com.adyen.checkout.card.api/PublicKeyConnection/call/#/PointingToDeclaration/card/com.adyen.checkout.card.api/-public-key-connection/call.html
 $dokka.location:com.adyen.checkout.card.data////PointingToDeclaration/card/com.adyen.checkout.card.data/index.html
 $dokka.location:com.adyen.checkout.card.data/CardType.AMERICAN_EXPRESS///PointingToDeclaration/card/com.adyen.checkout.card.data/-card-type/-a-m-e-r-i-c-a-n_-e-x-p-r-e-s-s/index.html
 $dokka.location:com.adyen.checkout.card.data/CardType.ARGENCARD///PointingToDeclaration/card/com.adyen.checkout.card.data/-card-type/-a-r-g-e-n-c-a-r-d/index.html
@@ -121,9 +118,6 @@ $dokka.location:com.adyen.checkout.card.repository/BinLookupRepository/contains/
 $dokka.location:com.adyen.checkout.card.repository/BinLookupRepository/fetch/#kotlin.String#kotlin.String#com.adyen.checkout.card.CardConfiguration/PointingToDeclaration/card/com.adyen.checkout.card.repository/-bin-lookup-repository/fetch.html
 $dokka.location:com.adyen.checkout.card.repository/BinLookupRepository/get/#kotlin.String/PointingToDeclaration/card/com.adyen.checkout.card.repository/-bin-lookup-repository/get.html
 $dokka.location:com.adyen.checkout.card.repository/BinLookupRepository/isRequiredSize/#kotlin.String/PointingToDeclaration/card/com.adyen.checkout.card.repository/-bin-lookup-repository/is-required-size.html
-$dokka.location:com.adyen.checkout.card.repository/PublicKeyRepository///PointingToDeclaration/card/com.adyen.checkout.card.repository/-public-key-repository/index.html
-$dokka.location:com.adyen.checkout.card.repository/PublicKeyRepository/PublicKeyRepository/#/PointingToDeclaration/card/com.adyen.checkout.card.repository/-public-key-repository/-public-key-repository.html
-$dokka.location:com.adyen.checkout.card.repository/PublicKeyRepository/fetchPublicKey/#com.adyen.checkout.core.api.Environment#kotlin.String/PointingToDeclaration/card/com.adyen.checkout.card.repository/-public-key-repository/fetch-public-key.html
 $dokka.location:com.adyen.checkout.card.ui////PointingToDeclaration/card/com.adyen.checkout.card.ui/index.html
 $dokka.location:com.adyen.checkout.card.ui/CardNumberInput///PointingToDeclaration/card/com.adyen.checkout.card.ui/-card-number-input/index.html
 $dokka.location:com.adyen.checkout.card.ui/CardNumberInput/CardNumberInput/#android.content.Context#android.util.AttributeSet#int/PointingToDeclaration/card/com.adyen.checkout.card.ui/-card-number-input/-card-number-input.html
@@ -206,7 +200,7 @@ $dokka.location:com.adyen.checkout.card/CardConfiguration/isStorePaymentFieldVis
 $dokka.location:com.adyen.checkout.card/CardConfiguration/newBuilder/#/PointingToDeclaration/card/com.adyen.checkout.card/-card-configuration/new-builder.html
 $dokka.location:com.adyen.checkout.card/CardConfiguration/writeToParcel/#android.os.Parcel#int/PointingToDeclaration/card/com.adyen.checkout.card/-card-configuration/write-to-parcel.html
 $dokka.location:com.adyen.checkout.card/CardDelegate///PointingToDeclaration/card/com.adyen.checkout.card/-card-delegate/index.html
-$dokka.location:com.adyen.checkout.card/CardDelegate/CardDelegate/#com.adyen.checkout.card.CardConfiguration#com.adyen.checkout.card.repository.PublicKeyRepository/PointingToDeclaration/card/com.adyen.checkout.card/-card-delegate/-card-delegate.html
+$dokka.location:com.adyen.checkout.card/CardDelegate/CardDelegate/#com.adyen.checkout.card.CardConfiguration#com.adyen.checkout.components.repository.PublicKeyRepository/PointingToDeclaration/card/com.adyen.checkout.card/-card-delegate/-card-delegate.html
 $dokka.location:com.adyen.checkout.card/CardDelegate/detectCardType/#kotlin.String#kotlin.String?#kotlinx.coroutines.CoroutineScope/PointingToDeclaration/card/com.adyen.checkout.card/-card-delegate/detect-card-type.html
 $dokka.location:com.adyen.checkout.card/CardDelegate/fetchPublicKey/#/PointingToDeclaration/card/com.adyen.checkout.card/-card-delegate/fetch-public-key.html
 $dokka.location:com.adyen.checkout.card/CardDelegate/getFundingSource/#/PointingToDeclaration/card/com.adyen.checkout.card/-card-delegate/get-funding-source.html
@@ -388,7 +382,7 @@ $dokka.location:com.adyen.checkout.card/KcpValidationUtils/KCP_BIRTH_DATE_LENGTH
 $dokka.location:com.adyen.checkout.card/KcpValidationUtils/validateKcpBirthDateOrTaxNumber/#kotlin.String/PointingToDeclaration/card/com.adyen.checkout.card/-kcp-validation-utils/validate-kcp-birth-date-or-tax-number.html
 $dokka.location:com.adyen.checkout.card/KcpValidationUtils/validateKcpCardPassword/#kotlin.String/PointingToDeclaration/card/com.adyen.checkout.card/-kcp-validation-utils/validate-kcp-card-password.html
 $dokka.location:com.adyen.checkout.card/NewCardDelegate///PointingToDeclaration/card/com.adyen.checkout.card/-new-card-delegate/index.html
-$dokka.location:com.adyen.checkout.card/NewCardDelegate/NewCardDelegate/#com.adyen.checkout.components.model.paymentmethods.PaymentMethod#com.adyen.checkout.card.CardConfiguration#com.adyen.checkout.card.repository.BinLookupRepository#com.adyen.checkout.card.repository.PublicKeyRepository#com.adyen.checkout.card.CardValidationMapper/PointingToDeclaration/card/com.adyen.checkout.card/-new-card-delegate/-new-card-delegate.html
+$dokka.location:com.adyen.checkout.card/NewCardDelegate/NewCardDelegate/#com.adyen.checkout.components.model.paymentmethods.PaymentMethod#com.adyen.checkout.card.CardConfiguration#com.adyen.checkout.card.repository.BinLookupRepository#com.adyen.checkout.components.repository.PublicKeyRepository#com.adyen.checkout.card.CardValidationMapper/PointingToDeclaration/card/com.adyen.checkout.card/-new-card-delegate/-new-card-delegate.html
 $dokka.location:com.adyen.checkout.card/NewCardDelegate/detectCardType/#kotlin.String#kotlin.String?#kotlinx.coroutines.CoroutineScope/PointingToDeclaration/card/com.adyen.checkout.card/-new-card-delegate/detect-card-type.html
 $dokka.location:com.adyen.checkout.card/NewCardDelegate/getFundingSource/#/PointingToDeclaration/card/com.adyen.checkout.card/-new-card-delegate/get-funding-source.html
 $dokka.location:com.adyen.checkout.card/NewCardDelegate/getInstallmentOptions/#com.adyen.checkout.card.InstallmentConfiguration?#com.adyen.checkout.card.data.CardType?#kotlin.Boolean/PointingToDeclaration/card/com.adyen.checkout.card/-new-card-delegate/get-installment-options.html
@@ -420,7 +414,7 @@ $dokka.location:com.adyen.checkout.card/SocialSecurityNumberVisibility.SHOW/name
 $dokka.location:com.adyen.checkout.card/SocialSecurityNumberVisibility.SHOW/ordinal/#/PointingToDeclaration/card/com.adyen.checkout.card/-social-security-number-visibility/-s-h-o-w/ordinal.html
 $dokka.location:com.adyen.checkout.card/SocialSecurityNumberVisibility///PointingToDeclaration/card/com.adyen.checkout.card/-social-security-number-visibility/index.html
 $dokka.location:com.adyen.checkout.card/StoredCardDelegate///PointingToDeclaration/card/com.adyen.checkout.card/-stored-card-delegate/index.html
-$dokka.location:com.adyen.checkout.card/StoredCardDelegate/StoredCardDelegate/#com.adyen.checkout.components.model.paymentmethods.StoredPaymentMethod#com.adyen.checkout.card.CardConfiguration#com.adyen.checkout.card.repository.PublicKeyRepository/PointingToDeclaration/card/com.adyen.checkout.card/-stored-card-delegate/-stored-card-delegate.html
+$dokka.location:com.adyen.checkout.card/StoredCardDelegate/StoredCardDelegate/#com.adyen.checkout.components.model.paymentmethods.StoredPaymentMethod#com.adyen.checkout.card.CardConfiguration#com.adyen.checkout.components.repository.PublicKeyRepository/PointingToDeclaration/card/com.adyen.checkout.card/-stored-card-delegate/-stored-card-delegate.html
 $dokka.location:com.adyen.checkout.card/StoredCardDelegate/detectCardType/#kotlin.String#kotlin.String?#kotlinx.coroutines.CoroutineScope/PointingToDeclaration/card/com.adyen.checkout.card/-stored-card-delegate/detect-card-type.html
 $dokka.location:com.adyen.checkout.card/StoredCardDelegate/getFundingSource/#/PointingToDeclaration/card/com.adyen.checkout.card/-stored-card-delegate/get-funding-source.html
 $dokka.location:com.adyen.checkout.card/StoredCardDelegate/getId/#/PointingToDeclaration/card/com.adyen.checkout.card/-stored-card-delegate/get-id.html
