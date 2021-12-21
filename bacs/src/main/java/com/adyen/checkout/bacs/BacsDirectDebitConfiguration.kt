@@ -67,6 +67,15 @@ class BacsDirectDebitConfiguration : Configuration {
          */
         constructor(shopperLocale: Locale, environment: Environment, clientKey: String) : super(shopperLocale, environment, clientKey)
 
+        /**
+         * Constructor that copies an existing configuration.
+         *
+         * @param configuration A configuration to initialize the builder.
+         */
+        constructor(configuration: BacsDirectDebitConfiguration) : super(configuration) {
+            amount = configuration.amount
+        }
+
         override fun setShopperLocale(builderShopperLocale: Locale): Builder {
             return super.setShopperLocale(builderShopperLocale) as Builder
         }

@@ -69,6 +69,15 @@ public class EPSConfiguration extends IssuerListConfiguration {
             super(shopperLocale, environment, clientKey);
         }
 
+        /**
+         * Constructor that copies an existing configuration.
+         *
+         * @param configuration A configuration to initialize the builder.
+         */
+        public Builder(@NonNull EPSConfiguration configuration) {
+            super(configuration);
+        }
+
         @Override
         @NonNull
         public Builder setShopperLocale(@NonNull Locale builderShopperLocale) {

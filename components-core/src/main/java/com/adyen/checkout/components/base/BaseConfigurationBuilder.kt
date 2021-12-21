@@ -5,14 +5,14 @@ import com.adyen.checkout.components.util.ValidationUtils
 import com.adyen.checkout.core.api.Environment
 import com.adyen.checkout.core.exception.CheckoutException
 import com.adyen.checkout.core.util.LocaleUtil
-import java.util.*
+import java.util.Locale
 
 /**
  * Base constructor with the required fields.
  *
- * @param shopperLocale The Locale of the shopper.
- * @param environment   The {@link Environment} to be used for network calls to Adyen.
- * @param clientKey     Your Client Key used for network calls from the SDK to Adyen.
+ * @param builderShopperLocale The Locale of the shopper.
+ * @param builderEnvironment   The [Environment] to be used for network calls to Adyen.
+ * @param builderClientKey     Your Client Key used for network calls from the SDK to Adyen.
  */
 abstract class BaseConfigurationBuilder<ConfigurationT : Configuration>(
     var builderShopperLocale: Locale,
@@ -33,6 +33,13 @@ abstract class BaseConfigurationBuilder<ConfigurationT : Configuration>(
      * @param clientKey Your Client Key used for network calls from the SDK to Adyen.
      */
     constructor(context: Context, clientKey: String) : this(LocaleUtil.getLocale(context), Environment.TEST, clientKey)
+
+    /**
+     * Constructor that copies an existing configuration.
+     *
+     * @param configuration A configuration to initialize the builder.
+     */
+    constructor(configuration: ConfigurationT) : this(configuration.shopperLocale, configuration.environment, configuration.clientKey)
 
     /**
      * @param builderShopperLocale the [Locale] used for translations.

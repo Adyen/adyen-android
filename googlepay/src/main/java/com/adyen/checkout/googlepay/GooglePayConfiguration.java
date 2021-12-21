@@ -244,8 +244,13 @@ public class GooglePayConfiguration extends Configuration {
             super(shopperLocale, environment, clientKey);
         }
 
+        /**
+         * Constructor that copies an existing configuration.
+         *
+         * @param configuration A configuration to initialize the builder.
+         */
         public Builder(@NonNull GooglePayConfiguration configuration) {
-            super(configuration.getShopperLocale(), configuration.getEnvironment(), configuration.getClientKey());
+            super(configuration);
             mBuilderMerchantAccount = configuration.getMerchantAccount();
             mBuilderGooglePayEnvironment = configuration.getGooglePayEnvironment();
             mBuilderAmount = configuration.getAmount();

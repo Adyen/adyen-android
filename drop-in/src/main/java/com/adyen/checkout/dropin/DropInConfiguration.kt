@@ -160,11 +160,7 @@ class DropInConfiguration : Configuration, Parcelable {
         /**
          * Create a Builder with the same values of an existing Configuration object.
          */
-        constructor(dropInConfiguration: DropInConfiguration) : super(
-            dropInConfiguration.shopperLocale,
-            dropInConfiguration.environment,
-            dropInConfiguration.clientKey
-        ) {
+        constructor(dropInConfiguration: DropInConfiguration) : super(dropInConfiguration) {
             packageName = dropInConfiguration.serviceComponentName.packageName
             serviceClassName = dropInConfiguration.serviceComponentName.className
 
