@@ -11,15 +11,18 @@ import android.content.Context
 import android.os.Parcel
 import android.os.Parcelable
 import com.adyen.checkout.components.base.BaseConfigurationBuilder
+import com.adyen.checkout.components.base.BuildableConfiguration
 import com.adyen.checkout.components.base.Configuration
 import com.adyen.checkout.core.api.Environment
 import java.util.Locale
 
-class Adyen3DS2Configuration : Configuration {
+class Adyen3DS2Configuration : Configuration, BuildableConfiguration<Adyen3DS2Configuration> {
 
     private constructor(builder: Builder) : super(builder.builderShopperLocale, builder.builderEnvironment, builder.builderClientKey)
 
     private constructor(inputParcel: Parcel) : super(inputParcel)
+
+    override fun toBuilder(): BaseConfigurationBuilder<Adyen3DS2Configuration> = Builder(this)
 
     /**
      * Builder to create a [Adyen3DS2Configuration].

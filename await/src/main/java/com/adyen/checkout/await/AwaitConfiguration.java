@@ -15,12 +15,13 @@ import android.os.Parcelable;
 import androidx.annotation.NonNull;
 
 import com.adyen.checkout.components.base.BaseConfigurationBuilder;
+import com.adyen.checkout.components.base.BuildableConfiguration;
 import com.adyen.checkout.components.base.Configuration;
 import com.adyen.checkout.core.api.Environment;
 
 import java.util.Locale;
 
-public class AwaitConfiguration extends Configuration {
+public class AwaitConfiguration extends Configuration implements BuildableConfiguration<AwaitConfiguration> {
 
     public static final Parcelable.Creator<AwaitConfiguration> CREATOR = new Parcelable.Creator<AwaitConfiguration>() {
         public AwaitConfiguration createFromParcel(@NonNull Parcel in) {
@@ -38,6 +39,12 @@ public class AwaitConfiguration extends Configuration {
 
     protected AwaitConfiguration(@NonNull Parcel in) {
         super(in);
+    }
+
+    @NonNull
+    @Override
+    public BaseConfigurationBuilder<AwaitConfiguration> toBuilder() {
+        return new Builder(this);
     }
 
     /**

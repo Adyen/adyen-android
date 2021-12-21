@@ -14,13 +14,15 @@ import android.os.Parcelable;
 
 import androidx.annotation.NonNull;
 
+import com.adyen.checkout.components.base.BaseConfigurationBuilder;
+import com.adyen.checkout.components.base.BuildableConfiguration;
 import com.adyen.checkout.core.api.Environment;
 import com.adyen.checkout.issuerlist.IssuerListConfiguration;
 
 import java.util.Locale;
 
 @SuppressWarnings("AbbreviationAsWordInName")
-public class EPSConfiguration extends IssuerListConfiguration {
+public class EPSConfiguration extends IssuerListConfiguration implements BuildableConfiguration<EPSConfiguration> {
 
     public static final Parcelable.Creator<EPSConfiguration> CREATOR = new Parcelable.Creator<EPSConfiguration>() {
         public EPSConfiguration createFromParcel(@NonNull Parcel in) {
@@ -41,6 +43,12 @@ public class EPSConfiguration extends IssuerListConfiguration {
 
     EPSConfiguration(@NonNull Parcel in) {
         super(in);
+    }
+
+    @NonNull
+    @Override
+    public BaseConfigurationBuilder<EPSConfiguration> toBuilder() {
+        return new Builder(this);
     }
 
     /**

@@ -15,12 +15,13 @@ import android.os.Parcelable;
 import androidx.annotation.NonNull;
 
 import com.adyen.checkout.components.base.BaseConfigurationBuilder;
+import com.adyen.checkout.components.base.BuildableConfiguration;
 import com.adyen.checkout.components.base.Configuration;
 import com.adyen.checkout.core.api.Environment;
 
 import java.util.Locale;
 
-public class WeChatPayActionConfiguration extends Configuration {
+public class WeChatPayActionConfiguration extends Configuration implements BuildableConfiguration<WeChatPayActionConfiguration> {
 
     public static final Parcelable.Creator<WeChatPayActionConfiguration> CREATOR = new Parcelable.Creator<WeChatPayActionConfiguration>() {
         public WeChatPayActionConfiguration createFromParcel(@NonNull Parcel in) {
@@ -38,6 +39,12 @@ public class WeChatPayActionConfiguration extends Configuration {
 
     protected WeChatPayActionConfiguration(@NonNull Parcel in) {
         super(in);
+    }
+
+    @NonNull
+    @Override
+    public BaseConfigurationBuilder<WeChatPayActionConfiguration> toBuilder() {
+        return new Builder(this);
     }
 
     /**

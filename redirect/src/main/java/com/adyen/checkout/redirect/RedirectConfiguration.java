@@ -15,12 +15,13 @@ import android.os.Parcelable;
 import androidx.annotation.NonNull;
 
 import com.adyen.checkout.components.base.BaseConfigurationBuilder;
+import com.adyen.checkout.components.base.BuildableConfiguration;
 import com.adyen.checkout.components.base.Configuration;
 import com.adyen.checkout.core.api.Environment;
 
 import java.util.Locale;
 
-public class RedirectConfiguration extends Configuration {
+public class RedirectConfiguration extends Configuration implements BuildableConfiguration<RedirectConfiguration> {
 
     public static final Parcelable.Creator<RedirectConfiguration> CREATOR = new Parcelable.Creator<RedirectConfiguration>() {
         public RedirectConfiguration createFromParcel(@NonNull Parcel in) {
@@ -38,6 +39,12 @@ public class RedirectConfiguration extends Configuration {
 
     protected RedirectConfiguration(@NonNull Parcel in) {
         super(in);
+    }
+
+    @NonNull
+    @Override
+    public BaseConfigurationBuilder<RedirectConfiguration> toBuilder() {
+        return new Builder(this);
     }
 
     /**

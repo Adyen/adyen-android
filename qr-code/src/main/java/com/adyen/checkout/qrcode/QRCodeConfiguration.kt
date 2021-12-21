@@ -11,11 +11,12 @@ import android.content.Context
 import android.os.Parcel
 import android.os.Parcelable
 import com.adyen.checkout.components.base.BaseConfigurationBuilder
+import com.adyen.checkout.components.base.BuildableConfiguration
 import com.adyen.checkout.components.base.Configuration
 import com.adyen.checkout.core.api.Environment
 import java.util.*
 
-class QRCodeConfiguration : Configuration {
+class QRCodeConfiguration : Configuration, BuildableConfiguration<QRCodeConfiguration> {
 
     companion object {
         @JvmField
@@ -33,6 +34,8 @@ class QRCodeConfiguration : Configuration {
 
     internal constructor(builder: Builder) : super(builder.builderShopperLocale, builder.builderEnvironment, builder.builderClientKey)
     internal constructor(parcel: Parcel) : super(parcel)
+
+    override fun toBuilder(): BaseConfigurationBuilder<QRCodeConfiguration> = Builder(this)
 
     /**
      * Builder to create a [QRCodeConfiguration].

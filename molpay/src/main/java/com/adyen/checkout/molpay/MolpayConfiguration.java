@@ -14,12 +14,14 @@ import android.os.Parcelable;
 
 import androidx.annotation.NonNull;
 
+import com.adyen.checkout.components.base.BaseConfigurationBuilder;
+import com.adyen.checkout.components.base.BuildableConfiguration;
 import com.adyen.checkout.core.api.Environment;
 import com.adyen.checkout.issuerlist.IssuerListConfiguration;
 
 import java.util.Locale;
 
-public class MolpayConfiguration extends IssuerListConfiguration {
+public class MolpayConfiguration extends IssuerListConfiguration implements BuildableConfiguration<MolpayConfiguration> {
 
     public static final Parcelable.Creator<MolpayConfiguration> CREATOR = new Parcelable.Creator<MolpayConfiguration>() {
         public MolpayConfiguration createFromParcel(@NonNull Parcel in) {
@@ -40,6 +42,12 @@ public class MolpayConfiguration extends IssuerListConfiguration {
 
     MolpayConfiguration(@NonNull Parcel in) {
         super(in);
+    }
+
+    @NonNull
+    @Override
+    public BaseConfigurationBuilder<MolpayConfiguration> toBuilder() {
+        return new Builder(this);
     }
 
     /**

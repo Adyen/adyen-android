@@ -14,12 +14,14 @@ import android.os.Parcelable;
 
 import androidx.annotation.NonNull;
 
+import com.adyen.checkout.components.base.BaseConfigurationBuilder;
+import com.adyen.checkout.components.base.BuildableConfiguration;
 import com.adyen.checkout.core.api.Environment;
 import com.adyen.checkout.issuerlist.IssuerListConfiguration;
 
 import java.util.Locale;
 
-public class EntercashConfiguration extends IssuerListConfiguration {
+public class EntercashConfiguration extends IssuerListConfiguration implements BuildableConfiguration<EntercashConfiguration> {
 
     public static final Parcelable.Creator<EntercashConfiguration> CREATOR = new Parcelable.Creator<EntercashConfiguration>() {
         public EntercashConfiguration createFromParcel(@NonNull Parcel in) {
@@ -40,6 +42,12 @@ public class EntercashConfiguration extends IssuerListConfiguration {
 
     EntercashConfiguration(@NonNull Parcel in) {
         super(in);
+    }
+
+    @NonNull
+    @Override
+    public BaseConfigurationBuilder<EntercashConfiguration> toBuilder() {
+        return new Builder(this);
     }
 
     /**

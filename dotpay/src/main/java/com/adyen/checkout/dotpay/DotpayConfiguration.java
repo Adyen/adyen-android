@@ -14,12 +14,14 @@ import android.os.Parcelable;
 
 import androidx.annotation.NonNull;
 
+import com.adyen.checkout.components.base.BaseConfigurationBuilder;
+import com.adyen.checkout.components.base.BuildableConfiguration;
 import com.adyen.checkout.core.api.Environment;
 import com.adyen.checkout.issuerlist.IssuerListConfiguration;
 
 import java.util.Locale;
 
-public class DotpayConfiguration extends IssuerListConfiguration {
+public class DotpayConfiguration extends IssuerListConfiguration implements BuildableConfiguration<DotpayConfiguration> {
 
     public static final Parcelable.Creator<DotpayConfiguration> CREATOR = new Parcelable.Creator<DotpayConfiguration>() {
         public DotpayConfiguration createFromParcel(Parcel in) {
@@ -40,6 +42,12 @@ public class DotpayConfiguration extends IssuerListConfiguration {
 
     DotpayConfiguration(@NonNull Parcel in) {
         super(in);
+    }
+
+    @NonNull
+    @Override
+    public BaseConfigurationBuilder<DotpayConfiguration> toBuilder() {
+        return new Builder(this);
     }
 
     /**

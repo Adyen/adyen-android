@@ -15,12 +15,13 @@ import android.os.Parcelable;
 import androidx.annotation.NonNull;
 
 import com.adyen.checkout.components.base.BaseConfigurationBuilder;
+import com.adyen.checkout.components.base.BuildableConfiguration;
 import com.adyen.checkout.components.base.Configuration;
 import com.adyen.checkout.core.api.Environment;
 
 import java.util.Locale;
 
-public class BlikConfiguration extends Configuration {
+public class BlikConfiguration extends Configuration implements BuildableConfiguration<BlikConfiguration> {
 
     public static final Parcelable.Creator<BlikConfiguration> CREATOR = new Parcelable.Creator<BlikConfiguration>() {
         public BlikConfiguration createFromParcel(@NonNull Parcel in) {
@@ -38,6 +39,12 @@ public class BlikConfiguration extends Configuration {
 
     BlikConfiguration(@NonNull Parcel in) {
         super(in);
+    }
+
+    @NonNull
+    @Override
+    public BaseConfigurationBuilder<BlikConfiguration> toBuilder() {
+        return new Builder(this);
     }
 
     /**

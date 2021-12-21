@@ -18,6 +18,7 @@ import androidx.annotation.Nullable;
 import com.adyen.checkout.card.data.CardType;
 import com.adyen.checkout.components.base.AddressVisibility;
 import com.adyen.checkout.components.base.BaseConfigurationBuilder;
+import com.adyen.checkout.components.base.BuildableConfiguration;
 import com.adyen.checkout.components.base.Configuration;
 import com.adyen.checkout.core.api.Environment;
 import com.adyen.checkout.core.util.ParcelUtils;
@@ -30,7 +31,7 @@ import java.util.Locale;
 /**
  * {@link Configuration} class required by {@link CardComponent} to change it's behavior. Pass it to the {@link CardComponent#PROVIDER}.
  */
-public class CardConfiguration extends Configuration {
+public class CardConfiguration extends Configuration implements BuildableConfiguration<CardConfiguration> {
 
     private static final CardType[] DEFAULT_SUPPORTED_CARDS =
             new CardType[]{CardType.VISA, CardType.AMERICAN_EXPRESS, CardType.MASTERCARD};
@@ -173,6 +174,12 @@ public class CardConfiguration extends Configuration {
     @Nullable
     public InstallmentConfiguration getInstallmentConfiguration() {
         return mInstallmentConfiguration;
+    }
+
+    @NonNull
+    @Override
+    public BaseConfigurationBuilder<CardConfiguration> toBuilder() {
+        return new Builder(this);
     }
 
     /**

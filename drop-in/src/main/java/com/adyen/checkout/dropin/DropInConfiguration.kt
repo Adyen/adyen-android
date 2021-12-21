@@ -19,6 +19,7 @@ import com.adyen.checkout.bcmc.BcmcConfiguration
 import com.adyen.checkout.blik.BlikConfiguration
 import com.adyen.checkout.card.CardConfiguration
 import com.adyen.checkout.components.base.BaseConfigurationBuilder
+import com.adyen.checkout.components.base.BuildableConfiguration
 import com.adyen.checkout.components.base.Configuration
 import com.adyen.checkout.components.model.payments.Amount
 import com.adyen.checkout.components.util.CheckoutCurrency
@@ -52,7 +53,7 @@ import kotlin.collections.set
  * If you don't specify anything, a default configuration will be used.
  */
 @SuppressWarnings("TooManyFunctions")
-class DropInConfiguration : Configuration, Parcelable {
+class DropInConfiguration : Configuration, Parcelable, BuildableConfiguration<DropInConfiguration> {
 
     private val availablePaymentConfigs: HashMap<String, Configuration>
     private val availableActionConfigs: HashMap<Class<*>, Configuration>
@@ -118,6 +119,8 @@ class DropInConfiguration : Configuration, Parcelable {
         }
         return null
     }
+
+    override fun toBuilder(): BaseConfigurationBuilder<DropInConfiguration> = Builder(this)
 
     /**
      * Builder for creating a [DropInConfiguration] where you can set specific Configurations for a Payment Method

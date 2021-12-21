@@ -16,6 +16,7 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 
 import com.adyen.checkout.components.base.BaseConfigurationBuilder;
+import com.adyen.checkout.components.base.BuildableConfiguration;
 import com.adyen.checkout.components.base.Configuration;
 import com.adyen.checkout.components.model.payments.Amount;
 import com.adyen.checkout.components.util.CheckoutCurrency;
@@ -31,7 +32,7 @@ import com.google.android.gms.wallet.WalletConstants;
 import java.util.List;
 import java.util.Locale;
 
-public class GooglePayConfiguration extends Configuration {
+public class GooglePayConfiguration extends Configuration implements BuildableConfiguration<GooglePayConfiguration> {
 
     private final String mMerchantAccount;
     private final int mGooglePayEnvironment;
@@ -184,6 +185,12 @@ public class GooglePayConfiguration extends Configuration {
     @Nullable
     public BillingAddressParameters getBillingAddressParameters() {
         return mBillingAddressParameters;
+    }
+
+    @NonNull
+    @Override
+    public BaseConfigurationBuilder<GooglePayConfiguration> toBuilder() {
+        return new Builder(this);
     }
 
     /**

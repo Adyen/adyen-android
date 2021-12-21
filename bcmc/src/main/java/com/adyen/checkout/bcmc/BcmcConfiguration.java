@@ -16,6 +16,7 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 
 import com.adyen.checkout.components.base.BaseConfigurationBuilder;
+import com.adyen.checkout.components.base.BuildableConfiguration;
 import com.adyen.checkout.components.base.Configuration;
 import com.adyen.checkout.core.api.Environment;
 import com.adyen.checkout.core.util.ParcelUtils;
@@ -25,7 +26,7 @@ import java.util.Locale;
 /**
  * {@link Configuration} class required by {@link BcmcComponent} to change it's behavior. Pass it to the {@link BcmcComponent#PROVIDER}.
  */
-public class BcmcConfiguration extends Configuration {
+public class BcmcConfiguration extends Configuration implements BuildableConfiguration<BcmcConfiguration> {
 
     private final String mShopperReference;
     private final boolean mShowStorePaymentField;
@@ -67,6 +68,12 @@ public class BcmcConfiguration extends Configuration {
 
     public boolean isStorePaymentFieldVisible() {
         return mShowStorePaymentField;
+    }
+
+    @NonNull
+    @Override
+    public BaseConfigurationBuilder<BcmcConfiguration> toBuilder() {
+        return new Builder(this);
     }
 
     /**

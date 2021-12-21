@@ -15,12 +15,13 @@ import android.os.Parcelable;
 import androidx.annotation.NonNull;
 
 import com.adyen.checkout.components.base.BaseConfigurationBuilder;
+import com.adyen.checkout.components.base.BuildableConfiguration;
 import com.adyen.checkout.components.base.Configuration;
 import com.adyen.checkout.core.api.Environment;
 
 import java.util.Locale;
 
-public class SepaConfiguration extends Configuration {
+public class SepaConfiguration extends Configuration implements BuildableConfiguration<SepaConfiguration> {
 
     public static final Parcelable.Creator<SepaConfiguration> CREATOR = new Parcelable.Creator<SepaConfiguration>() {
         public SepaConfiguration createFromParcel(@NonNull Parcel in) {
@@ -38,6 +39,12 @@ public class SepaConfiguration extends Configuration {
 
     SepaConfiguration(@NonNull Parcel in) {
         super(in);
+    }
+
+    @NonNull
+    @Override
+    public BaseConfigurationBuilder<SepaConfiguration> toBuilder() {
+        return new Builder(this);
     }
 
     /**

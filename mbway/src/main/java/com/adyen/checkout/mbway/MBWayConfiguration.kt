@@ -11,11 +11,12 @@ import android.content.Context
 import android.os.Parcel
 import android.os.Parcelable
 import com.adyen.checkout.components.base.BaseConfigurationBuilder
+import com.adyen.checkout.components.base.BuildableConfiguration
 import com.adyen.checkout.components.base.Configuration
 import com.adyen.checkout.core.api.Environment
 import java.util.*
 
-class MBWayConfiguration : Configuration {
+class MBWayConfiguration : Configuration, BuildableConfiguration<MBWayConfiguration> {
 
     companion object {
         @JvmField
@@ -33,6 +34,8 @@ class MBWayConfiguration : Configuration {
 
     internal constructor(builder: Builder) : super(builder.builderShopperLocale, builder.builderEnvironment, builder.builderClientKey)
     internal constructor(parcel: Parcel) : super(parcel)
+
+    override fun toBuilder(): BaseConfigurationBuilder<MBWayConfiguration> = Builder(this)
 
     /**
      * Builder to create a [MBWayConfiguration].

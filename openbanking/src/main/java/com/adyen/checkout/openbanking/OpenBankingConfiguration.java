@@ -14,12 +14,14 @@ import android.os.Parcelable;
 
 import androidx.annotation.NonNull;
 
+import com.adyen.checkout.components.base.BaseConfigurationBuilder;
+import com.adyen.checkout.components.base.BuildableConfiguration;
 import com.adyen.checkout.core.api.Environment;
 import com.adyen.checkout.issuerlist.IssuerListConfiguration;
 
 import java.util.Locale;
 
-public class OpenBankingConfiguration extends IssuerListConfiguration {
+public class OpenBankingConfiguration extends IssuerListConfiguration implements BuildableConfiguration<OpenBankingConfiguration> {
 
     public static final Parcelable.Creator<OpenBankingConfiguration> CREATOR = new Parcelable.Creator<OpenBankingConfiguration>() {
         public OpenBankingConfiguration createFromParcel(@NonNull Parcel in) {
@@ -40,6 +42,12 @@ public class OpenBankingConfiguration extends IssuerListConfiguration {
 
     OpenBankingConfiguration(@NonNull Parcel in) {
         super(in);
+    }
+
+    @NonNull
+    @Override
+    public BaseConfigurationBuilder<OpenBankingConfiguration> toBuilder() {
+        return new Builder(this);
     }
 
     /**

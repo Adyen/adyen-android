@@ -12,6 +12,7 @@ import android.content.Context
 import android.os.Parcel
 import android.os.Parcelable
 import com.adyen.checkout.components.base.BaseConfigurationBuilder
+import com.adyen.checkout.components.base.BuildableConfiguration
 import com.adyen.checkout.components.base.Configuration
 import com.adyen.checkout.components.model.payments.Amount
 import com.adyen.checkout.components.util.CheckoutCurrency
@@ -20,7 +21,7 @@ import com.adyen.checkout.core.exception.CheckoutException
 import com.adyen.checkout.core.model.JsonUtils
 import java.util.*
 
-class BacsDirectDebitConfiguration : Configuration {
+class BacsDirectDebitConfiguration : Configuration, BuildableConfiguration<BacsDirectDebitConfiguration> {
 
     val amount: Amount
 
@@ -50,6 +51,8 @@ class BacsDirectDebitConfiguration : Configuration {
         super.writeToParcel(parcel, flags)
         JsonUtils.writeToParcel(parcel, Amount.SERIALIZER.serialize(amount))
     }
+
+    override fun toBuilder(): BaseConfigurationBuilder<BacsDirectDebitConfiguration> = Builder(this)
 
     class Builder : BaseConfigurationBuilder<BacsDirectDebitConfiguration> {
 

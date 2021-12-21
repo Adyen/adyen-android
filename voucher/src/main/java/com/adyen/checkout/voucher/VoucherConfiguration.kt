@@ -12,15 +12,18 @@ import android.content.Context
 import android.os.Parcel
 import android.os.Parcelable
 import com.adyen.checkout.components.base.BaseConfigurationBuilder
+import com.adyen.checkout.components.base.BuildableConfiguration
 import com.adyen.checkout.components.base.Configuration
 import com.adyen.checkout.core.api.Environment
 import java.util.Locale
 
-class VoucherConfiguration : Configuration {
+class VoucherConfiguration : Configuration, BuildableConfiguration<VoucherConfiguration> {
 
     private constructor(builder: Builder) : super(builder.builderShopperLocale, builder.builderEnvironment, builder.builderClientKey)
 
     private constructor(parcel: Parcel) : super(parcel)
+
+    override fun toBuilder(): BaseConfigurationBuilder<VoucherConfiguration> = Builder(this)
 
     class Builder : BaseConfigurationBuilder<VoucherConfiguration> {
         /**
