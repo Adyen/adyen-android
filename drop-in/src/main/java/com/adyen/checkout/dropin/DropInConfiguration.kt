@@ -102,31 +102,21 @@ class DropInConfiguration : Configuration, Parcelable {
         ParcelUtils.writeBoolean(dest, skipListWhenSinglePaymentMethod)
     }
 
-    internal fun <T : Configuration> getConfigurationForPaymentMethodOrNull(paymentMethod: String): T? {
-        return try {
-            getConfigurationForPaymentMethod(paymentMethod)
-        } catch (e: CheckoutException) {
-            null
-        }
-    }
-
-    internal fun <T : Configuration> getConfigurationForPaymentMethod(paymentMethod: String): T {
-        return if (availablePaymentConfigs.containsKey(paymentMethod)) {
+    internal fun <T : Configuration> getConfigurationForPaymentMethod(paymentMethod: String): T? {
+        if (availablePaymentConfigs.containsKey(paymentMethod)) {
             @Suppress("UNCHECKED_CAST")
-            availablePaymentConfigs[paymentMethod] as T
-        } else {
-            getDefaultConfigForPaymentMethod(paymentMethod, this)
+            return availablePaymentConfigs[paymentMethod] as T
         }
+        return null
     }
 
-    internal inline fun <reified T : Configuration> getConfigurationForAction(): T {
+    internal inline fun <reified T : Configuration> getConfigurationForAction(): T? {
         val actionClass = T::class.java
-        return if (availableActionConfigs.containsKey(actionClass)) {
+        if (availableActionConfigs.containsKey(actionClass)) {
             @Suppress("UNCHECKED_CAST")
-            availableActionConfigs[actionClass] as T
-        } else {
-            getDefaultConfigForAction(this)
+            return availableActionConfigs[actionClass] as T
         }
+        return null
     }
 
     /**

@@ -28,6 +28,7 @@ import com.adyen.checkout.core.exception.ComponentException
 import com.adyen.checkout.core.log.LogUtil
 import com.adyen.checkout.core.log.Logger
 import com.adyen.checkout.dropin.R
+import com.adyen.checkout.dropin.getConfigurationForPaymentMethod
 import com.adyen.checkout.dropin.ui.base.DropInBottomSheetDialogFragment
 import com.adyen.checkout.dropin.ui.getViewModel
 import com.adyen.checkout.googlepay.GooglePayComponent
@@ -118,7 +119,7 @@ class PaymentMethodListDialogFragment : DropInBottomSheetDialogFragment(), Payme
                 Logger.d(TAG, "onPaymentMethodSelected: starting Google Pay")
                 protocol.startGooglePay(
                     paymentMethodsListViewModel.getPaymentMethod(paymentMethod),
-                    dropInViewModel.dropInConfiguration.getConfigurationForPaymentMethod(paymentMethod.type)
+                    getConfigurationForPaymentMethod(paymentMethod.type, dropInViewModel.dropInConfiguration)
                 )
             }
             PaymentMethodTypes.SUPPORTED_ACTION_ONLY_PAYMENT_METHODS.contains(paymentMethod.type) -> {
