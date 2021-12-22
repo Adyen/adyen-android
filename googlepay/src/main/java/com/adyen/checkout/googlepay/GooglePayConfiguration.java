@@ -15,6 +15,8 @@ import android.os.Parcelable;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 
+import com.adyen.checkout.components.base.AmountConfiguration;
+import com.adyen.checkout.components.base.AmountConfigurationBuilder;
 import com.adyen.checkout.components.base.BaseConfigurationBuilder;
 import com.adyen.checkout.components.base.Configuration;
 import com.adyen.checkout.components.model.payments.Amount;
@@ -31,7 +33,7 @@ import com.google.android.gms.wallet.WalletConstants;
 import java.util.List;
 import java.util.Locale;
 
-public class GooglePayConfiguration extends Configuration {
+public class GooglePayConfiguration extends Configuration implements AmountConfiguration {
 
     private final String mMerchantAccount;
     private final int mGooglePayEnvironment;
@@ -123,6 +125,7 @@ public class GooglePayConfiguration extends Configuration {
     }
 
     @NonNull
+    @Override
     public Amount getAmount() {
         return mAmount;
     }
@@ -189,7 +192,7 @@ public class GooglePayConfiguration extends Configuration {
     /**
      * Builder to create a {@link GooglePayConfiguration}.
      */
-    public static final class Builder extends BaseConfigurationBuilder<GooglePayConfiguration> {
+    public static final class Builder extends BaseConfigurationBuilder<GooglePayConfiguration> implements AmountConfigurationBuilder {
 
         private static final String DEFAULT_TOTAL_PRICE_STATUS = "FINAL";
 
@@ -318,7 +321,11 @@ public class GooglePayConfiguration extends Configuration {
         }
 
         @NonNull
+        @Override
         public Builder setAmount(@NonNull Amount amount) {
+            if (!CheckoutCurrency.isSupported(amount.getCurrency()) || amount.getValue() < 0) {
+                throw new CheckoutException("Currency is not valid.");
+            }
             mBuilderAmount = amount;
             return this;
         }
