@@ -434,3 +434,30 @@ internal fun getActionComponentFor(
         }
     }
 }
+
+private fun Configuration.toBuilder(): BaseConfigurationBuilder<out Configuration> {
+    return when (this) {
+        is Adyen3DS2Configuration -> Adyen3DS2Configuration.Builder(this)
+        is AwaitConfiguration -> AwaitConfiguration.Builder(this)
+        is BacsDirectDebitConfiguration -> BacsDirectDebitConfiguration.Builder(this)
+        is BcmcConfiguration -> BcmcConfiguration.Builder(this)
+        is BlikConfiguration -> BlikConfiguration.Builder(this)
+        is CardConfiguration -> CardConfiguration.Builder(this)
+        is DotpayConfiguration -> DotpayConfiguration.Builder(this)
+        is DropInConfiguration -> DropInConfiguration.Builder(this)
+        is EntercashConfiguration -> EntercashConfiguration.Builder(this)
+        is EPSConfiguration -> EPSConfiguration.Builder(this)
+        is GiftCardConfiguration -> GiftCardConfiguration.Builder(this)
+        is GooglePayConfiguration -> GooglePayConfiguration.Builder(this)
+        is IdealConfiguration -> IdealConfiguration.Builder(this)
+        is MBWayConfiguration -> MBWayConfiguration.Builder(this)
+        is MolpayConfiguration -> MolpayConfiguration.Builder(this)
+        is OpenBankingConfiguration -> OpenBankingConfiguration.Builder(this)
+        is QRCodeConfiguration -> QRCodeConfiguration.Builder(this)
+        is RedirectConfiguration -> RedirectConfiguration.Builder(this)
+        is SepaConfiguration -> SepaConfiguration.Builder(this)
+        is VoucherConfiguration -> VoucherConfiguration.Builder(this)
+        is WeChatPayActionConfiguration -> WeChatPayActionConfiguration.Builder(this)
+        else -> throw CheckoutException("Unable to find builder for class - ${this::class}")
+    }
+}
