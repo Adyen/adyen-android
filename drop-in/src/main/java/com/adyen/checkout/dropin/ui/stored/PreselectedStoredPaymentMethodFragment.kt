@@ -94,7 +94,7 @@ class PreselectedStoredPaymentMethodFragment : DropInBottomSheetDialogFragment()
             dropInViewModel.dropInConfiguration.environment
         )
 
-        component = getComponentFor(this, storedPaymentMethod, dropInViewModel.dropInConfiguration)
+        component = getComponentFor(this, storedPaymentMethod, dropInViewModel.dropInConfiguration, dropInViewModel.amount)
         component.observe(viewLifecycleOwner, storedPaymentViewModel::componentStateChanged)
         component.observeErrors(viewLifecycleOwner, storedPaymentViewModel::componentErrorOccurred)
 

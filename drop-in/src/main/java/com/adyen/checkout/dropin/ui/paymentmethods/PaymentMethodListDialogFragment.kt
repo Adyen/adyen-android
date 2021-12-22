@@ -53,7 +53,8 @@ class PaymentMethodListDialogFragment : DropInBottomSheetDialogFragment(), Payme
                 dropInViewModel.paymentMethodsApiResponse.paymentMethods.orEmpty(),
                 dropInViewModel.paymentMethodsApiResponse.storedPaymentMethods.orEmpty(),
                 dropInViewModel.currentOrder,
-                dropInViewModel.dropInConfiguration
+                dropInViewModel.dropInConfiguration,
+                dropInViewModel.amount
             )
         }
         val view = inflater.inflate(R.layout.fragment_payment_methods_list, container, false)
@@ -119,7 +120,7 @@ class PaymentMethodListDialogFragment : DropInBottomSheetDialogFragment(), Payme
                 Logger.d(TAG, "onPaymentMethodSelected: starting Google Pay")
                 protocol.startGooglePay(
                     paymentMethodsListViewModel.getPaymentMethod(paymentMethod),
-                    getConfigurationForPaymentMethod(paymentMethod.type, dropInViewModel.dropInConfiguration)
+                    getConfigurationForPaymentMethod(paymentMethod.type, dropInViewModel.dropInConfiguration, dropInViewModel.amount)
                 )
             }
             PaymentMethodTypes.SUPPORTED_ACTION_ONLY_PAYMENT_METHODS.contains(paymentMethod.type) -> {
