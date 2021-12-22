@@ -106,9 +106,9 @@ abstract class BaseComponentDialogFragment : DropInBottomSheetDialogFragment(), 
 
         try {
             component = if (isStoredPayment)
-                getComponentFor(this, storedPaymentMethod, dropInConfiguration)
+                getComponentFor(this, storedPaymentMethod, dropInConfiguration, dropInViewModel.amount)
             else
-                getComponentFor(this, paymentMethod, dropInConfiguration)
+                getComponentFor(this, paymentMethod, dropInConfiguration, dropInViewModel.amount)
         } catch (e: CheckoutException) {
             handleError(ComponentError(e))
             return

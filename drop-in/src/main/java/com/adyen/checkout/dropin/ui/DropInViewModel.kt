@@ -35,7 +35,6 @@ import com.adyen.checkout.giftcard.GiftCardComponentState
 import com.adyen.checkout.giftcard.util.GiftCardBalanceStatus
 import com.adyen.checkout.giftcard.util.GiftCardBalanceUtils
 import com.adyen.checkout.googlepay.GooglePayComponent
-import com.adyen.checkout.googlepay.GooglePayConfiguration
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.flow.receiveAsFlow
@@ -263,11 +262,6 @@ class DropInViewModel(
             this@DropInViewModel.paymentMethodsApiResponse = paymentMethodsApiResponse
             sendEvent(DropInActivityEvent.ShowPaymentMethods)
         }
-    }
-
-    fun updateGooglePayConfiguration(googlePayConfiguration: GooglePayConfiguration): GooglePayConfiguration {
-        if (currentOrder == null) return googlePayConfiguration
-        return GooglePayConfiguration.Builder(googlePayConfiguration).setAmount(amount).build()
     }
 
     private suspend fun getOrderDetails(orderResponse: OrderResponse?): OrderModel? {
