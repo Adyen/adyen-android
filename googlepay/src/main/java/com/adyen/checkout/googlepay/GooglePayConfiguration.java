@@ -15,6 +15,8 @@ import android.os.Parcelable;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 
+import com.adyen.checkout.components.base.AmountConfiguration;
+import com.adyen.checkout.components.base.AmountConfigurationBuilder;
 import com.adyen.checkout.components.base.BaseConfigurationBuilder;
 import com.adyen.checkout.components.base.BuildableConfiguration;
 import com.adyen.checkout.components.base.Configuration;
@@ -32,7 +34,7 @@ import com.google.android.gms.wallet.WalletConstants;
 import java.util.List;
 import java.util.Locale;
 
-public class GooglePayConfiguration extends Configuration implements BuildableConfiguration<GooglePayConfiguration> {
+public class GooglePayConfiguration extends Configuration implements BuildableConfiguration<GooglePayConfiguration>, AmountConfiguration {
 
     private final String mMerchantAccount;
     private final int mGooglePayEnvironment;
@@ -124,6 +126,7 @@ public class GooglePayConfiguration extends Configuration implements BuildableCo
     }
 
     @NonNull
+    @Override
     public Amount getAmount() {
         return mAmount;
     }
@@ -196,7 +199,7 @@ public class GooglePayConfiguration extends Configuration implements BuildableCo
     /**
      * Builder to create a {@link GooglePayConfiguration}.
      */
-    public static final class Builder extends BaseConfigurationBuilder<GooglePayConfiguration> {
+    public static final class Builder extends BaseConfigurationBuilder<GooglePayConfiguration> implements AmountConfigurationBuilder<GooglePayConfiguration> {
 
         private static final String DEFAULT_TOTAL_PRICE_STATUS = "FINAL";
 
@@ -326,6 +329,9 @@ public class GooglePayConfiguration extends Configuration implements BuildableCo
 
         @NonNull
         public Builder setAmount(@NonNull Amount amount) {
+            if (!CheckoutCurrency.isSupported(amount.getCurrency()) || amount.getValue() < 0) {
+                throw new CheckoutException("Currency is not valid.");
+            }
             mBuilderAmount = amount;
             return this;
         }

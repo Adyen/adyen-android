@@ -11,6 +11,8 @@ package com.adyen.checkout.bacs
 import android.content.Context
 import android.os.Parcel
 import android.os.Parcelable
+import com.adyen.checkout.components.base.AmountConfiguration
+import com.adyen.checkout.components.base.AmountConfigurationBuilder
 import com.adyen.checkout.components.base.BaseConfigurationBuilder
 import com.adyen.checkout.components.base.BuildableConfiguration
 import com.adyen.checkout.components.base.Configuration
@@ -21,9 +23,9 @@ import com.adyen.checkout.core.exception.CheckoutException
 import com.adyen.checkout.core.model.JsonUtils
 import java.util.*
 
-class BacsDirectDebitConfiguration : Configuration, BuildableConfiguration<BacsDirectDebitConfiguration> {
+class BacsDirectDebitConfiguration : Configuration, BuildableConfiguration<BacsDirectDebitConfiguration>, AmountConfiguration {
 
-    val amount: Amount
+    override val amount: Amount
 
     companion object {
         @JvmField
@@ -54,7 +56,7 @@ class BacsDirectDebitConfiguration : Configuration, BuildableConfiguration<BacsD
 
     override fun toBuilder(): BaseConfigurationBuilder<BacsDirectDebitConfiguration> = Builder(this)
 
-    class Builder : BaseConfigurationBuilder<BacsDirectDebitConfiguration> {
+    class Builder : BaseConfigurationBuilder<BacsDirectDebitConfiguration>, AmountConfigurationBuilder<BacsDirectDebitConfiguration> {
 
         internal var amount: Amount = Amount.EMPTY
             private set
@@ -91,7 +93,7 @@ class BacsDirectDebitConfiguration : Configuration, BuildableConfiguration<BacsD
             return BacsDirectDebitConfiguration(this)
         }
 
-        fun setAmount(amount: Amount): Builder {
+        override fun setAmount(amount: Amount): Builder {
             if (!CheckoutCurrency.isSupported(amount.currency) || amount.value < 0) {
                 throw CheckoutException("Currency is not valid.")
             }
