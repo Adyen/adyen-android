@@ -36,8 +36,11 @@ import com.adyen.checkout.components.PaymentComponent
 import com.adyen.checkout.components.PaymentComponentState
 import com.adyen.checkout.components.PaymentMethodAvailabilityCheck
 import com.adyen.checkout.components.ViewableComponent
+import com.adyen.checkout.components.base.AmountConfiguration
+import com.adyen.checkout.components.base.AmountConfigurationBuilder
 import com.adyen.checkout.components.base.BaseActionComponent
 import com.adyen.checkout.components.base.BaseConfigurationBuilder
+import com.adyen.checkout.components.base.BuildableConfiguration
 import com.adyen.checkout.components.base.Configuration
 import com.adyen.checkout.components.base.OutputData
 import com.adyen.checkout.components.model.paymentmethods.PaymentMethod
@@ -96,23 +99,33 @@ object ComponentParsingProvider {
     val TAG = LogUtil.getTag()
 }
 
-internal fun <T : Configuration> getConfigurationForPaymentMethod(
+internal inline fun <reified T : Configuration> getConfigurationForPaymentMethod(
     paymentMethod: String,
     dropInConfiguration: DropInConfiguration,
     amount: Amount
 ): T {
-    return dropInConfiguration.getConfigurationForPaymentMethod(paymentMethod) ?: getDefaultConfigForPaymentMethod(
+    val configuration: T = dropInConfiguration.getConfigurationForPaymentMethod(paymentMethod) ?: getDefaultConfigForPaymentMethod(
         paymentMethod,
-        dropInConfiguration,
-        amount
+        dropInConfiguration
     )
+    if (amount.isEmpty || configuration !is AmountConfiguration) return configuration
+    return overrideConfigurationAmount(configuration, amount)
+}
+
+private inline fun <reified T> overrideConfigurationAmount(
+    configuration: Configuration,
+    amount: Amount
+): T where T : Configuration, T : AmountConfiguration {
+    Logger.d(ComponentParsingProvider.TAG, "Overriding ${configuration::class.java.simpleName} with $amount")
+    @Suppress("UNCHECKED_CAST")
+    val builder = (configuration as BuildableConfiguration<T>).toBuilder() as AmountConfigurationBuilder<T>
+    return builder.setAmount(amount).build()
 }
 
 @Suppress("ComplexMethod", "LongMethod")
 internal fun <T : Configuration> getDefaultConfigForPaymentMethod(
     paymentMethod: String,
-    dropInConfiguration: DropInConfiguration,
-    amount: Amount
+    dropInConfiguration: DropInConfiguration
 ): T {
     val shopperLocale = dropInConfiguration.shopperLocale
     val environment = dropInConfiguration.environment
@@ -120,9 +133,7 @@ internal fun <T : Configuration> getDefaultConfigForPaymentMethod(
 
     // get default builder for Configuration type
     val builder: BaseConfigurationBuilder<out Configuration> = when (paymentMethod) {
-        PaymentMethodTypes.BACS -> BacsDirectDebitConfiguration.Builder(shopperLocale, environment, clientKey).apply {
-            if (!amount.isEmpty) setAmount(amount)
-        }
+        PaymentMethodTypes.BACS -> BacsDirectDebitConfiguration.Builder(shopperLocale, environment, clientKey)
         PaymentMethodTypes.BCMC -> BcmcConfiguration.Builder(shopperLocale, environment, clientKey)
         PaymentMethodTypes.BLIK -> BlikConfiguration.Builder(shopperLocale, environment, clientKey)
         PaymentMethodTypes.DOTPAY -> DotpayConfiguration.Builder(shopperLocale, environment, clientKey)
@@ -130,11 +141,7 @@ internal fun <T : Configuration> getDefaultConfigForPaymentMethod(
         PaymentMethodTypes.EPS -> EPSConfiguration.Builder(shopperLocale, environment, clientKey)
         PaymentMethodTypes.GIFTCARD -> GiftCardConfiguration.Builder(shopperLocale, environment, clientKey)
         PaymentMethodTypes.GOOGLE_PAY,
-        PaymentMethodTypes.GOOGLE_PAY_LEGACY -> {
-            GooglePayConfiguration.Builder(shopperLocale, environment, clientKey).apply {
-                if (!amount.isEmpty) setAmount(amount)
-            }
-        }
+        PaymentMethodTypes.GOOGLE_PAY_LEGACY -> GooglePayConfiguration.Builder(shopperLocale, environment, clientKey)
         PaymentMethodTypes.IDEAL -> IdealConfiguration.Builder(shopperLocale, environment, clientKey)
         PaymentMethodTypes.MB_WAY -> MBWayConfiguration.Builder(shopperLocale, environment, clientKey)
         PaymentMethodTypes.MOLPAY_THAILAND,
