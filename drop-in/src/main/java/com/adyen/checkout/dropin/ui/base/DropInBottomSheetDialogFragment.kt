@@ -79,6 +79,8 @@ abstract class DropInBottomSheetDialogFragment : BottomSheetDialogFragment() {
             }
         }
 
+        dialog.setCanceledOnTouchOutside(false)
+
         return dialog
     }
 
