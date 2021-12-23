@@ -239,7 +239,7 @@ class ExampleAsyncDropInService : DropInService() {
         }
     }
 
-    override fun cancelOrder(order: OrderRequest, isDropInCancelledByUser: Boolean) {
+    override fun cancelOrder(order: OrderRequest, shouldUpdatePaymentMethods: Boolean) {
         launch(Dispatchers.IO) {
             Logger.d(TAG, "cancelOrder")
             val cancelOrderRequest = createCancelOrderRequest(
@@ -249,13 +249,13 @@ class ExampleAsyncDropInService : DropInService() {
             val requestBody = cancelOrderRequest.toString().toRequestBody(CONTENT_TYPE)
             val response = paymentsRepository.cancelOrderAsync(requestBody)
 
-            val result = handleCancelOrderResponse(response, isDropInCancelledByUser) ?: return@launch
+            val result = handleCancelOrderResponse(response, shouldUpdatePaymentMethods) ?: return@launch
             sendResult(result)
         }
     }
 
     @Suppress("NestedBlockDepth")
-    private fun handleCancelOrderResponse(response: ResponseBody?, isDropInCancelledByUser: Boolean): DropInServiceResult? {
+    private fun handleCancelOrderResponse(response: ResponseBody?, shouldUpdatePaymentMethods: Boolean): DropInServiceResult? {
         return if (response != null) {
             val orderJson = response.string()
             val jsonResponse = JSONObject(orderJson)
@@ -263,7 +263,7 @@ class ExampleAsyncDropInService : DropInService() {
             val resultCode = jsonResponse.getStringOrNull("resultCode")
             when (resultCode) {
                 "Received" -> {
-                    if (!isDropInCancelledByUser) fetchPaymentMethods()
+                    if (shouldUpdatePaymentMethods) fetchPaymentMethods()
                     null
                 }
                 else -> DropInServiceResult.Error(reason = resultCode, dismissDropIn = false)

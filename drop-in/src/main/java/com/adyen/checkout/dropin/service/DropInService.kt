@@ -299,11 +299,11 @@ abstract class DropInService : Service(), CoroutineScope, DropInServiceInterface
 
     override fun requestCancelOrder(order: OrderRequest, isDropInCancelledByUser: Boolean) {
         Logger.d(TAG, "requestCancelOrder")
-        cancelOrder(order, isDropInCancelledByUser)
+        cancelOrder(order, !isDropInCancelledByUser)
     }
 
     // TODO docs
-    open fun cancelOrder(order: OrderRequest, isDropInCancelledByUser: Boolean) {
+    open fun cancelOrder(order: OrderRequest, shouldUpdatePaymentMethods: Boolean) {
         throw NotImplementedError("Method cancelOrder is not implemented")
     }
 
