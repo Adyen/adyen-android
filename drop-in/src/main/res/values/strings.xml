@@ -30,4 +30,8 @@
     <string name="checkout_giftcard_remove_button">Remove</string>
     <string name="checkout_giftcard_max_transaction_limit">Max. %s allowed per transaction on this gift card</string>
     <string name="checkout_negative_amount" translatable="false">- %s</string>
+    <string name="checkout_giftcard_remove_gift_cards_title">Confirm card removal</string>
+    <string name="checkout_giftcard_remove_gift_cards_body">Remove added giftcards?</string>
+    <string name="checkout_giftcard_remove_gift_cards_positive_button">Yes, remove</string>
+    <string name="checkout_giftcard_remove_gift_cards_negative_button">Cancel</string>
 </resources>

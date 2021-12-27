@@ -9,7 +9,7 @@
 package com.adyen.checkout.example.service
 
 import com.adyen.checkout.components.model.payments.Amount
-import com.adyen.checkout.components.model.payments.request.Order
+import com.adyen.checkout.components.model.payments.request.OrderRequest
 import com.adyen.checkout.example.data.api.model.paymentsRequest.AdditionalData
 import com.adyen.checkout.example.data.api.model.paymentsRequest.Item
 import com.adyen.checkout.example.data.api.model.paymentsRequest.PaymentMethodsRequest
@@ -18,7 +18,7 @@ import com.google.gson.Gson
 import org.json.JSONArray
 import org.json.JSONObject
 
-fun getPaymentMethodRequest(keyValueStorage: KeyValueStorage, order: Order? = null): PaymentMethodsRequest {
+fun getPaymentMethodRequest(keyValueStorage: KeyValueStorage, order: OrderRequest? = null): PaymentMethodsRequest {
     return PaymentMethodsRequest(
         merchantAccount = keyValueStorage.getMerchantAccount(),
         shopperReference = keyValueStorage.getShopperReference(),
@@ -83,5 +83,15 @@ fun createOrderRequest(
         put("amount", JSONObject(Gson().toJson(amount)))
         put("merchantAccount", merchantAccount)
         put("reference", "android-test-components_${System.currentTimeMillis()}")
+    }
+}
+
+fun createCancelOrderRequest(
+    order: OrderRequest,
+    merchantAccount: String
+): JSONObject {
+    return JSONObject().apply {
+        put("order", OrderRequest.SERIALIZER.serialize(order))
+        put("merchantAccount", merchantAccount)
     }
 }

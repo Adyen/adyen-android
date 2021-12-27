@@ -11,7 +11,7 @@ package com.adyen.checkout.example.service
 import com.adyen.checkout.card.CardComponentState
 import com.adyen.checkout.components.ActionComponentData
 import com.adyen.checkout.components.PaymentComponentState
-import com.adyen.checkout.components.model.payments.request.Order
+import com.adyen.checkout.components.model.payments.request.OrderRequest
 import com.adyen.checkout.components.model.payments.request.PaymentMethodDetails
 import com.adyen.checkout.components.model.payments.response.Action
 import com.adyen.checkout.components.model.payments.response.BalanceResult
@@ -124,7 +124,8 @@ class ExampleAsyncDropInService : DropInService() {
             }
             isNonFullyPaidOrder(jsonResponse) -> {
                 Logger.d(TAG, "Received a non fully paid order")
-                fetchPaymentMethods(jsonResponse)
+                val order = getOrderFromResponse(jsonResponse)
+                fetchPaymentMethods(order)
                 null
             }
             else -> {
@@ -152,18 +153,15 @@ class ExampleAsyncDropInService : DropInService() {
         return OrderResponse.SERIALIZER.deserialize(orderJSON)
     }
 
-    private fun fetchPaymentMethods(jsonResponse: JSONObject) {
+    private fun fetchPaymentMethods(order: OrderResponse? = null) {
+        Logger.d(TAG, "fetchPaymentMethods")
         launch(Dispatchers.IO) {
-            val order = getOrderFromResponse(jsonResponse)
-            val paymentMethods = paymentsRepository.getPaymentMethods(
-                getPaymentMethodRequest(
-                    keyValueStorage,
-                    Order(
-                        pspReference = order.pspReference,
-                        orderData = order.orderData
-                    )
-                )
+            val orderRequest = if (order == null) null else OrderRequest(
+                pspReference = order.pspReference,
+                orderData = order.orderData
             )
+            val paymentMethodRequest = getPaymentMethodRequest(keyValueStorage, orderRequest)
+            val paymentMethods = paymentsRepository.getPaymentMethods(paymentMethodRequest)
             val result = if (paymentMethods != null) {
                 DropInServiceResult.Update(paymentMethods, order)
             } else {
@@ -238,6 +236,41 @@ class ExampleAsyncDropInService : DropInService() {
         } else {
             Logger.e(TAG, "FAILED")
             OrderDropInServiceResult.Error(reason = "IOException")
+        }
+    }
+
+    override fun cancelOrder(order: OrderRequest, shouldUpdatePaymentMethods: Boolean) {
+        launch(Dispatchers.IO) {
+            Logger.d(TAG, "cancelOrder")
+            val cancelOrderRequest = createCancelOrderRequest(
+                order,
+                keyValueStorage.getMerchantAccount()
+            )
+            val requestBody = cancelOrderRequest.toString().toRequestBody(CONTENT_TYPE)
+            val response = paymentsRepository.cancelOrderAsync(requestBody)
+
+            val result = handleCancelOrderResponse(response, shouldUpdatePaymentMethods) ?: return@launch
+            sendResult(result)
+        }
+    }
+
+    @Suppress("NestedBlockDepth")
+    private fun handleCancelOrderResponse(response: ResponseBody?, shouldUpdatePaymentMethods: Boolean): DropInServiceResult? {
+        return if (response != null) {
+            val orderJson = response.string()
+            val jsonResponse = JSONObject(orderJson)
+            Logger.v(TAG, "cancelOrder response - ${jsonResponse.toStringPretty()}")
+            val resultCode = jsonResponse.getStringOrNull("resultCode")
+            when (resultCode) {
+                "Received" -> {
+                    if (shouldUpdatePaymentMethods) fetchPaymentMethods()
+                    null
+                }
+                else -> DropInServiceResult.Error(reason = resultCode, dismissDropIn = false)
+            }
+        } else {
+            Logger.e(TAG, "FAILED")
+            DropInServiceResult.Error(reason = "IOException")
         }
     }
 }

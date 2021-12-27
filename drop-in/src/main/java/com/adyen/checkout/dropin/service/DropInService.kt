@@ -20,6 +20,7 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.Observer
 import com.adyen.checkout.components.ActionComponentData
 import com.adyen.checkout.components.PaymentComponentState
+import com.adyen.checkout.components.model.payments.request.OrderRequest
 import com.adyen.checkout.components.model.payments.request.PaymentComponentData
 import com.adyen.checkout.components.model.payments.request.PaymentMethodDetails
 import com.adyen.checkout.core.log.LogUtil
@@ -296,6 +297,16 @@ abstract class DropInService : Service(), CoroutineScope, DropInServiceInterface
         throw NotImplementedError("Method createOrder is not implemented")
     }
 
+    override fun requestCancelOrder(order: OrderRequest, isDropInCancelledByUser: Boolean) {
+        Logger.d(TAG, "requestCancelOrder")
+        cancelOrder(order, !isDropInCancelledByUser)
+    }
+
+    // TODO docs
+    open fun cancelOrder(order: OrderRequest, shouldUpdatePaymentMethods: Boolean) {
+        throw NotImplementedError("Method cancelOrder is not implemented")
+    }
+
     override fun observeResult(owner: LifecycleOwner, observer: Observer<BaseDropInServiceResult>) {
         mResultLiveData.observe(owner, observer)
     }
@@ -328,4 +339,5 @@ internal interface DropInServiceInterface {
     fun requestDetailsCall(actionComponentData: ActionComponentData)
     fun requestBalanceCall(paymentMethodData: PaymentMethodDetails)
     fun requestOrdersCall()
+    fun requestCancelOrder(order: OrderRequest, isDropInCancelledByUser: Boolean)
 }

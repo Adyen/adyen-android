@@ -16,7 +16,7 @@ import com.adyen.checkout.components.PaymentComponentState
 import com.adyen.checkout.components.model.PaymentMethodsApiResponse
 import com.adyen.checkout.components.model.paymentmethods.StoredPaymentMethod
 import com.adyen.checkout.components.model.payments.Amount
-import com.adyen.checkout.components.model.payments.request.Order
+import com.adyen.checkout.components.model.payments.request.OrderRequest
 import com.adyen.checkout.components.model.payments.request.PaymentMethodDetails
 import com.adyen.checkout.components.model.payments.response.BalanceResult
 import com.adyen.checkout.components.model.payments.response.OrderResponse
@@ -250,8 +250,8 @@ class DropInViewModel(
         }
     }
 
-    private fun createOrder(order: OrderModel): Order {
-        return Order(
+    private fun createOrder(order: OrderModel): OrderRequest {
+        return OrderRequest(
             pspReference = order.pspReference,
             orderData = order.orderData
         )
@@ -290,6 +290,25 @@ class DropInViewModel(
         val paymentComponentState = cachedGiftCardComponentState
             ?: throw CheckoutException("Lost reference to cached GiftCardComponentState")
         sendEvent(DropInActivityEvent.MakePartialPayment(paymentComponentState))
+    }
+
+    fun orderCancellationRequested() {
+        val order = currentOrder
+            ?: throw CheckoutException("No order in progress")
+        sendCancelOrderEvent(order, false)
+    }
+
+    fun cancelDropIn() {
+        currentOrder?.let { sendCancelOrderEvent(it, true) }
+        sendEvent(DropInActivityEvent.CancelDropIn)
+    }
+
+    private fun sendCancelOrderEvent(order: OrderModel, isDropInCancelledByUser: Boolean) {
+        val orderRequest = OrderRequest(
+            pspReference = order.pspReference,
+            orderData = order.orderData
+        )
+        sendEvent(DropInActivityEvent.CancelOrder(orderRequest, isDropInCancelledByUser))
     }
 
     private fun sendEvent(event: DropInActivityEvent) {

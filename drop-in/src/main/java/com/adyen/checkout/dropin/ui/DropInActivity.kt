@@ -30,6 +30,7 @@ import com.adyen.checkout.components.analytics.AnalyticsDispatcher
 import com.adyen.checkout.components.model.PaymentMethodsApiResponse
 import com.adyen.checkout.components.model.paymentmethods.PaymentMethod
 import com.adyen.checkout.components.model.paymentmethods.StoredPaymentMethod
+import com.adyen.checkout.components.model.payments.request.OrderRequest
 import com.adyen.checkout.components.model.payments.response.Action
 import com.adyen.checkout.components.model.payments.response.BalanceResult
 import com.adyen.checkout.components.model.payments.response.OrderResponse
@@ -113,6 +114,7 @@ class DropInActivity : AppCompatActivity(), DropInBottomSheetDialogFragment.Prot
     private var actionDataQueue: ActionComponentData? = null
     private var balanceDataQueue: GiftCardComponentState? = null
     private var orderDataQueue: Unit? = null
+    private var orderCancellationQueue: OrderRequest? = null
 
     private val serviceConnection = object : ServiceConnection {
 
@@ -142,6 +144,11 @@ class DropInActivity : AppCompatActivity(), DropInBottomSheetDialogFragment.Prot
                 Logger.d(TAG, "Sending queued order request")
                 requestOrdersCall()
                 orderDataQueue = null
+            }
+            orderCancellationQueue?.let {
+                Logger.d(TAG, "Sending queued cancel order request")
+                requestCancelOrderCall(it, true)
+                orderCancellationQueue = null
             }
         }
 
@@ -240,6 +247,7 @@ class DropInActivity : AppCompatActivity(), DropInBottomSheetDialogFragment.Prot
     }
 
     override fun onStart() {
+        Logger.v(TAG, "onStart")
         super.onStart()
         bindService()
     }
@@ -258,6 +266,7 @@ class DropInActivity : AppCompatActivity(), DropInBottomSheetDialogFragment.Prot
     }
 
     override fun onStop() {
+        Logger.v(TAG, "onStop")
         super.onStop()
         unbindService()
     }
@@ -332,8 +341,14 @@ class DropInActivity : AppCompatActivity(), DropInBottomSheetDialogFragment.Prot
     }
 
     override fun onResume() {
+        Logger.v(TAG, "onResume")
         super.onResume()
         setLoading(dropInViewModel.isWaitingResult)
+    }
+
+    override fun onDestroy() {
+        Logger.v(TAG, "onDestroy")
+        super.onDestroy()
     }
 
     override fun showPreselectedDialog() {
@@ -383,7 +398,7 @@ class DropInActivity : AppCompatActivity(), DropInBottomSheetDialogFragment.Prot
 
     override fun terminateDropIn() {
         Logger.d(TAG, "terminateDropIn")
-        terminateWithError(DropIn.ERROR_REASON_USER_CANCELED)
+        dropInViewModel.cancelDropIn()
     }
 
     override fun startGooglePay(paymentMethod: PaymentMethod, googlePayConfiguration: GooglePayConfiguration) {
@@ -420,6 +435,18 @@ class DropInActivity : AppCompatActivity(), DropInBottomSheetDialogFragment.Prot
         dropInViewModel.isWaitingResult = true
         setLoading(true)
         dropInService?.requestOrdersCall()
+    }
+
+    private fun requestCancelOrderCall(order: OrderRequest, isDropInCancelledByUser: Boolean) {
+        Logger.d(TAG, "requestCancelOrderCall")
+        if (dropInService == null) {
+            Logger.e(TAG, "requestOrdersCall - service is disconnected")
+            orderCancellationQueue = order
+            return
+        }
+        dropInViewModel.isWaitingResult = true
+        setLoading(true)
+        dropInService?.requestCancelOrder(order, isDropInCancelledByUser)
     }
 
     override fun finishWithAction() {
@@ -562,6 +589,12 @@ class DropInActivity : AppCompatActivity(), DropInBottomSheetDialogFragment.Prot
                 setLoading(false)
                 showPaymentMethodsDialog()
             }
+            is DropInActivityEvent.CancelOrder -> {
+                requestCancelOrderCall(event.order, event.isDropInCancelledByUser)
+            }
+            is DropInActivityEvent.CancelDropIn -> {
+                terminateWithError(DropIn.ERROR_REASON_USER_CANCELED)
+            }
         }
     }
 
@@ -616,6 +649,10 @@ class DropInActivity : AppCompatActivity(), DropInBottomSheetDialogFragment.Prot
 
     override fun requestPartialPayment() {
         dropInViewModel.partialPaymentRequested()
+    }
+
+    override fun requestOrderCancellation() {
+        dropInViewModel.orderCancellationRequested()
     }
 
     companion object {

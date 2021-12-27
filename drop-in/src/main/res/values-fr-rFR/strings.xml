@@ -29,4 +29,8 @@
     <string name="checkout_giftcard_payment_methods_header">Carte-cadeau ajoutée</string>
     <string name="checkout_giftcard_remove_button">Supprimer</string>
     <string name="checkout_giftcard_max_transaction_limit">Montant maximum autorisé par transaction avec cette carte cadeau : %s</string>
+    <string name="checkout_giftcard_remove_gift_cards_title">Confirmer la suppression de la carte</string>
+    <string name="checkout_giftcard_remove_gift_cards_body">Supprimer les cartes-cadeaux ajoutées ?</string>
+    <string name="checkout_giftcard_remove_gift_cards_positive_button">Oui, supprimer</string>
+    <string name="checkout_giftcard_remove_gift_cards_negative_button">Annuler</string>
 </resources>

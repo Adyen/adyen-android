@@ -29,4 +29,8 @@
     <string name="checkout_giftcard_payment_methods_header">La til gavekort</string>
     <string name="checkout_giftcard_remove_button">Fjern</string>
     <string name="checkout_giftcard_max_transaction_limit">Maksimalt %s per transaksjon er tillatt på dette gavekortet</string>
+    <string name="checkout_giftcard_remove_gift_cards_title">Bekreft fjerning av kort</string>
+    <string name="checkout_giftcard_remove_gift_cards_body">Vil du fjerne gavekort som er lagt til?</string>
+    <string name="checkout_giftcard_remove_gift_cards_positive_button">Ja, fjern</string>
+    <string name="checkout_giftcard_remove_gift_cards_negative_button">Avbryt</string>
 </resources>
