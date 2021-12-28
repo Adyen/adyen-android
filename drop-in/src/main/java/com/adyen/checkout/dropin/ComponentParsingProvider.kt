@@ -6,6 +6,7 @@
  * Created by caiof on 24/4/2019.
  */
 
+@file:Suppress("TooManyFunctions")
 package com.adyen.checkout.dropin
 
 import android.app.Application
@@ -457,6 +458,7 @@ internal fun getActionComponentFor(
     }
 }
 
+@Suppress("ComplexMethod")
 private fun Configuration.toBuilder(): BaseConfigurationBuilder<out Configuration> {
     return when (this) {
         is Adyen3DS2Configuration -> Adyen3DS2Configuration.Builder(this)
