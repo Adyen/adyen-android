@@ -15,9 +15,6 @@ import android.content.Intent
 import android.content.ServiceConnection
 import android.os.Binder
 import android.os.IBinder
-import androidx.lifecycle.LifecycleOwner
-import androidx.lifecycle.MutableLiveData
-import androidx.lifecycle.Observer
 import com.adyen.checkout.components.ActionComponentData
 import com.adyen.checkout.components.PaymentComponentState
 import com.adyen.checkout.components.model.payments.request.OrderRequest
@@ -29,6 +26,9 @@ import kotlin.coroutines.CoroutineContext
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.Job
+import kotlinx.coroutines.channels.Channel
+import kotlinx.coroutines.flow.collect
+import kotlinx.coroutines.flow.receiveAsFlow
 import kotlinx.coroutines.launch
 import org.json.JSONObject
 
@@ -52,8 +52,8 @@ abstract class DropInService : Service(), CoroutineScope, DropInServiceInterface
 
     private val binder = DropInBinder()
 
-    // TODO change LiveData into channel/flow to support single events?
-    private val mResultLiveData: MutableLiveData<BaseDropInServiceResult> = MutableLiveData()
+    private val resultChannel = Channel<BaseDropInServiceResult>(Channel.BUFFERED)
+    private val resultFlow = resultChannel.receiveAsFlow()
 
     override fun onBind(intent: Intent?): IBinder {
         Logger.d(TAG, "onBind")
@@ -207,9 +207,11 @@ abstract class DropInService : Service(), CoroutineScope, DropInServiceInterface
      * @param result the result of the network request.
      */
     protected fun sendResult(result: DropInServiceResult) {
-        // send response back to activity
-        Logger.d(TAG, "dispatching DropInServiceResult")
-        mResultLiveData.postValue(result)
+        launch {
+            // send response back to activity
+            Logger.d(TAG, "dispatching DropInServiceResult")
+            resultChannel.send(result)
+        }
     }
 
     /**
@@ -222,9 +224,11 @@ abstract class DropInService : Service(), CoroutineScope, DropInServiceInterface
      * @param result the result of the network request.
      */
     protected fun sendBalanceResult(result: BalanceDropInServiceResult) {
-        // send response back to activity
-        Logger.d(TAG, "dispatching BalanceDropInServiceResult")
-        mResultLiveData.postValue(result)
+        launch {
+            // send response back to activity
+            Logger.d(TAG, "dispatching BalanceDropInServiceResult")
+            resultChannel.send(result)
+        }
     }
 
     /**
@@ -237,9 +241,11 @@ abstract class DropInService : Service(), CoroutineScope, DropInServiceInterface
      * @param result the result of the network request.
      */
     protected fun sendOrderResult(result: OrderDropInServiceResult) {
-        // send response back to activity
-        Logger.d(TAG, "dispatching OrderDropInServiceResult")
-        mResultLiveData.postValue(result)
+        launch {
+            // send response back to activity
+            Logger.d(TAG, "dispatching OrderDropInServiceResult")
+            resultChannel.send(result)
+        }
     }
 
     /**
@@ -404,8 +410,8 @@ abstract class DropInService : Service(), CoroutineScope, DropInServiceInterface
         throw NotImplementedError("Method cancelOrder is not implemented")
     }
 
-    override fun observeResult(owner: LifecycleOwner, observer: Observer<BaseDropInServiceResult>) {
-        mResultLiveData.observe(owner, observer)
+    override suspend fun observeResult(callback: (BaseDropInServiceResult) -> Unit) {
+        resultFlow.collect { callback(it) }
     }
 
     internal inner class DropInBinder : Binder() {
@@ -431,7 +437,7 @@ abstract class DropInService : Service(), CoroutineScope, DropInServiceInterface
 }
 
 internal interface DropInServiceInterface {
-    fun observeResult(owner: LifecycleOwner, observer: Observer<BaseDropInServiceResult>)
+    suspend fun observeResult(callback: (BaseDropInServiceResult) -> Unit)
     fun requestPaymentsCall(paymentComponentState: PaymentComponentState<*>)
     fun requestDetailsCall(actionComponentData: ActionComponentData)
     fun requestBalanceCall(paymentMethodData: PaymentMethodDetails)
