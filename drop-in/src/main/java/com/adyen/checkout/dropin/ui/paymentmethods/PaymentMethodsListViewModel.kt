@@ -16,6 +16,7 @@ import com.adyen.checkout.components.ComponentAvailableCallback
 import com.adyen.checkout.components.base.Configuration
 import com.adyen.checkout.components.model.paymentmethods.PaymentMethod
 import com.adyen.checkout.components.model.paymentmethods.StoredPaymentMethod
+import com.adyen.checkout.components.model.payments.Amount
 import com.adyen.checkout.components.util.CurrencyUtils
 import com.adyen.checkout.components.util.PaymentMethodTypes
 import com.adyen.checkout.core.exception.CheckoutException
@@ -32,7 +33,8 @@ class PaymentMethodsListViewModel(
     private val paymentMethods: List<PaymentMethod>,
     storedPaymentMethods: List<StoredPaymentMethod>,
     private val order: OrderModel?,
-    val dropInConfiguration: DropInConfiguration
+    private val dropInConfiguration: DropInConfiguration,
+    private val amount: Amount
 ) : AndroidViewModel(application), ComponentAvailableCallback<Configuration> {
 
     private val paymentMethodsMutableLiveData: MutableLiveData<List<PaymentMethodListItem>> = MutableLiveData()
@@ -98,7 +100,7 @@ class PaymentMethodsListViewModel(
                     // We assume payment method is available and remove it later when the callback comes
                     // this is the overwhelming majority of cases, and we keep the list ordered this way.
                     paymentMethodsList.add(paymentMethod.mapToModel(index))
-                    checkPaymentMethodAvailability(getApplication(), paymentMethod, dropInConfiguration, this)
+                    checkPaymentMethodAvailability(getApplication(), paymentMethod, dropInConfiguration, amount, this)
                 }
                 else -> {
                     availabilitySkipSum++

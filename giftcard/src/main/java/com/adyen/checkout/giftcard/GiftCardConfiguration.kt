@@ -55,6 +55,13 @@ class GiftCardConfiguration : Configuration {
          */
         constructor(shopperLocale: Locale, environment: Environment, clientKey: String) : super(shopperLocale, environment, clientKey)
 
+        /**
+         * Constructor that copies an existing configuration.
+         *
+         * @param configuration A configuration to initialize the builder.
+         */
+        constructor(configuration: GiftCardConfiguration) : super(configuration)
+
         override fun setShopperLocale(builderShopperLocale: Locale): Builder {
             return super.setShopperLocale(builderShopperLocale) as Builder
         }
