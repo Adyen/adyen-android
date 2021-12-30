@@ -172,10 +172,11 @@ class ExampleAsyncDropInService : DropInService() {
         }
     }
 
-    override fun checkBalance(paymentMethodData: PaymentMethodDetails, paymentMethodJson: JSONObject) {
+    override fun checkBalance(paymentMethodData: PaymentMethodDetails) {
         launch(Dispatchers.IO) {
             Logger.d(TAG, "checkBalance")
 
+            val paymentMethodJson = PaymentMethodDetails.SERIALIZER.serialize(paymentMethodData)
             Logger.v(TAG, "paymentMethods/balance/ - ${paymentMethodJson.toStringPretty()}")
 
             val paymentRequest = createBalanceRequest(
@@ -242,8 +243,9 @@ class ExampleAsyncDropInService : DropInService() {
     override fun cancelOrder(order: OrderRequest, shouldUpdatePaymentMethods: Boolean) {
         launch(Dispatchers.IO) {
             Logger.d(TAG, "cancelOrder")
+            val orderJson = OrderRequest.SERIALIZER.serialize(order)
             val cancelOrderRequest = createCancelOrderRequest(
-                order,
+                orderJson,
                 keyValueStorage.getMerchantAccount()
             )
             val requestBody = cancelOrderRequest.toString().toRequestBody(CONTENT_TYPE)
