@@ -12,15 +12,14 @@
     <string name="payment_methods_header">결제 수단</string>
     <string name="error_dialog_title">오류</string>
     <string name="error_dialog_button">확인</string>
-    <string name="payment_failed">Error sending payment. Please try again.</string>
+    <string name="payment_failed">결제 전송 중 오류 발생. 다시 시도해 주세요.</string>
     <string name="action_failed">결제 처리 중 오류가 발생했습니다. 나중에 다시 시도해 주세요.</string>
     <string name="component_error">오류가 발생했습니다.</string>
-    <string name="time_out_error">Request timed out. Please try again.</string>
+    <string name="time_out_error">요청 시간 초과. 다시 시도해 주세요.</string>
     <string name="store_payment_methods_header">귀하의 결제 수단</string>
     <string name="other_payment_methods">다른 수단 선택</string>
     <string name="continue_button">계속</string>
     <string name="change_payment_method">결제 수단 변경</string>
-    <string name="credit_card">Credit Card</string>
     <string name="checkout_giftcard_redeem_button">기프트 카드로 결제</string>
     <string name="checkout_giftcard_error_zero_balance">이 기프트 카드에는 잔액이 없습니다</string>
     <string name="checkout_giftcard_error_currency">기프트 카드는 발급된 통화로만 사용하실 수 있습니다</string>

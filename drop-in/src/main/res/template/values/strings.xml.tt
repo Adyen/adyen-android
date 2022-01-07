@@ -12,15 +12,14 @@
     <string name="payment_methods_header">%%paymentMethods.title%%</string>
     <string name="error_dialog_title">%%error.title%%</string>
     <string name="error_dialog_button">%%dismissButton%%</string>
-    <string name="payment_failed">Error sending payment. Please try again.</string>
+    <string name="payment_failed">%%resultMessages.failed%%</string>
     <string name="action_failed">%%resultMessages.Error%%</string>
     <string name="component_error">%%resultMessages.unknown%%</string>
-    <string name="time_out_error">Request timed out. Please try again.</string>
+    <string name="time_out_error">%%resultMessages.timeout%%</string>
     <string name="store_payment_methods_header">%%paymentMethods.storedMethods%%</string>
     <string name="other_payment_methods">%%paymentMethods.otherMethods%%</string>
     <string name="continue_button">%%continue%%</string>
     <string name="change_payment_method">%%preselectedPaymentMethod.changeButton.accessibilityLabel%%</string>
-    <string name="credit_card">Credit Card</string>
     <string name="checkout_giftcard_redeem_button">%%applyGiftcard%%</string>
     <string name="checkout_giftcard_error_zero_balance">%%error.giftcard.no-balance%%</string>
     <string name="checkout_giftcard_error_currency">%%error.giftcard.currency-error%%</string>

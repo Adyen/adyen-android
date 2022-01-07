@@ -12,15 +12,14 @@
     <string name="payment_methods_header">Načini plačila</string>
     <string name="error_dialog_title">Napaka</string>
     <string name="error_dialog_button">OK</string>
-    <string name="payment_failed">Error sending payment. Please try again.</string>
+    <string name="payment_failed">Napaka pri pošiljanju plačila. Poskusite znova.</string>
     <string name="action_failed">Pri obdelavi vašega plačila je prišlo do napake. Poskusite znova pozneje.</string>
     <string name="component_error">Nekaj je šlo narobe.</string>
-    <string name="time_out_error">Request timed out. Please try again.</string>
+    <string name="time_out_error">Zahteva je potekla. Poskusite znova.</string>
     <string name="store_payment_methods_header">Vaši načini plačila</string>
     <string name="other_payment_methods">Izberite drug način</string>
     <string name="continue_button">Nadaljuj</string>
     <string name="change_payment_method">Spremeni način plačila</string>
-    <string name="credit_card">Credit Card</string>
     <string name="checkout_giftcard_redeem_button">Unovči</string>
     <string name="checkout_giftcard_error_zero_balance">Na tej darilni kartici ni sredstev</string>
     <string name="checkout_giftcard_error_currency">Darilne kartice so veljavne samo za valuto, za katero so bile izdane</string>

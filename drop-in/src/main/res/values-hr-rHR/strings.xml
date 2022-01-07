@@ -12,15 +12,14 @@
     <string name="payment_methods_header">Način plaćanja</string>
     <string name="error_dialog_title">Greška</string>
     <string name="error_dialog_button">U redu</string>
-    <string name="payment_failed">Error sending payment. Please try again.</string>
+    <string name="payment_failed">Greška prilikom slanja plaćanja. Pokušajte ponovno.</string>
     <string name="action_failed">Došlo je do pogreške prilikom obrade plaćanja. Pokušajte ponovno kasnije.</string>
     <string name="component_error">Pojavio se problem.</string>
-    <string name="time_out_error">Request timed out. Please try again.</string>
+    <string name="time_out_error">Isteklo je vrijeme zahtjeva. Pokušajte ponovno.</string>
     <string name="store_payment_methods_header">Vaš način plaćanja</string>
     <string name="other_payment_methods">Odaberite drugi način</string>
     <string name="continue_button">Nastavi</string>
     <string name="change_payment_method">Promijeni način plaćanja</string>
-    <string name="credit_card">Credit Card</string>
     <string name="checkout_giftcard_redeem_button">Iskoristite</string>
     <string name="checkout_giftcard_error_zero_balance">Stanje na ovoj poklon-kartici iznosi nula</string>
     <string name="checkout_giftcard_error_currency">Poklon-kartice vrijede samo u valuti u kojoj su izdane</string>

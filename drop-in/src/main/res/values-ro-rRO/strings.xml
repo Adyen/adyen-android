@@ -12,15 +12,14 @@
     <string name="payment_methods_header">Metode de plată</string>
     <string name="error_dialog_title">Eroare</string>
     <string name="error_dialog_button">Ok</string>
-    <string name="payment_failed">Error sending payment. Please try again.</string>
+    <string name="payment_failed">Eroare la trimiterea plății. Vă rugăm să încercați din nou.</string>
     <string name="action_failed">S-a produs o eroare la prelucrarea plății. Vă rugăm să încercați din nou mai târziu.</string>
     <string name="component_error">A apărut o problemă.</string>
-    <string name="time_out_error">Request timed out. Please try again.</string>
+    <string name="time_out_error">Solicitarea a expirat. Vă rugăm să încercați din nou.</string>
     <string name="store_payment_methods_header">Metodele dvs. de plată</string>
     <string name="other_payment_methods">Selectați o altă metodă</string>
     <string name="continue_button">Continuare</string>
     <string name="change_payment_method">Schimbare metodă de plată</string>
-    <string name="credit_card">Credit Card</string>
     <string name="checkout_giftcard_redeem_button">Valorificare</string>
     <string name="checkout_giftcard_error_zero_balance">Acest card cadou are soldul zero</string>
     <string name="checkout_giftcard_error_currency">Cardurile cadou sunt valabile numai în moneda în care au fost emise</string>

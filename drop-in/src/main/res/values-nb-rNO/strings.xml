@@ -12,15 +12,14 @@
     <string name="payment_methods_header">Betalingsmetoder</string>
     <string name="error_dialog_title">Feil</string>
     <string name="error_dialog_button">Ok</string>
-    <string name="payment_failed">Error sending payment. Please try again.</string>
+    <string name="payment_failed">Feil ved sending av betaling. Vennligst prøv igjen.</string>
     <string name="action_failed">Det oppstod en feil under behandlingen av betalingen din. Vennligst prøv igjen senere.</string>
     <string name="component_error">Noe gikk galt.</string>
-    <string name="time_out_error">Request timed out. Please try again.</string>
+    <string name="time_out_error">Forespørselen fikk tidsavbrudd. Vennligst prøv igjen.</string>
     <string name="store_payment_methods_header">Dine betalingsmetoder</string>
     <string name="other_payment_methods">Velg annen metode</string>
     <string name="continue_button">Fortsett</string>
     <string name="change_payment_method">Endre betalingsmetode</string>
-    <string name="credit_card">Credit Card</string>
     <string name="checkout_giftcard_redeem_button">Løs inn</string>
     <string name="checkout_giftcard_error_zero_balance">Dette gavekortet har en saldo på null</string>
     <string name="checkout_giftcard_error_currency">Gavekort er kun gyldige i den valutaen de ble utstedt i</string>
