@@ -12,15 +12,14 @@
     <string name="payment_methods_header">Fizetési módok</string>
     <string name="error_dialog_title">Hiba</string>
     <string name="error_dialog_button">OK</string>
-    <string name="payment_failed">Error sending payment. Please try again.</string>
+    <string name="payment_failed">Hiba történt a fizetés elküldése során. Próbálkozzon újra.</string>
     <string name="action_failed">Fizetése feldolgozása során hiba történt. Próbálkozzon újra később.</string>
     <string name="component_error">Hiba történt.</string>
-    <string name="time_out_error">Request timed out. Please try again.</string>
+    <string name="time_out_error">A kérés időkorlátja lejárt. Próbálkozzon újra.</string>
     <string name="store_payment_methods_header">Fizetési módjai</string>
     <string name="other_payment_methods">Másik mód választása</string>
     <string name="continue_button">Folytatás</string>
     <string name="change_payment_method">Fizetési mód módosítása</string>
-    <string name="credit_card">Credit Card</string>
     <string name="checkout_giftcard_redeem_button">Beváltás</string>
     <string name="checkout_giftcard_error_zero_balance">Az ajándékkártya egyenlege nulla</string>
     <string name="checkout_giftcard_error_currency">Az ajándékkártyák csak abban a pénznemben érvényesek, amelyre kiállították azokat</string>

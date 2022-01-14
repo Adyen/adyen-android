@@ -12,15 +12,14 @@
     <string name="payment_methods_header">支付方式</string>
     <string name="error_dialog_title">错误</string>
     <string name="error_dialog_button">确定</string>
-    <string name="payment_failed">Error sending payment. Please try again.</string>
+    <string name="payment_failed">付款时出错。请重试。</string>
     <string name="action_failed">处理您的付款时发生错误。请稍候重试。</string>
     <string name="component_error">发生错误。</string>
-    <string name="time_out_error">Request timed out. Please try again.</string>
+    <string name="time_out_error">请求超时。请重试。</string>
     <string name="store_payment_methods_header">您的支付方式</string>
     <string name="other_payment_methods">选择其他方式</string>
     <string name="continue_button">继续</string>
     <string name="change_payment_method">更改支付方式</string>
-    <string name="credit_card">Credit Card</string>
     <string name="checkout_giftcard_redeem_button">兑换</string>
     <string name="checkout_giftcard_error_zero_balance">礼品卡余额为零</string>
     <string name="checkout_giftcard_error_currency">礼品卡仅以其发行的货币为有效货币</string>

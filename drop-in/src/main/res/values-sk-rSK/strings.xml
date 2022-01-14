@@ -12,15 +12,14 @@
     <string name="payment_methods_header">Spôsob platby</string>
     <string name="error_dialog_title">Chyba</string>
     <string name="error_dialog_button">OK</string>
-    <string name="payment_failed">Error sending payment. Please try again.</string>
+    <string name="payment_failed">Pri odosielaní platby došlo k chybe. Skúste to znova.</string>
     <string name="action_failed">Pri spracúvaní vašej platby sa vyskytla chyba. Skúste to neskôr znova.</string>
     <string name="component_error">Niečo sa pokazilo.</string>
-    <string name="time_out_error">Request timed out. Please try again.</string>
+    <string name="time_out_error">Časový limit pre požiadavku uplynul. Skúste to znova.</string>
     <string name="store_payment_methods_header">Vaše spôsoby platby</string>
     <string name="other_payment_methods">Vyberte iný spôsob</string>
     <string name="continue_button">Pokračovať</string>
     <string name="change_payment_method">Zmeniť spôsob platby</string>
-    <string name="credit_card">Credit Card</string>
     <string name="checkout_giftcard_redeem_button">Uplatniť</string>
     <string name="checkout_giftcard_error_zero_balance">Táto darčeková karta má nulový zostatok</string>
     <string name="checkout_giftcard_error_currency">Darčekové karty sú platné iba v mene, v ktorej boli vydané</string>

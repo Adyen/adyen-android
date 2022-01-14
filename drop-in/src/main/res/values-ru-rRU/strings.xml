@@ -12,15 +12,14 @@
     <string name="payment_methods_header">Способы оплаты</string>
     <string name="error_dialog_title">Ошибка</string>
     <string name="error_dialog_button">ОК</string>
-    <string name="payment_failed">Error sending payment. Please try again.</string>
+    <string name="payment_failed">Ошибка при отправке платежа. Повторите попытку.</string>
     <string name="action_failed">При обработке платежа возникла ошибка. Повторите попытку позже.</string>
     <string name="component_error">Произошла ошибка.</string>
-    <string name="time_out_error">Request timed out. Please try again.</string>
+    <string name="time_out_error">Время ожидания запроса истекло. Повторите попытку.</string>
     <string name="store_payment_methods_header">Ваши способы оплаты</string>
     <string name="other_payment_methods">Выбрать другой способ</string>
     <string name="continue_button">Продолжить</string>
     <string name="change_payment_method">Изменить способ оплаты</string>
-    <string name="credit_card">Credit Card</string>
     <string name="checkout_giftcard_redeem_button">Использовать</string>
     <string name="checkout_giftcard_error_zero_balance">На этой подарочной карте нет средств</string>
     <string name="checkout_giftcard_error_currency">Принимаются только подарочные карты соответствующей валюты</string>

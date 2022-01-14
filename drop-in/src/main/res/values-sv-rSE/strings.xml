@@ -12,15 +12,14 @@
     <string name="payment_methods_header">Betalningsmetoder</string>
     <string name="error_dialog_title">Fel</string>
     <string name="error_dialog_button">OK</string>
-    <string name="payment_failed">Error sending payment. Please try again.</string>
+    <string name="payment_failed">Fel när betalningen skickades. Försök igen.</string>
     <string name="action_failed">Det uppstod ett fel vid behandlingen av din betalning. Försök igen senare.</string>
     <string name="component_error">Någonting gick fel.</string>
-    <string name="time_out_error">Request timed out. Please try again.</string>
+    <string name="time_out_error">Förfrågan tog för lång tid. Försök igen.</string>
     <string name="store_payment_methods_header">Dina sparade betalningsmetoder</string>
     <string name="other_payment_methods">Välj annan betalningsmetod</string>
     <string name="continue_button">Fortsätt</string>
     <string name="change_payment_method">Ändra betalningssätt</string>
-    <string name="credit_card">Credit Card</string>
     <string name="checkout_giftcard_redeem_button">Lös in</string>
     <string name="checkout_giftcard_error_zero_balance">Saldot för detta presentkort är noll</string>
     <string name="checkout_giftcard_error_currency">Presentkort är endast giltiga i den valuta som de utfärdades i</string>
