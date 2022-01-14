@@ -39,7 +39,7 @@ import kotlinx.coroutines.launch
 
 private val TAG = LogUtil.getTag()
 
-private val PAYMENT_METHOD_TYPES = arrayOf(PaymentMethodTypes.SCHEME)
+
 private const val BIN_VALUE_LENGTH = 6
 private const val LAST_FOUR_LENGTH = 4
 private const val SINGLE_CARD_LIST_SIZE = 1
@@ -434,5 +434,6 @@ class CardComponent private constructor(
     companion object {
         @JvmStatic
         val PROVIDER: StoredPaymentComponentProvider<CardComponent, CardConfiguration> = CardComponentProvider()
+        val PAYMENT_METHOD_TYPES = arrayOf(PaymentMethodTypes.SCHEME)
     }
 }

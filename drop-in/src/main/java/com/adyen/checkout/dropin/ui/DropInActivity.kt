@@ -22,6 +22,8 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.DialogFragment
 import androidx.lifecycle.Observer
 import androidx.lifecycle.lifecycleScope
+import com.adyen.checkout.bacs.BacsDirectDebitComponent
+import com.adyen.checkout.card.CardComponent
 import com.adyen.checkout.components.ActionComponentData
 import com.adyen.checkout.components.ComponentError
 import com.adyen.checkout.components.PaymentComponentState
@@ -34,7 +36,6 @@ import com.adyen.checkout.components.model.payments.request.OrderRequest
 import com.adyen.checkout.components.model.payments.response.Action
 import com.adyen.checkout.components.model.payments.response.BalanceResult
 import com.adyen.checkout.components.model.payments.response.OrderResponse
-import com.adyen.checkout.components.util.PaymentMethodTypes
 import com.adyen.checkout.core.exception.CheckoutException
 import com.adyen.checkout.core.log.LogUtil
 import com.adyen.checkout.core.log.Logger
@@ -62,6 +63,7 @@ import com.adyen.checkout.dropin.ui.giftcard.GiftCardPaymentConfirmationData
 import com.adyen.checkout.dropin.ui.giftcard.GiftCardPaymentConfirmationDialogFragment
 import com.adyen.checkout.dropin.ui.paymentmethods.PaymentMethodListDialogFragment
 import com.adyen.checkout.dropin.ui.stored.PreselectedStoredPaymentMethodFragment
+import com.adyen.checkout.giftcard.GiftCardComponent
 import com.adyen.checkout.giftcard.GiftCardComponentState
 import com.adyen.checkout.googlepay.GooglePayComponent
 import com.adyen.checkout.googlepay.GooglePayComponentState
@@ -370,10 +372,10 @@ class DropInActivity : AppCompatActivity(), DropInBottomSheetDialogFragment.Prot
     override fun showStoredComponentDialog(storedPaymentMethod: StoredPaymentMethod, fromPreselected: Boolean) {
         Logger.d(TAG, "showStoredComponentDialog")
         hideAllScreens()
-        val dialogFragment = when (storedPaymentMethod.type) {
-            PaymentMethodTypes.SCHEME -> CardComponentDialogFragment
+        val dialogFragment = when {
+            CardComponent.PAYMENT_METHOD_TYPES.contains(storedPaymentMethod.type) -> CardComponentDialogFragment
             else -> GenericComponentDialogFragment
-        }.newInstance(storedPaymentMethod, dropInViewModel.dropInConfiguration, fromPreselected)
+        }.newInstance(storedPaymentMethod, fromPreselected)
 
         dialogFragment.show(supportFragmentManager, COMPONENT_FRAGMENT_TAG)
     }
@@ -381,12 +383,12 @@ class DropInActivity : AppCompatActivity(), DropInBottomSheetDialogFragment.Prot
     override fun showComponentDialog(paymentMethod: PaymentMethod) {
         Logger.d(TAG, "showComponentDialog")
         hideAllScreens()
-        val dialogFragment = when (paymentMethod.type) {
-            PaymentMethodTypes.SCHEME -> CardComponentDialogFragment
-            PaymentMethodTypes.BACS -> BacsDirectDebitDialogFragment
-            PaymentMethodTypes.GIFTCARD -> GiftCardComponentDialogFragment
-            else -> GenericComponentDialogFragment
-        }.newInstance(paymentMethod, dropInViewModel.dropInConfiguration)
+        val dialogFragment = when {
+            CardComponent.PAYMENT_METHOD_TYPES.contains(paymentMethod.type) -> CardComponentDialogFragment.newInstance(paymentMethod)
+            BacsDirectDebitComponent.PAYMENT_METHOD_TYPES.contains(paymentMethod.type) -> BacsDirectDebitDialogFragment.newInstance(paymentMethod)
+            GiftCardComponent.PAYMENT_METHOD_TYPES.contains(paymentMethod.type) -> GiftCardComponentDialogFragment.newInstance(paymentMethod)
+            else -> GenericComponentDialogFragment.newInstance(paymentMethod)
+        }
 
         dialogFragment.show(supportFragmentManager, COMPONENT_FRAGMENT_TAG)
     }
