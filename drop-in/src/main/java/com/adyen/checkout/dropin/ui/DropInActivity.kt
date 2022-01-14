@@ -122,7 +122,9 @@ class DropInActivity : AppCompatActivity(), DropInBottomSheetDialogFragment.Prot
             Logger.d(TAG, "onServiceConnected")
             val dropInBinder = binder as? DropInService.DropInBinder ?: return
             dropInService = dropInBinder.getService()
-            dropInService?.observeResult(this@DropInActivity) { handleDropInServiceResult(it) }
+            lifecycleScope.launchWhenStarted {
+                dropInService?.observeResult { handleDropInServiceResult(it) }
+            }
 
             paymentDataQueue?.let {
                 Logger.d(TAG, "Sending queued payment request")

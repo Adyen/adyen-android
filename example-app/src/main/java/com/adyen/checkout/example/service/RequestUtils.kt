@@ -87,11 +87,11 @@ fun createOrderRequest(
 }
 
 fun createCancelOrderRequest(
-    order: OrderRequest,
+    orderJson: JSONObject,
     merchantAccount: String
 ): JSONObject {
     return JSONObject().apply {
-        put("order", OrderRequest.SERIALIZER.serialize(order))
+        put("order", orderJson)
         put("merchantAccount", merchantAccount)
     }
 }
