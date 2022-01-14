@@ -31,6 +31,9 @@ import retrofit2.Call
 /**
  * This is just an example on how to make networkModule calls on the [DropInService].
  * You should make the calls to your own servers and have additional data or processing if necessary.
+ *
+ * This class implements [makePaymentsCall] and [makeDetailsCall] which provide the simplest way of
+ * interacting with Drop-in, without having to manage background threads.
  */
 @AndroidEntryPoint
 class ExampleDropInService : DropInService() {
@@ -42,6 +45,7 @@ class ExampleDropInService : DropInService() {
 
     @Inject
     lateinit var paymentsRepository: PaymentsRepository
+
     @Inject
     lateinit var keyValueStorage: KeyValueStorage
 

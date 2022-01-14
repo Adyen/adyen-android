@@ -11,10 +11,17 @@ package com.adyen.checkout.giftcard.util
 import com.adyen.checkout.components.model.payments.Amount
 import kotlin.math.min
 
-// TODO docs
 object GiftCardBalanceUtils {
 
-    // TODO docs
+    /**
+     * Check whether a full or partial payment can be made with a certain gift card for a give amount.
+     *
+     * @param balance the balance of the gift card. Should be extracted from the /paymentMethods/balance call.
+     * @param transactionLimit the maximum amount for a single transaction of the gift card. Should be extracted
+     * from the /paymentMethods/balance call.
+     * @param amountToBePaid the desired amount to be paid using this gift card.
+     * @return the result of teh balance check.
+     */
     fun checkBalance(balance: Amount, transactionLimit: Amount?, amountToBePaid: Amount): GiftCardBalanceStatus {
         return when {
             amountToBePaid.isEmpty || amountToBePaid.value <= 0 -> GiftCardBalanceStatus.ZeroAmountToBePaid

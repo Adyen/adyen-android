@@ -99,6 +99,7 @@ public final class PaymentMethodTypes {
                 DOTPAY,
                 ENTERCASH,
                 EPS,
+                GIFTCARD,
                 GOOGLE_PAY,
                 GOOGLE_PAY_LEGACY,
                 IDEAL,
@@ -158,9 +159,7 @@ public final class PaymentMethodTypes {
                 ECONTEXT_SEVEN_ELEVEN,
                 ECONTEXT_ATM,
                 ECONTEXT_STORES,
-                ECONTEXT_ONLINE,
-
-                GIFTCARD
+                ECONTEXT_ONLINE
         ));
     }
 

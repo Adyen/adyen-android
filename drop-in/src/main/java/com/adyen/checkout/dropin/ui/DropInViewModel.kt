@@ -182,6 +182,7 @@ class DropInViewModel(
                 GiftCardBalanceResult.Error(R.string.payment_failed, "Drop-in amount is not set", true)
             }
             is GiftCardBalanceStatus.FullPayment -> {
+                cachedPartialPaymentAmount = giftCardBalanceResult.amountPaid
                 GiftCardBalanceResult.FullPayment(
                     createGiftCardPaymentConfirmationData(giftCardBalanceResult, cachedGiftCardComponentState)
                 )
@@ -233,15 +234,18 @@ class DropInViewModel(
 
     fun updatePaymentComponentStateForPaymentsCall(paymentComponentState: PaymentComponentState<*>) {
         // include amount value if merchant passed it to the DropIn
-        val amount = when {
-            cachedPartialPaymentAmount != null -> cachedPartialPaymentAmount
-            !amount.isEmpty -> amount
-            else -> null
-        }
-        cachedPartialPaymentAmount = null
-        amount?.let {
-            paymentComponentState.data.amount = it
-            Logger.d(TAG, "Payment amount set: $it")
+        val existingAmount = paymentComponentState.data.amount
+        when {
+            existingAmount != null && !existingAmount.isEmpty -> {
+                Logger.d(TAG, "Payment amount already set: $existingAmount")
+            }
+            !amount.isEmpty -> {
+                paymentComponentState.data.amount = amount
+                Logger.d(TAG, "Payment amount set: $amount")
+            }
+            else -> {
+                Logger.d(TAG, "Payment amount not set")
+            }
         }
         currentOrder?.let {
             paymentComponentState.data.order = createOrder(it)
@@ -283,6 +287,12 @@ class DropInViewModel(
     fun partialPaymentRequested() {
         val paymentComponentState = cachedGiftCardComponentState
             ?: throw CheckoutException("Lost reference to cached GiftCardComponentState")
+        val partialPaymentAmount = cachedPartialPaymentAmount
+            ?: throw CheckoutException("Lost reference to cached partial payment amount")
+        paymentComponentState.data.amount = partialPaymentAmount
+        Logger.d(TAG, "Partial payment amount set: $partialPaymentAmount")
+        cachedGiftCardComponentState = null
+        cachedPartialPaymentAmount = null
         sendEvent(DropInActivityEvent.MakePartialPayment(paymentComponentState))
     }
 
