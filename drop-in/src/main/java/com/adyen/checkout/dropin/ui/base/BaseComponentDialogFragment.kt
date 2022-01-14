@@ -27,8 +27,8 @@ import com.adyen.checkout.core.log.LogUtil
 import com.adyen.checkout.core.log.Logger
 import com.adyen.checkout.dropin.R
 import com.adyen.checkout.dropin.getComponentFor
-import com.adyen.checkout.dropin.ui.ComponentDialogViewModel
-import com.adyen.checkout.dropin.ui.ComponentFragmentState
+import com.adyen.checkout.dropin.ui.viewmodel.ComponentDialogViewModel
+import com.adyen.checkout.dropin.ui.viewmodel.ComponentFragmentState
 
 private const val STORED_PAYMENT_METHOD = "STORED_PAYMENT_METHOD"
 private const val NAVIGATED_FROM_PRESELECTED = "NAVIGATED_FROM_PRESELECTED"

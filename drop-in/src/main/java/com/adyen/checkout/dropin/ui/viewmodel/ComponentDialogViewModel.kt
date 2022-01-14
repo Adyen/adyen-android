@@ -6,7 +6,7 @@
  * Created by josephj on 18/3/2021.
  */
 
-package com.adyen.checkout.dropin.ui
+package com.adyen.checkout.dropin.ui.viewmodel
 
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.SavedStateHandle

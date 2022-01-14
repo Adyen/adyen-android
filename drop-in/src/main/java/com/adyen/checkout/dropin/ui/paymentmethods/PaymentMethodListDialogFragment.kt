@@ -34,6 +34,7 @@ import com.adyen.checkout.dropin.R
 import com.adyen.checkout.dropin.getConfigurationForPaymentMethod
 import com.adyen.checkout.dropin.ui.base.DropInBottomSheetDialogFragment
 import com.adyen.checkout.dropin.ui.getViewModel
+import com.adyen.checkout.dropin.ui.viewmodel.PaymentMethodsListViewModel
 import com.adyen.checkout.googlepay.GooglePayComponent
 
 private val TAG = LogUtil.getTag()

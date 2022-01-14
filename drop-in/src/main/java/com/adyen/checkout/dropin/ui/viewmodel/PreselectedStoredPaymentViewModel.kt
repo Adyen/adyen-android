@@ -1,12 +1,12 @@
 /*
- * Copyright (c) 2020 Adyen N.V.
+ * Copyright (c) 2021 Adyen N.V.
  *
  * This file is open source and available under the MIT license. See the LICENSE file for more info.
  *
- * Created by caiof on 2/12/2020.
+ * Created by josephj on 14/1/2022.
  */
 
-package com.adyen.checkout.dropin.ui.stored
+package com.adyen.checkout.dropin.ui.viewmodel
 
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
@@ -18,11 +18,12 @@ import com.adyen.checkout.components.model.payments.request.PaymentMethodDetails
 import com.adyen.checkout.core.log.LogUtil
 import com.adyen.checkout.core.log.Logger
 import com.adyen.checkout.dropin.ui.paymentmethods.StoredPaymentMethodModel
-import com.adyen.checkout.dropin.ui.stored.PreselectedStoredState.AwaitingComponentInitialization
-import com.adyen.checkout.dropin.ui.stored.PreselectedStoredState.Idle
-import com.adyen.checkout.dropin.ui.stored.PreselectedStoredState.PaymentError
-import com.adyen.checkout.dropin.ui.stored.PreselectedStoredState.RequestPayment
-import com.adyen.checkout.dropin.ui.stored.PreselectedStoredState.ShowStoredPaymentDialog
+import com.adyen.checkout.dropin.ui.stored.makeStoredModel
+import com.adyen.checkout.dropin.ui.viewmodel.PreselectedStoredState.AwaitingComponentInitialization
+import com.adyen.checkout.dropin.ui.viewmodel.PreselectedStoredState.Idle
+import com.adyen.checkout.dropin.ui.viewmodel.PreselectedStoredState.PaymentError
+import com.adyen.checkout.dropin.ui.viewmodel.PreselectedStoredState.RequestPayment
+import com.adyen.checkout.dropin.ui.viewmodel.PreselectedStoredState.ShowStoredPaymentDialog
 
 class PreselectedStoredPaymentViewModel(
     storedPaymentMethod: StoredPaymentMethod,

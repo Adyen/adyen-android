@@ -6,7 +6,7 @@
  * Created by josephj on 29/11/2021.
  */
 
-package com.adyen.checkout.dropin.ui
+package com.adyen.checkout.dropin.ui.viewmodel
 
 import android.os.Bundle
 import androidx.lifecycle.AbstractSavedStateViewModelFactory

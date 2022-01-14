@@ -63,6 +63,9 @@ import com.adyen.checkout.dropin.ui.giftcard.GiftCardPaymentConfirmationData
 import com.adyen.checkout.dropin.ui.giftcard.GiftCardPaymentConfirmationDialogFragment
 import com.adyen.checkout.dropin.ui.paymentmethods.PaymentMethodListDialogFragment
 import com.adyen.checkout.dropin.ui.stored.PreselectedStoredPaymentMethodFragment
+import com.adyen.checkout.dropin.ui.viewmodel.DropInActivityEvent
+import com.adyen.checkout.dropin.ui.viewmodel.DropInViewModel
+import com.adyen.checkout.dropin.ui.viewmodel.DropInViewModelFactory
 import com.adyen.checkout.giftcard.GiftCardComponent
 import com.adyen.checkout.giftcard.GiftCardComponentState
 import com.adyen.checkout.googlepay.GooglePayComponent

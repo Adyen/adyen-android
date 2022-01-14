@@ -21,7 +21,7 @@ import com.adyen.checkout.components.model.paymentmethods.StoredPaymentMethod
 import com.adyen.checkout.core.log.LogUtil
 import com.adyen.checkout.core.log.Logger
 import com.adyen.checkout.dropin.R
-import com.adyen.checkout.dropin.ui.DropInViewModel
+import com.adyen.checkout.dropin.ui.viewmodel.DropInViewModel
 import com.adyen.checkout.giftcard.GiftCardComponentState
 import com.adyen.checkout.googlepay.GooglePayConfiguration
 import com.google.android.material.bottomsheet.BottomSheetBehavior
