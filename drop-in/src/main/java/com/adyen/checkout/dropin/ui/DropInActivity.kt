@@ -20,12 +20,10 @@ import androidx.activity.viewModels
 import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.DialogFragment
-import androidx.lifecycle.Observer
 import androidx.lifecycle.lifecycleScope
 import com.adyen.checkout.bacs.BacsDirectDebitComponent
 import com.adyen.checkout.card.CardComponent
 import com.adyen.checkout.components.ActionComponentData
-import com.adyen.checkout.components.ComponentError
 import com.adyen.checkout.components.PaymentComponentState
 import com.adyen.checkout.components.analytics.AnalyticEvent
 import com.adyen.checkout.components.analytics.AnalyticsDispatcher
@@ -58,6 +56,7 @@ import com.adyen.checkout.dropin.ui.component.BacsDirectDebitDialogFragment
 import com.adyen.checkout.dropin.ui.component.CardComponentDialogFragment
 import com.adyen.checkout.dropin.ui.component.GenericComponentDialogFragment
 import com.adyen.checkout.dropin.ui.component.GiftCardComponentDialogFragment
+import com.adyen.checkout.dropin.ui.component.GooglePayComponentDialogFragment
 import com.adyen.checkout.dropin.ui.giftcard.GiftCardBalanceResult
 import com.adyen.checkout.dropin.ui.giftcard.GiftCardPaymentConfirmationData
 import com.adyen.checkout.dropin.ui.giftcard.GiftCardPaymentConfirmationDialogFragment
@@ -69,8 +68,6 @@ import com.adyen.checkout.dropin.ui.viewmodel.DropInViewModelFactory
 import com.adyen.checkout.giftcard.GiftCardComponent
 import com.adyen.checkout.giftcard.GiftCardComponentState
 import com.adyen.checkout.googlepay.GooglePayComponent
-import com.adyen.checkout.googlepay.GooglePayComponentState
-import com.adyen.checkout.googlepay.GooglePayConfiguration
 import com.adyen.checkout.redirect.RedirectUtil
 import com.adyen.checkout.wechatpay.WeChatPayUtils
 import kotlinx.coroutines.ExperimentalCoroutinesApi
@@ -85,7 +82,7 @@ private const val ACTION_FRAGMENT_TAG = "ACTION_DIALOG_FRAGMENT"
 private const val LOADING_FRAGMENT_TAG = "LOADING_DIALOG_FRAGMENT"
 private const val GIFT_CARD_PAYMENT_CONFIRMATION_FRAGMENT_TAG = "GIFT_CARD_PAYMENT_CONFIRMATION_FRAGMENT"
 
-private const val GOOGLE_PAY_REQUEST_CODE = 1
+internal const val GOOGLE_PAY_REQUEST_CODE = 1
 
 /**
  * Activity that presents the available PaymentMethods to the Shopper.
@@ -95,22 +92,9 @@ class DropInActivity : AppCompatActivity(), DropInBottomSheetDialogFragment.Prot
 
     private val dropInViewModel: DropInViewModel by viewModels { DropInViewModelFactory(this, intent.extras) }
 
-    private lateinit var googlePayComponent: GooglePayComponent
-
     private lateinit var actionHandler: ActionHandler
 
     private val loadingDialog = LoadingDialogFragment.newInstance()
-
-    private val googlePayObserver: Observer<GooglePayComponentState> = Observer {
-        if (it?.isValid == true) {
-            requestPaymentsCall(it)
-        }
-    }
-
-    private val googlePayErrorObserver: Observer<ComponentError> = Observer {
-        Logger.d(TAG, "GooglePay error - ${it?.errorMessage}")
-        showPaymentMethodsDialog()
-    }
 
     private var dropInService: DropInServiceInterface? = null
     private var serviceBound: Boolean = false
@@ -239,9 +223,17 @@ class DropInActivity : AppCompatActivity(), DropInBottomSheetDialogFragment.Prot
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         super.onActivityResult(requestCode, resultCode, data)
-        when (requestCode) {
-            GOOGLE_PAY_REQUEST_CODE -> googlePayComponent.handleActivityResult(resultCode, data)
+        checkGooglePayActivityResult(requestCode, resultCode, data)
+    }
+
+    private fun checkGooglePayActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
+        if (requestCode != GOOGLE_PAY_REQUEST_CODE) return
+        val fragment = getFragmentByTag(COMPONENT_FRAGMENT_TAG) as? GooglePayComponentDialogFragment
+        if (fragment == null) {
+            Logger.e(TAG, "GooglePayComponentDialogFragment is not loaded")
+            return
         }
+        fragment.handleActivityResult(resultCode, data)
     }
 
     override fun onNewIntent(intent: Intent?) {
@@ -390,6 +382,7 @@ class DropInActivity : AppCompatActivity(), DropInBottomSheetDialogFragment.Prot
             CardComponent.PAYMENT_METHOD_TYPES.contains(paymentMethod.type) -> CardComponentDialogFragment.newInstance(paymentMethod)
             BacsDirectDebitComponent.PAYMENT_METHOD_TYPES.contains(paymentMethod.type) -> BacsDirectDebitDialogFragment.newInstance(paymentMethod)
             GiftCardComponent.PAYMENT_METHOD_TYPES.contains(paymentMethod.type) -> GiftCardComponentDialogFragment.newInstance(paymentMethod)
+            GooglePayComponent.PAYMENT_METHOD_TYPES.contains(paymentMethod.type) -> GooglePayComponentDialogFragment.newInstance(paymentMethod)
             else -> GenericComponentDialogFragment.newInstance(paymentMethod)
         }
 
@@ -407,16 +400,6 @@ class DropInActivity : AppCompatActivity(), DropInBottomSheetDialogFragment.Prot
     override fun terminateDropIn() {
         Logger.d(TAG, "terminateDropIn")
         dropInViewModel.cancelDropIn()
-    }
-
-    override fun startGooglePay(paymentMethod: PaymentMethod, googlePayConfiguration: GooglePayConfiguration) {
-        Logger.d(TAG, "startGooglePay")
-        googlePayComponent = GooglePayComponent.PROVIDER.get(this, paymentMethod, googlePayConfiguration)
-        googlePayComponent.observe(this@DropInActivity, googlePayObserver)
-        googlePayComponent.observeErrors(this@DropInActivity, googlePayErrorObserver)
-
-        hideFragmentDialog(PAYMENT_METHODS_LIST_FRAGMENT_TAG)
-        googlePayComponent.startGooglePayScreen(this, GOOGLE_PAY_REQUEST_CODE)
     }
 
     override fun requestBalanceCall(giftCardComponentState: GiftCardComponentState) {
