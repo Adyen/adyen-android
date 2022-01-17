@@ -1,9 +1,9 @@
 /*
- * Copyright (c) 2021 Adyen N.V.
+ * Copyright (c) 2020 Adyen N.V.
  *
  * This file is open source and available under the MIT license. See the LICENSE file for more info.
  *
- * Created by josephj on 14/1/2022.
+ * Created by caiof on 2/12/2020.
  */
 
 package com.adyen.checkout.dropin.ui.viewmodel
