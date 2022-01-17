@@ -39,7 +39,6 @@ import kotlinx.coroutines.launch
 
 private val TAG = LogUtil.getTag()
 
-
 private const val BIN_VALUE_LENGTH = 6
 private const val LAST_FOUR_LENGTH = 4
 private const val SINGLE_CARD_LIST_SIZE = 1

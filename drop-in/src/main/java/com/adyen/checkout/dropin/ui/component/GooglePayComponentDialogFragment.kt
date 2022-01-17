@@ -35,6 +35,7 @@ import kotlinx.coroutines.flow.collect
 private const val NAVIGATED_FROM_PRESELECTED = "NAVIGATED_FROM_PRESELECTED"
 private const val PAYMENT_METHOD = "PAYMENT_METHOD"
 
+@Suppress("TooManyFunctions")
 class GooglePayComponentDialogFragment : DropInBottomSheetDialogFragment(), Observer<GooglePayComponentState> {
 
     companion object {

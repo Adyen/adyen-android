@@ -23,7 +23,6 @@ import com.adyen.checkout.core.log.Logger
 import com.adyen.checkout.dropin.R
 import com.adyen.checkout.dropin.ui.viewmodel.DropInViewModel
 import com.adyen.checkout.giftcard.GiftCardComponentState
-import com.adyen.checkout.googlepay.GooglePayConfiguration
 import com.google.android.material.bottomsheet.BottomSheetBehavior
 import com.google.android.material.bottomsheet.BottomSheetDialog
 import com.google.android.material.bottomsheet.BottomSheetDialogFragment
