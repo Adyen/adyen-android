@@ -14,6 +14,7 @@ import android.content.Context
 import android.content.Intent
 import android.content.ServiceConnection
 import android.os.Binder
+import android.os.Bundle
 import android.os.IBinder
 import com.adyen.checkout.components.ActionComponentData
 import com.adyen.checkout.components.PaymentComponentState
@@ -80,10 +81,10 @@ abstract class DropInService : Service(), CoroutineScope, DropInServiceInterface
         super.onDestroy()
     }
 
-    override fun requestPaymentsCall(paymentComponentState: PaymentComponentState<*>) {
+    override fun requestPaymentsCall(paymentComponentState: PaymentComponentState<*>, additionalDataForDropInService: Bundle?) {
         Logger.d(TAG, "requestPaymentsCall")
         val json = PaymentComponentData.SERIALIZER.serialize(paymentComponentState.data)
-        onPaymentsCallRequested(paymentComponentState, json)
+        onPaymentsCallRequested(paymentComponentState, json, additionalDataForDropInService)
     }
 
     /**
@@ -129,10 +130,12 @@ abstract class DropInService : Service(), CoroutineScope, DropInServiceInterface
      * submits the payment.
      * @param paymentComponentJson The serialized data from the [PaymentComponent] to compose your
      * call.
+     * @param additionalDataForDropInService The bundle data which was passed to the DropIn SDK
      */
     protected open fun onPaymentsCallRequested(
         paymentComponentState: PaymentComponentState<*>,
-        paymentComponentJson: JSONObject
+        paymentComponentJson: JSONObject,
+        additionalDataForDropInService: Bundle?
     ) {
         launch(Dispatchers.IO) {
             // Merchant makes network call
@@ -141,10 +144,10 @@ abstract class DropInService : Service(), CoroutineScope, DropInServiceInterface
         }
     }
 
-    override fun requestDetailsCall(actionComponentData: ActionComponentData) {
+    override fun requestDetailsCall(actionComponentData: ActionComponentData, additionalDataForDropInService: Bundle?) {
         Logger.d(TAG, "requestDetailsCall")
         val json = ActionComponentData.SERIALIZER.serialize(actionComponentData)
-        onDetailsCallRequested(actionComponentData, json)
+        onDetailsCallRequested(actionComponentData, json, additionalDataForDropInService)
     }
 
     /**
@@ -187,7 +190,8 @@ abstract class DropInService : Service(), CoroutineScope, DropInServiceInterface
      */
     protected open fun onDetailsCallRequested(
         actionComponentData: ActionComponentData,
-        actionComponentJson: JSONObject
+        actionComponentJson: JSONObject,
+        additionalDataForDropInService: Bundle?
     ) {
         launch(Dispatchers.IO) {
             // Merchant makes network call
@@ -438,8 +442,8 @@ abstract class DropInService : Service(), CoroutineScope, DropInServiceInterface
 
 internal interface DropInServiceInterface {
     suspend fun observeResult(callback: (BaseDropInServiceResult) -> Unit)
-    fun requestPaymentsCall(paymentComponentState: PaymentComponentState<*>)
-    fun requestDetailsCall(actionComponentData: ActionComponentData)
+    fun requestPaymentsCall(paymentComponentState: PaymentComponentState<*>, additionalDataForDropInService: Bundle?)
+    fun requestDetailsCall(actionComponentData: ActionComponentData, additionalDataForDropInService: Bundle?)
     fun requestBalanceCall(paymentMethodData: PaymentMethodDetails)
     fun requestOrdersCall()
     fun requestCancelOrder(order: OrderRequest, isDropInCancelledByUser: Boolean)

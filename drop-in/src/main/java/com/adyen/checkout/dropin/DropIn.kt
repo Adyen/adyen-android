@@ -11,6 +11,7 @@ package com.adyen.checkout.dropin
 import android.app.Activity
 import android.content.Context
 import android.content.Intent
+import android.os.Bundle
 import androidx.activity.result.ActivityResultCaller
 import androidx.activity.result.ActivityResultLauncher
 import androidx.fragment.app.Fragment
@@ -86,11 +87,16 @@ object DropIn {
      * [getDropInResultFromIntent] helper method to get it or you can find it in the intent
      * extras with key [RESULT_KEY].
      *
+     * When additional data is needed in the DropInService use the [additionalDataForDropInService]
+     * bundle. This bundle will be passed to the DropInService methods onPaymentsCallRequested and
+     * onDetailsCallRequested.
+     *
      * @param activity An activity to start the Checkout flow.
      * @param dropInLauncher A launcher to start Drop-in, obtained with [registerForDropInResult].
      * @param paymentMethodsApiResponse The result from the paymentMethods/ endpoint.
      * @param dropInConfiguration Additional required configuration data.
      * @param resultHandlerIntent Intent to be called after Drop-in has finished.
+     * @param additionalDataForDropInService Bundle which will passed to the DropInService
      *
      */
     @JvmStatic
@@ -99,7 +105,8 @@ object DropIn {
         dropInLauncher: ActivityResultLauncher<Intent>,
         paymentMethodsApiResponse: PaymentMethodsApiResponse,
         dropInConfiguration: DropInConfiguration,
-        resultHandlerIntent: Intent? = null
+        resultHandlerIntent: Intent? = null,
+        additionalDataForDropInService: Bundle? = null
     ) {
         updateDefaultLogcatLevel(activity)
         Logger.d(TAG, "startPayment from Activity")
@@ -108,7 +115,8 @@ object DropIn {
             activity,
             paymentMethodsApiResponse,
             dropInConfiguration,
-            resultHandlerIntent
+            resultHandlerIntent,
+            additionalDataForDropInService
         )
         dropInLauncher.launch(intent)
     }
@@ -141,11 +149,16 @@ object DropIn {
      * [getDropInResultFromIntent] helper method to get it or you can find it in the intent
      * extras with key [RESULT_KEY].
      *
+     * When additional data is needed in the DropInService use the [additionalDataForDropInService]
+     * bundle. This bundle will be passed to the DropInService methods onPaymentsCallRequested and
+     * onDetailsCallRequested.
+     *
      * @param fragment A fragment to start the Checkout flow.
      * @param dropInLauncher A launcher to start Drop-in, obtained with [registerForDropInResult].
      * @param paymentMethodsApiResponse The result from the paymentMethods/ endpoint.
      * @param dropInConfiguration Additional required configuration data.
      * @param resultHandlerIntent Intent to be called after Drop-in has finished.
+     * @param additionalDataForDropInService Bundle which will passed to the DropInService
      *
      */
     @JvmStatic
@@ -154,7 +167,8 @@ object DropIn {
         dropInLauncher: ActivityResultLauncher<Intent>,
         paymentMethodsApiResponse: PaymentMethodsApiResponse,
         dropInConfiguration: DropInConfiguration,
-        resultHandlerIntent: Intent? = null
+        resultHandlerIntent: Intent? = null,
+        additionalDataForDropInService: Bundle? = null
     ) {
         updateDefaultLogcatLevel(fragment.requireContext())
         Logger.d(TAG, "startPayment from Fragment")
@@ -163,7 +177,8 @@ object DropIn {
             fragment.requireContext(),
             paymentMethodsApiResponse,
             dropInConfiguration,
-            resultHandlerIntent
+            resultHandlerIntent,
+            additionalDataForDropInService
         )
         dropInLauncher.launch(intent)
     }
@@ -203,10 +218,15 @@ object DropIn {
      * [getDropInResultFromIntent] helper method to get it or you can find it in the intent
      * extras with key [RESULT_KEY].
      *
+     * When additional data is needed in the DropInService use the [additionalDataForDropInService]
+     * bundle. This bundle will be passed to the DropInService methods onPaymentsCallRequested and
+     * onDetailsCallRequested.
+     *
      * @param activity An activity to start the Checkout flow.
      * @param paymentMethodsApiResponse The result from the paymentMethods/ endpoint.
      * @param dropInConfiguration Additional required configuration data.
      * @param resultHandlerIntent Intent to be called after Drop-in has finished.
+     * @param additionalDataForDropInService Bundle which will passed to the DropInService
      *
      */
     @JvmStatic
@@ -214,7 +234,8 @@ object DropIn {
         activity: Activity,
         paymentMethodsApiResponse: PaymentMethodsApiResponse,
         dropInConfiguration: DropInConfiguration,
-        resultHandlerIntent: Intent? = null
+        resultHandlerIntent: Intent? = null,
+        additionalDataForDropInService: Bundle? = null
     ) {
         updateDefaultLogcatLevel(activity)
         Logger.d(TAG, "startPayment from Activity")
@@ -223,7 +244,8 @@ object DropIn {
             activity,
             paymentMethodsApiResponse,
             dropInConfiguration,
-            resultHandlerIntent
+            resultHandlerIntent,
+            additionalDataForDropInService
         )
         activity.startActivityForResult(intent, DROP_IN_REQUEST_CODE)
     }
@@ -263,10 +285,15 @@ object DropIn {
      * [getDropInResultFromIntent] helper method to get it or you can find it in the intent
      * extras with key [RESULT_KEY].
      *
+     * When additional data is needed in the DropInService use the [additionalDataForDropInService]
+     * bundle. This bundle will be passed to the DropInService methods onPaymentsCallRequested and
+     * onDetailsCallRequested.
+     *
      * @param fragment A fragment to start the Checkout flow.
      * @param paymentMethodsApiResponse The result from the paymentMethods/ endpoint.
      * @param dropInConfiguration Additional required configuration data.
      * @param resultHandlerIntent Intent to be called after Drop-in has finished.
+     * @param additionalDataForDropInService Bundle which will passed to the DropInService
      *
      */
     @JvmStatic
@@ -274,7 +301,8 @@ object DropIn {
         fragment: Fragment,
         paymentMethodsApiResponse: PaymentMethodsApiResponse,
         dropInConfiguration: DropInConfiguration,
-        resultHandlerIntent: Intent? = null
+        resultHandlerIntent: Intent? = null,
+        additionalDataForDropInService: Bundle? = null
     ) {
         updateDefaultLogcatLevel(fragment.requireContext())
         Logger.d(TAG, "startPayment from Fragment")
@@ -283,7 +311,8 @@ object DropIn {
             fragment.requireContext(),
             paymentMethodsApiResponse,
             dropInConfiguration,
-            resultHandlerIntent
+            resultHandlerIntent,
+            additionalDataForDropInService
         )
         fragment.startActivityForResult(intent, DROP_IN_REQUEST_CODE)
     }
@@ -292,7 +321,8 @@ object DropIn {
         context: Context,
         paymentMethodsApiResponse: PaymentMethodsApiResponse,
         dropInConfiguration: DropInConfiguration,
-        resultHandlerIntent: Intent?
+        resultHandlerIntent: Intent?,
+        additionalDataForDropInService: Bundle?
     ): Intent {
         // Add locale to prefs
         DropInPrefs.setShopperLocale(context, dropInConfiguration.shopperLocale)
@@ -301,7 +331,8 @@ object DropIn {
             context,
             dropInConfiguration,
             paymentMethodsApiResponse,
-            resultHandlerIntent
+            resultHandlerIntent,
+            additionalDataForDropInService
         )
     }
 

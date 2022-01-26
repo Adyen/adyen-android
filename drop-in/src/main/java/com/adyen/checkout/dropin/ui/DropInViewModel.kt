@@ -9,6 +9,7 @@
 package com.adyen.checkout.dropin.ui
 
 import android.content.Intent
+import android.os.Bundle
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
@@ -46,6 +47,7 @@ private const val PAYMENT_METHODS_RESPONSE_KEY = "PAYMENT_METHODS_RESPONSE_KEY"
 private const val DROP_IN_CONFIGURATION_KEY = "DROP_IN_CONFIGURATION_KEY"
 private const val DROP_IN_RESULT_INTENT_KEY = "DROP_IN_RESULT_INTENT_KEY"
 private const val IS_WAITING_FOR_RESULT_KEY = "IS_WAITING_FOR_RESULT_KEY"
+private const val ADDITIONAL_DATA_FOR_DROP_IN_SERVICE_KEY = "ADDITIONAL_DATA_FOR_DROP_IN_SERVICE_KEY"
 private const val CACHED_GIFT_CARD = "CACHED_GIFT_CARD"
 private const val CURRENT_ORDER = "CURRENT_ORDER"
 private const val PARTIAL_PAYMENT_AMOUNT = "PARTIAL_PAYMENT_AMOUNT"
@@ -62,6 +64,7 @@ class DropInViewModel(
 
     val dropInConfiguration: DropInConfiguration = getStateValueOrFail(DROP_IN_CONFIGURATION_KEY)
     val resultHandlerIntent: Intent? = savedStateHandle[DROP_IN_RESULT_INTENT_KEY]
+    val additionalDataForDropInService: Bundle? = savedStateHandle[ADDITIONAL_DATA_FOR_DROP_IN_SERVICE_KEY]
 
     var amount: Amount
         get() {
@@ -327,12 +330,14 @@ class DropInViewModel(
             intent: Intent,
             dropInConfiguration: DropInConfiguration,
             paymentMethodsApiResponse: PaymentMethodsApiResponse,
-            resultHandlerIntent: Intent?
+            resultHandlerIntent: Intent?,
+            additionalDataForDropInService: Bundle?
         ) {
             intent.apply {
                 putExtra(PAYMENT_METHODS_RESPONSE_KEY, paymentMethodsApiResponse)
                 putExtra(DROP_IN_CONFIGURATION_KEY, dropInConfiguration)
                 putExtra(DROP_IN_RESULT_INTENT_KEY, resultHandlerIntent)
+                putExtra(ADDITIONAL_DATA_FOR_DROP_IN_SERVICE_KEY, additionalDataForDropInService)
             }
         }
     }

@@ -290,7 +290,7 @@ class DropInActivity : AppCompatActivity(), DropInBottomSheetDialogFragment.Prot
         dropInViewModel.isWaitingResult = true
         setLoading(true)
         dropInViewModel.updatePaymentComponentStateForPaymentsCall(paymentComponentState)
-        dropInService?.requestPaymentsCall(paymentComponentState)
+        dropInService?.requestPaymentsCall(paymentComponentState, dropInViewModel.additionalDataForDropInService)
     }
 
     override fun requestDetailsCall(actionComponentData: ActionComponentData) {
@@ -302,7 +302,7 @@ class DropInActivity : AppCompatActivity(), DropInBottomSheetDialogFragment.Prot
         }
         dropInViewModel.isWaitingResult = true
         setLoading(true)
-        dropInService?.requestDetailsCall(actionComponentData)
+        dropInService?.requestDetailsCall(actionComponentData, dropInViewModel.additionalDataForDropInService)
     }
 
     override fun showError(errorMessage: String, reason: String, terminate: Boolean) {
@@ -661,10 +661,11 @@ class DropInActivity : AppCompatActivity(), DropInBottomSheetDialogFragment.Prot
             context: Context,
             dropInConfiguration: DropInConfiguration,
             paymentMethodsApiResponse: PaymentMethodsApiResponse,
-            resultHandlerIntent: Intent?
+            resultHandlerIntent: Intent?,
+            additionalDataForDropInService: Bundle?
         ): Intent {
             val intent = Intent(context, DropInActivity::class.java)
-            DropInViewModel.putIntentExtras(intent, dropInConfiguration, paymentMethodsApiResponse, resultHandlerIntent)
+            DropInViewModel.putIntentExtras(intent, dropInConfiguration, paymentMethodsApiResponse, resultHandlerIntent, additionalDataForDropInService)
             return intent
         }
     }

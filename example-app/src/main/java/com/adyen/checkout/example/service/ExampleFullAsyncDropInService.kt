@@ -8,6 +8,7 @@
 
 package com.adyen.checkout.example.service
 
+import android.os.Bundle
 import com.adyen.checkout.card.CardComponentState
 import com.adyen.checkout.components.ActionComponentData
 import com.adyen.checkout.components.PaymentComponentState
@@ -63,7 +64,11 @@ class ExampleFullAsyncDropInService : DropInService() {
     @Inject
     lateinit var keyValueStorage: KeyValueStorage
 
-    override fun onPaymentsCallRequested(paymentComponentState: PaymentComponentState<*>, paymentComponentJson: JSONObject) {
+    override fun onPaymentsCallRequested(
+        paymentComponentState: PaymentComponentState<*>,
+        paymentComponentJson: JSONObject,
+        additionalDataForDropInService: Bundle?
+    ) {
         launch(Dispatchers.IO) {
             Logger.d(TAG, "onPaymentsCallRequested")
 
@@ -102,7 +107,11 @@ class ExampleFullAsyncDropInService : DropInService() {
         }
     }
 
-    override fun onDetailsCallRequested(actionComponentData: ActionComponentData, actionComponentJson: JSONObject) {
+    override fun onDetailsCallRequested(
+        actionComponentData: ActionComponentData,
+        actionComponentJson: JSONObject,
+        additionalDataForDropInService: Bundle?
+    ) {
         launch(Dispatchers.IO) {
             Logger.d(TAG, "onDetailsCallRequested")
 
