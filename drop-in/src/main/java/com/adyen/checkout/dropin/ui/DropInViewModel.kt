@@ -126,9 +126,11 @@ class DropInViewModel(
 
     val showPreselectedStored = paymentMethodsApiResponse.storedPaymentMethods?.any { it.isEcommerce } == true &&
         dropInConfiguration.showPreselectedStoredPaymentMethod
-    val preselectedStoredPayment = paymentMethodsApiResponse.storedPaymentMethods?.firstOrNull {
-        it.isEcommerce && PaymentMethodTypes.SUPPORTED_PAYMENT_METHODS.contains(it.type)
-    } ?: StoredPaymentMethod()
+
+    val preselectedStoredPayment
+        get() = paymentMethodsApiResponse.storedPaymentMethods?.firstOrNull {
+            it.isEcommerce && PaymentMethodTypes.SUPPORTED_PAYMENT_METHODS.contains(it.type)
+        } ?: StoredPaymentMethod()
 
     fun getStoredPaymentMethod(id: String): StoredPaymentMethod {
         return paymentMethodsApiResponse.storedPaymentMethods?.firstOrNull { it.id == id } ?: StoredPaymentMethod()
@@ -265,6 +267,15 @@ class DropInViewModel(
             handleOrderResponse(order)
             this@DropInViewModel.paymentMethodsApiResponse = paymentMethodsApiResponse
             sendEvent(DropInActivityEvent.ShowPaymentMethods)
+        }
+    }
+
+    fun removeStoredPaymentMethodWithId(id: String) {
+        val positionToRemove = paymentMethodsApiResponse.storedPaymentMethods?.indexOfFirst { it.id == id } ?: -1
+        val updatedStoredPaymentMethods = paymentMethodsApiResponse.storedPaymentMethods?.toMutableList()
+        if (positionToRemove != -1) {
+            updatedStoredPaymentMethods?.removeAt(positionToRemove)
+            paymentMethodsApiResponse.storedPaymentMethods = updatedStoredPaymentMethods
         }
     }
 

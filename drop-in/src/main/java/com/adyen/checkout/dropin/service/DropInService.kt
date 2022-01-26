@@ -17,6 +17,7 @@ import android.os.Binder
 import android.os.IBinder
 import com.adyen.checkout.components.ActionComponentData
 import com.adyen.checkout.components.PaymentComponentState
+import com.adyen.checkout.components.model.paymentmethods.StoredPaymentMethod
 import com.adyen.checkout.components.model.payments.request.OrderRequest
 import com.adyen.checkout.components.model.payments.request.PaymentComponentData
 import com.adyen.checkout.components.model.payments.request.PaymentMethodDetails
@@ -248,6 +249,15 @@ abstract class DropInService : Service(), CoroutineScope, DropInServiceInterface
         }
     }
 
+    // TODO docs
+    protected fun sendRecurringResult(result: RecurringDropInServiceResult) {
+        launch {
+            // send response back to activity
+            Logger.d(TAG, "dispatching RecurringDropInServiceResult")
+            resultChannel.send(result)
+        }
+    }
+
     /**
      * In this method you should make the network call to tell your server to make a call to the payments/ endpoint.
      *
@@ -410,6 +420,16 @@ abstract class DropInService : Service(), CoroutineScope, DropInServiceInterface
         throw NotImplementedError("Method cancelOrder is not implemented")
     }
 
+    override fun disableStoredPaymentMethod(storedPaymentMethod: StoredPaymentMethod) {
+        Logger.d(TAG, "disableStoredPaymentMethod")
+        onDisableStoredPaymentMethod(storedPaymentMethod, StoredPaymentMethod.SERIALIZER.serialize(storedPaymentMethod))
+    }
+
+    // TODO docs
+    open fun onDisableStoredPaymentMethod(storedPaymentMethod: StoredPaymentMethod, storedPaymentMethodJson: JSONObject) {
+        throw NotImplementedError("Method onDisableStoredPaymentMethod is not implemented")
+    }
+
     override suspend fun observeResult(callback: (BaseDropInServiceResult) -> Unit) {
         resultFlow.collect { callback(it) }
     }
@@ -443,4 +463,5 @@ internal interface DropInServiceInterface {
     fun requestBalanceCall(paymentMethodData: PaymentMethodDetails)
     fun requestOrdersCall()
     fun requestCancelOrder(order: OrderRequest, isDropInCancelledByUser: Boolean)
+    fun disableStoredPaymentMethod(storedPaymentMethod: StoredPaymentMethod)
 }
