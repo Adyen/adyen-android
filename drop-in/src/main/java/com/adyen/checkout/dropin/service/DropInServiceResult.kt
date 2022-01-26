@@ -134,3 +134,15 @@ sealed class OrderDropInServiceResult : BaseDropInServiceResult() {
         override val dismissDropIn: Boolean = false
     ) : OrderDropInServiceResult(), DropInServiceResultError
 }
+
+// TODO docs
+sealed class RecurringDropInServiceResult : BaseDropInServiceResult() {
+
+    class PaymentMethodRemoved(val id: String) : RecurringDropInServiceResult()
+
+    class Error(
+        override val errorMessage: String? = null,
+        override val reason: String? = null,
+        override val dismissDropIn: Boolean = false
+    ) : RecurringDropInServiceResult(), DropInServiceResultError
+}
