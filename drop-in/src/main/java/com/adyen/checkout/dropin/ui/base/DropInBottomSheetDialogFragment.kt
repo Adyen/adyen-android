@@ -106,5 +106,6 @@ abstract class DropInBottomSheetDialogFragment : BottomSheetDialogFragment() {
         fun requestPartialPayment()
         fun requestOrderCancellation()
         fun finishWithAction()
+        fun disableStoredPaymentMethod(storedPaymentMethod: StoredPaymentMethod)
     }
 }

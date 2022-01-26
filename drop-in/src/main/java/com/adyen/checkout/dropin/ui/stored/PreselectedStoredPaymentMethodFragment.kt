@@ -14,6 +14,7 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.appcompat.app.AlertDialog
 import androidx.core.view.isVisible
 import com.adyen.checkout.components.ComponentError
 import com.adyen.checkout.components.PaymentComponent
@@ -118,6 +119,21 @@ class PreselectedStoredPaymentMethodFragment : DropInBottomSheetDialogFragment()
                 dropInViewModel.dropInConfiguration.shopperLocale
             )
             binding.payButton.text = getString(R.string.pay_button_with_value, value)
+        }
+
+        binding.storedPaymentMethodItem.paymentMethodItemUnderlayButton.setOnClickListener {
+            // TODO translations
+            AlertDialog.Builder(requireContext())
+                .setTitle("Remove")
+                .setMessage("Message")
+                .setPositiveButton(R.string.error_dialog_button) { dialog, _ ->
+                    val storedPaymentMethod = StoredPaymentMethod().apply {
+                        id = storedPaymentMethod.id
+                    }
+                    protocol.disableStoredPaymentMethod(storedPaymentMethod)
+                    dialog.dismiss()
+                }
+                .show()
         }
 
         binding.payButton.setOnClickListener {

@@ -101,7 +101,7 @@ class GiftCardPaymentConfirmationDialogFragment : DropInBottomSheetDialogFragmen
             dropInViewModel.dropInConfiguration.environment
         )
 
-        paymentMethodAdapter = PaymentMethodAdapter(paymentMethods, imageLoader)
+        paymentMethodAdapter = PaymentMethodAdapter(paymentMethods.toMutableList(), imageLoader)
         binding.recyclerViewGiftCards.layoutManager = LinearLayoutManager(requireContext())
         binding.recyclerViewGiftCards.adapter = paymentMethodAdapter
     }

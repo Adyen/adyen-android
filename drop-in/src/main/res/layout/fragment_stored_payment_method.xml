@@ -30,7 +30,7 @@
 
     <include
         android:id="@+id/stored_payment_method_item"
-        layout="@layout/payment_methods_list_item"
+        layout="@layout/removable_payment_methods_list_item"
         android:layout_width="match_parent"
         android:layout_height="wrap_content" />
 
