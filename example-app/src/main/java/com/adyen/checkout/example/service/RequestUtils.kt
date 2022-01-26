@@ -95,3 +95,15 @@ fun createCancelOrderRequest(
         put("merchantAccount", merchantAccount)
     }
 }
+
+fun createDisableStoredPaymentMethodRequest(
+    recurringDetailReference: String,
+    merchantAccount: String,
+    shopperReference: String
+): JSONObject {
+    return JSONObject().apply {
+        put("recurringDetailReference", recurringDetailReference)
+        put("merchantAccount", merchantAccount)
+        put("shopperReference", shopperReference)
+    }
+}
