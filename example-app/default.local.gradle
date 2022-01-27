@@ -13,6 +13,7 @@ android {
             buildConfigField "String", "CHECKOUT_API_KEY", "\"<YOUR_API_KEY>\""
             buildConfigField "String", "CLIENT_KEY", "\"<YOUR_CLIENT_KEY>\""
             buildConfigField "String", "SHOPPER_REFERENCE", "\"<SHOPPER_REFERENCE>\""
+            buildConfigField "String", "MERCHANT_RECURRING_SERVER_URL", "\"<YOUR_SERVER_URL>\""
         }
 
         release {
