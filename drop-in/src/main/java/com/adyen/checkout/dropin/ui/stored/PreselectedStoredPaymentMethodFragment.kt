@@ -174,6 +174,7 @@ class PreselectedStoredPaymentMethodFragment : DropInBottomSheetDialogFragment()
                 dialog.dismiss()
             }
             .setNegativeButton(R.string.checkout_giftcard_remove_gift_cards_negative_button) { dialog, _ ->
+                binding.storedPaymentMethodItem.root.collapseUnderlay()
                 dialog.dismiss()
             }
             .show()

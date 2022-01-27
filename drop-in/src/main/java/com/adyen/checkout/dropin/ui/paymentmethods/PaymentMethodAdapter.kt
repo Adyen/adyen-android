@@ -8,7 +8,6 @@
 
 package com.adyen.checkout.dropin.ui.paymentmethods
 
-import android.content.Context
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -17,7 +16,6 @@ import android.widget.TextView
 import androidx.appcompat.app.AlertDialog
 import androidx.recyclerview.widget.RecyclerView
 import com.adyen.checkout.components.api.ImageLoader
-import com.adyen.checkout.components.model.paymentmethods.StoredPaymentMethod
 import com.adyen.checkout.components.ui.view.AdyenSwipeToRevealLayout
 import com.adyen.checkout.components.ui.view.RoundCornerImageView
 import com.adyen.checkout.components.util.CurrencyUtils
@@ -114,7 +112,7 @@ class PaymentMethodAdapter(
         }
 
         holder.itemView.findViewById<FrameLayout>(R.id.payment_method_item_underlay_button).setOnClickListener {
-            showRemoveStoredPaymentDialog(holder.itemView.context, storedPaymentMethod)
+            showRemoveStoredPaymentDialog(holder.itemView, storedPaymentMethod)
         }
 
         (holder.itemView as? AdyenSwipeToRevealLayout)?.setUnderlayListener { view ->
@@ -122,8 +120,8 @@ class PaymentMethodAdapter(
         }
     }
 
-    private fun showRemoveStoredPaymentDialog(context: Context, storedPaymentMethodModel: StoredPaymentMethodModel) {
-        AlertDialog.Builder(context)
+    private fun showRemoveStoredPaymentDialog(itemView: View, storedPaymentMethodModel: StoredPaymentMethodModel) {
+        AlertDialog.Builder(itemView.context)
             .setTitle(R.string.checkout_giftcard_remove_gift_cards_title)
             .setMessage(R.string.checkout_remove_stored_payment_method_body)
             .setPositiveButton(R.string.checkout_giftcard_remove_gift_cards_positive_button) { dialog, _ ->
@@ -131,6 +129,7 @@ class PaymentMethodAdapter(
                 dialog.dismiss()
             }
             .setNegativeButton(R.string.checkout_giftcard_remove_gift_cards_negative_button) { dialog, _ ->
+                (itemView as? AdyenSwipeToRevealLayout)?.collapseUnderlay()
                 dialog.dismiss()
             }
             .show()
