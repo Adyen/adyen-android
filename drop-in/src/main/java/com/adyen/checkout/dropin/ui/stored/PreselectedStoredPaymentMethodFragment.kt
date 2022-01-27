@@ -122,18 +122,7 @@ class PreselectedStoredPaymentMethodFragment : DropInBottomSheetDialogFragment()
         }
 
         binding.storedPaymentMethodItem.paymentMethodItemUnderlayButton.setOnClickListener {
-            // TODO translations
-            AlertDialog.Builder(requireContext())
-                .setTitle("Remove")
-                .setMessage("Message")
-                .setPositiveButton(R.string.error_dialog_button) { dialog, _ ->
-                    val storedPaymentMethod = StoredPaymentMethod().apply {
-                        id = storedPaymentMethod.id
-                    }
-                    protocol.disableStoredPaymentMethod(storedPaymentMethod)
-                    dialog.dismiss()
-                }
-                .show()
+            showRemoveStoredPaymentDialog()
         }
 
         binding.payButton.setOnClickListener {
@@ -153,23 +142,41 @@ class PreselectedStoredPaymentMethodFragment : DropInBottomSheetDialogFragment()
 
     private fun observe() {
         storedPaymentViewModel.storedPaymentLiveData.observe(
-            viewLifecycleOwner,
-            {
-                when (it) {
-                    is StoredCardModel -> {
-                        binding.storedPaymentMethodItem.textViewText.text = requireActivity().getString(R.string.card_number_4digit, it.lastFour)
-                        imageLoader.load(it.imageId, binding.storedPaymentMethodItem.imageViewLogo)
-                        binding.storedPaymentMethodItem.textViewDetail.text = DateUtils.parseDateToView(it.expiryMonth, it.expiryYear)
-                        binding.storedPaymentMethodItem.textViewDetail.visibility = View.VISIBLE
-                    }
-                    is GenericStoredModel -> {
-                        binding.storedPaymentMethodItem.textViewText.text = it.name
-                        binding.storedPaymentMethodItem.textViewDetail.visibility = View.GONE
-                        imageLoader.load(it.imageId, binding.storedPaymentMethodItem.imageViewLogo)
-                    }
+            viewLifecycleOwner
+        ) {
+            when (it) {
+                is StoredCardModel -> {
+                    binding.storedPaymentMethodItem.textViewText.text =
+                        requireActivity().getString(R.string.card_number_4digit, it.lastFour)
+                    imageLoader.load(it.imageId, binding.storedPaymentMethodItem.imageViewLogo)
+                    binding.storedPaymentMethodItem.textViewDetail.text =
+                        DateUtils.parseDateToView(it.expiryMonth, it.expiryYear)
+                    binding.storedPaymentMethodItem.textViewDetail.visibility = View.VISIBLE
+                }
+                is GenericStoredModel -> {
+                    binding.storedPaymentMethodItem.textViewText.text = it.name
+                    binding.storedPaymentMethodItem.textViewDetail.visibility = View.GONE
+                    imageLoader.load(it.imageId, binding.storedPaymentMethodItem.imageViewLogo)
                 }
             }
-        )
+        }
+    }
+
+    private fun showRemoveStoredPaymentDialog() {
+        AlertDialog.Builder(requireContext())
+            .setTitle(R.string.checkout_giftcard_remove_gift_cards_title)
+            .setMessage(R.string.checkout_remove_stored_payment_method_body)
+            .setPositiveButton(R.string.checkout_giftcard_remove_gift_cards_positive_button) { dialog, _ ->
+                val storedPaymentMethod = StoredPaymentMethod().apply {
+                    id = storedPaymentMethod.id
+                }
+                protocol.disableStoredPaymentMethod(storedPaymentMethod)
+                dialog.dismiss()
+            }
+            .setNegativeButton(R.string.checkout_giftcard_remove_gift_cards_negative_button) { dialog, _ ->
+                dialog.dismiss()
+            }
+            .show()
     }
 
     companion object {

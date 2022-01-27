@@ -8,6 +8,7 @@
 
 package com.adyen.checkout.dropin.ui.paymentmethods
 
+import android.content.Context
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -16,6 +17,7 @@ import android.widget.TextView
 import androidx.appcompat.app.AlertDialog
 import androidx.recyclerview.widget.RecyclerView
 import com.adyen.checkout.components.api.ImageLoader
+import com.adyen.checkout.components.model.paymentmethods.StoredPaymentMethod
 import com.adyen.checkout.components.ui.view.AdyenSwipeToRevealLayout
 import com.adyen.checkout.components.ui.view.RoundCornerImageView
 import com.adyen.checkout.components.util.CurrencyUtils
@@ -112,20 +114,26 @@ class PaymentMethodAdapter(
         }
 
         holder.itemView.findViewById<FrameLayout>(R.id.payment_method_item_underlay_button).setOnClickListener {
-            // TODO translations
-            AlertDialog.Builder(holder.itemView.context)
-                .setTitle("Remove")
-                .setMessage("Message")
-                .setPositiveButton(R.string.error_dialog_button) { dialog, _ ->
-                    onStoredPaymentDisabledCallback?.onStoredPaymentMethodDisabled(storedPaymentMethod)
-                    dialog.dismiss()
-                }
-                .show()
+            showRemoveStoredPaymentDialog(holder.itemView.context, storedPaymentMethod)
         }
 
         (holder.itemView as? AdyenSwipeToRevealLayout)?.setUnderlayListener { view ->
             onUnderlayExpandListener?.invoke(view)
         }
+    }
+
+    private fun showRemoveStoredPaymentDialog(context: Context, storedPaymentMethodModel: StoredPaymentMethodModel) {
+        AlertDialog.Builder(context)
+            .setTitle(R.string.checkout_giftcard_remove_gift_cards_title)
+            .setMessage(R.string.checkout_remove_stored_payment_method_body)
+            .setPositiveButton(R.string.checkout_giftcard_remove_gift_cards_positive_button) { dialog, _ ->
+                onStoredPaymentDisabledCallback?.onStoredPaymentMethodDisabled(storedPaymentMethodModel)
+                dialog.dismiss()
+            }
+            .setNegativeButton(R.string.checkout_giftcard_remove_gift_cards_negative_button) { dialog, _ ->
+                dialog.dismiss()
+            }
+            .show()
     }
 
     private fun bindStoredCard(holder: StoredPaymentMethodVH, storedCardModel: StoredCardModel) {

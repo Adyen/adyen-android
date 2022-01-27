@@ -1,9 +1,9 @@
 <!--
-  ~ Copyright (c) 2020 Adyen N.V.
+  ~ Copyright (c) 2019 Adyen N.V.
   ~
   ~ This file is open source and available under the MIT license. See the LICENSE file for more info.
   ~
-  ~ Created by josephj on 8/12/2020.
+  ~ Created by caiof on 21/3/2019.
   -->
 
 <resources>
@@ -32,4 +32,5 @@
     <string name="checkout_giftcard_remove_gift_cards_body">Odstrániť pridané darčekové karty?</string>
     <string name="checkout_giftcard_remove_gift_cards_positive_button">Áno, odstrániť</string>
     <string name="checkout_giftcard_remove_gift_cards_negative_button">Zrušiť</string>
+    <string name="checkout_remove_stored_payment_method_body">Odstrániť uložený spôsob platby</string>
 </resources>
