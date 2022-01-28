@@ -13,13 +13,13 @@ import okhttp3.RequestBody
 import okhttp3.ResponseBody
 
 interface RecurringRepository {
-    suspend fun disableStoredPaymentMethod(requestBody: RequestBody): ResponseBody?
+    suspend fun removeStoredPaymentMethod(requestBody: RequestBody): ResponseBody?
 }
 
 class RecurringRepositoryImpl(private val recurringApiService: RecurringApiService) : RecurringRepository, BaseRepository() {
-    override suspend fun disableStoredPaymentMethod(requestBody: RequestBody): ResponseBody? {
+    override suspend fun removeStoredPaymentMethod(requestBody: RequestBody): ResponseBody? {
         return safeApiCall(
-            call = { recurringApiService.disableStoredPaymentMethodAsync(requestBody).await() }
+            call = { recurringApiService.removeStoredPaymentMethodAsync(requestBody).await() }
         )
     }
 }

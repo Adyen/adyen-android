@@ -42,7 +42,7 @@ private val TAG = LogUtil.getTag()
 class PaymentMethodListDialogFragment :
     DropInBottomSheetDialogFragment(),
     PaymentMethodAdapter.OnPaymentMethodSelectedCallback,
-    PaymentMethodAdapter.OnStoredPaymentDisabledCallback {
+    PaymentMethodAdapter.OnStoredPaymentRemovedCallback {
 
     private lateinit var paymentMethodsListViewModel: PaymentMethodsListViewModel
     private lateinit var paymentMethodAdapter: PaymentMethodAdapter
@@ -89,7 +89,7 @@ class PaymentMethodListDialogFragment :
                     collapseNotUsedUnderlayButtons(recyclerView, it)
                 }
             paymentMethodAdapter.setPaymentMethodSelectedCallback(this)
-            paymentMethodAdapter.setStoredPaymentDisabledCallback(this)
+            paymentMethodAdapter.setStoredPaymentRemovedCallback(this)
             recyclerView.layoutManager = LinearLayoutManager(requireContext())
             recyclerView.adapter = paymentMethodAdapter
         }
@@ -154,11 +154,11 @@ class PaymentMethodListDialogFragment :
         }
     }
 
-    override fun onStoredPaymentMethodDisabled(storedPaymentMethodModel: StoredPaymentMethodModel) {
+    override fun onStoredPaymentMethodRemoved(storedPaymentMethodModel: StoredPaymentMethodModel) {
         val storedPaymentMethod = StoredPaymentMethod().apply {
             id = storedPaymentMethodModel.id
         }
-        protocol.disableStoredPaymentMethod(storedPaymentMethod)
+        protocol.removeStoredPaymentMethod(storedPaymentMethod)
     }
 
     fun removeStoredPaymentMethod(id: String) {

@@ -38,14 +38,14 @@ class PaymentMethodAdapter(
 ) : RecyclerView.Adapter<PaymentMethodAdapter.BaseViewHolder>() {
 
     private var onPaymentMethodSelectedCallback: OnPaymentMethodSelectedCallback? = null
-    private var onStoredPaymentDisabledCallback: OnStoredPaymentDisabledCallback? = null
+    private var onStoredPaymentRemovedCallback: OnStoredPaymentRemovedCallback? = null
 
     fun setPaymentMethodSelectedCallback(onPaymentMethodSelectedCallback: OnPaymentMethodSelectedCallback) {
         this.onPaymentMethodSelectedCallback = onPaymentMethodSelectedCallback
     }
 
-    fun setStoredPaymentDisabledCallback(onStoredPaymentDisabledCallback: OnStoredPaymentDisabledCallback) {
-        this.onStoredPaymentDisabledCallback = onStoredPaymentDisabledCallback
+    fun setStoredPaymentRemovedCallback(onStoredPaymentRemovedCallback: OnStoredPaymentRemovedCallback) {
+        this.onStoredPaymentRemovedCallback = onStoredPaymentRemovedCallback
     }
 
     fun removePaymentMethodWithId(id: String) {
@@ -125,7 +125,7 @@ class PaymentMethodAdapter(
             .setTitle(R.string.checkout_giftcard_remove_gift_cards_title)
             .setMessage(R.string.checkout_remove_stored_payment_method_body)
             .setPositiveButton(R.string.checkout_giftcard_remove_gift_cards_positive_button) { dialog, _ ->
-                onStoredPaymentDisabledCallback?.onStoredPaymentMethodDisabled(storedPaymentMethodModel)
+                onStoredPaymentRemovedCallback?.onStoredPaymentMethodRemoved(storedPaymentMethodModel)
                 dialog.dismiss()
             }
             .setNegativeButton(R.string.checkout_giftcard_remove_gift_cards_negative_button) { dialog, _ ->
@@ -245,8 +245,8 @@ class PaymentMethodAdapter(
         fun onHeaderActionSelected(header: PaymentMethodHeader)
     }
 
-    interface OnStoredPaymentDisabledCallback {
-        fun onStoredPaymentMethodDisabled(storedPaymentMethodModel: StoredPaymentMethodModel)
+    interface OnStoredPaymentRemovedCallback {
+        fun onStoredPaymentMethodRemoved(storedPaymentMethodModel: StoredPaymentMethodModel)
     }
 
     class StoredPaymentMethodVH(rootView: View) : BaseViewHolder(rootView) {

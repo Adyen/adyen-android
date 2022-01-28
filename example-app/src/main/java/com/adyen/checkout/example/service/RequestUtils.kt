@@ -96,7 +96,7 @@ fun createCancelOrderRequest(
     }
 }
 
-fun createDisableStoredPaymentMethodRequest(
+fun createRemoveStoredPaymentMethodRequest(
     recurringDetailReference: String,
     merchantAccount: String,
     shopperReference: String

@@ -252,8 +252,8 @@ abstract class DropInService : Service(), CoroutineScope, DropInServiceInterface
     /**
      * Allow asynchronously sending the results of the Recurring/ network call.
      *
-     * Call this method after making a network call to disable a stored payment method
-     * while using [onDisableStoredPaymentMethod] and pass an instance of [RecurringDropInServiceResult]
+     * Call this method after making a network call to remove a stored payment method
+     * while using [removeStoredPaymentMethod] and pass an instance of [RecurringDropInServiceResult]
      * depending on the response of the corresponding network call.
      * Check the subclasses of [RecurringDropInServiceResult] for more information.
      *
@@ -429,9 +429,9 @@ abstract class DropInService : Service(), CoroutineScope, DropInServiceInterface
         throw NotImplementedError("Method cancelOrder is not implemented")
     }
 
-    override fun disableStoredPaymentMethod(storedPaymentMethod: StoredPaymentMethod) {
-        Logger.d(TAG, "disableStoredPaymentMethod")
-        onDisableStoredPaymentMethod(storedPaymentMethod, StoredPaymentMethod.SERIALIZER.serialize(storedPaymentMethod))
+    override fun requestRemoveStoredPaymentMethod(storedPaymentMethod: StoredPaymentMethod) {
+        Logger.d(TAG, "requestRemoveStoredPaymentMethod")
+        removeStoredPaymentMethod(storedPaymentMethod, StoredPaymentMethod.SERIALIZER.serialize(storedPaymentMethod))
     }
 
     /**
@@ -452,8 +452,8 @@ abstract class DropInService : Service(), CoroutineScope, DropInServiceInterface
      *
      * See https://docs.adyen.com/api-explorer/ for more information on the API documentation.
      */
-    open fun onDisableStoredPaymentMethod(storedPaymentMethod: StoredPaymentMethod, storedPaymentMethodJson: JSONObject) {
-        throw NotImplementedError("Method onDisableStoredPaymentMethod is not implemented")
+    open fun removeStoredPaymentMethod(storedPaymentMethod: StoredPaymentMethod, storedPaymentMethodJson: JSONObject) {
+        throw NotImplementedError("Method removeStoredPaymentMethod is not implemented")
     }
 
     override suspend fun observeResult(callback: (BaseDropInServiceResult) -> Unit) {
@@ -489,5 +489,5 @@ internal interface DropInServiceInterface {
     fun requestBalanceCall(paymentMethodData: PaymentMethodDetails)
     fun requestOrdersCall()
     fun requestCancelOrder(order: OrderRequest, isDropInCancelledByUser: Boolean)
-    fun disableStoredPaymentMethod(storedPaymentMethod: StoredPaymentMethod)
+    fun requestRemoveStoredPaymentMethod(storedPaymentMethod: StoredPaymentMethod)
 }

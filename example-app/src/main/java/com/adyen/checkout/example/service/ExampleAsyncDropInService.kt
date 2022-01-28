@@ -140,27 +140,27 @@ class ExampleAsyncDropInService : DropInService() {
         return jsonResponse.has("action")
     }
 
-    override fun onDisableStoredPaymentMethod(
+    override fun removeStoredPaymentMethod(
         storedPaymentMethod: StoredPaymentMethod,
         storedPaymentMethodJson: JSONObject
     ) {
         launch(Dispatchers.IO) {
-            val requestBody = createDisableStoredPaymentMethodRequest(
+            val requestBody = createRemoveStoredPaymentMethodRequest(
                 storedPaymentMethod.id.orEmpty(),
                 keyValueStorage.getMerchantAccount(),
                 keyValueStorage.getShopperReference()
             ).toString().toRequestBody(CONTENT_TYPE)
-            val response = recurringRepository.disableStoredPaymentMethod(requestBody)
-            val result = handleDisableStoredPaymentMethodResult(response, storedPaymentMethod.id.orEmpty())
+            val response = recurringRepository.removeStoredPaymentMethod(requestBody)
+            val result = handleRemoveStoredPaymentMethodResult(response, storedPaymentMethod.id.orEmpty())
             sendRecurringResult(result)
         }
     }
 
-    private fun handleDisableStoredPaymentMethodResult(response: ResponseBody?, id: String): RecurringDropInServiceResult {
+    private fun handleRemoveStoredPaymentMethodResult(response: ResponseBody?, id: String): RecurringDropInServiceResult {
         return if (response != null) {
             val orderJson = response.string()
             val jsonResponse = JSONObject(orderJson)
-            Logger.v(TAG, "disableStoredPaymentMethod response - ${jsonResponse.toStringPretty()}")
+            Logger.v(TAG, "removeStoredPaymentMethod response - ${jsonResponse.toStringPretty()}")
             val responseCode = jsonResponse.getStringOrNull("response")
             when (responseCode) {
                 "[detail-successfully-disabled]" -> RecurringDropInServiceResult.PaymentMethodRemoved(id)

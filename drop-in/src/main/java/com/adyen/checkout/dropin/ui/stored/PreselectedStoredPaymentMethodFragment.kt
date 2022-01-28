@@ -170,7 +170,7 @@ class PreselectedStoredPaymentMethodFragment : DropInBottomSheetDialogFragment()
                 val storedPaymentMethod = StoredPaymentMethod().apply {
                     id = storedPaymentMethod.id
                 }
-                protocol.disableStoredPaymentMethod(storedPaymentMethod)
+                protocol.removeStoredPaymentMethod(storedPaymentMethod)
                 dialog.dismiss()
             }
             .setNegativeButton(R.string.checkout_giftcard_remove_gift_cards_negative_button) { dialog, _ ->

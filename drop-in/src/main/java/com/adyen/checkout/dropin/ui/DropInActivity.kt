@@ -456,8 +456,8 @@ class DropInActivity : AppCompatActivity(), DropInBottomSheetDialogFragment.Prot
         sendResult(DropIn.FINISHED_WITH_ACTION)
     }
 
-    override fun disableStoredPaymentMethod(storedPaymentMethod: StoredPaymentMethod) {
-        dropInService?.disableStoredPaymentMethod(storedPaymentMethod)
+    override fun removeStoredPaymentMethod(storedPaymentMethod: StoredPaymentMethod) {
+        dropInService?.requestRemoveStoredPaymentMethod(storedPaymentMethod)
         setLoading(true)
     }
 
