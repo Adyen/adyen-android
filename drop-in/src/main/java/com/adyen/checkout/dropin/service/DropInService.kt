@@ -249,7 +249,16 @@ abstract class DropInService : Service(), CoroutineScope, DropInServiceInterface
         }
     }
 
-    // TODO docs
+    /**
+     * Allow asynchronously sending the results of the Recurring/ network call.
+     *
+     * Call this method after making a network call to disable a stored payment method
+     * while using [onDisableStoredPaymentMethod] and pass an instance of [RecurringDropInServiceResult]
+     * depending on the response of the corresponding network call.
+     * Check the subclasses of [RecurringDropInServiceResult] for more information.
+     *
+     * @param result the result of the network request.
+     */
     protected fun sendRecurringResult(result: RecurringDropInServiceResult) {
         launch {
             // send response back to activity
@@ -425,7 +434,24 @@ abstract class DropInService : Service(), CoroutineScope, DropInServiceInterface
         onDisableStoredPaymentMethod(storedPaymentMethod, StoredPaymentMethod.SERIALIZER.serialize(storedPaymentMethod))
     }
 
-    // TODO docs
+    /**
+     * Only applicable to removing stored payment methods.
+     *
+     * In this method you should make the network call to tell your server to make a call to the
+     * Recurring/<version_number>/disable endpoint. This method is called when the user initiates
+     * removing a stored payment method using the remove button.
+     *
+     * We provide [storedPaymentMethod] that contains the id of the stored payment method to be removed
+     * in the field [StoredPaymentMethod.id].
+     *
+     * Asynchronous handling: since this method runs on the main thread, you should make sure the
+     * Recurring/<version>/disable call and any other long running operation is made on a background thread.
+     *
+     * Note that not overriding this method while enabling gift card payments will cause a [NotImplementedError]
+     * to be thrown.
+     *
+     * See https://docs.adyen.com/api-explorer/ for more information on the API documentation.
+     */
     open fun onDisableStoredPaymentMethod(storedPaymentMethod: StoredPaymentMethod, storedPaymentMethodJson: JSONObject) {
         throw NotImplementedError("Method onDisableStoredPaymentMethod is not implemented")
     }
