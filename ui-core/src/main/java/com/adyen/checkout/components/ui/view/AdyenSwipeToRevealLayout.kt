@@ -142,10 +142,15 @@ class AdyenSwipeToRevealLayout @JvmOverloads constructor(
         }
 
         override fun onSingleTapConfirmed(e: MotionEvent): Boolean {
+            val isUnderlayHidden = mainView.right == rectMainNotDragged.right
             val didHitMainView = e.x >= mainView.left && e.x <= mainView.right &&
                 e.y >= mainView.top && e.y <= mainView.bottom
             return if (didHitMainView) {
-                onClickListener?.onClick()
+                if (isUnderlayHidden) {
+                    onClickListener?.onClick()
+                } else {
+                    collapseUnderlay()
+                }
                 true
             } else {
                 super.onSingleTapConfirmed(e)

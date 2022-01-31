@@ -177,6 +177,7 @@ class MainActivity : AppCompatActivity(), DropInCallback {
             .addBcmcConfiguration(bcmcConfiguration)
             .addGooglePayConfiguration(googlePayConfig)
             .add3ds2ActionConfiguration(adyen3DS2Configuration)
+            .setEnableRemovingStoredPaymentMethods(true)
 
         try {
             dropInConfigurationBuilder.setAmount(amount)
