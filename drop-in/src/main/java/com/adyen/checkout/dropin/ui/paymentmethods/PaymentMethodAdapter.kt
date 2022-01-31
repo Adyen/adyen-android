@@ -107,16 +107,18 @@ class PaymentMethodAdapter(
             is GenericStoredModel -> bindGenericStored(holder, storedPaymentMethod)
         }
 
-        holder.itemView.setOnClickListener {
-            onStoredPaymentMethodClick(storedPaymentMethod)
-        }
-
         holder.itemView.findViewById<FrameLayout>(R.id.payment_method_item_underlay_button).setOnClickListener {
             showRemoveStoredPaymentDialog(holder.itemView, storedPaymentMethod)
         }
 
-        (holder.itemView as? AdyenSwipeToRevealLayout)?.setUnderlayListener { view ->
-            onUnderlayExpandListener?.invoke(view)
+        (holder.itemView as? AdyenSwipeToRevealLayout)?.apply {
+            setUnderlayListener { view ->
+                onUnderlayExpandListener?.invoke(view)
+            }
+            setClickListener {
+                onStoredPaymentMethodClick(storedPaymentMethod)
+            }
+            setDragLocked(!storedPaymentMethod.isRemovable)
         }
     }
 

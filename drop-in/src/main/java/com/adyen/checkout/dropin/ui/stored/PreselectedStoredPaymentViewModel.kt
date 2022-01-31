@@ -26,7 +26,8 @@ import com.adyen.checkout.dropin.ui.stored.PreselectedStoredState.ShowStoredPaym
 
 class PreselectedStoredPaymentViewModel(
     storedPaymentMethod: StoredPaymentMethod,
-    private val componentRequiresInput: Boolean
+    private val componentRequiresInput: Boolean,
+    private val isRemovingEnabled: Boolean
 ) : ViewModel() {
 
     companion object {
@@ -43,7 +44,7 @@ class PreselectedStoredPaymentViewModel(
     private var lastComponentError: ComponentError? = null
 
     init {
-        storedPaymentMethodMutableLiveData.value = makeStoredModel(storedPaymentMethod)
+        storedPaymentMethodMutableLiveData.value = makeStoredModel(storedPaymentMethod, isRemovingEnabled)
     }
 
     fun componentStateChanged(componentState: PaymentComponentState<in PaymentMethodDetails>) {

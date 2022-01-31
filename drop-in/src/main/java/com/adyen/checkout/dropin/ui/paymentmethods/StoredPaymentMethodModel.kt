@@ -11,6 +11,7 @@ package com.adyen.checkout.dropin.ui.paymentmethods
 sealed class StoredPaymentMethodModel : PaymentMethodListItem {
     abstract val id: String
     abstract val imageId: String
+    abstract val isRemovable: Boolean
 
     override fun getViewType(): Int = PaymentMethodListItem.STORED_PAYMENT_METHOD
 }
@@ -18,6 +19,7 @@ sealed class StoredPaymentMethodModel : PaymentMethodListItem {
 data class StoredCardModel(
     override val id: String,
     override val imageId: String,
+    override val isRemovable: Boolean,
     val lastFour: String,
     val expiryMonth: String,
     val expiryYear: String
@@ -26,5 +28,6 @@ data class StoredCardModel(
 data class GenericStoredModel(
     override val id: String,
     override val imageId: String,
+    override val isRemovable: Boolean,
     val name: String
 ) : StoredPaymentMethodModel()

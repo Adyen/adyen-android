@@ -46,7 +46,11 @@ private const val STORED_PAYMENT_KEY = "STORED_PAYMENT"
 class PreselectedStoredPaymentMethodFragment : DropInBottomSheetDialogFragment() {
 
     private val storedPaymentViewModel: PreselectedStoredPaymentViewModel by viewModelsFactory {
-        PreselectedStoredPaymentViewModel(storedPaymentMethod, component.requiresInput())
+        PreselectedStoredPaymentViewModel(
+            storedPaymentMethod,
+            component.requiresInput(),
+            dropInViewModel.dropInConfiguration.isRemovingStoredPaymentMethodsEnabled
+        )
     }
     private lateinit var binding: FragmentStoredPaymentMethodBinding
     private lateinit var storedPaymentMethod: StoredPaymentMethod
@@ -121,8 +125,10 @@ class PreselectedStoredPaymentMethodFragment : DropInBottomSheetDialogFragment()
             binding.payButton.text = getString(R.string.pay_button_with_value, value)
         }
 
-        binding.storedPaymentMethodItem.paymentMethodItemUnderlayButton.setOnClickListener {
-            showRemoveStoredPaymentDialog()
+        if (dropInViewModel.dropInConfiguration.isRemovingStoredPaymentMethodsEnabled) {
+            binding.storedPaymentMethodItem.paymentMethodItemUnderlayButton.setOnClickListener {
+                showRemoveStoredPaymentDialog()
+            }
         }
 
         binding.payButton.setOnClickListener {
@@ -144,6 +150,7 @@ class PreselectedStoredPaymentMethodFragment : DropInBottomSheetDialogFragment()
         storedPaymentViewModel.storedPaymentLiveData.observe(
             viewLifecycleOwner
         ) {
+            binding.storedPaymentMethodItem.root.setDragLocked(!it.isRemovable)
             when (it) {
                 is StoredCardModel -> {
                     binding.storedPaymentMethodItem.textViewText.text =

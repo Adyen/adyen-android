@@ -63,7 +63,7 @@ class PaymentMethodsListViewModel(
         for (storedPaymentMethod in storedPaymentMethods) {
             if (isStoredPaymentSupported(storedPaymentMethod)) {
                 // We don't check for availability on stored payment methods
-                storedPaymentMethodsList.add(makeStoredModel(storedPaymentMethod))
+                storedPaymentMethodsList.add(makeStoredModel(storedPaymentMethod, dropInConfiguration.isRemovingStoredPaymentMethodsEnabled))
             } else {
                 Logger.e(TAG, "Unsupported stored payment method - ${storedPaymentMethod.type} : ${storedPaymentMethod.name}")
             }

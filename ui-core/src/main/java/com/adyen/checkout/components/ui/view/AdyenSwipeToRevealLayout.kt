@@ -52,6 +52,7 @@ class AdyenSwipeToRevealLayout @JvmOverloads constructor(
     private lateinit var dragHelper: ViewDragHelper
     private var gestureDetector: GestureDetectorCompat
     private var underlayListener: UnderlayListener? = null
+    private var onClickListener: OnClickListener? = null
 
     private val viewDragHelperCallback = object : ViewDragHelper.Callback() {
         override fun tryCaptureView(child: View, pointerId: Int): Boolean {
@@ -135,8 +136,19 @@ class AdyenSwipeToRevealLayout @JvmOverloads constructor(
             val isUnderlayHidden = mainView.right == rectMainNotDragged.right
             val didHitMainView = e.x >= mainView.left && e.x <= mainView.right &&
                 e.y >= mainView.top && e.y <= mainView.bottom
-            if (isUnderlayHidden && didHitMainView) {
+            if (isUnderlayHidden && didHitMainView && !isDragLocked) {
                 expandUnderlay()
+            }
+        }
+
+        override fun onSingleTapConfirmed(e: MotionEvent): Boolean {
+            val didHitMainView = e.x >= mainView.left && e.x <= mainView.right &&
+                e.y >= mainView.top && e.y <= mainView.bottom
+            return if (didHitMainView) {
+                onClickListener?.onClick()
+                true
+            } else {
+                super.onSingleTapConfirmed(e)
             }
         }
     }
@@ -275,24 +287,20 @@ class AdyenSwipeToRevealLayout @JvmOverloads constructor(
     }
 
     override fun onInterceptTouchEvent(ev: MotionEvent): Boolean {
-        if (isDragLocked) {
-            return super.onInterceptTouchEvent(ev)
-        }
-
         gestureDetector.onTouchEvent(ev)
         dragHelper.processTouchEvent(ev)
 
         calculateDragDistance(ev)
 
         val isIdle = dragHelper.viewDragState == ViewDragHelper.STATE_IDLE && isDragging
-        val canPerformClick = ev.x >= mainView.right && ev.x <= mainView.left &&
+        val canPerformClickOnUnderlay = ev.x >= mainView.right && ev.x <= mainView.left &&
             ev.y >= mainView.top && ev.y <= mainView.bottom &&
             dragDistance < dragHelper.touchSlop
         val isSettling = dragHelper.viewDragState == ViewDragHelper.STATE_SETTLING
 
         previousX = ev.x
 
-        return !canPerformClick && (isSettling || isIdle)
+        return !canPerformClickOnUnderlay && (isSettling || isIdle)
     }
 
     override fun computeScroll() {
@@ -311,6 +319,10 @@ class AdyenSwipeToRevealLayout @JvmOverloads constructor(
 
     fun removeUnderlayListener() {
         this.underlayListener = null
+    }
+
+    fun setClickListener(onClickListener: OnClickListener) {
+        this.onClickListener = onClickListener
     }
 
     private fun calculateDragDistance(event: MotionEvent) {
@@ -335,5 +347,9 @@ class AdyenSwipeToRevealLayout @JvmOverloads constructor(
 
     fun interface UnderlayListener {
         fun onUnderlayDragged(view: AdyenSwipeToRevealLayout)
+    }
+
+    fun interface OnClickListener {
+        fun onClick()
     }
 }

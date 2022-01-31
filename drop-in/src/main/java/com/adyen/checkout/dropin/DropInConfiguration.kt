@@ -60,6 +60,7 @@ class DropInConfiguration : Configuration, Parcelable {
     val amount: Amount
     val showPreselectedStoredPaymentMethod: Boolean
     val skipListWhenSinglePaymentMethod: Boolean
+    val isRemovingStoredPaymentMethodsEnabled: Boolean
 
     companion object {
         @JvmField
@@ -79,6 +80,7 @@ class DropInConfiguration : Configuration, Parcelable {
         this.amount = builder.amount
         this.showPreselectedStoredPaymentMethod = builder.showPreselectedStoredPaymentMethod
         this.skipListWhenSinglePaymentMethod = builder.skipListWhenSinglePaymentMethod
+        this.isRemovingStoredPaymentMethodsEnabled = builder.isRemovingStoredPaymentMethodsEnabled
     }
 
     constructor(parcel: Parcel) : super(parcel) {
@@ -90,6 +92,7 @@ class DropInConfiguration : Configuration, Parcelable {
         amount = Amount.CREATOR.createFromParcel(parcel)
         showPreselectedStoredPaymentMethod = ParcelUtils.readBoolean(parcel)
         skipListWhenSinglePaymentMethod = ParcelUtils.readBoolean(parcel)
+        isRemovingStoredPaymentMethodsEnabled = ParcelUtils.readBoolean(parcel)
     }
 
     override fun writeToParcel(dest: Parcel, flags: Int) {
@@ -100,6 +103,7 @@ class DropInConfiguration : Configuration, Parcelable {
         JsonUtils.writeToParcel(dest, Amount.SERIALIZER.serialize(amount))
         ParcelUtils.writeBoolean(dest, showPreselectedStoredPaymentMethod)
         ParcelUtils.writeBoolean(dest, skipListWhenSinglePaymentMethod)
+        ParcelUtils.writeBoolean(dest, isRemovingStoredPaymentMethodsEnabled)
     }
 
     internal fun <T : Configuration> getConfigurationForPaymentMethod(paymentMethod: String): T? {
@@ -138,6 +142,8 @@ class DropInConfiguration : Configuration, Parcelable {
         var showPreselectedStoredPaymentMethod: Boolean = true
             private set
         var skipListWhenSinglePaymentMethod: Boolean = false
+            private set
+        var isRemovingStoredPaymentMethodsEnabled: Boolean = false
             private set
 
         private val packageName: String
@@ -208,6 +214,11 @@ class DropInConfiguration : Configuration, Parcelable {
          */
         fun setSkipListWhenSinglePaymentMethod(skipListWhenSinglePaymentMethod: Boolean): Builder {
             this.skipListWhenSinglePaymentMethod = skipListWhenSinglePaymentMethod
+            return this
+        }
+
+        fun setEnableRemovingStoredPaymentMethods(isEnabled: Boolean): Builder {
+            this.isRemovingStoredPaymentMethodsEnabled = isEnabled
             return this
         }
 
