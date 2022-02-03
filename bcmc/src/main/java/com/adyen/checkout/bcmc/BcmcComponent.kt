@@ -11,6 +11,7 @@ import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.viewModelScope
 import com.adyen.checkout.card.CardValidationMapper
 import com.adyen.checkout.card.CardValidationUtils
+import com.adyen.checkout.card.api.model.Brand
 import com.adyen.checkout.card.data.CardType
 import com.adyen.checkout.card.data.ExpiryDate
 import com.adyen.checkout.components.GenericComponentState
@@ -152,6 +153,6 @@ class BcmcComponent(
     }
 
     private fun validateExpiryDate(expiryDate: ExpiryDate): FieldState<ExpiryDate> {
-        return CardValidationUtils.validateExpiryDate(expiryDate)
+        return CardValidationUtils.validateExpiryDate(expiryDate, Brand.FieldPolicy.REQUIRED)
     }
 }

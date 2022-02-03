@@ -74,20 +74,28 @@ object CardValidationUtils {
     /**
      * Validate Expiry Date.
      */
-    fun validateExpiryDate(expiryDate: ExpiryDate): FieldState<ExpiryDate> {
-        if (dateExists(expiryDate)) {
-            val expiryDateCalendar = getExpiryCalendar(expiryDate)
-            val maxFutureCalendar = GregorianCalendar.getInstance()
-            maxFutureCalendar.add(Calendar.YEAR, MAXIMUM_YEARS_IN_FUTURE)
-            val maxPastCalendar = GregorianCalendar.getInstance()
-            maxPastCalendar.add(Calendar.MONTH, -MAXIMUM_EXPIRED_MONTHS)
+    fun validateExpiryDate(expiryDate: ExpiryDate, fieldPolicy: Brand.FieldPolicy?): FieldState<ExpiryDate> {
+        val invalidState = FieldState(expiryDate, Validation.Invalid(R.string.checkout_expiry_date_not_valid))
+        return when {
+            dateExists(expiryDate) -> {
+                val expiryDateCalendar = getExpiryCalendar(expiryDate)
+                val maxFutureCalendar = GregorianCalendar.getInstance()
+                maxFutureCalendar.add(Calendar.YEAR, MAXIMUM_YEARS_IN_FUTURE)
+                val maxPastCalendar = GregorianCalendar.getInstance()
+                maxPastCalendar.add(Calendar.MONTH, -MAXIMUM_EXPIRED_MONTHS)
 
-            // higher than maxPast and lower than maxFuture
-            if (expiryDateCalendar >= maxPastCalendar && expiryDateCalendar <= maxFutureCalendar) {
-                return FieldState(expiryDate, Validation.Valid)
+                // higher than maxPast and lower than maxFuture
+                if (expiryDateCalendar >= maxPastCalendar && expiryDateCalendar <= maxFutureCalendar) {
+                    FieldState(expiryDate, Validation.Valid)
+                } else {
+                    invalidState
+                }
             }
+            fieldPolicy == Brand.FieldPolicy.OPTIONAL && expiryDate != ExpiryDate.INVALID_DATE -> {
+                FieldState(expiryDate, Validation.Valid)
+            }
+            else -> invalidState
         }
-        return FieldState(expiryDate, Validation.Invalid(R.string.checkout_expiry_date_not_valid))
     }
 
     /**
