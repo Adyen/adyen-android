@@ -8,6 +8,7 @@
 
 package com.adyen.checkout.example.service
 
+import android.os.Bundle
 import com.adyen.checkout.components.model.payments.response.Action
 import com.adyen.checkout.core.log.LogUtil
 import com.adyen.checkout.core.log.Logger
@@ -49,7 +50,10 @@ class ExampleDropInService : DropInService() {
     @Inject
     lateinit var keyValueStorage: KeyValueStorage
 
-    override fun makePaymentsCall(paymentComponentJson: JSONObject): DropInServiceResult {
+    override fun makePaymentsCall(
+        paymentComponentJson: JSONObject,
+        additionalDataForDropInService: Bundle?
+    ): DropInServiceResult {
         Logger.d(TAG, "makePaymentsCall")
 
         // Check out the documentation of this method on the parent DropInService class
@@ -74,7 +78,10 @@ class ExampleDropInService : DropInService() {
         return handleResponse(call)
     }
 
-    override fun makeDetailsCall(actionComponentJson: JSONObject): DropInServiceResult {
+    override fun makeDetailsCall(
+        actionComponentJson: JSONObject,
+        additionalDataForDropInService: Bundle?
+    ): DropInServiceResult {
         Logger.d(TAG, "makeDetailsCall")
 
         Logger.v(TAG, "payments/details/ - ${actionComponentJson.toStringPretty()}")

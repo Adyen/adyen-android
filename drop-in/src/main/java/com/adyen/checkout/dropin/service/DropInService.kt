@@ -139,7 +139,7 @@ abstract class DropInService : Service(), CoroutineScope, DropInServiceInterface
     ) {
         launch(Dispatchers.IO) {
             // Merchant makes network call
-            val result = makePaymentsCall(paymentComponentJson)
+            val result = makePaymentsCall(paymentComponentJson, additionalDataForDropInService)
             sendResult(result)
         }
     }
@@ -187,6 +187,7 @@ abstract class DropInService : Service(), CoroutineScope, DropInServiceInterface
      * @param actionComponentData The data from the [ActionComponent].
      * @param actionComponentJson The serialized data from the [ActionComponent] to compose your
      * call.
+     * @param additionalDataForDropInService The bundle data which was passed to the DropIn SDK
      */
     protected open fun onDetailsCallRequested(
         actionComponentData: ActionComponentData,
@@ -195,7 +196,7 @@ abstract class DropInService : Service(), CoroutineScope, DropInServiceInterface
     ) {
         launch(Dispatchers.IO) {
             // Merchant makes network call
-            val result = makeDetailsCall(actionComponentJson)
+            val result = makeDetailsCall(actionComponentJson, additionalDataForDropInService)
             sendResult(result)
         }
     }
@@ -279,9 +280,13 @@ abstract class DropInService : Service(), CoroutineScope, DropInServiceInterface
      * See https://docs.adyen.com/api-explorer/ for more information on the API documentation.
      *
      * @param paymentComponentJson The result data from the [PaymentComponent] to compose your call.
+     * @param additionalDataForDropInService The bundle data which was passed to the DropIn SDK
      * @return The result of the network call
      */
-    open fun makePaymentsCall(paymentComponentJson: JSONObject): DropInServiceResult {
+    open fun makePaymentsCall(
+        paymentComponentJson: JSONObject,
+        additionalDataForDropInService: Bundle?
+    ): DropInServiceResult {
         throw NotImplementedError("Neither makePaymentsCall nor onPaymentsCallRequested is implemented")
     }
 
@@ -310,9 +315,10 @@ abstract class DropInService : Service(), CoroutineScope, DropInServiceInterface
      * See https://docs.adyen.com/api-explorer/ for more information on the API documentation.
      *
      * @param actionComponentJson The result data from the [ActionComponent] to compose your call.
+     * @param additionalDataForDropInService The bundle data which was passed to the DropIn SDK
      * @return The result of the network call
      */
-    open fun makeDetailsCall(actionComponentJson: JSONObject): DropInServiceResult {
+    open fun makeDetailsCall(actionComponentJson: JSONObject, additionalDataForDropInService: Bundle?): DropInServiceResult {
         throw NotImplementedError("Neither makeDetailsCall nor onDetailsCallRequested is implemented")
     }
 
