@@ -10,6 +10,7 @@ package com.adyen.checkout.dropin
 
 import android.content.ComponentName
 import android.content.Context
+import android.os.Bundle
 import android.os.Parcel
 import android.os.Parcelable
 import com.adyen.checkout.adyen3ds2.Adyen3DS2Configuration
@@ -60,6 +61,7 @@ class DropInConfiguration : Configuration, Parcelable {
     val amount: Amount
     val showPreselectedStoredPaymentMethod: Boolean
     val skipListWhenSinglePaymentMethod: Boolean
+    val additionalDataForDropInService: Bundle?
 
     companion object {
         @JvmField
@@ -79,6 +81,7 @@ class DropInConfiguration : Configuration, Parcelable {
         this.amount = builder.amount
         this.showPreselectedStoredPaymentMethod = builder.showPreselectedStoredPaymentMethod
         this.skipListWhenSinglePaymentMethod = builder.skipListWhenSinglePaymentMethod
+        this.additionalDataForDropInService = builder.additionalDataForDropInService
     }
 
     constructor(parcel: Parcel) : super(parcel) {
@@ -90,6 +93,7 @@ class DropInConfiguration : Configuration, Parcelable {
         amount = Amount.CREATOR.createFromParcel(parcel)
         showPreselectedStoredPaymentMethod = ParcelUtils.readBoolean(parcel)
         skipListWhenSinglePaymentMethod = ParcelUtils.readBoolean(parcel)
+        additionalDataForDropInService = parcel.readParcelable(Bundle::class.java.classLoader)
     }
 
     override fun writeToParcel(dest: Parcel, flags: Int) {
@@ -100,6 +104,7 @@ class DropInConfiguration : Configuration, Parcelable {
         JsonUtils.writeToParcel(dest, Amount.SERIALIZER.serialize(amount))
         ParcelUtils.writeBoolean(dest, showPreselectedStoredPaymentMethod)
         ParcelUtils.writeBoolean(dest, skipListWhenSinglePaymentMethod)
+        dest.writeParcelable(additionalDataForDropInService, flags)
     }
 
     internal fun <T : Configuration> getConfigurationForPaymentMethod(paymentMethod: String): T? {
@@ -139,6 +144,8 @@ class DropInConfiguration : Configuration, Parcelable {
             private set
         var skipListWhenSinglePaymentMethod: Boolean = false
             private set
+        var additionalDataForDropInService: Bundle? = null
+            private set
 
         private val packageName: String
         private val serviceClassName: String
@@ -168,6 +175,7 @@ class DropInConfiguration : Configuration, Parcelable {
             amount = dropInConfiguration.amount
             showPreselectedStoredPaymentMethod = dropInConfiguration.showPreselectedStoredPaymentMethod
             skipListWhenSinglePaymentMethod = dropInConfiguration.skipListWhenSinglePaymentMethod
+            additionalDataForDropInService = dropInConfiguration.additionalDataForDropInService
         }
 
         fun setServiceComponentName(serviceComponentName: ComponentName): Builder {
@@ -208,6 +216,18 @@ class DropInConfiguration : Configuration, Parcelable {
          */
         fun setSkipListWhenSinglePaymentMethod(skipListWhenSinglePaymentMethod: Boolean): Builder {
             this.skipListWhenSinglePaymentMethod = skipListWhenSinglePaymentMethod
+            return this
+        }
+
+        /**
+         * When additional data is needed in the DropInService use the [additionalDataForDropInService]
+         * bundle. This bundle will be passed to the DropInService methods onPaymentsCallRequested and
+         * onDetailsCallRequested.
+         *
+         * @param additionalDataForDropInService Bundle which will passed to the DropInService
+         */
+        fun addAdditionalDataForDropInService(additionalDataForDropInService: Bundle): Builder {
+            this.additionalDataForDropInService = additionalDataForDropInService
             return this
         }
 

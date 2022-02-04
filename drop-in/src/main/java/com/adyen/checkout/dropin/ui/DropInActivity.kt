@@ -661,11 +661,10 @@ class DropInActivity : AppCompatActivity(), DropInBottomSheetDialogFragment.Prot
             context: Context,
             dropInConfiguration: DropInConfiguration,
             paymentMethodsApiResponse: PaymentMethodsApiResponse,
-            resultHandlerIntent: Intent?,
-            additionalDataForDropInService: Bundle?
+            resultHandlerIntent: Intent?
         ): Intent {
             val intent = Intent(context, DropInActivity::class.java)
-            DropInViewModel.putIntentExtras(intent, dropInConfiguration, paymentMethodsApiResponse, resultHandlerIntent, additionalDataForDropInService)
+            DropInViewModel.putIntentExtras(intent, dropInConfiguration, paymentMethodsApiResponse, resultHandlerIntent)
             return intent
         }
     }
