@@ -85,7 +85,7 @@ class PaymentMethodListDialogFragment :
 
             // We expect the list of payment methods to be updated only once, so we just set the adapter
             paymentMethodAdapter =
-                PaymentMethodAdapter(paymentMethods.toMutableList(), imageLoader) {
+                PaymentMethodAdapter(paymentMethods, imageLoader) {
                     collapseNotUsedUnderlayButtons(recyclerView, it)
                 }
             paymentMethodAdapter.setPaymentMethodSelectedCallback(this)

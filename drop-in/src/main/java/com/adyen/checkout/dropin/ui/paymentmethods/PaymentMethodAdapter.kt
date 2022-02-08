@@ -31,11 +31,17 @@ import com.adyen.checkout.dropin.ui.paymentmethods.PaymentMethodListItem.Compani
 import com.adyen.checkout.dropin.ui.paymentmethods.PaymentMethodListItem.Companion.STORED_PAYMENT_METHOD
 
 @SuppressWarnings("TooManyFunctions")
-class PaymentMethodAdapter(
+class PaymentMethodAdapter @JvmOverloads constructor(
     private val paymentMethods: MutableList<PaymentMethodListItem>,
     private val imageLoader: ImageLoader,
     private val onUnderlayExpandListener: ((AdyenSwipeToRevealLayout) -> Unit)? = null
 ) : RecyclerView.Adapter<PaymentMethodAdapter.BaseViewHolder>() {
+
+    constructor(
+        paymentMethods: Collection<PaymentMethodListItem>,
+        imageLoader: ImageLoader,
+        onUnderlayExpandListener: ((AdyenSwipeToRevealLayout) -> Unit)? = null
+    ) : this(paymentMethods.toMutableList(), imageLoader, onUnderlayExpandListener)
 
     private var onPaymentMethodSelectedCallback: OnPaymentMethodSelectedCallback? = null
     private var onStoredPaymentRemovedCallback: OnStoredPaymentRemovedCallback? = null
@@ -49,7 +55,7 @@ class PaymentMethodAdapter(
     }
 
     fun removePaymentMethodWithId(id: String) {
-        val positionToRemove = paymentMethods.toMutableList().indexOfFirst { it is StoredPaymentMethodModel && it.id == id }
+        val positionToRemove = paymentMethods.indexOfFirst { it is StoredPaymentMethodModel && it.id == id }
         if (positionToRemove == -1) {
             Logger.e(TAG, "Cannot remove stored payment method because it cannot be found.")
         } else {
@@ -115,7 +121,7 @@ class PaymentMethodAdapter(
             setUnderlayListener { view ->
                 onUnderlayExpandListener?.invoke(view)
             }
-            setClickListener {
+            this.setOnMainClickListener {
                 onStoredPaymentMethodClick(storedPaymentMethod)
             }
             setDragLocked(!storedPaymentMethod.isRemovable)

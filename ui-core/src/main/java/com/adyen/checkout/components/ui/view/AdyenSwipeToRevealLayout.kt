@@ -27,6 +27,24 @@ import kotlin.math.min
 
 private const val CHILD_COUNT = 2
 
+/**
+ * A swipeable view that contains two child views which are:
+ *
+ * Underlay View: A [View] instance which is gonna be placed in the background and will be shown
+ * once user swipes the Main View from right to left. When defining your layout, your underlay view
+ * needs to be placed before your main view within [AdyenSwipeToRevealLayout].
+ *
+ * Main View: A [View] instance which is gonna be shown in the foreground. When defining your layout,
+ * your main view needs to be placed after your underlay view within [AdyenSwipeToRevealLayout].
+ *
+ * Example:
+ *
+ * <com.adyen.checkout.components.ui.view.AdyenSwipeToRevealLayout>
+ *     <View android:id="@+id/yourUnderlayView" ... />
+ *     <View android:id="@+id/yourMainView" ... />
+ * </com.adyen.checkout.components.ui.view.AdyenSwipeToRevealLayout>
+ *
+ */
 @Suppress("TooManyFunctions")
 class AdyenSwipeToRevealLayout @JvmOverloads constructor(
     context: Context,
@@ -34,26 +52,66 @@ class AdyenSwipeToRevealLayout @JvmOverloads constructor(
     defStyleAttr: Int = 0
 ) : ViewGroup(context, attrs, defStyleAttr) {
 
-    private lateinit var mainView: View
+    /**
+     * Underlay View: Needs to be placed first in layout.
+     */
     private lateinit var underlayView: View
 
+    /**
+     * Main View: Needs to be placed second in layout.
+     */
+    private lateinit var mainView: View
+
+    /**
+     * Flag to track if the view is being dragged at the moment.
+     */
     @Volatile private var isDragging = false
+
+    /**
+     * Flag to track if the dragging is enabled or disabled.
+     */
     @Volatile private var isDragLocked = false
 
+    /**
+     * [Rect] instances to store boundaries of the main view in both dragged and not dragged states.
+     */
     private val rectMainDragged = Rect()
     private val rectMainNotDragged = Rect()
 
+    /**
+     * [Rect] instances to store boundaries of the underlay view in both dragged and not dragged states.
+     */
     private val rectUnderlayDragged = Rect()
     private val rectUnderlayNotDragged = Rect()
 
+    /**
+     * Distance of the current drag gesture.
+     */
     private var dragDistance = 0f
+
+    /**
+     * TODO
+     */
     private var previousX = -1f
 
+    /**
+     * [ViewDragHelper] instance to capture the dragging of the view.
+     */
     private lateinit var dragHelper: ViewDragHelper
-    private var gestureDetector: GestureDetectorCompat
-    private var underlayListener: UnderlayListener? = null
-    private var onClickListener: OnClickListener? = null
 
+    /**
+     * [GestureDetectorCompat] instance to detect the gestures like swiping, long clicks and single
+     * taps.
+     */
+    private var gestureDetector: GestureDetectorCompat
+
+    private var underlayListener: UnderlayListener? = null
+    private var onMainClickListener: OnMainClickListener? = null
+
+    /**
+     * [ViewDragHelper.Callback] implementation to define the behavior on capturing the dragging
+     * of the view.
+     */
     private val viewDragHelperCallback = object : ViewDragHelper.Callback() {
         override fun tryCaptureView(child: View, pointerId: Int): Boolean {
             return if (!isDragLocked) {
@@ -102,8 +160,11 @@ class AdyenSwipeToRevealLayout @JvmOverloads constructor(
         }
     }
 
+    /**
+     * [GestureDetector.OnGestureListener] implementation to define the behavior when related
+     * gestures are detected.
+     */
     private val gestureListener = object : GestureDetector.SimpleOnGestureListener() {
-
         override fun onDown(e: MotionEvent?): Boolean {
             isDragging = false
             return true
@@ -147,7 +208,7 @@ class AdyenSwipeToRevealLayout @JvmOverloads constructor(
                 e.y >= mainView.top && e.y <= mainView.bottom
             return if (didHitMainView) {
                 if (isUnderlayHidden) {
-                    onClickListener?.onClick()
+                    onMainClickListener?.onClick()
                 } else {
                     collapseUnderlay()
                 }
@@ -314,20 +375,39 @@ class AdyenSwipeToRevealLayout @JvmOverloads constructor(
         }
     }
 
+    /**
+     * Set drag locked state of this view.
+     *
+     * @param isDragLocked True if the dragging is disabled, false otherwise.
+     */
     fun setDragLocked(isDragLocked: Boolean) {
         this.isDragLocked = isDragLocked
     }
 
+    /**
+     * Set [UnderlayListener] that will receive the notifications every time [underlayView] gets
+     * expanded.
+     *
+     * @param underlayListener the underlay listener
+     */
     fun setUnderlayListener(underlayListener: UnderlayListener) {
         this.underlayListener = underlayListener
     }
 
+    /**
+     * Remove [UnderlayListener] that's been set using [setUnderlayListener].
+     */
     fun removeUnderlayListener() {
         this.underlayListener = null
     }
 
-    fun setClickListener(onClickListener: OnClickListener) {
-        this.onClickListener = onClickListener
+    /**
+     * Register a listener to be invoked when [mainView] is clicked.
+     *
+     * @param onMainClickListener the click listener
+     */
+    fun setOnMainClickListener(onMainClickListener: OnMainClickListener) {
+        this.onMainClickListener = onMainClickListener
     }
 
     private fun calculateDragDistance(event: MotionEvent) {
@@ -342,19 +422,31 @@ class AdyenSwipeToRevealLayout @JvmOverloads constructor(
     private fun expandUnderlay() {
         dragHelper.smoothSlideViewTo(mainView, rectMainDragged.left, rectMainDragged.top)
         ViewCompat.postInvalidateOnAnimation(this)
-        underlayListener?.onUnderlayDragged(this)
+        underlayListener?.onUnderlayExpanded(this)
     }
 
+    /**
+     * Collapse the [underlayView] with animation.
+     */
     fun collapseUnderlay() {
         dragHelper.smoothSlideViewTo(mainView, rectMainNotDragged.left, rectMainNotDragged.top)
         ViewCompat.postInvalidateOnAnimation(this)
     }
 
+    /**
+     * A callback interface that gets triggered every time [underlayView] gets expanded.
+     */
     fun interface UnderlayListener {
-        fun onUnderlayDragged(view: AdyenSwipeToRevealLayout)
+        /**
+         * @param view Root view containing the [underlayView] that's being expanded.
+         */
+        fun onUnderlayExpanded(view: AdyenSwipeToRevealLayout)
     }
 
-    fun interface OnClickListener {
+    /**
+     * A callback that gets triggered every time [mainView] gets clicked if underlay is hidden.
+     */
+    fun interface OnMainClickListener {
         fun onClick()
     }
 }
