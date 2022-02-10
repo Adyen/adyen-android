@@ -25,5 +25,5 @@
         android:paddingTop="@dimen/standard_half_margin"
         android:paddingBottom="@dimen/standard_half_margin"
         tools:context=".ui.paymentmethods.PaymentMethodListDialogFragment"
-        tools:listitem="@layout/recycler_list_with_image"/>
+        tools:listitem="@layout/payment_methods_list_item"/>
 </LinearLayout>

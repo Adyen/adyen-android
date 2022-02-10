@@ -25,7 +25,7 @@
 
     <androidx.appcompat.widget.AppCompatTextView
         android:id="@+id/textView_text"
-        android:layout_width="match_parent"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         style="@style/AdyenCheckout.ListItemText"
         tools:text="Test"/>

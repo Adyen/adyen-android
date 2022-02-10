@@ -45,18 +45,18 @@
         android:orientation="vertical">
         <androidx.appcompat.widget.AppCompatTextView
             android:id="@+id/textView_text"
-            android:layout_width="match_parent"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_gravity="center_vertical"
+            android:layout_gravity="start|center_vertical"
             android:maxHeight="@dimen/logo_width"
             android:textColor="@color/textColor"
             android:textSize="16sp"
             tools:text="Test"/>
         <androidx.appcompat.widget.AppCompatTextView
             android:id="@+id/textView_detail"
-            android:layout_width="match_parent"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_gravity="center_vertical"
+            android:layout_gravity="start|center_vertical"
             android:maxHeight="@dimen/logo_width"
             android:textSize="12sp"
             tools:text="Test"/>
