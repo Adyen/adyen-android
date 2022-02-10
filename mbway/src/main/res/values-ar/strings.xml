@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+  ~ Copyright (c) 2020 Adyen N.V.
+  ~
+  ~ This file is open source and available under the MIT license. See the LICENSE file for more info.
+  ~
+  ~ Created by caiof on 15/10/2020.
+  -->
+
+<resources>
+    <string name="checkout_mbway_mobile_number">رقم الجوال</string>
+    <string name="checkout_mbway_phone_number_not_valid">رقم هاتف غير صحيح</string>
+</resources>
