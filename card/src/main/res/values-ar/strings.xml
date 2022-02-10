@@ -1,0 +1,38 @@
+<!--
+  ~ Copyright (c) 2019 Adyen N.V.
+  ~
+  ~ This file is open source and available under the MIT license. See the LICENSE file for more info.
+  ~
+  ~ Created by ran on 13/3/2019.
+  -->
+
+<resources>
+    <string name="checkout_card_number_hint">رقم البطاقة</string>
+    <string name="checkout_card_holder_hint">الاسم على البطاقة</string>
+    <string name="checkout_card_expiry_date_hint">تاريخ الانتهاء</string>
+    <string name="checkout_card_expiry_date_optional_hint">تاريخ الانتهاء (اختياري)</string>
+    <string name="checkout_card_security_code_hint">رمز CVC / CVV</string>
+    <string name="checkout_card_security_code_optional_hint">رمز CVC / CVV (اختياري)</string>
+    <string name="checkout_kcp_birth_date_or_tax_number_hint">تاريخ ميلاد حامل البطاقة (يوم شهر سنة) أو رقم تسجيل الشركة (10 أرقام)</string>
+    <string name="checkout_kcp_tax_number_hint">رقم تسجيل الشركة (10 أرقام)</string>
+    <string name="checkout_kcp_password_hint">أول رقمان من كلمة مرور البطاقة</string>
+    <string name="checkout_card_postal_code_hint">الرمز البريدي</string>
+
+    <string name="checkout_card_number_not_valid">رقم بطاقة غير صحيح</string>
+    <string name="checkout_expiry_date_not_valid">تاريخ انتهاء غير صحيح</string>
+    <string name="checkout_security_code_not_valid">تنسيق CVC / CVV غير صحيح</string>
+    <string name="checkout_holder_name_not_valid">اسم صاحب الحساب غير صحيح</string>
+    <string name="checkout_social_security_number_not_valid">إدخال غير صحيح</string>
+    <string name="checkout_kcp_birth_date_or_tax_number_invalid">تاريخ ميلاد حامل البطاقة أو رقم تسجيل الشركة غير صحيح</string>
+    <string name="checkout_kcp_password_invalid">كلمة مرور غير صحيحة</string>
+    <string name="checkout_card_postal_not_valid">تنسيق الإدخال غير صحيح.</string>
+    <string name="checkout_card_brand_not_supported">العلامة التجارية للبطاقة التي تم إدخالها غير مدعومة</string>
+    <string name="checkout_card_formatted_brand_name_not_supported">%s غير مدعومة</string>
+
+    <string name="checkout_card_installments_title">عدد الأقساط</string>
+    <string name="checkout_card_installments_option_regular">%s أشهر</string>
+    <string name="checkout_card_installments_option_one_time">الدفع مرة واحدة</string>
+    <string name="checkout_card_installments_option_revolving">الدفع الدوري</string>
+
+    <string name="store_payment_method">حفظ لمدفوعاتي القادمة</string>
+</resources>

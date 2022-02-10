@@ -1,0 +1,36 @@
+<!--
+  ~ Copyright (c) 2019 Adyen N.V.
+  ~
+  ~ This file is open source and available under the MIT license. See the LICENSE file for more info.
+  ~
+  ~ Created by caiof on 21/3/2019.
+  -->
+
+<resources>
+    <string name="pay_button">دفع</string>
+    <string name="pay_button_with_value">دفع %s</string>
+    <string name="payment_methods_header">طرق الدفع</string>
+    <string name="error_dialog_title">خطأ</string>
+    <string name="error_dialog_button">موافق</string>
+    <string name="payment_failed">خطأ في إرسال المدفوعات. يُرجى المحاولة مرة أخرى.</string>
+    <string name="action_failed">حدث خطأ أثناء معالجة مدفوعاتك. يُرجى المحاولة مرة أخرى لاحقًا.</string>
+    <string name="component_error">حدث خطأ ما.</string>
+    <string name="time_out_error">انتهت مهلة الطلب. يُرجى المحاولة مرة أخرى.</string>
+    <string name="store_payment_methods_header">طرق الدفع الخاصة بك</string>
+    <string name="other_payment_methods">تحديد طريقة أخرى</string>
+    <string name="continue_button">متابعة</string>
+    <string name="change_payment_method">تغيير طريقة الدفع</string>
+    <string name="checkout_giftcard_redeem_button">استرداد</string>
+    <string name="checkout_giftcard_error_zero_balance">لا يوجد رصيد ببطاقة الهدايا هذه</string>
+    <string name="checkout_giftcard_error_currency">لا تسري بطاقات الهدايا إلا بالعملة التي صدرت بها</string>
+    <string name="checkout_giftcard_remaining_balance_text">سيبلغ الرصيد المتبقي %s</string>
+    <string name="checkout_giftcard_pay_remaining_amount">تحديد طريقة الدفع لمبلغ %s المتبقي</string>
+    <string name="checkout_giftcard_payment_methods_header">بطاقة هدايا مضافة</string>
+    <string name="checkout_giftcard_remove_button">إزالة</string>
+    <string name="checkout_giftcard_max_transaction_limit">يسمح فقط بحد أقصى %s لكل معاملة على بطاقة الهدايا هذه</string>
+    <string name="checkout_giftcard_remove_gift_cards_title">تأكيد إزالة البطاقة</string>
+    <string name="checkout_giftcard_remove_gift_cards_body">هل ترغب في إزالة بطاقات الهدايا المضافة؟</string>
+    <string name="checkout_giftcard_remove_gift_cards_positive_button">نعم، أرغب في إزالتها</string>
+    <string name="checkout_giftcard_remove_gift_cards_negative_button">إلغاء</string>
+    <string name="checkout_remove_stored_payment_method_body">إزالة طريقة الدفع المخزنة</string>
+</resources>

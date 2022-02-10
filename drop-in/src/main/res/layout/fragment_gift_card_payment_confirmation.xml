@@ -30,7 +30,7 @@
         android:layout_marginTop="@dimen/standard_half_margin"
         android:layout_marginBottom="@dimen/standard_half_margin"
         tools:itemCount="2"
-        tools:listitem="@layout/recycler_list_with_image"/>
+        tools:listitem="@layout/payment_methods_list_item"/>
 
     <androidx.appcompat.widget.AppCompatButton
         android:id="@+id/payButton"
