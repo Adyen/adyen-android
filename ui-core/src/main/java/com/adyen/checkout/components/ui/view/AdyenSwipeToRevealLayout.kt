@@ -90,7 +90,8 @@ class AdyenSwipeToRevealLayout @JvmOverloads constructor(
     private var dragDistance = 0f
 
     /**
-     * TODO
+     * Previous x-coordinate of the main view that's being dragged.
+     * It is used calculating the [dragDistance].
      */
     private var previousX = -1f
 

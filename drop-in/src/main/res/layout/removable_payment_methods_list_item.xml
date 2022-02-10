@@ -26,71 +26,78 @@
             android:src="@drawable/ic_trash_bin" />
     </FrameLayout>
 
-    <LinearLayout
+    <FrameLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:background="@color/white"
-        android:clickable="true"
-        android:focusable="true"
-        android:orientation="horizontal"
-        android:paddingStart="@dimen/standard_margin"
-        android:paddingLeft="@dimen/standard_margin"
-        android:paddingTop="@dimen/standard_three_quarters_margin"
-        android:paddingEnd="@dimen/standard_margin"
-        android:paddingRight="@dimen/standard_margin"
-        android:paddingBottom="@dimen/standard_three_quarters_margin">
-
-        <com.adyen.checkout.components.ui.view.RoundCornerImageView
-            android:id="@+id/imageView_logo"
-            android:layout_width="@dimen/logo_width"
-            android:layout_height="@dimen/logo_height"
-            android:layout_gravity="center"
-            android:layout_marginEnd="@dimen/standard_margin"
-            android:contentDescription="@null"
-            android:maxHeight="@dimen/logo_width"
-            android:minHeight="@dimen/logo_height"
-            android:scaleType="fitCenter"
-            android:src="@drawable/ic_placeholder_image"
-            app:strokeColor="@color/stroke_color" />
+        android:background="?android:colorBackground">
 
         <LinearLayout
-            android:layout_width="0dp"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_gravity="center"
-            android:layout_weight="1"
-            android:orientation="vertical">
+            android:background="?selectableItemBackground"
+            android:clickable="true"
+            android:focusable="true"
+            android:orientation="horizontal"
+            android:paddingStart="@dimen/standard_margin"
+            android:paddingLeft="@dimen/standard_margin"
+            android:paddingTop="@dimen/standard_three_quarters_margin"
+            android:paddingEnd="@dimen/standard_margin"
+            android:paddingRight="@dimen/standard_margin"
+            android:paddingBottom="@dimen/standard_three_quarters_margin">
+
+            <com.adyen.checkout.components.ui.view.RoundCornerImageView
+                android:id="@+id/imageView_logo"
+                android:layout_width="@dimen/logo_width"
+                android:layout_height="@dimen/logo_height"
+                android:layout_gravity="center"
+                android:layout_marginEnd="@dimen/standard_margin"
+                android:contentDescription="@null"
+                android:maxHeight="@dimen/logo_width"
+                android:minHeight="@dimen/logo_height"
+                android:scaleType="fitCenter"
+                android:src="@drawable/ic_placeholder_image"
+                app:strokeColor="@color/stroke_color" />
+
+            <LinearLayout
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:layout_weight="1"
+                android:orientation="vertical">
+
+                <androidx.appcompat.widget.AppCompatTextView
+                    android:id="@+id/textView_text"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center_vertical"
+                    android:maxHeight="@dimen/logo_width"
+                    android:textColor="@color/textColor"
+                    android:textSize="16sp"
+                    tools:text="Test" />
+
+                <androidx.appcompat.widget.AppCompatTextView
+                    android:id="@+id/textView_detail"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center_vertical"
+                    android:maxHeight="@dimen/logo_width"
+                    android:textSize="12sp"
+                    tools:text="Test" />
+            </LinearLayout>
 
             <androidx.appcompat.widget.AppCompatTextView
-                android:id="@+id/textView_text"
-                android:layout_width="match_parent"
+                android:id="@+id/textView_endText"
+                android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center_vertical"
-                android:maxHeight="@dimen/logo_width"
+                android:layout_marginStart="@dimen/standard_quarter_margin"
                 android:textColor="@color/textColor"
                 android:textSize="16sp"
-                tools:text="Test" />
+                android:visibility="gone"
+                tools:text="- €13,37"
+                tools:visibility="visible" />
 
-            <androidx.appcompat.widget.AppCompatTextView
-                android:id="@+id/textView_detail"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_gravity="center_vertical"
-                android:maxHeight="@dimen/logo_width"
-                android:textSize="12sp"
-                tools:text="Test" />
         </LinearLayout>
 
-        <androidx.appcompat.widget.AppCompatTextView
-            android:id="@+id/textView_endText"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_gravity="center_vertical"
-            android:layout_marginStart="@dimen/standard_quarter_margin"
-            android:textColor="@color/textColor"
-            android:textSize="16sp"
-            android:visibility="gone"
-            tools:text="- €13,37"
-            tools:visibility="visible" />
-
-    </LinearLayout>
+    </FrameLayout>
 </com.adyen.checkout.components.ui.view.AdyenSwipeToRevealLayout>
