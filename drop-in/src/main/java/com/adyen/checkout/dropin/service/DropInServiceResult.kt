@@ -134,3 +134,25 @@ sealed class OrderDropInServiceResult : BaseDropInServiceResult() {
         override val dismissDropIn: Boolean = false
     ) : OrderDropInServiceResult(), DropInServiceResultError
 }
+
+sealed class RecurringDropInServiceResult : BaseDropInServiceResult() {
+
+    /**
+     * Only applicable to removing stored payment methods.
+     *
+     * A call to remove a stored payment method was successful.
+     *
+     * @param id Id of the stored payment method.
+     */
+    class PaymentMethodRemoved(val id: String) : RecurringDropInServiceResult()
+
+    /**
+     * Call failed with an error. Can have the localized error message which will be shown
+     * in an Alert Dialog, otherwise a generic error message will be shown.
+     */
+    class Error(
+        override val errorMessage: String? = null,
+        override val reason: String? = null,
+        override val dismissDropIn: Boolean = false
+    ) : RecurringDropInServiceResult(), DropInServiceResultError
+}

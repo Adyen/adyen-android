@@ -11,6 +11,7 @@ package com.adyen.checkout.example.service
 import com.adyen.checkout.card.CardComponentState
 import com.adyen.checkout.components.ActionComponentData
 import com.adyen.checkout.components.PaymentComponentState
+import com.adyen.checkout.components.model.paymentmethods.StoredPaymentMethod
 import com.adyen.checkout.components.model.payments.request.OrderRequest
 import com.adyen.checkout.components.model.payments.request.PaymentMethodDetails
 import com.adyen.checkout.components.model.payments.response.Action
@@ -24,8 +25,10 @@ import com.adyen.checkout.dropin.service.BalanceDropInServiceResult
 import com.adyen.checkout.dropin.service.DropInService
 import com.adyen.checkout.dropin.service.DropInServiceResult
 import com.adyen.checkout.dropin.service.OrderDropInServiceResult
+import com.adyen.checkout.dropin.service.RecurringDropInServiceResult
 import com.adyen.checkout.example.data.api.model.paymentsRequest.AdditionalData
 import com.adyen.checkout.example.data.storage.KeyValueStorage
+import com.adyen.checkout.example.repositories.RecurringRepository
 import com.adyen.checkout.example.repositories.paymentMethods.PaymentsRepository
 import com.adyen.checkout.redirect.RedirectComponent
 import dagger.hilt.android.AndroidEntryPoint
@@ -59,6 +62,9 @@ class ExampleFullAsyncDropInService : DropInService() {
 
     @Inject
     lateinit var paymentsRepository: PaymentsRepository
+
+    @Inject
+    lateinit var recurringRepository: RecurringRepository
 
     @Inject
     lateinit var keyValueStorage: KeyValueStorage
@@ -279,6 +285,38 @@ class ExampleFullAsyncDropInService : DropInService() {
         } else {
             Logger.e(TAG, "FAILED")
             DropInServiceResult.Error(reason = "IOException")
+        }
+    }
+
+    override fun removeStoredPaymentMethod(
+        storedPaymentMethod: StoredPaymentMethod,
+        storedPaymentMethodJson: JSONObject
+    ) {
+        launch(Dispatchers.IO) {
+            val requestBody = createRemoveStoredPaymentMethodRequest(
+                storedPaymentMethod.id.orEmpty(),
+                keyValueStorage.getMerchantAccount(),
+                keyValueStorage.getShopperReference()
+            ).toString().toRequestBody(CONTENT_TYPE)
+            val response = recurringRepository.removeStoredPaymentMethod(requestBody)
+            val result = handleRemoveStoredPaymentMethodResult(response, storedPaymentMethod.id.orEmpty())
+            sendRecurringResult(result)
+        }
+    }
+
+    private fun handleRemoveStoredPaymentMethodResult(response: ResponseBody?, id: String): RecurringDropInServiceResult {
+        return if (response != null) {
+            val orderJson = response.string()
+            val jsonResponse = JSONObject(orderJson)
+            Logger.v(TAG, "removeStoredPaymentMethod response - ${jsonResponse.toStringPretty()}")
+            val responseCode = jsonResponse.getStringOrNull("response")
+            when (responseCode) {
+                "[detail-successfully-disabled]" -> RecurringDropInServiceResult.PaymentMethodRemoved(id)
+                else -> RecurringDropInServiceResult.Error(reason = responseCode, dismissDropIn = false)
+            }
+        } else {
+            Logger.e(TAG, "FAILED")
+            RecurringDropInServiceResult.Error(reason = "IOException")
         }
     }
 }

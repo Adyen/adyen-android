@@ -50,6 +50,7 @@ import com.adyen.checkout.dropin.service.DropInServiceInterface
 import com.adyen.checkout.dropin.service.DropInServiceResult
 import com.adyen.checkout.dropin.service.DropInServiceResultError
 import com.adyen.checkout.dropin.service.OrderDropInServiceResult
+import com.adyen.checkout.dropin.service.RecurringDropInServiceResult
 import com.adyen.checkout.dropin.ui.action.ActionComponentDialogFragment
 import com.adyen.checkout.dropin.ui.base.DropInBottomSheetDialogFragment
 import com.adyen.checkout.dropin.ui.component.BacsDirectDebitDialogFragment
@@ -455,6 +456,11 @@ class DropInActivity : AppCompatActivity(), DropInBottomSheetDialogFragment.Prot
         sendResult(DropIn.FINISHED_WITH_ACTION)
     }
 
+    override fun removeStoredPaymentMethod(storedPaymentMethod: StoredPaymentMethod) {
+        dropInService?.requestRemoveStoredPaymentMethod(storedPaymentMethod)
+        setLoading(true)
+    }
+
     private fun handleDropInServiceResult(dropInServiceResult: BaseDropInServiceResult) {
         Logger.d(TAG, "handleDropInServiceResult - ${dropInServiceResult::class.simpleName}")
         dropInViewModel.isWaitingResult = false
@@ -462,6 +468,7 @@ class DropInActivity : AppCompatActivity(), DropInBottomSheetDialogFragment.Prot
             is DropInServiceResult -> handleDropInServiceResult(dropInServiceResult)
             is BalanceDropInServiceResult -> handleDropInServiceResult(dropInServiceResult)
             is OrderDropInServiceResult -> handleDropInServiceResult(dropInServiceResult)
+            is RecurringDropInServiceResult -> handleDropInServiceResult(dropInServiceResult)
         }
     }
 
@@ -485,6 +492,13 @@ class DropInActivity : AppCompatActivity(), DropInBottomSheetDialogFragment.Prot
         when (dropInServiceResult) {
             is OrderDropInServiceResult.OrderCreated -> handleOrderResult(dropInServiceResult.order)
             is OrderDropInServiceResult.Error -> handleErrorDropInServiceResult(dropInServiceResult)
+        }
+    }
+
+    private fun handleDropInServiceResult(dropInServiceResult: RecurringDropInServiceResult) {
+        when (dropInServiceResult) {
+            is RecurringDropInServiceResult.PaymentMethodRemoved -> handleRemovePaymentMethodResult(dropInServiceResult.id)
+            is RecurringDropInServiceResult.Error -> handleErrorDropInServiceResult(dropInServiceResult)
         }
     }
 
@@ -654,6 +668,24 @@ class DropInActivity : AppCompatActivity(), DropInBottomSheetDialogFragment.Prot
 
     override fun requestOrderCancellation() {
         dropInViewModel.orderCancellationRequested()
+    }
+
+    private fun handleRemovePaymentMethodResult(id: String) {
+        setLoading(false)
+        dropInViewModel.removeStoredPaymentMethodWithId(id)
+
+        val preselectedStoredPaymentMethodFragment =
+            getFragmentByTag(PRESELECTED_PAYMENT_METHOD_FRAGMENT_TAG) as? PreselectedStoredPaymentMethodFragment
+        if (preselectedStoredPaymentMethodFragment != null) {
+            showPaymentMethodsDialog()
+            return
+        }
+
+        val paymentMethodListDialogFragment = getFragmentByTag(PAYMENT_METHODS_LIST_FRAGMENT_TAG) as? PaymentMethodListDialogFragment
+        if (paymentMethodListDialogFragment != null) {
+            paymentMethodListDialogFragment.removeStoredPaymentMethod(id)
+            return
+        }
     }
 
     companion object {

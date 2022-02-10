@@ -32,4 +32,5 @@
     <string name="checkout_giftcard_remove_gift_cards_body">¿Quiere retirar las tarjetas de regalo añadidas?</string>
     <string name="checkout_giftcard_remove_gift_cards_positive_button">Sí, eliminar</string>
     <string name="checkout_giftcard_remove_gift_cards_negative_button">Cancelar</string>
+    <string name="checkout_remove_stored_payment_method_body">Eliminar método de pago almacenado</string>
 </resources>

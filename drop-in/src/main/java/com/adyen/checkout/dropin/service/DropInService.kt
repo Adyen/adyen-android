@@ -17,6 +17,7 @@ import android.os.Binder
 import android.os.IBinder
 import com.adyen.checkout.components.ActionComponentData
 import com.adyen.checkout.components.PaymentComponentState
+import com.adyen.checkout.components.model.paymentmethods.StoredPaymentMethod
 import com.adyen.checkout.components.model.payments.request.OrderRequest
 import com.adyen.checkout.components.model.payments.request.PaymentComponentData
 import com.adyen.checkout.components.model.payments.request.PaymentMethodDetails
@@ -249,6 +250,24 @@ abstract class DropInService : Service(), CoroutineScope, DropInServiceInterface
     }
 
     /**
+     * Allow asynchronously sending the results of the Recurring/ network call.
+     *
+     * Call this method after making a network call to remove a stored payment method
+     * while using [removeStoredPaymentMethod] and pass an instance of [RecurringDropInServiceResult]
+     * depending on the response of the corresponding network call.
+     * Check the subclasses of [RecurringDropInServiceResult] for more information.
+     *
+     * @param result the result of the network request.
+     */
+    protected fun sendRecurringResult(result: RecurringDropInServiceResult) {
+        launch {
+            // send response back to activity
+            Logger.d(TAG, "dispatching RecurringDropInServiceResult")
+            resultChannel.send(result)
+        }
+    }
+
+    /**
      * In this method you should make the network call to tell your server to make a call to the payments/ endpoint.
      *
      * We provide a [PaymentComponentData] (as JSONObject) with the parameters we can infer from
@@ -410,6 +429,33 @@ abstract class DropInService : Service(), CoroutineScope, DropInServiceInterface
         throw NotImplementedError("Method cancelOrder is not implemented")
     }
 
+    override fun requestRemoveStoredPaymentMethod(storedPaymentMethod: StoredPaymentMethod) {
+        Logger.d(TAG, "requestRemoveStoredPaymentMethod")
+        removeStoredPaymentMethod(storedPaymentMethod, StoredPaymentMethod.SERIALIZER.serialize(storedPaymentMethod))
+    }
+
+    /**
+     * Only applicable to removing stored payment methods.
+     *
+     * In this method you should make the network call to tell your server to make a call to the
+     * Recurring/<version_number>/disable endpoint. This method is called when the user initiates
+     * removing a stored payment method using the remove button.
+     *
+     * We provide [storedPaymentMethod] that contains the id of the stored payment method to be removed
+     * in the field [StoredPaymentMethod.id].
+     *
+     * Asynchronous handling: since this method runs on the main thread, you should make sure the
+     * Recurring/<version>/disable call and any other long running operation is made on a background thread.
+     *
+     * Note that not overriding this method while enabling gift card payments will cause a [NotImplementedError]
+     * to be thrown.
+     *
+     * See https://docs.adyen.com/api-explorer/ for more information on the API documentation.
+     */
+    open fun removeStoredPaymentMethod(storedPaymentMethod: StoredPaymentMethod, storedPaymentMethodJson: JSONObject) {
+        throw NotImplementedError("Method removeStoredPaymentMethod is not implemented")
+    }
+
     override suspend fun observeResult(callback: (BaseDropInServiceResult) -> Unit) {
         resultFlow.collect { callback(it) }
     }
@@ -443,4 +489,5 @@ internal interface DropInServiceInterface {
     fun requestBalanceCall(paymentMethodData: PaymentMethodDetails)
     fun requestOrdersCall()
     fun requestCancelOrder(order: OrderRequest, isDropInCancelledByUser: Boolean)
+    fun requestRemoveStoredPaymentMethod(storedPaymentMethod: StoredPaymentMethod)
 }

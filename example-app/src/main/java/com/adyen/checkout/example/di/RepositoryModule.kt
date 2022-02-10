@@ -9,6 +9,9 @@
 package com.adyen.checkout.example.di
 
 import com.adyen.checkout.example.data.api.CheckoutApiService
+import com.adyen.checkout.example.data.api.RecurringApiService
+import com.adyen.checkout.example.repositories.RecurringRepository
+import com.adyen.checkout.example.repositories.RecurringRepositoryImpl
 import com.adyen.checkout.example.repositories.paymentMethods.PaymentsRepository
 import com.adyen.checkout.example.repositories.paymentMethods.PaymentsRepositoryImpl
 import dagger.Module
@@ -22,4 +25,7 @@ object RepositoryModule {
 
     @Provides
     fun providePaymentsRepository(checkoutApiService: CheckoutApiService): PaymentsRepository = PaymentsRepositoryImpl(checkoutApiService)
+
+    @Provides
+    fun provideRecurringRepository(recurringApiService: RecurringApiService): RecurringRepository = RecurringRepositoryImpl(recurringApiService)
 }

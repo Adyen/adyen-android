@@ -32,4 +32,5 @@
     <string name="checkout_giftcard_remove_gift_cards_body">追加したギフトカードを削除しますか？</string>
     <string name="checkout_giftcard_remove_gift_cards_positive_button">はい、削除します</string>
     <string name="checkout_giftcard_remove_gift_cards_negative_button">キャンセル</string>
+    <string name="checkout_remove_stored_payment_method_body">保存されている支払方法を削除する</string>
 </resources>

@@ -15,13 +15,16 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.appcompat.app.AlertDialog
+import androidx.core.view.children
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.adyen.checkout.components.GenericComponentState
 import com.adyen.checkout.components.api.ImageLoader
+import com.adyen.checkout.components.model.paymentmethods.StoredPaymentMethod
 import com.adyen.checkout.components.model.payments.request.GenericPaymentMethod
 import com.adyen.checkout.components.model.payments.request.PaymentComponentData
 import com.adyen.checkout.components.model.payments.request.PaymentMethodDetails
+import com.adyen.checkout.components.ui.view.AdyenSwipeToRevealLayout
 import com.adyen.checkout.components.util.PaymentMethodTypes
 import com.adyen.checkout.core.exception.CheckoutException
 import com.adyen.checkout.core.exception.ComponentException
@@ -35,7 +38,11 @@ import com.adyen.checkout.googlepay.GooglePayComponent
 
 private val TAG = LogUtil.getTag()
 
-class PaymentMethodListDialogFragment : DropInBottomSheetDialogFragment(), PaymentMethodAdapter.OnPaymentMethodSelectedCallback {
+@Suppress("TooManyFunctions")
+class PaymentMethodListDialogFragment :
+    DropInBottomSheetDialogFragment(),
+    PaymentMethodAdapter.OnPaymentMethodSelectedCallback,
+    PaymentMethodAdapter.OnStoredPaymentRemovedCallback {
 
     private lateinit var paymentMethodsListViewModel: PaymentMethodsListViewModel
     private lateinit var paymentMethodAdapter: PaymentMethodAdapter
@@ -64,25 +71,28 @@ class PaymentMethodListDialogFragment : DropInBottomSheetDialogFragment(), Payme
 
     private fun addObserver(recyclerView: RecyclerView) {
         paymentMethodsListViewModel.paymentMethodsLiveData.observe(
-            viewLifecycleOwner,
-            { paymentMethods ->
-                Logger.d(TAG, "paymentMethods changed")
-                if (paymentMethods == null) {
-                    throw CheckoutException("List of PaymentMethodModel is null.")
-                }
-
-                val imageLoader = ImageLoader.getInstance(
-                    requireContext(),
-                    dropInViewModel.dropInConfiguration.environment
-                )
-
-                // We expect the list of payment methods to be updated only once, so we just set the adapter
-                paymentMethodAdapter = PaymentMethodAdapter(paymentMethods, imageLoader)
-                paymentMethodAdapter.setPaymentMethodSelectedCallback(this)
-                recyclerView.layoutManager = LinearLayoutManager(requireContext())
-                recyclerView.adapter = paymentMethodAdapter
+            viewLifecycleOwner
+        ) { paymentMethods ->
+            Logger.d(TAG, "paymentMethods changed")
+            if (paymentMethods == null) {
+                throw CheckoutException("List of PaymentMethodModel is null.")
             }
-        )
+
+            val imageLoader = ImageLoader.getInstance(
+                requireContext(),
+                dropInViewModel.dropInConfiguration.environment
+            )
+
+            // We expect the list of payment methods to be updated only once, so we just set the adapter
+            paymentMethodAdapter =
+                PaymentMethodAdapter(paymentMethods, imageLoader) {
+                    collapseNotUsedUnderlayButtons(recyclerView, it)
+                }
+            paymentMethodAdapter.setPaymentMethodSelectedCallback(this)
+            paymentMethodAdapter.setStoredPaymentRemovedCallback(this)
+            recyclerView.layoutManager = LinearLayoutManager(requireContext())
+            recyclerView.adapter = paymentMethodAdapter
+        }
     }
 
     override fun onCancel(dialog: DialogInterface) {
@@ -144,6 +154,17 @@ class PaymentMethodListDialogFragment : DropInBottomSheetDialogFragment(), Payme
         }
     }
 
+    override fun onStoredPaymentMethodRemoved(storedPaymentMethodModel: StoredPaymentMethodModel) {
+        val storedPaymentMethod = StoredPaymentMethod().apply {
+            id = storedPaymentMethodModel.id
+        }
+        protocol.removeStoredPaymentMethod(storedPaymentMethod)
+    }
+
+    fun removeStoredPaymentMethod(id: String) {
+        paymentMethodAdapter.removePaymentMethodWithId(id)
+    }
+
     private fun showCancelOrderAlert() {
         AlertDialog.Builder(requireContext())
             .setTitle(R.string.checkout_giftcard_remove_gift_cards_title)
@@ -161,5 +182,13 @@ class PaymentMethodListDialogFragment : DropInBottomSheetDialogFragment(), Payme
         paymentComponentData.paymentMethod = GenericPaymentMethod(type)
         val paymentComponentState = GenericComponentState(paymentComponentData, true, true)
         protocol.requestPaymentsCall(paymentComponentState)
+    }
+
+    private fun collapseNotUsedUnderlayButtons(recyclerView: RecyclerView, draggedItem: AdyenSwipeToRevealLayout) {
+        recyclerView.children.filterIsInstance(AdyenSwipeToRevealLayout::class.java).forEach {
+            if (it != draggedItem) {
+                it.collapseUnderlay()
+            }
+        }
     }
 }
