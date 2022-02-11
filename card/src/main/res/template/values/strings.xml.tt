@@ -35,4 +35,7 @@
     <string name="checkout_card_installments_option_revolving">%%installments.revolving%%</string>
 
     <string name="store_payment_method">%%storeDetails%%</string>
+    <!-- Untranslatable strings -->
+    <string name="checkout_social_security_number_hint" translatable="false">CPF/CNPJ</string>
+    <string name="card_number_4digit" translatable="false">•••• %s</string>
 </resources>
