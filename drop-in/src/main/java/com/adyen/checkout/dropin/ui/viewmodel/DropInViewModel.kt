@@ -6,7 +6,7 @@
  * Created by arman on 2/7/2019.
  */
 
-package com.adyen.checkout.dropin.ui
+package com.adyen.checkout.dropin.ui.viewmodel
 
 import android.content.Intent
 import androidx.lifecycle.SavedStateHandle
@@ -30,7 +30,6 @@ import com.adyen.checkout.dropin.R
 import com.adyen.checkout.dropin.ui.giftcard.GiftCardBalanceResult
 import com.adyen.checkout.dropin.ui.giftcard.GiftCardPaymentConfirmationData
 import com.adyen.checkout.dropin.ui.order.OrderModel
-import com.adyen.checkout.dropin.ui.paymentmethods.PaymentMethodsListViewModel
 import com.adyen.checkout.giftcard.GiftCardComponentState
 import com.adyen.checkout.giftcard.util.GiftCardBalanceStatus
 import com.adyen.checkout.giftcard.util.GiftCardBalanceUtils

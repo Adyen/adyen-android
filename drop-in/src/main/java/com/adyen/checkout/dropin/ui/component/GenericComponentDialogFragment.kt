@@ -61,7 +61,7 @@ class GenericComponentDialogFragment : BaseComponentDialogFragment() {
         binding.header.text = paymentMethod.name
 
         if (!dropInViewModel.amount.isEmpty) {
-            val value = CurrencyUtils.formatAmount(dropInViewModel.amount, dropInConfiguration.shopperLocale)
+            val value = CurrencyUtils.formatAmount(dropInViewModel.amount, dropInViewModel.dropInConfiguration.shopperLocale)
             binding.payButton.text = String.format(resources.getString(R.string.pay_button_with_value), value)
         }
 

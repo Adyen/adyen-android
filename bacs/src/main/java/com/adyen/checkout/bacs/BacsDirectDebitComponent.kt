@@ -17,8 +17,6 @@ import com.adyen.checkout.components.model.payments.request.BacsDirectDebitPayme
 import com.adyen.checkout.components.model.payments.request.PaymentComponentData
 import com.adyen.checkout.components.util.PaymentMethodTypes
 
-private val PAYMENT_METHOD_TYPES = arrayOf(PaymentMethodTypes.BACS)
-
 class BacsDirectDebitComponent(
     savedStateHandle: SavedStateHandle,
     paymentMethodDelegate: GenericPaymentMethodDelegate,
@@ -76,5 +74,6 @@ class BacsDirectDebitComponent(
         @JvmStatic
         val PROVIDER: PaymentComponentProvider<BacsDirectDebitComponent, BacsDirectDebitConfiguration> =
             GenericPaymentComponentProvider(BacsDirectDebitComponent::class.java)
+        val PAYMENT_METHOD_TYPES = arrayOf(PaymentMethodTypes.BACS)
     }
 }

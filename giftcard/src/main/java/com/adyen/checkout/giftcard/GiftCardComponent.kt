@@ -27,8 +27,6 @@ import kotlinx.coroutines.launch
 
 private val TAG = LogUtil.getTag()
 
-private val PAYMENT_METHOD_TYPES = arrayOf(PaymentMethodTypes.GIFTCARD)
-
 private const val LAST_FOUR_LENGTH = 4
 
 /**
@@ -52,6 +50,7 @@ class GiftCardComponent(
     companion object {
         @JvmStatic
         val PROVIDER: PaymentComponentProvider<GiftCardComponent, GiftCardConfiguration> = GiftCardComponentProvider()
+        val PAYMENT_METHOD_TYPES = arrayOf(PaymentMethodTypes.GIFTCARD)
     }
 
     private var publicKey: String? = null

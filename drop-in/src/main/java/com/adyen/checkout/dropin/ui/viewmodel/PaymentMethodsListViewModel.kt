@@ -6,7 +6,7 @@
  * Created by caiof on 30/11/2020.
  */
 
-package com.adyen.checkout.dropin.ui.paymentmethods
+package com.adyen.checkout.dropin.ui.viewmodel
 
 import android.app.Application
 import androidx.lifecycle.AndroidViewModel
@@ -26,6 +26,12 @@ import com.adyen.checkout.dropin.DropInConfiguration
 import com.adyen.checkout.dropin.R
 import com.adyen.checkout.dropin.checkPaymentMethodAvailability
 import com.adyen.checkout.dropin.ui.order.OrderModel
+import com.adyen.checkout.dropin.ui.paymentmethods.GiftCardPaymentMethodModel
+import com.adyen.checkout.dropin.ui.paymentmethods.PaymentMethodHeader
+import com.adyen.checkout.dropin.ui.paymentmethods.PaymentMethodListItem
+import com.adyen.checkout.dropin.ui.paymentmethods.PaymentMethodModel
+import com.adyen.checkout.dropin.ui.paymentmethods.PaymentMethodNote
+import com.adyen.checkout.dropin.ui.paymentmethods.StoredPaymentMethodModel
 import com.adyen.checkout.dropin.ui.stored.makeStoredModel
 
 class PaymentMethodsListViewModel(
