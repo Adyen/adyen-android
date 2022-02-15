@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+  ~ Copyright (c) 2021 Adyen N.V.
+  ~
+  ~ This file is open source and available under the MIT license. See the LICENSE file for more info.
+  ~
+  ~ Created by josephj on 26/3/2021.
+  -->
+
+<resources>
+    <string name="checkout_qr_code_pix">Másolja ki a kódot, majd nyissa meg az alkalmazást a regisztrált PIX-kulccsal, válassza a Fizetés PIX használatával lehetőséget, és illessze be a kódot.</string>
+    <string name="checkout_qr_code_copy_button">Kód másolása</string>
+    <string name="checkout_qr_code_timer_text">Fizetéshez rendelkezésre álló idő: %s</string>
+    <string name="checkout_qr_code_copied_toast">Kód a vágólapra másolva</string>
+</resources>

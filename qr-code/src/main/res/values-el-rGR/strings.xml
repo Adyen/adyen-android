@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+  ~ Copyright (c) 2021 Adyen N.V.
+  ~
+  ~ This file is open source and available under the MIT license. See the LICENSE file for more info.
+  ~
+  ~ Created by josephj on 26/3/2021.
+  -->
+
+<resources>
+    <string name="checkout_qr_code_pix">Αντιγράψτε τον κωδικό, έπειτα ανοίξτε την εφαρμογή με το καταχωρημένο κλειδί PIX, επιλέξτε Πληρωμή με PIX και επικολλήστε εκεί τον κωδικό.</string>
+    <string name="checkout_qr_code_copy_button">Αντιγραφή κωδικού</string>
+    <string name="checkout_qr_code_timer_text">Έχετε στη διάθεσή σας %s για την πληρωμή</string>
+    <string name="checkout_qr_code_copied_toast">Ο κωδικός αντιγράφτηκε στο πρόχειρο</string>
+</resources>
