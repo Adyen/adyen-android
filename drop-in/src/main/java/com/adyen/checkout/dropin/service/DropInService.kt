@@ -14,6 +14,7 @@ import android.content.Context
 import android.content.Intent
 import android.content.ServiceConnection
 import android.os.Binder
+import android.os.Bundle
 import android.os.IBinder
 import com.adyen.checkout.components.ActionComponentData
 import com.adyen.checkout.components.PaymentComponentState
@@ -23,6 +24,7 @@ import com.adyen.checkout.components.model.payments.request.PaymentComponentData
 import com.adyen.checkout.components.model.payments.request.PaymentMethodDetails
 import com.adyen.checkout.core.log.LogUtil
 import com.adyen.checkout.core.log.Logger
+import com.adyen.checkout.dropin.DropInConfiguration
 import kotlin.coroutines.CoroutineContext
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
@@ -56,8 +58,13 @@ abstract class DropInService : Service(), CoroutineScope, DropInServiceInterface
     private val resultChannel = Channel<BaseDropInServiceResult>(Channel.BUFFERED)
     private val resultFlow = resultChannel.receiveAsFlow()
 
+    private var additionalData: Bundle? = null
+
     override fun onBind(intent: Intent?): IBinder {
         Logger.d(TAG, "onBind")
+        if (intent?.hasExtra(INTENT_EXTRA_ADDITIONAL_DATA) == true) {
+            additionalData = intent.getBundleExtra(INTENT_EXTRA_ADDITIONAL_DATA)
+        }
         return binder
     }
 
@@ -460,18 +467,32 @@ abstract class DropInService : Service(), CoroutineScope, DropInServiceInterface
         resultFlow.collect { callback(it) }
     }
 
+    /**
+     * Gets the additional data that was set when starting drop-in using
+     * [DropInConfiguration.Builder.setAdditionalDataForDropInService] or null if nothing was set.
+     */
+    protected fun getAdditionalData(): Bundle? {
+        return additionalData
+    }
+
     internal inner class DropInBinder : Binder() {
         fun getService(): DropInServiceInterface = this@DropInService
     }
 
     companion object {
+        private const val INTENT_EXTRA_ADDITIONAL_DATA = "ADDITIONAL_DATA"
+
         internal fun bindService(
             context: Context,
             connection: ServiceConnection,
-            merchantService: ComponentName
+            merchantService: ComponentName,
+            additionalData: Bundle?
         ): Boolean {
             Logger.d(TAG, "bindService - ${context::class.simpleName}")
-            val intent = Intent().apply { component = merchantService }
+            val intent = Intent().apply {
+                component = merchantService
+                putExtra(INTENT_EXTRA_ADDITIONAL_DATA, additionalData)
+            }
             return context.bindService(intent, connection, Context.BIND_AUTO_CREATE)
         }
 

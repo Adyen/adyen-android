@@ -74,6 +74,7 @@ class ExampleFullAsyncDropInService : DropInService() {
             Logger.d(TAG, "onPaymentsCallRequested")
 
             checkPaymentState(paymentComponentState)
+            checkAdditionalData()
 
             // Check out the documentation of this method on the parent DropInService class
             val paymentRequest = createPaymentRequest(
@@ -106,6 +107,14 @@ class ExampleFullAsyncDropInService : DropInService() {
         if (paymentComponentState is CardComponentState) {
             // a card payment is being made, handle accordingly
         }
+    }
+
+    /**
+     * This is an example on how to fetch additional data
+     */
+    private fun checkAdditionalData() {
+        val additionalData = getAdditionalData()
+        // read bundle and handle it
     }
 
     override fun onDetailsCallRequested(actionComponentData: ActionComponentData, actionComponentJson: JSONObject) {
