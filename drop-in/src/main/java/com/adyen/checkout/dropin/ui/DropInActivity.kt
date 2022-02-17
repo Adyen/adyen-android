@@ -253,7 +253,12 @@ class DropInActivity : AppCompatActivity(), DropInBottomSheetDialogFragment.Prot
     }
 
     private fun bindService() {
-        val bound = DropInService.bindService(this, serviceConnection, dropInViewModel.dropInConfiguration.serviceComponentName)
+        val bound = DropInService.bindService(
+            this,
+            serviceConnection,
+            dropInViewModel.dropInConfiguration.serviceComponentName,
+            dropInViewModel.dropInConfiguration.additionalDataForDropInService
+        )
         if (bound) {
             serviceBound = true
         } else {
