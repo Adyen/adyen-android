@@ -30,6 +30,7 @@ import com.adyen.checkout.core.model.JsonUtils
 import com.adyen.checkout.core.util.ParcelUtils
 import com.adyen.checkout.dotpay.DotpayConfiguration
 import com.adyen.checkout.dropin.DropInConfiguration.Builder
+import com.adyen.checkout.dropin.service.DropInService
 import com.adyen.checkout.entercash.EntercashConfiguration
 import com.adyen.checkout.eps.EPSConfiguration
 import com.adyen.checkout.googlepay.GooglePayConfiguration
@@ -43,7 +44,6 @@ import com.adyen.checkout.sepa.SepaConfiguration
 import com.adyen.checkout.voucher.VoucherConfiguration
 import com.adyen.checkout.wechatpay.WeChatPayActionConfiguration
 import java.util.*
-import kotlin.collections.HashMap
 import kotlin.collections.set
 
 /**
@@ -174,6 +174,7 @@ class DropInConfiguration : Configuration, Parcelable {
             amount = dropInConfiguration.amount
             showPreselectedStoredPaymentMethod = dropInConfiguration.showPreselectedStoredPaymentMethod
             skipListWhenSinglePaymentMethod = dropInConfiguration.skipListWhenSinglePaymentMethod
+            isRemovingStoredPaymentMethodsEnabled = dropInConfiguration.isRemovingStoredPaymentMethodsEnabled
         }
 
         fun setServiceComponentName(serviceComponentName: ComponentName): Builder {
@@ -217,6 +218,11 @@ class DropInConfiguration : Configuration, Parcelable {
             return this
         }
 
+        /**
+         * When set to true, users can remove their stored payment methods by swiping left on the corresponding row in the payment methods screen.
+         *
+         * You need to implement [DropInService.removeStoredPaymentMethod] to handle the removal.
+         */
         fun setEnableRemovingStoredPaymentMethods(isEnabled: Boolean): Builder {
             this.isRemovingStoredPaymentMethodsEnabled = isEnabled
             return this
