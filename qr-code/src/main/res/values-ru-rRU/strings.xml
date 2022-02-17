@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+  ~ Copyright (c) 2021 Adyen N.V.
+  ~
+  ~ This file is open source and available under the MIT license. See the LICENSE file for more info.
+  ~
+  ~ Created by josephj on 26/3/2021.
+  -->
+
+<resources>
+    <string name="checkout_qr_code_pix">Скопируйте код, а затем откройте приложение, используя зарегистрированный ключ PIX, выберите «Оплатить через PIX» и вставьте код.</string>
+    <string name="checkout_qr_code_copy_button">Скопировать код</string>
+    <string name="checkout_qr_code_timer_text">У вас %s на оплату</string>
+    <string name="checkout_qr_code_copied_toast">Код скопирован в буфер обмена</string>
+</resources>

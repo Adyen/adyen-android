@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+  ~ Copyright (c) 2021 Adyen N.V.
+  ~
+  ~ This file is open source and available under the MIT license. See the LICENSE file for more info.
+  ~
+  ~ Created by josephj on 26/3/2021.
+  -->
+
+<resources>
+    <string name="checkout_qr_code_pix">Copiați codul, apoi deschideți aplicația cu cheia PIX înregistrată, alegeți Plătiți cu PIX și lipiți codul acolo.</string>
+    <string name="checkout_qr_code_copy_button">Copiați codul</string>
+    <string name="checkout_qr_code_timer_text">Trebuie să achitați %s</string>
+    <string name="checkout_qr_code_copied_toast">Cod copiat în clipboard</string>
+</resources>
