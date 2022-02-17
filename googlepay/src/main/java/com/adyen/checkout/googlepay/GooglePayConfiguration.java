@@ -197,7 +197,7 @@ public class GooglePayConfiguration extends Configuration implements AmountConfi
         private static final String DEFAULT_TOTAL_PRICE_STATUS = "FINAL";
 
         private String mBuilderMerchantAccount;
-        private int mBuilderGooglePayEnvironment = getDefaultGooglePayEnvironment();
+        private int mBuilderGooglePayEnvironment = getDefaultGooglePayEnvironment(getBuilderEnvironment());
         private Amount mBuilderAmount = createDefaultAmount();
         private MerchantInfo mBuilderMerchantInfo = null;
         private String mBuilderCountryCode = null;
@@ -212,8 +212,10 @@ public class GooglePayConfiguration extends Configuration implements AmountConfi
         private BillingAddressParameters mBuilderBillingAddressParameters;
         private String mBuilderTotalPriceStatus = DEFAULT_TOTAL_PRICE_STATUS;
 
-        private int getDefaultGooglePayEnvironment() {
-            if (getBuilderEnvironment().equals(Environment.TEST)) {
+        private boolean mBuilderIsGoogleEnvironmentSetManually = false;
+
+        private int getDefaultGooglePayEnvironment(Environment environment) {
+            if (environment.equals(Environment.TEST)) {
                 return WalletConstants.ENVIRONMENT_TEST;
             }
             return WalletConstants.ENVIRONMENT_PRODUCTION;
@@ -280,6 +282,9 @@ public class GooglePayConfiguration extends Configuration implements AmountConfi
         @Override
         @NonNull
         public Builder setEnvironment(@NonNull Environment builderEnvironment) {
+            if (!mBuilderIsGoogleEnvironmentSetManually) {
+                mBuilderGooglePayEnvironment = getDefaultGooglePayEnvironment(builderEnvironment);
+            }
             return (Builder) super.setEnvironment(builderEnvironment);
         }
 
@@ -317,6 +322,7 @@ public class GooglePayConfiguration extends Configuration implements AmountConfi
                         + "Use either WalletConstants.ENVIRONMENT_TEST or WalletConstants.ENVIRONMENT_PRODUCTION");
             }
             mBuilderGooglePayEnvironment = googlePayEnvironment;
+            mBuilderIsGoogleEnvironmentSetManually = true;
             return this;
         }
 
