@@ -90,7 +90,7 @@ internal const val GOOGLE_PAY_REQUEST_CODE = 1
 @Suppress("TooManyFunctions")
 class DropInActivity : AppCompatActivity(), DropInBottomSheetDialogFragment.Protocol, ActionHandler.ActionHandlingInterface {
 
-    private val dropInViewModel: DropInViewModel by viewModels { DropInViewModelFactory(this, intent.extras) }
+    private val dropInViewModel: DropInViewModel by viewModels { DropInViewModelFactory(this) }
 
     private lateinit var actionHandler: ActionHandler
 
