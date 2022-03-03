@@ -138,6 +138,11 @@
             tools:ignore="RequiredSize" />
     </com.google.android.material.textfield.TextInputLayout>
 
+    <com.adyen.checkout.card.ui.AddressFormInput
+        android:id="@+id/addressFormInput"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content" />
+
     <com.google.android.material.textfield.TextInputLayout
         android:id="@+id/textInputLayout_socialSecurityNumber"
         style="@style/AdyenCheckout.TextInputLayout"
