@@ -9,6 +9,7 @@
 package com.adyen.checkout.card.ui;
 
 import android.content.Context;
+import android.os.Build;
 import android.util.AttributeSet;
 
 import androidx.annotation.NonNull;
@@ -29,5 +30,9 @@ public class SecurityCodeInput extends CardNumberInput {
     public SecurityCodeInput(@NonNull Context context, @Nullable AttributeSet attrs, int defStyleAttr) {
         super(context, attrs, defStyleAttr);
         enforceMaxInputLength(MAX_LENGTH);
+
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+            setAutofillHints(AUTOFILL_HINT_CREDIT_CARD_SECURITY_CODE);
+        }
     }
 }

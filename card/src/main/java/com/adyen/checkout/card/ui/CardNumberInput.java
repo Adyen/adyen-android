@@ -9,6 +9,7 @@
 package com.adyen.checkout.card.ui;
 
 import android.content.Context;
+import android.os.Build;
 import android.text.Editable;
 import android.text.InputType;
 import android.text.TextUtils;
@@ -50,6 +51,10 @@ public class CardNumberInput extends AdyenTextInputEditText {
         enforceMaxInputLength(CardValidationUtils.MAXIMUM_CARD_NUMBER_LENGTH + MAX_DIGIT_SEPARATOR_COUNT);
         setInputType(InputType.TYPE_CLASS_NUMBER);
         setKeyListener(DigitsKeyListener.getInstance(SUPPORTED_DIGITS + DIGIT_SEPARATOR));
+
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+            setAutofillHints(AUTOFILL_HINT_CREDIT_CARD_NUMBER);
+        }
     }
 
     @NonNull
