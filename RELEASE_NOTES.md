@@ -11,14 +11,13 @@
 ## Added
 - Gift Card flow in Drop-in.
 - New required Gift Card related methods in `DropInService`:
-  - `checkBalance` to make the `paymentMethods/balance` API call and `sendBalanceResult` to return the result.
-  - `createOrder` to make the `orders` API call and `sendOrderResult` to return the result.
-  - `cancelOrder` to make the `orders/cancel` API call. Result can be returned with `sendResult`.
+  - `checkBalance` to make the `/paymentMethods/balance` API call and `sendBalanceResult` to return the result.
+  - `createOrder` to make the `/orders` API call and `sendOrderResult` to return the result.
+  - `cancelOrder` to make the `/orders/cancel` API call. Result can be returned with `sendResult`.
 - `DropInServiceResult.Update` required for the Gift Card flow. Updates drop-in with a new list of payment methods and optionally an order.
 - Gift Card Component.
 - RTL support.
 - Arabic string resource translations.
-- Various missing translations.
 - Pass a custom `Bundle` to `DropInService` using `DropInConfiguration.Builder.setAdditionalDataForDropInService`. Retrieve this bundle by calling `DropInService.getAdditionalData`.
 - The default Google Pay environment will automatically follow the Adyen environment even when calling `GooglePayConfiguration.Builder.setEnvironment` separately. You can still call `GooglePayConfiguration.Builder.setGooglePayEnvironment` to override this default behaviour.
 - Ability to remove stored payment methods. Override `DropInService.removeStoredPaymentMethod` and use `sendRecurringResult` to return the result.
@@ -31,6 +30,7 @@
 - Crash when the provided shopper `Locale` doesn't have an `isO3Country`.
 - Crash in the Component screen when resuming drop-in after the activity has been destroyed in the background.
 - CVC and expiry date fields in Card Component not being validated when empty.
+- Various missing translations.
 
 ## Removed
 - Drop-in being dismissed when tapping anywhere outside of the bottom sheet.
