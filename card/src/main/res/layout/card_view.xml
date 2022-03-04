@@ -121,7 +121,6 @@
             style="@style/AdyenCheckout.Card.HolderNameInput"
             android:nextFocusDown="@+id/editText_postalCode"
             android:nextFocusForward="@+id/editText_postalCode"
-            android:autofillHints="personName"
             tools:ignore="RequiredSize" />
     </com.google.android.material.textfield.TextInputLayout>
 
