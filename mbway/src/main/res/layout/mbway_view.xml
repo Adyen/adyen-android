@@ -47,6 +47,7 @@
 
             <com.adyen.checkout.components.ui.view.AdyenTextInputEditText
                 style="@style/AdyenCheckout.MBWay.MobileNumberInput"
+                android:autofillHints="phoneNational"
                 tools:ignore="RequiredSize" />
         </com.google.android.material.textfield.TextInputLayout>
     </LinearLayout>
