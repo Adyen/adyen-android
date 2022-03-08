@@ -12,15 +12,14 @@
     <string name="payment_methods_header">%%paymentMethods.title%%</string>
     <string name="error_dialog_title">%%error.title%%</string>
     <string name="error_dialog_button">%%dismissButton%%</string>
-    <string name="payment_failed">Error sending payment. Please try again.</string>
+    <string name="payment_failed">%%resultMessages.failed%%</string>
     <string name="action_failed">%%resultMessages.Error%%</string>
     <string name="component_error">%%resultMessages.unknown%%</string>
-    <string name="time_out_error">Request timed out. Please try again.</string>
+    <string name="time_out_error">%%resultMessages.timeout%%</string>
     <string name="store_payment_methods_header">%%paymentMethods.storedMethods%%</string>
     <string name="other_payment_methods">%%paymentMethods.otherMethods%%</string>
     <string name="continue_button">%%continue%%</string>
     <string name="change_payment_method">%%preselectedPaymentMethod.changeButton.accessibilityLabel%%</string>
-    <string name="credit_card">Credit Card</string>
     <string name="checkout_giftcard_redeem_button">%%applyGiftcard%%</string>
     <string name="checkout_giftcard_error_zero_balance">%%error.giftcard.no-balance%%</string>
     <string name="checkout_giftcard_error_currency">%%error.giftcard.currency-error%%</string>
@@ -29,4 +28,11 @@
     <string name="checkout_giftcard_payment_methods_header">%%paymentmethods.giftcard%%</string>
     <string name="checkout_giftcard_remove_button">%%storedPaymentMethod.disable.button%%</string>
     <string name="checkout_giftcard_max_transaction_limit">%%giftcardTransactionLimit%%</string>
+    <string name="checkout_giftcard_remove_gift_cards_title">%%giftcard.remove.title%%</string>
+    <string name="checkout_giftcard_remove_gift_cards_body">%%giftcard.remove.body.allgiftcards%%</string>
+    <string name="checkout_giftcard_remove_gift_cards_positive_button">%%storedPaymentMethod.disable.confirmButton%%</string>
+    <string name="checkout_giftcard_remove_gift_cards_negative_button">%%storedPaymentMethod.disable.cancelButton%%</string>
+    <string name="checkout_remove_stored_payment_method_body">%%storedPaymentMethod.disable.confirmation%%</string>
+    <!-- Untranslatable strings -->
+    <string name="checkout_negative_amount" translatable="false">- %s</string>
 </resources>

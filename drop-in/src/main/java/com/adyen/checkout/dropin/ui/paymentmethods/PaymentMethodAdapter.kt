@@ -11,14 +11,18 @@ package com.adyen.checkout.dropin.ui.paymentmethods
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.FrameLayout
 import android.widget.TextView
+import androidx.appcompat.app.AlertDialog
 import androidx.recyclerview.widget.RecyclerView
 import com.adyen.checkout.components.api.ImageLoader
+import com.adyen.checkout.components.ui.view.AdyenSwipeToRevealLayout
 import com.adyen.checkout.components.ui.view.RoundCornerImageView
 import com.adyen.checkout.components.util.CurrencyUtils
 import com.adyen.checkout.components.util.DateUtils
 import com.adyen.checkout.core.exception.CheckoutException
 import com.adyen.checkout.core.log.LogUtil
+import com.adyen.checkout.core.log.Logger
 import com.adyen.checkout.dropin.R
 import com.adyen.checkout.dropin.ui.paymentmethods.PaymentMethodListItem.Companion.GIFT_CARD_PAYMENT_METHOD
 import com.adyen.checkout.dropin.ui.paymentmethods.PaymentMethodListItem.Companion.PAYMENT_METHOD
@@ -27,21 +31,43 @@ import com.adyen.checkout.dropin.ui.paymentmethods.PaymentMethodListItem.Compani
 import com.adyen.checkout.dropin.ui.paymentmethods.PaymentMethodListItem.Companion.STORED_PAYMENT_METHOD
 
 @SuppressWarnings("TooManyFunctions")
-class PaymentMethodAdapter(
-    private val paymentMethods: List<PaymentMethodListItem>,
-    private val imageLoader: ImageLoader
+class PaymentMethodAdapter @JvmOverloads constructor(
+    private val paymentMethods: MutableList<PaymentMethodListItem>,
+    private val imageLoader: ImageLoader,
+    private val onUnderlayExpandListener: ((AdyenSwipeToRevealLayout) -> Unit)? = null
 ) : RecyclerView.Adapter<PaymentMethodAdapter.BaseViewHolder>() {
 
+    constructor(
+        paymentMethods: Collection<PaymentMethodListItem>,
+        imageLoader: ImageLoader,
+        onUnderlayExpandListener: ((AdyenSwipeToRevealLayout) -> Unit)? = null
+    ) : this(paymentMethods.toMutableList(), imageLoader, onUnderlayExpandListener)
+
     private var onPaymentMethodSelectedCallback: OnPaymentMethodSelectedCallback? = null
+    private var onStoredPaymentRemovedCallback: OnStoredPaymentRemovedCallback? = null
 
     fun setPaymentMethodSelectedCallback(onPaymentMethodSelectedCallback: OnPaymentMethodSelectedCallback) {
         this.onPaymentMethodSelectedCallback = onPaymentMethodSelectedCallback
     }
 
+    fun setStoredPaymentRemovedCallback(onStoredPaymentRemovedCallback: OnStoredPaymentRemovedCallback) {
+        this.onStoredPaymentRemovedCallback = onStoredPaymentRemovedCallback
+    }
+
+    fun removePaymentMethodWithId(id: String) {
+        val positionToRemove = paymentMethods.indexOfFirst { it is StoredPaymentMethodModel && it.id == id }
+        if (positionToRemove == -1) {
+            Logger.e(TAG, "Cannot remove stored payment method because it cannot be found.")
+        } else {
+            paymentMethods.removeAt(positionToRemove)
+            notifyItemRemoved(positionToRemove)
+        }
+    }
+
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): BaseViewHolder {
         return when (viewType) {
             PAYMENT_METHODS_HEADER -> HeaderVH(getView(parent, R.layout.payment_methods_list_header))
-            STORED_PAYMENT_METHOD -> StoredPaymentMethodVH(getView(parent, R.layout.payment_methods_list_item))
+            STORED_PAYMENT_METHOD -> StoredPaymentMethodVH(getView(parent, R.layout.removable_payment_methods_list_item))
             PAYMENT_METHOD -> PaymentMethodVH(getView(parent, R.layout.payment_methods_list_item))
             GIFT_CARD_PAYMENT_METHOD -> GiftCardPaymentMethodVH(getView(parent, R.layout.payment_methods_list_item))
             PAYMENT_METHODS_NOTE -> NoteVH(getView(parent, R.layout.payment_methods_list_note))
@@ -87,9 +113,34 @@ class PaymentMethodAdapter(
             is GenericStoredModel -> bindGenericStored(holder, storedPaymentMethod)
         }
 
-        holder.itemView.setOnClickListener {
-            onStoredPaymentMethodClick(storedPaymentMethod)
+        holder.itemView.findViewById<FrameLayout>(R.id.payment_method_item_underlay_button).setOnClickListener {
+            showRemoveStoredPaymentDialog(holder.itemView, storedPaymentMethod)
         }
+
+        (holder.itemView as? AdyenSwipeToRevealLayout)?.apply {
+            setUnderlayListener { view ->
+                onUnderlayExpandListener?.invoke(view)
+            }
+            this.setOnMainClickListener {
+                onStoredPaymentMethodClick(storedPaymentMethod)
+            }
+            setDragLocked(!storedPaymentMethod.isRemovable)
+        }
+    }
+
+    private fun showRemoveStoredPaymentDialog(itemView: View, storedPaymentMethodModel: StoredPaymentMethodModel) {
+        AlertDialog.Builder(itemView.context)
+            .setTitle(R.string.checkout_giftcard_remove_gift_cards_title)
+            .setMessage(R.string.checkout_remove_stored_payment_method_body)
+            .setPositiveButton(R.string.checkout_giftcard_remove_gift_cards_positive_button) { dialog, _ ->
+                onStoredPaymentRemovedCallback?.onStoredPaymentMethodRemoved(storedPaymentMethodModel)
+                dialog.dismiss()
+            }
+            .setNegativeButton(R.string.checkout_giftcard_remove_gift_cards_negative_button) { dialog, _ ->
+                (itemView as? AdyenSwipeToRevealLayout)?.collapseUnderlay()
+                dialog.dismiss()
+            }
+            .show()
     }
 
     private fun bindStoredCard(holder: StoredPaymentMethodVH, storedCardModel: StoredCardModel) {
@@ -200,6 +251,10 @@ class PaymentMethodAdapter(
         fun onStoredPaymentMethodSelected(storedPaymentMethodModel: StoredPaymentMethodModel)
         fun onPaymentMethodSelected(paymentMethod: PaymentMethodModel)
         fun onHeaderActionSelected(header: PaymentMethodHeader)
+    }
+
+    interface OnStoredPaymentRemovedCallback {
+        fun onStoredPaymentMethodRemoved(storedPaymentMethodModel: StoredPaymentMethodModel)
     }
 
     class StoredPaymentMethodVH(rootView: View) : BaseViewHolder(rootView) {

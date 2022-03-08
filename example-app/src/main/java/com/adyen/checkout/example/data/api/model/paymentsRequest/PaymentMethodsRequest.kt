@@ -9,7 +9,7 @@
 package com.adyen.checkout.example.data.api.model.paymentsRequest
 
 import com.adyen.checkout.components.model.payments.Amount
-import com.adyen.checkout.components.model.payments.request.Order
+import com.adyen.checkout.components.model.payments.request.OrderRequest
 
 data class PaymentMethodsRequest(
     val merchantAccount: String,
@@ -22,5 +22,5 @@ data class PaymentMethodsRequest(
     val shopperLocale: String = "en_US",
     val channel: String = "android",
     val splitCardFundingSources: Boolean = false,
-    val order: Order?
+    val order: OrderRequest?
 )

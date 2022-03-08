@@ -10,6 +10,7 @@ package com.adyen.checkout.dropin
 
 import android.content.ComponentName
 import android.content.Context
+import android.os.Bundle
 import android.os.Parcel
 import android.os.Parcelable
 import com.adyen.checkout.adyen3ds2.Adyen3DS2Configuration
@@ -30,6 +31,7 @@ import com.adyen.checkout.core.model.JsonUtils
 import com.adyen.checkout.core.util.ParcelUtils
 import com.adyen.checkout.dotpay.DotpayConfiguration
 import com.adyen.checkout.dropin.DropInConfiguration.Builder
+import com.adyen.checkout.dropin.service.DropInService
 import com.adyen.checkout.entercash.EntercashConfiguration
 import com.adyen.checkout.eps.EPSConfiguration
 import com.adyen.checkout.googlepay.GooglePayConfiguration
@@ -43,7 +45,6 @@ import com.adyen.checkout.sepa.SepaConfiguration
 import com.adyen.checkout.voucher.VoucherConfiguration
 import com.adyen.checkout.wechatpay.WeChatPayActionConfiguration
 import java.util.*
-import kotlin.collections.HashMap
 import kotlin.collections.set
 
 /**
@@ -60,6 +61,8 @@ class DropInConfiguration : Configuration, Parcelable {
     val amount: Amount
     val showPreselectedStoredPaymentMethod: Boolean
     val skipListWhenSinglePaymentMethod: Boolean
+    val isRemovingStoredPaymentMethodsEnabled: Boolean
+    val additionalDataForDropInService: Bundle?
 
     companion object {
         @JvmField
@@ -79,6 +82,8 @@ class DropInConfiguration : Configuration, Parcelable {
         this.amount = builder.amount
         this.showPreselectedStoredPaymentMethod = builder.showPreselectedStoredPaymentMethod
         this.skipListWhenSinglePaymentMethod = builder.skipListWhenSinglePaymentMethod
+        this.isRemovingStoredPaymentMethodsEnabled = builder.isRemovingStoredPaymentMethodsEnabled
+        this.additionalDataForDropInService = builder.additionalDataForDropInService
     }
 
     constructor(parcel: Parcel) : super(parcel) {
@@ -90,6 +95,8 @@ class DropInConfiguration : Configuration, Parcelable {
         amount = Amount.CREATOR.createFromParcel(parcel)
         showPreselectedStoredPaymentMethod = ParcelUtils.readBoolean(parcel)
         skipListWhenSinglePaymentMethod = ParcelUtils.readBoolean(parcel)
+        isRemovingStoredPaymentMethodsEnabled = ParcelUtils.readBoolean(parcel)
+        additionalDataForDropInService = parcel.readBundle(Bundle::class.java.classLoader)
     }
 
     override fun writeToParcel(dest: Parcel, flags: Int) {
@@ -100,33 +107,25 @@ class DropInConfiguration : Configuration, Parcelable {
         JsonUtils.writeToParcel(dest, Amount.SERIALIZER.serialize(amount))
         ParcelUtils.writeBoolean(dest, showPreselectedStoredPaymentMethod)
         ParcelUtils.writeBoolean(dest, skipListWhenSinglePaymentMethod)
+        ParcelUtils.writeBoolean(dest, isRemovingStoredPaymentMethodsEnabled)
+        dest.writeBundle(additionalDataForDropInService)
     }
 
-    internal fun <T : Configuration> getConfigurationForPaymentMethodOrNull(paymentMethod: String): T? {
-        return try {
-            getConfigurationForPaymentMethod(paymentMethod)
-        } catch (e: CheckoutException) {
-            null
-        }
-    }
-
-    internal fun <T : Configuration> getConfigurationForPaymentMethod(paymentMethod: String): T {
-        return if (availablePaymentConfigs.containsKey(paymentMethod)) {
+    internal fun <T : Configuration> getConfigurationForPaymentMethod(paymentMethod: String): T? {
+        if (availablePaymentConfigs.containsKey(paymentMethod)) {
             @Suppress("UNCHECKED_CAST")
-            availablePaymentConfigs[paymentMethod] as T
-        } else {
-            getDefaultConfigForPaymentMethod(paymentMethod, this)
+            return availablePaymentConfigs[paymentMethod] as T
         }
+        return null
     }
 
-    internal inline fun <reified T : Configuration> getConfigurationForAction(): T {
+    internal inline fun <reified T : Configuration> getConfigurationForAction(): T? {
         val actionClass = T::class.java
-        return if (availableActionConfigs.containsKey(actionClass)) {
+        if (availableActionConfigs.containsKey(actionClass)) {
             @Suppress("UNCHECKED_CAST")
-            availableActionConfigs[actionClass] as T
-        } else {
-            getDefaultConfigForAction(this)
+            return availableActionConfigs[actionClass] as T
         }
+        return null
     }
 
     /**
@@ -149,6 +148,10 @@ class DropInConfiguration : Configuration, Parcelable {
             private set
         var skipListWhenSinglePaymentMethod: Boolean = false
             private set
+        var isRemovingStoredPaymentMethodsEnabled: Boolean = false
+            private set
+        var additionalDataForDropInService: Bundle? = null
+            private set
 
         private val packageName: String
         private val serviceClassName: String
@@ -170,11 +173,7 @@ class DropInConfiguration : Configuration, Parcelable {
         /**
          * Create a Builder with the same values of an existing Configuration object.
          */
-        constructor(dropInConfiguration: DropInConfiguration) : super(
-            dropInConfiguration.shopperLocale,
-            dropInConfiguration.environment,
-            dropInConfiguration.clientKey
-        ) {
+        constructor(dropInConfiguration: DropInConfiguration) : super(dropInConfiguration) {
             packageName = dropInConfiguration.serviceComponentName.packageName
             serviceClassName = dropInConfiguration.serviceComponentName.className
 
@@ -182,6 +181,8 @@ class DropInConfiguration : Configuration, Parcelable {
             amount = dropInConfiguration.amount
             showPreselectedStoredPaymentMethod = dropInConfiguration.showPreselectedStoredPaymentMethod
             skipListWhenSinglePaymentMethod = dropInConfiguration.skipListWhenSinglePaymentMethod
+            isRemovingStoredPaymentMethodsEnabled = dropInConfiguration.isRemovingStoredPaymentMethodsEnabled
+            additionalDataForDropInService = dropInConfiguration.additionalDataForDropInService
         }
 
         fun setServiceComponentName(serviceComponentName: ComponentName): Builder {
@@ -222,6 +223,24 @@ class DropInConfiguration : Configuration, Parcelable {
          */
         fun setSkipListWhenSinglePaymentMethod(skipListWhenSinglePaymentMethod: Boolean): Builder {
             this.skipListWhenSinglePaymentMethod = skipListWhenSinglePaymentMethod
+            return this
+        }
+
+        /**
+         * When set to true, users can remove their stored payment methods by swiping left on the corresponding row in the payment methods screen.
+         *
+         * You need to implement [DropInService.removeStoredPaymentMethod] to handle the removal.
+         */
+        fun setEnableRemovingStoredPaymentMethods(isEnabled: Boolean): Builder {
+            this.isRemovingStoredPaymentMethodsEnabled = isEnabled
+            return this
+        }
+
+        /**
+         * Pass a custom Bundle to Drop-in. This Bundle will passed to the [DropInService] and can be read using [DropInService.getAdditionalData].
+         */
+        fun setAdditionalDataForDropInService(additionalDataForDropInService: Bundle): Builder {
+            this.additionalDataForDropInService = additionalDataForDropInService
             return this
         }
 

@@ -12,15 +12,14 @@
     <string name="payment_methods_header">Zahlungsmethoden</string>
     <string name="error_dialog_title">Fehler</string>
     <string name="error_dialog_button">OK</string>
-    <string name="payment_failed">Error sending payment. Please try again.</string>
+    <string name="payment_failed">Fehler beim Senden der Zahlung. Bitte versuchen Sie es erneut.</string>
     <string name="action_failed">Bei der Verarbeitung Ihrer Zahlung ist ein Fehler aufgetreten. Bitte versuchen Sie es später erneut.</string>
     <string name="component_error">Es ist etwas schief gegangen.</string>
-    <string name="time_out_error">Request timed out. Please try again.</string>
+    <string name="time_out_error">Zeitüberschreitung bei Anfrage. Bitte versuchen Sie es erneut.</string>
     <string name="store_payment_methods_header">Ihre Zahlungsmethoden</string>
     <string name="other_payment_methods">Andere Zahlungsmethoden</string>
     <string name="continue_button">Weiter</string>
     <string name="change_payment_method">Zahlungsmethode wechseln</string>
-    <string name="credit_card">Credit Card</string>
     <string name="checkout_giftcard_redeem_button">Einlösen</string>
     <string name="checkout_giftcard_error_zero_balance">Auf dieser Geschenkkarte ist kein Guthaben vorhanden</string>
     <string name="checkout_giftcard_error_currency">Geschenkkarten sind nur in der Währung gültig, in der sie ausgestellt wurden</string>
@@ -29,4 +28,9 @@
     <string name="checkout_giftcard_payment_methods_header">Geschenkgutschein hinzugefügt</string>
     <string name="checkout_giftcard_remove_button">Entfernen</string>
     <string name="checkout_giftcard_max_transaction_limit">Der zulässige Höchstbetrag pro Transaktion für diese Geschenkkarte ist %s</string>
+    <string name="checkout_giftcard_remove_gift_cards_title">Entfernen der Karte bestätigen</string>
+    <string name="checkout_giftcard_remove_gift_cards_body">Hinzugefügte Geschenkgutscheine entfernen?</string>
+    <string name="checkout_giftcard_remove_gift_cards_positive_button">Ja, entfernen</string>
+    <string name="checkout_giftcard_remove_gift_cards_negative_button">Abbrechen</string>
+    <string name="checkout_remove_stored_payment_method_body">Gespeicherte Zahlungsmethode entfernen</string>
 </resources>

@@ -1,9 +1,9 @@
 <!--
-  ~ Copyright (c) 2020 Adyen N.V.
+  ~ Copyright (c) 2019 Adyen N.V.
   ~
   ~ This file is open source and available under the MIT license. See the LICENSE file for more info.
   ~
-  ~ Created by josephj on 8/12/2020.
+  ~ Created by caiof on 21/3/2019.
   -->
 
 <resources>
@@ -12,15 +12,14 @@
     <string name="payment_methods_header">Způsoby platby</string>
     <string name="error_dialog_title">Chyba</string>
     <string name="error_dialog_button">OK</string>
-    <string name="payment_failed">Error sending payment. Please try again.</string>
+    <string name="payment_failed">Chyba při odesílání platby. Zkuste to znovu.</string>
     <string name="action_failed">Při zpracování platby došlo k chybě. Zkuste to znovu později.</string>
     <string name="component_error">Něco se pokazilo.</string>
-    <string name="time_out_error">Request timed out. Please try again.</string>
+    <string name="time_out_error">Vypršení doby požadavku. Zkuste to znovu.</string>
     <string name="store_payment_methods_header">Vaše způsoby platby</string>
     <string name="other_payment_methods">Vyberte jiný způsob platby</string>
     <string name="continue_button">Pokračovat</string>
     <string name="change_payment_method">Změnit způsob platby</string>
-    <string name="credit_card">Credit Card</string>
     <string name="checkout_giftcard_redeem_button">Uplatnit</string>
     <string name="checkout_giftcard_error_zero_balance">Na dárkové kartě je nulový zůstatek</string>
     <string name="checkout_giftcard_error_currency">Dárkové karty jsou platné jenom v měně, ve které byly vystavené</string>
@@ -29,4 +28,9 @@
     <string name="checkout_giftcard_payment_methods_header">Přidaná dárková karta</string>
     <string name="checkout_giftcard_remove_button">Odebrat</string>
     <string name="checkout_giftcard_max_transaction_limit">Maximální povolená částka za jednu transakci touto dárkovou kartou je %s.</string>
+    <string name="checkout_giftcard_remove_gift_cards_title">Potvrďte odebrání karty</string>
+    <string name="checkout_giftcard_remove_gift_cards_body">Odebrat přidané dárkové karty?</string>
+    <string name="checkout_giftcard_remove_gift_cards_positive_button">Ano, odebrat</string>
+    <string name="checkout_giftcard_remove_gift_cards_negative_button">Zrušit</string>
+    <string name="checkout_remove_stored_payment_method_body">Odebrat uložený způsob platby</string>
 </resources>

@@ -11,6 +11,8 @@ import android.content.Context
 import android.content.Intent
 import android.content.pm.PackageManager
 import android.net.Uri
+import android.os.Build
+import androidx.browser.customtabs.CustomTabColorSchemeParams
 import androidx.browser.customtabs.CustomTabsIntent
 import com.adyen.checkout.components.ui.util.ThemeUtil
 import com.adyen.checkout.core.exception.CheckoutException
@@ -106,15 +108,27 @@ object RedirectUtil {
      */
     @JvmStatic
     fun createRedirectIntent(context: Context, uri: Uri): Intent {
-        return if (determineResolveResult(context, uri).type == ResolveResult.Type.APPLICATION) {
-            Intent(Intent.ACTION_VIEW, uri)
+        return if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R) {
+            createCustomTabIntent(context, uri)
         } else {
-            val customTabsIntent = CustomTabsIntent.Builder()
-                .setShowTitle(true)
-                .setToolbarColor(ThemeUtil.getPrimaryThemeColor(context))
-                .build()
-            customTabsIntent.intent.data = uri
-            customTabsIntent.intent
+            if (determineResolveResult(context, uri).type == ResolveResult.Type.APPLICATION) {
+                Intent(Intent.ACTION_VIEW, uri)
+            } else {
+                createCustomTabIntent(context, uri)
+            }
         }
+    }
+
+    private fun createCustomTabIntent(context: Context, uri: Uri): Intent {
+        val defaultColors = CustomTabColorSchemeParams.Builder()
+            .setToolbarColor(ThemeUtil.getPrimaryThemeColor(context))
+            .build()
+
+        val customTabsIntent = CustomTabsIntent.Builder()
+            .setShowTitle(true)
+            .setDefaultColorSchemeParams(defaultColors)
+            .build()
+        customTabsIntent.intent.data = uri
+        return customTabsIntent.intent
     }
 }

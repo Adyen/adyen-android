@@ -36,6 +36,7 @@
 
         <service android:name=".service.ExampleDropInService" />
         <service android:name=".service.ExampleAsyncDropInService" />
+        <service android:name=".service.ExampleFullAsyncDropInService" />
     </application>
 
 </manifest>

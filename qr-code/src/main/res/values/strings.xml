@@ -1,4 +1,5 @@
-<?xml version="1.0" encoding="utf-8"?><!--
+<?xml version="1.0" encoding="utf-8"?>
+<!--
   ~ Copyright (c) 2021 Adyen N.V.
   ~
   ~ This file is open source and available under the MIT license. See the LICENSE file for more info.
@@ -7,9 +8,10 @@
   -->
 
 <resources>
-    <string name="checkout_qr_code_time_left_format" translatable="false">%02d:%02d</string>
     <string name="checkout_qr_code_pix">Copy the code, then open the app with the registered PIX key, choose Pay with PIX and paste the code there.</string>
     <string name="checkout_qr_code_copy_button">Copy code</string>
-    <string name="checkout_qr_code_copied_toast">Code copied to clipboard</string>
     <string name="checkout_qr_code_timer_text">You have %s to pay</string>
+    <string name="checkout_qr_code_copied_toast">Code copied to clipboard</string>
+    <!-- Untranslatable strings -->
+    <string name="checkout_qr_code_time_left_format" translatable="false">%02d:%02d</string>
 </resources>

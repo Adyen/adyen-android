@@ -12,15 +12,14 @@
     <string name="payment_methods_header">Metody płatności</string>
     <string name="error_dialog_title">Błąd</string>
     <string name="error_dialog_button">Ok</string>
-    <string name="payment_failed">Error sending payment. Please try again.</string>
+    <string name="payment_failed">Wystąpił błąd podczas wysyłania płatności. Spróbuj ponownie.</string>
     <string name="action_failed">Podczas przetwarzania płatności wystąpił błąd. Prosimy spróbować ponownie.</string>
     <string name="component_error">Coś poszło nie tak.</string>
-    <string name="time_out_error">Request timed out. Please try again.</string>
+    <string name="time_out_error">Upłynął limit czasu żądania. Spróbuj ponownie.</string>
     <string name="store_payment_methods_header">Twoje metody płatności</string>
     <string name="other_payment_methods">Wybierz inną metodę</string>
     <string name="continue_button">Kontynuuj</string>
     <string name="change_payment_method">Zmień metodę płatności</string>
-    <string name="credit_card">Credit Card</string>
     <string name="checkout_giftcard_redeem_button">Wykorzystaj</string>
     <string name="checkout_giftcard_error_zero_balance">Saldo karty podarunkowej jest puste</string>
     <string name="checkout_giftcard_error_currency">Karty podarunkowe są ważne tylko w walucie, w której zostały wydane</string>
@@ -29,4 +28,9 @@
     <string name="checkout_giftcard_payment_methods_header">Dodano kartę podarunkową</string>
     <string name="checkout_giftcard_remove_button">Usuń</string>
     <string name="checkout_giftcard_max_transaction_limit">Maks. dozwolona kwota (%s) na transakcję tą kartą upominkową</string>
+    <string name="checkout_giftcard_remove_gift_cards_title">Potwierdź usunięcie karty</string>
+    <string name="checkout_giftcard_remove_gift_cards_body">Usunąć dodane karty podarunkowe?</string>
+    <string name="checkout_giftcard_remove_gift_cards_positive_button">Tak, usuń</string>
+    <string name="checkout_giftcard_remove_gift_cards_negative_button">Anuluj</string>
+    <string name="checkout_remove_stored_payment_method_body">Usuń zapisaną metodę płatności</string>
 </resources>

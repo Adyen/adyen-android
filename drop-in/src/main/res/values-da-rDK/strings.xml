@@ -12,15 +12,14 @@
     <string name="payment_methods_header">Betalingsmåder</string>
     <string name="error_dialog_title">Fejl</string>
     <string name="error_dialog_button">OK</string>
-    <string name="payment_failed">Error sending payment. Please try again.</string>
+    <string name="payment_failed">Fejl ved gennemførelse af betaling. Prøv igen.</string>
     <string name="action_failed">Der opstod en fejl ved behandlingen af betalingen. Prøv igen senere.</string>
     <string name="component_error">Noget gik galt.</string>
-    <string name="time_out_error">Request timed out. Please try again.</string>
+    <string name="time_out_error">Anmodning udløbet. Prøv igen.</string>
     <string name="store_payment_methods_header">Dine betalingsmåder</string>
     <string name="other_payment_methods">Vælg anden måde</string>
     <string name="continue_button">Fortsæt</string>
     <string name="change_payment_method">Skift betalingsmåde</string>
-    <string name="credit_card">Credit Card</string>
     <string name="checkout_giftcard_redeem_button">Indløs</string>
     <string name="checkout_giftcard_error_zero_balance">Saldoen på gavekortet er 0</string>
     <string name="checkout_giftcard_error_currency">Gavekort er kun gyldige i udstedelsesvalutaen</string>
@@ -29,4 +28,9 @@
     <string name="checkout_giftcard_payment_methods_header">Gavekort tilføjet</string>
     <string name="checkout_giftcard_remove_button">Fjern</string>
     <string name="checkout_giftcard_max_transaction_limit">Maks. %s tilladt pr. transaktion på dette gavekort</string>
+    <string name="checkout_giftcard_remove_gift_cards_title">Bekræft fjernelse af kort</string>
+    <string name="checkout_giftcard_remove_gift_cards_body">Fjern tilføjede gavekort?</string>
+    <string name="checkout_giftcard_remove_gift_cards_positive_button">Ja, fjern</string>
+    <string name="checkout_giftcard_remove_gift_cards_negative_button">Annuller</string>
+    <string name="checkout_remove_stored_payment_method_body">Fjern gemt betalingsmåde</string>
 </resources>

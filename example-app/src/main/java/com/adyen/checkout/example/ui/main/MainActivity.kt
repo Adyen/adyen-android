@@ -34,7 +34,7 @@ import com.adyen.checkout.example.R
 import com.adyen.checkout.example.data.api.CheckoutApiService
 import com.adyen.checkout.example.data.storage.KeyValueStorage
 import com.adyen.checkout.example.databinding.ActivityMainBinding
-import com.adyen.checkout.example.service.ExampleAsyncDropInService
+import com.adyen.checkout.example.service.ExampleFullAsyncDropInService
 import com.adyen.checkout.example.ui.configuration.ConfigurationActivity
 import com.adyen.checkout.googlepay.GooglePayConfiguration
 import dagger.hilt.android.AndroidEntryPoint
@@ -168,7 +168,7 @@ class MainActivity : AppCompatActivity(), DropInCallback {
 
         val dropInConfigurationBuilder = DropInConfiguration.Builder(
             this@MainActivity,
-            ExampleAsyncDropInService::class.java,
+            ExampleFullAsyncDropInService::class.java,
             BuildConfig.CLIENT_KEY
         )
             .setEnvironment(Environment.TEST)
@@ -177,6 +177,7 @@ class MainActivity : AppCompatActivity(), DropInCallback {
             .addBcmcConfiguration(bcmcConfiguration)
             .addGooglePayConfiguration(googlePayConfig)
             .add3ds2ActionConfiguration(adyen3DS2Configuration)
+            .setEnableRemovingStoredPaymentMethods(true)
 
         try {
             dropInConfigurationBuilder.setAmount(amount)

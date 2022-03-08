@@ -14,7 +14,7 @@ import com.adyen.checkout.core.model.ModelObject
 import org.json.JSONException
 import org.json.JSONObject
 
-data class Order(
+data class OrderRequest(
     val pspReference: String,
     val orderData: String
 ) : ModelObject() {
@@ -28,23 +28,23 @@ data class Order(
         private const val ORDER_DATA = "orderData"
 
         @JvmField
-        val CREATOR = Creator(Order::class.java)
+        val CREATOR = Creator(OrderRequest::class.java)
 
         @JvmField
-        val SERIALIZER: Serializer<Order> = object : Serializer<Order> {
-            override fun serialize(modelObject: Order): JSONObject {
+        val SERIALIZER: Serializer<OrderRequest> = object : Serializer<OrderRequest> {
+            override fun serialize(modelObject: OrderRequest): JSONObject {
                 return JSONObject().apply {
                     try {
                         putOpt(PSP_REFERENCE, modelObject.pspReference)
                         putOpt(ORDER_DATA, modelObject.orderData)
                     } catch (e: JSONException) {
-                        throw ModelSerializationException(Order::class.java, e)
+                        throw ModelSerializationException(OrderRequest::class.java, e)
                     }
                 }
             }
 
-            override fun deserialize(jsonObject: JSONObject): Order {
-                return Order(
+            override fun deserialize(jsonObject: JSONObject): OrderRequest {
+                return OrderRequest(
                     pspReference = jsonObject.optString(PSP_REFERENCE, ""),
                     orderData = jsonObject.optString(ORDER_DATA, "")
                 )

@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+  ~ Copyright (c) 2021 Adyen N.V.
+  ~
+  ~ This file is open source and available under the MIT license. See the LICENSE file for more info.
+  ~
+  ~ Created by josephj on 26/3/2021.
+  -->
+
+<resources>
+    <string name="checkout_qr_code_pix">复制代码，然后使用注册的 PIX 密钥打开应用，选择“使用 PIX 支付”并将代码粘贴到那里。</string>
+    <string name="checkout_qr_code_copy_button">复制代码</string>
+    <string name="checkout_qr_code_timer_text">您需要支付 %s</string>
+    <string name="checkout_qr_code_copied_toast">代码复制到剪贴板</string>
+</resources>

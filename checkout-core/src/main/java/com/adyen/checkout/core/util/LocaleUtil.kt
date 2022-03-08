@@ -9,8 +9,8 @@ package com.adyen.checkout.core.util
 
 import android.content.Context
 import android.os.Build
+import java.util.IllformedLocaleException
 import java.util.Locale
-import java.util.MissingResourceException
 
 /**
  * Utility class to use [Locale].
@@ -63,8 +63,9 @@ object LocaleUtil {
     @JvmStatic
     fun isValidLocale(locale: Locale): Boolean {
         return try {
-            locale.isO3Language.isNotEmpty() && (locale.country.isEmpty() || locale.isO3Country.isNotEmpty())
-        } catch (ex: MissingResourceException) {
+            Locale.Builder().setLocale(locale).build()
+            return true
+        } catch (ex: IllformedLocaleException) {
             false
         }
     }

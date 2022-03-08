@@ -10,4 +10,5 @@
 <resources>
     <color name="overlay">#55000000</color>
     <color name="indicator_color">#1F000000</color>
+    <color name="remove_stored_bg">#B00020</color>
 </resources>

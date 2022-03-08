@@ -14,20 +14,24 @@ import android.content.Context
 import android.content.Intent
 import android.content.ServiceConnection
 import android.os.Binder
+import android.os.Bundle
 import android.os.IBinder
-import androidx.lifecycle.LifecycleOwner
-import androidx.lifecycle.MutableLiveData
-import androidx.lifecycle.Observer
 import com.adyen.checkout.components.ActionComponentData
 import com.adyen.checkout.components.PaymentComponentState
+import com.adyen.checkout.components.model.paymentmethods.StoredPaymentMethod
+import com.adyen.checkout.components.model.payments.request.OrderRequest
 import com.adyen.checkout.components.model.payments.request.PaymentComponentData
 import com.adyen.checkout.components.model.payments.request.PaymentMethodDetails
 import com.adyen.checkout.core.log.LogUtil
 import com.adyen.checkout.core.log.Logger
+import com.adyen.checkout.dropin.DropInConfiguration
 import kotlin.coroutines.CoroutineContext
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.Job
+import kotlinx.coroutines.channels.Channel
+import kotlinx.coroutines.flow.collect
+import kotlinx.coroutines.flow.receiveAsFlow
 import kotlinx.coroutines.launch
 import org.json.JSONObject
 
@@ -51,11 +55,16 @@ abstract class DropInService : Service(), CoroutineScope, DropInServiceInterface
 
     private val binder = DropInBinder()
 
-    // TODO change LiveData into channel/flow to support single events?
-    private val mResultLiveData: MutableLiveData<BaseDropInServiceResult> = MutableLiveData()
+    private val resultChannel = Channel<BaseDropInServiceResult>(Channel.BUFFERED)
+    private val resultFlow = resultChannel.receiveAsFlow()
+
+    private var additionalData: Bundle? = null
 
     override fun onBind(intent: Intent?): IBinder {
         Logger.d(TAG, "onBind")
+        if (intent?.hasExtra(INTENT_EXTRA_ADDITIONAL_DATA) == true) {
+            additionalData = intent.getBundleExtra(INTENT_EXTRA_ADDITIONAL_DATA)
+        }
         return binder
     }
 
@@ -119,11 +128,14 @@ abstract class DropInService : Service(), CoroutineScope, DropInServiceInterface
      * Note that the [PaymentComponentState] is a abstract class, you can check and cast to
      * one of its child classes for a more component specific state.
      *
+     * Only applicable for gift card flow: in case of a partial payment, you should update Drop-in
+     * by calling [sendResult] with [DropInServiceResult.Update].
+     *
      * See https://docs.adyen.com/api-explorer/ for more information on the API documentation.
      *
      * @param paymentComponentState The state of the [PaymentComponent] at the moment the user
      * submits the payment.
-     * @param paymentComponentJson The serialized data from the [PaymentComponent] the compose your
+     * @param paymentComponentJson The serialized data from the [PaymentComponent] to compose your
      * call.
      */
     protected open fun onPaymentsCallRequested(
@@ -172,10 +184,13 @@ abstract class DropInService : Service(), CoroutineScope, DropInServiceInterface
      * implementation of [makeDetailsCall] in a background thread so you won't need to
      * manage the threads yourself.
      *
+     * Only applicable for gift card flow: in case of a partial payment, you should update Drop-in
+     * by calling [sendResult] with [DropInServiceResult.Update].
+     *
      * See https://docs.adyen.com/api-explorer/ for more information on the API documentation.
      *
      * @param actionComponentData The data from the [ActionComponent].
-     * @param actionComponentJson The serialized data from the [ActionComponent] the compose your
+     * @param actionComponentJson The serialized data from the [ActionComponent] to compose your
      * call.
      */
     protected open fun onDetailsCallRequested(
@@ -200,21 +215,63 @@ abstract class DropInService : Service(), CoroutineScope, DropInServiceInterface
      * @param result the result of the network request.
      */
     protected fun sendResult(result: DropInServiceResult) {
-        // send response back to activity
-        Logger.d(TAG, "dispatching DropInServiceResult")
-        mResultLiveData.postValue(result)
+        launch {
+            // send response back to activity
+            Logger.d(TAG, "dispatching DropInServiceResult")
+            resultChannel.send(result)
+        }
     }
 
+    /**
+     * Allow asynchronously sending the results of the paymentMethods/balance/ network call.
+     *
+     * Call this method when using [checkBalance] with a [BalanceDropInServiceResult] depending
+     * on the response of the corresponding network call.
+     * Check the subclasses of [BalanceDropInServiceResult] for more information.
+     *
+     * @param result the result of the network request.
+     */
     protected fun sendBalanceResult(result: BalanceDropInServiceResult) {
-        // send response back to activity
-        Logger.d(TAG, "dispatching BalanceDropInServiceResult")
-        mResultLiveData.postValue(result)
+        launch {
+            // send response back to activity
+            Logger.d(TAG, "dispatching BalanceDropInServiceResult")
+            resultChannel.send(result)
+        }
     }
 
+    /**
+     * Allow asynchronously sending the results of the orders/ network call.
+     *
+     * Call this method when using [createOrder] with a [OrderDropInServiceResult] depending
+     * on the response of the corresponding network call.
+     * Check the subclasses of [OrderDropInServiceResult] for more information.
+     *
+     * @param result the result of the network request.
+     */
     protected fun sendOrderResult(result: OrderDropInServiceResult) {
-        // send response back to activity
-        Logger.d(TAG, "dispatching OrderDropInServiceResult")
-        mResultLiveData.postValue(result)
+        launch {
+            // send response back to activity
+            Logger.d(TAG, "dispatching OrderDropInServiceResult")
+            resultChannel.send(result)
+        }
+    }
+
+    /**
+     * Allow asynchronously sending the results of the Recurring/ network call.
+     *
+     * Call this method after making a network call to remove a stored payment method
+     * while using [removeStoredPaymentMethod] and pass an instance of [RecurringDropInServiceResult]
+     * depending on the response of the corresponding network call.
+     * Check the subclasses of [RecurringDropInServiceResult] for more information.
+     *
+     * @param result the result of the network request.
+     */
+    protected fun sendRecurringResult(result: RecurringDropInServiceResult) {
+        launch {
+            // send response back to activity
+            Logger.d(TAG, "dispatching RecurringDropInServiceResult")
+            resultChannel.send(result)
+        }
     }
 
     /**
@@ -238,9 +295,12 @@ abstract class DropInService : Service(), CoroutineScope, DropInServiceInterface
      * If you want to make the call asynchronously, or get a more detailed, non-serialized
      * version of the payment component data, override [onPaymentsCallRequested] instead.
      *
+     * Only applicable for gift card flow: in case of a partial payment, you should update Drop-in
+     * by returning [DropInServiceResult.Update].
+     *
      * See https://docs.adyen.com/api-explorer/ for more information on the API documentation.
      *
-     * @param paymentComponentJson The result data from the [PaymentComponent] the compose your call.
+     * @param paymentComponentJson The result data from the [PaymentComponent] to compose your call.
      * @return The result of the network call
      */
     open fun makePaymentsCall(paymentComponentJson: JSONObject): DropInServiceResult {
@@ -266,9 +326,12 @@ abstract class DropInService : Service(), CoroutineScope, DropInServiceInterface
      * If you want to make the call asynchronously, or get a non-serialized version of the action
      * component data, override [onDetailsCallRequested] instead.
      *
+     * Only applicable for gift card flow: in case of a partial payment, you should update Drop-in
+     * by returning [DropInServiceResult.Update].
+     *
      * See https://docs.adyen.com/api-explorer/ for more information on the API documentation.
      *
-     * @param actionComponentJson The result data from the [ActionComponent] the compose your call.
+     * @param actionComponentJson The result data from the [ActionComponent] to compose your call.
      * @return The result of the network call
      */
     open fun makeDetailsCall(actionComponentJson: JSONObject): DropInServiceResult {
@@ -277,12 +340,35 @@ abstract class DropInService : Service(), CoroutineScope, DropInServiceInterface
 
     override fun requestBalanceCall(paymentMethodData: PaymentMethodDetails) {
         Logger.d(TAG, "requestBalanceCall")
-        val json = PaymentMethodDetails.SERIALIZER.serialize(paymentMethodData)
-        checkBalance(paymentMethodData, json)
+        checkBalance(paymentMethodData)
     }
 
-    // TODO docs
-    open fun checkBalance(paymentMethodData: PaymentMethodDetails, paymentMethodJson: JSONObject) {
+    /**
+     * Only applicable for gift card flow.
+     *
+     * In this method you should make the network call to tell your server to make a call to the
+     * paymentMethods/balance/ endpoint. This method is called right after the user enters their gift card
+     * details and submits them.
+     *
+     * We provide [paymentMethodData], a [PaymentMethodDetails] object that contains a non-serialized
+     * version of the gift card payment method JSON. Use [PaymentMethodDetails.SERIALIZER] to serialize it
+     * to a [JSONObject].
+     *
+     * Asynchronous handling: since this method runs on the main thread, you should make sure the
+     * paymentMethods/balance/ call and any other long running operation is made on a background thread.
+     *
+     * You should eventually call [sendBalanceResult] with a [BalanceDropInServiceResult] containing the result
+     * of the network request. The base class will handle messaging the UI afterwards, based on the
+     * [BalanceDropInServiceResult].
+     *
+     * Note that not overriding this method while enabling gift card payments will cause a [NotImplementedError]
+     * to be thrown.
+     *
+     * See https://docs.adyen.com/api-explorer/ for more information on the API documentation.
+     *
+     * @param paymentMethodData The data from the gift card component.
+     */
+    open fun checkBalance(paymentMethodData: PaymentMethodDetails) {
         throw NotImplementedError("Method checkBalance is not implemented")
     }
 
@@ -291,13 +377,102 @@ abstract class DropInService : Service(), CoroutineScope, DropInServiceInterface
         createOrder()
     }
 
-    // TODO docs
+    /**
+     * Only applicable for gift card flow.
+     *
+     * In this method you should make the network call to tell your server to make a call to the
+     * orders/ endpoint. This method is called when the user is trying to pay a part of the Drop-in amount
+     * using a gift card.
+     *
+     * Asynchronous handling: since this method runs on the main thread, you should make sure the orders/
+     * call and any other long running operation is made on a background thread.
+     *
+     * You should eventually call [sendOrderResult] with a [OrderDropInServiceResult] containing the result of the
+     * network request. The base class will handle messaging the UI afterwards, based on the [OrderDropInServiceResult].
+     *
+     * Note that not overriding this method while enabling gift card payments will cause a [NotImplementedError]
+     * to be thrown.
+     *
+     * See https://docs.adyen.com/api-explorer/ for more information on the API documentation.
+     */
     open fun createOrder() {
         throw NotImplementedError("Method createOrder is not implemented")
     }
 
-    override fun observeResult(owner: LifecycleOwner, observer: Observer<BaseDropInServiceResult>) {
-        mResultLiveData.observe(owner, observer)
+    override fun requestCancelOrder(order: OrderRequest, isDropInCancelledByUser: Boolean) {
+        Logger.d(TAG, "requestCancelOrder")
+        cancelOrder(order, !isDropInCancelledByUser)
+    }
+
+    /**
+     * Only applicable for gift card flow.
+     *
+     * In this method you should make the network call to tell your server to make a call to the
+     * orders/cancel/ endpoint. This method is called during a partial payment, when the user removes
+     * their already paid gift cards either by using the remove button or cancelling Drop-in.
+     *
+     * We provide [order], an [OrderRequest] object that contains a non-serialized version of the order
+     * to be cancelled. Use [OrderRequest.SERIALIZER] to serialize it to a [JSONObject].
+     *
+     * The [shouldUpdatePaymentMethods] flag indicates the next step you should take after the API call
+     * is made:
+     * - [true] means that Drop-in is still showing and you should therefore call paymentMethods/
+     * then update Drop-in with the new list of payment methods, by passing [DropInServiceResult.Update] to
+     * [sendResult].
+     * - [false] means that Drop-in is being dismissed by the user so there is no need to do any further calls.
+     *
+     * Asynchronous handling: since this method runs on the main thread, you should make sure the
+     * paymentMethods/balance/ call and any other long running operation is made on a background thread.
+     *
+     * Note that not overriding this method while enabling gift card payments will cause a [NotImplementedError]
+     * to be thrown.
+     *
+     * See https://docs.adyen.com/api-explorer/ for more information on the API documentation.
+     *
+     * @param order The data from order being cancelled.
+     * @param shouldUpdatePaymentMethods indicates whether payment methods should be re-fetched and passed to Drop-in.
+     */
+    open fun cancelOrder(order: OrderRequest, shouldUpdatePaymentMethods: Boolean) {
+        throw NotImplementedError("Method cancelOrder is not implemented")
+    }
+
+    override fun requestRemoveStoredPaymentMethod(storedPaymentMethod: StoredPaymentMethod) {
+        Logger.d(TAG, "requestRemoveStoredPaymentMethod")
+        removeStoredPaymentMethod(storedPaymentMethod, StoredPaymentMethod.SERIALIZER.serialize(storedPaymentMethod))
+    }
+
+    /**
+     * Only applicable to removing stored payment methods.
+     *
+     * In this method you should make the network call to tell your server to make a call to the
+     * Recurring/<version_number>/disable endpoint. This method is called when the user initiates
+     * removing a stored payment method using the remove button.
+     *
+     * We provide [storedPaymentMethod] that contains the id of the stored payment method to be removed
+     * in the field [StoredPaymentMethod.id].
+     *
+     * Asynchronous handling: since this method runs on the main thread, you should make sure the
+     * Recurring/<version>/disable call and any other long running operation is made on a background thread.
+     *
+     * Note that not overriding this method while enabling gift card payments will cause a [NotImplementedError]
+     * to be thrown.
+     *
+     * See https://docs.adyen.com/api-explorer/ for more information on the API documentation.
+     */
+    open fun removeStoredPaymentMethod(storedPaymentMethod: StoredPaymentMethod, storedPaymentMethodJson: JSONObject) {
+        throw NotImplementedError("Method removeStoredPaymentMethod is not implemented")
+    }
+
+    override suspend fun observeResult(callback: (BaseDropInServiceResult) -> Unit) {
+        resultFlow.collect { callback(it) }
+    }
+
+    /**
+     * Gets the additional data that was set when starting drop-in using
+     * [DropInConfiguration.Builder.setAdditionalDataForDropInService] or null if nothing was set.
+     */
+    protected fun getAdditionalData(): Bundle? {
+        return additionalData
     }
 
     internal inner class DropInBinder : Binder() {
@@ -305,13 +480,19 @@ abstract class DropInService : Service(), CoroutineScope, DropInServiceInterface
     }
 
     companion object {
+        private const val INTENT_EXTRA_ADDITIONAL_DATA = "ADDITIONAL_DATA"
+
         internal fun bindService(
             context: Context,
             connection: ServiceConnection,
-            merchantService: ComponentName
+            merchantService: ComponentName,
+            additionalData: Bundle?
         ): Boolean {
             Logger.d(TAG, "bindService - ${context::class.simpleName}")
-            val intent = Intent().apply { component = merchantService }
+            val intent = Intent().apply {
+                component = merchantService
+                putExtra(INTENT_EXTRA_ADDITIONAL_DATA, additionalData)
+            }
             return context.bindService(intent, connection, Context.BIND_AUTO_CREATE)
         }
 
@@ -323,9 +504,11 @@ abstract class DropInService : Service(), CoroutineScope, DropInServiceInterface
 }
 
 internal interface DropInServiceInterface {
-    fun observeResult(owner: LifecycleOwner, observer: Observer<BaseDropInServiceResult>)
+    suspend fun observeResult(callback: (BaseDropInServiceResult) -> Unit)
     fun requestPaymentsCall(paymentComponentState: PaymentComponentState<*>)
     fun requestDetailsCall(actionComponentData: ActionComponentData)
     fun requestBalanceCall(paymentMethodData: PaymentMethodDetails)
     fun requestOrdersCall()
+    fun requestCancelOrder(order: OrderRequest, isDropInCancelledByUser: Boolean)
+    fun requestRemoveStoredPaymentMethod(storedPaymentMethod: StoredPaymentMethod)
 }

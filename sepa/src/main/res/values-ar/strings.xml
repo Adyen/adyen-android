@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+  ~ Copyright (c) 2019 Adyen N.V.
+  ~
+  ~ This file is open source and available under the MIT license. See the LICENSE file for more info.
+  ~
+  ~ Created by caiof on 26/8/2019.
+  -->
+
+<resources>
+    <string name="checkout_sepa_holder_name">صاحب الحساب</string>
+    <string name="checkout_sepa_account_number">رقم الحساب (IBAN)</string>
+    <string name="checkout_holder_name_not_valid">اسم صاحب الحساب غير صحيح</string>
+    <string name="checkout_iban_not_valid">رقم حساب غير صحيح</string>
+</resources>

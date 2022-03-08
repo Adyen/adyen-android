@@ -12,15 +12,14 @@
     <string name="payment_methods_header">Méthodes de paiement</string>
     <string name="error_dialog_title">Erreur</string>
     <string name="error_dialog_button">Ok</string>
-    <string name="payment_failed">Error sending payment. Please try again.</string>
+    <string name="payment_failed">Erreur lors de l\'envoi du paiement. Veuillez réessayer.</string>
     <string name="action_failed">Une erreur s\'est produite lors du traitement de votre paiement. Veuillez réessayer plus tard.</string>
     <string name="component_error">Un problème s\'est produit.</string>
-    <string name="time_out_error">Request timed out. Please try again.</string>
+    <string name="time_out_error">La requête a expiré. Veuillez réessayer.</string>
     <string name="store_payment_methods_header">Vos modes de paiement</string>
     <string name="other_payment_methods">Autre méthode de paiement</string>
     <string name="continue_button">Continuer</string>
     <string name="change_payment_method">Changer de moyen de paiement</string>
-    <string name="credit_card">Credit Card</string>
     <string name="checkout_giftcard_redeem_button">Utiliser</string>
     <string name="checkout_giftcard_error_zero_balance">Aucun solde n\'est disponible sur cette carte cadeau</string>
     <string name="checkout_giftcard_error_currency">Les cartes cadeaux sont valables uniquement dans la devise dans laquelle elles ont été émises</string>
@@ -29,4 +28,9 @@
     <string name="checkout_giftcard_payment_methods_header">Carte-cadeau ajoutée</string>
     <string name="checkout_giftcard_remove_button">Supprimer</string>
     <string name="checkout_giftcard_max_transaction_limit">Montant maximum autorisé par transaction avec cette carte cadeau : %s</string>
+    <string name="checkout_giftcard_remove_gift_cards_title">Confirmer la suppression de la carte</string>
+    <string name="checkout_giftcard_remove_gift_cards_body">Supprimer les cartes-cadeaux ajoutées ?</string>
+    <string name="checkout_giftcard_remove_gift_cards_positive_button">Oui, supprimer</string>
+    <string name="checkout_giftcard_remove_gift_cards_negative_button">Annuler</string>
+    <string name="checkout_remove_stored_payment_method_body">Supprimer le mode de paiement enregistré</string>
 </resources>

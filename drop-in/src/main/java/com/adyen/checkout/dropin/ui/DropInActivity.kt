@@ -20,20 +20,20 @@ import androidx.activity.viewModels
 import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.DialogFragment
-import androidx.lifecycle.Observer
 import androidx.lifecycle.lifecycleScope
+import com.adyen.checkout.bacs.BacsDirectDebitComponent
+import com.adyen.checkout.card.CardComponent
 import com.adyen.checkout.components.ActionComponentData
-import com.adyen.checkout.components.ComponentError
 import com.adyen.checkout.components.PaymentComponentState
 import com.adyen.checkout.components.analytics.AnalyticEvent
 import com.adyen.checkout.components.analytics.AnalyticsDispatcher
 import com.adyen.checkout.components.model.PaymentMethodsApiResponse
 import com.adyen.checkout.components.model.paymentmethods.PaymentMethod
 import com.adyen.checkout.components.model.paymentmethods.StoredPaymentMethod
+import com.adyen.checkout.components.model.payments.request.OrderRequest
 import com.adyen.checkout.components.model.payments.response.Action
 import com.adyen.checkout.components.model.payments.response.BalanceResult
 import com.adyen.checkout.components.model.payments.response.OrderResponse
-import com.adyen.checkout.components.util.PaymentMethodTypes
 import com.adyen.checkout.core.exception.CheckoutException
 import com.adyen.checkout.core.log.LogUtil
 import com.adyen.checkout.core.log.Logger
@@ -49,21 +49,25 @@ import com.adyen.checkout.dropin.service.DropInServiceInterface
 import com.adyen.checkout.dropin.service.DropInServiceResult
 import com.adyen.checkout.dropin.service.DropInServiceResultError
 import com.adyen.checkout.dropin.service.OrderDropInServiceResult
+import com.adyen.checkout.dropin.service.RecurringDropInServiceResult
 import com.adyen.checkout.dropin.ui.action.ActionComponentDialogFragment
 import com.adyen.checkout.dropin.ui.base.DropInBottomSheetDialogFragment
 import com.adyen.checkout.dropin.ui.component.BacsDirectDebitDialogFragment
 import com.adyen.checkout.dropin.ui.component.CardComponentDialogFragment
 import com.adyen.checkout.dropin.ui.component.GenericComponentDialogFragment
 import com.adyen.checkout.dropin.ui.component.GiftCardComponentDialogFragment
+import com.adyen.checkout.dropin.ui.component.GooglePayComponentDialogFragment
 import com.adyen.checkout.dropin.ui.giftcard.GiftCardBalanceResult
 import com.adyen.checkout.dropin.ui.giftcard.GiftCardPaymentConfirmationData
 import com.adyen.checkout.dropin.ui.giftcard.GiftCardPaymentConfirmationDialogFragment
 import com.adyen.checkout.dropin.ui.paymentmethods.PaymentMethodListDialogFragment
 import com.adyen.checkout.dropin.ui.stored.PreselectedStoredPaymentMethodFragment
+import com.adyen.checkout.dropin.ui.viewmodel.DropInActivityEvent
+import com.adyen.checkout.dropin.ui.viewmodel.DropInViewModel
+import com.adyen.checkout.dropin.ui.viewmodel.DropInViewModelFactory
+import com.adyen.checkout.giftcard.GiftCardComponent
 import com.adyen.checkout.giftcard.GiftCardComponentState
 import com.adyen.checkout.googlepay.GooglePayComponent
-import com.adyen.checkout.googlepay.GooglePayComponentState
-import com.adyen.checkout.googlepay.GooglePayConfiguration
 import com.adyen.checkout.redirect.RedirectUtil
 import com.adyen.checkout.wechatpay.WeChatPayUtils
 import kotlinx.coroutines.ExperimentalCoroutinesApi
@@ -78,7 +82,7 @@ private const val ACTION_FRAGMENT_TAG = "ACTION_DIALOG_FRAGMENT"
 private const val LOADING_FRAGMENT_TAG = "LOADING_DIALOG_FRAGMENT"
 private const val GIFT_CARD_PAYMENT_CONFIRMATION_FRAGMENT_TAG = "GIFT_CARD_PAYMENT_CONFIRMATION_FRAGMENT"
 
-private const val GOOGLE_PAY_REQUEST_CODE = 1
+internal const val GOOGLE_PAY_REQUEST_CODE = 1
 
 /**
  * Activity that presents the available PaymentMethods to the Shopper.
@@ -86,24 +90,11 @@ private const val GOOGLE_PAY_REQUEST_CODE = 1
 @Suppress("TooManyFunctions")
 class DropInActivity : AppCompatActivity(), DropInBottomSheetDialogFragment.Protocol, ActionHandler.ActionHandlingInterface {
 
-    private val dropInViewModel: DropInViewModel by viewModels { DropInViewModelFactory(this, intent.extras) }
-
-    private lateinit var googlePayComponent: GooglePayComponent
+    private val dropInViewModel: DropInViewModel by viewModels { DropInViewModelFactory(this) }
 
     private lateinit var actionHandler: ActionHandler
 
     private val loadingDialog = LoadingDialogFragment.newInstance()
-
-    private val googlePayObserver: Observer<GooglePayComponentState> = Observer {
-        if (it?.isValid == true) {
-            requestPaymentsCall(it)
-        }
-    }
-
-    private val googlePayErrorObserver: Observer<ComponentError> = Observer {
-        Logger.d(TAG, "GooglePay error - ${it?.errorMessage}")
-        showPaymentMethodsDialog()
-    }
 
     private var dropInService: DropInServiceInterface? = null
     private var serviceBound: Boolean = false
@@ -113,6 +104,7 @@ class DropInActivity : AppCompatActivity(), DropInBottomSheetDialogFragment.Prot
     private var actionDataQueue: ActionComponentData? = null
     private var balanceDataQueue: GiftCardComponentState? = null
     private var orderDataQueue: Unit? = null
+    private var orderCancellationQueue: OrderRequest? = null
 
     private val serviceConnection = object : ServiceConnection {
 
@@ -120,7 +112,9 @@ class DropInActivity : AppCompatActivity(), DropInBottomSheetDialogFragment.Prot
             Logger.d(TAG, "onServiceConnected")
             val dropInBinder = binder as? DropInService.DropInBinder ?: return
             dropInService = dropInBinder.getService()
-            dropInService?.observeResult(this@DropInActivity) { handleDropInServiceResult(it) }
+            lifecycleScope.launchWhenStarted {
+                dropInService?.observeResult { handleDropInServiceResult(it) }
+            }
 
             paymentDataQueue?.let {
                 Logger.d(TAG, "Sending queued payment request")
@@ -142,6 +136,11 @@ class DropInActivity : AppCompatActivity(), DropInBottomSheetDialogFragment.Prot
                 Logger.d(TAG, "Sending queued order request")
                 requestOrdersCall()
                 orderDataQueue = null
+            }
+            orderCancellationQueue?.let {
+                Logger.d(TAG, "Sending queued cancel order request")
+                requestCancelOrderCall(it, true)
+                orderCancellationQueue = null
             }
         }
 
@@ -224,9 +223,17 @@ class DropInActivity : AppCompatActivity(), DropInBottomSheetDialogFragment.Prot
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         super.onActivityResult(requestCode, resultCode, data)
-        when (requestCode) {
-            GOOGLE_PAY_REQUEST_CODE -> googlePayComponent.handleActivityResult(resultCode, data)
+        checkGooglePayActivityResult(requestCode, resultCode, data)
+    }
+
+    private fun checkGooglePayActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
+        if (requestCode != GOOGLE_PAY_REQUEST_CODE) return
+        val fragment = getFragmentByTag(COMPONENT_FRAGMENT_TAG) as? GooglePayComponentDialogFragment
+        if (fragment == null) {
+            Logger.e(TAG, "GooglePayComponentDialogFragment is not loaded")
+            return
         }
+        fragment.handleActivityResult(resultCode, data)
     }
 
     override fun onNewIntent(intent: Intent?) {
@@ -240,12 +247,18 @@ class DropInActivity : AppCompatActivity(), DropInBottomSheetDialogFragment.Prot
     }
 
     override fun onStart() {
+        Logger.v(TAG, "onStart")
         super.onStart()
         bindService()
     }
 
     private fun bindService() {
-        val bound = DropInService.bindService(this, serviceConnection, dropInViewModel.dropInConfiguration.serviceComponentName)
+        val bound = DropInService.bindService(
+            this,
+            serviceConnection,
+            dropInViewModel.dropInConfiguration.serviceComponentName,
+            dropInViewModel.dropInConfiguration.additionalDataForDropInService
+        )
         if (bound) {
             serviceBound = true
         } else {
@@ -258,6 +271,7 @@ class DropInActivity : AppCompatActivity(), DropInBottomSheetDialogFragment.Prot
     }
 
     override fun onStop() {
+        Logger.v(TAG, "onStop")
         super.onStop()
         unbindService()
     }
@@ -332,8 +346,14 @@ class DropInActivity : AppCompatActivity(), DropInBottomSheetDialogFragment.Prot
     }
 
     override fun onResume() {
+        Logger.v(TAG, "onResume")
         super.onResume()
         setLoading(dropInViewModel.isWaitingResult)
+    }
+
+    override fun onDestroy() {
+        Logger.v(TAG, "onDestroy")
+        super.onDestroy()
     }
 
     override fun showPreselectedDialog() {
@@ -352,10 +372,10 @@ class DropInActivity : AppCompatActivity(), DropInBottomSheetDialogFragment.Prot
     override fun showStoredComponentDialog(storedPaymentMethod: StoredPaymentMethod, fromPreselected: Boolean) {
         Logger.d(TAG, "showStoredComponentDialog")
         hideAllScreens()
-        val dialogFragment = when (storedPaymentMethod.type) {
-            PaymentMethodTypes.SCHEME -> CardComponentDialogFragment
+        val dialogFragment = when {
+            CardComponent.PAYMENT_METHOD_TYPES.contains(storedPaymentMethod.type) -> CardComponentDialogFragment
             else -> GenericComponentDialogFragment
-        }.newInstance(storedPaymentMethod, dropInViewModel.dropInConfiguration, fromPreselected)
+        }.newInstance(storedPaymentMethod, fromPreselected)
 
         dialogFragment.show(supportFragmentManager, COMPONENT_FRAGMENT_TAG)
     }
@@ -363,12 +383,13 @@ class DropInActivity : AppCompatActivity(), DropInBottomSheetDialogFragment.Prot
     override fun showComponentDialog(paymentMethod: PaymentMethod) {
         Logger.d(TAG, "showComponentDialog")
         hideAllScreens()
-        val dialogFragment = when (paymentMethod.type) {
-            PaymentMethodTypes.SCHEME -> CardComponentDialogFragment
-            PaymentMethodTypes.BACS -> BacsDirectDebitDialogFragment
-            PaymentMethodTypes.GIFTCARD -> GiftCardComponentDialogFragment
-            else -> GenericComponentDialogFragment
-        }.newInstance(paymentMethod, dropInViewModel.dropInConfiguration)
+        val dialogFragment = when {
+            CardComponent.PAYMENT_METHOD_TYPES.contains(paymentMethod.type) -> CardComponentDialogFragment.newInstance(paymentMethod)
+            BacsDirectDebitComponent.PAYMENT_METHOD_TYPES.contains(paymentMethod.type) -> BacsDirectDebitDialogFragment.newInstance(paymentMethod)
+            GiftCardComponent.PAYMENT_METHOD_TYPES.contains(paymentMethod.type) -> GiftCardComponentDialogFragment.newInstance(paymentMethod)
+            GooglePayComponent.PAYMENT_METHOD_TYPES.contains(paymentMethod.type) -> GooglePayComponentDialogFragment.newInstance(paymentMethod)
+            else -> GenericComponentDialogFragment.newInstance(paymentMethod)
+        }
 
         dialogFragment.show(supportFragmentManager, COMPONENT_FRAGMENT_TAG)
     }
@@ -383,18 +404,7 @@ class DropInActivity : AppCompatActivity(), DropInBottomSheetDialogFragment.Prot
 
     override fun terminateDropIn() {
         Logger.d(TAG, "terminateDropIn")
-        terminateWithError(DropIn.ERROR_REASON_USER_CANCELED)
-    }
-
-    override fun startGooglePay(paymentMethod: PaymentMethod, googlePayConfiguration: GooglePayConfiguration) {
-        Logger.d(TAG, "startGooglePay")
-        val configuration = dropInViewModel.updateGooglePayConfiguration(googlePayConfiguration)
-        googlePayComponent = GooglePayComponent.PROVIDER.get(this, paymentMethod, configuration)
-        googlePayComponent.observe(this@DropInActivity, googlePayObserver)
-        googlePayComponent.observeErrors(this@DropInActivity, googlePayErrorObserver)
-
-        hideFragmentDialog(PAYMENT_METHODS_LIST_FRAGMENT_TAG)
-        googlePayComponent.startGooglePayScreen(this, GOOGLE_PAY_REQUEST_CODE)
+        dropInViewModel.cancelDropIn()
     }
 
     override fun requestBalanceCall(giftCardComponentState: GiftCardComponentState) {
@@ -422,9 +432,26 @@ class DropInActivity : AppCompatActivity(), DropInBottomSheetDialogFragment.Prot
         dropInService?.requestOrdersCall()
     }
 
+    private fun requestCancelOrderCall(order: OrderRequest, isDropInCancelledByUser: Boolean) {
+        Logger.d(TAG, "requestCancelOrderCall")
+        if (dropInService == null) {
+            Logger.e(TAG, "requestOrdersCall - service is disconnected")
+            orderCancellationQueue = order
+            return
+        }
+        dropInViewModel.isWaitingResult = true
+        setLoading(true)
+        dropInService?.requestCancelOrder(order, isDropInCancelledByUser)
+    }
+
     override fun finishWithAction() {
         Logger.d(TAG, "finishWithActionCall")
         sendResult(DropIn.FINISHED_WITH_ACTION)
+    }
+
+    override fun removeStoredPaymentMethod(storedPaymentMethod: StoredPaymentMethod) {
+        dropInService?.requestRemoveStoredPaymentMethod(storedPaymentMethod)
+        setLoading(true)
     }
 
     private fun handleDropInServiceResult(dropInServiceResult: BaseDropInServiceResult) {
@@ -434,6 +461,7 @@ class DropInActivity : AppCompatActivity(), DropInBottomSheetDialogFragment.Prot
             is DropInServiceResult -> handleDropInServiceResult(dropInServiceResult)
             is BalanceDropInServiceResult -> handleDropInServiceResult(dropInServiceResult)
             is OrderDropInServiceResult -> handleDropInServiceResult(dropInServiceResult)
+            is RecurringDropInServiceResult -> handleDropInServiceResult(dropInServiceResult)
         }
     }
 
@@ -457,6 +485,13 @@ class DropInActivity : AppCompatActivity(), DropInBottomSheetDialogFragment.Prot
         when (dropInServiceResult) {
             is OrderDropInServiceResult.OrderCreated -> handleOrderResult(dropInServiceResult.order)
             is OrderDropInServiceResult.Error -> handleErrorDropInServiceResult(dropInServiceResult)
+        }
+    }
+
+    private fun handleDropInServiceResult(dropInServiceResult: RecurringDropInServiceResult) {
+        when (dropInServiceResult) {
+            is RecurringDropInServiceResult.PaymentMethodRemoved -> handleRemovePaymentMethodResult(dropInServiceResult.id)
+            is RecurringDropInServiceResult.Error -> handleErrorDropInServiceResult(dropInServiceResult)
         }
     }
 
@@ -562,6 +597,12 @@ class DropInActivity : AppCompatActivity(), DropInBottomSheetDialogFragment.Prot
                 setLoading(false)
                 showPaymentMethodsDialog()
             }
+            is DropInActivityEvent.CancelOrder -> {
+                requestCancelOrderCall(event.order, event.isDropInCancelledByUser)
+            }
+            is DropInActivityEvent.CancelDropIn -> {
+                terminateWithError(DropIn.ERROR_REASON_USER_CANCELED)
+            }
         }
     }
 
@@ -616,6 +657,28 @@ class DropInActivity : AppCompatActivity(), DropInBottomSheetDialogFragment.Prot
 
     override fun requestPartialPayment() {
         dropInViewModel.partialPaymentRequested()
+    }
+
+    override fun requestOrderCancellation() {
+        dropInViewModel.orderCancellationRequested()
+    }
+
+    private fun handleRemovePaymentMethodResult(id: String) {
+        setLoading(false)
+        dropInViewModel.removeStoredPaymentMethodWithId(id)
+
+        val preselectedStoredPaymentMethodFragment =
+            getFragmentByTag(PRESELECTED_PAYMENT_METHOD_FRAGMENT_TAG) as? PreselectedStoredPaymentMethodFragment
+        if (preselectedStoredPaymentMethodFragment != null) {
+            showPaymentMethodsDialog()
+            return
+        }
+
+        val paymentMethodListDialogFragment = getFragmentByTag(PAYMENT_METHODS_LIST_FRAGMENT_TAG) as? PaymentMethodListDialogFragment
+        if (paymentMethodListDialogFragment != null) {
+            paymentMethodListDialogFragment.removeStoredPaymentMethod(id)
+            return
+        }
     }
 
     companion object {

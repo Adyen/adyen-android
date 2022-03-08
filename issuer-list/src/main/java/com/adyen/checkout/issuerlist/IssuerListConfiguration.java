@@ -44,5 +44,9 @@ public abstract class IssuerListConfiguration extends Configuration {
         protected IssuerListBuilder(@NonNull Locale shopperLocale, @NonNull Environment environment, @NonNull String clientKey) {
             super(shopperLocale, environment, clientKey);
         }
+
+        protected IssuerListBuilder(@NonNull IssuerListConfigurationT configuration) {
+            super(configuration);
+        }
     }
 }

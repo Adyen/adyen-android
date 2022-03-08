@@ -12,15 +12,14 @@
     <string name="payment_methods_header">Betalningsmetoder</string>
     <string name="error_dialog_title">Fel</string>
     <string name="error_dialog_button">OK</string>
-    <string name="payment_failed">Error sending payment. Please try again.</string>
+    <string name="payment_failed">Fel när betalningen skickades. Försök igen.</string>
     <string name="action_failed">Det uppstod ett fel vid behandlingen av din betalning. Försök igen senare.</string>
     <string name="component_error">Någonting gick fel.</string>
-    <string name="time_out_error">Request timed out. Please try again.</string>
+    <string name="time_out_error">Förfrågan tog för lång tid. Försök igen.</string>
     <string name="store_payment_methods_header">Dina sparade betalningsmetoder</string>
     <string name="other_payment_methods">Välj annan betalningsmetod</string>
     <string name="continue_button">Fortsätt</string>
     <string name="change_payment_method">Ändra betalningssätt</string>
-    <string name="credit_card">Credit Card</string>
     <string name="checkout_giftcard_redeem_button">Lös in</string>
     <string name="checkout_giftcard_error_zero_balance">Saldot för detta presentkort är noll</string>
     <string name="checkout_giftcard_error_currency">Presentkort är endast giltiga i den valuta som de utfärdades i</string>
@@ -29,4 +28,9 @@
     <string name="checkout_giftcard_payment_methods_header">Tillagt presentkort</string>
     <string name="checkout_giftcard_remove_button">Ta bort</string>
     <string name="checkout_giftcard_max_transaction_limit">Maximalt %s per transaktion är tillåtet på detta presentkort</string>
+    <string name="checkout_giftcard_remove_gift_cards_title">Bekräfta borttagning av kort</string>
+    <string name="checkout_giftcard_remove_gift_cards_body">Ta bort tillagda presentkort?</string>
+    <string name="checkout_giftcard_remove_gift_cards_positive_button">Ja, ta bort</string>
+    <string name="checkout_giftcard_remove_gift_cards_negative_button">Avbryt</string>
+    <string name="checkout_remove_stored_payment_method_body">Ta bort sparat betalningssätt</string>
 </resources>

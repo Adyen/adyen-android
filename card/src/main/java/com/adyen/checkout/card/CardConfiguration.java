@@ -195,7 +195,7 @@ public class CardConfiguration extends Configuration {
          * Constructor of Card Configuration Builder with instance of CardConfiguration.
          */
         public Builder(@NonNull CardConfiguration cardConfiguration) {
-            super(cardConfiguration.getShopperLocale(), cardConfiguration.getEnvironment(), cardConfiguration.getClientKey());
+            super(cardConfiguration);
             mBuilderSupportedCardTypes = cardConfiguration.getSupportedCardTypes();
             mBuilderHolderNameRequired = cardConfiguration.isHolderNameRequired();
             mBuilderShowStorePaymentField = cardConfiguration.isStorePaymentFieldVisible();

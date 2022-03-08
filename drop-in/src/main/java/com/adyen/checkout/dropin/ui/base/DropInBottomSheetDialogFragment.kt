@@ -21,9 +21,9 @@ import com.adyen.checkout.components.model.paymentmethods.StoredPaymentMethod
 import com.adyen.checkout.core.log.LogUtil
 import com.adyen.checkout.core.log.Logger
 import com.adyen.checkout.dropin.R
-import com.adyen.checkout.dropin.ui.DropInViewModel
+import com.adyen.checkout.dropin.ui.viewmodel.DropInViewModel
+import com.adyen.checkout.dropin.ui.viewmodel.DropInViewModelFactory
 import com.adyen.checkout.giftcard.GiftCardComponentState
-import com.adyen.checkout.googlepay.GooglePayConfiguration
 import com.google.android.material.bottomsheet.BottomSheetBehavior
 import com.google.android.material.bottomsheet.BottomSheetDialog
 import com.google.android.material.bottomsheet.BottomSheetDialogFragment
@@ -35,7 +35,7 @@ abstract class DropInBottomSheetDialogFragment : BottomSheetDialogFragment() {
     lateinit var protocol: Protocol
 
     private var dialogInitViewState: Int = BottomSheetBehavior.STATE_COLLAPSED
-    protected val dropInViewModel: DropInViewModel by activityViewModels()
+    protected val dropInViewModel: DropInViewModel by activityViewModels { DropInViewModelFactory(requireActivity()) }
 
     fun setInitViewState(firstViewState: Int) {
         this.dialogInitViewState = firstViewState
@@ -79,6 +79,8 @@ abstract class DropInBottomSheetDialogFragment : BottomSheetDialogFragment() {
             }
         }
 
+        dialog.setCanceledOnTouchOutside(false)
+
         return dialog
     }
 
@@ -99,9 +101,10 @@ abstract class DropInBottomSheetDialogFragment : BottomSheetDialogFragment() {
         fun requestDetailsCall(actionComponentData: ActionComponentData)
         fun showError(errorMessage: String, reason: String, terminate: Boolean)
         fun terminateDropIn()
-        fun startGooglePay(paymentMethod: PaymentMethod, googlePayConfiguration: GooglePayConfiguration)
         fun requestBalanceCall(giftCardComponentState: GiftCardComponentState)
         fun requestPartialPayment()
+        fun requestOrderCancellation()
         fun finishWithAction()
+        fun removeStoredPaymentMethod(storedPaymentMethod: StoredPaymentMethod)
     }
 }

@@ -6,7 +6,7 @@
  * Created by caiof on 30/11/2020.
  */
 
-package com.adyen.checkout.dropin.ui.paymentmethods
+package com.adyen.checkout.dropin.ui.viewmodel
 
 import android.app.Application
 import androidx.lifecycle.AndroidViewModel
@@ -16,6 +16,7 @@ import com.adyen.checkout.components.ComponentAvailableCallback
 import com.adyen.checkout.components.base.Configuration
 import com.adyen.checkout.components.model.paymentmethods.PaymentMethod
 import com.adyen.checkout.components.model.paymentmethods.StoredPaymentMethod
+import com.adyen.checkout.components.model.payments.Amount
 import com.adyen.checkout.components.util.CurrencyUtils
 import com.adyen.checkout.components.util.PaymentMethodTypes
 import com.adyen.checkout.core.exception.CheckoutException
@@ -25,6 +26,12 @@ import com.adyen.checkout.dropin.DropInConfiguration
 import com.adyen.checkout.dropin.R
 import com.adyen.checkout.dropin.checkPaymentMethodAvailability
 import com.adyen.checkout.dropin.ui.order.OrderModel
+import com.adyen.checkout.dropin.ui.paymentmethods.GiftCardPaymentMethodModel
+import com.adyen.checkout.dropin.ui.paymentmethods.PaymentMethodHeader
+import com.adyen.checkout.dropin.ui.paymentmethods.PaymentMethodListItem
+import com.adyen.checkout.dropin.ui.paymentmethods.PaymentMethodModel
+import com.adyen.checkout.dropin.ui.paymentmethods.PaymentMethodNote
+import com.adyen.checkout.dropin.ui.paymentmethods.StoredPaymentMethodModel
 import com.adyen.checkout.dropin.ui.stored.makeStoredModel
 
 class PaymentMethodsListViewModel(
@@ -32,7 +39,8 @@ class PaymentMethodsListViewModel(
     private val paymentMethods: List<PaymentMethod>,
     storedPaymentMethods: List<StoredPaymentMethod>,
     private val order: OrderModel?,
-    val dropInConfiguration: DropInConfiguration
+    private val dropInConfiguration: DropInConfiguration,
+    private val amount: Amount
 ) : AndroidViewModel(application), ComponentAvailableCallback<Configuration> {
 
     private val paymentMethodsMutableLiveData: MutableLiveData<List<PaymentMethodListItem>> = MutableLiveData()
@@ -61,7 +69,7 @@ class PaymentMethodsListViewModel(
         for (storedPaymentMethod in storedPaymentMethods) {
             if (isStoredPaymentSupported(storedPaymentMethod)) {
                 // We don't check for availability on stored payment methods
-                storedPaymentMethodsList.add(makeStoredModel(storedPaymentMethod))
+                storedPaymentMethodsList.add(makeStoredModel(storedPaymentMethod, dropInConfiguration.isRemovingStoredPaymentMethodsEnabled))
             } else {
                 Logger.e(TAG, "Unsupported stored payment method - ${storedPaymentMethod.type} : ${storedPaymentMethod.name}")
             }
@@ -98,7 +106,7 @@ class PaymentMethodsListViewModel(
                     // We assume payment method is available and remove it later when the callback comes
                     // this is the overwhelming majority of cases, and we keep the list ordered this way.
                     paymentMethodsList.add(paymentMethod.mapToModel(index))
-                    checkPaymentMethodAvailability(getApplication(), paymentMethod, dropInConfiguration, this)
+                    checkPaymentMethodAvailability(getApplication(), paymentMethod, dropInConfiguration, amount, this)
                 }
                 else -> {
                     availabilitySkipSum++

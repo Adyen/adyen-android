@@ -11,6 +11,8 @@ package com.adyen.checkout.bacs
 import android.content.Context
 import android.os.Parcel
 import android.os.Parcelable
+import com.adyen.checkout.components.base.AmountConfiguration
+import com.adyen.checkout.components.base.AmountConfigurationBuilder
 import com.adyen.checkout.components.base.BaseConfigurationBuilder
 import com.adyen.checkout.components.base.Configuration
 import com.adyen.checkout.components.model.payments.Amount
@@ -20,9 +22,9 @@ import com.adyen.checkout.core.exception.CheckoutException
 import com.adyen.checkout.core.model.JsonUtils
 import java.util.*
 
-class BacsDirectDebitConfiguration : Configuration {
+class BacsDirectDebitConfiguration : Configuration, AmountConfiguration {
 
-    val amount: Amount
+    override val amount: Amount
 
     companion object {
         @JvmField
@@ -51,7 +53,7 @@ class BacsDirectDebitConfiguration : Configuration {
         JsonUtils.writeToParcel(parcel, Amount.SERIALIZER.serialize(amount))
     }
 
-    class Builder : BaseConfigurationBuilder<BacsDirectDebitConfiguration> {
+    class Builder : BaseConfigurationBuilder<BacsDirectDebitConfiguration>, AmountConfigurationBuilder {
 
         internal var amount: Amount = Amount.EMPTY
             private set
@@ -67,6 +69,15 @@ class BacsDirectDebitConfiguration : Configuration {
          */
         constructor(shopperLocale: Locale, environment: Environment, clientKey: String) : super(shopperLocale, environment, clientKey)
 
+        /**
+         * Constructor that copies an existing configuration.
+         *
+         * @param configuration A configuration to initialize the builder.
+         */
+        constructor(configuration: BacsDirectDebitConfiguration) : super(configuration) {
+            amount = configuration.amount
+        }
+
         override fun setShopperLocale(builderShopperLocale: Locale): Builder {
             return super.setShopperLocale(builderShopperLocale) as Builder
         }
@@ -79,7 +90,7 @@ class BacsDirectDebitConfiguration : Configuration {
             return BacsDirectDebitConfiguration(this)
         }
 
-        fun setAmount(amount: Amount): Builder {
+        override fun setAmount(amount: Amount): Builder {
             if (!CheckoutCurrency.isSupported(amount.currency) || amount.value < 0) {
                 throw CheckoutException("Currency is not valid.")
             }

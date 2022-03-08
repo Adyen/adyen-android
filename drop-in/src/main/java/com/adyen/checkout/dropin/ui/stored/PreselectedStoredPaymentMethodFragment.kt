@@ -14,6 +14,7 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.appcompat.app.AlertDialog
 import androidx.core.view.isVisible
 import com.adyen.checkout.components.ComponentError
 import com.adyen.checkout.components.PaymentComponent
@@ -33,11 +34,12 @@ import com.adyen.checkout.dropin.getComponentFor
 import com.adyen.checkout.dropin.ui.base.DropInBottomSheetDialogFragment
 import com.adyen.checkout.dropin.ui.paymentmethods.GenericStoredModel
 import com.adyen.checkout.dropin.ui.paymentmethods.StoredCardModel
-import com.adyen.checkout.dropin.ui.stored.PreselectedStoredState.AwaitingComponentInitialization
-import com.adyen.checkout.dropin.ui.stored.PreselectedStoredState.PaymentError
-import com.adyen.checkout.dropin.ui.stored.PreselectedStoredState.RequestPayment
-import com.adyen.checkout.dropin.ui.stored.PreselectedStoredState.ShowStoredPaymentDialog
+import com.adyen.checkout.dropin.ui.viewmodel.PreselectedStoredState.AwaitingComponentInitialization
+import com.adyen.checkout.dropin.ui.viewmodel.PreselectedStoredState.PaymentError
+import com.adyen.checkout.dropin.ui.viewmodel.PreselectedStoredState.RequestPayment
+import com.adyen.checkout.dropin.ui.viewmodel.PreselectedStoredState.ShowStoredPaymentDialog
 import com.adyen.checkout.dropin.ui.viewModelsFactory
+import com.adyen.checkout.dropin.ui.viewmodel.PreselectedStoredPaymentViewModel
 
 private val TAG = LogUtil.getTag()
 private const val STORED_PAYMENT_KEY = "STORED_PAYMENT"
@@ -45,7 +47,11 @@ private const val STORED_PAYMENT_KEY = "STORED_PAYMENT"
 class PreselectedStoredPaymentMethodFragment : DropInBottomSheetDialogFragment() {
 
     private val storedPaymentViewModel: PreselectedStoredPaymentViewModel by viewModelsFactory {
-        PreselectedStoredPaymentViewModel(storedPaymentMethod, component.requiresInput())
+        PreselectedStoredPaymentViewModel(
+            storedPaymentMethod,
+            component.requiresInput(),
+            dropInViewModel.dropInConfiguration.isRemovingStoredPaymentMethodsEnabled
+        )
     }
     private lateinit var binding: FragmentStoredPaymentMethodBinding
     private lateinit var storedPaymentMethod: StoredPaymentMethod
@@ -94,7 +100,7 @@ class PreselectedStoredPaymentMethodFragment : DropInBottomSheetDialogFragment()
             dropInViewModel.dropInConfiguration.environment
         )
 
-        component = getComponentFor(this, storedPaymentMethod, dropInViewModel.dropInConfiguration)
+        component = getComponentFor(this, storedPaymentMethod, dropInViewModel.dropInConfiguration, dropInViewModel.amount)
         component.observe(viewLifecycleOwner, storedPaymentViewModel::componentStateChanged)
         component.observeErrors(viewLifecycleOwner, storedPaymentViewModel::componentErrorOccurred)
 
@@ -120,6 +126,12 @@ class PreselectedStoredPaymentMethodFragment : DropInBottomSheetDialogFragment()
             binding.payButton.text = getString(R.string.pay_button_with_value, value)
         }
 
+        if (dropInViewModel.dropInConfiguration.isRemovingStoredPaymentMethodsEnabled) {
+            binding.storedPaymentMethodItem.paymentMethodItemUnderlayButton.setOnClickListener {
+                showRemoveStoredPaymentDialog()
+            }
+        }
+
         binding.payButton.setOnClickListener {
             storedPaymentViewModel.payButtonClicked()
         }
@@ -137,23 +149,43 @@ class PreselectedStoredPaymentMethodFragment : DropInBottomSheetDialogFragment()
 
     private fun observe() {
         storedPaymentViewModel.storedPaymentLiveData.observe(
-            viewLifecycleOwner,
-            {
-                when (it) {
-                    is StoredCardModel -> {
-                        binding.storedPaymentMethodItem.textViewText.text = requireActivity().getString(R.string.card_number_4digit, it.lastFour)
-                        imageLoader.load(it.imageId, binding.storedPaymentMethodItem.imageViewLogo)
-                        binding.storedPaymentMethodItem.textViewDetail.text = DateUtils.parseDateToView(it.expiryMonth, it.expiryYear)
-                        binding.storedPaymentMethodItem.textViewDetail.visibility = View.VISIBLE
-                    }
-                    is GenericStoredModel -> {
-                        binding.storedPaymentMethodItem.textViewText.text = it.name
-                        binding.storedPaymentMethodItem.textViewDetail.visibility = View.GONE
-                        imageLoader.load(it.imageId, binding.storedPaymentMethodItem.imageViewLogo)
-                    }
+            viewLifecycleOwner
+        ) {
+            binding.storedPaymentMethodItem.root.setDragLocked(!it.isRemovable)
+            when (it) {
+                is StoredCardModel -> {
+                    binding.storedPaymentMethodItem.textViewText.text =
+                        requireActivity().getString(R.string.card_number_4digit, it.lastFour)
+                    imageLoader.load(it.imageId, binding.storedPaymentMethodItem.imageViewLogo)
+                    binding.storedPaymentMethodItem.textViewDetail.text =
+                        DateUtils.parseDateToView(it.expiryMonth, it.expiryYear)
+                    binding.storedPaymentMethodItem.textViewDetail.visibility = View.VISIBLE
+                }
+                is GenericStoredModel -> {
+                    binding.storedPaymentMethodItem.textViewText.text = it.name
+                    binding.storedPaymentMethodItem.textViewDetail.visibility = View.GONE
+                    imageLoader.load(it.imageId, binding.storedPaymentMethodItem.imageViewLogo)
                 }
             }
-        )
+        }
+    }
+
+    private fun showRemoveStoredPaymentDialog() {
+        AlertDialog.Builder(requireContext())
+            .setTitle(R.string.checkout_giftcard_remove_gift_cards_title)
+            .setMessage(R.string.checkout_remove_stored_payment_method_body)
+            .setPositiveButton(R.string.checkout_giftcard_remove_gift_cards_positive_button) { dialog, _ ->
+                val storedPaymentMethod = StoredPaymentMethod().apply {
+                    id = storedPaymentMethod.id
+                }
+                protocol.removeStoredPaymentMethod(storedPaymentMethod)
+                dialog.dismiss()
+            }
+            .setNegativeButton(R.string.checkout_giftcard_remove_gift_cards_negative_button) { dialog, _ ->
+                binding.storedPaymentMethodItem.root.collapseUnderlay()
+                dialog.dismiss()
+            }
+            .show()
     }
 
     companion object {

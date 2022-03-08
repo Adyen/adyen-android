@@ -1,9 +1,9 @@
 <!--
-  ~ Copyright (c) 2020 Adyen N.V.
+  ~ Copyright (c) 2019 Adyen N.V.
   ~
   ~ This file is open source and available under the MIT license. See the LICENSE file for more info.
   ~
-  ~ Created by josephj on 8/12/2020.
+  ~ Created by caiof on 21/3/2019.
   -->
 
 <resources>
@@ -12,15 +12,14 @@
     <string name="payment_methods_header">Τρόποι πληρωμής</string>
     <string name="error_dialog_title">Σφάλμα</string>
     <string name="error_dialog_button">ΟΚ</string>
-    <string name="payment_failed">Error sending payment. Please try again.</string>
+    <string name="payment_failed">Σφάλμα κατά την αποστολή πληρωμής. Προσπαθήστε ξανά.</string>
     <string name="action_failed">Προέκυψε σφάλμα κατά την επεξεργασία της πληρωμής σας. Προσπαθήστε ξανά αργότερα.</string>
     <string name="component_error">Κάτι πήγε στραβά.</string>
-    <string name="time_out_error">Request timed out. Please try again.</string>
+    <string name="time_out_error">Έληξε το χρονικό όριο του αιτήματος. Προσπαθήστε ξανά.</string>
     <string name="store_payment_methods_header">Οι τρόποι πληρωμής σας</string>
     <string name="other_payment_methods">Επιλέξτε άλλον τρόπο</string>
     <string name="continue_button">Συνέχεια</string>
     <string name="change_payment_method">Αλλαγή τρόπου πληρωμής</string>
-    <string name="credit_card">Credit Card</string>
     <string name="checkout_giftcard_redeem_button">Εξαργύρωση</string>
     <string name="checkout_giftcard_error_zero_balance">Η συγκεκριμένη δωροκάρτα έχει μηδενικό υπόλοιπο</string>
     <string name="checkout_giftcard_error_currency">Οι δωροκάρτες ισχύουν μόνο για το νόμισμα στο οποίο εκδόθηκαν</string>
@@ -29,4 +28,9 @@
     <string name="checkout_giftcard_payment_methods_header">Προστέθηκε δωροκάρτα</string>
     <string name="checkout_giftcard_remove_button">Αφαίρεση</string>
     <string name="checkout_giftcard_max_transaction_limit">Το μέγιστο επιτρεπόμενο ποσό ανά συναλλαγή σε αυτήν τη δωροκάρτα είναι %s</string>
+    <string name="checkout_giftcard_remove_gift_cards_title">Επιβεβαίωση αφαίρεσης κάρτας</string>
+    <string name="checkout_giftcard_remove_gift_cards_body">Αφαίρεση των προστεθειμένων δωροκαρτών;</string>
+    <string name="checkout_giftcard_remove_gift_cards_positive_button">Ναι, αφαίρεση</string>
+    <string name="checkout_giftcard_remove_gift_cards_negative_button">Άκυρο</string>
+    <string name="checkout_remove_stored_payment_method_body">Αφαίρεση αποθηκευμένου τρόπου πληρωμής</string>
 </resources>

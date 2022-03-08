@@ -12,15 +12,14 @@
     <string name="payment_methods_header">Maksutavat</string>
     <string name="error_dialog_title">Virhe</string>
     <string name="error_dialog_button">Ok</string>
-    <string name="payment_failed">Error sending payment. Please try again.</string>
+    <string name="payment_failed">Virhe maksun lähettämisessä. Yritä uudelleen.</string>
     <string name="action_failed">Maksua käsitellessä tapahtui virhe. Yritä myöhemmin uudelleen.</string>
     <string name="component_error">Jotain meni pieleen.</string>
-    <string name="time_out_error">Request timed out. Please try again.</string>
+    <string name="time_out_error">Pyydä aikakatkaisu. Yritä uudelleen.</string>
     <string name="store_payment_methods_header">Maksutapasi</string>
     <string name="other_payment_methods">Valitse muu maksutapa</string>
     <string name="continue_button">Jatka</string>
     <string name="change_payment_method">Muuta maksutapaa</string>
-    <string name="credit_card">Credit Card</string>
     <string name="checkout_giftcard_redeem_button">Lunasta</string>
     <string name="checkout_giftcard_error_zero_balance">Lahjakortin saldo on nolla</string>
     <string name="checkout_giftcard_error_currency">Gift cards are only valid in the currency they were issued in</string>
@@ -29,4 +28,9 @@
     <string name="checkout_giftcard_payment_methods_header">Lisätty lahjakortti</string>
     <string name="checkout_giftcard_remove_button">Poista</string>
     <string name="checkout_giftcard_max_transaction_limit">Maks. %s sallittu tapahtumaa kohti tällä lahjakortilla</string>
+    <string name="checkout_giftcard_remove_gift_cards_title">Vahvista kortin poisto</string>
+    <string name="checkout_giftcard_remove_gift_cards_body">Poistetaanko lisätyt lahjakortit?</string>
+    <string name="checkout_giftcard_remove_gift_cards_positive_button">Kyllä, poista</string>
+    <string name="checkout_giftcard_remove_gift_cards_negative_button">Peruuta</string>
+    <string name="checkout_remove_stored_payment_method_body">Poista tallennettu maksutapa</string>
 </resources>

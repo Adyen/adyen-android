@@ -6,7 +6,7 @@
  * Created by arman on 2/7/2019.
  */
 
-package com.adyen.checkout.dropin.ui
+package com.adyen.checkout.dropin.ui.viewmodel
 
 import android.content.Intent
 import androidx.lifecycle.SavedStateHandle
@@ -16,7 +16,7 @@ import com.adyen.checkout.components.PaymentComponentState
 import com.adyen.checkout.components.model.PaymentMethodsApiResponse
 import com.adyen.checkout.components.model.paymentmethods.StoredPaymentMethod
 import com.adyen.checkout.components.model.payments.Amount
-import com.adyen.checkout.components.model.payments.request.Order
+import com.adyen.checkout.components.model.payments.request.OrderRequest
 import com.adyen.checkout.components.model.payments.request.PaymentMethodDetails
 import com.adyen.checkout.components.model.payments.response.BalanceResult
 import com.adyen.checkout.components.model.payments.response.OrderResponse
@@ -30,12 +30,10 @@ import com.adyen.checkout.dropin.R
 import com.adyen.checkout.dropin.ui.giftcard.GiftCardBalanceResult
 import com.adyen.checkout.dropin.ui.giftcard.GiftCardPaymentConfirmationData
 import com.adyen.checkout.dropin.ui.order.OrderModel
-import com.adyen.checkout.dropin.ui.paymentmethods.PaymentMethodsListViewModel
 import com.adyen.checkout.giftcard.GiftCardComponentState
 import com.adyen.checkout.giftcard.util.GiftCardBalanceStatus
 import com.adyen.checkout.giftcard.util.GiftCardBalanceUtils
 import com.adyen.checkout.googlepay.GooglePayComponent
-import com.adyen.checkout.googlepay.GooglePayConfiguration
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.flow.receiveAsFlow
@@ -127,9 +125,11 @@ class DropInViewModel(
 
     val showPreselectedStored = paymentMethodsApiResponse.storedPaymentMethods?.any { it.isEcommerce } == true &&
         dropInConfiguration.showPreselectedStoredPaymentMethod
-    val preselectedStoredPayment = paymentMethodsApiResponse.storedPaymentMethods?.firstOrNull {
-        it.isEcommerce && PaymentMethodTypes.SUPPORTED_PAYMENT_METHODS.contains(it.type)
-    } ?: StoredPaymentMethod()
+
+    val preselectedStoredPayment
+        get() = paymentMethodsApiResponse.storedPaymentMethods?.firstOrNull {
+            it.isEcommerce && PaymentMethodTypes.SUPPORTED_PAYMENT_METHODS.contains(it.type)
+        } ?: StoredPaymentMethod()
 
     fun getStoredPaymentMethod(id: String): StoredPaymentMethod {
         return paymentMethodsApiResponse.storedPaymentMethods?.firstOrNull { it.id == id } ?: StoredPaymentMethod()
@@ -183,6 +183,7 @@ class DropInViewModel(
                 GiftCardBalanceResult.Error(R.string.payment_failed, "Drop-in amount is not set", true)
             }
             is GiftCardBalanceStatus.FullPayment -> {
+                cachedPartialPaymentAmount = giftCardBalanceResult.amountPaid
                 GiftCardBalanceResult.FullPayment(
                     createGiftCardPaymentConfirmationData(giftCardBalanceResult, cachedGiftCardComponentState)
                 )
@@ -234,15 +235,18 @@ class DropInViewModel(
 
     fun updatePaymentComponentStateForPaymentsCall(paymentComponentState: PaymentComponentState<*>) {
         // include amount value if merchant passed it to the DropIn
-        val amount = when {
-            cachedPartialPaymentAmount != null -> cachedPartialPaymentAmount
-            !amount.isEmpty -> amount
-            else -> null
-        }
-        cachedPartialPaymentAmount = null
-        amount?.let {
-            paymentComponentState.data.amount = it
-            Logger.d(TAG, "Payment amount set: $it")
+        val existingAmount = paymentComponentState.data.amount
+        when {
+            existingAmount != null && !existingAmount.isEmpty -> {
+                Logger.d(TAG, "Payment amount already set: $existingAmount")
+            }
+            !amount.isEmpty -> {
+                paymentComponentState.data.amount = amount
+                Logger.d(TAG, "Payment amount set: $amount")
+            }
+            else -> {
+                Logger.d(TAG, "Payment amount not set")
+            }
         }
         currentOrder?.let {
             paymentComponentState.data.order = createOrder(it)
@@ -250,8 +254,8 @@ class DropInViewModel(
         }
     }
 
-    private fun createOrder(order: OrderModel): Order {
-        return Order(
+    private fun createOrder(order: OrderModel): OrderRequest {
+        return OrderRequest(
             pspReference = order.pspReference,
             orderData = order.orderData
         )
@@ -265,9 +269,13 @@ class DropInViewModel(
         }
     }
 
-    fun updateGooglePayConfiguration(googlePayConfiguration: GooglePayConfiguration): GooglePayConfiguration {
-        if (currentOrder == null) return googlePayConfiguration
-        return GooglePayConfiguration.Builder(googlePayConfiguration).setAmount(amount).build()
+    fun removeStoredPaymentMethodWithId(id: String) {
+        val positionToRemove = paymentMethodsApiResponse.storedPaymentMethods?.indexOfFirst { it.id == id } ?: -1
+        val updatedStoredPaymentMethods = paymentMethodsApiResponse.storedPaymentMethods?.toMutableList()
+        if (positionToRemove != -1) {
+            updatedStoredPaymentMethods?.removeAt(positionToRemove)
+            paymentMethodsApiResponse.storedPaymentMethods = updatedStoredPaymentMethods
+        }
     }
 
     private suspend fun getOrderDetails(orderResponse: OrderResponse?): OrderModel? {
@@ -289,7 +297,32 @@ class DropInViewModel(
     fun partialPaymentRequested() {
         val paymentComponentState = cachedGiftCardComponentState
             ?: throw CheckoutException("Lost reference to cached GiftCardComponentState")
+        val partialPaymentAmount = cachedPartialPaymentAmount
+            ?: throw CheckoutException("Lost reference to cached partial payment amount")
+        paymentComponentState.data.amount = partialPaymentAmount
+        Logger.d(TAG, "Partial payment amount set: $partialPaymentAmount")
+        cachedGiftCardComponentState = null
+        cachedPartialPaymentAmount = null
         sendEvent(DropInActivityEvent.MakePartialPayment(paymentComponentState))
+    }
+
+    fun orderCancellationRequested() {
+        val order = currentOrder
+            ?: throw CheckoutException("No order in progress")
+        sendCancelOrderEvent(order, false)
+    }
+
+    fun cancelDropIn() {
+        currentOrder?.let { sendCancelOrderEvent(it, true) }
+        sendEvent(DropInActivityEvent.CancelDropIn)
+    }
+
+    private fun sendCancelOrderEvent(order: OrderModel, isDropInCancelledByUser: Boolean) {
+        val orderRequest = OrderRequest(
+            pspReference = order.pspReference,
+            orderData = order.orderData
+        )
+        sendEvent(DropInActivityEvent.CancelOrder(orderRequest, isDropInCancelledByUser))
     }
 
     private fun sendEvent(event: DropInActivityEvent) {

@@ -43,6 +43,13 @@ class Adyen3DS2Configuration : Configuration {
          */
         constructor(shopperLocale: Locale, environment: Environment, clientKey: String) : super(shopperLocale, environment, clientKey)
 
+        /**
+         * Constructor that copies an existing configuration.
+         *
+         * @param configuration A configuration to initialize the builder.
+         */
+        constructor(configuration: Adyen3DS2Configuration) : super(configuration)
+
         override fun setShopperLocale(builderShopperLocale: Locale): Builder {
             return super.setShopperLocale(builderShopperLocale) as Builder
         }
