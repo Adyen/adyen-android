@@ -27,7 +27,7 @@
 
 ## Fixed
 - Redirects in Android 11. [Privacy changes for package visibility in Android 11](https://developer.android.com/about/versions/11/privacy/package-visibility) requires a fix for [handling redirects using Custom Tabs](https://developers.google.com/web/updates/2020/07/custom-tabs-android-11).
-- Crash when the provided shopper `Locale` doesn't have an `isO3Country`.
+- Crash when the provided shopper `Locale` doesn't have an `ISO3Country`.
 - Crash in the Component screen when resuming drop-in after the activity has been destroyed in the background.
 - CVC and expiry date fields in Card Component not being validated when empty.
 - Various missing translations.
