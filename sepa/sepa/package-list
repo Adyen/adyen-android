@@ -25,6 +25,7 @@ $dokka.location:com.adyen.checkout.sepa/SepaComponent/SepaComponent/#androidx.li
 $dokka.location:com.adyen.checkout.sepa/SepaComponent/getSupportedPaymentMethodTypes/#/PointingToDeclaration/sepa/com.adyen.checkout.sepa/-sepa-component/get-supported-payment-method-types.html
 $dokka.location:com.adyen.checkout.sepa/SepaConfiguration.Builder///PointingToDeclaration/sepa/com.adyen.checkout.sepa/-sepa-configuration/-builder/index.html
 $dokka.location:com.adyen.checkout.sepa/SepaConfiguration.Builder/Builder/#android.content.Context#java.lang.String/PointingToDeclaration/sepa/com.adyen.checkout.sepa/-sepa-configuration/-builder/-builder.html
+$dokka.location:com.adyen.checkout.sepa/SepaConfiguration.Builder/Builder/#com.adyen.checkout.sepa.SepaConfiguration/PointingToDeclaration/sepa/com.adyen.checkout.sepa/-sepa-configuration/-builder/-builder.html
 $dokka.location:com.adyen.checkout.sepa/SepaConfiguration.Builder/Builder/#java.util.Locale#com.adyen.checkout.core.api.Environment#java.lang.String/PointingToDeclaration/sepa/com.adyen.checkout.sepa/-sepa-configuration/-builder/-builder.html
 $dokka.location:com.adyen.checkout.sepa/SepaConfiguration.Builder/setEnvironment/#com.adyen.checkout.core.api.Environment/PointingToDeclaration/sepa/com.adyen.checkout.sepa/-sepa-configuration/-builder/set-environment.html
 $dokka.location:com.adyen.checkout.sepa/SepaConfiguration.Builder/setShopperLocale/#java.util.Locale/PointingToDeclaration/sepa/com.adyen.checkout.sepa/-sepa-configuration/-builder/set-shopper-locale.html

@@ -2,6 +2,7 @@ $dokka.format:html-v1
 $dokka.linkExtension:html
 $dokka.location:com.adyen.checkout.bacs////PointingToDeclaration/bacs/com.adyen.checkout.bacs/index.html
 $dokka.location:com.adyen.checkout.bacs/BacsDirectDebitComponent.Companion///PointingToDeclaration/bacs/com.adyen.checkout.bacs/-bacs-direct-debit-component/-companion/index.html
+$dokka.location:com.adyen.checkout.bacs/BacsDirectDebitComponent.Companion/PAYMENT_METHOD_TYPES/#/PointingToDeclaration/bacs/com.adyen.checkout.bacs/-bacs-direct-debit-component/-companion/-p-a-y-m-e-n-t_-m-e-t-h-o-d_-t-y-p-e-s.html
 $dokka.location:com.adyen.checkout.bacs/BacsDirectDebitComponent.Companion/PROVIDER/#/PointingToDeclaration/bacs/com.adyen.checkout.bacs/-bacs-direct-debit-component/-companion/-p-r-o-v-i-d-e-r.html
 $dokka.location:com.adyen.checkout.bacs/BacsDirectDebitComponent///PointingToDeclaration/bacs/com.adyen.checkout.bacs/-bacs-direct-debit-component/index.html
 $dokka.location:com.adyen.checkout.bacs/BacsDirectDebitComponent/BacsDirectDebitComponent/#androidx.lifecycle.SavedStateHandle#com.adyen.checkout.components.base.GenericPaymentMethodDelegate#com.adyen.checkout.bacs.BacsDirectDebitConfiguration/PointingToDeclaration/bacs/com.adyen.checkout.bacs/-bacs-direct-debit-component/-bacs-direct-debit-component.html
@@ -14,6 +15,7 @@ $dokka.location:com.adyen.checkout.bacs/BacsDirectDebitComponentState/isValid/#/
 $dokka.location:com.adyen.checkout.bacs/BacsDirectDebitComponentState/mode/#/PointingToDeclaration/bacs/com.adyen.checkout.bacs/-bacs-direct-debit-component-state/mode.html
 $dokka.location:com.adyen.checkout.bacs/BacsDirectDebitConfiguration.Builder///PointingToDeclaration/bacs/com.adyen.checkout.bacs/-bacs-direct-debit-configuration/-builder/index.html
 $dokka.location:com.adyen.checkout.bacs/BacsDirectDebitConfiguration.Builder/Builder/#android.content.Context#kotlin.String/PointingToDeclaration/bacs/com.adyen.checkout.bacs/-bacs-direct-debit-configuration/-builder/-builder.html
+$dokka.location:com.adyen.checkout.bacs/BacsDirectDebitConfiguration.Builder/Builder/#com.adyen.checkout.bacs.BacsDirectDebitConfiguration/PointingToDeclaration/bacs/com.adyen.checkout.bacs/-bacs-direct-debit-configuration/-builder/-builder.html
 $dokka.location:com.adyen.checkout.bacs/BacsDirectDebitConfiguration.Builder/Builder/#java.util.Locale#com.adyen.checkout.core.api.Environment#kotlin.String/PointingToDeclaration/bacs/com.adyen.checkout.bacs/-bacs-direct-debit-configuration/-builder/-builder.html
 $dokka.location:com.adyen.checkout.bacs/BacsDirectDebitConfiguration.Builder/setAmount/#com.adyen.checkout.components.model.payments.Amount/PointingToDeclaration/bacs/com.adyen.checkout.bacs/-bacs-direct-debit-configuration/-builder/set-amount.html
 $dokka.location:com.adyen.checkout.bacs/BacsDirectDebitConfiguration.Builder/setEnvironment/#com.adyen.checkout.core.api.Environment/PointingToDeclaration/bacs/com.adyen.checkout.bacs/-bacs-direct-debit-configuration/-builder/set-environment.html

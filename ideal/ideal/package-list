@@ -7,6 +7,7 @@ $dokka.location:com.adyen.checkout.ideal/IdealComponent/PROVIDER/#/PointingToDec
 $dokka.location:com.adyen.checkout.ideal/IdealComponent/getSupportedPaymentMethodTypes/#/PointingToDeclaration/ideal/com.adyen.checkout.ideal/-ideal-component/get-supported-payment-method-types.html
 $dokka.location:com.adyen.checkout.ideal/IdealConfiguration.Builder///PointingToDeclaration/ideal/com.adyen.checkout.ideal/-ideal-configuration/-builder/index.html
 $dokka.location:com.adyen.checkout.ideal/IdealConfiguration.Builder/Builder/#android.content.Context#java.lang.String/PointingToDeclaration/ideal/com.adyen.checkout.ideal/-ideal-configuration/-builder/-builder.html
+$dokka.location:com.adyen.checkout.ideal/IdealConfiguration.Builder/Builder/#com.adyen.checkout.ideal.IdealConfiguration/PointingToDeclaration/ideal/com.adyen.checkout.ideal/-ideal-configuration/-builder/-builder.html
 $dokka.location:com.adyen.checkout.ideal/IdealConfiguration.Builder/Builder/#java.util.Locale#com.adyen.checkout.core.api.Environment#java.lang.String/PointingToDeclaration/ideal/com.adyen.checkout.ideal/-ideal-configuration/-builder/-builder.html
 $dokka.location:com.adyen.checkout.ideal/IdealConfiguration.Builder/setEnvironment/#com.adyen.checkout.core.api.Environment/PointingToDeclaration/ideal/com.adyen.checkout.ideal/-ideal-configuration/-builder/set-environment.html
 $dokka.location:com.adyen.checkout.ideal/IdealConfiguration.Builder/setShopperLocale/#java.util.Locale/PointingToDeclaration/ideal/com.adyen.checkout.ideal/-ideal-configuration/-builder/set-shopper-locale.html

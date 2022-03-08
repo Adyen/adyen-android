@@ -1,0 +1,40 @@
+<html>
+  <head>
+    <meta name="viewport" content="width=device-width, initial-scale=1" charset="UTF-8">
+    <title>cancelOrder</title>
+</head><body><link href="../../../../../../../images/logo-icon.svg" rel="icon" type="image/svg"><script>var pathToRoot = "../../../../";</script><script type="text/javascript" src="../../../../scripts/sourceset_dependencies.js" async></script><link href="../../../../styles/style.css" rel="Stylesheet"><link href="../../../../styles/logo-styles.css" rel="Stylesheet"><link href="../../../../styles/jetbrains-mono.css" rel="Stylesheet"><link href="../../../../styles/main.css" rel="Stylesheet"><script type="text/javascript" src="../../../../scripts/clipboard.js" async></script><script type="text/javascript" src="../../../../scripts/navigation-loader.js" async></script><script type="text/javascript" src="../../../../scripts/platform-content-handler.js" async></script><script type="text/javascript" src="../../../../scripts/main.js" async></script>
+  
+    <div id="container">
+      <div id="leftColumn"><a href="../../../../index.html">
+            <div id="logo"></div>
+          </a>
+        <div id="paneSearch"></div>
+        <div id="sideMenu"></div>
+      </div>
+      <div id="main">
+        <script type="text/javascript" src="../../../../scripts/main.js"></script><div id="leftToggler"><span class="icon-toggler"></span></div>
+
+        <div class="main-content" id="content" pageids="drop-in::com.adyen.checkout.dropin.service/DropInService/cancelOrder/#com.adyen.checkout.components.model.payments.request.OrderRequest#kotlin.Boolean/PointingToDeclaration//812263874">
+          <div class="navigation-wrapper" id="navigation-wrapper">
+            <div class="breadcrumbs"><a href="../../../index.html">drop-in</a>/<a href="../index.html">com.adyen.checkout.dropin.service</a>/<a href="index.html">DropInService</a>/<a href="cancel-order.html">cancelOrder</a></div>
+            <div class="pull-right d-flex">
+              <div id="searchBar"></div>
+            </div>
+          </div>
+          <div class="cover ">
+            <h1 class="cover"><span>cancel</span><wbr><span>Order</span></h1>
+          </div>
+<div class="divergent-group" data-filterable-current=":drop-in:dokkaHtmlPartial/release" data-filterable-set=":drop-in:dokkaHtmlPartial/release"><div class="with-platform-tags"><span class="pull-right"></span></div>
+
+  <div>
+    <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-depenent-content" data-active="" data-togglable=":drop-in:dokkaHtmlPartial/release"><div class="symbol monospace">open fun <a href="cancel-order.html">cancelOrder</a>(order: <a href="../../../../components-core/components-core/com.adyen.checkout.components.model.payments.request/-order-request/index.html">OrderRequest</a>, shouldUpdatePaymentMethods: <a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-boolean/index.html">Boolean</a>)<span class="top-right-position"><span class="copy-icon"></span><div class="copy-popup-wrapper popup-to-left"><span class="copy-popup-icon"></span><span>Content copied to clipboard</span></div></span></div></div></div>
+  </div>
+<p class="paragraph">Only applicable for gift card flow.</p><p class="paragraph">In this method you should make the network call to tell your server to make a call to the orders/cancel/ endpoint. This method is called during a partial payment, when the user removes their already paid gift cards either by using the remove button or cancelling Drop-in.</p><p class="paragraph">We provide <a href="cancel-order.html">order</a>, an <a href="../../../../components-core/components-core/com.adyen.checkout.components.model.payments.request/-order-request/index.html">OrderRequest</a> object that contains a non-serialized version of the order to be cancelled. Use <a href="../../../../components-core/components-core/com.adyen.checkout.components.model.payments.request/-order-request/-companion/-s-e-r-i-a-l-i-z-e-r.html">OrderRequest.SERIALIZER</a> to serialize it to a <a href="https://developer.android.com/reference/kotlin/org/json/JSONObject.html">JSONObject</a>.</p><p class="paragraph">The <a href="cancel-order.html">shouldUpdatePaymentMethods</a> flag indicates the next step you should take after the API call is made:</p><ul><li><p class="paragraph">true means that Drop-in is still showing and you should therefore call paymentMethods/ then update Drop-in with the new list of payment methods, by passing <a href="../-drop-in-service-result/-update/index.html">DropInServiceResult.Update</a> to <a href="../../../../drop-in/com.adyen.checkout.dropin.service/-drop-in-service/send-result.html">sendResult</a>.</p></li><li><p class="paragraph">false means that Drop-in is being dismissed by the user so there is no need to do any further calls.</p></li></ul><p class="paragraph">Asynchronous handling: since this method runs on the main thread, you should make sure the paymentMethods/balance/ call and any other long running operation is made on a background thread.</p><p class="paragraph">Note that not overriding this method while enabling gift card payments will cause a <a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-not-implemented-error/index.html">NotImplementedError</a> to be thrown.</p><p class="paragraph">See https://docs.adyen.com/api-explorer/ for more information on the API documentation.</p><h2 class="">Parameters</h2><div data-togglable="Parameters"><div class="platform-hinted WithExtraAttributes" data-platform-hinted="data-platform-hinted" data-togglable="Parameters"><div class="content sourceset-depenent-content" data-active="" data-togglable=":drop-in:dokkaHtmlPartial/release"><div data-togglable="Parameters"><div class="table" data-togglable="Parameters"><div class="table-row" data-filterable-current=":drop-in:dokkaHtmlPartial/release" data-filterable-set=":drop-in:dokkaHtmlPartial/release"><div class="main-subrow keyValue WithExtraAttributes"><div class=""><span class="inline-flex">order</span></div><div><div class="title"><div data-togglable="Parameters"><p class="paragraph">The data from order being cancelled.</p></div></div></div></div></div><div class="table-row" data-filterable-current=":drop-in:dokkaHtmlPartial/release" data-filterable-set=":drop-in:dokkaHtmlPartial/release"><div class="main-subrow keyValue WithExtraAttributes"><div class=""><span class="inline-flex">shouldUpdatePaymentMethods</span></div><div><div class="title"><div data-togglable="Parameters"><p class="paragraph">indicates whether payment methods should be re-fetched and passed to Drop-in.</p></div></div></div></div></div></div></div></div></div></div></div>
+        </div>
+        <div class="footer"><span class="go-to-top-icon"><a href="#content"></a></span><span>© 2022 Copyright</span><span class="pull-right"><span>Generated by </span><a href="https://github.com/Kotlin/dokka"><span>dokka</span><span class="padded-icon"></span></a></span></div>
+      </div>
+    </div>
+  
+</body></html>
+
+

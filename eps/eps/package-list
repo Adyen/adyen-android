@@ -7,6 +7,7 @@ $dokka.location:com.adyen.checkout.eps/EPSComponent/PROVIDER/#/PointingToDeclara
 $dokka.location:com.adyen.checkout.eps/EPSComponent/getSupportedPaymentMethodTypes/#/PointingToDeclaration/eps/com.adyen.checkout.eps/-e-p-s-component/get-supported-payment-method-types.html
 $dokka.location:com.adyen.checkout.eps/EPSConfiguration.Builder///PointingToDeclaration/eps/com.adyen.checkout.eps/-e-p-s-configuration/-builder/index.html
 $dokka.location:com.adyen.checkout.eps/EPSConfiguration.Builder/Builder/#android.content.Context#java.lang.String/PointingToDeclaration/eps/com.adyen.checkout.eps/-e-p-s-configuration/-builder/-builder.html
+$dokka.location:com.adyen.checkout.eps/EPSConfiguration.Builder/Builder/#com.adyen.checkout.eps.EPSConfiguration/PointingToDeclaration/eps/com.adyen.checkout.eps/-e-p-s-configuration/-builder/-builder.html
 $dokka.location:com.adyen.checkout.eps/EPSConfiguration.Builder/Builder/#java.util.Locale#com.adyen.checkout.core.api.Environment#java.lang.String/PointingToDeclaration/eps/com.adyen.checkout.eps/-e-p-s-configuration/-builder/-builder.html
 $dokka.location:com.adyen.checkout.eps/EPSConfiguration.Builder/buildInternal/#/PointingToDeclaration/eps/com.adyen.checkout.eps/-e-p-s-configuration/-builder/build-internal.html
 $dokka.location:com.adyen.checkout.eps/EPSConfiguration.Builder/setEnvironment/#com.adyen.checkout.core.api.Environment/PointingToDeclaration/eps/com.adyen.checkout.eps/-e-p-s-configuration/-builder/set-environment.html

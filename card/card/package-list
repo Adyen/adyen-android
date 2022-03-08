@@ -144,6 +144,7 @@ $dokka.location:com.adyen.checkout.card.ui/SocialSecurityNumberInput/SocialSecur
 $dokka.location:com.adyen.checkout.card.ui/SocialSecurityNumberInput/SocialSecurityNumberInput/#android.content.Context/PointingToDeclaration/card/com.adyen.checkout.card.ui/-social-security-number-input/-social-security-number-input.html
 $dokka.location:com.adyen.checkout.card////PointingToDeclaration/card/com.adyen.checkout.card/index.html
 $dokka.location:com.adyen.checkout.card/CardComponent.Companion///PointingToDeclaration/card/com.adyen.checkout.card/-card-component/-companion/index.html
+$dokka.location:com.adyen.checkout.card/CardComponent.Companion/PAYMENT_METHOD_TYPES/#/PointingToDeclaration/card/com.adyen.checkout.card/-card-component/-companion/-p-a-y-m-e-n-t_-m-e-t-h-o-d_-t-y-p-e-s.html
 $dokka.location:com.adyen.checkout.card/CardComponent.Companion/PROVIDER/#/PointingToDeclaration/card/com.adyen.checkout.card/-card-component/-companion/-p-r-o-v-i-d-e-r.html
 $dokka.location:com.adyen.checkout.card/CardComponent///PointingToDeclaration/card/com.adyen.checkout.card/-card-component/index.html
 $dokka.location:com.adyen.checkout.card/CardComponent/CardComponent/#androidx.lifecycle.SavedStateHandle#com.adyen.checkout.card.NewCardDelegate#com.adyen.checkout.card.CardConfiguration/PointingToDeclaration/card/com.adyen.checkout.card/-card-component/-card-component.html
@@ -283,7 +284,7 @@ $dokka.location:com.adyen.checkout.card/CardValidationMapper/mapCardNumberValida
 $dokka.location:com.adyen.checkout.card/CardValidationUtils///PointingToDeclaration/card/com.adyen.checkout.card/-card-validation-utils/index.html
 $dokka.location:com.adyen.checkout.card/CardValidationUtils/MAXIMUM_CARD_NUMBER_LENGTH/#/PointingToDeclaration/card/com.adyen.checkout.card/-card-validation-utils/-m-a-x-i-m-u-m_-c-a-r-d_-n-u-m-b-e-r_-l-e-n-g-t-h.html
 $dokka.location:com.adyen.checkout.card/CardValidationUtils/validateCardNumber/#kotlin.String#kotlin.Boolean#kotlin.Boolean/PointingToDeclaration/card/com.adyen.checkout.card/-card-validation-utils/validate-card-number.html
-$dokka.location:com.adyen.checkout.card/CardValidationUtils/validateExpiryDate/#com.adyen.checkout.card.data.ExpiryDate/PointingToDeclaration/card/com.adyen.checkout.card/-card-validation-utils/validate-expiry-date.html
+$dokka.location:com.adyen.checkout.card/CardValidationUtils/validateExpiryDate/#com.adyen.checkout.card.data.ExpiryDate#com.adyen.checkout.card.api.model.Brand.FieldPolicy?/PointingToDeclaration/card/com.adyen.checkout.card/-card-validation-utils/validate-expiry-date.html
 $dokka.location:com.adyen.checkout.card/CardValidationUtils/validateSecurityCode/#kotlin.String#com.adyen.checkout.card.data.DetectedCardType?/PointingToDeclaration/card/com.adyen.checkout.card/-card-validation-utils/validate-security-code.html
 $dokka.location:com.adyen.checkout.card/CardView.Companion///PointingToDeclaration/card/com.adyen.checkout.card/-card-view/-companion/index.html
 $dokka.location:com.adyen.checkout.card/CardView///PointingToDeclaration/card/com.adyen.checkout.card/-card-view/index.html

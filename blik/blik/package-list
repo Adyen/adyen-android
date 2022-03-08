@@ -9,6 +9,7 @@ $dokka.location:com.adyen.checkout.blik/BlikComponent/getSupportedPaymentMethodT
 $dokka.location:com.adyen.checkout.blik/BlikComponent/requiresInput/#/PointingToDeclaration/blik/com.adyen.checkout.blik/-blik-component/requires-input.html
 $dokka.location:com.adyen.checkout.blik/BlikConfiguration.Builder///PointingToDeclaration/blik/com.adyen.checkout.blik/-blik-configuration/-builder/index.html
 $dokka.location:com.adyen.checkout.blik/BlikConfiguration.Builder/Builder/#android.content.Context#java.lang.String/PointingToDeclaration/blik/com.adyen.checkout.blik/-blik-configuration/-builder/-builder.html
+$dokka.location:com.adyen.checkout.blik/BlikConfiguration.Builder/Builder/#com.adyen.checkout.blik.BlikConfiguration/PointingToDeclaration/blik/com.adyen.checkout.blik/-blik-configuration/-builder/-builder.html
 $dokka.location:com.adyen.checkout.blik/BlikConfiguration.Builder/Builder/#java.util.Locale#com.adyen.checkout.core.api.Environment#java.lang.String/PointingToDeclaration/blik/com.adyen.checkout.blik/-blik-configuration/-builder/-builder.html
 $dokka.location:com.adyen.checkout.blik/BlikConfiguration.Builder/setEnvironment/#com.adyen.checkout.core.api.Environment/PointingToDeclaration/blik/com.adyen.checkout.blik/-blik-configuration/-builder/set-environment.html
 $dokka.location:com.adyen.checkout.blik/BlikConfiguration.Builder/setShopperLocale/#java.util.Locale/PointingToDeclaration/blik/com.adyen.checkout.blik/-blik-configuration/-builder/set-shopper-locale.html
