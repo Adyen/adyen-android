@@ -9,6 +9,7 @@
 package com.adyen.checkout.card.ui;
 
 import android.content.Context;
+import android.os.Build;
 import android.text.Editable;
 import android.util.AttributeSet;
 
@@ -53,6 +54,10 @@ public class ExpiryDateInput extends AdyenTextInputEditText {
         enforceMaxInputLength(MAX_LENGTH);
         // Make sure DateFormat only accepts the correct formatting.
         mDateFormat.setLenient(false);
+
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+            setAutofillHints(AUTOFILL_HINT_CREDIT_CARD_EXPIRATION_DATE);
+        }
     }
 
     @Override

@@ -64,6 +64,7 @@
         <com.adyen.checkout.components.ui.view.AdyenTextInputEditText
             android:id="@+id/editText_shopperEmail"
             style="@style/AdyenCheckout.Bacs.ShopperEmailInput"
+            android:autofillHints="emailAddress"
             tools:ignore="RequiredSize" />
     </com.google.android.material.textfield.TextInputLayout>
 
