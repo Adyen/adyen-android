@@ -41,8 +41,6 @@ android {
         versionName version_name
 
         testInstrumentationRunner 'androidx.test.runner.AndroidJUnitRunner'
-
-        multiDexEnabled true
     }
 
     compileOptions {
