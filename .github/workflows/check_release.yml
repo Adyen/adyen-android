@@ -25,6 +25,6 @@ jobs:
         run: chmod +x gradlew
 
       - name: Gradle check
-        run: ./gradlew check
+        run: ./gradlew check --no-daemon
 
       # TODO: add more tests
