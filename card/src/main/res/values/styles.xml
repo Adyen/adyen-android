@@ -78,9 +78,65 @@
         <item name="android:maxLength">2</item>
     </style>
 
+    <!-- TODO translations -->
+
+    <style name="AdyenCheckout.Card.StreetInput" parent="AdyenCheckout.TextInputEditText">
+        <item name="android:hint">Street</item>
+        <item name="android:inputType">text</item>
+    </style>
+
+    <style name="AdyenCheckout.Card.Address" parent="AdyenCheckout.TextInputEditText">
+        <item name="android:hint">Address</item>
+        <item name="android:inputType">text</item>
+    </style>
+
+    <style name="AdyenCheckout.Card.HouseNumberInput" parent="AdyenCheckout.TextInputEditText">
+        <item name="android:hint">House number</item>
+        <item name="android:inputType">text</item>
+    </style>
+
     <style name="AdyenCheckout.Card.PostalCodeInput" parent="AdyenCheckout.TextInputEditText">
         <item name="android:hint">@string/checkout_card_postal_code_hint</item>
         <item name="android:inputType">textPostalAddress</item>
+    </style>
+
+    <style name="AdyenCheckout.Card.ZipCodeInput" parent="AdyenCheckout.TextInputEditText">
+        <item name="android:hint">Zip code</item>
+        <item name="android:inputType">textPostalAddress</item>
+    </style>
+
+
+    <style name="AdyenCheckout.Card.City" parent="AdyenCheckout.TextInputEditText">
+        <item name="android:hint">City</item>
+        <item name="android:inputType">text</item>
+    </style>
+
+    <style name="AdyenCheckout.Card.CityTown" parent="AdyenCheckout.TextInputEditText">
+        <item name="android:hint">City / Town</item>
+        <item name="android:inputType">text</item>
+    </style>
+
+    <style name="AdyenCheckout.Card.ApartmentSuite" parent="AdyenCheckout.TextInputEditText">
+        <item name="android:hint">Apartment / Suite (Optional)</item>
+        <item name="android:inputType">text</item>
+    </style>
+
+    <style name="AdyenCheckout.Card.ProvinceTerritory" parent="AdyenCheckout.TextInputEditText">
+        <item name="android:hint">Province or Territory</item>
+        <item name="android:inputType">text</item>
+    </style>
+
+    <style name="AdyenCheckout.DropdownTextInputLayout.Country" parent="AdyenCheckout.DropdownTextInputLayout">
+        <item name="android:hint">Country</item>
+    </style>
+
+
+    <style name="AdyenCheckout.DropdownTextInputLayout.States" parent="AdyenCheckout.DropdownTextInputLayout">
+        <item name="android:hint">State</item>
+    </style>
+
+    <style name="AdyenCheckout.DropdownTextInputLayout.ProvinceTerritory" parent="AdyenCheckout.DropdownTextInputLayout">
+        <item name="android:hint">Province or Territory</item>
     </style>
 
     <style name="AdyenCheckout.Card.StorePaymentSwitch" parent="AdyenCheckout.Switch">
