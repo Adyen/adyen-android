@@ -11,6 +11,8 @@ package com.adyen.checkout.example.data.api
 import com.adyen.checkout.components.model.PaymentMethodsApiResponse
 import com.adyen.checkout.example.BuildConfig
 import com.adyen.checkout.example.data.api.model.paymentsRequest.PaymentMethodsRequest
+import com.adyen.checkout.example.data.api.model.paymentsRequest.SessionRequest
+import com.adyen.checkout.sessions.model.Session
 import kotlinx.coroutines.Deferred
 import okhttp3.RequestBody
 import okhttp3.ResponseBody
@@ -29,6 +31,10 @@ interface CheckoutApiService {
             return BuildConfig.MERCHANT_SERVER_URL != defaultGradleUrl
         }
     }
+
+    @Headers(BuildConfig.API_KEY_HEADER_NAME + ":" + BuildConfig.CHECKOUT_API_KEY)
+    @POST("sessions")
+    fun sessionsAsync(@Body sessionRequest: SessionRequest): Deferred<Response<Session>>
 
     @Headers(BuildConfig.API_KEY_HEADER_NAME + ":" + BuildConfig.CHECKOUT_API_KEY)
     @POST("paymentMethods")

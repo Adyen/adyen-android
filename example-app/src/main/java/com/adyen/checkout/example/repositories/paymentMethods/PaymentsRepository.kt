@@ -11,12 +11,15 @@ package com.adyen.checkout.example.repositories.paymentMethods
 import com.adyen.checkout.components.model.PaymentMethodsApiResponse
 import com.adyen.checkout.example.data.api.CheckoutApiService
 import com.adyen.checkout.example.data.api.model.paymentsRequest.PaymentMethodsRequest
+import com.adyen.checkout.example.data.api.model.paymentsRequest.SessionRequest
 import com.adyen.checkout.example.repositories.BaseRepository
+import com.adyen.checkout.sessions.model.Session
 import okhttp3.RequestBody
 import okhttp3.ResponseBody
 import retrofit2.Call
 
 interface PaymentsRepository {
+    suspend fun getSessionAsync(sessionRequest: SessionRequest): Session?
     suspend fun getPaymentMethods(paymentMethodsRequest: PaymentMethodsRequest): PaymentMethodsApiResponse?
     fun paymentsRequest(paymentsRequest: RequestBody): Call<ResponseBody>
     suspend fun paymentsRequestAsync(paymentsRequest: RequestBody): ResponseBody?
@@ -28,6 +31,12 @@ interface PaymentsRepository {
 }
 
 class PaymentsRepositoryImpl(private val checkoutApiService: CheckoutApiService) : PaymentsRepository, BaseRepository() {
+
+    override suspend fun getSessionAsync(sessionRequest: SessionRequest): Session? {
+        return safeApiCall(
+            call = { checkoutApiService.sessionsAsync(sessionRequest).await() }
+        )
+    }
 
     override suspend fun getPaymentMethods(paymentMethodsRequest: PaymentMethodsRequest): PaymentMethodsApiResponse? {
         return safeApiCall(

@@ -13,6 +13,7 @@ import com.adyen.checkout.components.model.payments.request.OrderRequest
 import com.adyen.checkout.example.data.api.model.paymentsRequest.AdditionalData
 import com.adyen.checkout.example.data.api.model.paymentsRequest.Item
 import com.adyen.checkout.example.data.api.model.paymentsRequest.PaymentMethodsRequest
+import com.adyen.checkout.example.data.api.model.paymentsRequest.SessionRequest
 import com.adyen.checkout.example.data.storage.KeyValueStorage
 import com.google.gson.Gson
 import org.json.JSONArray
@@ -27,6 +28,18 @@ fun getPaymentMethodRequest(keyValueStorage: KeyValueStorage, order: OrderReques
         shopperLocale = keyValueStorage.getShopperLocale(),
         splitCardFundingSources = keyValueStorage.isSplitCardFundingSources(),
         order = order
+    )
+}
+
+fun getSessionRequest(keyValueStorage: KeyValueStorage, returnUrl: String): SessionRequest {
+    return SessionRequest(
+        merchantAccount = keyValueStorage.getMerchantAccount(),
+        shopperReference = keyValueStorage.getShopperReference(),
+        amount = keyValueStorage.getAmount(),
+        countryCode = keyValueStorage.getCountry(),
+        shopperLocale = keyValueStorage.getShopperLocale(),
+        splitCardFundingSources = keyValueStorage.isSplitCardFundingSources(),
+        returnUrl = returnUrl
     )
 }
 
