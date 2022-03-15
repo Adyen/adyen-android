@@ -5,92 +5,51 @@
  *
  * Created by caiof on 17/12/2020.
  */
+package com.adyen.checkout.core.api
 
-package com.adyen.checkout.core.api;
-
-import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
-
-import com.adyen.checkout.core.BuildConfig;
-import com.adyen.checkout.core.log.LogUtil;
-import com.adyen.checkout.core.log.Logger;
-
-import java.io.ByteArrayOutputStream;
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.OutputStream;
-import java.net.HttpURLConnection;
-import java.nio.charset.Charset;
-import java.nio.charset.StandardCharsets;
-import java.util.Arrays;
-import java.util.Collections;
-import java.util.List;
-import java.util.Map;
-import java.util.concurrent.Callable;
+import com.adyen.checkout.core.BuildConfig
+import com.adyen.checkout.core.log.LogUtil
+import com.adyen.checkout.core.log.Logger
+import java.io.ByteArrayOutputStream
+import java.io.IOException
+import java.io.InputStream
+import java.net.HttpURLConnection
+import java.nio.charset.StandardCharsets
+import java.util.*
+import java.util.concurrent.Callable
 
 /**
  * A wrapper for a callable network connection.
  *
  * @param <T> The type of the connection return.
+ * @param url The URl used to make this Connection.
  */
-public abstract class Connection<T> implements Callable<T> {
-    private static final String TAG = LogUtil.getTag();
+abstract class Connection<T> protected constructor(
+    protected val url: String
+) : Callable<T> {
 
-    private static final String CONTENT_TYPE_HEADER = "Content-Type";
-    private static final String APP_JSON_CONTENT_TYPE = "application/json";
-    public static final Map<String, String> CONTENT_TYPE_JSON_HEADER = Collections.singletonMap(CONTENT_TYPE_HEADER, APP_JSON_CONTENT_TYPE);
-
-    private static final Charset CHARSET = StandardCharsets.UTF_8;
-    private static final int BUFFER_SIZE = 1024;
-
-    private HttpURLConnection mURLConnection;
-    private final String mUrl;
-
-    protected Connection(@NonNull String url) {
-        mUrl = url;
-    }
-
-    /**
-     * @return the URl used to make this Connection.
-     */
-    @NonNull
-    protected String getUrl() {
-        return mUrl;
-    }
-
-    /**
-     * Performs an URL connection using HTTP GET.
-     *
-     * @return The byte array of the response
-     * @throws IOException In case an IO error happens.
-     */
-    @NonNull
-    protected byte[] get() throws IOException {
-        return get(Collections.emptyMap());
-    }
+    private var urlConnection: HttpURLConnection? = null
 
     /**
      * Performs an URL connection using HTTP GET.
      *
      * @param headers The headers of the connection.
      * @return The byte array of the response
-     * @throws IOException n case an IO error happens.
+     * @throws IOException In case an IO error happens.
      */
-    @NonNull
-    protected byte[] get(@NonNull Map<String, String> headers) throws IOException {
-        if (mURLConnection != null) {
-            throw new RuntimeException("Connection already initiated");
+    @Suppress("TooGenericExceptionThrown")
+    @Throws(IOException::class)
+    protected operator fun get(headers: Map<String, String> = emptyMap()): ByteArray {
+        if (urlConnection != null) {
+            throw RuntimeException("Connection already initiated")
         }
-
-        try {
-            mURLConnection = getUrlConnection(mUrl, headers, HttpMethod.GET);
-            mURLConnection.connect();
-
-            return handleResponse(mURLConnection);
+        return try {
+            val connection = getUrlConnection(url, headers, HttpMethod.GET)
+            urlConnection = connection
+            connection.connect()
+            handleResponse(connection)
         } finally {
-            if (mURLConnection != null) {
-                mURLConnection.disconnect();
-            }
+            urlConnection?.disconnect()
         }
     }
 
@@ -100,120 +59,99 @@ public abstract class Connection<T> implements Callable<T> {
      * @return The byte array of the response
      * @throws IOException In case an IO error happens.
      */
-    @NonNull
-    protected byte[] post(@NonNull Map<String, String> headers, @NonNull byte[] data) throws IOException {
-        if (mURLConnection != null) {
-            throw new RuntimeException("Connection already initiated");
+    @Suppress("TooGenericExceptionThrown")
+    @Throws(IOException::class)
+    protected fun post(headers: Map<String, String>, data: ByteArray): ByteArray {
+        if (urlConnection != null) {
+            throw RuntimeException("Connection already initiated")
         }
-
-        try {
-            mURLConnection = getUrlConnection(mUrl, headers, HttpMethod.POST);
-            mURLConnection.connect();
-
-            try (OutputStream outputStream = mURLConnection.getOutputStream()) {
-                outputStream.write(data);
-                outputStream.flush();
+        return try {
+            val connection = getUrlConnection(url, headers, HttpMethod.POST)
+            urlConnection = connection
+            connection.connect()
+            connection.outputStream.use { outputStream ->
+                outputStream.write(data)
+                outputStream.flush()
             }
-
-            return handleResponse(mURLConnection);
+            handleResponse(connection)
         } finally {
-            if (mURLConnection != null) {
-                mURLConnection.disconnect();
-            }
+            urlConnection?.disconnect()
         }
     }
 
-    @NonNull
-    private IOException parseException(@Nullable byte[] errorBytes) {
-        String message = null;
-
+    private fun parseException(errorBytes: ByteArray?): IOException {
+        var message: String? = null
         if (errorBytes != null) {
-            message = new String(errorBytes, CHARSET);
+            message = errorBytes.toString(CHARSET)
         }
-
-        return new IOException(message);
+        return IOException(message)
     }
 
-    @NonNull
-    private HttpURLConnection getUrlConnection(@NonNull String url, @NonNull Map<String, String> headers, @NonNull HttpMethod httpMethod)
-            throws IOException {
-
-        final HttpURLConnection urlConnection = HttpUrlConnectionFactory.getInstance().createHttpUrlConnection(url);
-        urlConnection.setRequestMethod(httpMethod.getValue());
-        urlConnection.setUseCaches(false);
-        urlConnection.setDoInput(true);
-        urlConnection.setDoOutput(httpMethod.isDoOutput());
-
-        for (Map.Entry<String, String> header : headers.entrySet()) {
-            urlConnection.addRequestProperty(header.getKey(), header.getValue());
+    @Throws(IOException::class)
+    private fun getUrlConnection(url: String, headers: Map<String, String>, httpMethod: HttpMethod): HttpURLConnection {
+        val urlConnection = HttpUrlConnectionFactory.INSTANCE.createHttpUrlConnection(url)
+        urlConnection.requestMethod = httpMethod.value
+        urlConnection.useCaches = false
+        urlConnection.doInput = true
+        urlConnection.doOutput = httpMethod.isDoOutput
+        for ((key, value) in headers) {
+            urlConnection.addRequestProperty(key, value)
         }
-
-        return urlConnection;
+        return urlConnection
     }
 
-    @NonNull
-    private byte[] handleResponse(@NonNull HttpURLConnection urlConnection) throws IOException {
+    @Suppress("NestedBlockDepth")
+    @Throws(IOException::class)
+    private fun handleResponse(urlConnection: HttpURLConnection): ByteArray {
         if (BuildConfig.DEBUG) {
-            Logger.v(TAG, "Connection HEADERS");
-            final Map<String, List<String>> responseHeaders = mURLConnection.getHeaderFields();
-            for (String key : responseHeaders.keySet()) {
-                Logger.v(TAG, key + ": " + Arrays.toString(responseHeaders.get(key).toArray()));
+            Logger.v(TAG, "Connection HEADERS")
+            val responseHeaders = urlConnection.headerFields
+            for (key in responseHeaders.keys) {
+                Logger.v(TAG, "$key: " + responseHeaders[key]?.toTypedArray().contentToString())
             }
-            Logger.v(TAG, "Connection HEADERS - END");
+            Logger.v(TAG, "Connection HEADERS - END")
         }
-
-        try (InputStream errorStream = urlConnection.getErrorStream()) {
+        urlConnection.errorStream.use { errorStream ->
             if (errorStream == null) {
-                try (InputStream inputStream = urlConnection.getInputStream()) {
-                    final byte[] responseBytes = getBytes(inputStream);
+                urlConnection.inputStream.use { inputStream ->
+                    val responseBytes = getBytes(inputStream)
                     if (responseBytes != null) {
-                        return responseBytes;
+                        return responseBytes
                     }
                 }
             }
-            final byte[] errorBytes = getBytes(errorStream);
-            throw parseException(errorBytes);
+            val errorBytes = getBytes(errorStream)
+            throw parseException(errorBytes)
         }
     }
 
-    @Nullable
-    private byte[] getBytes(@Nullable InputStream inputStream) throws IOException {
+    @Throws(IOException::class)
+    private fun getBytes(inputStream: InputStream?): ByteArray? {
         if (inputStream == null) {
-            return null;
+            return null
         }
-
-        final ByteArrayOutputStream out = new ByteArrayOutputStream();
-        final byte[] buffer = new byte[BUFFER_SIZE];
-
-        int length = inputStream.read(buffer);
-
+        val out = ByteArrayOutputStream()
+        val buffer = ByteArray(BUFFER_SIZE)
+        var length = inputStream.read(buffer)
         while (length > 0) {
-            out.write(buffer, 0, length);
-            length = inputStream.read(buffer);
+            out.write(buffer, 0, length)
+            length = inputStream.read(buffer)
         }
-
-        return out.toByteArray();
+        return out.toByteArray()
     }
 
-    private enum HttpMethod {
-        GET("GET", false),
-        POST("POST", true);
+    private enum class HttpMethod(val value: String, val isDoOutput: Boolean) {
+        GET("GET", false), POST("POST", true);
+    }
 
-        private final String mValue;
-        private final boolean mDoOutput;
+    companion object {
+        private val TAG = LogUtil.getTag()
+        private const val CONTENT_TYPE_HEADER = "Content-Type"
+        private const val APP_JSON_CONTENT_TYPE = "application/json"
+        private val CHARSET = StandardCharsets.UTF_8
+        private const val BUFFER_SIZE = 1024
 
-        HttpMethod(@NonNull String value, boolean doOutput) {
-            mValue = value;
-            mDoOutput = doOutput;
-        }
-
-        @NonNull
-        String getValue() {
-            return mValue;
-        }
-
-        boolean isDoOutput() {
-            return mDoOutput;
-        }
+        @JvmField
+        val CONTENT_TYPE_JSON_HEADER: Map<String, String> = Collections.singletonMap(CONTENT_TYPE_HEADER, APP_JSON_CONTENT_TYPE)
     }
 }

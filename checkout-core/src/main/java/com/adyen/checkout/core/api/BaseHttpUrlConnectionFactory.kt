@@ -5,37 +5,31 @@
  *
  * Created by caiof on 17/12/2020.
  */
+package com.adyen.checkout.core.api
 
-package com.adyen.checkout.core.api;
+import java.io.IOException
+import java.net.HttpURLConnection
+import java.net.URL
+import javax.net.ssl.HttpsURLConnection
 
-import static com.adyen.checkout.core.api.SSLSocketUtil.TLS_SOCKET_FACTORY;
+internal abstract class BaseHttpUrlConnectionFactory {
 
-import androidx.annotation.NonNull;
-
-import java.io.IOException;
-import java.net.HttpURLConnection;
-import java.net.URL;
-
-import javax.net.ssl.HttpsURLConnection;
-
-abstract class BaseHttpUrlConnectionFactory {
-
-    static {
-        HttpsURLConnection.setDefaultSSLSocketFactory(TLS_SOCKET_FACTORY);
-    }
-
-    @NonNull
-    HttpURLConnection createHttpUrlConnection(@NonNull String url) throws IOException {
-        final HttpURLConnection urlConnection = (HttpURLConnection) new URL(url).openConnection();
-
-        if (urlConnection instanceof HttpsURLConnection) {
-            ((HttpsURLConnection) urlConnection).setSSLSocketFactory(TLS_SOCKET_FACTORY);
-            return urlConnection;
+    @Throws(IOException::class)
+    fun createHttpUrlConnection(url: String): HttpURLConnection {
+        val urlConnection = URL(url).openConnection() as HttpURLConnection
+        return if (urlConnection is HttpsURLConnection) {
+            urlConnection.sslSocketFactory = SSLSocketUtil.TLS_SOCKET_FACTORY
+            urlConnection
         } else {
-            return handleInsecureConnection(urlConnection);
+            handleInsecureConnection(urlConnection)
         }
     }
 
-    @NonNull
-    abstract HttpURLConnection handleInsecureConnection(@NonNull HttpURLConnection httpUrlConnection);
+    abstract fun handleInsecureConnection(httpUrlConnection: HttpURLConnection): HttpURLConnection
+
+    companion object {
+        init {
+            HttpsURLConnection.setDefaultSSLSocketFactory(SSLSocketUtil.TLS_SOCKET_FACTORY)
+        }
+    }
 }

@@ -5,32 +5,23 @@
  *
  * Created by caiof on 17/12/2020.
  */
+package com.adyen.checkout.core.api
 
-package com.adyen.checkout.core.api;
+import android.os.Handler
+import android.os.Looper
+import java.util.concurrent.ExecutorService
+import java.util.concurrent.Executors
 
-import android.os.Handler;
-import android.os.Looper;
+object ThreadManager {
 
-import com.adyen.checkout.core.exception.NoConstructorException;
-
-import java.util.concurrent.ExecutorService;
-import java.util.concurrent.Executors;
-
-public final class ThreadManager {
-
-    public static final Handler MAIN_HANDLER = getMainHandler();
-    public static final ExecutorService EXECUTOR = Executors.newCachedThreadPool();
-
-    private static Handler getMainHandler() {
-        try {
-            return new Handler(Looper.getMainLooper());
-        } catch (RuntimeException e) {
-            // avoid Looper class on testing
-            return new Handler();
-        }
+    @Suppress("TooGenericExceptionCaught")
+    @JvmField
+    val MAIN_HANDLER = try {
+        Handler(Looper.getMainLooper())
+    } catch (e: RuntimeException) {
+        // avoid Looper class on testing
+        Handler()
     }
-
-    private ThreadManager() {
-        throw new NoConstructorException();
-    }
+    @JvmField
+    val EXECUTOR: ExecutorService = Executors.newCachedThreadPool()
 }

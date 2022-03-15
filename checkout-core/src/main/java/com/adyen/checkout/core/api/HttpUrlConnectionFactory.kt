@@ -5,49 +5,32 @@
  *
  * Created by caiof on 17/12/2020.
  */
+package com.adyen.checkout.core.api
 
-package com.adyen.checkout.core.api;
-
-import androidx.annotation.NonNull;
-
-import com.adyen.checkout.core.log.LogUtil;
-import com.adyen.checkout.core.log.Logger;
-
-import java.net.HttpURLConnection;
+import com.adyen.checkout.core.log.LogUtil
+import com.adyen.checkout.core.log.Logger
+import java.net.HttpURLConnection
 
 /**
  * A factory that creates a URL connections using a secure socket encryption.
  */
-final class HttpUrlConnectionFactory extends BaseHttpUrlConnectionFactory {
-    private static final String TAG = LogUtil.getTag();
+internal class HttpUrlConnectionFactory private constructor() : BaseHttpUrlConnectionFactory() {
 
-    private static final String ERROR_MESSAGE_INSECURE_CONNECTION = "Trying to connect to a URL that is not HTTPS.";
-
-    private static HttpUrlConnectionFactory sInstance;
-
-    /**
-     * Get the instance of the {@link HttpUrlConnectionFactory}.
-     *
-     * @return The instance of the {@link HttpUrlConnectionFactory}.
-     */
-    @NonNull
-    static HttpUrlConnectionFactory getInstance() {
-        synchronized (HttpUrlConnectionFactory.class) {
-            if (sInstance == null) {
-                sInstance = new HttpUrlConnectionFactory();
-            }
-            return sInstance;
-        }
+    override fun handleInsecureConnection(httpUrlConnection: HttpURLConnection): HttpURLConnection {
+        Logger.w(TAG, ERROR_MESSAGE_INSECURE_CONNECTION)
+        return httpUrlConnection
     }
 
-    private HttpUrlConnectionFactory() {
-        // Private constructor for Singleton
-    }
+    companion object {
+        private val TAG = LogUtil.getTag()
+        private const val ERROR_MESSAGE_INSECURE_CONNECTION = "Trying to connect to a URL that is not HTTPS."
 
-    @NonNull
-    @Override
-    HttpURLConnection handleInsecureConnection(@NonNull HttpURLConnection httpUrlConnection) {
-        Logger.w(TAG, ERROR_MESSAGE_INSECURE_CONNECTION);
-        return httpUrlConnection;
+        /**
+         * Get the instance of the [HttpUrlConnectionFactory].
+         *
+         * @return The instance of the [HttpUrlConnectionFactory].
+         */
+        @JvmStatic
+        val INSTANCE: HttpUrlConnectionFactory by lazy { HttpUrlConnectionFactory() }
     }
 }

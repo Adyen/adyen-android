@@ -12,6 +12,7 @@ import android.content.Context
 import android.util.AttributeSet
 import android.view.LayoutInflater
 import android.view.View
+import android.view.View.OnFocusChangeListener
 import androidx.lifecycle.LifecycleOwner
 import androidx.lifecycle.Observer
 import com.adyen.checkout.bacs.databinding.BacsDirectDebitInputViewBinding
@@ -101,7 +102,6 @@ class BacsDirectDebitInputView @JvmOverloads constructor(context: Context, attrs
             val shopperEmailValidation = it.shopperEmailState.validation
             if (shopperEmailValidation is Validation.Invalid) {
                 if (!isErrorFocused) {
-                    isErrorFocused = true
                     binding.editTextShopperEmail.requestFocus()
                 }
                 binding.textInputLayoutShopperEmail.error = mLocalizedContext.getString(shopperEmailValidation.reason)

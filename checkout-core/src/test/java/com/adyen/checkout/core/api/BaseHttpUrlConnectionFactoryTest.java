@@ -26,7 +26,7 @@ public class BaseHttpUrlConnectionFactoryTest {
         HttpURLConnection urlConnection = new BaseHttpUrlConnectionFactory() {
             @NonNull
             @Override
-            HttpURLConnection handleInsecureConnection(@NonNull HttpURLConnection httpUrlConnection) {
+            public HttpURLConnection handleInsecureConnection(@NonNull HttpURLConnection httpUrlConnection) {
                 // this should get call
                 assertEquals(1, 2);
                 return httpUrlConnection;
@@ -43,7 +43,7 @@ public class BaseHttpUrlConnectionFactoryTest {
         HttpURLConnection urlConnection = new BaseHttpUrlConnectionFactory() {
             @NonNull
             @Override
-            HttpURLConnection handleInsecureConnection(@NonNull HttpURLConnection httpUrlConnection) {
+            public HttpURLConnection handleInsecureConnection(@NonNull HttpURLConnection httpUrlConnection) {
                 // this should get call
                 assertEquals(httpUrlConnection.getURL().toString(), url);
                 return httpUrlConnection;

@@ -5,95 +5,62 @@
  *
  * Created by caiof on 17/12/2020.
  */
+package com.adyen.checkout.core.api
 
-package com.adyen.checkout.core.api;
-
-import android.os.Parcel;
-import android.os.Parcelable;
-
-import androidx.annotation.NonNull;
-
-import com.adyen.checkout.core.exception.CheckoutException;
-
-import java.net.MalformedURLException;
-import java.net.URL;
-import java.util.Objects;
+import android.os.Parcel
+import android.os.Parcelable
+import java.net.URL
+import java.util.*
 
 /**
  * Identifies which host URL to be used for network calls.
  */
-@SuppressWarnings("PMD.DataClass")
-public final class Environment implements Parcelable {
+class Environment(private val internalUrl: URL) : Parcelable {
 
-    public static final Environment TEST;
-    public static final Environment LIVE;
-    public static final Environment EUROPE;
-    public static final Environment UNITED_STATES;
-    public static final Environment AUSTRALIA;
+    val baseUrl: String
+        get() = internalUrl.toString()
 
-    public static final Creator<Environment> CREATOR = new Creator<Environment>() {
-        @Override
-        public Environment createFromParcel(@NonNull Parcel in) {
-            return new Environment(in);
+    private constructor(parcel: Parcel) : this(parcel.readSerializable() as URL)
+
+    override fun writeToParcel(dest: Parcel, flags: Int) {
+        dest.writeSerializable(internalUrl)
+    }
+
+    override fun describeContents(): Int {
+        return Parcelable.CONTENTS_FILE_DESCRIPTOR
+    }
+
+    override fun equals(other: Any?): Boolean {
+        if (this === other) {
+            return true
         }
-
-        @Override
-        public Environment[] newArray(int size) {
-            return new Environment[size];
+        if (other == null || other !is Environment) {
+            return false
         }
-    };
+        return internalUrl.toString() == other.internalUrl.toString()
+    }
 
-    static {
-        try {
-            TEST = new Environment(new URL("https://checkoutshopper-test.adyen.com/checkoutshopper/"));
-            EUROPE = new Environment(new URL("https://checkoutshopper-live.adyen.com/checkoutshopper/"));
-            UNITED_STATES = new Environment(new URL("https://checkoutshopper-live-us.adyen.com/checkoutshopper/"));
-            AUSTRALIA = new Environment(new URL("https://checkoutshopper-live-au.adyen.com/checkoutshopper/"));
-            LIVE = EUROPE;
-        } catch (MalformedURLException e) {
-            throw new CheckoutException("Failed to parse Environment URL.", e);
+    override fun hashCode(): Int {
+        return Objects.hash(internalUrl)
+    }
+
+    companion object {
+
+        @JvmField val TEST: Environment = Environment(URL("https://checkoutshopper-test.adyen.com/checkoutshopper/"))
+        @JvmField val EUROPE: Environment = Environment(URL("https://checkoutshopper-live.adyen.com/checkoutshopper/"))
+        @JvmField val UNITED_STATES: Environment = Environment(URL("https://checkoutshopper-live-us.adyen.com/checkoutshopper/"))
+        @JvmField val AUSTRALIA: Environment = Environment(URL("https://checkoutshopper-live-au.adyen.com/checkoutshopper/"))
+        @JvmField val LIVE: Environment = EUROPE
+
+        @JvmField
+        val CREATOR: Parcelable.Creator<Environment> = object : Parcelable.Creator<Environment> {
+            override fun createFromParcel(`in`: Parcel): Environment {
+                return Environment(`in`)
+            }
+
+            override fun newArray(size: Int): Array<Environment?> {
+                return arrayOfNulls(size)
+            }
         }
-    }
-
-    private final URL mBaseUrl;
-
-    public Environment(@NonNull URL baseUrl) {
-        mBaseUrl = baseUrl;
-    }
-
-    Environment(@NonNull Parcel in) {
-        mBaseUrl = (URL) in.readSerializable();
-    }
-
-    @Override
-    public void writeToParcel(@NonNull Parcel dest, int flags) {
-        dest.writeSerializable(mBaseUrl);
-    }
-
-    @Override
-    public int describeContents() {
-        return Parcelable.CONTENTS_FILE_DESCRIPTOR;
-    }
-
-    @NonNull
-    public String getBaseUrl() {
-        return mBaseUrl.toString();
-    }
-
-    @Override
-    public boolean equals(Object o) {
-        if (this == o) {
-            return true;
-        }
-        if (o == null || getClass() != o.getClass()) {
-            return false;
-        }
-        final Environment that = (Environment) o;
-        return mBaseUrl.toString().equals(that.mBaseUrl.toString());
-    }
-
-    @Override
-    public int hashCode() {
-        return Objects.hash(mBaseUrl);
     }
 }

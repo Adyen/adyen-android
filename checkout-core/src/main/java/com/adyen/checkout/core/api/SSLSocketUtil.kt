@@ -5,46 +5,28 @@
  *
  * Created by caiof on 17/12/2020.
  */
+package com.adyen.checkout.core.api
 
-package com.adyen.checkout.core.api;
-
-import androidx.annotation.NonNull;
-
-import java.security.KeyManagementException;
-import java.security.NoSuchAlgorithmException;
-
-import javax.net.ssl.SSLContext;
-import javax.net.ssl.SSLSocketFactory;
+import java.security.KeyManagementException
+import java.security.NoSuchAlgorithmException
+import javax.net.ssl.SSLContext
+import javax.net.ssl.SSLSocketFactory
 
 /**
  * Util Class for SSL Socket.
  */
-@SuppressWarnings("AbbreviationAsWordInName")
-public final class SSLSocketUtil {
 
-    public static final SSLSocketFactory TLS_SOCKET_FACTORY;
-
-    static {
-        try {
-            TLS_SOCKET_FACTORY = getTLSSocketFactory();
-        } catch (NoSuchAlgorithmException | KeyManagementException e) {
-            throw new RuntimeException("Could not initialize SSLSocketFactory.", e);
-        }
-    }
+object SSLSocketUtil {
 
     /**
      * Get an SSL factory from SSLContext with TLS enabled.
-     *
-     * @return SSLSocketFactory depends on version code.
      */
-    @NonNull
-    private static SSLSocketFactory getTLSSocketFactory() throws NoSuchAlgorithmException, KeyManagementException {
-        final SSLContext context = SSLContext.getInstance("TLS");
-        context.init(null, null, null);
-        return context.getSocketFactory();
-    }
-
-    private SSLSocketUtil() {
-        throw new AssertionError("private constructor");
-    }
+    @JvmStatic
+    @get:Throws(NoSuchAlgorithmException::class, KeyManagementException::class)
+    val TLS_SOCKET_FACTORY: SSLSocketFactory
+        get() {
+            val context = SSLContext.getInstance("TLS")
+            context.init(null, null, null)
+            return context.socketFactory
+        }
 }

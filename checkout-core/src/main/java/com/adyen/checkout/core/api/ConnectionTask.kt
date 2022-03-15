@@ -5,75 +5,54 @@
  *
  * Created by caiof on 17/12/2020.
  */
+package com.adyen.checkout.core.api
 
-package com.adyen.checkout.core.api;
-
-import androidx.annotation.CallSuper;
-import androidx.annotation.NonNull;
-
-import com.adyen.checkout.core.log.LogUtil;
-import com.adyen.checkout.core.log.Logger;
-
-import java.util.concurrent.ExecutionException;
-import java.util.concurrent.FutureTask;
-import java.util.concurrent.TimeUnit;
-import java.util.concurrent.TimeoutException;
+import androidx.annotation.CallSuper
+import com.adyen.checkout.core.log.LogUtil
+import com.adyen.checkout.core.log.Logger
+import java.util.concurrent.ExecutionException
+import java.util.concurrent.FutureTask
+import java.util.concurrent.TimeUnit
+import java.util.concurrent.TimeoutException
 
 /**
- * A {@link FutureTask} that wraps a {@link Connection} callable.
+ * A cancellable [FutureTask] that wraps a [Connection] callable.
  *
- * @param <T> The type returned by the {@link Connection}
+ * @param <T> The type returned by the [Connection]
+ * @param connection The Connection to be ran.
+ * @param mTimeOut A time out in milliseconds to cancel the connection.
  */
-public abstract class ConnectionTask<T> extends FutureTask<T> {
-    private static final String TAG = LogUtil.getTag();
-
-    private final long mTimeOut;
-
-    /**
-     * A cancellable task that runs a {@link Connection}.
-     *
-     * @param connection The Connection to be ran.
-     */
-    protected ConnectionTask(@NonNull Connection<T> connection) {
-        // don't hold a reference to the connection, the FutureTask handles it's lifecycle
-        this(connection, 0);
-    }
-
-    /**
-     * A cancellable task that runs a {@link Connection}.
-     *
-     * @param connection The Connection to be ran.
-     * @param timeOut A time out in milliseconds to cancel the connection.
-     */
-    protected ConnectionTask(@NonNull Connection<T> connection, long timeOut) {
-        super(connection);
-        mTimeOut = timeOut;
-    }
+abstract class ConnectionTask<T> protected constructor(
+    connection: Connection<T>,
+    private val mTimeOut: Long = 0,
+) : FutureTask<T>(connection) {
 
     @CallSuper
-    @Override
-    public boolean cancel(boolean mayInterruptIfRunning) {
-        Logger.d(TAG, "cancel - " + mayInterruptIfRunning);
-        return super.cancel(mayInterruptIfRunning);
+    override fun cancel(mayInterruptIfRunning: Boolean): Boolean {
+        Logger.d(TAG, "cancel - $mayInterruptIfRunning")
+        return super.cancel(mayInterruptIfRunning)
     }
 
-    @Override
-    public void run() {
+    override fun run() {
         if (mTimeOut > 0) {
-            Logger.d(TAG, "run with timeout - " + mTimeOut);
+            Logger.d(TAG, "run with timeout - $mTimeOut")
         }
-        super.run();
+        super.run()
         if (mTimeOut > 0) {
             try {
-                get(mTimeOut, TimeUnit.MILLISECONDS);
-            } catch (ExecutionException e) {
-                Logger.d(TAG, "ExecutionException", e);
-            } catch (InterruptedException e) {
-                Logger.d(TAG, "InterruptedException", e);
-            } catch (TimeoutException e) {
-                Logger.e(TAG, "Task timed out after " + mTimeOut + " milliseconds.");
-                cancel(true);
+                get(mTimeOut, TimeUnit.MILLISECONDS)
+            } catch (e: ExecutionException) {
+                Logger.d(TAG, "ExecutionException", e)
+            } catch (e: InterruptedException) {
+                Logger.d(TAG, "InterruptedException", e)
+            } catch (e: TimeoutException) {
+                Logger.e(TAG, "Task timed out after $mTimeOut milliseconds.")
+                cancel(true)
             }
         }
+    }
+
+    companion object {
+        private val TAG = LogUtil.getTag()
     }
 }
