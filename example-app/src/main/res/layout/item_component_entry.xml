@@ -4,7 +4,8 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:background="?selectableItemBackground">
+    android:background="?selectableItemBackground"
+    tools:ignore="OverDraw">
 
     <View
         android:id="@+id/divider"
@@ -23,6 +24,7 @@
         android:layout_marginHorizontal="32dp"
         android:layout_marginVertical="16dp"
         android:textAppearance="@style/TextAppearance.MaterialComponents.Body1"
+        android:textIsSelectable="false"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"

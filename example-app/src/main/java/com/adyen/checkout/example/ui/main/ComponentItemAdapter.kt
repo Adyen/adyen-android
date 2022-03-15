@@ -8,7 +8,8 @@ import com.adyen.checkout.example.databinding.ItemComponentEntryBinding
 import com.adyen.checkout.example.databinding.ItemComponentTitleBinding
 
 internal class ComponentItemAdapter(
-    private val items: List<ComponentItem>
+    private val items: List<ComponentItem>,
+    private val onEntryClick: (ComponentItem.Entry) -> Unit,
 ) :
     RecyclerView.Adapter<ComponentItemAdapter.ComponentItemViewHolder>() {
 
@@ -24,7 +25,8 @@ internal class ComponentItemAdapter(
 
         return when (viewType) {
             VIEW_TYPE_TITLE -> TitleViewHolder(ItemComponentTitleBinding.inflate(layoutInflater, parent, false))
-            VIEW_TYPE_ENTRY -> EntryViewHolder(ItemComponentEntryBinding.inflate(layoutInflater, parent, false))
+            VIEW_TYPE_ENTRY ->
+                EntryViewHolder(ItemComponentEntryBinding.inflate(layoutInflater, parent, false), onEntryClick)
             else -> throw NotImplementedError()
         }
     }
@@ -44,10 +46,14 @@ internal class ComponentItemAdapter(
         }
     }
 
-    private class EntryViewHolder(private val binding: ItemComponentEntryBinding) : ComponentItemViewHolder(binding) {
+    private class EntryViewHolder(
+        private val binding: ItemComponentEntryBinding,
+        private val onEntryClick: (ComponentItem.Entry) -> Unit,
+    ) : ComponentItemViewHolder(binding) {
 
         override fun bind(item: ComponentItem) {
             binding.title.text = item.text
+            binding.root.setOnClickListener { onEntryClick(item as ComponentItem.Entry) }
         }
     }
 
