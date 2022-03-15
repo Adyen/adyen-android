@@ -88,7 +88,7 @@ public final class LogUtil {
     }
 
     private LogUtil() {
-        throw new NoConstructorException();
+        throw NoConstructorException.INSTANCE;
     }
 
 }

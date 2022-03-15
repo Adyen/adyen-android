@@ -20,7 +20,7 @@ public final class ParcelUtils {
     private static final int BOOLEAN_FALSE_VALUE = 0;
 
     private ParcelUtils() {
-        throw new NoConstructorException();
+        throw NoConstructorException.INSTANCE;
     }
 
     /**

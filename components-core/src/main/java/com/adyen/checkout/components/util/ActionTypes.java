@@ -25,6 +25,6 @@ public final class  ActionTypes {
     public static final String VOUCHER = "voucher";
 
     private ActionTypes() {
-        throw new NoConstructorException();
+        throw NoConstructorException.INSTANCE;
     }
 }

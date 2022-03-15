@@ -5,24 +5,16 @@
  *
  * Created by caiof on 17/12/2020.
  */
+package com.adyen.checkout.core.exception
 
-package com.adyen.checkout.core.exception;
-
-import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
-
-import com.adyen.checkout.core.model.ModelObject;
-
-import org.json.JSONException;
+import org.json.JSONException
 
 /**
- * Exception thrown when an issue occurs during serialization of a {@link ModelObject}.
+ * Exception thrown when an issue occurs during serialization of a [ModelObject].
  */
-public class ModelSerializationException extends CheckoutException {
-
-    private static final long serialVersionUID = -241916181048458214L;
-
-    public ModelSerializationException(@NonNull Class modelClass, @Nullable JSONException cause) {
-        super("Unexpected exception while serializing " + modelClass.getSimpleName() + ".", cause);
+class ModelSerializationException(modelClass: Class<*>, cause: JSONException?) :
+    CheckoutException("Unexpected exception while serializing ${modelClass.simpleName}.", cause) {
+    companion object {
+        private const val serialVersionUID = -241916181048458214L
     }
 }

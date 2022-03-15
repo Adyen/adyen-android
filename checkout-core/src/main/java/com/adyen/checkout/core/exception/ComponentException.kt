@@ -5,21 +5,13 @@
  *
  * Created by caiof on 17/12/2020.
  */
+package com.adyen.checkout.core.exception
 
-package com.adyen.checkout.core.exception;
+open class ComponentException : CheckoutException {
+    constructor(errorMessage: String) : super(errorMessage)
+    constructor(errorMessage: String, cause: Throwable?) : super(errorMessage, cause)
 
-import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
-
-public class ComponentException extends CheckoutException {
-
-    private static final long serialVersionUID = -2906708092144840124L;
-
-    public ComponentException(@NonNull String errorMessage) {
-        super(errorMessage);
-    }
-
-    public ComponentException(@NonNull String errorMessage, @Nullable Throwable cause) {
-        super(errorMessage, cause);
+    companion object {
+        private const val serialVersionUID = -2906708092144840124L
     }
 }

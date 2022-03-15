@@ -249,6 +249,6 @@ public final class GooglePayUtils {
     }
 
     private GooglePayUtils() {
-        throw new NoConstructorException();
+        throw NoConstructorException.INSTANCE;
     }
 }

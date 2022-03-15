@@ -5,24 +5,16 @@
  *
  * Created by caiof on 17/12/2020.
  */
-
-package com.adyen.checkout.core.exception;
-
-import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
+package com.adyen.checkout.core.exception
 
 /**
  * Exception thrown when there is an issue with an internal API call.
  */
-public class ApiCallException extends CheckoutException {
+class ApiCallException : CheckoutException {
+    constructor(errorMessage: String) : super(errorMessage)
+    constructor(errorMessage: String, cause: Throwable?) : super(errorMessage, cause)
 
-    private static final long serialVersionUID = 4060450855496938503L;
-
-    public ApiCallException(@NonNull String errorMessage) {
-        super(errorMessage);
-    }
-
-    public ApiCallException(@NonNull String errorMessage, @Nullable Throwable cause) {
-        super(errorMessage, cause);
+    companion object {
+        private const val serialVersionUID = 4060450855496938503L
     }
 }

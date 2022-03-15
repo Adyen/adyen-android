@@ -164,6 +164,6 @@ public final class PaymentMethodTypes {
     }
 
     private PaymentMethodTypes() {
-        throw new NoConstructorException();
+        throw NoConstructorException.INSTANCE;
     }
 }

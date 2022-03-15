@@ -55,6 +55,6 @@ public final class CurrencyUtils {
     }
 
     private CurrencyUtils() {
-        throw new NoConstructorException();
+        throw NoConstructorException.INSTANCE;
     }
 }

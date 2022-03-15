@@ -143,6 +143,6 @@ public final class ModelUtils {
     }
 
     private ModelUtils() {
-        throw new NoConstructorException();
+        throw NoConstructorException.INSTANCE;
     }
 }

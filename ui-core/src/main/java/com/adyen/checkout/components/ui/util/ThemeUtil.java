@@ -37,6 +37,6 @@ public final class ThemeUtil {
     }
 
     private ThemeUtil() {
-        throw new NoConstructorException();
+        throw NoConstructorException.INSTANCE;
     }
 }

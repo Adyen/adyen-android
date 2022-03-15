@@ -31,6 +31,6 @@ public final class ValidationUtils {
     }
 
     private ValidationUtils() {
-        throw new NoConstructorException();
+        throw NoConstructorException.INSTANCE;
     }
 }

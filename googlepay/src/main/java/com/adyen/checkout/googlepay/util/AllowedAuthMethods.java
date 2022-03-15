@@ -34,6 +34,6 @@ public final class AllowedAuthMethods {
     }
 
     private AllowedAuthMethods() {
-        throw new NoConstructorException();
+        throw NoConstructorException.INSTANCE;
     }
 }

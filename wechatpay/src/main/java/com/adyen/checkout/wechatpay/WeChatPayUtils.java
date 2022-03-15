@@ -76,6 +76,6 @@ public final class WeChatPayUtils {
     }
 
     private WeChatPayUtils() {
-        throw new NoConstructorException();
+        throw NoConstructorException.INSTANCE;
     }
 }

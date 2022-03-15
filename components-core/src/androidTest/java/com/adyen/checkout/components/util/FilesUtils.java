@@ -52,6 +52,6 @@ public class FilesUtils {
     }
 
     private FilesUtils() {
-        throw new NoConstructorException();
+        throw NoConstructorException.INSTANCE;
     }
 }

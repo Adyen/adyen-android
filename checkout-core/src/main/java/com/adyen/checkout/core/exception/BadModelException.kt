@@ -5,24 +5,17 @@
  *
  * Created by caiof on 17/12/2020.
  */
+package com.adyen.checkout.core.exception
 
-package com.adyen.checkout.core.exception;
-
-import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
-
-import com.adyen.checkout.core.model.ModelObject;
-import com.adyen.checkout.core.model.ModelUtils;
+import com.adyen.checkout.core.model.ModelUtils
 
 /**+
- * Exception thrown when a {@link ModelObject} does not meet the requirement of having a SERIALIZER object.
+ * Exception thrown when a [ModelObject] does not meet the requirement of having a SERIALIZER object.
  */
-public class BadModelException extends CheckoutException {
-
-    private static final long serialVersionUID = -1161500360463809921L;
-
-    public BadModelException(@NonNull Class<?> clazz, @Nullable Throwable e) {
-        super("ModelObject protocol requires a ModelObject.Serializer object called " + ModelUtils.SERIALIZER_FIELD_NAME + " on class "
-                + clazz.getSimpleName(), e);
+class BadModelException(clazz: Class<*>, e: Throwable?) : CheckoutException(
+    "ModelObject protocol requires a ModelObject.Serializer object called ${ModelUtils.SERIALIZER_FIELD_NAME} on class ${clazz.simpleName}", e
+) {
+    companion object {
+        private const val serialVersionUID = -1161500360463809921L
     }
 }

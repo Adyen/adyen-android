@@ -52,6 +52,6 @@ public final class StringUtil {
     }
 
     private StringUtil() {
-        throw new NoConstructorException();
+        throw NoConstructorException.INSTANCE;
     }
 }

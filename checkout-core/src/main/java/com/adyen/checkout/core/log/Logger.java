@@ -183,7 +183,7 @@ public final class Logger {
     }
 
     private Logger() {
-        throw new NoConstructorException();
+        throw NoConstructorException.INSTANCE;
     }
 
 }
