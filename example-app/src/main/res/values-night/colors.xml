@@ -7,6 +7,9 @@
     <color name="color_surface">@color/color_background</color>
     <color name="color_on_surface">@color/color_on_background</color>
     <color name="color_control_normal">@color/color_white</color>
+    <color name="color_divider">#1AFFFFFF</color>
+
+    <color name="text_color">@color/color_white</color>
 
     <bool name="has_light_system_bars">false</bool>
 
