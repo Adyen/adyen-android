@@ -63,7 +63,9 @@ class MainActivity : AppCompatActivity(), DropInCallback {
         AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_FOLLOW_SYSTEM)
         binding = ActivityMainBinding.inflate(layoutInflater)
         setContentView(binding.root)
-        setSupportActionBar(findViewById(R.id.toolbar))
+
+        setSupportActionBar(binding.toolbar)
+        supportActionBar?.setDisplayShowTitleEnabled(false)
 
         val result = DropIn.getDropInResultFromIntent(intent)
         if (result != null) {
@@ -88,17 +90,17 @@ class MainActivity : AppCompatActivity(), DropInCallback {
             }
         }
 
-        paymentMethodsViewModel.paymentMethodResponseLiveData.observe(
-            this,
-            {
-                if (it != null) {
-                    Logger.d(TAG, "Got paymentMethods response - oneClick? ${it.storedPaymentMethods?.size ?: 0}")
-                    if (isWaitingPaymentMethods) startDropIn(it)
-                } else {
-                    Logger.v(TAG, "API response is null")
-                }
+        paymentMethodsViewModel.paymentMethodResponseLiveData.observe(this) {
+            if (it != null) {
+                Logger.d(
+                    TAG,
+                    "Got paymentMethods response - oneClick? ${it.storedPaymentMethods?.size ?: 0}"
+                )
+                if (isWaitingPaymentMethods) startDropIn(it)
+            } else {
+                Logger.v(TAG, "API response is null")
             }
-        )
+        }
     }
 
     override fun onResume() {
