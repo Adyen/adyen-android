@@ -60,7 +60,6 @@ class MainActivity : AppCompatActivity(), DropInCallback {
         super.onCreate(savedInstanceState)
 
         Logger.d(TAG, "onCreate")
-        AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_FOLLOW_SYSTEM)
         binding = ActivityMainBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
