@@ -14,8 +14,4 @@ import com.adyen.checkout.core.model.ModelUtils
  */
 class BadModelException(clazz: Class<*>, e: Throwable?) : CheckoutException(
     "ModelObject protocol requires a ModelObject.Serializer object called ${ModelUtils.SERIALIZER_FIELD_NAME} on class ${clazz.simpleName}", e
-) {
-    companion object {
-        private const val serialVersionUID = -1161500360463809921L
-    }
-}
+)

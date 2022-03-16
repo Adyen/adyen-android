@@ -10,8 +10,4 @@ package com.adyen.checkout.core.exception
 open class ComponentException : CheckoutException {
     constructor(errorMessage: String) : super(errorMessage)
     constructor(errorMessage: String, cause: Throwable?) : super(errorMessage, cause)
-
-    companion object {
-        private const val serialVersionUID = -2906708092144840124L
-    }
 }

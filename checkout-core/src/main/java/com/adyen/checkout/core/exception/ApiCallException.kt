@@ -13,8 +13,4 @@ package com.adyen.checkout.core.exception
 class ApiCallException : CheckoutException {
     constructor(errorMessage: String) : super(errorMessage)
     constructor(errorMessage: String, cause: Throwable?) : super(errorMessage, cause)
-
-    companion object {
-        private const val serialVersionUID = 4060450855496938503L
-    }
 }

@@ -33,7 +33,7 @@ abstract class ModelObject : Parcelable {
      * Interface that must be implemented and provided as a public SERIALIZER field that serializes the to and from a JSONObject.
      * @param <T> The class that extends ModelObject to be serialized.
      */
-    interface Serializer<T : ModelObject?> {
+    interface Serializer<T : ModelObject> {
         /**
          * Serialize the [ModelObject] to a [JSONObject].
          * @param modelObject The Model class to be serialized.
@@ -53,14 +53,10 @@ abstract class ModelObject : Parcelable {
      * A helper class that implements the Parcelable.Creator for a ModelObject.
      * @param <T> The specific class that extends the ModelObject.
      */
-    class Creator<T : ModelObject?>(private val mClass: Class<T>) : Parcelable.Creator<T> {
+    class Creator<T : ModelObject>(private val mClass: Class<T>) : Parcelable.Creator<T> {
         override fun createFromParcel(source: Parcel): T {
-            val jsonObject: JSONObject?
-            try {
-                jsonObject = readFromParcel(source)
-                if (jsonObject == null) {
-                    throw CheckoutException("Failed to create ModelObject from parcel. JSONObject is null.")
-                }
+            val jsonObject: JSONObject = try {
+                readFromParcel(source) ?: throw CheckoutException("Failed to create ModelObject from parcel. JSONObject is null.")
             } catch (e: JSONException) {
                 throw CheckoutException("Failed to create ModelObject from parcel.", e)
             }
@@ -68,6 +64,7 @@ abstract class ModelObject : Parcelable {
         }
 
         override fun newArray(size: Int): Array<T> {
+            @Suppress("UNCHECKED_CAST")
             return java.lang.reflect.Array.newInstance(mClass, size) as Array<T>
         }
     }

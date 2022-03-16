@@ -8,31 +8,24 @@
 package com.adyen.checkout.core.util
 
 import android.os.Parcel
-import com.adyen.checkout.core.exception.NoConstructorException
 
-class ParcelUtils private constructor() {
-    companion object {
-        private const val BOOLEAN_TRUE_VALUE = 1
-        private const val BOOLEAN_FALSE_VALUE = 0
+object ParcelUtils {
+    private const val BOOLEAN_TRUE_VALUE = 1
+    private const val BOOLEAN_FALSE_VALUE = 0
 
-        /**
-         * Write boolean in to Parcel.
-         */
-        @JvmStatic
-        fun writeBoolean(dest: Parcel, value: Boolean) {
-            dest.writeInt(if (value) BOOLEAN_TRUE_VALUE else BOOLEAN_FALSE_VALUE)
-        }
-
-        /**
-         * Read boolean from Parcel.
-         */
-        @JvmStatic
-        fun readBoolean(input: Parcel): Boolean {
-            return input.readInt() == BOOLEAN_TRUE_VALUE
-        }
+    /**
+     * Write boolean in to Parcel.
+     */
+    @JvmStatic
+    fun writeBoolean(dest: Parcel, value: Boolean) {
+        dest.writeInt(if (value) BOOLEAN_TRUE_VALUE else BOOLEAN_FALSE_VALUE)
     }
 
-    init {
-        throw NoConstructorException
+    /**
+     * Read boolean from Parcel.
+     */
+    @JvmStatic
+    fun readBoolean(input: Parcel): Boolean {
+        return input.readInt() == BOOLEAN_TRUE_VALUE
     }
 }

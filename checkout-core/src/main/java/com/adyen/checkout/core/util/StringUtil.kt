@@ -7,42 +7,34 @@
  */
 package com.adyen.checkout.core.util
 
-import com.adyen.checkout.core.exception.NoConstructorException
-
-class StringUtil private constructor() {
-    companion object {
-        /**
-         * Removes empty spaces and any additional specified characters.
-         *
-         * @param value The string to be normalized.
-         * @param additionalCharsToReplace Additional characters to be removed.
-         * @return The original string normalized to remove specified characters.
-         */
-        @JvmStatic
-        fun normalize(value: String, vararg additionalCharsToReplace: Char): String {
-            val regex: Regex = "[\\s${String(additionalCharsToReplace)}]".toRegex()
-            return value.replace(regex, "")
-        }
-
-        /**
-         * Check if the string only contains number and the specified separator characters.
-         *
-         * @param value The string to be checked.
-         * @param separators The optional accepted separators.
-         * @return If the string is only numbers and separators.
-         */
-        fun isDigitsAndSeparatorsOnly(value: String, vararg separators: Char): Boolean {
-            for (char in value) {
-                val isDigitOrSeparator = Character.isDigit(char) || (separators.isNotEmpty() && separators.contains(char))
-                if (!isDigitOrSeparator) {
-                    return false
-                }
-            }
-            return true
-        }
+object StringUtil {
+    /**
+     * Removes empty spaces and any additional specified characters.
+     *
+     * @param value The string to be normalized.
+     * @param additionalCharsToReplace Additional characters to be removed.
+     * @return The original string normalized to remove specified characters.
+     */
+    @JvmStatic
+    fun normalize(value: String, vararg additionalCharsToReplace: Char): String {
+        val regex: Regex = "[\\s${String(additionalCharsToReplace)}]".toRegex()
+        return value.replace(regex, "")
     }
 
-    init {
-        throw NoConstructorException
+    /**
+     * Check if the string only contains number and the specified separator characters.
+     *
+     * @param value The string to be checked.
+     * @param separators The optional accepted separators.
+     * @return If the string is only numbers and separators.
+     */
+    fun isDigitsAndSeparatorsOnly(value: String, vararg separators: Char): Boolean {
+        for (char in value) {
+            val isDigitOrSeparator = Character.isDigit(char) || (separators.isNotEmpty() && separators.contains(char))
+            if (!isDigitOrSeparator) {
+                return false
+            }
+        }
+        return true
     }
 }

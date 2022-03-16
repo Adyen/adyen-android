@@ -10,6 +10,4 @@ package com.adyen.checkout.core.exception
 /**
  * Exception to prevent instantiation of utility classes.
  */
-object NoConstructorException : IllegalStateException() {
-    private const val serialVersionUID = -5460575792365783947L
-}
+object NoConstructorException : IllegalStateException()

@@ -13,8 +13,4 @@ import org.json.JSONException
  * Exception thrown when an issue occurs during serialization of a [ModelObject].
  */
 class ModelSerializationException(modelClass: Class<*>, cause: JSONException?) :
-    CheckoutException("Unexpected exception while serializing ${modelClass.simpleName}.", cause) {
-    companion object {
-        private const val serialVersionUID = -241916181048458214L
-    }
-}
+    CheckoutException("Unexpected exception while serializing ${modelClass.simpleName}.", cause)

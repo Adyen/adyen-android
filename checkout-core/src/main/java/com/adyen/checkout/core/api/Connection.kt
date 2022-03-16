@@ -15,7 +15,7 @@ import java.io.IOException
 import java.io.InputStream
 import java.net.HttpURLConnection
 import java.nio.charset.StandardCharsets
-import java.util.*
+import java.util.Collections
 import java.util.concurrent.Callable
 
 /**
@@ -37,11 +37,10 @@ abstract class Connection<T> protected constructor(
      * @return The byte array of the response
      * @throws IOException In case an IO error happens.
      */
-    @Suppress("TooGenericExceptionThrown")
-    @Throws(IOException::class)
+    @Throws(IOException::class, IllegalStateException::class)
     protected operator fun get(headers: Map<String, String> = emptyMap()): ByteArray {
         if (urlConnection != null) {
-            throw RuntimeException("Connection already initiated")
+            throw IllegalStateException("Connection already initiated")
         }
         return try {
             val connection = getUrlConnection(url, headers, HttpMethod.GET)
@@ -59,11 +58,10 @@ abstract class Connection<T> protected constructor(
      * @return The byte array of the response
      * @throws IOException In case an IO error happens.
      */
-    @Suppress("TooGenericExceptionThrown")
-    @Throws(IOException::class)
+    @Throws(IOException::class, IllegalStateException::class)
     protected fun post(headers: Map<String, String>, data: ByteArray): ByteArray {
         if (urlConnection != null) {
-            throw RuntimeException("Connection already initiated")
+            throw IllegalStateException("Connection already initiated")
         }
         return try {
             val connection = getUrlConnection(url, headers, HttpMethod.POST)
@@ -88,17 +86,16 @@ abstract class Connection<T> protected constructor(
     }
 
     @Throws(IOException::class)
-    private fun getUrlConnection(url: String, headers: Map<String, String>, httpMethod: HttpMethod): HttpURLConnection {
-        val urlConnection = HttpUrlConnectionFactory.INSTANCE.createHttpUrlConnection(url)
-        urlConnection.requestMethod = httpMethod.value
-        urlConnection.useCaches = false
-        urlConnection.doInput = true
-        urlConnection.doOutput = httpMethod.isDoOutput
-        for ((key, value) in headers) {
-            urlConnection.addRequestProperty(key, value)
+    private fun getUrlConnection(url: String, headers: Map<String, String>, httpMethod: HttpMethod) =
+        HttpUrlConnectionFactory.createHttpUrlConnection(url).apply {
+            requestMethod = httpMethod.value
+            useCaches = false
+            doInput = true
+            doOutput = httpMethod.isDoOutput
+            for ((key, value) in headers) {
+                addRequestProperty(key, value)
+            }
         }
-        return urlConnection
-    }
 
     @Suppress("NestedBlockDepth")
     @Throws(IOException::class)
