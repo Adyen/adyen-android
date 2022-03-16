@@ -5,115 +5,47 @@
  *
  * Created by caiof on 11/6/2019.
  */
+package com.adyen.checkout.components.analytics
 
-package com.adyen.checkout.components.analytics;
+import android.content.Context
+import android.net.Uri
+import android.os.Build
+import android.os.Parcel
+import android.os.Parcelable
+import android.webkit.URLUtil
+import com.adyen.checkout.components.BuildConfig
+import java.net.MalformedURLException
+import java.net.URL
+import java.util.Locale
 
-import android.content.Context;
-import android.net.Uri;
-import android.os.Build;
-import android.os.Parcel;
-import android.os.Parcelable;
-import android.webkit.URLUtil;
-
-import androidx.annotation.NonNull;
-
-import com.adyen.checkout.components.BuildConfig;
-import com.adyen.checkout.core.exception.CheckoutException;
-
-import java.net.MalformedURLException;
-import java.net.URL;
-import java.util.Locale;
-
-public class AnalyticEvent implements Parcelable {
-
-    private static final String DROPIN_FLAVOR = "dropin";
-    private static final String COMPONENT_FLAVOR = "components";
-
-    private static final String CURRENT_PAYLOAD_VERSION = "1";
-    private static final String ANDROID_PLATFORM = "android";
-
-    private static final String PAYLOAD_VERSION_KEY = "payload_version";
-    private static final String VERSION_KEY = "version";
-    private static final String FLAVOR_KEY = "flavor";
-    private static final String COMPONENT_KEY = "component";
-    private static final String LOCALE_KEY = "locale";
-    private static final String PLATFORM_KEY = "platform";
-
-    private static final String REFERER_KEY = "referer";
-    private static final String DEVICE_BRAND_KEY = "device_brand";
-    private static final String DEVICE_MODEL_KEY = "device_model";
-    private static final String SYSTEM_VERSION_KEY = "system_version";
-
-    public enum Flavor {
-        DROPIN,
-        COMPONENT
+class AnalyticEvent : Parcelable {
+    enum class Flavor {
+        DROPIN, COMPONENT
     }
 
-    private final String mPayloadVersion = CURRENT_PAYLOAD_VERSION;
-    private final String mVersion = BuildConfig.CHECKOUT_VERSION;
-    // e.g: 'dropin', 'component'
-    private final String mFlavor;
-    // e.g: dropin, paymentType
-    private final String mComponent;
-    // e.g: en_US
-    private final String mLocale;
-    private final String mPlatform = ANDROID_PLATFORM;
+    private val payloadVersion = CURRENT_PAYLOAD_VERSION
+    private val version = BuildConfig.CHECKOUT_VERSION
+    private val flavor: String? // e.g: 'dropin', 'component'
+    private val component: String? // e.g: dropin, paymentType
+    private val locale: String? // e.g: en_US
+    private val platform = ANDROID_PLATFORM
+    private val referer: String? // e.g: package name
+    private val deviceBrand = Build.BRAND
+    private val deviceModel = Build.MODEL
+    private val systemVersion = Build.VERSION.SDK_INT.toString()
 
-    // e.g: package name
-    private final String mReferer;
-    private final String mDeviceBrand = Build.BRAND;
-    private final String mDeviceModel = Build.MODEL;
-    private final String mSystemVersion = String.valueOf(Build.VERSION.SDK_INT);
-
-    public static final Creator<AnalyticEvent> CREATOR = new Creator<AnalyticEvent>() {
-        @Override
-        public AnalyticEvent createFromParcel(Parcel in) {
-            return new AnalyticEvent(in);
-        }
-
-        @Override
-        public AnalyticEvent[] newArray(int size) {
-            return new AnalyticEvent[size];
-        }
-    };
-
-    /**
-     * Create an AnalyticEvent representing a state of the usage of the components.
-     *
-     * @param context A context to get the package name.
-     * @param flavor One of the available flavors os integration.
-     * @param components The component that was openend.
-     * @param locale The user locale being used.
-     * @return A new instance of an AnalyticEvent
-     */
-    @NonNull
-    public static AnalyticEvent create(@NonNull Context context, @NonNull Flavor flavor, @NonNull String components, @NonNull Locale locale) {
-        final String flavorName;
-        switch (flavor) {
-            case DROPIN:
-                flavorName = DROPIN_FLAVOR;
-                break;
-            case COMPONENT:
-                flavorName = COMPONENT_FLAVOR;
-                break;
-            default:
-                throw new CheckoutException("Unexpected flavor - " + flavor.name());
-        }
-        return new AnalyticEvent(context.getPackageName(), flavorName, components, locale.toString());
+    internal constructor(input: Parcel) {
+        flavor = input.readString()
+        component = input.readString()
+        locale = input.readString()
+        referer = input.readString()
     }
 
-    AnalyticEvent(@NonNull Parcel in) {
-        mFlavor = in.readString();
-        mComponent = in.readString();
-        mLocale = in.readString();
-        mReferer = in.readString();
-    }
-
-    private AnalyticEvent(@NonNull String packageName, @NonNull String flavor, @NonNull String components, @NonNull String locale) {
-        mReferer = packageName;
-        mLocale = locale;
-        mFlavor = flavor;
-        mComponent = components;
+    private constructor(packageName: String, flavor: String, components: String, locale: String) {
+        referer = packageName
+        this.locale = locale
+        this.flavor = flavor
+        component = components
     }
 
     /**
@@ -122,43 +54,84 @@ public class AnalyticEvent implements Parcelable {
      * @param baseUrl A base URL of the endpoint to send the events to.
      * @return The full URL to be called.
      */
-    @NonNull
-    URL toUrl(@NonNull String baseUrl) throws MalformedURLException {
+    @Throws(MalformedURLException::class)
+    fun toUrl(baseUrl: String): URL {
         if (!URLUtil.isValidUrl(baseUrl)) {
-            throw new MalformedURLException("Invalid URL format - " + baseUrl);
+            throw MalformedURLException("Invalid URL format - $baseUrl")
         }
-        final Uri baseUri = Uri.parse(baseUrl);
-
-        final Uri finalUri = new Uri.Builder()
-                .scheme(baseUri.getScheme())
-                .authority(baseUri.getAuthority())
-                .path(baseUri.getPath())
-                .appendQueryParameter(PAYLOAD_VERSION_KEY, mPayloadVersion)
-                .appendQueryParameter(VERSION_KEY, mVersion)
-                .appendQueryParameter(FLAVOR_KEY, mFlavor)
-                .appendQueryParameter(COMPONENT_KEY, mComponent)
-                .appendQueryParameter(LOCALE_KEY, mLocale)
-                .appendQueryParameter(PLATFORM_KEY, mPlatform)
-                .appendQueryParameter(REFERER_KEY, mReferer)
-                .appendQueryParameter(DEVICE_BRAND_KEY, mDeviceBrand)
-                .appendQueryParameter(DEVICE_MODEL_KEY, mDeviceModel)
-                .appendQueryParameter(SYSTEM_VERSION_KEY, mSystemVersion)
-                .build();
-
-        return new URL(finalUri.toString());
+        val baseUri = Uri.parse(baseUrl)
+        val finalUri = Uri.Builder()
+            .scheme(baseUri.scheme)
+            .authority(baseUri.authority)
+            .path(baseUri.path)
+            .appendQueryParameter(PAYLOAD_VERSION_KEY, payloadVersion)
+            .appendQueryParameter(VERSION_KEY, version)
+            .appendQueryParameter(FLAVOR_KEY, flavor)
+            .appendQueryParameter(COMPONENT_KEY, component)
+            .appendQueryParameter(LOCALE_KEY, locale)
+            .appendQueryParameter(PLATFORM_KEY, platform)
+            .appendQueryParameter(REFERER_KEY, referer)
+            .appendQueryParameter(DEVICE_BRAND_KEY, deviceBrand)
+            .appendQueryParameter(DEVICE_MODEL_KEY, deviceModel)
+            .appendQueryParameter(SYSTEM_VERSION_KEY, systemVersion)
+            .build()
+        return URL(finalUri.toString())
     }
 
-    @Override
-    public int describeContents() {
-        return Parcelable.CONTENTS_FILE_DESCRIPTOR;
+    override fun describeContents(): Int {
+        return Parcelable.CONTENTS_FILE_DESCRIPTOR
     }
 
-    @Override
-    public void writeToParcel(@NonNull Parcel dest, int flags) {
-        dest.writeString(mFlavor);
-        dest.writeString(mComponent);
-        dest.writeString(mLocale);
-        dest.writeString(mReferer);
+    override fun writeToParcel(dest: Parcel, flags: Int) {
+        dest.writeString(flavor)
+        dest.writeString(component)
+        dest.writeString(locale)
+        dest.writeString(referer)
     }
 
+    companion object {
+        private const val DROPIN_FLAVOR = "dropin"
+        private const val COMPONENT_FLAVOR = "components"
+        private const val CURRENT_PAYLOAD_VERSION = "1"
+        private const val ANDROID_PLATFORM = "android"
+        private const val PAYLOAD_VERSION_KEY = "payload_version"
+        private const val VERSION_KEY = "version"
+        private const val FLAVOR_KEY = "flavor"
+        private const val COMPONENT_KEY = "component"
+        private const val LOCALE_KEY = "locale"
+        private const val PLATFORM_KEY = "platform"
+        private const val REFERER_KEY = "referer"
+        private const val DEVICE_BRAND_KEY = "device_brand"
+        private const val DEVICE_MODEL_KEY = "device_model"
+        private const val SYSTEM_VERSION_KEY = "system_version"
+
+        @JvmField
+        val CREATOR: Parcelable.Creator<AnalyticEvent> = object : Parcelable.Creator<AnalyticEvent> {
+            override fun createFromParcel(`in`: Parcel): AnalyticEvent {
+                return AnalyticEvent(`in`)
+            }
+
+            override fun newArray(size: Int): Array<AnalyticEvent?> {
+                return arrayOfNulls(size)
+            }
+        }
+
+        /**
+         * Create an AnalyticEvent representing a state of the usage of the components.
+         *
+         * @param context A context to get the package name.
+         * @param flavor One of the available flavors os integration.
+         * @param components The component that was openend.
+         * @param locale The user locale being used.
+         * @return A new instance of an AnalyticEvent
+         */
+        @JvmStatic
+        fun create(context: Context, flavor: Flavor, components: String, locale: Locale): AnalyticEvent {
+            val flavorName = when (flavor) {
+                Flavor.DROPIN -> DROPIN_FLAVOR
+                Flavor.COMPONENT -> COMPONENT_FLAVOR
+            }
+            return AnalyticEvent(context.packageName, flavorName, components, locale.toString())
+        }
+    }
 }
