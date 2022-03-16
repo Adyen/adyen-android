@@ -36,6 +36,7 @@ import com.adyen.checkout.example.data.storage.KeyValueStorage
 import com.adyen.checkout.example.databinding.ActivityMainBinding
 import com.adyen.checkout.example.service.ExampleFullAsyncDropInService
 import com.adyen.checkout.example.ui.card.CardFragment
+import com.adyen.checkout.example.ui.configuration.CheckoutConfigurationProvider
 import com.adyen.checkout.example.ui.configuration.ConfigurationActivity
 import com.adyen.checkout.googlepay.GooglePayConfiguration
 import dagger.hilt.android.AndroidEntryPoint
@@ -53,7 +54,7 @@ class MainActivity : AppCompatActivity(), DropInCallback {
     private val paymentMethodsViewModel: PaymentMethodsViewModel by viewModels()
 
     @Inject
-    lateinit var keyValueStorage: KeyValueStorage
+    internal lateinit var checkoutConfigurationProvider: CheckoutConfigurationProvider
 
     private val dropInLauncher = DropIn.registerForDropInResult(this, this)
 
@@ -158,48 +159,6 @@ class MainActivity : AppCompatActivity(), DropInCallback {
         Logger.d(TAG, "startDropIn")
         setLoading(false)
 
-        val shopperLocaleString = keyValueStorage.getShopperLocale()
-        val shopperLocale = Locale.forLanguageTag(shopperLocaleString)
-
-        val amount = keyValueStorage.getAmount()
-
-        val cardConfiguration = CardConfiguration.Builder(shopperLocale, Environment.TEST, BuildConfig.CLIENT_KEY)
-            .setShopperReference(keyValueStorage.getShopperReference())
-            .build()
-
-        val googlePayConfig = GooglePayConfiguration.Builder(shopperLocale, Environment.TEST, BuildConfig.CLIENT_KEY)
-            .setCountryCode(keyValueStorage.getCountry())
-            .setAmount(amount)
-            .build()
-
-        val bcmcConfiguration = BcmcConfiguration.Builder(shopperLocale, Environment.TEST, BuildConfig.CLIENT_KEY)
-            .setShopperReference(keyValueStorage.getShopperReference())
-            .setShowStorePaymentField(true)
-            .build()
-
-        val adyen3DS2Configuration =
-            Adyen3DS2Configuration.Builder(shopperLocale, Environment.TEST, BuildConfig.CLIENT_KEY)
-                .build()
-
-        val dropInConfigurationBuilder = DropInConfiguration.Builder(
-            this@MainActivity,
-            ExampleFullAsyncDropInService::class.java,
-            BuildConfig.CLIENT_KEY
-        )
-            .setEnvironment(Environment.TEST)
-            .setShopperLocale(shopperLocale)
-            .addCardConfiguration(cardConfiguration)
-            .addBcmcConfiguration(bcmcConfiguration)
-            .addGooglePayConfiguration(googlePayConfig)
-            .add3ds2ActionConfiguration(adyen3DS2Configuration)
-            .setEnableRemovingStoredPaymentMethods(true)
-
-        try {
-            dropInConfigurationBuilder.setAmount(amount)
-        } catch (e: CheckoutException) {
-            Logger.e(TAG, "Amount $amount not valid", e)
-        }
-
         val resultIntent = Intent(this, MainActivity::class.java)
         resultIntent.flags = Intent.FLAG_ACTIVITY_CLEAR_TOP
 
@@ -207,7 +166,7 @@ class MainActivity : AppCompatActivity(), DropInCallback {
             this,
             dropInLauncher,
             paymentMethodsApiResponse,
-            dropInConfigurationBuilder.build(),
+            checkoutConfigurationProvider.getDropInConfiguration(this),
             resultIntent
         )
     }
