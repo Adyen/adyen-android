@@ -1,9 +1,21 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <color name="colorPrimary">@color/teal_500</color>
-    <color name="colorPrimaryDark">@color/teal_700</color>
-    <color name="colorAccent">@color/teal_500</color>
+    <color name="color_primary">@color/color_adyen_green</color>
+    <color name="color_on_primary">@color/color_white</color>
+    <color name="color_secondary">@color/color_adyen_dark</color>
+    <color name="color_on_secondary">@color/color_white</color>
+    <color name="color_accent">@color/color_secondary</color>
+    <color name="color_background">@color/color_white</color>
+    <color name="color_on_background">@color/color_adyen_dark</color>
+    <color name="color_surface">@color/color_background</color>
+    <color name="color_on_surface">@color/color_on_background</color>
+    <color name="color_control_normal">@color/color_adyen_dark</color>
+    <color name="color_control_highlight">#1F0abf53</color>
 
-    <color name="teal_500">#009688</color>
-    <color name="teal_700">#00796B</color>
+    <color name="color_white">#FFFFFF</color>
+    <color name="color_adyen_green">#0abf53</color>
+    <color name="color_adyen_dark">#00112c</color>
+
+    <bool name="has_light_system_bars">true</bool>
+
 </resources>

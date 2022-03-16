@@ -16,7 +16,6 @@ import android.view.View
 import android.widget.Toast
 import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
-import androidx.appcompat.app.AppCompatDelegate
 import com.adyen.checkout.adyen3ds2.Adyen3DS2Configuration
 import com.adyen.checkout.bcmc.BcmcConfiguration
 import com.adyen.checkout.card.CardConfiguration
@@ -60,10 +59,11 @@ class MainActivity : AppCompatActivity(), DropInCallback {
         super.onCreate(savedInstanceState)
 
         Logger.d(TAG, "onCreate")
-        AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_FOLLOW_SYSTEM)
         binding = ActivityMainBinding.inflate(layoutInflater)
         setContentView(binding.root)
-        setSupportActionBar(findViewById(R.id.toolbar))
+
+        setSupportActionBar(binding.toolbar)
+        supportActionBar?.setDisplayShowTitleEnabled(false)
 
         val result = DropIn.getDropInResultFromIntent(intent)
         if (result != null) {
@@ -88,17 +88,17 @@ class MainActivity : AppCompatActivity(), DropInCallback {
             }
         }
 
-        paymentMethodsViewModel.paymentMethodResponseLiveData.observe(
-            this,
-            {
-                if (it != null) {
-                    Logger.d(TAG, "Got paymentMethods response - oneClick? ${it.storedPaymentMethods?.size ?: 0}")
-                    if (isWaitingPaymentMethods) startDropIn(it)
-                } else {
-                    Logger.v(TAG, "API response is null")
-                }
+        paymentMethodsViewModel.paymentMethodResponseLiveData.observe(this) {
+            if (it != null) {
+                Logger.d(
+                    TAG,
+                    "Got paymentMethods response - oneClick? ${it.storedPaymentMethods?.size ?: 0}"
+                )
+                if (isWaitingPaymentMethods) startDropIn(it)
+            } else {
+                Logger.v(TAG, "API response is null")
             }
-        )
+        }
     }
 
     override fun onResume() {
