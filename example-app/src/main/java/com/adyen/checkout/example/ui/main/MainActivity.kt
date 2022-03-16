@@ -35,6 +35,7 @@ import com.adyen.checkout.example.data.api.CheckoutApiService
 import com.adyen.checkout.example.data.storage.KeyValueStorage
 import com.adyen.checkout.example.databinding.ActivityMainBinding
 import com.adyen.checkout.example.service.ExampleFullAsyncDropInService
+import com.adyen.checkout.example.ui.card.CardFragment
 import com.adyen.checkout.example.ui.configuration.ConfigurationActivity
 import com.adyen.checkout.googlepay.GooglePayConfiguration
 import dagger.hilt.android.AndroidEntryPoint
@@ -149,7 +150,7 @@ class MainActivity : AppCompatActivity(), DropInCallback {
                     setLoading(true)
                 }
             }
-            ComponentItem.Entry.Card -> Toast.makeText(this, "Not implemented yet", Toast.LENGTH_SHORT).show()
+            ComponentItem.Entry.Card -> CardFragment.show(supportFragmentManager)
         }
     }
 

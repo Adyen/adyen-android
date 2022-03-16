@@ -21,6 +21,7 @@
         <item name="android:statusBarColor">@color/color_background</item>
         <item name="android:navigationBarColor">@color/color_background</item>
         <item name="android:windowLightStatusBar" tools:ignore="NewApi">@bool/has_light_system_bars</item>
+        <item name="android:windowLightNavigationBar" tools:ignore="NewApi">@bool/has_light_system_bars</item>
 
         <item name="toolbarStyle">@style/Widget.Adyen.Toolbar</item>
 
