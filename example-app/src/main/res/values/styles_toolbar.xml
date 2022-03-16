@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <style name="Widget.Adyen.Toolbar" parent="Widget.MaterialComponents.Toolbar.Surface">
+        <item name="elevation">0dp</item>
+        <item name="titleTextColor">?attr/colorPrimary</item>
+        <item name="subtitleTextColor">?attr/colorSecondary</item>
+        <item name="materialThemeOverlay">@style/ThemeOverlay.Adyen.Toolbar</item>
+        <item name="android:theme">@style/ThemeOverlay.Adyen.Toolbar</item>
+    </style>
+
+    <style name="ThemeOverlay.Adyen.Toolbar" parent="ThemeOverlay.MaterialComponents.Toolbar.Surface">
+        <item name="colorControlNormal">@color/color_control_normal</item>
+    </style>
+
+</resources>
