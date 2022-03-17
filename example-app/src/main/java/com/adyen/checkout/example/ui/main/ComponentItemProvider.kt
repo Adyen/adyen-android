@@ -1,11 +1,13 @@
 package com.adyen.checkout.example.ui.main
 
+import com.adyen.checkout.example.R
+
 internal object ComponentItemProvider {
 
     fun getComponentItems() = listOf(
-        ComponentItem.Title("Drop In"),
+        ComponentItem.Title(R.string.drop_in_title),
         ComponentItem.Entry.DropIn,
-        ComponentItem.Title("Components"),
+        ComponentItem.Title(R.string.components_title),
         ComponentItem.Entry.Card,
     )
 }

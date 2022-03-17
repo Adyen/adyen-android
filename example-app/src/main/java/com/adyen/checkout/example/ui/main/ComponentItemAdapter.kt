@@ -42,7 +42,7 @@ internal class ComponentItemAdapter(
     private class TitleViewHolder(private val binding: ItemComponentTitleBinding) : ComponentItemViewHolder(binding) {
 
         override fun bind(item: ComponentItem) {
-            binding.title.text = item.text
+            binding.title.setText(item.stringResource)
         }
     }
 
@@ -52,7 +52,7 @@ internal class ComponentItemAdapter(
     ) : ComponentItemViewHolder(binding) {
 
         override fun bind(item: ComponentItem) {
-            binding.title.text = item.text
+            binding.title.setText(item.stringResource)
             binding.root.setOnClickListener { onEntryClick(item as ComponentItem.Entry) }
         }
     }

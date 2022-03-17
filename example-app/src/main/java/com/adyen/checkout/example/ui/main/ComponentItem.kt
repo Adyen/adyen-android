@@ -1,13 +1,16 @@
 package com.adyen.checkout.example.ui.main
 
+import androidx.annotation.StringRes
+import com.adyen.checkout.example.R
+
 internal sealed class ComponentItem {
 
-    abstract val text: String
+    abstract val stringResource: Int
 
-    data class Title(override val text: String) : ComponentItem()
+    data class Title(@StringRes override val stringResource: Int) : ComponentItem()
 
-    sealed class Entry(override val text: String) : ComponentItem() {
-        object DropIn : Entry("Start")
-        object Card : Entry("Card")
+    sealed class Entry(@StringRes override val stringResource: Int) : ComponentItem() {
+        object DropIn : Entry(R.string.drop_in_entry)
+        object Card : Entry(R.string.card_component_entry)
     }
 }
