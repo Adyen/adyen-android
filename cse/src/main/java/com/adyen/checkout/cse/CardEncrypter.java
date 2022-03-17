@@ -43,7 +43,7 @@ public final class CardEncrypter {
     }
 
     private CardEncrypter() {
-        throw new NoConstructorException();
+        throw NoConstructorException.INSTANCE;
     }
 
     /**

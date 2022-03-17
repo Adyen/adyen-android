@@ -68,6 +68,6 @@ public final class AmountFormat {
     }
 
     private AmountFormat() {
-        throw new NoConstructorException();
+        throw NoConstructorException.INSTANCE;
     }
 }

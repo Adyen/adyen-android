@@ -37,7 +37,7 @@ public class StatusConnectionTask extends ConnectionTask<StatusResponse> {
             @NonNull String logoUrl,
             @NonNull StatusRequest statusRequest,
             @NonNull StatusCallback callback) {
-        super(new StatusConnection(logoUrl, statusRequest));
+        super(new StatusConnection(logoUrl, statusRequest), 0);
         mStatusApi = statusApi;
         mCallback = callback;
     }

@@ -29,6 +29,6 @@ public final class BrowserUtils {
     }
 
     private BrowserUtils() {
-        throw new NoConstructorException();
+        throw NoConstructorException.INSTANCE;
     }
 }

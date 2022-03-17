@@ -42,6 +42,6 @@ public final class AllowedCardNetworks {
     }
 
     private AllowedCardNetworks() {
-        throw new NoConstructorException();
+        throw NoConstructorException.INSTANCE;
     }
 }

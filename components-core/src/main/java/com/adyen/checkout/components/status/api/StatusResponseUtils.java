@@ -26,6 +26,6 @@ public final class StatusResponseUtils {
     }
 
     private StatusResponseUtils() {
-        throw new NoConstructorException();
+        throw NoConstructorException.INSTANCE;
     }
 }

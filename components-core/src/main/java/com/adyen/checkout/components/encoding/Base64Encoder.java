@@ -44,6 +44,6 @@ public final class Base64Encoder {
     }
 
     private Base64Encoder() {
-        throw new NoConstructorException();
+        throw NoConstructorException.INSTANCE;
     }
 }
