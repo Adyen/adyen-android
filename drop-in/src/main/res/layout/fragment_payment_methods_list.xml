@@ -1,5 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?>
-<!--
+<?xml version="1.0" encoding="utf-8"?><!--
   ~ Copyright (c) 2019 Adyen N.V.
   ~
   ~ This file is open source and available under the MIT license. See the LICENSE file for more info.
@@ -7,15 +6,18 @@
   ~ Created by caiof on 29/4/2019.
   -->
 
-<LinearLayout
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical">
-    <include layout="@layout/bottom_sheet_indicator"
+
+    <include
+        layout="@layout/bottom_sheet_indicator"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"/>
+        android:layout_height="wrap_content" />
+
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/recyclerView_paymentMethods"
         android:layout_width="match_parent"
@@ -24,6 +26,8 @@
         android:clipToPadding="false"
         android:paddingTop="@dimen/standard_half_margin"
         android:paddingBottom="@dimen/standard_half_margin"
+        app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
         tools:context=".ui.paymentmethods.PaymentMethodListDialogFragment"
-        tools:listitem="@layout/payment_methods_list_item"/>
+        tools:listitem="@layout/payment_methods_list_item" />
+
 </LinearLayout>

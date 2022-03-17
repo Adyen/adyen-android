@@ -16,11 +16,10 @@
         <item name="android:layout_marginTop">@dimen/standard_margin</item>
         <item name="android:text">@string/checkout_voucher_introduction_bacs</item>
         <item name="android:gravity">center_horizontal</item>
-        <item name="android:textColor">@color/textColor</item>
     </style>
 
     <style name="AdyenCheckout.Voucher.DownloadTextAppearance" parent="AdyenCheckout.TextAppearance.Primary">
-        <item name="android:textColor">@color/primaryColor</item>
+        <item name="android:textColor">?android:attr/colorPrimary</item>
         <item name="android:layout_marginTop">@dimen/standard_margin</item>
         <item name="android:gravity">center_horizontal</item>
         <item name="android:layout_marginBottom">@dimen/standard_half_margin</item>

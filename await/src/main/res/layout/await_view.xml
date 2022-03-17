@@ -44,7 +44,7 @@
         <ProgressBar
             android:layout_width="36dp"
             android:layout_height="36dp"
-            android:indeterminateTint="@color/primaryColor"
+            android:indeterminateTint="?android:attr/colorPrimary"
             tools:targetApi="lollipop" />
 
         <TextView
