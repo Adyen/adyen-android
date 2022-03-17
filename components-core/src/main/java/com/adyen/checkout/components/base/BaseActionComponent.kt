@@ -5,132 +5,112 @@
  *
  * Created by caiof on 13/5/2019.
  */
+package com.adyen.checkout.components.base
 
-package com.adyen.checkout.components.base;
+import android.app.Activity
+import android.app.Application
+import android.os.Bundle
+import androidx.lifecycle.LifecycleOwner
+import androidx.lifecycle.MutableLiveData
+import androidx.lifecycle.Observer
+import androidx.lifecycle.SavedStateHandle
+import com.adyen.checkout.components.ActionComponentData
+import com.adyen.checkout.components.ComponentError
+import com.adyen.checkout.components.base.lifecycle.ActionComponentViewModel
+import com.adyen.checkout.components.model.payments.response.Action
+import com.adyen.checkout.core.exception.CheckoutException
+import com.adyen.checkout.core.exception.ComponentException
+import com.adyen.checkout.core.log.LogUtil.getTag
+import com.adyen.checkout.core.log.Logger.w
+import org.json.JSONObject
 
-import android.app.Activity;
-import android.app.Application;
-import android.os.Bundle;
-
-import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
-import androidx.lifecycle.LifecycleOwner;
-import androidx.lifecycle.MutableLiveData;
-import androidx.lifecycle.Observer;
-import androidx.lifecycle.SavedStateHandle;
-
-import com.adyen.checkout.components.ActionComponentData;
-import com.adyen.checkout.components.ComponentError;
-import com.adyen.checkout.components.base.lifecycle.ActionComponentViewModel;
-import com.adyen.checkout.components.model.payments.response.Action;
-import com.adyen.checkout.core.exception.CheckoutException;
-import com.adyen.checkout.core.exception.ComponentException;
-import com.adyen.checkout.core.log.LogUtil;
-import com.adyen.checkout.core.log.Logger;
-
-import org.json.JSONObject;
-
-public abstract class BaseActionComponent<ConfigurationT extends Configuration> extends ActionComponentViewModel<ConfigurationT> {
-
-    private static final String TAG = LogUtil.getTag();
-
-    private static final String PAYMENT_DATA_KEY = "payment_data";
-
-    private final MutableLiveData<ActionComponentData> mResultLiveData = new MutableLiveData<>();
-
-    private final MutableLiveData<ComponentError> mErrorMutableLiveData = new MutableLiveData<>();
-
-    public BaseActionComponent(@NonNull SavedStateHandle savedStateHandle, @NonNull Application application, @NonNull ConfigurationT configuration) {
-        super(savedStateHandle, application, configuration);
-    }
-
-    @Override
-    public void handleAction(@NonNull Activity activity, @NonNull Action action) {
+@Suppress("TooManyFunctions")
+abstract class BaseActionComponent<ConfigurationT : Configuration>(
+    savedStateHandle: SavedStateHandle,
+    application: Application,
+    configuration: ConfigurationT
+) : ActionComponentViewModel<ConfigurationT>(savedStateHandle, application, configuration) {
+    private val mResultLiveData = MutableLiveData<ActionComponentData>()
+    private val mErrorMutableLiveData = MutableLiveData<ComponentError>()
+    override fun handleAction(activity: Activity, action: Action) {
         if (!canHandleAction(action)) {
-            notifyException(new ComponentException("Action type not supported by this component - " + action.getType()));
-            return;
+            notifyException(ComponentException("Action type not supported by this component - " + action.type))
+            return
         }
-
-        setPaymentData(action.getPaymentData());
+        paymentData = action.paymentData
         try {
-            handleActionInternal(activity, action);
-        } catch (ComponentException e) {
-            notifyException(e);
+            handleActionInternal(activity, action)
+        } catch (e: ComponentException) {
+            notifyException(e)
         }
     }
 
-    @Override
-    public void observe(@NonNull LifecycleOwner lifecycleOwner, @NonNull Observer<ActionComponentData> observer) {
-        mResultLiveData.observe(lifecycleOwner, observer);
+    override fun observe(lifecycleOwner: LifecycleOwner, observer: Observer<ActionComponentData>) {
+        mResultLiveData.observe(lifecycleOwner, observer)
     }
 
-    @Override
-    public void removeObservers(@NonNull LifecycleOwner lifecycleOwner) {
-        mResultLiveData.removeObservers(lifecycleOwner);
+    override fun removeObservers(lifecycleOwner: LifecycleOwner) {
+        mResultLiveData.removeObservers(lifecycleOwner)
     }
 
-    @Override
-    public void removeObserver(@NonNull final Observer<ActionComponentData> observer) {
-        mResultLiveData.removeObserver(observer);
+    override fun removeObserver(observer: Observer<ActionComponentData>) {
+        mResultLiveData.removeObserver(observer)
     }
 
-    @Override
-    public void observeErrors(@NonNull LifecycleOwner lifecycleOwner, @NonNull Observer<ComponentError> observer) {
-        mErrorMutableLiveData.observe(lifecycleOwner, observer);
+    override fun observeErrors(lifecycleOwner: LifecycleOwner, observer: Observer<ComponentError>) {
+        mErrorMutableLiveData.observe(lifecycleOwner, observer)
     }
 
-    @Override
-    public void removeErrorObservers(@NonNull LifecycleOwner lifecycleOwner) {
-        mErrorMutableLiveData.removeObservers(lifecycleOwner);
+    override fun removeErrorObservers(lifecycleOwner: LifecycleOwner) {
+        mErrorMutableLiveData.removeObservers(lifecycleOwner)
     }
 
-    @Override
-    public void removeErrorObserver(@NonNull final Observer<ComponentError> observer) {
-        mErrorMutableLiveData.removeObserver(observer);
+    override fun removeErrorObserver(observer: Observer<ComponentError>) {
+        mErrorMutableLiveData.removeObserver(observer)
     }
 
     /**
-     * Call this method to save the current data of the Component to the Bundle from {@link Activity#onSaveInstanceState(Bundle)}.
+     * Call this method to save the current data of the Component to the Bundle from [Activity.onSaveInstanceState].
      *
      * @param bundle The bundle to save the sate into.
-     * @deprecated You can safely remove this method, we rely on {@link SavedStateHandle} to handle the state.
      */
-    @Deprecated
-    public void saveState(@Nullable Bundle bundle) {
-        Logger.w(TAG, "Calling saveState is not necessary anymore, you can safely remove this method.");
+    @Deprecated("You can safely remove this method, we rely on {@link SavedStateHandle} to handle the state.")
+    fun saveState(bundle: Bundle?) {
+        w(TAG, "Calling saveState is not necessary anymore, you can safely remove this method.")
     }
 
     /**
-     * Call this method to restore the current data of the Component from the savedInstanceState Bundle from {@link Activity#onCreate(Bundle)}}.
+     * Call this method to restore the current data of the Component from the savedInstanceState Bundle from [Activity.onCreate]}.
      *
      * @param bundle The bundle to restore the sate from.
-     * @deprecated You can safely remove this method, we rely on {@link SavedStateHandle} to handle the state.
      */
-    @Deprecated
-    public void restoreState(@Nullable Bundle bundle) {
-        Logger.w(TAG, "Calling restoreState is not necessary anymore, you can safely remove this method.");
+    @Deprecated("You can safely remove this method, we rely on {@link SavedStateHandle} to handle the state.")
+    fun restoreState(bundle: Bundle?) {
+        w(TAG, "Calling restoreState is not necessary anymore, you can safely remove this method.")
     }
 
-    protected abstract void handleActionInternal(@NonNull Activity activity, @NonNull Action action) throws ComponentException;
-
-    protected void notifyDetails(@NonNull JSONObject details) throws ComponentException {
-        final ActionComponentData actionComponentData = new ActionComponentData();
-        actionComponentData.setDetails(details);
-        actionComponentData.setPaymentData(getPaymentData());
-
-        mResultLiveData.setValue(actionComponentData);
+    @Throws(ComponentException::class)
+    protected abstract fun handleActionInternal(activity: Activity, action: Action)
+    @Throws(ComponentException::class)
+    protected fun notifyDetails(details: JSONObject) {
+        val actionComponentData = ActionComponentData()
+        actionComponentData.details = details
+        actionComponentData.paymentData = paymentData
+        mResultLiveData.value = actionComponentData
     }
 
-    protected void notifyException(@NonNull CheckoutException e) {
-        mErrorMutableLiveData.postValue(new ComponentError(e));
+    protected fun notifyException(e: CheckoutException) {
+        mErrorMutableLiveData.postValue(ComponentError(e))
     }
 
-    @Nullable
-    protected String getPaymentData() {
-        return getSavedStateHandle().get(PAYMENT_DATA_KEY);
-    }
+    protected var paymentData: String?
+        get() = savedStateHandle.get(PAYMENT_DATA_KEY)
+        protected set(paymentData) {
+            savedStateHandle.set(PAYMENT_DATA_KEY, paymentData)
+        }
 
-    protected void setPaymentData(@Nullable String paymentData) {
-        getSavedStateHandle().set(PAYMENT_DATA_KEY, paymentData);
+    companion object {
+        private val TAG = getTag()
+        private const val PAYMENT_DATA_KEY = "payment_data"
     }
 }

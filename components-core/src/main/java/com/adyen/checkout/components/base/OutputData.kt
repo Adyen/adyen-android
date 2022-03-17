@@ -5,10 +5,8 @@
  *
  * Created by caiof on 30/8/2019.
  */
+package com.adyen.checkout.components.base
 
-package com.adyen.checkout.components.base;
-
-public interface OutputData {
-    // Marker interface.
-    boolean isValid();
+interface OutputData {
+    val isValid: Boolean
 }

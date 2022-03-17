@@ -31,15 +31,16 @@ data class CardOutputData(
     val isPostalCodeRequired: Boolean,
     val installmentOptions: List<InstallmentModel>
 ) : OutputData {
-    override fun isValid(): Boolean {
-        return cardNumberState.validation.isValid() &&
-            expiryDateState.validation.isValid() &&
-            securityCodeState.validation.isValid() &&
-            holderNameState.validation.isValid() &&
-            socialSecurityNumberState.validation.isValid() &&
-            kcpBirthDateOrTaxNumberState.validation.isValid() &&
-            kcpCardPasswordState.validation.isValid() &&
-            postalCodeState.validation.isValid() &&
-            installmentState.validation.isValid()
-    }
+
+    override val isValid: Boolean
+        get() =
+            cardNumberState.validation.isValid() &&
+                expiryDateState.validation.isValid() &&
+                securityCodeState.validation.isValid() &&
+                holderNameState.validation.isValid() &&
+                socialSecurityNumberState.validation.isValid() &&
+                kcpBirthDateOrTaxNumberState.validation.isValid() &&
+                kcpCardPasswordState.validation.isValid() &&
+                postalCodeState.validation.isValid() &&
+                installmentState.validation.isValid()
 }
