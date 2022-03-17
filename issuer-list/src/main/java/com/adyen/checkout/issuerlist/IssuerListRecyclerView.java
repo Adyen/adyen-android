@@ -19,7 +19,7 @@ import androidx.lifecycle.Observer;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.adyen.checkout.components.GenericComponentState;
+import com.adyen.checkout.components.PaymentComponentState;
 import com.adyen.checkout.components.api.ImageLoader;
 import com.adyen.checkout.components.model.payments.request.IssuerListPaymentMethod;
 import com.adyen.checkout.components.ui.adapter.ClickableListRecyclerAdapter;
@@ -36,7 +36,7 @@ public abstract class IssuerListRecyclerView<
         extends AdyenLinearLayout<
             IssuerListOutputData,
             IssuerListConfiguration,
-            GenericComponentState<IssuerListPaymentMethodT>,
+            PaymentComponentState<IssuerListPaymentMethodT>,
             IssuerListComponentT>
         implements Observer<List<IssuerModel>>, ClickableListRecyclerAdapter.OnItemCLickedListener {
     private static final String TAG = LogUtil.getTag();

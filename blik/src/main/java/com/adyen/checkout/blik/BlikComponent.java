@@ -11,7 +11,7 @@ package com.adyen.checkout.blik;
 import androidx.annotation.NonNull;
 import androidx.lifecycle.SavedStateHandle;
 
-import com.adyen.checkout.components.GenericComponentState;
+import com.adyen.checkout.components.PaymentComponentState;
 import com.adyen.checkout.components.StoredPaymentComponentProvider;
 import com.adyen.checkout.components.base.BasePaymentComponent;
 import com.adyen.checkout.components.base.GenericPaymentMethodDelegate;
@@ -23,7 +23,7 @@ import com.adyen.checkout.components.util.PaymentMethodTypes;
 import com.adyen.checkout.core.log.LogUtil;
 import com.adyen.checkout.core.log.Logger;
 
-public class BlikComponent extends BasePaymentComponent<BlikConfiguration, BlikInputData, BlikOutputData, GenericComponentState<BlikPaymentMethod>> {
+public class BlikComponent extends BasePaymentComponent<BlikConfiguration, BlikInputData, BlikOutputData, PaymentComponentState<BlikPaymentMethod>> {
     private static final String TAG = LogUtil.getTag();
 
     public static final StoredPaymentComponentProvider<BlikComponent, BlikConfiguration> PROVIDER =
@@ -63,7 +63,7 @@ public class BlikComponent extends BasePaymentComponent<BlikConfiguration, BlikI
 
     @NonNull
     @Override
-    protected GenericComponentState<BlikPaymentMethod> createComponentState() {
+    protected PaymentComponentState<BlikPaymentMethod> createComponentState() {
 
         final BlikOutputData blikOutputData = getOutputData();
 
@@ -86,7 +86,7 @@ public class BlikComponent extends BasePaymentComponent<BlikConfiguration, BlikI
                 || blikOutputData != null
                 && blikOutputData.isValid();
 
-        return new GenericComponentState<>(paymentComponentData, isInputValid, true);
+        return new PaymentComponentState<>(paymentComponentData, isInputValid, true);
     }
 
     @NonNull

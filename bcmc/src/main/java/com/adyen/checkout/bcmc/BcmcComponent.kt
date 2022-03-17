@@ -14,7 +14,7 @@ import com.adyen.checkout.card.CardValidationUtils
 import com.adyen.checkout.card.api.model.Brand
 import com.adyen.checkout.card.data.CardType
 import com.adyen.checkout.card.data.ExpiryDate
-import com.adyen.checkout.components.GenericComponentState
+import com.adyen.checkout.components.PaymentComponentState
 import com.adyen.checkout.components.PaymentComponentProvider
 import com.adyen.checkout.components.base.BasePaymentComponent
 import com.adyen.checkout.components.base.GenericPaymentMethodDelegate
@@ -50,7 +50,7 @@ class BcmcComponent(
     private val publicKeyRepository: PublicKeyRepository,
     private val cardValidationMapper: CardValidationMapper
 ) : BasePaymentComponent<BcmcConfiguration, BcmcInputData, BcmcOutputData,
-    GenericComponentState<CardPaymentMethod>>(savedStateHandle, paymentMethodDelegate, configuration) {
+    PaymentComponentState<CardPaymentMethod>>(savedStateHandle, paymentMethodDelegate, configuration) {
 
     companion object {
         @JvmField
@@ -94,7 +94,7 @@ class BcmcComponent(
     }
 
     @SuppressWarnings("ReturnCount")
-    override fun createComponentState(): GenericComponentState<CardPaymentMethod> {
+    override fun createComponentState(): PaymentComponentState<CardPaymentMethod> {
         Logger.v(TAG, "createComponentState")
 
         val unencryptedCardBuilder = UnencryptedCard.Builder()
@@ -107,7 +107,7 @@ class BcmcComponent(
         if (outputData?.isValid != true || publicKey == null) {
             val isInputValid = outputData?.isValid ?: false
             val isReady = publicKey != null
-            return GenericComponentState(paymentComponentData, isInputValid, isReady)
+            return PaymentComponentState(paymentComponentData, isInputValid, isReady)
         }
         val encryptedCard = try {
             unencryptedCardBuilder.setNumber(outputData.cardNumberField.value)
@@ -119,7 +119,7 @@ class BcmcComponent(
             CardEncrypter.encryptFields(unencryptedCardBuilder.build(), publicKey)
         } catch (e: EncryptionException) {
             notifyException(e)
-            return GenericComponentState(paymentComponentData, false, true)
+            return PaymentComponentState(paymentComponentData, false, true)
         }
 
         // BCMC payment method is scheme type.
@@ -139,7 +139,7 @@ class BcmcComponent(
         paymentComponentData.paymentMethod = cardPaymentMethod
         paymentComponentData.setStorePaymentMethod(outputData.isStoredPaymentMethodEnabled)
         paymentComponentData.shopperReference = configuration.shopperReference
-        return GenericComponentState(paymentComponentData, true, true)
+        return PaymentComponentState(paymentComponentData, true, true)
     }
 
     fun isCardNumberSupported(cardNumber: String?): Boolean {

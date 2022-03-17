@@ -19,7 +19,7 @@ import androidx.annotation.Nullable;
 import androidx.lifecycle.LifecycleOwner;
 import androidx.lifecycle.Observer;
 
-import com.adyen.checkout.components.GenericComponentState;
+import com.adyen.checkout.components.PaymentComponentState;
 import com.adyen.checkout.components.model.payments.request.SepaPaymentMethod;
 import com.adyen.checkout.components.ui.Validation;
 import com.adyen.checkout.components.ui.view.AdyenLinearLayout;
@@ -30,7 +30,7 @@ import com.adyen.checkout.core.log.Logger;
 import com.google.android.material.textfield.TextInputLayout;
 
 public class SepaView
-        extends AdyenLinearLayout<SepaOutputData, SepaConfiguration, GenericComponentState<SepaPaymentMethod>, SepaComponent>
+        extends AdyenLinearLayout<SepaOutputData, SepaConfiguration, PaymentComponentState<SepaPaymentMethod>, SepaComponent>
         implements Observer<SepaOutputData> {
     private static final String TAG = LogUtil.getTag();
 

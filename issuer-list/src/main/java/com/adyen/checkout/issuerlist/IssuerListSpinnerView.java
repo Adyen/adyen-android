@@ -20,7 +20,7 @@ import androidx.appcompat.widget.AppCompatSpinner;
 import androidx.lifecycle.LifecycleOwner;
 import androidx.lifecycle.Observer;
 
-import com.adyen.checkout.components.GenericComponentState;
+import com.adyen.checkout.components.PaymentComponentState;
 import com.adyen.checkout.components.api.ImageLoader;
 import com.adyen.checkout.components.model.payments.request.IssuerListPaymentMethod;
 import com.adyen.checkout.components.ui.view.AdyenLinearLayout;
@@ -36,7 +36,7 @@ public abstract class IssuerListSpinnerView<
         extends AdyenLinearLayout<
             IssuerListOutputData,
             IssuerListConfiguration,
-            GenericComponentState<IssuerListPaymentMethodT>,
+            PaymentComponentState<IssuerListPaymentMethodT>,
             IssuerListComponentT>
         implements AdapterView.OnItemSelectedListener {
     private static final String TAG = LogUtil.getTag();

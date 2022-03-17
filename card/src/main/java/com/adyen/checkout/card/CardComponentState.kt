@@ -21,5 +21,5 @@ class CardComponentState(
     isReady: Boolean,
     val cardType: CardType?,
     val binValue: String,
-    val lastFourDigits: String?
+    val lastFourDigits: String?,
 ) : PaymentComponentState<CardPaymentMethod>(paymentComponentData, isInputValid, isReady)
