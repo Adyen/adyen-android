@@ -5,122 +5,101 @@
  *
  * Created by arman on 20/2/2019.
  */
+package com.adyen.checkout.components.base
 
-package com.adyen.checkout.components.base;
+import android.content.Context
+import android.text.TextUtils
+import androidx.annotation.WorkerThread
+import androidx.lifecycle.LifecycleOwner
+import androidx.lifecycle.MutableLiveData
+import androidx.lifecycle.Observer
+import androidx.lifecycle.SavedStateHandle
+import com.adyen.checkout.components.ComponentError
+import com.adyen.checkout.components.PaymentComponentState
+import com.adyen.checkout.components.ViewableComponent
+import com.adyen.checkout.components.analytics.AnalyticEvent.Companion.create
+import com.adyen.checkout.components.analytics.AnalyticEvent.Flavor
+import com.adyen.checkout.components.analytics.AnalyticsDispatcher.Companion.dispatchEvent
+import com.adyen.checkout.components.base.lifecycle.PaymentComponentViewModel
+import com.adyen.checkout.components.model.payments.request.PaymentMethodDetails
+import com.adyen.checkout.core.api.ThreadManager
+import com.adyen.checkout.core.exception.CheckoutException
+import com.adyen.checkout.core.exception.ComponentException
+import com.adyen.checkout.core.log.LogUtil.getTag
+import com.adyen.checkout.core.log.Logger
 
-import android.content.Context;
-import android.text.TextUtils;
+/**
+ * Component should not be instantiated directly. Instead use the PROVIDER object.
+ *
+ * @param savedStateHandle      [SavedStateHandle]
+ * @param paymentMethodDelegate [PaymentMethodDelegate]
+ * @param configuration         [ConfigurationT]
+ */
+@Suppress("TooManyFunctions")
+abstract class BasePaymentComponent<
+    ConfigurationT : Configuration,
+    InputDataT : InputData,
+    OutputDataT : OutputData,
+    ComponentStateT : PaymentComponentState<out PaymentMethodDetails>
+    >(
+    savedStateHandle: SavedStateHandle,
+    paymentMethodDelegate: PaymentMethodDelegate,
+    configuration: ConfigurationT
+) : PaymentComponentViewModel<ConfigurationT, ComponentStateT>(savedStateHandle, paymentMethodDelegate, configuration),
+    ViewableComponent<OutputDataT, ConfigurationT, ComponentStateT> {
 
-import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
-import androidx.annotation.WorkerThread;
-import androidx.lifecycle.LifecycleOwner;
-import androidx.lifecycle.MutableLiveData;
-import androidx.lifecycle.Observer;
-import androidx.lifecycle.SavedStateHandle;
+    protected var latestInputData: InputDataT? = null
+    private val paymentComponentStateLiveData = MutableLiveData<ComponentStateT>()
+    private val componentErrorLiveData = MutableLiveData<ComponentError>()
+    private val outputLiveData = MutableLiveData<OutputDataT>()
+    private var isCreatedForDropIn = false
+    private var isAnalyticsEnabled = true
 
-import com.adyen.checkout.components.ComponentError;
-import com.adyen.checkout.components.PaymentComponentState;
-import com.adyen.checkout.components.ViewableComponent;
-import com.adyen.checkout.components.analytics.AnalyticEvent;
-import com.adyen.checkout.components.analytics.AnalyticsDispatcher;
-import com.adyen.checkout.components.base.lifecycle.PaymentComponentViewModel;
-import com.adyen.checkout.components.model.payments.request.PaymentMethodDetails;
-import com.adyen.checkout.core.api.ThreadManager;
-import com.adyen.checkout.core.exception.CheckoutException;
-import com.adyen.checkout.core.exception.ComponentException;
-import com.adyen.checkout.core.log.LogUtil;
-import com.adyen.checkout.core.log.Logger;
-
-public abstract class BasePaymentComponent<
-        ConfigurationT extends Configuration,
-        InputDataT extends InputData,
-        OutputDataT extends OutputData,
-        ComponentStateT extends PaymentComponentState<? extends PaymentMethodDetails>>
-        extends PaymentComponentViewModel<ConfigurationT, ComponentStateT>
-        implements ViewableComponent<OutputDataT, ConfigurationT, ComponentStateT> {
-
-    private static final String TAG = LogUtil.getTag();
-
-    @Nullable
-    protected InputDataT mLatestInputData;
-
-    private final MutableLiveData<ComponentStateT> mPaymentComponentStateLiveData = new MutableLiveData<>();
-    private final MutableLiveData<ComponentError> mComponentErrorLiveData = new MutableLiveData<>();
-
-    private final MutableLiveData<OutputDataT> mOutputLiveData = new MutableLiveData<>();
-
-    private boolean mIsCreatedForDropIn = false;
-    private boolean mIsAnalyticsEnabled = true;
-
-    /**
-     * Component should not be instantiated directly. Instead use the PROVIDER object.
-     *
-     * @param savedStateHandle      {@link SavedStateHandle}
-     * @param paymentMethodDelegate {@link PaymentMethodDelegate}
-     * @param configuration         {@link ConfigurationT}
-     */
-    @SuppressWarnings("LambdaLast")
-    public BasePaymentComponent(
-            @NonNull SavedStateHandle savedStateHandle,
-            @NonNull PaymentMethodDelegate paymentMethodDelegate,
-            @NonNull ConfigurationT configuration
-    ) {
-        super(savedStateHandle, paymentMethodDelegate, configuration);
-        assertSupported(paymentMethodDelegate.getPaymentMethodType());
+    init {
+        assertSupported(paymentMethodDelegate.getPaymentMethodType())
     }
 
-    @Override
-    public boolean requiresInput() {
+    override fun requiresInput(): Boolean {
         // By default all components require user input.
-        return true;
+        return true
     }
 
-    @Override
-    public void observe(@NonNull LifecycleOwner lifecycleOwner, @NonNull Observer<ComponentStateT> observer) {
-        mPaymentComponentStateLiveData.observe(lifecycleOwner, observer);
+    override fun observe(lifecycleOwner: LifecycleOwner, observer: Observer<ComponentStateT>) {
+        paymentComponentStateLiveData.observe(lifecycleOwner, observer)
     }
 
-    @Override
-    public void removeObservers(@NonNull LifecycleOwner lifecycleOwner) {
-        mPaymentComponentStateLiveData.removeObservers(lifecycleOwner);
+    override fun removeObservers(lifecycleOwner: LifecycleOwner) {
+        paymentComponentStateLiveData.removeObservers(lifecycleOwner)
     }
 
-    @Override
-    public void removeObserver(@NonNull final Observer<ComponentStateT> observer) {
-        mPaymentComponentStateLiveData.removeObserver(observer);
+    override fun removeObserver(observer: Observer<ComponentStateT>) {
+        paymentComponentStateLiveData.removeObserver(observer)
     }
 
-    @Override
-    public void observeErrors(@NonNull LifecycleOwner lifecycleOwner, @NonNull Observer<ComponentError> observer) {
-        mComponentErrorLiveData.observe(lifecycleOwner, observer);
+    override fun observeErrors(lifecycleOwner: LifecycleOwner, observer: Observer<ComponentError>) {
+        componentErrorLiveData.observe(lifecycleOwner, observer)
     }
 
-    @Override
-    public void removeErrorObservers(@NonNull LifecycleOwner lifecycleOwner) {
-        mComponentErrorLiveData.removeObservers(lifecycleOwner);
+    override fun removeErrorObservers(lifecycleOwner: LifecycleOwner) {
+        componentErrorLiveData.removeObservers(lifecycleOwner)
     }
 
-    @Override
-    public void removeErrorObserver(@NonNull final Observer<ComponentError> observer) {
-        mComponentErrorLiveData.removeObserver(observer);
+    override fun removeErrorObserver(observer: Observer<ComponentError>) {
+        componentErrorLiveData.removeObserver(observer)
     }
 
-    @Override
-    @Nullable
-    public PaymentComponentState<? extends PaymentMethodDetails> getState() {
-        return mPaymentComponentStateLiveData.getValue();
-    }
+    override val state: ComponentStateT?
+        get() = paymentComponentStateLiveData.value
 
     /**
-     * Receives a set of {@link InputData} from the user to be processed.
+     * Receives a set of [InputData] from the user to be processed.
      *
-     * @param inputData {@link InputDataT}
+     * @param inputData [InputDataT]
      */
-    public final void inputDataChanged(@NonNull InputDataT inputData) {
-        Logger.v(TAG, "inputDataChanged");
-        mLatestInputData = inputData;
-        notifyStateChanged(onInputDataChanged(inputData));
+    fun inputDataChanged(inputData: InputDataT) {
+        Logger.v(TAG, "inputDataChanged")
+        latestInputData = inputData
+        notifyStateChanged(onInputDataChanged(inputData))
     }
 
     /**
@@ -130,8 +109,8 @@ public abstract class BasePaymentComponent<
      * @param isEnabled Is analytics should be enabled or not.
      */
     // TODO: 13/11/2020 Add to Configuration instead?
-    public void setAnalyticsEnabled(boolean isEnabled) {
-        mIsAnalyticsEnabled = isEnabled;
+    fun setAnalyticsEnabled(isEnabled: Boolean) {
+        isAnalyticsEnabled = isEnabled
     }
 
     /**
@@ -139,54 +118,42 @@ public abstract class BasePaymentComponent<
      *
      * @param context The context where the component is.
      */
-    public void sendAnalyticsEvent(@NonNull Context context) {
-        if (mIsAnalyticsEnabled) {
-            final AnalyticEvent.Flavor flavor;
-            if (mIsCreatedForDropIn) {
-                flavor = AnalyticEvent.Flavor.DROPIN;
+    override fun sendAnalyticsEvent(context: Context) {
+        if (isAnalyticsEnabled) {
+            val flavor: Flavor = if (isCreatedForDropIn) {
+                Flavor.DROPIN
             } else {
-                flavor = AnalyticEvent.Flavor.COMPONENT;
+                Flavor.COMPONENT
             }
-
-            final String type = paymentMethodDelegate.getPaymentMethodType();
+            val type = paymentMethodDelegate.getPaymentMethodType()
             if (TextUtils.isEmpty(type)) {
-                throw new CheckoutException("Payment method has empty or null type");
+                throw CheckoutException("Payment method has empty or null type")
             }
-
-            final AnalyticEvent analyticEvent = AnalyticEvent.create(context, flavor, type, getConfiguration().getShopperLocale());
-            AnalyticsDispatcher.dispatchEvent(context, getConfiguration().getEnvironment(), analyticEvent);
+            val analyticEvent = create(context, flavor, type, configuration.shopperLocale)
+            dispatchEvent(context, configuration.environment, analyticEvent)
         }
     }
 
-
-    @Override
-    public void observeOutputData(@NonNull LifecycleOwner lifecycleOwner, @NonNull Observer<OutputDataT> observer) {
+    override fun observeOutputData(lifecycleOwner: LifecycleOwner, observer: Observer<OutputDataT>) {
         // Parent component needs to overrides this for view to have access to the method in the package
-        mOutputLiveData.observe(lifecycleOwner, observer);
+        outputLiveData.observe(lifecycleOwner, observer)
     }
 
-    @Nullable
-    @Override
-    public OutputDataT getOutputData() {
-        return mOutputLiveData.getValue();
-    }
+    override val outputData: OutputDataT?
+        get() = outputLiveData.value
 
     /**
-     * Called every time the {@link InputData} changes.
+     * Called every time the [InputData] changes.
      *
      * @param inputData The new InputData
      * @return The OutputData after processing.
      */
-    @NonNull
-    protected abstract OutputDataT onInputDataChanged(@NonNull InputDataT inputData);
-
-    @NonNull
+    protected abstract fun onInputDataChanged(inputData: InputDataT): OutputDataT
     @WorkerThread
-    protected abstract ComponentStateT createComponentState();
-
-    protected void notifyException(@NonNull CheckoutException e) {
-        Logger.e(TAG, "notifyException - " + e.getMessage());
-        mComponentErrorLiveData.postValue(new ComponentError(e));
+    protected abstract fun createComponentState(): ComponentStateT
+    protected fun notifyException(e: CheckoutException) {
+        Logger.e(TAG, "notifyException - " + e.message)
+        componentErrorLiveData.postValue(ComponentError(e))
     }
 
     /**
@@ -195,47 +162,50 @@ public abstract class BasePaymentComponent<
      *
      * @param outputData the new output data
      */
-    protected void notifyStateChanged(@NonNull OutputDataT outputData) {
-        Logger.d(TAG, "notifyStateChanged with OutputData");
-        if (!outputData.equals(mOutputLiveData.getValue())) {
-            mOutputLiveData.setValue(outputData);
-            notifyStateChanged();
+    protected fun notifyStateChanged(outputData: OutputDataT) {
+        Logger.d(TAG, "notifyStateChanged with OutputData")
+        if (outputData != outputLiveData.value) {
+            outputLiveData.value = outputData
+            notifyStateChanged()
         } else {
-            Logger.d(TAG, "state has not changed");
+            Logger.d(TAG, "state has not changed")
         }
     }
 
     /**
      * Asks the component to recreate its state and notify its observers.
      */
-    protected void notifyStateChanged() {
-        Logger.d(TAG, "notifyStateChanged");
-        ThreadManager.EXECUTOR.submit(() -> {
+    @Suppress("TooGenericExceptionCaught")
+    protected fun notifyStateChanged() {
+        Logger.d(TAG, "notifyStateChanged")
+        ThreadManager.EXECUTOR.submit {
             try {
-                mPaymentComponentStateLiveData.postValue(createComponentState());
-            } catch (Exception e) {
-                Logger.e(TAG, "notifyStateChanged - error:" + e.getMessage());
-                notifyException(new ComponentException("Unexpected error", e));
-            }
-        });
-    }
-
-    private void assertSupported(@NonNull String paymentMethodType) {
-        if (!isSupported(paymentMethodType)) {
-            throw new IllegalArgumentException("Unsupported payment method type " + paymentMethodType);
-        }
-    }
-
-    private boolean isSupported(@NonNull String paymentMethodType) {
-        for (String supportedType : getSupportedPaymentMethodTypes()) {
-            if (supportedType.equals(paymentMethodType)) {
-                return true;
+                paymentComponentStateLiveData.postValue(createComponentState())
+            } catch (e: Exception) {
+                Logger.e(TAG, "notifyStateChanged - error:" + e.message)
+                notifyException(ComponentException("Unexpected error", e))
             }
         }
-        return false;
     }
 
-    public void setCreatedForDropIn() {
-        mIsCreatedForDropIn = true;
+    private fun assertSupported(paymentMethodType: String) {
+        require(isSupported(paymentMethodType)) { "Unsupported payment method type $paymentMethodType" }
+    }
+
+    private fun isSupported(paymentMethodType: String): Boolean {
+        for (supportedType in supportedPaymentMethodTypes) {
+            if (supportedType == paymentMethodType) {
+                return true
+            }
+        }
+        return false
+    }
+
+    fun setCreatedForDropIn() {
+        isCreatedForDropIn = true
+    }
+
+    companion object {
+        private val TAG = getTag()
     }
 }

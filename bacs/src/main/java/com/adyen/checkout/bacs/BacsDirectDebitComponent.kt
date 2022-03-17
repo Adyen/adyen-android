@@ -57,17 +57,17 @@ class BacsDirectDebitComponent(
             paymentComponentData = paymentComponentData,
             isInputValid = outputData?.isValid ?: false,
             isReady = true,
-            mode = mLatestInputData?.mode ?: BacsDirectDebitMode.INPUT
+            mode = latestInputData?.mode ?: BacsDirectDebitMode.INPUT
         )
     }
 
     fun setInputMode() {
-        mLatestInputData?.mode = BacsDirectDebitMode.INPUT
+        latestInputData?.mode = BacsDirectDebitMode.INPUT
         notifyStateChanged()
     }
 
     fun setConfirmationMode() {
-        mLatestInputData?.mode = BacsDirectDebitMode.CONFIRMATION
+        latestInputData?.mode = BacsDirectDebitMode.CONFIRMATION
         notifyStateChanged()
     }
 

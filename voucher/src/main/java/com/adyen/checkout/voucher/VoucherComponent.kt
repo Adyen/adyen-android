@@ -41,9 +41,8 @@ class VoucherComponent(
         mOutputLiveData.observe(lifecycleOwner, observer)
     }
 
-    override fun getOutputData(): VoucherOutputData? {
-        return mOutputLiveData.value
-    }
+    override val outputData: VoucherOutputData?
+        get() = mOutputLiveData.value
 
     override fun sendAnalyticsEvent(context: Context) {
         // no ops

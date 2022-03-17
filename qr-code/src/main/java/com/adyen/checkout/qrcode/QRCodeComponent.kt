@@ -32,9 +32,9 @@ import com.adyen.checkout.core.exception.ComponentException
 import com.adyen.checkout.core.log.LogUtil
 import com.adyen.checkout.core.log.Logger
 import com.adyen.checkout.redirect.RedirectDelegate
-import java.util.concurrent.TimeUnit
 import org.json.JSONException
 import org.json.JSONObject
+import java.util.concurrent.TimeUnit
 
 private val TAG = LogUtil.getTag()
 private const val PAYLOAD_DETAILS_KEY = "payload"
@@ -57,6 +57,7 @@ class QRCodeComponent(
     private var qrCodeData: String? = null
     private val statusRepository: StatusRepository = StatusRepository.getInstance(configuration.environment)
     private val timerLiveData = MutableLiveData<TimerData>()
+
     private var statusCountDownTimer: CountDownTimer = object : CountDownTimer(
         statusRepository.maxPollingDurationMillis,
         STATUS_POLLING_INTERVAL_MILLIS
@@ -149,9 +150,8 @@ class QRCodeComponent(
         timerLiveData.observe(lifecycleOwner, observer)
     }
 
-    override fun getOutputData(): QRCodeOutputData? {
-        return outputLiveData.value
-    }
+    override val outputData: QRCodeOutputData?
+        get() = outputLiveData.value
 
     override fun sendAnalyticsEvent(context: Context) {
         // noop

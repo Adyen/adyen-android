@@ -28,7 +28,7 @@ interface PaymentComponent<ComponentStateT : PaymentComponentState<out PaymentMe
     /**
      * @return The last [PaymentComponentState] of this Component.
      */
-    val state: PaymentComponentState<out PaymentMethodDetails>
+    val state: PaymentComponentState<out PaymentMethodDetails>?
 
     /**
      * Checks if the component in its current configuration needs any input from the user to make the /payments call.
