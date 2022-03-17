@@ -5,79 +5,51 @@
  *
  * Created by caiof on 10/5/2019.
  */
+package com.adyen.checkout.components
 
-package com.adyen.checkout.components;
+import android.os.Parcel
+import com.adyen.checkout.components.ActionComponentData
+import com.adyen.checkout.core.exception.ModelSerializationException
+import com.adyen.checkout.core.model.JsonUtils.writeToParcel
+import com.adyen.checkout.core.model.ModelObject
+import com.adyen.checkout.core.model.getStringOrNull
+import org.json.JSONException
+import org.json.JSONObject
 
-import android.os.Parcel;
+data class ActionComponentData(
+    var paymentData: String? = null,
+    var details: JSONObject? = null,
+) : ModelObject() {
 
-import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
+    override fun writeToParcel(dest: Parcel, flags: Int) {
+        writeToParcel(dest, SERIALIZER.serialize(this))
+    }
 
-import com.adyen.checkout.core.exception.ModelSerializationException;
-import com.adyen.checkout.core.model.JsonUtils;
-import com.adyen.checkout.core.model.ModelObject;
+    companion object {
+        private const val PAYMENT_DATA = "paymentData"
+        private const val DETAILS = "details"
 
-import org.json.JSONException;
-import org.json.JSONObject;
+        @JvmField
+        val CREATOR = Creator(ActionComponentData::class.java)
 
-@SuppressWarnings({"MemberName", "PMD.DataClass"})
-public class ActionComponentData extends ModelObject {
-
-    @NonNull
-    public static final Creator<ActionComponentData> CREATOR = new Creator<>(ActionComponentData.class);
-
-    private static final String PAYMENT_DATA = "paymentData";
-    private static final String DETAILS = "details";
-
-    @NonNull
-    public static final ModelObject.Serializer<ActionComponentData> SERIALIZER = new ModelObject.Serializer<ActionComponentData>() {
-
-        @NonNull
-        @Override
-        public JSONObject serialize(@NonNull ActionComponentData modelObject) {
-            final JSONObject jsonObject = new JSONObject();
-            try {
-                jsonObject.putOpt(PAYMENT_DATA, modelObject.getPaymentData());
-                jsonObject.putOpt(DETAILS, modelObject.getDetails());
-            } catch (JSONException e) {
-                throw new ModelSerializationException(ActionComponentData.class, e);
+        val SERIALIZER: Serializer<ActionComponentData> = object : Serializer<ActionComponentData> {
+            override fun serialize(modelObject: ActionComponentData): JSONObject {
+                return try {
+                    JSONObject().apply {
+                        putOpt(PAYMENT_DATA, modelObject.paymentData)
+                        putOpt(DETAILS, modelObject.details)
+                    }
+                } catch (e: JSONException) {
+                    throw ModelSerializationException(ActionComponentData::class.java, e)
+                }
             }
-            return jsonObject;
+
+            override fun deserialize(jsonObject: JSONObject): ActionComponentData {
+                return ActionComponentData(
+                    paymentData = jsonObject.getStringOrNull(PAYMENT_DATA),
+                    details = jsonObject.optJSONObject(DETAILS),
+                )
+            }
         }
-
-        @NonNull
-        @Override
-        public ActionComponentData deserialize(@NonNull JSONObject jsonObject) {
-            final ActionComponentData actionComponentData = new ActionComponentData();
-            actionComponentData.setPaymentData(jsonObject.optString(PAYMENT_DATA));
-            actionComponentData.setDetails(jsonObject.optJSONObject(DETAILS));
-            return actionComponentData;
-        }
-    };
-
-    private String paymentData;
-    private JSONObject details;
-
-    @Override
-    public void writeToParcel(@NonNull Parcel dest, int flags) {
-        JsonUtils.writeToParcel(dest, SERIALIZER.serialize(this));
-    }
-
-    @Nullable
-    public String getPaymentData() {
-        return paymentData;
-    }
-
-    public void setPaymentData(@Nullable String paymentData) {
-        this.paymentData = paymentData;
-    }
-
-    @Nullable
-    public JSONObject getDetails() {
-        return details;
-    }
-
-    public void setDetails(@Nullable JSONObject details) {
-        this.details = details;
     }
 }
