@@ -148,7 +148,7 @@ public abstract class BasePaymentComponent<
                 flavor = AnalyticEvent.Flavor.COMPONENT;
             }
 
-            final String type = mPaymentMethodDelegate.getPaymentMethodType();
+            final String type = paymentMethodDelegate.getPaymentMethodType();
             if (TextUtils.isEmpty(type)) {
                 throw new CheckoutException("Payment method has empty or null type");
             }

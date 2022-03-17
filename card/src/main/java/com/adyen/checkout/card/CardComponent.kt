@@ -316,7 +316,7 @@ class CardComponent private constructor(
             cardPaymentMethod.encryptedExpiryMonth = encryptedCard.encryptedExpiryMonth
             cardPaymentMethod.encryptedExpiryYear = encryptedCard.encryptedExpiryYear
         } else {
-            cardPaymentMethod.storedPaymentMethodId = (mPaymentMethodDelegate as StoredCardDelegate).getId()
+            cardPaymentMethod.storedPaymentMethodId = (paymentMethodDelegate as StoredCardDelegate).getId()
         }
 
         if (!cardDelegate.isCvcHidden()) {

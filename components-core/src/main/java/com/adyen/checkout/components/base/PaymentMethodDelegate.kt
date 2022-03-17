@@ -12,6 +12,5 @@ package com.adyen.checkout.components.base
  * Differentiates between a regular PaymentMethod and a StoredPaymentMethod
  */
 interface PaymentMethodDelegate {
-
     fun getPaymentMethodType(): String
 }

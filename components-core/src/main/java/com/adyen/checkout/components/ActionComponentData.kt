@@ -8,7 +8,6 @@
 package com.adyen.checkout.components
 
 import android.os.Parcel
-import com.adyen.checkout.components.ActionComponentData
 import com.adyen.checkout.core.exception.ModelSerializationException
 import com.adyen.checkout.core.model.JsonUtils.writeToParcel
 import com.adyen.checkout.core.model.ModelObject

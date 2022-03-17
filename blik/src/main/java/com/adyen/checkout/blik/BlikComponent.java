@@ -51,7 +51,7 @@ public class BlikComponent extends BasePaymentComponent<BlikConfiguration, BlikI
 
     @Override
     public boolean requiresInput() {
-        return mPaymentMethodDelegate instanceof GenericPaymentMethodDelegate;
+        return paymentMethodDelegate instanceof GenericPaymentMethodDelegate;
     }
 
     @NonNull
@@ -75,14 +75,14 @@ public class BlikComponent extends BasePaymentComponent<BlikConfiguration, BlikI
             paymentMethod.setBlikCode(blikOutputData.getBlikCodeField().getValue());
         }
 
-        if (mPaymentMethodDelegate instanceof GenericStoredPaymentDelegate) {
+        if (paymentMethodDelegate instanceof GenericStoredPaymentDelegate) {
             paymentMethod.setStoredPaymentMethodId(
-                    ((GenericStoredPaymentDelegate) mPaymentMethodDelegate).getStoredPaymentMethod().getId());
+                    ((GenericStoredPaymentDelegate) paymentMethodDelegate).getStoredPaymentMethod().getId());
         }
 
         paymentComponentData.setPaymentMethod(paymentMethod);
 
-        final boolean isInputValid = mPaymentMethodDelegate instanceof GenericStoredPaymentDelegate
+        final boolean isInputValid = paymentMethodDelegate instanceof GenericStoredPaymentDelegate
                 || blikOutputData != null
                 && blikOutputData.isValid();
 

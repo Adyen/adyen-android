@@ -99,7 +99,7 @@ public class GooglePayComponent extends
     }
 
     private PaymentMethod getPaymentMethod() {
-        return ((GenericPaymentMethodDelegate) mPaymentMethodDelegate).getPaymentMethod();
+        return ((GenericPaymentMethodDelegate) paymentMethodDelegate).getPaymentMethod();
     }
 
     /**
