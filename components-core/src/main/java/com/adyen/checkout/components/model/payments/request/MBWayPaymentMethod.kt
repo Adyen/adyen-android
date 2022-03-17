@@ -5,76 +5,51 @@
  *
  * Created by caiof on 11/8/2020.
  */
+package com.adyen.checkout.components.model.payments.request
 
-package com.adyen.checkout.components.model.payments.request;
+import android.os.Parcel
+import com.adyen.checkout.components.util.PaymentMethodTypes
+import com.adyen.checkout.core.exception.ModelSerializationException
+import com.adyen.checkout.core.model.JsonUtils.writeToParcel
+import com.adyen.checkout.core.model.getStringOrNull
+import org.json.JSONException
+import org.json.JSONObject
 
-import android.os.Parcel;
+class MBWayPaymentMethod(
+    override var type: String? = null,
+    var telephoneNumber: String? = null,
+) : PaymentMethodDetails() {
 
-import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
+    override fun writeToParcel(dest: Parcel, flags: Int) {
+        writeToParcel(dest, SERIALIZER.serialize(this))
+    }
 
-import com.adyen.checkout.components.util.PaymentMethodTypes;
-import com.adyen.checkout.core.exception.ModelSerializationException;
-import com.adyen.checkout.core.model.JsonUtils;
+    companion object {
+        const val PAYMENT_METHOD_TYPE = PaymentMethodTypes.MB_WAY
+        private const val TELEPHONE_NUMBER = "telephoneNumber"
 
-import org.json.JSONException;
-import org.json.JSONObject;
+        @JvmField
+        val CREATOR = Creator(MBWayPaymentMethod::class.java)
 
-@SuppressWarnings({"AbbreviationAsWordInName", "MemberName", "PMD.DataClass"})
-public class MBWayPaymentMethod extends PaymentMethodDetails {
-
-    @NonNull
-    public static final Creator<MBWayPaymentMethod> CREATOR = new Creator<>(MBWayPaymentMethod.class);
-
-    public static final String PAYMENT_METHOD_TYPE = PaymentMethodTypes.MB_WAY;
-
-    private static final String TELEPHONE_NUMBER = "telephoneNumber";
-
-    @NonNull
-    public static final Serializer<MBWayPaymentMethod> SERIALIZER = new Serializer<MBWayPaymentMethod>() {
-
-        @NonNull
-        @Override
-        public JSONObject serialize(@NonNull MBWayPaymentMethod modelObject) {
-            final JSONObject jsonObject = new JSONObject();
-            try {
-                // getting parameters from parent class
-                jsonObject.putOpt(PaymentMethodDetails.TYPE, modelObject.getType());
-
-                jsonObject.putOpt(TELEPHONE_NUMBER, modelObject.getTelephoneNumber());
-            } catch (JSONException e) {
-                throw new ModelSerializationException(GooglePayPaymentMethod.class, e);
+        @JvmField
+        val SERIALIZER: Serializer<MBWayPaymentMethod> = object : Serializer<MBWayPaymentMethod> {
+            override fun serialize(modelObject: MBWayPaymentMethod): JSONObject {
+                return try {
+                    JSONObject().apply {
+                        putOpt(TYPE, modelObject.type)
+                        putOpt(TELEPHONE_NUMBER, modelObject.telephoneNumber)
+                    }
+                } catch (e: JSONException) {
+                    throw ModelSerializationException(GooglePayPaymentMethod::class.java, e)
+                }
             }
-            return jsonObject;
+
+            override fun deserialize(jsonObject: JSONObject): MBWayPaymentMethod {
+                return MBWayPaymentMethod(
+                    type = jsonObject.getStringOrNull(TYPE),
+                    telephoneNumber = jsonObject.getStringOrNull(TELEPHONE_NUMBER),
+                )
+            }
         }
-
-        @NonNull
-        @Override
-        public MBWayPaymentMethod deserialize(@NonNull JSONObject jsonObject) {
-            final MBWayPaymentMethod mbWayPaymentMethod = new MBWayPaymentMethod();
-
-            // getting parameters from parent class
-            mbWayPaymentMethod.setType(jsonObject.optString(PaymentMethodDetails.TYPE, null));
-
-            mbWayPaymentMethod.setTelephoneNumber(jsonObject.optString(TELEPHONE_NUMBER, null));
-
-            return mbWayPaymentMethod;
-        }
-    };
-
-    private String telephoneNumber;
-
-    @Override
-    public void writeToParcel(@NonNull Parcel dest, int flags) {
-        JsonUtils.writeToParcel(dest, SERIALIZER.serialize(this));
-    }
-
-    @Nullable
-    public String getTelephoneNumber() {
-        return telephoneNumber;
-    }
-
-    public void setTelephoneNumber(@Nullable String telephoneNumber) {
-        this.telephoneNumber = telephoneNumber;
     }
 }

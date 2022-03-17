@@ -12,7 +12,7 @@ import android.content.Intent
 import androidx.core.app.JobIntentService
 import com.adyen.checkout.core.api.Environment
 import com.adyen.checkout.core.api.SSLSocketUtil.TLS_SOCKET_FACTORY
-import com.adyen.checkout.core.log.LogUtil.Companion.getTag
+import com.adyen.checkout.core.log.LogUtil
 import com.adyen.checkout.core.log.Logger
 import java.io.IOException
 import java.security.KeyManagementException
@@ -55,7 +55,7 @@ class AnalyticsDispatcher : JobIntentService() {
     }
 
     companion object {
-        private val TAG = getTag()
+        private val TAG = LogUtil.getTag()
         private const val EVENT_KEY = "analytic_event"
         private const val ENV_URL_KEY = "env_url_key"
         private const val ANALYTICS_ENDPOINT = "images/analytics.png"

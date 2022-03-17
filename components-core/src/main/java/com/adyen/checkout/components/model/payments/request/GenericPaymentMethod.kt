@@ -5,54 +5,44 @@
  *
  * Created by caiof on 5/6/2019.
  */
+package com.adyen.checkout.components.model.payments.request
 
-package com.adyen.checkout.components.model.payments.request;
+import android.os.Parcel
+import com.adyen.checkout.core.exception.ModelSerializationException
+import com.adyen.checkout.core.model.JsonUtils.writeToParcel
+import com.adyen.checkout.core.model.getStringOrNull
+import org.json.JSONException
+import org.json.JSONObject
 
-import android.os.Parcel;
+class GenericPaymentMethod(
+    override var type: String? = null,
+) : PaymentMethodDetails() {
 
-import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
-
-import com.adyen.checkout.core.exception.ModelSerializationException;
-import com.adyen.checkout.core.model.JsonUtils;
-
-import org.json.JSONException;
-import org.json.JSONObject;
-
-public class GenericPaymentMethod extends PaymentMethodDetails {
-    @NonNull
-    public static final Creator<GenericPaymentMethod> CREATOR = new Creator<>(GenericPaymentMethod.class);
-
-    @NonNull
-    public static final Serializer<GenericPaymentMethod> SERIALIZER = new Serializer<GenericPaymentMethod>() {
-
-        @NonNull
-        @Override
-        public JSONObject serialize(@NonNull GenericPaymentMethod modelObject) {
-            final JSONObject jsonObject = new JSONObject();
-            try {
-                // getting parameters from parent class
-                jsonObject.putOpt(PaymentMethodDetails.TYPE, modelObject.getType());
-
-            } catch (JSONException e) {
-                throw new ModelSerializationException(GenericPaymentMethod.class, e);
-            }
-            return jsonObject;
-        }
-
-        @NonNull
-        @Override
-        public GenericPaymentMethod deserialize(@NonNull JSONObject jsonObject) {
-            return new GenericPaymentMethod(jsonObject.optString(PaymentMethodDetails.TYPE, null));
-        }
-    };
-
-    public GenericPaymentMethod(@Nullable String paymentType) {
-        setType(paymentType);
+    override fun writeToParcel(dest: Parcel, flags: Int) {
+        writeToParcel(dest, SERIALIZER.serialize(this))
     }
 
-    @Override
-    public void writeToParcel(@NonNull Parcel dest, int flags) {
-        JsonUtils.writeToParcel(dest, SERIALIZER.serialize(this));
+    companion object {
+        @JvmField
+        val CREATOR = Creator(GenericPaymentMethod::class.java)
+
+        @JvmField
+        val SERIALIZER: Serializer<GenericPaymentMethod> = object : Serializer<GenericPaymentMethod> {
+            override fun serialize(modelObject: GenericPaymentMethod): JSONObject {
+                return try {
+                    JSONObject().apply {
+                        putOpt(TYPE, modelObject.type)
+                    }
+                } catch (e: JSONException) {
+                    throw ModelSerializationException(GenericPaymentMethod::class.java, e)
+                }
+            }
+
+            override fun deserialize(jsonObject: JSONObject): GenericPaymentMethod {
+                return GenericPaymentMethod(
+                    type = jsonObject.getStringOrNull(TYPE)
+                )
+            }
+        }
     }
 }

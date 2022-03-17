@@ -5,17 +5,15 @@
  *
  * Created by caiof on 29/5/2019.
  */
+package com.adyen.checkout.components.models
 
-package com.adyen.checkout.components.models;
+import android.os.Parcel
+import com.adyen.checkout.components.model.payments.request.PaymentMethodDetails
 
-import android.os.Parcel;
-
-import com.adyen.checkout.components.model.payments.request.PaymentMethodDetails;
-
-public class TestPaymentMethod extends PaymentMethodDetails {
-
-    @Override
-    public void writeToParcel(Parcel dest, int flags) {
-
+class TestPaymentMethod(
+    override var type: String? = null,
+) : PaymentMethodDetails() {
+    override fun writeToParcel(dest: Parcel, flags: Int) {
+        // noop
     }
 }

@@ -5,62 +5,50 @@
  *
  * Created by arman on 12/6/2019.
  */
+package com.adyen.checkout.components.model.payments.request
 
-package com.adyen.checkout.components.model.payments.request;
+import android.os.Parcel
+import com.adyen.checkout.components.util.PaymentMethodTypes
+import com.adyen.checkout.core.exception.ModelSerializationException
+import com.adyen.checkout.core.model.JsonUtils.writeToParcel
+import com.adyen.checkout.core.model.getStringOrNull
+import org.json.JSONException
+import org.json.JSONObject
 
-import android.os.Parcel;
+data class EPSPaymentMethod(
+    override var type: String? = null,
+    override var issuer: String? = null,
+) : IssuerListPaymentMethod() {
 
-import androidx.annotation.NonNull;
-
-import com.adyen.checkout.components.util.PaymentMethodTypes;
-import com.adyen.checkout.core.exception.ModelSerializationException;
-import com.adyen.checkout.core.model.JsonUtils;
-
-import org.json.JSONException;
-import org.json.JSONObject;
-
-@SuppressWarnings("AbbreviationAsWordInName")
-public final class EPSPaymentMethod extends IssuerListPaymentMethod {
-    @NonNull
-    public static final Creator<EPSPaymentMethod> CREATOR = new Creator<>(EPSPaymentMethod.class);
-
-    public static final String PAYMENT_METHOD_TYPE = PaymentMethodTypes.EPS;
-
-    @NonNull
-    public static final Serializer<EPSPaymentMethod> SERIALIZER = new Serializer<EPSPaymentMethod>() {
-
-        @NonNull
-        @Override
-        public JSONObject serialize(@NonNull EPSPaymentMethod modelObject) {
-            final JSONObject jsonObject = new JSONObject();
-            try {
-                // getting parameters from parent class
-                jsonObject.putOpt(PaymentMethodDetails.TYPE, modelObject.getType());
-                jsonObject.putOpt(IssuerListPaymentMethod.ISSUER, modelObject.getIssuer());
-
-
-            } catch (JSONException e) {
-                throw new ModelSerializationException(EPSPaymentMethod.class, e);
-            }
-            return jsonObject;
-        }
-
-        @NonNull
-        @Override
-        public EPSPaymentMethod deserialize(@NonNull JSONObject jsonObject) {
-            final EPSPaymentMethod idealPaymentMethod = new EPSPaymentMethod();
-
-            // getting parameters from parent class
-            idealPaymentMethod.setType(jsonObject.optString(PaymentMethodDetails.TYPE, null));
-            idealPaymentMethod.setIssuer(jsonObject.optString(IssuerListPaymentMethod.ISSUER, null));
-
-            return idealPaymentMethod;
-        }
-    };
-
-    @Override
-    public void writeToParcel(@NonNull Parcel dest, int flags) {
-        JsonUtils.writeToParcel(dest, SERIALIZER.serialize(this));
+    override fun writeToParcel(dest: Parcel, flags: Int) {
+        writeToParcel(dest, SERIALIZER.serialize(this))
     }
 
+    companion object {
+        const val PAYMENT_METHOD_TYPE = PaymentMethodTypes.EPS
+
+        @JvmField
+        val CREATOR = Creator(EPSPaymentMethod::class.java)
+
+        @JvmField
+        val SERIALIZER: Serializer<EPSPaymentMethod> = object : Serializer<EPSPaymentMethod> {
+            override fun serialize(modelObject: EPSPaymentMethod): JSONObject {
+                return try {
+                    JSONObject().apply {
+                        putOpt(TYPE, modelObject.type)
+                        putOpt(ISSUER, modelObject.issuer)
+                    }
+                } catch (e: JSONException) {
+                    throw ModelSerializationException(EPSPaymentMethod::class.java, e)
+                }
+            }
+
+            override fun deserialize(jsonObject: JSONObject): EPSPaymentMethod {
+                return EPSPaymentMethod(
+                    type = jsonObject.getStringOrNull(TYPE),
+                    issuer = jsonObject.getStringOrNull(ISSUER)
+                )
+            }
+        }
+    }
 }

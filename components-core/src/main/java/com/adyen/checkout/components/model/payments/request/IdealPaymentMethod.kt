@@ -5,60 +5,49 @@
  *
  * Created by caiof on 28/5/2019.
  */
+package com.adyen.checkout.components.model.payments.request
 
-package com.adyen.checkout.components.model.payments.request;
+import android.os.Parcel
+import com.adyen.checkout.core.exception.ModelSerializationException
+import com.adyen.checkout.core.model.JsonUtils.writeToParcel
+import com.adyen.checkout.core.model.getStringOrNull
+import org.json.JSONException
+import org.json.JSONObject
 
-import android.os.Parcel;
+class IdealPaymentMethod(
+    override var type: String? = null,
+    override var issuer: String? = null,
+) : IssuerListPaymentMethod() {
 
-import androidx.annotation.NonNull;
-
-import com.adyen.checkout.core.exception.ModelSerializationException;
-import com.adyen.checkout.core.model.JsonUtils;
-
-import org.json.JSONException;
-import org.json.JSONObject;
-
-public final class IdealPaymentMethod extends IssuerListPaymentMethod {
-    @NonNull
-    public static final Creator<IdealPaymentMethod> CREATOR = new Creator<>(IdealPaymentMethod.class);
-
-    public static final String PAYMENT_METHOD_TYPE = "ideal";
-
-    @NonNull
-    public static final Serializer<IdealPaymentMethod> SERIALIZER = new Serializer<IdealPaymentMethod>() {
-
-        @NonNull
-        @Override
-        public JSONObject serialize(@NonNull IdealPaymentMethod modelObject) {
-            final JSONObject jsonObject = new JSONObject();
-            try {
-                // getting parameters from parent class
-                jsonObject.putOpt(PaymentMethodDetails.TYPE, modelObject.getType());
-                jsonObject.putOpt(IssuerListPaymentMethod.ISSUER, modelObject.getIssuer());
-
-
-            } catch (JSONException e) {
-                throw new ModelSerializationException(IdealPaymentMethod.class, e);
-            }
-            return jsonObject;
-        }
-
-        @NonNull
-        @Override
-        public IdealPaymentMethod deserialize(@NonNull JSONObject jsonObject) {
-            final IdealPaymentMethod idealPaymentMethod = new IdealPaymentMethod();
-
-            // getting parameters from parent class
-            idealPaymentMethod.setType(jsonObject.optString(PaymentMethodDetails.TYPE, null));
-            idealPaymentMethod.setIssuer(jsonObject.optString(IssuerListPaymentMethod.ISSUER, null));
-
-            return idealPaymentMethod;
-        }
-    };
-
-    @Override
-    public void writeToParcel(@NonNull Parcel dest, int flags) {
-        JsonUtils.writeToParcel(dest, SERIALIZER.serialize(this));
+    override fun writeToParcel(dest: Parcel, flags: Int) {
+        writeToParcel(dest, SERIALIZER.serialize(this))
     }
 
+    companion object {
+        const val PAYMENT_METHOD_TYPE = "ideal"
+
+        @JvmField
+        val CREATOR = Creator(IdealPaymentMethod::class.java)
+
+        @JvmField
+        val SERIALIZER: Serializer<IdealPaymentMethod> = object : Serializer<IdealPaymentMethod> {
+            override fun serialize(modelObject: IdealPaymentMethod): JSONObject {
+                return try {
+                    JSONObject().apply {
+                        putOpt(TYPE, modelObject.type)
+                        putOpt(ISSUER, modelObject.issuer)
+                    }
+                } catch (e: JSONException) {
+                    throw ModelSerializationException(IdealPaymentMethod::class.java, e)
+                }
+            }
+
+            override fun deserialize(jsonObject: JSONObject): IdealPaymentMethod {
+                return IdealPaymentMethod(
+                    type = jsonObject.getStringOrNull(TYPE),
+                    issuer = jsonObject.getStringOrNull(ISSUER)
+                )
+            }
+        }
+    }
 }

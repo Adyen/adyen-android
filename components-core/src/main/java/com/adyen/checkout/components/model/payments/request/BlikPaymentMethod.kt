@@ -5,89 +5,55 @@
  *
  * Created by josephj on 4/12/2020.
  */
+package com.adyen.checkout.components.model.payments.request
 
-package com.adyen.checkout.components.model.payments.request;
+import android.os.Parcel
+import com.adyen.checkout.components.util.PaymentMethodTypes
+import com.adyen.checkout.core.exception.ModelSerializationException
+import com.adyen.checkout.core.model.JsonUtils.writeToParcel
+import com.adyen.checkout.core.model.getStringOrNull
+import org.json.JSONException
+import org.json.JSONObject
 
-import android.os.Parcel;
+data class BlikPaymentMethod(
+    override var type: String? = null,
+    var blikCode: String? = null,
+    var storedPaymentMethodId: String? = null,
+) : PaymentMethodDetails() {
 
-import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
+    override fun writeToParcel(dest: Parcel, flags: Int) {
+        writeToParcel(dest, SERIALIZER.serialize(this))
+    }
 
-import com.adyen.checkout.components.util.PaymentMethodTypes;
-import com.adyen.checkout.core.exception.ModelSerializationException;
-import com.adyen.checkout.core.model.JsonUtils;
+    companion object {
+        const val PAYMENT_METHOD_TYPE = PaymentMethodTypes.BLIK
+        private const val BLIK_CODE = "blikCode"
+        private const val STORED_PAYMENT_METHOD_ID = "storedPaymentMethodId"
 
-import org.json.JSONException;
-import org.json.JSONObject;
+        @JvmField
+        val CREATOR = Creator(BlikPaymentMethod::class.java)
 
-@SuppressWarnings({"MemberName", "PMD.DataClass"})
-public class BlikPaymentMethod extends PaymentMethodDetails {
-
-    @NonNull
-    public static final Creator<BlikPaymentMethod> CREATOR = new Creator<>(BlikPaymentMethod.class);
-
-    public static final String PAYMENT_METHOD_TYPE = PaymentMethodTypes.BLIK;
-
-    private static final String BLIK_CODE = "blikCode";
-    private static final String STORED_PAYMENT_METHOD_ID = "storedPaymentMethodId";
-
-    @NonNull
-    public static final Serializer<BlikPaymentMethod> SERIALIZER = new Serializer<BlikPaymentMethod>() {
-
-        @NonNull
-        @Override
-        public JSONObject serialize(@NonNull BlikPaymentMethod modelObject) {
-            final JSONObject jsonObject = new JSONObject();
-            try {
-                // getting parameters from parent class
-                jsonObject.putOpt(PaymentMethodDetails.TYPE, modelObject.getType());
-
-                jsonObject.putOpt(BLIK_CODE, modelObject.getBlikCode());
-                jsonObject.putOpt(STORED_PAYMENT_METHOD_ID, modelObject.getStoredPaymentMethodId());
-            } catch (JSONException e) {
-                throw new ModelSerializationException(BlikPaymentMethod.class, e);
+        @JvmField
+        val SERIALIZER: Serializer<BlikPaymentMethod> = object : Serializer<BlikPaymentMethod> {
+            override fun serialize(modelObject: BlikPaymentMethod): JSONObject {
+                return try {
+                    JSONObject().apply {
+                        putOpt(TYPE, modelObject.type)
+                        putOpt(BLIK_CODE, modelObject.blikCode)
+                        putOpt(STORED_PAYMENT_METHOD_ID, modelObject.storedPaymentMethodId)
+                    }
+                } catch (e: JSONException) {
+                    throw ModelSerializationException(BlikPaymentMethod::class.java, e)
+                }
             }
-            return jsonObject;
+
+            override fun deserialize(jsonObject: JSONObject): BlikPaymentMethod {
+                return BlikPaymentMethod(
+                    type = jsonObject.getStringOrNull(TYPE),
+                    blikCode = jsonObject.getStringOrNull(BLIK_CODE),
+                    storedPaymentMethodId = jsonObject.getStringOrNull(STORED_PAYMENT_METHOD_ID)
+                )
+            }
         }
-
-        @NonNull
-        @Override
-        public BlikPaymentMethod deserialize(@NonNull JSONObject jsonObject) {
-            final BlikPaymentMethod blikPaymentMethod = new BlikPaymentMethod();
-
-            // getting parameters from parent class
-            blikPaymentMethod.setType(jsonObject.optString(PaymentMethodDetails.TYPE, null));
-
-            blikPaymentMethod.setBlikCode(jsonObject.optString(BLIK_CODE, null));
-            blikPaymentMethod.setStoredPaymentMethodId(jsonObject.optString(STORED_PAYMENT_METHOD_ID, null));
-
-            return blikPaymentMethod;
-        }
-    };
-
-    private String blikCode;
-    private String storedPaymentMethodId;
-
-    @Override
-    public void writeToParcel(@NonNull Parcel dest, int flags) {
-        JsonUtils.writeToParcel(dest, SERIALIZER.serialize(this));
-    }
-
-    @Nullable
-    public String getBlikCode() {
-        return blikCode;
-    }
-
-    @Nullable
-    public String getStoredPaymentMethodId() {
-        return storedPaymentMethodId;
-    }
-
-    public void setBlikCode(@Nullable String blikCode) {
-        this.blikCode = blikCode;
-    }
-
-    public void setStoredPaymentMethodId(@Nullable String storedPaymentMethodId) {
-        this.storedPaymentMethodId = storedPaymentMethodId;
     }
 }

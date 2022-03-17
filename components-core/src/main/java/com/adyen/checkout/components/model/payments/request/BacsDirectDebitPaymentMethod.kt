@@ -12,10 +12,20 @@ import android.os.Parcel
 import android.os.Parcelable
 import com.adyen.checkout.core.exception.ModelSerializationException
 import com.adyen.checkout.core.model.JsonUtils
+import com.adyen.checkout.core.model.getStringOrNull
 import org.json.JSONException
 import org.json.JSONObject
 
-class BacsDirectDebitPaymentMethod : PaymentMethodDetails() {
+data class BacsDirectDebitPaymentMethod(
+    override var type: String? = null,
+    var holderName: String? = null,
+    var bankAccountNumber: String? = null,
+    var bankLocationId: String? = null,
+) : PaymentMethodDetails() {
+
+    override fun writeToParcel(parcel: Parcel, flags: Int) {
+        JsonUtils.writeToParcel(parcel, SERIALIZER.serialize(this))
+    }
 
     companion object {
         private const val HOLDER_NAME = "holderName"
@@ -44,21 +54,13 @@ class BacsDirectDebitPaymentMethod : PaymentMethodDetails() {
             }
 
             override fun deserialize(jsonObject: JSONObject): BacsDirectDebitPaymentMethod {
-                return BacsDirectDebitPaymentMethod().apply {
-                    type = jsonObject.optString(TYPE, null)
-                    holderName = jsonObject.optString(HOLDER_NAME, null)
-                    bankAccountNumber = jsonObject.optString(BANK_ACCOUNT_NUMBER, null)
-                    bankLocationId = jsonObject.optString(BANK_LOCATION_ID, null)
-                }
+                return BacsDirectDebitPaymentMethod(
+                    type = jsonObject.getStringOrNull(TYPE),
+                    holderName = jsonObject.getStringOrNull(HOLDER_NAME),
+                    bankAccountNumber = jsonObject.getStringOrNull(BANK_ACCOUNT_NUMBER),
+                    bankLocationId = jsonObject.getStringOrNull(BANK_LOCATION_ID)
+                )
             }
         }
     }
-
-    override fun writeToParcel(parcel: Parcel, flags: Int) {
-        JsonUtils.writeToParcel(parcel, SERIALIZER.serialize(this))
-    }
-
-    var holderName: String? = null
-    var bankAccountNumber: String? = null
-    var bankLocationId: String? = null
 }

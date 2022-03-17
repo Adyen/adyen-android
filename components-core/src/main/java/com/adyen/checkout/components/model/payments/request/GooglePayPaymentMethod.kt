@@ -5,85 +5,53 @@
  *
  * Created by caiof on 4/7/2019.
  */
+package com.adyen.checkout.components.model.payments.request
 
-package com.adyen.checkout.components.model.payments.request;
+import android.os.Parcel
+import com.adyen.checkout.core.exception.ModelSerializationException
+import com.adyen.checkout.core.model.JsonUtils.writeToParcel
+import com.adyen.checkout.core.model.getStringOrNull
+import org.json.JSONException
+import org.json.JSONObject
 
-import android.os.Parcel;
+class GooglePayPaymentMethod(
+    override var type: String? = null,
+    var googlePayToken: String? = null,
+    var googlePayCardNetwork: String? = null,
+) : PaymentMethodDetails() {
 
-import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
+    override fun writeToParcel(dest: Parcel, flags: Int) {
+        writeToParcel(dest, SERIALIZER.serialize(this))
+    }
 
-import com.adyen.checkout.core.exception.ModelSerializationException;
-import com.adyen.checkout.core.model.JsonUtils;
+    companion object {
+        private const val GOOGLE_PAY_TOKEN = "googlePayToken"
+        private const val GOOGLE_PAY_CARD_NETWORK = "googlePayCardNetwork"
 
-import org.json.JSONException;
-import org.json.JSONObject;
+        @JvmField
+        val CREATOR = Creator(GooglePayPaymentMethod::class.java)
 
-@SuppressWarnings({"MemberName", "PMD.DataClass"})
-public class GooglePayPaymentMethod extends PaymentMethodDetails {
-
-    @NonNull
-    public static final Creator<GooglePayPaymentMethod> CREATOR = new Creator<>(GooglePayPaymentMethod.class);
-
-    private static final String GOOGLE_PAY_TOKEN = "googlePayToken";
-    private static final String GOOGLE_PAY_CARD_NETWORK = "googlePayCardNetwork";
-
-    @NonNull
-    public static final Serializer<GooglePayPaymentMethod> SERIALIZER = new Serializer<GooglePayPaymentMethod>() {
-        @NonNull
-        @Override
-        public JSONObject serialize(@NonNull GooglePayPaymentMethod modelObject) {
-            final JSONObject jsonObject = new JSONObject();
-            try {
-                // getting parameters from parent class
-                jsonObject.putOpt(PaymentMethodDetails.TYPE, modelObject.getType());
-
-                jsonObject.putOpt(GOOGLE_PAY_TOKEN, modelObject.getGooglePayToken());
-                jsonObject.putOpt(GOOGLE_PAY_CARD_NETWORK, modelObject.getGooglePayCardNetwork());
-            } catch (JSONException e) {
-                throw new ModelSerializationException(GooglePayPaymentMethod.class, e);
+        @JvmField
+        val SERIALIZER: Serializer<GooglePayPaymentMethod> = object : Serializer<GooglePayPaymentMethod> {
+            override fun serialize(modelObject: GooglePayPaymentMethod): JSONObject {
+                return try {
+                    JSONObject().apply {
+                        putOpt(TYPE, modelObject.type)
+                        putOpt(GOOGLE_PAY_TOKEN, modelObject.googlePayToken)
+                        putOpt(GOOGLE_PAY_CARD_NETWORK, modelObject.googlePayCardNetwork)
+                    }
+                } catch (e: JSONException) {
+                    throw ModelSerializationException(GooglePayPaymentMethod::class.java, e)
+                }
             }
-            return jsonObject;
+
+            override fun deserialize(jsonObject: JSONObject): GooglePayPaymentMethod {
+                return GooglePayPaymentMethod(
+                    type = jsonObject.getStringOrNull(TYPE),
+                    googlePayToken = jsonObject.getStringOrNull(GOOGLE_PAY_TOKEN),
+                    googlePayCardNetwork = jsonObject.getStringOrNull(GOOGLE_PAY_CARD_NETWORK)
+                )
+            }
         }
-
-        @NonNull
-        @Override
-        public GooglePayPaymentMethod deserialize(@NonNull JSONObject jsonObject) {
-            final GooglePayPaymentMethod googlePayPaymentMethod = new GooglePayPaymentMethod();
-
-            // getting parameters from parent class
-            googlePayPaymentMethod.setType(jsonObject.optString(PaymentMethodDetails.TYPE, null));
-
-            googlePayPaymentMethod.setGooglePayToken(jsonObject.optString(GOOGLE_PAY_TOKEN, null));
-            googlePayPaymentMethod.setGooglePayCardNetwork(jsonObject.optString(GOOGLE_PAY_CARD_NETWORK, null));
-
-            return googlePayPaymentMethod;
-        }
-    };
-
-    private String googlePayToken;
-    private String googlePayCardNetwork;
-
-    @Override
-    public void writeToParcel(@NonNull Parcel dest, int flags) {
-        JsonUtils.writeToParcel(dest, SERIALIZER.serialize(this));
-    }
-
-    @Nullable
-    public String getGooglePayToken() {
-        return googlePayToken;
-    }
-
-    public void setGooglePayToken(@Nullable String googlePayToken) {
-        this.googlePayToken = googlePayToken;
-    }
-
-    @Nullable
-    public String getGooglePayCardNetwork() {
-        return googlePayCardNetwork;
-    }
-
-    public void setGooglePayCardNetwork(@Nullable String googlePayCardNetwork) {
-        this.googlePayCardNetwork = googlePayCardNetwork;
     }
 }

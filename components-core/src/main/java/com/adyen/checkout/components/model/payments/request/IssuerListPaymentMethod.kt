@@ -5,24 +5,12 @@
  *
  * Created by caiof on 28/5/2019.
  */
+package com.adyen.checkout.components.model.payments.request
 
-package com.adyen.checkout.components.model.payments.request;
+abstract class IssuerListPaymentMethod : PaymentMethodDetails() {
+    abstract var issuer: String?
 
-import androidx.annotation.Nullable;
-
-@SuppressWarnings("MemberName")
-public abstract class IssuerListPaymentMethod extends PaymentMethodDetails {
-
-    static final String ISSUER = "issuer";
-
-    private String issuer;
-
-    @Nullable
-    public String getIssuer() {
-        return issuer;
-    }
-
-    public void setIssuer(@Nullable String issuer) {
-        this.issuer = issuer;
+    companion object {
+        const val ISSUER = "issuer"
     }
 }

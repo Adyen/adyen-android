@@ -5,61 +5,50 @@
  *
  * Created by arman on 12/6/2019.
  */
+package com.adyen.checkout.components.model.payments.request
 
-package com.adyen.checkout.components.model.payments.request;
+import android.os.Parcel
+import com.adyen.checkout.components.util.PaymentMethodTypes
+import com.adyen.checkout.core.exception.ModelSerializationException
+import com.adyen.checkout.core.model.JsonUtils.writeToParcel
+import com.adyen.checkout.core.model.getStringOrNull
+import org.json.JSONException
+import org.json.JSONObject
 
-import android.os.Parcel;
+class OpenBankingPaymentMethod(
+    override var type: String? = null,
+    override var issuer: String? = null,
+) : IssuerListPaymentMethod() {
 
-import androidx.annotation.NonNull;
-
-import com.adyen.checkout.components.util.PaymentMethodTypes;
-import com.adyen.checkout.core.exception.ModelSerializationException;
-import com.adyen.checkout.core.model.JsonUtils;
-
-import org.json.JSONException;
-import org.json.JSONObject;
-
-public final class OpenBankingPaymentMethod extends IssuerListPaymentMethod {
-    @NonNull
-    public static final Creator<OpenBankingPaymentMethod> CREATOR = new Creator<>(OpenBankingPaymentMethod.class);
-
-    public static final String PAYMENT_METHOD_TYPE = PaymentMethodTypes.OPEN_BANKING;
-
-    @NonNull
-    public static final Serializer<OpenBankingPaymentMethod> SERIALIZER = new Serializer<OpenBankingPaymentMethod>() {
-
-        @NonNull
-        @Override
-        public JSONObject serialize(@NonNull OpenBankingPaymentMethod modelObject) {
-            final JSONObject jsonObject = new JSONObject();
-            try {
-                // getting parameters from parent class
-                jsonObject.putOpt(PaymentMethodDetails.TYPE, modelObject.getType());
-                jsonObject.putOpt(IssuerListPaymentMethod.ISSUER, modelObject.getIssuer());
-
-
-            } catch (JSONException e) {
-                throw new ModelSerializationException(OpenBankingPaymentMethod.class, e);
-            }
-            return jsonObject;
-        }
-
-        @NonNull
-        @Override
-        public OpenBankingPaymentMethod deserialize(@NonNull JSONObject jsonObject) {
-            final OpenBankingPaymentMethod idealPaymentMethod = new OpenBankingPaymentMethod();
-
-            // getting parameters from parent class
-            idealPaymentMethod.setType(jsonObject.optString(PaymentMethodDetails.TYPE, null));
-            idealPaymentMethod.setIssuer(jsonObject.optString(IssuerListPaymentMethod.ISSUER, null));
-
-            return idealPaymentMethod;
-        }
-    };
-
-    @Override
-    public void writeToParcel(@NonNull Parcel dest, int flags) {
-        JsonUtils.writeToParcel(dest, SERIALIZER.serialize(this));
+    override fun writeToParcel(dest: Parcel, flags: Int) {
+        writeToParcel(dest, SERIALIZER.serialize(this))
     }
 
+    companion object {
+        const val PAYMENT_METHOD_TYPE = PaymentMethodTypes.OPEN_BANKING
+
+        @JvmField
+        val CREATOR = Creator(OpenBankingPaymentMethod::class.java)
+
+        @JvmField
+        val SERIALIZER: Serializer<OpenBankingPaymentMethod> = object : Serializer<OpenBankingPaymentMethod> {
+            override fun serialize(modelObject: OpenBankingPaymentMethod): JSONObject {
+                return try {
+                    JSONObject().apply {
+                        putOpt(TYPE, modelObject.type)
+                        putOpt(ISSUER, modelObject.issuer)
+                    }
+                } catch (e: JSONException) {
+                    throw ModelSerializationException(OpenBankingPaymentMethod::class.java, e)
+                }
+            }
+
+            override fun deserialize(jsonObject: JSONObject): OpenBankingPaymentMethod {
+                return OpenBankingPaymentMethod(
+                    type = jsonObject.getStringOrNull(TYPE),
+                    issuer = jsonObject.getStringOrNull(ISSUER),
+                )
+            }
+        }
+    }
 }
