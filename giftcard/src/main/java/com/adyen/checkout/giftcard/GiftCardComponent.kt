@@ -40,18 +40,14 @@ class GiftCardComponent(
     private val paymentMethodDelegate: GenericPaymentMethodDelegate,
     configuration: GiftCardConfiguration,
     private val publicKeyRepository: PublicKeyRepository
-) :
-    BasePaymentComponent<GiftCardConfiguration, GiftCardInputData, GiftCardOutputData, GiftCardComponentState>(
-        savedStateHandle,
-        paymentMethodDelegate,
-        configuration
-    ) {
+) : BasePaymentComponent<GiftCardConfiguration, GiftCardInputData, GiftCardOutputData, GiftCardComponentState>(
+    savedStateHandle,
+    paymentMethodDelegate,
+    configuration
+) {
 
-    companion object {
-        @JvmStatic
-        val PROVIDER: PaymentComponentProvider<GiftCardComponent, GiftCardConfiguration> = GiftCardComponentProvider()
-        val PAYMENT_METHOD_TYPES = arrayOf(PaymentMethodTypes.GIFTCARD)
-    }
+    override val supportedPaymentMethodTypes: Array<String>
+        get() = PAYMENT_METHOD_TYPES
 
     private var publicKey: String? = null
 
@@ -127,5 +123,9 @@ class GiftCardComponent(
         )
     }
 
-    override fun getSupportedPaymentMethodTypes(): Array<String> = PAYMENT_METHOD_TYPES
+    companion object {
+        @JvmStatic
+        val PROVIDER: PaymentComponentProvider<GiftCardComponent, GiftCardConfiguration> = GiftCardComponentProvider()
+        val PAYMENT_METHOD_TYPES = arrayOf(PaymentMethodTypes.GIFTCARD)
+    }
 }

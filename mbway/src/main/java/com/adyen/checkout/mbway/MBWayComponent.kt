@@ -8,8 +8,8 @@
 package com.adyen.checkout.mbway
 
 import androidx.lifecycle.SavedStateHandle
-import com.adyen.checkout.components.PaymentComponentState
 import com.adyen.checkout.components.PaymentComponentProvider
+import com.adyen.checkout.components.PaymentComponentState
 import com.adyen.checkout.components.base.BasePaymentComponent
 import com.adyen.checkout.components.base.GenericPaymentComponentProvider
 import com.adyen.checkout.components.base.GenericPaymentMethodDelegate
@@ -40,6 +40,9 @@ class MBWayComponent(
     BasePaymentComponent<MBWayConfiguration, MBWayInputData, MBWayOutputData,
         PaymentComponentState<MBWayPaymentMethod>>(savedStateHandle, paymentMethodDelegate, configuration) {
 
+    override val supportedPaymentMethodTypes: Array<String>
+        get() = PAYMENT_METHOD_TYPES
+
     companion object {
         @JvmStatic
         val PROVIDER: PaymentComponentProvider<MBWayComponent, MBWayConfiguration> = GenericPaymentComponentProvider(MBWayComponent::class.java)
@@ -68,8 +71,6 @@ class MBWayComponent(
         paymentComponentData.paymentMethod = paymentMethod
         return PaymentComponentState(paymentComponentData, mbWayOutputData?.isValid == true, true)
     }
-
-    override fun getSupportedPaymentMethodTypes(): Array<String> = PAYMENT_METHOD_TYPES
 
     fun getSupportedCountries(): List<String> = SUPPORTED_COUNTRIES
 }

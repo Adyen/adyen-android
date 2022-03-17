@@ -9,13 +9,14 @@ package com.adyen.checkout.bcmc
 
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.viewModelScope
+import com.adyen.checkout.card.CardComponent
 import com.adyen.checkout.card.CardValidationMapper
 import com.adyen.checkout.card.CardValidationUtils
 import com.adyen.checkout.card.api.model.Brand
 import com.adyen.checkout.card.data.CardType
 import com.adyen.checkout.card.data.ExpiryDate
-import com.adyen.checkout.components.PaymentComponentState
 import com.adyen.checkout.components.PaymentComponentProvider
+import com.adyen.checkout.components.PaymentComponentState
 import com.adyen.checkout.components.base.BasePaymentComponent
 import com.adyen.checkout.components.base.GenericPaymentMethodDelegate
 import com.adyen.checkout.components.model.payments.request.CardPaymentMethod
@@ -73,6 +74,9 @@ class BcmcComponent(
         }
     }
 
+    override val supportedPaymentMethodTypes: Array<String>
+        get() = CardComponent.PAYMENT_METHOD_TYPES
+
     private suspend fun fetchPublicKey(): String {
         return publicKeyRepository.fetchPublicKey(
             environment = configuration.environment,
@@ -87,10 +91,6 @@ class BcmcComponent(
             validateExpiryDate(inputData.expiryDate),
             inputData.isStorePaymentSelected
         )
-    }
-
-    override fun getSupportedPaymentMethodTypes(): Array<String> {
-        return PAYMENT_METHOD_TYPES
     }
 
     @SuppressWarnings("ReturnCount")

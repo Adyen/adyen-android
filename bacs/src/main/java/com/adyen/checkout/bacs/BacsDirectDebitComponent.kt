@@ -25,7 +25,8 @@ class BacsDirectDebitComponent(
     BasePaymentComponent<BacsDirectDebitConfiguration, BacsDirectDebitInputData, BacsDirectDebitOutputData,
         BacsDirectDebitComponentState>(savedStateHandle, paymentMethodDelegate, configuration) {
 
-    override fun getSupportedPaymentMethodTypes() = PAYMENT_METHOD_TYPES
+    override val supportedPaymentMethodTypes: Array<String>
+        get() = PAYMENT_METHOD_TYPES
 
     override fun onInputDataChanged(inputData: BacsDirectDebitInputData): BacsDirectDebitOutputData {
         return BacsDirectDebitOutputData(
