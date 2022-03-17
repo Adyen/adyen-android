@@ -5,50 +5,48 @@
  *
  * Created by caiof on 8/9/2020.
  */
+package com.adyen.checkout.components.base.lifecycle
 
-package com.adyen.checkout.components.base.lifecycle;
-
-import androidx.lifecycle.Lifecycle;
-import androidx.lifecycle.LifecycleObserver;
-import androidx.lifecycle.OnLifecycleEvent;
+import androidx.lifecycle.Lifecycle
+import androidx.lifecycle.LifecycleObserver
+import androidx.lifecycle.OnLifecycleEvent
 
 /**
  * Basic LifecycleObserver that can be extended.
  */
-public class BaseLifecycleObserver implements LifecycleObserver {
-
+open class BaseLifecycleObserver : LifecycleObserver {
     @OnLifecycleEvent(Lifecycle.Event.ON_CREATE)
-    public void onCreate(){
+    fun onCreate() {
         // noop, to be overridden
     }
 
     @OnLifecycleEvent(Lifecycle.Event.ON_START)
-    public void onStart(){
+    fun onStart() {
         // noop, to be overridden
     }
 
     @OnLifecycleEvent(Lifecycle.Event.ON_RESUME)
-    public void onResume(){
+    open fun onResume() {
         // noop, to be overridden
     }
 
     @OnLifecycleEvent(Lifecycle.Event.ON_PAUSE)
-    public void onPause(){
+    fun onPause() {
         // noop, to be overridden
     }
 
     @OnLifecycleEvent(Lifecycle.Event.ON_STOP)
-    public void onStop(){
+    fun onStop() {
         // noop, to be overridden
     }
 
     @OnLifecycleEvent(Lifecycle.Event.ON_DESTROY)
-    public void onDestroy(){
+    fun onDestroy() {
         // noop, to be overridden
     }
 
     @OnLifecycleEvent(Lifecycle.Event.ON_ANY)
-    public void onAny(){
+    fun onAny() {
         // noop, to be overridden
     }
 }
