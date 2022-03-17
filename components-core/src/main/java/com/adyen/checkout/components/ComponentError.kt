@@ -5,41 +5,27 @@
  *
  * Created by caiof on 20/5/2019.
  */
+package com.adyen.checkout.components
 
-package com.adyen.checkout.components;
-
-import androidx.annotation.NonNull;
-
-import com.adyen.checkout.core.exception.CheckoutException;
+import com.adyen.checkout.core.exception.CheckoutException
 
 /**
  * Data about an error that happened inside a component.
  */
-public class ComponentError {
-
-    private final CheckoutException mException;
-
-    public ComponentError(@NonNull CheckoutException e) {
-        mException = e;
-    }
+class ComponentError(
+    /**
+     * Can be used to try to identify the root cause of the issue.
+     *
+     * @return The exception that happened.
+     */
+    val exception: CheckoutException
+) {
 
     /**
      * This message is not intended for user feedback, but for development feedback on what happened.
      *
      * @return A development driven error message from the Exception.
      */
-    @NonNull
-    public String getErrorMessage() {
-        return mException.getMessage();
-    }
-
-    /**
-     * Can be used to try to identify the root cause of the issue.
-     *
-     * @return The exception that happened.
-     */
-    @NonNull
-    public CheckoutException getException() {
-        return mException;
-    }
+    val errorMessage: String
+        get() = exception.message.orEmpty()
 }

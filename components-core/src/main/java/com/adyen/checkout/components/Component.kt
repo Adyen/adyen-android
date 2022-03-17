@@ -5,23 +5,19 @@
  *
  * Created by arman on 20/2/2019.
  */
+package com.adyen.checkout.components
 
-package com.adyen.checkout.components;
-
-import androidx.lifecycle.LifecycleOwner;
-import androidx.lifecycle.Observer;
-import androidx.annotation.NonNull;
-
-import com.adyen.checkout.components.base.Configuration;
+import androidx.lifecycle.LifecycleOwner
+import androidx.lifecycle.Observer
+import com.adyen.checkout.components.base.Configuration
 
 /**
- * A {@link Component} is a class that helps to retrieve or format data related to a part of the Checkout API payment.
+ * A [Component] is a class that helps to retrieve or format data related to a part of the Checkout API payment.
  *
  * @param <ComponentResultT> The main parameter that notifies changes on this component.
  * @param <ConfigurationT> The Configuration object associated with this Component.
  */
-public interface Component<ComponentResultT, ConfigurationT extends Configuration> {
-
+interface Component<ComponentResultT, ConfigurationT : Configuration> {
     /**
      * Observe changes on the result of this component.
      * A valid result contains data that can be sent to the payments API to make a payment.
@@ -29,21 +25,21 @@ public interface Component<ComponentResultT, ConfigurationT extends Configuratio
      * @param lifecycleOwner The lifecycle for which the observer will be active.
      * @param observer The observer that will receive the updates.
      */
-    void observe(@NonNull LifecycleOwner lifecycleOwner, @NonNull Observer<ComponentResultT> observer);
+    fun observe(lifecycleOwner: LifecycleOwner, observer: Observer<ComponentResultT>)
 
     /**
-     * Remove all observers attached to this component using {@link #observe(LifecycleOwner, Observer)}.
+     * Remove all observers attached to this component using [.observe].
      *
      * @param lifecycleOwner The lifecycle for which the observer is active.
      */
-    void removeObservers(@NonNull LifecycleOwner lifecycleOwner);
+    fun removeObservers(lifecycleOwner: LifecycleOwner)
 
     /**
-     * Remove a specific observer attached to this component using {@link #observe(LifecycleOwner, Observer)}.
+     * Remove a specific observer attached to this component using [.observe].
      *
      * @param observer The observer to be removed.
      */
-    void removeObserver(@NonNull Observer<ComponentResultT> observer);
+    fun removeObserver(observer: Observer<ComponentResultT>)
 
     /**
      * Observe if an unexpected error happens during the processing of the Component.
@@ -52,25 +48,24 @@ public interface Component<ComponentResultT, ConfigurationT extends Configuratio
      * @param lifecycleOwner The lifecycle for which the observer will be active.
      * @param observer The observer that will receive the updates.
      */
-    void observeErrors(@NonNull LifecycleOwner lifecycleOwner, @NonNull Observer<ComponentError> observer);
+    fun observeErrors(lifecycleOwner: LifecycleOwner, observer: Observer<ComponentError>)
 
     /**
-     * Remove all error observers attached to this component using {@link #observeErrors(LifecycleOwner, Observer)}.
+     * Remove all error observers attached to this component using [.observeErrors].
      *
      * @param lifecycleOwner The lifecycle for which the observer is active.
      */
-    void removeErrorObservers(@NonNull LifecycleOwner lifecycleOwner);
+    fun removeErrorObservers(lifecycleOwner: LifecycleOwner)
 
     /**
-     * Remove a specific error observer attached to this component using {@link #observeErrors(LifecycleOwner, Observer)}.
+     * Remove a specific error observer attached to this component using [.observeErrors].
      *
      * @param observer The observer to be removed.
      */
-    void removeErrorObserver(@NonNull Observer<ComponentError> observer);
+    fun removeErrorObserver(observer: Observer<ComponentError>)
 
     /**
-     * @return The {@link Configuration} object used to initialize this Component.
+     * @return The [Configuration] object used to initialize this Component.
      */
-    @NonNull
-    ConfigurationT getConfiguration();
+    val configuration: ConfigurationT
 }
