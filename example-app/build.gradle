@@ -75,8 +75,8 @@ dependencies {
 //    implementation "com.adyen.checkout:drop-in:4.5.0"
 
     // Dependencies
-    implementation "org.jetbrains.kotlinx:kotlinx-coroutines-android:$kotlinx_version"
-    implementation "org.jetbrains.kotlinx:kotlinx-coroutines-core:$kotlinx_version"
+    implementation "org.jetbrains.kotlinx:kotlinx-coroutines-android:$coroutines_version"
+    implementation "org.jetbrains.kotlinx:kotlinx-coroutines-core:$coroutines_version"
 
     implementation "androidx.appcompat:appcompat:$appcompat_version"
     implementation "androidx.recyclerview:recyclerview:$recyclerview_version"
