@@ -5,100 +5,58 @@
  *
  * Created by caiof on 4/6/2019.
  */
+package com.adyen.checkout.components.model.payments
 
-package com.adyen.checkout.components.model.payments;
+import android.os.Parcel
+import com.adyen.checkout.core.exception.ModelSerializationException
+import com.adyen.checkout.core.model.JsonUtils.writeToParcel
+import com.adyen.checkout.core.model.ModelObject
+import com.adyen.checkout.core.model.getStringOrNull
+import org.json.JSONException
+import org.json.JSONObject
 
-import android.os.Parcel;
+data class Amount(
+    var currency: String? = null,
+    var value: Long = 0L,
+) : ModelObject() {
 
-import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
-
-import com.adyen.checkout.core.exception.ModelSerializationException;
-import com.adyen.checkout.core.model.JsonUtils;
-import com.adyen.checkout.core.model.ModelObject;
-
-import org.json.JSONException;
-import org.json.JSONObject;
-
-@SuppressWarnings({"MemberName", "PMD.DataClass"})
-public class Amount extends ModelObject {
-
-    @NonNull
-    public static final Creator<Amount> CREATOR = new Creator<>(Amount.class);
-
-    @NonNull
-    public static final Amount EMPTY;
-
-    private static final String EMPTY_CURRENCY = "NONE";
-    private static final int EMPTY_VALUE = -1;
-
-    static {
-        EMPTY = new Amount();
-        EMPTY.setCurrency(EMPTY_CURRENCY);
-        EMPTY.setValue(EMPTY_VALUE);
+    override fun writeToParcel(dest: Parcel, flags: Int) {
+        writeToParcel(dest, SERIALIZER.serialize(this))
     }
 
-    private static final String CURRENCY = "currency";
-    private static final String VALUE = "value";
+    val isEmpty: Boolean
+        get() = currency == EMPTY_CURRENCY || value == EMPTY_VALUE
 
-    @NonNull
-    public static final Serializer<Amount> SERIALIZER = new Serializer<Amount>() {
+    companion object {
+        private const val EMPTY_CURRENCY = "NONE"
+        private const val EMPTY_VALUE = -1L
+        private const val CURRENCY = "currency"
+        private const val VALUE = "value"
 
-        @NonNull
-        @Override
-        public JSONObject serialize(@NonNull Amount modelObject) {
-            final JSONObject jsonObject = new JSONObject();
-            try {
-                jsonObject.putOpt(CURRENCY, modelObject.getCurrency());
-                jsonObject.putOpt(VALUE, modelObject.getValue());
-            } catch (JSONException e) {
-                throw new ModelSerializationException(Amount.class, e);
+        val EMPTY = Amount(EMPTY_CURRENCY, EMPTY_VALUE)
+
+        @JvmField
+        val CREATOR = Creator(Amount::class.java)
+
+        @JvmField
+        val SERIALIZER: Serializer<Amount> = object : Serializer<Amount> {
+            override fun serialize(modelObject: Amount): JSONObject {
+                return try {
+                    JSONObject().apply {
+                        putOpt(CURRENCY, modelObject.currency)
+                        putOpt(VALUE, modelObject.value)
+                    }
+                } catch (e: JSONException) {
+                    throw ModelSerializationException(Amount::class.java, e)
+                }
             }
-            return jsonObject;
+
+            override fun deserialize(jsonObject: JSONObject): Amount {
+                return Amount(
+                    currency = jsonObject.getStringOrNull(CURRENCY),
+                    value = jsonObject.optLong(VALUE, EMPTY_VALUE),
+                )
+            }
         }
-
-        @NonNull
-        @Override
-        public Amount deserialize(@NonNull JSONObject jsonObject) {
-            final Amount amount = new Amount();
-            amount.setCurrency(jsonObject.optString(CURRENCY, null));
-            amount.setValue(jsonObject.optInt(VALUE, -1));
-            return amount;
-        }
-    };
-
-    private String currency;
-    private int value;
-
-    @Override
-    public void writeToParcel(@NonNull Parcel dest, int flags) {
-        JsonUtils.writeToParcel(dest, SERIALIZER.serialize(this));
-    }
-
-    @Nullable
-    public String getCurrency() {
-        return currency;
-    }
-
-    public void setCurrency(@Nullable String currency) {
-        this.currency = currency;
-    }
-
-    public int getValue() {
-        return value;
-    }
-
-    public void setValue(int value) {
-        this.value = value;
-    }
-
-    public boolean isEmpty() {
-        return EMPTY_CURRENCY.equals(currency) || value == EMPTY_VALUE;
-    }
-
-    @Override
-    @NonNull
-    public String toString() {
-        return "Amount(" + currency + ", " + value + ")";
     }
 }

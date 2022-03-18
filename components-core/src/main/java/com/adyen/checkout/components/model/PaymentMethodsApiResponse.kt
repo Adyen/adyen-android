@@ -5,88 +5,57 @@
  *
  * Created by caiof on 11/2/2019.
  */
+package com.adyen.checkout.components.model
 
-package com.adyen.checkout.components.model;
-
-import android.os.Parcel;
-
-import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
-
-import com.adyen.checkout.components.model.paymentmethods.PaymentMethod;
-import com.adyen.checkout.components.model.paymentmethods.StoredPaymentMethod;
-import com.adyen.checkout.core.exception.ModelSerializationException;
-import com.adyen.checkout.core.model.JsonUtils;
-import com.adyen.checkout.core.model.ModelObject;
-import com.adyen.checkout.core.model.ModelUtils;
-
-import org.json.JSONException;
-import org.json.JSONObject;
-
-import java.util.List;
+import android.os.Parcel
+import com.adyen.checkout.components.model.paymentmethods.PaymentMethod
+import com.adyen.checkout.components.model.paymentmethods.StoredPaymentMethod
+import com.adyen.checkout.core.exception.ModelSerializationException
+import com.adyen.checkout.core.model.JsonUtils.writeToParcel
+import com.adyen.checkout.core.model.ModelObject
+import com.adyen.checkout.core.model.ModelUtils.deserializeOptList
+import com.adyen.checkout.core.model.ModelUtils.serializeOptList
+import org.json.JSONException
+import org.json.JSONObject
 
 /**
  * Object that parses and holds the response data from the paymentMethods/ endpoint.
  */
-@SuppressWarnings({"MemberName", "PMD.DataClass"})
-public final class PaymentMethodsApiResponse extends ModelObject {
-    @NonNull
-    public static final Creator<PaymentMethodsApiResponse> CREATOR = new Creator<>(PaymentMethodsApiResponse.class);
+class PaymentMethodsApiResponse(
+    var storedPaymentMethods: List<StoredPaymentMethod>? = null,
+    var paymentMethods: List<PaymentMethod>? = null,
+) : ModelObject() {
 
-    private static final String STORED_PAYMENT_METHODS = "storedPaymentMethods";
-    private static final String PAYMENT_METHODS = "paymentMethods";
+    override fun writeToParcel(dest: Parcel, flags: Int) {
+        writeToParcel(dest, SERIALIZER.serialize(this))
+    }
 
-    @NonNull
-    public static final Serializer<PaymentMethodsApiResponse> SERIALIZER = new Serializer<PaymentMethodsApiResponse>() {
-        @Override
-        @NonNull
-        public JSONObject serialize(@NonNull PaymentMethodsApiResponse modelObject) {
-            final JSONObject jsonObject = new JSONObject();
-            try {
-                jsonObject.putOpt(STORED_PAYMENT_METHODS,
-                        ModelUtils.serializeOptList(modelObject.getStoredPaymentMethods(), StoredPaymentMethod.SERIALIZER));
-                jsonObject.putOpt(PAYMENT_METHODS, ModelUtils.serializeOptList(modelObject.getPaymentMethods(), PaymentMethod.SERIALIZER));
-            } catch (JSONException e) {
-                throw new ModelSerializationException(PaymentMethodsApiResponse.class, e);
+    companion object {
+        private const val STORED_PAYMENT_METHODS = "storedPaymentMethods"
+        private const val PAYMENT_METHODS = "paymentMethods"
+
+        @JvmField
+        val CREATOR = Creator(PaymentMethodsApiResponse::class.java)
+
+        @JvmField
+        val SERIALIZER: Serializer<PaymentMethodsApiResponse> = object : Serializer<PaymentMethodsApiResponse> {
+            override fun serialize(modelObject: PaymentMethodsApiResponse): JSONObject {
+                return try {
+                    JSONObject().apply {
+                        putOpt(STORED_PAYMENT_METHODS, serializeOptList(modelObject.storedPaymentMethods, StoredPaymentMethod.SERIALIZER))
+                        putOpt(PAYMENT_METHODS, serializeOptList(modelObject.paymentMethods, PaymentMethod.SERIALIZER))
+                    }
+                } catch (e: JSONException) {
+                    throw ModelSerializationException(PaymentMethodsApiResponse::class.java, e)
+                }
             }
-            return jsonObject;
+
+            override fun deserialize(jsonObject: JSONObject): PaymentMethodsApiResponse {
+                return PaymentMethodsApiResponse(
+                    storedPaymentMethods = deserializeOptList(jsonObject.optJSONArray(STORED_PAYMENT_METHODS), StoredPaymentMethod.SERIALIZER),
+                    paymentMethods = deserializeOptList(jsonObject.optJSONArray(PAYMENT_METHODS), PaymentMethod.SERIALIZER),
+                )
+            }
         }
-
-        @Override
-        @NonNull
-        public PaymentMethodsApiResponse deserialize(@NonNull JSONObject jsonObject) {
-            final PaymentMethodsApiResponse paymentMethodsApiResponse = new PaymentMethodsApiResponse();
-            paymentMethodsApiResponse.setStoredPaymentMethods(
-                    ModelUtils.deserializeOptList(jsonObject.optJSONArray(STORED_PAYMENT_METHODS), StoredPaymentMethod.SERIALIZER));
-            paymentMethodsApiResponse.setPaymentMethods(
-                    ModelUtils.deserializeOptList(jsonObject.optJSONArray(PAYMENT_METHODS), PaymentMethod.SERIALIZER));
-            return paymentMethodsApiResponse;
-        }
-    };
-
-    private List<StoredPaymentMethod> storedPaymentMethods;
-    private List<PaymentMethod> paymentMethods;
-
-    @Override
-    public void writeToParcel(@NonNull Parcel dest, int flags) {
-        JsonUtils.writeToParcel(dest, SERIALIZER.serialize(this));
-    }
-
-    @Nullable
-    public List<StoredPaymentMethod> getStoredPaymentMethods() {
-        return storedPaymentMethods;
-    }
-
-    @Nullable
-    public List<PaymentMethod> getPaymentMethods() {
-        return paymentMethods;
-    }
-
-    public void setStoredPaymentMethods(@Nullable List<StoredPaymentMethod> storedPaymentMethods) {
-        this.storedPaymentMethods = storedPaymentMethods;
-    }
-
-    public void setPaymentMethods(@Nullable List<PaymentMethod> paymentMethods) {
-        this.paymentMethods = paymentMethods;
     }
 }
