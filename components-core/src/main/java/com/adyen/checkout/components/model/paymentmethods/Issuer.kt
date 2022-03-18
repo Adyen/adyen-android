@@ -5,90 +5,55 @@
  *
  * Created by caiof on 6/11/2020.
  */
+package com.adyen.checkout.components.model.paymentmethods
 
-package com.adyen.checkout.components.model.paymentmethods;
+import android.os.Parcel
+import com.adyen.checkout.core.exception.ModelSerializationException
+import com.adyen.checkout.core.model.JsonUtils.writeToParcel
+import com.adyen.checkout.core.model.ModelObject
+import com.adyen.checkout.core.model.getStringOrNull
+import org.json.JSONException
+import org.json.JSONObject
 
-import android.os.Parcel;
+data class Issuer(
+    var id: String? = null,
+    var name: String? = null,
+    var isDisabled: Boolean = false,
+) : ModelObject() {
 
-import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
+    override fun writeToParcel(dest: Parcel, flags: Int) {
+        writeToParcel(dest, SERIALIZER.serialize(this))
+    }
 
-import com.adyen.checkout.core.exception.ModelSerializationException;
-import com.adyen.checkout.core.model.JsonUtils;
-import com.adyen.checkout.core.model.ModelObject;
+    companion object {
+        private const val ID = "id"
+        private const val NAME = "name"
+        private const val DISABLED = "disabled"
 
-import org.json.JSONException;
-import org.json.JSONObject;
+        @JvmField
+        val CREATOR = Creator(Issuer::class.java)
 
-@SuppressWarnings({"MemberName", "PMD.DataClass"})
-public class Issuer extends ModelObject {
-    @NonNull
-    public static final Creator<Issuer> CREATOR = new Creator<>(Issuer.class);
-
-    private static final String ID = "id";
-    private static final String NAME = "name";
-    private static final String DISABLED = "disabled";
-
-    @NonNull
-    public static final Serializer<Issuer> SERIALIZER = new Serializer<Issuer>() {
-
-        @NonNull
-        @Override
-        public JSONObject serialize(@NonNull Issuer modelObject) {
-            final JSONObject jsonObject = new JSONObject();
-            try {
-                jsonObject.putOpt(ID, modelObject.getId());
-                jsonObject.putOpt(NAME, modelObject.getName());
-                jsonObject.putOpt(DISABLED, modelObject.isDisabled());
-            } catch (JSONException e) {
-                throw new ModelSerializationException(PaymentMethod.class, e);
+        @JvmField
+        val SERIALIZER: Serializer<Issuer> = object : Serializer<Issuer> {
+            override fun serialize(modelObject: Issuer): JSONObject {
+                return try {
+                    JSONObject().apply {
+                        putOpt(ID, modelObject.id)
+                        putOpt(NAME, modelObject.name)
+                        putOpt(DISABLED, modelObject.isDisabled)
+                    }
+                } catch (e: JSONException) {
+                    throw ModelSerializationException(PaymentMethod::class.java, e)
+                }
             }
-            return jsonObject;
+
+            override fun deserialize(jsonObject: JSONObject): Issuer {
+                return Issuer(
+                    id = jsonObject.getStringOrNull(ID),
+                    name = jsonObject.getStringOrNull(NAME),
+                    isDisabled = jsonObject.optBoolean(DISABLED, false),
+                )
+            }
         }
-
-        @NonNull
-        @Override
-        public Issuer deserialize(@NonNull JSONObject jsonObject) {
-            final Issuer issuer = new Issuer();
-            issuer.setId(jsonObject.optString(ID, null));
-            issuer.setName(jsonObject.optString(NAME, null));
-            issuer.setDisabled(jsonObject.optBoolean(DISABLED, false));
-            return issuer;
-        }
-    };
-
-    private String id;
-    private String name;
-    private boolean disabled;
-
-    @Override
-    public void writeToParcel(@NonNull Parcel dest, int flags) {
-        JsonUtils.writeToParcel(dest, SERIALIZER.serialize(this));
-    }
-
-    @Nullable
-    public String getId() {
-        return id;
-    }
-
-    @Nullable
-    public String getName() {
-        return name;
-    }
-
-    public boolean isDisabled() {
-        return disabled;
-    }
-
-    public void setId(@Nullable String id) {
-        this.id = id;
-    }
-
-    public void setName(@Nullable String name) {
-        this.name = name;
-    }
-
-    public void setDisabled(boolean disabled) {
-        this.disabled = disabled;
     }
 }

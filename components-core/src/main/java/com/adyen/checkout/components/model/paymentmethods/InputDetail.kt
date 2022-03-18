@@ -5,66 +5,47 @@
  *
  * Created by josephj on 23/12/2020.
  */
+package com.adyen.checkout.components.model.paymentmethods
 
-package com.adyen.checkout.components.model.paymentmethods;
+import android.os.Parcel
+import com.adyen.checkout.core.exception.ModelSerializationException
+import com.adyen.checkout.core.model.JsonUtils.writeToParcel
+import com.adyen.checkout.core.model.ModelObject
+import com.adyen.checkout.core.model.ModelUtils.deserializeOptList
+import com.adyen.checkout.core.model.ModelUtils.serializeOptList
+import org.json.JSONException
+import org.json.JSONObject
 
-import android.os.Parcel;
+data class InputDetail(
+    var items: List<Item>? = null,
+) : ModelObject() {
+    override fun writeToParcel(dest: Parcel, flags: Int) {
+        writeToParcel(dest, SERIALIZER.serialize(this))
+    }
 
-import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
+    companion object {
+        private const val ITEMS = "items"
 
-import com.adyen.checkout.core.exception.ModelSerializationException;
-import com.adyen.checkout.core.model.JsonUtils;
-import com.adyen.checkout.core.model.ModelObject;
-import com.adyen.checkout.core.model.ModelUtils;
+        @JvmField
+        val CREATOR = Creator(InputDetail::class.java)
 
-import org.json.JSONException;
-import org.json.JSONObject;
-
-import java.util.List;
-
-@SuppressWarnings({"MemberName", "PMD.DataClass"})
-public final class InputDetail extends ModelObject {
-    @NonNull
-    public static final Creator<InputDetail> CREATOR = new Creator<>(InputDetail.class);
-
-    private static final String ITEMS = "items";
-
-    @NonNull
-    public static final Serializer<InputDetail> SERIALIZER = new Serializer<InputDetail>() {
-        @Override
-        @NonNull
-        public JSONObject serialize(@NonNull InputDetail modelObject) {
-            final JSONObject jsonObject = new JSONObject();
-            try {
-                jsonObject.putOpt(ITEMS, ModelUtils.serializeOptList(modelObject.getItems(), Item.SERIALIZER));
-            } catch (JSONException e) {
-                throw new ModelSerializationException(InputDetail.class, e);
+        @JvmField
+        val SERIALIZER: Serializer<InputDetail> = object : Serializer<InputDetail> {
+            override fun serialize(modelObject: InputDetail): JSONObject {
+                return try {
+                    JSONObject().apply {
+                        putOpt(ITEMS, serializeOptList(modelObject.items, Item.SERIALIZER))
+                    }
+                } catch (e: JSONException) {
+                    throw ModelSerializationException(InputDetail::class.java, e)
+                }
             }
-            return jsonObject;
+
+            override fun deserialize(jsonObject: JSONObject): InputDetail {
+                return InputDetail(
+                    items = deserializeOptList(jsonObject.optJSONArray(ITEMS), Item.SERIALIZER),
+                )
+            }
         }
-
-        @Override
-        @NonNull
-        public InputDetail deserialize(@NonNull JSONObject jsonObject) {
-            final InputDetail inputDetail = new InputDetail();
-            inputDetail.setItems(ModelUtils.deserializeOptList(jsonObject.optJSONArray(ITEMS), Item.SERIALIZER));
-            return inputDetail;
-        }
-    };
-    private List<Item> items;
-
-    @Override
-    public void writeToParcel(@NonNull Parcel dest, int flags) {
-        JsonUtils.writeToParcel(dest, SERIALIZER.serialize(this));
-    }
-
-    @Nullable
-    public List<Item> getItems() {
-        return items;
-    }
-
-    public void setItems(@Nullable List<Item> items) {
-        this.items = items;
     }
 }

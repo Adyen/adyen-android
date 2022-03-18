@@ -5,167 +5,87 @@
  *
  * Created by caiof on 27/5/2019.
  */
+package com.adyen.checkout.components.model.paymentmethods
 
-package com.adyen.checkout.components.model.paymentmethods;
+import android.os.Parcel
+import com.adyen.checkout.core.exception.ModelSerializationException
+import com.adyen.checkout.core.model.JsonUtils.parseOptStringList
+import com.adyen.checkout.core.model.JsonUtils.serializeOptStringList
+import com.adyen.checkout.core.model.JsonUtils.writeToParcel
+import com.adyen.checkout.core.model.ModelObject
+import com.adyen.checkout.core.model.ModelUtils.deserializeOpt
+import com.adyen.checkout.core.model.ModelUtils.deserializeOptList
+import com.adyen.checkout.core.model.ModelUtils.serializeOpt
+import com.adyen.checkout.core.model.ModelUtils.serializeOptList
+import com.adyen.checkout.core.model.getStringOrNull
+import org.json.JSONException
+import org.json.JSONObject
 
-import android.os.Parcel;
+data class PaymentMethod(
+    var type: String? = null,
+    var name: String? = null,
+    var brands: List<String>? = null,
+    var brand: String? = null,
+    var fundingSource: String? = null,
+    var issuers: List<Issuer>? = null,
+    var configuration: Configuration? = null,
+    var details: List<InputDetail>? = null,
+) : ModelObject() {
 
-import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
+    override fun writeToParcel(dest: Parcel, flags: Int) {
+        writeToParcel(dest, SERIALIZER.serialize(this))
+    }
 
-import com.adyen.checkout.core.exception.ModelSerializationException;
-import com.adyen.checkout.core.model.JsonUtils;
-import com.adyen.checkout.core.model.ModelObject;
-import com.adyen.checkout.core.model.ModelUtils;
+    companion object {
+        private const val TYPE = "type"
+        private const val NAME = "name"
 
-import org.json.JSONException;
-import org.json.JSONObject;
+        // Brands is only used for type = scheme
+        private const val BRANDS = "brands"
 
-import java.util.List;
+        // Brand is only used for type = giftcard
+        private const val BRAND = "brand"
+        private const val FUNDING_SOURCE = "fundingSource"
+        private const val ISSUERS = "issuers"
+        private const val CONFIGURATION = "configuration"
 
-@SuppressWarnings({"MemberName", "PMD.DataClass"})
-public class PaymentMethod extends ModelObject {
-    @NonNull
-    public static final Creator<PaymentMethod> CREATOR = new Creator<>(PaymentMethod.class);
+        // This field is returned in older API versions, only used to retrieve the issuers list
+        private const val DETAILS = "details"
 
-    private static final String TYPE = "type";
-    private static final String NAME = "name";
-    // Brands is only used for type = scheme
-    private static final String BRANDS = "brands";
-    // Brand is only used for type = giftcard
-    private static final String BRAND = "brand";
-    private static final String FUNDING_SOURCE = "fundingSource";
-    private static final String ISSUERS = "issuers";
-    private static final String CONFIGURATION = "configuration";
-    // This field is returned in older API versions, only used to retrieve the issuers list
-    private static final String DETAILS = "details";
+        @JvmField
+        val CREATOR = Creator(PaymentMethod::class.java)
 
-    @NonNull
-    public static final Serializer<PaymentMethod> SERIALIZER = new Serializer<PaymentMethod>() {
-
-        @Override
-        @NonNull
-        public JSONObject serialize(@NonNull PaymentMethod modelObject) {
-            final JSONObject jsonObject = new JSONObject();
-            try {
-                jsonObject.putOpt(TYPE, modelObject.getType());
-                jsonObject.putOpt(NAME, modelObject.getName());
-                jsonObject.putOpt(BRANDS, JsonUtils.serializeOptStringList(modelObject.getBrands()));
-                jsonObject.putOpt(BRAND, modelObject.getBrand());
-                jsonObject.putOpt(FUNDING_SOURCE, modelObject.getFundingSource());
-                jsonObject.putOpt(ISSUERS,
-                        ModelUtils.serializeOptList(modelObject.getIssuers(), Issuer.SERIALIZER)
-                );
-                jsonObject.putOpt(CONFIGURATION, ModelUtils.serializeOpt(modelObject.getConfiguration(), Configuration.SERIALIZER));
-                jsonObject.putOpt(DETAILS, ModelUtils.serializeOptList(modelObject.getDetails(), InputDetail.SERIALIZER));
-            } catch (JSONException e) {
-                throw new ModelSerializationException(PaymentMethod.class, e);
+        @JvmField
+        val SERIALIZER: Serializer<PaymentMethod> = object : Serializer<PaymentMethod> {
+            override fun serialize(modelObject: PaymentMethod): JSONObject {
+                return try {
+                    JSONObject().apply {
+                        putOpt(TYPE, modelObject.type)
+                        putOpt(NAME, modelObject.name)
+                        putOpt(BRANDS, serializeOptStringList(modelObject.brands))
+                        putOpt(BRAND, modelObject.brand)
+                        putOpt(FUNDING_SOURCE, modelObject.fundingSource)
+                        putOpt(ISSUERS, serializeOptList(modelObject.issuers, Issuer.SERIALIZER))
+                        putOpt(CONFIGURATION, serializeOpt(modelObject.configuration, Configuration.SERIALIZER))
+                        putOpt(DETAILS, serializeOptList(modelObject.details, InputDetail.SERIALIZER))
+                    }
+                } catch (e: JSONException) {
+                    throw ModelSerializationException(PaymentMethod::class.java, e)
+                }
             }
-            return jsonObject;
+
+            override fun deserialize(jsonObject: JSONObject): PaymentMethod {
+                return PaymentMethod(
+                    type = jsonObject.getStringOrNull(TYPE),
+                    name = jsonObject.getStringOrNull(NAME),
+                    brands = parseOptStringList(jsonObject.optJSONArray(BRANDS)),
+                    brand = jsonObject.getStringOrNull(BRAND),
+                    fundingSource = jsonObject.getStringOrNull(FUNDING_SOURCE),
+                    issuers = deserializeOptList(jsonObject.optJSONArray(ISSUERS), Issuer.SERIALIZER),
+                    configuration = deserializeOpt(jsonObject.optJSONObject(CONFIGURATION), Configuration.SERIALIZER),
+                    details = deserializeOptList(jsonObject.optJSONArray(DETAILS), InputDetail.SERIALIZER),
+                )
+            }
         }
-
-        @Override
-        @NonNull
-        public PaymentMethod deserialize(@NonNull JSONObject jsonObject) {
-            final PaymentMethod paymentMethod = new PaymentMethod();
-            paymentMethod.setType(jsonObject.optString(TYPE, null));
-            paymentMethod.setName(jsonObject.optString(NAME, null));
-            paymentMethod.setBrands(JsonUtils.parseOptStringList(jsonObject.optJSONArray(BRANDS)));
-            paymentMethod.setBrand(jsonObject.optString(BRAND, null));
-            paymentMethod.setFundingSource(jsonObject.optString(FUNDING_SOURCE, null));
-            paymentMethod.setIssuers(
-                    ModelUtils.deserializeOptList(jsonObject.optJSONArray(ISSUERS), Issuer.SERIALIZER)
-            );
-            paymentMethod.setConfiguration(
-                    ModelUtils.deserializeOpt(jsonObject.optJSONObject(CONFIGURATION), Configuration.SERIALIZER));
-            paymentMethod.setDetails(ModelUtils.deserializeOptList(jsonObject.optJSONArray(DETAILS), InputDetail.SERIALIZER));
-            return paymentMethod;
-        }
-    };
-
-    private String type;
-    private String name;
-    private List<String> brands;
-    private String brand;
-    private String fundingSource;
-    private List<Issuer> issuers;
-    private Configuration configuration;
-    private List<InputDetail> details;
-
-    @Override
-    public void writeToParcel(@NonNull Parcel dest, int flags) {
-        JsonUtils.writeToParcel(dest, SERIALIZER.serialize(this));
-    }
-
-    @Nullable
-    public String getType() {
-        return type;
-    }
-
-    @Nullable
-    public String getName() {
-        return name;
-    }
-
-    @Nullable
-    public List<String> getBrands() {
-        return brands;
-    }
-
-    @Nullable
-    public String getBrand() {
-        return brand;
-    }
-
-    @Nullable
-    public String getFundingSource() {
-        return fundingSource;
-    }
-
-    @Nullable
-    public List<Issuer> getIssuers() {
-        return issuers;
-    }
-
-    @Nullable
-    public Configuration getConfiguration() {
-        return configuration;
-    }
-
-    @Nullable
-    public List<InputDetail> getDetails() {
-        return details;
-    }
-
-    public void setType(@Nullable String type) {
-        this.type = type;
-    }
-
-    public void setName(@Nullable String name) {
-        this.name = name;
-    }
-
-    public void setBrands(@Nullable List<String> brands) {
-        this.brands = brands;
-    }
-
-    public void setBrand(@Nullable String brand) {
-        this.brand = brand;
-    }
-
-    public void setFundingSource(@Nullable String fundingSource) {
-        this.fundingSource = fundingSource;
-    }
-
-    public void setIssuers(@Nullable List<Issuer> issuers) {
-        this.issuers = issuers;
-    }
-
-    public void setConfiguration(@Nullable Configuration configuration) {
-        this.configuration = configuration;
-    }
-
-    public void setDetails(@Nullable List<InputDetail> details) {
-        this.details = details;
     }
 }

@@ -5,77 +5,51 @@
  *
  * Created by caiof on 27/5/2019.
  */
+package com.adyen.checkout.components.model.paymentmethods
 
-package com.adyen.checkout.components.model.paymentmethods;
+import android.os.Parcel
+import com.adyen.checkout.core.exception.ModelSerializationException
+import com.adyen.checkout.core.model.JsonUtils.writeToParcel
+import com.adyen.checkout.core.model.ModelObject
+import com.adyen.checkout.core.model.getStringOrNull
+import org.json.JSONException
+import org.json.JSONObject
 
-import android.os.Parcel;
+data class Item(
+    var id: String? = null,
+    var name: String? = null,
+) : ModelObject() {
 
-import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
+    override fun writeToParcel(dest: Parcel, flags: Int) {
+        writeToParcel(dest, SERIALIZER.serialize(this))
+    }
 
-import com.adyen.checkout.core.exception.ModelSerializationException;
-import com.adyen.checkout.core.model.JsonUtils;
-import com.adyen.checkout.core.model.ModelObject;
+    companion object {
+        private const val ID = "id"
+        private const val NAME = "name"
 
-import org.json.JSONException;
-import org.json.JSONObject;
+        @JvmField
+        val CREATOR = Creator(Item::class.java)
 
-@SuppressWarnings({"MemberName", "PMD.DataClass"})
-public final class Item extends ModelObject {
-    @NonNull
-    public static final Creator<Item> CREATOR = new Creator<>(Item.class);
-
-    private static final String ID = "id";
-    private static final String NAME = "name";
-
-    @NonNull
-    public static final Serializer<Item> SERIALIZER = new Serializer<Item>() {
-        @Override
-        @NonNull
-        public JSONObject serialize(@NonNull Item modelObject) {
-            final JSONObject jsonObject = new JSONObject();
-            try {
-                jsonObject.putOpt(ID, modelObject.getId());
-                jsonObject.putOpt(NAME, modelObject.getName());
-            } catch (JSONException e) {
-                throw new ModelSerializationException(Item.class, e);
+        @JvmField
+        val SERIALIZER: Serializer<Item> = object : Serializer<Item> {
+            override fun serialize(modelObject: Item): JSONObject {
+                return try {
+                    JSONObject().apply {
+                        putOpt(ID, modelObject.id)
+                        putOpt(NAME, modelObject.name)
+                    }
+                } catch (e: JSONException) {
+                    throw ModelSerializationException(Item::class.java, e)
+                }
             }
-            return jsonObject;
+
+            override fun deserialize(jsonObject: JSONObject): Item {
+                return Item(
+                    id = jsonObject.getStringOrNull(ID),
+                    name = jsonObject.getStringOrNull(NAME),
+                )
+            }
         }
-
-        @Override
-        @NonNull
-        public Item deserialize(@NonNull JSONObject jsonObject) {
-            final Item item = new Item();
-            item.setId(jsonObject.optString(ID, null));
-            item.setName(jsonObject.optString(NAME, null));
-            return item;
-        }
-    };
-
-    private String id;
-    private String name;
-
-    @Override
-    public void writeToParcel(@NonNull Parcel dest, int flags) {
-        JsonUtils.writeToParcel(dest, SERIALIZER.serialize(this));
-    }
-
-    @Nullable
-    public String getId() {
-        return id;
-    }
-
-    @Nullable
-    public String getName() {
-        return name;
-    }
-
-    public void setId(@Nullable String id) {
-        this.id = id;
-    }
-
-    public void setName(@Nullable String name) {
-        this.name = name;
     }
 }
