@@ -17,30 +17,19 @@ import android.widget.Toast
 import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.isVisible
-import com.adyen.checkout.adyen3ds2.Adyen3DS2Configuration
-import com.adyen.checkout.bcmc.BcmcConfiguration
-import com.adyen.checkout.card.CardConfiguration
 import com.adyen.checkout.components.model.PaymentMethodsApiResponse
-import com.adyen.checkout.core.api.Environment
-import com.adyen.checkout.core.exception.CheckoutException
 import com.adyen.checkout.core.log.LogUtil
 import com.adyen.checkout.core.log.Logger
 import com.adyen.checkout.dropin.DropIn
 import com.adyen.checkout.dropin.DropInCallback
-import com.adyen.checkout.dropin.DropInConfiguration
 import com.adyen.checkout.dropin.DropInResult
-import com.adyen.checkout.example.BuildConfig
 import com.adyen.checkout.example.R
 import com.adyen.checkout.example.data.api.CheckoutApiService
-import com.adyen.checkout.example.data.storage.KeyValueStorage
 import com.adyen.checkout.example.databinding.ActivityMainBinding
-import com.adyen.checkout.example.service.ExampleFullAsyncDropInService
 import com.adyen.checkout.example.ui.card.CardFragment
 import com.adyen.checkout.example.ui.configuration.CheckoutConfigurationProvider
 import com.adyen.checkout.example.ui.configuration.ConfigurationActivity
-import com.adyen.checkout.googlepay.GooglePayConfiguration
 import dagger.hilt.android.AndroidEntryPoint
-import java.util.*
 import javax.inject.Inject
 
 @AndroidEntryPoint

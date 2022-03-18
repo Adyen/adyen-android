@@ -14,7 +14,7 @@ import com.adyen.checkout.example.BuildConfig
 import com.adyen.checkout.example.data.storage.KeyValueStorage
 import com.adyen.checkout.example.service.ExampleFullAsyncDropInService
 import com.adyen.checkout.googlepay.GooglePayConfiguration
-import java.util.*
+import java.util.Locale
 import javax.inject.Inject
 import javax.inject.Singleton
 
@@ -54,22 +54,25 @@ internal class CheckoutConfigurationProvider @Inject constructor(
         return dropInConfigurationBuilder.build()
     }
 
-    fun getCardConfiguration() = CardConfiguration.Builder(shopperLocale, Environment.TEST, BuildConfig.CLIENT_KEY)
+    fun getCardConfiguration(): CardConfiguration = CardConfiguration.Builder(shopperLocale, Environment.TEST, BuildConfig.CLIENT_KEY)
         .setShopperReference(keyValueStorage.getShopperReference())
         .build()
 
-    private fun getBcmcConfiguration() = BcmcConfiguration.Builder(shopperLocale, Environment.TEST, BuildConfig.CLIENT_KEY)
-        .setShopperReference(keyValueStorage.getShopperReference())
-        .setShowStorePaymentField(true)
-        .build()
+    private fun getBcmcConfiguration(): BcmcConfiguration =
+        BcmcConfiguration.Builder(shopperLocale, Environment.TEST, BuildConfig.CLIENT_KEY)
+            .setShopperReference(keyValueStorage.getShopperReference())
+            .setShowStorePaymentField(true)
+            .build()
 
-    private fun getGooglePayConfiguration()= GooglePayConfiguration.Builder(shopperLocale, Environment.TEST, BuildConfig.CLIENT_KEY)
-        .setCountryCode(keyValueStorage.getCountry())
-        .setAmount(amount)
-        .build()
+    private fun getGooglePayConfiguration(): GooglePayConfiguration =
+        GooglePayConfiguration.Builder(shopperLocale, Environment.TEST, BuildConfig.CLIENT_KEY)
+            .setCountryCode(keyValueStorage.getCountry())
+            .setAmount(amount)
+            .build()
 
-    private fun get3DS2Configuration() = Adyen3DS2Configuration.Builder(shopperLocale, Environment.TEST, BuildConfig.CLIENT_KEY)
-        .build()
+    private fun get3DS2Configuration(): Adyen3DS2Configuration =
+        Adyen3DS2Configuration.Builder(shopperLocale, Environment.TEST, BuildConfig.CLIENT_KEY)
+            .build()
 
     companion object {
         private val TAG: String = LogUtil.getTag()
