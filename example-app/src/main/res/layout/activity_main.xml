@@ -31,15 +31,14 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent">
 
-        <Button
-            android:id="@+id/startCheckoutButton"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_gravity="center"
-            android:text="@string/start_checkout" />
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/component_list"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager" />
 
         <androidx.core.widget.ContentLoadingProgressBar
-            android:id="@+id/progressBar"
+            android:id="@+id/progress_indicator"
             style="@style/Widget.AppCompat.ProgressBar"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"

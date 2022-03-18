@@ -15,6 +15,9 @@
         <item name="colorControlNormal">@color/color_control_normal</item>
         <item name="colorControlHighlight">@color/color_control_highlight</item>
 
+        <item name="android:textColorPrimary">@color/text_color</item>
+        <item name="android:textColorSecondary">@color/text_color</item>
+
         <item name="android:statusBarColor">@color/color_background</item>
         <item name="android:navigationBarColor">@color/color_background</item>
         <item name="android:windowLightStatusBar" tools:ignore="NewApi">@bool/has_light_system_bars</item>

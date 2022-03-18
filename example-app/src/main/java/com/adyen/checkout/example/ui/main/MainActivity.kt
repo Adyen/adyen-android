@@ -16,6 +16,7 @@ import android.view.View
 import android.widget.Toast
 import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
+import androidx.core.view.isVisible
 import com.adyen.checkout.adyen3ds2.Adyen3DS2Configuration
 import com.adyen.checkout.bcmc.BcmcConfiguration
 import com.adyen.checkout.card.CardConfiguration
@@ -49,7 +50,9 @@ class MainActivity : AppCompatActivity(), DropInCallback {
 
     private lateinit var binding: ActivityMainBinding
     private val paymentMethodsViewModel: PaymentMethodsViewModel by viewModels()
-    @Inject lateinit var keyValueStorage: KeyValueStorage
+
+    @Inject
+    lateinit var keyValueStorage: KeyValueStorage
 
     private val dropInLauncher = DropIn.registerForDropInResult(this, this)
 
@@ -65,27 +68,14 @@ class MainActivity : AppCompatActivity(), DropInCallback {
         setSupportActionBar(binding.toolbar)
         supportActionBar?.setDisplayShowTitleEnabled(false)
 
+        binding.componentList.adapter = ComponentItemAdapter(
+            ComponentItemProvider.getComponentItems(),
+            ::onComponentEntryClick
+        )
+
         val result = DropIn.getDropInResultFromIntent(intent)
         if (result != null) {
             Toast.makeText(this, result, Toast.LENGTH_SHORT).show()
-        }
-
-        binding.startCheckoutButton.setOnClickListener {
-            if (!CheckoutApiService.isRealUrlAvailable()) {
-                Toast.makeText(
-                    this@MainActivity,
-                    "No server URL configured on local.gradle file.",
-                    Toast.LENGTH_SHORT
-                ).show()
-                return@setOnClickListener
-            }
-
-            val currentResponse = paymentMethodsViewModel.paymentMethodResponseLiveData.value
-            if (currentResponse != null) {
-                startDropIn(currentResponse)
-            } else {
-                setLoading(true)
-            }
         }
 
         paymentMethodsViewModel.paymentMethodResponseLiveData.observe(this) {
@@ -140,6 +130,29 @@ class MainActivity : AppCompatActivity(), DropInCallback {
         }
     }
 
+    private fun onComponentEntryClick(entry: ComponentItem.Entry) {
+        if (!CheckoutApiService.isRealUrlAvailable()) {
+            Toast.makeText(
+                this@MainActivity,
+                "No server URL configured on local.gradle file.",
+                Toast.LENGTH_SHORT
+            ).show()
+            return
+        }
+
+        when (entry) {
+            ComponentItem.Entry.DropIn -> {
+                val currentResponse = paymentMethodsViewModel.paymentMethodResponseLiveData.value
+                if (currentResponse != null) {
+                    startDropIn(currentResponse)
+                } else {
+                    setLoading(true)
+                }
+            }
+            ComponentItem.Entry.Card -> Toast.makeText(this, "Not implemented yet", Toast.LENGTH_SHORT).show()
+        }
+    }
+
     private fun startDropIn(paymentMethodsApiResponse: PaymentMethodsApiResponse) {
         Logger.d(TAG, "startDropIn")
         setLoading(false)
@@ -163,8 +176,9 @@ class MainActivity : AppCompatActivity(), DropInCallback {
             .setShowStorePaymentField(true)
             .build()
 
-        val adyen3DS2Configuration = Adyen3DS2Configuration.Builder(shopperLocale, Environment.TEST, BuildConfig.CLIENT_KEY)
-            .build()
+        val adyen3DS2Configuration =
+            Adyen3DS2Configuration.Builder(shopperLocale, Environment.TEST, BuildConfig.CLIENT_KEY)
+                .build()
 
         val dropInConfigurationBuilder = DropInConfiguration.Builder(
             this@MainActivity,
@@ -188,17 +202,23 @@ class MainActivity : AppCompatActivity(), DropInCallback {
         val resultIntent = Intent(this, MainActivity::class.java)
         resultIntent.flags = Intent.FLAG_ACTIVITY_CLEAR_TOP
 
-        DropIn.startPayment(this, dropInLauncher, paymentMethodsApiResponse, dropInConfigurationBuilder.build(), resultIntent)
+        DropIn.startPayment(
+            this,
+            dropInLauncher,
+            paymentMethodsApiResponse,
+            dropInConfigurationBuilder.build(),
+            resultIntent
+        )
     }
 
     private fun setLoading(isLoading: Boolean) {
         isWaitingPaymentMethods = isLoading
         if (isLoading) {
-            binding.startCheckoutButton.visibility = View.GONE
-            binding.progressBar.show()
+            binding.componentList.isVisible = false
+            binding.progressIndicator.show()
         } else {
-            binding.startCheckoutButton.visibility = View.VISIBLE
-            binding.progressBar.hide()
+            binding.componentList.visibility = View.VISIBLE
+            binding.progressIndicator.hide()
         }
     }
 }
