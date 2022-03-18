@@ -13,7 +13,6 @@ import com.adyen.checkout.core.api.SSLSocketUtil
 import com.adyen.checkout.example.BuildConfig
 import com.adyen.checkout.example.data.api.CheckoutApiService
 import com.adyen.checkout.example.data.api.RecurringApiService
-import com.jakewharton.retrofit2.adapter.kotlin.coroutines.CoroutineCallAdapterFactory
 import com.squareup.moshi.Moshi
 import com.squareup.moshi.kotlin.reflect.KotlinJsonAdapterFactory
 import dagger.Module
@@ -89,7 +88,6 @@ object NetworkModule {
             .baseUrl(BASE_URL)
             .client(okHttpClient)
             .addConverterFactory(converterFactory)
-            .addCallAdapterFactory(CoroutineCallAdapterFactory())
             .build()
 
     @Singleton
@@ -103,7 +101,6 @@ object NetworkModule {
             .baseUrl(BASE_URL_RECURRING)
             .client(okHttpClient)
             .addConverterFactory(converterFactory)
-            .addCallAdapterFactory(CoroutineCallAdapterFactory())
             .build()
 
     @Provides

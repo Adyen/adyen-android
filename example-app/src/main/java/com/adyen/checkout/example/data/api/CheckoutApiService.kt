@@ -13,7 +13,6 @@ import com.adyen.checkout.example.BuildConfig
 import com.adyen.checkout.example.data.api.model.paymentsRequest.PaymentMethodsRequest
 import com.adyen.checkout.example.data.api.model.paymentsRequest.SessionRequest
 import com.adyen.checkout.sessions.model.Session
-import kotlinx.coroutines.Deferred
 import okhttp3.RequestBody
 import okhttp3.ResponseBody
 import retrofit2.Call
@@ -34,11 +33,11 @@ interface CheckoutApiService {
 
     @Headers(BuildConfig.API_KEY_HEADER_NAME + ":" + BuildConfig.CHECKOUT_API_KEY)
     @POST("sessions")
-    fun sessionsAsync(@Body sessionRequest: SessionRequest): Deferred<Response<Session>>
+    suspend fun sessionsAsync(@Body sessionRequest: SessionRequest): Response<Session>
 
     @Headers(BuildConfig.API_KEY_HEADER_NAME + ":" + BuildConfig.CHECKOUT_API_KEY)
     @POST("paymentMethods")
-    fun paymentMethodsAsync(@Body paymentMethodsRequest: PaymentMethodsRequest): Deferred<Response<PaymentMethodsApiResponse>>
+    suspend fun paymentMethodsAsync(@Body paymentMethodsRequest: PaymentMethodsRequest): Response<PaymentMethodsApiResponse>
 
     // There is no native support for JSONObject in either Moshi or Gson, so using RequestBody as a work around for now
     @Headers(BuildConfig.API_KEY_HEADER_NAME + ":" + BuildConfig.CHECKOUT_API_KEY)
@@ -48,7 +47,7 @@ interface CheckoutApiService {
     // There is no native support for JSONObject in either Moshi or Gson, so using RequestBody as a work around for now
     @Headers(BuildConfig.API_KEY_HEADER_NAME + ":" + BuildConfig.CHECKOUT_API_KEY)
     @POST("payments")
-    fun paymentsAsync(@Body paymentsRequest: RequestBody): Deferred<Response<ResponseBody>>
+    suspend fun paymentsAsync(@Body paymentsRequest: RequestBody): Response<ResponseBody>
 
     @Headers(BuildConfig.API_KEY_HEADER_NAME + ":" + BuildConfig.CHECKOUT_API_KEY)
     @POST("payments/details")
@@ -56,17 +55,17 @@ interface CheckoutApiService {
 
     @Headers(BuildConfig.API_KEY_HEADER_NAME + ":" + BuildConfig.CHECKOUT_API_KEY)
     @POST("payments/details")
-    fun detailsAsync(@Body detailsRequest: RequestBody): Deferred<Response<ResponseBody>>
+    suspend fun detailsAsync(@Body detailsRequest: RequestBody): Response<ResponseBody>
 
     @Headers(BuildConfig.API_KEY_HEADER_NAME + ":" + BuildConfig.CHECKOUT_API_KEY)
     @POST("paymentMethods/balance")
-    fun checkBalanceAsync(@Body balanceRequest: RequestBody): Deferred<Response<ResponseBody>>
+    suspend fun checkBalanceAsync(@Body balanceRequest: RequestBody): Response<ResponseBody>
 
     @Headers(BuildConfig.API_KEY_HEADER_NAME + ":" + BuildConfig.CHECKOUT_API_KEY)
     @POST("orders")
-    fun createOrderAsync(@Body orderRequest: RequestBody): Deferred<Response<ResponseBody>>
+    suspend fun createOrderAsync(@Body orderRequest: RequestBody): Response<ResponseBody>
 
     @Headers(BuildConfig.API_KEY_HEADER_NAME + ":" + BuildConfig.CHECKOUT_API_KEY)
     @POST("orders/cancel")
-    fun cancelOrderAsync(@Body orderRequest: RequestBody): Deferred<Response<ResponseBody>>
+    suspend fun cancelOrderAsync(@Body orderRequest: RequestBody): Response<ResponseBody>
 }

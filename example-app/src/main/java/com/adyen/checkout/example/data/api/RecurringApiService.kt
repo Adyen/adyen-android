@@ -29,5 +29,5 @@ interface RecurringApiService {
 
     @Headers(BuildConfig.API_KEY_HEADER_NAME + ":" + BuildConfig.CHECKOUT_API_KEY)
     @POST("disable")
-    fun removeStoredPaymentMethodAsync(@Body request: RequestBody): Deferred<Response<ResponseBody>>
+    suspend fun removeStoredPaymentMethodAsync(@Body request: RequestBody): Response<ResponseBody>
 }

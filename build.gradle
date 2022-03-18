@@ -77,9 +77,8 @@ allprojects {
     ext.constraintlayout_version = '2.0.2'
     ext.preference_version = "1.1.1"
     ext.retrofit2_version = '2.9.0'
-    ext.coroutines_adapter_version = "0.9.2"
     ext.moshi_adapters_version = '1.11.0'
-    ext.moshi_kotlin_adapter_version = '1.11.0'
+    ext.moshi_kotlin_adapter_version = '1.13.0'
     ext.okhttp_logging_version = "4.9.0"
     ext.okhttp_idling_resource_version = "1.0.0"
 

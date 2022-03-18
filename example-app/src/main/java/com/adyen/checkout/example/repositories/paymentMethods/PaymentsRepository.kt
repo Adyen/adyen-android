@@ -34,13 +34,13 @@ class PaymentsRepositoryImpl(private val checkoutApiService: CheckoutApiService)
 
     override suspend fun getSessionAsync(sessionRequest: SessionRequest): Session? {
         return safeApiCall(
-            call = { checkoutApiService.sessionsAsync(sessionRequest).await() }
+            call = { checkoutApiService.sessionsAsync(sessionRequest) }
         )
     }
 
     override suspend fun getPaymentMethods(paymentMethodsRequest: PaymentMethodsRequest): PaymentMethodsApiResponse? {
         return safeApiCall(
-            call = { checkoutApiService.paymentMethodsAsync(paymentMethodsRequest).await() }
+            call = { checkoutApiService.paymentMethodsAsync(paymentMethodsRequest) }
         )
     }
 
@@ -50,7 +50,7 @@ class PaymentsRepositoryImpl(private val checkoutApiService: CheckoutApiService)
 
     override suspend fun paymentsRequestAsync(paymentsRequest: RequestBody): ResponseBody? {
         return safeApiCall(
-            call = { checkoutApiService.paymentsAsync(paymentsRequest).await() }
+            call = { checkoutApiService.paymentsAsync(paymentsRequest) }
         )
     }
 
@@ -60,25 +60,25 @@ class PaymentsRepositoryImpl(private val checkoutApiService: CheckoutApiService)
 
     override suspend fun detailsRequestAsync(paymentsRequest: RequestBody): ResponseBody? {
         return safeApiCall(
-            call = { checkoutApiService.detailsAsync(paymentsRequest).await() }
+            call = { checkoutApiService.detailsAsync(paymentsRequest) }
         )
     }
 
     override suspend fun balanceRequestAsync(balanceRequest: RequestBody): ResponseBody? {
         return safeApiCall(
-            call = { checkoutApiService.checkBalanceAsync(balanceRequest).await() }
+            call = { checkoutApiService.checkBalanceAsync(balanceRequest) }
         )
     }
 
     override suspend fun createOrderAsync(orderRequest: RequestBody): ResponseBody? {
         return safeApiCall(
-            call = { checkoutApiService.createOrderAsync(orderRequest).await() }
+            call = { checkoutApiService.createOrderAsync(orderRequest) }
         )
     }
 
     override suspend fun cancelOrderAsync(orderRequest: RequestBody): ResponseBody? {
         return safeApiCall(
-            call = { checkoutApiService.cancelOrderAsync(orderRequest).await() }
+            call = { checkoutApiService.cancelOrderAsync(orderRequest) }
         )
     }
 }
