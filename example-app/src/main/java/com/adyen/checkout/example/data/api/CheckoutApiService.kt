@@ -16,11 +16,10 @@ import com.adyen.checkout.sessions.model.Session
 import okhttp3.RequestBody
 import okhttp3.ResponseBody
 import retrofit2.Call
-import retrofit2.Response
 import retrofit2.http.Body
 import retrofit2.http.POST
 
-interface CheckoutApiService {
+internal interface CheckoutApiService {
 
     companion object {
         private const val defaultGradleUrl = "<YOUR_SERVER_URL>"
@@ -31,10 +30,10 @@ interface CheckoutApiService {
     }
 
     @POST("sessions")
-    suspend fun sessionsAsync(@Body sessionRequest: SessionRequest): Response<Session>
+    suspend fun sessionsAsync(@Body sessionRequest: SessionRequest): Session
 
     @POST("paymentMethods")
-    suspend fun paymentMethodsAsync(@Body paymentMethodsRequest: PaymentMethodsRequest): Response<PaymentMethodsApiResponse>
+    suspend fun paymentMethodsAsync(@Body paymentMethodsRequest: PaymentMethodsRequest): PaymentMethodsApiResponse
 
     // There is no native support for JSONObject in either Moshi or Gson, so using RequestBody as a work around for now
     @POST("payments")
@@ -42,20 +41,20 @@ interface CheckoutApiService {
 
     // There is no native support for JSONObject in either Moshi or Gson, so using RequestBody as a work around for now
     @POST("payments")
-    suspend fun paymentsAsync(@Body paymentsRequest: RequestBody): Response<ResponseBody>
+    suspend fun paymentsAsync(@Body paymentsRequest: RequestBody): ResponseBody
 
     @POST("payments/details")
     fun details(@Body detailsRequest: RequestBody): Call<ResponseBody>
 
     @POST("payments/details")
-    suspend fun detailsAsync(@Body detailsRequest: RequestBody): Response<ResponseBody>
+    suspend fun detailsAsync(@Body detailsRequest: RequestBody): ResponseBody
 
     @POST("paymentMethods/balance")
-    suspend fun checkBalanceAsync(@Body balanceRequest: RequestBody): Response<ResponseBody>
+    suspend fun checkBalanceAsync(@Body balanceRequest: RequestBody): ResponseBody
 
     @POST("orders")
-    suspend fun createOrderAsync(@Body orderRequest: RequestBody): Response<ResponseBody>
+    suspend fun createOrderAsync(@Body orderRequest: RequestBody): ResponseBody
 
     @POST("orders/cancel")
-    suspend fun cancelOrderAsync(@Body orderRequest: RequestBody): Response<ResponseBody>
+    suspend fun cancelOrderAsync(@Body orderRequest: RequestBody): ResponseBody
 }

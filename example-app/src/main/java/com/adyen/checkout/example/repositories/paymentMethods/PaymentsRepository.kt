@@ -12,7 +12,7 @@ import com.adyen.checkout.components.model.PaymentMethodsApiResponse
 import com.adyen.checkout.example.data.api.CheckoutApiService
 import com.adyen.checkout.example.data.api.model.paymentsRequest.PaymentMethodsRequest
 import com.adyen.checkout.example.data.api.model.paymentsRequest.SessionRequest
-import com.adyen.checkout.example.repositories.BaseRepository
+import com.adyen.checkout.example.repositories.safeApiCall
 import com.adyen.checkout.sessions.model.Session
 import okhttp3.RequestBody
 import okhttp3.ResponseBody
@@ -30,12 +30,10 @@ interface PaymentsRepository {
     suspend fun cancelOrderAsync(orderRequest: RequestBody): ResponseBody?
 }
 
-class PaymentsRepositoryImpl(private val checkoutApiService: CheckoutApiService) : PaymentsRepository, BaseRepository() {
+internal class PaymentsRepositoryImpl(private val checkoutApiService: CheckoutApiService) : PaymentsRepository {
 
     override suspend fun getSessionAsync(sessionRequest: SessionRequest): Session? {
-        return safeApiCall(
-            call = { checkoutApiService.sessionsAsync(sessionRequest) }
-        )
+        return safeApiCall { checkoutApiService.sessionsAsync(sessionRequest) }
     }
 
     override suspend fun getPaymentMethods(paymentMethodsRequest: PaymentMethodsRequest): PaymentMethodsApiResponse? {

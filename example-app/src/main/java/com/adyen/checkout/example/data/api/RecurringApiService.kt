@@ -11,11 +11,10 @@ package com.adyen.checkout.example.data.api
 import com.adyen.checkout.example.BuildConfig
 import okhttp3.RequestBody
 import okhttp3.ResponseBody
-import retrofit2.Response
 import retrofit2.http.Body
 import retrofit2.http.POST
 
-interface RecurringApiService {
+internal interface RecurringApiService {
 
     companion object {
         private const val defaultGradleUrl = "<YOUR_SERVER_URL>"
@@ -26,5 +25,5 @@ interface RecurringApiService {
     }
 
     @POST("disable")
-    suspend fun removeStoredPaymentMethodAsync(@Body request: RequestBody): Response<ResponseBody>
+    suspend fun removeStoredPaymentMethodAsync(@Body request: RequestBody): ResponseBody
 }

@@ -47,7 +47,7 @@ object NetworkModule {
 
     @Singleton
     @Provides
-    fun provideOkHttpClient(): OkHttpClient {
+    internal fun provideOkHttpClient(): OkHttpClient {
         val builder = OkHttpClient.Builder()
 
         if (BuildConfig.DEBUG) {
@@ -81,14 +81,14 @@ object NetworkModule {
 
     @Singleton
     @Provides
-    fun provideConverterFactory(): Converter.Factory = MoshiConverterFactory.create(
+    internal fun provideConverterFactory(): Converter.Factory = MoshiConverterFactory.create(
         Moshi.Builder().add(KotlinJsonAdapterFactory()).build()
     )
 
     @Singleton
     @Provides
     @Named("RetrofitCheckout")
-    fun provideRetrofit(
+    internal fun provideRetrofit(
         okHttpClient: OkHttpClient,
         converterFactory: Converter.Factory,
     ): Retrofit =
@@ -101,7 +101,7 @@ object NetworkModule {
     @Singleton
     @Provides
     @Named("RetrofitRecurring")
-    fun provideRetrofitRecurring(
+    internal fun provideRetrofitRecurring(
         okHttpClient: OkHttpClient,
         converterFactory: Converter.Factory,
     ): Retrofit =
@@ -112,10 +112,10 @@ object NetworkModule {
             .build()
 
     @Provides
-    fun provideApiService(@Named("RetrofitCheckout") retrofit: Retrofit): CheckoutApiService =
+    internal fun provideApiService(@Named("RetrofitCheckout") retrofit: Retrofit): CheckoutApiService =
         retrofit.create(CheckoutApiService::class.java)
 
     @Provides
-    fun provideRecurringApiService(@Named("RetrofitRecurring") retrofit: Retrofit): RecurringApiService =
+    internal fun provideRecurringApiService(@Named("RetrofitRecurring") retrofit: Retrofit): RecurringApiService =
         retrofit.create(RecurringApiService::class.java)
 }

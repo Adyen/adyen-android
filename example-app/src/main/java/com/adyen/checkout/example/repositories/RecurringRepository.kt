@@ -16,10 +16,10 @@ interface RecurringRepository {
     suspend fun removeStoredPaymentMethod(requestBody: RequestBody): ResponseBody?
 }
 
-class RecurringRepositoryImpl(private val recurringApiService: RecurringApiService) : RecurringRepository, BaseRepository() {
-    override suspend fun removeStoredPaymentMethod(requestBody: RequestBody): ResponseBody? {
-        return safeApiCall(
-            call = { recurringApiService.removeStoredPaymentMethodAsync(requestBody) }
-        )
-    }
+internal class RecurringRepositoryImpl(
+    private val recurringApiService: RecurringApiService
+) : RecurringRepository {
+
+    override suspend fun removeStoredPaymentMethod(requestBody: RequestBody): ResponseBody? =
+        safeApiCall { recurringApiService.removeStoredPaymentMethodAsync(requestBody) }
 }
