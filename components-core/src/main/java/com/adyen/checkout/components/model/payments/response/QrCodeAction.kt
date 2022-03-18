@@ -5,91 +5,62 @@
  *
  * Created by caiof on 4/6/2019.
  */
+package com.adyen.checkout.components.model.payments.response
 
-package com.adyen.checkout.components.model.payments.response;
+import android.os.Parcel
+import com.adyen.checkout.components.util.ActionTypes
+import com.adyen.checkout.core.exception.ModelSerializationException
+import com.adyen.checkout.core.model.JsonUtils.writeToParcel
+import com.adyen.checkout.core.model.getStringOrNull
+import org.json.JSONException
+import org.json.JSONObject
 
-import android.os.Parcel;
+data class QrCodeAction(
+    override var type: String? = null,
+    override var paymentData: String? = null,
+    override var paymentMethodType: String? = null,
+    var qrCodeData: String? = null,
+    var url: String? = null,
+) : Action() {
 
-import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
+    override fun writeToParcel(dest: Parcel, flags: Int) {
+        writeToParcel(dest, SERIALIZER.serialize(this))
+    }
 
-import com.adyen.checkout.components.util.ActionTypes;
-import com.adyen.checkout.core.exception.ModelSerializationException;
-import com.adyen.checkout.core.model.JsonUtils;
+    companion object {
+        const val ACTION_TYPE = ActionTypes.QR_CODE
+        private const val QR_CODE_DATA = "qrCodeData"
+        private const val URL = "url"
 
-import org.json.JSONException;
-import org.json.JSONObject;
+        @JvmField
+        val CREATOR = Creator(QrCodeAction::class.java)
 
-@SuppressWarnings({"MemberName", "PMD.DataClass"})
-public class QrCodeAction extends Action {
-    @NonNull
-    public static final Creator<QrCodeAction> CREATOR = new Creator<>(QrCodeAction.class);
+        @JvmField
+        val SERIALIZER: Serializer<QrCodeAction> = object : Serializer<QrCodeAction> {
+            override fun serialize(modelObject: QrCodeAction): JSONObject {
 
-    public static final String ACTION_TYPE = ActionTypes.QR_CODE;
-
-    private static final String QR_CODE_DATA = "qrCodeData";
-    private static final String URL = "url";
-
-    @NonNull
-    public static final Serializer<QrCodeAction> SERIALIZER = new Serializer<QrCodeAction>() {
-
-        @NonNull
-        @Override
-        public JSONObject serialize(@NonNull QrCodeAction modelObject) {
-            final JSONObject jsonObject = new JSONObject();
-            try {
-                // Get parameters from parent class
-                jsonObject.putOpt(Action.TYPE, modelObject.getType());
-                jsonObject.putOpt(Action.PAYMENT_DATA, modelObject.getPaymentData());
-                jsonObject.putOpt(Action.PAYMENT_METHOD_TYPE, modelObject.getPaymentMethodType());
-
-                jsonObject.putOpt(QR_CODE_DATA, modelObject.getQrCodeData());
-                jsonObject.putOpt(URL, modelObject.getUrl());
-            } catch (JSONException e) {
-                throw new ModelSerializationException(QrCodeAction.class, e);
+                return try {
+                    JSONObject().apply {
+                        putOpt(TYPE, modelObject.type)
+                        putOpt(PAYMENT_DATA, modelObject.paymentData)
+                        putOpt(PAYMENT_METHOD_TYPE, modelObject.paymentMethodType)
+                        putOpt(QR_CODE_DATA, modelObject.qrCodeData)
+                        putOpt(URL, modelObject.url)
+                    }
+                } catch (e: JSONException) {
+                    throw ModelSerializationException(QrCodeAction::class.java, e)
+                }
             }
-            return jsonObject;
+
+            override fun deserialize(jsonObject: JSONObject): QrCodeAction {
+                return QrCodeAction(
+                    type = jsonObject.getStringOrNull(TYPE),
+                    paymentData = jsonObject.getStringOrNull(PAYMENT_DATA),
+                    paymentMethodType = jsonObject.getStringOrNull(PAYMENT_METHOD_TYPE),
+                    qrCodeData = jsonObject.getStringOrNull(QR_CODE_DATA),
+                    url = jsonObject.getStringOrNull(URL),
+                )
+            }
         }
-
-        @NonNull
-        @Override
-        public QrCodeAction deserialize(@NonNull JSONObject jsonObject) {
-            final QrCodeAction qrCodeAction = new QrCodeAction();
-
-            // getting parameters from parent class
-            qrCodeAction.setType(jsonObject.optString(Action.TYPE, null));
-            qrCodeAction.setPaymentData(jsonObject.optString(Action.PAYMENT_DATA, null));
-            qrCodeAction.setPaymentMethodType(jsonObject.optString(Action.PAYMENT_METHOD_TYPE, null));
-
-            qrCodeAction.setQrCodeData(jsonObject.optString(QR_CODE_DATA));
-            qrCodeAction.setUrl(jsonObject.optString(URL));
-            return qrCodeAction;
-        }
-    };
-
-    private String qrCodeData;
-    private String url;
-
-    @Override
-    public void writeToParcel(@NonNull Parcel dest, int flags) {
-        JsonUtils.writeToParcel(dest, SERIALIZER.serialize(this));
-    }
-
-    @Nullable
-    public String getQrCodeData() {
-        return qrCodeData;
-    }
-
-    public void setQrCodeData(@Nullable String qrCodeData) {
-        this.qrCodeData = qrCodeData;
-    }
-
-    @Nullable
-    public String getUrl() {
-        return url;
-    }
-
-    public void setUrl(@Nullable String url) {
-        this.url = url;
     }
 }

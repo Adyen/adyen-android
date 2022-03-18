@@ -5,12 +5,8 @@
  *
  * Created by caiof on 28/5/2020.
  */
+package com.adyen.checkout.components.model.payments.response
 
-package com.adyen.checkout.components.model.payments.response;
+import com.adyen.checkout.core.model.ModelObject
 
-import com.adyen.checkout.core.model.ModelObject;
-
-@SuppressWarnings("PMD.AbstractClassWithoutAnyMethod")
-abstract class SdkData extends ModelObject {
-    // Base class
-}
+abstract class SdkData : ModelObject()

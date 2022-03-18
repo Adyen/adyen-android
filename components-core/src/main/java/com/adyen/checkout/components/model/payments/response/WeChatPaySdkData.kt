@@ -5,142 +5,70 @@
  *
  * Created by caiof on 11/10/2019.
  */
+package com.adyen.checkout.components.model.payments.response
 
-package com.adyen.checkout.components.model.payments.response;
+import android.os.Parcel
+import com.adyen.checkout.core.exception.ModelSerializationException
+import com.adyen.checkout.core.model.JsonUtils.writeToParcel
+import com.adyen.checkout.core.model.getStringOrNull
+import org.json.JSONException
+import org.json.JSONObject
 
-import android.os.Parcel;
+data class WeChatPaySdkData(
+    var appid: String? = null,
+    var noncestr: String? = null,
+    var packageValue: String? = null,
+    var partnerid: String? = null,
+    var prepayid: String? = null,
+    var sign: String? = null,
+    var timestamp: String? = null,
+) : SdkData() {
 
-import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
+    override fun writeToParcel(dest: Parcel, flags: Int) {
+        writeToParcel(dest, SERIALIZER.serialize(this))
+    }
 
-import com.adyen.checkout.core.exception.ModelSerializationException;
-import com.adyen.checkout.core.model.JsonUtils;
+    companion object {
+        private const val APP_ID = "appid"
+        private const val NONCE_STR = "noncestr"
+        private const val PACKAGE_VALUE = "packageValue"
+        private const val PARTNER_ID = "partnerid"
+        private const val PREPAY_ID = "prepayid"
+        private const val SIGN = "sign"
+        private const val TIMESTAMP = "timestamp"
 
-import org.json.JSONException;
-import org.json.JSONObject;
+        @JvmField
+        val CREATOR = Creator(WeChatPaySdkData::class.java)
 
-@SuppressWarnings({"MemberName", "PMD.DataClass"})
-public class WeChatPaySdkData extends SdkData {
-    @NonNull
-    public static final Creator<WeChatPaySdkData> CREATOR = new Creator<>(WeChatPaySdkData.class);
-
-    private static final String APP_ID = "appid";
-    private static final String NONCE_STR = "noncestr";
-    private static final String PACKAGE_VALUE = "packageValue";
-    private static final String PARTNER_ID = "partnerid";
-    private static final String PREPAY_ID = "prepayid";
-    private static final String SIGN = "sign";
-    private static final String TIMESTAMP = "timestamp";
-
-    @NonNull
-    public static final Serializer<WeChatPaySdkData> SERIALIZER = new Serializer<WeChatPaySdkData>() {
-        @Override
-        @NonNull
-        public JSONObject serialize(@NonNull WeChatPaySdkData modelObject) {
-            final JSONObject jsonObject = new JSONObject();
-            try {
-                jsonObject.putOpt(APP_ID, modelObject.getAppid());
-                jsonObject.putOpt(NONCE_STR, modelObject.getNoncestr());
-                jsonObject.putOpt(PACKAGE_VALUE, modelObject.getPackageValue());
-                jsonObject.putOpt(PARTNER_ID, modelObject.getPartnerid());
-                jsonObject.putOpt(PREPAY_ID, modelObject.getPrepayid());
-                jsonObject.putOpt(SIGN, modelObject.getSign());
-                jsonObject.putOpt(TIMESTAMP, modelObject.getTimestamp());
-            } catch (JSONException e) {
-                throw new ModelSerializationException(WeChatPaySdkData.class, e);
+        @JvmField
+        val SERIALIZER: Serializer<WeChatPaySdkData> = object : Serializer<WeChatPaySdkData> {
+            override fun serialize(modelObject: WeChatPaySdkData): JSONObject {
+                return try {
+                    JSONObject().apply {
+                        putOpt(APP_ID, modelObject.appid)
+                        putOpt(NONCE_STR, modelObject.noncestr)
+                        putOpt(PACKAGE_VALUE, modelObject.packageValue)
+                        putOpt(PARTNER_ID, modelObject.partnerid)
+                        putOpt(PREPAY_ID, modelObject.prepayid)
+                        putOpt(SIGN, modelObject.sign)
+                        putOpt(TIMESTAMP, modelObject.timestamp)
+                    }
+                } catch (e: JSONException) {
+                    throw ModelSerializationException(WeChatPaySdkData::class.java, e)
+                }
             }
-            return jsonObject;
+
+            override fun deserialize(jsonObject: JSONObject): WeChatPaySdkData {
+                return WeChatPaySdkData(
+                    appid = jsonObject.getStringOrNull(APP_ID),
+                    noncestr = jsonObject.getStringOrNull(NONCE_STR),
+                    packageValue = jsonObject.getStringOrNull(PACKAGE_VALUE),
+                    partnerid = jsonObject.getStringOrNull(PARTNER_ID),
+                    prepayid = jsonObject.getStringOrNull(PREPAY_ID),
+                    sign = jsonObject.getStringOrNull(SIGN),
+                    timestamp = jsonObject.getStringOrNull(TIMESTAMP),
+                )
+            }
         }
-
-        @Override
-        @NonNull
-        public WeChatPaySdkData deserialize(@NonNull JSONObject jsonObject) {
-            final WeChatPaySdkData weChatPaySdkData = new WeChatPaySdkData();
-            weChatPaySdkData.setAppid(jsonObject.optString(APP_ID, null));
-            weChatPaySdkData.setNoncestr(jsonObject.optString(NONCE_STR, null));
-            weChatPaySdkData.setPackageValue(jsonObject.optString(PACKAGE_VALUE, null));
-            weChatPaySdkData.setPartnerid(jsonObject.optString(PARTNER_ID, null));
-            weChatPaySdkData.setPrepayid(jsonObject.optString(PREPAY_ID, null));
-            weChatPaySdkData.setSign(jsonObject.optString(SIGN, null));
-            weChatPaySdkData.setTimestamp(jsonObject.optString(TIMESTAMP, null));
-
-            return weChatPaySdkData;
-        }
-    };
-
-    private String appid;
-    private String noncestr;
-    private String packageValue;
-    private String partnerid;
-    private String prepayid;
-    private String sign;
-    private String timestamp;
-
-    @Override
-    public void writeToParcel(@NonNull Parcel dest, int flags) {
-        JsonUtils.writeToParcel(dest, SERIALIZER.serialize(this));
-    }
-
-    @Nullable
-    public String getAppid() {
-        return appid;
-    }
-
-    public void setAppid(@Nullable String appid) {
-        this.appid = appid;
-    }
-
-    @Nullable
-    public String getNoncestr() {
-        return noncestr;
-    }
-
-    public void setNoncestr(@Nullable String noncestr) {
-        this.noncestr = noncestr;
-    }
-
-    @Nullable
-    public String getPackageValue() {
-        return packageValue;
-    }
-
-    public void setPackageValue(@Nullable String packageValue) {
-        this.packageValue = packageValue;
-    }
-
-    @Nullable
-    public String getPartnerid() {
-        return partnerid;
-    }
-
-    public void setPartnerid(@Nullable String partnerid) {
-        this.partnerid = partnerid;
-    }
-
-    @Nullable
-    public String getPrepayid() {
-        return prepayid;
-    }
-
-    public void setPrepayid(@Nullable String prepayid) {
-        this.prepayid = prepayid;
-    }
-
-    @Nullable
-    public String getSign() {
-        return sign;
-    }
-
-    public void setSign(@Nullable String sign) {
-        this.sign = sign;
-    }
-
-    @Nullable
-    public String getTimestamp() {
-        return timestamp;
-    }
-
-    public void setTimestamp(@Nullable String timestamp) {
-        this.timestamp = timestamp;
     }
 }

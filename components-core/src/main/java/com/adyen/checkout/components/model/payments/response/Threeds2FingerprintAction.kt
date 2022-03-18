@@ -16,8 +16,11 @@ import com.adyen.checkout.core.model.getStringOrNull
 import org.json.JSONException
 import org.json.JSONObject
 
-class Threeds2FingerprintAction(
-    val token: String? = null
+data class Threeds2FingerprintAction(
+    override var type: String? = null,
+    override var paymentData: String? = null,
+    override var paymentMethodType: String? = null,
+    var token: String? = null,
 ) : Action() {
 
     override fun writeToParcel(dest: Parcel, flags: Int) {
@@ -26,7 +29,6 @@ class Threeds2FingerprintAction(
 
     companion object {
         const val ACTION_TYPE = ActionTypes.THREEDS2_FINGERPRINT
-
         private const val TOKEN = "token"
 
         @JvmField
@@ -35,29 +37,26 @@ class Threeds2FingerprintAction(
         @JvmField
         val SERIALIZER: Serializer<Threeds2FingerprintAction> = object : Serializer<Threeds2FingerprintAction> {
             override fun serialize(modelObject: Threeds2FingerprintAction): JSONObject {
-                val jsonObject = JSONObject()
-                try {
-                    // Get parameters from parent class
-                    jsonObject.putOpt(TYPE, modelObject.type)
-                    jsonObject.putOpt(PAYMENT_DATA, modelObject.paymentData)
-                    jsonObject.putOpt(PAYMENT_METHOD_TYPE, modelObject.paymentMethodType)
-
-                    jsonObject.putOpt(TOKEN, modelObject.token)
+                return try {
+                    JSONObject().apply {
+                        putOpt(TYPE, modelObject.type)
+                        putOpt(PAYMENT_DATA, modelObject.paymentData)
+                        putOpt(PAYMENT_METHOD_TYPE, modelObject.paymentMethodType)
+                        putOpt(TOKEN, modelObject.token)
+                    }
                 } catch (e: JSONException) {
                     throw ModelSerializationException(Threeds2FingerprintAction::class.java, e)
                 }
-                return jsonObject
             }
 
             override fun deserialize(jsonObject: JSONObject): Threeds2FingerprintAction {
                 return try {
                     Threeds2FingerprintAction(
                         token = jsonObject.getStringOrNull(TOKEN),
-                    ).apply {
-                        type = jsonObject.getStringOrNull(TYPE)
-                        paymentData = jsonObject.getStringOrNull(PAYMENT_DATA)
-                        paymentMethodType = jsonObject.getStringOrNull(PAYMENT_METHOD_TYPE)
-                    }
+                        type = jsonObject.getStringOrNull(TYPE),
+                        paymentData = jsonObject.getStringOrNull(PAYMENT_DATA),
+                        paymentMethodType = jsonObject.getStringOrNull(PAYMENT_METHOD_TYPE),
+                    )
                 } catch (e: JSONException) {
                     throw ModelSerializationException(Threeds2Action::class.java, e)
                 }

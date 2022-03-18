@@ -5,184 +5,91 @@
  *
  * Created by caiof on 4/6/2019.
  */
+package com.adyen.checkout.components.model.payments.response
 
-package com.adyen.checkout.components.model.payments.response;
+import android.os.Parcel
+import com.adyen.checkout.components.model.payments.Amount
+import com.adyen.checkout.components.util.ActionTypes
+import com.adyen.checkout.core.exception.ModelSerializationException
+import com.adyen.checkout.core.model.JsonUtils.writeToParcel
+import com.adyen.checkout.core.model.ModelUtils.deserializeOpt
+import com.adyen.checkout.core.model.ModelUtils.serializeOpt
+import com.adyen.checkout.core.model.getStringOrNull
+import org.json.JSONException
+import org.json.JSONObject
 
-import android.os.Parcel;
+data class VoucherAction(
+    override var type: String? = null,
+    override var paymentData: String? = null,
+    override var paymentMethodType: String? = null,
+    var surcharge: Amount? = null,
+    var initialAmount: Amount? = null,
+    var totalAmount: Amount? = null,
+    var issuer: String? = null,
+    var expiresAt: String? = null,
+    var reference: String? = null,
+    var alternativeReference: String? = null,
+    var merchantName: String? = null,
+    var url: String? = null,
+) : Action() {
+    override fun writeToParcel(dest: Parcel, flags: Int) {
+        writeToParcel(dest, SERIALIZER.serialize(this))
+    }
 
-import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
+    companion object {
+        const val ACTION_TYPE = ActionTypes.VOUCHER
+        private const val SURCHARGE = "surcharge"
+        private const val INITIAL_AMOUNT = "initialAmount"
+        private const val TOTAL_AMOUNT = "totalAmount"
+        private const val ISSUER = "issuer"
+        private const val EXPIRES_AT = "expiresAt"
+        private const val REFERENCE = "reference"
+        private const val ALTERNATIVE_REFERENCE = "alternativeReference"
+        private const val MERCHANT_NAME = "merchantName"
+        private const val URL = "url"
 
-import com.adyen.checkout.components.model.payments.Amount;
-import com.adyen.checkout.components.util.ActionTypes;
-import com.adyen.checkout.core.exception.ModelSerializationException;
-import com.adyen.checkout.core.model.JsonUtils;
-import com.adyen.checkout.core.model.ModelUtils;
+        @JvmField
+        val CREATOR = Creator(VoucherAction::class.java)
 
-import org.json.JSONException;
-import org.json.JSONObject;
-
-@SuppressWarnings({"MemberName", "PMD.DataClass"})
-public class VoucherAction extends Action {
-    @NonNull
-    public static final Creator<VoucherAction> CREATOR = new Creator<>(VoucherAction.class);
-
-    public static final String ACTION_TYPE = ActionTypes.VOUCHER;
-
-    private static final String SURCHARGE = "surcharge";
-    private static final String INITIAL_AMOUNT = "initialAmount";
-    private static final String TOTAL_AMOUNT = "totalAmount";
-    private static final String ISSUER = "issuer";
-    private static final String EXPIRES_AT = "expiresAt";
-    private static final String REFERENCE = "reference";
-    private static final String ALTERNATIVE_REFERENCE = "alternativeReference";
-    private static final String MERCHANT_NAME = "merchantName";
-    private static final String URL = "url";
-
-    @NonNull
-    public static final Serializer<VoucherAction> SERIALIZER = new Serializer<VoucherAction>() {
-
-        @NonNull
-        @Override
-        public JSONObject serialize(@NonNull VoucherAction modelObject) {
-            final JSONObject jsonObject = new JSONObject();
-            try {
-                // Get parameters from parent class
-                jsonObject.putOpt(Action.TYPE, modelObject.getType());
-                jsonObject.putOpt(Action.PAYMENT_DATA, modelObject.getPaymentData());
-                jsonObject.putOpt(Action.PAYMENT_METHOD_TYPE, modelObject.getPaymentMethodType());
-
-                jsonObject.putOpt(SURCHARGE, ModelUtils.serializeOpt(modelObject.getSurcharge(), Amount.SERIALIZER));
-                jsonObject.putOpt(INITIAL_AMOUNT, ModelUtils.serializeOpt(modelObject.getInitialAmount(), Amount.SERIALIZER));
-                jsonObject.putOpt(TOTAL_AMOUNT, ModelUtils.serializeOpt(modelObject.getTotalAmount(), Amount.SERIALIZER));
-                jsonObject.putOpt(ISSUER, modelObject.getIssuer());
-                jsonObject.putOpt(EXPIRES_AT, modelObject.getExpiresAt());
-                jsonObject.putOpt(REFERENCE, modelObject.getReference());
-                jsonObject.putOpt(ALTERNATIVE_REFERENCE, modelObject.getAlternativeReference());
-                jsonObject.putOpt(MERCHANT_NAME, modelObject.getMerchantName());
-                jsonObject.putOpt(URL, modelObject.getUrl());
-            } catch (JSONException e) {
-                throw new ModelSerializationException(VoucherAction.class, e);
+        @JvmField
+        val SERIALIZER: Serializer<VoucherAction> = object : Serializer<VoucherAction> {
+            override fun serialize(modelObject: VoucherAction): JSONObject {
+                return try {
+                    JSONObject().apply {
+                        putOpt(TYPE, modelObject.type)
+                        putOpt(PAYMENT_DATA, modelObject.paymentData)
+                        putOpt(PAYMENT_METHOD_TYPE, modelObject.paymentMethodType)
+                        putOpt(SURCHARGE, serializeOpt(modelObject.surcharge, Amount.SERIALIZER))
+                        putOpt(INITIAL_AMOUNT, serializeOpt(modelObject.initialAmount, Amount.SERIALIZER))
+                        putOpt(TOTAL_AMOUNT, serializeOpt(modelObject.totalAmount, Amount.SERIALIZER))
+                        putOpt(ISSUER, modelObject.issuer)
+                        putOpt(EXPIRES_AT, modelObject.expiresAt)
+                        putOpt(REFERENCE, modelObject.reference)
+                        putOpt(ALTERNATIVE_REFERENCE, modelObject.alternativeReference)
+                        putOpt(MERCHANT_NAME, modelObject.merchantName)
+                        putOpt(URL, modelObject.url)
+                    }
+                } catch (e: JSONException) {
+                    throw ModelSerializationException(VoucherAction::class.java, e)
+                }
             }
-            return jsonObject;
+
+            override fun deserialize(jsonObject: JSONObject): VoucherAction {
+                return VoucherAction(
+                    type = jsonObject.getStringOrNull(TYPE),
+                    paymentData = jsonObject.getStringOrNull(PAYMENT_DATA),
+                    paymentMethodType = jsonObject.getStringOrNull(PAYMENT_METHOD_TYPE),
+                    surcharge = deserializeOpt(jsonObject.optJSONObject(SURCHARGE), Amount.SERIALIZER),
+                    initialAmount = deserializeOpt(jsonObject.optJSONObject(INITIAL_AMOUNT), Amount.SERIALIZER),
+                    totalAmount = deserializeOpt(jsonObject.optJSONObject(TOTAL_AMOUNT), Amount.SERIALIZER),
+                    issuer = jsonObject.getStringOrNull(ISSUER),
+                    expiresAt = jsonObject.getStringOrNull(EXPIRES_AT),
+                    reference = jsonObject.getStringOrNull(REFERENCE),
+                    alternativeReference = jsonObject.getStringOrNull(ALTERNATIVE_REFERENCE),
+                    merchantName = jsonObject.getStringOrNull(MERCHANT_NAME),
+                    url = jsonObject.getStringOrNull(URL),
+                )
+            }
         }
-
-        @NonNull
-        @Override
-        public VoucherAction deserialize(@NonNull JSONObject jsonObject) {
-            final VoucherAction voucherAction = new VoucherAction();
-
-            // getting parameters from parent class
-            voucherAction.setType(jsonObject.optString(Action.TYPE, null));
-            voucherAction.setPaymentData(jsonObject.optString(Action.PAYMENT_DATA, null));
-            voucherAction.setPaymentMethodType(jsonObject.optString(Action.PAYMENT_METHOD_TYPE, null));
-
-            voucherAction.setSurcharge(ModelUtils.deserializeOpt(jsonObject.optJSONObject(SURCHARGE), Amount.SERIALIZER));
-            voucherAction.setInitialAmount(ModelUtils.deserializeOpt(jsonObject.optJSONObject(INITIAL_AMOUNT), Amount.SERIALIZER));
-            voucherAction.setTotalAmount(ModelUtils.deserializeOpt(jsonObject.optJSONObject(TOTAL_AMOUNT), Amount.SERIALIZER));
-            voucherAction.setIssuer(jsonObject.optString(ISSUER));
-            voucherAction.setExpiresAt(jsonObject.optString(EXPIRES_AT));
-            voucherAction.setReference(jsonObject.optString(REFERENCE));
-            voucherAction.setAlternativeReference(jsonObject.optString(ALTERNATIVE_REFERENCE));
-            voucherAction.setMerchantName(jsonObject.optString(MERCHANT_NAME));
-            voucherAction.setUrl(jsonObject.optString(URL));
-            return voucherAction;
-        }
-    };
-
-    private Amount surcharge;
-    private Amount initialAmount;
-    private Amount totalAmount;
-    private String issuer;
-    private String expiresAt;
-    private String reference;
-    private String alternativeReference;
-    private String merchantName;
-    private String url;
-
-    @Override
-    public void writeToParcel(@NonNull Parcel dest, int flags) {
-        JsonUtils.writeToParcel(dest, SERIALIZER.serialize(this));
-    }
-
-    @Nullable
-    public Amount getSurcharge() {
-        return surcharge;
-    }
-
-    public void setSurcharge(@Nullable Amount surcharge) {
-        this.surcharge = surcharge;
-    }
-
-    @Nullable
-    public Amount getInitialAmount() {
-        return initialAmount;
-    }
-
-    public void setInitialAmount(@Nullable Amount initialAmount) {
-        this.initialAmount = initialAmount;
-    }
-
-    @Nullable
-    public Amount getTotalAmount() {
-        return totalAmount;
-    }
-
-    public void setTotalAmount(@Nullable Amount totalAmount) {
-        this.totalAmount = totalAmount;
-    }
-
-    @Nullable
-    public String getIssuer() {
-        return issuer;
-    }
-
-    public void setIssuer(@Nullable String issuer) {
-        this.issuer = issuer;
-    }
-
-    @Nullable
-    public String getExpiresAt() {
-        return expiresAt;
-    }
-
-    public void setExpiresAt(@Nullable String expiresAt) {
-        this.expiresAt = expiresAt;
-    }
-
-    @Nullable
-    public String getReference() {
-        return reference;
-    }
-
-    public void setReference(@Nullable String reference) {
-        this.reference = reference;
-    }
-
-    @Nullable
-    public String getAlternativeReference() {
-        return alternativeReference;
-    }
-
-    public void setAlternativeReference(@Nullable String alternativeReference) {
-        this.alternativeReference = alternativeReference;
-    }
-
-    @Nullable
-    public String getMerchantName() {
-        return merchantName;
-    }
-
-    public void setMerchantName(@Nullable String merchantName) {
-        this.merchantName = merchantName;
-    }
-
-    @Nullable
-    public String getUrl() {
-        return url;
-    }
-
-    public void setUrl(@Nullable String url) {
-        this.url = url;
     }
 }
