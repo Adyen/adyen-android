@@ -5,104 +5,61 @@
  *
  * Created by arman on 10/12/2019.
  */
+package com.adyen.checkout.components.model.payments.request
 
-package com.adyen.checkout.components.model.payments.request;
+import android.os.Parcel
+import com.adyen.checkout.core.exception.ModelSerializationException
+import com.adyen.checkout.core.model.JsonUtils.writeToParcel
+import com.adyen.checkout.core.model.ModelObject
+import com.adyen.checkout.core.model.getStringOrNull
+import org.json.JSONException
+import org.json.JSONObject
 
-import android.os.Parcel;
+data class ShopperName(
+    var firstName: String? = null,
+    var infix: String? = null,
+    var lastName: String? = null,
+    var gender: String? = null,
+) : ModelObject() {
 
-import androidx.annotation.NonNull;
+    override fun writeToParcel(dest: Parcel, flags: Int) {
+        writeToParcel(dest, SERIALIZER.serialize(this))
+    }
 
-import com.adyen.checkout.core.exception.ModelSerializationException;
-import com.adyen.checkout.core.model.JsonUtils;
-import com.adyen.checkout.core.model.ModelObject;
+    companion object {
+        private const val FIRST_NAME = "firstName"
+        private const val INFIX = "infix"
+        private const val LAST_NAME = "lastName"
+        private const val GENDER = "gender"
 
-import org.json.JSONException;
-import org.json.JSONObject;
+        @JvmField
+        val CREATOR = Creator(
+            ShopperName::class.java
+        )
 
-@SuppressWarnings({"MemberName", "PMD.DataClass", "DeclarationOrder", "PMD.FieldDeclarationsShouldBeAtStartOfClass"})
-public class ShopperName extends ModelObject {
-    @NonNull
-    public static final Creator<ShopperName> CREATOR = new Creator<>(ShopperName.class);
-
-    private static final String FIRST_NAME = "firstName";
-    private static final String INFIX = "infix";
-    private static final String LAST_NAME = "lastName";
-    private static final String GENDER = "gender";
-
-    @NonNull
-    public static final Serializer<ShopperName> SERIALIZER = new Serializer<ShopperName>() {
-        @Override
-        @NonNull
-        public JSONObject serialize(@NonNull ShopperName modelObject) {
-            final JSONObject jsonObject = new JSONObject();
-            try {
-                jsonObject.putOpt(FIRST_NAME, modelObject.getFirstName());
-                jsonObject.putOpt(INFIX, modelObject.getInfix());
-                jsonObject.putOpt(LAST_NAME, modelObject.getLastName());
-                jsonObject.putOpt(GENDER, modelObject.getGender());
-            } catch (JSONException e) {
-                throw new ModelSerializationException(ShopperName.class, e);
+        @JvmField
+        val SERIALIZER: Serializer<ShopperName> = object : Serializer<ShopperName> {
+            override fun serialize(modelObject: ShopperName): JSONObject {
+                return try {
+                    JSONObject().apply {
+                        putOpt(FIRST_NAME, modelObject.firstName)
+                        putOpt(INFIX, modelObject.infix)
+                        putOpt(LAST_NAME, modelObject.lastName)
+                        putOpt(GENDER, modelObject.gender)
+                    }
+                } catch (e: JSONException) {
+                    throw ModelSerializationException(ShopperName::class.java, e)
+                }
             }
-            return jsonObject;
+
+            override fun deserialize(jsonObject: JSONObject): ShopperName {
+                return ShopperName(
+                    firstName = jsonObject.getStringOrNull(FIRST_NAME),
+                    infix = jsonObject.getStringOrNull(INFIX),
+                    lastName = jsonObject.getStringOrNull(LAST_NAME),
+                    gender = jsonObject.getStringOrNull(GENDER),
+                )
+            }
         }
-
-        @Override
-        @NonNull
-        public ShopperName deserialize(@NonNull JSONObject jsonObject) {
-            final ShopperName shopperName = new ShopperName();
-
-            shopperName.setFirstName(jsonObject.optString(FIRST_NAME, null));
-            shopperName.setInfix(jsonObject.optString(INFIX, null));
-            shopperName.setLastName(jsonObject.optString(LAST_NAME, null));
-            shopperName.setGender(jsonObject.optString(GENDER, null));
-
-            return shopperName;
-        }
-    };
-
-    @Override
-    public void writeToParcel(@NonNull Parcel dest, int flags) {
-        JsonUtils.writeToParcel(dest, SERIALIZER.serialize(this));
-    }
-
-    private String firstName;
-    private String infix;
-    private String lastName;
-    private String gender;
-
-    @NonNull
-    public String getFirstName() {
-        return firstName;
-    }
-
-    public void setFirstName(@NonNull String firstName) {
-        this.firstName = firstName;
-    }
-
-    @NonNull
-    public String getInfix() {
-        return infix;
-    }
-
-    public void setInfix(@NonNull String infix) {
-        this.infix = infix;
-    }
-
-    @NonNull
-    public String getLastName() {
-        return lastName;
-    }
-
-    public void setLastName(@NonNull String lastName) {
-        this.lastName = lastName;
-    }
-
-    @NonNull
-    public String getGender() {
-        return gender;
-    }
-
-    public void setGender(@NonNull String gender) {
-        this.gender = gender;
     }
 }

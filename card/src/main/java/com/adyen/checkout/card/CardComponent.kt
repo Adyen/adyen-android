@@ -395,7 +395,7 @@ class CardComponent private constructor(
     ): PaymentComponentData<CardPaymentMethod> {
         return PaymentComponentData<CardPaymentMethod>().apply {
             paymentMethod = cardPaymentMethod
-            setStorePaymentMethod(stateOutputData.isStoredPaymentMethodEnable)
+            storePaymentMethod = stateOutputData.isStoredPaymentMethodEnable
             shopperReference = configuration.shopperReference
             if (cardDelegate.isSocialSecurityNumberRequired()) {
                 socialSecurityNumber = stateOutputData.socialSecurityNumberState.value

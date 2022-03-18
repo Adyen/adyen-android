@@ -137,7 +137,7 @@ class BcmcComponent(
             }
         }
         paymentComponentData.paymentMethod = cardPaymentMethod
-        paymentComponentData.setStorePaymentMethod(outputData.isStoredPaymentMethodEnabled)
+        paymentComponentData.storePaymentMethod = outputData.isStoredPaymentMethodEnabled
         paymentComponentData.shopperReference = configuration.shopperReference
         return PaymentComponentState(paymentComponentData, true, true)
     }

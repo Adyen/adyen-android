@@ -72,6 +72,7 @@ abstract class PaymentMethodDetails : ModelObject() {
                 BacsDirectDebitPaymentMethod.PAYMENT_METHOD_TYPE -> BacsDirectDebitPaymentMethod.SERIALIZER
                 else -> GenericPaymentMethod.SERIALIZER
             }
+            @Suppress("UNCHECKED_CAST")
             return serializer as Serializer<PaymentMethodDetails>
         }
     }
