@@ -18,7 +18,6 @@ import okhttp3.ResponseBody
 import retrofit2.Call
 import retrofit2.Response
 import retrofit2.http.Body
-import retrofit2.http.Headers
 import retrofit2.http.POST
 
 interface CheckoutApiService {
@@ -31,41 +30,32 @@ interface CheckoutApiService {
         }
     }
 
-    @Headers(BuildConfig.API_KEY_HEADER_NAME + ":" + BuildConfig.CHECKOUT_API_KEY)
     @POST("sessions")
     suspend fun sessionsAsync(@Body sessionRequest: SessionRequest): Response<Session>
 
-    @Headers(BuildConfig.API_KEY_HEADER_NAME + ":" + BuildConfig.CHECKOUT_API_KEY)
     @POST("paymentMethods")
     suspend fun paymentMethodsAsync(@Body paymentMethodsRequest: PaymentMethodsRequest): Response<PaymentMethodsApiResponse>
 
     // There is no native support for JSONObject in either Moshi or Gson, so using RequestBody as a work around for now
-    @Headers(BuildConfig.API_KEY_HEADER_NAME + ":" + BuildConfig.CHECKOUT_API_KEY)
     @POST("payments")
     fun payments(@Body paymentsRequest: RequestBody): Call<ResponseBody>
 
     // There is no native support for JSONObject in either Moshi or Gson, so using RequestBody as a work around for now
-    @Headers(BuildConfig.API_KEY_HEADER_NAME + ":" + BuildConfig.CHECKOUT_API_KEY)
     @POST("payments")
     suspend fun paymentsAsync(@Body paymentsRequest: RequestBody): Response<ResponseBody>
 
-    @Headers(BuildConfig.API_KEY_HEADER_NAME + ":" + BuildConfig.CHECKOUT_API_KEY)
     @POST("payments/details")
     fun details(@Body detailsRequest: RequestBody): Call<ResponseBody>
 
-    @Headers(BuildConfig.API_KEY_HEADER_NAME + ":" + BuildConfig.CHECKOUT_API_KEY)
     @POST("payments/details")
     suspend fun detailsAsync(@Body detailsRequest: RequestBody): Response<ResponseBody>
 
-    @Headers(BuildConfig.API_KEY_HEADER_NAME + ":" + BuildConfig.CHECKOUT_API_KEY)
     @POST("paymentMethods/balance")
     suspend fun checkBalanceAsync(@Body balanceRequest: RequestBody): Response<ResponseBody>
 
-    @Headers(BuildConfig.API_KEY_HEADER_NAME + ":" + BuildConfig.CHECKOUT_API_KEY)
     @POST("orders")
     suspend fun createOrderAsync(@Body orderRequest: RequestBody): Response<ResponseBody>
 
-    @Headers(BuildConfig.API_KEY_HEADER_NAME + ":" + BuildConfig.CHECKOUT_API_KEY)
     @POST("orders/cancel")
     suspend fun cancelOrderAsync(@Body orderRequest: RequestBody): Response<ResponseBody>
 }

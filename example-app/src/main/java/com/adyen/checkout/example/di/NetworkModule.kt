@@ -19,17 +19,17 @@ import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
 import dagger.hilt.components.SingletonComponent
-import java.security.KeyStore
-import java.util.*
-import javax.inject.Singleton
-import javax.net.ssl.TrustManagerFactory
-import javax.net.ssl.X509TrustManager
 import okhttp3.OkHttpClient
 import okhttp3.logging.HttpLoggingInterceptor
 import retrofit2.Converter
 import retrofit2.Retrofit
 import retrofit2.converter.moshi.MoshiConverterFactory
+import java.security.KeyStore
+import java.util.Arrays
 import javax.inject.Named
+import javax.inject.Singleton
+import javax.net.ssl.TrustManagerFactory
+import javax.net.ssl.X509TrustManager
 
 @Module
 @InstallIn(SingletonComponent::class)
@@ -54,6 +54,14 @@ object NetworkModule {
             val interceptor = HttpLoggingInterceptor()
             interceptor.level = HttpLoggingInterceptor.Level.BODY
             builder.addNetworkInterceptor(interceptor)
+        }
+
+        builder.addInterceptor { chain ->
+            val request = chain.request().newBuilder()
+                .addHeader(BuildConfig.API_KEY_HEADER_NAME, BuildConfig.CHECKOUT_API_KEY)
+                .build()
+
+            chain.proceed(request)
         }
 
         if (Build.VERSION_CODES.JELLY_BEAN <= Build.VERSION.SDK_INT && Build.VERSION.SDK_INT < Build.VERSION_CODES.LOLLIPOP_MR1) {
