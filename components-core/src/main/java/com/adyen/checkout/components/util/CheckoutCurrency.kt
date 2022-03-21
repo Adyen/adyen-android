@@ -5,23 +5,18 @@
  *
  * Created by caiof on 31/7/2019.
  */
+package com.adyen.checkout.components.util
 
-package com.adyen.checkout.components.util;
-
-import android.text.TextUtils;
-
-import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
-
-import java.util.Collections;
-import java.util.HashMap;
-import java.util.Map;
+import android.text.TextUtils
+import com.adyen.checkout.core.exception.CheckoutException
+import java.util.Collections
 
 /**
  * Utility class holding currency information.
- * @see <a href="https://docs.adyen.com/developers/currency-codes">Adyen currency codes</a>
+ * @see [Adyen currency codes](https://docs.adyen.com/developers/currency-codes)
  */
-public enum CheckoutCurrency {
+@Suppress("MagicNumber")
+enum class CheckoutCurrency(val fractionDigits: Int) {
     AED(2),
     ALL(2),
     AMD(2),
@@ -161,45 +156,36 @@ public enum CheckoutCurrency {
     ZAR(2),
     ZMW(2);
 
-    private static final Map<String, CheckoutCurrency> CURRENCIES_HASHMAP;
-    static {
-        final HashMap<String, CheckoutCurrency> hashMap = new HashMap<>();
-        for (CheckoutCurrency checkoutCurrency : CheckoutCurrency.values()) {
-            hashMap.put(checkoutCurrency.name(), checkoutCurrency);
+    companion object {
+        private val CURRENCIES_HASHMAP: Map<String, CheckoutCurrency> = HashMap<String, CheckoutCurrency>().apply {
+            for (checkoutCurrency in values()) {
+                put(checkoutCurrency.name, checkoutCurrency)
+            }
+        }.let {
+            Collections.unmodifiableMap(it)
         }
-        CURRENCIES_HASHMAP = Collections.unmodifiableMap(hashMap);
-    }
 
-    private final int mFractionDigits;
+        /**
+         * Check if the currency code is supported by Adyen.
+         *
+         * @param currency the 3 letter code of the currency.
+         * @return if the currency exists and is supported by Adyen
+         */
+        @JvmStatic
+        fun isSupported(currency: String?): Boolean {
+            return !TextUtils.isEmpty(currency) && CURRENCIES_HASHMAP.containsKey(currency)
+        }
 
-    /**
-     * Check if the currency code is supported by Adyen.
-     *
-     * @param currency the 3 letter code of the currency.
-     * @return if the currency exists and is supported by Adyen
-     */
-    public static boolean isSupported(@Nullable String currency) {
-        return !TextUtils.isEmpty(currency) && CURRENCIES_HASHMAP.containsKey(currency);
-    }
-
-    /**
-     * Find the instance of {@link CheckoutCurrency} based on the currency code.
-     *
-     * @param currency The currency code.
-     * @return The CheckoutCurrency instance, or throws a {@link com.adyen.checkout.core.exception.CheckoutException} if the code is not supported.
-     */
-    @NonNull
-    public static CheckoutCurrency find(@Nullable String currency) {
-        CurrencyUtils.assertCurrency(currency);
-        //noinspection ConstantConditions
-        return CURRENCIES_HASHMAP.get(currency);
-    }
-
-    CheckoutCurrency(int fractionDigits) {
-        mFractionDigits = fractionDigits;
-    }
-
-    public int getFractionDigits() {
-        return mFractionDigits;
+        /**
+         * Find the instance of [CheckoutCurrency] based on the currency code.
+         *
+         * @param currency The currency code.
+         * @return The CheckoutCurrency instance, or throws a [CheckoutException] if the code is not supported.
+         */
+        @JvmStatic
+        fun find(currency: String): CheckoutCurrency {
+            CurrencyUtils.assertCurrency(currency)
+            return CURRENCIES_HASHMAP[currency] ?: throw CheckoutException("Currency not found.")
+        }
     }
 }

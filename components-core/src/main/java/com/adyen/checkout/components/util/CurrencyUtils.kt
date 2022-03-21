@@ -5,56 +5,43 @@
  *
  * Created by caiof on 30/9/2019.
  */
+package com.adyen.checkout.components.util
 
-package com.adyen.checkout.components.util;
+import com.adyen.checkout.components.model.payments.Amount
+import com.adyen.checkout.components.util.CheckoutCurrency.Companion.find
+import com.adyen.checkout.components.util.CheckoutCurrency.Companion.isSupported
+import com.adyen.checkout.core.exception.CheckoutException
+import com.adyen.checkout.core.log.LogUtil.getTag
+import java.math.BigDecimal
+import java.text.DecimalFormat
+import java.util.Currency
+import java.util.Locale
 
-import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
-
-import com.adyen.checkout.components.model.payments.Amount;
-import com.adyen.checkout.core.exception.CheckoutException;
-import com.adyen.checkout.core.exception.NoConstructorException;
-import com.adyen.checkout.core.log.LogUtil;
-
-import java.math.BigDecimal;
-import java.text.DecimalFormat;
-import java.text.NumberFormat;
-import java.util.Currency;
-import java.util.Locale;
-
-public final class CurrencyUtils {
-    public static final String TAG = LogUtil.getTag();
+object CurrencyUtils {
+    val TAG = getTag()
 
     /**
-     * Format the {@link Amount} to be displayed to the user based on the Locale.
+     * Format the [Amount] to be displayed to the user based on the Locale.
      *
      * @param amount The amount with currency and value.
      * @param locale The locale the amount will be formatted with.
      * @return A formatted string displaying currency and value.
      */
-    @NonNull
-    public static String formatAmount(@NonNull Amount amount, @NonNull Locale locale) {
-
-        final String currencyCode = amount.getCurrency();
-        final CheckoutCurrency checkoutCurrency = CheckoutCurrency.find(currencyCode);
-
-        final Currency currency = Currency.getInstance(currencyCode);
-        final NumberFormat currencyFormat = DecimalFormat.getCurrencyInstance(locale);
-        currencyFormat.setCurrency(currency);
-        currencyFormat.setMinimumFractionDigits(checkoutCurrency.getFractionDigits());
-        currencyFormat.setMaximumFractionDigits(checkoutCurrency.getFractionDigits());
-
-        final BigDecimal value = BigDecimal.valueOf(amount.getValue(), checkoutCurrency.getFractionDigits());
-        return currencyFormat.format(value);
+    fun formatAmount(amount: Amount, locale: Locale): String {
+        val currencyCode = amount.currency
+        val checkoutCurrency = find(currencyCode.orEmpty())
+        val currency = Currency.getInstance(currencyCode)
+        val currencyFormat = DecimalFormat.getCurrencyInstance(locale)
+        currencyFormat.currency = currency
+        currencyFormat.minimumFractionDigits = checkoutCurrency.fractionDigits
+        currencyFormat.maximumFractionDigits = checkoutCurrency.fractionDigits
+        val value = BigDecimal.valueOf(amount.value, checkoutCurrency.fractionDigits)
+        return currencyFormat.format(value)
     }
 
-    static void assertCurrency(@Nullable String currencyCode) {
-        if (!CheckoutCurrency.isSupported(currencyCode)) {
-            throw new CheckoutException("Currency " + currencyCode + " not supported");
+    fun assertCurrency(currencyCode: String?) {
+        if (!isSupported(currencyCode)) {
+            throw CheckoutException("Currency $currencyCode not supported")
         }
-    }
-
-    private CurrencyUtils() {
-        throw NoConstructorException.INSTANCE;
     }
 }
