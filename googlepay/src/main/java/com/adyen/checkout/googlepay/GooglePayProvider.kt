@@ -18,7 +18,6 @@ import com.adyen.checkout.components.PaymentMethodAvailabilityCheck
 import com.adyen.checkout.components.base.GenericPaymentMethodDelegate
 import com.adyen.checkout.components.base.lifecycle.viewModelFactory
 import com.adyen.checkout.components.model.paymentmethods.PaymentMethod
-import com.adyen.checkout.core.exception.CheckoutException
 import com.adyen.checkout.core.log.LogUtil
 import com.adyen.checkout.core.log.Logger
 import com.adyen.checkout.googlepay.model.GooglePayParams
@@ -61,12 +60,9 @@ class GooglePayProvider :
     override fun isAvailable(
         applicationContext: Application,
         paymentMethod: PaymentMethod,
-        configuration: GooglePayConfiguration?,
+        configuration: GooglePayConfiguration,
         callback: ComponentAvailableCallback<GooglePayConfiguration>
     ) {
-        if (configuration == null) {
-            throw CheckoutException("GooglePayConfiguration cannot be null")
-        }
         if (GoogleApiAvailability.getInstance().isGooglePlayServicesAvailable(applicationContext) != ConnectionResult.SUCCESS) {
             callback.onAvailabilityResult(false, paymentMethod, configuration)
             return

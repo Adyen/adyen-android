@@ -11,5 +11,5 @@ import com.adyen.checkout.components.base.Configuration
 import com.adyen.checkout.components.model.paymentmethods.PaymentMethod
 
 interface ComponentAvailableCallback<ConfigurationT : Configuration> {
-    fun onAvailabilityResult(isAvailable: Boolean, paymentMethod: PaymentMethod, config: ConfigurationT)
+    fun onAvailabilityResult(isAvailable: Boolean, paymentMethod: PaymentMethod, config: ConfigurationT?)
 }

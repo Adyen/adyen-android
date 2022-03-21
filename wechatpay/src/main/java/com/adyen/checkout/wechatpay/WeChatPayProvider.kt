@@ -25,7 +25,7 @@ class WeChatPayProvider : PaymentMethodAvailabilityCheck<Configuration> {
     override fun isAvailable(
         applicationContext: Application,
         paymentMethod: PaymentMethod,
-        configuration: Configuration?,
+        configuration: Configuration,
         callback: ComponentAvailableCallback<Configuration>
     ) {
         callback.onAvailabilityResult(WeChatPayUtils.isAvailable(applicationContext), paymentMethod, configuration)

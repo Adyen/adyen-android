@@ -24,7 +24,6 @@ import com.adyen.checkout.redirect.RedirectDelegate
 
 class Adyen3DS2ComponentProvider : ActionComponentProvider<Adyen3DS2Component, Adyen3DS2Configuration> {
 
-
     override fun <T> get(
         owner: T,
         application: Application,
