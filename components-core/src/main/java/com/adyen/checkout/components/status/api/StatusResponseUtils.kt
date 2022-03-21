@@ -5,27 +5,19 @@
  *
  * Created by caiof on 8/9/2020.
  */
+package com.adyen.checkout.components.status.api
 
-package com.adyen.checkout.components.status.api;
+import com.adyen.checkout.components.status.model.StatusResponse
 
-import androidx.annotation.NonNull;
+object StatusResponseUtils {
+    const val RESULT_PENDING = "pending"
+    const val RESULT_AUTHORIZED = "authorised"
+    const val RESULT_REFUSED = "refused"
+    const val RESULT_ERROR = "error"
+    const val RESULT_CANCELED = "canceled"
 
-import com.adyen.checkout.components.status.model.StatusResponse;
-import com.adyen.checkout.core.exception.NoConstructorException;
-
-public final class StatusResponseUtils {
-
-    public static final String RESULT_PENDING = "pending";
-    public static final String RESULT_AUTHORIZED = "authorised";
-    public static final String RESULT_REFUSED = "refused";
-    public static final String RESULT_ERROR = "error";
-    public static final String RESULT_CANCELED = "canceled";
-
-    public static boolean isFinalResult(@NonNull StatusResponse statusResponse) {
-        return !RESULT_PENDING.equals(statusResponse.getResultCode());
-    }
-
-    private StatusResponseUtils() {
-        throw NoConstructorException.INSTANCE;
+    @JvmStatic
+    fun isFinalResult(statusResponse: StatusResponse): Boolean {
+        return RESULT_PENDING != statusResponse.resultCode
     }
 }

@@ -5,66 +5,50 @@
  *
  * Created by caiof on 28/8/2020.
  */
+package com.adyen.checkout.components.status.model
 
-package com.adyen.checkout.components.status.model;
+import android.os.Parcel
+import com.adyen.checkout.components.model.payments.request.Address
+import com.adyen.checkout.core.exception.ModelSerializationException
+import com.adyen.checkout.core.model.JsonUtils.writeToParcel
+import com.adyen.checkout.core.model.ModelObject
+import com.adyen.checkout.core.model.getStringOrNull
+import org.json.JSONException
+import org.json.JSONObject
 
-import android.os.Parcel;
+data class StatusRequest(
+    var paymentData: String? = null,
+) : ModelObject() {
 
-import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
+    override fun writeToParcel(dest: Parcel, flags: Int) {
+        writeToParcel(dest, SERIALIZER.serialize(this))
+    }
 
-import com.adyen.checkout.components.model.payments.request.Address;
-import com.adyen.checkout.core.exception.ModelSerializationException;
-import com.adyen.checkout.core.model.JsonUtils;
-import com.adyen.checkout.core.model.ModelObject;
+    companion object {
+        const val PAYMENT_DATA = "paymentData"
 
-import org.json.JSONException;
-import org.json.JSONObject;
+        @JvmField
+        val CREATOR = Creator(
+            StatusRequest::class.java
+        )
 
-@SuppressWarnings("MemberName")
-public class StatusRequest extends ModelObject {
-    @NonNull
-    public static final Creator<StatusRequest> CREATOR = new Creator<>(StatusRequest.class);
-
-    public static final String PAYMENT_DATA = "paymentData";
-
-    @NonNull
-    public static final Serializer<StatusRequest> SERIALIZER = new Serializer<StatusRequest>() {
-
-        @NonNull
-        @Override
-        public JSONObject serialize(@NonNull StatusRequest modelObject) {
-            final JSONObject jsonObject = new JSONObject();
-            try {
-                jsonObject.putOpt(PAYMENT_DATA, modelObject.getPaymentData());
-            } catch (JSONException e) {
-                throw new ModelSerializationException(Address.class, e);
+        @JvmField
+        val SERIALIZER: Serializer<StatusRequest> = object : Serializer<StatusRequest> {
+            override fun serialize(modelObject: StatusRequest): JSONObject {
+                return try {
+                    JSONObject().apply {
+                        putOpt(PAYMENT_DATA, modelObject.paymentData)
+                    }
+                } catch (e: JSONException) {
+                    throw ModelSerializationException(Address::class.java, e)
+                }
             }
-            return jsonObject;
+
+            override fun deserialize(jsonObject: JSONObject): StatusRequest {
+                return StatusRequest(
+                    paymentData = jsonObject.getStringOrNull(PAYMENT_DATA)
+                )
+            }
         }
-
-        @NonNull
-        @Override
-        public StatusRequest deserialize(@NonNull JSONObject jsonObject) {
-            final StatusRequest statusRequest = new StatusRequest();
-            statusRequest.setPaymentData(jsonObject.optString(PAYMENT_DATA, null));
-            return statusRequest;
-        }
-    };
-
-    private String paymentData;
-
-    @Override
-    public void writeToParcel(@NonNull Parcel dest, int flags) {
-        JsonUtils.writeToParcel(dest, SERIALIZER.serialize(this));
-    }
-
-    @Nullable
-    public String getPaymentData() {
-        return paymentData;
-    }
-
-    public void setPaymentData(@Nullable String paymentData) {
-        this.paymentData = paymentData;
     }
 }

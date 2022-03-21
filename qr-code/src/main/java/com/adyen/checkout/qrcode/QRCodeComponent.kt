@@ -59,7 +59,7 @@ class QRCodeComponent(
     private val timerLiveData = MutableLiveData<TimerData>()
 
     private var statusCountDownTimer: CountDownTimer = object : CountDownTimer(
-        statusRepository.maxPollingDurationMillis,
+        StatusRepository.MAX_POLLING_DURATION_MILLIS,
         STATUS_POLLING_INTERVAL_MILLIS
     ) {
         override fun onTick(millisUntilFinished: Long) {
@@ -71,14 +71,14 @@ class QRCodeComponent(
         }
     }
 
-    private val responseObserver: Observer<StatusResponse> = Observer { statusResponse ->
+    private val responseObserver: Observer<StatusResponse?> = Observer { statusResponse ->
         Logger.v(TAG, "onChanged - " + if (statusResponse == null) "null" else statusResponse.resultCode)
         createOutputData(statusResponse)
         if (statusResponse != null && StatusResponseUtils.isFinalResult(statusResponse)) {
             onPollingSuccessful(statusResponse)
         }
     }
-    private val mErrorObserver: Observer<ComponentException> = Observer { e ->
+    private val errorObserver: Observer<ComponentException?> = Observer { e ->
         // StatusRepository will post null errors to reset it's status. We can ignore.
         if (e != null) {
             Logger.e(TAG, "onError")
@@ -105,8 +105,8 @@ class QRCodeComponent(
 
     override fun observe(lifecycleOwner: LifecycleOwner, observer: Observer<ActionComponentData>) {
         super.observe(lifecycleOwner, observer)
-        statusRepository.statusResponseLiveData.observe(lifecycleOwner, responseObserver)
-        statusRepository.errorLiveData.observe(lifecycleOwner, mErrorObserver)
+        statusRepository.responseLiveData.observe(lifecycleOwner, responseObserver)
+        statusRepository.errorLiveData.observe(lifecycleOwner, errorObserver)
 
         // Immediately request a new status if the user resumes the app
         lifecycleOwner.lifecycle.addObserver(object : BaseLifecycleObserver() {
@@ -168,7 +168,7 @@ class QRCodeComponent(
     }
 
     private fun onTimerTick(millisUntilFinished: Long) {
-        val progressPercentage = (HUNDRED * millisUntilFinished / statusRepository.maxPollingDurationMillis).toInt()
+        val progressPercentage = (HUNDRED * millisUntilFinished / StatusRepository.MAX_POLLING_DURATION_MILLIS).toInt()
         timerLiveData.postValue(TimerData(millisUntilFinished, progressPercentage))
     }
 

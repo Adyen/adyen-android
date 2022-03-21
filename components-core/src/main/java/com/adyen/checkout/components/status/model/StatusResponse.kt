@@ -5,95 +5,57 @@
  *
  * Created by caiof on 28/8/2020.
  */
+package com.adyen.checkout.components.status.model
 
-package com.adyen.checkout.components.status.model;
+import android.os.Parcel
+import com.adyen.checkout.components.model.payments.request.Address
+import com.adyen.checkout.core.exception.ModelSerializationException
+import com.adyen.checkout.core.model.JsonUtils.writeToParcel
+import com.adyen.checkout.core.model.ModelObject
+import com.adyen.checkout.core.model.getStringOrNull
+import org.json.JSONException
+import org.json.JSONObject
 
-import android.os.Parcel;
+data class StatusResponse(
+    var type: String? = null,
+    var payload: String? = null,
+    var resultCode: String? = null,
+) : ModelObject() {
+    override fun writeToParcel(dest: Parcel, flags: Int) {
+        writeToParcel(dest, SERIALIZER.serialize(this))
+    }
 
-import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
+    companion object {
+        const val TYPE = "type"
+        const val PAYLOAD = "payload"
+        const val RESULT_CODE = "resultCode"
 
-import com.adyen.checkout.components.model.payments.request.Address;
-import com.adyen.checkout.core.exception.ModelSerializationException;
-import com.adyen.checkout.core.model.JsonUtils;
-import com.adyen.checkout.core.model.ModelObject;
+        @JvmField
+        val CREATOR = Creator(
+            StatusResponse::class.java
+        )
 
-import org.json.JSONException;
-import org.json.JSONObject;
-
-@SuppressWarnings({"MemberName", "PMD.DataClass"})
-public class StatusResponse extends ModelObject {
-    @NonNull
-    public static final Creator<StatusResponse> CREATOR = new Creator<>(StatusResponse.class);
-
-    public static final String TYPE = "type";
-    public static final String PAYLOAD = "payload";
-    public static final String RESULT_CODE = "resultCode";
-
-    @NonNull
-    public static final Serializer<StatusResponse> SERIALIZER = new Serializer<StatusResponse>() {
-
-        @NonNull
-        @Override
-        public JSONObject serialize(@NonNull StatusResponse modelObject) {
-            final JSONObject jsonObject = new JSONObject();
-            try {
-                jsonObject.putOpt(TYPE, modelObject.getType());
-                jsonObject.putOpt(PAYLOAD, modelObject.getPayload());
-                jsonObject.putOpt(RESULT_CODE, modelObject.getResultCode());
-            } catch (JSONException e) {
-                throw new ModelSerializationException(Address.class, e);
+        @JvmField
+        val SERIALIZER: Serializer<StatusResponse> = object : Serializer<StatusResponse> {
+            override fun serialize(modelObject: StatusResponse): JSONObject {
+                return try {
+                    JSONObject().apply {
+                        putOpt(TYPE, modelObject.type)
+                        putOpt(PAYLOAD, modelObject.payload)
+                        putOpt(RESULT_CODE, modelObject.resultCode)
+                    }
+                } catch (e: JSONException) {
+                    throw ModelSerializationException(Address::class.java, e)
+                }
             }
-            return jsonObject;
+
+            override fun deserialize(jsonObject: JSONObject): StatusResponse {
+                return StatusResponse(
+                    type = jsonObject.getStringOrNull(TYPE),
+                    payload = jsonObject.getStringOrNull(PAYLOAD),
+                    resultCode = jsonObject.getStringOrNull(RESULT_CODE),
+                )
+            }
         }
-
-        @NonNull
-        @Override
-        public StatusResponse deserialize(@NonNull JSONObject jsonObject) {
-            final StatusResponse statusResponse = new StatusResponse();
-
-            statusResponse.setType(jsonObject.optString(TYPE, null));
-            statusResponse.setPayload(jsonObject.optString(PAYLOAD, null));
-            statusResponse.setResultCode(jsonObject.optString(RESULT_CODE, null));
-
-            return statusResponse;
-        }
-    };
-
-    private String type;
-    private String payload;
-    private String resultCode;
-
-    @Override
-    public void writeToParcel(@NonNull Parcel dest, int flags) {
-        JsonUtils.writeToParcel(dest, SERIALIZER.serialize(this));
     }
-
-    @Nullable
-    public String getType() {
-        return type;
-    }
-
-    public void setType(@Nullable String type) {
-        this.type = type;
-    }
-
-    @Nullable
-    public String getPayload() {
-        return payload;
-    }
-
-    public void setPayload(@Nullable String payload) {
-        this.payload = payload;
-    }
-
-    @Nullable
-    public String getResultCode() {
-        return resultCode;
-    }
-
-    public void setResultCode(@Nullable String resultCode) {
-        this.resultCode = resultCode;
-    }
-
 }

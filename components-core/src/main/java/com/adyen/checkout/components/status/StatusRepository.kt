@@ -5,102 +5,61 @@
  *
  * Created by caiof on 18/8/2020.
  */
+package com.adyen.checkout.components.status
 
-package com.adyen.checkout.components.status;
+import android.os.Handler
+import android.os.Looper
+import androidx.lifecycle.LiveData
+import androidx.lifecycle.MutableLiveData
+import com.adyen.checkout.components.status.api.StatusApi
+import com.adyen.checkout.components.status.api.StatusConnectionTask
+import com.adyen.checkout.components.status.api.StatusResponseUtils.isFinalResult
+import com.adyen.checkout.components.status.model.StatusResponse
+import com.adyen.checkout.core.api.Environment
+import com.adyen.checkout.core.exception.ApiCallException
+import com.adyen.checkout.core.exception.ComponentException
+import com.adyen.checkout.core.log.LogUtil.getTag
+import com.adyen.checkout.core.log.Logger
+import java.util.concurrent.TimeUnit
 
-import android.os.Handler;
+class StatusRepository private constructor(environment: Environment) {
 
-import androidx.annotation.NonNull;
-import androidx.lifecycle.LiveData;
-import androidx.lifecycle.MutableLiveData;
-
-import com.adyen.checkout.components.status.api.StatusApi;
-import com.adyen.checkout.components.status.api.StatusConnectionTask;
-import com.adyen.checkout.components.status.api.StatusResponseUtils;
-import com.adyen.checkout.components.status.model.StatusResponse;
-import com.adyen.checkout.core.api.Environment;
-import com.adyen.checkout.core.exception.ApiCallException;
-import com.adyen.checkout.core.exception.ComponentException;
-import com.adyen.checkout.core.log.LogUtil;
-import com.adyen.checkout.core.log.Logger;
-
-import java.util.concurrent.TimeUnit;
-
-public final class StatusRepository {
-    static final String TAG = LogUtil.getTag();
-
-    private static final long POLLING_DELAY_FAST = TimeUnit.SECONDS.toMillis(2);
-    private static final long POLLING_DELAY_SLOW = TimeUnit.SECONDS.toMillis(10);
-    private static final long POLLING_THRESHOLD = TimeUnit.SECONDS.toMillis(60);
-    private static final long POLLING_MAX_COUNT = TimeUnit.MINUTES.toMillis(15);
-
-    private static StatusRepository sInstance;
-
-    final Handler mHandler = new Handler();
-
-    final Runnable mStatusPollingRunnable = new Runnable() {
-        @Override
-        public void run() {
-            Logger.d(TAG, "mStatusPollingRunnable.run()");
-            mStatusApi.callStatus(mClientKey, mPaymentData, mStatusCallback);
-            updatePollingDelay();
-            mHandler.postDelayed(mStatusPollingRunnable, mPollingDelay);
+    val handler = Handler(Looper.getMainLooper())
+    private val statusPollingRunnable: Runnable = object : Runnable {
+        override fun run() {
+            Logger.d(TAG, "mStatusPollingRunnable.run()")
+            statusApi.callStatus(clientKey!!, paymentData!!, mStatusCallback)
+            updatePollingDelay()
+            handler.postDelayed(this, pollingDelay)
         }
-    };
+    }
 
-    final StatusApi mStatusApi;
+    val statusApi: StatusApi = StatusApi.getInstance(environment)
+    private val statusResponseLiveData = MutableLiveData<StatusResponse?>()
+    val responseLiveData: LiveData<StatusResponse?> = statusResponseLiveData
+    private val statusErrorLiveData = MutableLiveData<ComponentException?>()
+    val errorLiveData: LiveData<ComponentException?> = statusErrorLiveData
 
-    final MutableLiveData<StatusResponse> mStatusResponseLiveData = new MutableLiveData<>();
-    private final MutableLiveData<ComponentException> mStatusErrorLiveData = new MutableLiveData<>();
-
-    final StatusConnectionTask.StatusCallback mStatusCallback = new StatusConnectionTask.StatusCallback() {
-        @Override
-        public void onSuccess(@NonNull StatusResponse statusResponse) {
-            Logger.d(TAG, "onSuccess - " + statusResponse.getResultCode());
-            mStatusResponseLiveData.postValue(statusResponse);
-            if (StatusResponseUtils.isFinalResult(statusResponse)) {
-                stopPolling();
+    val mStatusCallback: StatusConnectionTask.StatusCallback = object : StatusConnectionTask.StatusCallback {
+        override fun onSuccess(statusResponse: StatusResponse) {
+            Logger.d(TAG, "onSuccess - " + statusResponse.resultCode)
+            statusResponseLiveData.postValue(statusResponse)
+            if (isFinalResult(statusResponse)) {
+                stopPolling()
             }
         }
 
-        @Override
-        public void onFailed(@NonNull ApiCallException exception) {
-            Logger.e(TAG, "onFailed");
+        override fun onFailed(exception: ApiCallException) {
+            Logger.e(TAG, "onFailed")
             // TODO: 08/09/2020 check error type, fail flow if no internet?
         }
-    };
-
-    String mClientKey;
-    String mPaymentData;
-    Boolean mIsPolling = false;
-
-    long mPollingDelay;
-    private long mPollingStartTime;
-
-    @NonNull
-    public static StatusRepository getInstance(@NonNull Environment environment) {
-        synchronized (StatusRepository.class) {
-            if (sInstance == null) {
-                sInstance = new StatusRepository(environment);
-            }
-        }
-        return sInstance;
     }
 
-    // private constructor
-    private StatusRepository(@NonNull Environment environment) {
-        mStatusApi = StatusApi.getInstance(environment);
-    }
-
-    @NonNull
-    public LiveData<StatusResponse> getStatusResponseLiveData() {
-        return mStatusResponseLiveData;
-    }
-
-    @NonNull
-    public LiveData<ComponentException> getErrorLiveData() {
-        return mStatusErrorLiveData;
-    }
+    var clientKey: String? = null
+    var paymentData: String? = null
+    var pollingDelay: Long = 0
+    private var isPolling = false
+    private var pollingStartTime: Long = 0
 
     /**
      * Start polling status requests for the provided payment.
@@ -108,62 +67,76 @@ public final class StatusRepository {
      * @param clientKey The client key that identifies the merchant.
      * @param paymentData The payment data of the payment we are requesting.
      */
-    public void startPolling(@NonNull String clientKey, @NonNull String paymentData) {
-        Logger.d(TAG, "startPolling");
-        if (mIsPolling && clientKey.equals(mClientKey) && paymentData.equals(mPaymentData)) {
-            Logger.e(TAG, "Already polling for this payment.");
-            return;
+    fun startPolling(clientKey: String, paymentData: String) {
+        Logger.d(TAG, "startPolling")
+        if (isPolling && clientKey == this.clientKey && paymentData == this.paymentData) {
+            Logger.e(TAG, "Already polling for this payment.")
+            return
         }
-        stopPolling();
-        mIsPolling = true;
-        mClientKey = clientKey;
-        mPaymentData = paymentData;
-        mPollingStartTime = System.currentTimeMillis();
-
-        mHandler.post(mStatusPollingRunnable);
+        stopPolling()
+        isPolling = true
+        this.clientKey = clientKey
+        this.paymentData = paymentData
+        pollingStartTime = System.currentTimeMillis()
+        handler.post(statusPollingRunnable)
     }
 
     /**
      * Immediately request a status update instead of waiting for the next poll result.
      */
-    public void updateStatus() {
-        Logger.d(TAG, "updateStatus");
-        if (!mIsPolling) {
-            Logger.d(TAG, "No polling in progress");
-            return;
+    fun updateStatus() {
+        Logger.d(TAG, "updateStatus")
+        if (!isPolling) {
+            Logger.d(TAG, "No polling in progress")
+            return
         }
-        mHandler.removeCallbacks(mStatusPollingRunnable);
-        mHandler.post(mStatusPollingRunnable);
+        handler.removeCallbacks(statusPollingRunnable)
+        handler.post(statusPollingRunnable)
     }
 
     /**
      * Stops the polling process.
      */
-    public void stopPolling() {
-        Logger.d(TAG, "stopPolling");
-        if (!mIsPolling) {
-            Logger.w(TAG, "Stop called with no polling in progress, stopping anyway");
+    fun stopPolling() {
+        Logger.d(TAG, "stopPolling")
+        if (!isPolling) {
+            Logger.w(TAG, "Stop called with no polling in progress, stopping anyway")
         }
-        mIsPolling = false;
-        mHandler.removeCallbacksAndMessages(null);
+        isPolling = false
+        handler.removeCallbacksAndMessages(null)
         // Set null so that new observers don't get the status from the previous result
         // This could be replaced by other types of observable like Kotlin Flow
-        mStatusResponseLiveData.setValue(null);
-        mStatusErrorLiveData.setValue(null);
+        statusResponseLiveData.value = null
+        statusErrorLiveData.value = null
     }
 
-    void updatePollingDelay() {
-        final long elapsedTime = System.currentTimeMillis() - mPollingStartTime;
-        if (elapsedTime <= POLLING_THRESHOLD) {
-            mPollingDelay = POLLING_DELAY_FAST;
-        } else if (elapsedTime <= POLLING_MAX_COUNT) {
-            mPollingDelay = POLLING_DELAY_SLOW;
-        } else {
-            mStatusErrorLiveData.setValue(new ComponentException("Status requesting timed out with no result"));
+    fun updatePollingDelay() {
+        val elapsedTime = System.currentTimeMillis() - pollingStartTime
+        when {
+            elapsedTime <= POLLING_THRESHOLD -> pollingDelay = POLLING_DELAY_FAST
+            elapsedTime <= MAX_POLLING_DURATION_MILLIS -> pollingDelay = POLLING_DELAY_SLOW
+            else -> statusErrorLiveData.setValue(ComponentException("Status requesting timed out with no result"))
         }
     }
 
-    public long getMaxPollingDurationMillis() {
-        return POLLING_MAX_COUNT;
+    companion object {
+        val TAG = getTag()
+        val MAX_POLLING_DURATION_MILLIS = TimeUnit.MINUTES.toMillis(15)
+
+        private val POLLING_DELAY_FAST = TimeUnit.SECONDS.toMillis(2)
+        private val POLLING_DELAY_SLOW = TimeUnit.SECONDS.toMillis(10)
+        private val POLLING_THRESHOLD = TimeUnit.SECONDS.toMillis(60)
+
+        private lateinit var instance: StatusRepository
+
+        @JvmStatic
+        fun getInstance(environment: Environment): StatusRepository {
+            synchronized(StatusRepository::class.java) {
+                if (!::instance.isInitialized) {
+                    instance = StatusRepository(environment)
+                }
+            }
+            return instance
+        }
     }
 }
