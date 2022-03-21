@@ -5,16 +5,11 @@
  *
  * Created by caiof on 23/7/2019.
  */
+package com.adyen.checkout.components
 
-package com.adyen.checkout.components;
+import com.adyen.checkout.components.base.Configuration
+import com.adyen.checkout.components.model.paymentmethods.PaymentMethod
 
-import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
-
-import com.adyen.checkout.components.base.Configuration;
-import com.adyen.checkout.components.model.paymentmethods.PaymentMethod;
-
-public interface ComponentAvailableCallback<ConfigurationT extends Configuration> {
-
-    void onAvailabilityResult(boolean isAvailable, @NonNull PaymentMethod paymentMethod, @Nullable ConfigurationT config);
+interface ComponentAvailableCallback<ConfigurationT : Configuration> {
+    fun onAvailabilityResult(isAvailable: Boolean, paymentMethod: PaymentMethod, config: ConfigurationT)
 }

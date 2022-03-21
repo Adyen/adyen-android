@@ -5,12 +5,9 @@
  *
  * Created by caiof on 23/7/2019.
  */
-
-package com.adyen.checkout.components;
+package com.adyen.checkout.components
 
 /**
- * This provider should be used to get an instance of a {@link Component} that is bound your lifecycle.
+ * This provider should be used to get an instance of a [Component] that is bound your lifecycle.
  */
-public interface ComponentProvider<ComponentT extends Component> {
-    // Maker interface
-}
+interface ComponentProvider<ComponentT : Component<*, *>>

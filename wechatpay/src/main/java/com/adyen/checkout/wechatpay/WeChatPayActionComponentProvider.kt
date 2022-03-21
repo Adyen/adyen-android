@@ -47,15 +47,14 @@ class WeChatPayActionComponentProvider : ActionComponentProvider<WeChatPayAction
         return ViewModelProvider(viewModelStoreOwner, weChatFactory).get(WeChatPayActionComponent::class.java)
     }
 
+    override val supportedActionTypes: List<String?>
+        get() = listOf(SdkAction.ACTION_TYPE)
+
     @Deprecated(
         "You can safely remove this method, it will always return true as all action components require a configuration.",
         ReplaceWith("true")
     )
     override fun requiresConfiguration(): Boolean = true
-
-    override fun getSupportedActionTypes(): List<String> {
-        return listOf(SdkAction.ACTION_TYPE)
-    }
 
     override fun canHandleAction(action: Action): Boolean {
         return supportedActionTypes.contains(action.type) && PAYMENT_METHODS.contains(action.paymentMethodType)

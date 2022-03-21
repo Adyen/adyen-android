@@ -48,6 +48,9 @@ class VoucherComponentProvider : ActionComponentProvider<VoucherComponent, Vouch
         return ViewModelProvider(viewModelStoreOwner, voucherFactory).get(VoucherComponent::class.java)
     }
 
+    override val supportedActionTypes: List<String?>
+        get() = listOf(VoucherAction.ACTION_TYPE)
+
     @Deprecated(
         "You can safely remove this method, it will always return true as all action components require a configuration.",
         ReplaceWith("true")
@@ -60,10 +63,6 @@ class VoucherComponentProvider : ActionComponentProvider<VoucherComponent, Vouch
 
     override fun requiresView(action: Action): Boolean {
         return true
-    }
-
-    override fun getSupportedActionTypes(): List<String> {
-        return listOf(VoucherAction.ACTION_TYPE)
     }
 
     override fun providesDetails(): Boolean {
