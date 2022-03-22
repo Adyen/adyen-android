@@ -3,12 +3,15 @@ package com.adyen.checkout.example.ui.card
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.adyen.checkout.card.CardComponentState
+import com.adyen.checkout.components.ActionComponentData
 import com.adyen.checkout.components.ComponentError
 import com.adyen.checkout.components.model.payments.request.PaymentComponentData
+import com.adyen.checkout.components.model.payments.response.Action
 import com.adyen.checkout.core.model.getStringOrNull
 import com.adyen.checkout.example.data.api.model.paymentsRequest.AdditionalData
 import com.adyen.checkout.example.data.storage.KeyValueStorage
 import com.adyen.checkout.example.repositories.paymentMethods.PaymentsRepository
+import com.adyen.checkout.example.service.ExampleFullAsyncDropInService
 import com.adyen.checkout.example.service.createPaymentRequest
 import com.adyen.checkout.example.service.getPaymentMethodRequest
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -35,6 +38,9 @@ internal class CardViewModel @Inject constructor(
 
     private val _paymentResult = MutableSharedFlow<String>()
     val paymentResult: Flow<String> = _paymentResult
+
+    private val _additionalAction = MutableSharedFlow<CardAction>()
+    val additionalAction: Flow<CardAction> = _additionalAction
 
     private var cardComponentState: CardComponentState? = null
 
@@ -94,16 +100,39 @@ internal class CardViewModel @Inject constructor(
     }
 
     private suspend fun handlePaymentResponse(responseBody: ResponseBody?) {
-        val message = responseBody?.let {
+        responseBody?.let {
             @Suppress("BlockingMethodInNonBlockingContext")
             val json = JSONObject(it.string())
 
             when {
-                json.has("action") -> "Action: Not implemented yet"
-                else -> "Success: ${json.getStringOrNull("resultCode")}"
+                json.has("action") -> {
+                    val action = Action.SERIALIZER.deserialize(json.getJSONObject("action"))
+                    handleAction(action)
+                }
+                else -> _paymentResult.emit("Success: ${json.getStringOrNull("resultCode")}")
             }
-        } ?: "Failed"
+        } ?: _paymentResult.emit("Failed")
+    }
 
-        _paymentResult.emit(message)
+    private suspend fun handleAction(action: Action) {
+        val cardAction = when (action.type) {
+            "redirect" -> CardAction.Redirect(action)
+            "threeDS2" -> CardAction.ThreeDS2(action)
+            else -> CardAction.Unsupported
+        }
+
+        _additionalAction.emit(cardAction)
+    }
+
+    fun onActionComponentData(actionComponentData: ActionComponentData) {
+        sendPaymentDetails(actionComponentData)
+    }
+
+    private fun sendPaymentDetails(actionComponentData: ActionComponentData) {
+        viewModelScope.launch(Dispatchers.IO) {
+            val json = ActionComponentData.SERIALIZER.serialize(actionComponentData)
+            val requestBody = json.toString().toRequestBody("application/json".toMediaType())
+            handlePaymentResponse(paymentsRepository.detailsRequestAsync(requestBody))
+        }
     }
 }

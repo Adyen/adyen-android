@@ -1,5 +1,6 @@
 package com.adyen.checkout.example.ui.card
 
+import android.content.Intent
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
@@ -11,8 +12,11 @@ import androidx.fragment.app.viewModels
 import androidx.lifecycle.lifecycleScope
 import com.adyen.checkout.card.CardComponent
 import com.adyen.checkout.components.model.paymentmethods.PaymentMethod
+import com.adyen.checkout.components.model.payments.response.Action
 import com.adyen.checkout.example.databinding.FragmentCardBinding
 import com.adyen.checkout.example.ui.configuration.CheckoutConfigurationProvider
+import com.adyen.checkout.redirect.RedirectComponent
+import com.adyen.checkout.redirect.RedirectUtil
 import com.google.android.material.bottomsheet.BottomSheetDialogFragment
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.flow.collect
@@ -20,7 +24,7 @@ import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 @AndroidEntryPoint
-class CardFragment : BottomSheetDialogFragment() {
+class CardFragment : BottomSheetDialogFragment(), NewIntentListener {
 
     @Inject
     internal lateinit var checkoutConfigurationProvider: CheckoutConfigurationProvider
@@ -29,6 +33,8 @@ class CardFragment : BottomSheetDialogFragment() {
     private val binding: FragmentCardBinding get() = requireNotNull(_binding)
 
     private val cardViewModel: CardViewModel by viewModels()
+
+    private var redirectComponent: RedirectComponent? = null
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View {
         _binding = FragmentCardBinding.inflate(inflater, container, false)
@@ -43,6 +49,7 @@ class CardFragment : BottomSheetDialogFragment() {
         lifecycleScope.launchWhenStarted {
             launch { cardViewModel.cardViewState.collect(::onCardViewState) }
             launch { cardViewModel.paymentResult.collect(::onPaymentResult) }
+            launch { cardViewModel.additionalAction.collect(::onAdditionalAction) }
         }
     }
 
@@ -89,8 +96,39 @@ class CardFragment : BottomSheetDialogFragment() {
         dismiss()
     }
 
+    private fun onAdditionalAction(cardAction: CardAction) {
+        when (cardAction) {
+            is CardAction.Redirect -> setupRedirectComponent(cardAction.action)
+            is CardAction.ThreeDS2 -> {}
+            CardAction.Unsupported -> {
+                Toast.makeText(requireContext(), "This action is not implemented", Toast.LENGTH_SHORT).show()
+            }
+        }
+    }
+
+    private fun setupRedirectComponent(action: Action) {
+        redirectComponent = RedirectComponent.PROVIDER.get(
+            this,
+            requireActivity().application,
+            checkoutConfigurationProvider.getRedirectConfiguration()
+        )
+
+        redirectComponent?.observe(viewLifecycleOwner, cardViewModel::onActionComponentData)
+        redirectComponent?.observeErrors(viewLifecycleOwner, cardViewModel::onComponentError)
+
+        redirectComponent?.handleAction(requireActivity(), action)
+    }
+
+    override fun onNewIntent(intent: Intent) {
+        val data = intent.data
+        if (data != null && data.toString().startsWith(RedirectUtil.REDIRECT_RESULT_SCHEME)) {
+            redirectComponent?.handleIntent(intent)
+        }
+    }
+
     override fun onDestroyView() {
         super.onDestroyView()
+        redirectComponent = null
         _binding = null
     }
 
