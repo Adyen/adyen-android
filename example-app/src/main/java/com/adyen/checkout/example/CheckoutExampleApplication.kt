@@ -8,13 +8,13 @@
 
 package com.adyen.checkout.example
 
+import android.app.Application
 import android.util.Log
-import androidx.multidex.MultiDexApplication
 import com.adyen.checkout.core.log.Logger
 import dagger.hilt.android.HiltAndroidApp
 
 @HiltAndroidApp
-class CheckoutExampleApplication : MultiDexApplication() {
+class CheckoutExampleApplication : Application() {
 
     companion object {
         init {

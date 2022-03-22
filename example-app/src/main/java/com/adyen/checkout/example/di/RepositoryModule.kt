@@ -24,8 +24,12 @@ import dagger.hilt.components.SingletonComponent
 object RepositoryModule {
 
     @Provides
-    fun providePaymentsRepository(checkoutApiService: CheckoutApiService): PaymentsRepository = PaymentsRepositoryImpl(checkoutApiService)
+    internal fun providePaymentsRepository(
+        checkoutApiService: CheckoutApiService
+    ): PaymentsRepository = PaymentsRepositoryImpl(checkoutApiService)
 
     @Provides
-    fun provideRecurringRepository(recurringApiService: RecurringApiService): RecurringRepository = RecurringRepositoryImpl(recurringApiService)
+    internal fun provideRecurringRepository(
+        recurringApiService: RecurringApiService
+    ): RecurringRepository = RecurringRepositoryImpl(recurringApiService)
 }

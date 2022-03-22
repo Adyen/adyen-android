@@ -13,24 +13,23 @@ import com.adyen.checkout.core.api.SSLSocketUtil
 import com.adyen.checkout.example.BuildConfig
 import com.adyen.checkout.example.data.api.CheckoutApiService
 import com.adyen.checkout.example.data.api.RecurringApiService
-import com.jakewharton.retrofit2.adapter.kotlin.coroutines.CoroutineCallAdapterFactory
 import com.squareup.moshi.Moshi
 import com.squareup.moshi.kotlin.reflect.KotlinJsonAdapterFactory
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
 import dagger.hilt.components.SingletonComponent
-import java.security.KeyStore
-import java.util.*
-import javax.inject.Singleton
-import javax.net.ssl.TrustManagerFactory
-import javax.net.ssl.X509TrustManager
 import okhttp3.OkHttpClient
 import okhttp3.logging.HttpLoggingInterceptor
 import retrofit2.Converter
 import retrofit2.Retrofit
 import retrofit2.converter.moshi.MoshiConverterFactory
+import java.security.KeyStore
+import java.util.Arrays
 import javax.inject.Named
+import javax.inject.Singleton
+import javax.net.ssl.TrustManagerFactory
+import javax.net.ssl.X509TrustManager
 
 @Module
 @InstallIn(SingletonComponent::class)
@@ -48,13 +47,21 @@ object NetworkModule {
 
     @Singleton
     @Provides
-    fun provideOkHttpClient(): OkHttpClient {
+    internal fun provideOkHttpClient(): OkHttpClient {
         val builder = OkHttpClient.Builder()
 
         if (BuildConfig.DEBUG) {
             val interceptor = HttpLoggingInterceptor()
             interceptor.level = HttpLoggingInterceptor.Level.BODY
             builder.addNetworkInterceptor(interceptor)
+        }
+
+        builder.addInterceptor { chain ->
+            val request = chain.request().newBuilder()
+                .addHeader(BuildConfig.API_KEY_HEADER_NAME, BuildConfig.CHECKOUT_API_KEY)
+                .build()
+
+            chain.proceed(request)
         }
 
         if (Build.VERSION_CODES.JELLY_BEAN <= Build.VERSION.SDK_INT && Build.VERSION.SDK_INT < Build.VERSION_CODES.LOLLIPOP_MR1) {
@@ -74,14 +81,14 @@ object NetworkModule {
 
     @Singleton
     @Provides
-    fun provideConverterFactory(): Converter.Factory = MoshiConverterFactory.create(
+    internal fun provideConverterFactory(): Converter.Factory = MoshiConverterFactory.create(
         Moshi.Builder().add(KotlinJsonAdapterFactory()).build()
     )
 
     @Singleton
     @Provides
     @Named("RetrofitCheckout")
-    fun provideRetrofit(
+    internal fun provideRetrofit(
         okHttpClient: OkHttpClient,
         converterFactory: Converter.Factory,
     ): Retrofit =
@@ -89,13 +96,12 @@ object NetworkModule {
             .baseUrl(BASE_URL)
             .client(okHttpClient)
             .addConverterFactory(converterFactory)
-            .addCallAdapterFactory(CoroutineCallAdapterFactory())
             .build()
 
     @Singleton
     @Provides
     @Named("RetrofitRecurring")
-    fun provideRetrofitRecurring(
+    internal fun provideRetrofitRecurring(
         okHttpClient: OkHttpClient,
         converterFactory: Converter.Factory,
     ): Retrofit =
@@ -103,14 +109,13 @@ object NetworkModule {
             .baseUrl(BASE_URL_RECURRING)
             .client(okHttpClient)
             .addConverterFactory(converterFactory)
-            .addCallAdapterFactory(CoroutineCallAdapterFactory())
             .build()
 
     @Provides
-    fun provideApiService(@Named("RetrofitCheckout") retrofit: Retrofit): CheckoutApiService =
+    internal fun provideApiService(@Named("RetrofitCheckout") retrofit: Retrofit): CheckoutApiService =
         retrofit.create(CheckoutApiService::class.java)
 
     @Provides
-    fun provideRecurringApiService(@Named("RetrofitRecurring") retrofit: Retrofit): RecurringApiService =
+    internal fun provideRecurringApiService(@Named("RetrofitRecurring") retrofit: Retrofit): RecurringApiService =
         retrofit.create(RecurringApiService::class.java)
 }
