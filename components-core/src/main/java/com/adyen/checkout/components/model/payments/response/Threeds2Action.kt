@@ -17,9 +17,12 @@ import org.json.JSONException
 import org.json.JSONObject
 
 class Threeds2Action(
-    val token: String? = null,
-    val subtype: String? = null,
-    val authorisationToken: String? = null
+    override var type: String? = null,
+    override var paymentData: String? = null,
+    override var paymentMethodType: String? = null,
+    var token: String? = null,
+    var subtype: String? = null,
+    var authorisationToken: String? = null
 ) : Action() {
 
     override fun writeToParcel(dest: Parcel, flags: Int) {
@@ -39,20 +42,18 @@ class Threeds2Action(
         @JvmField
         val SERIALIZER: Serializer<Threeds2Action> = object : Serializer<Threeds2Action> {
             override fun serialize(modelObject: Threeds2Action): JSONObject {
-                val jsonObject = JSONObject()
-                try {
-                    // Get parameters from parent class
-                    jsonObject.putOpt(TYPE, modelObject.type)
-                    jsonObject.putOpt(PAYMENT_DATA, modelObject.paymentData)
-                    jsonObject.putOpt(PAYMENT_METHOD_TYPE, modelObject.paymentMethodType)
-
-                    jsonObject.putOpt(TOKEN, modelObject.token)
-                    jsonObject.putOpt(SUBTYPE, modelObject.subtype)
-                    jsonObject.putOpt(AUTHORISATION_TOKEN, modelObject.authorisationToken)
+                return try {
+                    JSONObject().apply {
+                        putOpt(TYPE, modelObject.type)
+                        putOpt(PAYMENT_DATA, modelObject.paymentData)
+                        putOpt(PAYMENT_METHOD_TYPE, modelObject.paymentMethodType)
+                        putOpt(TOKEN, modelObject.token)
+                        putOpt(SUBTYPE, modelObject.subtype)
+                        putOpt(AUTHORISATION_TOKEN, modelObject.authorisationToken)
+                    }
                 } catch (e: JSONException) {
                     throw ModelSerializationException(Threeds2Action::class.java, e)
                 }
-                return jsonObject
             }
 
             override fun deserialize(jsonObject: JSONObject): Threeds2Action {
@@ -60,12 +61,11 @@ class Threeds2Action(
                     Threeds2Action(
                         token = jsonObject.getStringOrNull(TOKEN),
                         subtype = jsonObject.getStringOrNull(SUBTYPE),
-                        authorisationToken = jsonObject.getStringOrNull(AUTHORISATION_TOKEN)
-                    ).apply {
-                        type = jsonObject.getStringOrNull(TYPE)
-                        paymentData = jsonObject.getStringOrNull(PAYMENT_DATA)
-                        paymentMethodType = jsonObject.getStringOrNull(PAYMENT_METHOD_TYPE)
-                    }
+                        authorisationToken = jsonObject.getStringOrNull(AUTHORISATION_TOKEN),
+                        type = jsonObject.getStringOrNull(TYPE),
+                        paymentData = jsonObject.getStringOrNull(PAYMENT_DATA),
+                        paymentMethodType = jsonObject.getStringOrNull(PAYMENT_METHOD_TYPE),
+                    )
                 } catch (e: JSONException) {
                     throw ModelSerializationException(Threeds2Action::class.java, e)
                 }

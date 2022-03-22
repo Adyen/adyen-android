@@ -18,7 +18,6 @@ class GiftCardOutputData(cardNumber: String, pin: String) : OutputData {
     val giftcardNumberFieldState: FieldState<String> = GiftCardNumberUtils.validateInputField(cardNumber)
     val giftcardPinFieldState: FieldState<String> = GiftCardPinUtils.validateInputField(pin)
 
-    override fun isValid(): Boolean {
-        return giftcardNumberFieldState.validation.isValid() && giftcardPinFieldState.validation.isValid()
-    }
+    override val isValid: Boolean
+        get() = giftcardNumberFieldState.validation.isValid() && giftcardPinFieldState.validation.isValid()
 }

@@ -41,8 +41,8 @@ import com.adyen.checkout.core.util.BuildUtils
  */
 @Suppress("TooManyFunctions")
 class CardView @JvmOverloads constructor(context: Context, attrs: AttributeSet? = null, defStyleAttr: Int = 0) :
-    AdyenLinearLayout<CardOutputData?, CardConfiguration?, CardComponentState?, CardComponent?>(context, attrs, defStyleAttr),
-    Observer<CardOutputData?> {
+    AdyenLinearLayout<CardOutputData, CardConfiguration, CardComponentState, CardComponent>(context, attrs, defStyleAttr),
+    Observer<CardOutputData> {
 
     companion object {
         private const val UNSELECTED_BRAND_LOGO_ALPHA = 0.2f

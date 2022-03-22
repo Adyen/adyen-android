@@ -197,7 +197,7 @@ class GiftCardBalanceUtilsTest {
         assert(result is GiftCardBalanceStatus.ZeroBalance)
     }
 
-    private fun createAmount(value: Int, currency: String = "EUR"): Amount {
+    private fun createAmount(value: Long, currency: String = "EUR"): Amount {
         return Amount().apply {
             this.value = value
             this.currency = currency

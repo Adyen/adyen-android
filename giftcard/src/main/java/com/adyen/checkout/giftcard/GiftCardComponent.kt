@@ -37,21 +37,17 @@ private const val LAST_FOUR_LENGTH = 4
  */
 class GiftCardComponent(
     savedStateHandle: SavedStateHandle,
-    private val paymentMethodDelegate: GenericPaymentMethodDelegate,
+    paymentMethodDelegate: GenericPaymentMethodDelegate,
     configuration: GiftCardConfiguration,
     private val publicKeyRepository: PublicKeyRepository
-) :
-    BasePaymentComponent<GiftCardConfiguration, GiftCardInputData, GiftCardOutputData, GiftCardComponentState>(
-        savedStateHandle,
-        paymentMethodDelegate,
-        configuration
-    ) {
+) : BasePaymentComponent<GiftCardConfiguration, GiftCardInputData, GiftCardOutputData, GiftCardComponentState>(
+    savedStateHandle,
+    paymentMethodDelegate,
+    configuration
+) {
 
-    companion object {
-        @JvmStatic
-        val PROVIDER: PaymentComponentProvider<GiftCardComponent, GiftCardConfiguration> = GiftCardComponentProvider()
-        val PAYMENT_METHOD_TYPES = arrayOf(PaymentMethodTypes.GIFTCARD)
-    }
+    override val supportedPaymentMethodTypes: Array<String>
+        get() = PAYMENT_METHOD_TYPES
 
     private var publicKey: String? = null
 
@@ -115,7 +111,7 @@ class GiftCardComponent(
             type = GiftCardPaymentMethod.PAYMENT_METHOD_TYPE
             encryptedCardNumber = encryptedCard.encryptedCardNumber
             encryptedSecurityCode = encryptedCard.encryptedSecurityCode
-            brand = paymentMethodDelegate.paymentMethod.brand
+            brand = (paymentMethodDelegate as GenericPaymentMethodDelegate).paymentMethod.brand
         }
         paymentComponentData.paymentMethod = giftCardPaymentMethod
         val lastFour = outputData.giftcardNumberFieldState.value.takeLast(LAST_FOUR_LENGTH)
@@ -127,5 +123,9 @@ class GiftCardComponent(
         )
     }
 
-    override fun getSupportedPaymentMethodTypes(): Array<String> = PAYMENT_METHOD_TYPES
+    companion object {
+        @JvmStatic
+        val PROVIDER: PaymentComponentProvider<GiftCardComponent, GiftCardConfiguration> = GiftCardComponentProvider()
+        val PAYMENT_METHOD_TYPES = arrayOf(PaymentMethodTypes.GIFTCARD)
+    }
 }

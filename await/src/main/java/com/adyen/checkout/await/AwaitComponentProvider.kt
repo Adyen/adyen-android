@@ -22,6 +22,10 @@ import com.adyen.checkout.components.util.PaymentMethodTypes
 private val PAYMENT_METHODS = listOf(PaymentMethodTypes.BLIK, PaymentMethodTypes.MB_WAY)
 
 class AwaitComponentProvider : ActionComponentProvider<AwaitComponent, AwaitConfiguration> {
+
+    override val supportedActionTypes: List<String>
+        get() = listOf(AwaitAction.ACTION_TYPE)
+
     override fun <T> get(
         owner: T,
         application: Application,
@@ -52,10 +56,6 @@ class AwaitComponentProvider : ActionComponentProvider<AwaitComponent, AwaitConf
         ReplaceWith("true")
     )
     override fun requiresConfiguration(): Boolean = true
-
-    override fun getSupportedActionTypes(): List<String> {
-        return listOf(AwaitAction.ACTION_TYPE)
-    }
 
     override fun canHandleAction(action: Action): Boolean {
         return supportedActionTypes.contains(action.type) && PAYMENT_METHODS.contains(action.paymentMethodType)

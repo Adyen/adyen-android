@@ -55,6 +55,9 @@ class Adyen3DS2ComponentProvider : ActionComponentProvider<Adyen3DS2Component, A
         return ViewModelProvider(viewModelStoreOwner, threeDS2Factory).get(Adyen3DS2Component::class.java)
     }
 
+    override val supportedActionTypes: List<String>
+        get() = listOf(Threeds2FingerprintAction.ACTION_TYPE, Threeds2ChallengeAction.ACTION_TYPE, Threeds2Action.ACTION_TYPE)
+
     @Deprecated(
         "You can safely remove this method, it will always return true as all action components require a configuration.",
         ReplaceWith("true")
@@ -62,10 +65,6 @@ class Adyen3DS2ComponentProvider : ActionComponentProvider<Adyen3DS2Component, A
     override fun requiresConfiguration(): Boolean = true
 
     override fun requiresView(action: Action): Boolean = false
-
-    override fun getSupportedActionTypes(): List<String> {
-        return listOf(Threeds2FingerprintAction.ACTION_TYPE, Threeds2ChallengeAction.ACTION_TYPE, Threeds2Action.ACTION_TYPE)
-    }
 
     override fun canHandleAction(action: Action): Boolean {
         return supportedActionTypes.contains(action.type)

@@ -50,7 +50,7 @@ class KeyValueStorageImpl(private val appContext: Context, private val sharedPre
 
         val amount = Amount()
         amount.currency = amountCurrency
-        amount.value = amountValue.toInt()
+        amount.value = amountValue.toLong()
 
         return amount
     }

@@ -18,7 +18,7 @@ import androidx.appcompat.app.AlertDialog
 import androidx.core.view.children
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
-import com.adyen.checkout.components.GenericComponentState
+import com.adyen.checkout.components.PaymentComponentState
 import com.adyen.checkout.components.api.ImageLoader
 import com.adyen.checkout.components.model.paymentmethods.StoredPaymentMethod
 import com.adyen.checkout.components.model.payments.request.GenericPaymentMethod
@@ -172,7 +172,7 @@ class PaymentMethodListDialogFragment :
     private fun sendPayment(type: String) {
         val paymentComponentData = PaymentComponentData<PaymentMethodDetails>()
         paymentComponentData.paymentMethod = GenericPaymentMethod(type)
-        val paymentComponentState = GenericComponentState(paymentComponentData, true, true)
+        val paymentComponentState = PaymentComponentState(paymentComponentData, true, true)
         protocol.requestPaymentsCall(paymentComponentState)
     }
 

@@ -122,12 +122,11 @@ class CardComponent private constructor(
         cardConfiguration
     )
 
+    override val supportedPaymentMethodTypes: Array<String>
+        get() = PAYMENT_METHOD_TYPES
+
     override fun requiresInput(): Boolean {
         return cardDelegate.requiresInput()
-    }
-
-    override fun getSupportedPaymentMethodTypes(): Array<String> {
-        return PAYMENT_METHOD_TYPES
     }
 
     override fun onInputDataChanged(inputData: CardInputData): CardOutputData {
@@ -317,7 +316,7 @@ class CardComponent private constructor(
             cardPaymentMethod.encryptedExpiryMonth = encryptedCard.encryptedExpiryMonth
             cardPaymentMethod.encryptedExpiryYear = encryptedCard.encryptedExpiryYear
         } else {
-            cardPaymentMethod.storedPaymentMethodId = (mPaymentMethodDelegate as StoredCardDelegate).getId()
+            cardPaymentMethod.storedPaymentMethodId = (paymentMethodDelegate as StoredCardDelegate).getId()
         }
 
         if (!cardDelegate.isCvcHidden()) {
@@ -396,7 +395,7 @@ class CardComponent private constructor(
     ): PaymentComponentData<CardPaymentMethod> {
         return PaymentComponentData<CardPaymentMethod>().apply {
             paymentMethod = cardPaymentMethod
-            setStorePaymentMethod(stateOutputData.isStoredPaymentMethodEnable)
+            storePaymentMethod = stateOutputData.isStoredPaymentMethodEnable
             shopperReference = configuration.shopperReference
             if (cardDelegate.isSocialSecurityNumberRequired()) {
                 socialSecurityNumber = stateOutputData.socialSecurityNumberState.value

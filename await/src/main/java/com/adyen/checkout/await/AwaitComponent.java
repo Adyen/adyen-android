@@ -94,7 +94,7 @@ public class AwaitComponent extends BaseActionComponent<AwaitConfiguration>
     @Override
     public void observe(@NonNull LifecycleOwner lifecycleOwner, @NonNull Observer<ActionComponentData> observer) {
         super.observe(lifecycleOwner, observer);
-        mStatusRepository.getStatusResponseLiveData().observe(lifecycleOwner, mResponseObserver);
+        mStatusRepository.getResponseLiveData().observe(lifecycleOwner, mResponseObserver);
         mStatusRepository.getErrorLiveData().observe(lifecycleOwner, mErrorObserver);
 
         // Immediately request a new status if the user resumes the app

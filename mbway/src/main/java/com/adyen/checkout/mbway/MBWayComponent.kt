@@ -8,8 +8,8 @@
 package com.adyen.checkout.mbway
 
 import androidx.lifecycle.SavedStateHandle
-import com.adyen.checkout.components.GenericComponentState
 import com.adyen.checkout.components.PaymentComponentProvider
+import com.adyen.checkout.components.PaymentComponentState
 import com.adyen.checkout.components.base.BasePaymentComponent
 import com.adyen.checkout.components.base.GenericPaymentComponentProvider
 import com.adyen.checkout.components.base.GenericPaymentMethodDelegate
@@ -38,7 +38,10 @@ class MBWayComponent(
     configuration: MBWayConfiguration
 ) :
     BasePaymentComponent<MBWayConfiguration, MBWayInputData, MBWayOutputData,
-        GenericComponentState<MBWayPaymentMethod>>(savedStateHandle, paymentMethodDelegate, configuration) {
+        PaymentComponentState<MBWayPaymentMethod>>(savedStateHandle, paymentMethodDelegate, configuration) {
+
+    override val supportedPaymentMethodTypes: Array<String>
+        get() = PAYMENT_METHOD_TYPES
 
     companion object {
         @JvmStatic
@@ -55,7 +58,7 @@ class MBWayComponent(
         return inputData.countryCode + sanitizedNumber
     }
 
-    override fun createComponentState(): GenericComponentState<MBWayPaymentMethod> {
+    override fun createComponentState(): PaymentComponentState<MBWayPaymentMethod> {
         val paymentComponentData = PaymentComponentData<MBWayPaymentMethod>()
         val paymentMethod = MBWayPaymentMethod().apply {
             type = MBWayPaymentMethod.PAYMENT_METHOD_TYPE
@@ -66,10 +69,8 @@ class MBWayComponent(
             paymentMethod.telephoneNumber = mbWayOutputData.mobilePhoneNumberFieldState.value
         }
         paymentComponentData.paymentMethod = paymentMethod
-        return GenericComponentState(paymentComponentData, mbWayOutputData?.isValid == true, true)
+        return PaymentComponentState(paymentComponentData, mbWayOutputData?.isValid == true, true)
     }
-
-    override fun getSupportedPaymentMethodTypes(): Array<String> = PAYMENT_METHOD_TYPES
 
     fun getSupportedCountries(): List<String> = SUPPORTED_COUNTRIES
 }

@@ -20,8 +20,6 @@ import org.json.JSONObject
  * All model objects can be serialized and deserialized to and from a JSONObject using the [Serializer] interface.
  * All model object also implement Parcelable to be sent as part of Extras in an Intent Bundle.
  *
- *
- *
  * The classes extending [ModelObject] are data classes designed to work standalone or in association with JSON libraries like GSON and Moshi.
  */
 abstract class ModelObject : Parcelable {

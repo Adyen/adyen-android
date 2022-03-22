@@ -13,7 +13,7 @@ import androidx.annotation.Nullable;
 import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.SavedStateHandle;
 
-import com.adyen.checkout.components.GenericComponentState;
+import com.adyen.checkout.components.PaymentComponentState;
 import com.adyen.checkout.components.base.BasePaymentComponent;
 import com.adyen.checkout.components.base.GenericPaymentMethodDelegate;
 import com.adyen.checkout.components.model.paymentmethods.InputDetail;
@@ -31,7 +31,7 @@ public abstract class IssuerListComponent<IssuerListPaymentMethodT extends Issue
         IssuerListConfiguration,
         IssuerListInputData,
         IssuerListOutputData,
-        GenericComponentState<IssuerListPaymentMethodT>
+        PaymentComponentState<IssuerListPaymentMethodT>
         > {
 
     private final MutableLiveData<List<IssuerModel>> mIssuersLiveData = new MutableLiveData<>();
@@ -94,12 +94,12 @@ public abstract class IssuerListComponent<IssuerListPaymentMethodT extends Issue
 
     @NonNull
     @Override
-    protected GenericComponentState<IssuerListPaymentMethodT> createComponentState() {
+    protected PaymentComponentState<IssuerListPaymentMethodT> createComponentState() {
         final IssuerListPaymentMethodT issuerListPaymentMethod = instantiateTypedPaymentMethod();
 
         final IssuerModel selectedIssuer = getOutputData() != null ? getOutputData().getSelectedIssuer() : null;
 
-        issuerListPaymentMethod.setType(mPaymentMethodDelegate.getPaymentMethodType());
+        issuerListPaymentMethod.setType(paymentMethodDelegate.getPaymentMethodType());
         issuerListPaymentMethod.setIssuer(selectedIssuer != null ? selectedIssuer.getId() : "");
 
         final boolean isInputValid = getOutputData().isValid();
@@ -107,7 +107,7 @@ public abstract class IssuerListComponent<IssuerListPaymentMethodT extends Issue
         final PaymentComponentData<IssuerListPaymentMethodT> paymentComponentData = new PaymentComponentData<>();
         paymentComponentData.setPaymentMethod(issuerListPaymentMethod);
 
-        return new GenericComponentState<>(paymentComponentData, isInputValid, true);
+        return new PaymentComponentState<>(paymentComponentData, isInputValid, true);
     }
 
     @NonNull
@@ -115,6 +115,6 @@ public abstract class IssuerListComponent<IssuerListPaymentMethodT extends Issue
 
     @NonNull
     protected String getPaymentMethodType() {
-        return mPaymentMethodDelegate.getPaymentMethodType();
+        return paymentMethodDelegate.getPaymentMethodType();
     }
 }
