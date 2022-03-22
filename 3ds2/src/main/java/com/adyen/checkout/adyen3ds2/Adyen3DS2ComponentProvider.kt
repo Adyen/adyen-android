@@ -55,7 +55,7 @@ class Adyen3DS2ComponentProvider : ActionComponentProvider<Adyen3DS2Component, A
         return ViewModelProvider(viewModelStoreOwner, threeDS2Factory).get(Adyen3DS2Component::class.java)
     }
 
-    override val supportedActionTypes: List<String?>
+    override val supportedActionTypes: List<String>
         get() = listOf(Threeds2FingerprintAction.ACTION_TYPE, Threeds2ChallengeAction.ACTION_TYPE, Threeds2Action.ACTION_TYPE)
 
     @Deprecated(

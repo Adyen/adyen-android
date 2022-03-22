@@ -5,153 +5,124 @@
  *
  * Created by arman on 10/4/2019.
  */
+package com.adyen.checkout.components.base
 
-package com.adyen.checkout.components.base;
+import androidx.arch.core.executor.testing.InstantTaskExecutorRule
+import androidx.lifecycle.Lifecycle
+import androidx.lifecycle.LifecycleOwner
+import androidx.lifecycle.LifecycleRegistry
+import androidx.lifecycle.SavedStateHandle
+import com.adyen.checkout.components.DataProvider
+import com.adyen.checkout.components.PaymentComponentState
+import com.adyen.checkout.components.model.paymentmethods.PaymentMethod
+import com.adyen.checkout.components.model.payments.request.PaymentComponentData
+import com.adyen.checkout.components.model.payments.request.PaymentMethodDetails
+import com.adyen.checkout.components.models.TestComponentState
+import com.adyen.checkout.components.models.TestConfiguration
+import com.adyen.checkout.components.models.TestInputData
+import com.adyen.checkout.components.models.TestOutputData
+import com.adyen.checkout.components.models.TestPaymentMethod
+import org.json.JSONException
+import org.junit.Assert
+import org.junit.Before
+import org.junit.Rule
+import org.junit.Test
+import org.junit.rules.TestRule
+import org.junit.runner.RunWith
+import org.mockito.Mockito
+import org.robolectric.RobolectricTestRunner
+import org.robolectric.annotation.Config
+import org.robolectric.shadows.ShadowLog
+import java.io.IOException
 
-import static org.mockito.Mockito.mock;
-import static org.mockito.Mockito.when;
-
-import androidx.annotation.NonNull;
-import androidx.arch.core.executor.testing.InstantTaskExecutorRule;
-import androidx.lifecycle.Lifecycle;
-import androidx.lifecycle.LifecycleOwner;
-import androidx.lifecycle.LifecycleRegistry;
-import androidx.lifecycle.SavedStateHandle;
-
-import com.adyen.checkout.components.DataProvider;
-import com.adyen.checkout.components.PaymentComponentState;
-import com.adyen.checkout.components.model.paymentmethods.PaymentMethod;
-import com.adyen.checkout.components.model.payments.request.PaymentComponentData;
-import com.adyen.checkout.components.model.payments.request.PaymentMethodDetails;
-import com.adyen.checkout.components.models.TestConfiguration;
-import com.adyen.checkout.components.models.TestInputData;
-import com.adyen.checkout.components.models.TestOutputData;
-import com.adyen.checkout.components.models.TestPaymentMethod;
-
-import org.json.JSONException;
-import org.junit.Before;
-import org.junit.Rule;
-import org.junit.Test;
-import org.junit.rules.TestRule;
-import org.junit.runner.RunWith;
-import org.robolectric.RobolectricTestRunner;
-import org.robolectric.annotation.Config;
-import org.robolectric.shadows.ShadowLog;
-
-import java.io.IOException;
-
-@RunWith(RobolectricTestRunner.class)
-@Config(shadows = ShadowLog.class)
-public class BaseComponentTest {
+@RunWith(RobolectricTestRunner::class)
+@Config(shadows = [ShadowLog::class])
+class BaseComponentTest {
 
     @Before
-    public void setUp() {
-        ShadowLog.setupLogging();
+    fun setUp() {
+        ShadowLog.setupLogging()
     }
 
-    @Rule
-    public TestRule rule = new InstantTaskExecutorRule();
+    @get:Rule
+    var rule: TestRule = InstantTaskExecutorRule()
 
-    BasePaymentComponent<TestConfiguration, TestInputData, TestOutputData, PaymentComponentState<? extends PaymentMethodDetails>> mBaseComponent;
-
-    PaymentMethod paymentMethod;
-    PaymentMethodDelegateTest mPaymentMethodDelegateTest = new PaymentMethodDelegateTest();
-    ClassLoader classLoader;
+    private var paymentMethod: PaymentMethod? = null
+    var paymentMethodDelegateTest = PaymentMethodDelegateTest()
 
     @Before
-    public void init() throws IOException, JSONException {
-        classLoader = this.getClass().getClassLoader();
-        paymentMethod = DataProvider.getPaymentMethodResponse(classLoader).getPaymentMethods().get(0);
+    @Throws(IOException::class, JSONException::class)
+    fun init() {
+        paymentMethod = DataProvider.getPaymentMethodResponse(javaClass.classLoader).paymentMethods!![0]
     }
 
-//    @Test(expected = IllegalArgumentException.class)
-    @Test
-    public void initBaseComponent_notSupportedPaymentMethod_expectException() throws IOException, JSONException {
-//        mBaseComponent = new BasePaymentComponent<
-//                TestConfiguration, TestInputData, TestOutputData, PaymentComponentState<? extends PaymentMethodDetails>>(
-//                new SavedStateHandle(),
-//                new PaymentMethodDelegateTest(),
-//                null
-//        ) {
-//            @NonNull
-//            @Override
-//            protected TestOutputData onInputDataChanged(@NonNull TestInputData inputData) {
-//                return new TestOutputData();
-//            }
-//
-//            @NonNull
-//            @Override
-//            protected PaymentComponentState<? extends PaymentMethodDetails> createComponentState() {
-//                return null;
-//            }
-//
-//            @NonNull
-//            @Override
-//            public String[] getSupportedPaymentMethodTypes() {
-//                return new String[]{"something"};
-//            }
-//        };
-    }
-
-    @Test
-    public void initBaseComponent_SupportedPaymentMethod_expectOutputData() {
-//        mBaseComponent = getBaseComponent();
-//
-//        mBaseComponent.observeOutputData(mockLifecycleOwner(), Assert::assertNotNull);
-//        Assert.assertNull(mBaseComponent.getOutputData());
-    }
-
-    @Test
-    public void initBaseComponent_ChangeInputData_expectPaymentDetails() {
-//        mBaseComponent = getBaseComponent();
-//        mBaseComponent.inputDataChanged(new TestInputData());
-//
-//        mBaseComponent.observe(mockLifecycleOwner(), paymentComponentState -> Assert.assertNotNull(paymentComponentState.getData()));
-    }
-
-    @Test
-    public void initBaseComponent_SupportedPaymentMethod_latePaymentDetails() {
-//        mBaseComponent = getBaseComponent();
-//        mBaseComponent.inputDataChanged(new TestInputData(false));
-//
-//        mBaseComponent.observe(mockLifecycleOwner(), paymentComponentState -> Assert.assertEquals(1, 1));
-    }
-
-    private BasePaymentComponent<TestConfiguration, TestInputData, TestOutputData, PaymentComponentState<? extends PaymentMethodDetails>> getBaseComponent() {
-        BasePaymentComponent<TestConfiguration, TestInputData, TestOutputData, PaymentComponentState<? extends PaymentMethodDetails>> baseComponent =
-                new BasePaymentComponent<TestConfiguration, TestInputData, TestOutputData, PaymentComponentState<? extends PaymentMethodDetails>>
-                        (new SavedStateHandle(), mPaymentMethodDelegateTest, null) {
-            @NonNull
-            @Override
-            protected TestOutputData onInputDataChanged(@NonNull TestInputData inputData) {
-                TestOutputData outputData = new TestOutputData(inputData.isValid);
-                return outputData;
+    @Test(expected = IllegalArgumentException::class)
+    @Throws(IOException::class, JSONException::class)
+    fun initBaseComponent_notSupportedPaymentMethod_expectException() {
+        object : BasePaymentComponent<TestConfiguration, TestInputData, TestOutputData, PaymentComponentState<out PaymentMethodDetails>>(
+            SavedStateHandle(),
+            PaymentMethodDelegateTest(),
+            TestConfiguration()
+        ) {
+            override fun onInputDataChanged(inputData: TestInputData): TestOutputData {
+                return TestOutputData()
             }
 
-            @NonNull
-            @Override
-            protected PaymentComponentState<TestPaymentMethod> createComponentState() {
-                final PaymentComponentData<TestPaymentMethod> paymentComponentData = new PaymentComponentData<>();
-                paymentComponentData.setPaymentMethod(new TestPaymentMethod());
-                return new PaymentComponentState<>(paymentComponentData, true, true);
+            override fun createComponentState(): PaymentComponentState<out PaymentMethodDetails> {
+                return TestComponentState()
             }
 
-            @NonNull
-            @Override
-            public String[] getSupportedPaymentMethodTypes() {
-                return new String[]{""};
-            }
-        };
-
-        return baseComponent;
+            override val supportedPaymentMethodTypes: Array<String>
+                get() = arrayOf("something")
+        }
     }
 
-    private static LifecycleOwner mockLifecycleOwner() {
-        LifecycleOwner owner = mock(LifecycleOwner.class);
-        LifecycleRegistry lifecycle = new LifecycleRegistry(owner);
-        lifecycle.handleLifecycleEvent(Lifecycle.Event.ON_RESUME);
-        when(owner.getLifecycle()).thenReturn(lifecycle);
-        return owner;
+    @Test
+    fun initBaseComponent_SupportedPaymentMethod_expectOutputData() {
+        baseComponent.observeOutputData(mockLifecycleOwner(), Assert::assertNotNull)
+        Assert.assertNull(baseComponent.outputData)
+    }
 
+    @Test
+    fun initBaseComponent_ChangeInputData_expectPaymentDetails() {
+        baseComponent.inputDataChanged(TestInputData())
+        baseComponent.observe(mockLifecycleOwner()) { paymentComponentState -> Assert.assertNotNull(paymentComponentState.data) }
+    }
+
+    @Test
+    fun initBaseComponent_SupportedPaymentMethod_latePaymentDetails() {
+        baseComponent.inputDataChanged(TestInputData(false))
+        baseComponent.observe(mockLifecycleOwner()) { Assert.assertEquals(1, 1) }
+    }
+
+    private val baseComponent: BasePaymentComponent<TestConfiguration, TestInputData, TestOutputData, PaymentComponentState<out PaymentMethodDetails>>
+        get() = object :
+            BasePaymentComponent<TestConfiguration, TestInputData, TestOutputData, PaymentComponentState<out PaymentMethodDetails>>(
+                SavedStateHandle(),
+                paymentMethodDelegateTest,
+                TestConfiguration()
+            ) {
+            override fun onInputDataChanged(inputData: TestInputData): TestOutputData {
+                return TestOutputData(inputData.isValid)
+            }
+
+            override fun createComponentState(): PaymentComponentState<TestPaymentMethod> {
+                val paymentComponentData: PaymentComponentData<TestPaymentMethod> = PaymentComponentData()
+                paymentComponentData.paymentMethod = TestPaymentMethod()
+                return PaymentComponentState(paymentComponentData, isInputValid = true, isReady = true)
+            }
+
+            override val supportedPaymentMethodTypes: Array<String>
+                get() = arrayOf("")
+        }
+
+    companion object {
+        private fun mockLifecycleOwner(): LifecycleOwner {
+            val owner = Mockito.mock(LifecycleOwner::class.java)
+            val lifecycle = LifecycleRegistry(owner)
+            lifecycle.handleLifecycleEvent(Lifecycle.Event.ON_RESUME)
+            Mockito.`when`(owner.lifecycle).thenReturn(lifecycle)
+            return owner
+        }
     }
 }

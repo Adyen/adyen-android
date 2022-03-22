@@ -46,7 +46,7 @@ class RedirectComponentProvider : ActionComponentProvider<RedirectComponent, Red
         return ViewModelProvider(viewModelStoreOwner, redirectFactory).get(RedirectComponent::class.java)
     }
 
-    override val supportedActionTypes: List<String?>
+    override val supportedActionTypes: List<String>
         get() = listOf(RedirectAction.ACTION_TYPE)
 
     @Deprecated(

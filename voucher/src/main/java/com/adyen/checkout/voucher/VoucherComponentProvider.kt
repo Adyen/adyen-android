@@ -48,7 +48,7 @@ class VoucherComponentProvider : ActionComponentProvider<VoucherComponent, Vouch
         return ViewModelProvider(viewModelStoreOwner, voucherFactory).get(VoucherComponent::class.java)
     }
 
-    override val supportedActionTypes: List<String?>
+    override val supportedActionTypes: List<String>
         get() = listOf(VoucherAction.ACTION_TYPE)
 
     @Deprecated(

@@ -23,7 +23,7 @@ private val PAYMENT_METHODS = listOf(PaymentMethodTypes.BLIK, PaymentMethodTypes
 
 class AwaitComponentProvider : ActionComponentProvider<AwaitComponent, AwaitConfiguration> {
 
-    override val supportedActionTypes: List<String?>
+    override val supportedActionTypes: List<String>
         get() = listOf(AwaitAction.ACTION_TYPE)
 
     override fun <T> get(

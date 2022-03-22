@@ -28,22 +28,22 @@ class StatusRepository private constructor(environment: Environment) {
     private val statusPollingRunnable: Runnable = object : Runnable {
         override fun run() {
             Logger.d(TAG, "mStatusPollingRunnable.run()")
-            statusApi.callStatus(clientKey!!, paymentData!!, mStatusCallback)
+            statusApi.callStatus(clientKey!!, paymentData!!, statusCallback)
             updatePollingDelay()
             handler.postDelayed(this, pollingDelay)
         }
     }
 
     val statusApi: StatusApi = StatusApi.getInstance(environment)
-    private val statusResponseLiveData = MutableLiveData<StatusResponse?>()
-    val responseLiveData: LiveData<StatusResponse?> = statusResponseLiveData
-    private val statusErrorLiveData = MutableLiveData<ComponentException?>()
-    val errorLiveData: LiveData<ComponentException?> = statusErrorLiveData
+    private val _responseLiveData = MutableLiveData<StatusResponse?>()
+    val responseLiveData: LiveData<StatusResponse?> = _responseLiveData
+    private val _errorLiveData = MutableLiveData<ComponentException?>()
+    val errorLiveData: LiveData<ComponentException?> = _errorLiveData
 
-    val mStatusCallback: StatusConnectionTask.StatusCallback = object : StatusConnectionTask.StatusCallback {
+    val statusCallback: StatusConnectionTask.StatusCallback = object : StatusConnectionTask.StatusCallback {
         override fun onSuccess(statusResponse: StatusResponse) {
             Logger.d(TAG, "onSuccess - " + statusResponse.resultCode)
-            statusResponseLiveData.postValue(statusResponse)
+            _responseLiveData.postValue(statusResponse)
             if (isFinalResult(statusResponse)) {
                 stopPolling()
             }
@@ -106,8 +106,8 @@ class StatusRepository private constructor(environment: Environment) {
         handler.removeCallbacksAndMessages(null)
         // Set null so that new observers don't get the status from the previous result
         // This could be replaced by other types of observable like Kotlin Flow
-        statusResponseLiveData.value = null
-        statusErrorLiveData.value = null
+        _responseLiveData.value = null
+        _errorLiveData.value = null
     }
 
     fun updatePollingDelay() {
@@ -115,7 +115,7 @@ class StatusRepository private constructor(environment: Environment) {
         when {
             elapsedTime <= POLLING_THRESHOLD -> pollingDelay = POLLING_DELAY_FAST
             elapsedTime <= MAX_POLLING_DURATION_MILLIS -> pollingDelay = POLLING_DELAY_SLOW
-            else -> statusErrorLiveData.setValue(ComponentException("Status requesting timed out with no result"))
+            else -> _errorLiveData.setValue(ComponentException("Status requesting timed out with no result"))
         }
     }
 

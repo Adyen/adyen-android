@@ -5,27 +5,8 @@
  *
  * Created by arman on 12/4/2019.
  */
+package com.adyen.checkout.components.models
 
-package com.adyen.checkout.components.models;
+import com.adyen.checkout.components.base.OutputData
 
-import com.adyen.checkout.components.base.OutputData;
-
-public class TestOutputData implements OutputData {
-
-    public boolean isValid;
-
-    public TestOutputData() {
-        this(false);
-    }
-
-    public TestOutputData(boolean isValid) {
-        this.isValid = isValid;
-    }
-
-    @Override
-    public boolean isValid() {
-        return this.isValid;
-    }
-
-
-}
+class TestOutputData @JvmOverloads constructor(override var isValid: Boolean = false) : OutputData

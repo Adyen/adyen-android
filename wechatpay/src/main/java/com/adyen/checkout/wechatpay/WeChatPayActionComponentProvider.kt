@@ -47,7 +47,7 @@ class WeChatPayActionComponentProvider : ActionComponentProvider<WeChatPayAction
         return ViewModelProvider(viewModelStoreOwner, weChatFactory).get(WeChatPayActionComponent::class.java)
     }
 
-    override val supportedActionTypes: List<String?>
+    override val supportedActionTypes: List<String>
         get() = listOf(SdkAction.ACTION_TYPE)
 
     @Deprecated(

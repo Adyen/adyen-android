@@ -5,28 +5,31 @@
  *
  * Created by arman on 12/4/2019.
  */
+package com.adyen.checkout.components
 
-package com.adyen.checkout.components;
+import com.adyen.checkout.components.model.PaymentMethodsApiResponse
+import org.json.JSONException
+import org.json.JSONObject
+import java.io.File
+import java.io.IOException
+import java.nio.charset.Charset
+import java.nio.file.Files
+import java.nio.file.Paths
 
-import com.adyen.checkout.components.model.PaymentMethodsApiResponse;
-
-import org.json.JSONException;
-import org.json.JSONObject;
-
-import java.io.File;
-import java.io.IOException;
-import java.nio.charset.Charset;
-import java.nio.file.Files;
-import java.nio.file.Paths;
-
-public class DataProvider {
-    public static JSONObject readJsonFileFromResource(String fileName, ClassLoader classLoader) throws IOException, JSONException {
-        File file = new File(classLoader.getResource(fileName).getFile());
-        byte[] encoded = Files.readAllBytes(Paths.get(file.getPath()));
-        return new JSONObject(new String(encoded, Charset.defaultCharset()));
+object DataProvider {
+    @Throws(IOException::class, JSONException::class)
+    fun readJsonFileFromResource(fileName: String?, classLoader: ClassLoader): JSONObject {
+        val file = File(classLoader.getResource(fileName).file)
+        val encoded = Files.readAllBytes(Paths.get(file.path))
+        return JSONObject(String(encoded, Charset.defaultCharset()))
     }
 
-    public static PaymentMethodsApiResponse getPaymentMethodResponse(ClassLoader classLoader) throws IOException, JSONException {
-        return PaymentMethodsApiResponse.SERIALIZER.deserialize(readJsonFileFromResource("PaymentMethodsResponse.json", classLoader));
+    @Throws(IOException::class, JSONException::class)
+    fun getPaymentMethodResponse(classLoader: ClassLoader?): PaymentMethodsApiResponse {
+        return if (classLoader == null) {
+            throw IllegalArgumentException("ClassLoader should not be null")
+        } else {
+            PaymentMethodsApiResponse.SERIALIZER.deserialize(readJsonFileFromResource("PaymentMethodsResponse.json", classLoader))
+        }
     }
 }

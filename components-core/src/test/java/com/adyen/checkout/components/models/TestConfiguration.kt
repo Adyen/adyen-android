@@ -5,24 +5,10 @@
  *
  * Created by arman on 12/4/2019.
  */
+package com.adyen.checkout.components.models
 
-package com.adyen.checkout.components.models;
+import com.adyen.checkout.components.base.Configuration
+import com.adyen.checkout.core.api.Environment
+import java.util.Locale
 
-import android.os.Parcel;
-import androidx.annotation.NonNull;
-
-import com.adyen.checkout.components.base.Configuration;
-import com.adyen.checkout.core.api.Environment;
-
-import java.util.Locale;
-
-public class TestConfiguration extends Configuration {
-
-    public TestConfiguration() {
-        super(Locale.US, Environment.TEST, null);
-    }
-
-    protected TestConfiguration(@NonNull Parcel in) {
-        super(in);
-    }
-}
+class TestConfiguration : Configuration(Locale.US, Environment.TEST, "")

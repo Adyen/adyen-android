@@ -21,7 +21,7 @@ import com.adyen.checkout.components.model.payments.response.Action
 import com.adyen.checkout.core.exception.CheckoutException
 import com.adyen.checkout.core.exception.ComponentException
 import com.adyen.checkout.core.log.LogUtil.getTag
-import com.adyen.checkout.core.log.Logger.w
+import com.adyen.checkout.core.log.Logger
 import org.json.JSONObject
 
 @Suppress("TooManyFunctions")
@@ -30,8 +30,10 @@ abstract class BaseActionComponent<ConfigurationT : Configuration>(
     application: Application,
     configuration: ConfigurationT
 ) : ActionComponentViewModel<ConfigurationT>(savedStateHandle, application, configuration) {
-    private val mResultLiveData = MutableLiveData<ActionComponentData>()
-    private val mErrorMutableLiveData = MutableLiveData<ComponentError>()
+
+    private val resultLiveData = MutableLiveData<ActionComponentData>()
+    private val errorMutableLiveData = MutableLiveData<ComponentError>()
+
     override fun handleAction(activity: Activity, action: Action) {
         if (!canHandleAction(action)) {
             notifyException(ComponentException("Action type not supported by this component - " + action.type))
@@ -46,27 +48,27 @@ abstract class BaseActionComponent<ConfigurationT : Configuration>(
     }
 
     override fun observe(lifecycleOwner: LifecycleOwner, observer: Observer<ActionComponentData>) {
-        mResultLiveData.observe(lifecycleOwner, observer)
+        resultLiveData.observe(lifecycleOwner, observer)
     }
 
     override fun removeObservers(lifecycleOwner: LifecycleOwner) {
-        mResultLiveData.removeObservers(lifecycleOwner)
+        resultLiveData.removeObservers(lifecycleOwner)
     }
 
     override fun removeObserver(observer: Observer<ActionComponentData>) {
-        mResultLiveData.removeObserver(observer)
+        resultLiveData.removeObserver(observer)
     }
 
     override fun observeErrors(lifecycleOwner: LifecycleOwner, observer: Observer<ComponentError>) {
-        mErrorMutableLiveData.observe(lifecycleOwner, observer)
+        errorMutableLiveData.observe(lifecycleOwner, observer)
     }
 
     override fun removeErrorObservers(lifecycleOwner: LifecycleOwner) {
-        mErrorMutableLiveData.removeObservers(lifecycleOwner)
+        errorMutableLiveData.removeObservers(lifecycleOwner)
     }
 
     override fun removeErrorObserver(observer: Observer<ComponentError>) {
-        mErrorMutableLiveData.removeObserver(observer)
+        errorMutableLiveData.removeObserver(observer)
     }
 
     /**
@@ -76,7 +78,7 @@ abstract class BaseActionComponent<ConfigurationT : Configuration>(
      */
     @Deprecated("You can safely remove this method, we rely on {@link SavedStateHandle} to handle the state.")
     fun saveState(bundle: Bundle?) {
-        w(TAG, "Calling saveState is not necessary anymore, you can safely remove this method.")
+        Logger.w(TAG, "Calling saveState is not necessary anymore, you can safely remove this method.")
     }
 
     /**
@@ -86,7 +88,7 @@ abstract class BaseActionComponent<ConfigurationT : Configuration>(
      */
     @Deprecated("You can safely remove this method, we rely on {@link SavedStateHandle} to handle the state.")
     fun restoreState(bundle: Bundle?) {
-        w(TAG, "Calling restoreState is not necessary anymore, you can safely remove this method.")
+        Logger.w(TAG, "Calling restoreState is not necessary anymore, you can safely remove this method.")
     }
 
     @Throws(ComponentException::class)
@@ -96,11 +98,11 @@ abstract class BaseActionComponent<ConfigurationT : Configuration>(
         val actionComponentData = ActionComponentData()
         actionComponentData.details = details
         actionComponentData.paymentData = paymentData
-        mResultLiveData.value = actionComponentData
+        resultLiveData.value = actionComponentData
     }
 
     protected fun notifyException(e: CheckoutException) {
-        mErrorMutableLiveData.postValue(ComponentError(e))
+        errorMutableLiveData.postValue(ComponentError(e))
     }
 
     protected var paymentData: String?

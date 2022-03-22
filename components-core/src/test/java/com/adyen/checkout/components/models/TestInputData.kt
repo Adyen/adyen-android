@@ -5,18 +5,16 @@
  *
  * Created by arman on 12/4/2019.
  */
+package com.adyen.checkout.components.models
 
-package com.adyen.checkout.components.models;
+import com.adyen.checkout.components.base.InputData
 
-import com.adyen.checkout.components.base.InputData;
+class TestInputData : InputData {
+    var isValid = true
 
-public class TestInputData implements InputData {
-    public boolean isValid = true;
-
-    public TestInputData(boolean isValid) {
-        this.isValid = isValid;
+    constructor(isValid: Boolean) {
+        this.isValid = isValid
     }
 
-    public TestInputData() {
-    }
+    constructor()
 }

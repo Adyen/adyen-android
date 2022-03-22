@@ -70,7 +70,7 @@ interface ActionComponentProvider<ComponentT : ActionComponent<out Configuration
     /**
      * @return the list of supported action types
      */
-    val supportedActionTypes: List<String?>
+    val supportedActionTypes: List<String>
 
     /**
      * Checks if the provided component will trigger updates that can be observed using
