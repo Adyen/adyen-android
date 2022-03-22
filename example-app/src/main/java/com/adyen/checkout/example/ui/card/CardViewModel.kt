@@ -3,6 +3,7 @@ package com.adyen.checkout.example.ui.card
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.adyen.checkout.card.CardComponentState
+import com.adyen.checkout.components.ComponentError
 import com.adyen.checkout.components.model.payments.request.PaymentComponentData
 import com.adyen.checkout.core.model.getStringOrNull
 import com.adyen.checkout.example.data.api.model.paymentsRequest.AdditionalData
@@ -47,11 +48,15 @@ internal class CardViewModel @Inject constructor(
             ?.firstOrNull { it.type == "scheme" }
 
         if (paymentMethod == null) CardViewState.Error
-        else CardViewState.Data(paymentMethod)
+        else CardViewState.ShowComponent(paymentMethod)
     }
 
     fun onCardComponentState(state: CardComponentState?) {
         cardComponentState = state
+    }
+
+    fun onComponentError(error: ComponentError) {
+        viewModelScope.launch { _paymentResult.emit("Failed: ${error.errorMessage}") }
     }
 
     fun onPayClick() {

@@ -6,7 +6,7 @@ internal sealed class CardViewState {
 
     object Loading : CardViewState()
 
-    data class Data(val paymentMethod: PaymentMethod) : CardViewState()
+    data class ShowComponent(val paymentMethod: PaymentMethod) : CardViewState()
 
     object Invalid : CardViewState()
 

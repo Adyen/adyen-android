@@ -53,7 +53,7 @@ class CardFragment : BottomSheetDialogFragment() {
                 binding.cardContainer.isVisible = false
                 binding.errorView.isVisible = false
             }
-            is CardViewState.Data -> {
+            is CardViewState.ShowComponent -> {
                 binding.cardContainer.isVisible = true
                 binding.progressIndicator.isVisible = false
                 binding.errorView.isVisible = false
@@ -81,6 +81,7 @@ class CardFragment : BottomSheetDialogFragment() {
         binding.cardView.attach(cardComponent, viewLifecycleOwner)
 
         cardComponent.observe(viewLifecycleOwner, cardViewModel::onCardComponentState)
+        cardComponent.observeErrors(viewLifecycleOwner, cardViewModel::onComponentError)
     }
 
     private fun onPaymentResult(result: String) {
