@@ -8,10 +8,12 @@
 
 package com.adyen.checkout.card
 
+import com.adyen.checkout.card.api.model.AddressItem
 import com.adyen.checkout.card.api.model.Brand
 import com.adyen.checkout.card.data.CardType
 import com.adyen.checkout.card.data.DetectedCardType
 import com.adyen.checkout.card.data.ExpiryDate
+import com.adyen.checkout.card.repository.AddressRepository
 import com.adyen.checkout.card.repository.BinLookupRepository
 import com.adyen.checkout.components.base.AddressVisibility
 import com.adyen.checkout.components.model.paymentmethods.PaymentMethod
@@ -36,6 +38,7 @@ class NewCardDelegate(
     cardConfiguration: CardConfiguration,
     private val binLookupRepository: BinLookupRepository,
     publicKeyRepository: PublicKeyRepository,
+    private val addressDelegate: AddressDelegate,
     private val cardValidationMapper: CardValidationMapper
 ) : CardDelegate(cardConfiguration, publicKeyRepository) {
 
