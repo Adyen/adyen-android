@@ -33,7 +33,7 @@ import dagger.hilt.android.AndroidEntryPoint
 import javax.inject.Inject
 
 @AndroidEntryPoint
-class MainActivity : AppCompatActivity(), DropInCallback {
+class MainActivity : AppCompatActivity(), DropInCallback, NewIntentSubject {
 
     companion object {
         private val TAG: String = LogUtil.getTag()
@@ -48,6 +48,8 @@ class MainActivity : AppCompatActivity(), DropInCallback {
     private val dropInLauncher = DropIn.registerForDropInResult(this, this)
 
     private var isWaitingPaymentMethods = false
+
+    private var newIntentObservers = mutableListOf<NewIntentSubject.Observer>()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -108,8 +110,14 @@ class MainActivity : AppCompatActivity(), DropInCallback {
         super.onNewIntent(intent)
         Logger.d(TAG, "onNewIntent")
         if (intent == null) return
-        val result = DropIn.getDropInResultFromIntent(intent) ?: return
-        Toast.makeText(this, result, Toast.LENGTH_SHORT).show()
+        val result = DropIn.getDropInResultFromIntent(intent)
+
+        // Result should be null if a standalone component was used instead of the drop-in
+        if (result != null) {
+            Toast.makeText(this, result, Toast.LENGTH_SHORT).show()
+        } else {
+            newIntentObservers.forEach { it.onNewIntent(intent) }
+        }
     }
 
     override fun onDropInResult(dropInResult: DropInResult?) {
@@ -169,5 +177,13 @@ class MainActivity : AppCompatActivity(), DropInCallback {
             binding.componentList.visibility = View.VISIBLE
             binding.progressIndicator.hide()
         }
+    }
+
+    override fun registerObserver(observer: NewIntentSubject.Observer) {
+        newIntentObservers.add(observer)
+    }
+
+    override fun unregisterObserver(observer: NewIntentSubject.Observer) {
+        newIntentObservers.remove(observer)
     }
 }

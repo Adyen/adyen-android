@@ -11,12 +11,12 @@ import androidx.fragment.app.FragmentManager
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.lifecycleScope
 import com.adyen.checkout.adyen3ds2.Adyen3DS2Component
-import com.adyen.checkout.adyen3ds2.Adyen3DS2ComponentProvider
 import com.adyen.checkout.card.CardComponent
 import com.adyen.checkout.components.model.paymentmethods.PaymentMethod
 import com.adyen.checkout.components.model.payments.response.Action
 import com.adyen.checkout.example.databinding.FragmentCardBinding
 import com.adyen.checkout.example.ui.configuration.CheckoutConfigurationProvider
+import com.adyen.checkout.example.ui.main.NewIntentSubject
 import com.adyen.checkout.redirect.RedirectComponent
 import com.adyen.checkout.redirect.RedirectUtil
 import com.google.android.material.bottomsheet.BottomSheetDialogFragment
@@ -26,7 +26,7 @@ import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 @AndroidEntryPoint
-class CardFragment : BottomSheetDialogFragment(), NewIntentListener {
+class CardFragment : BottomSheetDialogFragment(), NewIntentSubject.Observer {
 
     @Inject
     internal lateinit var checkoutConfigurationProvider: CheckoutConfigurationProvider
@@ -55,6 +55,11 @@ class CardFragment : BottomSheetDialogFragment(), NewIntentListener {
             launch { cardViewModel.paymentResult.collect(::onPaymentResult) }
             launch { cardViewModel.additionalAction.collect(::onAdditionalAction) }
         }
+    }
+
+    override fun onStart() {
+        super.onStart()
+        (requireActivity() as? NewIntentSubject)?.registerObserver(this)
     }
 
     private fun onCardViewState(cardViewState: CardViewState) {
@@ -142,6 +147,11 @@ class CardFragment : BottomSheetDialogFragment(), NewIntentListener {
             redirectComponent?.handleIntent(intent)
             threeDS2Component?.handleIntent(intent)
         }
+    }
+
+    override fun onStop() {
+        super.onStop()
+        (requireActivity() as? NewIntentSubject)?.unregisterObserver(this)
     }
 
     override fun onDestroyView() {
