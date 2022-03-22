@@ -8,6 +8,7 @@
 
 package com.adyen.checkout.card
 
+import com.adyen.checkout.card.api.model.AddressItem
 import com.adyen.checkout.card.api.model.Brand
 import com.adyen.checkout.card.data.CardType
 import com.adyen.checkout.card.data.DetectedCardType
@@ -142,6 +143,10 @@ class StoredCardDelegate(
         cardType: CardType?,
         isCardTypeReliable: Boolean
     ): List<InstallmentModel> {
+        return emptyList()
+    }
+
+    override fun getAddressData(): List<AddressItem> {
         return emptyList()
     }
 
