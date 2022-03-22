@@ -10,6 +10,8 @@ import androidx.core.view.isVisible
 import androidx.fragment.app.FragmentManager
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.lifecycleScope
+import com.adyen.checkout.adyen3ds2.Adyen3DS2Component
+import com.adyen.checkout.adyen3ds2.Adyen3DS2ComponentProvider
 import com.adyen.checkout.card.CardComponent
 import com.adyen.checkout.components.model.paymentmethods.PaymentMethod
 import com.adyen.checkout.components.model.payments.response.Action
@@ -35,6 +37,8 @@ class CardFragment : BottomSheetDialogFragment(), NewIntentListener {
     private val cardViewModel: CardViewModel by viewModels()
 
     private var redirectComponent: RedirectComponent? = null
+
+    private var threeDS2Component: Adyen3DS2Component? = null
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View {
         _binding = FragmentCardBinding.inflate(inflater, container, false)
@@ -99,7 +103,7 @@ class CardFragment : BottomSheetDialogFragment(), NewIntentListener {
     private fun onAdditionalAction(cardAction: CardAction) {
         when (cardAction) {
             is CardAction.Redirect -> setupRedirectComponent(cardAction.action)
-            is CardAction.ThreeDS2 -> {}
+            is CardAction.ThreeDS2 -> setupThreeDS2Component(cardAction.action)
             CardAction.Unsupported -> {
                 Toast.makeText(requireContext(), "This action is not implemented", Toast.LENGTH_SHORT).show()
             }
@@ -119,10 +123,24 @@ class CardFragment : BottomSheetDialogFragment(), NewIntentListener {
         redirectComponent?.handleAction(requireActivity(), action)
     }
 
+    private fun setupThreeDS2Component(action: Action) {
+        threeDS2Component = Adyen3DS2Component.PROVIDER.get(
+            this,
+            requireActivity().application,
+            checkoutConfigurationProvider.get3DS2Configuration()
+        )
+
+        threeDS2Component?.observe(viewLifecycleOwner, cardViewModel::onActionComponentData)
+        threeDS2Component?.observeErrors(viewLifecycleOwner, cardViewModel::onComponentError)
+
+        threeDS2Component?.handleAction(requireActivity(), action)
+    }
+
     override fun onNewIntent(intent: Intent) {
         val data = intent.data
         if (data != null && data.toString().startsWith(RedirectUtil.REDIRECT_RESULT_SCHEME)) {
             redirectComponent?.handleIntent(intent)
+            threeDS2Component?.handleIntent(intent)
         }
     }
 
