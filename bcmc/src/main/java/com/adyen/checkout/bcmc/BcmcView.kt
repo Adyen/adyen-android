@@ -5,234 +5,192 @@
  *
  * Created by arman on 18/9/2019.
  */
+package com.adyen.checkout.bcmc
 
-package com.adyen.checkout.bcmc;
-
-import android.content.Context;
-import android.content.res.TypedArray;
-import android.util.AttributeSet;
-import android.view.LayoutInflater;
-import android.view.View;
-import android.widget.LinearLayout;
-
-import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
-import androidx.annotation.StringRes;
-import androidx.appcompat.widget.SwitchCompat;
-import androidx.lifecycle.LifecycleOwner;
-import androidx.lifecycle.Observer;
-
-import com.adyen.checkout.card.ui.CardNumberInput;
-import com.adyen.checkout.card.ui.ExpiryDateInput;
-import com.adyen.checkout.components.PaymentComponentState;
-import com.adyen.checkout.components.api.ImageLoader;
-import com.adyen.checkout.components.model.payments.request.CardPaymentMethod;
-import com.adyen.checkout.components.ui.FieldState;
-import com.adyen.checkout.components.ui.Validation;
-import com.adyen.checkout.components.ui.view.AdyenLinearLayout;
-import com.adyen.checkout.components.ui.view.RoundCornerImageView;
-import com.google.android.material.textfield.TextInputLayout;
+import android.content.Context
+import android.content.res.TypedArray
+import android.util.AttributeSet
+import android.view.LayoutInflater
+import android.view.View
+import android.view.View.OnFocusChangeListener
+import android.widget.CompoundButton
+import androidx.annotation.StringRes
+import androidx.appcompat.widget.SwitchCompat
+import androidx.lifecycle.LifecycleOwner
+import androidx.lifecycle.Observer
+import com.adyen.checkout.card.ui.CardNumberInput
+import com.adyen.checkout.card.ui.ExpiryDateInput
+import com.adyen.checkout.components.PaymentComponentState
+import com.adyen.checkout.components.api.ImageLoader
+import com.adyen.checkout.components.api.ImageLoader.Companion.getInstance
+import com.adyen.checkout.components.model.payments.request.CardPaymentMethod
+import com.adyen.checkout.components.ui.FieldState
+import com.adyen.checkout.components.ui.Validation
+import com.adyen.checkout.components.ui.view.AdyenLinearLayout
+import com.adyen.checkout.components.ui.view.RoundCornerImageView
+import com.google.android.material.textfield.TextInputLayout
 
 /**
- * CardView for {@link BcmcComponent}.
+ * CardView for [BcmcComponent].
  */
-public final class BcmcView
-        extends AdyenLinearLayout<BcmcOutputData, BcmcConfiguration, PaymentComponentState<CardPaymentMethod>, BcmcComponent>
-        implements Observer<BcmcOutputData> {
+@Suppress("TooManyFunctions")
+class BcmcView @JvmOverloads constructor(context: Context, attrs: AttributeSet? = null, defStyleAttr: Int = 0) :
+    AdyenLinearLayout<BcmcOutputData, BcmcConfiguration, PaymentComponentState<CardPaymentMethod>, BcmcComponent>(context, attrs, defStyleAttr),
+    Observer<BcmcOutputData> {
 
-    private RoundCornerImageView mCardBrandLogoImageView;
+    private lateinit var cardBrandLogoImageView: RoundCornerImageView
+    private lateinit var cardNumberEditText: CardNumberInput
+    private lateinit var expiryDateEditText: ExpiryDateInput
+    private lateinit var expiryDateInput: TextInputLayout
+    private lateinit var cardNumberInput: TextInputLayout
+    private lateinit var switchStorePaymentMethod: SwitchCompat
+    private val cardInputData = BcmcInputData()
+    private lateinit var imageLoader: ImageLoader
 
-    private CardNumberInput mCardNumberEditText;
-    private ExpiryDateInput mExpiryDateEditText;
-
-    private TextInputLayout mExpiryDateInput;
-    private TextInputLayout mCardNumberInput;
-
-    private SwitchCompat mSwitchStorePaymentMethod;
-
-    private final BcmcInputData mCardInputData = new BcmcInputData();
-
-    private ImageLoader mImageLoader;
-
-    public BcmcView(@NonNull Context context) {
-        this(context, null);
+    init {
+        orientation = VERTICAL
+        LayoutInflater.from(getContext()).inflate(R.layout.bcmc_view, this, true)
+        val padding = resources.getDimension(R.dimen.standard_margin).toInt()
+        setPadding(padding, padding, padding, 0)
     }
 
-    public BcmcView(@NonNull Context context, @Nullable AttributeSet attrs) {
-        this(context, attrs, 0);
-    }
-
-    // Regular View constructor
-    @SuppressWarnings("JavadocMethod")
-    public BcmcView(@NonNull Context context, @Nullable AttributeSet attrs, int defStyleAttr) {
-        super(context, attrs, defStyleAttr);
-        setOrientation(LinearLayout.VERTICAL);
-
-        LayoutInflater.from(getContext()).inflate(R.layout.bcmc_view, this, true);
-
-        final int padding = (int) getResources().getDimension(R.dimen.standard_margin);
-        setPadding(padding, padding, padding, 0);
-    }
-
-    @Override
-    protected void initLocalizedStrings(@NonNull Context localizedContext) {
-        int[] myAttrs = {android.R.attr.hint};
-        TypedArray typedArray;
+    override fun initLocalizedStrings(localizedContext: Context) {
+        var myAttrs = intArrayOf(android.R.attr.hint)
 
         // Card Number
-        typedArray = localizedContext.obtainStyledAttributes(R.style.AdyenCheckout_Card_CardNumberInput, myAttrs);
-        mCardNumberInput.setHint(typedArray.getString(0));
-        typedArray.recycle();
+        var typedArray: TypedArray = localizedContext.obtainStyledAttributes(R.style.AdyenCheckout_Card_CardNumberInput, myAttrs)
+        cardNumberInput.hint = typedArray.getString(0)
+        typedArray.recycle()
 
         // Expiry Date
-        typedArray = localizedContext.obtainStyledAttributes(R.style.AdyenCheckout_Card_ExpiryDateInput, myAttrs);
-        mExpiryDateInput.setHint(typedArray.getString(0));
-        typedArray.recycle();
+        typedArray = localizedContext.obtainStyledAttributes(R.style.AdyenCheckout_Card_ExpiryDateInput, myAttrs)
+        expiryDateInput.hint = typedArray.getString(0)
+        typedArray.recycle()
 
         // Store Switch
-        myAttrs = new int[] {android.R.attr.text};
-        typedArray = localizedContext.obtainStyledAttributes(R.style.AdyenCheckout_Card_StorePaymentSwitch, myAttrs);
-        mSwitchStorePaymentMethod.setText(typedArray.getString(0));
-        typedArray.recycle();
+        myAttrs = intArrayOf(android.R.attr.text)
+        typedArray = localizedContext.obtainStyledAttributes(R.style.AdyenCheckout_Card_StorePaymentSwitch, myAttrs)
+        switchStorePaymentMethod.text = typedArray.getString(0)
+        typedArray.recycle()
     }
 
-    @Override
-    public void initView() {
-        mCardBrandLogoImageView = findViewById(R.id.cardBrandLogo_imageView);
-
-        initCardNumberInput();
-        initExpiryDateInput();
-        initStorePaymentMethodSwitch();
+    override fun initView() {
+        cardBrandLogoImageView = findViewById(R.id.cardBrandLogo_imageView)
+        initCardNumberInput()
+        initExpiryDateInput()
+        initStorePaymentMethodSwitch()
     }
 
-    @Override
-    public void onComponentAttached() {
-        mImageLoader = ImageLoader.getInstance(getContext(), getComponent().getConfiguration().getEnvironment());
+    override fun onComponentAttached() {
+        imageLoader = getInstance(context, component.configuration.environment)
     }
 
-    @Override
-    public void onChanged(@Nullable BcmcOutputData cardOutputData) {
+    override fun onChanged(cardOutputData: BcmcOutputData?) {
         if (cardOutputData != null) {
-            onCardNumberValidated(cardOutputData.getCardNumberField());
+            onCardNumberValidated(cardOutputData.cardNumberField)
         }
     }
 
-    @Override
-    protected void observeComponentChanges(@NonNull LifecycleOwner lifecycleOwner) {
-        getComponent().observeOutputData(lifecycleOwner, this);
+    override fun observeComponentChanges(lifecycleOwner: LifecycleOwner) {
+        component.observeOutputData(lifecycleOwner, this)
     }
 
-    @Override
-    public boolean isConfirmationRequired() {
-        return true;
-    }
+    override val isConfirmationRequired = true
 
-    @Override
-    public void highlightValidationErrors() {
-        final BcmcOutputData outputData;
-        if (getComponent().getOutputData() != null) {
-            outputData = getComponent().getOutputData();
+    override fun highlightValidationErrors() {
+        val outputData: BcmcOutputData? = if (component.outputData != null) {
+            component.outputData
         } else {
-            return;
+            return
         }
-
-        boolean isErrorFocused = false;
-
-        final Validation cardNumberValidation = outputData.getCardNumberField().getValidation();
+        var isErrorFocused = false
+        val cardNumberValidation = outputData!!.cardNumberField.validation
         if (!cardNumberValidation.isValid()) {
-            isErrorFocused = true;
-            mCardNumberEditText.requestFocus();
-            final int errorReasonResId = ((Validation.Invalid) cardNumberValidation).getReason();
-            setCardNumberError(errorReasonResId);
+            isErrorFocused = true
+            cardNumberEditText.requestFocus()
+            val errorReasonResId = (cardNumberValidation as Validation.Invalid).reason
+            setCardNumberError(errorReasonResId)
         }
-
-        final Validation expiryFieldValidation = outputData.getExpiryDateField().getValidation();
+        val expiryFieldValidation = outputData.expiryDateField.validation
         if (!expiryFieldValidation.isValid()) {
             if (!isErrorFocused) {
-                mExpiryDateInput.requestFocus();
+                expiryDateInput.requestFocus()
             }
-            final int errorReasonResId = ((Validation.Invalid) expiryFieldValidation).getReason();
-            mExpiryDateInput.setError(localizedContext.getString(errorReasonResId));
+            val errorReasonResId = (expiryFieldValidation as Validation.Invalid).reason
+            expiryDateInput.error = localizedContext.getString(errorReasonResId)
         }
     }
 
-    private void notifyInputDataChanged() {
-        getComponent().inputDataChanged(mCardInputData);
+    private fun notifyInputDataChanged() {
+        component.inputDataChanged(cardInputData)
     }
 
-    private void onCardNumberValidated(@NonNull FieldState<String> validatedNumber) {
-        if (!getComponent().isCardNumberSupported(validatedNumber.getValue())) {
-            mCardBrandLogoImageView.setStrokeWidth(0f);
-            mCardBrandLogoImageView.setImageResource(R.drawable.ic_card);
+    private fun onCardNumberValidated(validatedNumber: FieldState<String>) {
+        if (!component.isCardNumberSupported(validatedNumber.value)) {
+            cardBrandLogoImageView.strokeWidth = 0f
+            cardBrandLogoImageView.setImageResource(R.drawable.ic_card)
         } else {
-            mCardBrandLogoImageView.setStrokeWidth(RoundCornerImageView.DEFAULT_STROKE_WIDTH);
-            mImageLoader.load(BcmcComponent.SUPPORTED_CARD_TYPE.getTxVariant(), mCardBrandLogoImageView);
+            cardBrandLogoImageView.strokeWidth = RoundCornerImageView.DEFAULT_STROKE_WIDTH
+            imageLoader.load(BcmcComponent.SUPPORTED_CARD_TYPE.txVariant, cardBrandLogoImageView)
         }
     }
 
-    private void initCardNumberInput() {
-        mCardNumberInput = findViewById(R.id.textInputLayout_cardNumber);
-        mCardNumberEditText = (CardNumberInput) mCardNumberInput.getEditText();
-        //noinspection ConstantConditions
-        mCardNumberEditText.setOnChangeListener(editable -> {
-            mCardInputData.setCardNumber(mCardNumberEditText.getRawValue());
-            notifyInputDataChanged();
-            setCardNumberError(null);
-        });
-        mCardNumberEditText.setOnFocusChangeListener((v, hasFocus) -> {
-            final BcmcOutputData outputData = getComponent().getOutputData();
-            final Validation cardNumberValidation = outputData != null
-                    ? outputData.getCardNumberField().getValidation()
-                    : null;
+    private fun initCardNumberInput() {
+        cardNumberInput = findViewById(R.id.textInputLayout_cardNumber)
+        cardNumberEditText = cardNumberInput.editText as CardNumberInput
+        cardNumberEditText.setOnChangeListener {
+            cardInputData.cardNumber = cardNumberEditText.rawValue
+            notifyInputDataChanged()
+            setCardNumberError(null)
+        }
+        cardNumberEditText.onFocusChangeListener = OnFocusChangeListener { _: View?, hasFocus: Boolean ->
+            val outputData = component.outputData
+            val cardNumberValidation = outputData?.cardNumberField?.validation
             if (hasFocus) {
-                setCardNumberError(null);
+                setCardNumberError(null)
             } else if (cardNumberValidation != null && !cardNumberValidation.isValid()) {
-                final int errorReasonResId = ((Validation.Invalid) cardNumberValidation).getReason();
-                setCardNumberError(errorReasonResId);
+                val errorReasonResId = (cardNumberValidation as Validation.Invalid).reason
+                setCardNumberError(errorReasonResId)
             }
-        });
-    }
-
-    private void setCardNumberError(@StringRes Integer stringResId) {
-        if (stringResId == null) {
-            mCardNumberInput.setError(null);
-            mCardBrandLogoImageView.setVisibility(View.VISIBLE);
-        } else {
-            mCardNumberInput.setError(localizedContext.getString(stringResId));
-            mCardBrandLogoImageView.setVisibility(View.GONE);
         }
     }
 
-    private void initExpiryDateInput() {
-        mExpiryDateInput = findViewById(R.id.textInputLayout_expiryDate);
-        mExpiryDateEditText = (ExpiryDateInput) mExpiryDateInput.getEditText();
-        //noinspection ConstantConditions
-        mExpiryDateEditText.setOnChangeListener(editable -> {
-            mCardInputData.setExpiryDate(mExpiryDateEditText.getDate());
-            notifyInputDataChanged();
-            mExpiryDateInput.setError(null);
-        });
-        mExpiryDateEditText.setOnFocusChangeListener((v, hasFocus) -> {
-            final BcmcOutputData outputData = getComponent().getOutputData();
-            final Validation expiryDateValidation = outputData != null
-                    ? outputData.getExpiryDateField().getValidation()
-                    : null;
-            if (hasFocus) {
-                mExpiryDateInput.setError(null);
-            } else if (expiryDateValidation != null && !expiryDateValidation.isValid()) {
-                final int errorReasonResId = ((Validation.Invalid) expiryDateValidation).getReason();
-                mExpiryDateInput.setError(localizedContext.getString(errorReasonResId));
-            }
-        });
+    private fun setCardNumberError(@StringRes stringResId: Int?) {
+        if (stringResId == null) {
+            cardNumberInput.error = null
+            cardBrandLogoImageView.visibility = VISIBLE
+        } else {
+            cardNumberInput.error = localizedContext.getString(stringResId)
+            cardBrandLogoImageView.visibility = GONE
+        }
     }
 
-    private void initStorePaymentMethodSwitch() {
-        mSwitchStorePaymentMethod = findViewById(R.id.switch_storePaymentMethod);
+    private fun initExpiryDateInput() {
+        expiryDateInput = findViewById(R.id.textInputLayout_expiryDate)
+        expiryDateEditText = expiryDateInput.editText as ExpiryDateInput
+        expiryDateEditText.setOnChangeListener {
+            cardInputData.expiryDate = expiryDateEditText.date
+            notifyInputDataChanged()
+            expiryDateInput.error = null
+        }
+        expiryDateEditText.onFocusChangeListener = OnFocusChangeListener { _: View?, hasFocus: Boolean ->
+            val outputData = component.outputData
+            val expiryDateValidation = outputData?.expiryDateField?.validation
+            if (hasFocus) {
+                expiryDateInput.error = null
+            } else if (expiryDateValidation != null && !expiryDateValidation.isValid()) {
+                val errorReasonResId = (expiryDateValidation as Validation.Invalid).reason
+                expiryDateInput.error = localizedContext.getString(errorReasonResId)
+            }
+        }
+    }
 
-        mSwitchStorePaymentMethod.setVisibility(getComponent().getConfiguration().isStorePaymentFieldVisible() ? VISIBLE : GONE);
-        mSwitchStorePaymentMethod.setOnCheckedChangeListener((buttonView, isChecked) -> {
-            mCardInputData.setStorePaymentSelected(isChecked);
-            notifyInputDataChanged();
-        });
+    private fun initStorePaymentMethodSwitch() {
+        switchStorePaymentMethod = findViewById(R.id.switch_storePaymentMethod)
+        switchStorePaymentMethod.visibility = if (component.configuration.isStorePaymentFieldVisible) VISIBLE else GONE
+        switchStorePaymentMethod.setOnCheckedChangeListener { _: CompoundButton?, isChecked: Boolean ->
+            cardInputData.isStorePaymentSelected = isChecked
+            notifyInputDataChanged()
+        }
     }
 }

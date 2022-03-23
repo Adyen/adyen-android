@@ -5,77 +5,54 @@
  *
  * Created by arman on 18/9/2019.
  */
+package com.adyen.checkout.bcmc
 
-package com.adyen.checkout.bcmc;
-
-import android.content.Context;
-import android.os.Parcel;
-import android.os.Parcelable;
-
-import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
-
-import com.adyen.checkout.components.base.BaseConfigurationBuilder;
-import com.adyen.checkout.components.base.Configuration;
-import com.adyen.checkout.core.api.Environment;
-import com.adyen.checkout.core.util.ParcelUtils;
-
-import java.util.Locale;
+import android.content.Context
+import android.os.Parcel
+import android.os.Parcelable
+import com.adyen.checkout.components.base.BaseConfigurationBuilder
+import com.adyen.checkout.components.base.Configuration
+import com.adyen.checkout.core.api.Environment
+import com.adyen.checkout.core.util.ParcelUtils.readBoolean
+import com.adyen.checkout.core.util.ParcelUtils.writeBoolean
+import java.util.Locale
 
 /**
- * {@link Configuration} class required by {@link BcmcComponent} to change it's behavior. Pass it to the {@link BcmcComponent#PROVIDER}.
+ * [Configuration] class required by [BcmcComponent] to change it's behavior. Pass it to the [BcmcComponent.PROVIDER].
  */
-public class BcmcConfiguration extends Configuration {
+class BcmcConfiguration : Configuration {
 
-    private final String mShopperReference;
-    private final boolean mShowStorePaymentField;
+    val shopperReference: String?
+    val isStorePaymentFieldVisible: Boolean
 
-    public static final Parcelable.Creator<BcmcConfiguration> CREATOR = new Parcelable.Creator<BcmcConfiguration>() {
-        public BcmcConfiguration createFromParcel(@NonNull Parcel in) {
-            return new BcmcConfiguration(in);
-        }
-
-        public BcmcConfiguration[] newArray(int size) {
-            return new BcmcConfiguration[size];
-        }
-    };
-
-    BcmcConfiguration(@NonNull Builder builder) {
-        super(builder.getBuilderShopperLocale(), builder.getBuilderEnvironment(), builder.getBuilderClientKey());
-
-        mShopperReference = builder.mShopperReference;
-        mShowStorePaymentField = builder.mBuilderShowStorePaymentField;
+    internal constructor(
+        shopperLocale: Locale,
+        environment: Environment,
+        clientKey: String,
+        shopperReference: String?,
+        isStorePaymentFieldVisible: Boolean,
+    ) : super(shopperLocale, environment, clientKey) {
+        this.shopperReference = shopperReference
+        this.isStorePaymentFieldVisible = isStorePaymentFieldVisible
     }
 
-    BcmcConfiguration(@NonNull Parcel in) {
-        super(in);
-        mShopperReference = in.readString();
-        mShowStorePaymentField = ParcelUtils.readBoolean(in);
+    internal constructor(parcel: Parcel) : super(parcel) {
+        shopperReference = parcel.readString()
+        isStorePaymentFieldVisible = readBoolean(parcel)
     }
 
-    @Override
-    public void writeToParcel(@NonNull Parcel dest, int flags) {
-        super.writeToParcel(dest, flags);
-        dest.writeString(mShopperReference);
-        ParcelUtils.writeBoolean(dest, mShowStorePaymentField);
-    }
-
-    @Nullable
-    public String getShopperReference() {
-        return mShopperReference;
-    }
-
-    public boolean isStorePaymentFieldVisible() {
-        return mShowStorePaymentField;
+    override fun writeToParcel(parcel: Parcel, flags: Int) {
+        super.writeToParcel(parcel, flags)
+        parcel.writeString(shopperReference)
+        writeBoolean(parcel, isStorePaymentFieldVisible)
     }
 
     /**
-     * Builder to create a {@link BcmcConfiguration}.
+     * Builder to create a [BcmcConfiguration].
      */
-    public static final class Builder extends BaseConfigurationBuilder<BcmcConfiguration> {
-
-        private boolean mBuilderShowStorePaymentField = false;
-        private String mShopperReference;
+    class Builder : BaseConfigurationBuilder<BcmcConfiguration> {
+        private var builderShowStorePaymentField = false
+        private var builderShopperReference: String? = null
 
         /**
          * Constructor of Card Configuration Builder with default values.
@@ -83,83 +60,89 @@ public class BcmcConfiguration extends Configuration {
          * @param context   A context
          * @param clientKey Your Client Key used for network calls from the SDK to Adyen.
          */
-        public Builder(@NonNull Context context, @NonNull String clientKey) {
-            super(context, clientKey);
-        }
+        constructor(context: Context, clientKey: String) : super(context, clientKey)
 
         /**
-         * Builder with required parameters for a {@link BcmcConfiguration}.
+         * Builder with required parameters for a [BcmcConfiguration].
          *
          * @param shopperLocale The Locale of the shopper.
-         * @param environment   The {@link Environment} to be used for network calls to Adyen.
+         * @param environment   The [Environment] to be used for network calls to Adyen.
          * @param clientKey Your Client Key used for network calls from the SDK to Adyen.
          */
-        public Builder(
-                @NonNull Locale shopperLocale,
-                @NonNull Environment environment,
-                @NonNull String clientKey
-        ) {
-            super(shopperLocale, environment, clientKey);
-        }
+        constructor(
+            shopperLocale: Locale,
+            environment: Environment,
+            clientKey: String
+        ) : super(shopperLocale, environment, clientKey)
 
         /**
          * Constructor that copies an existing configuration.
          *
          * @param configuration A configuration to initialize the builder.
          */
-        public Builder(@NonNull BcmcConfiguration configuration) {
-            super(configuration);
-            mShopperReference = configuration.getShopperReference();
-            mBuilderShowStorePaymentField = configuration.isStorePaymentFieldVisible();
+        constructor(configuration: BcmcConfiguration) : super(configuration) {
+            builderShopperReference = configuration.shopperReference
+            builderShowStorePaymentField = configuration.isStorePaymentFieldVisible
         }
 
-        @Override
-        @NonNull
-        public Builder setShopperLocale(@NonNull Locale builderShopperLocale) {
-            return (Builder) super.setShopperLocale(builderShopperLocale);
+        override fun setShopperLocale(builderShopperLocale: Locale): Builder {
+            return super.setShopperLocale(builderShopperLocale) as Builder
         }
 
-        @Override
-        @NonNull
-        public Builder setEnvironment(@NonNull Environment builderEnvironment) {
-            return (Builder) super.setEnvironment(builderEnvironment);
+        override fun setEnvironment(builderEnvironment: Environment): Builder {
+            return super.setEnvironment(builderEnvironment) as Builder
         }
 
         /**
          * Set if the option to store the card for future payments should be shown as an input field.
          *
-         * @param showStorePaymentField {@link Boolean}
-         * @return {@link BcmcConfiguration.Builder}
+         * @param showStorePaymentField [Boolean]
+         * @return [BcmcConfiguration.Builder]
          */
-        @NonNull
-        public BcmcConfiguration.Builder setShowStorePaymentField(boolean showStorePaymentField) {
-            mBuilderShowStorePaymentField = showStorePaymentField;
-            return this;
+        fun setShowStorePaymentField(showStorePaymentField: Boolean): Builder {
+            builderShowStorePaymentField = showStorePaymentField
+            return this
         }
 
         /**
          * Set the unique reference for the shopper doing this transaction.
-         * This value will simply be passed back to you in the {@link com.adyen.checkout.components.model.payments.request.PaymentComponentData}
+         * This value will simply be passed back to you in the [com.adyen.checkout.components.model.payments.request.PaymentComponentData]
          * for convenience.
          *
          * @param shopperReference The unique shopper reference
-         * @return {@link BcmcConfiguration.Builder}
+         * @return [BcmcConfiguration.Builder]
          */
-        @NonNull
-        public BcmcConfiguration.Builder setShopperReference(@NonNull String shopperReference) {
-            mShopperReference = shopperReference;
-            return this;
+        fun setShopperReference(shopperReference: String): Builder {
+            builderShopperReference = shopperReference
+            return this
         }
 
         /**
-         * Build {@link BcmcConfiguration} object from {@link BcmcConfiguration.Builder} inputs.
+         * Build [BcmcConfiguration] object from [BcmcConfiguration.Builder] inputs.
          *
-         * @return {@link BcmcConfiguration}
+         * @return [BcmcConfiguration]
          */
-        @NonNull
-        protected BcmcConfiguration buildInternal() {
-            return new BcmcConfiguration(this);
+        override fun buildInternal(): BcmcConfiguration {
+            return BcmcConfiguration(
+                shopperLocale = builderShopperLocale,
+                environment = builderEnvironment,
+                clientKey = builderClientKey,
+                shopperReference = builderShopperReference,
+                isStorePaymentFieldVisible = builderShowStorePaymentField,
+            )
         }
     }
 
+    companion object {
+        @JvmField
+        val CREATOR: Parcelable.Creator<BcmcConfiguration> = object : Parcelable.Creator<BcmcConfiguration> {
+            override fun createFromParcel(parcel: Parcel): BcmcConfiguration {
+                return BcmcConfiguration(parcel)
+            }
+
+            override fun newArray(size: Int): Array<BcmcConfiguration?> {
+                return arrayOfNulls(size)
+            }
+        }
+    }
 }
