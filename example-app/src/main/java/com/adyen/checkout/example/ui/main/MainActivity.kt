@@ -26,14 +26,14 @@ import com.adyen.checkout.dropin.DropInResult
 import com.adyen.checkout.example.R
 import com.adyen.checkout.example.data.api.CheckoutApiService
 import com.adyen.checkout.example.databinding.ActivityMainBinding
-import com.adyen.checkout.example.ui.card.CardFragment
+import com.adyen.checkout.example.ui.card.CardActivity
 import com.adyen.checkout.example.ui.configuration.CheckoutConfigurationProvider
 import com.adyen.checkout.example.ui.configuration.ConfigurationActivity
 import dagger.hilt.android.AndroidEntryPoint
 import javax.inject.Inject
 
 @AndroidEntryPoint
-class MainActivity : AppCompatActivity(), DropInCallback, NewIntentSubject {
+class MainActivity : AppCompatActivity(), DropInCallback {
 
     companion object {
         private val TAG: String = LogUtil.getTag()
@@ -48,8 +48,6 @@ class MainActivity : AppCompatActivity(), DropInCallback, NewIntentSubject {
     private val dropInLauncher = DropIn.registerForDropInResult(this, this)
 
     private var isWaitingPaymentMethods = false
-
-    private var newIntentObservers = mutableListOf<NewIntentSubject.Observer>()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -110,14 +108,8 @@ class MainActivity : AppCompatActivity(), DropInCallback, NewIntentSubject {
         super.onNewIntent(intent)
         Logger.d(TAG, "onNewIntent")
         if (intent == null) return
-        val result = DropIn.getDropInResultFromIntent(intent)
-
-        // Result should be null if a standalone component was used instead of the drop-in
-        if (result != null) {
-            Toast.makeText(this, result, Toast.LENGTH_SHORT).show()
-        } else {
-            newIntentObservers.forEach { it.onNewIntent(intent) }
-        }
+        val result = DropIn.getDropInResultFromIntent(intent) ?: return
+        Toast.makeText(this, result, Toast.LENGTH_SHORT).show()
     }
 
     override fun onDropInResult(dropInResult: DropInResult?) {
@@ -148,7 +140,10 @@ class MainActivity : AppCompatActivity(), DropInCallback, NewIntentSubject {
                     setLoading(true)
                 }
             }
-            ComponentItem.Entry.Card -> CardFragment.show(supportFragmentManager)
+            ComponentItem.Entry.Card -> {
+                val intent = Intent(this, CardActivity::class.java)
+                startActivity(intent)
+            }
         }
     }
 
@@ -177,13 +172,5 @@ class MainActivity : AppCompatActivity(), DropInCallback, NewIntentSubject {
             binding.componentList.visibility = View.VISIBLE
             binding.progressIndicator.hide()
         }
-    }
-
-    override fun registerObserver(observer: NewIntentSubject.Observer) {
-        newIntentObservers.add(observer)
-    }
-
-    override fun unregisterObserver(observer: NewIntentSubject.Observer) {
-        newIntentObservers.remove(observer)
     }
 }

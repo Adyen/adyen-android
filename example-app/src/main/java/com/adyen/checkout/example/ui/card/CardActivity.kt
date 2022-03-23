@@ -2,37 +2,31 @@ package com.adyen.checkout.example.ui.card
 
 import android.content.Intent
 import android.os.Bundle
-import android.view.LayoutInflater
-import android.view.View
-import android.view.ViewGroup
 import android.widget.Toast
+import androidx.activity.viewModels
+import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.isVisible
-import androidx.fragment.app.FragmentManager
-import androidx.fragment.app.viewModels
 import androidx.lifecycle.lifecycleScope
 import com.adyen.checkout.adyen3ds2.Adyen3DS2Component
 import com.adyen.checkout.card.CardComponent
 import com.adyen.checkout.components.model.paymentmethods.PaymentMethod
 import com.adyen.checkout.components.model.payments.response.Action
-import com.adyen.checkout.example.databinding.FragmentCardBinding
+import com.adyen.checkout.example.databinding.ActivityCardBinding
 import com.adyen.checkout.example.ui.configuration.CheckoutConfigurationProvider
-import com.adyen.checkout.example.ui.main.NewIntentSubject
 import com.adyen.checkout.redirect.RedirectComponent
 import com.adyen.checkout.redirect.RedirectUtil
-import com.google.android.material.bottomsheet.BottomSheetDialogFragment
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 @AndroidEntryPoint
-class CardFragment : BottomSheetDialogFragment(), NewIntentSubject.Observer {
+class CardActivity : AppCompatActivity() {
 
     @Inject
     internal lateinit var checkoutConfigurationProvider: CheckoutConfigurationProvider
 
-    private var _binding: FragmentCardBinding? = null
-    private val binding: FragmentCardBinding get() = requireNotNull(_binding)
+    private lateinit var binding: ActivityCardBinding
 
     private val cardViewModel: CardViewModel by viewModels()
 
@@ -40,13 +34,11 @@ class CardFragment : BottomSheetDialogFragment(), NewIntentSubject.Observer {
 
     private var threeDS2Component: Adyen3DS2Component? = null
 
-    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View {
-        _binding = FragmentCardBinding.inflate(inflater, container, false)
-        return binding.root
-    }
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
 
-    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
-        super.onViewCreated(view, savedInstanceState)
+        binding = ActivityCardBinding.inflate(layoutInflater)
+        setContentView(binding.root)
 
         binding.payButton.setOnClickListener { cardViewModel.onPayClick() }
 
@@ -57,9 +49,14 @@ class CardFragment : BottomSheetDialogFragment(), NewIntentSubject.Observer {
         }
     }
 
-    override fun onStart() {
-        super.onStart()
-        (requireActivity() as? NewIntentSubject)?.registerObserver(this)
+    override fun onNewIntent(intent: Intent) {
+        super.onNewIntent(intent)
+
+        val data = intent.data
+        if (data != null && data.toString().startsWith(RedirectUtil.REDIRECT_RESULT_SCHEME)) {
+            redirectComponent?.handleIntent(intent)
+            threeDS2Component?.handleIntent(intent)
+        }
     }
 
     private fun onCardViewState(cardViewState: CardViewState) {
@@ -94,15 +91,15 @@ class CardFragment : BottomSheetDialogFragment(), NewIntentSubject.Observer {
             checkoutConfigurationProvider.getCardConfiguration()
         )
 
-        binding.cardView.attach(cardComponent, viewLifecycleOwner)
+        binding.cardView.attach(cardComponent, this)
 
-        cardComponent.observe(viewLifecycleOwner, cardViewModel::onCardComponentState)
-        cardComponent.observeErrors(viewLifecycleOwner, cardViewModel::onComponentError)
+        cardComponent.observe(this, cardViewModel::onCardComponentState)
+        cardComponent.observeErrors(this, cardViewModel::onComponentError)
     }
 
     private fun onPaymentResult(result: String) {
-        Toast.makeText(requireContext(), result, Toast.LENGTH_SHORT).show()
-        dismiss()
+        Toast.makeText(this, result, Toast.LENGTH_SHORT).show()
+        finish()
     }
 
     private fun onAdditionalAction(cardAction: CardAction) {
@@ -110,7 +107,7 @@ class CardFragment : BottomSheetDialogFragment(), NewIntentSubject.Observer {
             is CardAction.Redirect -> setupRedirectComponent(cardAction.action)
             is CardAction.ThreeDS2 -> setupThreeDS2Component(cardAction.action)
             CardAction.Unsupported -> {
-                Toast.makeText(requireContext(), "This action is not implemented", Toast.LENGTH_SHORT).show()
+                Toast.makeText(this, "This action is not implemented", Toast.LENGTH_SHORT).show()
             }
         }
     }
@@ -118,49 +115,32 @@ class CardFragment : BottomSheetDialogFragment(), NewIntentSubject.Observer {
     private fun setupRedirectComponent(action: Action) {
         redirectComponent = RedirectComponent.PROVIDER.get(
             this,
-            requireActivity().application,
+            application,
             checkoutConfigurationProvider.getRedirectConfiguration()
         )
 
-        redirectComponent?.observe(viewLifecycleOwner, cardViewModel::onActionComponentData)
-        redirectComponent?.observeErrors(viewLifecycleOwner, cardViewModel::onComponentError)
+        redirectComponent?.observe(this, cardViewModel::onActionComponentData)
+        redirectComponent?.observeErrors(this, cardViewModel::onComponentError)
 
-        redirectComponent?.handleAction(requireActivity(), action)
+        redirectComponent?.handleAction(this, action)
     }
 
     private fun setupThreeDS2Component(action: Action) {
         threeDS2Component = Adyen3DS2Component.PROVIDER.get(
             this,
-            requireActivity().application,
+            application,
             checkoutConfigurationProvider.get3DS2Configuration()
         )
 
-        threeDS2Component?.observe(viewLifecycleOwner, cardViewModel::onActionComponentData)
-        threeDS2Component?.observeErrors(viewLifecycleOwner, cardViewModel::onComponentError)
+        threeDS2Component?.observe(this, cardViewModel::onActionComponentData)
+        threeDS2Component?.observeErrors(this, cardViewModel::onComponentError)
 
-        threeDS2Component?.handleAction(requireActivity(), action)
+        threeDS2Component?.handleAction(this, action)
     }
 
-    override fun onNewIntent(intent: Intent) {
-        val data = intent.data
-        if (data != null && data.toString().startsWith(RedirectUtil.REDIRECT_RESULT_SCHEME)) {
-            redirectComponent?.handleIntent(intent)
-            threeDS2Component?.handleIntent(intent)
-        }
-    }
-
-    override fun onStop() {
-        super.onStop()
-        (requireActivity() as? NewIntentSubject)?.unregisterObserver(this)
-    }
-
-    override fun onDestroyView() {
-        super.onDestroyView()
+    override fun onDestroy() {
+        super.onDestroy()
         redirectComponent = null
-        _binding = null
-    }
-
-    companion object {
-        fun show(fragmentManager: FragmentManager) = CardFragment().show(fragmentManager, null)
+        threeDS2Component = null
     }
 }
