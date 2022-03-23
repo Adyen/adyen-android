@@ -5,154 +5,130 @@
  *
  * Created by caiof on 18/8/2020.
  */
+package com.adyen.checkout.await
 
-package com.adyen.checkout.await;
+import android.app.Activity
+import android.app.Application
+import android.content.Context
+import androidx.lifecycle.LifecycleOwner
+import androidx.lifecycle.MutableLiveData
+import androidx.lifecycle.Observer
+import androidx.lifecycle.SavedStateHandle
+import com.adyen.checkout.components.ActionComponentData
+import com.adyen.checkout.components.ActionComponentProvider
+import com.adyen.checkout.components.ViewableComponent
+import com.adyen.checkout.components.base.BaseActionComponent
+import com.adyen.checkout.components.base.Configuration
+import com.adyen.checkout.components.base.lifecycle.BaseLifecycleObserver
+import com.adyen.checkout.components.model.payments.response.Action
+import com.adyen.checkout.components.status.StatusRepository
+import com.adyen.checkout.components.status.StatusRepository.Companion.getInstance
+import com.adyen.checkout.components.status.api.StatusResponseUtils.isFinalResult
+import com.adyen.checkout.components.status.model.StatusResponse
+import com.adyen.checkout.core.exception.ComponentException
+import com.adyen.checkout.core.log.LogUtil.getTag
+import com.adyen.checkout.core.log.Logger
+import org.json.JSONException
+import org.json.JSONObject
 
-import android.app.Activity;
-import android.app.Application;
-import android.content.Context;
-import android.text.TextUtils;
+class AwaitComponent(savedStateHandle: SavedStateHandle, application: Application, configuration: AwaitConfiguration) :
+    BaseActionComponent<AwaitConfiguration>(savedStateHandle, application, configuration),
+    ViewableComponent<AwaitOutputData, AwaitConfiguration, ActionComponentData> {
 
-import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
-import androidx.lifecycle.LifecycleOwner;
-import androidx.lifecycle.MutableLiveData;
-import androidx.lifecycle.Observer;
-import androidx.lifecycle.SavedStateHandle;
+    val statusRepository: StatusRepository = getInstance(configuration.environment)
+    private val outputLiveData = MutableLiveData<AwaitOutputData>()
+    private var paymentMethodType: String? = null
 
-import com.adyen.checkout.components.ActionComponentData;
-import com.adyen.checkout.components.ActionComponentProvider;
-import com.adyen.checkout.components.ViewableComponent;
-import com.adyen.checkout.components.base.BaseActionComponent;
-import com.adyen.checkout.components.base.Configuration;
-import com.adyen.checkout.components.base.lifecycle.BaseLifecycleObserver;
-import com.adyen.checkout.components.model.payments.response.Action;
-import com.adyen.checkout.components.status.StatusRepository;
-import com.adyen.checkout.components.status.api.StatusResponseUtils;
-import com.adyen.checkout.components.status.model.StatusResponse;
-import com.adyen.checkout.core.exception.ComponentException;
-import com.adyen.checkout.core.log.LogUtil;
-import com.adyen.checkout.core.log.Logger;
-
-import org.json.JSONException;
-import org.json.JSONObject;
-
-public class AwaitComponent extends BaseActionComponent<AwaitConfiguration>
-        implements ViewableComponent<AwaitOutputData, AwaitConfiguration, ActionComponentData> {
-
-    static final String TAG = LogUtil.getTag();
-
-    private static final String PAYLOAD_DETAILS_KEY = "payload";
-
-    public static final ActionComponentProvider<AwaitComponent, AwaitConfiguration> PROVIDER = new AwaitComponentProvider();
-
-    final StatusRepository mStatusRepository;
-
-    private final MutableLiveData<AwaitOutputData> mOutputLiveData = new MutableLiveData<>();
-    private String mPaymentMethodType;
-
-    private final Observer<StatusResponse> mResponseObserver = new Observer<StatusResponse>() {
-        @Override
-        public void onChanged(@Nullable StatusResponse statusResponse) {
-            Logger.v(TAG, "onChanged - " + (statusResponse == null ? "null" : statusResponse.getResultCode()));
-            createOutputData(statusResponse);
-            if (statusResponse != null && StatusResponseUtils.isFinalResult(statusResponse)) {
-                onPollingSuccessful(statusResponse);
-            }
+    private val responseObserver: Observer<StatusResponse?> = Observer { statusResponse ->
+        Logger.v(TAG, "onChanged - ${if (statusResponse == null) "null" else statusResponse.resultCode}")
+        createOutputData(statusResponse)
+        if (statusResponse != null && isFinalResult(statusResponse)) {
+            onPollingSuccessful(statusResponse)
         }
-    };
-    private final Observer<ComponentException> mErrorObserver = new Observer<ComponentException>() {
-        @Override
-        public void onChanged(@Nullable ComponentException e) {
-            // StatusRepository will post null errors to reset it's status. We can ignore.
-            if (e != null) {
-                Logger.e(TAG, "onError");
-                notifyException(e);
-            }
+    }
+    private val errorObserver: Observer<ComponentException?> = Observer { e ->
+        // StatusRepository will post null errors to reset it's status. We can ignore.
+        if (e != null) {
+            Logger.e(TAG, "onError")
+            notifyException(e)
         }
-    };
-
-    public AwaitComponent(@NonNull SavedStateHandle savedStateHandle, @NonNull Application application, @NonNull AwaitConfiguration configuration) {
-        super(savedStateHandle, application, configuration);
-        mStatusRepository = StatusRepository.getInstance(configuration.getEnvironment());
     }
 
-    @Override
-    public boolean canHandleAction(@NonNull Action action) {
-        return PROVIDER.canHandleAction(action);
+    override fun canHandleAction(action: Action): Boolean {
+        return PROVIDER.canHandleAction(action)
     }
 
-    @Override
-    protected void handleActionInternal(@NonNull Activity activity, @NonNull Action action) throws ComponentException {
-        final Configuration configuration = getConfiguration();
-        mPaymentMethodType = action.getPaymentMethodType();
+    @Throws(ComponentException::class)
+    override fun handleActionInternal(activity: Activity, action: Action) {
+        val configuration: Configuration = configuration
+        paymentMethodType = action.paymentMethodType
         // Notify UI to get the logo.
-        createOutputData(null);
-        mStatusRepository.startPolling(configuration.getClientKey(), getPaymentData());
+        createOutputData(null)
+        paymentData?.let {
+            statusRepository.startPolling(configuration.clientKey, it)
+        } ?: throw ComponentException("paymentData is null")
     }
 
-    @Override
-    public void observe(@NonNull LifecycleOwner lifecycleOwner, @NonNull Observer<ActionComponentData> observer) {
-        super.observe(lifecycleOwner, observer);
-        mStatusRepository.getResponseLiveData().observe(lifecycleOwner, mResponseObserver);
-        mStatusRepository.getErrorLiveData().observe(lifecycleOwner, mErrorObserver);
+    override fun observe(lifecycleOwner: LifecycleOwner, observer: Observer<ActionComponentData>) {
+        super.observe(lifecycleOwner, observer)
+        statusRepository.responseLiveData.observe(lifecycleOwner, responseObserver)
+        statusRepository.errorLiveData.observe(lifecycleOwner, errorObserver)
 
         // Immediately request a new status if the user resumes the app
-        lifecycleOwner.getLifecycle().addObserver(new BaseLifecycleObserver() {
-            @Override
-            public void onResume() {
-                mStatusRepository.updateStatus();
+        lifecycleOwner.lifecycle.addObserver(object : BaseLifecycleObserver() {
+            override fun onResume() {
+                statusRepository.updateStatus()
             }
-        });
+        })
     }
 
-    void onPollingSuccessful(@NonNull StatusResponse statusResponse) {
+    private fun onPollingSuccessful(statusResponse: StatusResponse) {
         // Not authorized status should still call /details so that merchant can get more info
-        if (StatusResponseUtils.isFinalResult(statusResponse) && !TextUtils.isEmpty(statusResponse.getPayload())) {
-            //noinspection ConstantConditions
-            notifyDetails(createDetail(statusResponse.getPayload()));
+        val payload = statusResponse.payload
+        if (isFinalResult(statusResponse) && !payload.isNullOrEmpty()) {
+            notifyDetails(createDetail(payload))
         } else {
-            notifyException(new ComponentException("Payment was not completed. - " + statusResponse.getResultCode()));
+            notifyException(ComponentException("Payment was not completed. - " + statusResponse.resultCode))
         }
     }
 
-    private JSONObject createDetail(@NonNull String payload) {
-        final JSONObject jsonObject = new JSONObject();
+    private fun createDetail(payload: String): JSONObject {
+        val jsonObject = JSONObject()
         try {
-            jsonObject.put(PAYLOAD_DETAILS_KEY, payload);
-        } catch (JSONException e) {
-            notifyException(new ComponentException("Failed to create details.", e));
+            jsonObject.put(PAYLOAD_DETAILS_KEY, payload)
+        } catch (e: JSONException) {
+            notifyException(ComponentException("Failed to create details.", e))
         }
-        return jsonObject;
+        return jsonObject
     }
 
-    @Override
-    protected void onCleared() {
-        super.onCleared();
-        Logger.d(TAG, "onCleared");
-        mStatusRepository.stopPolling();
+    override fun onCleared() {
+        super.onCleared()
+        Logger.d(TAG, "onCleared")
+        statusRepository.stopPolling()
     }
 
-    @Override
-    public void observeOutputData(@NonNull LifecycleOwner lifecycleOwner, @NonNull Observer<AwaitOutputData> observer) {
-        mOutputLiveData.observe(lifecycleOwner, observer);
+    override fun observeOutputData(lifecycleOwner: LifecycleOwner, observer: Observer<AwaitOutputData>) {
+        outputLiveData.observe(lifecycleOwner, observer)
     }
 
-    @Nullable
-    @Override
-    public AwaitOutputData getOutputData() {
-        return mOutputLiveData.getValue();
-    }
+    override val outputData: AwaitOutputData?
+        get() = outputLiveData.value
 
-    @Override
-    public void sendAnalyticsEvent(@NonNull Context context) {
+    override fun sendAnalyticsEvent(context: Context) {
         // noop
     }
 
+    private fun createOutputData(statusResponse: StatusResponse?) {
+        val isValid = statusResponse != null && isFinalResult(statusResponse)
+        val outputData = AwaitOutputData(isValid, paymentMethodType)
+        outputLiveData.value = outputData
+    }
 
-    void createOutputData(@Nullable StatusResponse statusResponse) {
-        final boolean isValid = statusResponse != null && StatusResponseUtils.isFinalResult(statusResponse);
-        final AwaitOutputData outputData = new AwaitOutputData(isValid, mPaymentMethodType);
-        mOutputLiveData.setValue(outputData);
+    companion object {
+        val TAG = getTag()
+        private const val PAYLOAD_DETAILS_KEY = "payload"
+        @JvmField
+        val PROVIDER: ActionComponentProvider<AwaitComponent, AwaitConfiguration> = AwaitComponentProvider()
     }
 }

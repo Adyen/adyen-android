@@ -5,131 +5,100 @@
  *
  * Created by caiof on 18/8/2020.
  */
+package com.adyen.checkout.await
 
-package com.adyen.checkout.await;
+import android.content.Context
+import android.util.AttributeSet
+import android.view.LayoutInflater
+import android.widget.ImageView
+import android.widget.TextView
+import androidx.annotation.StringRes
+import androidx.lifecycle.LifecycleOwner
+import androidx.lifecycle.Observer
+import com.adyen.checkout.components.ActionComponentData
+import com.adyen.checkout.components.api.ImageLoader
+import com.adyen.checkout.components.api.ImageLoader.Companion.getInstance
+import com.adyen.checkout.components.ui.view.AdyenLinearLayout
+import com.adyen.checkout.components.util.PaymentMethodTypes
+import com.adyen.checkout.core.log.LogUtil.getTag
+import com.adyen.checkout.core.log.Logger
 
-import android.content.Context;
-import android.text.TextUtils;
-import android.util.AttributeSet;
-import android.view.LayoutInflater;
-import android.widget.ImageView;
-import android.widget.LinearLayout;
-import android.widget.TextView;
+class AwaitView @JvmOverloads constructor(context: Context, attrs: AttributeSet? = null, defStyleAttr: Int = 0) :
+    AdyenLinearLayout<AwaitOutputData, AwaitConfiguration, ActionComponentData, AwaitComponent>(context, attrs, defStyleAttr),
+    Observer<AwaitOutputData> {
 
-import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
-import androidx.annotation.StringRes;
-import androidx.lifecycle.LifecycleOwner;
-import androidx.lifecycle.Observer;
+    private lateinit var imageView: ImageView
+    private lateinit var textViewOpenApp: TextView
+    private lateinit var textViewWaitingConfirmation: TextView
+    private lateinit var imageLoader: ImageLoader
+    private var paymentMethodType: String? = null
 
-import com.adyen.checkout.components.ActionComponentData;
-import com.adyen.checkout.components.api.ImageLoader;
-import com.adyen.checkout.components.ui.view.AdyenLinearLayout;
-import com.adyen.checkout.components.util.PaymentMethodTypes;
-import com.adyen.checkout.core.log.LogUtil;
-import com.adyen.checkout.core.log.Logger;
-
-public class AwaitView extends AdyenLinearLayout<AwaitOutputData, AwaitConfiguration, ActionComponentData, AwaitComponent>
-        implements Observer<AwaitOutputData> {
-    private static final String TAG = LogUtil.getTag();
-
-    ImageView mImageView;
-    TextView mTextViewOpenApp;
-    TextView mTextViewWaitingConfirmation;
-
-    private ImageLoader mImageLoader;
-    private String mPaymentMethodType;
-
-    public AwaitView(@NonNull Context context) {
-        this(context, null);
+    init {
+        orientation = VERTICAL
+        LayoutInflater.from(getContext()).inflate(R.layout.await_view, this, true)
+        val padding = resources.getDimension(R.dimen.standard_double_margin).toInt()
+        setPadding(padding, padding, padding, padding)
     }
 
-    public AwaitView(@NonNull Context context, @Nullable AttributeSet attrs) {
-        this(context, attrs, 0);
+    override fun onComponentAttached() {
+        imageLoader = getInstance(context, component.configuration.environment)
     }
 
-    // Regular View constructor
-    @SuppressWarnings("JavadocMethod")
-    public AwaitView(@NonNull Context context, @Nullable AttributeSet attrs, int defStyleAttr) {
-        super(context, attrs, defStyleAttr);
-
-        setOrientation(LinearLayout.VERTICAL);
-
-        LayoutInflater.from(getContext()).inflate(R.layout.await_view, this, true);
-
-        final int padding = (int) getResources().getDimension(R.dimen.standard_double_margin);
-        setPadding(padding, padding, padding, padding);
+    override fun initView() {
+        imageView = findViewById(R.id.imageView_logo)
+        textViewOpenApp = findViewById(R.id.textView_open_app)
+        textViewWaitingConfirmation = findViewById(R.id.textView_waiting_confirmation)
     }
 
-    @Override
-    public void onComponentAttached() {
-        mImageLoader = ImageLoader.getInstance(getContext(), getComponent().getConfiguration().getEnvironment());
-    }
-
-    @Override
-    public void initView() {
-        mImageView = findViewById(R.id.imageView_logo);
-        mTextViewOpenApp = findViewById(R.id.textView_open_app);
-        mTextViewWaitingConfirmation = findViewById(R.id.textView_waiting_confirmation);
-    }
-
-    @Override
-    protected void initLocalizedStrings(@NonNull Context localizedContext) {
+    override fun initLocalizedStrings(localizedContext: Context) {
         // TODO: 02/09/2020 IMPLEMENT
     }
 
-    @Override
-    protected void observeComponentChanges(@NonNull LifecycleOwner lifecycleOwner) {
-        getComponent().observeOutputData(lifecycleOwner, this);
+    override fun observeComponentChanges(lifecycleOwner: LifecycleOwner) {
+        component.observeOutputData(lifecycleOwner, this)
     }
 
-    @Override
-    public void onChanged(@Nullable AwaitOutputData awaitOutputData) {
-        Logger.d(TAG, "onChanged");
+    override fun onChanged(awaitOutputData: AwaitOutputData?) {
+        Logger.d(TAG, "onChanged")
+
         if (awaitOutputData == null) {
-            return;
+            return
         }
-
-        if (mPaymentMethodType == null || !mPaymentMethodType.equals(awaitOutputData.getPaymentMethodType())) {
-            mPaymentMethodType = awaitOutputData.getPaymentMethodType();
-            updateMessageText();
-            updateLogo();
+        if (paymentMethodType == null || paymentMethodType != awaitOutputData.paymentMethodType) {
+            paymentMethodType = awaitOutputData.paymentMethodType
+            updateMessageText()
+            updateLogo()
         }
     }
 
-    @Override
-    public boolean isConfirmationRequired() {
-        return false;
-    }
+    override val isConfirmationRequired = false
 
-    @Override
-    public void highlightValidationErrors() {
+    override fun highlightValidationErrors() {
         // No validation required
     }
 
-    private void updateLogo() {
-        Logger.d(TAG, "updateLogo - " + mPaymentMethodType);
-        if (!TextUtils.isEmpty(mPaymentMethodType)) {
-            mImageLoader.load(mPaymentMethodType, mImageView);
+    private fun updateLogo() {
+        Logger.d(TAG, "updateLogo - $paymentMethodType")
+        paymentMethodType?.let {
+            imageLoader.load(it, imageView)
         }
     }
 
-    private void updateMessageText() {
-        if (getMessageTextResource() == null) {
-            return;
+    private fun updateMessageText() {
+        messageTextResource?.let {
+            textViewOpenApp.setText(it)
         }
-        mTextViewOpenApp.setText(getMessageTextResource());
     }
 
-    @StringRes
-    private Integer getMessageTextResource() {
-        switch (mPaymentMethodType) {
-            case PaymentMethodTypes.BLIK:
-                return R.string.checkout_await_message_blik;
-            case PaymentMethodTypes.MB_WAY:
-                return R.string.checkout_await_message_mbway;
-            default:
-                return null;
+    @get:StringRes
+    private val messageTextResource: Int?
+        get() = when (paymentMethodType) {
+            PaymentMethodTypes.BLIK -> R.string.checkout_await_message_blik
+            PaymentMethodTypes.MB_WAY -> R.string.checkout_await_message_mbway
+            else -> null
         }
+
+    companion object {
+        private val TAG = getTag()
     }
 }
