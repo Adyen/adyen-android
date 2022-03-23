@@ -16,20 +16,23 @@
         <item name="colorControlNormal">@color/color_control_normal</item>
         <item name="colorControlHighlight">@color/color_control_highlight</item>
 
-        <item name="android:textColorPrimary">@color/text_color</item>
-        <item name="android:textColorSecondary">@color/text_color</item>
-
-        <item name="android:statusBarColor">@color/color_background</item>
-        <item name="android:navigationBarColor">@color/color_transparent</item>
-        <item name="android:windowLightStatusBar" tools:ignore="NewApi">@bool/has_light_system_bars</item>
-        <item name="android:windowLightNavigationBar" tools:ignore="NewApi">@bool/has_light_system_bars</item>
-
-        <item name="toolbarStyle">@style/Widget.Adyen.Toolbar</item>
-
         <item name="android:textColor">?attr/colorOnBackground</item>
         <item name="android:textColorPrimary">?attr/colorOnBackground</item>
         <item name="android:textColorSecondary">?attr/colorOnBackground</item>
         <item name="android:textColorTertiary">?attr/colorOnBackground</item>
+
+        <item name="android:statusBarColor">@color/color_background</item>
+        <item name="android:navigationBarColor">@color/color_transparent</item>
+        <item name="android:windowLightStatusBar" tools:ignore="NewApi">
+            @bool/has_light_system_bars
+        </item>
+        <item name="android:windowLightNavigationBar" tools:ignore="NewApi">
+            @bool/has_light_system_bars
+        </item>
+
+        <item name="toolbarStyle">@style/Widget.Adyen.Toolbar</item>
+
+        <item name="bottomSheetDialogTheme">@style/Widget.Adyen.BottomSheetDialogTheme</item>
 
     </style>
 
