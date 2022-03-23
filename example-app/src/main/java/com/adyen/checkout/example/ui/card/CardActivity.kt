@@ -40,6 +40,10 @@ class CardActivity : AppCompatActivity() {
         binding = ActivityCardBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
+        setSupportActionBar(binding.toolbar)
+        supportActionBar?.setDisplayShowTitleEnabled(false)
+        supportActionBar?.setDisplayHomeAsUpEnabled(true)
+
         binding.payButton.setOnClickListener { cardViewModel.onPayClick() }
 
         lifecycleScope.launchWhenStarted {

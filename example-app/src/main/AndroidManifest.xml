@@ -51,6 +51,9 @@
                     android:scheme="adyencheckout" />
             </intent-filter>
 
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value=".ui.main.MainActivity" />
         </activity>
 
         <service android:name=".service.ExampleDropInService" />
