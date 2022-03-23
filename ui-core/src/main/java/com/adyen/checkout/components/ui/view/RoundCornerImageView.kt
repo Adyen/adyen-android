@@ -5,118 +5,99 @@
  *
  * Created by arman on 28/5/2019.
  */
+package com.adyen.checkout.components.ui.view
 
-package com.adyen.checkout.components.ui.view;
+import android.annotation.SuppressLint
+import android.content.Context
+import android.content.res.TypedArray
+import android.graphics.Canvas
+import android.graphics.Color
+import android.graphics.Paint
+import android.graphics.Path
+import android.graphics.RectF
+import android.util.AttributeSet
+import androidx.appcompat.widget.AppCompatImageView
+import com.adyen.checkout.components.ui.R
 
-import android.annotation.SuppressLint;
-import android.content.Context;
-import android.content.res.TypedArray;
-import android.graphics.Canvas;
-import android.graphics.Color;
-import android.graphics.Paint;
-import android.graphics.Path;
-import android.graphics.RectF;
-import android.util.AttributeSet;
+/**
+ * ImageView that adds a corner to the loaded drawable.
+ */
+class RoundCornerImageView @JvmOverloads constructor(context: Context, attrs: AttributeSet? = null, defStyle: Int = 0) :
+    AppCompatImageView(context, attrs, defStyle) {
 
-import androidx.annotation.ColorInt;
-import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
-import androidx.appcompat.widget.AppCompatImageView;
+    private val strokePaint = Paint()
 
-import com.adyen.checkout.components.ui.R;
+    var radius = 0f
+        set(value) {
+            field = value
+            invalidate()
+        }
+    var strokeWidth = 0f
+        set(value) {
+            field = value
+            invalidate()
+        }
+    var strokeColor = 0
+        set(value) {
+            field = value
+            invalidate()
+        }
+    var borderEnabled = true
+        set(value) {
+            field = value
+            invalidate()
+        }
 
-public class RoundCornerImageView extends AppCompatImageView {
-
-    public static final float DEFAULT_RADIUS = 9.0f;
-    public static final int DEFAULT_STROKE_COLOR = Color.BLACK;
-    public static final float DEFAULT_STROKE_WIDTH = 4f;
-
-    private float mRadius;
-    private final Paint mStrokePaint = new Paint();
-    private float mStrokeWidth;
-    private int mStrokeColor;
-    private boolean mIsBorderEnabled = true;
-
-    public RoundCornerImageView(@NonNull Context context) {
-        this(context, null);
+    init {
+        val typedArrayAttrs = context.theme.obtainStyledAttributes(
+            attrs, R.styleable.RoundCornerImageView,
+            0, 0
+        )
+        applyAttrs(typedArrayAttrs)
     }
 
-    public RoundCornerImageView(@NonNull Context context, @Nullable AttributeSet attrs) {
-        this(context, attrs, 0);
-    }
-
-    /**
-     * ImageView that add corner to loaded drawable.
-     */
-    public RoundCornerImageView(@NonNull Context context, @Nullable AttributeSet attrs, @Nullable int defStyle) {
-        super(context, attrs, defStyle);
-
-        final TypedArray typedArrayAttrs = context.getTheme().obtainStyledAttributes(attrs, R.styleable.RoundCornerImageView,
-                0, 0);
-        applyAttrs(typedArrayAttrs);
-    }
-
-    public void setRadius(float radius) {
-        this.mRadius = radius;
-        invalidate();
-    }
-
-    public void setStrokeColor(@ColorInt int color) {
-        this.mStrokeColor = color;
-        invalidate();
-    }
-
-    public void setStrokeWidth(float width) {
-        this.mStrokeWidth = width;
-        invalidate();
-    }
-
-    public void setBorderEnabled(boolean enabled) {
-        this.mIsBorderEnabled = enabled;
-        invalidate();
-    }
-
-    private void applyAttrs(TypedArray typedArrayAttrs) {
+    private fun applyAttrs(typedArrayAttrs: TypedArray) {
         try {
-            mStrokeColor = typedArrayAttrs.getColor(R.styleable.RoundCornerImageView_strokeColor, DEFAULT_STROKE_COLOR);
-            mStrokeWidth = typedArrayAttrs.getDimension(R.styleable.RoundCornerImageView_strokeWidth, DEFAULT_STROKE_WIDTH);
-            mRadius = typedArrayAttrs.getDimension(R.styleable.RoundCornerImageView_radius, DEFAULT_RADIUS);
+            strokeColor = typedArrayAttrs.getColor(R.styleable.RoundCornerImageView_strokeColor, DEFAULT_STROKE_COLOR)
+            strokeWidth = typedArrayAttrs.getDimension(R.styleable.RoundCornerImageView_strokeWidth, DEFAULT_STROKE_WIDTH)
+            radius = typedArrayAttrs.getDimension(R.styleable.RoundCornerImageView_radius, DEFAULT_RADIUS)
         } finally {
-            typedArrayAttrs.recycle();
+            typedArrayAttrs.recycle()
         }
     }
 
-    @Override
-    protected void onMeasure(int widthMeasureSpec, int heightMeasureSpec) {
-        super.onMeasure(widthMeasureSpec + (int) mStrokeWidth * 2, heightMeasureSpec + (int) mStrokeWidth * 2);
+    override fun onMeasure(widthMeasureSpec: Int, heightMeasureSpec: Int) {
+        super.onMeasure(widthMeasureSpec + strokeWidth.toInt() * 2, heightMeasureSpec + strokeWidth.toInt() * 2)
     }
 
     @SuppressLint("DrawAllocation")
-    @Override
-    protected void onDraw(@NonNull Canvas canvas) {
-        if (!mIsBorderEnabled) {
-            super.onDraw(canvas);
-            return;
+    override fun onDraw(canvas: Canvas) {
+        if (!borderEnabled) {
+            super.onDraw(canvas)
+            return
         }
-        final RectF rect = new RectF(mStrokeWidth / 2, mStrokeWidth / 2,
-                getWidth() - (mStrokeWidth / 2),
-                getHeight() - (mStrokeWidth / 2));
-
-        mStrokePaint.reset();
-
-        if (mStrokeWidth > 0) {
-            mStrokePaint.setStyle(Paint.Style.STROKE);
-            mStrokePaint.setAntiAlias(true);
-            mStrokePaint.setColor(mStrokeColor);
-            mStrokePaint.setStrokeWidth(mStrokeWidth);
-
-            canvas.drawRoundRect(rect, mRadius, mRadius, mStrokePaint);
+        val rect = RectF(
+            strokeWidth / 2, strokeWidth / 2,
+            width - strokeWidth / 2,
+            height - strokeWidth / 2
+        )
+        strokePaint.reset()
+        if (strokeWidth > 0) {
+            strokePaint.style = Paint.Style.STROKE
+            strokePaint.isAntiAlias = true
+            strokePaint.color = strokeColor
+            strokePaint.strokeWidth = strokeWidth
+            canvas.drawRoundRect(rect, radius, radius, strokePaint)
         }
+        val path = Path()
+        path.addRoundRect(rect, radius, radius, Path.Direction.CW)
+        canvas.clipPath(path)
+        super.onDraw(canvas)
+    }
 
-        final Path path = new Path();
-        path.addRoundRect(rect, mRadius, mRadius, Path.Direction.CW);
-        canvas.clipPath(path);
-
-        super.onDraw(canvas);
+    companion object {
+        const val DEFAULT_RADIUS = 9.0f
+        const val DEFAULT_STROKE_COLOR = Color.BLACK
+        const val DEFAULT_STROKE_WIDTH = 4f
     }
 }

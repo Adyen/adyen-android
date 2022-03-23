@@ -152,7 +152,7 @@ public final class BcmcView
                 mExpiryDateInput.requestFocus();
             }
             final int errorReasonResId = ((Validation.Invalid) expiryFieldValidation).getReason();
-            mExpiryDateInput.setError(mLocalizedContext.getString(errorReasonResId));
+            mExpiryDateInput.setError(localizedContext.getString(errorReasonResId));
         }
     }
 
@@ -198,7 +198,7 @@ public final class BcmcView
             mCardNumberInput.setError(null);
             mCardBrandLogoImageView.setVisibility(View.VISIBLE);
         } else {
-            mCardNumberInput.setError(mLocalizedContext.getString(stringResId));
+            mCardNumberInput.setError(localizedContext.getString(stringResId));
             mCardBrandLogoImageView.setVisibility(View.GONE);
         }
     }
@@ -221,7 +221,7 @@ public final class BcmcView
                 mExpiryDateInput.setError(null);
             } else if (expiryDateValidation != null && !expiryDateValidation.isValid()) {
                 final int errorReasonResId = ((Validation.Invalid) expiryDateValidation).getReason();
-                mExpiryDateInput.setError(mLocalizedContext.getString(errorReasonResId));
+                mExpiryDateInput.setError(localizedContext.getString(errorReasonResId));
             }
         });
     }

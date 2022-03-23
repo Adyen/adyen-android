@@ -39,6 +39,7 @@ public abstract class IssuerListRecyclerView<
             PaymentComponentState<IssuerListPaymentMethodT>,
             IssuerListComponentT>
         implements Observer<List<IssuerModel>>, ClickableListRecyclerAdapter.OnItemCLickedListener {
+
     private static final String TAG = LogUtil.getTag();
 
     private RecyclerView mIssuersRecyclerView;

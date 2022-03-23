@@ -65,7 +65,8 @@ class QRCodeView : AdyenLinearLayout<QRCodeOutputData, QRCodeConfiguration, Acti
         context.copyTextToClipboard("Pix Code", code, resources.getString(R.string.checkout_qr_code_copied_toast))
     }
 
-    override fun isConfirmationRequired(): Boolean = false
+    override val isConfirmationRequired: Boolean
+        get() = false
 
     override fun highlightValidationErrors() {
         // No validation required

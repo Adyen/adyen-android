@@ -5,88 +5,64 @@
  *
  * Created by caiof on 26/8/2019.
  */
+package com.adyen.checkout.components.ui.view
 
-package com.adyen.checkout.components.ui.view;
+import android.content.Context
+import android.text.Editable
+import android.text.InputFilter
+import android.text.InputFilter.LengthFilter
+import android.text.TextWatcher
+import android.util.AttributeSet
+import androidx.annotation.CallSuper
+import com.google.android.material.R
+import com.google.android.material.textfield.TextInputEditText
 
-import android.content.Context;
-import android.text.Editable;
-import android.text.InputFilter;
-import android.text.TextWatcher;
-import android.util.AttributeSet;
+open class AdyenTextInputEditText @JvmOverloads constructor(context: Context, attrs: AttributeSet? = null, defStyleAttr: Int = 0) :
+    TextInputEditText(context, attrs, if (defStyleAttr == 0) R.attr.editTextStyle else defStyleAttr) {
 
-import androidx.annotation.CallSuper;
-import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
+    private var listener: Listener? = null
 
-import com.google.android.material.textfield.TextInputEditText;
-
-public class AdyenTextInputEditText extends TextInputEditText {
-
-    protected static final int NO_MAX_LENGTH = -1;
-
-    @Nullable
-    private Listener mListener;
-
-    public AdyenTextInputEditText(@NonNull Context context) {
-        this(context, null);
-    }
-
-    public AdyenTextInputEditText(@NonNull Context context, @Nullable AttributeSet attrs) {
-        this(context, attrs, 0);
-    }
+    open val rawValue: String
+        get() = text?.toString() ?: ""
 
     /**
      * Constructor of AdyenTextInputEditText.
      */
-    public AdyenTextInputEditText(@NonNull Context context, @Nullable AttributeSet attrs, int defStyleAttr) {
-        super(context, attrs, defStyleAttr == 0 ? com.google.android.material.R.attr.editTextStyle : defStyleAttr);
-        addTextChangedListener(getTextWatcher());
+    init {
+        this.addTextChangedListener(textWatcher)
     }
 
-    public void setOnChangeListener(@NonNull Listener listener) {
-        this.mListener = listener;
-    }
-
-    @NonNull
-    public String getRawValue() {
-        return getText() != null ? getText().toString() : "";
+    fun setOnChangeListener(listener: Listener) {
+        this.listener = listener
     }
 
     @CallSuper
-    protected void afterTextChanged(@NonNull Editable editable) {
-        if (mListener != null) {
-            mListener.onTextChanged(editable);
-        }
+    protected open fun afterTextChanged(editable: Editable) {
+        listener?.onTextChanged(editable)
     }
 
-    protected void enforceMaxInputLength(int maxLength) {
+    protected fun enforceMaxInputLength(maxLength: Int) {
         if (maxLength != NO_MAX_LENGTH) {
-            setFilters(new InputFilter[]{new InputFilter.LengthFilter(maxLength)});
+            filters = arrayOf<InputFilter>(LengthFilter(maxLength))
         }
     }
 
-    @NonNull
-    private TextWatcher getTextWatcher() {
-        return new TextWatcher() {
+    private val textWatcher: TextWatcher
+        get() = object : TextWatcher {
+            override fun beforeTextChanged(s: CharSequence, start: Int, count: Int, after: Int) = Unit
 
-            @Override
-            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
-                // Empty
-            }
+            override fun onTextChanged(s: CharSequence, start: Int, before: Int, count: Int) = Unit
 
-            @Override
-            public void onTextChanged(CharSequence s, int start, int before, int count) {
-                // Empty
+            override fun afterTextChanged(s: Editable) {
+                this@AdyenTextInputEditText.afterTextChanged(s)
             }
+        }
 
-            @Override
-            public void afterTextChanged(Editable s) {
-                AdyenTextInputEditText.this.afterTextChanged(s);
-            }
-        };
+    fun interface Listener {
+        fun onTextChanged(editable: Editable)
     }
 
-    public interface Listener {
-        void onTextChanged(@NonNull Editable editable);
+    companion object {
+        protected const val NO_MAX_LENGTH = -1
     }
 }

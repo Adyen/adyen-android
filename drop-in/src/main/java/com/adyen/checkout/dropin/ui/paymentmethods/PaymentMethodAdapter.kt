@@ -165,7 +165,7 @@ class PaymentMethodAdapter @JvmOverloads constructor(
         holder.text.text = paymentMethod.name
         holder.detail.visibility = View.GONE
 
-        holder.logo.setBorderEnabled(paymentMethod.drawIconBorder)
+        holder.logo.borderEnabled = paymentMethod.drawIconBorder
         imageLoader.load(paymentMethod.icon, holder.logo)
 
         holder.itemView.setOnClickListener {

@@ -5,38 +5,27 @@
  *
  * Created by caiof on 2/4/2019.
  */
+package com.adyen.checkout.components.ui.util
 
-package com.adyen.checkout.components.ui.util;
+import android.content.Context
+import android.util.TypedValue
+import androidx.annotation.AttrRes
+import androidx.annotation.ColorInt
+import com.adyen.checkout.components.ui.R
 
-import android.content.Context;
-import android.content.res.TypedArray;
-import android.util.TypedValue;
-
-import androidx.annotation.AttrRes;
-import androidx.annotation.ColorInt;
-import androidx.annotation.NonNull;
-
-import com.adyen.checkout.components.ui.R;
-import com.adyen.checkout.core.exception.NoConstructorException;
-
-public final class ThemeUtil {
+object ThemeUtil {
 
     @ColorInt
-    public static int getPrimaryThemeColor(@NonNull Context context) {
-        return getAttributeColor(context, R.attr.colorPrimary);
+    fun getPrimaryThemeColor(context: Context): Int {
+        return getAttributeColor(context, R.attr.colorPrimary)
     }
 
     @ColorInt
-    private static int getAttributeColor(@NonNull Context context, @AttrRes int attributeColor) {
-        final TypedValue typedValue = new TypedValue();
-        final TypedArray typedArray = context.obtainStyledAttributes(typedValue.data, new int[] {attributeColor});
-        final int color = typedArray.getColor(0, 0);
-        typedArray.recycle();
-
-        return color;
-    }
-
-    private ThemeUtil() {
-        throw NoConstructorException.INSTANCE;
+    private fun getAttributeColor(context: Context, @AttrRes attributeColor: Int): Int {
+        val typedValue = TypedValue()
+        val typedArray = context.obtainStyledAttributes(typedValue.data, intArrayOf(attributeColor))
+        val color = typedArray.getColor(0, 0)
+        typedArray.recycle()
+        return color
     }
 }

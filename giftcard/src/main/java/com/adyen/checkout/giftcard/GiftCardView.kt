@@ -70,27 +70,31 @@ class GiftCardView :
             notifyInputDataChanged()
             binding.textInputLayoutGiftcardNumber.error = null
         }
+
         binding.editTextGiftcardNumber.onFocusChangeListener = OnFocusChangeListener { _: View?, hasFocus: Boolean ->
             val cardNumberValidation = component.outputData?.giftcardNumberFieldState?.validation
             if (hasFocus) {
                 binding.textInputLayoutGiftcardNumber.error = null
             } else if (cardNumberValidation != null && cardNumberValidation is Validation.Invalid) {
-                binding.textInputLayoutGiftcardNumber.error = mLocalizedContext.getString(cardNumberValidation.reason)
+                binding.textInputLayoutGiftcardNumber.error = localizedContext.getString(cardNumberValidation.reason)
             }
         }
+
         binding.editTextGiftcardPin.setOnChangeListener { editable: Editable ->
             giftCardInputData.pin = editable.toString()
             notifyInputDataChanged()
             binding.textInputLayoutGiftcardPin.error = null
         }
+
         binding.editTextGiftcardPin.onFocusChangeListener = OnFocusChangeListener { _, hasFocus ->
             val pinValidation = component.outputData?.giftcardPinFieldState?.validation
             if (hasFocus) {
                 binding.textInputLayoutGiftcardPin.error = null
             } else if (pinValidation != null && pinValidation is Validation.Invalid) {
-                binding.textInputLayoutGiftcardPin.error = mLocalizedContext.getString(pinValidation.reason)
+                binding.textInputLayoutGiftcardPin.error = localizedContext.getString(pinValidation.reason)
             }
         }
+
         notifyInputDataChanged()
     }
 
@@ -106,9 +110,8 @@ class GiftCardView :
         Logger.v(TAG, "GiftCardOutputData changed")
     }
 
-    override fun isConfirmationRequired(): Boolean {
-        return true
-    }
+    override val isConfirmationRequired: Boolean
+        get() = true
 
     override fun highlightValidationErrors() {
         Logger.d(TAG, "highlightValidationErrors")
@@ -118,14 +121,14 @@ class GiftCardView :
         if (cardNumberValidation is Validation.Invalid) {
             isErrorFocused = true
             binding.textInputLayoutGiftcardNumber.requestFocus()
-            binding.textInputLayoutGiftcardNumber.error = mLocalizedContext.getString(cardNumberValidation.reason)
+            binding.textInputLayoutGiftcardNumber.error = localizedContext.getString(cardNumberValidation.reason)
         }
         val pinValidation = outputData.giftcardPinFieldState.validation
         if (pinValidation is Validation.Invalid) {
             if (!isErrorFocused) {
                 binding.textInputLayoutGiftcardPin.requestFocus()
             }
-            binding.textInputLayoutGiftcardPin.error = mLocalizedContext.getString(pinValidation.reason)
+            binding.textInputLayoutGiftcardPin.error = localizedContext.getString(pinValidation.reason)
         }
     }
 

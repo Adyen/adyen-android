@@ -45,9 +45,7 @@ class BacsDirectDebitConfirmationView @JvmOverloads constructor(context: Context
         // no ops
     }
 
-    override fun isConfirmationRequired(): Boolean {
-        return true
-    }
+    override val isConfirmationRequired = true
 
     override fun highlightValidationErrors() {
         // no ops

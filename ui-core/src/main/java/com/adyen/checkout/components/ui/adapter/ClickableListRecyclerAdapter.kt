@@ -5,42 +5,34 @@
  *
  * Created by caiof on 23/5/2019.
  */
+package com.adyen.checkout.components.ui.adapter
 
-package com.adyen.checkout.components.ui.adapter;
+import androidx.annotation.CallSuper
+import androidx.recyclerview.widget.RecyclerView
+import com.adyen.checkout.core.log.LogUtil.getTag
+import com.adyen.checkout.core.log.Logger
 
-import android.view.View;
+abstract class ClickableListRecyclerAdapter<ViewHolderT : RecyclerView.ViewHolder> : RecyclerView.Adapter<ViewHolderT>() {
 
-import androidx.annotation.CallSuper;
-import androidx.annotation.NonNull;
-import androidx.recyclerview.widget.RecyclerView;
-
-import com.adyen.checkout.core.log.LogUtil;
-import com.adyen.checkout.core.log.Logger;
-
-public abstract class ClickableListRecyclerAdapter<ViewHolderT extends RecyclerView.ViewHolder> extends RecyclerView.Adapter<ViewHolderT> {
-    static final String TAG = LogUtil.getTag();
-
-    OnItemCLickedListener mOnItemCLickedListener;
+    var onItemCLickedListener: OnItemCLickedListener? = null
 
     @CallSuper
-    @Override
-    public void onBindViewHolder(@NonNull final ViewHolderT viewHolderT, int position) {
-        viewHolderT.itemView.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Logger.d(TAG, "click");
-                if (mOnItemCLickedListener != null) {
-                    mOnItemCLickedListener.onItemClicked(viewHolderT.getAdapterPosition());
-                }
-            }
-        });
+    override fun onBindViewHolder(viewHolderT: ViewHolderT, position: Int) {
+        viewHolderT.itemView.setOnClickListener {
+            Logger.d(TAG, "click")
+            onItemCLickedListener?.onItemClicked(viewHolderT.bindingAdapterPosition)
+        }
     }
 
-    public void setItemCLickListener(@NonNull OnItemCLickedListener itemCLickListener) {
-        mOnItemCLickedListener = itemCLickListener;
+    fun setItemCLickListener(itemCLickListener: OnItemCLickedListener) {
+        onItemCLickedListener = itemCLickListener
     }
 
-    public interface OnItemCLickedListener {
-        void onItemClicked(int position);
+    fun interface OnItemCLickedListener {
+        fun onItemClicked(position: Int)
+    }
+
+    companion object {
+        val TAG = getTag()
     }
 }
