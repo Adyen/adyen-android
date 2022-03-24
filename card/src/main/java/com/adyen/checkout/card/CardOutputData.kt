@@ -7,6 +7,7 @@
  */
 package com.adyen.checkout.card
 
+import com.adyen.checkout.card.api.model.AddressItem
 import com.adyen.checkout.card.data.DetectedCardType
 import com.adyen.checkout.card.data.ExpiryDate
 import com.adyen.checkout.components.base.OutputData
@@ -29,7 +30,8 @@ data class CardOutputData(
     val isSocialSecurityNumberRequired: Boolean,
     val isKCPAuthRequired: Boolean,
     val isPostalCodeRequired: Boolean,
-    val installmentOptions: List<InstallmentModel>
+    val installmentOptions: List<InstallmentModel>,
+    val countryOptions: List<AddressItem>
 ) : OutputData {
     override fun isValid(): Boolean {
         return cardNumberState.validation.isValid() &&

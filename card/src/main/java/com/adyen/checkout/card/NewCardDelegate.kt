@@ -28,6 +28,7 @@ import kotlinx.coroutines.channels.BufferOverflow
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.launch
+import java.util.*
 
 private val TAG = LogUtil.getTag()
 private const val DEBIT_FUNDING_SOURCE = "debit"
@@ -188,6 +189,14 @@ class NewCardDelegate(
         } else {
             InstallmentUtils.makeInstallmentOptions(installmentConfiguration, cardType, isCardTypeReliable)
         }
+    }
+
+    fun getCountryListFlow(): Flow<List<AddressItem>> {
+        return addressDelegate.countriesFlow
+    }
+
+    suspend fun getCountryList(): List<AddressItem> {
+        return addressDelegate.getCountryList(cardConfiguration)
     }
 
     private fun detectCardLocally(cardNumber: String): List<DetectedCardType> {

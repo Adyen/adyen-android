@@ -11,6 +11,7 @@ package com.adyen.checkout.card
 import androidx.annotation.StringRes
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.viewModelScope
+import com.adyen.checkout.card.api.model.AddressItem
 import com.adyen.checkout.card.api.model.Brand
 import com.adyen.checkout.card.data.CardType
 import com.adyen.checkout.card.data.DetectedCardType
@@ -68,6 +69,7 @@ class CardComponent private constructor(
             }
         }
 
+
         if (cardDelegate is NewCardDelegate) {
             cardDelegate.binLookupFlow
                 .onEach {
@@ -87,12 +89,36 @@ class CardComponent private constructor(
                             isStorePaymentSelected = isStoredPaymentMethodEnable,
                             detectedCardTypes = it,
                             selectedCardIndex = inputData.selectedCardIndex,
-                            selectedInstallmentOption = null
+                            selectedInstallmentOption = null,
+                            countryOptions = countryOptions
                         )
                         notifyStateChanged(newOutputData)
                     }
                 }
                 .launchIn(viewModelScope)
+
+            viewModelScope.launch {
+                val countries = cardDelegate.getCountryList()
+                with(outputData) {
+                    this ?: return@with
+                    val newOutputData = makeOutputData(
+                        cardNumber = cardNumberState.value,
+                        expiryDate = expiryDateState.value,
+                        securityCode = securityCodeState.value,
+                        holderName = holderNameState.value,
+                        socialSecurityNumber = socialSecurityNumberState.value,
+                        kcpBirthDateOrTaxNumber = kcpBirthDateOrTaxNumberState.value,
+                        kcpCardPassword = kcpCardPasswordState.value,
+                        postalCode = postalCodeState.value,
+                        isStorePaymentSelected = isStoredPaymentMethodEnable,
+                        detectedCardTypes = this.detectedCardTypes,
+                        selectedCardIndex = 0,
+                        selectedInstallmentOption = null,
+                        countryOptions = countries
+                    )
+                    notifyStateChanged(newOutputData)
+                }
+            }
         }
     }
 
@@ -135,6 +161,10 @@ class CardComponent private constructor(
         Logger.v(TAG, "onInputDataChanged")
 
         val detectedCardTypes = cardDelegate.detectCardType(inputData.cardNumber, publicKey, viewModelScope)
+        val countryOptions = mutableListOf<AddressItem>()
+        if (cardDelegate is NewCardDelegate) viewModelScope.launch {
+            countryOptions.addAll(cardDelegate.getCountryList())
+        }
 
         return makeOutputData(
             cardNumber = inputData.cardNumber,
@@ -148,7 +178,8 @@ class CardComponent private constructor(
             postalCode = inputData.postalCode,
             detectedCardTypes = detectedCardTypes,
             selectedCardIndex = inputData.selectedCardIndex,
-            selectedInstallmentOption = inputData.installmentOption
+            selectedInstallmentOption = inputData.installmentOption,
+            countryOptions = countryOptions
         )
     }
 
@@ -165,7 +196,8 @@ class CardComponent private constructor(
         postalCode: String,
         detectedCardTypes: List<DetectedCardType>,
         selectedCardIndex: Int,
-        selectedInstallmentOption: InstallmentModel?
+        selectedInstallmentOption: InstallmentModel?,
+        countryOptions: List<AddressItem>
     ): CardOutputData {
 
         val isReliable = detectedCardTypes.any { it.isReliable }
@@ -202,7 +234,8 @@ class CardComponent private constructor(
                 configuration.installmentConfiguration,
                 selectedOrFirstCardType?.cardType,
                 isReliable
-            )
+            ),
+            countryOptions
         )
     }
 

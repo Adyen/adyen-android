@@ -29,8 +29,7 @@
         android:id="@+id/textInputLayout_houseNumber"
         style="@style/AdyenCheckout.TextInputLayout"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginEnd="@dimen/standard_margin">
+        android:layout_height="wrap_content">
 
         <com.adyen.checkout.components.ui.view.AdyenTextInputEditText
             android:id="@+id/editText_houseNumber"
