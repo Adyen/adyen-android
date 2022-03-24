@@ -26,7 +26,7 @@ import com.adyen.checkout.dropin.DropInResult
 import com.adyen.checkout.example.R
 import com.adyen.checkout.example.data.api.CheckoutApiService
 import com.adyen.checkout.example.databinding.ActivityMainBinding
-import com.adyen.checkout.example.ui.card.CardFragment
+import com.adyen.checkout.example.ui.card.CardActivity
 import com.adyen.checkout.example.ui.configuration.CheckoutConfigurationProvider
 import com.adyen.checkout.example.ui.configuration.ConfigurationActivity
 import dagger.hilt.android.AndroidEntryPoint
@@ -140,7 +140,10 @@ class MainActivity : AppCompatActivity(), DropInCallback {
                     setLoading(true)
                 }
             }
-            ComponentItem.Entry.Card -> CardFragment.show(supportFragmentManager)
+            ComponentItem.Entry.Card -> {
+                val intent = Intent(this, CardActivity::class.java)
+                startActivity(intent)
+            }
         }
     }
 

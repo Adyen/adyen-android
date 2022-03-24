@@ -14,6 +14,7 @@ import com.adyen.checkout.example.BuildConfig
 import com.adyen.checkout.example.data.storage.KeyValueStorage
 import com.adyen.checkout.example.service.ExampleFullAsyncDropInService
 import com.adyen.checkout.googlepay.GooglePayConfiguration
+import com.adyen.checkout.redirect.RedirectConfiguration
 import java.util.Locale
 import javax.inject.Inject
 import javax.inject.Singleton
@@ -31,13 +32,17 @@ internal class CheckoutConfigurationProvider @Inject constructor(
 
     private val amount: Amount get() = keyValueStorage.getAmount()
 
+    private val clientKey = BuildConfig.CLIENT_KEY
+
+    private val environment = Environment.TEST
+
     fun getDropInConfiguration(context: Context): DropInConfiguration {
         val dropInConfigurationBuilder = DropInConfiguration.Builder(
             context,
             ExampleFullAsyncDropInService::class.java,
-            BuildConfig.CLIENT_KEY
+            clientKey
         )
-            .setEnvironment(Environment.TEST)
+            .setEnvironment(environment)
             .setShopperLocale(shopperLocale)
             .addCardConfiguration(getCardConfiguration())
             .addBcmcConfiguration(getBcmcConfiguration())
@@ -54,24 +59,29 @@ internal class CheckoutConfigurationProvider @Inject constructor(
         return dropInConfigurationBuilder.build()
     }
 
-    fun getCardConfiguration(): CardConfiguration = CardConfiguration.Builder(shopperLocale, Environment.TEST, BuildConfig.CLIENT_KEY)
-        .setShopperReference(keyValueStorage.getShopperReference())
-        .build()
+    fun getCardConfiguration(): CardConfiguration =
+        CardConfiguration.Builder(shopperLocale, environment, clientKey)
+            .setShopperReference(keyValueStorage.getShopperReference())
+            .build()
 
     private fun getBcmcConfiguration(): BcmcConfiguration =
-        BcmcConfiguration.Builder(shopperLocale, Environment.TEST, BuildConfig.CLIENT_KEY)
+        BcmcConfiguration.Builder(shopperLocale, environment, clientKey)
             .setShopperReference(keyValueStorage.getShopperReference())
             .setShowStorePaymentField(true)
             .build()
 
     private fun getGooglePayConfiguration(): GooglePayConfiguration =
-        GooglePayConfiguration.Builder(shopperLocale, Environment.TEST, BuildConfig.CLIENT_KEY)
+        GooglePayConfiguration.Builder(shopperLocale, environment, clientKey)
             .setCountryCode(keyValueStorage.getCountry())
             .setAmount(amount)
             .build()
 
-    private fun get3DS2Configuration(): Adyen3DS2Configuration =
-        Adyen3DS2Configuration.Builder(shopperLocale, Environment.TEST, BuildConfig.CLIENT_KEY)
+    fun get3DS2Configuration(): Adyen3DS2Configuration =
+        Adyen3DS2Configuration.Builder(shopperLocale, environment, clientKey)
+            .build()
+
+    fun getRedirectConfiguration(): RedirectConfiguration =
+        RedirectConfiguration.Builder(shopperLocale, environment, clientKey)
             .build()
 
     companion object {
