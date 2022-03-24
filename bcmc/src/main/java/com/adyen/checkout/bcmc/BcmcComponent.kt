@@ -9,7 +9,6 @@ package com.adyen.checkout.bcmc
 
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.viewModelScope
-import com.adyen.checkout.card.CardComponent
 import com.adyen.checkout.card.CardValidationMapper
 import com.adyen.checkout.card.CardValidationUtils
 import com.adyen.checkout.card.api.model.Brand
@@ -34,10 +33,6 @@ import com.adyen.checkout.cse.exception.EncryptionException
 import com.adyen.threeds2.ThreeDS2Service
 import kotlinx.coroutines.launch
 
-private val TAG = LogUtil.getTag()
-
-private val PAYMENT_METHOD_TYPES = arrayOf(PaymentMethodTypes.BCMC)
-
 /**
  * Constructs a [BcmcComponent] object.
  *
@@ -54,6 +49,10 @@ class BcmcComponent(
     PaymentComponentState<CardPaymentMethod>>(savedStateHandle, paymentMethodDelegate, configuration) {
 
     companion object {
+        private val TAG = LogUtil.getTag()
+
+        private val PAYMENT_METHOD_TYPES = arrayOf(PaymentMethodTypes.BCMC)
+
         @JvmField
         val PROVIDER: PaymentComponentProvider<BcmcComponent, BcmcConfiguration> = BcmcComponentProvider()
 
@@ -75,7 +74,7 @@ class BcmcComponent(
     }
 
     override val supportedPaymentMethodTypes: Array<String>
-        get() = CardComponent.PAYMENT_METHOD_TYPES
+        get() = PAYMENT_METHOD_TYPES
 
     private suspend fun fetchPublicKey(): String {
         return publicKeyRepository.fetchPublicKey(
