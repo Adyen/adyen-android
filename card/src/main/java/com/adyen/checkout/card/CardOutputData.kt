@@ -31,7 +31,8 @@ data class CardOutputData(
     val isKCPAuthRequired: Boolean,
     val isPostalCodeRequired: Boolean,
     val installmentOptions: List<InstallmentModel>,
-    val countryOptions: List<AddressItem>
+    val countryOptions: List<AddressItem>,
+    val stateOptions: List<AddressItem>
 ) : OutputData {
     override fun isValid(): Boolean {
         return cardNumberState.validation.isValid() &&

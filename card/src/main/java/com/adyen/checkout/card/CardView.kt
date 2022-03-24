@@ -88,6 +88,7 @@ class CardView @JvmOverloads constructor(context: Context, attrs: AttributeSet? 
         initSocialSecurityNumberInput()
         initKcpAuthenticationInput()
         initPostalCodeInput()
+        initAddressFormInput()
 
         binding.switchStorePaymentMethod.setOnCheckedChangeListener { _, isChecked ->
             component.inputData.isStorePaymentSelected = isChecked
@@ -160,6 +161,7 @@ class CardView @JvmOverloads constructor(context: Context, attrs: AttributeSet? 
             handleExpiryDateUIState(cardOutputData.expiryDateUIState)
             updateInstallments(cardOutputData)
             updateCountries(cardOutputData.countryOptions)
+            updateStates(cardOutputData.stateOptions)
         }
         if (component.isStoredPaymentMethod() && component.requiresInput()) {
             binding.textInputLayoutSecurityCode.editText?.requestFocus()
@@ -477,14 +479,18 @@ class CardView @JvmOverloads constructor(context: Context, attrs: AttributeSet? 
     }
 
     private fun initAddressFormInput() {
-        binding.addressFormInput.setOnAddressChangeListener {
-            mCardInputData.address = it
+        binding.addressFormInput.setOnAddressChangeListener { address ->
+            mCardInputData.address = address
             notifyInputDataChanged()
         }
     }
 
     private fun updateCountries(countryOptions: List<AddressItem>) {
         binding.addressFormInput.initialize(countryOptions)
+    }
+
+    private fun updateStates(stateOptions: List<AddressItem>) {
+        binding.addressFormInput.updateStates(stateOptions)
     }
 
     private fun updateInstallments(cardOutputData: CardOutputData) {
