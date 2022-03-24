@@ -18,6 +18,7 @@ import com.adyen.checkout.card.AddressInputModel
 import com.adyen.checkout.card.InstallmentListAdapter
 import com.adyen.checkout.card.R
 import com.adyen.checkout.card.api.model.AddressItem
+import com.adyen.checkout.card.ui.model.AddressListItem
 import com.adyen.checkout.components.ui.adapter.SimpleTextListAdapter
 import com.adyen.checkout.components.ui.adapter.SimpleTextListItem
 import com.adyen.checkout.components.ui.view.AdyenTextInputEditText
@@ -29,8 +30,7 @@ class AddressFormInput @JvmOverloads constructor(
 ): LinearLayout(context, attrs, defStyleAttr) {
 
     private var onAddressChangeListener: OnAddressChangeListener? = null
-
-    private var simpleTextListAdapter: SimpleTextListAdapter<SimpleTextListItem>? = null
+    private var simpleTextListAdapter: SimpleTextListAdapter<AddressListItem>? = null
 
     private val addressInput = AddressInputModel()
 
@@ -52,16 +52,19 @@ class AddressFormInput @JvmOverloads constructor(
         if (simpleTextListAdapter == null) {
             simpleTextListAdapter = SimpleTextListAdapter(context)
         }
-        simpleTextListAdapter!!.setItems(countryList.map {
-            SimpleTextListItem(
-                it.name.orEmpty()
-            )
-        })
+        simpleTextListAdapter?.setItems(
+            countryList.map {
+                AddressListItem(
+                    name = it.name.orEmpty(),
+                    code = it.id.orEmpty()
+                )
+            }
+        )
         rootView.findViewById<AutoCompleteTextView>(R.id.autoCompleteTextView_country).apply {
             inputType = 0
             setAdapter(simpleTextListAdapter)
             onItemClickListener = AdapterView.OnItemClickListener { _, _, position, _ ->
-                populateFormFields(AddressSpecification.fromString(simpleTextListAdapter!!.getItem(position).text))
+                populateFormFields(AddressSpecification.fromString(simpleTextListAdapter?.getItem(position)?.code))
             }
         }
     }
@@ -119,7 +122,7 @@ class AddressFormInput @JvmOverloads constructor(
         BR, CA, GB, US, DEFAULT;
 
         companion object {
-            fun fromString(countryCode: String): AddressSpecification {
+            fun fromString(countryCode: String?): AddressSpecification {
                 return values().firstOrNull { it.name == countryCode } ?: DEFAULT
             }
         }
