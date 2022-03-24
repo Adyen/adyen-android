@@ -5,140 +5,98 @@
  *
  * Created by josephj on 4/12/2020.
  */
+package com.adyen.checkout.blik
 
-package com.adyen.checkout.blik;
+import android.content.Context
+import android.util.AttributeSet
+import android.view.LayoutInflater
+import android.view.View
+import android.view.View.OnFocusChangeListener
+import androidx.lifecycle.LifecycleOwner
+import androidx.lifecycle.Observer
+import com.adyen.checkout.components.PaymentComponentState
+import com.adyen.checkout.components.model.payments.request.BlikPaymentMethod
+import com.adyen.checkout.components.ui.Validation
+import com.adyen.checkout.components.ui.view.AdyenLinearLayout
+import com.adyen.checkout.components.ui.view.AdyenTextInputEditText
+import com.adyen.checkout.core.exception.CheckoutException
+import com.adyen.checkout.core.log.LogUtil.getTag
+import com.adyen.checkout.core.log.Logger
+import com.google.android.material.textfield.TextInputLayout
 
-import android.content.Context;
-import android.content.res.TypedArray;
-import android.util.AttributeSet;
-import android.view.LayoutInflater;
-import android.widget.LinearLayout;
+class BlikView @JvmOverloads constructor(context: Context, attrs: AttributeSet? = null, defStyleAttr: Int = 0) :
+    AdyenLinearLayout<BlikOutputData, BlikConfiguration, PaymentComponentState<BlikPaymentMethod>, BlikComponent>(context, attrs, defStyleAttr),
+    Observer<BlikOutputData> {
 
-import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
-import androidx.lifecycle.LifecycleOwner;
-import androidx.lifecycle.Observer;
+    private var blikInputData = BlikInputData()
+    private lateinit var blikCodeInput: TextInputLayout
+    private lateinit var blikCodeEditText: AdyenTextInputEditText
 
-import com.adyen.checkout.components.PaymentComponentState;
-import com.adyen.checkout.components.model.payments.request.BlikPaymentMethod;
-import com.adyen.checkout.components.ui.Validation;
-import com.adyen.checkout.components.ui.view.AdyenLinearLayout;
-import com.adyen.checkout.components.ui.view.AdyenTextInputEditText;
-import com.adyen.checkout.core.exception.CheckoutException;
-import com.adyen.checkout.core.log.LogUtil;
-import com.adyen.checkout.core.log.Logger;
-import com.google.android.material.textfield.TextInputLayout;
-
-public class BlikView
-        extends AdyenLinearLayout<BlikOutputData, BlikConfiguration, PaymentComponentState<BlikPaymentMethod>, BlikComponent>
-        implements Observer<BlikOutputData> {
-    private static final String TAG = LogUtil.getTag();
-
-    BlikInputData mBlikInputData = new BlikInputData();
-
-    TextInputLayout mBlikCodeInput;
-
-    AdyenTextInputEditText mBlikCodeEditText;
-
-    public BlikView(@NonNull Context context) {
-        this(context, null);
+    init {
+        orientation = VERTICAL
+        LayoutInflater.from(getContext()).inflate(R.layout.blik_view, this, true)
+        val padding = resources.getDimension(R.dimen.standard_margin).toInt()
+        setPadding(padding, padding, padding, 0)
     }
 
-    public BlikView(@NonNull Context context, @Nullable AttributeSet attrs) {
-        this(context, attrs, 0);
+    override fun initLocalizedStrings(localizedContext: Context) {
+        val myAttrs = intArrayOf(android.R.attr.hint)
+        val typedArray = localizedContext.obtainStyledAttributes(R.style.AdyenCheckout_Blik_BlikCodeInput, myAttrs)
+        blikCodeInput.hint = typedArray.getString(0)
+        typedArray.recycle()
     }
 
-    // Regular View constructor
-    @SuppressWarnings("JavadocMethod")
-    public BlikView(@NonNull Context context, @Nullable AttributeSet attrs, int defStyleAttr) {
-        super(context, attrs, defStyleAttr);
+    override fun initView() {
+        blikCodeInput = findViewById(R.id.textInputLayout_blikCode) ?: throw CheckoutException("Could not find views inside layout.")
+        blikCodeEditText = blikCodeInput.editText as AdyenTextInputEditText
 
-        setOrientation(LinearLayout.VERTICAL);
-
-        LayoutInflater.from(getContext()).inflate(R.layout.blik_view, this, true);
-
-        final int padding = (int) getResources().getDimension(R.dimen.standard_margin);
-        setPadding(padding, padding, padding, 0);
-    }
-
-    @Override
-    protected void initLocalizedStrings(@NonNull Context localizedContext) {
-        final int[] myAttrs = {android.R.attr.hint};
-        final TypedArray typedArray = localizedContext.obtainStyledAttributes(R.style.AdyenCheckout_Blik_BlikCodeInput, myAttrs);
-        mBlikCodeInput.setHint(typedArray.getString(0));
-        typedArray.recycle();
-    }
-
-    @Override
-    public void initView() {
-        mBlikCodeInput = findViewById(R.id.textInputLayout_blikCode);
-        mBlikCodeEditText = (AdyenTextInputEditText) mBlikCodeInput.getEditText();
-
-        if (mBlikCodeEditText == null) {
-            throw new CheckoutException("Could not find views inside layout.");
+        blikCodeEditText.setOnChangeListener {
+            blikInputData.blikCode = blikCodeEditText.rawValue
+            notifyInputDataChanged()
+            blikCodeInput.error = null
         }
 
-        mBlikCodeEditText.setOnChangeListener(editable -> {
-            mBlikInputData.setBlikCode(mBlikCodeEditText.getRawValue());
-            notifyInputDataChanged();
-            mBlikCodeInput.setError(null);
-        });
-
-        mBlikCodeEditText.setOnFocusChangeListener((v, hasFocus) -> {
-            final BlikOutputData outputData = getComponent().getOutputData();
-            final Validation blikCodeValidation = outputData != null
-                    ? outputData.getBlikCodeField().getValidation()
-                    : null;
+        blikCodeEditText.onFocusChangeListener = OnFocusChangeListener { _: View?, hasFocus: Boolean ->
+            val outputData = component.outputData
+            val blikCodeValidation = outputData?.blikCodeField?.validation
             if (hasFocus) {
-                mBlikCodeInput.setError(null);
+                blikCodeInput.error = null
             } else if (blikCodeValidation != null && !blikCodeValidation.isValid()) {
-                final int errorReasonResId = ((Validation.Invalid) blikCodeValidation).getReason();
-                mBlikCodeInput.setError(localizedContext.getString(errorReasonResId));
+                val errorReasonResId = (blikCodeValidation as Validation.Invalid).reason
+                blikCodeInput.error = localizedContext.getString(errorReasonResId)
             }
-        });
-    }
-
-    @Override
-    public void onChanged(@Nullable BlikOutputData blikOutputData) {
-        Logger.v(TAG, "blikOutputData changed");
-    }
-
-    @Override
-    public void onComponentAttached() {
-        // nothing to impl
-    }
-
-    @Override
-    protected void observeComponentChanges(@NonNull LifecycleOwner lifecycleOwner) {
-        getComponent().observeOutputData(lifecycleOwner, this);
-    }
-
-    @Override
-    public boolean isConfirmationRequired() {
-        return true;
-    }
-
-    @Override
-    public void highlightValidationErrors() {
-        Logger.d(TAG, "highlightValidationErrors");
-
-        final BlikOutputData outputData;
-        if (getComponent().getOutputData() != null) {
-            outputData = getComponent().getOutputData();
-        } else {
-            return;
         }
+    }
 
-        final Validation blikCodeValidation = outputData.getBlikCodeField().getValidation();
+    override fun onChanged(blikOutputData: BlikOutputData?) {
+        Logger.v(TAG, "blikOutputData changed")
+    }
 
+    override fun onComponentAttached() = Unit // nothing to impl
+
+    override fun observeComponentChanges(lifecycleOwner: LifecycleOwner) {
+        component.observeOutputData(lifecycleOwner, this)
+    }
+
+    override val isConfirmationRequired: Boolean
+        get() = true
+
+    override fun highlightValidationErrors() {
+        Logger.d(TAG, "highlightValidationErrors")
+        val outputData = component.outputData ?: return
+        val blikCodeValidation = outputData.blikCodeField.validation
         if (!blikCodeValidation.isValid()) {
-            mBlikCodeInput.requestFocus();
-            final int errorReasonResId = ((Validation.Invalid) blikCodeValidation).getReason();
-            mBlikCodeInput.setError(localizedContext.getString(errorReasonResId));
+            blikCodeInput.requestFocus()
+            val errorReasonResId = (blikCodeValidation as Validation.Invalid).reason
+            blikCodeInput.error = localizedContext.getString(errorReasonResId)
         }
     }
 
-    void notifyInputDataChanged() {
-        getComponent().inputDataChanged(mBlikInputData);
+    private fun notifyInputDataChanged() {
+        component.inputDataChanged(blikInputData)
+    }
+
+    companion object {
+        private val TAG = getTag()
     }
 }

@@ -5,23 +5,10 @@
  *
  * Created by josephj on 4/12/2020.
  */
+package com.adyen.checkout.blik
 
-package com.adyen.checkout.blik;
+import com.adyen.checkout.components.base.InputData
 
-import androidx.annotation.NonNull;
-
-import com.adyen.checkout.components.base.InputData;
-
-public class BlikInputData implements InputData {
-
-    private String mBlikCode = "";
-
-    @NonNull
-    public String getBlikCode() {
-        return mBlikCode;
-    }
-
-    public void setBlikCode(@NonNull String blikCode) {
-        mBlikCode = blikCode;
-    }
-}
+data class BlikInputData(
+    var blikCode: String = "",
+) : InputData

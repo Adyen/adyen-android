@@ -5,93 +5,74 @@
  *
  * Created by josephj on 4/12/2020.
  */
+package com.adyen.checkout.blik
 
-package com.adyen.checkout.blik;
+import androidx.lifecycle.SavedStateHandle
+import com.adyen.checkout.components.PaymentComponentState
+import com.adyen.checkout.components.StoredPaymentComponentProvider
+import com.adyen.checkout.components.base.BasePaymentComponent
+import com.adyen.checkout.components.base.GenericPaymentMethodDelegate
+import com.adyen.checkout.components.base.GenericStoredPaymentComponentProvider
+import com.adyen.checkout.components.base.GenericStoredPaymentDelegate
+import com.adyen.checkout.components.model.payments.request.BlikPaymentMethod
+import com.adyen.checkout.components.model.payments.request.PaymentComponentData
+import com.adyen.checkout.components.util.PaymentMethodTypes
+import com.adyen.checkout.core.log.LogUtil.getTag
+import com.adyen.checkout.core.log.Logger
 
-import androidx.annotation.NonNull;
-import androidx.lifecycle.SavedStateHandle;
+class BlikComponent : BasePaymentComponent<BlikConfiguration, BlikInputData, BlikOutputData, PaymentComponentState<BlikPaymentMethod>> {
+    constructor(
+        savedStateHandle: SavedStateHandle,
+        paymentMethodDelegate: GenericPaymentMethodDelegate,
+        configuration: BlikConfiguration
+    ) : super(savedStateHandle, paymentMethodDelegate, configuration)
 
-import com.adyen.checkout.components.PaymentComponentState;
-import com.adyen.checkout.components.StoredPaymentComponentProvider;
-import com.adyen.checkout.components.base.BasePaymentComponent;
-import com.adyen.checkout.components.base.GenericPaymentMethodDelegate;
-import com.adyen.checkout.components.base.GenericStoredPaymentComponentProvider;
-import com.adyen.checkout.components.base.GenericStoredPaymentDelegate;
-import com.adyen.checkout.components.model.payments.request.BlikPaymentMethod;
-import com.adyen.checkout.components.model.payments.request.PaymentComponentData;
-import com.adyen.checkout.components.util.PaymentMethodTypes;
-import com.adyen.checkout.core.log.LogUtil;
-import com.adyen.checkout.core.log.Logger;
-
-public class BlikComponent extends BasePaymentComponent<BlikConfiguration, BlikInputData, BlikOutputData, PaymentComponentState<BlikPaymentMethod>> {
-    private static final String TAG = LogUtil.getTag();
-
-    public static final StoredPaymentComponentProvider<BlikComponent, BlikConfiguration> PROVIDER =
-            new GenericStoredPaymentComponentProvider<>(BlikComponent.class);
-
-    private static final String[] PAYMENT_METHOD_TYPES = {PaymentMethodTypes.BLIK};
-
-    public BlikComponent(
-            @NonNull SavedStateHandle savedStateHandle,
-            @NonNull GenericPaymentMethodDelegate paymentMethodDelegate,
-            @NonNull BlikConfiguration configuration
-    ) {
-        super(savedStateHandle, paymentMethodDelegate, configuration);
-    }
-
-    public BlikComponent(
-            @NonNull SavedStateHandle savedStateHandle,
-            @NonNull GenericStoredPaymentDelegate paymentDelegate,
-            @NonNull BlikConfiguration configuration
-    ) {
-        super(savedStateHandle, paymentDelegate, configuration);
+    constructor(
+        savedStateHandle: SavedStateHandle,
+        paymentDelegate: GenericStoredPaymentDelegate,
+        configuration: BlikConfiguration
+    ) : super(savedStateHandle, paymentDelegate, configuration) {
         // TODO: 09/12/2020 move this logic to base component, maybe create the inputdata from the delegate?
-        inputDataChanged(new BlikInputData());
+        inputDataChanged(BlikInputData())
     }
 
-    @Override
-    public boolean requiresInput() {
-        return paymentMethodDelegate instanceof GenericPaymentMethodDelegate;
+    override fun requiresInput(): Boolean {
+        return paymentMethodDelegate is GenericPaymentMethodDelegate
     }
 
-    @NonNull
-    @Override
-    protected BlikOutputData onInputDataChanged(@NonNull BlikInputData inputData) {
-        Logger.v(TAG, "onInputDataChanged");
-        return new BlikOutputData(inputData.getBlikCode());
+    override fun onInputDataChanged(inputData: BlikInputData): BlikOutputData {
+        Logger.v(TAG, "onInputDataChanged")
+        return BlikOutputData(inputData.blikCode)
     }
 
-    @NonNull
-    @Override
-    protected PaymentComponentState<BlikPaymentMethod> createComponentState() {
+    override val supportedPaymentMethodTypes: Array<String>
+        get() = arrayOf(PaymentMethodTypes.BLIK)
 
-        final BlikOutputData blikOutputData = getOutputData();
-
-        final PaymentComponentData<BlikPaymentMethod> paymentComponentData = new PaymentComponentData<>();
-        final BlikPaymentMethod paymentMethod = new BlikPaymentMethod();
-        paymentMethod.setType(BlikPaymentMethod.PAYMENT_METHOD_TYPE);
-
+    override fun createComponentState(): PaymentComponentState<BlikPaymentMethod> {
+        val blikOutputData = outputData
+        val paymentComponentData = PaymentComponentData<BlikPaymentMethod>()
+        val paymentMethod = BlikPaymentMethod()
+        paymentMethod.type = BlikPaymentMethod.PAYMENT_METHOD_TYPE
         if (blikOutputData != null) {
-            paymentMethod.setBlikCode(blikOutputData.getBlikCodeField().getValue());
+            paymentMethod.blikCode = blikOutputData.blikCodeField.value
         }
-
-        if (paymentMethodDelegate instanceof GenericStoredPaymentDelegate) {
-            paymentMethod.setStoredPaymentMethodId(
-                    ((GenericStoredPaymentDelegate) paymentMethodDelegate).getStoredPaymentMethod().getId());
+        if (paymentMethodDelegate is GenericStoredPaymentDelegate) {
+            paymentMethod.storedPaymentMethodId = paymentMethodDelegate.storedPaymentMethod.id
         }
-
-        paymentComponentData.setPaymentMethod(paymentMethod);
-
-        final boolean isInputValid = paymentMethodDelegate instanceof GenericStoredPaymentDelegate
-                || blikOutputData != null
-                && blikOutputData.isValid();
-
-        return new PaymentComponentState<>(paymentComponentData, isInputValid, true);
+        paymentComponentData.paymentMethod = paymentMethod
+        val isInputValid = (
+            paymentMethodDelegate is GenericStoredPaymentDelegate ||
+                blikOutputData != null &&
+                blikOutputData.isValid
+            )
+        return PaymentComponentState(paymentComponentData, isInputValid, true)
     }
 
-    @NonNull
-    @Override
-    public String[] getSupportedPaymentMethodTypes() {
-        return PAYMENT_METHOD_TYPES;
+    companion object {
+        private val TAG = getTag()
+
+        @JvmField
+        val PROVIDER: StoredPaymentComponentProvider<BlikComponent, BlikConfiguration> =
+            GenericStoredPaymentComponentProvider(BlikComponent::class.java)
     }
 }

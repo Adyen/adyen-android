@@ -5,48 +5,38 @@
  *
  * Created by josephj on 4/12/2020.
  */
+package com.adyen.checkout.blik
 
-package com.adyen.checkout.blik;
+import com.adyen.checkout.components.base.OutputData
+import com.adyen.checkout.components.ui.FieldState
+import com.adyen.checkout.components.ui.Validation
+import com.adyen.checkout.core.log.LogUtil.getTag
+import com.adyen.checkout.core.log.Logger
 
-import androidx.annotation.NonNull;
+class BlikOutputData(blikCode: String) : OutputData {
 
-import com.adyen.checkout.components.base.OutputData;
-import com.adyen.checkout.components.ui.FieldState;
-import com.adyen.checkout.components.ui.Validation;
-import com.adyen.checkout.core.log.LogUtil;
-import com.adyen.checkout.core.log.Logger;
+    val blikCodeField: FieldState<String>
+    override val isValid: Boolean
+        get() = blikCodeField.validation.isValid()
 
-class BlikOutputData implements OutputData {
-    private static final String TAG = LogUtil.getTag();
-
-    private static final int BLIK_CODE_LENGTH = 6;
-
-    private final FieldState<String> mBlikCodeField;
-
-    BlikOutputData(@NonNull String blikCode) {
-        mBlikCodeField = new FieldState<>(blikCode, getBlikCodeValidation(blikCode));
-    }
-
-    @Override
-    public boolean isValid() {
-        return mBlikCodeField.getValidation().isValid();
-    }
-
-    @NonNull
-    public FieldState<String> getBlikCodeField() {
-        return mBlikCodeField;
-    }
-
-    private Validation getBlikCodeValidation(@NonNull String blikCode) {
+    private fun getBlikCodeValidation(blikCode: String): Validation {
         try {
-            Integer.parseInt(blikCode);
-        } catch (NumberFormatException e) {
-            Logger.e(TAG, "Failed to parse blik code to Integer", e);
-            return new Validation.Invalid(R.string.checkout_blik_code_not_valid);
+            blikCode.toInt()
+        } catch (e: NumberFormatException) {
+            Logger.e(TAG, "Failed to parse blik code to Integer", e)
+            return Validation.Invalid(R.string.checkout_blik_code_not_valid)
         }
-        if (blikCode.length() == BLIK_CODE_LENGTH) {
-            return Validation.Valid.INSTANCE;
-        }
-        return new Validation.Invalid(R.string.checkout_blik_code_not_valid);
+        return if (blikCode.length == BLIK_CODE_LENGTH) {
+            Validation.Valid
+        } else Validation.Invalid(R.string.checkout_blik_code_not_valid)
+    }
+
+    companion object {
+        private val TAG = getTag()
+        private const val BLIK_CODE_LENGTH = 6
+    }
+
+    init {
+        blikCodeField = FieldState(blikCode, getBlikCodeValidation(blikCode))
     }
 }
