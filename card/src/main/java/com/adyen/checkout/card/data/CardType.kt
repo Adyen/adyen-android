@@ -5,22 +5,14 @@
  *
  * Created by arman on 16/9/2019.
  */
+package com.adyen.checkout.card.data
 
-package com.adyen.checkout.card.data;
+import java.util.Collections
+import java.util.regex.Pattern
 
-import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
+@Suppress("unused", "SpellCheckingInspection")
+enum class CardType(var txVariant: String, private val mPattern: Pattern) {
 
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
-
-@SuppressWarnings("PMD.AvoidDuplicateLiterals")
-public enum CardType {
     AMERICAN_EXPRESS("amex", Pattern.compile("^3[47][0-9]{0,13}$")),
     ARGENCARD("argencard", Pattern.compile("^(50)(1)\\d*$")),
     BCMC("bcmc", Pattern.compile("^((6703)[0-9]{0,15}|(479658|606005)[0-9]{0,13})$")),
@@ -35,7 +27,9 @@ public enum CardType {
     ELO("elo", Pattern.compile(
             "^((((506699)|(506770)|(506771)|(506772)|(506773)|(506774)|(506775)|(506776)|(506777)|(506778)|(401178)|(438935)|(451416)|(457631)|"
                     + "(457632)|(504175)|(627780)|(636368)|(636297))[0-9]{0,10})|((50676)|(50675)|(50674)|(50673)|(50672)|(50671)|(50670))[0-9]{0,"
-                    + "11})$")),
+                    + "11})$"
+        )
+    ),
     FORBRUGSFORENINGEN("forbrugsforeningen", Pattern.compile("^(60)(0)\\d*$")),
     VISAALPHABANKBONUS("visaalphabankbonus", Pattern.compile("^(450903)[0-9]{0,10}$")),
     MCALPHABANKBONUS("mcalphabankbonus", Pattern.compile("^(510099)[0-9]{0,10}$")),
@@ -60,71 +54,52 @@ public enum CardType {
     // UNKNOWN type is used for txVariants that are valid but not accounted for in this enum
     UNKNOWN("", Pattern.compile("([1-9])+"));
 
-    private String mTxVariant;
-    private final Pattern mPattern;
+    companion object {
 
-    private static final Map<String, CardType> MAPPED_BY_NAME;
+        private val MAPPED_BY_NAME: Map<String, CardType>
 
-    static {
-        final Map<String, CardType> hashMap = new HashMap<>();
-        for (CardType type : CardType.values()) {
-            hashMap.put(type.mTxVariant, type);
-        }
-        MAPPED_BY_NAME = Collections.unmodifiableMap(hashMap);
-    }
-
-    /**
-     * Estimate all potential {@link CardType CardTypes} for a given card number.
-     *
-     * @param cardNumber The potential card number.
-     * @return All matching {@link CardType CardTypes} if the number was valid, otherwise an empty {@link List}.
-     */
-    @NonNull
-    public static List<CardType> estimate(@NonNull String cardNumber) {
-        final List<CardType> result = new ArrayList<>();
-
-        for (CardType type : CardType.values()) {
-            if (type.isEstimateFor(cardNumber)) {
-                result.add(type);
+        /**
+         * Estimate all potential [CardTypes][CardType] for a given card number.
+         *
+         * @param cardNumber The potential card number.
+         * @return All matching [CardTypes][CardType] if the number was valid, otherwise an empty [List].
+         */
+        fun estimate(cardNumber: String): List<CardType> {
+            val result: MutableList<CardType> = ArrayList()
+            for (type in values()) {
+                if (type.isEstimateFor(cardNumber)) {
+                    result.add(type)
+                }
             }
+            return result
         }
 
-        return result;
+        /**
+         * Get CardType from the brand name as it appears in the Checkout API.
+         * @see [](https://docs.adyen.com/api-explorer/./CheckoutService/v65/post/paymentMethods__resParam_storedPaymentMethods-brand)
+         */
+        fun getByBrandName(brand: String): CardType? {
+            return MAPPED_BY_NAME[brand]
+        }
+
+        init {
+            val hashMap: MutableMap<String, CardType> = HashMap()
+            for (type in values()) {
+                hashMap[type.txVariant] = type
+            }
+            MAPPED_BY_NAME = Collections.unmodifiableMap(hashMap)
+        }
     }
 
     /**
-     * Get CardType from the brand name as it appears in the Checkout API.
-     * @see  <a href="https://docs.adyen.com/api-explorer/#/CheckoutService/v65/post/paymentMethods__resParam_storedPaymentMethods-brand"></a>
-     */
-    @Nullable
-    public static CardType getByBrandName(@NonNull String brand) {
-        return MAPPED_BY_NAME.get(brand);
-    }
-
-    CardType(@NonNull String txVariant, @NonNull Pattern pattern) {
-        mTxVariant = txVariant;
-        mPattern = pattern;
-    }
-
-    @NonNull
-    public String getTxVariant() {
-        return mTxVariant;
-    }
-
-    public void setTxVariant(@NonNull String txVariant) {
-        mTxVariant = txVariant;
-    }
-
-    /**
-     * Returns whether a given card number is estimated for this {@link CardType}.
+     * Returns whether a given card number is estimated for this [CardType].
      *
      * @param cardNumber The card number to make an estimation for.
-     * @return Whether the {@link CardType} is an estimation for a given card number.
+     * @return Whether the [CardType] is an estimation for a given card number.
      */
-    public boolean isEstimateFor(@NonNull String cardNumber) {
-        final String normalizedCardNumber = cardNumber.replaceAll("\\s", "");
-        final Matcher matcher = mPattern.matcher(normalizedCardNumber);
-
-        return matcher.matches() || matcher.hitEnd();
+    fun isEstimateFor(cardNumber: String): Boolean {
+        val normalizedCardNumber = cardNumber.replace("\\s".toRegex(), "")
+        val matcher = mPattern.matcher(normalizedCardNumber)
+        return matcher.matches() || matcher.hitEnd()
     }
 }

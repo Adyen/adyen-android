@@ -118,8 +118,6 @@ object CardValidationUtils {
     private fun dateExists(expiryDate: ExpiryDate): Boolean {
         return (
             expiryDate !== ExpiryDate.EMPTY_DATE &&
-                expiryDate.expiryMonth != ExpiryDate.EMPTY_VALUE &&
-                expiryDate.expiryYear != ExpiryDate.EMPTY_VALUE &&
                 isValidMonth(expiryDate.expiryMonth) &&
                 expiryDate.expiryYear > 0
             )

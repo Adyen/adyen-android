@@ -111,7 +111,7 @@ class BcmcComponent(
         val encryptedCard = try {
             unencryptedCardBuilder.setNumber(outputData.cardNumberField.value)
             val expiryDateResult = outputData.expiryDateField.value
-            if (expiryDateResult.expiryYear != ExpiryDate.EMPTY_VALUE && expiryDateResult.expiryMonth != ExpiryDate.EMPTY_VALUE) {
+            if (expiryDateResult != ExpiryDate.EMPTY_DATE) {
                 unencryptedCardBuilder.setExpiryMonth(expiryDateResult.expiryMonth.toString())
                 unencryptedCardBuilder.setExpiryYear(expiryDateResult.expiryYear.toString())
             }

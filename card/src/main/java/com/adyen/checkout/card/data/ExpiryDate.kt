@@ -5,33 +5,18 @@
  *
  * Created by arman on 16/9/2019.
  */
+package com.adyen.checkout.card.data
 
-package com.adyen.checkout.card.data;
+data class ExpiryDate(
+    val expiryMonth: Int,
+    val expiryYear: Int,
+) {
 
-public class ExpiryDate {
-    public static final int EMPTY_VALUE = 0;
-    public static final ExpiryDate EMPTY_DATE = new ExpiryDate(EMPTY_VALUE, EMPTY_VALUE, false);
-    public static final ExpiryDate INVALID_DATE = new ExpiryDate(EMPTY_VALUE, EMPTY_VALUE, true);
-
-    private final int mExpiryMonth;
-    private final int mExpiryYear;
-    private final boolean mHasInput;
-
-    public ExpiryDate(int expiryMonth, int expiryYear, boolean hasInput) {
-        mExpiryMonth = expiryMonth;
-        mExpiryYear = expiryYear;
-        mHasInput = hasInput;
-    }
-
-    public int getExpiryMonth() {
-        return mExpiryMonth;
-    }
-
-    public int getExpiryYear() {
-        return mExpiryYear;
-    }
-
-    public boolean hasInput() {
-        return mHasInput;
+    companion object {
+        const val EMPTY_VALUE = 0
+        @JvmField
+        val EMPTY_DATE = ExpiryDate(0, 0)
+        @JvmField
+        val INVALID_DATE = ExpiryDate(-1, -1)
     }
 }

@@ -150,7 +150,7 @@ class StoredCardDelegate(
         storedCardInputData.cardNumber = storedPaymentMethod.lastFour.orEmpty()
 
         try {
-            val storedDate = ExpiryDate(storedPaymentMethod.expiryMonth.orEmpty().toInt(), storedPaymentMethod.expiryYear.orEmpty().toInt(), true)
+            val storedDate = ExpiryDate(storedPaymentMethod.expiryMonth.orEmpty().toInt(), storedPaymentMethod.expiryYear.orEmpty().toInt())
             storedCardInputData.expiryDate = storedDate
         } catch (e: NumberFormatException) {
             Logger.e(TAG, "Failed to parse stored Date", e)
