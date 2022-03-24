@@ -21,6 +21,7 @@ import androidx.annotation.StringRes
 import androidx.core.view.isVisible
 import androidx.lifecycle.LifecycleOwner
 import androidx.lifecycle.Observer
+import com.adyen.checkout.card.api.model.AddressItem
 import com.adyen.checkout.card.data.CardType
 import com.adyen.checkout.card.data.DetectedCardType
 import com.adyen.checkout.card.data.ExpiryDate
@@ -143,6 +144,7 @@ class CardView @JvmOverloads constructor(
             handleCvcUIState(cardOutputData.cvcUIState)
             handleExpiryDateUIState(cardOutputData.expiryDateUIState)
             updateInstallments(cardOutputData)
+            updateCountries(cardOutputData.countryOptions)
             setSupportedCardsList(cardOutputData.supportedCardTypes)
         }
         if (component.isStoredPaymentMethod() && component.requiresInput()) {
@@ -484,6 +486,17 @@ class CardView @JvmOverloads constructor(
                 binding.textInputLayoutPostalCode.error = localizedContext.getString(postalCodeValidation.reason)
             }
         }
+    }
+
+    private fun initAddressFormInput() {
+        binding.addressFormInput.setOnAddressChangeListener {
+            component.inputData.address = it
+            notifyInputDataChanged()
+        }
+    }
+
+    private fun updateCountries(countryOptions: List<AddressItem>) {
+        binding.addressFormInput.initialize(countryOptions)
     }
 
     private fun updateInstallments(cardOutputData: CardOutputData) {

@@ -8,7 +8,6 @@
 
 package com.adyen.checkout.card
 
-import com.adyen.checkout.card.api.model.AddressItem
 import com.adyen.checkout.card.api.model.Brand
 import com.adyen.checkout.card.data.CardType
 import com.adyen.checkout.card.data.DetectedCardType
@@ -153,9 +152,9 @@ class StoredCardDelegate(
         return emptyList()
     }
 
-    override fun getAddressData(): List<AddressItem> {
-        return emptyList()
-    }
+    fun getStoredCardInputData(): CardInputData {
+        val storedCardInputData = CardInputData()
+        storedCardInputData.cardNumber = storedPaymentMethod.lastFour.orEmpty()
 
     override fun getSupportedCardTypes(): List<CardType> = emptyList()
 

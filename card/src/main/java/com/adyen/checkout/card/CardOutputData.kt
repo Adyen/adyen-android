@@ -8,6 +8,7 @@
 package com.adyen.checkout.card
 
 import com.adyen.checkout.card.data.CardType
+import com.adyen.checkout.card.api.model.AddressItem
 import com.adyen.checkout.card.data.DetectedCardType
 import com.adyen.checkout.card.data.ExpiryDate
 import com.adyen.checkout.components.base.OutputData
@@ -31,6 +32,7 @@ data class CardOutputData(
     val isKCPAuthRequired: Boolean,
     val isPostalCodeRequired: Boolean,
     val installmentOptions: List<InstallmentModel>,
+    val countryOptions: List<AddressItem>,
     val supportedCardTypes: List<CardType>,
 ) : OutputData {
 

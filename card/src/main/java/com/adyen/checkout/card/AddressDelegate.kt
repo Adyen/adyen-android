@@ -28,9 +28,6 @@ class AddressDelegate(
     private val _statesFlow: MutableSharedFlow<List<AddressItem>> = MutableSharedFlow(0, 1, BufferOverflow.DROP_OLDEST)
     internal val statesFlow: Flow<List<AddressItem>> = _statesFlow
 
-    private val _countriesFlow: MutableSharedFlow<List<AddressItem>> = MutableSharedFlow(0, 1, BufferOverflow.DROP_OLDEST)
-    internal val countriesFlow: Flow<List<AddressItem>> = _countriesFlow
-
     private val cache: LruCache<String, List<AddressItem>> = LruCache<String, List<AddressItem>>(20)
 
     fun getStateList(configuration: Configuration, countryCode: String, coroutineScope: CoroutineScope): List<AddressItem> {
@@ -54,20 +51,22 @@ class AddressDelegate(
         return cache[url].orEmpty()
     }
 
-    fun getCountryList(configuration: Configuration, coroutineScope: CoroutineScope): List<AddressItem> {
+    suspend fun getCountryList(configuration: Configuration): List<AddressItem> {
         val url = makeUrl(
             environment = configuration.environment,
             dataType = AddressDataType.COUNRTY,
             localeString = configuration.shopperLocale.toLanguageTag()
         )
-        coroutineScope.launch {
+        return cache[url] ?: run {
             val countries = addressRepository.getAddressData(
                 environment = configuration.environment,
                 dataType = AddressDataType.COUNRTY,
                 localeString = configuration.shopperLocale.toLanguageTag())
-            _countriesFlow.tryEmit(countries)
+            if (countries.isNotEmpty()) {
+                cache.put(url, countries)
+            }
+            countries
         }
-        return cache[url].orEmpty()
     }
 
 }

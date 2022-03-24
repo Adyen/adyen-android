@@ -11,9 +11,15 @@ package com.adyen.checkout.card.ui
 import android.content.Context
 import android.util.AttributeSet
 import android.view.LayoutInflater
+import android.widget.AdapterView
+import android.widget.AutoCompleteTextView
 import android.widget.LinearLayout
 import com.adyen.checkout.card.AddressInputModel
+import com.adyen.checkout.card.InstallmentListAdapter
 import com.adyen.checkout.card.R
+import com.adyen.checkout.card.api.model.AddressItem
+import com.adyen.checkout.components.ui.adapter.SimpleTextListAdapter
+import com.adyen.checkout.components.ui.adapter.SimpleTextListItem
 import com.adyen.checkout.components.ui.view.AdyenTextInputEditText
 
 class AddressFormInput @JvmOverloads constructor(
@@ -22,21 +28,42 @@ class AddressFormInput @JvmOverloads constructor(
     defStyleAttr: Int = 0
 ): LinearLayout(context, attrs, defStyleAttr) {
 
-    private var listener: OnAddressChangeListener? = null
+    private var onAddressChangeListener: OnAddressChangeListener? = null
+
+    private var simpleTextListAdapter: SimpleTextListAdapter<SimpleTextListItem>? = null
+
     private val addressInput = AddressInputModel()
 
     init {
         orientation = VERTICAL
         layoutParams = LayoutParams(LayoutParams.MATCH_PARENT, LayoutParams.WRAP_CONTENT)
-        populateFormFields(AddressSpecification.US)
+        LayoutInflater.from(context).inflate(R.layout.address_form_input, this, true)
     }
 
     fun setOnAddressChangeListener(listener: OnAddressChangeListener) {
-        this.listener = listener
+        this.onAddressChangeListener = listener
     }
 
     fun removeOnAddressChangeListener() {
-        this.listener = null
+        this.onAddressChangeListener = null
+    }
+
+    fun initialize(countryList: List<AddressItem>) {
+        if (simpleTextListAdapter == null) {
+            simpleTextListAdapter = SimpleTextListAdapter(context)
+        }
+        simpleTextListAdapter!!.setItems(countryList.map {
+            SimpleTextListItem(
+                it.name.orEmpty()
+            )
+        })
+        rootView.findViewById<AutoCompleteTextView>(R.id.autoCompleteTextView_country).apply {
+            inputType = 0
+            setAdapter(simpleTextListAdapter)
+            onItemClickListener = AdapterView.OnItemClickListener { _, _, position, _ ->
+                populateFormFields(AddressSpecification.fromString(simpleTextListAdapter!!.getItem(position).text))
+            }
+        }
     }
 
     private fun populateFormFields(specification: AddressSpecification) {
@@ -48,49 +75,58 @@ class AddressFormInput @JvmOverloads constructor(
             AddressSpecification.DEFAULT -> R.layout.address_form_default
         }
 
-        LayoutInflater.from(context).inflate(R.layout.address_form_input, this, true)
         val formContainer = rootView.findViewById<LinearLayout>(R.id.linearLayout_formContainer)
+        formContainer.removeAllViews()
         LayoutInflater.from(context).inflate(layoutResId, formContainer, true)
+        initForm()
     }
 
     private fun initForm() {
-
         rootView.findViewById<AdyenTextInputEditText>(R.id.editText_street).setOnChangeListener {
             addressInput.street = it.toString()
-            listener?.onChanged(addressInput)
+            onAddressChangeListener?.onChanged(addressInput)
         }
 
-        rootView.findViewById<AdyenTextInputEditText>(R.id.editText_apartmentSuite).setOnChangeListener {
+        rootView.findViewById<AdyenTextInputEditText>(R.id.editText_apartmentSuite)?.setOnChangeListener {
             addressInput.houseNumberOrName = it.toString()
-            listener?.onChanged(addressInput)
+            onAddressChangeListener?.onChanged(addressInput)
         }
 
-        rootView.findViewById<AdyenTextInputEditText>(R.id.editText_postalCode).setOnChangeListener {
+        rootView.findViewById<AdyenTextInputEditText>(R.id.editText_postalCode)?.setOnChangeListener {
             addressInput.postalCode = it.toString()
-            listener?.onChanged(addressInput)
+            onAddressChangeListener?.onChanged(addressInput)
         }
 
-        rootView.findViewById<AdyenTextInputEditText>(R.id.editText_city).setOnChangeListener {
+        rootView.findViewById<AdyenTextInputEditText>(R.id.editText_city)?.setOnChangeListener {
             addressInput.city = it.toString()
-            listener?.onChanged(addressInput)
+            onAddressChangeListener?.onChanged(addressInput)
         }
 
-        rootView.findViewById<AdyenTextInputEditText>(R.id.editText_provinceTerritory).setOnChangeListener {
+        rootView.findViewById<AdyenTextInputEditText>(R.id.editText_provinceTerritory)?.setOnChangeListener {
             addressInput.stateOrProvince = it.toString()
-            listener?.onChanged(addressInput)
+            onAddressChangeListener?.onChanged(addressInput)
         }
 
-        rootView.findViewById<AdyenTextInputEditText>(R.id.autoCompleteTextView_state).setOnChangeListener {
-            addressInput.stateOrProvince = it.toString()
-            listener?.onChanged(addressInput)
-        }
+//        rootView.findViewById<AutoCompleteTextView>(R.id.autoCompleteTextView_state)?.apply {
+//            onItemClickListener = AdapterView.OnItemClickListener { _, _, position, _ ->
+//                addressInput.stateOrProvince = it.toString()
+//                onAddressChangeListener?.onChanged(addressInput)
+//            }
+//        }
     }
 
     enum class AddressSpecification {
-        BR, CA, GB, US, DEFAULT
+        BR, CA, GB, US, DEFAULT;
+
+        companion object {
+            fun fromString(countryCode: String): AddressSpecification {
+                return values().firstOrNull { it.name == countryCode } ?: DEFAULT
+            }
+        }
+
     }
 
-    interface OnAddressChangeListener {
+    fun interface OnAddressChangeListener {
         fun onChanged(address: AddressInputModel)
     }
 }
