@@ -201,10 +201,6 @@ class NewCardDelegate(
 
     override fun getSupportedCardTypes(): List<CardType> = cardConfiguration.supportedCardTypes
 
-    fun getCountryListFlow(): Flow<List<AddressItem>> {
-        return addressDelegate.countriesFlow
-    }
-
     suspend fun getCountryList(): List<AddressItem> {
         return addressDelegate.getCountryList(cardConfiguration)
     }

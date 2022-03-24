@@ -35,6 +35,7 @@ class AddressConnection(
         return parseOptAddressItemList(resultJson).orEmpty()
     }
 
+    // TODO make it more generic?
     private fun parseOptAddressItemList(jsonArray: JSONArray?): List<AddressItem>? {
         if (jsonArray == null) {
             return null
