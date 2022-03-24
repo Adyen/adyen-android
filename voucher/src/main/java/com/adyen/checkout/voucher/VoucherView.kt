@@ -46,9 +46,7 @@ class VoucherView @JvmOverloads constructor(context: Context, attrs: AttributeSe
         }
     }
 
-    override fun isConfirmationRequired(): Boolean {
-        return false
-    }
+    override val isConfirmationRequired: Boolean = false
 
     override fun highlightValidationErrors() {
         // no validation required

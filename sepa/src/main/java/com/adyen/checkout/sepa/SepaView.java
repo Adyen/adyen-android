@@ -112,7 +112,7 @@ public class SepaView
                 mIbanNumberInput.setError(null);
             } else if (ibanNumberValidation != null && !ibanNumberValidation.isValid()) {
                 final int errorReasonResId = ((Validation.Invalid) ibanNumberValidation).getReason();
-                mIbanNumberInput.setError(mLocalizedContext.getString(errorReasonResId));
+                mIbanNumberInput.setError(localizedContext.getString(errorReasonResId));
             }
         });
     }
@@ -155,7 +155,7 @@ public class SepaView
             errorFocused = true;
             mHolderNameInput.requestFocus();
             final int errorReasonResId = ((Validation.Invalid) ownerNameValidation).getReason();
-            mHolderNameInput.setError(mLocalizedContext.getString(errorReasonResId));
+            mHolderNameInput.setError(localizedContext.getString(errorReasonResId));
         }
 
         final Validation ibanNumberValidation = outputData.getIbanNumberField().getValidation();
@@ -164,7 +164,7 @@ public class SepaView
                 mIbanNumberInput.requestFocus();
             }
             final int errorReasonResId = ((Validation.Invalid) ibanNumberValidation).getReason();
-            mIbanNumberInput.setError(mLocalizedContext.getString(errorReasonResId));
+            mIbanNumberInput.setError(localizedContext.getString(errorReasonResId));
         }
     }
 

@@ -70,9 +70,8 @@ class BacsDirectDebitInputView @JvmOverloads constructor(context: Context, attrs
         initConsentSwitches()
     }
 
-    override fun isConfirmationRequired(): Boolean {
-        return true
-    }
+    override val isConfirmationRequired: Boolean
+        get() = true
 
     override fun highlightValidationErrors() {
         component.outputData?.let {
@@ -81,7 +80,7 @@ class BacsDirectDebitInputView @JvmOverloads constructor(context: Context, attrs
             if (holderNameValidation is Validation.Invalid) {
                 isErrorFocused = true
                 binding.editTextHolderName.requestFocus()
-                binding.textInputLayoutHolderName.error = mLocalizedContext.getString(holderNameValidation.reason)
+                binding.textInputLayoutHolderName.error = localizedContext.getString(holderNameValidation.reason)
             }
             val bankAccountNumberValidation = it.bankAccountNumberState.validation
             if (bankAccountNumberValidation is Validation.Invalid) {
@@ -89,7 +88,7 @@ class BacsDirectDebitInputView @JvmOverloads constructor(context: Context, attrs
                     isErrorFocused = true
                     binding.editTextBankAccountNumber.requestFocus()
                 }
-                binding.textInputLayoutBankAccountNumber.error = mLocalizedContext.getString(bankAccountNumberValidation.reason)
+                binding.textInputLayoutBankAccountNumber.error = localizedContext.getString(bankAccountNumberValidation.reason)
             }
             val sortCodeValidation = it.sortCodeState.validation
             if (sortCodeValidation is Validation.Invalid) {
@@ -97,14 +96,14 @@ class BacsDirectDebitInputView @JvmOverloads constructor(context: Context, attrs
                     isErrorFocused = true
                     binding.editTextSortCode.requestFocus()
                 }
-                binding.textInputLayoutSortCode.error = mLocalizedContext.getString(sortCodeValidation.reason)
+                binding.textInputLayoutSortCode.error = localizedContext.getString(sortCodeValidation.reason)
             }
             val shopperEmailValidation = it.shopperEmailState.validation
             if (shopperEmailValidation is Validation.Invalid) {
                 if (!isErrorFocused) {
                     binding.editTextShopperEmail.requestFocus()
                 }
-                binding.textInputLayoutShopperEmail.error = mLocalizedContext.getString(shopperEmailValidation.reason)
+                binding.textInputLayoutShopperEmail.error = localizedContext.getString(shopperEmailValidation.reason)
             }
         }
     }
@@ -159,7 +158,7 @@ class BacsDirectDebitInputView @JvmOverloads constructor(context: Context, attrs
             if (hasFocus) {
                 binding.textInputLayoutHolderName.error = null
             } else if (holderNameValidation != null && holderNameValidation is Validation.Invalid) {
-                binding.textInputLayoutHolderName.error = mLocalizedContext.getString(holderNameValidation.reason)
+                binding.textInputLayoutHolderName.error = localizedContext.getString(holderNameValidation.reason)
             }
         }
     }
@@ -176,7 +175,7 @@ class BacsDirectDebitInputView @JvmOverloads constructor(context: Context, attrs
             if (hasFocus) {
                 binding.textInputLayoutBankAccountNumber.error = null
             } else if (bankAccountNumberValidation != null && bankAccountNumberValidation is Validation.Invalid) {
-                binding.textInputLayoutBankAccountNumber.error = mLocalizedContext.getString(bankAccountNumberValidation.reason)
+                binding.textInputLayoutBankAccountNumber.error = localizedContext.getString(bankAccountNumberValidation.reason)
             }
         }
     }
@@ -193,7 +192,7 @@ class BacsDirectDebitInputView @JvmOverloads constructor(context: Context, attrs
             if (hasFocus) {
                 binding.textInputLayoutSortCode.error = null
             } else if (sortCodeValidation != null && sortCodeValidation is Validation.Invalid) {
-                binding.textInputLayoutSortCode.error = mLocalizedContext.getString(sortCodeValidation.reason)
+                binding.textInputLayoutSortCode.error = localizedContext.getString(sortCodeValidation.reason)
             }
         }
     }
@@ -210,7 +209,7 @@ class BacsDirectDebitInputView @JvmOverloads constructor(context: Context, attrs
             if (hasFocus) {
                 binding.textInputLayoutShopperEmail.error = null
             } else if (shopperEmailValidation != null && shopperEmailValidation is Validation.Invalid) {
-                binding.textInputLayoutShopperEmail.error = mLocalizedContext.getString(shopperEmailValidation.reason)
+                binding.textInputLayoutShopperEmail.error = localizedContext.getString(shopperEmailValidation.reason)
             }
         }
     }

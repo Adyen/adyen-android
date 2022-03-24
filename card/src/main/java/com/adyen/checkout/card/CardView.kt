@@ -161,9 +161,8 @@ class CardView @JvmOverloads constructor(context: Context, attrs: AttributeSet? 
         component.observeOutputData(lifecycleOwner, this)
     }
 
-    override fun isConfirmationRequired(): Boolean {
-        return true
-    }
+    override val isConfirmationRequired: Boolean
+        get() = true
 
     override fun highlightValidationErrors() {
         component.outputData?.let {
@@ -180,7 +179,7 @@ class CardView @JvmOverloads constructor(context: Context, attrs: AttributeSet? 
                     isErrorFocused = true
                     binding.textInputLayoutExpiryDate.requestFocus()
                 }
-                binding.textInputLayoutExpiryDate.error = mLocalizedContext.getString(expiryDateValidation.reason)
+                binding.textInputLayoutExpiryDate.error = localizedContext.getString(expiryDateValidation.reason)
             }
             val securityCodeValidation = it.securityCodeState.validation
             if (securityCodeValidation is Validation.Invalid) {
@@ -188,21 +187,21 @@ class CardView @JvmOverloads constructor(context: Context, attrs: AttributeSet? 
                     isErrorFocused = true
                     binding.textInputLayoutSecurityCode.requestFocus()
                 }
-                binding.textInputLayoutSecurityCode.error = mLocalizedContext.getString(securityCodeValidation.reason)
+                binding.textInputLayoutSecurityCode.error = localizedContext.getString(securityCodeValidation.reason)
             }
             val holderNameValidation = it.holderNameState.validation
             if (binding.textInputLayoutCardHolder.isVisible && holderNameValidation is Validation.Invalid) {
                 if (!isErrorFocused) {
                     binding.textInputLayoutCardHolder.requestFocus()
                 }
-                binding.textInputLayoutCardHolder.error = mLocalizedContext.getString(holderNameValidation.reason)
+                binding.textInputLayoutCardHolder.error = localizedContext.getString(holderNameValidation.reason)
             }
             val postalCodeValidation = it.postalCodeState.validation
             if (binding.textInputLayoutPostalCode.isVisible && postalCodeValidation is Validation.Invalid) {
                 if (!isErrorFocused) {
                     binding.textInputLayoutPostalCode.requestFocus()
                 }
-                binding.textInputLayoutPostalCode.error = mLocalizedContext.getString(postalCodeValidation.reason)
+                binding.textInputLayoutPostalCode.error = localizedContext.getString(postalCodeValidation.reason)
             }
         }
     }
@@ -215,7 +214,7 @@ class CardView @JvmOverloads constructor(context: Context, attrs: AttributeSet? 
         val detectedCardTypes = cardOutputData.detectedCardTypes
         if (detectedCardTypes.isEmpty()) {
             binding.cardBrandLogoImageViewPrimary.apply {
-                setStrokeWidth(0f)
+                strokeWidth = 0f
                 setImageResource(R.drawable.ic_card)
                 alpha = 1f
             }
@@ -223,7 +222,7 @@ class CardView @JvmOverloads constructor(context: Context, attrs: AttributeSet? 
             binding.editTextCardNumber.setAmexCardFormat(false)
             resetBrandSelectionInput()
         } else {
-            binding.cardBrandLogoImageViewPrimary.setStrokeWidth(RoundCornerImageView.DEFAULT_STROKE_WIDTH)
+            binding.cardBrandLogoImageViewPrimary.strokeWidth = RoundCornerImageView.DEFAULT_STROKE_WIDTH
             mImageLoader?.load(detectedCardTypes[0].cardType.txVariant, binding.cardBrandLogoImageViewPrimary, 0, R.drawable.ic_card)
             setDualBrandedCardImages(detectedCardTypes, cardOutputData.cardNumberState.validation)
 
@@ -238,10 +237,10 @@ class CardView @JvmOverloads constructor(context: Context, attrs: AttributeSet? 
         if (validation is Validation.Invalid && !cardNumberHasFocus) {
             setCardNumberError(validation.reason)
         } else {
-            detectedCardTypes.getOrNull(1)?.takeIf { it.isReliable }?.let {
+            detectedCardTypes.getOrNull(1)?.takeIf { it.isReliable }?.let { detectedCardType ->
                 binding.cardBrandLogoContainerSecondary.isVisible = true
-                binding.cardBrandLogoImageViewSecondary.setStrokeWidth(RoundCornerImageView.DEFAULT_STROKE_WIDTH)
-                mImageLoader?.load(it.cardType.txVariant, binding.cardBrandLogoImageViewSecondary, 0, R.drawable.ic_card)
+                binding.cardBrandLogoImageViewSecondary.strokeWidth = RoundCornerImageView.DEFAULT_STROKE_WIDTH
+                mImageLoader?.load(detectedCardType.cardType.txVariant, binding.cardBrandLogoImageViewSecondary, 0, R.drawable.ic_card)
                 initCardBrandLogoViews(detectedCardTypes.indexOfFirst { it.isSelected })
                 initBrandSelectionListeners()
             } ?: run {
@@ -295,7 +294,7 @@ class CardView @JvmOverloads constructor(context: Context, attrs: AttributeSet? 
             binding.cardBrandLogoContainerPrimary.isVisible = true
             binding.cardBrandLogoContainerSecondary.isVisible = shouldShowSecondaryLogo
         } else {
-            binding.textInputLayoutCardNumber.error = mLocalizedContext.getString(stringResId)
+            binding.textInputLayoutCardNumber.error = localizedContext.getString(stringResId)
             binding.cardBrandLogoContainerPrimary.isVisible = false
             binding.cardBrandLogoContainerSecondary.isVisible = false
         }
@@ -350,7 +349,7 @@ class CardView @JvmOverloads constructor(context: Context, attrs: AttributeSet? 
             if (hasFocus) {
                 binding.textInputLayoutExpiryDate.error = null
             } else if (expiryDateValidation != null && expiryDateValidation is Validation.Invalid) {
-                binding.textInputLayoutExpiryDate.error = mLocalizedContext.getString(expiryDateValidation.reason)
+                binding.textInputLayoutExpiryDate.error = localizedContext.getString(expiryDateValidation.reason)
             }
         }
     }
@@ -367,7 +366,7 @@ class CardView @JvmOverloads constructor(context: Context, attrs: AttributeSet? 
             if (hasFocus) {
                 binding.textInputLayoutSecurityCode.error = null
             } else if (securityCodeValidation != null && securityCodeValidation is Validation.Invalid) {
-                binding.textInputLayoutSecurityCode.error = mLocalizedContext.getString(securityCodeValidation.reason)
+                binding.textInputLayoutSecurityCode.error = localizedContext.getString(securityCodeValidation.reason)
             }
         }
     }
@@ -384,7 +383,7 @@ class CardView @JvmOverloads constructor(context: Context, attrs: AttributeSet? 
             if (hasFocus) {
                 binding.textInputLayoutCardHolder.error = null
             } else if (holderNameValidation != null && holderNameValidation is Validation.Invalid) {
-                binding.textInputLayoutCardHolder.error = mLocalizedContext.getString(holderNameValidation.reason)
+                binding.textInputLayoutCardHolder.error = localizedContext.getString(holderNameValidation.reason)
             }
         }
     }
@@ -401,7 +400,7 @@ class CardView @JvmOverloads constructor(context: Context, attrs: AttributeSet? 
             if (hasFocus) {
                 binding.textInputLayoutSocialSecurityNumber.error = null
             } else if (socialSecurityNumberValidation != null && socialSecurityNumberValidation is Validation.Invalid) {
-                binding.textInputLayoutSocialSecurityNumber.error = mLocalizedContext.getString(socialSecurityNumberValidation.reason)
+                binding.textInputLayoutSocialSecurityNumber.error = localizedContext.getString(socialSecurityNumberValidation.reason)
             }
         }
     }
@@ -418,7 +417,7 @@ class CardView @JvmOverloads constructor(context: Context, attrs: AttributeSet? 
             notifyInputDataChanged()
             binding.textInputLayoutKcpBirthDateOrTaxNumber.error = null
             val hintResourceId = component.getKcpBirthDateOrTaxNumberHint(it.toString())
-            binding.textInputLayoutKcpBirthDateOrTaxNumber.hint = mLocalizedContext.getString(hintResourceId)
+            binding.textInputLayoutKcpBirthDateOrTaxNumber.hint = localizedContext.getString(hintResourceId)
         }
 
         kcpBirthDateOrRegistrationNumberEditText?.onFocusChangeListener = OnFocusChangeListener { _, hasFocus ->
@@ -426,7 +425,7 @@ class CardView @JvmOverloads constructor(context: Context, attrs: AttributeSet? 
             if (hasFocus) {
                 binding.textInputLayoutKcpBirthDateOrTaxNumber.error = null
             } else if (kcpBirthDateOrTaxNumberValidation != null && kcpBirthDateOrTaxNumberValidation is Validation.Invalid) {
-                binding.textInputLayoutKcpBirthDateOrTaxNumber.error = mLocalizedContext.getString(kcpBirthDateOrTaxNumberValidation.reason)
+                binding.textInputLayoutKcpBirthDateOrTaxNumber.error = localizedContext.getString(kcpBirthDateOrTaxNumberValidation.reason)
             }
         }
     }
@@ -444,7 +443,7 @@ class CardView @JvmOverloads constructor(context: Context, attrs: AttributeSet? 
             if (hasFocus) {
                 binding.textInputLayoutKcpCardPassword.error = null
             } else if (kcpBirthDateOrRegistrationNumberValidation != null && kcpBirthDateOrRegistrationNumberValidation is Validation.Invalid) {
-                binding.textInputLayoutKcpCardPassword.error = mLocalizedContext.getString(kcpBirthDateOrRegistrationNumberValidation.reason)
+                binding.textInputLayoutKcpCardPassword.error = localizedContext.getString(kcpBirthDateOrRegistrationNumberValidation.reason)
             }
         }
     }
@@ -462,7 +461,7 @@ class CardView @JvmOverloads constructor(context: Context, attrs: AttributeSet? 
             if (hasFocus) {
                 binding.textInputLayoutPostalCode.error = null
             } else if (postalCodeValidation != null && postalCodeValidation is Validation.Invalid) {
-                binding.textInputLayoutPostalCode.error = mLocalizedContext.getString(postalCodeValidation.reason)
+                binding.textInputLayoutPostalCode.error = localizedContext.getString(postalCodeValidation.reason)
             }
         }
     }
@@ -555,7 +554,7 @@ class CardView @JvmOverloads constructor(context: Context, attrs: AttributeSet? 
     }
 
     private fun setStoredCardInterface(storedCardInput: CardInputData) {
-        binding.editTextCardNumber.setText(mLocalizedContext.getString(R.string.card_number_4digit, storedCardInput.cardNumber))
+        binding.editTextCardNumber.setText(localizedContext.getString(R.string.card_number_4digit, storedCardInput.cardNumber))
         binding.editTextCardNumber.isEnabled = false
         binding.editTextExpiryDate.setDate(storedCardInput.expiryDate)
         binding.editTextExpiryDate.isEnabled = false

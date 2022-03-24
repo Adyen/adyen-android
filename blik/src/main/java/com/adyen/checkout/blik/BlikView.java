@@ -93,7 +93,7 @@ public class BlikView
                 mBlikCodeInput.setError(null);
             } else if (blikCodeValidation != null && !blikCodeValidation.isValid()) {
                 final int errorReasonResId = ((Validation.Invalid) blikCodeValidation).getReason();
-                mBlikCodeInput.setError(mLocalizedContext.getString(errorReasonResId));
+                mBlikCodeInput.setError(localizedContext.getString(errorReasonResId));
             }
         });
     }
@@ -134,7 +134,7 @@ public class BlikView
         if (!blikCodeValidation.isValid()) {
             mBlikCodeInput.requestFocus();
             final int errorReasonResId = ((Validation.Invalid) blikCodeValidation).getReason();
-            mBlikCodeInput.setError(mLocalizedContext.getString(errorReasonResId));
+            mBlikCodeInput.setError(localizedContext.getString(errorReasonResId));
         }
     }
 

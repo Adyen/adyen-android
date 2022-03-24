@@ -98,7 +98,7 @@ class MBWayView :
             if (hasFocus) {
                 mMobileNumberInput.error = null
             } else if (outputData != null && mobilePhoneNumberValidation is Validation.Invalid) {
-                mMobileNumberInput.error = mLocalizedContext.getString(mobilePhoneNumberValidation.reason)
+                mMobileNumberInput.error = localizedContext.getString(mobilePhoneNumberValidation.reason)
             }
         }
         val countries = getCountries()
@@ -149,15 +149,14 @@ class MBWayView :
         Logger.v(TAG, "MBWayOutputData changed")
     }
 
-    override fun isConfirmationRequired(): Boolean {
-        return true
-    }
+    override val isConfirmationRequired: Boolean
+        get() = true
 
     override fun highlightValidationErrors() {
         Logger.d(TAG, "highlightValidationErrors")
         val mobilePhoneNumberValidation = component.outputData?.mobilePhoneNumberFieldState?.validation
         if (mobilePhoneNumberValidation is Validation.Invalid) {
-            mMobileNumberInput?.error = mLocalizedContext.getString(mobilePhoneNumberValidation.reason)
+            mMobileNumberInput?.error = localizedContext.getString(mobilePhoneNumberValidation.reason)
         }
     }
 

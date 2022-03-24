@@ -39,9 +39,8 @@ class GiftCardNumberInput constructor(
         keyListener = DigitsKeyListener.getInstance(SUPPORTED_DIGITS + DIGIT_SEPARATOR)
     }
 
-    override fun getRawValue(): String {
-        return GiftCardNumberUtils.getRawValue(text.toString())
-    }
+    override val rawValue: String
+        get() = GiftCardNumberUtils.getRawValue(text.toString())
 
     override fun afterTextChanged(editable: Editable) {
         val original = editable.toString()
