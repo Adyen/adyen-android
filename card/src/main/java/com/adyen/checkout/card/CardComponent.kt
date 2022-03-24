@@ -82,7 +82,35 @@ class CardComponent private constructor(
                             detectedCardTypes = it,
                             selectedCardIndex = inputData.selectedCardIndex,
                             selectedInstallmentOption = null,
-                            countryOptions = countryOptions
+                            countryOptions = countryOptions,
+                            stateOptions = stateOptions
+                        )
+                        notifyStateChanged(newOutputData)
+                    }
+                }
+                .launchIn(viewModelScope)
+
+            cardDelegate.stateListFlow
+                .onEach {
+                    Logger.d(TAG, "New states emitted")
+                    Logger.d(TAG, "States: $it")
+                    with(outputData) {
+                        this ?: return@with
+                        val newOutputData = makeOutputData(
+                            cardNumber = cardNumberState.value,
+                            expiryDate = expiryDateState.value,
+                            securityCode = securityCodeState.value,
+                            holderName = holderNameState.value,
+                            socialSecurityNumber = socialSecurityNumberState.value,
+                            kcpBirthDateOrTaxNumber = kcpBirthDateOrTaxNumberState.value,
+                            kcpCardPassword = kcpCardPasswordState.value,
+                            postalCode = postalCodeState.value,
+                            isStorePaymentSelected = isStoredPaymentMethodEnable,
+                            detectedCardTypes = detectedCardTypes,
+                            selectedCardIndex = 0,
+                            selectedInstallmentOption = null,
+                            countryOptions = countryOptions,
+                            stateOptions = it
                         )
                         notifyStateChanged(newOutputData)
                     }
@@ -106,7 +134,8 @@ class CardComponent private constructor(
                         detectedCardTypes = this.detectedCardTypes,
                         selectedCardIndex = 0,
                         selectedInstallmentOption = null,
-                        countryOptions = countries
+                        countryOptions = countries,
+                        stateOptions = stateOptions
                     )
                     notifyStateChanged(newOutputData)
                 }
@@ -166,9 +195,9 @@ class CardComponent private constructor(
         Logger.v(TAG, "onInputDataChanged")
 
         val detectedCardTypes = cardDelegate.detectCardType(inputData.cardNumber, publicKey, viewModelScope)
-        val countryOptions = mutableListOf<AddressItem>()
-        if (cardDelegate is NewCardDelegate) viewModelScope.launch {
-            countryOptions.addAll(cardDelegate.getCountryList())
+        val stateOptions = mutableListOf<AddressItem>()
+        if (cardDelegate is NewCardDelegate) {
+            cardDelegate.requestStateList(inputData.address.country, viewModelScope)
         }
 
         return makeOutputData(
@@ -184,7 +213,8 @@ class CardComponent private constructor(
             detectedCardTypes = detectedCardTypes,
             selectedCardIndex = inputData.selectedCardIndex,
             selectedInstallmentOption = inputData.installmentOption,
-            countryOptions = countryOptions
+            countryOptions = outputData?.countryOptions.orEmpty(),
+            stateOptions = stateOptions
         )
     }
 
@@ -202,7 +232,8 @@ class CardComponent private constructor(
         detectedCardTypes: List<DetectedCardType>,
         selectedCardIndex: Int,
         selectedInstallmentOption: InstallmentModel?,
-        countryOptions: List<AddressItem>
+        countryOptions: List<AddressItem>,
+        stateOptions: List<AddressItem>
     ): CardOutputData {
 
         val isReliable = detectedCardTypes.any { it.isReliable }
@@ -245,6 +276,7 @@ class CardComponent private constructor(
                 isReliable
             ),
             countryOptions,
+            stateOptions,
             cardDelegate.getSupportedCardTypes(),
         )
     }

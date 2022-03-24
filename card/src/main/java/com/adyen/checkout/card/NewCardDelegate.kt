@@ -15,6 +15,7 @@ import com.adyen.checkout.card.data.DetectedCardType
 import com.adyen.checkout.card.data.ExpiryDate
 import com.adyen.checkout.card.repository.AddressRepository
 import com.adyen.checkout.card.repository.BinLookupRepository
+import com.adyen.checkout.card.ui.AddressFormInput
 import com.adyen.checkout.components.base.AddressVisibility
 import com.adyen.checkout.components.model.paymentmethods.PaymentMethod
 import com.adyen.checkout.components.repository.PublicKeyRepository
@@ -46,6 +47,8 @@ class NewCardDelegate(
     private val _binLookupFlow: MutableSharedFlow<List<DetectedCardType>> =
         MutableSharedFlow(0, 1, BufferOverflow.DROP_OLDEST)
     internal val binLookupFlow: Flow<List<DetectedCardType>> = _binLookupFlow
+
+    internal val stateListFlow: Flow<List<AddressItem>> = addressDelegate.statesFlow
 
     override fun getPaymentMethodType(): String {
         return paymentMethod.type ?: PaymentMethodTypes.UNKNOWN
@@ -203,6 +206,10 @@ class NewCardDelegate(
 
     suspend fun getCountryList(): List<AddressItem> {
         return addressDelegate.getCountryList(cardConfiguration)
+    }
+
+    fun requestStateList(countryCode: String?, coroutineScope: CoroutineScope) {
+        return addressDelegate.getStateList(cardConfiguration, countryCode, coroutineScope)
     }
 
     private fun detectCardLocally(cardNumber: String): List<DetectedCardType> {

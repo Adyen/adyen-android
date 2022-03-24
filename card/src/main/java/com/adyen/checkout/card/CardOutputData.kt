@@ -33,6 +33,7 @@ data class CardOutputData(
     val isPostalCodeRequired: Boolean,
     val installmentOptions: List<InstallmentModel>,
     val countryOptions: List<AddressItem>,
+    val stateOptions: List<AddressItem>,
     val supportedCardTypes: List<CardType>,
 ) : OutputData {
 

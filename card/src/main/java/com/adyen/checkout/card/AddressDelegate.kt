@@ -12,8 +12,8 @@ import android.util.LruCache
 import com.adyen.checkout.card.api.AddressDataType
 import com.adyen.checkout.card.api.makeUrl
 import com.adyen.checkout.card.api.model.AddressItem
-import com.adyen.checkout.card.data.DetectedCardType
 import com.adyen.checkout.card.repository.AddressRepository
+import com.adyen.checkout.card.ui.AddressFormInput
 import com.adyen.checkout.components.base.Configuration
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.channels.BufferOverflow
@@ -25,30 +25,42 @@ class AddressDelegate(
     private val addressRepository: AddressRepository
 ) {
 
-    private val _statesFlow: MutableSharedFlow<List<AddressItem>> = MutableSharedFlow(0, 1, BufferOverflow.DROP_OLDEST)
+    private val _statesFlow: MutableSharedFlow<List<AddressItem>> =
+        MutableSharedFlow(0, 1, BufferOverflow.DROP_OLDEST)
     internal val statesFlow: Flow<List<AddressItem>> = _statesFlow
 
     private val cache: LruCache<String, List<AddressItem>> = LruCache<String, List<AddressItem>>(20)
 
-    fun getStateList(configuration: Configuration, countryCode: String, coroutineScope: CoroutineScope): List<AddressItem> {
-        val url = makeUrl(
-            configuration.environment,
-            AddressDataType.STATE,
-            configuration.shopperLocale.toLanguageTag(),
-            countryCode
-        )
-        coroutineScope.launch {
-            val states = addressRepository.getAddressData(
-                environment = configuration.environment,
-                dataType = AddressDataType.STATE,
-                localeString = configuration.shopperLocale.toLanguageTag(),
-                countryCode = countryCode)
-            _statesFlow.tryEmit(states)
-            if (states.isNotEmpty()) {
-                cache.put(url, states)
+    fun getStateList(
+        configuration: Configuration,
+        countryCode: String?,
+        coroutineScope: CoroutineScope
+    ) {
+        val addressSpecification = AddressFormInput.AddressSpecification.fromString(countryCode)
+        val needsStates = addressSpecification == AddressFormInput.AddressSpecification.BR ||
+            addressSpecification == AddressFormInput.AddressSpecification.US
+        if (!countryCode.isNullOrEmpty() && needsStates) {
+            val url = makeUrl(
+                configuration.environment,
+                AddressDataType.STATE,
+                configuration.shopperLocale.toLanguageTag(),
+                countryCode
+            )
+            cache[url]?.let {
+                _statesFlow.tryEmit(it)
+            } ?: coroutineScope.launch {
+                val states = addressRepository.getAddressData(
+                    environment = configuration.environment,
+                    dataType = AddressDataType.STATE,
+                    localeString = configuration.shopperLocale.toLanguageTag(),
+                    countryCode = countryCode
+                )
+                if (states.isNotEmpty()) {
+                    cache.put(url, states)
+                }
+                _statesFlow.tryEmit(states)
             }
         }
-        return cache[url].orEmpty()
     }
 
     suspend fun getCountryList(configuration: Configuration): List<AddressItem> {
@@ -61,12 +73,12 @@ class AddressDelegate(
             val countries = addressRepository.getAddressData(
                 environment = configuration.environment,
                 dataType = AddressDataType.COUNRTY,
-                localeString = configuration.shopperLocale.toLanguageTag())
+                localeString = configuration.shopperLocale.toLanguageTag()
+            )
             if (countries.isNotEmpty()) {
                 cache.put(url, countries)
             }
             countries
         }
     }
-
 }
