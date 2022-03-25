@@ -40,9 +40,15 @@ import com.adyen.checkout.core.util.BuildUtils
  * CardView for [CardComponent].
  */
 @Suppress("TooManyFunctions")
-class CardView @JvmOverloads constructor(context: Context, attrs: AttributeSet? = null, defStyleAttr: Int = 0) :
-    AdyenLinearLayout<CardOutputData, CardConfiguration, CardComponentState, CardComponent>(context, attrs, defStyleAttr),
-    Observer<CardOutputData> {
+class CardView @JvmOverloads constructor(
+    context: Context,
+    attrs: AttributeSet? = null,
+    defStyleAttr: Int = 0
+) : AdyenLinearLayout<CardOutputData, CardConfiguration, CardComponentState, CardComponent>(
+    context,
+    attrs,
+    defStyleAttr
+), Observer<CardOutputData> {
 
     companion object {
         private const val UNSELECTED_BRAND_LOGO_ALPHA = 0.2f
@@ -53,9 +59,10 @@ class CardView @JvmOverloads constructor(context: Context, attrs: AttributeSet? 
 
     private val binding: CardViewBinding = CardViewBinding.inflate(LayoutInflater.from(context), this)
 
-    private val mCardInputData = CardInputData()
-    private var mImageLoader: ImageLoader? = null
+    private val cardInputData = CardInputData()
+    private var imageLoader: ImageLoader? = null
     private var installmentListAdapter: InstallmentListAdapter? = null
+    private var cardListAdapter: CardListAdapter? = null
 
     init {
         orientation = VERTICAL
@@ -88,7 +95,7 @@ class CardView @JvmOverloads constructor(context: Context, attrs: AttributeSet? 
         initPostalCodeInput()
 
         binding.switchStorePaymentMethod.setOnCheckedChangeListener { _, isChecked ->
-            mCardInputData.isStorePaymentSelected = isChecked
+            cardInputData.isStorePaymentSelected = isChecked
             notifyInputDataChanged()
         }
         if (component.isStoredPaymentMethod()) {
@@ -106,7 +113,8 @@ class CardView @JvmOverloads constructor(context: Context, attrs: AttributeSet? 
         var myAttrs = intArrayOf(android.R.attr.hint)
 
         // Card Number
-        var typedArray: TypedArray = localizedContext.obtainStyledAttributes(R.style.AdyenCheckout_Card_CardNumberInput, myAttrs)
+        var typedArray: TypedArray =
+            localizedContext.obtainStyledAttributes(R.style.AdyenCheckout_Card_CardNumberInput, myAttrs)
         binding.textInputLayoutCardNumber.hint = typedArray.getString(0)
         typedArray.recycle()
 
@@ -138,7 +146,7 @@ class CardView @JvmOverloads constructor(context: Context, attrs: AttributeSet? 
     }
 
     override fun onComponentAttached() {
-        mImageLoader = ImageLoader.getInstance(context, component.configuration.environment)
+        imageLoader = ImageLoader.getInstance(context, component.configuration.environment)
     }
 
     override fun onChanged(cardOutputData: CardOutputData?) {
@@ -155,6 +163,11 @@ class CardView @JvmOverloads constructor(context: Context, attrs: AttributeSet? 
         if (component.isStoredPaymentMethod() && component.requiresInput()) {
             binding.textInputLayoutSecurityCode.editText?.requestFocus()
         }
+
+        val filteredCards: List<CardType> = if (!component.isStoredPaymentMethod()) {
+            cardOutputData?.detectedCardTypes.orEmpty().map { it.cardType }
+        } else emptyList()
+        setFilteredCards(filteredCards)
     }
 
     override fun observeComponentChanges(lifecycleOwner: LifecycleOwner) {
@@ -207,7 +220,7 @@ class CardView @JvmOverloads constructor(context: Context, attrs: AttributeSet? 
     }
 
     private fun notifyInputDataChanged() {
-        component.inputDataChanged(mCardInputData)
+        component.inputDataChanged(cardInputData)
     }
 
     private fun onCardNumberValidated(cardOutputData: CardOutputData) {
@@ -223,7 +236,12 @@ class CardView @JvmOverloads constructor(context: Context, attrs: AttributeSet? 
             resetBrandSelectionInput()
         } else {
             binding.cardBrandLogoImageViewPrimary.strokeWidth = RoundCornerImageView.DEFAULT_STROKE_WIDTH
-            mImageLoader?.load(detectedCardTypes[0].cardType.txVariant, binding.cardBrandLogoImageViewPrimary, 0, R.drawable.ic_card)
+            imageLoader?.load(
+                detectedCardTypes[0].cardType.txVariant,
+                binding.cardBrandLogoImageViewPrimary,
+                0,
+                R.drawable.ic_card
+            )
             setDualBrandedCardImages(detectedCardTypes, cardOutputData.cardNumberState.validation)
 
             // TODO: 29/01/2021 get this logic from OutputData
@@ -240,7 +258,12 @@ class CardView @JvmOverloads constructor(context: Context, attrs: AttributeSet? 
             detectedCardTypes.getOrNull(1)?.takeIf { it.isReliable }?.let { detectedCardType ->
                 binding.cardBrandLogoContainerSecondary.isVisible = true
                 binding.cardBrandLogoImageViewSecondary.strokeWidth = RoundCornerImageView.DEFAULT_STROKE_WIDTH
-                mImageLoader?.load(detectedCardType.cardType.txVariant, binding.cardBrandLogoImageViewSecondary, 0, R.drawable.ic_card)
+                imageLoader?.load(
+                    detectedCardType.cardType.txVariant,
+                    binding.cardBrandLogoImageViewSecondary,
+                    0,
+                    R.drawable.ic_card
+                )
                 initCardBrandLogoViews(detectedCardTypes.indexOfFirst { it.isSelected })
                 initBrandSelectionListeners()
             } ?: run {
@@ -265,7 +288,7 @@ class CardView @JvmOverloads constructor(context: Context, attrs: AttributeSet? 
 
     private fun initCardNumberInput() {
         binding.editTextCardNumber.setOnChangeListener {
-            mCardInputData.cardNumber = binding.editTextCardNumber.rawValue
+            cardInputData.cardNumber = binding.editTextCardNumber.rawValue
             notifyInputDataChanged()
             setCardErrorState(true)
         }
@@ -310,13 +333,13 @@ class CardView @JvmOverloads constructor(context: Context, attrs: AttributeSet? 
 
     private fun initBrandSelectionListeners() {
         binding.cardBrandLogoContainerPrimary.setOnClickListener {
-            mCardInputData.selectedCardIndex = PRIMARY_BRAND_INDEX
+            cardInputData.selectedCardIndex = PRIMARY_BRAND_INDEX
             notifyInputDataChanged()
             selectPrimaryBrand()
         }
 
         binding.cardBrandLogoContainerSecondary.setOnClickListener {
-            mCardInputData.selectedCardIndex = SECONDARY_BRAND_INDEX
+            cardInputData.selectedCardIndex = SECONDARY_BRAND_INDEX
             notifyInputDataChanged()
             selectSecondaryBrand()
         }
@@ -340,7 +363,7 @@ class CardView @JvmOverloads constructor(context: Context, attrs: AttributeSet? 
     private fun initExpiryDateInput() {
         binding.editTextExpiryDate.setOnChangeListener {
             val date = binding.editTextExpiryDate.date
-            mCardInputData.expiryDate = date
+            cardInputData.expiryDate = date
             notifyInputDataChanged()
             binding.textInputLayoutExpiryDate.error = null
         }
@@ -357,7 +380,7 @@ class CardView @JvmOverloads constructor(context: Context, attrs: AttributeSet? 
     private fun initSecurityCodeInput() {
         val securityCodeEditText = binding.textInputLayoutSecurityCode.editText as? SecurityCodeInput
         securityCodeEditText?.setOnChangeListener { editable: Editable ->
-            mCardInputData.securityCode = editable.toString()
+            cardInputData.securityCode = editable.toString()
             notifyInputDataChanged()
             binding.textInputLayoutSecurityCode.error = null
         }
@@ -374,7 +397,7 @@ class CardView @JvmOverloads constructor(context: Context, attrs: AttributeSet? 
     private fun initHolderNameInput() {
         val cardHolderEditText = binding.textInputLayoutCardHolder.editText as? AdyenTextInputEditText
         cardHolderEditText?.setOnChangeListener { editable: Editable ->
-            mCardInputData.holderName = editable.toString()
+            cardInputData.holderName = editable.toString()
             notifyInputDataChanged()
             binding.textInputLayoutCardHolder.error = null
         }
@@ -389,9 +412,10 @@ class CardView @JvmOverloads constructor(context: Context, attrs: AttributeSet? 
     }
 
     private fun initSocialSecurityNumberInput() {
-        val socialSecurityNumberEditText = binding.textInputLayoutSocialSecurityNumber.editText as? AdyenTextInputEditText
+        val socialSecurityNumberEditText =
+            binding.textInputLayoutSocialSecurityNumber.editText as? AdyenTextInputEditText
         socialSecurityNumberEditText?.setOnChangeListener { editable ->
-            mCardInputData.socialSecurityNumber = editable.toString()
+            cardInputData.socialSecurityNumber = editable.toString()
             notifyInputDataChanged()
             binding.textInputLayoutSocialSecurityNumber.error = null
         }
@@ -400,7 +424,8 @@ class CardView @JvmOverloads constructor(context: Context, attrs: AttributeSet? 
             if (hasFocus) {
                 binding.textInputLayoutSocialSecurityNumber.error = null
             } else if (socialSecurityNumberValidation != null && socialSecurityNumberValidation is Validation.Invalid) {
-                binding.textInputLayoutSocialSecurityNumber.error = localizedContext.getString(socialSecurityNumberValidation.reason)
+                binding.textInputLayoutSocialSecurityNumber.error =
+                    localizedContext.getString(socialSecurityNumberValidation.reason)
             }
         }
     }
@@ -411,9 +436,10 @@ class CardView @JvmOverloads constructor(context: Context, attrs: AttributeSet? 
     }
 
     private fun initKcpBirthDateOrTaxNumberInput() {
-        val kcpBirthDateOrRegistrationNumberEditText = binding.textInputLayoutKcpBirthDateOrTaxNumber.editText as? AdyenTextInputEditText
+        val kcpBirthDateOrRegistrationNumberEditText =
+            binding.textInputLayoutKcpBirthDateOrTaxNumber.editText as? AdyenTextInputEditText
         kcpBirthDateOrRegistrationNumberEditText?.setOnChangeListener {
-            mCardInputData.kcpBirthDateOrTaxNumber = it.toString()
+            cardInputData.kcpBirthDateOrTaxNumber = it.toString()
             notifyInputDataChanged()
             binding.textInputLayoutKcpBirthDateOrTaxNumber.error = null
             val hintResourceId = component.getKcpBirthDateOrTaxNumberHint(it.toString())
@@ -425,7 +451,8 @@ class CardView @JvmOverloads constructor(context: Context, attrs: AttributeSet? 
             if (hasFocus) {
                 binding.textInputLayoutKcpBirthDateOrTaxNumber.error = null
             } else if (kcpBirthDateOrTaxNumberValidation != null && kcpBirthDateOrTaxNumberValidation is Validation.Invalid) {
-                binding.textInputLayoutKcpBirthDateOrTaxNumber.error = localizedContext.getString(kcpBirthDateOrTaxNumberValidation.reason)
+                binding.textInputLayoutKcpBirthDateOrTaxNumber.error =
+                    localizedContext.getString(kcpBirthDateOrTaxNumberValidation.reason)
             }
         }
     }
@@ -433,7 +460,7 @@ class CardView @JvmOverloads constructor(context: Context, attrs: AttributeSet? 
     private fun initKcpCardPasswordInput() {
         val kcpPasswordEditText = binding.textInputLayoutKcpCardPassword.editText as? AdyenTextInputEditText
         kcpPasswordEditText?.setOnChangeListener {
-            mCardInputData.kcpCardPassword = it.toString()
+            cardInputData.kcpCardPassword = it.toString()
             notifyInputDataChanged()
             binding.textInputLayoutKcpCardPassword.error = null
         }
@@ -443,7 +470,8 @@ class CardView @JvmOverloads constructor(context: Context, attrs: AttributeSet? 
             if (hasFocus) {
                 binding.textInputLayoutKcpCardPassword.error = null
             } else if (kcpBirthDateOrRegistrationNumberValidation != null && kcpBirthDateOrRegistrationNumberValidation is Validation.Invalid) {
-                binding.textInputLayoutKcpCardPassword.error = localizedContext.getString(kcpBirthDateOrRegistrationNumberValidation.reason)
+                binding.textInputLayoutKcpCardPassword.error =
+                    localizedContext.getString(kcpBirthDateOrRegistrationNumberValidation.reason)
             }
         }
     }
@@ -451,7 +479,7 @@ class CardView @JvmOverloads constructor(context: Context, attrs: AttributeSet? 
     private fun initPostalCodeInput() {
         val postalCodeEditText = binding.textInputLayoutPostalCode.editText as? AdyenTextInputEditText
         postalCodeEditText?.setOnChangeListener {
-            mCardInputData.postalCode = it.toString()
+            cardInputData.postalCode = it.toString()
             notifyInputDataChanged()
             binding.textInputLayoutPostalCode.error = null
         }
@@ -554,7 +582,12 @@ class CardView @JvmOverloads constructor(context: Context, attrs: AttributeSet? 
     }
 
     private fun setStoredCardInterface(storedCardInput: CardInputData) {
-        binding.editTextCardNumber.setText(localizedContext.getString(R.string.card_number_4digit, storedCardInput.cardNumber))
+        binding.editTextCardNumber.setText(
+            localizedContext.getString(
+                R.string.card_number_4digit,
+                storedCardInput.cardNumber
+            )
+        )
         binding.editTextCardNumber.isEnabled = false
         binding.editTextExpiryDate.date = storedCardInput.expiryDate
         binding.editTextExpiryDate.isEnabled = false
@@ -565,7 +598,7 @@ class CardView @JvmOverloads constructor(context: Context, attrs: AttributeSet? 
 
     private fun updateInstallmentSelection(installmentModel: InstallmentModel?) {
         installmentModel?.let {
-            mCardInputData.installmentOption = it
+            cardInputData.installmentOption = it
             notifyInputDataChanged()
         }
     }
@@ -576,5 +609,19 @@ class CardView @JvmOverloads constructor(context: Context, attrs: AttributeSet? 
             is ContextWrapper -> getActivity(context.baseContext)
             else -> null
         }
+    }
+
+    fun setSupportedCardsList(cards: List<CardType>) {
+        binding.recyclerViewCardList.isVisible = cards.isNotEmpty()
+        if (cardListAdapter == null) {
+            cardListAdapter = CardListAdapter(requireNotNull(imageLoader), cards)
+            binding.recyclerViewCardList.adapter = cardListAdapter
+        } else {
+            cardListAdapter?.supportedCards = cards
+        }
+    }
+
+    private fun setFilteredCards(cards: List<CardType>) {
+        cardListAdapter?.filteredCards = cards
     }
 }
