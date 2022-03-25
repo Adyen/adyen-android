@@ -5,207 +5,126 @@
  *
  * Created by ran on 14/3/2019.
  */
+package com.adyen.checkout.card
 
-package com.adyen.checkout.card;
-
-import android.content.Context;
-import android.os.Parcel;
-import android.os.Parcelable;
-
-import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
-
-import com.adyen.checkout.card.data.CardType;
-import com.adyen.checkout.components.base.AddressVisibility;
-import com.adyen.checkout.components.base.BaseConfigurationBuilder;
-import com.adyen.checkout.components.base.Configuration;
-import com.adyen.checkout.core.api.Environment;
-import com.adyen.checkout.core.util.ParcelUtils;
-
-import java.util.Arrays;
-import java.util.Collections;
-import java.util.List;
-import java.util.Locale;
+import android.content.Context
+import android.os.Parcel
+import android.os.Parcelable
+import com.adyen.checkout.card.data.CardType
+import com.adyen.checkout.components.base.AddressVisibility
+import com.adyen.checkout.components.base.BaseConfigurationBuilder
+import com.adyen.checkout.components.base.Configuration
+import com.adyen.checkout.core.api.Environment
+import com.adyen.checkout.core.util.ParcelUtils.readBoolean
+import com.adyen.checkout.core.util.ParcelUtils.writeBoolean
+import java.util.Locale
 
 /**
- * {@link Configuration} class required by {@link CardComponent} to change it's behavior. Pass it to the {@link CardComponent#PROVIDER}.
+ * [Configuration] class required by [CardComponent] to change it's behavior. Pass it to the [CardComponent.PROVIDER].
  */
-public class CardConfiguration extends Configuration {
+class CardConfiguration : Configuration {
 
-    private static final CardType[] DEFAULT_SUPPORTED_CARDS =
-            new CardType[]{CardType.VISA, CardType.AMERICAN_EXPRESS, CardType.MASTERCARD};
+    val isHolderNameRequired: Boolean
+    val supportedCardTypes: List<CardType>
+    val shopperReference: String?
+    val isStorePaymentFieldVisible: Boolean
+    val isHideCvc: Boolean
+    val isHideCvcStoredCard: Boolean
+    val socialSecurityNumberVisibility: SocialSecurityNumberVisibility?
+    val kcpAuthVisibility: KCPAuthVisibility?
+    val addressVisibility: AddressVisibility
+    val installmentConfiguration: InstallmentConfiguration?
 
-    public static final List<CardType> DEFAULT_SUPPORTED_CARDS_LIST =
-            Collections.unmodifiableList(Arrays.asList(DEFAULT_SUPPORTED_CARDS));
+    @Suppress("LongParameterList")
+    internal constructor(
+        shopperLocale: Locale,
+        environment: Environment,
+        clientKey: String,
+        isHolderNameRequired: Boolean,
+        supportedCardTypes: List<CardType>,
+        shopperReference: String?,
+        isStorePaymentFieldVisible: Boolean,
+        isHideCvc: Boolean,
+        isHideCvcStoredCard: Boolean,
+        socialSecurityNumberVisibility: SocialSecurityNumberVisibility?,
+        kcpAuthVisibility: KCPAuthVisibility?,
+        addressVisibility: AddressVisibility,
+        installmentConfiguration: InstallmentConfiguration?,
 
-    private final String mShopperReference;
-    private final boolean mHolderNameRequired;
-    private final List<CardType> mSupportedCardTypes;
-    private final boolean mShowStorePaymentField;
-    private final boolean mHideCvc;
-    private final boolean mHideCvcStoredCard;
-    private final SocialSecurityNumberVisibility mSocialSecurityNumberVisibility;
-    private final KCPAuthVisibility mKcpAuthVisibility;
-    private final AddressVisibility mAddressVisibility;
-    private final InstallmentConfiguration mInstallmentConfiguration;
-
-    public static final Parcelable.Creator<CardConfiguration> CREATOR = new Parcelable.Creator<CardConfiguration>() {
-        public CardConfiguration createFromParcel(@NonNull Parcel in) {
-            return new CardConfiguration(in);
-        }
-
-        public CardConfiguration[] newArray(int size) {
-            return new CardConfiguration[size];
-        }
-    };
-
-    /**
-     * @param builder The Builder instance to create the configuration.
-     */
-    CardConfiguration(
-            Builder builder
-    ) {
-        super(builder.getBuilderShopperLocale(), builder.getBuilderEnvironment(), builder.getBuilderClientKey());
-
-        mHolderNameRequired = builder.mBuilderHolderNameRequired;
-        mSupportedCardTypes = builder.mBuilderSupportedCardTypes;
-        mShopperReference = builder.mShopperReference;
-        mShowStorePaymentField = builder.mBuilderShowStorePaymentField;
-        mHideCvc = builder.mBuilderHideCvc;
-        mHideCvcStoredCard = builder.mBuilderHideCvcStoredCard;
-        mSocialSecurityNumberVisibility = builder.mBuilderSocialSecurityNumberVisibility;
-        mKcpAuthVisibility = builder.mBuilderKcpAuthVisibility;
-        mAddressVisibility = builder.mBuilderAddressVisibility;
-        mInstallmentConfiguration = builder.mBuilderInstallmentConfiguration;
+    ) : super(shopperLocale, environment, clientKey) {
+        this.isHolderNameRequired = isHolderNameRequired
+        this.supportedCardTypes = supportedCardTypes
+        this.shopperReference = shopperReference
+        this.isStorePaymentFieldVisible = isStorePaymentFieldVisible
+        this.isHideCvc = isHideCvc
+        this.isHideCvcStoredCard = isHideCvcStoredCard
+        this.socialSecurityNumberVisibility = socialSecurityNumberVisibility
+        this.kcpAuthVisibility = kcpAuthVisibility
+        this.addressVisibility = addressVisibility
+        this.installmentConfiguration = installmentConfiguration
     }
 
-    CardConfiguration(@NonNull Parcel in) {
-        super(in);
-        mShopperReference = in.readString();
-        mHolderNameRequired = ParcelUtils.readBoolean(in);
-        mSupportedCardTypes = in.readArrayList(CardType.class.getClassLoader());
-        mShowStorePaymentField = ParcelUtils.readBoolean(in);
-        mHideCvc = ParcelUtils.readBoolean(in);
-        mHideCvcStoredCard = ParcelUtils.readBoolean(in);
-        mSocialSecurityNumberVisibility = SocialSecurityNumberVisibility.valueOf(in.readString());
-        mKcpAuthVisibility = KCPAuthVisibility.valueOf(in.readString());
-        mAddressVisibility = (AddressVisibility) in.readSerializable();
-        mInstallmentConfiguration = in.readParcelable(InstallmentConfiguration.class.getClassLoader());
+    internal constructor(parcel: Parcel) : super(parcel) {
+        shopperReference = parcel.readString()
+        isHolderNameRequired = readBoolean(parcel)
+        supportedCardTypes = parcel.readArrayList(CardType::class.java.classLoader) as List<CardType>
+        isStorePaymentFieldVisible = readBoolean(parcel)
+        isHideCvc = readBoolean(parcel)
+        isHideCvcStoredCard = readBoolean(parcel)
+        socialSecurityNumberVisibility = SocialSecurityNumberVisibility.valueOf(parcel.readString()!!)
+        kcpAuthVisibility = KCPAuthVisibility.valueOf(parcel.readString()!!)
+        addressVisibility = (parcel.readSerializable() as AddressVisibility?)!!
+        installmentConfiguration = parcel.readParcelable(InstallmentConfiguration::class.java.classLoader)
     }
 
-    @Override
-    public void writeToParcel(@NonNull Parcel dest, int flags) {
-        super.writeToParcel(dest, flags);
-        dest.writeString(mShopperReference);
-        ParcelUtils.writeBoolean(dest, mHolderNameRequired);
-        dest.writeList(mSupportedCardTypes);
-        ParcelUtils.writeBoolean(dest, mShowStorePaymentField);
-        ParcelUtils.writeBoolean(dest, mHideCvc);
-        ParcelUtils.writeBoolean(dest, mHideCvcStoredCard);
-        dest.writeString(mSocialSecurityNumberVisibility.name());
-        dest.writeString(mKcpAuthVisibility.name());
-        dest.writeSerializable(mAddressVisibility);
-        dest.writeParcelable(mInstallmentConfiguration, flags);
+    override fun writeToParcel(parcel: Parcel, flags: Int) {
+        super.writeToParcel(parcel, flags)
+        parcel.writeString(shopperReference)
+        writeBoolean(parcel, isHolderNameRequired)
+        parcel.writeList(supportedCardTypes)
+        writeBoolean(parcel, isStorePaymentFieldVisible)
+        writeBoolean(parcel, isHideCvc)
+        writeBoolean(parcel, isHideCvcStoredCard)
+        parcel.writeString(socialSecurityNumberVisibility!!.name)
+        parcel.writeString(kcpAuthVisibility!!.name)
+        parcel.writeSerializable(addressVisibility)
+        parcel.writeParcelable(installmentConfiguration, flags)
+    }
+
+    fun newBuilder(): Builder {
+        return Builder(this)
     }
 
     /**
-     * The list of {@link CardType} that this payment supports. Used to predict the card type of the
-     *
-     * @return The list of {@link CardType}.
+     * Builder to create a [CardConfiguration].
      */
-    @NonNull
-    public List<CardType> getSupportedCardTypes() {
-        return mSupportedCardTypes;
-    }
-
-    /**
-     * @return If the Holder Name is required for this Card payment.
-     */
-    public boolean isHolderNameRequired() {
-        return mHolderNameRequired;
-    }
-
-    @Nullable
-    public String getShopperReference() {
-        return mShopperReference;
-    }
-
-    /**
-     * @deprecated in favor of isStorePaymentFieldVisible because it had a typo.
-     */
-    @Deprecated
-    public boolean isShowStorePaymentFieldEnable() {
-        return mShowStorePaymentField;
-    }
-
-    public boolean isStorePaymentFieldVisible() {
-        return mShowStorePaymentField;
-    }
-
-    @NonNull
-    public Builder newBuilder() {
-        return new Builder(this);
-    }
-
-    public boolean isHideCvc() {
-        return mHideCvc;
-    }
-
-    public boolean isHideCvcStoredCard() {
-        return mHideCvcStoredCard;
-    }
-
-    @Nullable
-    public SocialSecurityNumberVisibility getSocialSecurityNumberVisibility() {
-        return mSocialSecurityNumberVisibility;
-    }
-
-    @Nullable
-    public KCPAuthVisibility getKcpAuthVisibility() {
-        return mKcpAuthVisibility;
-    }
-
-    @NonNull
-    public AddressVisibility getAddressVisibility() {
-        return mAddressVisibility;
-    }
-
-    @Nullable
-    public InstallmentConfiguration getInstallmentConfiguration() {
-        return mInstallmentConfiguration;
-    }
-
-    /**
-     * Builder to create a {@link CardConfiguration}.
-     */
-    public static final class Builder extends BaseConfigurationBuilder<CardConfiguration> {
-
-        private List<CardType> mBuilderSupportedCardTypes = Collections.emptyList();
-        private boolean mBuilderHolderNameRequired;
-        private boolean mBuilderShowStorePaymentField = true;
-        private String mShopperReference;
-        private boolean mBuilderHideCvc;
-        private boolean mBuilderHideCvcStoredCard;
-        private SocialSecurityNumberVisibility mBuilderSocialSecurityNumberVisibility = SocialSecurityNumberVisibility.HIDE;
-        private KCPAuthVisibility mBuilderKcpAuthVisibility = KCPAuthVisibility.HIDE;
-        private AddressVisibility mBuilderAddressVisibility = AddressVisibility.NONE;
-        private InstallmentConfiguration mBuilderInstallmentConfiguration;
+    @Suppress("TooManyFunctions")
+    class Builder : BaseConfigurationBuilder<CardConfiguration> {
+        private var builderSupportedCardTypes: List<CardType> = emptyList()
+        private var builderHolderNameRequired = false
+        private var builderIsStorePaymentFieldVisible = true
+        private var builderShopperReference: String? = null
+        private var builderHideCvc = false
+        private var builderHideCvcStoredCard = false
+        private var builderSocialSecurityNumberVisibility: SocialSecurityNumberVisibility? = SocialSecurityNumberVisibility.HIDE
+        private var builderKcpAuthVisibility: KCPAuthVisibility? = KCPAuthVisibility.HIDE
+        private var builderAddressVisibility = AddressVisibility.NONE
+        private var builderInstallmentConfiguration: InstallmentConfiguration? = null
 
         /**
          * Constructor of Card Configuration Builder with instance of CardConfiguration.
          */
-        public Builder(@NonNull CardConfiguration cardConfiguration) {
-            super(cardConfiguration);
-            mBuilderSupportedCardTypes = cardConfiguration.getSupportedCardTypes();
-            mBuilderHolderNameRequired = cardConfiguration.isHolderNameRequired();
-            mBuilderShowStorePaymentField = cardConfiguration.isStorePaymentFieldVisible();
-            mShopperReference = cardConfiguration.getShopperReference();
-            mBuilderHideCvc = cardConfiguration.isHideCvc();
-            mBuilderHideCvcStoredCard = cardConfiguration.isHideCvcStoredCard();
-            mBuilderSocialSecurityNumberVisibility = cardConfiguration.getSocialSecurityNumberVisibility();
-            mBuilderKcpAuthVisibility = cardConfiguration.getKcpAuthVisibility();
-            mBuilderAddressVisibility = cardConfiguration.getAddressVisibility();
-            mBuilderInstallmentConfiguration = cardConfiguration.getInstallmentConfiguration();
+        constructor(cardConfiguration: CardConfiguration) : super(cardConfiguration) {
+            builderSupportedCardTypes = cardConfiguration.supportedCardTypes
+            builderHolderNameRequired = cardConfiguration.isHolderNameRequired
+            builderIsStorePaymentFieldVisible = cardConfiguration.isStorePaymentFieldVisible
+            builderShopperReference = cardConfiguration.shopperReference
+            builderHideCvc = cardConfiguration.isHideCvc
+            builderHideCvcStoredCard = cardConfiguration.isHideCvcStoredCard
+            builderSocialSecurityNumberVisibility = cardConfiguration.socialSecurityNumberVisibility
+            builderKcpAuthVisibility = cardConfiguration.kcpAuthVisibility
+            builderAddressVisibility = cardConfiguration.addressVisibility
+            builderInstallmentConfiguration = cardConfiguration.installmentConfiguration
         }
 
         /**
@@ -214,85 +133,73 @@ public class CardConfiguration extends Configuration {
          * @param context A context
          * @param clientKey Your Client Key used for network calls from the SDK to Adyen.
          */
-        public Builder(@NonNull Context context, @NonNull String clientKey) {
-            super(context, clientKey);
-        }
+        constructor(context: Context, clientKey: String) : super(context, clientKey)
 
         /**
-         * Builder with parameters for a {@link CardConfiguration}.
+         * Builder with parameters for a [CardConfiguration].
          *
          * @param shopperLocale The Locale of the shopper.
-         * @param environment   The {@link Environment} to be used for network calls to Adyen.
+         * @param environment   The [Environment] to be used for network calls to Adyen.
          * @param clientKey Your Client Key used for network calls from the SDK to Adyen.
          */
-        public Builder(
-                @NonNull Locale shopperLocale,
-                @NonNull Environment environment,
-                @NonNull String clientKey
-        ) {
-            super(shopperLocale, environment, clientKey);
+        constructor(
+            shopperLocale: Locale,
+            environment: Environment,
+            clientKey: String
+        ) : super(shopperLocale, environment, clientKey)
+
+        override fun setShopperLocale(builderShopperLocale: Locale): Builder {
+            return super.setShopperLocale(builderShopperLocale) as Builder
         }
 
-        @Override
-        @NonNull
-        public Builder setShopperLocale(@NonNull Locale builderShopperLocale) {
-            return (Builder) super.setShopperLocale(builderShopperLocale);
-        }
-
-        @Override
-        @NonNull
-        public Builder setEnvironment(@NonNull Environment builderEnvironment) {
-            return (Builder) super.setEnvironment(builderEnvironment);
+        override fun setEnvironment(builderEnvironment: Environment): Builder {
+            return super.setEnvironment(builderEnvironment) as Builder
         }
 
         /**
          * Set the supported card types for this payment. Supported types will be shown as user inputs the card number.
          *
-         * @param supportCardTypes array of {@link CardType}
-         * @return {@link CardConfiguration.Builder}
+         * @param supportCardTypes array of [CardType]
+         * @return [CardConfiguration.Builder]
          */
-        @NonNull
-        public Builder setSupportedCardTypes(@NonNull CardType... supportCardTypes) {
-            mBuilderSupportedCardTypes = Arrays.asList(supportCardTypes);
-            return this;
+        fun setSupportedCardTypes(vararg supportCardTypes: CardType): Builder {
+            builderSupportedCardTypes = listOf(*supportCardTypes)
+            return this
         }
 
         /**
          * Set if the holder name is required and should be shown as an input field.
          *
-         * @param holderNameRequired {@link Boolean}
-         * @return {@link CardConfiguration.Builder}
+         * @param holderNameRequired [Boolean]
+         * @return [CardConfiguration.Builder]
          */
-        @NonNull
-        public Builder setHolderNameRequired(boolean holderNameRequired) {
-            mBuilderHolderNameRequired = holderNameRequired;
-            return this;
+        fun setHolderNameRequired(holderNameRequired: Boolean): Builder {
+            builderHolderNameRequired = holderNameRequired
+            return this
         }
 
         /**
          * Set if the option to store the card for future payments should be shown as an input field.
          *
-         * @param showStorePaymentField {@link Boolean}
-         * @return {@link CardConfiguration.Builder}
+         * @param showStorePaymentField [Boolean]
+         * @return [CardConfiguration.Builder]
          */
-        @NonNull
-        public Builder setShowStorePaymentField(boolean showStorePaymentField) {
-            mBuilderShowStorePaymentField = showStorePaymentField;
-            return this;
+        fun setShowStorePaymentField(showStorePaymentField: Boolean): Builder {
+            builderIsStorePaymentFieldVisible = showStorePaymentField
+            return this
         }
 
         /**
          * Set the unique reference for the shopper doing this transaction.
-         * This value will simply be passed back to you in the {@link com.adyen.checkout.components.model.payments.request.PaymentComponentData}
+         * This value will simply be passed back to you in the [com.adyen.checkout.components.model.payments.request.PaymentComponentData]
          * for convenience.
          *
          * @param shopperReference The unique shopper reference
-         * @return {@link CardConfiguration.Builder}
+         * @return [CardConfiguration.Builder]
          */
-        @NonNull
-        public Builder setShopperReference(@NonNull String shopperReference) {
-            mShopperReference = shopperReference;
-            return this;
+        fun setShopperReference(shopperReference: String): Builder {
+            this.builderShopperReference = shopperReference
+            return this
         }
 
         /**
@@ -300,12 +207,11 @@ public class CardConfiguration extends Configuration {
          * Note that this might have implications for the risk of the transaction. Talk to Adyen Support before enabling this.
          *
          * @param hideCvc If CVC should be hidden or not.
-         * @return {@link CardConfiguration.Builder}
+         * @return [CardConfiguration.Builder]
          */
-        @NonNull
-        public Builder setHideCvc(boolean hideCvc) {
-            mBuilderHideCvc = hideCvc;
-            return this;
+        fun setHideCvc(hideCvc: Boolean): Builder {
+            builderHideCvc = hideCvc
+            return this
         }
 
         /**
@@ -313,65 +219,87 @@ public class CardConfiguration extends Configuration {
          * Note that this has implications for the risk of the transaction. Talk to Adyen Support before enabling this.
          *
          * @param hideCvcStoredCard If CVC should be hidden or not for stored payments.
-         * @return {@link CardConfiguration.Builder}
+         * @return [CardConfiguration.Builder]
          */
-        @NonNull
-        public Builder setHideCvcStoredCard(boolean hideCvcStoredCard) {
-            mBuilderHideCvcStoredCard = hideCvcStoredCard;
-            return this;
+        fun setHideCvcStoredCard(hideCvcStoredCard: Boolean): Builder {
+            builderHideCvcStoredCard = hideCvcStoredCard
+            return this
         }
 
         /**
          * Set if CPF/CNPJ field for Brazil merchants should be visible or not.
          *
          * @param socialSecurityNumberVisibility If CPF/CNPJ field should be visible or not.
-         * @return {@link CardConfiguration.Builder}
+         * @return [CardConfiguration.Builder]
          */
-        @NonNull
-        public Builder setSocialSecurityNumberVisibility(@NonNull SocialSecurityNumberVisibility socialSecurityNumberVisibility) {
-            mBuilderSocialSecurityNumberVisibility = socialSecurityNumberVisibility;
-            return this;
+        fun setSocialSecurityNumberVisibility(socialSecurityNumberVisibility: SocialSecurityNumberVisibility): Builder {
+            builderSocialSecurityNumberVisibility = socialSecurityNumberVisibility
+            return this
         }
 
-        @NonNull
-        public Builder setKcpAuthVisibility(@NonNull KCPAuthVisibility kcpAuthVisibility) {
-            mBuilderKcpAuthVisibility = kcpAuthVisibility;
-            return this;
+        fun setKcpAuthVisibility(kcpAuthVisibility: KCPAuthVisibility): Builder {
+            builderKcpAuthVisibility = kcpAuthVisibility
+            return this
         }
 
         /**
          * Specifies whether address input fields should be shown or not and in which form.
          *
          * @param addressVisibility The visibility state of the address input fields.
-         * @return {@link CardConfiguration.Builder}
+         * @return [CardConfiguration.Builder]
          */
-        @NonNull
-        public Builder setAddressVisibility(@NonNull AddressVisibility addressVisibility) {
-            mBuilderAddressVisibility = addressVisibility;
-            return this;
+        fun setAddressVisibility(addressVisibility: AddressVisibility): Builder {
+            builderAddressVisibility = addressVisibility
+            return this
         }
 
         /**
          * Configures the installment options to be provided to the shopper.
          *
          * @param installmentConfiguration The configuration object for installment options.
-         * @return {@link CardConfiguration.Builder}
+         * @return [CardConfiguration.Builder]
          */
-        @NonNull
-        public Builder setInstallmentConfigurations(@NonNull InstallmentConfiguration installmentConfiguration) {
-            mBuilderInstallmentConfiguration = installmentConfiguration;
-            return this;
+        fun setInstallmentConfigurations(installmentConfiguration: InstallmentConfiguration): Builder {
+            builderInstallmentConfiguration = installmentConfiguration
+            return this
         }
 
         /**
-         * Build {@link CardConfiguration} object from {@link CardConfiguration.Builder} inputs.
+         * Build [CardConfiguration] object from [CardConfiguration.Builder] inputs.
          *
-         * @return {@link CardConfiguration}
+         * @return [CardConfiguration]
          */
-        @NonNull
-        protected CardConfiguration buildInternal() {
-            return new CardConfiguration(this);
+        override fun buildInternal(): CardConfiguration {
+            return CardConfiguration(
+                shopperLocale = builderShopperLocale,
+                environment = builderEnvironment,
+                clientKey = builderClientKey,
+                isHolderNameRequired = builderHolderNameRequired,
+                supportedCardTypes = builderSupportedCardTypes,
+                shopperReference = builderShopperReference,
+                isStorePaymentFieldVisible = builderIsStorePaymentFieldVisible,
+                isHideCvc = builderHideCvc,
+                isHideCvcStoredCard = builderHideCvcStoredCard,
+                socialSecurityNumberVisibility = builderSocialSecurityNumberVisibility,
+                kcpAuthVisibility = builderKcpAuthVisibility,
+                addressVisibility = builderAddressVisibility,
+                installmentConfiguration = builderInstallmentConfiguration,
+            )
         }
     }
 
+    companion object {
+        val DEFAULT_SUPPORTED_CARDS_LIST: List<CardType> = listOf(CardType.VISA, CardType.AMERICAN_EXPRESS, CardType.MASTERCARD)
+
+        @JvmField
+        val CREATOR: Parcelable.Creator<CardConfiguration> = object : Parcelable.Creator<CardConfiguration> {
+            override fun createFromParcel(parcel: Parcel): CardConfiguration {
+                return CardConfiguration(parcel)
+            }
+
+            override fun newArray(size: Int): Array<CardConfiguration?> {
+                return arrayOfNulls(size)
+            }
+        }
+    }
 }
