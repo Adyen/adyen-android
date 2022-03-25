@@ -44,11 +44,8 @@ class CardView @JvmOverloads constructor(
     context: Context,
     attrs: AttributeSet? = null,
     defStyleAttr: Int = 0
-) : AdyenLinearLayout<CardOutputData, CardConfiguration, CardComponentState, CardComponent>(
-    context,
-    attrs,
-    defStyleAttr
-), Observer<CardOutputData> {
+) : AdyenLinearLayout<CardOutputData, CardConfiguration, CardComponentState, CardComponent>(context, attrs, defStyleAttr),
+    Observer<CardOutputData> {
 
     companion object {
         private const val UNSELECTED_BRAND_LOGO_ALPHA = 0.2f
@@ -313,10 +310,12 @@ class CardView @JvmOverloads constructor(
 
     private fun setCardNumberError(@StringRes stringResId: Int?, shouldShowSecondaryLogo: Boolean = false) {
         if (stringResId == null) {
+            binding.textInputLayoutCardNumber.isErrorEnabled = false
             binding.textInputLayoutCardNumber.error = null
             binding.cardBrandLogoContainerPrimary.isVisible = true
             binding.cardBrandLogoContainerSecondary.isVisible = shouldShowSecondaryLogo
         } else {
+            binding.textInputLayoutCardNumber.isErrorEnabled = true
             binding.textInputLayoutCardNumber.error = localizedContext.getString(stringResId)
             binding.cardBrandLogoContainerPrimary.isVisible = false
             binding.cardBrandLogoContainerSecondary.isVisible = false

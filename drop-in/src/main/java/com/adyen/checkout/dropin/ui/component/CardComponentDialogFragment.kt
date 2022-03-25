@@ -14,7 +14,6 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.core.view.isVisible
 import com.adyen.checkout.card.CardComponent
-import com.adyen.checkout.card.data.CardType
 import com.adyen.checkout.components.PaymentComponentState
 import com.adyen.checkout.components.model.payments.request.PaymentMethodDetails
 import com.adyen.checkout.components.util.CurrencyUtils
@@ -89,7 +88,7 @@ class CardComponentDialogFragment : BaseComponentDialogFragment() {
         }
 
         val supportedCards = if (cardComponent.isStoredPaymentMethod()) {
-            emptyList<CardType>()
+            emptyList()
         } else {
             cardComponent.configuration.supportedCardTypes
         }
