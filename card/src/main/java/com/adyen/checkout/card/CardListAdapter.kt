@@ -5,72 +5,50 @@
  *
  * Created by arman on 28/5/2019.
  */
+package com.adyen.checkout.card
 
-package com.adyen.checkout.card;
+import android.annotation.SuppressLint
+import android.view.LayoutInflater
+import android.view.View
+import android.view.ViewGroup
+import androidx.recyclerview.widget.RecyclerView
+import com.adyen.checkout.card.CardListAdapter.ImageViewHolder
+import com.adyen.checkout.card.data.CardType
+import com.adyen.checkout.components.api.ImageLoader
+import com.adyen.checkout.components.ui.view.RoundCornerImageView
 
-import android.view.LayoutInflater;
-import android.view.View;
-import android.view.ViewGroup;
+class CardListAdapter(private val mImageLoader: ImageLoader, private val mSupportedCards: List<CardType>) : RecyclerView.Adapter<ImageViewHolder>() {
+    private var filteredCards: List<CardType> = emptyList()
 
-import androidx.annotation.NonNull;
-import androidx.recyclerview.widget.RecyclerView;
-
-import com.adyen.checkout.card.data.CardType;
-import com.adyen.checkout.components.api.ImageLoader;
-import com.adyen.checkout.components.ui.view.RoundCornerImageView;
-
-import java.util.Collections;
-import java.util.List;
-
-public class CardListAdapter extends RecyclerView.Adapter<CardListAdapter.ImageViewHolder> {
-
-    private final List<CardType> mSupportedCards;
-    private List<CardType> mFilteredCards = Collections.emptyList();
-    private final ImageLoader mImageLoader;
-
-    private static final float ACTIVE = 1f;
-    private static final float NOT_ACTIVE = 0.2f;
-
-    public CardListAdapter(@NonNull ImageLoader imageLoader, @NonNull List<CardType> supportedCards) {
-        mImageLoader = imageLoader;
-        mSupportedCards = supportedCards;
+    override fun onCreateViewHolder(parent: ViewGroup, i: Int): ImageViewHolder {
+        val imageView = LayoutInflater.from(parent.context).inflate(R.layout.brand_logo, parent, false) as RoundCornerImageView
+        return ImageViewHolder(imageView)
     }
 
-    @NonNull
-    @Override
-    public ImageViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int i) {
-
-        final RoundCornerImageView imageView =
-                (RoundCornerImageView) LayoutInflater.from(parent.getContext()).inflate(R.layout.brand_logo, parent, false);
-
-        return new ImageViewHolder(imageView);
+    override fun onBindViewHolder(imageViewHolder: ImageViewHolder, i: Int) {
+        val card = mSupportedCards[i]
+        imageViewHolder.mCardLogo.alpha =
+            if (filteredCards.isEmpty() || filteredCards.contains(card)) ACTIVE else NOT_ACTIVE
+        mImageLoader.load(card.txVariant, imageViewHolder.mCardLogo)
     }
 
-    @Override
-    public void onBindViewHolder(@NonNull ImageViewHolder imageViewHolder, int i) {
-        final CardType card = mSupportedCards.get(i);
-        imageViewHolder.mCardLogo.setAlpha(mFilteredCards.isEmpty() || mFilteredCards.contains(card) ? ACTIVE : NOT_ACTIVE);
-        mImageLoader.load(card.getTxVariant(), imageViewHolder.mCardLogo);
+    override fun getItemCount(): Int {
+        return mSupportedCards.size
     }
 
-    @Override
-    public int getItemCount() {
-        return mSupportedCards.size();
+    @SuppressLint("NotifyDataSetChanged")
+    fun setFilteredCard(filteredCards: List<CardType>) {
+        this.filteredCards = filteredCards
+        notifyDataSetChanged()
+        // TODO refactor this to ListAdapter
     }
 
-
-    public void setFilteredCard(@NonNull List<CardType> filteredCards) {
-        this.mFilteredCards = filteredCards;
-        notifyDataSetChanged();
+    inner class ImageViewHolder(view: View) : RecyclerView.ViewHolder(view) {
+        var mCardLogo: RoundCornerImageView = view as RoundCornerImageView
     }
 
-    class ImageViewHolder extends RecyclerView.ViewHolder {
-
-        RoundCornerImageView mCardLogo;
-
-        ImageViewHolder(View view) {
-            super(view);
-            mCardLogo = (RoundCornerImageView) view;
-        }
+    companion object {
+        private const val ACTIVE = 1f
+        private const val NOT_ACTIVE = 0.2f
     }
 }
