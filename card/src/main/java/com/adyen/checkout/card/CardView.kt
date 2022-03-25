@@ -556,7 +556,7 @@ class CardView @JvmOverloads constructor(context: Context, attrs: AttributeSet? 
     private fun setStoredCardInterface(storedCardInput: CardInputData) {
         binding.editTextCardNumber.setText(localizedContext.getString(R.string.card_number_4digit, storedCardInput.cardNumber))
         binding.editTextCardNumber.isEnabled = false
-        binding.editTextExpiryDate.setDate(storedCardInput.expiryDate)
+        binding.editTextExpiryDate.date = storedCardInput.expiryDate
         binding.editTextExpiryDate.isEnabled = false
         binding.switchStorePaymentMethod.isVisible = false
         binding.textInputLayoutCardHolder.isVisible = false

@@ -13,7 +13,6 @@ data class ExpiryDate(
 ) {
 
     companion object {
-        const val EMPTY_VALUE = 0
         @JvmField
         val EMPTY_DATE = ExpiryDate(0, 0)
         @JvmField
