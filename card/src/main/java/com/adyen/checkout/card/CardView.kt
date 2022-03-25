@@ -614,11 +614,11 @@ class CardView @JvmOverloads constructor(
     fun setSupportedCardsList(cards: List<CardType>) {
         binding.recyclerViewCardList.isVisible = cards.isNotEmpty()
         if (cardListAdapter == null) {
-            cardListAdapter = CardListAdapter(requireNotNull(imageLoader), cards)
+            cardListAdapter = CardListAdapter(requireNotNull(imageLoader))
             binding.recyclerViewCardList.adapter = cardListAdapter
-        } else {
-            cardListAdapter?.supportedCards = cards
         }
+
+        cardListAdapter?.submitList(cards)
     }
 
     private fun setFilteredCards(cards: List<CardType>) {

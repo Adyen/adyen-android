@@ -10,6 +10,8 @@ package com.adyen.checkout.card
 import android.annotation.SuppressLint
 import android.view.LayoutInflater
 import android.view.ViewGroup
+import androidx.recyclerview.widget.DiffUtil
+import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
 import com.adyen.checkout.card.CardListAdapter.ImageViewHolder
 import com.adyen.checkout.card.data.CardType
@@ -18,15 +20,7 @@ import com.adyen.checkout.components.ui.view.RoundCornerImageView
 
 internal class CardListAdapter(
     private val imageLoader: ImageLoader,
-    initialSupportedCards: List<CardType> = emptyList()
-) : RecyclerView.Adapter<ImageViewHolder>() {
-
-    var supportedCards: List<CardType> = initialSupportedCards
-        @SuppressLint("NotifyDataSetChanged")
-        set(value) {
-            field = value
-            notifyDataSetChanged()
-        }
+) : ListAdapter<CardType, ImageViewHolder>(CardDiffCallback) {
 
     var filteredCards: List<CardType> = emptyList()
         @SuppressLint("NotifyDataSetChanged")
@@ -36,20 +30,15 @@ internal class CardListAdapter(
         }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ImageViewHolder {
-        val imageView = LayoutInflater
-            .from(parent.context)
+        val imageView = LayoutInflater.from(parent.context)
             .inflate(R.layout.brand_logo, parent, false) as RoundCornerImageView
         return ImageViewHolder(imageView)
     }
 
     override fun onBindViewHolder(holder: ImageViewHolder, position: Int) {
-        val card = supportedCards[position]
+        val card = currentList[position]
         val alpha = if (filteredCards.isEmpty() || filteredCards.contains(card)) ACTIVE else NOT_ACTIVE
         holder.bind(card, alpha, imageLoader)
-    }
-
-    override fun getItemCount(): Int {
-        return supportedCards.size
     }
 
     internal class ImageViewHolder(
@@ -65,5 +54,13 @@ internal class CardListAdapter(
     companion object {
         private const val ACTIVE = 1f
         private const val NOT_ACTIVE = 0.2f
+    }
+
+    object CardDiffCallback : DiffUtil.ItemCallback<CardType>() {
+        override fun areItemsTheSame(oldItem: CardType, newItem: CardType): Boolean =
+            oldItem == newItem
+
+        override fun areContentsTheSame(oldItem: CardType, newItem: CardType): Boolean =
+            areItemsTheSame(oldItem, newItem)
     }
 }
