@@ -5,23 +5,10 @@
  *
  * Created by caiof on 25/4/2019.
  */
+package com.adyen.checkout.issuerlist
 
-package com.adyen.checkout.issuerlist;
+import com.adyen.checkout.components.base.InputData
 
-import androidx.annotation.Nullable;
-
-import com.adyen.checkout.components.base.InputData;
-
-public class IssuerListInputData implements InputData {
-
-    private IssuerModel mSelectedIssuer;
-
-    void setSelectedIssuer(@Nullable IssuerModel selectedIssuer) {
-        mSelectedIssuer = selectedIssuer;
-    }
-
-    @Nullable
-    IssuerModel getSelectedIssuer() {
-        return mSelectedIssuer;
-    }
-}
+data class IssuerListInputData(
+    var selectedIssuer: IssuerModel? = null,
+) : InputData

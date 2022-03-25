@@ -5,48 +5,27 @@
  *
  * Created by caiof on 25/4/2019.
  */
+package com.adyen.checkout.issuerlist
 
-package com.adyen.checkout.issuerlist;
+import android.content.Context
+import android.os.Parcel
+import com.adyen.checkout.components.base.BaseConfigurationBuilder
+import com.adyen.checkout.components.base.Configuration
+import com.adyen.checkout.core.api.Environment
+import java.util.Locale
 
-import android.content.Context;
-import android.os.Parcel;
+abstract class IssuerListConfiguration : Configuration {
+    protected constructor(
+        shopperLocale: Locale,
+        environment: Environment,
+        clientKey: String
+    ) : super(shopperLocale, environment, clientKey)
 
-import androidx.annotation.NonNull;
+    protected constructor(parcel: Parcel) : super(parcel)
 
-import com.adyen.checkout.components.base.BaseConfigurationBuilder;
-import com.adyen.checkout.components.base.Configuration;
-import com.adyen.checkout.core.api.Environment;
-
-import java.util.Locale;
-
-public abstract class IssuerListConfiguration extends Configuration {
-
-    protected IssuerListConfiguration(
-            @NonNull Locale shopperLocale,
-            @NonNull Environment environment,
-            @NonNull String clientKey
-    ) {
-        super(shopperLocale, environment, clientKey);
-    }
-
-    protected IssuerListConfiguration(@NonNull Parcel in) {
-        super(in);
-    }
-
-
-    public abstract static class IssuerListBuilder<IssuerListConfigurationT extends IssuerListConfiguration>
-            extends BaseConfigurationBuilder<IssuerListConfigurationT> {
-
-        protected IssuerListBuilder(@NonNull Context context, @NonNull String clientKey) {
-            super(context, clientKey);
-        }
-
-        protected IssuerListBuilder(@NonNull Locale shopperLocale, @NonNull Environment environment, @NonNull String clientKey) {
-            super(shopperLocale, environment, clientKey);
-        }
-
-        protected IssuerListBuilder(@NonNull IssuerListConfigurationT configuration) {
-            super(configuration);
-        }
+    abstract class IssuerListBuilder<IssuerListConfigurationT : IssuerListConfiguration> : BaseConfigurationBuilder<IssuerListConfigurationT> {
+        protected constructor(context: Context, clientKey: String) : super(context, clientKey)
+        protected constructor(shopperLocale: Locale, environment: Environment, clientKey: String) : super(shopperLocale, environment, clientKey)
+        protected constructor(configuration: IssuerListConfigurationT) : super(configuration)
     }
 }

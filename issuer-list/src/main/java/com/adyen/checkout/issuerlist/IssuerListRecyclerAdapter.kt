@@ -5,88 +5,72 @@
  *
  * Created by caiof on 21/5/2019.
  */
+package com.adyen.checkout.issuerlist
 
-package com.adyen.checkout.issuerlist;
+import android.annotation.SuppressLint
+import android.view.LayoutInflater
+import android.view.View
+import android.view.ViewGroup
+import android.widget.TextView
+import androidx.recyclerview.widget.RecyclerView
+import com.adyen.checkout.components.api.ImageLoader
+import com.adyen.checkout.components.ui.adapter.ClickableListRecyclerAdapter
+import com.adyen.checkout.components.ui.view.RoundCornerImageView
+import com.adyen.checkout.issuerlist.IssuerListRecyclerAdapter.IssuerViewHolder
 
-import android.view.LayoutInflater;
-import android.view.View;
-import android.view.ViewGroup;
-import android.widget.TextView;
+internal class IssuerListRecyclerAdapter(
+    private var issuerModelList: List<IssuerModel>,
+    private val imageLoader: ImageLoader,
+    private val paymentMethod: String,
+    private val hideIssuerLogo: Boolean
+) : ClickableListRecyclerAdapter<IssuerViewHolder>() {
 
-import androidx.annotation.NonNull;
-import androidx.recyclerview.widget.RecyclerView;
-
-import com.adyen.checkout.components.api.ImageLoader;
-import com.adyen.checkout.components.ui.adapter.ClickableListRecyclerAdapter;
-import com.adyen.checkout.components.ui.view.RoundCornerImageView;
-
-import java.util.List;
-
-class IssuerListRecyclerAdapter extends ClickableListRecyclerAdapter<IssuerListRecyclerAdapter.IssuerViewHolder> {
-    private List<IssuerModel> mIssuerModelList;
-    private final ImageLoader mImageLoader;
-    private final String mPaymentMethod;
-    private final boolean mHideIssuerLogo;
-
-    IssuerListRecyclerAdapter(@NonNull List<IssuerModel> issuerModelList, ImageLoader imageLoader, String paymentMethod, boolean hideIssuerLogo) {
-        mIssuerModelList = issuerModelList;
-        mHideIssuerLogo = hideIssuerLogo;
-        mImageLoader = imageLoader;
-        mPaymentMethod = paymentMethod;
+    override fun onCreateViewHolder(viewGroup: ViewGroup, viewType: Int): IssuerViewHolder {
+        val view = LayoutInflater.from(viewGroup.context).inflate(R.layout.recycler_list_with_image, viewGroup, false)
+        return IssuerViewHolder(view, hideIssuerLogo)
     }
 
-    @NonNull
-    @Override
-    public IssuerViewHolder onCreateViewHolder(@NonNull ViewGroup viewGroup, int viewType) {
-        final View view = LayoutInflater.from(viewGroup.getContext()).inflate(R.layout.recycler_list_with_image, viewGroup, false);
-        return new IssuerViewHolder(view, mHideIssuerLogo);
+    override fun onBindViewHolder(viewHolder: IssuerViewHolder, position: Int) {
+        super.onBindViewHolder(viewHolder, position)
+        viewHolder.bind(paymentMethod, issuerModelList[position], hideIssuerLogo, imageLoader)
     }
 
-    @Override
-    public void onBindViewHolder(@NonNull IssuerViewHolder issuerViewHolder, int position) {
-        super.onBindViewHolder(issuerViewHolder, position);
-        issuerViewHolder.bind(mPaymentMethod, mIssuerModelList.get(position), mHideIssuerLogo, mImageLoader);
-    }
-
-    @Override
-    public int getItemCount() {
-        return mIssuerModelList.size();
+    override fun getItemCount(): Int {
+        return issuerModelList.size
     }
 
     // We only expect either a full new list or small changes on an item, like a new Logo drawable
-    void updateIssuerModelList(@NonNull List<IssuerModel> issuerModelList) {
-        mIssuerModelList = issuerModelList;
-        notifyDataSetChanged();
+    @SuppressLint("NotifyDataSetChanged")
+    fun updateIssuerModelList(issuerModelList: List<IssuerModel>) {
+        this.issuerModelList = issuerModelList
+        notifyDataSetChanged()
+        // TODO refactor to ListAdapter
     }
 
-    IssuerModel getIssuerAt(int position) {
-        return mIssuerModelList.get(position);
+    fun getIssuerAt(position: Int): IssuerModel {
+        return issuerModelList[position]
     }
 
-    final class IssuerViewHolder extends RecyclerView.ViewHolder {
+    internal inner class IssuerViewHolder(itemView: View, hideIssuerLogo: Boolean) : RecyclerView.ViewHolder(itemView) {
 
-        private final RoundCornerImageView mLogoImage;
-        private final TextView mText;
+        private val logoImage: RoundCornerImageView = itemView.findViewById(R.id.imageView_logo)
+        private val text: TextView = itemView.findViewById(R.id.textView_text)
 
-        IssuerViewHolder(@NonNull View itemView, boolean hideIssuerLogo) {
-            super(itemView);
-            mLogoImage = itemView.findViewById(R.id.imageView_logo);
-            mText = itemView.findViewById(R.id.textView_text);
-
-            mLogoImage.setVisibility(hideIssuerLogo ? View.GONE : View.VISIBLE);
+        init {
+            logoImage.visibility = if (hideIssuerLogo) View.GONE else View.VISIBLE
         }
 
-        void bind(String paymentMethod, IssuerModel issuerModel, boolean hideIssuerLogo, ImageLoader imageLoader) {
-            mText.setText(issuerModel.getName());
+        fun bind(paymentMethod: String, issuerModel: IssuerModel, hideIssuerLogo: Boolean, imageLoader: ImageLoader) {
+            text.text = issuerModel.name
             if (!hideIssuerLogo) {
-                imageLoader.load(paymentMethod,
-                        issuerModel.getId(),
-                        mLogoImage,
-                        R.drawable.ic_placeholder_image,
-                        R.drawable.ic_placeholder_image);
+                imageLoader.load(
+                    paymentMethod,
+                    issuerModel.id,
+                    logoImage,
+                    R.drawable.ic_placeholder_image,
+                    R.drawable.ic_placeholder_image
+                )
             }
         }
-
     }
-
 }

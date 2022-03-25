@@ -5,116 +5,80 @@
  *
  * Created by caiof on 25/4/2019.
  */
+package com.adyen.checkout.issuerlist
 
-package com.adyen.checkout.issuerlist;
+import androidx.lifecycle.MutableLiveData
+import androidx.lifecycle.SavedStateHandle
+import com.adyen.checkout.components.PaymentComponentState
+import com.adyen.checkout.components.base.BasePaymentComponent
+import com.adyen.checkout.components.base.GenericPaymentMethodDelegate
+import com.adyen.checkout.components.model.paymentmethods.InputDetail
+import com.adyen.checkout.components.model.paymentmethods.Issuer
+import com.adyen.checkout.components.model.paymentmethods.PaymentMethod
+import com.adyen.checkout.components.model.payments.request.IssuerListPaymentMethod
+import com.adyen.checkout.components.model.payments.request.PaymentComponentData
 
-import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
-import androidx.lifecycle.MutableLiveData;
-import androidx.lifecycle.SavedStateHandle;
-
-import com.adyen.checkout.components.PaymentComponentState;
-import com.adyen.checkout.components.base.BasePaymentComponent;
-import com.adyen.checkout.components.base.GenericPaymentMethodDelegate;
-import com.adyen.checkout.components.model.paymentmethods.InputDetail;
-import com.adyen.checkout.components.model.paymentmethods.Issuer;
-import com.adyen.checkout.components.model.paymentmethods.Item;
-import com.adyen.checkout.components.model.paymentmethods.PaymentMethod;
-import com.adyen.checkout.components.model.payments.request.IssuerListPaymentMethod;
-import com.adyen.checkout.components.model.payments.request.PaymentComponentData;
-
-import java.util.ArrayList;
-import java.util.List;
-
-public abstract class IssuerListComponent<IssuerListPaymentMethodT extends IssuerListPaymentMethod>
-        extends BasePaymentComponent<
-        IssuerListConfiguration,
-        IssuerListInputData,
-        IssuerListOutputData,
-        PaymentComponentState<IssuerListPaymentMethodT>
-        > {
-
-    private final MutableLiveData<List<IssuerModel>> mIssuersLiveData = new MutableLiveData<>();
-
-    @SuppressWarnings("LambdaLast")
-    public IssuerListComponent(
-            @NonNull SavedStateHandle savedStateHandle,
-            @NonNull GenericPaymentMethodDelegate genericPaymentMethodDelegate,
-            @NonNull IssuerListConfiguration configuration
-    ) {
-        super(savedStateHandle, genericPaymentMethodDelegate, configuration);
-        initComponent(genericPaymentMethodDelegate.getPaymentMethod());
-    }
-
-    MutableLiveData<List<IssuerModel>> getIssuersLiveData() {
-        return mIssuersLiveData;
-    }
-
-    private void initComponent(@NonNull PaymentMethod paymentMethod) {
-        final List<Issuer> issuersList = paymentMethod.getIssuers();
+abstract class IssuerListComponent<IssuerListPaymentMethodT : IssuerListPaymentMethod>(
+    savedStateHandle: SavedStateHandle,
+    genericPaymentMethodDelegate: GenericPaymentMethodDelegate,
+    configuration: IssuerListConfiguration
+) : BasePaymentComponent<IssuerListConfiguration, IssuerListInputData, IssuerListOutputData, PaymentComponentState<IssuerListPaymentMethodT>>(
+    savedStateHandle,
+    genericPaymentMethodDelegate,
+    configuration
+) {
+    val issuersLiveData = MutableLiveData<List<IssuerModel>>()
+    private fun initComponent(paymentMethod: PaymentMethod) {
+        val issuersList = paymentMethod.issuers
         if (issuersList != null) {
-            initIssuers(issuersList);
+            initIssuers(issuersList)
         } else {
-            initLegacyIssuers(paymentMethod.getDetails());
+            initLegacyIssuers(paymentMethod.details)
         }
     }
 
-    private void initIssuers(@NonNull List<Issuer> issuerList) {
-        final List<IssuerModel> issuerModelList = new ArrayList<>();
-        for (Issuer issuer : issuerList) {
-            if (!issuer.isDisabled()) {
-                final IssuerModel issuerModel = new IssuerModel(issuer.getId(), issuer.getName());
-                issuerModelList.add(issuerModel);
+    private fun initIssuers(issuerList: List<Issuer>) {
+        val issuerModelList: MutableList<IssuerModel> = ArrayList()
+        for ((id, name, isDisabled) in issuerList) {
+            if (!isDisabled) {
+                val issuerModel = IssuerModel(id!!, name!!)
+                issuerModelList.add(issuerModel)
             }
         }
-        mIssuersLiveData.setValue(issuerModelList);
+        issuersLiveData.value = issuerModelList
     }
 
-    private void initLegacyIssuers(@Nullable List<InputDetail> details) {
-        if (details != null) {
-            for (InputDetail detail : details) {
-                if (detail.getItems() != null) {
-                    final List<IssuerModel> issuers = new ArrayList<>();
-                    for (Item item : detail.getItems()) {
-                        final IssuerModel issuer = new IssuerModel(item.getId(), item.getName());
-                        issuers.add(issuer);
-                    }
-                    mIssuersLiveData.setValue(issuers);
-                }
+    private fun initLegacyIssuers(details: List<InputDetail>?) {
+        for ((items) in details ?: emptyList()) {
+            val issuers: MutableList<IssuerModel> = ArrayList()
+            for ((id, name) in items ?: emptyList()) {
+                issuers.add(IssuerModel(id.orEmpty(), name.orEmpty()))
             }
+            issuersLiveData.value = issuers
         }
     }
 
-    @Override
-    @NonNull
-    protected IssuerListOutputData onInputDataChanged(@NonNull IssuerListInputData inputData) {
+    override fun onInputDataChanged(inputData: IssuerListInputData): IssuerListOutputData {
         // can also reuse instance if we implement equals properly
-        return new IssuerListOutputData(inputData.getSelectedIssuer());
+        return IssuerListOutputData(inputData.selectedIssuer)
     }
 
-    @NonNull
-    @Override
-    protected PaymentComponentState<IssuerListPaymentMethodT> createComponentState() {
-        final IssuerListPaymentMethodT issuerListPaymentMethod = instantiateTypedPaymentMethod();
-
-        final IssuerModel selectedIssuer = getOutputData() != null ? getOutputData().getSelectedIssuer() : null;
-
-        issuerListPaymentMethod.setType(paymentMethodDelegate.getPaymentMethodType());
-        issuerListPaymentMethod.setIssuer(selectedIssuer != null ? selectedIssuer.getId() : "");
-
-        final boolean isInputValid = getOutputData().isValid();
-
-        final PaymentComponentData<IssuerListPaymentMethodT> paymentComponentData = new PaymentComponentData<>();
-        paymentComponentData.setPaymentMethod(issuerListPaymentMethod);
-
-        return new PaymentComponentState<>(paymentComponentData, isInputValid, true);
+    override fun createComponentState(): PaymentComponentState<IssuerListPaymentMethodT> {
+        val issuerListPaymentMethod = instantiateTypedPaymentMethod()
+        val selectedIssuer = outputData?.selectedIssuer
+        issuerListPaymentMethod.type = paymentMethodDelegate.getPaymentMethodType()
+        issuerListPaymentMethod.issuer = selectedIssuer?.id ?: ""
+        val isInputValid: Boolean = outputData?.isValid == true
+        val paymentComponentData = PaymentComponentData<IssuerListPaymentMethodT>()
+        paymentComponentData.paymentMethod = issuerListPaymentMethod
+        return PaymentComponentState(paymentComponentData, isInputValid, true)
     }
 
-    @NonNull
-    protected abstract IssuerListPaymentMethodT instantiateTypedPaymentMethod();
+    protected abstract fun instantiateTypedPaymentMethod(): IssuerListPaymentMethodT
+    val paymentMethodType: String
+        get() = paymentMethodDelegate.getPaymentMethodType()
 
-    @NonNull
-    protected String getPaymentMethodType() {
-        return paymentMethodDelegate.getPaymentMethodType();
+    init {
+        initComponent(genericPaymentMethodDelegate.paymentMethod)
     }
 }

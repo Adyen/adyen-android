@@ -5,128 +5,101 @@
  *
  * Created by caiof on 21/5/2019.
  */
+package com.adyen.checkout.issuerlist
 
-package com.adyen.checkout.issuerlist;
+import android.content.Context
+import android.util.AttributeSet
+import android.view.LayoutInflater
+import androidx.lifecycle.LifecycleOwner
+import androidx.lifecycle.Observer
+import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.recyclerview.widget.RecyclerView
+import com.adyen.checkout.components.PaymentComponentState
+import com.adyen.checkout.components.api.ImageLoader.Companion.getInstance
+import com.adyen.checkout.components.model.payments.request.IssuerListPaymentMethod
+import com.adyen.checkout.components.ui.adapter.ClickableListRecyclerAdapter.OnItemCLickedListener
+import com.adyen.checkout.components.ui.view.AdyenLinearLayout
+import com.adyen.checkout.core.log.LogUtil.getTag
+import com.adyen.checkout.core.log.Logger
 
-import android.content.Context;
-import android.util.AttributeSet;
-import android.view.LayoutInflater;
+abstract class IssuerListRecyclerView<
+    IssuerListPaymentMethodT : IssuerListPaymentMethod,
+    IssuerListComponentT : IssuerListComponent<IssuerListPaymentMethodT>
+    >
+@JvmOverloads constructor(
+    context: Context,
+    attrs: AttributeSet? = null,
+    defStyleAttr: Int = 0
+) : AdyenLinearLayout<IssuerListOutputData, IssuerListConfiguration, PaymentComponentState<IssuerListPaymentMethodT>, IssuerListComponentT>(
+        context,
+        attrs,
+        defStyleAttr
+    ),
+    Observer<List<IssuerModel>>,
+    OnItemCLickedListener {
 
-import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
-import androidx.lifecycle.LifecycleOwner;
-import androidx.lifecycle.Observer;
-import androidx.recyclerview.widget.LinearLayoutManager;
-import androidx.recyclerview.widget.RecyclerView;
-
-import com.adyen.checkout.components.PaymentComponentState;
-import com.adyen.checkout.components.api.ImageLoader;
-import com.adyen.checkout.components.model.payments.request.IssuerListPaymentMethod;
-import com.adyen.checkout.components.ui.adapter.ClickableListRecyclerAdapter;
-import com.adyen.checkout.components.ui.view.AdyenLinearLayout;
-import com.adyen.checkout.core.log.LogUtil;
-import com.adyen.checkout.core.log.Logger;
-
-import java.util.Collections;
-import java.util.List;
-
-public abstract class IssuerListRecyclerView<
-        IssuerListPaymentMethodT extends IssuerListPaymentMethod,
-        IssuerListComponentT extends IssuerListComponent<IssuerListPaymentMethodT>>
-        extends AdyenLinearLayout<
-            IssuerListOutputData,
-            IssuerListConfiguration,
-            PaymentComponentState<IssuerListPaymentMethodT>,
-            IssuerListComponentT>
-        implements Observer<List<IssuerModel>>, ClickableListRecyclerAdapter.OnItemCLickedListener {
-
-    private static final String TAG = LogUtil.getTag();
-
-    private RecyclerView mIssuersRecyclerView;
-    private IssuerListRecyclerAdapter mIssuersAdapter;
-
-    private final IssuerListInputData mIdealInputData = new IssuerListInputData();
-
-    public IssuerListRecyclerView(@NonNull Context context) {
-        this(context, null);
-    }
-
-    public IssuerListRecyclerView(@NonNull Context context, @Nullable AttributeSet attrs) {
-        this(context, attrs, 0);
-    }
+    private lateinit var issuersRecyclerView: RecyclerView
+    private lateinit var issuersAdapter: IssuerListRecyclerAdapter
+    private val idealInputData = IssuerListInputData()
 
     // Regular View constructor
-    @SuppressWarnings("JavadocMethod")
-    public IssuerListRecyclerView(@NonNull Context context, @Nullable AttributeSet attrs, int defStyleAttr) {
-        super(context, attrs, defStyleAttr);
-        LayoutInflater.from(getContext()).inflate(R.layout.issuer_list_recycler_view, this, true);
+    init {
+        LayoutInflater.from(getContext()).inflate(R.layout.issuer_list_recycler_view, this, true)
     }
 
-    @Override
-    public void initView() {
-        mIssuersRecyclerView = findViewById(R.id.recycler_issuers);
-        mIssuersRecyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
-
-        mIssuersAdapter.setItemCLickListener(this);
-        mIssuersRecyclerView.setAdapter(mIssuersAdapter);
+    override fun initView() {
+        issuersRecyclerView = findViewById<RecyclerView?>(R.id.recycler_issuers).apply {
+            layoutManager = LinearLayoutManager(context)
+        }
+        issuersAdapter.setItemCLickListener(this)
+        issuersRecyclerView.adapter = issuersAdapter
     }
 
-    @SuppressWarnings("PMD.EmptyMethodInAbstractClassShouldBeAbstract")
-    @Override
-    protected void initLocalizedStrings(@NonNull Context localizedContext) {
+    override fun initLocalizedStrings(localizedContext: Context) {
         // no embedded localized strings on this view
     }
 
-    @Override
-    public void onComponentAttached() {
-        mIssuersAdapter = new IssuerListRecyclerAdapter(Collections.emptyList(),
-                ImageLoader.getInstance(getContext(), getComponent().getConfiguration().getEnvironment()),
-                getComponent().getPaymentMethodType(),
-                hideIssuersLogo());
+    override fun onComponentAttached() {
+        issuersAdapter = IssuerListRecyclerAdapter(
+            emptyList(),
+            getInstance(context, component.configuration.environment),
+            component.paymentMethodType,
+            hideIssuersLogo()
+        )
     }
 
-    @Override
-    protected void observeComponentChanges(@NonNull LifecycleOwner lifecycleOwner) {
-        getComponent().getIssuersLiveData().observe(lifecycleOwner, this);
-
+    override fun observeComponentChanges(lifecycleOwner: LifecycleOwner) {
+        component.issuersLiveData.observe(lifecycleOwner, this)
     }
 
-    @Override
-    public boolean isConfirmationRequired() {
-        return false;
-    }
+    override val isConfirmationRequired: Boolean
+        get() = false
 
-    @SuppressWarnings("PMD.EmptyMethodInAbstractClassShouldBeAbstract")
-    @Override
-    public void highlightValidationErrors() {
+    override fun highlightValidationErrors() {
         // no implementation
     }
 
-    public boolean hideIssuersLogo() {
-        return false;
+    open fun hideIssuersLogo(): Boolean {
+        return false
     }
 
-    @Override
-    public void setEnabled(boolean enabled) {
-        super.setEnabled(enabled);
-        mIssuersRecyclerView.setEnabled(enabled);
+    override fun setEnabled(enabled: Boolean) {
+        super.setEnabled(enabled)
+        issuersRecyclerView.isEnabled = enabled
     }
 
-    @Override
-    public void onChanged(@Nullable List<IssuerModel> issuerModels) {
-        Logger.v(TAG, "onChanged");
-        if (issuerModels == null) {
-            Logger.e(TAG, "issuerModels is null");
-            return;
-        }
-
-        mIssuersAdapter.updateIssuerModelList(issuerModels);
+    override fun onChanged(issuerModels: List<IssuerModel>) {
+        Logger.v(TAG, "onChanged")
+        issuersAdapter.updateIssuerModelList(issuerModels)
     }
 
-    @Override
-    public void onItemClicked(int position) {
-        Logger.d(TAG, "onItemClicked - " + position);
-        mIdealInputData.setSelectedIssuer(mIssuersAdapter.getIssuerAt(position));
-        getComponent().inputDataChanged(mIdealInputData);
+    override fun onItemClicked(position: Int) {
+        Logger.d(TAG, "onItemClicked - $position")
+        idealInputData.selectedIssuer = issuersAdapter.getIssuerAt(position)
+        component.inputDataChanged(idealInputData)
+    }
+
+    companion object {
+        private val TAG = getTag()
     }
 }

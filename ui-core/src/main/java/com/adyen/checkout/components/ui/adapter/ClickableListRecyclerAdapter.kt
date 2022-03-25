@@ -17,10 +17,10 @@ abstract class ClickableListRecyclerAdapter<ViewHolderT : RecyclerView.ViewHolde
     var onItemCLickedListener: OnItemCLickedListener? = null
 
     @CallSuper
-    override fun onBindViewHolder(viewHolderT: ViewHolderT, position: Int) {
-        viewHolderT.itemView.setOnClickListener {
+    override fun onBindViewHolder(viewHolder: ViewHolderT, position: Int) {
+        viewHolder.itemView.setOnClickListener {
             Logger.d(TAG, "click")
-            onItemCLickedListener?.onItemClicked(viewHolderT.bindingAdapterPosition)
+            onItemCLickedListener?.onItemClicked(viewHolder.bindingAdapterPosition)
         }
     }
 
