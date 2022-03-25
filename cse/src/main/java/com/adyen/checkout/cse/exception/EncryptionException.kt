@@ -5,19 +5,12 @@
  *
  * Created by caiof on 14/1/2021.
  */
+package com.adyen.checkout.cse.exception
 
-package com.adyen.checkout.cse.exception;
+import com.adyen.checkout.core.exception.CheckoutException
 
-import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
-
-import com.adyen.checkout.core.exception.CheckoutException;
-
-public class EncryptionException extends CheckoutException {
-
-    private static final long serialVersionUID = 604047691381396990L;
-
-    public EncryptionException(@NonNull String message, @Nullable Throwable cause) {
-        super(message, cause);
+class EncryptionException(message: String, cause: Throwable?) : CheckoutException(message, cause) {
+    companion object {
+        private const val serialVersionUID = 604047691381396990L
     }
 }

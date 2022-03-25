@@ -5,85 +5,46 @@
  *
  * Created by arman on 6/6/2019.
  */
+package com.adyen.checkout.cse
 
-package com.adyen.checkout.cse;
+import android.os.Parcel
+import android.os.Parcelable
 
-import android.os.Parcel;
-import android.os.Parcelable;
+data class EncryptedCard(
+    val encryptedCardNumber: String?,
+    val encryptedExpiryMonth: String?,
+    val encryptedExpiryYear: String?,
+    val encryptedSecurityCode: String?,
+) : Parcelable {
 
-import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
+    private constructor(source: Parcel) : this(
+        encryptedCardNumber = source.readString(),
+        encryptedExpiryMonth = source.readString(),
+        encryptedExpiryYear = source.readString(),
+        encryptedSecurityCode = source.readString(),
+    )
 
-public final class EncryptedCard implements Parcelable {
+    override fun describeContents(): Int {
+        return Parcelable.CONTENTS_FILE_DESCRIPTOR
+    }
 
-    @NonNull
-    public static final Parcelable.Creator<EncryptedCard> CREATOR = new Creator<EncryptedCard>() {
-        @Override
-        public EncryptedCard createFromParcel(Parcel source) {
-            return new EncryptedCard(source);
+    override fun writeToParcel(dest: Parcel, flags: Int) {
+        dest.writeString(encryptedCardNumber)
+        dest.writeString(encryptedExpiryMonth)
+        dest.writeString(encryptedExpiryYear)
+        dest.writeString(encryptedSecurityCode)
+    }
+
+    companion object {
+        @JvmField
+        val CREATOR: Parcelable.Creator<EncryptedCard> = object : Parcelable.Creator<EncryptedCard> {
+            override fun createFromParcel(source: Parcel): EncryptedCard {
+                return EncryptedCard(source)
+            }
+
+            override fun newArray(size: Int): Array<EncryptedCard?> {
+                return arrayOfNulls(size)
+            }
         }
-
-        @Override
-        public EncryptedCard[] newArray(int size) {
-            return new EncryptedCard[size];
-        }
-    };
-
-    private final String mEncryptedCardNumber;
-    private final String mEncryptedExpiryMonth;
-    private final String mEncryptedExpiryYear;
-    private final String mEncryptedSecurityCode;
-
-    EncryptedCard(
-            @Nullable String encryptedCardNumber,
-            @Nullable String encryptedExpiryMonth,
-            @Nullable String encryptedExpiryYear,
-            @Nullable String encryptedSecurityCode
-    ) {
-        mEncryptedCardNumber = encryptedCardNumber;
-        mEncryptedExpiryMonth = encryptedExpiryMonth;
-        mEncryptedExpiryYear = encryptedExpiryYear;
-        mEncryptedSecurityCode = encryptedSecurityCode;
     }
-
-    private EncryptedCard(@NonNull Parcel source) {
-        mEncryptedCardNumber = source.readString();
-        mEncryptedExpiryMonth = source.readString();
-        mEncryptedExpiryYear = source.readString();
-        mEncryptedSecurityCode = source.readString();
-    }
-
-    @Override
-    public int describeContents() {
-        return Parcelable.CONTENTS_FILE_DESCRIPTOR;
-    }
-
-    @Override
-    public void writeToParcel(@NonNull Parcel dest, int flags) {
-        dest.writeString(mEncryptedCardNumber);
-        dest.writeString(mEncryptedExpiryMonth);
-        dest.writeString(mEncryptedExpiryYear);
-        dest.writeString(mEncryptedSecurityCode);
-    }
-
-    @Nullable
-    public String getEncryptedCardNumber() {
-        return mEncryptedCardNumber;
-    }
-
-    @Nullable
-    public String getEncryptedExpiryMonth() {
-        return mEncryptedExpiryMonth;
-    }
-
-    @Nullable
-    public String getEncryptedExpiryYear() {
-        return mEncryptedExpiryYear;
-    }
-
-    @Nullable
-    public String getEncryptedSecurityCode() {
-        return mEncryptedSecurityCode;
-    }
-
 }

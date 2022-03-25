@@ -5,107 +5,48 @@
  *
  * Created by caiof on 14/1/2021.
  */
+package com.adyen.checkout.cse
 
-package com.adyen.checkout.cse;
+import com.adyen.checkout.cse.CardEncrypter.GENERATION_DATE_FORMAT
+import org.json.JSONException
+import org.json.JSONObject
+import java.util.Date
 
-import static com.adyen.checkout.cse.CardEncrypter.GENERATION_DATE_FORMAT;
-
-import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
-
-import org.json.JSONException;
-import org.json.JSONObject;
-
-import java.util.Date;
-
-
-public class UnencryptedCard {
-
-    private final String mNumber;
-    private final String mExpiryMonth;
-    private final String mExpiryYear;
-    private final String mCvc;
-    private final String mCardHolderName;
-    private final Date mGenerationTime;
-
-    public UnencryptedCard(
-            @Nullable String number,
-            @Nullable String expiryMonth,
-            @Nullable String expiryYear,
-            @Nullable String cvc,
-            @Nullable String cardHolderName,
-            @Nullable Date generationTime
-    ) {
-        this.mNumber = number;
-        this.mExpiryMonth = expiryMonth;
-        this.mExpiryYear = expiryYear;
-        this.mCvc = cvc;
-        this.mCardHolderName = cardHolderName;
-        this.mGenerationTime = generationTime;
-    }
-
-    @Nullable
-    public String getNumber() {
-        return mNumber;
-    }
-
-    @Nullable
-    public String getExpiryMonth() {
-        return mExpiryMonth;
-    }
-
-    @Nullable
-    public String getExpiryYear() {
-        return mExpiryYear;
-    }
-
-    @Nullable
-    public String getCvc() {
-        return mCvc;
-    }
-
-    @Nullable
-    public String getCardHolderName() {
-        return mCardHolderName;
-    }
-
-    @Nullable
-    public Date getGenerationTime() {
-        return mGenerationTime;
-    }
-
-    @NonNull
-    @Override
-    public String toString() {
-        final JSONObject cardJson = new JSONObject();
-
-        try {
-            if (mGenerationTime != null) {
-                cardJson.put("generationtime", GENERATION_DATE_FORMAT.format(mGenerationTime));
+data class UnencryptedCard(
+    val number: String?,
+    val expiryMonth: String?,
+    val expiryYear: String?,
+    val cvc: String?,
+    val cardHolderName: String?,
+    val generationTime: Date?
+) {
+    override fun toString(): String {
+        return try {
+            val cardJson = JSONObject()
+            if (generationTime != null) {
+                cardJson.put("generationtime", GENERATION_DATE_FORMAT.format(generationTime))
             }
-            if (mNumber != null) {
+            if (number != null) {
                 // Builder checks that number needs to be at least 8 digits.
-                final int firstThreeDigits = 3;
-                cardJson.put("number", mNumber.substring(0, firstThreeDigits));
+                cardJson.put("number", number.substring(0, firstThreeDigits))
             }
-            cardJson.putOpt("holderName", mCardHolderName);
-        } catch (JSONException e) {
-            throw new RuntimeException("UnencryptedCard toString() failed.", e);
+            cardJson.putOpt("holderName", cardHolderName)
+            cardJson.toString()
+        } catch (e: JSONException) {
+            throw IllegalStateException("UnencryptedCard toString() failed.", e)
         }
-
-        return cardJson.toString();
     }
 
     /**
-     * Builder for {@link UnencryptedCard} objects.
+     * Builder for [UnencryptedCard] objects.
      */
-    public static final class Builder {
-        private String mNumber;
-        private String mExpiryMonth;
-        private String mExpiryYear;
-        private String mCardHolderName;
-        private String mCvc;
-        private Date mGenerationTime;
+    class Builder {
+        private var number: String? = null
+        private var expiryMonth: String? = null
+        private var expiryYear: String? = null
+        private var cardHolderName: String? = null
+        private var cvc: String? = null
+        private var generationTime: Date? = null
 
         /**
          * Set the optional card number.
@@ -113,10 +54,9 @@ public class UnencryptedCard {
          * @param number The card number.
          * @return The Builder instance.
          */
-        @NonNull
-        public Builder setNumber(@NonNull String number) {
-            this.mNumber = removeWhiteSpaces(number);
-            return this;
+        fun setNumber(number: String): Builder {
+            this.number = removeWhiteSpaces(number)
+            return this
         }
 
         /**
@@ -125,10 +65,9 @@ public class UnencryptedCard {
          * @param expiryMonth The expiry month.
          * @return The Builder instance.
          */
-        @NonNull
-        public Builder setExpiryMonth(@NonNull String expiryMonth) {
-            this.mExpiryMonth = removeWhiteSpaces(expiryMonth);
-            return this;
+        fun setExpiryMonth(expiryMonth: String): Builder {
+            this.expiryMonth = removeWhiteSpaces(expiryMonth)
+            return this
         }
 
         /**
@@ -137,10 +76,9 @@ public class UnencryptedCard {
          * @param expiryYear The expiry year.
          * @return The Builder instance.
          */
-        @NonNull
-        public Builder setExpiryYear(@NonNull String expiryYear) {
-            this.mExpiryYear = removeWhiteSpaces(expiryYear);
-            return this;
+        fun setExpiryYear(expiryYear: String): Builder {
+            this.expiryYear = removeWhiteSpaces(expiryYear)
+            return this
         }
 
         /**
@@ -149,10 +87,9 @@ public class UnencryptedCard {
          * @param cvc The card security code.
          * @return The Builder instance.
          */
-        @NonNull
-        public Builder setCvc(@NonNull String cvc) {
-            this.mCvc = removeWhiteSpaces(cvc);
-            return this;
+        fun setCvc(cvc: String): Builder {
+            this.cvc = removeWhiteSpaces(cvc)
+            return this
         }
 
         /**
@@ -161,10 +98,9 @@ public class UnencryptedCard {
          * @param holderName The holder name.
          * @return The Builder instance.
          */
-        @NonNull
-        public Builder setHolderName(@NonNull String holderName) {
-            this.mCardHolderName = trimAndRemoveMultipleWhiteSpaces(holderName);
-            return this;
+        fun setHolderName(holderName: String): Builder {
+            cardHolderName = trimAndRemoveMultipleWhiteSpaces(holderName)
+            return this
         }
 
         /**
@@ -173,28 +109,38 @@ public class UnencryptedCard {
          * @param generationTime The generation time.
          * @return The Builder instance.
          */
-        @NonNull
-        public Builder setGenerationTime(@NonNull Date generationTime) {
-            this.mGenerationTime = generationTime;
-            return this;
+        fun setGenerationTime(generationTime: Date): Builder {
+            this.generationTime = generationTime
+            return this
         }
 
         /**
-         * Builds the given {@link UnencryptedCard} object.
+         * Builds the given [UnencryptedCard] object.
          *
-         * @return The {@link UnencryptedCard} object.
+         * @return The [UnencryptedCard] object.
          */
-        @NonNull
-        public UnencryptedCard build() throws NullPointerException, IllegalStateException {
-            return new UnencryptedCard(mNumber, mExpiryMonth, mExpiryYear, mCvc, mCardHolderName, mGenerationTime);
+        @Throws(NullPointerException::class, IllegalStateException::class)
+        fun build(): UnencryptedCard {
+            return UnencryptedCard(
+                number = number,
+                expiryMonth = expiryMonth,
+                expiryYear = expiryYear,
+                cvc = cvc,
+                cardHolderName = cardHolderName,
+                generationTime = generationTime
+            )
         }
 
-        private String removeWhiteSpaces(String string) {
-            return string != null ? string.replaceAll("\\s", "") : null;
+        private fun removeWhiteSpaces(string: String?): String? {
+            return string?.replace("\\s".toRegex(), "")
         }
 
-        private String trimAndRemoveMultipleWhiteSpaces(String string) {
-            return string != null ? string.trim().replaceAll("\\s{2,}", " ") : null;
+        private fun trimAndRemoveMultipleWhiteSpaces(string: String?): String? {
+            return string?.trim { it <= ' ' }?.replace("\\s{2,}".toRegex(), " ")
         }
+    }
+
+    companion object {
+        private const val firstThreeDigits = 3
     }
 }
