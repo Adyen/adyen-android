@@ -3,18 +3,19 @@ package com.adyen.checkout.components.base
 import android.os.Parcel
 import android.os.Parcelable
 import com.adyen.checkout.core.api.Environment
-import java.util.*
+import java.util.Locale
 
 abstract class Configuration protected constructor(
     val shopperLocale: Locale,
     val environment: Environment,
-    val clientKey: String
+    val clientKey: String,
 ) : Parcelable {
 
     constructor(parcel: Parcel) : this(
-        parcel.readSerializable() as Locale,
-        parcel.readParcelable(Environment::class.java.classLoader)!!,
-        parcel.readString()!!
+        shopperLocale = parcel.readSerializable() as Locale,
+        environment = parcel.readParcelable(Environment::class.java.classLoader)
+            ?: throw IllegalStateException("Failed to read Environment from parcel"),
+        clientKey = parcel.readString() ?: throw IllegalStateException("Failed to read clientKey from parcel"),
     )
 
     override fun writeToParcel(parcel: Parcel, flags: Int) {

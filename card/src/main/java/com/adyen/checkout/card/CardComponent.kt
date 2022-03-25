@@ -254,7 +254,7 @@ class CardComponent private constructor(
         // If data is not valid we just return empty object, encryption would fail and we don't pass unencrypted data.
         if (!stateOutputData.isValid || publicKey == null) {
             return CardComponentState(
-                paymentComponentData = PaymentComponentData<CardPaymentMethod>(),
+                paymentComponentData = PaymentComponentData(),
                 isInputValid = stateOutputData.isValid,
                 isReady = publicKey != null,
                 cardType = firstCardType,
@@ -274,7 +274,7 @@ class CardComponent private constructor(
                 if (cvc.isNotEmpty()) unencryptedCardBuilder.setCvc(cvc)
             }
             val expiryDateResult = stateOutputData.expiryDateState.value
-            if (expiryDateResult.expiryYear != ExpiryDate.EMPTY_VALUE && expiryDateResult.expiryMonth != ExpiryDate.EMPTY_VALUE) {
+            if (expiryDateResult != ExpiryDate.EMPTY_DATE) {
                 unencryptedCardBuilder.setExpiryMonth(expiryDateResult.expiryMonth.toString())
                 unencryptedCardBuilder.setExpiryYear(expiryDateResult.expiryYear.toString())
             }
@@ -283,7 +283,7 @@ class CardComponent private constructor(
         } catch (e: EncryptionException) {
             notifyException(e)
             return CardComponentState(
-                paymentComponentData = PaymentComponentData<CardPaymentMethod>(),
+                paymentComponentData = PaymentComponentData(),
                 isInputValid = false,
                 isReady = true,
                 cardType = firstCardType,

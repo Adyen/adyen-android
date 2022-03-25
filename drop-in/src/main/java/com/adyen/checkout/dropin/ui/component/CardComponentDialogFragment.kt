@@ -106,9 +106,10 @@ class CardComponentDialogFragment : BaseComponentDialogFragment() {
     override fun onChanged(paymentComponentState: PaymentComponentState<in PaymentMethodDetails>?) {
         val cardComponent = component as CardComponent
         val cardComponentState = paymentComponentState as? CardComponentState
-        if (cardComponentState?.cardType != null && !cardComponent.isStoredPaymentMethod()) {
+        val cardType = cardComponentState?.cardType
+        if (cardType != null && !cardComponent.isStoredPaymentMethod()) {
             // TODO: 11/01/2021 pass list of cards from Bin Lookup
-            cardListAdapter.setFilteredCard(listOf(cardComponentState.cardType))
+            cardListAdapter.setFilteredCard(listOf(cardType))
         } else {
             cardListAdapter.setFilteredCard(emptyList())
         }
