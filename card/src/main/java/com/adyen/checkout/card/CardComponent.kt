@@ -180,7 +180,11 @@ class CardComponent private constructor(
         val shouldFailWithUnsupportedBrand = selectedOrFirstCardType == null && isReliable
 
         return CardOutputData(
-            cardDelegate.validateCardNumber(cardNumber, enableLuhnCheck, isBrandSupported = !shouldFailWithUnsupportedBrand),
+            cardDelegate.validateCardNumber(
+                cardNumber,
+                enableLuhnCheck,
+                isBrandSupported = !shouldFailWithUnsupportedBrand
+            ),
             cardDelegate.validateExpiryDate(expiryDate, selectedOrFirstCardType?.expiryDatePolicy),
             cardDelegate.validateSecurityCode(securityCode, selectedOrFirstCardType),
             cardDelegate.validateHolderName(holderName),
@@ -200,7 +204,8 @@ class CardComponent private constructor(
                 configuration.installmentConfiguration,
                 selectedOrFirstCardType?.cardType,
                 isReliable
-            )
+            ),
+            cardDelegate.getSupportedCardTypes(),
         )
     }
 
@@ -382,7 +387,8 @@ class CardComponent private constructor(
         return configuration.isStorePaymentFieldVisible
     }
 
-    @StringRes fun getKcpBirthDateOrTaxNumberHint(input: String): Int {
+    @StringRes
+    fun getKcpBirthDateOrTaxNumberHint(input: String): Int {
         return when {
             input.length > KcpValidationUtils.KCP_BIRTH_DATE_LENGTH -> R.string.checkout_kcp_tax_number_hint
             else -> R.string.checkout_kcp_birth_date_or_tax_number_hint

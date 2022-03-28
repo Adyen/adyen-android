@@ -86,13 +86,6 @@ class CardComponentDialogFragment : BaseComponentDialogFragment() {
         } else {
             binding.payButton.visibility = View.GONE
         }
-
-        val supportedCards = if (cardComponent.isStoredPaymentMethod()) {
-            emptyList()
-        } else {
-            cardComponent.configuration.supportedCardTypes
-        }
-        binding.cardView.setSupportedCardsList(supportedCards)
     }
 
     override fun onChanged(paymentComponentState: PaymentComponentState<in PaymentMethodDetails>?) {

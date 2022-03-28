@@ -156,6 +156,7 @@ class CardView @JvmOverloads constructor(
             handleCvcUIState(cardOutputData.cvcUIState)
             handleExpiryDateUIState(cardOutputData.expiryDateUIState)
             updateInstallments(cardOutputData)
+            setSupportedCardsList(cardOutputData.supportedCardTypes)
         }
         if (component.isStoredPaymentMethod() && component.requiresInput()) {
             binding.textInputLayoutSecurityCode.editText?.requestFocus()
@@ -610,7 +611,7 @@ class CardView @JvmOverloads constructor(
         }
     }
 
-    fun setSupportedCardsList(cards: List<CardType>) {
+    private fun setSupportedCardsList(cards: List<CardType>) {
         binding.recyclerViewCardList.isVisible = cards.isNotEmpty()
         if (cardListAdapter == null) {
             cardListAdapter = CardListAdapter(requireNotNull(imageLoader))
