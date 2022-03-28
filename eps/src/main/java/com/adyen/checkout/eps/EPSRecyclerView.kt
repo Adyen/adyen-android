@@ -5,35 +5,19 @@
  *
  * Created by arman on 12/6/2019.
  */
+package com.adyen.checkout.eps
 
-package com.adyen.checkout.eps;
+import android.content.Context
+import android.util.AttributeSet
+import com.adyen.checkout.components.model.payments.request.EPSPaymentMethod
+import com.adyen.checkout.issuerlist.IssuerListRecyclerView
 
-import android.content.Context;
-import android.util.AttributeSet;
+class EPSRecyclerView : IssuerListRecyclerView<EPSPaymentMethod, EPSComponent> {
+    constructor(context: Context) : super(context)
+    constructor(context: Context, attrs: AttributeSet?) : super(context, attrs)
+    constructor(context: Context, attrs: AttributeSet?, defStyleAttr: Int) : super(context, attrs, defStyleAttr)
 
-import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
-
-import com.adyen.checkout.components.model.payments.request.EPSPaymentMethod;
-import com.adyen.checkout.issuerlist.IssuerListRecyclerView;
-
-@SuppressWarnings("AbbreviationAsWordInName")
-public class EPSRecyclerView extends IssuerListRecyclerView<EPSPaymentMethod, EPSComponent> {
-
-    public EPSRecyclerView(@NonNull Context context) {
-        super(context);
-    }
-
-    public EPSRecyclerView(@NonNull Context context, @Nullable AttributeSet attrs) {
-        super(context, attrs);
-    }
-
-    public EPSRecyclerView(@NonNull Context context, @Nullable AttributeSet attrs, int defStyleAttr) {
-        super(context, attrs, defStyleAttr);
-    }
-
-    @Override
-    public boolean hideIssuersLogo() {
-        return true;
+    override fun hideIssuersLogo(): Boolean {
+        return true
     }
 }

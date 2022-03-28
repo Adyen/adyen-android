@@ -5,29 +5,15 @@
  *
  * Created by caiof on 22/5/2019.
  */
+package com.adyen.checkout.ideal
 
-package com.adyen.checkout.ideal;
+import android.content.Context
+import android.util.AttributeSet
+import com.adyen.checkout.components.model.payments.request.IdealPaymentMethod
+import com.adyen.checkout.issuerlist.IssuerListRecyclerView
 
-import android.content.Context;
-import android.util.AttributeSet;
-
-import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
-
-import com.adyen.checkout.components.model.payments.request.IdealPaymentMethod;
-import com.adyen.checkout.issuerlist.IssuerListRecyclerView;
-
-public class IdealRecyclerView extends IssuerListRecyclerView<IdealPaymentMethod, IdealComponent> {
-
-    public IdealRecyclerView(@NonNull Context context) {
-        super(context);
-    }
-
-    public IdealRecyclerView(@NonNull Context context, @Nullable AttributeSet attrs) {
-        super(context, attrs);
-    }
-
-    public IdealRecyclerView(@NonNull Context context, @Nullable AttributeSet attrs, int defStyleAttr) {
-        super(context, attrs, defStyleAttr);
-    }
+class IdealRecyclerView : IssuerListRecyclerView<IdealPaymentMethod, IdealComponent> {
+    constructor(context: Context) : super(context)
+    constructor(context: Context, attrs: AttributeSet?) : super(context, attrs)
+    constructor(context: Context, attrs: AttributeSet?, defStyleAttr: Int) : super(context, attrs, defStyleAttr)
 }

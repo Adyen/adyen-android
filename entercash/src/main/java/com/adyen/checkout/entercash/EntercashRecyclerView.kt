@@ -5,29 +5,15 @@
  *
  * Created by arman on 12/6/2019.
  */
+package com.adyen.checkout.entercash
 
-package com.adyen.checkout.entercash;
+import android.content.Context
+import android.util.AttributeSet
+import com.adyen.checkout.components.model.payments.request.EntercashPaymentMethod
+import com.adyen.checkout.issuerlist.IssuerListRecyclerView
 
-import android.content.Context;
-import android.util.AttributeSet;
-
-import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
-
-import com.adyen.checkout.components.model.payments.request.EntercashPaymentMethod;
-import com.adyen.checkout.issuerlist.IssuerListRecyclerView;
-
-public class EntercashRecyclerView extends IssuerListRecyclerView<EntercashPaymentMethod, EntercashComponent> {
-
-    public EntercashRecyclerView(@NonNull Context context) {
-        super(context);
-    }
-
-    public EntercashRecyclerView(@NonNull Context context, @Nullable AttributeSet attrs) {
-        super(context, attrs);
-    }
-
-    public EntercashRecyclerView(@NonNull Context context, @Nullable AttributeSet attrs, int defStyleAttr) {
-        super(context, attrs, defStyleAttr);
-    }
+class EntercashRecyclerView : IssuerListRecyclerView<EntercashPaymentMethod, EntercashComponent> {
+    constructor(context: Context) : super(context)
+    constructor(context: Context, attrs: AttributeSet?) : super(context, attrs)
+    constructor(context: Context, attrs: AttributeSet?, defStyleAttr: Int) : super(context, attrs, defStyleAttr)
 }

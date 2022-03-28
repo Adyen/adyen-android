@@ -5,29 +5,15 @@
  *
  * Created by arman on 12/6/2019.
  */
+package com.adyen.checkout.openbanking
 
-package com.adyen.checkout.openbanking;
+import android.content.Context
+import android.util.AttributeSet
+import com.adyen.checkout.components.model.payments.request.OpenBankingPaymentMethod
+import com.adyen.checkout.issuerlist.IssuerListRecyclerView
 
-import android.content.Context;
-import android.util.AttributeSet;
-
-import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
-
-import com.adyen.checkout.components.model.payments.request.OpenBankingPaymentMethod;
-import com.adyen.checkout.issuerlist.IssuerListRecyclerView;
-
-public class OpenBankingRecyclerView extends IssuerListRecyclerView<OpenBankingPaymentMethod, OpenBankingComponent> {
-
-    public OpenBankingRecyclerView(@NonNull Context context) {
-        super(context);
-    }
-
-    public OpenBankingRecyclerView(@NonNull Context context, @Nullable AttributeSet attrs) {
-        super(context, attrs);
-    }
-
-    public OpenBankingRecyclerView(@NonNull Context context, @Nullable AttributeSet attrs, int defStyleAttr) {
-        super(context, attrs, defStyleAttr);
-    }
+class OpenBankingRecyclerView : IssuerListRecyclerView<OpenBankingPaymentMethod, OpenBankingComponent> {
+    constructor(context: Context) : super(context)
+    constructor(context: Context, attrs: AttributeSet?) : super(context, attrs)
+    constructor(context: Context, attrs: AttributeSet?, defStyleAttr: Int) : super(context, attrs, defStyleAttr)
 }
