@@ -39,19 +39,27 @@ class NewCardDelegate(
     private val cardValidationMapper: CardValidationMapper
 ) : CardDelegate(cardConfiguration, publicKeyRepository) {
 
-    private val _binLookupFlow: MutableSharedFlow<List<DetectedCardType>> = MutableSharedFlow(0, 1, BufferOverflow.DROP_OLDEST)
+    private val _binLookupFlow: MutableSharedFlow<List<DetectedCardType>> =
+        MutableSharedFlow(0, 1, BufferOverflow.DROP_OLDEST)
     internal val binLookupFlow: Flow<List<DetectedCardType>> = _binLookupFlow
 
     override fun getPaymentMethodType(): String {
         return paymentMethod.type ?: PaymentMethodTypes.UNKNOWN
     }
 
-    override fun validateCardNumber(cardNumber: String, enableLuhnCheck: Boolean, isBrandSupported: Boolean): FieldState<String> {
+    override fun validateCardNumber(
+        cardNumber: String,
+        enableLuhnCheck: Boolean,
+        isBrandSupported: Boolean
+    ): FieldState<String> {
         val validation = CardValidationUtils.validateCardNumber(cardNumber, enableLuhnCheck, isBrandSupported)
         return cardValidationMapper.mapCardNumberValidation(cardNumber, validation)
     }
 
-    override fun validateExpiryDate(expiryDate: ExpiryDate, expiryDatePolicy: Brand.FieldPolicy?): FieldState<ExpiryDate> {
+    override fun validateExpiryDate(
+        expiryDate: ExpiryDate,
+        expiryDatePolicy: Brand.FieldPolicy?
+    ): FieldState<ExpiryDate> {
         return CardValidationUtils.validateExpiryDate(expiryDate, expiryDatePolicy)
     }
 
@@ -186,6 +194,8 @@ class NewCardDelegate(
             InstallmentUtils.makeInstallmentOptions(installmentConfiguration, cardType, isCardTypeReliable)
         }
     }
+
+    override fun getSupportedCardTypes(): List<CardType> = cardConfiguration.supportedCardTypes
 
     private fun detectCardLocally(cardNumber: String): List<DetectedCardType> {
         Logger.d(TAG, "detectCardLocally")

@@ -53,14 +53,21 @@ class StoredCardDelegate(
         return storedPaymentMethod.type ?: PaymentMethodTypes.UNKNOWN
     }
 
-    override fun validateCardNumber(cardNumber: String, enableLuhnCheck: Boolean, isBrandSupported: Boolean): FieldState<String> {
+    override fun validateCardNumber(
+        cardNumber: String,
+        enableLuhnCheck: Boolean,
+        isBrandSupported: Boolean
+    ): FieldState<String> {
         return FieldState(
             cardNumber,
             Validation.Valid
         )
     }
 
-    override fun validateExpiryDate(expiryDate: ExpiryDate, expiryDatePolicy: Brand.FieldPolicy?): FieldState<ExpiryDate> {
+    override fun validateExpiryDate(
+        expiryDate: ExpiryDate,
+        expiryDatePolicy: Brand.FieldPolicy?
+    ): FieldState<ExpiryDate> {
         return FieldState(
             expiryDate,
             Validation.Valid
@@ -145,12 +152,17 @@ class StoredCardDelegate(
         return emptyList()
     }
 
+    override fun getSupportedCardTypes(): List<CardType> = emptyList()
+
     fun getStoredCardInputData(): CardInputData {
         val storedCardInputData = CardInputData()
         storedCardInputData.cardNumber = storedPaymentMethod.lastFour.orEmpty()
 
         try {
-            val storedDate = ExpiryDate(storedPaymentMethod.expiryMonth.orEmpty().toInt(), storedPaymentMethod.expiryYear.orEmpty().toInt())
+            val storedDate = ExpiryDate(
+                storedPaymentMethod.expiryMonth.orEmpty().toInt(),
+                storedPaymentMethod.expiryYear.orEmpty().toInt()
+            )
             storedCardInputData.expiryDate = storedDate
         } catch (e: NumberFormatException) {
             Logger.e(TAG, "Failed to parse stored Date", e)

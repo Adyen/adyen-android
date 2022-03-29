@@ -22,7 +22,8 @@
             android:id="@+id/textInputLayout_cardNumber"
             style="@style/AdyenCheckout.TextInputLayout"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content">
+            android:layout_height="wrap_content"
+            android:minHeight="@null">
 
             <com.adyen.checkout.card.ui.CardNumberInput
                 android:id="@+id/editText_cardNumber"
@@ -69,6 +70,22 @@
             </FrameLayout>
         </LinearLayout>
     </FrameLayout>
+
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/recyclerView_cardList"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="@dimen/standard_half_margin"
+        android:clipToPadding="false"
+        android:orientation="horizontal"
+        android:paddingStart="@dimen/standard_three_quarters_margin"
+        app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
+        tools:itemCount="8"
+        tools:listitem="@layout/brand_logo" />
+
+    <Space
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/standard_three_quarters_margin" />
 
     <LinearLayout
         android:layout_width="match_parent"
