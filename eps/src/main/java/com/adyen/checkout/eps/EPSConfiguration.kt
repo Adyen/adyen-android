@@ -5,95 +5,80 @@
  *
  * Created by arman on 12/6/2019.
  */
+package com.adyen.checkout.eps
 
-package com.adyen.checkout.eps;
+import android.content.Context
+import android.os.Parcel
+import android.os.Parcelable
+import com.adyen.checkout.core.api.Environment
+import com.adyen.checkout.issuerlist.IssuerListConfiguration
+import java.util.Locale
 
-import android.content.Context;
-import android.os.Parcel;
-import android.os.Parcelable;
+class EPSConfiguration : IssuerListConfiguration {
 
-import androidx.annotation.NonNull;
+    internal constructor(
+        shopperLocale: Locale,
+        environment: Environment,
+        clientKey: String
+    ) : super(shopperLocale, environment, clientKey)
 
-import com.adyen.checkout.core.api.Environment;
-import com.adyen.checkout.issuerlist.IssuerListConfiguration;
-
-import java.util.Locale;
-
-@SuppressWarnings("AbbreviationAsWordInName")
-public class EPSConfiguration extends IssuerListConfiguration {
-
-    public static final Parcelable.Creator<EPSConfiguration> CREATOR = new Parcelable.Creator<EPSConfiguration>() {
-        public EPSConfiguration createFromParcel(@NonNull Parcel in) {
-            return new EPSConfiguration(in);
-        }
-
-        public EPSConfiguration[] newArray(int size) {
-            return new EPSConfiguration[size];
-        }
-    };
+    internal constructor(parcel: Parcel) : super(parcel)
 
     /**
-     * @param builder The Builder instance to create the configuration.
+     * Builder to create a [EPSConfiguration].
      */
-    EPSConfiguration(@NonNull Builder builder) {
-        super(builder.getBuilderShopperLocale(), builder.getBuilderEnvironment(), builder.getBuilderClientKey());
-    }
-
-    EPSConfiguration(@NonNull Parcel in) {
-        super(in);
-    }
-
-    /**
-     * Builder to create a {@link EPSConfiguration}.
-     */
-    public static final class Builder extends IssuerListBuilder<EPSConfiguration> {
-
+    class Builder : IssuerListBuilder<EPSConfiguration> {
         /**
          * Constructor for Builder with default values.
          *
          * @param context   A context
          * @param clientKey Your Client Key used for network calls from the SDK to Adyen.
          */
-        public Builder(@NonNull Context context, @NonNull String clientKey) {
-            super(context, clientKey);
-        }
+        constructor(context: Context, clientKey: String) : super(context, clientKey)
 
         /**
          * Builder with required parameters.
          *
          * @param shopperLocale The Locale of the shopper.
-         * @param environment   The {@link Environment} to be used for network calls to Adyen.
+         * @param environment   The [Environment] to be used for network calls to Adyen.
          * @param clientKey Your Client Key used for network calls from the SDK to Adyen.
          */
-        public Builder(@NonNull Locale shopperLocale, @NonNull Environment environment, @NonNull String clientKey) {
-            super(shopperLocale, environment, clientKey);
-        }
+        constructor(shopperLocale: Locale, environment: Environment, clientKey: String) : super(shopperLocale, environment, clientKey)
 
         /**
          * Constructor that copies an existing configuration.
          *
          * @param configuration A configuration to initialize the builder.
          */
-        public Builder(@NonNull EPSConfiguration configuration) {
-            super(configuration);
+        constructor(configuration: EPSConfiguration) : super(configuration)
+
+        override fun setShopperLocale(builderShopperLocale: Locale): Builder {
+            return super.setShopperLocale(builderShopperLocale) as Builder
         }
 
-        @Override
-        @NonNull
-        public Builder setShopperLocale(@NonNull Locale builderShopperLocale) {
-            return (Builder) super.setShopperLocale(builderShopperLocale);
+        override fun setEnvironment(builderEnvironment: Environment): Builder {
+            return super.setEnvironment(builderEnvironment) as Builder
         }
 
-        @Override
-        @NonNull
-        public Builder setEnvironment(@NonNull Environment builderEnvironment) {
-            return (Builder) super.setEnvironment(builderEnvironment);
+        public override fun buildInternal(): EPSConfiguration {
+            return EPSConfiguration(
+                shopperLocale = builderShopperLocale,
+                environment = builderEnvironment,
+                clientKey = builderClientKey,
+            )
         }
+    }
 
-        @NonNull
-        @Override
-        public EPSConfiguration buildInternal() {
-            return new EPSConfiguration(this);
+    companion object {
+        @JvmField
+        val CREATOR: Parcelable.Creator<EPSConfiguration> = object : Parcelable.Creator<EPSConfiguration> {
+            override fun createFromParcel(parcel: Parcel): EPSConfiguration {
+                return EPSConfiguration(parcel)
+            }
+
+            override fun newArray(size: Int): Array<EPSConfiguration?> {
+                return arrayOfNulls(size)
+            }
         }
     }
 }

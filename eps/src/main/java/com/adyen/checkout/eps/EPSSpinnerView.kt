@@ -5,35 +5,19 @@
  *
  * Created by arman on 12/6/2019.
  */
+package com.adyen.checkout.eps
 
-package com.adyen.checkout.eps;
+import android.content.Context
+import android.util.AttributeSet
+import com.adyen.checkout.components.model.payments.request.EPSPaymentMethod
+import com.adyen.checkout.issuerlist.IssuerListSpinnerView
 
-import android.content.Context;
-import android.util.AttributeSet;
+class EPSSpinnerView : IssuerListSpinnerView<EPSPaymentMethod, EPSComponent> {
+    constructor(context: Context) : super(context)
+    constructor(context: Context, attrs: AttributeSet?) : super(context, attrs)
+    constructor(context: Context, attrs: AttributeSet?, defStyleAttr: Int) : super(context, attrs, defStyleAttr)
 
-import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
-
-import com.adyen.checkout.components.model.payments.request.EPSPaymentMethod;
-import com.adyen.checkout.issuerlist.IssuerListSpinnerView;
-
-@SuppressWarnings("AbbreviationAsWordInName")
-public final class EPSSpinnerView extends IssuerListSpinnerView<EPSPaymentMethod, EPSComponent> {
-
-    public EPSSpinnerView(@NonNull Context context) {
-        super(context);
-    }
-
-    public EPSSpinnerView(@NonNull Context context, @Nullable AttributeSet attrs) {
-        super(context, attrs);
-    }
-
-    public EPSSpinnerView(@NonNull Context context, @Nullable AttributeSet attrs, int defStyleAttr) {
-        super(context, attrs, defStyleAttr);
-    }
-
-    @Override
-    public boolean hideIssuersLogo() {
-        return true;
+    override fun hideIssuersLogo(): Boolean {
+        return true
     }
 }
