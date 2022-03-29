@@ -20,7 +20,7 @@ interface PaymentMethodAvailabilityCheck<ConfigurationT : Configuration> {
     fun isAvailable(
         applicationContext: Application,
         paymentMethod: PaymentMethod,
-        configuration: ConfigurationT,
+        configuration: ConfigurationT?,
         callback: ComponentAvailableCallback<ConfigurationT>
     )
 }
