@@ -5,29 +5,15 @@
  *
  * Created by arman on 20/2/2019.
  */
+package com.adyen.checkout.ideal
 
-package com.adyen.checkout.ideal;
+import android.content.Context
+import android.util.AttributeSet
+import com.adyen.checkout.components.model.payments.request.IdealPaymentMethod
+import com.adyen.checkout.issuerlist.IssuerListSpinnerView
 
-import android.content.Context;
-import android.util.AttributeSet;
-
-import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
-
-import com.adyen.checkout.components.model.payments.request.IdealPaymentMethod;
-import com.adyen.checkout.issuerlist.IssuerListSpinnerView;
-
-public final class IdealSpinnerView extends IssuerListSpinnerView<IdealPaymentMethod, IdealComponent> {
-
-    public IdealSpinnerView(@NonNull Context context) {
-        super(context);
-    }
-
-    public IdealSpinnerView(@NonNull Context context, @Nullable AttributeSet attrs) {
-        super(context, attrs);
-    }
-
-    public IdealSpinnerView(@NonNull Context context, @Nullable AttributeSet attrs, int defStyleAttr) {
-        super(context, attrs, defStyleAttr);
-    }
+class IdealSpinnerView : IssuerListSpinnerView<IdealPaymentMethod, IdealComponent> {
+    constructor(context: Context) : super(context)
+    constructor(context: Context, attrs: AttributeSet?) : super(context, attrs)
+    constructor(context: Context, attrs: AttributeSet?, defStyleAttr: Int) : super(context, attrs, defStyleAttr)
 }
