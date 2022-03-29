@@ -17,7 +17,7 @@ class AlwaysAvailablePaymentMethod : PaymentMethodAvailabilityCheck<Configuratio
     override fun isAvailable(
         applicationContext: Application,
         paymentMethod: PaymentMethod,
-        configuration: Configuration,
+        configuration: Configuration?,
         callback: ComponentAvailableCallback<Configuration>
     ) {
         callback.onAvailabilityResult(true, paymentMethod, configuration)

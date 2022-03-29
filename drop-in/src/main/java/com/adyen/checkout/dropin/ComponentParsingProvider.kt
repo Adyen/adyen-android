@@ -212,7 +212,6 @@ internal fun checkPaymentMethodAvailability(
 
         val availabilityCheck = getPaymentMethodAvailabilityCheck(type)
         val configuration = getConfigurationForPaymentMethodOrNull<Configuration>(type, dropInConfiguration, amount)
-            ?: throw CheckoutException("GooglePayConfiguration cannot be null")
 
         availabilityCheck.isAvailable(application, paymentMethod, configuration, callback)
     } catch (e: CheckoutException) {
