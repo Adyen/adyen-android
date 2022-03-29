@@ -140,9 +140,10 @@ class DropInViewModel(
         val singlePm = paymentMethodsApiResponse.paymentMethods?.size == 1
 
         val firstPaymentMethod = paymentMethodsApiResponse.paymentMethods?.firstOrNull()
-        val paymentMethodHasComponent = PaymentMethodTypes.SUPPORTED_PAYMENT_METHODS.contains(firstPaymentMethod?.type) &&
-            !GooglePayComponent.PAYMENT_METHOD_TYPES.contains(firstPaymentMethod?.type) &&
-            !PaymentMethodTypes.SUPPORTED_ACTION_ONLY_PAYMENT_METHODS.contains(firstPaymentMethod?.type)
+        val paymentMethodHasComponent =
+            PaymentMethodTypes.SUPPORTED_PAYMENT_METHODS.contains(firstPaymentMethod?.type) &&
+                !GooglePayComponent.PAYMENT_METHOD_TYPES.contains(firstPaymentMethod?.type) &&
+                !PaymentMethodTypes.SUPPORTED_ACTION_ONLY_PAYMENT_METHODS.contains(firstPaymentMethod?.type)
 
         return noStored && singlePm && paymentMethodHasComponent && dropInConfiguration.skipListWhenSinglePaymentMethod
     }
@@ -161,25 +162,42 @@ class DropInViewModel(
     }
 
     fun handleBalanceResult(balanceResult: BalanceResult): GiftCardBalanceResult {
-        Logger.d(TAG, "handleBalanceResult - balance: ${balanceResult.balance} - transactionLimit: ${balanceResult.transactionLimit}")
+        Logger.d(
+            TAG,
+            "handleBalanceResult - balance: ${balanceResult.balance} - " +
+                "transactionLimit: ${balanceResult.transactionLimit}"
+        )
 
         val giftCardBalanceResult = GiftCardBalanceUtils.checkBalance(
             balance = balanceResult.balance,
             transactionLimit = balanceResult.transactionLimit,
             amountToBePaid = amount
         )
-        val cachedGiftCardComponentState = cachedGiftCardComponentState ?: throw CheckoutException("Failed to retrieved cached gift card object")
+        val cachedGiftCardComponentState =
+            cachedGiftCardComponentState ?: throw CheckoutException("Failed to retrieved cached gift card object")
         return when (giftCardBalanceResult) {
             is GiftCardBalanceStatus.ZeroBalance -> {
                 Logger.i(TAG, "handleBalanceResult - Gift Card has zero balance")
-                GiftCardBalanceResult.Error(R.string.checkout_giftcard_error_zero_balance, "Gift Card has zero balance", false)
+                GiftCardBalanceResult.Error(
+                    R.string.checkout_giftcard_error_zero_balance,
+                    "Gift Card has zero balance",
+                    false
+                )
             }
             is GiftCardBalanceStatus.NonMatchingCurrencies -> {
                 Logger.e(TAG, "handleBalanceResult - Gift Card currency mismatch")
-                GiftCardBalanceResult.Error(R.string.checkout_giftcard_error_currency, "Gift Card currency mismatch", false)
+                GiftCardBalanceResult.Error(
+                    R.string.checkout_giftcard_error_currency,
+                    "Gift Card currency mismatch",
+                    false
+                )
             }
             is GiftCardBalanceStatus.ZeroAmountToBePaid -> {
-                Logger.e(TAG, "handleBalanceResult - You must set an amount in DropInConfiguration.Builder to enable gift card payments")
+                Logger.e(
+                    TAG,
+                    "handleBalanceResult - You must set an amount in DropInConfiguration.Builder to enable gift " +
+                        "card payments"
+                )
                 GiftCardBalanceResult.Error(R.string.payment_failed, "Drop-in amount is not set", true)
             }
             is GiftCardBalanceStatus.FullPayment -> {

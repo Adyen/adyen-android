@@ -21,7 +21,9 @@ import com.adyen.checkout.components.model.payments.request.PaymentMethodDetails
  * @param <ConfigurationT>  A Configuration object although optional is required to construct a Component.
  * @param <ComponentStateT> The [PaymentComponentState] this Component returns as a result.
  */
-abstract class PaymentComponentViewModel<ConfigurationT : Configuration, ComponentStateT : PaymentComponentState<out PaymentMethodDetails>>(
+abstract class PaymentComponentViewModel<
+    ConfigurationT : Configuration,
+    ComponentStateT : PaymentComponentState<out PaymentMethodDetails>>(
     val savedStateHandle: SavedStateHandle,
     @JvmField
     protected val paymentMethodDelegate: PaymentMethodDelegate,

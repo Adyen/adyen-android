@@ -22,6 +22,7 @@ class WeChatPayActionConfiguration : Configuration {
         environment: Environment,
         clientKey: String
     ) : super(shopperLocale, environment, clientKey)
+
     constructor(parcel: Parcel) : super(parcel)
 
     /**
@@ -43,7 +44,11 @@ class WeChatPayActionConfiguration : Configuration {
          * @param environment   The [Environment] to be used for network calls to Adyen.
          * @param clientKey Your Client Key used for network calls from the SDK to Adyen.
          */
-        constructor(shopperLocale: Locale, environment: Environment, clientKey: String) : super(shopperLocale, environment, clientKey)
+        constructor(
+            shopperLocale: Locale,
+            environment: Environment,
+            clientKey: String
+        ) : super(shopperLocale, environment, clientKey)
 
         /**
          * Constructor that copies an existing configuration.
@@ -71,14 +76,15 @@ class WeChatPayActionConfiguration : Configuration {
 
     companion object {
         @JvmField
-        val CREATOR: Parcelable.Creator<WeChatPayActionConfiguration> = object : Parcelable.Creator<WeChatPayActionConfiguration> {
-            override fun createFromParcel(parcel: Parcel): WeChatPayActionConfiguration {
-                return WeChatPayActionConfiguration(parcel)
-            }
+        val CREATOR: Parcelable.Creator<WeChatPayActionConfiguration> =
+            object : Parcelable.Creator<WeChatPayActionConfiguration> {
+                override fun createFromParcel(parcel: Parcel): WeChatPayActionConfiguration {
+                    return WeChatPayActionConfiguration(parcel)
+                }
 
-            override fun newArray(size: Int): Array<WeChatPayActionConfiguration?> {
-                return arrayOfNulls(size)
+                override fun newArray(size: Int): Array<WeChatPayActionConfiguration?> {
+                    return arrayOfNulls(size)
+                }
             }
-        }
     }
 }

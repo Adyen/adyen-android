@@ -23,9 +23,17 @@ abstract class IssuerListConfiguration : Configuration {
 
     protected constructor(parcel: Parcel) : super(parcel)
 
-    abstract class IssuerListBuilder<IssuerListConfigurationT : IssuerListConfiguration> : BaseConfigurationBuilder<IssuerListConfigurationT> {
+    abstract class IssuerListBuilder<IssuerListConfigurationT : IssuerListConfiguration> :
+        BaseConfigurationBuilder<IssuerListConfigurationT> {
+
         protected constructor(context: Context, clientKey: String) : super(context, clientKey)
-        protected constructor(shopperLocale: Locale, environment: Environment, clientKey: String) : super(shopperLocale, environment, clientKey)
+
+        protected constructor(
+            shopperLocale: Locale,
+            environment: Environment,
+            clientKey: String
+        ) : super(shopperLocale, environment, clientKey)
+
         protected constructor(configuration: IssuerListConfigurationT) : super(configuration)
     }
 }

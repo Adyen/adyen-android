@@ -65,7 +65,9 @@ abstract class DropInBottomSheetDialogFragment : BottomSheetDialogFragment() {
         }
 
         dialog.setOnShowListener {
-            val bottomSheet = (dialog as BottomSheetDialog).findViewById<FrameLayout>(com.google.android.material.R.id.design_bottom_sheet)
+            val bottomSheet = (dialog as BottomSheetDialog).findViewById<FrameLayout>(
+                com.google.android.material.R.id.design_bottom_sheet
+            )
 
             if (bottomSheet != null) {
                 val behavior = BottomSheetBehavior.from(bottomSheet)

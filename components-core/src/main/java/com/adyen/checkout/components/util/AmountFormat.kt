@@ -48,7 +48,12 @@ object AmountFormat {
             val checkoutCurrency = find(normalizedCurrencyCode)
             return checkoutCurrency.fractionDigits
         } catch (e: CheckoutException) {
-            Logger.e(TAG, "$normalizedCurrencyCode is an unsupported currency. Falling back to information from java.util.Currency.", e)
+            Logger.e(
+                tag = TAG,
+                msg = "$normalizedCurrencyCode is an unsupported currency. Falling back to information from " +
+                    "java.util.Currency.",
+                tr = e
+            )
         }
         return try {
             val currency = Currency.getInstance(normalizedCurrencyCode)

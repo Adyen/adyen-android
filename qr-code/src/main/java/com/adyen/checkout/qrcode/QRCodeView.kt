@@ -27,7 +27,9 @@ import java.util.concurrent.TimeUnit
 private val TAG = LogUtil.getTag()
 
 @Suppress("TooManyFunctions")
-class QRCodeView : AdyenLinearLayout<QRCodeOutputData, QRCodeConfiguration, ActionComponentData, QRCodeComponent>, Observer<QRCodeOutputData> {
+class QRCodeView :
+    AdyenLinearLayout<QRCodeOutputData, QRCodeConfiguration, ActionComponentData, QRCodeComponent>,
+    Observer<QRCodeOutputData> {
 
     private val binding: QrcodeViewBinding = QrcodeViewBinding.inflate(LayoutInflater.from(context), this)
 
@@ -42,7 +44,11 @@ class QRCodeView : AdyenLinearLayout<QRCodeOutputData, QRCodeConfiguration, Acti
         init()
     }
 
-    constructor(context: Context, attributeSet: AttributeSet, defStyleAttr: Int) : super(context, attributeSet, defStyleAttr) {
+    constructor(context: Context, attributeSet: AttributeSet, defStyleAttr: Int) : super(
+        context,
+        attributeSet,
+        defStyleAttr
+    ) {
         init()
     }
 

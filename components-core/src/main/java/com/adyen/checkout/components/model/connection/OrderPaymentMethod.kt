@@ -46,7 +46,10 @@ data class OrderPaymentMethod(
                     jsonObject.putOpt(TYPE, modelObject.type)
                     jsonObject.putOpt(LAST_FOUR, modelObject.lastFour)
                     jsonObject.putOpt(AMOUNT, ModelUtils.serializeOpt(modelObject.amount, Amount.SERIALIZER))
-                    jsonObject.putOpt(TRANSACTION_LIMIT, ModelUtils.serializeOpt(modelObject.transactionLimit, Amount.SERIALIZER))
+                    jsonObject.putOpt(
+                        TRANSACTION_LIMIT,
+                        ModelUtils.serializeOpt(modelObject.transactionLimit, Amount.SERIALIZER)
+                    )
                 } catch (e: JSONException) {
                     throw ModelSerializationException(OrderPaymentMethod::class.java, e)
                 }
@@ -58,8 +61,12 @@ data class OrderPaymentMethod(
                     OrderPaymentMethod(
                         type = jsonObject.getString(TYPE),
                         lastFour = jsonObject.getString(LAST_FOUR),
-                        amount = ModelUtils.deserializeOpt(jsonObject.optJSONObject(AMOUNT), Amount.SERIALIZER) ?: Amount.EMPTY,
-                        transactionLimit = ModelUtils.deserializeOpt(jsonObject.optJSONObject(TRANSACTION_LIMIT), Amount.SERIALIZER)
+                        amount = ModelUtils.deserializeOpt(jsonObject.optJSONObject(AMOUNT), Amount.SERIALIZER)
+                            ?: Amount.EMPTY,
+                        transactionLimit = ModelUtils.deserializeOpt(
+                            jsonObject.optJSONObject(TRANSACTION_LIMIT),
+                            Amount.SERIALIZER
+                        )
                     )
                 } catch (e: JSONException) {
                     throw ModelSerializationException(OrderPaymentMethod::class.java, e)

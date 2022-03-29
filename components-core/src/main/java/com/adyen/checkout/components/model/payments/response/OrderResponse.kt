@@ -49,7 +49,10 @@ data class OrderResponse(
                         putOpt(ORDER_DATA, modelObject.orderData)
                         putOpt(REFERENCE, modelObject.reference)
                         putOpt(AMOUNT, ModelUtils.serializeOpt(modelObject.amount, Amount.SERIALIZER))
-                        putOpt(REMAINING_AMOUNT, ModelUtils.serializeOpt(modelObject.remainingAmount, Amount.SERIALIZER))
+                        putOpt(
+                            REMAINING_AMOUNT,
+                            ModelUtils.serializeOpt(modelObject.remainingAmount, Amount.SERIALIZER)
+                        )
                         putOpt(EXPIRES_AT, modelObject.expiresAt)
                     } catch (e: JSONException) {
                         throw ModelSerializationException(OrderResponse::class.java, e)
@@ -63,7 +66,10 @@ data class OrderResponse(
                     orderData = jsonObject.optString(ORDER_DATA, ""),
                     reference = jsonObject.optString(REFERENCE, ""),
                     amount = ModelUtils.deserializeOpt(jsonObject.optJSONObject(AMOUNT), Amount.SERIALIZER),
-                    remainingAmount = ModelUtils.deserializeOpt(jsonObject.optJSONObject(REMAINING_AMOUNT), Amount.SERIALIZER),
+                    remainingAmount = ModelUtils.deserializeOpt(
+                        jsonObject.optJSONObject(REMAINING_AMOUNT),
+                        Amount.SERIALIZER
+                    ),
                     expiresAt = jsonObject.optString(EXPIRES_AT, "")
                 )
             }

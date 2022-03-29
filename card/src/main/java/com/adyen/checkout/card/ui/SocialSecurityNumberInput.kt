@@ -23,7 +23,9 @@ class SocialSecurityNumberInput constructor(
     constructor(context: Context, attrs: AttributeSet?) : this(context, attrs, 0)
 
     init {
-        enforceMaxInputLength(SocialSecurityNumberUtils.CNPJ_DIGIT_LIMIT + SocialSecurityNumberUtils.CNPJ_MASK_SEPARATORS.size)
+        enforceMaxInputLength(
+            SocialSecurityNumberUtils.CNPJ_DIGIT_LIMIT + SocialSecurityNumberUtils.CNPJ_MASK_SEPARATORS.size
+        )
         inputType = InputType.TYPE_CLASS_NUMBER
         keyListener = DigitsKeyListener.getInstance(SUPPORTED_CHARS)
     }

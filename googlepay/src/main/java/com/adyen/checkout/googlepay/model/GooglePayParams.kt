@@ -48,7 +48,8 @@ data class GooglePayParams(
         return serverGatewayMerchantId
             ?: googlePayConfiguration.merchantAccount
             ?: throw ComponentException(
-                "GooglePay merchantAccount not found. Update your API version or pass it manually inside your GooglePayConfiguration"
+                "GooglePay merchantAccount not found. Update your API version or pass it manually inside your " +
+                    "GooglePayConfiguration"
             )
     }
 

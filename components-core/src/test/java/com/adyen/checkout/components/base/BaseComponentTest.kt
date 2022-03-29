@@ -59,11 +59,16 @@ class BaseComponentTest {
     @Test(expected = IllegalArgumentException::class)
     @Throws(IOException::class, JSONException::class)
     fun initBaseComponent_notSupportedPaymentMethod_expectException() {
-        object : BasePaymentComponent<TestConfiguration, TestInputData, TestOutputData, PaymentComponentState<out PaymentMethodDetails>>(
-            SavedStateHandle(),
-            PaymentMethodDelegateTest(),
-            TestConfiguration()
-        ) {
+        object :
+            BasePaymentComponent<
+                TestConfiguration,
+                TestInputData,
+                TestOutputData,
+                PaymentComponentState<out PaymentMethodDetails>>(
+                SavedStateHandle(),
+                PaymentMethodDelegateTest(),
+                TestConfiguration()
+            ) {
             override fun onInputDataChanged(inputData: TestInputData): TestOutputData {
                 return TestOutputData()
             }
@@ -85,7 +90,11 @@ class BaseComponentTest {
     @Test
     fun initBaseComponent_ChangeInputData_expectPaymentDetails() {
         baseComponent.inputDataChanged(TestInputData())
-        baseComponent.observe(mockLifecycleOwner()) { paymentComponentState -> Assert.assertNotNull(paymentComponentState.data) }
+        baseComponent.observe(mockLifecycleOwner()) { paymentComponentState ->
+            Assert.assertNotNull(
+                paymentComponentState.data
+            )
+        }
     }
 
     @Test
@@ -94,9 +103,17 @@ class BaseComponentTest {
         baseComponent.observe(mockLifecycleOwner()) { Assert.assertEquals(1, 1) }
     }
 
-    private val baseComponent: BasePaymentComponent<TestConfiguration, TestInputData, TestOutputData, PaymentComponentState<out PaymentMethodDetails>>
+    private val baseComponent: BasePaymentComponent<
+        TestConfiguration,
+        TestInputData,
+        TestOutputData,
+        PaymentComponentState<out PaymentMethodDetails>>
         get() = object :
-            BasePaymentComponent<TestConfiguration, TestInputData, TestOutputData, PaymentComponentState<out PaymentMethodDetails>>(
+            BasePaymentComponent<
+                TestConfiguration,
+                TestInputData,
+                TestOutputData,
+                PaymentComponentState<out PaymentMethodDetails>>(
                 SavedStateHandle(),
                 paymentMethodDelegateTest,
                 TestConfiguration()

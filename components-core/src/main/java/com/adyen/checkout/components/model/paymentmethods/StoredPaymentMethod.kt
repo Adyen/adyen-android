@@ -85,7 +85,9 @@ data class StoredPaymentMethod(
                     id = jsonObject.getStringOrNull(ID),
                     lastFour = jsonObject.getStringOrNull(LAST_FOUR),
                     shopperEmail = jsonObject.getStringOrNull(SHOPPER_EMAIL),
-                    supportedShopperInteractions = parseOptStringList(jsonObject.optJSONArray(SUPPORTED_SHOPPER_INTERACTIONS)),
+                    supportedShopperInteractions = parseOptStringList(
+                        jsonObject.optJSONArray(SUPPORTED_SHOPPER_INTERACTIONS)
+                    ),
                 )
             }
         }

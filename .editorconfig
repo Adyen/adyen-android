@@ -6,7 +6,7 @@ indent_style = space
 insert_final_newline = true
 max_line_length = 100
 tab_width = 4
-ij_continuation_indent_size = 8
+ij_continuation_indent_size = 4
 ij_formatter_off_tag = @formatter:off
 ij_formatter_on_tag = @formatter:on
 ij_formatter_tags_enabled = false
@@ -472,6 +472,7 @@ ij_groovy_while_on_new_line = false
 ij_groovy_wrap_long_lines = false
 
 [{*.kt,*.kts}]
+disabled_rules=import-ordering
 max_line_length = 120
 ij_kotlin_align_in_columns_case_branch = false
 ij_kotlin_align_multiline_binary_operation = false

@@ -35,7 +35,9 @@ private const val NAVIGATED_FROM_PRESELECTED = "NAVIGATED_FROM_PRESELECTED"
 private const val PAYMENT_METHOD = "PAYMENT_METHOD"
 
 @Suppress("TooManyFunctions")
-abstract class BaseComponentDialogFragment : DropInBottomSheetDialogFragment(), Observer<PaymentComponentState<in PaymentMethodDetails>> {
+abstract class BaseComponentDialogFragment :
+    DropInBottomSheetDialogFragment(),
+    Observer<PaymentComponentState<in PaymentMethodDetails>> {
 
     companion object {
         private val TAG = LogUtil.getTag()
@@ -76,7 +78,11 @@ abstract class BaseComponentDialogFragment : DropInBottomSheetDialogFragment(), 
         }
     }
 
-    abstract override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View?
+    abstract override fun onCreateView(
+        inflater: LayoutInflater,
+        container: ViewGroup?,
+        savedInstanceState: Bundle?
+    ): View?
 
     abstract override fun onViewCreated(view: View, savedInstanceState: Bundle?)
 

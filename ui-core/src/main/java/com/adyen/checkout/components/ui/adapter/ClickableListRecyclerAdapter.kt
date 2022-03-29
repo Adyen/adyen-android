@@ -12,7 +12,8 @@ import androidx.recyclerview.widget.RecyclerView
 import com.adyen.checkout.core.log.LogUtil.getTag
 import com.adyen.checkout.core.log.Logger
 
-abstract class ClickableListRecyclerAdapter<ViewHolderT : RecyclerView.ViewHolder> : RecyclerView.Adapter<ViewHolderT>() {
+abstract class ClickableListRecyclerAdapter<ViewHolderT : RecyclerView.ViewHolder> :
+    RecyclerView.Adapter<ViewHolderT>() {
 
     var onItemCLickedListener: OnItemCLickedListener? = null
 

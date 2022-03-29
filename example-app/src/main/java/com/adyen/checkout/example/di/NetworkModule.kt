@@ -66,7 +66,10 @@ object NetworkModule {
             chain.proceed(request)
         }
 
-        if (Build.VERSION_CODES.JELLY_BEAN <= Build.VERSION.SDK_INT && Build.VERSION.SDK_INT < Build.VERSION_CODES.LOLLIPOP_MR1) {
+        if (
+            Build.VERSION_CODES.JELLY_BEAN <= Build.VERSION.SDK_INT &&
+            Build.VERSION.SDK_INT < Build.VERSION_CODES.LOLLIPOP_MR1
+        ) {
             val trustManagerFactory = TrustManagerFactory.getInstance(TrustManagerFactory.getDefaultAlgorithm())
             trustManagerFactory.init(null as KeyStore?)
             val trustManagers = trustManagerFactory.trustManagers

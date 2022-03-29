@@ -21,7 +21,11 @@ import java.util.Arrays
 /**
  * Input that support formatting for card number.
  */
-open class CardNumberInput @JvmOverloads constructor(context: Context, attrs: AttributeSet? = null, defStyleAttr: Int = 0) :
+open class CardNumberInput @JvmOverloads constructor(
+    context: Context,
+    attrs: AttributeSet? = null,
+    defStyleAttr: Int = 0
+) :
     AdyenTextInputEditText(context, attrs, defStyleAttr) {
 
     private var isAmexCard = false
@@ -62,7 +66,8 @@ open class CardNumberInput @JvmOverloads constructor(context: Context, attrs: At
 
     @Suppress("SpreadOperator")
     private fun formatProcessedString(processedValue: String): String {
-        val result = splitStringWithMask(processedValue, *if (isAmexCard) AMEX_CARD_NUMBER_MASK else DEFAULT_CARD_NUMBER_MASK)
+        val result =
+            splitStringWithMask(processedValue, *if (isAmexCard) AMEX_CARD_NUMBER_MASK else DEFAULT_CARD_NUMBER_MASK)
         return TextUtils.join(DIGIT_SEPARATOR.toString() + "", result).trim { it <= ' ' }
     }
 

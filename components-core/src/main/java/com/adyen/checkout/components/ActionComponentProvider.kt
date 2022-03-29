@@ -14,7 +14,8 @@ import androidx.savedstate.SavedStateRegistryOwner
 import com.adyen.checkout.components.base.Configuration
 import com.adyen.checkout.components.model.payments.response.Action
 
-interface ActionComponentProvider<ComponentT : ActionComponent<out Configuration>, ConfigurationT : Configuration> : ComponentProvider<ComponentT> {
+interface ActionComponentProvider<ComponentT : ActionComponent<out Configuration>, ConfigurationT : Configuration> :
+    ComponentProvider<ComponentT> {
     /**
      * Get an [ActionComponent].
      *
@@ -51,7 +52,10 @@ interface ActionComponentProvider<ComponentT : ActionComponent<out Configuration
     /**
      * @return If the Configuration is required for this Component.
      */
-    @Deprecated("You can safely remove this method, it will always return true as all action components require a configuration.")
+    @Deprecated(
+        """You can safely remove this method, it will always return true as all action components require
+            | a configuration."""
+    )
     fun requiresConfiguration(): Boolean
 
     /**

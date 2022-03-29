@@ -67,7 +67,10 @@ class GooglePayProvider :
         if (configuration == null) {
             throw CheckoutException("GooglePayConfiguration cannot be null")
         }
-        if (GoogleApiAvailability.getInstance().isGooglePlayServicesAvailable(applicationContext) != ConnectionResult.SUCCESS) {
+        if (
+            GoogleApiAvailability.getInstance()
+                .isGooglePlayServicesAvailable(applicationContext) != ConnectionResult.SUCCESS
+        ) {
             callback.onAvailabilityResult(false, paymentMethod, configuration)
             return
         }
@@ -75,7 +78,8 @@ class GooglePayProvider :
             WeakReference<ComponentAvailableCallback<GooglePayConfiguration>>(callback)
         val serverGatewayMerchantId = paymentMethod.configuration?.gatewayMerchantId
         val params = GooglePayParams(configuration, serverGatewayMerchantId, paymentMethod.brands)
-        val paymentsClient: PaymentsClient = Wallet.getPaymentsClient(applicationContext, GooglePayUtils.createWalletOptions(params))
+        val paymentsClient: PaymentsClient =
+            Wallet.getPaymentsClient(applicationContext, GooglePayUtils.createWalletOptions(params))
         val readyToPayRequest: IsReadyToPayRequest = GooglePayUtils.createIsReadyToPayRequest(params)
         val readyToPayTask: Task<Boolean> = paymentsClient.isReadyToPay(readyToPayRequest)
         readyToPayTask.addOnCompleteListener { task ->

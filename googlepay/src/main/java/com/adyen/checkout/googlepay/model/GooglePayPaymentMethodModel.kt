@@ -43,7 +43,10 @@ data class GooglePayPaymentMethodModel(
                         putOpt(PARAMETERS, serializeOpt(modelObject.parameters, CardParameters.SERIALIZER))
                         putOpt(
                             TOKENIZATION_SPECIFICATION,
-                            serializeOpt(modelObject.tokenizationSpecification, PaymentMethodTokenizationSpecification.SERIALIZER)
+                            serializeOpt(
+                                modelObject.tokenizationSpecification,
+                                PaymentMethodTokenizationSpecification.SERIALIZER
+                            )
                         )
                     }
                 } catch (e: JSONException) {
@@ -54,7 +57,10 @@ data class GooglePayPaymentMethodModel(
             override fun deserialize(jsonObject: JSONObject): GooglePayPaymentMethodModel {
                 val googlePayPaymentMethodModel = GooglePayPaymentMethodModel()
                 googlePayPaymentMethodModel.type = jsonObject.getStringOrNull(TYPE)
-                googlePayPaymentMethodModel.parameters = deserializeOpt(jsonObject.optJSONObject(PARAMETERS), CardParameters.SERIALIZER)
+                googlePayPaymentMethodModel.parameters = deserializeOpt(
+                    jsonObject.optJSONObject(PARAMETERS),
+                    CardParameters.SERIALIZER
+                )
                 googlePayPaymentMethodModel.tokenizationSpecification = deserializeOpt(
                     jsonObject.optJSONObject(TOKENIZATION_SPECIFICATION),
                     PaymentMethodTokenizationSpecification.SERIALIZER

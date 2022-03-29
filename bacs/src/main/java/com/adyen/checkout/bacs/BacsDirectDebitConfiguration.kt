@@ -20,7 +20,7 @@ import com.adyen.checkout.components.util.CheckoutCurrency
 import com.adyen.checkout.core.api.Environment
 import com.adyen.checkout.core.exception.CheckoutException
 import com.adyen.checkout.core.model.JsonUtils
-import java.util.*
+import java.util.Locale
 
 class BacsDirectDebitConfiguration : Configuration, AmountConfiguration {
 
@@ -28,19 +28,24 @@ class BacsDirectDebitConfiguration : Configuration, AmountConfiguration {
 
     companion object {
         @JvmField
-        val CREATOR: Parcelable.Creator<BacsDirectDebitConfiguration?> = object : Parcelable.Creator<BacsDirectDebitConfiguration?> {
-            override fun createFromParcel(source: Parcel?): BacsDirectDebitConfiguration? {
-                if (source == null) return null
-                return BacsDirectDebitConfiguration(source)
-            }
+        val CREATOR: Parcelable.Creator<BacsDirectDebitConfiguration?> =
+            object : Parcelable.Creator<BacsDirectDebitConfiguration?> {
+                override fun createFromParcel(source: Parcel?): BacsDirectDebitConfiguration? {
+                    if (source == null) return null
+                    return BacsDirectDebitConfiguration(source)
+                }
 
-            override fun newArray(size: Int): Array<BacsDirectDebitConfiguration?> {
-                return arrayOfNulls(size)
+                override fun newArray(size: Int): Array<BacsDirectDebitConfiguration?> {
+                    return arrayOfNulls(size)
+                }
             }
-        }
     }
 
-    internal constructor(builder: Builder) : super(builder.builderShopperLocale, builder.builderEnvironment, builder.builderClientKey) {
+    internal constructor(builder: Builder) : super(
+        builder.builderShopperLocale,
+        builder.builderEnvironment,
+        builder.builderClientKey
+    ) {
         this.amount = builder.amount
     }
 
@@ -67,7 +72,11 @@ class BacsDirectDebitConfiguration : Configuration, AmountConfiguration {
          * @param environment   The [Environment] to be used for network calls to Adyen.
          * @param clientKey Your Client Key used for network calls from the SDK to Adyen.
          */
-        constructor(shopperLocale: Locale, environment: Environment, clientKey: String) : super(shopperLocale, environment, clientKey)
+        constructor(shopperLocale: Locale, environment: Environment, clientKey: String) : super(
+            shopperLocale,
+            environment,
+            clientKey
+        )
 
         /**
          * Constructor that copies an existing configuration.

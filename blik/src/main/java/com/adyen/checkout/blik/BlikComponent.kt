@@ -20,7 +20,12 @@ import com.adyen.checkout.components.util.PaymentMethodTypes
 import com.adyen.checkout.core.log.LogUtil.getTag
 import com.adyen.checkout.core.log.Logger
 
-class BlikComponent : BasePaymentComponent<BlikConfiguration, BlikInputData, BlikOutputData, PaymentComponentState<BlikPaymentMethod>> {
+class BlikComponent : BasePaymentComponent<
+    BlikConfiguration,
+    BlikInputData,
+    BlikOutputData,
+    PaymentComponentState<BlikPaymentMethod>> {
+
     constructor(
         savedStateHandle: SavedStateHandle,
         paymentMethodDelegate: GenericPaymentMethodDelegate,
@@ -59,11 +64,9 @@ class BlikComponent : BasePaymentComponent<BlikConfiguration, BlikInputData, Bli
             paymentMethod.storedPaymentMethodId = paymentMethodDelegate.storedPaymentMethod.id
         }
         paymentComponentData.paymentMethod = paymentMethod
-        val isInputValid = (
-            paymentMethodDelegate is GenericStoredPaymentDelegate ||
-                blikOutputData != null &&
-                blikOutputData.isValid
-            )
+        val isInputValid = paymentMethodDelegate is GenericStoredPaymentDelegate ||
+            blikOutputData != null &&
+            blikOutputData.isValid
         return PaymentComponentState(paymentComponentData, isInputValid, true)
     }
 

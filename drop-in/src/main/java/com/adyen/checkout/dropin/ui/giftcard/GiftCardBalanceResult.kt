@@ -14,5 +14,9 @@ sealed class GiftCardBalanceResult {
     class FullPayment(val data: GiftCardPaymentConfirmationData) : GiftCardBalanceResult()
     object RequestOrderCreation : GiftCardBalanceResult()
     object RequestPartialPayment : GiftCardBalanceResult()
-    class Error(@StringRes val errorMessage: Int, val reason: String, val terminateDropIn: Boolean) : GiftCardBalanceResult()
+    class Error(
+        @StringRes val errorMessage: Int,
+        val reason: String,
+        val terminateDropIn: Boolean
+    ) : GiftCardBalanceResult()
 }

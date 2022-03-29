@@ -44,7 +44,8 @@ class MBWayComponent(
 
     companion object {
         @JvmStatic
-        val PROVIDER: PaymentComponentProvider<MBWayComponent, MBWayConfiguration> = GenericPaymentComponentProvider(MBWayComponent::class.java)
+        val PROVIDER: PaymentComponentProvider<MBWayComponent, MBWayConfiguration> =
+            GenericPaymentComponentProvider(MBWayComponent::class.java)
     }
 
     override fun onInputDataChanged(inputData: MBWayInputData): MBWayOutputData {

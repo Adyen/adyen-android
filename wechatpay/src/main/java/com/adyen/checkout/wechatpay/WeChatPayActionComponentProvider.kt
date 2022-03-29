@@ -21,7 +21,9 @@ import com.adyen.checkout.components.util.PaymentMethodTypes
 
 private val PAYMENT_METHODS = listOf(PaymentMethodTypes.WECHAT_PAY_SDK)
 
-class WeChatPayActionComponentProvider : ActionComponentProvider<WeChatPayActionComponent, WeChatPayActionConfiguration> {
+class WeChatPayActionComponentProvider :
+    ActionComponentProvider<WeChatPayActionComponent, WeChatPayActionConfiguration> {
+
     override fun <T> get(
         owner: T,
         application: Application,
@@ -51,8 +53,9 @@ class WeChatPayActionComponentProvider : ActionComponentProvider<WeChatPayAction
         get() = listOf(SdkAction.ACTION_TYPE)
 
     @Deprecated(
-        "You can safely remove this method, it will always return true as all action components require a configuration.",
-        ReplaceWith("true")
+        message = "You can safely remove this method, it will always return true as all action components require " +
+            "a configuration.",
+        replaceWith = ReplaceWith("true")
     )
     override fun requiresConfiguration(): Boolean = true
 

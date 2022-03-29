@@ -35,7 +35,8 @@ data class BacsDirectDebitPaymentMethod(
         const val PAYMENT_METHOD_TYPE = "directdebit_GB"
 
         @JvmField
-        val CREATOR: Parcelable.Creator<BacsDirectDebitPaymentMethod> = Creator(BacsDirectDebitPaymentMethod::class.java)
+        val CREATOR: Parcelable.Creator<BacsDirectDebitPaymentMethod> =
+            Creator(BacsDirectDebitPaymentMethod::class.java)
 
         @JvmField
         val SERIALIZER: Serializer<BacsDirectDebitPaymentMethod> = object : Serializer<BacsDirectDebitPaymentMethod> {

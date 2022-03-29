@@ -12,13 +12,18 @@ object DualBrandedCardUtils {
             val hasCarteBancaire = cards.any { it.cardType == CardType.CARTEBANCAIRE }
             val hasVisa = cards.any { it.cardType == CardType.VISA }
             val hasPlcc = cards.any {
-                it.cardType == CardType.UNKNOWN &&
-                    (it.cardType.txVariant.contains("plcc") || it.cardType.txVariant.contains("cbcc"))
+                it.cardType == CardType.UNKNOWN && (
+                    it.cardType.txVariant.contains("plcc") ||
+                        it.cardType.txVariant.contains("cbcc")
+                    )
             }
 
             when {
                 hasCarteBancaire && hasVisa -> cards.sortedByDescending { it.cardType == CardType.VISA }
-                hasPlcc -> cards.sortedByDescending { it.cardType.txVariant.contains("plcc") || it.cardType.txVariant.contains("cbcc") }
+                hasPlcc -> cards.sortedByDescending {
+                    it.cardType.txVariant.contains("plcc") ||
+                        it.cardType.txVariant.contains("cbcc")
+                }
                 else -> cards
             }
         }

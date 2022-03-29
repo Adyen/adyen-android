@@ -31,13 +31,13 @@ import com.adyen.checkout.example.repositories.RecurringRepository
 import com.adyen.checkout.example.repositories.paymentMethods.PaymentsRepository
 import com.adyen.checkout.redirect.RedirectComponent
 import dagger.hilt.android.AndroidEntryPoint
-import javax.inject.Inject
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import okhttp3.MediaType
 import okhttp3.MediaType.Companion.toMediaType
 import okhttp3.ResponseBody
 import org.json.JSONObject
+import javax.inject.Inject
 
 /**
  * This is just an example on how to make networkModule calls on the [DropInService].
@@ -67,7 +67,10 @@ class ExampleFullAsyncDropInService : DropInService() {
     @Inject
     lateinit var keyValueStorage: KeyValueStorage
 
-    override fun onPaymentsCallRequested(paymentComponentState: PaymentComponentState<*>, paymentComponentJson: JSONObject) {
+    override fun onPaymentsCallRequested(
+        paymentComponentState: PaymentComponentState<*>,
+        paymentComponentJson: JSONObject
+    ) {
         launch(Dispatchers.IO) {
             Logger.d(TAG, "onPaymentsCallRequested")
 
@@ -219,7 +222,10 @@ class ExampleFullAsyncDropInService : DropInService() {
             val resultCode = jsonResponse.getStringOrNull("resultCode")
             when (resultCode) {
                 "Success" -> BalanceDropInServiceResult.Balance(BalanceResult.SERIALIZER.deserialize(jsonResponse))
-                "NotEnoughBalance" -> BalanceDropInServiceResult.Error(reason = "Not enough balance", dismissDropIn = false)
+                "NotEnoughBalance" -> BalanceDropInServiceResult.Error(
+                    reason = "Not enough balance",
+                    dismissDropIn = false
+                )
                 else -> BalanceDropInServiceResult.Error(reason = resultCode, dismissDropIn = false)
             }
         } else {
@@ -276,7 +282,10 @@ class ExampleFullAsyncDropInService : DropInService() {
     }
 
     @Suppress("NestedBlockDepth")
-    private fun handleCancelOrderResponse(response: ResponseBody?, shouldUpdatePaymentMethods: Boolean): DropInServiceResult? {
+    private fun handleCancelOrderResponse(
+        response: ResponseBody?,
+        shouldUpdatePaymentMethods: Boolean
+    ): DropInServiceResult? {
         return if (response != null) {
             val orderJson = response.string()
             val jsonResponse = JSONObject(orderJson)
@@ -311,7 +320,10 @@ class ExampleFullAsyncDropInService : DropInService() {
         }
     }
 
-    private fun handleRemoveStoredPaymentMethodResult(response: ResponseBody?, id: String): RecurringDropInServiceResult {
+    private fun handleRemoveStoredPaymentMethodResult(
+        response: ResponseBody?,
+        id: String
+    ): RecurringDropInServiceResult {
         return if (response != null) {
             val orderJson = response.string()
             val jsonResponse = JSONObject(orderJson)

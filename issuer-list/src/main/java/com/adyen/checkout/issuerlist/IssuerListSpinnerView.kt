@@ -31,11 +31,12 @@ abstract class IssuerListSpinnerView<
     context: Context,
     attrs: AttributeSet? = null,
     defStyleAttr: Int = 0
-) : AdyenLinearLayout<IssuerListOutputData, IssuerListConfiguration, PaymentComponentState<IssuerListPaymentMethodT>, IssuerListComponentT>(
-        context,
-        attrs,
-        defStyleAttr
-    ),
+) :
+    AdyenLinearLayout<
+        IssuerListOutputData,
+        IssuerListConfiguration,
+        PaymentComponentState<IssuerListPaymentMethodT>,
+        IssuerListComponentT>(context, attrs, defStyleAttr),
     AdapterView.OnItemSelectedListener {
 
     private val idealInputData = IssuerListInputData()

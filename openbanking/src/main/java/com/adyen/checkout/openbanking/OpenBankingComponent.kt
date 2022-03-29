@@ -32,9 +32,8 @@ class OpenBankingComponent(
 
     companion object {
         @JvmField
-        val PROVIDER: PaymentComponentProvider<OpenBankingComponent, OpenBankingConfiguration> = GenericPaymentComponentProvider(
-            OpenBankingComponent::class.java
-        )
+        val PROVIDER: PaymentComponentProvider<OpenBankingComponent, OpenBankingConfiguration> =
+            GenericPaymentComponentProvider(OpenBankingComponent::class.java)
         val PAYMENT_METHOD_TYPES = arrayOf(PaymentMethodTypes.OPEN_BANKING)
     }
 }

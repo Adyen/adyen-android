@@ -25,7 +25,11 @@ import com.adyen.checkout.core.log.Logger
 import com.google.android.material.textfield.TextInputLayout
 
 class BlikView @JvmOverloads constructor(context: Context, attrs: AttributeSet? = null, defStyleAttr: Int = 0) :
-    AdyenLinearLayout<BlikOutputData, BlikConfiguration, PaymentComponentState<BlikPaymentMethod>, BlikComponent>(context, attrs, defStyleAttr),
+    AdyenLinearLayout<BlikOutputData, BlikConfiguration, PaymentComponentState<BlikPaymentMethod>, BlikComponent>(
+        context,
+        attrs,
+        defStyleAttr
+    ),
     Observer<BlikOutputData> {
 
     private var blikInputData = BlikInputData()
@@ -47,7 +51,8 @@ class BlikView @JvmOverloads constructor(context: Context, attrs: AttributeSet? 
     }
 
     override fun initView() {
-        blikCodeInput = findViewById(R.id.textInputLayout_blikCode) ?: throw CheckoutException("Could not find views inside layout.")
+        blikCodeInput = findViewById(R.id.textInputLayout_blikCode)
+            ?: throw CheckoutException("Could not find views inside layout.")
         blikCodeEditText = blikCodeInput.editText as AdyenTextInputEditText
 
         blikCodeEditText.setOnChangeListener {

@@ -18,7 +18,9 @@ import com.adyen.checkout.components.model.payments.request.PaymentMethodDetails
  *
  * Should be used attached to a corresponding ComponentView to get data from.
  */
-interface PaymentComponent<ComponentStateT : PaymentComponentState<out PaymentMethodDetails>, ConfigurationT : Configuration> :
+interface PaymentComponent<
+    ComponentStateT : PaymentComponentState<out PaymentMethodDetails>,
+    ConfigurationT : Configuration> :
     Component<ComponentStateT, ConfigurationT> {
     /**
      * @return An array of the supported [com.adyen.checkout.components.util.PaymentMethodTypes]

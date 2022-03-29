@@ -16,7 +16,9 @@ import com.adyen.checkout.components.PaymentComponentProvider
 import com.adyen.checkout.components.base.lifecycle.viewModelFactory
 import com.adyen.checkout.components.model.paymentmethods.PaymentMethod
 
-class GenericPaymentComponentProvider<BaseComponentT : BasePaymentComponent<*, *, *, *>, ConfigurationT : Configuration>(
+class GenericPaymentComponentProvider<
+    BaseComponentT : BasePaymentComponent<*, *, *, *>,
+    ConfigurationT : Configuration>(
     private val componentClass: Class<BaseComponentT>
 ) : PaymentComponentProvider<BaseComponentT, ConfigurationT> {
 
@@ -35,13 +37,14 @@ class GenericPaymentComponentProvider<BaseComponentT : BasePaymentComponent<*, *
         configuration: ConfigurationT,
         defaultArgs: Bundle?
     ): BaseComponentT {
-        val genericFactory: ViewModelProvider.Factory = viewModelFactory(savedStateRegistryOwner, defaultArgs) { savedStateHandle ->
-            componentClass.getConstructor(
-                SavedStateHandle::class.java,
-                GenericPaymentMethodDelegate::class.java,
-                configuration.javaClass
-            ).newInstance(savedStateHandle, GenericPaymentMethodDelegate(paymentMethod), configuration)
-        }
+        val genericFactory: ViewModelProvider.Factory =
+            viewModelFactory(savedStateRegistryOwner, defaultArgs) { savedStateHandle ->
+                componentClass.getConstructor(
+                    SavedStateHandle::class.java,
+                    GenericPaymentMethodDelegate::class.java,
+                    configuration.javaClass
+                ).newInstance(savedStateHandle, GenericPaymentMethodDelegate(paymentMethod), configuration)
+            }
         return ViewModelProvider(viewModelStoreOwner, genericFactory).get(componentClass)
     }
 }

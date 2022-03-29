@@ -134,7 +134,8 @@ class BcmcComponent(
     }
 
     private fun validateCardNumber(cardNumber: String): FieldState<String> {
-        val validation = CardValidationUtils.validateCardNumber(cardNumber, enableLuhnCheck = true, isBrandSupported = true)
+        val validation =
+            CardValidationUtils.validateCardNumber(cardNumber, enableLuhnCheck = true, isBrandSupported = true)
         return cardValidationMapper.mapCardNumberValidation(cardNumber, validation)
     }
 

@@ -52,7 +52,10 @@ data class SessionSetupResponse(
                     jsonObject.putOpt(SESSION_DATA, modelObject.sessionData)
                     jsonObject.putOpt(AMOUNT, ModelUtils.serializeOpt(modelObject.amount, Amount.SERIALIZER))
                     jsonObject.putOpt(EXPIRES_AT, modelObject.expiresAt)
-                    jsonObject.putOpt(PAYMENT_METHODS, ModelUtils.serializeOpt(modelObject.paymentMethods, PaymentMethodsApiResponse.SERIALIZER))
+                    jsonObject.putOpt(
+                        PAYMENT_METHODS,
+                        ModelUtils.serializeOpt(modelObject.paymentMethods, PaymentMethodsApiResponse.SERIALIZER)
+                    )
                     jsonObject.putOpt(RETURN_URL, modelObject.returnUrl)
                 } catch (e: JSONException) {
                     throw ModelSerializationException(SessionSetupResponse::class.java, e)
@@ -67,7 +70,10 @@ data class SessionSetupResponse(
                         sessionData = jsonObject.optString(SESSION_DATA),
                         amount = ModelUtils.deserializeOpt(jsonObject.optJSONObject(AMOUNT), Amount.SERIALIZER),
                         expiresAt = jsonObject.optString(EXPIRES_AT),
-                        paymentMethods = ModelUtils.deserializeOpt(jsonObject.optJSONObject(PAYMENT_METHODS), PaymentMethodsApiResponse.SERIALIZER),
+                        paymentMethods = ModelUtils.deserializeOpt(
+                            jsonObject.optJSONObject(PAYMENT_METHODS),
+                            PaymentMethodsApiResponse.SERIALIZER
+                        ),
                         returnUrl = jsonObject.optString(RETURN_URL)
                     )
                 } catch (e: JSONException) {

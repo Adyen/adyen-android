@@ -42,7 +42,10 @@ class PaymentMethodsApiResponse(
             override fun serialize(modelObject: PaymentMethodsApiResponse): JSONObject {
                 return try {
                     JSONObject().apply {
-                        putOpt(STORED_PAYMENT_METHODS, serializeOptList(modelObject.storedPaymentMethods, StoredPaymentMethod.SERIALIZER))
+                        putOpt(
+                            STORED_PAYMENT_METHODS,
+                            serializeOptList(modelObject.storedPaymentMethods, StoredPaymentMethod.SERIALIZER)
+                        )
                         putOpt(PAYMENT_METHODS, serializeOptList(modelObject.paymentMethods, PaymentMethod.SERIALIZER))
                     }
                 } catch (e: JSONException) {
@@ -52,8 +55,14 @@ class PaymentMethodsApiResponse(
 
             override fun deserialize(jsonObject: JSONObject): PaymentMethodsApiResponse {
                 return PaymentMethodsApiResponse(
-                    storedPaymentMethods = deserializeOptList(jsonObject.optJSONArray(STORED_PAYMENT_METHODS), StoredPaymentMethod.SERIALIZER),
-                    paymentMethods = deserializeOptList(jsonObject.optJSONArray(PAYMENT_METHODS), PaymentMethod.SERIALIZER),
+                    storedPaymentMethods = deserializeOptList(
+                        jsonObject.optJSONArray(STORED_PAYMENT_METHODS),
+                        StoredPaymentMethod.SERIALIZER
+                    ),
+                    paymentMethods = deserializeOptList(
+                        jsonObject.optJSONArray(PAYMENT_METHODS),
+                        PaymentMethod.SERIALIZER
+                    ),
                 )
             }
         }

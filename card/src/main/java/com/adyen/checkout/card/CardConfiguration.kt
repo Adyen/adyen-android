@@ -50,7 +50,6 @@ class CardConfiguration : Configuration {
         kcpAuthVisibility: KCPAuthVisibility?,
         addressVisibility: AddressVisibility,
         installmentConfiguration: InstallmentConfiguration?,
-
     ) : super(shopperLocale, environment, clientKey) {
         this.isHolderNameRequired = isHolderNameRequired
         this.supportedCardTypes = supportedCardTypes
@@ -106,7 +105,8 @@ class CardConfiguration : Configuration {
         private var builderShopperReference: String? = null
         private var builderHideCvc = false
         private var builderHideCvcStoredCard = false
-        private var builderSocialSecurityNumberVisibility: SocialSecurityNumberVisibility? = SocialSecurityNumberVisibility.HIDE
+        private var builderSocialSecurityNumberVisibility: SocialSecurityNumberVisibility? =
+            SocialSecurityNumberVisibility.HIDE
         private var builderKcpAuthVisibility: KCPAuthVisibility? = KCPAuthVisibility.HIDE
         private var builderAddressVisibility = AddressVisibility.NONE
         private var builderInstallmentConfiguration: InstallmentConfiguration? = null
@@ -289,7 +289,11 @@ class CardConfiguration : Configuration {
     }
 
     companion object {
-        val DEFAULT_SUPPORTED_CARDS_LIST: List<CardType> = listOf(CardType.VISA, CardType.AMERICAN_EXPRESS, CardType.MASTERCARD)
+        val DEFAULT_SUPPORTED_CARDS_LIST: List<CardType> = listOf(
+            CardType.VISA,
+            CardType.AMERICAN_EXPRESS,
+            CardType.MASTERCARD
+        )
 
         @JvmField
         val CREATOR: Parcelable.Creator<CardConfiguration> = object : Parcelable.Creator<CardConfiguration> {

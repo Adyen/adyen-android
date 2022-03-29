@@ -19,6 +19,10 @@ class CountryViewHolder(private val rootView: View) : RecyclerView.ViewHolder(ro
 
     fun bindItem(country: CountryModel) {
         flagTextView.text = country.emoji
-        countryTextView.text = rootView.context.getString(R.string.checkout_mbway_country_name_format, country.countryName, country.callingCode)
+        countryTextView.text = rootView.context.getString(
+            R.string.checkout_mbway_country_name_format,
+            country.countryName,
+            country.callingCode
+        )
     }
 }

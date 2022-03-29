@@ -16,14 +16,18 @@ import androidx.lifecycle.Observer
 import com.adyen.checkout.bacs.databinding.BacsDirectDebitConfirmationViewBinding
 import com.adyen.checkout.components.ui.view.AdyenLinearLayout
 
-class BacsDirectDebitConfirmationView @JvmOverloads constructor(context: Context, attrs: AttributeSet? = null, defStyleAttr: Int = 0) :
-    AdyenLinearLayout<BacsDirectDebitOutputData,
+class BacsDirectDebitConfirmationView @JvmOverloads constructor(
+    context: Context,
+    attrs: AttributeSet? = null,
+    defStyleAttr: Int = 0
+) : AdyenLinearLayout<BacsDirectDebitOutputData,
         BacsDirectDebitConfiguration,
         BacsDirectDebitComponentState,
         BacsDirectDebitComponent>(context, attrs, defStyleAttr),
     Observer<BacsDirectDebitOutputData> {
 
-    private val binding: BacsDirectDebitConfirmationViewBinding = BacsDirectDebitConfirmationViewBinding.inflate(LayoutInflater.from(context), this)
+    private val binding: BacsDirectDebitConfirmationViewBinding =
+        BacsDirectDebitConfirmationViewBinding.inflate(LayoutInflater.from(context), this)
 
     init {
         orientation = VERTICAL

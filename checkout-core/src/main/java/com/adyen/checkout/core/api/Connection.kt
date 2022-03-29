@@ -149,6 +149,9 @@ abstract class Connection<T> protected constructor(
         private const val BUFFER_SIZE = 1024
 
         @JvmField
-        val CONTENT_TYPE_JSON_HEADER: Map<String, String> = Collections.singletonMap(CONTENT_TYPE_HEADER, APP_JSON_CONTENT_TYPE)
+        val CONTENT_TYPE_JSON_HEADER: Map<String, String> = Collections.singletonMap(
+            CONTENT_TYPE_HEADER,
+            APP_JSON_CONTENT_TYPE,
+        )
     }
 }

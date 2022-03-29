@@ -64,7 +64,9 @@ class Adyen3DS2Component(
     private val submitFingerprintRepository: SubmitFingerprintRepository,
     private val adyen3DS2Serializer: Adyen3DS2Serializer,
     private val redirectDelegate: RedirectDelegate
-) : BaseActionComponent<Adyen3DS2Configuration>(savedStateHandle, application, configuration), ChallengeStatusReceiver, IntentHandlingComponent {
+) : BaseActionComponent<Adyen3DS2Configuration>(savedStateHandle, application, configuration),
+    ChallengeStatusReceiver,
+    IntentHandlingComponent {
 
     private var mTransaction: Transaction? = null
     private var mUiCustomization: UiCustomization? = null
@@ -187,8 +189,13 @@ class Adyen3DS2Component(
         closeTransaction(getApplication())
     }
 
+    @Suppress("LongMethod")
     @Throws(ComponentException::class)
-    private fun identifyShopper(activity: Activity, encodedFingerprintToken: String, submitFingerprintAutomatically: Boolean) {
+    private fun identifyShopper(
+        activity: Activity,
+        encodedFingerprintToken: String,
+        submitFingerprintAutomatically: Boolean
+    ) {
         Logger.d(TAG, "identifyShopper - submitFingerprintAutomatically: $submitFingerprintAutomatically")
         val decodedFingerprintToken = Base64Encoder.decode(encodedFingerprintToken)
 
@@ -225,7 +232,12 @@ class Adyen3DS2Component(
                 if (fingerprintToken.threeDSMessageVersion != null) {
                     ThreeDS2Service.INSTANCE.createTransaction(null, fingerprintToken.threeDSMessageVersion)
                 } else {
-                    notifyException(ComponentException("Failed to create 3DS2 Transaction. Missing threeDSMessageVersion inside fingerprintToken."))
+                    notifyException(
+                        ComponentException(
+                            "Failed to create 3DS2 Transaction. Missing " +
+                                "threeDSMessageVersion inside fingerprintToken."
+                        )
+                    )
                     return@launch
                 }
             } catch (e: SDKNotInitializedException) {
@@ -255,8 +267,9 @@ class Adyen3DS2Component(
     private suspend fun submitFingerprintAutomatically(activity: Activity, encodedFingerprint: String) {
         try {
             val result = submitFingerprintRepository.submitFingerprint(encodedFingerprint, configuration, paymentData)
-            // This flow (calling the internal submitFingerprint endpoint) requires that we do not send paymentData back to the merchant.
-            // Setting it to null ensures that when the flow ends and notifyDetails is called, paymentData will not be included in the response.
+            // This flow (calling the internal submitFingerprint endpoint) requires that we do not send paymentData
+            // back to the merchant. Setting it to null ensures that when the flow ends and notifyDetails is called,
+            // paymentData will not be included in the response.
             paymentData = null
             when (result) {
                 is SubmitFingerprintResult.Completed -> {
@@ -280,7 +293,9 @@ class Adyen3DS2Component(
     private fun challengeShopper(activity: Activity, encodedChallengeToken: String) {
         Logger.d(TAG, "challengeShopper")
         if (mTransaction == null) {
-            notifyException(Authentication3DS2Exception("Failed to make challenge, missing reference to initial transaction."))
+            notifyException(
+                Authentication3DS2Exception("Failed to make challenge, missing reference to initial transaction.")
+            )
             return
         }
         val decodedChallengeToken = Base64Encoder.decode(encodedChallengeToken)

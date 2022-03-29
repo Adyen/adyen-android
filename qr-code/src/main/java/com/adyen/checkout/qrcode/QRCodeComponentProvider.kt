@@ -54,16 +54,19 @@ class QRCodeComponentProvider : ActionComponentProvider<QRCodeComponent, QRCodeC
         get() = listOf(QrCodeAction.ACTION_TYPE)
 
     @Deprecated(
-        "You can safely remove this method, it will always return true as all action components require a configuration.",
-        ReplaceWith("true")
+        message = "You can safely remove this method, it will always return true as all action components require" +
+            " a configuration.",
+        replaceWith = ReplaceWith("true")
     )
     override fun requiresConfiguration(): Boolean = true
 
     override fun canHandleAction(action: Action): Boolean {
         return when {
             !supportedActionTypes.contains(action.type) -> false
-            requiresView(action) -> true // viewable action, can be handled
-            !(action as? QrCodeAction)?.url.isNullOrEmpty() -> true // QR code actions that contain a url are handled as a redirect action
+            // viewable action, can be handled
+            requiresView(action) -> true
+            // QR code actions that contain a url are handled as a redirect action
+            !(action as? QrCodeAction)?.url.isNullOrEmpty() -> true
             else -> false
         }
     }

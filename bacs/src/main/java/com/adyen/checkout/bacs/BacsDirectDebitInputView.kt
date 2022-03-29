@@ -27,14 +27,19 @@ import com.adyen.checkout.core.log.Logger
 private val TAG = LogUtil.getTag()
 
 @Suppress("TooManyFunctions")
-class BacsDirectDebitInputView @JvmOverloads constructor(context: Context, attrs: AttributeSet? = null, defStyleAttr: Int = 0) :
+class BacsDirectDebitInputView @JvmOverloads constructor(
+    context: Context,
+    attrs: AttributeSet? = null,
+    defStyleAttr: Int = 0
+) :
     AdyenLinearLayout<BacsDirectDebitOutputData,
         BacsDirectDebitConfiguration,
         BacsDirectDebitComponentState,
         BacsDirectDebitComponent>(context, attrs, defStyleAttr),
     Observer<BacsDirectDebitOutputData> {
 
-    private val binding: BacsDirectDebitInputViewBinding = BacsDirectDebitInputViewBinding.inflate(LayoutInflater.from(context), this)
+    private val binding: BacsDirectDebitInputViewBinding =
+        BacsDirectDebitInputViewBinding.inflate(LayoutInflater.from(context), this)
 
     private val mBacsDirectDebitInputData = BacsDirectDebitInputData()
 
@@ -57,8 +62,10 @@ class BacsDirectDebitInputView @JvmOverloads constructor(context: Context, attrs
         }
         component.setInputMode()
         if (!component.configuration.amount.isEmpty) {
-            val formattedAmount = CurrencyUtils.formatAmount(component.configuration.amount, component.configuration.shopperLocale)
-            binding.switchConsentAmount.text = resources.getString(R.string.bacs_consent_amount_specified, formattedAmount)
+            val formattedAmount =
+                CurrencyUtils.formatAmount(component.configuration.amount, component.configuration.shopperLocale)
+            binding.switchConsentAmount.text =
+                resources.getString(R.string.bacs_consent_amount_specified, formattedAmount)
         }
     }
 
@@ -88,7 +95,8 @@ class BacsDirectDebitInputView @JvmOverloads constructor(context: Context, attrs
                     isErrorFocused = true
                     binding.editTextBankAccountNumber.requestFocus()
                 }
-                binding.textInputLayoutBankAccountNumber.error = localizedContext.getString(bankAccountNumberValidation.reason)
+                binding.textInputLayoutBankAccountNumber.error =
+                    localizedContext.getString(bankAccountNumberValidation.reason)
             }
             val sortCodeValidation = it.sortCodeState.validation
             if (sortCodeValidation is Validation.Invalid) {
@@ -175,7 +183,8 @@ class BacsDirectDebitInputView @JvmOverloads constructor(context: Context, attrs
             if (hasFocus) {
                 binding.textInputLayoutBankAccountNumber.error = null
             } else if (bankAccountNumberValidation != null && bankAccountNumberValidation is Validation.Invalid) {
-                binding.textInputLayoutBankAccountNumber.error = localizedContext.getString(bankAccountNumberValidation.reason)
+                binding.textInputLayoutBankAccountNumber.error =
+                    localizedContext.getString(bankAccountNumberValidation.reason)
             }
         }
     }

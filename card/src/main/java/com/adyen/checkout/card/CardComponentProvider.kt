@@ -24,6 +24,7 @@ import com.adyen.checkout.core.log.Logger
 private val TAG = LogUtil.getTag()
 
 class CardComponentProvider : StoredPaymentComponentProvider<CardComponent, CardConfiguration> {
+
     override fun <T> get(
         owner: T,
         paymentMethod: PaymentMethod,
@@ -97,7 +98,10 @@ class CardComponentProvider : StoredPaymentComponentProvider<CardComponent, Card
      * @param cardConfiguration The configuration object that will start the component.
      * @return The Configuration object with possibly adjusted values.
      */
-    private fun checkSupportedCardTypes(paymentMethod: PaymentMethod, cardConfiguration: CardConfiguration): CardConfiguration {
+    private fun checkSupportedCardTypes(
+        paymentMethod: PaymentMethod,
+        cardConfiguration: CardConfiguration
+    ): CardConfiguration {
         if (cardConfiguration.supportedCardTypes.isNotEmpty()) {
             return cardConfiguration
         }

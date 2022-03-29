@@ -34,8 +34,16 @@ import com.google.android.material.textfield.TextInputLayout
  * CardView for [BcmcComponent].
  */
 @Suppress("TooManyFunctions")
-class BcmcView @JvmOverloads constructor(context: Context, attrs: AttributeSet? = null, defStyleAttr: Int = 0) :
-    AdyenLinearLayout<BcmcOutputData, BcmcConfiguration, PaymentComponentState<CardPaymentMethod>, BcmcComponent>(context, attrs, defStyleAttr),
+class BcmcView @JvmOverloads constructor(
+    context: Context,
+    attrs: AttributeSet? = null,
+    defStyleAttr: Int = 0
+) :
+    AdyenLinearLayout<BcmcOutputData, BcmcConfiguration, PaymentComponentState<CardPaymentMethod>, BcmcComponent>(
+        context,
+        attrs,
+        defStyleAttr
+    ),
     Observer<BcmcOutputData> {
 
     private lateinit var cardBrandLogoImageView: RoundCornerImageView
@@ -58,7 +66,8 @@ class BcmcView @JvmOverloads constructor(context: Context, attrs: AttributeSet? 
         var myAttrs = intArrayOf(android.R.attr.hint)
 
         // Card Number
-        var typedArray: TypedArray = localizedContext.obtainStyledAttributes(R.style.AdyenCheckout_Card_CardNumberInput, myAttrs)
+        var typedArray: TypedArray =
+            localizedContext.obtainStyledAttributes(R.style.AdyenCheckout_Card_CardNumberInput, myAttrs)
         cardNumberInput.hint = typedArray.getString(0)
         typedArray.recycle()
 
