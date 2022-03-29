@@ -29,6 +29,7 @@ import com.adyen.checkout.card.databinding.CardViewBinding
 import com.adyen.checkout.card.ui.SecurityCodeInput
 import com.adyen.checkout.components.api.ImageLoader
 import com.adyen.checkout.components.extensions.isVisible
+import com.adyen.checkout.components.base.AddressVisibility
 import com.adyen.checkout.components.ui.FieldState
 import com.adyen.checkout.components.ui.Validation
 import com.adyen.checkout.components.ui.view.AdyenLinearLayout
@@ -141,7 +142,7 @@ class CardView @JvmOverloads constructor(
             onExpiryDateValidated(cardOutputData.expiryDateState)
             setSocialSecurityNumberVisibility(cardOutputData.isSocialSecurityNumberRequired)
             setKcpAuthVisibility(cardOutputData.isKCPAuthRequired)
-            setPostalCodeVisibility(cardOutputData.isPostalCodeRequired)
+            setAddressInputVisibility(cardOutputData.addressVisibility)
             handleCvcUIState(cardOutputData.cvcUIState)
             handleExpiryDateUIState(cardOutputData.expiryDateUIState)
             updateInstallments(cardOutputData)
@@ -596,8 +597,22 @@ class CardView @JvmOverloads constructor(
         binding.textInputLayoutKcpCardPassword.isVisible = shouldShowKCPAuth
     }
 
-    private fun setPostalCodeVisibility(shouldShowPostalCode: Boolean) {
-        binding.textInputLayoutPostalCode.isVisible = shouldShowPostalCode
+    private fun setAddressInputVisibility(addressVisibility: AddressVisibility) {
+        when (addressVisibility) {
+            AddressVisibility.FULL_ADDRESS -> {
+                binding.addressFormInput.isVisible = true
+                binding.textInputLayoutPostalCode.isVisible = false
+            }
+            AddressVisibility.POSTAL_CODE -> {
+                binding.addressFormInput.isVisible = false
+                binding.textInputLayoutPostalCode.isVisible = true
+            }
+            AddressVisibility.NONE -> {
+                binding.addressFormInput.isVisible = false
+                binding.textInputLayoutPostalCode.isVisible = false
+            }
+        }
+
     }
 
     private fun setStoredCardInterface(storedCardInput: CardInputData) {
