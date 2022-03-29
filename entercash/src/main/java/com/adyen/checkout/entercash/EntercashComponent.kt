@@ -5,54 +5,35 @@
  *
  * Created by arman on 12/6/2019.
  */
+package com.adyen.checkout.entercash
 
-package com.adyen.checkout.entercash;
-
-import androidx.annotation.NonNull;
-import androidx.lifecycle.SavedStateHandle;
-
-import com.adyen.checkout.components.PaymentComponentProvider;
-import com.adyen.checkout.components.base.GenericPaymentComponentProvider;
-import com.adyen.checkout.components.base.GenericPaymentMethodDelegate;
-import com.adyen.checkout.components.model.payments.request.EntercashPaymentMethod;
-import com.adyen.checkout.components.util.PaymentMethodTypes;
-import com.adyen.checkout.issuerlist.IssuerListComponent;
-import com.adyen.checkout.issuerlist.IssuerListInputData;
-import com.adyen.checkout.issuerlist.IssuerListOutputData;
+import androidx.lifecycle.SavedStateHandle
+import com.adyen.checkout.components.PaymentComponentProvider
+import com.adyen.checkout.components.base.GenericPaymentComponentProvider
+import com.adyen.checkout.components.base.GenericPaymentMethodDelegate
+import com.adyen.checkout.components.model.payments.request.EntercashPaymentMethod
+import com.adyen.checkout.components.util.PaymentMethodTypes
+import com.adyen.checkout.issuerlist.IssuerListComponent
 
 /**
  * PaymentComponent to handle iDeal payments.
  */
-public final class EntercashComponent extends IssuerListComponent<EntercashPaymentMethod> {
+class EntercashComponent(
+    savedStateHandle: SavedStateHandle,
+    paymentMethodDelegate: GenericPaymentMethodDelegate,
+    configuration: EntercashConfiguration
+) : IssuerListComponent<EntercashPaymentMethod>(savedStateHandle, paymentMethodDelegate, configuration) {
 
-    public static final PaymentComponentProvider<EntercashComponent, EntercashConfiguration> PROVIDER =
-            new GenericPaymentComponentProvider<>(EntercashComponent.class);
-
-    private static final String[] PAYMENT_METHOD_TYPES = {PaymentMethodTypes.ENTERCASH};
-
-    public EntercashComponent(@NonNull SavedStateHandle savedStateHandle,
-            @NonNull GenericPaymentMethodDelegate paymentMethodDelegate,
-            @NonNull EntercashConfiguration configuration
-    ) {
-        super(savedStateHandle, paymentMethodDelegate, configuration);
+    override fun instantiateTypedPaymentMethod(): EntercashPaymentMethod {
+        return EntercashPaymentMethod()
     }
 
-    @NonNull
-    @Override
-    public String[] getSupportedPaymentMethodTypes() {
-        return PAYMENT_METHOD_TYPES;
-    }
+    override val supportedPaymentMethodTypes: Array<String> = arrayOf(PaymentMethodTypes.ENTERCASH)
 
-    @Override
-    @NonNull
-    protected IssuerListOutputData onInputDataChanged(@NonNull IssuerListInputData inputData) {
-        return super.onInputDataChanged(inputData);
+    companion object {
+        @JvmField
+        val PROVIDER: PaymentComponentProvider<EntercashComponent, EntercashConfiguration> = GenericPaymentComponentProvider(
+            EntercashComponent::class.java
+        )
     }
-
-    @NonNull
-    @Override
-    protected EntercashPaymentMethod instantiateTypedPaymentMethod() {
-        return new EntercashPaymentMethod();
-    }
-
 }

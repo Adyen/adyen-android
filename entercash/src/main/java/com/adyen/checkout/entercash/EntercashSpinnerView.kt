@@ -5,29 +5,15 @@
  *
  * Created by arman on 12/6/2019.
  */
+package com.adyen.checkout.entercash
 
-package com.adyen.checkout.entercash;
+import android.content.Context
+import android.util.AttributeSet
+import com.adyen.checkout.components.model.payments.request.EntercashPaymentMethod
+import com.adyen.checkout.issuerlist.IssuerListSpinnerView
 
-import android.content.Context;
-import android.util.AttributeSet;
-
-import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
-
-import com.adyen.checkout.components.model.payments.request.EntercashPaymentMethod;
-import com.adyen.checkout.issuerlist.IssuerListSpinnerView;
-
-public final class EntercashSpinnerView extends IssuerListSpinnerView<EntercashPaymentMethod, EntercashComponent> {
-
-    public EntercashSpinnerView(@NonNull Context context) {
-        super(context);
-    }
-
-    public EntercashSpinnerView(@NonNull Context context, @Nullable AttributeSet attrs) {
-        super(context, attrs);
-    }
-
-    public EntercashSpinnerView(@NonNull Context context, @Nullable AttributeSet attrs, int defStyleAttr) {
-        super(context, attrs, defStyleAttr);
-    }
+class EntercashSpinnerView : IssuerListSpinnerView<EntercashPaymentMethod, EntercashComponent> {
+    constructor(context: Context) : super(context)
+    constructor(context: Context, attrs: AttributeSet?) : super(context, attrs)
+    constructor(context: Context, attrs: AttributeSet?, defStyleAttr: Int) : super(context, attrs, defStyleAttr)
 }
