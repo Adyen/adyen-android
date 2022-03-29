@@ -98,6 +98,8 @@ class AddressFormInput @JvmOverloads constructor(
     }
 
     private fun initForm() {
+        addressInput.reset()
+
         rootView.findViewById<AdyenTextInputEditText>(R.id.editText_street).setOnChangeListener {
             addressInput.street = it.toString()
             onAddressChangeListener?.onChanged(addressInput)
@@ -144,7 +146,6 @@ class AddressFormInput @JvmOverloads constructor(
                 return values().firstOrNull { it.name == countryCode } ?: DEFAULT
             }
         }
-
     }
 
     fun interface OnAddressChangeListener {

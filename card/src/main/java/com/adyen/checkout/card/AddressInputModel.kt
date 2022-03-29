@@ -15,4 +15,13 @@ data class AddressInputModel(
     var houseNumberOrName: String = "",
     var city: String = "",
     var country: String = "",
-)
+) {
+    fun reset() {
+        postalCode = ""
+        street = ""
+        stateOrProvince = ""
+        houseNumberOrName = ""
+        city = ""
+        country = ""
+    }
+}
