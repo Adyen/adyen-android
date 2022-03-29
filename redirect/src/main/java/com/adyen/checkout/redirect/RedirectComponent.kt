@@ -5,77 +5,65 @@
  *
  * Created by caiof on 5/4/2019.
  */
+package com.adyen.checkout.redirect
 
-package com.adyen.checkout.redirect;
+import android.app.Activity
+import android.app.Application
+import android.content.Context
+import android.content.Intent
+import androidx.lifecycle.SavedStateHandle
+import com.adyen.checkout.components.ActionComponentProvider
+import com.adyen.checkout.components.base.BaseActionComponent
+import com.adyen.checkout.components.base.IntentHandlingComponent
+import com.adyen.checkout.components.model.payments.response.Action
+import com.adyen.checkout.components.model.payments.response.RedirectAction
+import com.adyen.checkout.core.exception.CheckoutException
+import com.adyen.checkout.core.exception.ComponentException
 
-import android.app.Activity;
-import android.app.Application;
-import android.content.Context;
-import android.content.Intent;
+class RedirectComponent(
+    savedStateHandle: SavedStateHandle,
+    application: Application,
+    configuration: RedirectConfiguration,
+    private val redirectDelegate: RedirectDelegate
+) : BaseActionComponent<RedirectConfiguration>(savedStateHandle, application, configuration), IntentHandlingComponent {
 
-import androidx.annotation.NonNull;
-import androidx.lifecycle.SavedStateHandle;
-
-import com.adyen.checkout.components.ActionComponentProvider;
-import com.adyen.checkout.components.base.BaseActionComponent;
-import com.adyen.checkout.components.base.IntentHandlingComponent;
-import com.adyen.checkout.components.model.payments.response.Action;
-import com.adyen.checkout.components.model.payments.response.RedirectAction;
-import com.adyen.checkout.core.exception.CheckoutException;
-import com.adyen.checkout.core.exception.ComponentException;
-
-import org.json.JSONObject;
-
-public final class RedirectComponent extends BaseActionComponent<RedirectConfiguration> implements IntentHandlingComponent {
-    public static final ActionComponentProvider<RedirectComponent, RedirectConfiguration> PROVIDER = new RedirectComponentProvider();
-
-    private final RedirectDelegate mRedirectDelegate;
-
-    public RedirectComponent(
-            @NonNull SavedStateHandle savedStateHandle,
-            @NonNull Application application,
-            @NonNull RedirectConfiguration configuration,
-            @NonNull RedirectDelegate redirectDelegate
-    ) {
-        super(savedStateHandle, application, configuration);
-        mRedirectDelegate = redirectDelegate;
+    override fun canHandleAction(action: Action): Boolean {
+        return PROVIDER.canHandleAction(action)
     }
 
-    /**
-     * Returns the suggested value to be used as the `returnUrl` value in the payments/ call.
-     *
-     * @param context The context provides the package name which constitutes part of the ReturnUrl
-     * @return The suggested `returnUrl` to be used. Consists of {@link RedirectUtil#REDIRECT_RESULT_SCHEME} + App package name.
-     */
-    @NonNull
-    public static String getReturnUrl(@NonNull Context context) {
-        return RedirectUtil.REDIRECT_RESULT_SCHEME + context.getPackageName();
-    }
-
-    @Override
-    public boolean canHandleAction(@NonNull Action action) {
-        return PROVIDER.canHandleAction(action);
-    }
-
-    @Override
-    protected void handleActionInternal(@NonNull Activity activity, @NonNull Action action) throws ComponentException {
-        final RedirectAction redirectAction = (RedirectAction) action;
-        mRedirectDelegate.makeRedirect(activity, redirectAction);
+    @Throws(ComponentException::class)
+    override fun handleActionInternal(activity: Activity, action: Action) {
+        val redirectAction = action as RedirectAction
+        redirectDelegate.makeRedirect(activity, redirectAction)
     }
 
     /**
      * Call this method when receiving the return URL from the redirect with the result data.
-     * This result will be in the {@link Intent#getData()} and begins with the returnUrl you specified on the payments/ call.
+     * This result will be in the [Intent.getData] and begins with the returnUrl you specified on the payments/ call.
      *
-     * @param intent The received {@link Intent}.
+     * @param intent The received [Intent].
      */
-    @Override
-    public void handleIntent(@NonNull Intent intent) {
+    override fun handleIntent(intent: Intent) {
         try {
-            final JSONObject parsedResult = mRedirectDelegate.handleRedirectResponse(intent.getData());
-            notifyDetails(parsedResult);
-        } catch (CheckoutException e) {
-            notifyException(e);
+            val parsedResult = redirectDelegate.handleRedirectResponse(intent.data)
+            notifyDetails(parsedResult)
+        } catch (e: CheckoutException) {
+            notifyException(e)
+        }
+    }
+
+    companion object {
+        @JvmField
+        val PROVIDER: ActionComponentProvider<RedirectComponent, RedirectConfiguration> = RedirectComponentProvider()
+
+        /**
+         * Returns the suggested value to be used as the `returnUrl` value in the payments/ call.
+         *
+         * @param context The context provides the package name which constitutes part of the ReturnUrl
+         * @return The suggested `returnUrl` to be used. Consists of [RedirectUtil.REDIRECT_RESULT_SCHEME] + App package name.
+         */
+        fun getReturnUrl(context: Context): String {
+            return RedirectUtil.REDIRECT_RESULT_SCHEME + context.packageName
         }
     }
 }
