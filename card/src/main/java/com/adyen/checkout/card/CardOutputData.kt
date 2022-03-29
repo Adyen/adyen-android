@@ -10,6 +10,7 @@ package com.adyen.checkout.card
 import com.adyen.checkout.card.api.model.AddressItem
 import com.adyen.checkout.card.data.DetectedCardType
 import com.adyen.checkout.card.data.ExpiryDate
+import com.adyen.checkout.components.base.AddressVisibility
 import com.adyen.checkout.components.base.OutputData
 import com.adyen.checkout.components.ui.FieldState
 
@@ -29,7 +30,7 @@ data class CardOutputData(
     val detectedCardTypes: List<DetectedCardType>,
     val isSocialSecurityNumberRequired: Boolean,
     val isKCPAuthRequired: Boolean,
-    val isPostalCodeRequired: Boolean,
+    val addressVisibility: AddressVisibility,
     val installmentOptions: List<InstallmentModel>,
     val countryOptions: List<AddressItem>,
     val stateOptions: List<AddressItem>

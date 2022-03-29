@@ -260,7 +260,7 @@ class CardComponent private constructor(
             outputCardTypes,
             cardDelegate.isSocialSecurityNumberRequired(),
             cardDelegate.isKCPAuthRequired(),
-            cardDelegate.isPostalCodeRequired(),
+            configuration.addressVisibility,
             cardDelegate.getInstallmentOptions(
                 configuration.installmentConfiguration,
                 selectedOrFirstCardType?.cardType,
