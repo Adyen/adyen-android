@@ -5,55 +5,35 @@
  *
  * Created by arman on 12/6/2019.
  */
+package com.adyen.checkout.openbanking
 
-package com.adyen.checkout.openbanking;
-
-import androidx.annotation.NonNull;
-import androidx.lifecycle.SavedStateHandle;
-
-import com.adyen.checkout.components.PaymentComponentProvider;
-import com.adyen.checkout.components.base.GenericPaymentComponentProvider;
-import com.adyen.checkout.components.base.GenericPaymentMethodDelegate;
-import com.adyen.checkout.components.model.payments.request.OpenBankingPaymentMethod;
-import com.adyen.checkout.components.util.PaymentMethodTypes;
-import com.adyen.checkout.issuerlist.IssuerListComponent;
-import com.adyen.checkout.issuerlist.IssuerListInputData;
-import com.adyen.checkout.issuerlist.IssuerListOutputData;
+import androidx.lifecycle.SavedStateHandle
+import com.adyen.checkout.components.PaymentComponentProvider
+import com.adyen.checkout.components.base.GenericPaymentComponentProvider
+import com.adyen.checkout.components.base.GenericPaymentMethodDelegate
+import com.adyen.checkout.components.model.payments.request.OpenBankingPaymentMethod
+import com.adyen.checkout.components.util.PaymentMethodTypes
+import com.adyen.checkout.issuerlist.IssuerListComponent
 
 /**
  * PaymentComponent to handle iDeal payments.
  */
-public final class OpenBankingComponent extends IssuerListComponent<OpenBankingPaymentMethod> {
+class OpenBankingComponent(
+    savedStateHandle: SavedStateHandle,
+    paymentMethodDelegate: GenericPaymentMethodDelegate,
+    configuration: OpenBankingConfiguration
+) : IssuerListComponent<OpenBankingPaymentMethod>(savedStateHandle, paymentMethodDelegate, configuration) {
 
-    public static final PaymentComponentProvider<OpenBankingComponent, OpenBankingConfiguration> PROVIDER =
-            new GenericPaymentComponentProvider<>(OpenBankingComponent.class);
+    override val supportedPaymentMethodTypes: Array<String> = arrayOf(PaymentMethodTypes.OPEN_BANKING)
 
-    private static final String[] PAYMENT_METHOD_TYPES = {PaymentMethodTypes.OPEN_BANKING};
-
-    public OpenBankingComponent(
-            @NonNull SavedStateHandle savedStateHandle,
-            @NonNull GenericPaymentMethodDelegate paymentMethodDelegate,
-            @NonNull OpenBankingConfiguration configuration
-    ) {
-        super(savedStateHandle, paymentMethodDelegate, configuration);
+    override fun instantiateTypedPaymentMethod(): OpenBankingPaymentMethod {
+        return OpenBankingPaymentMethod()
     }
 
-    @NonNull
-    @Override
-    public String[] getSupportedPaymentMethodTypes() {
-        return PAYMENT_METHOD_TYPES;
+    companion object {
+        @JvmField
+        val PROVIDER: PaymentComponentProvider<OpenBankingComponent, OpenBankingConfiguration> = GenericPaymentComponentProvider(
+            OpenBankingComponent::class.java
+        )
     }
-
-    @Override
-    @NonNull
-    protected IssuerListOutputData onInputDataChanged(@NonNull IssuerListInputData inputData) {
-        return super.onInputDataChanged(inputData);
-    }
-
-    @NonNull
-    @Override
-    protected OpenBankingPaymentMethod instantiateTypedPaymentMethod() {
-        return new OpenBankingPaymentMethod();
-    }
-
 }
