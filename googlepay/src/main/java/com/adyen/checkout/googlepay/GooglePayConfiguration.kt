@@ -5,227 +5,156 @@
  *
  * Created by caiof on 4/7/2019.
  */
+@file:Suppress("unused")
 
-package com.adyen.checkout.googlepay;
+package com.adyen.checkout.googlepay
 
-import android.content.Context;
-import android.os.Parcel;
-import android.os.Parcelable;
+import android.content.Context
+import android.os.Parcel
+import android.os.Parcelable
+import com.adyen.checkout.components.base.AmountConfiguration
+import com.adyen.checkout.components.base.AmountConfigurationBuilder
+import com.adyen.checkout.components.base.BaseConfigurationBuilder
+import com.adyen.checkout.components.base.Configuration
+import com.adyen.checkout.components.model.payments.Amount
+import com.adyen.checkout.components.util.CheckoutCurrency
+import com.adyen.checkout.components.util.CheckoutCurrency.Companion.isSupported
+import com.adyen.checkout.core.api.Environment
+import com.adyen.checkout.core.exception.CheckoutException
+import com.adyen.checkout.core.util.ParcelUtils.readBoolean
+import com.adyen.checkout.core.util.ParcelUtils.writeBoolean
+import com.adyen.checkout.googlepay.model.BillingAddressParameters
+import com.adyen.checkout.googlepay.model.MerchantInfo
+import com.adyen.checkout.googlepay.model.ShippingAddressParameters
+import com.adyen.checkout.googlepay.util.AllowedAuthMethods
+import com.google.android.gms.wallet.WalletConstants
+import java.util.Locale
 
-import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
+class GooglePayConfiguration : Configuration, AmountConfiguration {
 
-import com.adyen.checkout.components.base.AmountConfiguration;
-import com.adyen.checkout.components.base.AmountConfigurationBuilder;
-import com.adyen.checkout.components.base.BaseConfigurationBuilder;
-import com.adyen.checkout.components.base.Configuration;
-import com.adyen.checkout.components.model.payments.Amount;
-import com.adyen.checkout.components.util.CheckoutCurrency;
-import com.adyen.checkout.core.api.Environment;
-import com.adyen.checkout.core.exception.CheckoutException;
-import com.adyen.checkout.core.util.ParcelUtils;
-import com.adyen.checkout.googlepay.model.BillingAddressParameters;
-import com.adyen.checkout.googlepay.model.MerchantInfo;
-import com.adyen.checkout.googlepay.model.ShippingAddressParameters;
-import com.adyen.checkout.googlepay.util.AllowedAuthMethods;
-import com.google.android.gms.wallet.WalletConstants;
+    val merchantAccount: String?
+    val googlePayEnvironment: Int
+    override val amount: Amount
+    val totalPriceStatus: String
+    val countryCode: String?
+    val merchantInfo: MerchantInfo?
+    val allowedAuthMethods: List<String>
+    val allowedCardNetworks: List<String>?
+    val isAllowPrepaidCards: Boolean
+    val isEmailRequired: Boolean
+    val isExistingPaymentMethodRequired: Boolean
+    val isShippingAddressRequired: Boolean
+    val shippingAddressParameters: ShippingAddressParameters?
+    val isBillingAddressRequired: Boolean
+    val billingAddressParameters: BillingAddressParameters?
 
-import java.util.List;
-import java.util.Locale;
-
-public class GooglePayConfiguration extends Configuration implements AmountConfiguration {
-
-    private final String mMerchantAccount;
-    private final int mGooglePayEnvironment;
-    private final Amount mAmount;
-    private final String mTotalPriceStatus;
-    private final String mCountryCode;
-    private final MerchantInfo mMerchantInfo;
-    private final List<String> mAllowedAuthMethods;
-    private final List<String> mAllowedCardNetworks;
-    private final boolean mAllowPrepaidCards;
-    private final boolean mEmailRequired;
-    private final boolean mExistingPaymentMethodRequired;
-    private final boolean mShippingAddressRequired;
-    private final ShippingAddressParameters mShippingAddressParameters;
-    private final boolean mBillingAddressRequired;
-    private final BillingAddressParameters mBillingAddressParameters;
-
-    public static final Parcelable.Creator<GooglePayConfiguration> CREATOR = new Parcelable.Creator<GooglePayConfiguration>() {
-        public GooglePayConfiguration createFromParcel(@NonNull Parcel in) {
-            return new GooglePayConfiguration(in);
-        }
-
-        public GooglePayConfiguration[] newArray(int size) {
-            return new GooglePayConfiguration[size];
-        }
-    };
-
-    GooglePayConfiguration(@NonNull Builder builder) {
-        super(builder.getBuilderShopperLocale(), builder.getBuilderEnvironment(), builder.getBuilderClientKey());
-        mMerchantAccount = builder.mBuilderMerchantAccount;
-        mGooglePayEnvironment = builder.mBuilderGooglePayEnvironment;
-        mAmount = builder.mBuilderAmount;
-        mTotalPriceStatus = builder.mBuilderTotalPriceStatus;
-        mCountryCode = builder.mBuilderCountryCode;
-        mMerchantInfo = builder.mBuilderMerchantInfo;
-        mAllowedAuthMethods = builder.mBuilderAllowedAuthMethods;
-        mAllowedCardNetworks = builder.mBuilderAllowedCardNetworks;
-        mAllowPrepaidCards = builder.mBuilderAllowPrepaidCards;
-        mEmailRequired = builder.mBuilderEmailRequired;
-        mExistingPaymentMethodRequired = builder.mBuilderExistingPaymentMethodRequired;
-        mShippingAddressRequired = builder.mBuilderShippingAddressRequired;
-        mShippingAddressParameters = builder.mBuilderShippingAddressParameters;
-        mBillingAddressRequired = builder.mBuilderBillingAddressRequired;
-        mBillingAddressParameters = builder.mBuilderBillingAddressParameters;
+    @Suppress("LongParameterList")
+    internal constructor(
+        shopperLocale: Locale,
+        environment: Environment,
+        clientKey: String,
+        merchantAccount: String?,
+        googlePayEnvironment: Int,
+        amount: Amount,
+        totalPriceStatus: String,
+        countryCode: String?,
+        merchantInfo: MerchantInfo?,
+        allowedAuthMethods: List<String>,
+        allowedCardNetworks: List<String>?,
+        isAllowPrepaidCards: Boolean,
+        isEmailRequired: Boolean,
+        isExistingPaymentMethodRequired: Boolean,
+        isShippingAddressRequired: Boolean,
+        shippingAddressParameters: ShippingAddressParameters?,
+        isBillingAddressRequired: Boolean,
+        billingAddressParameters: BillingAddressParameters?,
+    ) : super(shopperLocale, environment, clientKey) {
+        this.merchantAccount = merchantAccount
+        this.googlePayEnvironment = googlePayEnvironment
+        this.amount = amount
+        this.totalPriceStatus = totalPriceStatus
+        this.countryCode = countryCode
+        this.merchantInfo = merchantInfo
+        this.allowedAuthMethods = allowedAuthMethods
+        this.allowedCardNetworks = allowedCardNetworks
+        this.isAllowPrepaidCards = isAllowPrepaidCards
+        this.isEmailRequired = isEmailRequired
+        this.isExistingPaymentMethodRequired = isExistingPaymentMethodRequired
+        this.isShippingAddressRequired = isShippingAddressRequired
+        this.shippingAddressParameters = shippingAddressParameters
+        this.isBillingAddressRequired = isBillingAddressRequired
+        this.billingAddressParameters = billingAddressParameters
     }
 
-    GooglePayConfiguration(@NonNull Parcel in) {
-        super(in);
-        mMerchantAccount = in.readString();
-        mGooglePayEnvironment = in.readInt();
-        mAmount = in.readParcelable(Amount.class.getClassLoader());
-        mTotalPriceStatus = in.readString();
-        mCountryCode = in.readString();
-        mMerchantInfo = in.readParcelable(MerchantInfo.class.getClassLoader());
-        mAllowedAuthMethods = in.readArrayList(String.class.getClassLoader());
-        mAllowedCardNetworks = in.readArrayList(String.class.getClassLoader());
-        mAllowPrepaidCards = ParcelUtils.readBoolean(in);
-        mEmailRequired = ParcelUtils.readBoolean(in);
-        mExistingPaymentMethodRequired = ParcelUtils.readBoolean(in);
-        mShippingAddressRequired = ParcelUtils.readBoolean(in);
-        mShippingAddressParameters = in.readParcelable(ShippingAddressParameters.class.getClassLoader());
-        mBillingAddressRequired = ParcelUtils.readBoolean(in);
-        mBillingAddressParameters = in.readParcelable(BillingAddressParameters.class.getClassLoader());
+    internal constructor(parcel: Parcel) : super(parcel) {
+        merchantAccount = parcel.readString()
+        googlePayEnvironment = parcel.readInt()
+        amount = parcel.readParcelable(Amount::class.java.classLoader) ?: throw CheckoutException("Failed to read amount from parcel.")
+        totalPriceStatus = parcel.readString()!!
+        countryCode = parcel.readString()
+        merchantInfo = parcel.readParcelable(MerchantInfo::class.java.classLoader)
+        @Suppress("UNCHECKED_CAST")
+        allowedAuthMethods = parcel.readArrayList(String::class.java.classLoader) as List<String>
+        @Suppress("UNCHECKED_CAST")
+        allowedCardNetworks = parcel.readArrayList(String::class.java.classLoader) as List<String>
+        isAllowPrepaidCards = readBoolean(parcel)
+        isEmailRequired = readBoolean(parcel)
+        isExistingPaymentMethodRequired = readBoolean(parcel)
+        isShippingAddressRequired = readBoolean(parcel)
+        shippingAddressParameters = parcel.readParcelable(ShippingAddressParameters::class.java.classLoader)
+        isBillingAddressRequired = readBoolean(parcel)
+        billingAddressParameters = parcel.readParcelable(BillingAddressParameters::class.java.classLoader)
     }
 
-    @Override
-    public void writeToParcel(@NonNull Parcel dest, int flags) {
-        super.writeToParcel(dest, flags);
-        dest.writeString(mMerchantAccount);
-        dest.writeInt(mGooglePayEnvironment);
-        dest.writeParcelable(mAmount, flags);
-        dest.writeString(mTotalPriceStatus);
-        dest.writeString(mCountryCode);
-        dest.writeParcelable(mMerchantInfo, flags);
-        dest.writeList(mAllowedAuthMethods);
-        dest.writeList(mAllowedCardNetworks);
-        ParcelUtils.writeBoolean(dest, mAllowPrepaidCards);
-        ParcelUtils.writeBoolean(dest, mEmailRequired);
-        ParcelUtils.writeBoolean(dest, mExistingPaymentMethodRequired);
-        ParcelUtils.writeBoolean(dest, mShippingAddressRequired);
-        dest.writeParcelable(mShippingAddressParameters, flags);
-        ParcelUtils.writeBoolean(dest, mBillingAddressRequired);
-        dest.writeParcelable(mBillingAddressParameters, flags);
-    }
-
-    @Nullable
-    public String getMerchantAccount() {
-        return mMerchantAccount;
-    }
-
-    @NonNull
-    @Override
-    public Amount getAmount() {
-        return mAmount;
-    }
-
-    @NonNull
-    public String getTotalPriceStatus() {
-        return mTotalPriceStatus;
-    }
-
-    @Nullable
-    public String getCountryCode() {
-        return mCountryCode;
-    }
-
-    public int getGooglePayEnvironment() {
-        return mGooglePayEnvironment;
-    }
-
-    @Nullable
-    public MerchantInfo getMerchantInfo() {
-        return mMerchantInfo;
-    }
-
-    @Nullable
-    public List<String> getAllowedAuthMethods() {
-        return mAllowedAuthMethods;
-    }
-
-    @Nullable
-    public List<String> getAllowedCardNetworks() {
-        return mAllowedCardNetworks;
-    }
-
-    public boolean isAllowPrepaidCards() {
-        return mAllowPrepaidCards;
-    }
-
-    public boolean isEmailRequired() {
-        return mEmailRequired;
-    }
-
-    public boolean isExistingPaymentMethodRequired() {
-        return mExistingPaymentMethodRequired;
-    }
-
-    public boolean isShippingAddressRequired() {
-        return mShippingAddressRequired;
-    }
-
-    @Nullable
-    public ShippingAddressParameters getShippingAddressParameters() {
-        return mShippingAddressParameters;
-    }
-
-    public boolean isBillingAddressRequired() {
-        return mBillingAddressRequired;
-    }
-
-    @Nullable
-    public BillingAddressParameters getBillingAddressParameters() {
-        return mBillingAddressParameters;
+    override fun writeToParcel(parcel: Parcel, flags: Int) {
+        super.writeToParcel(parcel, flags)
+        parcel.writeString(merchantAccount)
+        parcel.writeInt(googlePayEnvironment)
+        parcel.writeParcelable(amount, flags)
+        parcel.writeString(totalPriceStatus)
+        parcel.writeString(countryCode)
+        parcel.writeParcelable(merchantInfo, flags)
+        parcel.writeList(allowedAuthMethods)
+        parcel.writeList(allowedCardNetworks)
+        writeBoolean(parcel, isAllowPrepaidCards)
+        writeBoolean(parcel, isEmailRequired)
+        writeBoolean(parcel, isExistingPaymentMethodRequired)
+        writeBoolean(parcel, isShippingAddressRequired)
+        parcel.writeParcelable(shippingAddressParameters, flags)
+        writeBoolean(parcel, isBillingAddressRequired)
+        parcel.writeParcelable(billingAddressParameters, flags)
     }
 
     /**
-     * Builder to create a {@link GooglePayConfiguration}.
+     * Builder to create a [GooglePayConfiguration].
      */
-    public static final class Builder extends BaseConfigurationBuilder<GooglePayConfiguration> implements AmountConfigurationBuilder {
-
-        private static final String DEFAULT_TOTAL_PRICE_STATUS = "FINAL";
-
-        private String mBuilderMerchantAccount;
-        private int mBuilderGooglePayEnvironment = getDefaultGooglePayEnvironment(getBuilderEnvironment());
-        private Amount mBuilderAmount = createDefaultAmount();
-        private MerchantInfo mBuilderMerchantInfo = null;
-        private String mBuilderCountryCode = null;
-        private List<String> mBuilderAllowedAuthMethods = AllowedAuthMethods.getAllAllowedAuthMethods();
-        private List<String> mBuilderAllowedCardNetworks = null;
-        private boolean mBuilderAllowPrepaidCards = false;
-        private boolean mBuilderEmailRequired;
-        private boolean mBuilderExistingPaymentMethodRequired;
-        private boolean mBuilderShippingAddressRequired;
-        private ShippingAddressParameters mBuilderShippingAddressParameters;
-        private boolean mBuilderBillingAddressRequired;
-        private BillingAddressParameters mBuilderBillingAddressParameters;
-        private String mBuilderTotalPriceStatus = DEFAULT_TOTAL_PRICE_STATUS;
-
-        private boolean mBuilderIsGoogleEnvironmentSetManually = false;
-
-        private int getDefaultGooglePayEnvironment(Environment environment) {
-            if (environment.equals(Environment.TEST)) {
-                return WalletConstants.ENVIRONMENT_TEST;
-            }
-            return WalletConstants.ENVIRONMENT_PRODUCTION;
+    @Suppress("TooManyFunctions")
+    class Builder : BaseConfigurationBuilder<GooglePayConfiguration>, AmountConfigurationBuilder {
+        private var builderMerchantAccount: String? = null
+        private var builderGooglePayEnvironment = getDefaultGooglePayEnvironment(builderEnvironment)
+        private var builderAmount = Amount().apply {
+            value = 0
+            currency = CheckoutCurrency.USD.name
         }
+        private var builderMerchantInfo: MerchantInfo? = null
+        private var builderCountryCode: String? = null
+        private var builderAllowedAuthMethods: List<String> = AllowedAuthMethods.getAllAllowedAuthMethods()
+        private var builderAllowedCardNetworks: List<String>? = null
+        private var builderAllowPrepaidCards = false
+        private var builderEmailRequired = false
+        private var builderExistingPaymentMethodRequired = false
+        private var builderShippingAddressRequired = false
+        private var builderShippingAddressParameters: ShippingAddressParameters? = null
+        private var builderBillingAddressRequired = false
+        private var builderBillingAddressParameters: BillingAddressParameters? = null
+        private var builderTotalPriceStatus: String = "FINAL"
 
-        private static Amount createDefaultAmount() {
-            final Amount defaultAmount = new Amount();
-            defaultAmount.setValue(0);
-            defaultAmount.setCurrency(CheckoutCurrency.USD.name());
-            return defaultAmount;
+        private var builderIsGoogleEnvironmentSetManually = false
+
+        private fun getDefaultGooglePayEnvironment(environment: Environment): Int {
+            return if (environment == Environment.TEST) {
+                WalletConstants.ENVIRONMENT_TEST
+            } else WalletConstants.ENVIRONMENT_PRODUCTION
         }
 
         /**
@@ -234,68 +163,76 @@ public class GooglePayConfiguration extends Configuration implements AmountConfi
          * @param context   A context to get some information.
          * @param clientKey Your Client Key used for network calls from the SDK to Adyen.
          */
-        public Builder(@NonNull Context context, @NonNull String clientKey) {
-            super(context, clientKey);
-        }
+        constructor(context: Context, clientKey: String) : super(context, clientKey)
 
         /**
          * Builder with required parameters.
          *
          * @param shopperLocale The locale of the Shopper for translation.
-         * @param environment   The {@link Environment} to be used for network calls to Adyen.
+         * @param environment   The [Environment] to be used for network calls to Adyen.
          * @param clientKey     Your Client Key used for network calls from the SDK to Adyen.
          */
-        public Builder(@NonNull Locale shopperLocale, @NonNull Environment environment, @NonNull String clientKey) {
-            super(shopperLocale, environment, clientKey);
-        }
+        constructor(shopperLocale: Locale, environment: Environment, clientKey: String) : super(shopperLocale, environment, clientKey)
 
         /**
          * Constructor that copies an existing configuration.
          *
          * @param configuration A configuration to initialize the builder.
          */
-        public Builder(@NonNull GooglePayConfiguration configuration) {
-            super(configuration);
-            mBuilderMerchantAccount = configuration.getMerchantAccount();
-            mBuilderGooglePayEnvironment = configuration.getGooglePayEnvironment();
-            mBuilderAmount = configuration.getAmount();
-            mBuilderTotalPriceStatus = configuration.getTotalPriceStatus();
-            mBuilderCountryCode = configuration.getCountryCode();
-            mBuilderMerchantInfo = configuration.getMerchantInfo();
-            mBuilderAllowedAuthMethods = configuration.getAllowedAuthMethods();
-            mBuilderAllowedCardNetworks = configuration.getAllowedCardNetworks();
-            mBuilderAllowPrepaidCards = configuration.isAllowPrepaidCards();
-            mBuilderEmailRequired = configuration.isEmailRequired();
-            mBuilderExistingPaymentMethodRequired = configuration.isExistingPaymentMethodRequired();
-            mBuilderShippingAddressRequired = configuration.isShippingAddressRequired();
-            mBuilderShippingAddressParameters = configuration.getShippingAddressParameters();
-            mBuilderBillingAddressRequired = configuration.isBillingAddressRequired();
-            mBuilderBillingAddressParameters = configuration.getBillingAddressParameters();
+        constructor(configuration: GooglePayConfiguration) : super(configuration) {
+            builderMerchantAccount = configuration.merchantAccount
+            builderGooglePayEnvironment = configuration.googlePayEnvironment
+            builderAmount = configuration.amount
+            builderTotalPriceStatus = configuration.totalPriceStatus
+            builderCountryCode = configuration.countryCode
+            builderMerchantInfo = configuration.merchantInfo
+            builderAllowedAuthMethods = configuration.allowedAuthMethods
+            builderAllowedCardNetworks = configuration.allowedCardNetworks
+            builderAllowPrepaidCards = configuration.isAllowPrepaidCards
+            builderEmailRequired = configuration.isEmailRequired
+            builderExistingPaymentMethodRequired = configuration.isExistingPaymentMethodRequired
+            builderShippingAddressRequired = configuration.isShippingAddressRequired
+            builderShippingAddressParameters = configuration.shippingAddressParameters
+            builderBillingAddressRequired = configuration.isBillingAddressRequired
+            builderBillingAddressParameters = configuration.billingAddressParameters
         }
 
-        @Override
-        @NonNull
-        public Builder setShopperLocale(@NonNull Locale builderShopperLocale) {
-            return (Builder) super.setShopperLocale(builderShopperLocale);
+        override fun setShopperLocale(builderShopperLocale: Locale): Builder {
+            return super.setShopperLocale(builderShopperLocale) as Builder
         }
 
-        @Override
-        @NonNull
-        public Builder setEnvironment(@NonNull Environment builderEnvironment) {
-            if (!mBuilderIsGoogleEnvironmentSetManually) {
-                mBuilderGooglePayEnvironment = getDefaultGooglePayEnvironment(builderEnvironment);
+        override fun setEnvironment(builderEnvironment: Environment): Builder {
+            if (!builderIsGoogleEnvironmentSetManually) {
+                builderGooglePayEnvironment = getDefaultGooglePayEnvironment(builderEnvironment)
             }
-            return (Builder) super.setEnvironment(builderEnvironment);
+            return super.setEnvironment(builderEnvironment) as Builder
         }
 
-        public void setTotalPriceStatus(@Nullable String builderTotalPriceStatus) {
-            mBuilderTotalPriceStatus = builderTotalPriceStatus;
+        fun setTotalPriceStatus(totalPriceStatus: String) {
+            this.builderTotalPriceStatus = totalPriceStatus
         }
 
-        @NonNull
-        @Override
-        protected GooglePayConfiguration buildInternal() {
-            return new GooglePayConfiguration(this);
+        override fun buildInternal(): GooglePayConfiguration {
+            return GooglePayConfiguration(
+                shopperLocale = builderShopperLocale,
+                environment = builderEnvironment,
+                clientKey = builderClientKey,
+                merchantAccount = builderMerchantAccount,
+                googlePayEnvironment = builderGooglePayEnvironment,
+                amount = builderAmount,
+                totalPriceStatus = builderTotalPriceStatus,
+                countryCode = builderCountryCode,
+                merchantInfo = builderMerchantInfo,
+                allowedAuthMethods = builderAllowedAuthMethods,
+                allowedCardNetworks = builderAllowedCardNetworks,
+                isAllowPrepaidCards = builderAllowPrepaidCards,
+                isEmailRequired = builderEmailRequired,
+                isExistingPaymentMethodRequired = builderExistingPaymentMethodRequired,
+                isShippingAddressRequired = builderShippingAddressRequired,
+                shippingAddressParameters = builderShippingAddressParameters,
+                isBillingAddressRequired = builderBillingAddressRequired,
+                billingAddressParameters = builderBillingAddressParameters,
+            )
         }
 
         /**
@@ -303,103 +240,102 @@ public class GooglePayConfiguration extends Configuration implements AmountConfi
          *
          * @param merchantAccount Your merchant account.
          */
-        @NonNull
-        public Builder setMerchantAccount(@NonNull String merchantAccount) {
-            mBuilderMerchantAccount = merchantAccount;
-            return this;
+        fun setMerchantAccount(merchantAccount: String): Builder {
+            builderMerchantAccount = merchantAccount
+            return this
         }
 
         /**
          * Set the environment to be used by GooglePay.
-         * Should be either {@link WalletConstants#ENVIRONMENT_TEST} or {@link WalletConstants#ENVIRONMENT_PRODUCTION}
+         * Should be either [WalletConstants.ENVIRONMENT_TEST] or [WalletConstants.ENVIRONMENT_PRODUCTION]
          *
          * @param googlePayEnvironment The GooglePay environment.
          */
-        @NonNull
-        public Builder setGooglePayEnvironment(int googlePayEnvironment) {
+        fun setGooglePayEnvironment(googlePayEnvironment: Int): Builder {
             if (googlePayEnvironment != WalletConstants.ENVIRONMENT_TEST && googlePayEnvironment != WalletConstants.ENVIRONMENT_PRODUCTION) {
-                throw new CheckoutException("Invalid value for Google Environment. "
-                        + "Use either WalletConstants.ENVIRONMENT_TEST or WalletConstants.ENVIRONMENT_PRODUCTION");
+                throw CheckoutException(
+                    "Invalid value for Google Environment. Use either WalletConstants.ENVIRONMENT_TEST or WalletConstants.ENVIRONMENT_PRODUCTION"
+                )
             }
-            mBuilderGooglePayEnvironment = googlePayEnvironment;
-            mBuilderIsGoogleEnvironmentSetManually = true;
-            return this;
+            builderGooglePayEnvironment = googlePayEnvironment
+            builderIsGoogleEnvironmentSetManually = true
+            return this
         }
 
-        @NonNull
-        @Override
-        public Builder setAmount(@NonNull Amount amount) {
-            if (!CheckoutCurrency.isSupported(amount.getCurrency()) || amount.getValue() < 0) {
-                throw new CheckoutException("Currency is not valid.");
+        override fun setAmount(amount: Amount): Builder {
+            if (!isSupported(amount.currency) || amount.value < 0) {
+                throw CheckoutException("Currency is not valid.")
             }
-            mBuilderAmount = amount;
-            return this;
+            builderAmount = amount
+            return this
         }
 
-        @NonNull
-        public Builder setBuilderMerchantInfo(@Nullable MerchantInfo builderMerchantInfo) {
-            mBuilderMerchantInfo = builderMerchantInfo;
-            return this;
+        fun setMerchantInfo(merchantInfo: MerchantInfo?): Builder {
+            this.builderMerchantInfo = merchantInfo
+            return this
         }
 
-        @NonNull
-        public Builder setCountryCode(@Nullable String countryCode) {
-            mBuilderCountryCode = countryCode;
-            return this;
+        fun setCountryCode(countryCode: String?): Builder {
+            builderCountryCode = countryCode
+            return this
         }
 
-        @NonNull
-        public Builder setAllowedAuthMethods(@Nullable List<String> allowedAuthMethods) {
-            mBuilderAllowedAuthMethods = allowedAuthMethods;
-            return this;
+        fun setAllowedAuthMethods(allowedAuthMethods: List<String>): Builder {
+            builderAllowedAuthMethods = allowedAuthMethods
+            return this
         }
 
-        @NonNull
-        public Builder setAllowedCardNetworks(@Nullable List<String> allowedCardNetworks) {
-            mBuilderAllowedCardNetworks = allowedCardNetworks;
-            return this;
+        fun setAllowedCardNetworks(allowedCardNetworks: List<String>?): Builder {
+            builderAllowedCardNetworks = allowedCardNetworks
+            return this
         }
 
-        @NonNull
-        public Builder setAllowPrepaidCards(boolean allowPrepaidCards) {
-            mBuilderAllowPrepaidCards = allowPrepaidCards;
-            return this;
+        fun setAllowPrepaidCards(allowPrepaidCards: Boolean): Builder {
+            builderAllowPrepaidCards = allowPrepaidCards
+            return this
         }
 
-        @NonNull
-        public Builder setEmailRequired(boolean builderEmailRequired) {
-            mBuilderEmailRequired = builderEmailRequired;
-            return this;
+        fun setEmailRequired(emailRequired: Boolean): Builder {
+            this.builderEmailRequired = emailRequired
+            return this
         }
 
-        @NonNull
-        public Builder setExistingPaymentMethodRequired(boolean builderExistingPaymentMethodRequired) {
-            mBuilderExistingPaymentMethodRequired = builderExistingPaymentMethodRequired;
-            return this;
+        fun setExistingPaymentMethodRequired(existingPaymentMethodRequired: Boolean): Builder {
+            this.builderExistingPaymentMethodRequired = existingPaymentMethodRequired
+            return this
         }
 
-        @NonNull
-        public Builder setShippingAddressRequired(boolean builderShippingAddressRequired) {
-            mBuilderShippingAddressRequired = builderShippingAddressRequired;
-            return this;
+        fun setShippingAddressRequired(shippingAddressRequired: Boolean): Builder {
+            this.builderShippingAddressRequired = shippingAddressRequired
+            return this
         }
 
-        @NonNull
-        public Builder setShippingAddressParameters(@Nullable ShippingAddressParameters builderShippingAddressParameters) {
-            mBuilderShippingAddressParameters = builderShippingAddressParameters;
-            return this;
+        fun setShippingAddressParameters(shippingAddressParameters: ShippingAddressParameters?): Builder {
+            this.builderShippingAddressParameters = shippingAddressParameters
+            return this
         }
 
-        @NonNull
-        public Builder setBillingAddressRequired(boolean builderBillingAddressRequired) {
-            mBuilderBillingAddressRequired = builderBillingAddressRequired;
-            return this;
+        fun setBillingAddressRequired(billingAddressRequired: Boolean): Builder {
+            this.builderBillingAddressRequired = billingAddressRequired
+            return this
         }
 
-        @NonNull
-        public Builder setBillingAddressParameters(@Nullable BillingAddressParameters builderBillingAddressParameters) {
-            mBuilderBillingAddressParameters = builderBillingAddressParameters;
-            return this;
+        fun setBillingAddressParameters(billingAddressParameters: BillingAddressParameters?): Builder {
+            this.builderBillingAddressParameters = billingAddressParameters
+            return this
+        }
+    }
+
+    companion object {
+        @JvmField
+        val CREATOR: Parcelable.Creator<GooglePayConfiguration> = object : Parcelable.Creator<GooglePayConfiguration> {
+            override fun createFromParcel(parcel: Parcel): GooglePayConfiguration {
+                return GooglePayConfiguration(parcel)
+            }
+
+            override fun newArray(size: Int): Array<GooglePayConfiguration?> {
+                return arrayOfNulls(size)
+            }
         }
     }
 }

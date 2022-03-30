@@ -5,24 +5,11 @@
  *
  * Created by caiof on 4/7/2019.
  */
+package com.adyen.checkout.googlepay
 
-package com.adyen.checkout.googlepay;
+import com.adyen.checkout.components.base.InputData
+import com.google.android.gms.wallet.PaymentData
 
-import androidx.annotation.Nullable;
-
-import com.adyen.checkout.components.base.InputData;
-import com.google.android.gms.wallet.PaymentData;
-
-class GooglePayInputData implements InputData {
-
-    private PaymentData mPaymentData;
-
-    @Nullable
-    public PaymentData getPaymentData() {
-        return mPaymentData;
-    }
-
-    public void setPaymentData(@Nullable PaymentData paymentData) {
-        mPaymentData = paymentData;
-    }
-}
+class GooglePayInputData(
+    val paymentData: PaymentData?
+) : InputData

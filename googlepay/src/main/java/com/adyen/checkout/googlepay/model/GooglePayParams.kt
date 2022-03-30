@@ -31,7 +31,7 @@ data class GooglePayParams(
     val totalPriceStatus = googlePayConfiguration.totalPriceStatus
     val countryCode: String? = googlePayConfiguration.countryCode
     val merchantInfo: MerchantInfo? = googlePayConfiguration.merchantInfo
-    val allowedAuthMethods: List<String>? = googlePayConfiguration.allowedAuthMethods
+    val allowedAuthMethods: List<String> = googlePayConfiguration.allowedAuthMethods
     val allowedCardNetworks: List<String> = getAvailableCardNetworks()
     val isAllowPrepaidCards: Boolean = googlePayConfiguration.isAllowPrepaidCards
     val isEmailRequired: Boolean = googlePayConfiguration.isEmailRequired

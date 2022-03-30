@@ -5,32 +5,13 @@
  *
  * Created by caiof on 4/7/2019.
  */
+package com.adyen.checkout.googlepay
 
-package com.adyen.checkout.googlepay;
+import com.adyen.checkout.components.base.OutputData
+import com.adyen.checkout.googlepay.util.GooglePayUtils
+import com.google.android.gms.wallet.PaymentData
 
-import android.text.TextUtils;
+class GooglePayOutputData(val paymentData: PaymentData) : OutputData {
 
-import androidx.annotation.Nullable;
-
-import com.adyen.checkout.components.base.OutputData;
-import com.adyen.checkout.googlepay.util.GooglePayUtils;
-import com.google.android.gms.wallet.PaymentData;
-
-class GooglePayOutputData implements OutputData {
-
-    private final PaymentData mPaymentData;
-
-    GooglePayOutputData(PaymentData paymentData) {
-        mPaymentData = paymentData;
-    }
-
-    @Override
-    public boolean isValid() {
-        return mPaymentData != null && !TextUtils.isEmpty(GooglePayUtils.findToken(mPaymentData));
-    }
-
-    @Nullable
-    public PaymentData getPaymentData() {
-        return mPaymentData;
-    }
+    override val isValid: Boolean = GooglePayUtils.findToken(paymentData).isNotEmpty()
 }
