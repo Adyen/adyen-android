@@ -5,170 +5,127 @@
  *
  * Created by caiof on 26/8/2019.
  */
+package com.adyen.checkout.sepa
 
-package com.adyen.checkout.sepa;
+import android.content.Context
+import android.content.res.TypedArray
+import android.util.AttributeSet
+import android.view.LayoutInflater
+import android.view.View
+import android.view.View.OnFocusChangeListener
+import androidx.lifecycle.LifecycleOwner
+import androidx.lifecycle.Observer
+import com.adyen.checkout.components.PaymentComponentState
+import com.adyen.checkout.components.model.payments.request.SepaPaymentMethod
+import com.adyen.checkout.components.ui.Validation
+import com.adyen.checkout.components.ui.view.AdyenLinearLayout
+import com.adyen.checkout.components.ui.view.AdyenTextInputEditText
+import com.adyen.checkout.core.log.LogUtil.getTag
+import com.adyen.checkout.core.log.Logger.d
+import com.adyen.checkout.core.log.Logger.v
+import com.google.android.material.textfield.TextInputLayout
 
-import android.content.Context;
-import android.content.res.TypedArray;
-import android.util.AttributeSet;
-import android.view.LayoutInflater;
-import android.widget.LinearLayout;
+class SepaView @JvmOverloads constructor(context: Context, attrs: AttributeSet? = null, defStyleAttr: Int = 0) :
+    AdyenLinearLayout<SepaOutputData, SepaConfiguration, PaymentComponentState<SepaPaymentMethod>, SepaComponent>(context, attrs, defStyleAttr),
+    Observer<SepaOutputData> {
 
-import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
-import androidx.lifecycle.LifecycleOwner;
-import androidx.lifecycle.Observer;
-
-import com.adyen.checkout.components.PaymentComponentState;
-import com.adyen.checkout.components.model.payments.request.SepaPaymentMethod;
-import com.adyen.checkout.components.ui.Validation;
-import com.adyen.checkout.components.ui.view.AdyenLinearLayout;
-import com.adyen.checkout.components.ui.view.AdyenTextInputEditText;
-import com.adyen.checkout.core.exception.CheckoutException;
-import com.adyen.checkout.core.log.LogUtil;
-import com.adyen.checkout.core.log.Logger;
-import com.google.android.material.textfield.TextInputLayout;
-
-public class SepaView
-        extends AdyenLinearLayout<SepaOutputData, SepaConfiguration, PaymentComponentState<SepaPaymentMethod>, SepaComponent>
-        implements Observer<SepaOutputData> {
-    private static final String TAG = LogUtil.getTag();
-
-    SepaInputData mSepaInputData = new SepaInputData();
-
-    TextInputLayout mHolderNameInput;
-
-    TextInputLayout mIbanNumberInput;
-
-    AdyenTextInputEditText mHolderNameEditText;
-    AdyenTextInputEditText mIbanNumberEditText;
-
-    public SepaView(@NonNull Context context) {
-        this(context, null);
-    }
-
-    public SepaView(@NonNull Context context, @Nullable AttributeSet attrs) {
-        this(context, attrs, 0);
-    }
+    private var sepaInputData = SepaInputData()
+    private lateinit var holderNameInput: TextInputLayout
+    private lateinit var ibanNumberInput: TextInputLayout
+    private lateinit var holderNameEditText: AdyenTextInputEditText
+    private lateinit var ibanNumberEditText: AdyenTextInputEditText
 
     // Regular View constructor
-    @SuppressWarnings("JavadocMethod")
-    public SepaView(@NonNull Context context, @Nullable AttributeSet attrs, int defStyleAttr) {
-        super(context, attrs, defStyleAttr);
-
-        setOrientation(LinearLayout.VERTICAL);
-
-        LayoutInflater.from(getContext()).inflate(R.layout.sepa_view, this, true);
-
-        final int padding = (int) getResources().getDimension(R.dimen.standard_margin);
-        setPadding(padding, padding, padding, 0);
+    init {
+        orientation = VERTICAL
+        LayoutInflater.from(getContext()).inflate(R.layout.sepa_view, this, true)
+        val padding = resources.getDimension(R.dimen.standard_margin).toInt()
+        setPadding(padding, padding, padding, 0)
     }
 
-    @Override
-    protected void initLocalizedStrings(@NonNull Context localizedContext) {
-        final int[] myAttrs = {android.R.attr.hint};
-        TypedArray typedArray;
+    override fun initLocalizedStrings(localizedContext: Context) {
+        val myAttrs = intArrayOf(android.R.attr.hint)
 
         // Holder name
-        typedArray = localizedContext.obtainStyledAttributes(R.style.AdyenCheckout_Sepa_HolderNameInput, myAttrs);
-        mHolderNameInput.setHint(typedArray.getString(0));
-        typedArray.recycle();
+        var typedArray: TypedArray = localizedContext.obtainStyledAttributes(R.style.AdyenCheckout_Sepa_HolderNameInput, myAttrs)
+        holderNameInput.hint = typedArray.getString(0)
+        typedArray.recycle()
 
         // Account Number
-        typedArray = localizedContext.obtainStyledAttributes(R.style.AdyenCheckout_Sepa_AccountNumberInput, myAttrs);
-        mIbanNumberInput.setHint(typedArray.getString(0));
-        typedArray.recycle();
+        typedArray = localizedContext.obtainStyledAttributes(R.style.AdyenCheckout_Sepa_AccountNumberInput, myAttrs)
+        ibanNumberInput.hint = typedArray.getString(0)
+        typedArray.recycle()
     }
 
-    @Override
-    public void initView() {
-        mHolderNameInput = findViewById(R.id.textInputLayout_holderName);
-        mIbanNumberInput = findViewById(R.id.textInputLayout_ibanNumber);
-        mHolderNameEditText = (AdyenTextInputEditText) mHolderNameInput.getEditText();
-        mIbanNumberEditText = (AdyenTextInputEditText) mIbanNumberInput.getEditText();
+    override fun initView() {
+        holderNameInput = findViewById(R.id.textInputLayout_holderName)
+        ibanNumberInput = findViewById(R.id.textInputLayout_ibanNumber)
+        holderNameEditText = holderNameInput.editText as AdyenTextInputEditText
+        ibanNumberEditText = ibanNumberInput.editText as AdyenTextInputEditText
 
-        if (mHolderNameEditText == null || mIbanNumberEditText == null) {
-            throw new CheckoutException("Could not find views inside layout.");
+        holderNameEditText.setOnChangeListener {
+            sepaInputData.name = holderNameEditText.rawValue
+            notifyInputDataChanged()
+            holderNameInput.error = null
         }
-
-        mHolderNameEditText.setOnChangeListener(editable -> {
-            mSepaInputData.setName(mHolderNameEditText.getRawValue());
-            notifyInputDataChanged();
-            mHolderNameInput.setError(null);
-        });
-
-        mIbanNumberEditText.setOnChangeListener(editable -> {
-            mSepaInputData.setIban(mIbanNumberEditText.getRawValue());
-            notifyInputDataChanged();
-            mIbanNumberInput.setError(null);
-        });
-
-        mIbanNumberEditText.setOnFocusChangeListener((v, hasFocus) -> {
-            final SepaOutputData outputData = getComponent().getOutputData();
-            final Validation ibanNumberValidation = outputData != null
-                    ? outputData.getIbanNumberField().getValidation()
-                    : null;
+        ibanNumberEditText.setOnChangeListener {
+            sepaInputData.iban = ibanNumberEditText.rawValue
+            notifyInputDataChanged()
+            ibanNumberInput.error = null
+        }
+        ibanNumberEditText.onFocusChangeListener = OnFocusChangeListener { _: View?, hasFocus: Boolean ->
+            val outputData = component.outputData
+            val ibanNumberValidation = outputData?.ibanNumberField?.validation
             if (hasFocus) {
-                mIbanNumberInput.setError(null);
+                ibanNumberInput.error = null
             } else if (ibanNumberValidation != null && !ibanNumberValidation.isValid()) {
-                final int errorReasonResId = ((Validation.Invalid) ibanNumberValidation).getReason();
-                mIbanNumberInput.setError(localizedContext.getString(errorReasonResId));
+                val errorReasonResId = (ibanNumberValidation as Validation.Invalid).reason
+                ibanNumberInput.error = localizedContext.getString(errorReasonResId)
             }
-        });
+        }
     }
 
-    @Override
-    public void onChanged(@Nullable SepaOutputData sepaOutputData) {
-        Logger.v(TAG, "sepaOutputData changed");
+    override fun onChanged(sepaOutputData: SepaOutputData?) {
+        v(TAG, "sepaOutputData changed")
     }
 
-    @Override
-    public void onComponentAttached() {
+    override fun onComponentAttached() {
         // nothing to impl
     }
 
-    @Override
-    protected void observeComponentChanges(@NonNull LifecycleOwner lifecycleOwner) {
-        getComponent().observeOutputData(lifecycleOwner, this);
+    override fun observeComponentChanges(lifecycleOwner: LifecycleOwner) {
+        component.observeOutputData(lifecycleOwner, this)
     }
 
-    @Override
-    public boolean isConfirmationRequired() {
-        return true;
-    }
+    override val isConfirmationRequired: Boolean
+        get() = true
 
-    @Override
-    public void highlightValidationErrors() {
-        Logger.d(TAG, "highlightValidationErrors");
-
-        final SepaOutputData outputData;
-        if (getComponent().getOutputData() != null) {
-            outputData = getComponent().getOutputData();
-        } else {
-            return;
-        }
-
-        boolean errorFocused = false;
-
-        final Validation ownerNameValidation = outputData.getOwnerNameField().getValidation();
+    override fun highlightValidationErrors() {
+        d(TAG, "highlightValidationErrors")
+        val outputData: SepaOutputData = component.outputData ?: return
+        var errorFocused = false
+        val ownerNameValidation = outputData.ownerNameField.validation
         if (!ownerNameValidation.isValid()) {
-            errorFocused = true;
-            mHolderNameInput.requestFocus();
-            final int errorReasonResId = ((Validation.Invalid) ownerNameValidation).getReason();
-            mHolderNameInput.setError(localizedContext.getString(errorReasonResId));
+            errorFocused = true
+            holderNameInput.requestFocus()
+            val errorReasonResId = (ownerNameValidation as Validation.Invalid).reason
+            holderNameInput.error = localizedContext.getString(errorReasonResId)
         }
-
-        final Validation ibanNumberValidation = outputData.getIbanNumberField().getValidation();
+        val ibanNumberValidation = outputData.ibanNumberField.validation
         if (!ibanNumberValidation.isValid()) {
             if (!errorFocused) {
-                mIbanNumberInput.requestFocus();
+                ibanNumberInput.requestFocus()
             }
-            final int errorReasonResId = ((Validation.Invalid) ibanNumberValidation).getReason();
-            mIbanNumberInput.setError(localizedContext.getString(errorReasonResId));
+            val errorReasonResId = (ibanNumberValidation as Validation.Invalid).reason
+            ibanNumberInput.error = localizedContext.getString(errorReasonResId)
         }
     }
 
-    void notifyInputDataChanged() {
-        getComponent().inputDataChanged(mSepaInputData);
+    private fun notifyInputDataChanged() {
+        component.inputDataChanged(sepaInputData)
+    }
+
+    companion object {
+        private val TAG = getTag()
     }
 }

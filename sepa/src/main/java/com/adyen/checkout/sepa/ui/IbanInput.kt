@@ -5,43 +5,27 @@
  *
  * Created by caiof on 28/8/2019.
  */
+package com.adyen.checkout.sepa.ui
 
-package com.adyen.checkout.sepa.ui;
+import android.content.Context
+import android.text.Editable
+import android.util.AttributeSet
+import com.adyen.checkout.components.ui.view.AdyenTextInputEditText
+import com.adyen.checkout.sepa.Iban
 
-import android.content.Context;
-import android.text.Editable;
-import android.util.AttributeSet;
+class IbanInput @JvmOverloads constructor(context: Context, attrs: AttributeSet? = null, defStyleAttr: Int = 0) :
+    AdyenTextInputEditText(context, attrs, defStyleAttr) {
 
-import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
-
-import com.adyen.checkout.components.ui.view.AdyenTextInputEditText;
-import com.adyen.checkout.sepa.Iban;
-
-public class IbanInput extends AdyenTextInputEditText {
-
-    public IbanInput(@NonNull Context context) {
-        this(context, null);
-    }
-
-    public IbanInput(@NonNull Context context, @Nullable AttributeSet attrs) {
-        this(context, attrs, 0);
-    }
-
-    public IbanInput(@NonNull Context context, @Nullable AttributeSet attrs, int defStyleAttr) {
-        super(context, attrs, defStyleAttr);
-        enforceMaxInputLength(Iban.getFormattedMaxLength());
-    }
-
-    @Override
-    protected void afterTextChanged(@NonNull Editable editable) {
-        final String initial = editable.toString();
-        final String processed = Iban.format(initial);
-
-        if (!initial.equals(processed)) {
-            editable.replace(0, initial.length(), processed);
+    override fun afterTextChanged(editable: Editable) {
+        val initial = editable.toString()
+        val processed = Iban.format(initial)
+        if (initial != processed) {
+            editable.replace(0, initial.length, processed)
         }
+        super.afterTextChanged(editable)
+    }
 
-        super.afterTextChanged(editable);
+    init {
+        enforceMaxInputLength(Iban.formattedMaxLength)
     }
 }
