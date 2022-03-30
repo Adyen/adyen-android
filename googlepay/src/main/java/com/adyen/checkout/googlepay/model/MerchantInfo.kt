@@ -5,80 +5,49 @@
  *
  * Created by caiof on 30/7/2019.
  */
+package com.adyen.checkout.googlepay.model
 
-package com.adyen.checkout.googlepay.model;
+import android.os.Parcel
+import com.adyen.checkout.core.exception.ModelSerializationException
+import com.adyen.checkout.core.model.JsonUtils.writeToParcel
+import com.adyen.checkout.core.model.ModelObject
+import com.adyen.checkout.core.model.getStringOrNull
+import org.json.JSONException
+import org.json.JSONObject
 
-import android.os.Parcel;
+data class MerchantInfo(
+    var merchantName: String? = null,
+    var merchantId: String? = null,
+) : ModelObject() {
 
-import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
+    override fun writeToParcel(dest: Parcel, flags: Int) {
+        writeToParcel(dest, SERIALIZER.serialize(this))
+    }
 
-import com.adyen.checkout.core.exception.ModelSerializationException;
-import com.adyen.checkout.core.model.JsonUtils;
-import com.adyen.checkout.core.model.ModelObject;
+    companion object {
+        private const val MERCHANT_NAME = "merchantName"
+        private const val MERCHANT_ID = "merchantId"
 
-import org.json.JSONException;
-import org.json.JSONObject;
+        @JvmField
+        val CREATOR = Creator(MerchantInfo::class.java)
 
-@SuppressWarnings({"MemberName", "PMD.DataClass"})
-public class MerchantInfo extends ModelObject {
-
-    @NonNull
-    public static final Creator<MerchantInfo> CREATOR = new Creator<>(MerchantInfo.class);
-
-    private static final String MERCHANT_NAME = "merchantName";
-    private static final String MERCHANT_ID = "merchantId";
-
-    @NonNull
-    public static final Serializer<MerchantInfo> SERIALIZER = new Serializer<MerchantInfo>() {
-
-        @NonNull
-        @Override
-        public JSONObject serialize(@NonNull MerchantInfo modelObject) {
-            final JSONObject jsonObject = new JSONObject();
-            try {
-                jsonObject.putOpt(MERCHANT_NAME, modelObject.getMerchantName());
-                jsonObject.putOpt(MERCHANT_ID, modelObject.getMerchantId());
-
-            } catch (JSONException e) {
-                throw new ModelSerializationException(MerchantInfo.class, e);
+        @JvmField
+        val SERIALIZER: Serializer<MerchantInfo> = object : Serializer<MerchantInfo> {
+            override fun serialize(modelObject: MerchantInfo): JSONObject {
+                return try {
+                    JSONObject().apply {
+                        putOpt(MERCHANT_NAME, modelObject.merchantName)
+                        putOpt(MERCHANT_ID, modelObject.merchantId)
+                    }
+                } catch (e: JSONException) {
+                    throw ModelSerializationException(MerchantInfo::class.java, e)
+                }
             }
-            return jsonObject;
+
+            override fun deserialize(jsonObject: JSONObject) = MerchantInfo(
+                merchantName = jsonObject.getStringOrNull(MERCHANT_NAME),
+                merchantId = jsonObject.getStringOrNull(MERCHANT_ID),
+            )
         }
-
-        @NonNull
-        @Override
-        public MerchantInfo deserialize(@NonNull JSONObject jsonObject) {
-            final MerchantInfo merchantInfo = new MerchantInfo();
-            merchantInfo.setMerchantName(jsonObject.optString(MERCHANT_NAME, null));
-            merchantInfo.setMerchantId(jsonObject.optString(MERCHANT_ID, null));
-            return merchantInfo;
-        }
-    };
-
-    private String merchantName;
-    private String merchantId;
-
-    @Override
-    public void writeToParcel(@NonNull Parcel dest, int flags) {
-        JsonUtils.writeToParcel(dest, SERIALIZER.serialize(this));
-    }
-
-    @Nullable
-    public String getMerchantName() {
-        return merchantName;
-    }
-
-    public void setMerchantName(@Nullable String merchantName) {
-        this.merchantName = merchantName;
-    }
-
-    @Nullable
-    public String getMerchantId() {
-        return merchantId;
-    }
-
-    public void setMerchantId(@Nullable String merchantId) {
-        this.merchantId = merchantId;
     }
 }

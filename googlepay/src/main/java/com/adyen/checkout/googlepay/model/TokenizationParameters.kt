@@ -5,79 +5,48 @@
  *
  * Created by caiof on 18/7/2019.
  */
+package com.adyen.checkout.googlepay.model
 
-package com.adyen.checkout.googlepay.model;
+import android.os.Parcel
+import com.adyen.checkout.core.exception.ModelSerializationException
+import com.adyen.checkout.core.model.JsonUtils.writeToParcel
+import com.adyen.checkout.core.model.ModelObject
+import com.adyen.checkout.core.model.getStringOrNull
+import org.json.JSONException
+import org.json.JSONObject
 
-import android.os.Parcel;
+data class TokenizationParameters(
+    var gateway: String? = null,
+    var gatewayMerchantId: String? = null,
+) : ModelObject() {
 
-import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
+    override fun writeToParcel(dest: Parcel, flags: Int) {
+        writeToParcel(dest, SERIALIZER.serialize(this))
+    }
 
-import com.adyen.checkout.core.exception.ModelSerializationException;
-import com.adyen.checkout.core.model.JsonUtils;
-import com.adyen.checkout.core.model.ModelObject;
+    companion object {
+        private const val GATEWAY = "gateway"
+        private const val GATEWAY_MERCHANT_ID = "gatewayMerchantId"
 
-import org.json.JSONException;
-import org.json.JSONObject;
+        @JvmField
+        val CREATOR = Creator(TokenizationParameters::class.java)
 
-@SuppressWarnings({"MemberName", "PMD.AvoidFieldNameMatchingTypeName", "PMD.DataClass"})
-public class TokenizationParameters extends ModelObject {
-
-    @NonNull
-    public static final Creator<TokenizationParameters> CREATOR = new Creator<>(TokenizationParameters.class);
-
-    private static final String GATEWAY = "gateway";
-    private static final String GATEWAY_MERCHANT_ID = "gatewayMerchantId";
-
-    @NonNull
-    public static final Serializer<TokenizationParameters> SERIALIZER = new Serializer<TokenizationParameters>() {
-
-        @NonNull
-        @Override
-        public JSONObject serialize(@NonNull TokenizationParameters modelObject) {
-            final JSONObject jsonObject = new JSONObject();
-            try {
-                jsonObject.putOpt(GATEWAY, modelObject.getGateway());
-                jsonObject.putOpt(GATEWAY_MERCHANT_ID, modelObject.getGatewayMerchantId());
-            } catch (JSONException e) {
-                throw new ModelSerializationException(TokenizationParameters.class, e);
+        val SERIALIZER: Serializer<TokenizationParameters> = object : Serializer<TokenizationParameters> {
+            override fun serialize(modelObject: TokenizationParameters): JSONObject {
+                return try {
+                    JSONObject().apply {
+                        putOpt(GATEWAY, modelObject.gateway)
+                        putOpt(GATEWAY_MERCHANT_ID, modelObject.gatewayMerchantId)
+                    }
+                } catch (e: JSONException) {
+                    throw ModelSerializationException(TokenizationParameters::class.java, e)
+                }
             }
-            return jsonObject;
+
+            override fun deserialize(jsonObject: JSONObject) = TokenizationParameters(
+                gateway = jsonObject.getStringOrNull(GATEWAY),
+                gatewayMerchantId = jsonObject.getStringOrNull(GATEWAY_MERCHANT_ID),
+            )
         }
-
-        @NonNull
-        @Override
-        public TokenizationParameters deserialize(@NonNull JSONObject jsonObject) {
-            final TokenizationParameters tokenizationParameters = new TokenizationParameters();
-            tokenizationParameters.setGateway(jsonObject.optString(GATEWAY, null));
-            tokenizationParameters.setGatewayMerchantId(jsonObject.optString(GATEWAY_MERCHANT_ID, null));
-            return tokenizationParameters;
-        }
-    };
-
-    private String gateway;
-    private String gatewayMerchantId;
-
-    @Override
-    public void writeToParcel(@NonNull Parcel dest, int flags) {
-        JsonUtils.writeToParcel(dest, SERIALIZER.serialize(this));
-    }
-
-    @Nullable
-    public String getGateway() {
-        return gateway;
-    }
-
-    public void setGateway(@Nullable String gateway) {
-        this.gateway = gateway;
-    }
-
-    @Nullable
-    public String getGatewayMerchantId() {
-        return gatewayMerchantId;
-    }
-
-    public void setGatewayMerchantId(@Nullable String gatewayMerchantId) {
-        this.gatewayMerchantId = gatewayMerchantId;
     }
 }

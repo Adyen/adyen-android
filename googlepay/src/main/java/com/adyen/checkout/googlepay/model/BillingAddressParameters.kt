@@ -5,78 +5,49 @@
  *
  * Created by caiof on 18/7/2019.
  */
+package com.adyen.checkout.googlepay.model
 
-package com.adyen.checkout.googlepay.model;
+import android.os.Parcel
+import com.adyen.checkout.core.exception.ModelSerializationException
+import com.adyen.checkout.core.model.JsonUtils.writeToParcel
+import com.adyen.checkout.core.model.ModelObject
+import com.adyen.checkout.core.model.getStringOrNull
+import org.json.JSONException
+import org.json.JSONObject
 
-import android.os.Parcel;
+data class BillingAddressParameters(
+    var format: String? = null,
+    var isPhoneNumberRequired: Boolean = false,
+) : ModelObject() {
 
-import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
+    override fun writeToParcel(dest: Parcel, flags: Int) {
+        writeToParcel(dest, SERIALIZER.serialize(this))
+    }
 
-import com.adyen.checkout.core.exception.ModelSerializationException;
-import com.adyen.checkout.core.model.JsonUtils;
-import com.adyen.checkout.core.model.ModelObject;
+    companion object {
+        private const val FORMAT = "format"
+        private const val PHONE_NUMBER_REQUIRED = "phoneNumberRequired"
 
-import org.json.JSONException;
-import org.json.JSONObject;
+        @JvmField
+        val CREATOR = Creator(BillingAddressParameters::class.java)
 
-@SuppressWarnings({"MemberName", "PMD.DataClass"})
-public class BillingAddressParameters extends ModelObject {
-
-    @NonNull
-    public static final Creator<BillingAddressParameters> CREATOR = new Creator<>(BillingAddressParameters.class);
-
-    private static final String FORMAT = "format";
-    private static final String PHONE_NUMBER_REQUIRED = "phoneNumberRequired";
-
-    @NonNull
-    public static final Serializer<BillingAddressParameters> SERIALIZER = new Serializer<BillingAddressParameters>() {
-
-        @NonNull
-        @Override
-        public JSONObject serialize(@NonNull BillingAddressParameters modelObject) {
-            final JSONObject jsonObject = new JSONObject();
-            try {
-                jsonObject.putOpt(FORMAT, modelObject.getFormat());
-                jsonObject.putOpt(PHONE_NUMBER_REQUIRED, modelObject.isPhoneNumberRequired());
-            } catch (JSONException e) {
-                throw new ModelSerializationException(BillingAddressParameters.class, e);
+        @JvmField
+        val SERIALIZER: Serializer<BillingAddressParameters> = object : Serializer<BillingAddressParameters> {
+            override fun serialize(modelObject: BillingAddressParameters): JSONObject {
+                return try {
+                    JSONObject().apply {
+                        putOpt(FORMAT, modelObject.format)
+                        putOpt(PHONE_NUMBER_REQUIRED, modelObject.isPhoneNumberRequired)
+                    }
+                } catch (e: JSONException) {
+                    throw ModelSerializationException(BillingAddressParameters::class.java, e)
+                }
             }
-            return jsonObject;
+
+            override fun deserialize(jsonObject: JSONObject) = BillingAddressParameters(
+                format = jsonObject.getStringOrNull(FORMAT),
+                isPhoneNumberRequired = jsonObject.optBoolean(PHONE_NUMBER_REQUIRED),
+            )
         }
-
-        @NonNull
-        @Override
-        public BillingAddressParameters deserialize(@NonNull JSONObject jsonObject) {
-            final BillingAddressParameters billingAddressParameters = new BillingAddressParameters();
-            billingAddressParameters.setFormat(jsonObject.optString(FORMAT, null));
-            billingAddressParameters.setPhoneNumberRequired(jsonObject.optBoolean(PHONE_NUMBER_REQUIRED));
-            return billingAddressParameters;
-        }
-    };
-
-    private String format;
-    private boolean phoneNumberRequired;
-
-    @Override
-    public void writeToParcel(@NonNull Parcel dest, int flags) {
-        JsonUtils.writeToParcel(dest, SERIALIZER.serialize(this));
-    }
-
-    @Nullable
-    public String getFormat() {
-        return format;
-    }
-
-    public void setFormat(@Nullable String format) {
-        this.format = format;
-    }
-
-    public boolean isPhoneNumberRequired() {
-        return phoneNumberRequired;
-    }
-
-    public void setPhoneNumberRequired(boolean phoneNumberRequired) {
-        this.phoneNumberRequired = phoneNumberRequired;
     }
 }

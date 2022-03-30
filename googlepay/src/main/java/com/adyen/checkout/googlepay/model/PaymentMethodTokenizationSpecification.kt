@@ -5,81 +5,48 @@
  *
  * Created by caiof on 17/7/2019.
  */
+package com.adyen.checkout.googlepay.model
 
-package com.adyen.checkout.googlepay.model;
+import android.os.Parcel
+import com.adyen.checkout.core.exception.ModelSerializationException
+import com.adyen.checkout.core.model.JsonUtils.writeToParcel
+import com.adyen.checkout.core.model.ModelObject
+import com.adyen.checkout.core.model.ModelUtils.deserializeOpt
+import com.adyen.checkout.core.model.ModelUtils.serializeOpt
+import org.json.JSONException
+import org.json.JSONObject
 
-import android.os.Parcel;
+data class PaymentMethodTokenizationSpecification(
+    var type: String? = null,
+    var parameters: TokenizationParameters? = null,
+) : ModelObject() {
+    override fun writeToParcel(dest: Parcel, flags: Int) {
+        writeToParcel(dest, SERIALIZER.serialize(this))
+    }
 
-import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
+    companion object {
+        private const val TYPE = "type"
+        private const val PARAMETERS = "parameters"
 
-import com.adyen.checkout.core.exception.ModelSerializationException;
-import com.adyen.checkout.core.model.JsonUtils;
-import com.adyen.checkout.core.model.ModelObject;
-import com.adyen.checkout.core.model.ModelUtils;
+        @JvmField
+        val CREATOR = Creator(PaymentMethodTokenizationSpecification::class.java)
 
-import org.json.JSONException;
-import org.json.JSONObject;
-
-@SuppressWarnings({"MemberName", "PMD.DataClass"})
-public class PaymentMethodTokenizationSpecification extends ModelObject {
-
-    @NonNull
-    public static final Creator<PaymentMethodTokenizationSpecification> CREATOR = new Creator<>(PaymentMethodTokenizationSpecification.class);
-
-    private static final String TYPE = "type";
-    private static final String PARAMETERS = "parameters";
-
-    @NonNull
-    public static final Serializer<PaymentMethodTokenizationSpecification> SERIALIZER = new Serializer<PaymentMethodTokenizationSpecification>() {
-
-        @NonNull
-        @Override
-        public JSONObject serialize(@NonNull PaymentMethodTokenizationSpecification modelObject) {
-            final JSONObject jsonObject = new JSONObject();
-            try {
-                jsonObject.putOpt(TYPE, modelObject.getType());
-                jsonObject.putOpt(PARAMETERS, ModelUtils.serializeOpt(modelObject.getParameters(), TokenizationParameters.SERIALIZER));
-            } catch (JSONException e) {
-                throw new ModelSerializationException(PaymentMethodTokenizationSpecification.class, e);
+        val SERIALIZER: Serializer<PaymentMethodTokenizationSpecification> = object : Serializer<PaymentMethodTokenizationSpecification> {
+            override fun serialize(modelObject: PaymentMethodTokenizationSpecification): JSONObject {
+                return try {
+                    JSONObject().apply {
+                        putOpt(TYPE, modelObject.type)
+                        putOpt(PARAMETERS, serializeOpt(modelObject.parameters, TokenizationParameters.SERIALIZER))
+                    }
+                } catch (e: JSONException) {
+                    throw ModelSerializationException(PaymentMethodTokenizationSpecification::class.java, e)
+                }
             }
-            return jsonObject;
+
+            override fun deserialize(jsonObject: JSONObject) = PaymentMethodTokenizationSpecification(
+                type = jsonObject.getString(TYPE),
+                parameters = deserializeOpt(jsonObject.optJSONObject(PARAMETERS), TokenizationParameters.SERIALIZER),
+            )
         }
-
-        @NonNull
-        @Override
-        public PaymentMethodTokenizationSpecification deserialize(@NonNull JSONObject jsonObject) {
-            final PaymentMethodTokenizationSpecification paymentMethodTokenizationSpecification = new PaymentMethodTokenizationSpecification();
-            paymentMethodTokenizationSpecification.setType(jsonObject.optString(TYPE, null));
-            paymentMethodTokenizationSpecification.setParameters(
-                    ModelUtils.deserializeOpt(jsonObject.optJSONObject(PARAMETERS), TokenizationParameters.SERIALIZER));
-            return paymentMethodTokenizationSpecification;
-        }
-    };
-
-    private String type;
-    private TokenizationParameters parameters;
-
-    @Override
-    public void writeToParcel(@NonNull Parcel dest, int flags) {
-        JsonUtils.writeToParcel(dest, SERIALIZER.serialize(this));
-    }
-
-    @Nullable
-    public String getType() {
-        return type;
-    }
-
-    public void setType(@Nullable String type) {
-        this.type = type;
-    }
-
-    @Nullable
-    public TokenizationParameters getParameters() {
-        return parameters;
-    }
-
-    public void setParameters(@Nullable TokenizationParameters parameters) {
-        this.parameters = parameters;
     }
 }

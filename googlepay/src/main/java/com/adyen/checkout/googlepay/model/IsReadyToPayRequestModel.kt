@@ -5,107 +5,62 @@
  *
  * Created by caiof on 17/7/2019.
  */
+package com.adyen.checkout.googlepay.model
 
-package com.adyen.checkout.googlepay.model;
+import android.os.Parcel
+import com.adyen.checkout.core.exception.ModelSerializationException
+import com.adyen.checkout.core.model.JsonUtils.writeToParcel
+import com.adyen.checkout.core.model.ModelObject
+import com.adyen.checkout.core.model.ModelUtils.deserializeOptList
+import com.adyen.checkout.core.model.ModelUtils.serializeOptList
+import org.json.JSONException
+import org.json.JSONObject
 
-import android.os.Parcel;
+data class IsReadyToPayRequestModel(
+    var apiVersion: Int = 0,
+    var apiVersionMinor: Int = 0,
+    var allowedPaymentMethods: List<GooglePayPaymentMethodModel>? = null,
+    var isExistingPaymentMethodRequired: Boolean = false,
+) : ModelObject() {
 
-import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
+    override fun writeToParcel(dest: Parcel, flags: Int) {
+        writeToParcel(dest, SERIALIZER.serialize(this))
+    }
 
-import com.adyen.checkout.core.exception.ModelSerializationException;
-import com.adyen.checkout.core.model.JsonUtils;
-import com.adyen.checkout.core.model.ModelObject;
-import com.adyen.checkout.core.model.ModelUtils;
+    companion object {
+        private const val API_VERSION = "apiVersion"
+        private const val API_VERSION_MINOR = "apiVersionMinor"
+        private const val ALLOWED_PAYMENT_METHODS = "allowedPaymentMethods"
+        private const val EXISTING_PAYMENT_METHOD_REQUIRED = "existingPaymentMethodRequired"
 
-import org.json.JSONException;
-import org.json.JSONObject;
+        @JvmField
+        val CREATOR = Creator(IsReadyToPayRequestModel::class.java)
 
-import java.util.List;
-
-@SuppressWarnings({"MemberName", "PMD.DataClass"})
-public class IsReadyToPayRequestModel extends ModelObject {
-
-    @NonNull
-    public static final Creator<IsReadyToPayRequestModel> CREATOR = new Creator<>(IsReadyToPayRequestModel.class);
-
-    private static final String API_VERSION = "apiVersion";
-    private static final String API_VERSION_MINOR = "apiVersionMinor";
-    private static final String ALLOWED_PAYMENT_METHODS = "allowedPaymentMethods";
-    private static final String EXISTING_PAYMENT_METHOD_REQUIRED = "existingPaymentMethodRequired";
-
-    @NonNull
-    public static final Serializer<IsReadyToPayRequestModel> SERIALIZER = new Serializer<IsReadyToPayRequestModel>() {
-
-        @NonNull
-        @Override
-        public JSONObject serialize(@NonNull IsReadyToPayRequestModel modelObject) {
-            final JSONObject jsonObject = new JSONObject();
-            try {
-                jsonObject.putOpt(API_VERSION, modelObject.getApiVersion());
-                jsonObject.putOpt(API_VERSION_MINOR, modelObject.getApiVersionMinor());
-                jsonObject.putOpt(ALLOWED_PAYMENT_METHODS,
-                        ModelUtils.serializeOptList(modelObject.getAllowedPaymentMethods(), GooglePayPaymentMethodModel.SERIALIZER));
-                jsonObject.putOpt(EXISTING_PAYMENT_METHOD_REQUIRED, modelObject.isExistingPaymentMethodRequired());
-            } catch (JSONException e) {
-                throw new ModelSerializationException(IsReadyToPayRequestModel.class, e);
+        @JvmField
+        val SERIALIZER: Serializer<IsReadyToPayRequestModel> = object : Serializer<IsReadyToPayRequestModel> {
+            override fun serialize(modelObject: IsReadyToPayRequestModel): JSONObject {
+                return try {
+                    JSONObject().apply {
+                        putOpt(API_VERSION, modelObject.apiVersion)
+                        putOpt(API_VERSION_MINOR, modelObject.apiVersionMinor)
+                        putOpt(
+                            ALLOWED_PAYMENT_METHODS,
+                            serializeOptList(modelObject.allowedPaymentMethods, GooglePayPaymentMethodModel.SERIALIZER)
+                        )
+                        putOpt(EXISTING_PAYMENT_METHOD_REQUIRED, modelObject.isExistingPaymentMethodRequired)
+                    }
+                } catch (e: JSONException) {
+                    throw ModelSerializationException(IsReadyToPayRequestModel::class.java, e)
+                }
             }
-            return jsonObject;
+
+            override fun deserialize(jsonObject: JSONObject) = IsReadyToPayRequestModel(
+                apiVersion = jsonObject.optInt(API_VERSION),
+                apiVersionMinor = jsonObject.optInt(API_VERSION_MINOR),
+                allowedPaymentMethods =
+                deserializeOptList(jsonObject.optJSONArray(ALLOWED_PAYMENT_METHODS), GooglePayPaymentMethodModel.SERIALIZER),
+                isExistingPaymentMethodRequired = jsonObject.optBoolean(EXISTING_PAYMENT_METHOD_REQUIRED)
+            )
         }
-
-        @NonNull
-        @Override
-        public IsReadyToPayRequestModel deserialize(@NonNull JSONObject jsonObject) {
-            final IsReadyToPayRequestModel isReadyToPayRequestModel = new IsReadyToPayRequestModel();
-            isReadyToPayRequestModel.setApiVersion(jsonObject.optInt(API_VERSION));
-            isReadyToPayRequestModel.setApiVersionMinor(jsonObject.optInt(API_VERSION_MINOR));
-            isReadyToPayRequestModel.setAllowedPaymentMethods(
-                    ModelUtils.deserializeOptList(jsonObject.optJSONArray(ALLOWED_PAYMENT_METHODS), GooglePayPaymentMethodModel.SERIALIZER));
-            isReadyToPayRequestModel.setExistingPaymentMethodRequired(jsonObject.optBoolean(EXISTING_PAYMENT_METHOD_REQUIRED));
-            return isReadyToPayRequestModel;
-        }
-    };
-
-    private int apiVersion;
-    private int apiVersionMinor;
-    private List<GooglePayPaymentMethodModel> allowedPaymentMethods;
-    private boolean existingPaymentMethodRequired;
-
-    @Override
-    public void writeToParcel(@NonNull Parcel dest, int flags) {
-        JsonUtils.writeToParcel(dest, SERIALIZER.serialize(this));
-    }
-
-    public int getApiVersion() {
-        return apiVersion;
-    }
-
-    public void setApiVersion(int apiVersion) {
-        this.apiVersion = apiVersion;
-    }
-
-    public int getApiVersionMinor() {
-        return apiVersionMinor;
-    }
-
-    public void setApiVersionMinor(int apiVersionMinor) {
-        this.apiVersionMinor = apiVersionMinor;
-    }
-
-    @Nullable
-    public List<GooglePayPaymentMethodModel> getAllowedPaymentMethods() {
-        return allowedPaymentMethods;
-    }
-
-    public void setAllowedPaymentMethods(@Nullable List<GooglePayPaymentMethodModel> allowedPaymentMethods) {
-        this.allowedPaymentMethods = allowedPaymentMethods;
-    }
-
-    public boolean isExistingPaymentMethodRequired() {
-        return existingPaymentMethodRequired;
-    }
-
-    public void setExistingPaymentMethodRequired(boolean existingPaymentMethodRequired) {
-        this.existingPaymentMethodRequired = existingPaymentMethodRequired;
     }
 }

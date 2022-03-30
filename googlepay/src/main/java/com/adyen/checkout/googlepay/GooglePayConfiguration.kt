@@ -138,7 +138,7 @@ class GooglePayConfiguration : Configuration, AmountConfiguration {
         }
         private var builderMerchantInfo: MerchantInfo? = null
         private var builderCountryCode: String? = null
-        private var builderAllowedAuthMethods: List<String> = AllowedAuthMethods.getAllAllowedAuthMethods()
+        private var builderAllowedAuthMethods: List<String> = AllowedAuthMethods.allAllowedAuthMethods
         private var builderAllowedCardNetworks: List<String>? = null
         private var builderAllowPrepaidCards = false
         private var builderEmailRequired = false

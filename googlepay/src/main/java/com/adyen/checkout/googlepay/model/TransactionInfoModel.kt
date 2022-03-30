@@ -5,144 +5,68 @@
  *
  * Created by caiof on 30/7/2019.
  */
+package com.adyen.checkout.googlepay.model
 
-package com.adyen.checkout.googlepay.model;
+import android.os.Parcel
+import com.adyen.checkout.core.exception.ModelSerializationException
+import com.adyen.checkout.core.model.JsonUtils.writeToParcel
+import com.adyen.checkout.core.model.ModelObject
+import com.adyen.checkout.core.model.getStringOrNull
+import org.json.JSONException
+import org.json.JSONObject
 
-import android.os.Parcel;
+data class TransactionInfoModel(
+    var currencyCode: String? = null,
+    var countryCode: String? = null,
+    var transactionId: String? = null,
+    var totalPriceStatus: String? = null,
+    var totalPrice: String? = null,
+    var totalPriceLabel: String? = null,
+    var checkoutOption: String? = null,
+) : ModelObject() {
 
-import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
+    override fun writeToParcel(dest: Parcel, flags: Int) {
+        writeToParcel(dest, SERIALIZER.serialize(this))
+    }
 
-import com.adyen.checkout.core.exception.ModelSerializationException;
-import com.adyen.checkout.core.model.JsonUtils;
-import com.adyen.checkout.core.model.ModelObject;
+    companion object {
+        private const val CURRENCY_CODE = "currencyCode"
+        private const val COUNTRY_CODE = "countryCode"
+        private const val TRANSACTION_ID = "transactionId"
+        private const val TOTAL_PRICE_STATUS = "totalPriceStatus"
+        private const val TOTAL_PRICE = "totalPrice"
+        private const val TOTAL_PRICE_LABEL = "totalPriceLabel"
+        private const val CHECKOUT_OPTION = "checkoutOption"
 
-import org.json.JSONException;
-import org.json.JSONObject;
+        @JvmField
+        val CREATOR = Creator(TransactionInfoModel::class.java)
 
-@SuppressWarnings({"MemberName", "PMD.DataClass"})
-public class TransactionInfoModel extends ModelObject {
-
-    @NonNull
-    public static final Creator<TransactionInfoModel> CREATOR = new Creator<>(TransactionInfoModel.class);
-
-    private static final String CURRENCY_CODE = "currencyCode";
-    private static final String COUNTRY_CODE = "countryCode";
-    private static final String TRANSACTION_ID = "transactionId";
-    private static final String TOTAL_PRICE_STATUS = "totalPriceStatus";
-    private static final String TOTAL_PRICE = "totalPrice";
-    private static final String TOTAL_PRICE_LABEL = "totalPriceLabel";
-    private static final String CHECKOUT_OPTION = "checkoutOption";
-
-    @NonNull
-    public static final Serializer<TransactionInfoModel> SERIALIZER = new Serializer<TransactionInfoModel>() {
-
-        @NonNull
-        @Override
-        public JSONObject serialize(@NonNull TransactionInfoModel modelObject) {
-            final JSONObject jsonObject = new JSONObject();
-            try {
-                jsonObject.putOpt(CURRENCY_CODE, modelObject.getCurrencyCode());
-                jsonObject.putOpt(COUNTRY_CODE, modelObject.getCountryCode());
-                jsonObject.putOpt(TRANSACTION_ID, modelObject.getTransactionId());
-                jsonObject.putOpt(TOTAL_PRICE_STATUS, modelObject.getTotalPriceStatus());
-                jsonObject.putOpt(TOTAL_PRICE, modelObject.getTotalPrice());
-                jsonObject.putOpt(TOTAL_PRICE_LABEL, modelObject.getTotalPriceLabel());
-                jsonObject.putOpt(CHECKOUT_OPTION, modelObject.getCheckoutOption());
-            } catch (JSONException e) {
-                throw new ModelSerializationException(TransactionInfoModel.class, e);
+        val SERIALIZER: Serializer<TransactionInfoModel> = object : Serializer<TransactionInfoModel> {
+            override fun serialize(modelObject: TransactionInfoModel): JSONObject {
+                return try {
+                    JSONObject().apply {
+                        putOpt(CURRENCY_CODE, modelObject.currencyCode)
+                        putOpt(COUNTRY_CODE, modelObject.countryCode)
+                        putOpt(TRANSACTION_ID, modelObject.transactionId)
+                        putOpt(TOTAL_PRICE_STATUS, modelObject.totalPriceStatus)
+                        putOpt(TOTAL_PRICE, modelObject.totalPrice)
+                        putOpt(TOTAL_PRICE_LABEL, modelObject.totalPriceLabel)
+                        putOpt(CHECKOUT_OPTION, modelObject.checkoutOption)
+                    }
+                } catch (e: JSONException) {
+                    throw ModelSerializationException(TransactionInfoModel::class.java, e)
+                }
             }
-            return jsonObject;
+
+            override fun deserialize(jsonObject: JSONObject) = TransactionInfoModel(
+                currencyCode = jsonObject.getStringOrNull(CURRENCY_CODE),
+                countryCode = jsonObject.getStringOrNull(COUNTRY_CODE),
+                transactionId = jsonObject.getStringOrNull(TRANSACTION_ID),
+                totalPriceStatus = jsonObject.getStringOrNull(TOTAL_PRICE_STATUS),
+                totalPrice = jsonObject.getStringOrNull(TOTAL_PRICE),
+                totalPriceLabel = jsonObject.getStringOrNull(TOTAL_PRICE_LABEL),
+                checkoutOption = jsonObject.getStringOrNull(CHECKOUT_OPTION),
+            )
         }
-
-        @NonNull
-        @Override
-        public TransactionInfoModel deserialize(@NonNull JSONObject jsonObject) {
-            final TransactionInfoModel transactionInfoModel = new TransactionInfoModel();
-            transactionInfoModel.setCurrencyCode(jsonObject.optString(CURRENCY_CODE, null));
-            transactionInfoModel.setCountryCode(jsonObject.optString(COUNTRY_CODE, null));
-            transactionInfoModel.setTransactionId(jsonObject.optString(TRANSACTION_ID, null));
-            transactionInfoModel.setTotalPriceStatus(jsonObject.optString(TOTAL_PRICE_STATUS, null));
-            transactionInfoModel.setTotalPrice(jsonObject.optString(TOTAL_PRICE, null));
-            transactionInfoModel.setTotalPriceLabel(jsonObject.optString(TOTAL_PRICE_LABEL, null));
-            transactionInfoModel.setCheckoutOption(jsonObject.optString(CHECKOUT_OPTION, null));
-            return transactionInfoModel;
-        }
-    };
-
-    private String currencyCode;
-    private String countryCode;
-    private String transactionId;
-    private String totalPriceStatus;
-    private String totalPrice;
-    private String totalPriceLabel;
-    private String checkoutOption;
-
-    @Override
-    public void writeToParcel(@NonNull Parcel dest, int flags) {
-        JsonUtils.writeToParcel(dest, SERIALIZER.serialize(this));
-    }
-
-    @Nullable
-    public String getCurrencyCode() {
-        return currencyCode;
-    }
-
-    public void setCurrencyCode(@Nullable String currencyCode) {
-        this.currencyCode = currencyCode;
-    }
-
-    @Nullable
-    public String getCountryCode() {
-        return countryCode;
-    }
-
-    public void setCountryCode(@Nullable String countryCode) {
-        this.countryCode = countryCode;
-    }
-
-    @Nullable
-    public String getTransactionId() {
-        return transactionId;
-    }
-
-    public void setTransactionId(@Nullable String transactionId) {
-        this.transactionId = transactionId;
-    }
-
-    @Nullable
-    public String getTotalPriceStatus() {
-        return totalPriceStatus;
-    }
-
-    public void setTotalPriceStatus(@Nullable String totalPriceStatus) {
-        this.totalPriceStatus = totalPriceStatus;
-    }
-
-    @Nullable
-    public String getTotalPrice() {
-        return totalPrice;
-    }
-
-    public void setTotalPrice(@Nullable String totalPrice) {
-        this.totalPrice = totalPrice;
-    }
-
-    @Nullable
-    public String getTotalPriceLabel() {
-        return totalPriceLabel;
-    }
-
-    public void setTotalPriceLabel(@Nullable String totalPriceLabel) {
-        this.totalPriceLabel = totalPriceLabel;
-    }
-
-    @Nullable
-    public String getCheckoutOption() {
-        return checkoutOption;
-    }
-
-    public void setCheckoutOption(@Nullable String checkoutOption) {
-        this.checkoutOption = checkoutOption;
     }
 }

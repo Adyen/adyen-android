@@ -55,7 +55,7 @@ data class GooglePayParams(
     private fun getAvailableCardNetworks(): List<String> {
         return googlePayConfiguration.allowedCardNetworks
             ?: getAvailableCardNetworksFromApi()
-            ?: AllowedCardNetworks.getAllAllowedCardNetworks()
+            ?: AllowedCardNetworks.allAllowedCardNetworks
     }
 
     private fun getAvailableCardNetworksFromApi(): List<String>? {

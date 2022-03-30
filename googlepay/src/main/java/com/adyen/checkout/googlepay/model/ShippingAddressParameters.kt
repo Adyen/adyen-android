@@ -5,82 +5,49 @@
  *
  * Created by caiof on 30/7/2019.
  */
+package com.adyen.checkout.googlepay.model
 
-package com.adyen.checkout.googlepay.model;
+import android.os.Parcel
+import com.adyen.checkout.core.exception.ModelSerializationException
+import com.adyen.checkout.core.model.JsonUtils.parseOptStringList
+import com.adyen.checkout.core.model.JsonUtils.serializeOptStringList
+import com.adyen.checkout.core.model.JsonUtils.writeToParcel
+import com.adyen.checkout.core.model.ModelObject
+import org.json.JSONException
+import org.json.JSONObject
 
-import android.os.Parcel;
+data class ShippingAddressParameters(
+    var allowedCountryCodes: List<String?>? = null,
+    var isPhoneNumberRequired: Boolean = false,
+) : ModelObject() {
 
-import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
+    override fun writeToParcel(dest: Parcel, flags: Int) {
+        writeToParcel(dest, SERIALIZER.serialize(this))
+    }
 
-import com.adyen.checkout.core.exception.ModelSerializationException;
-import com.adyen.checkout.core.model.JsonUtils;
-import com.adyen.checkout.core.model.ModelObject;
+    companion object {
+        private const val ALLOWED_COUNTRY_CODES = "allowedCountryCodes"
+        private const val PHONE_NUMBER_REQUIRED = "phoneNumberRequired"
 
-import org.json.JSONException;
-import org.json.JSONObject;
+        @JvmField
+        val CREATOR = Creator(ShippingAddressParameters::class.java)
 
-import java.util.List;
-
-@SuppressWarnings({"MemberName", "PMD.DataClass"})
-public class ShippingAddressParameters extends ModelObject {
-
-    @NonNull
-    public static final Creator<ShippingAddressParameters> CREATOR = new Creator<>(ShippingAddressParameters.class);
-
-    private static final String ALLOWED_COUNTRY_CODES = "allowedCountryCodes";
-    private static final String PHONE_NUMBER_REQUIRED = "phoneNumberRequired";
-
-    @NonNull
-    public static final Serializer<ShippingAddressParameters> SERIALIZER = new Serializer<ShippingAddressParameters>() {
-
-        @NonNull
-        @Override
-        public JSONObject serialize(@NonNull ShippingAddressParameters modelObject) {
-            final JSONObject jsonObject = new JSONObject();
-            try {
-                jsonObject.putOpt(ALLOWED_COUNTRY_CODES, JsonUtils.serializeOptStringList(modelObject.getAllowedCountryCodes()));
-                jsonObject.putOpt(ALLOWED_COUNTRY_CODES, modelObject.isPhoneNumberRequired());
-
-            } catch (JSONException e) {
-                throw new ModelSerializationException(ShippingAddressParameters.class, e);
+        val SERIALIZER: Serializer<ShippingAddressParameters> = object : Serializer<ShippingAddressParameters> {
+            override fun serialize(modelObject: ShippingAddressParameters): JSONObject {
+                return try {
+                    JSONObject().apply {
+                        putOpt(ALLOWED_COUNTRY_CODES, serializeOptStringList(modelObject.allowedCountryCodes))
+                        putOpt(ALLOWED_COUNTRY_CODES, modelObject.isPhoneNumberRequired)
+                    }
+                } catch (e: JSONException) {
+                    throw ModelSerializationException(ShippingAddressParameters::class.java, e)
+                }
             }
-            return jsonObject;
+
+            override fun deserialize(jsonObject: JSONObject) = ShippingAddressParameters(
+                allowedCountryCodes = parseOptStringList(jsonObject.optJSONArray(PHONE_NUMBER_REQUIRED)),
+                isPhoneNumberRequired = jsonObject.optBoolean(PHONE_NUMBER_REQUIRED),
+            )
         }
-
-        @NonNull
-        @Override
-        public ShippingAddressParameters deserialize(@NonNull JSONObject jsonObject) {
-            final ShippingAddressParameters shippingAddressParameters = new ShippingAddressParameters();
-            shippingAddressParameters.setAllowedCountryCodes(JsonUtils.parseOptStringList(jsonObject.optJSONArray(PHONE_NUMBER_REQUIRED)));
-            shippingAddressParameters.setPhoneNumberRequired(jsonObject.optBoolean(PHONE_NUMBER_REQUIRED));
-            return shippingAddressParameters;
-        }
-    };
-
-    private List<String> allowedCountryCodes;
-    private boolean phoneNumberRequired;
-
-
-    @Override
-    public void writeToParcel(@NonNull Parcel dest, int flags) {
-        JsonUtils.writeToParcel(dest, SERIALIZER.serialize(this));
-    }
-
-    @Nullable
-    public List<String> getAllowedCountryCodes() {
-        return allowedCountryCodes;
-    }
-
-    public void setAllowedCountryCodes(@Nullable List<String> allowedCountryCodes) {
-        this.allowedCountryCodes = allowedCountryCodes;
-    }
-
-    public boolean isPhoneNumberRequired() {
-        return phoneNumberRequired;
-    }
-
-    public void setPhoneNumberRequired(boolean phoneNumberRequired) {
-        this.phoneNumberRequired = phoneNumberRequired;
     }
 }

@@ -5,162 +5,86 @@
  *
  * Created by caiof on 30/7/2019.
  */
+package com.adyen.checkout.googlepay.model
 
-package com.adyen.checkout.googlepay.model;
+import android.os.Parcel
+import com.adyen.checkout.core.exception.ModelSerializationException
+import com.adyen.checkout.core.model.JsonUtils.writeToParcel
+import com.adyen.checkout.core.model.ModelObject
+import com.adyen.checkout.core.model.ModelUtils.deserializeOpt
+import com.adyen.checkout.core.model.ModelUtils.deserializeOptList
+import com.adyen.checkout.core.model.ModelUtils.serializeOpt
+import com.adyen.checkout.core.model.ModelUtils.serializeOptList
+import org.json.JSONException
+import org.json.JSONObject
 
-import android.os.Parcel;
+data class PaymentDataRequestModel(
+    var apiVersion: Int = 0,
+    var apiVersionMinor: Int = 0,
+    var merchantInfo: MerchantInfo? = null,
+    var allowedPaymentMethods: List<GooglePayPaymentMethodModel>? = null,
+    var transactionInfo: TransactionInfoModel? = null,
+    var isEmailRequired: Boolean = false,
+    var isShippingAddressRequired: Boolean = false,
+    var shippingAddressParameters: ShippingAddressParameters? = null,
+) : ModelObject() {
 
-import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
+    override fun writeToParcel(dest: Parcel, flags: Int) {
+        writeToParcel(dest, SERIALIZER.serialize(this))
+    }
 
-import com.adyen.checkout.core.exception.ModelSerializationException;
-import com.adyen.checkout.core.model.JsonUtils;
-import com.adyen.checkout.core.model.ModelObject;
-import com.adyen.checkout.core.model.ModelUtils;
+    companion object {
+        private const val API_VERSION = "apiVersion"
+        private const val API_VERSION_MINOR = "apiVersionMinor"
+        private const val MERCHANT_INFO = "merchantInfo"
+        private const val ALLOWED_PAYMENT_METHODS = "allowedPaymentMethods"
+        private const val TRANSACTION_INFO = "transactionInfo"
+        private const val EMAIL_REQUIRED = "emailRequired"
+        private const val SHIPPING_ADDRESS_REQUIRED = "shippingAddressRequired"
+        private const val SHIPPING_ADDRESS_PARAMETERS = "shippingAddressParameters"
 
-import org.json.JSONException;
-import org.json.JSONObject;
+        @JvmField
+        val CREATOR = Creator(PaymentDataRequestModel::class.java)
 
-import java.util.List;
-
-@SuppressWarnings({"MemberName", "PMD.DataClass"})
-public class PaymentDataRequestModel extends ModelObject {
-
-    @NonNull
-    public static final Creator<PaymentDataRequestModel> CREATOR = new Creator<>(PaymentDataRequestModel.class);
-
-    private static final String API_VERSION = "apiVersion";
-    private static final String API_VERSION_MINOR = "apiVersionMinor";
-    private static final String MERCHANT_INFO = "merchantInfo";
-    private static final String ALLOWED_PAYMENT_METHODS = "allowedPaymentMethods";
-    private static final String TRANSACTION_INFO = "transactionInfo";
-    private static final String EMAIL_REQUIRED = "emailRequired";
-    private static final String SHIPPING_ADDRESS_REQUIRED = "shippingAddressRequired";
-    private static final String SHIPPING_ADDRESS_PARAMETERS = "shippingAddressParameters";
-
-
-    @NonNull
-    public static final Serializer<PaymentDataRequestModel> SERIALIZER = new Serializer<PaymentDataRequestModel>() {
-
-        @NonNull
-        @Override
-        public JSONObject serialize(@NonNull PaymentDataRequestModel modelObject) {
-            final JSONObject jsonObject = new JSONObject();
-            try {
-                jsonObject.putOpt(API_VERSION, modelObject.getApiVersion());
-                jsonObject.putOpt(API_VERSION_MINOR, modelObject.getApiVersionMinor());
-                jsonObject.putOpt(MERCHANT_INFO, ModelUtils.serializeOpt(modelObject.getMerchantInfo(), MerchantInfo.SERIALIZER));
-                jsonObject.putOpt(ALLOWED_PAYMENT_METHODS,
-                        ModelUtils.serializeOptList(modelObject.getAllowedPaymentMethods(), GooglePayPaymentMethodModel.SERIALIZER));
-                jsonObject.putOpt(TRANSACTION_INFO, ModelUtils.serializeOpt(modelObject.getTransactionInfo(), TransactionInfoModel.SERIALIZER));
-                jsonObject.putOpt(EMAIL_REQUIRED, modelObject.isEmailRequired());
-                jsonObject.putOpt(SHIPPING_ADDRESS_REQUIRED, modelObject.isShippingAddressRequired());
-                jsonObject.putOpt(SHIPPING_ADDRESS_PARAMETERS,
-                        ModelUtils.serializeOpt(modelObject.getShippingAddressParameters(), ShippingAddressParameters.SERIALIZER));
-            } catch (JSONException e) {
-                throw new ModelSerializationException(PaymentDataRequestModel.class, e);
+        @JvmField
+        val SERIALIZER: Serializer<PaymentDataRequestModel> = object : Serializer<PaymentDataRequestModel> {
+            override fun serialize(modelObject: PaymentDataRequestModel): JSONObject {
+                return try {
+                    JSONObject().apply {
+                        putOpt(API_VERSION, modelObject.apiVersion)
+                        putOpt(API_VERSION_MINOR, modelObject.apiVersionMinor)
+                        putOpt(MERCHANT_INFO, serializeOpt(modelObject.merchantInfo, MerchantInfo.SERIALIZER))
+                        putOpt(
+                            ALLOWED_PAYMENT_METHODS,
+                            serializeOptList(modelObject.allowedPaymentMethods, GooglePayPaymentMethodModel.SERIALIZER)
+                        )
+                        putOpt(TRANSACTION_INFO, serializeOpt(modelObject.transactionInfo, TransactionInfoModel.SERIALIZER))
+                        putOpt(EMAIL_REQUIRED, modelObject.isEmailRequired)
+                        putOpt(SHIPPING_ADDRESS_REQUIRED, modelObject.isShippingAddressRequired)
+                        putOpt(
+                            SHIPPING_ADDRESS_PARAMETERS,
+                            serializeOpt(modelObject.shippingAddressParameters, ShippingAddressParameters.SERIALIZER)
+                        )
+                    }
+                } catch (e: JSONException) {
+                    throw ModelSerializationException(PaymentDataRequestModel::class.java, e)
+                }
             }
-            return jsonObject;
+
+            override fun deserialize(jsonObject: JSONObject): PaymentDataRequestModel {
+                val paymentDataRequestModel = PaymentDataRequestModel()
+                paymentDataRequestModel.apiVersion = jsonObject.optInt(API_VERSION)
+                paymentDataRequestModel.apiVersionMinor = jsonObject.optInt(API_VERSION_MINOR)
+                paymentDataRequestModel.merchantInfo = deserializeOpt(jsonObject.optJSONObject(MERCHANT_INFO), MerchantInfo.SERIALIZER)
+                paymentDataRequestModel.allowedPaymentMethods =
+                    deserializeOptList(jsonObject.optJSONArray(ALLOWED_PAYMENT_METHODS), GooglePayPaymentMethodModel.SERIALIZER)
+                paymentDataRequestModel.transactionInfo = deserializeOpt(jsonObject.optJSONObject(TRANSACTION_INFO), TransactionInfoModel.SERIALIZER)
+                paymentDataRequestModel.isEmailRequired = jsonObject.optBoolean(EMAIL_REQUIRED)
+                paymentDataRequestModel.isShippingAddressRequired = jsonObject.optBoolean(SHIPPING_ADDRESS_REQUIRED)
+                paymentDataRequestModel.shippingAddressParameters =
+                    deserializeOpt(jsonObject.optJSONObject(SHIPPING_ADDRESS_PARAMETERS), ShippingAddressParameters.SERIALIZER)
+                return paymentDataRequestModel
+            }
         }
-
-        @NonNull
-        @Override
-        public PaymentDataRequestModel deserialize(@NonNull JSONObject jsonObject) {
-            final PaymentDataRequestModel paymentDataRequestModel = new PaymentDataRequestModel();
-            paymentDataRequestModel.setApiVersion(jsonObject.optInt(API_VERSION));
-            paymentDataRequestModel.setApiVersionMinor(jsonObject.optInt(API_VERSION_MINOR));
-            paymentDataRequestModel.setMerchantInfo(ModelUtils.deserializeOpt(jsonObject.optJSONObject(MERCHANT_INFO), MerchantInfo.SERIALIZER));
-            paymentDataRequestModel.setAllowedPaymentMethods(
-                    ModelUtils.deserializeOptList(jsonObject.optJSONArray(ALLOWED_PAYMENT_METHODS), GooglePayPaymentMethodModel.SERIALIZER));
-            paymentDataRequestModel.setTransactionInfo(
-                    ModelUtils.deserializeOpt(jsonObject.optJSONObject(TRANSACTION_INFO), TransactionInfoModel.SERIALIZER));
-            paymentDataRequestModel.setEmailRequired(jsonObject.optBoolean(EMAIL_REQUIRED));
-            paymentDataRequestModel.setShippingAddressRequired(jsonObject.optBoolean(SHIPPING_ADDRESS_REQUIRED));
-            paymentDataRequestModel.setShippingAddressParameters(
-                    ModelUtils.deserializeOpt(jsonObject.optJSONObject(SHIPPING_ADDRESS_PARAMETERS), ShippingAddressParameters.SERIALIZER));
-            return paymentDataRequestModel;
-        }
-    };
-
-    private int apiVersion;
-    private int apiVersionMinor;
-    private MerchantInfo merchantInfo;
-    private List<GooglePayPaymentMethodModel> allowedPaymentMethods;
-    private TransactionInfoModel transactionInfo;
-    private boolean emailRequired;
-    private boolean shippingAddressRequired;
-    private ShippingAddressParameters shippingAddressParameters;
-
-    @Override
-    public void writeToParcel(@NonNull Parcel dest, int flags) {
-        JsonUtils.writeToParcel(dest, SERIALIZER.serialize(this));
-    }
-
-    public int getApiVersion() {
-        return apiVersion;
-    }
-
-    public void setApiVersion(int apiVersion) {
-        this.apiVersion = apiVersion;
-    }
-
-    public int getApiVersionMinor() {
-        return apiVersionMinor;
-    }
-
-    public void setApiVersionMinor(int apiVersionMinor) {
-        this.apiVersionMinor = apiVersionMinor;
-    }
-
-    @Nullable
-    public MerchantInfo getMerchantInfo() {
-        return merchantInfo;
-    }
-
-    public void setMerchantInfo(@Nullable MerchantInfo merchantInfo) {
-        this.merchantInfo = merchantInfo;
-    }
-
-    @Nullable
-    public List<GooglePayPaymentMethodModel> getAllowedPaymentMethods() {
-        return allowedPaymentMethods;
-    }
-
-    public void setAllowedPaymentMethods(@Nullable List<GooglePayPaymentMethodModel> allowedPaymentMethods) {
-        this.allowedPaymentMethods = allowedPaymentMethods;
-    }
-
-    @Nullable
-    public TransactionInfoModel getTransactionInfo() {
-        return transactionInfo;
-    }
-
-    public void setTransactionInfo(@Nullable TransactionInfoModel transactionInfo) {
-        this.transactionInfo = transactionInfo;
-    }
-
-    public boolean isEmailRequired() {
-        return emailRequired;
-    }
-
-    public void setEmailRequired(boolean emailRequired) {
-        this.emailRequired = emailRequired;
-    }
-
-    public boolean isShippingAddressRequired() {
-        return shippingAddressRequired;
-    }
-
-    public void setShippingAddressRequired(boolean shippingAddressRequired) {
-        this.shippingAddressRequired = shippingAddressRequired;
-    }
-
-    @Nullable
-    public ShippingAddressParameters getShippingAddressParameters() {
-        return shippingAddressParameters;
-    }
-
-    public void setShippingAddressParameters(@Nullable ShippingAddressParameters shippingAddressParameters) {
-        this.shippingAddressParameters = shippingAddressParameters;
     }
 }
