@@ -17,6 +17,7 @@ import com.adyen.checkout.components.model.paymentmethods.PaymentMethod
 import com.adyen.checkout.components.model.payments.request.GooglePayPaymentMethod
 import com.adyen.checkout.components.model.payments.request.PaymentComponentData
 import com.adyen.checkout.components.util.PaymentMethodTypes
+import com.adyen.checkout.core.exception.CheckoutException
 import com.adyen.checkout.core.exception.ComponentException
 import com.adyen.checkout.core.log.LogUtil.getTag
 import com.adyen.checkout.core.log.Logger.d
@@ -40,16 +41,16 @@ class GooglePayComponent(
     override val supportedPaymentMethodTypes: Array<String> = PAYMENT_METHOD_TYPES
 
     override fun onInputDataChanged(inputData: GooglePayInputData): GooglePayOutputData {
-        return GooglePayOutputData(inputData.paymentData!!)
+        return GooglePayOutputData(inputData.paymentData ?: throw CheckoutException("paymentData is null"))
     }
 
     override fun createComponentState(): GooglePayComponentState {
-        val paymentData = if (outputData != null) outputData!!.paymentData else null
+        val outputData = this.outputData ?: throw CheckoutException("outputData is null")
         val paymentMethodType = paymentMethod.type
         val paymentComponentData = PaymentComponentData<GooglePayPaymentMethod>()
-        val paymentMethod = GooglePayUtils.createGooglePayPaymentMethod(paymentData, paymentMethodType)
+        val paymentMethod = GooglePayUtils.createGooglePayPaymentMethod(outputData.paymentData, paymentMethodType)
         paymentComponentData.paymentMethod = paymentMethod
-        return GooglePayComponentState(paymentComponentData, outputData!!.isValid, true, outputData!!.paymentData)
+        return GooglePayComponentState(paymentComponentData, outputData.isValid, true, outputData.paymentData)
     }
 
     /**
