@@ -15,16 +15,18 @@ import java.util.regex.Pattern
 
 class Iban private constructor(val value: String) {
 
+    @Suppress("MemberVisibilityCanBePrivate")
     val countryCode: String = value.substring(0, COUNTRY_CODE_POSITION_END)
     val checkDigits: String = value.substring(CHECK_DIGIT_POSITION_START, CHECK_DIGIT_POSITION_END)
-    val bban: String
-        get() = value.substring(IBAN_BLOCK_SIZE)
+    @Suppress("unused")
+    val bban: String = value.substring(IBAN_BLOCK_SIZE)
 
     /**
      * Check if the this IBAN is from a SEPA country.
      *
      * @return If is from a SEPA country.
      */
+    @Suppress("unused")
     val isSepa: Boolean
         get() {
             val details = COUNTRY_DETAILS[countryCode]
@@ -52,6 +54,7 @@ class Iban private constructor(val value: String) {
         }
     }
 
+    @Suppress("MagicNumber")
     companion object {
         const val IBAN_BLOCK_SIZE = 4
         private const val COUNTRY_NAME_SIZE = 2
@@ -142,6 +145,7 @@ class Iban private constructor(val value: String) {
          * @param ibanValue The IBAN value to mask.
          * @return The masked IBAN value.
          */
+        @Suppress("unused")
         fun mask(ibanValue: String?): String {
             val normalizedValue = normalize(ibanValue)
             return normalizedValue.replaceFirst("(.{4}).+(.{4})".toRegex(), "$1 \u2026 $2")
@@ -168,6 +172,7 @@ class Iban private constructor(val value: String) {
          * @param value The value to be parsed.
          * @return An [Iban] if the given can be parsed by adding zeros, otherwise `null`.
          */
+        @Suppress("unused")
         fun parseByAddingMissingZeros(value: String?): Iban? {
             val normalizedValue = normalize(value)
             val details = if (normalizedValue.length >= 2) COUNTRY_DETAILS[normalizedValue.substring(0, 2)] else null
@@ -186,6 +191,7 @@ class Iban private constructor(val value: String) {
          * @param value The value to check.
          * @return `true` if the value is a partial IBAN.
          */
+        @Suppress("unused")
         fun isPartial(value: String?): Boolean {
             val normalizedValue = normalize(value)
             return if (normalizedValue.length < COUNTRY_NAME_SIZE) {
@@ -207,11 +213,12 @@ class Iban private constructor(val value: String) {
          * @param value The value to check.
          * @return Whether the value starts with a SEPA country code.
          */
+        @Suppress("unused")
         fun startsWithSepaCountryCode(value: String?): Boolean {
             val normalizedValue = normalize(value)
             return if (normalizedValue.length < COUNTRY_NAME_SIZE) {
                 for ((countryCode, details) in COUNTRY_DETAILS) {
-                    if (countryCode.startsWith(normalizedValue) && details != null && details.isSepa) {
+                    if (countryCode.startsWith(normalizedValue) && details.isSepa) {
                         return true
                     }
                 }
@@ -255,6 +262,7 @@ class Iban private constructor(val value: String) {
             return numericIbanValue.mod(VALIDATION_MODULUS).toInt() == 1
         }
 
+        @Suppress("MagicNumber")
         private fun getZeroPaddedValue(normalizedValue: String, details: Details): String {
             val length = normalizedValue.length
             val difference = details.length - length
