@@ -51,7 +51,7 @@ class ClientSideEncrypter(publicKeyString: String) {
         }
 
         secureRandom = SecureRandom()
-        val keyComponents = publicKeyString.split("\\|").toTypedArray()
+        val keyComponents = publicKeyString.split("|").toTypedArray()
 
         // The bytes can be converted back to a public key object
         val keyFactory: KeyFactory = try {
