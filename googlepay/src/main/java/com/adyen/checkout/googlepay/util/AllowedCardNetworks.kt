@@ -5,43 +5,22 @@
  *
  * Created by caiof on 17/7/2019.
  */
+package com.adyen.checkout.googlepay.util
 
-package com.adyen.checkout.googlepay.util;
+@Suppress("MemberVisibilityCanBePrivate")
+object AllowedCardNetworks {
 
-import androidx.annotation.NonNull;
-
-import com.adyen.checkout.core.exception.NoConstructorException;
-
-import java.util.ArrayList;
-import java.util.List;
-
-public final class AllowedCardNetworks {
-
-    public static final String AMEX = "AMEX";
-    public static final String DISCOVER = "DISCOVER";
-    public static final String INTERAC = "INTERAC";
-    public static final String JCB = "JCB";
-    public static final String MASTERCARD = "MASTERCARD";
-    public static final String VISA = "VISA";
+    const val AMEX = "AMEX"
+    const val DISCOVER = "DISCOVER"
+    const val INTERAC = "INTERAC"
+    const val JCB = "JCB"
+    const val MASTERCARD = "MASTERCARD"
+    const val VISA = "VISA"
 
     /**
      * A list of the allowed credit card networks accepted on Google Pay.
      *
      * @return The list of all allowed card networks.
      */
-    @NonNull
-    public static List<String> getAllAllowedCardNetworks() {
-        final ArrayList<String> allowedCardNetworks = new ArrayList<>();
-        allowedCardNetworks.add(AMEX);
-        allowedCardNetworks.add(DISCOVER);
-        allowedCardNetworks.add(INTERAC);
-        allowedCardNetworks.add(JCB);
-        allowedCardNetworks.add(MASTERCARD);
-        allowedCardNetworks.add(VISA);
-        return allowedCardNetworks;
-    }
-
-    private AllowedCardNetworks() {
-        throw NoConstructorException.INSTANCE;
-    }
+    val allAllowedCardNetworks: List<String> = listOf(AMEX, DISCOVER, INTERAC, JCB, MASTERCARD, VISA)
 }
