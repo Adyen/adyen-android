@@ -18,17 +18,20 @@ import com.adyen.checkout.core.exception.CheckoutException
 import com.adyen.checkout.core.log.LogUtil
 import com.adyen.checkout.core.log.Logger
 import com.adyen.checkout.sessions.api.SessionBalanceConnection
+import com.adyen.checkout.sessions.api.SessionCancelOrderConnection
 import com.adyen.checkout.sessions.api.SessionCreateOrderConnection
 import com.adyen.checkout.sessions.api.SessionDetailsConnection
 import com.adyen.checkout.sessions.api.SessionPaymentsConnection
 import com.adyen.checkout.sessions.api.SessionSetupConnection
 import com.adyen.checkout.sessions.model.Session
 import com.adyen.checkout.sessions.model.request.SessionBalanceRequest
+import com.adyen.checkout.sessions.model.request.SessionCancelOrderRequest
 import com.adyen.checkout.sessions.model.request.SessionDetailsRequest
 import com.adyen.checkout.sessions.model.request.SessionOrderRequest
 import com.adyen.checkout.sessions.model.request.SessionPaymentsRequest
 import com.adyen.checkout.sessions.model.request.SessionSetupRequest
 import com.adyen.checkout.sessions.model.response.SessionBalanceResponse
+import com.adyen.checkout.sessions.model.response.SessionCancelOrderResponse
 import com.adyen.checkout.sessions.model.response.SessionDetailsResponse
 import com.adyen.checkout.sessions.model.response.SessionOrderResponse
 import com.adyen.checkout.sessions.model.response.SessionPaymentsResponse
@@ -153,6 +156,29 @@ class SessionRepository {
         } catch (e: JSONException) {
             Logger.e(TAG, "SessionCreateOrderConnection unexpected result", e)
             throw CheckoutException("Unable to create order")
+        }
+    }
+
+    suspend fun cancelOrder(
+        configuration: Configuration,
+        session: Session,
+        order: OrderRequest
+    ): SessionCancelOrderResponse {
+        Logger.d(TAG, "Cancelling order")
+        try {
+            val request = SessionCancelOrderRequest(session.sessionData.orEmpty(), order)
+            return SessionCancelOrderConnection(
+                request = request,
+                environment = configuration.environment,
+                sessionId = session.id,
+                clientKey = configuration.clientKey
+            ).suspendedCall()
+        } catch (e: IOException) {
+            Logger.e(TAG, "SessionCancelOrderConnection Failed", e)
+            throw CheckoutException("Unable to cancel order")
+        } catch (e: JSONException) {
+            Logger.e(TAG, "SessionCancelOrderConnection unexpected result", e)
+            throw CheckoutException("Unable to cancel order")
         }
     }
 }
