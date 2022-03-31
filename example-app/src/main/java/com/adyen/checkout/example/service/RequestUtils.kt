@@ -10,10 +10,10 @@ package com.adyen.checkout.example.service
 
 import com.adyen.checkout.components.model.payments.Amount
 import com.adyen.checkout.components.model.payments.request.OrderRequest
-import com.adyen.checkout.example.data.api.model.paymentsRequest.AdditionalData
-import com.adyen.checkout.example.data.api.model.paymentsRequest.Item
-import com.adyen.checkout.example.data.api.model.paymentsRequest.PaymentMethodsRequest
-import com.adyen.checkout.example.data.api.model.paymentsRequest.SessionRequest
+import com.adyen.checkout.example.data.api.model.AdditionalData
+import com.adyen.checkout.example.data.api.model.Item
+import com.adyen.checkout.example.data.api.model.PaymentMethodsRequest
+import com.adyen.checkout.example.data.api.model.SessionRequest
 import com.adyen.checkout.example.data.storage.KeyValueStorage
 import com.squareup.moshi.JsonAdapter
 import com.squareup.moshi.Moshi

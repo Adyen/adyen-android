@@ -1,16 +1,17 @@
 /*
- * Copyright (c) 2022 Adyen N.V.
+ * Copyright (c) 2019 Adyen N.V.
  *
  * This file is open source and available under the MIT license. See the LICENSE file for more info.
  *
- * Created by josephj on 14/3/2022.
+ * Created by arman on 10/10/2019.
  */
 
-package com.adyen.checkout.example.data.api.model.paymentsRequest
+package com.adyen.checkout.example.data.api.model
 
 import com.adyen.checkout.components.model.payments.Amount
+import com.adyen.checkout.components.model.payments.request.OrderRequest
 
-data class SessionRequest(
+data class PaymentMethodsRequest(
     val merchantAccount: String,
     val shopperReference: String,
 //    val additionalData: Any,
@@ -21,5 +22,5 @@ data class SessionRequest(
     val shopperLocale: String = "en_US",
     val channel: String = "android",
     val splitCardFundingSources: Boolean = false,
-    val returnUrl: String
+    val order: OrderRequest?
 )

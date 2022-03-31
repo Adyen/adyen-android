@@ -10,8 +10,8 @@ package com.adyen.checkout.example.repositories.paymentMethods
 
 import com.adyen.checkout.components.model.PaymentMethodsApiResponse
 import com.adyen.checkout.example.data.api.CheckoutApiService
-import com.adyen.checkout.example.data.api.model.paymentsRequest.PaymentMethodsRequest
-import com.adyen.checkout.example.data.api.model.paymentsRequest.SessionRequest
+import com.adyen.checkout.example.data.api.model.PaymentMethodsRequest
+import com.adyen.checkout.example.data.api.model.SessionRequest
 import com.adyen.checkout.example.repositories.safeApiCall
 import com.adyen.checkout.sessions.model.Session
 import okhttp3.RequestBody

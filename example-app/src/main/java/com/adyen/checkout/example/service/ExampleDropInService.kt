@@ -14,7 +14,7 @@ import com.adyen.checkout.core.log.Logger
 import com.adyen.checkout.core.model.toStringPretty
 import com.adyen.checkout.dropin.service.DropInService
 import com.adyen.checkout.dropin.service.DropInServiceResult
-import com.adyen.checkout.example.data.api.model.paymentsRequest.AdditionalData
+import com.adyen.checkout.example.data.api.model.AdditionalData
 import com.adyen.checkout.example.data.storage.KeyValueStorage
 import com.adyen.checkout.example.repositories.paymentMethods.PaymentsRepository
 import com.adyen.checkout.redirect.RedirectComponent

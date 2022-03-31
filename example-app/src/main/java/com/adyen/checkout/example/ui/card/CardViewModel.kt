@@ -8,7 +8,7 @@ import com.adyen.checkout.components.ComponentError
 import com.adyen.checkout.components.model.payments.request.PaymentComponentData
 import com.adyen.checkout.components.model.payments.response.Action
 import com.adyen.checkout.core.model.getStringOrNull
-import com.adyen.checkout.example.data.api.model.paymentsRequest.AdditionalData
+import com.adyen.checkout.example.data.api.model.AdditionalData
 import com.adyen.checkout.example.data.storage.KeyValueStorage
 import com.adyen.checkout.example.repositories.paymentMethods.PaymentsRepository
 import com.adyen.checkout.example.service.createPaymentRequest

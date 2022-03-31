@@ -26,7 +26,7 @@ import com.adyen.checkout.dropin.service.DropInService
 import com.adyen.checkout.dropin.service.DropInServiceResult
 import com.adyen.checkout.dropin.service.OrderDropInServiceResult
 import com.adyen.checkout.dropin.service.RecurringDropInServiceResult
-import com.adyen.checkout.example.data.api.model.paymentsRequest.AdditionalData
+import com.adyen.checkout.example.data.api.model.AdditionalData
 import com.adyen.checkout.example.data.storage.KeyValueStorage
 import com.adyen.checkout.example.repositories.RecurringRepository
 import com.adyen.checkout.example.repositories.paymentMethods.PaymentsRepository

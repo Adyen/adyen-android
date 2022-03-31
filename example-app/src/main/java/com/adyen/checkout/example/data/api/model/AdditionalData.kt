@@ -6,7 +6,7 @@
  * Created by arman on 10/10/2019.
  */
 
-package com.adyen.checkout.example.data.api.model.paymentsRequest
+package com.adyen.checkout.example.data.api.model
 
 data class AdditionalData(
     val allow3DS2: String = "false",
