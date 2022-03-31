@@ -20,7 +20,6 @@ import com.adyen.checkout.core.model.toStringPretty
 import com.adyen.checkout.dropin.service.DropInService
 import com.adyen.checkout.dropin.service.DropInServiceResult
 import com.adyen.checkout.dropin.service.RecurringDropInServiceResult
-import com.adyen.checkout.example.data.api.model.AdditionalData
 import com.adyen.checkout.example.data.storage.KeyValueStorage
 import com.adyen.checkout.example.repositories.RecurringRepository
 import com.adyen.checkout.example.repositories.paymentMethods.PaymentsRepository
@@ -31,7 +30,6 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import okhttp3.MediaType
 import okhttp3.MediaType.Companion.toMediaType
-import okhttp3.RequestBody.Companion.toRequestBody
 import okhttp3.ResponseBody
 import org.json.JSONObject
 
@@ -67,22 +65,18 @@ class ExampleAsyncDropInService : DropInService() {
 
             // Check out the documentation of this method on the parent DropInService class
             val paymentRequest = createPaymentRequest(
-                paymentComponentJson,
-                keyValueStorage.getShopperReference(),
-                keyValueStorage.getAmount(),
-                keyValueStorage.getCountry(),
-                keyValueStorage.getMerchantAccount(),
-                RedirectComponent.getReturnUrl(applicationContext),
-                AdditionalData(
-                    allow3DS2 = keyValueStorage.isThreeds2Enable().toString(),
-                    executeThreeD = keyValueStorage.isExecuteThreeD().toString()
-                )
+                paymentComponentData = paymentComponentJson,
+                shopperReference = keyValueStorage.getShopperReference(),
+                amount = keyValueStorage.getAmount(),
+                countryCode = keyValueStorage.getCountry(),
+                merchantAccount = keyValueStorage.getMerchantAccount(),
+                redirectUrl = RedirectComponent.getReturnUrl(applicationContext),
+                isThreeds2Enabled = keyValueStorage.isThreeds2Enable(),
+                isExecuteThreeD = keyValueStorage.isExecuteThreeD()
             )
 
             Logger.v(TAG, "paymentComponentJson - ${paymentComponentJson.toStringPretty()}")
-
-            val requestBody = paymentRequest.toString().toRequestBody(CONTENT_TYPE)
-            val response = paymentsRepository.paymentsRequestAsync(requestBody)
+            val response = paymentsRepository.paymentsRequestAsync(paymentRequest)
 
             val result = handleResponse(response)
             sendResult(result)
@@ -104,8 +98,7 @@ class ExampleAsyncDropInService : DropInService() {
 
             Logger.v(TAG, "payments/details/ - ${actionComponentJson.toStringPretty()}")
 
-            val requestBody = actionComponentJson.toString().toRequestBody(CONTENT_TYPE)
-            val response = paymentsRepository.detailsRequestAsync(requestBody)
+            val response = paymentsRepository.detailsRequestAsync(actionComponentJson)
 
             val result = handleResponse(response)
             sendResult(result)
@@ -145,12 +138,12 @@ class ExampleAsyncDropInService : DropInService() {
         storedPaymentMethodJson: JSONObject
     ) {
         launch(Dispatchers.IO) {
-            val requestBody = createRemoveStoredPaymentMethodRequest(
+            val request = createRemoveStoredPaymentMethodRequest(
                 storedPaymentMethod.id.orEmpty(),
                 keyValueStorage.getMerchantAccount(),
                 keyValueStorage.getShopperReference()
-            ).toString().toRequestBody(CONTENT_TYPE)
-            val response = recurringRepository.removeStoredPaymentMethod(requestBody)
+            )
+            val response = recurringRepository.removeStoredPaymentMethod(request)
             val result = handleRemoveStoredPaymentMethodResult(response, storedPaymentMethod.id.orEmpty())
             sendRecurringResult(result)
         }

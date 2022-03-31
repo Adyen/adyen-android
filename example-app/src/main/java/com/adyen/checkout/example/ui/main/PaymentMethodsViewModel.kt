@@ -37,7 +37,14 @@ class PaymentMethodsViewModel @Inject constructor(
         viewModelScope.launch {
             paymentMethodResponseLiveData.postValue(
                 paymentsRepository.getPaymentMethods(
-                    getPaymentMethodRequest(keyValueStorage)
+                    getPaymentMethodRequest(
+                        merchantAccount = keyValueStorage.getMerchantAccount(),
+                        shopperReference = keyValueStorage.getShopperReference(),
+                        amount = keyValueStorage.getAmount(),
+                        countryCode = keyValueStorage.getCountry(),
+                        shopperLocale = keyValueStorage.getShopperLocale(),
+                        splitCardFundingSources = keyValueStorage.isSplitCardFundingSources()
+                    )
                 )
             )
         }

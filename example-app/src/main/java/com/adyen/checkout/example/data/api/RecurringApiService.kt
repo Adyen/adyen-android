@@ -9,7 +9,7 @@
 package com.adyen.checkout.example.data.api
 
 import com.adyen.checkout.example.BuildConfig
-import okhttp3.RequestBody
+import com.adyen.checkout.example.data.api.model.RemoveStoredPaymentMethodRequest
 import okhttp3.ResponseBody
 import retrofit2.http.Body
 import retrofit2.http.POST
@@ -25,5 +25,5 @@ internal interface RecurringApiService {
     }
 
     @POST("disable")
-    suspend fun removeStoredPaymentMethodAsync(@Body request: RequestBody): ResponseBody
+    suspend fun removeStoredPaymentMethodAsync(@Body request: RemoveStoredPaymentMethodRequest): ResponseBody
 }

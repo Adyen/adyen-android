@@ -3,26 +3,34 @@
  *
  * This file is open source and available under the MIT license. See the LICENSE file for more info.
  *
- * Created by josephj on 14/3/2022.
+ * Created by josephj on 31/3/2022.
  */
 
 package com.adyen.checkout.example.data.api.model
 
 import com.adyen.checkout.components.model.payments.Amount
+import org.json.JSONObject
 
-data class SessionRequest(
-    val merchantAccount: String,
+/**
+ * Data inside this class will not be sent as shown, instead paymentComponentData and requestData will
+ * both be merged into the same JSON object. Check [PaymentRequestAdapter] for implementation.
+ */
+data class PaymentsRequest(
+    val paymentComponentData: JSONObject,
+    val requestData: PaymentsRequestData
+)
+
+data class PaymentsRequestData(
     val shopperReference: String,
-    val amount: Amount?,
+    val amount: Amount,
     val countryCode: String,
-    val shopperLocale: String,
-    val channel: String,
-    val splitCardFundingSources: Boolean,
+    val merchantAccount: String,
     val returnUrl: String,
     val additionalData: AdditionalData,
     val threeDSAuthenticationOnly: Boolean,
     val shopperIP: String,
     val reference: String,
+    val channel: String,
     val lineItems: List<Item>,
     val threeDS2RequestData: ThreeDS2RequestDataRequest?
 )
