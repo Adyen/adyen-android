@@ -19,7 +19,7 @@
 
     <TextView
         android:id="@+id/header"
-        style="@style/AdyenCheckout.TextAppearance.HeaderTitle.Card"
+        style="@style/Adyen.Checkout.TextAppearance.HeaderTitle.Card"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginStart="@dimen/standard_margin"
@@ -42,9 +42,9 @@
                 android:layout_width="match_parent"
                 android:layout_height="match_parent" />
 
-            <androidx.appcompat.widget.AppCompatButton
+            <Button
                 android:id="@+id/payButton"
-                style="@style/AdyenCheckout.Button.Colored"
+                style="@style/Adyen.Checkout.Button.Colored"
                 android:layout_width="match_parent"
                 android:layout_marginBottom="@dimen/standard_half_margin"
                 android:text="@string/pay_button" />

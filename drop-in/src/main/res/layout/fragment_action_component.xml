@@ -19,7 +19,7 @@
 
     <TextView
         android:id="@+id/header"
-        style="@style/AdyenCheckout.TextAppearance.HeaderTitle"
+        style="@style/Adyen.Checkout.TextAppearance.HeaderTitle"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:textIsSelectable="false"
@@ -30,9 +30,9 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content" />
 
-    <androidx.appcompat.widget.AppCompatButton
+    <Button
         android:id="@+id/button_finish"
-        style="@style/AdyenCheckout.Button.Colored"
+        style="@style/Adyen.Checkout.Button.Colored"
         android:layout_width="match_parent"
         android:layout_marginBottom="@dimen/standard_margin"
         android:text="@string/checkout_voucher_finish"

@@ -20,14 +20,14 @@
 
         <com.google.android.material.textfield.TextInputLayout
             android:id="@+id/textInputLayout_cardNumber"
-            style="@style/AdyenCheckout.TextInputLayout"
+            style="@style/Adyen.Checkout.TextInputLayout"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:minHeight="@null">
 
             <com.adyen.checkout.card.ui.CardNumberInput
                 android:id="@+id/editText_cardNumber"
-                style="@style/AdyenCheckout.Card.CardNumberInput"
+                style="@style/Adyen.Checkout.Card.CardNumberInput"
                 android:nextFocusDown="@+id/editText_expiryDate"
                 android:nextFocusForward="@+id/editText_expiryDate"
                 tools:ignore="RequiredSize" />
@@ -36,27 +36,27 @@
 
         <LinearLayout
             android:id="@+id/cardBrandLogo_container"
-            style="@style/AdyenCheckout.Card.BrandRecognitionLogoContainerGroup"
+            style="@style/Adyen.Checkout.Card.BrandRecognitionLogoContainerGroup"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:orientation="horizontal">
 
             <FrameLayout
                 android:id="@+id/cardBrandLogo_container_primary"
-                style="@style/AdyenCheckout.Card.BrandRecognitionLogoContainer"
+                style="@style/Adyen.Checkout.Card.BrandRecognitionLogoContainer"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content">
 
                 <com.adyen.checkout.components.ui.view.RoundCornerImageView
                     android:id="@+id/cardBrandLogo_imageView_primary"
-                    style="@style/AdyenCheckout.Card.BrandRecognitionLogo"
+                    style="@style/Adyen.Checkout.Card.BrandRecognitionLogo"
                     app:strokeColor="@color/stroke_color"
                     app:strokeWidth="0dp" />
             </FrameLayout>
 
             <FrameLayout
                 android:id="@+id/cardBrandLogo_container_secondary"
-                style="@style/AdyenCheckout.Card.BrandRecognitionLogoContainer"
+                style="@style/Adyen.Checkout.Card.BrandRecognitionLogoContainer"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:visibility="gone"
@@ -64,7 +64,7 @@
 
                 <com.adyen.checkout.components.ui.view.RoundCornerImageView
                     android:id="@+id/cardBrandLogo_imageView_secondary"
-                    style="@style/AdyenCheckout.Card.BrandRecognitionLogo"
+                    style="@style/Adyen.Checkout.Card.BrandRecognitionLogo"
                     app:strokeColor="@color/stroke_color"
                     app:strokeWidth="0dp" />
             </FrameLayout>
@@ -95,7 +95,7 @@
 
         <com.google.android.material.textfield.TextInputLayout
             android:id="@+id/textInputLayout_expiryDate"
-            style="@style/AdyenCheckout.TextInputLayout"
+            style="@style/Adyen.Checkout.TextInputLayout"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginEnd="@dimen/standard_half_margin"
@@ -103,7 +103,7 @@
 
             <com.adyen.checkout.card.ui.ExpiryDateInput
                 android:id="@+id/editText_expiryDate"
-                style="@style/AdyenCheckout.Card.ExpiryDateInput"
+                style="@style/Adyen.Checkout.Card.ExpiryDateInput"
                 android:nextFocusRight="@+id/editText_securityCode"
                 android:nextFocusDown="@id/editText_securityCode"
                 android:nextFocusForward="@+id/editText_securityCode"
@@ -112,7 +112,7 @@
 
         <com.google.android.material.textfield.TextInputLayout
             android:id="@+id/textInputLayout_securityCode"
-            style="@style/AdyenCheckout.TextInputLayout"
+            style="@style/Adyen.Checkout.TextInputLayout"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginStart="@dimen/standard_half_margin"
@@ -120,7 +120,7 @@
 
             <com.adyen.checkout.card.ui.SecurityCodeInput
                 android:id="@+id/editText_securityCode"
-                style="@style/AdyenCheckout.Card.SecurityCodeInput"
+                style="@style/Adyen.Checkout.Card.SecurityCodeInput"
                 android:nextFocusRight="@+id/editText_cardHolder"
                 android:nextFocusForward="@+id/editText_cardHolder"
                 tools:ignore="RequiredSize" />
@@ -129,13 +129,13 @@
 
     <com.google.android.material.textfield.TextInputLayout
         android:id="@+id/textInputLayout_cardHolder"
-        style="@style/AdyenCheckout.TextInputLayout"
+        style="@style/Adyen.Checkout.TextInputLayout"
         android:layout_width="match_parent"
         android:layout_height="wrap_content">
 
         <com.adyen.checkout.components.ui.view.AdyenTextInputEditText
             android:id="@+id/editText_cardHolder"
-            style="@style/AdyenCheckout.Card.HolderNameInput"
+            style="@style/Adyen.Checkout.Card.HolderNameInput"
             android:nextFocusDown="@+id/editText_postalCode"
             android:nextFocusForward="@+id/editText_postalCode"
             tools:ignore="RequiredSize" />
@@ -143,56 +143,56 @@
 
     <com.google.android.material.textfield.TextInputLayout
         android:id="@+id/textInputLayout_postalCode"
-        style="@style/AdyenCheckout.TextInputLayout"
+        style="@style/Adyen.Checkout.TextInputLayout"
         android:layout_width="match_parent"
         android:layout_height="wrap_content">
 
         <com.adyen.checkout.components.ui.view.AdyenTextInputEditText
             android:id="@+id/editText_postalCode"
-            style="@style/AdyenCheckout.Card.PostalCodeInput"
+            style="@style/Adyen.Checkout.Card.PostalCodeInput"
             android:autofillHints="postalCode"
             tools:ignore="RequiredSize" />
     </com.google.android.material.textfield.TextInputLayout>
 
     <com.google.android.material.textfield.TextInputLayout
         android:id="@+id/textInputLayout_socialSecurityNumber"
-        style="@style/AdyenCheckout.TextInputLayout"
+        style="@style/Adyen.Checkout.TextInputLayout"
         android:layout_width="match_parent"
         android:layout_height="wrap_content">
 
         <com.adyen.checkout.card.ui.SocialSecurityNumberInput
             android:id="@+id/editText_socialSecurityNumber"
-            style="@style/AdyenCheckout.Card.SocialSecurityNumberInput"
+            style="@style/Adyen.Checkout.Card.SocialSecurityNumberInput"
             tools:ignore="RequiredSize" />
     </com.google.android.material.textfield.TextInputLayout>
 
     <com.google.android.material.textfield.TextInputLayout
         android:id="@+id/textInputLayout_kcpBirthDateOrTaxNumber"
-        style="@style/AdyenCheckout.TextInputLayout"
+        style="@style/Adyen.Checkout.TextInputLayout"
         android:layout_width="match_parent"
         android:layout_height="wrap_content">
 
         <com.adyen.checkout.components.ui.view.AdyenTextInputEditText
             android:id="@+id/editText_kcpBirthDateOrTaxNumber"
-            style="@style/AdyenCheckout.Card.KcpBirthDateOrTaxNumber"
+            style="@style/Adyen.Checkout.Card.KcpBirthDateOrTaxNumber"
             tools:ignore="RequiredSize" />
     </com.google.android.material.textfield.TextInputLayout>
 
     <com.google.android.material.textfield.TextInputLayout
         android:id="@+id/textInputLayout_kcpCardPassword"
-        style="@style/AdyenCheckout.TextInputLayout"
+        style="@style/Adyen.Checkout.TextInputLayout"
         android:layout_width="match_parent"
         android:layout_height="wrap_content">
 
         <com.adyen.checkout.components.ui.view.AdyenTextInputEditText
             android:id="@+id/editText_kcpCardPassword"
-            style="@style/AdyenCheckout.Card.KcpCardPassword"
+            style="@style/Adyen.Checkout.Card.KcpCardPassword"
             tools:ignore="RequiredSize" />
     </com.google.android.material.textfield.TextInputLayout>
 
     <com.google.android.material.textfield.TextInputLayout
         android:id="@+id/textInputLayout_installments"
-        style="@style/AdyenCheckout.DropdownTextInputLayout.Installments"
+        style="@style/Adyen.Checkout.DropdownTextInputLayout.Installments"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:visibility="gone"
@@ -200,7 +200,7 @@
 
         <androidx.appcompat.widget.AppCompatAutoCompleteTextView
             android:id="@+id/autoCompleteTextView_installments"
-            style="@style/AdyenCheckout.DropdownTextInputEditText"
+            style="@style/Adyen.Checkout.DropdownTextInputEditText"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:dropDownAnchor="@id/textInputLayout_installments" />
@@ -208,7 +208,7 @@
 
     <androidx.appcompat.widget.SwitchCompat
         android:id="@+id/switch_storePaymentMethod"
-        style="@style/AdyenCheckout.Card.StorePaymentSwitch"
+        style="@style/Adyen.Checkout.Card.StorePaymentSwitch"
         android:layout_width="match_parent"
         android:layout_height="wrap_content" />
 </merge>

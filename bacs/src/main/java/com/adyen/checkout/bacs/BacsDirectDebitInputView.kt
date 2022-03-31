@@ -120,22 +120,22 @@ class BacsDirectDebitInputView @JvmOverloads constructor(
         val attrs = intArrayOf(android.R.attr.hint)
 
         // Holder Name
-        var typedArray = localizedContext.obtainStyledAttributes(R.style.AdyenCheckout_Bacs_HolderNameInput, attrs)
+        var typedArray = localizedContext.obtainStyledAttributes(R.style.Adyen_Checkout_Bacs_HolderNameInput, attrs)
         binding.textInputLayoutHolderName.hint = typedArray.getString(0)
         typedArray.recycle()
 
         // Account Number
-        typedArray = localizedContext.obtainStyledAttributes(R.style.AdyenCheckout_Bacs_AccountNumberInput, attrs)
+        typedArray = localizedContext.obtainStyledAttributes(R.style.Adyen_Checkout_Bacs_AccountNumberInput, attrs)
         binding.textInputLayoutBankAccountNumber.hint = typedArray.getString(0)
         typedArray.recycle()
 
         // Sort Code
-        typedArray = localizedContext.obtainStyledAttributes(R.style.AdyenCheckout_Bacs_SortCodeInput, attrs)
+        typedArray = localizedContext.obtainStyledAttributes(R.style.Adyen_Checkout_Bacs_SortCodeInput, attrs)
         binding.textInputLayoutSortCode.hint = typedArray.getString(0)
         typedArray.recycle()
 
         // Shopper Email
-        typedArray = localizedContext.obtainStyledAttributes(R.style.AdyenCheckout_Bacs_ShopperEmailInput, attrs)
+        typedArray = localizedContext.obtainStyledAttributes(R.style.Adyen_Checkout_Bacs_ShopperEmailInput, attrs)
         binding.textInputLayoutShopperEmail.hint = typedArray.getString(0)
         typedArray.recycle()
     }

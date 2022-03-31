@@ -13,21 +13,21 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    style="@style/AdyenCheckout.RecyclerListItem"
+    style="@style/Adyen.Checkout.RecyclerListItem"
     android:clickable="true"
     android:focusable="true"
     android:orientation="horizontal" >
 
     <com.adyen.checkout.components.ui.view.RoundCornerImageView
         android:id="@+id/imageView_logo"
-        style="@style/AdyenCheckout.Image.Logo"
+        style="@style/Adyen.Checkout.Image.Logo"
         app:strokeColor="@color/stroke_color"/>
 
     <androidx.appcompat.widget.AppCompatTextView
         android:id="@+id/textView_text"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        style="@style/AdyenCheckout.ListItemText"
+        style="@style/Adyen.Checkout.ListItemText"
         tools:text="Test"/>
 
 </LinearLayout>

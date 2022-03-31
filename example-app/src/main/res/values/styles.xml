@@ -1,7 +1,7 @@
 <resources xmlns:tools="http://schemas.android.com/tools">
 
     <!-- Base application theme. -->
-    <style name="AppTheme" parent="Theme.MaterialComponents.DayNight.NoActionBar">
+    <style name="MyAppTheme" parent="Theme.MaterialComponents.DayNight.NoActionBar">
 
         <item name="colorPrimary">@color/color_primary</item>
         <item name="colorOnPrimary">@color/color_on_primary</item>
@@ -35,5 +35,7 @@
         <item name="bottomSheetDialogTheme">@style/Widget.Adyen.BottomSheetDialogTheme</item>
 
     </style>
+
+    <style name="Adyen.AppTheme" parent="MyAppTheme" />
 
 </resources>

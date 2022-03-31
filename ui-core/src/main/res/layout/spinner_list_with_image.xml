@@ -12,18 +12,18 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    style="@style/AdyenCheckout.SpinnerListItem"
+    style="@style/Adyen.Checkout.SpinnerListItem"
     android:orientation="horizontal" >
 
     <androidx.appcompat.widget.AppCompatImageView
         android:id="@+id/imageView_logo"
-        style="@style/AdyenCheckout.Image.Logo" />
+        style="@style/Adyen.Checkout.Image.Logo" />
 
     <androidx.appcompat.widget.AppCompatTextView
         android:id="@+id/textView_text"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        style="@style/AdyenCheckout.ListItemText"
+        style="@style/Adyen.Checkout.ListItemText"
         tools:text="Test"/>
 
 </LinearLayout>

@@ -14,7 +14,7 @@
 
     <TextView
         android:id="@+id/payment_method_header_title"
-        style="@style/AdyenCheckout.TextAppearance.HeaderTitle"
+        style="@style/Adyen.Checkout.TextAppearance.HeaderTitle"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_weight="1"
@@ -23,7 +23,7 @@
 
     <TextView
         android:id="@+id/payment_method_header_action"
-        style="@style/AdyenCheckout.TextAppearance.HeaderAction"
+        style="@style/Adyen.Checkout.TextAppearance.HeaderAction"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:textIsSelectable="false"

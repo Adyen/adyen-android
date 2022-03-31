@@ -8,14 +8,14 @@
   -->
 
 <resources>
-    <style name="AdyenCheckout.Sepa"/>
+    <style name="Adyen.Checkout.Sepa"/>
 
-    <style name="AdyenCheckout.Sepa.HolderNameInput" parent="AdyenCheckout.TextInputEditText">
+    <style name="Adyen.Checkout.Sepa.HolderNameInput" parent="Adyen.Checkout.TextInputEditText">
         <item name="android:hint">@string/checkout_sepa_holder_name</item>
         <item name="android:inputType">text|textPersonName|textCapWords</item>
     </style>
 
-    <style name="AdyenCheckout.Sepa.AccountNumberInput" parent="AdyenCheckout.TextInputEditText">
+    <style name="Adyen.Checkout.Sepa.AccountNumberInput" parent="Adyen.Checkout.TextInputEditText">
         <item name="android:hint">@string/checkout_sepa_account_number</item>
         <item name="android:inputType">text|textCapCharacters</item>
     </style>

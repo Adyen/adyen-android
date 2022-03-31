@@ -24,14 +24,14 @@
 
         <com.google.android.material.textfield.TextInputLayout
             android:id="@+id/textInputLayout_country"
-            style="@style/AdyenCheckout.DropdownTextInputLayout"
+            style="@style/Adyen.Checkout.DropdownTextInputLayout"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginEnd="@dimen/standard_half_margin">
 
             <androidx.appcompat.widget.AppCompatAutoCompleteTextView
                 android:id="@+id/autoCompleteTextView_country"
-                style="@style/AdyenCheckout.DropdownTextInputEditText"
+                style="@style/Adyen.Checkout.DropdownTextInputEditText"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:dropDownAnchor="@id/layout_container"
@@ -40,13 +40,13 @@
 
         <com.google.android.material.textfield.TextInputLayout
             android:id="@+id/textInputLayout_mobileNumber"
-            style="@style/AdyenCheckout.TextInputLayout"
+            style="@style/Adyen.Checkout.TextInputLayout"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="1">
 
             <com.adyen.checkout.components.ui.view.AdyenTextInputEditText
-                style="@style/AdyenCheckout.MBWay.MobileNumberInput"
+                style="@style/Adyen.Checkout.MBWay.MobileNumberInput"
                 android:autofillHints="phoneNational"
                 tools:ignore="RequiredSize" />
         </com.google.android.material.textfield.TextInputLayout>

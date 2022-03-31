@@ -8,9 +8,9 @@
   -->
 
 <resources>
-    <style name="AdyenCheckout.MBWay"/>
+    <style name="Adyen.Checkout.MBWay"/>
 
-    <style name="AdyenCheckout.MBWay.MobileNumberInput" parent="AdyenCheckout.TextInputEditText">
+    <style name="Adyen.Checkout.MBWay.MobileNumberInput" parent="Adyen.Checkout.TextInputEditText">
         <item name="android:hint">@string/checkout_mbway_mobile_number</item>
         <item name="android:inputType">phone</item>
     </style>

@@ -8,9 +8,9 @@
 
 <resources>
 
-    <style name="AdyenCheckout.Voucher" />
+    <style name="Adyen.Checkout.Voucher" />
 
-    <style name="AdyenCheckout.Voucher.DescriptionTextAppearance" parent="AdyenCheckout.TextAppearance.Primary">
+    <style name="Adyen.Checkout.Voucher.DescriptionTextAppearance" parent="Adyen.Checkout.TextAppearance.Primary">
         <item name="android:layout_marginStart">@dimen/standard_double_margin</item>
         <item name="android:layout_marginEnd">@dimen/standard_double_margin</item>
         <item name="android:layout_marginTop">@dimen/standard_margin</item>
@@ -18,7 +18,7 @@
         <item name="android:gravity">center_horizontal</item>
     </style>
 
-    <style name="AdyenCheckout.Voucher.DownloadTextAppearance" parent="AdyenCheckout.TextAppearance.Primary">
+    <style name="Adyen.Checkout.Voucher.DownloadTextAppearance" parent="Adyen.Checkout.TextAppearance.Primary">
         <item name="android:textColor">?android:attr/colorPrimary</item>
         <item name="android:layout_marginTop">@dimen/standard_margin</item>
         <item name="android:gravity">center_horizontal</item>

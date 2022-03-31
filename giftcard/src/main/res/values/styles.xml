@@ -8,13 +8,13 @@
 
 <resources>
 
-    <style name="AdyenCheckout.GiftCard" />
+    <style name="Adyen.Checkout.GiftCard" />
 
-    <style name="AdyenCheckout.GiftCard.GiftCardNumberInput" parent="AdyenCheckout.TextInputEditText">
+    <style name="Adyen.Checkout.GiftCard.GiftCardNumberInput" parent="Adyen.Checkout.TextInputEditText">
         <item name="android:hint">@string/checkout_giftcard_number_hint</item>
     </style>
 
-    <style name="AdyenCheckout.GiftCard.GiftCardPinInput" parent="AdyenCheckout.TextInputEditText">
+    <style name="Adyen.Checkout.GiftCard.GiftCardPinInput" parent="Adyen.Checkout.TextInputEditText">
         <item name="android:hint">@string/checkout_giftcard_pin_hint</item>
         <item name="android:inputType">number</item>
         <item name="android:maxLength">10</item>

@@ -45,7 +45,7 @@ class BlikView @JvmOverloads constructor(context: Context, attrs: AttributeSet? 
 
     override fun initLocalizedStrings(localizedContext: Context) {
         val myAttrs = intArrayOf(android.R.attr.hint)
-        val typedArray = localizedContext.obtainStyledAttributes(R.style.AdyenCheckout_Blik_BlikCodeInput, myAttrs)
+        val typedArray = localizedContext.obtainStyledAttributes(R.style.Adyen_Checkout_Blik_BlikCodeInput, myAttrs)
         blikCodeInput.hint = typedArray.getString(0)
         typedArray.recycle()
     }

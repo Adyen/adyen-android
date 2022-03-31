@@ -15,13 +15,13 @@
 
     <com.google.android.material.textfield.TextInputLayout
         android:id="@+id/textInputLayout_holderName"
-        style="@style/AdyenCheckout.TextInputLayout"
+        style="@style/Adyen.Checkout.TextInputLayout"
         android:layout_width="match_parent"
         android:layout_height="wrap_content">
 
         <com.adyen.checkout.components.ui.view.AdyenTextInputEditText
             android:id="@+id/editText_holderName"
-            style="@style/AdyenCheckout.Bacs.HolderNameInput"
+            style="@style/Adyen.Checkout.Bacs.HolderNameInput"
             android:enabled="false"
             android:nextFocusDown="@id/editText_bankAccountNumber"
             android:nextFocusForward="@id/editText_bankAccountNumber"
@@ -31,13 +31,13 @@
 
     <com.google.android.material.textfield.TextInputLayout
         android:id="@+id/textInputLayout_bankAccountNumber"
-        style="@style/AdyenCheckout.TextInputLayout"
+        style="@style/Adyen.Checkout.TextInputLayout"
         android:layout_width="match_parent"
         android:layout_height="wrap_content">
 
         <com.adyen.checkout.components.ui.view.AdyenTextInputEditText
             android:id="@+id/editText_bankAccountNumber"
-            style="@style/AdyenCheckout.Bacs.AccountNumberInput"
+            style="@style/Adyen.Checkout.Bacs.AccountNumberInput"
             android:enabled="false"
             android:nextFocusDown="@id/editText_sortCode"
             android:nextFocusForward="@id/editText_sortCode"
@@ -47,13 +47,13 @@
 
     <com.google.android.material.textfield.TextInputLayout
         android:id="@+id/textInputLayout_sortCode"
-        style="@style/AdyenCheckout.TextInputLayout"
+        style="@style/Adyen.Checkout.TextInputLayout"
         android:layout_width="match_parent"
         android:layout_height="wrap_content">
 
         <com.adyen.checkout.components.ui.view.AdyenTextInputEditText
             android:id="@+id/editText_sortCode"
-            style="@style/AdyenCheckout.Bacs.SortCodeInput"
+            style="@style/Adyen.Checkout.Bacs.SortCodeInput"
             android:enabled="false"
             android:nextFocusDown="@id/editText_shopperEmail"
             android:nextFocusForward="@id/editText_shopperEmail"
@@ -63,13 +63,13 @@
 
     <com.google.android.material.textfield.TextInputLayout
         android:id="@+id/textInputLayout_shopperEmail"
-        style="@style/AdyenCheckout.TextInputLayout"
+        style="@style/Adyen.Checkout.TextInputLayout"
         android:layout_width="match_parent"
         android:layout_height="wrap_content">
 
         <com.adyen.checkout.components.ui.view.AdyenTextInputEditText
             android:id="@+id/editText_shopperEmail"
-            style="@style/AdyenCheckout.Bacs.ShopperEmailInput"
+            style="@style/Adyen.Checkout.Bacs.ShopperEmailInput"
             android:enabled="false"
             tools:ignore="RequiredSize"
             tools:text="example@mail.com" />
