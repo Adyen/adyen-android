@@ -7,7 +7,7 @@ internal object GooglePayParamUtils {
     fun mapBrandToGooglePayNetwork(brand: String): String? {
         return when {
             brand == "mc" -> AllowedCardNetworks.MASTERCARD
-            AllowedCardNetworks.getAllAllowedCardNetworks().contains(brand.uppercase()) -> brand.uppercase()
+            AllowedCardNetworks.allAllowedCardNetworks.contains(brand.uppercase()) -> brand.uppercase()
             else -> null
         }
     }
