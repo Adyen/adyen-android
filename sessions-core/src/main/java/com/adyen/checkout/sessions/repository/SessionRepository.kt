@@ -18,16 +18,19 @@ import com.adyen.checkout.core.exception.CheckoutException
 import com.adyen.checkout.core.log.LogUtil
 import com.adyen.checkout.core.log.Logger
 import com.adyen.checkout.sessions.api.SessionBalanceConnection
+import com.adyen.checkout.sessions.api.SessionCreateOrderConnection
 import com.adyen.checkout.sessions.api.SessionDetailsConnection
 import com.adyen.checkout.sessions.api.SessionPaymentsConnection
 import com.adyen.checkout.sessions.api.SessionSetupConnection
 import com.adyen.checkout.sessions.model.Session
 import com.adyen.checkout.sessions.model.request.SessionBalanceRequest
 import com.adyen.checkout.sessions.model.request.SessionDetailsRequest
+import com.adyen.checkout.sessions.model.request.SessionOrderRequest
 import com.adyen.checkout.sessions.model.request.SessionPaymentsRequest
 import com.adyen.checkout.sessions.model.request.SessionSetupRequest
 import com.adyen.checkout.sessions.model.response.SessionBalanceResponse
 import com.adyen.checkout.sessions.model.response.SessionDetailsResponse
+import com.adyen.checkout.sessions.model.response.SessionOrderResponse
 import com.adyen.checkout.sessions.model.response.SessionPaymentsResponse
 import com.adyen.checkout.sessions.model.response.SessionSetupResponse
 import java.io.IOException
@@ -128,6 +131,28 @@ class SessionRepository {
         } catch (e: JSONException) {
             Logger.e(TAG, "SessionBalanceConnection unexpected result", e)
             throw CheckoutException("Unable to fetch balance")
+        }
+    }
+
+    suspend fun createOrder(
+        configuration: Configuration,
+        session: Session
+    ): SessionOrderResponse {
+        Logger.d(TAG, "Creating order")
+        try {
+            val request = SessionOrderRequest(session.sessionData.orEmpty())
+            return SessionCreateOrderConnection(
+                request = request,
+                environment = configuration.environment,
+                sessionId = session.id,
+                clientKey = configuration.clientKey
+            ).suspendedCall()
+        } catch (e: IOException) {
+            Logger.e(TAG, "SessionCreateOrderConnection Failed", e)
+            throw CheckoutException("Unable to create order")
+        } catch (e: JSONException) {
+            Logger.e(TAG, "SessionCreateOrderConnection unexpected result", e)
+            throw CheckoutException("Unable to create order")
         }
     }
 }
