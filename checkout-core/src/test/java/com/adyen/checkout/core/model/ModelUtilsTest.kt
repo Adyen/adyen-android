@@ -5,88 +5,80 @@
  *
  * Created by caiof on 18/4/2019.
  */
+package com.adyen.checkout.core.model
 
-package com.adyen.checkout.core.model;
+import com.adyen.checkout.core.mock.MockModelObject
+import com.adyen.checkout.core.model.ModelUtils.deserializeModel
+import com.adyen.checkout.core.model.ModelUtils.deserializeOpt
+import com.adyen.checkout.core.model.ModelUtils.deserializeOptList
+import com.adyen.checkout.core.model.ModelUtils.serializeOpt
+import com.adyen.checkout.core.model.ModelUtils.serializeOptList
+import org.json.JSONArray
+import org.json.JSONObject
+import org.junit.Assert
+import org.junit.Test
 
-import static org.junit.Assert.assertNotNull;
-
-import com.adyen.checkout.core.mock.MockModelObject;
-
-import org.json.JSONArray;
-import org.json.JSONObject;
-import org.junit.Assert;
-import org.junit.Test;
-
-import java.util.ArrayList;
-import java.util.List;
-
-public class ModelUtilsTest {
-
+class ModelUtilsTest {
     @Test
-    public void parseModel_Pass_ParseMockedModelByClass() {
-        JSONObject jsonObject = new JSONObject();
+    fun parseModel_Pass_ParseMockedModelByClass() {
+        val jsonObject = JSONObject()
 
         // Verify is deserializeModel is able to get the Serializer by the class
-        MockModelObject parsedResult =  ModelUtils.deserializeModel(jsonObject, MockModelObject.class);
-        assertNotNull(parsedResult);
+        val parsedResult = deserializeModel(jsonObject, MockModelObject::class.java)
+        Assert.assertNotNull(parsedResult)
     }
 
     @Test
-    public void parseOpt_Pass_ParseMockedModel() {
-        JSONObject jsonObject = new JSONObject();
-        MockModelObject parsedResult =  ModelUtils.deserializeOpt(jsonObject, MockModelObject.SERIALIZER);
-        Assert.assertNotNull(parsedResult);
-    }
-
-    @SuppressWarnings("ConstantConditions")
-    @Test
-    public void parseOpt_Pass_ParseNull() {
-        MockModelObject parsedResult =  ModelUtils.deserializeOpt(null, MockModelObject.SERIALIZER);
-        Assert.assertNull(parsedResult);
+    fun parseOpt_Pass_ParseMockedModel() {
+        val jsonObject = JSONObject()
+        val parsedResult = deserializeOpt(jsonObject, MockModelObject.SERIALIZER)
+        Assert.assertNotNull(parsedResult)
     }
 
     @Test
-    public void parseOptList_Pass_ParseMockedModel() {
-        JSONArray jsonArray = new JSONArray();
-        List<MockModelObject> modelList =  ModelUtils.deserializeOptList(jsonArray, MockModelObject.SERIALIZER);
-        Assert.assertNotNull(modelList);
-    }
-
-    @SuppressWarnings("ConstantConditions")
-    @Test
-    public void parseOptList_Pass_ParseNull() {
-        List<MockModelObject> modelList =  ModelUtils.deserializeOptList(null, MockModelObject.SERIALIZER);
-        Assert.assertNull(modelList);
+    fun parseOpt_Pass_ParseNull() {
+        val parsedResult = deserializeOpt(null, MockModelObject.SERIALIZER)
+        Assert.assertNull(parsedResult)
     }
 
     @Test
-    public void serializeOpt_Pass_SerializeMockedModel() {
-        MockModelObject mockModelObject = new MockModelObject();
-        JSONObject jsonObject =  ModelUtils.serializeOpt(mockModelObject, MockModelObject.SERIALIZER);
-        Assert.assertNotNull(jsonObject);
-    }
-
-    @SuppressWarnings("ConstantConditions")
-    @Test
-    public void serializeOpt_Pass_SerializeNull() {
-        JSONObject jsonObject =  ModelUtils.serializeOpt(null, MockModelObject.SERIALIZER);
-        Assert.assertNull(jsonObject);
+    fun parseOptList_Pass_ParseMockedModel() {
+        val jsonArray = JSONArray()
+        val modelList = deserializeOptList(jsonArray, MockModelObject.SERIALIZER)
+        Assert.assertNotNull(modelList)
     }
 
     @Test
-    public void serializeOptList_Pass_SerializeMockedModelList() {
-        List<MockModelObject> modelObjectList = new ArrayList<>();
-        modelObjectList.add(new MockModelObject());
-
-        JSONArray jsonArray = ModelUtils.serializeOptList(modelObjectList, MockModelObject.SERIALIZER);
-        Assert.assertNotNull(jsonArray);
-        Assert.assertTrue(!jsonArray.isNull(0));
+    fun parseOptList_Pass_ParseNull() {
+        val modelList = deserializeOptList(null, MockModelObject.SERIALIZER)
+        Assert.assertNull(modelList)
     }
 
-    @SuppressWarnings("ConstantConditions")
     @Test
-    public void serializeOptList_Pass_SerializeNull() {
-        JSONArray jsonArray = ModelUtils.serializeOptList(null, MockModelObject.SERIALIZER);
-        Assert.assertNull(jsonArray);
+    fun serializeOpt_Pass_SerializeMockedModel() {
+        val mockModelObject = MockModelObject()
+        val jsonObject = serializeOpt(mockModelObject, MockModelObject.SERIALIZER)
+        Assert.assertNotNull(jsonObject)
+    }
+
+    @Test
+    fun serializeOpt_Pass_SerializeNull() {
+        val jsonObject = serializeOpt(null, MockModelObject.SERIALIZER)
+        Assert.assertNull(jsonObject)
+    }
+
+    @Test
+    fun serializeOptList_Pass_SerializeMockedModelList() {
+        val modelObjectList: MutableList<MockModelObject> = ArrayList()
+        modelObjectList.add(MockModelObject())
+        val jsonArray = serializeOptList(modelObjectList, MockModelObject.SERIALIZER)
+        Assert.assertNotNull(jsonArray)
+        Assert.assertTrue(!jsonArray!!.isNull(0))
+    }
+
+    @Test
+    fun serializeOptList_Pass_SerializeNull() {
+        val jsonArray = serializeOptList(null, MockModelObject.SERIALIZER)
+        Assert.assertNull(jsonArray)
     }
 }

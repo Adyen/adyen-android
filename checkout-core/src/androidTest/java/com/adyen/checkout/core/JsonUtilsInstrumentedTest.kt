@@ -5,97 +5,91 @@
  *
  * Created by caiof on 18/4/2019.
  */
+package com.adyen.checkout.core
 
-package com.adyen.checkout.core;
+import android.os.Parcel
+import androidx.test.ext.junit.runners.AndroidJUnit4
+import com.adyen.checkout.core.model.JsonUtils.readFromParcel
+import com.adyen.checkout.core.model.JsonUtils.writeToParcel
+import org.json.JSONException
+import org.json.JSONObject
+import org.junit.Assert
+import org.junit.Test
+import org.junit.runner.RunWith
 
-import android.os.Parcel;
-
-import androidx.test.ext.junit.runners.AndroidJUnit4;
-
-import com.adyen.checkout.core.model.JsonUtils;
-
-import org.json.JSONException;
-import org.json.JSONObject;
-import org.junit.Assert;
-import org.junit.Test;
-import org.junit.runner.RunWith;
-
-@RunWith(AndroidJUnit4.class)
-public class JsonUtilsInstrumentedTest {
-
-    // These should match the same values from the class, don't want to expose the variables
-    public static final int FLAG_NULL = 0;
-    public static final int FLAG_NON_NULL = FLAG_NULL + 1;
-
+@RunWith(AndroidJUnit4::class)
+class JsonUtilsInstrumentedTest {
     @Test
-    public void writeToParcel_Pass_WriteJson() throws JSONException {
-        Parcel parcel = Parcel.obtain();
-        JSONObject jsonObject = new JSONObject();
-
-        JsonUtils.writeToParcel(parcel, jsonObject);
+    @Throws(JSONException::class)
+    fun writeToParcel_Pass_WriteJson() {
+        val parcel = Parcel.obtain()
+        val jsonObject = JSONObject()
+        writeToParcel(parcel, jsonObject)
 
         // Reset parcel for reading
-        parcel.setDataPosition(0);
+        parcel.setDataPosition(0)
 
         // Assert the nullness flag
-        int nullness = parcel.readInt();
-        Assert.assertEquals(nullness, FLAG_NON_NULL);
+        val nullness = parcel.readInt()
+        Assert.assertEquals(nullness.toLong(), FLAG_NON_NULL.toLong())
 
         // Assert the String result
-        String resultJsonString = parcel.readString();
-        Assert.assertNotNull(resultJsonString);
-        Assert.assertTrue(!resultJsonString.isEmpty());
+        val resultJsonString = parcel.readString()
+        Assert.assertNotNull(resultJsonString)
+        Assert.assertTrue(!resultJsonString!!.isEmpty())
 
         // Assert the Json can be parsed back to JSONObject
-        JSONObject resultJsonObject = new JSONObject(resultJsonString);
-        Assert.assertEquals(jsonObject.toString(), resultJsonObject.toString());
-
+        val resultJsonObject = JSONObject(resultJsonString)
+        Assert.assertEquals(jsonObject.toString(), resultJsonObject.toString())
     }
 
     @Test
-    public void writeToParcel_Pass_WriteNull() {
-        Parcel parcel = Parcel.obtain();
-
-        JsonUtils.writeToParcel(parcel, null);
+    fun writeToParcel_Pass_WriteNull() {
+        val parcel = Parcel.obtain()
+        writeToParcel(parcel, null)
 
         // Reset parcel for reading
-        parcel.setDataPosition(0);
+        parcel.setDataPosition(0)
 
         // Assert the nullness flag
-        int nullness = parcel.readInt();
-        Assert.assertEquals(nullness, FLAG_NULL);
+        val nullness = parcel.readInt()
+        Assert.assertEquals(nullness.toLong(), FLAG_NULL.toLong())
     }
 
     @Test
-    public void readFromParcel_Pass_ReadJson() throws JSONException {
-
-        Parcel parcel = Parcel.obtain();
-        JSONObject jsonObject = new JSONObject();
+    @Throws(JSONException::class)
+    fun readFromParcel_Pass_ReadJson() {
+        val parcel = Parcel.obtain()
+        val jsonObject = JSONObject()
 
         // Write JSON to parcel
-        parcel.writeInt(FLAG_NON_NULL);
-        parcel.writeString(jsonObject.toString());
+        parcel.writeInt(FLAG_NON_NULL)
+        parcel.writeString(jsonObject.toString())
 
         // Reset parcel for reading
-        parcel.setDataPosition(0);
-
-        JSONObject resultJsonObject = JsonUtils.readFromParcel(parcel);
-
-        Assert.assertNotNull(resultJsonObject);
-        Assert.assertEquals(jsonObject.toString(), resultJsonObject.toString());
+        parcel.setDataPosition(0)
+        val resultJsonObject = readFromParcel(parcel)
+        Assert.assertNotNull(resultJsonObject)
+        Assert.assertEquals(jsonObject.toString(), resultJsonObject.toString())
     }
 
     @Test
-    public void readFromParcel_Pass_ReadNull() throws JSONException {
-        Parcel parcel = Parcel.obtain();
+    @Throws(JSONException::class)
+    fun readFromParcel_Pass_ReadNull() {
+        val parcel = Parcel.obtain()
 
         // Write JSON to parcel
-        parcel.writeInt(FLAG_NULL);
+        parcel.writeInt(FLAG_NULL)
 
         // Reset parcel for reading
-        parcel.setDataPosition(0);
+        parcel.setDataPosition(0)
+        val resultJsonObject = readFromParcel(parcel)
+        Assert.assertNull(resultJsonObject)
+    }
 
-        JSONObject resultJsonObject = JsonUtils.readFromParcel(parcel);
-        Assert.assertNull(resultJsonObject);
+    companion object {
+        // These should match the same values from the class, don't want to expose the variables
+        const val FLAG_NULL = 0
+        const val FLAG_NON_NULL = FLAG_NULL + 1
     }
 }

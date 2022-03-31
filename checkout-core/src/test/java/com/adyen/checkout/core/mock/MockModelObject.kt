@@ -5,37 +5,27 @@
  *
  * Created by caiof on 18/4/2019.
  */
+package com.adyen.checkout.core.mock
 
-package com.adyen.checkout.core.mock;
+import android.os.Parcel
+import com.adyen.checkout.core.model.ModelObject
+import org.json.JSONObject
 
-import android.os.Parcel;
-
-import androidx.annotation.NonNull;
-
-import com.adyen.checkout.core.model.ModelObject;
-
-import org.json.JSONObject;
-
-public class MockModelObject extends ModelObject {
-
-    @NonNull
-    public static final Serializer<MockModelObject> SERIALIZER = new Serializer<MockModelObject>() {
-
-        @NonNull
-        @Override
-        public JSONObject serialize(@NonNull MockModelObject modelObject) {
-            return new JSONObject();
-        }
-
-        @NonNull
-        @Override
-        public MockModelObject deserialize(@NonNull JSONObject jsonObject) {
-            return new MockModelObject();
-        }
-    };
-
-    @Override
-    public void writeToParcel(Parcel dest, int flags) {
+class MockModelObject : ModelObject() {
+    override fun writeToParcel(dest: Parcel, flags: Int) {
         // empty
+    }
+
+    companion object {
+        @JvmField
+        val SERIALIZER: Serializer<MockModelObject> = object : Serializer<MockModelObject> {
+            override fun serialize(modelObject: MockModelObject): JSONObject {
+                return JSONObject()
+            }
+
+            override fun deserialize(jsonObject: JSONObject): MockModelObject {
+                return MockModelObject()
+            }
+        }
     }
 }

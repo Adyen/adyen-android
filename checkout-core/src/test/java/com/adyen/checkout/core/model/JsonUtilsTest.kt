@@ -5,47 +5,36 @@
  *
  * Created by caiof on 18/4/2019.
  */
+package com.adyen.checkout.core.model
 
-package com.adyen.checkout.core.model;
+import com.adyen.checkout.core.model.JsonUtils.parseOptStringList
+import org.json.JSONArray
+import org.junit.Assert
+import org.junit.Test
 
-import org.json.JSONArray;
-import org.junit.Assert;
-import org.junit.Test;
-
-import java.util.List;
-
-public class JsonUtilsTest {
-
+class JsonUtilsTest {
     @Test
-    public void parseOptStringList_Pass_ParseStringArray() {
-
-        JSONArray jsonArray = new JSONArray();
-        String testString = "Test";
-        jsonArray.put(testString);
-
-        List<String> stringList = JsonUtils.parseOptStringList(jsonArray);
-
-        Assert.assertNotNull(stringList);
-        String first = stringList.get(0);
-
-        Assert.assertEquals(testString, first);
+    fun parseOptStringList_Pass_ParseStringArray() {
+        val jsonArray = JSONArray()
+        val testString = "Test"
+        jsonArray.put(testString)
+        val stringList = parseOptStringList(jsonArray)
+        Assert.assertNotNull(stringList)
+        val first = stringList!![0]
+        Assert.assertEquals(testString, first)
     }
 
     @Test
-    public void parseOptStringList_Pass_ParseEmptyArray() {
-        JSONArray jsonArray = new JSONArray();
-
-        List<String> stringList = JsonUtils.parseOptStringList(jsonArray);
-
-        Assert.assertNotNull(stringList);
-        Assert.assertTrue(stringList.isEmpty());
+    fun parseOptStringList_Pass_ParseEmptyArray() {
+        val jsonArray = JSONArray()
+        val stringList = parseOptStringList(jsonArray)
+        Assert.assertNotNull(stringList)
+        Assert.assertTrue(stringList!!.isEmpty())
     }
 
-    @SuppressWarnings("ConstantConditions")
     @Test
-    public void parseOptStringList_Pass_ParseNull() {
-        List<String> stringList = JsonUtils.parseOptStringList(null);
-        Assert.assertNull(stringList);
+    fun parseOptStringList_Pass_ParseNull() {
+        val stringList = parseOptStringList(null)
+        Assert.assertNull(stringList)
     }
-
 }
