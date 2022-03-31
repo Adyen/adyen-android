@@ -28,6 +28,7 @@ abstract class IssuerListComponent<IssuerListPaymentMethodT : IssuerListPaymentM
     configuration
 ) {
     val issuersLiveData = MutableLiveData<List<IssuerModel>>()
+
     private fun initComponent(paymentMethod: PaymentMethod) {
         val issuersList = paymentMethod.issuers
         if (issuersList != null) {

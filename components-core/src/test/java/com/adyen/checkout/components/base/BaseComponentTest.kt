@@ -72,8 +72,7 @@ class BaseComponentTest {
                 return TestComponentState()
             }
 
-            override val supportedPaymentMethodTypes: Array<String>
-                get() = arrayOf("something")
+            override fun getSupportedPaymentMethodTypes() = arrayOf("something")
         }
     }
 
@@ -112,8 +111,7 @@ class BaseComponentTest {
                 return PaymentComponentState(paymentComponentData, isInputValid = true, isReady = true)
             }
 
-            override val supportedPaymentMethodTypes: Array<String>
-                get() = arrayOf("")
+            override fun getSupportedPaymentMethodTypes() = arrayOf("")
         }
 
     companion object {

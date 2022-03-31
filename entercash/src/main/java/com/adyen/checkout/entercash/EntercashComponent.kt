@@ -28,12 +28,13 @@ class EntercashComponent(
         return EntercashPaymentMethod()
     }
 
-    override val supportedPaymentMethodTypes: Array<String> = arrayOf(PaymentMethodTypes.ENTERCASH)
+    override fun getSupportedPaymentMethodTypes(): Array<String> = PAYMENT_METHOD_TYPES
 
     companion object {
         @JvmField
         val PROVIDER: PaymentComponentProvider<EntercashComponent, EntercashConfiguration> = GenericPaymentComponentProvider(
             EntercashComponent::class.java
         )
+        val PAYMENT_METHOD_TYPES = arrayOf(PaymentMethodTypes.ENTERCASH)
     }
 }

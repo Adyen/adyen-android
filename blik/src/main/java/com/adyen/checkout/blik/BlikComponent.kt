@@ -32,7 +32,7 @@ class BlikComponent : BasePaymentComponent<BlikConfiguration, BlikInputData, Bli
         paymentDelegate: GenericStoredPaymentDelegate,
         configuration: BlikConfiguration
     ) : super(savedStateHandle, paymentDelegate, configuration) {
-        // TODO: 09/12/2020 move this logic to base component, maybe create the inputdata from the delegate?
+        // TODO: 09/12/2020 move this logic to base component, maybe create the InputData from the delegate?
         inputDataChanged(BlikInputData())
     }
 
@@ -45,8 +45,7 @@ class BlikComponent : BasePaymentComponent<BlikConfiguration, BlikInputData, Bli
         return BlikOutputData(inputData.blikCode)
     }
 
-    override val supportedPaymentMethodTypes: Array<String>
-        get() = arrayOf(PaymentMethodTypes.BLIK)
+    override fun getSupportedPaymentMethodTypes(): Array<String> = PAYMENT_METHOD_TYPES
 
     override fun createComponentState(): PaymentComponentState<BlikPaymentMethod> {
         val blikOutputData = outputData
@@ -74,5 +73,6 @@ class BlikComponent : BasePaymentComponent<BlikConfiguration, BlikInputData, Bli
         @JvmField
         val PROVIDER: StoredPaymentComponentProvider<BlikComponent, BlikConfiguration> =
             GenericStoredPaymentComponentProvider(BlikComponent::class.java)
+        val PAYMENT_METHOD_TYPES = arrayOf(PaymentMethodTypes.BLIK)
     }
 }

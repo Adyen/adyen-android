@@ -40,8 +40,7 @@ class MBWayComponent(
     BasePaymentComponent<MBWayConfiguration, MBWayInputData, MBWayOutputData,
         PaymentComponentState<MBWayPaymentMethod>>(savedStateHandle, paymentMethodDelegate, configuration) {
 
-    override val supportedPaymentMethodTypes: Array<String>
-        get() = PAYMENT_METHOD_TYPES
+    override fun getSupportedPaymentMethodTypes(): Array<String> = PAYMENT_METHOD_TYPES
 
     companion object {
         @JvmStatic

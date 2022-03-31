@@ -23,7 +23,7 @@ interface PaymentComponent<ComponentStateT : PaymentComponentState<out PaymentMe
     /**
      * @return An array of the supported [com.adyen.checkout.components.util.PaymentMethodTypes]
      */
-    val supportedPaymentMethodTypes: Array<String>
+    fun getSupportedPaymentMethodTypes(): Array<String>
 
     /**
      * @return The last [PaymentComponentState] of this Component.

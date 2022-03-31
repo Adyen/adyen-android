@@ -48,18 +48,6 @@ class BcmcComponent(
 ) : BasePaymentComponent<BcmcConfiguration, BcmcInputData, BcmcOutputData,
     PaymentComponentState<CardPaymentMethod>>(savedStateHandle, paymentMethodDelegate, configuration) {
 
-    companion object {
-        private val TAG = LogUtil.getTag()
-
-        private val PAYMENT_METHOD_TYPES = arrayOf(PaymentMethodTypes.BCMC)
-
-        @JvmField
-        val PROVIDER: PaymentComponentProvider<BcmcComponent, BcmcConfiguration> = BcmcComponentProvider()
-
-        @JvmField
-        val SUPPORTED_CARD_TYPE = CardType.BCMC
-    }
-
     private var publicKey: String? = null
 
     init {
@@ -73,8 +61,7 @@ class BcmcComponent(
         }
     }
 
-    override val supportedPaymentMethodTypes: Array<String>
-        get() = PAYMENT_METHOD_TYPES
+    override fun getSupportedPaymentMethodTypes(): Array<String> = PAYMENT_METHOD_TYPES
 
     private suspend fun fetchPublicKey(): String {
         return publicKeyRepository.fetchPublicKey(
@@ -118,7 +105,7 @@ class BcmcComponent(
             CardEncrypter.encryptFields(unencryptedCardBuilder.build(), publicKey)
         } catch (e: EncryptionException) {
             notifyException(e)
-            return PaymentComponentState(paymentComponentData, false, true)
+            return PaymentComponentState(paymentComponentData, isInputValid = false, isReady = true)
         }
 
         // BCMC payment method is scheme type.
@@ -138,7 +125,7 @@ class BcmcComponent(
         paymentComponentData.paymentMethod = cardPaymentMethod
         paymentComponentData.storePaymentMethod = outputData.isStoredPaymentMethodEnabled
         paymentComponentData.shopperReference = configuration.shopperReference
-        return PaymentComponentState(paymentComponentData, true, true)
+        return PaymentComponentState(paymentComponentData, isInputValid = true, isReady = true)
     }
 
     fun isCardNumberSupported(cardNumber: String?): Boolean {
@@ -153,5 +140,17 @@ class BcmcComponent(
 
     private fun validateExpiryDate(expiryDate: ExpiryDate): FieldState<ExpiryDate> {
         return CardValidationUtils.validateExpiryDate(expiryDate, Brand.FieldPolicy.REQUIRED)
+    }
+
+    companion object {
+        private val TAG = LogUtil.getTag()
+
+        private val PAYMENT_METHOD_TYPES = arrayOf(PaymentMethodTypes.BCMC)
+
+        @JvmField
+        val PROVIDER: PaymentComponentProvider<BcmcComponent, BcmcConfiguration> = BcmcComponentProvider()
+
+        @JvmField
+        val SUPPORTED_CARD_TYPE = CardType.BCMC
     }
 }

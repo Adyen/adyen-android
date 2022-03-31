@@ -24,7 +24,7 @@ class EPSComponent(
     configuration: EPSConfiguration
 ) : IssuerListComponent<EPSPaymentMethod>(savedStateHandle, paymentMethodDelegate, configuration) {
 
-    override val supportedPaymentMethodTypes: Array<String> = arrayOf(PaymentMethodTypes.EPS)
+    override fun getSupportedPaymentMethodTypes(): Array<String> = PAYMENT_METHOD_TYPES
 
     override fun instantiateTypedPaymentMethod(): EPSPaymentMethod {
         return EPSPaymentMethod()
@@ -34,5 +34,6 @@ class EPSComponent(
         val PROVIDER: PaymentComponentProvider<EPSComponent, EPSConfiguration> = GenericPaymentComponentProvider(
             EPSComponent::class.java
         )
+        val PAYMENT_METHOD_TYPES = arrayOf(PaymentMethodTypes.EPS)
     }
 }

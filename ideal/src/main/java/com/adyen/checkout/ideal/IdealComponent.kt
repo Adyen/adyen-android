@@ -24,13 +24,14 @@ class IdealComponent(
     configuration: IdealConfiguration
 ) : IssuerListComponent<IdealPaymentMethod>(savedStateHandle, paymentMethodDelegate, configuration) {
 
-    override val supportedPaymentMethodTypes: Array<String> = arrayOf(PaymentMethodTypes.IDEAL)
+    override fun getSupportedPaymentMethodTypes(): Array<String> = PAYMENT_METHOD_TYPES
 
     override fun instantiateTypedPaymentMethod(): IdealPaymentMethod {
         return IdealPaymentMethod()
     }
 
     companion object {
+        val PAYMENT_METHOD_TYPES = arrayOf(PaymentMethodTypes.IDEAL)
         val PROVIDER: PaymentComponentProvider<IdealComponent, IdealConfiguration> = GenericPaymentComponentProvider(
             IdealComponent::class.java
         )

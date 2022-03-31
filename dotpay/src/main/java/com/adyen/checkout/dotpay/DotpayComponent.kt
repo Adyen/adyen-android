@@ -28,10 +28,11 @@ class DotpayComponent(
         return DotpayPaymentMethod()
     }
 
-    override val supportedPaymentMethodTypes: Array<String> = arrayOf(PaymentMethodTypes.DOTPAY)
+    override fun getSupportedPaymentMethodTypes(): Array<String> = PAYMENT_METHOD_TYPES
 
     companion object {
         @JvmField
         val PROVIDER: PaymentComponentProvider<DotpayComponent, DotpayConfiguration> = GenericPaymentComponentProvider(DotpayComponent::class.java)
+        val PAYMENT_METHOD_TYPES = arrayOf(PaymentMethodTypes.DOTPAY)
     }
 }

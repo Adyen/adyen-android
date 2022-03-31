@@ -193,7 +193,7 @@ abstract class BasePaymentComponent<
     }
 
     private fun isSupported(paymentMethodType: String): Boolean {
-        for (supportedType in supportedPaymentMethodTypes) {
+        for (supportedType in getSupportedPaymentMethodTypes()) {
             if (supportedType == paymentMethodType) {
                 return true
             }
