@@ -8,6 +8,7 @@
 
 package com.adyen.checkout.sessions.repository
 
+import com.adyen.checkout.components.ActionComponentData
 import com.adyen.checkout.components.api.suspendedCall
 import com.adyen.checkout.components.base.Configuration
 import com.adyen.checkout.components.model.payments.request.OrderRequest
@@ -16,11 +17,14 @@ import com.adyen.checkout.components.model.payments.request.PaymentMethodDetails
 import com.adyen.checkout.core.exception.CheckoutException
 import com.adyen.checkout.core.log.LogUtil
 import com.adyen.checkout.core.log.Logger
+import com.adyen.checkout.sessions.api.SessionDetailsConnection
 import com.adyen.checkout.sessions.api.SessionPaymentsConnection
 import com.adyen.checkout.sessions.api.SessionSetupConnection
 import com.adyen.checkout.sessions.model.Session
+import com.adyen.checkout.sessions.model.request.SessionDetailsRequest
 import com.adyen.checkout.sessions.model.request.SessionPaymentsRequest
 import com.adyen.checkout.sessions.model.request.SessionSetupRequest
+import com.adyen.checkout.sessions.model.response.SessionDetailsResponse
 import com.adyen.checkout.sessions.model.response.SessionPaymentsResponse
 import com.adyen.checkout.sessions.model.response.SessionSetupResponse
 import java.io.IOException
@@ -75,6 +79,29 @@ class SessionRepository {
         } catch (e: JSONException) {
             Logger.e(TAG, "SessionPaymentsConnection unexpected result", e)
             throw CheckoutException("Unable to submit payment")
+        }
+    }
+
+    suspend fun submitDetails(
+        configuration: Configuration,
+        session: Session,
+        actionComponentData: ActionComponentData
+    ): SessionDetailsResponse {
+        Logger.d(TAG, "Submitting details")
+        try {
+            val request = SessionDetailsRequest(session.sessionData.orEmpty(), actionComponentData.paymentData, actionComponentData.details)
+            return SessionDetailsConnection(
+                request = request,
+                environment = configuration.environment,
+                sessionId = session.id,
+                clientKey = configuration.clientKey
+            ).suspendedCall()
+        } catch (e: IOException) {
+            Logger.e(TAG, "SessionDetailsConnection Failed", e)
+            throw CheckoutException("Unable to submit details")
+        } catch (e: JSONException) {
+            Logger.e(TAG, "SessionDetailsConnection unexpected result", e)
+            throw CheckoutException("Unable to submit details")
         }
     }
 }
