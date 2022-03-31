@@ -17,13 +17,16 @@ import com.adyen.checkout.components.model.payments.request.PaymentMethodDetails
 import com.adyen.checkout.core.exception.CheckoutException
 import com.adyen.checkout.core.log.LogUtil
 import com.adyen.checkout.core.log.Logger
+import com.adyen.checkout.sessions.api.SessionBalanceConnection
 import com.adyen.checkout.sessions.api.SessionDetailsConnection
 import com.adyen.checkout.sessions.api.SessionPaymentsConnection
 import com.adyen.checkout.sessions.api.SessionSetupConnection
 import com.adyen.checkout.sessions.model.Session
+import com.adyen.checkout.sessions.model.request.SessionBalanceRequest
 import com.adyen.checkout.sessions.model.request.SessionDetailsRequest
 import com.adyen.checkout.sessions.model.request.SessionPaymentsRequest
 import com.adyen.checkout.sessions.model.request.SessionSetupRequest
+import com.adyen.checkout.sessions.model.response.SessionBalanceResponse
 import com.adyen.checkout.sessions.model.response.SessionDetailsResponse
 import com.adyen.checkout.sessions.model.response.SessionPaymentsResponse
 import com.adyen.checkout.sessions.model.response.SessionSetupResponse
@@ -102,6 +105,29 @@ class SessionRepository {
         } catch (e: JSONException) {
             Logger.e(TAG, "SessionDetailsConnection unexpected result", e)
             throw CheckoutException("Unable to submit details")
+        }
+    }
+
+    suspend fun checkBalance(
+        configuration: Configuration,
+        session: Session,
+        paymentMethodDetails: PaymentMethodDetails
+    ): SessionBalanceResponse {
+        Logger.d(TAG, "Checking payment method balance")
+        try {
+            val request = SessionBalanceRequest(session.sessionData.orEmpty(), paymentMethodDetails)
+            return SessionBalanceConnection(
+                request = request,
+                environment = configuration.environment,
+                sessionId = session.id,
+                clientKey = configuration.clientKey
+            ).suspendedCall()
+        } catch (e: IOException) {
+            Logger.e(TAG, "SessionBalanceConnection Failed", e)
+            throw CheckoutException("Unable to fetch balance")
+        } catch (e: JSONException) {
+            Logger.e(TAG, "SessionBalanceConnection unexpected result", e)
+            throw CheckoutException("Unable to fetch balance")
         }
     }
 }
