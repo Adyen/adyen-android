@@ -24,11 +24,7 @@ class MolpayComponent(
     configuration: MolpayConfiguration
 ) : IssuerListComponent<MolpayPaymentMethod>(savedStateHandle, paymentMethodDelegate, configuration) {
 
-    override val supportedPaymentMethodTypes: Array<String> = arrayOf(
-        PaymentMethodTypes.MOLPAY_THAILAND,
-        PaymentMethodTypes.MOLPAY_MALAYSIA,
-        PaymentMethodTypes.MOLPAY_VIETNAM
-    )
+    override fun getSupportedPaymentMethodTypes(): Array<String> = PAYMENT_METHOD_TYPES
 
     override fun instantiateTypedPaymentMethod(): MolpayPaymentMethod {
         return MolpayPaymentMethod()
@@ -37,6 +33,11 @@ class MolpayComponent(
     companion object {
         val PROVIDER: PaymentComponentProvider<MolpayComponent, MolpayConfiguration> = GenericPaymentComponentProvider(
             MolpayComponent::class.java
+        )
+        val PAYMENT_METHOD_TYPES = arrayOf(
+            PaymentMethodTypes.MOLPAY_THAILAND,
+            PaymentMethodTypes.MOLPAY_MALAYSIA,
+            PaymentMethodTypes.MOLPAY_VIETNAM
         )
     }
 }

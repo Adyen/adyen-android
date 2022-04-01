@@ -38,7 +38,7 @@ class GooglePayComponent(
     ),
     ActivityResultHandlingComponent {
 
-    override val supportedPaymentMethodTypes: Array<String> = PAYMENT_METHOD_TYPES
+    override fun getSupportedPaymentMethodTypes() = PAYMENT_METHOD_TYPES
 
     override fun onInputDataChanged(inputData: GooglePayInputData): GooglePayOutputData {
         return GooglePayOutputData(inputData.paymentData ?: throw CheckoutException("paymentData is null"))

@@ -29,7 +29,7 @@ class SepaComponent(
     configuration
 ) {
 
-    override val supportedPaymentMethodTypes: Array<String> = arrayOf(PaymentMethodTypes.SEPA)
+    override fun getSupportedPaymentMethodTypes(): Array<String> = PAYMENT_METHOD_TYPES
 
     override fun onInputDataChanged(inputData: SepaInputData): SepaOutputData {
         Logger.v(TAG, "onInputDataChanged")
@@ -54,5 +54,6 @@ class SepaComponent(
         val PROVIDER: PaymentComponentProvider<SepaComponent, SepaConfiguration> = GenericPaymentComponentProvider(
             SepaComponent::class.java
         )
+        val PAYMENT_METHOD_TYPES = arrayOf(PaymentMethodTypes.SEPA)
     }
 }

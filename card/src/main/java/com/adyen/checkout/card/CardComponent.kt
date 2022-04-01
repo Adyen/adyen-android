@@ -122,8 +122,7 @@ class CardComponent private constructor(
         cardConfiguration
     )
 
-    override val supportedPaymentMethodTypes: Array<String>
-        get() = PAYMENT_METHOD_TYPES
+    override fun getSupportedPaymentMethodTypes(): Array<String> = PAYMENT_METHOD_TYPES
 
     override fun requiresInput(): Boolean {
         return cardDelegate.requiresInput()

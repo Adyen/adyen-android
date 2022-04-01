@@ -46,8 +46,7 @@ class GiftCardComponent(
     configuration
 ) {
 
-    override val supportedPaymentMethodTypes: Array<String>
-        get() = PAYMENT_METHOD_TYPES
+    override fun getSupportedPaymentMethodTypes(): Array<String> = PAYMENT_METHOD_TYPES
 
     private var publicKey: String? = null
 

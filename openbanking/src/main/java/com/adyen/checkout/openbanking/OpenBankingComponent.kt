@@ -24,7 +24,7 @@ class OpenBankingComponent(
     configuration: OpenBankingConfiguration
 ) : IssuerListComponent<OpenBankingPaymentMethod>(savedStateHandle, paymentMethodDelegate, configuration) {
 
-    override val supportedPaymentMethodTypes: Array<String> = arrayOf(PaymentMethodTypes.OPEN_BANKING)
+    override fun getSupportedPaymentMethodTypes(): Array<String> = PAYMENT_METHOD_TYPES
 
     override fun instantiateTypedPaymentMethod(): OpenBankingPaymentMethod {
         return OpenBankingPaymentMethod()
@@ -35,5 +35,6 @@ class OpenBankingComponent(
         val PROVIDER: PaymentComponentProvider<OpenBankingComponent, OpenBankingConfiguration> = GenericPaymentComponentProvider(
             OpenBankingComponent::class.java
         )
+        val PAYMENT_METHOD_TYPES = arrayOf(PaymentMethodTypes.OPEN_BANKING)
     }
 }
