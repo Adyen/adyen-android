@@ -5,7 +5,7 @@
  *
  * Created by josephj on 17/3/2022.
  */
-package com.adyen.checkout.sessions.model.response
+package com.adyen.checkout.sessions.model.orders
 
 import android.os.Parcel
 import com.adyen.checkout.components.model.payments.Amount

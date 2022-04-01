@@ -6,11 +6,11 @@
  * Created by josephj on 17/3/2022.
  */
 
-package com.adyen.checkout.sessions.model.request
+package com.adyen.checkout.sessions.model.orders
 
 import android.os.Parcel
 import android.os.Parcelable
-import com.adyen.checkout.components.model.payments.request.OrderRequest
+import com.adyen.checkout.components.model.payments.request.PaymentMethodDetails
 import com.adyen.checkout.core.exception.ModelSerializationException
 import com.adyen.checkout.core.model.JsonUtils
 import com.adyen.checkout.core.model.ModelObject
@@ -18,9 +18,9 @@ import com.adyen.checkout.core.model.ModelUtils
 import org.json.JSONException
 import org.json.JSONObject
 
-data class SessionSetupRequest(
+data class SessionBalanceRequest(
     val sessionData: String,
-    val order: OrderRequest?
+    val paymentMethod: PaymentMethodDetails?
 ) : ModelObject() {
 
     override fun writeToParcel(parcel: Parcel, flags: Int) {
@@ -29,32 +29,32 @@ data class SessionSetupRequest(
 
     companion object {
         private const val SESSION_DATA = "sessionData"
-        private const val ORDER = "order"
+        private const val PAYMENT_METHOD = "paymentMethod"
 
         @JvmField
-        val CREATOR: Parcelable.Creator<SessionSetupRequest> = Creator(SessionSetupRequest::class.java)
+        val CREATOR: Parcelable.Creator<SessionBalanceRequest> = Creator(SessionBalanceRequest::class.java)
 
         @JvmStatic
-        val SERIALIZER: Serializer<SessionSetupRequest> = object : Serializer<SessionSetupRequest> {
-            override fun serialize(modelObject: SessionSetupRequest): JSONObject {
+        val SERIALIZER: Serializer<SessionBalanceRequest> = object : Serializer<SessionBalanceRequest> {
+            override fun serialize(modelObject: SessionBalanceRequest): JSONObject {
                 val jsonObject = JSONObject()
                 try {
                     jsonObject.putOpt(SESSION_DATA, modelObject.sessionData)
-                    jsonObject.putOpt(ORDER, ModelUtils.serializeOpt(modelObject.order, OrderRequest.SERIALIZER))
+                    jsonObject.putOpt(PAYMENT_METHOD, ModelUtils.serializeOpt(modelObject.paymentMethod, PaymentMethodDetails.SERIALIZER))
                 } catch (e: JSONException) {
-                    throw ModelSerializationException(SessionSetupRequest::class.java, e)
+                    throw ModelSerializationException(SessionBalanceRequest::class.java, e)
                 }
                 return jsonObject
             }
 
-            override fun deserialize(jsonObject: JSONObject): SessionSetupRequest {
+            override fun deserialize(jsonObject: JSONObject): SessionBalanceRequest {
                 return try {
-                    SessionSetupRequest(
+                    SessionBalanceRequest(
                         sessionData = jsonObject.optString(SESSION_DATA),
-                        order = ModelUtils.deserializeOpt(jsonObject.optJSONObject(ORDER), OrderRequest.SERIALIZER)
+                        paymentMethod = ModelUtils.deserializeOpt(jsonObject.optJSONObject(PAYMENT_METHOD), PaymentMethodDetails.SERIALIZER)
                     )
                 } catch (e: JSONException) {
-                    throw ModelSerializationException(SessionSetupRequest::class.java, e)
+                    throw ModelSerializationException(SessionBalanceRequest::class.java, e)
                 }
             }
         }

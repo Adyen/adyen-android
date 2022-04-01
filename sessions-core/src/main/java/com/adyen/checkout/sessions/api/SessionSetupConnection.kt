@@ -13,8 +13,8 @@ import com.adyen.checkout.core.api.Environment
 import com.adyen.checkout.core.log.LogUtil
 import com.adyen.checkout.core.log.Logger
 import com.adyen.checkout.core.model.toStringPretty
-import com.adyen.checkout.sessions.model.request.SessionSetupRequest
-import com.adyen.checkout.sessions.model.response.SessionSetupResponse
+import com.adyen.checkout.sessions.model.setup.SessionSetupRequest
+import com.adyen.checkout.sessions.model.setup.SessionSetupResponse
 import java.io.IOException
 import org.json.JSONException
 import org.json.JSONObject

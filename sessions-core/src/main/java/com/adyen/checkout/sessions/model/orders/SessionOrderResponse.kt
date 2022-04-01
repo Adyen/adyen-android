@@ -3,9 +3,9 @@
  *
  * This file is open source and available under the MIT license. See the LICENSE file for more info.
  *
- * Created by josephj on 18/3/2022.
+ * Created by josephj on 17/3/2022.
  */
-package com.adyen.checkout.sessions.model.response
+package com.adyen.checkout.sessions.model.orders
 
 import android.os.Parcel
 import com.adyen.checkout.core.exception.ModelSerializationException
@@ -14,9 +14,10 @@ import com.adyen.checkout.core.model.ModelObject
 import org.json.JSONException
 import org.json.JSONObject
 
-data class SessionCancelOrderResponse(
+data class SessionOrderResponse(
     val sessionData: String,
-    val status: String?
+    val orderData: String,
+    val pspReference: String
 ) : ModelObject() {
 
     override fun writeToParcel(dest: Parcel, flags: Int) {
@@ -25,28 +26,31 @@ data class SessionCancelOrderResponse(
 
     companion object {
         private const val SESSION_DATA = "sessionData"
-        private const val STATUS = "status"
+        private const val ORDER_DATA = "orderData"
+        private const val PSP_REFERENCE = "pspReference"
 
         @JvmField
-        val CREATOR = Creator(SessionCancelOrderResponse::class.java)
+        val CREATOR = Creator(SessionOrderResponse::class.java)
 
         @JvmField
-        val SERIALIZER: Serializer<SessionCancelOrderResponse> = object : Serializer<SessionCancelOrderResponse> {
-            override fun serialize(modelObject: SessionCancelOrderResponse): JSONObject {
+        val SERIALIZER: Serializer<SessionOrderResponse> = object : Serializer<SessionOrderResponse> {
+            override fun serialize(modelObject: SessionOrderResponse): JSONObject {
                 return JSONObject().apply {
                     try {
                         putOpt(SESSION_DATA, modelObject.sessionData)
-                        putOpt(STATUS, modelObject.status)
+                        putOpt(ORDER_DATA, modelObject.orderData)
+                        putOpt(PSP_REFERENCE, modelObject.pspReference)
                     } catch (e: JSONException) {
-                        throw ModelSerializationException(SessionCancelOrderResponse::class.java, e)
+                        throw ModelSerializationException(SessionOrderResponse::class.java, e)
                     }
                 }
             }
 
-            override fun deserialize(jsonObject: JSONObject): SessionCancelOrderResponse {
-                return SessionCancelOrderResponse(
+            override fun deserialize(jsonObject: JSONObject): SessionOrderResponse {
+                return SessionOrderResponse(
                     sessionData = jsonObject.optString(SESSION_DATA),
-                    status = jsonObject.optString(STATUS)
+                    orderData = jsonObject.optString(ORDER_DATA),
+                    pspReference = jsonObject.optString(PSP_REFERENCE)
                 )
             }
         }

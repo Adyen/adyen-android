@@ -13,8 +13,8 @@ import com.adyen.checkout.core.api.Environment
 import com.adyen.checkout.core.log.LogUtil
 import com.adyen.checkout.core.log.Logger
 import com.adyen.checkout.core.model.toStringPretty
-import com.adyen.checkout.sessions.model.request.SessionPaymentsRequest
-import com.adyen.checkout.sessions.model.response.SessionPaymentsResponse
+import com.adyen.checkout.sessions.model.payments.SessionPaymentsRequest
+import com.adyen.checkout.sessions.model.payments.SessionPaymentsResponse
 import java.io.IOException
 import org.json.JSONException
 import org.json.JSONObject

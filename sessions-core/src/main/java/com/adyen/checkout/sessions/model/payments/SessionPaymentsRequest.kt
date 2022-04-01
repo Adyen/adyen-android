@@ -6,7 +6,7 @@
  * Created by josephj on 17/3/2022.
  */
 
-package com.adyen.checkout.sessions.model.request
+package com.adyen.checkout.sessions.model.payments
 
 import android.os.Parcel
 import android.os.Parcelable
