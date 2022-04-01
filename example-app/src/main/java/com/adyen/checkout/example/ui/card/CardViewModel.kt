@@ -89,8 +89,7 @@ internal class CardViewModel @Inject constructor(
                 amount = keyValueStorage.getAmount(),
                 countryCode = keyValueStorage.getCountry(),
                 merchantAccount = keyValueStorage.getMerchantAccount(),
-                // Should be set correctly for additional actions
-                redirectUrl = "",
+                redirectUrl = "adyencheckout://com.adyen.checkout.example/card",
                 isThreeds2Enabled = keyValueStorage.isThreeds2Enable(),
                 isExecuteThreeD = keyValueStorage.isExecuteThreeD()
             )

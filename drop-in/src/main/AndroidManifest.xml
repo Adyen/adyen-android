@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
     package="com.adyen.checkout.dropin">
 
     <uses-permission android:name="android.permission.WAKE_LOCK" />
@@ -19,6 +20,13 @@
 
                 <data
                     android:host="${applicationId}"
+                    android:path=""
+                    android:scheme="${checkoutRedirectScheme}"
+                    tools:ignore="AppLinkUrlError" />
+
+                <data
+                    android:host="${applicationId}"
+                    android:path="/"
                     android:scheme="${checkoutRedirectScheme}" />
             </intent-filter>
         </activity>
