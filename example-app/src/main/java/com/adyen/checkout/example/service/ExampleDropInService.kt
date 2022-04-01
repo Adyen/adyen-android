@@ -14,7 +14,6 @@ import com.adyen.checkout.core.log.Logger
 import com.adyen.checkout.core.model.toStringPretty
 import com.adyen.checkout.dropin.service.DropInService
 import com.adyen.checkout.dropin.service.DropInServiceResult
-import com.adyen.checkout.example.data.api.model.paymentsRequest.AdditionalData
 import com.adyen.checkout.example.data.storage.KeyValueStorage
 import com.adyen.checkout.example.repositories.paymentMethods.PaymentsRepository
 import com.adyen.checkout.redirect.RedirectComponent
@@ -23,7 +22,6 @@ import java.io.IOException
 import javax.inject.Inject
 import okhttp3.MediaType
 import okhttp3.MediaType.Companion.toMediaType
-import okhttp3.RequestBody.Companion.toRequestBody
 import okhttp3.ResponseBody
 import org.json.JSONObject
 import retrofit2.Call
@@ -54,22 +52,18 @@ class ExampleDropInService : DropInService() {
 
         // Check out the documentation of this method on the parent DropInService class
         val paymentRequest = createPaymentRequest(
-            paymentComponentJson,
-            keyValueStorage.getShopperReference(),
-            keyValueStorage.getAmount(),
-            keyValueStorage.getCountry(),
-            keyValueStorage.getMerchantAccount(),
-            RedirectComponent.getReturnUrl(applicationContext),
-            AdditionalData(
-                allow3DS2 = keyValueStorage.isThreeds2Enable().toString(),
-                executeThreeD = keyValueStorage.isExecuteThreeD().toString()
-            )
+            paymentComponentData = paymentComponentJson,
+            shopperReference = keyValueStorage.getShopperReference(),
+            amount = keyValueStorage.getAmount(),
+            countryCode = keyValueStorage.getCountry(),
+            merchantAccount = keyValueStorage.getMerchantAccount(),
+            redirectUrl = RedirectComponent.getReturnUrl(applicationContext),
+            isThreeds2Enabled = keyValueStorage.isThreeds2Enable(),
+            isExecuteThreeD = keyValueStorage.isExecuteThreeD()
         )
 
         Logger.v(TAG, "paymentComponentJson - ${paymentComponentJson.toStringPretty()}")
-
-        val requestBody = paymentRequest.toString().toRequestBody(CONTENT_TYPE)
-        val call = paymentsRepository.paymentsRequest(requestBody)
+        val call = paymentsRepository.paymentsRequest(paymentRequest)
 
         return handleResponse(call)
     }
@@ -79,8 +73,7 @@ class ExampleDropInService : DropInService() {
 
         Logger.v(TAG, "payments/details/ - ${actionComponentJson.toStringPretty()}")
 
-        val requestBody = actionComponentJson.toString().toRequestBody(CONTENT_TYPE)
-        val call = paymentsRepository.detailsRequest(requestBody)
+        val call = paymentsRepository.detailsRequest(actionComponentJson)
 
         return handleResponse(call)
     }

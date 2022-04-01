@@ -10,11 +10,15 @@ package com.adyen.checkout.example.data.api
 
 import com.adyen.checkout.components.model.PaymentMethodsApiResponse
 import com.adyen.checkout.example.BuildConfig
-import com.adyen.checkout.example.data.api.model.paymentsRequest.PaymentMethodsRequest
-import com.adyen.checkout.example.data.api.model.paymentsRequest.SessionRequest
+import com.adyen.checkout.example.data.api.model.BalanceRequest
+import com.adyen.checkout.example.data.api.model.CancelOrderRequest
+import com.adyen.checkout.example.data.api.model.CreateOrderRequest
+import com.adyen.checkout.example.data.api.model.PaymentMethodsRequest
+import com.adyen.checkout.example.data.api.model.PaymentsRequest
+import com.adyen.checkout.example.data.api.model.SessionRequest
 import com.adyen.checkout.sessions.model.Session
-import okhttp3.RequestBody
 import okhttp3.ResponseBody
+import org.json.JSONObject
 import retrofit2.Call
 import retrofit2.http.Body
 import retrofit2.http.POST
@@ -37,24 +41,24 @@ internal interface CheckoutApiService {
 
     // There is no native support for JSONObject in either Moshi or Gson, so using RequestBody as a work around for now
     @POST("payments")
-    fun payments(@Body paymentsRequest: RequestBody): Call<ResponseBody>
+    fun payments(@Body paymentsRequest: PaymentsRequest): Call<ResponseBody>
 
     // There is no native support for JSONObject in either Moshi or Gson, so using RequestBody as a work around for now
     @POST("payments")
-    suspend fun paymentsAsync(@Body paymentsRequest: RequestBody): ResponseBody
+    suspend fun paymentsAsync(@Body paymentsRequest: PaymentsRequest): ResponseBody
 
     @POST("payments/details")
-    fun details(@Body detailsRequest: RequestBody): Call<ResponseBody>
+    fun details(@Body detailsRequest: JSONObject): Call<ResponseBody>
 
     @POST("payments/details")
-    suspend fun detailsAsync(@Body detailsRequest: RequestBody): ResponseBody
+    suspend fun detailsAsync(@Body detailsRequest: JSONObject): ResponseBody
 
     @POST("paymentMethods/balance")
-    suspend fun checkBalanceAsync(@Body balanceRequest: RequestBody): ResponseBody
+    suspend fun checkBalanceAsync(@Body request: BalanceRequest): ResponseBody
 
     @POST("orders")
-    suspend fun createOrderAsync(@Body orderRequest: RequestBody): ResponseBody
+    suspend fun createOrderAsync(@Body orderRequest: CreateOrderRequest): ResponseBody
 
     @POST("orders/cancel")
-    suspend fun cancelOrderAsync(@Body orderRequest: RequestBody): ResponseBody
+    suspend fun cancelOrderAsync(@Body request: CancelOrderRequest): ResponseBody
 }

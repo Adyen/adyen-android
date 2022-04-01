@@ -6,7 +6,7 @@
  * Created by arman on 10/12/2019.
  */
 
-package com.adyen.checkout.example.data.api.model.paymentsRequest
+package com.adyen.checkout.example.data.api.model
 
 import java.util.Date
 

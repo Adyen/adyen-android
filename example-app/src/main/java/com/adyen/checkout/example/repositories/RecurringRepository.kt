@@ -9,17 +9,17 @@
 package com.adyen.checkout.example.repositories
 
 import com.adyen.checkout.example.data.api.RecurringApiService
-import okhttp3.RequestBody
+import com.adyen.checkout.example.data.api.model.RemoveStoredPaymentMethodRequest
 import okhttp3.ResponseBody
 
 interface RecurringRepository {
-    suspend fun removeStoredPaymentMethod(requestBody: RequestBody): ResponseBody?
+    suspend fun removeStoredPaymentMethod(request: RemoveStoredPaymentMethodRequest): ResponseBody?
 }
 
 internal class RecurringRepositoryImpl(
     private val recurringApiService: RecurringApiService
 ) : RecurringRepository {
 
-    override suspend fun removeStoredPaymentMethod(requestBody: RequestBody): ResponseBody? =
-        safeApiCall { recurringApiService.removeStoredPaymentMethodAsync(requestBody) }
+    override suspend fun removeStoredPaymentMethod(request: RemoveStoredPaymentMethodRequest): ResponseBody? =
+        safeApiCall { recurringApiService.removeStoredPaymentMethodAsync(request) }
 }

@@ -20,4 +20,4 @@
 # hide the original source file name.
 #-renamesourcefileattribute SourceFile
 
--keep class com.adyen.checkout.example.data.api.model.paymentsRequest.** { *; }
+-keep class com.adyen.checkout.example.data.api.model.** { *; }

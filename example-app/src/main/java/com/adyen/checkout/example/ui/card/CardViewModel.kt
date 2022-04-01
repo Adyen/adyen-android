@@ -8,23 +8,20 @@ import com.adyen.checkout.components.ComponentError
 import com.adyen.checkout.components.model.payments.request.PaymentComponentData
 import com.adyen.checkout.components.model.payments.response.Action
 import com.adyen.checkout.core.model.getStringOrNull
-import com.adyen.checkout.example.data.api.model.paymentsRequest.AdditionalData
 import com.adyen.checkout.example.data.storage.KeyValueStorage
 import com.adyen.checkout.example.repositories.paymentMethods.PaymentsRepository
 import com.adyen.checkout.example.service.createPaymentRequest
 import com.adyen.checkout.example.service.getPaymentMethodRequest
 import dagger.hilt.android.lifecycle.HiltViewModel
+import javax.inject.Inject
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
-import okhttp3.MediaType.Companion.toMediaType
-import okhttp3.RequestBody.Companion.toRequestBody
 import okhttp3.ResponseBody
 import org.json.JSONObject
-import javax.inject.Inject
 
 @HiltViewModel
 internal class CardViewModel @Inject constructor(
@@ -48,9 +45,16 @@ internal class CardViewModel @Inject constructor(
     }
 
     private suspend fun fetchPaymentMethods(): CardViewState = withContext(Dispatchers.IO) {
-        val paymentMethod = paymentsRepository.getPaymentMethods(getPaymentMethodRequest(keyValueStorage))
-            ?.paymentMethods
-            ?.firstOrNull { it.type == "scheme" }
+        val paymentMethod = paymentsRepository.getPaymentMethods(
+            getPaymentMethodRequest(
+                merchantAccount = keyValueStorage.getMerchantAccount(),
+                shopperReference = keyValueStorage.getShopperReference(),
+                amount = keyValueStorage.getAmount(),
+                countryCode = keyValueStorage.getCountry(),
+                shopperLocale = keyValueStorage.getShopperLocale(),
+                splitCardFundingSources = keyValueStorage.isSplitCardFundingSources()
+            )
+        )?.paymentMethods?.firstOrNull { it.type == "scheme" }
 
         if (paymentMethod == null) CardViewState.Error
         else CardViewState.ShowComponent(paymentMethod)
@@ -80,21 +84,18 @@ internal class CardViewModel @Inject constructor(
 
         viewModelScope.launch(Dispatchers.IO) {
             val paymentRequest = createPaymentRequest(
-                paymentComponentData,
-                keyValueStorage.getShopperReference(),
-                keyValueStorage.getAmount(),
-                keyValueStorage.getCountry(),
-                keyValueStorage.getMerchantAccount(),
+                paymentComponentData = paymentComponentData,
+                shopperReference = keyValueStorage.getShopperReference(),
+                amount = keyValueStorage.getAmount(),
+                countryCode = keyValueStorage.getCountry(),
+                merchantAccount = keyValueStorage.getMerchantAccount(),
                 // Should be set correctly for additional actions
-                "",
-                AdditionalData(
-                    allow3DS2 = keyValueStorage.isThreeds2Enable().toString(),
-                    executeThreeD = keyValueStorage.isExecuteThreeD().toString()
-                )
+                redirectUrl = "",
+                isThreeds2Enabled = keyValueStorage.isThreeds2Enable(),
+                isExecuteThreeD = keyValueStorage.isExecuteThreeD()
             )
 
-            val requestBody = paymentRequest.toString().toRequestBody("application/json".toMediaType())
-            handlePaymentResponse(paymentsRepository.paymentsRequestAsync(requestBody))
+            handlePaymentResponse(paymentsRepository.paymentsRequestAsync(paymentRequest))
         }
     }
 
@@ -130,8 +131,7 @@ internal class CardViewModel @Inject constructor(
     private fun sendPaymentDetails(actionComponentData: ActionComponentData) {
         viewModelScope.launch(Dispatchers.IO) {
             val json = ActionComponentData.SERIALIZER.serialize(actionComponentData)
-            val requestBody = json.toString().toRequestBody("application/json".toMediaType())
-            handlePaymentResponse(paymentsRepository.detailsRequestAsync(requestBody))
+            handlePaymentResponse(paymentsRepository.detailsRequestAsync(json))
         }
     }
 }

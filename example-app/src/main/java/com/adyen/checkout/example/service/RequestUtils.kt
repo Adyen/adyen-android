@@ -6,44 +6,77 @@
  * Created by arman on 13/12/2019.
  */
 
+@file:Suppress("TooManyFunctions")
+
 package com.adyen.checkout.example.service
 
 import com.adyen.checkout.components.model.payments.Amount
 import com.adyen.checkout.components.model.payments.request.OrderRequest
-import com.adyen.checkout.example.data.api.model.paymentsRequest.AdditionalData
-import com.adyen.checkout.example.data.api.model.paymentsRequest.Item
-import com.adyen.checkout.example.data.api.model.paymentsRequest.PaymentMethodsRequest
-import com.adyen.checkout.example.data.api.model.paymentsRequest.SessionRequest
-import com.adyen.checkout.example.data.storage.KeyValueStorage
-import com.squareup.moshi.JsonAdapter
-import com.squareup.moshi.Moshi
-import com.squareup.moshi.Types
-import com.squareup.moshi.kotlin.reflect.KotlinJsonAdapterFactory
-import org.json.JSONArray
+import com.adyen.checkout.example.data.api.model.AdditionalData
+import com.adyen.checkout.example.data.api.model.BalanceRequest
+import com.adyen.checkout.example.data.api.model.CancelOrderRequest
+import com.adyen.checkout.example.data.api.model.CreateOrderRequest
+import com.adyen.checkout.example.data.api.model.Item
+import com.adyen.checkout.example.data.api.model.PaymentMethodsRequest
+import com.adyen.checkout.example.data.api.model.PaymentsRequest
+import com.adyen.checkout.example.data.api.model.PaymentsRequestData
+import com.adyen.checkout.example.data.api.model.RemoveStoredPaymentMethodRequest
+import com.adyen.checkout.example.data.api.model.SessionRequest
+import com.adyen.checkout.example.data.api.model.ThreeDS2RequestDataRequest
 import org.json.JSONObject
-import java.lang.reflect.Type
 
-fun getPaymentMethodRequest(keyValueStorage: KeyValueStorage, order: OrderRequest? = null): PaymentMethodsRequest {
+@Suppress("LongParameterList")
+fun getPaymentMethodRequest(
+    merchantAccount: String,
+    shopperReference: String,
+    amount: Amount?,
+    countryCode: String,
+    shopperLocale: String,
+    splitCardFundingSources: Boolean,
+    order: OrderRequest? = null
+): PaymentMethodsRequest {
     return PaymentMethodsRequest(
-        merchantAccount = keyValueStorage.getMerchantAccount(),
-        shopperReference = keyValueStorage.getShopperReference(),
-        amount = if (order == null) keyValueStorage.getAmount() else null,
-        countryCode = keyValueStorage.getCountry(),
-        shopperLocale = keyValueStorage.getShopperLocale(),
-        splitCardFundingSources = keyValueStorage.isSplitCardFundingSources(),
-        order = order
+        merchantAccount = merchantAccount,
+        shopperReference = shopperReference,
+        amount = if (order == null) amount else null,
+        countryCode = countryCode,
+        shopperLocale = shopperLocale,
+        splitCardFundingSources = splitCardFundingSources,
+        order = order,
+        channel = CHANNEL
     )
 }
 
-fun getSessionRequest(keyValueStorage: KeyValueStorage, returnUrl: String): SessionRequest {
+@Suppress("LongParameterList")
+fun getSessionRequest(
+    merchantAccount: String,
+    shopperReference: String,
+    amount: Amount?,
+    countryCode: String,
+    shopperLocale: String,
+    splitCardFundingSources: Boolean,
+    redirectUrl: String,
+    isThreeds2Enabled: Boolean,
+    isExecuteThreeD: Boolean,
+    force3DS2Challenge: Boolean = true,
+    threeDSAuthenticationOnly: Boolean = false
+): SessionRequest {
     return SessionRequest(
-        merchantAccount = keyValueStorage.getMerchantAccount(),
-        shopperReference = keyValueStorage.getShopperReference(),
-        amount = keyValueStorage.getAmount(),
-        countryCode = keyValueStorage.getCountry(),
-        shopperLocale = keyValueStorage.getShopperLocale(),
-        splitCardFundingSources = keyValueStorage.isSplitCardFundingSources(),
-        returnUrl = returnUrl
+        merchantAccount = merchantAccount,
+        shopperReference = shopperReference,
+        amount = amount,
+        countryCode = countryCode,
+        shopperLocale = shopperLocale,
+        splitCardFundingSources = splitCardFundingSources,
+        returnUrl = redirectUrl,
+        shopperIP = SHOPPER_IP,
+        reference = getReference(),
+        channel = CHANNEL,
+        additionalData = getAdditionalData(isThreeds2Enabled = isThreeds2Enabled, isExecuteThreeD = isExecuteThreeD),
+        lineItems = LINE_ITEMS,
+        threeDSAuthenticationOnly = threeDSAuthenticationOnly,
+        // TODO check if this should be kept or removed
+        threeDS2RequestData = null // if (force3DS2Challenge) ThreeDS2RequestDataRequest() else null
     )
 }
 
@@ -55,74 +88,69 @@ fun createPaymentRequest(
     countryCode: String,
     merchantAccount: String,
     redirectUrl: String,
-    additionalData: AdditionalData,
+    isThreeds2Enabled: Boolean,
+    isExecuteThreeD: Boolean,
     force3DS2Challenge: Boolean = true,
     threeDSAuthenticationOnly: Boolean = false
-) = JSONObject(paymentComponentData.toString()).apply {
-    put("shopperReference", shopperReference)
-    if (!has("amount")) put("amount", JSONObject(getJsonAdapter(Amount::class.java).toJson(amount)))
-    put("merchantAccount", merchantAccount)
-    put("returnUrl", redirectUrl)
-    put("countryCode", countryCode)
-    put("shopperIP", "142.12.31.22")
-    put("reference", "android-test-components_${System.currentTimeMillis()}")
-    put("channel", "android")
-    put("additionalData", JSONObject(getJsonAdapter(AdditionalData::class.java).toJson(additionalData)))
-    val listItemJsonAdapter = getJsonAdapter<List<Item>>(Types.newParameterizedType(List::class.java, Item::class.java))
-    put("lineItems", JSONArray(listItemJsonAdapter.toJson(listOf(Item()))))
-    put("threeDSAuthenticationOnly", threeDSAuthenticationOnly)
+): PaymentsRequest {
+    val paymentsRequestData = PaymentsRequestData(
+        shopperReference = shopperReference,
+        amount = amount,
+        merchantAccount = merchantAccount,
+        returnUrl = redirectUrl,
+        countryCode = countryCode,
+        shopperIP = SHOPPER_IP,
+        reference = getReference(),
+        channel = CHANNEL,
+        additionalData = getAdditionalData(isThreeds2Enabled = isThreeds2Enabled, isExecuteThreeD = isExecuteThreeD),
+        lineItems = LINE_ITEMS,
+        threeDSAuthenticationOnly = threeDSAuthenticationOnly,
+        threeDS2RequestData = if (force3DS2Challenge) ThreeDS2RequestDataRequest() else null
+    )
 
-    if (force3DS2Challenge) {
-        val threeDS2RequestData = JSONObject()
-        threeDS2RequestData.put("deviceChannel", "app")
-        threeDS2RequestData.put("challengeIndicator", "requestChallenge")
-        put("threeDS2RequestData", threeDS2RequestData)
-    }
+    return PaymentsRequest(paymentComponentData, paymentsRequestData)
 }
 
 fun createBalanceRequest(
     paymentComponentData: JSONObject,
     merchantAccount: String,
-): JSONObject {
-    return JSONObject().apply {
-        put("paymentMethod", paymentComponentData)
-        put("merchantAccount", merchantAccount)
-    }
-}
+) = BalanceRequest(
+    paymentMethod = paymentComponentData,
+    merchantAccount = merchantAccount
+)
 
 fun createOrderRequest(
     amount: Amount,
     merchantAccount: String
-) = JSONObject().apply {
-    put("amount", JSONObject(getJsonAdapter(Amount::class.java).toJson(amount)))
-    put("merchantAccount", merchantAccount)
-    put("reference", "android-test-components_${System.currentTimeMillis()}")
-}
+) = CreateOrderRequest(
+    amount = amount,
+    merchantAccount = merchantAccount,
+    reference = getReference()
+)
 
 fun createCancelOrderRequest(
     orderJson: JSONObject,
     merchantAccount: String
-) = JSONObject().apply {
-    put("order", orderJson)
-    put("merchantAccount", merchantAccount)
-}
+) = CancelOrderRequest(
+    order = orderJson,
+    merchantAccount = merchantAccount
+)
 
 fun createRemoveStoredPaymentMethodRequest(
     recurringDetailReference: String,
     merchantAccount: String,
     shopperReference: String
-) = JSONObject().apply {
-    put("recurringDetailReference", recurringDetailReference)
-    put("merchantAccount", merchantAccount)
-    put("shopperReference", shopperReference)
-}
+) = RemoveStoredPaymentMethodRequest(
+    recurringDetailReference = recurringDetailReference,
+    merchantAccount = merchantAccount,
+    shopperReference = shopperReference
+)
 
-private fun <T> getJsonAdapter(clazz: Class<T>): JsonAdapter<T> {
-    val moshi = Moshi.Builder().add(KotlinJsonAdapterFactory()).build()
-    return moshi.adapter(clazz)
-}
-
-private fun <T> getJsonAdapter(type: Type): JsonAdapter<T> {
-    val moshi = Moshi.Builder().add(KotlinJsonAdapterFactory()).build()
-    return moshi.adapter(type)
-}
+private const val SHOPPER_IP = "142.12.31.22"
+private const val CHANNEL = "android"
+private val LINE_ITEMS = listOf(Item())
+private fun getReference() = "android-test-components_${System.currentTimeMillis()}"
+private fun getAdditionalData(isThreeds2Enabled: Boolean, isExecuteThreeD: Boolean) = AdditionalData(
+    allow3DS2 = isThreeds2Enabled.toString(),
+    executeThreeD = isExecuteThreeD.toString()
+)

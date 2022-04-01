@@ -13,23 +13,25 @@ import com.adyen.checkout.core.api.SSLSocketUtil
 import com.adyen.checkout.example.BuildConfig
 import com.adyen.checkout.example.data.api.CheckoutApiService
 import com.adyen.checkout.example.data.api.RecurringApiService
+import com.adyen.checkout.example.data.api.adapter.PaymentRequestAdapter
+import com.adyen.checkout.example.data.api.adapter.JSONObjectAdapter
 import com.squareup.moshi.Moshi
 import com.squareup.moshi.kotlin.reflect.KotlinJsonAdapterFactory
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
 import dagger.hilt.components.SingletonComponent
-import okhttp3.OkHttpClient
-import okhttp3.logging.HttpLoggingInterceptor
-import retrofit2.Converter
-import retrofit2.Retrofit
-import retrofit2.converter.moshi.MoshiConverterFactory
 import java.security.KeyStore
 import java.util.Arrays
 import javax.inject.Named
 import javax.inject.Singleton
 import javax.net.ssl.TrustManagerFactory
 import javax.net.ssl.X509TrustManager
+import okhttp3.OkHttpClient
+import okhttp3.logging.HttpLoggingInterceptor
+import retrofit2.Converter
+import retrofit2.Retrofit
+import retrofit2.converter.moshi.MoshiConverterFactory
 
 @Module
 @InstallIn(SingletonComponent::class)
@@ -82,7 +84,11 @@ object NetworkModule {
     @Singleton
     @Provides
     internal fun provideConverterFactory(): Converter.Factory = MoshiConverterFactory.create(
-        Moshi.Builder().add(KotlinJsonAdapterFactory()).build()
+        Moshi.Builder()
+            .add(PaymentRequestAdapter())
+            .add(JSONObjectAdapter())
+            .add(KotlinJsonAdapterFactory())
+            .build()
     )
 
     @Singleton

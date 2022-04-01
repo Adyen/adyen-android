@@ -6,7 +6,7 @@
  * Created by arman on 10/10/2019.
  */
 
-package com.adyen.checkout.example.data.api.model.paymentsRequest
+package com.adyen.checkout.example.data.api.model
 
 import com.adyen.checkout.components.model.payments.Amount
 import com.adyen.checkout.components.model.payments.request.OrderRequest
@@ -14,13 +14,10 @@ import com.adyen.checkout.components.model.payments.request.OrderRequest
 data class PaymentMethodsRequest(
     val merchantAccount: String,
     val shopperReference: String,
-//    val additionalData: Any,
-//    val allowedPaymentMethods: ArrayList<String>,
     val amount: Amount?,
-//    val blockedPaymentMethods: ArrayList<String>,
-    val countryCode: String = "NL",
-    val shopperLocale: String = "en_US",
-    val channel: String = "android",
-    val splitCardFundingSources: Boolean = false,
+    val countryCode: String,
+    val shopperLocale: String,
+    val channel: String,
+    val splitCardFundingSources: Boolean,
     val order: OrderRequest?
 )
