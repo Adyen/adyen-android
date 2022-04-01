@@ -95,9 +95,9 @@ class GooglePayConfiguration : Configuration, AmountConfiguration {
         countryCode = parcel.readString()
         merchantInfo = parcel.readParcelable(MerchantInfo::class.java.classLoader)
         @Suppress("UNCHECKED_CAST")
-        allowedAuthMethods = parcel.readArrayList(String::class.java.classLoader) as List<String>
+        allowedAuthMethods = (parcel.readArrayList(String::class.java.classLoader) as? List<String>) ?: emptyList()
         @Suppress("UNCHECKED_CAST")
-        allowedCardNetworks = parcel.readArrayList(String::class.java.classLoader) as List<String>
+        allowedCardNetworks = parcel.readArrayList(String::class.java.classLoader) as? List<String>
         isAllowPrepaidCards = readBoolean(parcel)
         isEmailRequired = readBoolean(parcel)
         isExistingPaymentMethodRequired = readBoolean(parcel)
@@ -257,19 +257,19 @@ class GooglePayConfiguration : Configuration, AmountConfiguration {
          * @param googlePayEnvironment The GooglePay environment.
          */
         fun setGooglePayEnvironment(googlePayEnvironment: Int): Builder {
-            if (
-                googlePayEnvironment != WalletConstants.ENVIRONMENT_TEST &&
-                googlePayEnvironment != WalletConstants.ENVIRONMENT_PRODUCTION
-            ) {
+            if (!isGooglePayEnvironmentValid(googlePayEnvironment)) {
                 throw CheckoutException(
-                    "Invalid value for Google Environment. Use either WalletConstants.ENVIRONMENT_TEST or " +
-                        "WalletConstants.ENVIRONMENT_PRODUCTION"
+                    "Invalid value for Google Environment. Use either WalletConstants.ENVIRONMENT_TEST or" +
+                        " WalletConstants.ENVIRONMENT_PRODUCTION"
                 )
             }
             builderGooglePayEnvironment = googlePayEnvironment
             builderIsGoogleEnvironmentSetManually = true
             return this
         }
+
+        private fun isGooglePayEnvironmentValid(environment: Int): Boolean =
+            environment == WalletConstants.ENVIRONMENT_TEST || environment == WalletConstants.ENVIRONMENT_PRODUCTION
 
         override fun setAmount(amount: Amount): Builder {
             if (!isSupported(amount.currency) || amount.value < 0) {
