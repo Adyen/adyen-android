@@ -8,11 +8,23 @@
 
 package com.adyen.checkout.example.data
 
-class Scheme(val cardNumber: String, val cvc: String, val expiryDate: String, val holderName: String = "", val threeds2: Threeds2? = null)
+class Scheme(
+    val cardNumber: String,
+    val cvc: String,
+    val expiryDate: String,
+    val holderName: String = "",
+    val threeds2: Threeds2? = null
+)
+
 class Threeds2(val username: String, val password: String)
 
 val normalScheme = Scheme(cardNumber = "4111 1111 1111 1111", cvc = "737", expiryDate = "10/20")
-val threeds2Scheme = Scheme(cardNumber = "5454 5454 5454 5454", cvc = "737", expiryDate = "10/20", threeds2 = Threeds2("username", "1234"))
+val threeds2Scheme = Scheme(
+    cardNumber = "5454 5454 5454 5454",
+    cvc = "737",
+    expiryDate = "10/20",
+    threeds2 = Threeds2("username", "1234")
+)
 
 const val IDEAL_WEBVIEW_REDIRECT_KEY = "Continue"
 const val RESULT_KEY_AUTHORISED = "Authorised"

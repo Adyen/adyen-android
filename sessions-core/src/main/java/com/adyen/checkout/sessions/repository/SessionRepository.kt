@@ -98,7 +98,11 @@ class SessionRepository {
     ): SessionDetailsResponse {
         Logger.d(TAG, "Submitting details")
         try {
-            val request = SessionDetailsRequest(session.sessionData.orEmpty(), actionComponentData.paymentData, actionComponentData.details)
+            val request = SessionDetailsRequest(
+                sessionData = session.sessionData.orEmpty(),
+                paymentData = actionComponentData.paymentData,
+                details = actionComponentData.details
+            )
             return SessionDetailsConnection(
                 request = request,
                 environment = configuration.environment,

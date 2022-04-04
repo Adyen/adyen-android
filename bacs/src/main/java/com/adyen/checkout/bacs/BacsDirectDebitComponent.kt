@@ -21,16 +21,16 @@ class BacsDirectDebitComponent(
     savedStateHandle: SavedStateHandle,
     paymentMethodDelegate: GenericPaymentMethodDelegate,
     configuration: BacsDirectDebitConfiguration
-) :
-    BasePaymentComponent<BacsDirectDebitConfiguration, BacsDirectDebitInputData, BacsDirectDebitOutputData,
-        BacsDirectDebitComponentState>(savedStateHandle, paymentMethodDelegate, configuration) {
+) : BasePaymentComponent<BacsDirectDebitConfiguration, BacsDirectDebitInputData, BacsDirectDebitOutputData,
+    BacsDirectDebitComponentState>(savedStateHandle, paymentMethodDelegate, configuration) {
 
     override fun getSupportedPaymentMethodTypes(): Array<String> = PAYMENT_METHOD_TYPES
 
     override fun onInputDataChanged(inputData: BacsDirectDebitInputData): BacsDirectDebitOutputData {
         return BacsDirectDebitOutputData(
             holderNameState = BacsDirectDebitValidationUtils.validateHolderName(inputData.holderName),
-            bankAccountNumberState = BacsDirectDebitValidationUtils.validateBankAccountNumber(inputData.bankAccountNumber),
+            bankAccountNumberState = BacsDirectDebitValidationUtils
+                .validateBankAccountNumber(inputData.bankAccountNumber),
             sortCodeState = BacsDirectDebitValidationUtils.validateSortCode(inputData.sortCode),
             shopperEmailState = BacsDirectDebitValidationUtils.validateShopperEmail(inputData.shopperEmail),
             isAmountConsentChecked = inputData.isAmountConsentChecked,

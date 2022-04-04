@@ -56,11 +56,16 @@ class Adyen3DS2ComponentProvider : ActionComponentProvider<Adyen3DS2Component, A
     }
 
     override val supportedActionTypes: List<String>
-        get() = listOf(Threeds2FingerprintAction.ACTION_TYPE, Threeds2ChallengeAction.ACTION_TYPE, Threeds2Action.ACTION_TYPE)
+        get() = listOf(
+            Threeds2FingerprintAction.ACTION_TYPE,
+            Threeds2ChallengeAction.ACTION_TYPE,
+            Threeds2Action.ACTION_TYPE
+        )
 
     @Deprecated(
-        "You can safely remove this method, it will always return true as all action components require a configuration.",
-        ReplaceWith("true")
+        message = "You can safely remove this method, it will always return true as all action components require " +
+            "a configuration.",
+        replaceWith = ReplaceWith("true")
     )
     override fun requiresConfiguration(): Boolean = true
 

@@ -43,7 +43,11 @@ class EPSConfiguration : IssuerListConfiguration {
          * @param environment   The [Environment] to be used for network calls to Adyen.
          * @param clientKey Your Client Key used for network calls from the SDK to Adyen.
          */
-        constructor(shopperLocale: Locale, environment: Environment, clientKey: String) : super(shopperLocale, environment, clientKey)
+        constructor(
+            shopperLocale: Locale,
+            environment: Environment,
+            clientKey: String
+        ) : super(shopperLocale, environment, clientKey)
 
         /**
          * Constructor that copies an existing configuration.

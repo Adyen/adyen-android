@@ -54,7 +54,10 @@ object DropIn {
      * @return The launcher that can be used to start Drop-in.
      */
     @JvmStatic
-    fun registerForDropInResult(caller: ActivityResultCaller, callback: DropInCallback): ActivityResultLauncher<Intent> {
+    fun registerForDropInResult(
+        caller: ActivityResultCaller,
+        callback: DropInCallback
+    ): ActivityResultLauncher<Intent> {
         return caller.registerForActivityResult(DropInResultContract(), callback::onDropInResult)
     }
 

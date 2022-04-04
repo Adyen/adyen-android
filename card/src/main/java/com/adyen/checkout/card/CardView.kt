@@ -44,7 +44,12 @@ class CardView @JvmOverloads constructor(
     context: Context,
     attrs: AttributeSet? = null,
     defStyleAttr: Int = 0
-) : AdyenLinearLayout<CardOutputData, CardConfiguration, CardComponentState, CardComponent>(context, attrs, defStyleAttr),
+) :
+    AdyenLinearLayout<CardOutputData, CardConfiguration, CardComponentState, CardComponent>(
+        context,
+        attrs,
+        defStyleAttr
+    ),
     Observer<CardOutputData> {
 
     companion object {
@@ -450,7 +455,10 @@ class CardView @JvmOverloads constructor(
             val kcpBirthDateOrTaxNumberValidation = component.outputData?.kcpBirthDateOrTaxNumberState?.validation
             if (hasFocus) {
                 binding.textInputLayoutKcpBirthDateOrTaxNumber.error = null
-            } else if (kcpBirthDateOrTaxNumberValidation != null && kcpBirthDateOrTaxNumberValidation is Validation.Invalid) {
+            } else if (
+                kcpBirthDateOrTaxNumberValidation != null &&
+                kcpBirthDateOrTaxNumberValidation is Validation.Invalid
+            ) {
                 binding.textInputLayoutKcpBirthDateOrTaxNumber.error =
                     localizedContext.getString(kcpBirthDateOrTaxNumberValidation.reason)
             }
@@ -469,7 +477,9 @@ class CardView @JvmOverloads constructor(
             val kcpBirthDateOrRegistrationNumberValidation = component.outputData?.kcpCardPasswordState?.validation
             if (hasFocus) {
                 binding.textInputLayoutKcpCardPassword.error = null
-            } else if (kcpBirthDateOrRegistrationNumberValidation != null && kcpBirthDateOrRegistrationNumberValidation is Validation.Invalid) {
+            } else if (kcpBirthDateOrRegistrationNumberValidation != null &&
+                kcpBirthDateOrRegistrationNumberValidation is Validation.Invalid
+            ) {
                 binding.textInputLayoutKcpCardPassword.error =
                     localizedContext.getString(kcpBirthDateOrRegistrationNumberValidation.reason)
             }

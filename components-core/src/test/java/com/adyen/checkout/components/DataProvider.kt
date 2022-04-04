@@ -29,7 +29,12 @@ object DataProvider {
         return if (classLoader == null) {
             throw IllegalArgumentException("ClassLoader should not be null")
         } else {
-            PaymentMethodsApiResponse.SERIALIZER.deserialize(readJsonFileFromResource("PaymentMethodsResponse.json", classLoader))
+            PaymentMethodsApiResponse.SERIALIZER.deserialize(
+                readJsonFileFromResource(
+                    "PaymentMethodsResponse.json",
+                    classLoader
+                )
+            )
         }
     }
 }

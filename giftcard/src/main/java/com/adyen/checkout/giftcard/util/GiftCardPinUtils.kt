@@ -19,8 +19,10 @@ object GiftCardPinUtils {
 
     fun validateInputField(giftCardPin: String): FieldState<String> {
         val validation = when {
-            giftCardPin.length < MINIMUM_GIFT_CARD_PIN_LENGTH -> Validation.Invalid(R.string.checkout_giftcard_pin_not_valid)
-            giftCardPin.length > MAXIMUM_GIFT_CARD_PIN_LENGTH -> Validation.Invalid(R.string.checkout_giftcard_pin_not_valid)
+            giftCardPin.length < MINIMUM_GIFT_CARD_PIN_LENGTH ->
+                Validation.Invalid(R.string.checkout_giftcard_pin_not_valid)
+            giftCardPin.length > MAXIMUM_GIFT_CARD_PIN_LENGTH ->
+                Validation.Invalid(R.string.checkout_giftcard_pin_not_valid)
             else -> Validation.Valid
         }
         return FieldState(giftCardPin, validation)

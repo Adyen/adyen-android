@@ -40,7 +40,10 @@ data class SessionBalanceRequest(
                 val jsonObject = JSONObject()
                 try {
                     jsonObject.putOpt(SESSION_DATA, modelObject.sessionData)
-                    jsonObject.putOpt(PAYMENT_METHOD, ModelUtils.serializeOpt(modelObject.paymentMethod, PaymentMethodDetails.SERIALIZER))
+                    jsonObject.putOpt(
+                        PAYMENT_METHOD,
+                        ModelUtils.serializeOpt(modelObject.paymentMethod, PaymentMethodDetails.SERIALIZER)
+                    )
                 } catch (e: JSONException) {
                     throw ModelSerializationException(SessionBalanceRequest::class.java, e)
                 }
@@ -51,7 +54,10 @@ data class SessionBalanceRequest(
                 return try {
                     SessionBalanceRequest(
                         sessionData = jsonObject.optString(SESSION_DATA),
-                        paymentMethod = ModelUtils.deserializeOpt(jsonObject.optJSONObject(PAYMENT_METHOD), PaymentMethodDetails.SERIALIZER)
+                        paymentMethod = ModelUtils.deserializeOpt(
+                            jsonObject.optJSONObject(PAYMENT_METHOD),
+                            PaymentMethodDetails.SERIALIZER
+                        )
                     )
                 } catch (e: JSONException) {
                     throw ModelSerializationException(SessionBalanceRequest::class.java, e)

@@ -36,7 +36,9 @@ data class InstallmentConfiguration(
             throw CheckoutException("Installment Configuration has multiple rules for same card type.")
         }
         if (!InstallmentUtils.areInstallmentValuesValid(this)) {
-            throw CheckoutException("Installment Configuration contains invalid values for options. Values must be greater than 1.")
+            throw CheckoutException(
+                "Installment Configuration contains invalid values for options. Values must be greater than 1."
+            )
         }
     }
 

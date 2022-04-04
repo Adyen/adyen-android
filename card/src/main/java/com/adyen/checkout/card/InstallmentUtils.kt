@@ -19,7 +19,11 @@ internal object InstallmentUtils {
     /**
      * Create a list of installment options from [InstallmentConfiguration].
      */
-    fun makeInstallmentOptions(configuration: InstallmentConfiguration?, cardType: CardType?, isCardTypeReliable: Boolean): List<InstallmentModel> {
+    fun makeInstallmentOptions(
+        configuration: InstallmentConfiguration?,
+        cardType: CardType?,
+        isCardTypeReliable: Boolean
+    ): List<InstallmentModel> {
         val hasCardBasedInstallmentOptions = configuration?.cardBasedOptions != null
         val hasDefaultInstallmentOptions = configuration?.defaultOptions != null
         val hasOptionsForCardType = hasCardBasedInstallmentOptions &&
@@ -95,7 +99,9 @@ internal object InstallmentUtils {
     /**
      * Check whether the card based options contain only one option defined per card type.
      */
-    fun isCardBasedOptionsValid(cardBasedInstallmentOptions: List<InstallmentOptions.CardBasedInstallmentOptions>?): Boolean {
+    fun isCardBasedOptionsValid(
+        cardBasedInstallmentOptions: List<InstallmentOptions.CardBasedInstallmentOptions>?
+    ): Boolean {
         val hasMultipleOptionsForSameCard = cardBasedInstallmentOptions
             ?.groupBy { it.cardType }
             ?.values

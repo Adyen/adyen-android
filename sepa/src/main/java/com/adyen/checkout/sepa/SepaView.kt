@@ -25,8 +25,16 @@ import com.adyen.checkout.core.log.Logger.d
 import com.adyen.checkout.core.log.Logger.v
 import com.google.android.material.textfield.TextInputLayout
 
-class SepaView @JvmOverloads constructor(context: Context, attrs: AttributeSet? = null, defStyleAttr: Int = 0) :
-    AdyenLinearLayout<SepaOutputData, SepaConfiguration, PaymentComponentState<SepaPaymentMethod>, SepaComponent>(context, attrs, defStyleAttr),
+class SepaView @JvmOverloads constructor(
+    context: Context,
+    attrs: AttributeSet? = null,
+    defStyleAttr: Int = 0
+) :
+    AdyenLinearLayout<
+        SepaOutputData,
+        SepaConfiguration,
+        PaymentComponentState<SepaPaymentMethod>,
+        SepaComponent>(context, attrs, defStyleAttr),
     Observer<SepaOutputData> {
 
     private var sepaInputData = SepaInputData()
@@ -47,7 +55,8 @@ class SepaView @JvmOverloads constructor(context: Context, attrs: AttributeSet? 
         val myAttrs = intArrayOf(android.R.attr.hint)
 
         // Holder name
-        var typedArray: TypedArray = localizedContext.obtainStyledAttributes(R.style.AdyenCheckout_Sepa_HolderNameInput, myAttrs)
+        var typedArray: TypedArray =
+            localizedContext.obtainStyledAttributes(R.style.AdyenCheckout_Sepa_HolderNameInput, myAttrs)
         holderNameInput.hint = typedArray.getString(0)
         typedArray.recycle()
 

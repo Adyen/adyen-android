@@ -54,7 +54,8 @@ abstract class ModelObject : Parcelable {
     class Creator<T : ModelObject>(private val mClass: Class<T>) : Parcelable.Creator<T> {
         override fun createFromParcel(source: Parcel): T {
             val jsonObject: JSONObject = try {
-                readFromParcel(source) ?: throw CheckoutException("Failed to create ModelObject from parcel. JSONObject is null.")
+                readFromParcel(source)
+                    ?: throw CheckoutException("Failed to create ModelObject from parcel. JSONObject is null.")
             } catch (e: JSONException) {
                 throw CheckoutException("Failed to create ModelObject from parcel.", e)
             }

@@ -52,8 +52,9 @@ class AwaitComponentProvider : ActionComponentProvider<AwaitComponent, AwaitConf
     }
 
     @Deprecated(
-        "You can safely remove this method, it will always return true as all action components require a configuration.",
-        ReplaceWith("true")
+        message = "You can safely remove this method, it will always return true as all action components require a" +
+            " configuration.",
+        replaceWith = ReplaceWith("true")
     )
     override fun requiresConfiguration(): Boolean = true
 

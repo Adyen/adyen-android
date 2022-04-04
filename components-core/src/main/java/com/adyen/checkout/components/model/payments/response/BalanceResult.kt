@@ -39,7 +39,10 @@ data class BalanceResult(
                 return JSONObject().apply {
                     try {
                         putOpt(BALANCE, ModelUtils.serializeOpt(modelObject.balance, Amount.SERIALIZER))
-                        putOpt(TRANSACTION_LIMIT, ModelUtils.serializeOpt(modelObject.transactionLimit, Amount.SERIALIZER))
+                        putOpt(
+                            TRANSACTION_LIMIT,
+                            ModelUtils.serializeOpt(modelObject.transactionLimit, Amount.SERIALIZER)
+                        )
                     } catch (e: JSONException) {
                         throw ModelSerializationException(BalanceResult::class.java, e)
                     }
@@ -50,7 +53,10 @@ data class BalanceResult(
                 return BalanceResult(
                     balance = ModelUtils.deserializeOpt(jsonObject.optJSONObject(BALANCE), Amount.SERIALIZER)
                         ?: throw CheckoutException("Balance not found"),
-                    transactionLimit = ModelUtils.deserializeOpt(jsonObject.optJSONObject(TRANSACTION_LIMIT), Amount.SERIALIZER)
+                    transactionLimit = ModelUtils.deserializeOpt(
+                        jsonObject.optJSONObject(TRANSACTION_LIMIT),
+                        Amount.SERIALIZER
+                    )
                 )
             }
         }

@@ -31,22 +31,26 @@ data class PaymentMethodTokenizationSpecification(
         @JvmField
         val CREATOR = Creator(PaymentMethodTokenizationSpecification::class.java)
 
-        val SERIALIZER: Serializer<PaymentMethodTokenizationSpecification> = object : Serializer<PaymentMethodTokenizationSpecification> {
-            override fun serialize(modelObject: PaymentMethodTokenizationSpecification): JSONObject {
-                return try {
-                    JSONObject().apply {
-                        putOpt(TYPE, modelObject.type)
-                        putOpt(PARAMETERS, serializeOpt(modelObject.parameters, TokenizationParameters.SERIALIZER))
+        val SERIALIZER: Serializer<PaymentMethodTokenizationSpecification> =
+            object : Serializer<PaymentMethodTokenizationSpecification> {
+                override fun serialize(modelObject: PaymentMethodTokenizationSpecification): JSONObject {
+                    return try {
+                        JSONObject().apply {
+                            putOpt(TYPE, modelObject.type)
+                            putOpt(PARAMETERS, serializeOpt(modelObject.parameters, TokenizationParameters.SERIALIZER))
+                        }
+                    } catch (e: JSONException) {
+                        throw ModelSerializationException(PaymentMethodTokenizationSpecification::class.java, e)
                     }
-                } catch (e: JSONException) {
-                    throw ModelSerializationException(PaymentMethodTokenizationSpecification::class.java, e)
                 }
-            }
 
-            override fun deserialize(jsonObject: JSONObject) = PaymentMethodTokenizationSpecification(
-                type = jsonObject.getString(TYPE),
-                parameters = deserializeOpt(jsonObject.optJSONObject(PARAMETERS), TokenizationParameters.SERIALIZER),
-            )
-        }
+                override fun deserialize(jsonObject: JSONObject) = PaymentMethodTokenizationSpecification(
+                    type = jsonObject.getString(TYPE),
+                    parameters = deserializeOpt(
+                        jsonObject.optJSONObject(PARAMETERS),
+                        TokenizationParameters.SERIALIZER
+                    ),
+                )
+            }
     }
 }

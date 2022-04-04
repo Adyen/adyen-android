@@ -23,7 +23,8 @@ import dagger.hilt.components.SingletonComponent
 object StorageModule {
 
     @Provides
-    fun provideSharedPreferences(appContext: Application): SharedPreferences = PreferenceManager.getDefaultSharedPreferences(appContext)
+    fun provideSharedPreferences(appContext: Application): SharedPreferences =
+        PreferenceManager.getDefaultSharedPreferences(appContext)
 
     @Provides
     fun provideKeyValueStorage(appContext: Application, sharedPreferences: SharedPreferences): KeyValueStorage =

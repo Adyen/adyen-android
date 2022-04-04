@@ -10,7 +10,7 @@ package com.adyen.checkout.core.api
 import android.os.Parcel
 import android.os.Parcelable
 import java.net.URL
-import java.util.*
+import java.util.Objects
 
 /**
  * Identifies which host URL to be used for network calls.
@@ -46,11 +46,16 @@ class Environment(private val internalUrl: URL) : Parcelable {
 
     companion object {
 
-        @JvmField val TEST: Environment = Environment(URL("https://checkoutshopper-test.adyen.com/checkoutshopper/"))
-        @JvmField val EUROPE: Environment = Environment(URL("https://checkoutshopper-live.adyen.com/checkoutshopper/"))
-        @JvmField val UNITED_STATES: Environment = Environment(URL("https://checkoutshopper-live-us.adyen.com/checkoutshopper/"))
-        @JvmField val AUSTRALIA: Environment = Environment(URL("https://checkoutshopper-live-au.adyen.com/checkoutshopper/"))
-        @JvmField val LIVE: Environment = EUROPE
+        @JvmField
+        val TEST: Environment = Environment(URL("https://checkoutshopper-test.adyen.com/checkoutshopper/"))
+        @JvmField
+        val EUROPE: Environment = Environment(URL("https://checkoutshopper-live.adyen.com/checkoutshopper/"))
+        @JvmField
+        val UNITED_STATES: Environment = Environment(URL("https://checkoutshopper-live-us.adyen.com/checkoutshopper/"))
+        @JvmField
+        val AUSTRALIA: Environment = Environment(URL("https://checkoutshopper-live-au.adyen.com/checkoutshopper/"))
+        @JvmField
+        val LIVE: Environment = EUROPE
 
         @JvmField
         val CREATOR: Parcelable.Creator<Environment> = object : Parcelable.Creator<Environment> {

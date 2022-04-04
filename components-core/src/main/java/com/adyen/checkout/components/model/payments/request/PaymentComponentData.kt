@@ -81,7 +81,10 @@ data class PaymentComponentData<PaymentMethodDetailsT : PaymentMethodDetails>(
 
             override fun deserialize(jsonObject: JSONObject): PaymentComponentData<PaymentMethodDetails> {
                 return PaymentComponentData(
-                    paymentMethod = deserializeOpt(jsonObject.optJSONObject(PAYMENT_METHOD), PaymentMethodDetails.SERIALIZER),
+                    paymentMethod = deserializeOpt(
+                        jsonObject.optJSONObject(PAYMENT_METHOD),
+                        PaymentMethodDetails.SERIALIZER
+                    ),
                     storePaymentMethod = jsonObject.optBoolean(STORE_PAYMENT_METHOD),
                     shopperReference = jsonObject.optString(SHOPPER_REFERENCE),
                     amount = deserializeOpt(jsonObject.optJSONObject(AMOUNT), Amount.SERIALIZER),

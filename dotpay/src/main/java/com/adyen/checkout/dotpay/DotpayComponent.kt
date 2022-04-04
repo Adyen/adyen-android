@@ -32,7 +32,8 @@ class DotpayComponent(
 
     companion object {
         @JvmField
-        val PROVIDER: PaymentComponentProvider<DotpayComponent, DotpayConfiguration> = GenericPaymentComponentProvider(DotpayComponent::class.java)
+        val PROVIDER: PaymentComponentProvider<DotpayComponent, DotpayConfiguration> =
+            GenericPaymentComponentProvider(DotpayComponent::class.java)
         val PAYMENT_METHOD_TYPES = arrayOf(PaymentMethodTypes.DOTPAY)
     }
 }

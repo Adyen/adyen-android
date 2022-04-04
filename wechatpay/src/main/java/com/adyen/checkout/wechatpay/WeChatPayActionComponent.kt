@@ -30,7 +30,8 @@ class WeChatPayActionComponent(
     savedStateHandle: SavedStateHandle,
     application: Application,
     configuration: WeChatPayActionConfiguration
-) : BaseActionComponent<WeChatPayActionConfiguration>(savedStateHandle, application, configuration), IntentHandlingComponent {
+) : BaseActionComponent<WeChatPayActionConfiguration>(savedStateHandle, application, configuration),
+    IntentHandlingComponent {
 
     private val iwxApi: IWXAPI = WXAPIFactory.createWXAPI(application, null, true)
     private val eventHandler: IWXAPIEventHandler = object : IWXAPIEventHandler {
@@ -77,6 +78,7 @@ class WeChatPayActionComponent(
 
     companion object {
         private val TAG = getTag()
-        val PROVIDER: ActionComponentProvider<WeChatPayActionComponent, WeChatPayActionConfiguration> = WeChatPayActionComponentProvider()
+        val PROVIDER: ActionComponentProvider<WeChatPayActionComponent, WeChatPayActionConfiguration> =
+            WeChatPayActionComponentProvider()
     }
 }

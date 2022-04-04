@@ -79,7 +79,12 @@ class GooglePayComponentDialogFragment : DropInBottomSheetDialogFragment(), Obse
         }
 
         try {
-            component = getComponentFor(this, paymentMethod, dropInViewModel.dropInConfiguration, dropInViewModel.amount) as GooglePayComponent
+            component = getComponentFor(
+                this,
+                paymentMethod,
+                dropInViewModel.dropInConfiguration,
+                dropInViewModel.amount
+            ) as GooglePayComponent
         } catch (e: CheckoutException) {
             handleError(ComponentError(e))
             return

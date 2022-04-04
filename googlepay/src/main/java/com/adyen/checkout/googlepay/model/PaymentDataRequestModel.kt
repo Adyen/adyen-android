@@ -58,7 +58,10 @@ data class PaymentDataRequestModel(
                             ALLOWED_PAYMENT_METHODS,
                             serializeOptList(modelObject.allowedPaymentMethods, GooglePayPaymentMethodModel.SERIALIZER)
                         )
-                        putOpt(TRANSACTION_INFO, serializeOpt(modelObject.transactionInfo, TransactionInfoModel.SERIALIZER))
+                        putOpt(
+                            TRANSACTION_INFO,
+                            serializeOpt(modelObject.transactionInfo, TransactionInfoModel.SERIALIZER)
+                        )
                         putOpt(EMAIL_REQUIRED, modelObject.isEmailRequired)
                         putOpt(SHIPPING_ADDRESS_REQUIRED, modelObject.isShippingAddressRequired)
                         putOpt(
@@ -75,14 +78,24 @@ data class PaymentDataRequestModel(
                 val paymentDataRequestModel = PaymentDataRequestModel()
                 paymentDataRequestModel.apiVersion = jsonObject.optInt(API_VERSION)
                 paymentDataRequestModel.apiVersionMinor = jsonObject.optInt(API_VERSION_MINOR)
-                paymentDataRequestModel.merchantInfo = deserializeOpt(jsonObject.optJSONObject(MERCHANT_INFO), MerchantInfo.SERIALIZER)
-                paymentDataRequestModel.allowedPaymentMethods =
-                    deserializeOptList(jsonObject.optJSONArray(ALLOWED_PAYMENT_METHODS), GooglePayPaymentMethodModel.SERIALIZER)
-                paymentDataRequestModel.transactionInfo = deserializeOpt(jsonObject.optJSONObject(TRANSACTION_INFO), TransactionInfoModel.SERIALIZER)
+                paymentDataRequestModel.merchantInfo = deserializeOpt(
+                    jsonObject.optJSONObject(MERCHANT_INFO),
+                    MerchantInfo.SERIALIZER
+                )
+                paymentDataRequestModel.allowedPaymentMethods = deserializeOptList(
+                    jsonObject.optJSONArray(ALLOWED_PAYMENT_METHODS),
+                    GooglePayPaymentMethodModel.SERIALIZER
+                )
+                paymentDataRequestModel.transactionInfo = deserializeOpt(
+                    jsonObject.optJSONObject(TRANSACTION_INFO),
+                    TransactionInfoModel.SERIALIZER
+                )
                 paymentDataRequestModel.isEmailRequired = jsonObject.optBoolean(EMAIL_REQUIRED)
                 paymentDataRequestModel.isShippingAddressRequired = jsonObject.optBoolean(SHIPPING_ADDRESS_REQUIRED)
-                paymentDataRequestModel.shippingAddressParameters =
-                    deserializeOpt(jsonObject.optJSONObject(SHIPPING_ADDRESS_PARAMETERS), ShippingAddressParameters.SERIALIZER)
+                paymentDataRequestModel.shippingAddressParameters = deserializeOpt(
+                    jsonObject.optJSONObject(SHIPPING_ADDRESS_PARAMETERS),
+                    ShippingAddressParameters.SERIALIZER
+                )
                 return paymentDataRequestModel
             }
         }

@@ -11,7 +11,6 @@ import android.os.Parcel
 import org.json.JSONArray
 import org.json.JSONException
 import org.json.JSONObject
-import java.util.ArrayList
 import java.util.Collections
 
 private const val INDENTATION_SPACES = 4

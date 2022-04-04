@@ -74,8 +74,8 @@ class CardComponentDialogFragment : BaseComponentDialogFragment() {
         cardComponent.observeErrors(viewLifecycleOwner, createErrorHandlerObserver())
 
         // try to get the name from the payment methods response
-        binding.header.text =
-            dropInViewModel.paymentMethodsApiResponse.paymentMethods?.find { it.type == PaymentMethodTypes.SCHEME }?.name
+        binding.header.text = dropInViewModel.paymentMethodsApiResponse.paymentMethods
+            ?.find { it.type == PaymentMethodTypes.SCHEME }?.name
 
         binding.cardView.attach(cardComponent, viewLifecycleOwner)
 

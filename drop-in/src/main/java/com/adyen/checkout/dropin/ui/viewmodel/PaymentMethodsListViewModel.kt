@@ -69,9 +69,14 @@ class PaymentMethodsListViewModel(
         for (storedPaymentMethod in storedPaymentMethods) {
             if (isStoredPaymentSupported(storedPaymentMethod)) {
                 // We don't check for availability on stored payment methods
-                storedPaymentMethodsList.add(makeStoredModel(storedPaymentMethod, dropInConfiguration.isRemovingStoredPaymentMethodsEnabled))
+                storedPaymentMethodsList.add(
+                    makeStoredModel(storedPaymentMethod, dropInConfiguration.isRemovingStoredPaymentMethodsEnabled)
+                )
             } else {
-                Logger.e(TAG, "Unsupported stored payment method - ${storedPaymentMethod.type} : ${storedPaymentMethod.name}")
+                Logger.e(
+                    TAG,
+                    "Unsupported stored payment method - ${storedPaymentMethod.type} : ${storedPaymentMethod.name}"
+                )
             }
         }
     }
@@ -86,7 +91,9 @@ class PaymentMethodsListViewModel(
     private fun setupPaymentMethods(paymentMethods: List<PaymentMethod>) {
         // We can't remove availability callbacks so just for safety let's crash in case of a concurrency issue.
         if (availabilityChecksum != 0) {
-            throw CheckoutException("Concurrency error. Cannot update Payment methods list because availability is still being checked.")
+            throw CheckoutException(
+                "Concurrency error. Cannot update Payment methods list because availability is still being checked."
+            )
         }
 
         // Reset variables
@@ -174,7 +181,10 @@ class PaymentMethodsListViewModel(
                     val value = CurrencyUtils.formatAmount(remainingAmount, dropInConfiguration.shopperLocale)
                     add(
                         PaymentMethodNote(
-                            getApplication<Application>().getString(R.string.checkout_giftcard_pay_remaining_amount, value)
+                            getApplication<Application>().getString(
+                                R.string.checkout_giftcard_pay_remaining_amount,
+                                value
+                            )
                         )
                     )
                 }

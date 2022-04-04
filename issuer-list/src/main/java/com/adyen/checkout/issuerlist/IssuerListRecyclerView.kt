@@ -30,11 +30,13 @@ abstract class IssuerListRecyclerView<
     context: Context,
     attrs: AttributeSet? = null,
     defStyleAttr: Int = 0
-) : AdyenLinearLayout<IssuerListOutputData, IssuerListConfiguration, PaymentComponentState<IssuerListPaymentMethodT>, IssuerListComponentT>(
-        context,
-        attrs,
-        defStyleAttr
-    ),
+) :
+    AdyenLinearLayout<
+        IssuerListOutputData,
+        IssuerListConfiguration,
+        PaymentComponentState<IssuerListPaymentMethodT>,
+        IssuerListComponentT
+        >(context, attrs, defStyleAttr),
     Observer<List<IssuerModel>>,
     OnItemCLickedListener {
 

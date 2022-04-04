@@ -53,6 +53,9 @@ fun ViewInteraction.performClick() = perform(ViewActions.click())
 
 fun ViewInteraction.performTypeText(text: String) = perform(ViewActions.typeText(text), ViewActions.closeSoftKeyboard())
 
-fun <T : RecyclerView.ViewHolder> ViewInteraction.performActionOnRecyclerItemAtPosition(position: Int, action: ViewAction) {
+fun <T : RecyclerView.ViewHolder> ViewInteraction.performActionOnRecyclerItemAtPosition(
+    position: Int,
+    action: ViewAction
+) {
     perform(RecyclerViewActions.actionOnItemAtPosition<T>(position, action))
 }

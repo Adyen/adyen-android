@@ -13,7 +13,7 @@ import android.os.Parcelable
 import com.adyen.checkout.components.base.BaseConfigurationBuilder
 import com.adyen.checkout.components.base.Configuration
 import com.adyen.checkout.core.api.Environment
-import java.util.*
+import java.util.Locale
 
 class QRCodeConfiguration : Configuration {
 
@@ -31,7 +31,12 @@ class QRCodeConfiguration : Configuration {
         }
     }
 
-    internal constructor(builder: Builder) : super(builder.builderShopperLocale, builder.builderEnvironment, builder.builderClientKey)
+    internal constructor(builder: Builder) : super(
+        builder.builderShopperLocale,
+        builder.builderEnvironment,
+        builder.builderClientKey
+    )
+
     internal constructor(parcel: Parcel) : super(parcel)
 
     /**
@@ -53,7 +58,11 @@ class QRCodeConfiguration : Configuration {
          * @param environment   The [Environment] to be used for network calls to Adyen.
          * @param clientKey Your Client Key used for network calls from the SDK to Adyen.
          */
-        constructor(shopperLocale: Locale, environment: Environment, clientKey: String) : super(shopperLocale, environment, clientKey)
+        constructor(shopperLocale: Locale, environment: Environment, clientKey: String) : super(
+            shopperLocale,
+            environment,
+            clientKey
+        )
 
         /**
          * Constructor that copies an existing configuration.

@@ -27,12 +27,17 @@ object GiftCardBalanceUtils {
             amountToBePaid.isEmpty || amountToBePaid.value <= 0 -> GiftCardBalanceStatus.ZeroAmountToBePaid
             balance.isEmpty || balance.value <= 0 -> GiftCardBalanceStatus.ZeroBalance
             amountToBePaid.currency != balance.currency -> GiftCardBalanceStatus.NonMatchingCurrencies
-            transactionLimit != null && amountToBePaid.currency != transactionLimit.currency -> GiftCardBalanceStatus.NonMatchingCurrencies
+            transactionLimit != null && amountToBePaid.currency != transactionLimit.currency ->
+                GiftCardBalanceStatus.NonMatchingCurrencies
             else -> calculateRemainingAmount(balance, transactionLimit, amountToBePaid)
         }
     }
 
-    private fun calculateRemainingAmount(balance: Amount, transactionLimit: Amount?, amountToBePaid: Amount): GiftCardBalanceStatus {
+    private fun calculateRemainingAmount(
+        balance: Amount,
+        transactionLimit: Amount?,
+        amountToBePaid: Amount
+    ): GiftCardBalanceStatus {
         val maxPayableAmount =
             if (transactionLimit == null || transactionLimit.isEmpty) balance.value
             else min(balance.value, transactionLimit.value)

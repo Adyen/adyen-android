@@ -8,7 +8,7 @@
 
 package com.adyen.checkout.components.util
 
-import java.util.*
+import java.util.Locale
 
 object CountryUtils {
 

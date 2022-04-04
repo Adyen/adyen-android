@@ -88,7 +88,10 @@ internal const val GOOGLE_PAY_REQUEST_CODE = 1
  * Activity that presents the available PaymentMethods to the Shopper.
  */
 @Suppress("TooManyFunctions")
-class DropInActivity : AppCompatActivity(), DropInBottomSheetDialogFragment.Protocol, ActionHandler.ActionHandlingInterface {
+class DropInActivity :
+    AppCompatActivity(),
+    DropInBottomSheetDialogFragment.Protocol,
+    ActionHandler.ActionHandlingInterface {
 
     private val dropInViewModel: DropInViewModel by viewModels { DropInViewModelFactory(this) }
 
@@ -384,10 +387,14 @@ class DropInActivity : AppCompatActivity(), DropInBottomSheetDialogFragment.Prot
         Logger.d(TAG, "showComponentDialog")
         hideAllScreens()
         val dialogFragment = when {
-            CardComponent.PAYMENT_METHOD_TYPES.contains(paymentMethod.type) -> CardComponentDialogFragment.newInstance(paymentMethod)
-            BacsDirectDebitComponent.PAYMENT_METHOD_TYPES.contains(paymentMethod.type) -> BacsDirectDebitDialogFragment.newInstance(paymentMethod)
-            GiftCardComponent.PAYMENT_METHOD_TYPES.contains(paymentMethod.type) -> GiftCardComponentDialogFragment.newInstance(paymentMethod)
-            GooglePayComponent.PAYMENT_METHOD_TYPES.contains(paymentMethod.type) -> GooglePayComponentDialogFragment.newInstance(paymentMethod)
+            CardComponent.PAYMENT_METHOD_TYPES.contains(paymentMethod.type) ->
+                CardComponentDialogFragment.newInstance(paymentMethod)
+            BacsDirectDebitComponent.PAYMENT_METHOD_TYPES.contains(paymentMethod.type) ->
+                BacsDirectDebitDialogFragment.newInstance(paymentMethod)
+            GiftCardComponent.PAYMENT_METHOD_TYPES.contains(paymentMethod.type) ->
+                GiftCardComponentDialogFragment.newInstance(paymentMethod)
+            GooglePayComponent.PAYMENT_METHOD_TYPES.contains(paymentMethod.type) ->
+                GooglePayComponentDialogFragment.newInstance(paymentMethod)
             else -> GenericComponentDialogFragment.newInstance(paymentMethod)
         }
 
@@ -490,7 +497,8 @@ class DropInActivity : AppCompatActivity(), DropInBottomSheetDialogFragment.Prot
 
     private fun handleDropInServiceResult(dropInServiceResult: RecurringDropInServiceResult) {
         when (dropInServiceResult) {
-            is RecurringDropInServiceResult.PaymentMethodRemoved -> handleRemovePaymentMethodResult(dropInServiceResult.id)
+            is RecurringDropInServiceResult.PaymentMethodRemoved ->
+                handleRemovePaymentMethodResult(dropInServiceResult.id)
             is RecurringDropInServiceResult.Error -> handleErrorDropInServiceResult(dropInServiceResult)
         }
     }
@@ -630,7 +638,11 @@ class DropInActivity : AppCompatActivity(), DropInBottomSheetDialogFragment.Prot
         val result = dropInViewModel.handleBalanceResult(balanceResult)
         Logger.d(TAG, "handleBalanceResult: ${result::class.java.simpleName}")
         when (result) {
-            is GiftCardBalanceResult.Error -> showError(getString(result.errorMessage), result.reason, result.terminateDropIn)
+            is GiftCardBalanceResult.Error -> showError(
+                getString(result.errorMessage),
+                result.reason,
+                result.terminateDropIn
+            )
             is GiftCardBalanceResult.FullPayment -> handleGiftCardFullPayment(result)
             is GiftCardBalanceResult.RequestOrderCreation -> requestOrdersCall()
             is GiftCardBalanceResult.RequestPartialPayment -> requestPartialPayment()
@@ -674,7 +686,8 @@ class DropInActivity : AppCompatActivity(), DropInBottomSheetDialogFragment.Prot
             return
         }
 
-        val paymentMethodListDialogFragment = getFragmentByTag(PAYMENT_METHODS_LIST_FRAGMENT_TAG) as? PaymentMethodListDialogFragment
+        val paymentMethodListDialogFragment =
+            getFragmentByTag(PAYMENT_METHODS_LIST_FRAGMENT_TAG) as? PaymentMethodListDialogFragment
         if (paymentMethodListDialogFragment != null) {
             paymentMethodListDialogFragment.removeStoredPaymentMethod(id)
             return

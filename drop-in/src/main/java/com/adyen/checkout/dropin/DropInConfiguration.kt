@@ -44,7 +44,7 @@ import com.adyen.checkout.redirect.RedirectConfiguration
 import com.adyen.checkout.sepa.SepaConfiguration
 import com.adyen.checkout.voucher.VoucherConfiguration
 import com.adyen.checkout.wechatpay.WeChatPayActionConfiguration
-import java.util.*
+import java.util.Locale
 import kotlin.collections.set
 
 /**
@@ -88,9 +88,11 @@ class DropInConfiguration : Configuration, Parcelable {
 
     constructor(parcel: Parcel) : super(parcel) {
         @Suppress("UNCHECKED_CAST")
-        availablePaymentConfigs = parcel.readHashMap(Configuration::class.java.classLoader) as HashMap<String, Configuration>
+        availablePaymentConfigs =
+            parcel.readHashMap(Configuration::class.java.classLoader) as HashMap<String, Configuration>
         @Suppress("UNCHECKED_CAST")
-        availableActionConfigs = parcel.readHashMap(Configuration::class.java.classLoader) as HashMap<Class<*>, Configuration>
+        availableActionConfigs =
+            parcel.readHashMap(Configuration::class.java.classLoader) as HashMap<Class<*>, Configuration>
         serviceComponentName = parcel.readParcelable(ComponentName::class.java.classLoader)!!
         amount = Amount.CREATOR.createFromParcel(parcel)
         showPreselectedStoredPaymentMethod = ParcelUtils.readBoolean(parcel)
@@ -99,16 +101,16 @@ class DropInConfiguration : Configuration, Parcelable {
         additionalDataForDropInService = parcel.readBundle(Bundle::class.java.classLoader)
     }
 
-    override fun writeToParcel(dest: Parcel, flags: Int) {
-        super.writeToParcel(dest, flags)
-        dest.writeMap(availablePaymentConfigs)
-        dest.writeMap(availableActionConfigs)
-        dest.writeParcelable(serviceComponentName, flags)
-        JsonUtils.writeToParcel(dest, Amount.SERIALIZER.serialize(amount))
-        ParcelUtils.writeBoolean(dest, showPreselectedStoredPaymentMethod)
-        ParcelUtils.writeBoolean(dest, skipListWhenSinglePaymentMethod)
-        ParcelUtils.writeBoolean(dest, isRemovingStoredPaymentMethodsEnabled)
-        dest.writeBundle(additionalDataForDropInService)
+    override fun writeToParcel(parcel: Parcel, flags: Int) {
+        super.writeToParcel(parcel, flags)
+        parcel.writeMap(availablePaymentConfigs)
+        parcel.writeMap(availableActionConfigs)
+        parcel.writeParcelable(serviceComponentName, flags)
+        JsonUtils.writeToParcel(parcel, Amount.SERIALIZER.serialize(amount))
+        ParcelUtils.writeBoolean(parcel, showPreselectedStoredPaymentMethod)
+        ParcelUtils.writeBoolean(parcel, skipListWhenSinglePaymentMethod)
+        ParcelUtils.writeBoolean(parcel, isRemovingStoredPaymentMethodsEnabled)
+        parcel.writeBundle(additionalDataForDropInService)
     }
 
     internal fun <T : Configuration> getConfigurationForPaymentMethod(paymentMethod: String): T? {

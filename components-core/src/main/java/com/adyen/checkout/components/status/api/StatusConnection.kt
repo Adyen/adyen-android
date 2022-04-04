@@ -17,7 +17,11 @@ import org.json.JSONObject
 import java.io.IOException
 import java.nio.charset.Charset
 
-internal class StatusConnection(url: String, private val mStatusRequest: StatusRequest) : Connection<StatusResponse?>(url) {
+internal class StatusConnection(
+    url: String,
+    private val mStatusRequest: StatusRequest
+) : Connection<StatusResponse?>(url) {
+
     @Throws(IOException::class, JSONException::class)
     override fun call(): StatusResponse {
         Logger.v(TAG, "call - $url")

@@ -212,8 +212,10 @@ class CardComponent private constructor(
         Logger.d(TAG, "makeCvcUIState: $cvcPolicy")
         return when {
             cardDelegate.isCvcHidden() -> InputFieldUIState.HIDDEN
-            // we treat CvcPolicy.HIDDEN as OPTIONAL for now to avoid hiding and showing the cvc field while the user is typing the card number
-            cvcPolicy == Brand.FieldPolicy.OPTIONAL || cvcPolicy == Brand.FieldPolicy.HIDDEN -> InputFieldUIState.OPTIONAL
+            // We treat CvcPolicy.HIDDEN as OPTIONAL for now to avoid hiding and showing the cvc field while the user
+            // is typing the card number.
+            cvcPolicy == Brand.FieldPolicy.OPTIONAL
+                || cvcPolicy == Brand.FieldPolicy.HIDDEN -> InputFieldUIState.OPTIONAL
             else -> InputFieldUIState.REQUIRED
         }
     }

@@ -30,7 +30,8 @@ class ComponentDialogViewModel(private val savedStateHandle: SavedStateHandle) :
         savedStateHandle[COMPONENT_FRAGMENT_STATE_KEY] = state
     }
 
-    val componentFragmentState: LiveData<ComponentFragmentState> = savedStateHandle.getLiveData(COMPONENT_FRAGMENT_STATE_KEY)
+    val componentFragmentState: LiveData<ComponentFragmentState> =
+        savedStateHandle.getLiveData(COMPONENT_FRAGMENT_STATE_KEY)
     private var componentState: PaymentComponentState<out PaymentMethodDetails>? = null
 
     fun payButtonClicked() {
@@ -56,7 +57,10 @@ class ComponentDialogViewModel(private val savedStateHandle: SavedStateHandle) :
         setComponentFragmentState(ComponentFragmentState.IDLE)
     }
 
-    fun componentStateChanged(componentState: PaymentComponentState<out PaymentMethodDetails>?, confirmationRequired: Boolean = true) {
+    fun componentStateChanged(
+        componentState: PaymentComponentState<out PaymentMethodDetails>?,
+        confirmationRequired: Boolean = true
+    ) {
         Logger.v(
             TAG,
             "componentStateChanged - componentState.isInputValid: ${componentState?.isInputValid} - " +

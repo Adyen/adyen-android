@@ -11,8 +11,11 @@ import android.content.Context
 import android.os.Build
 import android.util.AttributeSet
 
-class SecurityCodeInput @JvmOverloads constructor(context: Context, attrs: AttributeSet? = null, defStyleAttr: Int = 0) :
-    CardNumberInput(context, attrs, defStyleAttr) {
+class SecurityCodeInput @JvmOverloads constructor(
+    context: Context,
+    attrs: AttributeSet? = null,
+    defStyleAttr: Int = 0
+) : CardNumberInput(context, attrs, defStyleAttr) {
 
     init {
         enforceMaxInputLength(MAX_LENGTH)

@@ -18,6 +18,7 @@ class Iban private constructor(val value: String) {
     @Suppress("MemberVisibilityCanBePrivate")
     val countryCode: String = value.substring(0, COUNTRY_CODE_POSITION_END)
     val checkDigits: String = value.substring(CHECK_DIGIT_POSITION_START, CHECK_DIGIT_POSITION_END)
+
     @Suppress("unused")
     val bban: String = value.substring(IBAN_BLOCK_SIZE)
 
@@ -253,7 +254,8 @@ class Iban private constructor(val value: String) {
         }
 
         private fun isChecksumValid(normalizedIban: String): Boolean {
-            val rearrangedIban = normalizedIban.substring(IBAN_BLOCK_SIZE) + normalizedIban.substring(0, IBAN_BLOCK_SIZE)
+            val rearrangedIban =
+                normalizedIban.substring(IBAN_BLOCK_SIZE) + normalizedIban.substring(0, IBAN_BLOCK_SIZE)
             val numericIban = StringBuilder()
             for (element in rearrangedIban) {
                 numericIban.append(Character.getNumericValue(element))
@@ -280,7 +282,10 @@ class Iban private constructor(val value: String) {
                 if (lastDigitIndex > 0) {
                     val chars = CharArray(details.length - length)
                     Arrays.fill(chars, '0')
-                    return normalizedValue.substring(0, lastDigitIndex) + String(chars) + normalizedValue.substring(lastDigitIndex, length)
+                    return normalizedValue.substring(0, lastDigitIndex) + String(chars) + normalizedValue.substring(
+                        lastDigitIndex,
+                        length
+                    )
                 }
             }
             return normalizedValue

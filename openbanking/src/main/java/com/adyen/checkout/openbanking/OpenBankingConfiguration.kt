@@ -23,6 +23,7 @@ class OpenBankingConfiguration : IssuerListConfiguration {
         environment: Environment,
         clientKey: String,
     ) : super(shopperLocale, environment, clientKey)
+
     internal constructor(parcel: Parcel) : super(parcel)
 
     /**
@@ -44,7 +45,11 @@ class OpenBankingConfiguration : IssuerListConfiguration {
          * @param environment   The [Environment] to be used for network calls to Adyen.
          * @param clientKey Your Client Key used for network calls from the SDK to Adyen.
          */
-        constructor(shopperLocale: Locale, environment: Environment, clientKey: String) : super(shopperLocale, environment, clientKey)
+        constructor(
+            shopperLocale: Locale,
+            environment: Environment,
+            clientKey: String
+        ) : super(shopperLocale, environment, clientKey)
 
         /**
          * Constructor that copies an existing configuration.
@@ -72,14 +77,15 @@ class OpenBankingConfiguration : IssuerListConfiguration {
 
     companion object {
         @JvmField
-        val CREATOR: Parcelable.Creator<OpenBankingConfiguration> = object : Parcelable.Creator<OpenBankingConfiguration> {
-            override fun createFromParcel(parcel: Parcel): OpenBankingConfiguration {
-                return OpenBankingConfiguration(parcel)
-            }
+        val CREATOR: Parcelable.Creator<OpenBankingConfiguration> =
+            object : Parcelable.Creator<OpenBankingConfiguration> {
+                override fun createFromParcel(parcel: Parcel): OpenBankingConfiguration {
+                    return OpenBankingConfiguration(parcel)
+                }
 
-            override fun newArray(size: Int): Array<OpenBankingConfiguration?> {
-                return arrayOfNulls(size)
+                override fun newArray(size: Int): Array<OpenBankingConfiguration?> {
+                    return arrayOfNulls(size)
+                }
             }
-        }
     }
 }

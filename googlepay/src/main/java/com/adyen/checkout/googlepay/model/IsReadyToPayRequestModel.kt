@@ -57,8 +57,10 @@ data class IsReadyToPayRequestModel(
             override fun deserialize(jsonObject: JSONObject) = IsReadyToPayRequestModel(
                 apiVersion = jsonObject.optInt(API_VERSION),
                 apiVersionMinor = jsonObject.optInt(API_VERSION_MINOR),
-                allowedPaymentMethods =
-                deserializeOptList(jsonObject.optJSONArray(ALLOWED_PAYMENT_METHODS), GooglePayPaymentMethodModel.SERIALIZER),
+                allowedPaymentMethods = deserializeOptList(
+                    jsonObject.optJSONArray(ALLOWED_PAYMENT_METHODS),
+                    GooglePayPaymentMethodModel.SERIALIZER
+                ),
                 isExistingPaymentMethodRequired = jsonObject.optBoolean(EXISTING_PAYMENT_METHOD_REQUIRED)
             )
         }

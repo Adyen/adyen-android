@@ -27,9 +27,9 @@ enum class CardType(var txVariant: String, private val mPattern: Pattern) {
     ELO(
         "elo",
         Pattern.compile(
-            "^((((506699)|(506770)|(506771)|(506772)|(506773)|(506774)|(506775)|(506776)|(506777)|(506778)|(401178)|(438935)|(451416)|" +
-                "(457631)|(457632)|(504175)|(627780)|(636368)|(636297))[0-9]{0,10})|((50676)|(50675)|(50674)|(50673)|(50672)|(50671)|" +
-                "(50670))[0-9]{0," + "11})$"
+            "^((((506699)|(506770)|(506771)|(506772)|(506773)|(506774)|(506775)|(506776)|(506777)|(506778)|" +
+                "(401178)|(438935)|(451416)|(457631)|(457632)|(504175)|(627780)|(636368)|(636297))[0-9]{0,10})|" +
+                "((50676)|(50675)|(50674)|(50673)|(50672)|(50671)|(50670))[0-9]{0," + "11})$"
         )
     ),
     FORBRUGSFORENINGEN("forbrugsforeningen", Pattern.compile("^(60)(0)\\d*$")),
@@ -53,6 +53,7 @@ enum class CardType(var txVariant: String, private val mPattern: Pattern) {
     UATP("uatp", Pattern.compile("^1[0-9]{0,14}$")),
     VISA("visa", Pattern.compile("^4[0-9]{0,18}$")),
     VISADANKORT("visadankort", Pattern.compile("^(4571)[0-9]{0,12}$")),
+
     // UNKNOWN type is used for txVariants that are valid but not accounted for in this enum
     UNKNOWN("", Pattern.compile("([1-9])+"));
 

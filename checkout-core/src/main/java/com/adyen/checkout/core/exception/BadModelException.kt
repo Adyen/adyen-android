@@ -12,6 +12,11 @@ import com.adyen.checkout.core.model.ModelUtils
 /**+
  * Exception thrown when a [ModelObject] does not meet the requirement of having a SERIALIZER object.
  */
-class BadModelException(clazz: Class<*>, e: Throwable?) : CheckoutException(
-    "ModelObject protocol requires a ModelObject.Serializer object called ${ModelUtils.SERIALIZER_FIELD_NAME} on class ${clazz.simpleName}", e
+class BadModelException(
+    clazz: Class<*>,
+    e: Throwable?
+) : CheckoutException(
+    "ModelObject protocol requires a ModelObject.Serializer object called ${ModelUtils.SERIALIZER_FIELD_NAME} on " +
+        "class ${clazz.simpleName}",
+    e
 )

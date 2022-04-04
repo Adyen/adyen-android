@@ -22,8 +22,11 @@ import com.adyen.checkout.components.ui.R
 /**
  * ImageView that adds a corner to the loaded drawable.
  */
-class RoundCornerImageView @JvmOverloads constructor(context: Context, attrs: AttributeSet? = null, defStyle: Int = 0) :
-    AppCompatImageView(context, attrs, defStyle) {
+class RoundCornerImageView @JvmOverloads constructor(
+    context: Context,
+    attrs: AttributeSet? = null,
+    defStyle: Int = 0
+) : AppCompatImageView(context, attrs, defStyle) {
 
     private val strokePaint = Paint()
 
@@ -59,7 +62,8 @@ class RoundCornerImageView @JvmOverloads constructor(context: Context, attrs: At
     private fun applyAttrs(typedArrayAttrs: TypedArray) {
         try {
             strokeColor = typedArrayAttrs.getColor(R.styleable.RoundCornerImageView_strokeColor, DEFAULT_STROKE_COLOR)
-            strokeWidth = typedArrayAttrs.getDimension(R.styleable.RoundCornerImageView_strokeWidth, DEFAULT_STROKE_WIDTH)
+            strokeWidth =
+                typedArrayAttrs.getDimension(R.styleable.RoundCornerImageView_strokeWidth, DEFAULT_STROKE_WIDTH)
             radius = typedArrayAttrs.getDimension(R.styleable.RoundCornerImageView_radius, DEFAULT_RADIUS)
         } finally {
             typedArrayAttrs.recycle()

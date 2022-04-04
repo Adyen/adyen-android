@@ -89,7 +89,8 @@ class GooglePayConfiguration : Configuration, AmountConfiguration {
     internal constructor(parcel: Parcel) : super(parcel) {
         merchantAccount = parcel.readString()
         googlePayEnvironment = parcel.readInt()
-        amount = parcel.readParcelable(Amount::class.java.classLoader) ?: throw CheckoutException("Failed to read amount from parcel.")
+        amount = parcel.readParcelable(Amount::class.java.classLoader)
+            ?: throw CheckoutException("Failed to read amount from parcel.")
         totalPriceStatus = parcel.readString()!!
         countryCode = parcel.readString()
         merchantInfo = parcel.readParcelable(MerchantInfo::class.java.classLoader)
@@ -172,7 +173,11 @@ class GooglePayConfiguration : Configuration, AmountConfiguration {
          * @param environment   The [Environment] to be used for network calls to Adyen.
          * @param clientKey     Your Client Key used for network calls from the SDK to Adyen.
          */
-        constructor(shopperLocale: Locale, environment: Environment, clientKey: String) : super(shopperLocale, environment, clientKey)
+        constructor(
+            shopperLocale: Locale,
+            environment: Environment,
+            clientKey: String
+        ) : super(shopperLocale, environment, clientKey)
 
         /**
          * Constructor that copies an existing configuration.
@@ -252,9 +257,13 @@ class GooglePayConfiguration : Configuration, AmountConfiguration {
          * @param googlePayEnvironment The GooglePay environment.
          */
         fun setGooglePayEnvironment(googlePayEnvironment: Int): Builder {
-            if (googlePayEnvironment != WalletConstants.ENVIRONMENT_TEST && googlePayEnvironment != WalletConstants.ENVIRONMENT_PRODUCTION) {
+            if (
+                googlePayEnvironment != WalletConstants.ENVIRONMENT_TEST &&
+                googlePayEnvironment != WalletConstants.ENVIRONMENT_PRODUCTION
+            ) {
                 throw CheckoutException(
-                    "Invalid value for Google Environment. Use either WalletConstants.ENVIRONMENT_TEST or WalletConstants.ENVIRONMENT_PRODUCTION"
+                    "Invalid value for Google Environment. Use either WalletConstants.ENVIRONMENT_TEST or " +
+                        "WalletConstants.ENVIRONMENT_PRODUCTION"
                 )
             }
             builderGooglePayEnvironment = googlePayEnvironment

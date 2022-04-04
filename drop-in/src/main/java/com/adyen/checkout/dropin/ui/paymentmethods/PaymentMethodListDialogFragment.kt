@@ -134,7 +134,10 @@ class PaymentMethodListDialogFragment :
                 protocol.showComponentDialog(paymentMethodsListViewModel.getPaymentMethod(paymentMethod))
             }
             else -> {
-                Logger.d(TAG, "onPaymentMethodSelected: unidentified payment method, sending payment in case of redirect")
+                Logger.d(
+                    TAG,
+                    "onPaymentMethodSelected: unidentified payment method, sending payment in case of redirect"
+                )
                 sendPayment(paymentMethod.type)
             }
         }
@@ -161,7 +164,9 @@ class PaymentMethodListDialogFragment :
         AlertDialog.Builder(requireContext())
             .setTitle(R.string.checkout_giftcard_remove_gift_cards_title)
             .setMessage(R.string.checkout_giftcard_remove_gift_cards_body)
-            .setNegativeButton(R.string.checkout_giftcard_remove_gift_cards_negative_button) { dialog, _ -> dialog.dismiss() }
+            .setNegativeButton(R.string.checkout_giftcard_remove_gift_cards_negative_button) { dialog, _ ->
+                dialog.dismiss()
+            }
             .setPositiveButton(R.string.checkout_giftcard_remove_gift_cards_positive_button) { dialog, _ ->
                 dialog.dismiss()
                 protocol.requestOrderCancellation()

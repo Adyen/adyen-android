@@ -39,7 +39,11 @@ abstract class BaseConfigurationBuilder<ConfigurationT : Configuration>(
      *
      * @param configuration A configuration to initialize the builder.
      */
-    constructor(configuration: ConfigurationT) : this(configuration.shopperLocale, configuration.environment, configuration.clientKey)
+    constructor(configuration: ConfigurationT) : this(
+        configuration.shopperLocale,
+        configuration.environment,
+        configuration.clientKey
+    )
 
     /**
      * @param builderShopperLocale the [Locale] used for translations.

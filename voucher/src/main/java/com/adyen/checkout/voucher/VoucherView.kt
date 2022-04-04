@@ -22,8 +22,16 @@ import com.adyen.checkout.components.ui.util.ThemeUtil
 import com.adyen.checkout.components.ui.view.AdyenLinearLayout
 import com.adyen.checkout.voucher.databinding.VoucherViewBinding
 
-class VoucherView @JvmOverloads constructor(context: Context, attrs: AttributeSet? = null, defStyleAttr: Int = 0) :
-    AdyenLinearLayout<VoucherOutputData, VoucherConfiguration, ActionComponentData, VoucherComponent>(context, attrs, defStyleAttr),
+class VoucherView @JvmOverloads constructor(
+    context: Context,
+    attrs: AttributeSet? = null,
+    defStyleAttr: Int = 0
+) :
+    AdyenLinearLayout<VoucherOutputData, VoucherConfiguration, ActionComponentData, VoucherComponent>(
+        context,
+        attrs,
+        defStyleAttr
+    ),
     Observer<VoucherOutputData> {
 
     private val binding: VoucherViewBinding = VoucherViewBinding.inflate(LayoutInflater.from(context), this)

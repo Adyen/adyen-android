@@ -14,6 +14,7 @@ import com.adyen.checkout.components.model.payments.response.OrderResponse
 import com.adyen.checkout.core.exception.CheckoutException
 import org.json.JSONException
 import org.json.JSONObject
+import com.adyen.checkout.components.model.payments.response.Action as ActionResponse
 
 sealed class BaseDropInServiceResult
 
@@ -44,9 +45,9 @@ sealed class DropInServiceResult : BaseDropInServiceResult() {
      */
     @Suppress("MemberNameEqualsClassName")
     class Action : DropInServiceResult {
-        val action: com.adyen.checkout.components.model.payments.response.Action
+        val action: ActionResponse
 
-        constructor(action: com.adyen.checkout.components.model.payments.response.Action) {
+        constructor(action: ActionResponse) {
             this.action = action
         }
 
@@ -57,7 +58,7 @@ sealed class DropInServiceResult : BaseDropInServiceResult() {
             } catch (e: JSONException) {
                 throw CheckoutException("Provided action is not a JSON object")
             }
-            action = com.adyen.checkout.components.model.payments.response.Action.SERIALIZER.deserialize(actionJSONObject)
+            action = ActionResponse.SERIALIZER.deserialize(actionJSONObject)
         }
     }
 
@@ -77,7 +78,10 @@ sealed class DropInServiceResult : BaseDropInServiceResult() {
      * @param paymentMethodsApiResponse the updated payment methods list.
      * @param order the order object returned from the backend, or null if an order was cancelled.
      */
-    class Update(val paymentMethodsApiResponse: PaymentMethodsApiResponse, val order: OrderResponse?) : DropInServiceResult()
+    class Update(
+        val paymentMethodsApiResponse: PaymentMethodsApiResponse,
+        val order: OrderResponse?
+    ) : DropInServiceResult()
 
     /**
      * Call failed with an error. Can have the localized error message which will be shown

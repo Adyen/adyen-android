@@ -63,8 +63,10 @@ data class CardParameters(
                 allowedCardNetworks = parseOptStringList(jsonObject.optJSONArray(ALLOWED_CARD_NETWORKS)),
                 isAllowPrepaidCards = jsonObject.optBoolean(ALLOW_PREPAID_CARDS),
                 isBillingAddressRequired = jsonObject.optBoolean(BILLING_ADDRESS_REQUIRED),
-                billingAddressParameters =
-                deserializeOpt(jsonObject.optJSONObject(BILLING_ADDRESS_PARAMETERS), BillingAddressParameters.SERIALIZER),
+                billingAddressParameters = deserializeOpt(
+                    jsonObject.optJSONObject(BILLING_ADDRESS_PARAMETERS),
+                    BillingAddressParameters.SERIALIZER
+                ),
             )
         }
     }

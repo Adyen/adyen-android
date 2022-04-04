@@ -17,8 +17,11 @@ import androidx.annotation.CallSuper
 import com.google.android.material.R
 import com.google.android.material.textfield.TextInputEditText
 
-open class AdyenTextInputEditText @JvmOverloads constructor(context: Context, attrs: AttributeSet? = null, defStyleAttr: Int = 0) :
-    TextInputEditText(context, attrs, if (defStyleAttr == 0) R.attr.editTextStyle else defStyleAttr) {
+open class AdyenTextInputEditText @JvmOverloads constructor(
+    context: Context,
+    attrs: AttributeSet? = null,
+    defStyleAttr: Int = 0
+) : TextInputEditText(context, attrs, if (defStyleAttr == 0) R.attr.editTextStyle else defStyleAttr) {
 
     private var listener: Listener? = null
 

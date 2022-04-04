@@ -67,7 +67,9 @@ class PaymentMethodAdapter @JvmOverloads constructor(
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): BaseViewHolder {
         return when (viewType) {
             PAYMENT_METHODS_HEADER -> HeaderVH(getView(parent, R.layout.payment_methods_list_header))
-            STORED_PAYMENT_METHOD -> StoredPaymentMethodVH(getView(parent, R.layout.removable_payment_methods_list_item))
+            STORED_PAYMENT_METHOD -> StoredPaymentMethodVH(
+                getView(parent, R.layout.removable_payment_methods_list_item)
+            )
             PAYMENT_METHOD -> PaymentMethodVH(getView(parent, R.layout.payment_methods_list_item))
             GIFT_CARD_PAYMENT_METHOD -> GiftCardPaymentMethodVH(getView(parent, R.layout.payment_methods_list_item))
             PAYMENT_METHODS_NOTE -> NoteVH(getView(parent, R.layout.payment_methods_list_note))
@@ -184,7 +186,8 @@ class PaymentMethodAdapter @JvmOverloads constructor(
             holder.detail.visibility = View.GONE
         } else {
             holder.detail.visibility = View.VISIBLE
-            val value = CurrencyUtils.formatAmount(giftCardPaymentMethod.transactionLimit, giftCardPaymentMethod.shopperLocale)
+            val value =
+                CurrencyUtils.formatAmount(giftCardPaymentMethod.transactionLimit, giftCardPaymentMethod.shopperLocale)
             holder.detail.text = context.getString(R.string.checkout_giftcard_max_transaction_limit, value)
         }
         if (giftCardPaymentMethod.amount == null || giftCardPaymentMethod.shopperLocale == null) {

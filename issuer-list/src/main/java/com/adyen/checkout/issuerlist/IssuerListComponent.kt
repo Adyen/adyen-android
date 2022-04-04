@@ -22,7 +22,12 @@ abstract class IssuerListComponent<IssuerListPaymentMethodT : IssuerListPaymentM
     savedStateHandle: SavedStateHandle,
     genericPaymentMethodDelegate: GenericPaymentMethodDelegate,
     configuration: IssuerListConfiguration
-) : BasePaymentComponent<IssuerListConfiguration, IssuerListInputData, IssuerListOutputData, PaymentComponentState<IssuerListPaymentMethodT>>(
+) : BasePaymentComponent<
+    IssuerListConfiguration,
+    IssuerListInputData,
+    IssuerListOutputData,
+    PaymentComponentState<IssuerListPaymentMethodT>
+    >(
     savedStateHandle,
     genericPaymentMethodDelegate,
     configuration

@@ -27,7 +27,10 @@ interface KeyValueStorage {
     fun isSplitCardFundingSources(): Boolean
 }
 
-class KeyValueStorageImpl(private val appContext: Context, private val sharedPreferences: SharedPreferences) : KeyValueStorage {
+class KeyValueStorageImpl(
+    private val appContext: Context,
+    private val sharedPreferences: SharedPreferences
+) : KeyValueStorage {
 
     companion object {
         private const val DEFAULT_COUNTRY = "NL"
@@ -80,6 +83,10 @@ class KeyValueStorageImpl(private val appContext: Context, private val sharedPre
     }
 
     override fun isSplitCardFundingSources(): Boolean {
-        return sharedPreferences.get(appContext, R.string.split_card_funding_sources_key, DEFAULT_SPLIT_CARD_FUNDING_SOURCES)
+        return sharedPreferences.get(
+            appContext,
+            R.string.split_card_funding_sources_key,
+            DEFAULT_SPLIT_CARD_FUNDING_SOURCES
+        )
     }
 }

@@ -78,7 +78,8 @@ class ActionComponentDialogFragment : DropInBottomSheetDialogFragment(), Observe
 
         try {
             @Suppress("UNCHECKED_CAST")
-            componentView = getViewFor(requireContext(), actionType) as ComponentView<in OutputData, ViewableComponent<*, *, ActionComponentData>>
+            componentView = getViewFor(requireContext(), actionType)
+                as ComponentView<in OutputData, ViewableComponent<*, *, ActionComponentData>>
             actionComponent = getComponent(action)
             attachComponent(actionComponent, componentView)
 
@@ -103,9 +104,15 @@ class ActionComponentDialogFragment : DropInBottomSheetDialogFragment(), Observe
     override fun onBackPressed(): Boolean {
         // polling will be canceled by lifecycle event
         when {
-            shouldFinishWithAction() -> { protocol.finishWithAction() }
-            dropInViewModel.shouldSkipToSinglePaymentMethod() -> { protocol.terminateDropIn() }
-            else -> { protocol.showPaymentMethodsDialog() }
+            shouldFinishWithAction() -> {
+                protocol.finishWithAction()
+            }
+            dropInViewModel.shouldSkipToSinglePaymentMethod() -> {
+                protocol.terminateDropIn()
+            }
+            else -> {
+                protocol.showPaymentMethodsDialog()
+            }
         }
         return true
     }
@@ -137,13 +144,20 @@ class ActionComponentDialogFragment : DropInBottomSheetDialogFragment(), Observe
      */
     @SuppressWarnings("ThrowsCount")
     private fun getComponent(action: Action): ViewableComponent<*, *, ActionComponentData> {
-        val provider = getActionProviderFor(action) ?: throw ComponentException("Unexpected Action component type - $actionType")
+        val provider =
+            getActionProviderFor(action) ?: throw ComponentException("Unexpected Action component type - $actionType")
         if (!provider.requiresView(action)) {
-            throw ComponentException("Action is not viewable - action: ${action.type} - paymentMethod: ${action.paymentMethodType}")
+            throw ComponentException(
+                "Action is not viewable - action: ${action.type} - " +
+                    "paymentMethod: ${action.paymentMethodType}"
+            )
         }
         val component = getActionComponentFor(requireActivity(), provider, dropInViewModel.dropInConfiguration)
         if (!component.canHandleAction(action)) {
-            throw ComponentException("Unexpected Action component type - action: ${action.type} - paymentMethod: ${action.paymentMethodType}")
+            throw ComponentException(
+                "Unexpected Action component type - action: ${action.type} - " +
+                    "paymentMethod: ${action.paymentMethodType}"
+            )
         }
 
         @Suppress("UNCHECKED_CAST")
