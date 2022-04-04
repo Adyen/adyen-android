@@ -13,6 +13,7 @@ import com.adyen.checkout.core.exception.ComponentException
 import com.adyen.checkout.core.log.LogUtil
 import com.adyen.checkout.core.log.Logger
 import com.adyen.checkout.googlepay.GooglePayConfiguration
+import com.adyen.checkout.googlepay.util.AllowedAuthMethods
 import com.adyen.checkout.googlepay.util.AllowedCardNetworks
 
 private val TAG = LogUtil.getTag()
@@ -31,7 +32,7 @@ data class GooglePayParams(
     val totalPriceStatus = googlePayConfiguration.totalPriceStatus
     val countryCode: String? = googlePayConfiguration.countryCode
     val merchantInfo: MerchantInfo? = googlePayConfiguration.merchantInfo
-    val allowedAuthMethods: List<String> = googlePayConfiguration.allowedAuthMethods
+    val allowedAuthMethods: List<String> = getAvailableAuthMethods()
     val allowedCardNetworks: List<String> = getAvailableCardNetworks()
     val isAllowPrepaidCards: Boolean = googlePayConfiguration.isAllowPrepaidCards
     val isEmailRequired: Boolean = googlePayConfiguration.isEmailRequired
@@ -51,6 +52,11 @@ data class GooglePayParams(
                 "GooglePay merchantAccount not found. Update your API version or pass it manually inside your " +
                     "GooglePayConfiguration"
             )
+    }
+
+    private fun getAvailableAuthMethods(): List<String> {
+        return googlePayConfiguration.allowedAuthMethods
+            ?: AllowedAuthMethods.allAllowedAuthMethods
     }
 
     private fun getAvailableCardNetworks(): List<String> {

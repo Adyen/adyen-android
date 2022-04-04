@@ -26,7 +26,6 @@ import com.adyen.checkout.core.util.ParcelUtils.writeBoolean
 import com.adyen.checkout.googlepay.model.BillingAddressParameters
 import com.adyen.checkout.googlepay.model.MerchantInfo
 import com.adyen.checkout.googlepay.model.ShippingAddressParameters
-import com.adyen.checkout.googlepay.util.AllowedAuthMethods
 import com.google.android.gms.wallet.WalletConstants
 import java.util.Locale
 
@@ -38,7 +37,7 @@ class GooglePayConfiguration : Configuration, AmountConfiguration {
     val totalPriceStatus: String
     val countryCode: String?
     val merchantInfo: MerchantInfo?
-    val allowedAuthMethods: List<String>
+    val allowedAuthMethods: List<String>?
     val allowedCardNetworks: List<String>?
     val isAllowPrepaidCards: Boolean
     val isEmailRequired: Boolean
@@ -59,7 +58,7 @@ class GooglePayConfiguration : Configuration, AmountConfiguration {
         totalPriceStatus: String,
         countryCode: String?,
         merchantInfo: MerchantInfo?,
-        allowedAuthMethods: List<String>,
+        allowedAuthMethods: List<String>?,
         allowedCardNetworks: List<String>?,
         isAllowPrepaidCards: Boolean,
         isEmailRequired: Boolean,
@@ -95,9 +94,9 @@ class GooglePayConfiguration : Configuration, AmountConfiguration {
         countryCode = parcel.readString()
         merchantInfo = parcel.readParcelable(MerchantInfo::class.java.classLoader)
         @Suppress("UNCHECKED_CAST")
-        allowedAuthMethods = parcel.readArrayList(String::class.java.classLoader) as List<String>
+        allowedAuthMethods = parcel.readArrayList(String::class.java.classLoader) as? List<String>
         @Suppress("UNCHECKED_CAST")
-        allowedCardNetworks = parcel.readArrayList(String::class.java.classLoader) as List<String>
+        allowedCardNetworks = parcel.readArrayList(String::class.java.classLoader) as? List<String>
         isAllowPrepaidCards = readBoolean(parcel)
         isEmailRequired = readBoolean(parcel)
         isExistingPaymentMethodRequired = readBoolean(parcel)
@@ -139,7 +138,7 @@ class GooglePayConfiguration : Configuration, AmountConfiguration {
         }
         private var builderMerchantInfo: MerchantInfo? = null
         private var builderCountryCode: String? = null
-        private var builderAllowedAuthMethods: List<String> = AllowedAuthMethods.allAllowedAuthMethods
+        private var builderAllowedAuthMethods: List<String>? = null
         private var builderAllowedCardNetworks: List<String>? = null
         private var builderAllowPrepaidCards = false
         private var builderEmailRequired = false
@@ -257,19 +256,19 @@ class GooglePayConfiguration : Configuration, AmountConfiguration {
          * @param googlePayEnvironment The GooglePay environment.
          */
         fun setGooglePayEnvironment(googlePayEnvironment: Int): Builder {
-            if (
-                googlePayEnvironment != WalletConstants.ENVIRONMENT_TEST &&
-                googlePayEnvironment != WalletConstants.ENVIRONMENT_PRODUCTION
-            ) {
+            if (!isGooglePayEnvironmentValid(googlePayEnvironment)) {
                 throw CheckoutException(
-                    "Invalid value for Google Environment. Use either WalletConstants.ENVIRONMENT_TEST or " +
-                        "WalletConstants.ENVIRONMENT_PRODUCTION"
+                    "Invalid value for Google Environment. Use either WalletConstants.ENVIRONMENT_TEST or" +
+                        " WalletConstants.ENVIRONMENT_PRODUCTION"
                 )
             }
             builderGooglePayEnvironment = googlePayEnvironment
             builderIsGoogleEnvironmentSetManually = true
             return this
         }
+
+        private fun isGooglePayEnvironmentValid(environment: Int): Boolean =
+            environment == WalletConstants.ENVIRONMENT_TEST || environment == WalletConstants.ENVIRONMENT_PRODUCTION
 
         override fun setAmount(amount: Amount): Builder {
             if (!isSupported(amount.currency) || amount.value < 0) {
@@ -289,7 +288,7 @@ class GooglePayConfiguration : Configuration, AmountConfiguration {
             return this
         }
 
-        fun setAllowedAuthMethods(allowedAuthMethods: List<String>): Builder {
+        fun setAllowedAuthMethods(allowedAuthMethods: List<String>?): Builder {
             builderAllowedAuthMethods = allowedAuthMethods
             return this
         }
