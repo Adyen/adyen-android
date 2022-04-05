@@ -26,7 +26,7 @@ import java.util.concurrent.Callable
  */
 abstract class Connection<T> protected constructor(
     protected val url: String
-) : Callable<T> {
+) : HttpClient, Callable<T> {
 
     private var urlConnection: HttpURLConnection? = null
 
@@ -38,7 +38,7 @@ abstract class Connection<T> protected constructor(
      * @throws IOException In case an IO error happens.
      */
     @Throws(IOException::class, IllegalStateException::class)
-    protected operator fun get(headers: Map<String, String> = emptyMap()): ByteArray {
+    override fun get(headers: Map<String, String>): ByteArray {
         if (urlConnection != null) {
             throw IllegalStateException("Connection already initiated")
         }
@@ -59,7 +59,7 @@ abstract class Connection<T> protected constructor(
      * @throws IOException In case an IO error happens.
      */
     @Throws(IOException::class, IllegalStateException::class)
-    protected fun post(headers: Map<String, String>, data: ByteArray): ByteArray {
+    override fun post(jsonBody: String, headers: Map<String, String>): ByteArray {
         if (urlConnection != null) {
             throw IllegalStateException("Connection already initiated")
         }
@@ -68,7 +68,7 @@ abstract class Connection<T> protected constructor(
             urlConnection = connection
             connection.connect()
             connection.outputStream.use { outputStream ->
-                outputStream.write(data)
+                outputStream.write(jsonBody.toByteArray(Charsets.UTF_8))
                 outputStream.flush()
             }
             handleResponse(connection)

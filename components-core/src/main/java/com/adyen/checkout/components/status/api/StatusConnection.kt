@@ -25,8 +25,8 @@ internal class StatusConnection(
     @Throws(IOException::class, JSONException::class)
     override fun call(): StatusResponse {
         Logger.v(TAG, "call - $url")
-        val body = StatusRequest.SERIALIZER.serialize(mStatusRequest).toString().toByteArray(Charset.defaultCharset())
-        val bytes = post(CONTENT_TYPE_JSON_HEADER, body)
+        val body = StatusRequest.SERIALIZER.serialize(mStatusRequest).toString()
+        val bytes = post(body, CONTENT_TYPE_JSON_HEADER)
         val result = String(bytes, Charset.defaultCharset())
         val jsonObject = JSONObject(result)
         return StatusResponse.SERIALIZER.deserialize(jsonObject)

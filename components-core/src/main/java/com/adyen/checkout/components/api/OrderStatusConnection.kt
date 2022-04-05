@@ -15,9 +15,9 @@ import com.adyen.checkout.core.api.Environment
 import com.adyen.checkout.core.log.LogUtil
 import com.adyen.checkout.core.log.Logger
 import com.adyen.checkout.core.model.toStringPretty
-import java.io.IOException
 import org.json.JSONException
 import org.json.JSONObject
+import java.io.IOException
 
 private val TAG = LogUtil.getTag()
 private const val ENDPOINT = "v1/order/status?clientKey="
@@ -34,7 +34,7 @@ class OrderStatusConnection(
         Logger.v(TAG, "call - $url")
         val requestJson = OrderStatusRequest.SERIALIZER.serialize(request)
         Logger.v(TAG, "request - ${requestJson.toStringPretty()}")
-        val result = post(CONTENT_TYPE_JSON_HEADER, requestJson.toString().toByteArray(Charsets.UTF_8))
+        val result = post(requestJson.toString(), CONTENT_TYPE_JSON_HEADER)
         val resultJson = JSONObject(String(result, Charsets.UTF_8))
         Logger.v(TAG, "response: ${resultJson.toStringPretty()}")
         return OrderStatusResponse.SERIALIZER.deserialize(resultJson)

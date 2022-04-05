@@ -30,7 +30,7 @@ class BinLookupConnection(
         Logger.v(TAG, "call - $url")
         Logger.v(TAG, "request - ${BinLookupRequest.SERIALIZER.serialize(request).toStringPretty()}")
         val requestString = BinLookupRequest.SERIALIZER.serialize(request).toString()
-        val result = post(CONTENT_TYPE_JSON_HEADER, requestString.toByteArray(Charsets.UTF_8))
+        val result = post(requestString, CONTENT_TYPE_JSON_HEADER)
         val resultJson = JSONObject(String(result, Charsets.UTF_8))
         Logger.v(TAG, "response: ${resultJson.toStringPretty()}")
         return BinLookupResponse.SERIALIZER.deserialize(resultJson)
