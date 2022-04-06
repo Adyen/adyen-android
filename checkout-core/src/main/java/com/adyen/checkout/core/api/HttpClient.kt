@@ -10,7 +10,7 @@ package com.adyen.checkout.core.api
 
 interface HttpClient {
 
-    fun get(headers: Map<String, String> = emptyMap()): ByteArray
+    fun get(path: String, headers: Map<String, String> = emptyMap()): ByteArray
 
-    fun post(jsonBody: String, headers: Map<String, String> = emptyMap()): ByteArray
+    fun post(path: String, jsonBody: String, headers: Map<String, String> = emptyMap()): ByteArray
 }

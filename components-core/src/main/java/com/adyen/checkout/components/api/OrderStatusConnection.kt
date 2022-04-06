@@ -20,21 +20,21 @@ import org.json.JSONObject
 import java.io.IOException
 
 private val TAG = LogUtil.getTag()
-private const val ENDPOINT = "v1/order/status?clientKey="
 
 class OrderStatusConnection(
     private val request: OrderStatusRequest,
     environment: Environment,
     clientKey: String
-) : Connection<OrderStatusResponse>(
-    "${environment.baseUrl}$ENDPOINT$clientKey"
-) {
+) : Connection<OrderStatusResponse>(environment.baseUrl) {
+
+    private val path = "v1/order/status?clientKey=$clientKey"
+
     @Throws(IOException::class, JSONException::class)
     override fun call(): OrderStatusResponse {
-        Logger.v(TAG, "call - $url")
+        Logger.v(TAG, "call - $path")
         val requestJson = OrderStatusRequest.SERIALIZER.serialize(request)
         Logger.v(TAG, "request - ${requestJson.toStringPretty()}")
-        val result = post(requestJson.toString(), CONTENT_TYPE_JSON_HEADER)
+        val result = post(path, requestJson.toString(), CONTENT_TYPE_JSON_HEADER)
         val resultJson = JSONObject(String(result, Charsets.UTF_8))
         Logger.v(TAG, "response: ${resultJson.toStringPretty()}")
         return OrderStatusResponse.SERIALIZER.deserialize(resultJson)
