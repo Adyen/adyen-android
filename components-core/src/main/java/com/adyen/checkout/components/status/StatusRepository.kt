@@ -12,8 +12,8 @@ import android.os.Looper
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import com.adyen.checkout.components.status.api.StatusApi
-import com.adyen.checkout.components.status.api.StatusConnectionTask
 import com.adyen.checkout.components.status.api.StatusResponseUtils.isFinalResult
+import com.adyen.checkout.components.status.api.StatusTask
 import com.adyen.checkout.components.status.model.StatusResponse
 import com.adyen.checkout.core.api.Environment
 import com.adyen.checkout.core.exception.ApiCallException
@@ -40,7 +40,7 @@ class StatusRepository private constructor(environment: Environment) {
     private val _errorLiveData = MutableLiveData<ComponentException?>()
     val errorLiveData: LiveData<ComponentException?> = _errorLiveData
 
-    val statusCallback: StatusConnectionTask.StatusCallback = object : StatusConnectionTask.StatusCallback {
+    val statusCallback: StatusTask.StatusCallback = object : StatusTask.StatusCallback {
         override fun onSuccess(statusResponse: StatusResponse) {
             Logger.d(TAG, "onSuccess - " + statusResponse.resultCode)
             _responseLiveData.postValue(statusResponse)

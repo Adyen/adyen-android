@@ -9,7 +9,6 @@
 package com.adyen.checkout.sessions.repository
 
 import com.adyen.checkout.components.ActionComponentData
-import com.adyen.checkout.components.api.suspendedCall
 import com.adyen.checkout.components.base.Configuration
 import com.adyen.checkout.components.model.payments.request.OrderRequest
 import com.adyen.checkout.components.model.payments.request.PaymentComponentData
@@ -17,33 +16,29 @@ import com.adyen.checkout.components.model.payments.request.PaymentMethodDetails
 import com.adyen.checkout.core.exception.CheckoutException
 import com.adyen.checkout.core.log.LogUtil
 import com.adyen.checkout.core.log.Logger
-import com.adyen.checkout.sessions.api.SessionBalanceConnection
-import com.adyen.checkout.sessions.api.SessionCancelOrderConnection
-import com.adyen.checkout.sessions.api.SessionCreateOrderConnection
-import com.adyen.checkout.sessions.api.SessionDetailsConnection
-import com.adyen.checkout.sessions.api.SessionPaymentsConnection
-import com.adyen.checkout.sessions.api.SessionSetupConnection
+import com.adyen.checkout.sessions.api.SessionBalanceService
+import com.adyen.checkout.sessions.api.SessionCancelOrderService
+import com.adyen.checkout.sessions.api.SessionCreateOrderService
+import com.adyen.checkout.sessions.api.SessionDetailsService
+import com.adyen.checkout.sessions.api.SessionPaymentsService
+import com.adyen.checkout.sessions.api.SessionSetupService
 import com.adyen.checkout.sessions.model.Session
 import com.adyen.checkout.sessions.model.orders.SessionBalanceRequest
-import com.adyen.checkout.sessions.model.orders.SessionCancelOrderRequest
-import com.adyen.checkout.sessions.model.payments.SessionDetailsRequest
-import com.adyen.checkout.sessions.model.orders.SessionOrderRequest
-import com.adyen.checkout.sessions.model.payments.SessionPaymentsRequest
-import com.adyen.checkout.sessions.model.setup.SessionSetupRequest
 import com.adyen.checkout.sessions.model.orders.SessionBalanceResponse
+import com.adyen.checkout.sessions.model.orders.SessionCancelOrderRequest
 import com.adyen.checkout.sessions.model.orders.SessionCancelOrderResponse
-import com.adyen.checkout.sessions.model.payments.SessionDetailsResponse
+import com.adyen.checkout.sessions.model.orders.SessionOrderRequest
 import com.adyen.checkout.sessions.model.orders.SessionOrderResponse
+import com.adyen.checkout.sessions.model.payments.SessionDetailsRequest
+import com.adyen.checkout.sessions.model.payments.SessionDetailsResponse
+import com.adyen.checkout.sessions.model.payments.SessionPaymentsRequest
 import com.adyen.checkout.sessions.model.payments.SessionPaymentsResponse
+import com.adyen.checkout.sessions.model.setup.SessionSetupRequest
 import com.adyen.checkout.sessions.model.setup.SessionSetupResponse
-import java.io.IOException
 import org.json.JSONException
+import java.io.IOException
 
 class SessionRepository {
-
-    companion object {
-        private val TAG = LogUtil.getTag()
-    }
 
     suspend fun setupSession(
         configuration: Configuration,
@@ -53,12 +48,12 @@ class SessionRepository {
         Logger.d(TAG, "Setting up session")
         try {
             val request = SessionSetupRequest(session.sessionData.orEmpty(), order)
-            return SessionSetupConnection(
+            return SessionSetupService(
                 request = request,
                 environment = configuration.environment,
                 sessionId = session.id,
                 clientKey = configuration.clientKey
-            ).suspendedCall()
+            ).setupSession()
         } catch (e: IOException) {
             Logger.e(TAG, "SessionSetupConnection Failed", e)
             throw CheckoutException("Unable to setup session")
@@ -76,12 +71,12 @@ class SessionRepository {
         Logger.d(TAG, "Submitting payment")
         try {
             val request = SessionPaymentsRequest(session.sessionData.orEmpty(), paymentComponentData)
-            return SessionPaymentsConnection(
+            return SessionPaymentsService(
                 request = request,
                 environment = configuration.environment,
                 sessionId = session.id,
                 clientKey = configuration.clientKey
-            ).suspendedCall()
+            ).submitPayment()
         } catch (e: IOException) {
             Logger.e(TAG, "SessionPaymentsConnection Failed", e)
             throw CheckoutException("Unable to submit payment")
@@ -103,12 +98,12 @@ class SessionRepository {
                 paymentData = actionComponentData.paymentData,
                 details = actionComponentData.details
             )
-            return SessionDetailsConnection(
+            return SessionDetailsService(
                 request = request,
                 environment = configuration.environment,
                 sessionId = session.id,
                 clientKey = configuration.clientKey
-            ).suspendedCall()
+            ).submitDetails()
         } catch (e: IOException) {
             Logger.e(TAG, "SessionDetailsConnection Failed", e)
             throw CheckoutException("Unable to submit details")
@@ -126,12 +121,12 @@ class SessionRepository {
         Logger.d(TAG, "Checking payment method balance")
         try {
             val request = SessionBalanceRequest(session.sessionData.orEmpty(), paymentMethodDetails)
-            return SessionBalanceConnection(
+            return SessionBalanceService(
                 request = request,
                 environment = configuration.environment,
                 sessionId = session.id,
                 clientKey = configuration.clientKey
-            ).suspendedCall()
+            ).checkBalance()
         } catch (e: IOException) {
             Logger.e(TAG, "SessionBalanceConnection Failed", e)
             throw CheckoutException("Unable to fetch balance")
@@ -148,12 +143,12 @@ class SessionRepository {
         Logger.d(TAG, "Creating order")
         try {
             val request = SessionOrderRequest(session.sessionData.orEmpty())
-            return SessionCreateOrderConnection(
+            return SessionCreateOrderService(
                 request = request,
                 environment = configuration.environment,
                 sessionId = session.id,
                 clientKey = configuration.clientKey
-            ).suspendedCall()
+            ).createOrder()
         } catch (e: IOException) {
             Logger.e(TAG, "SessionCreateOrderConnection Failed", e)
             throw CheckoutException("Unable to create order")
@@ -171,12 +166,12 @@ class SessionRepository {
         Logger.d(TAG, "Cancelling order")
         try {
             val request = SessionCancelOrderRequest(session.sessionData.orEmpty(), order)
-            return SessionCancelOrderConnection(
+            return SessionCancelOrderService(
                 request = request,
                 environment = configuration.environment,
                 sessionId = session.id,
                 clientKey = configuration.clientKey
-            ).suspendedCall()
+            ).cancelOrder()
         } catch (e: IOException) {
             Logger.e(TAG, "SessionCancelOrderConnection Failed", e)
             throw CheckoutException("Unable to cancel order")
@@ -184,5 +179,9 @@ class SessionRepository {
             Logger.e(TAG, "SessionCancelOrderConnection unexpected result", e)
             throw CheckoutException("Unable to cancel order")
         }
+    }
+
+    companion object {
+        private val TAG = LogUtil.getTag()
     }
 }

@@ -8,31 +8,33 @@
 
 package com.adyen.checkout.components.api
 
-import com.adyen.checkout.core.api.Connection
 import com.adyen.checkout.core.api.Environment
+import com.adyen.checkout.core.api.HttpClientFactory
 import com.adyen.checkout.core.log.LogUtil
 import com.adyen.checkout.core.log.Logger
-import org.json.JSONException
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.withContext
 import org.json.JSONObject
-import java.io.IOException
 
 private val TAG = LogUtil.getTag()
-private const val ENDPOINT = "v1/clientKeys/"
 private const val PUBLIC_KEY_JSON_KEY = "publicKey"
 
-class PublicKeyConnection(
-    environment: Environment,
+internal class PublicKeyService(
+    private val environment: Environment,
     clientKey: String
-) : Connection<String>(environment.baseUrl) {
+) {
 
-    private val path = "$ENDPOINT$clientKey"
+    private val path = "v1/clientKeys/$clientKey"
 
-    @Throws(IOException::class, JSONException::class)
-    override fun call(): String {
+    suspend fun getPublicKey(): String = withContext(Dispatchers.IO) {
         Logger.v(TAG, "call - $path")
-        val result = String(get(path), Charsets.UTF_8)
+
+        val httpClient = HttpClientFactory.getHttpClient(environment.baseUrl)
+        val result = String(httpClient.get(path), Charsets.UTF_8)
         val jsonObject = JSONObject(result)
+
         Logger.v(TAG, "result: $result")
-        return jsonObject.getString(PUBLIC_KEY_JSON_KEY)
+
+        jsonObject.getString(PUBLIC_KEY_JSON_KEY)
     }
 }

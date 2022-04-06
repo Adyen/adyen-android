@@ -10,33 +10,39 @@ package com.adyen.checkout.adyen3ds2.connection
 
 import com.adyen.checkout.adyen3ds2.model.SubmitFingerprintRequest
 import com.adyen.checkout.adyen3ds2.model.SubmitFingerprintResponse
-import com.adyen.checkout.core.api.Connection
+import com.adyen.checkout.core.api.Connection.Companion.CONTENT_TYPE_JSON_HEADER
 import com.adyen.checkout.core.api.Environment
+import com.adyen.checkout.core.api.HttpClientFactory
 import com.adyen.checkout.core.log.LogUtil
 import com.adyen.checkout.core.log.Logger
 import com.adyen.checkout.core.model.toStringPretty
-import org.json.JSONException
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.withContext
 import org.json.JSONObject
-import java.io.IOException
 
 private val TAG = LogUtil.getTag()
 
-class SubmitFingerprintConnection(
+internal class SubmitFingerprintService(
     private val request: SubmitFingerprintRequest,
-    environment: Environment,
+    private val environment: Environment,
     clientKey: String
-) : Connection<SubmitFingerprintResponse>(environment.baseUrl) {
+) {
 
     private val path = "v1/submitThreeDS2Fingerprint?token=$clientKey"
 
-    @Throws(IOException::class, JSONException::class)
-    override fun call(): SubmitFingerprintResponse {
+    suspend fun submitFingerprint(): SubmitFingerprintResponse = withContext(Dispatchers.IO) {
         Logger.v(TAG, "call - $path")
+
         val requestJson = SubmitFingerprintRequest.SERIALIZER.serialize(request)
+
         Logger.v(TAG, "request - ${requestJson.toStringPretty()}")
-        val result = post(path, requestJson.toString(), CONTENT_TYPE_JSON_HEADER)
+
+        val httpClient = HttpClientFactory.getHttpClient(environment.baseUrl)
+        val result = httpClient.post(path, requestJson.toString(), CONTENT_TYPE_JSON_HEADER)
         val resultJson = JSONObject(String(result, Charsets.UTF_8))
+
         Logger.v(TAG, "response: ${resultJson.toStringPretty()}")
-        return SubmitFingerprintResponse.SERIALIZER.deserialize(resultJson)
+
+        SubmitFingerprintResponse.SERIALIZER.deserialize(resultJson)
     }
 }

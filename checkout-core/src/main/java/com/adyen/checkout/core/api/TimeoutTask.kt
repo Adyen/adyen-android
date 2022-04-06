@@ -10,22 +10,23 @@ package com.adyen.checkout.core.api
 import androidx.annotation.CallSuper
 import com.adyen.checkout.core.log.LogUtil
 import com.adyen.checkout.core.log.Logger
+import java.util.concurrent.Callable
 import java.util.concurrent.ExecutionException
 import java.util.concurrent.FutureTask
 import java.util.concurrent.TimeUnit
 import java.util.concurrent.TimeoutException
 
 /**
- * A cancellable [FutureTask] that wraps a [Connection] callable.
+ * A cancellable [FutureTask] that wraps a [Callable].
  *
  * @param <T> The type returned by the [Connection]
- * @param connection The Connection to be ran.
- * @param mTimeOut A time out in milliseconds to cancel the connection.
+ * @param callable The block of code to be ran.
+ * @param timeOut A time out in milliseconds to cancel the connection.
  */
-abstract class ConnectionTask<T> protected constructor(
-    connection: Connection<T>,
-    private val mTimeOut: Long = 0,
-) : FutureTask<T>(connection) {
+abstract class TimeoutTask<T> protected constructor(
+    callable: Callable<T>,
+    private val timeOut: Long = 0,
+) : FutureTask<T>(callable) {
 
     @CallSuper
     override fun cancel(mayInterruptIfRunning: Boolean): Boolean {
@@ -34,19 +35,19 @@ abstract class ConnectionTask<T> protected constructor(
     }
 
     override fun run() {
-        if (mTimeOut > 0) {
-            Logger.d(TAG, "run with timeout - $mTimeOut")
+        if (timeOut > 0) {
+            Logger.d(TAG, "run with timeout - $timeOut")
         }
         super.run()
-        if (mTimeOut > 0) {
+        if (timeOut > 0) {
             try {
-                get(mTimeOut, TimeUnit.MILLISECONDS)
+                get(timeOut, TimeUnit.MILLISECONDS)
             } catch (e: ExecutionException) {
                 Logger.d(TAG, "ExecutionException", e)
             } catch (e: InterruptedException) {
                 Logger.d(TAG, "InterruptedException", e)
             } catch (e: TimeoutException) {
-                Logger.e(TAG, "Task timed out after $mTimeOut milliseconds.")
+                Logger.e(TAG, "Task timed out after $timeOut milliseconds.")
                 cancel(true)
             }
         }
