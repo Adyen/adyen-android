@@ -53,8 +53,7 @@ object LogUtil {
     private val callerClassName: String
         get() {
             val stElements = Thread.currentThread().stackTrace
-            for (i in 1 until stElements.size) {
-                val ste = stElements[i]
+            for (ste in stElements.drop(1)) {
                 val callerClass = ste.className
                 if (callerClass != LogUtil::class.java.name && callerClass.indexOf("java.lang.Thread") != 0) {
                     return callerClass
@@ -64,7 +63,7 @@ object LogUtil {
         }
 
     private fun simplifyClassName(className: String): String {
-        val packageSplit = className.split("\\.").toTypedArray()
+        val packageSplit = className.split(".").toTypedArray()
         return if (packageSplit.isEmpty()) {
             className
         } else packageSplit[packageSplit.size - 1]
