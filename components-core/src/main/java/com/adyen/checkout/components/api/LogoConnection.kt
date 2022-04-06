@@ -20,12 +20,14 @@ private val TAG = LogUtil.getTag()
 /**
  * Connection that gets a Logo [BitmapDrawable] from a URL.
  */
-class LogoConnection(logoUrl: String) : Connection<BitmapDrawable>(logoUrl) {
+class LogoConnection(
+    logoUrl: String
+) : Connection<BitmapDrawable>(logoUrl) {
 
     @Throws(IOException::class)
     override fun call(): BitmapDrawable {
-        Logger.v(TAG, "call - " + url.hashCode())
-        val bytes = get()
+        Logger.v(TAG, "call - " + baseUrl.hashCode())
+        val bytes = get("")
         val bitmap = BitmapFactory.decodeByteArray(bytes, 0, bytes.size)
         return BitmapDrawable(Resources.getSystem(), bitmap)
     }

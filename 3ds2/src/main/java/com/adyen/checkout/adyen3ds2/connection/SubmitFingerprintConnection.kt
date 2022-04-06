@@ -20,21 +20,21 @@ import org.json.JSONObject
 import java.io.IOException
 
 private val TAG = LogUtil.getTag()
-private const val ENDPOINT = "v1/submitThreeDS2Fingerprint?token="
 
 class SubmitFingerprintConnection(
     private val request: SubmitFingerprintRequest,
     environment: Environment,
     clientKey: String
-) : Connection<SubmitFingerprintResponse>(
-    "${environment.baseUrl}$ENDPOINT$clientKey"
-) {
+) : Connection<SubmitFingerprintResponse>(environment.baseUrl) {
+
+    private val path = "v1/submitThreeDS2Fingerprint?token=$clientKey"
+
     @Throws(IOException::class, JSONException::class)
     override fun call(): SubmitFingerprintResponse {
-        Logger.v(TAG, "call - $url")
+        Logger.v(TAG, "call - $path")
         val requestJson = SubmitFingerprintRequest.SERIALIZER.serialize(request)
         Logger.v(TAG, "request - ${requestJson.toStringPretty()}")
-        val result = post(requestJson.toString(), CONTENT_TYPE_JSON_HEADER)
+        val result = post(path, requestJson.toString(), CONTENT_TYPE_JSON_HEADER)
         val resultJson = JSONObject(String(result, Charsets.UTF_8))
         Logger.v(TAG, "response: ${resultJson.toStringPretty()}")
         return SubmitFingerprintResponse.SERIALIZER.deserialize(resultJson)

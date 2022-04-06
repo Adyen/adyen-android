@@ -20,22 +20,22 @@ import org.json.JSONObject
 import java.io.IOException
 
 private val TAG = LogUtil.getTag()
-private const val ENDPOINT = "v1/sessions/"
 
 class SessionBalanceConnection(
     private val request: SessionBalanceRequest,
     environment: Environment,
     sessionId: String,
     clientKey: String
-) : Connection<SessionBalanceResponse>(
-    "${environment.baseUrl}$ENDPOINT$sessionId/paymentMethodBalance?clientKey=$clientKey"
-) {
+) : Connection<SessionBalanceResponse>(environment.baseUrl) {
+
+    private val path = "v1/sessions/$sessionId/paymentMethodBalance?clientKey=$clientKey"
+
     @Throws(IOException::class, JSONException::class)
     override fun call(): SessionBalanceResponse {
-        Logger.v(TAG, "call - $url")
+        Logger.v(TAG, "call - $path")
         val requestJson = SessionBalanceRequest.SERIALIZER.serialize(request)
         Logger.v(TAG, "request - ${requestJson.toStringPretty()}")
-        val result = post(requestJson.toString(), CONTENT_TYPE_JSON_HEADER)
+        val result = post(path, requestJson.toString(), CONTENT_TYPE_JSON_HEADER)
         val resultJson = JSONObject(String(result, Charsets.UTF_8))
         Logger.v(TAG, "response: ${resultJson.toStringPretty()}")
         return SessionBalanceResponse.SERIALIZER.deserialize(resultJson)

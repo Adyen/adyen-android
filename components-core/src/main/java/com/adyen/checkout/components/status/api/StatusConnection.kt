@@ -19,14 +19,14 @@ import java.nio.charset.Charset
 
 internal class StatusConnection(
     url: String,
-    private val mStatusRequest: StatusRequest
+    private val statusRequest: StatusRequest
 ) : Connection<StatusResponse?>(url) {
 
     @Throws(IOException::class, JSONException::class)
     override fun call(): StatusResponse {
-        Logger.v(TAG, "call - $url")
-        val body = StatusRequest.SERIALIZER.serialize(mStatusRequest).toString()
-        val bytes = post(body, CONTENT_TYPE_JSON_HEADER)
+        Logger.v(TAG, "call - $baseUrl")
+        val body = StatusRequest.SERIALIZER.serialize(statusRequest).toString()
+        val bytes = post("", body, CONTENT_TYPE_JSON_HEADER)
         val result = String(bytes, Charset.defaultCharset())
         val jsonObject = JSONObject(result)
         return StatusResponse.SERIALIZER.deserialize(jsonObject)
