@@ -16,7 +16,6 @@ import java.io.InputStream
 import java.net.HttpURLConnection
 import java.nio.charset.StandardCharsets
 import java.util.Collections
-import java.util.concurrent.Callable
 
 /**
  * A wrapper for a callable network connection.
@@ -24,9 +23,9 @@ import java.util.concurrent.Callable
  * @param <T> The type of the connection return.
  * @param baseUrl The URl used to make this Connection.
  */
-abstract class Connection<T> protected constructor(
-    protected val baseUrl: String
-) : HttpClient, Callable<T> {
+class Connection constructor(
+    private val baseUrl: String
+) : HttpClient {
 
     private var urlConnection: HttpURLConnection? = null
 

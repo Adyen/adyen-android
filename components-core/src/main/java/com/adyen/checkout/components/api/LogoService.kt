@@ -10,25 +10,23 @@ package com.adyen.checkout.components.api
 import android.content.res.Resources
 import android.graphics.BitmapFactory
 import android.graphics.drawable.BitmapDrawable
-import com.adyen.checkout.core.api.Connection
+import com.adyen.checkout.core.api.HttpClientFactory
 import com.adyen.checkout.core.log.LogUtil
 import com.adyen.checkout.core.log.Logger
-import java.io.IOException
 
 private val TAG = LogUtil.getTag()
 
-/**
- * Connection that gets a Logo [BitmapDrawable] from a URL.
- */
-class LogoConnection(
-    logoUrl: String
-) : Connection<BitmapDrawable>(logoUrl) {
+internal class LogoService(
+    private val logoUrl: String
+) {
 
-    @Throws(IOException::class)
-    override fun call(): BitmapDrawable {
-        Logger.v(TAG, "call - " + baseUrl.hashCode())
-        val bytes = get("")
+    fun getLogo(): BitmapDrawable {
+        Logger.v(TAG, "call - " + logoUrl.hashCode())
+
+        val httpClient = HttpClientFactory.getHttpClient(logoUrl)
+        val bytes = httpClient.get("")
         val bitmap = BitmapFactory.decodeByteArray(bytes, 0, bytes.size)
+
         return BitmapDrawable(Resources.getSystem(), bitmap)
     }
 }

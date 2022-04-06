@@ -10,30 +10,39 @@ package com.adyen.checkout.card.api
 
 import com.adyen.checkout.card.api.model.BinLookupRequest
 import com.adyen.checkout.card.api.model.BinLookupResponse
-import com.adyen.checkout.core.api.Connection
+import com.adyen.checkout.core.api.Connection.Companion.CONTENT_TYPE_JSON_HEADER
 import com.adyen.checkout.core.api.Environment
+import com.adyen.checkout.core.api.HttpClientFactory
 import com.adyen.checkout.core.log.LogUtil
 import com.adyen.checkout.core.log.Logger
 import com.adyen.checkout.core.model.toStringPretty
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.withContext
 import org.json.JSONObject
 
 private val TAG = LogUtil.getTag()
 
-class BinLookupConnection(
+internal class BinLookupService(
     private val request: BinLookupRequest,
-    environment: Environment,
+    private val environment: Environment,
     clientKey: String
-) : Connection<BinLookupResponse>(environment.baseUrl) {
+) {
 
     private val path = "v2/bin/binLookup?clientKey=$clientKey"
 
-    override fun call(): BinLookupResponse {
+    suspend fun makeBinLookup(): BinLookupResponse = withContext(Dispatchers.IO) {
         Logger.v(TAG, "call - $path")
-        Logger.v(TAG, "request - ${BinLookupRequest.SERIALIZER.serialize(request).toStringPretty()}")
-        val requestString = BinLookupRequest.SERIALIZER.serialize(request).toString()
-        val result = post(path, requestString, CONTENT_TYPE_JSON_HEADER)
+
+        val requestJson = BinLookupRequest.SERIALIZER.serialize(request)
+
+        Logger.v(TAG, "request - ${requestJson.toStringPretty()}")
+
+        val httpClient = HttpClientFactory.getHttpClient(environment.baseUrl)
+        val result = httpClient.post(path, requestJson.toString(), CONTENT_TYPE_JSON_HEADER)
         val resultJson = JSONObject(String(result, Charsets.UTF_8))
+
         Logger.v(TAG, "response: ${resultJson.toStringPretty()}")
-        return BinLookupResponse.SERIALIZER.deserialize(resultJson)
+
+        BinLookupResponse.SERIALIZER.deserialize(resultJson)
     }
 }
