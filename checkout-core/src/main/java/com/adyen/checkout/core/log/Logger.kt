@@ -8,7 +8,6 @@
 package com.adyen.checkout.core.log
 
 import android.util.Log
-import androidx.annotation.IntDef
 import com.adyen.checkout.core.BuildConfig
 
 /**
@@ -17,22 +16,19 @@ import com.adyen.checkout.core.BuildConfig
  */
 // Keeping method names to match the ones from Logcat
 @Suppress("TooManyFunctions")
-object Logger {
-
-    @IntDef(SENSITIVE, Log.VERBOSE, Log.DEBUG, Log.INFO, Log.WARN, Log.ERROR, NONE)
-    @kotlin.annotation.Retention(AnnotationRetention.SOURCE)
-    annotation class LogLevel
+object Logger : AdyenLogger {
 
     // TODO: 14/02/2019 The idea is for this class to have a system where we can send a stream of logs to the merchant and/or proxy to Logcat.
-    private const val SENSITIVE = -1
+
     const val NONE = Log.ASSERT + 1
 
     // The logcat limit changes per device, you can see it using $adb logcat -g
     // 2KB seems like a safe value to be within max payload range
     private const val MAX_LOGCAT_MSG_SIZE = 2048
 
-    @LogLevel
+    @AdyenLogger.LogLevel
     private var logcatLevel = if (BuildConfig.DEBUG) Log.DEBUG else NONE
+
     private var isLogcatLevelInitialized = false
     fun updateDefaultLogcatLevel(isDebugBuild: Boolean) {
         if (!isLogcatLevelInitialized) {
@@ -40,80 +36,49 @@ object Logger {
         }
     }
 
-    @JvmStatic
-    fun setLogcatLevel(@LogLevel logcatLevel: Int) {
+    override fun setLogcatLevel(@AdyenLogger.LogLevel logcatLevel: Int) {
         isLogcatLevelInitialized = true
         this.logcatLevel = logcatLevel
     }
 
-    @JvmStatic
-    fun v(tag: String, msg: String) {
-        logToLogcat(Log.VERBOSE, tag, msg, null)
-    }
-
-    @JvmStatic
-    fun v(tag: String, msg: String, tr: Throwable) {
+    override fun v(tag: String, msg: String, tr: Throwable?) {
         logToLogcat(Log.VERBOSE, tag, msg, tr)
     }
 
-    @JvmStatic
-    fun d(tag: String, msg: String) {
-        logToLogcat(Log.DEBUG, tag, msg, null)
-    }
-
-    @JvmStatic
-    fun d(tag: String, msg: String, tr: Throwable) {
+    override fun d(tag: String, msg: String, tr: Throwable?) {
         logToLogcat(Log.DEBUG, tag, msg, tr)
     }
 
-    @JvmStatic
-    fun i(tag: String, msg: String) {
-        logToLogcat(Log.INFO, tag, msg, null)
-    }
-
-    @JvmStatic
-    fun i(tag: String, msg: String, tr: Throwable) {
+    override fun i(tag: String, msg: String, tr: Throwable?) {
         logToLogcat(Log.INFO, tag, msg, tr)
     }
 
-    @JvmStatic
-    fun w(tag: String, msg: String) {
-        logToLogcat(Log.WARN, tag, msg, null)
-    }
-
-    @JvmStatic
-    fun w(tag: String, msg: String, tr: Throwable) {
+    override fun w(tag: String, msg: String, tr: Throwable?) {
         logToLogcat(Log.WARN, tag, msg, tr)
     }
 
-    @JvmStatic
-    fun e(tag: String, msg: String) {
-        logToLogcat(Log.ERROR, tag, msg, null)
-    }
-
-    @JvmStatic
-    fun e(tag: String, msg: String, tr: Throwable) {
+    override fun e(tag: String, msg: String, tr: Throwable?) {
         logToLogcat(Log.ERROR, tag, msg, tr)
     }
 
     /**
      * Log to be used when you want to debug sensitive information that cannot be committed.
-     * Set the [LogLevel] to [SENSITIVE] and make sure to change it back before committing.
+     * Set the logcatLevel to [SENSITIVE] and make sure to change it back before committing.
      *
      * @param tag Used to identify the source of a log message.
      * @param msg The message you would like logged.
      */
     @Suppress("unused")
-    fun sensitiveLog(tag: String, msg: String) {
-        if (logcatLevel != SENSITIVE) {
+    override fun sensitiveLog(tag: String, msg: String) {
+        if (logcatLevel != sensitive) {
             throw SecurityException("Sensitive information should never be logged. Remove before committing.")
         } else {
-            logToLogcat(SENSITIVE, tag, msg, null)
+            logToLogcat(sensitive, tag, msg, null)
         }
     }
 
     @Suppress("ComplexMethod")
-    private fun logToLogcat(@LogLevel logLevel: Int, tag: String, msg: String, tr: Throwable?) {
+    private fun logToLogcat(@AdyenLogger.LogLevel logLevel: Int, tag: String, msg: String, tr: Throwable?) {
         if (logcatLevel > logLevel) {
             return
         }
@@ -136,7 +101,7 @@ object Logger {
         }
 
         when (logLevel) {
-            SENSITIVE -> if (tr == null) {
+            sensitive -> if (tr == null) {
                 Log.wtf(tag, msg)
             } else {
                 Log.wtf(tag, msg, tr)

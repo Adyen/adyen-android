@@ -12,7 +12,6 @@ import android.app.Application
 
 class CheckoutServiceLocator(val application: Application) {
 
-
     companion object {
         private lateinit var INSTANCE: CheckoutServiceLocator
 
