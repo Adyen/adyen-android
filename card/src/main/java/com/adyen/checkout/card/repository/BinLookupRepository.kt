@@ -80,7 +80,10 @@ class BinLookupRepository {
             val encryptedBin = deferredEncryption.await()
             val cardTypes = cardConfiguration.supportedCardTypes.map { it.txVariant }
             val request = BinLookupRequest(encryptedBin, UUID.randomUUID().toString(), cardTypes)
-            BinLookupService(request, cardConfiguration.environment, cardConfiguration.clientKey).makeBinLookup()
+            BinLookupService(cardConfiguration.environment).makeBinLookup(
+                request,
+                cardConfiguration.clientKey
+            )
         } catch (e: EncryptionException) {
             Logger.e(TAG, "checkCardType - Failed to encrypt BIN", e)
             null

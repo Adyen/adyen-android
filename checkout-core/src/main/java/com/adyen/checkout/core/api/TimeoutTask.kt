@@ -19,7 +19,7 @@ import java.util.concurrent.TimeoutException
 /**
  * A cancellable [FutureTask] that wraps a [Callable].
  *
- * @param <T> The type returned by the [Connection]
+ * @param <T> The type returned by the [Callable]
  * @param callable The block of code to be ran.
  * @param timeOut A time out in milliseconds to cancel the connection.
  */

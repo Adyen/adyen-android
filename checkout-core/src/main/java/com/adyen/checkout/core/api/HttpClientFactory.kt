@@ -11,6 +11,6 @@ package com.adyen.checkout.core.api
 object HttpClientFactory {
 
     fun getHttpClient(baseUrl: String): HttpClient {
-        return Connection(baseUrl)
+        return ConnectionHttpClient(baseUrl)
     }
 }

@@ -25,7 +25,7 @@ class PublicKeyRepository {
         Logger.d(TAG, "fetching publicKey from API")
         repeat(CONNECTION_RETRIES) {
             try {
-                return PublicKeyService(environment, clientKey).getPublicKey()
+                return PublicKeyService(environment).getPublicKey(clientKey)
             } catch (e: IOException) {
                 Logger.e(TAG, "PublicKeyConnection Failed", e)
             } catch (e: JSONException) {

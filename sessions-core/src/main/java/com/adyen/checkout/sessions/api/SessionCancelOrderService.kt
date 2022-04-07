@@ -8,7 +8,7 @@
 
 package com.adyen.checkout.sessions.api
 
-import com.adyen.checkout.core.api.Connection.Companion.CONTENT_TYPE_JSON_HEADER
+import com.adyen.checkout.core.api.ConnectionHttpClient.Companion.CONTENT_TYPE_JSON_HEADER
 import com.adyen.checkout.core.api.Environment
 import com.adyen.checkout.core.api.HttpClientFactory
 import com.adyen.checkout.core.log.LogUtil
@@ -23,15 +23,16 @@ import org.json.JSONObject
 private val TAG = LogUtil.getTag()
 
 internal class SessionCancelOrderService(
-    private val request: SessionCancelOrderRequest,
     private val environment: Environment,
-    sessionId: String,
-    clientKey: String
 ) {
 
-    private val path = "v1/sessions/$sessionId/orders/cancel?clientKey=$clientKey"
+    suspend fun cancelOrder(
+        request: SessionCancelOrderRequest,
+        sessionId: String,
+        clientKey: String,
+    ): SessionCancelOrderResponse = withContext(Dispatchers.IO) {
+        val path = "v1/sessions/$sessionId/orders/cancel?clientKey=$clientKey"
 
-    suspend fun cancelOrder(): SessionCancelOrderResponse = withContext(Dispatchers.IO) {
         Logger.v(TAG, "call - $path")
 
         val requestJson = SessionCancelOrderRequest.SERIALIZER.serialize(request)

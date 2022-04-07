@@ -16,11 +16,9 @@ import com.adyen.checkout.core.log.Logger
 
 private val TAG = LogUtil.getTag()
 
-internal class LogoService(
-    private val logoUrl: String
-) {
+internal class LogoService {
 
-    fun getLogo(): BitmapDrawable {
+    fun getLogo(logoUrl: String): BitmapDrawable {
         Logger.v(TAG, "call - " + logoUrl.hashCode())
 
         val httpClient = HttpClientFactory.getHttpClient(logoUrl)

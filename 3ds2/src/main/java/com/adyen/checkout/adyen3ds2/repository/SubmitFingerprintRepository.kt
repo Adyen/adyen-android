@@ -32,11 +32,10 @@ class SubmitFingerprintRepository {
             paymentData = paymentData
         )
 
-        val response = SubmitFingerprintService(
+        val response = SubmitFingerprintService(configuration.environment).submitFingerprint(
             request,
-            environment = configuration.environment,
-            clientKey = configuration.clientKey
-        ).submitFingerprint()
+            configuration.clientKey
+        )
 
         return when {
             response.type == RESPONSE_TYPE_COMPLETED && response.details != null -> {
