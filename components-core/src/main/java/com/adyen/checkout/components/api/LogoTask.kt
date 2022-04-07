@@ -21,7 +21,7 @@ class LogoTask(
     private val logoUrl: String,
     callback: LogoCallback
 ) : TimeoutTask<BitmapDrawable>(
-    { LogoService(logoUrl).getLogo() }
+    { LogoService().getLogo(logoUrl) }
 ) {
 
     var callbacks: HashSet<LogoCallback> = hashSetOf(callback)

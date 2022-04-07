@@ -31,11 +31,10 @@ class OrderStatusRepository {
         Logger.d(TAG, "Getting order status")
         try {
             val request = OrderStatusRequest(orderData)
-            return OrderStatusService(
+            return OrderStatusService(configuration.environment).getOrderStatus(
                 request,
-                environment = configuration.environment,
-                clientKey = configuration.clientKey
-            ).getOrderStatus()
+                configuration.clientKey
+            )
         } catch (e: IOException) {
             Logger.e(TAG, "OrderStatusConnection Failed", e)
             throw CheckoutException("Unable to get order status")

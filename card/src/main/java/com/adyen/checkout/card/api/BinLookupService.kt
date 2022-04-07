@@ -10,7 +10,7 @@ package com.adyen.checkout.card.api
 
 import com.adyen.checkout.card.api.model.BinLookupRequest
 import com.adyen.checkout.card.api.model.BinLookupResponse
-import com.adyen.checkout.core.api.Connection.Companion.CONTENT_TYPE_JSON_HEADER
+import com.adyen.checkout.core.api.ConnectionHttpClient.Companion.CONTENT_TYPE_JSON_HEADER
 import com.adyen.checkout.core.api.Environment
 import com.adyen.checkout.core.api.HttpClientFactory
 import com.adyen.checkout.core.log.LogUtil
@@ -23,14 +23,15 @@ import org.json.JSONObject
 private val TAG = LogUtil.getTag()
 
 internal class BinLookupService(
-    private val request: BinLookupRequest,
     private val environment: Environment,
-    clientKey: String
 ) {
 
-    private val path = "v2/bin/binLookup?clientKey=$clientKey"
+    suspend fun makeBinLookup(
+        request: BinLookupRequest,
+        clientKey: String,
+    ): BinLookupResponse = withContext(Dispatchers.IO) {
+        val path = "v2/bin/binLookup?clientKey=$clientKey"
 
-    suspend fun makeBinLookup(): BinLookupResponse = withContext(Dispatchers.IO) {
         Logger.v(TAG, "call - $path")
 
         val requestJson = BinLookupRequest.SERIALIZER.serialize(request)

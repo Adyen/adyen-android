@@ -20,13 +20,14 @@ private val TAG = LogUtil.getTag()
 private const val PUBLIC_KEY_JSON_KEY = "publicKey"
 
 internal class PublicKeyService(
-    private val environment: Environment,
-    clientKey: String
+    private val environment: Environment
 ) {
 
-    private val path = "v1/clientKeys/$clientKey"
+    suspend fun getPublicKey(
+        clientKey: String
+    ): String = withContext(Dispatchers.IO) {
+        val path = "v1/clientKeys/$clientKey"
 
-    suspend fun getPublicKey(): String = withContext(Dispatchers.IO) {
         Logger.v(TAG, "call - $path")
 
         val httpClient = HttpClientFactory.getHttpClient(environment.baseUrl)

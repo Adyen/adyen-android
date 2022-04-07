@@ -48,12 +48,11 @@ class SessionRepository {
         Logger.d(TAG, "Setting up session")
         try {
             val request = SessionSetupRequest(session.sessionData.orEmpty(), order)
-            return SessionSetupService(
+            return SessionSetupService(configuration.environment).setupSession(
                 request = request,
-                environment = configuration.environment,
                 sessionId = session.id,
                 clientKey = configuration.clientKey
-            ).setupSession()
+            )
         } catch (e: IOException) {
             Logger.e(TAG, "SessionSetupConnection Failed", e)
             throw CheckoutException("Unable to setup session")
@@ -71,12 +70,11 @@ class SessionRepository {
         Logger.d(TAG, "Submitting payment")
         try {
             val request = SessionPaymentsRequest(session.sessionData.orEmpty(), paymentComponentData)
-            return SessionPaymentsService(
+            return SessionPaymentsService(configuration.environment).submitPayment(
                 request = request,
-                environment = configuration.environment,
                 sessionId = session.id,
                 clientKey = configuration.clientKey
-            ).submitPayment()
+            )
         } catch (e: IOException) {
             Logger.e(TAG, "SessionPaymentsConnection Failed", e)
             throw CheckoutException("Unable to submit payment")
@@ -98,12 +96,11 @@ class SessionRepository {
                 paymentData = actionComponentData.paymentData,
                 details = actionComponentData.details
             )
-            return SessionDetailsService(
+            return SessionDetailsService(configuration.environment).submitDetails(
                 request = request,
-                environment = configuration.environment,
                 sessionId = session.id,
                 clientKey = configuration.clientKey
-            ).submitDetails()
+            )
         } catch (e: IOException) {
             Logger.e(TAG, "SessionDetailsConnection Failed", e)
             throw CheckoutException("Unable to submit details")
@@ -121,12 +118,11 @@ class SessionRepository {
         Logger.d(TAG, "Checking payment method balance")
         try {
             val request = SessionBalanceRequest(session.sessionData.orEmpty(), paymentMethodDetails)
-            return SessionBalanceService(
+            return SessionBalanceService(configuration.environment).checkBalance(
                 request = request,
-                environment = configuration.environment,
                 sessionId = session.id,
                 clientKey = configuration.clientKey
-            ).checkBalance()
+            )
         } catch (e: IOException) {
             Logger.e(TAG, "SessionBalanceConnection Failed", e)
             throw CheckoutException("Unable to fetch balance")
@@ -143,12 +139,11 @@ class SessionRepository {
         Logger.d(TAG, "Creating order")
         try {
             val request = SessionOrderRequest(session.sessionData.orEmpty())
-            return SessionCreateOrderService(
+            return SessionCreateOrderService(configuration.environment).createOrder(
                 request = request,
-                environment = configuration.environment,
                 sessionId = session.id,
                 clientKey = configuration.clientKey
-            ).createOrder()
+            )
         } catch (e: IOException) {
             Logger.e(TAG, "SessionCreateOrderConnection Failed", e)
             throw CheckoutException("Unable to create order")
@@ -166,12 +161,11 @@ class SessionRepository {
         Logger.d(TAG, "Cancelling order")
         try {
             val request = SessionCancelOrderRequest(session.sessionData.orEmpty(), order)
-            return SessionCancelOrderService(
+            return SessionCancelOrderService(configuration.environment).cancelOrder(
                 request = request,
-                environment = configuration.environment,
                 sessionId = session.id,
                 clientKey = configuration.clientKey
-            ).cancelOrder()
+            )
         } catch (e: IOException) {
             Logger.e(TAG, "SessionCancelOrderConnection Failed", e)
             throw CheckoutException("Unable to cancel order")

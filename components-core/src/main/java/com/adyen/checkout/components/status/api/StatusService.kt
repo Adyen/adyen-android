@@ -9,19 +9,19 @@ package com.adyen.checkout.components.status.api
 
 import com.adyen.checkout.components.status.model.StatusRequest
 import com.adyen.checkout.components.status.model.StatusResponse
-import com.adyen.checkout.core.api.Connection.Companion.CONTENT_TYPE_JSON_HEADER
+import com.adyen.checkout.core.api.ConnectionHttpClient.Companion.CONTENT_TYPE_JSON_HEADER
 import com.adyen.checkout.core.api.HttpClientFactory
 import com.adyen.checkout.core.log.LogUtil.getTag
 import com.adyen.checkout.core.log.Logger
 import org.json.JSONObject
 import java.nio.charset.Charset
 
-internal class StatusService(
-    private val url: String,
-    private val statusRequest: StatusRequest
-) {
+internal class StatusService {
 
-    fun checkStatus(): StatusResponse {
+    fun checkStatus(
+        url: String,
+        statusRequest: StatusRequest
+    ): StatusResponse {
         Logger.v(TAG, "call - $url")
 
         val body = StatusRequest.SERIALIZER.serialize(statusRequest).toString()

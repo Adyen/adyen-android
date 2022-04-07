@@ -23,7 +23,7 @@ import java.util.Collections
  * @param <T> The type of the connection return.
  * @param baseUrl The URl used to make this Connection.
  */
-class Connection constructor(
+class ConnectionHttpClient constructor(
     private val baseUrl: String
 ) : HttpClient {
 
