@@ -9,7 +9,6 @@ package com.adyen.checkout.components.status.api
 
 import com.adyen.checkout.components.status.model.StatusRequest
 import com.adyen.checkout.components.status.model.StatusResponse
-import com.adyen.checkout.core.api.ConnectionHttpClient.Companion.CONTENT_TYPE_JSON_HEADER
 import com.adyen.checkout.core.api.HttpClientFactory
 import com.adyen.checkout.core.log.LogUtil.getTag
 import com.adyen.checkout.core.log.Logger
@@ -27,7 +26,7 @@ internal class StatusService {
         val body = StatusRequest.SERIALIZER.serialize(statusRequest).toString()
 
         val httpClient = HttpClientFactory.getHttpClient(url)
-        val bytes = httpClient.post("", body, CONTENT_TYPE_JSON_HEADER)
+        val bytes = httpClient.post("", body)
 
         val result = String(bytes, Charset.defaultCharset())
         val jsonObject = JSONObject(result)
