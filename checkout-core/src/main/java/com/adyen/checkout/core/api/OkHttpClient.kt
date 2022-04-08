@@ -18,11 +18,12 @@ import java.io.IOException
 internal class OkHttpClient(
     private val client: OkHttpClient,
     private val baseUrl: String,
+    private val defaultHeaders: Map<String, String> = emptyMap()
 ) : HttpClient {
 
     override fun get(path: String, headers: Map<String, String>): ByteArray {
         val request = Request.Builder()
-            .headers(headers.toHeaders())
+            .headers(headers.combineToHeaders())
             .url(baseUrl + path)
             .get()
             .build()
@@ -32,7 +33,7 @@ internal class OkHttpClient(
 
     override fun post(path: String, jsonBody: String, headers: Map<String, String>): ByteArray {
         val request = Request.Builder()
-            .headers(headers.toHeaders())
+            .headers(headers.combineToHeaders())
             .url(baseUrl + path)
             .post(jsonBody.toRequestBody(MEDIA_TYPE_JSON))
             .build()
@@ -51,6 +52,9 @@ internal class OkHttpClient(
             throw IOException(response.body?.string())
         }
     }
+
+    private fun Map<String, String>.combineToHeaders() =
+        (defaultHeaders + this).toHeaders()
 
     companion object {
         private val MEDIA_TYPE_JSON = "application/json; charset=utf-8".toMediaType()
