@@ -8,7 +8,6 @@
 
 package com.adyen.checkout.sessions.api
 
-import com.adyen.checkout.core.api.ConnectionHttpClient.Companion.CONTENT_TYPE_JSON_HEADER
 import com.adyen.checkout.core.api.Environment
 import com.adyen.checkout.core.api.HttpClientFactory
 import com.adyen.checkout.core.log.LogUtil
@@ -40,7 +39,7 @@ internal class SessionBalanceService(
         Logger.v(TAG, "request - ${requestJson.toStringPretty()}")
 
         val httpClient = HttpClientFactory.getHttpClient(environment.baseUrl)
-        val result = httpClient.post(path, requestJson.toString(), CONTENT_TYPE_JSON_HEADER)
+        val result = httpClient.post(path, requestJson.toString())
         val resultJson = JSONObject(String(result, Charsets.UTF_8))
 
         Logger.v(TAG, "response: ${resultJson.toStringPretty()}")
