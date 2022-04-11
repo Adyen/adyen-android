@@ -8,16 +8,12 @@
 
 package com.adyen.checkout.components.api
 
+import com.adyen.checkout.components.model.PublicKeyResponse
 import com.adyen.checkout.core.api.Environment
 import com.adyen.checkout.core.api.HttpClientFactory
-import com.adyen.checkout.core.log.LogUtil
-import com.adyen.checkout.core.log.Logger
+import com.adyen.checkout.core.api.get
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
-import org.json.JSONObject
-
-private val TAG = LogUtil.getTag()
-private const val PUBLIC_KEY_JSON_KEY = "publicKey"
 
 internal class PublicKeyService(
     private val environment: Environment
@@ -25,17 +21,10 @@ internal class PublicKeyService(
 
     suspend fun getPublicKey(
         clientKey: String
-    ): String = withContext(Dispatchers.IO) {
-        val path = "v1/clientKeys/$clientKey"
-
-        Logger.v(TAG, "call - $path")
-
-        val httpClient = HttpClientFactory.getHttpClient(environment.baseUrl)
-        val result = String(httpClient.get(path), Charsets.UTF_8)
-        val jsonObject = JSONObject(result)
-
-        Logger.v(TAG, "result: $result")
-
-        jsonObject.getString(PUBLIC_KEY_JSON_KEY)
+    ): PublicKeyResponse = withContext(Dispatchers.IO) {
+        HttpClientFactory.getHttpClient(environment.baseUrl).get(
+            "v1/clientKeys/$clientKey",
+            PublicKeyResponse.SERIALIZER
+        )
     }
 }
