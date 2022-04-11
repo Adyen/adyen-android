@@ -9,8 +9,8 @@ package com.adyen.checkout.components.status.api
 
 import com.adyen.checkout.components.status.model.StatusRequest
 import com.adyen.checkout.components.status.model.StatusResponse
-import com.adyen.checkout.core.api.ConnectionTask
 import com.adyen.checkout.core.api.ThreadManager
+import com.adyen.checkout.core.api.TimeoutTask
 import com.adyen.checkout.core.exception.ApiCallException
 import com.adyen.checkout.core.log.LogUtil.getTag
 import com.adyen.checkout.core.log.Logger
@@ -18,12 +18,14 @@ import java.util.concurrent.ExecutionException
 import java.util.concurrent.TimeUnit
 import java.util.concurrent.TimeoutException
 
-class StatusConnectionTask internal constructor(
+class StatusTask internal constructor(
     val api: StatusApi,
-    logoUrl: String,
+    url: String,
     statusRequest: StatusRequest,
     private var callback: StatusCallback?
-) : ConnectionTask<StatusResponse?>(StatusConnection(logoUrl, statusRequest), 0) {
+) : TimeoutTask<StatusResponse?>(
+    { StatusService().checkStatus(url, statusRequest) }
+) {
 
     override fun done() {
         Logger.v(TAG, "done")

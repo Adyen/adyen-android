@@ -8,16 +8,15 @@
 
 package com.adyen.checkout.components.repository
 
-import com.adyen.checkout.components.api.OrderStatusConnection
-import com.adyen.checkout.components.api.suspendedCall
+import com.adyen.checkout.components.api.OrderStatusService
 import com.adyen.checkout.components.base.Configuration
 import com.adyen.checkout.components.model.connection.OrderStatusRequest
 import com.adyen.checkout.components.model.connection.OrderStatusResponse
 import com.adyen.checkout.core.exception.CheckoutException
 import com.adyen.checkout.core.log.LogUtil
 import com.adyen.checkout.core.log.Logger
-import java.io.IOException
 import org.json.JSONException
+import java.io.IOException
 
 class OrderStatusRepository {
 
@@ -32,11 +31,10 @@ class OrderStatusRepository {
         Logger.d(TAG, "Getting order status")
         try {
             val request = OrderStatusRequest(orderData)
-            return OrderStatusConnection(
+            return OrderStatusService(configuration.environment).getOrderStatus(
                 request,
-                environment = configuration.environment,
-                clientKey = configuration.clientKey
-            ).suspendedCall()
+                configuration.clientKey
+            )
         } catch (e: IOException) {
             Logger.e(TAG, "OrderStatusConnection Failed", e)
             throw CheckoutException("Unable to get order status")

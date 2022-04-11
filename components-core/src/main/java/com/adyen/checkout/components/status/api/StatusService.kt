@@ -9,26 +9,29 @@ package com.adyen.checkout.components.status.api
 
 import com.adyen.checkout.components.status.model.StatusRequest
 import com.adyen.checkout.components.status.model.StatusResponse
-import com.adyen.checkout.core.api.Connection
+import com.adyen.checkout.core.api.ConnectionHttpClient.Companion.CONTENT_TYPE_JSON_HEADER
+import com.adyen.checkout.core.api.HttpClientFactory
 import com.adyen.checkout.core.log.LogUtil.getTag
 import com.adyen.checkout.core.log.Logger
-import org.json.JSONException
 import org.json.JSONObject
-import java.io.IOException
 import java.nio.charset.Charset
 
-internal class StatusConnection(
-    url: String,
-    private val mStatusRequest: StatusRequest
-) : Connection<StatusResponse?>(url) {
+internal class StatusService {
 
-    @Throws(IOException::class, JSONException::class)
-    override fun call(): StatusResponse {
+    fun checkStatus(
+        url: String,
+        statusRequest: StatusRequest
+    ): StatusResponse {
         Logger.v(TAG, "call - $url")
-        val body = StatusRequest.SERIALIZER.serialize(mStatusRequest).toString().toByteArray(Charset.defaultCharset())
-        val bytes = post(CONTENT_TYPE_JSON_HEADER, body)
+
+        val body = StatusRequest.SERIALIZER.serialize(statusRequest).toString()
+
+        val httpClient = HttpClientFactory.getHttpClient(url)
+        val bytes = httpClient.post("", body, CONTENT_TYPE_JSON_HEADER)
+
         val result = String(bytes, Charset.defaultCharset())
         val jsonObject = JSONObject(result)
+
         return StatusResponse.SERIALIZER.deserialize(jsonObject)
     }
 

@@ -8,36 +8,43 @@
 
 package com.adyen.checkout.sessions.api
 
-import com.adyen.checkout.core.api.Connection
+import com.adyen.checkout.core.api.ConnectionHttpClient.Companion.CONTENT_TYPE_JSON_HEADER
 import com.adyen.checkout.core.api.Environment
+import com.adyen.checkout.core.api.HttpClientFactory
 import com.adyen.checkout.core.log.LogUtil
 import com.adyen.checkout.core.log.Logger
 import com.adyen.checkout.core.model.toStringPretty
 import com.adyen.checkout.sessions.model.setup.SessionSetupRequest
 import com.adyen.checkout.sessions.model.setup.SessionSetupResponse
-import java.io.IOException
-import org.json.JSONException
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.withContext
 import org.json.JSONObject
 
 private val TAG = LogUtil.getTag()
-private const val ENDPOINT = "v1/sessions/"
 
-class SessionSetupConnection(
-    private val request: SessionSetupRequest,
-    environment: Environment,
-    sessionId: String,
-    clientKey: String
-) : Connection<SessionSetupResponse>(
-    "${environment.baseUrl}$ENDPOINT$sessionId/setup?clientKey=$clientKey"
+internal class SessionSetupService(
+    private val environment: Environment
 ) {
-    @Throws(IOException::class, JSONException::class)
-    override fun call(): SessionSetupResponse {
-        Logger.v(TAG, "call - $url")
+
+    suspend fun setupSession(
+        request: SessionSetupRequest,
+        sessionId: String,
+        clientKey: String,
+    ): SessionSetupResponse = withContext(Dispatchers.IO) {
+        val path = "v1/sessions/$sessionId/setup?clientKey=$clientKey"
+
+        Logger.v(TAG, "call - $path")
+
         val requestJson = SessionSetupRequest.SERIALIZER.serialize(request)
+
         Logger.v(TAG, "request - ${requestJson.toStringPretty()}")
-        val result = post(CONTENT_TYPE_JSON_HEADER, requestJson.toString().toByteArray(Charsets.UTF_8))
+
+        val httpClient = HttpClientFactory.getHttpClient(environment.baseUrl)
+        val result = httpClient.post(path, requestJson.toString(), CONTENT_TYPE_JSON_HEADER)
         val resultJson = JSONObject(String(result, Charsets.UTF_8))
+
         Logger.v(TAG, "response: ${resultJson.toStringPretty()}")
-        return SessionSetupResponse.SERIALIZER.deserialize(resultJson)
+
+        SessionSetupResponse.SERIALIZER.deserialize(resultJson)
     }
 }

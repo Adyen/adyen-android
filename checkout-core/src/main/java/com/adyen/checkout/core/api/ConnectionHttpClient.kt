@@ -16,17 +16,16 @@ import java.io.InputStream
 import java.net.HttpURLConnection
 import java.nio.charset.StandardCharsets
 import java.util.Collections
-import java.util.concurrent.Callable
 
 /**
  * A wrapper for a callable network connection.
  *
  * @param <T> The type of the connection return.
- * @param url The URl used to make this Connection.
+ * @param baseUrl The URl used to make this Connection.
  */
-abstract class Connection<T> protected constructor(
-    protected val url: String
-) : Callable<T> {
+class ConnectionHttpClient constructor(
+    private val baseUrl: String
+) : HttpClient {
 
     private var urlConnection: HttpURLConnection? = null
 
@@ -38,12 +37,12 @@ abstract class Connection<T> protected constructor(
      * @throws IOException In case an IO error happens.
      */
     @Throws(IOException::class, IllegalStateException::class)
-    protected operator fun get(headers: Map<String, String> = emptyMap()): ByteArray {
+    override fun get(path: String, headers: Map<String, String>): ByteArray {
         if (urlConnection != null) {
             throw IllegalStateException("Connection already initiated")
         }
         return try {
-            val connection = getUrlConnection(url, headers, HttpMethod.GET)
+            val connection = getUrlConnection(baseUrl + path, headers, HttpMethod.GET)
             urlConnection = connection
             connection.connect()
             handleResponse(connection)
@@ -59,16 +58,16 @@ abstract class Connection<T> protected constructor(
      * @throws IOException In case an IO error happens.
      */
     @Throws(IOException::class, IllegalStateException::class)
-    protected fun post(headers: Map<String, String>, data: ByteArray): ByteArray {
+    override fun post(path: String, jsonBody: String, headers: Map<String, String>): ByteArray {
         if (urlConnection != null) {
             throw IllegalStateException("Connection already initiated")
         }
         return try {
-            val connection = getUrlConnection(url, headers, HttpMethod.POST)
+            val connection = getUrlConnection(baseUrl + path, headers, HttpMethod.POST)
             urlConnection = connection
             connection.connect()
             connection.outputStream.use { outputStream ->
-                outputStream.write(data)
+                outputStream.write(jsonBody.toByteArray(Charsets.UTF_8))
                 outputStream.flush()
             }
             handleResponse(connection)

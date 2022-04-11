@@ -12,12 +12,11 @@ import android.graphics.drawable.BitmapDrawable
 import android.widget.ImageView
 import androidx.annotation.DrawableRes
 import com.adyen.checkout.components.api.LogoApi.Companion.getInstance
-import com.adyen.checkout.components.api.LogoConnectionTask.LogoCallback
+import com.adyen.checkout.components.api.LogoTask.LogoCallback
 import com.adyen.checkout.core.api.Environment
 import com.adyen.checkout.core.log.LogUtil
 import com.adyen.checkout.core.log.Logger
 import java.lang.ref.WeakReference
-import java.util.HashMap
 
 /**
  * Loading Image from LogoApi.

@@ -23,7 +23,7 @@ class StatusApi private constructor(host: String) {
     }
 
     // We will only handle 1 call at a time.
-    private var mCurrentTask: StatusConnectionTask? = null
+    private var mCurrentTask: StatusTask? = null
     fun taskFinished() {
         synchronized(this) { mCurrentTask = null }
     }
@@ -35,7 +35,7 @@ class StatusApi private constructor(host: String) {
      * @param paymentData The paymentData that identifies the payment.
      * @param callback The callback to receive the result.
      */
-    fun callStatus(clientKey: String, paymentData: String, callback: StatusConnectionTask.StatusCallback) {
+    fun callStatus(clientKey: String, paymentData: String, callback: StatusTask.StatusCallback) {
         Logger.v(TAG, "getStatus")
         val url = String.format(statusUrlFormat, clientKey)
         synchronized(this) {
@@ -45,7 +45,7 @@ class StatusApi private constructor(host: String) {
             }
             val statusRequest = StatusRequest()
             statusRequest.paymentData = paymentData
-            mCurrentTask = StatusConnectionTask(this, url, statusRequest, callback)
+            mCurrentTask = StatusTask(this, url, statusRequest, callback)
             ThreadManager.EXECUTOR.submit(mCurrentTask)
         }
     }

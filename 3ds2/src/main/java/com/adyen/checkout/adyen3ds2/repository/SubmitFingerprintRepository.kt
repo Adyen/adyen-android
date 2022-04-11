@@ -9,9 +9,8 @@
 package com.adyen.checkout.adyen3ds2.repository
 
 import com.adyen.checkout.adyen3ds2.Adyen3DS2Configuration
-import com.adyen.checkout.adyen3ds2.connection.SubmitFingerprintConnection
+import com.adyen.checkout.adyen3ds2.connection.SubmitFingerprintService
 import com.adyen.checkout.adyen3ds2.model.SubmitFingerprintRequest
-import com.adyen.checkout.components.api.suspendedCall
 import com.adyen.checkout.components.model.payments.response.RedirectAction
 import com.adyen.checkout.components.model.payments.response.Threeds2Action
 import com.adyen.checkout.core.exception.ComponentException
@@ -21,27 +20,23 @@ import org.json.JSONObject
 
 class SubmitFingerprintRepository {
 
-    companion object {
-        private val TAG = LogUtil.getTag()
-        private const val RESPONSE_TYPE_COMPLETED = "completed"
-        private const val RESPONSE_TYPE_ACTION = "action"
-    }
-
     suspend fun submitFingerprint(
         encodedFingerprint: String,
         configuration: Adyen3DS2Configuration,
         paymentData: String?
     ): SubmitFingerprintResult {
         Logger.d(TAG, "Submitting fingerprint automatically")
+
         val request = SubmitFingerprintRequest(
             encodedFingerprint = encodedFingerprint,
             paymentData = paymentData
         )
-        val response = SubmitFingerprintConnection(
+
+        val response = SubmitFingerprintService(configuration.environment).submitFingerprint(
             request,
-            environment = configuration.environment,
-            clientKey = configuration.clientKey
-        ).suspendedCall()
+            configuration.clientKey
+        )
+
         return when {
             response.type == RESPONSE_TYPE_COMPLETED && response.details != null -> {
                 Logger.d(TAG, "submitFingerprint: challenge completed")
@@ -60,5 +55,11 @@ class SubmitFingerprintRepository {
                 throw ComponentException("Failed to retrieve 3DS2 fingerprint result")
             }
         }
+    }
+
+    companion object {
+        private val TAG = LogUtil.getTag()
+        private const val RESPONSE_TYPE_COMPLETED = "completed"
+        private const val RESPONSE_TYPE_ACTION = "action"
     }
 }
