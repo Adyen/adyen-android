@@ -21,8 +21,6 @@ import com.adyen.checkout.components.repository.PublicKeyRepository
 import com.adyen.checkout.core.log.LogUtil
 import com.adyen.checkout.core.log.Logger
 
-private val TAG = LogUtil.getTag()
-
 class CardComponentProvider : StoredPaymentComponentProvider<CardComponent, CardConfiguration> {
 
     override fun get(
@@ -111,5 +109,9 @@ class CardComponentProvider : StoredPaymentComponentProvider<CardComponent, Card
         return cardConfiguration.newBuilder()
             .setSupportedCardTypes(*supportedCardTypes.toTypedArray())
             .build()
+    }
+
+    companion object {
+        private val TAG = LogUtil.getTag()
     }
 }

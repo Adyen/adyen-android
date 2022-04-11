@@ -8,19 +8,21 @@
 
 package com.adyen.checkout.core.di
 
-import android.app.Application
+import kotlin.reflect.KClass
 
-class CheckoutServiceLocator(val application: Application) {
+object CheckoutServiceLocator {
 
-    companion object {
-        private lateinit var INSTANCE: CheckoutServiceLocator
+    private val containers = mutableListOf<DependencyContainer>().apply {
+        add(AppContainer())
+    }
 
-        fun getInstance(application: Application): CheckoutServiceLocator {
-            return if (::INSTANCE.isInitialized) {
-                INSTANCE
-            } else {
-                CheckoutServiceLocator(application)
-            }
-        }
+    fun addContainer(dependencyContainer: DependencyContainer) {
+        containers.add(dependencyContainer)
+    }
+
+    fun <T> provide(kClass: KClass<*>): T {
+        val container = containers.firstOrNull { it.canProvide(kClass) }
+            ?: throw IllegalArgumentException("Cannot find container with provider for ${kClass.simpleName}")
+        return container.provide(kClass)
     }
 }
