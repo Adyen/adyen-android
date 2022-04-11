@@ -12,14 +12,9 @@ import com.adyen.checkout.components.model.connection.OrderStatusRequest
 import com.adyen.checkout.components.model.connection.OrderStatusResponse
 import com.adyen.checkout.core.api.Environment
 import com.adyen.checkout.core.api.HttpClientFactory
-import com.adyen.checkout.core.log.LogUtil
-import com.adyen.checkout.core.log.Logger
-import com.adyen.checkout.core.model.toStringPretty
+import com.adyen.checkout.core.api.post
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
-import org.json.JSONObject
-
-private val TAG = LogUtil.getTag()
 
 internal class OrderStatusService(
     private val environment: Environment
@@ -29,20 +24,11 @@ internal class OrderStatusService(
         request: OrderStatusRequest,
         clientKey: String
     ): OrderStatusResponse = withContext(Dispatchers.IO) {
-        val path = "v1/order/status?clientKey=$clientKey"
-
-        Logger.v(TAG, "call - $path")
-
-        val requestJson = OrderStatusRequest.SERIALIZER.serialize(request)
-
-        Logger.v(TAG, "request - ${requestJson.toStringPretty()}")
-
-        val httpClient = HttpClientFactory.getHttpClient(environment.baseUrl)
-        val result = httpClient.post(path, requestJson.toString())
-        val resultJson = JSONObject(String(result, Charsets.UTF_8))
-
-        Logger.v(TAG, "response: ${resultJson.toStringPretty()}")
-
-        OrderStatusResponse.SERIALIZER.deserialize(resultJson)
+        HttpClientFactory.getHttpClient(environment.baseUrl).post(
+            path = "v1/order/status?clientKey=$clientKey",
+            body = request,
+            requestSerializer = OrderStatusRequest.SERIALIZER,
+            responseSerializer = OrderStatusResponse.SERIALIZER
+        )
     }
 }
