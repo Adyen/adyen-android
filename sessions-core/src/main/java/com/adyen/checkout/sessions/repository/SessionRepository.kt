@@ -16,12 +16,7 @@ import com.adyen.checkout.components.model.payments.request.PaymentMethodDetails
 import com.adyen.checkout.core.exception.CheckoutException
 import com.adyen.checkout.core.log.LogUtil
 import com.adyen.checkout.core.log.Logger
-import com.adyen.checkout.sessions.api.SessionBalanceService
-import com.adyen.checkout.sessions.api.SessionCancelOrderService
-import com.adyen.checkout.sessions.api.SessionCreateOrderService
-import com.adyen.checkout.sessions.api.SessionDetailsService
-import com.adyen.checkout.sessions.api.SessionPaymentsService
-import com.adyen.checkout.sessions.api.SessionSetupService
+import com.adyen.checkout.sessions.api.SessionService
 import com.adyen.checkout.sessions.model.Session
 import com.adyen.checkout.sessions.model.orders.SessionBalanceRequest
 import com.adyen.checkout.sessions.model.orders.SessionBalanceResponse
@@ -38,7 +33,11 @@ import com.adyen.checkout.sessions.model.setup.SessionSetupResponse
 import org.json.JSONException
 import java.io.IOException
 
-class SessionRepository {
+internal class SessionRepository(
+    configuration: Configuration,
+) {
+
+    private val sessionService = SessionService(configuration.environment.baseUrl)
 
     suspend fun setupSession(
         configuration: Configuration,
@@ -48,7 +47,7 @@ class SessionRepository {
         Logger.d(TAG, "Setting up session")
         try {
             val request = SessionSetupRequest(session.sessionData.orEmpty(), order)
-            return SessionSetupService(configuration.environment).setupSession(
+            return sessionService.setupSession(
                 request = request,
                 sessionId = session.id,
                 clientKey = configuration.clientKey
@@ -70,7 +69,7 @@ class SessionRepository {
         Logger.d(TAG, "Submitting payment")
         try {
             val request = SessionPaymentsRequest(session.sessionData.orEmpty(), paymentComponentData)
-            return SessionPaymentsService(configuration.environment).submitPayment(
+            return sessionService.submitPayment(
                 request = request,
                 sessionId = session.id,
                 clientKey = configuration.clientKey
@@ -96,7 +95,7 @@ class SessionRepository {
                 paymentData = actionComponentData.paymentData,
                 details = actionComponentData.details
             )
-            return SessionDetailsService(configuration.environment).submitDetails(
+            return sessionService.submitDetails(
                 request = request,
                 sessionId = session.id,
                 clientKey = configuration.clientKey
@@ -118,7 +117,7 @@ class SessionRepository {
         Logger.d(TAG, "Checking payment method balance")
         try {
             val request = SessionBalanceRequest(session.sessionData.orEmpty(), paymentMethodDetails)
-            return SessionBalanceService(configuration.environment).checkBalance(
+            return sessionService.checkBalance(
                 request = request,
                 sessionId = session.id,
                 clientKey = configuration.clientKey
@@ -139,7 +138,7 @@ class SessionRepository {
         Logger.d(TAG, "Creating order")
         try {
             val request = SessionOrderRequest(session.sessionData.orEmpty())
-            return SessionCreateOrderService(configuration.environment).createOrder(
+            return sessionService.createOrder(
                 request = request,
                 sessionId = session.id,
                 clientKey = configuration.clientKey
@@ -161,7 +160,7 @@ class SessionRepository {
         Logger.d(TAG, "Cancelling order")
         try {
             val request = SessionCancelOrderRequest(session.sessionData.orEmpty(), order)
-            return SessionCancelOrderService(configuration.environment).cancelOrder(
+            return sessionService.cancelOrder(
                 request = request,
                 sessionId = session.id,
                 clientKey = configuration.clientKey

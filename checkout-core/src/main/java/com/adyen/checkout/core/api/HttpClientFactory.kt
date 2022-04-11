@@ -8,9 +8,18 @@
 
 package com.adyen.checkout.core.api
 
+import okhttp3.OkHttpClient
+import com.adyen.checkout.core.api.OkHttpClient as InternalOkHttpClient
+
 object HttpClientFactory {
 
+    private val defaultHeaders = mapOf(
+        "Content-Type" to "application/json"
+    )
+
+    private val okHttpClient: OkHttpClient by lazy { OkHttpClient() }
+
     fun getHttpClient(baseUrl: String): HttpClient {
-        return ConnectionHttpClient(baseUrl)
+        return InternalOkHttpClient(okHttpClient, baseUrl, defaultHeaders)
     }
 }
