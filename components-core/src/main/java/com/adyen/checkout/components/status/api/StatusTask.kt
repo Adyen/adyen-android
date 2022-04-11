@@ -19,12 +19,13 @@ import java.util.concurrent.TimeUnit
 import java.util.concurrent.TimeoutException
 
 class StatusTask internal constructor(
-    val api: StatusApi,
-    url: String,
+    private val api: StatusApi,
+    baseUrl: String,
+    path: String,
     statusRequest: StatusRequest,
     private var callback: StatusCallback?
 ) : TimeoutTask<StatusResponse?>(
-    { StatusService().checkStatus(url, statusRequest) }
+    { StatusService(baseUrl).checkStatus(path, statusRequest) }
 ) {
 
     override fun done() {

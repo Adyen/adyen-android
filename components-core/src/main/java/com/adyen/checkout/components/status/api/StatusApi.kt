@@ -14,13 +14,9 @@ import com.adyen.checkout.core.exception.ApiCallException
 import com.adyen.checkout.core.log.LogUtil.getTag
 import com.adyen.checkout.core.log.Logger
 
-class StatusApi private constructor(host: String) {
-    private val statusUrlFormat: String
-
-    init {
-        Logger.v(TAG, "Environment URL - $host")
-        statusUrlFormat = host + STATUS_PATH
-    }
+class StatusApi private constructor(
+    private val host: String
+) {
 
     // We will only handle 1 call at a time.
     private var mCurrentTask: StatusTask? = null
@@ -37,7 +33,6 @@ class StatusApi private constructor(host: String) {
      */
     fun callStatus(clientKey: String, paymentData: String, callback: StatusTask.StatusCallback) {
         Logger.v(TAG, "getStatus")
-        val url = String.format(statusUrlFormat, clientKey)
         synchronized(this) {
             if (mCurrentTask != null) {
                 Logger.e(TAG, "Status already pending.")
@@ -45,7 +40,7 @@ class StatusApi private constructor(host: String) {
             }
             val statusRequest = StatusRequest()
             statusRequest.paymentData = paymentData
-            mCurrentTask = StatusTask(this, url, statusRequest, callback)
+            mCurrentTask = StatusTask(this, host, clientKey, statusRequest, callback)
             ThreadManager.EXECUTOR.submit(mCurrentTask)
         }
     }
@@ -53,8 +48,6 @@ class StatusApi private constructor(host: String) {
     companion object {
         private val TAG = getTag()
 
-        // %1$s = client key
-        private const val STATUS_PATH = "services/PaymentInitiation/v1/status?token=%1\$s"
         private var sInstance: StatusApi? = null
 
         /**
@@ -75,7 +68,7 @@ class StatusApi private constructor(host: String) {
         }
 
         private fun isDifferentHost(statusApi: StatusApi, hostUrl: String): Boolean {
-            return !statusApi.statusUrlFormat.startsWith(hostUrl)
+            return statusApi.host != hostUrl
         }
     }
 }
