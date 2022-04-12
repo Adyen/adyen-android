@@ -10,7 +10,7 @@ package com.adyen.checkout.components.api
 import android.graphics.drawable.BitmapDrawable
 import android.util.DisplayMetrics
 import android.util.LruCache
-import com.adyen.checkout.components.api.LogoConnectionTask.LogoCallback
+import com.adyen.checkout.components.api.LogoTask.LogoCallback
 import com.adyen.checkout.core.api.Environment
 import com.adyen.checkout.core.api.ThreadManager
 import com.adyen.checkout.core.log.LogUtil
@@ -56,7 +56,7 @@ class LogoApi(host: String, displayMetrics: DisplayMetrics) {
         }
     }
 
-    private val connectionsMap: MutableMap<String, LogoConnectionTask> = HashMap()
+    private val connectionsMap: MutableMap<String, LogoTask> = HashMap()
     private val logoUrlFormat: String = host + LOGO_PATH
     private val densityExtension: String = getDensityExtension(displayMetrics.densityDpi)
     private val cache: LruCache<String, BitmapDrawable> =
@@ -91,7 +91,7 @@ class LogoApi(host: String, displayMetrics: DisplayMetrics) {
                     callback.onLogoReceived(cachedLogo)
                 }
                 !connectionsMap.containsKey(logoUrl) -> {
-                    val logoConnectionTask = LogoConnectionTask(this, logoUrl, callback)
+                    val logoConnectionTask = LogoTask(this, logoUrl, callback)
                     connectionsMap[logoUrl] = logoConnectionTask
                     ThreadManager.EXECUTOR.submit(logoConnectionTask)
                 }

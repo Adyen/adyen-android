@@ -34,6 +34,7 @@ android {
 dependencies {
     // Dependencies
     api "androidx.annotation:annotation:$annotation_version"
+    implementation "com.squareup.okhttp3:okhttp:$okhttp_version"
 
     //Tests
     testImplementation "junit:junit:$junit_version"

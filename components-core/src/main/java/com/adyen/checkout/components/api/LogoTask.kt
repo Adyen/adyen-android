@@ -8,23 +8,20 @@
 package com.adyen.checkout.components.api
 
 import android.graphics.drawable.BitmapDrawable
-import com.adyen.checkout.core.api.ConnectionTask
 import com.adyen.checkout.core.api.ThreadManager
+import com.adyen.checkout.core.api.TimeoutTask
 import com.adyen.checkout.core.log.LogUtil
 import com.adyen.checkout.core.log.Logger
 import java.util.concurrent.ExecutionException
 import java.util.concurrent.TimeUnit
 import java.util.concurrent.TimeoutException
 
-/**
- * Task that wraps a Connection to get a Logo.
- */
-class LogoConnectionTask(
+class LogoTask(
     private val logoApi: LogoApi,
-    val logoUrl: String,
+    private val logoUrl: String,
     callback: LogoCallback
-) : ConnectionTask<BitmapDrawable>(
-    LogoConnection(logoUrl)
+) : TimeoutTask<BitmapDrawable>(
+    { LogoService().getLogo(logoUrl) }
 ) {
 
     var callbacks: HashSet<LogoCallback> = hashSetOf(callback)

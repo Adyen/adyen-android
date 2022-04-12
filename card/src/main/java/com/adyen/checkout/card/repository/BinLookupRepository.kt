@@ -9,13 +9,12 @@
 package com.adyen.checkout.card.repository
 
 import com.adyen.checkout.card.CardConfiguration
-import com.adyen.checkout.card.api.BinLookupConnection
+import com.adyen.checkout.card.api.BinLookupService
 import com.adyen.checkout.card.api.model.BinLookupRequest
 import com.adyen.checkout.card.api.model.BinLookupResponse
 import com.adyen.checkout.card.api.model.Brand
 import com.adyen.checkout.card.data.CardType
 import com.adyen.checkout.card.data.DetectedCardType
-import com.adyen.checkout.components.api.suspendedCall
 import com.adyen.checkout.core.encryption.Sha256
 import com.adyen.checkout.core.log.LogUtil
 import com.adyen.checkout.core.log.Logger
@@ -81,7 +80,10 @@ class BinLookupRepository {
             val encryptedBin = deferredEncryption.await()
             val cardTypes = cardConfiguration.supportedCardTypes.map { it.txVariant }
             val request = BinLookupRequest(encryptedBin, UUID.randomUUID().toString(), cardTypes)
-            BinLookupConnection(request, cardConfiguration.environment, cardConfiguration.clientKey).suspendedCall()
+            BinLookupService(cardConfiguration.environment).makeBinLookup(
+                request,
+                cardConfiguration.clientKey
+            )
         } catch (e: EncryptionException) {
             Logger.e(TAG, "checkCardType - Failed to encrypt BIN", e)
             null
