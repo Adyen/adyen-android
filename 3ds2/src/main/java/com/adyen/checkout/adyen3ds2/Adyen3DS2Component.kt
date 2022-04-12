@@ -265,27 +265,31 @@ class Adyen3DS2Component(
     }
 
     private suspend fun submitFingerprintAutomatically(activity: Activity, encodedFingerprint: String) {
-        try {
-            val result = submitFingerprintRepository.submitFingerprint(encodedFingerprint, configuration, paymentData)
-            // This flow (calling the internal submitFingerprint endpoint) requires that we do not send paymentData
-            // back to the merchant. Setting it to null ensures that when the flow ends and notifyDetails is called,
-            // paymentData will not be included in the response.
-            paymentData = null
-            when (result) {
-                is SubmitFingerprintResult.Completed -> {
-                    viewModelScope.launch(Dispatchers.Main) {
-                        notifyDetails(result.details)
-                    }
-                }
-                is SubmitFingerprintResult.Redirect -> {
-                    redirectDelegate.makeRedirect(activity, result.action)
-                }
-                is SubmitFingerprintResult.Threeds2 -> {
-                    handleAction(activity, result.action)
+        submitFingerprintRepository.submitFingerprint(encodedFingerprint, configuration, paymentData)
+            .fold(
+                onSuccess = { result -> onSubmitFingerprintResult(result, activity) },
+                onFailure = { e -> notifyException(ComponentException("Unable to submit fingerprint", e)) }
+            )
+    }
+
+    private fun onSubmitFingerprintResult(result: SubmitFingerprintResult, activity: Activity) {
+        // This flow (calling the internal submitFingerprint endpoint) requires that we do not send paymentData
+        // back to the merchant. Setting it to null ensures that when the flow ends and notifyDetails is called,
+        // paymentData will not be included in the response.
+        paymentData = null
+
+        when (result) {
+            is SubmitFingerprintResult.Completed -> {
+                viewModelScope.launch(Dispatchers.Main) {
+                    notifyDetails(result.details)
                 }
             }
-        } catch (e: ComponentException) {
-            notifyException(e)
+            is SubmitFingerprintResult.Redirect -> {
+                redirectDelegate.makeRedirect(activity, result.action)
+            }
+            is SubmitFingerprintResult.Threeds2 -> {
+                handleAction(activity, result.action)
+            }
         }
     }
 

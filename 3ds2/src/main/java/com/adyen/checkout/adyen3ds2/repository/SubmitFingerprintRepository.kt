@@ -13,7 +13,6 @@ import com.adyen.checkout.adyen3ds2.connection.SubmitFingerprintService
 import com.adyen.checkout.adyen3ds2.model.SubmitFingerprintRequest
 import com.adyen.checkout.components.model.payments.response.RedirectAction
 import com.adyen.checkout.components.model.payments.response.Threeds2Action
-import com.adyen.checkout.core.exception.ComponentException
 import com.adyen.checkout.core.log.LogUtil
 import com.adyen.checkout.core.log.Logger
 import org.json.JSONObject
@@ -24,7 +23,7 @@ class SubmitFingerprintRepository {
         encodedFingerprint: String,
         configuration: Adyen3DS2Configuration,
         paymentData: String?
-    ): SubmitFingerprintResult {
+    ): Result<SubmitFingerprintResult> = runCatching {
         Logger.d(TAG, "Submitting fingerprint automatically")
 
         val request = SubmitFingerprintRequest(
@@ -37,7 +36,7 @@ class SubmitFingerprintRepository {
             configuration.clientKey
         )
 
-        return when {
+        when {
             response.type == RESPONSE_TYPE_COMPLETED && response.details != null -> {
                 Logger.d(TAG, "submitFingerprint: challenge completed")
                 SubmitFingerprintResult.Completed(JSONObject(response.details))
@@ -52,7 +51,7 @@ class SubmitFingerprintRepository {
             }
             else -> {
                 Logger.e(TAG, "submitFingerprint: unexpected response $response")
-                throw ComponentException("Failed to retrieve 3DS2 fingerprint result")
+                throw IllegalStateException("Failed to retrieve 3DS2 fingerprint result")
             }
         }
     }
