@@ -12,7 +12,6 @@ import com.adyen.checkout.components.PaymentComponentState
 import com.adyen.checkout.components.StoredPaymentComponentProvider
 import com.adyen.checkout.components.base.BasePaymentComponent
 import com.adyen.checkout.components.base.GenericPaymentMethodDelegate
-import com.adyen.checkout.components.base.GenericStoredPaymentComponentProvider
 import com.adyen.checkout.components.base.GenericStoredPaymentDelegate
 import com.adyen.checkout.components.model.payments.request.BlikPaymentMethod
 import com.adyen.checkout.components.model.payments.request.PaymentComponentData
@@ -34,9 +33,9 @@ class BlikComponent : BasePaymentComponent<
 
     constructor(
         savedStateHandle: SavedStateHandle,
-        paymentDelegate: GenericStoredPaymentDelegate,
+        storedPaymentDelegate: GenericStoredPaymentDelegate,
         configuration: BlikConfiguration
-    ) : super(savedStateHandle, paymentDelegate, configuration) {
+    ) : super(savedStateHandle, storedPaymentDelegate, configuration) {
         // TODO: 09/12/2020 move this logic to base component, maybe create the InputData from the delegate?
         inputDataChanged(BlikInputData())
     }
@@ -74,8 +73,7 @@ class BlikComponent : BasePaymentComponent<
         private val TAG = getTag()
 
         @JvmField
-        val PROVIDER: StoredPaymentComponentProvider<BlikComponent, BlikConfiguration> =
-            GenericStoredPaymentComponentProvider(BlikComponent::class.java)
+        val PROVIDER: StoredPaymentComponentProvider<BlikComponent, BlikConfiguration> = BlikComponentProvider()
         val PAYMENT_METHOD_TYPES = arrayOf(PaymentMethodTypes.BLIK)
     }
 }
