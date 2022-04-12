@@ -31,7 +31,26 @@ class AddressFormInput @JvmOverloads constructor(
     private var countryAdapter: SimpleTextListAdapter<AddressListItem> = SimpleTextListAdapter(context)
     private var statesAdapter: SimpleTextListAdapter<AddressListItem> = SimpleTextListAdapter(context)
 
-    private lateinit var autoCompleteTextViewCountry: AutoCompleteTextView
+    private val autoCompleteTextViewCountry: AutoCompleteTextView?
+        get() = rootView.findViewById(R.id.autoCompleteTextView_country)
+
+    private val autoCompleteTextViewState: AutoCompleteTextView?
+        get() = rootView.findViewById(R.id.autoCompleteTextView_state)
+
+    private val editTextStreet: AdyenTextInputEditText?
+        get() = rootView.findViewById(R.id.editText_street)
+
+    private val editTextApartmentSuite: AdyenTextInputEditText?
+        get() = rootView.findViewById(R.id.editText_apartmentSuite)
+
+    private val editTextPostalCode: AdyenTextInputEditText?
+        get() = rootView.findViewById(R.id.editText_postalCode)
+
+    private val editTextCity: AdyenTextInputEditText?
+        get() = rootView.findViewById(R.id.editText_city)
+
+    private val editTextProvinceTerritory: AdyenTextInputEditText?
+        get() = rootView.findViewById(R.id.editText_provinceTerritory)
 
     private val addressInput = AddressInputModel()
 
@@ -40,7 +59,7 @@ class AddressFormInput @JvmOverloads constructor(
         layoutParams = LayoutParams(LayoutParams.MATCH_PARENT, LayoutParams.WRAP_CONTENT)
         LayoutInflater.from(context).inflate(R.layout.address_form_input, this, true)
 
-        autoCompleteTextViewCountry = rootView.findViewById<AutoCompleteTextView>(R.id.autoCompleteTextView_country).apply {
+        autoCompleteTextViewCountry?.apply {
             inputType = 0
             setAdapter(countryAdapter)
             onItemClickListener = AdapterView.OnItemClickListener { _, _, position, _ ->
@@ -61,12 +80,19 @@ class AddressFormInput @JvmOverloads constructor(
 
     fun updateCountries(countryList: List<AddressListItem>) {
         countryAdapter.setItems(countryList)
-        autoCompleteTextViewCountry.setText(countryList.firstOrNull { it.selected }?.name)
-        populateFormFields(AddressSpecification.fromString(countryList.firstOrNull { it.selected }?.code))
+        countryList.firstOrNull { it.selected }?.let {
+            autoCompleteTextViewCountry?.setText(it.name)
+            populateFormFields(AddressSpecification.fromString(it.code))
+            addressInput.country = it.code
+        }
     }
 
     fun updateStates(stateList: List<AddressListItem>) {
         statesAdapter.setItems(stateList)
+        stateList.firstOrNull { it.selected }?.let {
+            autoCompleteTextViewState?.setText(it.name)
+            addressInput.stateOrProvince = it.code
+        }
     }
 
     private fun populateFormFields(
@@ -89,35 +115,32 @@ class AddressFormInput @JvmOverloads constructor(
     private fun initForm() {
         addressInput.reset()
 
-        rootView.findViewById<AdyenTextInputEditText>(R.id.editText_street).setOnChangeListener {
+        editTextStreet?.setOnChangeListener {
             addressInput.street = it.toString()
             onAddressChangeListener?.onChanged(addressInput)
         }
 
-        rootView.findViewById<AdyenTextInputEditText>(R.id.editText_apartmentSuite)
-            ?.setOnChangeListener {
-                addressInput.houseNumberOrName = it.toString()
-                onAddressChangeListener?.onChanged(addressInput)
-            }
+        editTextApartmentSuite?.setOnChangeListener {
+            addressInput.houseNumberOrName = it.toString()
+            onAddressChangeListener?.onChanged(addressInput)
+        }
 
-        rootView.findViewById<AdyenTextInputEditText>(R.id.editText_postalCode)
-            ?.setOnChangeListener {
-                addressInput.postalCode = it.toString()
-                onAddressChangeListener?.onChanged(addressInput)
-            }
+        editTextPostalCode?.setOnChangeListener {
+            addressInput.postalCode = it.toString()
+            onAddressChangeListener?.onChanged(addressInput)
+        }
 
-        rootView.findViewById<AdyenTextInputEditText>(R.id.editText_city)?.setOnChangeListener {
+        editTextCity?.setOnChangeListener {
             addressInput.city = it.toString()
             onAddressChangeListener?.onChanged(addressInput)
         }
 
-        rootView.findViewById<AdyenTextInputEditText>(R.id.editText_provinceTerritory)
-            ?.setOnChangeListener {
-                addressInput.stateOrProvince = it.toString()
-                onAddressChangeListener?.onChanged(addressInput)
-            }
+        editTextProvinceTerritory?.setOnChangeListener {
+            addressInput.stateOrProvince = it.toString()
+            onAddressChangeListener?.onChanged(addressInput)
+        }
 
-        rootView.findViewById<AutoCompleteTextView>(R.id.autoCompleteTextView_state)?.apply {
+        autoCompleteTextViewState?.apply {
             inputType = 0
             setAdapter(statesAdapter)
             onItemClickListener = AdapterView.OnItemClickListener { _, _, position, _ ->
