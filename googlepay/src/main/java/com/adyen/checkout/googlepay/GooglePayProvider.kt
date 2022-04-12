@@ -37,14 +37,6 @@ class GooglePayProvider :
     PaymentComponentProvider<GooglePayComponent, GooglePayConfiguration>,
     PaymentMethodAvailabilityCheck<GooglePayConfiguration> {
 
-    override fun <T> get(
-        owner: T,
-        paymentMethod: PaymentMethod,
-        configuration: GooglePayConfiguration
-    ): GooglePayComponent where T : ViewModelStoreOwner, T : SavedStateRegistryOwner {
-        return get(owner, owner, paymentMethod, configuration, null)
-    }
-
     override fun get(
         savedStateRegistryOwner: SavedStateRegistryOwner,
         viewModelStoreOwner: ViewModelStoreOwner,

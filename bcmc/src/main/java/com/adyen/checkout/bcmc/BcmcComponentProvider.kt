@@ -19,13 +19,6 @@ import com.adyen.checkout.components.model.paymentmethods.PaymentMethod
 import com.adyen.checkout.components.repository.PublicKeyRepository
 
 class BcmcComponentProvider : PaymentComponentProvider<BcmcComponent, BcmcConfiguration> {
-    override fun <T> get(
-        owner: T,
-        paymentMethod: PaymentMethod,
-        configuration: BcmcConfiguration
-    ): BcmcComponent where T : SavedStateRegistryOwner, T : ViewModelStoreOwner {
-        return get(owner, owner, paymentMethod, configuration, null)
-    }
 
     override fun get(
         savedStateRegistryOwner: SavedStateRegistryOwner,

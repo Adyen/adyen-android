@@ -36,7 +36,9 @@ interface PaymentComponentProvider<ComponentT : PaymentComponent<*, *>, Configur
         owner: T,
         paymentMethod: PaymentMethod,
         configuration: ConfigurationT
-    ): ComponentT where T : SavedStateRegistryOwner, T : ViewModelStoreOwner
+    ): ComponentT where T : SavedStateRegistryOwner, T : ViewModelStoreOwner {
+        return get(owner, owner, paymentMethod, configuration, null)
+    }
 
     /**
      * Get a [PaymentComponent].

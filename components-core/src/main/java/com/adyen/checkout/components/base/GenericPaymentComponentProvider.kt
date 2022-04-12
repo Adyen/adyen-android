@@ -22,14 +22,6 @@ class GenericPaymentComponentProvider<
     private val componentClass: Class<BaseComponentT>
 ) : PaymentComponentProvider<BaseComponentT, ConfigurationT> {
 
-    override fun <T> get(
-        owner: T,
-        paymentMethod: PaymentMethod,
-        configuration: ConfigurationT
-    ): BaseComponentT where T : SavedStateRegistryOwner, T : ViewModelStoreOwner {
-        return get(owner, owner, paymentMethod, configuration, null)
-    }
-
     override fun get(
         savedStateRegistryOwner: SavedStateRegistryOwner,
         viewModelStoreOwner: ViewModelStoreOwner,

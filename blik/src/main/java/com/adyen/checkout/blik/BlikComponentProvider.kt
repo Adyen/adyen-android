@@ -21,14 +21,6 @@ import com.adyen.checkout.components.model.paymentmethods.StoredPaymentMethod
 
 class BlikComponentProvider : StoredPaymentComponentProvider<BlikComponent, BlikConfiguration> {
 
-    override fun <T> get(
-        owner: T,
-        paymentMethod: PaymentMethod,
-        configuration: BlikConfiguration
-    ): BlikComponent where T : SavedStateRegistryOwner, T : ViewModelStoreOwner {
-        return get(owner, owner, paymentMethod, configuration, null)
-    }
-
     override fun get(
         savedStateRegistryOwner: SavedStateRegistryOwner,
         viewModelStoreOwner: ViewModelStoreOwner,
@@ -45,14 +37,6 @@ class BlikComponentProvider : StoredPaymentComponentProvider<BlikComponent, Blik
                 )
             }
         return ViewModelProvider(viewModelStoreOwner, genericFactory)[BlikComponent::class.java]
-    }
-
-    override fun <T> get(
-        owner: T,
-        storedPaymentMethod: StoredPaymentMethod,
-        configuration: BlikConfiguration
-    ): BlikComponent where T : SavedStateRegistryOwner, T : ViewModelStoreOwner {
-        return get(owner, owner, storedPaymentMethod, configuration, null)
     }
 
     override fun get(
