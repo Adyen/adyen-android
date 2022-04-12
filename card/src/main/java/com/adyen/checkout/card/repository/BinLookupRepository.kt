@@ -19,11 +19,8 @@ import com.adyen.checkout.core.encryption.Sha256
 import com.adyen.checkout.core.log.LogUtil
 import com.adyen.checkout.core.log.Logger
 import com.adyen.checkout.cse.CardEncrypter
-import com.adyen.checkout.cse.exception.EncryptionException
 import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.async
-import kotlinx.coroutines.coroutineScope
-import java.io.IOException
+import kotlinx.coroutines.withContext
 import java.util.UUID
 
 private val TAG = LogUtil.getTag()
@@ -72,25 +69,19 @@ class BinLookupRepository {
         cardNumber: String,
         publicKey: String,
         cardConfiguration: CardConfiguration
-    ): BinLookupResponse? = coroutineScope {
-        val deferredEncryption = async(Dispatchers.Default) {
-            CardEncrypter.encryptBin(cardNumber, publicKey)
-        }
-        return@coroutineScope try {
-            val encryptedBin = deferredEncryption.await()
+    ): BinLookupResponse? = withContext(Dispatchers.Default) {
+        runCatching {
+            val encryptedBin = CardEncrypter.encryptBin(cardNumber, publicKey)
             val cardTypes = cardConfiguration.supportedCardTypes.map { it.txVariant }
             val request = BinLookupRequest(encryptedBin, UUID.randomUUID().toString(), cardTypes)
+
             BinLookupService(cardConfiguration.environment).makeBinLookup(
-                request,
-                cardConfiguration.clientKey
+                request = request,
+                clientKey = cardConfiguration.clientKey
             )
-        } catch (e: EncryptionException) {
-            Logger.e(TAG, "checkCardType - Failed to encrypt BIN", e)
-            null
-        } catch (e: IOException) {
-            Logger.e(TAG, "checkCardType - Failed to call binLookup API.", e)
-            null
         }
+            .onFailure { e -> Logger.e(TAG, "checkCardType - Failed to do bin lookup", e) }
+            .getOrNull()
     }
 
     private fun mapResponse(binLookupResponse: BinLookupResponse?): List<DetectedCardType> {
@@ -104,7 +95,7 @@ class BinLookupRepository {
                 txVariant = brandResponse.brand
             }
             DetectedCardType(
-                cardType,
+                cardType = cardType,
                 isReliable = true,
                 enableLuhnCheck = brandResponse.enableLuhnCheck == true,
                 cvcPolicy = Brand.FieldPolicy.parse(brandResponse.cvcPolicy ?: Brand.FieldPolicy.REQUIRED.value),
