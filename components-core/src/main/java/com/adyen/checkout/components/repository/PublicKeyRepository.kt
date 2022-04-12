@@ -10,28 +10,38 @@ package com.adyen.checkout.components.repository
 
 import com.adyen.checkout.components.api.PublicKeyService
 import com.adyen.checkout.core.api.Environment
-import com.adyen.checkout.core.exception.CheckoutException
 import com.adyen.checkout.core.log.LogUtil
 import com.adyen.checkout.core.log.Logger
-import org.json.JSONException
-import java.io.IOException
-
-private val TAG = LogUtil.getTag()
-private const val CONNECTION_RETRIES = 3
 
 class PublicKeyRepository {
 
-    suspend fun fetchPublicKey(environment: Environment, clientKey: String): String {
+    suspend fun fetchPublicKey(
+        environment: Environment,
+        clientKey: String
+    ): Result<String> = runCatching {
         Logger.d(TAG, "fetching publicKey from API")
-        repeat(CONNECTION_RETRIES) {
+
+        retryOnFailure(CONNECTION_RETRIES) {
+            PublicKeyService(environment).getPublicKey(clientKey).publicKey
+        }
+    }
+
+    @Suppress("SameParameterValue")
+    private inline fun <T> retryOnFailure(times: Int, block: () -> T): T {
+        repeat(times - 1) {
             try {
-                return PublicKeyService(environment).getPublicKey(clientKey).publicKey
-            } catch (e: IOException) {
-                Logger.e(TAG, "PublicKeyConnection Failed", e)
-            } catch (e: JSONException) {
-                Logger.e(TAG, "PublicKeyConnection unexpected result", e)
+                return block()
+            } catch (e: Throwable) {
+                // Empty body to ignore errors and retry.
             }
         }
-        throw CheckoutException("Unable to fetch public key")
+
+        // Final try, that will throw an exception if it fails.
+        return block()
+    }
+
+    companion object {
+        private val TAG = LogUtil.getTag()
+        private const val CONNECTION_RETRIES = 3
     }
 }

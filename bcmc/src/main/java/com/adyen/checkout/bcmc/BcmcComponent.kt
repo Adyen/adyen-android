@@ -23,7 +23,6 @@ import com.adyen.checkout.components.model.payments.request.PaymentComponentData
 import com.adyen.checkout.components.repository.PublicKeyRepository
 import com.adyen.checkout.components.ui.FieldState
 import com.adyen.checkout.components.util.PaymentMethodTypes
-import com.adyen.checkout.core.exception.CheckoutException
 import com.adyen.checkout.core.exception.ComponentException
 import com.adyen.checkout.core.log.LogUtil
 import com.adyen.checkout.core.log.Logger
@@ -51,23 +50,26 @@ class BcmcComponent(
     private var publicKey: String? = null
 
     init {
-        viewModelScope.launch {
-            try {
-                publicKey = fetchPublicKey()
-                notifyStateChanged()
-            } catch (e: CheckoutException) {
-                notifyException(ComponentException("Unable to fetch publicKey.", e))
-            }
-        }
+        fetchPublicKey()
     }
 
     override fun getSupportedPaymentMethodTypes(): Array<String> = PAYMENT_METHOD_TYPES
 
-    private suspend fun fetchPublicKey(): String {
-        return publicKeyRepository.fetchPublicKey(
-            environment = configuration.environment,
-            clientKey = configuration.clientKey
-        )
+    private fun fetchPublicKey() {
+        viewModelScope.launch {
+            publicKeyRepository.fetchPublicKey(
+                environment = configuration.environment,
+                clientKey = configuration.clientKey
+            ).fold(
+                onSuccess = { key ->
+                    publicKey = key
+                    notifyStateChanged()
+                },
+                onFailure = { e ->
+                    notifyException(ComponentException("Unable to fetch publicKey.", e))
+                }
+            )
+        }
     }
 
     override fun onInputDataChanged(inputData: BcmcInputData): BcmcOutputData {
