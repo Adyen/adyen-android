@@ -48,6 +48,7 @@ public class CardConfiguration extends Configuration {
     private final KCPAuthVisibility mKcpAuthVisibility;
     private final AddressVisibility mAddressVisibility;
     private final InstallmentConfiguration mInstallmentConfiguration;
+    private final AddressConfiguration mAddressConfiguration;
 
     public static final Parcelable.Creator<CardConfiguration> CREATOR = new Parcelable.Creator<CardConfiguration>() {
         public CardConfiguration createFromParcel(@NonNull Parcel in) {
@@ -77,6 +78,7 @@ public class CardConfiguration extends Configuration {
         mKcpAuthVisibility = builder.mBuilderKcpAuthVisibility;
         mAddressVisibility = builder.mBuilderAddressVisibility;
         mInstallmentConfiguration = builder.mBuilderInstallmentConfiguration;
+        mAddressConfiguration = builder.mBuilderAddressConfiguration;
     }
 
     CardConfiguration(@NonNull Parcel in) {
@@ -91,6 +93,7 @@ public class CardConfiguration extends Configuration {
         mKcpAuthVisibility = KCPAuthVisibility.valueOf(in.readString());
         mAddressVisibility = (AddressVisibility) in.readSerializable();
         mInstallmentConfiguration = in.readParcelable(InstallmentConfiguration.class.getClassLoader());
+        mAddressConfiguration = in.readParcelable(AddressConfiguration.class.getClassLoader());
     }
 
     @Override
@@ -106,6 +109,7 @@ public class CardConfiguration extends Configuration {
         dest.writeString(mKcpAuthVisibility.name());
         dest.writeSerializable(mAddressVisibility);
         dest.writeParcelable(mInstallmentConfiguration, flags);
+        dest.writeParcelable(mAddressConfiguration, flags);
     }
 
     /**
@@ -175,6 +179,11 @@ public class CardConfiguration extends Configuration {
         return mInstallmentConfiguration;
     }
 
+    @Nullable
+    public AddressConfiguration getAddressConfiguration() {
+        return mAddressConfiguration;
+    }
+
     /**
      * Builder to create a {@link CardConfiguration}.
      */
@@ -190,6 +199,7 @@ public class CardConfiguration extends Configuration {
         private KCPAuthVisibility mBuilderKcpAuthVisibility = KCPAuthVisibility.HIDE;
         private AddressVisibility mBuilderAddressVisibility = AddressVisibility.NONE;
         private InstallmentConfiguration mBuilderInstallmentConfiguration;
+        private AddressConfiguration mBuilderAddressConfiguration;
 
         /**
          * Constructor of Card Configuration Builder with instance of CardConfiguration.
@@ -206,6 +216,7 @@ public class CardConfiguration extends Configuration {
             mBuilderKcpAuthVisibility = cardConfiguration.getKcpAuthVisibility();
             mBuilderAddressVisibility = cardConfiguration.getAddressVisibility();
             mBuilderInstallmentConfiguration = cardConfiguration.getInstallmentConfiguration();
+            mBuilderAddressConfiguration = cardConfiguration.getAddressConfiguration();
         }
 
         /**
@@ -360,6 +371,18 @@ public class CardConfiguration extends Configuration {
         @NonNull
         public Builder setInstallmentConfigurations(@NonNull InstallmentConfiguration installmentConfiguration) {
             mBuilderInstallmentConfiguration = installmentConfiguration;
+            return this;
+        }
+
+        /**
+         * Configures the address form to be shown to the shopper.
+         *
+         * @param addressConfiguration The configuration object for address form.
+         * @return {@link CardConfiguration.Builder}
+         */
+        @NonNull
+        public Builder setAddressConfiguration(@NonNull AddressConfiguration addressConfiguration) {
+            mBuilderAddressConfiguration = addressConfiguration;
             return this;
         }
 
