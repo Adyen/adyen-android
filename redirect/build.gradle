@@ -33,15 +33,6 @@ android {
         // Get scheme for redirect result
         buildConfigField "String", "checkoutRedirectScheme", "\"$rootProject.ext.checkoutRedirectScheme\""
     }
-
-    compileOptions {
-        sourceCompatibility JavaVersion.VERSION_1_8
-        targetCompatibility JavaVersion.VERSION_1_8
-    }
-
-    kotlinOptions {
-        jvmTarget = JavaVersion.VERSION_1_8.toString()
-    }
 }
 
 dependencies {
