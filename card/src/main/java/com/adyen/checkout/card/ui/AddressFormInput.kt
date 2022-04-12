@@ -31,6 +31,8 @@ class AddressFormInput @JvmOverloads constructor(
     private var countryAdapter: SimpleTextListAdapter<AddressListItem> = SimpleTextListAdapter(context)
     private var statesAdapter: SimpleTextListAdapter<AddressListItem> = SimpleTextListAdapter(context)
 
+    private lateinit var autoCompleteTextViewCountry: AutoCompleteTextView
+
     private val addressInput = AddressInputModel()
 
     init {
@@ -38,14 +40,13 @@ class AddressFormInput @JvmOverloads constructor(
         layoutParams = LayoutParams(LayoutParams.MATCH_PARENT, LayoutParams.WRAP_CONTENT)
         LayoutInflater.from(context).inflate(R.layout.address_form_input, this, true)
 
-        rootView.findViewById<AutoCompleteTextView>(R.id.autoCompleteTextView_country).apply {
+        autoCompleteTextViewCountry = rootView.findViewById<AutoCompleteTextView>(R.id.autoCompleteTextView_country).apply {
             inputType = 0
             setAdapter(countryAdapter)
             onItemClickListener = AdapterView.OnItemClickListener { _, _, position, _ ->
                 val selectedCountryCode = countryAdapter.getItem(position).code
                 addressInput.country = selectedCountryCode
                 onAddressChangeListener?.onChanged(addressInput)
-                populateFormFields(AddressSpecification.fromString(selectedCountryCode))
             }
         }
     }
@@ -58,26 +59,14 @@ class AddressFormInput @JvmOverloads constructor(
         this.onAddressChangeListener = null
     }
 
-    fun initialize(countryList: List<AddressItem>) {
-        countryAdapter.setItems(
-            countryList.map {
-                AddressListItem(
-                    name = it.name.orEmpty(),
-                    code = it.id.orEmpty()
-                )
-            }
-        )
+    fun updateCountries(countryList: List<AddressListItem>) {
+        countryAdapter.setItems(countryList)
+        autoCompleteTextViewCountry.setText(countryList.firstOrNull { it.selected }?.name)
+        populateFormFields(AddressSpecification.fromString(countryList.firstOrNull { it.selected }?.code))
     }
 
-    fun updateStates(stateList: List<AddressItem>) {
-        statesAdapter.setItems(
-            stateList.map {
-                AddressListItem(
-                    name = it.name.orEmpty(),
-                    code = it.id.orEmpty()
-                )
-            }
-        )
+    fun updateStates(stateList: List<AddressListItem>) {
+        statesAdapter.setItems(stateList)
     }
 
     private fun populateFormFields(

@@ -11,6 +11,7 @@ package com.adyen.checkout.card
 import android.os.Parcel
 import android.os.Parcelable
 import com.adyen.checkout.card.data.CardType
+import com.adyen.checkout.card.util.InstallmentUtils
 import com.adyen.checkout.core.exception.CheckoutException
 import com.adyen.checkout.core.util.ParcelUtils
 

@@ -12,5 +12,6 @@ import com.adyen.checkout.components.ui.adapter.SimpleTextListItem
 
 data class AddressListItem(
     val name: String,
-    val code: String
+    val code: String,
+    val selected: Boolean
 ) : SimpleTextListItem(name)
