@@ -11,7 +11,6 @@ package com.adyen.checkout.bacs
 import androidx.lifecycle.SavedStateHandle
 import com.adyen.checkout.components.PaymentComponentProvider
 import com.adyen.checkout.components.base.BasePaymentComponent
-import com.adyen.checkout.components.base.GenericPaymentComponentProvider
 import com.adyen.checkout.components.base.GenericPaymentMethodDelegate
 import com.adyen.checkout.components.model.payments.request.BacsDirectDebitPaymentMethod
 import com.adyen.checkout.components.model.payments.request.PaymentComponentData
@@ -73,7 +72,7 @@ class BacsDirectDebitComponent(
     companion object {
         @JvmStatic
         val PROVIDER: PaymentComponentProvider<BacsDirectDebitComponent, BacsDirectDebitConfiguration> =
-            GenericPaymentComponentProvider(BacsDirectDebitComponent::class.java)
+            BacsProvider()
         val PAYMENT_METHOD_TYPES = arrayOf(PaymentMethodTypes.BACS)
     }
 }

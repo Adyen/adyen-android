@@ -9,7 +9,6 @@ package com.adyen.checkout.openbanking
 
 import androidx.lifecycle.SavedStateHandle
 import com.adyen.checkout.components.PaymentComponentProvider
-import com.adyen.checkout.components.base.GenericPaymentComponentProvider
 import com.adyen.checkout.components.base.GenericPaymentMethodDelegate
 import com.adyen.checkout.components.model.payments.request.OpenBankingPaymentMethod
 import com.adyen.checkout.components.util.PaymentMethodTypes
@@ -32,8 +31,7 @@ class OpenBankingComponent(
 
     companion object {
         @JvmField
-        val PROVIDER: PaymentComponentProvider<OpenBankingComponent, OpenBankingConfiguration> =
-            GenericPaymentComponentProvider(OpenBankingComponent::class.java)
+        val PROVIDER: PaymentComponentProvider<OpenBankingComponent, OpenBankingConfiguration> = OpenBankingProvider()
         val PAYMENT_METHOD_TYPES = arrayOf(PaymentMethodTypes.OPEN_BANKING)
     }
 }

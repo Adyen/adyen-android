@@ -32,7 +32,7 @@ interface PaymentComponentProvider<ComponentT : PaymentComponent<*, *>, Configur
      * @return The Component
      */
     @Throws(CheckoutException::class)
-    operator fun <T> get(
+    fun <T> get(
         owner: T,
         paymentMethod: PaymentMethod,
         configuration: ConfigurationT
@@ -52,7 +52,7 @@ interface PaymentComponentProvider<ComponentT : PaymentComponent<*, *>, Configur
      * @return The Component
      */
     @Throws(CheckoutException::class)
-    operator fun get(
+    fun get(
         savedStateRegistryOwner: SavedStateRegistryOwner,
         viewModelStoreOwner: ViewModelStoreOwner,
         paymentMethod: PaymentMethod,

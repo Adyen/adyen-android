@@ -9,7 +9,6 @@ package com.adyen.checkout.entercash
 
 import androidx.lifecycle.SavedStateHandle
 import com.adyen.checkout.components.PaymentComponentProvider
-import com.adyen.checkout.components.base.GenericPaymentComponentProvider
 import com.adyen.checkout.components.base.GenericPaymentMethodDelegate
 import com.adyen.checkout.components.model.payments.request.EntercashPaymentMethod
 import com.adyen.checkout.components.util.PaymentMethodTypes
@@ -32,8 +31,7 @@ class EntercashComponent(
 
     companion object {
         @JvmField
-        val PROVIDER: PaymentComponentProvider<EntercashComponent, EntercashConfiguration> =
-            GenericPaymentComponentProvider(EntercashComponent::class.java)
+        val PROVIDER: PaymentComponentProvider<EntercashComponent, EntercashConfiguration> = EntercashProvider()
         val PAYMENT_METHOD_TYPES = arrayOf(PaymentMethodTypes.ENTERCASH)
     }
 }

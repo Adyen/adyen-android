@@ -11,7 +11,6 @@ import androidx.lifecycle.SavedStateHandle
 import com.adyen.checkout.components.PaymentComponentProvider
 import com.adyen.checkout.components.PaymentComponentState
 import com.adyen.checkout.components.base.BasePaymentComponent
-import com.adyen.checkout.components.base.GenericPaymentComponentProvider
 import com.adyen.checkout.components.base.GenericPaymentMethodDelegate
 import com.adyen.checkout.components.model.payments.request.PaymentComponentData
 import com.adyen.checkout.components.model.payments.request.SepaPaymentMethod
@@ -51,9 +50,7 @@ class SepaComponent(
 
     companion object {
         private val TAG = getTag()
-        val PROVIDER: PaymentComponentProvider<SepaComponent, SepaConfiguration> = GenericPaymentComponentProvider(
-            SepaComponent::class.java
-        )
+        val PROVIDER: PaymentComponentProvider<SepaComponent, SepaConfiguration> = SepaProvider()
         val PAYMENT_METHOD_TYPES = arrayOf(PaymentMethodTypes.SEPA)
     }
 }

@@ -9,7 +9,6 @@ package com.adyen.checkout.dotpay
 
 import androidx.lifecycle.SavedStateHandle
 import com.adyen.checkout.components.PaymentComponentProvider
-import com.adyen.checkout.components.base.GenericPaymentComponentProvider
 import com.adyen.checkout.components.base.GenericPaymentMethodDelegate
 import com.adyen.checkout.components.model.payments.request.DotpayPaymentMethod
 import com.adyen.checkout.components.util.PaymentMethodTypes
@@ -32,8 +31,7 @@ class DotpayComponent(
 
     companion object {
         @JvmField
-        val PROVIDER: PaymentComponentProvider<DotpayComponent, DotpayConfiguration> =
-            GenericPaymentComponentProvider(DotpayComponent::class.java)
+        val PROVIDER: PaymentComponentProvider<DotpayComponent, DotpayConfiguration> = DotpayProvider()
         val PAYMENT_METHOD_TYPES = arrayOf(PaymentMethodTypes.DOTPAY)
     }
 }
