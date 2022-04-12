@@ -19,7 +19,7 @@ import com.adyen.checkout.components.base.lifecycle.viewModelFactory
 import com.adyen.checkout.components.model.paymentmethods.PaymentMethod
 import com.adyen.checkout.components.model.paymentmethods.StoredPaymentMethod
 
-class BlikComponentProvider : StoredPaymentComponentProvider<BlikComponent, BlikConfiguration> {
+class BlikProvider : StoredPaymentComponentProvider<BlikComponent, BlikConfiguration> {
 
     override fun get(
         savedStateRegistryOwner: SavedStateRegistryOwner,

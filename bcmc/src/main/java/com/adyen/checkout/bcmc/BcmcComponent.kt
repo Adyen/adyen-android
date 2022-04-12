@@ -149,7 +149,7 @@ class BcmcComponent(
         private val PAYMENT_METHOD_TYPES = arrayOf(PaymentMethodTypes.BCMC)
 
         @JvmField
-        val PROVIDER: PaymentComponentProvider<BcmcComponent, BcmcConfiguration> = BcmcComponentProvider()
+        val PROVIDER: PaymentComponentProvider<BcmcComponent, BcmcConfiguration> = BcmcProvider()
 
         @JvmField
         val SUPPORTED_CARD_TYPE = CardType.BCMC

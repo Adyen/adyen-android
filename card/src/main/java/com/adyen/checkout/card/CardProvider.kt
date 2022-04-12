@@ -23,7 +23,7 @@ import com.adyen.checkout.core.log.Logger
 
 private val TAG = LogUtil.getTag()
 
-class CardComponentProvider : StoredPaymentComponentProvider<CardComponent, CardConfiguration> {
+class CardProvider : StoredPaymentComponentProvider<CardComponent, CardConfiguration> {
 
     override fun get(
         savedStateRegistryOwner: SavedStateRegistryOwner,
