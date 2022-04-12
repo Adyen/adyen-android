@@ -8,6 +8,7 @@
 
 package com.adyen.checkout.card
 
+import com.adyen.checkout.card.util.CardNumberValidation
 import com.adyen.checkout.components.ui.FieldState
 import com.adyen.checkout.components.ui.Validation
 

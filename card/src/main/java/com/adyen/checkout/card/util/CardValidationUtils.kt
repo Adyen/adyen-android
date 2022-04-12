@@ -5,8 +5,9 @@
  *
  * Created by arman on 18/9/2019.
  */
-package com.adyen.checkout.card
+package com.adyen.checkout.card.util
 
+import com.adyen.checkout.card.R
 import com.adyen.checkout.card.api.model.Brand
 import com.adyen.checkout.card.data.CardType
 import com.adyen.checkout.card.data.DetectedCardType

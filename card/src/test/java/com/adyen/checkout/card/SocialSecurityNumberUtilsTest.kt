@@ -1,5 +1,6 @@
 package com.adyen.checkout.card
 
+import com.adyen.checkout.card.util.SocialSecurityNumberUtils
 import org.junit.Assert.assertEquals
 import org.junit.Test
 

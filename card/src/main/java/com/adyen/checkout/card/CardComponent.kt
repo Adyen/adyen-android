@@ -16,6 +16,11 @@ import com.adyen.checkout.card.api.model.Brand
 import com.adyen.checkout.card.data.CardType
 import com.adyen.checkout.card.data.DetectedCardType
 import com.adyen.checkout.card.data.ExpiryDate
+import com.adyen.checkout.card.ui.model.AddressListItem
+import com.adyen.checkout.card.util.AddressFormUtils
+import com.adyen.checkout.card.util.DualBrandedCardUtils
+import com.adyen.checkout.card.util.InstallmentUtils
+import com.adyen.checkout.card.util.KcpValidationUtils
 import com.adyen.checkout.components.StoredPaymentComponentProvider
 import com.adyen.checkout.components.base.BasePaymentComponent
 import com.adyen.checkout.components.model.payments.request.Address
@@ -118,7 +123,7 @@ class CardComponent private constructor(
                             selectedCardIndex = 0,
                             selectedInstallmentOption = null,
                             countryOptions = countryOptions,
-                            stateOptions = it
+                            stateOptions = AddressFormUtils.mapToListItem(it, true)
                         )
                         notifyStateChanged(newOutputData)
                     }
@@ -142,7 +147,7 @@ class CardComponent private constructor(
                         detectedCardTypes = this.detectedCardTypes,
                         selectedCardIndex = 0,
                         selectedInstallmentOption = null,
-                        countryOptions = countries,
+                        countryOptions = AddressFormUtils.mapToListItem(countries, true),
                         stateOptions = stateOptions
                     )
                     notifyStateChanged(newOutputData)
@@ -190,7 +195,7 @@ class CardComponent private constructor(
         Logger.v(TAG, "onInputDataChanged")
 
         val detectedCardTypes = cardDelegate.detectCardType(inputData.cardNumber, publicKey, viewModelScope)
-        val stateOptions = mutableListOf<AddressItem>()
+        val stateOptions = mutableListOf<AddressListItem>()
         if (cardDelegate is NewCardDelegate) {
             cardDelegate.requestStateList(inputData.address.country, viewModelScope)
         }
@@ -208,7 +213,7 @@ class CardComponent private constructor(
             detectedCardTypes = detectedCardTypes,
             selectedCardIndex = inputData.selectedCardIndex,
             selectedInstallmentOption = inputData.installmentOption,
-            countryOptions = outputData?.countryOptions.orEmpty(),
+            countryOptions = AddressFormUtils.markCountrySelected(outputData?.countryOptions.orEmpty(), inputData.address.country),
             stateOptions = stateOptions
         )
     }
@@ -227,8 +232,8 @@ class CardComponent private constructor(
         detectedCardTypes: List<DetectedCardType>,
         selectedCardIndex: Int,
         selectedInstallmentOption: InstallmentModel?,
-        countryOptions: List<AddressItem>,
-        stateOptions: List<AddressItem>
+        countryOptions: List<AddressListItem>,
+        stateOptions: List<AddressListItem>
     ): CardOutputData {
 
         val isReliable = detectedCardTypes.any { it.isReliable }

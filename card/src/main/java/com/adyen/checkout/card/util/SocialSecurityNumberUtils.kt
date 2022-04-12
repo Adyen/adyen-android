@@ -1,5 +1,6 @@
-package com.adyen.checkout.card
+package com.adyen.checkout.card.util
 
+import com.adyen.checkout.card.R
 import com.adyen.checkout.components.ui.FieldState
 import com.adyen.checkout.components.ui.Validation
 import java.util.regex.Pattern

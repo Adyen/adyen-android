@@ -27,6 +27,8 @@ import com.adyen.checkout.card.data.DetectedCardType
 import com.adyen.checkout.card.data.ExpiryDate
 import com.adyen.checkout.card.databinding.CardViewBinding
 import com.adyen.checkout.card.ui.SecurityCodeInput
+import com.adyen.checkout.card.ui.model.AddressListItem
+import com.adyen.checkout.card.util.InstallmentUtils
 import com.adyen.checkout.components.api.ImageLoader
 import com.adyen.checkout.components.extensions.isVisible
 import com.adyen.checkout.components.base.AddressVisibility
@@ -486,11 +488,11 @@ class CardView @JvmOverloads constructor(context: Context, attrs: AttributeSet? 
         }
     }
 
-    private fun updateCountries(countryOptions: List<AddressItem>) {
-        binding.addressFormInput.initialize(countryOptions)
+    private fun updateCountries(countryOptions: List<AddressListItem>) {
+        binding.addressFormInput.updateCountries(countryOptions)
     }
 
-    private fun updateStates(stateOptions: List<AddressItem>) {
+    private fun updateStates(stateOptions: List<AddressListItem>) {
         binding.addressFormInput.updateStates(stateOptions)
     }
 
