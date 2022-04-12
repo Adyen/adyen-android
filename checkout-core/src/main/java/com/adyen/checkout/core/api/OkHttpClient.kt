@@ -13,7 +13,7 @@ import okhttp3.MediaType.Companion.toMediaType
 import okhttp3.OkHttpClient
 import okhttp3.Request
 import okhttp3.RequestBody.Companion.toRequestBody
-import java.io.IOException
+import org.json.JSONObject
 
 internal class OkHttpClient(
     private val client: OkHttpClient,
@@ -49,7 +49,15 @@ internal class OkHttpClient(
                 ?.bytes()
                 ?: ByteArray(0)
         } else {
-            throw IOException(response.body?.string())
+            @Suppress("TooGenericExceptionCaught")
+            val errorBody = try {
+                response.body?.string()
+                    ?.let { JSONObject(it) }
+                    ?.let { ErrorResponseBody.SERIALIZER.deserialize(it) }
+            } catch (e: Throwable) {
+                null
+            }
+            throw HttpException(response.code, response.message, errorBody)
         }
     }
 

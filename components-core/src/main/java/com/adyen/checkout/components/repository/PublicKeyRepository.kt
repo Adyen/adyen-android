@@ -29,6 +29,7 @@ class PublicKeyRepository {
     @Suppress("SameParameterValue")
     private inline fun <T> retryOnFailure(times: Int, block: () -> T): T {
         repeat(times - 1) {
+            @Suppress("TooGenericExceptionCaught")
             try {
                 return block()
             } catch (e: Throwable) {
