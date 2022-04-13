@@ -9,7 +9,6 @@ package com.adyen.checkout.molpay
 
 import androidx.lifecycle.SavedStateHandle
 import com.adyen.checkout.components.PaymentComponentProvider
-import com.adyen.checkout.components.base.GenericPaymentComponentProvider
 import com.adyen.checkout.components.base.GenericPaymentMethodDelegate
 import com.adyen.checkout.components.model.payments.request.MolpayPaymentMethod
 import com.adyen.checkout.components.util.PaymentMethodTypes
@@ -31,9 +30,7 @@ class MolpayComponent(
     }
 
     companion object {
-        val PROVIDER: PaymentComponentProvider<MolpayComponent, MolpayConfiguration> = GenericPaymentComponentProvider(
-            MolpayComponent::class.java
-        )
+        val PROVIDER: PaymentComponentProvider<MolpayComponent, MolpayConfiguration> = MolpayComponentProvider()
         val PAYMENT_METHOD_TYPES = arrayOf(
             PaymentMethodTypes.MOLPAY_THAILAND,
             PaymentMethodTypes.MOLPAY_MALAYSIA,

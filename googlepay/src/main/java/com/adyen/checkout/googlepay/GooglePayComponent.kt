@@ -111,7 +111,7 @@ class GooglePayComponent(
         private val TAG = getTag()
 
         @JvmField
-        val PROVIDER = GooglePayProvider()
+        val PROVIDER = GooglePayComponentProvider()
 
         val PAYMENT_METHOD_TYPES = arrayOf(PaymentMethodTypes.GOOGLE_PAY, PaymentMethodTypes.GOOGLE_PAY_LEGACY)
     }

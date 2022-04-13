@@ -9,7 +9,6 @@ package com.adyen.checkout.ideal
 
 import androidx.lifecycle.SavedStateHandle
 import com.adyen.checkout.components.PaymentComponentProvider
-import com.adyen.checkout.components.base.GenericPaymentComponentProvider
 import com.adyen.checkout.components.base.GenericPaymentMethodDelegate
 import com.adyen.checkout.components.model.payments.request.IdealPaymentMethod
 import com.adyen.checkout.components.util.PaymentMethodTypes
@@ -32,8 +31,6 @@ class IdealComponent(
 
     companion object {
         val PAYMENT_METHOD_TYPES = arrayOf(PaymentMethodTypes.IDEAL)
-        val PROVIDER: PaymentComponentProvider<IdealComponent, IdealConfiguration> = GenericPaymentComponentProvider(
-            IdealComponent::class.java
-        )
+        val PROVIDER: PaymentComponentProvider<IdealComponent, IdealConfiguration> = IdealComponentProvider()
     }
 }

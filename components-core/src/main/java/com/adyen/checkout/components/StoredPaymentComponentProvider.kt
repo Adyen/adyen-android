@@ -29,7 +29,9 @@ interface StoredPaymentComponentProvider<ComponentT : PaymentComponent<*, *>, Co
         owner: T,
         storedPaymentMethod: StoredPaymentMethod,
         configuration: ConfigurationT
-    ): ComponentT where T : SavedStateRegistryOwner, T : ViewModelStoreOwner
+    ): ComponentT where T : SavedStateRegistryOwner, T : ViewModelStoreOwner {
+        return get(owner, owner, storedPaymentMethod, configuration, null)
+    }
 
     /**
      * Get a [PaymentComponent] with a stored payment method.

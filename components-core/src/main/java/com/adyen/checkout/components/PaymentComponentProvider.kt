@@ -32,11 +32,13 @@ interface PaymentComponentProvider<ComponentT : PaymentComponent<*, *>, Configur
      * @return The Component
      */
     @Throws(CheckoutException::class)
-    operator fun <T> get(
+    fun <T> get(
         owner: T,
         paymentMethod: PaymentMethod,
         configuration: ConfigurationT
-    ): ComponentT where T : SavedStateRegistryOwner, T : ViewModelStoreOwner
+    ): ComponentT where T : SavedStateRegistryOwner, T : ViewModelStoreOwner {
+        return get(owner, owner, paymentMethod, configuration, null)
+    }
 
     /**
      * Get a [PaymentComponent].
@@ -50,7 +52,7 @@ interface PaymentComponentProvider<ComponentT : PaymentComponent<*, *>, Configur
      * @return The Component
      */
     @Throws(CheckoutException::class)
-    operator fun get(
+    fun get(
         savedStateRegistryOwner: SavedStateRegistryOwner,
         viewModelStoreOwner: ViewModelStoreOwner,
         paymentMethod: PaymentMethod,

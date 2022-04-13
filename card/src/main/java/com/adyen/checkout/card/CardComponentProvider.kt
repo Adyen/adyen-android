@@ -25,14 +25,6 @@ private val TAG = LogUtil.getTag()
 
 class CardComponentProvider : StoredPaymentComponentProvider<CardComponent, CardConfiguration> {
 
-    override fun <T> get(
-        owner: T,
-        paymentMethod: PaymentMethod,
-        configuration: CardConfiguration
-    ): CardComponent where T : SavedStateRegistryOwner, T : ViewModelStoreOwner {
-        return get(owner, owner, paymentMethod, configuration, null)
-    }
-
     override fun get(
         savedStateRegistryOwner: SavedStateRegistryOwner,
         viewModelStoreOwner: ViewModelStoreOwner,
@@ -58,14 +50,6 @@ class CardComponentProvider : StoredPaymentComponentProvider<CardComponent, Card
             )
         }
         return ViewModelProvider(viewModelStoreOwner, factory).get(CardComponent::class.java)
-    }
-
-    override fun <T> get(
-        owner: T,
-        storedPaymentMethod: StoredPaymentMethod,
-        configuration: CardConfiguration
-    ): CardComponent where T : SavedStateRegistryOwner, T : ViewModelStoreOwner {
-        return get(owner, owner, storedPaymentMethod, configuration, null)
     }
 
     override fun get(
