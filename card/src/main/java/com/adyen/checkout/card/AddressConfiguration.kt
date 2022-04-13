@@ -6,7 +6,7 @@ import android.os.Parcelable
 // TODO docs
 sealed class AddressConfiguration: Parcelable {
 
-    object None: AddressConfiguration() {
+    object None : AddressConfiguration() {
         @JvmField
         val CREATOR = object : Parcelable.Creator<None> {
             override fun createFromParcel(source: Parcel?) = None
@@ -16,7 +16,7 @@ sealed class AddressConfiguration: Parcelable {
         override fun writeToParcel(dest: Parcel?, flags: Int) {}
     }
 
-    object PostalCode: AddressConfiguration() {
+    object PostalCode : AddressConfiguration() {
         @JvmField
         val CREATOR = object : Parcelable.Creator<PostalCode> {
             override fun createFromParcel(source: Parcel?) = PostalCode
@@ -29,7 +29,7 @@ sealed class AddressConfiguration: Parcelable {
     data class FullAddress(
         val defaultCountryCode: String? = null,
         val supportedCountryCodes: List<String> = emptyList()
-    ): AddressConfiguration() {
+    ) : AddressConfiguration() {
         @JvmField
         val CREATOR = object : Parcelable.Creator<FullAddress> {
             @Suppress("UNCHECKED_CAST")
