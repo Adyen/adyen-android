@@ -14,6 +14,7 @@ import com.adyen.checkout.card.data.CardType
 import com.adyen.checkout.card.data.DetectedCardType
 import com.adyen.checkout.card.data.ExpiryDate
 import com.adyen.checkout.card.repository.BinLookupRepository
+import com.adyen.checkout.card.util.AddressValidationUtils
 import com.adyen.checkout.card.util.CardValidationUtils
 import com.adyen.checkout.card.util.InstallmentUtils
 import com.adyen.checkout.card.util.KcpValidationUtils
@@ -127,6 +128,14 @@ class NewCardDelegate(
             else -> Validation.Valid
         }
         return FieldState(postalCode, validation)
+    }
+
+    override fun validateAddress(addressInputModel: AddressInputModel): AddressOutputData {
+        return if (cardConfiguration.addressConfiguration is AddressConfiguration.FullAddress) {
+            AddressValidationUtils.validateAddressInput(addressInputModel)
+        } else {
+            AddressValidationUtils.makeValidEmptyAddressOutput(addressInputModel)
+        }
     }
 
     override fun isCvcHidden(): Boolean {

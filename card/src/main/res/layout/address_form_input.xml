@@ -6,10 +6,12 @@
   ~ Created by ozgur on 11/3/2022.
   -->
 
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<merge xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:orientation="vertical">
+    android:orientation="vertical"
+    tools:parentTag="android.widget.LinearLayout">
 
     <com.google.android.material.textfield.TextInputLayout
         android:id="@+id/textInputLayout_country"
@@ -31,4 +33,4 @@
         android:layout_height="wrap_content"
         android:orientation="vertical" />
 
-</LinearLayout>
+</merge>

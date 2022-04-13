@@ -218,6 +218,9 @@ class CardView @JvmOverloads constructor(context: Context, attrs: AttributeSet? 
                 }
                 binding.textInputLayoutPostalCode.error = mLocalizedContext.getString(postalCodeValidation.reason)
             }
+            if (binding.addressFormInput.isVisible && !it.addressState.isValid()) {
+                binding.addressFormInput.highlightValidationErrors(it.addressState)
+            }
         }
     }
 

@@ -15,11 +15,13 @@ import android.widget.AdapterView
 import android.widget.AutoCompleteTextView
 import android.widget.LinearLayout
 import com.adyen.checkout.card.AddressInputModel
+import com.adyen.checkout.card.AddressOutputData
 import com.adyen.checkout.card.R
-import com.adyen.checkout.card.api.model.AddressItem
 import com.adyen.checkout.card.ui.model.AddressListItem
+import com.adyen.checkout.components.ui.Validation
 import com.adyen.checkout.components.ui.adapter.SimpleTextListAdapter
 import com.adyen.checkout.components.ui.view.AdyenTextInputEditText
+import com.google.android.material.textfield.TextInputLayout
 
 class AddressFormInput @JvmOverloads constructor(
     context: Context,
@@ -40,8 +42,8 @@ class AddressFormInput @JvmOverloads constructor(
     private val editTextStreet: AdyenTextInputEditText?
         get() = rootView.findViewById(R.id.editText_street)
 
-    private val editTextApartmentSuite: AdyenTextInputEditText?
-        get() = rootView.findViewById(R.id.editText_apartmentSuite)
+    private val editTextHouseNumber: AdyenTextInputEditText?
+        get() = rootView.findViewById(R.id.editText_houseNumber)
 
     private val editTextPostalCode: AdyenTextInputEditText?
         get() = rootView.findViewById(R.id.editText_postalCode)
@@ -51,6 +53,21 @@ class AddressFormInput @JvmOverloads constructor(
 
     private val editTextProvinceTerritory: AdyenTextInputEditText?
         get() = rootView.findViewById(R.id.editText_provinceTerritory)
+
+    private val textInputLayoutStreet: TextInputLayout?
+        get() = rootView.findViewById(R.id.textInputLayout_street)
+
+    private val textInputLayoutHouseNumber: TextInputLayout?
+        get() = rootView.findViewById(R.id.textInputLayout_houseNumber)
+
+    private val textInputLayoutPostalCode: TextInputLayout?
+        get() = rootView.findViewById<LinearLayout>(R.id.linearLayout_formContainer).findViewById(R.id.textInputLayout_postalCode)
+
+    private val textInputLayoutCity: TextInputLayout?
+        get() = rootView.findViewById(R.id.textInputLayout_city)
+
+    private val textInputLayoutProvinceTerritory: TextInputLayout?
+        get() = rootView.findViewById(R.id.textInputLayout_provinceTerritory)
 
     private val addressInput = AddressInputModel()
 
@@ -76,6 +93,48 @@ class AddressFormInput @JvmOverloads constructor(
 
     fun removeOnAddressChangeListener() {
         this.onAddressChangeListener = null
+    }
+
+    fun highlightValidationErrors(addressOutputData: AddressOutputData) {
+        var isErrorFocused = false
+        val streetValidation = addressOutputData.street.validation
+        if (streetValidation is Validation.Invalid) {
+            isErrorFocused = true
+            textInputLayoutStreet?.requestFocus()
+            textInputLayoutStreet?.error = resources.getString(streetValidation.reason)
+        }
+        val houseNumberValidation = addressOutputData.houseNumberOrName.validation
+        if (houseNumberValidation is Validation.Invalid) {
+            if (!isErrorFocused) {
+                isErrorFocused = true
+                textInputLayoutHouseNumber?.requestFocus()
+            }
+            textInputLayoutHouseNumber?.error = resources.getString(houseNumberValidation.reason)
+        }
+        val postalCodeValidation = addressOutputData.postalCode.validation
+        if (postalCodeValidation is Validation.Invalid) {
+            if (!isErrorFocused) {
+                isErrorFocused = true
+                textInputLayoutPostalCode?.requestFocus()
+            }
+            textInputLayoutPostalCode?.error = resources.getString(postalCodeValidation.reason)
+        }
+        val cityValidation = addressOutputData.city.validation
+        if (cityValidation is Validation.Invalid) {
+            if (!isErrorFocused) {
+                isErrorFocused = true
+                textInputLayoutCity?.requestFocus()
+            }
+            textInputLayoutCity?.error = resources.getString(cityValidation.reason)
+        }
+        val provinceTerritoryValidation = addressOutputData.stateOrProvince.validation
+        if (provinceTerritoryValidation is Validation.Invalid) {
+            if (!isErrorFocused) {
+                isErrorFocused = true
+                textInputLayoutProvinceTerritory?.requestFocus()
+            }
+            textInputLayoutProvinceTerritory?.error = resources.getString(provinceTerritoryValidation.reason)
+        }
     }
 
     fun updateCountries(countryList: List<AddressListItem>) {
@@ -120,7 +179,7 @@ class AddressFormInput @JvmOverloads constructor(
             onAddressChangeListener?.onChanged(addressInput)
         }
 
-        editTextApartmentSuite?.setOnChangeListener {
+        editTextHouseNumber?.setOnChangeListener {
             addressInput.houseNumberOrName = it.toString()
             onAddressChangeListener?.onChanged(addressInput)
         }
