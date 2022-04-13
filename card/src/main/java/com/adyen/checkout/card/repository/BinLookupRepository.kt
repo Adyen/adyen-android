@@ -18,6 +18,7 @@ import com.adyen.checkout.card.data.DetectedCardType
 import com.adyen.checkout.core.encryption.Sha256
 import com.adyen.checkout.core.log.LogUtil
 import com.adyen.checkout.core.log.Logger
+import com.adyen.checkout.core.util.runSuspendCatching
 import com.adyen.checkout.cse.CardEncrypter
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
@@ -70,7 +71,7 @@ class BinLookupRepository {
         publicKey: String,
         cardConfiguration: CardConfiguration
     ): BinLookupResponse? = withContext(Dispatchers.Default) {
-        runCatching {
+        runSuspendCatching {
             val encryptedBin = CardEncrypter.encryptBin(cardNumber, publicKey)
             val cardTypes = cardConfiguration.supportedCardTypes.map { it.txVariant }
             val request = BinLookupRequest(encryptedBin, UUID.randomUUID().toString(), cardTypes)

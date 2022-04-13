@@ -15,6 +15,7 @@ import com.adyen.checkout.components.model.payments.response.RedirectAction
 import com.adyen.checkout.components.model.payments.response.Threeds2Action
 import com.adyen.checkout.core.log.LogUtil
 import com.adyen.checkout.core.log.Logger
+import com.adyen.checkout.core.util.runSuspendCatching
 import org.json.JSONObject
 
 class SubmitFingerprintRepository {
@@ -23,7 +24,7 @@ class SubmitFingerprintRepository {
         encodedFingerprint: String,
         configuration: Adyen3DS2Configuration,
         paymentData: String?
-    ): Result<SubmitFingerprintResult> = runCatching {
+    ): Result<SubmitFingerprintResult> = runSuspendCatching {
         Logger.d(TAG, "Submitting fingerprint automatically")
 
         val request = SubmitFingerprintRequest(

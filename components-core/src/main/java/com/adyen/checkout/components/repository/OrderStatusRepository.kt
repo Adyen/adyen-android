@@ -14,13 +14,14 @@ import com.adyen.checkout.components.model.connection.OrderStatusRequest
 import com.adyen.checkout.components.model.connection.OrderStatusResponse
 import com.adyen.checkout.core.log.LogUtil
 import com.adyen.checkout.core.log.Logger
+import com.adyen.checkout.core.util.runSuspendCatching
 
 class OrderStatusRepository {
 
     suspend fun getOrderStatus(
         configuration: Configuration,
         orderData: String
-    ): Result<OrderStatusResponse> = runCatching {
+    ): Result<OrderStatusResponse> = runSuspendCatching {
         Logger.d(TAG, "Getting order status")
 
         val request = OrderStatusRequest(orderData)

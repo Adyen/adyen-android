@@ -15,6 +15,7 @@ import com.adyen.checkout.components.model.payments.request.PaymentComponentData
 import com.adyen.checkout.components.model.payments.request.PaymentMethodDetails
 import com.adyen.checkout.core.log.LogUtil
 import com.adyen.checkout.core.log.Logger
+import com.adyen.checkout.core.util.runSuspendCatching
 import com.adyen.checkout.sessions.api.SessionService
 import com.adyen.checkout.sessions.model.Session
 import com.adyen.checkout.sessions.model.orders.SessionBalanceRequest
@@ -40,7 +41,7 @@ internal class SessionRepository(
         configuration: Configuration,
         session: Session,
         order: OrderRequest?
-    ): Result<SessionSetupResponse> = runCatching {
+    ): Result<SessionSetupResponse> = runSuspendCatching {
         Logger.d(TAG, "Setting up session")
 
         val request = SessionSetupRequest(session.sessionData.orEmpty(), order)
@@ -55,7 +56,7 @@ internal class SessionRepository(
         configuration: Configuration,
         session: Session,
         paymentComponentData: PaymentComponentData<out PaymentMethodDetails>
-    ): Result<SessionPaymentsResponse> = runCatching {
+    ): Result<SessionPaymentsResponse> = runSuspendCatching {
         Logger.d(TAG, "Submitting payment")
 
         val request = SessionPaymentsRequest(session.sessionData.orEmpty(), paymentComponentData)
@@ -70,7 +71,7 @@ internal class SessionRepository(
         configuration: Configuration,
         session: Session,
         actionComponentData: ActionComponentData
-    ): Result<SessionDetailsResponse> = runCatching {
+    ): Result<SessionDetailsResponse> = runSuspendCatching {
         Logger.d(TAG, "Submitting details")
 
         val request = SessionDetailsRequest(
@@ -89,7 +90,7 @@ internal class SessionRepository(
         configuration: Configuration,
         session: Session,
         paymentMethodDetails: PaymentMethodDetails
-    ): Result<SessionBalanceResponse> = runCatching {
+    ): Result<SessionBalanceResponse> = runSuspendCatching {
         Logger.d(TAG, "Checking payment method balance")
 
         val request = SessionBalanceRequest(session.sessionData.orEmpty(), paymentMethodDetails)
@@ -103,7 +104,7 @@ internal class SessionRepository(
     suspend fun createOrder(
         configuration: Configuration,
         session: Session
-    ): Result<SessionOrderResponse> = runCatching {
+    ): Result<SessionOrderResponse> = runSuspendCatching {
         Logger.d(TAG, "Creating order")
 
         val request = SessionOrderRequest(session.sessionData.orEmpty())
@@ -118,7 +119,7 @@ internal class SessionRepository(
         configuration: Configuration,
         session: Session,
         order: OrderRequest
-    ): Result<SessionCancelOrderResponse> = runCatching {
+    ): Result<SessionCancelOrderResponse> = runSuspendCatching {
         Logger.d(TAG, "Cancelling order")
 
         val request = SessionCancelOrderRequest(session.sessionData.orEmpty(), order)

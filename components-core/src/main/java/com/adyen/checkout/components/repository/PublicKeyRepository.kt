@@ -12,13 +12,14 @@ import com.adyen.checkout.components.api.PublicKeyService
 import com.adyen.checkout.core.api.Environment
 import com.adyen.checkout.core.log.LogUtil
 import com.adyen.checkout.core.log.Logger
+import com.adyen.checkout.core.util.runSuspendCatching
 
 class PublicKeyRepository {
 
     suspend fun fetchPublicKey(
         environment: Environment,
         clientKey: String
-    ): Result<String> = runCatching {
+    ): Result<String> = runSuspendCatching {
         Logger.d(TAG, "fetching publicKey from API")
 
         retryOnFailure(CONNECTION_RETRIES) {
