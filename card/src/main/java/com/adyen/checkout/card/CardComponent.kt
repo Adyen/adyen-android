@@ -11,7 +11,6 @@ package com.adyen.checkout.card
 import androidx.annotation.StringRes
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.viewModelScope
-import com.adyen.checkout.card.api.model.AddressItem
 import com.adyen.checkout.card.api.model.Brand
 import com.adyen.checkout.card.data.CardType
 import com.adyen.checkout.card.data.DetectedCardType
@@ -82,6 +81,7 @@ class CardComponent private constructor(
                             socialSecurityNumber = socialSecurityNumberState.value,
                             kcpBirthDateOrTaxNumber = kcpBirthDateOrTaxNumberState.value,
                             kcpCardPassword = kcpCardPasswordState.value,
+                            addressInputModel = AddressInputModel(addressState),
                             postalCode = postalCodeState.value,
                             isStorePaymentSelected = isStoredPaymentMethodEnable,
                             detectedCardTypes = it,
@@ -109,6 +109,7 @@ class CardComponent private constructor(
                             socialSecurityNumber = socialSecurityNumberState.value,
                             kcpBirthDateOrTaxNumber = kcpBirthDateOrTaxNumberState.value,
                             kcpCardPassword = kcpCardPasswordState.value,
+                            addressInputModel = AddressInputModel(addressState),
                             postalCode = postalCodeState.value,
                             isStorePaymentSelected = isStoredPaymentMethodEnable,
                             detectedCardTypes = detectedCardTypes,
@@ -134,6 +135,7 @@ class CardComponent private constructor(
                         socialSecurityNumber = socialSecurityNumberState.value,
                         kcpBirthDateOrTaxNumber = kcpBirthDateOrTaxNumberState.value,
                         kcpCardPassword = kcpCardPasswordState.value,
+                        addressInputModel = AddressInputModel(addressState),
                         postalCode = postalCodeState.value,
                         isStorePaymentSelected = isStoredPaymentMethodEnable,
                         detectedCardTypes = this.detectedCardTypes,
@@ -200,7 +202,6 @@ class CardComponent private constructor(
         Logger.v(TAG, "onInputDataChanged")
 
         val detectedCardTypes = cardDelegate.detectCardType(inputData.cardNumber, publicKey, viewModelScope)
-        val stateOptions = mutableListOf<AddressListItem>()
         if (cardDelegate is NewCardDelegate) {
             cardDelegate.requestStateList(inputData.address.country, viewModelScope)
         }
@@ -213,13 +214,14 @@ class CardComponent private constructor(
             socialSecurityNumber = inputData.socialSecurityNumber,
             kcpBirthDateOrTaxNumber = inputData.kcpBirthDateOrTaxNumber,
             kcpCardPassword = inputData.kcpCardPassword,
+            addressInputModel = inputData.address,
             isStorePaymentSelected = inputData.isStorePaymentSelected,
             postalCode = inputData.postalCode,
             detectedCardTypes = detectedCardTypes,
             selectedCardIndex = inputData.selectedCardIndex,
             selectedInstallmentOption = inputData.installmentOption,
-            countryOptions = AddressFormUtils.markCountrySelected(outputData?.countryOptions.orEmpty(), inputData.address.country),
-            stateOptions = stateOptions
+            countryOptions = AddressFormUtils.markAddressListItemSelected(outputData?.countryOptions.orEmpty(), inputData.address.country),
+            stateOptions = AddressFormUtils.markAddressListItemSelected(outputData?.stateOptions.orEmpty(), inputData.address.stateOrProvince)
         )
     }
 
@@ -232,6 +234,7 @@ class CardComponent private constructor(
         socialSecurityNumber: String,
         kcpBirthDateOrTaxNumber: String,
         kcpCardPassword: String,
+        addressInputModel: AddressInputModel,
         isStorePaymentSelected: Boolean,
         postalCode: String,
         detectedCardTypes: List<DetectedCardType>,
@@ -267,6 +270,7 @@ class CardComponent private constructor(
             cardDelegate.validateKcpBirthDateOrTaxNumber(kcpBirthDateOrTaxNumber),
             cardDelegate.validateKcpCardPassword(kcpCardPassword),
             cardDelegate.validatePostalCode(postalCode),
+            cardDelegate.validateAddress(addressInputModel),
             makeInstallmentFieldState(selectedInstallmentOption),
             isStorePaymentSelected,
             makeCvcUIState(selectedOrFirstCardType?.cvcPolicy),
