@@ -29,17 +29,18 @@ class PublicKeyRepository {
 
     @Suppress("SameParameterValue")
     private inline fun <T> retryOnFailure(times: Int, block: () -> T): T {
-        repeat(times - 1) {
+        lateinit var throwable: Throwable
+
+        repeat(times) {
             @Suppress("TooGenericExceptionCaught")
             try {
                 return block()
             } catch (e: Throwable) {
-                // Empty body to ignore errors and retry.
+                throwable = e
             }
         }
 
-        // Final try, that will throw an exception if it fails.
-        return block()
+        throw throwable
     }
 
     companion object {
