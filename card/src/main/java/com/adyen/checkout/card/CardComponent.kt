@@ -58,14 +58,7 @@ class CardComponent private constructor(
     private var publicKey: String? = null
 
     init {
-        viewModelScope.launch {
-            try {
-                publicKey = cardDelegate.fetchPublicKey()
-                notifyStateChanged()
-            } catch (e: CheckoutException) {
-                notifyException(ComponentException("Unable to fetch publicKey.", e))
-            }
-        }
+        fetchPublicKey()
 
         if (cardDelegate is NewCardDelegate) {
             cardDelegate.binLookupFlow
@@ -121,6 +114,21 @@ class CardComponent private constructor(
         cardDelegate as CardDelegate,
         cardConfiguration
     )
+
+    private fun fetchPublicKey() {
+        viewModelScope.launch {
+            cardDelegate.fetchPublicKey()
+                .fold(
+                    onSuccess = { key ->
+                        publicKey = key
+                        notifyStateChanged()
+                    },
+                    onFailure = { e ->
+                        notifyException(ComponentException("Unable to fetch publicKey.", e))
+                    }
+                )
+        }
+    }
 
     override fun getSupportedPaymentMethodTypes(): Array<String> = PAYMENT_METHOD_TYPES
 

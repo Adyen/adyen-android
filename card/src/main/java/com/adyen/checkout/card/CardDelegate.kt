@@ -65,7 +65,7 @@ abstract class CardDelegate(
 
     abstract fun getSupportedCardTypes(): List<CardType>
 
-    suspend fun fetchPublicKey(): String {
+    suspend fun fetchPublicKey(): Result<String> {
         return publicKeyRepository.fetchPublicKey(
             environment = cardConfiguration.environment,
             clientKey = cardConfiguration.clientKey

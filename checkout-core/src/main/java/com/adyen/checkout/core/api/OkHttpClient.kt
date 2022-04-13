@@ -8,11 +8,14 @@
 
 package com.adyen.checkout.core.api
 
+import com.adyen.checkout.core.exception.ModelSerializationException
 import okhttp3.Headers.Companion.toHeaders
 import okhttp3.MediaType.Companion.toMediaType
 import okhttp3.OkHttpClient
 import okhttp3.Request
 import okhttp3.RequestBody.Companion.toRequestBody
+import org.json.JSONException
+import org.json.JSONObject
 import java.io.IOException
 
 internal class OkHttpClient(
@@ -49,7 +52,18 @@ internal class OkHttpClient(
                 ?.bytes()
                 ?: ByteArray(0)
         } else {
-            throw IOException(response.body?.string())
+            val errorBody = try {
+                response.body?.string()
+                    ?.let { JSONObject(it) }
+                    ?.let { ErrorResponseBody.SERIALIZER.deserialize(it) }
+            } catch (e: IOException) {
+                null
+            } catch (e: JSONException) {
+                null
+            } catch (e: ModelSerializationException) {
+                null
+            }
+            throw HttpException(response.code, response.message, errorBody)
         }
     }
 

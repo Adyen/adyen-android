@@ -12,35 +12,26 @@ import com.adyen.checkout.components.api.OrderStatusService
 import com.adyen.checkout.components.base.Configuration
 import com.adyen.checkout.components.model.connection.OrderStatusRequest
 import com.adyen.checkout.components.model.connection.OrderStatusResponse
-import com.adyen.checkout.core.exception.CheckoutException
 import com.adyen.checkout.core.log.LogUtil
 import com.adyen.checkout.core.log.Logger
-import org.json.JSONException
-import java.io.IOException
+import com.adyen.checkout.core.util.runSuspendCatching
 
 class OrderStatusRepository {
-
-    companion object {
-        private val TAG = LogUtil.getTag()
-    }
 
     suspend fun getOrderStatus(
         configuration: Configuration,
         orderData: String
-    ): OrderStatusResponse {
+    ): Result<OrderStatusResponse> = runSuspendCatching {
         Logger.d(TAG, "Getting order status")
-        try {
-            val request = OrderStatusRequest(orderData)
-            return OrderStatusService(configuration.environment).getOrderStatus(
-                request,
-                configuration.clientKey
-            )
-        } catch (e: IOException) {
-            Logger.e(TAG, "OrderStatusConnection Failed", e)
-            throw CheckoutException("Unable to get order status")
-        } catch (e: JSONException) {
-            Logger.e(TAG, "OrderStatusConnection unexpected result", e)
-            throw CheckoutException("Unable to get order status")
-        }
+
+        val request = OrderStatusRequest(orderData)
+        OrderStatusService(configuration.environment).getOrderStatus(
+            request,
+            configuration.clientKey
+        )
+    }
+
+    companion object {
+        private val TAG = LogUtil.getTag()
     }
 }

@@ -298,18 +298,22 @@ class DropInViewModel(
 
     private suspend fun getOrderDetails(orderResponse: OrderResponse?): OrderModel? {
         if (orderResponse == null) return null
-        return try {
-            val orderStatus = orderStatusRepository.getOrderStatus(dropInConfiguration, orderResponse.orderData)
-            OrderModel(
-                orderData = orderResponse.orderData,
-                pspReference = orderResponse.pspReference,
-                remainingAmount = orderStatus.remainingAmount,
-                paymentMethods = orderStatus.paymentMethods
+
+        return orderStatusRepository.getOrderStatus(dropInConfiguration, orderResponse.orderData)
+            .fold(
+                onSuccess = { statusResponse ->
+                    OrderModel(
+                        orderData = orderResponse.orderData,
+                        pspReference = orderResponse.pspReference,
+                        remainingAmount = statusResponse.remainingAmount,
+                        paymentMethods = statusResponse.paymentMethods
+                    )
+                },
+                onFailure = { e ->
+                    Logger.e(PaymentMethodsListViewModel.TAG, "Unable to fetch order details", e)
+                    null
+                }
             )
-        } catch (e: CheckoutException) {
-            Logger.e(PaymentMethodsListViewModel.TAG, "Unable to fetch order details")
-            null
-        }
     }
 
     fun partialPaymentRequested() {
