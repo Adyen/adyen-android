@@ -30,7 +30,7 @@ class EPSComponent(
     }
 
     companion object {
-        val PROVIDER: PaymentComponentProvider<EPSComponent, EPSConfiguration> = EPSProvider()
+        val PROVIDER: PaymentComponentProvider<EPSComponent, EPSConfiguration> = EPSComponentProvider()
         val PAYMENT_METHOD_TYPES = arrayOf(PaymentMethodTypes.EPS)
     }
 }

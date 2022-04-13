@@ -33,7 +33,7 @@ import java.lang.ref.WeakReference
 
 private val TAG = LogUtil.getTag()
 
-class GooglePayProvider :
+class GooglePayComponentProvider :
     PaymentComponentProvider<GooglePayComponent, GooglePayConfiguration>,
     PaymentMethodAvailabilityCheck<GooglePayConfiguration> {
 

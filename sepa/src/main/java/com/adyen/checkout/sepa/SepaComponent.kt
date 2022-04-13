@@ -50,7 +50,7 @@ class SepaComponent(
 
     companion object {
         private val TAG = getTag()
-        val PROVIDER: PaymentComponentProvider<SepaComponent, SepaConfiguration> = SepaProvider()
+        val PROVIDER: PaymentComponentProvider<SepaComponent, SepaConfiguration> = SepaComponentProvider()
         val PAYMENT_METHOD_TYPES = arrayOf(PaymentMethodTypes.SEPA)
     }
 }

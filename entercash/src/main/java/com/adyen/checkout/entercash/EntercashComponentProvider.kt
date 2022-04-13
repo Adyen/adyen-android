@@ -6,7 +6,7 @@
  * Created by caiof on 12/4/2022.
  */
 
-package com.adyen.checkout.mbway
+package com.adyen.checkout.entercash
 
 import android.os.Bundle
 import androidx.lifecycle.ViewModelProvider
@@ -17,18 +17,18 @@ import com.adyen.checkout.components.base.GenericPaymentMethodDelegate
 import com.adyen.checkout.components.base.lifecycle.viewModelFactory
 import com.adyen.checkout.components.model.paymentmethods.PaymentMethod
 
-class MBWayProvider : PaymentComponentProvider<MBWayComponent, MBWayConfiguration> {
+class EntercashComponentProvider : PaymentComponentProvider<EntercashComponent, EntercashConfiguration> {
     override fun get(
         savedStateRegistryOwner: SavedStateRegistryOwner,
         viewModelStoreOwner: ViewModelStoreOwner,
         paymentMethod: PaymentMethod,
-        configuration: MBWayConfiguration,
+        configuration: EntercashConfiguration,
         defaultArgs: Bundle?
-    ): MBWayComponent {
+    ): EntercashComponent {
         val genericFactory: ViewModelProvider.Factory =
             viewModelFactory(savedStateRegistryOwner, defaultArgs) { savedStateHandle ->
-                MBWayComponent(savedStateHandle, GenericPaymentMethodDelegate(paymentMethod), configuration)
+                EntercashComponent(savedStateHandle, GenericPaymentMethodDelegate(paymentMethod), configuration)
             }
-        return ViewModelProvider(viewModelStoreOwner, genericFactory).get(MBWayComponent::class.java)
+        return ViewModelProvider(viewModelStoreOwner, genericFactory).get(EntercashComponent::class.java)
     }
 }

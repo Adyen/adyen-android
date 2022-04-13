@@ -31,7 +31,8 @@ class EntercashComponent(
 
     companion object {
         @JvmField
-        val PROVIDER: PaymentComponentProvider<EntercashComponent, EntercashConfiguration> = EntercashProvider()
+        val PROVIDER: PaymentComponentProvider<EntercashComponent, EntercashConfiguration> =
+            EntercashComponentProvider()
         val PAYMENT_METHOD_TYPES = arrayOf(PaymentMethodTypes.ENTERCASH)
     }
 }

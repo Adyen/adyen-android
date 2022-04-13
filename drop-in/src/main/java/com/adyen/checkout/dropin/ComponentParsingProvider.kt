@@ -68,7 +68,7 @@ import com.adyen.checkout.giftcard.GiftCardConfiguration
 import com.adyen.checkout.giftcard.GiftCardView
 import com.adyen.checkout.googlepay.GooglePayComponent
 import com.adyen.checkout.googlepay.GooglePayConfiguration
-import com.adyen.checkout.googlepay.GooglePayProvider
+import com.adyen.checkout.googlepay.GooglePayComponentProvider
 import com.adyen.checkout.ideal.IdealComponent
 import com.adyen.checkout.ideal.IdealConfiguration
 import com.adyen.checkout.ideal.IdealRecyclerView
@@ -235,7 +235,7 @@ internal fun getPaymentMethodAvailabilityCheck(
     @Suppress("UNCHECKED_CAST")
     return when (paymentMethodType) {
         PaymentMethodTypes.GOOGLE_PAY,
-        PaymentMethodTypes.GOOGLE_PAY_LEGACY -> GooglePayProvider()
+        PaymentMethodTypes.GOOGLE_PAY_LEGACY -> GooglePayComponentProvider()
         PaymentMethodTypes.WECHAT_PAY_SDK -> WeChatPayProvider()
         else -> AlwaysAvailablePaymentMethod()
     } as PaymentMethodAvailabilityCheck<Configuration>

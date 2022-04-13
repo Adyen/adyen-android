@@ -6,7 +6,7 @@
  * Created by caiof on 12/4/2022.
  */
 
-package com.adyen.checkout.openbanking
+package com.adyen.checkout.sepa
 
 import android.os.Bundle
 import androidx.lifecycle.ViewModelProvider
@@ -17,18 +17,18 @@ import com.adyen.checkout.components.base.GenericPaymentMethodDelegate
 import com.adyen.checkout.components.base.lifecycle.viewModelFactory
 import com.adyen.checkout.components.model.paymentmethods.PaymentMethod
 
-class OpenBankingProvider : PaymentComponentProvider<OpenBankingComponent, OpenBankingConfiguration> {
+class SepaComponentProvider : PaymentComponentProvider<SepaComponent, SepaConfiguration> {
     override fun get(
         savedStateRegistryOwner: SavedStateRegistryOwner,
         viewModelStoreOwner: ViewModelStoreOwner,
         paymentMethod: PaymentMethod,
-        configuration: OpenBankingConfiguration,
+        configuration: SepaConfiguration,
         defaultArgs: Bundle?
-    ): OpenBankingComponent {
+    ): SepaComponent {
         val genericFactory: ViewModelProvider.Factory =
             viewModelFactory(savedStateRegistryOwner, defaultArgs) { savedStateHandle ->
-                OpenBankingComponent(savedStateHandle, GenericPaymentMethodDelegate(paymentMethod), configuration)
+                SepaComponent(savedStateHandle, GenericPaymentMethodDelegate(paymentMethod), configuration)
             }
-        return ViewModelProvider(viewModelStoreOwner, genericFactory).get(OpenBankingComponent::class.java)
+        return ViewModelProvider(viewModelStoreOwner, genericFactory).get(SepaComponent::class.java)
     }
 }

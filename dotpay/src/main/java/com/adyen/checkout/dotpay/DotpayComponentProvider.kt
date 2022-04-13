@@ -17,7 +17,7 @@ import com.adyen.checkout.components.base.GenericPaymentMethodDelegate
 import com.adyen.checkout.components.base.lifecycle.viewModelFactory
 import com.adyen.checkout.components.model.paymentmethods.PaymentMethod
 
-class DotpayProvider : PaymentComponentProvider<DotpayComponent, DotpayConfiguration> {
+class DotpayComponentProvider : PaymentComponentProvider<DotpayComponent, DotpayConfiguration> {
     override fun get(
         savedStateRegistryOwner: SavedStateRegistryOwner,
         viewModelStoreOwner: ViewModelStoreOwner,

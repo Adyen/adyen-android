@@ -6,7 +6,7 @@
  * Created by caiof on 12/4/2022.
  */
 
-package com.adyen.checkout.molpay
+package com.adyen.checkout.ideal
 
 import android.os.Bundle
 import androidx.lifecycle.ViewModelProvider
@@ -17,18 +17,18 @@ import com.adyen.checkout.components.base.GenericPaymentMethodDelegate
 import com.adyen.checkout.components.base.lifecycle.viewModelFactory
 import com.adyen.checkout.components.model.paymentmethods.PaymentMethod
 
-class MolpayProvider : PaymentComponentProvider<MolpayComponent, MolpayConfiguration> {
+class IdealComponentProvider : PaymentComponentProvider<IdealComponent, IdealConfiguration> {
     override fun get(
         savedStateRegistryOwner: SavedStateRegistryOwner,
         viewModelStoreOwner: ViewModelStoreOwner,
         paymentMethod: PaymentMethod,
-        configuration: MolpayConfiguration,
+        configuration: IdealConfiguration,
         defaultArgs: Bundle?
-    ): MolpayComponent {
+    ): IdealComponent {
         val genericFactory: ViewModelProvider.Factory =
             viewModelFactory(savedStateRegistryOwner, defaultArgs) { savedStateHandle ->
-                MolpayComponent(savedStateHandle, GenericPaymentMethodDelegate(paymentMethod), configuration)
+                IdealComponent(savedStateHandle, GenericPaymentMethodDelegate(paymentMethod), configuration)
             }
-        return ViewModelProvider(viewModelStoreOwner, genericFactory).get(MolpayComponent::class.java)
+        return ViewModelProvider(viewModelStoreOwner, genericFactory).get(IdealComponent::class.java)
     }
 }

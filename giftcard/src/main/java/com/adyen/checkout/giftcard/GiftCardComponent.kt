@@ -124,7 +124,7 @@ class GiftCardComponent(
 
     companion object {
         @JvmStatic
-        val PROVIDER: PaymentComponentProvider<GiftCardComponent, GiftCardConfiguration> = GiftCardProvider()
+        val PROVIDER: PaymentComponentProvider<GiftCardComponent, GiftCardConfiguration> = GiftCardComponentProvider()
         val PAYMENT_METHOD_TYPES = arrayOf(PaymentMethodTypes.GIFTCARD)
     }
 }

@@ -438,7 +438,7 @@ class CardComponent private constructor(
 
     companion object {
         @JvmStatic
-        val PROVIDER: StoredPaymentComponentProvider<CardComponent, CardConfiguration> = CardProvider()
+        val PROVIDER: StoredPaymentComponentProvider<CardComponent, CardConfiguration> = CardComponentProvider()
         val PAYMENT_METHOD_TYPES = arrayOf(PaymentMethodTypes.SCHEME)
     }
 }

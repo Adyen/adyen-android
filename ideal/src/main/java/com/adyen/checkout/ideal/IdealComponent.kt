@@ -31,6 +31,6 @@ class IdealComponent(
 
     companion object {
         val PAYMENT_METHOD_TYPES = arrayOf(PaymentMethodTypes.IDEAL)
-        val PROVIDER: PaymentComponentProvider<IdealComponent, IdealConfiguration> = IdealProvider()
+        val PROVIDER: PaymentComponentProvider<IdealComponent, IdealConfiguration> = IdealComponentProvider()
     }
 }

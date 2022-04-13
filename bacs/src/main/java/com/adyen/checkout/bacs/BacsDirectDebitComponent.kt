@@ -72,7 +72,7 @@ class BacsDirectDebitComponent(
     companion object {
         @JvmStatic
         val PROVIDER: PaymentComponentProvider<BacsDirectDebitComponent, BacsDirectDebitConfiguration> =
-            BacsProvider()
+            BacsComponentProvider()
         val PAYMENT_METHOD_TYPES = arrayOf(PaymentMethodTypes.BACS)
     }
 }

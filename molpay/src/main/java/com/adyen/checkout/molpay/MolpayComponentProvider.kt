@@ -6,7 +6,7 @@
  * Created by caiof on 12/4/2022.
  */
 
-package com.adyen.checkout.entercash
+package com.adyen.checkout.molpay
 
 import android.os.Bundle
 import androidx.lifecycle.ViewModelProvider
@@ -17,18 +17,18 @@ import com.adyen.checkout.components.base.GenericPaymentMethodDelegate
 import com.adyen.checkout.components.base.lifecycle.viewModelFactory
 import com.adyen.checkout.components.model.paymentmethods.PaymentMethod
 
-class EntercashProvider : PaymentComponentProvider<EntercashComponent, EntercashConfiguration> {
+class MolpayComponentProvider : PaymentComponentProvider<MolpayComponent, MolpayConfiguration> {
     override fun get(
         savedStateRegistryOwner: SavedStateRegistryOwner,
         viewModelStoreOwner: ViewModelStoreOwner,
         paymentMethod: PaymentMethod,
-        configuration: EntercashConfiguration,
+        configuration: MolpayConfiguration,
         defaultArgs: Bundle?
-    ): EntercashComponent {
+    ): MolpayComponent {
         val genericFactory: ViewModelProvider.Factory =
             viewModelFactory(savedStateRegistryOwner, defaultArgs) { savedStateHandle ->
-                EntercashComponent(savedStateHandle, GenericPaymentMethodDelegate(paymentMethod), configuration)
+                MolpayComponent(savedStateHandle, GenericPaymentMethodDelegate(paymentMethod), configuration)
             }
-        return ViewModelProvider(viewModelStoreOwner, genericFactory).get(EntercashComponent::class.java)
+        return ViewModelProvider(viewModelStoreOwner, genericFactory).get(MolpayComponent::class.java)
     }
 }

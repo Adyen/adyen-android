@@ -73,7 +73,7 @@ class BlikComponent : BasePaymentComponent<
         private val TAG = getTag()
 
         @JvmField
-        val PROVIDER: StoredPaymentComponentProvider<BlikComponent, BlikConfiguration> = BlikProvider()
+        val PROVIDER: StoredPaymentComponentProvider<BlikComponent, BlikConfiguration> = BlikComponentProvider()
         val PAYMENT_METHOD_TYPES = arrayOf(PaymentMethodTypes.BLIK)
     }
 }

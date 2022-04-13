@@ -6,7 +6,7 @@
  * Created by caiof on 12/4/2022.
  */
 
-package com.adyen.checkout.eps
+package com.adyen.checkout.openbanking
 
 import android.os.Bundle
 import androidx.lifecycle.ViewModelProvider
@@ -17,18 +17,18 @@ import com.adyen.checkout.components.base.GenericPaymentMethodDelegate
 import com.adyen.checkout.components.base.lifecycle.viewModelFactory
 import com.adyen.checkout.components.model.paymentmethods.PaymentMethod
 
-class EPSProvider : PaymentComponentProvider<EPSComponent, EPSConfiguration> {
+class OpenBankingComponentProvider : PaymentComponentProvider<OpenBankingComponent, OpenBankingConfiguration> {
     override fun get(
         savedStateRegistryOwner: SavedStateRegistryOwner,
         viewModelStoreOwner: ViewModelStoreOwner,
         paymentMethod: PaymentMethod,
-        configuration: EPSConfiguration,
+        configuration: OpenBankingConfiguration,
         defaultArgs: Bundle?
-    ): EPSComponent {
+    ): OpenBankingComponent {
         val genericFactory: ViewModelProvider.Factory =
             viewModelFactory(savedStateRegistryOwner, defaultArgs) { savedStateHandle ->
-                EPSComponent(savedStateHandle, GenericPaymentMethodDelegate(paymentMethod), configuration)
+                OpenBankingComponent(savedStateHandle, GenericPaymentMethodDelegate(paymentMethod), configuration)
             }
-        return ViewModelProvider(viewModelStoreOwner, genericFactory).get(EPSComponent::class.java)
+        return ViewModelProvider(viewModelStoreOwner, genericFactory).get(OpenBankingComponent::class.java)
     }
 }

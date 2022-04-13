@@ -30,7 +30,7 @@ class MolpayComponent(
     }
 
     companion object {
-        val PROVIDER: PaymentComponentProvider<MolpayComponent, MolpayConfiguration> = MolpayProvider()
+        val PROVIDER: PaymentComponentProvider<MolpayComponent, MolpayConfiguration> = MolpayComponentProvider()
         val PAYMENT_METHOD_TYPES = arrayOf(
             PaymentMethodTypes.MOLPAY_THAILAND,
             PaymentMethodTypes.MOLPAY_MALAYSIA,

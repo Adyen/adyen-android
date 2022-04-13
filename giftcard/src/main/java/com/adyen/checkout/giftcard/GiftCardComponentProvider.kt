@@ -17,7 +17,7 @@ import com.adyen.checkout.components.base.lifecycle.viewModelFactory
 import com.adyen.checkout.components.model.paymentmethods.PaymentMethod
 import com.adyen.checkout.components.repository.PublicKeyRepository
 
-class GiftCardProvider : PaymentComponentProvider<GiftCardComponent, GiftCardConfiguration> {
+class GiftCardComponentProvider : PaymentComponentProvider<GiftCardComponent, GiftCardConfiguration> {
 
     override fun get(
         savedStateRegistryOwner: SavedStateRegistryOwner,

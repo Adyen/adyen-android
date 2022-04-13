@@ -6,7 +6,7 @@
  * Created by caiof on 12/4/2022.
  */
 
-package com.adyen.checkout.sepa
+package com.adyen.checkout.mbway
 
 import android.os.Bundle
 import androidx.lifecycle.ViewModelProvider
@@ -17,18 +17,18 @@ import com.adyen.checkout.components.base.GenericPaymentMethodDelegate
 import com.adyen.checkout.components.base.lifecycle.viewModelFactory
 import com.adyen.checkout.components.model.paymentmethods.PaymentMethod
 
-class SepaProvider : PaymentComponentProvider<SepaComponent, SepaConfiguration> {
+class MBWayComponentProvider : PaymentComponentProvider<MBWayComponent, MBWayConfiguration> {
     override fun get(
         savedStateRegistryOwner: SavedStateRegistryOwner,
         viewModelStoreOwner: ViewModelStoreOwner,
         paymentMethod: PaymentMethod,
-        configuration: SepaConfiguration,
+        configuration: MBWayConfiguration,
         defaultArgs: Bundle?
-    ): SepaComponent {
+    ): MBWayComponent {
         val genericFactory: ViewModelProvider.Factory =
             viewModelFactory(savedStateRegistryOwner, defaultArgs) { savedStateHandle ->
-                SepaComponent(savedStateHandle, GenericPaymentMethodDelegate(paymentMethod), configuration)
+                MBWayComponent(savedStateHandle, GenericPaymentMethodDelegate(paymentMethod), configuration)
             }
-        return ViewModelProvider(viewModelStoreOwner, genericFactory).get(SepaComponent::class.java)
+        return ViewModelProvider(viewModelStoreOwner, genericFactory).get(MBWayComponent::class.java)
     }
 }

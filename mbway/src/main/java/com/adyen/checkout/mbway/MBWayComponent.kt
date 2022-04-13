@@ -62,7 +62,7 @@ class MBWayComponent(
 
     companion object {
         @JvmStatic
-        val PROVIDER: PaymentComponentProvider<MBWayComponent, MBWayConfiguration> = MBWayProvider()
+        val PROVIDER: PaymentComponentProvider<MBWayComponent, MBWayConfiguration> = MBWayComponentProvider()
 
         private val TAG = LogUtil.getTag()
 

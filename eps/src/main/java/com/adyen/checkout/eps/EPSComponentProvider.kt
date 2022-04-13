@@ -6,7 +6,7 @@
  * Created by caiof on 12/4/2022.
  */
 
-package com.adyen.checkout.bacs
+package com.adyen.checkout.eps
 
 import android.os.Bundle
 import androidx.lifecycle.ViewModelProvider
@@ -17,18 +17,18 @@ import com.adyen.checkout.components.base.GenericPaymentMethodDelegate
 import com.adyen.checkout.components.base.lifecycle.viewModelFactory
 import com.adyen.checkout.components.model.paymentmethods.PaymentMethod
 
-class BacsProvider : PaymentComponentProvider<BacsDirectDebitComponent, BacsDirectDebitConfiguration> {
+class EPSComponentProvider : PaymentComponentProvider<EPSComponent, EPSConfiguration> {
     override fun get(
         savedStateRegistryOwner: SavedStateRegistryOwner,
         viewModelStoreOwner: ViewModelStoreOwner,
         paymentMethod: PaymentMethod,
-        configuration: BacsDirectDebitConfiguration,
+        configuration: EPSConfiguration,
         defaultArgs: Bundle?
-    ): BacsDirectDebitComponent {
+    ): EPSComponent {
         val genericFactory: ViewModelProvider.Factory =
             viewModelFactory(savedStateRegistryOwner, defaultArgs) { savedStateHandle ->
-                BacsDirectDebitComponent(savedStateHandle, GenericPaymentMethodDelegate(paymentMethod), configuration)
+                EPSComponent(savedStateHandle, GenericPaymentMethodDelegate(paymentMethod), configuration)
             }
-        return ViewModelProvider(viewModelStoreOwner, genericFactory).get(BacsDirectDebitComponent::class.java)
+        return ViewModelProvider(viewModelStoreOwner, genericFactory).get(EPSComponent::class.java)
     }
 }
