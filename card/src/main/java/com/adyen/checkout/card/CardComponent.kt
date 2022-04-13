@@ -15,6 +15,7 @@ import com.adyen.checkout.card.api.model.Brand
 import com.adyen.checkout.card.data.CardType
 import com.adyen.checkout.card.data.DetectedCardType
 import com.adyen.checkout.card.data.ExpiryDate
+import com.adyen.checkout.card.di.CardContainer
 import com.adyen.checkout.components.StoredPaymentComponentProvider
 import com.adyen.checkout.components.base.BasePaymentComponent
 import com.adyen.checkout.components.model.payments.request.Address
@@ -445,6 +446,9 @@ class CardComponent private constructor(
     }
 
     companion object {
+        init {
+            CardContainer.addToServiceLocator()
+        }
         @JvmStatic
         val PROVIDER: StoredPaymentComponentProvider<CardComponent, CardConfiguration> = CardComponentProvider()
         val PAYMENT_METHOD_TYPES = arrayOf(PaymentMethodTypes.SCHEME)

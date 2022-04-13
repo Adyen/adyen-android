@@ -14,7 +14,11 @@ import kotlin.reflect.full.isSubclassOf
 abstract class DependencyContainerNode(private val parentContainers: List<DependencyContainerNode>) :
     DependencyContainer {
 
-    protected val providerMap: HashMap<KClass<*>, DependencyProvider<*>> = HashMap()
+    private val providerMap: HashMap<KClass<*>, DependencyProvider<*>> = HashMap()
+
+    protected fun addProvider(kClass: KClass<*>, provider: DependencyProvider<*>) {
+        providerMap[kClass] = provider
+    }
 
     override fun canProvide(kClass: KClass<*>): Boolean {
         return if (hasProvider(kClass)) {
@@ -22,6 +26,10 @@ abstract class DependencyContainerNode(private val parentContainers: List<Depend
         } else {
             parentContainers.firstOrNull { it.canProvide(kClass) } != null
         }
+    }
+
+    fun addToServiceLocator() {
+        CheckoutServiceLocator.addContainer(this)
     }
 
     override fun <T> provide(kClass: KClass<*>): T {

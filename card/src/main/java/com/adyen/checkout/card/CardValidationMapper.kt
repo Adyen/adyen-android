@@ -11,7 +11,7 @@ package com.adyen.checkout.card
 import com.adyen.checkout.components.ui.FieldState
 import com.adyen.checkout.components.ui.Validation
 
-class CardValidationMapper {
+object CardValidationMapper {
 
     fun mapCardNumberValidation(cardNumber: String, validation: CardNumberValidation): FieldState<String> {
         val fieldStateValidation = when (validation) {

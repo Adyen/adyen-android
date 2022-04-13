@@ -12,9 +12,7 @@ import kotlin.reflect.KClass
 
 object CheckoutServiceLocator {
 
-    private val containers = mutableListOf<DependencyContainer>().apply {
-        add(AppContainer())
-    }
+    private val containers = mutableSetOf<DependencyContainer>()
 
     fun addContainer(dependencyContainer: DependencyContainer) {
         containers.add(dependencyContainer)

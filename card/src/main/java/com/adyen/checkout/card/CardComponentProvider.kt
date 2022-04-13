@@ -18,6 +18,7 @@ import com.adyen.checkout.components.base.lifecycle.viewModelFactory
 import com.adyen.checkout.components.model.paymentmethods.PaymentMethod
 import com.adyen.checkout.components.model.paymentmethods.StoredPaymentMethod
 import com.adyen.checkout.components.repository.PublicKeyRepository
+import com.adyen.checkout.core.di.CheckoutServiceLocator
 import com.adyen.checkout.core.log.LogUtil
 import com.adyen.checkout.core.log.Logger
 
@@ -33,7 +34,7 @@ class CardComponentProvider : StoredPaymentComponentProvider<CardComponent, Card
         val verifiedConfiguration = checkSupportedCardTypes(paymentMethod, configuration)
         val binLookupRepository = BinLookupRepository()
         val publicKeyRepository = PublicKeyRepository()
-        val cardValidationMapper = CardValidationMapper()
+        val cardValidationMapper = CheckoutServiceLocator.provide<CardValidationMapper>(CardValidationMapper::class)
         val factory = viewModelFactory(savedStateRegistryOwner, defaultArgs) { savedStateHandle ->
             CardComponent(
                 savedStateHandle,

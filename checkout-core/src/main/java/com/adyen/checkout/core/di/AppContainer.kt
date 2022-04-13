@@ -12,11 +12,10 @@ import com.adyen.checkout.core.log.AdyenLogger
 import com.adyen.checkout.core.log.Logger
 
 
-class AppContainer : DependencyContainerNode(emptyList()) {
+object AppContainer : DependencyContainerNode(emptyList()) {
 
     init {
-        providerMap.apply {
-            put(AdyenLogger::class, DependencyProvider<AdyenLogger> { Logger })
-        }
+        addProvider(AdyenLogger::class) { Logger }
+        CheckoutServiceLocator.addContainer(this)
     }
 }
