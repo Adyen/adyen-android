@@ -8,6 +8,7 @@
 
 package com.adyen.checkout.dropin.ui.paymentmethods
 
+import android.annotation.SuppressLint
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -22,7 +23,6 @@ import com.adyen.checkout.components.util.CurrencyUtils
 import com.adyen.checkout.components.util.DateUtils
 import com.adyen.checkout.core.exception.CheckoutException
 import com.adyen.checkout.core.log.LogUtil
-import com.adyen.checkout.core.log.Logger
 import com.adyen.checkout.dropin.R
 import com.adyen.checkout.dropin.ui.paymentmethods.PaymentMethodListItem.Companion.GIFT_CARD_PAYMENT_METHOD
 import com.adyen.checkout.dropin.ui.paymentmethods.PaymentMethodListItem.Companion.PAYMENT_METHOD
@@ -54,14 +54,11 @@ class PaymentMethodAdapter @JvmOverloads constructor(
         this.onStoredPaymentRemovedCallback = onStoredPaymentRemovedCallback
     }
 
-    fun removePaymentMethodWithId(id: String) {
-        val positionToRemove = paymentMethods.indexOfFirst { it is StoredPaymentMethodModel && it.id == id }
-        if (positionToRemove == -1) {
-            Logger.e(TAG, "Cannot remove stored payment method because it cannot be found.")
-        } else {
-            paymentMethods.removeAt(positionToRemove)
-            notifyItemRemoved(positionToRemove)
-        }
+    @SuppressLint("NotifyDataSetChanged")
+    fun updatePaymentMethods(paymentMethods: List<PaymentMethodListItem>) {
+        this.paymentMethods.clear()
+        this.paymentMethods.addAll(paymentMethods)
+        notifyDataSetChanged()
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): BaseViewHolder {

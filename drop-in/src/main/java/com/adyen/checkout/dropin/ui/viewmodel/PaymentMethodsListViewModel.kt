@@ -34,6 +34,7 @@ import com.adyen.checkout.dropin.ui.paymentmethods.PaymentMethodNote
 import com.adyen.checkout.dropin.ui.paymentmethods.StoredPaymentMethodModel
 import com.adyen.checkout.dropin.ui.stored.makeStoredModel
 
+@Suppress("TooManyFunctions")
 class PaymentMethodsListViewModel(
     application: Application,
     private val paymentMethods: List<PaymentMethod>,
@@ -55,7 +56,7 @@ class PaymentMethodsListViewModel(
     private val orderPaymentMethodsList: List<GiftCardPaymentMethodModel> = setupOrderPaymentMethods(order)
 
     init {
-        Logger.d(TAG, "onPaymentMethodsResponseChanged")
+        Logger.d(TAG, "initPaymentMethods")
         setupStoredPaymentMethods(storedPaymentMethods)
         setupPaymentMethods(paymentMethods)
     }
@@ -203,6 +204,15 @@ class PaymentMethodsListViewModel(
                 shopperLocale = dropInConfiguration.shopperLocale
             )
         }
+    }
+
+    fun removePaymentMethodWithId(id: String) {
+        removeStoredPaymentMethod(id)
+        onPaymentMethodsReady()
+    }
+
+    private fun removeStoredPaymentMethod(id: String) {
+        storedPaymentMethodsList.removeAll { it.id == id }
     }
 
     companion object {
