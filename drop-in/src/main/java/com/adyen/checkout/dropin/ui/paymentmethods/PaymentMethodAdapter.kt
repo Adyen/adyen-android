@@ -115,15 +115,15 @@ class PaymentMethodAdapter @JvmOverloads constructor(
             is GenericStoredModel -> bindGenericStored(holder, storedPaymentMethod)
         }
 
-        holder.itemView.findViewById<FrameLayout>(R.id.payment_method_item_underlay_button).setOnClickListener {
+        holder.underlayButton.setOnClickListener {
             showRemoveStoredPaymentDialog(holder.itemView, storedPaymentMethod)
         }
 
-        (holder.itemView as? AdyenSwipeToRevealLayout)?.apply {
+        holder.swipeToRevealLayout.apply {
             setUnderlayListener { view ->
                 onUnderlayExpandListener?.invoke(view)
             }
-            this.setOnMainClickListener {
+            setOnMainClickListener {
                 onStoredPaymentMethodClick(storedPaymentMethod)
             }
             setDragLocked(!storedPaymentMethod.isRemovable)
@@ -265,6 +265,8 @@ class PaymentMethodAdapter @JvmOverloads constructor(
         internal val detail: TextView = rootView.findViewById(R.id.textView_detail)
         internal val logo: RoundCornerImageView = rootView.findViewById(R.id.imageView_logo)
         internal val endText: TextView = rootView.findViewById(R.id.textView_endText)
+        internal val swipeToRevealLayout: AdyenSwipeToRevealLayout = rootView.findViewById(R.id.swipeToRevealLayout)
+        internal val underlayButton: FrameLayout = rootView.findViewById(R.id.payment_method_item_underlay_button)
     }
 
     class PaymentMethodVH(rootView: View) : BaseViewHolder(rootView) {
