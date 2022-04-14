@@ -16,6 +16,8 @@ import com.adyen.checkout.components.PaymentComponentProvider
 import com.adyen.checkout.components.base.GenericPaymentMethodDelegate
 import com.adyen.checkout.components.base.lifecycle.viewModelFactory
 import com.adyen.checkout.components.model.paymentmethods.PaymentMethod
+import com.adyen.checkout.core.di.CheckoutServiceLocator
+import com.adyen.checkout.core.log.AdyenLogger
 
 class SepaComponentProvider : PaymentComponentProvider<SepaComponent, SepaConfiguration> {
     override fun get(
@@ -27,7 +29,13 @@ class SepaComponentProvider : PaymentComponentProvider<SepaComponent, SepaConfig
     ): SepaComponent {
         val genericFactory: ViewModelProvider.Factory =
             viewModelFactory(savedStateRegistryOwner, defaultArgs) { savedStateHandle ->
-                SepaComponent(savedStateHandle, GenericPaymentMethodDelegate(paymentMethod), configuration)
+                SepaComponent(
+                    savedStateHandle = savedStateHandle,
+                    paymentMethodDelegate = GenericPaymentMethodDelegate(paymentMethod),
+                    configuration = configuration,
+                    logger = CheckoutServiceLocator.provide(AdyenLogger::class),
+                    sepaProcessor = CheckoutServiceLocator.provide(SepaProcessor::class),
+                )
             }
         return ViewModelProvider(viewModelStoreOwner, genericFactory).get(SepaComponent::class.java)
     }

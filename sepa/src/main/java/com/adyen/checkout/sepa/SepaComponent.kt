@@ -15,13 +15,16 @@ import com.adyen.checkout.components.base.GenericPaymentMethodDelegate
 import com.adyen.checkout.components.model.payments.request.PaymentComponentData
 import com.adyen.checkout.components.model.payments.request.SepaPaymentMethod
 import com.adyen.checkout.components.util.PaymentMethodTypes
+import com.adyen.checkout.core.log.AdyenLogger
 import com.adyen.checkout.core.log.LogUtil.getTag
-import com.adyen.checkout.core.log.Logger
+import com.adyen.checkout.sepa.di.SepaContainer
 
 class SepaComponent(
     savedStateHandle: SavedStateHandle,
     paymentMethodDelegate: GenericPaymentMethodDelegate,
-    configuration: SepaConfiguration
+    configuration: SepaConfiguration,
+    val logger: AdyenLogger,
+    val sepaProcessor: SepaProcessor,
 ) : BasePaymentComponent<SepaConfiguration, SepaInputData, SepaOutputData, PaymentComponentState<SepaPaymentMethod>>(
     savedStateHandle,
     paymentMethodDelegate,
@@ -31,24 +34,30 @@ class SepaComponent(
     override fun getSupportedPaymentMethodTypes(): Array<String> = PAYMENT_METHOD_TYPES
 
     override fun onInputDataChanged(inputData: SepaInputData): SepaOutputData {
-        Logger.v(TAG, "onInputDataChanged")
-        return SepaOutputData(inputData.name, inputData.iban)
+        logger.v(TAG, "onInputDataChanged")
+        return sepaProcessor(inputData)
     }
 
     override fun createComponentState(): PaymentComponentState<SepaPaymentMethod> {
-        val sepaOutputData = outputData
-        val paymentComponentData = PaymentComponentData<SepaPaymentMethod>()
-        val paymentMethod = SepaPaymentMethod()
-        paymentMethod.type = SepaPaymentMethod.PAYMENT_METHOD_TYPE
-        if (sepaOutputData != null) {
-            paymentMethod.ownerName = sepaOutputData.ownerNameField.value
-            paymentMethod.iban = sepaOutputData.ibanNumberField.value
+        val paymentMethod = SepaPaymentMethod(
+            type = SepaPaymentMethod.PAYMENT_METHOD_TYPE,
+            ownerName = outputData?.ownerNameField?.value,
+            iban = outputData?.ibanNumberField?.value
+        )
+        val paymentComponentData = PaymentComponentData<SepaPaymentMethod>().apply {
+            this.paymentMethod = paymentMethod
         }
-        paymentComponentData.paymentMethod = paymentMethod
-        return PaymentComponentState(paymentComponentData, sepaOutputData != null && sepaOutputData.isValid, true)
+        return PaymentComponentState(
+            data = paymentComponentData,
+            isInputValid = outputData?.isValid == true,
+            isReady = true
+        )
     }
 
     companion object {
+        init {
+            SepaContainer.addToServiceLocator()
+        }
         private val TAG = getTag()
         val PROVIDER: PaymentComponentProvider<SepaComponent, SepaConfiguration> = SepaComponentProvider()
         val PAYMENT_METHOD_TYPES = arrayOf(PaymentMethodTypes.SEPA)
