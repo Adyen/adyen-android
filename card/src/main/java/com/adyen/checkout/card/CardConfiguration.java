@@ -351,11 +351,15 @@ public class CardConfiguration extends Configuration {
         }
 
         /**
+         * @deprecated in favor of {@link #setAddressConfiguration(AddressConfiguration)}. Full address
+         * form is only supported through using {@link #setAddressConfiguration(AddressConfiguration)}
+         *
          * Specifies whether address input fields should be shown or not and in which form.
          *
          * @param addressVisibility The visibility state of the address input fields.
          * @return {@link CardConfiguration.Builder}
          */
+        @Deprecated
         @NonNull
         public Builder setAddressVisibility(@NonNull AddressVisibility addressVisibility) {
             mBuilderAddressVisibility = addressVisibility;

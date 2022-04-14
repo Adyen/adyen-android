@@ -1,8 +1,11 @@
 package com.adyen.checkout.card.util
 
+import com.adyen.checkout.card.AddressConfiguration
+import com.adyen.checkout.card.AddressFormUIState
 import com.adyen.checkout.card.AddressOutputData
 import com.adyen.checkout.card.api.model.AddressItem
 import com.adyen.checkout.card.ui.model.AddressListItem
+import com.adyen.checkout.components.base.AddressVisibility
 
 // TODO docs
 internal object AddressFormUtils {
@@ -22,6 +25,11 @@ internal object AddressFormUtils {
         return countryList.map {
             it.copy(selected = it.code == countryCode)
         }
+    }
+
+    fun getAddressFormUIState(addressConfiguration: AddressConfiguration?, addressVisibility: AddressVisibility): AddressFormUIState {
+        return addressConfiguration?.let { AddressFormUIState.fromAddressConfiguration(addressConfiguration) }
+            ?: AddressFormUIState.fromAddressVisibility(addressVisibility)
     }
 
 //    fun makeInitialCountryList(countries: List<AddressItem>, addressConfiguration: AddressConfiguration): List<AddressListItem> {

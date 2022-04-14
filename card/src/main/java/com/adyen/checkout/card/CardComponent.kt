@@ -268,7 +268,7 @@ class CardComponent private constructor(
             outputCardTypes,
             cardDelegate.isSocialSecurityNumberRequired(),
             cardDelegate.isKCPAuthRequired(),
-            configuration.addressVisibility,
+            AddressFormUtils.getAddressFormUIState(configuration.addressConfiguration, configuration.addressVisibility),
             cardDelegate.getInstallmentOptions(
                 configuration.installmentConfiguration,
                 selectedOrFirstCardType?.cardType,
