@@ -13,7 +13,7 @@ import org.json.JSONObject
 
 /**
  * Data inside this class will not be sent as shown, instead paymentComponentData and requestData will
- * both be merged into the same JSON object. Check [PaymentRequestAdapter] for implementation.
+ * both be merged into the same JSON object. Check [PaymentsRepositoryImpl] for implementation.
  */
 data class PaymentsRequest(
     val paymentComponentData: JSONObject,

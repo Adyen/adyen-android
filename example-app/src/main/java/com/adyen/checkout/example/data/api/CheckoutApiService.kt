@@ -14,7 +14,6 @@ import com.adyen.checkout.example.data.api.model.BalanceRequest
 import com.adyen.checkout.example.data.api.model.CancelOrderRequest
 import com.adyen.checkout.example.data.api.model.CreateOrderRequest
 import com.adyen.checkout.example.data.api.model.PaymentMethodsRequest
-import com.adyen.checkout.example.data.api.model.PaymentsRequest
 import com.adyen.checkout.example.data.api.model.SessionRequest
 import com.adyen.checkout.sessions.model.Session
 import okhttp3.ResponseBody
@@ -39,13 +38,11 @@ internal interface CheckoutApiService {
     @POST("paymentMethods")
     suspend fun paymentMethodsAsync(@Body paymentMethodsRequest: PaymentMethodsRequest): PaymentMethodsApiResponse
 
-    // There is no native support for JSONObject in either Moshi or Gson, so using RequestBody as a work around for now
     @POST("payments")
-    fun payments(@Body paymentsRequest: PaymentsRequest): Call<ResponseBody>
+    fun payments(@Body paymentsRequest: JSONObject): Call<ResponseBody>
 
-    // There is no native support for JSONObject in either Moshi or Gson, so using RequestBody as a work around for now
     @POST("payments")
-    suspend fun paymentsAsync(@Body paymentsRequest: PaymentsRequest): ResponseBody
+    suspend fun paymentsAsync(@Body paymentsRequest: JSONObject): ResponseBody
 
     @POST("payments/details")
     fun details(@Body detailsRequest: JSONObject): Call<ResponseBody>

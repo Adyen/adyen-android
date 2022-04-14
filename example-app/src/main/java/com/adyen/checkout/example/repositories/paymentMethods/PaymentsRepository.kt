@@ -15,9 +15,12 @@ import com.adyen.checkout.example.data.api.model.CancelOrderRequest
 import com.adyen.checkout.example.data.api.model.CreateOrderRequest
 import com.adyen.checkout.example.data.api.model.PaymentMethodsRequest
 import com.adyen.checkout.example.data.api.model.PaymentsRequest
+import com.adyen.checkout.example.data.api.model.PaymentsRequestData
 import com.adyen.checkout.example.data.api.model.SessionRequest
 import com.adyen.checkout.example.repositories.safeApiCall
 import com.adyen.checkout.sessions.model.Session
+import com.squareup.moshi.Moshi
+import com.squareup.moshi.kotlin.reflect.KotlinJsonAdapterFactory
 import okhttp3.ResponseBody
 import org.json.JSONObject
 import retrofit2.Call
@@ -47,13 +50,32 @@ internal class PaymentsRepositoryImpl(private val checkoutApiService: CheckoutAp
     }
 
     override fun paymentsRequest(paymentsRequest: PaymentsRequest): Call<ResponseBody> {
-        return checkoutApiService.payments(paymentsRequest)
+        return checkoutApiService.payments(paymentsRequest.combineToJSONObject())
     }
 
     override suspend fun paymentsRequestAsync(paymentsRequest: PaymentsRequest): ResponseBody? {
         return safeApiCall(
-            call = { checkoutApiService.paymentsAsync(paymentsRequest) }
+            call = { checkoutApiService.paymentsAsync(paymentsRequest.combineToJSONObject()) }
         )
+    }
+
+    private fun PaymentsRequest.combineToJSONObject(): JSONObject {
+        val moshi = Moshi.Builder().add(KotlinJsonAdapterFactory()).build()
+        val adapter = moshi.adapter(PaymentsRequestData::class.java)
+        val requestDataJson = JSONObject(adapter.toJson(this.requestData))
+
+        return this.paymentComponentData
+            .putAll(requestDataJson)
+    }
+
+    private fun JSONObject.putAll(other: JSONObject): JSONObject {
+        val keys = other.keys()
+        while (keys.hasNext()) {
+            val key = keys.next()
+            val value = other.get(key)
+            put(key, value)
+        }
+        return this
     }
 
     override fun detailsRequest(detailsRequest: JSONObject): Call<ResponseBody> {
