@@ -32,7 +32,7 @@ class CardComponentProvider : StoredPaymentComponentProvider<CardComponent, Card
         defaultArgs: Bundle?
     ): CardComponent {
         val verifiedConfiguration = checkSupportedCardTypes(paymentMethod, configuration)
-        val binLookupRepository = BinLookupRepository()
+        val binLookupRepository = CheckoutServiceLocator.provide<BinLookupRepository>(BinLookupRepository::class)
         val publicKeyRepository = PublicKeyRepository()
         val cardValidationMapper = CheckoutServiceLocator.provide<CardValidationMapper>(CardValidationMapper::class)
         val factory = viewModelFactory(savedStateRegistryOwner, defaultArgs) { savedStateHandle ->

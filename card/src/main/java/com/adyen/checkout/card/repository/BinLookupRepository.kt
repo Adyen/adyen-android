@@ -16,17 +16,17 @@ import com.adyen.checkout.card.api.model.Brand
 import com.adyen.checkout.card.data.CardType
 import com.adyen.checkout.card.data.DetectedCardType
 import com.adyen.checkout.core.encryption.Sha256
+import com.adyen.checkout.core.log.AdyenLogger
 import com.adyen.checkout.core.log.LogUtil
-import com.adyen.checkout.core.log.Logger
 import com.adyen.checkout.core.util.runSuspendCatching
 import com.adyen.checkout.cse.CardEncrypter
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 import java.util.UUID
 
-private val TAG = LogUtil.getTag()
-
-class BinLookupRepository {
+class BinLookupRepository(
+    val logger: AdyenLogger,
+) {
 
     private val cachedBinLookup = HashMap<String, List<DetectedCardType>>()
 
@@ -81,13 +81,13 @@ class BinLookupRepository {
                 clientKey = cardConfiguration.clientKey
             )
         }
-            .onFailure { e -> Logger.e(TAG, "checkCardType - Failed to do bin lookup", e) }
+            .onFailure { e -> logger.e(TAG, "checkCardType - Failed to do bin lookup", e) }
             .getOrNull()
     }
 
     private fun mapResponse(binLookupResponse: BinLookupResponse?): List<DetectedCardType> {
-        Logger.d(TAG, "handleBinLookupResponse")
-        Logger.v(TAG, "Brands: ${binLookupResponse?.brands}")
+        logger.d(TAG, "handleBinLookupResponse")
+        logger.v(TAG, "Brands: ${binLookupResponse?.brands}")
 
         // Any null or unmapped values are ignored, a null response becomes an empty list
         return binLookupResponse?.brands.orEmpty().mapNotNull { brandResponse ->
@@ -109,6 +109,7 @@ class BinLookupRepository {
     }
 
     companion object {
+        private val TAG = LogUtil.getTag()
         private const val REQUIRED_BIN_SIZE = 11
     }
 }

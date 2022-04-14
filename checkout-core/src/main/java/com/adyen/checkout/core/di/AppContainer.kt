@@ -11,7 +11,6 @@ package com.adyen.checkout.core.di
 import com.adyen.checkout.core.log.AdyenLogger
 import com.adyen.checkout.core.log.Logger
 
-
 object AppContainer : DependencyContainerNode(emptyList()) {
 
     init {

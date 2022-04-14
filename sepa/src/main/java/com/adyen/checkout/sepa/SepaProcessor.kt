@@ -13,7 +13,7 @@ import com.adyen.checkout.components.ui.Validation
 
 object SepaProcessor {
 
-    operator fun invoke(sepaInputData: SepaInputData) : SepaOutputData {
+    operator fun invoke(sepaInputData: SepaInputData): SepaOutputData {
         val ownerNameField: FieldState<String> = with(sepaInputData.name) {
             FieldState(
                 value = this,
