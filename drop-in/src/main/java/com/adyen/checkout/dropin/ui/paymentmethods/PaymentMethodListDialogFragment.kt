@@ -31,6 +31,7 @@ import com.adyen.checkout.core.exception.ComponentException
 import com.adyen.checkout.core.log.LogUtil
 import com.adyen.checkout.core.log.Logger
 import com.adyen.checkout.dropin.R
+import com.adyen.checkout.dropin.databinding.FragmentPaymentMethodsListBinding
 import com.adyen.checkout.dropin.ui.base.DropInBottomSheetDialogFragment
 import com.adyen.checkout.dropin.ui.getViewModel
 import com.adyen.checkout.dropin.ui.viewmodel.PaymentMethodsListViewModel
@@ -46,13 +47,17 @@ class PaymentMethodListDialogFragment :
     private lateinit var paymentMethodsListViewModel: PaymentMethodsListViewModel
     private lateinit var paymentMethodAdapter: PaymentMethodAdapter
 
+    private var _binding: FragmentPaymentMethodsListBinding? = null
+    private val binding: FragmentPaymentMethodsListBinding get() = requireNotNull(_binding)
+
     override fun onAttach(context: Context) {
         super.onAttach(context)
         Logger.d(TAG, "onAttach")
     }
 
-    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
+    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View {
         Logger.d(TAG, "onCreateView")
+        _binding = FragmentPaymentMethodsListBinding.inflate(inflater, container, false)
         paymentMethodsListViewModel = getViewModel {
             PaymentMethodsListViewModel(
                 requireActivity().application,
@@ -63,35 +68,46 @@ class PaymentMethodListDialogFragment :
                 dropInViewModel.amount
             )
         }
-        val view = inflater.inflate(R.layout.fragment_payment_methods_list, container, false)
-        addObserver(view.findViewById(R.id.recyclerView_paymentMethods))
-        return view
+        return binding.root
     }
 
-    private fun addObserver(recyclerView: RecyclerView) {
-        paymentMethodsListViewModel.paymentMethodsLiveData.observe(
-            viewLifecycleOwner
-        ) { paymentMethods ->
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
+        Logger.d(TAG, "onViewCreated")
+        initPaymentMethodsRecyclerView()
+        initObservers()
+    }
+
+    private fun initPaymentMethodsRecyclerView() {
+        val imageLoader = ImageLoader.getInstance(
+            requireContext(),
+            dropInViewModel.dropInConfiguration.environment
+        )
+
+        paymentMethodAdapter = PaymentMethodAdapter(emptyList(), imageLoader) {
+            collapseNotUsedUnderlayButtons(binding.recyclerViewPaymentMethods, it)
+        }
+        paymentMethodAdapter.setPaymentMethodSelectedCallback(this)
+        paymentMethodAdapter.setStoredPaymentRemovedCallback(this)
+
+        binding.recyclerViewPaymentMethods.layoutManager = LinearLayoutManager(requireContext())
+        binding.recyclerViewPaymentMethods.adapter = paymentMethodAdapter
+    }
+
+    private fun initObservers() {
+        paymentMethodsListViewModel.paymentMethodsLiveData.observe(viewLifecycleOwner) { paymentMethods ->
             Logger.d(TAG, "paymentMethods changed")
             if (paymentMethods == null) {
                 throw CheckoutException("List of PaymentMethodModel is null.")
             }
-
-            val imageLoader = ImageLoader.getInstance(
-                requireContext(),
-                dropInViewModel.dropInConfiguration.environment
-            )
-
-            // We expect the list of payment methods to be updated only once, so we just set the adapter
-            paymentMethodAdapter =
-                PaymentMethodAdapter(paymentMethods, imageLoader) {
-                    collapseNotUsedUnderlayButtons(recyclerView, it)
-                }
-            paymentMethodAdapter.setPaymentMethodSelectedCallback(this)
-            paymentMethodAdapter.setStoredPaymentRemovedCallback(this)
-            recyclerView.layoutManager = LinearLayoutManager(requireContext())
-            recyclerView.adapter = paymentMethodAdapter
+            paymentMethodAdapter.updatePaymentMethods(paymentMethods)
         }
+    }
+
+    override fun onDestroyView() {
+        super.onDestroyView()
+        binding.recyclerViewPaymentMethods.adapter = null
+        _binding = null
     }
 
     override fun onCancel(dialog: DialogInterface) {
@@ -154,7 +170,7 @@ class PaymentMethodListDialogFragment :
     }
 
     fun removeStoredPaymentMethod(id: String) {
-        paymentMethodAdapter.removePaymentMethodWithId(id)
+        paymentMethodsListViewModel.removePaymentMethodWithId(id)
     }
 
     private fun showCancelOrderAlert() {
