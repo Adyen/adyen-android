@@ -21,7 +21,6 @@ import androidx.annotation.StringRes
 import androidx.core.view.isVisible
 import androidx.lifecycle.LifecycleOwner
 import androidx.lifecycle.Observer
-import com.adyen.checkout.card.api.model.AddressItem
 import com.adyen.checkout.card.data.CardType
 import com.adyen.checkout.card.data.DetectedCardType
 import com.adyen.checkout.card.data.ExpiryDate
@@ -144,7 +143,7 @@ class CardView @JvmOverloads constructor(
             onExpiryDateValidated(cardOutputData.expiryDateState)
             setSocialSecurityNumberVisibility(cardOutputData.isSocialSecurityNumberRequired)
             setKcpAuthVisibility(cardOutputData.isKCPAuthRequired)
-            setAddressInputVisibility(cardOutputData.addressVisibility)
+            setAddressInputVisibility(cardOutputData.addressUIState)
             handleCvcUIState(cardOutputData.cvcUIState)
             handleExpiryDateUIState(cardOutputData.expiryDateUIState)
             updateInstallments(cardOutputData)
@@ -602,17 +601,17 @@ class CardView @JvmOverloads constructor(
         binding.textInputLayoutKcpCardPassword.isVisible = shouldShowKCPAuth
     }
 
-    private fun setAddressInputVisibility(addressVisibility: AddressVisibility) {
-        when (addressVisibility) {
-            AddressVisibility.FULL_ADDRESS -> {
+    private fun setAddressInputVisibility(addressFormUIState: AddressFormUIState) {
+        when (addressFormUIState) {
+            AddressFormUIState.FULL_ADDRESS -> {
                 binding.addressFormInput.isVisible = true
                 binding.textInputLayoutPostalCode.isVisible = false
             }
-            AddressVisibility.POSTAL_CODE -> {
+            AddressFormUIState.POSTAL_CODE -> {
                 binding.addressFormInput.isVisible = false
                 binding.textInputLayoutPostalCode.isVisible = true
             }
-            AddressVisibility.NONE -> {
+            AddressFormUIState.NONE -> {
                 binding.addressFormInput.isVisible = false
                 binding.textInputLayoutPostalCode.isVisible = false
             }

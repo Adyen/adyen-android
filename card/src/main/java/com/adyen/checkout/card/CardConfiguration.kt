@@ -255,6 +255,10 @@ class CardConfiguration : Configuration {
          * @param addressVisibility The visibility state of the address input fields.
          * @return [CardConfiguration.Builder]
          */
+        @Deprecated(
+            message = "In favor of setAddressConfiguration(AddressConfiguration). Full address " +
+                "form is only supported through using setAddressConfiguration(AddressConfiguration)."
+        )
         fun setAddressVisibility(addressVisibility: AddressVisibility): Builder {
             builderAddressVisibility = addressVisibility
             return this

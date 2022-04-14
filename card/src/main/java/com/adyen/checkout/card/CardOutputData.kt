@@ -32,7 +32,7 @@ data class CardOutputData(
     val detectedCardTypes: List<DetectedCardType>,
     val isSocialSecurityNumberRequired: Boolean,
     val isKCPAuthRequired: Boolean,
-    val addressVisibility: AddressVisibility,
+    val addressUIState: AddressFormUIState,
     val installmentOptions: List<InstallmentModel>,
     val countryOptions: List<AddressListItem>,
     val stateOptions: List<AddressListItem>,
