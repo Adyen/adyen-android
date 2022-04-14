@@ -151,7 +151,7 @@ class PreselectedStoredPaymentMethodFragment : DropInBottomSheetDialogFragment()
         storedPaymentViewModel.storedPaymentLiveData.observe(
             viewLifecycleOwner
         ) {
-            binding.storedPaymentMethodItem.root.setDragLocked(!it.isRemovable)
+            binding.storedPaymentMethodItem.swipeToRevealLayout.setDragLocked(!it.isRemovable)
             when (it) {
                 is StoredCardModel -> {
                     binding.storedPaymentMethodItem.textViewText.text =
