@@ -53,7 +53,8 @@ class PreselectedStoredPaymentMethodFragment : DropInBottomSheetDialogFragment()
             dropInViewModel.dropInConfiguration.isRemovingStoredPaymentMethodsEnabled
         )
     }
-    private lateinit var binding: FragmentStoredPaymentMethodBinding
+    private var _binding: FragmentStoredPaymentMethodBinding? = null
+    private val binding: FragmentStoredPaymentMethodBinding get() = requireNotNull(_binding)
     private lateinit var storedPaymentMethod: StoredPaymentMethod
     private lateinit var imageLoader: ImageLoader
     private lateinit var component: PaymentComponent<PaymentComponentState<in PaymentMethodDetails>, Configuration>
@@ -105,7 +106,7 @@ class PreselectedStoredPaymentMethodFragment : DropInBottomSheetDialogFragment()
         component.observe(viewLifecycleOwner, storedPaymentViewModel::componentStateChanged)
         component.observeErrors(viewLifecycleOwner, storedPaymentViewModel::componentErrorOccurred)
 
-        binding = FragmentStoredPaymentMethodBinding.inflate(inflater, container, false)
+        _binding = FragmentStoredPaymentMethodBinding.inflate(inflater, container, false)
         return binding.root
     }
 
@@ -187,6 +188,11 @@ class PreselectedStoredPaymentMethodFragment : DropInBottomSheetDialogFragment()
                 dialog.dismiss()
             }
             .show()
+    }
+
+    override fun onDestroyView() {
+        _binding = null
+        super.onDestroyView()
     }
 
     companion object {

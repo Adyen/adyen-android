@@ -33,14 +33,15 @@ import com.google.android.material.bottomsheet.BottomSheetBehavior
 class GiftCardComponentDialogFragment : BaseComponentDialogFragment() {
 
     private lateinit var componentView: ComponentView<in OutputData, ViewableComponent<*, *, *>>
-    private lateinit var binding: FragmentGiftcardComponentBinding
+    private var _binding: FragmentGiftcardComponentBinding? = null
+    private val binding: FragmentGiftcardComponentBinding get() = requireNotNull(_binding)
 
     companion object : BaseCompanion<GiftCardComponentDialogFragment>(GiftCardComponentDialogFragment::class.java) {
         private val TAG = LogUtil.getTag()
     }
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View {
-        binding = FragmentGiftcardComponentBinding.inflate(inflater, container, false)
+        _binding = FragmentGiftcardComponentBinding.inflate(inflater, container, false)
         return binding.root
     }
 
@@ -94,5 +95,10 @@ class GiftCardComponentDialogFragment : BaseComponentDialogFragment() {
             throw CheckoutException("Unsupported payment method, not a gift card: $componentState")
         }
         protocol.requestBalanceCall(componentState)
+    }
+
+    override fun onDestroyView() {
+        _binding = null
+        super.onDestroyView()
     }
 }

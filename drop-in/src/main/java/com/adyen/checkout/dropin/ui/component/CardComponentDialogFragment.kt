@@ -32,10 +32,11 @@ class CardComponentDialogFragment : BaseComponentDialogFragment() {
         private val TAG = LogUtil.getTag()
     }
 
-    private lateinit var binding: FragmentCardComponentBinding
+    private var _binding: FragmentCardComponentBinding? = null
+    private val binding: FragmentCardComponentBinding get() = requireNotNull(_binding)
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View {
-        binding = FragmentCardComponentBinding.inflate(inflater, container, false)
+        _binding = FragmentCardComponentBinding.inflate(inflater, container, false)
         return binding.root
     }
 
@@ -90,5 +91,10 @@ class CardComponentDialogFragment : BaseComponentDialogFragment() {
 
     override fun onChanged(paymentComponentState: PaymentComponentState<in PaymentMethodDetails>?) {
         componentDialogViewModel.componentStateChanged(component.state)
+    }
+
+    override fun onDestroyView() {
+        _binding = null
+        super.onDestroyView()
     }
 }

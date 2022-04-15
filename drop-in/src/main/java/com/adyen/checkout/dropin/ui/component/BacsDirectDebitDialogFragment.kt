@@ -37,14 +37,15 @@ import com.google.android.material.bottomsheet.BottomSheetDialog
 @Suppress("TooManyFunctions")
 class BacsDirectDebitDialogFragment : BaseComponentDialogFragment() {
 
-    private lateinit var binding: FragmentBacsDirectDebitComponentBinding
+    private var _binding: FragmentBacsDirectDebitComponentBinding? = null
+    private val binding: FragmentBacsDirectDebitComponentBinding get() = requireNotNull(_binding)
 
     companion object : BaseCompanion<BacsDirectDebitDialogFragment>(BacsDirectDebitDialogFragment::class.java) {
         private val TAG = LogUtil.getTag()
     }
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View {
-        binding = FragmentBacsDirectDebitComponentBinding.inflate(inflater, container, false)
+        _binding = FragmentBacsDirectDebitComponentBinding.inflate(inflater, container, false)
         return binding.root
     }
 
@@ -205,5 +206,10 @@ class BacsDirectDebitDialogFragment : BaseComponentDialogFragment() {
             bottomSheet?.layoutParams = layoutParams
             behavior?.state = BottomSheetBehavior.STATE_EXPANDED
         }
+    }
+
+    override fun onDestroyView() {
+        _binding = null
+        super.onDestroyView()
     }
 }
