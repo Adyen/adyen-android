@@ -63,8 +63,9 @@ internal class PaymentsRepositoryImpl(private val checkoutApiService: CheckoutAp
         val adapter = moshi.adapter(PaymentsRequestData::class.java)
         val requestDataJson = JSONObject(adapter.toJson(this.requestData))
 
-        return this.paymentComponentData
-            .putAll(requestDataJson)
+        return requestDataJson
+            // This will override any already existing fields in requestDataJson
+            .putAll(this.paymentComponentData)
     }
 
     private fun JSONObject.putAll(other: JSONObject): JSONObject {
