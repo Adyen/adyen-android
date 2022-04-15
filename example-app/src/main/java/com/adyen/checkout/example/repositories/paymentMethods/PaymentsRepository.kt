@@ -21,22 +21,21 @@ import com.adyen.checkout.example.repositories.safeApiCall
 import com.adyen.checkout.sessions.model.Session
 import com.squareup.moshi.Moshi
 import com.squareup.moshi.kotlin.reflect.KotlinJsonAdapterFactory
-import okhttp3.ResponseBody
 import org.json.JSONObject
-import retrofit2.Call
 
 interface PaymentsRepository {
     suspend fun getSessionAsync(sessionRequest: SessionRequest): Session?
     suspend fun getPaymentMethods(paymentMethodsRequest: PaymentMethodsRequest): PaymentMethodsApiResponse?
-    fun paymentsRequest(paymentsRequest: PaymentsRequest): Call<ResponseBody>
-    suspend fun paymentsRequestAsync(paymentsRequest: PaymentsRequest): ResponseBody?
-    fun detailsRequest(detailsRequest: JSONObject): Call<ResponseBody>
-    suspend fun detailsRequestAsync(detailsRequest: JSONObject): ResponseBody?
-    suspend fun balanceRequestAsync(request: BalanceRequest): ResponseBody?
-    suspend fun createOrderAsync(orderRequest: CreateOrderRequest): ResponseBody?
-    suspend fun cancelOrderAsync(request: CancelOrderRequest): ResponseBody?
+    fun paymentsRequest(paymentsRequest: PaymentsRequest): JSONObject?
+    suspend fun paymentsRequestAsync(paymentsRequest: PaymentsRequest): JSONObject?
+    fun detailsRequest(detailsRequest: JSONObject): JSONObject?
+    suspend fun detailsRequestAsync(detailsRequest: JSONObject): JSONObject?
+    suspend fun balanceRequestAsync(request: BalanceRequest): JSONObject?
+    suspend fun createOrderAsync(orderRequest: CreateOrderRequest): JSONObject?
+    suspend fun cancelOrderAsync(request: CancelOrderRequest): JSONObject?
 }
 
+@Suppress("TooManyFunctions")
 internal class PaymentsRepositoryImpl(private val checkoutApiService: CheckoutApiService) : PaymentsRepository {
 
     override suspend fun getSessionAsync(sessionRequest: SessionRequest): Session? {
@@ -49,11 +48,11 @@ internal class PaymentsRepositoryImpl(private val checkoutApiService: CheckoutAp
         )
     }
 
-    override fun paymentsRequest(paymentsRequest: PaymentsRequest): Call<ResponseBody> {
-        return checkoutApiService.payments(paymentsRequest.combineToJSONObject())
+    override fun paymentsRequest(paymentsRequest: PaymentsRequest): JSONObject? {
+        return checkoutApiService.payments(paymentsRequest.combineToJSONObject()).execute().body()
     }
 
-    override suspend fun paymentsRequestAsync(paymentsRequest: PaymentsRequest): ResponseBody? {
+    override suspend fun paymentsRequestAsync(paymentsRequest: PaymentsRequest): JSONObject? {
         return safeApiCall(
             call = { checkoutApiService.paymentsAsync(paymentsRequest.combineToJSONObject()) }
         )
@@ -78,29 +77,29 @@ internal class PaymentsRepositoryImpl(private val checkoutApiService: CheckoutAp
         return this
     }
 
-    override fun detailsRequest(detailsRequest: JSONObject): Call<ResponseBody> {
-        return checkoutApiService.details(detailsRequest)
+    override fun detailsRequest(detailsRequest: JSONObject): JSONObject? {
+        return checkoutApiService.details(detailsRequest).execute().body()
     }
 
-    override suspend fun detailsRequestAsync(detailsRequest: JSONObject): ResponseBody? {
+    override suspend fun detailsRequestAsync(detailsRequest: JSONObject): JSONObject? {
         return safeApiCall(
             call = { checkoutApiService.detailsAsync(detailsRequest) }
         )
     }
 
-    override suspend fun balanceRequestAsync(request: BalanceRequest): ResponseBody? {
+    override suspend fun balanceRequestAsync(request: BalanceRequest): JSONObject? {
         return safeApiCall(
             call = { checkoutApiService.checkBalanceAsync(request) }
         )
     }
 
-    override suspend fun createOrderAsync(orderRequest: CreateOrderRequest): ResponseBody? {
+    override suspend fun createOrderAsync(orderRequest: CreateOrderRequest): JSONObject? {
         return safeApiCall(
             call = { checkoutApiService.createOrderAsync(orderRequest) }
         )
     }
 
-    override suspend fun cancelOrderAsync(request: CancelOrderRequest): ResponseBody? {
+    override suspend fun cancelOrderAsync(request: CancelOrderRequest): JSONObject? {
         return safeApiCall(
             call = { checkoutApiService.cancelOrderAsync(request) }
         )

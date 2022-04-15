@@ -18,13 +18,8 @@ import com.adyen.checkout.example.data.storage.KeyValueStorage
 import com.adyen.checkout.example.repositories.paymentMethods.PaymentsRepository
 import com.adyen.checkout.redirect.RedirectComponent
 import dagger.hilt.android.AndroidEntryPoint
-import java.io.IOException
-import javax.inject.Inject
-import okhttp3.MediaType
-import okhttp3.MediaType.Companion.toMediaType
-import okhttp3.ResponseBody
 import org.json.JSONObject
-import retrofit2.Call
+import javax.inject.Inject
 
 /**
  * This is just an example on how to make networkModule calls on the [DropInService].
@@ -38,7 +33,6 @@ class ExampleDropInService : DropInService() {
 
     companion object {
         private val TAG = LogUtil.getTag()
-        private val CONTENT_TYPE: MediaType = "application/json".toMediaType()
     }
 
     @Inject
@@ -73,42 +67,26 @@ class ExampleDropInService : DropInService() {
 
         Logger.v(TAG, "payments/details/ - ${actionComponentJson.toStringPretty()}")
 
-        val call = paymentsRepository.detailsRequest(actionComponentJson)
-
-        return handleResponse(call)
+        return handleResponse(paymentsRepository.detailsRequest(actionComponentJson))
     }
 
     @Suppress("NestedBlockDepth")
-    private fun handleResponse(call: Call<ResponseBody>): DropInServiceResult {
-        return try {
-            val response = call.execute()
-
-            val byteArray = response.errorBody()?.bytes()
-            if (byteArray != null) {
-                Logger.e(TAG, "errorBody - ${String(byteArray)}")
-            }
-
-            if (response.isSuccessful) {
-                val detailsResponse = JSONObject(response.body()?.string() ?: "")
-                if (detailsResponse.has("action")) {
-                    val action = Action.SERIALIZER.deserialize(detailsResponse.getJSONObject("action"))
-                    DropInServiceResult.Action(action)
-                } else {
-                    Logger.d(TAG, "Final result - ${detailsResponse.toStringPretty()}")
-
-                    val resultCode = if (detailsResponse.has("resultCode")) {
-                        detailsResponse.get("resultCode").toString()
-                    } else {
-                        "EMPTY"
-                    }
-                    DropInServiceResult.Finished(resultCode)
-                }
+    private fun handleResponse(detailsResponse: JSONObject?): DropInServiceResult {
+        return if (detailsResponse != null) {
+            if (detailsResponse.has("action")) {
+                val action = Action.SERIALIZER.deserialize(detailsResponse.getJSONObject("action"))
+                DropInServiceResult.Action(action)
             } else {
-                Logger.e(TAG, "FAILED - ${response.message()}")
-                DropInServiceResult.Error(reason = "IOException")
+                Logger.d(TAG, "Final result - ${detailsResponse.toStringPretty()}")
+
+                val resultCode = if (detailsResponse.has("resultCode")) {
+                    detailsResponse.get("resultCode").toString()
+                } else {
+                    "EMPTY"
+                }
+                DropInServiceResult.Finished(resultCode)
             }
-        } catch (e: IOException) {
-            Logger.e(TAG, "IOException", e)
+        } else {
             DropInServiceResult.Error(reason = "IOException")
         }
     }

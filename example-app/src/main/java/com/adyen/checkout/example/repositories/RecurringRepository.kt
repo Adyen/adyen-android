@@ -10,16 +10,16 @@ package com.adyen.checkout.example.repositories
 
 import com.adyen.checkout.example.data.api.RecurringApiService
 import com.adyen.checkout.example.data.api.model.RemoveStoredPaymentMethodRequest
-import okhttp3.ResponseBody
+import org.json.JSONObject
 
 interface RecurringRepository {
-    suspend fun removeStoredPaymentMethod(request: RemoveStoredPaymentMethodRequest): ResponseBody?
+    suspend fun removeStoredPaymentMethod(request: RemoveStoredPaymentMethodRequest): JSONObject?
 }
 
 internal class RecurringRepositoryImpl(
     private val recurringApiService: RecurringApiService
 ) : RecurringRepository {
 
-    override suspend fun removeStoredPaymentMethod(request: RemoveStoredPaymentMethodRequest): ResponseBody? =
+    override suspend fun removeStoredPaymentMethod(request: RemoveStoredPaymentMethodRequest): JSONObject? =
         safeApiCall { recurringApiService.removeStoredPaymentMethodAsync(request) }
 }

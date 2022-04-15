@@ -27,9 +27,6 @@ import com.adyen.checkout.redirect.RedirectComponent
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
-import okhttp3.MediaType
-import okhttp3.MediaType.Companion.toMediaType
-import okhttp3.ResponseBody
 import org.json.JSONObject
 import javax.inject.Inject
 
@@ -45,7 +42,6 @@ class ExampleAsyncDropInService : DropInService() {
 
     companion object {
         private val TAG = LogUtil.getTag()
-        private val CONTENT_TYPE: MediaType = "application/json".toMediaType()
     }
 
     @Inject
@@ -108,8 +104,7 @@ class ExampleAsyncDropInService : DropInService() {
         }
     }
 
-    private fun handleResponse(response: ResponseBody?): DropInServiceResult {
-        val jsonResponse = if (response == null) null else JSONObject(response.string())
+    private fun handleResponse(jsonResponse: JSONObject?): DropInServiceResult {
         return when {
             jsonResponse == null -> {
                 Logger.e(TAG, "FAILED")
@@ -153,15 +148,12 @@ class ExampleAsyncDropInService : DropInService() {
     }
 
     private fun handleRemoveStoredPaymentMethodResult(
-        response: ResponseBody?,
+        jsonResponse: JSONObject?,
         id: String
     ): RecurringDropInServiceResult {
-        return if (response != null) {
-            val orderJson = response.string()
-            val jsonResponse = JSONObject(orderJson)
+        return if (jsonResponse != null) {
             Logger.v(TAG, "removeStoredPaymentMethod response - ${jsonResponse.toStringPretty()}")
-            val responseCode = jsonResponse.getStringOrNull("response")
-            when (responseCode) {
+            when (val responseCode = jsonResponse.getStringOrNull("response")) {
                 "[detail-successfully-disabled]" -> RecurringDropInServiceResult.PaymentMethodRemoved(id)
                 else -> RecurringDropInServiceResult.Error(reason = responseCode, dismissDropIn = false)
             }
