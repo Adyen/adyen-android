@@ -59,12 +59,12 @@ class GiftCardView :
 
         // Card Number
         var typedArray =
-            localizedContext.obtainStyledAttributes(R.style.Adyen_Checkout_GiftCard_GiftCardNumberInput, myAttrs)
+            localizedContext.obtainStyledAttributes(R.style.AdyenCheckout_GiftCard_GiftCardNumberInput, myAttrs)
         binding.textInputLayoutGiftcardNumber.hint = typedArray.getString(0)
         typedArray.recycle()
 
         // PIN
-        typedArray = localizedContext.obtainStyledAttributes(R.style.Adyen_Checkout_GiftCard_GiftCardPinInput, myAttrs)
+        typedArray = localizedContext.obtainStyledAttributes(R.style.AdyenCheckout_GiftCard_GiftCardPinInput, myAttrs)
         binding.textInputLayoutGiftcardPin.hint = typedArray.getString(0)
         typedArray.recycle()
     }

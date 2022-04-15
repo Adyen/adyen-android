@@ -116,33 +116,33 @@ class CardView @JvmOverloads constructor(
 
         // Card Number
         var typedArray: TypedArray =
-            localizedContext.obtainStyledAttributes(R.style.Adyen_Checkout_Card_CardNumberInput, myAttrs)
+            localizedContext.obtainStyledAttributes(R.style.AdyenCheckout_Card_CardNumberInput, myAttrs)
         binding.textInputLayoutCardNumber.hint = typedArray.getString(0)
         typedArray.recycle()
 
         // Expiry Date
-        typedArray = localizedContext.obtainStyledAttributes(R.style.Adyen_Checkout_Card_ExpiryDateInput, myAttrs)
+        typedArray = localizedContext.obtainStyledAttributes(R.style.AdyenCheckout_Card_ExpiryDateInput, myAttrs)
         binding.textInputLayoutExpiryDate.hint = typedArray.getString(0)
         typedArray.recycle()
 
         // Security Code
-        typedArray = localizedContext.obtainStyledAttributes(R.style.Adyen_Checkout_Card_SecurityCodeInput, myAttrs)
+        typedArray = localizedContext.obtainStyledAttributes(R.style.AdyenCheckout_Card_SecurityCodeInput, myAttrs)
         binding.textInputLayoutSecurityCode.hint = typedArray.getString(0)
         typedArray.recycle()
 
         // Card Holder
-        typedArray = localizedContext.obtainStyledAttributes(R.style.Adyen_Checkout_Card_HolderNameInput, myAttrs)
+        typedArray = localizedContext.obtainStyledAttributes(R.style.AdyenCheckout_Card_HolderNameInput, myAttrs)
         binding.textInputLayoutCardHolder.hint = typedArray.getString(0)
         typedArray.recycle()
 
         // Postal code
-        typedArray = localizedContext.obtainStyledAttributes(R.style.Adyen_Checkout_Card_PostalCodeInput, myAttrs)
+        typedArray = localizedContext.obtainStyledAttributes(R.style.AdyenCheckout_Card_PostalCodeInput, myAttrs)
         binding.textInputLayoutPostalCode.hint = typedArray.getString(0)
         typedArray.recycle()
 
         // Store Switch
         myAttrs = intArrayOf(android.R.attr.text)
-        typedArray = localizedContext.obtainStyledAttributes(R.style.Adyen_Checkout_Card_StorePaymentSwitch, myAttrs)
+        typedArray = localizedContext.obtainStyledAttributes(R.style.AdyenCheckout_Card_StorePaymentSwitch, myAttrs)
         binding.switchStorePaymentMethod.text = typedArray.getString(0)
         typedArray.recycle()
     }

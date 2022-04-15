@@ -8,19 +8,19 @@
 
 <resources>
 
-    <style name="Adyen.Checkout.Card" />
+    <style name="AdyenCheckout.Card" />
 
-    <style name="Adyen.Checkout.Image.CardLogo">
+    <style name="AdyenCheckout.Image.CardLogo">
         <item name="android:layout_width">@dimen/brand_logo_width</item>
         <item name="android:layout_height">@dimen/brand_logo_height</item>
     </style>
 
-    <style name="Adyen.Checkout.Card.BrandListLogo" parent="Adyen.Checkout.Image.CardLogo">
+    <style name="AdyenCheckout.Card.BrandListLogo" parent="AdyenCheckout.Image.CardLogo">
         <item name="android:layout_marginStart">@dimen/standard_quarter_margin</item>
         <item name="android:layout_marginLeft">@dimen/standard_quarter_margin</item>
     </style>
 
-    <style name="Adyen.Checkout.Card.BrandRecognitionLogoContainerGroup">
+    <style name="AdyenCheckout.Card.BrandRecognitionLogoContainerGroup">
         <item name="android:layout_marginStart">@dimen/standard_quarter_margin</item>
         <item name="android:layout_marginLeft">@dimen/standard_quarter_margin</item>
         <item name="android:layout_gravity">end|top</item>
@@ -29,70 +29,70 @@
         <item name="android:layout_marginRight">@dimen/standard_three_quarters_margin</item>
     </style>
 
-    <style name="Adyen.Checkout.Card.BrandRecognitionLogo" parent="Adyen.Checkout.Image.CardLogo">
+    <style name="AdyenCheckout.Card.BrandRecognitionLogo" parent="AdyenCheckout.Image.CardLogo">
         <item name="android:src">@drawable/ic_card</item>
     </style>
 
-    <style name="Adyen.Checkout.Card.BrandRecognitionLogoContainer">
+    <style name="AdyenCheckout.Card.BrandRecognitionLogoContainer">
         <item name="android:paddingStart">@dimen/standard_quarter_margin</item>
         <item name="android:paddingEnd">@dimen/standard_quarter_margin</item>
         <item name="android:paddingTop">@dimen/standard_half_margin</item>
         <item name="android:paddingBottom">@dimen/standard_half_margin</item>
     </style>
 
-    <style name="Adyen.Checkout.Card.CardNumberInput" parent="Adyen.Checkout.TextInputEditText">
+    <style name="AdyenCheckout.Card.CardNumberInput" parent="AdyenCheckout.TextInputEditText">
         <item name="android:hint">@string/checkout_card_number_hint</item>
     </style>
 
-    <style name="Adyen.Checkout.Card.ExpiryDateInput" parent="Adyen.Checkout.TextInputEditText">
+    <style name="AdyenCheckout.Card.ExpiryDateInput" parent="AdyenCheckout.TextInputEditText">
         <item name="android:hint">@string/checkout_card_expiry_date_hint</item>
         <item name="android:inputType">date</item>
         <item name="android:maxLength">7</item>
     </style>
 
-    <style name="Adyen.Checkout.Card.SecurityCodeInput" parent="Adyen.Checkout.TextInputEditText">
+    <style name="AdyenCheckout.Card.SecurityCodeInput" parent="AdyenCheckout.TextInputEditText">
         <item name="android:hint">@string/checkout_card_security_code_hint</item>
         <item name="android:inputType">number</item>
         <item name="android:maxLength">4</item>
     </style>
 
-    <style name="Adyen.Checkout.Card.HolderNameInput" parent="Adyen.Checkout.TextInputEditText">
+    <style name="AdyenCheckout.Card.HolderNameInput" parent="AdyenCheckout.TextInputEditText">
         <item name="android:hint">@string/checkout_card_holder_hint</item>
         <item name="android:inputType">text</item>
     </style>
 
-    <style name="Adyen.Checkout.Card.SocialSecurityNumberInput" parent="Adyen.Checkout.TextInputEditText">
+    <style name="AdyenCheckout.Card.SocialSecurityNumberInput" parent="AdyenCheckout.TextInputEditText">
         <item name="android:hint">@string/checkout_social_security_number_hint</item>
         <item name="android:inputType">text</item>
     </style>
 
-    <style name="Adyen.Checkout.Card.KcpBirthDateOrTaxNumber" parent="Adyen.Checkout.TextInputEditText">
+    <style name="AdyenCheckout.Card.KcpBirthDateOrTaxNumber" parent="AdyenCheckout.TextInputEditText">
         <item name="android:hint">@string/checkout_kcp_birth_date_or_tax_number_hint</item>
         <item name="android:inputType">number</item>
         <item name="android:maxLength">10</item>
     </style>
 
-    <style name="Adyen.Checkout.Card.KcpCardPassword" parent="Adyen.Checkout.TextInputEditText">
+    <style name="AdyenCheckout.Card.KcpCardPassword" parent="AdyenCheckout.TextInputEditText">
         <item name="android:hint">@string/checkout_kcp_password_hint</item>
         <item name="android:inputType">numberPassword</item>
         <item name="android:maxLength">2</item>
     </style>
 
-    <style name="Adyen.Checkout.Card.PostalCodeInput" parent="Adyen.Checkout.TextInputEditText">
+    <style name="AdyenCheckout.Card.PostalCodeInput" parent="AdyenCheckout.TextInputEditText">
         <item name="android:hint">@string/checkout_card_postal_code_hint</item>
         <item name="android:inputType">textPostalAddress</item>
     </style>
 
-    <style name="Adyen.Checkout.Card.StorePaymentSwitch" parent="Adyen.Checkout.Switch">
+    <style name="AdyenCheckout.Card.StorePaymentSwitch" parent="AdyenCheckout.Switch">
         <item name="android:text">@string/store_payment_method</item>
         <item name="android:textSize">18sp</item>
     </style>
 
-    <style name="Adyen.Checkout.DropdownTextInputLayout.Installments" parent="Adyen.Checkout.DropdownTextInputLayout">
+    <style name="AdyenCheckout.DropdownTextInputLayout.Installments" parent="AdyenCheckout.DropdownTextInputLayout">
         <item name="android:hint">@string/checkout_card_installments_title</item>
     </style>
 
-    <style name="Adyen.Checkout.InstallmentOptionTextView" parent="Adyen.Checkout.TextAppearance">
+    <style name="AdyenCheckout.InstallmentOptionTextView" parent="AdyenCheckout.TextAppearance">
         <item name="android:textColor">?android:attr/textColor</item>
         <item name="android:textSize">16sp</item>
         <item name="android:layout_gravity">center_vertical</item>

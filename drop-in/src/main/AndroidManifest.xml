@@ -10,7 +10,7 @@
             android:name=".ui.DropInActivity"
             android:exported="true"
             android:launchMode="singleTask"
-            android:theme="@style/Adyen.Checkout.Translucent">
+            android:theme="@style/AdyenCheckout.Translucent">
             <intent-filter>
                 <action android:name="android.intent.action.VIEW" />
 

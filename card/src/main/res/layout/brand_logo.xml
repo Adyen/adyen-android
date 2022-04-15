@@ -8,7 +8,7 @@
 
 <com.adyen.checkout.components.ui.view.RoundCornerImageView xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    style="@style/Adyen.Checkout.Image.CardLogo"
+    style="@style/AdyenCheckout.Image.CardLogo"
     android:layout_width="@dimen/brand_logo_width"
     android:layout_height="@dimen/brand_logo_height"
     android:layout_marginStart="@dimen/standard_quarter_margin"

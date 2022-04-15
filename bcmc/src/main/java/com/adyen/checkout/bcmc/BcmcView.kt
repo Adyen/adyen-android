@@ -67,18 +67,18 @@ class BcmcView @JvmOverloads constructor(
 
         // Card Number
         var typedArray: TypedArray =
-            localizedContext.obtainStyledAttributes(R.style.Adyen_Checkout_Card_CardNumberInput, myAttrs)
+            localizedContext.obtainStyledAttributes(R.style.AdyenCheckout_Card_CardNumberInput, myAttrs)
         cardNumberInput.hint = typedArray.getString(0)
         typedArray.recycle()
 
         // Expiry Date
-        typedArray = localizedContext.obtainStyledAttributes(R.style.Adyen_Checkout_Card_ExpiryDateInput, myAttrs)
+        typedArray = localizedContext.obtainStyledAttributes(R.style.AdyenCheckout_Card_ExpiryDateInput, myAttrs)
         expiryDateInput.hint = typedArray.getString(0)
         typedArray.recycle()
 
         // Store Switch
         myAttrs = intArrayOf(android.R.attr.text)
-        typedArray = localizedContext.obtainStyledAttributes(R.style.Adyen_Checkout_Card_StorePaymentSwitch, myAttrs)
+        typedArray = localizedContext.obtainStyledAttributes(R.style.AdyenCheckout_Card_StorePaymentSwitch, myAttrs)
         switchStorePaymentMethod.text = typedArray.getString(0)
         typedArray.recycle()
     }

@@ -56,12 +56,12 @@ class SepaView @JvmOverloads constructor(
 
         // Holder name
         var typedArray: TypedArray =
-            localizedContext.obtainStyledAttributes(R.style.Adyen_Checkout_Sepa_HolderNameInput, myAttrs)
+            localizedContext.obtainStyledAttributes(R.style.AdyenCheckout_Sepa_HolderNameInput, myAttrs)
         holderNameInput.hint = typedArray.getString(0)
         typedArray.recycle()
 
         // Account Number
-        typedArray = localizedContext.obtainStyledAttributes(R.style.Adyen_Checkout_Sepa_AccountNumberInput, myAttrs)
+        typedArray = localizedContext.obtainStyledAttributes(R.style.AdyenCheckout_Sepa_AccountNumberInput, myAttrs)
         ibanNumberInput.hint = typedArray.getString(0)
         typedArray.recycle()
     }

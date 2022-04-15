@@ -1,17 +1,17 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
 
-    <style name="Adyen.Checkout.BottomSheetDialogTheme" parent="@style/ThemeOverlay.MaterialComponents.BottomSheetDialog">
+    <style name="AdyenCheckout.BottomSheetDialogTheme" parent="@style/ThemeOverlay.MaterialComponents.BottomSheetDialog">
         <item name="android:windowIsFloating">false</item>
-        <item name="bottomSheetStyle">@style/Adyen.Checkout.BottomSheet</item>
+        <item name="bottomSheetStyle">@style/AdyenCheckout.BottomSheet</item>
         <item name="android:windowSoftInputMode">adjustResize</item>
     </style>
 
-    <style name="Adyen.Checkout.BottomSheet" parent="@style/Widget.MaterialComponents.BottomSheet.Modal">
-        <item name="shapeAppearanceOverlay">@style/Adyen.Checkout.BottomSheet.ShapeAppearance</item>
+    <style name="AdyenCheckout.BottomSheet" parent="@style/Widget.MaterialComponents.BottomSheet.Modal">
+        <item name="shapeAppearanceOverlay">@style/AdyenCheckout.BottomSheet.ShapeAppearance</item>
     </style>
 
-    <style name="Adyen.Checkout.BottomSheet.ShapeAppearance">
+    <style name="AdyenCheckout.BottomSheet.ShapeAppearance">
         <item name="cornerFamily">rounded</item>
         <item name="cornerSizeTopRight">16dp</item>
         <item name="cornerSizeTopLeft">16dp</item>

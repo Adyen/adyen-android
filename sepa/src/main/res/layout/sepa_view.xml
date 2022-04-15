@@ -17,24 +17,24 @@
 
     <com.google.android.material.textfield.TextInputLayout
         android:id="@+id/textInputLayout_holderName"
-        style="@style/Adyen.Checkout.TextInputLayout"
+        style="@style/AdyenCheckout.TextInputLayout"
         android:layout_width="match_parent"
         android:layout_height="wrap_content">
 
         <com.adyen.checkout.components.ui.view.AdyenTextInputEditText
             tools:ignore="RequiredSize"
-            style="@style/Adyen.Checkout.Sepa.HolderNameInput" />
+            style="@style/AdyenCheckout.Sepa.HolderNameInput" />
     </com.google.android.material.textfield.TextInputLayout>
 
     <com.google.android.material.textfield.TextInputLayout
         android:id="@+id/textInputLayout_ibanNumber"
-        style="@style/Adyen.Checkout.TextInputLayout"
+        style="@style/AdyenCheckout.TextInputLayout"
         android:layout_width="match_parent"
         android:layout_height="wrap_content">
 
         <com.adyen.checkout.sepa.ui.IbanInput
             tools:ignore="RequiredSize"
-            style="@style/Adyen.Checkout.Sepa.AccountNumberInput" />
+            style="@style/AdyenCheckout.Sepa.AccountNumberInput" />
     </com.google.android.material.textfield.TextInputLayout>
 
 </merge>

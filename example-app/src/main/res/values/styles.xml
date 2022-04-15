@@ -36,6 +36,6 @@
 
     </style>
 
-    <style name="Adyen.AppTheme" parent="MyAppTheme" />
+    <style name="AppTheme" parent="MyAppTheme" />
 
 </resources>

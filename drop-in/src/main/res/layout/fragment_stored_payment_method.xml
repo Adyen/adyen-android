@@ -36,7 +36,7 @@
 
     <Button
         android:id="@+id/payButton"
-        style="@style/Adyen.Checkout.Button.Colored"
+        style="@style/AdyenCheckout.Button.Colored"
         android:layout_width="match_parent"
         android:text="@string/continue_button"/>
 
@@ -52,6 +52,6 @@
         android:id="@+id/change_payment_method_button"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        style="@style/Adyen.Checkout.Button.Secondary"
+        style="@style/AdyenCheckout.Button.Secondary"
         android:text="@string/change_payment_method" />
 </LinearLayout>

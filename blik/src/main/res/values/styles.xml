@@ -8,9 +8,9 @@
 
 <resources>
 
-    <style name="Adyen.Checkout.Blik" />
+    <style name="AdyenCheckout.Blik" />
 
-    <style name="Adyen.Checkout.Blik.BlikCodeInput" parent="Adyen.Checkout.TextInputEditText">
+    <style name="AdyenCheckout.Blik.BlikCodeInput" parent="AdyenCheckout.TextInputEditText">
         <item name="android:hint">@string/checkout_blik_code</item>
         <item name="android:inputType">number</item>
         <item name="android:maxLength">6</item>

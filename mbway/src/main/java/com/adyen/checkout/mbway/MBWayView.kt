@@ -78,7 +78,7 @@ class MBWayView :
         val myAttrs = intArrayOf(android.R.attr.hint)
 
         val typedArray =
-            localizedContext.obtainStyledAttributes(R.style.Adyen_Checkout_MBWay_MobileNumberInput, myAttrs)
+            localizedContext.obtainStyledAttributes(R.style.AdyenCheckout_MBWay_MobileNumberInput, myAttrs)
         mMobileNumberInput?.hint = typedArray.getString(0)
         typedArray.recycle()
     }

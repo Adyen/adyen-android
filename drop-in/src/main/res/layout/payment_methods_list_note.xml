@@ -9,7 +9,7 @@
 <TextView xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/payment_method_note"
-    style="@style/Adyen.Checkout.TextAppearance.NoteText"
+    style="@style/AdyenCheckout.TextAppearance.NoteText"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:layout_marginBottom="@dimen/standard_quarter_margin"

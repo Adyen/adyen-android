@@ -13,6 +13,5 @@
     tools:ignore="MergeRootFrame"
     android:layout_width="match_parent"
     android:layout_height="wrap_content" >
-    <View
-        style="@style/Adyen.Checkout.BottomSheetIndicator" />
+    <View style="@style/AdyenCheckout.BottomSheetIndicator" />
 </FrameLayout>

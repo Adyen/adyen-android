@@ -15,7 +15,7 @@
 
     <TextView
         android:id="@+id/header"
-        style="@style/Adyen.Checkout.TextAppearance.HeaderTitle"
+        style="@style/AdyenCheckout.TextAppearance.HeaderTitle"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:textIsSelectable="false"
@@ -40,7 +40,7 @@
 
             <Button
                 android:id="@+id/payButton"
-                style="@style/Adyen.Checkout.Button.Colored"
+                style="@style/AdyenCheckout.Button.Colored"
                 android:text="@string/pay_button" />
 
             <androidx.core.widget.ContentLoadingProgressBar

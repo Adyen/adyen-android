@@ -22,14 +22,14 @@
 
     <TextView
         android:id="@+id/textView_description"
-        style="@style/Adyen.Checkout.Voucher.DescriptionTextAppearance"
+        style="@style/AdyenCheckout.Voucher.DescriptionTextAppearance"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:textIsSelectable="false" />
 
     <TextView
         android:id="@+id/textView_download"
-        style="@style/Adyen.Checkout.Voucher.DownloadTextAppearance"
+        style="@style/AdyenCheckout.Voucher.DownloadTextAppearance"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:gravity="center_horizontal"

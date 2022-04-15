@@ -34,13 +34,13 @@
 
     <Button
         android:id="@+id/payButton"
-        style="@style/Adyen.Checkout.Button.Colored"
+        style="@style/AdyenCheckout.Button.Colored"
         android:layout_width="match_parent"
         tools:text="Pay €13,37"/>
 
     <androidx.appcompat.widget.AppCompatTextView
         android:id="@+id/textView_remainingBalance"
-        style="@style/Adyen.Checkout.TextAppearance.ButtonSubtext"
+        style="@style/AdyenCheckout.TextAppearance.ButtonSubtext"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:gravity="center"
@@ -58,6 +58,6 @@
         android:id="@+id/change_payment_method_button"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        style="@style/Adyen.Checkout.Button.Secondary"
+        style="@style/AdyenCheckout.Button.Secondary"
         android:text="@string/change_payment_method" />
 </LinearLayout>

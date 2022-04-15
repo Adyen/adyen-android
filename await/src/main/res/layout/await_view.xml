@@ -19,14 +19,14 @@
 
     <ImageView
         android:id="@+id/imageView_logo"
-        style="@style/Adyen.Checkout.Image.Logo.Large"
+        style="@style/AdyenCheckout.Image.Logo.Large"
         android:layout_gravity="center_horizontal"
         android:contentDescription="@null"
         tools:ignore="RequiredSize" />
 
     <TextView
         android:id="@+id/textView_open_app"
-        style="@style/Adyen.Checkout.TextAppearance.Primary"
+        style="@style/AdyenCheckout.TextAppearance.Primary"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_gravity="center_horizontal"
@@ -51,7 +51,7 @@
             android:id="@+id/textView_waiting_confirmation"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            style="@style/Adyen.Checkout.TextAppearance.Secondary"
+            style="@style/AdyenCheckout.TextAppearance.Secondary"
             android:layout_gravity="center_vertical"
             android:layout_margin="@dimen/standard_half_margin"
             android:text="@string/checkout_await_waiting_confirmation"/>

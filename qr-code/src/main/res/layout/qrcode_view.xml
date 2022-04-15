@@ -15,14 +15,14 @@
 
     <ImageView
         android:id="@+id/imageView_logo"
-        style="@style/Adyen.Checkout.Image.Logo.Large"
+        style="@style/AdyenCheckout.Image.Logo.Large"
         android:layout_gravity="center_horizontal"
         android:contentDescription="@null"
         tools:ignore="RequiredSize" />
 
     <TextView
         android:id="@+id/textView_top_label"
-        style="@style/Adyen.Checkout.TextAppearance.Primary"
+        style="@style/AdyenCheckout.TextAppearance.Primary"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_gravity="center_horizontal"
@@ -33,7 +33,7 @@
 
     <com.google.android.material.progressindicator.LinearProgressIndicator
         android:id="@+id/progress_indicator"
-        style="@style/Adyen.Checkout.QrCode.ProgressIndicator"
+        style="@style/AdyenCheckout.QrCode.ProgressIndicator"
         android:layout_gravity="center_horizontal"
         android:layout_marginHorizontal="@dimen/standard_margin"
         android:layout_marginTop="@dimen/standard_margin"
@@ -41,7 +41,7 @@
 
     <TextView
         android:id="@+id/textView_timer"
-        style="@style/Adyen.Checkout.QrCode.TimerTextAppearance"
+        style="@style/AdyenCheckout.QrCode.TimerTextAppearance"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_gravity="center_horizontal"
@@ -54,7 +54,7 @@
 
     <Button
         android:id="@+id/copyButton"
-        style="@style/Adyen.Checkout.QrCode.CopyButton"
+        style="@style/AdyenCheckout.QrCode.CopyButton"
         android:layout_width="match_parent"
         android:text="@string/checkout_qr_code_copy_button" />
 
