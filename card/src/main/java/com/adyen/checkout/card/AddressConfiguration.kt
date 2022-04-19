@@ -4,7 +4,7 @@ import android.os.Parcel
 import android.os.Parcelable
 
 // TODO docs
-sealed class AddressConfiguration: Parcelable {
+sealed class AddressConfiguration : Parcelable {
 
     object None : AddressConfiguration() {
         @JvmField
@@ -13,7 +13,9 @@ sealed class AddressConfiguration: Parcelable {
             override fun newArray(size: Int) = arrayOfNulls<None>(size)
         }
         override fun describeContents() = Parcelable.CONTENTS_FILE_DESCRIPTOR
-        override fun writeToParcel(dest: Parcel?, flags: Int) {}
+        override fun writeToParcel(dest: Parcel?, flags: Int) {
+            // no ops
+        }
     }
 
     object PostalCode : AddressConfiguration() {
@@ -23,7 +25,9 @@ sealed class AddressConfiguration: Parcelable {
             override fun newArray(size: Int) = arrayOfNulls<PostalCode>(size)
         }
         override fun describeContents() = Parcelable.CONTENTS_FILE_DESCRIPTOR
-        override fun writeToParcel(dest: Parcel?, flags: Int) {}
+        override fun writeToParcel(dest: Parcel?, flags: Int) {
+            // no ops
+        }
     }
 
     data class FullAddress(

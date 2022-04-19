@@ -8,7 +8,7 @@ import com.adyen.checkout.components.ui.Validation
 
 object AddressValidationUtils {
 
-    fun validateAddressInput(addressInputModel: AddressInputModel) : AddressOutputData {
+    fun validateAddressInput(addressInputModel: AddressInputModel): AddressOutputData {
         return with(addressInputModel) {
             AddressOutputData(
                 postalCode = validateAddressField(postalCode),
@@ -32,7 +32,7 @@ object AddressValidationUtils {
         )
     }
 
-    private fun validateAddressField(input: String) : FieldState<String> {
+    private fun validateAddressField(input: String): FieldState<String> {
         return if (input.isNotEmpty()) {
             FieldState(input, Validation.Valid)
         } else {

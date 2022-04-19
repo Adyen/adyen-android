@@ -13,6 +13,7 @@ import com.adyen.checkout.core.api.Connection
 import com.adyen.checkout.core.api.Environment
 import com.adyen.checkout.core.log.LogUtil
 import com.adyen.checkout.core.log.Logger
+import com.adyen.checkout.core.model.toStringPretty
 import org.json.JSONArray
 
 private val TAG = LogUtil.getTag()
@@ -31,7 +32,7 @@ class AddressConnection(
         val result = get(CONTENT_TYPE_JSON_HEADER)
         val resultJson = JSONArray(String(result, Charsets.UTF_8))
         resultJson.toString()
-        Logger.v(TAG, "response: ${resultJson.toString(4)}")
+        Logger.v(TAG, "response: ${resultJson.toStringPretty()}")
         return parseOptAddressItemList(resultJson).orEmpty()
     }
 
@@ -56,7 +57,7 @@ fun makeUrl(
     dataType: AddressDataType,
     localeString: String,
     countryCode: String? = null
-) : String {
+): String {
     return when (dataType) {
         AddressDataType.COUNRTY -> "${environment.baseUrl}$ENDPOINT${dataType.pathParam}/$localeString$JSON_SUFFIX"
         AddressDataType.STATE -> "${environment.baseUrl}$ENDPOINT${dataType.pathParam}/$countryCode/$localeString$JSON_SUFFIX"

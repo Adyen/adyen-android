@@ -30,7 +30,6 @@ import com.adyen.checkout.card.ui.model.AddressListItem
 import com.adyen.checkout.card.util.InstallmentUtils
 import com.adyen.checkout.components.api.ImageLoader
 import com.adyen.checkout.components.extensions.isVisible
-import com.adyen.checkout.components.base.AddressVisibility
 import com.adyen.checkout.components.ui.FieldState
 import com.adyen.checkout.components.ui.Validation
 import com.adyen.checkout.components.ui.view.AdyenLinearLayout
@@ -168,6 +167,7 @@ class CardView @JvmOverloads constructor(
     override val isConfirmationRequired: Boolean
         get() = true
 
+    @Suppress("ComplexMethod")
     override fun highlightValidationErrors() {
         component.outputData?.let {
             var isErrorFocused = false
@@ -616,7 +616,6 @@ class CardView @JvmOverloads constructor(
                 binding.textInputLayoutPostalCode.isVisible = false
             }
         }
-
     }
 
     private fun setStoredCardInterface(storedCardInput: CardInputData) {

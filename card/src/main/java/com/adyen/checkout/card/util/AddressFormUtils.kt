@@ -2,7 +2,6 @@ package com.adyen.checkout.card.util
 
 import com.adyen.checkout.card.AddressConfiguration
 import com.adyen.checkout.card.AddressFormUIState
-import com.adyen.checkout.card.AddressOutputData
 import com.adyen.checkout.card.api.model.AddressItem
 import com.adyen.checkout.card.ui.model.AddressListItem
 import com.adyen.checkout.components.base.AddressVisibility
@@ -32,7 +31,7 @@ internal object AddressFormUtils {
             ?: AddressFormUIState.fromAddressVisibility(addressVisibility)
     }
 
-    fun initializeCountryOptions(addressConfiguration: AddressConfiguration?, countryList: List<AddressItem>) : List<AddressListItem> {
+    fun initializeCountryOptions(addressConfiguration: AddressConfiguration?, countryList: List<AddressItem>): List<AddressListItem> {
         return when (addressConfiguration) {
             is AddressConfiguration.FullAddress -> {
                 val filteredCountryList = if (addressConfiguration.supportedCountryCodes.isNotEmpty()) {

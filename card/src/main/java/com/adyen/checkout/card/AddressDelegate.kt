@@ -25,11 +25,16 @@ class AddressDelegate(
     private val addressRepository: AddressRepository
 ) {
 
+    companion object {
+        // Only US, CA and BR has states and there's only one countries list.
+        private const val CACHE_ENTRY_SIZE = 4
+    }
+
     private val _statesFlow: MutableSharedFlow<List<AddressItem>> =
         MutableSharedFlow(0, 1, BufferOverflow.DROP_OLDEST)
     internal val statesFlow: Flow<List<AddressItem>> = _statesFlow
 
-    private val cache: LruCache<String, List<AddressItem>> = LruCache<String, List<AddressItem>>(20)
+    private val cache: LruCache<String, List<AddressItem>> = LruCache<String, List<AddressItem>>(CACHE_ENTRY_SIZE)
 
     fun getStateList(
         configuration: Configuration,
@@ -38,7 +43,8 @@ class AddressDelegate(
     ) {
         val addressSpecification = AddressFormInput.AddressSpecification.fromString(countryCode)
         val needsStates = addressSpecification == AddressFormInput.AddressSpecification.BR ||
-            addressSpecification == AddressFormInput.AddressSpecification.US
+            addressSpecification == AddressFormInput.AddressSpecification.US ||
+            addressSpecification == AddressFormInput.AddressSpecification.CA
         if (!countryCode.isNullOrEmpty() && needsStates) {
             val url = makeUrl(
                 configuration.environment,
