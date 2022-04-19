@@ -13,15 +13,14 @@ import com.adyen.checkout.example.repositories.paymentMethods.PaymentsRepository
 import com.adyen.checkout.example.service.createPaymentRequest
 import com.adyen.checkout.example.service.getPaymentMethodRequest
 import dagger.hilt.android.lifecycle.HiltViewModel
-import javax.inject.Inject
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
-import okhttp3.ResponseBody
 import org.json.JSONObject
+import javax.inject.Inject
 
 @HiltViewModel
 internal class CardViewModel @Inject constructor(
@@ -98,11 +97,8 @@ internal class CardViewModel @Inject constructor(
         }
     }
 
-    private suspend fun handlePaymentResponse(responseBody: ResponseBody?) {
-        responseBody?.let {
-            @Suppress("BlockingMethodInNonBlockingContext")
-            val json = JSONObject(it.string())
-
+    private suspend fun handlePaymentResponse(json: JSONObject?) {
+        json?.let {
             when {
                 json.has("action") -> {
                     val action = Action.SERIALIZER.deserialize(json.getJSONObject("action"))

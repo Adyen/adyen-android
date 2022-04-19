@@ -33,9 +33,6 @@ import com.adyen.checkout.redirect.RedirectComponent
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
-import okhttp3.MediaType
-import okhttp3.MediaType.Companion.toMediaType
-import okhttp3.ResponseBody
 import org.json.JSONObject
 import javax.inject.Inject
 
@@ -55,7 +52,6 @@ class ExampleFullAsyncDropInService : DropInService() {
 
     companion object {
         private val TAG = LogUtil.getTag()
-        private val CONTENT_TYPE: MediaType = "application/json".toMediaType()
     }
 
     @Inject
@@ -127,8 +123,7 @@ class ExampleFullAsyncDropInService : DropInService() {
         }
     }
 
-    private fun handleResponse(response: ResponseBody?): DropInServiceResult? {
-        val jsonResponse = if (response == null) null else JSONObject(response.string())
+    private fun handleResponse(jsonResponse: JSONObject?): DropInServiceResult? {
         return when {
             jsonResponse == null -> {
                 Logger.e(TAG, "FAILED")
@@ -215,12 +210,9 @@ class ExampleFullAsyncDropInService : DropInService() {
         }
     }
 
-    private fun handleBalanceResponse(response: ResponseBody?): BalanceDropInServiceResult {
-        return if (response != null) {
-            val balanceJson = response.string()
-            val jsonResponse = JSONObject(balanceJson)
-            val resultCode = jsonResponse.getStringOrNull("resultCode")
-            when (resultCode) {
+    private fun handleBalanceResponse(jsonResponse: JSONObject?): BalanceDropInServiceResult {
+        return if (jsonResponse != null) {
+            when (val resultCode = jsonResponse.getStringOrNull("resultCode")) {
                 "Success" -> BalanceDropInServiceResult.Balance(BalanceResult.SERIALIZER.deserialize(jsonResponse))
                 "NotEnoughBalance" -> BalanceDropInServiceResult.Error(
                     reason = "Not enough balance",
@@ -251,12 +243,9 @@ class ExampleFullAsyncDropInService : DropInService() {
     }
 
     @Suppress("NestedBlockDepth")
-    private fun handleOrderResponse(response: ResponseBody?): OrderDropInServiceResult {
-        return if (response != null) {
-            val orderJson = response.string()
-            val jsonResponse = JSONObject(orderJson)
-            val resultCode = jsonResponse.getStringOrNull("resultCode")
-            when (resultCode) {
+    private fun handleOrderResponse(jsonResponse: JSONObject?): OrderDropInServiceResult {
+        return if (jsonResponse != null) {
+            when (val resultCode = jsonResponse.getStringOrNull("resultCode")) {
                 "Success" -> OrderDropInServiceResult.OrderCreated(OrderResponse.SERIALIZER.deserialize(jsonResponse))
                 else -> OrderDropInServiceResult.Error(reason = resultCode, dismissDropIn = false)
             }
@@ -283,15 +272,12 @@ class ExampleFullAsyncDropInService : DropInService() {
 
     @Suppress("NestedBlockDepth")
     private fun handleCancelOrderResponse(
-        response: ResponseBody?,
+        jsonResponse: JSONObject?,
         shouldUpdatePaymentMethods: Boolean
     ): DropInServiceResult? {
-        return if (response != null) {
-            val orderJson = response.string()
-            val jsonResponse = JSONObject(orderJson)
+        return if (jsonResponse != null) {
             Logger.v(TAG, "cancelOrder response - ${jsonResponse.toStringPretty()}")
-            val resultCode = jsonResponse.getStringOrNull("resultCode")
-            when (resultCode) {
+            when (val resultCode = jsonResponse.getStringOrNull("resultCode")) {
                 "Received" -> {
                     if (shouldUpdatePaymentMethods) fetchPaymentMethods()
                     null
@@ -321,15 +307,12 @@ class ExampleFullAsyncDropInService : DropInService() {
     }
 
     private fun handleRemoveStoredPaymentMethodResult(
-        response: ResponseBody?,
+        jsonResponse: JSONObject?,
         id: String
     ): RecurringDropInServiceResult {
-        return if (response != null) {
-            val orderJson = response.string()
-            val jsonResponse = JSONObject(orderJson)
+        return if (jsonResponse != null) {
             Logger.v(TAG, "removeStoredPaymentMethod response - ${jsonResponse.toStringPretty()}")
-            val responseCode = jsonResponse.getStringOrNull("response")
-            when (responseCode) {
+            when (val responseCode = jsonResponse.getStringOrNull("response")) {
                 "[detail-successfully-disabled]" -> RecurringDropInServiceResult.PaymentMethodRemoved(id)
                 else -> RecurringDropInServiceResult.Error(reason = responseCode, dismissDropIn = false)
             }

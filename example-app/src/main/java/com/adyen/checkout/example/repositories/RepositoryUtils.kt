@@ -8,10 +8,18 @@
 
 package com.adyen.checkout.example.repositories
 
+import com.adyen.checkout.core.log.Logger
+import com.adyen.checkout.core.util.runSuspendCatching
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 
 internal suspend fun <T> safeApiCall(call: suspend () -> T): T? = withContext(Dispatchers.IO) {
-    runCatching { call() }
-        .fold({ it }, { null })
+    runSuspendCatching { call() }
+        .fold(
+            onSuccess = { it },
+            onFailure = { e ->
+                Logger.e("safeApiCall", "API call failed", e)
+                null
+            }
+        )
 }
