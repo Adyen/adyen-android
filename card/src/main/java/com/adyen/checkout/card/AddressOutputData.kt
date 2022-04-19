@@ -8,6 +8,7 @@
 
 package com.adyen.checkout.card
 
+import com.adyen.checkout.components.base.OutputData
 import com.adyen.checkout.components.ui.FieldState
 
 data class AddressOutputData(
@@ -17,8 +18,8 @@ data class AddressOutputData(
     val houseNumberOrName: FieldState<String>,
     val city: FieldState<String>,
     val country: FieldState<String>
-) {
-    fun isValid(): Boolean {
+) : OutputData {
+    override fun isValid(): Boolean {
         return postalCode.validation.isValid() &&
             street.validation.isValid() &&
             stateOrProvince.validation.isValid() &&

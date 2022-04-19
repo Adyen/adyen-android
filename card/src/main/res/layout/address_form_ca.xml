@@ -62,14 +62,16 @@
     </com.google.android.material.textfield.TextInputLayout>
 
     <com.google.android.material.textfield.TextInputLayout
-        android:id="@+id/textInputLayout_provinceTerritory"
+        android:id="@+id/textInputLayout_state"
         style="@style/AdyenCheckout.DropdownTextInputLayout.ProvinceTerritory"
         android:layout_width="match_parent"
         android:layout_height="wrap_content">
 
         <androidx.appcompat.widget.AppCompatAutoCompleteTextView
-            android:id="@+id/editText_provinceTerritory"
+            android:id="@+id/autoCompleteTextView_state"
             style="@style/AdyenCheckout.DropdownTextInputEditText"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
             tools:ignore="RequiredSize" />
     </com.google.android.material.textfield.TextInputLayout>
 </merge>

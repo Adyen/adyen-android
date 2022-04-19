@@ -20,7 +20,7 @@ import org.json.JSONObject
 data class AddressItem(
     val id: String? = null,
     val name: String? = null
-): ModelObject() {
+) : ModelObject() {
 
     override fun writeToParcel(dest: Parcel, flags: Int) {
         JsonUtils.writeToParcel(dest, SERIALIZER.serialize(this))
@@ -56,8 +56,6 @@ data class AddressItem(
                     throw ModelSerializationException(AddressItem::class.java, e)
                 }
             }
-
         }
     }
-
 }

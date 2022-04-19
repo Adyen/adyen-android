@@ -61,7 +61,8 @@ class AddressFormInput @JvmOverloads constructor(
         get() = rootView.findViewById(R.id.textInputLayout_houseNumber)
 
     private val textInputLayoutPostalCode: TextInputLayout?
-        get() = rootView.findViewById<LinearLayout>(R.id.linearLayout_formContainer).findViewById(R.id.textInputLayout_postalCode)
+        get() = rootView.findViewById<LinearLayout>(R.id.linearLayout_formContainer)
+            .findViewById(R.id.textInputLayout_postalCode)
 
     private val textInputLayoutCity: TextInputLayout?
         get() = rootView.findViewById(R.id.textInputLayout_city)

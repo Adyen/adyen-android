@@ -10,7 +10,6 @@ package com.adyen.checkout.card
 import com.adyen.checkout.card.data.DetectedCardType
 import com.adyen.checkout.card.data.ExpiryDate
 import com.adyen.checkout.card.ui.model.AddressListItem
-import com.adyen.checkout.components.base.AddressVisibility
 import com.adyen.checkout.components.base.OutputData
 import com.adyen.checkout.components.ui.FieldState
 
@@ -46,6 +45,6 @@ data class CardOutputData(
             kcpCardPasswordState.validation.isValid() &&
             postalCodeState.validation.isValid() &&
             installmentState.validation.isValid() &&
-            addressState.isValid()
+            addressState.isValid
     }
 }
