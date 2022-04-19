@@ -34,20 +34,11 @@ import com.adyen.checkout.giftcard.GiftCardComponentState
 import com.adyen.checkout.giftcard.util.GiftCardBalanceStatus
 import com.adyen.checkout.giftcard.util.GiftCardBalanceUtils
 import com.adyen.checkout.googlepay.GooglePayComponent
+import com.adyen.checkout.sessions.model.Session
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.flow.receiveAsFlow
 import kotlinx.coroutines.launch
-
-private val TAG = LogUtil.getTag()
-
-private const val PAYMENT_METHODS_RESPONSE_KEY = "PAYMENT_METHODS_RESPONSE_KEY"
-private const val DROP_IN_CONFIGURATION_KEY = "DROP_IN_CONFIGURATION_KEY"
-private const val IS_WAITING_FOR_RESULT_KEY = "IS_WAITING_FOR_RESULT_KEY"
-private const val CACHED_GIFT_CARD = "CACHED_GIFT_CARD"
-private const val CURRENT_ORDER = "CURRENT_ORDER"
-private const val PARTIAL_PAYMENT_AMOUNT = "PARTIAL_PAYMENT_AMOUNT"
-private const val AMOUNT = "AMOUNT"
 
 @Suppress("TooManyFunctions")
 class DropInViewModel(
@@ -353,6 +344,18 @@ class DropInViewModel(
     }
 
     companion object {
+
+        private val TAG = LogUtil.getTag()
+
+        private const val PAYMENT_METHODS_RESPONSE_KEY = "PAYMENT_METHODS_RESPONSE_KEY"
+        private const val SESSION_KEY = "SESSION_KEY"
+        private const val DROP_IN_CONFIGURATION_KEY = "DROP_IN_CONFIGURATION_KEY"
+        private const val IS_WAITING_FOR_RESULT_KEY = "IS_WAITING_FOR_RESULT_KEY"
+        private const val CACHED_GIFT_CARD = "CACHED_GIFT_CARD"
+        private const val CURRENT_ORDER = "CURRENT_ORDER"
+        private const val PARTIAL_PAYMENT_AMOUNT = "PARTIAL_PAYMENT_AMOUNT"
+        private const val AMOUNT = "AMOUNT"
+
         fun putIntentExtras(
             intent: Intent,
             dropInConfiguration: DropInConfiguration,
@@ -360,6 +363,17 @@ class DropInViewModel(
         ) {
             intent.apply {
                 putExtra(PAYMENT_METHODS_RESPONSE_KEY, paymentMethodsApiResponse)
+                putExtra(DROP_IN_CONFIGURATION_KEY, dropInConfiguration)
+            }
+        }
+
+        fun putIntentExtras(
+            intent: Intent,
+            dropInConfiguration: DropInConfiguration,
+            session: Session,
+        ) {
+            intent.apply {
+                putExtra(SESSION_KEY, session)
                 putExtra(DROP_IN_CONFIGURATION_KEY, dropInConfiguration)
             }
         }

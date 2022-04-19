@@ -69,6 +69,7 @@ import com.adyen.checkout.giftcard.GiftCardComponent
 import com.adyen.checkout.giftcard.GiftCardComponentState
 import com.adyen.checkout.googlepay.GooglePayComponent
 import com.adyen.checkout.redirect.RedirectUtil
+import com.adyen.checkout.sessions.model.Session
 import com.adyen.checkout.wechatpay.WeChatPayUtils
 import kotlinx.coroutines.flow.collect
 
@@ -682,6 +683,7 @@ class DropInActivity :
     }
 
     companion object {
+
         fun createIntent(
             context: Context,
             dropInConfiguration: DropInConfiguration,
@@ -689,6 +691,16 @@ class DropInActivity :
         ): Intent {
             val intent = Intent(context, DropInActivity::class.java)
             DropInViewModel.putIntentExtras(intent, dropInConfiguration, paymentMethodsApiResponse)
+            return intent
+        }
+
+        fun createIntent(
+            context: Context,
+            dropInConfiguration: DropInConfiguration,
+            session: Session,
+        ): Intent {
+            val intent = Intent(context, DropInActivity::class.java)
+            DropInViewModel.putIntentExtras(intent, dropInConfiguration, session)
             return intent
         }
     }

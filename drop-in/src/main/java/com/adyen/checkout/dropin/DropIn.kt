@@ -20,6 +20,7 @@ import com.adyen.checkout.dropin.DropIn.startPayment
 import com.adyen.checkout.dropin.service.DropInService
 import com.adyen.checkout.dropin.service.DropInServiceResult
 import com.adyen.checkout.dropin.ui.DropInActivity
+import com.adyen.checkout.sessions.model.Session
 
 /**
  * Drop-in is our pre-built checkout UI for accepting payments. You only need to provide
@@ -32,10 +33,10 @@ import com.adyen.checkout.dropin.ui.DropInActivity
 object DropIn {
     private val TAG = LogUtil.getTag()
 
-    const val RESULT_KEY = "payment_result"
-    const val ERROR_REASON_KEY = "error_reason"
-    const val ERROR_REASON_USER_CANCELED = "Canceled by user"
-    const val FINISHED_WITH_ACTION = "finish_with_action"
+    internal const val RESULT_KEY = "payment_result"
+    internal const val ERROR_REASON_KEY = "error_reason"
+    internal const val ERROR_REASON_USER_CANCELED = "Canceled by user"
+    internal const val FINISHED_WITH_ACTION = "finish_with_action"
 
     /**
      * Register your Activity or Fragment with the Activity Result API and receive the final
@@ -88,27 +89,56 @@ object DropIn {
         updateDefaultLogcatLevel(context)
         Logger.d(TAG, "startPayment from Activity")
 
-        val intent = preparePayment(
+        DropInPrefs.setShopperLocale(context, dropInConfiguration.shopperLocale)
+
+        val intent = DropInActivity.createIntent(
             context,
-            paymentMethodsApiResponse,
             dropInConfiguration,
+            paymentMethodsApiResponse,
         )
         dropInLauncher.launch(intent)
     }
 
-    private fun preparePayment(
+    /**
+     * TODO: Update this documentation
+     *
+     * Starts the checkout flow to be handled by the Drop-in solution.
+     * Call [registerForDropInResult] to create a launcher when initializing your Activity.
+     *
+     * You will receive the Drop-in result in the [DropInCallback] parameter specified when
+     * calling [registerForDropInResult].
+     *
+     * 3 states can occur from this operation:
+     * - Cancelled by user: the user dismissed the Drop-in before it has completed.
+     * - Error: a [DropInServiceResult.Error] was returned in the [DropInService], or an error
+     * has occurred.
+     * - Finished: a [DropInServiceResult.Finished] was returned in the [DropInService].
+     *
+     * You should always handle the cases of cancellation and error in [DropInCallback.onDropInResult].
+     *
+     * @param context The context to start the Checkout flow with.
+     * @param dropInLauncher A launcher to start Drop-in, obtained with [registerForDropInResult].
+     * @param session The result from the session/ endpoint.
+     * @param dropInConfiguration Additional required configuration data.
+     */
+    @JvmStatic
+    fun startPaymentWithSession(
         context: Context,
-        paymentMethodsApiResponse: PaymentMethodsApiResponse,
+        dropInLauncher: ActivityResultLauncher<Intent>,
+        session: Session,
         dropInConfiguration: DropInConfiguration,
-    ): Intent {
-        // Add locale to prefs
+    ) {
+        updateDefaultLogcatLevel(context)
+        Logger.d(TAG, "startPayment from Activity")
+
         DropInPrefs.setShopperLocale(context, dropInConfiguration.shopperLocale)
 
-        return DropInActivity.createIntent(
+        val intent = DropInActivity.createIntent(
             context,
             dropInConfiguration,
-            paymentMethodsApiResponse,
+            session,
         )
+        dropInLauncher.launch(intent)
     }
 
     private fun updateDefaultLogcatLevel(context: Context) {
