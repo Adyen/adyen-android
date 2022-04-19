@@ -19,16 +19,19 @@ import com.adyen.checkout.dropin.R
 
 class LoadingDialogFragment : DialogFragment() {
 
+    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
+        isCancelable = false
+        return inflater.inflate(R.layout.loading, container, false)
+    }
+
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
+        requireDialog().window?.setBackgroundDrawable(ColorDrawable(Color.TRANSPARENT))
+    }
+
     companion object {
         fun newInstance(): LoadingDialogFragment {
             return LoadingDialogFragment()
         }
-    }
-
-    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
-        // TODO: 11/09/2020 code smell
-        dialog!!.window!!.setBackgroundDrawable(ColorDrawable(Color.TRANSPARENT))
-        isCancelable = false
-        return inflater.inflate(R.layout.loading, container, false)
     }
 }

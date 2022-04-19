@@ -34,14 +34,15 @@ import com.google.android.material.bottomsheet.BottomSheetBehavior
 class GenericComponentDialogFragment : BaseComponentDialogFragment() {
 
     private lateinit var componentView: ComponentView<in OutputData, ViewableComponent<*, *, *>>
-    private lateinit var binding: FragmentGenericComponentBinding
+    private var _binding: FragmentGenericComponentBinding? = null
+    private val binding: FragmentGenericComponentBinding get() = requireNotNull(_binding)
 
     companion object : BaseCompanion<GenericComponentDialogFragment>(GenericComponentDialogFragment::class.java) {
         private val TAG = LogUtil.getTag()
     }
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View {
-        binding = FragmentGenericComponentBinding.inflate(inflater, container, false)
+        _binding = FragmentGenericComponentBinding.inflate(inflater, container, false)
         return binding.root
     }
 
@@ -94,5 +95,10 @@ class GenericComponentDialogFragment : BaseComponentDialogFragment() {
         } else {
             binding.payButton.visibility = View.GONE
         }
+    }
+
+    override fun onDestroyView() {
+        _binding = null
+        super.onDestroyView()
     }
 }

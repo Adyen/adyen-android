@@ -52,7 +52,8 @@ class ActionComponentDialogFragment : DropInBottomSheetDialogFragment(), Observe
         }
     }
 
-    private lateinit var binding: FragmentActionComponentBinding
+    private var _binding: FragmentActionComponentBinding? = null
+    private val binding: FragmentActionComponentBinding get() = requireNotNull(_binding)
     private lateinit var action: Action
     private lateinit var actionType: String
     private lateinit var componentView: ComponentView<in OutputData, ViewableComponent<*, *, ActionComponentData>>
@@ -67,7 +68,7 @@ class ActionComponentDialogFragment : DropInBottomSheetDialogFragment(), Observe
     }
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View {
-        binding = FragmentActionComponentBinding.inflate(inflater)
+        _binding = FragmentActionComponentBinding.inflate(inflater)
         return binding.root
     }
 
@@ -190,5 +191,10 @@ class ActionComponentDialogFragment : DropInBottomSheetDialogFragment(), Observe
 
     private fun shouldFinishWithAction(): Boolean {
         return getActionProviderFor(action)?.providesDetails() == false
+    }
+
+    override fun onDestroyView() {
+        _binding = null
+        super.onDestroyView()
     }
 }

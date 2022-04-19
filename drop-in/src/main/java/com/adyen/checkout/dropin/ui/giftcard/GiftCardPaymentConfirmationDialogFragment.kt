@@ -27,8 +27,8 @@ import com.adyen.checkout.dropin.ui.paymentmethods.PaymentMethodAdapter
 
 class GiftCardPaymentConfirmationDialogFragment : DropInBottomSheetDialogFragment() {
 
-    private lateinit var binding: FragmentGiftCardPaymentConfirmationBinding
-    private lateinit var paymentMethodAdapter: PaymentMethodAdapter
+    private var _binding: FragmentGiftCardPaymentConfirmationBinding? = null
+    private val binding: FragmentGiftCardPaymentConfirmationBinding get() = requireNotNull(_binding)
 
     private lateinit var giftCardPaymentConfirmationData: GiftCardPaymentConfirmationData
 
@@ -45,7 +45,7 @@ class GiftCardPaymentConfirmationDialogFragment : DropInBottomSheetDialogFragmen
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View {
         Logger.d(TAG, "onCreateView")
-        binding = FragmentGiftCardPaymentConfirmationBinding.inflate(inflater, container, false)
+        _binding = FragmentGiftCardPaymentConfirmationBinding.inflate(inflater, container, false)
         return binding.root
     }
 
@@ -101,9 +101,8 @@ class GiftCardPaymentConfirmationDialogFragment : DropInBottomSheetDialogFragmen
             dropInViewModel.dropInConfiguration.environment
         )
 
-        paymentMethodAdapter = PaymentMethodAdapter(paymentMethods, imageLoader)
         binding.recyclerViewGiftCards.layoutManager = LinearLayoutManager(requireContext())
-        binding.recyclerViewGiftCards.adapter = paymentMethodAdapter
+        binding.recyclerViewGiftCards.adapter = PaymentMethodAdapter(paymentMethods, imageLoader)
     }
 
     override fun onCancel(dialog: DialogInterface) {
@@ -123,6 +122,12 @@ class GiftCardPaymentConfirmationDialogFragment : DropInBottomSheetDialogFragmen
             protocol.showPaymentMethodsDialog()
         }
         return true
+    }
+
+    override fun onDestroyView() {
+        binding.recyclerViewGiftCards.adapter = null
+        _binding = null
+        super.onDestroyView()
     }
 
     companion object {
