@@ -118,8 +118,8 @@ class AdyenSwipeToRevealLayout @JvmOverloads constructor(
      */
     private val viewDragHelperCallback = object : ViewDragHelper.Callback() {
         override fun tryCaptureView(child: View, pointerId: Int): Boolean {
-            return if (!isDragLocked) {
-                dragHelper.captureChildView(mainView, pointerId)
+            return if (!isDragLocked && child == mainView) {
+                dragHelper.captureChildView(child, pointerId)
                 true
             } else {
                 false
