@@ -26,10 +26,15 @@ import java.util.Objects;
 public final class Environment implements Parcelable {
 
     public static final Environment TEST;
-    public static final Environment LIVE;
     public static final Environment EUROPE;
     public static final Environment UNITED_STATES;
     public static final Environment AUSTRALIA;
+
+    /**
+     * @deprecated Use the same live environment as your back end instead. You can find that value in your Customer Area.
+     */
+    @Deprecated
+    public static final Environment LIVE;
 
     public static final Creator<Environment> CREATOR = new Creator<Environment>() {
         @Override
