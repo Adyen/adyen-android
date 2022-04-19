@@ -32,32 +32,23 @@ internal object AddressFormUtils {
             ?: AddressFormUIState.fromAddressVisibility(addressVisibility)
     }
 
-//    fun makeInitialCountryList(countries: List<AddressItem>, addressConfiguration: AddressConfiguration): List<AddressListItem> {
-//        when (addressConfiguration) {
-//            is AddressConfiguration.FullAddress -> {
-//                addressConfiguration.defaultCountryCode?.let {
-//                    countries.mapToListItem1(false).markCountrySelected1(it)
-//                } ?: countries.mapToListItem1(true)
-//            }
-//            else -> {}
-//        }
-//    }
-//
-//    fun List<AddressListItem>.markCountrySelected1(countryCode: String): List<AddressListItem> {
-//        return map {
-//            it.copy(selected = it.code == countryCode)
-//        }
-//    }
-//
-//    fun List<AddressItem>.mapToListItem1(shouldSelectFirstItem: Boolean): List<AddressListItem> {
-//        return map {
-//            val isFirstItem = it.id == firstOrNull()?.id
-//            AddressListItem(
-//                name = it.name.orEmpty(),
-//                code = it.id.orEmpty(),
-//                selected = shouldSelectFirstItem && isFirstItem
-//            )
-//        }
-//    }
+    fun initializeCountryOptions(addressConfiguration: AddressConfiguration?, countryList: List<AddressItem>) : List<AddressListItem> {
+        return when (addressConfiguration) {
+            is AddressConfiguration.FullAddress -> {
+                val filteredCountryList = if (addressConfiguration.supportedCountryCodes.isNotEmpty()) {
+                    countryList.filter { countryItem -> addressConfiguration.supportedCountryCodes.any { it == countryItem.id } }
+                } else {
+                    countryList
+                }
 
+                val defaultCountryCode = addressConfiguration.defaultCountryCode
+                if (defaultCountryCode != null && filteredCountryList.any { it.id == defaultCountryCode }) {
+                    markAddressListItemSelected(mapToListItem(filteredCountryList, false), defaultCountryCode)
+                } else {
+                    mapToListItem(filteredCountryList, true)
+                }
+            }
+            else -> emptyList()
+        }
+    }
 }

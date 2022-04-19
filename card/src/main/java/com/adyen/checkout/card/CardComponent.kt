@@ -125,6 +125,10 @@ class CardComponent private constructor(
 
             viewModelScope.launch {
                 val countries = cardDelegate.getCountryList()
+                val countryOptions = AddressFormUtils.initializeCountryOptions(cardConfiguration.addressConfiguration, countries)
+                countryOptions.firstOrNull { it.selected }?.let {
+                    cardDelegate.requestStateList(it.code, viewModelScope)
+                }
                 with(outputData) {
                     this ?: return@with
                     val newOutputData = makeOutputData(
@@ -141,7 +145,7 @@ class CardComponent private constructor(
                         detectedCardTypes = this.detectedCardTypes,
                         selectedCardIndex = 0,
                         selectedInstallmentOption = null,
-                        countryOptions = AddressFormUtils.mapToListItem(countries, true),
+                        countryOptions = countryOptions,
                         stateOptions = stateOptions
                     )
                     notifyStateChanged(newOutputData)
