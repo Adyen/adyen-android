@@ -76,10 +76,26 @@ class PaymentMethodListDialogFragment :
         super.onViewCreated(view, savedInstanceState)
         Logger.d(TAG, "onViewCreated")
 
-        addObserver(binding.recyclerViewPaymentMethods)
+        initPaymentMethodsRecyclerView()
+        initObservers()
     }
 
-    private fun addObserver(recyclerView: RecyclerView) {
+    private fun initPaymentMethodsRecyclerView() {
+        val imageLoader = ImageLoader.getInstance(
+            requireContext(),
+            dropInViewModel.dropInConfiguration.environment
+        )
+
+        paymentMethodAdapter = PaymentMethodAdapter(emptyList(), imageLoader) {
+            collapseNotUsedUnderlayButtons(binding.recyclerViewPaymentMethods, it)
+        }
+        paymentMethodAdapter.setPaymentMethodSelectedCallback(this)
+        paymentMethodAdapter.setStoredPaymentRemovedCallback(this)
+
+        binding.recyclerViewPaymentMethods.adapter = paymentMethodAdapter
+    }
+
+    private fun initObservers() {
         paymentMethodsListViewModel.paymentMethodsLiveData.observe(
             viewLifecycleOwner
         ) { paymentMethods ->
@@ -87,20 +103,7 @@ class PaymentMethodListDialogFragment :
             if (paymentMethods == null) {
                 throw CheckoutException("List of PaymentMethodModel is null.")
             }
-
-            val imageLoader = ImageLoader.getInstance(
-                requireContext(),
-                dropInViewModel.dropInConfiguration.environment
-            )
-
-            // We expect the list of payment methods to be updated only once, so we just set the adapter
-            paymentMethodAdapter =
-                PaymentMethodAdapter(paymentMethods, imageLoader) {
-                    collapseNotUsedUnderlayButtons(recyclerView, it)
-                }
-            paymentMethodAdapter.setPaymentMethodSelectedCallback(this)
-            paymentMethodAdapter.setStoredPaymentRemovedCallback(this)
-            recyclerView.adapter = paymentMethodAdapter
+            paymentMethodAdapter.updatePaymentMethods(paymentMethods)
         }
     }
 
@@ -173,7 +176,7 @@ class PaymentMethodListDialogFragment :
     }
 
     fun removeStoredPaymentMethod(id: String) {
-        paymentMethodAdapter.removePaymentMethodWithId(id)
+        paymentMethodsListViewModel.removePaymentMethodWithId(id)
     }
 
     private fun showCancelOrderAlert() {
