@@ -70,7 +70,6 @@ import com.adyen.checkout.giftcard.GiftCardComponentState
 import com.adyen.checkout.googlepay.GooglePayComponent
 import com.adyen.checkout.redirect.RedirectUtil
 import com.adyen.checkout.wechatpay.WeChatPayUtils
-import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.collect
 
 private val TAG = LogUtil.getTag()
@@ -158,7 +157,6 @@ class DropInActivity :
         super.attachBaseContext(createLocalizedContext(newBase))
     }
 
-    @ExperimentalCoroutinesApi
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         Logger.d(TAG, "onCreate - $savedInstanceState")
@@ -520,17 +518,8 @@ class DropInActivity :
     }
 
     private fun sendResult(content: String) {
-        val resultHandlerIntent = dropInViewModel.resultHandlerIntent
-        // Merchant requested the result to be sent back with a result intent
-        if (resultHandlerIntent != null) {
-            resultHandlerIntent.putExtra(DropIn.RESULT_KEY, content)
-            startActivity(resultHandlerIntent)
-        }
-        // Merchant did not specify a result intent and should handle the result in onActivityResult
-        else {
-            val resultIntent = Intent().putExtra(DropIn.RESULT_KEY, content)
-            setResult(Activity.RESULT_OK, resultIntent)
-        }
+        val resultIntent = Intent().putExtra(DropIn.RESULT_KEY, content)
+        setResult(Activity.RESULT_OK, resultIntent)
         terminateSuccessfully()
     }
 
@@ -697,10 +686,9 @@ class DropInActivity :
             context: Context,
             dropInConfiguration: DropInConfiguration,
             paymentMethodsApiResponse: PaymentMethodsApiResponse,
-            resultHandlerIntent: Intent?
         ): Intent {
             val intent = Intent(context, DropInActivity::class.java)
-            DropInViewModel.putIntentExtras(intent, dropInConfiguration, paymentMethodsApiResponse, resultHandlerIntent)
+            DropInViewModel.putIntentExtras(intent, dropInConfiguration, paymentMethodsApiResponse)
             return intent
         }
     }

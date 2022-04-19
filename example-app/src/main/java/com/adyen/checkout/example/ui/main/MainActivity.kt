@@ -158,7 +158,6 @@ class MainActivity : AppCompatActivity(), DropInCallback {
             dropInLauncher,
             paymentMethodsApiResponse,
             checkoutConfigurationProvider.getDropInConfiguration(this),
-            resultIntent
         )
     }
 

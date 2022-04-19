@@ -43,7 +43,6 @@ private val TAG = LogUtil.getTag()
 
 private const val PAYMENT_METHODS_RESPONSE_KEY = "PAYMENT_METHODS_RESPONSE_KEY"
 private const val DROP_IN_CONFIGURATION_KEY = "DROP_IN_CONFIGURATION_KEY"
-private const val DROP_IN_RESULT_INTENT_KEY = "DROP_IN_RESULT_INTENT_KEY"
 private const val IS_WAITING_FOR_RESULT_KEY = "IS_WAITING_FOR_RESULT_KEY"
 private const val CACHED_GIFT_CARD = "CACHED_GIFT_CARD"
 private const val CURRENT_ORDER = "CURRENT_ORDER"
@@ -60,7 +59,6 @@ class DropInViewModel(
     internal val eventsFlow = eventChannel.receiveAsFlow()
 
     val dropInConfiguration: DropInConfiguration = getStateValueOrFail(DROP_IN_CONFIGURATION_KEY)
-    val resultHandlerIntent: Intent? = savedStateHandle[DROP_IN_RESULT_INTENT_KEY]
 
     var amount: Amount
         get() {
@@ -359,12 +357,10 @@ class DropInViewModel(
             intent: Intent,
             dropInConfiguration: DropInConfiguration,
             paymentMethodsApiResponse: PaymentMethodsApiResponse,
-            resultHandlerIntent: Intent?
         ) {
             intent.apply {
                 putExtra(PAYMENT_METHODS_RESPONSE_KEY, paymentMethodsApiResponse)
                 putExtra(DROP_IN_CONFIGURATION_KEY, dropInConfiguration)
-                putExtra(DROP_IN_RESULT_INTENT_KEY, resultHandlerIntent)
             }
         }
     }

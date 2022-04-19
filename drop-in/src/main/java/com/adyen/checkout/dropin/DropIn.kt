@@ -8,7 +8,6 @@
 
 package com.adyen.checkout.dropin
 
-import android.app.Activity
 import android.content.Context
 import android.content.Intent
 import androidx.activity.result.ActivityResultCaller
@@ -32,8 +31,6 @@ import com.adyen.checkout.dropin.ui.DropInActivity
  */
 object DropIn {
     private val TAG = LogUtil.getTag()
-
-    const val DROP_IN_REQUEST_CODE = 529
 
     const val RESULT_KEY = "payment_result"
     const val ERROR_REASON_KEY = "error_reason"
@@ -64,10 +61,6 @@ object DropIn {
      * Starts the checkout flow to be handled by the Drop-in solution.
      * Make sure you have [DropInService] set up before calling this.
      * Call [registerForDropInResult] to create a launcher when initializing your Activity.
-     * You can pass a [resultHandlerIntent] that will be launched after the Drop-in has completed
-     * without any errors.
-     * We suggest that you set up the [resultHandlerIntent] with the appropriate flags to clear
-     * the stack of the checkout activities.
      *
      * You will receive the Drop-in result in the [DropInCallback] parameter specified when
      * calling [registerForDropInResult].
@@ -80,20 +73,10 @@ object DropIn {
      *
      * You should always handle the cases of cancellation and error in [DropInCallback.onDropInResult].
      *
-     * As for the Drop-in finished case, if you did not specify a [resultHandlerIntent], you will
-     * also receive the result in [DropInCallback.onDropInResult].
-     * However, if you do specify a [resultHandlerIntent], [DropInCallback.onDropInResult] will not
-     * receive the result. Instead, that [resultHandlerIntent] will be launched when the
-     * payment is finished and will contain the result. You can use the
-     * [getDropInResultFromIntent] helper method to get it or you can find it in the intent
-     * extras with key [RESULT_KEY].
-     *
      * @param context The context to start the Checkout flow with.
      * @param dropInLauncher A launcher to start Drop-in, obtained with [registerForDropInResult].
      * @param paymentMethodsApiResponse The result from the paymentMethods/ endpoint.
      * @param dropInConfiguration Additional required configuration data.
-     * @param resultHandlerIntent Intent to be called after Drop-in has finished.
-     *
      */
     @JvmStatic
     fun startPayment(
@@ -101,7 +84,6 @@ object DropIn {
         dropInLauncher: ActivityResultLauncher<Intent>,
         paymentMethodsApiResponse: PaymentMethodsApiResponse,
         dropInConfiguration: DropInConfiguration,
-        resultHandlerIntent: Intent? = null
     ) {
         updateDefaultLogcatLevel(context)
         Logger.d(TAG, "startPayment from Activity")
@@ -110,7 +92,6 @@ object DropIn {
             context,
             paymentMethodsApiResponse,
             dropInConfiguration,
-            resultHandlerIntent
         )
         dropInLauncher.launch(intent)
     }
@@ -119,7 +100,6 @@ object DropIn {
         context: Context,
         paymentMethodsApiResponse: PaymentMethodsApiResponse,
         dropInConfiguration: DropInConfiguration,
-        resultHandlerIntent: Intent?
     ): Intent {
         // Add locale to prefs
         DropInPrefs.setShopperLocale(context, dropInConfiguration.shopperLocale)
@@ -128,49 +108,11 @@ object DropIn {
             context,
             dropInConfiguration,
             paymentMethodsApiResponse,
-            resultHandlerIntent
         )
     }
 
     private fun updateDefaultLogcatLevel(context: Context) {
         Logger.updateDefaultLogcatLevel(BuildUtils.isDebugBuild(context))
-    }
-
-    /**
-     * Helper method to transform the activity result into a [DropInResult].
-     *
-     * The returned value could be:
-     * * [DropInResult.CancelledByUser] if the operation was cancelled by the user.
-     * * [DropInResult.Error] if an unexpected error has occurred during Drop-in, the
-     * [DropInResult.Error.reason] field will contain the error detail.
-     * * [DropInResult.Error] if a [DropInServiceResult.Error] was returned to the
-     * [DropInService]. The [DropInResult.Error.reason] field will hold the same value as
-     * [DropInServiceResult.Error.reason].
-     * * [DropInResult.Finished] if a [DropInServiceResult.Finished] was returned to the
-     * [DropInService]. The [DropInResult.Finished.result] field will hold the same value as
-     * [DropInServiceResult.Finished.result].
-     * * [null] if the activity result does not correspond to the Drop-in.
-     *
-     * Note that [DropInResult.Finished] will be returned here only if a result intent was
-     * provided to the [startPayment] method.
-     *
-     * @return the result of the Drop-in.
-     *
-     */
-    @JvmStatic
-    fun handleActivityResult(requestCode: Int, resultCode: Int, data: Intent?): DropInResult? {
-        return when {
-            requestCode != DROP_IN_REQUEST_CODE || data == null -> null
-            resultCode == Activity.RESULT_CANCELED && data.hasExtra(ERROR_REASON_KEY) -> {
-                val reason = data.getStringExtra(ERROR_REASON_KEY) ?: ""
-                if (reason == ERROR_REASON_USER_CANCELED) DropInResult.CancelledByUser()
-                else DropInResult.Error(reason)
-            }
-            resultCode == Activity.RESULT_OK && data.hasExtra(RESULT_KEY) -> {
-                DropInResult.Finished(data.getStringExtra(RESULT_KEY) ?: "")
-            }
-            else -> null
-        }
     }
 
     /**
