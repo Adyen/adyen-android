@@ -21,11 +21,14 @@ import androidx.core.view.ViewCompat
 import androidx.core.view.children
 import androidx.customview.widget.ViewDragHelper
 import com.adyen.checkout.core.exception.CheckoutException
+import com.google.android.material.elevation.ElevationOverlayProvider
 import kotlin.math.abs
 import kotlin.math.max
 import kotlin.math.min
 
 private const val CHILD_COUNT = 2
+
+private const val ELEVATION_CORRECTION = 56f
 
 /**
  * A swipeable view that contains two child views which are:
@@ -344,6 +347,20 @@ class AdyenSwipeToRevealLayout @JvmOverloads constructor(
             }
             else -> throw CheckoutException("${this.javaClass.simpleName} must contain two children.")
         }
+    }
+
+    override fun onAttachedToWindow() {
+        super.onAttachedToWindow()
+        fixElevationOverlay()
+    }
+
+    private fun fixElevationOverlay() {
+        val overlayProvider = ElevationOverlayProvider(context)
+        if (!overlayProvider.isThemeElevationOverlayEnabled) return
+
+        val elevation = overlayProvider.getParentAbsoluteElevation(this) - ELEVATION_CORRECTION
+        val elevatedMainViewColor = overlayProvider.compositeOverlayWithThemeSurfaceColorIfNeeded(elevation)
+        mainView.setBackgroundColor(elevatedMainViewColor)
     }
 
     @SuppressLint("ClickableViewAccessibility")

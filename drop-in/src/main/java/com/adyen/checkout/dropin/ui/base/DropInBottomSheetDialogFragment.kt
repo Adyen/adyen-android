@@ -20,7 +20,6 @@ import com.adyen.checkout.components.model.paymentmethods.PaymentMethod
 import com.adyen.checkout.components.model.paymentmethods.StoredPaymentMethod
 import com.adyen.checkout.core.log.LogUtil
 import com.adyen.checkout.core.log.Logger
-import com.adyen.checkout.dropin.R
 import com.adyen.checkout.dropin.ui.viewmodel.DropInViewModel
 import com.adyen.checkout.dropin.ui.viewmodel.DropInViewModelFactory
 import com.adyen.checkout.giftcard.GiftCardComponentState
@@ -40,8 +39,6 @@ abstract class DropInBottomSheetDialogFragment : BottomSheetDialogFragment() {
     fun setInitViewState(firstViewState: Int) {
         this.dialogInitViewState = firstViewState
     }
-
-    override fun getTheme(): Int = R.style.AdyenCheckout_BottomSheetDialogTheme
 
     override fun onAttach(context: Context) {
         super.onAttach(context)

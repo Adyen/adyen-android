@@ -16,7 +16,6 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.appcompat.app.AlertDialog
 import androidx.core.view.children
-import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.adyen.checkout.components.PaymentComponentState
 import com.adyen.checkout.components.api.ImageLoader
@@ -31,6 +30,7 @@ import com.adyen.checkout.core.exception.ComponentException
 import com.adyen.checkout.core.log.LogUtil
 import com.adyen.checkout.core.log.Logger
 import com.adyen.checkout.dropin.R
+import com.adyen.checkout.dropin.databinding.FragmentPaymentMethodsListBinding
 import com.adyen.checkout.dropin.ui.base.DropInBottomSheetDialogFragment
 import com.adyen.checkout.dropin.ui.getViewModel
 import com.adyen.checkout.dropin.ui.viewmodel.PaymentMethodsListViewModel
@@ -43,6 +43,9 @@ class PaymentMethodListDialogFragment :
     PaymentMethodAdapter.OnPaymentMethodSelectedCallback,
     PaymentMethodAdapter.OnStoredPaymentRemovedCallback {
 
+    private var _binding: FragmentPaymentMethodsListBinding? = null
+    private val binding: FragmentPaymentMethodsListBinding get() = requireNotNull(_binding)
+
     private lateinit var paymentMethodsListViewModel: PaymentMethodsListViewModel
     private lateinit var paymentMethodAdapter: PaymentMethodAdapter
 
@@ -51,8 +54,9 @@ class PaymentMethodListDialogFragment :
         Logger.d(TAG, "onAttach")
     }
 
-    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
+    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View {
         Logger.d(TAG, "onCreateView")
+
         paymentMethodsListViewModel = getViewModel {
             PaymentMethodsListViewModel(
                 requireActivity().application,
@@ -63,9 +67,16 @@ class PaymentMethodListDialogFragment :
                 dropInViewModel.amount
             )
         }
-        val view = inflater.inflate(R.layout.fragment_payment_methods_list, container, false)
-        addObserver(view.findViewById(R.id.recyclerView_paymentMethods))
-        return view
+
+        _binding = FragmentPaymentMethodsListBinding.inflate(inflater, container, false)
+        return binding.root
+    }
+
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
+        Logger.d(TAG, "onViewCreated")
+
+        addObserver(binding.recyclerViewPaymentMethods)
     }
 
     private fun addObserver(recyclerView: RecyclerView) {
@@ -89,9 +100,14 @@ class PaymentMethodListDialogFragment :
                 }
             paymentMethodAdapter.setPaymentMethodSelectedCallback(this)
             paymentMethodAdapter.setStoredPaymentRemovedCallback(this)
-            recyclerView.layoutManager = LinearLayoutManager(requireContext())
             recyclerView.adapter = paymentMethodAdapter
         }
+    }
+
+    override fun onDestroyView() {
+        super.onDestroyView()
+        binding.recyclerViewPaymentMethods.adapter = null
+        _binding = null
     }
 
     override fun onCancel(dialog: DialogInterface) {

@@ -71,7 +71,6 @@
                     android:layout_height="wrap_content"
                     android:layout_gravity="center_vertical"
                     android:maxHeight="@dimen/logo_width"
-                    android:textColor="@color/textColor"
                     android:textSize="16sp"
                     tools:text="Test" />
 
@@ -91,7 +90,6 @@
                 android:layout_height="wrap_content"
                 android:layout_gravity="center_vertical"
                 android:layout_marginStart="@dimen/standard_quarter_margin"
-                android:textColor="@color/textColor"
                 android:textSize="16sp"
                 android:visibility="gone"
                 tools:text="- €13,37"

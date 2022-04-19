@@ -52,7 +52,7 @@
         android:textIsSelectable="false"
         tools:text="You have 13:46 to pay" />
 
-    <androidx.appcompat.widget.AppCompatButton
+    <Button
         android:id="@+id/copyButton"
         style="@style/AdyenCheckout.QrCode.CopyButton"
         android:layout_width="match_parent"

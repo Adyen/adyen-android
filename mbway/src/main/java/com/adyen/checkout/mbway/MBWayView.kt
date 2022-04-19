@@ -77,7 +77,8 @@ class MBWayView :
     override fun initLocalizedStrings(localizedContext: Context) {
         val myAttrs = intArrayOf(android.R.attr.hint)
 
-        val typedArray = localizedContext.obtainStyledAttributes(R.style.AdyenCheckout_MBWay_MobileNumberInput, myAttrs)
+        val typedArray =
+            localizedContext.obtainStyledAttributes(R.style.AdyenCheckout_MBWay_MobileNumberInput, myAttrs)
         mMobileNumberInput?.hint = typedArray.getString(0)
         typedArray.recycle()
     }

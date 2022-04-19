@@ -7,7 +7,7 @@
   -->
 
 <resources>
-    <style name="AdyenCheckout.Bacs"/>
+    <style name="AdyenCheckout.Bacs" />
 
     <style name="AdyenCheckout.Bacs.HolderNameInput" parent="AdyenCheckout.TextInputEditText">
         <item name="android:hint">@string/bacs_holder_name_hint</item>
