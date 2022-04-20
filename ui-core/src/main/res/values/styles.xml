@@ -51,6 +51,7 @@
         <!-- The textDirection and textAlignment attributes ensure consistent display behaviour with RTL locales -->
         <item name="android:textDirection">ltr</item>
         <item name="android:textAlignment">viewStart</item>
+        <item name="android:inputType">text</item>
     </style>
 
     <style name="AdyenCheckout.DropdownTextInputEditText">
