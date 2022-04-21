@@ -86,7 +86,7 @@ class GiftCardComponentDialogFragment : BaseComponentDialogFragment() {
             setInitViewState(BottomSheetBehavior.STATE_EXPANDED)
             (componentView as View).requestFocus()
         } else {
-            binding.redeemButton.visibility = View.GONE
+            binding.redeemButton.isVisible = false
         }
     }
 

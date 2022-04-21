@@ -15,6 +15,7 @@ import android.view.ViewGroup
 import android.widget.FrameLayout
 import android.widget.TextView
 import androidx.appcompat.app.AlertDialog
+import androidx.core.view.isVisible
 import androidx.recyclerview.widget.RecyclerView
 import com.adyen.checkout.components.api.ImageLoader
 import com.adyen.checkout.components.ui.view.AdyenSwipeToRevealLayout
@@ -93,9 +94,9 @@ class PaymentMethodAdapter @JvmOverloads constructor(
         holder.title.setText(header.titleResId)
         with(holder.action) {
             if (header.actionResId == null) {
-                visibility = View.GONE
+                isVisible = false
             } else {
-                visibility = View.VISIBLE
+                isVisible = true
                 setText(header.actionResId)
                 setOnClickListener {
                     onHeaderActionClick(header)
@@ -147,22 +148,22 @@ class PaymentMethodAdapter @JvmOverloads constructor(
         holder.text.text = context.getString(R.string.card_number_4digit, storedCardModel.lastFour)
         imageLoader.load(storedCardModel.imageId, holder.logo)
         holder.detail.text = DateUtils.parseDateToView(storedCardModel.expiryMonth, storedCardModel.expiryYear)
-        holder.detail.visibility = View.VISIBLE
-        holder.endText.visibility = View.GONE
+        holder.detail.isVisible = true
+        holder.endText.isVisible = false
     }
 
     private fun bindGenericStored(holder: StoredPaymentMethodVH, genericStoredModel: GenericStoredModel) {
         holder.text.text = genericStoredModel.name
-        holder.detail.visibility = View.GONE
+        holder.detail.isVisible = false
         imageLoader.load(genericStoredModel.imageId, holder.logo)
-        holder.endText.visibility = View.GONE
+        holder.endText.isVisible = false
     }
 
     private fun bindPaymentMethod(holder: PaymentMethodVH, position: Int) {
         val paymentMethod = getPaymentMethodAt(position)
 
         holder.text.text = paymentMethod.name
-        holder.detail.visibility = View.GONE
+        holder.detail.isVisible = false
 
         holder.logo.borderEnabled = paymentMethod.drawIconBorder
         imageLoader.load(paymentMethod.icon, holder.logo)
@@ -170,7 +171,7 @@ class PaymentMethodAdapter @JvmOverloads constructor(
         holder.itemView.setOnClickListener {
             onPaymentMethodClick(paymentMethod)
         }
-        holder.endText.visibility = View.GONE
+        holder.endText.isVisible = false
     }
 
     private fun bindGiftCardPaymentMethod(holder: GiftCardPaymentMethodVH, position: Int) {
@@ -180,17 +181,17 @@ class PaymentMethodAdapter @JvmOverloads constructor(
         holder.text.text = context.getString(R.string.card_number_4digit, giftCardPaymentMethod.lastFour)
         imageLoader.load(giftCardPaymentMethod.imageId, holder.logo)
         if (giftCardPaymentMethod.transactionLimit == null || giftCardPaymentMethod.shopperLocale == null) {
-            holder.detail.visibility = View.GONE
+            holder.detail.isVisible = false
         } else {
-            holder.detail.visibility = View.VISIBLE
+            holder.detail.isVisible = true
             val value =
                 CurrencyUtils.formatAmount(giftCardPaymentMethod.transactionLimit, giftCardPaymentMethod.shopperLocale)
             holder.detail.text = context.getString(R.string.checkout_giftcard_max_transaction_limit, value)
         }
         if (giftCardPaymentMethod.amount == null || giftCardPaymentMethod.shopperLocale == null) {
-            holder.endText.visibility = View.GONE
+            holder.endText.isVisible = false
         } else {
-            holder.endText.visibility = View.VISIBLE
+            holder.endText.isVisible = true
             val value = CurrencyUtils.formatAmount(giftCardPaymentMethod.amount, giftCardPaymentMethod.shopperLocale)
             holder.endText.text = context.getString(R.string.checkout_negative_amount, value)
         }

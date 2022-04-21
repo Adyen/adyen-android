@@ -75,7 +75,7 @@ class ActionComponentDialogFragment : DropInBottomSheetDialogFragment(), Observe
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         Logger.d(TAG, "onViewCreated")
-        binding.header.visibility = View.GONE
+        binding.header.isVisible = false
 
         try {
             @Suppress("UNCHECKED_CAST")

@@ -10,6 +10,7 @@ package com.adyen.checkout.components.ui.view
 import android.content.Context
 import android.util.AttributeSet
 import android.widget.LinearLayout
+import androidx.core.view.isVisible
 import androidx.lifecycle.LifecycleOwner
 import com.adyen.checkout.components.ComponentView
 import com.adyen.checkout.components.ViewableComponent
@@ -33,7 +34,7 @@ abstract class AdyenLinearLayout<
     protected lateinit var localizedContext: Context
 
     init {
-        visibility = if (isInEditMode) VISIBLE else GONE
+        isVisible = isInEditMode
     }
 
     override fun attach(component: ComponentT, lifecycleOwner: LifecycleOwner) {
@@ -42,7 +43,7 @@ abstract class AdyenLinearLayout<
         localizedContext = createLocalizedContext(component.configuration.shopperLocale)
         initView()
         initLocalizedStrings(localizedContext)
-        visibility = VISIBLE
+        isVisible = true
         component.sendAnalyticsEvent(context)
         observeComponentChanges(lifecycleOwner)
     }

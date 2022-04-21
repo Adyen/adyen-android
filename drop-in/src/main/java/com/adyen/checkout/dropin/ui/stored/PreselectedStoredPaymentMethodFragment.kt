@@ -161,11 +161,11 @@ class PreselectedStoredPaymentMethodFragment : DropInBottomSheetDialogFragment()
                     imageLoader.load(it.imageId, binding.storedPaymentMethodItem.imageViewLogo)
                     binding.storedPaymentMethodItem.textViewDetail.text =
                         DateUtils.parseDateToView(it.expiryMonth, it.expiryYear)
-                    binding.storedPaymentMethodItem.textViewDetail.visibility = View.VISIBLE
+                    binding.storedPaymentMethodItem.textViewDetail.isVisible = true
                 }
                 is GenericStoredModel -> {
                     binding.storedPaymentMethodItem.textViewText.text = it.name
-                    binding.storedPaymentMethodItem.textViewDetail.visibility = View.GONE
+                    binding.storedPaymentMethodItem.textViewDetail.isVisible = false
                     imageLoader.load(it.imageId, binding.storedPaymentMethodItem.imageViewLogo)
                 }
             }
