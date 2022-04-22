@@ -12,6 +12,7 @@ import com.adyen.checkout.components.model.PaymentMethodsApiResponse
 import com.adyen.checkout.components.model.payments.response.BalanceResult
 import com.adyen.checkout.components.model.payments.response.OrderResponse
 import com.adyen.checkout.core.exception.CheckoutException
+import com.adyen.checkout.sessions.model.setup.SessionSetupResponse
 import org.json.JSONException
 import org.json.JSONObject
 import com.adyen.checkout.components.model.payments.response.Action as ActionResponse
@@ -159,4 +160,15 @@ sealed class RecurringDropInServiceResult : BaseDropInServiceResult() {
         override val reason: String? = null,
         override val dismissDropIn: Boolean = false
     ) : RecurringDropInServiceResult(), DropInServiceResultError
+}
+
+internal sealed class SessionSetupDropInServiceResult : BaseDropInServiceResult() {
+
+    data class Success(val sessionSetupResponse: SessionSetupResponse) : SessionSetupDropInServiceResult()
+
+    data class Error(
+        override val errorMessage: String? = null,
+        override val reason: String? = null,
+        override val dismissDropIn: Boolean = false
+    ) : SessionSetupDropInServiceResult(), DropInServiceResultError
 }
