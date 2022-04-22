@@ -210,7 +210,7 @@ class CardView @JvmOverloads constructor(context: Context, attrs: AttributeSet? 
                 }
                 binding.textInputLayoutCardHolder.error = mLocalizedContext.getString(holderNameValidation.reason)
             }
-            val postalCodeValidation = it.postalCodeState.validation
+            val postalCodeValidation = it.addressState.postalCode.validation
             if (binding.textInputLayoutPostalCode.isVisible && postalCodeValidation is Validation.Invalid) {
                 if (!isErrorFocused) {
                     binding.textInputLayoutPostalCode.requestFocus()
@@ -468,13 +468,13 @@ class CardView @JvmOverloads constructor(context: Context, attrs: AttributeSet? 
     private fun initPostalCodeInput() {
         val postalCodeEditText = binding.textInputLayoutPostalCode.editText as? AdyenTextInputEditText
         postalCodeEditText?.setOnChangeListener {
-            component.inputData.postalCode = it.toString()
+            component.inputData.address.postalCode = it.toString()
             notifyInputDataChanged()
             binding.textInputLayoutPostalCode.error = null
         }
 
         postalCodeEditText?.onFocusChangeListener = OnFocusChangeListener { _, hasFocus ->
-            val postalCodeValidation = component.outputData?.postalCodeState?.validation
+            val postalCodeValidation = component.outputData?.addressState?.postalCode?.validation
             if (hasFocus) {
                 binding.textInputLayoutPostalCode.error = null
             } else if (postalCodeValidation != null && postalCodeValidation is Validation.Invalid) {
@@ -616,6 +616,7 @@ class CardView @JvmOverloads constructor(context: Context, attrs: AttributeSet? 
         binding.switchStorePaymentMethod.isVisible = false
         binding.textInputLayoutCardHolder.isVisible = false
         binding.textInputLayoutPostalCode.isVisible = false
+        binding.addressFormInput.isVisible = false
     }
 
     private fun updateInstallmentSelection(installmentModel: InstallmentModel?) {

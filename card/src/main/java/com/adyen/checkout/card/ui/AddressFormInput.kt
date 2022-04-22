@@ -29,6 +29,8 @@ class AddressFormInput @JvmOverloads constructor(
     defStyleAttr: Int = 0
 ) : LinearLayout(context, attrs, defStyleAttr) {
 
+    private var currentSpecification: AddressSpecification?
+
     private var onAddressChangeListener: OnAddressChangeListener? = null
     private var countryAdapter: SimpleTextListAdapter<AddressListItem> = SimpleTextListAdapter(context)
     private var statesAdapter: SimpleTextListAdapter<AddressListItem> = SimpleTextListAdapter(context)
@@ -46,7 +48,8 @@ class AddressFormInput @JvmOverloads constructor(
         get() = rootView.findViewById(R.id.editText_houseNumber)
 
     private val editTextPostalCode: AdyenTextInputEditText?
-        get() = rootView.findViewById(R.id.editText_postalCode)
+        get() = rootView.findViewById<LinearLayout>(R.id.linearLayout_formContainer)
+            .findViewById(R.id.editText_postalCode)
 
     private val editTextCity: AdyenTextInputEditText?
         get() = rootView.findViewById(R.id.editText_city)
@@ -76,6 +79,7 @@ class AddressFormInput @JvmOverloads constructor(
         orientation = VERTICAL
         layoutParams = LayoutParams(LayoutParams.MATCH_PARENT, LayoutParams.WRAP_CONTENT)
         LayoutInflater.from(context).inflate(R.layout.address_form_input, this, true)
+        currentSpecification = null
 
         autoCompleteTextViewCountry?.apply {
             inputType = 0
@@ -141,9 +145,13 @@ class AddressFormInput @JvmOverloads constructor(
     fun updateCountries(countryList: List<AddressListItem>) {
         countryAdapter.setItems(countryList)
         countryList.firstOrNull { it.selected }?.let {
-            autoCompleteTextViewCountry?.setText(it.name)
-            populateFormFields(AddressSpecification.fromString(it.code))
-            addressInput.country = it.code
+            val selectedSpecification = AddressSpecification.fromString(it.code)
+            if (currentSpecification != selectedSpecification) {
+                currentSpecification = selectedSpecification
+                autoCompleteTextViewCountry?.setText(it.name)
+                populateFormFields(selectedSpecification)
+                addressInput.country = it.code
+            }
         }
     }
 

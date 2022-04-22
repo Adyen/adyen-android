@@ -21,7 +21,6 @@ data class CardOutputData(
     val socialSecurityNumberState: FieldState<String>,
     val kcpBirthDateOrTaxNumberState: FieldState<String>,
     val kcpCardPasswordState: FieldState<String>,
-    val postalCodeState: FieldState<String>,
     val addressState: AddressOutputData,
     val installmentState: FieldState<InstallmentModel?>,
     val isStoredPaymentMethodEnable: Boolean,
@@ -43,7 +42,6 @@ data class CardOutputData(
             socialSecurityNumberState.validation.isValid() &&
             kcpBirthDateOrTaxNumberState.validation.isValid() &&
             kcpCardPasswordState.validation.isValid() &&
-            postalCodeState.validation.isValid() &&
             installmentState.validation.isValid() &&
             addressState.isValid
     }

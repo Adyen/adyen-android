@@ -14,6 +14,7 @@ import com.adyen.checkout.card.data.CardType
 import com.adyen.checkout.card.data.DetectedCardType
 import com.adyen.checkout.card.data.ExpiryDate
 import com.adyen.checkout.card.repository.BinLookupRepository
+import com.adyen.checkout.card.util.AddressFormUtils
 import com.adyen.checkout.card.util.AddressValidationUtils
 import com.adyen.checkout.card.util.CardValidationUtils
 import com.adyen.checkout.card.util.InstallmentUtils
@@ -116,26 +117,8 @@ class NewCardDelegate(
         }
     }
 
-    override fun validatePostalCode(postalCode: String): FieldState<String> {
-        val validation = when {
-            isPostalCodeRequired() -> {
-                if (postalCode.isNotEmpty()) {
-                    Validation.Valid
-                } else {
-                    Validation.Invalid(R.string.checkout_card_postal_not_valid)
-                }
-            }
-            else -> Validation.Valid
-        }
-        return FieldState(postalCode, validation)
-    }
-
-    override fun validateAddress(addressInputModel: AddressInputModel): AddressOutputData {
-        return if (cardConfiguration.addressConfiguration is AddressConfiguration.FullAddress) {
-            AddressValidationUtils.validateAddressInput(addressInputModel)
-        } else {
-            AddressValidationUtils.makeValidEmptyAddressOutput(addressInputModel)
-        }
+    override fun validateAddress(addressInputModel: AddressInputModel, addressFormUIState: AddressFormUIState): AddressOutputData {
+        return AddressValidationUtils.validateAddressInput(addressInputModel, addressFormUIState)
     }
 
     override fun isCvcHidden(): Boolean {
@@ -158,8 +141,8 @@ class NewCardDelegate(
         return cardConfiguration.isHolderNameRequired
     }
 
-    override fun isPostalCodeRequired(): Boolean {
-        return cardConfiguration.addressVisibility == AddressVisibility.POSTAL_CODE
+    override fun isAddressRequired(addressFormUIState: AddressFormUIState): Boolean {
+        return AddressFormUtils.isAddressRequired(addressFormUIState)
     }
 
     override fun detectCardType(

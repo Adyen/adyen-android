@@ -99,11 +99,7 @@ class StoredCardDelegate(
         return FieldState(kcpCardPassword, Validation.Valid)
     }
 
-    override fun validatePostalCode(postalCode: String): FieldState<String> {
-        return FieldState(postalCode, Validation.Valid)
-    }
-
-    override fun validateAddress(addressInputModel: AddressInputModel): AddressOutputData {
+    override fun validateAddress(addressInputModel: AddressInputModel, addressFormUIState: AddressFormUIState): AddressOutputData {
         return AddressValidationUtils.makeValidEmptyAddressOutput(addressInputModel)
     }
 
@@ -127,7 +123,7 @@ class StoredCardDelegate(
         return false
     }
 
-    override fun isPostalCodeRequired(): Boolean {
+    override fun isAddressRequired(addressFormUIState: AddressFormUIState): Boolean {
         return false
     }
 
