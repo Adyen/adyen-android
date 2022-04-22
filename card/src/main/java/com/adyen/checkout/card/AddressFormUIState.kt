@@ -8,16 +8,16 @@ enum class AddressFormUIState {
     companion object {
         fun fromAddressConfiguration(addressConfiguration: AddressConfiguration): AddressFormUIState {
             return when (addressConfiguration) {
-                is AddressConfiguration.FullAddress -> AddressFormUIState.FULL_ADDRESS
-                is AddressConfiguration.PostalCode -> AddressFormUIState.POSTAL_CODE
-                is AddressConfiguration.None -> AddressFormUIState.NONE
+                is AddressConfiguration.FullAddress -> FULL_ADDRESS
+                is AddressConfiguration.PostalCode -> POSTAL_CODE
+                is AddressConfiguration.None -> NONE
             }
         }
 
         fun fromAddressVisibility(addressVisibility: AddressVisibility): AddressFormUIState {
             return when (addressVisibility) {
-                AddressVisibility.POSTAL_CODE -> AddressFormUIState.FULL_ADDRESS
-                AddressVisibility.NONE -> AddressFormUIState.POSTAL_CODE
+                AddressVisibility.POSTAL_CODE -> POSTAL_CODE
+                AddressVisibility.NONE -> NONE
             }
         }
     }

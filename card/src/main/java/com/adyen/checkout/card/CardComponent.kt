@@ -82,7 +82,6 @@ class CardComponent private constructor(
                             kcpBirthDateOrTaxNumber = kcpBirthDateOrTaxNumberState.value,
                             kcpCardPassword = kcpCardPasswordState.value,
                             addressInputModel = AddressInputModel(addressState),
-                            postalCode = postalCodeState.value,
                             isStorePaymentSelected = isStoredPaymentMethodEnable,
                             detectedCardTypes = it,
                             selectedCardIndex = inputData.selectedCardIndex,
@@ -110,7 +109,6 @@ class CardComponent private constructor(
                             kcpBirthDateOrTaxNumber = kcpBirthDateOrTaxNumberState.value,
                             kcpCardPassword = kcpCardPasswordState.value,
                             addressInputModel = AddressInputModel(addressState),
-                            postalCode = postalCodeState.value,
                             isStorePaymentSelected = isStoredPaymentMethodEnable,
                             detectedCardTypes = detectedCardTypes,
                             selectedCardIndex = 0,
@@ -140,7 +138,6 @@ class CardComponent private constructor(
                         kcpBirthDateOrTaxNumber = kcpBirthDateOrTaxNumberState.value,
                         kcpCardPassword = kcpCardPasswordState.value,
                         addressInputModel = AddressInputModel(addressState),
-                        postalCode = postalCodeState.value,
                         isStorePaymentSelected = isStoredPaymentMethodEnable,
                         detectedCardTypes = this.detectedCardTypes,
                         selectedCardIndex = 0,
@@ -220,7 +217,6 @@ class CardComponent private constructor(
             kcpCardPassword = inputData.kcpCardPassword,
             addressInputModel = inputData.address,
             isStorePaymentSelected = inputData.isStorePaymentSelected,
-            postalCode = inputData.postalCode,
             detectedCardTypes = detectedCardTypes,
             selectedCardIndex = inputData.selectedCardIndex,
             selectedInstallmentOption = inputData.installmentOption,
@@ -240,7 +236,6 @@ class CardComponent private constructor(
         kcpCardPassword: String,
         addressInputModel: AddressInputModel,
         isStorePaymentSelected: Boolean,
-        postalCode: String,
         detectedCardTypes: List<DetectedCardType>,
         selectedCardIndex: Int,
         selectedInstallmentOption: InstallmentModel?,
@@ -261,6 +256,8 @@ class CardComponent private constructor(
         // when no supported cards are detected, only show an error if the brand detection was reliable
         val shouldFailWithUnsupportedBrand = selectedOrFirstCardType == null && isReliable
 
+        val addressFormUIState = AddressFormUtils.getAddressFormUIState(configuration.addressConfiguration, configuration.addressVisibility, isStoredPaymentMethod())
+
         return CardOutputData(
             cardDelegate.validateCardNumber(
                 cardNumber,
@@ -273,8 +270,7 @@ class CardComponent private constructor(
             cardDelegate.validateSocialSecurityNumber(socialSecurityNumber),
             cardDelegate.validateKcpBirthDateOrTaxNumber(kcpBirthDateOrTaxNumber),
             cardDelegate.validateKcpCardPassword(kcpCardPassword),
-            cardDelegate.validatePostalCode(postalCode),
-            cardDelegate.validateAddress(addressInputModel),
+            cardDelegate.validateAddress(addressInputModel, addressFormUIState),
             makeInstallmentFieldState(selectedInstallmentOption),
             isStorePaymentSelected,
             makeCvcUIState(selectedOrFirstCardType?.cvcPolicy),
@@ -282,7 +278,7 @@ class CardComponent private constructor(
             outputCardTypes,
             cardDelegate.isSocialSecurityNumberRequired(),
             cardDelegate.isKCPAuthRequired(),
-            AddressFormUtils.getAddressFormUIState(configuration.addressConfiguration, configuration.addressVisibility),
+            addressFormUIState,
             cardDelegate.getInstallmentOptions(
                 configuration.installmentConfiguration,
                 selectedOrFirstCardType?.cardType,
@@ -489,8 +485,8 @@ class CardComponent private constructor(
             if (cardDelegate.isSocialSecurityNumberRequired()) {
                 socialSecurityNumber = stateOutputData.socialSecurityNumberState.value
             }
-            if (cardDelegate.isPostalCodeRequired()) {
-                billingAddress = makeAddressData(stateOutputData)
+            if (cardDelegate.isAddressRequired(stateOutputData.addressUIState)) {
+                billingAddress = AddressFormUtils.makeAddressData(stateOutputData.addressState, stateOutputData.addressUIState)
             }
             if (isInstallmentsRequired(stateOutputData)) {
                 installments = InstallmentUtils.makeInstallmentModelObject(stateOutputData.installmentState.value)
@@ -505,17 +501,6 @@ class CardComponent private constructor(
 
     private fun isInstallmentsRequired(cardOutputData: CardOutputData): Boolean {
         return cardOutputData.installmentOptions.isNotEmpty()
-    }
-
-    private fun makeAddressData(outputData: CardOutputData): Address {
-        return Address().apply {
-            postalCode = outputData.postalCodeState.value
-            street = Address.ADDRESS_NULL_PLACEHOLDER
-            stateOrProvince = Address.ADDRESS_NULL_PLACEHOLDER
-            houseNumberOrName = Address.ADDRESS_NULL_PLACEHOLDER
-            city = Address.ADDRESS_NULL_PLACEHOLDER
-            country = Address.ADDRESS_COUNTRY_NULL_PLACEHOLDER
-        }
     }
 
     companion object {

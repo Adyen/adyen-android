@@ -2,9 +2,11 @@ package com.adyen.checkout.card.util
 
 import com.adyen.checkout.card.AddressConfiguration
 import com.adyen.checkout.card.AddressFormUIState
+import com.adyen.checkout.card.AddressOutputData
 import com.adyen.checkout.card.api.model.AddressItem
 import com.adyen.checkout.card.ui.model.AddressListItem
 import com.adyen.checkout.components.base.AddressVisibility
+import com.adyen.checkout.components.model.payments.request.Address
 
 // TODO docs
 internal object AddressFormUtils {
@@ -26,9 +28,12 @@ internal object AddressFormUtils {
         }
     }
 
-    fun getAddressFormUIState(addressConfiguration: AddressConfiguration?, addressVisibility: AddressVisibility): AddressFormUIState {
-        return addressConfiguration?.let { AddressFormUIState.fromAddressConfiguration(addressConfiguration) }
-            ?: AddressFormUIState.fromAddressVisibility(addressVisibility)
+    fun getAddressFormUIState(addressConfiguration: AddressConfiguration?, addressVisibility: AddressVisibility, isStoredCard: Boolean): AddressFormUIState {
+        return when {
+            isStoredCard -> AddressFormUIState.NONE
+            addressConfiguration != null -> AddressFormUIState.fromAddressConfiguration(addressConfiguration)
+            else -> AddressFormUIState.fromAddressVisibility(addressVisibility)
+        }
     }
 
     fun initializeCountryOptions(addressConfiguration: AddressConfiguration?, countryList: List<AddressItem>): List<AddressListItem> {
@@ -48,6 +53,32 @@ internal object AddressFormUtils {
                 }
             }
             else -> emptyList()
+        }
+    }
+
+    fun isAddressRequired(addressFormUIState: AddressFormUIState): Boolean {
+        return addressFormUIState != AddressFormUIState.NONE
+    }
+
+    fun makeAddressData(addressOutputData: AddressOutputData, addressFormUIState: AddressFormUIState): Address? {
+        return when (addressFormUIState) {
+            AddressFormUIState.FULL_ADDRESS -> Address().apply {
+                postalCode = addressOutputData.postalCode.value
+                street = addressOutputData.street.value
+                stateOrProvince = addressOutputData.stateOrProvince.value
+                houseNumberOrName = addressOutputData.houseNumberOrName.value
+                city = addressOutputData.city.value
+                country = addressOutputData.country.value
+            }
+            AddressFormUIState.POSTAL_CODE -> Address().apply {
+                postalCode = addressOutputData.postalCode.value
+                street = Address.ADDRESS_NULL_PLACEHOLDER
+                stateOrProvince = Address.ADDRESS_NULL_PLACEHOLDER
+                houseNumberOrName = Address.ADDRESS_NULL_PLACEHOLDER
+                city = Address.ADDRESS_NULL_PLACEHOLDER
+                country = Address.ADDRESS_COUNTRY_NULL_PLACEHOLDER
+            }
+            else -> null
         }
     }
 }
