@@ -85,7 +85,7 @@ class CardComponentDialogFragment : BaseComponentDialogFragment() {
             setInitViewState(BottomSheetBehavior.STATE_EXPANDED)
             binding.cardView.requestFocus()
         } else {
-            binding.payButton.visibility = View.GONE
+            binding.payButton.isVisible = false
         }
     }
 

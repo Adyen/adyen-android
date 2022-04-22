@@ -93,7 +93,7 @@ class GenericComponentDialogFragment : BaseComponentDialogFragment() {
             setInitViewState(BottomSheetBehavior.STATE_EXPANDED)
             (componentView as View).requestFocus()
         } else {
-            binding.payButton.visibility = View.GONE
+            binding.payButton.isVisible = false
         }
     }
 

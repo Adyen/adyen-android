@@ -14,6 +14,7 @@ import android.view.ViewGroup
 import android.widget.BaseAdapter
 import androidx.appcompat.widget.AppCompatImageView
 import androidx.appcompat.widget.AppCompatTextView
+import androidx.core.view.isVisible
 import com.adyen.checkout.components.api.ImageLoader
 
 class IssuerListSpinnerAdapter internal constructor(
@@ -59,7 +60,7 @@ class IssuerListSpinnerAdapter internal constructor(
                 R.drawable.ic_placeholder_image
             )
         } else {
-            issuerLogo.visibility = View.GONE
+            issuerLogo.isVisible = false
         }
         return view
     }

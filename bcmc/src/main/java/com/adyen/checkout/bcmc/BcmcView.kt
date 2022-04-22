@@ -16,6 +16,7 @@ import android.view.View.OnFocusChangeListener
 import android.widget.CompoundButton
 import androidx.annotation.StringRes
 import androidx.appcompat.widget.SwitchCompat
+import androidx.core.view.isVisible
 import androidx.lifecycle.LifecycleOwner
 import androidx.lifecycle.Observer
 import com.adyen.checkout.card.ui.CardNumberInput
@@ -167,10 +168,10 @@ class BcmcView @JvmOverloads constructor(
     private fun setCardNumberError(@StringRes stringResId: Int?) {
         if (stringResId == null) {
             cardNumberInput.error = null
-            cardBrandLogoImageView.visibility = VISIBLE
+            cardBrandLogoImageView.isVisible = true
         } else {
             cardNumberInput.error = localizedContext.getString(stringResId)
-            cardBrandLogoImageView.visibility = GONE
+            cardBrandLogoImageView.isVisible = false
         }
     }
 
@@ -196,7 +197,7 @@ class BcmcView @JvmOverloads constructor(
 
     private fun initStorePaymentMethodSwitch() {
         switchStorePaymentMethod = findViewById(R.id.switch_storePaymentMethod)
-        switchStorePaymentMethod.visibility = if (component.configuration.isStorePaymentFieldVisible) VISIBLE else GONE
+        switchStorePaymentMethod.isVisible = component.configuration.isStorePaymentFieldVisible
         switchStorePaymentMethod.setOnCheckedChangeListener { _: CompoundButton?, isChecked: Boolean ->
             cardInputData.isStorePaymentSelected = isChecked
             notifyInputDataChanged()

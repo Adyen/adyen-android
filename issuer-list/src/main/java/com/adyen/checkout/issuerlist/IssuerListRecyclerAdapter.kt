@@ -12,6 +12,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.TextView
+import androidx.core.view.isVisible
 import androidx.recyclerview.widget.RecyclerView
 import com.adyen.checkout.components.api.ImageLoader
 import com.adyen.checkout.components.ui.adapter.ClickableListRecyclerAdapter
@@ -57,7 +58,7 @@ internal class IssuerListRecyclerAdapter(
         private val text: TextView = itemView.findViewById(R.id.textView_text)
 
         init {
-            logoImage.visibility = if (hideIssuerLogo) View.GONE else View.VISIBLE
+            logoImage.isVisible = !hideIssuerLogo
         }
 
         fun bind(paymentMethod: String, issuerModel: IssuerModel, hideIssuerLogo: Boolean, imageLoader: ImageLoader) {

@@ -12,7 +12,6 @@ import android.content.Intent
 import android.os.Bundle
 import android.view.Menu
 import android.view.MenuItem
-import android.view.View
 import android.widget.Toast
 import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
@@ -169,7 +168,7 @@ class MainActivity : AppCompatActivity(), DropInCallback {
             binding.componentList.isVisible = false
             binding.progressIndicator.show()
         } else {
-            binding.componentList.visibility = View.VISIBLE
+            binding.componentList.isVisible = true
             binding.progressIndicator.hide()
         }
     }
