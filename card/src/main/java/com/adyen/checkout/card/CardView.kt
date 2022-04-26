@@ -54,7 +54,6 @@ class CardView @JvmOverloads constructor(context: Context, attrs: AttributeSet? 
 
     private val binding: CardViewBinding = CardViewBinding.inflate(LayoutInflater.from(context), this)
 
-    private val mCardInputData = CardInputData()
     private var mImageLoader: ImageLoader? = null
     private var installmentListAdapter: InstallmentListAdapter? = null
 
@@ -89,13 +88,11 @@ class CardView @JvmOverloads constructor(context: Context, attrs: AttributeSet? 
         initPostalCodeInput()
 
         binding.switchStorePaymentMethod.setOnCheckedChangeListener { _, isChecked ->
-            mCardInputData.isStorePaymentSelected = isChecked
+            component.inputData.isStorePaymentSelected = isChecked
             notifyInputDataChanged()
         }
         if (component.isStoredPaymentMethod()) {
-            component.getStoredPaymentInputData()?.let {
-                setStoredCardInterface(it)
-            }
+            setStoredCardInterface(component.inputData)
         } else {
             binding.textInputLayoutCardHolder.isVisible = component.isHolderNameRequired()
             binding.switchStorePaymentMethod.isVisible = component.showStorePaymentField()
@@ -209,7 +206,7 @@ class CardView @JvmOverloads constructor(context: Context, attrs: AttributeSet? 
     }
 
     private fun notifyInputDataChanged() {
-        component.inputDataChanged(mCardInputData)
+        component.inputDataChanged(component.inputData)
     }
 
     private fun onCardNumberValidated(cardOutputData: CardOutputData) {
@@ -267,7 +264,7 @@ class CardView @JvmOverloads constructor(context: Context, attrs: AttributeSet? 
 
     private fun initCardNumberInput() {
         binding.editTextCardNumber.setOnChangeListener {
-            mCardInputData.cardNumber = binding.editTextCardNumber.rawValue
+            component.inputData.cardNumber = binding.editTextCardNumber.rawValue
             notifyInputDataChanged()
             setCardErrorState(true)
         }
@@ -312,13 +309,13 @@ class CardView @JvmOverloads constructor(context: Context, attrs: AttributeSet? 
 
     private fun initBrandSelectionListeners() {
         binding.cardBrandLogoContainerPrimary.setOnClickListener {
-            mCardInputData.selectedCardIndex = PRIMARY_BRAND_INDEX
+            component.inputData.selectedCardIndex = PRIMARY_BRAND_INDEX
             notifyInputDataChanged()
             selectPrimaryBrand()
         }
 
         binding.cardBrandLogoContainerSecondary.setOnClickListener {
-            mCardInputData.selectedCardIndex = SECONDARY_BRAND_INDEX
+            component.inputData.selectedCardIndex = SECONDARY_BRAND_INDEX
             notifyInputDataChanged()
             selectSecondaryBrand()
         }
@@ -342,7 +339,7 @@ class CardView @JvmOverloads constructor(context: Context, attrs: AttributeSet? 
     private fun initExpiryDateInput() {
         binding.editTextExpiryDate.setOnChangeListener {
             val date = binding.editTextExpiryDate.date
-            mCardInputData.expiryDate = date
+            component.inputData.expiryDate = date
             notifyInputDataChanged()
             binding.textInputLayoutExpiryDate.error = null
         }
@@ -359,7 +356,7 @@ class CardView @JvmOverloads constructor(context: Context, attrs: AttributeSet? 
     private fun initSecurityCodeInput() {
         val securityCodeEditText = binding.textInputLayoutSecurityCode.editText as? SecurityCodeInput
         securityCodeEditText?.setOnChangeListener { editable: Editable ->
-            mCardInputData.securityCode = editable.toString()
+            component.inputData.securityCode = editable.toString()
             notifyInputDataChanged()
             binding.textInputLayoutSecurityCode.error = null
         }
@@ -376,7 +373,7 @@ class CardView @JvmOverloads constructor(context: Context, attrs: AttributeSet? 
     private fun initHolderNameInput() {
         val cardHolderEditText = binding.textInputLayoutCardHolder.editText as? AdyenTextInputEditText
         cardHolderEditText?.setOnChangeListener { editable: Editable ->
-            mCardInputData.holderName = editable.toString()
+            component.inputData.holderName = editable.toString()
             notifyInputDataChanged()
             binding.textInputLayoutCardHolder.error = null
         }
@@ -393,7 +390,7 @@ class CardView @JvmOverloads constructor(context: Context, attrs: AttributeSet? 
     private fun initSocialSecurityNumberInput() {
         val socialSecurityNumberEditText = binding.textInputLayoutSocialSecurityNumber.editText as? AdyenTextInputEditText
         socialSecurityNumberEditText?.setOnChangeListener { editable ->
-            mCardInputData.socialSecurityNumber = editable.toString()
+            component.inputData.socialSecurityNumber = editable.toString()
             notifyInputDataChanged()
             binding.textInputLayoutSocialSecurityNumber.error = null
         }
@@ -415,7 +412,7 @@ class CardView @JvmOverloads constructor(context: Context, attrs: AttributeSet? 
     private fun initKcpBirthDateOrTaxNumberInput() {
         val kcpBirthDateOrRegistrationNumberEditText = binding.textInputLayoutKcpBirthDateOrTaxNumber.editText as? AdyenTextInputEditText
         kcpBirthDateOrRegistrationNumberEditText?.setOnChangeListener {
-            mCardInputData.kcpBirthDateOrTaxNumber = it.toString()
+            component.inputData.kcpBirthDateOrTaxNumber = it.toString()
             notifyInputDataChanged()
             binding.textInputLayoutKcpBirthDateOrTaxNumber.error = null
             val hintResourceId = component.getKcpBirthDateOrTaxNumberHint(it.toString())
@@ -435,7 +432,7 @@ class CardView @JvmOverloads constructor(context: Context, attrs: AttributeSet? 
     private fun initKcpCardPasswordInput() {
         val kcpPasswordEditText = binding.textInputLayoutKcpCardPassword.editText as? AdyenTextInputEditText
         kcpPasswordEditText?.setOnChangeListener {
-            mCardInputData.kcpCardPassword = it.toString()
+            component.inputData.kcpCardPassword = it.toString()
             notifyInputDataChanged()
             binding.textInputLayoutKcpCardPassword.error = null
         }
@@ -453,7 +450,7 @@ class CardView @JvmOverloads constructor(context: Context, attrs: AttributeSet? 
     private fun initPostalCodeInput() {
         val postalCodeEditText = binding.textInputLayoutPostalCode.editText as? AdyenTextInputEditText
         postalCodeEditText?.setOnChangeListener {
-            mCardInputData.postalCode = it.toString()
+            component.inputData.postalCode = it.toString()
             notifyInputDataChanged()
             binding.textInputLayoutPostalCode.error = null
         }
@@ -567,7 +564,7 @@ class CardView @JvmOverloads constructor(context: Context, attrs: AttributeSet? 
 
     private fun updateInstallmentSelection(installmentModel: InstallmentModel?) {
         installmentModel?.let {
-            mCardInputData.installmentOption = it
+            component.inputData.installmentOption = it
             notifyInputDataChanged()
         }
     }
