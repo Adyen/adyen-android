@@ -13,6 +13,7 @@ import android.os.IBinder
 import com.adyen.checkout.components.ActionComponentData
 import com.adyen.checkout.components.PaymentComponentState
 import com.adyen.checkout.components.base.Configuration
+import com.adyen.checkout.components.model.payments.request.OrderRequest
 import com.adyen.checkout.components.model.payments.request.PaymentMethodDetails
 import com.adyen.checkout.components.model.payments.response.BalanceResult
 import com.adyen.checkout.core.log.LogUtil
@@ -147,6 +148,24 @@ internal class SessionDropInService : DropInService() {
                 .fold(
                     onSuccess = { response ->
                         // TODO: Check difference between SessionOrderResponse and OrderResponse
+                    },
+                    onFailure = {
+                        val result = DropInServiceResult.Error(
+                            reason = it.message,
+                            dismissDropIn = false,
+                        )
+                        sendResult(result)
+                    }
+                )
+        }
+    }
+
+    override fun cancelOrder(order: OrderRequest, shouldUpdatePaymentMethods: Boolean) {
+        launch {
+            sessionRepository.cancelOrder(order)
+                .fold(
+                    onSuccess = {
+                        //if (shouldUpdatePaymentMethods) // TODO: fetch payment methods
                     },
                     onFailure = {
                         val result = DropInServiceResult.Error(
