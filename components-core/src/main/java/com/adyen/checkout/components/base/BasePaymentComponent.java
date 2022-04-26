@@ -42,9 +42,6 @@ public abstract class BasePaymentComponent<
 
     private static final String TAG = LogUtil.getTag();
 
-    @Nullable
-    protected InputDataT mLatestInputData;
-
     private final MutableLiveData<ComponentStateT> mPaymentComponentStateLiveData = new MutableLiveData<>();
     private final MutableLiveData<ComponentError> mComponentErrorLiveData = new MutableLiveData<>();
 
@@ -119,7 +116,6 @@ public abstract class BasePaymentComponent<
      */
     public final void inputDataChanged(@NonNull InputDataT inputData) {
         Logger.v(TAG, "inputDataChanged");
-        mLatestInputData = inputData;
         notifyStateChanged(onInputDataChanged(inputData));
     }
 
