@@ -126,8 +126,6 @@
     <style name="AdyenCheckout.Switch" parent="Widget.AppCompat.CompoundButton.Switch">
         <item name="android:theme">@style/AdyenCheckout.SwitchTheme</item>
         <item name="android:textSize">16sp</item>
-        <item name="android:layout_marginStart">@dimen/standard_quarter_margin</item>
-        <item name="android:layout_marginLeft">@dimen/standard_quarter_margin</item>
         <item name="android:layout_marginEnd">@dimen/standard_quarter_margin</item>
         <item name="android:layout_marginRight">@dimen/standard_quarter_margin</item>
         <item name="android:layout_marginBottom">@dimen/standard_margin</item>

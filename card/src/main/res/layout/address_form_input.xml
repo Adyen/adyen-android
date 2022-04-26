@@ -13,6 +13,13 @@
     android:orientation="vertical"
     tools:parentTag="android.widget.LinearLayout">
 
+    <TextView
+        android:id="@+id/textView_header"
+        style="@style/AdyenCheckout.AddressFormHeader"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Billing Address" />
+
     <com.google.android.material.textfield.TextInputLayout
         android:id="@+id/textInputLayout_country"
         style="@style/AdyenCheckout.DropdownTextInputLayout.Country"
