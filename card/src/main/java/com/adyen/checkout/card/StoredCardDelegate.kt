@@ -159,22 +159,19 @@ class StoredCardDelegate(
 
     override fun getSupportedCardTypes(): List<CardType> = emptyList()
 
-    fun getStoredCardInputData(): CardInputData {
-        val storedCardInputData = CardInputData()
-        storedCardInputData.cardNumber = storedPaymentMethod.lastFour.orEmpty()
+    fun updateInputData(inputData: CardInputData) {
+        inputData.cardNumber = storedPaymentMethod.lastFour.orEmpty()
 
         try {
             val storedDate = ExpiryDate(
                 storedPaymentMethod.expiryMonth.orEmpty().toInt(),
                 storedPaymentMethod.expiryYear.orEmpty().toInt()
             )
-            storedCardInputData.expiryDate = storedDate
+            inputData.expiryDate = storedDate
         } catch (e: NumberFormatException) {
             Logger.e(TAG, "Failed to parse stored Date", e)
-            storedCardInputData.expiryDate = ExpiryDate.EMPTY_DATE
+            inputData.expiryDate = ExpiryDate.EMPTY_DATE
         }
-
-        return storedCardInputData
     }
 
     fun getId(): String {

@@ -54,7 +54,8 @@ class CardComponent private constructor(
     cardConfiguration
 ) {
 
-    private var storedPaymentInputData: CardInputData? = null
+    internal val inputData = CardInputData()
+
     private var publicKey: String? = null
 
     init {
@@ -78,7 +79,7 @@ class CardComponent private constructor(
                             postalCode = postalCodeState.value,
                             isStorePaymentSelected = isStoredPaymentMethodEnable,
                             detectedCardTypes = it,
-                            selectedCardIndex = 0,
+                            selectedCardIndex = inputData.selectedCardIndex,
                             selectedInstallmentOption = null
                         )
                         notifyStateChanged(newOutputData)
@@ -97,11 +98,11 @@ class CardComponent private constructor(
         storedCardDelegate as CardDelegate,
         cardConfiguration
     ) {
-        storedPaymentInputData = storedCardDelegate.getStoredCardInputData()
+        storedCardDelegate.updateInputData(inputData)
 
         // TODO: 09/12/2020 move this logic to base component, maybe create the inputdata from the delegate?
         if (!requiresInput()) {
-            inputDataChanged(CardInputData())
+            inputDataChanged(inputData)
         }
     }
 
@@ -382,10 +383,6 @@ class CardComponent private constructor(
 
     fun isStoredPaymentMethod(): Boolean {
         return cardDelegate is StoredCardDelegate
-    }
-
-    fun getStoredPaymentInputData(): CardInputData? {
-        return storedPaymentInputData
     }
 
     fun isHolderNameRequired(): Boolean {
