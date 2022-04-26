@@ -13,6 +13,8 @@ import android.os.IBinder
 import com.adyen.checkout.components.ActionComponentData
 import com.adyen.checkout.components.PaymentComponentState
 import com.adyen.checkout.components.base.Configuration
+import com.adyen.checkout.components.model.payments.request.PaymentMethodDetails
+import com.adyen.checkout.components.model.payments.response.BalanceResult
 import com.adyen.checkout.core.log.LogUtil
 import com.adyen.checkout.core.log.Logger
 import com.adyen.checkout.sessions.repository.SessionRepository
@@ -113,6 +115,27 @@ internal class SessionDropInService : DropInService() {
                     onFailure = {
                         val result = DropInServiceResult.Error(
                             errorMessage = "Something went wrong while submitting the payment details",
+                            reason = it.message,
+                            dismissDropIn = false,
+                        )
+                        sendResult(result)
+                    }
+                )
+        }
+    }
+
+    override fun checkBalance(paymentMethodData: PaymentMethodDetails) {
+        launch {
+            sessionRepository.checkBalance(paymentMethodData)
+                .fold(
+                    onSuccess = { response ->
+                        // TODO: Check how not enough balance is handled
+                        val balanceResult = BalanceResult(response.balance, response.transactionLimit)
+                        sendBalanceResult(BalanceDropInServiceResult.Balance(balanceResult))
+                    },
+                    onFailure = {
+                        val result = DropInServiceResult.Error(
+                            errorMessage = "Something went wrong while checking balance",
                             reason = it.message,
                             dismissDropIn = false,
                         )
