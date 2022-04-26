@@ -58,7 +58,6 @@ internal class SessionDropInService : DropInService() {
                     },
                     onFailure = {
                         val result = SessionSetupDropInServiceResult.Error(
-                            errorMessage = "Something went wrong while setting up the session",
                             reason = it.message,
                             dismissDropIn = false,
                         )
@@ -91,7 +90,6 @@ internal class SessionDropInService : DropInService() {
                     },
                     onFailure = {
                         val result = DropInServiceResult.Error(
-                            errorMessage = "Something went wrong while submitting the payment",
                             reason = it.message,
                             dismissDropIn = false,
                         )
@@ -114,7 +112,6 @@ internal class SessionDropInService : DropInService() {
                     },
                     onFailure = {
                         val result = DropInServiceResult.Error(
-                            errorMessage = "Something went wrong while submitting the payment details",
                             reason = it.message,
                             dismissDropIn = false,
                         )
@@ -135,7 +132,24 @@ internal class SessionDropInService : DropInService() {
                     },
                     onFailure = {
                         val result = DropInServiceResult.Error(
-                            errorMessage = "Something went wrong while checking balance",
+                            reason = it.message,
+                            dismissDropIn = false,
+                        )
+                        sendResult(result)
+                    }
+                )
+        }
+    }
+
+    override fun createOrder() {
+        launch {
+            sessionRepository.createOrder()
+                .fold(
+                    onSuccess = { response ->
+                        // TODO: Check difference between SessionOrderResponse and OrderResponse
+                    },
+                    onFailure = {
+                        val result = DropInServiceResult.Error(
                             reason = it.message,
                             dismissDropIn = false,
                         )
