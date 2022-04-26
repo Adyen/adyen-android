@@ -6,18 +6,11 @@
  * Created by oscars on 21/4/2022.
  */
 
-/*
- * Copyright (c) 2022 Adyen N.V.
- *
- * This file is open source and available under the MIT license. See the LICENSE file for more info.
- *
- * Created by oscars on 21/4/2022.
- */
-
 package com.adyen.checkout.dropin.service
 
 import android.content.Intent
 import android.os.IBinder
+import com.adyen.checkout.components.ActionComponentData
 import com.adyen.checkout.components.PaymentComponentState
 import com.adyen.checkout.components.base.Configuration
 import com.adyen.checkout.core.log.LogUtil
@@ -33,15 +26,17 @@ internal class SessionDropInService : DropInService() {
     private lateinit var sessionRepository: SessionRepository
 
     override fun onBind(intent: Intent?): IBinder {
+        val binder = super.onBind(intent)
+        val additionalData = getAdditionalData()
+
         if (
             !isInitialized &&
-            intent?.hasExtra(INTENT_EXTRA_CONFIGURATION) == true &&
-            intent.hasExtra(INTENT_EXTRA_SESSION)
+            additionalData != null
         ) {
-            val configuration = requireNotNull(intent.getParcelableExtra<Configuration>(INTENT_EXTRA_CONFIGURATION))
+            val configuration = requireNotNull(additionalData.getParcelable<Configuration>(INTENT_EXTRA_CONFIGURATION))
             sessionRepository = SessionRepository(
                 configuration = configuration,
-                session = requireNotNull(intent.getParcelableExtra(INTENT_EXTRA_SESSION)),
+                session = requireNotNull(additionalData.getParcelable(INTENT_EXTRA_SESSION)),
             )
 
             setupSession()
@@ -49,7 +44,7 @@ internal class SessionDropInService : DropInService() {
             isInitialized = true
         }
 
-        return super.onBind(intent)
+        return binder
     }
 
     private fun setupSession() {
@@ -83,13 +78,41 @@ internal class SessionDropInService : DropInService() {
         launch {
             sessionRepository.submitPayment(paymentComponentState.data)
                 .fold(
-                    onSuccess = {
-                        // TODO handle response correctly
-                        sendResult(DropInServiceResult.Finished("Success!"))
+                    onSuccess = { response ->
+                        val result = when {
+                            response.action != null -> DropInServiceResult.Action(response.action!!)
+                            // TODO: figure out what to do in this case
+                            response.order != null -> TODO()
+                            else -> DropInServiceResult.Finished(response.resultCode ?: "EMPTY")
+                        }
+                        sendResult(result)
                     },
                     onFailure = {
                         val result = DropInServiceResult.Error(
-                            errorMessage = "Something went wrong while setting up the session",
+                            errorMessage = "Something went wrong while submitting the payment",
+                            reason = it.message,
+                            dismissDropIn = false,
+                        )
+                        sendResult(result)
+                    }
+                )
+        }
+    }
+
+    override fun onDetailsCallRequested(actionComponentData: ActionComponentData, actionComponentJson: JSONObject) {
+        launch {
+            sessionRepository.submitDetails(actionComponentData)
+                .fold(
+                    onSuccess = { response ->
+                        val result = when {
+                            response.action != null -> DropInServiceResult.Action(response.action!!)
+                            else -> DropInServiceResult.Finished(response.resultCode ?: "EMPTY")
+                        }
+                        sendResult(result)
+                    },
+                    onFailure = {
+                        val result = DropInServiceResult.Error(
+                            errorMessage = "Something went wrong while submitting the payment details",
                             reason = it.message,
                             dismissDropIn = false,
                         )
@@ -102,7 +125,7 @@ internal class SessionDropInService : DropInService() {
     companion object {
         private val TAG = LogUtil.getTag()
 
-        private const val INTENT_EXTRA_CONFIGURATION = "INTENT_EXTRA_CONFIGURATION"
-        private const val INTENT_EXTRA_SESSION = "INTENT_EXTRA_SESSION"
+        internal const val INTENT_EXTRA_CONFIGURATION = "INTENT_EXTRA_CONFIGURATION"
+        internal const val INTENT_EXTRA_SESSION = "INTENT_EXTRA_SESSION"
     }
 }
