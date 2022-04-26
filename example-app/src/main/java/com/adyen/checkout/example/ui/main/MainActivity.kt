@@ -151,7 +151,6 @@ class MainActivity : AppCompatActivity(), DropInCallback {
         val amount = keyValueStorage.getAmount()
 
         val cardConfiguration = CardConfiguration.Builder(shopperLocale, Environment.TEST, BuildConfig.CLIENT_KEY)
-            .setAddressVisibility(AddressVisibility.FULL_ADDRESS)
             .setShopperReference(keyValueStorage.getShopperReference())
             .build()
 
