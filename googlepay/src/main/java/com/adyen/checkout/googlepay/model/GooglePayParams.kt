@@ -42,11 +42,12 @@ data class GooglePayParams(
     val billingAddressParameters: BillingAddressParameters? = googlePayConfiguration.billingAddressParameters
 
     /**
-     * Returns the gatewayMerchantId provided by the API if available, or falls back to the one provided in GooglePayConfiguration
+     * Returns the [GooglePayConfiguration.getMerchantAccount] if set, or falls back to the
+     * paymentMethod.configuration.gatewayMerchantId field returned by the API.
      */
     private fun getPreferredGatewayMerchantId(): String {
-        return serverGatewayMerchantId
-            ?: googlePayConfiguration.merchantAccount
+        return googlePayConfiguration.merchantAccount
+            ?: serverGatewayMerchantId
             ?: throw ComponentException(
                 "GooglePay merchantAccount not found. Update your API version or pass it manually inside your GooglePayConfiguration"
             )
