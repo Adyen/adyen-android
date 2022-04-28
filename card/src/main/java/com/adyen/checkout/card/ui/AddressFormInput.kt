@@ -23,6 +23,9 @@ import com.adyen.checkout.components.ui.adapter.SimpleTextListAdapter
 import com.adyen.checkout.components.ui.view.AdyenTextInputEditText
 import com.google.android.material.textfield.TextInputLayout
 
+/**
+ * AddressFormInput to be used in [CardComponent].
+ */
 @Suppress("TooManyFunctions")
 class AddressFormInput @JvmOverloads constructor(
     context: Context,
@@ -300,6 +303,9 @@ class AddressFormInput @JvmOverloads constructor(
         component.inputDataChanged(component.inputData)
     }
 
+    /**
+     * Specification for address form alternatives depending on the country.
+     */
     enum class AddressSpecification {
         BR, CA, GB, US, DEFAULT;
 
