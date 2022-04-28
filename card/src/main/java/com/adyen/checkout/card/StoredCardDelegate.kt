@@ -147,10 +147,6 @@ class StoredCardDelegate(
         return emptyList()
     }
 
-    fun getStoredCardInputData(): CardInputData {
-        val storedCardInputData = CardInputData()
-        storedCardInputData.cardNumber = storedPaymentMethod.lastFour.orEmpty()
-
     fun updateInputData(inputData: CardInputData) {
         inputData.cardNumber = storedPaymentMethod.lastFour.orEmpty()
 
