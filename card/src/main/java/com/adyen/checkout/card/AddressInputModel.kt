@@ -13,6 +13,7 @@ data class AddressInputModel(
     var street: String = "",
     var stateOrProvince: String = "",
     var houseNumberOrName: String = "",
+    var apartmentSuite: String = "",
     var city: String = "",
     var country: String = "",
 ) {
@@ -21,6 +22,7 @@ data class AddressInputModel(
         street = ""
         stateOrProvince = ""
         houseNumberOrName = ""
+        apartmentSuite = ""
         city = ""
     }
 }

@@ -46,6 +46,9 @@ class AddressFormInput @JvmOverloads constructor(
     private val editTextHouseNumber: AdyenTextInputEditText?
         get() = rootView.findViewById(R.id.editText_houseNumber)
 
+    private val editTextApartmentSuite: AdyenTextInputEditText?
+        get() = rootView.findViewById(R.id.editText_apartmentSuite)
+
     private val editTextPostalCode: AdyenTextInputEditText?
         get() = rootView.findViewById<LinearLayout>(R.id.linearLayout_formContainer)
             .findViewById(R.id.editText_postalCode)
@@ -188,6 +191,7 @@ class AddressFormInput @JvmOverloads constructor(
     private fun initForm() {
         editTextStreet?.setText(addressInput.street)
         editTextHouseNumber?.setText(addressInput.houseNumberOrName)
+        editTextApartmentSuite?.setText(addressInput.apartmentSuite)
         editTextPostalCode?.setText(addressInput.postalCode)
         editTextCity?.setText(addressInput.city)
         editTextProvinceTerritory?.setText(addressInput.stateOrProvince)
@@ -202,6 +206,11 @@ class AddressFormInput @JvmOverloads constructor(
 
         editTextHouseNumber?.setOnChangeListener {
             addressInput.houseNumberOrName = it.toString()
+            onAddressChangeListener?.onChanged(addressInput)
+        }
+
+        editTextApartmentSuite?.setOnChangeListener {
+            addressInput.apartmentSuite = it.toString()
             onAddressChangeListener?.onChanged(addressInput)
         }
 
