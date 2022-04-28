@@ -14,6 +14,7 @@ import android.view.LayoutInflater
 import android.widget.AdapterView
 import android.widget.AutoCompleteTextView
 import android.widget.LinearLayout
+import androidx.core.view.children
 import com.adyen.checkout.card.AddressInputModel
 import com.adyen.checkout.card.AddressOutputData
 import com.adyen.checkout.card.R
@@ -28,8 +29,6 @@ class AddressFormInput @JvmOverloads constructor(
     attrs: AttributeSet? = null,
     defStyleAttr: Int = 0
 ) : LinearLayout(context, attrs, defStyleAttr) {
-
-    private var currentSpecification: AddressSpecification?
 
     private var onAddressChangeListener: OnAddressChangeListener? = null
     private var countryAdapter: SimpleTextListAdapter<AddressListItem> = SimpleTextListAdapter(context)
@@ -73,23 +72,30 @@ class AddressFormInput @JvmOverloads constructor(
     private val textInputLayoutProvinceTerritory: TextInputLayout?
         get() = rootView.findViewById(R.id.textInputLayout_provinceTerritory)
 
-    private val addressInput = AddressInputModel()
+    private lateinit var addressInput: AddressInputModel
 
     init {
         orientation = VERTICAL
         layoutParams = LayoutParams(LayoutParams.MATCH_PARENT, LayoutParams.WRAP_CONTENT)
         LayoutInflater.from(context).inflate(R.layout.address_form_input, this, true)
-        currentSpecification = null
 
         autoCompleteTextViewCountry?.apply {
             inputType = 0
             setAdapter(countryAdapter)
             onItemClickListener = AdapterView.OnItemClickListener { _, _, position, _ ->
                 val selectedCountryCode = countryAdapter.getItem(position).code
-                addressInput.country = selectedCountryCode
-                onAddressChangeListener?.onChanged(addressInput)
+                if (addressInput.country != selectedCountryCode) {
+                    addressInput.reset()
+                    addressInput.country = selectedCountryCode
+                    onAddressChangeListener?.onChanged(addressInput)
+                    populateFormFields(AddressSpecification.fromString(selectedCountryCode))
+                }
             }
         }
+    }
+
+    fun setInputData(inputModel: AddressInputModel) {
+        addressInput = inputModel
     }
 
     fun setOnAddressChangeListener(listener: OnAddressChangeListener) {
@@ -146,11 +152,10 @@ class AddressFormInput @JvmOverloads constructor(
         countryAdapter.setItems(countryList)
         countryList.firstOrNull { it.selected }?.let {
             val selectedSpecification = AddressSpecification.fromString(it.code)
-            if (currentSpecification != selectedSpecification) {
-                currentSpecification = selectedSpecification
+            val formContainer = rootView.findViewById<LinearLayout>(R.id.linearLayout_formContainer)
+            if (formContainer.childCount == 0) {
                 autoCompleteTextViewCountry?.setText(it.name)
                 populateFormFields(selectedSpecification)
-                addressInput.country = it.code
             }
         }
     }
@@ -181,7 +186,14 @@ class AddressFormInput @JvmOverloads constructor(
     }
 
     private fun initForm() {
-        addressInput.reset()
+        editTextStreet?.setText(addressInput.street)
+        editTextHouseNumber?.setText(addressInput.houseNumberOrName)
+        editTextPostalCode?.setText(addressInput.postalCode)
+        editTextCity?.setText(addressInput.city)
+        editTextProvinceTerritory?.setText(addressInput.stateOrProvince)
+        autoCompleteTextViewState?.let {
+            statesAdapter.getItem { it.code == addressInput.stateOrProvince }
+        }
 
         editTextStreet?.setOnChangeListener {
             addressInput.street = it.toString()

@@ -81,7 +81,7 @@ class CardComponent private constructor(
                             socialSecurityNumber = socialSecurityNumberState.value,
                             kcpBirthDateOrTaxNumber = kcpBirthDateOrTaxNumberState.value,
                             kcpCardPassword = kcpCardPasswordState.value,
-                            addressInputModel = AddressInputModel(addressState),
+                            addressInputModel = inputData.address,
                             isStorePaymentSelected = isStoredPaymentMethodEnable,
                             detectedCardTypes = it,
                             selectedCardIndex = inputData.selectedCardIndex,
@@ -108,10 +108,10 @@ class CardComponent private constructor(
                             socialSecurityNumber = socialSecurityNumberState.value,
                             kcpBirthDateOrTaxNumber = kcpBirthDateOrTaxNumberState.value,
                             kcpCardPassword = kcpCardPasswordState.value,
-                            addressInputModel = AddressInputModel(addressState),
+                            addressInputModel = inputData.address,
                             isStorePaymentSelected = isStoredPaymentMethodEnable,
                             detectedCardTypes = detectedCardTypes,
-                            selectedCardIndex = 0,
+                            selectedCardIndex = inputData.selectedCardIndex,
                             selectedInstallmentOption = null,
                             countryOptions = countryOptions,
                             stateOptions = AddressFormUtils.mapToListItem(it, true)
@@ -125,6 +125,7 @@ class CardComponent private constructor(
                 val countries = cardDelegate.getCountryList()
                 val countryOptions = AddressFormUtils.initializeCountryOptions(cardConfiguration.addressConfiguration, countries)
                 countryOptions.firstOrNull { it.selected }?.let {
+                    inputData.address.country = it.code
                     cardDelegate.requestStateList(it.code, viewModelScope)
                 }
                 with(outputData) {
@@ -137,10 +138,10 @@ class CardComponent private constructor(
                         socialSecurityNumber = socialSecurityNumberState.value,
                         kcpBirthDateOrTaxNumber = kcpBirthDateOrTaxNumberState.value,
                         kcpCardPassword = kcpCardPasswordState.value,
-                        addressInputModel = AddressInputModel(addressState),
+                        addressInputModel = inputData.address,
                         isStorePaymentSelected = isStoredPaymentMethodEnable,
                         detectedCardTypes = this.detectedCardTypes,
-                        selectedCardIndex = 0,
+                        selectedCardIndex = inputData.selectedCardIndex,
                         selectedInstallmentOption = null,
                         countryOptions = countryOptions,
                         stateOptions = stateOptions
