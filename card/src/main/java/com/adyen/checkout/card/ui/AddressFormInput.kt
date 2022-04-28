@@ -14,8 +14,6 @@ import android.view.LayoutInflater
 import android.widget.AdapterView
 import android.widget.AutoCompleteTextView
 import android.widget.LinearLayout
-import androidx.core.view.children
-import com.adyen.checkout.card.AddressInputModel
 import com.adyen.checkout.card.AddressOutputData
 import com.adyen.checkout.card.CardComponent
 import com.adyen.checkout.card.R
@@ -25,6 +23,7 @@ import com.adyen.checkout.components.ui.adapter.SimpleTextListAdapter
 import com.adyen.checkout.components.ui.view.AdyenTextInputEditText
 import com.google.android.material.textfield.TextInputLayout
 
+@Suppress("TooManyFunctions")
 class AddressFormInput @JvmOverloads constructor(
     context: Context,
     attrs: AttributeSet? = null,
@@ -201,7 +200,7 @@ class AddressFormInput @JvmOverloads constructor(
             val validation = component.outputData?.addressState?.street?.validation
             if (hasFocus) {
                 textInputLayoutStreet?.error = null
-            } else if  (validation != null && validation is Validation.Invalid) {
+            } else if (validation != null && validation is Validation.Invalid) {
                 textInputLayoutStreet?.error = context.getString(validation.reason)
             }
         }
@@ -218,7 +217,7 @@ class AddressFormInput @JvmOverloads constructor(
             val validation = component.outputData?.addressState?.houseNumberOrName?.validation
             if (hasFocus) {
                 textInputLayoutHouseNumber?.error = null
-            } else if  (validation != null && validation is Validation.Invalid) {
+            } else if (validation != null && validation is Validation.Invalid) {
                 textInputLayoutHouseNumber?.error = context.getString(validation.reason)
             }
         }
@@ -243,7 +242,7 @@ class AddressFormInput @JvmOverloads constructor(
             val validation = component.outputData?.addressState?.postalCode?.validation
             if (hasFocus) {
                 textInputLayoutPostalCode?.error = null
-            } else if  (validation != null && validation is Validation.Invalid) {
+            } else if (validation != null && validation is Validation.Invalid) {
                 textInputLayoutPostalCode?.error = context.getString(validation.reason)
             }
         }
@@ -260,7 +259,7 @@ class AddressFormInput @JvmOverloads constructor(
             val validation = component.outputData?.addressState?.city?.validation
             if (hasFocus) {
                 textInputLayoutCity?.error = null
-            } else if  (validation != null && validation is Validation.Invalid) {
+            } else if (validation != null && validation is Validation.Invalid) {
                 textInputLayoutCity?.error = context.getString(validation.reason)
             }
         }
@@ -277,7 +276,7 @@ class AddressFormInput @JvmOverloads constructor(
             val validation = component.outputData?.addressState?.stateOrProvince?.validation
             if (hasFocus) {
                 textInputLayoutProvinceTerritory?.error = null
-            } else if  (validation != null && validation is Validation.Invalid) {
+            } else if (validation != null && validation is Validation.Invalid) {
                 textInputLayoutProvinceTerritory?.error = context.getString(validation.reason)
             }
         }

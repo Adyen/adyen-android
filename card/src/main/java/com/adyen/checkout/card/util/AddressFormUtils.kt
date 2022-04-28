@@ -28,7 +28,11 @@ internal object AddressFormUtils {
         }
     }
 
-    fun getAddressFormUIState(addressConfiguration: AddressConfiguration?, addressVisibility: AddressVisibility, isStoredCard: Boolean): AddressFormUIState {
+    fun getAddressFormUIState(
+        addressConfiguration: AddressConfiguration?,
+        addressVisibility: AddressVisibility,
+        isStoredCard: Boolean
+    ): AddressFormUIState {
         return when {
             isStoredCard -> AddressFormUIState.NONE
             addressConfiguration != null -> AddressFormUIState.fromAddressConfiguration(addressConfiguration)

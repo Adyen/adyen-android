@@ -19,7 +19,7 @@ import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
 import com.adyen.checkout.components.ui.R
 
-class SimpleTextListAdapter<T: SimpleTextListItem>(private val context: Context): BaseAdapter(), Filterable {
+class SimpleTextListAdapter<T : SimpleTextListItem>(private val context: Context) : BaseAdapter(), Filterable {
 
     private val itemList: MutableList<T> = mutableListOf()
     private val simpleTextListFilter = SimpleTextListFilter(itemList)
@@ -58,7 +58,6 @@ class SimpleTextListAdapter<T: SimpleTextListItem>(private val context: Context)
     override fun getFilter(): Filter {
         return simpleTextListFilter
     }
-
 }
 
 class SimpleTextListFilter(

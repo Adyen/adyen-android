@@ -22,7 +22,6 @@ import com.adyen.checkout.card.util.InstallmentUtils
 import com.adyen.checkout.card.util.KcpValidationUtils
 import com.adyen.checkout.components.StoredPaymentComponentProvider
 import com.adyen.checkout.components.base.BasePaymentComponent
-import com.adyen.checkout.components.model.payments.request.Address
 import com.adyen.checkout.components.model.payments.request.CardPaymentMethod
 import com.adyen.checkout.components.model.payments.request.PaymentComponentData
 import com.adyen.checkout.components.ui.FieldState
@@ -259,7 +258,11 @@ class CardComponent private constructor(
         // when no supported cards are detected, only show an error if the brand detection was reliable
         val shouldFailWithUnsupportedBrand = selectedOrFirstCardType == null && isReliable
 
-        val addressFormUIState = AddressFormUtils.getAddressFormUIState(configuration.addressConfiguration, configuration.addressVisibility, isStoredPaymentMethod())
+        val addressFormUIState = AddressFormUtils.getAddressFormUIState(
+            configuration.addressConfiguration,
+            configuration.addressVisibility,
+            isStoredPaymentMethod()
+        )
 
         return CardOutputData(
             cardDelegate.validateCardNumber(
