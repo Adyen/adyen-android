@@ -38,6 +38,7 @@ import com.adyen.checkout.cse.GenericEncrypter
 import com.adyen.checkout.cse.UnencryptedCard
 import com.adyen.checkout.cse.exception.EncryptionException
 import com.adyen.threeds2.ThreeDS2Service
+import kotlinx.coroutines.flow.distinctUntilChanged
 import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.launch
@@ -102,6 +103,7 @@ class CardComponent private constructor(
                 .launchIn(viewModelScope)
 
             cardDelegate.stateListFlow
+                .distinctUntilChanged()
                 .onEach {
                     Logger.d(TAG, "New states emitted")
                     Logger.d(TAG, "States: $it")
