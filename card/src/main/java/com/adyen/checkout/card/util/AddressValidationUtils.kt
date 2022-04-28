@@ -9,6 +9,9 @@ import com.adyen.checkout.components.ui.Validation
 
 object AddressValidationUtils {
 
+    /**
+     * Validate address input.
+     */
     fun validateAddressInput(addressInputModel: AddressInputModel, addressFormUIState: AddressFormUIState): AddressOutputData {
         return when (addressFormUIState) {
             AddressFormUIState.FULL_ADDRESS -> validateAddressInput(addressInputModel)

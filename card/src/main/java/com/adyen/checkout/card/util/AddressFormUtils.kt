@@ -8,9 +8,16 @@ import com.adyen.checkout.card.ui.model.AddressListItem
 import com.adyen.checkout.components.base.AddressVisibility
 import com.adyen.checkout.components.model.payments.request.Address
 
-// TODO docs
 internal object AddressFormUtils {
 
+    /**
+     * Map a list of [AddressItem] to a list of [AddressListItem].
+     *
+     * @param list Input list.
+     * @param shouldSelectFirstItem Whether or not the first item should be marked as selected.
+     *
+     * @return Mapped list of [AddressListItem].
+     */
     fun mapToListItem(list: List<AddressItem>, shouldSelectFirstItem: Boolean): List<AddressListItem> {
         return list.map {
             val isFirstItem = it.id == list.firstOrNull()?.id
@@ -22,12 +29,29 @@ internal object AddressFormUtils {
         }
     }
 
-    fun markAddressListItemSelected(countryList: List<AddressListItem>, countryCode: String): List<AddressListItem> {
-        return countryList.map {
-            it.copy(selected = it.code == countryCode)
+    /**
+     * Mark the item that matches the given code as selected in the given input list.
+     *
+     * @param list Input list of [AddressListItem].
+     * @param code Country or state code to be marked as selected.
+     *
+     * @return List of [AddressListItem] with the item in the list having given code marked as selected.
+     */
+    fun markAddressListItemSelected(list: List<AddressListItem>, code: String): List<AddressListItem> {
+        return list.map {
+            it.copy(selected = it.code == code)
         }
     }
 
+    /**
+     * Get visibility state of the address form.
+     *
+     * @param addressConfiguration Configuration object for address form.
+     * @param addressVisibility Visibility modifier for address form.
+     * @param isStoredCard Whether or not current form is for stored card or a new card.
+     *
+     * @return Visibility state of the address form.
+     */
     fun getAddressFormUIState(
         addressConfiguration: AddressConfiguration?,
         addressVisibility: AddressVisibility,
@@ -40,6 +64,19 @@ internal object AddressFormUtils {
         }
     }
 
+    /**
+     * Initialize country options using [AddressConfiguration].
+     *
+     * First filter if there's [AddressConfiguration.FullAddress.supportedCountryCodes] defined in the
+     * configuration. Then mark [AddressConfiguration.FullAddress.defaultCountryCode] as selected if it
+     * is defined in configuration and exists in the filtered country list. Otherwise mark first item
+     * in the list as selected.
+     *
+     * @param addressConfiguration Configuration object.
+     * @param countryList List of countries from API.
+     *
+     * @return Country options.
+     */
     fun initializeCountryOptions(addressConfiguration: AddressConfiguration?, countryList: List<AddressItem>): List<AddressListItem> {
         return when (addressConfiguration) {
             is AddressConfiguration.FullAddress -> {
@@ -60,10 +97,25 @@ internal object AddressFormUtils {
         }
     }
 
+    /**
+     * Check whether the address is required for creation of Payment Component Data.
+     *
+     * @param addressFormUIState UI state of the form.
+     *
+     * @return Whether if address data is required or not.
+     */
     fun isAddressRequired(addressFormUIState: AddressFormUIState): Boolean {
         return addressFormUIState != AddressFormUIState.NONE
     }
 
+    /**
+     * Make [Address] object from the output data.
+     *
+     * @param addressOutputData Output data object storing the data from the form.
+     * @param addressFormUIState UI state of the form.
+     *
+     * @return [Address] object to be passed to the merchant as part of Payment Component Data.
+     */
     fun makeAddressData(addressOutputData: AddressOutputData, addressFormUIState: AddressFormUIState): Address? {
         return when (addressFormUIState) {
             AddressFormUIState.FULL_ADDRESS -> Address().apply {
@@ -89,6 +141,16 @@ internal object AddressFormUtils {
         }
     }
 
+    /**
+     * Make [Address.houseNumberOrName] field using houseNumberOrName and apartmentSuite fields.
+     *
+     * Concat two fields and separate them with an empty space if both exists.
+     *
+     * @param houseNumberOrName
+     * @param apartmentSuite
+     *
+     * @return Resulting houseNumberOrName string.
+     */
     fun makeHouseNumberOrName(houseNumberOrName: String, apartmentSuite: String): String {
         return listOf(houseNumberOrName, apartmentSuite).filter { it.isNotEmpty() }
             .joinToString(" ")
