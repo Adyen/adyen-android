@@ -16,6 +16,7 @@ data class AddressOutputData(
     val street: FieldState<String>,
     val stateOrProvince: FieldState<String>,
     val houseNumberOrName: FieldState<String>,
+    val apartmentSuite: FieldState<String>,
     val city: FieldState<String>,
     val country: FieldState<String>
 ) : OutputData {
@@ -24,6 +25,7 @@ data class AddressOutputData(
             street.validation.isValid() &&
             stateOrProvince.validation.isValid() &&
             houseNumberOrName.validation.isValid() &&
+            apartmentSuite.validation.isValid() &&
             city.validation.isValid() &&
             country.validation.isValid()
     }

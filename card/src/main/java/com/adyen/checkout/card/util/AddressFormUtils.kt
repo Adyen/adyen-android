@@ -66,7 +66,10 @@ internal object AddressFormUtils {
                 postalCode = addressOutputData.postalCode.value
                 street = addressOutputData.street.value
                 stateOrProvince = addressOutputData.stateOrProvince.value
-                houseNumberOrName = addressOutputData.houseNumberOrName.value
+                houseNumberOrName = makeHouseNumberOrName(
+                    addressOutputData.houseNumberOrName.value,
+                    addressOutputData.apartmentSuite.value
+                )
                 city = addressOutputData.city.value
                 country = addressOutputData.country.value
             }
@@ -80,5 +83,10 @@ internal object AddressFormUtils {
             }
             else -> null
         }
+    }
+
+    fun makeHouseNumberOrName(houseNumberOrName: String, apartmentSuite: String): String {
+        return listOf(houseNumberOrName, apartmentSuite).filter { it.isNotEmpty() }
+            .joinToString(" ")
     }
 }

@@ -18,14 +18,17 @@ object AddressValidationUtils {
     }
 
     private fun validatePostalCode(addressInputModel: AddressInputModel): AddressOutputData {
-        return AddressOutputData(
-            postalCode = validateAddressField(addressInputModel.postalCode),
-            street = FieldState(addressInputModel.street, Validation.Valid),
-            stateOrProvince = FieldState(addressInputModel.stateOrProvince, Validation.Valid),
-            houseNumberOrName = FieldState(addressInputModel.houseNumberOrName, Validation.Valid),
-            city = FieldState(addressInputModel.city, Validation.Valid),
-            country = FieldState(addressInputModel.country, Validation.Valid)
-        )
+        return with(addressInputModel) {
+            AddressOutputData(
+                postalCode = validateAddressField(postalCode),
+                street = FieldState(street, Validation.Valid),
+                stateOrProvince = FieldState(stateOrProvince, Validation.Valid),
+                houseNumberOrName = FieldState(houseNumberOrName, Validation.Valid),
+                apartmentSuite = FieldState(apartmentSuite, Validation.Valid),
+                city = FieldState(city, Validation.Valid),
+                country = FieldState(country, Validation.Valid)
+            )
+        }
     }
 
     private fun validateAddressInput(addressInputModel: AddressInputModel): AddressOutputData {
@@ -35,6 +38,7 @@ object AddressValidationUtils {
                 street = validateAddressField(street),
                 stateOrProvince = validateAddressField(stateOrProvince),
                 houseNumberOrName = validateAddressField(houseNumberOrName),
+                apartmentSuite = FieldState(apartmentSuite, Validation.Valid),
                 city = validateAddressField(city),
                 country = validateAddressField(country)
             )
@@ -42,14 +46,17 @@ object AddressValidationUtils {
     }
 
     fun makeValidEmptyAddressOutput(addressInputModel: AddressInputModel): AddressOutputData {
-        return AddressOutputData(
-            postalCode = FieldState(addressInputModel.postalCode, Validation.Valid),
-            street = FieldState(addressInputModel.street, Validation.Valid),
-            stateOrProvince = FieldState(addressInputModel.stateOrProvince, Validation.Valid),
-            houseNumberOrName = FieldState(addressInputModel.houseNumberOrName, Validation.Valid),
-            city = FieldState(addressInputModel.city, Validation.Valid),
-            country = FieldState(addressInputModel.country, Validation.Valid)
-        )
+        return with(addressInputModel) {
+            AddressOutputData(
+                postalCode = FieldState(postalCode, Validation.Valid),
+                street = FieldState(street, Validation.Valid),
+                stateOrProvince = FieldState(stateOrProvince, Validation.Valid),
+                houseNumberOrName = FieldState(houseNumberOrName, Validation.Valid),
+                apartmentSuite = FieldState(apartmentSuite, Validation.Valid),
+                city = FieldState(city, Validation.Valid),
+                country = FieldState(country, Validation.Valid)
+            )
+        }
     }
 
     private fun validateAddressField(input: String): FieldState<String> {
