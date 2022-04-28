@@ -496,12 +496,7 @@ class CardView @JvmOverloads constructor(
     }
 
     private fun initAddressFormInput() {
-        binding.addressFormInput.setInputData(component.inputData.address)
         binding.addressFormInput.attachComponent(component)
-        binding.addressFormInput.setOnAddressChangeListener { address ->
-            component.inputData.address = address
-            notifyInputDataChanged()
-        }
     }
 
     private fun updateCountries(countryOptions: List<AddressListItem>) {

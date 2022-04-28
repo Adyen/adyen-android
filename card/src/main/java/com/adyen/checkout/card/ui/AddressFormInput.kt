@@ -31,13 +31,10 @@ class AddressFormInput @JvmOverloads constructor(
     defStyleAttr: Int = 0
 ) : LinearLayout(context, attrs, defStyleAttr) {
 
-    private var onAddressChangeListener: OnAddressChangeListener? = null
+    private lateinit var component: CardComponent
+
     private var countryAdapter: SimpleTextListAdapter<AddressListItem> = SimpleTextListAdapter(context)
     private var statesAdapter: SimpleTextListAdapter<AddressListItem> = SimpleTextListAdapter(context)
-
-    private lateinit var addressInput: AddressInputModel
-
-    private lateinit var component: CardComponent
 
     private val autoCompleteTextViewCountry: AutoCompleteTextView?
         get() = rootView.findViewById(R.id.autoCompleteTextView_country)
@@ -90,10 +87,10 @@ class AddressFormInput @JvmOverloads constructor(
             setAdapter(countryAdapter)
             onItemClickListener = AdapterView.OnItemClickListener { _, _, position, _ ->
                 val selectedCountryCode = countryAdapter.getItem(position).code
-                if (addressInput.country != selectedCountryCode) {
-                    addressInput.reset()
-                    addressInput.country = selectedCountryCode
-                    onAddressChangeListener?.onChanged(addressInput)
+                if (component.inputData.address.country != selectedCountryCode) {
+                    component.inputData.address.reset()
+                    component.inputData.address.country = selectedCountryCode
+                    notifyInputDataChanged()
                     populateFormFields(AddressSpecification.fromString(selectedCountryCode))
                 }
             }
@@ -102,19 +99,6 @@ class AddressFormInput @JvmOverloads constructor(
 
     fun attachComponent(component: CardComponent) {
         this.component = component
-    }
-
-
-    fun setInputData(inputModel: AddressInputModel) {
-        addressInput = inputModel
-    }
-
-    fun setOnAddressChangeListener(listener: OnAddressChangeListener) {
-        this.onAddressChangeListener = listener
-    }
-
-    fun removeOnAddressChangeListener() {
-        this.onAddressChangeListener = null
     }
 
     fun highlightValidationErrors(addressOutputData: AddressOutputData) {
@@ -175,7 +159,7 @@ class AddressFormInput @JvmOverloads constructor(
         statesAdapter.setItems(stateList)
         stateList.firstOrNull { it.selected }?.let {
             autoCompleteTextViewState?.setText(it.name)
-            addressInput.stateOrProvince = it.code
+            component.inputData.address.stateOrProvince = it.code
         }
     }
 
@@ -207,10 +191,10 @@ class AddressFormInput @JvmOverloads constructor(
     }
 
     private fun initStreetInput() {
-        editTextStreet?.setText(addressInput.street)
+        editTextStreet?.setText(component.inputData.address.street)
         editTextStreet?.setOnChangeListener {
-            addressInput.street = it.toString()
-            onAddressChangeListener?.onChanged(addressInput)
+            component.inputData.address.street = it.toString()
+            notifyInputDataChanged()
             textInputLayoutStreet?.error = null
         }
         editTextStreet?.onFocusChangeListener = OnFocusChangeListener { _, hasFocus ->
@@ -224,10 +208,10 @@ class AddressFormInput @JvmOverloads constructor(
     }
 
     private fun initHouseNumberInput() {
-        editTextHouseNumber?.setText(addressInput.houseNumberOrName)
+        editTextHouseNumber?.setText(component.inputData.address.houseNumberOrName)
         editTextHouseNumber?.setOnChangeListener {
-            addressInput.houseNumberOrName = it.toString()
-            onAddressChangeListener?.onChanged(addressInput)
+            component.inputData.address.houseNumberOrName = it.toString()
+            notifyInputDataChanged()
             textInputLayoutHouseNumber?.error = null
         }
         editTextHouseNumber?.onFocusChangeListener = OnFocusChangeListener { _, hasFocus ->
@@ -241,18 +225,18 @@ class AddressFormInput @JvmOverloads constructor(
     }
 
     private fun initApartmentSuiteInput() {
-        editTextApartmentSuite?.setText(addressInput.apartmentSuite)
+        editTextApartmentSuite?.setText(component.inputData.address.apartmentSuite)
         editTextApartmentSuite?.setOnChangeListener {
-            addressInput.apartmentSuite = it.toString()
-            onAddressChangeListener?.onChanged(addressInput)
+            component.inputData.address.apartmentSuite = it.toString()
+            notifyInputDataChanged()
         }
     }
 
     private fun initPostalCodeInput() {
-        editTextPostalCode?.setText(addressInput.postalCode)
+        editTextPostalCode?.setText(component.inputData.address.postalCode)
         editTextPostalCode?.setOnChangeListener {
-            addressInput.postalCode = it.toString()
-            onAddressChangeListener?.onChanged(addressInput)
+            component.inputData.address.postalCode = it.toString()
+            notifyInputDataChanged()
             textInputLayoutPostalCode?.error = null
         }
         editTextPostalCode?.onFocusChangeListener = OnFocusChangeListener { _, hasFocus ->
@@ -266,10 +250,10 @@ class AddressFormInput @JvmOverloads constructor(
     }
 
     private fun initCityInput() {
-        editTextCity?.setText(addressInput.city)
+        editTextCity?.setText(component.inputData.address.city)
         editTextCity?.setOnChangeListener {
-            addressInput.city = it.toString()
-            onAddressChangeListener?.onChanged(addressInput)
+            component.inputData.address.city = it.toString()
+            notifyInputDataChanged()
             textInputLayoutCity?.error = null
         }
         editTextCity?.onFocusChangeListener = OnFocusChangeListener { _, hasFocus ->
@@ -283,10 +267,10 @@ class AddressFormInput @JvmOverloads constructor(
     }
 
     private fun initProvinceTerritoryInput() {
-        editTextProvinceTerritory?.setText(addressInput.stateOrProvince)
+        editTextProvinceTerritory?.setText(component.inputData.address.stateOrProvince)
         editTextProvinceTerritory?.setOnChangeListener {
-            addressInput.stateOrProvince = it.toString()
-            onAddressChangeListener?.onChanged(addressInput)
+            component.inputData.address.stateOrProvince = it.toString()
+            notifyInputDataChanged()
             textInputLayoutProvinceTerritory?.error = null
         }
         editTextProvinceTerritory?.onFocusChangeListener = OnFocusChangeListener { _, hasFocus ->
@@ -301,16 +285,20 @@ class AddressFormInput @JvmOverloads constructor(
 
     private fun initStatesInput() {
         autoCompleteTextViewState?.let {
-            statesAdapter.getItem { it.code == addressInput.stateOrProvince }
+            statesAdapter.getItem { it.code == component.inputData.address.stateOrProvince }
         }
         autoCompleteTextViewState?.apply {
             inputType = 0
             setAdapter(statesAdapter)
             onItemClickListener = AdapterView.OnItemClickListener { _, _, position, _ ->
-                addressInput.stateOrProvince = statesAdapter.getItem(position).code
-                onAddressChangeListener?.onChanged(addressInput)
+                component.inputData.address.stateOrProvince = statesAdapter.getItem(position).code
+                notifyInputDataChanged()
             }
         }
+    }
+
+    private fun notifyInputDataChanged() {
+        component.inputDataChanged(component.inputData)
     }
 
     enum class AddressSpecification {
@@ -321,9 +309,5 @@ class AddressFormInput @JvmOverloads constructor(
                 return values().firstOrNull { it.name == countryCode } ?: DEFAULT
             }
         }
-    }
-
-    fun interface OnAddressChangeListener {
-        fun onChanged(address: AddressInputModel)
     }
 }
