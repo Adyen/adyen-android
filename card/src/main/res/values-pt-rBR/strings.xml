@@ -29,6 +29,18 @@
     <string name="checkout_card_brand_not_supported">A bandeira do cartão inserido não é aceita</string>
     <string name="checkout_card_formatted_brand_name_not_supported">Não aceitamos %s</string>
 
+    <string name="checkout_address_form_billing_address_title">Endereço de cobrança</string>
+    <string name="checkout_address_form_street_hint">Rua</string>
+    <string name="checkout_address_form_address_hint">Endereço</string>
+    <string name="checkout_address_form_house_number_hint">Número da casa</string>
+    <string name="checkout_address_form_apartment_suite_hint">Apartamento/Conjunto</string>
+    <string name="checkout_address_form_city_hint">Cidade</string>
+    <string name="checkout_address_form_country_hint">País</string>
+    <string name="checkout_address_form_states_hint">Estado</string>
+    <string name="checkout_address_form_zip_code_hint">Código postal</string>
+    <string name="checkout_address_form_province_territory_hint">Província ou território</string>
+    <string name="checkout_address_form_city_town_hint">Cidade</string>
+
     <string name="checkout_card_installments_title">Opções de Parcelamento</string>
     <string name="checkout_card_installments_option_regular">%s meses</string>
     <string name="checkout_card_installments_option_one_time">Pagamento à vista</string>
