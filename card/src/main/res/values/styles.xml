@@ -152,11 +152,12 @@
         <item name="android:layout_gravity">center_vertical</item>
     </style>
 
-    <style name="AdyenCheckout.AddressFormHeader" parent="AdyenCheckout.TextAppearance">
+    <style name="AdyenCheckout.AddressForm.HeaderTextAppearance" parent="AdyenCheckout.TextAppearance">
         <item name="android:textSize">12sp</item>
         <item name="android:textStyle">bold</item>
         <item name="android:textColor">@color/textColor</item>
         <item name="android:alpha">0.5</item>
         <item name="android:layout_marginBottom">@dimen/standard_margin</item>
+        <item name="android:text">Billing Address</item>
     </style>
 </resources>
