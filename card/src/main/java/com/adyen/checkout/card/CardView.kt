@@ -484,6 +484,7 @@ class CardView @JvmOverloads constructor(context: Context, attrs: AttributeSet? 
     }
 
     private fun initAddressFormInput() {
+        binding.addressFormInput.setInputData(component.inputData.address)
         binding.addressFormInput.setOnAddressChangeListener { address ->
             component.inputData.address = address
             notifyInputDataChanged()

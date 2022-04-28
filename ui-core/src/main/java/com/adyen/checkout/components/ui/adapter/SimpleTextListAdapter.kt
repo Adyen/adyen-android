@@ -30,6 +30,10 @@ class SimpleTextListAdapter<T: SimpleTextListItem>(private val context: Context)
         notifyDataSetChanged()
     }
 
+    fun getItem(predicate: ((T) -> Boolean)): T? {
+        return itemList.firstOrNull { predicate.invoke(it) }
+    }
+
     override fun getCount() = itemList.size
 
     override fun getItem(position: Int) = itemList[position]

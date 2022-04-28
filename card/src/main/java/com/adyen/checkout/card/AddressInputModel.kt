@@ -16,21 +16,11 @@ data class AddressInputModel(
     var city: String = "",
     var country: String = "",
 ) {
-    constructor(addressOutputData: AddressOutputData) : this(
-        postalCode = addressOutputData.postalCode.value,
-        street = addressOutputData.street.value,
-        stateOrProvince = addressOutputData.stateOrProvince.value,
-        houseNumberOrName = addressOutputData.houseNumberOrName.value,
-        city = addressOutputData.city.value,
-        country = addressOutputData.country.value,
-    )
-
     fun reset() {
         postalCode = ""
         street = ""
         stateOrProvince = ""
         houseNumberOrName = ""
         city = ""
-        country = ""
     }
 }
