@@ -25,7 +25,7 @@ import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 @HiltViewModel
-internal class PaymentMethodsViewModel @Inject constructor(
+internal class MainViewModel @Inject constructor(
     private val paymentsRepository: PaymentsRepository,
     private val keyValueStorage: KeyValueStorage,
 ) : ViewModel() {

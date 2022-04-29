@@ -34,12 +34,8 @@ import javax.inject.Inject
 @AndroidEntryPoint
 class MainActivity : AppCompatActivity(), DropInCallback {
 
-    companion object {
-        private val TAG: String = LogUtil.getTag()
-    }
-
     private lateinit var binding: ActivityMainBinding
-    private val viewModel: PaymentMethodsViewModel by viewModels()
+    private val viewModel: MainViewModel by viewModels()
 
     @Inject
     internal lateinit var checkoutConfigurationProvider: CheckoutConfigurationProvider
@@ -156,5 +152,9 @@ class MainActivity : AppCompatActivity(), DropInCallback {
     override fun onDestroy() {
         super.onDestroy()
         componentItemAdapter = null
+    }
+
+    companion object {
+        private val TAG: String = LogUtil.getTag()
     }
 }
