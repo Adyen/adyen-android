@@ -27,6 +27,7 @@ import com.adyen.checkout.components.ActionComponentData
 import com.adyen.checkout.components.PaymentComponentState
 import com.adyen.checkout.components.analytics.AnalyticEvent
 import com.adyen.checkout.components.analytics.AnalyticsDispatcher
+import com.adyen.checkout.components.extensions.createLocalizedContext
 import com.adyen.checkout.components.model.PaymentMethodsApiResponse
 import com.adyen.checkout.components.model.paymentmethods.PaymentMethod
 import com.adyen.checkout.components.model.paymentmethods.StoredPaymentMethod
@@ -211,9 +212,7 @@ class DropInActivity :
 
         // We need to get the Locale from sharedPrefs because attachBaseContext is called before onCreate, so we don't have the Config object yet.
         val locale = DropInPrefs.getShopperLocale(baseContext)
-        val config = Configuration(baseContext.resources.configuration)
-        config.setLocale(locale)
-        return baseContext.createConfigurationContext(config)
+        return baseContext.createLocalizedContext(locale)
     }
 
     private fun assertBundleExists(bundle: Bundle?): Boolean {

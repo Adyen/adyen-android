@@ -4,6 +4,11 @@ import android.content.Context
 import com.adyen.checkout.adyen3ds2.Adyen3DS2Configuration
 import com.adyen.checkout.bcmc.BcmcConfiguration
 import com.adyen.checkout.card.CardConfiguration
+import com.adyen.checkout.card.InstallmentConfiguration
+import com.adyen.checkout.card.InstallmentOptions
+import com.adyen.checkout.card.KCPAuthVisibility
+import com.adyen.checkout.card.SocialSecurityNumberVisibility
+import com.adyen.checkout.components.base.AddressVisibility
 import com.adyen.checkout.components.model.payments.Amount
 import com.adyen.checkout.core.api.Environment
 import com.adyen.checkout.core.exception.CheckoutException
@@ -62,6 +67,11 @@ internal class CheckoutConfigurationProvider @Inject constructor(
     fun getCardConfiguration(): CardConfiguration =
         CardConfiguration.Builder(shopperLocale, environment, clientKey)
             .setShopperReference(keyValueStorage.getShopperReference())
+            .setHolderNameRequired(true)
+            .setAddressVisibility(AddressVisibility.POSTAL_CODE)
+            .setInstallmentConfigurations(InstallmentConfiguration(InstallmentOptions.DefaultInstallmentOptions(3, false)))
+            .setKcpAuthVisibility(KCPAuthVisibility.SHOW)
+            .setSocialSecurityNumberVisibility(SocialSecurityNumberVisibility.SHOW)
             .build()
 
     private fun getBcmcConfiguration(): BcmcConfiguration =

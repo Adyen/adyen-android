@@ -113,39 +113,15 @@ class CardView @JvmOverloads constructor(
     }
 
     override fun initLocalizedStrings(localizedContext: Context) {
-        var myAttrs = intArrayOf(android.R.attr.hint)
-
-        // Card Number
-        var typedArray: TypedArray =
-            localizedContext.obtainStyledAttributes(R.style.AdyenCheckout_Card_CardNumberInput, myAttrs)
-        binding.textInputLayoutCardNumber.hint = typedArray.getString(0)
-        typedArray.recycle()
-
-        // Expiry Date
-        typedArray = localizedContext.obtainStyledAttributes(R.style.AdyenCheckout_Card_ExpiryDateInput, myAttrs)
-        binding.textInputLayoutExpiryDate.hint = typedArray.getString(0)
-        typedArray.recycle()
-
-        // Security Code
-        typedArray = localizedContext.obtainStyledAttributes(R.style.AdyenCheckout_Card_SecurityCodeInput, myAttrs)
-        binding.textInputLayoutSecurityCode.hint = typedArray.getString(0)
-        typedArray.recycle()
-
-        // Card Holder
-        typedArray = localizedContext.obtainStyledAttributes(R.style.AdyenCheckout_Card_HolderNameInput, myAttrs)
-        binding.textInputLayoutCardHolder.hint = typedArray.getString(0)
-        typedArray.recycle()
-
-        // Postal code
-        typedArray = localizedContext.obtainStyledAttributes(R.style.AdyenCheckout_Card_PostalCodeInput, myAttrs)
-        binding.textInputLayoutPostalCode.hint = typedArray.getString(0)
-        typedArray.recycle()
-
-        // Store Switch
-        myAttrs = intArrayOf(android.R.attr.text)
-        typedArray = localizedContext.obtainStyledAttributes(R.style.AdyenCheckout_Card_StorePaymentSwitch, myAttrs)
-        binding.switchStorePaymentMethod.text = typedArray.getString(0)
-        typedArray.recycle()
+        binding.textInputLayoutCardNumber.setLocalizedHintFromStyle(R.style.AdyenCheckout_Card_CardNumberInput)
+        binding.textInputLayoutExpiryDate.setLocalizedHintFromStyle(R.style.AdyenCheckout_Card_ExpiryDateInput)
+        binding.textInputLayoutSecurityCode.setLocalizedHintFromStyle(R.style.AdyenCheckout_Card_SecurityCodeInput)
+        binding.textInputLayoutCardHolder.setLocalizedHintFromStyle(R.style.AdyenCheckout_Card_HolderNameInput)
+        binding.textInputLayoutPostalCode.setLocalizedHintFromStyle(R.style.AdyenCheckout_Card_PostalCodeInput)
+        binding.textInputLayoutSocialSecurityNumber.setLocalizedHintFromStyle(R.style.AdyenCheckout_Card_SocialSecurityNumberInput)
+        binding.textInputLayoutKcpBirthDateOrTaxNumber.setLocalizedHintFromStyle(R.style.AdyenCheckout_Card_KcpBirthDateOrTaxNumber)
+        binding.textInputLayoutKcpCardPassword.setLocalizedHintFromStyle(R.style.AdyenCheckout_Card_KcpCardPassword)
+        binding.switchStorePaymentMethod.setLocalizedTextFromStyle(R.style.AdyenCheckout_Card_StorePaymentSwitch)
     }
 
     override fun onComponentAttached() {
@@ -515,7 +491,7 @@ class CardView @JvmOverloads constructor(
             if (cardOutputData.installmentState.value == null) {
                 updateInstallmentSelection(cardOutputData.installmentOptions.first())
                 val installmentOptionText = InstallmentUtils.getTextForInstallmentOption(
-                    context,
+                    localizedContext,
                     cardOutputData.installmentOptions.first()
                 )
                 installmentAutoCompleteTextView.setText(installmentOptionText)
@@ -528,7 +504,7 @@ class CardView @JvmOverloads constructor(
     }
 
     private fun initInstallments() {
-        installmentListAdapter = InstallmentListAdapter(context)
+        installmentListAdapter = InstallmentListAdapter(context, localizedContext)
         installmentListAdapter?.let {
             binding.autoCompleteTextViewInstallments.apply {
                 inputType = 0
@@ -544,11 +520,11 @@ class CardView @JvmOverloads constructor(
         when (cvcUIState) {
             InputFieldUIState.REQUIRED -> {
                 binding.textInputLayoutSecurityCode.isVisible = true
-                binding.textInputLayoutSecurityCode.setHint(R.string.checkout_card_security_code_hint)
+                binding.textInputLayoutSecurityCode.setLocalizedHintFromStyle(R.style.AdyenCheckout_Card_SecurityCodeInput)
             }
             InputFieldUIState.OPTIONAL -> {
                 binding.textInputLayoutSecurityCode.isVisible = true
-                binding.textInputLayoutSecurityCode.setHint(R.string.checkout_card_security_code_optional_hint)
+                binding.textInputLayoutSecurityCode.hint = localizedContext.getString(R.string.checkout_card_security_code_optional_hint)
             }
             InputFieldUIState.HIDDEN -> {
                 binding.textInputLayoutSecurityCode.isVisible = false
@@ -564,11 +540,11 @@ class CardView @JvmOverloads constructor(
         when (expiryDateUIState) {
             InputFieldUIState.REQUIRED -> {
                 binding.textInputLayoutExpiryDate.isVisible = true
-                binding.textInputLayoutExpiryDate.setHint(R.string.checkout_card_expiry_date_hint)
+                binding.textInputLayoutExpiryDate.setLocalizedHintFromStyle(R.style.AdyenCheckout_Card_ExpiryDateInput)
             }
             InputFieldUIState.OPTIONAL -> {
                 binding.textInputLayoutExpiryDate.isVisible = true
-                binding.textInputLayoutExpiryDate.setHint(R.string.checkout_card_expiry_date_optional_hint)
+                binding.textInputLayoutExpiryDate.hint = localizedContext.getString(R.string.checkout_card_expiry_date_optional_hint)
             }
             InputFieldUIState.HIDDEN -> {
                 binding.textInputLayoutExpiryDate.isVisible = false

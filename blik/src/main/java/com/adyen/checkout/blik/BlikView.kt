@@ -12,6 +12,7 @@ import android.util.AttributeSet
 import android.view.LayoutInflater
 import android.view.View
 import android.view.View.OnFocusChangeListener
+import android.widget.TextView
 import androidx.lifecycle.LifecycleOwner
 import androidx.lifecycle.Observer
 import com.adyen.checkout.components.PaymentComponentState
@@ -19,7 +20,6 @@ import com.adyen.checkout.components.model.payments.request.BlikPaymentMethod
 import com.adyen.checkout.components.ui.Validation
 import com.adyen.checkout.components.ui.view.AdyenLinearLayout
 import com.adyen.checkout.components.ui.view.AdyenTextInputEditText
-import com.adyen.checkout.core.exception.CheckoutException
 import com.adyen.checkout.core.log.LogUtil.getTag
 import com.adyen.checkout.core.log.Logger
 import com.google.android.material.textfield.TextInputLayout
@@ -33,6 +33,7 @@ class BlikView @JvmOverloads constructor(context: Context, attrs: AttributeSet? 
     Observer<BlikOutputData> {
 
     private var blikInputData = BlikInputData()
+    private lateinit var blikHeader: TextView
     private lateinit var blikCodeInput: TextInputLayout
     private lateinit var blikCodeEditText: AdyenTextInputEditText
 
@@ -44,15 +45,13 @@ class BlikView @JvmOverloads constructor(context: Context, attrs: AttributeSet? 
     }
 
     override fun initLocalizedStrings(localizedContext: Context) {
-        val myAttrs = intArrayOf(android.R.attr.hint)
-        val typedArray = localizedContext.obtainStyledAttributes(R.style.AdyenCheckout_Blik_BlikCodeInput, myAttrs)
-        blikCodeInput.hint = typedArray.getString(0)
-        typedArray.recycle()
+        blikCodeInput.setLocalizedHintFromStyle(R.style.AdyenCheckout_Blik_BlikCodeInput)
+        blikHeader.setLocalizedTextFromStyle(R.style.AdyenCheckout_Blik_BlikHeaderTextView)
     }
 
     override fun initView() {
+        blikHeader =  findViewById(R.id.textView_blikHeader)
         blikCodeInput = findViewById(R.id.textInputLayout_blikCode)
-            ?: throw CheckoutException("Could not find views inside layout.")
         blikCodeEditText = blikCodeInput.editText as AdyenTextInputEditText
 
         blikCodeEditText.setOnChangeListener {

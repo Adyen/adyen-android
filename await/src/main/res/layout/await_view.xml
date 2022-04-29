@@ -15,8 +15,6 @@
     android:orientation="vertical"
     tools:parentTag="android.widget.LinearLayout">
 
-    <!-- TODO fix layout according to design specs -->
-
     <ImageView
         android:id="@+id/imageView_logo"
         style="@style/AdyenCheckout.Image.Logo.Large"
@@ -32,7 +30,7 @@
         android:layout_gravity="center_horizontal"
         android:layout_margin="@dimen/standard_margin"
         android:gravity="center"
-        android:text="@string/checkout_await_message_blik" />
+        tools:text="@string/checkout_await_message_blik" />
 
     <LinearLayout
         android:layout_width="wrap_content"
@@ -49,14 +47,11 @@
 
         <TextView
             android:id="@+id/textView_waiting_confirmation"
+            style="@style/AdyenCheckout.Await.WaitingConfirmationTextView"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            style="@style/AdyenCheckout.TextAppearance.Secondary"
-            android:layout_gravity="center_vertical"
-            android:layout_margin="@dimen/standard_half_margin"
-            android:text="@string/checkout_await_waiting_confirmation"/>
+            android:layout_margin="@dimen/standard_half_margin" />
     </LinearLayout>
-
 
 
 </merge>

@@ -55,18 +55,8 @@ class GiftCardView :
     }
 
     override fun initLocalizedStrings(localizedContext: Context) {
-        val myAttrs = intArrayOf(android.R.attr.hint)
-
-        // Card Number
-        var typedArray =
-            localizedContext.obtainStyledAttributes(R.style.AdyenCheckout_GiftCard_GiftCardNumberInput, myAttrs)
-        binding.textInputLayoutGiftcardNumber.hint = typedArray.getString(0)
-        typedArray.recycle()
-
-        // PIN
-        typedArray = localizedContext.obtainStyledAttributes(R.style.AdyenCheckout_GiftCard_GiftCardPinInput, myAttrs)
-        binding.textInputLayoutGiftcardPin.hint = typedArray.getString(0)
-        typedArray.recycle()
+        binding.textInputLayoutGiftcardNumber.setLocalizedHintFromStyle(R.style.AdyenCheckout_GiftCard_GiftCardNumberInput)
+        binding.textInputLayoutGiftcardPin.setLocalizedHintFromStyle(R.style.AdyenCheckout_GiftCard_GiftCardPinInput)
     }
 
     override fun initView() {
