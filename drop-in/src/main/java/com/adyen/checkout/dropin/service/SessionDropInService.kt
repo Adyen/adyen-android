@@ -16,13 +16,14 @@ import com.adyen.checkout.components.base.Configuration
 import com.adyen.checkout.components.model.payments.request.OrderRequest
 import com.adyen.checkout.components.model.payments.request.PaymentMethodDetails
 import com.adyen.checkout.components.model.payments.response.BalanceResult
+import com.adyen.checkout.components.model.payments.response.OrderResponse
 import com.adyen.checkout.core.log.LogUtil
 import com.adyen.checkout.core.log.Logger
 import com.adyen.checkout.sessions.repository.SessionRepository
 import kotlinx.coroutines.launch
 import org.json.JSONObject
 
-internal class SessionDropInService : DropInService() {
+open class SessionDropInService : DropInService() {
 
     private var isInitialized = false
 
@@ -81,43 +82,36 @@ internal class SessionDropInService : DropInService() {
             sessionRepository.submitPayment(paymentComponentState.data)
                 .fold(
                     onSuccess = { response ->
+                        val action = response.action
                         val result = when {
-                            response.action != null -> DropInServiceResult.Action(response.action!!)
-                            // TODO: figure out what to do in this case
-                            response.order != null -> TODO()
+                            action != null -> DropInServiceResult.Action(action)
+                            response.order.isNonFullyPaid() -> {
+                                updatePaymentMethods(response.order)
+                                null
+                            }
                             else -> DropInServiceResult.Finished(response.resultCode ?: "EMPTY")
                         }
-                        sendResult(result)
+                        result?.let { sendResult(result) }
                     },
-                    onFailure = {
-                        val result = DropInServiceResult.Error(
-                            reason = it.message,
-                            dismissDropIn = false,
-                        )
-                        sendResult(result)
-                    }
+                    onFailure = ::onFailure
                 )
         }
     }
+
+    private fun OrderResponse?.isNonFullyPaid() = (this?.remainingAmount?.value ?: 0) > 0
 
     override fun onDetailsCallRequested(actionComponentData: ActionComponentData, actionComponentJson: JSONObject) {
         launch {
             sessionRepository.submitDetails(actionComponentData)
                 .fold(
                     onSuccess = { response ->
-                        val result = when {
-                            response.action != null -> DropInServiceResult.Action(response.action!!)
-                            else -> DropInServiceResult.Finished(response.resultCode ?: "EMPTY")
+                        val result = when (val action = response.action) {
+                            null -> DropInServiceResult.Finished(response.resultCode ?: "EMPTY")
+                            else -> DropInServiceResult.Action(action)
                         }
                         sendResult(result)
                     },
-                    onFailure = {
-                        val result = DropInServiceResult.Error(
-                            reason = it.message,
-                            dismissDropIn = false,
-                        )
-                        sendResult(result)
-                    }
+                    onFailure = ::onFailure
                 )
         }
     }
@@ -127,17 +121,10 @@ internal class SessionDropInService : DropInService() {
             sessionRepository.checkBalance(paymentMethodData)
                 .fold(
                     onSuccess = { response ->
-                        // TODO: Check how not enough balance is handled
                         val balanceResult = BalanceResult(response.balance, response.transactionLimit)
                         sendBalanceResult(BalanceDropInServiceResult.Balance(balanceResult))
                     },
-                    onFailure = {
-                        val result = DropInServiceResult.Error(
-                            reason = it.message,
-                            dismissDropIn = false,
-                        )
-                        sendResult(result)
-                    }
+                    onFailure = ::onFailure
                 )
         }
     }
@@ -147,15 +134,17 @@ internal class SessionDropInService : DropInService() {
             sessionRepository.createOrder()
                 .fold(
                     onSuccess = { response ->
-                        // TODO: Check difference between SessionOrderResponse and OrderResponse
-                    },
-                    onFailure = {
-                        val result = DropInServiceResult.Error(
-                            reason = it.message,
-                            dismissDropIn = false,
+                        val order = OrderResponse(
+                            pspReference = response.pspReference,
+                            orderData = response.orderData,
+                            reference = null,
+                            amount = null,
+                            remainingAmount = null,
+                            expiresAt = null,
                         )
-                        sendResult(result)
-                    }
+                        sendOrderResult(OrderDropInServiceResult.OrderCreated(order))
+                    },
+                    onFailure = ::onFailure
                 )
         }
     }
@@ -165,17 +154,43 @@ internal class SessionDropInService : DropInService() {
             sessionRepository.cancelOrder(order)
                 .fold(
                     onSuccess = {
-                        //if (shouldUpdatePaymentMethods) // TODO: fetch payment methods
+                        if (shouldUpdatePaymentMethods) {
+                            updatePaymentMethods()
+                        }
                     },
-                    onFailure = {
-                        val result = DropInServiceResult.Error(
-                            reason = it.message,
-                            dismissDropIn = false,
-                        )
-                        sendResult(result)
-                    }
+                    onFailure = ::onFailure
                 )
         }
+    }
+
+    private fun updatePaymentMethods(order: OrderResponse? = null) {
+        launch {
+            val orderRequest = order?.let {
+                OrderRequest(
+                    pspReference = order.pspReference,
+                    orderData = order.orderData
+                )
+            }
+
+            sessionRepository.setupSession(orderRequest)
+                .fold(
+                    onSuccess = { response ->
+                        val paymentMethods = response.paymentMethods
+                        val result = if (paymentMethods != null) DropInServiceResult.Update(paymentMethods, order)
+                        else DropInServiceResult.Error(reason = "Payment methods should not be null")
+                        sendResult(result)
+                    },
+                    onFailure = ::onFailure
+                )
+        }
+    }
+
+    private fun onFailure(throwable: Throwable) {
+        val result = DropInServiceResult.Error(
+            reason = throwable.message,
+            dismissDropIn = false,
+        )
+        sendResult(result)
     }
 
     companion object {
