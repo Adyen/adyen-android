@@ -75,11 +75,12 @@ class GooglePayProvider :
             WeakReference<ComponentAvailableCallback<GooglePayConfiguration>>(callback)
         val serverGatewayMerchantId = paymentMethod.configuration?.gatewayMerchantId
         val params = GooglePayParams(configuration, serverGatewayMerchantId, paymentMethod.brands)
-        val paymentsClient: PaymentsClient = Wallet.getPaymentsClient(applicationContext, GooglePayUtils.createWalletOptions(params))
+        val paymentsClient: PaymentsClient =
+            Wallet.getPaymentsClient(applicationContext, GooglePayUtils.createWalletOptions(params))
         val readyToPayRequest: IsReadyToPayRequest = GooglePayUtils.createIsReadyToPayRequest(params)
         val readyToPayTask: Task<Boolean> = paymentsClient.isReadyToPay(readyToPayRequest)
-        readyToPayTask.addOnCompleteListener { task ->
-            callbackWeakReference.get()?.onAvailabilityResult(task.result == true, paymentMethod, configuration)
+        readyToPayTask.addOnSuccessListener { result ->
+            callbackWeakReference.get()?.onAvailabilityResult(result, paymentMethod, configuration)
         }
         readyToPayTask.addOnCanceledListener {
             Logger.e(TAG, "GooglePay readyToPay task is cancelled.")
