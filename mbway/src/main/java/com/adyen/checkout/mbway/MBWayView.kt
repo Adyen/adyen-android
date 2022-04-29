@@ -75,12 +75,7 @@ class MBWayView :
     }
 
     override fun initLocalizedStrings(localizedContext: Context) {
-        val myAttrs = intArrayOf(android.R.attr.hint)
-
-        val typedArray =
-            localizedContext.obtainStyledAttributes(R.style.AdyenCheckout_MBWay_MobileNumberInput, myAttrs)
-        mMobileNumberInput?.hint = typedArray.getString(0)
-        typedArray.recycle()
+        mMobileNumberInput?.setLocalizedHintFromStyle(R.style.AdyenCheckout_MBWay_MobileNumberInput)
     }
 
     override fun initView() {
@@ -107,7 +102,7 @@ class MBWayView :
             }
         }
         val countries = getCountries()
-        val adapter = CountryAdapter(context)
+        val adapter = CountryAdapter(context, localizedContext)
         adapter.setItems(countries)
         mCountryAdapter = adapter
         // disable editing and hide cursor

@@ -10,13 +10,16 @@ package com.adyen.checkout.components.ui.view
 import android.content.Context
 import android.util.AttributeSet
 import android.widget.LinearLayout
+import android.widget.TextView
+import androidx.annotation.StyleRes
 import androidx.core.view.isVisible
 import androidx.lifecycle.LifecycleOwner
 import com.adyen.checkout.components.ComponentView
 import com.adyen.checkout.components.ViewableComponent
 import com.adyen.checkout.components.base.Configuration
 import com.adyen.checkout.components.base.OutputData
-import java.util.Locale
+import com.adyen.checkout.components.extensions.createLocalizedContext
+import com.google.android.material.textfield.TextInputLayout
 
 abstract class AdyenLinearLayout<
     OutputDataT : OutputData,
@@ -40,20 +43,12 @@ abstract class AdyenLinearLayout<
     override fun attach(component: ComponentT, lifecycleOwner: LifecycleOwner) {
         _component = component
         onComponentAttached()
-        localizedContext = createLocalizedContext(component.configuration.shopperLocale)
+        localizedContext = context.createLocalizedContext(component.configuration.shopperLocale)
         initView()
         initLocalizedStrings(localizedContext)
         isVisible = true
         component.sendAnalyticsEvent(context)
         observeComponentChanges(lifecycleOwner)
-    }
-
-    private fun createLocalizedContext(shopperLocale: Locale): Context {
-        // We need to get the strings from the styles instead of the strings.xml because merchants can override them.
-        val configuration = context.resources.configuration
-        val newConfig = android.content.res.Configuration(configuration)
-        newConfig.setLocale(shopperLocale)
-        return context.createConfigurationContext(newConfig)
     }
 
     /**
@@ -67,4 +62,18 @@ abstract class AdyenLinearLayout<
      * It's better to Observer on live data objects here.
      */
     protected abstract fun observeComponentChanges(lifecycleOwner: LifecycleOwner)
+
+    protected fun TextInputLayout.setLocalizedHintFromStyle(@StyleRes styleResId: Int) {
+        val attrs = intArrayOf(android.R.attr.hint)
+        val typedArray = localizedContext.obtainStyledAttributes(styleResId, attrs)
+        hint = typedArray.getString(0)
+        typedArray.recycle()
+    }
+
+    protected fun TextView.setLocalizedTextFromStyle(@StyleRes styleResId: Int) {
+        val attrs = intArrayOf(android.R.attr.text)
+        val typedArray = localizedContext.obtainStyledAttributes(styleResId, attrs)
+        text = typedArray.getString(0)
+        typedArray.recycle()
+    }
 }

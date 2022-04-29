@@ -68,7 +68,11 @@ class QRCodeView :
 
     private fun copyCode() {
         val code = component.getCodeString() ?: return
-        context.copyTextToClipboard("Pix Code", code, resources.getString(R.string.checkout_qr_code_copied_toast))
+        context.copyTextToClipboard(
+            "Pix Code",
+            code,
+            localizedContext.getString(R.string.checkout_qr_code_copied_toast)
+        )
     }
 
     override val isConfirmationRequired: Boolean
@@ -79,7 +83,7 @@ class QRCodeView :
     }
 
     override fun initLocalizedStrings(localizedContext: Context) {
-        // TODO: 14/04/2021 IMPLEMENT
+        binding.copyButton.setLocalizedTextFromStyle(R.style.AdyenCheckout_QrCode_CopyButton)
     }
 
     override fun observeComponentChanges(lifecycleOwner: LifecycleOwner) {
@@ -102,8 +106,15 @@ class QRCodeView :
     private fun onTimerTick(timerData: TimerData) {
         val minutes = TimeUnit.MILLISECONDS.toMinutes(timerData.millisUntilFinished)
         val seconds = TimeUnit.MILLISECONDS.toSeconds(timerData.millisUntilFinished) % TimeUnit.MINUTES.toSeconds(1)
-        val minutesSecondsString = resources.getString(R.string.checkout_qr_code_time_left_format, minutes, seconds)
-        binding.textViewTimer.text = resources.getString(R.string.checkout_qr_code_timer_text, minutesSecondsString)
+        val minutesSecondsString = localizedContext.getString(
+            R.string.checkout_qr_code_time_left_format,
+            minutes,
+            seconds
+        )
+        binding.textViewTimer.text = localizedContext.getString(
+            R.string.checkout_qr_code_timer_text,
+            minutesSecondsString
+        )
         binding.progressIndicator.progress = timerData.progress
     }
 
@@ -117,7 +128,7 @@ class QRCodeView :
 
     private fun updateMessageText() {
         val resId = getMessageTextResource() ?: return
-        binding.textViewTopLabel.setText(resId)
+        binding.textViewTopLabel.text = localizedContext.getString(resId)
     }
 
     @StringRes

@@ -12,6 +12,7 @@
 
     <style name="AdyenCheckout.QrCode.CopyButton" parent="AdyenCheckout.Button.Colored">
         <item name="android:layout_height">@dimen/copy_button_height</item>
+        <item name="android:text">@string/checkout_qr_code_copy_button</item>
         <item name="android:textAllCaps">false</item>
     </style>
 

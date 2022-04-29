@@ -16,4 +16,8 @@
         <item name="android:maxLength">6</item>
     </style>
 
+    <style name="AdyenCheckout.Blik.BlikHeaderTextView" parent="AdyenCheckout.TextAppearance.Primary">
+        <item name="android:text">@string/checkout_blik_helper_text</item>
+    </style>
+
 </resources>

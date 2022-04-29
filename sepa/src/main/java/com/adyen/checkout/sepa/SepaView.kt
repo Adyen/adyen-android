@@ -8,7 +8,6 @@
 package com.adyen.checkout.sepa
 
 import android.content.Context
-import android.content.res.TypedArray
 import android.util.AttributeSet
 import android.view.LayoutInflater
 import android.view.View
@@ -52,18 +51,8 @@ class SepaView @JvmOverloads constructor(
     }
 
     override fun initLocalizedStrings(localizedContext: Context) {
-        val myAttrs = intArrayOf(android.R.attr.hint)
-
-        // Holder name
-        var typedArray: TypedArray =
-            localizedContext.obtainStyledAttributes(R.style.AdyenCheckout_Sepa_HolderNameInput, myAttrs)
-        holderNameInput.hint = typedArray.getString(0)
-        typedArray.recycle()
-
-        // Account Number
-        typedArray = localizedContext.obtainStyledAttributes(R.style.AdyenCheckout_Sepa_AccountNumberInput, myAttrs)
-        ibanNumberInput.hint = typedArray.getString(0)
-        typedArray.recycle()
+        holderNameInput.setLocalizedHintFromStyle(R.style.AdyenCheckout_Sepa_HolderNameInput)
+        ibanNumberInput.setLocalizedHintFromStyle(R.style.AdyenCheckout_Sepa_AccountNumberInput)
     }
 
     override fun initView() {

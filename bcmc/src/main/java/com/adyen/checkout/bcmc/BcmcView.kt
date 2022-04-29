@@ -8,7 +8,6 @@
 package com.adyen.checkout.bcmc
 
 import android.content.Context
-import android.content.res.TypedArray
 import android.util.AttributeSet
 import android.view.LayoutInflater
 import android.view.View
@@ -64,24 +63,9 @@ class BcmcView @JvmOverloads constructor(
     }
 
     override fun initLocalizedStrings(localizedContext: Context) {
-        var myAttrs = intArrayOf(android.R.attr.hint)
-
-        // Card Number
-        var typedArray: TypedArray =
-            localizedContext.obtainStyledAttributes(R.style.AdyenCheckout_Card_CardNumberInput, myAttrs)
-        cardNumberInput.hint = typedArray.getString(0)
-        typedArray.recycle()
-
-        // Expiry Date
-        typedArray = localizedContext.obtainStyledAttributes(R.style.AdyenCheckout_Card_ExpiryDateInput, myAttrs)
-        expiryDateInput.hint = typedArray.getString(0)
-        typedArray.recycle()
-
-        // Store Switch
-        myAttrs = intArrayOf(android.R.attr.text)
-        typedArray = localizedContext.obtainStyledAttributes(R.style.AdyenCheckout_Card_StorePaymentSwitch, myAttrs)
-        switchStorePaymentMethod.text = typedArray.getString(0)
-        typedArray.recycle()
+        cardNumberInput.setLocalizedHintFromStyle(R.style.AdyenCheckout_Card_CardNumberInput)
+        expiryDateInput.setLocalizedHintFromStyle(R.style.AdyenCheckout_Card_ExpiryDateInput)
+        switchStorePaymentMethod.setLocalizedTextFromStyle(R.style.AdyenCheckout_Card_StorePaymentSwitch)
     }
 
     override fun initView() {
