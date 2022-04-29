@@ -10,10 +10,10 @@ package com.adyen.checkout.example.di
 
 import com.adyen.checkout.example.data.api.CheckoutApiService
 import com.adyen.checkout.example.data.api.RecurringApiService
+import com.adyen.checkout.example.repositories.PaymentsRepository
+import com.adyen.checkout.example.repositories.PaymentsRepositoryImpl
 import com.adyen.checkout.example.repositories.RecurringRepository
 import com.adyen.checkout.example.repositories.RecurringRepositoryImpl
-import com.adyen.checkout.example.repositories.paymentMethods.PaymentsRepository
-import com.adyen.checkout.example.repositories.paymentMethods.PaymentsRepositoryImpl
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn

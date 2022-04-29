@@ -15,21 +15,20 @@ import android.view.MenuItem
 import android.widget.Toast
 import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
-import androidx.core.view.isVisible
-import com.adyen.checkout.components.model.PaymentMethodsApiResponse
+import androidx.lifecycle.lifecycleScope
 import com.adyen.checkout.core.log.LogUtil
 import com.adyen.checkout.core.log.Logger
 import com.adyen.checkout.dropin.DropIn
 import com.adyen.checkout.dropin.DropInCallback
 import com.adyen.checkout.dropin.DropInResult
 import com.adyen.checkout.example.R
-import com.adyen.checkout.example.data.api.CheckoutApiService
 import com.adyen.checkout.example.databinding.ActivityMainBinding
 import com.adyen.checkout.example.ui.card.CardActivity
 import com.adyen.checkout.example.ui.configuration.CheckoutConfigurationProvider
 import com.adyen.checkout.example.ui.configuration.ConfigurationActivity
-import com.adyen.checkout.sessions.model.Session
 import dagger.hilt.android.AndroidEntryPoint
+import kotlinx.coroutines.flow.collect
+import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 @AndroidEntryPoint
@@ -40,14 +39,14 @@ class MainActivity : AppCompatActivity(), DropInCallback {
     }
 
     private lateinit var binding: ActivityMainBinding
-    private val paymentMethodsViewModel: PaymentMethodsViewModel by viewModels()
+    private val viewModel: PaymentMethodsViewModel by viewModels()
 
     @Inject
     internal lateinit var checkoutConfigurationProvider: CheckoutConfigurationProvider
 
     private val dropInLauncher = DropIn.registerForDropInResult(this, this)
 
-    private var isWaitingPaymentMethods = false
+    private var componentItemAdapter: ComponentItemAdapter? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -59,33 +58,19 @@ class MainActivity : AppCompatActivity(), DropInCallback {
         setSupportActionBar(binding.toolbar)
         supportActionBar?.setDisplayShowTitleEnabled(false)
 
-        binding.componentList.adapter = ComponentItemAdapter(
-            ComponentItemProvider.getComponentItems(),
-            ::onComponentEntryClick
+        componentItemAdapter = ComponentItemAdapter(
+            viewModel::onComponentEntryClick
         )
+        binding.componentList.adapter = componentItemAdapter
 
         val result = DropIn.getDropInResultFromIntent(intent)
         if (result != null) {
             Toast.makeText(this, result, Toast.LENGTH_SHORT).show()
         }
 
-        paymentMethodsViewModel.paymentMethodResponseLiveData.observe(this) {
-            if (it != null) {
-                Logger.d(
-                    TAG,
-                    "Got paymentMethods response - oneClick? ${it.storedPaymentMethods?.size ?: 0}"
-                )
-                if (isWaitingPaymentMethods) startDropIn(it)
-            } else {
-                Logger.v(TAG, "API response is null")
-            }
-        }
-    }
-
-    override fun onResume() {
-        super.onResume()
-        if (CheckoutApiService.isRealUrlAvailable()) {
-            paymentMethodsViewModel.requestPaymentMethods()
+        lifecycleScope.launchWhenStarted {
+            launch { viewModel.viewState.collect(::onViewState) }
+            launch { viewModel.navigateTo.collect(::onNavigateTo) }
         }
     }
 
@@ -121,61 +106,55 @@ class MainActivity : AppCompatActivity(), DropInCallback {
         }
     }
 
-    private fun onComponentEntryClick(entry: ComponentItem.Entry) {
-        if (!CheckoutApiService.isRealUrlAvailable()) {
-            Toast.makeText(
-                this@MainActivity,
-                "No server URL configured on local.gradle file.",
-                Toast.LENGTH_SHORT
-            ).show()
-            return
+    private fun onViewState(viewState: MainViewState) {
+        when (viewState) {
+            is MainViewState.Error -> {
+                setLoading(false)
+                Toast.makeText(this, viewState.message, Toast.LENGTH_SHORT).show()
+            }
+            MainViewState.Loading -> setLoading(true)
+            is MainViewState.Result -> {
+                setLoading(false)
+                componentItemAdapter?.items = viewState.items
+            }
         }
+    }
 
-        when (entry) {
-            ComponentItem.Entry.DropIn -> {
-                val currentResponse = paymentMethodsViewModel.paymentMethodResponseLiveData.value
-                if (currentResponse != null) {
-                    startDropIn(currentResponse)
-                } else {
-                    setLoading(true)
-                }
-            }
-            ComponentItem.Entry.DropInWithSession -> {
-                DropIn.startPaymentWithSession(
-                    this,
-                    dropInLauncher,
-                    // TODO: fetch real session
-                    Session("id", "data"),
-                    checkoutConfigurationProvider.getDropInConfiguration(this)
-                )
-            }
-            ComponentItem.Entry.Card -> {
+    private fun onNavigateTo(navigation: MainNavigation) {
+        when (navigation) {
+            MainNavigation.Card -> {
                 val intent = Intent(this, CardActivity::class.java)
                 startActivity(intent)
             }
+            is MainNavigation.DropIn -> {
+                DropIn.startPayment(
+                    this,
+                    dropInLauncher,
+                    navigation.paymentMethodsApiResponse,
+                    checkoutConfigurationProvider.getDropInConfiguration(this),
+                )
+            }
+            is MainNavigation.DropInWithSession -> {
+                DropIn.startPaymentWithSession(
+                    this,
+                    dropInLauncher,
+                    navigation.session,
+                    checkoutConfigurationProvider.getDropInConfiguration(this)
+                )
+            }
         }
-    }
-
-    private fun startDropIn(paymentMethodsApiResponse: PaymentMethodsApiResponse) {
-        Logger.d(TAG, "startDropIn")
-        setLoading(false)
-
-        DropIn.startPayment(
-            this,
-            dropInLauncher,
-            paymentMethodsApiResponse,
-            checkoutConfigurationProvider.getDropInConfiguration(this),
-        )
     }
 
     private fun setLoading(isLoading: Boolean) {
-        isWaitingPaymentMethods = isLoading
         if (isLoading) {
-            binding.componentList.isVisible = false
             binding.progressIndicator.show()
         } else {
-            binding.componentList.isVisible = true
             binding.progressIndicator.hide()
         }
+    }
+
+    override fun onDestroy() {
+        super.onDestroy()
+        componentItemAdapter = null
     }
 }

@@ -6,7 +6,7 @@
  * Created by arman on 10/10/2019.
  */
 
-package com.adyen.checkout.example.repositories.paymentMethods
+package com.adyen.checkout.example.repositories
 
 import com.adyen.checkout.components.model.PaymentMethodsApiResponse
 import com.adyen.checkout.example.data.api.CheckoutApiService
@@ -17,7 +17,6 @@ import com.adyen.checkout.example.data.api.model.PaymentMethodsRequest
 import com.adyen.checkout.example.data.api.model.PaymentsRequest
 import com.adyen.checkout.example.data.api.model.PaymentsRequestData
 import com.adyen.checkout.example.data.api.model.SessionRequest
-import com.adyen.checkout.example.repositories.safeApiCall
 import com.adyen.checkout.sessions.model.Session
 import com.squareup.moshi.Moshi
 import com.squareup.moshi.kotlin.reflect.KotlinJsonAdapterFactory

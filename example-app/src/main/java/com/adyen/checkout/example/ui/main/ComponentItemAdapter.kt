@@ -1,5 +1,6 @@
 package com.adyen.checkout.example.ui.main
 
+import android.annotation.SuppressLint
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
@@ -8,10 +9,15 @@ import com.adyen.checkout.example.databinding.ItemComponentEntryBinding
 import com.adyen.checkout.example.databinding.ItemComponentTitleBinding
 
 internal class ComponentItemAdapter(
-    private val items: List<ComponentItem>,
     private val onEntryClick: (ComponentItem.Entry) -> Unit,
-) :
-    RecyclerView.Adapter<ComponentItemAdapter.ComponentItemViewHolder>() {
+) : RecyclerView.Adapter<ComponentItemAdapter.ComponentItemViewHolder>() {
+
+    var items = emptyList<ComponentItem>()
+        @SuppressLint("NotifyDataSetChanged")
+        set(value) {
+            field = value
+            notifyDataSetChanged()
+        }
 
     override fun getItemCount(): Int = items.size
 
