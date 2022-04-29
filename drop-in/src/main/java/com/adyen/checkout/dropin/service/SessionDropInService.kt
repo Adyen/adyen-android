@@ -23,6 +23,7 @@ import com.adyen.checkout.sessions.repository.SessionRepository
 import kotlinx.coroutines.launch
 import org.json.JSONObject
 
+@Suppress("TooManyFunctions")
 open class SessionDropInService : DropInService() {
 
     private var isInitialized = false
@@ -121,8 +122,12 @@ open class SessionDropInService : DropInService() {
             sessionRepository.checkBalance(paymentMethodData)
                 .fold(
                     onSuccess = { response ->
-                        val balanceResult = BalanceResult(response.balance, response.transactionLimit)
-                        sendBalanceResult(BalanceDropInServiceResult.Balance(balanceResult))
+                        if (response.balance.value <= 0) {
+                            onFailure("Not enough balance")
+                        } else {
+                            val balanceResult = BalanceResult(response.balance, response.transactionLimit)
+                            sendBalanceResult(BalanceDropInServiceResult.Balance(balanceResult))
+                        }
                     },
                     onFailure = ::onFailure
                 )
@@ -186,8 +191,12 @@ open class SessionDropInService : DropInService() {
     }
 
     private fun onFailure(throwable: Throwable) {
+        onFailure(throwable.message)
+    }
+
+    private fun onFailure(reason: String?) {
         val result = DropInServiceResult.Error(
-            reason = throwable.message,
+            reason = reason,
             dismissDropIn = false,
         )
         sendResult(result)
