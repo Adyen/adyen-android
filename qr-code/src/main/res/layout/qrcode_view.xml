@@ -55,7 +55,6 @@
     <Button
         android:id="@+id/copyButton"
         style="@style/AdyenCheckout.QrCode.CopyButton"
-        android:layout_width="match_parent"
-        android:text="@string/checkout_qr_code_copy_button" />
+        android:layout_width="match_parent" />
 
 </merge>

@@ -17,7 +17,8 @@ import android.widget.Filter
 import android.widget.Filterable
 import com.adyen.checkout.mbway.R
 
-class CountryAdapter(private val context: Context) : BaseAdapter(), Filterable {
+// We need context to inflate the views and localizedContext to fetch the strings
+class CountryAdapter(private val context: Context, private val localizedContext: Context) : BaseAdapter(), Filterable {
 
     private val countries: MutableList<CountryModel> = mutableListOf()
     private val countryFilter: CountryFilter = CountryFilter(countries)

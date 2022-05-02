@@ -58,7 +58,7 @@ class AwaitView @JvmOverloads constructor(
     }
 
     override fun initLocalizedStrings(localizedContext: Context) {
-        // TODO: 02/09/2020 IMPLEMENT
+        textViewWaitingConfirmation.setLocalizedTextFromStyle(R.style.AdyenCheckout_Await_WaitingConfirmationTextView)
     }
 
     override fun observeComponentChanges(lifecycleOwner: LifecycleOwner) {
@@ -93,7 +93,7 @@ class AwaitView @JvmOverloads constructor(
 
     private fun updateMessageText() {
         messageTextResource?.let {
-            textViewOpenApp.setText(it)
+            textViewOpenApp.text = localizedContext.getString(it)
         }
     }
 
