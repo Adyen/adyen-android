@@ -126,6 +126,9 @@ class CardView @JvmOverloads constructor(
         binding.textInputLayoutKcpCardPassword.setLocalizedHintFromStyle(
             R.style.AdyenCheckout_Card_KcpCardPassword
         )
+        binding.textInputLayoutInstallments.setLocalizedHintFromStyle(
+            R.style.AdyenCheckout_DropdownTextInputLayout_Installments
+        )
         binding.switchStorePaymentMethod.setLocalizedTextFromStyle(R.style.AdyenCheckout_Card_StorePaymentSwitch)
     }
 
