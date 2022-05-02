@@ -69,6 +69,11 @@ public abstract class AdyenLinearLayout<
         return mComponent;
     }
 
+    @NonNull
+    protected Context getLocalizedContext() {
+        return mLocalizedContext;
+    }
+
     private void initLocalization(@NonNull Locale shopperLocale) {
         // We need to get the strings from the styles instead of the strings.xml because merchants can override them.
         final android.content.res.Configuration configuration = getContext().getResources().getConfiguration();

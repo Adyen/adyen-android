@@ -14,6 +14,7 @@ import android.view.LayoutInflater
 import androidx.lifecycle.LifecycleOwner
 import androidx.lifecycle.Observer
 import com.adyen.checkout.bacs.databinding.BacsDirectDebitConfirmationViewBinding
+import com.adyen.checkout.components.extensions.setLocalizedHintFromStyle
 import com.adyen.checkout.components.ui.view.AdyenLinearLayout
 
 class BacsDirectDebitConfirmationView @JvmOverloads constructor(context: Context, attrs: AttributeSet? = null, defStyleAttr: Int = 0) :
@@ -54,27 +55,22 @@ class BacsDirectDebitConfirmationView @JvmOverloads constructor(context: Context
     }
 
     override fun initLocalizedStrings(localizedContext: Context) {
-        val attrs = intArrayOf(android.R.attr.hint)
-
-        // Holder Name
-        var typedArray = localizedContext.obtainStyledAttributes(R.style.AdyenCheckout_Bacs_HolderNameInput, attrs)
-        binding.textInputLayoutHolderName.hint = typedArray.getString(0)
-        typedArray.recycle()
-
-        // Account Number
-        typedArray = localizedContext.obtainStyledAttributes(R.style.AdyenCheckout_Bacs_AccountNumberInput, attrs)
-        binding.textInputLayoutBankAccountNumber.hint = typedArray.getString(0)
-        typedArray.recycle()
-
-        // Sort Code
-        typedArray = localizedContext.obtainStyledAttributes(R.style.AdyenCheckout_Bacs_SortCodeInput, attrs)
-        binding.textInputLayoutSortCode.hint = typedArray.getString(0)
-        typedArray.recycle()
-
-        // Shopper Email
-        typedArray = localizedContext.obtainStyledAttributes(R.style.AdyenCheckout_Bacs_ShopperEmailInput, attrs)
-        binding.textInputLayoutShopperEmail.hint = typedArray.getString(0)
-        typedArray.recycle()
+        binding.textInputLayoutHolderName.setLocalizedHintFromStyle(
+            R.style.AdyenCheckout_Bacs_HolderNameInput,
+            localizedContext
+        )
+        binding.textInputLayoutBankAccountNumber.setLocalizedHintFromStyle(
+            R.style.AdyenCheckout_Bacs_AccountNumberInput,
+            localizedContext
+        )
+        binding.textInputLayoutSortCode.setLocalizedHintFromStyle(
+            R.style.AdyenCheckout_Bacs_SortCodeInput,
+            localizedContext
+        )
+        binding.textInputLayoutShopperEmail.setLocalizedHintFromStyle(
+            R.style.AdyenCheckout_Bacs_ShopperEmailInput,
+            localizedContext
+        )
     }
 
     override fun observeComponentChanges(lifecycleOwner: LifecycleOwner) {

@@ -19,10 +19,14 @@ import android.widget.TextView
 import androidx.annotation.StringRes
 import androidx.recyclerview.widget.RecyclerView
 
-class InstallmentListAdapter(private val context: Context) : BaseAdapter(), Filterable {
+// We need context to inflate the views and localizedContext to fetch the strings
+class InstallmentListAdapter(
+    private val context: Context,
+    private val localizedContext: Context
+) : BaseAdapter(), Filterable {
 
     private val installmentOptions: MutableList<InstallmentModel> = mutableListOf()
-    private val installmentFilter = InstallmentFilter(context, installmentOptions)
+    private val installmentFilter = InstallmentFilter(localizedContext, installmentOptions)
 
     fun setItems(installmentOptions: List<InstallmentModel>) {
         this.installmentOptions.clear()
@@ -41,7 +45,7 @@ class InstallmentListAdapter(private val context: Context) : BaseAdapter(), Filt
         val viewHolder: InstallmentViewHolder
         if (convertView == null) {
             view = LayoutInflater.from(context).inflate(R.layout.installment_view, parent, false)
-            viewHolder = InstallmentViewHolder(view)
+            viewHolder = InstallmentViewHolder(view, localizedContext)
             view.tag = viewHolder
         } else {
             view = convertView
@@ -85,11 +89,14 @@ class InstallmentFilter(
     }
 }
 
-class InstallmentViewHolder(private val rootView: View) : RecyclerView.ViewHolder(rootView) {
+class InstallmentViewHolder(
+    rootView: View,
+    private val localizedContext: Context
+) : RecyclerView.ViewHolder(rootView) {
 
     private val installmentTextView: TextView = rootView.findViewById(R.id.textView_installmentOption)
 
     fun bindItem(installmentModel: InstallmentModel) {
-        installmentTextView.text = InstallmentUtils.getTextForInstallmentOption(rootView.context, installmentModel)
+        installmentTextView.text = InstallmentUtils.getTextForInstallmentOption(localizedContext, installmentModel)
     }
 }
