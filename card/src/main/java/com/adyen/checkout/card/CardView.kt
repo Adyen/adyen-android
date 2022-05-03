@@ -145,6 +145,7 @@ class CardView @JvmOverloads constructor(context: Context, attrs: AttributeSet? 
             R.style.AdyenCheckout_Card_StorePaymentSwitch,
             localizedContext
         )
+        binding.addressFormInput.initLocalizedContext(localizedContext)
     }
 
     override fun onComponentAttached() {
