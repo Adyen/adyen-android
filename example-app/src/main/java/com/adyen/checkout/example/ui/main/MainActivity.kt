@@ -28,6 +28,7 @@ import com.adyen.checkout.example.databinding.ActivityMainBinding
 import com.adyen.checkout.example.ui.card.CardActivity
 import com.adyen.checkout.example.ui.configuration.CheckoutConfigurationProvider
 import com.adyen.checkout.example.ui.configuration.ConfigurationActivity
+import com.adyen.checkout.sessions.model.Session
 import dagger.hilt.android.AndroidEntryPoint
 import javax.inject.Inject
 
@@ -139,6 +140,15 @@ class MainActivity : AppCompatActivity(), DropInCallback {
                     setLoading(true)
                 }
             }
+            ComponentItem.Entry.DropInWithSession -> {
+                DropIn.startPaymentWithSession(
+                    this,
+                    dropInLauncher,
+                    // TODO: fetch real session
+                    Session("id", "data"),
+                    checkoutConfigurationProvider.getDropInConfiguration(this)
+                )
+            }
             ComponentItem.Entry.Card -> {
                 val intent = Intent(this, CardActivity::class.java)
                 startActivity(intent)
@@ -149,9 +159,6 @@ class MainActivity : AppCompatActivity(), DropInCallback {
     private fun startDropIn(paymentMethodsApiResponse: PaymentMethodsApiResponse) {
         Logger.d(TAG, "startDropIn")
         setLoading(false)
-
-        val resultIntent = Intent(this, MainActivity::class.java)
-        resultIntent.flags = Intent.FLAG_ACTIVITY_CLEAR_TOP
 
         DropIn.startPayment(
             this,

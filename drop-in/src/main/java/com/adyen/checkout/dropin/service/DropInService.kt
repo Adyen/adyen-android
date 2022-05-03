@@ -25,7 +25,6 @@ import com.adyen.checkout.components.model.payments.request.PaymentMethodDetails
 import com.adyen.checkout.core.log.LogUtil
 import com.adyen.checkout.core.log.Logger
 import com.adyen.checkout.dropin.DropInConfiguration
-import kotlin.coroutines.CoroutineContext
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.Job
@@ -34,8 +33,7 @@ import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.flow.receiveAsFlow
 import kotlinx.coroutines.launch
 import org.json.JSONObject
-
-private val TAG = LogUtil.getTag()
+import kotlin.coroutines.CoroutineContext
 
 /**
  * Base service to be extended by the merchant to provide the network calls that connect to the Adyen endpoints.
@@ -215,11 +213,8 @@ abstract class DropInService : Service(), CoroutineScope, DropInServiceInterface
      * @param result the result of the network request.
      */
     protected fun sendResult(result: DropInServiceResult) {
-        launch {
-            // send response back to activity
-            Logger.d(TAG, "dispatching DropInServiceResult")
-            resultChannel.send(result)
-        }
+        Logger.d(TAG, "dispatching DropInServiceResult")
+        emitResult(result)
     }
 
     /**
@@ -232,11 +227,8 @@ abstract class DropInService : Service(), CoroutineScope, DropInServiceInterface
      * @param result the result of the network request.
      */
     protected fun sendBalanceResult(result: BalanceDropInServiceResult) {
-        launch {
-            // send response back to activity
-            Logger.d(TAG, "dispatching BalanceDropInServiceResult")
-            resultChannel.send(result)
-        }
+        Logger.d(TAG, "dispatching BalanceDropInServiceResult")
+        emitResult(result)
     }
 
     /**
@@ -249,11 +241,8 @@ abstract class DropInService : Service(), CoroutineScope, DropInServiceInterface
      * @param result the result of the network request.
      */
     protected fun sendOrderResult(result: OrderDropInServiceResult) {
-        launch {
-            // send response back to activity
-            Logger.d(TAG, "dispatching OrderDropInServiceResult")
-            resultChannel.send(result)
-        }
+        Logger.d(TAG, "dispatching OrderDropInServiceResult")
+        emitResult(result)
     }
 
     /**
@@ -267,9 +256,13 @@ abstract class DropInService : Service(), CoroutineScope, DropInServiceInterface
      * @param result the result of the network request.
      */
     protected fun sendRecurringResult(result: RecurringDropInServiceResult) {
+        Logger.d(TAG, "dispatching RecurringDropInServiceResult")
+        emitResult(result)
+    }
+
+    internal fun emitResult(result: BaseDropInServiceResult) {
         launch {
             // send response back to activity
-            Logger.d(TAG, "dispatching RecurringDropInServiceResult")
             resultChannel.send(result)
         }
     }
@@ -480,6 +473,9 @@ abstract class DropInService : Service(), CoroutineScope, DropInServiceInterface
     }
 
     companion object {
+
+        private val TAG = LogUtil.getTag()
+
         private const val INTENT_EXTRA_ADDITIONAL_DATA = "ADDITIONAL_DATA"
 
         internal fun bindService(

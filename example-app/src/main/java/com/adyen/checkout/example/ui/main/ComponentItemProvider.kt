@@ -7,6 +7,7 @@ internal object ComponentItemProvider {
     fun getComponentItems() = listOf(
         ComponentItem.Title(R.string.drop_in_title),
         ComponentItem.Entry.DropIn,
+        ComponentItem.Entry.DropInWithSession,
         ComponentItem.Title(R.string.components_title),
         ComponentItem.Entry.Card,
     )

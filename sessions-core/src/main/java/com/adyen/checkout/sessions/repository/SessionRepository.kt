@@ -31,15 +31,14 @@ import com.adyen.checkout.sessions.model.payments.SessionPaymentsResponse
 import com.adyen.checkout.sessions.model.setup.SessionSetupRequest
 import com.adyen.checkout.sessions.model.setup.SessionSetupResponse
 
-internal class SessionRepository(
-    configuration: Configuration,
+class SessionRepository(
+    private val configuration: Configuration,
+    private var session: Session,
 ) {
 
     private val sessionService = SessionService(configuration.environment.baseUrl)
 
     suspend fun setupSession(
-        configuration: Configuration,
-        session: Session,
         order: OrderRequest?
     ): Result<SessionSetupResponse> = runSuspendCatching {
         Logger.d(TAG, "Setting up session")
@@ -49,12 +48,12 @@ internal class SessionRepository(
             request = request,
             sessionId = session.id,
             clientKey = configuration.clientKey
-        )
+        ).also {
+            session = session.copy(sessionData = it.sessionData)
+        }
     }
 
     suspend fun submitPayment(
-        configuration: Configuration,
-        session: Session,
         paymentComponentData: PaymentComponentData<out PaymentMethodDetails>
     ): Result<SessionPaymentsResponse> = runSuspendCatching {
         Logger.d(TAG, "Submitting payment")
@@ -64,12 +63,12 @@ internal class SessionRepository(
             request = request,
             sessionId = session.id,
             clientKey = configuration.clientKey
-        )
+        ).also {
+            session = session.copy(sessionData = it.sessionData)
+        }
     }
 
     suspend fun submitDetails(
-        configuration: Configuration,
-        session: Session,
         actionComponentData: ActionComponentData
     ): Result<SessionDetailsResponse> = runSuspendCatching {
         Logger.d(TAG, "Submitting details")
@@ -83,12 +82,12 @@ internal class SessionRepository(
             request = request,
             sessionId = session.id,
             clientKey = configuration.clientKey
-        )
+        ).also {
+            session = session.copy(sessionData = it.sessionData)
+        }
     }
 
     suspend fun checkBalance(
-        configuration: Configuration,
-        session: Session,
         paymentMethodDetails: PaymentMethodDetails
     ): Result<SessionBalanceResponse> = runSuspendCatching {
         Logger.d(TAG, "Checking payment method balance")
@@ -98,13 +97,12 @@ internal class SessionRepository(
             request = request,
             sessionId = session.id,
             clientKey = configuration.clientKey
-        )
+        ).also {
+            session = session.copy(sessionData = it.sessionData)
+        }
     }
 
-    suspend fun createOrder(
-        configuration: Configuration,
-        session: Session
-    ): Result<SessionOrderResponse> = runSuspendCatching {
+    suspend fun createOrder(): Result<SessionOrderResponse> = runSuspendCatching {
         Logger.d(TAG, "Creating order")
 
         val request = SessionOrderRequest(session.sessionData.orEmpty())
@@ -112,12 +110,12 @@ internal class SessionRepository(
             request = request,
             sessionId = session.id,
             clientKey = configuration.clientKey
-        )
+        ).also {
+            session = session.copy(sessionData = it.sessionData)
+        }
     }
 
     suspend fun cancelOrder(
-        configuration: Configuration,
-        session: Session,
         order: OrderRequest
     ): Result<SessionCancelOrderResponse> = runSuspendCatching {
         Logger.d(TAG, "Cancelling order")
@@ -127,7 +125,9 @@ internal class SessionRepository(
             request = request,
             sessionId = session.id,
             clientKey = configuration.clientKey
-        )
+        ).also {
+            session = session.copy(sessionData = it.sessionData)
+        }
     }
 
     companion object {

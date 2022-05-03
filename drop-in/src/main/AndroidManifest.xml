@@ -30,6 +30,8 @@
                     android:scheme="${checkoutRedirectScheme}" />
             </intent-filter>
         </activity>
+
+        <service android:name=".service.SessionDropInService" />
     </application>
 
 </manifest>

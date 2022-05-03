@@ -3,6 +3,7 @@
 
     <string name="drop_in_title">Drop In</string>
     <string name="drop_in_entry">Start</string>
+    <string name="drop_in_with_session_entry">Start with session</string>
     <string name="components_title">Components</string>
     <string name="card_component_entry">Card</string>
 
