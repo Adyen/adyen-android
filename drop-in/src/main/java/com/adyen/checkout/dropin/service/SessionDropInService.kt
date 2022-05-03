@@ -60,10 +60,7 @@ open class SessionDropInService : DropInService() {
                         sendSessionSetupResult(SessionSetupDropInServiceResult.Success(it))
                     },
                     onFailure = {
-                        val result = SessionSetupDropInServiceResult.Error(
-                            reason = it.message,
-                            dismissDropIn = false,
-                        )
+                        val result = SessionSetupDropInServiceResult.Error(reason = it.message)
                         sendSessionSetupResult(result)
                     }
                 )
@@ -94,7 +91,10 @@ open class SessionDropInService : DropInService() {
                         }
                         result?.let { sendResult(result) }
                     },
-                    onFailure = ::onFailure
+                    onFailure = {
+                        val result = DropInServiceResult.Error(reason = it.message)
+                        sendResult(result)
+                    }
                 )
         }
     }
@@ -112,7 +112,10 @@ open class SessionDropInService : DropInService() {
                         }
                         sendResult(result)
                     },
-                    onFailure = ::onFailure
+                    onFailure = {
+                        val result = DropInServiceResult.Error(reason = it.message)
+                        sendResult(result)
+                    }
                 )
         }
     }
@@ -122,14 +125,18 @@ open class SessionDropInService : DropInService() {
             sessionRepository.checkBalance(paymentMethodData)
                 .fold(
                     onSuccess = { response ->
-                        if (response.balance.value <= 0) {
-                            onFailure("Not enough balance")
+                        val result = if (response.balance.value <= 0) {
+                            BalanceDropInServiceResult.Error(reason = "Not enough balance")
                         } else {
                             val balanceResult = BalanceResult(response.balance, response.transactionLimit)
-                            sendBalanceResult(BalanceDropInServiceResult.Balance(balanceResult))
+                            BalanceDropInServiceResult.Balance(balanceResult)
                         }
+                        sendBalanceResult(result)
                     },
-                    onFailure = ::onFailure
+                    onFailure = {
+                        val result = BalanceDropInServiceResult.Error(reason = it.message)
+                        sendBalanceResult(result)
+                    }
                 )
         }
     }
@@ -149,7 +156,10 @@ open class SessionDropInService : DropInService() {
                         )
                         sendOrderResult(OrderDropInServiceResult.OrderCreated(order))
                     },
-                    onFailure = ::onFailure
+                    onFailure = {
+                        val result = OrderDropInServiceResult.Error(reason = it.message)
+                        sendOrderResult(result)
+                    }
                 )
         }
     }
@@ -163,7 +173,10 @@ open class SessionDropInService : DropInService() {
                             updatePaymentMethods()
                         }
                     },
-                    onFailure = ::onFailure
+                    onFailure = {
+                        val result = SessionSetupDropInServiceResult.Error(reason = it.message)
+                        sendSessionSetupResult(result)
+                    }
                 )
         }
     }
@@ -185,21 +198,12 @@ open class SessionDropInService : DropInService() {
                         else DropInServiceResult.Error(reason = "Payment methods should not be null")
                         sendResult(result)
                     },
-                    onFailure = ::onFailure
+                    onFailure = {
+                        val result = DropInServiceResult.Error(reason = it.message)
+                        sendResult(result)
+                    }
                 )
         }
-    }
-
-    private fun onFailure(throwable: Throwable) {
-        onFailure(throwable.message)
-    }
-
-    private fun onFailure(reason: String?) {
-        val result = DropInServiceResult.Error(
-            reason = reason,
-            dismissDropIn = false,
-        )
-        sendResult(result)
     }
 
     companion object {
