@@ -52,7 +52,7 @@ private const val SINGLE_CARD_LIST_SIZE = 1
 class CardComponent private constructor(
     savedStateHandle: SavedStateHandle,
     private val cardDelegate: CardDelegate,
-    cardConfiguration: CardConfiguration
+    private val cardConfiguration: CardConfiguration
 ) : BasePaymentComponent<CardConfiguration, CardInputData, CardOutputData, CardComponentState>(
     savedStateHandle,
     cardDelegate,
@@ -101,61 +101,9 @@ class CardComponent private constructor(
                 }
                 .launchIn(viewModelScope)
 
-            cardDelegate.stateListFlow
-                .distinctUntilChanged()
-                .onEach {
-                    Logger.d(TAG, "New states emitted")
-                    Logger.d(TAG, "States: $it")
-                    with(outputData) {
-                        this ?: return@with
-                        val newOutputData = makeOutputData(
-                            cardNumber = cardNumberState.value,
-                            expiryDate = expiryDateState.value,
-                            securityCode = securityCodeState.value,
-                            holderName = holderNameState.value,
-                            socialSecurityNumber = socialSecurityNumberState.value,
-                            kcpBirthDateOrTaxNumber = kcpBirthDateOrTaxNumberState.value,
-                            kcpCardPassword = kcpCardPasswordState.value,
-                            addressInputModel = inputData.address,
-                            isStorePaymentSelected = isStoredPaymentMethodEnable,
-                            detectedCardTypes = detectedCardTypes,
-                            selectedCardIndex = inputData.selectedCardIndex,
-                            selectedInstallmentOption = null,
-                            countryOptions = countryOptions,
-                            stateOptions = AddressFormUtils.mapToListItem(it, true)
-                        )
-                        notifyStateChanged(newOutputData)
-                    }
-                }
-                .launchIn(viewModelScope)
-
-            viewModelScope.launch {
-                val countries = cardDelegate.getCountryList()
-                val countryOptions = AddressFormUtils.initializeCountryOptions(cardConfiguration.addressConfiguration, countries)
-                countryOptions.firstOrNull { it.selected }?.let {
-                    inputData.address.country = it.code
-                    cardDelegate.requestStateList(it.code, viewModelScope)
-                }
-                with(outputData) {
-                    this ?: return@with
-                    val newOutputData = makeOutputData(
-                        cardNumber = cardNumberState.value,
-                        expiryDate = expiryDateState.value,
-                        securityCode = securityCodeState.value,
-                        holderName = holderNameState.value,
-                        socialSecurityNumber = socialSecurityNumberState.value,
-                        kcpBirthDateOrTaxNumber = kcpBirthDateOrTaxNumberState.value,
-                        kcpCardPassword = kcpCardPasswordState.value,
-                        addressInputModel = inputData.address,
-                        isStorePaymentSelected = isStoredPaymentMethodEnable,
-                        detectedCardTypes = this.detectedCardTypes,
-                        selectedCardIndex = inputData.selectedCardIndex,
-                        selectedInstallmentOption = null,
-                        countryOptions = countryOptions,
-                        stateOptions = stateOptions
-                    )
-                    notifyStateChanged(newOutputData)
-                }
+            if (configuration.addressConfiguration is AddressConfiguration.FullAddress) {
+                subscribeToStatesList()
+                requestCountryList()
             }
         }
     }
@@ -283,6 +231,68 @@ class CardComponent private constructor(
             countryOptions,
             stateOptions
         )
+    }
+
+    private fun subscribeToStatesList() {
+        (cardDelegate as NewCardDelegate).stateListFlow
+            .distinctUntilChanged()
+            .onEach {
+                Logger.d(TAG, "New states emitted")
+                Logger.d(TAG, "States: $it")
+                with(outputData) {
+                    this ?: return@with
+                    val newOutputData = makeOutputData(
+                        cardNumber = cardNumberState.value,
+                        expiryDate = expiryDateState.value,
+                        securityCode = securityCodeState.value,
+                        holderName = holderNameState.value,
+                        socialSecurityNumber = socialSecurityNumberState.value,
+                        kcpBirthDateOrTaxNumber = kcpBirthDateOrTaxNumberState.value,
+                        kcpCardPassword = kcpCardPasswordState.value,
+                        addressInputModel = inputData.address,
+                        isStorePaymentSelected = isStoredPaymentMethodEnable,
+                        detectedCardTypes = detectedCardTypes,
+                        selectedCardIndex = inputData.selectedCardIndex,
+                        selectedInstallmentOption = null,
+                        countryOptions = countryOptions,
+                        stateOptions = AddressFormUtils.mapToListItem(it, true)
+                    )
+                    notifyStateChanged(newOutputData)
+                }
+            }
+            .launchIn(viewModelScope)
+    }
+
+    private fun requestCountryList() {
+        val newCardDelegate = cardDelegate as NewCardDelegate
+        viewModelScope.launch {
+            val countries = cardDelegate.getCountryList()
+            val countryOptions = AddressFormUtils.initializeCountryOptions(cardConfiguration.addressConfiguration, countries)
+            countryOptions.firstOrNull { it.selected }?.let {
+                inputData.address.country = it.code
+                cardDelegate.requestStateList(it.code, viewModelScope)
+            }
+            with(outputData) {
+                this ?: return@with
+                val newOutputData = makeOutputData(
+                    cardNumber = cardNumberState.value,
+                    expiryDate = expiryDateState.value,
+                    securityCode = securityCodeState.value,
+                    holderName = holderNameState.value,
+                    socialSecurityNumber = socialSecurityNumberState.value,
+                    kcpBirthDateOrTaxNumber = kcpBirthDateOrTaxNumberState.value,
+                    kcpCardPassword = kcpCardPasswordState.value,
+                    addressInputModel = inputData.address,
+                    isStorePaymentSelected = isStoredPaymentMethodEnable,
+                    detectedCardTypes = this.detectedCardTypes,
+                    selectedCardIndex = inputData.selectedCardIndex,
+                    selectedInstallmentOption = null,
+                    countryOptions = countryOptions,
+                    stateOptions = stateOptions
+                )
+                notifyStateChanged(newOutputData)
+            }
+        }
     }
 
     private fun makeCvcUIState(cvcPolicy: Brand.FieldPolicy?): InputFieldUIState {
