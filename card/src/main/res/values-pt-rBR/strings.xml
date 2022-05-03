@@ -40,6 +40,7 @@
     <string name="checkout_address_form_zip_code_hint">Código postal</string>
     <string name="checkout_address_form_province_territory_hint">Província ou território</string>
     <string name="checkout_address_form_city_town_hint">Cidade</string>
+    <string name="checkout_address_form_field_not_valid">Entrada inválida</string>
 
     <string name="checkout_card_installments_title">Opções de Parcelamento</string>
     <string name="checkout_card_installments_option_regular">%s meses</string>

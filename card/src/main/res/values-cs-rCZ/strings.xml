@@ -40,6 +40,7 @@
     <string name="checkout_address_form_zip_code_hint">PSČ</string>
     <string name="checkout_address_form_province_territory_hint">Provincie nebo teritorium</string>
     <string name="checkout_address_form_city_town_hint">Město</string>
+    <string name="checkout_address_form_field_not_valid">Neplatný vstup</string>
 
     <string name="checkout_card_installments_title">Počet splátek</string>
     <string name="checkout_card_installments_option_regular">%s měsíců</string>

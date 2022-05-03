@@ -48,6 +48,9 @@ object AddressValidationUtils {
         }
     }
 
+    /**
+     * Make [AddressOutputData] without validating any fields.
+     */
     fun makeValidEmptyAddressOutput(addressInputModel: AddressInputModel): AddressOutputData {
         return with(addressInputModel) {
             AddressOutputData(
@@ -66,7 +69,7 @@ object AddressValidationUtils {
         return if (input.isNotEmpty()) {
             FieldState(input, Validation.Valid)
         } else {
-            FieldState(input, Validation.Invalid(R.string.checkout_social_security_number_not_valid)) // TODO correct translation
+            FieldState(input, Validation.Invalid(R.string.checkout_address_form_field_not_valid))
         }
     }
 }

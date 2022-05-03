@@ -40,6 +40,7 @@
     <string name="checkout_address_form_zip_code_hint">Kod pocztowy</string>
     <string name="checkout_address_form_province_territory_hint">Region lub terytorium</string>
     <string name="checkout_address_form_city_town_hint">Miejscowość</string>
+    <string name="checkout_address_form_field_not_valid">Nieprawidłowe dane wejściowe</string>
 
     <string name="checkout_card_installments_title">Liczba rat</string>
     <string name="checkout_card_installments_option_regular">%s miesięcy</string>

@@ -40,6 +40,7 @@
     <string name="checkout_address_form_zip_code_hint">Postnummer</string>
     <string name="checkout_address_form_province_territory_hint">Provins eller territorium</string>
     <string name="checkout_address_form_city_town_hint">Ort</string>
+    <string name="checkout_address_form_field_not_valid">Ogiltig inmatning</string>
 
     <string name="checkout_card_installments_title">Antal delbetalningar</string>
     <string name="checkout_card_installments_option_regular">%s månader</string>

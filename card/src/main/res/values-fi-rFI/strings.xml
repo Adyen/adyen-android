@@ -40,6 +40,7 @@
     <string name="checkout_address_form_zip_code_hint">Postinumero</string>
     <string name="checkout_address_form_province_territory_hint">Maakunta tai alue</string>
     <string name="checkout_address_form_city_town_hint">Kaupunki / taajama</string>
+    <string name="checkout_address_form_field_not_valid">Ei-kelvollinen syöte</string>
 
     <string name="checkout_card_installments_title">Asennusten määrä</string>
     <string name="checkout_card_installments_option_regular">%s kuukautta</string>

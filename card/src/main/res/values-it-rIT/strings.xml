@@ -40,6 +40,7 @@
     <string name="checkout_address_form_zip_code_hint">CAP</string>
     <string name="checkout_address_form_province_territory_hint">Provincia o territorio</string>
     <string name="checkout_address_form_city_town_hint">Città</string>
+    <string name="checkout_address_form_field_not_valid">Dati inseriti non validi</string>
 
     <string name="checkout_card_installments_title">Numero di rate</string>
     <string name="checkout_card_installments_option_regular">%s mesi</string>
