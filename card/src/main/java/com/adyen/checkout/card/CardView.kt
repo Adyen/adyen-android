@@ -130,6 +130,7 @@ class CardView @JvmOverloads constructor(
             R.style.AdyenCheckout_DropdownTextInputLayout_Installments
         )
         binding.switchStorePaymentMethod.setLocalizedTextFromStyle(R.style.AdyenCheckout_Card_StorePaymentSwitch)
+        binding.addressFormInput.initLocalizedContext(localizedContext)
     }
 
     override fun onComponentAttached() {

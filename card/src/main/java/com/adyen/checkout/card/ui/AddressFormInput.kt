@@ -9,11 +9,13 @@
 package com.adyen.checkout.card.ui
 
 import android.content.Context
+import android.content.res.Configuration
 import android.util.AttributeSet
 import android.view.LayoutInflater
 import android.widget.AdapterView
 import android.widget.AutoCompleteTextView
 import android.widget.LinearLayout
+import android.widget.TextView
 import com.adyen.checkout.card.AddressOutputData
 import com.adyen.checkout.card.CardComponent
 import com.adyen.checkout.card.R
@@ -33,10 +35,15 @@ class AddressFormInput @JvmOverloads constructor(
     defStyleAttr: Int = 0
 ) : LinearLayout(context, attrs, defStyleAttr) {
 
+    private lateinit var localizedContext: Context
+
     private lateinit var component: CardComponent
 
     private var countryAdapter: SimpleTextListAdapter<AddressListItem> = SimpleTextListAdapter(context)
     private var statesAdapter: SimpleTextListAdapter<AddressListItem> = SimpleTextListAdapter(context)
+
+    private val textViewHeader: TextView
+        get() = rootView.findViewById(R.id.textView_header)
 
     private val autoCompleteTextViewCountry: AutoCompleteTextView?
         get() = rootView.findViewById(R.id.autoCompleteTextView_country)
@@ -63,11 +70,17 @@ class AddressFormInput @JvmOverloads constructor(
     private val editTextProvinceTerritory: AdyenTextInputEditText?
         get() = rootView.findViewById(R.id.editText_provinceTerritory)
 
+    private val textInputLayoutCountry: TextInputLayout?
+        get() = rootView.findViewById(R.id.textInputLayout_country)
+
     private val textInputLayoutStreet: TextInputLayout?
         get() = rootView.findViewById(R.id.textInputLayout_street)
 
     private val textInputLayoutHouseNumber: TextInputLayout?
         get() = rootView.findViewById(R.id.textInputLayout_houseNumber)
+
+    private val textInputLayoutApartmentSuite: TextInputLayout?
+        get() = rootView.findViewById(R.id.textInputLayout_apartmentSuite)
 
     private val textInputLayoutPostalCode: TextInputLayout?
         get() = rootView.findViewById<LinearLayout>(R.id.linearLayout_formContainer)
@@ -101,6 +114,10 @@ class AddressFormInput @JvmOverloads constructor(
 
     fun attachComponent(component: CardComponent) {
         this.component = component
+    }
+
+    fun initLocalizedContext(localizedContext: Context) {
+        this.localizedContext = localizedContext
     }
 
     fun highlightValidationErrors(addressOutputData: AddressOutputData) {
@@ -179,117 +196,144 @@ class AddressFormInput @JvmOverloads constructor(
         val formContainer = rootView.findViewById<LinearLayout>(R.id.linearLayout_formContainer)
         formContainer.removeAllViews()
         LayoutInflater.from(context).inflate(layoutResId, formContainer, true)
-        initForm()
+        initForm(specification)
     }
 
-    private fun initForm() {
-        initStreetInput()
+    private fun initForm(addressSpecification: AddressSpecification) {
+        initHeader()
+        initCountryInput()
+        initStreetInput(addressSpecification.streetHintResId)
         initHouseNumberInput()
         initApartmentSuiteInput()
-        initPostalCodeInput()
-        initCityInput()
-        initProvinceTerritoryInput()
-        initStatesInput()
+        initPostalCodeInput(addressSpecification.postalCodeHintResId)
+        initCityInput(addressSpecification.cityHintResId)
+        initProvinceTerritoryInput(addressSpecification.stateHintResId)
+        initStatesInput(addressSpecification.stateHintResId)
     }
 
-    private fun initStreetInput() {
-        editTextStreet?.setText(component.inputData.address.street)
-        editTextStreet?.setOnChangeListener {
-            component.inputData.address.street = it.toString()
-            notifyInputDataChanged()
-            textInputLayoutStreet?.error = null
-        }
-        editTextStreet?.onFocusChangeListener = OnFocusChangeListener { _, hasFocus ->
-            val validation = component.outputData?.addressState?.street?.validation
-            if (hasFocus) {
+    private fun initHeader() {
+        textViewHeader.text = localizedContext.getString(R.string.checkout_address_form_billing_address_title)
+    }
+
+    private fun initCountryInput() {
+        textInputLayoutCountry?.hint = localizedContext.getString(R.string.checkout_address_form_country_hint)
+    }
+
+    private fun initStreetInput(hintResId: Int) {
+        textInputLayoutStreet?.hint = localizedContext.getString(hintResId)
+        editTextStreet?.apply {
+            setText(component.inputData.address.street)
+            setOnChangeListener {
+                component.inputData.address.street = it.toString()
+                notifyInputDataChanged()
                 textInputLayoutStreet?.error = null
-            } else if (validation != null && validation is Validation.Invalid) {
-                textInputLayoutStreet?.error = context.getString(validation.reason)
+            }
+            onFocusChangeListener = OnFocusChangeListener { _, hasFocus ->
+                val validation = component.outputData?.addressState?.street?.validation
+                if (hasFocus) {
+                    textInputLayoutStreet?.error = null
+                } else if (validation != null && validation is Validation.Invalid) {
+                    textInputLayoutStreet?.error = localizedContext.getString(validation.reason)
+                }
             }
         }
     }
 
     private fun initHouseNumberInput() {
-        editTextHouseNumber?.setText(component.inputData.address.houseNumberOrName)
-        editTextHouseNumber?.setOnChangeListener {
-            component.inputData.address.houseNumberOrName = it.toString()
-            notifyInputDataChanged()
-            textInputLayoutHouseNumber?.error = null
-        }
-        editTextHouseNumber?.onFocusChangeListener = OnFocusChangeListener { _, hasFocus ->
-            val validation = component.outputData?.addressState?.houseNumberOrName?.validation
-            if (hasFocus) {
+        textInputLayoutHouseNumber?.hint = localizedContext.getString(R.string.checkout_address_form_house_number_hint)
+        editTextHouseNumber?.apply {
+            setText(component.inputData.address.houseNumberOrName)
+            setOnChangeListener {
+                component.inputData.address.houseNumberOrName = it.toString()
+                notifyInputDataChanged()
                 textInputLayoutHouseNumber?.error = null
-            } else if (validation != null && validation is Validation.Invalid) {
-                textInputLayoutHouseNumber?.error = context.getString(validation.reason)
+            }
+            onFocusChangeListener = OnFocusChangeListener { _, hasFocus ->
+                val validation = component.outputData?.addressState?.houseNumberOrName?.validation
+                if (hasFocus) {
+                    textInputLayoutHouseNumber?.error = null
+                } else if (validation != null && validation is Validation.Invalid) {
+                    textInputLayoutHouseNumber?.error = localizedContext.getString(validation.reason)
+                }
             }
         }
     }
 
     private fun initApartmentSuiteInput() {
-        editTextApartmentSuite?.setText(component.inputData.address.apartmentSuite)
-        editTextApartmentSuite?.setOnChangeListener {
-            component.inputData.address.apartmentSuite = it.toString()
-            notifyInputDataChanged()
+        textInputLayoutApartmentSuite?.hint = localizedContext.getString(R.string.checkout_address_form_apartment_suite_hint)
+        editTextApartmentSuite?.apply {
+            setText(component.inputData.address.apartmentSuite)
+            setOnChangeListener {
+                component.inputData.address.apartmentSuite = it.toString()
+                notifyInputDataChanged()
+            }
         }
     }
 
-    private fun initPostalCodeInput() {
-        editTextPostalCode?.setText(component.inputData.address.postalCode)
-        editTextPostalCode?.setOnChangeListener {
-            component.inputData.address.postalCode = it.toString()
-            notifyInputDataChanged()
-            textInputLayoutPostalCode?.error = null
-        }
-        editTextPostalCode?.onFocusChangeListener = OnFocusChangeListener { _, hasFocus ->
-            val validation = component.outputData?.addressState?.postalCode?.validation
-            if (hasFocus) {
+    private fun initPostalCodeInput(hintResId: Int) {
+        textInputLayoutPostalCode?.hint = localizedContext.getString(hintResId)
+        editTextPostalCode?.apply {
+            setText(component.inputData.address.postalCode)
+            setOnChangeListener {
+                component.inputData.address.postalCode = it.toString()
+                notifyInputDataChanged()
                 textInputLayoutPostalCode?.error = null
-            } else if (validation != null && validation is Validation.Invalid) {
-                textInputLayoutPostalCode?.error = context.getString(validation.reason)
+            }
+            onFocusChangeListener = OnFocusChangeListener { _, hasFocus ->
+                val validation = component.outputData?.addressState?.postalCode?.validation
+                if (hasFocus) {
+                    textInputLayoutPostalCode?.error = null
+                } else if (validation != null && validation is Validation.Invalid) {
+                    textInputLayoutPostalCode?.error = localizedContext.getString(validation.reason)
+                }
             }
         }
     }
 
-    private fun initCityInput() {
-        editTextCity?.setText(component.inputData.address.city)
-        editTextCity?.setOnChangeListener {
-            component.inputData.address.city = it.toString()
-            notifyInputDataChanged()
-            textInputLayoutCity?.error = null
-        }
-        editTextCity?.onFocusChangeListener = OnFocusChangeListener { _, hasFocus ->
-            val validation = component.outputData?.addressState?.city?.validation
-            if (hasFocus) {
+    private fun initCityInput(hintResId: Int) {
+        textInputLayoutCity?.hint = localizedContext.getString(hintResId)
+        editTextCity?.apply {
+            setText(component.inputData.address.city)
+            setOnChangeListener {
+                component.inputData.address.city = it.toString()
+                notifyInputDataChanged()
                 textInputLayoutCity?.error = null
-            } else if (validation != null && validation is Validation.Invalid) {
-                textInputLayoutCity?.error = context.getString(validation.reason)
+            }
+            onFocusChangeListener = OnFocusChangeListener { _, hasFocus ->
+                val validation = component.outputData?.addressState?.city?.validation
+                if (hasFocus) {
+                    textInputLayoutCity?.error = null
+                } else if (validation != null && validation is Validation.Invalid) {
+                    textInputLayoutCity?.error = localizedContext.getString(validation.reason)
+                }
             }
         }
     }
 
-    private fun initProvinceTerritoryInput() {
-        editTextProvinceTerritory?.setText(component.inputData.address.stateOrProvince)
-        editTextProvinceTerritory?.setOnChangeListener {
-            component.inputData.address.stateOrProvince = it.toString()
-            notifyInputDataChanged()
-            textInputLayoutProvinceTerritory?.error = null
-        }
-        editTextProvinceTerritory?.onFocusChangeListener = OnFocusChangeListener { _, hasFocus ->
-            val validation = component.outputData?.addressState?.stateOrProvince?.validation
-            if (hasFocus) {
+    private fun initProvinceTerritoryInput(hintResId: Int) {
+        textInputLayoutProvinceTerritory?.hint = localizedContext.getString(hintResId)
+        editTextProvinceTerritory?.apply {
+            setText(component.inputData.address.stateOrProvince)
+            setOnChangeListener {
+                component.inputData.address.stateOrProvince = it.toString()
+                notifyInputDataChanged()
                 textInputLayoutProvinceTerritory?.error = null
-            } else if (validation != null && validation is Validation.Invalid) {
-                textInputLayoutProvinceTerritory?.error = context.getString(validation.reason)
+            }
+            onFocusChangeListener = OnFocusChangeListener { _, hasFocus ->
+                val validation = component.outputData?.addressState?.stateOrProvince?.validation
+                if (hasFocus) {
+                    textInputLayoutProvinceTerritory?.error = null
+                } else if (validation != null && validation is Validation.Invalid) {
+                    textInputLayoutProvinceTerritory?.error = localizedContext.getString(validation.reason)
+                }
             }
         }
     }
 
-    private fun initStatesInput() {
-        autoCompleteTextViewState?.let {
-            statesAdapter.getItem { it.code == component.inputData.address.stateOrProvince }
-        }
+    private fun initStatesInput(hintResId: Int) {
         autoCompleteTextViewState?.apply {
+            hint = localizedContext.getString(hintResId)
+            statesAdapter.getItem { it.code == component.inputData.address.stateOrProvince }
             inputType = 0
             setAdapter(statesAdapter)
             onItemClickListener = AdapterView.OnItemClickListener { _, _, position, _ ->
@@ -306,8 +350,42 @@ class AddressFormInput @JvmOverloads constructor(
     /**
      * Specification for address form alternatives depending on the country.
      */
-    enum class AddressSpecification {
-        BR, CA, GB, US, DEFAULT;
+    enum class AddressSpecification(
+        val streetHintResId: Int,
+        val postalCodeHintResId: Int,
+        val cityHintResId: Int,
+        val stateHintResId: Int
+    ) {
+        BR(
+            R.string.checkout_address_form_street_hint,
+            R.string.checkout_card_postal_code_hint,
+            R.string.checkout_address_form_city_hint,
+            R.string.checkout_address_form_states_hint
+        ),
+        CA(
+            R.string.checkout_address_form_address_hint,
+            R.string.checkout_card_postal_code_hint,
+            R.string.checkout_address_form_city_hint,
+            R.string.checkout_address_form_province_territory_hint
+        ),
+        GB(
+            R.string.checkout_address_form_street_hint,
+            R.string.checkout_card_postal_code_hint,
+            R.string.checkout_address_form_city_town_hint,
+            R.string.checkout_address_form_province_territory_hint
+        ),
+        US(
+            R.string.checkout_address_form_address_hint,
+            R.string.checkout_address_form_zip_code_hint,
+            R.string.checkout_address_form_city_hint,
+            R.string.checkout_address_form_states_hint
+        ),
+        DEFAULT(
+            R.string.checkout_address_form_street_hint,
+            R.string.checkout_card_postal_code_hint,
+            R.string.checkout_address_form_city_hint,
+            R.string.checkout_address_form_province_territory_hint
+        );
 
         companion object {
             fun fromString(countryCode: String?): AddressSpecification {
