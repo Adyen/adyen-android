@@ -40,6 +40,7 @@
     <string name="checkout_address_form_zip_code_hint">Почтовый индекс</string>
     <string name="checkout_address_form_province_territory_hint">Провинция или территория</string>
     <string name="checkout_address_form_city_town_hint">Город</string>
+    <string name="checkout_address_form_field_not_valid">Неверные данные</string>
 
     <string name="checkout_card_installments_title">Количество платежей</string>
     <string name="checkout_card_installments_option_regular">%s мес.</string>

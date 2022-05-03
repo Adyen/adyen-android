@@ -40,6 +40,7 @@
     <string name="checkout_address_form_zip_code_hint">邮政编码</string>
     <string name="checkout_address_form_province_territory_hint">省或地区</string>
     <string name="checkout_address_form_city_town_hint">市 / 镇</string>
+    <string name="checkout_address_form_field_not_valid">无效的输入</string>
 
     <string name="checkout_card_installments_title">分期付款期数</string>
     <string name="checkout_card_installments_option_regular">%s 个月</string>

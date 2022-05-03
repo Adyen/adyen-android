@@ -40,6 +40,7 @@
     <string name="checkout_address_form_zip_code_hint">%%zipCode%%</string>
     <string name="checkout_address_form_province_territory_hint">%%provinceOrTerritory%%</string>
     <string name="checkout_address_form_city_town_hint">%%cityTown%%</string>
+    <string name="checkout_address_form_field_not_valid">%%validationAlert.title%%</string>
 
     <string name="checkout_card_installments_title">%%installments%%</string>
     <string name="checkout_card_installments_option_regular">%%installmentOptionMonths%%</string>

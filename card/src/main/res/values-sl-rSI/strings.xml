@@ -40,6 +40,7 @@
     <string name="checkout_address_form_zip_code_hint">Poštna številka</string>
     <string name="checkout_address_form_province_territory_hint">Območje ali ozemlje</string>
     <string name="checkout_address_form_city_town_hint">Mesto</string>
+    <string name="checkout_address_form_field_not_valid">Neveljaven vnos</string>
 
     <string name="checkout_card_installments_title">Število obrokov</string>
     <string name="checkout_card_installments_option_regular">Št. mesecev: %s</string>

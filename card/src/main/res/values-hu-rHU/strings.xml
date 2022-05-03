@@ -40,6 +40,7 @@
     <string name="checkout_address_form_zip_code_hint">Irányítószám</string>
     <string name="checkout_address_form_province_territory_hint">Tartomány vagy terület</string>
     <string name="checkout_address_form_city_town_hint">Város</string>
+    <string name="checkout_address_form_field_not_valid">Érvénytelen bevitel</string>
 
     <string name="checkout_card_installments_title">Részletek száma</string>
     <string name="checkout_card_installments_option_regular">%s hónap</string>

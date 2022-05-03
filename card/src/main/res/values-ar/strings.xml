@@ -40,6 +40,7 @@
     <string name="checkout_address_form_zip_code_hint">الرمز البريدي</string>
     <string name="checkout_address_form_province_territory_hint">المقاطعة أو الإقليم</string>
     <string name="checkout_address_form_city_town_hint">المدينة / البلدة</string>
+    <string name="checkout_address_form_field_not_valid">إدخال غير صحيح</string>
 
     <string name="checkout_card_installments_title">عدد الأقساط</string>
     <string name="checkout_card_installments_option_regular">%s أشهر</string>

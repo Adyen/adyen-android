@@ -40,6 +40,7 @@
     <string name="checkout_address_form_zip_code_hint">우편번호</string>
     <string name="checkout_address_form_province_territory_hint">도</string>
     <string name="checkout_address_form_city_town_hint">시/구</string>
+    <string name="checkout_address_form_field_not_valid">유효하지 않은 입력</string>
 
     <string name="checkout_card_installments_title">할부 개월 수</string>
     <string name="checkout_card_installments_option_regular">%s개월</string>

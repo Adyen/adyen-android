@@ -40,6 +40,7 @@
     <string name="checkout_address_form_zip_code_hint">Poštanski broj</string>
     <string name="checkout_address_form_province_territory_hint">Pokrajina ili teritorij</string>
     <string name="checkout_address_form_city_town_hint">Grad</string>
+    <string name="checkout_address_form_field_not_valid">Pogrešan unos</string>
 
     <string name="checkout_card_installments_title">Broj rata</string>
     <string name="checkout_card_installments_option_regular">Mjeseci: %s</string>

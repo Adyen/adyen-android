@@ -40,6 +40,7 @@
     <string name="checkout_address_form_zip_code_hint">郵便番号</string>
     <string name="checkout_address_form_province_territory_hint">州または準州</string>
     <string name="checkout_address_form_city_town_hint">市区町村</string>
+    <string name="checkout_address_form_field_not_valid">無効な入力</string>
 
     <string name="checkout_card_installments_title">分割回数</string>
     <string name="checkout_card_installments_option_regular">%sか月</string>
