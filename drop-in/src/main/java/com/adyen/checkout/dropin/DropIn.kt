@@ -8,7 +8,6 @@
 
 package com.adyen.checkout.dropin
 
-import android.content.ComponentName
 import android.content.Context
 import android.content.Intent
 import androidx.activity.result.ActivityResultCaller
@@ -20,7 +19,6 @@ import com.adyen.checkout.core.util.BuildUtils
 import com.adyen.checkout.dropin.DropIn.startPayment
 import com.adyen.checkout.dropin.service.DropInService
 import com.adyen.checkout.dropin.service.DropInServiceResult
-import com.adyen.checkout.dropin.service.SessionDropInService
 import com.adyen.checkout.dropin.ui.DropInActivity
 import com.adyen.checkout.sessions.model.Session
 
@@ -135,13 +133,9 @@ object DropIn {
 
         DropInPrefs.setShopperLocale(context, dropInConfiguration.shopperLocale)
 
-        val configuration = DropInConfiguration.Builder(dropInConfiguration)
-            .setServiceComponentName(ComponentName(context.packageName, SessionDropInService::class.java.name))
-            .build()
-
         val intent = DropInActivity.createIntent(
             context,
-            configuration,
+            dropInConfiguration,
             session,
         )
         dropInLauncher.launch(intent)
