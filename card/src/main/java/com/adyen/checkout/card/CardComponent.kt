@@ -92,7 +92,7 @@ class CardComponent private constructor(
                             isStorePaymentSelected = isStoredPaymentMethodEnable,
                             detectedCardTypes = it,
                             selectedCardIndex = inputData.selectedCardIndex,
-                            selectedInstallmentOption = null,
+                            selectedInstallmentOption = inputData.installmentOption,
                             countryOptions = countryOptions,
                             stateOptions = stateOptions
                         )
@@ -102,8 +102,8 @@ class CardComponent private constructor(
                 .launchIn(viewModelScope)
 
             if (configuration.addressConfiguration is AddressConfiguration.FullAddress) {
-                subscribeToStatesList()
-                requestCountryList()
+                subscribeToStatesList(cardDelegate)
+                requestCountryList(cardDelegate)
             }
         }
     }
@@ -200,10 +200,9 @@ class CardComponent private constructor(
         // when no supported cards are detected, only show an error if the brand detection was reliable
         val shouldFailWithUnsupportedBrand = selectedOrFirstCardType == null && isReliable
 
-        val addressFormUIState = AddressFormUtils.getAddressFormUIState(
+        val addressFormUIState = cardDelegate.getAddressFormUIState(
             configuration.addressConfiguration,
-            configuration.addressVisibility,
-            isStoredPaymentMethod()
+            configuration.addressVisibility
         )
 
         return CardOutputData(
@@ -233,8 +232,8 @@ class CardComponent private constructor(
         )
     }
 
-    private fun subscribeToStatesList() {
-        (cardDelegate as NewCardDelegate).stateListFlow
+    private fun subscribeToStatesList(cardDelegate: NewCardDelegate) {
+        cardDelegate.stateListFlow
             .distinctUntilChanged()
             .onEach {
                 Logger.d(TAG, "New states emitted")
@@ -253,7 +252,7 @@ class CardComponent private constructor(
                         isStorePaymentSelected = isStoredPaymentMethodEnable,
                         detectedCardTypes = detectedCardTypes,
                         selectedCardIndex = inputData.selectedCardIndex,
-                        selectedInstallmentOption = null,
+                        selectedInstallmentOption = inputData.installmentOption,
                         countryOptions = countryOptions,
                         stateOptions = AddressFormUtils.mapToListItem(it, true)
                     )
@@ -263,8 +262,7 @@ class CardComponent private constructor(
             .launchIn(viewModelScope)
     }
 
-    private fun requestCountryList() {
-        val newCardDelegate = cardDelegate as NewCardDelegate
+    private fun requestCountryList(cardDelegate: NewCardDelegate) {
         viewModelScope.launch {
             val countries = cardDelegate.getCountryList()
             val countryOptions = AddressFormUtils.initializeCountryOptions(cardConfiguration.addressConfiguration, countries)
@@ -286,7 +284,7 @@ class CardComponent private constructor(
                     isStorePaymentSelected = isStoredPaymentMethodEnable,
                     detectedCardTypes = this.detectedCardTypes,
                     selectedCardIndex = inputData.selectedCardIndex,
-                    selectedInstallmentOption = null,
+                    selectedInstallmentOption = inputData.installmentOption,
                     countryOptions = countryOptions,
                     stateOptions = stateOptions
                 )

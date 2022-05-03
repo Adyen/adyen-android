@@ -10,7 +10,6 @@ package com.adyen.checkout.card
 
 import android.util.LruCache
 import com.adyen.checkout.card.api.AddressDataType
-import com.adyen.checkout.card.api.makeUrl
 import com.adyen.checkout.card.api.model.AddressItem
 import com.adyen.checkout.card.repository.AddressRepository
 import com.adyen.checkout.card.ui.AddressFormInput
@@ -35,17 +34,9 @@ class AddressDelegate(
         coroutineScope: CoroutineScope
     ) {
         val addressSpecification = AddressFormInput.AddressSpecification.fromString(countryCode)
-        val needsStates = addressSpecification == AddressFormInput.AddressSpecification.BR ||
-            addressSpecification == AddressFormInput.AddressSpecification.US ||
-            addressSpecification == AddressFormInput.AddressSpecification.CA
+        val needsStates = COUNTRIES_WITH_STATES.contains(addressSpecification)
         if (!countryCode.isNullOrEmpty() && needsStates) {
-            val url = makeUrl(
-                configuration.environment,
-                AddressDataType.STATE,
-                configuration.shopperLocale.toLanguageTag(),
-                countryCode
-            )
-            cache[url]?.let {
+            cache[countryCode]?.let {
                 _statesFlow.tryEmit(it)
             } ?: coroutineScope.launch {
                 val states = addressRepository.getAddressData(
@@ -55,7 +46,7 @@ class AddressDelegate(
                     countryCode = countryCode
                 )
                 if (states.isNotEmpty()) {
-                    cache.put(url, states)
+                    cache.put(countryCode, states)
                 }
                 _statesFlow.tryEmit(states)
             }
@@ -63,26 +54,27 @@ class AddressDelegate(
     }
 
     suspend fun getCountryList(configuration: Configuration): List<AddressItem> {
-        val url = makeUrl(
-            environment = configuration.environment,
-            dataType = AddressDataType.COUNRTY,
-            localeString = configuration.shopperLocale.toLanguageTag()
-        )
-        return cache[url] ?: run {
+        return cache[COUNTRIES_CACHE_KEY] ?: run {
             val countries = addressRepository.getAddressData(
                 environment = configuration.environment,
-                dataType = AddressDataType.COUNRTY,
+                dataType = AddressDataType.COUNTRY,
                 localeString = configuration.shopperLocale.toLanguageTag()
             )
             if (countries.isNotEmpty()) {
-                cache.put(url, countries)
+                cache.put(COUNTRIES_CACHE_KEY, countries)
             }
             countries
         }
     }
 
     companion object {
+        private val COUNTRIES_WITH_STATES = listOf(
+            AddressFormInput.AddressSpecification.BR,
+            AddressFormInput.AddressSpecification.CA,
+            AddressFormInput.AddressSpecification.US
+        )
         // Only US, CA and BR has states and there's only one countries list.
-        private const val CACHE_ENTRY_SIZE = 4
+        private val CACHE_ENTRY_SIZE = COUNTRIES_WITH_STATES.size + 1
+        private const val COUNTRIES_CACHE_KEY = "countries"
     }
 }

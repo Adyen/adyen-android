@@ -48,17 +48,14 @@ internal object AddressFormUtils {
      *
      * @param addressConfiguration Configuration object for address form.
      * @param addressVisibility Visibility modifier for address form.
-     * @param isStoredCard Whether or not current form is for stored card or a new card.
      *
      * @return Visibility state of the address form.
      */
     fun getAddressFormUIState(
         addressConfiguration: AddressConfiguration?,
-        addressVisibility: AddressVisibility,
-        isStoredCard: Boolean
+        addressVisibility: AddressVisibility
     ): AddressFormUIState {
         return when {
-            isStoredCard -> AddressFormUIState.NONE
             addressConfiguration != null -> AddressFormUIState.fromAddressConfiguration(addressConfiguration)
             else -> AddressFormUIState.fromAddressVisibility(addressVisibility)
         }
