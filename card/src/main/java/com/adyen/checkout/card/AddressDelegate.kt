@@ -16,22 +16,15 @@ import com.adyen.checkout.card.repository.AddressRepository
 import com.adyen.checkout.card.ui.AddressFormInput
 import com.adyen.checkout.components.base.Configuration
 import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.channels.BufferOverflow
 import kotlinx.coroutines.flow.Flow
-import kotlinx.coroutines.flow.MutableSharedFlow
+import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.launch
 
 class AddressDelegate(
     private val addressRepository: AddressRepository
 ) {
 
-    companion object {
-        // Only US, CA and BR has states and there's only one countries list.
-        private const val CACHE_ENTRY_SIZE = 4
-    }
-
-    private val _statesFlow: MutableSharedFlow<List<AddressItem>> =
-        MutableSharedFlow(0, 1, BufferOverflow.DROP_OLDEST)
+    private val _statesFlow: MutableStateFlow<List<AddressItem>> = MutableStateFlow(emptyList())
     internal val statesFlow: Flow<List<AddressItem>> = _statesFlow
 
     private val cache: LruCache<String, List<AddressItem>> = LruCache<String, List<AddressItem>>(CACHE_ENTRY_SIZE)
@@ -86,5 +79,10 @@ class AddressDelegate(
             }
             countries
         }
+    }
+
+    companion object {
+        // Only US, CA and BR has states and there's only one countries list.
+        private const val CACHE_ENTRY_SIZE = 4
     }
 }
