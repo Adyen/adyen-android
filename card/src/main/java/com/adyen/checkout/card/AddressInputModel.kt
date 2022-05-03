@@ -17,6 +17,12 @@ data class AddressInputModel(
     var city: String = "",
     var country: String = "",
 ) {
+    /**
+     * Reset the data.
+     *
+     * Note: This method is called when country is changed and that's the reason [country] field
+     * does not get reset.
+     */
     fun reset() {
         postalCode = ""
         street = ""

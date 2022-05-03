@@ -12,6 +12,7 @@ import com.adyen.checkout.card.api.model.Brand
 import com.adyen.checkout.card.data.CardType
 import com.adyen.checkout.card.data.DetectedCardType
 import com.adyen.checkout.card.data.ExpiryDate
+import com.adyen.checkout.components.base.AddressVisibility
 import com.adyen.checkout.components.base.PaymentMethodDelegate
 import com.adyen.checkout.components.repository.PublicKeyRepository
 import com.adyen.checkout.components.ui.FieldState
@@ -47,6 +48,7 @@ abstract class CardDelegate(
     abstract fun isKCPAuthRequired(): Boolean
     abstract fun requiresInput(): Boolean
     abstract fun isHolderNameRequired(): Boolean
+    abstract fun getAddressFormUIState(addressConfiguration: AddressConfiguration?, addressVisibility: AddressVisibility): AddressFormUIState
     abstract fun isAddressRequired(addressFormUIState: AddressFormUIState): Boolean
 
     abstract fun detectCardType(

@@ -20,6 +20,7 @@ import com.adyen.checkout.card.util.CardValidationUtils
 import com.adyen.checkout.card.util.InstallmentUtils
 import com.adyen.checkout.card.util.KcpValidationUtils
 import com.adyen.checkout.card.util.SocialSecurityNumberUtils
+import com.adyen.checkout.components.base.AddressVisibility
 import com.adyen.checkout.components.model.paymentmethods.PaymentMethod
 import com.adyen.checkout.components.repository.PublicKeyRepository
 import com.adyen.checkout.components.ui.FieldState
@@ -146,6 +147,16 @@ class NewCardDelegate(
 
     override fun isHolderNameRequired(): Boolean {
         return cardConfiguration.isHolderNameRequired
+    }
+
+    override fun getAddressFormUIState(
+        addressConfiguration: AddressConfiguration?,
+        addressVisibility: AddressVisibility
+    ): AddressFormUIState {
+        return AddressFormUtils.getAddressFormUIState(
+            addressConfiguration,
+            addressVisibility
+        )
     }
 
     override fun isAddressRequired(addressFormUIState: AddressFormUIState): Boolean {

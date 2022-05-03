@@ -56,7 +56,7 @@ sealed class AddressConfiguration : Parcelable {
                 @Suppress("UNCHECKED_CAST")
                 override fun createFromParcel(source: Parcel) = FullAddress(
                     defaultCountryCode = source.readString(),
-                    supportedCountryCodes = source.readArrayList(String()::class.java.classLoader) as List<String>
+                    supportedCountryCodes = source.readArrayList(String::class.java.classLoader) as List<String>
                 )
                 override fun newArray(size: Int) = arrayOfNulls<FullAddress>(size)
             }

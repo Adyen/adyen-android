@@ -13,6 +13,7 @@ import com.adyen.checkout.core.api.Connection
 import com.adyen.checkout.core.api.Environment
 import com.adyen.checkout.core.log.LogUtil
 import com.adyen.checkout.core.log.Logger
+import com.adyen.checkout.core.model.ModelUtils
 import com.adyen.checkout.core.model.toStringPretty
 import org.json.JSONArray
 
@@ -31,24 +32,8 @@ class AddressConnection(
         Logger.v(TAG, "call - $url")
         val result = get(CONTENT_TYPE_JSON_HEADER)
         val resultJson = JSONArray(String(result, Charsets.UTF_8))
-        resultJson.toString()
         Logger.v(TAG, "response: ${resultJson.toStringPretty()}")
-        return parseOptAddressItemList(resultJson).orEmpty()
-    }
-
-    // TODO make it more generic?
-    private fun parseOptAddressItemList(jsonArray: JSONArray?): List<AddressItem>? {
-        if (jsonArray == null) {
-            return null
-        }
-        val list = mutableListOf<AddressItem>()
-        for (i in 0 until jsonArray.length()) {
-            val item = jsonArray.optJSONObject(i)
-            if (item != null) {
-                list.add(AddressItem.SERIALIZER.deserialize(item))
-            }
-        }
-        return list
+        return ModelUtils.deserializeOptList(resultJson, AddressItem.SERIALIZER).orEmpty()
     }
 }
 
@@ -59,12 +44,12 @@ fun makeUrl(
     countryCode: String? = null
 ): String {
     return when (dataType) {
-        AddressDataType.COUNRTY -> "${environment.baseUrl}$ENDPOINT${dataType.pathParam}/$localeString$JSON_SUFFIX"
+        AddressDataType.COUNTRY -> "${environment.baseUrl}$ENDPOINT${dataType.pathParam}/$localeString$JSON_SUFFIX"
         AddressDataType.STATE -> "${environment.baseUrl}$ENDPOINT${dataType.pathParam}/$countryCode/$localeString$JSON_SUFFIX"
     }
 }
 
 enum class AddressDataType(val pathParam: String) {
-    COUNRTY("countries"),
+    COUNTRY("countries"),
     STATE("states")
 }

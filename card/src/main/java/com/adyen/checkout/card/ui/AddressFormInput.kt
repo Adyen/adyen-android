@@ -15,7 +15,6 @@ import android.widget.AdapterView
 import android.widget.AutoCompleteTextView
 import android.widget.LinearLayout
 import android.widget.TextView
-import com.adyen.checkout.card.AddressOutputData
 import com.adyen.checkout.card.CardComponent
 import com.adyen.checkout.card.R
 import com.adyen.checkout.card.ui.model.AddressListItem
@@ -44,7 +43,10 @@ class AddressFormInput @JvmOverloads constructor(
     private val textViewHeader: TextView
         get() = rootView.findViewById(R.id.textView_header)
 
-    private val autoCompleteTextViewCountry: AutoCompleteTextView?
+    private val formContainer: LinearLayout
+        get() = rootView.findViewById(R.id.linearLayout_formContainer)
+
+    private val autoCompleteTextViewCountry: AutoCompleteTextView
         get() = rootView.findViewById(R.id.autoCompleteTextView_country)
 
     private val autoCompleteTextViewState: AutoCompleteTextView?
@@ -60,8 +62,7 @@ class AddressFormInput @JvmOverloads constructor(
         get() = rootView.findViewById(R.id.editText_apartmentSuite)
 
     private val editTextPostalCode: AdyenTextInputEditText?
-        get() = rootView.findViewById<LinearLayout>(R.id.linearLayout_formContainer)
-            .findViewById(R.id.editText_postalCode)
+        get() = formContainer.findViewById(R.id.editText_postalCode)
 
     private val editTextCity: AdyenTextInputEditText?
         get() = rootView.findViewById(R.id.editText_city)
@@ -82,8 +83,7 @@ class AddressFormInput @JvmOverloads constructor(
         get() = rootView.findViewById(R.id.textInputLayout_apartmentSuite)
 
     private val textInputLayoutPostalCode: TextInputLayout?
-        get() = rootView.findViewById<LinearLayout>(R.id.linearLayout_formContainer)
-            .findViewById(R.id.textInputLayout_postalCode)
+        get() = formContainer.findViewById(R.id.textInputLayout_postalCode)
 
     private val textInputLayoutCity: TextInputLayout?
         get() = rootView.findViewById(R.id.textInputLayout_city)
@@ -96,7 +96,7 @@ class AddressFormInput @JvmOverloads constructor(
         layoutParams = LayoutParams(LayoutParams.MATCH_PARENT, LayoutParams.WRAP_CONTENT)
         LayoutInflater.from(context).inflate(R.layout.address_form_input, this, true)
 
-        autoCompleteTextViewCountry?.apply {
+        autoCompleteTextViewCountry.apply {
             inputType = 0
             setAdapter(countryAdapter)
             onItemClickListener = AdapterView.OnItemClickListener { _, _, position, _ ->
@@ -119,15 +119,17 @@ class AddressFormInput @JvmOverloads constructor(
         this.localizedContext = localizedContext
     }
 
-    fun highlightValidationErrors(addressOutputData: AddressOutputData) {
-        var isErrorFocused = false
-        val streetValidation = addressOutputData.street.validation
+    fun highlightValidationErrors(isErrorFocusedPreviously: Boolean) {
+        var isErrorFocused = isErrorFocusedPreviously
+        val streetValidation = component.outputData?.addressState?.street?.validation
         if (streetValidation is Validation.Invalid) {
-            isErrorFocused = true
-            textInputLayoutStreet?.requestFocus()
+            if (!isErrorFocused) {
+                isErrorFocused = true
+                textInputLayoutStreet?.requestFocus()
+            }
             textInputLayoutStreet?.error = resources.getString(streetValidation.reason)
         }
-        val houseNumberValidation = addressOutputData.houseNumberOrName.validation
+        val houseNumberValidation = component.outputData?.addressState?.houseNumberOrName?.validation
         if (houseNumberValidation is Validation.Invalid) {
             if (!isErrorFocused) {
                 isErrorFocused = true
@@ -135,7 +137,7 @@ class AddressFormInput @JvmOverloads constructor(
             }
             textInputLayoutHouseNumber?.error = resources.getString(houseNumberValidation.reason)
         }
-        val postalCodeValidation = addressOutputData.postalCode.validation
+        val postalCodeValidation = component.outputData?.addressState?.postalCode?.validation
         if (postalCodeValidation is Validation.Invalid) {
             if (!isErrorFocused) {
                 isErrorFocused = true
@@ -143,7 +145,7 @@ class AddressFormInput @JvmOverloads constructor(
             }
             textInputLayoutPostalCode?.error = resources.getString(postalCodeValidation.reason)
         }
-        val cityValidation = addressOutputData.city.validation
+        val cityValidation = component.outputData?.addressState?.city?.validation
         if (cityValidation is Validation.Invalid) {
             if (!isErrorFocused) {
                 isErrorFocused = true
@@ -151,7 +153,7 @@ class AddressFormInput @JvmOverloads constructor(
             }
             textInputLayoutCity?.error = resources.getString(cityValidation.reason)
         }
-        val provinceTerritoryValidation = addressOutputData.stateOrProvince.validation
+        val provinceTerritoryValidation = component.outputData?.addressState?.stateOrProvince?.validation
         if (provinceTerritoryValidation is Validation.Invalid) {
             if (!isErrorFocused) {
                 isErrorFocused = true
@@ -165,9 +167,8 @@ class AddressFormInput @JvmOverloads constructor(
         countryAdapter.setItems(countryList)
         countryList.firstOrNull { it.selected }?.let {
             val selectedSpecification = AddressSpecification.fromString(it.code)
-            val formContainer = rootView.findViewById<LinearLayout>(R.id.linearLayout_formContainer)
             if (formContainer.childCount == 0) {
-                autoCompleteTextViewCountry?.setText(it.name)
+                autoCompleteTextViewCountry.setText(it.name)
                 populateFormFields(selectedSpecification)
             }
         }
@@ -192,7 +193,6 @@ class AddressFormInput @JvmOverloads constructor(
             AddressSpecification.DEFAULT -> R.layout.address_form_default
         }
 
-        val formContainer = rootView.findViewById<LinearLayout>(R.id.linearLayout_formContainer)
         formContainer.removeAllViews()
         LayoutInflater.from(context).inflate(layoutResId, formContainer, true)
         initForm(specification)
