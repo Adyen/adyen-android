@@ -18,6 +18,8 @@ import android.widget.TextView
 import com.adyen.checkout.card.CardComponent
 import com.adyen.checkout.card.R
 import com.adyen.checkout.card.ui.model.AddressListItem
+import com.adyen.checkout.components.extensions.setLocalizedHintFromStyle
+import com.adyen.checkout.components.extensions.setLocalizedTextFromStyle
 import com.adyen.checkout.components.ui.Validation
 import com.adyen.checkout.components.ui.adapter.SimpleTextListAdapter
 import com.adyen.checkout.components.ui.view.AdyenTextInputEditText
@@ -91,6 +93,9 @@ class AddressFormInput @JvmOverloads constructor(
     private val textInputLayoutProvinceTerritory: TextInputLayout?
         get() = rootView.findViewById(R.id.textInputLayout_provinceTerritory)
 
+    private val textInputLayoutState: TextInputLayout?
+        get() = rootView.findViewById(R.id.textInputLayout_state)
+
     init {
         orientation = VERTICAL
         layoutParams = LayoutParams(LayoutParams.MATCH_PARENT, LayoutParams.WRAP_CONTENT)
@@ -127,7 +132,7 @@ class AddressFormInput @JvmOverloads constructor(
                 isErrorFocused = true
                 textInputLayoutStreet?.requestFocus()
             }
-            textInputLayoutStreet?.error = resources.getString(streetValidation.reason)
+            textInputLayoutStreet?.error = localizedContext.getString(streetValidation.reason)
         }
         val houseNumberValidation = component.outputData?.addressState?.houseNumberOrName?.validation
         if (houseNumberValidation is Validation.Invalid) {
@@ -135,7 +140,7 @@ class AddressFormInput @JvmOverloads constructor(
                 isErrorFocused = true
                 textInputLayoutHouseNumber?.requestFocus()
             }
-            textInputLayoutHouseNumber?.error = resources.getString(houseNumberValidation.reason)
+            textInputLayoutHouseNumber?.error = localizedContext.getString(houseNumberValidation.reason)
         }
         val postalCodeValidation = component.outputData?.addressState?.postalCode?.validation
         if (postalCodeValidation is Validation.Invalid) {
@@ -143,7 +148,7 @@ class AddressFormInput @JvmOverloads constructor(
                 isErrorFocused = true
                 textInputLayoutPostalCode?.requestFocus()
             }
-            textInputLayoutPostalCode?.error = resources.getString(postalCodeValidation.reason)
+            textInputLayoutPostalCode?.error = localizedContext.getString(postalCodeValidation.reason)
         }
         val cityValidation = component.outputData?.addressState?.city?.validation
         if (cityValidation is Validation.Invalid) {
@@ -151,7 +156,7 @@ class AddressFormInput @JvmOverloads constructor(
                 isErrorFocused = true
                 textInputLayoutCity?.requestFocus()
             }
-            textInputLayoutCity?.error = resources.getString(cityValidation.reason)
+            textInputLayoutCity?.error = localizedContext.getString(cityValidation.reason)
         }
         val provinceTerritoryValidation = component.outputData?.addressState?.stateOrProvince?.validation
         if (provinceTerritoryValidation is Validation.Invalid) {
@@ -159,7 +164,7 @@ class AddressFormInput @JvmOverloads constructor(
                 isErrorFocused = true
                 textInputLayoutProvinceTerritory?.requestFocus()
             }
-            textInputLayoutProvinceTerritory?.error = resources.getString(provinceTerritoryValidation.reason)
+            textInputLayoutProvinceTerritory?.error = localizedContext.getString(provinceTerritoryValidation.reason)
         }
     }
 
@@ -201,25 +206,34 @@ class AddressFormInput @JvmOverloads constructor(
     private fun initForm(addressSpecification: AddressSpecification) {
         initHeader()
         initCountryInput()
-        initStreetInput(addressSpecification.streetHintResId)
+        initStreetInput(addressSpecification.streetStyleResId)
         initHouseNumberInput()
         initApartmentSuiteInput()
-        initPostalCodeInput(addressSpecification.postalCodeHintResId)
-        initCityInput(addressSpecification.cityHintResId)
-        initProvinceTerritoryInput(addressSpecification.stateHintResId)
-        initStatesInput(addressSpecification.stateHintResId)
+        initPostalCodeInput(addressSpecification.postalCodeStyleResId)
+        initCityInput(addressSpecification.cityStyleResId)
+        initProvinceTerritoryInput(addressSpecification.stateStyleResId)
+        initStatesInput(addressSpecification.stateStyleResId)
     }
 
     private fun initHeader() {
-        textViewHeader.text = localizedContext.getString(R.string.checkout_address_form_billing_address_title)
+        textViewHeader.setLocalizedTextFromStyle(
+            R.style.AdyenCheckout_AddressForm_HeaderTextAppearance,
+            localizedContext
+        )
     }
 
     private fun initCountryInput() {
-        textInputLayoutCountry?.hint = localizedContext.getString(R.string.checkout_address_form_country_hint)
+        textInputLayoutCountry?.setLocalizedHintFromStyle(
+            R.style.AdyenCheckout_DropdownTextInputLayout_CountryInput,
+            localizedContext
+        )
     }
 
-    private fun initStreetInput(hintResId: Int) {
-        textInputLayoutStreet?.hint = localizedContext.getString(hintResId)
+    private fun initStreetInput(styleResId: Int) {
+        textInputLayoutStreet?.setLocalizedHintFromStyle(
+            styleResId,
+            localizedContext
+        )
         editTextStreet?.apply {
             setText(component.inputData.address.street)
             setOnChangeListener {
@@ -239,7 +253,10 @@ class AddressFormInput @JvmOverloads constructor(
     }
 
     private fun initHouseNumberInput() {
-        textInputLayoutHouseNumber?.hint = localizedContext.getString(R.string.checkout_address_form_house_number_hint)
+        textInputLayoutHouseNumber?.setLocalizedHintFromStyle(
+            R.style.AdyenCheckout_Card_HouseNumberInput,
+            localizedContext
+        )
         editTextHouseNumber?.apply {
             setText(component.inputData.address.houseNumberOrName)
             setOnChangeListener {
@@ -259,7 +276,10 @@ class AddressFormInput @JvmOverloads constructor(
     }
 
     private fun initApartmentSuiteInput() {
-        textInputLayoutApartmentSuite?.hint = localizedContext.getString(R.string.checkout_address_form_apartment_suite_hint)
+        textInputLayoutApartmentSuite?.setLocalizedHintFromStyle(
+            R.style.AdyenCheckout_Card_ApartmentSuiteInput,
+            localizedContext
+        )
         editTextApartmentSuite?.apply {
             setText(component.inputData.address.apartmentSuite)
             setOnChangeListener {
@@ -269,8 +289,11 @@ class AddressFormInput @JvmOverloads constructor(
         }
     }
 
-    private fun initPostalCodeInput(hintResId: Int) {
-        textInputLayoutPostalCode?.hint = localizedContext.getString(hintResId)
+    private fun initPostalCodeInput(styleResId: Int) {
+        textInputLayoutPostalCode?.setLocalizedHintFromStyle(
+            styleResId,
+            localizedContext
+        )
         editTextPostalCode?.apply {
             setText(component.inputData.address.postalCode)
             setOnChangeListener {
@@ -289,8 +312,11 @@ class AddressFormInput @JvmOverloads constructor(
         }
     }
 
-    private fun initCityInput(hintResId: Int) {
-        textInputLayoutCity?.hint = localizedContext.getString(hintResId)
+    private fun initCityInput(styleResId: Int) {
+        textInputLayoutCity?.setLocalizedHintFromStyle(
+            styleResId,
+            localizedContext
+        )
         editTextCity?.apply {
             setText(component.inputData.address.city)
             setOnChangeListener {
@@ -309,8 +335,11 @@ class AddressFormInput @JvmOverloads constructor(
         }
     }
 
-    private fun initProvinceTerritoryInput(hintResId: Int) {
-        textInputLayoutProvinceTerritory?.hint = localizedContext.getString(hintResId)
+    private fun initProvinceTerritoryInput(styleResId: Int) {
+        textInputLayoutProvinceTerritory?.setLocalizedHintFromStyle(
+            styleResId,
+            localizedContext
+        )
         editTextProvinceTerritory?.apply {
             setText(component.inputData.address.stateOrProvince)
             setOnChangeListener {
@@ -329,9 +358,12 @@ class AddressFormInput @JvmOverloads constructor(
         }
     }
 
-    private fun initStatesInput(hintResId: Int) {
+    private fun initStatesInput(styleResId: Int) {
+        textInputLayoutState?.setLocalizedHintFromStyle(
+            styleResId,
+            localizedContext
+        )
         autoCompleteTextViewState?.apply {
-            hint = localizedContext.getString(hintResId)
             statesAdapter.getItem { it.code == component.inputData.address.stateOrProvince }
             inputType = 0
             setAdapter(statesAdapter)
@@ -350,40 +382,40 @@ class AddressFormInput @JvmOverloads constructor(
      * Specification for address form alternatives depending on the country.
      */
     enum class AddressSpecification(
-        val streetHintResId: Int,
-        val postalCodeHintResId: Int,
-        val cityHintResId: Int,
-        val stateHintResId: Int
+        val streetStyleResId: Int,
+        val postalCodeStyleResId: Int,
+        val cityStyleResId: Int,
+        val stateStyleResId: Int
     ) {
         BR(
-            R.string.checkout_address_form_street_hint,
-            R.string.checkout_card_postal_code_hint,
-            R.string.checkout_address_form_city_hint,
-            R.string.checkout_address_form_states_hint
+            R.style.AdyenCheckout_Card_StreetInput,
+            R.style.AdyenCheckout_Card_PostalCodeInput,
+            R.style.AdyenCheckout_Card_CityInput,
+            R.style.AdyenCheckout_DropdownTextInputLayout_StatesInput
         ),
         CA(
-            R.string.checkout_address_form_address_hint,
-            R.string.checkout_card_postal_code_hint,
-            R.string.checkout_address_form_city_hint,
-            R.string.checkout_address_form_province_territory_hint
+            R.style.AdyenCheckout_Card_AddressInput,
+            R.style.AdyenCheckout_Card_PostalCodeInput,
+            R.style.AdyenCheckout_Card_CityInput,
+            R.style.AdyenCheckout_Card_ProvinceTerritoryInput
         ),
         GB(
-            R.string.checkout_address_form_street_hint,
-            R.string.checkout_card_postal_code_hint,
-            R.string.checkout_address_form_city_town_hint,
-            R.string.checkout_address_form_province_territory_hint
+            R.style.AdyenCheckout_Card_StreetInput,
+            R.style.AdyenCheckout_Card_PostalCodeInput,
+            R.style.AdyenCheckout_Card_CityTownInput,
+            R.style.AdyenCheckout_Card_ProvinceTerritoryInput
         ),
         US(
-            R.string.checkout_address_form_address_hint,
-            R.string.checkout_address_form_zip_code_hint,
-            R.string.checkout_address_form_city_hint,
-            R.string.checkout_address_form_states_hint
+            R.style.AdyenCheckout_Card_AddressInput,
+            R.style.AdyenCheckout_Card_ZipCodeInput,
+            R.style.AdyenCheckout_Card_CityInput,
+            R.style.AdyenCheckout_DropdownTextInputLayout_StatesInput
         ),
         DEFAULT(
-            R.string.checkout_address_form_street_hint,
-            R.string.checkout_card_postal_code_hint,
-            R.string.checkout_address_form_city_hint,
-            R.string.checkout_address_form_province_territory_hint
+            R.style.AdyenCheckout_Card_StreetInput,
+            R.style.AdyenCheckout_Card_PostalCodeInput,
+            R.style.AdyenCheckout_Card_CityInput,
+            R.style.AdyenCheckout_Card_ProvinceTerritoryInput
         );
 
         companion object {

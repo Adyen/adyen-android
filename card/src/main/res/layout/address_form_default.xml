@@ -45,7 +45,7 @@
 
         <com.adyen.checkout.components.ui.view.AdyenTextInputEditText
             android:id="@+id/editText_apartmentSuite"
-            style="@style/AdyenCheckout.Card.ApartmentSuite"
+            style="@style/AdyenCheckout.Card.ApartmentSuiteInput"
             tools:ignore="RequiredSize" />
     </com.google.android.material.textfield.TextInputLayout>
 
@@ -69,7 +69,7 @@
 
         <com.adyen.checkout.components.ui.view.AdyenTextInputEditText
             android:id="@+id/editText_city"
-            style="@style/AdyenCheckout.Card.City"
+            style="@style/AdyenCheckout.Card.CityInput"
             tools:ignore="RequiredSize" />
     </com.google.android.material.textfield.TextInputLayout>
 
@@ -81,7 +81,7 @@
 
         <com.adyen.checkout.components.ui.view.AdyenTextInputEditText
             android:id="@+id/editText_provinceTerritory"
-            style="@style/AdyenCheckout.Card.ProvinceTerritory"
+            style="@style/AdyenCheckout.Card.ProvinceTerritoryInput"
             tools:ignore="RequiredSize" />
     </com.google.android.material.textfield.TextInputLayout>
 </merge>
