@@ -45,7 +45,7 @@
 
         <com.adyen.checkout.components.ui.view.AdyenTextInputEditText
             android:id="@+id/editText_city"
-            style="@style/AdyenCheckout.Card.CityTown"
+            style="@style/AdyenCheckout.Card.CityTownInput"
             tools:ignore="RequiredSize" />
     </com.google.android.material.textfield.TextInputLayout>
 
