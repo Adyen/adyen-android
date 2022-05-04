@@ -161,6 +161,6 @@ class MainActivity : AppCompatActivity(), DropInCallback {
     companion object {
         private val TAG: String = LogUtil.getTag()
 
-        internal val RETURN_URL_EXTRA = "RETURN_URL_EXTRA"
+        internal const val RETURN_URL_EXTRA = "RETURN_URL_EXTRA"
     }
 }

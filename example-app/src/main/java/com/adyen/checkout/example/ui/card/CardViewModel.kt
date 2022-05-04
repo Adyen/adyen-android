@@ -1,5 +1,6 @@
 package com.adyen.checkout.example.ui.card
 
+import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.adyen.checkout.card.CardComponentState
@@ -12,6 +13,7 @@ import com.adyen.checkout.example.data.storage.KeyValueStorage
 import com.adyen.checkout.example.repositories.PaymentsRepository
 import com.adyen.checkout.example.service.createPaymentRequest
 import com.adyen.checkout.example.service.getPaymentMethodRequest
+import com.adyen.checkout.example.ui.card.CardActivity.Companion.RETURN_URL_EXTRA
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.Flow
@@ -24,8 +26,9 @@ import javax.inject.Inject
 
 @HiltViewModel
 internal class CardViewModel @Inject constructor(
+    private val savedStateHandle: SavedStateHandle,
     private val paymentsRepository: PaymentsRepository,
-    private val keyValueStorage: KeyValueStorage
+    private val keyValueStorage: KeyValueStorage,
 ) : ViewModel() {
 
     private val _cardViewState = MutableStateFlow<CardViewState>(CardViewState.Loading)
@@ -88,7 +91,8 @@ internal class CardViewModel @Inject constructor(
                 amount = keyValueStorage.getAmount(),
                 countryCode = keyValueStorage.getCountry(),
                 merchantAccount = keyValueStorage.getMerchantAccount(),
-                redirectUrl = "adyencheckout://com.adyen.checkout.example/card",
+                redirectUrl = savedStateHandle.get<String>(RETURN_URL_EXTRA)
+                    ?: throw IllegalStateException("Return url should be set"),
                 isThreeds2Enabled = keyValueStorage.isThreeds2Enable(),
                 isExecuteThreeD = keyValueStorage.isExecuteThreeD()
             )
