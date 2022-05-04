@@ -178,7 +178,7 @@ class CardView @JvmOverloads constructor(context: Context, attrs: AttributeSet? 
         return true
     }
 
-    @Suppress("ComplexMethod")
+    @Suppress("ComplexMethod", "LongMethod")
     override fun highlightValidationErrors() {
         component.outputData?.let {
             var isErrorFocused = false
@@ -207,6 +207,7 @@ class CardView @JvmOverloads constructor(context: Context, attrs: AttributeSet? 
             val holderNameValidation = it.holderNameState.validation
             if (binding.textInputLayoutCardHolder.isVisible && holderNameValidation is Validation.Invalid) {
                 if (!isErrorFocused) {
+                    isErrorFocused = true
                     binding.textInputLayoutCardHolder.requestFocus()
                 }
                 binding.textInputLayoutCardHolder.error = mLocalizedContext.getString(holderNameValidation.reason)
@@ -214,11 +215,36 @@ class CardView @JvmOverloads constructor(context: Context, attrs: AttributeSet? 
             val postalCodeValidation = it.addressState.postalCode.validation
             if (binding.textInputLayoutPostalCode.isVisible && postalCodeValidation is Validation.Invalid) {
                 if (!isErrorFocused) {
+                    isErrorFocused = true
                     binding.textInputLayoutPostalCode.requestFocus()
                 }
                 binding.textInputLayoutPostalCode.error = mLocalizedContext.getString(postalCodeValidation.reason)
             }
-            if (binding.addressFormInput.isVisible && !it.addressState.isValid()) {
+            val socialSecurityNumberValidation = it.socialSecurityNumberState.validation
+            if (binding.textInputLayoutSocialSecurityNumber.isVisible && socialSecurityNumberValidation is Validation.Invalid) {
+                if (!isErrorFocused) {
+                    isErrorFocused = true
+                    binding.textInputLayoutSocialSecurityNumber.requestFocus()
+                }
+                binding.textInputLayoutSocialSecurityNumber.error = mLocalizedContext.getString(socialSecurityNumberValidation.reason)
+            }
+            val kcpBirthDateOrTaxNumberValidation = it.kcpBirthDateOrTaxNumberState.validation
+            if (binding.textInputLayoutKcpBirthDateOrTaxNumber.isVisible && kcpBirthDateOrTaxNumberValidation is Validation.Invalid) {
+                if (!isErrorFocused) {
+                    isErrorFocused = true
+                    binding.textInputLayoutKcpBirthDateOrTaxNumber.requestFocus()
+                }
+                binding.textInputLayoutKcpBirthDateOrTaxNumber.error = mLocalizedContext.getString(kcpBirthDateOrTaxNumberValidation.reason)
+            }
+            val kcpPasswordValidation = it.kcpCardPasswordState.validation
+            if (binding.textInputLayoutKcpCardPassword.isVisible && kcpPasswordValidation is Validation.Invalid) {
+                if (!isErrorFocused) {
+                    isErrorFocused = true
+                    binding.textInputLayoutKcpCardPassword.requestFocus()
+                }
+                binding.textInputLayoutKcpCardPassword.error = mLocalizedContext.getString(kcpPasswordValidation.reason)
+            }
+            if (binding.addressFormInput.isVisible && !it.addressState.isValid) {
                 binding.addressFormInput.highlightValidationErrors(isErrorFocused)
             }
         }
