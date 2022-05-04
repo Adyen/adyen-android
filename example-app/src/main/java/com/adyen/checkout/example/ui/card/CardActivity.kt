@@ -37,6 +37,10 @@ class CardActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
+        // Insert return url in extras, so we can access it in the ViewModel through SavedStateHandle
+        val returnUrl = RedirectComponent.getReturnUrl(applicationContext) + "/card"
+        intent = (intent ?: Intent()).putExtra(RETURN_URL_EXTRA, returnUrl)
+
         binding = ActivityCardBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
@@ -146,5 +150,9 @@ class CardActivity : AppCompatActivity() {
         super.onDestroy()
         redirectComponent = null
         threeDS2Component = null
+    }
+
+    companion object {
+        internal const val RETURN_URL_EXTRA = "RETURN_URL_EXTRA"
     }
 }
