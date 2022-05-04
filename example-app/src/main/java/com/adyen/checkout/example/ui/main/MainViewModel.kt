@@ -8,6 +8,7 @@
 
 package com.adyen.checkout.example.ui.main
 
+import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.adyen.checkout.core.log.LogUtil
@@ -16,6 +17,7 @@ import com.adyen.checkout.example.data.storage.KeyValueStorage
 import com.adyen.checkout.example.repositories.PaymentsRepository
 import com.adyen.checkout.example.service.getPaymentMethodRequest
 import com.adyen.checkout.example.service.getSessionRequest
+import com.adyen.checkout.example.ui.main.MainActivity.Companion.RETURN_URL_EXTRA
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.async
 import kotlinx.coroutines.flow.Flow
@@ -26,6 +28,7 @@ import javax.inject.Inject
 
 @HiltViewModel
 internal class MainViewModel @Inject constructor(
+    private val savedStateHandle: SavedStateHandle,
     private val paymentsRepository: PaymentsRepository,
     private val keyValueStorage: KeyValueStorage,
 ) : ViewModel() {
@@ -99,8 +102,8 @@ internal class MainViewModel @Inject constructor(
             splitCardFundingSources = keyValueStorage.isSplitCardFundingSources(),
             isExecuteThreeD = keyValueStorage.isExecuteThreeD(),
             isThreeds2Enabled = keyValueStorage.isThreeds2Enable(),
-            // RedirectComponent.getReturnUrl(applicationContext) should be used here
-            redirectUrl = "adyencheckout://com.adyen.checkout.example",
+            redirectUrl = savedStateHandle.get<String>(RETURN_URL_EXTRA)
+                ?: throw IllegalStateException("Return url should be set"),
         )
     )
 

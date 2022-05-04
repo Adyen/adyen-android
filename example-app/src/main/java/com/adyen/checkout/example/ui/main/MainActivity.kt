@@ -26,6 +26,7 @@ import com.adyen.checkout.example.databinding.ActivityMainBinding
 import com.adyen.checkout.example.ui.card.CardActivity
 import com.adyen.checkout.example.ui.configuration.CheckoutConfigurationProvider
 import com.adyen.checkout.example.ui.configuration.ConfigurationActivity
+import com.adyen.checkout.redirect.RedirectComponent
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.launch
@@ -46,6 +47,9 @@ class MainActivity : AppCompatActivity(), DropInCallback {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+
+        // Insert return url in extras, so we can access it in the ViewModel through SavedStateHandle
+        intent = (intent ?: Intent()).putExtra(RETURN_URL_EXTRA, RedirectComponent.getReturnUrl(applicationContext))
 
         Logger.d(TAG, "onCreate")
         binding = ActivityMainBinding.inflate(layoutInflater)
@@ -156,5 +160,7 @@ class MainActivity : AppCompatActivity(), DropInCallback {
 
     companion object {
         private val TAG: String = LogUtil.getTag()
+
+        internal val RETURN_URL_EXTRA = "RETURN_URL_EXTRA"
     }
 }
