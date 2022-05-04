@@ -16,6 +16,8 @@ import android.view.View.OnFocusChangeListener
 import androidx.lifecycle.LifecycleOwner
 import androidx.lifecycle.Observer
 import com.adyen.checkout.bacs.databinding.BacsDirectDebitInputViewBinding
+import com.adyen.checkout.components.extensions.setLocalizedHintFromStyle
+import com.adyen.checkout.components.extensions.setLocalizedTextFromStyle
 import com.adyen.checkout.components.ui.FieldState
 import com.adyen.checkout.components.ui.Validation
 import com.adyen.checkout.components.ui.view.AdyenLinearLayout
@@ -66,6 +68,7 @@ class BacsDirectDebitInputView @JvmOverloads constructor(context: Context, attrs
         initSortCodeInput()
         initShopperEmailInput()
         initConsentSwitches()
+        initButton()
     }
 
     override fun isConfirmationRequired(): Boolean {
@@ -109,27 +112,30 @@ class BacsDirectDebitInputView @JvmOverloads constructor(context: Context, attrs
     }
 
     override fun initLocalizedStrings(localizedContext: Context) {
-        val attrs = intArrayOf(android.R.attr.hint)
-
-        // Holder Name
-        var typedArray = localizedContext.obtainStyledAttributes(R.style.AdyenCheckout_Bacs_HolderNameInput, attrs)
-        binding.textInputLayoutHolderName.hint = typedArray.getString(0)
-        typedArray.recycle()
-
-        // Account Number
-        typedArray = localizedContext.obtainStyledAttributes(R.style.AdyenCheckout_Bacs_AccountNumberInput, attrs)
-        binding.textInputLayoutBankAccountNumber.hint = typedArray.getString(0)
-        typedArray.recycle()
-
-        // Sort Code
-        typedArray = localizedContext.obtainStyledAttributes(R.style.AdyenCheckout_Bacs_SortCodeInput, attrs)
-        binding.textInputLayoutSortCode.hint = typedArray.getString(0)
-        typedArray.recycle()
-
-        // Shopper Email
-        typedArray = localizedContext.obtainStyledAttributes(R.style.AdyenCheckout_Bacs_ShopperEmailInput, attrs)
-        binding.textInputLayoutShopperEmail.hint = typedArray.getString(0)
-        typedArray.recycle()
+        binding.textInputLayoutHolderName.setLocalizedHintFromStyle(
+            R.style.AdyenCheckout_Bacs_HolderNameInput,
+            localizedContext
+        )
+        binding.textInputLayoutBankAccountNumber.setLocalizedHintFromStyle(
+            R.style.AdyenCheckout_Bacs_AccountNumberInput,
+            localizedContext
+        )
+        binding.textInputLayoutSortCode.setLocalizedHintFromStyle(
+            R.style.AdyenCheckout_Bacs_SortCodeInput,
+            localizedContext
+        )
+        binding.textInputLayoutShopperEmail.setLocalizedHintFromStyle(
+            R.style.AdyenCheckout_Bacs_ShopperEmailInput,
+            localizedContext
+        )
+        binding.switchConsentAmount.setLocalizedTextFromStyle(
+            R.style.AdyenCheckout_Bacs_Switch_Amount,
+            localizedContext
+        )
+        binding.switchConsentAccount.setLocalizedTextFromStyle(
+            R.style.AdyenCheckout_Bacs_Switch_Account,
+            localizedContext
+        )
     }
 
     override fun observeComponentChanges(lifecycleOwner: LifecycleOwner) {
@@ -223,6 +229,15 @@ class BacsDirectDebitInputView @JvmOverloads constructor(context: Context, attrs
         binding.switchConsentAccount.setOnCheckedChangeListener { _, isChecked ->
             component.inputData.isAccountConsentChecked = isChecked
             notifyInputDataChanged()
+        }
+    }
+
+    private fun initButton() {
+        if (!component.configuration.amount.isEmpty) {
+            val formattedAmount =
+                CurrencyUtils.formatAmount(component.configuration.amount, component.configuration.shopperLocale)
+            binding.switchConsentAmount.text =
+                localizedContext.getString(R.string.bacs_consent_amount_specified, formattedAmount)
         }
     }
 
