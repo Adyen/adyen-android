@@ -22,6 +22,7 @@
         <com.adyen.checkout.components.ui.view.AdyenTextInputEditText
             android:id="@+id/editText_street"
             style="@style/AdyenCheckout.Card.AddressInput"
+            android:autofillHints="postalAddress"
             tools:ignore="RequiredSize" />
     </com.google.android.material.textfield.TextInputLayout>
 
@@ -34,6 +35,7 @@
         <com.adyen.checkout.components.ui.view.AdyenTextInputEditText
             android:id="@+id/editText_apartmentSuite"
             style="@style/AdyenCheckout.Card.ApartmentSuiteInput"
+            android:autofillHints="postalAddress"
             tools:ignore="RequiredSize" />
     </com.google.android.material.textfield.TextInputLayout>
 
@@ -46,6 +48,7 @@
         <com.adyen.checkout.components.ui.view.AdyenTextInputEditText
             android:id="@+id/editText_city"
             style="@style/AdyenCheckout.Card.CityInput"
+            android:autofillHints="postalAddress"
             tools:ignore="RequiredSize" />
     </com.google.android.material.textfield.TextInputLayout>
 
@@ -58,6 +61,7 @@
         <com.adyen.checkout.components.ui.view.AdyenTextInputEditText
             android:id="@+id/editText_postalCode"
             style="@style/AdyenCheckout.Card.PostalCodeInput"
+            android:autofillHints="postalCode"
             tools:ignore="RequiredSize" />
     </com.google.android.material.textfield.TextInputLayout>
 
@@ -72,6 +76,7 @@
             style="@style/AdyenCheckout.DropdownTextInputEditText"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:autofillHints="postalAddress"
             tools:ignore="RequiredSize" />
     </com.google.android.material.textfield.TextInputLayout>
 </merge>

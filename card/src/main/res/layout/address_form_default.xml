@@ -22,6 +22,7 @@
         <com.adyen.checkout.components.ui.view.AdyenTextInputEditText
             android:id="@+id/editText_street"
             style="@style/AdyenCheckout.Card.StreetInput"
+            android:autofillHints="postalAddress"
             tools:ignore="RequiredSize" />
     </com.google.android.material.textfield.TextInputLayout>
 
@@ -34,6 +35,7 @@
         <com.adyen.checkout.components.ui.view.AdyenTextInputEditText
             android:id="@+id/editText_houseNumber"
             style="@style/AdyenCheckout.Card.HouseNumberInput"
+            android:autofillHints="postalAddress"
             tools:ignore="RequiredSize" />
     </com.google.android.material.textfield.TextInputLayout>
 
@@ -46,6 +48,7 @@
         <com.adyen.checkout.components.ui.view.AdyenTextInputEditText
             android:id="@+id/editText_apartmentSuite"
             style="@style/AdyenCheckout.Card.ApartmentSuiteInput"
+            android:autofillHints="postalAddress"
             tools:ignore="RequiredSize" />
     </com.google.android.material.textfield.TextInputLayout>
 
@@ -58,6 +61,7 @@
         <com.adyen.checkout.components.ui.view.AdyenTextInputEditText
             android:id="@+id/editText_postalCode"
             style="@style/AdyenCheckout.Card.PostalCodeInput"
+            android:autofillHints="postalCode"
             tools:ignore="RequiredSize" />
     </com.google.android.material.textfield.TextInputLayout>
 
@@ -70,6 +74,7 @@
         <com.adyen.checkout.components.ui.view.AdyenTextInputEditText
             android:id="@+id/editText_city"
             style="@style/AdyenCheckout.Card.CityInput"
+            android:autofillHints="postalAddress"
             tools:ignore="RequiredSize" />
     </com.google.android.material.textfield.TextInputLayout>
 
@@ -82,6 +87,7 @@
         <com.adyen.checkout.components.ui.view.AdyenTextInputEditText
             android:id="@+id/editText_provinceTerritory"
             style="@style/AdyenCheckout.Card.ProvinceTerritoryInput"
+            android:autofillHints="postalAddress"
             tools:ignore="RequiredSize" />
     </com.google.android.material.textfield.TextInputLayout>
 </merge>
