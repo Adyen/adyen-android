@@ -116,14 +116,14 @@ internal object AddressFormUtils {
     fun makeAddressData(addressOutputData: AddressOutputData, addressFormUIState: AddressFormUIState): Address? {
         return when (addressFormUIState) {
             AddressFormUIState.FULL_ADDRESS -> Address().apply {
-                postalCode = addressOutputData.postalCode.value
-                street = addressOutputData.street.value
-                stateOrProvince = addressOutputData.stateOrProvince.value
+                postalCode = addressOutputData.postalCode.value.ifEmpty { Address.ADDRESS_NULL_PLACEHOLDER }
+                street = addressOutputData.street.value.ifEmpty { Address.ADDRESS_NULL_PLACEHOLDER }
+                stateOrProvince = addressOutputData.stateOrProvince.value.ifEmpty { Address.ADDRESS_NULL_PLACEHOLDER }
                 houseNumberOrName = makeHouseNumberOrName(
                     addressOutputData.houseNumberOrName.value,
                     addressOutputData.apartmentSuite.value
-                )
-                city = addressOutputData.city.value
+                ).ifEmpty { Address.ADDRESS_NULL_PLACEHOLDER }
+                city = addressOutputData.city.value.ifEmpty { Address.ADDRESS_NULL_PLACEHOLDER }
                 country = addressOutputData.country.value
             }
             AddressFormUIState.POSTAL_CODE -> Address().apply {
