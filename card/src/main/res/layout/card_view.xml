@@ -192,6 +192,8 @@
         <com.adyen.checkout.components.ui.view.AdyenTextInputEditText
             android:id="@+id/editText_kcpCardPassword"
             style="@style/AdyenCheckout.Card.KcpCardPassword"
+            android:nextFocusDown="@id/addressFormInput"
+            android:nextFocusForward="@id/addressFormInput"
             tools:ignore="RequiredSize" />
     </com.google.android.material.textfield.TextInputLayout>
 
@@ -221,5 +223,7 @@
         android:id="@+id/addressFormInput"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:descendantFocusability="afterDescendants"
+        android:focusableInTouchMode="true"
         android:visibility="gone" />
 </merge>

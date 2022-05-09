@@ -23,6 +23,8 @@
             android:id="@+id/editText_street"
             style="@style/AdyenCheckout.Card.AddressInput"
             android:autofillHints="postalAddress"
+            android:nextFocusDown="@id/editText_apartmentSuite"
+            android:nextFocusForward="@id/editText_apartmentSuite"
             tools:ignore="RequiredSize" />
     </com.google.android.material.textfield.TextInputLayout>
 
@@ -36,6 +38,8 @@
             android:id="@+id/editText_apartmentSuite"
             style="@style/AdyenCheckout.Card.ApartmentSuiteInput"
             android:autofillHints="postalAddress"
+            android:nextFocusDown="@id/editText_city"
+            android:nextFocusForward="@id/editText_city"
             tools:ignore="RequiredSize" />
     </com.google.android.material.textfield.TextInputLayout>
 
@@ -49,6 +53,8 @@
             android:id="@+id/editText_city"
             style="@style/AdyenCheckout.Card.CityInput"
             android:autofillHints="postalAddress"
+            android:nextFocusDown="@id/editText_postalCode"
+            android:nextFocusForward="@id/editText_postalCode"
             tools:ignore="RequiredSize" />
     </com.google.android.material.textfield.TextInputLayout>
 
