@@ -11,25 +11,6 @@ import com.adyen.checkout.components.model.payments.request.Address
 internal object AddressFormUtils {
 
     /**
-     * Map a list of [AddressItem] to a list of [AddressListItem].
-     *
-     * @param list Input list.
-     * @param shouldSelectFirstItem Whether or not the first item should be marked as selected.
-     *
-     * @return Mapped list of [AddressListItem].
-     */
-    fun mapToListItem(list: List<AddressItem>, shouldSelectFirstItem: Boolean): List<AddressListItem> {
-        return list.map {
-            val isFirstItem = it.id == list.firstOrNull()?.id
-            AddressListItem(
-                name = it.name.orEmpty(),
-                code = it.id.orEmpty(),
-                selected = shouldSelectFirstItem && isFirstItem
-            )
-        }
-    }
-
-    /**
      * Mark the item that matches the given code as selected in the given input list.
      *
      * @param list Input list of [AddressListItem].
@@ -37,9 +18,16 @@ internal object AddressFormUtils {
      *
      * @return List of [AddressListItem] with the item in the list having given code marked as selected.
      */
-    fun markAddressListItemSelected(list: List<AddressListItem>, code: String): List<AddressListItem> {
-        return list.map {
-            it.copy(selected = it.code == code)
+    fun markAddressListItemSelected(list: List<AddressListItem>, code: String? = null): List<AddressListItem> {
+        return if (list.any { it.code == code } && code?.isNotEmpty() == true) {
+            list.map {
+                it.copy(selected = it.code == code)
+            }
+        } else {
+            list.mapIndexed { index, addressListItem ->
+                val isFirstItem = index == 0
+                addressListItem.copy(selected = isFirstItem)
+            }
         }
     }
 
@@ -83,15 +71,22 @@ internal object AddressFormUtils {
                     countryList
                 }
 
-                val defaultCountryCode = addressConfiguration.defaultCountryCode
-                if (defaultCountryCode != null && filteredCountryList.any { it.id == defaultCountryCode }) {
-                    markAddressListItemSelected(mapToListItem(filteredCountryList, false), defaultCountryCode)
-                } else {
-                    mapToListItem(filteredCountryList, true)
-                }
+                val defaultCountryCode = addressConfiguration.defaultCountryCode.orEmpty()
+                markAddressListItemSelected(mapToListItem(filteredCountryList), defaultCountryCode)
             }
             else -> emptyList()
         }
+    }
+
+    /**
+     * Initialize state options.
+     *
+     * @param stateList List of states from API.
+     *
+     * @return State options.
+     */
+    fun initializeStateOptions(stateList: List<AddressItem>): List<AddressListItem> {
+        return markAddressListItemSelected(mapToListItem(stateList))
     }
 
     /**
@@ -151,5 +146,22 @@ internal object AddressFormUtils {
     fun makeHouseNumberOrName(houseNumberOrName: String, apartmentSuite: String): String {
         return listOf(houseNumberOrName, apartmentSuite).filter { it.isNotEmpty() }
             .joinToString(" ")
+    }
+
+    /**
+     * Map a list of [AddressItem] to a list of [AddressListItem].
+     *
+     * @param list Input list.
+     *
+     * @return Mapped list of [AddressListItem].
+     */
+    private fun mapToListItem(list: List<AddressItem>): List<AddressListItem> {
+        return list.map {
+            AddressListItem(
+                name = it.name.orEmpty(),
+                code = it.id.orEmpty(),
+                selected = false
+            )
+        }
     }
 }

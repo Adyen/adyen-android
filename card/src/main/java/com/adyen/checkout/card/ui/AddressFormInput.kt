@@ -382,7 +382,7 @@ class AddressFormInput @JvmOverloads constructor(
             localizedContext
         )
         autoCompleteTextViewState?.apply {
-            statesAdapter.getItem { it.code == component.inputData.address.stateOrProvince }
+            setText(statesAdapter.getItem { it.selected }?.name)
             inputType = 0
             setAdapter(statesAdapter)
             onItemClickListener = AdapterView.OnItemClickListener { _, _, position, _ ->

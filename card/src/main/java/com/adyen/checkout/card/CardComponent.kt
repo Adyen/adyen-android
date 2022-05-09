@@ -254,7 +254,7 @@ class CardComponent private constructor(
                         selectedCardIndex = inputData.selectedCardIndex,
                         selectedInstallmentOption = inputData.installmentOption,
                         countryOptions = countryOptions,
-                        stateOptions = AddressFormUtils.mapToListItem(it, true)
+                        stateOptions = AddressFormUtils.initializeStateOptions(it)
                     )
                     notifyStateChanged(newOutputData)
                 }
