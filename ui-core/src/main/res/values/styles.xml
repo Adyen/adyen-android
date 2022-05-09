@@ -41,6 +41,7 @@
     <style name="AdyenCheckout.DropdownTextInputLayout" parent="Widget.MaterialComponents.TextInputLayout.OutlinedBox.ExposedDropdownMenu">
         <item name="boxStrokeColor">@color/primaryColor</item>
         <item name="android:minHeight">@dimen/input_layout_height</item>
+        <item name="android:descendantFocusability">blocksDescendants</item>
     </style>
 
     <style name="AdyenCheckout.TextInputEditText">
@@ -111,6 +112,8 @@
         <item name="android:layout_marginEnd">@dimen/standard_quarter_margin</item>
         <item name="android:layout_marginRight">@dimen/standard_quarter_margin</item>
         <item name="android:layout_marginBottom">@dimen/standard_margin</item>
+        <item name="android:focusable">false</item>
+        <item name="android:focusableInTouchMode">false</item>
     </style>
 
     <style name="AdyenCheckout.SwitchTheme" parent="Widget.AppCompat.CompoundButton.Switch">
@@ -136,6 +139,8 @@
         <item name="android:layout_marginEnd">@dimen/standard_margin</item>
         <item name="android:textColor">@color/white</item>
         <item name="android:theme">@style/AdyenCheckout.PrimaryFlatButton</item>
+        <item name="android:focusable">false</item>
+        <item name="android:focusableInTouchMode">false</item>
     </style>
 
     <style name="AdyenCheckout.PrimaryFlatButton" parent="AdyenCheckout">
