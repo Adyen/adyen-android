@@ -50,6 +50,8 @@ class AddressDelegate(
                 }
                 _statesFlow.tryEmit(states)
             }
+        } else {
+            _statesFlow.tryEmit(emptyList())
         }
     }
 
