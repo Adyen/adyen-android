@@ -206,9 +206,11 @@ class AddressFormInput @JvmOverloads constructor(
             AddressSpecification.DEFAULT -> R.layout.address_form_default
         }
 
+        val hadFocus = hasFocus()
         formContainer.removeAllViews()
         LayoutInflater.from(context).inflate(layoutResId, formContainer, true)
         initForm(specification)
+        if (hadFocus) requestFocus()
     }
 
     private fun initForm(addressSpecification: AddressSpecification) {
