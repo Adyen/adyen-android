@@ -39,6 +39,14 @@ fun JSONObject.optStringList(key: String): List<String>? {
     return JsonUtils.parseOptStringList(optJSONArray(key))
 }
 
+fun JSONArray.toStringPretty(): String {
+    return try {
+        toString(INDENTATION_SPACES)
+    } catch (e: JSONException) {
+        PARSING_ERROR
+    }
+}
+
 object JsonUtils {
 
     /**

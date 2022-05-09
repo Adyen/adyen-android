@@ -8,6 +8,8 @@
 
 package com.adyen.checkout.card
 
+import com.adyen.checkout.card.util.CardNumberValidation
+import com.adyen.checkout.card.util.CardValidationUtils
 import org.junit.Assert.assertEquals
 import org.junit.Test
 

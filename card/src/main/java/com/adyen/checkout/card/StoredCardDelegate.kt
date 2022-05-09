@@ -12,6 +12,9 @@ import com.adyen.checkout.card.api.model.Brand
 import com.adyen.checkout.card.data.CardType
 import com.adyen.checkout.card.data.DetectedCardType
 import com.adyen.checkout.card.data.ExpiryDate
+import com.adyen.checkout.card.util.AddressValidationUtils
+import com.adyen.checkout.card.util.CardValidationUtils
+import com.adyen.checkout.components.base.AddressVisibility
 import com.adyen.checkout.components.model.paymentmethods.StoredPaymentMethod
 import com.adyen.checkout.components.repository.PublicKeyRepository
 import com.adyen.checkout.components.ui.FieldState
@@ -97,8 +100,8 @@ class StoredCardDelegate(
         return FieldState(kcpCardPassword, Validation.Valid)
     }
 
-    override fun validatePostalCode(postalCode: String): FieldState<String> {
-        return FieldState(postalCode, Validation.Valid)
+    override fun validateAddress(addressInputModel: AddressInputModel, addressFormUIState: AddressFormUIState): AddressOutputData {
+        return AddressValidationUtils.makeValidEmptyAddressOutput(addressInputModel)
     }
 
     override fun isCvcHidden(): Boolean {
@@ -121,7 +124,14 @@ class StoredCardDelegate(
         return false
     }
 
-    override fun isPostalCodeRequired(): Boolean {
+    override fun getAddressFormUIState(
+        addressConfiguration: AddressConfiguration?,
+        addressVisibility: AddressVisibility
+    ): AddressFormUIState {
+        return AddressFormUIState.NONE
+    }
+
+    override fun isAddressRequired(addressFormUIState: AddressFormUIState): Boolean {
         return false
     }
 

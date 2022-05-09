@@ -1,4 +1,4 @@
-package com.adyen.checkout.card
+package com.adyen.checkout.card.util
 
 import com.adyen.checkout.card.data.CardType
 import com.adyen.checkout.card.data.DetectedCardType

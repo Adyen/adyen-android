@@ -19,6 +19,7 @@ data class CardInputData(
     var kcpBirthDateOrTaxNumber: String = "",
     var kcpCardPassword: String = "",
     var postalCode: String = "",
+    var address: AddressInputModel = AddressInputModel(),
     var isStorePaymentSelected: Boolean = false,
     var selectedCardIndex: Int = 0,
     var installmentOption: InstallmentModel? = null
