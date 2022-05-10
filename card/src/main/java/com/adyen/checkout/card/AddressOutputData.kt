@@ -20,13 +20,12 @@ data class AddressOutputData(
     val city: FieldState<String>,
     val country: FieldState<String>
 ) : OutputData {
-    override fun isValid(): Boolean {
-        return postalCode.validation.isValid() &&
+    override val isValid: Boolean
+        get() = postalCode.validation.isValid() &&
             street.validation.isValid() &&
             stateOrProvince.validation.isValid() &&
             houseNumberOrName.validation.isValid() &&
             apartmentSuite.validation.isValid() &&
             city.validation.isValid() &&
             country.validation.isValid()
-    }
 }

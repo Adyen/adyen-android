@@ -216,7 +216,7 @@ class CardView @JvmOverloads constructor(
                     isErrorFocused = true
                     binding.textInputLayoutSocialSecurityNumber.requestFocus()
                 }
-                binding.textInputLayoutSocialSecurityNumber.error = mLocalizedContext.getString(socialSecurityNumberValidation.reason)
+                binding.textInputLayoutSocialSecurityNumber.error = localizedContext.getString(socialSecurityNumberValidation.reason)
             }
             val kcpBirthDateOrTaxNumberValidation = it.kcpBirthDateOrTaxNumberState.validation
             if (binding.textInputLayoutKcpBirthDateOrTaxNumber.isVisible && kcpBirthDateOrTaxNumberValidation is Validation.Invalid) {
@@ -224,7 +224,7 @@ class CardView @JvmOverloads constructor(
                     isErrorFocused = true
                     binding.textInputLayoutKcpBirthDateOrTaxNumber.requestFocus()
                 }
-                binding.textInputLayoutKcpBirthDateOrTaxNumber.error = mLocalizedContext.getString(kcpBirthDateOrTaxNumberValidation.reason)
+                binding.textInputLayoutKcpBirthDateOrTaxNumber.error = localizedContext.getString(kcpBirthDateOrTaxNumberValidation.reason)
             }
             val kcpPasswordValidation = it.kcpCardPasswordState.validation
             if (binding.textInputLayoutKcpCardPassword.isVisible && kcpPasswordValidation is Validation.Invalid) {
@@ -232,7 +232,7 @@ class CardView @JvmOverloads constructor(
                     isErrorFocused = true
                     binding.textInputLayoutKcpCardPassword.requestFocus()
                 }
-                binding.textInputLayoutKcpCardPassword.error = mLocalizedContext.getString(kcpPasswordValidation.reason)
+                binding.textInputLayoutKcpCardPassword.error = localizedContext.getString(kcpPasswordValidation.reason)
             }
             if (binding.addressFormInput.isVisible && !it.addressState.isValid) {
                 binding.addressFormInput.highlightValidationErrors(isErrorFocused)
