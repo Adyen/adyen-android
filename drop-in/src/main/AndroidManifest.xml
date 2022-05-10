@@ -29,7 +29,9 @@
             </intent-filter>
         </activity>
 
-        <service android:name=".service.SessionDropInService" />
+        <service
+            android:name=".service.SessionDropInService"
+            android:exported="false" />
     </application>
 
 </manifest>
