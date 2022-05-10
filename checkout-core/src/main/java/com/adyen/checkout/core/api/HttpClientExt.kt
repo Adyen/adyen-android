@@ -11,7 +11,9 @@ package com.adyen.checkout.core.api
 import com.adyen.checkout.core.log.LogUtil
 import com.adyen.checkout.core.log.Logger
 import com.adyen.checkout.core.model.ModelObject
+import com.adyen.checkout.core.model.ModelUtils
 import com.adyen.checkout.core.model.toStringPretty
+import org.json.JSONArray
 import org.json.JSONObject
 
 private val TAG = LogUtil.getTag()
@@ -28,6 +30,20 @@ fun <T : ModelObject> HttpClient.get(
     Logger.v(TAG, "response - ${resultJson.toStringPretty()}")
 
     return responseSerializer.deserialize(resultJson)
+}
+
+fun <T : ModelObject> HttpClient.getList(
+    path: String,
+    responseSerializer: ModelObject.Serializer<T>
+): List<T> {
+    Logger.d(TAG, "GET - $path")
+
+    val result = this.get(path)
+    val resultJson = JSONArray(String(result, Charsets.UTF_8))
+
+    Logger.v(TAG, "response - ${resultJson.toStringPretty()}")
+
+    return ModelUtils.deserializeOptList(resultJson, responseSerializer).orEmpty()
 }
 
 fun <T : ModelObject, R : ModelObject> HttpClient.post(

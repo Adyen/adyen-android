@@ -9,7 +9,6 @@
 package com.adyen.checkout.card
 
 import android.util.LruCache
-import com.adyen.checkout.card.api.AddressDataType
 import com.adyen.checkout.card.api.model.AddressItem
 import com.adyen.checkout.card.repository.AddressRepository
 import com.adyen.checkout.card.ui.AddressFormInput
@@ -39,16 +38,20 @@ class AddressDelegate(
             cache[countryCode]?.let {
                 _statesFlow.tryEmit(it)
             } ?: coroutineScope.launch {
-                val states = addressRepository.getAddressData(
+                addressRepository.getStates(
                     environment = configuration.environment,
-                    dataType = AddressDataType.STATE,
-                    localeString = configuration.shopperLocale.toLanguageTag(),
+                    shopperLocale = configuration.shopperLocale,
                     countryCode = countryCode
+                ).fold(
+                    onSuccess = { states ->
+                        if (states.isNotEmpty()) {
+                            cache.put(countryCode, states)
+                        }
+                        _statesFlow.tryEmit(states)
+                    },
+                    onFailure = { _statesFlow.tryEmit(emptyList()) }
                 )
-                if (states.isNotEmpty()) {
-                    cache.put(countryCode, states)
-                }
-                _statesFlow.tryEmit(states)
+
             }
         } else {
             _statesFlow.tryEmit(emptyList())
@@ -57,15 +60,20 @@ class AddressDelegate(
 
     suspend fun getCountryList(configuration: Configuration): List<AddressItem> {
         return cache[COUNTRIES_CACHE_KEY] ?: run {
-            val countries = addressRepository.getAddressData(
+            addressRepository.getCountries(
                 environment = configuration.environment,
-                dataType = AddressDataType.COUNTRY,
-                localeString = configuration.shopperLocale.toLanguageTag()
+                shopperLocale = configuration.shopperLocale
+            ).fold(
+                onSuccess = { countries ->
+                    if (countries.isNotEmpty()) {
+                        cache.put(COUNTRIES_CACHE_KEY, countries)
+                    }
+                    countries
+                },
+                onFailure = {
+                    emptyList()
+                }
             )
-            if (countries.isNotEmpty()) {
-                cache.put(COUNTRIES_CACHE_KEY, countries)
-            }
-            countries
         }
     }
 

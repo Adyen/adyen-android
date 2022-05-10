@@ -8,16 +8,13 @@
 
 package com.adyen.checkout.card.repository
 
-import com.adyen.checkout.card.api.AddressConnection
-import com.adyen.checkout.card.api.AddressDataType
+import com.adyen.checkout.card.api.AddressService
 import com.adyen.checkout.card.api.model.AddressItem
-import com.adyen.checkout.components.api.suspendedCall
 import com.adyen.checkout.core.api.Environment
-import com.adyen.checkout.core.exception.CheckoutException
 import com.adyen.checkout.core.log.LogUtil
 import com.adyen.checkout.core.log.Logger
-import org.json.JSONException
-import java.io.IOException
+import com.adyen.checkout.core.util.runSuspendCatching
+import java.util.Locale
 
 class AddressRepository {
 
@@ -25,21 +22,21 @@ class AddressRepository {
         private val TAG = LogUtil.getTag()
     }
 
-    suspend fun getAddressData(
+    suspend fun getCountries(
         environment: Environment,
-        dataType: AddressDataType,
-        localeString: String,
-        countryCode: String? = null
-    ): List<AddressItem> {
-        Logger.d(TAG, "getting address data")
-        try {
-            return AddressConnection(environment, dataType, localeString, countryCode).suspendedCall()
-        } catch (e: IOException) {
-            Logger.e(TAG, "AddressConnection Failed")
-            throw CheckoutException("Unable to get address data.")
-        } catch (e: JSONException) {
-            Logger.e(TAG, "AddressConnection unexpected result")
-            throw CheckoutException("Unable to get address data.")
-        }
+        shopperLocale: Locale
+    ): Result<List<AddressItem>> = runSuspendCatching {
+        Logger.d(TAG, "getting country list")
+        return@runSuspendCatching AddressService(environment.baseUrl).getCountries(shopperLocale.toLanguageTag())
     }
+
+    suspend fun getStates(
+        environment: Environment,
+        shopperLocale: Locale,
+        countryCode: String
+    ): Result<List<AddressItem>> = runSuspendCatching {
+        Logger.d(TAG, "getting state list for $countryCode")
+        return@runSuspendCatching AddressService(environment.baseUrl).getStates(shopperLocale.toLanguageTag(), countryCode)
+    }
+
 }
