@@ -3,8 +3,6 @@
     xmlns:tools="http://schemas.android.com/tools"
     package="com.adyen.checkout.dropin">
 
-    <uses-permission android:name="android.permission.WAKE_LOCK" />
-
     <application android:supportsRtl="true">
         <activity
             android:name=".ui.DropInActivity"
