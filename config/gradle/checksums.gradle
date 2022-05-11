@@ -17,7 +17,7 @@ if (!hasProperty("checksums")) {
             "org.jetbrains.kotlin:kotlin-klib-commonizer-embeddable:1.6.21:ea6fa29c284656cd40b13825464f5972:MD5",
 
             // Coroutines
-            "org.jetbrains.kotlinx:kotlinx-coroutines-android:1.5.0:111a33c5f32964013d38e0d78bbdf9f3:MD5",
+            "org.jetbrains.kotlinx:kotlinx-coroutines-android:1.6.1:e427aac656a3159609ea059d38feaf7f:MD5",
 
             // Android Gradle Plugin
             "androidx.databinding:viewbinding:4.2.2:80a29d43e530c7475f9d192bbb57b21c:MD5",
