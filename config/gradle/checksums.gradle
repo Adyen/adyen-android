@@ -20,7 +20,7 @@ if (!hasProperty("checksums")) {
             "org.jetbrains.kotlinx:kotlinx-coroutines-android:1.6.1:e427aac656a3159609ea059d38feaf7f:MD5",
 
             // Android Gradle Plugin
-            "androidx.databinding:viewbinding:4.2.2:80a29d43e530c7475f9d192bbb57b21c:MD5",
+            "androidx.databinding:viewbinding:7.1.0:c59dfc4dbdf2bb7560b26e178fa3041a:MD5",
 
             // AndroidX
             "androidx.annotation:annotation:1.2.0:9120b153f33a2d61a6252935839f6d4e:MD5",
