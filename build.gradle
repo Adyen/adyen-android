@@ -79,7 +79,6 @@ allprojects {
     ext.moshi_adapters_version = '1.11.0'
     ext.moshi_kotlin_adapter_version = '1.13.0'
     ext.okhttp_logging_version = "4.9.0"
-    ext.okhttp_idling_resource_version = "1.0.0"
 
     // Tests
     ext.junit_version = '4.13.2'
