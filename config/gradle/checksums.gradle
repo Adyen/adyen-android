@@ -12,9 +12,9 @@ if (!hasProperty("checksums")) {
             "com.adyen.threeds:adyen-3ds2:2.2.6:a7f66ed68afc898d02ff71486747abec:MD5",
 
             // Kotlin
-            "org.jetbrains.kotlin:kotlin-stdlib-jdk8:1.5.21:4f74db0220f534e0c746fc2a89a50304:MD5",
-            "org.jetbrains.kotlin:kotlin-compiler-embeddable:1.5.21:5bb547be66e8cd76d1a9c1f5387c24ac:MD5",
-            "org.jetbrains.kotlin:kotlin-klib-commonizer-embeddable:1.5.21:662cdacfac64a3a16cda4dddcd6a8cba:MD5",
+            "org.jetbrains.kotlin:kotlin-stdlib-jdk8:1.6.21:9e7ee18a1a5dd5bf070c7e6f706ccc9c:MD5",
+            "org.jetbrains.kotlin:kotlin-compiler-embeddable:1.6.21:eb3d83e86861d7399e816410e1ceba2c:MD5",
+            "org.jetbrains.kotlin:kotlin-klib-commonizer-embeddable:1.6.21:ea6fa29c284656cd40b13825464f5972:MD5",
 
             // Coroutines
             "org.jetbrains.kotlinx:kotlinx-coroutines-android:1.5.0:111a33c5f32964013d38e0d78bbdf9f3:MD5",
