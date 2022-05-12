@@ -24,7 +24,6 @@ import com.adyen.checkout.example.data.IDEAL_WEBVIEW_REDIRECT_KEY
 import com.adyen.checkout.example.data.RESULT_KEY_AUTHORISED
 import com.adyen.checkout.example.data.RESULT_KEY_REFUSED
 import com.adyen.checkout.example.data.normalScheme
-import com.adyen.checkout.example.rules.OkHttpIdlingResourceRule
 import com.adyen.checkout.example.ui.main.MainActivity
 import com.adyen.checkout.example.utils.findItemByTextinRecyclerAndPerformClick
 import com.adyen.checkout.example.utils.findObjectWithText
@@ -47,9 +46,6 @@ class MainActivityTest : KoinTest {
 
     @get:Rule
     var activityRule: IntentsTestRule<MainActivity> = IntentsTestRule(MainActivity::class.java)
-
-    @get:Rule
-    var httpRule = OkHttpIdlingResourceRule(okHttpClient)
 
     // TODO: 21/10/2020 Re enable after getValue() is fixes on Expresso utils class
 //    @Test

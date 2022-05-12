@@ -92,6 +92,5 @@ dependencies {
     androidTestImplementation "androidx.test.espresso:espresso-core:$espresso_version"
     androidTestImplementation "androidx.test.espresso:espresso-contrib:$espresso_version"
     androidTestImplementation "androidx.test.espresso:espresso-intents:$espresso_version"
-    androidTestImplementation "com.jakewharton.espresso:okhttp3-idling-resource:$okhttp_idling_resource_version"
     androidTestImplementation "androidx.test.uiautomator:uiautomator:$uiautomator_version"
 }
