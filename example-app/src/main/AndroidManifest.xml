@@ -63,9 +63,15 @@
                 android:value=".ui.main.MainActivity" />
         </activity>
 
-        <service android:name=".service.ExampleDropInService" />
-        <service android:name=".service.ExampleAsyncDropInService" />
-        <service android:name=".service.ExampleFullAsyncDropInService" />
+        <service
+            android:name=".service.ExampleDropInService"
+            android:exported="false" />
+        <service
+            android:name=".service.ExampleAsyncDropInService"
+            android:exported="false" />
+        <service
+            android:name=".service.ExampleFullAsyncDropInService"
+            android:exported="false" />
     </application>
 
 </manifest>
