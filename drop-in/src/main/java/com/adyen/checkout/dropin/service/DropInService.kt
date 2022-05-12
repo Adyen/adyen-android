@@ -28,6 +28,7 @@ import com.adyen.checkout.dropin.DropInConfiguration
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.Job
+import kotlinx.coroutines.cancel
 import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.flow.receiveAsFlow
@@ -83,6 +84,9 @@ abstract class DropInService : Service(), CoroutineScope, DropInServiceInterface
 
     override fun onDestroy() {
         Logger.d(TAG, "onDestroy")
+
+        cancel()
+
         super.onDestroy()
     }
 

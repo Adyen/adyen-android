@@ -195,6 +195,8 @@ class DropInActivity :
         sendAnalyticsEvent()
 
         initObservers()
+
+        bindService()
     }
 
     private fun noDialogPresent(): Boolean {
@@ -249,7 +251,6 @@ class DropInActivity :
     override fun onStart() {
         Logger.v(TAG, "onStart")
         super.onStart()
-        bindService()
     }
 
     private fun bindService() {
@@ -273,7 +274,6 @@ class DropInActivity :
     override fun onStop() {
         Logger.v(TAG, "onStop")
         super.onStop()
-        unbindService()
     }
 
     private fun unbindService() {
@@ -353,6 +353,7 @@ class DropInActivity :
 
     override fun onDestroy() {
         Logger.v(TAG, "onDestroy")
+        unbindService()
         super.onDestroy()
     }
 
