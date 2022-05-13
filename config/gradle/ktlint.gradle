@@ -26,7 +26,7 @@ task ktlint(type: JavaExec) {
 
     classpath = configurations.ktlint
     main = "com.pinterest.ktlint.Main"
-    args "src/**/*.kt", "--reporter=plain", "--reporter=checkstyle,output=${project.buildDir}/reports/klint/klint-results.xml"
+    args "src/**/*.kt !src/**/*Test.kt", "--reporter=plain", "--reporter=checkstyle,output=${project.buildDir}/reports/klint/klint-results.xml"
 }
 
 task ktlintFormat(type: JavaExec) {
