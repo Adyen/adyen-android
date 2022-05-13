@@ -60,6 +60,8 @@ class DropInViewModel(
             savedStateHandle[AMOUNT] = value
         }
 
+    private val initialSession: Session? = savedStateHandle[SESSION_KEY]
+
     private var paymentMethodsApiResponse: PaymentMethodsApiResponse?
         get() {
             return savedStateHandle[PAYMENT_METHODS_RESPONSE_KEY]
@@ -150,6 +152,20 @@ class DropInViewModel(
     }
 
     fun activityCreated() {
+        if (isInitializedWithSession() && paymentMethodsApiResponse == null) {
+            // we just need to wait for the service to fetch the payment methods and send them to us
+            // TODO add loading state?
+            return
+        } else {
+            loadDropIn()
+        }
+    }
+
+    private fun isInitializedWithSession(): Boolean {
+        return initialSession != null
+    }
+
+    private fun loadDropIn() {
         val fragmentToLoad = when {
             shouldSkipToSinglePaymentMethod() -> {
                 val firstPaymentMethod = getPaymentMethods().firstOrNull()
