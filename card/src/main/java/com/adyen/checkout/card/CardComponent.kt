@@ -170,8 +170,14 @@ class CardComponent private constructor(
             detectedCardTypes = detectedCardTypes,
             selectedCardIndex = inputData.selectedCardIndex,
             selectedInstallmentOption = inputData.installmentOption,
-            countryOptions = AddressFormUtils.markAddressListItemSelected(outputData?.countryOptions.orEmpty(), inputData.address.country),
-            stateOptions = AddressFormUtils.markAddressListItemSelected(outputData?.stateOptions.orEmpty(), inputData.address.stateOrProvince)
+            countryOptions = AddressFormUtils.markAddressListItemSelected(
+                outputData?.countryOptions.orEmpty(),
+                inputData.address.country
+            ),
+            stateOptions = AddressFormUtils.markAddressListItemSelected(
+                outputData?.stateOptions.orEmpty(),
+                inputData.address.stateOrProvince
+            )
         )
     }
 
@@ -276,7 +282,10 @@ class CardComponent private constructor(
     private fun requestCountryList(cardDelegate: NewCardDelegate) {
         viewModelScope.launch {
             val countries = cardDelegate.getCountryList()
-            val countryOptions = AddressFormUtils.initializeCountryOptions(cardConfiguration.addressConfiguration, countries)
+            val countryOptions = AddressFormUtils.initializeCountryOptions(
+                addressConfiguration = cardConfiguration.addressConfiguration,
+                countryList = countries
+            )
             countryOptions.firstOrNull { it.selected }?.let {
                 inputData.address.country = it.code
                 cardDelegate.requestStateList(it.code, viewModelScope)
@@ -500,7 +509,10 @@ class CardComponent private constructor(
                 socialSecurityNumber = stateOutputData.socialSecurityNumberState.value
             }
             if (cardDelegate.isAddressRequired(stateOutputData.addressUIState)) {
-                billingAddress = AddressFormUtils.makeAddressData(stateOutputData.addressState, stateOutputData.addressUIState)
+                billingAddress = AddressFormUtils.makeAddressData(
+                    addressOutputData = stateOutputData.addressState,
+                    addressFormUIState = stateOutputData.addressUIState
+                )
             }
             if (isInstallmentsRequired(stateOutputData)) {
                 installments = InstallmentUtils.makeInstallmentModelObject(stateOutputData.installmentState.value)

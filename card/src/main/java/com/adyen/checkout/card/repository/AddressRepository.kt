@@ -36,7 +36,7 @@ class AddressRepository {
         countryCode: String
     ): Result<List<AddressItem>> = runSuspendCatching {
         Logger.d(TAG, "getting state list for $countryCode")
-        return@runSuspendCatching AddressService(environment.baseUrl).getStates(shopperLocale.toLanguageTag(), countryCode)
+        return@runSuspendCatching AddressService(environment.baseUrl)
+            .getStates(shopperLocale.toLanguageTag(), countryCode)
     }
-
 }

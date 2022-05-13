@@ -13,7 +13,10 @@ object AddressValidationUtils {
     /**
      * Validate address input.
      */
-    fun validateAddressInput(addressInputModel: AddressInputModel, addressFormUIState: AddressFormUIState): AddressOutputData {
+    fun validateAddressInput(
+        addressInputModel: AddressInputModel,
+        addressFormUIState: AddressFormUIState
+    ): AddressOutputData {
         return when (addressFormUIState) {
             AddressFormUIState.FULL_ADDRESS -> validateAddressInput(addressInputModel)
             AddressFormUIState.POSTAL_CODE -> validatePostalCode(addressInputModel)

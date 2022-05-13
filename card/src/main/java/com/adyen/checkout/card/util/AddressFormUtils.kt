@@ -62,11 +62,16 @@ internal object AddressFormUtils {
      *
      * @return Country options.
      */
-    fun initializeCountryOptions(addressConfiguration: AddressConfiguration?, countryList: List<AddressItem>): List<AddressListItem> {
+    fun initializeCountryOptions(
+        addressConfiguration: AddressConfiguration?,
+        countryList: List<AddressItem>
+    ): List<AddressListItem> {
         return when (addressConfiguration) {
             is AddressConfiguration.FullAddress -> {
                 val filteredCountryList = if (addressConfiguration.supportedCountryCodes.isNotEmpty()) {
-                    countryList.filter { countryItem -> addressConfiguration.supportedCountryCodes.any { it == countryItem.id } }
+                    countryList.filter { countryItem ->
+                        addressConfiguration.supportedCountryCodes.any { it == countryItem.id }
+                    }
                 } else {
                     countryList
                 }

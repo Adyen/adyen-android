@@ -125,7 +125,10 @@ class NewCardDelegate(
         }
     }
 
-    override fun validateAddress(addressInputModel: AddressInputModel, addressFormUIState: AddressFormUIState): AddressOutputData {
+    override fun validateAddress(
+        addressInputModel: AddressInputModel,
+        addressFormUIState: AddressFormUIState
+    ): AddressOutputData {
         return AddressValidationUtils.validateAddressInput(addressInputModel, addressFormUIState)
     }
 

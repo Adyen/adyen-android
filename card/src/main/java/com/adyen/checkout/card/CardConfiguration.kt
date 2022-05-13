@@ -275,7 +275,6 @@ class CardConfiguration : Configuration {
             return this
         }
 
-
         /**
          * Configures the address form to be shown to the shopper.
          *

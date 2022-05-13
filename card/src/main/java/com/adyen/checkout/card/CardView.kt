@@ -211,20 +211,26 @@ class CardView @JvmOverloads constructor(
                 binding.textInputLayoutPostalCode.error = localizedContext.getString(postalCodeValidation.reason)
             }
             val socialSecurityNumberValidation = it.socialSecurityNumberState.validation
-            if (binding.textInputLayoutSocialSecurityNumber.isVisible && socialSecurityNumberValidation is Validation.Invalid) {
+            if (binding.textInputLayoutSocialSecurityNumber.isVisible &&
+                socialSecurityNumberValidation is Validation.Invalid
+            ) {
                 if (!isErrorFocused) {
                     isErrorFocused = true
                     binding.textInputLayoutSocialSecurityNumber.requestFocus()
                 }
-                binding.textInputLayoutSocialSecurityNumber.error = localizedContext.getString(socialSecurityNumberValidation.reason)
+                binding.textInputLayoutSocialSecurityNumber.error =
+                    localizedContext.getString(socialSecurityNumberValidation.reason)
             }
             val kcpBirthDateOrTaxNumberValidation = it.kcpBirthDateOrTaxNumberState.validation
-            if (binding.textInputLayoutKcpBirthDateOrTaxNumber.isVisible && kcpBirthDateOrTaxNumberValidation is Validation.Invalid) {
+            if (binding.textInputLayoutKcpBirthDateOrTaxNumber.isVisible &&
+                kcpBirthDateOrTaxNumberValidation is Validation.Invalid
+            ) {
                 if (!isErrorFocused) {
                     isErrorFocused = true
                     binding.textInputLayoutKcpBirthDateOrTaxNumber.requestFocus()
                 }
-                binding.textInputLayoutKcpBirthDateOrTaxNumber.error = localizedContext.getString(kcpBirthDateOrTaxNumberValidation.reason)
+                binding.textInputLayoutKcpBirthDateOrTaxNumber.error =
+                    localizedContext.getString(kcpBirthDateOrTaxNumberValidation.reason)
             }
             val kcpPasswordValidation = it.kcpCardPasswordState.validation
             if (binding.textInputLayoutKcpCardPassword.isVisible && kcpPasswordValidation is Validation.Invalid) {

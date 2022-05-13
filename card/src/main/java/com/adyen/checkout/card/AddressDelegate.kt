@@ -51,7 +51,6 @@ class AddressDelegate(
                     },
                     onFailure = { _statesFlow.tryEmit(emptyList()) }
                 )
-
             }
         } else {
             _statesFlow.tryEmit(emptyList())
