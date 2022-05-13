@@ -36,6 +36,7 @@ import com.adyen.checkout.giftcard.util.GiftCardBalanceStatus
 import com.adyen.checkout.giftcard.util.GiftCardBalanceUtils
 import com.adyen.checkout.googlepay.GooglePayComponent
 import com.adyen.checkout.sessions.model.Session
+import com.adyen.checkout.sessions.model.setup.SessionSetupResponse
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.flow.receiveAsFlow
@@ -163,6 +164,11 @@ class DropInViewModel(
 
     private fun isInitializedWithSession(): Boolean {
         return initialSession != null
+    }
+
+    fun sessionSetupSuccessful(sessionSetupResponse: SessionSetupResponse) {
+        paymentMethodsApiResponse = sessionSetupResponse.paymentMethods
+        loadDropIn()
     }
 
     private fun loadDropIn() {

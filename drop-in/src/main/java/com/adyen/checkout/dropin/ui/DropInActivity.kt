@@ -49,6 +49,7 @@ import com.adyen.checkout.dropin.service.DropInServiceResult
 import com.adyen.checkout.dropin.service.DropInServiceResultError
 import com.adyen.checkout.dropin.service.OrderDropInServiceResult
 import com.adyen.checkout.dropin.service.RecurringDropInServiceResult
+import com.adyen.checkout.dropin.service.SessionSetupDropInServiceResult
 import com.adyen.checkout.dropin.ui.action.ActionComponentDialogFragment
 import com.adyen.checkout.dropin.ui.base.DropInBottomSheetDialogFragment
 import com.adyen.checkout.dropin.ui.component.BacsDirectDebitDialogFragment
@@ -455,6 +456,7 @@ class DropInActivity :
             is BalanceDropInServiceResult -> handleDropInServiceResult(dropInServiceResult)
             is OrderDropInServiceResult -> handleDropInServiceResult(dropInServiceResult)
             is RecurringDropInServiceResult -> handleDropInServiceResult(dropInServiceResult)
+            is SessionSetupDropInServiceResult -> handleDropInServiceResult(dropInServiceResult)
         }
     }
 
@@ -486,6 +488,14 @@ class DropInActivity :
             is RecurringDropInServiceResult.PaymentMethodRemoved ->
                 handleRemovePaymentMethodResult(dropInServiceResult.id)
             is RecurringDropInServiceResult.Error -> handleErrorDropInServiceResult(dropInServiceResult)
+        }
+    }
+
+    private fun handleDropInServiceResult(dropInServiceResult: SessionSetupDropInServiceResult) {
+        when (dropInServiceResult) {
+            is SessionSetupDropInServiceResult.Success ->
+                dropInViewModel.sessionSetupSuccessful(dropInServiceResult.sessionSetupResponse)
+            is SessionSetupDropInServiceResult.Error -> handleErrorDropInServiceResult(dropInServiceResult)
         }
     }
 
