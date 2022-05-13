@@ -149,6 +149,22 @@ class DropInViewModel(
         return noStored && singlePm && paymentMethodHasComponent && dropInConfiguration.skipListWhenSinglePaymentMethod
     }
 
+    fun activityCreated() {
+        val fragmentToLoad = when {
+            shouldSkipToSinglePaymentMethod() -> {
+                val firstPaymentMethod = getPaymentMethods().firstOrNull()
+                if (firstPaymentMethod != null) {
+                    DropInFragmentToLoad.PaymentComponent(firstPaymentMethod)
+                } else {
+                    throw CheckoutException("First payment method is null")
+                }
+            }
+            showPreselectedStored() -> DropInFragmentToLoad.PreselectedStored
+            else -> DropInFragmentToLoad.PaymentMethods
+        }
+        sendEvent(DropInActivityEvent.LoadFragment(fragmentToLoad))
+    }
+
     /**
      * @return the payment method details required to request the balance, or null if invalid
      */
