@@ -175,14 +175,14 @@ class DropInActivity :
         if (noDialogPresent()) {
             when {
                 dropInViewModel.shouldSkipToSinglePaymentMethod() -> {
-                    val firstPaymentMethod = dropInViewModel.paymentMethodsApiResponse.paymentMethods?.firstOrNull()
+                    val firstPaymentMethod = dropInViewModel.getPaymentMethods().firstOrNull()
                     if (firstPaymentMethod != null) {
                         showComponentDialog(firstPaymentMethod)
                     } else {
                         throw CheckoutException("First payment method is null")
                     }
                 }
-                dropInViewModel.showPreselectedStored -> showPreselectedDialog()
+                dropInViewModel.showPreselectedStored() -> showPreselectedDialog()
                 else -> showPaymentMethodsDialog()
             }
         }
@@ -360,7 +360,7 @@ class DropInActivity :
     override fun showPreselectedDialog() {
         Logger.d(TAG, "showPreselectedDialog")
         hideAllScreens()
-        PreselectedStoredPaymentMethodFragment.newInstance(dropInViewModel.preselectedStoredPayment)
+        PreselectedStoredPaymentMethodFragment.newInstance(dropInViewModel.getPreselectedStoredPaymentMethod())
             .show(supportFragmentManager, PRESELECTED_PAYMENT_METHOD_FRAGMENT_TAG)
     }
 
