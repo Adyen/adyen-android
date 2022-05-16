@@ -120,7 +120,7 @@ class PaymentMethodListDialogFragment :
     }
 
     override fun onBackPressed(): Boolean {
-        if (dropInViewModel.showPreselectedStored()) {
+        if (dropInViewModel.shouldShowPreselectedStored()) {
             protocol.showPreselectedDialog()
         } else {
             protocol.terminateDropIn()

@@ -63,7 +63,7 @@ import com.adyen.checkout.dropin.ui.giftcard.GiftCardPaymentConfirmationDialogFr
 import com.adyen.checkout.dropin.ui.paymentmethods.PaymentMethodListDialogFragment
 import com.adyen.checkout.dropin.ui.stored.PreselectedStoredPaymentMethodFragment
 import com.adyen.checkout.dropin.ui.viewmodel.DropInActivityEvent
-import com.adyen.checkout.dropin.ui.viewmodel.DropInFragmentToLoad
+import com.adyen.checkout.dropin.ui.viewmodel.DropInDestination
 import com.adyen.checkout.dropin.ui.viewmodel.DropInViewModel
 import com.adyen.checkout.dropin.ui.viewmodel.DropInViewModelFactory
 import com.adyen.checkout.giftcard.GiftCardComponent
@@ -173,7 +173,7 @@ class DropInActivity :
         }
 
         if (noDialogPresent()) {
-            dropInViewModel.activityCreated()
+            dropInViewModel.onCreated()
         }
 
         actionHandler = ActionHandler(this, dropInViewModel.dropInConfiguration)
@@ -494,7 +494,7 @@ class DropInActivity :
     private fun handleDropInServiceResult(dropInServiceResult: SessionSetupDropInServiceResult) {
         when (dropInServiceResult) {
             is SessionSetupDropInServiceResult.Success ->
-                dropInViewModel.sessionSetupSuccessful(dropInServiceResult.sessionSetupResponse)
+                dropInViewModel.onSessionSetupSuccessful(dropInServiceResult.sessionSetupResponse)
             is SessionSetupDropInServiceResult.Error -> handleErrorDropInServiceResult(dropInServiceResult)
         }
     }
@@ -598,19 +598,19 @@ class DropInActivity :
             is DropInActivityEvent.CancelDropIn -> {
                 terminateWithError(DropIn.ERROR_REASON_USER_CANCELED)
             }
-            is DropInActivityEvent.LoadFragment -> {
-                loadFragment(event.fragment)
+            is DropInActivityEvent.NavigateTo -> {
+                loadFragment(event.destination)
             }
         }
     }
 
-    private fun loadFragment(fragment: DropInFragmentToLoad) {
-        when (fragment) {
-            is DropInFragmentToLoad.ActionComponent -> displayAction(fragment.action)
-            is DropInFragmentToLoad.GiftCardPaymentConfirmation -> showGiftCardPaymentConfirmationDialog(fragment.data)
-            is DropInFragmentToLoad.PaymentComponent -> showComponentDialog(fragment.paymentMethod)
-            is DropInFragmentToLoad.PaymentMethods -> showPaymentMethodsDialog()
-            is DropInFragmentToLoad.PreselectedStored -> showPreselectedDialog()
+    private fun loadFragment(destination: DropInDestination) {
+        when (destination) {
+            is DropInDestination.ActionComponent -> displayAction(destination.action)
+            is DropInDestination.GiftCardPaymentConfirmation -> showGiftCardPaymentConfirmationDialog(destination.data)
+            is DropInDestination.PaymentComponent -> showComponentDialog(destination.paymentMethod)
+            is DropInDestination.PaymentMethods -> showPaymentMethodsDialog()
+            is DropInDestination.PreselectedStored -> showPreselectedDialog()
         }
     }
 

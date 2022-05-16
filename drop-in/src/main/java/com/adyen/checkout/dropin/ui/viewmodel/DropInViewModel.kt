@@ -124,7 +124,7 @@ class DropInViewModel(
         return paymentMethodsApiResponse?.storedPaymentMethods.orEmpty()
     }
 
-    fun showPreselectedStored(): Boolean {
+    fun shouldShowPreselectedStored(): Boolean {
         return getStoredPaymentMethods().any { it.isEcommerce } &&
             dropInConfiguration.showPreselectedStoredPaymentMethod
     }
@@ -152,13 +152,13 @@ class DropInViewModel(
         return noStored && singlePm && paymentMethodHasComponent && dropInConfiguration.skipListWhenSinglePaymentMethod
     }
 
-    fun activityCreated() {
+    fun onCreated() {
         if (isInitializedWithSession() && paymentMethodsApiResponse == null) {
             // we just need to wait for the service to fetch the payment methods and send them to us
             // TODO add loading state?
             return
         } else {
-            loadDropIn()
+            navigateToInitialDestination()
         }
     }
 
@@ -166,25 +166,25 @@ class DropInViewModel(
         return initialSession != null
     }
 
-    fun sessionSetupSuccessful(sessionSetupResponse: SessionSetupResponse) {
+    fun onSessionSetupSuccessful(sessionSetupResponse: SessionSetupResponse) {
         paymentMethodsApiResponse = sessionSetupResponse.paymentMethods
-        loadDropIn()
+        navigateToInitialDestination()
     }
 
-    private fun loadDropIn() {
-        val fragmentToLoad = when {
+    private fun navigateToInitialDestination() {
+        val destination = when {
             shouldSkipToSinglePaymentMethod() -> {
                 val firstPaymentMethod = getPaymentMethods().firstOrNull()
                 if (firstPaymentMethod != null) {
-                    DropInFragmentToLoad.PaymentComponent(firstPaymentMethod)
+                    DropInDestination.PaymentComponent(firstPaymentMethod)
                 } else {
                     throw CheckoutException("First payment method is null")
                 }
             }
-            showPreselectedStored() -> DropInFragmentToLoad.PreselectedStored
-            else -> DropInFragmentToLoad.PaymentMethods
+            shouldShowPreselectedStored() -> DropInDestination.PreselectedStored
+            else -> DropInDestination.PaymentMethods
         }
-        sendEvent(DropInActivityEvent.LoadFragment(fragmentToLoad))
+        sendEvent(DropInActivityEvent.NavigateTo(destination))
     }
 
     /**
