@@ -14,6 +14,7 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.adyen.checkout.components.PaymentComponentState
 import com.adyen.checkout.components.model.PaymentMethodsApiResponse
+import com.adyen.checkout.components.model.paymentmethods.PaymentMethod
 import com.adyen.checkout.components.model.paymentmethods.StoredPaymentMethod
 import com.adyen.checkout.components.model.payments.Amount
 import com.adyen.checkout.components.model.payments.request.OrderRequest
@@ -35,6 +36,7 @@ import com.adyen.checkout.giftcard.util.GiftCardBalanceStatus
 import com.adyen.checkout.giftcard.util.GiftCardBalanceUtils
 import com.adyen.checkout.googlepay.GooglePayComponent
 import com.adyen.checkout.sessions.model.Session
+import com.adyen.checkout.sessions.model.setup.SessionSetupResponse
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.flow.receiveAsFlow
@@ -59,11 +61,13 @@ class DropInViewModel(
             savedStateHandle[AMOUNT] = value
         }
 
-    var paymentMethodsApiResponse: PaymentMethodsApiResponse
+    private val initialSession: Session? = savedStateHandle[SESSION_KEY]
+
+    private var paymentMethodsApiResponse: PaymentMethodsApiResponse?
         get() {
-            return getStateValueOrFail(PAYMENT_METHODS_RESPONSE_KEY)
+            return savedStateHandle[PAYMENT_METHODS_RESPONSE_KEY]
         }
-        private set(value) {
+        set(value) {
             savedStateHandle[PAYMENT_METHODS_RESPONSE_KEY] = value
         }
 
@@ -77,7 +81,7 @@ class DropInViewModel(
 
     private var cachedGiftCardComponentState: GiftCardComponentState?
         get() {
-            return savedStateHandle.get<GiftCardComponentState>(CACHED_GIFT_CARD)
+            return savedStateHandle[CACHED_GIFT_CARD]
         }
         private set(value) {
             savedStateHandle[CACHED_GIFT_CARD] = value
@@ -85,7 +89,7 @@ class DropInViewModel(
 
     private var cachedPartialPaymentAmount: Amount?
         get() {
-            return savedStateHandle.get<Amount>(PARTIAL_PAYMENT_AMOUNT)
+            return savedStateHandle[PARTIAL_PAYMENT_AMOUNT]
         }
         private set(value) {
             savedStateHandle[PARTIAL_PAYMENT_AMOUNT] = value
@@ -93,7 +97,7 @@ class DropInViewModel(
 
     var currentOrder: OrderModel?
         get() {
-            return savedStateHandle.get<OrderModel>(CURRENT_ORDER)
+            return savedStateHandle[CURRENT_ORDER]
         }
         private set(value) {
             savedStateHandle[CURRENT_ORDER] = value
@@ -112,29 +116,75 @@ class DropInViewModel(
         amount = dropInConfiguration.amount
     }
 
-    val showPreselectedStored = paymentMethodsApiResponse.storedPaymentMethods?.any { it.isEcommerce } == true &&
-        dropInConfiguration.showPreselectedStoredPaymentMethod
+    fun getPaymentMethods(): List<PaymentMethod> {
+        return paymentMethodsApiResponse?.paymentMethods.orEmpty()
+    }
 
-    val preselectedStoredPayment
-        get() = paymentMethodsApiResponse.storedPaymentMethods?.firstOrNull {
+    fun getStoredPaymentMethods(): List<StoredPaymentMethod> {
+        return paymentMethodsApiResponse?.storedPaymentMethods.orEmpty()
+    }
+
+    fun shouldShowPreselectedStored(): Boolean {
+        return getStoredPaymentMethods().any { it.isEcommerce } &&
+            dropInConfiguration.showPreselectedStoredPaymentMethod
+    }
+
+    fun getPreselectedStoredPaymentMethod(): StoredPaymentMethod {
+        return getStoredPaymentMethods().firstOrNull {
             it.isEcommerce && PaymentMethodTypes.SUPPORTED_PAYMENT_METHODS.contains(it.type)
         } ?: StoredPaymentMethod()
+    }
 
     fun getStoredPaymentMethod(id: String): StoredPaymentMethod {
-        return paymentMethodsApiResponse.storedPaymentMethods?.firstOrNull { it.id == id } ?: StoredPaymentMethod()
+        return getStoredPaymentMethods().firstOrNull { it.id == id } ?: StoredPaymentMethod()
     }
 
     fun shouldSkipToSinglePaymentMethod(): Boolean {
-        val noStored = paymentMethodsApiResponse.storedPaymentMethods.isNullOrEmpty()
-        val singlePm = paymentMethodsApiResponse.paymentMethods?.size == 1
+        val noStored = getStoredPaymentMethods().isEmpty()
+        val singlePm = getPaymentMethods().size == 1
 
-        val firstPaymentMethod = paymentMethodsApiResponse.paymentMethods?.firstOrNull()
+        val firstPaymentMethod = getPaymentMethods().firstOrNull()
         val paymentMethodHasComponent =
             PaymentMethodTypes.SUPPORTED_PAYMENT_METHODS.contains(firstPaymentMethod?.type) &&
                 !GooglePayComponent.PAYMENT_METHOD_TYPES.contains(firstPaymentMethod?.type) &&
                 !PaymentMethodTypes.SUPPORTED_ACTION_ONLY_PAYMENT_METHODS.contains(firstPaymentMethod?.type)
 
         return noStored && singlePm && paymentMethodHasComponent && dropInConfiguration.skipListWhenSinglePaymentMethod
+    }
+
+    fun onCreated() {
+        if (isInitializedWithSession() && paymentMethodsApiResponse == null) {
+            // we just need to wait for the service to fetch the payment methods and send them to us
+            // TODO add loading state?
+            return
+        } else {
+            navigateToInitialDestination()
+        }
+    }
+
+    private fun isInitializedWithSession(): Boolean {
+        return initialSession != null
+    }
+
+    fun onSessionSetupSuccessful(sessionSetupResponse: SessionSetupResponse) {
+        paymentMethodsApiResponse = sessionSetupResponse.paymentMethods
+        navigateToInitialDestination()
+    }
+
+    private fun navigateToInitialDestination() {
+        val destination = when {
+            shouldSkipToSinglePaymentMethod() -> {
+                val firstPaymentMethod = getPaymentMethods().firstOrNull()
+                if (firstPaymentMethod != null) {
+                    DropInDestination.PaymentComponent(firstPaymentMethod)
+                } else {
+                    throw CheckoutException("First payment method is null")
+                }
+            }
+            shouldShowPreselectedStored() -> DropInDestination.PreselectedStored
+            else -> DropInDestination.PaymentMethods
+        }
+        sendEvent(DropInActivityEvent.NavigateTo(destination))
     }
 
     /**
@@ -277,11 +327,11 @@ class DropInViewModel(
     }
 
     fun removeStoredPaymentMethodWithId(id: String) {
-        val positionToRemove = paymentMethodsApiResponse.storedPaymentMethods?.indexOfFirst { it.id == id } ?: -1
-        val updatedStoredPaymentMethods = paymentMethodsApiResponse.storedPaymentMethods?.toMutableList()
+        val positionToRemove = getStoredPaymentMethods().indexOfFirst { it.id == id }
+        val updatedStoredPaymentMethods = getStoredPaymentMethods().toMutableList()
         if (positionToRemove != -1) {
-            updatedStoredPaymentMethods?.removeAt(positionToRemove)
-            paymentMethodsApiResponse.storedPaymentMethods = updatedStoredPaymentMethods
+            updatedStoredPaymentMethods.removeAt(positionToRemove)
+            paymentMethodsApiResponse?.storedPaymentMethods = updatedStoredPaymentMethods
         }
     }
 

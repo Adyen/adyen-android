@@ -60,8 +60,8 @@ class PaymentMethodListDialogFragment :
         paymentMethodsListViewModel = getViewModel {
             PaymentMethodsListViewModel(
                 requireActivity().application,
-                dropInViewModel.paymentMethodsApiResponse.paymentMethods.orEmpty(),
-                dropInViewModel.paymentMethodsApiResponse.storedPaymentMethods.orEmpty(),
+                dropInViewModel.getPaymentMethods(),
+                dropInViewModel.getStoredPaymentMethods(),
                 dropInViewModel.currentOrder,
                 dropInViewModel.dropInConfiguration,
                 dropInViewModel.amount
@@ -120,7 +120,7 @@ class PaymentMethodListDialogFragment :
     }
 
     override fun onBackPressed(): Boolean {
-        if (dropInViewModel.showPreselectedStored) {
+        if (dropInViewModel.shouldShowPreselectedStored()) {
             protocol.showPreselectedDialog()
         } else {
             protocol.terminateDropIn()

@@ -34,7 +34,6 @@ import com.adyen.checkout.components.model.payments.request.OrderRequest
 import com.adyen.checkout.components.model.payments.response.Action
 import com.adyen.checkout.components.model.payments.response.BalanceResult
 import com.adyen.checkout.components.model.payments.response.OrderResponse
-import com.adyen.checkout.core.exception.CheckoutException
 import com.adyen.checkout.core.log.LogUtil
 import com.adyen.checkout.core.log.Logger
 import com.adyen.checkout.dropin.ActionHandler
@@ -50,6 +49,7 @@ import com.adyen.checkout.dropin.service.DropInServiceResult
 import com.adyen.checkout.dropin.service.DropInServiceResultError
 import com.adyen.checkout.dropin.service.OrderDropInServiceResult
 import com.adyen.checkout.dropin.service.RecurringDropInServiceResult
+import com.adyen.checkout.dropin.service.SessionSetupDropInServiceResult
 import com.adyen.checkout.dropin.ui.action.ActionComponentDialogFragment
 import com.adyen.checkout.dropin.ui.base.DropInBottomSheetDialogFragment
 import com.adyen.checkout.dropin.ui.component.BacsDirectDebitDialogFragment
@@ -63,6 +63,7 @@ import com.adyen.checkout.dropin.ui.giftcard.GiftCardPaymentConfirmationDialogFr
 import com.adyen.checkout.dropin.ui.paymentmethods.PaymentMethodListDialogFragment
 import com.adyen.checkout.dropin.ui.stored.PreselectedStoredPaymentMethodFragment
 import com.adyen.checkout.dropin.ui.viewmodel.DropInActivityEvent
+import com.adyen.checkout.dropin.ui.viewmodel.DropInDestination
 import com.adyen.checkout.dropin.ui.viewmodel.DropInViewModel
 import com.adyen.checkout.dropin.ui.viewmodel.DropInViewModelFactory
 import com.adyen.checkout.giftcard.GiftCardComponent
@@ -71,7 +72,6 @@ import com.adyen.checkout.googlepay.GooglePayComponent
 import com.adyen.checkout.redirect.RedirectUtil
 import com.adyen.checkout.sessions.model.Session
 import com.adyen.checkout.wechatpay.WeChatPayUtils
-import kotlinx.coroutines.flow.collect
 
 private val TAG = LogUtil.getTag()
 
@@ -173,18 +173,7 @@ class DropInActivity :
         }
 
         if (noDialogPresent()) {
-            when {
-                dropInViewModel.shouldSkipToSinglePaymentMethod() -> {
-                    val firstPaymentMethod = dropInViewModel.paymentMethodsApiResponse.paymentMethods?.firstOrNull()
-                    if (firstPaymentMethod != null) {
-                        showComponentDialog(firstPaymentMethod)
-                    } else {
-                        throw CheckoutException("First payment method is null")
-                    }
-                }
-                dropInViewModel.showPreselectedStored -> showPreselectedDialog()
-                else -> showPaymentMethodsDialog()
-            }
+            dropInViewModel.onCreated()
         }
 
         actionHandler = ActionHandler(this, dropInViewModel.dropInConfiguration)
@@ -360,7 +349,7 @@ class DropInActivity :
     override fun showPreselectedDialog() {
         Logger.d(TAG, "showPreselectedDialog")
         hideAllScreens()
-        PreselectedStoredPaymentMethodFragment.newInstance(dropInViewModel.preselectedStoredPayment)
+        PreselectedStoredPaymentMethodFragment.newInstance(dropInViewModel.getPreselectedStoredPaymentMethod())
             .show(supportFragmentManager, PRESELECTED_PAYMENT_METHOD_FRAGMENT_TAG)
     }
 
@@ -467,6 +456,7 @@ class DropInActivity :
             is BalanceDropInServiceResult -> handleDropInServiceResult(dropInServiceResult)
             is OrderDropInServiceResult -> handleDropInServiceResult(dropInServiceResult)
             is RecurringDropInServiceResult -> handleDropInServiceResult(dropInServiceResult)
+            is SessionSetupDropInServiceResult -> handleDropInServiceResult(dropInServiceResult)
         }
     }
 
@@ -498,6 +488,14 @@ class DropInActivity :
             is RecurringDropInServiceResult.PaymentMethodRemoved ->
                 handleRemovePaymentMethodResult(dropInServiceResult.id)
             is RecurringDropInServiceResult.Error -> handleErrorDropInServiceResult(dropInServiceResult)
+        }
+    }
+
+    private fun handleDropInServiceResult(dropInServiceResult: SessionSetupDropInServiceResult) {
+        when (dropInServiceResult) {
+            is SessionSetupDropInServiceResult.Success ->
+                dropInViewModel.onSessionSetupSuccessful(dropInServiceResult.sessionSetupResponse)
+            is SessionSetupDropInServiceResult.Error -> handleErrorDropInServiceResult(dropInServiceResult)
         }
     }
 
@@ -600,6 +598,19 @@ class DropInActivity :
             is DropInActivityEvent.CancelDropIn -> {
                 terminateWithError(DropIn.ERROR_REASON_USER_CANCELED)
             }
+            is DropInActivityEvent.NavigateTo -> {
+                loadFragment(event.destination)
+            }
+        }
+    }
+
+    private fun loadFragment(destination: DropInDestination) {
+        when (destination) {
+            is DropInDestination.ActionComponent -> displayAction(destination.action)
+            is DropInDestination.GiftCardPaymentConfirmation -> showGiftCardPaymentConfirmationDialog(destination.data)
+            is DropInDestination.PaymentComponent -> showComponentDialog(destination.paymentMethod)
+            is DropInDestination.PaymentMethods -> showPaymentMethodsDialog()
+            is DropInDestination.PreselectedStored -> showPreselectedDialog()
         }
     }
 

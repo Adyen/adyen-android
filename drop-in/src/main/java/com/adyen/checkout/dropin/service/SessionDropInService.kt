@@ -60,7 +60,7 @@ open class SessionDropInService : DropInService() {
                         sendSessionSetupResult(SessionSetupDropInServiceResult.Success(it))
                     },
                     onFailure = {
-                        val result = SessionSetupDropInServiceResult.Error(reason = it.message)
+                        val result = SessionSetupDropInServiceResult.Error(reason = it.message, dismissDropIn = true)
                         sendSessionSetupResult(result)
                     }
                 )
