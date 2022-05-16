@@ -34,6 +34,7 @@ class CardConfiguration : Configuration {
     val kcpAuthVisibility: KCPAuthVisibility?
     val addressVisibility: AddressVisibility
     val installmentConfiguration: InstallmentConfiguration?
+    val addressConfiguration: AddressConfiguration?
 
     @Suppress("LongParameterList")
     internal constructor(
@@ -50,6 +51,7 @@ class CardConfiguration : Configuration {
         kcpAuthVisibility: KCPAuthVisibility?,
         addressVisibility: AddressVisibility,
         installmentConfiguration: InstallmentConfiguration?,
+        addressConfiguration: AddressConfiguration?
     ) : super(shopperLocale, environment, clientKey) {
         this.isHolderNameRequired = isHolderNameRequired
         this.supportedCardTypes = supportedCardTypes
@@ -61,6 +63,7 @@ class CardConfiguration : Configuration {
         this.kcpAuthVisibility = kcpAuthVisibility
         this.addressVisibility = addressVisibility
         this.installmentConfiguration = installmentConfiguration
+        this.addressConfiguration = addressConfiguration
     }
 
     internal constructor(parcel: Parcel) : super(parcel) {
@@ -74,6 +77,7 @@ class CardConfiguration : Configuration {
         kcpAuthVisibility = KCPAuthVisibility.valueOf(parcel.readString()!!)
         addressVisibility = (parcel.readSerializable() as AddressVisibility?)!!
         installmentConfiguration = parcel.readParcelable(InstallmentConfiguration::class.java.classLoader)
+        addressConfiguration = parcel.readParcelable(AddressConfiguration::class.java.classLoader)
     }
 
     override fun writeToParcel(parcel: Parcel, flags: Int) {
@@ -88,6 +92,7 @@ class CardConfiguration : Configuration {
         parcel.writeString(kcpAuthVisibility!!.name)
         parcel.writeSerializable(addressVisibility)
         parcel.writeParcelable(installmentConfiguration, flags)
+        parcel.writeParcelable(addressConfiguration, flags)
     }
 
     fun newBuilder(): Builder {
@@ -110,6 +115,7 @@ class CardConfiguration : Configuration {
         private var builderKcpAuthVisibility: KCPAuthVisibility? = KCPAuthVisibility.HIDE
         private var builderAddressVisibility = AddressVisibility.NONE
         private var builderInstallmentConfiguration: InstallmentConfiguration? = null
+        private var builderAddressConfiguration: AddressConfiguration? = null
 
         /**
          * Constructor of Card Configuration Builder with instance of CardConfiguration.
@@ -125,6 +131,7 @@ class CardConfiguration : Configuration {
             builderKcpAuthVisibility = cardConfiguration.kcpAuthVisibility
             builderAddressVisibility = cardConfiguration.addressVisibility
             builderInstallmentConfiguration = cardConfiguration.installmentConfiguration
+            builderAddressConfiguration = cardConfiguration.addressConfiguration
         }
 
         /**
@@ -248,6 +255,10 @@ class CardConfiguration : Configuration {
          * @param addressVisibility The visibility state of the address input fields.
          * @return [CardConfiguration.Builder]
          */
+        @Deprecated(
+            message = "In favor of setAddressConfiguration(AddressConfiguration). Full address " +
+                "form is only supported through using setAddressConfiguration(AddressConfiguration)."
+        )
         fun setAddressVisibility(addressVisibility: AddressVisibility): Builder {
             builderAddressVisibility = addressVisibility
             return this
@@ -261,6 +272,17 @@ class CardConfiguration : Configuration {
          */
         fun setInstallmentConfigurations(installmentConfiguration: InstallmentConfiguration): Builder {
             builderInstallmentConfiguration = installmentConfiguration
+            return this
+        }
+
+        /**
+         * Configures the address form to be shown to the shopper.
+         *
+         * @param addressConfiguration The configuration object for address form.
+         * @return [CardConfiguration.Builder]
+         */
+        fun setAddressConfiguration(addressConfiguration: AddressConfiguration): Builder {
+            builderAddressConfiguration = addressConfiguration
             return this
         }
 
@@ -284,6 +306,7 @@ class CardConfiguration : Configuration {
                 kcpAuthVisibility = builderKcpAuthVisibility,
                 addressVisibility = builderAddressVisibility,
                 installmentConfiguration = builderInstallmentConfiguration,
+                addressConfiguration = builderAddressConfiguration,
             )
         }
     }

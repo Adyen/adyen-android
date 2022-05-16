@@ -14,7 +14,7 @@ import android.text.InputType
 import android.text.TextUtils
 import android.text.method.DigitsKeyListener
 import android.util.AttributeSet
-import com.adyen.checkout.card.CardValidationUtils
+import com.adyen.checkout.card.util.CardValidationUtils
 import com.adyen.checkout.components.ui.view.AdyenTextInputEditText
 import java.util.Arrays
 

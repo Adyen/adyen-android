@@ -18,6 +18,7 @@ import android.widget.Filterable
 import android.widget.TextView
 import androidx.annotation.StringRes
 import androidx.recyclerview.widget.RecyclerView
+import com.adyen.checkout.card.util.InstallmentUtils
 
 // We need context to inflate the views and localizedContext to fetch the strings
 class InstallmentListAdapter(

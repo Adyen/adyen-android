@@ -8,11 +8,18 @@
 
 package com.adyen.checkout.card
 
+import com.adyen.checkout.card.api.model.AddressItem
 import com.adyen.checkout.card.api.model.Brand
 import com.adyen.checkout.card.data.CardType
 import com.adyen.checkout.card.data.DetectedCardType
 import com.adyen.checkout.card.data.ExpiryDate
 import com.adyen.checkout.card.repository.BinLookupRepository
+import com.adyen.checkout.card.util.AddressFormUtils
+import com.adyen.checkout.card.util.AddressValidationUtils
+import com.adyen.checkout.card.util.CardValidationUtils
+import com.adyen.checkout.card.util.InstallmentUtils
+import com.adyen.checkout.card.util.KcpValidationUtils
+import com.adyen.checkout.card.util.SocialSecurityNumberUtils
 import com.adyen.checkout.components.base.AddressVisibility
 import com.adyen.checkout.components.model.paymentmethods.PaymentMethod
 import com.adyen.checkout.components.repository.PublicKeyRepository
@@ -36,12 +43,15 @@ class NewCardDelegate(
     cardConfiguration: CardConfiguration,
     private val binLookupRepository: BinLookupRepository,
     publicKeyRepository: PublicKeyRepository,
+    private val addressDelegate: AddressDelegate,
     private val cardValidationMapper: CardValidationMapper
 ) : CardDelegate(cardConfiguration, publicKeyRepository) {
 
     private val _binLookupFlow: MutableSharedFlow<List<DetectedCardType>> =
         MutableSharedFlow(0, 1, BufferOverflow.DROP_OLDEST)
     internal val binLookupFlow: Flow<List<DetectedCardType>> = _binLookupFlow
+
+    internal val stateListFlow: Flow<List<AddressItem>> = addressDelegate.statesFlow
 
     override fun getPaymentMethodType(): String {
         return paymentMethod.type ?: PaymentMethodTypes.UNKNOWN
@@ -115,18 +125,11 @@ class NewCardDelegate(
         }
     }
 
-    override fun validatePostalCode(postalCode: String): FieldState<String> {
-        val validation = when {
-            isPostalCodeRequired() -> {
-                if (postalCode.isNotEmpty()) {
-                    Validation.Valid
-                } else {
-                    Validation.Invalid(R.string.checkout_card_postal_not_valid)
-                }
-            }
-            else -> Validation.Valid
-        }
-        return FieldState(postalCode, validation)
+    override fun validateAddress(
+        addressInputModel: AddressInputModel,
+        addressFormUIState: AddressFormUIState
+    ): AddressOutputData {
+        return AddressValidationUtils.validateAddressInput(addressInputModel, addressFormUIState)
     }
 
     override fun isCvcHidden(): Boolean {
@@ -149,8 +152,18 @@ class NewCardDelegate(
         return cardConfiguration.isHolderNameRequired
     }
 
-    override fun isPostalCodeRequired(): Boolean {
-        return cardConfiguration.addressVisibility == AddressVisibility.POSTAL_CODE
+    override fun getAddressFormUIState(
+        addressConfiguration: AddressConfiguration?,
+        addressVisibility: AddressVisibility
+    ): AddressFormUIState {
+        return AddressFormUtils.getAddressFormUIState(
+            addressConfiguration,
+            addressVisibility
+        )
+    }
+
+    override fun isAddressRequired(addressFormUIState: AddressFormUIState): Boolean {
+        return AddressFormUtils.isAddressRequired(addressFormUIState)
     }
 
     override fun detectCardType(
@@ -196,6 +209,14 @@ class NewCardDelegate(
     }
 
     override fun getSupportedCardTypes(): List<CardType> = cardConfiguration.supportedCardTypes
+
+    suspend fun getCountryList(): List<AddressItem> {
+        return addressDelegate.getCountryList(cardConfiguration)
+    }
+
+    fun requestStateList(countryCode: String?, coroutineScope: CoroutineScope) {
+        return addressDelegate.getStateList(cardConfiguration, countryCode, coroutineScope)
+    }
 
     private fun detectCardLocally(cardNumber: String): List<DetectedCardType> {
         Logger.d(TAG, "detectCardLocally")

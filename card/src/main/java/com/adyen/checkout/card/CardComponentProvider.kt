@@ -12,6 +12,7 @@ import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.ViewModelStoreOwner
 import androidx.savedstate.SavedStateRegistryOwner
 import com.adyen.checkout.card.data.CardType
+import com.adyen.checkout.card.repository.AddressRepository
 import com.adyen.checkout.card.repository.BinLookupRepository
 import com.adyen.checkout.components.StoredPaymentComponentProvider
 import com.adyen.checkout.components.base.lifecycle.viewModelFactory
@@ -35,6 +36,7 @@ class CardComponentProvider : StoredPaymentComponentProvider<CardComponent, Card
         val verifiedConfiguration = checkSupportedCardTypes(paymentMethod, configuration)
         val binLookupRepository = BinLookupRepository()
         val publicKeyRepository = PublicKeyRepository()
+        val addressDelegate = AddressDelegate(AddressRepository())
         val cardValidationMapper = CardValidationMapper()
         val factory = viewModelFactory(savedStateRegistryOwner, defaultArgs) { savedStateHandle ->
             CardComponent(
@@ -44,6 +46,7 @@ class CardComponentProvider : StoredPaymentComponentProvider<CardComponent, Card
                     verifiedConfiguration,
                     binLookupRepository,
                     publicKeyRepository,
+                    addressDelegate,
                     cardValidationMapper
                 ),
                 verifiedConfiguration

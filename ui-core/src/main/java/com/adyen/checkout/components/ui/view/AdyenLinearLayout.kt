@@ -19,6 +19,8 @@ import com.adyen.checkout.components.ViewableComponent
 import com.adyen.checkout.components.base.Configuration
 import com.adyen.checkout.components.base.OutputData
 import com.adyen.checkout.components.extensions.createLocalizedContext
+import com.adyen.checkout.components.extensions.setLocalizedHintFromStyle
+import com.adyen.checkout.components.extensions.setLocalizedTextFromStyle
 import com.google.android.material.textfield.TextInputLayout
 
 abstract class AdyenLinearLayout<
@@ -64,16 +66,10 @@ abstract class AdyenLinearLayout<
     protected abstract fun observeComponentChanges(lifecycleOwner: LifecycleOwner)
 
     protected fun TextInputLayout.setLocalizedHintFromStyle(@StyleRes styleResId: Int) {
-        val attrs = intArrayOf(android.R.attr.hint)
-        val typedArray = localizedContext.obtainStyledAttributes(styleResId, attrs)
-        hint = typedArray.getString(0)
-        typedArray.recycle()
+        setLocalizedHintFromStyle(styleResId, localizedContext)
     }
 
     protected fun TextView.setLocalizedTextFromStyle(@StyleRes styleResId: Int) {
-        val attrs = intArrayOf(android.R.attr.text)
-        val typedArray = localizedContext.obtainStyledAttributes(styleResId, attrs)
-        text = typedArray.getString(0)
-        typedArray.recycle()
+        setLocalizedTextFromStyle(styleResId, localizedContext)
     }
 }

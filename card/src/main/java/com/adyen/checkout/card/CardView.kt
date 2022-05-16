@@ -26,6 +26,8 @@ import com.adyen.checkout.card.data.DetectedCardType
 import com.adyen.checkout.card.data.ExpiryDate
 import com.adyen.checkout.card.databinding.CardViewBinding
 import com.adyen.checkout.card.ui.SecurityCodeInput
+import com.adyen.checkout.card.ui.model.AddressListItem
+import com.adyen.checkout.card.util.InstallmentUtils
 import com.adyen.checkout.components.api.ImageLoader
 import com.adyen.checkout.components.extensions.isVisible
 import com.adyen.checkout.components.ui.FieldState
@@ -61,7 +63,6 @@ class CardView @JvmOverloads constructor(
 
     private val binding: CardViewBinding = CardViewBinding.inflate(LayoutInflater.from(context), this)
 
-    private val cardInputData = CardInputData()
     private var imageLoader: ImageLoader? = null
     private var installmentListAdapter: InstallmentListAdapter? = null
     private var cardListAdapter: CardListAdapter? = null
@@ -95,15 +96,14 @@ class CardView @JvmOverloads constructor(
         initSocialSecurityNumberInput()
         initKcpAuthenticationInput()
         initPostalCodeInput()
+        initAddressFormInput()
 
         binding.switchStorePaymentMethod.setOnCheckedChangeListener { _, isChecked ->
-            cardInputData.isStorePaymentSelected = isChecked
+            component.inputData.isStorePaymentSelected = isChecked
             notifyInputDataChanged()
         }
         if (component.isStoredPaymentMethod()) {
-            component.getStoredPaymentInputData()?.let {
-                setStoredCardInterface(it)
-            }
+            setStoredCardInterface(component.inputData)
         } else {
             binding.textInputLayoutCardHolder.isVisible = component.isHolderNameRequired()
             binding.switchStorePaymentMethod.isVisible = component.showStorePaymentField()
@@ -130,6 +130,7 @@ class CardView @JvmOverloads constructor(
             R.style.AdyenCheckout_DropdownTextInputLayout_Installments
         )
         binding.switchStorePaymentMethod.setLocalizedTextFromStyle(R.style.AdyenCheckout_Card_StorePaymentSwitch)
+        binding.addressFormInput.initLocalizedContext(localizedContext)
     }
 
     override fun onComponentAttached() {
@@ -142,10 +143,12 @@ class CardView @JvmOverloads constructor(
             onExpiryDateValidated(cardOutputData.expiryDateState)
             setSocialSecurityNumberVisibility(cardOutputData.isSocialSecurityNumberRequired)
             setKcpAuthVisibility(cardOutputData.isKCPAuthRequired)
-            setPostalCodeVisibility(cardOutputData.isPostalCodeRequired)
+            setAddressInputVisibility(cardOutputData.addressUIState)
             handleCvcUIState(cardOutputData.cvcUIState)
             handleExpiryDateUIState(cardOutputData.expiryDateUIState)
             updateInstallments(cardOutputData)
+            updateCountries(cardOutputData.countryOptions)
+            updateStates(cardOutputData.stateOptions)
             setSupportedCardsList(cardOutputData.supportedCardTypes)
         }
         if (component.isStoredPaymentMethod() && component.requiresInput()) {
@@ -165,6 +168,7 @@ class CardView @JvmOverloads constructor(
     override val isConfirmationRequired: Boolean
         get() = true
 
+    @Suppress("ComplexMethod", "LongMethod")
     override fun highlightValidationErrors() {
         component.outputData?.let {
             var isErrorFocused = false
@@ -193,22 +197,57 @@ class CardView @JvmOverloads constructor(
             val holderNameValidation = it.holderNameState.validation
             if (binding.textInputLayoutCardHolder.isVisible && holderNameValidation is Validation.Invalid) {
                 if (!isErrorFocused) {
+                    isErrorFocused = true
                     binding.textInputLayoutCardHolder.requestFocus()
                 }
                 binding.textInputLayoutCardHolder.error = localizedContext.getString(holderNameValidation.reason)
             }
-            val postalCodeValidation = it.postalCodeState.validation
+            val postalCodeValidation = it.addressState.postalCode.validation
             if (binding.textInputLayoutPostalCode.isVisible && postalCodeValidation is Validation.Invalid) {
                 if (!isErrorFocused) {
+                    isErrorFocused = true
                     binding.textInputLayoutPostalCode.requestFocus()
                 }
                 binding.textInputLayoutPostalCode.error = localizedContext.getString(postalCodeValidation.reason)
+            }
+            val socialSecurityNumberValidation = it.socialSecurityNumberState.validation
+            if (binding.textInputLayoutSocialSecurityNumber.isVisible &&
+                socialSecurityNumberValidation is Validation.Invalid
+            ) {
+                if (!isErrorFocused) {
+                    isErrorFocused = true
+                    binding.textInputLayoutSocialSecurityNumber.requestFocus()
+                }
+                binding.textInputLayoutSocialSecurityNumber.error =
+                    localizedContext.getString(socialSecurityNumberValidation.reason)
+            }
+            val kcpBirthDateOrTaxNumberValidation = it.kcpBirthDateOrTaxNumberState.validation
+            if (binding.textInputLayoutKcpBirthDateOrTaxNumber.isVisible &&
+                kcpBirthDateOrTaxNumberValidation is Validation.Invalid
+            ) {
+                if (!isErrorFocused) {
+                    isErrorFocused = true
+                    binding.textInputLayoutKcpBirthDateOrTaxNumber.requestFocus()
+                }
+                binding.textInputLayoutKcpBirthDateOrTaxNumber.error =
+                    localizedContext.getString(kcpBirthDateOrTaxNumberValidation.reason)
+            }
+            val kcpPasswordValidation = it.kcpCardPasswordState.validation
+            if (binding.textInputLayoutKcpCardPassword.isVisible && kcpPasswordValidation is Validation.Invalid) {
+                if (!isErrorFocused) {
+                    isErrorFocused = true
+                    binding.textInputLayoutKcpCardPassword.requestFocus()
+                }
+                binding.textInputLayoutKcpCardPassword.error = localizedContext.getString(kcpPasswordValidation.reason)
+            }
+            if (binding.addressFormInput.isVisible && !it.addressState.isValid) {
+                binding.addressFormInput.highlightValidationErrors(isErrorFocused)
             }
         }
     }
 
     private fun notifyInputDataChanged() {
-        component.inputDataChanged(cardInputData)
+        component.inputDataChanged(component.inputData)
     }
 
     private fun onCardNumberValidated(cardOutputData: CardOutputData) {
@@ -276,7 +315,7 @@ class CardView @JvmOverloads constructor(
 
     private fun initCardNumberInput() {
         binding.editTextCardNumber.setOnChangeListener {
-            cardInputData.cardNumber = binding.editTextCardNumber.rawValue
+            component.inputData.cardNumber = binding.editTextCardNumber.rawValue
             notifyInputDataChanged()
             setCardErrorState(true)
         }
@@ -323,13 +362,13 @@ class CardView @JvmOverloads constructor(
 
     private fun initBrandSelectionListeners() {
         binding.cardBrandLogoContainerPrimary.setOnClickListener {
-            cardInputData.selectedCardIndex = PRIMARY_BRAND_INDEX
+            component.inputData.selectedCardIndex = PRIMARY_BRAND_INDEX
             notifyInputDataChanged()
             selectPrimaryBrand()
         }
 
         binding.cardBrandLogoContainerSecondary.setOnClickListener {
-            cardInputData.selectedCardIndex = SECONDARY_BRAND_INDEX
+            component.inputData.selectedCardIndex = SECONDARY_BRAND_INDEX
             notifyInputDataChanged()
             selectSecondaryBrand()
         }
@@ -353,7 +392,7 @@ class CardView @JvmOverloads constructor(
     private fun initExpiryDateInput() {
         binding.editTextExpiryDate.setOnChangeListener {
             val date = binding.editTextExpiryDate.date
-            cardInputData.expiryDate = date
+            component.inputData.expiryDate = date
             notifyInputDataChanged()
             binding.textInputLayoutExpiryDate.error = null
         }
@@ -370,7 +409,7 @@ class CardView @JvmOverloads constructor(
     private fun initSecurityCodeInput() {
         val securityCodeEditText = binding.textInputLayoutSecurityCode.editText as? SecurityCodeInput
         securityCodeEditText?.setOnChangeListener { editable: Editable ->
-            cardInputData.securityCode = editable.toString()
+            component.inputData.securityCode = editable.toString()
             notifyInputDataChanged()
             binding.textInputLayoutSecurityCode.error = null
         }
@@ -387,7 +426,7 @@ class CardView @JvmOverloads constructor(
     private fun initHolderNameInput() {
         val cardHolderEditText = binding.textInputLayoutCardHolder.editText as? AdyenTextInputEditText
         cardHolderEditText?.setOnChangeListener { editable: Editable ->
-            cardInputData.holderName = editable.toString()
+            component.inputData.holderName = editable.toString()
             notifyInputDataChanged()
             binding.textInputLayoutCardHolder.error = null
         }
@@ -405,7 +444,7 @@ class CardView @JvmOverloads constructor(
         val socialSecurityNumberEditText =
             binding.textInputLayoutSocialSecurityNumber.editText as? AdyenTextInputEditText
         socialSecurityNumberEditText?.setOnChangeListener { editable ->
-            cardInputData.socialSecurityNumber = editable.toString()
+            component.inputData.socialSecurityNumber = editable.toString()
             notifyInputDataChanged()
             binding.textInputLayoutSocialSecurityNumber.error = null
         }
@@ -429,7 +468,7 @@ class CardView @JvmOverloads constructor(
         val kcpBirthDateOrRegistrationNumberEditText =
             binding.textInputLayoutKcpBirthDateOrTaxNumber.editText as? AdyenTextInputEditText
         kcpBirthDateOrRegistrationNumberEditText?.setOnChangeListener {
-            cardInputData.kcpBirthDateOrTaxNumber = it.toString()
+            component.inputData.kcpBirthDateOrTaxNumber = it.toString()
             notifyInputDataChanged()
             binding.textInputLayoutKcpBirthDateOrTaxNumber.error = null
             val hintResourceId = component.getKcpBirthDateOrTaxNumberHint(it.toString())
@@ -453,7 +492,7 @@ class CardView @JvmOverloads constructor(
     private fun initKcpCardPasswordInput() {
         val kcpPasswordEditText = binding.textInputLayoutKcpCardPassword.editText as? AdyenTextInputEditText
         kcpPasswordEditText?.setOnChangeListener {
-            cardInputData.kcpCardPassword = it.toString()
+            component.inputData.kcpCardPassword = it.toString()
             notifyInputDataChanged()
             binding.textInputLayoutKcpCardPassword.error = null
         }
@@ -474,19 +513,31 @@ class CardView @JvmOverloads constructor(
     private fun initPostalCodeInput() {
         val postalCodeEditText = binding.textInputLayoutPostalCode.editText as? AdyenTextInputEditText
         postalCodeEditText?.setOnChangeListener {
-            cardInputData.postalCode = it.toString()
+            component.inputData.address.postalCode = it.toString()
             notifyInputDataChanged()
             binding.textInputLayoutPostalCode.error = null
         }
 
         postalCodeEditText?.onFocusChangeListener = OnFocusChangeListener { _, hasFocus ->
-            val postalCodeValidation = component.outputData?.postalCodeState?.validation
+            val postalCodeValidation = component.outputData?.addressState?.postalCode?.validation
             if (hasFocus) {
                 binding.textInputLayoutPostalCode.error = null
             } else if (postalCodeValidation != null && postalCodeValidation is Validation.Invalid) {
                 binding.textInputLayoutPostalCode.error = localizedContext.getString(postalCodeValidation.reason)
             }
         }
+    }
+
+    private fun initAddressFormInput() {
+        binding.addressFormInput.attachComponent(component)
+    }
+
+    private fun updateCountries(countryOptions: List<AddressListItem>) {
+        binding.addressFormInput.updateCountries(countryOptions)
+    }
+
+    private fun updateStates(stateOptions: List<AddressListItem>) {
+        binding.addressFormInput.updateStates(stateOptions)
     }
 
     private fun updateInstallments(cardOutputData: CardOutputData) {
@@ -580,8 +631,21 @@ class CardView @JvmOverloads constructor(
         binding.textInputLayoutKcpCardPassword.isVisible = shouldShowKCPAuth
     }
 
-    private fun setPostalCodeVisibility(shouldShowPostalCode: Boolean) {
-        binding.textInputLayoutPostalCode.isVisible = shouldShowPostalCode
+    private fun setAddressInputVisibility(addressFormUIState: AddressFormUIState) {
+        when (addressFormUIState) {
+            AddressFormUIState.FULL_ADDRESS -> {
+                binding.addressFormInput.isVisible = true
+                binding.textInputLayoutPostalCode.isVisible = false
+            }
+            AddressFormUIState.POSTAL_CODE -> {
+                binding.addressFormInput.isVisible = false
+                binding.textInputLayoutPostalCode.isVisible = true
+            }
+            AddressFormUIState.NONE -> {
+                binding.addressFormInput.isVisible = false
+                binding.textInputLayoutPostalCode.isVisible = false
+            }
+        }
     }
 
     private fun setStoredCardInterface(storedCardInput: CardInputData) {
@@ -597,11 +661,12 @@ class CardView @JvmOverloads constructor(
         binding.switchStorePaymentMethod.isVisible = false
         binding.textInputLayoutCardHolder.isVisible = false
         binding.textInputLayoutPostalCode.isVisible = false
+        binding.addressFormInput.isVisible = false
     }
 
     private fun updateInstallmentSelection(installmentModel: InstallmentModel?) {
         installmentModel?.let {
-            cardInputData.installmentOption = it
+            component.inputData.installmentOption = it
             notifyInputDataChanged()
         }
     }

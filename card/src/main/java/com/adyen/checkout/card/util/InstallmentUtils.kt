@@ -6,9 +6,14 @@
  * Created by ozgur on 26/10/2021.
  */
 
-package com.adyen.checkout.card
+package com.adyen.checkout.card.util
 
 import android.content.Context
+import com.adyen.checkout.card.InstallmentConfiguration
+import com.adyen.checkout.card.InstallmentModel
+import com.adyen.checkout.card.InstallmentOption
+import com.adyen.checkout.card.InstallmentOptions
+import com.adyen.checkout.card.R
 import com.adyen.checkout.card.data.CardType
 import com.adyen.checkout.components.model.payments.request.Installments
 

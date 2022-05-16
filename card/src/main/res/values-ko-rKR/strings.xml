@@ -29,6 +29,19 @@
     <string name="checkout_card_brand_not_supported">입력한 카드 브랜드는 지원되지 않습니다</string>
     <string name="checkout_card_formatted_brand_name_not_supported">%s은(는) 지원되지 않습니다</string>
 
+    <string name="checkout_address_form_billing_address_title">청구지 주소</string>
+    <string name="checkout_address_form_street_hint">도로명</string>
+    <string name="checkout_address_form_address_hint">주소</string>
+    <string name="checkout_address_form_house_number_hint">집 전화번호</string>
+    <string name="checkout_address_form_apartment_suite_hint">아파트/건물</string>
+    <string name="checkout_address_form_city_hint">시</string>
+    <string name="checkout_address_form_country_hint">국가</string>
+    <string name="checkout_address_form_states_hint">주</string>
+    <string name="checkout_address_form_zip_code_hint">우편번호</string>
+    <string name="checkout_address_form_province_territory_hint">도</string>
+    <string name="checkout_address_form_city_town_hint">시/구</string>
+    <string name="checkout_address_form_field_not_valid">유효하지 않은 입력</string>
+
     <string name="checkout_card_installments_title">할부 개월 수</string>
     <string name="checkout_card_installments_option_regular">%s개월</string>
     <string name="checkout_card_installments_option_one_time">일시불 결제</string>

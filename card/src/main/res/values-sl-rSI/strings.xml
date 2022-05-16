@@ -29,6 +29,19 @@
     <string name="checkout_card_brand_not_supported">Vnesena znamka kartice ni podprta</string>
     <string name="checkout_card_formatted_brand_name_not_supported">%s ni podprta znamka</string>
 
+    <string name="checkout_address_form_billing_address_title">Naslov za račun</string>
+    <string name="checkout_address_form_street_hint">Ulica</string>
+    <string name="checkout_address_form_address_hint">Naslov</string>
+    <string name="checkout_address_form_house_number_hint">Hišna številka</string>
+    <string name="checkout_address_form_apartment_suite_hint">Št. apartmaja/stanovanja</string>
+    <string name="checkout_address_form_city_hint">Mesto</string>
+    <string name="checkout_address_form_country_hint">Država</string>
+    <string name="checkout_address_form_states_hint">Država</string>
+    <string name="checkout_address_form_zip_code_hint">Poštna številka</string>
+    <string name="checkout_address_form_province_territory_hint">Območje ali ozemlje</string>
+    <string name="checkout_address_form_city_town_hint">Mesto</string>
+    <string name="checkout_address_form_field_not_valid">Neveljaven vnos</string>
+
     <string name="checkout_card_installments_title">Število obrokov</string>
     <string name="checkout_card_installments_option_regular">Št. mesecev: %s</string>
     <string name="checkout_card_installments_option_one_time">Enkratno plačilo</string>

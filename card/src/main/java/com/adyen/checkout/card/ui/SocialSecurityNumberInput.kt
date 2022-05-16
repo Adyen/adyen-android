@@ -5,7 +5,7 @@ import android.text.Editable
 import android.text.InputType
 import android.text.method.DigitsKeyListener
 import android.util.AttributeSet
-import com.adyen.checkout.card.SocialSecurityNumberUtils
+import com.adyen.checkout.card.util.SocialSecurityNumberUtils
 import com.adyen.checkout.components.ui.view.AdyenTextInputEditText
 
 class SocialSecurityNumberInput constructor(

@@ -29,6 +29,19 @@
     <string name="checkout_card_brand_not_supported">Kortmerket du har oppgitt, støttes ikke</string>
     <string name="checkout_card_formatted_brand_name_not_supported">%s støttes ikke</string>
 
+    <string name="checkout_address_form_billing_address_title">Faktureringsadresse</string>
+    <string name="checkout_address_form_street_hint">Gate</string>
+    <string name="checkout_address_form_address_hint">Adresse</string>
+    <string name="checkout_address_form_house_number_hint">Husnummer</string>
+    <string name="checkout_address_form_apartment_suite_hint">Leilighet/suite</string>
+    <string name="checkout_address_form_city_hint">Poststed</string>
+    <string name="checkout_address_form_country_hint">Land</string>
+    <string name="checkout_address_form_states_hint">Delstat</string>
+    <string name="checkout_address_form_zip_code_hint">Postnummer</string>
+    <string name="checkout_address_form_province_territory_hint">Provins eller territorium</string>
+    <string name="checkout_address_form_city_town_hint">By</string>
+    <string name="checkout_address_form_field_not_valid">Ugyldige inndata</string>
+
     <string name="checkout_card_installments_title">Antall avdrag</string>
     <string name="checkout_card_installments_option_regular">%s måneder</string>
     <string name="checkout_card_installments_option_one_time">Engangsbetaling</string>

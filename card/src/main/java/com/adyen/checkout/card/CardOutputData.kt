@@ -10,6 +10,7 @@ package com.adyen.checkout.card
 import com.adyen.checkout.card.data.CardType
 import com.adyen.checkout.card.data.DetectedCardType
 import com.adyen.checkout.card.data.ExpiryDate
+import com.adyen.checkout.card.ui.model.AddressListItem
 import com.adyen.checkout.components.base.OutputData
 import com.adyen.checkout.components.ui.FieldState
 
@@ -21,7 +22,7 @@ data class CardOutputData(
     val socialSecurityNumberState: FieldState<String>,
     val kcpBirthDateOrTaxNumberState: FieldState<String>,
     val kcpCardPasswordState: FieldState<String>,
-    val postalCodeState: FieldState<String>,
+    val addressState: AddressOutputData,
     val installmentState: FieldState<InstallmentModel?>,
     val isStoredPaymentMethodEnable: Boolean,
     val cvcUIState: InputFieldUIState,
@@ -29,8 +30,10 @@ data class CardOutputData(
     val detectedCardTypes: List<DetectedCardType>,
     val isSocialSecurityNumberRequired: Boolean,
     val isKCPAuthRequired: Boolean,
-    val isPostalCodeRequired: Boolean,
+    val addressUIState: AddressFormUIState,
     val installmentOptions: List<InstallmentModel>,
+    val countryOptions: List<AddressListItem>,
+    val stateOptions: List<AddressListItem>,
     val supportedCardTypes: List<CardType>,
 ) : OutputData {
 
@@ -43,6 +46,6 @@ data class CardOutputData(
                 socialSecurityNumberState.validation.isValid() &&
                 kcpBirthDateOrTaxNumberState.validation.isValid() &&
                 kcpCardPasswordState.validation.isValid() &&
-                postalCodeState.validation.isValid() &&
-                installmentState.validation.isValid()
+                installmentState.validation.isValid() &&
+                addressState.isValid
 }
