@@ -27,6 +27,7 @@ import com.adyen.checkout.components.base.BaseActionComponent
 import com.adyen.checkout.components.base.IntentHandlingComponent
 import com.adyen.checkout.components.encoding.Base64Encoder
 import com.adyen.checkout.components.model.payments.response.Action
+import com.adyen.checkout.components.model.payments.response.RedirectAction
 import com.adyen.checkout.components.model.payments.response.Threeds2Action
 import com.adyen.checkout.components.model.payments.response.Threeds2Action.SubType
 import com.adyen.checkout.components.model.payments.response.Threeds2ChallengeAction
@@ -136,6 +137,9 @@ class Adyen3DS2Component(
                 // We need to keep authorizationToken in memory to access it later when the 3DS2 challenge is done
                 authorizationToken = action.authorisationToken
                 handleActionSubtype(activity, subtype, action.token.orEmpty())
+            }
+            is RedirectAction -> {
+                redirectDelegate.makeRedirect(activity, action)
             }
         }
     }

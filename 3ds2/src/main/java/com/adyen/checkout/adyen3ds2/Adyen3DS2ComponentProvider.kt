@@ -17,6 +17,7 @@ import com.adyen.checkout.adyen3ds2.repository.SubmitFingerprintRepository
 import com.adyen.checkout.components.ActionComponentProvider
 import com.adyen.checkout.components.base.lifecycle.viewModelFactory
 import com.adyen.checkout.components.model.payments.response.Action
+import com.adyen.checkout.components.model.payments.response.RedirectAction
 import com.adyen.checkout.components.model.payments.response.Threeds2Action
 import com.adyen.checkout.components.model.payments.response.Threeds2ChallengeAction
 import com.adyen.checkout.components.model.payments.response.Threeds2FingerprintAction
@@ -59,7 +60,8 @@ class Adyen3DS2ComponentProvider : ActionComponentProvider<Adyen3DS2Component, A
         get() = listOf(
             Threeds2FingerprintAction.ACTION_TYPE,
             Threeds2ChallengeAction.ACTION_TYPE,
-            Threeds2Action.ACTION_TYPE
+            Threeds2Action.ACTION_TYPE,
+            RedirectAction.ACTION_TYPE
         )
 
     @Deprecated(
