@@ -14,8 +14,5 @@ import com.adyen.checkout.sessions.model.Session
 internal sealed class MainNavigation {
     object Card : MainNavigation()
     data class DropIn(val paymentMethodsApiResponse: PaymentMethodsApiResponse) : MainNavigation()
-    data class DropInWithSession(
-        val session: Session,
-        val paymentMethodsApiResponse: PaymentMethodsApiResponse,
-    ) : MainNavigation()
+    data class DropInWithSession(val session: Session) : MainNavigation()
 }
