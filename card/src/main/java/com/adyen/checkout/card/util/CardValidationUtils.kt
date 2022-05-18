@@ -85,8 +85,10 @@ object CardValidationUtils {
                 val maxPastCalendar = GregorianCalendar.getInstance()
                 maxPastCalendar.add(Calendar.MONTH, -MAXIMUM_EXPIRED_MONTHS)
 
+                val isInMaxYearRange = expiryDateCalendar.get(Calendar.YEAR) <= maxFutureCalendar.get(Calendar.YEAR)
+                val isInMinMonthRange = expiryDateCalendar >= maxPastCalendar
                 // higher than maxPast and lower than maxFuture
-                if (expiryDateCalendar >= maxPastCalendar && expiryDateCalendar <= maxFutureCalendar) {
+                if (isInMinMonthRange && isInMaxYearRange) {
                     FieldState(expiryDate, Validation.Valid)
                 } else {
                     invalidState
