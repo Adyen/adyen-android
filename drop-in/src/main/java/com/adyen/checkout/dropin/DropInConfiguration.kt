@@ -8,7 +8,6 @@
 
 package com.adyen.checkout.dropin
 
-import android.content.ComponentName
 import android.content.Context
 import android.os.Bundle
 import android.os.Parcel
@@ -57,7 +56,6 @@ class DropInConfiguration : Configuration, Parcelable {
 
     private val availablePaymentConfigs: HashMap<String, Configuration>
     private val availableActionConfigs: HashMap<Class<*>, Configuration>
-    val serviceComponentName: ComponentName
     val amount: Amount
     val showPreselectedStoredPaymentMethod: Boolean
     val skipListWhenSinglePaymentMethod: Boolean
@@ -78,7 +76,6 @@ class DropInConfiguration : Configuration, Parcelable {
     ) : super(builder.builderShopperLocale, builder.builderEnvironment, builder.builderClientKey) {
         this.availablePaymentConfigs = builder.availablePaymentConfigs
         this.availableActionConfigs = builder.availableActionConfigs
-        this.serviceComponentName = builder.serviceComponentName
         this.amount = builder.amount
         this.showPreselectedStoredPaymentMethod = builder.showPreselectedStoredPaymentMethod
         this.skipListWhenSinglePaymentMethod = builder.skipListWhenSinglePaymentMethod
@@ -93,7 +90,6 @@ class DropInConfiguration : Configuration, Parcelable {
         @Suppress("UNCHECKED_CAST")
         availableActionConfigs =
             parcel.readHashMap(Configuration::class.java.classLoader) as HashMap<Class<*>, Configuration>
-        serviceComponentName = parcel.readParcelable(ComponentName::class.java.classLoader)!!
         amount = Amount.CREATOR.createFromParcel(parcel)
         showPreselectedStoredPaymentMethod = ParcelUtils.readBoolean(parcel)
         skipListWhenSinglePaymentMethod = ParcelUtils.readBoolean(parcel)
@@ -105,7 +101,6 @@ class DropInConfiguration : Configuration, Parcelable {
         super.writeToParcel(parcel, flags)
         parcel.writeMap(availablePaymentConfigs)
         parcel.writeMap(availableActionConfigs)
-        parcel.writeParcelable(serviceComponentName, flags)
         JsonUtils.writeToParcel(parcel, Amount.SERIALIZER.serialize(amount))
         ParcelUtils.writeBoolean(parcel, showPreselectedStoredPaymentMethod)
         ParcelUtils.writeBoolean(parcel, skipListWhenSinglePaymentMethod)
@@ -142,8 +137,6 @@ class DropInConfiguration : Configuration, Parcelable {
         val availablePaymentConfigs = HashMap<String, Configuration>()
         val availableActionConfigs = HashMap<Class<*>, Configuration>()
 
-        var serviceComponentName: ComponentName
-            private set
         var amount: Amount = Amount.EMPTY
             private set
         var showPreselectedStoredPaymentMethod: Boolean = true
@@ -155,41 +148,24 @@ class DropInConfiguration : Configuration, Parcelable {
         var additionalDataForDropInService: Bundle? = null
             private set
 
-        private val packageName: String
-        private val serviceClassName: String
-
         /**
          *
          * Create a [DropInConfiguration]
          *
          * @param context
-         * @param serviceClass Service that extended from [DropInService] that would handle network requests.
          * @param clientKey Your Client Key used for network calls from the SDK to Adyen.
          */
-        constructor(context: Context, serviceClass: Class<out Any?>, clientKey: String) : super(context, clientKey) {
-            this.packageName = context.packageName
-            this.serviceClassName = serviceClass.name
-            this.serviceComponentName = ComponentName(packageName, serviceClassName)
-        }
+        constructor(context: Context, clientKey: String) : super(context, clientKey)
 
         /**
          * Create a Builder with the same values of an existing Configuration object.
          */
         constructor(dropInConfiguration: DropInConfiguration) : super(dropInConfiguration) {
-            packageName = dropInConfiguration.serviceComponentName.packageName
-            serviceClassName = dropInConfiguration.serviceComponentName.className
-
-            serviceComponentName = dropInConfiguration.serviceComponentName
             amount = dropInConfiguration.amount
             showPreselectedStoredPaymentMethod = dropInConfiguration.showPreselectedStoredPaymentMethod
             skipListWhenSinglePaymentMethod = dropInConfiguration.skipListWhenSinglePaymentMethod
             isRemovingStoredPaymentMethodsEnabled = dropInConfiguration.isRemovingStoredPaymentMethodsEnabled
             additionalDataForDropInService = dropInConfiguration.additionalDataForDropInService
-        }
-
-        fun setServiceComponentName(serviceComponentName: ComponentName): Builder {
-            this.serviceComponentName = serviceComponentName
-            return this
         }
 
         override fun setShopperLocale(builderShopperLocale: Locale): Builder {

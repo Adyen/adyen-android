@@ -8,6 +8,7 @@
 
 package com.adyen.checkout.dropin
 
+import android.content.ComponentName
 import android.content.Context
 import android.content.Intent
 import androidx.activity.result.ActivityResultCaller
@@ -19,6 +20,7 @@ import com.adyen.checkout.core.util.BuildUtils
 import com.adyen.checkout.dropin.DropIn.startPayment
 import com.adyen.checkout.dropin.service.DropInService
 import com.adyen.checkout.dropin.service.DropInServiceResult
+import com.adyen.checkout.dropin.service.SessionDropInService
 import com.adyen.checkout.dropin.ui.DropInActivity
 import com.adyen.checkout.sessions.model.Session
 
@@ -78,6 +80,7 @@ object DropIn {
      * @param dropInLauncher A launcher to start Drop-in, obtained with [registerForDropInResult].
      * @param paymentMethodsApiResponse The result from the paymentMethods/ endpoint.
      * @param dropInConfiguration Additional required configuration data.
+     * @param serviceClass Service that extends from [DropInService] that would handle network requests.
      */
     @JvmStatic
     fun startPayment(
@@ -85,6 +88,7 @@ object DropIn {
         dropInLauncher: ActivityResultLauncher<Intent>,
         paymentMethodsApiResponse: PaymentMethodsApiResponse,
         dropInConfiguration: DropInConfiguration,
+        serviceClass: Class<out DropInService>,
     ) {
         updateDefaultLogcatLevel(context)
         Logger.d(TAG, "startPayment from Activity")
@@ -95,6 +99,7 @@ object DropIn {
             context,
             dropInConfiguration,
             paymentMethodsApiResponse,
+            getComponentName(context, serviceClass),
         )
         dropInLauncher.launch(intent)
     }
@@ -120,6 +125,7 @@ object DropIn {
      * @param dropInLauncher A launcher to start Drop-in, obtained with [registerForDropInResult].
      * @param session The result from the session/ endpoint.
      * @param dropInConfiguration Additional required configuration data.
+     * @param serviceClass Optional service that extends from [SessionDropInService] that would handle network requests.
      */
     @JvmStatic
     fun startPaymentWithSession(
@@ -127,6 +133,7 @@ object DropIn {
         dropInLauncher: ActivityResultLauncher<Intent>,
         session: Session,
         dropInConfiguration: DropInConfiguration,
+        serviceClass: Class<out SessionDropInService> = SessionDropInService::class.java,
     ) {
         updateDefaultLogcatLevel(context)
         Logger.d(TAG, "startPayment from Activity")
@@ -137,6 +144,7 @@ object DropIn {
             context,
             dropInConfiguration,
             session,
+            getComponentName(context, serviceClass),
         )
         dropInLauncher.launch(intent)
     }
@@ -144,6 +152,8 @@ object DropIn {
     private fun updateDefaultLogcatLevel(context: Context) {
         Logger.updateDefaultLogcatLevel(BuildUtils.isDebugBuild(context))
     }
+
+    private fun getComponentName(context: Context, serviceClass: Class<*>) = ComponentName(context, serviceClass)
 
     /**
      * Helper method to fetch the Drop-in result string from the result intent provided to

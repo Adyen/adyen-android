@@ -246,7 +246,7 @@ class DropInActivity :
         val bound = DropInService.bindService(
             this,
             serviceConnection,
-            dropInViewModel.dropInConfiguration.serviceComponentName,
+            dropInViewModel.serviceComponentName,
             dropInViewModel.dropInConfiguration.additionalDataForDropInService
         )
         if (bound) {
@@ -254,7 +254,7 @@ class DropInActivity :
         } else {
             Logger.e(
                 TAG,
-                "Error binding to ${dropInViewModel.dropInConfiguration.serviceComponentName.className}. " +
+                "Error binding to ${dropInViewModel.serviceComponentName.className}. " +
                     "The system couldn't find the service or your client doesn't have permission to bind to it"
             )
         }
@@ -700,9 +700,10 @@ class DropInActivity :
             context: Context,
             dropInConfiguration: DropInConfiguration,
             paymentMethodsApiResponse: PaymentMethodsApiResponse,
+            service: ComponentName,
         ): Intent {
             val intent = Intent(context, DropInActivity::class.java)
-            DropInViewModel.putIntentExtras(intent, dropInConfiguration, paymentMethodsApiResponse)
+            DropInViewModel.putIntentExtras(intent, dropInConfiguration, paymentMethodsApiResponse, service)
             return intent
         }
 
@@ -710,9 +711,10 @@ class DropInActivity :
             context: Context,
             dropInConfiguration: DropInConfiguration,
             session: Session,
+            service: ComponentName,
         ): Intent {
             val intent = Intent(context, DropInActivity::class.java)
-            DropInViewModel.putIntentExtras(intent, dropInConfiguration, session)
+            DropInViewModel.putIntentExtras(intent, dropInConfiguration, session, service)
             return intent
         }
     }
