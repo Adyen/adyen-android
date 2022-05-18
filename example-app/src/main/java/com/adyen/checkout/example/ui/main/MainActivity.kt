@@ -23,12 +23,12 @@ import com.adyen.checkout.dropin.DropInCallback
 import com.adyen.checkout.dropin.DropInResult
 import com.adyen.checkout.example.R
 import com.adyen.checkout.example.databinding.ActivityMainBinding
+import com.adyen.checkout.example.service.ExampleFullAsyncDropInService
 import com.adyen.checkout.example.ui.card.CardActivity
 import com.adyen.checkout.example.ui.configuration.CheckoutConfigurationProvider
 import com.adyen.checkout.example.ui.configuration.ConfigurationActivity
 import com.adyen.checkout.redirect.RedirectComponent
 import dagger.hilt.android.AndroidEntryPoint
-import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
@@ -132,6 +132,7 @@ class MainActivity : AppCompatActivity(), DropInCallback {
                     dropInLauncher,
                     navigation.paymentMethodsApiResponse,
                     checkoutConfigurationProvider.getDropInConfiguration(this),
+                    ExampleFullAsyncDropInService::class.java,
                 )
             }
             is MainNavigation.DropInWithSession -> {

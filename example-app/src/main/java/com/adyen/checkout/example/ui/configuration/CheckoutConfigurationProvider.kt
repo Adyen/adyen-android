@@ -12,7 +12,6 @@ import com.adyen.checkout.core.log.Logger
 import com.adyen.checkout.dropin.DropInConfiguration
 import com.adyen.checkout.example.BuildConfig
 import com.adyen.checkout.example.data.storage.KeyValueStorage
-import com.adyen.checkout.example.service.ExampleFullAsyncDropInService
 import com.adyen.checkout.googlepay.GooglePayConfiguration
 import com.adyen.checkout.redirect.RedirectConfiguration
 import java.util.Locale
@@ -39,7 +38,6 @@ internal class CheckoutConfigurationProvider @Inject constructor(
     fun getDropInConfiguration(context: Context): DropInConfiguration {
         val dropInConfigurationBuilder = DropInConfiguration.Builder(
             context,
-            ExampleFullAsyncDropInService::class.java,
             clientKey
         )
             .setEnvironment(environment)
