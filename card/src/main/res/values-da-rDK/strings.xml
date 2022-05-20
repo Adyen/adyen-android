@@ -20,6 +20,8 @@
 
     <string name="checkout_card_number_not_valid">Ugyldigt kortnummer</string>
     <string name="checkout_expiry_date_not_valid">Ugyldig udløbsdato</string>
+    <string name="checkout_expiry_date_not_valid_too_old">Kort for gammelt</string>
+    <string name="checkout_expiry_date_not_valid_too_far_in_future">Dato for langt ude i fremtiden</string>
     <string name="checkout_security_code_not_valid">Ugyldigt format for CVC/CVV</string>
     <string name="checkout_holder_name_not_valid">Ugyldigt kontohavernavn</string>
     <string name="checkout_social_security_number_not_valid">Ugyldig indtastning</string>

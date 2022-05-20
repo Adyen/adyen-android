@@ -20,6 +20,8 @@
 
     <string name="checkout_card_number_not_valid">カード番号が無効です</string>
     <string name="checkout_expiry_date_not_valid">有効期限が無効です</string>
+    <string name="checkout_expiry_date_not_valid_too_old">カードが古すぎます</string>
+    <string name="checkout_expiry_date_not_valid_too_far_in_future">未来の日付が先すぎです</string>
     <string name="checkout_security_code_not_valid">無効なCVC / CVV形式です</string>
     <string name="checkout_holder_name_not_valid">口座名義が無効です</string>
     <string name="checkout_social_security_number_not_valid">無効な入力</string>

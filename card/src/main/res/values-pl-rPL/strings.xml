@@ -20,6 +20,8 @@
 
     <string name="checkout_card_number_not_valid">Nieprawidłowy numer karty</string>
     <string name="checkout_expiry_date_not_valid">Nieprawidłowa data wygaśnięcia</string>
+    <string name="checkout_expiry_date_not_valid_too_old">Termin ważności karty minął</string>
+    <string name="checkout_expiry_date_not_valid_too_far_in_future">Data w zbyt odległej przyszłości</string>
     <string name="checkout_security_code_not_valid">Nieprawidłowy format CVC/CVV</string>
     <string name="checkout_holder_name_not_valid">Nieprawidłowe imię i nazwisko posiadacza</string>
     <string name="checkout_social_security_number_not_valid">Nieprawidłowe dane wejściowe</string>

@@ -20,6 +20,8 @@
 
     <string name="checkout_card_number_not_valid">Väärä kortin numero</string>
     <string name="checkout_expiry_date_not_valid">Virheellinen vanhenemispäivämäärä</string>
+    <string name="checkout_expiry_date_not_valid_too_old">Kortti on liian vanha</string>
+    <string name="checkout_expiry_date_not_valid_too_far_in_future">Päivämäärä liian kaukana tulevaisuudessa</string>
     <string name="checkout_security_code_not_valid">Virheellinen CVC / CVV-muoto</string>
     <string name="checkout_holder_name_not_valid">Haltijan nimi väärä</string>
     <string name="checkout_social_security_number_not_valid">Ei-kelvollinen syöte</string>

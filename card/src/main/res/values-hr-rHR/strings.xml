@@ -20,6 +20,8 @@
 
     <string name="checkout_card_number_not_valid">Nevažeći broj kartice</string>
     <string name="checkout_expiry_date_not_valid">Nevažeći datum isteka</string>
+    <string name="checkout_expiry_date_not_valid_too_old">Kartica je prestara</string>
+    <string name="checkout_expiry_date_not_valid_too_far_in_future">Datum je predaleko u budućnosti</string>
     <string name="checkout_security_code_not_valid">Nevažeći CVC/CVV format</string>
     <string name="checkout_holder_name_not_valid">Ime vlasnika nije valjano</string>
     <string name="checkout_social_security_number_not_valid">Pogrešan unos</string>

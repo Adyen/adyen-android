@@ -20,6 +20,8 @@
 
     <string name="checkout_card_number_not_valid">信用卡號碼無效</string>
     <string name="checkout_expiry_date_not_valid">到期日期無效</string>
+    <string name="checkout_expiry_date_not_valid_too_old">卡太舊</string>
+    <string name="checkout_expiry_date_not_valid_too_far_in_future">未來日期距今太久</string>
     <string name="checkout_security_code_not_valid">CVC／CVV 格式無效</string>
     <string name="checkout_holder_name_not_valid">持卡人姓名無效</string>
     <string name="checkout_social_security_number_not_valid">輸入無效</string>

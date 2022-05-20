@@ -20,6 +20,8 @@
 
     <string name="checkout_card_number_not_valid">Ongeldig kaartnummer</string>
     <string name="checkout_expiry_date_not_valid">Ongeldige vervaldatum</string>
+    <string name="checkout_expiry_date_not_valid_too_old">Kaart te oud</string>
+    <string name="checkout_expiry_date_not_valid_too_far_in_future">Datum te ver in de toekomst</string>
     <string name="checkout_security_code_not_valid">Ongeldige CVC-/CVV-indeling</string>
     <string name="checkout_holder_name_not_valid">Naam houder ongeldig</string>
     <string name="checkout_social_security_number_not_valid">Ongeldige invoer</string>

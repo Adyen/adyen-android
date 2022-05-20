@@ -20,6 +20,8 @@
 
     <string name="checkout_card_number_not_valid">Μη έγκυρος αριθμός κάρτας</string>
     <string name="checkout_expiry_date_not_valid">Μη έγκυρη ημερομηνία λήξης</string>
+    <string name="checkout_expiry_date_not_valid_too_old">Η κάρτα είναι πολύ παλιά</string>
+    <string name="checkout_expiry_date_not_valid_too_far_in_future">Η ημερομηνία είναι πολύ μακρινή</string>
     <string name="checkout_security_code_not_valid">Μη έγκυρη μορφή κωδικού CVC/CVV</string>
     <string name="checkout_holder_name_not_valid">Μη έγκυρο όνομα κατόχου</string>
     <string name="checkout_social_security_number_not_valid">Μη έγκυρη είσοδος</string>
