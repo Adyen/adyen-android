@@ -30,7 +30,6 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.cancel
 import kotlinx.coroutines.channels.Channel
-import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.flow.receiveAsFlow
 import kotlinx.coroutines.launch
 import org.json.JSONObject
@@ -58,6 +57,10 @@ abstract class DropInService : Service(), CoroutineScope, DropInServiceInterface
     private val resultFlow = resultChannel.receiveAsFlow()
 
     private var additionalData: Bundle? = null
+
+    override fun onStartCommand(intent: Intent?, flags: Int, startId: Int): Int {
+        return START_NOT_STICKY
+    }
 
     override fun onBind(intent: Intent?): IBinder {
         Logger.d(TAG, "onBind")
@@ -482,11 +485,25 @@ abstract class DropInService : Service(), CoroutineScope, DropInServiceInterface
 
         private const val INTENT_EXTRA_ADDITIONAL_DATA = "ADDITIONAL_DATA"
 
-        internal fun bindService(
+        internal fun startService(
             context: Context,
             connection: ServiceConnection,
             merchantService: ComponentName,
-            additionalData: Bundle?
+            additionalData: Bundle?,
+        ): Boolean {
+            Logger.d(TAG, "startService - ${context::class.simpleName}")
+            val intent = Intent().apply {
+                component = merchantService
+            }
+            context.startService(intent)
+            return bindService(context, connection, merchantService, additionalData)
+        }
+
+        private fun bindService(
+            context: Context,
+            connection: ServiceConnection,
+            merchantService: ComponentName,
+            additionalData: Bundle?,
         ): Boolean {
             Logger.d(TAG, "bindService - ${context::class.simpleName}")
             val intent = Intent().apply {
@@ -496,7 +513,22 @@ abstract class DropInService : Service(), CoroutineScope, DropInServiceInterface
             return context.bindService(intent, connection, Context.BIND_AUTO_CREATE)
         }
 
-        internal fun unbindService(context: Context, connection: ServiceConnection) {
+        internal fun stopService(
+            context: Context,
+            merchantService: ComponentName,
+            connection: ServiceConnection,
+        ) {
+            unbindService(context, connection)
+
+            Logger.d(TAG, "stopService - ${context::class.simpleName}")
+
+            val intent = Intent().apply {
+                component = merchantService
+            }
+            context.stopService(intent)
+        }
+
+        private fun unbindService(context: Context, connection: ServiceConnection) {
             Logger.d(TAG, "unbindService - ${context::class.simpleName}")
             context.unbindService(connection)
         }

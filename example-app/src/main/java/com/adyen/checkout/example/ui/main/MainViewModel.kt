@@ -19,7 +19,6 @@ import com.adyen.checkout.example.service.getPaymentMethodRequest
 import com.adyen.checkout.example.service.getSessionRequest
 import com.adyen.checkout.example.ui.main.MainActivity.Companion.RETURN_URL_EXTRA
 import dagger.hilt.android.lifecycle.HiltViewModel
-import kotlinx.coroutines.async
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -66,15 +65,11 @@ internal class MainViewModel @Inject constructor(
         viewModelScope.launch {
             _viewState.emit(MainViewState.Loading)
 
-            val paymentMethodsDef = async { getPaymentMethods() }
-            val sessionDef = async { getSession() }
+            val session = getSession()
 
-            val paymentMethods = paymentMethodsDef.await()
-            val session = sessionDef.await()
-
-            if (paymentMethods != null && session != null) {
+            if (session != null) {
                 _viewState.emit(MainViewState.Result(ComponentItemProvider.getComponentItems()))
-                _navigateTo.emit(MainNavigation.DropInWithSession(session, paymentMethods))
+                _navigateTo.emit(MainNavigation.DropInWithSession(session))
             } else {
                 _viewState.emit(MainViewState.Error("Something went wrong while starting session"))
             }

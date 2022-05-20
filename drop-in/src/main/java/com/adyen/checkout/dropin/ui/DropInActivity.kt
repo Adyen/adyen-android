@@ -185,7 +185,7 @@ class DropInActivity :
 
         initObservers()
 
-        bindService()
+        startDropInService()
     }
 
     private fun noDialogPresent(): Boolean {
@@ -242,12 +242,12 @@ class DropInActivity :
         super.onStart()
     }
 
-    private fun bindService() {
-        val bound = DropInService.bindService(
-            this,
-            serviceConnection,
-            dropInViewModel.serviceComponentName,
-            dropInViewModel.dropInConfiguration.additionalDataForDropInService
+    private fun startDropInService() {
+        val bound = DropInService.startService(
+            context = this,
+            connection = serviceConnection,
+            merchantService = dropInViewModel.serviceComponentName,
+            additionalData = dropInViewModel.dropInConfiguration.additionalDataForDropInService,
         )
         if (bound) {
             serviceBound = true
@@ -265,9 +265,13 @@ class DropInActivity :
         super.onStop()
     }
 
-    private fun unbindService() {
+    private fun stopDropInService() {
         if (serviceBound) {
-            DropInService.unbindService(this, serviceConnection)
+            DropInService.stopService(
+                context = this,
+                merchantService = dropInViewModel.serviceComponentName,
+                connection = serviceConnection,
+            )
             serviceBound = false
         }
     }
@@ -342,7 +346,6 @@ class DropInActivity :
 
     override fun onDestroy() {
         Logger.v(TAG, "onDestroy")
-        unbindService()
         super.onDestroy()
     }
 
@@ -537,6 +540,7 @@ class DropInActivity :
 
     private fun terminate() {
         Logger.d(TAG, "terminate")
+        stopDropInService()
         finish()
         overridePendingTransition(0, R.anim.fade_out)
     }
