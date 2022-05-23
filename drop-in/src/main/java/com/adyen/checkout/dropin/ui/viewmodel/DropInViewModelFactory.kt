@@ -17,7 +17,7 @@ import com.adyen.checkout.components.repository.OrderStatusRepository
 class DropInViewModelFactory(
     activity: ComponentActivity
 ) : AbstractSavedStateViewModelFactory(activity, activity.intent.extras) {
-    override fun <T : ViewModel?> create(key: String, modelClass: Class<T>, handle: SavedStateHandle): T {
+    override fun <T : ViewModel> create(key: String, modelClass: Class<T>, handle: SavedStateHandle): T {
         @Suppress("UNCHECKED_CAST")
         return DropInViewModel(handle, OrderStatusRepository()) as T
     }
