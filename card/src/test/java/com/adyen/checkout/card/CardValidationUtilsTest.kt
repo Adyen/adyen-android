@@ -8,10 +8,12 @@
 
 package com.adyen.checkout.card
 
+import com.adyen.checkout.card.data.ExpiryDate
 import com.adyen.checkout.card.util.CardNumberValidation
 import com.adyen.checkout.card.util.CardValidationUtils
 import org.junit.Assert.assertEquals
 import org.junit.Test
+import java.util.GregorianCalendar
 
 class CardValidationUtilsTest {
     @Test
@@ -126,5 +128,50 @@ class CardValidationUtilsTest {
             isBrandSupported = true
         )
         assertEquals(CardNumberValidation.VALID, validation)
+    }
+
+    @Test
+    fun isInMaxYearRange_ExpiryDateThirtyYearsInFuture_ExpectTrue() {
+        val mockCalendarInstance = GregorianCalendar(2022, 4, 23) // 23/05/2022
+        val expiryDate = ExpiryDate(12, 2052) // 12/2052 (last valid date in future)
+        val actual = CardValidationUtils.isInMaxYearRange(expiryDate, mockCalendarInstance)
+        assertEquals(true, actual)
+    }
+
+    @Test
+    fun isInMaxYearRange_ExpiryDateMoreThanThirtyYearsInFuture_ExpectFalse() {
+        val mockCalendarInstance = GregorianCalendar(2022, 4, 23) // 23/05/2022
+        val expiryDate = ExpiryDate(1, 2053) // 01/2053 (first invalid date in future)
+        val actual = CardValidationUtils.isInMaxYearRange(expiryDate, mockCalendarInstance)
+        assertEquals(false, actual)
+    }
+
+    @Test
+    fun isInMaxYearRange_ExpiryDateEightYearsInFuture_ExpectTrue() {
+        val mockCalendarInstance = GregorianCalendar(2022, 4, 23) // 23/05/2022
+        val expiryDate = ExpiryDate(1, 2030) // 01/2030
+        val actual = CardValidationUtils.isInMaxYearRange(expiryDate, mockCalendarInstance)
+        assertEquals(true, actual)
+    }
+
+
+    @Test
+    fun isInMinMonthRange_ExpiryDateThreeMonthsInPast_ExpectTrue() {
+        // month is 0 based in calendar
+        val mockCalendarInstance = GregorianCalendar(2022, 4, 23) // 23/05/2022
+        // month is 1 based in expiry date
+        val expiryDate = ExpiryDate(2, 2022) // 02/2022 (last valid date in past)
+        val actual = CardValidationUtils.isInMinMonthRange(expiryDate, mockCalendarInstance)
+        assertEquals(true, actual)
+    }
+
+    @Test
+    fun isInMinMonthRange_ExpiryDateMoreThanThreeMonthsInPast_ExpectFalse() {
+        // month is 0 based in calendar
+        val mockCalendarInstance = GregorianCalendar(2022, 4, 23) // 23/05/2022
+        // month is 1 based in expiry date
+        val expiryDate = ExpiryDate(1, 2022) // 01/2022 (first invalid date in past)
+        val actual = CardValidationUtils.isInMinMonthRange(expiryDate, mockCalendarInstance)
+        assertEquals(false, actual)
     }
 }

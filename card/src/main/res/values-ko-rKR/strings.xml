@@ -20,6 +20,8 @@
 
     <string name="checkout_card_number_not_valid">유효하지 않은 카드 번호</string>
     <string name="checkout_expiry_date_not_valid">유효하지 않은 만료일</string>
+    <string name="checkout_expiry_date_not_valid_too_old">카드가 너무 오래되었습니다</string>
+    <string name="checkout_expiry_date_not_valid_too_far_in_future">현재로부터 너무 먼 날짜입니다</string>
     <string name="checkout_security_code_not_valid">유효하지 않은 CVC/CVV 형식</string>
     <string name="checkout_holder_name_not_valid">소유자 이름이 유효하지 않음</string>
     <string name="checkout_social_security_number_not_valid">유효하지 않은 입력</string>

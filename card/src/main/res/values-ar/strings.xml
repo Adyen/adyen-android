@@ -20,6 +20,8 @@
 
     <string name="checkout_card_number_not_valid">رقم بطاقة غير صحيح</string>
     <string name="checkout_expiry_date_not_valid">تاريخ انتهاء غير صحيح</string>
+    <string name="checkout_expiry_date_not_valid_too_old">بطاقة قديمة جدًا</string>
+    <string name="checkout_expiry_date_not_valid_too_far_in_future">التاريخ بعيد للغاية في المستقبل</string>
     <string name="checkout_security_code_not_valid">تنسيق CVC / CVV غير صحيح</string>
     <string name="checkout_holder_name_not_valid">اسم صاحب الحساب غير صحيح</string>
     <string name="checkout_social_security_number_not_valid">إدخال غير صحيح</string>

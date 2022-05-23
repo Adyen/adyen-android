@@ -20,6 +20,8 @@
 
     <string name="checkout_card_number_not_valid">Număr de card incorect</string>
     <string name="checkout_expiry_date_not_valid">Data de expirare este incorectă</string>
+    <string name="checkout_expiry_date_not_valid_too_old">Cardul este prea vechi</string>
+    <string name="checkout_expiry_date_not_valid_too_far_in_future">Data este prea departe în viitor</string>
     <string name="checkout_security_code_not_valid">Format CVC/CVV incorect</string>
     <string name="checkout_holder_name_not_valid">Numele posesorului este incorect</string>
     <string name="checkout_social_security_number_not_valid">Informațiile sunt incorecte</string>
