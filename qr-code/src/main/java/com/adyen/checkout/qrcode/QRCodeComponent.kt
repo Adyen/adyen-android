@@ -12,6 +12,7 @@ import android.app.Application
 import android.content.Context
 import android.content.Intent
 import android.os.CountDownTimer
+import androidx.lifecycle.DefaultLifecycleObserver
 import androidx.lifecycle.LifecycleOwner
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.Observer
@@ -21,7 +22,6 @@ import com.adyen.checkout.components.ActionComponentProvider
 import com.adyen.checkout.components.ViewableComponent
 import com.adyen.checkout.components.base.BaseActionComponent
 import com.adyen.checkout.components.base.IntentHandlingComponent
-import com.adyen.checkout.components.base.lifecycle.BaseLifecycleObserver
 import com.adyen.checkout.components.model.payments.response.Action
 import com.adyen.checkout.components.model.payments.response.QrCodeAction
 import com.adyen.checkout.components.status.StatusRepository
@@ -109,8 +109,8 @@ class QRCodeComponent(
         statusRepository.errorLiveData.observe(lifecycleOwner, errorObserver)
 
         // Immediately request a new status if the user resumes the app
-        lifecycleOwner.lifecycle.addObserver(object : BaseLifecycleObserver() {
-            override fun onResume() {
+        lifecycleOwner.lifecycle.addObserver(object : DefaultLifecycleObserver {
+            override fun onResume(owner: LifecycleOwner) {
                 statusRepository.updateStatus()
             }
         })
