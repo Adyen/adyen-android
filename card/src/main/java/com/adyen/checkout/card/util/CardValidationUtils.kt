@@ -79,21 +79,15 @@ object CardValidationUtils {
         val invalidState = FieldState(expiryDate, Validation.Invalid(R.string.checkout_expiry_date_not_valid))
         return when {
             dateExists(expiryDate) -> {
-                val expiryDateCalendar = getExpiryCalendar(expiryDate)
-                val maxFutureCalendar = GregorianCalendar.getInstance()
-                maxFutureCalendar.add(Calendar.YEAR, MAXIMUM_YEARS_IN_FUTURE)
-                val maxPastCalendar = GregorianCalendar.getInstance()
-                maxPastCalendar.add(Calendar.MONTH, -MAXIMUM_EXPIRED_MONTHS)
-
-                val isInMaxYearRange = expiryDateCalendar.get(Calendar.YEAR) <= maxFutureCalendar.get(Calendar.YEAR)
-                val isInMinMonthRange = expiryDateCalendar >= maxPastCalendar
+                val isInMaxYearRange = isInMaxYearRange(expiryDate, GregorianCalendar.getInstance())
+                val isInMinMonthRange = isInMinMonthRange(expiryDate, GregorianCalendar.getInstance())
                 val fieldState = when {
+                    // higher than maxPast and lower than maxFuture
                     isInMinMonthRange && isInMaxYearRange -> FieldState(expiryDate, Validation.Valid)
                     !isInMaxYearRange -> FieldState(expiryDate, Validation.Invalid(R.string.checkout_expiry_date_not_valid_too_far_in_future))
                     !isInMinMonthRange -> FieldState(expiryDate, Validation.Invalid(R.string.checkout_expiry_date_not_valid_too_old))
                     else -> invalidState
                 }
-                // higher than maxPast and lower than maxFuture
                 fieldState
             }
             fieldPolicy == Brand.FieldPolicy.OPTIONAL && expiryDate != ExpiryDate.INVALID_DATE -> {
@@ -101,6 +95,20 @@ object CardValidationUtils {
             }
             else -> invalidState
         }
+    }
+
+    internal fun isInMaxYearRange(expiryDate: ExpiryDate, calendar: Calendar): Boolean {
+        val expiryDateCalendar = getExpiryCalendar(expiryDate)
+        val maxFutureCalendar = calendar.clone() as GregorianCalendar
+        maxFutureCalendar.add(Calendar.YEAR, MAXIMUM_YEARS_IN_FUTURE)
+        return expiryDateCalendar.get(Calendar.YEAR) <= maxFutureCalendar.get(Calendar.YEAR)
+    }
+
+    internal fun isInMinMonthRange(expiryDate: ExpiryDate, calendar: Calendar): Boolean {
+        val expiryDateCalendar = getExpiryCalendar(expiryDate)
+        val maxPastCalendar = calendar.clone() as GregorianCalendar
+        maxPastCalendar.add(Calendar.MONTH, -MAXIMUM_EXPIRED_MONTHS)
+        return expiryDateCalendar >= maxPastCalendar
     }
 
     /**
