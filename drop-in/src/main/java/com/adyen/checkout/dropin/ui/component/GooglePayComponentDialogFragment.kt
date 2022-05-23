@@ -15,8 +15,10 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.viewModels
+import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.Observer
 import androidx.lifecycle.lifecycleScope
+import androidx.lifecycle.repeatOnLifecycle
 import com.adyen.checkout.components.ComponentError
 import com.adyen.checkout.components.model.paymentmethods.PaymentMethod
 import com.adyen.checkout.core.exception.CheckoutException
@@ -30,7 +32,7 @@ import com.adyen.checkout.dropin.ui.viewmodel.GooglePayFragmentEvent
 import com.adyen.checkout.dropin.ui.viewmodel.GooglePayViewModel
 import com.adyen.checkout.googlepay.GooglePayComponent
 import com.adyen.checkout.googlepay.GooglePayComponentState
-import kotlinx.coroutines.flow.collect
+import kotlinx.coroutines.launch
 
 private const val NAVIGATED_FROM_PRESELECTED = "NAVIGATED_FROM_PRESELECTED"
 private const val PAYMENT_METHOD = "PAYMENT_METHOD"
@@ -91,9 +93,13 @@ class GooglePayComponentDialogFragment : DropInBottomSheetDialogFragment(), Obse
         } catch (e: ClassCastException) {
             throw CheckoutException("Component is not GooglePayComponent")
         }
-        lifecycleScope.launchWhenStarted {
-            googlePayViewModel.fragmentLoaded()
-            googlePayViewModel.eventsFlow.collect { handleEvent(it) }
+
+        googlePayViewModel.fragmentLoaded()
+
+        viewLifecycleOwner.lifecycleScope.launch {
+            repeatOnLifecycle(Lifecycle.State.STARTED) {
+                googlePayViewModel.eventsFlow.collect { handleEvent(it) }
+            }
         }
     }
 

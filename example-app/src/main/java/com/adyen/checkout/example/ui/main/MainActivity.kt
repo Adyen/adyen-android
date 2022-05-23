@@ -15,7 +15,9 @@ import android.view.MenuItem
 import android.widget.Toast
 import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
+import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.lifecycleScope
+import androidx.lifecycle.repeatOnLifecycle
 import com.adyen.checkout.core.log.LogUtil
 import com.adyen.checkout.core.log.Logger
 import com.adyen.checkout.dropin.DropIn
@@ -68,9 +70,11 @@ class MainActivity : AppCompatActivity(), DropInCallback {
             Toast.makeText(this, result, Toast.LENGTH_SHORT).show()
         }
 
-        lifecycleScope.launchWhenStarted {
-            launch { viewModel.viewState.collect(::onViewState) }
-            launch { viewModel.navigateTo.collect(::onNavigateTo) }
+        lifecycleScope.launch {
+            repeatOnLifecycle(Lifecycle.State.STARTED) {
+                launch { viewModel.viewState.collect(::onViewState) }
+                launch { viewModel.navigateTo.collect(::onNavigateTo) }
+            }
         }
     }
 
