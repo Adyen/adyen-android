@@ -39,6 +39,7 @@ dependencies {
     // Dependencies
     api "org.jetbrains.kotlinx:kotlinx-coroutines-android:$coroutines_version"
     api "androidx.fragment:fragment-ktx:$fragment_version"
+    api "androidx.lifecycle:lifecycle-runtime-ktx:$lifecycle_version"
 
     //Tests
     testImplementation "junit:junit:$junit_version"
