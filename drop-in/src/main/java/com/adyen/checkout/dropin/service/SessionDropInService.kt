@@ -8,48 +8,30 @@
 
 package com.adyen.checkout.dropin.service
 
-import android.content.Intent
-import android.os.IBinder
 import com.adyen.checkout.components.ActionComponentData
 import com.adyen.checkout.components.PaymentComponentState
-import com.adyen.checkout.components.base.Configuration
 import com.adyen.checkout.components.model.payments.request.OrderRequest
 import com.adyen.checkout.components.model.payments.request.PaymentMethodDetails
 import com.adyen.checkout.components.model.payments.response.BalanceResult
 import com.adyen.checkout.components.model.payments.response.OrderResponse
 import com.adyen.checkout.core.log.LogUtil
 import com.adyen.checkout.core.log.Logger
+import com.adyen.checkout.sessions.model.Session
 import com.adyen.checkout.sessions.repository.SessionRepository
 import kotlinx.coroutines.launch
 import org.json.JSONObject
 
 @Suppress("TooManyFunctions")
-open class SessionDropInService : DropInService() {
-
-    private var isInitialized = false
+open class SessionDropInService : DropInService(), SessionDropInServiceInterface {
 
     private lateinit var sessionRepository: SessionRepository
 
-    override fun onBind(intent: Intent?): IBinder {
-        val binder = super.onBind(intent)
-        val additionalData = getAdditionalData()
+    override fun initialize(session: Session, clientKey: String, baseUrl: String, shouldFetchPaymentMethods: Boolean) {
+        sessionRepository = SessionRepository(baseUrl = baseUrl, clientKey = clientKey, session = session)
 
-        if (
-            !isInitialized &&
-            additionalData != null
-        ) {
-            val configuration = requireNotNull(additionalData.getParcelable<Configuration>(INTENT_EXTRA_CONFIGURATION))
-            sessionRepository = SessionRepository(
-                configuration = configuration,
-                session = requireNotNull(additionalData.getParcelable(INTENT_EXTRA_SESSION)),
-            )
-
+        if (shouldFetchPaymentMethods) {
             setupSession()
-
-            isInitialized = true
         }
-
-        return binder
     }
 
     private fun setupSession() {
@@ -57,19 +39,19 @@ open class SessionDropInService : DropInService() {
             sessionRepository.setupSession(null)
                 .fold(
                     onSuccess = {
-                        sendSessionSetupResult(SessionSetupDropInServiceResult.Success(it))
+                        sendSessionSetupResult(SessionDropInServiceResult.SetupDone(it.paymentMethods))
                     },
                     onFailure = {
-                        val result = SessionSetupDropInServiceResult.Error(reason = it.message, dismissDropIn = true)
+                        val result = SessionDropInServiceResult.Error(reason = it.message, dismissDropIn = true)
                         sendSessionSetupResult(result)
                     }
                 )
         }
     }
 
-    private fun sendSessionSetupResult(sessionSetupDropInServiceResult: SessionSetupDropInServiceResult) {
+    private fun sendSessionSetupResult(sessionDropInServiceResult: SessionDropInServiceResult) {
         Logger.d(TAG, "Sending session setup result")
-        emitResult(sessionSetupDropInServiceResult)
+        emitResult(sessionDropInServiceResult)
     }
 
     override fun onPaymentsCallRequested(
@@ -174,7 +156,7 @@ open class SessionDropInService : DropInService() {
                         }
                     },
                     onFailure = {
-                        val result = SessionSetupDropInServiceResult.Error(reason = it.message)
+                        val result = SessionDropInServiceResult.Error(reason = it.message)
                         sendSessionSetupResult(result)
                     }
                 )
@@ -208,8 +190,9 @@ open class SessionDropInService : DropInService() {
 
     companion object {
         private val TAG = LogUtil.getTag()
-
-        internal const val INTENT_EXTRA_CONFIGURATION = "INTENT_EXTRA_CONFIGURATION"
-        internal const val INTENT_EXTRA_SESSION = "INTENT_EXTRA_SESSION"
     }
+}
+
+internal interface SessionDropInServiceInterface : DropInServiceInterface {
+    fun initialize(session: Session, clientKey: String, baseUrl: String, shouldFetchPaymentMethods: Boolean)
 }

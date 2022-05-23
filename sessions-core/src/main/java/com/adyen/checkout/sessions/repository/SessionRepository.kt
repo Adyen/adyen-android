@@ -9,7 +9,6 @@
 package com.adyen.checkout.sessions.repository
 
 import com.adyen.checkout.components.ActionComponentData
-import com.adyen.checkout.components.base.Configuration
 import com.adyen.checkout.components.model.payments.request.OrderRequest
 import com.adyen.checkout.components.model.payments.request.PaymentComponentData
 import com.adyen.checkout.components.model.payments.request.PaymentMethodDetails
@@ -32,11 +31,12 @@ import com.adyen.checkout.sessions.model.setup.SessionSetupRequest
 import com.adyen.checkout.sessions.model.setup.SessionSetupResponse
 
 class SessionRepository(
-    private val configuration: Configuration,
+    baseUrl: String,
+    private val clientKey: String,
     private var session: Session,
 ) {
 
-    private val sessionService = SessionService(configuration.environment.baseUrl)
+    private val sessionService = SessionService(baseUrl)
 
     suspend fun setupSession(
         order: OrderRequest?
@@ -47,7 +47,7 @@ class SessionRepository(
         sessionService.setupSession(
             request = request,
             sessionId = session.id,
-            clientKey = configuration.clientKey
+            clientKey = clientKey
         ).also {
             session = session.copy(sessionData = it.sessionData)
         }
@@ -62,7 +62,7 @@ class SessionRepository(
         sessionService.submitPayment(
             request = request,
             sessionId = session.id,
-            clientKey = configuration.clientKey
+            clientKey = clientKey
         ).also {
             session = session.copy(sessionData = it.sessionData)
         }
@@ -81,7 +81,7 @@ class SessionRepository(
         sessionService.submitDetails(
             request = request,
             sessionId = session.id,
-            clientKey = configuration.clientKey
+            clientKey = clientKey
         ).also {
             session = session.copy(sessionData = it.sessionData)
         }
@@ -96,7 +96,7 @@ class SessionRepository(
         sessionService.checkBalance(
             request = request,
             sessionId = session.id,
-            clientKey = configuration.clientKey
+            clientKey = clientKey
         ).also {
             session = session.copy(sessionData = it.sessionData)
         }
@@ -109,7 +109,7 @@ class SessionRepository(
         sessionService.createOrder(
             request = request,
             sessionId = session.id,
-            clientKey = configuration.clientKey
+            clientKey = clientKey
         ).also {
             session = session.copy(sessionData = it.sessionData)
         }
@@ -124,7 +124,7 @@ class SessionRepository(
         sessionService.cancelOrder(
             request = request,
             sessionId = session.id,
-            clientKey = configuration.clientKey
+            clientKey = clientKey
         ).also {
             session = session.copy(sessionData = it.sessionData)
         }

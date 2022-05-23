@@ -51,7 +51,8 @@ import com.adyen.checkout.dropin.service.DropInServiceResult
 import com.adyen.checkout.dropin.service.DropInServiceResultError
 import com.adyen.checkout.dropin.service.OrderDropInServiceResult
 import com.adyen.checkout.dropin.service.RecurringDropInServiceResult
-import com.adyen.checkout.dropin.service.SessionSetupDropInServiceResult
+import com.adyen.checkout.dropin.service.SessionDropInServiceInterface
+import com.adyen.checkout.dropin.service.SessionDropInServiceResult
 import com.adyen.checkout.dropin.ui.action.ActionComponentDialogFragment
 import com.adyen.checkout.dropin.ui.base.DropInBottomSheetDialogFragment
 import com.adyen.checkout.dropin.ui.component.BacsDirectDebitDialogFragment
@@ -118,6 +119,15 @@ class DropInActivity :
             Logger.d(TAG, "onServiceConnected")
             val dropInBinder = binder as? DropInService.DropInBinder ?: return
             dropInService = dropInBinder.getService()
+
+            (dropInService as? SessionDropInServiceInterface)?.initialize(
+                // Get these values from a flow/livedata
+                session = dropInViewModel.session!!,
+                clientKey = dropInViewModel.dropInConfiguration.clientKey,
+                baseUrl = dropInViewModel.dropInConfiguration.environment.baseUrl,
+                shouldFetchPaymentMethods = dropInViewModel.paymentMethodsApiResponse == null,
+            )
+
             lifecycleScope.launch {
                 repeatOnLifecycle(Lifecycle.State.STARTED) {
                     dropInService?.observeResult { handleDropInServiceResult(it) }
@@ -464,7 +474,7 @@ class DropInActivity :
             is BalanceDropInServiceResult -> handleDropInServiceResult(dropInServiceResult)
             is OrderDropInServiceResult -> handleDropInServiceResult(dropInServiceResult)
             is RecurringDropInServiceResult -> handleDropInServiceResult(dropInServiceResult)
-            is SessionSetupDropInServiceResult -> handleDropInServiceResult(dropInServiceResult)
+            is SessionDropInServiceResult -> handleDropInServiceResult(dropInServiceResult)
         }
     }
 
@@ -499,11 +509,13 @@ class DropInActivity :
         }
     }
 
-    private fun handleDropInServiceResult(dropInServiceResult: SessionSetupDropInServiceResult) {
+    private fun handleDropInServiceResult(dropInServiceResult: SessionDropInServiceResult) {
         when (dropInServiceResult) {
-            is SessionSetupDropInServiceResult.Success ->
-                dropInViewModel.onSessionSetupSuccessful(dropInServiceResult.sessionSetupResponse)
-            is SessionSetupDropInServiceResult.Error -> handleErrorDropInServiceResult(dropInServiceResult)
+            is SessionDropInServiceResult.SetupDone ->
+                dropInViewModel.onSessionSetupSuccessful(dropInServiceResult.paymentMethods)
+            is SessionDropInServiceResult.SessionDataChanged ->
+                dropInViewModel.onSessionDataChanged(dropInServiceResult.sessionData)
+            is SessionDropInServiceResult.Error -> handleErrorDropInServiceResult(dropInServiceResult)
         }
     }
 

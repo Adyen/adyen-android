@@ -37,7 +37,6 @@ import com.adyen.checkout.giftcard.util.GiftCardBalanceStatus
 import com.adyen.checkout.giftcard.util.GiftCardBalanceUtils
 import com.adyen.checkout.googlepay.GooglePayComponent
 import com.adyen.checkout.sessions.model.Session
-import com.adyen.checkout.sessions.model.setup.SessionSetupResponse
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.flow.receiveAsFlow
@@ -64,13 +63,17 @@ class DropInViewModel(
             savedStateHandle[AMOUNT] = value
         }
 
-    private val initialSession: Session? = savedStateHandle[SESSION_KEY]
+    var session: Session?
+        get() = savedStateHandle[SESSION_KEY]
+        private set(value) {
+            savedStateHandle[SESSION_KEY] = value
+        }
 
-    private var paymentMethodsApiResponse: PaymentMethodsApiResponse?
+    var paymentMethodsApiResponse: PaymentMethodsApiResponse?
         get() {
             return savedStateHandle[PAYMENT_METHODS_RESPONSE_KEY]
         }
-        set(value) {
+        private set(value) {
             savedStateHandle[PAYMENT_METHODS_RESPONSE_KEY] = value
         }
 
@@ -166,12 +169,16 @@ class DropInViewModel(
     }
 
     private fun isInitializedWithSession(): Boolean {
-        return initialSession != null
+        return session != null
     }
 
-    fun onSessionSetupSuccessful(sessionSetupResponse: SessionSetupResponse) {
-        paymentMethodsApiResponse = sessionSetupResponse.paymentMethods
+    fun onSessionSetupSuccessful(paymentMethods: PaymentMethodsApiResponse?) {
+        paymentMethodsApiResponse = paymentMethods
         navigateToInitialDestination()
+    }
+
+    fun onSessionDataChanged(sessionData: String) {
+        session = session?.copy(sessionData = sessionData)
     }
 
     private fun navigateToInitialDestination() {
