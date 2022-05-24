@@ -6,7 +6,9 @@ import android.widget.Toast
 import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.isVisible
+import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.lifecycleScope
+import androidx.lifecycle.repeatOnLifecycle
 import com.adyen.checkout.adyen3ds2.Adyen3DS2Component
 import com.adyen.checkout.card.CardComponent
 import com.adyen.checkout.components.model.paymentmethods.PaymentMethod
@@ -16,7 +18,6 @@ import com.adyen.checkout.example.ui.configuration.CheckoutConfigurationProvider
 import com.adyen.checkout.redirect.RedirectComponent
 import com.adyen.checkout.redirect.RedirectUtil
 import dagger.hilt.android.AndroidEntryPoint
-import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
@@ -50,10 +51,12 @@ class CardActivity : AppCompatActivity() {
 
         binding.payButton.setOnClickListener { cardViewModel.onPayClick() }
 
-        lifecycleScope.launchWhenStarted {
-            launch { cardViewModel.cardViewState.collect(::onCardViewState) }
-            launch { cardViewModel.paymentResult.collect(::onPaymentResult) }
-            launch { cardViewModel.additionalAction.collect(::onAdditionalAction) }
+        lifecycleScope.launch {
+            repeatOnLifecycle(Lifecycle.State.STARTED) {
+                launch { cardViewModel.cardViewState.collect(::onCardViewState) }
+                launch { cardViewModel.paymentResult.collect(::onPaymentResult) }
+                launch { cardViewModel.additionalAction.collect(::onAdditionalAction) }
+            }
         }
     }
 

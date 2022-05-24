@@ -32,7 +32,7 @@ inline fun <ViewModelT : ViewModel> viewModelFactory(
     crossinline factoryProducer: (SavedStateHandle) -> ViewModelT
 ): AbstractSavedStateViewModelFactory {
     return object : AbstractSavedStateViewModelFactory(owner, defaultArgs) {
-        override fun <T : ViewModel?> create(key: String, modelClass: Class<T>, handle: SavedStateHandle): T {
+        override fun <T : ViewModel> create(key: String, modelClass: Class<T>, handle: SavedStateHandle): T {
             @Suppress("UNCHECKED_CAST")
             return factoryProducer(handle) as T
         }

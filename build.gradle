@@ -38,8 +38,8 @@ apply from: "config/gradle/dokkaRoot.gradle"
 allprojects {
     // SDK
     ext.min_sdk_version = 21
-    ext.target_sdk_version = 30
-    ext.compile_sdk_version = 30
+    ext.target_sdk_version = 31
+    ext.compile_sdk_version = 31
 
     // App version
     // just for example app, don't need to increment
@@ -55,7 +55,8 @@ allprojects {
     // api
     ext.annotation_version = "1.2.0"
     ext.coroutines_version = "1.6.1"
-    ext.fragment_version = "1.3.6"
+    ext.fragment_version = "1.4.1"
+    ext.lifecycle_version = "2.4.1"
     // implementation
     ext.appcompat_version = "1.3.1"
     ext.recyclerview_version = "1.2.1"

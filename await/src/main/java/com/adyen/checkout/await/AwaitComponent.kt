@@ -10,6 +10,7 @@ package com.adyen.checkout.await
 import android.app.Activity
 import android.app.Application
 import android.content.Context
+import androidx.lifecycle.DefaultLifecycleObserver
 import androidx.lifecycle.LifecycleOwner
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.Observer
@@ -19,7 +20,6 @@ import com.adyen.checkout.components.ActionComponentProvider
 import com.adyen.checkout.components.ViewableComponent
 import com.adyen.checkout.components.base.BaseActionComponent
 import com.adyen.checkout.components.base.Configuration
-import com.adyen.checkout.components.base.lifecycle.BaseLifecycleObserver
 import com.adyen.checkout.components.model.payments.response.Action
 import com.adyen.checkout.components.status.StatusRepository
 import com.adyen.checkout.components.status.StatusRepository.Companion.getInstance
@@ -75,8 +75,8 @@ class AwaitComponent(savedStateHandle: SavedStateHandle, application: Applicatio
         statusRepository.errorLiveData.observe(lifecycleOwner, errorObserver)
 
         // Immediately request a new status if the user resumes the app
-        lifecycleOwner.lifecycle.addObserver(object : BaseLifecycleObserver() {
-            override fun onResume() {
+        lifecycleOwner.lifecycle.addObserver(object : DefaultLifecycleObserver {
+            override fun onResume(owner: LifecycleOwner) {
                 statusRepository.updateStatus()
             }
         })

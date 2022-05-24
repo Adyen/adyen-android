@@ -19,7 +19,9 @@ import androidx.activity.viewModels
 import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.DialogFragment
+import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.lifecycleScope
+import androidx.lifecycle.repeatOnLifecycle
 import com.adyen.checkout.bacs.BacsDirectDebitComponent
 import com.adyen.checkout.card.CardComponent
 import com.adyen.checkout.components.ActionComponentData
@@ -72,6 +74,7 @@ import com.adyen.checkout.googlepay.GooglePayComponent
 import com.adyen.checkout.redirect.RedirectUtil
 import com.adyen.checkout.sessions.model.Session
 import com.adyen.checkout.wechatpay.WeChatPayUtils
+import kotlinx.coroutines.launch
 
 private val TAG = LogUtil.getTag()
 
@@ -115,8 +118,10 @@ class DropInActivity :
             Logger.d(TAG, "onServiceConnected")
             val dropInBinder = binder as? DropInService.DropInBinder ?: return
             dropInService = dropInBinder.getService()
-            lifecycleScope.launchWhenStarted {
-                dropInService?.observeResult { handleDropInServiceResult(it) }
+            lifecycleScope.launch {
+                repeatOnLifecycle(Lifecycle.State.STARTED) {
+                    dropInService?.observeResult { handleDropInServiceResult(it) }
+                }
             }
 
             paymentDataQueue?.let {
@@ -582,8 +587,10 @@ class DropInActivity :
     }
 
     private fun initObservers() {
-        lifecycleScope.launchWhenStarted {
-            dropInViewModel.eventsFlow.collect { handleEvent(it) }
+        lifecycleScope.launch {
+            repeatOnLifecycle(Lifecycle.State.STARTED) {
+                dropInViewModel.eventsFlow.collect { handleEvent(it) }
+            }
         }
     }
 
