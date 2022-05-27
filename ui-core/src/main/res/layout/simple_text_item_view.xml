@@ -15,7 +15,7 @@
 
     <androidx.appcompat.widget.AppCompatTextView
         android:id="@+id/textView_text"
-        style="@style/AdyenCheckout.InstallmentOptionTextView"
+        style="@style/AdyenCheckout.SimpleTextItemTextView"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_weight="1"
