@@ -169,4 +169,10 @@
         <item name="android:layout_marginEnd">@dimen/standard_margin</item>
     </style>
 
+    <style name="AdyenCheckout.SimpleTextItemTextView" parent="AdyenCheckout.TextAppearance">
+        <item name="android:textColor">@color/textColor</item>
+        <item name="android:textSize">16sp</item>
+        <item name="android:layout_gravity">center_vertical</item>
+    </style>
+
 </resources>
