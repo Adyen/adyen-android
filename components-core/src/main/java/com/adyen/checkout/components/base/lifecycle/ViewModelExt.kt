@@ -17,7 +17,7 @@ import androidx.lifecycle.ViewModelProvider
 import androidx.savedstate.SavedStateRegistryOwner
 
 @MainThread
-inline fun <ViewModelT : ViewModel> viewModelFactory(crossinline factoryProducer: () -> ViewModelT) =
+inline fun <reified ViewModelT : ViewModel> viewModelFactory(crossinline factoryProducer: () -> ViewModelT) =
     object : ViewModelProvider.Factory {
         override fun <T : ViewModel> create(modelClass: Class<T>): T {
             @Suppress("UNCHECKED_CAST")
@@ -26,7 +26,7 @@ inline fun <ViewModelT : ViewModel> viewModelFactory(crossinline factoryProducer
     }
 
 @MainThread
-inline fun <ViewModelT : ViewModel> viewModelFactory(
+inline fun <reified ViewModelT : ViewModel> viewModelFactory(
     owner: SavedStateRegistryOwner,
     defaultArgs: Bundle?,
     crossinline factoryProducer: (SavedStateHandle) -> ViewModelT
