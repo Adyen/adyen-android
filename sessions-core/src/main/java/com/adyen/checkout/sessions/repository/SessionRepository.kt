@@ -29,14 +29,22 @@ import com.adyen.checkout.sessions.model.payments.SessionPaymentsRequest
 import com.adyen.checkout.sessions.model.payments.SessionPaymentsResponse
 import com.adyen.checkout.sessions.model.setup.SessionSetupRequest
 import com.adyen.checkout.sessions.model.setup.SessionSetupResponse
+import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.update
 
 class SessionRepository(
     baseUrl: String,
     private val clientKey: String,
-    private var session: Session,
+    session: Session,
 ) {
 
     private val sessionService = SessionService(baseUrl)
+
+    private val _sessionFlow = MutableStateFlow(session)
+    val sessionFlow: Flow<Session> = _sessionFlow
+
+    private val session: Session get() = _sessionFlow.value
 
     suspend fun setupSession(
         order: OrderRequest?
@@ -49,7 +57,7 @@ class SessionRepository(
             sessionId = session.id,
             clientKey = clientKey
         ).also {
-            session = session.copy(sessionData = it.sessionData)
+            updateSessionData(it.sessionData)
         }
     }
 
@@ -64,7 +72,7 @@ class SessionRepository(
             sessionId = session.id,
             clientKey = clientKey
         ).also {
-            session = session.copy(sessionData = it.sessionData)
+            updateSessionData(it.sessionData)
         }
     }
 
@@ -83,7 +91,7 @@ class SessionRepository(
             sessionId = session.id,
             clientKey = clientKey
         ).also {
-            session = session.copy(sessionData = it.sessionData)
+            updateSessionData(it.sessionData)
         }
     }
 
@@ -98,7 +106,7 @@ class SessionRepository(
             sessionId = session.id,
             clientKey = clientKey
         ).also {
-            session = session.copy(sessionData = it.sessionData)
+            updateSessionData(it.sessionData)
         }
     }
 
@@ -111,7 +119,7 @@ class SessionRepository(
             sessionId = session.id,
             clientKey = clientKey
         ).also {
-            session = session.copy(sessionData = it.sessionData)
+            updateSessionData(it.sessionData)
         }
     }
 
@@ -126,8 +134,12 @@ class SessionRepository(
             sessionId = session.id,
             clientKey = clientKey
         ).also {
-            session = session.copy(sessionData = it.sessionData)
+            updateSessionData(it.sessionData)
         }
+    }
+
+    private fun updateSessionData(sessionData: String) {
+        _sessionFlow.update { it.copy(sessionData = sessionData) }
     }
 
     companion object {
