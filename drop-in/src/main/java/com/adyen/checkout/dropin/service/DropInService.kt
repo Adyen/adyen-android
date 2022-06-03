@@ -495,6 +495,7 @@ abstract class DropInService : Service(), CoroutineScope, DropInServiceInterface
             val intent = Intent().apply {
                 component = merchantService
             }
+            Logger.d(TAG, "merchant service: ${merchantService.className}")
             context.startService(intent)
             return bindService(context, connection, merchantService, additionalData)
         }

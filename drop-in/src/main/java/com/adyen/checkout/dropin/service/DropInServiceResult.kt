@@ -167,6 +167,8 @@ internal sealed class SessionDropInServiceResult : BaseDropInServiceResult() {
 
     data class SessionDataChanged(val sessionData: String) : SessionDropInServiceResult()
 
+    data class SessionTakenOverUpdated(val isFlowTakenOver: Boolean) : SessionDropInServiceResult()
+
     data class Error(
         override val errorMessage: String? = null,
         override val reason: String? = null,

@@ -124,7 +124,10 @@ class DropInActivity :
 
             lifecycleScope.launch {
                 repeatOnLifecycle(Lifecycle.State.STARTED) {
-                    dropInService?.observeResult { handleDropInServiceResult(it) }
+                    dropInService?.observeResult {
+                        Logger.d(TAG, "handle called baby")
+                        handleDropInServiceResult(it)
+                    }
                 }
             }
 
@@ -509,6 +512,8 @@ class DropInActivity :
                 dropInViewModel.onSessionSetupSuccessful(dropInServiceResult.paymentMethods)
             is SessionDropInServiceResult.SessionDataChanged ->
                 dropInViewModel.onSessionDataChanged(dropInServiceResult.sessionData)
+            is SessionDropInServiceResult.SessionTakenOverUpdated ->
+                dropInViewModel.onSessionTakenOverUpdated(dropInServiceResult.isFlowTakenOver)
             is SessionDropInServiceResult.Error -> handleErrorDropInServiceResult(dropInServiceResult)
         }
     }
@@ -620,6 +625,7 @@ class DropInActivity :
             clientKey = event.clientKey,
             baseUrl = event.baseUrl,
             shouldFetchPaymentMethods = event.shouldFetchPaymentMethods,
+            isFlowTakenOver = event.isFlowTakenOver,
         )
     }
 

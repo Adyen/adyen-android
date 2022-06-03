@@ -26,6 +26,7 @@ sealed class DropInActivityEvent {
         val clientKey: String,
         val baseUrl: String,
         val shouldFetchPaymentMethods: Boolean,
+        val isFlowTakenOver: Boolean,
     ) : DropInActivityEvent()
 }
 
