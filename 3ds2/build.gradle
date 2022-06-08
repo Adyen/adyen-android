@@ -38,10 +38,8 @@ dependencies {
     api project(':redirect')
 
     // Dependencies
-    api "com.adyen.threeds:adyen-3ds2:$adyen3ds2_version"
+    api libraries.adyen3ds2
 
     //Tests
-    testImplementation "junit:junit:$junit_version"
-    androidTestImplementation "androidx.test.ext:junit:$test_ext_version"
-    androidTestImplementation "androidx.test.espresso:espresso-core:$espresso_version"
+    testImplementation testLibraries.junit4
 }

@@ -37,11 +37,9 @@ dependencies {
     api project(':issuer-list')
 
     // Dependencies
-    implementation "androidx.appcompat:appcompat:$appcompat_version"
-    implementation "androidx.recyclerview:recyclerview:$recyclerview_version"
+    implementation libraries.androidx.appcompat
+    implementation libraries.androidx.recyclerview
 
     //Tests
-    testImplementation "junit:junit:$junit_version"
-    androidTestImplementation "androidx.test.ext:junit:$test_ext_version"
-    androidTestImplementation "androidx.test.espresso:espresso-core:$espresso_version"
+    testImplementation testLibraries.junit4
 }

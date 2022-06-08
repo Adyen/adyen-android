@@ -33,13 +33,12 @@ android {
 
 dependencies {
     // Dependencies
-    api "androidx.annotation:annotation:$annotation_version"
-    api "org.jetbrains.kotlinx:kotlinx-coroutines-android:$coroutines_version"
-    implementation "com.squareup.okhttp3:okhttp:$okhttp_version"
+    api libraries.androidx.annotation
+    api libraries.kotlinCoroutines
+    implementation libraries.okhttp
 
     //Tests
-    testImplementation "junit:junit:$junit_version"
-    testImplementation "org.json:json:$json_version"
-    androidTestImplementation "androidx.test.ext:junit:$test_ext_version"
-    androidTestImplementation "androidx.test.espresso:espresso-core:$espresso_version"
+    testImplementation testLibraries.junit4
+    androidTestImplementation testLibraries.androidTest
+    androidTestImplementation testLibraries.espresso
 }

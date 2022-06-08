@@ -9,13 +9,7 @@ ext {
 }
 
 buildscript {
-    // Build Script
-    ext.android_gradle_plugin_version = '7.1.0'
-    ext.kotlin_version = '1.6.21'
-    ext.detekt_gradle_plugin_version = "1.17.1"
-    ext.spotbugs_gradle_plugin_version = "4.5.1"
-    ext.dokka_version = "1.6.21"
-    ext.hilt_version = "2.40.1"
+    apply from: './dependencies.gradle'
 
     repositories {
         google()
@@ -36,64 +30,6 @@ buildscript {
 apply from: "config/gradle/dokkaRoot.gradle"
 
 allprojects {
-    // SDK
-    ext.min_sdk_version = 21
-    ext.target_sdk_version = 31
-    ext.compile_sdk_version = 31
-
-    // App version
-    // just for example app, don't need to increment
-    ext.version_code = 1
-    // The version_name format is "major.minor.patch(-(alpha|beta|rc)[0-9]{2}){0,1}" (e.g. 3.0.0, 3.1.1-alpha04 or 3.1.4-rc01 etc).
-    ext.version_name = "4.6.1"
-
-    // Code quality
-    ext.ktlint_version = '0.40.0'
-    ext.detekt_version = "1.17.1"
-
-    // Android Dependencies
-    // api
-    ext.annotation_version = "1.2.0"
-    ext.coroutines_version = "1.6.1"
-    ext.fragment_version = "1.4.1"
-    ext.lifecycle_version = "2.4.1"
-    // implementation
-    ext.appcompat_version = "1.3.1"
-    ext.recyclerview_version = "1.2.1"
-    ext.material_version = "1.4.0"
-    ext.browser_version = "1.3.0"
-
-    // Adyen Dependencies
-    ext.adyen3ds2_version = "2.2.6"
-
-    // External Dependencies
-    ext.play_services_wallet_version = '18.1.3'
-    ext.wechat_pay_version = "6.6.4"
-    ext.okhttp_version = "4.9.3"
-
-    // Drop-in
-
-    // Example app
-    ext.constraintlayout_version = '2.0.2'
-    ext.preference_version = "1.1.1"
-    ext.retrofit2_version = '2.9.0'
-    ext.moshi_adapters_version = '1.11.0'
-    ext.moshi_kotlin_adapter_version = '1.13.0'
-    ext.okhttp_logging_version = "4.9.0"
-
-    // Tests
-    ext.junit_version = '4.13.2'
-    ext.test_ext_version = "1.1.3"
-    ext.espresso_version = "3.4.0"
-    ext.arch_core_testing_version = "2.1.0"
-    ext.mockito_version = "4.6.1"
-    ext.mockito_kotlin_version = "4.0.0"
-    ext.turbine_version = "0.8.0"
-    ext.robolectric_version = "4.4"
-    ext.json_version = '20201115'
-    ext.test_rules_version = "1.3.0"
-    ext.uiautomator_version = "2.2.0"
-
     repositories {
         google()
         mavenCentral()

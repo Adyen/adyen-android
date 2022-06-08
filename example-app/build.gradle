@@ -66,32 +66,25 @@ dependencies {
 //    implementation "com.adyen.checkout:drop-in:4.6.1"
 
     // Dependencies
-    implementation "org.jetbrains.kotlinx:kotlinx-coroutines-android:$coroutines_version"
-    implementation "org.jetbrains.kotlinx:kotlinx-coroutines-core:$coroutines_version"
+    implementation libraries.kotlinCoroutines
 
-    implementation "androidx.appcompat:appcompat:$appcompat_version"
-    implementation "androidx.recyclerview:recyclerview:$recyclerview_version"
-    implementation "androidx.constraintlayout:constraintlayout:$constraintlayout_version"
-    implementation "androidx.preference:preference-ktx:$preference_version"
+    implementation libraries.androidx.appcompat
+    implementation libraries.androidx.recyclerview
+    implementation libraries.androidx.constraintlayout
+    implementation libraries.androidx.preference
 
-    implementation "com.google.android.material:material:$material_version"
+    implementation libraries.material
 
-    implementation "com.squareup.retrofit2:retrofit:$retrofit2_version"
-    implementation "com.squareup.retrofit2:converter-moshi:$retrofit2_version"
-    implementation "com.squareup.moshi:moshi-adapters:$moshi_adapters_version"
-    implementation "com.squareup.moshi:moshi-kotlin:$moshi_kotlin_adapter_version"
-    implementation "com.squareup.okhttp3:logging-interceptor:$okhttp_logging_version"
+    implementation libraries.retrofit
+    implementation libraries.moshi
+    implementation libraries.okhttpLogging
 
-    implementation "com.google.dagger:hilt-android:$hilt_version"
-    kapt "com.google.dagger:hilt-compiler:$hilt_version"
+    implementation libraries.hilt
+    kapt libraries.hiltCompiler
 
     // Tests
-    testImplementation "junit:junit:$junit_version"
-    testImplementation "org.mockito:mockito-core:$mockito_version"
-    androidTestImplementation "androidx.test.ext:junit:$test_ext_version"
-    androidTestImplementation "androidx.test:rules:$test_rules_version"
-    androidTestImplementation "androidx.test.espresso:espresso-core:$espresso_version"
-    androidTestImplementation "androidx.test.espresso:espresso-contrib:$espresso_version"
-    androidTestImplementation "androidx.test.espresso:espresso-intents:$espresso_version"
-    androidTestImplementation "androidx.test.uiautomator:uiautomator:$uiautomator_version"
+    testImplementation testLibraries.junit4
+    testImplementation testLibraries.mockito
+    androidTestImplementation testLibraries.androidTest
+    androidTestImplementation testLibraries.espresso
 }
