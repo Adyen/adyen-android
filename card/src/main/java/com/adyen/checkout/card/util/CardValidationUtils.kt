@@ -84,8 +84,14 @@ object CardValidationUtils {
                 val fieldState = when {
                     // higher than maxPast and lower than maxFuture
                     isInMinMonthRange && isInMaxYearRange -> FieldState(expiryDate, Validation.Valid)
-                    !isInMaxYearRange -> FieldState(expiryDate, Validation.Invalid(R.string.checkout_expiry_date_not_valid_too_far_in_future))
-                    !isInMinMonthRange -> FieldState(expiryDate, Validation.Invalid(R.string.checkout_expiry_date_not_valid_too_old))
+                    !isInMaxYearRange -> FieldState(
+                        expiryDate,
+                        Validation.Invalid(R.string.checkout_expiry_date_not_valid_too_far_in_future)
+                    )
+                    !isInMinMonthRange -> FieldState(
+                        expiryDate,
+                        Validation.Invalid(R.string.checkout_expiry_date_not_valid_too_old)
+                    )
                     else -> invalidState
                 }
                 fieldState
