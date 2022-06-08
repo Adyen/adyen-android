@@ -86,7 +86,9 @@ allprojects {
     ext.test_ext_version = "1.1.3"
     ext.espresso_version = "3.4.0"
     ext.arch_core_testing_version = "2.1.0"
-    ext.mockito_version = "3.11.2"
+    ext.mockito_version = "4.6.1"
+    ext.mockito_kotlin_version = "4.0.0"
+    ext.turbine_version = "0.8.0"
     ext.robolectric_version = "4.4"
     ext.json_version = '20201115'
     ext.test_rules_version = "1.3.0"

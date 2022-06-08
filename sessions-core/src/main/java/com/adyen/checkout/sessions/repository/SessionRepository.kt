@@ -12,8 +12,6 @@ import com.adyen.checkout.components.ActionComponentData
 import com.adyen.checkout.components.model.payments.request.OrderRequest
 import com.adyen.checkout.components.model.payments.request.PaymentComponentData
 import com.adyen.checkout.components.model.payments.request.PaymentMethodDetails
-import com.adyen.checkout.core.log.LogUtil
-import com.adyen.checkout.core.log.Logger
 import com.adyen.checkout.core.util.runSuspendCatching
 import com.adyen.checkout.sessions.api.SessionService
 import com.adyen.checkout.sessions.model.Session
@@ -34,12 +32,10 @@ import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.update
 
 class SessionRepository(
-    baseUrl: String,
+    private val sessionService: SessionService,
     private val clientKey: String,
     session: Session,
 ) {
-
-    private val sessionService = SessionService(baseUrl)
 
     private val _sessionFlow = MutableStateFlow(session)
     val sessionFlow: Flow<Session> = _sessionFlow
@@ -49,8 +45,6 @@ class SessionRepository(
     suspend fun setupSession(
         order: OrderRequest?
     ): Result<SessionSetupResponse> = runSuspendCatching {
-        Logger.d(TAG, "Setting up session")
-
         val request = SessionSetupRequest(session.sessionData.orEmpty(), order)
         sessionService.setupSession(
             request = request,
@@ -64,8 +58,6 @@ class SessionRepository(
     suspend fun submitPayment(
         paymentComponentData: PaymentComponentData<out PaymentMethodDetails>
     ): Result<SessionPaymentsResponse> = runSuspendCatching {
-        Logger.d(TAG, "Submitting payment")
-
         val request = SessionPaymentsRequest(session.sessionData.orEmpty(), paymentComponentData)
         sessionService.submitPayment(
             request = request,
@@ -79,8 +71,6 @@ class SessionRepository(
     suspend fun submitDetails(
         actionComponentData: ActionComponentData
     ): Result<SessionDetailsResponse> = runSuspendCatching {
-        Logger.d(TAG, "Submitting details")
-
         val request = SessionDetailsRequest(
             sessionData = session.sessionData.orEmpty(),
             paymentData = actionComponentData.paymentData,
@@ -98,8 +88,6 @@ class SessionRepository(
     suspend fun checkBalance(
         paymentMethodDetails: PaymentMethodDetails
     ): Result<SessionBalanceResponse> = runSuspendCatching {
-        Logger.d(TAG, "Checking payment method balance")
-
         val request = SessionBalanceRequest(session.sessionData.orEmpty(), paymentMethodDetails)
         sessionService.checkBalance(
             request = request,
@@ -111,8 +99,6 @@ class SessionRepository(
     }
 
     suspend fun createOrder(): Result<SessionOrderResponse> = runSuspendCatching {
-        Logger.d(TAG, "Creating order")
-
         val request = SessionOrderRequest(session.sessionData.orEmpty())
         sessionService.createOrder(
             request = request,
@@ -126,8 +112,6 @@ class SessionRepository(
     suspend fun cancelOrder(
         order: OrderRequest
     ): Result<SessionCancelOrderResponse> = runSuspendCatching {
-        Logger.d(TAG, "Cancelling order")
-
         val request = SessionCancelOrderRequest(session.sessionData.orEmpty(), order)
         sessionService.cancelOrder(
             request = request,
@@ -140,9 +124,5 @@ class SessionRepository(
 
     private fun updateSessionData(sessionData: String) {
         _sessionFlow.update { it.copy(sessionData = sessionData) }
-    }
-
-    companion object {
-        private val TAG = LogUtil.getTag()
     }
 }
