@@ -83,7 +83,7 @@ dependencies {
     kapt libraries.hiltCompiler
 
     // Tests
-    testImplementation testLibraries.junit4
+    testImplementation testLibraries.junit5
     testImplementation testLibraries.mockito
     androidTestImplementation testLibraries.androidTest
     androidTestImplementation testLibraries.espresso

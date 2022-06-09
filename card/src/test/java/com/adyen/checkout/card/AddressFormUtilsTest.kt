@@ -4,11 +4,11 @@ import com.adyen.checkout.card.api.model.AddressItem
 import com.adyen.checkout.card.ui.model.AddressListItem
 import com.adyen.checkout.card.util.AddressFormUtils
 import com.adyen.checkout.components.base.AddressVisibility
-import org.junit.Assert.assertEquals
-import org.junit.Test
+import org.junit.jupiter.api.Assertions.assertEquals
+import org.junit.jupiter.api.Test
 
 @Suppress("MaxLineLength")
-class AddressFormUtilsTest {
+internal class AddressFormUtilsTest {
 
     @Test
     fun markAddressListItemSelected_CodeProvided_ExpectItemWithCodeSelected() {

@@ -2,11 +2,11 @@ package com.adyen.checkout.googlepay
 
 import com.adyen.checkout.googlepay.model.GooglePayParamUtils
 import com.adyen.checkout.googlepay.util.AllowedCardNetworks
-import org.junit.Assert.assertEquals
-import org.junit.Assert.assertNull
-import org.junit.Test
+import org.junit.jupiter.api.Assertions.assertEquals
+import org.junit.jupiter.api.Assertions.assertNull
+import org.junit.jupiter.api.Test
 
-class GooglePayParamUtilsTest {
+internal class GooglePayParamUtilsTest {
 
     @Test
     fun testMasterCardToGooglePayNetworkMapping() {

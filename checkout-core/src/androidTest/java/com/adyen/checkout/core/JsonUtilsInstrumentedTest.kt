@@ -19,6 +19,7 @@ import org.junit.runner.RunWith
 
 @RunWith(AndroidJUnit4::class)
 class JsonUtilsInstrumentedTest {
+
     @Test
     @Throws(JSONException::class)
     fun writeToParcel_Pass_WriteJson() {

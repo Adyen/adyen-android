@@ -11,11 +11,12 @@ package com.adyen.checkout.card
 import com.adyen.checkout.card.data.ExpiryDate
 import com.adyen.checkout.card.util.CardNumberValidation
 import com.adyen.checkout.card.util.CardValidationUtils
-import org.junit.Assert.assertEquals
-import org.junit.Test
+import org.junit.jupiter.api.Assertions.assertEquals
+import org.junit.jupiter.api.Test
 import java.util.GregorianCalendar
 
-class CardValidationUtilsTest {
+internal class CardValidationUtilsTest {
+
     @Test
     fun validateCardNumber_PlainValidNumber_ExpectValid() {
         val number = "5454545454545454"

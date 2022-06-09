@@ -3,10 +3,10 @@ package com.adyen.checkout.giftcard
 import com.adyen.checkout.components.model.payments.Amount
 import com.adyen.checkout.giftcard.util.GiftCardBalanceStatus
 import com.adyen.checkout.giftcard.util.GiftCardBalanceUtils
-import org.junit.Assert.assertEquals
-import org.junit.Test
+import org.junit.jupiter.api.Assertions.assertEquals
+import org.junit.jupiter.api.Test
 
-class GiftCardBalanceUtilsTest {
+internal class GiftCardBalanceUtilsTest {
 
     @Test
     fun checkBalance_LargerTransactionLimit_ExpectFullPayment() {

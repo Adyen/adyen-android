@@ -40,5 +40,5 @@ dependencies {
     implementation libraries.wechat
 
     //Tests
-    testImplementation testLibraries.junit4
+    testImplementation testLibraries.junit5
 }

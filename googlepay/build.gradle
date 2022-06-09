@@ -40,5 +40,5 @@ dependencies {
     api libraries.playServicesWallet
 
     //Tests
-    testImplementation testLibraries.junit4
+    testImplementation testLibraries.junit5
 }

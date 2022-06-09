@@ -43,6 +43,6 @@ dependencies {
     implementation libraries.androidx.browser
 
     //Tests
-    testImplementation testLibraries.junit4
+    testImplementation testLibraries.junit5
     testImplementation testLibraries.robolectric
 }

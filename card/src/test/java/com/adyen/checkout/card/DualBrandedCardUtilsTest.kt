@@ -4,10 +4,10 @@ import com.adyen.checkout.card.api.model.Brand
 import com.adyen.checkout.card.data.CardType
 import com.adyen.checkout.card.data.DetectedCardType
 import com.adyen.checkout.card.util.DualBrandedCardUtils
-import org.junit.Assert.assertEquals
-import org.junit.Test
+import org.junit.jupiter.api.Assertions.assertEquals
+import org.junit.jupiter.api.Test
 
-class DualBrandedCardUtilsTest {
+internal class DualBrandedCardUtilsTest {
 
     @Test
     fun testDualBrandSortingEmptyList() {

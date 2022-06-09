@@ -15,56 +15,59 @@ import com.adyen.checkout.core.model.ModelUtils.serializeOpt
 import com.adyen.checkout.core.model.ModelUtils.serializeOptList
 import org.json.JSONArray
 import org.json.JSONObject
-import org.junit.Assert
-import org.junit.Test
+import org.junit.jupiter.api.Assertions.assertNotNull
+import org.junit.jupiter.api.Assertions.assertNull
+import org.junit.jupiter.api.Assertions.assertTrue
+import org.junit.jupiter.api.Test
 
-class ModelUtilsTest {
+internal class ModelUtilsTest {
+
     @Test
     fun parseModel_Pass_ParseMockedModelByClass() {
         val jsonObject = JSONObject()
 
         // Verify is deserializeModel is able to get the Serializer by the class
         val parsedResult = deserializeModel(jsonObject, MockModelObject::class.java)
-        Assert.assertNotNull(parsedResult)
+        assertNotNull(parsedResult)
     }
 
     @Test
     fun parseOpt_Pass_ParseMockedModel() {
         val jsonObject = JSONObject()
         val parsedResult = deserializeOpt(jsonObject, MockModelObject.SERIALIZER)
-        Assert.assertNotNull(parsedResult)
+        assertNotNull(parsedResult)
     }
 
     @Test
     fun parseOpt_Pass_ParseNull() {
         val parsedResult = deserializeOpt(null, MockModelObject.SERIALIZER)
-        Assert.assertNull(parsedResult)
+        assertNull(parsedResult)
     }
 
     @Test
     fun parseOptList_Pass_ParseMockedModel() {
         val jsonArray = JSONArray()
         val modelList = deserializeOptList(jsonArray, MockModelObject.SERIALIZER)
-        Assert.assertNotNull(modelList)
+        assertNotNull(modelList)
     }
 
     @Test
     fun parseOptList_Pass_ParseNull() {
         val modelList = deserializeOptList(null, MockModelObject.SERIALIZER)
-        Assert.assertNull(modelList)
+        assertNull(modelList)
     }
 
     @Test
     fun serializeOpt_Pass_SerializeMockedModel() {
         val mockModelObject = MockModelObject()
         val jsonObject = serializeOpt(mockModelObject, MockModelObject.SERIALIZER)
-        Assert.assertNotNull(jsonObject)
+        assertNotNull(jsonObject)
     }
 
     @Test
     fun serializeOpt_Pass_SerializeNull() {
         val jsonObject = serializeOpt(null, MockModelObject.SERIALIZER)
-        Assert.assertNull(jsonObject)
+        assertNull(jsonObject)
     }
 
     @Test
@@ -72,13 +75,13 @@ class ModelUtilsTest {
         val modelObjectList: MutableList<MockModelObject> = ArrayList()
         modelObjectList.add(MockModelObject())
         val jsonArray = serializeOptList(modelObjectList, MockModelObject.SERIALIZER)
-        Assert.assertNotNull(jsonArray)
-        Assert.assertTrue(!jsonArray!!.isNull(0))
+        assertNotNull(jsonArray)
+        assertTrue(!jsonArray!!.isNull(0))
     }
 
     @Test
     fun serializeOptList_Pass_SerializeNull() {
         val jsonArray = serializeOptList(null, MockModelObject.SERIALIZER)
-        Assert.assertNull(jsonArray)
+        assertNull(jsonArray)
     }
 }

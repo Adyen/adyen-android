@@ -42,5 +42,5 @@ dependencies {
     implementation libraries.androidx.recyclerview
 
     //Tests
-    testImplementation testLibraries.junit4
+    testImplementation testLibraries.junit5
 }
