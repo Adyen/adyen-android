@@ -29,5 +29,6 @@ dependencies {
     api project(':checkout-core')
 
     //Tests
+    testImplementation testLibraries.json
     testImplementation testLibraries.junit4
 }

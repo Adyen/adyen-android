@@ -49,5 +49,6 @@ dependencies {
     implementation libraries.material
 
     //Tests
+    testImplementation testLibraries.json
     testImplementation testLibraries.junit4
 }
