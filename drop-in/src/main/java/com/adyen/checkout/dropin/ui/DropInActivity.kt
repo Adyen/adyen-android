@@ -120,13 +120,7 @@ class DropInActivity :
             val dropInBinder = binder as? DropInService.DropInBinder ?: return
             dropInService = dropInBinder.getService()
 
-            (dropInService as? SessionDropInServiceInterface)?.initialize(
-                // Get these values from a flow/livedata
-                session = dropInViewModel.session!!,
-                clientKey = dropInViewModel.dropInConfiguration.clientKey,
-                baseUrl = dropInViewModel.dropInConfiguration.environment.baseUrl,
-                shouldFetchPaymentMethods = dropInViewModel.paymentMethodsApiResponse == null,
-            )
+            dropInViewModel.onDropInServiceConnected()
 
             lifecycleScope.launch {
                 repeatOnLifecycle(Lifecycle.State.STARTED) {
@@ -608,23 +602,25 @@ class DropInActivity :
 
     private fun handleEvent(event: DropInActivityEvent) {
         when (event) {
-            is DropInActivityEvent.MakePartialPayment -> {
-                requestPaymentsCall(event.paymentComponentState)
-            }
+            is DropInActivityEvent.MakePartialPayment -> requestPaymentsCall(event.paymentComponentState)
             is DropInActivityEvent.ShowPaymentMethods -> {
                 setLoading(false)
                 showPaymentMethodsDialog()
             }
-            is DropInActivityEvent.CancelOrder -> {
-                requestCancelOrderCall(event.order, event.isDropInCancelledByUser)
-            }
-            is DropInActivityEvent.CancelDropIn -> {
-                terminateWithError(DropIn.ERROR_REASON_USER_CANCELED)
-            }
-            is DropInActivityEvent.NavigateTo -> {
-                loadFragment(event.destination)
-            }
+            is DropInActivityEvent.CancelOrder -> requestCancelOrderCall(event.order, event.isDropInCancelledByUser)
+            is DropInActivityEvent.CancelDropIn -> terminateWithError(DropIn.ERROR_REASON_USER_CANCELED)
+            is DropInActivityEvent.NavigateTo -> loadFragment(event.destination)
+            is DropInActivityEvent.SessionServiceConnected -> onSessionServiceConnected(event)
         }
+    }
+
+    private fun onSessionServiceConnected(event: DropInActivityEvent.SessionServiceConnected) {
+        (dropInService as? SessionDropInServiceInterface)?.initialize(
+            session = event.session,
+            clientKey = event.clientKey,
+            baseUrl = event.baseUrl,
+            shouldFetchPaymentMethods = event.shouldFetchPaymentMethods,
+        )
     }
 
     private fun loadFragment(destination: DropInDestination) {

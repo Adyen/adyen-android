@@ -16,8 +16,10 @@ import com.adyen.checkout.components.model.payments.response.BalanceResult
 import com.adyen.checkout.components.model.payments.response.OrderResponse
 import com.adyen.checkout.core.log.LogUtil
 import com.adyen.checkout.core.log.Logger
+import com.adyen.checkout.sessions.api.SessionService
 import com.adyen.checkout.sessions.model.Session
 import com.adyen.checkout.sessions.repository.SessionRepository
+import kotlinx.coroutines.flow.mapNotNull
 import kotlinx.coroutines.launch
 import org.json.JSONObject
 
@@ -27,11 +29,24 @@ open class SessionDropInService : DropInService(), SessionDropInServiceInterface
     private lateinit var sessionRepository: SessionRepository
 
     override fun initialize(session: Session, clientKey: String, baseUrl: String, shouldFetchPaymentMethods: Boolean) {
-        sessionRepository = SessionRepository(baseUrl = baseUrl, clientKey = clientKey, session = session)
+        val sessionService = SessionService(baseUrl)
+        sessionRepository = SessionRepository(sessionService = sessionService, clientKey = clientKey, session = session)
+
+        launch {
+            sessionRepository.sessionFlow
+                .mapNotNull { it.sessionData }
+                .collect { sendSessionDataChangedResult(it) }
+        }
 
         if (shouldFetchPaymentMethods) {
             setupSession()
         }
+    }
+
+    private fun sendSessionDataChangedResult(sessionData: String) {
+        Logger.d(TAG, "Sending session data changed result - $sessionData")
+        val result = SessionDropInServiceResult.SessionDataChanged(sessionData)
+        emitResult(result)
     }
 
     private fun setupSession() {

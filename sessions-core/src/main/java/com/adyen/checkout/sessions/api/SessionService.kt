@@ -25,7 +25,7 @@ import com.adyen.checkout.sessions.model.setup.SessionSetupResponse
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 
-internal class SessionService(
+class SessionService(
     private val baseUrl: String,
 ) {
 

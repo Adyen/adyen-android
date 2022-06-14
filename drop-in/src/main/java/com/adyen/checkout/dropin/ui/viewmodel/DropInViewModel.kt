@@ -63,13 +63,13 @@ class DropInViewModel(
             savedStateHandle[AMOUNT] = value
         }
 
-    var session: Session?
+    private var session: Session?
         get() = savedStateHandle[SESSION_KEY]
         private set(value) {
             savedStateHandle[SESSION_KEY] = value
         }
 
-    var paymentMethodsApiResponse: PaymentMethodsApiResponse?
+    private var paymentMethodsApiResponse: PaymentMethodsApiResponse?
         get() {
             return savedStateHandle[PAYMENT_METHODS_RESPONSE_KEY]
         }
@@ -165,6 +165,18 @@ class DropInViewModel(
             return
         } else {
             navigateToInitialDestination()
+        }
+    }
+
+    fun onDropInServiceConnected() {
+        session?.let { session ->
+            val event = DropInActivityEvent.SessionServiceConnected(
+                session = session,
+                clientKey = dropInConfiguration.clientKey,
+                baseUrl = dropInConfiguration.environment.baseUrl,
+                shouldFetchPaymentMethods = paymentMethodsApiResponse == null,
+            )
+            sendEvent(event)
         }
     }
 
