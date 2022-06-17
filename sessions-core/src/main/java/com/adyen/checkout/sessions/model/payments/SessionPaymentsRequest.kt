@@ -34,7 +34,7 @@ data class SessionPaymentsRequest(
         @JvmField
         val CREATOR: Parcelable.Creator<SessionPaymentsRequest> = Creator(SessionPaymentsRequest::class.java)
 
-        @JvmStatic
+        @JvmField
         val SERIALIZER: Serializer<SessionPaymentsRequest> = object : Serializer<SessionPaymentsRequest> {
             override fun serialize(modelObject: SessionPaymentsRequest): JSONObject {
                 val paymentComponentJson = PaymentComponentData.SERIALIZER.serialize(modelObject.paymentComponentData)

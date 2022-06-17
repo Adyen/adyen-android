@@ -43,7 +43,7 @@ data class SessionSetupResponse(
         @JvmField
         val CREATOR: Parcelable.Creator<SessionSetupResponse> = Creator(SessionSetupResponse::class.java)
 
-        @JvmStatic
+        @JvmField
         val SERIALIZER: Serializer<SessionSetupResponse> = object : Serializer<SessionSetupResponse> {
             override fun serialize(modelObject: SessionSetupResponse): JSONObject {
                 val jsonObject = JSONObject()

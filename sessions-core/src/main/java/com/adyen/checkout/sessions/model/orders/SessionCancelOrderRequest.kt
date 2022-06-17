@@ -34,7 +34,7 @@ data class SessionCancelOrderRequest(
         @JvmField
         val CREATOR: Parcelable.Creator<SessionCancelOrderRequest> = Creator(SessionCancelOrderRequest::class.java)
 
-        @JvmStatic
+        @JvmField
         val SERIALIZER: Serializer<SessionCancelOrderRequest> = object : Serializer<SessionCancelOrderRequest> {
             override fun serialize(modelObject: SessionCancelOrderRequest): JSONObject {
                 val jsonObject = JSONObject()

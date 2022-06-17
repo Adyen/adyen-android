@@ -30,7 +30,7 @@ data class SessionOrderRequest(
         @JvmField
         val CREATOR: Parcelable.Creator<SessionOrderRequest> = Creator(SessionOrderRequest::class.java)
 
-        @JvmStatic
+        @JvmField
         val SERIALIZER: Serializer<SessionOrderRequest> = object : Serializer<SessionOrderRequest> {
             override fun serialize(modelObject: SessionOrderRequest): JSONObject {
                 val jsonObject = JSONObject()

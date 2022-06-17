@@ -41,6 +41,7 @@ data class TransactionInfoModel(
         @JvmField
         val CREATOR = Creator(TransactionInfoModel::class.java)
 
+        @JvmField
         val SERIALIZER: Serializer<TransactionInfoModel> = object : Serializer<TransactionInfoModel> {
             override fun serialize(modelObject: TransactionInfoModel): JSONObject {
                 return try {

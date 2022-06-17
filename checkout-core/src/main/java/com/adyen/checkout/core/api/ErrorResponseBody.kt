@@ -37,7 +37,7 @@ data class ErrorResponseBody(
         @JvmField
         val CREATOR: Parcelable.Creator<ErrorResponseBody> = Creator(ErrorResponseBody::class.java)
 
-        @JvmStatic
+        @JvmField
         val SERIALIZER: Serializer<ErrorResponseBody> = object : Serializer<ErrorResponseBody> {
             override fun serialize(modelObject: ErrorResponseBody): JSONObject {
                 val jsonObject = JSONObject()

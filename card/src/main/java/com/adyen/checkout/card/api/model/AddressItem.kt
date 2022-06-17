@@ -33,7 +33,7 @@ data class AddressItem(
         @JvmField
         val CREATOR: Parcelable.Creator<AddressItem> = Creator(AddressItem::class.java)
 
-        @JvmStatic
+        @JvmField
         val SERIALIZER: Serializer<AddressItem> = object : Serializer<AddressItem> {
             override fun serialize(modelObject: AddressItem): JSONObject {
                 val jsonObject = JSONObject()

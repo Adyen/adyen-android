@@ -34,7 +34,7 @@ data class SessionSetupRequest(
         @JvmField
         val CREATOR: Parcelable.Creator<SessionSetupRequest> = Creator(SessionSetupRequest::class.java)
 
-        @JvmStatic
+        @JvmField
         val SERIALIZER: Serializer<SessionSetupRequest> = object : Serializer<SessionSetupRequest> {
             override fun serialize(modelObject: SessionSetupRequest): JSONObject {
                 val jsonObject = JSONObject()
