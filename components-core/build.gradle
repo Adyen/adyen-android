@@ -37,18 +37,17 @@ dependencies {
     api project(':checkout-core')
 
     // Dependencies
-    api "org.jetbrains.kotlinx:kotlinx-coroutines-android:$coroutines_version"
-    api "androidx.fragment:fragment-ktx:$fragment_version"
-    api "androidx.lifecycle:lifecycle-runtime-ktx:$lifecycle_version"
+    api libraries.kotlinCoroutines
+    api libraries.androidx.fragment
+    api libraries.androidx.lifecycle
 
     //Tests
-    testImplementation "junit:junit:$junit_version"
-    testImplementation "org.json:json:$json_version"
-    testImplementation "androidx.arch.core:core-testing:$arch_core_testing_version"
-    testImplementation "org.mockito:mockito-core:$mockito_version"
-    testImplementation "org.robolectric:robolectric:$robolectric_version"
+    testImplementation testLibraries.junit4
+    testImplementation testLibraries.androidx.lifecycle
+    testImplementation testLibraries.mockito
+    testImplementation testLibraries.robolectric
 
-    androidTestImplementation "org.mockito:mockito-android:$mockito_version"
-    androidTestImplementation "androidx.test.ext:junit:$test_ext_version"
-    androidTestImplementation "androidx.test.espresso:espresso-core:$espresso_version"
+    androidTestImplementation testLibraries.androidTest
+    androidTestImplementation testLibraries.mockitoAndroid
+    androidTestImplementation testLibraries.espresso
 }

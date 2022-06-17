@@ -38,10 +38,9 @@ dependencies {
     api project(':ui-core')
 
     // Dependencies
-    implementation "com.google.android.material:material:$material_version"
+    implementation libraries.material
 
     //Tests
-    testImplementation "junit:junit:$junit_version"
-    androidTestImplementation "androidx.test.ext:junit:$test_ext_version"
-    androidTestImplementation "androidx.test.espresso:espresso-core:$espresso_version"
+    testImplementation testLibraries.json
+    testImplementation testLibraries.junit4
 }

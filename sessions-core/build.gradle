@@ -36,19 +36,12 @@ dependencies {
     api project(':components-core')
 
     // Dependencies
-    api "org.jetbrains.kotlinx:kotlinx-coroutines-android:$coroutines_version"
+    api libraries.kotlinCoroutines
 
     //Tests
-    testImplementation "junit:junit:$junit_version"
-    testImplementation "org.json:json:$json_version"
-    testImplementation "androidx.arch.core:core-testing:$arch_core_testing_version"
-    testImplementation "org.jetbrains.kotlinx:kotlinx-coroutines-test:$coroutines_version"
-    testImplementation "org.mockito.kotlin:mockito-kotlin:$mockito_kotlin_version"
-    testImplementation "org.mockito:mockito-inline:$mockito_version"
-    testImplementation "app.cash.turbine:turbine:$turbine_version"
-    testImplementation "org.robolectric:robolectric:$robolectric_version"
-
-    androidTestImplementation "org.mockito:mockito-android:$mockito_version"
-    androidTestImplementation "androidx.test.ext:junit:$test_ext_version"
-    androidTestImplementation "androidx.test.espresso:espresso-core:$espresso_version"
+    testImplementation testLibraries.androidx.lifecycle
+    testImplementation testLibraries.junit4
+    testImplementation testLibraries.kotlinCoroutines
+    testImplementation testLibraries.mockito
+    testImplementation testLibraries.robolectric
 }

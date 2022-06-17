@@ -29,8 +29,6 @@ dependencies {
     api project(':checkout-core')
 
     //Tests
-    testImplementation "junit:junit:$junit_version"
-    testImplementation "org.json:json:20201115"
-    androidTestImplementation "androidx.test.ext:junit:$test_ext_version"
-    androidTestImplementation "androidx.test.espresso:espresso-core:$espresso_version"
+    testImplementation testLibraries.json
+    testImplementation testLibraries.junit4
 }

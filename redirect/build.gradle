@@ -40,11 +40,9 @@ dependencies {
     api project(':ui-core')
 
     // Dependencies
-    implementation "androidx.browser:browser:$browser_version"
+    implementation libraries.androidx.browser
 
     //Tests
-    testImplementation "junit:junit:$junit_version"
-    testImplementation "org.robolectric:robolectric:$robolectric_version"
-    androidTestImplementation "androidx.test.ext:junit:$test_ext_version"
-    androidTestImplementation "androidx.test.espresso:espresso-core:$espresso_version"
+    testImplementation testLibraries.junit4
+    testImplementation testLibraries.robolectric
 }
