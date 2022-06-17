@@ -14,10 +14,12 @@ import com.adyen.checkout.components.model.payments.request.OrderRequest
 import com.adyen.checkout.components.model.payments.request.PaymentMethodDetails
 import com.adyen.checkout.components.model.payments.response.BalanceResult
 import com.adyen.checkout.components.model.payments.response.OrderResponse
+import com.adyen.checkout.components.status.api.StatusResponseUtils.RESULT_REFUSED
 import com.adyen.checkout.core.log.LogUtil
 import com.adyen.checkout.core.log.Logger
 import com.adyen.checkout.sessions.api.SessionService
 import com.adyen.checkout.sessions.model.Session
+import com.adyen.checkout.sessions.model.payments.SessionPaymentsResponse
 import com.adyen.checkout.sessions.repository.SessionRepository
 import kotlinx.coroutines.flow.mapNotNull
 import kotlinx.coroutines.launch
@@ -79,6 +81,7 @@ open class SessionDropInService : DropInService(), SessionDropInServiceInterface
                     onSuccess = { response ->
                         val action = response.action
                         val result = when {
+                            response.isRefused() -> DropInServiceResult.Error(reason = response.resultCode)
                             action != null -> DropInServiceResult.Action(action)
                             response.order.isNonFullyPaid() -> {
                                 updatePaymentMethods(response.order)
@@ -95,6 +98,8 @@ open class SessionDropInService : DropInService(), SessionDropInServiceInterface
                 )
         }
     }
+
+    private fun SessionPaymentsResponse.isRefused() = resultCode.equals(other = RESULT_REFUSED, ignoreCase = true)
 
     private fun OrderResponse?.isNonFullyPaid() = (this?.remainingAmount?.value ?: 0) > 0
 
