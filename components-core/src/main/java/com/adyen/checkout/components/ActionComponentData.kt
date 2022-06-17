@@ -31,6 +31,7 @@ data class ActionComponentData(
         @JvmField
         val CREATOR = Creator(ActionComponentData::class.java)
 
+        @JvmField
         val SERIALIZER: Serializer<ActionComponentData> = object : Serializer<ActionComponentData> {
             override fun serialize(modelObject: ActionComponentData): JSONObject {
                 return try {

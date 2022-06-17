@@ -37,7 +37,7 @@ data class SubmitFingerprintResponse(
         @JvmField
         val CREATOR: Parcelable.Creator<SubmitFingerprintResponse> = Creator(SubmitFingerprintResponse::class.java)
 
-        @JvmStatic
+        @JvmField
         val SERIALIZER: Serializer<SubmitFingerprintResponse> = object : Serializer<SubmitFingerprintResponse> {
             override fun serialize(modelObject: SubmitFingerprintResponse): JSONObject {
                 val jsonObject = JSONObject()

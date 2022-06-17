@@ -41,7 +41,7 @@ data class Brand(
         @JvmField
         val CREATOR: Parcelable.Creator<Brand> = Creator(Brand::class.java)
 
-        @JvmStatic
+        @JvmField
         val SERIALIZER: Serializer<Brand> = object : Serializer<Brand> {
             override fun serialize(modelObject: Brand): JSONObject {
                 val jsonObject = JSONObject()

@@ -26,6 +26,7 @@ abstract class Action : ModelObject() {
         const val PAYMENT_DATA = "paymentData"
         const val PAYMENT_METHOD_TYPE = "paymentMethodType"
 
+        @JvmField
         val SERIALIZER: Serializer<Action> = object : Serializer<Action> {
             override fun serialize(modelObject: Action): JSONObject {
                 val actionType = modelObject.type

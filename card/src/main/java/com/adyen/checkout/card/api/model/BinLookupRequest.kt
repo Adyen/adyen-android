@@ -36,7 +36,7 @@ data class BinLookupRequest(
         @JvmField
         val CREATOR: Parcelable.Creator<BinLookupRequest> = Creator(BinLookupRequest::class.java)
 
-        @JvmStatic
+        @JvmField
         val SERIALIZER: Serializer<BinLookupRequest> = object : Serializer<BinLookupRequest> {
             override fun serialize(modelObject: BinLookupRequest): JSONObject {
                 val jsonObject = JSONObject()

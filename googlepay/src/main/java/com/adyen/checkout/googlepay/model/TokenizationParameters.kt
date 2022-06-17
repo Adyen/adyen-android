@@ -31,6 +31,7 @@ data class TokenizationParameters(
         @JvmField
         val CREATOR = Creator(TokenizationParameters::class.java)
 
+        @JvmField
         val SERIALIZER: Serializer<TokenizationParameters> = object : Serializer<TokenizationParameters> {
             override fun serialize(modelObject: TokenizationParameters): JSONObject {
                 return try {

@@ -37,6 +37,7 @@ data class SdkAction<SdkDataT : SdkData>(
         @JvmField
         val CREATOR = Creator(SdkAction::class.java)
 
+        @JvmField
         val SERIALIZER: Serializer<SdkAction<*>> = object : Serializer<SdkAction<*>> {
             override fun serialize(modelObject: SdkAction<*>): JSONObject {
                 val sdkDataSerializer = getSdkDataSerializer(modelObject.paymentMethodType)

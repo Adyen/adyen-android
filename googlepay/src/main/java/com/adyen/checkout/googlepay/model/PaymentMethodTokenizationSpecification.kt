@@ -31,6 +31,7 @@ data class PaymentMethodTokenizationSpecification(
         @JvmField
         val CREATOR = Creator(PaymentMethodTokenizationSpecification::class.java)
 
+        @JvmField
         val SERIALIZER: Serializer<PaymentMethodTokenizationSpecification> =
             object : Serializer<PaymentMethodTokenizationSpecification> {
                 override fun serialize(modelObject: PaymentMethodTokenizationSpecification): JSONObject {

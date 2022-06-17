@@ -31,7 +31,7 @@ internal data class PublicKeyResponse(
         @JvmField
         val CREATOR: Parcelable.Creator<PublicKeyResponse> = Creator(PublicKeyResponse::class.java)
 
-        @JvmStatic
+        @JvmField
         val SERIALIZER: Serializer<PublicKeyResponse> = object : Serializer<PublicKeyResponse> {
             override fun serialize(modelObject: PublicKeyResponse): JSONObject {
                 val jsonObject = JSONObject()

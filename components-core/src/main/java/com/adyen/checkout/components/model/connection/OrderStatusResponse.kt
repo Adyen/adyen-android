@@ -34,7 +34,7 @@ data class OrderStatusResponse(
         @JvmField
         val CREATOR: Parcelable.Creator<OrderStatusResponse> = Creator(OrderStatusResponse::class.java)
 
-        @JvmStatic
+        @JvmField
         val SERIALIZER: Serializer<OrderStatusResponse> = object : Serializer<OrderStatusResponse> {
             override fun serialize(modelObject: OrderStatusResponse): JSONObject {
                 val jsonObject = JSONObject()

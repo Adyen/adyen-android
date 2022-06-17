@@ -32,6 +32,7 @@ data class ShippingAddressParameters(
         @JvmField
         val CREATOR = Creator(ShippingAddressParameters::class.java)
 
+        @JvmField
         val SERIALIZER: Serializer<ShippingAddressParameters> = object : Serializer<ShippingAddressParameters> {
             override fun serialize(modelObject: ShippingAddressParameters): JSONObject {
                 return try {
