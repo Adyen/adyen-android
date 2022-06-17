@@ -169,7 +169,10 @@ class DropInViewModel(
     }
 
     fun onDropInServiceConnected() {
-        session?.let { session ->
+        val session = this.session
+        if (session == null) {
+            Logger.d(TAG, "Session is null")
+        } else {
             val event = DropInActivityEvent.SessionServiceConnected(
                 session = session,
                 clientKey = dropInConfiguration.clientKey,
