@@ -123,14 +123,14 @@ ext {
             "org.junit.jupiter:junit-jupiter-api:$junit_jupiter_version",
             "org.junit.jupiter:junit-jupiter-engine:$junit_jupiter_version",
             "org.junit.jupiter:junit-jupiter-params:$junit_jupiter_version",
-            "org.junit.jupiter:junit-vintage-engine:$junit_jupiter_version",
+            "org.junit.vintage:junit-vintage-engine:$junit_jupiter_version",
         ],
         kotlinCoroutines: [
             "org.jetbrains.kotlinx:kotlinx-coroutines-test:$coroutines_version",
             "app.cash.turbine:turbine:$turbine_version"
         ],
         mockito         : [
-            "org.mockito:mockito-core:$mockito_version",
+            "org.mockito:mockito-junit-jupiter:$mockito_version",
             "org.mockito:mockito-inline:$mockito_version",
             "org.mockito.kotlin:mockito-kotlin:$mockito_kotlin_version"
         ],

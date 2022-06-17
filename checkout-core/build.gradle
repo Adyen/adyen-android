@@ -39,7 +39,7 @@ dependencies {
 
     //Tests
     testImplementation testLibraries.json
-    testImplementation testLibraries.junit4
+    testImplementation testLibraries.junit5
     androidTestImplementation testLibraries.androidTest
     androidTestImplementation testLibraries.espresso
 }

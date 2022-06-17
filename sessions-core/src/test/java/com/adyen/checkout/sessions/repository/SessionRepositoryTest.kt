@@ -28,30 +28,28 @@ import kotlinx.coroutines.test.UnconfinedTestDispatcher
 import kotlinx.coroutines.test.resetMain
 import kotlinx.coroutines.test.runTest
 import kotlinx.coroutines.test.setMain
-import org.junit.After
-import org.junit.Assert.assertEquals
-import org.junit.Before
-import org.junit.Rule
-import org.junit.Test
+import org.junit.jupiter.api.AfterEach
+import org.junit.jupiter.api.Assertions.assertEquals
+import org.junit.jupiter.api.BeforeEach
+import org.junit.jupiter.api.DisplayName
+import org.junit.jupiter.api.Nested
+import org.junit.jupiter.api.Test
+import org.junit.jupiter.api.extension.ExtendWith
 import org.mockito.Mock
-import org.mockito.junit.MockitoJUnit
-import org.mockito.junit.MockitoRule
+import org.mockito.junit.jupiter.MockitoExtension
 import org.mockito.kotlin.any
 import org.mockito.kotlin.doReturn
 import org.mockito.kotlin.whenever
 
 @OptIn(ExperimentalCoroutinesApi::class)
-internal class SessionRepositoryTest {
-
-    @get:Rule
-    val mockitoRule: MockitoRule = MockitoJUnit.rule()
-
-    @Mock
-    private lateinit var sessionService: SessionService
+@ExtendWith(MockitoExtension::class)
+internal class SessionRepositoryTest(
+    @Mock private val sessionService: SessionService,
+) {
 
     private lateinit var sessionRepository: SessionRepository
 
-    @Before
+    @BeforeEach
     fun before() {
         val initialSession = Session("id", "sessionData")
         sessionRepository = SessionRepository(sessionService, "someclientkey", initialSession)
@@ -59,127 +57,132 @@ internal class SessionRepositoryTest {
         Dispatchers.setMain(UnconfinedTestDispatcher())
     }
 
-    @After
+    @AfterEach
     fun after() {
         Dispatchers.resetMain()
     }
 
-    @Test
-    fun `whenever session setup is successful, then session data is updated`() = runTest {
-        whenever(sessionService.setupSession(any(), any(), any())) doReturn SessionSetupResponse(
-            id = "id",
-            sessionData = "updatedSessionData",
-            amount = null,
-            expiresAt = "expiresAt",
-            paymentMethods = null,
-            returnUrl = "returnUrl",
-        )
+    @Nested
+    @DisplayName("Session data is updated when")
+    inner class SessionDataUpdateTest {
 
-        sessionRepository.sessionFlow.test {
-            sessionRepository.setupSession(null)
+        @Test
+        fun `session setup is successful`() = runTest {
+            whenever(sessionService.setupSession(any(), any(), any())) doReturn SessionSetupResponse(
+                id = "id",
+                sessionData = "updatedSessionData",
+                amount = null,
+                expiresAt = "expiresAt",
+                paymentMethods = null,
+                returnUrl = "returnUrl",
+            )
 
-            skipItems(1)
+            sessionRepository.sessionFlow.test {
+                sessionRepository.setupSession(null)
 
-            assertEquals("updatedSessionData", awaitItem().sessionData)
+                skipItems(1)
 
-            cancelAndConsumeRemainingEvents()
+                assertEquals("updatedSessionData", awaitItem().sessionData)
+
+                cancelAndConsumeRemainingEvents()
+            }
         }
-    }
 
-    @Test
-    fun `whenever submit payment is successful, then session data is updated`() = runTest {
-        whenever(sessionService.submitPayment(any(), any(), any())) doReturn SessionPaymentsResponse(
-            sessionData = "updatedSessionData",
-            status = null,
-            resultCode = null,
-            action = null,
-            order = null,
-        )
+        @Test
+        fun `submit payment is successful`() = runTest {
+            whenever(sessionService.submitPayment(any(), any(), any())) doReturn SessionPaymentsResponse(
+                sessionData = "updatedSessionData",
+                status = null,
+                resultCode = null,
+                action = null,
+                order = null,
+            )
 
-        sessionRepository.sessionFlow.test {
-            sessionRepository.submitPayment(PaymentComponentData())
+            sessionRepository.sessionFlow.test {
+                sessionRepository.submitPayment(PaymentComponentData())
 
-            skipItems(1)
+                skipItems(1)
 
-            assertEquals("updatedSessionData", awaitItem().sessionData)
+                assertEquals("updatedSessionData", awaitItem().sessionData)
 
-            cancelAndConsumeRemainingEvents()
+                cancelAndConsumeRemainingEvents()
+            }
         }
-    }
 
-    @Test
-    fun `whenever submit details is successful, then session data is updated`() = runTest {
-        whenever(sessionService.submitDetails(any(), any(), any())) doReturn SessionDetailsResponse(
-            sessionData = "updatedSessionData",
-            status = null,
-            resultCode = null,
-            action = null,
-        )
+        @Test
+        fun `submit details is successful`() = runTest {
+            whenever(sessionService.submitDetails(any(), any(), any())) doReturn SessionDetailsResponse(
+                sessionData = "updatedSessionData",
+                status = null,
+                resultCode = null,
+                action = null,
+            )
 
-        sessionRepository.sessionFlow.test {
-            sessionRepository.submitDetails(ActionComponentData())
+            sessionRepository.sessionFlow.test {
+                sessionRepository.submitDetails(ActionComponentData())
 
-            skipItems(1)
+                skipItems(1)
 
-            assertEquals("updatedSessionData", awaitItem().sessionData)
+                assertEquals("updatedSessionData", awaitItem().sessionData)
 
-            cancelAndConsumeRemainingEvents()
+                cancelAndConsumeRemainingEvents()
+            }
         }
-    }
 
-    @Test
-    fun `whenever check balance is successful, then session data is updated`() = runTest {
-        whenever(sessionService.checkBalance(any(), any(), any())) doReturn SessionBalanceResponse(
-            sessionData = "updatedSessionData",
-            balance = Amount.EMPTY,
-            transactionLimit = null,
-        )
+        @Test
+        fun `check balance is successful`() = runTest {
+            whenever(sessionService.checkBalance(any(), any(), any())) doReturn SessionBalanceResponse(
+                sessionData = "updatedSessionData",
+                balance = Amount.EMPTY,
+                transactionLimit = null,
+            )
 
-        sessionRepository.sessionFlow.test {
-            sessionRepository.checkBalance(CardPaymentMethod())
+            sessionRepository.sessionFlow.test {
+                sessionRepository.checkBalance(CardPaymentMethod())
 
-            skipItems(1)
+                skipItems(1)
 
-            assertEquals("updatedSessionData", awaitItem().sessionData)
+                assertEquals("updatedSessionData", awaitItem().sessionData)
 
-            cancelAndConsumeRemainingEvents()
+                cancelAndConsumeRemainingEvents()
+            }
         }
-    }
 
-    @Test
-    fun `whenever create order is successful, then session data is updated`() = runTest {
-        whenever(sessionService.createOrder(any(), any(), any())) doReturn SessionOrderResponse(
-            sessionData = "updatedSessionData",
-            orderData = "",
-            pspReference = "",
-        )
+        @Test
+        fun `create order is successful`() = runTest {
+            whenever(sessionService.createOrder(any(), any(), any())) doReturn SessionOrderResponse(
+                sessionData = "updatedSessionData",
+                orderData = "",
+                pspReference = "",
+            )
 
-        sessionRepository.sessionFlow.test {
-            sessionRepository.createOrder()
+            sessionRepository.sessionFlow.test {
+                sessionRepository.createOrder()
 
-            skipItems(1)
+                skipItems(1)
 
-            assertEquals("updatedSessionData", awaitItem().sessionData)
+                assertEquals("updatedSessionData", awaitItem().sessionData)
 
-            cancelAndConsumeRemainingEvents()
+                cancelAndConsumeRemainingEvents()
+            }
         }
-    }
 
-    @Test
-    fun `whenever cancel order is successful, then session data is updated`() = runTest {
-        whenever(sessionService.cancelOrder(any(), any(), any())) doReturn SessionCancelOrderResponse(
-            sessionData = "updatedSessionData",
-            status = null,
-        )
+        @Test
+        fun `cancel order is successful`() = runTest {
+            whenever(sessionService.cancelOrder(any(), any(), any())) doReturn SessionCancelOrderResponse(
+                sessionData = "updatedSessionData",
+                status = null,
+            )
 
-        sessionRepository.sessionFlow.test {
-            sessionRepository.cancelOrder(OrderRequest("", ""))
+            sessionRepository.sessionFlow.test {
+                sessionRepository.cancelOrder(OrderRequest("", ""))
 
-            skipItems(1)
+                skipItems(1)
 
-            assertEquals("updatedSessionData", awaitItem().sessionData)
+                assertEquals("updatedSessionData", awaitItem().sessionData)
 
-            cancelAndConsumeRemainingEvents()
+                cancelAndConsumeRemainingEvents()
+            }
         }
     }
 }

@@ -37,5 +37,5 @@ dependencies {
     api project(':ui-core')
 
     //Tests
-    testImplementation testLibraries.junit4
+    testImplementation testLibraries.junit5
 }

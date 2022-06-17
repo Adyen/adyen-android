@@ -8,9 +8,11 @@
 
 package com.adyen.checkout.core.util
 
-import org.junit.Test
+import org.junit.jupiter.api.Assertions.assertEquals
+import org.junit.jupiter.api.Test
 
-class StringUtilTest {
+
+internal class StringUtilTest {
 
     @Test
     fun `when value has spaces and specified character - remove all spaces and character`() {
@@ -18,6 +20,6 @@ class StringUtilTest {
         val expected = "123456"
         val result = StringUtil.normalize(initial, '0')
         println("Result: $result")
-        assert(result == expected)
+        assertEquals(expected, result)
     }
 }

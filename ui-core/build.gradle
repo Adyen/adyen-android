@@ -42,5 +42,5 @@ dependencies {
     implementation libraries.material
 
     //Tests
-    testImplementation testLibraries.junit4
+    testImplementation testLibraries.junit5
 }

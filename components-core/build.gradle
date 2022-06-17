@@ -42,7 +42,7 @@ dependencies {
     api libraries.androidx.lifecycle
 
     //Tests
-    testImplementation testLibraries.junit4
+    testImplementation testLibraries.junit5
     testImplementation testLibraries.androidx.lifecycle
     testImplementation testLibraries.mockito
     testImplementation testLibraries.robolectric

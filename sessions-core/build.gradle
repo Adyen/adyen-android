@@ -40,7 +40,7 @@ dependencies {
 
     //Tests
     testImplementation testLibraries.androidx.lifecycle
-    testImplementation testLibraries.junit4
+    testImplementation testLibraries.junit5
     testImplementation testLibraries.kotlinCoroutines
     testImplementation testLibraries.mockito
     testImplementation testLibraries.robolectric

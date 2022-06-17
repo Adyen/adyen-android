@@ -41,5 +41,5 @@ dependencies {
     api libraries.adyen3ds2
 
     //Tests
-    testImplementation testLibraries.junit4
+    testImplementation testLibraries.junit5
 }

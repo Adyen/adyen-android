@@ -11,17 +11,18 @@ import com.adyen.checkout.cse.ResourceReader.readJsonFileFromResource
 import com.adyen.checkout.cse.ValidationUtils.isPublicKeyValid
 import org.json.JSONException
 import org.json.JSONObject
-import org.junit.Assert
-import org.junit.Before
-import org.junit.Test
-import java.io.IOException
+import org.junit.jupiter.api.Assertions.assertFalse
+import org.junit.jupiter.api.Assertions.assertTrue
+import org.junit.jupiter.api.BeforeEach
+import org.junit.jupiter.api.Test
 
-class ValidationUtilsTest {
-    var publicKeys: JSONObject? = null
-    @Before
-    @Throws(IOException::class, JSONException::class)
+internal class ValidationUtilsTest {
+
+    private var publicKeys: JSONObject? = null
+
+    @BeforeEach
     fun init() {
-        val classLoader = this.javaClass.classLoader
+        val classLoader = requireNotNull(this.javaClass.classLoader)
         publicKeys = readJsonFileFromResource(PUBLIC_KEYS_JSON, classLoader)
     }
 
@@ -40,7 +41,7 @@ class ValidationUtilsTest {
     fun isPublicKeyValid_CorrectPattern_ExpectValid() {
         val validKeys = getPublicKeysArrayFromJson(KEY_VALID_PUBLIC_KEYS)
         for (validKey in validKeys) {
-            Assert.assertTrue(isPublicKeyValid(validKey))
+            assertTrue(isPublicKeyValid(validKey))
         }
     }
 
@@ -48,7 +49,7 @@ class ValidationUtilsTest {
     fun isPublicKeyValid_IncorrectPattern_ExpectInvalid() {
         val invalidKeys = getPublicKeysArrayFromJson(KEY_INVALID_PUBLIC_KEYS)
         for (invalidKey in invalidKeys) {
-            Assert.assertFalse(isPublicKeyValid(invalidKey))
+            assertFalse(isPublicKeyValid(invalidKey))
         }
     }
 
