@@ -17,6 +17,7 @@ import com.adyen.checkout.components.model.payments.request.PaymentMethodDetails
 import com.adyen.checkout.components.model.payments.response.Action
 import com.adyen.checkout.components.model.payments.response.BalanceResult
 import com.adyen.checkout.components.model.payments.response.OrderResponse
+import com.adyen.checkout.components.status.api.StatusResponseUtils
 import com.adyen.checkout.core.log.LogUtil
 import com.adyen.checkout.core.log.Logger
 import com.adyen.checkout.core.model.getStringOrNull
@@ -129,6 +130,10 @@ class ExampleFullAsyncDropInService : DropInService() {
                 Logger.e(TAG, "FAILED")
                 DropInServiceResult.Error(reason = "IOException")
             }
+            isRefused(jsonResponse) -> {
+                Logger.d(TAG, "Refused")
+                DropInServiceResult.Error(reason = "Refused")
+            }
             isAction(jsonResponse) -> {
                 Logger.d(TAG, "Received action")
                 val action = Action.SERIALIZER.deserialize(jsonResponse.getJSONObject("action"))
@@ -150,6 +155,11 @@ class ExampleFullAsyncDropInService : DropInService() {
                 DropInServiceResult.Finished(resultCode)
             }
         }
+    }
+
+    private fun isRefused(jsonResponse: JSONObject): Boolean {
+        return jsonResponse.getStringOrNull("resultCode")
+            .equals(other = StatusResponseUtils.RESULT_REFUSED, ignoreCase = true)
     }
 
     private fun isAction(jsonResponse: JSONObject): Boolean {
