@@ -26,7 +26,7 @@ sealed class DropInActivityEvent {
         val clientKey: String,
         val baseUrl: String,
         val shouldFetchPaymentMethods: Boolean,
-    ): DropInActivityEvent()
+    ) : DropInActivityEvent()
 }
 
 sealed class DropInDestination {
