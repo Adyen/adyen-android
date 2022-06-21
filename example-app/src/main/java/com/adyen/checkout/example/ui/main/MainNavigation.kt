@@ -15,4 +15,5 @@ internal sealed class MainNavigation {
     object Card : MainNavigation()
     data class DropIn(val paymentMethodsApiResponse: PaymentMethodsApiResponse) : MainNavigation()
     data class DropInWithSession(val session: Session) : MainNavigation()
+    data class DropInWithCustomSession(val session: Session) : MainNavigation()
 }

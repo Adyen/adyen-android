@@ -145,6 +145,14 @@ class MainActivity : AppCompatActivity(), DropInCallback {
                     this,
                     dropInLauncher,
                     navigation.session,
+                    checkoutConfigurationProvider.getDropInConfiguration(this)
+                )
+            }
+            is MainNavigation.DropInWithCustomSession -> {
+                DropIn.startPaymentWithSession(
+                    this,
+                    dropInLauncher,
+                    navigation.session,
                     checkoutConfigurationProvider.getDropInConfiguration(this),
                     ExampleSessionsDropInService::class.java
                 )
