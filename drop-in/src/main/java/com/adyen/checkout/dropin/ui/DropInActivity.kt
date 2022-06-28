@@ -125,7 +125,6 @@ class DropInActivity :
             lifecycleScope.launch {
                 repeatOnLifecycle(Lifecycle.State.STARTED) {
                     dropInService?.observeResult {
-                        Logger.d(TAG, "handle called baby")
                         handleDropInServiceResult(it)
                     }
                 }
