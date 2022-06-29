@@ -34,7 +34,7 @@ open class SessionDropInService : DropInService(), SessionDropInServiceInterface
     var isFlowTakenOver: Boolean = false
         private set
 
-    override fun initialize(
+    final override fun initialize(
         session: Session,
         clientKey: String,
         baseUrl: String,
@@ -120,43 +120,30 @@ open class SessionDropInService : DropInService(), SessionDropInServiceInterface
         return false
     }
 
-    override fun onPaymentsCallRequested(
+    final override fun onPaymentsCallRequested(
         paymentComponentState: PaymentComponentState<*>,
         paymentComponentJson: JSONObject
     ) {
-        val callWasHandled = makePaymentsCallMerchant(paymentComponentState, paymentComponentJson)
-        if (!callWasHandled) {
-            if (isFlowTakenOver) {
-                throw CheckoutException("")
-            } else {
-                makePaymentsCallInternal(paymentComponentState)
-            }
-        } else {
-            if (!isFlowTakenOver) {
-                isFlowTakenOver = true
-                sendFlowTakenOverUpdatedResult(isFlowTakenOver)
-            }
-        }
+        checkIfCallWasHandled(
+            merchantCall = { makePaymentsCallMerchant(paymentComponentState, paymentComponentJson) },
+            internalCall = { makePaymentsCallInternal(paymentComponentState) },
+            merchantMethodName = ::makePaymentsCallMerchant.name
+        )
     }
 
     private fun SessionPaymentsResponse.isRefused() = resultCode.equals(other = RESULT_REFUSED, ignoreCase = true)
 
     private fun OrderResponse?.isNonFullyPaid() = (this?.remainingAmount?.value ?: 0) > 0
 
-    override fun onDetailsCallRequested(actionComponentData: ActionComponentData, actionComponentJson: JSONObject) {
-        val callWasHandled = makeDetailsCallMerchant(actionComponentData, actionComponentJson)
-        if (!callWasHandled) {
-            if (isFlowTakenOver) {
-                throw CheckoutException("")
-            } else {
-                makeDetailsCallInternal(actionComponentData)
-            }
-        } else {
-            if (!isFlowTakenOver) {
-                isFlowTakenOver = true
-                sendFlowTakenOverUpdatedResult(isFlowTakenOver)
-            }
-        }
+    final override fun onDetailsCallRequested(
+        actionComponentData: ActionComponentData,
+        actionComponentJson: JSONObject
+    ) {
+        checkIfCallWasHandled(
+            merchantCall = { makeDetailsCallMerchant(actionComponentData, actionComponentJson) },
+            internalCall = { makeDetailsCallInternal(actionComponentData) },
+            merchantMethodName = ::makeDetailsCallMerchant.name
+        )
     }
 
     private fun makeDetailsCallInternal(actionComponentData: ActionComponentData) {
@@ -185,20 +172,12 @@ open class SessionDropInService : DropInService(), SessionDropInServiceInterface
         return false
     }
 
-    override fun checkBalance(paymentMethodData: PaymentMethodDetails) {
-        val callWasHandled = makeCheckBalanceCallMerchant(paymentMethodData)
-        if (!callWasHandled) {
-            if (isFlowTakenOver) {
-                throw CheckoutException("")
-            } else {
-                makeCheckBalanceCallInternal(paymentMethodData)
-            }
-        } else {
-            if (!isFlowTakenOver) {
-                isFlowTakenOver = true
-                sendFlowTakenOverUpdatedResult(isFlowTakenOver)
-            }
-        }
+    final override fun checkBalance(paymentMethodData: PaymentMethodDetails) {
+        checkIfCallWasHandled(
+            merchantCall = { makeCheckBalanceCallMerchant(paymentMethodData) },
+            internalCall = { makeCheckBalanceCallInternal(paymentMethodData) },
+            merchantMethodName = ::makeCheckBalanceCallMerchant.name
+        )
     }
 
     private fun makeCheckBalanceCallInternal(paymentMethodData: PaymentMethodDetails) {
@@ -226,20 +205,12 @@ open class SessionDropInService : DropInService(), SessionDropInServiceInterface
         return false
     }
 
-    override fun createOrder() {
-        val callWasHandled = makeCreateOrderMerchant()
-        if (!callWasHandled) {
-            if (isFlowTakenOver) {
-                throw CheckoutException("")
-            } else {
-                makeCreateOrderInternal()
-            }
-        } else {
-            if (!isFlowTakenOver) {
-                isFlowTakenOver = true
-                sendFlowTakenOverUpdatedResult(isFlowTakenOver)
-            }
-        }
+    final override fun createOrder() {
+        checkIfCallWasHandled(
+            merchantCall = { makeCreateOrderMerchant() },
+            internalCall = { makeCreateOrderInternal() },
+            merchantMethodName = ::makeCreateOrderMerchant.name
+        )
     }
 
     protected open fun makeCreateOrderMerchant(): Boolean {
@@ -269,20 +240,12 @@ open class SessionDropInService : DropInService(), SessionDropInServiceInterface
         }
     }
 
-    override fun cancelOrder(order: OrderRequest, shouldUpdatePaymentMethods: Boolean) {
-        val callWasHandled = makeCancelOrderCallMerchant(order, shouldUpdatePaymentMethods)
-        if (!callWasHandled) {
-            if (isFlowTakenOver) {
-                throw CheckoutException("")
-            } else {
-                makeCancelOrderCallInternal(order, shouldUpdatePaymentMethods)
-            }
-        } else {
-            if (!isFlowTakenOver) {
-                isFlowTakenOver = true
-                sendFlowTakenOverUpdatedResult(isFlowTakenOver)
-            }
-        }
+    final override fun cancelOrder(order: OrderRequest, shouldUpdatePaymentMethods: Boolean) {
+        checkIfCallWasHandled(
+            merchantCall = { makeCancelOrderCallMerchant(order, shouldUpdatePaymentMethods) },
+            internalCall = { makeCancelOrderCallInternal(order, shouldUpdatePaymentMethods) },
+            merchantMethodName = ::makeCancelOrderCallMerchant.name
+        )
     }
 
     private fun makeCancelOrderCallInternal(order: OrderRequest, shouldUpdatePaymentMethods: Boolean) {
@@ -328,6 +291,29 @@ open class SessionDropInService : DropInService(), SessionDropInServiceInterface
                         sendResult(result)
                     }
                 )
+        }
+    }
+
+    private fun checkIfCallWasHandled(
+        merchantCall: () -> Boolean,
+        internalCall: () -> Unit,
+        merchantMethodName: String
+    ) {
+        val callWasHandled = merchantCall()
+        if (!callWasHandled) {
+            if (isFlowTakenOver) {
+                throw CheckoutException(
+                    "Sessions flow was already taken over in a" +
+                        " previous call, $merchantMethodName should be implemented"
+                )
+            } else {
+                internalCall()
+            }
+        } else {
+            if (!isFlowTakenOver) {
+                isFlowTakenOver = true
+                sendFlowTakenOverUpdatedResult(isFlowTakenOver)
+            }
         }
     }
 
