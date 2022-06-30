@@ -26,6 +26,7 @@ import com.adyen.checkout.dropin.DropInResult
 import com.adyen.checkout.example.R
 import com.adyen.checkout.example.databinding.ActivityMainBinding
 import com.adyen.checkout.example.service.ExampleFullAsyncDropInService
+import com.adyen.checkout.example.service.ExampleSessionsDropInService
 import com.adyen.checkout.example.ui.card.CardActivity
 import com.adyen.checkout.example.ui.configuration.CheckoutConfigurationProvider
 import com.adyen.checkout.example.ui.configuration.ConfigurationActivity
@@ -145,6 +146,15 @@ class MainActivity : AppCompatActivity(), DropInCallback {
                     dropInLauncher,
                     navigation.session,
                     checkoutConfigurationProvider.getDropInConfiguration(this)
+                )
+            }
+            is MainNavigation.DropInWithCustomSession -> {
+                DropIn.startPaymentWithSession(
+                    this,
+                    dropInLauncher,
+                    navigation.session,
+                    checkoutConfigurationProvider.getDropInConfiguration(this),
+                    ExampleSessionsDropInService::class.java
                 )
             }
         }

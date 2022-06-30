@@ -44,6 +44,7 @@ internal class MainViewModel @Inject constructor(
             ComponentItem.Entry.Card -> _navigateTo.tryEmit(MainNavigation.Card)
             ComponentItem.Entry.DropIn -> startDropInFlow()
             ComponentItem.Entry.DropInWithSession -> startSessionDropInFlow()
+            ComponentItem.Entry.DropInWithCustomSession -> startCustomSessionDropInFlow()
         }
     }
 
@@ -70,6 +71,21 @@ internal class MainViewModel @Inject constructor(
             if (session != null) {
                 _viewState.emit(MainViewState.Result(ComponentItemProvider.getComponentItems()))
                 _navigateTo.emit(MainNavigation.DropInWithSession(session))
+            } else {
+                _viewState.emit(MainViewState.Error("Something went wrong while starting session"))
+            }
+        }
+    }
+
+    private fun startCustomSessionDropInFlow() {
+        viewModelScope.launch {
+            _viewState.emit(MainViewState.Loading)
+
+            val session = getSession()
+
+            if (session != null) {
+                _viewState.emit(MainViewState.Result(ComponentItemProvider.getComponentItems()))
+                _navigateTo.emit(MainNavigation.DropInWithCustomSession(session))
             } else {
                 _viewState.emit(MainViewState.Error("Something went wrong while starting session"))
             }

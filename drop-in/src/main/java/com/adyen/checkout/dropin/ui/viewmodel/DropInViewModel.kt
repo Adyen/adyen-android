@@ -69,6 +69,12 @@ class DropInViewModel(
             savedStateHandle[SESSION_KEY] = value
         }
 
+    private var isSessionsFlowTakenOver: Boolean
+        get() = savedStateHandle[IS_SESSIONS_FLOW_TAKEN_OVER_KEY] ?: false
+        private set(value) {
+            savedStateHandle[IS_SESSIONS_FLOW_TAKEN_OVER_KEY] = value
+        }
+
     private var paymentMethodsApiResponse: PaymentMethodsApiResponse?
         get() {
             return savedStateHandle[PAYMENT_METHODS_RESPONSE_KEY]
@@ -178,6 +184,7 @@ class DropInViewModel(
                 clientKey = dropInConfiguration.clientKey,
                 baseUrl = dropInConfiguration.environment.baseUrl,
                 shouldFetchPaymentMethods = paymentMethodsApiResponse == null,
+                isFlowTakenOver = isSessionsFlowTakenOver
             )
             sendEvent(event)
         }
@@ -194,6 +201,10 @@ class DropInViewModel(
 
     fun onSessionDataChanged(sessionData: String) {
         session = session?.copy(sessionData = sessionData)
+    }
+
+    fun onSessionTakenOverUpdated(isFlowTakenOver: Boolean) {
+        isSessionsFlowTakenOver = isFlowTakenOver
     }
 
     private fun navigateToInitialDestination() {
@@ -424,6 +435,7 @@ class DropInViewModel(
 
         private const val PAYMENT_METHODS_RESPONSE_KEY = "PAYMENT_METHODS_RESPONSE_KEY"
         private const val SESSION_KEY = "SESSION_KEY"
+        private const val IS_SESSIONS_FLOW_TAKEN_OVER_KEY = "IS_SESSIONS_FLOW_TAKEN_OVER_KEY"
         private const val DROP_IN_CONFIGURATION_KEY = "DROP_IN_CONFIGURATION_KEY"
         private const val DROP_IN_SERVICE_KEY = "DROP_IN_SERVICE_KEY"
         private const val IS_WAITING_FOR_RESULT_KEY = "IS_WAITING_FOR_RESULT_KEY"
