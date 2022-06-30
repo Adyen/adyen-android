@@ -32,7 +32,7 @@ import com.adyen.checkout.core.log.Logger
  * Component should not be instantiated directly. Instead use the PROVIDER object.
  *
  * @param savedStateHandle      [SavedStateHandle]
- * @param paymentMethodDelegate [PaymentMethodDelegate]
+ * @param paymentMethodDelegate [PaymentMethodDelegateOld]
  * @param configuration         [ConfigurationT]
  */
 @Suppress("TooManyFunctions")
@@ -43,7 +43,7 @@ abstract class BasePaymentComponent<
     ComponentStateT : PaymentComponentState<out PaymentMethodDetails>
     >(
     savedStateHandle: SavedStateHandle,
-    paymentMethodDelegate: PaymentMethodDelegate,
+    paymentMethodDelegate: PaymentMethodDelegateOld,
     configuration: ConfigurationT
 ) : PaymentComponentViewModel<ConfigurationT, ComponentStateT>(savedStateHandle, paymentMethodDelegate, configuration),
     ViewableComponent<OutputDataT, ConfigurationT, ComponentStateT> {

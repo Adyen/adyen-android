@@ -8,7 +8,7 @@
 
 package com.adyen.checkout.components.base
 
-class PaymentMethodDelegateTest : PaymentMethodDelegate {
+class PaymentMethodDelegateTest : PaymentMethodDelegateOld {
     override fun getPaymentMethodType(): String {
         return ""
     }

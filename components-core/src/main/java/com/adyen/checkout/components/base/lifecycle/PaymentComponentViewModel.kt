@@ -12,7 +12,7 @@ import androidx.lifecycle.ViewModel
 import com.adyen.checkout.components.PaymentComponent
 import com.adyen.checkout.components.PaymentComponentState
 import com.adyen.checkout.components.base.Configuration
-import com.adyen.checkout.components.base.PaymentMethodDelegate
+import com.adyen.checkout.components.base.PaymentMethodDelegateOld
 import com.adyen.checkout.components.model.payments.request.PaymentMethodDetails
 
 /**
@@ -26,6 +26,6 @@ abstract class PaymentComponentViewModel<
     ComponentStateT : PaymentComponentState<out PaymentMethodDetails>>(
     val savedStateHandle: SavedStateHandle,
     @JvmField
-    protected val paymentMethodDelegate: PaymentMethodDelegate,
+    protected val paymentMethodDelegate: PaymentMethodDelegateOld,
     override val configuration: ConfigurationT
 ) : ViewModel(), PaymentComponent<ComponentStateT, ConfigurationT>
