@@ -1,7 +1,6 @@
 package com.adyen.checkout.redirect
 
 import android.app.Activity
-import android.content.ActivityNotFoundException
 import android.net.Uri
 import com.adyen.checkout.components.model.payments.response.RedirectAction
 import com.adyen.checkout.core.exception.ComponentException
@@ -33,12 +32,7 @@ class RedirectDelegate {
         Logger.d(TAG, "makeRedirect - $url")
         if (!url.isNullOrEmpty()) {
             val redirectUri = Uri.parse(url)
-            val redirectIntent = RedirectUtil.createRedirectIntent(activity, redirectUri)
-            try {
-                activity.startActivity(redirectIntent)
-            } catch (e: ActivityNotFoundException) {
-                throw ComponentException("Redirect to app failed.", e)
-            }
+            RedirectUtil.launchUriRedirect(activity, redirectUri)
         } else {
             throw ComponentException("Redirect URL is empty.")
         }
