@@ -27,7 +27,12 @@ class MBWayComponentProvider : PaymentComponentProvider<MBWayComponent, MBWayCon
     ): MBWayComponent {
         val genericFactory: ViewModelProvider.Factory =
             viewModelFactory(savedStateRegistryOwner, defaultArgs) { savedStateHandle ->
-                MBWayComponent(savedStateHandle, GenericPaymentMethodDelegate(paymentMethod), configuration)
+                MBWayComponent(
+                    savedStateHandle,
+                    GenericPaymentMethodDelegate(paymentMethod),
+                    MBWayDelegate(paymentMethod),
+                    configuration
+                )
             }
         return ViewModelProvider(viewModelStoreOwner, genericFactory).get(MBWayComponent::class.java)
     }

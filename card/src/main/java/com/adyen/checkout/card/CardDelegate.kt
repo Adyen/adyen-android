@@ -13,7 +13,7 @@ import com.adyen.checkout.card.data.CardType
 import com.adyen.checkout.card.data.DetectedCardType
 import com.adyen.checkout.card.data.ExpiryDate
 import com.adyen.checkout.components.base.AddressVisibility
-import com.adyen.checkout.components.base.PaymentMethodDelegate
+import com.adyen.checkout.components.base.PaymentMethodDelegateOld
 import com.adyen.checkout.components.repository.PublicKeyRepository
 import com.adyen.checkout.components.ui.FieldState
 import kotlinx.coroutines.CoroutineScope
@@ -22,7 +22,7 @@ import kotlinx.coroutines.CoroutineScope
 abstract class CardDelegate(
     protected val cardConfiguration: CardConfiguration,
     private val publicKeyRepository: PublicKeyRepository
-) : PaymentMethodDelegate {
+) : PaymentMethodDelegateOld {
 
     protected val noCvcBrands: Set<CardType> = hashSetOf(CardType.BCMC)
 

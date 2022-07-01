@@ -14,7 +14,7 @@ import com.adyen.checkout.components.util.PaymentMethodTypes
 /**
  * A generic delegate for a regular PaymentMethod
  */
-class GenericPaymentMethodDelegate(val paymentMethod: PaymentMethod) : PaymentMethodDelegate {
+class GenericPaymentMethodDelegate(val paymentMethod: PaymentMethod) : PaymentMethodDelegateOld {
     override fun getPaymentMethodType(): String {
         return paymentMethod.type ?: PaymentMethodTypes.UNKNOWN
     }

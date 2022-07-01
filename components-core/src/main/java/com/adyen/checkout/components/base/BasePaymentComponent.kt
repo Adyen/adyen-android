@@ -9,7 +9,6 @@ package com.adyen.checkout.components.base
 
 import android.content.Context
 import android.text.TextUtils
-import androidx.annotation.WorkerThread
 import androidx.lifecycle.LifecycleOwner
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.Observer
@@ -22,9 +21,7 @@ import com.adyen.checkout.components.analytics.AnalyticEvent.Flavor
 import com.adyen.checkout.components.analytics.AnalyticsDispatcher.Companion.dispatchEvent
 import com.adyen.checkout.components.base.lifecycle.PaymentComponentViewModel
 import com.adyen.checkout.components.model.payments.request.PaymentMethodDetails
-import com.adyen.checkout.core.api.ThreadManager
 import com.adyen.checkout.core.exception.CheckoutException
-import com.adyen.checkout.core.exception.ComponentException
 import com.adyen.checkout.core.log.LogUtil.getTag
 import com.adyen.checkout.core.log.Logger
 
@@ -32,7 +29,7 @@ import com.adyen.checkout.core.log.Logger
  * Component should not be instantiated directly. Instead use the PROVIDER object.
  *
  * @param savedStateHandle      [SavedStateHandle]
- * @param paymentMethodDelegate [PaymentMethodDelegate]
+ * @param paymentMethodDelegate [PaymentMethodDelegateOld]
  * @param configuration         [ConfigurationT]
  */
 @Suppress("TooManyFunctions")
@@ -43,7 +40,7 @@ abstract class BasePaymentComponent<
     ComponentStateT : PaymentComponentState<out PaymentMethodDetails>
     >(
     savedStateHandle: SavedStateHandle,
-    paymentMethodDelegate: PaymentMethodDelegate,
+    paymentMethodDelegate: PaymentMethodDelegateOld,
     configuration: ConfigurationT
 ) : PaymentComponentViewModel<ConfigurationT, ComponentStateT>(savedStateHandle, paymentMethodDelegate, configuration),
     ViewableComponent<OutputDataT, ConfigurationT, ComponentStateT> {
@@ -99,7 +96,7 @@ abstract class BasePaymentComponent<
     fun inputDataChanged(inputData: InputDataT) {
         Logger.v(TAG, "inputDataChanged")
         latestInputData = inputData
-        notifyStateChanged(onInputDataChanged(inputData))
+        onInputDataChanged(inputData)
     }
 
     /**
@@ -148,9 +145,8 @@ abstract class BasePaymentComponent<
      * @param inputData The new InputData
      * @return The OutputData after processing.
      */
-    protected abstract fun onInputDataChanged(inputData: InputDataT): OutputDataT
-    @WorkerThread
-    protected abstract fun createComponentState(): ComponentStateT
+    protected abstract fun onInputDataChanged(inputData: InputDataT)
+
     protected fun notifyException(e: CheckoutException) {
         Logger.e(TAG, "notifyException - " + e.message)
         componentErrorLiveData.postValue(ComponentError(e))
@@ -162,11 +158,10 @@ abstract class BasePaymentComponent<
      *
      * @param outputData the new output data
      */
-    protected fun notifyStateChanged(outputData: OutputDataT) {
-        Logger.d(TAG, "notifyStateChanged with OutputData")
+    protected fun notifyOutputDataChanged(outputData: OutputDataT) {
+        Logger.d(TAG, "notifyOutputDataChanged")
         if (outputData != outputLiveData.value) {
             outputLiveData.value = outputData
-            notifyStateChanged()
         } else {
             Logger.d(TAG, "state has not changed")
         }
@@ -176,16 +171,9 @@ abstract class BasePaymentComponent<
      * Asks the component to recreate its state and notify its observers.
      */
     @Suppress("TooGenericExceptionCaught")
-    protected fun notifyStateChanged() {
+    protected fun notifyStateChanged(componentState: ComponentStateT) {
         Logger.d(TAG, "notifyStateChanged")
-        ThreadManager.EXECUTOR.submit {
-            try {
-                paymentComponentStateLiveData.postValue(createComponentState())
-            } catch (e: Exception) {
-                Logger.e(TAG, "notifyStateChanged - error:" + e.message)
-                notifyException(ComponentException("Unexpected error", e))
-            }
-        }
+        paymentComponentStateLiveData.postValue(componentState)
     }
 
     private fun assertSupported(paymentMethodType: String) {
