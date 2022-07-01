@@ -10,10 +10,10 @@ package com.adyen.checkout.bcmc
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.viewModelScope
 import com.adyen.checkout.card.CardValidationMapper
-import com.adyen.checkout.card.util.CardValidationUtils
 import com.adyen.checkout.card.api.model.Brand
 import com.adyen.checkout.card.data.CardType
 import com.adyen.checkout.card.data.ExpiryDate
+import com.adyen.checkout.card.util.CardValidationUtils
 import com.adyen.checkout.components.PaymentComponentProvider
 import com.adyen.checkout.components.PaymentComponentState
 import com.adyen.checkout.components.base.BasePaymentComponent
@@ -63,7 +63,7 @@ class BcmcComponent(
             ).fold(
                 onSuccess = { key ->
                     publicKey = key
-                    notifyStateChanged()
+                    createComponentState()
                 },
                 onFailure = { e ->
                     notifyException(ComponentException("Unable to fetch publicKey.", e))
@@ -72,21 +72,28 @@ class BcmcComponent(
         }
     }
 
-    override fun onInputDataChanged(inputData: BcmcInputData): BcmcOutputData {
+    override fun onInputDataChanged(inputData: BcmcInputData) {
         Logger.v(TAG, "onInputDataChanged")
-        return BcmcOutputData(
-            validateCardNumber(inputData.cardNumber),
-            validateExpiryDate(inputData.expiryDate),
-            inputData.isStorePaymentSelected
+        notifyOutputDataChanged(
+            BcmcOutputData(
+                validateCardNumber(inputData.cardNumber),
+                validateExpiryDate(inputData.expiryDate),
+                inputData.isStorePaymentSelected
+            )
         )
+        createComponentState()
+    }
+
+    private fun createComponentState() {
+        val outputData = outputData
+        notifyStateChanged(createComponentState(outputData))
     }
 
     @SuppressWarnings("ReturnCount")
-    override fun createComponentState(): PaymentComponentState<CardPaymentMethod> {
+    private fun createComponentState(outputData: BcmcOutputData?): PaymentComponentState<CardPaymentMethod> {
         Logger.v(TAG, "createComponentState")
 
         val unencryptedCardBuilder = UnencryptedCard.Builder()
-        val outputData = outputData
         val paymentComponentData = PaymentComponentData<CardPaymentMethod>()
 
         val publicKey = publicKey

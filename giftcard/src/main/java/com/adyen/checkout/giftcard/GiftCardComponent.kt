@@ -61,7 +61,7 @@ class GiftCardComponent(
             ).fold(
                 onSuccess = { key ->
                     publicKey = key
-                    notifyStateChanged()
+                    createComponentState()
                 },
                 onFailure = { e ->
                     notifyException(ComponentException("Unable to fetch publicKey.", e))
@@ -70,15 +70,19 @@ class GiftCardComponent(
         }
     }
 
-    override fun onInputDataChanged(inputData: GiftCardInputData): GiftCardOutputData {
+    override fun onInputDataChanged(inputData: GiftCardInputData) {
         Logger.v(TAG, "onInputDataChanged")
-        return GiftCardOutputData(cardNumber = inputData.cardNumber, pin = inputData.pin)
+        notifyOutputDataChanged(GiftCardOutputData(cardNumber = inputData.cardNumber, pin = inputData.pin))
+        createComponentState()
+    }
+
+    private fun createComponentState() {
+        notifyStateChanged(createComponentState(outputData))
     }
 
     @Suppress("ReturnCount")
-    override fun createComponentState(): GiftCardComponentState {
+    private fun createComponentState(outputData: GiftCardOutputData?): GiftCardComponentState {
         val unencryptedCardBuilder = UnencryptedCard.Builder()
-        val outputData = outputData
         val paymentComponentData = PaymentComponentData<GiftCardPaymentMethod>()
 
         val publicKey = publicKey

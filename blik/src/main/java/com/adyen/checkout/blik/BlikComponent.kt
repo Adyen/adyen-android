@@ -44,14 +44,15 @@ class BlikComponent : BasePaymentComponent<
         return paymentMethodDelegate is GenericPaymentMethodDelegate
     }
 
-    override fun onInputDataChanged(inputData: BlikInputData): BlikOutputData {
+    override fun onInputDataChanged(inputData: BlikInputData) {
         Logger.v(TAG, "onInputDataChanged")
-        return BlikOutputData(inputData.blikCode)
+        notifyOutputDataChanged(BlikOutputData(inputData.blikCode))
+        createComponentState()
     }
 
     override fun getSupportedPaymentMethodTypes(): Array<String> = PAYMENT_METHOD_TYPES
 
-    override fun createComponentState(): PaymentComponentState<BlikPaymentMethod> {
+    private fun createComponentState() {
         val blikOutputData = outputData
         val paymentComponentData = PaymentComponentData<BlikPaymentMethod>()
         val paymentMethod = BlikPaymentMethod()
@@ -66,7 +67,7 @@ class BlikComponent : BasePaymentComponent<
         val isInputValid = paymentMethodDelegate is GenericStoredPaymentDelegate ||
             blikOutputData != null &&
             blikOutputData.isValid
-        return PaymentComponentState(paymentComponentData, isInputValid, true)
+        notifyStateChanged(PaymentComponentState(paymentComponentData, isInputValid, true))
     }
 
     companion object {

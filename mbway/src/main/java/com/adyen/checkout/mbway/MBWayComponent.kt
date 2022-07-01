@@ -34,9 +34,10 @@ class MBWayComponent(
 
     override fun getSupportedPaymentMethodTypes(): Array<String> = PAYMENT_METHOD_TYPES
 
-    override fun onInputDataChanged(inputData: MBWayInputData): MBWayOutputData {
+    override fun onInputDataChanged(inputData: MBWayInputData) {
         Logger.v(TAG, "onInputDataChanged")
-        return MBWayOutputData(getPhoneNumber(inputData))
+        notifyOutputDataChanged(MBWayOutputData(getPhoneNumber(inputData)))
+        createComponentState()
     }
 
     private fun getPhoneNumber(inputData: MBWayInputData): String {
@@ -44,7 +45,7 @@ class MBWayComponent(
         return inputData.countryCode + sanitizedNumber
     }
 
-    override fun createComponentState(): PaymentComponentState<MBWayPaymentMethod> {
+    private fun createComponentState() {
         val paymentComponentData = PaymentComponentData<MBWayPaymentMethod>()
         val paymentMethod = MBWayPaymentMethod().apply {
             type = MBWayPaymentMethod.PAYMENT_METHOD_TYPE
@@ -55,7 +56,7 @@ class MBWayComponent(
             paymentMethod.telephoneNumber = mbWayOutputData.mobilePhoneNumberFieldState.value
         }
         paymentComponentData.paymentMethod = paymentMethod
-        return PaymentComponentState(paymentComponentData, mbWayOutputData?.isValid == true, true)
+        notifyStateChanged(PaymentComponentState(paymentComponentData, mbWayOutputData?.isValid == true, true))
     }
 
     fun getSupportedCountries(): List<String> = SUPPORTED_COUNTRIES

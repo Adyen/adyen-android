@@ -64,12 +64,13 @@ abstract class IssuerListComponent<IssuerListPaymentMethodT : IssuerListPaymentM
         }
     }
 
-    override fun onInputDataChanged(inputData: IssuerListInputData): IssuerListOutputData {
+    override fun onInputDataChanged(inputData: IssuerListInputData) {
         // can also reuse instance if we implement equals properly
-        return IssuerListOutputData(inputData.selectedIssuer)
+        notifyOutputDataChanged(IssuerListOutputData(inputData.selectedIssuer))
+        createComponentState()
     }
 
-    override fun createComponentState(): PaymentComponentState<IssuerListPaymentMethodT> {
+    private fun createComponentState() {
         val issuerListPaymentMethod = instantiateTypedPaymentMethod()
         val selectedIssuer = outputData?.selectedIssuer
         issuerListPaymentMethod.type = paymentMethodDelegate.getPaymentMethodType()
@@ -77,7 +78,7 @@ abstract class IssuerListComponent<IssuerListPaymentMethodT : IssuerListPaymentM
         val isInputValid: Boolean = outputData?.isValid == true
         val paymentComponentData = PaymentComponentData<IssuerListPaymentMethodT>()
         paymentComponentData.paymentMethod = issuerListPaymentMethod
-        return PaymentComponentState(paymentComponentData, isInputValid, true)
+        notifyStateChanged(PaymentComponentState(paymentComponentData, isInputValid, true))
     }
 
     protected abstract fun instantiateTypedPaymentMethod(): IssuerListPaymentMethodT

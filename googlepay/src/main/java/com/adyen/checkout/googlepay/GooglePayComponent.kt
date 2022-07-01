@@ -40,17 +40,29 @@ class GooglePayComponent(
 
     override fun getSupportedPaymentMethodTypes() = PAYMENT_METHOD_TYPES
 
-    override fun onInputDataChanged(inputData: GooglePayInputData): GooglePayOutputData {
-        return GooglePayOutputData(inputData.paymentData ?: throw CheckoutException("paymentData is null"))
+    override fun onInputDataChanged(inputData: GooglePayInputData) {
+        notifyOutputDataChanged(
+            GooglePayOutputData(
+                inputData.paymentData ?: throw CheckoutException("paymentData is null")
+            )
+        )
+        createComponentState()
     }
 
-    override fun createComponentState(): GooglePayComponentState {
+    private fun createComponentState() {
         val outputData = this.outputData ?: throw CheckoutException("outputData is null")
         val paymentMethodType = paymentMethod.type
         val paymentComponentData = PaymentComponentData<GooglePayPaymentMethod>()
         val paymentMethod = GooglePayUtils.createGooglePayPaymentMethod(outputData.paymentData, paymentMethodType)
         paymentComponentData.paymentMethod = paymentMethod
-        return GooglePayComponentState(paymentComponentData, outputData.isValid, true, outputData.paymentData)
+        notifyStateChanged(
+            GooglePayComponentState(
+                paymentComponentData,
+                outputData.isValid,
+                true,
+                outputData.paymentData
+            )
+        )
     }
 
     /**

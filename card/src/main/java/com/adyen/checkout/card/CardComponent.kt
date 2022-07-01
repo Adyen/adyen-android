@@ -89,7 +89,8 @@ class CardComponent private constructor(
                             countryOptions = countryOptions,
                             stateOptions = stateOptions
                         )
-                        notifyStateChanged(newOutputData)
+                        notifyOutputDataChanged(newOutputData)
+                        createComponentState()
                     }
                 }
                 .launchIn(viewModelScope)
@@ -134,7 +135,7 @@ class CardComponent private constructor(
                 .fold(
                     onSuccess = { key ->
                         publicKey = key
-                        notifyStateChanged()
+                        createComponentState()
                     },
                     onFailure = { e ->
                         notifyException(ComponentException("Unable to fetch publicKey.", e))
@@ -149,7 +150,7 @@ class CardComponent private constructor(
         return cardDelegate.requiresInput()
     }
 
-    override fun onInputDataChanged(inputData: CardInputData): CardOutputData {
+    override fun onInputDataChanged(inputData: CardInputData) {
         Logger.v(TAG, "onInputDataChanged")
 
         val detectedCardTypes = cardDelegate.detectCardType(inputData.cardNumber, publicKey, viewModelScope)
@@ -157,28 +158,31 @@ class CardComponent private constructor(
             cardDelegate.requestStateList(inputData.address.country, viewModelScope)
         }
 
-        return makeOutputData(
-            cardNumber = inputData.cardNumber,
-            expiryDate = inputData.expiryDate,
-            securityCode = inputData.securityCode,
-            holderName = inputData.holderName,
-            socialSecurityNumber = inputData.socialSecurityNumber,
-            kcpBirthDateOrTaxNumber = inputData.kcpBirthDateOrTaxNumber,
-            kcpCardPassword = inputData.kcpCardPassword,
-            addressInputModel = inputData.address,
-            isStorePaymentSelected = inputData.isStorePaymentSelected,
-            detectedCardTypes = detectedCardTypes,
-            selectedCardIndex = inputData.selectedCardIndex,
-            selectedInstallmentOption = inputData.installmentOption,
-            countryOptions = AddressFormUtils.markAddressListItemSelected(
-                outputData?.countryOptions.orEmpty(),
-                inputData.address.country
-            ),
-            stateOptions = AddressFormUtils.markAddressListItemSelected(
-                outputData?.stateOptions.orEmpty(),
-                inputData.address.stateOrProvince
+        notifyOutputDataChanged(
+            makeOutputData(
+                cardNumber = inputData.cardNumber,
+                expiryDate = inputData.expiryDate,
+                securityCode = inputData.securityCode,
+                holderName = inputData.holderName,
+                socialSecurityNumber = inputData.socialSecurityNumber,
+                kcpBirthDateOrTaxNumber = inputData.kcpBirthDateOrTaxNumber,
+                kcpCardPassword = inputData.kcpCardPassword,
+                addressInputModel = inputData.address,
+                isStorePaymentSelected = inputData.isStorePaymentSelected,
+                detectedCardTypes = detectedCardTypes,
+                selectedCardIndex = inputData.selectedCardIndex,
+                selectedInstallmentOption = inputData.installmentOption,
+                countryOptions = AddressFormUtils.markAddressListItemSelected(
+                    outputData?.countryOptions.orEmpty(),
+                    inputData.address.country
+                ),
+                stateOptions = AddressFormUtils.markAddressListItemSelected(
+                    outputData?.stateOptions.orEmpty(),
+                    inputData.address.stateOrProvince
+                )
             )
         )
+        createComponentState()
     }
 
     @Suppress("LongParameterList")
@@ -273,7 +277,8 @@ class CardComponent private constructor(
                         countryOptions = countryOptions,
                         stateOptions = AddressFormUtils.initializeStateOptions(it)
                     )
-                    notifyStateChanged(newOutputData)
+                    notifyOutputDataChanged(newOutputData)
+                    createComponentState()
                 }
             }
             .launchIn(viewModelScope)
@@ -308,7 +313,8 @@ class CardComponent private constructor(
                     countryOptions = countryOptions,
                     stateOptions = stateOptions
                 )
-                notifyStateChanged(newOutputData)
+                notifyOutputDataChanged(newOutputData)
+                createComponentState()
             }
         }
     }
@@ -347,26 +353,28 @@ class CardComponent private constructor(
         return FieldState(installmentModel, Validation.Valid)
     }
 
+    private fun createComponentState() {
+        val outputData = outputData ?: return
+        notifyStateChanged(createComponentState(outputData))
+    }
+
     @Suppress("ReturnCount")
-    override fun createComponentState(): CardComponentState {
+    private fun createComponentState(outputData: CardOutputData): CardComponentState {
         Logger.v(TAG, "createComponentState")
 
-        // TODO: 29/01/2021 pass outputData as non null parameter
-        val stateOutputData = outputData ?: throw CheckoutException("Cannot create state with null outputData")
+        val cardNumber = outputData.cardNumberState.value
 
-        val cardNumber = stateOutputData.cardNumberState.value
-
-        val firstCardType = stateOutputData.detectedCardTypes.firstOrNull()?.cardType
+        val firstCardType = outputData.detectedCardTypes.firstOrNull()?.cardType
 
         val binValue = cardNumber.take(BIN_VALUE_LENGTH)
 
         val publicKey = publicKey
 
         // If data is not valid we just return empty object, encryption would fail and we don't pass unencrypted data.
-        if (!stateOutputData.isValid || publicKey == null) {
+        if (!outputData.isValid || publicKey == null) {
             return CardComponentState(
                 paymentComponentData = PaymentComponentData(),
-                isInputValid = stateOutputData.isValid,
+                isInputValid = outputData.isValid,
                 isReady = publicKey != null,
                 cardType = firstCardType,
                 binValue = binValue,
@@ -378,13 +386,13 @@ class CardComponent private constructor(
 
         val encryptedCard: EncryptedCard = try {
             if (!isStoredPaymentMethod()) {
-                unencryptedCardBuilder.setNumber(stateOutputData.cardNumberState.value)
+                unencryptedCardBuilder.setNumber(outputData.cardNumberState.value)
             }
             if (!cardDelegate.isCvcHidden()) {
-                val cvc = stateOutputData.securityCodeState.value
+                val cvc = outputData.securityCodeState.value
                 if (cvc.isNotEmpty()) unencryptedCardBuilder.setCvc(cvc)
             }
-            val expiryDateResult = stateOutputData.expiryDateState.value
+            val expiryDateResult = outputData.expiryDateState.value
             if (expiryDateResult != ExpiryDate.EMPTY_DATE) {
                 unencryptedCardBuilder.setExpiryMonth(expiryDateResult.expiryMonth.toString())
                 unencryptedCardBuilder.setExpiryYear(expiryDateResult.expiryYear.toString())
@@ -405,7 +413,7 @@ class CardComponent private constructor(
 
         return mapComponentState(
             encryptedCard,
-            stateOutputData,
+            outputData,
             cardNumber,
             firstCardType,
             binValue

@@ -25,19 +25,22 @@ class BacsDirectDebitComponent(
 
     override fun getSupportedPaymentMethodTypes(): Array<String> = PAYMENT_METHOD_TYPES
 
-    override fun onInputDataChanged(inputData: BacsDirectDebitInputData): BacsDirectDebitOutputData {
-        return BacsDirectDebitOutputData(
-            holderNameState = BacsDirectDebitValidationUtils.validateHolderName(inputData.holderName),
-            bankAccountNumberState = BacsDirectDebitValidationUtils
-                .validateBankAccountNumber(inputData.bankAccountNumber),
-            sortCodeState = BacsDirectDebitValidationUtils.validateSortCode(inputData.sortCode),
-            shopperEmailState = BacsDirectDebitValidationUtils.validateShopperEmail(inputData.shopperEmail),
-            isAmountConsentChecked = inputData.isAmountConsentChecked,
-            isAccountConsentChecked = inputData.isAccountConsentChecked
+    override fun onInputDataChanged(inputData: BacsDirectDebitInputData) {
+        notifyOutputDataChanged(
+            BacsDirectDebitOutputData(
+                holderNameState = BacsDirectDebitValidationUtils.validateHolderName(inputData.holderName),
+                bankAccountNumberState = BacsDirectDebitValidationUtils
+                    .validateBankAccountNumber(inputData.bankAccountNumber),
+                sortCodeState = BacsDirectDebitValidationUtils.validateSortCode(inputData.sortCode),
+                shopperEmailState = BacsDirectDebitValidationUtils.validateShopperEmail(inputData.shopperEmail),
+                isAmountConsentChecked = inputData.isAmountConsentChecked,
+                isAccountConsentChecked = inputData.isAccountConsentChecked
+            )
         )
+        createComponentState()
     }
 
-    override fun createComponentState(): BacsDirectDebitComponentState {
+    private fun createComponentState() {
         val paymentComponentData = PaymentComponentData<BacsDirectDebitPaymentMethod>()
         val bacsDirectDebitPaymentMethod = BacsDirectDebitPaymentMethod().apply {
             type = BacsDirectDebitPaymentMethod.PAYMENT_METHOD_TYPE
@@ -51,22 +54,24 @@ class BacsDirectDebitComponent(
             paymentMethod = bacsDirectDebitPaymentMethod
         }
 
-        return BacsDirectDebitComponentState(
-            paymentComponentData = paymentComponentData,
-            isInputValid = outputData?.isValid ?: false,
-            isReady = true,
-            mode = latestInputData?.mode ?: BacsDirectDebitMode.INPUT
+        notifyStateChanged(
+            BacsDirectDebitComponentState(
+                paymentComponentData = paymentComponentData,
+                isInputValid = outputData?.isValid ?: false,
+                isReady = true,
+                mode = latestInputData?.mode ?: BacsDirectDebitMode.INPUT
+            )
         )
     }
 
     fun setInputMode() {
         latestInputData?.mode = BacsDirectDebitMode.INPUT
-        notifyStateChanged()
+        createComponentState()
     }
 
     fun setConfirmationMode() {
         latestInputData?.mode = BacsDirectDebitMode.CONFIRMATION
-        notifyStateChanged()
+        createComponentState()
     }
 
     companion object {

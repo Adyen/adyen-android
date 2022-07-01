@@ -30,12 +30,13 @@ class SepaComponent(
 
     override fun getSupportedPaymentMethodTypes(): Array<String> = PAYMENT_METHOD_TYPES
 
-    override fun onInputDataChanged(inputData: SepaInputData): SepaOutputData {
+    override fun onInputDataChanged(inputData: SepaInputData) {
         Logger.v(TAG, "onInputDataChanged")
-        return SepaOutputData(inputData.name, inputData.iban)
+        notifyOutputDataChanged(SepaOutputData(inputData.name, inputData.iban))
+        createComponentState()
     }
 
-    override fun createComponentState(): PaymentComponentState<SepaPaymentMethod> {
+    private fun createComponentState() {
         val sepaOutputData = outputData
         val paymentComponentData = PaymentComponentData<SepaPaymentMethod>()
         val paymentMethod = SepaPaymentMethod()
@@ -45,7 +46,13 @@ class SepaComponent(
             paymentMethod.iban = sepaOutputData.ibanNumberField.value
         }
         paymentComponentData.paymentMethod = paymentMethod
-        return PaymentComponentState(paymentComponentData, sepaOutputData != null && sepaOutputData.isValid, true)
+        notifyStateChanged(
+            PaymentComponentState(
+                paymentComponentData,
+                sepaOutputData != null && sepaOutputData.isValid,
+                true
+            )
+        )
     }
 
     companion object {
