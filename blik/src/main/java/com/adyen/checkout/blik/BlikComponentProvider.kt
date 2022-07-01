@@ -33,6 +33,7 @@ class BlikComponentProvider : StoredPaymentComponentProvider<BlikComponent, Blik
                 BlikComponent(
                     savedStateHandle = savedStateHandle,
                     paymentMethodDelegate = GenericPaymentMethodDelegate(paymentMethod),
+                    newBlikDelegate = NewBlikDelegate(paymentMethod),
                     configuration = configuration,
                 )
             }
@@ -51,6 +52,7 @@ class BlikComponentProvider : StoredPaymentComponentProvider<BlikComponent, Blik
                 BlikComponent(
                     savedStateHandle = savedStateHandle,
                     storedPaymentDelegate = GenericStoredPaymentDelegate(storedPaymentMethod),
+                    storedBlikDelegate = StoredBlikDelegate(storedPaymentMethod),
                     configuration = configuration,
                 )
             }

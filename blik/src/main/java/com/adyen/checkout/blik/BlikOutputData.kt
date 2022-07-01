@@ -21,14 +21,16 @@ class BlikOutputData(blikCode: String) : OutputData {
 
     private fun getBlikCodeValidation(blikCode: String): Validation {
         try {
-            blikCode.toInt()
+            if (blikCode.isNotEmpty()) blikCode.toInt()
         } catch (e: NumberFormatException) {
             Logger.e(TAG, "Failed to parse blik code to Integer", e)
             return Validation.Invalid(R.string.checkout_blik_code_not_valid)
         }
         return if (blikCode.length == BLIK_CODE_LENGTH) {
             Validation.Valid
-        } else Validation.Invalid(R.string.checkout_blik_code_not_valid)
+        } else {
+            Validation.Invalid(R.string.checkout_blik_code_not_valid)
+        }
     }
 
     companion object {
