@@ -8,55 +8,55 @@
 package com.adyen.checkout.mbway
 
 import androidx.lifecycle.SavedStateHandle
+import androidx.lifecycle.viewModelScope
 import com.adyen.checkout.components.PaymentComponentProvider
 import com.adyen.checkout.components.PaymentComponentState
 import com.adyen.checkout.components.base.BasePaymentComponent
 import com.adyen.checkout.components.base.GenericPaymentMethodDelegate
 import com.adyen.checkout.components.model.payments.request.MBWayPaymentMethod
-import com.adyen.checkout.components.model.payments.request.PaymentComponentData
 import com.adyen.checkout.components.util.PaymentMethodTypes
 import com.adyen.checkout.core.log.LogUtil
-import com.adyen.checkout.core.log.Logger
+import kotlinx.coroutines.flow.filterNotNull
+import kotlinx.coroutines.flow.launchIn
+import kotlinx.coroutines.flow.onEach
 
 /**
  * Component should not be instantiated directly. Instead use the PROVIDER object.
  *
  * @param paymentMethodDelegate [GenericPaymentMethodDelegate]
+ * @param mbWayDelegate [MBWayDelegate]
  * @param configuration [MBWayConfiguration]
  */
 class MBWayComponent(
     savedStateHandle: SavedStateHandle,
     paymentMethodDelegate: GenericPaymentMethodDelegate,
+    private val mbWayDelegate: MBWayDelegate,
     configuration: MBWayConfiguration
 ) :
     BasePaymentComponent<MBWayConfiguration, MBWayInputData, MBWayOutputData,
         PaymentComponentState<MBWayPaymentMethod>>(savedStateHandle, paymentMethodDelegate, configuration) {
 
+    init {
+        observeOutputData()
+        observeComponentState()
+    }
+
     override fun getSupportedPaymentMethodTypes(): Array<String> = PAYMENT_METHOD_TYPES
 
     override fun onInputDataChanged(inputData: MBWayInputData) {
-        Logger.v(TAG, "onInputDataChanged")
-        notifyOutputDataChanged(MBWayOutputData(getPhoneNumber(inputData)))
-        createComponentState()
+        mbWayDelegate.onInputDataChanged(inputData)
     }
 
-    private fun getPhoneNumber(inputData: MBWayInputData): String {
-        val sanitizedNumber = inputData.localPhoneNumber.trimStart('0')
-        return inputData.countryCode + sanitizedNumber
+    private fun observeOutputData() {
+        mbWayDelegate.outputDataFlow.filterNotNull().onEach {
+            notifyOutputDataChanged(it)
+        }.launchIn(viewModelScope)
     }
 
-    private fun createComponentState() {
-        val paymentComponentData = PaymentComponentData<MBWayPaymentMethod>()
-        val paymentMethod = MBWayPaymentMethod().apply {
-            type = MBWayPaymentMethod.PAYMENT_METHOD_TYPE
-        }
-
-        val mbWayOutputData = outputData
-        if (mbWayOutputData != null) {
-            paymentMethod.telephoneNumber = mbWayOutputData.mobilePhoneNumberFieldState.value
-        }
-        paymentComponentData.paymentMethod = paymentMethod
-        notifyStateChanged(PaymentComponentState(paymentComponentData, mbWayOutputData?.isValid == true, true))
+    private fun observeComponentState() {
+        mbWayDelegate.componentStateFlow.filterNotNull().onEach {
+            notifyStateChanged(it)
+        }.launchIn(viewModelScope)
     }
 
     fun getSupportedCountries(): List<String> = SUPPORTED_COUNTRIES
