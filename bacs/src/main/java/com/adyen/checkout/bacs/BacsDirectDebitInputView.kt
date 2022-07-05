@@ -41,8 +41,6 @@ class BacsDirectDebitInputView @JvmOverloads constructor(
     private val binding: BacsDirectDebitInputViewBinding =
         BacsDirectDebitInputViewBinding.inflate(LayoutInflater.from(context), this)
 
-    private val mBacsDirectDebitInputData = BacsDirectDebitInputData()
-
     init {
         orientation = VERTICAL
         val padding = resources.getDimension(R.dimen.standard_margin).toInt()
@@ -133,13 +131,13 @@ class BacsDirectDebitInputView @JvmOverloads constructor(
     }
 
     private fun notifyInputDataChanged() {
-        component.inputDataChanged(mBacsDirectDebitInputData)
+        component.notifyInputDataChanged()
     }
 
     private fun initHolderNameInput() {
         val holderNameEditText = binding.editTextHolderName as? AdyenTextInputEditText
         holderNameEditText?.setOnChangeListener {
-            mBacsDirectDebitInputData.holderName = it.toString()
+            component.inputData.holderName = it.toString()
             notifyInputDataChanged()
             binding.textInputLayoutHolderName.error = null
         }
@@ -156,7 +154,7 @@ class BacsDirectDebitInputView @JvmOverloads constructor(
     private fun initBankAccountNumberInput() {
         val bankAccountNumberEditText = binding.editTextBankAccountNumber as? AdyenTextInputEditText
         bankAccountNumberEditText?.setOnChangeListener {
-            mBacsDirectDebitInputData.bankAccountNumber = it.toString()
+            component.inputData.bankAccountNumber = it.toString()
             notifyInputDataChanged()
             binding.textInputLayoutBankAccountNumber.error = null
         }
@@ -174,7 +172,7 @@ class BacsDirectDebitInputView @JvmOverloads constructor(
     private fun initSortCodeInput() {
         val sortCodeEditText = binding.editTextSortCode as? AdyenTextInputEditText
         sortCodeEditText?.setOnChangeListener {
-            mBacsDirectDebitInputData.sortCode = it.toString()
+            component.inputData.sortCode = it.toString()
             notifyInputDataChanged()
             binding.textInputLayoutSortCode.error = null
         }
@@ -191,7 +189,7 @@ class BacsDirectDebitInputView @JvmOverloads constructor(
     private fun initShopperEmailInput() {
         val shopperEmailEditText = binding.editTextShopperEmail as? AdyenTextInputEditText
         shopperEmailEditText?.setOnChangeListener {
-            mBacsDirectDebitInputData.shopperEmail = it.toString()
+            component.inputData.shopperEmail = it.toString()
             notifyInputDataChanged()
             binding.textInputLayoutShopperEmail.error = null
         }
@@ -207,12 +205,12 @@ class BacsDirectDebitInputView @JvmOverloads constructor(
 
     private fun initConsentSwitches() {
         binding.switchConsentAmount.setOnCheckedChangeListener { _, isChecked ->
-            mBacsDirectDebitInputData.isAmountConsentChecked = isChecked
+            component.inputData.isAmountConsentChecked = isChecked
             notifyInputDataChanged()
         }
 
         binding.switchConsentAccount.setOnCheckedChangeListener { _, isChecked ->
-            mBacsDirectDebitInputData.isAccountConsentChecked = isChecked
+            component.inputData.isAccountConsentChecked = isChecked
             notifyInputDataChanged()
         }
     }
@@ -227,7 +225,7 @@ class BacsDirectDebitInputView @JvmOverloads constructor(
     }
 
     private fun updateInputData(outputData: BacsDirectDebitOutputData) {
-        mBacsDirectDebitInputData.apply {
+        component.inputData.apply {
             holderName = outputData.holderNameState.value
             bankAccountNumber = outputData.bankAccountNumberState.value
             sortCode = outputData.sortCodeState.value

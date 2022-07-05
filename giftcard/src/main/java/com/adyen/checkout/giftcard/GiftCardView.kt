@@ -30,8 +30,6 @@ class GiftCardView :
 
     private val binding: GiftcardViewBinding = GiftcardViewBinding.inflate(LayoutInflater.from(context), this)
 
-    private var giftCardInputData = GiftCardInputData()
-
     constructor(context: Context) : super(context) {
         init()
     }
@@ -63,7 +61,7 @@ class GiftCardView :
 
     override fun initView() {
         binding.editTextGiftcardNumber.setOnChangeListener {
-            giftCardInputData.cardNumber = binding.editTextGiftcardNumber.rawValue
+            component.inputData.cardNumber = binding.editTextGiftcardNumber.rawValue
             notifyInputDataChanged()
             binding.textInputLayoutGiftcardNumber.error = null
         }
@@ -78,7 +76,7 @@ class GiftCardView :
         }
 
         binding.editTextGiftcardPin.setOnChangeListener { editable: Editable ->
-            giftCardInputData.pin = editable.toString()
+            component.inputData.pin = editable.toString()
             notifyInputDataChanged()
             binding.textInputLayoutGiftcardPin.error = null
         }
@@ -130,6 +128,6 @@ class GiftCardView :
     }
 
     private fun notifyInputDataChanged() {
-        component.inputDataChanged(giftCardInputData)
+        component.notifyInputDataChanged()
     }
 }

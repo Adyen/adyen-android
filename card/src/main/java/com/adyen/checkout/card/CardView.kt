@@ -247,7 +247,7 @@ class CardView @JvmOverloads constructor(
     }
 
     private fun notifyInputDataChanged() {
-        component.inputDataChanged(component.inputData)
+        component.notifyInputDataChanged()
     }
 
     private fun onCardNumberValidated(cardOutputData: CardOutputData) {

@@ -49,6 +49,8 @@ class GiftCardComponent(
 
     private var publicKey: String? = null
 
+    override var inputData: GiftCardInputData = GiftCardInputData()
+
     init {
         fetchPublicKey()
     }

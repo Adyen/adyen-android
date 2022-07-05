@@ -11,6 +11,7 @@ package com.adyen.checkout.card.ui
 import android.content.Context
 import android.util.AttributeSet
 import android.view.LayoutInflater
+import android.view.View.OnFocusChangeListener
 import android.widget.AdapterView
 import android.widget.AutoCompleteTextView
 import android.widget.LinearLayout
@@ -393,7 +394,7 @@ class AddressFormInput @JvmOverloads constructor(
     }
 
     private fun notifyInputDataChanged() {
-        component.inputDataChanged(component.inputData)
+        component.notifyInputDataChanged()
     }
 
     /**

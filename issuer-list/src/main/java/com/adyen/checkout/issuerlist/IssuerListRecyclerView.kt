@@ -42,7 +42,6 @@ abstract class IssuerListRecyclerView<
 
     private lateinit var issuersRecyclerView: RecyclerView
     private lateinit var issuersAdapter: IssuerListRecyclerAdapter
-    private val idealInputData = IssuerListInputData()
 
     // Regular View constructor
     init {
@@ -97,8 +96,8 @@ abstract class IssuerListRecyclerView<
 
     override fun onItemClicked(position: Int) {
         Logger.d(TAG, "onItemClicked - $position")
-        idealInputData.selectedIssuer = issuersAdapter.getIssuerAt(position)
-        component.inputDataChanged(idealInputData)
+        component.inputData.selectedIssuer = issuersAdapter.getIssuerAt(position)
+        component.notifyInputDataChanged()
     }
 
     companion object {

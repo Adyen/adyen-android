@@ -35,10 +35,9 @@ class BlikComponent : BasePaymentComponent<
         savedStateHandle: SavedStateHandle,
         storedPaymentDelegate: GenericStoredPaymentDelegate,
         configuration: BlikConfiguration
-    ) : super(savedStateHandle, storedPaymentDelegate, configuration) {
-        // TODO: 09/12/2020 move this logic to base component, maybe create the InputData from the delegate?
-        inputDataChanged(BlikInputData())
-    }
+    ) : super(savedStateHandle, storedPaymentDelegate, configuration)
+
+    override var inputData: BlikInputData = BlikInputData()
 
     override fun requiresInput(): Boolean {
         return paymentMethodDelegate is GenericPaymentMethodDelegate

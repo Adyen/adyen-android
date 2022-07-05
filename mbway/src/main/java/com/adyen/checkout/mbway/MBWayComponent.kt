@@ -41,6 +41,8 @@ class MBWayComponent(
         observeComponentState()
     }
 
+    override var inputData: MBWayInputData = MBWayInputData()
+
     override fun getSupportedPaymentMethodTypes(): Array<String> = PAYMENT_METHOD_TYPES
 
     override fun onInputDataChanged(inputData: MBWayInputData) {
