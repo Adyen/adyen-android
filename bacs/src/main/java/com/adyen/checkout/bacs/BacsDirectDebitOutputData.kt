@@ -11,7 +11,7 @@ package com.adyen.checkout.bacs
 import com.adyen.checkout.components.base.OutputData
 import com.adyen.checkout.components.ui.FieldState
 
-class BacsDirectDebitOutputData(
+data class BacsDirectDebitOutputData(
     val holderNameState: FieldState<String>,
     val bankAccountNumberState: FieldState<String>,
     val sortCodeState: FieldState<String>,
