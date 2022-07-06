@@ -27,7 +27,12 @@ class BacsComponentProvider : PaymentComponentProvider<BacsDirectDebitComponent,
     ): BacsDirectDebitComponent {
         val genericFactory: ViewModelProvider.Factory =
             viewModelFactory(savedStateRegistryOwner, defaultArgs) { savedStateHandle ->
-                BacsDirectDebitComponent(savedStateHandle, GenericPaymentMethodDelegate(paymentMethod), configuration)
+                BacsDirectDebitComponent(
+                    savedStateHandle,
+                    GenericPaymentMethodDelegate(paymentMethod),
+                    DefaultBacsDirectDebitDelegate(paymentMethod),
+                    configuration
+                )
             }
         return ViewModelProvider(viewModelStoreOwner, genericFactory).get(BacsDirectDebitComponent::class.java)
     }

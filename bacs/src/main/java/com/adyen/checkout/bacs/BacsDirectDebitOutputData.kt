@@ -17,7 +17,8 @@ class BacsDirectDebitOutputData(
     val sortCodeState: FieldState<String>,
     val shopperEmailState: FieldState<String>,
     val isAmountConsentChecked: Boolean,
-    val isAccountConsentChecked: Boolean
+    val isAccountConsentChecked: Boolean,
+    val mode: BacsDirectDebitMode,
 ) : OutputData {
 
     override val isValid: Boolean
