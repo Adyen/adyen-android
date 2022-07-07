@@ -61,6 +61,9 @@ class Environment(private val internalUrl: URL) : Parcelable {
         @JvmField
         val INDIA: Environment = Environment(URL("https://checkoutshopper-live-in.adyen.com/checkoutshopper/"))
 
+        @JvmField
+        val APSE: Environment = Environment(URL("https://checkoutshopper-live-apse.adyen.com/checkoutshopper/"))
+
         @Deprecated(
             "Use the same live environment as your back end instead. You can find that value in your Customer Area."
         )

@@ -18,6 +18,7 @@ object ValidationUtils {
     private const val CLIENT_KEY_LIVE_PREFIX = "live_"
 
     private val LIVE_ENVIRONMENTS = listOf(
+        Environment.APSE,
         Environment.AUSTRALIA,
         Environment.EUROPE,
         Environment.INDIA,
