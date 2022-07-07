@@ -29,6 +29,8 @@ public final class Environment implements Parcelable {
     public static final Environment EUROPE;
     public static final Environment UNITED_STATES;
     public static final Environment AUSTRALIA;
+    public static final Environment INDIA;
+    public static final Environment APSE;
 
     /**
      * @deprecated Use the same live environment as your back end instead. You can find that value in your Customer Area.
@@ -54,6 +56,8 @@ public final class Environment implements Parcelable {
             EUROPE = new Environment(new URL("https://checkoutshopper-live.adyen.com/checkoutshopper/"));
             UNITED_STATES = new Environment(new URL("https://checkoutshopper-live-us.adyen.com/checkoutshopper/"));
             AUSTRALIA = new Environment(new URL("https://checkoutshopper-live-au.adyen.com/checkoutshopper/"));
+            INDIA = new Environment(new URL("https://checkoutshopper-live-in.adyen.com/checkoutshopper/"));
+            APSE = new Environment(new URL("https://checkoutshopper-live-apse.adyen.com/checkoutshopper/"));
             LIVE = EUROPE;
         } catch (MalformedURLException e) {
             throw new CheckoutException("Failed to parse Environment URL.", e);

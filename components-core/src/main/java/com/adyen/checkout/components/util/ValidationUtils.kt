@@ -6,7 +6,7 @@ import java.util.regex.Pattern
 object ValidationUtils {
 
     private const val EMAIL_REGEX = "^[\\w\\.-]+@([\\w\\-]+\\.)+[A-Z]{2,4}$"
-    private val EMAIL_PATTERN = Pattern.compile(ValidationUtils.EMAIL_REGEX, Pattern.CASE_INSENSITIVE)
+    private val EMAIL_PATTERN = Pattern.compile(EMAIL_REGEX, Pattern.CASE_INSENSITIVE)
 
     private const val PHONE_REGEX = "^\\D*(\\d\\D*){9,14}$"
     private val PHONE_PATTERN = Pattern.compile(PHONE_REGEX)
@@ -16,6 +16,13 @@ object ValidationUtils {
 
     private const val CLIENT_KEY_TEST_PREFIX = "test_"
     private const val CLIENT_KEY_LIVE_PREFIX = "live_"
+
+    private val LIVE_ENVIRONMENTS = listOf(
+        Environment.AUSTRALIA,
+        Environment.EUROPE,
+        Environment.INDIA,
+        Environment.UNITED_STATES,
+    )
 
     /**
      * Check if phone number is valid.
@@ -56,9 +63,7 @@ object ValidationUtils {
      */
     fun doesClientKeyMatchEnvironment(clientKey: String, environment: Environment): Boolean {
         val isTestEnvironment = environment == Environment.TEST
-        val isLiveEnvironment = environment == Environment.EUROPE ||
-            environment == Environment.AUSTRALIA ||
-            environment == Environment.UNITED_STATES
+        val isLiveEnvironment = LIVE_ENVIRONMENTS.contains(environment)
 
         return (isLiveEnvironment && clientKey.startsWith(CLIENT_KEY_LIVE_PREFIX)) ||
             (isTestEnvironment && clientKey.startsWith(CLIENT_KEY_TEST_PREFIX)) ||
