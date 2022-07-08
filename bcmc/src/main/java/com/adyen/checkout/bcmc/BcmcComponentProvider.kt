@@ -33,9 +33,8 @@ class BcmcComponentProvider : PaymentComponentProvider<BcmcComponent, BcmcConfig
             BcmcComponent(
                 savedStateHandle,
                 GenericPaymentMethodDelegate(paymentMethod),
+                DefaultBcmcDelegate(paymentMethod, publicKeyRepository, configuration, cardValidationMapper),
                 configuration,
-                publicKeyRepository,
-                cardValidationMapper
             )
         }
         return ViewModelProvider(viewModelStoreOwner, bcmcFactory).get(BcmcComponent::class.java)
