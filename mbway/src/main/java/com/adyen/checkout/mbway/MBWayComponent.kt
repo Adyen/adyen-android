@@ -50,15 +50,17 @@ class MBWayComponent(
     }
 
     private fun observeOutputData() {
-        mbWayDelegate.outputDataFlow.filterNotNull().onEach {
-            notifyOutputDataChanged(it)
-        }.launchIn(viewModelScope)
+        mbWayDelegate.outputDataFlow
+            .filterNotNull()
+            .onEach { notifyOutputDataChanged(it) }
+            .launchIn(viewModelScope)
     }
 
     private fun observeComponentState() {
-        mbWayDelegate.componentStateFlow.filterNotNull().onEach {
-            notifyStateChanged(it)
-        }.launchIn(viewModelScope)
+        mbWayDelegate.componentStateFlow
+            .filterNotNull()
+            .onEach { notifyStateChanged(it) }
+            .launchIn(viewModelScope)
     }
 
     fun getSupportedCountries(): List<String> = SUPPORTED_COUNTRIES

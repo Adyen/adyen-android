@@ -50,14 +50,14 @@ class MBWayDelegate(val paymentMethod: PaymentMethod) :
     }
 
     override fun createComponentState(outputData: MBWayOutputData) {
-        val paymentMethod = MBWayPaymentMethod().apply {
-            type = MBWayPaymentMethod.PAYMENT_METHOD_TYPE
+        val paymentMethod = MBWayPaymentMethod(
+            type = MBWayPaymentMethod.PAYMENT_METHOD_TYPE,
             telephoneNumber = outputData.mobilePhoneNumberFieldState.value
-        }
+        )
 
-        val paymentComponentData = PaymentComponentData<MBWayPaymentMethod>().apply {
-            this.paymentMethod = paymentMethod
-        }
+        val paymentComponentData = PaymentComponentData(
+            paymentMethod = paymentMethod
+        )
 
         val paymentComponentState = PaymentComponentState(
             data = paymentComponentData,

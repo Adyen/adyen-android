@@ -29,7 +29,7 @@ class BlikComponent : BasePaymentComponent<
 
     private val blikDelegate: BlikDelegate
 
-    constructor(
+    internal constructor(
         savedStateHandle: SavedStateHandle,
         paymentMethodDelegate: GenericPaymentMethodDelegate,
         newBlikDelegate: NewBlikDelegate,
@@ -39,7 +39,7 @@ class BlikComponent : BasePaymentComponent<
         init()
     }
 
-    constructor(
+    internal constructor(
         savedStateHandle: SavedStateHandle,
         storedPaymentDelegate: GenericStoredPaymentDelegate,
         storedBlikDelegate: StoredBlikDelegate,
@@ -65,15 +65,17 @@ class BlikComponent : BasePaymentComponent<
     }
 
     private fun observeOutputData() {
-        blikDelegate.outputDataFlow.filterNotNull().onEach {
-            notifyOutputDataChanged(it)
-        }.launchIn(viewModelScope)
+        blikDelegate.outputDataFlow
+            .filterNotNull()
+            .onEach { notifyOutputDataChanged(it) }
+            .launchIn(viewModelScope)
     }
 
     private fun observeComponentState() {
-        blikDelegate.componentStateFlow.filterNotNull().onEach {
-            notifyStateChanged(it)
-        }.launchIn(viewModelScope)
+        blikDelegate.componentStateFlow
+            .filterNotNull()
+            .onEach { notifyStateChanged(it) }
+            .launchIn(viewModelScope)
     }
 
     override fun getSupportedPaymentMethodTypes(): Array<String> = PAYMENT_METHOD_TYPES

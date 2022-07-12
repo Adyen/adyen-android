@@ -26,7 +26,7 @@ import com.adyen.checkout.core.log.Logger
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableStateFlow
 
-class NewBlikDelegate(val paymentMethod: PaymentMethod) : BlikDelegate {
+internal class NewBlikDelegate(val paymentMethod: PaymentMethod) : BlikDelegate {
 
     private val _outputDataFlow = MutableStateFlow<BlikOutputData?>(null)
     override val outputDataFlow: Flow<BlikOutputData?> = _outputDataFlow
@@ -50,14 +50,14 @@ class NewBlikDelegate(val paymentMethod: PaymentMethod) : BlikDelegate {
     }
 
     override fun createComponentState(outputData: BlikOutputData) {
-        val paymentMethod = BlikPaymentMethod().apply {
-            type = BlikPaymentMethod.PAYMENT_METHOD_TYPE
+        val paymentMethod = BlikPaymentMethod(
+            type = BlikPaymentMethod.PAYMENT_METHOD_TYPE,
             blikCode = outputData.blikCodeField.value
-        }
+        )
 
-        val paymentComponentData = PaymentComponentData<BlikPaymentMethod>().apply {
-            this.paymentMethod = paymentMethod
-        }
+        val paymentComponentData = PaymentComponentData(
+            paymentMethod = paymentMethod
+        )
 
         val paymentComponentState = PaymentComponentState(
             data = paymentComponentData,
