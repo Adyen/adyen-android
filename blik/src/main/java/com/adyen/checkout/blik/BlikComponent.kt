@@ -13,7 +13,7 @@ import com.adyen.checkout.components.PaymentComponentState
 import com.adyen.checkout.components.StoredPaymentComponentProvider
 import com.adyen.checkout.components.base.BasePaymentComponent
 import com.adyen.checkout.components.base.GenericPaymentMethodDelegate
-import com.adyen.checkout.components.base.GenericStoredPaymentDelegate
+import com.adyen.checkout.components.base.PaymentMethodDelegateOld
 import com.adyen.checkout.components.model.payments.request.BlikPaymentMethod
 import com.adyen.checkout.components.util.PaymentMethodTypes
 import com.adyen.checkout.core.log.LogUtil.getTag
@@ -21,37 +21,20 @@ import kotlinx.coroutines.flow.filterNotNull
 import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.onEach
 
-class BlikComponent : BasePaymentComponent<
+class BlikComponent(
+    savedStateHandle: SavedStateHandle,
+    paymentMethodDelegate: PaymentMethodDelegateOld,
+    private val blikDelegate: BlikDelegate,
+    configuration: BlikConfiguration
+) : BasePaymentComponent<
     BlikConfiguration,
     BlikInputData,
     BlikOutputData,
-    PaymentComponentState<BlikPaymentMethod>> {
-
-    private val blikDelegate: BlikDelegate
-
-    internal constructor(
-        savedStateHandle: SavedStateHandle,
-        paymentMethodDelegate: GenericPaymentMethodDelegate,
-        newBlikDelegate: NewBlikDelegate,
-        configuration: BlikConfiguration
-    ) : super(savedStateHandle, paymentMethodDelegate, configuration) {
-        this.blikDelegate = newBlikDelegate
-        init()
-    }
-
-    internal constructor(
-        savedStateHandle: SavedStateHandle,
-        storedPaymentDelegate: GenericStoredPaymentDelegate,
-        storedBlikDelegate: StoredBlikDelegate,
-        configuration: BlikConfiguration
-    ) : super(savedStateHandle, storedPaymentDelegate, configuration) {
-        this.blikDelegate = storedBlikDelegate
-        init()
-    }
+    PaymentComponentState<BlikPaymentMethod>>(savedStateHandle, paymentMethodDelegate, configuration) {
 
     override var inputData: BlikInputData = BlikInputData()
 
-    private fun init() {
+    init {
         observeOutputData()
         observeComponentState()
     }

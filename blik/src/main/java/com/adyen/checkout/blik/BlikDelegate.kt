@@ -20,6 +20,8 @@ interface BlikDelegate :
         BlikOutputData,
         PaymentComponentState<BlikPaymentMethod>
         > {
+
     val outputDataFlow: Flow<BlikOutputData?>
+
     val componentStateFlow: Flow<PaymentComponentState<BlikPaymentMethod>?>
 }

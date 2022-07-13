@@ -30,7 +30,7 @@ class MBWayComponentProvider : PaymentComponentProvider<MBWayComponent, MBWayCon
                 MBWayComponent(
                     savedStateHandle,
                     GenericPaymentMethodDelegate(paymentMethod),
-                    MBWayDelegate(paymentMethod),
+                    DefaultMBWayDelegate(paymentMethod),
                     configuration
                 )
             }
