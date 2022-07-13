@@ -38,6 +38,8 @@ class GooglePayComponent(
     ),
     ActivityResultHandlingComponent {
 
+    override var inputData: GooglePayInputData = GooglePayInputData(null)
+
     override fun getSupportedPaymentMethodTypes() = PAYMENT_METHOD_TYPES
 
     override fun onInputDataChanged(inputData: GooglePayInputData) {
@@ -103,8 +105,8 @@ class GooglePayComponent(
                     return
                 }
                 val paymentData = PaymentData.getFromIntent(data)
-                val inputData = GooglePayInputData(paymentData)
-                inputDataChanged(inputData)
+                inputData = GooglePayInputData(paymentData)
+                notifyInputDataChanged()
             }
             Activity.RESULT_CANCELED -> notifyException(ComponentException("Payment canceled."))
             AutoResolveHelper.RESULT_ERROR -> {

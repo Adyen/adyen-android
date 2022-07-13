@@ -28,6 +28,8 @@ class SepaComponent(
     configuration
 ) {
 
+    override var inputData: SepaInputData = SepaInputData()
+
     override fun getSupportedPaymentMethodTypes(): Array<String> = PAYMENT_METHOD_TYPES
 
     override fun onInputDataChanged(inputData: SepaInputData) {

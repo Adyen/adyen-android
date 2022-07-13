@@ -52,7 +52,6 @@ class BcmcView @JvmOverloads constructor(
     private lateinit var expiryDateInput: TextInputLayout
     private lateinit var cardNumberInput: TextInputLayout
     private lateinit var switchStorePaymentMethod: SwitchCompat
-    private val cardInputData = BcmcInputData()
     private lateinit var imageLoader: ImageLoader
 
     init {
@@ -116,7 +115,7 @@ class BcmcView @JvmOverloads constructor(
     }
 
     private fun notifyInputDataChanged() {
-        component.inputDataChanged(cardInputData)
+        component.notifyInputDataChanged()
     }
 
     private fun onCardNumberValidated(validatedNumber: FieldState<String>) {
@@ -133,7 +132,7 @@ class BcmcView @JvmOverloads constructor(
         cardNumberInput = findViewById(R.id.textInputLayout_cardNumber)
         cardNumberEditText = cardNumberInput.editText as CardNumberInput
         cardNumberEditText.setOnChangeListener {
-            cardInputData.cardNumber = cardNumberEditText.rawValue
+            component.inputData.cardNumber = cardNumberEditText.rawValue
             notifyInputDataChanged()
             setCardNumberError(null)
         }
@@ -163,7 +162,7 @@ class BcmcView @JvmOverloads constructor(
         expiryDateInput = findViewById(R.id.textInputLayout_expiryDate)
         expiryDateEditText = expiryDateInput.editText as ExpiryDateInput
         expiryDateEditText.setOnChangeListener {
-            cardInputData.expiryDate = expiryDateEditText.date
+            component.inputData.expiryDate = expiryDateEditText.date
             notifyInputDataChanged()
             expiryDateInput.error = null
         }
@@ -183,7 +182,7 @@ class BcmcView @JvmOverloads constructor(
         switchStorePaymentMethod = findViewById(R.id.switch_storePaymentMethod)
         switchStorePaymentMethod.isVisible = component.configuration.isStorePaymentFieldVisible
         switchStorePaymentMethod.setOnCheckedChangeListener { _: CompoundButton?, isChecked: Boolean ->
-            cardInputData.isStorePaymentSelected = isChecked
+            component.inputData.isStorePaymentSelected = isChecked
             notifyInputDataChanged()
         }
     }

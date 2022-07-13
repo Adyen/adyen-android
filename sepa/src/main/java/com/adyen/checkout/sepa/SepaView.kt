@@ -36,7 +36,6 @@ class SepaView @JvmOverloads constructor(
         SepaComponent>(context, attrs, defStyleAttr),
     Observer<SepaOutputData> {
 
-    private var sepaInputData = SepaInputData()
     private lateinit var holderNameInput: TextInputLayout
     private lateinit var ibanNumberInput: TextInputLayout
     private lateinit var holderNameEditText: AdyenTextInputEditText
@@ -62,12 +61,12 @@ class SepaView @JvmOverloads constructor(
         ibanNumberEditText = ibanNumberInput.editText as AdyenTextInputEditText
 
         holderNameEditText.setOnChangeListener {
-            sepaInputData.name = holderNameEditText.rawValue
+            component.inputData.name = holderNameEditText.rawValue
             notifyInputDataChanged()
             holderNameInput.error = null
         }
         ibanNumberEditText.setOnChangeListener {
-            sepaInputData.iban = ibanNumberEditText.rawValue
+            component.inputData.iban = ibanNumberEditText.rawValue
             notifyInputDataChanged()
             ibanNumberInput.error = null
         }
@@ -120,7 +119,7 @@ class SepaView @JvmOverloads constructor(
     }
 
     private fun notifyInputDataChanged() {
-        component.inputDataChanged(sepaInputData)
+        component.notifyInputDataChanged()
     }
 
     companion object {

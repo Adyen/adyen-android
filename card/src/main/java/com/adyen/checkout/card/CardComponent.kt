@@ -59,7 +59,7 @@ class CardComponent private constructor(
     cardConfiguration
 ) {
 
-    internal val inputData = CardInputData()
+    override var inputData: CardInputData = CardInputData()
 
     private var publicKey: String? = null
 
@@ -113,9 +113,8 @@ class CardComponent private constructor(
     ) {
         storedCardDelegate.updateInputData(inputData)
 
-        // TODO: 09/12/2020 move this logic to base component, maybe create the inputdata from the delegate?
         if (!requiresInput()) {
-            inputDataChanged(inputData)
+            notifyInputDataChanged()
         }
     }
 

@@ -23,6 +23,8 @@ class BacsDirectDebitComponent(
 ) : BasePaymentComponent<BacsDirectDebitConfiguration, BacsDirectDebitInputData, BacsDirectDebitOutputData,
     BacsDirectDebitComponentState>(savedStateHandle, paymentMethodDelegate, configuration) {
 
+    override var inputData: BacsDirectDebitInputData = BacsDirectDebitInputData()
+
     override fun getSupportedPaymentMethodTypes(): Array<String> = PAYMENT_METHOD_TYPES
 
     override fun onInputDataChanged(inputData: BacsDirectDebitInputData) {
@@ -59,18 +61,18 @@ class BacsDirectDebitComponent(
                 paymentComponentData = paymentComponentData,
                 isInputValid = outputData?.isValid ?: false,
                 isReady = true,
-                mode = latestInputData?.mode ?: BacsDirectDebitMode.INPUT
+                mode = inputData.mode
             )
         )
     }
 
     fun setInputMode() {
-        latestInputData?.mode = BacsDirectDebitMode.INPUT
+        inputData.mode = BacsDirectDebitMode.INPUT
         createComponentState()
     }
 
     fun setConfirmationMode() {
-        latestInputData?.mode = BacsDirectDebitMode.CONFIRMATION
+        inputData.mode = BacsDirectDebitMode.CONFIRMATION
         createComponentState()
     }
 

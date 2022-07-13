@@ -45,7 +45,7 @@ abstract class BasePaymentComponent<
 ) : PaymentComponentViewModel<ConfigurationT, ComponentStateT>(savedStateHandle, paymentMethodDelegate, configuration),
     ViewableComponent<OutputDataT, ConfigurationT, ComponentStateT> {
 
-    protected var latestInputData: InputDataT? = null
+    abstract var inputData: InputDataT
     private val paymentComponentStateLiveData = MutableLiveData<ComponentStateT>()
     private val componentErrorLiveData = MutableLiveData<ComponentError>()
     private val outputLiveData = MutableLiveData<OutputDataT>()
@@ -90,12 +90,9 @@ abstract class BasePaymentComponent<
 
     /**
      * Receives a set of [InputData] from the user to be processed.
-     *
-     * @param inputData [InputDataT]
      */
-    fun inputDataChanged(inputData: InputDataT) {
-        Logger.v(TAG, "inputDataChanged")
-        latestInputData = inputData
+    fun notifyInputDataChanged() {
+        Logger.v(TAG, "notifyInputDataChanged")
         onInputDataChanged(inputData)
     }
 

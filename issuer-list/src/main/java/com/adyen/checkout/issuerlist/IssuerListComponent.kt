@@ -34,6 +34,8 @@ abstract class IssuerListComponent<IssuerListPaymentMethodT : IssuerListPaymentM
 ) {
     val issuersLiveData = MutableLiveData<List<IssuerModel>>()
 
+    override var inputData: IssuerListInputData = IssuerListInputData()
+
     private fun initComponent(paymentMethod: PaymentMethod) {
         val issuersList = paymentMethod.issuers
         if (issuersList != null) {

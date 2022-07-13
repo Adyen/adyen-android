@@ -39,7 +39,6 @@ abstract class IssuerListSpinnerView<
         IssuerListComponentT>(context, attrs, defStyleAttr),
     AdapterView.OnItemSelectedListener {
 
-    private val idealInputData = IssuerListInputData()
     private lateinit var issuersSpinner: AppCompatSpinner
     private lateinit var issuersAdapter: IssuerListSpinnerAdapter
 
@@ -88,8 +87,8 @@ abstract class IssuerListSpinnerView<
 
     override fun onItemSelected(parent: AdapterView<*>, view: View, position: Int, id: Long) {
         d(TAG, "onItemSelected - " + issuersAdapter.getItem(position).name)
-        idealInputData.selectedIssuer = issuersAdapter.getItem(position)
-        component.inputDataChanged(idealInputData)
+        component.inputData.selectedIssuer = issuersAdapter.getItem(position)
+        component.notifyInputDataChanged()
     }
 
     override fun setEnabled(enabled: Boolean) {

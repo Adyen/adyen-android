@@ -39,8 +39,6 @@ class MBWayView :
     Observer<MBWayOutputData>,
     AdapterView.OnItemClickListener {
 
-    private var mMBWayInputData = MBWayInputData()
-
     private var mMobileNumberInput: TextInputLayout? = null
     private var mCountryAutoCompleteTextView: AutoCompleteTextView? = null
 
@@ -161,17 +159,17 @@ class MBWayView :
     }
 
     private fun localNumberChanged() {
-        mMBWayInputData.localPhoneNumber = mMobileNumberEditText?.rawValue.orEmpty()
+        component.inputData.localPhoneNumber = mMobileNumberEditText?.rawValue.orEmpty()
         notifyInputDataChanged()
     }
 
     private fun countryCodeChanged() {
-        mMBWayInputData.countryCode = selectedCountry?.callingCode.orEmpty()
+        component.inputData.countryCode = selectedCountry?.callingCode.orEmpty()
         notifyInputDataChanged()
     }
 
     private fun notifyInputDataChanged() {
-        component.inputDataChanged(mMBWayInputData)
+        component.notifyInputDataChanged()
     }
 
     override fun onItemClick(parent: AdapterView<*>?, view: View?, position: Int, id: Long) {

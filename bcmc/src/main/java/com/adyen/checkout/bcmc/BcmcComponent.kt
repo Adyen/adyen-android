@@ -47,6 +47,8 @@ class BcmcComponent(
 ) : BasePaymentComponent<BcmcConfiguration, BcmcInputData, BcmcOutputData,
     PaymentComponentState<CardPaymentMethod>>(savedStateHandle, paymentMethodDelegate, configuration) {
 
+    override var inputData: BcmcInputData = BcmcInputData()
+
     private var publicKey: String? = null
 
     init {

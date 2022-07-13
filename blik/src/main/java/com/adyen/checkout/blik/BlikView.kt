@@ -32,7 +32,6 @@ class BlikView @JvmOverloads constructor(context: Context, attrs: AttributeSet? 
     ),
     Observer<BlikOutputData> {
 
-    private var blikInputData = BlikInputData()
     private lateinit var blikHeader: TextView
     private lateinit var blikCodeInput: TextInputLayout
     private lateinit var blikCodeEditText: AdyenTextInputEditText
@@ -55,7 +54,7 @@ class BlikView @JvmOverloads constructor(context: Context, attrs: AttributeSet? 
         blikCodeEditText = blikCodeInput.editText as AdyenTextInputEditText
 
         blikCodeEditText.setOnChangeListener {
-            blikInputData.blikCode = blikCodeEditText.rawValue
+            component.inputData.blikCode = blikCodeEditText.rawValue
             notifyInputDataChanged()
             blikCodeInput.error = null
         }
@@ -97,7 +96,7 @@ class BlikView @JvmOverloads constructor(context: Context, attrs: AttributeSet? 
     }
 
     private fun notifyInputDataChanged() {
-        component.inputDataChanged(blikInputData)
+        component.notifyInputDataChanged()
     }
 
     companion object {
