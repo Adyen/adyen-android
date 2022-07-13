@@ -9,71 +9,51 @@
 package com.adyen.checkout.bacs
 
 import androidx.lifecycle.SavedStateHandle
+import androidx.lifecycle.viewModelScope
 import com.adyen.checkout.components.PaymentComponentProvider
 import com.adyen.checkout.components.base.BasePaymentComponent
 import com.adyen.checkout.components.base.GenericPaymentMethodDelegate
-import com.adyen.checkout.components.model.payments.request.BacsDirectDebitPaymentMethod
-import com.adyen.checkout.components.model.payments.request.PaymentComponentData
 import com.adyen.checkout.components.util.PaymentMethodTypes
+import kotlinx.coroutines.flow.filterNotNull
+import kotlinx.coroutines.flow.launchIn
+import kotlinx.coroutines.flow.onEach
 
 class BacsDirectDebitComponent(
     savedStateHandle: SavedStateHandle,
     paymentMethodDelegate: GenericPaymentMethodDelegate,
+    private val bacsDirectDebitDelegate: BacsDirectDebitDelegate,
     configuration: BacsDirectDebitConfiguration
 ) : BasePaymentComponent<BacsDirectDebitConfiguration, BacsDirectDebitInputData, BacsDirectDebitOutputData,
     BacsDirectDebitComponentState>(savedStateHandle, paymentMethodDelegate, configuration) {
 
     override var inputData: BacsDirectDebitInputData = BacsDirectDebitInputData()
 
+    init {
+        bacsDirectDebitDelegate.outputDataFlow
+            .filterNotNull()
+            .onEach { notifyOutputDataChanged(it) }
+            .launchIn(viewModelScope)
+
+        bacsDirectDebitDelegate.componentStateFlow
+            .filterNotNull()
+            .onEach { notifyStateChanged(it) }
+            .launchIn(viewModelScope)
+    }
+
     override fun getSupportedPaymentMethodTypes(): Array<String> = PAYMENT_METHOD_TYPES
 
     override fun onInputDataChanged(inputData: BacsDirectDebitInputData) {
-        notifyOutputDataChanged(
-            BacsDirectDebitOutputData(
-                holderNameState = BacsDirectDebitValidationUtils.validateHolderName(inputData.holderName),
-                bankAccountNumberState = BacsDirectDebitValidationUtils
-                    .validateBankAccountNumber(inputData.bankAccountNumber),
-                sortCodeState = BacsDirectDebitValidationUtils.validateSortCode(inputData.sortCode),
-                shopperEmailState = BacsDirectDebitValidationUtils.validateShopperEmail(inputData.shopperEmail),
-                isAmountConsentChecked = inputData.isAmountConsentChecked,
-                isAccountConsentChecked = inputData.isAccountConsentChecked
-            )
-        )
-        createComponentState()
-    }
-
-    private fun createComponentState() {
-        val paymentComponentData = PaymentComponentData<BacsDirectDebitPaymentMethod>()
-        val bacsDirectDebitPaymentMethod = BacsDirectDebitPaymentMethod().apply {
-            type = BacsDirectDebitPaymentMethod.PAYMENT_METHOD_TYPE
-            holderName = outputData?.holderNameState?.value
-            bankAccountNumber = outputData?.bankAccountNumberState?.value
-            bankLocationId = outputData?.sortCodeState?.value
-        }
-
-        paymentComponentData.apply {
-            shopperEmail = outputData?.shopperEmailState?.value
-            paymentMethod = bacsDirectDebitPaymentMethod
-        }
-
-        notifyStateChanged(
-            BacsDirectDebitComponentState(
-                paymentComponentData = paymentComponentData,
-                isInputValid = outputData?.isValid ?: false,
-                isReady = true,
-                mode = inputData.mode
-            )
-        )
+        bacsDirectDebitDelegate.onInputDataChanged(inputData)
     }
 
     fun setInputMode() {
         inputData.mode = BacsDirectDebitMode.INPUT
-        createComponentState()
+        notifyInputDataChanged()
     }
 
     fun setConfirmationMode() {
         inputData.mode = BacsDirectDebitMode.CONFIRMATION
-        createComponentState()
+        notifyInputDataChanged()
     }
 
     companion object {
