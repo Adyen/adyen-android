@@ -13,6 +13,7 @@ import com.adyen.checkout.components.base.GenericPaymentMethodDelegate
 import com.adyen.checkout.components.model.payments.request.MolpayPaymentMethod
 import com.adyen.checkout.components.util.PaymentMethodTypes
 import com.adyen.checkout.issuerlist.IssuerListComponent
+import com.adyen.checkout.issuerlist.IssuerListDelegate
 
 /**
  * PaymentComponent to handle iDeal payments.
@@ -20,14 +21,16 @@ import com.adyen.checkout.issuerlist.IssuerListComponent
 class MolpayComponent(
     savedStateHandle: SavedStateHandle,
     paymentMethodDelegate: GenericPaymentMethodDelegate,
+    issuerListDelegate: IssuerListDelegate<MolpayPaymentMethod>,
     configuration: MolpayConfiguration
-) : IssuerListComponent<MolpayPaymentMethod>(savedStateHandle, paymentMethodDelegate, configuration) {
+) : IssuerListComponent<MolpayPaymentMethod>(
+    savedStateHandle,
+    paymentMethodDelegate,
+    issuerListDelegate,
+    configuration
+) {
 
     override fun getSupportedPaymentMethodTypes(): Array<String> = PAYMENT_METHOD_TYPES
-
-    override fun instantiateTypedPaymentMethod(): MolpayPaymentMethod {
-        return MolpayPaymentMethod()
-    }
 
     companion object {
         val PROVIDER: PaymentComponentProvider<MolpayComponent, MolpayConfiguration> = MolpayComponentProvider()

@@ -16,6 +16,8 @@ import com.adyen.checkout.components.PaymentComponentProvider
 import com.adyen.checkout.components.base.GenericPaymentMethodDelegate
 import com.adyen.checkout.components.base.lifecycle.viewModelFactory
 import com.adyen.checkout.components.model.paymentmethods.PaymentMethod
+import com.adyen.checkout.components.model.payments.request.DotpayPaymentMethod
+import com.adyen.checkout.issuerlist.DefaultIssuerListDelegate
 
 class DotpayComponentProvider : PaymentComponentProvider<DotpayComponent, DotpayConfiguration> {
     override fun get(
@@ -27,7 +29,8 @@ class DotpayComponentProvider : PaymentComponentProvider<DotpayComponent, Dotpay
     ): DotpayComponent {
         val genericFactory: ViewModelProvider.Factory =
             viewModelFactory(savedStateRegistryOwner, defaultArgs) { savedStateHandle ->
-                DotpayComponent(savedStateHandle, GenericPaymentMethodDelegate(paymentMethod), configuration)
+                val delegate = DefaultIssuerListDelegate(paymentMethod) { DotpayPaymentMethod() }
+                DotpayComponent(savedStateHandle, GenericPaymentMethodDelegate(paymentMethod), delegate, configuration)
             }
         return ViewModelProvider(viewModelStoreOwner, genericFactory).get(DotpayComponent::class.java)
     }

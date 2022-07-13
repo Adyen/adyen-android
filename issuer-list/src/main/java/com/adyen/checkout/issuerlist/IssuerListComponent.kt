@@ -7,20 +7,20 @@
  */
 package com.adyen.checkout.issuerlist
 
-import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.SavedStateHandle
+import androidx.lifecycle.viewModelScope
 import com.adyen.checkout.components.PaymentComponentState
 import com.adyen.checkout.components.base.BasePaymentComponent
 import com.adyen.checkout.components.base.GenericPaymentMethodDelegate
-import com.adyen.checkout.components.model.paymentmethods.InputDetail
-import com.adyen.checkout.components.model.paymentmethods.Issuer
-import com.adyen.checkout.components.model.paymentmethods.PaymentMethod
 import com.adyen.checkout.components.model.payments.request.IssuerListPaymentMethod
-import com.adyen.checkout.components.model.payments.request.PaymentComponentData
+import kotlinx.coroutines.flow.filterNotNull
+import kotlinx.coroutines.flow.launchIn
+import kotlinx.coroutines.flow.onEach
 
 abstract class IssuerListComponent<IssuerListPaymentMethodT : IssuerListPaymentMethod>(
     savedStateHandle: SavedStateHandle,
     genericPaymentMethodDelegate: GenericPaymentMethodDelegate,
+    private val issuerListDelegate: IssuerListDelegate<IssuerListPaymentMethodT>,
     configuration: IssuerListConfiguration
 ) : BasePaymentComponent<
     IssuerListConfiguration,
@@ -32,62 +32,28 @@ abstract class IssuerListComponent<IssuerListPaymentMethodT : IssuerListPaymentM
     genericPaymentMethodDelegate,
     configuration
 ) {
-    val issuersLiveData = MutableLiveData<List<IssuerModel>>()
 
     override var inputData: IssuerListInputData = IssuerListInputData()
 
-    private fun initComponent(paymentMethod: PaymentMethod) {
-        val issuersList = paymentMethod.issuers
-        if (issuersList != null) {
-            initIssuers(issuersList)
-        } else {
-            initLegacyIssuers(paymentMethod.details)
-        }
-    }
+    val issuers: List<IssuerModel>
+        get() = issuerListDelegate.getIssuers()
 
-    private fun initIssuers(issuerList: List<Issuer>) {
-        val issuerModelList: MutableList<IssuerModel> = ArrayList()
-        for ((id, name, isDisabled) in issuerList) {
-            if (!isDisabled) {
-                val issuerModel = IssuerModel(id!!, name!!)
-                issuerModelList.add(issuerModel)
-            }
-        }
-        issuersLiveData.value = issuerModelList
-    }
+    val paymentMethodType: String
+        get() = issuerListDelegate.getPaymentMethodType()
 
-    private fun initLegacyIssuers(details: List<InputDetail>?) {
-        for ((items) in details ?: emptyList()) {
-            val issuers: MutableList<IssuerModel> = ArrayList()
-            for ((id, name) in items ?: emptyList()) {
-                issuers.add(IssuerModel(id.orEmpty(), name.orEmpty()))
-            }
-            issuersLiveData.value = issuers
-        }
+    init {
+        issuerListDelegate.outputDataFlow
+            .filterNotNull()
+            .onEach { notifyOutputDataChanged(it) }
+            .launchIn(viewModelScope)
+
+        issuerListDelegate.componentStateFlow
+            .filterNotNull()
+            .onEach { notifyStateChanged(it) }
+            .launchIn(viewModelScope)
     }
 
     override fun onInputDataChanged(inputData: IssuerListInputData) {
-        // can also reuse instance if we implement equals properly
-        notifyOutputDataChanged(IssuerListOutputData(inputData.selectedIssuer))
-        createComponentState()
-    }
-
-    private fun createComponentState() {
-        val issuerListPaymentMethod = instantiateTypedPaymentMethod()
-        val selectedIssuer = outputData?.selectedIssuer
-        issuerListPaymentMethod.type = paymentMethodDelegate.getPaymentMethodType()
-        issuerListPaymentMethod.issuer = selectedIssuer?.id ?: ""
-        val isInputValid: Boolean = outputData?.isValid == true
-        val paymentComponentData = PaymentComponentData<IssuerListPaymentMethodT>()
-        paymentComponentData.paymentMethod = issuerListPaymentMethod
-        notifyStateChanged(PaymentComponentState(paymentComponentData, isInputValid, true))
-    }
-
-    protected abstract fun instantiateTypedPaymentMethod(): IssuerListPaymentMethodT
-    val paymentMethodType: String
-        get() = paymentMethodDelegate.getPaymentMethodType()
-
-    init {
-        initComponent(genericPaymentMethodDelegate.paymentMethod)
+        issuerListDelegate.onInputDataChanged(inputData)
     }
 }

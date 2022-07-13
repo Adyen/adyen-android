@@ -16,8 +16,11 @@ import com.adyen.checkout.components.PaymentComponentProvider
 import com.adyen.checkout.components.base.GenericPaymentMethodDelegate
 import com.adyen.checkout.components.base.lifecycle.viewModelFactory
 import com.adyen.checkout.components.model.paymentmethods.PaymentMethod
+import com.adyen.checkout.components.model.payments.request.OpenBankingPaymentMethod
+import com.adyen.checkout.issuerlist.DefaultIssuerListDelegate
 
 class OpenBankingComponentProvider : PaymentComponentProvider<OpenBankingComponent, OpenBankingConfiguration> {
+
     override fun get(
         savedStateRegistryOwner: SavedStateRegistryOwner,
         viewModelStoreOwner: ViewModelStoreOwner,
@@ -27,7 +30,13 @@ class OpenBankingComponentProvider : PaymentComponentProvider<OpenBankingCompone
     ): OpenBankingComponent {
         val genericFactory: ViewModelProvider.Factory =
             viewModelFactory(savedStateRegistryOwner, defaultArgs) { savedStateHandle ->
-                OpenBankingComponent(savedStateHandle, GenericPaymentMethodDelegate(paymentMethod), configuration)
+                val delegate = DefaultIssuerListDelegate(paymentMethod) { OpenBankingPaymentMethod() }
+                OpenBankingComponent(
+                    savedStateHandle,
+                    GenericPaymentMethodDelegate(paymentMethod),
+                    delegate,
+                    configuration
+                )
             }
         return ViewModelProvider(viewModelStoreOwner, genericFactory).get(OpenBankingComponent::class.java)
     }

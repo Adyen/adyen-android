@@ -14,7 +14,6 @@ import android.view.View
 import android.widget.AdapterView
 import androidx.appcompat.widget.AppCompatSpinner
 import androidx.lifecycle.LifecycleOwner
-import androidx.lifecycle.Observer
 import com.adyen.checkout.components.PaymentComponentState
 import com.adyen.checkout.components.api.ImageLoader.Companion.getInstance
 import com.adyen.checkout.components.model.payments.request.IssuerListPaymentMethod
@@ -59,16 +58,15 @@ abstract class IssuerListSpinnerView<
 
     override fun onComponentAttached() {
         issuersAdapter = IssuerListSpinnerAdapter(
-            context, emptyList(),
+            context,
+            component.issuers,
             getInstance(context, component.configuration.environment),
             component.paymentMethodType,
             hideIssuersLogo()
         )
     }
 
-    override fun observeComponentChanges(lifecycleOwner: LifecycleOwner) {
-        component.issuersLiveData.observe(lifecycleOwner, createIssuersObserver())
-    }
+    override fun observeComponentChanges(lifecycleOwner: LifecycleOwner) = Unit
 
     override val isConfirmationRequired: Boolean
         get() = true
@@ -79,10 +77,6 @@ abstract class IssuerListSpinnerView<
 
     open fun hideIssuersLogo(): Boolean {
         return false
-    }
-
-    private fun onIssuersChanged(issuerList: List<IssuerModel>) {
-        issuersAdapter.updateIssuers(issuerList)
     }
 
     override fun onItemSelected(parent: AdapterView<*>, view: View, position: Int, id: Long) {
@@ -98,10 +92,6 @@ abstract class IssuerListSpinnerView<
 
     override fun onNothingSelected(parent: AdapterView<*>) {
         // nothing changed
-    }
-
-    private fun createIssuersObserver(): Observer<List<IssuerModel>> {
-        return Observer { issuerList: List<IssuerModel> -> onIssuersChanged(issuerList) }
     }
 
     companion object {
