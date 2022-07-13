@@ -27,11 +27,6 @@ class IssuerListSpinnerAdapter internal constructor(
 
     private val inflater: LayoutInflater = LayoutInflater.from(context)
 
-    fun updateIssuers(issuerList: List<IssuerModel>) {
-        this.issuerList = issuerList
-        notifyDataSetChanged()
-    }
-
     override fun getCount(): Int {
         return issuerList.size
     }
