@@ -67,7 +67,6 @@ class BacsDirectDebitInputView @JvmOverloads constructor(
         initSortCodeInput()
         initShopperEmailInput()
         initConsentSwitches()
-        initButton()
     }
 
     override val isConfirmationRequired: Boolean
@@ -116,8 +115,8 @@ class BacsDirectDebitInputView @JvmOverloads constructor(
         )
         binding.textInputLayoutSortCode.setLocalizedHintFromStyle(R.style.AdyenCheckout_Bacs_SortCodeInput)
         binding.textInputLayoutShopperEmail.setLocalizedHintFromStyle(R.style.AdyenCheckout_Bacs_ShopperEmailInput)
-        binding.switchConsentAmount.setLocalizedTextFromStyle(R.style.AdyenCheckout_Bacs_Switch_Amount)
         binding.switchConsentAccount.setLocalizedTextFromStyle(R.style.AdyenCheckout_Bacs_Switch_Account)
+        setAmountConsentSwitchText()
     }
 
     override fun observeComponentChanges(lifecycleOwner: LifecycleOwner) {
@@ -215,12 +214,14 @@ class BacsDirectDebitInputView @JvmOverloads constructor(
         }
     }
 
-    private fun initButton() {
+    private fun setAmountConsentSwitchText() {
         if (!component.configuration.amount.isEmpty) {
             val formattedAmount =
                 CurrencyUtils.formatAmount(component.configuration.amount, component.configuration.shopperLocale)
             binding.switchConsentAmount.text =
                 localizedContext.getString(R.string.bacs_consent_amount_specified, formattedAmount)
+        } else {
+            binding.switchConsentAmount.setLocalizedTextFromStyle(R.style.AdyenCheckout_Bacs_Switch_Amount)
         }
     }
 
