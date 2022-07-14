@@ -16,6 +16,8 @@ import com.adyen.checkout.components.PaymentComponentProvider
 import com.adyen.checkout.components.base.GenericPaymentMethodDelegate
 import com.adyen.checkout.components.base.lifecycle.viewModelFactory
 import com.adyen.checkout.components.model.paymentmethods.PaymentMethod
+import com.adyen.checkout.components.model.payments.request.IdealPaymentMethod
+import com.adyen.checkout.issuerlist.DefaultIssuerListDelegate
 
 class IdealComponentProvider : PaymentComponentProvider<IdealComponent, IdealConfiguration> {
     override fun get(
@@ -27,7 +29,8 @@ class IdealComponentProvider : PaymentComponentProvider<IdealComponent, IdealCon
     ): IdealComponent {
         val genericFactory: ViewModelProvider.Factory =
             viewModelFactory(savedStateRegistryOwner, defaultArgs) { savedStateHandle ->
-                IdealComponent(savedStateHandle, GenericPaymentMethodDelegate(paymentMethod), configuration)
+                val delegate = DefaultIssuerListDelegate(paymentMethod) { IdealPaymentMethod() }
+                IdealComponent(savedStateHandle, GenericPaymentMethodDelegate(paymentMethod), delegate, configuration)
             }
         return ViewModelProvider(viewModelStoreOwner, genericFactory).get(IdealComponent::class.java)
     }

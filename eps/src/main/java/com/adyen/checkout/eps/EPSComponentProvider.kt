@@ -16,6 +16,8 @@ import com.adyen.checkout.components.PaymentComponentProvider
 import com.adyen.checkout.components.base.GenericPaymentMethodDelegate
 import com.adyen.checkout.components.base.lifecycle.viewModelFactory
 import com.adyen.checkout.components.model.paymentmethods.PaymentMethod
+import com.adyen.checkout.components.model.payments.request.EPSPaymentMethod
+import com.adyen.checkout.issuerlist.DefaultIssuerListDelegate
 
 class EPSComponentProvider : PaymentComponentProvider<EPSComponent, EPSConfiguration> {
     override fun get(
@@ -27,7 +29,8 @@ class EPSComponentProvider : PaymentComponentProvider<EPSComponent, EPSConfigura
     ): EPSComponent {
         val genericFactory: ViewModelProvider.Factory =
             viewModelFactory(savedStateRegistryOwner, defaultArgs) { savedStateHandle ->
-                EPSComponent(savedStateHandle, GenericPaymentMethodDelegate(paymentMethod), configuration)
+                val delegate = DefaultIssuerListDelegate(paymentMethod) { EPSPaymentMethod() }
+                EPSComponent(savedStateHandle, GenericPaymentMethodDelegate(paymentMethod), delegate, configuration)
             }
         return ViewModelProvider(viewModelStoreOwner, genericFactory).get(EPSComponent::class.java)
     }

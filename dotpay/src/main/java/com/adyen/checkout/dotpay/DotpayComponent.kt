@@ -13,6 +13,7 @@ import com.adyen.checkout.components.base.GenericPaymentMethodDelegate
 import com.adyen.checkout.components.model.payments.request.DotpayPaymentMethod
 import com.adyen.checkout.components.util.PaymentMethodTypes
 import com.adyen.checkout.issuerlist.IssuerListComponent
+import com.adyen.checkout.issuerlist.IssuerListDelegate
 
 /**
  * PaymentComponent to handle iDeal payments.
@@ -20,12 +21,14 @@ import com.adyen.checkout.issuerlist.IssuerListComponent
 class DotpayComponent(
     savedStateHandle: SavedStateHandle,
     paymentMethodDelegate: GenericPaymentMethodDelegate,
+    issuerListDelegate: IssuerListDelegate<DotpayPaymentMethod>,
     configuration: DotpayConfiguration
-) : IssuerListComponent<DotpayPaymentMethod>(savedStateHandle, paymentMethodDelegate, configuration) {
-
-    override fun instantiateTypedPaymentMethod(): DotpayPaymentMethod {
-        return DotpayPaymentMethod()
-    }
+) : IssuerListComponent<DotpayPaymentMethod>(
+    savedStateHandle,
+    paymentMethodDelegate,
+    issuerListDelegate,
+    configuration
+) {
 
     override fun getSupportedPaymentMethodTypes(): Array<String> = PAYMENT_METHOD_TYPES
 

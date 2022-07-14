@@ -7,7 +7,6 @@
  */
 package com.adyen.checkout.issuerlist
 
-import android.annotation.SuppressLint
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -38,14 +37,6 @@ internal class IssuerListRecyclerAdapter(
 
     override fun getItemCount(): Int {
         return issuerModelList.size
-    }
-
-    // We only expect either a full new list or small changes on an item, like a new Logo drawable
-    @SuppressLint("NotifyDataSetChanged")
-    fun updateIssuerModelList(issuerModelList: List<IssuerModel>) {
-        this.issuerModelList = issuerModelList
-        notifyDataSetChanged()
-        // TODO refactor to ListAdapter
     }
 
     fun getIssuerAt(position: Int): IssuerModel {

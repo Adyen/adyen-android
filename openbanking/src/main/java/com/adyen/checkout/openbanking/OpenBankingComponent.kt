@@ -13,6 +13,7 @@ import com.adyen.checkout.components.base.GenericPaymentMethodDelegate
 import com.adyen.checkout.components.model.payments.request.OpenBankingPaymentMethod
 import com.adyen.checkout.components.util.PaymentMethodTypes
 import com.adyen.checkout.issuerlist.IssuerListComponent
+import com.adyen.checkout.issuerlist.IssuerListDelegate
 
 /**
  * PaymentComponent to handle iDeal payments.
@@ -20,14 +21,16 @@ import com.adyen.checkout.issuerlist.IssuerListComponent
 class OpenBankingComponent(
     savedStateHandle: SavedStateHandle,
     paymentMethodDelegate: GenericPaymentMethodDelegate,
+    issuerListDelegate: IssuerListDelegate<OpenBankingPaymentMethod>,
     configuration: OpenBankingConfiguration
-) : IssuerListComponent<OpenBankingPaymentMethod>(savedStateHandle, paymentMethodDelegate, configuration) {
+) : IssuerListComponent<OpenBankingPaymentMethod>(
+    savedStateHandle,
+    paymentMethodDelegate,
+    issuerListDelegate,
+    configuration
+) {
 
     override fun getSupportedPaymentMethodTypes(): Array<String> = PAYMENT_METHOD_TYPES
-
-    override fun instantiateTypedPaymentMethod(): OpenBankingPaymentMethod {
-        return OpenBankingPaymentMethod()
-    }
 
     companion object {
         @JvmField

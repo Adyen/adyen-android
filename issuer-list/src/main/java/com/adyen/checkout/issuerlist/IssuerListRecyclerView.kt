@@ -11,7 +11,6 @@ import android.content.Context
 import android.util.AttributeSet
 import android.view.LayoutInflater
 import androidx.lifecycle.LifecycleOwner
-import androidx.lifecycle.Observer
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.adyen.checkout.components.PaymentComponentState
@@ -37,7 +36,6 @@ abstract class IssuerListRecyclerView<
         PaymentComponentState<IssuerListPaymentMethodT>,
         IssuerListComponentT
         >(context, attrs, defStyleAttr),
-    Observer<List<IssuerModel>>,
     OnItemCLickedListener {
 
     private lateinit var issuersRecyclerView: RecyclerView
@@ -62,16 +60,14 @@ abstract class IssuerListRecyclerView<
 
     override fun onComponentAttached() {
         issuersAdapter = IssuerListRecyclerAdapter(
-            emptyList(),
+            component.issuers,
             getInstance(context, component.configuration.environment),
             component.paymentMethodType,
             hideIssuersLogo()
         )
     }
 
-    override fun observeComponentChanges(lifecycleOwner: LifecycleOwner) {
-        component.issuersLiveData.observe(lifecycleOwner, this)
-    }
+    override fun observeComponentChanges(lifecycleOwner: LifecycleOwner) = Unit
 
     override val isConfirmationRequired: Boolean
         get() = false
@@ -87,11 +83,6 @@ abstract class IssuerListRecyclerView<
     override fun setEnabled(enabled: Boolean) {
         super.setEnabled(enabled)
         issuersRecyclerView.isEnabled = enabled
-    }
-
-    override fun onChanged(issuerModels: List<IssuerModel>) {
-        Logger.v(TAG, "onChanged")
-        issuersAdapter.updateIssuerModelList(issuerModels)
     }
 
     override fun onItemClicked(position: Int) {

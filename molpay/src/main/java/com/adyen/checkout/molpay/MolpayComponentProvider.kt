@@ -16,8 +16,11 @@ import com.adyen.checkout.components.PaymentComponentProvider
 import com.adyen.checkout.components.base.GenericPaymentMethodDelegate
 import com.adyen.checkout.components.base.lifecycle.viewModelFactory
 import com.adyen.checkout.components.model.paymentmethods.PaymentMethod
+import com.adyen.checkout.components.model.payments.request.MolpayPaymentMethod
+import com.adyen.checkout.issuerlist.DefaultIssuerListDelegate
 
 class MolpayComponentProvider : PaymentComponentProvider<MolpayComponent, MolpayConfiguration> {
+
     override fun get(
         savedStateRegistryOwner: SavedStateRegistryOwner,
         viewModelStoreOwner: ViewModelStoreOwner,
@@ -27,7 +30,8 @@ class MolpayComponentProvider : PaymentComponentProvider<MolpayComponent, Molpay
     ): MolpayComponent {
         val genericFactory: ViewModelProvider.Factory =
             viewModelFactory(savedStateRegistryOwner, defaultArgs) { savedStateHandle ->
-                MolpayComponent(savedStateHandle, GenericPaymentMethodDelegate(paymentMethod), configuration)
+                val delegate = DefaultIssuerListDelegate(paymentMethod) { MolpayPaymentMethod() }
+                MolpayComponent(savedStateHandle, GenericPaymentMethodDelegate(paymentMethod), delegate, configuration)
             }
         return ViewModelProvider(viewModelStoreOwner, genericFactory).get(MolpayComponent::class.java)
     }

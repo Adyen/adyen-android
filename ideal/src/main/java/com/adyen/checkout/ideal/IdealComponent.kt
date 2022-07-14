@@ -13,6 +13,7 @@ import com.adyen.checkout.components.base.GenericPaymentMethodDelegate
 import com.adyen.checkout.components.model.payments.request.IdealPaymentMethod
 import com.adyen.checkout.components.util.PaymentMethodTypes
 import com.adyen.checkout.issuerlist.IssuerListComponent
+import com.adyen.checkout.issuerlist.IssuerListDelegate
 
 /**
  * PaymentComponent to handle iDeal payments.
@@ -20,14 +21,16 @@ import com.adyen.checkout.issuerlist.IssuerListComponent
 class IdealComponent(
     savedStateHandle: SavedStateHandle,
     paymentMethodDelegate: GenericPaymentMethodDelegate,
+    issuerListDelegate: IssuerListDelegate<IdealPaymentMethod>,
     configuration: IdealConfiguration
-) : IssuerListComponent<IdealPaymentMethod>(savedStateHandle, paymentMethodDelegate, configuration) {
+) : IssuerListComponent<IdealPaymentMethod>(
+    savedStateHandle,
+    paymentMethodDelegate,
+    issuerListDelegate,
+    configuration
+) {
 
     override fun getSupportedPaymentMethodTypes(): Array<String> = PAYMENT_METHOD_TYPES
-
-    override fun instantiateTypedPaymentMethod(): IdealPaymentMethod {
-        return IdealPaymentMethod()
-    }
 
     companion object {
         val PAYMENT_METHOD_TYPES = arrayOf(PaymentMethodTypes.IDEAL)
