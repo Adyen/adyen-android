@@ -16,6 +16,7 @@ import com.adyen.checkout.components.base.GenericPaymentMethodDelegate
 import com.adyen.checkout.components.base.lifecycle.viewModelFactory
 import com.adyen.checkout.components.model.paymentmethods.PaymentMethod
 import com.adyen.checkout.components.repository.PublicKeyRepository
+import com.adyen.checkout.cse.DefaultCardEncrypter
 
 class GiftCardComponentProvider : PaymentComponentProvider<GiftCardComponent, GiftCardConfiguration> {
 
@@ -26,13 +27,17 @@ class GiftCardComponentProvider : PaymentComponentProvider<GiftCardComponent, Gi
         configuration: GiftCardConfiguration,
         defaultArgs: Bundle?
     ): GiftCardComponent {
-        val publicKeyRepository = PublicKeyRepository()
         val giftCardFactory = viewModelFactory(savedStateRegistryOwner, defaultArgs) { savedStateHandle ->
             GiftCardComponent(
-                savedStateHandle,
-                GenericPaymentMethodDelegate(paymentMethod),
-                DefaultGiftCardDelegate(paymentMethod, publicKeyRepository, configuration),
-                configuration,
+                savedStateHandle = savedStateHandle,
+                paymentMethodDelegate = GenericPaymentMethodDelegate(paymentMethod),
+                giftCardDelegate = DefaultGiftCardDelegate(
+                    paymentMethod,
+                    PublicKeyRepository(),
+                    configuration,
+                    DefaultCardEncrypter()
+                ),
+                configuration = configuration,
             )
         }
         return ViewModelProvider(viewModelStoreOwner, giftCardFactory).get(GiftCardComponent::class.java)

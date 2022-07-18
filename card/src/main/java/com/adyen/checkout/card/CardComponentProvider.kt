@@ -21,6 +21,7 @@ import com.adyen.checkout.components.model.paymentmethods.StoredPaymentMethod
 import com.adyen.checkout.components.repository.PublicKeyRepository
 import com.adyen.checkout.core.log.LogUtil
 import com.adyen.checkout.core.log.Logger
+import com.adyen.checkout.cse.DefaultCardEncrypter
 
 private val TAG = LogUtil.getTag()
 
@@ -49,7 +50,8 @@ class CardComponentProvider : StoredPaymentComponentProvider<CardComponent, Card
                     addressDelegate,
                     cardValidationMapper
                 ),
-                verifiedConfiguration
+                verifiedConfiguration,
+                DefaultCardEncrypter(),
             )
         }
         return ViewModelProvider(viewModelStoreOwner, factory).get(CardComponent::class.java)
@@ -71,7 +73,8 @@ class CardComponentProvider : StoredPaymentComponentProvider<CardComponent, Card
                     configuration,
                     publicKeyRepository
                 ),
-                configuration
+                configuration,
+                DefaultCardEncrypter(),
             )
         }
         return ViewModelProvider(viewModelStoreOwner, factory).get(CardComponent::class.java)

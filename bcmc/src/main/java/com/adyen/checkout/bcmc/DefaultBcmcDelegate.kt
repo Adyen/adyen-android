@@ -24,7 +24,7 @@ import com.adyen.checkout.core.exception.CheckoutException
 import com.adyen.checkout.core.exception.ComponentException
 import com.adyen.checkout.core.log.LogUtil
 import com.adyen.checkout.core.log.Logger
-import com.adyen.checkout.cse.CardEncrypter
+import com.adyen.checkout.cse.DefaultCardEncrypter
 import com.adyen.checkout.cse.EncryptedCard
 import com.adyen.checkout.cse.UnencryptedCard
 import com.adyen.checkout.cse.exception.EncryptionException
@@ -39,6 +39,7 @@ internal class DefaultBcmcDelegate(
     private val publicKeyRepository: PublicKeyRepository,
     private val configuration: BcmcConfiguration,
     private val cardValidationMapper: CardValidationMapper,
+    private val cardEncrypter: DefaultCardEncrypter,
 ) : BcmcDelegate {
 
     private val _outputDataFlow = MutableStateFlow<BcmcOutputData?>(null)
@@ -160,7 +161,7 @@ internal class DefaultBcmcDelegate(
             unencryptedCardBuilder.setExpiryYear(expiryDateResult.expiryYear.toString())
         }
 
-        CardEncrypter.encryptFields(unencryptedCardBuilder.build(), publicKey)
+        cardEncrypter.encryptFields(unencryptedCardBuilder.build(), publicKey)
     } catch (e: EncryptionException) {
         _exceptionFlow.tryEmit(e)
 

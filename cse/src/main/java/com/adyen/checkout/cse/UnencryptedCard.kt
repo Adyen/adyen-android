@@ -7,7 +7,6 @@
  */
 package com.adyen.checkout.cse
 
-import com.adyen.checkout.cse.CardEncrypter.GENERATION_DATE_FORMAT
 import org.json.JSONException
 import org.json.JSONObject
 import java.util.Date
@@ -24,7 +23,7 @@ data class UnencryptedCard(
         return try {
             val cardJson = JSONObject()
             if (generationTime != null) {
-                cardJson.put("generationtime", GENERATION_DATE_FORMAT.format(generationTime))
+                cardJson.put("generationtime", CardEncrypter.GENERATION_DATE_FORMAT.format(generationTime))
             }
             if (number != null) {
                 // Builder checks that number needs to be at least 8 digits.

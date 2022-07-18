@@ -20,6 +20,7 @@ import com.adyen.checkout.core.log.LogUtil
 import com.adyen.checkout.core.log.Logger
 import com.adyen.checkout.core.util.runSuspendCatching
 import com.adyen.checkout.cse.CardEncrypter
+import com.adyen.checkout.cse.DefaultCardEncrypter
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 import java.util.UUID
@@ -29,6 +30,8 @@ private val TAG = LogUtil.getTag()
 class BinLookupRepository {
 
     private val cachedBinLookup = HashMap<String, List<DetectedCardType>>()
+
+    private val cardEncrypter: CardEncrypter = DefaultCardEncrypter()
 
     fun isRequiredSize(cardNumber: String): Boolean {
         return cardNumber.length >= REQUIRED_BIN_SIZE
@@ -72,7 +75,7 @@ class BinLookupRepository {
         cardConfiguration: CardConfiguration
     ): BinLookupResponse? = withContext(Dispatchers.Default) {
         runSuspendCatching {
-            val encryptedBin = CardEncrypter.encryptBin(cardNumber, publicKey)
+            val encryptedBin = cardEncrypter.encryptBin(cardNumber, publicKey)
             val cardTypes = cardConfiguration.supportedCardTypes.map { it.txVariant }
             val request = BinLookupRequest(encryptedBin, UUID.randomUUID().toString(), cardTypes)
 

@@ -28,6 +28,7 @@ internal class DefaultGiftCardDelegate(
     private val paymentMethod: PaymentMethod,
     private val publicKeyRepository: PublicKeyRepository,
     private val configuration: GiftCardConfiguration,
+    private val cardEncrypter: CardEncrypter,
 ) : GiftCardDelegate {
 
     private val _outputDataFlow = MutableStateFlow<GiftCardOutputData?>(null)
@@ -138,7 +139,7 @@ internal class DefaultGiftCardDelegate(
             .setNumber(outputData.giftcardNumberFieldState.value)
             .setCvc(outputData.giftcardPinFieldState.value)
 
-        CardEncrypter.encryptFields(unencryptedCardBuilder.build(), publicKey)
+        cardEncrypter.encryptFields(unencryptedCardBuilder.build(), publicKey)
     } catch (e: EncryptionException) {
         _exceptionFlow.tryEmit(e)
 
