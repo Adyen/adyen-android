@@ -62,8 +62,9 @@ interface CardEncrypter {
 
         const val GENERATION_TIME_KEY = "generationtime"
 
-        val GENERATION_DATE_FORMAT: SimpleDateFormat = SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSS'Z'", Locale.US).apply {
-            timeZone = TimeZone.getTimeZone("UTC")
-        }
+        val GENERATION_DATE_FORMAT: SimpleDateFormat =
+            SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSS'Z'", Locale.US).apply {
+                timeZone = TimeZone.getTimeZone("UTC")
+            }
     }
 }

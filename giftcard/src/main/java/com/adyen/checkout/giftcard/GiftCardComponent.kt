@@ -48,11 +48,9 @@ class GiftCardComponent(
             .onEach { notifyStateChanged(it) }
             .launchIn(viewModelScope)
 
-
         giftCardDelegate.exceptionFlow
             .onEach { notifyException(it) }
             .launchIn(viewModelScope)
-
 
         viewModelScope.launch {
             giftCardDelegate.fetchPublicKey()

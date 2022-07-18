@@ -12,6 +12,7 @@ import app.cash.turbine.test
 import com.adyen.checkout.components.model.paymentmethods.PaymentMethod
 import com.adyen.checkout.components.repository.PublicKeyRepository
 import com.adyen.checkout.core.api.Environment
+import com.adyen.checkout.cse.TestCardEncrypter
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.test.UnconfinedTestDispatcher
@@ -21,6 +22,8 @@ import kotlinx.coroutines.test.setMain
 import org.junit.jupiter.api.AfterEach
 import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.Assertions.assertFalse
+import org.junit.jupiter.api.Assertions.assertNotNull
+import org.junit.jupiter.api.Assertions.assertTrue
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.DisplayName
 import org.junit.jupiter.api.Nested
@@ -40,6 +43,8 @@ internal class DefaultGiftCardDelegateTest(
     @Mock private val publicKeyRepository: PublicKeyRepository
 ) {
 
+    private val cardEncrypter = TestCardEncrypter()
+
     private val delegate = DefaultGiftCardDelegate(
         paymentMethod = PaymentMethod(),
         publicKeyRepository = publicKeyRepository,
@@ -48,11 +53,14 @@ internal class DefaultGiftCardDelegateTest(
             Environment.TEST,
             TEST_CLIENT_KEY
         ).build(),
+        cardEncrypter = cardEncrypter,
     )
 
     @BeforeEach
     fun before() {
         Dispatchers.setMain(UnconfinedTestDispatcher())
+
+        cardEncrypter.reset()
     }
 
     @AfterEach
@@ -91,8 +99,7 @@ internal class DefaultGiftCardDelegateTest(
 
         @Test
         fun `output data is invalid, then component state should be invalid`() = runTest {
-            whenever(publicKeyRepository.fetchPublicKey(any(), any())) doReturn Result.success(TEST_PUBLIC_KEY)
-            delegate.fetchPublicKey()
+            stubPublicKeyRepository()
 
             delegate.componentStateFlow.test {
                 delegate.createComponentState(GiftCardOutputData("123", "737"))
@@ -103,20 +110,42 @@ internal class DefaultGiftCardDelegateTest(
             }
         }
 
-        // TODO: Make encryption testable
-//        @Test
-//        fun `everything is valid, then component state should be invalid`() = runTest {
-//            whenever(publicKeyRepository.fetchPublicKey(any(), any())) doReturn Result.success(TEST_PUBLIC_KEY)
-//            delegate.fetchPublicKey()
-//
-//            delegate.componentStateFlow.test {
-//                delegate.createComponentState(GiftCardOutputData("5555444433330000", "737"))
-//
-//                skipItems(1)
-//
-//                assertFalse(awaitItem()!!.isInputValid)
-//            }
-//        }
+        @Test
+        fun `encryption fails, then component state should be invalid`() = runTest {
+            stubPublicKeyRepository()
+            cardEncrypter.shouldThrowException = true
+
+            delegate.componentStateFlow.test {
+                delegate.createComponentState(GiftCardOutputData("5555444433330000", "737"))
+
+                skipItems(1)
+
+                assertFalse(awaitItem()!!.isInputValid)
+            }
+        }
+
+        @Test
+        fun `everything is valid, then component state should be good`() = runTest {
+            stubPublicKeyRepository()
+
+            delegate.componentStateFlow.test {
+                delegate.createComponentState(GiftCardOutputData("5555444433330000", "737"))
+
+                skipItems(1)
+
+                val componentState = requireNotNull(awaitItem())
+
+                assertNotNull(componentState.data.paymentMethod)
+                assertTrue(componentState.isInputValid)
+                assertTrue(componentState.isReady)
+                assertEquals("0000", componentState.lastFourDigits)
+            }
+        }
+    }
+
+    private suspend fun stubPublicKeyRepository() {
+        whenever(publicKeyRepository.fetchPublicKey(any(), any())) doReturn Result.success(TEST_PUBLIC_KEY)
+        delegate.fetchPublicKey()
     }
 
     companion object {

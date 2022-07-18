@@ -64,6 +64,7 @@ internal class DefaultGiftCardDelegate(
         createComponentState(outputData)
     }
 
+    @Suppress("ReturnCount")
     override fun createComponentState(outputData: GiftCardOutputData) {
         val paymentComponentData = PaymentComponentData<GiftCardPaymentMethod>()
 
