@@ -31,8 +31,8 @@ class GiftCardComponentProvider : PaymentComponentProvider<GiftCardComponent, Gi
             GiftCardComponent(
                 savedStateHandle,
                 GenericPaymentMethodDelegate(paymentMethod),
+                DefaultGiftCardDelegate(paymentMethod, publicKeyRepository, configuration),
                 configuration,
-                publicKeyRepository
             )
         }
         return ViewModelProvider(viewModelStoreOwner, giftCardFactory).get(GiftCardComponent::class.java)
