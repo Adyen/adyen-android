@@ -45,7 +45,12 @@ class GooglePayComponentProvider :
         defaultArgs: Bundle?
     ): GooglePayComponent {
         val googlePayFactory = viewModelFactory(savedStateRegistryOwner, defaultArgs) { savedStateHandle ->
-            GooglePayComponent(savedStateHandle, GenericPaymentMethodDelegate(paymentMethod), configuration)
+            GooglePayComponent(
+                savedStateHandle = savedStateHandle,
+                paymentMethodDelegate = GenericPaymentMethodDelegate(paymentMethod),
+                googlePayDelegate = DefaultGooglePayDelegate(paymentMethod, configuration),
+                configuration = configuration,
+            )
         }
         return ViewModelProvider(viewModelStoreOwner, googlePayFactory).get(GooglePayComponent::class.java)
     }
