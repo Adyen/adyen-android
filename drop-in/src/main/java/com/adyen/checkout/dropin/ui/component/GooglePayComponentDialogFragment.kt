@@ -34,43 +34,14 @@ import com.adyen.checkout.googlepay.GooglePayComponent
 import com.adyen.checkout.googlepay.GooglePayComponentState
 import kotlinx.coroutines.launch
 
-private const val NAVIGATED_FROM_PRESELECTED = "NAVIGATED_FROM_PRESELECTED"
-private const val PAYMENT_METHOD = "PAYMENT_METHOD"
-
 @Suppress("TooManyFunctions")
 class GooglePayComponentDialogFragment : DropInBottomSheetDialogFragment(), Observer<GooglePayComponentState> {
-
-    companion object {
-        private val TAG = LogUtil.getTag()
-
-        fun newInstance(
-            paymentMethod: PaymentMethod
-        ): GooglePayComponentDialogFragment {
-            val args = Bundle()
-            args.putParcelable(PAYMENT_METHOD, paymentMethod)
-
-            return GooglePayComponentDialogFragment().apply {
-                arguments = args
-            }
-        }
-    }
 
     private val googlePayViewModel: GooglePayViewModel by viewModels()
 
     private lateinit var paymentMethod: PaymentMethod
     private lateinit var component: GooglePayComponent
     private var navigatedFromPreselected = false
-
-    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
-        Logger.d(TAG, "onCreateView")
-        return inflater.inflate(R.layout.fragment_google_pay_component, container, false)
-    }
-
-    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
-        Logger.d(TAG, "onViewCreated")
-        component.observe(viewLifecycleOwner, this)
-        component.observeErrors(viewLifecycleOwner, createErrorHandlerObserver())
-    }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         Logger.d(TAG, "onCreate")
@@ -95,6 +66,17 @@ class GooglePayComponentDialogFragment : DropInBottomSheetDialogFragment(), Obse
         }
 
         googlePayViewModel.fragmentLoaded()
+    }
+
+    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
+        Logger.d(TAG, "onCreateView")
+        return inflater.inflate(R.layout.fragment_google_pay_component, container, false)
+    }
+
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        Logger.d(TAG, "onViewCreated")
+        component.observe(viewLifecycleOwner, this)
+        component.observeErrors(viewLifecycleOwner, createErrorHandlerObserver())
 
         viewLifecycleOwner.lifecycleScope.launch {
             repeatOnLifecycle(Lifecycle.State.STARTED) {
@@ -155,5 +137,24 @@ class GooglePayComponentDialogFragment : DropInBottomSheetDialogFragment(), Obse
 
     fun handleActivityResult(resultCode: Int, data: Intent?) {
         component.handleActivityResult(resultCode, data)
+    }
+
+    companion object {
+
+        private val TAG = LogUtil.getTag()
+
+        private const val NAVIGATED_FROM_PRESELECTED = "NAVIGATED_FROM_PRESELECTED"
+        private const val PAYMENT_METHOD = "PAYMENT_METHOD"
+
+        fun newInstance(
+            paymentMethod: PaymentMethod
+        ): GooglePayComponentDialogFragment {
+            val args = Bundle()
+            args.putParcelable(PAYMENT_METHOD, paymentMethod)
+
+            return GooglePayComponentDialogFragment().apply {
+                arguments = args
+            }
+        }
     }
 }
