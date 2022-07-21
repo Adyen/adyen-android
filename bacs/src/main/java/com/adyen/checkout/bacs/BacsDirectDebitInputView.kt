@@ -13,6 +13,7 @@ import android.util.AttributeSet
 import android.view.LayoutInflater
 import android.view.View
 import android.view.View.OnFocusChangeListener
+import androidx.core.view.isVisible
 import androidx.lifecycle.LifecycleOwner
 import androidx.lifecycle.Observer
 import com.adyen.checkout.bacs.databinding.BacsDirectDebitInputViewBinding
@@ -104,6 +105,20 @@ class BacsDirectDebitInputView @JvmOverloads constructor(
                     binding.editTextShopperEmail.requestFocus()
                 }
                 binding.textInputLayoutShopperEmail.error = localizedContext.getString(shopperEmailValidation.reason)
+            }
+            if (!it.isAmountConsentChecked) {
+                if (!isErrorFocused) {
+                    isErrorFocused = true
+                    binding.switchConsentAmount.requestFocus()
+                }
+                binding.textViewErrorConsentAmount.isVisible = true
+            }
+            if (!it.isAccountConsentChecked) {
+                if (!isErrorFocused) {
+                    isErrorFocused = true
+                    binding.switchConsentAccount.requestFocus()
+                }
+                binding.textViewErrorConsentAccount.isVisible = true
             }
         }
     }
@@ -205,11 +220,13 @@ class BacsDirectDebitInputView @JvmOverloads constructor(
     private fun initConsentSwitches() {
         binding.switchConsentAmount.setOnCheckedChangeListener { _, isChecked ->
             component.inputData.isAmountConsentChecked = isChecked
+            binding.textViewErrorConsentAmount.isVisible = !isChecked
             notifyInputDataChanged()
         }
 
         binding.switchConsentAccount.setOnCheckedChangeListener { _, isChecked ->
             component.inputData.isAccountConsentChecked = isChecked
+            binding.textViewErrorConsentAccount.isVisible = !isChecked
             notifyInputDataChanged()
         }
     }
