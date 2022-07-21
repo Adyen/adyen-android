@@ -8,8 +8,5 @@
 [//]: # ( # Deprecated)
 [//]: # ( - Configurations public constructor are deprecated, please use each Configuration's builder to make a Configuration object)
 
-## Added
-- Support for the new Asia Pacific South East (APSE) and India live environments. Use these environments with the corresponding APSE or India location-based live endpoints.
-
 ## Fixed
-- For BACS Direct Debit, the payment agreement text in the payment form now includes the amount. Previously, it always showed the default **above amount** instead of the amount.
+- For BACS Direct Debit, agreement texts now show an error message to take further action if not switched on while continuing to the confirmation screen. 
