@@ -52,7 +52,8 @@ private const val SINGLE_CARD_LIST_SIZE = 1
 class CardComponent private constructor(
     savedStateHandle: SavedStateHandle,
     private val cardDelegate: CardDelegate,
-    private val cardConfiguration: CardConfiguration
+    private val cardConfiguration: CardConfiguration,
+    private val cardEncrypter: CardEncrypter,
 ) : BasePaymentComponent<CardConfiguration, CardInputData, CardOutputData, CardComponentState>(
     savedStateHandle,
     cardDelegate,
@@ -105,11 +106,13 @@ class CardComponent private constructor(
     constructor(
         savedStateHandle: SavedStateHandle,
         storedCardDelegate: StoredCardDelegate,
-        cardConfiguration: CardConfiguration
+        cardConfiguration: CardConfiguration,
+        cardEncrypter: CardEncrypter,
     ) : this(
         savedStateHandle,
         storedCardDelegate as CardDelegate,
-        cardConfiguration
+        cardConfiguration,
+        cardEncrypter,
     ) {
         storedCardDelegate.updateInputData(inputData)
 
@@ -121,11 +124,13 @@ class CardComponent private constructor(
     constructor(
         savedStateHandle: SavedStateHandle,
         cardDelegate: NewCardDelegate,
-        cardConfiguration: CardConfiguration
+        cardConfiguration: CardConfiguration,
+        cardEncrypter: CardEncrypter,
     ) : this(
         savedStateHandle,
         cardDelegate as CardDelegate,
-        cardConfiguration
+        cardConfiguration,
+        cardEncrypter
     )
 
     private fun fetchPublicKey() {
@@ -397,7 +402,7 @@ class CardComponent private constructor(
                 unencryptedCardBuilder.setExpiryYear(expiryDateResult.expiryYear.toString())
             }
 
-            CardEncrypter.encryptFields(unencryptedCardBuilder.build(), publicKey)
+            cardEncrypter.encryptFields(unencryptedCardBuilder.build(), publicKey)
         } catch (e: EncryptionException) {
             notifyException(e)
             return CardComponentState(

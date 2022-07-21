@@ -29,6 +29,7 @@ import com.adyen.checkout.cse.EncryptedCard
 import com.adyen.checkout.cse.UnencryptedCard
 import com.adyen.checkout.cse.exception.EncryptionException
 import com.adyen.threeds2.ThreeDS2Service
+import kotlinx.coroutines.channels.BufferOverflow
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -38,6 +39,7 @@ internal class DefaultBcmcDelegate(
     private val publicKeyRepository: PublicKeyRepository,
     private val configuration: BcmcConfiguration,
     private val cardValidationMapper: CardValidationMapper,
+    private val cardEncrypter: CardEncrypter,
 ) : BcmcDelegate {
 
     private val _outputDataFlow = MutableStateFlow<BcmcOutputData?>(null)
@@ -46,7 +48,7 @@ internal class DefaultBcmcDelegate(
     private val _componentStateFlow = MutableStateFlow<PaymentComponentState<CardPaymentMethod>?>(null)
     override val componentStateFlow: Flow<PaymentComponentState<CardPaymentMethod>?> = _componentStateFlow
 
-    private val _exceptionFlow = MutableSharedFlow<CheckoutException>()
+    private val _exceptionFlow = MutableSharedFlow<CheckoutException>(0, 1, BufferOverflow.DROP_OLDEST)
     override val exceptionFlow: Flow<CheckoutException> = _exceptionFlow
 
     private var publicKey: String? = null
@@ -159,7 +161,7 @@ internal class DefaultBcmcDelegate(
             unencryptedCardBuilder.setExpiryYear(expiryDateResult.expiryYear.toString())
         }
 
-        CardEncrypter.encryptFields(unencryptedCardBuilder.build(), publicKey)
+        cardEncrypter.encryptFields(unencryptedCardBuilder.build(), publicKey)
     } catch (e: EncryptionException) {
         _exceptionFlow.tryEmit(e)
 
