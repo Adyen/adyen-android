@@ -10,6 +10,6 @@ package com.adyen.checkout.googlepay
 import com.adyen.checkout.components.base.InputData
 import com.google.android.gms.wallet.PaymentData
 
-class GooglePayInputData(
+data class GooglePayInputData(
     val paymentData: PaymentData?
 ) : InputData
