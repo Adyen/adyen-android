@@ -10,7 +10,7 @@ import com.adyen.checkout.core.log.Logger
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableStateFlow
 
-class DefaultSepaDelegate(private val paymentMethod: PaymentMethod) : SepaDelegate {
+internal class DefaultSepaDelegate(private val paymentMethod: PaymentMethod) : SepaDelegate {
 
     private val _outputDataFlow = MutableStateFlow<SepaOutputData?>(null)
     override val outputDataFlow: Flow<SepaOutputData?> = _outputDataFlow
@@ -34,13 +34,12 @@ class DefaultSepaDelegate(private val paymentMethod: PaymentMethod) : SepaDelega
     }
 
     override fun createComponentState(outputData: SepaOutputData) {
-        val paymentComponentData = PaymentComponentData<SepaPaymentMethod>()
-        val paymentMethod = SepaPaymentMethod().apply {
-            type = SepaPaymentMethod.PAYMENT_METHOD_TYPE
-            ownerName = outputData.ownerNameField.value
+        val paymentMethod = SepaPaymentMethod(
+            type = SepaPaymentMethod.PAYMENT_METHOD_TYPE,
+            ownerName = outputData.ownerNameField.value,
             iban = outputData.ibanNumberField.value
-        }
-        paymentComponentData.paymentMethod = paymentMethod
+        )
+        val paymentComponentData = PaymentComponentData(paymentMethod)
         componentStateChanged(
             PaymentComponentState(
                 paymentComponentData,
