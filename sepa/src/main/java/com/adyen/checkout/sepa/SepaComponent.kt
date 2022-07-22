@@ -8,53 +8,47 @@
 package com.adyen.checkout.sepa
 
 import androidx.lifecycle.SavedStateHandle
+import androidx.lifecycle.viewModelScope
 import com.adyen.checkout.components.PaymentComponentProvider
 import com.adyen.checkout.components.PaymentComponentState
 import com.adyen.checkout.components.base.BasePaymentComponent
 import com.adyen.checkout.components.base.GenericPaymentMethodDelegate
-import com.adyen.checkout.components.model.payments.request.PaymentComponentData
 import com.adyen.checkout.components.model.payments.request.SepaPaymentMethod
 import com.adyen.checkout.components.util.PaymentMethodTypes
 import com.adyen.checkout.core.log.LogUtil.getTag
-import com.adyen.checkout.core.log.Logger
+import kotlinx.coroutines.flow.filterNotNull
+import kotlinx.coroutines.flow.launchIn
+import kotlinx.coroutines.flow.onEach
 
 class SepaComponent(
     savedStateHandle: SavedStateHandle,
     paymentMethodDelegate: GenericPaymentMethodDelegate,
-    configuration: SepaConfiguration
+    private val sepaDelegate: SepaDelegate,
+    configuration: SepaConfiguration,
 ) : BasePaymentComponent<SepaConfiguration, SepaInputData, SepaOutputData, PaymentComponentState<SepaPaymentMethod>>(
     savedStateHandle,
     paymentMethodDelegate,
     configuration
 ) {
 
+    init {
+        sepaDelegate.outputDataFlow
+            .filterNotNull()
+            .onEach { notifyOutputDataChanged(it) }
+            .launchIn(viewModelScope)
+
+        sepaDelegate.componentStateFlow
+            .filterNotNull()
+            .onEach { notifyStateChanged(it) }
+            .launchIn(viewModelScope)
+    }
+
     override var inputData: SepaInputData = SepaInputData()
 
     override fun getSupportedPaymentMethodTypes(): Array<String> = PAYMENT_METHOD_TYPES
 
     override fun onInputDataChanged(inputData: SepaInputData) {
-        Logger.v(TAG, "onInputDataChanged")
-        notifyOutputDataChanged(SepaOutputData(inputData.name, inputData.iban))
-        createComponentState()
-    }
-
-    private fun createComponentState() {
-        val sepaOutputData = outputData
-        val paymentComponentData = PaymentComponentData<SepaPaymentMethod>()
-        val paymentMethod = SepaPaymentMethod()
-        paymentMethod.type = SepaPaymentMethod.PAYMENT_METHOD_TYPE
-        if (sepaOutputData != null) {
-            paymentMethod.ownerName = sepaOutputData.ownerNameField.value
-            paymentMethod.iban = sepaOutputData.ibanNumberField.value
-        }
-        paymentComponentData.paymentMethod = paymentMethod
-        notifyStateChanged(
-            PaymentComponentState(
-                paymentComponentData,
-                sepaOutputData != null && sepaOutputData.isValid,
-                true
-            )
-        )
+        sepaDelegate.onInputDataChanged(inputData)
     }
 
     companion object {

@@ -27,7 +27,12 @@ class SepaComponentProvider : PaymentComponentProvider<SepaComponent, SepaConfig
     ): SepaComponent {
         val genericFactory: ViewModelProvider.Factory =
             viewModelFactory(savedStateRegistryOwner, defaultArgs) { savedStateHandle ->
-                SepaComponent(savedStateHandle, GenericPaymentMethodDelegate(paymentMethod), configuration)
+                SepaComponent(
+                    savedStateHandle,
+                    GenericPaymentMethodDelegate(paymentMethod),
+                    DefaultSepaDelegate(paymentMethod),
+                    configuration
+                )
             }
         return ViewModelProvider(viewModelStoreOwner, genericFactory).get(SepaComponent::class.java)
     }
