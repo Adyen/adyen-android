@@ -9,4 +9,4 @@
 [//]: # ( - Configurations public constructor are deprecated, please use each Configuration's builder to make a Configuration object)
 
 ## Fixed
-- Not being able to import some standalone modules because of `ui-core` accidentally having a dependency to a style in `card`.
+- For BACS Direct Debit, an error message appears under the payment agreement text if the shopper selects the **Continue** button without selecting the toggles to agree.
