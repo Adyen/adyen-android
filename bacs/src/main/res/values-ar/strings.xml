@@ -20,6 +20,7 @@
     <string name="bacs_consent_account">أؤكد أن الحساب باسمي وأنا وحدي صاحب التوقيع المطالب بالإذن بالخصم المباشر في هذا الحساب.</string>
     <string name="bacs_consent_amount">أوافق على خصم المبلغ أعلاه من حسابي البنكي.</string>
     <string name="bacs_consent_amount_specified">أوافق على خصم %s من حسابي البنكي.</string>
+    <string name="bacs_consent_invalid">يتطلب هذا الحقل إجراء</string>
 
     <string name="bacs_continue">متابعة</string>
     <string name="bacs_confirm_and_pay">تأكيد ودفع</string>

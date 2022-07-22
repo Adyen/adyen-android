@@ -20,6 +20,7 @@
     <string name="bacs_consent_account">Confirm că sunt titularul acestui cont și că sunt singurul semnatar necesar pentru autorizarea debitului direct pentru acest cont.</string>
     <string name="bacs_consent_amount">Sunt de acord ca suma menționată mai sus să fie dedusă din contul meu bancar.</string>
     <string name="bacs_consent_amount_specified">Sunt de acord să se deducă %s din contul meu bancar.</string>
+    <string name="bacs_consent_invalid">Acest câmp necesită o acțiune din partea dvs.</string>
 
     <string name="bacs_continue">Continuare</string>
     <string name="bacs_confirm_and_pay">Confirmați și plătiți</string>
