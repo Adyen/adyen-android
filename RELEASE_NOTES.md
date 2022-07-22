@@ -9,4 +9,4 @@
 [//]: # ( - Configurations public constructor are deprecated, please use each Configuration's builder to make a Configuration object)
 
 ## Fixed
-- For BACS Direct Debit, agreement texts now show an error message to take further action if not switched on while continuing to the confirmation screen. 
+- For BACS Direct Debit, an error message appears under the payment agreement text if the shopper selects the **Continue** button without selecting the toggles to agree.
