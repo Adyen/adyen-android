@@ -20,6 +20,7 @@
     <string name="bacs_consent_account">Jeg bekrefter at kontoen står i mitt navn, og at jeg er den eneste signataren som kreves for å autorisere direktebelastningen på denne kontoen.</string>
     <string name="bacs_consent_amount">Jeg samtykker til at beløpet ovenfor blir trukket fra bankkontoen min.</string>
     <string name="bacs_consent_amount_specified">Jeg godtar at %s blir trukket fra kontoen min.</string>
+    <string name="bacs_consent_invalid">Dette feltet krever handling</string>
 
     <string name="bacs_continue">Fortsett</string>
     <string name="bacs_confirm_and_pay">Bekreft og betal</string>

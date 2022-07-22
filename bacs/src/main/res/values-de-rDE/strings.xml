@@ -20,6 +20,7 @@
     <string name="bacs_consent_account">Ich bestätige, dass das Konto unter meinem Namen läuft und ich der einzige erforderliche Unterzeichner bin, um die Lastschrift für dieses Konto zu autorisieren.</string>
     <string name="bacs_consent_amount">Ich bin damit einverstanden, dass der oben genannte Betrag von meinem Bankkonto abgebucht wird.</string>
     <string name="bacs_consent_amount_specified">Ich bin damit einverstanden, dass %s von meinem Bankkonto abgebucht wird.</string>
+    <string name="bacs_consent_invalid">Dieses Feld erfordert eine Aktion</string>
 
     <string name="bacs_continue">Weiter</string>
     <string name="bacs_confirm_and_pay">Bestätigen und bezahlen</string>

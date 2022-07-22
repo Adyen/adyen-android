@@ -20,6 +20,7 @@
     <string name="bacs_consent_account">Confirmo que la cuenta está a mi nombre y soy el único firmante necesario para autorizar débitos directos en esta cuenta.</string>
     <string name="bacs_consent_amount">Estoy de acuerdo con que la cantidad anterior se deduzca de mi cuenta bancaria.</string>
     <string name="bacs_consent_amount_specified">Estoy de acuerdo en que se deduzca la siguiente cantidad de mi cuenta bancaria: %s.</string>
+    <string name="bacs_consent_invalid">Este campo requiere su atención</string>
 
     <string name="bacs_continue">Continuar</string>
     <string name="bacs_confirm_and_pay">Confirmar y pagar</string>
