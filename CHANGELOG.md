@@ -13,6 +13,10 @@
 [//]: <> (Add changes that not released yet into `Unreleased` section)
 [//]: <> (Comment `Unreleased` section if there are no changes)
 [//]: <> (## [Unreleased])
+## [3.8.4] - 2022-07-25
+### Added
+- Android 12 support.
+ 
 ## [3.8.3] - 2021-06-01
 ### Added
 - Enable showing Postal Code input in Card component.
