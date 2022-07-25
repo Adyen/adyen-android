@@ -7,7 +7,6 @@
  */
 package com.adyen.checkout.components.util
 
-import android.text.TextUtils
 import com.adyen.checkout.core.exception.CheckoutException
 import java.util.Collections
 
@@ -173,7 +172,7 @@ enum class CheckoutCurrency(val fractionDigits: Int) {
          */
         @JvmStatic
         fun isSupported(currency: String?): Boolean {
-            return !TextUtils.isEmpty(currency) && CURRENCIES_HASHMAP.containsKey(currency)
+            return currency != null && currency.isNotEmpty() && CURRENCIES_HASHMAP.containsKey(currency)
         }
 
         /**

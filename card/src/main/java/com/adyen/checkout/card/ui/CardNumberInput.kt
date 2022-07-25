@@ -11,7 +11,6 @@ import android.content.Context
 import android.os.Build
 import android.text.Editable
 import android.text.InputType
-import android.text.TextUtils
 import android.text.method.DigitsKeyListener
 import android.util.AttributeSet
 import com.adyen.checkout.card.util.CardValidationUtils
@@ -68,7 +67,7 @@ open class CardNumberInput @JvmOverloads constructor(
     private fun formatProcessedString(processedValue: String): String {
         val result =
             splitStringWithMask(processedValue, *if (isAmexCard) AMEX_CARD_NUMBER_MASK else DEFAULT_CARD_NUMBER_MASK)
-        return TextUtils.join(DIGIT_SEPARATOR.toString() + "", result).trim { it <= ' ' }
+        return result.joinToString(DIGIT_SEPARATOR.toString()).trim { it <= ' ' }
     }
 
     private fun splitStringWithMask(value: String, vararg mask: Int): Array<String?> {

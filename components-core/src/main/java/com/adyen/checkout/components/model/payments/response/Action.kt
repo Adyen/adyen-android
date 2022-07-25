@@ -7,7 +7,6 @@
  */
 package com.adyen.checkout.components.model.payments.response
 
-import android.text.TextUtils
 import com.adyen.checkout.core.exception.CheckoutException
 import com.adyen.checkout.core.model.ModelObject
 import org.json.JSONObject
@@ -38,7 +37,7 @@ abstract class Action : ModelObject() {
 
             override fun deserialize(jsonObject: JSONObject): Action {
                 val actionType = jsonObject.optString(TYPE)
-                if (TextUtils.isEmpty(actionType)) {
+                if (actionType.isEmpty()) {
                     throw CheckoutException("Action type not found")
                 }
                 val serializer = getChildSerializer(actionType)
