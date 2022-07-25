@@ -74,9 +74,25 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content" />
 
+    <TextView
+        android:id="@+id/textView_errorConsentAmount"
+        style="@style/AdyenCheckout.Bacs.InvalidSwitchTextAppearance"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:textIsSelectable="false"
+        android:visibility="gone" />
+
     <androidx.appcompat.widget.SwitchCompat
         android:id="@+id/switch_consentAccount"
         style="@style/AdyenCheckout.Bacs.Switch.Account"
         android:layout_width="match_parent"
         android:layout_height="wrap_content" />
+
+    <TextView
+        android:id="@+id/textView_errorConsentAccount"
+        style="@style/AdyenCheckout.Bacs.InvalidSwitchTextAppearance"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:textIsSelectable="false"
+        android:visibility="gone" />
 </merge>
