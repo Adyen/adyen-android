@@ -7,7 +7,6 @@
  */
 package com.adyen.checkout.mbway
 
-import android.text.TextUtils
 import com.adyen.checkout.components.base.OutputData
 import com.adyen.checkout.components.ui.FieldState
 import com.adyen.checkout.components.ui.Validation
@@ -21,7 +20,7 @@ class MBWayOutputData(mobilePhoneNumber: String) : OutputData {
         get() = mobilePhoneNumberFieldState.validation.isValid()
 
     private fun validateMobileNumber(mobileNumber: String): FieldState<String> {
-        return if (!TextUtils.isEmpty(mobileNumber) && ValidationUtils.isPhoneNumberValid(mobileNumber)) {
+        return if (mobileNumber.isNotEmpty() && ValidationUtils.isPhoneNumberValid(mobileNumber)) {
             FieldState(
                 mobileNumber,
                 Validation.Valid

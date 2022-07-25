@@ -7,7 +7,6 @@
  */
 package com.adyen.checkout.sepa
 
-import android.text.TextUtils
 import com.adyen.checkout.components.base.OutputData
 import com.adyen.checkout.components.ui.FieldState
 import com.adyen.checkout.components.ui.Validation
@@ -17,7 +16,7 @@ class SepaOutputData(ownerName: String, ibanNumber: String) : OutputData {
 
     val ownerNameField: FieldState<String> = FieldState(
         value = ownerName,
-        validation = if (TextUtils.isEmpty(ownerName))
+        validation = if (ownerName.isEmpty())
             Validation.Invalid(R.string.checkout_holder_name_not_valid)
         else
             Validation.Valid

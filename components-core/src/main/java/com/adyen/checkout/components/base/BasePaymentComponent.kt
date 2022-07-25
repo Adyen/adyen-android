@@ -8,7 +8,6 @@
 package com.adyen.checkout.components.base
 
 import android.content.Context
-import android.text.TextUtils
 import androidx.lifecycle.LifecycleOwner
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.Observer
@@ -120,7 +119,7 @@ abstract class BasePaymentComponent<
                 Flavor.COMPONENT
             }
             val type = paymentMethodDelegate.getPaymentMethodType()
-            if (TextUtils.isEmpty(type)) {
+            if (type.isEmpty()) {
                 throw CheckoutException("Payment method has empty or null type")
             }
             val analyticEvent = create(context, flavor, type, configuration.shopperLocale)
