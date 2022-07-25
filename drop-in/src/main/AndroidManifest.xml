@@ -8,6 +8,7 @@
         <activity
             android:name=".ui.DropInActivity"
             android:launchMode="singleTask"
+            android:exported="true"
             android:theme="@style/AdyenCheckout.Translucent">
             <intent-filter>
                 <action android:name="android.intent.action.VIEW" />
