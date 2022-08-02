@@ -44,7 +44,7 @@ abstract class BasePaymentComponent<
 ) : PaymentComponentViewModel<ConfigurationT, ComponentStateT>(savedStateHandle, paymentMethodDelegate, configuration),
     ViewableComponent<OutputDataT, ConfigurationT, ComponentStateT> {
 
-    abstract var inputData: InputDataT
+    abstract val inputData: InputDataT
     private val paymentComponentStateLiveData = MutableLiveData<ComponentStateT>()
     private val componentErrorLiveData = MutableLiveData<ComponentError>()
     private val outputLiveData = MutableLiveData<OutputDataT>()

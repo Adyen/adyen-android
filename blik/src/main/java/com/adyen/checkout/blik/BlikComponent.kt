@@ -32,7 +32,7 @@ class BlikComponent(
     BlikOutputData,
     PaymentComponentState<BlikPaymentMethod>>(savedStateHandle, paymentMethodDelegate, configuration) {
 
-    override var inputData: BlikInputData = BlikInputData()
+    override val inputData: BlikInputData = BlikInputData()
 
     init {
         observeOutputData()
