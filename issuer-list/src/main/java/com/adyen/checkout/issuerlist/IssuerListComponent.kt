@@ -33,7 +33,7 @@ abstract class IssuerListComponent<IssuerListPaymentMethodT : IssuerListPaymentM
     configuration
 ) {
 
-    override var inputData: IssuerListInputData = IssuerListInputData()
+    override val inputData: IssuerListInputData = IssuerListInputData()
 
     val issuers: List<IssuerModel>
         get() = issuerListDelegate.getIssuers()

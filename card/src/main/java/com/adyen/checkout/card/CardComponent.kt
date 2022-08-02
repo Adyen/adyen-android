@@ -60,7 +60,7 @@ class CardComponent private constructor(
     cardConfiguration
 ) {
 
-    override var inputData: CardInputData = CardInputData()
+    override val inputData: CardInputData = CardInputData()
 
     private var publicKey: String? = null
 

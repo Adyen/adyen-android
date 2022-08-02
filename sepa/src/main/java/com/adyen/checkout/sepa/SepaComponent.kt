@@ -43,7 +43,7 @@ class SepaComponent(
             .launchIn(viewModelScope)
     }
 
-    override var inputData: SepaInputData = SepaInputData()
+    override val inputData: SepaInputData = SepaInputData()
 
     override fun getSupportedPaymentMethodTypes(): Array<String> = PAYMENT_METHOD_TYPES
 

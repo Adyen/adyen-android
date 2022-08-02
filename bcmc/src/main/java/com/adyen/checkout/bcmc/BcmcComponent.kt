@@ -35,7 +35,7 @@ class BcmcComponent(
 ) : BasePaymentComponent<BcmcConfiguration, BcmcInputData, BcmcOutputData,
     PaymentComponentState<CardPaymentMethod>>(savedStateHandle, paymentMethodDelegate, configuration) {
 
-    override var inputData: BcmcInputData = BcmcInputData()
+    override val inputData: BcmcInputData = BcmcInputData()
 
     init {
         bcmcDelegate.outputDataFlow

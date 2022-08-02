@@ -29,9 +29,9 @@ internal class DefaultGooglePayDelegate(
     override val componentStateFlow: Flow<GooglePayComponentState?> = _componentStateFlow
 
     override fun onInputDataChanged(inputData: GooglePayInputData) {
-        if (inputData.paymentData == null) throw CheckoutException("paymentData is null")
+        val paymentData = inputData.paymentData ?: throw CheckoutException("paymentData is null")
 
-        val outputData = GooglePayOutputData(inputData.paymentData)
+        val outputData = GooglePayOutputData(paymentData)
 
         _outputDataFlow.tryEmit(outputData)
 

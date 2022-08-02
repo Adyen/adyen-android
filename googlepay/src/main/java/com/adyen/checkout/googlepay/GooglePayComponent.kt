@@ -38,7 +38,7 @@ class GooglePayComponent(
     ),
     ActivityResultHandlingComponent {
 
-    override var inputData: GooglePayInputData = GooglePayInputData(null)
+    override val inputData: GooglePayInputData = GooglePayInputData()
 
     init {
         googlePayDelegate.outputDataFlow
@@ -87,7 +87,7 @@ class GooglePayComponent(
                     return
                 }
                 val paymentData = PaymentData.getFromIntent(data)
-                inputData = GooglePayInputData(paymentData)
+                inputData.paymentData = paymentData
                 notifyInputDataChanged()
             }
             Activity.RESULT_CANCELED -> notifyException(ComponentException("Payment canceled."))

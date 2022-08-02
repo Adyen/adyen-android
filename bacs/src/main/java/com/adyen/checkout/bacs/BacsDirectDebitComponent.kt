@@ -26,7 +26,7 @@ class BacsDirectDebitComponent(
 ) : BasePaymentComponent<BacsDirectDebitConfiguration, BacsDirectDebitInputData, BacsDirectDebitOutputData,
     BacsDirectDebitComponentState>(savedStateHandle, paymentMethodDelegate, configuration) {
 
-    override var inputData: BacsDirectDebitInputData = BacsDirectDebitInputData()
+    override val inputData: BacsDirectDebitInputData = BacsDirectDebitInputData()
 
     init {
         bacsDirectDebitDelegate.outputDataFlow

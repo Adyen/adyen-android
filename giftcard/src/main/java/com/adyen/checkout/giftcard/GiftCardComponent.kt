@@ -35,7 +35,7 @@ class GiftCardComponent(
     configuration
 ) {
 
-    override var inputData: GiftCardInputData = GiftCardInputData()
+    override val inputData: GiftCardInputData = GiftCardInputData()
 
     init {
         giftCardDelegate.outputDataFlow

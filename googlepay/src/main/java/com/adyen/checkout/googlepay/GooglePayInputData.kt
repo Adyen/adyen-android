@@ -11,5 +11,5 @@ import com.adyen.checkout.components.base.InputData
 import com.google.android.gms.wallet.PaymentData
 
 data class GooglePayInputData(
-    val paymentData: PaymentData?
+    var paymentData: PaymentData? = null
 ) : InputData
