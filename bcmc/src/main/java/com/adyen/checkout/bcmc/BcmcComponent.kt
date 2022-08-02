@@ -53,7 +53,7 @@ class BcmcComponent(
             .launchIn(viewModelScope)
 
         viewModelScope.launch {
-            bcmcDelegate.fetchPublicKey()
+            bcmcDelegate.initialize()
         }
     }
 

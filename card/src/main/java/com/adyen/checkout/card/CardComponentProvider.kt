@@ -12,9 +12,13 @@ import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.ViewModelStoreOwner
 import androidx.savedstate.SavedStateRegistryOwner
 import com.adyen.checkout.card.data.CardType
+import com.adyen.checkout.card.delegate.AddressDelegate
+import com.adyen.checkout.card.delegate.DetectCardTypeDelegate
 import com.adyen.checkout.card.repository.AddressRepository
 import com.adyen.checkout.card.repository.BinLookupRepository
 import com.adyen.checkout.components.StoredPaymentComponentProvider
+import com.adyen.checkout.components.base.GenericPaymentMethodDelegate
+import com.adyen.checkout.components.base.GenericStoredPaymentDelegate
 import com.adyen.checkout.components.base.lifecycle.viewModelFactory
 import com.adyen.checkout.components.model.paymentmethods.PaymentMethod
 import com.adyen.checkout.components.model.paymentmethods.StoredPaymentMethod
@@ -35,23 +39,26 @@ class CardComponentProvider : StoredPaymentComponentProvider<CardComponent, Card
         defaultArgs: Bundle?
     ): CardComponent {
         val verifiedConfiguration = checkSupportedCardTypes(paymentMethod, configuration)
-        val binLookupRepository = BinLookupRepository()
+        val cardEncrypter = DefaultCardEncrypter()
+        val binLookupRepository = BinLookupRepository(cardEncrypter)
+        val detectCardTypeDelegate = DetectCardTypeDelegate(binLookupRepository)
         val publicKeyRepository = PublicKeyRepository()
         val addressDelegate = AddressDelegate(AddressRepository())
         val cardValidationMapper = CardValidationMapper()
         val factory = viewModelFactory(savedStateRegistryOwner, defaultArgs) { savedStateHandle ->
             CardComponent(
                 savedStateHandle,
-                NewCardDelegate(
-                    paymentMethod,
-                    verifiedConfiguration,
-                    binLookupRepository,
+                GenericPaymentMethodDelegate(paymentMethod),
+                DefaultCardDelegate(
                     publicKeyRepository,
+                    verifiedConfiguration,
+                    paymentMethod,
                     addressDelegate,
-                    cardValidationMapper
+                    detectCardTypeDelegate,
+                    cardValidationMapper,
+                    cardEncrypter
                 ),
-                verifiedConfiguration,
-                DefaultCardEncrypter(),
+                verifiedConfiguration
             )
         }
         return ViewModelProvider(viewModelStoreOwner, factory).get(CardComponent::class.java)
@@ -68,13 +75,14 @@ class CardComponentProvider : StoredPaymentComponentProvider<CardComponent, Card
         val factory = viewModelFactory(savedStateRegistryOwner, defaultArgs) { savedStateHandle ->
             CardComponent(
                 savedStateHandle,
+                GenericStoredPaymentDelegate(storedPaymentMethod),
                 StoredCardDelegate(
                     storedPaymentMethod,
                     configuration,
-                    publicKeyRepository
+                    DefaultCardEncrypter(),
+                    publicKeyRepository,
                 ),
-                configuration,
-                DefaultCardEncrypter(),
+                configuration
             )
         }
         return ViewModelProvider(viewModelStoreOwner, factory).get(CardComponent::class.java)

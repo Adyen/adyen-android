@@ -3,6 +3,7 @@ package com.adyen.checkout.example.ui.configuration
 import android.content.Context
 import com.adyen.checkout.adyen3ds2.Adyen3DS2Configuration
 import com.adyen.checkout.bcmc.BcmcConfiguration
+import com.adyen.checkout.card.AddressConfiguration
 import com.adyen.checkout.card.CardConfiguration
 import com.adyen.checkout.components.model.payments.Amount
 import com.adyen.checkout.core.api.Environment
@@ -59,6 +60,7 @@ internal class CheckoutConfigurationProvider @Inject constructor(
 
     fun getCardConfiguration(): CardConfiguration =
         CardConfiguration.Builder(shopperLocale, environment, clientKey)
+            .setAddressConfiguration(AddressConfiguration.FullAddress())
             .setShopperReference(keyValueStorage.getShopperReference())
             .build()
 

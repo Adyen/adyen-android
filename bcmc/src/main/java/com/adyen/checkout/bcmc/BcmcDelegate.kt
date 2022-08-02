@@ -29,7 +29,7 @@ interface BcmcDelegate :
 
     val exceptionFlow: Flow<CheckoutException>
 
-    suspend fun fetchPublicKey()
+    suspend fun initialize()
 
     fun isCardNumberSupported(cardNumber: String?): Boolean
 }

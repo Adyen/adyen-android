@@ -53,7 +53,7 @@ internal class DefaultBcmcDelegate(
 
     private var publicKey: String? = null
 
-    override suspend fun fetchPublicKey() {
+    override suspend fun initialize() {
         publicKeyRepository.fetchPublicKey(
             environment = configuration.environment,
             clientKey = configuration.clientKey
