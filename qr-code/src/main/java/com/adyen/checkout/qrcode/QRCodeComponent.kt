@@ -24,7 +24,7 @@ import com.adyen.checkout.components.base.BaseActionComponent
 import com.adyen.checkout.components.base.IntentHandlingComponent
 import com.adyen.checkout.components.model.payments.response.Action
 import com.adyen.checkout.components.model.payments.response.QrCodeAction
-import com.adyen.checkout.components.status.StatusRepository
+import com.adyen.checkout.components.status.OldStatusRepository
 import com.adyen.checkout.components.status.api.StatusResponseUtils
 import com.adyen.checkout.components.status.model.StatusResponse
 import com.adyen.checkout.core.exception.CheckoutException
@@ -55,11 +55,11 @@ class QRCodeComponent(
     private val outputLiveData = MutableLiveData<QRCodeOutputData>()
     private var paymentMethodType: String? = null
     private var qrCodeData: String? = null
-    private val statusRepository: StatusRepository = StatusRepository.getInstance(configuration.environment)
+    private val statusRepository: OldStatusRepository = OldStatusRepository.getInstance(configuration.environment)
     private val timerLiveData = MutableLiveData<TimerData>()
 
     private var statusCountDownTimer: CountDownTimer = object : CountDownTimer(
-        StatusRepository.MAX_POLLING_DURATION_MILLIS,
+        OldStatusRepository.MAX_POLLING_DURATION_MILLIS,
         STATUS_POLLING_INTERVAL_MILLIS
     ) {
         override fun onTick(millisUntilFinished: Long) {
@@ -168,7 +168,7 @@ class QRCodeComponent(
     }
 
     private fun onTimerTick(millisUntilFinished: Long) {
-        val progressPercentage = (HUNDRED * millisUntilFinished / StatusRepository.MAX_POLLING_DURATION_MILLIS).toInt()
+        val progressPercentage = (HUNDRED * millisUntilFinished / OldStatusRepository.MAX_POLLING_DURATION_MILLIS).toInt()
         timerLiveData.postValue(TimerData(millisUntilFinished, progressPercentage))
     }
 

@@ -21,8 +21,8 @@ import com.adyen.checkout.components.ViewableComponent
 import com.adyen.checkout.components.base.BaseActionComponent
 import com.adyen.checkout.components.base.Configuration
 import com.adyen.checkout.components.model.payments.response.Action
-import com.adyen.checkout.components.status.StatusRepository
-import com.adyen.checkout.components.status.StatusRepository.Companion.getInstance
+import com.adyen.checkout.components.status.OldStatusRepository
+import com.adyen.checkout.components.status.OldStatusRepository.Companion.getInstance
 import com.adyen.checkout.components.status.api.StatusResponseUtils.isFinalResult
 import com.adyen.checkout.components.status.model.StatusResponse
 import com.adyen.checkout.core.exception.ComponentException
@@ -35,7 +35,7 @@ class AwaitComponent(savedStateHandle: SavedStateHandle, application: Applicatio
     BaseActionComponent<AwaitConfiguration>(savedStateHandle, application, configuration),
     ViewableComponent<AwaitOutputData, AwaitConfiguration, ActionComponentData> {
 
-    val statusRepository: StatusRepository = getInstance(configuration.environment)
+    val statusRepository: OldStatusRepository = getInstance(configuration.environment)
     private val outputLiveData = MutableLiveData<AwaitOutputData>()
     private var paymentMethodType: String? = null
 

@@ -22,7 +22,7 @@ import com.adyen.checkout.core.log.LogUtil.getTag
 import com.adyen.checkout.core.log.Logger
 import java.util.concurrent.TimeUnit
 
-class StatusRepository private constructor(environment: Environment) {
+class OldStatusRepository private constructor(environment: Environment) {
 
     val handler = Handler(Looper.getMainLooper())
     private val statusPollingRunnable: Runnable = object : Runnable {
@@ -127,13 +127,13 @@ class StatusRepository private constructor(environment: Environment) {
         private val POLLING_DELAY_SLOW = TimeUnit.SECONDS.toMillis(10)
         private val POLLING_THRESHOLD = TimeUnit.SECONDS.toMillis(60)
 
-        private lateinit var instance: StatusRepository
+        private lateinit var instance: OldStatusRepository
 
         @JvmStatic
-        fun getInstance(environment: Environment): StatusRepository {
-            synchronized(StatusRepository::class.java) {
+        fun getInstance(environment: Environment): OldStatusRepository {
+            synchronized(OldStatusRepository::class.java) {
                 if (!::instance.isInitialized) {
-                    instance = StatusRepository(environment)
+                    instance = OldStatusRepository(environment)
                 }
             }
             return instance
