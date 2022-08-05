@@ -13,7 +13,7 @@ import com.adyen.checkout.card.api.model.Brand
 import com.adyen.checkout.card.data.CardType
 import com.adyen.checkout.card.data.DetectedCardType
 import com.adyen.checkout.card.data.ExpiryDate
-import com.adyen.checkout.card.delegate.AddressDelegate
+import com.adyen.checkout.card.repository.AddressRepository
 import com.adyen.checkout.card.delegate.DetectCardTypeDelegate
 import com.adyen.checkout.card.ui.model.AddressListItem
 import com.adyen.checkout.card.util.AddressFormUtils
@@ -56,7 +56,7 @@ class DefaultCardDelegate(
     private val publicKeyRepository: PublicKeyRepository,
     private val configuration: CardConfiguration,
     private val paymentMethod: PaymentMethod,
-    private val addressDelegate: AddressDelegate,
+    private val addressRepository: AddressRepository,
     private val detectCardTypeDelegate: DetectCardTypeDelegate,
     private val cardValidationMapper: CardValidationMapper,
     private val cardEncrypter: CardEncrypter
@@ -181,7 +181,7 @@ class DefaultCardDelegate(
 
     private fun subscribeToCountryList() {
         val coroutineScope = coroutineScope ?: return
-        addressDelegate.countriesFlow
+        addressRepository.countriesFlow
             .distinctUntilChanged()
             .onEach { countries ->
                 val countryOptions = AddressFormUtils.initializeCountryOptions(
@@ -219,7 +219,7 @@ class DefaultCardDelegate(
 
     private fun subscribeToStatesList() {
         val coroutineScope = coroutineScope ?: return
-        addressDelegate.statesFlow
+        addressRepository.statesFlow
             .distinctUntilChanged()
             .onEach {
                 Logger.d(TAG, "New states emitted")
@@ -520,12 +520,12 @@ class DefaultCardDelegate(
 
     private fun requestCountryList() {
         val coroutineScope = coroutineScope ?: return
-        addressDelegate.getCountryList(configuration, coroutineScope)
+        addressRepository.getCountryList(configuration, coroutineScope)
     }
 
     private fun requestStateList(countryCode: String?) {
         val coroutineScope = coroutineScope ?: return
-        addressDelegate.getStateList(configuration, countryCode, coroutineScope)
+        addressRepository.getStateList(configuration, countryCode, coroutineScope)
     }
 
     private fun makeCvcUIState(cvcPolicy: Brand.FieldPolicy?): InputFieldUIState {
