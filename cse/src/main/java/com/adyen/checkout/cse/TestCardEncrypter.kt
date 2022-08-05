@@ -42,8 +42,4 @@ class TestCardEncrypter : CardEncrypter {
 
         return bin
     }
-
-    fun reset() {
-        shouldThrowException = false
-    }
 }

@@ -15,7 +15,7 @@ import com.adyen.checkout.components.PaymentComponentProvider
 import com.adyen.checkout.components.base.GenericPaymentMethodDelegate
 import com.adyen.checkout.components.base.lifecycle.viewModelFactory
 import com.adyen.checkout.components.model.paymentmethods.PaymentMethod
-import com.adyen.checkout.components.repository.PublicKeyRepository
+import com.adyen.checkout.components.repository.DefaultPublicKeyRepository
 import com.adyen.checkout.cse.DefaultCardEncrypter
 
 class GiftCardComponentProvider : PaymentComponentProvider<GiftCardComponent, GiftCardConfiguration> {
@@ -33,7 +33,7 @@ class GiftCardComponentProvider : PaymentComponentProvider<GiftCardComponent, Gi
                 paymentMethodDelegate = GenericPaymentMethodDelegate(paymentMethod),
                 giftCardDelegate = DefaultGiftCardDelegate(
                     paymentMethod,
-                    PublicKeyRepository(),
+                    DefaultPublicKeyRepository(),
                     configuration,
                     DefaultCardEncrypter()
                 ),

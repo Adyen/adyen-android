@@ -22,7 +22,7 @@ import com.adyen.checkout.components.base.GenericStoredPaymentDelegate
 import com.adyen.checkout.components.base.lifecycle.viewModelFactory
 import com.adyen.checkout.components.model.paymentmethods.PaymentMethod
 import com.adyen.checkout.components.model.paymentmethods.StoredPaymentMethod
-import com.adyen.checkout.components.repository.PublicKeyRepository
+import com.adyen.checkout.components.repository.DefaultPublicKeyRepository
 import com.adyen.checkout.core.log.LogUtil
 import com.adyen.checkout.core.log.Logger
 import com.adyen.checkout.cse.DefaultCardEncrypter
@@ -42,7 +42,7 @@ class CardComponentProvider : StoredPaymentComponentProvider<CardComponent, Card
         val cardEncrypter = DefaultCardEncrypter()
         val binLookupRepository = BinLookupRepository(cardEncrypter)
         val detectCardTypeDelegate = DetectCardTypeDelegate(binLookupRepository)
-        val publicKeyRepository = PublicKeyRepository()
+        val publicKeyRepository = DefaultPublicKeyRepository()
         val addressDelegate = AddressDelegate(AddressRepository())
         val cardValidationMapper = CardValidationMapper()
         val factory = viewModelFactory(savedStateRegistryOwner, defaultArgs) { savedStateHandle ->
@@ -71,7 +71,7 @@ class CardComponentProvider : StoredPaymentComponentProvider<CardComponent, Card
         configuration: CardConfiguration,
         defaultArgs: Bundle?
     ): CardComponent {
-        val publicKeyRepository = PublicKeyRepository()
+        val publicKeyRepository = DefaultPublicKeyRepository()
         val factory = viewModelFactory(savedStateRegistryOwner, defaultArgs) { savedStateHandle ->
             CardComponent(
                 savedStateHandle,

@@ -10,7 +10,7 @@ package com.adyen.checkout.giftcard
 
 import app.cash.turbine.test
 import com.adyen.checkout.components.model.paymentmethods.PaymentMethod
-import com.adyen.checkout.components.repository.PublicKeyRepository
+import com.adyen.checkout.components.repository.TestPublicKeyRepository
 import com.adyen.checkout.core.api.Environment
 import com.adyen.checkout.cse.TestCardEncrypter
 import com.adyen.checkout.test.TestDispatcherExtension
@@ -25,47 +25,42 @@ import org.junit.jupiter.api.DisplayName
 import org.junit.jupiter.api.Nested
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.extension.ExtendWith
-import org.mockito.Mock
 import org.mockito.junit.jupiter.MockitoExtension
-import org.mockito.kotlin.any
-import org.mockito.kotlin.doReturn
-import org.mockito.kotlin.whenever
-import java.io.IOException
 import java.util.Locale
 
 @OptIn(ExperimentalCoroutinesApi::class)
 @ExtendWith(MockitoExtension::class, TestDispatcherExtension::class)
-internal class DefaultGiftCardDelegateTest(
-    @Mock private val publicKeyRepository: PublicKeyRepository
-) {
+internal class DefaultGiftCardDelegateTest {
 
-    private val cardEncrypter = TestCardEncrypter()
-
-    private val delegate = DefaultGiftCardDelegate(
-        paymentMethod = PaymentMethod(),
-        publicKeyRepository = publicKeyRepository,
-        configuration = GiftCardConfiguration.Builder(
-            Locale.US,
-            Environment.TEST,
-            TEST_CLIENT_KEY
-        ).build(),
-        cardEncrypter = cardEncrypter,
-    )
+    private lateinit var cardEncrypter: TestCardEncrypter
+    private lateinit var publicKeyRepository: TestPublicKeyRepository
+    private lateinit var delegate: DefaultGiftCardDelegate
 
     @BeforeEach
     fun before() {
-        cardEncrypter.reset()
+        cardEncrypter = TestCardEncrypter()
+        publicKeyRepository = TestPublicKeyRepository()
+
+        delegate = DefaultGiftCardDelegate(
+            paymentMethod = PaymentMethod(),
+            publicKeyRepository = publicKeyRepository,
+            configuration = GiftCardConfiguration.Builder(
+                Locale.US,
+                Environment.TEST,
+                TEST_CLIENT_KEY
+            ).build(),
+            cardEncrypter = cardEncrypter,
+        )
     }
 
     @Test
     fun `when fetching the public key fails, then an error is propagated`() = runTest {
-        val exception = IOException("Test")
-        whenever(publicKeyRepository.fetchPublicKey(any(), any())) doReturn Result.failure(exception)
+        publicKeyRepository.shouldReturnError = true
 
         delegate.exceptionFlow.test {
             delegate.fetchPublicKey()
 
-            assertEquals(exception, awaitItem().cause)
+            assertEquals(publicKeyRepository.errorResult.exceptionOrNull(), awaitItem().cause)
 
             cancelAndIgnoreRemainingEvents()
         }
@@ -88,8 +83,7 @@ internal class DefaultGiftCardDelegateTest(
 
         @Test
         fun `output data is invalid, then component state should be invalid`() = runTest {
-            stubPublicKeyRepository()
-
+            delegate.fetchPublicKey()
             delegate.componentStateFlow.test {
                 delegate.createComponentState(GiftCardOutputData("123", "737"))
 
@@ -101,22 +95,22 @@ internal class DefaultGiftCardDelegateTest(
 
         @Test
         fun `encryption fails, then component state should be invalid`() = runTest {
-            stubPublicKeyRepository()
+            delegate.fetchPublicKey()
             cardEncrypter.shouldThrowException = true
 
             delegate.componentStateFlow.test {
                 delegate.createComponentState(GiftCardOutputData("5555444433330000", "737"))
 
                 skipItems(1)
+                val item = awaitItem()
 
-                assertFalse(awaitItem()!!.isInputValid)
+                assertFalse(item!!.isInputValid)
             }
         }
 
         @Test
         fun `everything is valid, then component state should be good`() = runTest {
-            stubPublicKeyRepository()
-
+            delegate.fetchPublicKey()
             delegate.componentStateFlow.test {
                 delegate.createComponentState(GiftCardOutputData("5555444433330000", "737"))
 
@@ -132,19 +126,7 @@ internal class DefaultGiftCardDelegateTest(
         }
     }
 
-    private suspend fun stubPublicKeyRepository() {
-        whenever(publicKeyRepository.fetchPublicKey(any(), any())) doReturn Result.success(TEST_PUBLIC_KEY)
-        delegate.fetchPublicKey()
-    }
-
     companion object {
         private const val TEST_CLIENT_KEY = "test_qwertyuiopasdfghjklzxcvbnmqwerty"
-        private const val TEST_PUBLIC_KEY =
-            "10001|1111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111" +
-                "111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111" +
-                "111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111" +
-                "111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111" +
-                "111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111" +
-                "1111111111111111111111111111111111"
     }
 }
