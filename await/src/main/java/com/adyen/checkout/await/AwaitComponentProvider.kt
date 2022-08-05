@@ -17,6 +17,8 @@ import com.adyen.checkout.components.ActionComponentProvider
 import com.adyen.checkout.components.base.lifecycle.viewModelFactory
 import com.adyen.checkout.components.model.payments.response.Action
 import com.adyen.checkout.components.model.payments.response.AwaitAction
+import com.adyen.checkout.components.status.StatusRepository
+import com.adyen.checkout.components.status.api.StatusService
 import com.adyen.checkout.components.util.PaymentMethodTypes
 
 private val PAYMENT_METHODS = listOf(PaymentMethodTypes.BLIK, PaymentMethodTypes.MB_WAY)
@@ -41,11 +43,13 @@ class AwaitComponentProvider : ActionComponentProvider<AwaitComponent, AwaitConf
         configuration: AwaitConfiguration,
         defaultArgs: Bundle?
     ): AwaitComponent {
+        val statusService = StatusService(configuration.environment.baseUrl)
         val awaitFactory = viewModelFactory(savedStateRegistryOwner, defaultArgs) { savedStateHandle ->
             AwaitComponent(
                 savedStateHandle,
                 application,
-                configuration
+                configuration,
+                StatusRepository(statusService, configuration.clientKey)
             )
         }
         return ViewModelProvider(viewModelStoreOwner, awaitFactory).get(AwaitComponent::class.java)

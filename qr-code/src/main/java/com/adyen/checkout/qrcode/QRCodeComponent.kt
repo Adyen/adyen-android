@@ -168,7 +168,8 @@ class QRCodeComponent(
     }
 
     private fun onTimerTick(millisUntilFinished: Long) {
-        val progressPercentage = (HUNDRED * millisUntilFinished / OldStatusRepository.MAX_POLLING_DURATION_MILLIS).toInt()
+        val progressPercentage =
+            (HUNDRED * millisUntilFinished / OldStatusRepository.MAX_POLLING_DURATION_MILLIS).toInt()
         timerLiveData.postValue(TimerData(millisUntilFinished, progressPercentage))
     }
 
