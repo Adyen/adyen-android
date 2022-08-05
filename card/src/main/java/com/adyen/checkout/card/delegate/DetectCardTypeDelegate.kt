@@ -16,8 +16,10 @@ import com.adyen.checkout.core.api.Environment
 import com.adyen.checkout.core.log.LogUtil
 import com.adyen.checkout.core.log.Logger
 import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.channels.BufferOverflow
 import kotlinx.coroutines.flow.Flow
-import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.launch
 
 class DetectCardTypeDelegate(
@@ -31,7 +33,8 @@ class DetectCardTypeDelegate(
         return cardNumber.length >= BinLookupRepository.REQUIRED_BIN_SIZE
     }
 
-    private val _detectedCardTypesFlow: MutableStateFlow<List<DetectedCardType>> = MutableStateFlow(emptyList())
+    private val _detectedCardTypesFlow: MutableSharedFlow<List<DetectedCardType>> =
+        MutableSharedFlow(0, 1, BufferOverflow.DROP_OLDEST)
     internal val detectedCardTypesFlow: Flow<List<DetectedCardType>> = _detectedCardTypesFlow
 
     @Suppress("LongParameterList")
@@ -49,6 +52,7 @@ class DetectCardTypeDelegate(
                 is BinLookupRepository.BinLookupResult.Available -> {
                     Logger.d(TAG, "Retrieving from cache.")
                     _detectedCardTypesFlow.tryEmit(cachedResult.detectedCardTypes)
+                    return
                 }
                 is BinLookupRepository.BinLookupResult.Loading -> {
                     Logger.d(TAG, "BinLookup request is in progress.")
@@ -81,7 +85,7 @@ class DetectCardTypeDelegate(
         if (publicKey != null) {
             Logger.d(TAG, "Launching Bin Lookup")
 
-            coroutineScope.launch {
+            coroutineScope.launch(Dispatchers.IO) {
                 Logger.d(TAG, "Emitting new detectedCardTypes")
                 binLookupRepository.fetch(
                     cardNumber,

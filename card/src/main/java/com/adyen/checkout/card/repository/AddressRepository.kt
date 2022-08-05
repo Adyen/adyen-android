@@ -6,22 +6,6 @@
  * Created by ozgur on 5/8/2022.
  */
 
-/*
- * Copyright (c) 2022 Adyen N.V.
- *
- * This file is open source and available under the MIT license. See the LICENSE file for more info.
- *
- * Created by ozgur on 4/8/2022.
- */
-
-/*
- * Copyright (c) 2022 Adyen N.V.
- *
- * This file is open source and available under the MIT license. See the LICENSE file for more info.
- *
- * Created by ozgur on 18/3/2022.
- */
-
 package com.adyen.checkout.card.repository
 
 import android.util.LruCache
@@ -34,17 +18,20 @@ import com.adyen.checkout.core.log.LogUtil
 import com.adyen.checkout.core.log.Logger
 import com.adyen.checkout.core.util.runSuspendCatching
 import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.channels.BufferOverflow
 import kotlinx.coroutines.flow.Flow
-import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.launch
 import java.util.Locale
 
 class AddressRepository {
 
-    private val _statesFlow: MutableStateFlow<List<AddressItem>> = MutableStateFlow(emptyList())
+    private val _statesFlow: MutableSharedFlow<List<AddressItem>> = MutableSharedFlow(0, 1, BufferOverflow.DROP_OLDEST)
     internal val statesFlow: Flow<List<AddressItem>> = _statesFlow
 
-    private val _countriesFlow: MutableStateFlow<List<AddressItem>> = MutableStateFlow(emptyList())
+    private val _countriesFlow: MutableSharedFlow<List<AddressItem>> =
+        MutableSharedFlow(0, 1, BufferOverflow.DROP_OLDEST)
     internal val countriesFlow: Flow<List<AddressItem>> = _countriesFlow
 
     private val cache: LruCache<String, List<AddressItem>> = LruCache<String, List<AddressItem>>(CACHE_ENTRY_SIZE)
@@ -78,7 +65,7 @@ class AddressRepository {
         countryCode: String,
         coroutineScope: CoroutineScope
     ) {
-        coroutineScope.launch {
+        coroutineScope.launch(Dispatchers.IO) {
             val states = getStates(
                 environment = environment,
                 shopperLocale = shopperLocale,
@@ -109,7 +96,7 @@ class AddressRepository {
     }
 
     private fun fetchCountryList(environment: Environment, shopperLocale: Locale, coroutineScope: CoroutineScope) {
-        coroutineScope.launch {
+        coroutineScope.launch(Dispatchers.IO) {
             val countries = getCountries(
                 environment = environment,
                 shopperLocale = shopperLocale

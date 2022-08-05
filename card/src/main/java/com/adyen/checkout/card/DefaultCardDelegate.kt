@@ -8,13 +8,12 @@
 
 package com.adyen.checkout.card
 
-import android.util.Log
 import com.adyen.checkout.card.api.model.Brand
 import com.adyen.checkout.card.data.CardType
 import com.adyen.checkout.card.data.DetectedCardType
 import com.adyen.checkout.card.data.ExpiryDate
-import com.adyen.checkout.card.repository.AddressRepository
 import com.adyen.checkout.card.delegate.DetectCardTypeDelegate
+import com.adyen.checkout.card.repository.AddressRepository
 import com.adyen.checkout.card.ui.model.AddressListItem
 import com.adyen.checkout.card.util.AddressFormUtils
 import com.adyen.checkout.card.util.AddressValidationUtils
@@ -83,11 +82,12 @@ class DefaultCardDelegate(
     override fun initialize(coroutineScope: CoroutineScope) {
         this.coroutineScope = coroutineScope
 
+        updateOutputData()
+
         fetchPublicKey()
         subscribeToDetectedCardTypes()
 
         if (configuration.addressConfiguration is AddressConfiguration.FullAddress) {
-            Log.e(TAG, "subscribe to states list")
             subscribeToStatesList()
             subscribeToCountryList()
             requestCountryList()
@@ -95,16 +95,19 @@ class DefaultCardDelegate(
     }
 
     private fun fetchPublicKey() {
+        Logger.v(TAG, "fetchPublicKey")
         coroutineScope?.launch {
             publicKeyRepository.fetchPublicKey(
                 environment = configuration.environment,
                 clientKey = configuration.clientKey
             ).fold(
                 onSuccess = { key ->
+                    Logger.d(TAG, "Public key fetched")
                     publicKey = key
-                    outputData?.let { createComponentState(it) }
+                    updateOutputData()
                 },
                 onFailure = { e ->
+                    Logger.e(TAG, "Unable to fetch public key")
                     _exceptionFlow.tryEmit(ComponentException("Unable to fetch publicKey.", e))
                 }
             )
@@ -112,6 +115,7 @@ class DefaultCardDelegate(
     }
 
     override fun onInputDataChanged(inputData: CardInputData) {
+        Logger.v(TAG, "onInputDataChanged")
         val coroutineScope = coroutineScope ?: return
         detectCardTypeDelegate.detectCardType(
             cardNumber = inputData.cardNumber,
@@ -122,59 +126,18 @@ class DefaultCardDelegate(
             coroutineScope = coroutineScope
         )
         requestStateList(inputData.address.country)
-        val outputData = makeOutputData(
-            cardNumber = inputData.cardNumber,
-            expiryDate = inputData.expiryDate,
-            securityCode = inputData.securityCode,
-            holderName = inputData.holderName,
-            socialSecurityNumber = inputData.socialSecurityNumber,
-            kcpBirthDateOrTaxNumber = inputData.kcpBirthDateOrTaxNumber,
-            kcpCardPassword = inputData.kcpCardPassword,
-            addressInputModel = inputData.address,
-            isStorePaymentSelected = inputData.isStorePaymentSelected,
-            detectedCardTypes = outputData?.detectedCardTypes.orEmpty(),
-            selectedCardIndex = inputData.selectedCardIndex,
-            selectedInstallmentOption = inputData.installmentOption,
-            countryOptions = AddressFormUtils.markAddressListItemSelected(
-                outputData?.countryOptions.orEmpty(),
-                inputData.address.country
-            ),
-            stateOptions = AddressFormUtils.markAddressListItemSelected(
-                outputData?.stateOptions.orEmpty(),
-                inputData.address.stateOrProvince
-            )
-        )
-        _outputDataFlow.tryEmit(outputData)
-        createComponentState(outputData)
     }
 
     private fun subscribeToDetectedCardTypes() {
         val coroutineScope = coroutineScope ?: return
         detectCardTypeDelegate.detectedCardTypesFlow
-            .onEach {
-                Logger.d(TAG, "New binLookupFlow emitted")
-                Logger.d(TAG, "Brands: $it")
-                with(outputData) {
-                    this ?: return@with
-                    val newOutputData = makeOutputData(
-                        cardNumber = cardNumberState.value,
-                        expiryDate = expiryDateState.value,
-                        securityCode = securityCodeState.value,
-                        holderName = holderNameState.value,
-                        socialSecurityNumber = socialSecurityNumberState.value,
-                        kcpBirthDateOrTaxNumber = kcpBirthDateOrTaxNumberState.value,
-                        kcpCardPassword = kcpCardPasswordState.value,
-                        addressInputModel = inputData.address,
-                        isStorePaymentSelected = isStoredPaymentMethodEnable,
-                        detectedCardTypes = it,
-                        selectedCardIndex = inputData.selectedCardIndex,
-                        selectedInstallmentOption = inputData.installmentOption,
-                        countryOptions = countryOptions,
-                        stateOptions = stateOptions
-                    )
-                    _outputDataFlow.tryEmit(newOutputData)
-                    createComponentState(newOutputData)
-                }
+            .onEach { detectedCardTypes ->
+                Logger.d(
+                    TAG,
+                    "New detected card types emitted - detectedCardTypes: ${detectedCardTypes.map { it.cardType }} " +
+                        "- isReliable: ${detectedCardTypes.firstOrNull()?.isReliable}"
+                )
+                updateOutputData(detectedCardTypes = detectedCardTypes)
             }
             .launchIn(coroutineScope)
     }
@@ -184,6 +147,7 @@ class DefaultCardDelegate(
         addressRepository.countriesFlow
             .distinctUntilChanged()
             .onEach { countries ->
+                Logger.d(TAG, "New countries emitted - countries: ${countries.size}")
                 val countryOptions = AddressFormUtils.initializeCountryOptions(
                     addressConfiguration = configuration.addressConfiguration,
                     countryList = countries
@@ -192,27 +156,7 @@ class DefaultCardDelegate(
                     inputData.address.country = it.code
                     requestStateList(it.code)
                 }
-                with(outputData) {
-                    this ?: return@with
-                    val newOutputData = makeOutputData(
-                        cardNumber = cardNumberState.value,
-                        expiryDate = expiryDateState.value,
-                        securityCode = securityCodeState.value,
-                        holderName = holderNameState.value,
-                        socialSecurityNumber = socialSecurityNumberState.value,
-                        kcpBirthDateOrTaxNumber = kcpBirthDateOrTaxNumberState.value,
-                        kcpCardPassword = kcpCardPasswordState.value,
-                        addressInputModel = inputData.address,
-                        isStorePaymentSelected = isStoredPaymentMethodEnable,
-                        detectedCardTypes = this.detectedCardTypes,
-                        selectedCardIndex = inputData.selectedCardIndex,
-                        selectedInstallmentOption = inputData.installmentOption,
-                        countryOptions = countryOptions,
-                        stateOptions = stateOptions
-                    )
-                    _outputDataFlow.tryEmit(newOutputData)
-                    createComponentState(newOutputData)
-                }
+                updateOutputData(countryOptions = countryOptions)
             }
             .launchIn(coroutineScope)
     }
@@ -221,56 +165,32 @@ class DefaultCardDelegate(
         val coroutineScope = coroutineScope ?: return
         addressRepository.statesFlow
             .distinctUntilChanged()
-            .onEach {
-                Logger.d(TAG, "New states emitted")
-                Logger.d(TAG, "States: $it")
-                with(outputData) {
-                    this ?: return@with
-                    val newOutputData = makeOutputData(
-                        cardNumber = cardNumberState.value,
-                        expiryDate = expiryDateState.value,
-                        securityCode = securityCodeState.value,
-                        holderName = holderNameState.value,
-                        socialSecurityNumber = socialSecurityNumberState.value,
-                        kcpBirthDateOrTaxNumber = kcpBirthDateOrTaxNumberState.value,
-                        kcpCardPassword = kcpCardPasswordState.value,
-                        addressInputModel = inputData.address,
-                        isStorePaymentSelected = isStoredPaymentMethodEnable,
-                        detectedCardTypes = detectedCardTypes,
-                        selectedCardIndex = inputData.selectedCardIndex,
-                        selectedInstallmentOption = inputData.installmentOption,
-                        countryOptions = countryOptions,
-                        stateOptions = AddressFormUtils.initializeStateOptions(it)
-                    )
-                    _outputDataFlow.tryEmit(newOutputData)
-                    createComponentState(newOutputData)
-                }
+            .onEach { states ->
+                Logger.d(TAG, "New states emitted - states: ${states.size}")
+                updateOutputData(stateOptions = AddressFormUtils.initializeStateOptions(states))
             }
             .launchIn(coroutineScope)
     }
 
-    @Suppress("LongParameterList")
-    private fun makeOutputData(
-        cardNumber: String,
-        expiryDate: ExpiryDate,
-        securityCode: String,
-        holderName: String,
-        socialSecurityNumber: String,
-        kcpBirthDateOrTaxNumber: String,
-        kcpCardPassword: String,
-        addressInputModel: AddressInputModel,
-        isStorePaymentSelected: Boolean,
-        detectedCardTypes: List<DetectedCardType>,
-        selectedCardIndex: Int,
-        selectedInstallmentOption: InstallmentModel?,
-        countryOptions: List<AddressListItem>,
-        stateOptions: List<AddressListItem>
-    ): CardOutputData {
+    private fun updateOutputData(
+        detectedCardTypes: List<DetectedCardType> = outputData?.detectedCardTypes.orEmpty(),
+        countryOptions: List<AddressListItem> = outputData?.countryOptions.orEmpty(),
+        stateOptions: List<AddressListItem> = outputData?.stateOptions.orEmpty(),
+    ) {
+        Logger.v(TAG, "updateOutputData")
+        val updatedCountryOptions = AddressFormUtils.markAddressListItemSelected(
+            countryOptions,
+            inputData.address.country
+        )
+        val updatedStateOptions = AddressFormUtils.markAddressListItemSelected(
+            stateOptions,
+            inputData.address.stateOrProvince
+        )
 
         val isReliable = detectedCardTypes.any { it.isReliable }
         val supportedCardTypes = detectedCardTypes.filter { it.isSupported }
         val sortedCardTypes = DualBrandedCardUtils.sortBrands(supportedCardTypes)
-        val outputCardTypes = markSelectedCard(sortedCardTypes, selectedCardIndex)
+        val outputCardTypes = markSelectedCard(sortedCardTypes, inputData.selectedCardIndex)
 
         val selectedOrFirstCardType = outputCardTypes.firstOrNull { it.isSelected } ?: outputCardTypes.firstOrNull()
 
@@ -281,25 +201,25 @@ class DefaultCardDelegate(
         val shouldFailWithUnsupportedBrand = selectedOrFirstCardType == null && isReliable
 
         val addressFormUIState = getAddressFormUIState(
-            configuration.addressConfiguration,
-            configuration.addressVisibility
+            addressConfiguration = configuration.addressConfiguration,
+            addressVisibility = configuration.addressVisibility
         )
 
-        return CardOutputData(
+        val newOutputData = CardOutputData(
             cardNumberState = validateCardNumber(
-                cardNumber,
-                enableLuhnCheck,
+                cardNumber = inputData.cardNumber,
+                enableLuhnCheck = enableLuhnCheck,
                 isBrandSupported = !shouldFailWithUnsupportedBrand
             ),
-            expiryDateState = validateExpiryDate(expiryDate, selectedOrFirstCardType?.expiryDatePolicy),
-            securityCodeState = validateSecurityCode(securityCode, selectedOrFirstCardType),
-            holderNameState = validateHolderName(holderName),
-            socialSecurityNumberState = validateSocialSecurityNumber(socialSecurityNumber),
-            kcpBirthDateOrTaxNumberState = validateKcpBirthDateOrTaxNumber(kcpBirthDateOrTaxNumber),
-            kcpCardPasswordState = validateKcpCardPassword(kcpCardPassword),
-            addressState = validateAddress(addressInputModel, addressFormUIState),
-            installmentState = makeInstallmentFieldState(selectedInstallmentOption),
-            isStoredPaymentMethodEnable = isStorePaymentSelected,
+            expiryDateState = validateExpiryDate(inputData.expiryDate, selectedOrFirstCardType?.expiryDatePolicy),
+            securityCodeState = validateSecurityCode(inputData.securityCode, selectedOrFirstCardType),
+            holderNameState = validateHolderName(inputData.holderName),
+            socialSecurityNumberState = validateSocialSecurityNumber(inputData.socialSecurityNumber),
+            kcpBirthDateOrTaxNumberState = validateKcpBirthDateOrTaxNumber(inputData.kcpBirthDateOrTaxNumber),
+            kcpCardPasswordState = validateKcpCardPassword(inputData.kcpCardPassword),
+            addressState = validateAddress(inputData.address, addressFormUIState),
+            installmentState = makeInstallmentFieldState(inputData.installmentOption),
+            isStoredPaymentMethodEnable = inputData.isStorePaymentSelected,
             cvcUIState = makeCvcUIState(selectedOrFirstCardType?.cvcPolicy),
             expiryDateUIState = makeExpiryDateUIState(selectedOrFirstCardType?.expiryDatePolicy),
             detectedCardTypes = outputCardTypes,
@@ -307,14 +227,17 @@ class DefaultCardDelegate(
             isKCPAuthRequired = isKCPAuthRequired(),
             addressUIState = addressFormUIState,
             installmentOptions = getInstallmentOptions(
-                configuration.installmentConfiguration,
-                selectedOrFirstCardType?.cardType,
-                isReliable
+                installmentConfiguration = configuration.installmentConfiguration,
+                cardType = selectedOrFirstCardType?.cardType,
+                isCardTypeReliable = isReliable
             ),
-            countryOptions = countryOptions,
-            stateOptions = stateOptions,
+            countryOptions = updatedCountryOptions,
+            stateOptions = updatedStateOptions,
             supportedCardTypes = getSupportedCardTypes(),
         )
+
+        _outputDataFlow.tryEmit(newOutputData)
+        createComponentState(newOutputData)
     }
 
     override fun getPaymentMethodType(): String {
@@ -464,7 +387,6 @@ class DefaultCardDelegate(
         return AddressValidationUtils.validateAddressInput(addressInputModel, addressFormUIState)
     }
 
-    //
     private fun isCvcHidden(): Boolean {
         return configuration.isHideCvc
     }
