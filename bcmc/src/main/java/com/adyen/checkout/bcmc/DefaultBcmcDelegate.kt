@@ -29,10 +29,12 @@ import com.adyen.checkout.cse.EncryptedCard
 import com.adyen.checkout.cse.UnencryptedCard
 import com.adyen.checkout.cse.exception.EncryptionException
 import com.adyen.threeds2.ThreeDS2Service
+import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.channels.BufferOverflow
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.launch
 
 internal class DefaultBcmcDelegate(
     private val paymentMethod: PaymentMethod,
@@ -45,6 +47,9 @@ internal class DefaultBcmcDelegate(
     private val _outputDataFlow = MutableStateFlow<BcmcOutputData?>(null)
     override val outputDataFlow: Flow<BcmcOutputData?> = _outputDataFlow
 
+    private val outputData
+        get() = _outputDataFlow.value
+
     private val _componentStateFlow = MutableStateFlow<PaymentComponentState<CardPaymentMethod>?>(null)
     override val componentStateFlow: Flow<PaymentComponentState<CardPaymentMethod>?> = _componentStateFlow
 
@@ -53,18 +58,28 @@ internal class DefaultBcmcDelegate(
 
     private var publicKey: String? = null
 
-    override suspend fun initialize() {
-        publicKeyRepository.fetchPublicKey(
-            environment = configuration.environment,
-            clientKey = configuration.clientKey
-        ).fold(
-            onSuccess = { key ->
-                publicKey = key
-            },
-            onFailure = { e ->
-                _exceptionFlow.tryEmit(ComponentException("Unable to fetch publicKey.", e))
-            }
-        )
+    override fun initialize(coroutineScope: CoroutineScope) {
+        fetchPublicKey(coroutineScope)
+    }
+
+    private fun fetchPublicKey(coroutineScope: CoroutineScope) {
+        Logger.d(TAG, "fetchPublicKey")
+        coroutineScope.launch {
+            publicKeyRepository.fetchPublicKey(
+                environment = configuration.environment,
+                clientKey = configuration.clientKey
+            ).fold(
+                onSuccess = { key ->
+                    Logger.d(TAG, "Public key fetched")
+                    publicKey = key
+                    outputData?.let { createComponentState(it) }
+                },
+                onFailure = { e ->
+                    Logger.e(TAG, "Unable to fetch public key")
+                    _exceptionFlow.tryEmit(ComponentException("Unable to fetch publicKey.", e))
+                }
+            )
+        }
     }
 
     override fun onInputDataChanged(inputData: BcmcInputData) {
@@ -104,10 +119,11 @@ internal class DefaultBcmcDelegate(
             encryptedExpiryYear = encryptedCard.encryptedExpiryYear,
             threeDS2SdkVersion = get3DS2SdkVersion(),
         )
-
-        paymentComponentData.paymentMethod = cardPaymentMethod
-        paymentComponentData.storePaymentMethod = outputData.isStoredPaymentMethodEnabled
-        paymentComponentData.shopperReference = configuration.shopperReference
+        paymentComponentData.apply {
+            paymentMethod = cardPaymentMethod
+            storePaymentMethod = outputData.isStoredPaymentMethodEnabled
+            shopperReference = configuration.shopperReference
+        }
 
         _componentStateFlow.tryEmit(PaymentComponentState(paymentComponentData, isInputValid = true, isReady = true))
     }

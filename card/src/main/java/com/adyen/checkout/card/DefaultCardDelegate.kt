@@ -12,8 +12,8 @@ import com.adyen.checkout.card.api.model.Brand
 import com.adyen.checkout.card.data.CardType
 import com.adyen.checkout.card.data.DetectedCardType
 import com.adyen.checkout.card.data.ExpiryDate
-import com.adyen.checkout.card.repository.AddressRepository
 import com.adyen.checkout.card.delegate.DetectCardTypeRepository
+import com.adyen.checkout.card.repository.AddressRepository
 import com.adyen.checkout.card.ui.model.AddressListItem
 import com.adyen.checkout.card.util.AddressFormUtils
 import com.adyen.checkout.card.util.AddressValidationUtils
@@ -95,7 +95,7 @@ class DefaultCardDelegate(
     }
 
     private fun fetchPublicKey() {
-        Logger.v(TAG, "fetchPublicKey")
+        Logger.d(TAG, "fetchPublicKey")
         coroutineScope?.launch {
             publicKeyRepository.fetchPublicKey(
                 environment = configuration.environment,
@@ -104,7 +104,7 @@ class DefaultCardDelegate(
                 onSuccess = { key ->
                     Logger.d(TAG, "Public key fetched")
                     publicKey = key
-                    updateOutputData()
+                    outputData?.let { createComponentState(it) }
                 },
                 onFailure = { e ->
                     Logger.e(TAG, "Unable to fetch public key")
