@@ -10,9 +10,9 @@ package com.adyen.checkout.giftcard
 
 import app.cash.turbine.test
 import com.adyen.checkout.components.model.paymentmethods.PaymentMethod
-import com.adyen.checkout.components.repository.TestPublicKeyRepository
+import com.adyen.checkout.components.test.TestPublicKeyRepository
 import com.adyen.checkout.core.api.Environment
-import com.adyen.checkout.cse.TestCardEncrypter
+import com.adyen.checkout.cse.test.TestCardEncrypter
 import com.adyen.checkout.test.TestDispatcherExtension
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.test.runTest

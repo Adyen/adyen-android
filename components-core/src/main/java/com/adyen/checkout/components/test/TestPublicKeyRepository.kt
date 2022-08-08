@@ -6,15 +6,17 @@
  * Created by josephj on 5/8/2022.
  */
 
-package com.adyen.checkout.components.repository
+package com.adyen.checkout.components.test
 
 import androidx.annotation.RestrictTo
+import com.adyen.checkout.components.repository.PublicKeyRepository
 import com.adyen.checkout.core.api.Environment
 import java.io.IOException
 
 /**
  * Test implementation of [PublicKeyRepository]. This class should never be used except in test code.
  */
+// TODO move to test fixtures once it becomes supported on Android
 @RestrictTo(RestrictTo.Scope.TESTS)
 class TestPublicKeyRepository : PublicKeyRepository {
 
