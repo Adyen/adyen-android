@@ -49,7 +49,10 @@ class StatusRepository constructor(
                 if (result.isSuccess && StatusResponseUtils.isFinalResult(result.getOrThrow()))
                     currentCoroutineContext().cancel()
 
-                if (!updateDelay(startTime)) currentCoroutineContext().cancel()
+                if (!updateDelay(startTime)) {
+                    emit(Result.failure(IllegalStateException("Max polling time has been exceeded.")))
+                    currentCoroutineContext().cancel()
+                }
 
                 delay(delay)
             }
@@ -66,6 +69,9 @@ class StatusRepository constructor(
         }
     }
 
+    /**
+     * @return Returns if the delay time was updated. If not, that means the max polling time has been exceeded.
+     */
     private fun updateDelay(startTime: Long): Boolean {
         val elapsedTime = System.currentTimeMillis() - startTime
         return when {
