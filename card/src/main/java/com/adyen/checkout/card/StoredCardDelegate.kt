@@ -252,25 +252,26 @@ class StoredCardDelegate(
         firstCardType: CardType?,
         binValue: String
     ): CardComponentState {
-        val cardPaymentMethod = CardPaymentMethod()
-        cardPaymentMethod.type = CardPaymentMethod.PAYMENT_METHOD_TYPE
+        val cardPaymentMethod = CardPaymentMethod().apply {
+            type = CardPaymentMethod.PAYMENT_METHOD_TYPE
 
-        cardPaymentMethod.storedPaymentMethodId = getId()
+            storedPaymentMethodId = getPaymentMethodId()
 
-        if (!isCvcHidden()) {
-            cardPaymentMethod.encryptedSecurityCode = encryptedCard.encryptedSecurityCode
-        }
+            if (!isCvcHidden()) {
+                encryptedSecurityCode = encryptedCard.encryptedSecurityCode
+            }
 
-        if (isDualBrandedFlow(stateOutputData)) {
-            cardPaymentMethod.brand = stateOutputData.detectedCardTypes.first { it.isSelected }.cardType.txVariant
-        }
+            if (isDualBrandedFlow(stateOutputData)) {
+                brand = stateOutputData.detectedCardTypes.first { it.isSelected }.cardType.txVariant
+            }
 
-        try {
-            cardPaymentMethod.threeDS2SdkVersion = ThreeDS2Service.INSTANCE.sdkVersion
-        } catch (e: ClassNotFoundException) {
-            Logger.e(TAG, "threeDS2SdkVersion not set because 3DS2 SDK is not present in project.")
-        } catch (e: NoClassDefFoundError) {
-            Logger.e(TAG, "threeDS2SdkVersion not set because 3DS2 SDK is not present in project.")
+            try {
+                threeDS2SdkVersion = ThreeDS2Service.INSTANCE.sdkVersion
+            } catch (e: ClassNotFoundException) {
+                Logger.e(TAG, "threeDS2SdkVersion not set because 3DS2 SDK is not present in project.")
+            } catch (e: NoClassDefFoundError) {
+                Logger.e(TAG, "threeDS2SdkVersion not set because 3DS2 SDK is not present in project.")
+            }
         }
 
         val paymentComponentData = makePaymentComponentData(cardPaymentMethod, stateOutputData)
@@ -377,7 +378,7 @@ class StoredCardDelegate(
         }
     }
 
-    private fun getId(): String {
+    private fun getPaymentMethodId(): String {
         return storedPaymentMethod.id ?: "ID_NOT_FOUND"
     }
 
@@ -387,9 +388,7 @@ class StoredCardDelegate(
 
     companion object {
         private val TAG = LogUtil.getTag()
-        private const val DEBIT_FUNDING_SOURCE = "debit"
         private const val BIN_VALUE_LENGTH = 6
         private const val LAST_FOUR_LENGTH = 4
-        private const val SINGLE_CARD_LIST_SIZE = 1
     }
 }

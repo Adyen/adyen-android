@@ -491,44 +491,45 @@ class DefaultCardDelegate(
         firstCardType: CardType?,
         binValue: String
     ): CardComponentState {
-        val cardPaymentMethod = CardPaymentMethod()
-        cardPaymentMethod.type = CardPaymentMethod.PAYMENT_METHOD_TYPE
+        val cardPaymentMethod = CardPaymentMethod().apply {
+            type = CardPaymentMethod.PAYMENT_METHOD_TYPE
 
-        cardPaymentMethod.encryptedCardNumber = encryptedCard.encryptedCardNumber
-        cardPaymentMethod.encryptedExpiryMonth = encryptedCard.encryptedExpiryMonth
-        cardPaymentMethod.encryptedExpiryYear = encryptedCard.encryptedExpiryYear
+            encryptedCardNumber = encryptedCard.encryptedCardNumber
+            encryptedExpiryMonth = encryptedCard.encryptedExpiryMonth
+            encryptedExpiryYear = encryptedCard.encryptedExpiryYear
 
-        if (!isCvcHidden()) {
-            cardPaymentMethod.encryptedSecurityCode = encryptedCard.encryptedSecurityCode
-        }
+            if (!isCvcHidden()) {
+                encryptedSecurityCode = encryptedCard.encryptedSecurityCode
+            }
 
-        if (isHolderNameRequired()) {
-            cardPaymentMethod.holderName = stateOutputData.holderNameState.value
-        }
+            if (isHolderNameRequired()) {
+                holderName = stateOutputData.holderNameState.value
+            }
 
-        if (isKCPAuthRequired()) {
-            publicKey?.let { publicKey ->
-                cardPaymentMethod.encryptedPassword = GenericEncrypter.encryptField(
-                    GenericEncrypter.KCP_PASSWORD_KEY,
-                    stateOutputData.kcpCardPasswordState.value,
-                    publicKey
-                )
-            } ?: throw CheckoutException("Encryption failed because public key cannot be found.")
-            cardPaymentMethod.taxNumber = stateOutputData.kcpBirthDateOrTaxNumberState.value
-        }
+            if (isKCPAuthRequired()) {
+                publicKey?.let { publicKey ->
+                    encryptedPassword = GenericEncrypter.encryptField(
+                        GenericEncrypter.KCP_PASSWORD_KEY,
+                        stateOutputData.kcpCardPasswordState.value,
+                        publicKey
+                    )
+                } ?: throw CheckoutException("Encryption failed because public key cannot be found.")
+                taxNumber = stateOutputData.kcpBirthDateOrTaxNumberState.value
+            }
 
-        if (isDualBrandedFlow(stateOutputData)) {
-            cardPaymentMethod.brand = stateOutputData.detectedCardTypes.first { it.isSelected }.cardType.txVariant
-        }
+            if (isDualBrandedFlow(stateOutputData)) {
+                brand = stateOutputData.detectedCardTypes.first { it.isSelected }.cardType.txVariant
+            }
 
-        cardPaymentMethod.fundingSource = getFundingSource()
+            fundingSource = getFundingSource()
 
-        try {
-            cardPaymentMethod.threeDS2SdkVersion = ThreeDS2Service.INSTANCE.sdkVersion
-        } catch (e: ClassNotFoundException) {
-            Logger.e(TAG, "threeDS2SdkVersion not set because 3DS2 SDK is not present in project.")
-        } catch (e: NoClassDefFoundError) {
-            Logger.e(TAG, "threeDS2SdkVersion not set because 3DS2 SDK is not present in project.")
+            try {
+                threeDS2SdkVersion = ThreeDS2Service.INSTANCE.sdkVersion
+            } catch (e: ClassNotFoundException) {
+                Logger.e(TAG, "threeDS2SdkVersion not set because 3DS2 SDK is not present in project.")
+            } catch (e: NoClassDefFoundError) {
+                Logger.e(TAG, "threeDS2SdkVersion not set because 3DS2 SDK is not present in project.")
+            }
         }
 
         val paymentComponentData = makePaymentComponentData(cardPaymentMethod, stateOutputData)
