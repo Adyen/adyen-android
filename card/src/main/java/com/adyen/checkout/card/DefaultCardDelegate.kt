@@ -12,8 +12,8 @@ import com.adyen.checkout.card.api.model.Brand
 import com.adyen.checkout.card.data.CardType
 import com.adyen.checkout.card.data.DetectedCardType
 import com.adyen.checkout.card.data.ExpiryDate
-import com.adyen.checkout.card.delegate.DetectCardTypeDelegate
 import com.adyen.checkout.card.repository.AddressRepository
+import com.adyen.checkout.card.delegate.DetectCardTypeRepository
 import com.adyen.checkout.card.ui.model.AddressListItem
 import com.adyen.checkout.card.util.AddressFormUtils
 import com.adyen.checkout.card.util.AddressValidationUtils
@@ -56,7 +56,7 @@ class DefaultCardDelegate(
     private val configuration: CardConfiguration,
     private val paymentMethod: PaymentMethod,
     private val addressRepository: AddressRepository,
-    private val detectCardTypeDelegate: DetectCardTypeDelegate,
+    private val detectCardTypeRepository: DetectCardTypeRepository,
     private val cardValidationMapper: CardValidationMapper,
     private val cardEncrypter: CardEncrypter
 ) : CardDelegate {
@@ -117,7 +117,7 @@ class DefaultCardDelegate(
     override fun onInputDataChanged(inputData: CardInputData) {
         Logger.v(TAG, "onInputDataChanged")
         val coroutineScope = coroutineScope ?: return
-        detectCardTypeDelegate.detectCardType(
+        detectCardTypeRepository.detectCardType(
             cardNumber = inputData.cardNumber,
             publicKey = publicKey,
             supportedCardTypes = configuration.supportedCardTypes,
@@ -130,7 +130,7 @@ class DefaultCardDelegate(
 
     private fun subscribeToDetectedCardTypes() {
         val coroutineScope = coroutineScope ?: return
-        detectCardTypeDelegate.detectedCardTypesFlow
+        detectCardTypeRepository.detectedCardTypesFlow
             .onEach { detectedCardTypes ->
                 Logger.d(
                     TAG,
