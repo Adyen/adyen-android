@@ -17,6 +17,7 @@ import androidx.lifecycle.LifecycleOwner
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.Observer
 import androidx.lifecycle.SavedStateHandle
+import androidx.lifecycle.viewModelScope
 import com.adyen.checkout.components.ActionComponentData
 import com.adyen.checkout.components.ActionComponentProvider
 import com.adyen.checkout.components.ViewableComponent
@@ -24,7 +25,7 @@ import com.adyen.checkout.components.base.BaseActionComponent
 import com.adyen.checkout.components.base.IntentHandlingComponent
 import com.adyen.checkout.components.model.payments.response.Action
 import com.adyen.checkout.components.model.payments.response.QrCodeAction
-import com.adyen.checkout.components.status.OldStatusRepository
+import com.adyen.checkout.components.status.StatusRepository
 import com.adyen.checkout.components.status.api.StatusResponseUtils
 import com.adyen.checkout.components.status.model.StatusResponse
 import com.adyen.checkout.core.exception.CheckoutException
@@ -32,6 +33,9 @@ import com.adyen.checkout.core.exception.ComponentException
 import com.adyen.checkout.core.log.LogUtil
 import com.adyen.checkout.core.log.Logger
 import com.adyen.checkout.redirect.RedirectDelegate
+import kotlinx.coroutines.Job
+import kotlinx.coroutines.flow.launchIn
+import kotlinx.coroutines.flow.onEach
 import org.json.JSONException
 import org.json.JSONObject
 import java.util.concurrent.TimeUnit
@@ -46,7 +50,8 @@ class QRCodeComponent(
     savedStateHandle: SavedStateHandle,
     application: Application,
     configuration: QRCodeConfiguration,
-    private val redirectDelegate: RedirectDelegate
+    private val redirectDelegate: RedirectDelegate,
+    private val statusRepository: StatusRepository,
 ) :
     BaseActionComponent<QRCodeConfiguration>(savedStateHandle, application, configuration),
     ViewableComponent<QRCodeOutputData, QRCodeConfiguration, ActionComponentData>,
@@ -55,11 +60,11 @@ class QRCodeComponent(
     private val outputLiveData = MutableLiveData<QRCodeOutputData>()
     private var paymentMethodType: String? = null
     private var qrCodeData: String? = null
-    private val statusRepository: OldStatusRepository = OldStatusRepository.getInstance(configuration.environment)
     private val timerLiveData = MutableLiveData<TimerData>()
+    private var statusPollingJob: Job? = null
 
     private var statusCountDownTimer: CountDownTimer = object : CountDownTimer(
-        OldStatusRepository.MAX_POLLING_DURATION_MILLIS,
+        StatusRepository.MAX_POLLING_DURATION_MILLIS,
         STATUS_POLLING_INTERVAL_MILLIS
     ) {
         override fun onTick(millisUntilFinished: Long) {
@@ -68,21 +73,6 @@ class QRCodeComponent(
 
         override fun onFinish() {
             // do nothing, StatusRepository will finish the polling automatically
-        }
-    }
-
-    private val responseObserver: Observer<StatusResponse?> = Observer { statusResponse ->
-        Logger.v(TAG, "onChanged - " + if (statusResponse == null) "null" else statusResponse.resultCode)
-        createOutputData(statusResponse)
-        if (statusResponse != null && StatusResponseUtils.isFinalResult(statusResponse)) {
-            onPollingSuccessful(statusResponse)
-        }
-    }
-    private val errorObserver: Observer<ComponentException?> = Observer { e ->
-        // StatusRepository will post null errors to reset it's status. We can ignore.
-        if (e != null) {
-            Logger.e(TAG, "onError")
-            notifyException(e)
         }
     }
 
@@ -99,19 +89,41 @@ class QRCodeComponent(
         // Notify UI to get the logo.
         createOutputData(null)
         val data = paymentData ?: return
-        statusRepository.startPolling(configuration.clientKey, data)
+        startStatusPolling(data)
         statusCountDownTimer.start()
+    }
+
+    private fun startStatusPolling(paymentData: String) {
+        statusPollingJob?.cancel()
+        statusPollingJob = statusRepository.poll(paymentData)
+            .onEach { onStatus(it) }
+            .launchIn(viewModelScope)
+    }
+
+    private fun onStatus(result: Result<StatusResponse>) {
+        result.fold(
+            onSuccess = { response ->
+                Logger.v(TAG, "Status changed - ${response.resultCode}")
+                createOutputData(response)
+                if (StatusResponseUtils.isFinalResult(response)) {
+                    onPollingSuccessful(response)
+                }
+            },
+            onFailure = {
+                Logger.e(TAG, "Error while polling status", it)
+                notifyException(ComponentException("Error while polling status", it))
+            }
+        )
     }
 
     override fun observe(lifecycleOwner: LifecycleOwner, observer: Observer<ActionComponentData>) {
         super.observe(lifecycleOwner, observer)
-        statusRepository.responseLiveData.observe(lifecycleOwner, responseObserver)
-        statusRepository.errorLiveData.observe(lifecycleOwner, errorObserver)
 
         // Immediately request a new status if the user resumes the app
         lifecycleOwner.lifecycle.addObserver(object : DefaultLifecycleObserver {
             override fun onResume(owner: LifecycleOwner) {
-                statusRepository.updateStatus()
+                val data = paymentData ?: return
+                statusRepository.refreshStatus(data)
             }
         })
     }
@@ -139,7 +151,9 @@ class QRCodeComponent(
     override fun onCleared() {
         super.onCleared()
         Logger.d(TAG, "onCleared")
-        statusRepository.stopPolling()
+        statusPollingJob?.cancel()
+        statusPollingJob = null
+        statusCountDownTimer.cancel()
     }
 
     override fun observeOutputData(lifecycleOwner: LifecycleOwner, observer: Observer<QRCodeOutputData>) {
@@ -169,7 +183,7 @@ class QRCodeComponent(
 
     private fun onTimerTick(millisUntilFinished: Long) {
         val progressPercentage =
-            (HUNDRED * millisUntilFinished / OldStatusRepository.MAX_POLLING_DURATION_MILLIS).toInt()
+            (HUNDRED * millisUntilFinished / StatusRepository.MAX_POLLING_DURATION_MILLIS).toInt()
         timerLiveData.postValue(TimerData(millisUntilFinished, progressPercentage))
     }
 
