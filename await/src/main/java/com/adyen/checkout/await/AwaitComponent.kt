@@ -74,7 +74,10 @@ class AwaitComponent(
                     onPollingSuccessful(response)
                 }
             },
-            onFailure = {}
+            onFailure = {
+                Logger.e(TAG, "Error while polling status", it)
+                notifyException(ComponentException("Error while polling status", it))
+            }
         )
     }
 
@@ -84,8 +87,8 @@ class AwaitComponent(
         // Immediately request a new status if the user resumes the app
         lifecycleOwner.lifecycle.addObserver(object : DefaultLifecycleObserver {
             override fun onResume(owner: LifecycleOwner) {
-                // TODO: Check if really needed
-//                oldStatusRepository.updateStatus()
+                val data = paymentData ?: return
+                statusRepository.refreshStatus(data)
             }
         })
     }
