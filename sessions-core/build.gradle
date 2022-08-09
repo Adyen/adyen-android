@@ -39,6 +39,7 @@ dependencies {
     api libraries.kotlinCoroutines
 
     //Tests
+    testImplementation project(':test-core')
     testImplementation testLibraries.androidx.lifecycle
     testImplementation testLibraries.junit5
     testImplementation testLibraries.kotlinCoroutines

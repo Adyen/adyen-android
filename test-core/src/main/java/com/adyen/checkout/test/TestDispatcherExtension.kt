@@ -55,7 +55,8 @@ class TestDispatcherExtension : BeforeEachCallback, AfterEachCallback, Parameter
     @Throws(ParameterResolutionException::class)
     @Suppress("NewApi")
     override fun supportsParameter(parameterContext: ParameterContext, extensionContext: ExtensionContext): Boolean =
-        // It's safe to ignore the warning on getType(), because this code is used in JVM unit tests.
+        // It's safe to ignore the warning on getType(), because this code is used in JVM unit tests and not
+        // android related.
         parameterContext.parameter.type.isAssignableFrom(CoroutineDispatcher::class.java) ||
             parameterContext.parameter.type.isAssignableFrom(TestDispatcher::class.java)
 
