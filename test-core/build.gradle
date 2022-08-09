@@ -1,0 +1,25 @@
+/*
+ * Copyright (c) 2022 Adyen N.V.
+ *
+ * This file is open source and available under the MIT license. See the LICENSE file for more info.
+ *
+ * Created by oscars on 9/8/2022.
+ */
+
+plugins {
+    id 'org.jetbrains.kotlin.jvm'
+}
+
+apply from: "${rootDir}/config/gradle/codeQuality.gradle"
+
+dependencies {
+    implementation testLibraries.junit5
+    implementation testLibraries.kotlinCoroutines
+}
+
+// Disable test tasks, because this module only contains test utils.
+tasks.configureEach { task ->
+    if(task.name.startsWith('test')) {
+        task.enabled = false
+    }
+}
