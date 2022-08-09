@@ -14,7 +14,9 @@ import com.adyen.checkout.components.test.TestPublicKeyRepository
 import com.adyen.checkout.core.api.Environment
 import com.adyen.checkout.cse.test.TestCardEncrypter
 import com.adyen.checkout.test.TestDispatcherExtension
+import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.ExperimentalCoroutinesApi
+import kotlinx.coroutines.test.UnconfinedTestDispatcher
 import kotlinx.coroutines.test.runTest
 import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.Assertions.assertFalse
@@ -58,9 +60,11 @@ internal class DefaultGiftCardDelegateTest {
         publicKeyRepository.shouldReturnError = true
 
         delegate.exceptionFlow.test {
-            delegate.fetchPublicKey()
+            delegate.initialize(CoroutineScope(UnconfinedTestDispatcher()))
 
-            assertEquals(publicKeyRepository.errorResult.exceptionOrNull(), awaitItem().cause)
+            val exception = expectMostRecentItem()
+
+            assertEquals(publicKeyRepository.errorResult.exceptionOrNull(), exception.cause)
 
             cancelAndIgnoreRemainingEvents()
         }
@@ -75,48 +79,53 @@ internal class DefaultGiftCardDelegateTest {
             delegate.componentStateFlow.test {
                 delegate.createComponentState(GiftCardOutputData("5555444433330000", "737"))
 
-                skipItems(1)
+                val componentState = requireNotNull(expectMostRecentItem())
 
-                assertFalse(awaitItem()!!.isReady)
+                assertFalse(componentState.isReady)
+                assertEquals(null, componentState.lastFourDigits)
             }
         }
 
         @Test
         fun `output data is invalid, then component state should be invalid`() = runTest {
-            delegate.fetchPublicKey()
+            delegate.initialize(CoroutineScope(UnconfinedTestDispatcher()))
+
             delegate.componentStateFlow.test {
                 delegate.createComponentState(GiftCardOutputData("123", "737"))
 
-                skipItems(1)
+                val componentState = requireNotNull(expectMostRecentItem())
 
-                assertFalse(awaitItem()!!.isInputValid)
+                assertTrue(componentState.isReady)
+                assertFalse(componentState.isInputValid)
+                assertEquals(null, componentState.lastFourDigits)
             }
         }
 
         @Test
         fun `encryption fails, then component state should be invalid`() = runTest {
-            delegate.fetchPublicKey()
             cardEncrypter.shouldThrowException = true
+
+            delegate.initialize(CoroutineScope(UnconfinedTestDispatcher()))
 
             delegate.componentStateFlow.test {
                 delegate.createComponentState(GiftCardOutputData("5555444433330000", "737"))
 
-                skipItems(1)
-                val item = awaitItem()
+                val componentState = requireNotNull(expectMostRecentItem())
 
-                assertFalse(item!!.isInputValid)
+                assertTrue(componentState.isReady)
+                assertFalse(componentState.isInputValid)
+                assertEquals(null, componentState.lastFourDigits)
             }
         }
 
         @Test
         fun `everything is valid, then component state should be good`() = runTest {
-            delegate.fetchPublicKey()
+            delegate.initialize(CoroutineScope(UnconfinedTestDispatcher()))
+
             delegate.componentStateFlow.test {
                 delegate.createComponentState(GiftCardOutputData("5555444433330000", "737"))
 
-                skipItems(1)
-
-                val componentState = requireNotNull(awaitItem())
+                val componentState = requireNotNull(expectMostRecentItem())
 
                 assertNotNull(componentState.data.paymentMethod)
                 assertTrue(componentState.isInputValid)
