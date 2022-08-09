@@ -12,8 +12,8 @@ import com.adyen.checkout.card.api.model.Brand
 import com.adyen.checkout.card.data.CardType
 import com.adyen.checkout.card.data.DetectedCardType
 import com.adyen.checkout.card.data.ExpiryDate
-import com.adyen.checkout.card.delegate.DetectCardTypeRepository
 import com.adyen.checkout.card.repository.AddressRepository
+import com.adyen.checkout.card.repository.DetectCardTypeRepository
 import com.adyen.checkout.card.ui.model.AddressListItem
 import com.adyen.checkout.card.util.AddressFormUtils
 import com.adyen.checkout.card.util.AddressValidationUtils

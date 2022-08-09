@@ -6,7 +6,7 @@
  * Created by ozgur on 4/8/2022.
  */
 
-package com.adyen.checkout.card.delegate
+package com.adyen.checkout.card.repository
 
 import com.adyen.checkout.card.api.BinLookupService
 import com.adyen.checkout.card.api.model.BinLookupRequest
@@ -27,38 +27,18 @@ import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.launch
 import java.util.UUID
 
-class DetectCardTypeRepository(
+internal class DefaultDetectCardTypeRepository(
     private val cardEncrypter: CardEncrypter,
-) {
-
-    /**
-     * Result of Bin Lookup cache query.
-     */
-    sealed class BinLookupResult {
-        /**
-         * Bin Lookup Result not available in cache.
-         */
-        object Unavailable : BinLookupResult()
-
-        /**
-         * Bin Lookup Result is being fetched from the API.
-         */
-        object Loading : BinLookupResult()
-
-        /**
-         * Bin Lookup Result is available in cache.
-         */
-        data class Available(val detectedCardTypes: List<DetectedCardType>) : BinLookupResult()
-    }
+) : DetectCardTypeRepository {
 
     private val _detectedCardTypesFlow: MutableSharedFlow<List<DetectedCardType>> =
         MutableSharedFlow(0, 1, BufferOverflow.DROP_OLDEST)
-    internal val detectedCardTypesFlow: Flow<List<DetectedCardType>> = _detectedCardTypesFlow
+    override val detectedCardTypesFlow: Flow<List<DetectedCardType>> = _detectedCardTypesFlow
 
     private val cachedBinLookup = HashMap<String, BinLookupResult>()
 
     @Suppress("LongParameterList")
-    fun detectCardType(
+    override fun detectCardType(
         cardNumber: String,
         publicKey: String?,
         supportedCardTypes: List<CardType>,
@@ -226,4 +206,24 @@ class DetectCardTypeRepository(
 
         private const val REQUIRED_BIN_SIZE = 11
     }
+}
+
+/**
+ * Result of Bin Lookup cache query.
+ */
+private sealed class BinLookupResult {
+    /**
+     * Bin Lookup Result not available in cache.
+     */
+    object Unavailable : BinLookupResult()
+
+    /**
+     * Bin Lookup Result is being fetched from the API.
+     */
+    object Loading : BinLookupResult()
+
+    /**
+     * Bin Lookup Result is available in cache.
+     */
+    data class Available(val detectedCardTypes: List<DetectedCardType>) : BinLookupResult()
 }
