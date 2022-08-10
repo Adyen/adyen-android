@@ -58,7 +58,8 @@ class DefaultCardDelegate(
     private val addressRepository: AddressRepository,
     private val detectCardTypeRepository: DetectCardTypeRepository,
     private val cardValidationMapper: CardValidationMapper,
-    private val cardEncrypter: CardEncrypter
+    private val cardEncrypter: CardEncrypter,
+    private val genericEncrypter: GenericEncrypter,
 ) : CardDelegate {
 
     override val inputData: CardInputData = CardInputData()
@@ -249,7 +250,7 @@ class DefaultCardDelegate(
 
         val cardNumber = outputData.cardNumberState.value
 
-        val firstCardType = outputData.detectedCardTypes.firstOrNull()?.cardType
+        val firstCardType = getDetectedCardType(outputData)?.cardType
 
         val binValue = cardNumber.take(BIN_VALUE_LENGTH)
 
@@ -508,7 +509,7 @@ class DefaultCardDelegate(
 
             if (isKCPAuthRequired()) {
                 publicKey?.let { publicKey ->
-                    encryptedPassword = GenericEncrypter.encryptField(
+                    encryptedPassword = genericEncrypter.encryptField(
                         GenericEncrypter.KCP_PASSWORD_KEY,
                         stateOutputData.kcpCardPasswordState.value,
                         publicKey
@@ -518,7 +519,7 @@ class DefaultCardDelegate(
             }
 
             if (isDualBrandedFlow(stateOutputData)) {
-                brand = stateOutputData.detectedCardTypes.first { it.isSelected }.cardType.txVariant
+                brand = getDetectedCardType(stateOutputData)?.cardType?.txVariant
             }
 
             fundingSource = getFundingSource()
@@ -544,6 +545,14 @@ class DefaultCardDelegate(
             binValue = binValue,
             lastFourDigits = lastFour
         )
+    }
+
+    private fun getDetectedCardType(outputData: CardOutputData): DetectedCardType? {
+        return if (isDualBrandedFlow(outputData)) {
+            outputData.detectedCardTypes.firstOrNull { it.isSelected }
+        } else {
+            outputData.detectedCardTypes.firstOrNull()
+        }
     }
 
     override fun isDualBrandedFlow(cardOutputData: CardOutputData): Boolean {

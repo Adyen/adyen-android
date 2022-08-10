@@ -9,14 +9,14 @@ package com.adyen.checkout.cse
 
 import androidx.annotation.WorkerThread
 import com.adyen.checkout.cse.CardEncrypter.Companion.GENERATION_TIME_KEY
-import com.adyen.checkout.cse.GenericEncrypter.encryptField
-import com.adyen.checkout.cse.GenericEncrypter.makeGenerationTime
 import com.adyen.checkout.cse.exception.EncryptionException
 import org.json.JSONException
 import org.json.JSONObject
 import java.util.Date
 
-class DefaultCardEncrypter : CardEncrypter {
+class DefaultCardEncrypter(
+    private val genericEncrypter: GenericEncrypter
+) : CardEncrypter {
 
     /**
      * Encrypts the available card data from [UnencryptedCard] into individual encrypted blocks.
@@ -36,7 +36,7 @@ class DefaultCardEncrypter : CardEncrypter {
             val encryptedExpiryMonth: String?
             val encryptedExpiryYear: String?
             val encryptedNumber: String? = if (unencryptedCard.number != null) {
-                encryptField(
+                genericEncrypter.encryptField(
                     CARD_NUMBER_KEY,
                     unencryptedCard.number,
                     publicKey
@@ -45,12 +45,12 @@ class DefaultCardEncrypter : CardEncrypter {
                 null
             }
             if (unencryptedCard.expiryMonth != null && unencryptedCard.expiryYear != null) {
-                encryptedExpiryMonth = encryptField(
+                encryptedExpiryMonth = genericEncrypter.encryptField(
                     EXPIRY_MONTH_KEY,
                     unencryptedCard.expiryMonth,
                     publicKey
                 )
-                encryptedExpiryYear = encryptField(
+                encryptedExpiryYear = genericEncrypter.encryptField(
                     EXPIRY_YEAR_KEY,
                     unencryptedCard.expiryYear,
                     publicKey
@@ -62,7 +62,7 @@ class DefaultCardEncrypter : CardEncrypter {
                 throw EncryptionException("Both expiryMonth and expiryYear need to be set for encryption.", null)
             }
             val encryptedSecurityCode: String? = if (unencryptedCard.cvc != null) {
-                encryptField(CVC_KEY, unencryptedCard.cvc, publicKey)
+                genericEncrypter.encryptField(CVC_KEY, unencryptedCard.cvc, publicKey)
             } else {
                 null
             }
@@ -93,7 +93,7 @@ class DefaultCardEncrypter : CardEncrypter {
             cardJson.put(EXPIRY_YEAR_KEY, unencryptedCard.expiryYear)
             cardJson.put(CVC_KEY, unencryptedCard.cvc)
             cardJson.put(HOLDER_NAME_KEY, unencryptedCard.cardHolderName)
-            val formattedGenerationTime = makeGenerationTime(unencryptedCard.generationTime)
+            val formattedGenerationTime = genericEncrypter.makeGenerationTime(unencryptedCard.generationTime)
             cardJson.put(GENERATION_TIME_KEY, formattedGenerationTime)
             val encrypter = ClientSideEncrypter(publicKey)
             encrypter.encrypt(cardJson.toString())
@@ -116,7 +116,7 @@ class DefaultCardEncrypter : CardEncrypter {
         return try {
             val binJson = JSONObject()
             binJson.put(BIN_KEY, bin)
-            binJson.put(GENERATION_TIME_KEY, makeGenerationTime(Date()))
+            binJson.put(GENERATION_TIME_KEY, genericEncrypter.makeGenerationTime(Date()))
             val encrypter = ClientSideEncrypter(publicKey)
             encrypter.encrypt(binJson.toString())
         } catch (e: JSONException) {

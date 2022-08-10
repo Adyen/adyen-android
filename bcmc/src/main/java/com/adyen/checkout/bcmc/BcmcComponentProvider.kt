@@ -18,6 +18,7 @@ import com.adyen.checkout.components.base.lifecycle.viewModelFactory
 import com.adyen.checkout.components.model.paymentmethods.PaymentMethod
 import com.adyen.checkout.components.repository.DefaultPublicKeyRepository
 import com.adyen.checkout.cse.DefaultCardEncrypter
+import com.adyen.checkout.cse.DefaultGenericEncrypter
 
 class BcmcComponentProvider : PaymentComponentProvider<BcmcComponent, BcmcConfiguration> {
 
@@ -30,6 +31,8 @@ class BcmcComponentProvider : PaymentComponentProvider<BcmcComponent, BcmcConfig
     ): BcmcComponent {
         val publicKeyRepository = DefaultPublicKeyRepository()
         val cardValidationMapper = CardValidationMapper()
+        val genericEncrypter = DefaultGenericEncrypter()
+        val cardEncrypter = DefaultCardEncrypter(genericEncrypter)
         val bcmcFactory = viewModelFactory(savedStateRegistryOwner, defaultArgs) { savedStateHandle ->
             BcmcComponent(
                 savedStateHandle = savedStateHandle,
@@ -39,7 +42,7 @@ class BcmcComponentProvider : PaymentComponentProvider<BcmcComponent, BcmcConfig
                     publicKeyRepository,
                     configuration,
                     cardValidationMapper,
-                    DefaultCardEncrypter()
+                    cardEncrypter
                 ),
                 configuration = configuration,
             )

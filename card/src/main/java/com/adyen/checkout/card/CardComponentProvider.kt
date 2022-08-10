@@ -24,6 +24,7 @@ import com.adyen.checkout.components.repository.DefaultPublicKeyRepository
 import com.adyen.checkout.core.log.LogUtil
 import com.adyen.checkout.core.log.Logger
 import com.adyen.checkout.cse.DefaultCardEncrypter
+import com.adyen.checkout.cse.DefaultGenericEncrypter
 
 private val TAG = LogUtil.getTag()
 
@@ -37,7 +38,8 @@ class CardComponentProvider : StoredPaymentComponentProvider<CardComponent, Card
         defaultArgs: Bundle?
     ): CardComponent {
         val verifiedConfiguration = checkSupportedCardTypes(paymentMethod, configuration)
-        val cardEncrypter = DefaultCardEncrypter()
+        val genericEncrypter = DefaultGenericEncrypter()
+        val cardEncrypter = DefaultCardEncrypter(genericEncrypter)
         val detectCardTypeRepository = DefaultDetectCardTypeRepository(cardEncrypter)
         val publicKeyRepository = DefaultPublicKeyRepository()
         val addressRepository = DefaultAddressRepository()
@@ -53,7 +55,8 @@ class CardComponentProvider : StoredPaymentComponentProvider<CardComponent, Card
                     addressRepository,
                     detectCardTypeRepository,
                     cardValidationMapper,
-                    cardEncrypter
+                    cardEncrypter,
+                    genericEncrypter
                 ),
                 verifiedConfiguration
             )
@@ -69,6 +72,8 @@ class CardComponentProvider : StoredPaymentComponentProvider<CardComponent, Card
         defaultArgs: Bundle?
     ): CardComponent {
         val publicKeyRepository = DefaultPublicKeyRepository()
+        val genericEncrypter = DefaultGenericEncrypter()
+        val cardEncrypter = DefaultCardEncrypter(genericEncrypter)
         val factory = viewModelFactory(savedStateRegistryOwner, defaultArgs) { savedStateHandle ->
             CardComponent(
                 savedStateHandle,
@@ -76,7 +81,7 @@ class CardComponentProvider : StoredPaymentComponentProvider<CardComponent, Card
                 StoredCardDelegate(
                     storedPaymentMethod,
                     configuration,
-                    DefaultCardEncrypter(),
+                    cardEncrypter,
                     publicKeyRepository,
                 ),
                 configuration
