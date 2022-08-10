@@ -22,13 +22,9 @@ import com.adyen.checkout.sessions.model.orders.SessionOrderResponse
 import com.adyen.checkout.sessions.model.payments.SessionDetailsResponse
 import com.adyen.checkout.sessions.model.payments.SessionPaymentsResponse
 import com.adyen.checkout.sessions.model.setup.SessionSetupResponse
-import kotlinx.coroutines.Dispatchers
+import com.adyen.checkout.test.TestDispatcherExtension
 import kotlinx.coroutines.ExperimentalCoroutinesApi
-import kotlinx.coroutines.test.UnconfinedTestDispatcher
-import kotlinx.coroutines.test.resetMain
 import kotlinx.coroutines.test.runTest
-import kotlinx.coroutines.test.setMain
-import org.junit.jupiter.api.AfterEach
 import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.DisplayName
@@ -42,7 +38,7 @@ import org.mockito.kotlin.doReturn
 import org.mockito.kotlin.whenever
 
 @OptIn(ExperimentalCoroutinesApi::class)
-@ExtendWith(MockitoExtension::class)
+@ExtendWith(MockitoExtension::class, TestDispatcherExtension::class)
 internal class SessionRepositoryTest(
     @Mock private val sessionService: SessionService,
 ) {
@@ -53,13 +49,6 @@ internal class SessionRepositoryTest(
     fun before() {
         val initialSession = Session("id", "sessionData")
         sessionRepository = SessionRepository(sessionService, "someclientkey", initialSession)
-
-        Dispatchers.setMain(UnconfinedTestDispatcher())
-    }
-
-    @AfterEach
-    fun after() {
-        Dispatchers.resetMain()
     }
 
     @Nested

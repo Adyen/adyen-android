@@ -13,13 +13,9 @@ import com.adyen.checkout.components.model.paymentmethods.PaymentMethod
 import com.adyen.checkout.components.repository.PublicKeyRepository
 import com.adyen.checkout.core.api.Environment
 import com.adyen.checkout.cse.TestCardEncrypter
-import kotlinx.coroutines.Dispatchers
+import com.adyen.checkout.test.TestDispatcherExtension
 import kotlinx.coroutines.ExperimentalCoroutinesApi
-import kotlinx.coroutines.test.UnconfinedTestDispatcher
-import kotlinx.coroutines.test.resetMain
 import kotlinx.coroutines.test.runTest
-import kotlinx.coroutines.test.setMain
-import org.junit.jupiter.api.AfterEach
 import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.Assertions.assertFalse
 import org.junit.jupiter.api.Assertions.assertNotNull
@@ -38,7 +34,7 @@ import java.io.IOException
 import java.util.Locale
 
 @OptIn(ExperimentalCoroutinesApi::class)
-@ExtendWith(MockitoExtension::class)
+@ExtendWith(MockitoExtension::class, TestDispatcherExtension::class)
 internal class DefaultGiftCardDelegateTest(
     @Mock private val publicKeyRepository: PublicKeyRepository
 ) {
@@ -58,14 +54,7 @@ internal class DefaultGiftCardDelegateTest(
 
     @BeforeEach
     fun before() {
-        Dispatchers.setMain(UnconfinedTestDispatcher())
-
         cardEncrypter.reset()
-    }
-
-    @AfterEach
-    fun after() {
-        Dispatchers.resetMain()
     }
 
     @Test

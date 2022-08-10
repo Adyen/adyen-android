@@ -23,6 +23,7 @@ include ':3ds2',
         ':redirect',
         ':sepa',
         ':sessions-core',
+        ':test-core',
         ':ui-core',
         ':voucher',
         ':wechatpay'
