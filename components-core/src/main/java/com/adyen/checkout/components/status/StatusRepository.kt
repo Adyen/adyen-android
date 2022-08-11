@@ -14,21 +14,19 @@ import com.adyen.checkout.components.status.model.StatusRequest
 import com.adyen.checkout.components.status.model.StatusResponse
 import com.adyen.checkout.core.util.runSuspendCatching
 import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.FlowPreview
 import kotlinx.coroutines.cancel
 import kotlinx.coroutines.channels.BufferOverflow
 import kotlinx.coroutines.currentCoroutineContext
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableSharedFlow
-import kotlinx.coroutines.flow.flatMapConcat
 import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.flow.map
+import kotlinx.coroutines.flow.merge
 import kotlinx.coroutines.isActive
 import kotlinx.coroutines.withContext
 import java.util.concurrent.TimeUnit
 
-@OptIn(FlowPreview::class)
 class StatusRepository constructor(
     private val statusService: StatusService,
     private val clientKey: String,
@@ -58,9 +56,10 @@ class StatusRepository constructor(
             }
         }
 
-        return refreshFlow
-            .map { fetchStatus(it) }
-            .flatMapConcat { pollingFlow }
+        return merge(
+            pollingFlow,
+            refreshFlow.map { fetchStatus(it) },
+        )
     }
 
     private suspend fun fetchStatus(paymentData: String) = withContext(Dispatchers.IO) {
