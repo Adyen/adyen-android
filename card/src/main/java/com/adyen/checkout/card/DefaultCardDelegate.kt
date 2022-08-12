@@ -18,7 +18,7 @@ import com.adyen.checkout.card.ui.model.AddressListItem
 import com.adyen.checkout.card.util.AddressFormUtils
 import com.adyen.checkout.card.util.AddressValidationUtils
 import com.adyen.checkout.card.util.CardValidationUtils
-import com.adyen.checkout.card.util.DualBrandedCardUtils
+import com.adyen.checkout.card.util.DetectedCardTypesUtils
 import com.adyen.checkout.card.util.InstallmentUtils
 import com.adyen.checkout.card.util.KcpValidationUtils
 import com.adyen.checkout.card.util.SocialSecurityNumberUtils
@@ -189,11 +189,12 @@ class DefaultCardDelegate(
         )
 
         val isReliable = detectedCardTypes.any { it.isReliable }
-        val supportedCardTypes = detectedCardTypes.filter { it.isSupported }
-        val sortedCardTypes = DualBrandedCardUtils.sortBrands(supportedCardTypes)
-        val outputCardTypes = markSelectedCard(sortedCardTypes, inputData.selectedCardIndex)
 
-        val selectedOrFirstCardType = outputCardTypes.firstOrNull { it.isSelected } ?: outputCardTypes.firstOrNull()
+        val filteredDetectedCardTypes = DetectedCardTypesUtils.filterDetectedCardTypes(
+            detectedCardTypes,
+            inputData.selectedCardIndex
+        )
+        val selectedOrFirstCardType = getDetectedCardType(filteredDetectedCardTypes)
 
         // perform a Luhn Check if no brands are detected
         val enableLuhnCheck = selectedOrFirstCardType?.enableLuhnCheck ?: true
@@ -223,7 +224,7 @@ class DefaultCardDelegate(
             isStoredPaymentMethodEnable = inputData.isStorePaymentSelected,
             cvcUIState = makeCvcUIState(selectedOrFirstCardType?.cvcPolicy),
             expiryDateUIState = makeExpiryDateUIState(selectedOrFirstCardType?.expiryDatePolicy),
-            detectedCardTypes = outputCardTypes,
+            detectedCardTypes = filteredDetectedCardTypes,
             isSocialSecurityNumberRequired = isSocialSecurityNumberRequired(),
             isKCPAuthRequired = isKCPAuthRequired(),
             addressUIState = addressFormUIState,
@@ -250,7 +251,7 @@ class DefaultCardDelegate(
 
         val cardNumber = outputData.cardNumberState.value
 
-        val firstCardType = getDetectedCardType(outputData)?.cardType
+        val firstCardType = getDetectedCardType(outputData.detectedCardTypes)?.cardType
 
         val binValue = cardNumber.take(BIN_VALUE_LENGTH)
 
@@ -470,17 +471,6 @@ class DefaultCardDelegate(
         }
     }
 
-    private fun markSelectedCard(cards: List<DetectedCardType>, selectedIndex: Int): List<DetectedCardType> {
-        if (cards.size <= SINGLE_CARD_LIST_SIZE) return cards
-        return cards.mapIndexed { index, card ->
-            if (index == selectedIndex) {
-                card.copy(isSelected = true)
-            } else {
-                card
-            }
-        }
-    }
-
     private fun makeInstallmentFieldState(installmentModel: InstallmentModel?): FieldState<InstallmentModel?> {
         return FieldState(installmentModel, Validation.Valid)
     }
@@ -519,7 +509,7 @@ class DefaultCardDelegate(
             }
 
             if (isDualBrandedFlow(stateOutputData)) {
-                brand = getDetectedCardType(stateOutputData)?.cardType?.txVariant
+                brand = getDetectedCardType(stateOutputData.detectedCardTypes)?.cardType?.txVariant
             }
 
             fundingSource = getFundingSource()
@@ -547,12 +537,8 @@ class DefaultCardDelegate(
         )
     }
 
-    private fun getDetectedCardType(outputData: CardOutputData): DetectedCardType? {
-        return if (isDualBrandedFlow(outputData)) {
-            outputData.detectedCardTypes.firstOrNull { it.isSelected }
-        } else {
-            outputData.detectedCardTypes.firstOrNull()
-        }
+    private fun getDetectedCardType(detectedCardTypes: List<DetectedCardType>): DetectedCardType? {
+        return DetectedCardTypesUtils.getSelectedOrFirstDetectedCardType(detectedCardTypes)
     }
 
     override fun isDualBrandedFlow(cardOutputData: CardOutputData): Boolean {
@@ -607,6 +593,5 @@ class DefaultCardDelegate(
         private const val DEBIT_FUNDING_SOURCE = "debit"
         private const val BIN_VALUE_LENGTH = 6
         private const val LAST_FOUR_LENGTH = 4
-        private const val SINGLE_CARD_LIST_SIZE = 1
     }
 }

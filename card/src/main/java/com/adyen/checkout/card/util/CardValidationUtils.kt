@@ -96,7 +96,8 @@ object CardValidationUtils {
                 }
                 fieldState
             }
-            fieldPolicy == Brand.FieldPolicy.OPTIONAL && expiryDate != ExpiryDate.INVALID_DATE -> {
+            (fieldPolicy == Brand.FieldPolicy.OPTIONAL || fieldPolicy == Brand.FieldPolicy.HIDDEN)
+                && expiryDate != ExpiryDate.INVALID_DATE -> {
                 FieldState(expiryDate, Validation.Valid)
             }
             else -> invalidState

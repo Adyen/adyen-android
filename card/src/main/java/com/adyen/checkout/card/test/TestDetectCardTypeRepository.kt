@@ -14,6 +14,8 @@ import com.adyen.checkout.card.data.CardType
 import com.adyen.checkout.card.data.DetectedCardType
 import com.adyen.checkout.card.repository.DetectCardTypeRepository
 import com.adyen.checkout.card.test.TestDetectCardTypeRepository.TestDetectedCardType.DETECTED_LOCALLY
+import com.adyen.checkout.card.test.TestDetectCardTypeRepository.TestDetectedCardType.DUAL_BRANDED
+import com.adyen.checkout.card.test.TestDetectCardTypeRepository.TestDetectedCardType.ERROR
 import com.adyen.checkout.card.test.TestDetectCardTypeRepository.TestDetectedCardType.FETCHED_FROM_NETWORK
 import com.adyen.checkout.core.api.Environment
 import kotlinx.coroutines.CoroutineScope
@@ -44,39 +46,70 @@ internal class TestDetectCardTypeRepository : DetectCardTypeRepository {
         coroutineScope: CoroutineScope,
     ) {
         val detectedCardTypes = when (detectionResult) {
-            DETECTED_LOCALLY -> listOf(getDetectedCardTypeLocal(supportedCardTypes))
-            FETCHED_FROM_NETWORK -> listOf(getDetectedCardTypeNetwork(supportedCardTypes))
-        }
+            ERROR -> null
+            DETECTED_LOCALLY -> getDetectedCardTypesLocal(supportedCardTypes)
+            FETCHED_FROM_NETWORK -> getDetectedCardTypesNetwork(supportedCardTypes)
+            DUAL_BRANDED -> getDetectedCardTypesDualBranded(supportedCardTypes)
+        } ?: return
 
         _detectedCardTypesFlow.tryEmit(detectedCardTypes)
     }
 
     enum class TestDetectedCardType {
+        ERROR,
         DETECTED_LOCALLY,
         FETCHED_FROM_NETWORK,
+        DUAL_BRANDED,
     }
 
-    fun getDetectedCardTypeLocal(supportedCardTypes: List<CardType>): DetectedCardType {
+    fun getDetectedCardTypesLocal(supportedCardTypes: List<CardType>): List<DetectedCardType> {
         val cardType = CardType.VISA
-        return DetectedCardType(
-            cardType = cardType,
-            isReliable = false,
-            enableLuhnCheck = true,
-            cvcPolicy = Brand.FieldPolicy.REQUIRED,
-            expiryDatePolicy = Brand.FieldPolicy.REQUIRED,
-            isSupported = supportedCardTypes.contains(cardType)
+        return listOf(
+            DetectedCardType(
+                cardType = cardType,
+                isReliable = false,
+                enableLuhnCheck = true,
+                cvcPolicy = Brand.FieldPolicy.REQUIRED,
+                expiryDatePolicy = Brand.FieldPolicy.REQUIRED,
+                isSupported = supportedCardTypes.contains(cardType)
+            )
         )
     }
 
-    fun getDetectedCardTypeNetwork(supportedCardTypes: List<CardType>): DetectedCardType {
+    fun getDetectedCardTypesNetwork(supportedCardTypes: List<CardType>): List<DetectedCardType> {
         val cardType = CardType.MASTERCARD
-        return DetectedCardType(
-            cardType = cardType,
-            isReliable = true,
-            enableLuhnCheck = true,
-            cvcPolicy = Brand.FieldPolicy.REQUIRED,
-            expiryDatePolicy = Brand.FieldPolicy.REQUIRED,
-            isSupported = supportedCardTypes.contains(cardType)
+        return listOf(
+            DetectedCardType(
+                cardType = cardType,
+                isReliable = true,
+                enableLuhnCheck = true,
+                cvcPolicy = Brand.FieldPolicy.REQUIRED,
+                expiryDatePolicy = Brand.FieldPolicy.REQUIRED,
+                isSupported = supportedCardTypes.contains(cardType)
+            )
+        )
+    }
+
+    fun getDetectedCardTypesDualBranded(supportedCardTypes: List<CardType>): List<DetectedCardType> {
+        val cardTypeFirst = CardType.BCMC
+        val cardTypeSecond = CardType.MAESTRO
+        return listOf(
+            DetectedCardType(
+                cardType = cardTypeFirst,
+                isReliable = true,
+                enableLuhnCheck = true,
+                cvcPolicy = Brand.FieldPolicy.HIDDEN,
+                expiryDatePolicy = Brand.FieldPolicy.REQUIRED,
+                isSupported = supportedCardTypes.contains(cardTypeFirst)
+            ),
+            DetectedCardType(
+                cardType = cardTypeSecond,
+                isReliable = true,
+                enableLuhnCheck = false,
+                cvcPolicy = Brand.FieldPolicy.OPTIONAL,
+                expiryDatePolicy = Brand.FieldPolicy.HIDDEN,
+                isSupported = supportedCardTypes.contains(cardTypeSecond)
+            )
         )
     }
 }
