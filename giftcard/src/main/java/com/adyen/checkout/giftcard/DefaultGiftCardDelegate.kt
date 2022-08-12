@@ -63,8 +63,8 @@ internal class DefaultGiftCardDelegate(
                 },
                 onFailure = { e ->
                     Logger.e(TAG, "Unable to fetch public key")
-                   val item=  _exceptionFlow.tryEmit(ComponentException("Unable to fetch publicKey.", e))
-                    if(!item){
+                    val item = _exceptionFlow.tryEmit(ComponentException("Unable to fetch publicKey.", e))
+                    if (!item) {
                         Logger.d(TAG, "not emitted")
                     }
                 }
