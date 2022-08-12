@@ -8,7 +8,6 @@
 
 package com.adyen.checkout.card.repository
 
-import android.util.LruCache
 import com.adyen.checkout.card.api.AddressService
 import com.adyen.checkout.card.api.model.AddressItem
 import com.adyen.checkout.card.ui.AddressFormInput
@@ -34,7 +33,7 @@ internal class DefaultAddressRepository : AddressRepository {
         MutableSharedFlow(0, 1, BufferOverflow.DROP_OLDEST)
     override val countriesFlow: Flow<List<AddressItem>> = _countriesFlow
 
-    private val cache: LruCache<String, List<AddressItem>> = LruCache<String, List<AddressItem>>(CACHE_ENTRY_SIZE)
+    private val cache: HashMap<String, List<AddressItem>> = hashMapOf()
 
     override fun getStateList(
         configuration: Configuration,
@@ -73,7 +72,7 @@ internal class DefaultAddressRepository : AddressRepository {
             ).fold(
                 onSuccess = { states ->
                     if (states.isNotEmpty()) {
-                        cache.put(countryCode, states)
+                        cache[countryCode] = states
                     }
                     states
                 },
@@ -103,7 +102,7 @@ internal class DefaultAddressRepository : AddressRepository {
             ).fold(
                 onSuccess = { countries ->
                     if (countries.isNotEmpty()) {
-                        cache.put(COUNTRIES_CACHE_KEY, countries)
+                        cache[COUNTRIES_CACHE_KEY] = countries
                     }
                     countries
                 },
@@ -141,9 +140,6 @@ internal class DefaultAddressRepository : AddressRepository {
             AddressFormInput.AddressSpecification.CA,
             AddressFormInput.AddressSpecification.US
         )
-
-        // Only US, CA and BR has states and there's only one countries list.
-        private val CACHE_ENTRY_SIZE = COUNTRIES_WITH_STATES.size + 1
         private const val COUNTRIES_CACHE_KEY = "countries"
     }
 }
