@@ -141,8 +141,6 @@ class StoredCardDelegate(
 
         val firstCardType = outputData.detectedCardTypes.firstOrNull()?.cardType
 
-        val binValue = cardNumber.take(BIN_VALUE_LENGTH)
-
         val publicKey = publicKey
 
         // If data is not valid we just return empty object, encryption would fail and we don't pass unencrypted data.
@@ -153,7 +151,7 @@ class StoredCardDelegate(
                     isInputValid = outputData.isValid,
                     isReady = publicKey != null,
                     cardType = firstCardType,
-                    binValue = binValue,
+                    binValue = "",
                     lastFourDigits = null
                 )
             )
@@ -182,7 +180,7 @@ class StoredCardDelegate(
                     isInputValid = false,
                     isReady = true,
                     cardType = firstCardType,
-                    binValue = binValue,
+                    binValue = "",
                     lastFourDigits = null
                 )
             )
@@ -195,7 +193,6 @@ class StoredCardDelegate(
                 outputData,
                 cardNumber,
                 firstCardType,
-                binValue
             )
         )
     }
@@ -236,10 +233,7 @@ class StoredCardDelegate(
 
     private fun getSupportedCardTypes(): List<CardType> = emptyList()
 
-    override fun isDualBrandedFlow(cardOutputData: CardOutputData): Boolean {
-        val reliableDetectedCards = cardOutputData.detectedCardTypes.filter { it.isReliable }
-        return reliableDetectedCards.size > 1 && reliableDetectedCards.any { it.isSelected }
-    }
+    override fun isDualBrandedFlow(cardOutputData: CardOutputData): Boolean = false
 
     override fun isInstallmentsRequired(cardOutputData: CardOutputData): Boolean {
         return cardOutputData.installmentOptions.isNotEmpty()
@@ -250,7 +244,6 @@ class StoredCardDelegate(
         stateOutputData: CardOutputData,
         cardNumber: String,
         firstCardType: CardType?,
-        binValue: String
     ): CardComponentState {
         val cardPaymentMethod = CardPaymentMethod().apply {
             type = CardPaymentMethod.PAYMENT_METHOD_TYPE
@@ -259,10 +252,6 @@ class StoredCardDelegate(
 
             if (!isCvcHidden()) {
                 encryptedSecurityCode = encryptedCard.encryptedSecurityCode
-            }
-
-            if (isDualBrandedFlow(stateOutputData)) {
-                brand = stateOutputData.detectedCardTypes.first { it.isSelected }.cardType.txVariant
             }
 
             try {
@@ -283,7 +272,7 @@ class StoredCardDelegate(
             isInputValid = true,
             isReady = true,
             cardType = firstCardType,
-            binValue = binValue,
+            binValue = "",
             lastFourDigits = lastFour
         )
     }
@@ -388,7 +377,6 @@ class StoredCardDelegate(
 
     companion object {
         private val TAG = LogUtil.getTag()
-        private const val BIN_VALUE_LENGTH = 6
         private const val LAST_FOUR_LENGTH = 4
     }
 }
