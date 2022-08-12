@@ -110,24 +110,21 @@ class StoredCardDelegate(
 
         val detectedCardTypes = storedDetectedCardTypes
 
-        _outputDataFlow.tryEmit(
-            makeOutputData(
-                cardNumber = inputData.cardNumber,
-                expiryDate = inputData.expiryDate,
-                securityCode = inputData.securityCode,
-                holderName = inputData.holderName,
-                socialSecurityNumber = inputData.socialSecurityNumber,
-                kcpBirthDateOrTaxNumber = inputData.kcpBirthDateOrTaxNumber,
-                kcpCardPassword = inputData.kcpCardPassword,
-                addressInputModel = inputData.address,
-                isStorePaymentSelected = inputData.isStorePaymentSelected,
-                detectedCardType = detectedCardTypes,
-                selectedInstallmentOption = inputData.installmentOption,
-            )
+        val outputData = makeOutputData(
+            cardNumber = inputData.cardNumber,
+            expiryDate = inputData.expiryDate,
+            securityCode = inputData.securityCode,
+            holderName = inputData.holderName,
+            socialSecurityNumber = inputData.socialSecurityNumber,
+            kcpBirthDateOrTaxNumber = inputData.kcpBirthDateOrTaxNumber,
+            kcpCardPassword = inputData.kcpCardPassword,
+            addressInputModel = inputData.address,
+            isStorePaymentSelected = inputData.isStorePaymentSelected,
+            detectedCardType = detectedCardTypes,
+            selectedInstallmentOption = inputData.installmentOption,
         )
-        outputData?.let {
-            createComponentState(it)
-        }
+        _outputDataFlow.tryEmit(outputData)
+        createComponentState(outputData)
     }
 
     override fun getPaymentMethodType(): String {
@@ -255,6 +252,9 @@ class StoredCardDelegate(
             }
 
             try {
+                // This call will throw an exception in case the merchant did not include our 3DS2 component/SDK
+                // in their app. They can opt to use the standalone card component without 3DS2 or with another 3DS2
+                // library.
                 threeDS2SdkVersion = ThreeDS2Service.INSTANCE.sdkVersion
             } catch (e: ClassNotFoundException) {
                 Logger.e(TAG, "threeDS2SdkVersion not set because 3DS2 SDK is not present in project.")

@@ -9,6 +9,7 @@
 package com.adyen.checkout.card
 
 import app.cash.turbine.test
+import app.cash.turbine.testIn
 import com.adyen.checkout.card.api.model.Brand
 import com.adyen.checkout.card.data.CardType
 import com.adyen.checkout.card.data.DetectedCardType
@@ -90,62 +91,73 @@ internal class DefaultCardDelegateTest {
     inner class InputDataChangedTest {
         @Test
         fun `address configuration is none, then countries and states should not be fetched`() = runTest {
-            addressRepository.countriesFlow.test {
-                addressRepository.statesFlow.test {
-                    delegate.initialize(CoroutineScope(UnconfinedTestDispatcher()))
-                    expectNoEvents()
-                }
-                expectNoEvents()
-            }
+            val countriesFlow = addressRepository.countriesFlow.testIn(this)
+            val statesFlow = addressRepository.statesFlow.testIn(this)
+
+            delegate.initialize(CoroutineScope(UnconfinedTestDispatcher()))
+
+            countriesFlow.expectNoEvents()
+            statesFlow.expectNoEvents()
+
+            countriesFlow.cancelAndIgnoreRemainingEvents()
+            statesFlow.cancelAndIgnoreRemainingEvents()
         }
 
         @Test
         fun `address configuration is postal code, then countries and states should not be fetched`() = runTest {
+            val countriesFlow = addressRepository.countriesFlow.testIn(this)
+            val statesFlow = addressRepository.statesFlow.testIn(this)
             delegate = createCardDelegate(
                 configuration = getDefaultCardConfigurationBuilder()
                     .setAddressConfiguration(AddressConfiguration.PostalCode)
                     .build()
             )
-            addressRepository.countriesFlow.test {
-                addressRepository.statesFlow.test {
-                    delegate.initialize(CoroutineScope(UnconfinedTestDispatcher()))
-                    expectNoEvents()
-                }
-                expectNoEvents()
-            }
+
+            delegate.initialize(CoroutineScope(UnconfinedTestDispatcher()))
+
+            countriesFlow.expectNoEvents()
+            statesFlow.expectNoEvents()
+
+            countriesFlow.cancelAndIgnoreRemainingEvents()
+            statesFlow.cancelAndIgnoreRemainingEvents()
         }
 
         @Test
         fun `address repository returns error, then countries should be emitted empty`() = runTest {
+            val countriesFlow = addressRepository.countriesFlow.testIn(this)
+            val statesFlow = addressRepository.statesFlow.testIn(this)
+
             addressRepository.shouldReturnError = true
             delegate = createCardDelegate(
                 configuration = getDefaultCardConfigurationBuilder()
                     .setAddressConfiguration(AddressConfiguration.FullAddress())
                     .build()
             )
-            addressRepository.countriesFlow.test {
-                addressRepository.statesFlow.test {
-                    delegate.initialize(CoroutineScope(UnconfinedTestDispatcher()))
-                    expectNoEvents()
-                }
-                assertTrue(awaitItem().isEmpty())
-            }
+            delegate.initialize(CoroutineScope(UnconfinedTestDispatcher()))
+
+            assertTrue(countriesFlow.awaitItem().isEmpty())
+            statesFlow.expectNoEvents()
+
+            countriesFlow.cancelAndIgnoreRemainingEvents()
+            statesFlow.cancelAndIgnoreRemainingEvents()
         }
 
         @Test
         fun `address configuration is full address, then countries and states should be emitted`() = runTest {
+            val countriesFlow = addressRepository.countriesFlow.testIn(this)
+            val statesFlow = addressRepository.statesFlow.testIn(this)
             delegate = createCardDelegate(
                 configuration = getDefaultCardConfigurationBuilder()
                     .setAddressConfiguration(AddressConfiguration.FullAddress())
                     .build()
             )
-            addressRepository.countriesFlow.test {
-                addressRepository.statesFlow.test {
-                    delegate.initialize(CoroutineScope(UnconfinedTestDispatcher()))
-                    assertEquals(TestAddressRepository.STATES, awaitItem())
-                }
-                assertEquals(TestAddressRepository.COUNTRIES, awaitItem())
-            }
+            delegate.initialize(CoroutineScope(UnconfinedTestDispatcher()))
+
+            assertEquals(TestAddressRepository.COUNTRIES, countriesFlow.awaitItem())
+            assertEquals(TestAddressRepository.STATES, statesFlow.awaitItem())
+
+            countriesFlow.cancelAndIgnoreRemainingEvents()
+            statesFlow.cancelAndIgnoreRemainingEvents()
         }
 
         @Test
