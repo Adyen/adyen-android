@@ -17,7 +17,7 @@ import com.adyen.checkout.components.ActionComponentProvider
 import com.adyen.checkout.components.base.lifecycle.viewModelFactory
 import com.adyen.checkout.components.model.payments.response.Action
 import com.adyen.checkout.components.model.payments.response.QrCodeAction
-import com.adyen.checkout.components.status.StatusRepository
+import com.adyen.checkout.components.status.DefaultStatusRepository
 import com.adyen.checkout.components.status.api.StatusService
 import com.adyen.checkout.components.util.PaymentMethodTypes
 import com.adyen.checkout.redirect.RedirectDelegate
@@ -42,7 +42,7 @@ class QRCodeComponentProvider : ActionComponentProvider<QRCodeComponent, QRCodeC
     ): QRCodeComponent {
         val redirectDelegate = RedirectDelegate()
         val statusService = StatusService(configuration.environment.baseUrl)
-        val statusRepository = StatusRepository(statusService, configuration.clientKey)
+        val statusRepository = DefaultStatusRepository(statusService, configuration.clientKey)
         val qrCodeFactory = viewModelFactory(savedStateRegistryOwner, defaultArgs) { savedStateHandle ->
             QRCodeComponent(
                 savedStateHandle = savedStateHandle,

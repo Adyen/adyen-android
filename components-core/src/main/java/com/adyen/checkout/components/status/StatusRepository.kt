@@ -27,16 +27,23 @@ import kotlinx.coroutines.isActive
 import kotlinx.coroutines.withContext
 import java.util.concurrent.TimeUnit
 
-class StatusRepository constructor(
+interface StatusRepository {
+
+    fun poll(paymentData: String): Flow<Result<StatusResponse>>
+
+    fun refreshStatus(paymentData: String)
+}
+
+class DefaultStatusRepository constructor(
     private val statusService: StatusService,
     private val clientKey: String,
-) {
+) : StatusRepository {
 
     private var delay: Long = 0
 
     private val refreshFlow = MutableSharedFlow<String>(0, 1, BufferOverflow.DROP_OLDEST)
 
-    fun poll(paymentData: String): Flow<Result<StatusResponse>> {
+    override fun poll(paymentData: String): Flow<Result<StatusResponse>> {
         val startTime = System.currentTimeMillis()
 
         val pollingFlow = flow {
@@ -86,7 +93,7 @@ class StatusRepository constructor(
         }
     }
 
-    fun refreshStatus(paymentData: String) {
+    override fun refreshStatus(paymentData: String) {
         refreshFlow.tryEmit(paymentData)
     }
 
