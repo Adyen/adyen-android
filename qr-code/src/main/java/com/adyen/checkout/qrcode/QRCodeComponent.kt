@@ -11,12 +11,11 @@ import android.app.Activity
 import android.app.Application
 import android.content.Context
 import android.content.Intent
-import android.os.CountDownTimer
 import androidx.lifecycle.DefaultLifecycleObserver
 import androidx.lifecycle.LifecycleOwner
-import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.Observer
 import androidx.lifecycle.SavedStateHandle
+import androidx.lifecycle.asLiveData
 import androidx.lifecycle.viewModelScope
 import com.adyen.checkout.components.ActionComponentData
 import com.adyen.checkout.components.ActionComponentProvider
@@ -25,55 +24,32 @@ import com.adyen.checkout.components.base.BaseActionComponent
 import com.adyen.checkout.components.base.IntentHandlingComponent
 import com.adyen.checkout.components.model.payments.response.Action
 import com.adyen.checkout.components.model.payments.response.QrCodeAction
-import com.adyen.checkout.components.status.StatusRepository
-import com.adyen.checkout.components.status.api.StatusResponseUtils
-import com.adyen.checkout.components.status.model.StatusResponse
 import com.adyen.checkout.core.exception.CheckoutException
 import com.adyen.checkout.core.exception.ComponentException
 import com.adyen.checkout.core.log.LogUtil
 import com.adyen.checkout.core.log.Logger
 import com.adyen.checkout.redirect.RedirectDelegate
-import kotlinx.coroutines.Job
-import kotlinx.coroutines.flow.launchIn
-import kotlinx.coroutines.flow.onEach
-import org.json.JSONException
-import org.json.JSONObject
-import java.util.concurrent.TimeUnit
+import kotlinx.coroutines.flow.filterNotNull
 
-private val TAG = LogUtil.getTag()
-private const val PAYLOAD_DETAILS_KEY = "payload"
-private val STATUS_POLLING_INTERVAL_MILLIS = TimeUnit.SECONDS.toMillis(1L) // 1 second
-private const val HUNDRED = 100
-
-@Suppress("TooManyFunctions")
 class QRCodeComponent(
     savedStateHandle: SavedStateHandle,
     application: Application,
     configuration: QRCodeConfiguration,
     private val redirectDelegate: RedirectDelegate,
-    private val statusRepository: StatusRepository,
+    private val qrCodeDelegate: QRCodeDelegate,
 ) :
     BaseActionComponent<QRCodeConfiguration>(savedStateHandle, application, configuration),
     ViewableComponent<QRCodeOutputData, QRCodeConfiguration, ActionComponentData>,
     IntentHandlingComponent {
 
-    private val outputLiveData = MutableLiveData<QRCodeOutputData>()
-    private var paymentMethodType: String? = null
-    private var qrCodeData: String? = null
-    private val timerLiveData = MutableLiveData<TimerData>()
-    private var statusPollingJob: Job? = null
+    override val outputData: QRCodeOutputData? get() = qrCodeDelegate.outputData
 
-    private var statusCountDownTimer: CountDownTimer = object : CountDownTimer(
-        StatusRepository.MAX_POLLING_DURATION_MILLIS,
-        STATUS_POLLING_INTERVAL_MILLIS
-    ) {
-        override fun onTick(millisUntilFinished: Long) {
-            onTimerTick(millisUntilFinished)
-        }
+    init {
+        qrCodeDelegate.initialize(viewModelScope)
+    }
 
-        override fun onFinish() {
-            // do nothing, StatusRepository will finish the polling automatically
-        }
+    override fun canHandleAction(action: Action): Boolean {
+        return PROVIDER.canHandleAction(action)
     }
 
     @Throws(ComponentException::class)
@@ -84,111 +60,9 @@ class QRCodeComponent(
             redirectDelegate.makeRedirect(activity, action.url)
             return
         }
-        paymentMethodType = action.paymentMethodType
-        qrCodeData = action.qrCodeData
-        // Notify UI to get the logo.
-        createOutputData(null)
+
         val data = paymentData ?: return
-        startStatusPolling(data)
-        statusCountDownTimer.start()
-    }
-
-    private fun startStatusPolling(paymentData: String) {
-        statusPollingJob?.cancel()
-        statusPollingJob = statusRepository.poll(paymentData)
-            .onEach { onStatus(it) }
-            .launchIn(viewModelScope)
-    }
-
-    private fun onStatus(result: Result<StatusResponse>) {
-        result.fold(
-            onSuccess = { response ->
-                Logger.v(TAG, "Status changed - ${response.resultCode}")
-                createOutputData(response)
-                if (StatusResponseUtils.isFinalResult(response)) {
-                    onPollingSuccessful(response)
-                }
-            },
-            onFailure = {
-                Logger.e(TAG, "Error while polling status", it)
-                notifyException(ComponentException("Error while polling status", it))
-            }
-        )
-    }
-
-    override fun observe(lifecycleOwner: LifecycleOwner, observer: Observer<ActionComponentData>) {
-        super.observe(lifecycleOwner, observer)
-
-        // Immediately request a new status if the user resumes the app
-        lifecycleOwner.lifecycle.addObserver(object : DefaultLifecycleObserver {
-            override fun onResume(owner: LifecycleOwner) {
-                val data = paymentData ?: return
-                statusRepository.refreshStatus(data)
-            }
-        })
-    }
-
-    private fun onPollingSuccessful(statusResponse: StatusResponse) {
-        val payload = statusResponse.payload
-        // Not authorized status should still call /details so that merchant can get more info
-        if (StatusResponseUtils.isFinalResult(statusResponse) && !payload.isNullOrEmpty()) {
-            notifyDetails(createDetail(payload))
-        } else {
-            notifyException(ComponentException("Payment was not completed. - " + statusResponse.resultCode))
-        }
-    }
-
-    private fun createDetail(payload: String): JSONObject {
-        val jsonObject = JSONObject()
-        try {
-            jsonObject.put(PAYLOAD_DETAILS_KEY, payload)
-        } catch (e: JSONException) {
-            notifyException(ComponentException("Failed to create details.", e))
-        }
-        return jsonObject
-    }
-
-    override fun onCleared() {
-        super.onCleared()
-        Logger.d(TAG, "onCleared")
-        statusPollingJob?.cancel()
-        statusPollingJob = null
-        statusCountDownTimer.cancel()
-    }
-
-    override fun observeOutputData(lifecycleOwner: LifecycleOwner, observer: Observer<QRCodeOutputData>) {
-        outputLiveData.observe(lifecycleOwner, observer)
-    }
-
-    fun observeTimer(lifecycleOwner: LifecycleOwner, observer: Observer<TimerData>) {
-        timerLiveData.observe(lifecycleOwner, observer)
-    }
-
-    override val outputData: QRCodeOutputData?
-        get() = outputLiveData.value
-
-    override fun sendAnalyticsEvent(context: Context) {
-        // noop
-    }
-
-    private fun createOutputData(statusResponse: StatusResponse?) {
-        val isValid = statusResponse != null && StatusResponseUtils.isFinalResult(statusResponse)
-        val outputData = QRCodeOutputData(isValid, paymentMethodType)
-        outputLiveData.value = outputData
-    }
-
-    fun getCodeString(): String? {
-        return qrCodeData
-    }
-
-    private fun onTimerTick(millisUntilFinished: Long) {
-        val progressPercentage =
-            (HUNDRED * millisUntilFinished / StatusRepository.MAX_POLLING_DURATION_MILLIS).toInt()
-        timerLiveData.postValue(TimerData(millisUntilFinished, progressPercentage))
-    }
-
-    override fun canHandleAction(action: Action): Boolean {
-        return PROVIDER.canHandleAction(action)
+        qrCodeDelegate.handleAction(action, data)
     }
 
     /**
@@ -206,13 +80,45 @@ class QRCodeComponent(
         }
     }
 
+    override fun observe(lifecycleOwner: LifecycleOwner, observer: Observer<ActionComponentData>) {
+        super.observe(lifecycleOwner, observer)
+
+        // Immediately request a new status if the user resumes the app
+        lifecycleOwner.lifecycle.addObserver(object : DefaultLifecycleObserver {
+            override fun onResume(owner: LifecycleOwner) {
+                val data = paymentData ?: return
+                qrCodeDelegate.refreshStatus(data)
+            }
+        })
+    }
+
+    override fun observeOutputData(lifecycleOwner: LifecycleOwner, observer: Observer<QRCodeOutputData>) {
+        qrCodeDelegate.outputDataFlow
+            .filterNotNull()
+            .asLiveData()
+            .observe(lifecycleOwner, observer)
+    }
+
+    fun observeTimer(lifecycleOwner: LifecycleOwner, observer: Observer<TimerData>) {
+        qrCodeDelegate.timerFlow
+            .asLiveData()
+            .observe(lifecycleOwner, observer)
+    }
+
+    override fun sendAnalyticsEvent(context: Context) = Unit
+
+    fun getCodeString(): String? = qrCodeDelegate.getCodeString()
+
+    override fun onCleared() {
+        super.onCleared()
+        Logger.d(TAG, "onCleared")
+        qrCodeDelegate.onCleared()
+    }
+
     companion object {
         @JvmField
         val PROVIDER: ActionComponentProvider<QRCodeComponent, QRCodeConfiguration> = QRCodeComponentProvider()
+
+        private val TAG = LogUtil.getTag()
     }
 }
-
-data class TimerData(
-    val millisUntilFinished: Long,
-    val progress: Int
-)
