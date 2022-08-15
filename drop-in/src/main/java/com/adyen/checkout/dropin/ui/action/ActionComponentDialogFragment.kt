@@ -147,13 +147,21 @@ class ActionComponentDialogFragment : DropInBottomSheetDialogFragment(), Observe
     private fun getComponent(action: Action): ViewableComponent<*, *, ActionComponentData> {
         val provider =
             getActionProviderFor(action) ?: throw ComponentException("Unexpected Action component type - $actionType")
+
         if (!provider.requiresView(action)) {
             throw ComponentException(
                 "Action is not viewable - action: ${action.type} - " +
                     "paymentMethod: ${action.paymentMethodType}"
             )
         }
-        val component = getActionComponentFor(requireActivity(), provider, dropInViewModel.dropInConfiguration)
+
+        val component = getActionComponentFor(
+            owner = this,
+            application = requireActivity().application,
+            provider = provider,
+            dropInConfiguration = dropInViewModel.dropInConfiguration
+        )
+
         if (!component.canHandleAction(action)) {
             throw ComponentException(
                 "Unexpected Action component type - action: ${action.type} - " +

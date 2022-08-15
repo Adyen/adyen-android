@@ -12,7 +12,7 @@ import com.adyen.checkout.components.status.model.StatusResponse
 import com.adyen.checkout.core.api.HttpClientFactory
 import com.adyen.checkout.core.api.post
 
-internal class StatusService(
+class StatusService(
     private val baseUrl: String
 ) {
 

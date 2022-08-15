@@ -83,10 +83,10 @@ class ActionHandler(
         activity: FragmentActivity,
         provider: ActionComponentProvider<out BaseActionComponent<out Configuration>, out Configuration>
     ) {
-        getActionComponentFor(activity, provider, dropInConfiguration).apply {
+        getActionComponentFor(activity, activity.application, provider, dropInConfiguration).apply {
             loadedComponent = this
             observe(activity, this@ActionHandler)
-            observeErrors(activity, { callback.onActionError(it?.errorMessage ?: "Error handling action") })
+            observeErrors(activity) { callback.onActionError(it?.errorMessage ?: "Error handling action") }
             Logger.d(TAG, "handleAction - loaded a new component - ${this::class.java.simpleName}")
         }
     }

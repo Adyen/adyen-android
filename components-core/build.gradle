@@ -42,8 +42,10 @@ dependencies {
     api libraries.androidx.lifecycle
 
     //Tests
+    testImplementation project(':test-core')
     testImplementation testLibraries.junit5
     testImplementation testLibraries.androidx.lifecycle
+    testImplementation testLibraries.kotlinCoroutines
     testImplementation testLibraries.mockito
     testImplementation testLibraries.robolectric
 

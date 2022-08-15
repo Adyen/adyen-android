@@ -13,7 +13,8 @@ package com.adyen.checkout.dropin
 import android.app.Application
 import android.content.Context
 import androidx.fragment.app.Fragment
-import androidx.fragment.app.FragmentActivity
+import androidx.lifecycle.ViewModelStoreOwner
+import androidx.savedstate.SavedStateRegistryOwner
 import com.adyen.checkout.adyen3ds2.Adyen3DS2Component
 import com.adyen.checkout.adyen3ds2.Adyen3DS2Configuration
 import com.adyen.checkout.await.AwaitComponent
@@ -67,8 +68,8 @@ import com.adyen.checkout.giftcard.GiftCardComponent
 import com.adyen.checkout.giftcard.GiftCardConfiguration
 import com.adyen.checkout.giftcard.GiftCardView
 import com.adyen.checkout.googlepay.GooglePayComponent
-import com.adyen.checkout.googlepay.GooglePayConfiguration
 import com.adyen.checkout.googlepay.GooglePayComponentProvider
+import com.adyen.checkout.googlepay.GooglePayConfiguration
 import com.adyen.checkout.ideal.IdealComponent
 import com.adyen.checkout.ideal.IdealConfiguration
 import com.adyen.checkout.ideal.IdealRecyclerView
@@ -444,51 +445,45 @@ internal fun getActionProviderFor(
     return allActionProviders.firstOrNull { it.canHandleAction(action) }
 }
 
-/**
- * Provides a [BaseActionComponent] from an [ActionComponentProvider].
- *
- * @param activity The Action which the ActionComponent lifecycle will be bound to.
- * @param provider The component provider.
- * @throws CheckoutException In case a component cannot be created.
- */
 @Suppress("ComplexMethod", "LongMethod")
-internal fun getActionComponentFor(
-    activity: FragmentActivity,
+internal fun <T> getActionComponentFor(
+    owner: T,
+    application: Application,
     provider: ActionComponentProvider<out BaseActionComponent<out Configuration>, out Configuration>,
     dropInConfiguration: DropInConfiguration
-): BaseActionComponent<out Configuration> {
+): BaseActionComponent<out Configuration> where T : SavedStateRegistryOwner, T : ViewModelStoreOwner {
     return when (provider) {
         RedirectComponent.PROVIDER -> {
             RedirectComponent.PROVIDER.get(
-                activity,
-                activity.application,
+                owner,
+                application,
                 getConfigurationForAction(dropInConfiguration)
             )
         }
         Adyen3DS2Component.PROVIDER -> {
             Adyen3DS2Component.PROVIDER.get(
-                activity,
-                activity.application,
+                owner,
+                application,
                 getConfigurationForAction(dropInConfiguration)
             )
         }
         WeChatPayActionComponent.PROVIDER -> {
             WeChatPayActionComponent.PROVIDER.get(
-                activity,
-                activity.application,
+                owner,
+                application,
                 getConfigurationForAction(dropInConfiguration)
             )
         }
         AwaitComponent.PROVIDER -> {
-            AwaitComponent.PROVIDER.get(activity, activity.application, getConfigurationForAction(dropInConfiguration))
+            AwaitComponent.PROVIDER.get(owner, application, getConfigurationForAction(dropInConfiguration))
         }
         QRCodeComponent.PROVIDER -> {
-            QRCodeComponent.PROVIDER.get(activity, activity.application, getConfigurationForAction(dropInConfiguration))
+            QRCodeComponent.PROVIDER.get(owner, application, getConfigurationForAction(dropInConfiguration))
         }
         VoucherComponent.PROVIDER -> {
             VoucherComponent.PROVIDER.get(
-                activity,
-                activity.application,
+                owner,
+                application,
                 getConfigurationForAction(dropInConfiguration)
             )
         }

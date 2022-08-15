@@ -1,142 +1,99 @@
 /*
- * Copyright (c) 2020 Adyen N.V.
+ * Copyright (c) 2022 Adyen N.V.
  *
  * This file is open source and available under the MIT license. See the LICENSE file for more info.
  *
- * Created by caiof on 18/8/2020.
+ * Created by oscars on 4/8/2022.
  */
+
 package com.adyen.checkout.components.status
 
-import android.os.Handler
-import android.os.Looper
-import androidx.lifecycle.LiveData
-import androidx.lifecycle.MutableLiveData
-import com.adyen.checkout.components.status.api.StatusApi
-import com.adyen.checkout.components.status.api.StatusResponseUtils.isFinalResult
-import com.adyen.checkout.components.status.api.StatusTask
+import com.adyen.checkout.components.status.api.StatusResponseUtils
+import com.adyen.checkout.components.status.api.StatusService
+import com.adyen.checkout.components.status.model.StatusRequest
 import com.adyen.checkout.components.status.model.StatusResponse
-import com.adyen.checkout.core.api.Environment
-import com.adyen.checkout.core.exception.ApiCallException
-import com.adyen.checkout.core.exception.ComponentException
-import com.adyen.checkout.core.log.LogUtil.getTag
-import com.adyen.checkout.core.log.Logger
+import com.adyen.checkout.core.util.runSuspendCatching
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.cancel
+import kotlinx.coroutines.channels.BufferOverflow
+import kotlinx.coroutines.currentCoroutineContext
+import kotlinx.coroutines.delay
+import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.MutableSharedFlow
+import kotlinx.coroutines.flow.flow
+import kotlinx.coroutines.flow.map
+import kotlinx.coroutines.flow.merge
+import kotlinx.coroutines.isActive
+import kotlinx.coroutines.withContext
 import java.util.concurrent.TimeUnit
 
-class StatusRepository private constructor(environment: Environment) {
+class StatusRepository constructor(
+    private val statusService: StatusService,
+    private val clientKey: String,
+) {
 
-    val handler = Handler(Looper.getMainLooper())
-    private val statusPollingRunnable: Runnable = object : Runnable {
-        override fun run() {
-            Logger.d(TAG, "mStatusPollingRunnable.run()")
-            statusApi.callStatus(clientKey!!, paymentData!!, statusCallback)
-            updatePollingDelay()
-            handler.postDelayed(this, pollingDelay)
-        }
-    }
+    private var delay: Long = 0
 
-    val statusApi: StatusApi = StatusApi.getInstance(environment)
-    private val _responseLiveData = MutableLiveData<StatusResponse?>()
-    val responseLiveData: LiveData<StatusResponse?> = _responseLiveData
-    private val _errorLiveData = MutableLiveData<ComponentException?>()
-    val errorLiveData: LiveData<ComponentException?> = _errorLiveData
+    private val refreshFlow = MutableSharedFlow<String>(0, 1, BufferOverflow.DROP_OLDEST)
 
-    val statusCallback: StatusTask.StatusCallback = object : StatusTask.StatusCallback {
-        override fun onSuccess(statusResponse: StatusResponse) {
-            Logger.d(TAG, "onSuccess - " + statusResponse.resultCode)
-            _responseLiveData.postValue(statusResponse)
-            if (isFinalResult(statusResponse)) {
-                stopPolling()
+    fun poll(paymentData: String): Flow<Result<StatusResponse>> {
+        val startTime = System.currentTimeMillis()
+
+        val pollingFlow = flow {
+            while (currentCoroutineContext().isActive) {
+                val result = fetchStatus(paymentData)
+                emit(result)
+
+                if (result.isSuccess && StatusResponseUtils.isFinalResult(result.getOrThrow()))
+                    currentCoroutineContext().cancel()
+
+                if (!updateDelay(startTime)) {
+                    emit(Result.failure(IllegalStateException("Max polling time has been exceeded.")))
+                    currentCoroutineContext().cancel()
+                }
+
+                delay(delay)
             }
         }
 
-        override fun onFailed(exception: ApiCallException) {
-            Logger.e(TAG, "onFailed")
-            // TODO: 08/09/2020 check error type, fail flow if no internet?
-        }
+        return merge(
+            pollingFlow,
+            refreshFlow.map { fetchStatus(it) },
+        )
     }
 
-    var clientKey: String? = null
-    var paymentData: String? = null
-    var pollingDelay: Long = 0
-    private var isPolling = false
-    private var pollingStartTime: Long = 0
-
-    /**
-     * Start polling status requests for the provided payment.
-     *
-     * @param clientKey The client key that identifies the merchant.
-     * @param paymentData The payment data of the payment we are requesting.
-     */
-    fun startPolling(clientKey: String, paymentData: String) {
-        Logger.d(TAG, "startPolling")
-        if (isPolling && clientKey == this.clientKey && paymentData == this.paymentData) {
-            Logger.e(TAG, "Already polling for this payment.")
-            return
+    private suspend fun fetchStatus(paymentData: String) = withContext(Dispatchers.IO) {
+        runSuspendCatching {
+            statusService.checkStatus(clientKey, StatusRequest(paymentData))
         }
-        stopPolling()
-        isPolling = true
-        this.clientKey = clientKey
-        this.paymentData = paymentData
-        pollingStartTime = System.currentTimeMillis()
-        handler.post(statusPollingRunnable)
     }
 
     /**
-     * Immediately request a status update instead of waiting for the next poll result.
+     * @return Returns if the delay time was updated. If not, that means the max polling time has been exceeded.
      */
-    fun updateStatus() {
-        Logger.d(TAG, "updateStatus")
-        if (!isPolling) {
-            Logger.d(TAG, "No polling in progress")
-            return
+    private fun updateDelay(startTime: Long): Boolean {
+        val elapsedTime = System.currentTimeMillis() - startTime
+        return when {
+            elapsedTime <= POLLING_THRESHOLD -> {
+                delay = POLLING_DELAY_FAST
+                true
+            }
+            elapsedTime <= MAX_POLLING_DURATION_MILLIS -> {
+                delay = POLLING_DELAY_SLOW
+                true
+            }
+            else -> false
         }
-        handler.removeCallbacks(statusPollingRunnable)
-        handler.post(statusPollingRunnable)
     }
 
-    /**
-     * Stops the polling process.
-     */
-    fun stopPolling() {
-        Logger.d(TAG, "stopPolling")
-        if (!isPolling) {
-            Logger.w(TAG, "Stop called with no polling in progress, stopping anyway")
-        }
-        isPolling = false
-        handler.removeCallbacksAndMessages(null)
-        // Set null so that new observers don't get the status from the previous result
-        // This could be replaced by other types of observable like Kotlin Flow
-        _responseLiveData.value = null
-        _errorLiveData.value = null
-    }
-
-    fun updatePollingDelay() {
-        val elapsedTime = System.currentTimeMillis() - pollingStartTime
-        when {
-            elapsedTime <= POLLING_THRESHOLD -> pollingDelay = POLLING_DELAY_FAST
-            elapsedTime <= MAX_POLLING_DURATION_MILLIS -> pollingDelay = POLLING_DELAY_SLOW
-            else -> _errorLiveData.setValue(ComponentException("Status requesting timed out with no result"))
-        }
+    fun refreshStatus(paymentData: String) {
+        refreshFlow.tryEmit(paymentData)
     }
 
     companion object {
-        val TAG = getTag()
         val MAX_POLLING_DURATION_MILLIS = TimeUnit.MINUTES.toMillis(15)
-
         private val POLLING_DELAY_FAST = TimeUnit.SECONDS.toMillis(2)
         private val POLLING_DELAY_SLOW = TimeUnit.SECONDS.toMillis(10)
         private val POLLING_THRESHOLD = TimeUnit.SECONDS.toMillis(60)
-
-        private lateinit var instance: StatusRepository
-
-        @JvmStatic
-        fun getInstance(environment: Environment): StatusRepository {
-            synchronized(StatusRepository::class.java) {
-                if (!::instance.isInitialized) {
-                    instance = StatusRepository(environment)
-                }
-            }
-            return instance
-        }
     }
 }
