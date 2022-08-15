@@ -371,7 +371,7 @@ class StoredCardDelegate(
         return storedPaymentMethod.id ?: "ID_NOT_FOUND"
     }
 
-    override fun clear() {
+    override fun onCleared() {
         this.coroutineScope = null
     }
 

@@ -78,10 +78,11 @@ class DefaultCardDelegate(
     private val _exceptionFlow = MutableSharedFlow<CheckoutException>(0, 1, BufferOverflow.DROP_OLDEST)
     override val exceptionFlow: Flow<CheckoutException> = _exceptionFlow
 
-    private var coroutineScope: CoroutineScope? = null
+    private var _coroutineScope: CoroutineScope? = null
+    private val coroutineScope: CoroutineScope get() = requireNotNull(_coroutineScope)
 
     override fun initialize(coroutineScope: CoroutineScope) {
-        this.coroutineScope = coroutineScope
+        _coroutineScope = coroutineScope
 
         updateOutputData()
 
@@ -97,7 +98,7 @@ class DefaultCardDelegate(
 
     private fun fetchPublicKey() {
         Logger.d(TAG, "fetchPublicKey")
-        coroutineScope?.launch {
+        coroutineScope.launch {
             publicKeyRepository.fetchPublicKey(
                 environment = configuration.environment,
                 clientKey = configuration.clientKey
@@ -117,7 +118,6 @@ class DefaultCardDelegate(
 
     override fun onInputDataChanged(inputData: CardInputData) {
         Logger.v(TAG, "onInputDataChanged")
-        val coroutineScope = coroutineScope ?: return
         detectCardTypeRepository.detectCardType(
             cardNumber = inputData.cardNumber,
             publicKey = publicKey,
@@ -130,7 +130,6 @@ class DefaultCardDelegate(
     }
 
     private fun subscribeToDetectedCardTypes() {
-        val coroutineScope = coroutineScope ?: return
         detectCardTypeRepository.detectedCardTypesFlow
             .onEach { detectedCardTypes ->
                 Logger.d(
@@ -144,7 +143,6 @@ class DefaultCardDelegate(
     }
 
     private fun subscribeToCountryList() {
-        val coroutineScope = coroutineScope ?: return
         addressRepository.countriesFlow
             .distinctUntilChanged()
             .onEach { countries ->
@@ -163,7 +161,6 @@ class DefaultCardDelegate(
     }
 
     private fun subscribeToStatesList() {
-        val coroutineScope = coroutineScope ?: return
         addressRepository.statesFlow
             .distinctUntilChanged()
             .onEach { states ->
@@ -443,12 +440,10 @@ class DefaultCardDelegate(
     private fun getSupportedCardTypes(): List<CardType> = configuration.supportedCardTypes
 
     private fun requestCountryList() {
-        val coroutineScope = coroutineScope ?: return
         addressRepository.getCountryList(configuration, coroutineScope)
     }
 
     private fun requestStateList(countryCode: String?) {
-        val coroutineScope = coroutineScope ?: return
         addressRepository.getStateList(configuration, countryCode, coroutineScope)
     }
 
@@ -584,8 +579,8 @@ class DefaultCardDelegate(
         return cardOutputData.installmentOptions.isNotEmpty()
     }
 
-    override fun clear() {
-        this.coroutineScope = null
+    override fun onCleared() {
+        _coroutineScope = null
     }
 
     companion object {

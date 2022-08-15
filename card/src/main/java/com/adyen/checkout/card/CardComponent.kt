@@ -82,7 +82,7 @@ class CardComponent(
 
     override fun onCleared() {
         super.onCleared()
-        cardDelegate.clear()
+        cardDelegate.onCleared()
     }
 
     companion object {

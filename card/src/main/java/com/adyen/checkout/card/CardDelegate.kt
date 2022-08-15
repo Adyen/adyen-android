@@ -38,5 +38,5 @@ interface CardDelegate : PaymentMethodDelegate<CardConfiguration, CardInputData,
 
     fun requiresInput(): Boolean
 
-    fun clear()
+    fun onCleared()
 }
