@@ -7,11 +7,13 @@
  */
 package com.adyen.checkout.card
 
+import androidx.annotation.StringRes
 import com.adyen.checkout.card.data.CardType
 import com.adyen.checkout.card.data.DetectedCardType
 import com.adyen.checkout.card.data.ExpiryDate
 import com.adyen.checkout.card.ui.model.AddressListItem
 import com.adyen.checkout.components.base.OutputData
+import com.adyen.checkout.components.ui.ComponentMode
 import com.adyen.checkout.components.ui.FieldState
 
 data class CardOutputData(
@@ -27,6 +29,8 @@ data class CardOutputData(
     val isStoredPaymentMethodEnable: Boolean,
     val cvcUIState: InputFieldUIState,
     val expiryDateUIState: InputFieldUIState,
+    val holderNameUIState: InputFieldUIState,
+    val showStorePaymentField: Boolean,
     val detectedCardTypes: List<DetectedCardType>,
     val isSocialSecurityNumberRequired: Boolean,
     val isKCPAuthRequired: Boolean,
@@ -35,6 +39,10 @@ data class CardOutputData(
     val countryOptions: List<AddressListItem>,
     val stateOptions: List<AddressListItem>,
     val supportedCardTypes: List<CardType>,
+    val isDualBranded: Boolean,
+    @StringRes
+    val kcpBirthDateOrTaxNumberHint: Int?,
+    val componentMode: ComponentMode,
 ) : OutputData {
 
     override val isValid: Boolean

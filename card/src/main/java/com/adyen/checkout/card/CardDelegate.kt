@@ -8,7 +8,6 @@
 
 package com.adyen.checkout.card
 
-import androidx.annotation.StringRes
 import com.adyen.checkout.components.base.PaymentMethodDelegate
 import com.adyen.checkout.core.exception.CheckoutException
 import kotlinx.coroutines.CoroutineScope
@@ -25,16 +24,6 @@ interface CardDelegate : PaymentMethodDelegate<CardConfiguration, CardInputData,
     val exceptionFlow: Flow<CheckoutException>
 
     fun initialize(coroutineScope: CoroutineScope)
-
-    fun isDualBrandedFlow(cardOutputData: CardOutputData): Boolean
-
-    fun isInstallmentsRequired(cardOutputData: CardOutputData): Boolean
-
-    fun isHolderNameRequired(): Boolean
-
-    fun showStorePaymentField(): Boolean
-
-    @StringRes fun getKcpBirthDateOrTaxNumberHint(input: String): Int
 
     fun requiresInput(): Boolean
 

@@ -27,6 +27,7 @@ import com.adyen.checkout.components.model.paymentmethods.PaymentMethod
 import com.adyen.checkout.components.model.payments.request.CardPaymentMethod
 import com.adyen.checkout.components.model.payments.request.PaymentComponentData
 import com.adyen.checkout.components.repository.PublicKeyRepository
+import com.adyen.checkout.components.ui.ComponentMode
 import com.adyen.checkout.components.ui.FieldState
 import com.adyen.checkout.components.ui.Validation
 import com.adyen.checkout.components.util.PaymentMethodTypes
@@ -170,6 +171,7 @@ class DefaultCardDelegate(
             .launchIn(coroutineScope)
     }
 
+    @Suppress("LongMethod")
     private fun updateOutputData(
         detectedCardTypes: List<DetectedCardType> = outputData?.detectedCardTypes.orEmpty(),
         countryOptions: List<AddressListItem> = outputData?.countryOptions.orEmpty(),
@@ -221,6 +223,8 @@ class DefaultCardDelegate(
             isStoredPaymentMethodEnable = inputData.isStorePaymentSelected,
             cvcUIState = makeCvcUIState(selectedOrFirstCardType?.cvcPolicy),
             expiryDateUIState = makeExpiryDateUIState(selectedOrFirstCardType?.expiryDatePolicy),
+            holderNameUIState = getHolderNameUIState(),
+            showStorePaymentField = showStorePaymentField(),
             detectedCardTypes = filteredDetectedCardTypes,
             isSocialSecurityNumberRequired = isSocialSecurityNumberRequired(),
             isKCPAuthRequired = isKCPAuthRequired(),
@@ -233,6 +237,9 @@ class DefaultCardDelegate(
             countryOptions = updatedCountryOptions,
             stateOptions = updatedStateOptions,
             supportedCardTypes = getSupportedCardTypes(),
+            isDualBranded = isDualBrandedFlow(filteredDetectedCardTypes),
+            kcpBirthDateOrTaxNumberHint = getKcpBirthDateOrTaxNumberHint(inputData.kcpBirthDateOrTaxNumber),
+            componentMode = ComponentMode.DEFAULT,
         )
 
         _outputDataFlow.tryEmit(newOutputData)
@@ -402,7 +409,12 @@ class DefaultCardDelegate(
         return true
     }
 
-    override fun isHolderNameRequired(): Boolean {
+    private fun getHolderNameUIState(): InputFieldUIState {
+        return if (isHolderNameRequired()) InputFieldUIState.REQUIRED
+        else InputFieldUIState.HIDDEN
+    }
+
+    private fun isHolderNameRequired(): Boolean {
         return configuration.isHolderNameRequired
     }
 
@@ -503,7 +515,7 @@ class DefaultCardDelegate(
                 taxNumber = stateOutputData.kcpBirthDateOrTaxNumberState.value
             }
 
-            if (isDualBrandedFlow(stateOutputData)) {
+            if (isDualBrandedFlow(stateOutputData.detectedCardTypes)) {
                 brand = getDetectedCardType(stateOutputData.detectedCardTypes)?.cardType?.txVariant
             }
 
@@ -536,16 +548,16 @@ class DefaultCardDelegate(
         return DetectedCardTypesUtils.getSelectedOrFirstDetectedCardType(detectedCardTypes)
     }
 
-    override fun isDualBrandedFlow(cardOutputData: CardOutputData): Boolean {
-        val reliableDetectedCards = cardOutputData.detectedCardTypes.filter { it.isReliable }
+    private fun isDualBrandedFlow(detectedCardTypes: List<DetectedCardType>): Boolean {
+        val reliableDetectedCards = detectedCardTypes.filter { it.isReliable }
         return reliableDetectedCards.size > 1 && reliableDetectedCards.any { it.isSelected }
     }
 
-    override fun showStorePaymentField(): Boolean {
+    private fun showStorePaymentField(): Boolean {
         return configuration.isStorePaymentFieldVisible
     }
 
-    override fun getKcpBirthDateOrTaxNumberHint(input: String): Int {
+    private fun getKcpBirthDateOrTaxNumberHint(input: String): Int {
         return when {
             input.length > KcpValidationUtils.KCP_BIRTH_DATE_LENGTH -> R.string.checkout_kcp_tax_number_hint
             else -> R.string.checkout_kcp_birth_date_or_tax_number_hint
@@ -575,7 +587,7 @@ class DefaultCardDelegate(
         }
     }
 
-    override fun isInstallmentsRequired(cardOutputData: CardOutputData): Boolean {
+    private fun isInstallmentsRequired(cardOutputData: CardOutputData): Boolean {
         return cardOutputData.installmentOptions.isNotEmpty()
     }
 

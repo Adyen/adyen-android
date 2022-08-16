@@ -19,6 +19,7 @@ import com.adyen.checkout.components.model.paymentmethods.StoredPaymentMethod
 import com.adyen.checkout.components.model.payments.request.CardPaymentMethod
 import com.adyen.checkout.components.repository.PublicKeyRepository
 import com.adyen.checkout.components.test.TestPublicKeyRepository
+import com.adyen.checkout.components.ui.ComponentMode
 import com.adyen.checkout.components.ui.FieldState
 import com.adyen.checkout.components.ui.Validation
 import com.adyen.checkout.components.util.PaymentMethodTypes
@@ -354,6 +355,8 @@ internal class StoredCardDelegateTest {
         isStoredPaymentMethodEnable: Boolean = false,
         cvcUIState: InputFieldUIState = InputFieldUIState.REQUIRED,
         expiryDateUIState: InputFieldUIState = InputFieldUIState.REQUIRED,
+        holderNameUIState: InputFieldUIState = InputFieldUIState.HIDDEN,
+        showStorePaymentField: Boolean = false,
         detectedCardTypes: List<DetectedCardType> = listOf(createDetectedCardType()),
         isSocialSecurityNumberRequired: Boolean = false,
         isKCPAuthRequired: Boolean = false,
@@ -376,6 +379,8 @@ internal class StoredCardDelegateTest {
             isStoredPaymentMethodEnable = isStoredPaymentMethodEnable,
             cvcUIState = cvcUIState,
             expiryDateUIState = expiryDateUIState,
+            holderNameUIState = holderNameUIState,
+            showStorePaymentField = showStorePaymentField,
             detectedCardTypes = detectedCardTypes,
             isSocialSecurityNumberRequired = isSocialSecurityNumberRequired,
             isKCPAuthRequired = isKCPAuthRequired,
@@ -384,6 +389,9 @@ internal class StoredCardDelegateTest {
             countryOptions = countryOptions,
             stateOptions = stateOptions,
             supportedCardTypes = supportedCardTypes,
+            isDualBranded = false,
+            kcpBirthDateOrTaxNumberHint = null,
+            componentMode = ComponentMode.STORED,
         )
     }
 

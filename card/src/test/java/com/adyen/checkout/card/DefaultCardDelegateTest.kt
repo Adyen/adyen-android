@@ -8,6 +8,7 @@
 
 package com.adyen.checkout.card
 
+import androidx.annotation.StringRes
 import app.cash.turbine.test
 import app.cash.turbine.testIn
 import com.adyen.checkout.card.api.model.Brand
@@ -25,6 +26,7 @@ import com.adyen.checkout.card.util.InstallmentUtils
 import com.adyen.checkout.components.model.paymentmethods.PaymentMethod
 import com.adyen.checkout.components.repository.PublicKeyRepository
 import com.adyen.checkout.components.test.TestPublicKeyRepository
+import com.adyen.checkout.components.ui.ComponentMode
 import com.adyen.checkout.components.ui.FieldState
 import com.adyen.checkout.components.ui.Validation
 import com.adyen.checkout.components.util.PaymentMethodTypes
@@ -195,6 +197,7 @@ internal class DefaultCardDelegateTest {
 
                 with(requireNotNull(expectMostRecentItem())) {
                     assertEquals(expectedDetectedCardTypes, detectedCardTypes)
+                    assertFalse(isDualBranded)
                 }
             }
         }
@@ -220,6 +223,7 @@ internal class DefaultCardDelegateTest {
 
                 with(requireNotNull(expectMostRecentItem())) {
                     assertEquals(expectedDetectedCardTypes, detectedCardTypes)
+                    assertFalse(isDualBranded)
                 }
             }
         }
@@ -264,6 +268,7 @@ internal class DefaultCardDelegateTest {
                     assertTrue(securityCodeState.validation is Validation.Valid)
                     assertEquals(InputFieldUIState.OPTIONAL, cvcUIState)
                     assertEquals(InputFieldUIState.OPTIONAL, expiryDateUIState)
+                    assertTrue(isDualBranded)
                 }
             }
         }
@@ -331,9 +336,7 @@ internal class DefaultCardDelegateTest {
 
                 with(requireNotNull(expectMostRecentItem())) {
                     assertTrue(isValid)
-                    assertEquals(FieldState(TEST_CARD_NUMBER, Validation.Valid), cardNumberState)
-                    assertEquals(FieldState(TEST_SECURITY_CODE, Validation.Valid), securityCodeState)
-                    assertEquals(FieldState(TEST_EXPIRY_DATE, Validation.Valid), expiryDateState)
+                    assertEquals(createOutputData(), this)
                 }
             }
         }
@@ -358,6 +361,7 @@ internal class DefaultCardDelegateTest {
                     .setAddressConfiguration(addressConfiguration)
                     .setKcpAuthVisibility(KCPAuthVisibility.SHOW)
                     .setSupportedCardTypes(*supportedCardTypes.toTypedArray())
+                    .setShowStorePaymentField(false)
                     .build()
             )
 
@@ -377,7 +381,7 @@ internal class DefaultCardDelegateTest {
                     expiryDate = TEST_EXPIRY_DATE
                     holderName = "S. Hopper"
                     socialSecurityNumber = "123.123.123-12"
-                    kcpBirthDateOrTaxNumber = "901128"
+                    kcpBirthDateOrTaxNumber = "9011672845"
                     kcpCardPassword = "12"
                     isStorePaymentSelected = true
                     selectedCardIndex = 0
@@ -424,28 +428,35 @@ internal class DefaultCardDelegateTest {
                     inputData.address.country
                 )
 
+                val expectedOutputData = createOutputData(
+                    cardNumberState = FieldState(TEST_CARD_NUMBER, Validation.Valid),
+                    securityCodeState = FieldState(TEST_SECURITY_CODE, Validation.Valid),
+                    expiryDateState = FieldState(TEST_EXPIRY_DATE, Validation.Valid),
+                    holderNameState = FieldState("S. Hopper", Validation.Valid),
+                    socialSecurityNumberState = FieldState("12312312312", Validation.Valid),
+                    kcpBirthDateOrTaxNumberState = FieldState("9011672845", Validation.Valid),
+                    kcpCardPasswordState = FieldState("12", Validation.Valid),
+                    installmentState = FieldState(installmentModel, Validation.Valid),
+                    addressState = expectedAddressOutputData,
+                    isStoredPaymentMethodEnable = true,
+                    cvcUIState = InputFieldUIState.HIDDEN,
+                    expiryDateUIState = InputFieldUIState.REQUIRED,
+                    holderNameUIState = InputFieldUIState.REQUIRED,
+                    showStorePaymentField = false,
+                    detectedCardTypes = expectedDetectedCardTypes,
+                    isSocialSecurityNumberRequired = true,
+                    isKCPAuthRequired = true,
+                    addressUIState = AddressFormUIState.FULL_ADDRESS,
+                    installmentOptions = expectedInstallmentOptions,
+                    countryOptions = expectedCountries,
+                    stateOptions = AddressFormUtils.initializeStateOptions(TestAddressRepository.STATES),
+                    kcpBirthDateOrTaxNumberHint = R.string.checkout_kcp_tax_number_hint,
+                    supportedCardTypes = supportedCardTypes,
+                )
+
                 with(requireNotNull(expectMostRecentItem())) {
                     assertTrue(isValid)
-                    assertEquals(FieldState(TEST_CARD_NUMBER, Validation.Valid), cardNumberState)
-                    assertEquals(FieldState(TEST_SECURITY_CODE, Validation.Valid), securityCodeState)
-                    assertEquals(FieldState(TEST_EXPIRY_DATE, Validation.Valid), expiryDateState)
-                    assertEquals(FieldState("S. Hopper", Validation.Valid), holderNameState)
-                    assertEquals(FieldState("12312312312", Validation.Valid), socialSecurityNumberState)
-                    assertEquals(FieldState("901128", Validation.Valid), kcpBirthDateOrTaxNumberState)
-                    assertEquals(FieldState("12", Validation.Valid), kcpCardPasswordState)
-                    assertEquals(FieldState(installmentModel, Validation.Valid), installmentState)
-                    assertEquals(expectedAddressOutputData, addressState)
-                    assertTrue(isStoredPaymentMethodEnable)
-                    assertEquals(InputFieldUIState.HIDDEN, cvcUIState)
-                    assertEquals(InputFieldUIState.REQUIRED, expiryDateUIState)
-                    assertEquals(expectedDetectedCardTypes, detectedCardTypes)
-                    assertTrue(isSocialSecurityNumberRequired)
-                    assertTrue(isKCPAuthRequired)
-                    assertEquals(AddressFormUIState.FULL_ADDRESS, addressUIState)
-                    assertEquals(expectedInstallmentOptions, installmentOptions)
-                    assertEquals(expectedCountries, countryOptions)
-                    assertEquals(AddressFormUtils.initializeStateOptions(TestAddressRepository.STATES), stateOptions)
-                    assertEquals(supportedCardTypes, this.supportedCardTypes)
+                    assertEquals(expectedOutputData, this)
                 }
             }
         }
@@ -540,7 +551,7 @@ internal class DefaultCardDelegateTest {
                 assertTrue(componentState.isValid)
                 assertEquals(TEST_CARD_NUMBER.takeLast(4), componentState.lastFourDigits)
                 assertEquals(TEST_CARD_NUMBER.take(6), componentState.binValue)
-                assertEquals(CardType.MASTERCARD, componentState.cardType)
+                assertEquals(CardType.VISA, componentState.cardType)
 
                 val paymentComponentData = componentState.data
                 with(paymentComponentData) {
@@ -699,7 +710,9 @@ internal class DefaultCardDelegateTest {
     }
 
     private fun getDefaultCardConfigurationBuilder(): CardConfiguration.Builder {
-        return CardConfiguration.Builder(Locale.US, Environment.TEST, TEST_CLIENT_KEY)
+        return CardConfiguration
+            .Builder(Locale.US, Environment.TEST, TEST_CLIENT_KEY)
+            .setSupportedCardTypes(CardType.VISA)
     }
 
     private fun getCustomCardConfigurationBuilder(): CardConfiguration.Builder {
@@ -718,6 +731,7 @@ internal class DefaultCardDelegateTest {
             .setHolderNameRequired(true)
             .setAddressConfiguration(AddressConfiguration.FullAddress())
             .setKcpAuthVisibility(KCPAuthVisibility.SHOW)
+            .setShowStorePaymentField(false)
             .setSupportedCardTypes(CardType.VISA, CardType.MASTERCARD, CardType.AMERICAN_EXPRESS)
     }
 
@@ -734,14 +748,19 @@ internal class DefaultCardDelegateTest {
         isStoredPaymentMethodEnable: Boolean = false,
         cvcUIState: InputFieldUIState = InputFieldUIState.REQUIRED,
         expiryDateUIState: InputFieldUIState = InputFieldUIState.REQUIRED,
-        detectedCardTypes: List<DetectedCardType> = listOf(createDetectedCardType()),
+        holderNameUIState: InputFieldUIState = InputFieldUIState.HIDDEN,
+        showStorePaymentField: Boolean = true,
+        detectedCardTypes: List<DetectedCardType> =
+            detectCardTypeRepository.getDetectedCardTypesLocal(listOf(CardType.VISA)),
         isSocialSecurityNumberRequired: Boolean = false,
         isKCPAuthRequired: Boolean = false,
         addressUIState: AddressFormUIState = AddressFormUIState.NONE,
         installmentOptions: List<InstallmentModel> = emptyList(),
         countryOptions: List<AddressListItem> = emptyList(),
         stateOptions: List<AddressListItem> = emptyList(),
-        supportedCardTypes: List<CardType> = listOf(CardType.VISA, CardType.MASTERCARD, CardType.AMERICAN_EXPRESS),
+        isDualBranded: Boolean = false,
+        @StringRes kcpBirthDateOrTaxNumberHint: Int = R.string.checkout_kcp_birth_date_or_tax_number_hint,
+        supportedCardTypes: List<CardType> = listOf(CardType.VISA),
     ): CardOutputData {
         return CardOutputData(
             cardNumberState = cardNumberState,
@@ -756,6 +775,8 @@ internal class DefaultCardDelegateTest {
             isStoredPaymentMethodEnable = isStoredPaymentMethodEnable,
             cvcUIState = cvcUIState,
             expiryDateUIState = expiryDateUIState,
+            holderNameUIState = holderNameUIState,
+            showStorePaymentField = showStorePaymentField,
             detectedCardTypes = detectedCardTypes,
             isSocialSecurityNumberRequired = isSocialSecurityNumberRequired,
             isKCPAuthRequired = isKCPAuthRequired,
@@ -764,6 +785,9 @@ internal class DefaultCardDelegateTest {
             countryOptions = countryOptions,
             stateOptions = stateOptions,
             supportedCardTypes = supportedCardTypes,
+            isDualBranded = isDualBranded,
+            kcpBirthDateOrTaxNumberHint = kcpBirthDateOrTaxNumberHint,
+            componentMode = ComponentMode.DEFAULT,
         )
     }
 
