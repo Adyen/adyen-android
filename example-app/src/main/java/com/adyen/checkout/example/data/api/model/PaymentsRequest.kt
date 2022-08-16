@@ -32,5 +32,6 @@ data class PaymentsRequestData(
     val reference: String,
     val channel: String,
     val lineItems: List<Item>,
+    val shopperEmail: String? = null,
     val threeDS2RequestData: ThreeDS2RequestDataRequest?
 )
