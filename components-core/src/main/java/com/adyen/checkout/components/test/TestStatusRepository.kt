@@ -18,6 +18,7 @@ import kotlinx.coroutines.flow.asFlow
  * Test implementation of [StatusRepository]. This class should never be used in not test code as it does not actuall
  * poll any status!
  */
+// TODO move to test fixtures once it becomes supported on Android
 @RestrictTo(RestrictTo.Scope.TESTS)
 class TestStatusRepository : StatusRepository {
 
