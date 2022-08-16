@@ -15,14 +15,18 @@ import com.adyen.checkout.components.repository.PublicKeyRepository
 import com.adyen.checkout.components.util.PaymentMethodTypes
 import com.adyen.checkout.core.exception.CheckoutException
 import com.adyen.checkout.core.exception.ComponentException
+import com.adyen.checkout.core.log.LogUtil
+import com.adyen.checkout.core.log.Logger
 import com.adyen.checkout.cse.CardEncrypter
 import com.adyen.checkout.cse.EncryptedCard
 import com.adyen.checkout.cse.UnencryptedCard
 import com.adyen.checkout.cse.exception.EncryptionException
+import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.channels.BufferOverflow
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.launch
 
 internal class DefaultGiftCardDelegate(
     private val paymentMethod: PaymentMethod,
@@ -34,6 +38,9 @@ internal class DefaultGiftCardDelegate(
     private val _outputDataFlow = MutableStateFlow<GiftCardOutputData?>(null)
     override val outputDataFlow: Flow<GiftCardOutputData?> = _outputDataFlow
 
+    private val outputData
+        get() = _outputDataFlow.value
+
     private val _componentStateFlow = MutableStateFlow<GiftCardComponentState?>(null)
     override val componentStateFlow: Flow<GiftCardComponentState?> = _componentStateFlow
 
@@ -42,18 +49,27 @@ internal class DefaultGiftCardDelegate(
 
     private var publicKey: String? = null
 
-    override suspend fun fetchPublicKey() {
-        publicKeyRepository.fetchPublicKey(
-            environment = configuration.environment,
-            clientKey = configuration.clientKey
-        ).fold(
-            onSuccess = { key ->
-                publicKey = key
-            },
-            onFailure = { e ->
-                _exceptionFlow.tryEmit(ComponentException("Unable to fetch publicKey.", e))
-            }
-        )
+    override fun initialize(coroutineScope: CoroutineScope) {
+        Logger.d(TAG, "fetchPublicKey")
+        coroutineScope.launch {
+            publicKeyRepository.fetchPublicKey(
+                environment = configuration.environment,
+                clientKey = configuration.clientKey
+            ).fold(
+                onSuccess = { key ->
+                    Logger.d(TAG, "Public key fetched")
+                    publicKey = key
+                    outputData?.let { createComponentState(it) }
+                },
+                onFailure = { e ->
+                    Logger.e(TAG, "Unable to fetch public key")
+                    val item = _exceptionFlow.tryEmit(ComponentException("Unable to fetch publicKey.", e))
+                    if (!item) {
+                        Logger.d(TAG, "not emitted")
+                    }
+                }
+            )
+        }
     }
 
     override fun onInputDataChanged(inputData: GiftCardInputData) {
@@ -161,6 +177,7 @@ internal class DefaultGiftCardDelegate(
     }
 
     companion object {
+        private val TAG = LogUtil.getTag()
         private const val LAST_DIGITS_LENGTH = 4
     }
 }

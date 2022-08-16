@@ -12,6 +12,7 @@ import com.adyen.checkout.components.PaymentComponentState
 import com.adyen.checkout.components.base.PaymentMethodDelegate
 import com.adyen.checkout.components.model.payments.request.GiftCardPaymentMethod
 import com.adyen.checkout.core.exception.CheckoutException
+import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.flow.Flow
 
 interface GiftCardDelegate : PaymentMethodDelegate<
@@ -26,5 +27,5 @@ interface GiftCardDelegate : PaymentMethodDelegate<
 
     val exceptionFlow: Flow<CheckoutException>
 
-    suspend fun fetchPublicKey()
+    fun initialize(coroutineScope: CoroutineScope)
 }

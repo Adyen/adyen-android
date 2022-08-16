@@ -16,7 +16,6 @@ import com.adyen.checkout.components.util.PaymentMethodTypes
 import kotlinx.coroutines.flow.filterNotNull
 import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.onEach
-import kotlinx.coroutines.launch
 
 /**
  * Component should not be instantiated directly. Instead use the PROVIDER object.
@@ -52,9 +51,7 @@ class GiftCardComponent(
             .onEach { notifyException(it) }
             .launchIn(viewModelScope)
 
-        viewModelScope.launch {
-            giftCardDelegate.fetchPublicKey()
-        }
+        giftCardDelegate.initialize(viewModelScope)
     }
 
     override fun onInputDataChanged(inputData: GiftCardInputData) {

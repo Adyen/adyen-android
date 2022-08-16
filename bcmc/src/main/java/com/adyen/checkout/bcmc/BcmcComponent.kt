@@ -19,7 +19,6 @@ import com.adyen.checkout.components.util.PaymentMethodTypes
 import kotlinx.coroutines.flow.filterNotNull
 import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.onEach
-import kotlinx.coroutines.launch
 
 /**
  * Constructs a [BcmcComponent] object.
@@ -52,9 +51,7 @@ class BcmcComponent(
             .onEach { notifyException(it) }
             .launchIn(viewModelScope)
 
-        viewModelScope.launch {
-            bcmcDelegate.fetchPublicKey()
-        }
+        bcmcDelegate.initialize(viewModelScope)
     }
 
     override fun getSupportedPaymentMethodTypes(): Array<String> = PAYMENT_METHOD_TYPES

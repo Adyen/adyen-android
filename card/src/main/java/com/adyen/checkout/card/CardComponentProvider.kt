@@ -12,16 +12,19 @@ import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.ViewModelStoreOwner
 import androidx.savedstate.SavedStateRegistryOwner
 import com.adyen.checkout.card.data.CardType
-import com.adyen.checkout.card.repository.AddressRepository
-import com.adyen.checkout.card.repository.BinLookupRepository
+import com.adyen.checkout.card.repository.DefaultAddressRepository
+import com.adyen.checkout.card.repository.DefaultDetectCardTypeRepository
 import com.adyen.checkout.components.StoredPaymentComponentProvider
+import com.adyen.checkout.components.base.GenericPaymentMethodDelegate
+import com.adyen.checkout.components.base.GenericStoredPaymentDelegate
 import com.adyen.checkout.components.base.lifecycle.viewModelFactory
 import com.adyen.checkout.components.model.paymentmethods.PaymentMethod
 import com.adyen.checkout.components.model.paymentmethods.StoredPaymentMethod
-import com.adyen.checkout.components.repository.PublicKeyRepository
+import com.adyen.checkout.components.repository.DefaultPublicKeyRepository
 import com.adyen.checkout.core.log.LogUtil
 import com.adyen.checkout.core.log.Logger
 import com.adyen.checkout.cse.DefaultCardEncrypter
+import com.adyen.checkout.cse.DefaultGenericEncrypter
 
 private val TAG = LogUtil.getTag()
 
@@ -35,23 +38,27 @@ class CardComponentProvider : StoredPaymentComponentProvider<CardComponent, Card
         defaultArgs: Bundle?
     ): CardComponent {
         val verifiedConfiguration = checkSupportedCardTypes(paymentMethod, configuration)
-        val binLookupRepository = BinLookupRepository()
-        val publicKeyRepository = PublicKeyRepository()
-        val addressDelegate = AddressDelegate(AddressRepository())
+        val genericEncrypter = DefaultGenericEncrypter()
+        val cardEncrypter = DefaultCardEncrypter(genericEncrypter)
+        val detectCardTypeRepository = DefaultDetectCardTypeRepository(cardEncrypter)
+        val publicKeyRepository = DefaultPublicKeyRepository()
+        val addressRepository = DefaultAddressRepository()
         val cardValidationMapper = CardValidationMapper()
         val factory = viewModelFactory(savedStateRegistryOwner, defaultArgs) { savedStateHandle ->
             CardComponent(
                 savedStateHandle,
-                NewCardDelegate(
-                    paymentMethod,
-                    verifiedConfiguration,
-                    binLookupRepository,
+                GenericPaymentMethodDelegate(paymentMethod),
+                DefaultCardDelegate(
                     publicKeyRepository,
-                    addressDelegate,
-                    cardValidationMapper
+                    verifiedConfiguration,
+                    paymentMethod,
+                    addressRepository,
+                    detectCardTypeRepository,
+                    cardValidationMapper,
+                    cardEncrypter,
+                    genericEncrypter
                 ),
-                verifiedConfiguration,
-                DefaultCardEncrypter(),
+                verifiedConfiguration
             )
         }
         return ViewModelProvider(viewModelStoreOwner, factory).get(CardComponent::class.java)
@@ -64,17 +71,20 @@ class CardComponentProvider : StoredPaymentComponentProvider<CardComponent, Card
         configuration: CardConfiguration,
         defaultArgs: Bundle?
     ): CardComponent {
-        val publicKeyRepository = PublicKeyRepository()
+        val publicKeyRepository = DefaultPublicKeyRepository()
+        val genericEncrypter = DefaultGenericEncrypter()
+        val cardEncrypter = DefaultCardEncrypter(genericEncrypter)
         val factory = viewModelFactory(savedStateRegistryOwner, defaultArgs) { savedStateHandle ->
             CardComponent(
                 savedStateHandle,
+                GenericStoredPaymentDelegate(storedPaymentMethod),
                 StoredCardDelegate(
                     storedPaymentMethod,
                     configuration,
-                    publicKeyRepository
+                    cardEncrypter,
+                    publicKeyRepository,
                 ),
-                configuration,
-                DefaultCardEncrypter(),
+                configuration
             )
         }
         return ViewModelProvider(viewModelStoreOwner, factory).get(CardComponent::class.java)
