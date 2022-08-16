@@ -29,6 +29,7 @@ data class CardOutputData(
     val cvcUIState: InputFieldUIState,
     val expiryDateUIState: InputFieldUIState,
     val holderNameUIState: InputFieldUIState,
+    val showStorePaymentField: Boolean,
     val detectedCardTypes: List<DetectedCardType>,
     val isSocialSecurityNumberRequired: Boolean,
     val isKCPAuthRequired: Boolean,

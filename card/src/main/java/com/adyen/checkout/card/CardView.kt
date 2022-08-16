@@ -143,6 +143,7 @@ class CardView @JvmOverloads constructor(
         handleCvcUIState(cardOutputData.cvcUIState)
         handleExpiryDateUIState(cardOutputData.expiryDateUIState)
         handleHolderNameUIState(cardOutputData.holderNameUIState)
+        setStorePaymentSwitchVisibility(cardOutputData.showStorePaymentField)
         updateInstallments(cardOutputData)
         updateCountries(cardOutputData.countryOptions)
         updateStates(cardOutputData.stateOptions)
@@ -151,7 +152,6 @@ class CardView @JvmOverloads constructor(
         if (isStoredPaymentMethod(cardOutputData)) {
             setStoredCardInterface(cardOutputData)
         } else {
-            binding.switchStorePaymentMethod.isVisible = component.showStorePaymentField()
             setFilteredCards(cardOutputData.detectedCardTypes.map { it.cardType })
         }
     }
@@ -620,6 +620,10 @@ class CardView @JvmOverloads constructor(
 
     private fun handleHolderNameUIState(holderNameUIState: InputFieldUIState) {
         binding.textInputLayoutCardHolder.isVisible = holderNameUIState != InputFieldUIState.HIDDEN
+    }
+
+    private fun setStorePaymentSwitchVisibility(showStorePaymentField: Boolean) {
+        binding.switchStorePaymentMethod.isVisible = showStorePaymentField
     }
 
     private fun setSocialSecurityNumberVisibility(shouldShowSocialSecurityNumber: Boolean) {

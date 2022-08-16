@@ -214,10 +214,6 @@ class StoredCardDelegate(
         return !configuration.isHideCvcStoredCard
     }
 
-    override fun showStorePaymentField(): Boolean {
-        return configuration.isStorePaymentFieldVisible
-    }
-
     override fun getKcpBirthDateOrTaxNumberHint(input: String): Int {
         return when {
             input.length > KcpValidationUtils.KCP_BIRTH_DATE_LENGTH -> R.string.checkout_kcp_tax_number_hint
@@ -280,7 +276,6 @@ class StoredCardDelegate(
     ): PaymentComponentData<CardPaymentMethod> {
         return PaymentComponentData<CardPaymentMethod>().apply {
             paymentMethod = cardPaymentMethod
-            storePaymentMethod = stateOutputData.isStoredPaymentMethodEnable
             shopperReference = configuration.shopperReference
             if (isInstallmentsRequired(stateOutputData)) {
                 installments = InstallmentUtils.makeInstallmentModelObject(stateOutputData.installmentState.value)
@@ -335,6 +330,7 @@ class StoredCardDelegate(
             cvcUIState = makeCvcUIState(detectedCardType?.cvcPolicy),
             expiryDateUIState = makeExpiryDateUIState(detectedCardType?.expiryDatePolicy),
             holderNameUIState = InputFieldUIState.HIDDEN,
+            showStorePaymentField = false,
             detectedCardTypes = listOfNotNull(detectedCardType),
             isSocialSecurityNumberRequired = false,
             isKCPAuthRequired = false,

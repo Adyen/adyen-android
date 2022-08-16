@@ -357,6 +357,7 @@ internal class DefaultCardDelegateTest {
                     .setAddressConfiguration(addressConfiguration)
                     .setKcpAuthVisibility(KCPAuthVisibility.SHOW)
                     .setSupportedCardTypes(*supportedCardTypes.toTypedArray())
+                    .setShowStorePaymentField(false)
                     .build()
             )
 
@@ -437,6 +438,7 @@ internal class DefaultCardDelegateTest {
                     cvcUIState = InputFieldUIState.HIDDEN,
                     expiryDateUIState = InputFieldUIState.REQUIRED,
                     holderNameUIState = InputFieldUIState.REQUIRED,
+                    showStorePaymentField = false,
                     detectedCardTypes = expectedDetectedCardTypes,
                     isSocialSecurityNumberRequired = true,
                     isKCPAuthRequired = true,
@@ -724,6 +726,7 @@ internal class DefaultCardDelegateTest {
             .setHolderNameRequired(true)
             .setAddressConfiguration(AddressConfiguration.FullAddress())
             .setKcpAuthVisibility(KCPAuthVisibility.SHOW)
+            .setShowStorePaymentField(false)
             .setSupportedCardTypes(CardType.VISA, CardType.MASTERCARD, CardType.AMERICAN_EXPRESS)
     }
 
@@ -740,9 +743,10 @@ internal class DefaultCardDelegateTest {
         isStoredPaymentMethodEnable: Boolean = false,
         cvcUIState: InputFieldUIState = InputFieldUIState.REQUIRED,
         expiryDateUIState: InputFieldUIState = InputFieldUIState.REQUIRED,
+        holderNameUIState: InputFieldUIState = InputFieldUIState.HIDDEN,
+        showStorePaymentField: Boolean = true,
         detectedCardTypes: List<DetectedCardType> =
             detectCardTypeRepository.getDetectedCardTypesLocal(listOf(CardType.VISA)),
-        holderNameUIState: InputFieldUIState = InputFieldUIState.HIDDEN,
         isSocialSecurityNumberRequired: Boolean = false,
         isKCPAuthRequired: Boolean = false,
         addressUIState: AddressFormUIState = AddressFormUIState.NONE,
@@ -765,6 +769,7 @@ internal class DefaultCardDelegateTest {
             cvcUIState = cvcUIState,
             expiryDateUIState = expiryDateUIState,
             holderNameUIState = holderNameUIState,
+            showStorePaymentField = showStorePaymentField,
             detectedCardTypes = detectedCardTypes,
             isSocialSecurityNumberRequired = isSocialSecurityNumberRequired,
             isKCPAuthRequired = isKCPAuthRequired,

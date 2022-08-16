@@ -223,6 +223,7 @@ class DefaultCardDelegate(
             cvcUIState = makeCvcUIState(selectedOrFirstCardType?.cvcPolicy),
             expiryDateUIState = makeExpiryDateUIState(selectedOrFirstCardType?.expiryDatePolicy),
             holderNameUIState = getHolderNameUIState(),
+            showStorePaymentField = showStorePaymentField(),
             detectedCardTypes = filteredDetectedCardTypes,
             isSocialSecurityNumberRequired = isSocialSecurityNumberRequired(),
             isKCPAuthRequired = isKCPAuthRequired(),
@@ -549,7 +550,7 @@ class DefaultCardDelegate(
         return reliableDetectedCards.size > 1 && reliableDetectedCards.any { it.isSelected }
     }
 
-    override fun showStorePaymentField(): Boolean {
+    private fun showStorePaymentField(): Boolean {
         return configuration.isStorePaymentFieldVisible
     }
 

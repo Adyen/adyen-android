@@ -62,8 +62,6 @@ class CardComponent(
         cardDelegate.onInputDataChanged(inputData)
     }
 
-    fun showStorePaymentField() = cardDelegate.showStorePaymentField()
-
     fun isDualBrandedFlow(cardOutputData: CardOutputData) = cardDelegate.isDualBrandedFlow(cardOutputData)
 
     @StringRes
