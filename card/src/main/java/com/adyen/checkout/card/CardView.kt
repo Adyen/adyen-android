@@ -139,6 +139,7 @@ class CardView @JvmOverloads constructor(
         onExpiryDateValidated(cardOutputData.expiryDateState)
         setSocialSecurityNumberVisibility(cardOutputData.isSocialSecurityNumberRequired)
         setKcpAuthVisibility(cardOutputData.isKCPAuthRequired)
+        setKcpHint(cardOutputData.kcpBirthDateOrTaxNumberHint)
         setAddressInputVisibility(cardOutputData.addressUIState)
         handleCvcUIState(cardOutputData.cvcUIState)
         handleExpiryDateUIState(cardOutputData.expiryDateUIState)
@@ -467,8 +468,6 @@ class CardView @JvmOverloads constructor(
             component.inputData.kcpBirthDateOrTaxNumber = it.toString()
             notifyInputDataChanged()
             binding.textInputLayoutKcpBirthDateOrTaxNumber.error = null
-            val hintResourceId = component.getKcpBirthDateOrTaxNumberHint(it.toString())
-            binding.textInputLayoutKcpBirthDateOrTaxNumber.hint = localizedContext.getString(hintResourceId)
         }
 
         kcpBirthDateOrRegistrationNumberEditText?.onFocusChangeListener = OnFocusChangeListener { _, hasFocus ->
@@ -633,6 +632,11 @@ class CardView @JvmOverloads constructor(
     private fun setKcpAuthVisibility(shouldShowKCPAuth: Boolean) {
         binding.textInputLayoutKcpBirthDateOrTaxNumber.isVisible = shouldShowKCPAuth
         binding.textInputLayoutKcpCardPassword.isVisible = shouldShowKCPAuth
+    }
+
+    private fun setKcpHint(kcpBirthDateOrTaxNumberHint: Int?) {
+        kcpBirthDateOrTaxNumberHint ?: return
+        binding.textInputLayoutKcpBirthDateOrTaxNumber.hint = localizedContext.getString(kcpBirthDateOrTaxNumberHint)
     }
 
     private fun setAddressInputVisibility(addressFormUIState: AddressFormUIState) {

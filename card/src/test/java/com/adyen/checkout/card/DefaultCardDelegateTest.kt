@@ -8,6 +8,7 @@
 
 package com.adyen.checkout.card
 
+import androidx.annotation.StringRes
 import app.cash.turbine.test
 import app.cash.turbine.testIn
 import com.adyen.checkout.card.api.model.Brand
@@ -380,7 +381,7 @@ internal class DefaultCardDelegateTest {
                     expiryDate = TEST_EXPIRY_DATE
                     holderName = "S. Hopper"
                     socialSecurityNumber = "123.123.123-12"
-                    kcpBirthDateOrTaxNumber = "901128"
+                    kcpBirthDateOrTaxNumber = "9011672845"
                     kcpCardPassword = "12"
                     isStorePaymentSelected = true
                     selectedCardIndex = 0
@@ -433,7 +434,7 @@ internal class DefaultCardDelegateTest {
                     expiryDateState = FieldState(TEST_EXPIRY_DATE, Validation.Valid),
                     holderNameState = FieldState("S. Hopper", Validation.Valid),
                     socialSecurityNumberState = FieldState("12312312312", Validation.Valid),
-                    kcpBirthDateOrTaxNumberState = FieldState("901128", Validation.Valid),
+                    kcpBirthDateOrTaxNumberState = FieldState("9011672845", Validation.Valid),
                     kcpCardPasswordState = FieldState("12", Validation.Valid),
                     installmentState = FieldState(installmentModel, Validation.Valid),
                     addressState = expectedAddressOutputData,
@@ -449,6 +450,7 @@ internal class DefaultCardDelegateTest {
                     installmentOptions = expectedInstallmentOptions,
                     countryOptions = expectedCountries,
                     stateOptions = AddressFormUtils.initializeStateOptions(TestAddressRepository.STATES),
+                    kcpBirthDateOrTaxNumberHint = R.string.checkout_kcp_tax_number_hint,
                     supportedCardTypes = supportedCardTypes,
                 )
 
@@ -757,6 +759,7 @@ internal class DefaultCardDelegateTest {
         countryOptions: List<AddressListItem> = emptyList(),
         stateOptions: List<AddressListItem> = emptyList(),
         isDualBranded: Boolean = false,
+        @StringRes kcpBirthDateOrTaxNumberHint: Int = R.string.checkout_kcp_birth_date_or_tax_number_hint,
         supportedCardTypes: List<CardType> = listOf(CardType.VISA),
     ): CardOutputData {
         return CardOutputData(
@@ -783,6 +786,7 @@ internal class DefaultCardDelegateTest {
             stateOptions = stateOptions,
             supportedCardTypes = supportedCardTypes,
             isDualBranded = isDualBranded,
+            kcpBirthDateOrTaxNumberHint = kcpBirthDateOrTaxNumberHint,
             componentMode = ComponentMode.DEFAULT,
         )
     }

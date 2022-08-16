@@ -237,6 +237,7 @@ class DefaultCardDelegate(
             stateOptions = updatedStateOptions,
             supportedCardTypes = getSupportedCardTypes(),
             isDualBranded = isDualBrandedFlow(filteredDetectedCardTypes),
+            kcpBirthDateOrTaxNumberHint = getKcpBirthDateOrTaxNumberHint(inputData.kcpBirthDateOrTaxNumber),
             componentMode = ComponentMode.DEFAULT,
         )
 
@@ -555,7 +556,7 @@ class DefaultCardDelegate(
         return configuration.isStorePaymentFieldVisible
     }
 
-    override fun getKcpBirthDateOrTaxNumberHint(input: String): Int {
+    private fun getKcpBirthDateOrTaxNumberHint(input: String): Int {
         return when {
             input.length > KcpValidationUtils.KCP_BIRTH_DATE_LENGTH -> R.string.checkout_kcp_tax_number_hint
             else -> R.string.checkout_kcp_birth_date_or_tax_number_hint
@@ -585,7 +586,7 @@ class DefaultCardDelegate(
         }
     }
 
-    override fun isInstallmentsRequired(cardOutputData: CardOutputData): Boolean {
+    private fun isInstallmentsRequired(cardOutputData: CardOutputData): Boolean {
         return cardOutputData.installmentOptions.isNotEmpty()
     }
 

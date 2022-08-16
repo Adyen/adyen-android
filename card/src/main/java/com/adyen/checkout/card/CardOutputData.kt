@@ -7,6 +7,7 @@
  */
 package com.adyen.checkout.card
 
+import androidx.annotation.StringRes
 import com.adyen.checkout.card.data.CardType
 import com.adyen.checkout.card.data.DetectedCardType
 import com.adyen.checkout.card.data.ExpiryDate
@@ -39,6 +40,8 @@ data class CardOutputData(
     val stateOptions: List<AddressListItem>,
     val supportedCardTypes: List<CardType>,
     val isDualBranded: Boolean,
+    @StringRes
+    val kcpBirthDateOrTaxNumberHint: Int?,
     val componentMode: ComponentMode,
 ) : OutputData {
 

@@ -390,6 +390,7 @@ internal class StoredCardDelegateTest {
             stateOptions = stateOptions,
             supportedCardTypes = supportedCardTypes,
             isDualBranded = false,
+            kcpBirthDateOrTaxNumberHint = null,
             componentMode = ComponentMode.STORED,
         )
     }

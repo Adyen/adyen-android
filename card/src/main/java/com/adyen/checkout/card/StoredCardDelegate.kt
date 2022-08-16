@@ -14,8 +14,6 @@ import com.adyen.checkout.card.data.DetectedCardType
 import com.adyen.checkout.card.data.ExpiryDate
 import com.adyen.checkout.card.util.AddressValidationUtils
 import com.adyen.checkout.card.util.CardValidationUtils
-import com.adyen.checkout.card.util.InstallmentUtils
-import com.adyen.checkout.card.util.KcpValidationUtils
 import com.adyen.checkout.components.model.paymentmethods.StoredPaymentMethod
 import com.adyen.checkout.components.model.payments.request.CardPaymentMethod
 import com.adyen.checkout.components.model.payments.request.PaymentComponentData
@@ -188,7 +186,6 @@ class StoredCardDelegate(
         _componentStateFlow.tryEmit(
             mapComponentState(
                 encryptedCard,
-                outputData,
                 cardNumber,
                 firstCardType,
             )
@@ -214,22 +211,10 @@ class StoredCardDelegate(
         return !configuration.isHideCvcStoredCard
     }
 
-    override fun getKcpBirthDateOrTaxNumberHint(input: String): Int {
-        return when {
-            input.length > KcpValidationUtils.KCP_BIRTH_DATE_LENGTH -> R.string.checkout_kcp_tax_number_hint
-            else -> R.string.checkout_kcp_birth_date_or_tax_number_hint
-        }
-    }
-
     private fun getSupportedCardTypes(): List<CardType> = emptyList()
-
-    override fun isInstallmentsRequired(cardOutputData: CardOutputData): Boolean {
-        return cardOutputData.installmentOptions.isNotEmpty()
-    }
 
     private fun mapComponentState(
         encryptedCard: EncryptedCard,
-        stateOutputData: CardOutputData,
         cardNumber: String,
         firstCardType: CardType?,
     ): CardComponentState {
@@ -254,7 +239,7 @@ class StoredCardDelegate(
             }
         }
 
-        val paymentComponentData = makePaymentComponentData(cardPaymentMethod, stateOutputData)
+        val paymentComponentData = makePaymentComponentData(cardPaymentMethod)
 
         val lastFour = cardNumber.takeLast(LAST_FOUR_LENGTH)
 
@@ -269,15 +254,11 @@ class StoredCardDelegate(
     }
 
     private fun makePaymentComponentData(
-        cardPaymentMethod: CardPaymentMethod,
-        stateOutputData: CardOutputData
+        cardPaymentMethod: CardPaymentMethod
     ): PaymentComponentData<CardPaymentMethod> {
         return PaymentComponentData<CardPaymentMethod>().apply {
             paymentMethod = cardPaymentMethod
             shopperReference = configuration.shopperReference
-            if (isInstallmentsRequired(stateOutputData)) {
-                installments = InstallmentUtils.makeInstallmentModelObject(stateOutputData.installmentState.value)
-            }
         }
     }
 
@@ -338,6 +319,7 @@ class StoredCardDelegate(
             stateOptions = emptyList(),
             supportedCardTypes = getSupportedCardTypes(),
             isDualBranded = false,
+            kcpBirthDateOrTaxNumberHint = null,
             componentMode = ComponentMode.STORED,
         )
     }

@@ -8,7 +8,6 @@
 
 package com.adyen.checkout.card
 
-import androidx.annotation.StringRes
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.viewModelScope
 import com.adyen.checkout.components.StoredPaymentComponentProvider
@@ -60,11 +59,6 @@ class CardComponent(
 
     override fun onInputDataChanged(inputData: CardInputData) {
         cardDelegate.onInputDataChanged(inputData)
-    }
-
-    @StringRes
-    fun getKcpBirthDateOrTaxNumberHint(input: String): Int {
-        return cardDelegate.getKcpBirthDateOrTaxNumberHint(input)
     }
 
     override fun requiresInput() = cardDelegate.requiresInput()
