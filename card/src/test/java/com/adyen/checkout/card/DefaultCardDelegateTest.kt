@@ -331,9 +331,7 @@ internal class DefaultCardDelegateTest {
 
                 with(requireNotNull(expectMostRecentItem())) {
                     assertTrue(isValid)
-                    assertEquals(FieldState(TEST_CARD_NUMBER, Validation.Valid), cardNumberState)
-                    assertEquals(FieldState(TEST_SECURITY_CODE, Validation.Valid), securityCodeState)
-                    assertEquals(FieldState(TEST_EXPIRY_DATE, Validation.Valid), expiryDateState)
+                    assertEquals(createOutputData(), this)
                 }
             }
         }
@@ -424,28 +422,32 @@ internal class DefaultCardDelegateTest {
                     inputData.address.country
                 )
 
+                val expectedOutputData = createOutputData(
+                    cardNumberState = FieldState(TEST_CARD_NUMBER, Validation.Valid),
+                    securityCodeState = FieldState(TEST_SECURITY_CODE, Validation.Valid),
+                    expiryDateState = FieldState(TEST_EXPIRY_DATE, Validation.Valid),
+                    holderNameState = FieldState("S. Hopper", Validation.Valid),
+                    socialSecurityNumberState = FieldState("12312312312", Validation.Valid),
+                    kcpBirthDateOrTaxNumberState = FieldState("901128", Validation.Valid),
+                    kcpCardPasswordState = FieldState("12", Validation.Valid),
+                    installmentState = FieldState(installmentModel, Validation.Valid),
+                    addressState = expectedAddressOutputData,
+                    isStoredPaymentMethodEnable = true,
+                    cvcUIState = InputFieldUIState.HIDDEN,
+                    expiryDateUIState = InputFieldUIState.REQUIRED,
+                    detectedCardTypes = expectedDetectedCardTypes,
+                    isSocialSecurityNumberRequired = true,
+                    isKCPAuthRequired = true,
+                    addressUIState = AddressFormUIState.FULL_ADDRESS,
+                    installmentOptions = expectedInstallmentOptions,
+                    countryOptions = expectedCountries,
+                    stateOptions = AddressFormUtils.initializeStateOptions(TestAddressRepository.STATES),
+                    supportedCardTypes = supportedCardTypes,
+                )
+
                 with(requireNotNull(expectMostRecentItem())) {
                     assertTrue(isValid)
-                    assertEquals(FieldState(TEST_CARD_NUMBER, Validation.Valid), cardNumberState)
-                    assertEquals(FieldState(TEST_SECURITY_CODE, Validation.Valid), securityCodeState)
-                    assertEquals(FieldState(TEST_EXPIRY_DATE, Validation.Valid), expiryDateState)
-                    assertEquals(FieldState("S. Hopper", Validation.Valid), holderNameState)
-                    assertEquals(FieldState("12312312312", Validation.Valid), socialSecurityNumberState)
-                    assertEquals(FieldState("901128", Validation.Valid), kcpBirthDateOrTaxNumberState)
-                    assertEquals(FieldState("12", Validation.Valid), kcpCardPasswordState)
-                    assertEquals(FieldState(installmentModel, Validation.Valid), installmentState)
-                    assertEquals(expectedAddressOutputData, addressState)
-                    assertTrue(isStoredPaymentMethodEnable)
-                    assertEquals(InputFieldUIState.HIDDEN, cvcUIState)
-                    assertEquals(InputFieldUIState.REQUIRED, expiryDateUIState)
-                    assertEquals(expectedDetectedCardTypes, detectedCardTypes)
-                    assertTrue(isSocialSecurityNumberRequired)
-                    assertTrue(isKCPAuthRequired)
-                    assertEquals(AddressFormUIState.FULL_ADDRESS, addressUIState)
-                    assertEquals(expectedInstallmentOptions, installmentOptions)
-                    assertEquals(expectedCountries, countryOptions)
-                    assertEquals(AddressFormUtils.initializeStateOptions(TestAddressRepository.STATES), stateOptions)
-                    assertEquals(supportedCardTypes, this.supportedCardTypes)
+                    assertEquals(expectedOutputData, this)
                 }
             }
         }
@@ -540,7 +542,7 @@ internal class DefaultCardDelegateTest {
                 assertTrue(componentState.isValid)
                 assertEquals(TEST_CARD_NUMBER.takeLast(4), componentState.lastFourDigits)
                 assertEquals(TEST_CARD_NUMBER.take(6), componentState.binValue)
-                assertEquals(CardType.MASTERCARD, componentState.cardType)
+                assertEquals(CardType.VISA, componentState.cardType)
 
                 val paymentComponentData = componentState.data
                 with(paymentComponentData) {
@@ -699,7 +701,9 @@ internal class DefaultCardDelegateTest {
     }
 
     private fun getDefaultCardConfigurationBuilder(): CardConfiguration.Builder {
-        return CardConfiguration.Builder(Locale.US, Environment.TEST, TEST_CLIENT_KEY)
+        return CardConfiguration
+            .Builder(Locale.US, Environment.TEST, TEST_CLIENT_KEY)
+            .setSupportedCardTypes(CardType.VISA)
     }
 
     private fun getCustomCardConfigurationBuilder(): CardConfiguration.Builder {
@@ -734,14 +738,15 @@ internal class DefaultCardDelegateTest {
         isStoredPaymentMethodEnable: Boolean = false,
         cvcUIState: InputFieldUIState = InputFieldUIState.REQUIRED,
         expiryDateUIState: InputFieldUIState = InputFieldUIState.REQUIRED,
-        detectedCardTypes: List<DetectedCardType> = listOf(createDetectedCardType()),
+        detectedCardTypes: List<DetectedCardType> =
+            detectCardTypeRepository.getDetectedCardTypesLocal(listOf(CardType.VISA)),
         isSocialSecurityNumberRequired: Boolean = false,
         isKCPAuthRequired: Boolean = false,
         addressUIState: AddressFormUIState = AddressFormUIState.NONE,
         installmentOptions: List<InstallmentModel> = emptyList(),
         countryOptions: List<AddressListItem> = emptyList(),
         stateOptions: List<AddressListItem> = emptyList(),
-        supportedCardTypes: List<CardType> = listOf(CardType.VISA, CardType.MASTERCARD, CardType.AMERICAN_EXPRESS),
+        supportedCardTypes: List<CardType> = listOf(CardType.VISA),
     ): CardOutputData {
         return CardOutputData(
             cardNumberState = cardNumberState,
