@@ -171,6 +171,7 @@ class DefaultCardDelegate(
             .launchIn(coroutineScope)
     }
 
+    @Suppress("LongMethod")
     private fun updateOutputData(
         detectedCardTypes: List<DetectedCardType> = outputData?.detectedCardTypes.orEmpty(),
         countryOptions: List<AddressListItem> = outputData?.countryOptions.orEmpty(),
