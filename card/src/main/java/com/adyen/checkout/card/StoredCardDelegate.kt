@@ -223,8 +223,6 @@ class StoredCardDelegate(
 
     private fun getSupportedCardTypes(): List<CardType> = emptyList()
 
-    override fun isDualBrandedFlow(cardOutputData: CardOutputData): Boolean = false
-
     override fun isInstallmentsRequired(cardOutputData: CardOutputData): Boolean {
         return cardOutputData.installmentOptions.isNotEmpty()
     }
@@ -339,6 +337,7 @@ class StoredCardDelegate(
             countryOptions = emptyList(),
             stateOptions = emptyList(),
             supportedCardTypes = getSupportedCardTypes(),
+            isDualBranded = false,
             componentMode = ComponentMode.STORED,
         )
     }

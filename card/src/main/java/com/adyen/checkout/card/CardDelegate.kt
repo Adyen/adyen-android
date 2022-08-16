@@ -26,8 +26,6 @@ interface CardDelegate : PaymentMethodDelegate<CardConfiguration, CardInputData,
 
     fun initialize(coroutineScope: CoroutineScope)
 
-    fun isDualBrandedFlow(cardOutputData: CardOutputData): Boolean
-
     fun isInstallmentsRequired(cardOutputData: CardOutputData): Boolean
 
     @StringRes fun getKcpBirthDateOrTaxNumberHint(input: String): Int

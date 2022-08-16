@@ -196,6 +196,7 @@ internal class DefaultCardDelegateTest {
 
                 with(requireNotNull(expectMostRecentItem())) {
                     assertEquals(expectedDetectedCardTypes, detectedCardTypes)
+                    assertFalse(isDualBranded)
                 }
             }
         }
@@ -221,6 +222,7 @@ internal class DefaultCardDelegateTest {
 
                 with(requireNotNull(expectMostRecentItem())) {
                     assertEquals(expectedDetectedCardTypes, detectedCardTypes)
+                    assertFalse(isDualBranded)
                 }
             }
         }
@@ -265,6 +267,7 @@ internal class DefaultCardDelegateTest {
                     assertTrue(securityCodeState.validation is Validation.Valid)
                     assertEquals(InputFieldUIState.OPTIONAL, cvcUIState)
                     assertEquals(InputFieldUIState.OPTIONAL, expiryDateUIState)
+                    assertTrue(isDualBranded)
                 }
             }
         }
@@ -753,6 +756,7 @@ internal class DefaultCardDelegateTest {
         installmentOptions: List<InstallmentModel> = emptyList(),
         countryOptions: List<AddressListItem> = emptyList(),
         stateOptions: List<AddressListItem> = emptyList(),
+        isDualBranded: Boolean = false,
         supportedCardTypes: List<CardType> = listOf(CardType.VISA),
     ): CardOutputData {
         return CardOutputData(
@@ -778,6 +782,7 @@ internal class DefaultCardDelegateTest {
             countryOptions = countryOptions,
             stateOptions = stateOptions,
             supportedCardTypes = supportedCardTypes,
+            isDualBranded = isDualBranded,
             componentMode = ComponentMode.DEFAULT,
         )
     }

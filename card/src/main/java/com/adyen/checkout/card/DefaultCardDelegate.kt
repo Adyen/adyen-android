@@ -236,6 +236,7 @@ class DefaultCardDelegate(
             countryOptions = updatedCountryOptions,
             stateOptions = updatedStateOptions,
             supportedCardTypes = getSupportedCardTypes(),
+            isDualBranded = isDualBrandedFlow(filteredDetectedCardTypes),
             componentMode = ComponentMode.DEFAULT,
         )
 
@@ -512,7 +513,7 @@ class DefaultCardDelegate(
                 taxNumber = stateOutputData.kcpBirthDateOrTaxNumberState.value
             }
 
-            if (isDualBrandedFlow(stateOutputData)) {
+            if (isDualBrandedFlow(stateOutputData.detectedCardTypes)) {
                 brand = getDetectedCardType(stateOutputData.detectedCardTypes)?.cardType?.txVariant
             }
 
@@ -545,8 +546,8 @@ class DefaultCardDelegate(
         return DetectedCardTypesUtils.getSelectedOrFirstDetectedCardType(detectedCardTypes)
     }
 
-    override fun isDualBrandedFlow(cardOutputData: CardOutputData): Boolean {
-        val reliableDetectedCards = cardOutputData.detectedCardTypes.filter { it.isReliable }
+    private fun isDualBrandedFlow(detectedCardTypes: List<DetectedCardType>): Boolean {
+        val reliableDetectedCards = detectedCardTypes.filter { it.isReliable }
         return reliableDetectedCards.size > 1 && reliableDetectedCards.any { it.isSelected }
     }
 

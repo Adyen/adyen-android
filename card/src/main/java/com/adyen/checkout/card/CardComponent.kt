@@ -62,8 +62,6 @@ class CardComponent(
         cardDelegate.onInputDataChanged(inputData)
     }
 
-    fun isDualBrandedFlow(cardOutputData: CardOutputData) = cardDelegate.isDualBrandedFlow(cardOutputData)
-
     @StringRes
     fun getKcpBirthDateOrTaxNumberHint(input: String): Int {
         return cardDelegate.getKcpBirthDateOrTaxNumberHint(input)

@@ -327,7 +327,7 @@ class CardView @JvmOverloads constructor(
         val showErrorWhileEditing = (cardNumberValidation as? Validation.Invalid)?.showErrorWhileEditing ?: false
         val shouldNotShowError = hasFocus && !showErrorWhileEditing
         if (shouldNotShowError) {
-            val shouldShowSecondaryLogo = component.outputData?.let { component.isDualBrandedFlow(it) } ?: false
+            val shouldShowSecondaryLogo = outputData.isDualBranded
             setCardNumberError(null, shouldShowSecondaryLogo)
         } else if (cardNumberValidation is Validation.Invalid) {
             setCardNumberError(cardNumberValidation.reason)

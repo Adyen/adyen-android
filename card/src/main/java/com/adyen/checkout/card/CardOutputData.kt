@@ -38,6 +38,7 @@ data class CardOutputData(
     val countryOptions: List<AddressListItem>,
     val stateOptions: List<AddressListItem>,
     val supportedCardTypes: List<CardType>,
+    val isDualBranded: Boolean,
     val componentMode: ComponentMode,
 ) : OutputData {
 

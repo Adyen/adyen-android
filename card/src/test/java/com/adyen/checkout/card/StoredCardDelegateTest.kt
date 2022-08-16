@@ -389,6 +389,7 @@ internal class StoredCardDelegateTest {
             countryOptions = countryOptions,
             stateOptions = stateOptions,
             supportedCardTypes = supportedCardTypes,
+            isDualBranded = false,
             componentMode = ComponentMode.STORED,
         )
     }
