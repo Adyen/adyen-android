@@ -66,7 +66,7 @@ class QRCodeComponent(
     }
 
     /**
-     * Call this method when receiving the return URL from the 3DS redirect with the result data.
+     * Call this method when receiving the return URL from the redirect with the result data.
      * This result will be in the [Intent.getData] and begins with the returnUrl you specified on the payments/ call.
      *
      * @param intent The received [Intent].

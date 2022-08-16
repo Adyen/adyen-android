@@ -73,12 +73,12 @@ internal class DefaultQRCodeDelegateTest(
 
             skipItems(1)
 
-            awaitItem()!!.apply {
+            with(requireNotNull(awaitItem())) {
                 assertFalse(isValid)
                 assertEquals("test", paymentMethodType)
             }
 
-            awaitItem()!!.apply {
+            with(requireNotNull(awaitItem())) {
                 assertTrue(isValid)
                 assertEquals("test", paymentMethodType)
             }

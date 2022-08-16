@@ -60,8 +60,8 @@ internal class DefaultQRCodeDelegate(
 
     init {
         statusCountDownTimer.attach(
-            DefaultStatusRepository.MAX_POLLING_DURATION_MILLIS,
-            STATUS_POLLING_INTERVAL_MILLIS
+            millisInFuture = DefaultStatusRepository.MAX_POLLING_DURATION_MILLIS,
+            countDownInterval = STATUS_POLLING_INTERVAL_MILLIS
         ) { millisUntilFinished -> onTimerTick(millisUntilFinished) }
     }
 
