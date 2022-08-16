@@ -62,9 +62,6 @@ class CardComponent(
         cardDelegate.onInputDataChanged(inputData)
     }
 
-    // FIXME remove
-    fun isStoredPaymentMethod() = cardDelegate is StoredCardDelegate
-
     fun isHolderNameRequired() = cardDelegate.isHolderNameRequired()
 
     fun showStorePaymentField() = cardDelegate.showStorePaymentField()

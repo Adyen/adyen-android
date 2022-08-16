@@ -20,6 +20,7 @@ import com.adyen.checkout.components.model.paymentmethods.StoredPaymentMethod
 import com.adyen.checkout.components.model.payments.request.CardPaymentMethod
 import com.adyen.checkout.components.model.payments.request.PaymentComponentData
 import com.adyen.checkout.components.repository.PublicKeyRepository
+import com.adyen.checkout.components.ui.ComponentMode
 import com.adyen.checkout.components.ui.FieldState
 import com.adyen.checkout.components.ui.Validation
 import com.adyen.checkout.components.util.PaymentMethodTypes
@@ -345,6 +346,7 @@ class StoredCardDelegate(
             countryOptions = emptyList(),
             stateOptions = emptyList(),
             supportedCardTypes = getSupportedCardTypes(),
+            componentMode = ComponentMode.STORED,
         )
     }
 

@@ -19,6 +19,7 @@ import com.adyen.checkout.components.model.paymentmethods.StoredPaymentMethod
 import com.adyen.checkout.components.model.payments.request.CardPaymentMethod
 import com.adyen.checkout.components.repository.PublicKeyRepository
 import com.adyen.checkout.components.test.TestPublicKeyRepository
+import com.adyen.checkout.components.ui.ComponentMode
 import com.adyen.checkout.components.ui.FieldState
 import com.adyen.checkout.components.ui.Validation
 import com.adyen.checkout.components.util.PaymentMethodTypes
@@ -384,6 +385,7 @@ internal class StoredCardDelegateTest {
             countryOptions = countryOptions,
             stateOptions = stateOptions,
             supportedCardTypes = supportedCardTypes,
+            componentMode = ComponentMode.STORED,
         )
     }
 

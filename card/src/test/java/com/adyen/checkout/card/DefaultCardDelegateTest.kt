@@ -25,6 +25,7 @@ import com.adyen.checkout.card.util.InstallmentUtils
 import com.adyen.checkout.components.model.paymentmethods.PaymentMethod
 import com.adyen.checkout.components.repository.PublicKeyRepository
 import com.adyen.checkout.components.test.TestPublicKeyRepository
+import com.adyen.checkout.components.ui.ComponentMode
 import com.adyen.checkout.components.ui.FieldState
 import com.adyen.checkout.components.ui.Validation
 import com.adyen.checkout.components.util.PaymentMethodTypes
@@ -769,6 +770,7 @@ internal class DefaultCardDelegateTest {
             countryOptions = countryOptions,
             stateOptions = stateOptions,
             supportedCardTypes = supportedCardTypes,
+            componentMode = ComponentMode.DEFAULT,
         )
     }
 

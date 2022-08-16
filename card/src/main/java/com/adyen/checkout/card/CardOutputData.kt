@@ -12,6 +12,7 @@ import com.adyen.checkout.card.data.DetectedCardType
 import com.adyen.checkout.card.data.ExpiryDate
 import com.adyen.checkout.card.ui.model.AddressListItem
 import com.adyen.checkout.components.base.OutputData
+import com.adyen.checkout.components.ui.ComponentMode
 import com.adyen.checkout.components.ui.FieldState
 
 data class CardOutputData(
@@ -35,6 +36,7 @@ data class CardOutputData(
     val countryOptions: List<AddressListItem>,
     val stateOptions: List<AddressListItem>,
     val supportedCardTypes: List<CardType>,
+    val componentMode: ComponentMode,
 ) : OutputData {
 
     override val isValid: Boolean

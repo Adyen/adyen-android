@@ -30,6 +30,7 @@ import com.adyen.checkout.card.ui.model.AddressListItem
 import com.adyen.checkout.card.util.InstallmentUtils
 import com.adyen.checkout.components.api.ImageLoader
 import com.adyen.checkout.components.extensions.isVisible
+import com.adyen.checkout.components.ui.ComponentMode
 import com.adyen.checkout.components.ui.FieldState
 import com.adyen.checkout.components.ui.Validation
 import com.adyen.checkout.components.ui.view.AdyenLinearLayout
@@ -102,12 +103,6 @@ class CardView @JvmOverloads constructor(
             component.inputData.isStorePaymentSelected = isChecked
             notifyInputDataChanged()
         }
-        if (component.isStoredPaymentMethod()) {
-            setStoredCardInterface(component.inputData)
-        } else {
-            binding.textInputLayoutCardHolder.isVisible = component.isHolderNameRequired()
-            binding.switchStorePaymentMethod.isVisible = component.showStorePaymentField()
-        }
         notifyInputDataChanged()
     }
 
@@ -138,27 +133,27 @@ class CardView @JvmOverloads constructor(
     }
 
     override fun onChanged(cardOutputData: CardOutputData?) {
-        if (cardOutputData != null) {
-            onCardNumberValidated(cardOutputData)
-            onExpiryDateValidated(cardOutputData.expiryDateState)
-            setSocialSecurityNumberVisibility(cardOutputData.isSocialSecurityNumberRequired)
-            setKcpAuthVisibility(cardOutputData.isKCPAuthRequired)
-            setAddressInputVisibility(cardOutputData.addressUIState)
-            handleCvcUIState(cardOutputData.cvcUIState)
-            handleExpiryDateUIState(cardOutputData.expiryDateUIState)
-            updateInstallments(cardOutputData)
-            updateCountries(cardOutputData.countryOptions)
-            updateStates(cardOutputData.stateOptions)
-            setSupportedCardsList(cardOutputData.supportedCardTypes)
-        }
-        if (component.isStoredPaymentMethod() && component.requiresInput()) {
-            binding.textInputLayoutSecurityCode.editText?.requestFocus()
-        }
+        cardOutputData ?: return
 
-        val filteredCards: List<CardType> = if (!component.isStoredPaymentMethod()) {
-            cardOutputData?.detectedCardTypes.orEmpty().map { it.cardType }
-        } else emptyList()
-        setFilteredCards(filteredCards)
+        onCardNumberValidated(cardOutputData)
+        onExpiryDateValidated(cardOutputData.expiryDateState)
+        setSocialSecurityNumberVisibility(cardOutputData.isSocialSecurityNumberRequired)
+        setKcpAuthVisibility(cardOutputData.isKCPAuthRequired)
+        setAddressInputVisibility(cardOutputData.addressUIState)
+        handleCvcUIState(cardOutputData.cvcUIState)
+        handleExpiryDateUIState(cardOutputData.expiryDateUIState)
+        updateInstallments(cardOutputData)
+        updateCountries(cardOutputData.countryOptions)
+        updateStates(cardOutputData.stateOptions)
+        setSupportedCardsList(cardOutputData.supportedCardTypes)
+
+        if (isStoredPaymentMethod(cardOutputData)) {
+            setStoredCardInterface(cardOutputData)
+        } else {
+            binding.textInputLayoutCardHolder.isVisible = component.isHolderNameRequired()
+            binding.switchStorePaymentMethod.isVisible = component.showStorePaymentField()
+            setFilteredCards(cardOutputData.detectedCardTypes.map { it.cardType })
+        }
     }
 
     override fun observeComponentChanges(lifecycleOwner: LifecycleOwner) {
@@ -325,16 +320,17 @@ class CardView @JvmOverloads constructor(
     }
 
     private fun setCardErrorState(hasFocus: Boolean) {
-        if (!component.isStoredPaymentMethod()) {
-            val cardNumberValidation = component.outputData?.cardNumberState?.validation
-            val showErrorWhileEditing = (cardNumberValidation as? Validation.Invalid)?.showErrorWhileEditing ?: false
-            val shouldNotShowError = hasFocus && !showErrorWhileEditing
-            if (shouldNotShowError) {
-                val shouldShowSecondaryLogo = component.outputData?.let { component.isDualBrandedFlow(it) } ?: false
-                setCardNumberError(null, shouldShowSecondaryLogo)
-            } else if (cardNumberValidation is Validation.Invalid) {
-                setCardNumberError(cardNumberValidation.reason)
-            }
+        val outputData = component.outputData ?: return
+        if (isStoredPaymentMethod(outputData)) return
+
+        val cardNumberValidation = outputData.cardNumberState.validation
+        val showErrorWhileEditing = (cardNumberValidation as? Validation.Invalid)?.showErrorWhileEditing ?: false
+        val shouldNotShowError = hasFocus && !showErrorWhileEditing
+        if (shouldNotShowError) {
+            val shouldShowSecondaryLogo = component.outputData?.let { component.isDualBrandedFlow(it) } ?: false
+            setCardNumberError(null, shouldShowSecondaryLogo)
+        } else if (cardNumberValidation is Validation.Invalid) {
+            setCardNumberError(cardNumberValidation.reason)
         }
     }
 
@@ -648,20 +644,26 @@ class CardView @JvmOverloads constructor(
         }
     }
 
-    private fun setStoredCardInterface(storedCardInput: CardInputData) {
+    private fun setStoredCardInterface(outputData: CardOutputData) {
+        binding.editTextCardNumber.isEnabled = false
         binding.editTextCardNumber.setText(
             localizedContext.getString(
                 R.string.card_number_4digit,
-                storedCardInput.cardNumber
+                outputData.cardNumberState.value
             )
         )
-        binding.editTextCardNumber.isEnabled = false
-        binding.editTextExpiryDate.date = storedCardInput.expiryDate
         binding.editTextExpiryDate.isEnabled = false
+        binding.editTextExpiryDate.date = outputData.expiryDateState.value
         binding.switchStorePaymentMethod.isVisible = false
         binding.textInputLayoutCardHolder.isVisible = false
         binding.textInputLayoutPostalCode.isVisible = false
         binding.addressFormInput.isVisible = false
+
+        if (component.requiresInput()) {
+            binding.textInputLayoutSecurityCode.editText?.requestFocus()
+        }
+
+        setFilteredCards(emptyList())
     }
 
     private fun updateInstallmentSelection(installmentModel: InstallmentModel?) {
@@ -691,5 +693,9 @@ class CardView @JvmOverloads constructor(
 
     private fun setFilteredCards(cards: List<CardType>) {
         cardListAdapter?.filteredCards = cards
+    }
+
+    private fun isStoredPaymentMethod(outputData: CardOutputData): Boolean {
+        return outputData.componentMode == ComponentMode.STORED
     }
 }
