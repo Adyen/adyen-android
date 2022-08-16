@@ -28,7 +28,6 @@ class OnlineBankingPLPaymentMethods(
     companion object {
         const val PAYMENT_METHOD_TYPE = PaymentMethodTypes.ONLINE_BANKING_PL
 
-
         @JvmField
         val CREATOR = Creator(OnlineBankingPLPaymentMethods::class.java)
 

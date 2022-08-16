@@ -54,7 +54,6 @@ class OnlineBankingPLConfiguration : IssuerListConfiguration {
          */
         constructor(configuration: OnlineBankingPLConfiguration) : super(configuration)
 
-
         override fun setShopperLocale(builderShopperLocale: Locale): Builder {
             return super.setShopperLocale(builderShopperLocale) as Builder
         }

@@ -19,7 +19,8 @@ import com.adyen.checkout.components.model.paymentmethods.PaymentMethod
 import com.adyen.checkout.components.model.payments.request.OnlineBankingPLPaymentMethods
 import com.adyen.checkout.issuerlist.DefaultIssuerListDelegate
 
-class OnlineBankingPLComponentProvider : PaymentComponentProvider<OnlineBankingPLComponent, OnlineBankingPLConfiguration> {
+class OnlineBankingPLComponentProvider :
+    PaymentComponentProvider<OnlineBankingPLComponent, OnlineBankingPLConfiguration> {
     override fun get(
         savedStateRegistryOwner: SavedStateRegistryOwner,
         viewModelStoreOwner: ViewModelStoreOwner,

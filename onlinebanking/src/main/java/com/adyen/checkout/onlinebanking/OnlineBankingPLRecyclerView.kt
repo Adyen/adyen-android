@@ -13,7 +13,7 @@ import android.util.AttributeSet
 import com.adyen.checkout.components.model.payments.request.OnlineBankingPLPaymentMethods
 import com.adyen.checkout.issuerlist.IssuerListRecyclerView
 
-class OnlineBankingPLRecyclerView : IssuerListRecyclerView<OnlineBankingPLPaymentMethods,OnlineBankingPLComponent> {
+class OnlineBankingPLRecyclerView : IssuerListRecyclerView<OnlineBankingPLPaymentMethods, OnlineBankingPLComponent> {
     constructor(context: Context) : super(context)
     constructor(context: Context, attrs: AttributeSet?) : super(context, attrs)
     constructor(context: Context, attrs: AttributeSet?, defStyleAttr: Int) : super(context, attrs, defStyleAttr)
