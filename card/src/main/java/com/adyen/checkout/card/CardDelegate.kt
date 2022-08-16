@@ -30,8 +30,6 @@ interface CardDelegate : PaymentMethodDelegate<CardConfiguration, CardInputData,
 
     fun isInstallmentsRequired(cardOutputData: CardOutputData): Boolean
 
-    fun isHolderNameRequired(): Boolean
-
     fun showStorePaymentField(): Boolean
 
     @StringRes fun getKcpBirthDateOrTaxNumberHint(input: String): Int

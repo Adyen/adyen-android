@@ -436,6 +436,7 @@ internal class DefaultCardDelegateTest {
                     isStoredPaymentMethodEnable = true,
                     cvcUIState = InputFieldUIState.HIDDEN,
                     expiryDateUIState = InputFieldUIState.REQUIRED,
+                    holderNameUIState = InputFieldUIState.REQUIRED,
                     detectedCardTypes = expectedDetectedCardTypes,
                     isSocialSecurityNumberRequired = true,
                     isKCPAuthRequired = true,
@@ -741,6 +742,7 @@ internal class DefaultCardDelegateTest {
         expiryDateUIState: InputFieldUIState = InputFieldUIState.REQUIRED,
         detectedCardTypes: List<DetectedCardType> =
             detectCardTypeRepository.getDetectedCardTypesLocal(listOf(CardType.VISA)),
+        holderNameUIState: InputFieldUIState = InputFieldUIState.HIDDEN,
         isSocialSecurityNumberRequired: Boolean = false,
         isKCPAuthRequired: Boolean = false,
         addressUIState: AddressFormUIState = AddressFormUIState.NONE,
@@ -762,6 +764,7 @@ internal class DefaultCardDelegateTest {
             isStoredPaymentMethodEnable = isStoredPaymentMethodEnable,
             cvcUIState = cvcUIState,
             expiryDateUIState = expiryDateUIState,
+            holderNameUIState = holderNameUIState,
             detectedCardTypes = detectedCardTypes,
             isSocialSecurityNumberRequired = isSocialSecurityNumberRequired,
             isKCPAuthRequired = isKCPAuthRequired,

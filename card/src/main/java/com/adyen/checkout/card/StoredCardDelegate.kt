@@ -214,10 +214,6 @@ class StoredCardDelegate(
         return !configuration.isHideCvcStoredCard
     }
 
-    override fun isHolderNameRequired(): Boolean {
-        return false
-    }
-
     override fun showStorePaymentField(): Boolean {
         return configuration.isStorePaymentFieldVisible
     }
@@ -338,6 +334,7 @@ class StoredCardDelegate(
             isStoredPaymentMethodEnable = isStorePaymentSelected,
             cvcUIState = makeCvcUIState(detectedCardType?.cvcPolicy),
             expiryDateUIState = makeExpiryDateUIState(detectedCardType?.expiryDatePolicy),
+            holderNameUIState = InputFieldUIState.HIDDEN,
             detectedCardTypes = listOfNotNull(detectedCardType),
             isSocialSecurityNumberRequired = false,
             isKCPAuthRequired = false,

@@ -222,6 +222,7 @@ class DefaultCardDelegate(
             isStoredPaymentMethodEnable = inputData.isStorePaymentSelected,
             cvcUIState = makeCvcUIState(selectedOrFirstCardType?.cvcPolicy),
             expiryDateUIState = makeExpiryDateUIState(selectedOrFirstCardType?.expiryDatePolicy),
+            holderNameUIState = getHolderNameUIState(),
             detectedCardTypes = filteredDetectedCardTypes,
             isSocialSecurityNumberRequired = isSocialSecurityNumberRequired(),
             isKCPAuthRequired = isKCPAuthRequired(),
@@ -404,7 +405,12 @@ class DefaultCardDelegate(
         return true
     }
 
-    override fun isHolderNameRequired(): Boolean {
+    private fun getHolderNameUIState(): InputFieldUIState {
+        return if (isHolderNameRequired()) InputFieldUIState.REQUIRED
+        else InputFieldUIState.HIDDEN
+    }
+
+    private fun isHolderNameRequired(): Boolean {
         return configuration.isHolderNameRequired
     }
 
