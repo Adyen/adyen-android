@@ -8,9 +8,9 @@
 
 package com.adyen.checkout.qrcode
 
-import android.os.CountDownTimer
 import com.adyen.checkout.components.model.payments.response.Action
 import com.adyen.checkout.components.model.payments.response.QrCodeAction
+import com.adyen.checkout.components.status.DefaultStatusRepository
 import com.adyen.checkout.components.status.StatusRepository
 import com.adyen.checkout.components.status.api.StatusResponseUtils
 import com.adyen.checkout.components.status.model.StatusResponse
@@ -33,6 +33,7 @@ import java.util.concurrent.TimeUnit
 @Suppress("TooManyFunctions")
 internal class DefaultQRCodeDelegate(
     private val statusRepository: StatusRepository,
+    private val statusCountDownTimer: QRCodeCountDownTimer,
 ) : QRCodeDelegate {
 
     private val _outputDataFlow = MutableStateFlow<QRCodeOutputData?>(null)
@@ -49,30 +50,28 @@ internal class DefaultQRCodeDelegate(
     private val _timerFlow = MutableStateFlow(TimerData(0, 0))
     override val timerFlow: Flow<TimerData> = _timerFlow
 
-    private lateinit var coroutineScope: CoroutineScope
+    private var _coroutineScope: CoroutineScope? = null
+    private val coroutineScope: CoroutineScope get() = requireNotNull(_coroutineScope)
 
     private var statusPollingJob: Job? = null
 
     private var qrCodeData: String? = null
 
-    private var statusCountDownTimer: CountDownTimer = object : CountDownTimer(
-        StatusRepository.MAX_POLLING_DURATION_MILLIS,
-        STATUS_POLLING_INTERVAL_MILLIS
-    ) {
-        override fun onTick(millisUntilFinished: Long) {
-            onTimerTick(millisUntilFinished)
-        }
-
-        override fun onFinish() = Unit
+    init {
+        statusCountDownTimer.attach(
+            DefaultStatusRepository.MAX_POLLING_DURATION_MILLIS,
+            STATUS_POLLING_INTERVAL_MILLIS
+        ) { millisUntilFinished -> onTimerTick(millisUntilFinished) }
     }
 
     private fun onTimerTick(millisUntilFinished: Long) {
-        val progressPercentage = (HUNDRED * millisUntilFinished / StatusRepository.MAX_POLLING_DURATION_MILLIS).toInt()
+        val progressPercentage =
+            (HUNDRED * millisUntilFinished / DefaultStatusRepository.MAX_POLLING_DURATION_MILLIS).toInt()
         _timerFlow.tryEmit(TimerData(millisUntilFinished, progressPercentage))
     }
 
     override fun initialize(coroutineScope: CoroutineScope) {
-        this.coroutineScope = coroutineScope
+        _coroutineScope = coroutineScope
     }
 
     override fun handleAction(action: QrCodeAction, paymentData: String) {
@@ -144,6 +143,7 @@ internal class DefaultQRCodeDelegate(
         statusPollingJob?.cancel()
         statusPollingJob = null
         statusCountDownTimer.cancel()
+        _coroutineScope = null
     }
 
     companion object {

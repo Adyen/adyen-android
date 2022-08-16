@@ -43,13 +43,14 @@ class QRCodeComponentProvider : ActionComponentProvider<QRCodeComponent, QRCodeC
         val redirectDelegate = RedirectDelegate()
         val statusService = StatusService(configuration.environment.baseUrl)
         val statusRepository = DefaultStatusRepository(statusService, configuration.clientKey)
+        val countDownTimer = QRCodeCountDownTimer()
         val qrCodeFactory = viewModelFactory(savedStateRegistryOwner, defaultArgs) { savedStateHandle ->
             QRCodeComponent(
                 savedStateHandle = savedStateHandle,
                 application = application,
                 configuration = configuration,
                 redirectDelegate = redirectDelegate,
-                qrCodeDelegate = DefaultQRCodeDelegate(statusRepository),
+                qrCodeDelegate = DefaultQRCodeDelegate(statusRepository, countDownTimer),
             )
         }
         return ViewModelProvider(viewModelStoreOwner, qrCodeFactory).get(QRCodeComponent::class.java)
