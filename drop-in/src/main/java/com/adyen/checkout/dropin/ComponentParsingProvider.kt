@@ -143,9 +143,6 @@ internal fun <T : Configuration> getDefaultConfigForPaymentMethod(
         PaymentMethodTypes.BCMC -> BcmcConfiguration.Builder(shopperLocale, environment, clientKey)
         PaymentMethodTypes.BLIK -> BlikConfiguration.Builder(shopperLocale, environment, clientKey)
         PaymentMethodTypes.DOTPAY -> DotpayConfiguration.Builder(shopperLocale, environment, clientKey)
-        PaymentMethodTypes.ONLINE_BANKING_PL -> OnlineBankingPLConfiguration.Builder(
-            shopperLocale, environment, clientKey
-        )
         PaymentMethodTypes.ENTERCASH -> EntercashConfiguration.Builder(shopperLocale, environment, clientKey)
         PaymentMethodTypes.EPS -> EPSConfiguration.Builder(shopperLocale, environment, clientKey)
         PaymentMethodTypes.GIFTCARD -> GiftCardConfiguration.Builder(shopperLocale, environment, clientKey)
@@ -156,6 +153,9 @@ internal fun <T : Configuration> getDefaultConfigForPaymentMethod(
         PaymentMethodTypes.MOLPAY_THAILAND,
         PaymentMethodTypes.MOLPAY_MALAYSIA,
         PaymentMethodTypes.MOLPAY_VIETNAM -> MolpayConfiguration.Builder(shopperLocale, environment, clientKey)
+        PaymentMethodTypes.ONLINE_BANKING_PL -> OnlineBankingPLConfiguration.Builder(
+            shopperLocale, environment, clientKey
+        )
         PaymentMethodTypes.OPEN_BANKING -> OpenBankingConfiguration.Builder(shopperLocale, environment, clientKey)
         PaymentMethodTypes.SEPA -> SepaConfiguration.Builder(shopperLocale, environment, clientKey)
         PaymentMethodTypes.SCHEME -> CardConfiguration.Builder(shopperLocale, environment, clientKey)
@@ -317,11 +317,6 @@ internal fun getComponentFor(
                 getConfigurationForPaymentMethod(PaymentMethodTypes.DOTPAY, dropInConfiguration, amount)
             DotpayComponent.PROVIDER.get(fragment, paymentMethod, dotpayConfig)
         }
-        PaymentMethodTypes.ONLINE_BANKING_PL -> {
-            val onlineBankingPLConfig: OnlineBankingPLConfiguration =
-                getConfigurationForPaymentMethod(PaymentMethodTypes.ONLINE_BANKING_PL, dropInConfiguration, amount)
-            OnlineBankingPLComponent.PROVIDER.get(fragment, paymentMethod, onlineBankingPLConfig)
-        }
         PaymentMethodTypes.ENTERCASH -> {
             val entercashConfig: EntercashConfiguration =
                 getConfigurationForPaymentMethod(PaymentMethodTypes.ENTERCASH, dropInConfiguration, amount)
@@ -375,6 +370,11 @@ internal fun getComponentFor(
                 getConfigurationForPaymentMethod(PaymentMethodTypes.MOLPAY_VIETNAM, dropInConfiguration, amount)
             MolpayComponent.PROVIDER.get(fragment, paymentMethod, molpayConfig)
         }
+        PaymentMethodTypes.ONLINE_BANKING_PL -> {
+            val onlineBankingPLConfig: OnlineBankingPLConfiguration =
+                getConfigurationForPaymentMethod(PaymentMethodTypes.ONLINE_BANKING_PL, dropInConfiguration, amount)
+            OnlineBankingPLComponent.PROVIDER.get(fragment, paymentMethod, onlineBankingPLConfig)
+        }
         PaymentMethodTypes.OPEN_BANKING -> {
             val openBankingConfig: OpenBankingConfiguration =
                 getConfigurationForPaymentMethod(PaymentMethodTypes.OPEN_BANKING, dropInConfiguration, amount)
@@ -414,7 +414,6 @@ internal fun getViewFor(
     return when (paymentType) {
         PaymentMethodTypes.BCMC -> BcmcView(context)
         PaymentMethodTypes.DOTPAY -> DotpayRecyclerView(context)
-        PaymentMethodTypes.ONLINE_BANKING_PL -> OnlineBankingPLRecyclerView(context)
         PaymentMethodTypes.ENTERCASH -> EntercashRecyclerView(context)
         PaymentMethodTypes.EPS -> EPSRecyclerView(context)
         PaymentMethodTypes.GIFTCARD -> GiftCardView(context)
@@ -423,6 +422,7 @@ internal fun getViewFor(
         PaymentMethodTypes.MOLPAY_THAILAND,
         PaymentMethodTypes.MOLPAY_MALAYSIA,
         PaymentMethodTypes.MOLPAY_VIETNAM -> MolpayRecyclerView(context)
+        PaymentMethodTypes.ONLINE_BANKING_PL -> OnlineBankingPLRecyclerView(context)
         PaymentMethodTypes.OPEN_BANKING -> OpenBankingRecyclerView(context)
         PaymentMethodTypes.SCHEME -> CardView(context)
         PaymentMethodTypes.SEPA -> SepaView(context)
@@ -515,7 +515,6 @@ private fun Configuration.toBuilder(): BaseConfigurationBuilder<out Configuratio
         is BlikConfiguration -> BlikConfiguration.Builder(this)
         is CardConfiguration -> CardConfiguration.Builder(this)
         is DotpayConfiguration -> DotpayConfiguration.Builder(this)
-        is OnlineBankingPLConfiguration -> OnlineBankingPLConfiguration.Builder(this)
         is DropInConfiguration -> DropInConfiguration.Builder(this)
         is EntercashConfiguration -> EntercashConfiguration.Builder(this)
         is EPSConfiguration -> EPSConfiguration.Builder(this)
@@ -524,6 +523,7 @@ private fun Configuration.toBuilder(): BaseConfigurationBuilder<out Configuratio
         is IdealConfiguration -> IdealConfiguration.Builder(this)
         is MBWayConfiguration -> MBWayConfiguration.Builder(this)
         is MolpayConfiguration -> MolpayConfiguration.Builder(this)
+        is OnlineBankingPLConfiguration -> OnlineBankingPLConfiguration.Builder(this)
         is OpenBankingConfiguration -> OpenBankingConfiguration.Builder(this)
         is QRCodeConfiguration -> QRCodeConfiguration.Builder(this)
         is RedirectConfiguration -> RedirectConfiguration.Builder(this)
