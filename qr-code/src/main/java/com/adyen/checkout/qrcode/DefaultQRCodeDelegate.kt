@@ -11,7 +11,6 @@ package com.adyen.checkout.qrcode
 import androidx.annotation.VisibleForTesting
 import com.adyen.checkout.components.model.payments.response.Action
 import com.adyen.checkout.components.model.payments.response.QrCodeAction
-import com.adyen.checkout.components.status.DefaultStatusRepository
 import com.adyen.checkout.components.status.StatusRepository
 import com.adyen.checkout.components.status.api.StatusResponseUtils
 import com.adyen.checkout.components.status.model.StatusResponse
@@ -60,7 +59,7 @@ internal class DefaultQRCodeDelegate(
 
     init {
         statusCountDownTimer.attach(
-            millisInFuture = DefaultStatusRepository.MAX_POLLING_DURATION_MILLIS,
+            millisInFuture = statusRepository.getMaxPollingDuration(),
             countDownInterval = STATUS_POLLING_INTERVAL_MILLIS
         ) { millisUntilFinished -> onTimerTick(millisUntilFinished) }
     }
@@ -68,7 +67,7 @@ internal class DefaultQRCodeDelegate(
     @VisibleForTesting
     internal fun onTimerTick(millisUntilFinished: Long) {
         val progressPercentage =
-            (HUNDRED * millisUntilFinished / DefaultStatusRepository.MAX_POLLING_DURATION_MILLIS).toInt()
+            (HUNDRED * millisUntilFinished / statusRepository.getMaxPollingDuration()).toInt()
         _timerFlow.tryEmit(TimerData(millisUntilFinished, progressPercentage))
     }
 
@@ -150,6 +149,7 @@ internal class DefaultQRCodeDelegate(
 
     companion object {
         private val TAG = LogUtil.getTag()
+
         @VisibleForTesting
         internal const val PAYLOAD_DETAILS_KEY = "payload"
         private val STATUS_POLLING_INTERVAL_MILLIS = TimeUnit.SECONDS.toMillis(1L)

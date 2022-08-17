@@ -32,6 +32,8 @@ interface StatusRepository {
     fun poll(paymentData: String): Flow<Result<StatusResponse>>
 
     fun refreshStatus(paymentData: String)
+
+    fun getMaxPollingDuration(): Long
 }
 
 class DefaultStatusRepository constructor(
@@ -85,7 +87,7 @@ class DefaultStatusRepository constructor(
                 delay = POLLING_DELAY_FAST
                 true
             }
-            elapsedTime <= MAX_POLLING_DURATION_MILLIS -> {
+            elapsedTime <= getMaxPollingDuration() -> {
                 delay = POLLING_DELAY_SLOW
                 true
             }
@@ -97,8 +99,10 @@ class DefaultStatusRepository constructor(
         refreshFlow.tryEmit(paymentData)
     }
 
+    override fun getMaxPollingDuration(): Long = MAX_POLLING_DURATION_MILLIS
+
     companion object {
-        val MAX_POLLING_DURATION_MILLIS = TimeUnit.MINUTES.toMillis(15)
+        private val MAX_POLLING_DURATION_MILLIS = TimeUnit.MINUTES.toMillis(15)
         private val POLLING_DELAY_FAST = TimeUnit.SECONDS.toMillis(2)
         private val POLLING_DELAY_SLOW = TimeUnit.SECONDS.toMillis(10)
         private val POLLING_THRESHOLD = TimeUnit.SECONDS.toMillis(60)
