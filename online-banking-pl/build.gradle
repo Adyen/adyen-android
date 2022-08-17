@@ -11,9 +11,9 @@ plugins {
     id 'kotlin-android'
 }
 
-ext.mavenArtifactId = "onlinebanking"
-ext.mavenArtifactName = "Adyen checkout Online Banking"
-ext.mavenArtifactDescription = "Adyen checkout Online Banking component client for Adyen's Checkout API."
+ext.mavenArtifactId = "online-banking-pl"
+ext.mavenArtifactName = "Adyen checkout Online Banking Poland"
+ext.mavenArtifactDescription = "Adyen checkout Online Banking Poland component client for Adyen's Checkout API."
 
 apply from: "${rootDir}/config/gradle/sharedTasks.gradle"
 

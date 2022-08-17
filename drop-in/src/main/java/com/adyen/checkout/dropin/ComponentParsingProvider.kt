@@ -79,9 +79,9 @@ import com.adyen.checkout.mbway.MBWayView
 import com.adyen.checkout.molpay.MolpayComponent
 import com.adyen.checkout.molpay.MolpayConfiguration
 import com.adyen.checkout.molpay.MolpayRecyclerView
-import com.adyen.checkout.onlinebanking.OnlineBankingPLComponent
-import com.adyen.checkout.onlinebanking.OnlineBankingPLConfiguration
-import com.adyen.checkout.onlinebanking.OnlineBankingPLRecyclerView
+import com.adyen.checkout.onlinebankingpl.OnlineBankingPLComponent
+import com.adyen.checkout.onlinebankingpl.OnlineBankingPLConfiguration
+import com.adyen.checkout.onlinebankingpl.OnlineBankingPLRecyclerView
 import com.adyen.checkout.openbanking.OpenBankingComponent
 import com.adyen.checkout.openbanking.OpenBankingConfiguration
 import com.adyen.checkout.openbanking.OpenBankingRecyclerView

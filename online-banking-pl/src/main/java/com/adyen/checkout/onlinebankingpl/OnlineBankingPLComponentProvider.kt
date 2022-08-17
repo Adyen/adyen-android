@@ -6,7 +6,7 @@
  * Created by atef on 10/8/2022.
  */
 
-package com.adyen.checkout.onlinebanking
+package com.adyen.checkout.onlinebankingpl
 
 import android.os.Bundle
 import androidx.lifecycle.ViewModelProvider
