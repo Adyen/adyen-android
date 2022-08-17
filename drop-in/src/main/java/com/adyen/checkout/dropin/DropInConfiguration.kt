@@ -271,6 +271,9 @@ class DropInConfiguration : Configuration, Parcelable {
             return this
         }
 
+        /**
+         * Add configuration for Online Banking Poland payment method.
+         */
         fun addOnlineBankingPLConfiguration(onlineBankingPLConfiguration: OnlineBankingPLConfiguration): Builder {
             availablePaymentConfigs[PaymentMethodTypes.ONLINE_BANKING_PL] = onlineBankingPLConfiguration
             return this
