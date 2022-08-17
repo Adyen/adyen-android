@@ -71,7 +71,8 @@ class ExampleAsyncDropInService : DropInService() {
                 merchantAccount = keyValueStorage.getMerchantAccount(),
                 redirectUrl = RedirectComponent.getReturnUrl(applicationContext),
                 isThreeds2Enabled = keyValueStorage.isThreeds2Enable(),
-                isExecuteThreeD = keyValueStorage.isExecuteThreeD()
+                isExecuteThreeD = keyValueStorage.isExecuteThreeD(),
+                shopperEmail = keyValueStorage.getShopperEmail()
             )
 
             Logger.v(TAG, "paymentComponentJson - ${paymentComponentJson.toStringPretty()}")

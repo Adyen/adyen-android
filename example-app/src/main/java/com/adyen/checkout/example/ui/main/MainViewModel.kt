@@ -115,6 +115,7 @@ internal class MainViewModel @Inject constructor(
             isThreeds2Enabled = keyValueStorage.isThreeds2Enable(),
             redirectUrl = savedStateHandle.get<String>(RETURN_URL_EXTRA)
                 ?: throw IllegalStateException("Return url should be set"),
+            shopperEmail = keyValueStorage.getShopperEmail()
         )
     )
 
