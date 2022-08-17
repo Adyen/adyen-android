@@ -30,6 +30,8 @@ import com.adyen.checkout.core.log.LogUtil
 import com.adyen.checkout.core.log.Logger
 import com.adyen.checkout.redirect.RedirectDelegate
 import kotlinx.coroutines.flow.filterNotNull
+import kotlinx.coroutines.flow.launchIn
+import kotlinx.coroutines.flow.onEach
 
 class QRCodeComponent(
     savedStateHandle: SavedStateHandle,
@@ -46,6 +48,15 @@ class QRCodeComponent(
 
     init {
         qrCodeDelegate.initialize(viewModelScope)
+
+        qrCodeDelegate.detailsFlow
+            .filterNotNull()
+            .onEach { notifyDetails(it) }
+            .launchIn(viewModelScope)
+
+        qrCodeDelegate.exceptionFlow
+            .onEach { notifyException(it) }
+            .launchIn(viewModelScope)
     }
 
     override fun canHandleAction(action: Action): Boolean {
