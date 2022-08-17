@@ -59,7 +59,8 @@ fun getSessionRequest(
     isThreeds2Enabled: Boolean,
     isExecuteThreeD: Boolean,
     force3DS2Challenge: Boolean = true,
-    threeDSAuthenticationOnly: Boolean = false
+    threeDSAuthenticationOnly: Boolean = false,
+    shopperEmail: String? = null
 ): SessionRequest {
     return SessionRequest(
         merchantAccount = merchantAccount,
@@ -76,7 +77,8 @@ fun getSessionRequest(
         lineItems = LINE_ITEMS,
         threeDSAuthenticationOnly = threeDSAuthenticationOnly,
         // TODO check if this should be kept or removed
-        threeDS2RequestData = null // if (force3DS2Challenge) ThreeDS2RequestDataRequest() else null
+        threeDS2RequestData = null, // if (force3DS2Challenge) ThreeDS2RequestDataRequest() else null
+        shopperEmail = shopperEmail
     )
 }
 
