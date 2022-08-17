@@ -17,13 +17,13 @@ import java.util.Locale
 
 class OnlineBankingPLConfiguration : IssuerListConfiguration {
 
-    internal constructor(
+    private constructor(
         shopperLocale: Locale,
         environment: Environment,
         clientKey: String,
     ) : super(shopperLocale, environment, clientKey)
 
-    internal constructor(parcel: Parcel) : super(parcel)
+    private constructor(parcel: Parcel) : super(parcel)
 
     class Builder : IssuerListBuilder<OnlineBankingPLConfiguration> {
         /**
