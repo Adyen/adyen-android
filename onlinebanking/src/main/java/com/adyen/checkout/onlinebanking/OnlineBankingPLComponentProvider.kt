@@ -16,7 +16,7 @@ import com.adyen.checkout.components.PaymentComponentProvider
 import com.adyen.checkout.components.base.GenericPaymentMethodDelegate
 import com.adyen.checkout.components.base.lifecycle.viewModelFactory
 import com.adyen.checkout.components.model.paymentmethods.PaymentMethod
-import com.adyen.checkout.components.model.payments.request.OnlineBankingPLPaymentMethods
+import com.adyen.checkout.components.model.payments.request.OnlineBankingPLPaymentMethod
 import com.adyen.checkout.issuerlist.DefaultIssuerListDelegate
 
 class OnlineBankingPLComponentProvider :
@@ -30,7 +30,7 @@ class OnlineBankingPLComponentProvider :
     ): OnlineBankingPLComponent {
         val genericFactory: ViewModelProvider.Factory =
             viewModelFactory(savedStateRegistryOwner, defaultArgs) { savedStateHandle ->
-                val delegate = DefaultIssuerListDelegate(paymentMethod) { OnlineBankingPLPaymentMethods() }
+                val delegate = DefaultIssuerListDelegate(paymentMethod) { OnlineBankingPLPaymentMethod() }
                 OnlineBankingPLComponent(
                     savedStateHandle,
                     GenericPaymentMethodDelegate(paymentMethod),

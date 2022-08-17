@@ -16,7 +16,7 @@ import com.adyen.checkout.core.model.getStringOrNull
 import org.json.JSONException
 import org.json.JSONObject
 
-class OnlineBankingPLPaymentMethods(
+class OnlineBankingPLPaymentMethod(
     override var type: String? = null,
     override var issuer: String? = null,
 ) : IssuerListPaymentMethod() {
@@ -29,23 +29,23 @@ class OnlineBankingPLPaymentMethods(
         const val PAYMENT_METHOD_TYPE = PaymentMethodTypes.ONLINE_BANKING_PL
 
         @JvmField
-        val CREATOR = Creator(OnlineBankingPLPaymentMethods::class.java)
+        val CREATOR = Creator(OnlineBankingPLPaymentMethod::class.java)
 
         @JvmField
-        val SERIALIZER: Serializer<OnlineBankingPLPaymentMethods> = object : Serializer<OnlineBankingPLPaymentMethods> {
-            override fun serialize(modelObject: OnlineBankingPLPaymentMethods): JSONObject {
+        val SERIALIZER: Serializer<OnlineBankingPLPaymentMethod> = object : Serializer<OnlineBankingPLPaymentMethod> {
+            override fun serialize(modelObject: OnlineBankingPLPaymentMethod): JSONObject {
                 return try {
                     JSONObject().apply {
                         putOpt(TYPE, modelObject.type)
                         putOpt(ISSUER, modelObject.issuer)
                     }
                 } catch (e: JSONException) {
-                    throw ModelSerializationException(OnlineBankingPLPaymentMethods::class.java, e)
+                    throw ModelSerializationException(OnlineBankingPLPaymentMethod::class.java, e)
                 }
             }
 
-            override fun deserialize(jsonObject: JSONObject): OnlineBankingPLPaymentMethods {
-                return OnlineBankingPLPaymentMethods(
+            override fun deserialize(jsonObject: JSONObject): OnlineBankingPLPaymentMethod {
+                return OnlineBankingPLPaymentMethod(
                     type = jsonObject.getStringOrNull(TYPE),
                     issuer = jsonObject.getStringOrNull(ISSUER)
                 )

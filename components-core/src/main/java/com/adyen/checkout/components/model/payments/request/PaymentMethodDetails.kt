@@ -60,7 +60,7 @@ abstract class PaymentMethodDetails : ModelObject() {
                 PaymentMethodTypes.MOLPAY_THAILAND,
                 PaymentMethodTypes.MOLPAY_VIETNAM -> MolpayPaymentMethod.SERIALIZER
                 DotpayPaymentMethod.PAYMENT_METHOD_TYPE -> DotpayPaymentMethod.SERIALIZER
-                OnlineBankingPLPaymentMethods.PAYMENT_METHOD_TYPE -> OnlineBankingPLPaymentMethods.SERIALIZER
+                OnlineBankingPLPaymentMethod.PAYMENT_METHOD_TYPE -> OnlineBankingPLPaymentMethod.SERIALIZER
                 EPSPaymentMethod.PAYMENT_METHOD_TYPE -> EPSPaymentMethod.SERIALIZER
                 OpenBankingPaymentMethod.PAYMENT_METHOD_TYPE -> OpenBankingPaymentMethod.SERIALIZER
                 EntercashPaymentMethod.PAYMENT_METHOD_TYPE -> EntercashPaymentMethod.SERIALIZER

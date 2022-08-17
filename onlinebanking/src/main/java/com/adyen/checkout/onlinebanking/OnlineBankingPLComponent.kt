@@ -11,7 +11,7 @@ package com.adyen.checkout.onlinebanking
 import androidx.lifecycle.SavedStateHandle
 import com.adyen.checkout.components.PaymentComponentProvider
 import com.adyen.checkout.components.base.GenericPaymentMethodDelegate
-import com.adyen.checkout.components.model.payments.request.OnlineBankingPLPaymentMethods
+import com.adyen.checkout.components.model.payments.request.OnlineBankingPLPaymentMethod
 import com.adyen.checkout.components.util.PaymentMethodTypes
 import com.adyen.checkout.issuerlist.IssuerListComponent
 import com.adyen.checkout.issuerlist.IssuerListDelegate
@@ -19,9 +19,9 @@ import com.adyen.checkout.issuerlist.IssuerListDelegate
 class OnlineBankingPLComponent(
     savedStateHandle: SavedStateHandle,
     paymentMethodDelegate: GenericPaymentMethodDelegate,
-    issuerListDelegate: IssuerListDelegate<OnlineBankingPLPaymentMethods>,
+    issuerListDelegate: IssuerListDelegate<OnlineBankingPLPaymentMethod>,
     configuration: OnlineBankingPLConfiguration
-) : IssuerListComponent<OnlineBankingPLPaymentMethods>(
+) : IssuerListComponent<OnlineBankingPLPaymentMethod>(
     savedStateHandle,
     paymentMethodDelegate,
     issuerListDelegate,

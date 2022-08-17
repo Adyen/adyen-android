@@ -10,11 +10,11 @@ package com.adyen.checkout.onlinebanking
 
 import android.content.Context
 import android.util.AttributeSet
-import com.adyen.checkout.components.model.payments.request.OnlineBankingPLPaymentMethods
+import com.adyen.checkout.components.model.payments.request.OnlineBankingPLPaymentMethod
 import com.adyen.checkout.issuerlist.IssuerListRecyclerView
 
 class OnlineBankingPLRecyclerView @JvmOverloads constructor(
     context: Context,
     attrs: AttributeSet? = null,
     defStyleAttr: Int = 0
-) : IssuerListRecyclerView<OnlineBankingPLPaymentMethods, OnlineBankingPLComponent>(context, attrs, defStyleAttr)
+) : IssuerListRecyclerView<OnlineBankingPLPaymentMethod, OnlineBankingPLComponent>(context, attrs, defStyleAttr)
