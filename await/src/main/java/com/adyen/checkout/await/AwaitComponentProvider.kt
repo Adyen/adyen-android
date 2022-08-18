@@ -44,12 +44,15 @@ class AwaitComponentProvider : ActionComponentProvider<AwaitComponent, AwaitConf
         defaultArgs: Bundle?
     ): AwaitComponent {
         val statusService = StatusService(configuration.environment.baseUrl)
+        val statusRepository = DefaultStatusRepository(statusService, configuration.clientKey)
+        val awaitDelegate = DefaultAwaitDelegate(statusRepository)
+
         val awaitFactory = viewModelFactory(savedStateRegistryOwner, defaultArgs) { savedStateHandle ->
             AwaitComponent(
                 savedStateHandle,
                 application,
                 configuration,
-                DefaultStatusRepository(statusService, configuration.clientKey)
+                awaitDelegate,
             )
         }
         return ViewModelProvider(viewModelStoreOwner, awaitFactory).get(AwaitComponent::class.java)
