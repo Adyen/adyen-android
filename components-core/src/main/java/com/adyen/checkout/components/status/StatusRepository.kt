@@ -27,16 +27,25 @@ import kotlinx.coroutines.isActive
 import kotlinx.coroutines.withContext
 import java.util.concurrent.TimeUnit
 
-class StatusRepository constructor(
+interface StatusRepository {
+
+    fun poll(paymentData: String): Flow<Result<StatusResponse>>
+
+    fun refreshStatus(paymentData: String)
+
+    fun getMaxPollingDuration(): Long
+}
+
+class DefaultStatusRepository constructor(
     private val statusService: StatusService,
     private val clientKey: String,
-) {
+) : StatusRepository {
 
     private var delay: Long = 0
 
     private val refreshFlow = MutableSharedFlow<String>(0, 1, BufferOverflow.DROP_OLDEST)
 
-    fun poll(paymentData: String): Flow<Result<StatusResponse>> {
+    override fun poll(paymentData: String): Flow<Result<StatusResponse>> {
         val startTime = System.currentTimeMillis()
 
         val pollingFlow = flow {
@@ -78,7 +87,7 @@ class StatusRepository constructor(
                 delay = POLLING_DELAY_FAST
                 true
             }
-            elapsedTime <= MAX_POLLING_DURATION_MILLIS -> {
+            elapsedTime <= getMaxPollingDuration() -> {
                 delay = POLLING_DELAY_SLOW
                 true
             }
@@ -86,12 +95,14 @@ class StatusRepository constructor(
         }
     }
 
-    fun refreshStatus(paymentData: String) {
+    override fun refreshStatus(paymentData: String) {
         refreshFlow.tryEmit(paymentData)
     }
 
+    override fun getMaxPollingDuration(): Long = MAX_POLLING_DURATION_MILLIS
+
     companion object {
-        val MAX_POLLING_DURATION_MILLIS = TimeUnit.MINUTES.toMillis(15)
+        private val MAX_POLLING_DURATION_MILLIS = TimeUnit.MINUTES.toMillis(15)
         private val POLLING_DELAY_FAST = TimeUnit.SECONDS.toMillis(2)
         private val POLLING_DELAY_SLOW = TimeUnit.SECONDS.toMillis(10)
         private val POLLING_THRESHOLD = TimeUnit.SECONDS.toMillis(60)

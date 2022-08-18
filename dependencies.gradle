@@ -78,7 +78,10 @@ ext {
             browser         : "androidx.browser:browser:$browser_version",
             constraintlayout: "androidx.constraintlayout:constraintlayout:$constraintlayout_version",
             fragment        : "androidx.fragment:fragment-ktx:$fragment_version",
-            lifecycle       : "androidx.lifecycle:lifecycle-runtime-ktx:$lifecycle_version",
+            lifecycle       : [
+                "androidx.lifecycle:lifecycle-runtime-ktx:$lifecycle_version",
+                "androidx.lifecycle:lifecycle-livedata-ktx:$lifecycle_version"
+            ],
             preference      : "androidx.preference:preference-ktx:$preference_version",
             recyclerview    : "androidx.recyclerview:recyclerview:$recyclerview_version"
         ],

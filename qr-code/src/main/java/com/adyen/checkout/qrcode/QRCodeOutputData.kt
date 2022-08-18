@@ -13,4 +13,5 @@ import com.adyen.checkout.components.base.OutputData
 data class QRCodeOutputData(
     override val isValid: Boolean,
     val paymentMethodType: String?,
+    val qrCodeData: String?,
 ) : OutputData

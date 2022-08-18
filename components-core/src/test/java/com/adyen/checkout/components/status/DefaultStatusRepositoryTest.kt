@@ -27,11 +27,11 @@ import org.mockito.kotlin.whenever
 
 @OptIn(ExperimentalCoroutinesApi::class)
 @ExtendWith(MockitoExtension::class, TestDispatcherExtension::class)
-internal class StatusRepositoryTest(
+internal class DefaultStatusRepositoryTest(
     @Mock private val statusService: StatusService
 ) {
 
-    private val statusRepository = StatusRepository(statusService, "someclientkey")
+    private val statusRepository = DefaultStatusRepository(statusService, "someclientkey")
 
     @Test
     fun `when receiving the final result, then it should be emitted and the flow should end`(
