@@ -5,7 +5,7 @@
  *
  * Created by caiof on 1/4/2019.
  */
-package com.adyen.checkout.redirect
+package com.adyen.checkout.redirect.handler
 
 import android.content.ActivityNotFoundException
 import android.content.Context
@@ -23,32 +23,12 @@ import com.adyen.checkout.core.log.Logger
 import org.json.JSONException
 import org.json.JSONObject
 
-object RedirectUtil {
-    private val TAG = LogUtil.getTag()
+internal class DefaultRedirectHandler : RedirectHandler {
 
-    /**
-     * The suggested scheme to be used in the intent filter to receive the redirect result.
-     * This value should be the beginning of the `returnUrl` sent on the payments/ call.
-     */
-    const val REDIRECT_RESULT_SCHEME = BuildConfig.checkoutRedirectScheme + "://"
-
-    private const val PAYLOAD_PARAMETER = "payload"
-    private const val REDIRECT_RESULT_PARAMETER = "redirectResult"
-    private const val PAYMENT_RESULT_PARAMETER = "PaRes"
-    private const val MD_PARAMETER = "MD"
-    private const val QUERY_STRING_RESULT = "returnUrlQueryString"
-
-    /**
-     * A redirect may return to the application using the ReturnUrl when properly setup in an Intent Filter. Is usually contains result information
-     * as parameters on that returnUrl. This method parses those results and returns a [JSONObject] to be used in the details call.
-     *
-     * @param data The returned Uri
-     * @return The parsed value to be passed on the payments/details call, on the details parameter.
-     */
-    @JvmStatic
-    @Throws(CheckoutException::class)
-    fun parseRedirectResult(data: Uri): JSONObject {
+    override fun parseRedirectResult(data: Uri?): JSONObject {
         Logger.d(TAG, "parseRedirectResult - $data")
+
+        data ?: throw CheckoutException("Received a null redirect Uri")
 
         val extractedParams = HashMap<String, String>().apply {
             data.getQueryParameter(PAYLOAD_PARAMETER)?.let { put(PAYLOAD_PARAMETER, it) }
@@ -79,7 +59,9 @@ object RedirectUtil {
     }
 
     @Suppress("ReturnCount")
-    fun launchUriRedirect(context: Context, uri: Uri) {
+    override fun launchUriRedirect(context: Context, url: String?) {
+        if (url.isNullOrEmpty()) throw ComponentException("Redirect URL is empty.")
+        val uri = Uri.parse(url)
         if (launchNative(context, uri)) return
         if (launchWithCustomTabs(context, uri)) return
         if (launchBrowser(context, uri)) return
@@ -181,5 +163,15 @@ object RedirectUtil {
             Logger.d(TAG, "launchBrowser - could not do redirect on browser or there's no browser!", e)
             false
         }
+    }
+
+    companion object {
+        private val TAG = LogUtil.getTag()
+
+        private const val PAYLOAD_PARAMETER = "payload"
+        private const val REDIRECT_RESULT_PARAMETER = "redirectResult"
+        private const val PAYMENT_RESULT_PARAMETER = "PaRes"
+        private const val MD_PARAMETER = "MD"
+        private const val QUERY_STRING_RESULT = "returnUrlQueryString"
     }
 }

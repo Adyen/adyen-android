@@ -72,7 +72,7 @@ import com.adyen.checkout.dropin.ui.viewmodel.DropInViewModelFactory
 import com.adyen.checkout.giftcard.GiftCardComponent
 import com.adyen.checkout.giftcard.GiftCardComponentState
 import com.adyen.checkout.googlepay.GooglePayComponent
-import com.adyen.checkout.redirect.RedirectUtil
+import com.adyen.checkout.redirect.RedirectComponent
 import com.adyen.checkout.sessions.model.Session
 import com.adyen.checkout.wechatpay.WeChatPayUtils
 import kotlinx.coroutines.launch
@@ -573,7 +573,7 @@ class DropInActivity :
             // Redirect response
             Intent.ACTION_VIEW -> {
                 val data = intent.data
-                if (data != null && data.toString().startsWith(RedirectUtil.REDIRECT_RESULT_SCHEME)) {
+                if (data != null && data.toString().startsWith(RedirectComponent.REDIRECT_RESULT_SCHEME)) {
                     actionHandler.handleRedirectResponse(intent)
                 } else {
                     Logger.e(TAG, "Unexpected response from ACTION_VIEW - ${intent.data}")

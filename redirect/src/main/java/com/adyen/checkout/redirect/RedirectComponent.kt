@@ -66,13 +66,19 @@ class RedirectComponent(
         val PROVIDER: ActionComponentProvider<RedirectComponent, RedirectConfiguration> = RedirectComponentProvider()
 
         /**
+         * The suggested scheme to be used in the intent filter to receive the redirect result.
+         * This value should be the beginning of the `returnUrl` sent on the payments/ call.
+         */
+        const val REDIRECT_RESULT_SCHEME = BuildConfig.checkoutRedirectScheme + "://"
+
+        /**
          * Returns the suggested value to be used as the `returnUrl` value in the payments/ call.
          *
          * @param context The context provides the package name which constitutes part of the ReturnUrl
-         * @return The suggested `returnUrl` to be used. Consists of [RedirectUtil.REDIRECT_RESULT_SCHEME] + App package name.
+         * @return The suggested `returnUrl` to be used. Consists of [REDIRECT_RESULT_SCHEME] + App package name.
          */
         fun getReturnUrl(context: Context): String {
-            return RedirectUtil.REDIRECT_RESULT_SCHEME + context.packageName
+            return REDIRECT_RESULT_SCHEME + context.packageName
         }
     }
 }
