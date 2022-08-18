@@ -41,6 +41,7 @@ class CardComponent(
 
         observeOutputData()
         observeComponentState()
+        observeExceptions()
     }
 
     private fun observeOutputData() {
@@ -54,6 +55,12 @@ class CardComponent(
         cardDelegate.componentStateFlow
             .filterNotNull()
             .onEach { notifyStateChanged(it) }
+            .launchIn(viewModelScope)
+    }
+
+    private fun observeExceptions() {
+        cardDelegate.exceptionFlow
+            .onEach { notifyException(it) }
             .launchIn(viewModelScope)
     }
 
