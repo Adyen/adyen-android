@@ -43,4 +43,6 @@ dependencies {
 
     //Tests
     testImplementation testLibraries.junit5
+    testImplementation testLibraries.kotlinCoroutines
+    testImplementation testLibraries.mockito
 }
