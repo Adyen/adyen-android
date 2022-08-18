@@ -13,7 +13,10 @@ import com.adyen.checkout.components.model.paymentmethods.PaymentMethod
 import com.adyen.checkout.issuerlist.utils.TestIssuerPaymentMethod
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.test.runTest
-import org.junit.Assert
+import org.junit.Assert.assertEquals
+import org.junit.Assert.assertFalse
+import org.junit.Assert.assertNull
+import org.junit.Assert.assertTrue
 import org.junit.jupiter.api.DisplayName
 import org.junit.jupiter.api.Nested
 import org.junit.jupiter.api.Test
@@ -22,7 +25,7 @@ import org.mockito.junit.jupiter.MockitoExtension
 
 @OptIn(ExperimentalCoroutinesApi::class)
 @ExtendWith(MockitoExtension::class)
-class DefaultIssuerListDelegateTest {
+internal class DefaultIssuerListDelegateTest {
 
     private val delegate = DefaultIssuerListDelegate(
         paymentMethod = PaymentMethod(),
@@ -37,8 +40,9 @@ class DefaultIssuerListDelegateTest {
         fun `selectedIssuer is null, then output should be null`() = runTest {
             delegate.outputDataFlow.test {
                 delegate.onInputDataChanged(IssuerListInputData(null))
-                val outputData = expectMostRecentItem()
-                Assert.assertNull(outputData?.selectedIssuer)
+                with(requireNotNull(expectMostRecentItem())) {
+                    assertNull(selectedIssuer)
+                }
             }
         }
 
@@ -46,9 +50,10 @@ class DefaultIssuerListDelegateTest {
         fun `selectedIssuer is null, then output should be invalid`() = runTest {
             delegate.outputDataFlow.test {
                 delegate.onInputDataChanged(IssuerListInputData(null))
-                val outputData = expectMostRecentItem()
-                Assert.assertNull(outputData?.selectedIssuer)
-                Assert.assertEquals(false, outputData?.isValid == true)
+                with(requireNotNull(expectMostRecentItem())) {
+                    assertNull(selectedIssuer)
+                    assertFalse(isValid)
+                }
             }
         }
 
@@ -56,10 +61,11 @@ class DefaultIssuerListDelegateTest {
         fun `selectedIssuer is valid, then output should be valid`() = runTest {
             delegate.outputDataFlow.test {
                 delegate.onInputDataChanged(IssuerListInputData(IssuerModel(id = "id", name = "test")))
-                val outputData = expectMostRecentItem()
-                Assert.assertEquals("test", outputData?.selectedIssuer?.name)
-                Assert.assertEquals("id", outputData?.selectedIssuer?.id)
-                Assert.assertEquals(true, outputData?.isValid == true)
+                with(requireNotNull(expectMostRecentItem())) {
+                    assertEquals("test", selectedIssuer?.name)
+                    assertEquals("id", selectedIssuer?.id)
+                    assertTrue(isValid)
+                }
             }
         }
 
@@ -67,9 +73,10 @@ class DefaultIssuerListDelegateTest {
         fun `selectedIssuer is null, then component state should be invalid`() = runTest {
             delegate.componentStateFlow.test {
                 delegate.onInputDataChanged(IssuerListInputData())
-                val componentState = expectMostRecentItem()
-                Assert.assertEquals("", componentState?.data?.paymentMethod?.issuer)
-                Assert.assertEquals(false, componentState?.isValid)
+                with(requireNotNull(expectMostRecentItem())) {
+                    assertEquals("", data.paymentMethod?.issuer)
+                    assertFalse(isValid)
+                }
             }
         }
 
@@ -79,9 +86,10 @@ class DefaultIssuerListDelegateTest {
                 delegate.onInputDataChanged(
                     IssuerListInputData(selectedIssuer = IssuerModel(id = "issuer-id", name = "issuer-name"))
                 )
-                val componentState = expectMostRecentItem()
-                Assert.assertEquals("issuer-id", componentState?.data?.paymentMethod?.issuer)
-                Assert.assertEquals(true, componentState?.isValid)
+                with(requireNotNull(expectMostRecentItem())) {
+                    assertEquals("issuer-id", data.paymentMethod?.issuer)
+                    assertTrue(isValid)
+                }
             }
         }
     }
@@ -94,9 +102,10 @@ class DefaultIssuerListDelegateTest {
         fun `output is invalid, then component state should be invalid`() = runTest {
             delegate.componentStateFlow.test {
                 delegate.createComponentState(IssuerListOutputData(null))
-                val componentState = expectMostRecentItem()
-                Assert.assertEquals(false, componentState?.isInputValid)
-                Assert.assertEquals(false, componentState?.isValid)
+                with(requireNotNull(expectMostRecentItem())) {
+                    assertFalse(isInputValid)
+                    assertFalse(isValid)
+                }
             }
         }
 
@@ -104,10 +113,11 @@ class DefaultIssuerListDelegateTest {
         fun `output is valid, then component state should be valid`() = runTest {
             delegate.componentStateFlow.test {
                 delegate.createComponentState(IssuerListOutputData(IssuerModel(id = "issuer-id", name = "issuer-name")))
-                val componentState = expectMostRecentItem()
-                Assert.assertEquals("issuer-id", componentState?.data?.paymentMethod?.issuer)
-                Assert.assertEquals(true, componentState?.isInputValid)
-                Assert.assertEquals(true, componentState?.isValid)
+                with(requireNotNull(expectMostRecentItem())) {
+                    assertEquals("issuer-id", data.paymentMethod?.issuer)
+                    assertTrue(isInputValid)
+                    assertTrue(isValid)
+                }
             }
         }
     }

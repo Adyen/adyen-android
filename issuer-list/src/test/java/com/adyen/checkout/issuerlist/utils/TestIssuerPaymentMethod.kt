@@ -11,7 +11,7 @@ package com.adyen.checkout.issuerlist.utils
 import android.os.Parcel
 import com.adyen.checkout.components.model.payments.request.IssuerListPaymentMethod
 
-class TestIssuerPaymentMethod(
+internal class TestIssuerPaymentMethod(
     override var issuer: String? = "issuer", override var type: String? = "type"
 ) : IssuerListPaymentMethod() {
 
