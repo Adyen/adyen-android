@@ -67,7 +67,7 @@ class QRCodeView :
     }
 
     private fun copyCode() {
-        val code = component.getCodeString() ?: return
+        val code = component.outputData?.qrCodeData ?: return
         context.copyTextToClipboard(
             "Pix Code",
             code,

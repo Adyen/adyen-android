@@ -9,7 +9,6 @@
 package com.adyen.checkout.qrcode
 
 import androidx.annotation.VisibleForTesting
-import com.adyen.checkout.components.model.payments.response.Action
 import com.adyen.checkout.components.model.payments.response.QrCodeAction
 import com.adyen.checkout.components.status.StatusRepository
 import com.adyen.checkout.components.status.api.StatusResponseUtils
@@ -55,8 +54,6 @@ internal class DefaultQRCodeDelegate(
 
     private var statusPollingJob: Job? = null
 
-    private var qrCodeData: String? = null
-
     init {
         statusCountDownTimer.attach(
             millisInFuture = statusRepository.getMaxPollingDuration(),
@@ -76,8 +73,6 @@ internal class DefaultQRCodeDelegate(
     }
 
     override fun handleAction(action: QrCodeAction, paymentData: String) {
-        qrCodeData = action.qrCodeData
-
         // Notify UI to get the logo.
         createOutputData(null, action)
 
@@ -85,14 +80,14 @@ internal class DefaultQRCodeDelegate(
         statusCountDownTimer.start()
     }
 
-    private fun startStatusPolling(paymentData: String, action: Action) {
+    private fun startStatusPolling(paymentData: String, action: QrCodeAction) {
         statusPollingJob?.cancel()
         statusPollingJob = statusRepository.poll(paymentData)
             .onEach { onStatus(it, action) }
             .launchIn(coroutineScope)
     }
 
-    private fun onStatus(result: Result<StatusResponse>, action: Action) {
+    private fun onStatus(result: Result<StatusResponse>, action: QrCodeAction) {
         result.fold(
             onSuccess = { response ->
                 Logger.v(TAG, "Status changed - ${response.resultCode}")
@@ -108,9 +103,9 @@ internal class DefaultQRCodeDelegate(
         )
     }
 
-    private fun createOutputData(statusResponse: StatusResponse?, action: Action) {
+    private fun createOutputData(statusResponse: StatusResponse?, action: QrCodeAction) {
         val isValid = statusResponse != null && StatusResponseUtils.isFinalResult(statusResponse)
-        val outputData = QRCodeOutputData(isValid, action.paymentMethodType)
+        val outputData = QRCodeOutputData(isValid, action.paymentMethodType, action.qrCodeData)
         _outputDataFlow.tryEmit(outputData)
     }
 
@@ -137,8 +132,6 @@ internal class DefaultQRCodeDelegate(
     override fun refreshStatus(paymentData: String) {
         statusRepository.refreshStatus(paymentData)
     }
-
-    override fun getCodeString(): String? = qrCodeData
 
     override fun onCleared() {
         statusPollingJob?.cancel()

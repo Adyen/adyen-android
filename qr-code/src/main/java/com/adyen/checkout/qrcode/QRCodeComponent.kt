@@ -118,8 +118,6 @@ class QRCodeComponent(
 
     override fun sendAnalyticsEvent(context: Context) = Unit
 
-    fun getCodeString(): String? = qrCodeDelegate.getCodeString()
-
     override fun onCleared() {
         super.onCleared()
         Logger.d(TAG, "onCleared")

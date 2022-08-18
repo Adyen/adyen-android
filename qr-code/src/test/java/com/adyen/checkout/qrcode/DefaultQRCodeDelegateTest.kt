@@ -69,18 +69,20 @@ internal class DefaultQRCodeDelegateTest(
         delegate.initialize(CoroutineScope(UnconfinedTestDispatcher()))
 
         delegate.outputDataFlow.test {
-            delegate.handleAction(QrCodeAction(paymentMethodType = "test"), "paymentData")
+            delegate.handleAction(QrCodeAction(paymentMethodType = "test", qrCodeData = "qrData"), "paymentData")
 
             skipItems(1)
 
             with(requireNotNull(awaitItem())) {
                 assertFalse(isValid)
                 assertEquals("test", paymentMethodType)
+                assertEquals("qrData", qrCodeData)
             }
 
             with(requireNotNull(awaitItem())) {
                 assertTrue(isValid)
                 assertEquals("test", paymentMethodType)
+                assertEquals("qrData", qrCodeData)
             }
 
             cancelAndIgnoreRemainingEvents()

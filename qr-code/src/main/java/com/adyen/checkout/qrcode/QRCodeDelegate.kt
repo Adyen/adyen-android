@@ -32,7 +32,5 @@ interface QRCodeDelegate {
 
     fun refreshStatus(paymentData: String)
 
-    fun getCodeString(): String?
-
     fun onCleared()
 }
