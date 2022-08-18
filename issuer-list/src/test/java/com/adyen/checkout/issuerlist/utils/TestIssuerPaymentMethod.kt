@@ -16,5 +16,6 @@ class TestIssuerPaymentMethod(
 ) : IssuerListPaymentMethod() {
 
     override fun writeToParcel(p0: Parcel?, p1: Int) {
+        //mo need for implementation
     }
 }
