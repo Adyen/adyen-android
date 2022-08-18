@@ -34,7 +34,7 @@ class RedirectComponentProvider : ActionComponentProvider<RedirectComponent, Red
         configuration: RedirectConfiguration,
         defaultArgs: Bundle?
     ): RedirectComponent {
-        val redirectDelegate = RedirectDelegate()
+        val redirectDelegate = DefaultRedirectDelegate()
         val redirectFactory = viewModelFactory(savedStateRegistryOwner, defaultArgs) { savedStateHandle ->
             RedirectComponent(
                 savedStateHandle,

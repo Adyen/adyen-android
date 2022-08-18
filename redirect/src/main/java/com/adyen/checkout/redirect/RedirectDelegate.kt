@@ -1,51 +1,27 @@
+/*
+ * Copyright (c) 2022 Adyen N.V.
+ *
+ * This file is open source and available under the MIT license. See the LICENSE file for more info.
+ *
+ * Created by josephj on 18/8/2022.
+ */
+
 package com.adyen.checkout.redirect
 
 import android.app.Activity
-import android.net.Uri
+import android.content.Intent
 import com.adyen.checkout.components.model.payments.response.RedirectAction
-import com.adyen.checkout.core.exception.ComponentException
-import com.adyen.checkout.core.log.LogUtil
-import com.adyen.checkout.core.log.Logger
+import com.adyen.checkout.core.exception.CheckoutException
+import kotlinx.coroutines.flow.Flow
 import org.json.JSONObject
 
-private val TAG = LogUtil.getTag()
+interface RedirectDelegate {
 
-class RedirectDelegate {
+    val detailsFlow: Flow<JSONObject>
 
-    /**
-     * Make a redirect from the provided Activity to the target of the Redirect object.
-     *
-     * @param activity The Activity starting the redirect.
-     * @param redirectAction The object from the server response defining where to redirect to.
-     */
-    fun makeRedirect(activity: Activity, redirectAction: RedirectAction) {
-        makeRedirect(activity, redirectAction.url)
-    }
+    val exceptionFlow: Flow<CheckoutException>
 
-    /**
-     * Make a redirect from the provided Activity to the specified URL.
-     *
-     * @param activity The Activity starting the redirect.
-     * @param url The URL to redirect to.
-     */
-    fun makeRedirect(activity: Activity, url: String?) {
-        Logger.d(TAG, "makeRedirect - $url")
-        if (!url.isNullOrEmpty()) {
-            val redirectUri = Uri.parse(url)
-            RedirectUtil.launchUriRedirect(activity, redirectUri)
-        } else {
-            throw ComponentException("Redirect URL is empty.")
-        }
-    }
+    fun handleAction(activity: Activity, redirectAction: RedirectAction)
 
-    /**
-     * Call this method when receiving the return URL from the redirect with the result data.
-     * This result will be in the [Intent.getData] and begins with the returnUrl you specified on the payments/ call.
-     *
-     * @param data The Uri from the response.
-     */
-    fun handleRedirectResponse(data: Uri?): JSONObject {
-        if (data == null) throw ComponentException("Received a null redirect Uri")
-        return RedirectUtil.parseRedirectResult(data)
-    }
+    fun handleIntent(intent: Intent)
 }
