@@ -8,6 +8,7 @@
 
 package com.adyen.checkout.await
 
+import androidx.annotation.VisibleForTesting
 import com.adyen.checkout.components.model.payments.response.Action
 import com.adyen.checkout.components.status.StatusRepository
 import com.adyen.checkout.components.status.api.StatusResponseUtils
@@ -117,6 +118,8 @@ internal class DefaultAwaitDelegate(
 
     companion object {
         private val TAG = LogUtil.getTag()
-        private const val PAYLOAD_DETAILS_KEY = "payload"
+
+        @VisibleForTesting
+        internal const val PAYLOAD_DETAILS_KEY = "payload"
     }
 }
