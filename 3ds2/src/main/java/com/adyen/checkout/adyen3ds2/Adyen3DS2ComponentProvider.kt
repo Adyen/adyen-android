@@ -20,7 +20,7 @@ import com.adyen.checkout.components.model.payments.response.Action
 import com.adyen.checkout.components.model.payments.response.Threeds2Action
 import com.adyen.checkout.components.model.payments.response.Threeds2ChallengeAction
 import com.adyen.checkout.components.model.payments.response.Threeds2FingerprintAction
-import com.adyen.checkout.redirect.RedirectDelegate
+import com.adyen.checkout.redirect.handler.DefaultRedirectHandler
 
 class Adyen3DS2ComponentProvider : ActionComponentProvider<Adyen3DS2Component, Adyen3DS2Configuration> {
 
@@ -41,7 +41,7 @@ class Adyen3DS2ComponentProvider : ActionComponentProvider<Adyen3DS2Component, A
     ): Adyen3DS2Component {
         val submitFingerprintRepository = SubmitFingerprintRepository()
         val adyen3DS2DetailsParser = Adyen3DS2Serializer()
-        val redirectDelegate = RedirectDelegate()
+        val redirectHandler = DefaultRedirectHandler()
         val threeDS2Factory = viewModelFactory(savedStateRegistryOwner, defaultArgs) { savedStateHandle ->
             Adyen3DS2Component(
                 savedStateHandle,
@@ -49,7 +49,7 @@ class Adyen3DS2ComponentProvider : ActionComponentProvider<Adyen3DS2Component, A
                 configuration,
                 submitFingerprintRepository,
                 adyen3DS2DetailsParser,
-                redirectDelegate
+                redirectHandler,
             )
         }
         return ViewModelProvider(viewModelStoreOwner, threeDS2Factory).get(Adyen3DS2Component::class.java)

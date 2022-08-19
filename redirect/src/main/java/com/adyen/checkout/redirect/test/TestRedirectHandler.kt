@@ -20,7 +20,7 @@ import org.json.JSONObject
  */
 // TODO move to test fixtures once it becomes supported on Android
 @RestrictTo(RestrictTo.Scope.TESTS)
-internal class TestRedirectHandler : RedirectHandler {
+class TestRedirectHandler : RedirectHandler {
 
     var exception: ComponentException? = null
 

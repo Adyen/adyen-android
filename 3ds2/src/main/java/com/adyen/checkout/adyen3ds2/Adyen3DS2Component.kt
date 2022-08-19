@@ -27,6 +27,7 @@ import com.adyen.checkout.components.base.BaseActionComponent
 import com.adyen.checkout.components.base.IntentHandlingComponent
 import com.adyen.checkout.components.encoding.Base64Encoder
 import com.adyen.checkout.components.model.payments.response.Action
+import com.adyen.checkout.components.model.payments.response.RedirectAction
 import com.adyen.checkout.components.model.payments.response.Threeds2Action
 import com.adyen.checkout.components.model.payments.response.Threeds2Action.SubType
 import com.adyen.checkout.components.model.payments.response.Threeds2ChallengeAction
@@ -35,7 +36,7 @@ import com.adyen.checkout.core.exception.CheckoutException
 import com.adyen.checkout.core.exception.ComponentException
 import com.adyen.checkout.core.log.LogUtil
 import com.adyen.checkout.core.log.Logger
-import com.adyen.checkout.redirect.RedirectDelegate
+import com.adyen.checkout.redirect.handler.RedirectHandler
 import com.adyen.threeds2.AuthenticationRequestParameters
 import com.adyen.threeds2.ChallengeStatusReceiver
 import com.adyen.threeds2.CompletionEvent
@@ -63,7 +64,7 @@ class Adyen3DS2Component(
     configuration: Adyen3DS2Configuration,
     private val submitFingerprintRepository: SubmitFingerprintRepository,
     private val adyen3DS2Serializer: Adyen3DS2Serializer,
-    private val redirectDelegate: RedirectDelegate
+    private val redirectHandler: RedirectHandler,
 ) : BaseActionComponent<Adyen3DS2Configuration>(savedStateHandle, application, configuration),
     ChallengeStatusReceiver,
     IntentHandlingComponent {
@@ -285,11 +286,21 @@ class Adyen3DS2Component(
                 }
             }
             is SubmitFingerprintResult.Redirect -> {
-                redirectDelegate.makeRedirect(activity, result.action)
+                makeRedirect(activity, result.action)
             }
             is SubmitFingerprintResult.Threeds2 -> {
                 handleAction(activity, result.action)
             }
+        }
+    }
+
+    private fun makeRedirect(activity: Activity, action: RedirectAction) {
+        val url = action.url
+        try {
+            Logger.d(TAG, "makeRedirect - $url")
+            redirectHandler.launchUriRedirect(activity, url)
+        } catch (ex: CheckoutException) {
+            notifyException(ex)
         }
     }
 
@@ -366,7 +377,7 @@ class Adyen3DS2Component(
      */
     override fun handleIntent(intent: Intent) {
         try {
-            val parsedResult = redirectDelegate.handleRedirectResponse(intent.data)
+            val parsedResult = redirectHandler.parseRedirectResult(intent.data)
             notifyDetails(parsedResult)
         } catch (e: CheckoutException) {
             notifyException(e)

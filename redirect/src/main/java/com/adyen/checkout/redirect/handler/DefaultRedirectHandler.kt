@@ -23,7 +23,7 @@ import com.adyen.checkout.core.log.Logger
 import org.json.JSONException
 import org.json.JSONObject
 
-internal class DefaultRedirectHandler : RedirectHandler {
+class DefaultRedirectHandler : RedirectHandler {
 
     override fun parseRedirectResult(data: Uri?): JSONObject {
         Logger.d(TAG, "parseRedirectResult - $data")
@@ -65,6 +65,7 @@ internal class DefaultRedirectHandler : RedirectHandler {
         if (launchNative(context, uri)) return
         if (launchWithCustomTabs(context, uri)) return
         if (launchBrowser(context, uri)) return
+        Logger.e(TAG, "Could not launch url")
         throw ComponentException("Redirect to app failed.")
     }
 
