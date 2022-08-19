@@ -8,15 +8,19 @@
 
 package com.adyen.checkout.qrcode
 
+import android.app.Activity
+import android.content.Intent
 import androidx.annotation.VisibleForTesting
 import com.adyen.checkout.components.model.payments.response.QrCodeAction
 import com.adyen.checkout.components.status.StatusRepository
 import com.adyen.checkout.components.status.api.StatusResponseUtils
 import com.adyen.checkout.components.status.model.StatusResponse
+import com.adyen.checkout.components.util.PaymentMethodTypes
 import com.adyen.checkout.core.exception.CheckoutException
 import com.adyen.checkout.core.exception.ComponentException
 import com.adyen.checkout.core.log.LogUtil
 import com.adyen.checkout.core.log.Logger
+import com.adyen.checkout.redirect.handler.RedirectHandler
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.channels.BufferOverflow
@@ -33,6 +37,7 @@ import java.util.concurrent.TimeUnit
 internal class DefaultQRCodeDelegate(
     private val statusRepository: StatusRepository,
     private val statusCountDownTimer: QRCodeCountDownTimer,
+    private val redirectHandler: RedirectHandler,
 ) : QRCodeDelegate {
 
     private val _outputDataFlow = MutableStateFlow<QRCodeOutputData?>(null)
@@ -40,11 +45,11 @@ internal class DefaultQRCodeDelegate(
 
     override val outputData: QRCodeOutputData? get() = _outputDataFlow.value
 
-    private val _exceptionFlow = MutableSharedFlow<CheckoutException>(0, 1, BufferOverflow.DROP_OLDEST)
+    private val _exceptionFlow = MutableSharedFlow<CheckoutException>(1, 1, BufferOverflow.DROP_OLDEST)
     override val exceptionFlow: Flow<CheckoutException> = _exceptionFlow
 
-    private val _detailsFlow = MutableStateFlow<JSONObject?>(null)
-    override val detailsFlow: Flow<JSONObject?> = _detailsFlow
+    private val _detailsFlow = MutableSharedFlow<JSONObject>(1, 1, BufferOverflow.DROP_OLDEST)
+    override val detailsFlow: Flow<JSONObject> = _detailsFlow
 
     private val _timerFlow = MutableStateFlow(TimerData(0, 0))
     override val timerFlow: Flow<TimerData> = _timerFlow
@@ -72,12 +77,28 @@ internal class DefaultQRCodeDelegate(
         _coroutineScope = coroutineScope
     }
 
-    override fun handleAction(action: QrCodeAction, paymentData: String) {
+    override fun handleAction(action: QrCodeAction, activity: Activity, paymentData: String) {
+        if (!requiresView(action)) {
+            Logger.d(TAG, "Action does not require a view, redirecting.")
+            makeRedirect(activity, action)
+            return
+        }
+
         // Notify UI to get the logo.
         createOutputData(null, action)
 
         startStatusPolling(paymentData, action)
         statusCountDownTimer.start()
+    }
+
+    private fun makeRedirect(activity: Activity, action: QrCodeAction) {
+        val url = action.url
+        try {
+            Logger.d(TAG, "makeRedirect - $url")
+            redirectHandler.launchUriRedirect(activity, url)
+        } catch (ex: CheckoutException) {
+            _exceptionFlow.tryEmit(ex)
+        }
     }
 
     private fun startStatusPolling(paymentData: String, action: QrCodeAction) {
@@ -129,8 +150,21 @@ internal class DefaultQRCodeDelegate(
         return jsonObject
     }
 
+    private fun requiresView(action: QrCodeAction): Boolean {
+        return VIEWABLE_PAYMENT_METHODS.contains(action.paymentMethodType)
+    }
+
     override fun refreshStatus(paymentData: String) {
         statusRepository.refreshStatus(paymentData)
+    }
+
+    override fun handleIntent(intent: Intent) {
+        try {
+            val details = redirectHandler.parseRedirectResult(intent.data)
+            _detailsFlow.tryEmit(details)
+        } catch (ex: CheckoutException) {
+            _exceptionFlow.tryEmit(ex)
+        }
     }
 
     override fun onCleared() {
@@ -147,5 +181,7 @@ internal class DefaultQRCodeDelegate(
         internal const val PAYLOAD_DETAILS_KEY = "payload"
         private val STATUS_POLLING_INTERVAL_MILLIS = TimeUnit.SECONDS.toMillis(1L)
         private const val HUNDRED = 100
+
+        private val VIEWABLE_PAYMENT_METHODS = listOf(PaymentMethodTypes.PIX)
     }
 }

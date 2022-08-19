@@ -16,7 +16,6 @@ import com.adyen.checkout.components.model.payments.response.Action
 import com.adyen.checkout.example.databinding.ActivityCardBinding
 import com.adyen.checkout.example.ui.configuration.CheckoutConfigurationProvider
 import com.adyen.checkout.redirect.RedirectComponent
-import com.adyen.checkout.redirect.RedirectUtil
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.launch
 import javax.inject.Inject
@@ -64,7 +63,7 @@ class CardActivity : AppCompatActivity() {
         super.onNewIntent(intent)
 
         val data = intent.data
-        if (data != null && data.toString().startsWith(RedirectUtil.REDIRECT_RESULT_SCHEME)) {
+        if (data != null && data.toString().startsWith(RedirectComponent.REDIRECT_RESULT_SCHEME)) {
             redirectComponent?.handleIntent(intent)
             threeDS2Component?.handleIntent(intent)
         }

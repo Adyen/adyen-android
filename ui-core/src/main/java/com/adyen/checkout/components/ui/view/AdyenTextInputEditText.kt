@@ -41,8 +41,8 @@ open class AdyenTextInputEditText @JvmOverloads constructor(
 
     @CallSuper
     protected open fun afterTextChanged(editable: Editable) {
-        // TODO temporary measure to avoid notifying changes for disabled edit texts
-        // This should be removed after the view model starts emitting the final formatted strings for the edit texts
+        // TODO temporary measure to avoid notifying changes for disabled edit texts.
+        //  This should be removed after the view model starts emitting the final formatted strings for the edit texts
         if (isEnabled) listener?.onTextChanged(editable)
     }
 
