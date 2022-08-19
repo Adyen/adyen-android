@@ -8,6 +8,8 @@
 
 package com.adyen.checkout.qrcode
 
+import android.app.Activity
+import android.content.Intent
 import com.adyen.checkout.components.model.payments.response.QrCodeAction
 import com.adyen.checkout.core.exception.CheckoutException
 import kotlinx.coroutines.CoroutineScope
@@ -22,15 +24,17 @@ interface QRCodeDelegate {
 
     val exceptionFlow: Flow<CheckoutException>
 
-    val detailsFlow: Flow<JSONObject?>
+    val detailsFlow: Flow<JSONObject>
 
     val timerFlow: Flow<TimerData>
 
     fun initialize(coroutineScope: CoroutineScope)
 
-    fun handleAction(action: QrCodeAction, paymentData: String)
+    fun handleAction(action: QrCodeAction, activity: Activity, paymentData: String)
 
     fun refreshStatus(paymentData: String)
+
+    fun handleIntent(intent: Intent)
 
     fun onCleared()
 }

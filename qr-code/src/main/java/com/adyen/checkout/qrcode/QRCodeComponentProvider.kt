@@ -20,7 +20,7 @@ import com.adyen.checkout.components.model.payments.response.QrCodeAction
 import com.adyen.checkout.components.status.DefaultStatusRepository
 import com.adyen.checkout.components.status.api.StatusService
 import com.adyen.checkout.components.util.PaymentMethodTypes
-import com.adyen.checkout.redirect.RedirectDelegate
+import com.adyen.checkout.redirect.handler.DefaultRedirectHandler
 
 private val VIEWABLE_PAYMENT_METHODS = listOf(PaymentMethodTypes.PIX)
 
@@ -40,17 +40,17 @@ class QRCodeComponentProvider : ActionComponentProvider<QRCodeComponent, QRCodeC
         configuration: QRCodeConfiguration,
         defaultArgs: Bundle?
     ): QRCodeComponent {
-        val redirectDelegate = RedirectDelegate()
         val statusService = StatusService(configuration.environment.baseUrl)
         val statusRepository = DefaultStatusRepository(statusService, configuration.clientKey)
         val countDownTimer = QRCodeCountDownTimer()
+        val redirectHandler = DefaultRedirectHandler()
+        val qrCodeDelegate = DefaultQRCodeDelegate(statusRepository, countDownTimer, redirectHandler)
         val qrCodeFactory = viewModelFactory(savedStateRegistryOwner, defaultArgs) { savedStateHandle ->
             QRCodeComponent(
                 savedStateHandle = savedStateHandle,
                 application = application,
                 configuration = configuration,
-                redirectDelegate = redirectDelegate,
-                qrCodeDelegate = DefaultQRCodeDelegate(statusRepository, countDownTimer),
+                qrCodeDelegate = qrCodeDelegate,
             )
         }
         return ViewModelProvider(viewModelStoreOwner, qrCodeFactory).get(QRCodeComponent::class.java)
@@ -77,6 +77,7 @@ class QRCodeComponentProvider : ActionComponentProvider<QRCodeComponent, QRCodeC
         }
     }
 
+    // TODO remove this method when we create a generic Action handling Component
     override fun requiresView(action: Action): Boolean {
         return VIEWABLE_PAYMENT_METHODS.contains(action.paymentMethodType)
     }

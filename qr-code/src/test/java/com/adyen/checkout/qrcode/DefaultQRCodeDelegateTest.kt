@@ -8,13 +8,17 @@
 
 package com.adyen.checkout.qrcode
 
+import android.app.Activity
+import android.content.Intent
 import app.cash.turbine.test
 import com.adyen.checkout.components.model.payments.response.QrCodeAction
 import com.adyen.checkout.components.status.model.StatusResponse
 import com.adyen.checkout.components.test.TestStatusRepository
+import com.adyen.checkout.components.util.PaymentMethodTypes
 import com.adyen.checkout.core.exception.ComponentException
 import com.adyen.checkout.core.log.Logger
 import com.adyen.checkout.qrcode.DefaultQRCodeDelegate.Companion.PAYLOAD_DETAILS_KEY
+import com.adyen.checkout.redirect.test.TestRedirectHandler
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.test.UnconfinedTestDispatcher
@@ -35,13 +39,15 @@ internal class DefaultQRCodeDelegateTest(
     @Mock private val countDownTimer: QRCodeCountDownTimer
 ) {
 
+    private lateinit var redirectHandler: TestRedirectHandler
     private lateinit var statusRepository: TestStatusRepository
     private lateinit var delegate: DefaultQRCodeDelegate
 
     @BeforeEach
     fun beforeEach() {
         statusRepository = TestStatusRepository()
-        delegate = DefaultQRCodeDelegate(statusRepository, countDownTimer)
+        redirectHandler = TestRedirectHandler()
+        delegate = DefaultQRCodeDelegate(statusRepository, countDownTimer, redirectHandler)
         Logger.setLogcatLevel(Logger.NONE)
     }
 
@@ -69,19 +75,23 @@ internal class DefaultQRCodeDelegateTest(
         delegate.initialize(CoroutineScope(UnconfinedTestDispatcher()))
 
         delegate.outputDataFlow.test {
-            delegate.handleAction(QrCodeAction(paymentMethodType = "test", qrCodeData = "qrData"), "paymentData")
+            delegate.handleAction(
+                QrCodeAction(paymentMethodType = PaymentMethodTypes.PIX, qrCodeData = "qrData"),
+                Activity(),
+                "paymentData"
+            )
 
             skipItems(1)
 
             with(requireNotNull(awaitItem())) {
                 assertFalse(isValid)
-                assertEquals("test", paymentMethodType)
+                assertEquals(PaymentMethodTypes.PIX, paymentMethodType)
                 assertEquals("qrData", qrCodeData)
             }
 
             with(requireNotNull(awaitItem())) {
                 assertTrue(isValid)
-                assertEquals("test", paymentMethodType)
+                assertEquals(PaymentMethodTypes.PIX, paymentMethodType)
                 assertEquals("qrData", qrCodeData)
             }
 
@@ -97,11 +107,9 @@ internal class DefaultQRCodeDelegateTest(
         delegate.initialize(CoroutineScope(UnconfinedTestDispatcher()))
 
         delegate.detailsFlow.test {
-            delegate.handleAction(QrCodeAction(paymentMethodType = "test"), "paymentData")
+            delegate.handleAction(QrCodeAction(paymentMethodType = PaymentMethodTypes.PIX), Activity(), "paymentData")
 
-            skipItems(1)
-
-            assertEquals("testpayload", awaitItem()!!.getString(PAYLOAD_DETAILS_KEY))
+            assertEquals("testpayload", awaitItem().getString(PAYLOAD_DETAILS_KEY))
 
             cancelAndIgnoreRemainingEvents()
         }
@@ -114,7 +122,7 @@ internal class DefaultQRCodeDelegateTest(
         delegate.initialize(CoroutineScope(UnconfinedTestDispatcher()))
 
         delegate.exceptionFlow.test {
-            delegate.handleAction(QrCodeAction(paymentMethodType = "test"), "paymentData")
+            delegate.handleAction(QrCodeAction(paymentMethodType = PaymentMethodTypes.PIX), Activity(), "paymentData")
 
             assertEquals(error, awaitItem().cause)
 
@@ -130,11 +138,53 @@ internal class DefaultQRCodeDelegateTest(
         delegate.initialize(CoroutineScope(UnconfinedTestDispatcher()))
 
         delegate.exceptionFlow.test {
-            delegate.handleAction(QrCodeAction(paymentMethodType = "test"), "paymentData")
+            delegate.handleAction(QrCodeAction(paymentMethodType = PaymentMethodTypes.PIX), Activity(), "paymentData")
 
             assertTrue(awaitItem() is ComponentException)
 
             cancelAndIgnoreRemainingEvents()
+        }
+    }
+
+    @Test
+    fun `when handleAction called and RedirectHandler returns an error, then the error is propagated`() = runTest {
+        val error = ComponentException("Failed to make redirect.")
+        redirectHandler.exception = error
+
+        delegate.exceptionFlow.test {
+            delegate.handleAction(QrCodeAction(paymentMethodType = "test"), Activity(), "paymentData")
+
+            assertEquals(error, awaitItem())
+        }
+    }
+
+    @Test
+    fun `when handleAction called with valid data, then no error is propagated`() = runTest {
+        delegate.exceptionFlow.test {
+            delegate.handleAction(QrCodeAction(paymentMethodType = "test"), Activity(), "paymentData")
+
+            expectNoEvents()
+        }
+    }
+
+    @Test
+    fun `when handleIntent called and RedirectHandler returns an error, then the error is propagated`() = runTest {
+        val error = ComponentException("Failed to parse redirect result.")
+        redirectHandler.exception = error
+
+        delegate.exceptionFlow.test {
+            delegate.handleIntent(Intent())
+
+            assertEquals(error, awaitItem())
+        }
+    }
+
+    @Test
+    fun `when handleIntent called with valid data, then the details are emitted`() = runTest {
+        delegate.detailsFlow.test {
+            delegate.handleIntent(Intent())
+
+            assertEquals(TestRedirectHandler.REDIRECT_RESULT, awaitItem())
         }
     }
 }
