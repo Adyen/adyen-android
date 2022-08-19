@@ -135,6 +135,8 @@ class CardView @JvmOverloads constructor(
     override fun onChanged(cardOutputData: CardOutputData?) {
         cardOutputData ?: return
 
+        if (isStoredPaymentMethod(cardOutputData)) setStoredCardInterface(cardOutputData)
+
         onCardNumberValidated(cardOutputData)
         onExpiryDateValidated(cardOutputData.expiryDateState)
         setSocialSecurityNumberVisibility(cardOutputData.isSocialSecurityNumberRequired)
@@ -149,12 +151,7 @@ class CardView @JvmOverloads constructor(
         updateCountries(cardOutputData.countryOptions)
         updateStates(cardOutputData.stateOptions)
         setSupportedCardsList(cardOutputData.supportedCardTypes)
-
-        if (isStoredPaymentMethod(cardOutputData)) {
-            setStoredCardInterface(cardOutputData)
-        } else {
-            setFilteredCards(cardOutputData.detectedCardTypes.map { it.cardType })
-        }
+        setFilteredCards(cardOutputData.detectedCardTypes.map { it.cardType })
     }
 
     override fun observeComponentChanges(lifecycleOwner: LifecycleOwner) {
@@ -674,8 +671,6 @@ class CardView @JvmOverloads constructor(
         if (component.requiresInput()) {
             binding.textInputLayoutSecurityCode.editText?.requestFocus()
         }
-
-        setFilteredCards(emptyList())
     }
 
     private fun updateInstallmentSelection(installmentModel: InstallmentModel?) {
