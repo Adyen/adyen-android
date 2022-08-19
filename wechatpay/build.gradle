@@ -29,7 +29,10 @@ android {
         testInstrumentationRunner 'androidx.test.runner.AndroidJUnitRunner'
         consumerProguardFiles "consumer-rules.pro"
     }
-    
+
+    testOptions {
+        unitTests.returnDefaultValues = true
+    }
 }
 
 dependencies {
@@ -40,5 +43,8 @@ dependencies {
     implementation libraries.wechat
 
     //Tests
+    testImplementation testLibraries.json
     testImplementation testLibraries.junit5
+    testImplementation testLibraries.mockito
+    testImplementation testLibraries.kotlinCoroutines
 }

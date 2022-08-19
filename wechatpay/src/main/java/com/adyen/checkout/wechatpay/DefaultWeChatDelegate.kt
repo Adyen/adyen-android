@@ -9,6 +9,7 @@
 package com.adyen.checkout.wechatpay
 
 import android.content.Intent
+import androidx.annotation.VisibleForTesting
 import com.adyen.checkout.components.model.payments.response.Action
 import com.adyen.checkout.components.model.payments.response.SdkAction
 import com.adyen.checkout.components.model.payments.response.WeChatPaySdkData
@@ -23,10 +24,12 @@ import com.tencent.mm.opensdk.openapi.IWXAPIEventHandler
 import kotlinx.coroutines.channels.BufferOverflow
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableSharedFlow
+import org.json.JSONException
 import org.json.JSONObject
 
 internal class DefaultWeChatDelegate(
     private val iwxApi: IWXAPI,
+    private val payRequestGenerator: WeChatRequestGenerator<*>
 ) : WeChatDelegate {
 
     private val _detailsFlow = MutableSharedFlow<JSONObject>(0, 1, BufferOverflow.DROP_OLDEST)
@@ -39,13 +42,29 @@ internal class DefaultWeChatDelegate(
         override fun onReq(baseReq: BaseReq) = Unit
 
         override fun onResp(baseResp: BaseResp) {
-            val response = WeChatPayUtils.parseResult(baseResp)
+            onResponse(baseResp)
+        }
+    }
+
+    @VisibleForTesting
+    internal fun onResponse(baseResponse: BaseResp) {
+        parseResult(baseResponse)?.let { response ->
             _detailsFlow.tryEmit(response)
         }
     }
 
+    private fun parseResult(baseResp: BaseResp): JSONObject? {
+        val result = JSONObject()
+        try {
+            result.put(RESULT_CODE, baseResp.errCode)
+        } catch (e: JSONException) {
+            _exceptionFlow.tryEmit(CheckoutException("Error parsing result.", e))
+            return null
+        }
+        return result
+    }
+
     override fun handleIntent(intent: Intent) {
-        // TODO check intent identifiers
         iwxApi.handleIntent(intent, eventHandler)
     }
 
@@ -69,10 +88,13 @@ internal class DefaultWeChatDelegate(
     private fun initiateWeChatPayRedirect(weChatPaySdkData: WeChatPaySdkData, activityName: String): Boolean {
         Logger.d(TAG, "initiateWeChatPayRedirect")
         iwxApi.registerApp(weChatPaySdkData.appid)
-        return iwxApi.sendReq(WeChatPayUtils.generatePayRequest(weChatPaySdkData, activityName))
+        val request = payRequestGenerator.generate(weChatPaySdkData, activityName)
+        return iwxApi.sendReq(request)
     }
 
     companion object {
         private val TAG = LogUtil.getTag()
+
+        private const val RESULT_CODE = "resultCode"
     }
 }

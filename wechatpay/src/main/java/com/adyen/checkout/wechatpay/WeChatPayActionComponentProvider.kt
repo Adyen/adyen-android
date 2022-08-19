@@ -42,7 +42,8 @@ class WeChatPayActionComponentProvider :
         defaultArgs: Bundle?
     ): WeChatPayActionComponent {
         val iwxApi: IWXAPI = WXAPIFactory.createWXAPI(application, null, true)
-        val weChatDelegate = DefaultWeChatDelegate(iwxApi)
+        val requestGenerator = WeChatPayRequestGenerator()
+        val weChatDelegate = DefaultWeChatDelegate(iwxApi, requestGenerator)
 
         val weChatFactory = viewModelFactory(savedStateRegistryOwner, defaultArgs) { savedStateHandle ->
             WeChatPayActionComponent(
