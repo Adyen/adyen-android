@@ -13,6 +13,8 @@ import com.adyen.checkout.components.ComponentAvailableCallback
 import com.adyen.checkout.components.PaymentMethodAvailabilityCheck
 import com.adyen.checkout.components.base.Configuration
 import com.adyen.checkout.components.model.paymentmethods.PaymentMethod
+import com.tencent.mm.opensdk.constants.Build
+import com.tencent.mm.opensdk.openapi.WXAPIFactory
 
 /**
  * This class is not an actual provider, it only checks whether WeChatPay is available.
@@ -28,6 +30,14 @@ class WeChatPayProvider : PaymentMethodAvailabilityCheck<Configuration> {
         configuration: Configuration?,
         callback: ComponentAvailableCallback<Configuration>
     ) {
-        callback.onAvailabilityResult(WeChatPayUtils.isAvailable(applicationContext), paymentMethod, configuration)
+        callback.onAvailabilityResult(isAvailable(applicationContext), paymentMethod, configuration)
+    }
+
+    private fun isAvailable(applicationContext: Application?): Boolean {
+        val api = WXAPIFactory.createWXAPI(applicationContext, null, true)
+        val isAppInstalled = api.isWXAppInstalled
+        val isSupported = Build.PAY_SUPPORTED_SDK_INT <= api.wxAppSupportAPI
+        api.detach()
+        return isAppInstalled && isSupported
     }
 }

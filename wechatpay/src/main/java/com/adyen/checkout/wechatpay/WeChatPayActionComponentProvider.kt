@@ -18,6 +18,8 @@ import com.adyen.checkout.components.base.lifecycle.viewModelFactory
 import com.adyen.checkout.components.model.payments.response.Action
 import com.adyen.checkout.components.model.payments.response.SdkAction
 import com.adyen.checkout.components.util.PaymentMethodTypes
+import com.tencent.mm.opensdk.openapi.IWXAPI
+import com.tencent.mm.opensdk.openapi.WXAPIFactory
 
 private val PAYMENT_METHODS = listOf(PaymentMethodTypes.WECHAT_PAY_SDK)
 
@@ -39,13 +41,19 @@ class WeChatPayActionComponentProvider :
         configuration: WeChatPayActionConfiguration,
         defaultArgs: Bundle?
     ): WeChatPayActionComponent {
+        val iwxApi: IWXAPI = WXAPIFactory.createWXAPI(application, null, true)
+        val requestGenerator = WeChatPayRequestGenerator()
+        val weChatDelegate = DefaultWeChatDelegate(iwxApi, requestGenerator)
+
         val weChatFactory = viewModelFactory(savedStateRegistryOwner, defaultArgs) { savedStateHandle ->
             WeChatPayActionComponent(
-                savedStateHandle,
-                application,
-                configuration
+                savedStateHandle = savedStateHandle,
+                application = application,
+                configuration = configuration,
+                weChatDelegate = weChatDelegate,
             )
         }
+
         return ViewModelProvider(viewModelStoreOwner, weChatFactory).get(WeChatPayActionComponent::class.java)
     }
 
