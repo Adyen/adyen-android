@@ -76,9 +76,7 @@ internal class DefaultAwaitDelegateTest {
         delegate.detailsFlow.test {
             delegate.handleAction(AwaitAction(paymentMethodType = "test"), "paymentData")
 
-            skipItems(1)
-
-            assertEquals("testpayload", awaitItem()!!.getString(PAYLOAD_DETAILS_KEY))
+            assertEquals("testpayload", awaitItem().getString(PAYLOAD_DETAILS_KEY))
 
             cancelAndIgnoreRemainingEvents()
         }

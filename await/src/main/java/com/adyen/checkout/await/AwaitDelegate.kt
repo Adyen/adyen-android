@@ -20,7 +20,7 @@ interface AwaitDelegate {
 
     val outputData: AwaitOutputData?
 
-    val detailsFlow: Flow<JSONObject?>
+    val detailsFlow: Flow<JSONObject>
 
     val exceptionFlow: Flow<CheckoutException>
 

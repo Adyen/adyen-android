@@ -37,8 +37,8 @@ internal class DefaultAwaitDelegate(
 
     override val outputData: AwaitOutputData? get() = _outputDataFlow.value
 
-    private val _detailsFlow = MutableStateFlow<JSONObject?>(null)
-    override val detailsFlow: Flow<JSONObject?> = _detailsFlow
+    private val _detailsFlow: MutableSharedFlow<JSONObject> = MutableSingleEventSharedFlow()
+    override val detailsFlow: Flow<JSONObject> = _detailsFlow
 
     private val _exceptionFlow: MutableSharedFlow<CheckoutException> = MutableSingleEventSharedFlow()
     override val exceptionFlow: Flow<CheckoutException> = _exceptionFlow
