@@ -12,13 +12,13 @@ import com.adyen.checkout.card.api.AddressService
 import com.adyen.checkout.card.api.model.AddressItem
 import com.adyen.checkout.card.ui.AddressFormInput
 import com.adyen.checkout.components.base.Configuration
+import com.adyen.checkout.components.flow.MutableSingleEventSharedFlow
 import com.adyen.checkout.core.api.Environment
 import com.adyen.checkout.core.log.LogUtil
 import com.adyen.checkout.core.log.Logger
 import com.adyen.checkout.core.util.runSuspendCatching
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.channels.BufferOverflow
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.launch
@@ -26,11 +26,10 @@ import java.util.Locale
 
 internal class DefaultAddressRepository : AddressRepository {
 
-    private val _statesFlow: MutableSharedFlow<List<AddressItem>> = MutableSharedFlow(0, 1, BufferOverflow.DROP_OLDEST)
+    private val _statesFlow: MutableSharedFlow<List<AddressItem>> = MutableSingleEventSharedFlow()
     override val statesFlow: Flow<List<AddressItem>> = _statesFlow
 
-    private val _countriesFlow: MutableSharedFlow<List<AddressItem>> =
-        MutableSharedFlow(0, 1, BufferOverflow.DROP_OLDEST)
+    private val _countriesFlow: MutableSharedFlow<List<AddressItem>> = MutableSingleEventSharedFlow()
     override val countriesFlow: Flow<List<AddressItem>> = _countriesFlow
 
     private val cache: HashMap<String, List<AddressItem>> = hashMapOf()

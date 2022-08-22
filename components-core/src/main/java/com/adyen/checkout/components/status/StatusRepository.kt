@@ -8,6 +8,7 @@
 
 package com.adyen.checkout.components.status
 
+import com.adyen.checkout.components.flow.MutableSingleEventSharedFlow
 import com.adyen.checkout.components.status.api.StatusResponseUtils
 import com.adyen.checkout.components.status.api.StatusService
 import com.adyen.checkout.components.status.model.StatusRequest
@@ -15,7 +16,6 @@ import com.adyen.checkout.components.status.model.StatusResponse
 import com.adyen.checkout.core.util.runSuspendCatching
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.cancel
-import kotlinx.coroutines.channels.BufferOverflow
 import kotlinx.coroutines.currentCoroutineContext
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.Flow
@@ -43,7 +43,7 @@ class DefaultStatusRepository constructor(
 
     private var delay: Long = 0
 
-    private val refreshFlow = MutableSharedFlow<String>(0, 1, BufferOverflow.DROP_OLDEST)
+    private val refreshFlow: MutableSharedFlow<String> = MutableSingleEventSharedFlow()
 
     override fun poll(paymentData: String): Flow<Result<StatusResponse>> {
         val startTime = System.currentTimeMillis()

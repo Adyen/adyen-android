@@ -10,6 +10,7 @@ package com.adyen.checkout.wechatpay
 
 import android.content.Intent
 import androidx.annotation.VisibleForTesting
+import com.adyen.checkout.components.flow.MutableSingleEventSharedFlow
 import com.adyen.checkout.components.model.payments.response.Action
 import com.adyen.checkout.components.model.payments.response.SdkAction
 import com.adyen.checkout.components.model.payments.response.WeChatPaySdkData
@@ -21,7 +22,6 @@ import com.tencent.mm.opensdk.modelbase.BaseReq
 import com.tencent.mm.opensdk.modelbase.BaseResp
 import com.tencent.mm.opensdk.openapi.IWXAPI
 import com.tencent.mm.opensdk.openapi.IWXAPIEventHandler
-import kotlinx.coroutines.channels.BufferOverflow
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableSharedFlow
 import org.json.JSONException
@@ -32,10 +32,10 @@ internal class DefaultWeChatDelegate(
     private val payRequestGenerator: WeChatRequestGenerator<*>
 ) : WeChatDelegate {
 
-    private val _detailsFlow = MutableSharedFlow<JSONObject>(0, 1, BufferOverflow.DROP_OLDEST)
+    private val _detailsFlow: MutableSharedFlow<JSONObject> = MutableSingleEventSharedFlow()
     override val detailsFlow: Flow<JSONObject> = _detailsFlow
 
-    private val _exceptionFlow = MutableSharedFlow<CheckoutException>(0, 1, BufferOverflow.DROP_OLDEST)
+    private val _exceptionFlow: MutableSharedFlow<CheckoutException> = MutableSingleEventSharedFlow()
     override val exceptionFlow: Flow<CheckoutException> = _exceptionFlow
 
     private val eventHandler = object : IWXAPIEventHandler {
