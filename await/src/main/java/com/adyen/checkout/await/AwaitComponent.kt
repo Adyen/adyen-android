@@ -41,7 +41,6 @@ class AwaitComponent(
 
     init {
         awaitDelegate.detailsFlow
-            .filterNotNull()
             .onEach { notifyDetails(it) }
             .launchIn(viewModelScope)
 

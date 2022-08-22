@@ -11,6 +11,7 @@ package com.adyen.checkout.qrcode
 import android.app.Activity
 import android.content.Intent
 import androidx.annotation.VisibleForTesting
+import com.adyen.checkout.components.flow.MutableSingleEventSharedFlow
 import com.adyen.checkout.components.model.payments.response.QrCodeAction
 import com.adyen.checkout.components.status.StatusRepository
 import com.adyen.checkout.components.status.api.StatusResponseUtils
@@ -23,7 +24,6 @@ import com.adyen.checkout.core.log.Logger
 import com.adyen.checkout.redirect.handler.RedirectHandler
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Job
-import kotlinx.coroutines.channels.BufferOverflow
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -45,10 +45,10 @@ internal class DefaultQRCodeDelegate(
 
     override val outputData: QRCodeOutputData? get() = _outputDataFlow.value
 
-    private val _exceptionFlow = MutableSharedFlow<CheckoutException>(1, 1, BufferOverflow.DROP_OLDEST)
+    private val _exceptionFlow: MutableSharedFlow<CheckoutException> = MutableSingleEventSharedFlow()
     override val exceptionFlow: Flow<CheckoutException> = _exceptionFlow
 
-    private val _detailsFlow = MutableSharedFlow<JSONObject>(1, 1, BufferOverflow.DROP_OLDEST)
+    private val _detailsFlow: MutableSharedFlow<JSONObject> = MutableSingleEventSharedFlow()
     override val detailsFlow: Flow<JSONObject> = _detailsFlow
 
     private val _timerFlow = MutableStateFlow(TimerData(0, 0))

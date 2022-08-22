@@ -9,6 +9,7 @@
 package com.adyen.checkout.await
 
 import androidx.annotation.VisibleForTesting
+import com.adyen.checkout.components.flow.MutableSingleEventSharedFlow
 import com.adyen.checkout.components.model.payments.response.Action
 import com.adyen.checkout.components.status.StatusRepository
 import com.adyen.checkout.components.status.api.StatusResponseUtils
@@ -19,7 +20,6 @@ import com.adyen.checkout.core.log.LogUtil
 import com.adyen.checkout.core.log.Logger
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Job
-import kotlinx.coroutines.channels.BufferOverflow
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -37,10 +37,10 @@ internal class DefaultAwaitDelegate(
 
     override val outputData: AwaitOutputData? get() = _outputDataFlow.value
 
-    private val _detailsFlow = MutableStateFlow<JSONObject?>(null)
-    override val detailsFlow: Flow<JSONObject?> = _detailsFlow
+    private val _detailsFlow: MutableSharedFlow<JSONObject> = MutableSingleEventSharedFlow()
+    override val detailsFlow: Flow<JSONObject> = _detailsFlow
 
-    private val _exceptionFlow = MutableSharedFlow<CheckoutException>(0, 1, BufferOverflow.DROP_OLDEST)
+    private val _exceptionFlow: MutableSharedFlow<CheckoutException> = MutableSingleEventSharedFlow()
     override val exceptionFlow: Flow<CheckoutException> = _exceptionFlow
 
     private var _coroutineScope: CoroutineScope? = null

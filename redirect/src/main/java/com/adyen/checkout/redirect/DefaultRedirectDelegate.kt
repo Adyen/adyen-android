@@ -10,12 +10,12 @@ package com.adyen.checkout.redirect
 
 import android.app.Activity
 import android.content.Intent
+import com.adyen.checkout.components.flow.MutableSingleEventSharedFlow
 import com.adyen.checkout.components.model.payments.response.RedirectAction
 import com.adyen.checkout.core.exception.CheckoutException
 import com.adyen.checkout.core.log.LogUtil
 import com.adyen.checkout.core.log.Logger
 import com.adyen.checkout.redirect.handler.RedirectHandler
-import kotlinx.coroutines.channels.BufferOverflow
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableSharedFlow
 import org.json.JSONObject
@@ -26,10 +26,10 @@ internal class DefaultRedirectDelegate(
     private val redirectHandler: RedirectHandler
 ) : RedirectDelegate {
 
-    private val _detailsFlow = MutableSharedFlow<JSONObject>(1, 1, BufferOverflow.DROP_OLDEST)
+    private val _detailsFlow: MutableSharedFlow<JSONObject> = MutableSingleEventSharedFlow()
     override val detailsFlow: Flow<JSONObject> = _detailsFlow
 
-    private val _exceptionFlow = MutableSharedFlow<CheckoutException>(1, 1, BufferOverflow.DROP_OLDEST)
+    private val _exceptionFlow: MutableSharedFlow<CheckoutException> = MutableSingleEventSharedFlow()
     override val exceptionFlow: Flow<CheckoutException> = _exceptionFlow
 
     override fun handleAction(activity: Activity, redirectAction: RedirectAction) {

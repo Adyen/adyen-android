@@ -14,6 +14,7 @@ import com.adyen.checkout.card.api.model.BinLookupResponse
 import com.adyen.checkout.card.api.model.Brand
 import com.adyen.checkout.card.data.CardType
 import com.adyen.checkout.card.data.DetectedCardType
+import com.adyen.checkout.components.flow.MutableSingleEventSharedFlow
 import com.adyen.checkout.core.api.Environment
 import com.adyen.checkout.core.encryption.Sha256
 import com.adyen.checkout.core.log.LogUtil
@@ -21,7 +22,6 @@ import com.adyen.checkout.core.log.Logger
 import com.adyen.checkout.core.util.runSuspendCatching
 import com.adyen.checkout.cse.CardEncrypter
 import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.channels.BufferOverflow
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.launch
@@ -31,8 +31,7 @@ internal class DefaultDetectCardTypeRepository(
     private val cardEncrypter: CardEncrypter,
 ) : DetectCardTypeRepository {
 
-    private val _detectedCardTypesFlow: MutableSharedFlow<List<DetectedCardType>> =
-        MutableSharedFlow(0, 1, BufferOverflow.DROP_OLDEST)
+    private val _detectedCardTypesFlow: MutableSharedFlow<List<DetectedCardType>> = MutableSingleEventSharedFlow()
     override val detectedCardTypesFlow: Flow<List<DetectedCardType>> = _detectedCardTypesFlow
 
     private val cachedBinLookup = HashMap<String, BinLookupResult>()

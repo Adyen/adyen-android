@@ -8,6 +8,7 @@
 
 package com.adyen.checkout.giftcard
 
+import com.adyen.checkout.components.flow.MutableSingleEventSharedFlow
 import com.adyen.checkout.components.model.paymentmethods.PaymentMethod
 import com.adyen.checkout.components.model.payments.request.GiftCardPaymentMethod
 import com.adyen.checkout.components.model.payments.request.PaymentComponentData
@@ -22,7 +23,6 @@ import com.adyen.checkout.cse.EncryptedCard
 import com.adyen.checkout.cse.UnencryptedCard
 import com.adyen.checkout.cse.exception.EncryptionException
 import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.channels.BufferOverflow
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -44,7 +44,7 @@ internal class DefaultGiftCardDelegate(
     private val _componentStateFlow = MutableStateFlow<GiftCardComponentState?>(null)
     override val componentStateFlow: Flow<GiftCardComponentState?> = _componentStateFlow
 
-    private val _exceptionFlow = MutableSharedFlow<CheckoutException>(0, 1, BufferOverflow.DROP_OLDEST)
+    private val _exceptionFlow: MutableSharedFlow<CheckoutException> = MutableSingleEventSharedFlow()
     override val exceptionFlow: Flow<CheckoutException> = _exceptionFlow
 
     private var publicKey: String? = null
