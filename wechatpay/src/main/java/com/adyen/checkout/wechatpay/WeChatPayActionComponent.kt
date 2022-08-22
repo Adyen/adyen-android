@@ -11,11 +11,14 @@ import android.app.Activity
 import android.app.Application
 import android.content.Intent
 import androidx.lifecycle.SavedStateHandle
+import androidx.lifecycle.viewModelScope
 import com.adyen.checkout.components.ActionComponentProvider
 import com.adyen.checkout.components.base.BaseActionComponent
 import com.adyen.checkout.components.base.IntentHandlingComponent
 import com.adyen.checkout.components.model.payments.response.Action
 import com.adyen.checkout.core.exception.ComponentException
+import kotlinx.coroutines.flow.launchIn
+import kotlinx.coroutines.flow.onEach
 
 class WeChatPayActionComponent(
     savedStateHandle: SavedStateHandle,
@@ -24,6 +27,16 @@ class WeChatPayActionComponent(
     private val weChatDelegate: WeChatDelegate,
 ) : BaseActionComponent<WeChatPayActionConfiguration>(savedStateHandle, application, configuration),
     IntentHandlingComponent {
+
+    init {
+        weChatDelegate.detailsFlow
+            .onEach { notifyDetails(it) }
+            .launchIn(viewModelScope)
+
+        weChatDelegate.exceptionFlow
+            .onEach { notifyException(it) }
+            .launchIn(viewModelScope)
+    }
 
     /**
      * Pass the result Intent from the WeChatPay SDK response on Activity#onNewIntent(Intent).
