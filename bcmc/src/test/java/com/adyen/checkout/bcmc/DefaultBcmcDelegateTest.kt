@@ -168,7 +168,12 @@ internal class DefaultBcmcDelegateTest {
         @Test
         fun `component is not initialized, then component state should not be ready`() = runTest {
             delegate.componentStateFlow.test {
-                delegate.createComponentState(createOutputData())
+                delegate.createComponentState(
+                    createOutputData(
+                        cardNumber = FieldState(TEST_CARD_NUMBER, Validation.Valid),
+                        expiryDate = FieldState(TEST_EXPIRY_DATE, Validation.Valid)
+                    )
+                )
 
                 with(requireNotNull(expectMostRecentItem())) {
                     assertFalse(isReady)
@@ -183,7 +188,12 @@ internal class DefaultBcmcDelegateTest {
             delegate.initialize(CoroutineScope(UnconfinedTestDispatcher()))
 
             delegate.componentStateFlow.test {
-                delegate.createComponentState(createOutputData())
+                delegate.createComponentState(
+                    createOutputData(
+                        cardNumber = FieldState(TEST_CARD_NUMBER, Validation.Valid),
+                        expiryDate = FieldState(TEST_EXPIRY_DATE, Validation.Valid)
+                    )
+                )
 
                 with(requireNotNull(expectMostRecentItem())) {
                     assertTrue(isReady)
@@ -197,10 +207,11 @@ internal class DefaultBcmcDelegateTest {
             delegate.initialize(CoroutineScope(UnconfinedTestDispatcher()))
             delegate.componentStateFlow.test {
                 delegate.createComponentState(
-                    BcmcOutputData(
-                        FieldState("12345678", Validation.Invalid(R.string.checkout_card_number_not_valid)),
-                        FieldState(TEST_EXPIRY_DATE, Validation.Valid),
-                        false
+                    createOutputData(
+                        cardNumber = FieldState(
+                            "12345678", Validation.Invalid(R.string.checkout_card_number_not_valid)
+                        ),
+                        expiryDate = FieldState(TEST_EXPIRY_DATE, Validation.Valid),
                     )
                 )
 
@@ -216,13 +227,12 @@ internal class DefaultBcmcDelegateTest {
             delegate.initialize(CoroutineScope(UnconfinedTestDispatcher()))
             delegate.componentStateFlow.test {
                 delegate.createComponentState(
-                    BcmcOutputData(
-                        FieldState(TEST_CARD_NUMBER, Validation.Valid),
-                        FieldState(
+                    createOutputData(
+                        cardNumber = FieldState(TEST_CARD_NUMBER, Validation.Valid),
+                        expiryDate = FieldState(
                             ExpiryDate.INVALID_DATE,
                             Validation.Invalid(R.string.checkout_expiry_date_not_valid)
-                        ),
-                        false
+                        )
                     )
                 )
 
@@ -237,7 +247,12 @@ internal class DefaultBcmcDelegateTest {
         fun `output data is valid, then component state should be valid`() = runTest {
             delegate.initialize(CoroutineScope(UnconfinedTestDispatcher()))
             delegate.componentStateFlow.test {
-                delegate.createComponentState(createOutputData())
+                delegate.createComponentState(
+                    createOutputData(
+                        cardNumber = FieldState(TEST_CARD_NUMBER, Validation.Valid),
+                        expiryDate = FieldState(TEST_EXPIRY_DATE, Validation.Valid)
+                    )
+                )
                 with(requireNotNull(expectMostRecentItem())) {
                     assertTrue(isValid)
                     assertTrue(isInputValid)
@@ -246,11 +261,15 @@ internal class DefaultBcmcDelegateTest {
         }
     }
 
-    private fun createOutputData(): BcmcOutputData {
+    private fun createOutputData(
+        cardNumber: FieldState<String>,
+        expiryDate: FieldState<ExpiryDate>,
+        isStoredPaymentMethodEnable: Boolean = false
+    ): BcmcOutputData {
         return BcmcOutputData(
-            FieldState(TEST_CARD_NUMBER, Validation.Valid),
-            FieldState(TEST_EXPIRY_DATE, Validation.Valid),
-            false
+            cardNumber,
+            expiryDate,
+            isStoredPaymentMethodEnable
         )
     }
 

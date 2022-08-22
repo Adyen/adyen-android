@@ -39,7 +39,6 @@ android {
 dependencies {
     // Checkout
     api project(":card")
-    api project(':cse')
     // If 3DS2 SDK is present.
     compileOnly libraries.adyen3ds2
 
