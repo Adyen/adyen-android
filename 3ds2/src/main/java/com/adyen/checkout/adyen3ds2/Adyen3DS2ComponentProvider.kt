@@ -13,6 +13,7 @@ import android.os.Bundle
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.ViewModelStoreOwner
 import androidx.savedstate.SavedStateRegistryOwner
+import com.adyen.checkout.adyen3ds2.connection.SubmitFingerprintService
 import com.adyen.checkout.adyen3ds2.repository.SubmitFingerprintRepository
 import com.adyen.checkout.components.ActionComponentProvider
 import com.adyen.checkout.components.base.lifecycle.viewModelFactory
@@ -39,17 +40,25 @@ class Adyen3DS2ComponentProvider : ActionComponentProvider<Adyen3DS2Component, A
         configuration: Adyen3DS2Configuration,
         defaultArgs: Bundle?
     ): Adyen3DS2Component {
-        val submitFingerprintRepository = SubmitFingerprintRepository()
+        val submitFingerprintService = SubmitFingerprintService(configuration.environment)
+        val submitFingerprintRepository = SubmitFingerprintRepository(submitFingerprintService)
         val adyen3DS2DetailsParser = Adyen3DS2Serializer()
         val redirectHandler = DefaultRedirectHandler()
+
         val threeDS2Factory = viewModelFactory(savedStateRegistryOwner, defaultArgs) { savedStateHandle ->
+            val adyen3DS2Delegate = DefaultAdyen3DS2Delegate(
+                savedStateHandle = savedStateHandle,
+                configuration = configuration,
+                submitFingerprintRepository = submitFingerprintRepository,
+                adyen3DS2Serializer = adyen3DS2DetailsParser,
+                redirectHandler = redirectHandler,
+            )
+
             Adyen3DS2Component(
-                savedStateHandle,
-                application,
-                configuration,
-                submitFingerprintRepository,
-                adyen3DS2DetailsParser,
-                redirectHandler,
+                savedStateHandle = savedStateHandle,
+                application = application,
+                configuration = configuration,
+                adyen3DS2Delegate = adyen3DS2Delegate,
             )
         }
         return ViewModelProvider(viewModelStoreOwner, threeDS2Factory).get(Adyen3DS2Component::class.java)

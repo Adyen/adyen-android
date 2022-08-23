@@ -8,7 +8,6 @@
 
 package com.adyen.checkout.adyen3ds2.repository
 
-import com.adyen.checkout.adyen3ds2.Adyen3DS2Configuration
 import com.adyen.checkout.adyen3ds2.connection.SubmitFingerprintService
 import com.adyen.checkout.adyen3ds2.model.SubmitFingerprintRequest
 import com.adyen.checkout.components.model.payments.response.RedirectAction
@@ -18,11 +17,13 @@ import com.adyen.checkout.core.log.Logger
 import com.adyen.checkout.core.util.runSuspendCatching
 import org.json.JSONObject
 
-class SubmitFingerprintRepository {
+class SubmitFingerprintRepository internal constructor(
+    private val submitFingerprintService: SubmitFingerprintService
+) {
 
     suspend fun submitFingerprint(
         encodedFingerprint: String,
-        configuration: Adyen3DS2Configuration,
+        clientKey: String,
         paymentData: String?
     ): Result<SubmitFingerprintResult> = runSuspendCatching {
         Logger.d(TAG, "Submitting fingerprint automatically")
@@ -32,10 +33,7 @@ class SubmitFingerprintRepository {
             paymentData = paymentData
         )
 
-        val response = SubmitFingerprintService(configuration.environment).submitFingerprint(
-            request,
-            configuration.clientKey
-        )
+        val response = submitFingerprintService.submitFingerprint(request, clientKey)
 
         when {
             response.type == RESPONSE_TYPE_COMPLETED && response.details != null -> {
