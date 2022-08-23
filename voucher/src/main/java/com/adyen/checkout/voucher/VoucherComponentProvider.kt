@@ -38,11 +38,13 @@ class VoucherComponentProvider : ActionComponentProvider<VoucherComponent, Vouch
         configuration: VoucherConfiguration,
         defaultArgs: Bundle?
     ): VoucherComponent {
+        val voucherDelegate = DefaultVoucherDelegate()
         val voucherFactory = viewModelFactory(savedStateRegistryOwner, defaultArgs) { savedStateHandle ->
             VoucherComponent(
                 savedStateHandle,
                 application,
-                configuration
+                configuration,
+                voucherDelegate,
             )
         }
         return ViewModelProvider(viewModelStoreOwner, voucherFactory).get(VoucherComponent::class.java)

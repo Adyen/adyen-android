@@ -12,9 +12,9 @@ import android.app.Activity
 import android.app.Application
 import android.content.Context
 import androidx.lifecycle.LifecycleOwner
-import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.Observer
 import androidx.lifecycle.SavedStateHandle
+import androidx.lifecycle.asLiveData
 import com.adyen.checkout.components.ActionComponentData
 import com.adyen.checkout.components.ActionComponentProvider
 import com.adyen.checkout.components.ViewableComponent
@@ -22,27 +22,28 @@ import com.adyen.checkout.components.base.BaseActionComponent
 import com.adyen.checkout.components.model.payments.response.Action
 import com.adyen.checkout.components.model.payments.response.VoucherAction
 import com.adyen.checkout.core.exception.ComponentException
+import kotlinx.coroutines.flow.filterNotNull
 
 class VoucherComponent(
     savedStateHandle: SavedStateHandle,
     application: Application,
     configuration: VoucherConfiguration,
+    private val voucherDelegate: VoucherDelegate,
 ) : BaseActionComponent<VoucherConfiguration>(savedStateHandle, application, configuration),
     ViewableComponent<VoucherOutputData, VoucherConfiguration, ActionComponentData> {
 
-    private val mOutputLiveData = MutableLiveData<VoucherOutputData>()
-    private var url: String? = null
+    override val outputData: VoucherOutputData? get() = voucherDelegate.outputData
 
     override fun canHandleAction(action: Action): Boolean {
         return PROVIDER.canHandleAction(action)
     }
 
     override fun observeOutputData(lifecycleOwner: LifecycleOwner, observer: Observer<VoucherOutputData>) {
-        mOutputLiveData.observe(lifecycleOwner, observer)
+        voucherDelegate.outputDataFlow
+            .filterNotNull()
+            .asLiveData()
+            .observe(lifecycleOwner, observer)
     }
-
-    override val outputData: VoucherOutputData?
-        get() = mOutputLiveData.value
 
     override fun sendAnalyticsEvent(context: Context) {
         // no ops
@@ -51,18 +52,7 @@ class VoucherComponent(
     @Throws(ComponentException::class)
     override fun handleActionInternal(activity: Activity, action: Action) {
         if (action !is VoucherAction) throw ComponentException("Unsupported action")
-        url = action.url
-
-        mOutputLiveData.postValue(
-            VoucherOutputData(
-                true,
-                action.paymentMethodType
-            )
-        )
-    }
-
-    fun getDownloadUrl(): String? {
-        return url
+        voucherDelegate.handleAction(action)
     }
 
     companion object {
