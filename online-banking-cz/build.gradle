@@ -32,6 +32,8 @@ android {
 }
 
 dependencies {
+    // Checkout
+    api project(':issuer-list')
 
     // Dependencies
     implementation libraries.androidx.appcompat
