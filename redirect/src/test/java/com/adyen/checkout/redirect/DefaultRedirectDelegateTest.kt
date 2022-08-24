@@ -38,7 +38,7 @@ internal class DefaultRedirectDelegateTest {
         redirectHandler.exception = error
 
         delegate.exceptionFlow.test {
-            delegate.handleAction(Activity(), RedirectAction())
+            delegate.handleAction( RedirectAction(), Activity(), "paymentData")
 
             assertEquals(error, awaitItem())
         }
@@ -47,7 +47,7 @@ internal class DefaultRedirectDelegateTest {
     @Test
     fun `when handleAction called with valid data, then no error is propagated`() = runTest {
         delegate.exceptionFlow.test {
-            delegate.handleAction(Activity(), RedirectAction())
+            delegate.handleAction(RedirectAction(), Activity(), "paymentData")
 
             expectNoEvents()
         }

@@ -32,8 +32,8 @@ internal class DefaultRedirectDelegate(
     private val _exceptionFlow: MutableSharedFlow<CheckoutException> = MutableSingleEventSharedFlow()
     override val exceptionFlow: Flow<CheckoutException> = _exceptionFlow
 
-    override fun handleAction(activity: Activity, redirectAction: RedirectAction) {
-        makeRedirect(activity, redirectAction.url)
+    override fun handleAction(action: RedirectAction, activity: Activity, paymentData: String?) {
+        makeRedirect(activity, action.url)
     }
 
     private fun makeRedirect(activity: Activity, url: String?) {

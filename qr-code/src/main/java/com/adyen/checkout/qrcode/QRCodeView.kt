@@ -17,6 +17,7 @@ import androidx.lifecycle.Observer
 import com.adyen.checkout.components.ActionComponentData
 import com.adyen.checkout.components.api.ImageLoader
 import com.adyen.checkout.components.extensions.copyTextToClipboard
+import com.adyen.checkout.components.status.model.TimerData
 import com.adyen.checkout.components.ui.view.AdyenLinearLayout
 import com.adyen.checkout.components.util.PaymentMethodTypes
 import com.adyen.checkout.core.log.LogUtil

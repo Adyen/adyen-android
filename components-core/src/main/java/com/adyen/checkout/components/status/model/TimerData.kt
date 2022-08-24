@@ -6,7 +6,7 @@
  * Created by oscars on 15/8/2022.
  */
 
-package com.adyen.checkout.qrcode
+package com.adyen.checkout.components.status.model
 
 data class TimerData(
     val millisUntilFinished: Long,

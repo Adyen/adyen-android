@@ -13,6 +13,7 @@ import android.content.Intent
 import app.cash.turbine.test
 import com.adyen.checkout.components.model.payments.response.QrCodeAction
 import com.adyen.checkout.components.status.model.StatusResponse
+import com.adyen.checkout.components.status.model.TimerData
 import com.adyen.checkout.components.test.TestStatusRepository
 import com.adyen.checkout.components.util.PaymentMethodTypes
 import com.adyen.checkout.core.exception.ComponentException

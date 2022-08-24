@@ -8,6 +8,7 @@
 
 package com.adyen.checkout.wechatpay
 
+import android.app.Activity
 import android.content.Intent
 import app.cash.turbine.test
 import com.adyen.checkout.components.model.payments.response.SdkAction
@@ -89,7 +90,7 @@ internal class DefaultWeChatDelegateTest(
             )
         )
 
-        delegate.handleAction(action, "name")
+        delegate.handleAction(action, Activity(), "paymentData")
 
         verify(iwxApi).registerApp("appid")
         verify(iwxApi).sendReq(anyOrNull())
@@ -97,10 +98,10 @@ internal class DefaultWeChatDelegateTest(
 
     @Test
     fun `when handling action and sdkData is null, then an error is propagated`() = runTest {
-        val action = SdkAction(sdkData = null)
+        val action = SdkAction<WeChatPaySdkData>(sdkData = null)
 
         delegate.exceptionFlow.test {
-            delegate.handleAction(action, "name")
+            delegate.handleAction(action, Activity(), "paymentData")
 
             assertTrue(awaitItem() is ComponentException)
 
@@ -114,7 +115,7 @@ internal class DefaultWeChatDelegateTest(
         val action = SdkAction(sdkData = WeChatPaySdkData())
 
         delegate.exceptionFlow.test {
-            delegate.handleAction(action, "name")
+            delegate.handleAction(action, Activity(), "paymentData")
 
             assertTrue(awaitItem() is ComponentException)
 

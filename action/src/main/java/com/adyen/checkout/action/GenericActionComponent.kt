@@ -29,7 +29,7 @@ class GenericActionComponent(
     }
 
     @Throws(ComponentException::class)
-    override fun handleActionInternal(activity: Activity, action: Action) {
+    override fun handleActionInternal(action: Action, activity: Activity, paymentData: String?) {
         // TODO
     }
 

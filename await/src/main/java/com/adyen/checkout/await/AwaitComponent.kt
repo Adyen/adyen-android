@@ -21,6 +21,7 @@ import com.adyen.checkout.components.ActionComponentProvider
 import com.adyen.checkout.components.ViewableComponent
 import com.adyen.checkout.components.base.BaseActionComponent
 import com.adyen.checkout.components.model.payments.response.Action
+import com.adyen.checkout.components.model.payments.response.AwaitAction
 import com.adyen.checkout.core.exception.ComponentException
 import com.adyen.checkout.core.log.LogUtil
 import com.adyen.checkout.core.log.Logger
@@ -53,9 +54,12 @@ class AwaitComponent(
         return PROVIDER.canHandleAction(action)
     }
 
-    @Throws(ComponentException::class)
-    override fun handleActionInternal(activity: Activity, action: Action) {
-        paymentData?.let { awaitDelegate.handleAction(action, it) } ?: throw ComponentException("paymentData is null")
+    override fun handleActionInternal(action: Action, activity: Activity, paymentData: String?) {
+        if (action !is AwaitAction) {
+            notifyException(ComponentException("Unsupported action"))
+            return
+        }
+        awaitDelegate.handleAction(action, activity, paymentData)
     }
 
     override fun observe(lifecycleOwner: LifecycleOwner, observer: Observer<ActionComponentData>) {

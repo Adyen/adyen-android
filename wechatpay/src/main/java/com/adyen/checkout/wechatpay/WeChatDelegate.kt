@@ -8,19 +8,10 @@
 
 package com.adyen.checkout.wechatpay
 
-import android.content.Intent
-import com.adyen.checkout.components.model.payments.response.Action
-import com.adyen.checkout.core.exception.CheckoutException
-import kotlinx.coroutines.flow.Flow
-import org.json.JSONObject
+import com.adyen.checkout.components.base.ActionDelegate
+import com.adyen.checkout.components.base.DetailsEmittingDelegate
+import com.adyen.checkout.components.base.IntentHandlingDelegate
+import com.adyen.checkout.components.model.payments.response.SdkAction
+import com.adyen.checkout.components.model.payments.response.WeChatPaySdkData
 
-interface WeChatDelegate {
-
-    val detailsFlow: Flow<JSONObject>
-
-    val exceptionFlow: Flow<CheckoutException>
-
-    fun handleIntent(intent: Intent)
-
-    fun handleAction(action: Action, activityName: String)
-}
+interface WeChatDelegate : ActionDelegate<SdkAction<WeChatPaySdkData>>, DetailsEmittingDelegate, IntentHandlingDelegate

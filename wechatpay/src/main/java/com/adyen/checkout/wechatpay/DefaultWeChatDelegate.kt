@@ -8,10 +8,10 @@
 
 package com.adyen.checkout.wechatpay
 
+import android.app.Activity
 import android.content.Intent
 import androidx.annotation.VisibleForTesting
 import com.adyen.checkout.components.flow.MutableSingleEventSharedFlow
-import com.adyen.checkout.components.model.payments.response.Action
 import com.adyen.checkout.components.model.payments.response.SdkAction
 import com.adyen.checkout.components.model.payments.response.WeChatPaySdkData
 import com.adyen.checkout.core.exception.CheckoutException
@@ -68,13 +68,14 @@ internal class DefaultWeChatDelegate(
         iwxApi.handleIntent(intent, eventHandler)
     }
 
-    override fun handleAction(action: Action, activityName: String) {
+    override fun handleAction(action: SdkAction<WeChatPaySdkData>, activity: Activity, paymentData: String?) {
+        val activityName = activity.javaClass.name
         Logger.d(TAG, "handleAction: activity - $activityName")
 
-        @Suppress("UNCHECKED_CAST")
-        val sdkData = (action as? SdkAction<WeChatPaySdkData>)?.sdkData ?: run {
-            _exceptionFlow.tryEmit(ComponentException("sdkData is null"))
-            return@handleAction
+        val sdkData = action.sdkData
+        if (sdkData == null) {
+            _exceptionFlow.tryEmit(ComponentException("SDK Data is null"))
+            return
         }
 
         val isWeChatNotInitiated = !initiateWeChatPayRedirect(sdkData, activityName)

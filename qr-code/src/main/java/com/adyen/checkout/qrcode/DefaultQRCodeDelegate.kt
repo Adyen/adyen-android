@@ -16,6 +16,7 @@ import com.adyen.checkout.components.model.payments.response.QrCodeAction
 import com.adyen.checkout.components.status.StatusRepository
 import com.adyen.checkout.components.status.api.StatusResponseUtils
 import com.adyen.checkout.components.status.model.StatusResponse
+import com.adyen.checkout.components.status.model.TimerData
 import com.adyen.checkout.components.util.PaymentMethodTypes
 import com.adyen.checkout.core.exception.CheckoutException
 import com.adyen.checkout.core.exception.ComponentException
@@ -77,10 +78,15 @@ internal class DefaultQRCodeDelegate(
         _coroutineScope = coroutineScope
     }
 
-    override fun handleAction(action: QrCodeAction, activity: Activity, paymentData: String) {
+    override fun handleAction(action: QrCodeAction, activity: Activity, paymentData: String?) {
         if (!requiresView(action)) {
             Logger.d(TAG, "Action does not require a view, redirecting.")
             makeRedirect(activity, action)
+            return
+        }
+
+        if (paymentData == null) {
+            _exceptionFlow.tryEmit(ComponentException("Payment data is null"))
             return
         }
 

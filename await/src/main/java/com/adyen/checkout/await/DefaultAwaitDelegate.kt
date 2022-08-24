@@ -8,12 +8,15 @@
 
 package com.adyen.checkout.await
 
+import android.app.Activity
 import androidx.annotation.VisibleForTesting
 import com.adyen.checkout.components.flow.MutableSingleEventSharedFlow
 import com.adyen.checkout.components.model.payments.response.Action
+import com.adyen.checkout.components.model.payments.response.AwaitAction
 import com.adyen.checkout.components.status.StatusRepository
 import com.adyen.checkout.components.status.api.StatusResponseUtils
 import com.adyen.checkout.components.status.model.StatusResponse
+import com.adyen.checkout.components.status.model.TimerData
 import com.adyen.checkout.core.exception.CheckoutException
 import com.adyen.checkout.core.exception.ComponentException
 import com.adyen.checkout.core.log.LogUtil
@@ -23,6 +26,7 @@ import kotlinx.coroutines.Job
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.flowOf
 import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.onEach
 import org.json.JSONException
@@ -43,6 +47,9 @@ internal class DefaultAwaitDelegate(
     private val _exceptionFlow: MutableSharedFlow<CheckoutException> = MutableSingleEventSharedFlow()
     override val exceptionFlow: Flow<CheckoutException> = _exceptionFlow
 
+    // unused in Await
+    override val timerFlow: Flow<TimerData> = flowOf()
+
     private var _coroutineScope: CoroutineScope? = null
     private val coroutineScope: CoroutineScope get() = requireNotNull(_coroutineScope)
 
@@ -52,7 +59,11 @@ internal class DefaultAwaitDelegate(
         _coroutineScope = coroutineScope
     }
 
-    override fun handleAction(action: Action, paymentData: String) {
+    override fun handleAction(action: AwaitAction, activity: Activity, paymentData: String?) {
+        if (paymentData == null) {
+            _exceptionFlow.tryEmit(ComponentException("Payment data is null"))
+            return
+        }
         createOutputData(null, action)
         startStatusPolling(paymentData, action)
     }

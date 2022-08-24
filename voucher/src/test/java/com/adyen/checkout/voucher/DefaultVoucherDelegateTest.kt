@@ -8,6 +8,7 @@
 
 package com.adyen.checkout.voucher
 
+import android.app.Activity
 import app.cash.turbine.test
 import com.adyen.checkout.components.model.payments.response.VoucherAction
 import kotlinx.coroutines.ExperimentalCoroutinesApi
@@ -33,7 +34,9 @@ internal class DefaultVoucherDelegateTest {
                 VoucherAction(
                     paymentMethodType = "payment_method_type",
                     url = "download_url",
-                )
+                ),
+                Activity(),
+                "paymentData",
             )
 
             skipItems(1)

@@ -41,7 +41,7 @@ abstract class BaseActionComponent<ConfigurationT : Configuration>(
         }
         paymentData = action.paymentData
         try {
-            handleActionInternal(activity, action)
+            handleActionInternal(action, activity, paymentData)
         } catch (e: ComponentException) {
             notifyException(e)
         }
@@ -92,7 +92,8 @@ abstract class BaseActionComponent<ConfigurationT : Configuration>(
     }
 
     @Throws(ComponentException::class)
-    protected abstract fun handleActionInternal(activity: Activity, action: Action)
+    protected abstract fun handleActionInternal(action: Action, activity: Activity, paymentData: String?)
+
     @Throws(ComponentException::class)
     protected fun notifyDetails(details: JSONObject) {
         val actionComponentData = ActionComponentData()

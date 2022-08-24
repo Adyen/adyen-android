@@ -8,6 +8,7 @@
 
 package com.adyen.checkout.await
 
+import android.app.Activity
 import app.cash.turbine.test
 import com.adyen.checkout.await.DefaultAwaitDelegate.Companion.PAYLOAD_DETAILS_KEY
 import com.adyen.checkout.components.model.payments.response.AwaitAction
@@ -48,7 +49,7 @@ internal class DefaultAwaitDelegateTest {
         delegate.initialize(CoroutineScope(UnconfinedTestDispatcher()))
 
         delegate.outputDataFlow.test {
-            delegate.handleAction(AwaitAction(paymentMethodType = "test"), "paymentData")
+            delegate.handleAction(AwaitAction(paymentMethodType = "test"), Activity(), "paymentData")
 
             skipItems(1)
 
@@ -74,7 +75,7 @@ internal class DefaultAwaitDelegateTest {
         delegate.initialize(CoroutineScope(UnconfinedTestDispatcher()))
 
         delegate.detailsFlow.test {
-            delegate.handleAction(AwaitAction(paymentMethodType = "test"), "paymentData")
+            delegate.handleAction(AwaitAction(paymentMethodType = "test"), Activity(), "paymentData")
 
             assertEquals("testpayload", awaitItem().getString(PAYLOAD_DETAILS_KEY))
 
@@ -89,7 +90,7 @@ internal class DefaultAwaitDelegateTest {
         delegate.initialize(CoroutineScope(UnconfinedTestDispatcher()))
 
         delegate.exceptionFlow.test {
-            delegate.handleAction(AwaitAction(paymentMethodType = "test"), "paymentData")
+            delegate.handleAction(AwaitAction(paymentMethodType = "test"), Activity(), "paymentData")
 
             assertEquals(error, awaitItem().cause)
 
@@ -105,7 +106,7 @@ internal class DefaultAwaitDelegateTest {
         delegate.initialize(CoroutineScope(UnconfinedTestDispatcher()))
 
         delegate.exceptionFlow.test {
-            delegate.handleAction(AwaitAction(paymentMethodType = "test"), "paymentData")
+            delegate.handleAction(AwaitAction(paymentMethodType = "test"), Activity(), "paymentData")
 
             assertTrue(awaitItem() is ComponentException)
 

@@ -65,7 +65,7 @@ class Adyen3DS2Component(
     }
 
     @Throws(ComponentException::class)
-    override fun handleActionInternal(activity: Activity, action: Action) {
+    override fun handleActionInternal(action: Action, activity: Activity, paymentData: String?) {
         adyen3DS2Delegate.handleAction(action, activity, paymentData)
     }
 

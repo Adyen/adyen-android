@@ -8,27 +8,14 @@
 
 package com.adyen.checkout.await
 
-import com.adyen.checkout.components.model.payments.response.Action
-import com.adyen.checkout.core.exception.CheckoutException
-import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.flow.Flow
-import org.json.JSONObject
+import com.adyen.checkout.components.base.ActionDelegate
+import com.adyen.checkout.components.base.DetailsEmittingDelegate
+import com.adyen.checkout.components.base.StatusPollingDelegate
+import com.adyen.checkout.components.base.ViewableDelegate
+import com.adyen.checkout.components.model.payments.response.AwaitAction
 
-interface AwaitDelegate {
-
-    val outputDataFlow: Flow<AwaitOutputData?>
-
-    val outputData: AwaitOutputData?
-
-    val detailsFlow: Flow<JSONObject>
-
-    val exceptionFlow: Flow<CheckoutException>
-
-    fun initialize(coroutineScope: CoroutineScope)
-
-    fun handleAction(action: Action, paymentData: String)
-
-    fun refreshStatus(paymentData: String)
-
-    fun onCleared()
-}
+interface AwaitDelegate :
+    ActionDelegate<AwaitAction>,
+    DetailsEmittingDelegate,
+    ViewableDelegate<AwaitOutputData>,
+    StatusPollingDelegate
