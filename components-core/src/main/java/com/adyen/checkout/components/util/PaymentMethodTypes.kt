@@ -102,6 +102,7 @@ object PaymentMethodTypes {
             BLIK,
             WECHAT_PAY_SDK,
             PIX,
+            ONLINE_BANKING_CZ,
             ONLINE_BANKING_PL
         )
     )
