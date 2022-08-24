@@ -81,6 +81,8 @@ import com.adyen.checkout.mbway.MBWayView
 import com.adyen.checkout.molpay.MolpayComponent
 import com.adyen.checkout.molpay.MolpayConfiguration
 import com.adyen.checkout.molpay.MolpayRecyclerView
+import com.adyen.checkout.onlinebankingcz.OnlineBankingCZComponent
+import com.adyen.checkout.onlinebankingcz.OnlineBankingCZConfiguration
 import com.adyen.checkout.onlinebankingpl.OnlineBankingPLComponent
 import com.adyen.checkout.onlinebankingpl.OnlineBankingPLConfiguration
 import com.adyen.checkout.onlinebankingpl.OnlineBankingPLRecyclerView
@@ -153,6 +155,9 @@ internal fun <T : Configuration> getDefaultConfigForPaymentMethod(
         PaymentMethodTypes.MOLPAY_THAILAND,
         PaymentMethodTypes.MOLPAY_MALAYSIA,
         PaymentMethodTypes.MOLPAY_VIETNAM -> MolpayConfiguration.Builder(shopperLocale, environment, clientKey)
+        PaymentMethodTypes.ONLINE_BANKING_CZ -> OnlineBankingCZConfiguration.Builder(
+            shopperLocale, environment, clientKey
+        )
         PaymentMethodTypes.ONLINE_BANKING_PL -> OnlineBankingPLConfiguration.Builder(
             shopperLocale,
             environment,
@@ -346,6 +351,11 @@ internal fun getComponentFor(
                 getConfigurationForPaymentMethod(PaymentMethodTypes.MOLPAY_VIETNAM, dropInConfiguration, amount)
             MolpayComponent.PROVIDER.get(fragment, paymentMethod, molpayConfig)
         }
+        PaymentMethodTypes.ONLINE_BANKING_CZ -> {
+            val onlineBankingCZConfig: OnlineBankingCZConfiguration =
+                getConfigurationForPaymentMethod(PaymentMethodTypes.ONLINE_BANKING_CZ, dropInConfiguration, amount)
+            OnlineBankingCZComponent.PROVIDER.get(fragment, paymentMethod, onlineBankingCZConfig)
+        }
         PaymentMethodTypes.ONLINE_BANKING_PL -> {
             val onlineBankingPLConfig: OnlineBankingPLConfiguration =
                 getConfigurationForPaymentMethod(PaymentMethodTypes.ONLINE_BANKING_PL, dropInConfiguration, amount)
@@ -400,6 +410,7 @@ internal fun getViewFor(
         PaymentMethodTypes.MOLPAY_THAILAND,
         PaymentMethodTypes.MOLPAY_MALAYSIA,
         PaymentMethodTypes.MOLPAY_VIETNAM -> MolpayRecyclerView(context)
+        PaymentMethodTypes.ONLINE_BANKING_CZ -> OnlineBankingPLRecyclerView(context)
         PaymentMethodTypes.ONLINE_BANKING_PL -> OnlineBankingPLRecyclerView(context)
         PaymentMethodTypes.OPEN_BANKING -> OpenBankingRecyclerView(context)
         PaymentMethodTypes.SCHEME -> CardView(context)
@@ -505,6 +516,7 @@ private fun Configuration.toBuilder(): BaseConfigurationBuilder<out Configuratio
         is IdealConfiguration -> IdealConfiguration.Builder(this)
         is MBWayConfiguration -> MBWayConfiguration.Builder(this)
         is MolpayConfiguration -> MolpayConfiguration.Builder(this)
+        is OnlineBankingCZConfiguration -> OnlineBankingCZConfiguration.Builder(this)
         is OnlineBankingPLConfiguration -> OnlineBankingPLConfiguration.Builder(this)
         is OpenBankingConfiguration -> OpenBankingConfiguration.Builder(this)
         is QRCodeConfiguration -> QRCodeConfiguration.Builder(this)
