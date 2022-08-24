@@ -12,7 +12,6 @@ import androidx.lifecycle.viewModelScope
 import com.adyen.checkout.components.PaymentComponentProvider
 import com.adyen.checkout.components.PaymentComponentState
 import com.adyen.checkout.components.base.BasePaymentComponent
-import com.adyen.checkout.components.base.GenericPaymentMethodDelegate
 import com.adyen.checkout.components.model.payments.request.MBWayPaymentMethod
 import com.adyen.checkout.components.util.PaymentMethodTypes
 import com.adyen.checkout.core.log.LogUtil
@@ -21,20 +20,15 @@ import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.onEach
 
 /**
- * Component should not be instantiated directly. Instead use the PROVIDER object.
- *
- * @param paymentMethodDelegate [GenericPaymentMethodDelegate]
- * @param mbWayDelegate [MBWayDelegate]
- * @param configuration [MBWayConfiguration]
+ * Component should not be instantiated directly. Instead use the [PROVIDER] object.
  */
 class MBWayComponent(
     savedStateHandle: SavedStateHandle,
-    paymentMethodDelegate: GenericPaymentMethodDelegate,
     private val mbWayDelegate: MBWayDelegate,
     configuration: MBWayConfiguration
 ) :
     BasePaymentComponent<MBWayConfiguration, MBWayInputData, MBWayOutputData,
-        PaymentComponentState<MBWayPaymentMethod>>(savedStateHandle, paymentMethodDelegate, configuration) {
+        PaymentComponentState<MBWayPaymentMethod>>(savedStateHandle, mbWayDelegate, configuration) {
 
     init {
         observeOutputData()
@@ -66,12 +60,13 @@ class MBWayComponent(
     fun getSupportedCountries(): List<String> = SUPPORTED_COUNTRIES
 
     companion object {
-        @JvmStatic
+        @JvmField
         val PROVIDER: PaymentComponentProvider<MBWayComponent, MBWayConfiguration> = MBWayComponentProvider()
+        @JvmField
+        val PAYMENT_METHOD_TYPES = arrayOf(PaymentMethodTypes.MB_WAY)
 
         private val TAG = LogUtil.getTag()
 
-        private val PAYMENT_METHOD_TYPES = arrayOf(PaymentMethodTypes.MB_WAY)
         private const val ISO_CODE_PORTUGAL = "PT"
         private const val ISO_CODE_SPAIN = "ES"
         private val SUPPORTED_COUNTRIES = listOf(ISO_CODE_PORTUGAL, ISO_CODE_SPAIN)

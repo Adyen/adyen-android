@@ -11,14 +11,14 @@ import com.adyen.checkout.components.model.payments.Amount
 import com.adyen.checkout.components.util.CheckoutCurrency.Companion.find
 import com.adyen.checkout.components.util.CheckoutCurrency.Companion.isSupported
 import com.adyen.checkout.core.exception.CheckoutException
-import com.adyen.checkout.core.log.LogUtil.getTag
+import com.adyen.checkout.core.log.LogUtil
 import java.math.BigDecimal
 import java.text.DecimalFormat
 import java.util.Currency
 import java.util.Locale
 
 object CurrencyUtils {
-    val TAG = getTag()
+    private val TAG = LogUtil.getTag()
 
     /**
      * Format the [Amount] to be displayed to the user based on the Locale.

@@ -9,7 +9,7 @@ package com.adyen.checkout.components.ui.adapter
 
 import androidx.annotation.CallSuper
 import androidx.recyclerview.widget.RecyclerView
-import com.adyen.checkout.core.log.LogUtil.getTag
+import com.adyen.checkout.core.log.LogUtil
 import com.adyen.checkout.core.log.Logger
 
 abstract class ClickableListRecyclerAdapter<ViewHolderT : RecyclerView.ViewHolder> :
@@ -34,6 +34,6 @@ abstract class ClickableListRecyclerAdapter<ViewHolderT : RecyclerView.ViewHolde
     }
 
     companion object {
-        val TAG = getTag()
+        private val TAG = LogUtil.getTag()
     }
 }

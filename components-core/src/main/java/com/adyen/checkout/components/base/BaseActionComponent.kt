@@ -20,7 +20,7 @@ import com.adyen.checkout.components.base.lifecycle.ActionComponentViewModel
 import com.adyen.checkout.components.model.payments.response.Action
 import com.adyen.checkout.core.exception.CheckoutException
 import com.adyen.checkout.core.exception.ComponentException
-import com.adyen.checkout.core.log.LogUtil.getTag
+import com.adyen.checkout.core.log.LogUtil
 import com.adyen.checkout.core.log.Logger
 import org.json.JSONObject
 
@@ -112,7 +112,7 @@ abstract class BaseActionComponent<ConfigurationT : Configuration>(
         }
 
     companion object {
-        private val TAG = getTag()
+        private val TAG = LogUtil.getTag()
         private const val PAYMENT_DATA_KEY = "payment_data"
     }
 }

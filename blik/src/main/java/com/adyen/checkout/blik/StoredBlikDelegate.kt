@@ -63,6 +63,8 @@ internal class StoredBlikDelegate(val storedPaymentMethod: StoredPaymentMethod) 
         componentStateChanged(paymentComponentState)
     }
 
+    override fun requiresInput(): Boolean = false
+
     private fun componentStateChanged(componentState: PaymentComponentState<BlikPaymentMethod>) {
         _componentStateFlow.tryEmit(componentState)
     }

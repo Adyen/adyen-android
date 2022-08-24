@@ -10,7 +10,7 @@ package com.adyen.checkout.blik
 import com.adyen.checkout.components.base.OutputData
 import com.adyen.checkout.components.ui.FieldState
 import com.adyen.checkout.components.ui.Validation
-import com.adyen.checkout.core.log.LogUtil.getTag
+import com.adyen.checkout.core.log.LogUtil
 import com.adyen.checkout.core.log.Logger
 
 class BlikOutputData(blikCode: String) : OutputData {
@@ -34,7 +34,7 @@ class BlikOutputData(blikCode: String) : OutputData {
     }
 
     companion object {
-        private val TAG = getTag()
+        private val TAG = LogUtil.getTag()
         private const val BLIK_CODE_LENGTH = 6
     }
 

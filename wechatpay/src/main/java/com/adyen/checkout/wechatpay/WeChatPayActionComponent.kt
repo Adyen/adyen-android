@@ -58,6 +58,7 @@ class WeChatPayActionComponent(
     }
 
     companion object {
+        @JvmField
         val PROVIDER: ActionComponentProvider<WeChatPayActionComponent, WeChatPayActionConfiguration> =
             WeChatPayActionComponentProvider()
     }

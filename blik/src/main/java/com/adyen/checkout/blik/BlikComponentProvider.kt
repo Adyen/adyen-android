@@ -13,8 +13,6 @@ import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.ViewModelStoreOwner
 import androidx.savedstate.SavedStateRegistryOwner
 import com.adyen.checkout.components.StoredPaymentComponentProvider
-import com.adyen.checkout.components.base.GenericPaymentMethodDelegate
-import com.adyen.checkout.components.base.GenericStoredPaymentDelegate
 import com.adyen.checkout.components.base.lifecycle.viewModelFactory
 import com.adyen.checkout.components.model.paymentmethods.PaymentMethod
 import com.adyen.checkout.components.model.paymentmethods.StoredPaymentMethod
@@ -32,7 +30,6 @@ class BlikComponentProvider : StoredPaymentComponentProvider<BlikComponent, Blik
             viewModelFactory(savedStateRegistryOwner, defaultArgs) { savedStateHandle ->
                 BlikComponent(
                     savedStateHandle = savedStateHandle,
-                    paymentMethodDelegate = GenericPaymentMethodDelegate(paymentMethod),
                     blikDelegate = DefaultBlikDelegate(paymentMethod),
                     configuration = configuration,
                 )
@@ -51,7 +48,6 @@ class BlikComponentProvider : StoredPaymentComponentProvider<BlikComponent, Blik
             viewModelFactory(savedStateRegistryOwner, defaultArgs) { savedStateHandle ->
                 BlikComponent(
                     savedStateHandle = savedStateHandle,
-                    paymentMethodDelegate = GenericStoredPaymentDelegate(storedPaymentMethod),
                     blikDelegate = StoredBlikDelegate(storedPaymentMethod),
                     configuration = configuration,
                 )

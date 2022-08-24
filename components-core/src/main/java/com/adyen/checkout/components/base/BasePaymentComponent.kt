@@ -21,16 +21,9 @@ import com.adyen.checkout.components.analytics.AnalyticsDispatcher.Companion.dis
 import com.adyen.checkout.components.base.lifecycle.PaymentComponentViewModel
 import com.adyen.checkout.components.model.payments.request.PaymentMethodDetails
 import com.adyen.checkout.core.exception.CheckoutException
-import com.adyen.checkout.core.log.LogUtil.getTag
+import com.adyen.checkout.core.log.LogUtil
 import com.adyen.checkout.core.log.Logger
 
-/**
- * Component should not be instantiated directly. Instead use the PROVIDER object.
- *
- * @param savedStateHandle      [SavedStateHandle]
- * @param paymentMethodDelegate [PaymentMethodDelegateOld]
- * @param configuration         [ConfigurationT]
- */
 @Suppress("TooManyFunctions")
 abstract class BasePaymentComponent<
     ConfigurationT : Configuration,
@@ -39,9 +32,9 @@ abstract class BasePaymentComponent<
     ComponentStateT : PaymentComponentState<out PaymentMethodDetails>
     >(
     savedStateHandle: SavedStateHandle,
-    paymentMethodDelegate: PaymentMethodDelegateOld,
+    private val paymentMethodDelegate: PaymentMethodDelegate<ConfigurationT, InputDataT, OutputDataT, ComponentStateT>,
     configuration: ConfigurationT
-) : PaymentComponentViewModel<ConfigurationT, ComponentStateT>(savedStateHandle, paymentMethodDelegate, configuration),
+) : PaymentComponentViewModel<ConfigurationT, ComponentStateT>(savedStateHandle, configuration),
     ViewableComponent<OutputDataT, ConfigurationT, ComponentStateT> {
 
     abstract val inputData: InputDataT
@@ -190,6 +183,6 @@ abstract class BasePaymentComponent<
     }
 
     companion object {
-        private val TAG = getTag()
+        private val TAG = LogUtil.getTag()
     }
 }

@@ -12,24 +12,22 @@ import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.viewModelScope
 import com.adyen.checkout.components.StoredPaymentComponentProvider
 import com.adyen.checkout.components.base.BasePaymentComponent
-import com.adyen.checkout.components.base.PaymentMethodDelegateOld
 import com.adyen.checkout.components.util.PaymentMethodTypes
 import com.adyen.checkout.core.log.LogUtil
 import kotlinx.coroutines.flow.filterNotNull
 import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.onEach
 
-private val TAG = LogUtil.getTag()
-
-@Suppress("TooManyFunctions")
+/**
+ * Component should not be instantiated directly. Instead use the [PROVIDER] object.
+ */
 class CardComponent(
     savedStateHandle: SavedStateHandle,
-    paymentMethodDelegate: PaymentMethodDelegateOld,
     private val cardDelegate: CardDelegate,
     cardConfiguration: CardConfiguration
 ) : BasePaymentComponent<CardConfiguration, CardInputData, CardOutputData, CardComponentState>(
     savedStateHandle,
-    paymentMethodDelegate,
+    cardDelegate,
     cardConfiguration
 ) {
 
@@ -78,8 +76,11 @@ class CardComponent(
     }
 
     companion object {
-        @JvmStatic
+        private val TAG = LogUtil.getTag()
+
+        @JvmField
         val PROVIDER: StoredPaymentComponentProvider<CardComponent, CardConfiguration> = CardComponentProvider()
+        @JvmField
         val PAYMENT_METHOD_TYPES = arrayOf(PaymentMethodTypes.SCHEME)
     }
 }

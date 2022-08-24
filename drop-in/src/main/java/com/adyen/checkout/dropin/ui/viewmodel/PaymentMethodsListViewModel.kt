@@ -226,7 +226,7 @@ class PaymentMethodsListViewModel(
     }
 
     companion object {
-        val TAG = LogUtil.getTag()
+        private val TAG = LogUtil.getTag()
 
         private const val CARD_LOGO_TYPE = "card"
         private const val GOOGLE_PAY_LOGO_TYPE = PaymentMethodTypes.GOOGLE_PAY

@@ -12,22 +12,23 @@ import androidx.lifecycle.viewModelScope
 import com.adyen.checkout.components.PaymentComponentProvider
 import com.adyen.checkout.components.PaymentComponentState
 import com.adyen.checkout.components.base.BasePaymentComponent
-import com.adyen.checkout.components.base.GenericPaymentMethodDelegate
 import com.adyen.checkout.components.model.payments.request.SepaPaymentMethod
 import com.adyen.checkout.components.util.PaymentMethodTypes
-import com.adyen.checkout.core.log.LogUtil.getTag
+import com.adyen.checkout.core.log.LogUtil
 import kotlinx.coroutines.flow.filterNotNull
 import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.onEach
 
+/**
+ * Component should not be instantiated directly. Instead use the [PROVIDER] object.
+ */
 class SepaComponent(
     savedStateHandle: SavedStateHandle,
-    paymentMethodDelegate: GenericPaymentMethodDelegate,
     private val sepaDelegate: SepaDelegate,
     configuration: SepaConfiguration,
 ) : BasePaymentComponent<SepaConfiguration, SepaInputData, SepaOutputData, PaymentComponentState<SepaPaymentMethod>>(
     savedStateHandle,
-    paymentMethodDelegate,
+    sepaDelegate,
     configuration
 ) {
 
@@ -52,8 +53,10 @@ class SepaComponent(
     }
 
     companion object {
-        private val TAG = getTag()
+        private val TAG = LogUtil.getTag()
+        @JvmField
         val PROVIDER: PaymentComponentProvider<SepaComponent, SepaConfiguration> = SepaComponentProvider()
+        @JvmField
         val PAYMENT_METHOD_TYPES = arrayOf(PaymentMethodTypes.SEPA)
     }
 }

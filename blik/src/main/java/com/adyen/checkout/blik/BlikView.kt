@@ -20,7 +20,7 @@ import com.adyen.checkout.components.model.payments.request.BlikPaymentMethod
 import com.adyen.checkout.components.ui.Validation
 import com.adyen.checkout.components.ui.view.AdyenLinearLayout
 import com.adyen.checkout.components.ui.view.AdyenTextInputEditText
-import com.adyen.checkout.core.log.LogUtil.getTag
+import com.adyen.checkout.core.log.LogUtil
 import com.adyen.checkout.core.log.Logger
 import com.google.android.material.textfield.TextInputLayout
 
@@ -100,6 +100,6 @@ class BlikView @JvmOverloads constructor(context: Context, attrs: AttributeSet? 
     }
 
     companion object {
-        private val TAG = getTag()
+        private val TAG = LogUtil.getTag()
     }
 }

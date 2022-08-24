@@ -28,7 +28,7 @@ class ActionHandler(
 ) : Observer<ActionComponentData> {
 
     companion object {
-        val TAG = LogUtil.getTag()
+        private val TAG = LogUtil.getTag()
         const val UNKNOWN_ACTION = "UNKNOWN ACTION"
         private const val BUNDLE_ACTION = "bundle_action"
     }

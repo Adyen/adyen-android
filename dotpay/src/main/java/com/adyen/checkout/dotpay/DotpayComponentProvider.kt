@@ -13,7 +13,6 @@ import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.ViewModelStoreOwner
 import androidx.savedstate.SavedStateRegistryOwner
 import com.adyen.checkout.components.PaymentComponentProvider
-import com.adyen.checkout.components.base.GenericPaymentMethodDelegate
 import com.adyen.checkout.components.base.lifecycle.viewModelFactory
 import com.adyen.checkout.components.model.paymentmethods.PaymentMethod
 import com.adyen.checkout.components.model.payments.request.DotpayPaymentMethod
@@ -30,7 +29,7 @@ class DotpayComponentProvider : PaymentComponentProvider<DotpayComponent, Dotpay
         val genericFactory: ViewModelProvider.Factory =
             viewModelFactory(savedStateRegistryOwner, defaultArgs) { savedStateHandle ->
                 val delegate = DefaultIssuerListDelegate(paymentMethod) { DotpayPaymentMethod() }
-                DotpayComponent(savedStateHandle, GenericPaymentMethodDelegate(paymentMethod), delegate, configuration)
+                DotpayComponent(savedStateHandle, delegate, configuration)
             }
         return ViewModelProvider(viewModelStoreOwner, genericFactory).get(DotpayComponent::class.java)
     }

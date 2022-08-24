@@ -13,7 +13,6 @@ import com.adyen.checkout.card.data.CardType
 import com.adyen.checkout.components.PaymentComponentProvider
 import com.adyen.checkout.components.PaymentComponentState
 import com.adyen.checkout.components.base.BasePaymentComponent
-import com.adyen.checkout.components.base.GenericPaymentMethodDelegate
 import com.adyen.checkout.components.model.payments.request.CardPaymentMethod
 import com.adyen.checkout.components.util.PaymentMethodTypes
 import kotlinx.coroutines.flow.filterNotNull
@@ -21,18 +20,14 @@ import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.onEach
 
 /**
- * Constructs a [BcmcComponent] object.
- *
- * @param paymentMethodDelegate [GenericPaymentMethodDelegate] represents payment method.
- * @param configuration [BcmcConfiguration].
+ * Component should not be instantiated directly. Instead use the [PROVIDER] object.
  */
 class BcmcComponent(
     savedStateHandle: SavedStateHandle,
-    paymentMethodDelegate: GenericPaymentMethodDelegate,
     private val bcmcDelegate: BcmcDelegate,
     configuration: BcmcConfiguration,
 ) : BasePaymentComponent<BcmcConfiguration, BcmcInputData, BcmcOutputData,
-    PaymentComponentState<CardPaymentMethod>>(savedStateHandle, paymentMethodDelegate, configuration) {
+    PaymentComponentState<CardPaymentMethod>>(savedStateHandle, bcmcDelegate, configuration) {
 
     override val inputData: BcmcInputData = BcmcInputData()
 
@@ -65,13 +60,11 @@ class BcmcComponent(
     }
 
     companion object {
-
-        private val PAYMENT_METHOD_TYPES = arrayOf(PaymentMethodTypes.BCMC)
-
         @JvmField
         val PROVIDER: PaymentComponentProvider<BcmcComponent, BcmcConfiguration> = BcmcComponentProvider()
-
         @JvmField
-        val SUPPORTED_CARD_TYPE = CardType.BCMC
+        val PAYMENT_METHOD_TYPES = arrayOf(PaymentMethodTypes.BCMC)
+
+        internal val SUPPORTED_CARD_TYPE = CardType.BCMC
     }
 }

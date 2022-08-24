@@ -100,9 +100,7 @@ import com.adyen.checkout.wechatpay.WeChatPayActionComponent
 import com.adyen.checkout.wechatpay.WeChatPayActionConfiguration
 import com.adyen.checkout.wechatpay.WeChatPayProvider
 
-object ComponentParsingProvider {
-    val TAG = LogUtil.getTag()
-}
+private val TAG = LogUtil.getTag()
 
 internal inline fun <reified T : Configuration> getConfigurationForPaymentMethod(
     paymentMethod: String,
@@ -122,7 +120,7 @@ private inline fun <reified T> overrideConfigurationAmount(
     configuration: Configuration,
     amount: Amount
 ): T where T : Configuration, T : AmountConfiguration {
-    Logger.d(ComponentParsingProvider.TAG, "Overriding ${configuration::class.java.simpleName} with $amount")
+    Logger.d(TAG, "Overriding ${configuration::class.java.simpleName} with $amount")
     return configuration.toBuilder().apply {
         (this as AmountConfigurationBuilder).setAmount(amount)
     }.build() as T
@@ -219,7 +217,7 @@ internal fun checkPaymentMethodAvailability(
     callback: ComponentAvailableCallback<in Configuration>
 ) {
     try {
-        Logger.v(ComponentParsingProvider.TAG, "Checking availability for type - ${paymentMethod.type}")
+        Logger.v(TAG, "Checking availability for type - ${paymentMethod.type}")
 
         val type = paymentMethod.type ?: throw CheckoutException("PaymentMethod type is null")
 
@@ -228,7 +226,7 @@ internal fun checkPaymentMethodAvailability(
 
         availabilityCheck.isAvailable(application, paymentMethod, configuration, callback)
     } catch (e: CheckoutException) {
-        Logger.e(ComponentParsingProvider.TAG, "Unable to initiate ${paymentMethod.type}", e)
+        Logger.e(TAG, "Unable to initiate ${paymentMethod.type}", e)
         callback.onAvailabilityResult(false, paymentMethod, null)
     }
 }

@@ -83,6 +83,6 @@ internal class CheckoutConfigurationProvider @Inject constructor(
             .build()
 
     companion object {
-        private val TAG: String = LogUtil.getTag()
+        private val TAG = LogUtil.getTag()
     }
 }
