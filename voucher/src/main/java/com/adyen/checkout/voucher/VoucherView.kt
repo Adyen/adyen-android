@@ -75,7 +75,7 @@ class VoucherView @JvmOverloads constructor(
     }
 
     private fun launchDownloadIntent() {
-        val url = component.getDownloadUrl() ?: return
+        val url = component.outputData?.downloadUrl ?: return
         val intent = CustomTabsIntent.Builder()
             .setShowTitle(true)
             .setToolbarColor(ThemeUtil.getPrimaryThemeColor(context))
