@@ -11,13 +11,14 @@ import android.app.Activity
 import android.content.Intent
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.viewModelScope
+import com.adyen.checkout.components.PaymentComponentProvider
 import com.adyen.checkout.components.base.ActivityResultHandlingComponent
 import com.adyen.checkout.components.base.BasePaymentComponent
-import com.adyen.checkout.components.base.GenericPaymentMethodDelegate
 import com.adyen.checkout.components.util.PaymentMethodTypes
 import com.adyen.checkout.core.exception.ComponentException
-import com.adyen.checkout.core.log.LogUtil.getTag
+import com.adyen.checkout.core.log.LogUtil
 import com.adyen.checkout.core.log.Logger.d
+import com.adyen.checkout.googlepay.GooglePayComponent.Companion.PROVIDER
 import com.adyen.checkout.googlepay.util.GooglePayUtils
 import com.google.android.gms.wallet.AutoResolveHelper
 import com.google.android.gms.wallet.PaymentData
@@ -26,14 +27,16 @@ import kotlinx.coroutines.flow.filterNotNull
 import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.onEach
 
+/**
+ * Component should not be instantiated directly. Instead use the [PROVIDER] object.
+ */
 class GooglePayComponent(
     savedStateHandle: SavedStateHandle,
-    paymentMethodDelegate: GenericPaymentMethodDelegate,
     private val googlePayDelegate: GooglePayDelegate,
     configuration: GooglePayConfiguration
 ) : BasePaymentComponent<GooglePayConfiguration, GooglePayInputData, GooglePayOutputData, GooglePayComponentState>(
         savedStateHandle,
-        paymentMethodDelegate,
+        googlePayDelegate,
         configuration
     ),
     ActivityResultHandlingComponent {
@@ -104,11 +107,13 @@ class GooglePayComponent(
     }
 
     companion object {
-        private val TAG = getTag()
+        private val TAG = LogUtil.getTag()
 
         @JvmField
-        val PROVIDER = GooglePayComponentProvider()
+        val PROVIDER: PaymentComponentProvider<GooglePayComponent, GooglePayConfiguration> =
+            GooglePayComponentProvider()
 
+        @JvmField
         val PAYMENT_METHOD_TYPES = arrayOf(PaymentMethodTypes.GOOGLE_PAY, PaymentMethodTypes.GOOGLE_PAY_LEGACY)
     }
 }

@@ -13,7 +13,6 @@ import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.ViewModelStoreOwner
 import androidx.savedstate.SavedStateRegistryOwner
 import com.adyen.checkout.components.PaymentComponentProvider
-import com.adyen.checkout.components.base.GenericPaymentMethodDelegate
 import com.adyen.checkout.components.base.lifecycle.viewModelFactory
 import com.adyen.checkout.components.model.paymentmethods.PaymentMethod
 import com.adyen.checkout.components.model.payments.request.EntercashPaymentMethod
@@ -32,7 +31,6 @@ class EntercashComponentProvider : PaymentComponentProvider<EntercashComponent, 
                 val delegate = DefaultIssuerListDelegate(paymentMethod) { EntercashPaymentMethod() }
                 EntercashComponent(
                     savedStateHandle,
-                    GenericPaymentMethodDelegate(paymentMethod),
                     delegate,
                     configuration
                 )

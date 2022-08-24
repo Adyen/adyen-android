@@ -12,25 +12,25 @@ import androidx.lifecycle.viewModelScope
 import com.adyen.checkout.components.PaymentComponentState
 import com.adyen.checkout.components.StoredPaymentComponentProvider
 import com.adyen.checkout.components.base.BasePaymentComponent
-import com.adyen.checkout.components.base.GenericPaymentMethodDelegate
-import com.adyen.checkout.components.base.PaymentMethodDelegateOld
 import com.adyen.checkout.components.model.payments.request.BlikPaymentMethod
 import com.adyen.checkout.components.util.PaymentMethodTypes
-import com.adyen.checkout.core.log.LogUtil.getTag
+import com.adyen.checkout.core.log.LogUtil
 import kotlinx.coroutines.flow.filterNotNull
 import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.onEach
 
+/**
+ * Component should not be instantiated directly. Instead use the [PROVIDER] object.
+ */
 class BlikComponent(
     savedStateHandle: SavedStateHandle,
-    paymentMethodDelegate: PaymentMethodDelegateOld,
     private val blikDelegate: BlikDelegate,
     configuration: BlikConfiguration
 ) : BasePaymentComponent<
     BlikConfiguration,
     BlikInputData,
     BlikOutputData,
-    PaymentComponentState<BlikPaymentMethod>>(savedStateHandle, paymentMethodDelegate, configuration) {
+    PaymentComponentState<BlikPaymentMethod>>(savedStateHandle, blikDelegate, configuration) {
 
     override val inputData: BlikInputData = BlikInputData()
 
@@ -40,7 +40,7 @@ class BlikComponent(
     }
 
     override fun requiresInput(): Boolean {
-        return paymentMethodDelegate is GenericPaymentMethodDelegate
+        return blikDelegate.requiresInput()
     }
 
     override fun onInputDataChanged(inputData: BlikInputData) {
@@ -64,10 +64,11 @@ class BlikComponent(
     override fun getSupportedPaymentMethodTypes(): Array<String> = PAYMENT_METHOD_TYPES
 
     companion object {
-        private val TAG = getTag()
+        private val TAG = LogUtil.getTag()
 
         @JvmField
         val PROVIDER: StoredPaymentComponentProvider<BlikComponent, BlikConfiguration> = BlikComponentProvider()
+        @JvmField
         val PAYMENT_METHOD_TYPES = arrayOf(PaymentMethodTypes.BLIK)
     }
 }

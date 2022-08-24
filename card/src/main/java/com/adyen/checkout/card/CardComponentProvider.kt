@@ -15,8 +15,6 @@ import com.adyen.checkout.card.data.CardType
 import com.adyen.checkout.card.repository.DefaultAddressRepository
 import com.adyen.checkout.card.repository.DefaultDetectCardTypeRepository
 import com.adyen.checkout.components.StoredPaymentComponentProvider
-import com.adyen.checkout.components.base.GenericPaymentMethodDelegate
-import com.adyen.checkout.components.base.GenericStoredPaymentDelegate
 import com.adyen.checkout.components.base.lifecycle.viewModelFactory
 import com.adyen.checkout.components.model.paymentmethods.PaymentMethod
 import com.adyen.checkout.components.model.paymentmethods.StoredPaymentMethod
@@ -47,7 +45,6 @@ class CardComponentProvider : StoredPaymentComponentProvider<CardComponent, Card
         val factory = viewModelFactory(savedStateRegistryOwner, defaultArgs) { savedStateHandle ->
             CardComponent(
                 savedStateHandle,
-                GenericPaymentMethodDelegate(paymentMethod),
                 DefaultCardDelegate(
                     publicKeyRepository,
                     verifiedConfiguration,
@@ -77,7 +74,6 @@ class CardComponentProvider : StoredPaymentComponentProvider<CardComponent, Card
         val factory = viewModelFactory(savedStateRegistryOwner, defaultArgs) { savedStateHandle ->
             CardComponent(
                 savedStateHandle,
-                GenericStoredPaymentDelegate(storedPaymentMethod),
                 StoredCardDelegate(
                     storedPaymentMethod,
                     configuration,

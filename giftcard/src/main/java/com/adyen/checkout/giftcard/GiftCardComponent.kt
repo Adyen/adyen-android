@@ -11,26 +11,21 @@ import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.viewModelScope
 import com.adyen.checkout.components.PaymentComponentProvider
 import com.adyen.checkout.components.base.BasePaymentComponent
-import com.adyen.checkout.components.base.GenericPaymentMethodDelegate
 import com.adyen.checkout.components.util.PaymentMethodTypes
 import kotlinx.coroutines.flow.filterNotNull
 import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.onEach
 
 /**
- * Component should not be instantiated directly. Instead use the PROVIDER object.
- *
- * @param paymentMethodDelegate [GenericPaymentMethodDelegate]
- * @param configuration [GiftCardConfiguration]
+ * Component should not be instantiated directly. Instead use the [PROVIDER] object.
  */
 class GiftCardComponent(
     savedStateHandle: SavedStateHandle,
-    paymentMethodDelegate: GenericPaymentMethodDelegate,
     private val giftCardDelegate: GiftCardDelegate,
     configuration: GiftCardConfiguration,
 ) : BasePaymentComponent<GiftCardConfiguration, GiftCardInputData, GiftCardOutputData, GiftCardComponentState>(
     savedStateHandle,
-    paymentMethodDelegate,
+    giftCardDelegate,
     configuration
 ) {
 
@@ -61,8 +56,9 @@ class GiftCardComponent(
     override fun getSupportedPaymentMethodTypes(): Array<String> = PAYMENT_METHOD_TYPES
 
     companion object {
-        @JvmStatic
+        @JvmField
         val PROVIDER: PaymentComponentProvider<GiftCardComponent, GiftCardConfiguration> = GiftCardComponentProvider()
+        @JvmField
         val PAYMENT_METHOD_TYPES = arrayOf(PaymentMethodTypes.GIFTCARD)
     }
 }

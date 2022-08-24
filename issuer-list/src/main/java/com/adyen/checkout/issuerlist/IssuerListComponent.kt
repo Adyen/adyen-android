@@ -11,15 +11,16 @@ import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.viewModelScope
 import com.adyen.checkout.components.PaymentComponentState
 import com.adyen.checkout.components.base.BasePaymentComponent
-import com.adyen.checkout.components.base.GenericPaymentMethodDelegate
 import com.adyen.checkout.components.model.payments.request.IssuerListPaymentMethod
 import kotlinx.coroutines.flow.filterNotNull
 import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.onEach
 
+/**
+ * Component should not be instantiated directly.
+ */
 abstract class IssuerListComponent<IssuerListPaymentMethodT : IssuerListPaymentMethod>(
     savedStateHandle: SavedStateHandle,
-    genericPaymentMethodDelegate: GenericPaymentMethodDelegate,
     private val issuerListDelegate: IssuerListDelegate<IssuerListPaymentMethodT>,
     configuration: IssuerListConfiguration
 ) : BasePaymentComponent<
@@ -29,7 +30,7 @@ abstract class IssuerListComponent<IssuerListPaymentMethodT : IssuerListPaymentM
     PaymentComponentState<IssuerListPaymentMethodT>
     >(
     savedStateHandle,
-    genericPaymentMethodDelegate,
+    issuerListDelegate,
     configuration
 ) {
 

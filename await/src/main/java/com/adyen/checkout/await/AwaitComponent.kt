@@ -22,7 +22,7 @@ import com.adyen.checkout.components.ViewableComponent
 import com.adyen.checkout.components.base.BaseActionComponent
 import com.adyen.checkout.components.model.payments.response.Action
 import com.adyen.checkout.core.exception.ComponentException
-import com.adyen.checkout.core.log.LogUtil.getTag
+import com.adyen.checkout.core.log.LogUtil
 import com.adyen.checkout.core.log.Logger
 import kotlinx.coroutines.flow.filterNotNull
 import kotlinx.coroutines.flow.launchIn
@@ -86,7 +86,7 @@ class AwaitComponent(
     }
 
     companion object {
-        val TAG = getTag()
+        private val TAG = LogUtil.getTag()
 
         @JvmField
         val PROVIDER: ActionComponentProvider<AwaitComponent, AwaitConfiguration> = AwaitComponentProvider()

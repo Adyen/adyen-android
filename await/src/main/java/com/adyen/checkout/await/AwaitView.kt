@@ -20,7 +20,7 @@ import com.adyen.checkout.components.api.ImageLoader
 import com.adyen.checkout.components.api.ImageLoader.Companion.getInstance
 import com.adyen.checkout.components.ui.view.AdyenLinearLayout
 import com.adyen.checkout.components.util.PaymentMethodTypes
-import com.adyen.checkout.core.log.LogUtil.getTag
+import com.adyen.checkout.core.log.LogUtil
 import com.adyen.checkout.core.log.Logger
 
 class AwaitView @JvmOverloads constructor(
@@ -106,6 +106,6 @@ class AwaitView @JvmOverloads constructor(
         }
 
     companion object {
-        private val TAG = getTag()
+        private val TAG = LogUtil.getTag()
     }
 }

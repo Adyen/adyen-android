@@ -10,20 +10,20 @@ package com.adyen.checkout.onlinebankingpl
 
 import androidx.lifecycle.SavedStateHandle
 import com.adyen.checkout.components.PaymentComponentProvider
-import com.adyen.checkout.components.base.GenericPaymentMethodDelegate
 import com.adyen.checkout.components.model.payments.request.OnlineBankingPLPaymentMethod
 import com.adyen.checkout.components.util.PaymentMethodTypes
 import com.adyen.checkout.issuerlist.IssuerListComponent
 import com.adyen.checkout.issuerlist.IssuerListDelegate
 
+/**
+ * Component should not be instantiated directly. Instead use the [PROVIDER] object.
+ */
 class OnlineBankingPLComponent(
     savedStateHandle: SavedStateHandle,
-    paymentMethodDelegate: GenericPaymentMethodDelegate,
     issuerListDelegate: IssuerListDelegate<OnlineBankingPLPaymentMethod>,
     configuration: OnlineBankingPLConfiguration
 ) : IssuerListComponent<OnlineBankingPLPaymentMethod>(
     savedStateHandle,
-    paymentMethodDelegate,
     issuerListDelegate,
     configuration
 ) {
@@ -33,6 +33,7 @@ class OnlineBankingPLComponent(
         @JvmField
         val PROVIDER: PaymentComponentProvider<OnlineBankingPLComponent, OnlineBankingPLConfiguration> =
             OnlineBankingPLComponentProvider()
+        @JvmField
         val PAYMENT_METHOD_TYPES = arrayOf(PaymentMethodTypes.ONLINE_BANKING_PL)
     }
 }

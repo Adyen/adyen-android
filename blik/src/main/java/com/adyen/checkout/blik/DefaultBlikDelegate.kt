@@ -64,6 +64,8 @@ internal class DefaultBlikDelegate(val paymentMethod: PaymentMethod) : BlikDeleg
         _componentStateFlow.tryEmit(componentState)
     }
 
+    override fun requiresInput(): Boolean = true
+
     companion object {
         private val TAG = LogUtil.getTag()
     }

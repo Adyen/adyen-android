@@ -12,7 +12,6 @@ import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.ViewModelStoreOwner
 import androidx.savedstate.SavedStateRegistryOwner
 import com.adyen.checkout.components.PaymentComponentProvider
-import com.adyen.checkout.components.base.GenericPaymentMethodDelegate
 import com.adyen.checkout.components.base.lifecycle.viewModelFactory
 import com.adyen.checkout.components.model.paymentmethods.PaymentMethod
 import com.adyen.checkout.components.repository.DefaultPublicKeyRepository
@@ -33,7 +32,6 @@ class GiftCardComponentProvider : PaymentComponentProvider<GiftCardComponent, Gi
         val giftCardFactory = viewModelFactory(savedStateRegistryOwner, defaultArgs) { savedStateHandle ->
             GiftCardComponent(
                 savedStateHandle = savedStateHandle,
-                paymentMethodDelegate = GenericPaymentMethodDelegate(paymentMethod),
                 giftCardDelegate = DefaultGiftCardDelegate(
                     paymentMethod,
                     DefaultPublicKeyRepository(),

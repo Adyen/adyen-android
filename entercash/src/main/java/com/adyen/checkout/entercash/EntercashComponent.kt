@@ -9,23 +9,20 @@ package com.adyen.checkout.entercash
 
 import androidx.lifecycle.SavedStateHandle
 import com.adyen.checkout.components.PaymentComponentProvider
-import com.adyen.checkout.components.base.GenericPaymentMethodDelegate
 import com.adyen.checkout.components.model.payments.request.EntercashPaymentMethod
 import com.adyen.checkout.components.util.PaymentMethodTypes
 import com.adyen.checkout.issuerlist.IssuerListComponent
 import com.adyen.checkout.issuerlist.IssuerListDelegate
 
 /**
- * PaymentComponent to handle iDeal payments.
+ * Component should not be instantiated directly. Instead use the [PROVIDER] object.
  */
 class EntercashComponent(
     savedStateHandle: SavedStateHandle,
-    paymentMethodDelegate: GenericPaymentMethodDelegate,
     issuerListDelegate: IssuerListDelegate<EntercashPaymentMethod>,
     configuration: EntercashConfiguration
 ) : IssuerListComponent<EntercashPaymentMethod>(
     savedStateHandle,
-    paymentMethodDelegate,
     issuerListDelegate,
     configuration
 ) {
@@ -36,6 +33,7 @@ class EntercashComponent(
         @JvmField
         val PROVIDER: PaymentComponentProvider<EntercashComponent, EntercashConfiguration> =
             EntercashComponentProvider()
+        @JvmField
         val PAYMENT_METHOD_TYPES = arrayOf(PaymentMethodTypes.ENTERCASH)
     }
 }

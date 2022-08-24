@@ -24,4 +24,6 @@ interface BlikDelegate :
     val outputDataFlow: Flow<BlikOutputData?>
 
     val componentStateFlow: Flow<PaymentComponentState<BlikPaymentMethod>?>
+
+    fun requiresInput(): Boolean
 }
