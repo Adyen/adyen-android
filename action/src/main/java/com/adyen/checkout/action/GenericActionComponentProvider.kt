@@ -9,11 +9,14 @@
 package com.adyen.checkout.action
 
 import android.app.Application
+import android.content.Context
 import android.os.Bundle
+import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.ViewModelStoreOwner
 import androidx.savedstate.SavedStateRegistryOwner
 import com.adyen.checkout.components.ActionComponentProvider
+import com.adyen.checkout.components.base.ActionDelegate
 import com.adyen.checkout.components.base.lifecycle.viewModelFactory
 import com.adyen.checkout.components.model.payments.response.Action
 import com.adyen.checkout.components.model.payments.response.AwaitAction
@@ -26,7 +29,7 @@ import com.adyen.checkout.components.model.payments.response.Threeds2Fingerprint
 import com.adyen.checkout.components.model.payments.response.VoucherAction
 
 class GenericActionComponentProvider :
-    ActionComponentProvider<GenericActionComponent, GenericActionConfiguration> {
+    ActionComponentProvider<GenericActionComponent, GenericActionConfiguration, ActionDelegate<*>> {
     override fun <T> get(
         owner: T,
         application: Application,
@@ -50,6 +53,14 @@ class GenericActionComponentProvider :
             )
         }
         return ViewModelProvider(viewModelStoreOwner, genericActionFactory).get(GenericActionComponent::class.java)
+    }
+
+    override fun getDelegate(
+        configuration: GenericActionConfiguration,
+        savedStateHandle: SavedStateHandle,
+        context: Context
+    ): ActionDelegate<*> {
+        throw IllegalStateException("GenericActionComponent doesn't have a delegate")
     }
 
     override val supportedActionTypes: List<String>

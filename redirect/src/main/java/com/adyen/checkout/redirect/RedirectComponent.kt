@@ -65,7 +65,8 @@ class RedirectComponent(
 
     companion object {
         @JvmField
-        val PROVIDER: ActionComponentProvider<RedirectComponent, RedirectConfiguration> = RedirectComponentProvider()
+        val PROVIDER: ActionComponentProvider<RedirectComponent, RedirectConfiguration, RedirectDelegate> =
+            RedirectComponentProvider()
 
         /**
          * The suggested scheme to be used in the intent filter to receive the redirect result.

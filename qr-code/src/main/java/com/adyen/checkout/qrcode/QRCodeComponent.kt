@@ -112,7 +112,8 @@ class QRCodeComponent(
 
     companion object {
         @JvmField
-        val PROVIDER: ActionComponentProvider<QRCodeComponent, QRCodeConfiguration> = QRCodeComponentProvider()
+        val PROVIDER: ActionComponentProvider<QRCodeComponent, QRCodeConfiguration, QRCodeDelegate> =
+            QRCodeComponentProvider()
 
         private val TAG = LogUtil.getTag()
     }

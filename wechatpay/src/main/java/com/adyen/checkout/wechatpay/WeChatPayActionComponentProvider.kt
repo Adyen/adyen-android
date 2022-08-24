@@ -9,7 +9,9 @@
 package com.adyen.checkout.wechatpay
 
 import android.app.Application
+import android.content.Context
 import android.os.Bundle
+import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.ViewModelStoreOwner
 import androidx.savedstate.SavedStateRegistryOwner
@@ -25,7 +27,7 @@ import com.tencent.mm.opensdk.openapi.WXAPIFactory
 private val PAYMENT_METHODS = listOf(PaymentMethodTypes.WECHAT_PAY_SDK)
 
 class WeChatPayActionComponentProvider :
-    ActionComponentProvider<WeChatPayActionComponent, WeChatPayActionConfiguration> {
+    ActionComponentProvider<WeChatPayActionComponent, WeChatPayActionConfiguration, WeChatDelegate> {
 
     override fun <T> get(
         owner: T,
@@ -42,12 +44,8 @@ class WeChatPayActionComponentProvider :
         configuration: WeChatPayActionConfiguration,
         defaultArgs: Bundle?
     ): WeChatPayActionComponent {
-        val iwxApi: IWXAPI = WXAPIFactory.createWXAPI(application, null, true)
-        val requestGenerator = WeChatPayRequestGenerator()
-
         val weChatFactory = viewModelFactory(savedStateRegistryOwner, defaultArgs) { savedStateHandle ->
-            val paymentDataRepository = PaymentDataRepository(savedStateHandle)
-            val weChatDelegate = DefaultWeChatDelegate(iwxApi, requestGenerator, paymentDataRepository)
+            val weChatDelegate = getDelegate(configuration, savedStateHandle, application)
             WeChatPayActionComponent(
                 savedStateHandle = savedStateHandle,
                 application = application,
@@ -57,6 +55,17 @@ class WeChatPayActionComponentProvider :
         }
 
         return ViewModelProvider(viewModelStoreOwner, weChatFactory).get(WeChatPayActionComponent::class.java)
+    }
+
+    override fun getDelegate(
+        configuration: WeChatPayActionConfiguration,
+        savedStateHandle: SavedStateHandle,
+        context: Context,
+    ): WeChatDelegate {
+        val iwxApi: IWXAPI = WXAPIFactory.createWXAPI(context, null, true)
+        val requestGenerator = WeChatPayRequestGenerator()
+        val paymentDataRepository = PaymentDataRepository(savedStateHandle)
+        return DefaultWeChatDelegate(iwxApi, requestGenerator, paymentDataRepository)
     }
 
     override val supportedActionTypes: List<String>

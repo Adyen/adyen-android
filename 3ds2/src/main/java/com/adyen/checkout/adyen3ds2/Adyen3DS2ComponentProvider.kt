@@ -9,13 +9,16 @@
 package com.adyen.checkout.adyen3ds2
 
 import android.app.Application
+import android.content.Context
 import android.os.Bundle
+import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.ViewModelStoreOwner
 import androidx.savedstate.SavedStateRegistryOwner
 import com.adyen.checkout.adyen3ds2.connection.SubmitFingerprintService
 import com.adyen.checkout.adyen3ds2.repository.SubmitFingerprintRepository
 import com.adyen.checkout.components.ActionComponentProvider
+import com.adyen.checkout.components.base.ActionDelegate
 import com.adyen.checkout.components.base.lifecycle.viewModelFactory
 import com.adyen.checkout.components.encoding.AndroidBase64Encoder
 import com.adyen.checkout.components.model.payments.response.Action
@@ -27,7 +30,8 @@ import com.adyen.threeds2.ThreeDS2Service
 import com.adyen.threeds2.parameters.ChallengeParameters
 import kotlinx.coroutines.Dispatchers
 
-class Adyen3DS2ComponentProvider : ActionComponentProvider<Adyen3DS2Component, Adyen3DS2Configuration> {
+class Adyen3DS2ComponentProvider :
+    ActionComponentProvider<Adyen3DS2Component, Adyen3DS2Configuration, ActionDelegate<*>> {
 
     override fun <T> get(
         owner: T,
@@ -72,6 +76,15 @@ class Adyen3DS2ComponentProvider : ActionComponentProvider<Adyen3DS2Component, A
             )
         }
         return ViewModelProvider(viewModelStoreOwner, threeDS2Factory).get(Adyen3DS2Component::class.java)
+    }
+
+    override fun getDelegate(
+        configuration: Adyen3DS2Configuration,
+        savedStateHandle: SavedStateHandle,
+        context: Context,
+    ): ActionDelegate<*> {
+        // TODO: finish when we have a delegate
+        throw NotImplementedError()
     }
 
     override val supportedActionTypes: List<String>

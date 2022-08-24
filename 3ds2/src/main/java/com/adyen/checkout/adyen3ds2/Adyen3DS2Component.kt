@@ -13,6 +13,7 @@ import android.content.Intent
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.viewModelScope
 import com.adyen.checkout.components.ActionComponentProvider
+import com.adyen.checkout.components.base.ActionDelegate
 import com.adyen.checkout.components.base.BaseActionComponent
 import com.adyen.checkout.components.base.IntentHandlingComponent
 import com.adyen.checkout.components.model.payments.response.Action
@@ -80,6 +81,7 @@ class Adyen3DS2Component(
         private val TAG = LogUtil.getTag()
 
         @JvmField
-        val PROVIDER: ActionComponentProvider<Adyen3DS2Component, Adyen3DS2Configuration> = Adyen3DS2ComponentProvider()
+        val PROVIDER: ActionComponentProvider<Adyen3DS2Component, Adyen3DS2Configuration, ActionDelegate<*>> =
+            Adyen3DS2ComponentProvider()
     }
 }

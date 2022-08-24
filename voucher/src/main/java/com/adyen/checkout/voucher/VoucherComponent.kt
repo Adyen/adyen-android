@@ -59,6 +59,7 @@ class VoucherComponent(
 
     companion object {
         @JvmField
-        val PROVIDER: ActionComponentProvider<VoucherComponent, VoucherConfiguration> = VoucherComponentProvider()
+        val PROVIDER: ActionComponentProvider<VoucherComponent, VoucherConfiguration, VoucherDelegate> =
+            VoucherComponentProvider()
     }
 }

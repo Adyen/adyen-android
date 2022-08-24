@@ -9,26 +9,98 @@ package com.adyen.checkout.action
 
 import android.app.Activity
 import android.app.Application
+import android.content.Context
 import android.content.Intent
+import androidx.lifecycle.DefaultLifecycleObserver
+import androidx.lifecycle.LifecycleOwner
+import androidx.lifecycle.Observer
 import androidx.lifecycle.SavedStateHandle
+import androidx.lifecycle.asLiveData
+import androidx.lifecycle.viewModelScope
+import com.adyen.checkout.components.ActionComponentData
 import com.adyen.checkout.components.ActionComponentProvider
+import com.adyen.checkout.components.ViewableComponent
+import com.adyen.checkout.components.base.ActionDelegate
 import com.adyen.checkout.components.base.BaseActionComponent
+import com.adyen.checkout.components.base.DetailsEmittingDelegate
 import com.adyen.checkout.components.base.IntentHandlingComponent
+import com.adyen.checkout.components.base.IntentHandlingDelegate
+import com.adyen.checkout.components.base.OutputData
+import com.adyen.checkout.components.base.StatusPollingDelegate
+import com.adyen.checkout.components.base.ViewableDelegate
 import com.adyen.checkout.components.model.payments.response.Action
+import com.adyen.checkout.components.status.model.TimerData
+import kotlinx.coroutines.flow.filterNotNull
+import kotlinx.coroutines.flow.launchIn
+import kotlinx.coroutines.flow.onEach
 
 class GenericActionComponent(
     savedStateHandle: SavedStateHandle,
     application: Application,
     configuration: GenericActionConfiguration,
 ) : BaseActionComponent<GenericActionConfiguration>(savedStateHandle, application, configuration),
+    ViewableComponent<OutputData, GenericActionConfiguration, ActionComponentData>,
     IntentHandlingComponent {
+
+    private var _delegate: ActionDelegate<Action>? = null
+    private val delegate: ActionDelegate<Action> get() = requireNotNull(_delegate)
+
+    override val outputData: OutputData?
+        get() = (delegate as? ViewableDelegate<*>)?.outputData
 
     override fun canHandleAction(action: Action): Boolean {
         return PROVIDER.canHandleAction(action)
     }
 
     override fun handleActionInternal(action: Action, activity: Activity) {
-        // TODO
+        // TODO: Add check to see if previous delegate is 3ds2Delegate and current action is Threeds2ChallengeAction
+        val delegate = ActionDelegateProvider.get(action, configuration, savedStateHandle, activity)
+        _delegate = delegate
+
+        delegate.initialize(viewModelScope)
+
+        observeDetails()
+        observeExceptions()
+
+        delegate.handleAction(action, activity)
+    }
+
+    private fun observeExceptions() {
+        delegate.exceptionFlow
+            .onEach { notifyException(it) }
+            .launchIn(viewModelScope)
+    }
+
+    private fun observeDetails() {
+        (delegate as? DetailsEmittingDelegate)?.detailsFlow
+            ?.onEach { notifyDetails(it) }
+            ?.launchIn(viewModelScope)
+    }
+
+    override fun observeOutputData(lifecycleOwner: LifecycleOwner, observer: Observer<OutputData>) {
+        (delegate as? ViewableDelegate<*>)?.outputDataFlow
+            ?.filterNotNull()
+            ?.asLiveData()
+            ?.observe(lifecycleOwner, observer)
+    }
+
+    override fun observe(lifecycleOwner: LifecycleOwner, observer: Observer<ActionComponentData>) {
+        super.observe(lifecycleOwner, observer)
+
+        (delegate as? StatusPollingDelegate)?.let { statusPollingDelegate ->
+            // Immediately request a new status if the user resumes the app
+            lifecycleOwner.lifecycle.addObserver(object : DefaultLifecycleObserver {
+                override fun onResume(owner: LifecycleOwner) {
+                    statusPollingDelegate.refreshStatus()
+                }
+            })
+        }
+    }
+
+    fun observeTimer(lifecycleOwner: LifecycleOwner, observer: Observer<TimerData>) {
+        (delegate as? StatusPollingDelegate)?.timerFlow
+            ?.asLiveData()
+            ?.observe(lifecycleOwner, observer)
     }
 
     /**
@@ -38,12 +110,20 @@ class GenericActionComponent(
      * @param intent The received [Intent].
      */
     override fun handleIntent(intent: Intent) {
-        // TODO
+        (delegate as? IntentHandlingDelegate)?.handleIntent(intent)
+    }
+
+    override fun sendAnalyticsEvent(context: Context) = Unit
+
+    override fun onCleared() {
+        super.onCleared()
+        delegate.onCleared()
+        _delegate = null
     }
 
     companion object {
         @JvmField
-        val PROVIDER: ActionComponentProvider<GenericActionComponent, GenericActionConfiguration> =
+        val PROVIDER: ActionComponentProvider<GenericActionComponent, GenericActionConfiguration, ActionDelegate<*>> =
             GenericActionComponentProvider()
     }
 }
