@@ -17,6 +17,7 @@ import com.adyen.checkout.components.ActionComponentProvider
 import com.adyen.checkout.components.base.lifecycle.viewModelFactory
 import com.adyen.checkout.components.model.payments.response.Action
 import com.adyen.checkout.components.model.payments.response.AwaitAction
+import com.adyen.checkout.components.repository.PaymentDataRepository
 import com.adyen.checkout.components.status.DefaultStatusRepository
 import com.adyen.checkout.components.status.api.StatusService
 import com.adyen.checkout.components.util.PaymentMethodTypes
@@ -45,9 +46,10 @@ class AwaitComponentProvider : ActionComponentProvider<AwaitComponent, AwaitConf
     ): AwaitComponent {
         val statusService = StatusService(configuration.environment.baseUrl)
         val statusRepository = DefaultStatusRepository(statusService, configuration.clientKey)
-        val awaitDelegate = DefaultAwaitDelegate(statusRepository)
 
         val awaitFactory = viewModelFactory(savedStateRegistryOwner, defaultArgs) { savedStateHandle ->
+            val paymentDataRepository = PaymentDataRepository(savedStateHandle)
+            val awaitDelegate = DefaultAwaitDelegate(statusRepository, paymentDataRepository)
             AwaitComponent(
                 savedStateHandle,
                 application,

@@ -10,9 +10,11 @@ package com.adyen.checkout.await
 
 import android.app.Activity
 import androidx.annotation.VisibleForTesting
+import com.adyen.checkout.components.ActionComponentData
 import com.adyen.checkout.components.flow.MutableSingleEventSharedFlow
 import com.adyen.checkout.components.model.payments.response.Action
 import com.adyen.checkout.components.model.payments.response.AwaitAction
+import com.adyen.checkout.components.repository.PaymentDataRepository
 import com.adyen.checkout.components.status.StatusRepository
 import com.adyen.checkout.components.status.api.StatusResponseUtils
 import com.adyen.checkout.components.status.model.StatusResponse
@@ -34,6 +36,7 @@ import org.json.JSONObject
 
 internal class DefaultAwaitDelegate(
     private val statusRepository: StatusRepository,
+    private val paymentDataRepository: PaymentDataRepository,
 ) : AwaitDelegate {
 
     private val _outputDataFlow = MutableStateFlow<AwaitOutputData?>(null)
@@ -41,8 +44,8 @@ internal class DefaultAwaitDelegate(
 
     override val outputData: AwaitOutputData? get() = _outputDataFlow.value
 
-    private val _detailsFlow: MutableSharedFlow<JSONObject> = MutableSingleEventSharedFlow()
-    override val detailsFlow: Flow<JSONObject> = _detailsFlow
+    private val _detailsFlow: MutableSharedFlow<ActionComponentData> = MutableSingleEventSharedFlow()
+    override val detailsFlow: Flow<ActionComponentData> = _detailsFlow
 
     private val _exceptionFlow: MutableSharedFlow<CheckoutException> = MutableSingleEventSharedFlow()
     override val exceptionFlow: Flow<CheckoutException> = _exceptionFlow
@@ -59,7 +62,9 @@ internal class DefaultAwaitDelegate(
         _coroutineScope = coroutineScope
     }
 
-    override fun handleAction(action: AwaitAction, activity: Activity, paymentData: String?) {
+    override fun handleAction(action: AwaitAction, activity: Activity) {
+        val paymentData = action.paymentData
+        paymentDataRepository.paymentData = paymentData
         if (paymentData == null) {
             _exceptionFlow.tryEmit(ComponentException("Payment data is null"))
             return
@@ -101,13 +106,21 @@ internal class DefaultAwaitDelegate(
         // Not authorized status should still call /details so that merchant can get more info
         val payload = statusResponse.payload
         if (StatusResponseUtils.isFinalResult(statusResponse) && !payload.isNullOrEmpty()) {
-            _detailsFlow.tryEmit(createDetail(payload))
+            val details = createDetails(payload)
+            _detailsFlow.tryEmit(createActionComponentData(details))
         } else {
             _exceptionFlow.tryEmit(ComponentException("Payment was not completed. - " + statusResponse.resultCode))
         }
     }
 
-    private fun createDetail(payload: String): JSONObject {
+    private fun createActionComponentData(details: JSONObject): ActionComponentData {
+        return ActionComponentData(
+            details = details,
+            paymentData = paymentDataRepository.paymentData,
+        )
+    }
+
+    private fun createDetails(payload: String): JSONObject {
         val jsonObject = JSONObject()
         try {
             jsonObject.put(PAYLOAD_DETAILS_KEY, payload)
@@ -117,7 +130,8 @@ internal class DefaultAwaitDelegate(
         return jsonObject
     }
 
-    override fun refreshStatus(paymentData: String) {
+    override fun refreshStatus() {
+        val paymentData = paymentDataRepository.paymentData ?: return
         statusRepository.refreshStatus(paymentData)
     }
 

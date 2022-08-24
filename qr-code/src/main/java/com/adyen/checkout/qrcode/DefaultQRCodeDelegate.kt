@@ -11,8 +11,10 @@ package com.adyen.checkout.qrcode
 import android.app.Activity
 import android.content.Intent
 import androidx.annotation.VisibleForTesting
+import com.adyen.checkout.components.ActionComponentData
 import com.adyen.checkout.components.flow.MutableSingleEventSharedFlow
 import com.adyen.checkout.components.model.payments.response.QrCodeAction
+import com.adyen.checkout.components.repository.PaymentDataRepository
 import com.adyen.checkout.components.status.StatusRepository
 import com.adyen.checkout.components.status.api.StatusResponseUtils
 import com.adyen.checkout.components.status.model.StatusResponse
@@ -39,6 +41,7 @@ internal class DefaultQRCodeDelegate(
     private val statusRepository: StatusRepository,
     private val statusCountDownTimer: QRCodeCountDownTimer,
     private val redirectHandler: RedirectHandler,
+    private val paymentDataRepository: PaymentDataRepository,
 ) : QRCodeDelegate {
 
     private val _outputDataFlow = MutableStateFlow<QRCodeOutputData?>(null)
@@ -49,8 +52,8 @@ internal class DefaultQRCodeDelegate(
     private val _exceptionFlow: MutableSharedFlow<CheckoutException> = MutableSingleEventSharedFlow()
     override val exceptionFlow: Flow<CheckoutException> = _exceptionFlow
 
-    private val _detailsFlow: MutableSharedFlow<JSONObject> = MutableSingleEventSharedFlow()
-    override val detailsFlow: Flow<JSONObject> = _detailsFlow
+    private val _detailsFlow: MutableSharedFlow<ActionComponentData> = MutableSingleEventSharedFlow()
+    override val detailsFlow: Flow<ActionComponentData> = _detailsFlow
 
     private val _timerFlow = MutableStateFlow(TimerData(0, 0))
     override val timerFlow: Flow<TimerData> = _timerFlow
@@ -78,15 +81,17 @@ internal class DefaultQRCodeDelegate(
         _coroutineScope = coroutineScope
     }
 
-    override fun handleAction(action: QrCodeAction, activity: Activity, paymentData: String?) {
-        if (!requiresView(action)) {
-            Logger.d(TAG, "Action does not require a view, redirecting.")
-            makeRedirect(activity, action)
+    override fun handleAction(action: QrCodeAction, activity: Activity) {
+        val paymentData = action.paymentData
+        paymentDataRepository.paymentData = paymentData
+        if (paymentData == null) {
+            _exceptionFlow.tryEmit(ComponentException("Payment data is null"))
             return
         }
 
-        if (paymentData == null) {
-            _exceptionFlow.tryEmit(ComponentException("Payment data is null"))
+        if (!requiresView(action)) {
+            Logger.d(TAG, "Action does not require a view, redirecting.")
+            makeRedirect(activity, action)
             return
         }
 
@@ -140,13 +145,39 @@ internal class DefaultQRCodeDelegate(
         val payload = statusResponse.payload
         // Not authorized status should still call /details so that merchant can get more info
         if (StatusResponseUtils.isFinalResult(statusResponse) && !payload.isNullOrEmpty()) {
-            _detailsFlow.tryEmit(createDetail(payload))
+            val details = createDetails(payload)
+            _detailsFlow.tryEmit(createActionComponentData(details))
         } else {
             _exceptionFlow.tryEmit(ComponentException("Payment was not completed. - " + statusResponse.resultCode))
         }
     }
 
-    private fun createDetail(payload: String): JSONObject {
+    private fun requiresView(action: QrCodeAction): Boolean {
+        return VIEWABLE_PAYMENT_METHODS.contains(action.paymentMethodType)
+    }
+
+    override fun refreshStatus() {
+        val paymentData = paymentDataRepository.paymentData ?: return
+        statusRepository.refreshStatus(paymentData)
+    }
+
+    override fun handleIntent(intent: Intent) {
+        try {
+            val details = redirectHandler.parseRedirectResult(intent.data)
+            _detailsFlow.tryEmit(createActionComponentData(details))
+        } catch (ex: CheckoutException) {
+            _exceptionFlow.tryEmit(ex)
+        }
+    }
+
+    private fun createActionComponentData(details: JSONObject): ActionComponentData {
+        return ActionComponentData(
+            details = details,
+            paymentData = paymentDataRepository.paymentData,
+        )
+    }
+
+    private fun createDetails(payload: String): JSONObject {
         val jsonObject = JSONObject()
         try {
             jsonObject.put(PAYLOAD_DETAILS_KEY, payload)
@@ -154,23 +185,6 @@ internal class DefaultQRCodeDelegate(
             _exceptionFlow.tryEmit(ComponentException("Failed to create details.", e))
         }
         return jsonObject
-    }
-
-    private fun requiresView(action: QrCodeAction): Boolean {
-        return VIEWABLE_PAYMENT_METHODS.contains(action.paymentMethodType)
-    }
-
-    override fun refreshStatus(paymentData: String) {
-        statusRepository.refreshStatus(paymentData)
-    }
-
-    override fun handleIntent(intent: Intent) {
-        try {
-            val details = redirectHandler.parseRedirectResult(intent.data)
-            _detailsFlow.tryEmit(details)
-        } catch (ex: CheckoutException) {
-            _exceptionFlow.tryEmit(ex)
-        }
     }
 
     override fun onCleared() {

@@ -49,12 +49,12 @@ class VoucherComponent(
         // no ops
     }
 
-    override fun handleActionInternal(action: Action, activity: Activity, paymentData: String?) {
+    override fun handleActionInternal(action: Action, activity: Activity) {
         if (action !is VoucherAction) {
             notifyException(ComponentException("Unsupported action"))
             return
         }
-        voucherDelegate.handleAction(action, activity, paymentData)
+        voucherDelegate.handleAction(action, activity)
     }
 
     companion object {

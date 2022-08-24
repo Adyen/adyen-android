@@ -9,9 +9,11 @@
 package com.adyen.checkout.await
 
 import android.app.Activity
+import androidx.lifecycle.SavedStateHandle
 import app.cash.turbine.test
 import com.adyen.checkout.await.DefaultAwaitDelegate.Companion.PAYLOAD_DETAILS_KEY
 import com.adyen.checkout.components.model.payments.response.AwaitAction
+import com.adyen.checkout.components.repository.PaymentDataRepository
 import com.adyen.checkout.components.status.model.StatusResponse
 import com.adyen.checkout.components.test.TestStatusRepository
 import com.adyen.checkout.core.exception.ComponentException
@@ -20,6 +22,7 @@ import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.test.UnconfinedTestDispatcher
 import kotlinx.coroutines.test.runTest
+import org.json.JSONObject
 import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.Assertions.assertFalse
 import org.junit.jupiter.api.Assertions.assertTrue
@@ -31,12 +34,14 @@ import java.io.IOException
 internal class DefaultAwaitDelegateTest {
 
     private lateinit var statusRepository: TestStatusRepository
+    private lateinit var paymentDataRepository: PaymentDataRepository
     private lateinit var delegate: DefaultAwaitDelegate
 
     @BeforeEach
     fun beforeEach() {
         statusRepository = TestStatusRepository()
-        delegate = DefaultAwaitDelegate(statusRepository)
+        paymentDataRepository = PaymentDataRepository(SavedStateHandle())
+        delegate = DefaultAwaitDelegate(statusRepository, paymentDataRepository)
         Logger.setLogcatLevel(Logger.NONE)
     }
 
@@ -49,7 +54,7 @@ internal class DefaultAwaitDelegateTest {
         delegate.initialize(CoroutineScope(UnconfinedTestDispatcher()))
 
         delegate.outputDataFlow.test {
-            delegate.handleAction(AwaitAction(paymentMethodType = "test"), Activity(), "paymentData")
+            delegate.handleAction(AwaitAction(paymentMethodType = "test", paymentData = "paymentData"), Activity())
 
             skipItems(1)
 
@@ -75,9 +80,16 @@ internal class DefaultAwaitDelegateTest {
         delegate.initialize(CoroutineScope(UnconfinedTestDispatcher()))
 
         delegate.detailsFlow.test {
-            delegate.handleAction(AwaitAction(paymentMethodType = "test"), Activity(), "paymentData")
+            delegate.handleAction(AwaitAction(paymentMethodType = "test", paymentData = "paymentData"), Activity())
 
-            assertEquals("testpayload", awaitItem().getString(PAYLOAD_DETAILS_KEY))
+            val expectedDetails = JSONObject().apply {
+                put(PAYLOAD_DETAILS_KEY, "testpayload")
+            }
+
+            with(awaitItem()) {
+                assertEquals(expectedDetails.toString(), details.toString())
+                assertEquals("paymentData", paymentData)
+            }
 
             cancelAndIgnoreRemainingEvents()
         }
@@ -90,7 +102,7 @@ internal class DefaultAwaitDelegateTest {
         delegate.initialize(CoroutineScope(UnconfinedTestDispatcher()))
 
         delegate.exceptionFlow.test {
-            delegate.handleAction(AwaitAction(paymentMethodType = "test"), Activity(), "paymentData")
+            delegate.handleAction(AwaitAction(paymentMethodType = "test", paymentData = "paymentData"), Activity())
 
             assertEquals(error, awaitItem().cause)
 
@@ -106,7 +118,7 @@ internal class DefaultAwaitDelegateTest {
         delegate.initialize(CoroutineScope(UnconfinedTestDispatcher()))
 
         delegate.exceptionFlow.test {
-            delegate.handleAction(AwaitAction(paymentMethodType = "test"), Activity(), "paymentData")
+            delegate.handleAction(AwaitAction(paymentMethodType = "test", paymentData = "paymentData"), Activity())
 
             assertTrue(awaitItem() is ComponentException)
 

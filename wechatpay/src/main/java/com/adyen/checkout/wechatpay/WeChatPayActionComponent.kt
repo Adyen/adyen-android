@@ -54,14 +54,14 @@ class WeChatPayActionComponent(
         return PROVIDER.canHandleAction(action)
     }
 
-    override fun handleActionInternal(action: Action, activity: Activity, paymentData: String?) {
+    override fun handleActionInternal(action: Action, activity: Activity) {
         @Suppress("UNCHECKED_CAST")
         val sdkAction = (action as? SdkAction<WeChatPaySdkData>)
         if (sdkAction == null) {
             notifyException(ComponentException("Unsupported action"))
             return
         }
-        weChatDelegate.handleAction(action, activity, paymentData)
+        weChatDelegate.handleAction(action, activity)
     }
 
     companion object {

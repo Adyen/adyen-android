@@ -15,5 +15,5 @@ interface StatusPollingDelegate {
 
     val timerFlow: Flow<TimerData>
 
-    fun refreshStatus(paymentData: String)
+    fun refreshStatus()
 }

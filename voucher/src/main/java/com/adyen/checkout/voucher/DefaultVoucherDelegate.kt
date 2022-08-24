@@ -27,7 +27,7 @@ internal class DefaultVoucherDelegate : VoucherDelegate {
 
     override val outputData: VoucherOutputData? get() = _outputDataFlow.value
 
-    override fun handleAction(action: VoucherAction, activity: Activity, paymentData: String?) {
+    override fun handleAction(action: VoucherAction, activity: Activity) {
         _outputDataFlow.tryEmit(
             VoucherOutputData(
                 isValid = true,

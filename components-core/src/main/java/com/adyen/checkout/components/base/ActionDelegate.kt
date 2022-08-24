@@ -18,7 +18,7 @@ interface ActionDelegate<ActionT : Action> {
 
     val exceptionFlow: Flow<CheckoutException>
 
-    fun handleAction(action: ActionT, activity: Activity, paymentData: String?)
+    fun handleAction(action: ActionT, activity: Activity)
 
     /**
      * Override this method if you need to initialize your delegate and use a [CoroutineScope] inside it.

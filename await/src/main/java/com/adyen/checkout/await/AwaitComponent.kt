@@ -54,12 +54,12 @@ class AwaitComponent(
         return PROVIDER.canHandleAction(action)
     }
 
-    override fun handleActionInternal(action: Action, activity: Activity, paymentData: String?) {
+    override fun handleActionInternal(action: Action, activity: Activity) {
         if (action !is AwaitAction) {
             notifyException(ComponentException("Unsupported action"))
             return
         }
-        awaitDelegate.handleAction(action, activity, paymentData)
+        awaitDelegate.handleAction(action, activity)
     }
 
     override fun observe(lifecycleOwner: LifecycleOwner, observer: Observer<ActionComponentData>) {
@@ -68,8 +68,7 @@ class AwaitComponent(
         // Immediately request a new status if the user resumes the app
         lifecycleOwner.lifecycle.addObserver(object : DefaultLifecycleObserver {
             override fun onResume(owner: LifecycleOwner) {
-                val data = paymentData ?: return
-                awaitDelegate.refreshStatus(data)
+                awaitDelegate.refreshStatus()
             }
         })
     }

@@ -34,9 +34,9 @@ internal class DefaultVoucherDelegateTest {
                 VoucherAction(
                     paymentMethodType = "payment_method_type",
                     url = "download_url",
+                    paymentData = "paymentData",
                 ),
                 Activity(),
-                "paymentData",
             )
 
             skipItems(1)

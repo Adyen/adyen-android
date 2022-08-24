@@ -8,10 +8,10 @@
 
 package com.adyen.checkout.components.base
 
+import com.adyen.checkout.components.ActionComponentData
 import kotlinx.coroutines.flow.Flow
-import org.json.JSONObject
 
 interface DetailsEmittingDelegate {
 
-    val detailsFlow: Flow<JSONObject>
+    val detailsFlow: Flow<ActionComponentData>
 }

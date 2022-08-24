@@ -10,8 +10,10 @@ package com.adyen.checkout.redirect
 
 import android.app.Activity
 import android.content.Intent
+import androidx.lifecycle.SavedStateHandle
 import app.cash.turbine.test
 import com.adyen.checkout.components.model.payments.response.RedirectAction
+import com.adyen.checkout.components.repository.PaymentDataRepository
 import com.adyen.checkout.core.exception.ComponentException
 import com.adyen.checkout.redirect.test.TestRedirectHandler
 import kotlinx.coroutines.ExperimentalCoroutinesApi
@@ -24,12 +26,14 @@ import org.junit.jupiter.api.Test
 internal class DefaultRedirectDelegateTest {
 
     private lateinit var redirectHandler: TestRedirectHandler
+    private lateinit var paymentDataRepository: PaymentDataRepository
     private lateinit var delegate: DefaultRedirectDelegate
 
     @BeforeEach
     fun beforeEach() {
         redirectHandler = TestRedirectHandler()
-        delegate = DefaultRedirectDelegate(redirectHandler)
+        paymentDataRepository = PaymentDataRepository(SavedStateHandle())
+        delegate = DefaultRedirectDelegate(redirectHandler, paymentDataRepository)
     }
 
     @Test
@@ -38,7 +42,7 @@ internal class DefaultRedirectDelegateTest {
         redirectHandler.exception = error
 
         delegate.exceptionFlow.test {
-            delegate.handleAction( RedirectAction(), Activity(), "paymentData")
+            delegate.handleAction(RedirectAction(paymentData = "paymentData"), Activity())
 
             assertEquals(error, awaitItem())
         }
@@ -47,7 +51,7 @@ internal class DefaultRedirectDelegateTest {
     @Test
     fun `when handleAction called with valid data, then no error is propagated`() = runTest {
         delegate.exceptionFlow.test {
-            delegate.handleAction(RedirectAction(), Activity(), "paymentData")
+            delegate.handleAction(RedirectAction(paymentData = "paymentData"), Activity())
 
             expectNoEvents()
         }
@@ -68,9 +72,13 @@ internal class DefaultRedirectDelegateTest {
     @Test
     fun `when handleIntent called with valid data, then the details are emitted`() = runTest {
         delegate.detailsFlow.test {
+            delegate.handleAction(RedirectAction(paymentData = "paymentData"), Activity())
             delegate.handleIntent(Intent())
 
-            assertEquals(TestRedirectHandler.REDIRECT_RESULT, awaitItem())
+            with(awaitItem()) {
+                assertEquals(TestRedirectHandler.REDIRECT_RESULT, details)
+                assertEquals("paymentData", paymentData)
+            }
         }
     }
 }

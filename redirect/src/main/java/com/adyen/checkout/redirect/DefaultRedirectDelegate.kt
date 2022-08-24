@@ -10,9 +10,12 @@ package com.adyen.checkout.redirect
 
 import android.app.Activity
 import android.content.Intent
+import com.adyen.checkout.components.ActionComponentData
 import com.adyen.checkout.components.flow.MutableSingleEventSharedFlow
 import com.adyen.checkout.components.model.payments.response.RedirectAction
+import com.adyen.checkout.components.repository.PaymentDataRepository
 import com.adyen.checkout.core.exception.CheckoutException
+import com.adyen.checkout.core.exception.ComponentException
 import com.adyen.checkout.core.log.LogUtil
 import com.adyen.checkout.core.log.Logger
 import com.adyen.checkout.redirect.handler.RedirectHandler
@@ -23,16 +26,24 @@ import org.json.JSONObject
 private val TAG = LogUtil.getTag()
 
 internal class DefaultRedirectDelegate(
-    private val redirectHandler: RedirectHandler
+    private val redirectHandler: RedirectHandler,
+    private val paymentDataRepository: PaymentDataRepository,
 ) : RedirectDelegate {
 
-    private val _detailsFlow: MutableSharedFlow<JSONObject> = MutableSingleEventSharedFlow()
-    override val detailsFlow: Flow<JSONObject> = _detailsFlow
+    private val _detailsFlow: MutableSharedFlow<ActionComponentData> = MutableSingleEventSharedFlow()
+    override val detailsFlow: Flow<ActionComponentData> = _detailsFlow
 
     private val _exceptionFlow: MutableSharedFlow<CheckoutException> = MutableSingleEventSharedFlow()
     override val exceptionFlow: Flow<CheckoutException> = _exceptionFlow
 
-    override fun handleAction(action: RedirectAction, activity: Activity, paymentData: String?) {
+    override fun handleAction(action: RedirectAction, activity: Activity) {
+        val paymentData = action.paymentData
+        paymentDataRepository.paymentData = paymentData
+        if (paymentData == null) {
+            _exceptionFlow.tryEmit(ComponentException("Payment data is null"))
+            return
+        }
+
         makeRedirect(activity, action.url)
     }
 
@@ -51,9 +62,16 @@ internal class DefaultRedirectDelegate(
     override fun handleIntent(intent: Intent) {
         try {
             val details = redirectHandler.parseRedirectResult(intent.data)
-            _detailsFlow.tryEmit(details)
+            _detailsFlow.tryEmit(createActionComponentData(details))
         } catch (ex: CheckoutException) {
             _exceptionFlow.tryEmit(ex)
         }
+    }
+
+    private fun createActionComponentData(details: JSONObject): ActionComponentData {
+        return ActionComponentData(
+            details = details,
+            paymentData = paymentDataRepository.paymentData,
+        )
     }
 }

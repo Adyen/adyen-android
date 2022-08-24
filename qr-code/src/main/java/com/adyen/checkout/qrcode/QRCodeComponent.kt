@@ -60,12 +60,12 @@ class QRCodeComponent(
         return PROVIDER.canHandleAction(action)
     }
 
-    override fun handleActionInternal(action: Action, activity: Activity, paymentData: String?) {
+    override fun handleActionInternal(action: Action, activity: Activity) {
         if (action !is QrCodeAction) {
             notifyException(ComponentException("Unsupported action"))
             return
         }
-        qrCodeDelegate.handleAction(action, activity, paymentData)
+        qrCodeDelegate.handleAction(action, activity)
     }
 
     /**
@@ -84,8 +84,7 @@ class QRCodeComponent(
         // Immediately request a new status if the user resumes the app
         lifecycleOwner.lifecycle.addObserver(object : DefaultLifecycleObserver {
             override fun onResume(owner: LifecycleOwner) {
-                val data = paymentData ?: return
-                qrCodeDelegate.refreshStatus(data)
+                qrCodeDelegate.refreshStatus()
             }
         })
     }

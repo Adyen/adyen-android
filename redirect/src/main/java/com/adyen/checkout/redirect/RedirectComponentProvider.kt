@@ -17,6 +17,7 @@ import com.adyen.checkout.components.ActionComponentProvider
 import com.adyen.checkout.components.base.lifecycle.viewModelFactory
 import com.adyen.checkout.components.model.payments.response.Action
 import com.adyen.checkout.components.model.payments.response.RedirectAction
+import com.adyen.checkout.components.repository.PaymentDataRepository
 import com.adyen.checkout.redirect.handler.DefaultRedirectHandler
 
 class RedirectComponentProvider : ActionComponentProvider<RedirectComponent, RedirectConfiguration> {
@@ -36,8 +37,9 @@ class RedirectComponentProvider : ActionComponentProvider<RedirectComponent, Red
         defaultArgs: Bundle?
     ): RedirectComponent {
         val redirectHandler = DefaultRedirectHandler()
-        val redirectDelegate = DefaultRedirectDelegate(redirectHandler)
         val redirectFactory = viewModelFactory(savedStateRegistryOwner, defaultArgs) { savedStateHandle ->
+            val paymentDataRepository = PaymentDataRepository(savedStateHandle)
+            val redirectDelegate = DefaultRedirectDelegate(redirectHandler, paymentDataRepository)
             RedirectComponent(
                 savedStateHandle,
                 application,

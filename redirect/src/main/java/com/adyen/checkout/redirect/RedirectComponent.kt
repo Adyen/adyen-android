@@ -45,12 +45,12 @@ class RedirectComponent(
         return PROVIDER.canHandleAction(action)
     }
 
-    override fun handleActionInternal(action: Action, activity: Activity, paymentData: String?) {
+    override fun handleActionInternal(action: Action, activity: Activity) {
         if (action !is RedirectAction) {
             notifyException(ComponentException("Unsupported action"))
             return
         }
-        redirectDelegate.handleAction(action, activity, paymentData)
+        redirectDelegate.handleAction(action, activity)
     }
 
     /**

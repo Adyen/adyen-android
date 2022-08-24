@@ -15,7 +15,6 @@ import com.adyen.checkout.components.ActionComponentProvider
 import com.adyen.checkout.components.base.BaseActionComponent
 import com.adyen.checkout.components.base.IntentHandlingComponent
 import com.adyen.checkout.components.model.payments.response.Action
-import com.adyen.checkout.core.exception.ComponentException
 
 class GenericActionComponent(
     savedStateHandle: SavedStateHandle,
@@ -28,8 +27,7 @@ class GenericActionComponent(
         return PROVIDER.canHandleAction(action)
     }
 
-    @Throws(ComponentException::class)
-    override fun handleActionInternal(action: Action, activity: Activity, paymentData: String?) {
+    override fun handleActionInternal(action: Action, activity: Activity) {
         // TODO
     }
 

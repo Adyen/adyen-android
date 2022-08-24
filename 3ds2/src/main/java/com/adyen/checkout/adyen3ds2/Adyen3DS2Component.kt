@@ -39,19 +39,6 @@ class Adyen3DS2Component(
         adyen3DS2Delegate.exceptionFlow
             .onEach { notifyException(it) }
             .launchIn(viewModelScope)
-
-        adyen3DS2Delegate.eventFlow
-            .onEach { onEvent(it) }
-            .launchIn(viewModelScope)
-    }
-
-    private fun onEvent(event: Adyen3DS2Event) {
-        when (event) {
-            // TODO: Remove when generic action component is ready
-            Adyen3DS2Event.ClearPaymentData -> {
-                paymentData = null
-            }
-        }
     }
 
     /**
@@ -65,8 +52,8 @@ class Adyen3DS2Component(
     }
 
     @Throws(ComponentException::class)
-    override fun handleActionInternal(action: Action, activity: Activity, paymentData: String?) {
-        adyen3DS2Delegate.handleAction(action, activity, paymentData)
+    override fun handleActionInternal(action: Action, activity: Activity) {
+        adyen3DS2Delegate.handleAction(action, activity)
     }
 
     /**

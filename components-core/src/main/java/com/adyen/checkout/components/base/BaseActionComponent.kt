@@ -22,7 +22,6 @@ import com.adyen.checkout.core.exception.CheckoutException
 import com.adyen.checkout.core.exception.ComponentException
 import com.adyen.checkout.core.log.LogUtil
 import com.adyen.checkout.core.log.Logger
-import org.json.JSONObject
 
 @Suppress("TooManyFunctions")
 abstract class BaseActionComponent<ConfigurationT : Configuration>(
@@ -39,9 +38,8 @@ abstract class BaseActionComponent<ConfigurationT : Configuration>(
             notifyException(ComponentException("Action type not supported by this component - " + action.type))
             return
         }
-        paymentData = action.paymentData
         try {
-            handleActionInternal(action, activity, paymentData)
+            handleActionInternal(action, activity)
         } catch (e: ComponentException) {
             notifyException(e)
         }
@@ -92,28 +90,18 @@ abstract class BaseActionComponent<ConfigurationT : Configuration>(
     }
 
     @Throws(ComponentException::class)
-    protected abstract fun handleActionInternal(action: Action, activity: Activity, paymentData: String?)
+    protected abstract fun handleActionInternal(action: Action, activity: Activity)
 
     @Throws(ComponentException::class)
-    protected fun notifyDetails(details: JSONObject) {
-        val actionComponentData = ActionComponentData()
-        actionComponentData.details = details
-        actionComponentData.paymentData = paymentData
-        resultLiveData.value = actionComponentData
+    protected fun notifyDetails(actionComponentData: ActionComponentData) {
+        resultLiveData.postValue(actionComponentData)
     }
 
     protected fun notifyException(e: CheckoutException) {
         errorMutableLiveData.postValue(ComponentError(e))
     }
 
-    protected var paymentData: String?
-        get() = savedStateHandle.get(PAYMENT_DATA_KEY)
-        protected set(paymentData) {
-            savedStateHandle.set(PAYMENT_DATA_KEY, paymentData)
-        }
-
     companion object {
         private val TAG = LogUtil.getTag()
-        private const val PAYMENT_DATA_KEY = "payment_data"
     }
 }
