@@ -132,7 +132,7 @@ class DropInConfiguration : Configuration, Parcelable {
     class Builder : BaseConfigurationBuilder<DropInConfiguration> {
 
         companion object {
-            val TAG = LogUtil.getTag()
+            private val TAG = LogUtil.getTag()
         }
 
         val availablePaymentConfigs = HashMap<String, Configuration>()

@@ -10,7 +10,7 @@ package com.adyen.checkout.googlepay.util
 import com.adyen.checkout.components.model.payments.request.GooglePayPaymentMethod
 import com.adyen.checkout.components.util.AmountFormat.toBigDecimal
 import com.adyen.checkout.core.exception.CheckoutException
-import com.adyen.checkout.core.log.LogUtil.getTag
+import com.adyen.checkout.core.log.LogUtil
 import com.adyen.checkout.core.log.Logger.e
 import com.adyen.checkout.googlepay.model.CardParameters
 import com.adyen.checkout.googlepay.model.GooglePayParams
@@ -34,7 +34,7 @@ import java.util.Locale
 @Suppress("TooManyFunctions")
 object GooglePayUtils {
 
-    private val TAG = getTag()
+    private val TAG = LogUtil.getTag()
     private val GOOGLE_PAY_DECIMAL_FORMAT = DecimalFormat("0.##", DecimalFormatSymbols(Locale.ROOT))
     private const val GOOGLE_PAY_DECIMAL_SCALE = 2
 

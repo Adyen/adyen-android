@@ -10,14 +10,14 @@ package com.adyen.checkout.components.util
 import com.adyen.checkout.components.model.payments.Amount
 import com.adyen.checkout.components.util.CheckoutCurrency.Companion.find
 import com.adyen.checkout.core.exception.CheckoutException
-import com.adyen.checkout.core.log.LogUtil.getTag
+import com.adyen.checkout.core.log.LogUtil
 import com.adyen.checkout.core.log.Logger
 import java.math.BigDecimal
 import java.util.Currency
 import java.util.Locale
 
 object AmountFormat {
-    private val TAG = getTag()
+    private val TAG = LogUtil.getTag()
 
     /**
      * Convert an [Amount] to its corresponding [BigDecimal] value.

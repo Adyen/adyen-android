@@ -18,7 +18,7 @@ import com.adyen.checkout.components.api.ImageLoader.Companion.getInstance
 import com.adyen.checkout.components.model.payments.request.IssuerListPaymentMethod
 import com.adyen.checkout.components.ui.adapter.ClickableListRecyclerAdapter.OnItemCLickedListener
 import com.adyen.checkout.components.ui.view.AdyenLinearLayout
-import com.adyen.checkout.core.log.LogUtil.getTag
+import com.adyen.checkout.core.log.LogUtil
 import com.adyen.checkout.core.log.Logger
 
 abstract class IssuerListRecyclerView<
@@ -92,6 +92,6 @@ abstract class IssuerListRecyclerView<
     }
 
     companion object {
-        private val TAG = getTag()
+        private val TAG = LogUtil.getTag()
     }
 }

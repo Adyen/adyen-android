@@ -19,7 +19,7 @@ import com.adyen.checkout.components.model.payments.request.SepaPaymentMethod
 import com.adyen.checkout.components.ui.Validation
 import com.adyen.checkout.components.ui.view.AdyenLinearLayout
 import com.adyen.checkout.components.ui.view.AdyenTextInputEditText
-import com.adyen.checkout.core.log.LogUtil.getTag
+import com.adyen.checkout.core.log.LogUtil
 import com.adyen.checkout.core.log.Logger.d
 import com.adyen.checkout.core.log.Logger.v
 import com.google.android.material.textfield.TextInputLayout
@@ -123,6 +123,6 @@ class SepaView @JvmOverloads constructor(
     }
 
     companion object {
-        private val TAG = getTag()
+        private val TAG = LogUtil.getTag()
     }
 }

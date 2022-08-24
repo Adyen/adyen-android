@@ -245,7 +245,7 @@ class PaymentMethodAdapter @JvmOverloads constructor(
     }
 
     companion object {
-        internal val TAG = LogUtil.getTag()
+        private val TAG = LogUtil.getTag()
     }
 
     interface OnPaymentMethodSelectedCallback {

@@ -385,7 +385,7 @@ class DropInViewModel(
                     )
                 },
                 onFailure = { e ->
-                    Logger.e(PaymentMethodsListViewModel.TAG, "Unable to fetch order details", e)
+                    Logger.e(TAG, "Unable to fetch order details", e)
                     null
                 }
             )
