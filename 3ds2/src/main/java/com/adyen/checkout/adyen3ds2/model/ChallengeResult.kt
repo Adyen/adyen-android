@@ -7,7 +7,7 @@
  */
 package com.adyen.checkout.adyen3ds2.model
 
-import com.adyen.checkout.components.encoding.Base64Encoder
+import com.adyen.checkout.components.encoding.AndroidBase64Encoder
 import com.adyen.threeds2.CompletionEvent
 import org.json.JSONException
 import org.json.JSONObject
@@ -34,7 +34,7 @@ class ChallengeResult private constructor(val isAuthenticated: Boolean, val payl
             val jsonObject = JSONObject()
             jsonObject.put(KEY_TRANSACTION_STATUS, transactionStatus)
             jsonObject.putOpt(KEY_AUTHORISATION_TOKEN, authorisationToken)
-            val payload = Base64Encoder.encode(jsonObject.toString())
+            val payload = AndroidBase64Encoder().encode(jsonObject.toString())
             return ChallengeResult(isAuthenticated, payload)
         }
     }

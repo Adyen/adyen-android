@@ -30,6 +30,10 @@ android {
         testInstrumentationRunner 'androidx.test.runner.AndroidJUnitRunner'
         consumerProguardFiles "consumer-rules.pro"
     }
+
+    testOptions {
+        unitTests.returnDefaultValues = true
+    }
 }
 
 dependencies {
@@ -41,5 +45,9 @@ dependencies {
     api libraries.adyen3ds2
 
     //Tests
+    testImplementation project(':test-core')
+    testImplementation testLibraries.json
     testImplementation testLibraries.junit5
+    testImplementation testLibraries.mockito
+    testImplementation testLibraries.kotlinCoroutines
 }
