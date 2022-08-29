@@ -13,14 +13,19 @@ import android.os.Bundle
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.ViewModelStoreOwner
 import androidx.savedstate.SavedStateRegistryOwner
+import com.adyen.checkout.adyen3ds2.connection.SubmitFingerprintService
 import com.adyen.checkout.adyen3ds2.repository.SubmitFingerprintRepository
 import com.adyen.checkout.components.ActionComponentProvider
 import com.adyen.checkout.components.base.lifecycle.viewModelFactory
+import com.adyen.checkout.components.encoding.AndroidBase64Encoder
 import com.adyen.checkout.components.model.payments.response.Action
 import com.adyen.checkout.components.model.payments.response.Threeds2Action
 import com.adyen.checkout.components.model.payments.response.Threeds2ChallengeAction
 import com.adyen.checkout.components.model.payments.response.Threeds2FingerprintAction
 import com.adyen.checkout.redirect.handler.DefaultRedirectHandler
+import com.adyen.threeds2.ThreeDS2Service
+import com.adyen.threeds2.parameters.ChallengeParameters
+import kotlinx.coroutines.Dispatchers
 
 class Adyen3DS2ComponentProvider : ActionComponentProvider<Adyen3DS2Component, Adyen3DS2Configuration> {
 
@@ -39,17 +44,31 @@ class Adyen3DS2ComponentProvider : ActionComponentProvider<Adyen3DS2Component, A
         configuration: Adyen3DS2Configuration,
         defaultArgs: Bundle?
     ): Adyen3DS2Component {
-        val submitFingerprintRepository = SubmitFingerprintRepository()
+        val submitFingerprintService = SubmitFingerprintService(configuration.environment)
+        val submitFingerprintRepository = SubmitFingerprintRepository(submitFingerprintService)
         val adyen3DS2DetailsParser = Adyen3DS2Serializer()
         val redirectHandler = DefaultRedirectHandler()
+        val embeddedRequestorAppUrl = ChallengeParameters.getEmbeddedRequestorAppURL(application)
+
         val threeDS2Factory = viewModelFactory(savedStateRegistryOwner, defaultArgs) { savedStateHandle ->
+            val adyen3DS2Delegate = DefaultAdyen3DS2Delegate(
+                savedStateHandle = savedStateHandle,
+                configuration = configuration,
+                submitFingerprintRepository = submitFingerprintRepository,
+                adyen3DS2Serializer = adyen3DS2DetailsParser,
+                redirectHandler = redirectHandler,
+                threeDS2Service = ThreeDS2Service.INSTANCE,
+                defaultDispatcher = Dispatchers.Default,
+                embeddedRequestorAppUrl = embeddedRequestorAppUrl,
+                base64Encoder = AndroidBase64Encoder(),
+                application = application,
+            )
+
             Adyen3DS2Component(
-                savedStateHandle,
-                application,
-                configuration,
-                submitFingerprintRepository,
-                adyen3DS2DetailsParser,
-                redirectHandler,
+                savedStateHandle = savedStateHandle,
+                application = application,
+                configuration = configuration,
+                adyen3DS2Delegate = adyen3DS2Delegate,
             )
         }
         return ViewModelProvider(viewModelStoreOwner, threeDS2Factory).get(Adyen3DS2Component::class.java)

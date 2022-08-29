@@ -24,14 +24,20 @@ class TestRedirectHandler : RedirectHandler {
 
     var exception: ComponentException? = null
 
+    private var timesLaunchRedirectCalled = 0
+
     override fun parseRedirectResult(data: Uri?): JSONObject {
         exception?.let { throw it }
         return REDIRECT_RESULT
     }
 
     override fun launchUriRedirect(context: Context, url: String?) {
+        timesLaunchRedirectCalled++
         exception?.let { throw it }
     }
+
+    fun assertLaunchRedirectCalled() =
+        assert(timesLaunchRedirectCalled > 0)
 
     companion object {
         val REDIRECT_RESULT = JSONObject().apply { put("redirect", "successful") }
