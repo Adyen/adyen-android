@@ -21,9 +21,9 @@ import com.adyen.checkout.components.ActionComponentProvider
 import com.adyen.checkout.components.base.lifecycle.viewModelFactory
 import com.adyen.checkout.components.encoding.AndroidBase64Encoder
 import com.adyen.checkout.components.model.payments.response.Action
+import com.adyen.checkout.components.model.payments.response.Threeds2Action
 import com.adyen.checkout.components.model.payments.response.Threeds2ChallengeAction
 import com.adyen.checkout.components.model.payments.response.Threeds2FingerprintAction
-import com.adyen.checkout.components.model.payments.response.Threeds2SubtypeAction
 import com.adyen.checkout.redirect.handler.DefaultRedirectHandler
 import com.adyen.threeds2.ThreeDS2Service
 import com.adyen.threeds2.parameters.ChallengeParameters
@@ -88,7 +88,7 @@ class Adyen3DS2ComponentProvider :
         get() = listOf(
             Threeds2FingerprintAction.ACTION_TYPE,
             Threeds2ChallengeAction.ACTION_TYPE,
-            Threeds2SubtypeAction.ACTION_TYPE
+            Threeds2Action.ACTION_TYPE
         )
 
     @Deprecated(

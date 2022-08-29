@@ -11,11 +11,11 @@ package com.adyen.checkout.adyen3ds2
 import com.adyen.checkout.components.base.ActionDelegate
 import com.adyen.checkout.components.base.DetailsEmittingDelegate
 import com.adyen.checkout.components.base.IntentHandlingDelegate
-import com.adyen.checkout.components.model.payments.response.Threeds2Action
+import com.adyen.checkout.components.model.payments.response.BaseThreeds2Action
 import com.adyen.threeds2.customization.UiCustomization
 
 interface Adyen3DS2Delegate :
-    ActionDelegate<Threeds2Action>,
+    ActionDelegate<BaseThreeds2Action>,
     DetailsEmittingDelegate,
     IntentHandlingDelegate {
 

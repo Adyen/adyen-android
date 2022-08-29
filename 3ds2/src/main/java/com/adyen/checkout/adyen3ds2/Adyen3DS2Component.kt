@@ -16,7 +16,7 @@ import com.adyen.checkout.components.ActionComponentProvider
 import com.adyen.checkout.components.base.BaseActionComponent
 import com.adyen.checkout.components.base.IntentHandlingComponent
 import com.adyen.checkout.components.model.payments.response.Action
-import com.adyen.checkout.components.model.payments.response.Threeds2Action
+import com.adyen.checkout.components.model.payments.response.BaseThreeds2Action
 import com.adyen.checkout.core.exception.ComponentException
 import com.adyen.checkout.core.log.LogUtil
 import com.adyen.checkout.core.log.Logger
@@ -54,7 +54,7 @@ class Adyen3DS2Component(
 
     @Throws(ComponentException::class)
     override fun handleActionInternal(action: Action, activity: Activity) {
-        if (action !is Threeds2Action) {
+        if (action !is BaseThreeds2Action) {
             notifyException(ComponentException("Unsupported action"))
             return
         }

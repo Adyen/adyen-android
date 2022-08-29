@@ -11,7 +11,7 @@ package com.adyen.checkout.adyen3ds2.repository
 import com.adyen.checkout.adyen3ds2.connection.SubmitFingerprintService
 import com.adyen.checkout.adyen3ds2.model.SubmitFingerprintRequest
 import com.adyen.checkout.components.model.payments.response.RedirectAction
-import com.adyen.checkout.components.model.payments.response.Threeds2SubtypeAction
+import com.adyen.checkout.components.model.payments.response.Threeds2Action
 import com.adyen.checkout.core.log.LogUtil
 import com.adyen.checkout.core.log.Logger
 import com.adyen.checkout.core.util.runSuspendCatching
@@ -44,7 +44,7 @@ class SubmitFingerprintRepository internal constructor(
                 Logger.d(TAG, "submitFingerprint: received new RedirectAction")
                 SubmitFingerprintResult.Redirect(response.action)
             }
-            response.type == RESPONSE_TYPE_ACTION && response.action is Threeds2SubtypeAction -> {
+            response.type == RESPONSE_TYPE_ACTION && response.action is Threeds2Action -> {
                 Logger.d(TAG, "submitFingerprint: received new Threeds2Action")
                 SubmitFingerprintResult.Threeds2(response.action)
             }

@@ -21,7 +21,7 @@ data class Threeds2FingerprintAction(
     override var paymentData: String? = null,
     override var paymentMethodType: String? = null,
     var token: String? = null,
-) : Threeds2Action() {
+) : BaseThreeds2Action() {
 
     override fun writeToParcel(dest: Parcel, flags: Int) {
         JsonUtils.writeToParcel(dest, SERIALIZER.serialize(this))
@@ -58,7 +58,7 @@ data class Threeds2FingerprintAction(
                         paymentMethodType = jsonObject.getStringOrNull(PAYMENT_METHOD_TYPE),
                     )
                 } catch (e: JSONException) {
-                    throw ModelSerializationException(Threeds2SubtypeAction::class.java, e)
+                    throw ModelSerializationException(Threeds2Action::class.java, e)
                 }
             }
         }
