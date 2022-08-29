@@ -10,11 +10,8 @@ package com.adyen.checkout.adyen3ds2
 import android.app.Activity
 import android.app.Application
 import android.content.Intent
-import androidx.lifecycle.LifecycleOwner
-import androidx.lifecycle.Observer
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.viewModelScope
-import com.adyen.checkout.components.ActionComponentData
 import com.adyen.checkout.components.ActionComponentProvider
 import com.adyen.checkout.components.base.BaseActionComponent
 import com.adyen.checkout.components.base.IntentHandlingComponent
@@ -62,15 +59,6 @@ class Adyen3DS2Component(
             Adyen3DS2Event.ClearPaymentData -> {
                 paymentData = null
             }
-        }
-    }
-
-    override fun observe(lifecycleOwner: LifecycleOwner, observer: Observer<ActionComponentData>) {
-        super.observe(lifecycleOwner, observer)
-        if (adyen3DS2Delegate.gotDestroyedWhileChallenging) {
-            // This is OK if the user goes back and starts a new payment.
-            // TODO notify error to activity?
-            Logger.e(TAG, "Lost challenge result reference.")
         }
     }
 

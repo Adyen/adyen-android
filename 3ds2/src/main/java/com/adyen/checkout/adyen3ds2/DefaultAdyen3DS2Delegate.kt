@@ -76,9 +76,6 @@ internal class DefaultAdyen3DS2Delegate(
 
     override var uiCustomization: UiCustomization? = null
 
-    @Volatile
-    override var gotDestroyedWhileChallenging: Boolean = false
-
     private var _coroutineScope: CoroutineScope? = null
     private val coroutineScope: CoroutineScope get() = requireNotNull(_coroutineScope)
 
@@ -388,10 +385,6 @@ internal class DefaultAdyen3DS2Delegate(
     }
 
     override fun onCleared() {
-        if (currentTransaction != null) {
-            gotDestroyedWhileChallenging = true
-        }
-
         _coroutineScope = null
     }
 

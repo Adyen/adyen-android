@@ -27,8 +27,6 @@ interface Adyen3DS2Delegate {
 
     var uiCustomization: UiCustomization?
 
-    val gotDestroyedWhileChallenging: Boolean
-
     fun initialize(coroutineScope: CoroutineScope)
 
     fun handleAction(action: Action, activity: Activity, paymentData: String?)
