@@ -22,11 +22,11 @@ import com.adyen.checkout.adyen3ds2.repository.SubmitFingerprintResult
 import com.adyen.checkout.components.ActionComponentData
 import com.adyen.checkout.components.encoding.Base64Encoder
 import com.adyen.checkout.components.flow.MutableSingleEventSharedFlow
-import com.adyen.checkout.components.model.payments.response.Action
 import com.adyen.checkout.components.model.payments.response.RedirectAction
 import com.adyen.checkout.components.model.payments.response.Threeds2Action
 import com.adyen.checkout.components.model.payments.response.Threeds2ChallengeAction
 import com.adyen.checkout.components.model.payments.response.Threeds2FingerprintAction
+import com.adyen.checkout.components.model.payments.response.Threeds2SubtypeAction
 import com.adyen.checkout.core.exception.CheckoutException
 import com.adyen.checkout.core.exception.ComponentException
 import com.adyen.checkout.core.log.LogUtil
@@ -98,7 +98,7 @@ internal class DefaultAdyen3DS2Delegate(
     }
 
     @Suppress("ReturnCount")
-    override fun handleAction(action: Action, activity: Activity) {
+    override fun handleAction(action: Threeds2Action, activity: Activity) {
         when (action) {
             is Threeds2FingerprintAction -> {
                 if (action.token.isNullOrEmpty()) {
@@ -118,7 +118,7 @@ internal class DefaultAdyen3DS2Delegate(
                 }
                 challengeShopper(activity, action.token.orEmpty())
             }
-            is Threeds2Action -> {
+            is Threeds2SubtypeAction -> {
                 if (action.token.isNullOrEmpty()) {
                     _exceptionFlow.tryEmit(ComponentException("3DS2 token not found."))
                     return
@@ -127,7 +127,7 @@ internal class DefaultAdyen3DS2Delegate(
                     _exceptionFlow.tryEmit(ComponentException("3DS2 Action subtype not found."))
                     return
                 }
-                val subtype = Threeds2Action.SubType.parse(action.subtype.orEmpty())
+                val subtype = Threeds2SubtypeAction.SubType.parse(action.subtype.orEmpty())
                 // We need to keep authorizationToken in memory to access it later when the 3DS2 challenge is done
                 authorizationToken = action.authorisationToken
                 handleActionSubtype(activity, subtype, action.token.orEmpty())
@@ -137,16 +137,16 @@ internal class DefaultAdyen3DS2Delegate(
 
     private fun handleActionSubtype(
         activity: Activity,
-        subtype: Threeds2Action.SubType,
+        subtype: Threeds2SubtypeAction.SubType,
         token: String,
     ) {
         when (subtype) {
-            Threeds2Action.SubType.FINGERPRINT -> identifyShopper(
+            Threeds2SubtypeAction.SubType.FINGERPRINT -> identifyShopper(
                 activity = activity,
                 encodedFingerprintToken = token,
                 submitFingerprintAutomatically = true,
             )
-            Threeds2Action.SubType.CHALLENGE -> challengeShopper(activity, token)
+            Threeds2SubtypeAction.SubType.CHALLENGE -> challengeShopper(activity, token)
         }
     }
 

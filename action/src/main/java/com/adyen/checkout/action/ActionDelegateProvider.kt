@@ -23,8 +23,6 @@ import com.adyen.checkout.components.model.payments.response.QrCodeAction
 import com.adyen.checkout.components.model.payments.response.RedirectAction
 import com.adyen.checkout.components.model.payments.response.SdkAction
 import com.adyen.checkout.components.model.payments.response.Threeds2Action
-import com.adyen.checkout.components.model.payments.response.Threeds2ChallengeAction
-import com.adyen.checkout.components.model.payments.response.Threeds2FingerprintAction
 import com.adyen.checkout.components.model.payments.response.VoucherAction
 import com.adyen.checkout.core.exception.CheckoutException
 import com.adyen.checkout.qrcode.QRCodeComponent
@@ -54,9 +52,7 @@ object ActionDelegateProvider {
             is RedirectAction -> {
                 RedirectComponent.PROVIDER.getDelegate(getConfiguration(configuration), savedStateHandle, context)
             }
-            is Threeds2Action,
-            is Threeds2ChallengeAction,
-            is Threeds2FingerprintAction -> {
+            is Threeds2Action -> {
                 Adyen3DS2Component.PROVIDER.getDelegate(getConfiguration(configuration), savedStateHandle, context)
             }
             is VoucherAction -> {

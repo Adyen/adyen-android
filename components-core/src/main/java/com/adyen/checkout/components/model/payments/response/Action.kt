@@ -50,7 +50,7 @@ abstract class Action : ModelObject() {
                 RedirectAction.ACTION_TYPE -> RedirectAction.SERIALIZER
                 Threeds2FingerprintAction.ACTION_TYPE -> Threeds2FingerprintAction.SERIALIZER
                 Threeds2ChallengeAction.ACTION_TYPE -> Threeds2ChallengeAction.SERIALIZER
-                Threeds2Action.ACTION_TYPE -> Threeds2Action.SERIALIZER
+                Threeds2SubtypeAction.ACTION_TYPE -> Threeds2SubtypeAction.SERIALIZER
                 QrCodeAction.ACTION_TYPE -> QrCodeAction.SERIALIZER
                 VoucherAction.ACTION_TYPE -> VoucherAction.SERIALIZER
                 SdkAction.ACTION_TYPE -> SdkAction.SERIALIZER

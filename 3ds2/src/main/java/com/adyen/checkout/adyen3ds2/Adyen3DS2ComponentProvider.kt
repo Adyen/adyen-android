@@ -18,20 +18,19 @@ import androidx.savedstate.SavedStateRegistryOwner
 import com.adyen.checkout.adyen3ds2.connection.SubmitFingerprintService
 import com.adyen.checkout.adyen3ds2.repository.SubmitFingerprintRepository
 import com.adyen.checkout.components.ActionComponentProvider
-import com.adyen.checkout.components.base.ActionDelegate
 import com.adyen.checkout.components.base.lifecycle.viewModelFactory
 import com.adyen.checkout.components.encoding.AndroidBase64Encoder
 import com.adyen.checkout.components.model.payments.response.Action
-import com.adyen.checkout.components.model.payments.response.Threeds2Action
 import com.adyen.checkout.components.model.payments.response.Threeds2ChallengeAction
 import com.adyen.checkout.components.model.payments.response.Threeds2FingerprintAction
+import com.adyen.checkout.components.model.payments.response.Threeds2SubtypeAction
 import com.adyen.checkout.redirect.handler.DefaultRedirectHandler
 import com.adyen.threeds2.ThreeDS2Service
 import com.adyen.threeds2.parameters.ChallengeParameters
 import kotlinx.coroutines.Dispatchers
 
 class Adyen3DS2ComponentProvider :
-    ActionComponentProvider<Adyen3DS2Component, Adyen3DS2Configuration, ActionDelegate<*>> {
+    ActionComponentProvider<Adyen3DS2Component, Adyen3DS2Configuration, Adyen3DS2Delegate> {
 
     override fun <T> get(
         owner: T,
@@ -48,25 +47,8 @@ class Adyen3DS2ComponentProvider :
         configuration: Adyen3DS2Configuration,
         defaultArgs: Bundle?
     ): Adyen3DS2Component {
-        val submitFingerprintService = SubmitFingerprintService(configuration.environment)
-        val submitFingerprintRepository = SubmitFingerprintRepository(submitFingerprintService)
-        val adyen3DS2DetailsParser = Adyen3DS2Serializer()
-        val redirectHandler = DefaultRedirectHandler()
-        val embeddedRequestorAppUrl = ChallengeParameters.getEmbeddedRequestorAppURL(application)
-
         val threeDS2Factory = viewModelFactory(savedStateRegistryOwner, defaultArgs) { savedStateHandle ->
-            val adyen3DS2Delegate = DefaultAdyen3DS2Delegate(
-                savedStateHandle = savedStateHandle,
-                configuration = configuration,
-                submitFingerprintRepository = submitFingerprintRepository,
-                adyen3DS2Serializer = adyen3DS2DetailsParser,
-                redirectHandler = redirectHandler,
-                threeDS2Service = ThreeDS2Service.INSTANCE,
-                defaultDispatcher = Dispatchers.Default,
-                embeddedRequestorAppUrl = embeddedRequestorAppUrl,
-                base64Encoder = AndroidBase64Encoder(),
-                application = application,
-            )
+            val adyen3DS2Delegate = getDelegate(configuration, savedStateHandle, application)
 
             Adyen3DS2Component(
                 savedStateHandle = savedStateHandle,
@@ -82,16 +64,31 @@ class Adyen3DS2ComponentProvider :
         configuration: Adyen3DS2Configuration,
         savedStateHandle: SavedStateHandle,
         context: Context,
-    ): ActionDelegate<*> {
-        // TODO: finish when we have a delegate
-        throw NotImplementedError()
+    ): Adyen3DS2Delegate {
+        val submitFingerprintService = SubmitFingerprintService(configuration.environment)
+        val submitFingerprintRepository = SubmitFingerprintRepository(submitFingerprintService)
+        val adyen3DS2DetailsParser = Adyen3DS2Serializer()
+        val redirectHandler = DefaultRedirectHandler()
+        val embeddedRequestorAppUrl = ChallengeParameters.getEmbeddedRequestorAppURL(context)
+        return DefaultAdyen3DS2Delegate(
+            savedStateHandle = savedStateHandle,
+            configuration = configuration,
+            submitFingerprintRepository = submitFingerprintRepository,
+            adyen3DS2Serializer = adyen3DS2DetailsParser,
+            redirectHandler = redirectHandler,
+            threeDS2Service = ThreeDS2Service.INSTANCE,
+            defaultDispatcher = Dispatchers.Default,
+            embeddedRequestorAppUrl = embeddedRequestorAppUrl,
+            base64Encoder = AndroidBase64Encoder(),
+            application = context as Application,
+        )
     }
 
     override val supportedActionTypes: List<String>
         get() = listOf(
             Threeds2FingerprintAction.ACTION_TYPE,
             Threeds2ChallengeAction.ACTION_TYPE,
-            Threeds2Action.ACTION_TYPE
+            Threeds2SubtypeAction.ACTION_TYPE
         )
 
     @Deprecated(

@@ -20,9 +20,9 @@ import com.adyen.checkout.adyen3ds2.repository.SubmitFingerprintResult
 import com.adyen.checkout.components.ActionComponentData
 import com.adyen.checkout.components.encoding.JavaBase64Encoder
 import com.adyen.checkout.components.model.payments.response.RedirectAction
-import com.adyen.checkout.components.model.payments.response.Threeds2Action
 import com.adyen.checkout.components.model.payments.response.Threeds2ChallengeAction
 import com.adyen.checkout.components.model.payments.response.Threeds2FingerprintAction
+import com.adyen.checkout.components.model.payments.response.Threeds2SubtypeAction
 import com.adyen.checkout.core.api.Environment
 import com.adyen.checkout.core.exception.ComponentException
 import com.adyen.checkout.redirect.test.TestRedirectHandler
@@ -130,7 +130,7 @@ internal class DefaultAdyen3DS2DelegateTest(
             delegate.initialize(CoroutineScope(dispatcher))
 
             delegate.exceptionFlow.test {
-                delegate.handleAction(Threeds2Action(token = null), Activity())
+                delegate.handleAction(Threeds2SubtypeAction(token = null), Activity())
 
                 assertTrue(awaitItem() is ComponentException)
             }
@@ -143,7 +143,7 @@ internal class DefaultAdyen3DS2DelegateTest(
             delegate.initialize(CoroutineScope(dispatcher))
 
             delegate.exceptionFlow.test {
-                delegate.handleAction(Threeds2Action(token = "sometoken", subtype = null), Activity())
+                delegate.handleAction(Threeds2SubtypeAction(token = "sometoken", subtype = null), Activity())
 
                 assertTrue(awaitItem() is ComponentException)
             }

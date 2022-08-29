@@ -23,9 +23,9 @@ import com.adyen.checkout.components.model.payments.response.AwaitAction
 import com.adyen.checkout.components.model.payments.response.QrCodeAction
 import com.adyen.checkout.components.model.payments.response.RedirectAction
 import com.adyen.checkout.components.model.payments.response.SdkAction
-import com.adyen.checkout.components.model.payments.response.Threeds2Action
 import com.adyen.checkout.components.model.payments.response.Threeds2ChallengeAction
 import com.adyen.checkout.components.model.payments.response.Threeds2FingerprintAction
+import com.adyen.checkout.components.model.payments.response.Threeds2SubtypeAction
 import com.adyen.checkout.components.model.payments.response.VoucherAction
 
 class GenericActionComponentProvider :
@@ -68,7 +68,7 @@ class GenericActionComponentProvider :
             AwaitAction.ACTION_TYPE,
             QrCodeAction.ACTION_TYPE,
             RedirectAction.ACTION_TYPE,
-            Threeds2Action.ACTION_TYPE,
+            Threeds2SubtypeAction.ACTION_TYPE,
             Threeds2ChallengeAction.ACTION_TYPE,
             Threeds2FingerprintAction.ACTION_TYPE,
             VoucherAction.ACTION_TYPE,
