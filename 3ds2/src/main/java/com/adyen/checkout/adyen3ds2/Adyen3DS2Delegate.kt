@@ -19,5 +19,5 @@ interface Adyen3DS2Delegate :
     DetailsEmittingDelegate,
     IntentHandlingDelegate {
 
-    var uiCustomization: UiCustomization?
+    fun set3DS2UICustomization(uiCustomization: UiCustomization?)
 }

@@ -17,6 +17,7 @@ import androidx.lifecycle.Observer
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.asLiveData
 import androidx.lifecycle.viewModelScope
+import com.adyen.checkout.adyen3ds2.Adyen3DS2Delegate
 import com.adyen.checkout.components.ActionComponentData
 import com.adyen.checkout.components.ActionComponentProvider
 import com.adyen.checkout.components.ViewableComponent
@@ -30,6 +31,7 @@ import com.adyen.checkout.components.base.StatusPollingDelegate
 import com.adyen.checkout.components.base.ViewableDelegate
 import com.adyen.checkout.components.model.payments.response.Action
 import com.adyen.checkout.components.status.model.TimerData
+import com.adyen.threeds2.customization.UiCustomization
 import kotlinx.coroutines.flow.filterNotNull
 import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.onEach
@@ -101,6 +103,10 @@ class GenericActionComponent(
         (delegate as? StatusPollingDelegate)?.timerFlow
             ?.asLiveData()
             ?.observe(lifecycleOwner, observer)
+    }
+
+    fun set3DS2UICustomization(uiCustomization: UiCustomization?) {
+        (delegate as? Adyen3DS2Delegate)?.set3DS2UICustomization(uiCustomization)
     }
 
     /**

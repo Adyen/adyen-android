@@ -74,10 +74,10 @@ internal class DefaultAdyen3DS2Delegate(
     private val _exceptionFlow = MutableSingleEventSharedFlow<CheckoutException>()
     override val exceptionFlow: Flow<CheckoutException> = _exceptionFlow
 
-    override var uiCustomization: UiCustomization? = null
-
     private var _coroutineScope: CoroutineScope? = null
     private val coroutineScope: CoroutineScope get() = requireNotNull(_coroutineScope)
+
+    private var uiCustomization: UiCustomization? = null
 
     private var currentTransaction: Transaction? = null
 
@@ -343,6 +343,10 @@ internal class DefaultAdyen3DS2Delegate(
         } catch (e: CheckoutException) {
             _exceptionFlow.tryEmit(e)
         }
+    }
+
+    override fun set3DS2UICustomization(uiCustomization: UiCustomization?) {
+        this.uiCustomization = uiCustomization
     }
 
     override fun completed(completionEvent: CompletionEvent) {
