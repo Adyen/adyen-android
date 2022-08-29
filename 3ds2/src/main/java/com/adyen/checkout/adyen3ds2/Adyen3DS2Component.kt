@@ -56,6 +56,7 @@ class Adyen3DS2Component(
                     // no problem
                 }
             }
+            // TODO: Remove when generic action component is ready
             Adyen3DS2Event.ClearPaymentData -> {
                 paymentData = null
             }
