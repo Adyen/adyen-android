@@ -19,6 +19,7 @@ import com.adyen.checkout.adyen3ds2.model.FingerprintToken
 import com.adyen.checkout.adyen3ds2.repository.SubmitFingerprintRepository
 import com.adyen.checkout.adyen3ds2.repository.SubmitFingerprintResult
 import com.adyen.checkout.components.encoding.Base64Encoder
+import com.adyen.checkout.components.flow.MutableSingleEventSharedFlow
 import com.adyen.checkout.components.model.payments.response.Action
 import com.adyen.checkout.components.model.payments.response.RedirectAction
 import com.adyen.checkout.components.model.payments.response.Threeds2Action
@@ -46,9 +47,7 @@ import com.adyen.threeds2.util.AdyenConfigParameters
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.CoroutineExceptionHandler
 import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.channels.BufferOverflow
 import kotlinx.coroutines.flow.Flow
-import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.launch
 import org.json.JSONException
 import org.json.JSONObject
@@ -66,13 +65,13 @@ internal class DefaultAdyen3DS2Delegate(
     private val base64Encoder: Base64Encoder,
 ) : Adyen3DS2Delegate, ChallengeStatusReceiver {
 
-    private val _detailsFlow = MutableSharedFlow<JSONObject>(1, 1, BufferOverflow.DROP_OLDEST)
+    private val _detailsFlow = MutableSingleEventSharedFlow<JSONObject>()
     override val detailsFlow: Flow<JSONObject> = _detailsFlow
 
-    private val _exceptionFlow = MutableSharedFlow<CheckoutException>(1, 1, BufferOverflow.DROP_OLDEST)
+    private val _exceptionFlow = MutableSingleEventSharedFlow<CheckoutException>()
     override val exceptionFlow: Flow<CheckoutException> = _exceptionFlow
 
-    private val _eventFlow = MutableSharedFlow<Adyen3DS2Event>(1, 1, BufferOverflow.DROP_OLDEST)
+    private val _eventFlow = MutableSingleEventSharedFlow<Adyen3DS2Event>()
     override val eventFlow: Flow<Adyen3DS2Event> = _eventFlow
 
     override var uiCustomization: UiCustomization? = null
@@ -229,20 +228,22 @@ internal class DefaultAdyen3DS2Delegate(
 
     @Throws(ComponentException::class)
     private fun createEncodedFingerprint(authenticationRequestParameters: AuthenticationRequestParameters): String {
-        val fingerprintJson = JSONObject()
-        try {
-            with(authenticationRequestParameters) {
-                fingerprintJson.put("sdkAppID", sdkAppID)
-                fingerprintJson.put("sdkEncData", deviceData)
-                fingerprintJson.put("sdkEphemPubKey", JSONObject(sdkEphemeralPublicKey))
-                fingerprintJson.put("sdkReferenceNumber", sdkReferenceNumber)
-                fingerprintJson.put("sdkTransID", sdkTransactionID)
-                fingerprintJson.put("messageVersion", messageVersion)
+        return try {
+            val fingerprintJson = JSONObject().apply {
+                with(authenticationRequestParameters) {
+                    put("sdkAppID", sdkAppID)
+                    put("sdkEncData", deviceData)
+                    put("sdkEphemPubKey", JSONObject(sdkEphemeralPublicKey))
+                    put("sdkReferenceNumber", sdkReferenceNumber)
+                    put("sdkTransID", sdkTransactionID)
+                    put("messageVersion", messageVersion)
+                }
             }
+
+            base64Encoder.encode(fingerprintJson.toString())
         } catch (e: JSONException) {
             throw ComponentException("Failed to create encoded fingerprint", e)
         }
-        return base64Encoder.encode(fingerprintJson.toString())
     }
 
     private suspend fun submitFingerprintAutomatically(
