@@ -10,7 +10,5 @@ package com.adyen.checkout.adyen3ds2
 
 sealed class Adyen3DS2Event {
 
-    object CleanUp3DS2 : Adyen3DS2Event()
-
     object ClearPaymentData : Adyen3DS2Event()
 }

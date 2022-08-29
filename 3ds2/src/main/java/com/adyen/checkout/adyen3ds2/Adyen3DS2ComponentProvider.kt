@@ -61,6 +61,7 @@ class Adyen3DS2ComponentProvider : ActionComponentProvider<Adyen3DS2Component, A
                 defaultDispatcher = Dispatchers.Default,
                 embeddedRequestorAppUrl = embeddedRequestorAppUrl,
                 base64Encoder = AndroidBase64Encoder(),
+                application = application,
             )
 
             Adyen3DS2Component(

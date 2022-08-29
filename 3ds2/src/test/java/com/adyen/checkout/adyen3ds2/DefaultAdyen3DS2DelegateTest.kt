@@ -9,6 +9,7 @@
 package com.adyen.checkout.adyen3ds2
 
 import android.app.Activity
+import android.app.Application
 import android.content.Intent
 import androidx.lifecycle.SavedStateHandle
 import app.cash.turbine.test
@@ -88,6 +89,7 @@ internal class DefaultAdyen3DS2DelegateTest(
             defaultDispatcher = dispatcher,
             embeddedRequestorAppUrl = "embeddedRequestorAppUrl",
             base64Encoder = base64Encoder,
+            application = Application(),
         )
     }
 

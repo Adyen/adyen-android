@@ -9,6 +9,7 @@
 package com.adyen.checkout.adyen3ds2
 
 import android.app.Activity
+import android.app.Application
 import android.content.Intent
 import androidx.annotation.VisibleForTesting
 import androidx.lifecycle.SavedStateHandle
@@ -63,6 +64,7 @@ internal class DefaultAdyen3DS2Delegate(
     private val defaultDispatcher: CoroutineDispatcher,
     private val embeddedRequestorAppUrl: String,
     private val base64Encoder: Base64Encoder,
+    private val application: Application,
 ) : Adyen3DS2Delegate, ChallengeStatusReceiver {
 
     private val _detailsFlow = MutableSingleEventSharedFlow<JSONObject>()
@@ -381,7 +383,15 @@ internal class DefaultAdyen3DS2Delegate(
     private fun closeTransaction() {
         currentTransaction?.close()
         currentTransaction = null
-        _eventFlow.tryEmit(Adyen3DS2Event.CleanUp3DS2)
+        cleanUp3DS2()
+    }
+
+    private fun cleanUp3DS2() {
+        try {
+            ThreeDS2Service.INSTANCE.cleanup(application)
+        } catch (e: SDKNotInitializedException) {
+            // Safe to ignore
+        }
     }
 
     override fun onCleared() {

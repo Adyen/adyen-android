@@ -19,9 +19,7 @@ import com.adyen.checkout.components.model.payments.response.Action
 import com.adyen.checkout.core.exception.ComponentException
 import com.adyen.checkout.core.log.LogUtil
 import com.adyen.checkout.core.log.Logger
-import com.adyen.threeds2.ThreeDS2Service
 import com.adyen.threeds2.customization.UiCustomization
-import com.adyen.threeds2.exception.SDKNotInitializedException
 import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.onEach
 
@@ -49,13 +47,6 @@ class Adyen3DS2Component(
 
     private fun onEvent(event: Adyen3DS2Event) {
         when (event) {
-            Adyen3DS2Event.CleanUp3DS2 -> {
-                try {
-                    ThreeDS2Service.INSTANCE.cleanup(getApplication())
-                } catch (e: SDKNotInitializedException) {
-                    // no problem
-                }
-            }
             // TODO: Remove when generic action component is ready
             Adyen3DS2Event.ClearPaymentData -> {
                 paymentData = null
