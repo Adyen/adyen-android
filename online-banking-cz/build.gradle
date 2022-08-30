@@ -38,6 +38,7 @@ dependencies {
     // Dependencies
     implementation libraries.androidx.appcompat
     implementation libraries.androidx.recyclerview
+    implementation libraries.androidx.browser
 
     //Tests
     testImplementation testLibraries.junit5
