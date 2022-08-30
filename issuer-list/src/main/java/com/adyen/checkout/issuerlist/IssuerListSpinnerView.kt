@@ -12,14 +12,16 @@ import android.util.AttributeSet
 import android.view.LayoutInflater
 import android.view.View
 import android.widget.AdapterView
-import androidx.appcompat.widget.AppCompatSpinner
+import android.widget.AutoCompleteTextView
+import android.widget.TextView
 import androidx.lifecycle.LifecycleOwner
 import com.adyen.checkout.components.PaymentComponentState
-import com.adyen.checkout.components.api.ImageLoader.Companion.getInstance
 import com.adyen.checkout.components.model.payments.request.IssuerListPaymentMethod
+import com.adyen.checkout.components.ui.adapter.SimpleTextListAdapter
 import com.adyen.checkout.components.ui.view.AdyenLinearLayout
 import com.adyen.checkout.core.log.LogUtil
 import com.adyen.checkout.core.log.Logger.d
+import com.google.android.material.textfield.TextInputLayout
 
 @Suppress("TooManyFunctions")
 abstract class IssuerListSpinnerView<
@@ -38,17 +40,30 @@ abstract class IssuerListSpinnerView<
         IssuerListComponentT>(context, attrs, defStyleAttr),
     AdapterView.OnItemSelectedListener {
 
-    private lateinit var issuersSpinner: AppCompatSpinner
-    private lateinit var issuersAdapter: IssuerListSpinnerAdapter
+    protected val termsAndConditionsTextView: TextView?
+        get() = rootView.findViewById<TextView>(R.id.textview_termsAndConditions)
+    private val autoCompleteTextViewIssuers: AutoCompleteTextView
+        get() = rootView.findViewById(R.id.autoCompleteTextView_issuers)
+    private val textInputLayoutIssuers: TextInputLayout
+        get() = rootView.findViewById(R.id.textInputLayout_issuers)
+
+    private val issuersAdapter: SimpleTextListAdapter<IssuerModel> = SimpleTextListAdapter(context)
 
     init {
+        orientation = VERTICAL
+        layoutParams = LayoutParams(LayoutParams.MATCH_PARENT, LayoutParams.WRAP_CONTENT)
         LayoutInflater.from(getContext()).inflate(R.layout.issuer_list_spinner_view, this, true)
     }
 
     override fun initView() {
-        issuersSpinner = findViewById<AppCompatSpinner?>(R.id.spinner_issuers).apply {
-            adapter = issuersAdapter
-            onItemSelectedListener = this@IssuerListSpinnerView
+        autoCompleteTextViewIssuers.apply {
+            inputType = 0
+            setAdapter(issuersAdapter)
+            onItemClickListener = AdapterView.OnItemClickListener { _, _, position, _ ->
+                d(TAG, "onItemSelected - " + issuersAdapter.getItem(position).name)
+                component.inputData.selectedIssuer = issuersAdapter.getItem(position)
+                component.notifyInputDataChanged()
+            }
         }
     }
 
@@ -57,13 +72,7 @@ abstract class IssuerListSpinnerView<
     }
 
     override fun onComponentAttached() {
-        issuersAdapter = IssuerListSpinnerAdapter(
-            context,
-            component.issuers,
-            getInstance(context, component.configuration.environment),
-            component.paymentMethodType,
-            hideIssuersLogo()
-        )
+        issuersAdapter.setItems(component.issuers)
     }
 
     override fun observeComponentChanges(lifecycleOwner: LifecycleOwner) = Unit
@@ -87,7 +96,8 @@ abstract class IssuerListSpinnerView<
 
     override fun setEnabled(enabled: Boolean) {
         super.setEnabled(enabled)
-        issuersSpinner.isEnabled = enabled
+        autoCompleteTextViewIssuers.isEnabled = enabled
+        textInputLayoutIssuers.isEnabled = enabled
     }
 
     override fun onNothingSelected(parent: AdapterView<*>) {
