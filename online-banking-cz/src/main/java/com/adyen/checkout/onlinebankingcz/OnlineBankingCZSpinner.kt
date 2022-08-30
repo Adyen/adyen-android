@@ -9,12 +9,32 @@
 package com.adyen.checkout.onlinebankingcz
 
 import android.content.Context
+import android.net.Uri
 import android.util.AttributeSet
+import android.view.View
+import androidx.browser.customtabs.CustomTabsIntent
 import com.adyen.checkout.components.model.payments.request.OnlineBankingCZPaymentMethod
+import com.adyen.checkout.components.ui.util.ThemeUtil
 import com.adyen.checkout.issuerlist.IssuerListSpinnerView
 
 class OnlineBankingCZSpinner @JvmOverloads constructor(
     context: Context,
     attrs: AttributeSet? = null,
     defStyleAttr: Int = 0
-) : IssuerListSpinnerView<OnlineBankingCZPaymentMethod, OnlineBankingCZComponent>(context, attrs, defStyleAttr)
+) : IssuerListSpinnerView<OnlineBankingCZPaymentMethod, OnlineBankingCZComponent>(context, attrs, defStyleAttr) {
+
+    override fun onComponentAttached() {
+        super.onComponentAttached()
+        termsAndConditionsTextView?.visibility = View.VISIBLE
+        termsAndConditionsTextView?.setOnClickListener { launchDownloadIntent() }
+    }
+
+    private fun launchDownloadIntent() {
+        val url = component.getTermsAndConditionsUrl() ?: return
+        val intent = CustomTabsIntent.Builder()
+            .setShowTitle(true)
+            .setToolbarColor(ThemeUtil.getPrimaryThemeColor(context))
+            .build()
+        intent.launchUrl(context, Uri.parse(url))
+    }
+}
