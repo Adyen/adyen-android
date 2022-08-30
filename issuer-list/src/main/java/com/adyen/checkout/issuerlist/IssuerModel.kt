@@ -8,7 +8,9 @@
 
 package com.adyen.checkout.issuerlist
 
+import com.adyen.checkout.components.ui.adapter.SimpleTextListItem
+
 data class IssuerModel(
     val id: String,
     val name: String
-)
+) : SimpleTextListItem(name)
