@@ -30,7 +30,10 @@ import com.adyen.checkout.components.base.OutputData
 import com.adyen.checkout.components.base.StatusPollingDelegate
 import com.adyen.checkout.components.base.ViewableDelegate
 import com.adyen.checkout.components.model.payments.response.Action
+import com.adyen.checkout.components.model.payments.response.Threeds2ChallengeAction
 import com.adyen.checkout.components.status.model.TimerData
+import com.adyen.checkout.core.log.LogUtil
+import com.adyen.checkout.core.log.Logger
 import com.adyen.threeds2.customization.UiCustomization
 import kotlinx.coroutines.flow.filterNotNull
 import kotlinx.coroutines.flow.launchIn
@@ -55,14 +58,17 @@ class GenericActionComponent(
     }
 
     override fun handleActionInternal(action: Action, activity: Activity) {
-        // TODO: Add check to see if previous delegate is 3ds2Delegate and current action is Threeds2ChallengeAction
-        val delegate = ActionDelegateProvider.get(action, configuration, savedStateHandle, activity)
-        _delegate = delegate
+        if (_delegate is Adyen3DS2Delegate && action is Threeds2ChallengeAction) {
+            Logger.d(TAG, "Continuing the handling of 3ds2 challenge with old flow.")
+        } else {
+            val delegate = ActionDelegateProvider.get(action, configuration, savedStateHandle, activity)
+            _delegate = delegate
 
-        delegate.initialize(viewModelScope)
+            delegate.initialize(viewModelScope)
 
-        observeDetails()
-        observeExceptions()
+            observeDetails()
+            observeExceptions()
+        }
 
         delegate.handleAction(action, activity)
     }
@@ -128,6 +134,8 @@ class GenericActionComponent(
     }
 
     companion object {
+        private val TAG = LogUtil.getTag()
+
         @JvmField
         val PROVIDER: ActionComponentProvider<GenericActionComponent, GenericActionConfiguration, ActionDelegate<*>> =
             GenericActionComponentProvider()
