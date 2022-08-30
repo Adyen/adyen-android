@@ -9,8 +9,6 @@
 package com.adyen.checkout.issuerlist
 
 import com.adyen.checkout.components.PaymentComponentState
-import com.adyen.checkout.components.model.paymentmethods.InputDetail
-import com.adyen.checkout.components.model.paymentmethods.Issuer
 import com.adyen.checkout.components.model.paymentmethods.PaymentMethod
 import com.adyen.checkout.components.model.payments.request.IssuerListPaymentMethod
 import com.adyen.checkout.components.model.payments.request.PaymentComponentData
@@ -30,30 +28,10 @@ class DefaultIssuerListDelegate<IssuerListPaymentMethodT : IssuerListPaymentMeth
     override val componentStateFlow: Flow<PaymentComponentState<IssuerListPaymentMethodT>?> = _componentStateFlow
 
     override fun getIssuers(): List<IssuerModel> {
-        return paymentMethod.issuers?.let { getIssuers(it) } ?: getLegacyIssuers(paymentMethod.details)
+        return paymentMethod.issuers?.let {
+            IssuersUtils.getIssuers(it)
+        } ?: IssuersUtils.getLegacyIssuers(paymentMethod.details)
     }
-
-    private fun getIssuers(issuerList: List<Issuer>): List<IssuerModel> =
-        issuerList.mapNotNull { issuer ->
-            val (id, name, isDisabled) = issuer
-            if (!isDisabled && id != null && name != null) {
-                IssuerModel(id, name)
-            } else {
-                null
-            }
-        }
-
-    private fun getLegacyIssuers(details: List<InputDetail>?): List<IssuerModel> =
-        details.orEmpty()
-            .flatMap { it.items.orEmpty() }
-            .mapNotNull { item ->
-                val (id, name) = item
-                if (id != null && name != null) {
-                    IssuerModel(id, name)
-                } else {
-                    null
-                }
-            }
 
     override fun onInputDataChanged(inputData: IssuerListInputData) {
         val outputData = IssuerListOutputData(inputData.selectedIssuer)
