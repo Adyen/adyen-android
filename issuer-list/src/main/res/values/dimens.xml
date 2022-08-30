@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="utf-8"?><!--
+  ~ Copyright (c) 2022 Adyen N.V.
+  ~
+  ~ This file is open source and available under the MIT license. See the LICENSE file for more info.
+  ~
+  ~ Created by atef on 25/8/2022.
+  -->
+
+<resources>
+
+    <dimen name="termsAndConditions_margin">16dp</dimen>
+    <dimen name="termsAndConditions_text_size">12sp</dimen>
+
+    <dimen name="issuersSpinner_side_margin">16dp</dimen>
+
+</resources>
