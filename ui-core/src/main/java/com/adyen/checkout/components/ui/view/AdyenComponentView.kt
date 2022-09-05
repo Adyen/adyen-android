@@ -14,8 +14,11 @@ import androidx.core.view.isVisible
 import androidx.lifecycle.LifecycleOwner
 import androidx.lifecycle.lifecycleScope
 import com.adyen.checkout.components.ViewableComponent
+import com.adyen.checkout.components.base.ComponentDelegate
+import com.adyen.checkout.components.base.Configuration
 import com.adyen.checkout.components.extensions.createLocalizedContext
 import com.adyen.checkout.components.ui.ComponentViewNew
+import com.adyen.checkout.components.ui.ViewProvider
 import com.adyen.checkout.components.ui.ViewProvidingComponent
 import com.adyen.checkout.components.ui.ViewProvidingDelegate
 import kotlinx.coroutines.CoroutineScope
@@ -44,9 +47,19 @@ class AdyenComponentView @JvmOverloads constructor(
 
         // TODO remove when all components are supported
         if (component !is ViewProvidingComponent) throw IllegalArgumentException("Not implemented yet")
+        val delegate = component.delegate
+        if (delegate !is ViewProvidingDelegate) throw IllegalArgumentException("Not implemented yet")
 
         component.viewFlow
-            .onEach { loadView(it, lifecycleOwner.lifecycleScope) }
+            .onEach {
+                loadView(
+                    viewType = it,
+                    delegate = delegate,
+                    viewProvider = delegate.getViewProvider(),
+                    configuration = component.configuration,
+                    coroutineScope = lifecycleOwner.lifecycleScope,
+                )
+            }
             .launchIn(lifecycleOwner.lifecycleScope)
 
         isVisible = true
@@ -55,19 +68,19 @@ class AdyenComponentView @JvmOverloads constructor(
 
     // TODO how does rotation affect this? when views are in the xml layout file their state gets automatically saved
     //  but not with addView
-    private fun loadView(viewType: ComponentViewType?, coroutineScope: CoroutineScope) {
+    private fun loadView(
+        viewType: ComponentViewType?,
+        delegate: ComponentDelegate,
+        viewProvider: ViewProvider,
+        configuration: Configuration,
+        coroutineScope: CoroutineScope,
+    ) {
         removeAllViews()
         viewType ?: return
 
-        val component = component
-        if (component !is ViewProvidingComponent) throw IllegalArgumentException("Not implemented yet")
-        val delegate = component.delegate
-        if (delegate !is ViewProvidingDelegate) throw IllegalArgumentException("Not implemented yet")
-
-        val componentView = delegate.getViewProvider().getView(viewType, context, attrs, defStyleAttr)
+        val componentView = viewProvider.getView(viewType, context, attrs, defStyleAttr)
         this.componentView = componentView
 
-        val configuration = component.configuration
         val localizedContext = context.createLocalizedContext(configuration.shopperLocale)
 
         addView(componentView.getView())
