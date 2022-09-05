@@ -19,6 +19,7 @@ import com.adyen.checkout.components.status.StatusRepository
 import com.adyen.checkout.components.status.api.StatusResponseUtils
 import com.adyen.checkout.components.status.model.StatusResponse
 import com.adyen.checkout.components.status.model.TimerData
+import com.adyen.checkout.components.ui.view.ComponentViewType
 import com.adyen.checkout.core.exception.CheckoutException
 import com.adyen.checkout.core.exception.ComponentException
 import com.adyen.checkout.core.log.LogUtil
@@ -35,6 +36,7 @@ import org.json.JSONException
 import org.json.JSONObject
 
 internal class DefaultAwaitDelegate(
+    override val configuration: AwaitConfiguration,
     private val statusRepository: StatusRepository,
     private val paymentDataRepository: PaymentDataRepository,
 ) : AwaitDelegate {
@@ -49,6 +51,8 @@ internal class DefaultAwaitDelegate(
 
     private val _exceptionFlow: MutableSharedFlow<CheckoutException> = MutableSingleEventSharedFlow()
     override val exceptionFlow: Flow<CheckoutException> = _exceptionFlow
+
+    override val viewFlow: Flow<ComponentViewType?> = MutableStateFlow(ComponentViewType.AWAIT)
 
     // unused in Await
     override val timerFlow: Flow<TimerData> = flowOf()

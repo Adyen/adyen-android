@@ -1,9 +1,9 @@
 /*
- * Copyright (c) 2020 Adyen N.V.
+ * Copyright (c) 2022 Adyen N.V.
  *
  * This file is open source and available under the MIT license. See the LICENSE file for more info.
  *
- * Created by caiof on 4/9/2020.
+ * Created by josephj on 31/8/2022.
  */
 
 package com.adyen.checkout.dropin.ui.action
@@ -15,51 +15,50 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.core.view.isVisible
 import androidx.lifecycle.Observer
-import com.adyen.checkout.components.ActionComponent
+import com.adyen.checkout.action.GenericActionComponent
+import com.adyen.checkout.action.GenericActionConfiguration
+import com.adyen.checkout.adyen3ds2.Adyen3DS2Configuration
+import com.adyen.checkout.await.AwaitConfiguration
 import com.adyen.checkout.components.ActionComponentData
 import com.adyen.checkout.components.ComponentError
-import com.adyen.checkout.components.ComponentView
-import com.adyen.checkout.components.ViewableComponent
-import com.adyen.checkout.components.base.OutputData
 import com.adyen.checkout.components.model.payments.response.Action
+import com.adyen.checkout.components.ui.view.AdyenComponentView
 import com.adyen.checkout.core.exception.CheckoutException
-import com.adyen.checkout.core.exception.ComponentException
 import com.adyen.checkout.core.log.LogUtil
 import com.adyen.checkout.core.log.Logger
 import com.adyen.checkout.dropin.R
-import com.adyen.checkout.dropin.databinding.FragmentActionComponentBinding
-import com.adyen.checkout.dropin.getActionComponentFor
+import com.adyen.checkout.dropin.databinding.FragmentGenericActionComponentBinding
 import com.adyen.checkout.dropin.getActionProviderFor
-import com.adyen.checkout.dropin.getViewFor
 import com.adyen.checkout.dropin.ui.base.DropInBottomSheetDialogFragment
+import com.adyen.checkout.qrcode.QRCodeConfiguration
+import com.adyen.checkout.redirect.RedirectConfiguration
+import com.adyen.checkout.voucher.VoucherConfiguration
+import com.adyen.checkout.wechatpay.WeChatPayActionConfiguration
 
 @SuppressWarnings("TooManyFunctions")
-// TODO remove this class
-class ActionComponentDialogFragment : DropInBottomSheetDialogFragment(), Observer<ActionComponentData> {
+class ActionComponentDialogFragmentNew : DropInBottomSheetDialogFragment(), Observer<ActionComponentData> {
 
     companion object {
         private val TAG = LogUtil.getTag()
 
         const val ACTION = "ACTION"
 
-        fun newInstance(action: Action): ActionComponentDialogFragment {
+        fun newInstance(action: Action): ActionComponentDialogFragmentNew {
             val args = Bundle()
             args.putParcelable(ACTION, action)
 
-            val componentDialogFragment = ActionComponentDialogFragment()
+            val componentDialogFragment = ActionComponentDialogFragmentNew()
             componentDialogFragment.arguments = args
 
             return componentDialogFragment
         }
     }
 
-    private var _binding: FragmentActionComponentBinding? = null
-    private val binding: FragmentActionComponentBinding get() = requireNotNull(_binding)
+    private var _binding: FragmentGenericActionComponentBinding? = null
+    private val binding: FragmentGenericActionComponentBinding get() = requireNotNull(_binding)
     private lateinit var action: Action
     private lateinit var actionType: String
-    private lateinit var componentView: ComponentView<in OutputData, ViewableComponent<*, *, ActionComponentData>>
-    private lateinit var actionComponent: ViewableComponent<*, *, ActionComponentData>
-    private var isHandled = true
+    private lateinit var actionComponent: GenericActionComponent
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -69,7 +68,7 @@ class ActionComponentDialogFragment : DropInBottomSheetDialogFragment(), Observe
     }
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View {
-        _binding = FragmentActionComponentBinding.inflate(inflater)
+        _binding = FragmentGenericActionComponentBinding.inflate(inflater)
         return binding.root
     }
 
@@ -79,11 +78,22 @@ class ActionComponentDialogFragment : DropInBottomSheetDialogFragment(), Observe
         binding.header.isVisible = false
 
         try {
-            @Suppress("UNCHECKED_CAST")
-            componentView = getViewFor(requireContext(), actionType)
-                as ComponentView<in OutputData, ViewableComponent<*, *, ActionComponentData>>
-            actionComponent = getComponent(action)
-            attachComponent(actionComponent, componentView)
+            // TODO improve this logic
+            val actionConfiguration = with(dropInViewModel.dropInConfiguration) {
+                GenericActionConfiguration.Builder(shopperLocale, environment, clientKey).apply {
+                    getConfigurationForAction<Adyen3DS2Configuration>()?.let { add3ds2ActionConfiguration(it) }
+                    getConfigurationForAction<AwaitConfiguration>()?.let { addAwaitActionConfiguration(it) }
+                    getConfigurationForAction<QRCodeConfiguration>()?.let { addQRCodeActionConfiguration(it) }
+                    getConfigurationForAction<VoucherConfiguration>()?.let { addVoucherActionConfiguration(it) }
+                    getConfigurationForAction<RedirectConfiguration>()?.let { addRedirectActionConfiguration(it) }
+                    getConfigurationForAction<WeChatPayActionConfiguration>()?.let {
+                        addWeChatPayActionConfiguration(it)
+                    }
+                }.build()
+            }
+
+            actionComponent =
+                GenericActionComponent.PROVIDER.get(this, requireActivity().application, actionConfiguration)
 
             if (shouldFinishWithAction()) {
                 with(binding.buttonFinish) {
@@ -92,12 +102,9 @@ class ActionComponentDialogFragment : DropInBottomSheetDialogFragment(), Observe
                 }
             }
 
-            if (!isHandled) {
-                (actionComponent as ActionComponent<*>).handleAction(requireActivity(), action)
-                isHandled = true
-            } else {
-                Logger.d(TAG, "action already handled")
-            }
+            actionComponent.handleAction(requireActivity(), action)
+            attachComponent(actionComponent, binding.componentView)
+
         } catch (e: CheckoutException) {
             handleError(ComponentError(e))
         }
@@ -136,53 +143,13 @@ class ActionComponentDialogFragment : DropInBottomSheetDialogFragment(), Observe
         }
     }
 
-    fun setToHandleWhenStarting() {
-        Logger.d(TAG, "setToHandleWhenStarting")
-        isHandled = false
-    }
-
-    /**
-     * Return the possible viewable action components
-     */
-    @SuppressWarnings("ThrowsCount")
-    private fun getComponent(action: Action): ViewableComponent<*, *, ActionComponentData> {
-        val provider =
-            getActionProviderFor(action) ?: throw ComponentException("Unexpected Action component type - $actionType")
-
-        if (!provider.requiresView(action)) {
-            throw ComponentException(
-                "Action is not viewable - action: ${action.type} - " +
-                    "paymentMethod: ${action.paymentMethodType}"
-            )
-        }
-
-        val component = getActionComponentFor(
-            owner = this,
-            application = requireActivity().application,
-            provider = provider,
-            dropInConfiguration = dropInViewModel.dropInConfiguration
-        )
-
-        if (!component.canHandleAction(action)) {
-            throw ComponentException(
-                "Unexpected Action component type - action: ${action.type} - " +
-                    "paymentMethod: ${action.paymentMethodType}"
-            )
-        }
-
-        @Suppress("UNCHECKED_CAST")
-        return component as ViewableComponent<*, *, ActionComponentData>
-    }
-
     private fun attachComponent(
-        component: ViewableComponent<*, *, ActionComponentData>,
-        componentView: ComponentView<in OutputData, ViewableComponent<*, *, ActionComponentData>>
+        component: GenericActionComponent,
+        componentView: AdyenComponentView
     ) {
+        componentView.attach(component, viewLifecycleOwner)
         component.observe(viewLifecycleOwner, this)
         component.observeErrors(viewLifecycleOwner, createErrorHandlerObserver())
-        binding.componentContainer.addView(componentView as View)
-        @Suppress("UNCHECKED_CAST")
-        componentView.attach(component, viewLifecycleOwner)
     }
 
     private fun createErrorHandlerObserver(): Observer<ComponentError> {
@@ -198,6 +165,7 @@ class ActionComponentDialogFragment : DropInBottomSheetDialogFragment(), Observe
         protocol.showError(getString(R.string.action_failed), componentError.errorMessage, true)
     }
 
+    // TODO this should rely on the generic component not the individual providers
     private fun shouldFinishWithAction(): Boolean {
         return getActionProviderFor(action)?.providesDetails() == false
     }

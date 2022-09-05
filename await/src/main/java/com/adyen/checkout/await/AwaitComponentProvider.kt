@@ -65,7 +65,7 @@ class AwaitComponentProvider : ActionComponentProvider<AwaitComponent, AwaitConf
         val statusService = StatusService(configuration.environment.baseUrl)
         val statusRepository = DefaultStatusRepository(statusService, configuration.clientKey)
         val paymentDataRepository = PaymentDataRepository(savedStateHandle)
-        return DefaultAwaitDelegate(statusRepository, paymentDataRepository)
+        return DefaultAwaitDelegate(configuration, statusRepository, paymentDataRepository)
     }
 
     @Deprecated(

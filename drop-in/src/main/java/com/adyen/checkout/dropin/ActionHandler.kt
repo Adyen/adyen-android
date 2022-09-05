@@ -23,6 +23,7 @@ import com.adyen.checkout.core.exception.CheckoutException
 import com.adyen.checkout.core.log.LogUtil
 import com.adyen.checkout.core.log.Logger
 
+// TODO remove this class
 class ActionHandler(
     private val callback: ActionHandlingInterface,
     private val dropInConfiguration: DropInConfiguration

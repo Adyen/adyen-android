@@ -11,13 +11,14 @@ import android.app.Activity
 import android.app.Application
 import android.content.Context
 import android.content.Intent
+import android.util.AttributeSet
 import androidx.lifecycle.DefaultLifecycleObserver
 import androidx.lifecycle.LifecycleOwner
 import androidx.lifecycle.Observer
 import androidx.lifecycle.SavedStateHandle
-import androidx.lifecycle.asLiveData
 import androidx.lifecycle.viewModelScope
 import com.adyen.checkout.adyen3ds2.Adyen3DS2Delegate
+import com.adyen.checkout.await.AwaitViewNew
 import com.adyen.checkout.components.ActionComponentData
 import com.adyen.checkout.components.ActionComponentProvider
 import com.adyen.checkout.components.ViewableComponent
@@ -31,11 +32,16 @@ import com.adyen.checkout.components.base.StatusPollingDelegate
 import com.adyen.checkout.components.base.ViewableDelegate
 import com.adyen.checkout.components.model.payments.response.Action
 import com.adyen.checkout.components.model.payments.response.Threeds2ChallengeAction
-import com.adyen.checkout.components.status.model.TimerData
+import com.adyen.checkout.components.ui.ComponentViewNew
+import com.adyen.checkout.components.ui.ViewProvidingComponent
+import com.adyen.checkout.components.ui.ViewProvidingDelegate
+import com.adyen.checkout.components.ui.view.ComponentViewType
+import com.adyen.checkout.components.ui.view.ComponentViewType.AWAIT
 import com.adyen.checkout.core.log.LogUtil
 import com.adyen.checkout.core.log.Logger
 import com.adyen.threeds2.customization.UiCustomization
-import kotlinx.coroutines.flow.filterNotNull
+import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.onEach
 
@@ -46,13 +52,17 @@ class GenericActionComponent(
     configuration: GenericActionConfiguration,
 ) : BaseActionComponent<GenericActionConfiguration>(savedStateHandle, application, configuration),
     ViewableComponent<OutputData, GenericActionConfiguration, ActionComponentData>,
-    IntentHandlingComponent {
+    IntentHandlingComponent,
+    ViewProvidingComponent {
 
     private var _delegate: ActionDelegate<Action>? = null
-    private val delegate: ActionDelegate<Action> get() = requireNotNull(_delegate)
+    override val delegate: ActionDelegate<Action> get() = requireNotNull(_delegate)
 
     override val outputData: OutputData?
         get() = (delegate as? ViewableDelegate<*>)?.outputData
+
+    private val _viewFlow = MutableStateFlow<ComponentViewType?>(null)
+    override val viewFlow: Flow<ComponentViewType?> = _viewFlow
 
     override fun canHandleAction(action: Action): Boolean {
         return PROVIDER.canHandleAction(action)
@@ -69,6 +79,7 @@ class GenericActionComponent(
 
             observeDetails()
             observeExceptions()
+            observeViewFlow()
         }
 
         delegate.handleAction(action, activity)
@@ -86,11 +97,14 @@ class GenericActionComponent(
             ?.launchIn(viewModelScope)
     }
 
+    private fun observeViewFlow() {
+        (delegate as? ViewProvidingDelegate)?.viewFlow
+            ?.onEach { _viewFlow.tryEmit(it) }
+            ?.launchIn(viewModelScope)
+    }
+
     override fun observeOutputData(lifecycleOwner: LifecycleOwner, observer: Observer<OutputData>) {
-        (delegate as? ViewableDelegate<*>)?.outputDataFlow
-            ?.filterNotNull()
-            ?.asLiveData()
-            ?.observe(lifecycleOwner, observer)
+        // TODO remove
     }
 
     override fun observe(lifecycleOwner: LifecycleOwner, observer: Observer<ActionComponentData>) {
@@ -104,12 +118,6 @@ class GenericActionComponent(
                 }
             })
         }
-    }
-
-    fun observeTimer(lifecycleOwner: LifecycleOwner, observer: Observer<TimerData>) {
-        (delegate as? StatusPollingDelegate)?.timerFlow
-            ?.asLiveData()
-            ?.observe(lifecycleOwner, observer)
     }
 
     fun set3DS2UICustomization(uiCustomization: UiCustomization?) {
@@ -127,6 +135,17 @@ class GenericActionComponent(
     }
 
     override fun sendAnalyticsEvent(context: Context) = Unit
+
+    override fun getView(
+        viewType: ComponentViewType,
+        context: Context,
+        attrs: AttributeSet?,
+        defStyleAttr: Int
+    ): ComponentViewNew {
+        return when (viewType) {
+            AWAIT -> AwaitViewNew(context, attrs, defStyleAttr)
+        }
+    }
 
     override fun onCleared() {
         super.onCleared()

@@ -54,6 +54,7 @@ import com.adyen.checkout.dropin.service.RecurringDropInServiceResult
 import com.adyen.checkout.dropin.service.SessionDropInServiceInterface
 import com.adyen.checkout.dropin.service.SessionDropInServiceResult
 import com.adyen.checkout.dropin.ui.action.ActionComponentDialogFragment
+import com.adyen.checkout.dropin.ui.action.ActionComponentDialogFragmentNew
 import com.adyen.checkout.dropin.ui.base.DropInBottomSheetDialogFragment
 import com.adyen.checkout.dropin.ui.component.BacsDirectDebitDialogFragment
 import com.adyen.checkout.dropin.ui.component.CardComponentDialogFragment
@@ -525,7 +526,12 @@ class DropInActivity :
     }
 
     private fun handleAction(action: Action) {
-        actionHandler.handleAction(this, action, ::sendResult)
+        Logger.d(TAG, "showActionDialog")
+        setLoading(false)
+        hideAllScreens()
+        val actionFragment = ActionComponentDialogFragmentNew.newInstance(action)
+        actionFragment.show(supportFragmentManager, ACTION_FRAGMENT_TAG)
+        //actionHandler.handleAction(this, action, ::sendResult)
     }
 
     private fun handlePaymentMethodsUpdate(dropInServiceResult: DropInServiceResult.Update) {
