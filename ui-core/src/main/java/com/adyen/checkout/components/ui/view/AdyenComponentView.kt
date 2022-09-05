@@ -17,6 +17,7 @@ import com.adyen.checkout.components.ViewableComponent
 import com.adyen.checkout.components.extensions.createLocalizedContext
 import com.adyen.checkout.components.ui.ComponentViewNew
 import com.adyen.checkout.components.ui.ViewProvidingComponent
+import com.adyen.checkout.components.ui.ViewProvidingDelegate
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.onEach
@@ -60,8 +61,10 @@ class AdyenComponentView @JvmOverloads constructor(
 
         val component = component
         if (component !is ViewProvidingComponent) throw IllegalArgumentException("Not implemented yet")
+        val delegate = component.delegate
+        if (delegate !is ViewProvidingDelegate) throw IllegalArgumentException("Not implemented yet")
 
-        val componentView = component.getView(viewType, context, attrs, defStyleAttr)
+        val componentView = delegate.getViewProvider().getView(viewType, context, attrs, defStyleAttr)
         this.componentView = componentView
 
         val configuration = component.configuration
@@ -69,7 +72,7 @@ class AdyenComponentView @JvmOverloads constructor(
 
         addView(componentView.getView())
 
-        componentView.initView(component.delegate, coroutineScope, localizedContext)
+        componentView.initView(delegate, coroutineScope, localizedContext)
     }
 
     val isConfirmationRequired

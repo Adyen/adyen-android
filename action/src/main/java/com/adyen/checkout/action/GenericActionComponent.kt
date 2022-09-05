@@ -11,14 +11,12 @@ import android.app.Activity
 import android.app.Application
 import android.content.Context
 import android.content.Intent
-import android.util.AttributeSet
 import androidx.lifecycle.DefaultLifecycleObserver
 import androidx.lifecycle.LifecycleOwner
 import androidx.lifecycle.Observer
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.viewModelScope
 import com.adyen.checkout.adyen3ds2.Adyen3DS2Delegate
-import com.adyen.checkout.await.AwaitViewNew
 import com.adyen.checkout.components.ActionComponentData
 import com.adyen.checkout.components.ActionComponentProvider
 import com.adyen.checkout.components.ViewableComponent
@@ -32,11 +30,9 @@ import com.adyen.checkout.components.base.StatusPollingDelegate
 import com.adyen.checkout.components.base.ViewableDelegate
 import com.adyen.checkout.components.model.payments.response.Action
 import com.adyen.checkout.components.model.payments.response.Threeds2ChallengeAction
-import com.adyen.checkout.components.ui.ComponentViewNew
 import com.adyen.checkout.components.ui.ViewProvidingComponent
 import com.adyen.checkout.components.ui.ViewProvidingDelegate
 import com.adyen.checkout.components.ui.view.ComponentViewType
-import com.adyen.checkout.components.ui.view.ComponentViewType.AWAIT
 import com.adyen.checkout.core.log.LogUtil
 import com.adyen.checkout.core.log.Logger
 import com.adyen.threeds2.customization.UiCustomization
@@ -135,17 +131,6 @@ class GenericActionComponent(
     }
 
     override fun sendAnalyticsEvent(context: Context) = Unit
-
-    override fun getView(
-        viewType: ComponentViewType,
-        context: Context,
-        attrs: AttributeSet?,
-        defStyleAttr: Int
-    ): ComponentViewNew {
-        return when (viewType) {
-            AWAIT -> AwaitViewNew(context, attrs, defStyleAttr)
-        }
-    }
 
     override fun onCleared() {
         super.onCleared()

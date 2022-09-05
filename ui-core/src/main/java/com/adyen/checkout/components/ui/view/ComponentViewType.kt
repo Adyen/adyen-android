@@ -8,6 +8,4 @@
 
 package com.adyen.checkout.components.ui.view
 
-enum class ComponentViewType {
-    AWAIT
-}
+interface ComponentViewType

@@ -10,7 +10,6 @@ package com.adyen.checkout.await
 import android.app.Activity
 import android.app.Application
 import android.content.Context
-import android.util.AttributeSet
 import androidx.lifecycle.DefaultLifecycleObserver
 import androidx.lifecycle.LifecycleOwner
 import androidx.lifecycle.Observer
@@ -22,7 +21,6 @@ import com.adyen.checkout.components.ViewableComponent
 import com.adyen.checkout.components.base.BaseActionComponent
 import com.adyen.checkout.components.model.payments.response.Action
 import com.adyen.checkout.components.model.payments.response.AwaitAction
-import com.adyen.checkout.components.ui.ComponentViewNew
 import com.adyen.checkout.components.ui.ViewProvidingComponent
 import com.adyen.checkout.components.ui.view.ComponentViewType
 import com.adyen.checkout.core.exception.ComponentException
@@ -86,17 +84,6 @@ class AwaitComponent(
     }
 
     override fun sendAnalyticsEvent(context: Context) = Unit
-
-    override fun getView(
-        viewType: ComponentViewType,
-        context: Context,
-        attrs: AttributeSet?,
-        defStyleAttr: Int
-    ): ComponentViewNew {
-        return when (viewType) {
-            ComponentViewType.AWAIT -> AwaitViewNew(context, attrs, defStyleAttr)
-        }
-    }
 
     override fun onCleared() {
         super.onCleared()

@@ -12,5 +12,7 @@ import com.adyen.checkout.components.ui.view.ComponentViewType
 import kotlinx.coroutines.flow.Flow
 
 interface ViewProvidingDelegate {
-    val viewFlow: Flow<ComponentViewType?> // TODO replace with type
+    val viewFlow: Flow<ComponentViewType?>
+
+    fun getViewProvider(): ViewProvider
 }

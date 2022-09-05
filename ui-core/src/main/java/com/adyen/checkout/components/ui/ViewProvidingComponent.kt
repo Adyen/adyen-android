@@ -8,21 +8,12 @@
 
 package com.adyen.checkout.components.ui
 
-import android.content.Context
-import android.util.AttributeSet
 import com.adyen.checkout.components.base.ComponentDelegate
 import com.adyen.checkout.components.ui.view.ComponentViewType
 import kotlinx.coroutines.flow.Flow
 
 interface ViewProvidingComponent {
-    val viewFlow: Flow<ComponentViewType?> // TODO replace with type
+    val viewFlow: Flow<ComponentViewType?>
 
     val delegate: ComponentDelegate
-
-    fun getView(
-        viewType: ComponentViewType,
-        context: Context,
-        attrs: AttributeSet?,
-        defStyleAttr: Int
-    ): ComponentViewNew // TODO move to a view provider class?
 }
