@@ -9,7 +9,6 @@
 package com.adyen.checkout.action
 
 import android.app.Application
-import android.content.Context
 import android.os.Bundle
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModelProvider
@@ -58,7 +57,7 @@ class GenericActionComponentProvider :
     override fun getDelegate(
         configuration: GenericActionConfiguration,
         savedStateHandle: SavedStateHandle,
-        context: Context
+        application: Application,
     ): ActionDelegate<*> {
         throw IllegalStateException("GenericActionComponent doesn't have a delegate")
     }

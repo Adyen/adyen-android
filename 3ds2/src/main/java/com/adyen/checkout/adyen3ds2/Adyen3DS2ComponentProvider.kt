@@ -9,7 +9,6 @@
 package com.adyen.checkout.adyen3ds2
 
 import android.app.Application
-import android.content.Context
 import android.os.Bundle
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModelProvider
@@ -24,6 +23,7 @@ import com.adyen.checkout.components.model.payments.response.Action
 import com.adyen.checkout.components.model.payments.response.Threeds2Action
 import com.adyen.checkout.components.model.payments.response.Threeds2ChallengeAction
 import com.adyen.checkout.components.model.payments.response.Threeds2FingerprintAction
+import com.adyen.checkout.components.repository.PaymentDataRepository
 import com.adyen.checkout.redirect.handler.DefaultRedirectHandler
 import com.adyen.threeds2.ThreeDS2Service
 import com.adyen.threeds2.parameters.ChallengeParameters
@@ -63,24 +63,26 @@ class Adyen3DS2ComponentProvider :
     override fun getDelegate(
         configuration: Adyen3DS2Configuration,
         savedStateHandle: SavedStateHandle,
-        context: Context,
+        application: Application,
     ): Adyen3DS2Delegate {
         val submitFingerprintService = SubmitFingerprintService(configuration.environment)
         val submitFingerprintRepository = SubmitFingerprintRepository(submitFingerprintService)
+        val paymentDataRepository = PaymentDataRepository(savedStateHandle)
         val adyen3DS2DetailsParser = Adyen3DS2Serializer()
         val redirectHandler = DefaultRedirectHandler()
-        val embeddedRequestorAppUrl = ChallengeParameters.getEmbeddedRequestorAppURL(context)
+        val embeddedRequestorAppUrl = ChallengeParameters.getEmbeddedRequestorAppURL(application)
         return DefaultAdyen3DS2Delegate(
             savedStateHandle = savedStateHandle,
             configuration = configuration,
             submitFingerprintRepository = submitFingerprintRepository,
+            paymentDataRepository = paymentDataRepository,
             adyen3DS2Serializer = adyen3DS2DetailsParser,
             redirectHandler = redirectHandler,
             threeDS2Service = ThreeDS2Service.INSTANCE,
             defaultDispatcher = Dispatchers.Default,
             embeddedRequestorAppUrl = embeddedRequestorAppUrl,
             base64Encoder = AndroidBase64Encoder(),
-            application = context as Application,
+            application = application,
         )
     }
 

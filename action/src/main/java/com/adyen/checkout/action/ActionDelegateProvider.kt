@@ -8,7 +8,7 @@
 
 package com.adyen.checkout.action
 
-import android.content.Context
+import android.app.Application
 import androidx.lifecycle.SavedStateHandle
 import com.adyen.checkout.adyen3ds2.Adyen3DS2Component
 import com.adyen.checkout.adyen3ds2.Adyen3DS2Configuration
@@ -40,29 +40,29 @@ object ActionDelegateProvider {
         action: Action,
         configuration: GenericActionConfiguration,
         savedStateHandle: SavedStateHandle,
-        context: Context,
+        application: Application,
     ): ActionDelegate<Action> {
         val delegate = when (action) {
             is AwaitAction -> {
-                AwaitComponent.PROVIDER.getDelegate(getConfiguration(configuration), savedStateHandle, context)
+                AwaitComponent.PROVIDER.getDelegate(getConfiguration(configuration), savedStateHandle, application)
             }
             is QrCodeAction -> {
-                QRCodeComponent.PROVIDER.getDelegate(getConfiguration(configuration), savedStateHandle, context)
+                QRCodeComponent.PROVIDER.getDelegate(getConfiguration(configuration), savedStateHandle, application)
             }
             is RedirectAction -> {
-                RedirectComponent.PROVIDER.getDelegate(getConfiguration(configuration), savedStateHandle, context)
+                RedirectComponent.PROVIDER.getDelegate(getConfiguration(configuration), savedStateHandle, application)
             }
             is BaseThreeds2Action -> {
-                Adyen3DS2Component.PROVIDER.getDelegate(getConfiguration(configuration), savedStateHandle, context)
+                Adyen3DS2Component.PROVIDER.getDelegate(getConfiguration(configuration), savedStateHandle, application)
             }
             is VoucherAction -> {
-                VoucherComponent.PROVIDER.getDelegate(getConfiguration(configuration), savedStateHandle, context)
+                VoucherComponent.PROVIDER.getDelegate(getConfiguration(configuration), savedStateHandle, application)
             }
             is SdkAction<*> -> {
                 WeChatPayActionComponent.PROVIDER.getDelegate(
                     getConfiguration(configuration),
                     savedStateHandle,
-                    context
+                    application
                 )
             }
             else -> null

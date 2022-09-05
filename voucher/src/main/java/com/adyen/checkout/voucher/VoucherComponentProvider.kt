@@ -9,7 +9,6 @@
 package com.adyen.checkout.voucher
 
 import android.app.Application
-import android.content.Context
 import android.os.Bundle
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModelProvider
@@ -55,7 +54,7 @@ class VoucherComponentProvider : ActionComponentProvider<VoucherComponent, Vouch
     override fun getDelegate(
         configuration: VoucherConfiguration,
         savedStateHandle: SavedStateHandle,
-        context: Context
+        application: Application,
     ): VoucherDelegate {
         return DefaultVoucherDelegate()
     }

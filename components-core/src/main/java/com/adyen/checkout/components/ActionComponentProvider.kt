@@ -8,7 +8,6 @@
 package com.adyen.checkout.components
 
 import android.app.Application
-import android.content.Context
 import android.os.Bundle
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModelStoreOwner
@@ -59,7 +58,7 @@ interface ActionComponentProvider<
     fun getDelegate(
         configuration: ConfigurationT,
         savedStateHandle: SavedStateHandle,
-        context: Context,
+        application: Application,
     ): DelegateT
 
     /**

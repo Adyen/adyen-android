@@ -15,7 +15,6 @@ import com.adyen.checkout.components.flow.MutableSingleEventSharedFlow
 import com.adyen.checkout.components.model.payments.response.RedirectAction
 import com.adyen.checkout.components.repository.PaymentDataRepository
 import com.adyen.checkout.core.exception.CheckoutException
-import com.adyen.checkout.core.exception.ComponentException
 import com.adyen.checkout.core.log.LogUtil
 import com.adyen.checkout.core.log.Logger
 import com.adyen.checkout.redirect.handler.RedirectHandler
@@ -37,13 +36,7 @@ internal class DefaultRedirectDelegate(
     override val exceptionFlow: Flow<CheckoutException> = _exceptionFlow
 
     override fun handleAction(action: RedirectAction, activity: Activity) {
-        val paymentData = action.paymentData
-        paymentDataRepository.paymentData = paymentData
-        if (paymentData == null) {
-            _exceptionFlow.tryEmit(ComponentException("Payment data is null"))
-            return
-        }
-
+        paymentDataRepository.paymentData = action.paymentData
         makeRedirect(activity, action.url)
     }
 

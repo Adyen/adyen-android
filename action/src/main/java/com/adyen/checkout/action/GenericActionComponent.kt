@@ -39,6 +39,7 @@ import kotlinx.coroutines.flow.filterNotNull
 import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.onEach
 
+@Suppress("TooManyFunctions")
 class GenericActionComponent(
     savedStateHandle: SavedStateHandle,
     application: Application,
@@ -61,7 +62,7 @@ class GenericActionComponent(
         if (_delegate is Adyen3DS2Delegate && action is Threeds2ChallengeAction) {
             Logger.d(TAG, "Continuing the handling of 3ds2 challenge with old flow.")
         } else {
-            val delegate = ActionDelegateProvider.get(action, configuration, savedStateHandle, activity)
+            val delegate = ActionDelegateProvider.get(action, configuration, savedStateHandle, activity.application)
             _delegate = delegate
 
             delegate.initialize(viewModelScope)

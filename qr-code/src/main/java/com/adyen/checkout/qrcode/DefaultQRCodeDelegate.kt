@@ -85,6 +85,7 @@ internal class DefaultQRCodeDelegate(
         val paymentData = action.paymentData
         paymentDataRepository.paymentData = paymentData
         if (paymentData == null) {
+            Logger.e(TAG, "Payment data is null")
             _exceptionFlow.tryEmit(ComponentException("Payment data is null"))
             return
         }

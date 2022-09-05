@@ -9,7 +9,6 @@
 package com.adyen.checkout.redirect
 
 import android.app.Application
-import android.content.Context
 import android.os.Bundle
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModelProvider
@@ -53,7 +52,7 @@ class RedirectComponentProvider : ActionComponentProvider<RedirectComponent, Red
     override fun getDelegate(
         configuration: RedirectConfiguration,
         savedStateHandle: SavedStateHandle,
-        context: Context,
+        application: Application,
     ): RedirectDelegate {
         val redirectHandler = DefaultRedirectHandler()
         val paymentDataRepository = PaymentDataRepository(savedStateHandle)

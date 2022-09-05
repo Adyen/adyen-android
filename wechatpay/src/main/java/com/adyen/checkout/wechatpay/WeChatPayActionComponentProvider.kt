@@ -9,7 +9,6 @@
 package com.adyen.checkout.wechatpay
 
 import android.app.Application
-import android.content.Context
 import android.os.Bundle
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModelProvider
@@ -60,9 +59,9 @@ class WeChatPayActionComponentProvider :
     override fun getDelegate(
         configuration: WeChatPayActionConfiguration,
         savedStateHandle: SavedStateHandle,
-        context: Context,
+        application: Application,
     ): WeChatDelegate {
-        val iwxApi: IWXAPI = WXAPIFactory.createWXAPI(context, null, true)
+        val iwxApi: IWXAPI = WXAPIFactory.createWXAPI(application, null, true)
         val requestGenerator = WeChatPayRequestGenerator()
         val paymentDataRepository = PaymentDataRepository(savedStateHandle)
         return DefaultWeChatDelegate(iwxApi, requestGenerator, paymentDataRepository)

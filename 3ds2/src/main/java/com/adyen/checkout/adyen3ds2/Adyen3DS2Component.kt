@@ -33,6 +33,8 @@ class Adyen3DS2Component(
     IntentHandlingComponent {
 
     init {
+        adyen3DS2Delegate.initialize(viewModelScope)
+
         adyen3DS2Delegate.detailsFlow
             .onEach { notifyDetails(it) }
             .launchIn(viewModelScope)
@@ -49,7 +51,7 @@ class Adyen3DS2Component(
      * @param uiCustomization The customization object.
      */
     fun setUiCustomization(uiCustomization: UiCustomization?) {
-        adyen3DS2Delegate.uiCustomization = uiCustomization
+        adyen3DS2Delegate.set3DS2UICustomization(uiCustomization)
     }
 
     @Throws(ComponentException::class)

@@ -9,7 +9,6 @@
 package com.adyen.checkout.await
 
 import android.app.Application
-import android.content.Context
 import android.os.Bundle
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModelProvider
@@ -61,7 +60,7 @@ class AwaitComponentProvider : ActionComponentProvider<AwaitComponent, AwaitConf
     override fun getDelegate(
         configuration: AwaitConfiguration,
         savedStateHandle: SavedStateHandle,
-        context: Context,
+        application: Application,
     ): AwaitDelegate {
         val statusService = StatusService(configuration.environment.baseUrl)
         val statusRepository = DefaultStatusRepository(statusService, configuration.clientKey)

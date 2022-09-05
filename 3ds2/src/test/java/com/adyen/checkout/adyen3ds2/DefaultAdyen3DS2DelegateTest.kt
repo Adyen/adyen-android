@@ -23,6 +23,7 @@ import com.adyen.checkout.components.model.payments.response.RedirectAction
 import com.adyen.checkout.components.model.payments.response.Threeds2Action
 import com.adyen.checkout.components.model.payments.response.Threeds2ChallengeAction
 import com.adyen.checkout.components.model.payments.response.Threeds2FingerprintAction
+import com.adyen.checkout.components.repository.PaymentDataRepository
 import com.adyen.checkout.core.api.Environment
 import com.adyen.checkout.core.exception.ComponentException
 import com.adyen.checkout.redirect.test.TestRedirectHandler
@@ -73,16 +74,19 @@ internal class DefaultAdyen3DS2DelegateTest(
 
     private lateinit var redirectHandler: TestRedirectHandler
     private lateinit var delegate: DefaultAdyen3DS2Delegate
+    private lateinit var paymentDataRepository: PaymentDataRepository
 
     private val base64Encoder = JavaBase64Encoder()
 
     @BeforeEach
     fun beforeEach(dispatcher: TestDispatcher) {
         redirectHandler = TestRedirectHandler()
+        paymentDataRepository = PaymentDataRepository(SavedStateHandle())
         delegate = DefaultAdyen3DS2Delegate(
             savedStateHandle = SavedStateHandle(),
             configuration = Adyen3DS2Configuration.Builder(Locale.US, Environment.TEST, TEST_CLIENT_KEY).build(),
             submitFingerprintRepository = submitFingerprintRepository,
+            paymentDataRepository = paymentDataRepository,
             adyen3DS2Serializer = adyen3DS2Serializer,
             redirectHandler = redirectHandler,
             threeDS2Service = threeDS2Service,

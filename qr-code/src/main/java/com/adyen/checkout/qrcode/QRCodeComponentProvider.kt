@@ -9,7 +9,6 @@
 package com.adyen.checkout.qrcode
 
 import android.app.Application
-import android.content.Context
 import android.os.Bundle
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModelProvider
@@ -58,7 +57,7 @@ class QRCodeComponentProvider : ActionComponentProvider<QRCodeComponent, QRCodeC
     override fun getDelegate(
         configuration: QRCodeConfiguration,
         savedStateHandle: SavedStateHandle,
-        context: Context,
+        application: Application,
     ): QRCodeDelegate {
         val statusService = StatusService(configuration.environment.baseUrl)
         val statusRepository = DefaultStatusRepository(statusService, configuration.clientKey)

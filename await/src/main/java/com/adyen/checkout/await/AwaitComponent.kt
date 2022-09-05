@@ -41,6 +41,8 @@ class AwaitComponent(
     override val outputData: AwaitOutputData? get() = awaitDelegate.outputData
 
     init {
+        awaitDelegate.initialize(viewModelScope)
+
         awaitDelegate.detailsFlow
             .onEach { notifyDetails(it) }
             .launchIn(viewModelScope)
