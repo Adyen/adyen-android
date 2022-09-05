@@ -16,6 +16,7 @@ import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelStoreOwner
 import androidx.savedstate.SavedStateRegistryOwner
 import com.adyen.checkout.action.ActionDelegateProvider
+import com.adyen.checkout.action.GenericActionConfiguration
 import com.adyen.checkout.adyen3ds2.Adyen3DS2Component
 import com.adyen.checkout.adyen3ds2.Adyen3DS2Configuration
 import com.adyen.checkout.await.AwaitComponent
@@ -181,6 +182,18 @@ internal inline fun <reified T : Configuration> getConfigurationForAction(
 ): T {
     return dropInConfiguration.getConfigurationForAction()
         ?: ActionDelegateProvider.getDefaultConfiguration(dropInConfiguration)
+}
+
+internal fun createGenericActionConfiguration(dropInConfiguration: DropInConfiguration): GenericActionConfiguration {
+    return GenericActionConfiguration.Builder(
+        dropInConfiguration.shopperLocale,
+        dropInConfiguration.environment,
+        dropInConfiguration.clientKey
+    ).apply {
+        dropInConfiguration.availableActionConfigs.entries.forEach { entry ->
+            availableActionConfigs[entry.key] = entry.value
+        }
+    }.build()
 }
 
 private inline fun <reified T : Configuration> getConfigurationForPaymentMethodOrNull(

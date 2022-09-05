@@ -17,8 +17,6 @@ import androidx.core.view.isVisible
 import androidx.lifecycle.Observer
 import com.adyen.checkout.action.GenericActionComponent
 import com.adyen.checkout.action.GenericActionConfiguration
-import com.adyen.checkout.adyen3ds2.Adyen3DS2Configuration
-import com.adyen.checkout.await.AwaitConfiguration
 import com.adyen.checkout.components.ActionComponentData
 import com.adyen.checkout.components.ComponentError
 import com.adyen.checkout.components.model.payments.response.Action
@@ -30,10 +28,6 @@ import com.adyen.checkout.dropin.R
 import com.adyen.checkout.dropin.databinding.FragmentGenericActionComponentBinding
 import com.adyen.checkout.dropin.getActionProviderFor
 import com.adyen.checkout.dropin.ui.base.DropInBottomSheetDialogFragment
-import com.adyen.checkout.qrcode.QRCodeConfiguration
-import com.adyen.checkout.redirect.RedirectConfiguration
-import com.adyen.checkout.voucher.VoucherConfiguration
-import com.adyen.checkout.wechatpay.WeChatPayActionConfiguration
 
 @SuppressWarnings("TooManyFunctions")
 class ActionComponentDialogFragmentNew : DropInBottomSheetDialogFragment(), Observer<ActionComponentData> {
@@ -42,10 +36,15 @@ class ActionComponentDialogFragmentNew : DropInBottomSheetDialogFragment(), Obse
         private val TAG = LogUtil.getTag()
 
         const val ACTION = "ACTION"
+        const val ACTION_CONFIGURATION = "ACTION_CONFIGURATION"
 
-        fun newInstance(action: Action): ActionComponentDialogFragmentNew {
+        fun newInstance(
+            action: Action,
+            actionConfiguration: GenericActionConfiguration
+        ): ActionComponentDialogFragmentNew {
             val args = Bundle()
             args.putParcelable(ACTION, action)
+            args.putParcelable(ACTION_CONFIGURATION, actionConfiguration)
 
             val componentDialogFragment = ActionComponentDialogFragmentNew()
             componentDialogFragment.arguments = args
@@ -58,6 +57,7 @@ class ActionComponentDialogFragmentNew : DropInBottomSheetDialogFragment(), Obse
     private val binding: FragmentGenericActionComponentBinding get() = requireNotNull(_binding)
     private lateinit var action: Action
     private lateinit var actionType: String
+    private lateinit var actionConfiguration: GenericActionConfiguration
     private lateinit var actionComponent: GenericActionComponent
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -65,6 +65,8 @@ class ActionComponentDialogFragmentNew : DropInBottomSheetDialogFragment(), Obse
         Logger.d(TAG, "onCreate")
         action = arguments?.getParcelable(ACTION) ?: throw IllegalArgumentException("Action not found")
         actionType = action.type ?: throw IllegalArgumentException("Action type not found")
+        actionConfiguration =
+            arguments?.getParcelable(ACTION_CONFIGURATION) ?: throw IllegalArgumentException("Configuration not found")
     }
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View {
@@ -78,19 +80,6 @@ class ActionComponentDialogFragmentNew : DropInBottomSheetDialogFragment(), Obse
         binding.header.isVisible = false
 
         try {
-            // TODO improve this logic
-            val actionConfiguration = with(dropInViewModel.dropInConfiguration) {
-                GenericActionConfiguration.Builder(shopperLocale, environment, clientKey).apply {
-                    getConfigurationForAction<Adyen3DS2Configuration>()?.let { add3ds2ActionConfiguration(it) }
-                    getConfigurationForAction<AwaitConfiguration>()?.let { addAwaitActionConfiguration(it) }
-                    getConfigurationForAction<QRCodeConfiguration>()?.let { addQRCodeActionConfiguration(it) }
-                    getConfigurationForAction<VoucherConfiguration>()?.let { addVoucherActionConfiguration(it) }
-                    getConfigurationForAction<RedirectConfiguration>()?.let { addRedirectActionConfiguration(it) }
-                    getConfigurationForAction<WeChatPayActionConfiguration>()?.let {
-                        addWeChatPayActionConfiguration(it)
-                    }
-                }.build()
-            }
 
             actionComponent =
                 GenericActionComponent.PROVIDER.get(this, requireActivity().application, actionConfiguration)
