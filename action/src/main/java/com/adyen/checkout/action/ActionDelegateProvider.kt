@@ -9,6 +9,7 @@
 package com.adyen.checkout.action
 
 import android.app.Application
+import androidx.annotation.RestrictTo
 import androidx.lifecycle.SavedStateHandle
 import com.adyen.checkout.adyen3ds2.Adyen3DS2Component
 import com.adyen.checkout.adyen3ds2.Adyen3DS2Configuration
@@ -34,6 +35,7 @@ import com.adyen.checkout.voucher.VoucherConfiguration
 import com.adyen.checkout.wechatpay.WeChatPayActionComponent
 import com.adyen.checkout.wechatpay.WeChatPayActionConfiguration
 
+@RestrictTo(RestrictTo.Scope.LIBRARY_GROUP)
 object ActionDelegateProvider {
 
     fun get(
