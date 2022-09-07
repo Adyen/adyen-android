@@ -49,14 +49,17 @@ class VoucherComponent(
         // no ops
     }
 
-    @Throws(ComponentException::class)
-    override fun handleActionInternal(activity: Activity, action: Action) {
-        if (action !is VoucherAction) throw ComponentException("Unsupported action")
-        voucherDelegate.handleAction(action)
+    override fun handleActionInternal(action: Action, activity: Activity) {
+        if (action !is VoucherAction) {
+            notifyException(ComponentException("Unsupported action"))
+            return
+        }
+        voucherDelegate.handleAction(action, activity)
     }
 
     companion object {
         @JvmField
-        val PROVIDER: ActionComponentProvider<VoucherComponent, VoucherConfiguration> = VoucherComponentProvider()
+        val PROVIDER: ActionComponentProvider<VoucherComponent, VoucherConfiguration, VoucherDelegate> =
+            VoucherComponentProvider()
     }
 }

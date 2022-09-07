@@ -23,7 +23,7 @@ class Threeds2Action(
     var token: String? = null,
     var subtype: String? = null,
     var authorisationToken: String? = null
-) : Action() {
+) : BaseThreeds2Action() {
 
     override fun writeToParcel(dest: Parcel, flags: Int) {
         JsonUtils.writeToParcel(dest, SERIALIZER.serialize(this))

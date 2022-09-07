@@ -21,7 +21,7 @@ data class Threeds2ChallengeAction(
     override var paymentData: String? = null,
     override var paymentMethodType: String? = null,
     var token: String? = null
-) : Action() {
+) : BaseThreeds2Action() {
 
     override fun writeToParcel(dest: Parcel, flags: Int) {
         JsonUtils.writeToParcel(dest, SERIALIZER.serialize(this))

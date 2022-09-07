@@ -15,6 +15,7 @@ import android.content.Context
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelStoreOwner
 import androidx.savedstate.SavedStateRegistryOwner
+import com.adyen.checkout.action.ActionDelegateProvider
 import com.adyen.checkout.adyen3ds2.Adyen3DS2Component
 import com.adyen.checkout.adyen3ds2.Adyen3DS2Configuration
 import com.adyen.checkout.await.AwaitComponent
@@ -39,6 +40,7 @@ import com.adyen.checkout.components.PaymentComponent
 import com.adyen.checkout.components.PaymentComponentState
 import com.adyen.checkout.components.PaymentMethodAvailabilityCheck
 import com.adyen.checkout.components.ViewableComponent
+import com.adyen.checkout.components.base.ActionDelegate
 import com.adyen.checkout.components.base.AmountConfiguration
 import com.adyen.checkout.components.base.AmountConfigurationBuilder
 import com.adyen.checkout.components.base.BaseActionComponent
@@ -167,34 +169,8 @@ internal fun <T : Configuration> getDefaultConfigForPaymentMethod(
 internal inline fun <reified T : Configuration> getConfigurationForAction(
     dropInConfiguration: DropInConfiguration
 ): T {
-    return dropInConfiguration.getConfigurationForAction() ?: getDefaultConfigForAction(dropInConfiguration)
-}
-
-@Suppress("ComplexMethod", "LongMethod")
-internal inline fun <reified T : Configuration> getDefaultConfigForAction(
-    dropInConfiguration: DropInConfiguration
-): T {
-    val shopperLocale = dropInConfiguration.shopperLocale
-    val environment = dropInConfiguration.environment
-    val clientKey = dropInConfiguration.clientKey
-
-    // get default builder for Configuration type
-    val builder: BaseConfigurationBuilder<out Configuration> = when (T::class) {
-        AwaitConfiguration::class -> AwaitConfiguration.Builder(shopperLocale, environment, clientKey)
-        RedirectConfiguration::class -> RedirectConfiguration.Builder(shopperLocale, environment, clientKey)
-        QRCodeConfiguration::class -> QRCodeConfiguration.Builder(shopperLocale, environment, clientKey)
-        Adyen3DS2Configuration::class -> Adyen3DS2Configuration.Builder(shopperLocale, environment, clientKey)
-        WeChatPayActionConfiguration::class -> WeChatPayActionConfiguration.Builder(
-            shopperLocale,
-            environment,
-            clientKey
-        )
-        VoucherConfiguration::class -> VoucherConfiguration.Builder(shopperLocale, environment, clientKey)
-        else -> throw CheckoutException("Unable to find component configuration for class - ${T::class}")
-    }
-
-    @Suppress("UNCHECKED_CAST")
-    return builder.build() as T
+    return dropInConfiguration.getConfigurationForAction()
+        ?: ActionDelegateProvider.getDefaultConfiguration(dropInConfiguration)
 }
 
 private inline fun <reified T : Configuration> getConfigurationForPaymentMethodOrNull(
@@ -443,7 +419,7 @@ internal fun getViewFor(
  */
 internal fun getActionProviderFor(
     action: Action
-): ActionComponentProvider<out BaseActionComponent<out Configuration>, out Configuration>? {
+): ActionComponentProvider<out BaseActionComponent<out Configuration>, out Configuration, out ActionDelegate<*>>? {
     val allActionProviders = listOf(
         RedirectComponent.PROVIDER,
         Adyen3DS2Component.PROVIDER,
@@ -459,7 +435,11 @@ internal fun getActionProviderFor(
 internal fun <T> getActionComponentFor(
     owner: T,
     application: Application,
-    provider: ActionComponentProvider<out BaseActionComponent<out Configuration>, out Configuration>,
+    provider: ActionComponentProvider<
+        out BaseActionComponent<out Configuration>,
+        out Configuration,
+        out ActionDelegate<*>
+        >,
     dropInConfiguration: DropInConfiguration
 ): BaseActionComponent<out Configuration> where T : SavedStateRegistryOwner, T : ViewModelStoreOwner {
     return when (provider) {

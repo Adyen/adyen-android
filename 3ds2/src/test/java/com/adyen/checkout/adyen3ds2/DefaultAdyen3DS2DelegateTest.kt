@@ -13,16 +13,17 @@ import android.app.Application
 import android.content.Intent
 import androidx.lifecycle.SavedStateHandle
 import app.cash.turbine.test
-import app.cash.turbine.testIn
 import com.adyen.checkout.adyen3ds2.exception.Authentication3DS2Exception
 import com.adyen.checkout.adyen3ds2.exception.Cancelled3DS2Exception
 import com.adyen.checkout.adyen3ds2.repository.SubmitFingerprintRepository
 import com.adyen.checkout.adyen3ds2.repository.SubmitFingerprintResult
+import com.adyen.checkout.components.ActionComponentData
 import com.adyen.checkout.components.encoding.JavaBase64Encoder
 import com.adyen.checkout.components.model.payments.response.RedirectAction
 import com.adyen.checkout.components.model.payments.response.Threeds2Action
 import com.adyen.checkout.components.model.payments.response.Threeds2ChallengeAction
 import com.adyen.checkout.components.model.payments.response.Threeds2FingerprintAction
+import com.adyen.checkout.components.repository.PaymentDataRepository
 import com.adyen.checkout.core.api.Environment
 import com.adyen.checkout.core.exception.ComponentException
 import com.adyen.checkout.redirect.test.TestRedirectHandler
@@ -73,16 +74,19 @@ internal class DefaultAdyen3DS2DelegateTest(
 
     private lateinit var redirectHandler: TestRedirectHandler
     private lateinit var delegate: DefaultAdyen3DS2Delegate
+    private lateinit var paymentDataRepository: PaymentDataRepository
 
     private val base64Encoder = JavaBase64Encoder()
 
     @BeforeEach
     fun beforeEach(dispatcher: TestDispatcher) {
         redirectHandler = TestRedirectHandler()
+        paymentDataRepository = PaymentDataRepository(SavedStateHandle())
         delegate = DefaultAdyen3DS2Delegate(
             savedStateHandle = SavedStateHandle(),
             configuration = Adyen3DS2Configuration.Builder(Locale.US, Environment.TEST, TEST_CLIENT_KEY).build(),
             submitFingerprintRepository = submitFingerprintRepository,
+            paymentDataRepository = paymentDataRepository,
             adyen3DS2Serializer = adyen3DS2Serializer,
             redirectHandler = redirectHandler,
             threeDS2Service = threeDS2Service,
@@ -104,7 +108,7 @@ internal class DefaultAdyen3DS2DelegateTest(
             delegate.initialize(CoroutineScope(dispatcher))
 
             delegate.exceptionFlow.test {
-                delegate.handleAction(Threeds2FingerprintAction(token = null), Activity(), null)
+                delegate.handleAction(Threeds2FingerprintAction(token = null), Activity())
 
                 assertTrue(awaitItem() is ComponentException)
             }
@@ -117,7 +121,7 @@ internal class DefaultAdyen3DS2DelegateTest(
             delegate.initialize(CoroutineScope(dispatcher))
 
             delegate.exceptionFlow.test {
-                delegate.handleAction(Threeds2ChallengeAction(token = null), Activity(), null)
+                delegate.handleAction(Threeds2ChallengeAction(token = null), Activity())
 
                 assertTrue(awaitItem() is ComponentException)
             }
@@ -130,7 +134,7 @@ internal class DefaultAdyen3DS2DelegateTest(
             delegate.initialize(CoroutineScope(dispatcher))
 
             delegate.exceptionFlow.test {
-                delegate.handleAction(Threeds2Action(token = null), Activity(), null)
+                delegate.handleAction(Threeds2Action(token = null), Activity())
 
                 assertTrue(awaitItem() is ComponentException)
             }
@@ -143,7 +147,7 @@ internal class DefaultAdyen3DS2DelegateTest(
             delegate.initialize(CoroutineScope(dispatcher))
 
             delegate.exceptionFlow.test {
-                delegate.handleAction(Threeds2Action(token = "sometoken", subtype = null), Activity(), null)
+                delegate.handleAction(Threeds2Action(token = "sometoken", subtype = null), Activity())
 
                 assertTrue(awaitItem() is ComponentException)
             }
@@ -160,7 +164,7 @@ internal class DefaultAdyen3DS2DelegateTest(
 
             assertThrows<ComponentException> {
                 val encodedJson = base64Encoder.encode("{incorrectJson}")
-                delegate.identifyShopper(Activity(), encodedJson, false, null)
+                delegate.identifyShopper(Activity(), encodedJson, false)
             }
         }
 
@@ -177,7 +181,7 @@ internal class DefaultAdyen3DS2DelegateTest(
                     val encodedJson = base64Encoder.encode(
                         "{\"directoryServerId\": \"id\", \"directoryServerPublicKey\": \"key\"}"
                     )
-                    delegate.identifyShopper(Activity(), encodedJson, false, null)
+                    delegate.identifyShopper(Activity(), encodedJson, false)
 
                     assertEquals(error, awaitItem().cause)
                 }
@@ -195,7 +199,7 @@ internal class DefaultAdyen3DS2DelegateTest(
                 val encodedJson = base64Encoder.encode(
                     "{\"directoryServerId\": \"id\", \"directoryServerPublicKey\": \"key\", \"threeDSMessageVersion\":\"2.1.0\"}"
                 )
-                delegate.identifyShopper(Activity(), encodedJson, false, null)
+                delegate.identifyShopper(Activity(), encodedJson, false)
 
                 assertEquals(error, awaitItem().cause)
             }
@@ -210,7 +214,7 @@ internal class DefaultAdyen3DS2DelegateTest(
                 val encodedJson = base64Encoder.encode(
                     "{\"directoryServerId\": \"id\", \"directoryServerPublicKey\": \"key\", \"threeDSMessageVersion\":\"2.1.0\"}"
                 )
-                delegate.identifyShopper(Activity(), encodedJson, false, null)
+                delegate.identifyShopper(Activity(), encodedJson, false)
 
                 assertTrue(awaitItem() is ComponentException)
             }
@@ -234,19 +238,18 @@ internal class DefaultAdyen3DS2DelegateTest(
 
                 delegate.initialize(CoroutineScope(dispatcher))
 
-                val encodedJson = base64Encoder.encode(
-                    "{\"directoryServerId\": \"id\", \"directoryServerPublicKey\": \"key\", \"threeDSMessageVersion\":\"2.1.0\"}"
-                )
-                delegate.identifyShopper(Activity(), encodedJson, true, null)
+                delegate.detailsFlow.test {
+                    val encodedJson = base64Encoder.encode(
+                        "{\"directoryServerId\": \"id\", \"directoryServerPublicKey\": \"key\", \"threeDSMessageVersion\":\"2.1.0\"}"
+                    )
+                    delegate.identifyShopper(Activity(), encodedJson, true)
 
-                val eventFlowTest = delegate.eventFlow.testIn(this)
-                val detailsFlowTest = delegate.detailsFlow.testIn(this)
-
-                assertEquals(eventFlowTest.awaitItem(), Adyen3DS2Event.ClearPaymentData)
-                assertEquals(detailsFlowTest.awaitItem(), submitFingerprintResult.details)
-
-                eventFlowTest.cancel()
-                detailsFlowTest.cancel()
+                    val expected = ActionComponentData(
+                        paymentData = null,
+                        details = submitFingerprintResult.details,
+                    )
+                    assertEquals(expected, awaitItem())
+                }
             }
 
         @Test
@@ -270,7 +273,7 @@ internal class DefaultAdyen3DS2DelegateTest(
                 val encodedJson = base64Encoder.encode(
                     "{\"directoryServerId\": \"id\", \"directoryServerPublicKey\": \"key\", \"threeDSMessageVersion\":\"2.1.0\"}"
                 )
-                delegate.identifyShopper(Activity(), encodedJson, true, null)
+                delegate.identifyShopper(Activity(), encodedJson, true)
 
                 redirectHandler.assertLaunchRedirectCalled()
             }
@@ -297,7 +300,7 @@ internal class DefaultAdyen3DS2DelegateTest(
                     val encodedJson = base64Encoder.encode(
                         "{\"directoryServerId\": \"id\", \"directoryServerPublicKey\": \"key\", \"threeDSMessageVersion\":\"2.1.0\"}"
                     )
-                    delegate.identifyShopper(Activity(), encodedJson, true, null)
+                    delegate.identifyShopper(Activity(), encodedJson, true)
                     assertEquals(error, awaitItem().cause)
                 }
             }
@@ -323,9 +326,13 @@ internal class DefaultAdyen3DS2DelegateTest(
                     val encodedJson = base64Encoder.encode(
                         "{\"directoryServerId\": \"id\", \"directoryServerPublicKey\": \"key\", \"threeDSMessageVersion\":\"2.1.0\"}"
                     )
-                    delegate.identifyShopper(Activity(), encodedJson, false, null)
+                    delegate.identifyShopper(Activity(), encodedJson, false)
 
-                    assertEquals(fingerprintDetails, awaitItem())
+                    val expected = ActionComponentData(
+                        paymentData = null,
+                        details = fingerprintDetails,
+                    )
+                    assertEquals(expected, awaitItem())
                 }
             }
     }
@@ -394,7 +401,7 @@ internal class DefaultAdyen3DS2DelegateTest(
             val encodedJson = base64Encoder.encode(
                 "{\"directoryServerId\": \"id\", \"directoryServerPublicKey\": \"key\", \"threeDSMessageVersion\":\"2.1.0\"}"
             )
-            delegate.identifyShopper(Activity(), encodedJson, false, null)
+            delegate.identifyShopper(Activity(), encodedJson, false)
 
             return transaction
         }
@@ -409,7 +416,11 @@ internal class DefaultAdyen3DS2DelegateTest(
             delegate.detailsFlow.test {
                 delegate.handleIntent(Intent())
 
-                assertEquals(TestRedirectHandler.REDIRECT_RESULT, awaitItem())
+                val expected = ActionComponentData(
+                    paymentData = null,
+                    details = TestRedirectHandler.REDIRECT_RESULT,
+                )
+                assertEquals(expected, awaitItem())
             }
         }
 
@@ -438,7 +449,11 @@ internal class DefaultAdyen3DS2DelegateTest(
             delegate.detailsFlow.test {
                 delegate.completed(TestCompletionEvent())
 
-                assertEquals(details, awaitItem())
+                val expected = ActionComponentData(
+                    paymentData = null,
+                    details = details,
+                )
+                assertEquals(expected, awaitItem())
             }
         }
 

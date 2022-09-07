@@ -45,10 +45,12 @@ class RedirectComponent(
         return PROVIDER.canHandleAction(action)
     }
 
-    @Throws(ComponentException::class)
-    override fun handleActionInternal(activity: Activity, action: Action) {
-        val redirectAction = action as RedirectAction
-        redirectDelegate.handleAction(activity, redirectAction)
+    override fun handleActionInternal(action: Action, activity: Activity) {
+        if (action !is RedirectAction) {
+            notifyException(ComponentException("Unsupported action"))
+            return
+        }
+        redirectDelegate.handleAction(action, activity)
     }
 
     /**
@@ -63,7 +65,8 @@ class RedirectComponent(
 
     companion object {
         @JvmField
-        val PROVIDER: ActionComponentProvider<RedirectComponent, RedirectConfiguration> = RedirectComponentProvider()
+        val PROVIDER: ActionComponentProvider<RedirectComponent, RedirectConfiguration, RedirectDelegate> =
+            RedirectComponentProvider()
 
         /**
          * The suggested scheme to be used in the intent filter to receive the redirect result.

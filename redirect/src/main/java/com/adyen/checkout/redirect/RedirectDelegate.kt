@@ -8,20 +8,9 @@
 
 package com.adyen.checkout.redirect
 
-import android.app.Activity
-import android.content.Intent
+import com.adyen.checkout.components.base.ActionDelegate
+import com.adyen.checkout.components.base.DetailsEmittingDelegate
+import com.adyen.checkout.components.base.IntentHandlingDelegate
 import com.adyen.checkout.components.model.payments.response.RedirectAction
-import com.adyen.checkout.core.exception.CheckoutException
-import kotlinx.coroutines.flow.Flow
-import org.json.JSONObject
 
-interface RedirectDelegate {
-
-    val detailsFlow: Flow<JSONObject>
-
-    val exceptionFlow: Flow<CheckoutException>
-
-    fun handleAction(activity: Activity, redirectAction: RedirectAction)
-
-    fun handleIntent(intent: Intent)
-}
+interface RedirectDelegate : ActionDelegate<RedirectAction>, DetailsEmittingDelegate, IntentHandlingDelegate

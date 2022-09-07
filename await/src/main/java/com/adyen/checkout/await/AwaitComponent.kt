@@ -21,6 +21,7 @@ import com.adyen.checkout.components.ActionComponentProvider
 import com.adyen.checkout.components.ViewableComponent
 import com.adyen.checkout.components.base.BaseActionComponent
 import com.adyen.checkout.components.model.payments.response.Action
+import com.adyen.checkout.components.model.payments.response.AwaitAction
 import com.adyen.checkout.core.exception.ComponentException
 import com.adyen.checkout.core.log.LogUtil
 import com.adyen.checkout.core.log.Logger
@@ -40,6 +41,8 @@ class AwaitComponent(
     override val outputData: AwaitOutputData? get() = awaitDelegate.outputData
 
     init {
+        awaitDelegate.initialize(viewModelScope)
+
         awaitDelegate.detailsFlow
             .onEach { notifyDetails(it) }
             .launchIn(viewModelScope)
@@ -53,9 +56,12 @@ class AwaitComponent(
         return PROVIDER.canHandleAction(action)
     }
 
-    @Throws(ComponentException::class)
-    override fun handleActionInternal(activity: Activity, action: Action) {
-        paymentData?.let { awaitDelegate.handleAction(action, it) } ?: throw ComponentException("paymentData is null")
+    override fun handleActionInternal(action: Action, activity: Activity) {
+        if (action !is AwaitAction) {
+            notifyException(ComponentException("Unsupported action"))
+            return
+        }
+        awaitDelegate.handleAction(action, activity)
     }
 
     override fun observe(lifecycleOwner: LifecycleOwner, observer: Observer<ActionComponentData>) {
@@ -64,8 +70,7 @@ class AwaitComponent(
         // Immediately request a new status if the user resumes the app
         lifecycleOwner.lifecycle.addObserver(object : DefaultLifecycleObserver {
             override fun onResume(owner: LifecycleOwner) {
-                val data = paymentData ?: return
-                awaitDelegate.refreshStatus(data)
+                awaitDelegate.refreshStatus()
             }
         })
     }
@@ -89,6 +94,7 @@ class AwaitComponent(
         private val TAG = LogUtil.getTag()
 
         @JvmField
-        val PROVIDER: ActionComponentProvider<AwaitComponent, AwaitConfiguration> = AwaitComponentProvider()
+        val PROVIDER: ActionComponentProvider<AwaitComponent, AwaitConfiguration, AwaitDelegate> =
+            AwaitComponentProvider()
     }
 }

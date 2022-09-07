@@ -8,12 +8,14 @@
 
 package com.adyen.checkout.wechatpay
 
+import android.app.Activity
 import android.content.Intent
 import androidx.annotation.VisibleForTesting
+import com.adyen.checkout.components.ActionComponentData
 import com.adyen.checkout.components.flow.MutableSingleEventSharedFlow
-import com.adyen.checkout.components.model.payments.response.Action
 import com.adyen.checkout.components.model.payments.response.SdkAction
 import com.adyen.checkout.components.model.payments.response.WeChatPaySdkData
+import com.adyen.checkout.components.repository.PaymentDataRepository
 import com.adyen.checkout.core.exception.CheckoutException
 import com.adyen.checkout.core.exception.ComponentException
 import com.adyen.checkout.core.log.LogUtil
@@ -29,11 +31,12 @@ import org.json.JSONObject
 
 internal class DefaultWeChatDelegate(
     private val iwxApi: IWXAPI,
-    private val payRequestGenerator: WeChatRequestGenerator<*>
+    private val payRequestGenerator: WeChatRequestGenerator<*>,
+    private val paymentDataRepository: PaymentDataRepository,
 ) : WeChatDelegate {
 
-    private val _detailsFlow: MutableSharedFlow<JSONObject> = MutableSingleEventSharedFlow()
-    override val detailsFlow: Flow<JSONObject> = _detailsFlow
+    private val _detailsFlow: MutableSharedFlow<ActionComponentData> = MutableSingleEventSharedFlow()
+    override val detailsFlow: Flow<ActionComponentData> = _detailsFlow
 
     private val _exceptionFlow: MutableSharedFlow<CheckoutException> = MutableSingleEventSharedFlow()
     override val exceptionFlow: Flow<CheckoutException> = _exceptionFlow
@@ -49,7 +52,7 @@ internal class DefaultWeChatDelegate(
     @VisibleForTesting
     internal fun onResponse(baseResponse: BaseResp) {
         parseResult(baseResponse)?.let { response ->
-            _detailsFlow.tryEmit(response)
+            _detailsFlow.tryEmit(createActionComponentData(response))
         }
     }
 
@@ -68,13 +71,23 @@ internal class DefaultWeChatDelegate(
         iwxApi.handleIntent(intent, eventHandler)
     }
 
-    override fun handleAction(action: Action, activityName: String) {
+    @SuppressWarnings("ReturnCount")
+    override fun handleAction(action: SdkAction<WeChatPaySdkData>, activity: Activity) {
+        val activityName = activity.javaClass.name
         Logger.d(TAG, "handleAction: activity - $activityName")
 
-        @Suppress("UNCHECKED_CAST")
-        val sdkData = (action as? SdkAction<WeChatPaySdkData>)?.sdkData ?: run {
-            _exceptionFlow.tryEmit(ComponentException("sdkData is null"))
-            return@handleAction
+        val paymentData = action.paymentData
+        paymentDataRepository.paymentData = paymentData
+        if (paymentData == null) {
+            Logger.e(TAG, "Payment data is null")
+            _exceptionFlow.tryEmit(ComponentException("Payment data is null"))
+            return
+        }
+
+        val sdkData = action.sdkData
+        if (sdkData == null) {
+            _exceptionFlow.tryEmit(ComponentException("SDK Data is null"))
+            return
         }
 
         val isWeChatNotInitiated = !initiateWeChatPayRedirect(sdkData, activityName)
@@ -90,6 +103,13 @@ internal class DefaultWeChatDelegate(
         iwxApi.registerApp(weChatPaySdkData.appid)
         val request = payRequestGenerator.generate(weChatPaySdkData, activityName)
         return iwxApi.sendReq(request)
+    }
+
+    private fun createActionComponentData(details: JSONObject): ActionComponentData {
+        return ActionComponentData(
+            details = details,
+            paymentData = paymentDataRepository.paymentData,
+        )
     }
 
     companion object {

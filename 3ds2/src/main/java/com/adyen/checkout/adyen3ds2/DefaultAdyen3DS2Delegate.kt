@@ -19,13 +19,15 @@ import com.adyen.checkout.adyen3ds2.model.ChallengeToken
 import com.adyen.checkout.adyen3ds2.model.FingerprintToken
 import com.adyen.checkout.adyen3ds2.repository.SubmitFingerprintRepository
 import com.adyen.checkout.adyen3ds2.repository.SubmitFingerprintResult
+import com.adyen.checkout.components.ActionComponentData
 import com.adyen.checkout.components.encoding.Base64Encoder
 import com.adyen.checkout.components.flow.MutableSingleEventSharedFlow
-import com.adyen.checkout.components.model.payments.response.Action
+import com.adyen.checkout.components.model.payments.response.BaseThreeds2Action
 import com.adyen.checkout.components.model.payments.response.RedirectAction
 import com.adyen.checkout.components.model.payments.response.Threeds2Action
 import com.adyen.checkout.components.model.payments.response.Threeds2ChallengeAction
 import com.adyen.checkout.components.model.payments.response.Threeds2FingerprintAction
+import com.adyen.checkout.components.repository.PaymentDataRepository
 import com.adyen.checkout.core.exception.CheckoutException
 import com.adyen.checkout.core.exception.ComponentException
 import com.adyen.checkout.core.log.LogUtil
@@ -58,6 +60,7 @@ internal class DefaultAdyen3DS2Delegate(
     private val savedStateHandle: SavedStateHandle,
     private val configuration: Adyen3DS2Configuration,
     private val submitFingerprintRepository: SubmitFingerprintRepository,
+    private val paymentDataRepository: PaymentDataRepository,
     private val adyen3DS2Serializer: Adyen3DS2Serializer,
     private val redirectHandler: RedirectHandler,
     private val threeDS2Service: ThreeDS2Service,
@@ -67,19 +70,16 @@ internal class DefaultAdyen3DS2Delegate(
     private val application: Application,
 ) : Adyen3DS2Delegate, ChallengeStatusReceiver {
 
-    private val _detailsFlow = MutableSingleEventSharedFlow<JSONObject>()
-    override val detailsFlow: Flow<JSONObject> = _detailsFlow
+    private val _detailsFlow = MutableSingleEventSharedFlow<ActionComponentData>()
+    override val detailsFlow: Flow<ActionComponentData> = _detailsFlow
 
     private val _exceptionFlow = MutableSingleEventSharedFlow<CheckoutException>()
     override val exceptionFlow: Flow<CheckoutException> = _exceptionFlow
 
-    private val _eventFlow = MutableSingleEventSharedFlow<Adyen3DS2Event>()
-    override val eventFlow: Flow<Adyen3DS2Event> = _eventFlow
-
-    override var uiCustomization: UiCustomization? = null
-
     private var _coroutineScope: CoroutineScope? = null
     private val coroutineScope: CoroutineScope get() = requireNotNull(_coroutineScope)
+
+    private var uiCustomization: UiCustomization? = null
 
     private var currentTransaction: Transaction? = null
 
@@ -94,7 +94,9 @@ internal class DefaultAdyen3DS2Delegate(
     }
 
     @Suppress("ReturnCount")
-    override fun handleAction(action: Action, activity: Activity, paymentData: String?) {
+    override fun handleAction(action: BaseThreeds2Action, activity: Activity) {
+        val paymentData = action.paymentData
+        paymentDataRepository.paymentData = paymentData
         when (action) {
             is Threeds2FingerprintAction -> {
                 if (action.token.isNullOrEmpty()) {
@@ -105,7 +107,6 @@ internal class DefaultAdyen3DS2Delegate(
                     activity = activity,
                     encodedFingerprintToken = action.token.orEmpty(),
                     submitFingerprintAutomatically = false,
-                    paymentData = paymentData,
                 )
             }
             is Threeds2ChallengeAction -> {
@@ -127,7 +128,7 @@ internal class DefaultAdyen3DS2Delegate(
                 val subtype = Threeds2Action.SubType.parse(action.subtype.orEmpty())
                 // We need to keep authorizationToken in memory to access it later when the 3DS2 challenge is done
                 authorizationToken = action.authorisationToken
-                handleActionSubtype(activity, subtype, action.token.orEmpty(), paymentData)
+                handleActionSubtype(activity, subtype, action.token.orEmpty())
             }
         }
     }
@@ -136,14 +137,12 @@ internal class DefaultAdyen3DS2Delegate(
         activity: Activity,
         subtype: Threeds2Action.SubType,
         token: String,
-        paymentData: String?,
     ) {
         when (subtype) {
             Threeds2Action.SubType.FINGERPRINT -> identifyShopper(
                 activity = activity,
                 encodedFingerprintToken = token,
                 submitFingerprintAutomatically = true,
-                paymentData = paymentData,
             )
             Threeds2Action.SubType.CHALLENGE -> challengeShopper(activity, token)
         }
@@ -156,7 +155,6 @@ internal class DefaultAdyen3DS2Delegate(
         activity: Activity,
         encodedFingerprintToken: String,
         submitFingerprintAutomatically: Boolean,
-        paymentData: String?,
     ) {
         Logger.d(TAG, "identifyShopper - submitFingerprintAutomatically: $submitFingerprintAutomatically")
         val decodedFingerprintToken = base64Encoder.decode(encodedFingerprintToken)
@@ -218,9 +216,9 @@ internal class DefaultAdyen3DS2Delegate(
             }
             val encodedFingerprint = createEncodedFingerprint(authenticationRequestParameters)
             if (submitFingerprintAutomatically) {
-                submitFingerprintAutomatically(activity, encodedFingerprint, paymentData)
+                submitFingerprintAutomatically(activity, encodedFingerprint)
             } else {
-                _detailsFlow.tryEmit(adyen3DS2Serializer.createFingerprintDetails(encodedFingerprint))
+                emitDetails(adyen3DS2Serializer.createFingerprintDetails(encodedFingerprint))
             }
         }
     }
@@ -248,32 +246,43 @@ internal class DefaultAdyen3DS2Delegate(
     private suspend fun submitFingerprintAutomatically(
         activity: Activity,
         encodedFingerprint: String,
-        paymentData: String?
     ) {
-        submitFingerprintRepository.submitFingerprint(encodedFingerprint, configuration.clientKey, paymentData)
+        submitFingerprintRepository.submitFingerprint(
+            encodedFingerprint,
+            configuration.clientKey,
+            paymentDataRepository.paymentData
+        )
             .fold(
-                onSuccess = { result -> onSubmitFingerprintResult(result, activity, paymentData) },
+                onSuccess = { result -> onSubmitFingerprintResult(result, activity) },
                 onFailure = { e -> _exceptionFlow.tryEmit(ComponentException("Unable to submit fingerprint", e)) }
             )
     }
 
-    private fun onSubmitFingerprintResult(result: SubmitFingerprintResult, activity: Activity, paymentData: String?) {
+    private fun onSubmitFingerprintResult(result: SubmitFingerprintResult, activity: Activity) {
         // This flow (calling the internal submitFingerprint endpoint) requires that we do not send paymentData
         // back to the merchant. Setting it to null ensures that when the flow ends and notifyDetails is called,
         // paymentData will not be included in the response.
-        _eventFlow.tryEmit(Adyen3DS2Event.ClearPaymentData)
+        paymentDataRepository.paymentData = null
 
         when (result) {
             is SubmitFingerprintResult.Completed -> {
-                _detailsFlow.tryEmit(result.details)
+                emitDetails(result.details)
             }
             is SubmitFingerprintResult.Redirect -> {
                 makeRedirect(activity, result.action)
             }
             is SubmitFingerprintResult.Threeds2 -> {
-                handleAction(result.action, activity, paymentData)
+                handleAction(result.action, activity)
             }
         }
+    }
+
+    private fun emitDetails(details: JSONObject) {
+        val actionComponentData = ActionComponentData(
+            details = details,
+            paymentData = paymentDataRepository.paymentData,
+        )
+        _detailsFlow.tryEmit(actionComponentData)
     }
 
     private fun makeRedirect(activity: Activity, action: RedirectAction) {
@@ -332,10 +341,14 @@ internal class DefaultAdyen3DS2Delegate(
     override fun handleIntent(intent: Intent) {
         try {
             val parsedResult = redirectHandler.parseRedirectResult(intent.data)
-            _detailsFlow.tryEmit(parsedResult)
+            emitDetails(parsedResult)
         } catch (e: CheckoutException) {
             _exceptionFlow.tryEmit(e)
         }
+    }
+
+    override fun set3DS2UICustomization(uiCustomization: UiCustomization?) {
+        this.uiCustomization = uiCustomization
     }
 
     override fun completed(completionEvent: CompletionEvent) {
@@ -346,7 +359,7 @@ internal class DefaultAdyen3DS2Delegate(
             val details =
                 if (token == null) adyen3DS2Serializer.createChallengeDetails(completionEvent)
                 else adyen3DS2Serializer.createThreeDsResultDetails(completionEvent, token)
-            _detailsFlow.tryEmit(details)
+            emitDetails(details)
         } catch (e: CheckoutException) {
             _exceptionFlow.tryEmit(e)
         } finally {

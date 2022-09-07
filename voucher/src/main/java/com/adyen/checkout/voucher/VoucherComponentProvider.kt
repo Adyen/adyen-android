@@ -10,6 +10,7 @@ package com.adyen.checkout.voucher
 
 import android.app.Application
 import android.os.Bundle
+import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.ViewModelStoreOwner
 import androidx.savedstate.SavedStateRegistryOwner
@@ -21,7 +22,7 @@ import com.adyen.checkout.components.util.PaymentMethodTypes
 
 private val PAYMENT_METHODS = listOf(PaymentMethodTypes.BACS)
 
-class VoucherComponentProvider : ActionComponentProvider<VoucherComponent, VoucherConfiguration> {
+class VoucherComponentProvider : ActionComponentProvider<VoucherComponent, VoucherConfiguration, VoucherDelegate> {
 
     override fun <T> get(
         owner: T,
@@ -38,8 +39,8 @@ class VoucherComponentProvider : ActionComponentProvider<VoucherComponent, Vouch
         configuration: VoucherConfiguration,
         defaultArgs: Bundle?
     ): VoucherComponent {
-        val voucherDelegate = DefaultVoucherDelegate()
         val voucherFactory = viewModelFactory(savedStateRegistryOwner, defaultArgs) { savedStateHandle ->
+            val voucherDelegate = getDelegate(configuration, savedStateHandle, application)
             VoucherComponent(
                 savedStateHandle,
                 application,
@@ -48,6 +49,14 @@ class VoucherComponentProvider : ActionComponentProvider<VoucherComponent, Vouch
             )
         }
         return ViewModelProvider(viewModelStoreOwner, voucherFactory).get(VoucherComponent::class.java)
+    }
+
+    override fun getDelegate(
+        configuration: VoucherConfiguration,
+        savedStateHandle: SavedStateHandle,
+        application: Application,
+    ): VoucherDelegate {
+        return DefaultVoucherDelegate()
     }
 
     override val supportedActionTypes: List<String>

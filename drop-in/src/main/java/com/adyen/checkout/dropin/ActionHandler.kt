@@ -14,6 +14,7 @@ import androidx.fragment.app.FragmentActivity
 import androidx.lifecycle.Observer
 import com.adyen.checkout.components.ActionComponentData
 import com.adyen.checkout.components.ActionComponentProvider
+import com.adyen.checkout.components.base.ActionDelegate
 import com.adyen.checkout.components.base.BaseActionComponent
 import com.adyen.checkout.components.base.Configuration
 import com.adyen.checkout.components.base.IntentHandlingComponent
@@ -81,7 +82,11 @@ class ActionHandler(
 
     private fun loadComponent(
         activity: FragmentActivity,
-        provider: ActionComponentProvider<out BaseActionComponent<out Configuration>, out Configuration>
+        provider: ActionComponentProvider<
+            out BaseActionComponent<out Configuration>,
+            out Configuration,
+            out ActionDelegate<*>
+            >
     ) {
         getActionComponentFor(activity, activity.application, provider, dropInConfiguration).apply {
             loadedComponent = this

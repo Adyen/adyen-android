@@ -10,6 +10,7 @@ package com.adyen.checkout.await
 
 import android.app.Application
 import android.os.Bundle
+import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.ViewModelStoreOwner
 import androidx.savedstate.SavedStateRegistryOwner
@@ -17,13 +18,14 @@ import com.adyen.checkout.components.ActionComponentProvider
 import com.adyen.checkout.components.base.lifecycle.viewModelFactory
 import com.adyen.checkout.components.model.payments.response.Action
 import com.adyen.checkout.components.model.payments.response.AwaitAction
+import com.adyen.checkout.components.repository.PaymentDataRepository
 import com.adyen.checkout.components.status.DefaultStatusRepository
 import com.adyen.checkout.components.status.api.StatusService
 import com.adyen.checkout.components.util.PaymentMethodTypes
 
 private val PAYMENT_METHODS = listOf(PaymentMethodTypes.BLIK, PaymentMethodTypes.MB_WAY)
 
-class AwaitComponentProvider : ActionComponentProvider<AwaitComponent, AwaitConfiguration> {
+class AwaitComponentProvider : ActionComponentProvider<AwaitComponent, AwaitConfiguration, AwaitDelegate> {
 
     override val supportedActionTypes: List<String>
         get() = listOf(AwaitAction.ACTION_TYPE)
@@ -43,11 +45,8 @@ class AwaitComponentProvider : ActionComponentProvider<AwaitComponent, AwaitConf
         configuration: AwaitConfiguration,
         defaultArgs: Bundle?
     ): AwaitComponent {
-        val statusService = StatusService(configuration.environment.baseUrl)
-        val statusRepository = DefaultStatusRepository(statusService, configuration.clientKey)
-        val awaitDelegate = DefaultAwaitDelegate(statusRepository)
-
         val awaitFactory = viewModelFactory(savedStateRegistryOwner, defaultArgs) { savedStateHandle ->
+            val awaitDelegate = getDelegate(configuration, savedStateHandle, application)
             AwaitComponent(
                 savedStateHandle,
                 application,
@@ -56,6 +55,17 @@ class AwaitComponentProvider : ActionComponentProvider<AwaitComponent, AwaitConf
             )
         }
         return ViewModelProvider(viewModelStoreOwner, awaitFactory).get(AwaitComponent::class.java)
+    }
+
+    override fun getDelegate(
+        configuration: AwaitConfiguration,
+        savedStateHandle: SavedStateHandle,
+        application: Application,
+    ): AwaitDelegate {
+        val statusService = StatusService(configuration.environment.baseUrl)
+        val statusRepository = DefaultStatusRepository(statusService, configuration.clientKey)
+        val paymentDataRepository = PaymentDataRepository(savedStateHandle)
+        return DefaultAwaitDelegate(statusRepository, paymentDataRepository)
     }
 
     @Deprecated(

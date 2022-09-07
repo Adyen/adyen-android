@@ -9,13 +9,20 @@ package com.adyen.checkout.components
 
 import android.app.Application
 import android.os.Bundle
+import androidx.annotation.RestrictTo
+import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModelStoreOwner
 import androidx.savedstate.SavedStateRegistryOwner
+import com.adyen.checkout.components.base.ActionDelegate
 import com.adyen.checkout.components.base.Configuration
 import com.adyen.checkout.components.model.payments.response.Action
 
-interface ActionComponentProvider<ComponentT : ActionComponent<out Configuration>, ConfigurationT : Configuration> :
-    ComponentProvider<ComponentT> {
+interface ActionComponentProvider<
+    ComponentT : ActionComponent<out Configuration>,
+    ConfigurationT : Configuration,
+    DelegateT : ActionDelegate<*>
+    > : ComponentProvider<ComponentT> {
+
     /**
      * Get an [ActionComponent].
      *
@@ -48,6 +55,13 @@ interface ActionComponentProvider<ComponentT : ActionComponent<out Configuration
         configuration: ConfigurationT,
         defaultArgs: Bundle?
     ): ComponentT
+
+    @RestrictTo(RestrictTo.Scope.LIBRARY_GROUP)
+    fun getDelegate(
+        configuration: ConfigurationT,
+        savedStateHandle: SavedStateHandle,
+        application: Application,
+    ): DelegateT
 
     /**
      * @return If the Configuration is required for this Component.

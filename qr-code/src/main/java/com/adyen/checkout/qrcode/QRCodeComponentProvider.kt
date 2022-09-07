@@ -10,6 +10,7 @@ package com.adyen.checkout.qrcode
 
 import android.app.Application
 import android.os.Bundle
+import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.ViewModelStoreOwner
 import androidx.savedstate.SavedStateRegistryOwner
@@ -17,6 +18,7 @@ import com.adyen.checkout.components.ActionComponentProvider
 import com.adyen.checkout.components.base.lifecycle.viewModelFactory
 import com.adyen.checkout.components.model.payments.response.Action
 import com.adyen.checkout.components.model.payments.response.QrCodeAction
+import com.adyen.checkout.components.repository.PaymentDataRepository
 import com.adyen.checkout.components.status.DefaultStatusRepository
 import com.adyen.checkout.components.status.api.StatusService
 import com.adyen.checkout.components.util.PaymentMethodTypes
@@ -24,7 +26,7 @@ import com.adyen.checkout.redirect.handler.DefaultRedirectHandler
 
 private val VIEWABLE_PAYMENT_METHODS = listOf(PaymentMethodTypes.PIX)
 
-class QRCodeComponentProvider : ActionComponentProvider<QRCodeComponent, QRCodeConfiguration> {
+class QRCodeComponentProvider : ActionComponentProvider<QRCodeComponent, QRCodeConfiguration, QRCodeDelegate> {
     override fun <T> get(
         owner: T,
         application: Application,
@@ -40,12 +42,8 @@ class QRCodeComponentProvider : ActionComponentProvider<QRCodeComponent, QRCodeC
         configuration: QRCodeConfiguration,
         defaultArgs: Bundle?
     ): QRCodeComponent {
-        val statusService = StatusService(configuration.environment.baseUrl)
-        val statusRepository = DefaultStatusRepository(statusService, configuration.clientKey)
-        val countDownTimer = QRCodeCountDownTimer()
-        val redirectHandler = DefaultRedirectHandler()
-        val qrCodeDelegate = DefaultQRCodeDelegate(statusRepository, countDownTimer, redirectHandler)
         val qrCodeFactory = viewModelFactory(savedStateRegistryOwner, defaultArgs) { savedStateHandle ->
+            val qrCodeDelegate = getDelegate(configuration, savedStateHandle, application)
             QRCodeComponent(
                 savedStateHandle = savedStateHandle,
                 application = application,
@@ -54,6 +52,25 @@ class QRCodeComponentProvider : ActionComponentProvider<QRCodeComponent, QRCodeC
             )
         }
         return ViewModelProvider(viewModelStoreOwner, qrCodeFactory).get(QRCodeComponent::class.java)
+    }
+
+    override fun getDelegate(
+        configuration: QRCodeConfiguration,
+        savedStateHandle: SavedStateHandle,
+        application: Application,
+    ): QRCodeDelegate {
+        val statusService = StatusService(configuration.environment.baseUrl)
+        val statusRepository = DefaultStatusRepository(statusService, configuration.clientKey)
+        val countDownTimer = QRCodeCountDownTimer()
+        val redirectHandler = DefaultRedirectHandler()
+        val paymentDataRepository = PaymentDataRepository(savedStateHandle)
+
+        return DefaultQRCodeDelegate(
+            statusRepository,
+            countDownTimer,
+            redirectHandler,
+            paymentDataRepository,
+        )
     }
 
     override val supportedActionTypes: List<String>

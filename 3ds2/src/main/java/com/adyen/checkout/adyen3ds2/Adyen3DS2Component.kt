@@ -16,6 +16,7 @@ import com.adyen.checkout.components.ActionComponentProvider
 import com.adyen.checkout.components.base.BaseActionComponent
 import com.adyen.checkout.components.base.IntentHandlingComponent
 import com.adyen.checkout.components.model.payments.response.Action
+import com.adyen.checkout.components.model.payments.response.BaseThreeds2Action
 import com.adyen.checkout.core.exception.ComponentException
 import com.adyen.checkout.core.log.LogUtil
 import com.adyen.checkout.core.log.Logger
@@ -32,6 +33,8 @@ class Adyen3DS2Component(
     IntentHandlingComponent {
 
     init {
+        adyen3DS2Delegate.initialize(viewModelScope)
+
         adyen3DS2Delegate.detailsFlow
             .onEach { notifyDetails(it) }
             .launchIn(viewModelScope)
@@ -39,19 +42,6 @@ class Adyen3DS2Component(
         adyen3DS2Delegate.exceptionFlow
             .onEach { notifyException(it) }
             .launchIn(viewModelScope)
-
-        adyen3DS2Delegate.eventFlow
-            .onEach { onEvent(it) }
-            .launchIn(viewModelScope)
-    }
-
-    private fun onEvent(event: Adyen3DS2Event) {
-        when (event) {
-            // TODO: Remove when generic action component is ready
-            Adyen3DS2Event.ClearPaymentData -> {
-                paymentData = null
-            }
-        }
     }
 
     /**
@@ -61,12 +51,16 @@ class Adyen3DS2Component(
      * @param uiCustomization The customization object.
      */
     fun setUiCustomization(uiCustomization: UiCustomization?) {
-        adyen3DS2Delegate.uiCustomization = uiCustomization
+        adyen3DS2Delegate.set3DS2UICustomization(uiCustomization)
     }
 
     @Throws(ComponentException::class)
-    override fun handleActionInternal(activity: Activity, action: Action) {
-        adyen3DS2Delegate.handleAction(action, activity, paymentData)
+    override fun handleActionInternal(action: Action, activity: Activity) {
+        if (action !is BaseThreeds2Action) {
+            notifyException(ComponentException("Unsupported action"))
+            return
+        }
+        adyen3DS2Delegate.handleAction(action, activity)
     }
 
     /**
@@ -93,6 +87,7 @@ class Adyen3DS2Component(
         private val TAG = LogUtil.getTag()
 
         @JvmField
-        val PROVIDER: ActionComponentProvider<Adyen3DS2Component, Adyen3DS2Configuration> = Adyen3DS2ComponentProvider()
+        val PROVIDER: ActionComponentProvider<Adyen3DS2Component, Adyen3DS2Configuration, Adyen3DS2Delegate> =
+            Adyen3DS2ComponentProvider()
     }
 }

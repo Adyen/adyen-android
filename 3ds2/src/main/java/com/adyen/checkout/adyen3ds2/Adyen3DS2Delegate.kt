@@ -8,30 +8,16 @@
 
 package com.adyen.checkout.adyen3ds2
 
-import android.app.Activity
-import android.content.Intent
-import com.adyen.checkout.components.model.payments.response.Action
-import com.adyen.checkout.core.exception.CheckoutException
+import com.adyen.checkout.components.base.ActionDelegate
+import com.adyen.checkout.components.base.DetailsEmittingDelegate
+import com.adyen.checkout.components.base.IntentHandlingDelegate
+import com.adyen.checkout.components.model.payments.response.BaseThreeds2Action
 import com.adyen.threeds2.customization.UiCustomization
-import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.flow.Flow
-import org.json.JSONObject
 
-interface Adyen3DS2Delegate {
+interface Adyen3DS2Delegate :
+    ActionDelegate<BaseThreeds2Action>,
+    DetailsEmittingDelegate,
+    IntentHandlingDelegate {
 
-    val detailsFlow: Flow<JSONObject>
-
-    val exceptionFlow: Flow<CheckoutException>
-
-    val eventFlow: Flow<Adyen3DS2Event>
-
-    var uiCustomization: UiCustomization?
-
-    fun initialize(coroutineScope: CoroutineScope)
-
-    fun handleAction(action: Action, activity: Activity, paymentData: String?)
-
-    fun handleIntent(intent: Intent)
-
-    fun onCleared()
+    fun set3DS2UICustomization(uiCustomization: UiCustomization?)
 }

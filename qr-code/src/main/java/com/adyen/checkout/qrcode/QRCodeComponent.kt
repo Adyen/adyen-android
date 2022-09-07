@@ -24,6 +24,7 @@ import com.adyen.checkout.components.base.BaseActionComponent
 import com.adyen.checkout.components.base.IntentHandlingComponent
 import com.adyen.checkout.components.model.payments.response.Action
 import com.adyen.checkout.components.model.payments.response.QrCodeAction
+import com.adyen.checkout.components.status.model.TimerData
 import com.adyen.checkout.core.exception.ComponentException
 import com.adyen.checkout.core.log.LogUtil
 import com.adyen.checkout.core.log.Logger
@@ -59,11 +60,12 @@ class QRCodeComponent(
         return PROVIDER.canHandleAction(action)
     }
 
-    @Throws(ComponentException::class)
-    override fun handleActionInternal(activity: Activity, action: Action) {
-        if (action !is QrCodeAction) throw ComponentException("Unsupported action")
-        val data = paymentData ?: throw ComponentException("Payment data is null")
-        qrCodeDelegate.handleAction(action, activity, data)
+    override fun handleActionInternal(action: Action, activity: Activity) {
+        if (action !is QrCodeAction) {
+            notifyException(ComponentException("Unsupported action"))
+            return
+        }
+        qrCodeDelegate.handleAction(action, activity)
     }
 
     /**
@@ -82,8 +84,7 @@ class QRCodeComponent(
         // Immediately request a new status if the user resumes the app
         lifecycleOwner.lifecycle.addObserver(object : DefaultLifecycleObserver {
             override fun onResume(owner: LifecycleOwner) {
-                val data = paymentData ?: return
-                qrCodeDelegate.refreshStatus(data)
+                qrCodeDelegate.refreshStatus()
             }
         })
     }
@@ -111,7 +112,8 @@ class QRCodeComponent(
 
     companion object {
         @JvmField
-        val PROVIDER: ActionComponentProvider<QRCodeComponent, QRCodeConfiguration> = QRCodeComponentProvider()
+        val PROVIDER: ActionComponentProvider<QRCodeComponent, QRCodeConfiguration, QRCodeDelegate> =
+            QRCodeComponentProvider()
 
         private val TAG = LogUtil.getTag()
     }

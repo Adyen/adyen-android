@@ -10,6 +10,7 @@ package com.adyen.checkout.redirect
 
 import android.app.Application
 import android.os.Bundle
+import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.ViewModelStoreOwner
 import androidx.savedstate.SavedStateRegistryOwner
@@ -17,9 +18,10 @@ import com.adyen.checkout.components.ActionComponentProvider
 import com.adyen.checkout.components.base.lifecycle.viewModelFactory
 import com.adyen.checkout.components.model.payments.response.Action
 import com.adyen.checkout.components.model.payments.response.RedirectAction
+import com.adyen.checkout.components.repository.PaymentDataRepository
 import com.adyen.checkout.redirect.handler.DefaultRedirectHandler
 
-class RedirectComponentProvider : ActionComponentProvider<RedirectComponent, RedirectConfiguration> {
+class RedirectComponentProvider : ActionComponentProvider<RedirectComponent, RedirectConfiguration, RedirectDelegate> {
     override fun <T> get(
         owner: T,
         application: Application,
@@ -35,9 +37,8 @@ class RedirectComponentProvider : ActionComponentProvider<RedirectComponent, Red
         configuration: RedirectConfiguration,
         defaultArgs: Bundle?
     ): RedirectComponent {
-        val redirectHandler = DefaultRedirectHandler()
-        val redirectDelegate = DefaultRedirectDelegate(redirectHandler)
         val redirectFactory = viewModelFactory(savedStateRegistryOwner, defaultArgs) { savedStateHandle ->
+            val redirectDelegate = getDelegate(configuration, savedStateHandle, application)
             RedirectComponent(
                 savedStateHandle,
                 application,
@@ -46,6 +47,16 @@ class RedirectComponentProvider : ActionComponentProvider<RedirectComponent, Red
             )
         }
         return ViewModelProvider(viewModelStoreOwner, redirectFactory).get(RedirectComponent::class.java)
+    }
+
+    override fun getDelegate(
+        configuration: RedirectConfiguration,
+        savedStateHandle: SavedStateHandle,
+        application: Application,
+    ): RedirectDelegate {
+        val redirectHandler = DefaultRedirectHandler()
+        val paymentDataRepository = PaymentDataRepository(savedStateHandle)
+        return DefaultRedirectDelegate(redirectHandler, paymentDataRepository)
     }
 
     override val supportedActionTypes: List<String>

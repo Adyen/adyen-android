@@ -43,6 +43,7 @@ android {
 dependencies {
     // Checkout
     api project(":3ds2")
+    api project(":action")
     api project(":await")
     api project(':bcmc')
     api project(':blik')

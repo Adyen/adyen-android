@@ -16,6 +16,8 @@ import com.adyen.checkout.components.ActionComponentProvider
 import com.adyen.checkout.components.base.BaseActionComponent
 import com.adyen.checkout.components.base.IntentHandlingComponent
 import com.adyen.checkout.components.model.payments.response.Action
+import com.adyen.checkout.components.model.payments.response.SdkAction
+import com.adyen.checkout.components.model.payments.response.WeChatPaySdkData
 import com.adyen.checkout.core.exception.ComponentException
 import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.onEach
@@ -52,14 +54,19 @@ class WeChatPayActionComponent(
         return PROVIDER.canHandleAction(action)
     }
 
-    @Throws(ComponentException::class)
-    override fun handleActionInternal(activity: Activity, action: Action) {
-        weChatDelegate.handleAction(action, activity.javaClass.name)
+    override fun handleActionInternal(action: Action, activity: Activity) {
+        @Suppress("UNCHECKED_CAST")
+        val sdkAction = (action as? SdkAction<WeChatPaySdkData>)
+        if (sdkAction == null) {
+            notifyException(ComponentException("Unsupported action"))
+            return
+        }
+        weChatDelegate.handleAction(action, activity)
     }
 
     companion object {
         @JvmField
-        val PROVIDER: ActionComponentProvider<WeChatPayActionComponent, WeChatPayActionConfiguration> =
+        val PROVIDER: ActionComponentProvider<WeChatPayActionComponent, WeChatPayActionConfiguration, WeChatDelegate> =
             WeChatPayActionComponentProvider()
     }
 }

@@ -8,33 +8,16 @@
 
 package com.adyen.checkout.qrcode
 
-import android.app.Activity
-import android.content.Intent
+import com.adyen.checkout.components.base.ActionDelegate
+import com.adyen.checkout.components.base.DetailsEmittingDelegate
+import com.adyen.checkout.components.base.IntentHandlingDelegate
+import com.adyen.checkout.components.base.StatusPollingDelegate
+import com.adyen.checkout.components.base.ViewableDelegate
 import com.adyen.checkout.components.model.payments.response.QrCodeAction
-import com.adyen.checkout.core.exception.CheckoutException
-import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.flow.Flow
-import org.json.JSONObject
 
-interface QRCodeDelegate {
-
-    val outputDataFlow: Flow<QRCodeOutputData?>
-
-    val outputData: QRCodeOutputData?
-
-    val exceptionFlow: Flow<CheckoutException>
-
-    val detailsFlow: Flow<JSONObject>
-
-    val timerFlow: Flow<TimerData>
-
-    fun initialize(coroutineScope: CoroutineScope)
-
-    fun handleAction(action: QrCodeAction, activity: Activity, paymentData: String)
-
-    fun refreshStatus(paymentData: String)
-
-    fun handleIntent(intent: Intent)
-
-    fun onCleared()
-}
+interface QRCodeDelegate :
+    ActionDelegate<QrCodeAction>,
+    DetailsEmittingDelegate,
+    ViewableDelegate<QRCodeOutputData>,
+    IntentHandlingDelegate,
+    StatusPollingDelegate

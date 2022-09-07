@@ -8,10 +8,13 @@
 
 package com.adyen.checkout.wechatpay
 
+import android.app.Activity
 import android.content.Intent
+import androidx.lifecycle.SavedStateHandle
 import app.cash.turbine.test
 import com.adyen.checkout.components.model.payments.response.SdkAction
 import com.adyen.checkout.components.model.payments.response.WeChatPaySdkData
+import com.adyen.checkout.components.repository.PaymentDataRepository
 import com.adyen.checkout.core.exception.ComponentException
 import com.tencent.mm.opensdk.modelpay.PayResp
 import com.tencent.mm.opensdk.openapi.IWXAPI
@@ -38,13 +41,16 @@ internal class DefaultWeChatDelegateTest(
     @Mock private val weChatRequestGenerator: WeChatRequestGenerator<*>
 ) {
 
+    private lateinit var paymentDataRepository: PaymentDataRepository
     private lateinit var delegate: DefaultWeChatDelegate
 
     @BeforeEach
     fun beforeEach() {
+        paymentDataRepository = PaymentDataRepository(SavedStateHandle())
         delegate = DefaultWeChatDelegate(
             iwxApi = iwxApi,
             payRequestGenerator = weChatRequestGenerator,
+            paymentDataRepository = paymentDataRepository,
         )
     }
 
@@ -63,13 +69,23 @@ internal class DefaultWeChatDelegateTest(
             extData = "someExtData"
         }
 
+        val action = SdkAction(
+            sdkData = WeChatPaySdkData(),
+            paymentData = "paymentData"
+        )
+
         delegate.detailsFlow.test {
+            delegate.handleAction(action, Activity())
             delegate.onResponse(payResponse)
 
             val expected = JSONObject().apply {
                 put("resultCode", 0)
             }
-            assertEquals(expected.get("resultCode"), awaitItem().get("resultCode"))
+
+            with(awaitItem()) {
+                assertEquals(expected.toString(), details.toString())
+                assertEquals("paymentData", paymentData)
+            }
 
             cancelAndIgnoreRemainingEvents()
         }
@@ -86,10 +102,11 @@ internal class DefaultWeChatDelegateTest(
                 prepayid = "prepayid",
                 sign = "sign",
                 timestamp = "timestamp",
-            )
+            ),
+            paymentData = "paymentData"
         )
 
-        delegate.handleAction(action, "name")
+        delegate.handleAction(action, Activity())
 
         verify(iwxApi).registerApp("appid")
         verify(iwxApi).sendReq(anyOrNull())
@@ -97,10 +114,10 @@ internal class DefaultWeChatDelegateTest(
 
     @Test
     fun `when handling action and sdkData is null, then an error is propagated`() = runTest {
-        val action = SdkAction(sdkData = null)
+        val action = SdkAction<WeChatPaySdkData>(sdkData = null)
 
         delegate.exceptionFlow.test {
-            delegate.handleAction(action, "name")
+            delegate.handleAction(action, Activity())
 
             assertTrue(awaitItem() is ComponentException)
 
@@ -114,7 +131,7 @@ internal class DefaultWeChatDelegateTest(
         val action = SdkAction(sdkData = WeChatPaySdkData())
 
         delegate.exceptionFlow.test {
-            delegate.handleAction(action, "name")
+            delegate.handleAction(action, Activity())
 
             assertTrue(awaitItem() is ComponentException)
 

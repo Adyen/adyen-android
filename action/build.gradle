@@ -1,0 +1,48 @@
+/*
+ * Copyright (c) 2022 Adyen N.V.
+ *
+ * This file is open source and available under the MIT license. See the LICENSE file for more info.
+ *
+ * Created by josephj on 23/8/2022.
+ */
+
+plugins {
+    id 'com.android.library'
+    id 'kotlin-android'
+}
+
+ext.mavenArtifactId = "action"
+ext.mavenArtifactName = "Adyen Checkout Action component"
+ext.mavenArtifactDescription = "Adyen checkout action component for Adyen's Checkout API."
+
+apply from: "${rootDir}/config/gradle/sharedTasks.gradle"
+
+android {
+    compileSdkVersion compile_sdk_version
+
+    defaultConfig {
+        minSdkVersion min_sdk_version
+        targetSdkVersion target_sdk_version
+        versionCode version_code
+        versionName version_name
+
+        testInstrumentationRunner 'androidx.test.runner.AndroidJUnitRunner'
+        consumerProguardFiles "consumer-rules.pro"
+    }
+}
+
+dependencies {
+    // Checkout
+    api project(":3ds2")
+    api project(":await")
+    api project(':qr-code')
+    api project(":redirect")
+    api project(':wechatpay')
+    api project(':voucher')
+
+    //Tests
+    testImplementation testLibraries.json
+    testImplementation testLibraries.junit5
+    testImplementation testLibraries.mockito
+    testImplementation testLibraries.kotlinCoroutines
+}
