@@ -10,7 +10,6 @@ package com.adyen.checkout.onlinebankingcz
 
 import androidx.lifecycle.SavedStateHandle
 import com.adyen.checkout.components.PaymentComponentProvider
-import com.adyen.checkout.components.base.GenericPaymentMethodDelegate
 import com.adyen.checkout.components.model.payments.request.OnlineBankingCZPaymentMethod
 import com.adyen.checkout.components.util.PaymentMethodTypes
 import com.adyen.checkout.issuerlist.IssuerListComponent
@@ -18,12 +17,10 @@ import com.adyen.checkout.issuerlist.IssuerListDelegate
 
 class OnlineBankingCZComponent(
     savedStateHandle: SavedStateHandle,
-    paymentMethodDelegate: GenericPaymentMethodDelegate,
     issuerListDelegate: IssuerListDelegate<OnlineBankingCZPaymentMethod>,
     configuration: OnlineBankingCZConfiguration
 ) : IssuerListComponent<OnlineBankingCZPaymentMethod>(
     savedStateHandle,
-    paymentMethodDelegate,
     issuerListDelegate,
     configuration
 ) {
