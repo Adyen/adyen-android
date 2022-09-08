@@ -36,7 +36,6 @@ class OnlineBankingCZComponentProvider :
                     delegate,
                     configuration
                 )
-
             }
         return ViewModelProvider(viewModelStoreOwner, genericFactory).get(OnlineBankingCZComponent::class.java)
     }
