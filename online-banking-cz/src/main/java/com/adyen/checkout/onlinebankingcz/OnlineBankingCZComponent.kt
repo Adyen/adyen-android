@@ -17,7 +17,7 @@ import com.adyen.checkout.issuerlist.IssuerListDelegate
 
 class OnlineBankingCZComponent(
     savedStateHandle: SavedStateHandle,
-    issuerListDelegate: IssuerListDelegate<OnlineBankingCZPaymentMethod>,
+    private val issuerListDelegate: IssuerListDelegate<OnlineBankingCZPaymentMethod>,
     configuration: OnlineBankingCZConfiguration
 ) : IssuerListComponent<OnlineBankingCZPaymentMethod>(
     savedStateHandle,
@@ -25,13 +25,7 @@ class OnlineBankingCZComponent(
     configuration
 ) {
 
-    private var termsAndConditionsUrl: String? = null
-
-    init {
-        termsAndConditionsUrl = (issuerListDelegate as OnlineBankingCZDelegate).getTermsAndConditionsUrl()
-    }
-
-    fun getTermsAndConditionsUrl(): String? = termsAndConditionsUrl
+    fun getTermsAndConditionsUrl(): String = (issuerListDelegate as OnlineBankingCZDelegate).getTermsAndConditionsUrl()
 
     override fun getSupportedPaymentMethodTypes(): Array<String> = PAYMENT_METHOD_TYPES
 
