@@ -17,7 +17,7 @@ import com.adyen.checkout.components.model.payments.request.OnlineBankingCZPayme
 import com.adyen.checkout.components.ui.util.ThemeUtil
 import com.adyen.checkout.issuerlist.IssuerListSpinnerView
 
-class OnlineBankingCZSpinner @JvmOverloads constructor(
+class OnlineBankingCZSpinnerView @JvmOverloads constructor(
     context: Context,
     attrs: AttributeSet? = null,
     defStyleAttr: Int = 0
@@ -30,7 +30,7 @@ class OnlineBankingCZSpinner @JvmOverloads constructor(
     }
 
     private fun launchDownloadIntent() {
-        val url = component.getTermsAndConditionsUrl() ?: return
+        val url = component.getTermsAndConditionsUrl()
         val intent = CustomTabsIntent.Builder()
             .setShowTitle(true)
             .setToolbarColor(ThemeUtil.getPrimaryThemeColor(context))
