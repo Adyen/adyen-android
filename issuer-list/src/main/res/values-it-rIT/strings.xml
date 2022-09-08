@@ -7,6 +7,6 @@
   -->
 
 <resources>
-    <string name="checkout_issuers_list_terms_and_conditions_text">Facendo clic su Continua, accetti %#i termini e le condizioni%#</string>
+    <string name="checkout_issuers_list_terms_and_conditions_text">Facendo clic su Continua, accetti <a href="">i termini e le condizioni</a></string>
     <string name="checkout_issuers_list_hint">Seleziona la banca</string>
 </resources>
