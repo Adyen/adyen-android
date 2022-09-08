@@ -22,7 +22,7 @@ import com.adyen.checkout.components.model.payments.request.IssuerListPaymentMet
 import com.adyen.checkout.components.ui.adapter.SimpleTextListAdapter
 import com.adyen.checkout.components.ui.view.AdyenLinearLayout
 import com.adyen.checkout.core.log.LogUtil
-import com.adyen.checkout.core.log.Logger.d
+import com.adyen.checkout.core.log.Logger
 import com.google.android.material.textfield.TextInputLayout
 
 @Suppress("TooManyFunctions")
@@ -62,7 +62,7 @@ abstract class IssuerListSpinnerView<
             inputType = 0
             setAdapter(issuersAdapter)
             onItemClickListener = AdapterView.OnItemClickListener { _, _, position, _ ->
-                d(TAG, "onItemSelected - " + issuersAdapter.getItem(position).name)
+                Logger.d(TAG, "onItemSelected - " + issuersAdapter.getItem(position).name)
                 component.inputData.selectedIssuer = issuersAdapter.getItem(position)
                 component.notifyInputDataChanged()
             }
@@ -92,7 +92,7 @@ abstract class IssuerListSpinnerView<
     }
 
     override fun onItemSelected(parent: AdapterView<*>, view: View, position: Int, id: Long) {
-        d(TAG, "onItemSelected - " + issuersAdapter.getItem(position).name)
+        Logger.d(TAG, "onItemSelected - " + issuersAdapter.getItem(position).name)
         component.inputData.selectedIssuer = issuersAdapter.getItem(position)
         component.notifyInputDataChanged()
     }

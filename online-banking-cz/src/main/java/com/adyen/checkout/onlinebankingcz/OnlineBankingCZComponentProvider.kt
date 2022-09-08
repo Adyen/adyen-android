@@ -19,6 +19,7 @@ import com.adyen.checkout.components.model.payments.request.OnlineBankingCZPayme
 
 class OnlineBankingCZComponentProvider :
     PaymentComponentProvider<OnlineBankingCZComponent, OnlineBankingCZConfiguration> {
+
     override fun get(
         savedStateRegistryOwner: SavedStateRegistryOwner,
         viewModelStoreOwner: ViewModelStoreOwner,
@@ -29,11 +30,13 @@ class OnlineBankingCZComponentProvider :
         val genericFactory: ViewModelProvider.Factory =
             viewModelFactory(savedStateRegistryOwner, defaultArgs) { savedStateHandle ->
                 val delegate = OnlineBankingCZDelegate(paymentMethod) { OnlineBankingCZPaymentMethod() }
+
                 OnlineBankingCZComponent(
                     savedStateHandle,
                     delegate,
                     configuration
                 )
+
             }
         return ViewModelProvider(viewModelStoreOwner, genericFactory).get(OnlineBankingCZComponent::class.java)
     }
