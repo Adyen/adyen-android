@@ -8,6 +8,8 @@
 package com.adyen.checkout.issuerlist
 
 import android.content.Context
+import android.graphics.Color
+import android.text.method.LinkMovementMethod
 import android.util.AttributeSet
 import android.view.LayoutInflater
 import android.view.View
@@ -65,6 +67,7 @@ abstract class IssuerListSpinnerView<
                 component.notifyInputDataChanged()
             }
         }
+        setupTermsAndConditionsHyperLink()
     }
 
     override fun initLocalizedStrings(localizedContext: Context) {
@@ -102,6 +105,11 @@ abstract class IssuerListSpinnerView<
 
     override fun onNothingSelected(parent: AdapterView<*>) {
         // nothing changed
+    }
+
+    private fun setupTermsAndConditionsHyperLink() {
+        termsAndConditionsTextView?.movementMethod = LinkMovementMethod.getInstance()
+        termsAndConditionsTextView?.setLinkTextColor(Color.BLUE)
     }
 
     companion object {
