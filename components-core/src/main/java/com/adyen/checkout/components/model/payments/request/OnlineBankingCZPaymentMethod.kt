@@ -16,7 +16,7 @@ import com.adyen.checkout.core.model.getStringOrNull
 import org.json.JSONException
 import org.json.JSONObject
 
-class OnlineBankingCZPaymentMethod(
+data class OnlineBankingCZPaymentMethod(
     override var type: String? = null,
     override var issuer: String? = null,
 ) : IssuerListPaymentMethod() {
