@@ -30,7 +30,8 @@ class OnlineBankingCZDelegate(
     override val outputDataFlow: Flow<OnlineBankingCZOutputData?> get() = _outputDataFlow
 
     private val _componentStateFlow = MutableStateFlow<PaymentComponentState<OnlineBankingCZPaymentMethod>?>(null)
-    override val componentStateFlow: Flow<PaymentComponentState<OnlineBankingCZPaymentMethod>?> get() = _componentStateFlow
+    override val componentStateFlow: Flow<PaymentComponentState<OnlineBankingCZPaymentMethod>?>
+        get() = _componentStateFlow
 
     override fun getIssuers(): List<IssuerModel> {
         return paymentMethod.issuers?.let {
@@ -67,6 +68,4 @@ class OnlineBankingCZDelegate(
     companion object {
         private const val TERMS_CONDITIONS_URL = "https://static.payu.com/sites/terms/files/payu_privacy_policy_cs.pdf"
     }
-
-
 }
