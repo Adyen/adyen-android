@@ -58,14 +58,14 @@ dependencies {
     api project(':molpay')
     api project(':qr-code')
     api project(':openbanking')
+    api project(':online-banking-cz')
+    api project(':online-banking-pl')
     api project(":redirect")
     api project(':sepa')
     api project(':sessions-core')
     api project(':bacs')
     api project(':wechatpay')
     api project(':voucher')
-    api project(':online-banking-pl')
-    api project(':online-banking-cz')
 
     // Dependencies
     implementation libraries.androidx.recyclerview
