@@ -17,7 +17,8 @@ import com.adyen.checkout.issuerlist.IssuerListDelegate
 import com.adyen.checkout.issuerlist.IssuerListInputData
 import com.adyen.checkout.issuerlist.IssuerListOutputData
 import com.adyen.checkout.issuerlist.IssuerModel
-import com.adyen.checkout.issuerlist.IssuersUtils
+import com.adyen.checkout.issuerlist.getIssuers
+import com.adyen.checkout.issuerlist.getLegacyIssuers
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableStateFlow
 
@@ -35,8 +36,8 @@ class OnlineBankingCZDelegate(
 
     override fun getIssuers(): List<IssuerModel> {
         return paymentMethod.issuers?.let {
-            IssuersUtils.getIssuers(it)
-        } ?: IssuersUtils.getLegacyIssuers(paymentMethod.details)
+            getIssuers(it)
+        } ?: getLegacyIssuers(paymentMethod.details)
     }
 
     override fun createComponentState(outputData: IssuerListOutputData) {

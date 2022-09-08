@@ -29,8 +29,8 @@ class DefaultIssuerListDelegate<IssuerListPaymentMethodT : IssuerListPaymentMeth
 
     override fun getIssuers(): List<IssuerModel> {
         return paymentMethod.issuers?.let {
-            IssuersUtils.getIssuers(it)
-        } ?: IssuersUtils.getLegacyIssuers(paymentMethod.details)
+            getIssuers(it)
+        } ?: getLegacyIssuers(paymentMethod.details)
     }
 
     override fun onInputDataChanged(inputData: IssuerListInputData) {
