@@ -9,7 +9,7 @@ package com.adyen.checkout.issuerlist
 
 import com.adyen.checkout.components.base.OutputData
 
-open class IssuerListOutputData(
+class IssuerListOutputData(
     val selectedIssuer: IssuerModel?,
 ) : OutputData {
 
