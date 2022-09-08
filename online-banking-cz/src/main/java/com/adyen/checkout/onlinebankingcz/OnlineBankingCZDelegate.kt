@@ -24,15 +24,14 @@ import kotlinx.coroutines.flow.MutableStateFlow
 
 class OnlineBankingCZDelegate(
     private val paymentMethod: PaymentMethod,
-    private val onlineBankingCZPaymentMethod: () -> OnlineBankingCZPaymentMethod
+    private val paymentMethodFactory: () -> OnlineBankingCZPaymentMethod
 ) : IssuerListDelegate<OnlineBankingCZPaymentMethod> {
 
-    private val _outputDataFlow = MutableStateFlow<OnlineBankingCZOutputData?>(null)
-    override val outputDataFlow: Flow<OnlineBankingCZOutputData?> get() = _outputDataFlow
+    private val _outputDataFlow = MutableStateFlow<IssuerListOutputData?>(null)
+    override val outputDataFlow: Flow<IssuerListOutputData?> get() = _outputDataFlow
 
     private val _componentStateFlow = MutableStateFlow<PaymentComponentState<OnlineBankingCZPaymentMethod>?>(null)
-    override val componentStateFlow: Flow<PaymentComponentState<OnlineBankingCZPaymentMethod>?>
-        get() = _componentStateFlow
+    override val componentStateFlow: Flow<PaymentComponentState<OnlineBankingCZPaymentMethod>?> = _componentStateFlow
 
     override fun getIssuers(): List<IssuerModel> {
         return paymentMethod.issuers?.let {
@@ -41,19 +40,18 @@ class OnlineBankingCZDelegate(
     }
 
     override fun createComponentState(outputData: IssuerListOutputData) {
-        val issuerListPaymentMethod = onlineBankingCZPaymentMethod()
+        val issuerListPaymentMethod = paymentMethodFactory()
         issuerListPaymentMethod.type = getPaymentMethodType()
         issuerListPaymentMethod.issuer = outputData.selectedIssuer?.id ?: ""
 
-        val paymentComponentData = PaymentComponentData<OnlineBankingCZPaymentMethod>()
-        paymentComponentData.paymentMethod = issuerListPaymentMethod
+        val paymentComponentData = PaymentComponentData(paymentMethod = issuerListPaymentMethod)
 
         val state = PaymentComponentState(paymentComponentData, outputData.isValid, true)
         _componentStateFlow.tryEmit(state)
     }
 
     override fun onInputDataChanged(inputData: IssuerListInputData) {
-        val outputData = OnlineBankingCZOutputData(TERMS_CONDITIONS_URL, inputData.selectedIssuer)
+        val outputData = IssuerListOutputData(inputData.selectedIssuer)
 
         _outputDataFlow.tryEmit(outputData)
 
