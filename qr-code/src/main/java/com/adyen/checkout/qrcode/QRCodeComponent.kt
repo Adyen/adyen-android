@@ -25,9 +25,12 @@ import com.adyen.checkout.components.base.IntentHandlingComponent
 import com.adyen.checkout.components.model.payments.response.Action
 import com.adyen.checkout.components.model.payments.response.QrCodeAction
 import com.adyen.checkout.components.status.model.TimerData
+import com.adyen.checkout.components.ui.ViewProvidingComponent
+import com.adyen.checkout.components.ui.view.ComponentViewType
 import com.adyen.checkout.core.exception.ComponentException
 import com.adyen.checkout.core.log.LogUtil
 import com.adyen.checkout.core.log.Logger
+import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.filterNotNull
 import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.onEach
@@ -36,22 +39,25 @@ class QRCodeComponent(
     savedStateHandle: SavedStateHandle,
     application: Application,
     configuration: QRCodeConfiguration,
-    private val qrCodeDelegate: QRCodeDelegate,
+    override val delegate: QRCodeDelegate,
 ) :
     BaseActionComponent<QRCodeConfiguration>(savedStateHandle, application, configuration),
     ViewableComponent<QRCodeOutputData, QRCodeConfiguration, ActionComponentData>,
-    IntentHandlingComponent {
+    IntentHandlingComponent,
+    ViewProvidingComponent {
 
-    override val outputData: QRCodeOutputData? get() = qrCodeDelegate.outputData
+    override val viewFlow: Flow<ComponentViewType?> get() = delegate.viewFlow
+
+    override val outputData: QRCodeOutputData? get() = delegate.outputData
 
     init {
-        qrCodeDelegate.initialize(viewModelScope)
+        delegate.initialize(viewModelScope)
 
-        qrCodeDelegate.detailsFlow
+        delegate.detailsFlow
             .onEach { notifyDetails(it) }
             .launchIn(viewModelScope)
 
-        qrCodeDelegate.exceptionFlow
+        delegate.exceptionFlow
             .onEach { notifyException(it) }
             .launchIn(viewModelScope)
     }
@@ -65,7 +71,7 @@ class QRCodeComponent(
             notifyException(ComponentException("Unsupported action"))
             return
         }
-        qrCodeDelegate.handleAction(action, activity)
+        delegate.handleAction(action, activity)
     }
 
     /**
@@ -75,7 +81,7 @@ class QRCodeComponent(
      * @param intent The received [Intent].
      */
     override fun handleIntent(intent: Intent) {
-        qrCodeDelegate.handleIntent(intent)
+        delegate.handleIntent(intent)
     }
 
     override fun observe(lifecycleOwner: LifecycleOwner, observer: Observer<ActionComponentData>) {
@@ -84,20 +90,21 @@ class QRCodeComponent(
         // Immediately request a new status if the user resumes the app
         lifecycleOwner.lifecycle.addObserver(object : DefaultLifecycleObserver {
             override fun onResume(owner: LifecycleOwner) {
-                qrCodeDelegate.refreshStatus()
+                delegate.refreshStatus()
             }
         })
     }
 
+    // TODO remove?
     override fun observeOutputData(lifecycleOwner: LifecycleOwner, observer: Observer<QRCodeOutputData>) {
-        qrCodeDelegate.outputDataFlow
+        delegate.outputDataFlow
             .filterNotNull()
             .asLiveData()
             .observe(lifecycleOwner, observer)
     }
 
     fun observeTimer(lifecycleOwner: LifecycleOwner, observer: Observer<TimerData>) {
-        qrCodeDelegate.timerFlow
+        delegate.timerFlow
             .asLiveData()
             .observe(lifecycleOwner, observer)
     }
@@ -107,7 +114,7 @@ class QRCodeComponent(
     override fun onCleared() {
         super.onCleared()
         Logger.d(TAG, "onCleared")
-        qrCodeDelegate.onCleared()
+        delegate.onCleared()
     }
 
     companion object {

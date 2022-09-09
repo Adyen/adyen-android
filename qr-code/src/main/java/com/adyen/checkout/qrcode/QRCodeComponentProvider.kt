@@ -48,7 +48,7 @@ class QRCodeComponentProvider : ActionComponentProvider<QRCodeComponent, QRCodeC
                 savedStateHandle = savedStateHandle,
                 application = application,
                 configuration = configuration,
-                qrCodeDelegate = qrCodeDelegate,
+                delegate = qrCodeDelegate,
             )
         }
         return ViewModelProvider(viewModelStoreOwner, qrCodeFactory).get(QRCodeComponent::class.java)
@@ -66,6 +66,7 @@ class QRCodeComponentProvider : ActionComponentProvider<QRCodeComponent, QRCodeC
         val paymentDataRepository = PaymentDataRepository(savedStateHandle)
 
         return DefaultQRCodeDelegate(
+            configuration,
             statusRepository,
             countDownTimer,
             redirectHandler,
