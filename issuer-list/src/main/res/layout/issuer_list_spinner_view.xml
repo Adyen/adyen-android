@@ -10,23 +10,8 @@
     xmlns:tools="http://schemas.android.com/tools"
     tools:parentTag="android.widget.LinearLayout">
 
-    <com.google.android.material.textfield.TextInputLayout
-        android:id="@+id/textInputLayout_issuers"
-        style="@style/AdyenCheckout.DropdownTextInputLayout.Issuer"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content">
-
-        <androidx.appcompat.widget.AppCompatAutoCompleteTextView
-            android:id="@+id/autoCompleteTextView_issuers"
-            style="@style/AdyenCheckout.DropdownTextInputEditText"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:dropDownAnchor="@id/textInputLayout_issuers" />
-    </com.google.android.material.textfield.TextInputLayout>
-
-    <TextView
-        android:id="@+id/textview_termsAndConditions"
-        style="@style/AdyenCheckout.Issuer.TermsAndConditions"
+    <androidx.appcompat.widget.AppCompatSpinner
+        android:id="@+id/spinner_issuers"
         android:layout_width="match_parent"
         android:layout_height="wrap_content" />
 
