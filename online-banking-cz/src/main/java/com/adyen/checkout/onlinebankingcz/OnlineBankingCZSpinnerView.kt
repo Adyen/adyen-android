@@ -9,7 +9,6 @@
 package com.adyen.checkout.onlinebankingcz
 
 import android.content.Context
-import android.graphics.Color
 import android.net.Uri
 import android.text.method.LinkMovementMethod
 import android.util.AttributeSet
@@ -31,12 +30,13 @@ class OnlineBankingCZSpinnerView @JvmOverloads constructor(
     context: Context,
     attrs: AttributeSet? = null,
     defStyleAttr: Int = 0
-) : AdyenLinearLayout<
-    OnlineBankingOutputData,
-    OnlineBankingConfiguration,
-    PaymentComponentState<OnlineBankingCZPaymentMethod>,
-    OnlineBankingCZComponent
-    >(context, attrs, defStyleAttr),
+) :
+    AdyenLinearLayout<
+        OnlineBankingOutputData,
+        OnlineBankingConfiguration,
+        PaymentComponentState<OnlineBankingCZPaymentMethod>,
+        OnlineBankingCZComponent
+        >(context, attrs, defStyleAttr),
     AdapterView.OnItemSelectedListener {
 
     private val binding: OnlineBankingCzSpinnerLayoutBinding =
@@ -63,8 +63,10 @@ class OnlineBankingCZSpinnerView @JvmOverloads constructor(
                 component.notifyInputDataChanged()
             }
         }
-        setupTermsAndConditionsHyperLink()
-        binding.textviewTermsAndConditions.setOnClickListener { launchDownloadIntent() }
+        binding.textviewTermsAndConditions.apply {
+            movementMethod = LinkMovementMethod.getInstance()
+            setOnClickListener { launchDownloadIntent() }
+        }
     }
 
     override val isConfirmationRequired: Boolean
@@ -94,11 +96,6 @@ class OnlineBankingCZSpinnerView @JvmOverloads constructor(
         super.setEnabled(enabled)
         binding.autoCompleteTextViewIssuers.isEnabled = enabled
         binding.textInputLayoutIssuers.isEnabled = enabled
-    }
-
-    private fun setupTermsAndConditionsHyperLink() {
-        binding.textviewTermsAndConditions.movementMethod = LinkMovementMethod.getInstance()
-        binding.textviewTermsAndConditions.setLinkTextColor(Color.BLUE)
     }
 
     private fun launchDownloadIntent() {
