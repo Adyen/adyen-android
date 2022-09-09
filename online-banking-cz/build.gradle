@@ -29,6 +29,10 @@ android {
         testInstrumentationRunner 'androidx.test.runner.AndroidJUnitRunner'
         consumerProguardFiles "consumer-rules.pro"
     }
+
+    buildFeatures {
+        viewBinding true
+    }
 }
 
 dependencies {
@@ -39,6 +43,7 @@ dependencies {
     implementation libraries.androidx.appcompat
     implementation libraries.androidx.recyclerview
     implementation libraries.androidx.browser
+    implementation libraries.material
 
     //Tests
     testImplementation testLibraries.junit5
