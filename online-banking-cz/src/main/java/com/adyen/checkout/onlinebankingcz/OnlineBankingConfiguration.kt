@@ -15,7 +15,7 @@ import com.adyen.checkout.core.api.Environment
 import com.adyen.checkout.issuerlist.IssuerListConfiguration
 import java.util.Locale
 
-class OnlineBankingCZConfiguration : IssuerListConfiguration {
+class OnlineBankingConfiguration : IssuerListConfiguration {
 
     private constructor(
         shopperLocale: Locale,
@@ -25,7 +25,7 @@ class OnlineBankingCZConfiguration : IssuerListConfiguration {
 
     private constructor(parcel: Parcel) : super(parcel)
 
-    class Builder : IssuerListBuilder<OnlineBankingCZConfiguration> {
+    class Builder : IssuerListBuilder<OnlineBankingConfiguration> {
         /**
          * Constructor for Builder with default values.
          *
@@ -52,7 +52,7 @@ class OnlineBankingCZConfiguration : IssuerListConfiguration {
          *
          * @param configuration A configuration to initialize the builder.
          */
-        constructor(configuration: OnlineBankingCZConfiguration) : super(configuration)
+        constructor(configuration: OnlineBankingConfiguration) : super(configuration)
 
         override fun setShopperLocale(builderShopperLocale: Locale): Builder {
             return super.setShopperLocale(builderShopperLocale) as Builder
@@ -62,8 +62,8 @@ class OnlineBankingCZConfiguration : IssuerListConfiguration {
             return super.setEnvironment(builderEnvironment) as Builder
         }
 
-        override fun buildInternal(): OnlineBankingCZConfiguration {
-            return OnlineBankingCZConfiguration(
+        override fun buildInternal(): OnlineBankingConfiguration {
+            return OnlineBankingConfiguration(
                 shopperLocale = builderShopperLocale,
                 environment = builderEnvironment,
                 clientKey = builderClientKey,
@@ -71,12 +71,12 @@ class OnlineBankingCZConfiguration : IssuerListConfiguration {
         }
     }
 
-    companion object CREATOR : Parcelable.Creator<OnlineBankingCZConfiguration> {
-        override fun createFromParcel(parcel: Parcel): OnlineBankingCZConfiguration {
-            return OnlineBankingCZConfiguration(parcel)
+    companion object CREATOR : Parcelable.Creator<OnlineBankingConfiguration> {
+        override fun createFromParcel(parcel: Parcel): OnlineBankingConfiguration {
+            return OnlineBankingConfiguration(parcel)
         }
 
-        override fun newArray(size: Int): Array<OnlineBankingCZConfiguration?> {
+        override fun newArray(size: Int): Array<OnlineBankingConfiguration?> {
             return arrayOfNulls(size)
         }
     }

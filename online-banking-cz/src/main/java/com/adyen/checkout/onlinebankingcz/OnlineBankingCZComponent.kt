@@ -3,35 +3,61 @@
  *
  * This file is open source and available under the MIT license. See the LICENSE file for more info.
  *
- * Created by atef on 23/8/2022.
+ * Created by atef on 8/9/2022.
  */
 
 package com.adyen.checkout.onlinebankingcz
 
 import androidx.lifecycle.SavedStateHandle
+import androidx.lifecycle.viewModelScope
 import com.adyen.checkout.components.PaymentComponentProvider
+import com.adyen.checkout.components.PaymentComponentState
+import com.adyen.checkout.components.base.BasePaymentComponent
 import com.adyen.checkout.components.model.payments.request.OnlineBankingCZPaymentMethod
 import com.adyen.checkout.components.util.PaymentMethodTypes
-import com.adyen.checkout.issuerlist.IssuerListComponent
-import com.adyen.checkout.issuerlist.IssuerListDelegate
+import kotlinx.coroutines.flow.filterNotNull
+import kotlinx.coroutines.flow.launchIn
+import kotlinx.coroutines.flow.onEach
 
 class OnlineBankingCZComponent(
     savedStateHandle: SavedStateHandle,
-    private val issuerListDelegate: IssuerListDelegate<OnlineBankingCZPaymentMethod>,
-    configuration: OnlineBankingCZConfiguration
-) : IssuerListComponent<OnlineBankingCZPaymentMethod>(
-    savedStateHandle,
-    issuerListDelegate,
-    configuration
-) {
+    private val delegate: DefaultOnlineBankingCZDelegate,
+    configuration: OnlineBankingConfiguration
+) : BasePaymentComponent<
+    OnlineBankingConfiguration,
+    OnlineBankingInputData,
+    OnlineBankingOutputData,
+    PaymentComponentState<OnlineBankingCZPaymentMethod>
+    >(savedStateHandle, delegate, configuration) {
 
-    fun getTermsAndConditionsUrl(): String = (issuerListDelegate as OnlineBankingCZDelegate).getTermsAndConditionsUrl()
+    override val inputData: OnlineBankingInputData = OnlineBankingInputData()
+
+    val issuers: List<OnlineBankingModel>
+        get() = delegate.getIssuers()
+
+    init {
+        delegate.outputDataFlow
+            .filterNotNull()
+            .onEach { notifyOutputDataChanged(it) }
+            .launchIn(viewModelScope)
+
+        delegate.componentStateFlow
+            .filterNotNull()
+            .onEach { notifyStateChanged(it) }
+            .launchIn(viewModelScope)
+    }
+
+    override fun onInputDataChanged(inputData: OnlineBankingInputData) {
+        delegate.onInputDataChanged(inputData)
+    }
+
+    fun getTermsAndConditionsUrl(): String = delegate.getTermsAndConditionsUrl()
 
     override fun getSupportedPaymentMethodTypes(): Array<String> = PAYMENT_METHOD_TYPES
 
     companion object {
         @JvmField
-        val PROVIDER: PaymentComponentProvider<OnlineBankingCZComponent, OnlineBankingCZConfiguration> =
+        val PROVIDER: PaymentComponentProvider<OnlineBankingCZComponent, OnlineBankingConfiguration> =
             OnlineBankingCZComponentProvider()
         val PAYMENT_METHOD_TYPES = arrayOf(PaymentMethodTypes.ONLINE_BANKING_CZ)
     }
