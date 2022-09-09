@@ -3,30 +3,102 @@
  *
  * This file is open source and available under the MIT license. See the LICENSE file for more info.
  *
- * Created by atef on 23/8/2022.
+ * Created by atef on 8/9/2022.
  */
 
 package com.adyen.checkout.onlinebankingcz
 
 import android.content.Context
+import android.graphics.Color
 import android.net.Uri
+import android.text.method.LinkMovementMethod
 import android.util.AttributeSet
+import android.view.LayoutInflater
 import android.view.View
+import android.widget.AdapterView
 import androidx.browser.customtabs.CustomTabsIntent
+import androidx.lifecycle.LifecycleOwner
+import com.adyen.checkout.components.PaymentComponentState
 import com.adyen.checkout.components.model.payments.request.OnlineBankingCZPaymentMethod
+import com.adyen.checkout.components.ui.adapter.SimpleTextListAdapter
 import com.adyen.checkout.components.ui.util.ThemeUtil
-import com.adyen.checkout.issuerlist.IssuerListSpinnerView
+import com.adyen.checkout.components.ui.view.AdyenLinearLayout
+import com.adyen.checkout.core.log.LogUtil
+import com.adyen.checkout.core.log.Logger
+import com.adyen.checkout.onlinebankingcz.databinding.OnlineBankingCzSpinnerLayoutBinding
 
 class OnlineBankingCZSpinnerView @JvmOverloads constructor(
     context: Context,
     attrs: AttributeSet? = null,
     defStyleAttr: Int = 0
-) : IssuerListSpinnerView<OnlineBankingCZPaymentMethod, OnlineBankingCZComponent>(context, attrs, defStyleAttr) {
+) : AdyenLinearLayout<
+    OnlineBankingOutputData,
+    OnlineBankingConfiguration,
+    PaymentComponentState<OnlineBankingCZPaymentMethod>,
+    OnlineBankingCZComponent
+    >(context, attrs, defStyleAttr),
+    AdapterView.OnItemSelectedListener {
+
+    private val binding: OnlineBankingCzSpinnerLayoutBinding =
+        OnlineBankingCzSpinnerLayoutBinding.inflate(LayoutInflater.from(context), this)
+
+    private val issuersAdapter: SimpleTextListAdapter<OnlineBankingModel> = SimpleTextListAdapter(context)
+
+    init {
+        orientation = VERTICAL
+        layoutParams = LayoutParams(LayoutParams.MATCH_PARENT, LayoutParams.WRAP_CONTENT)
+    }
 
     override fun onComponentAttached() {
-        super.onComponentAttached()
-        termsAndConditionsTextView?.visibility = View.VISIBLE
-        termsAndConditionsTextView?.setOnClickListener { launchDownloadIntent() }
+        issuersAdapter.setItems(component.issuers)
+    }
+
+    override fun initView() {
+        binding.autoCompleteTextViewIssuers.apply {
+            inputType = 0
+            setAdapter(issuersAdapter)
+            onItemClickListener = AdapterView.OnItemClickListener { _, _, position, _ ->
+                Logger.d(TAG, "onItemSelected - " + issuersAdapter.getItem(position).name)
+                component.inputData.selectedIssuer = issuersAdapter.getItem(position)
+                component.notifyInputDataChanged()
+            }
+        }
+        setupTermsAndConditionsHyperLink()
+        binding.textviewTermsAndConditions.setOnClickListener { launchDownloadIntent() }
+    }
+
+    override val isConfirmationRequired: Boolean
+        get() = true
+
+    override fun highlightValidationErrors() {
+        // no implementation
+    }
+
+    override fun initLocalizedStrings(localizedContext: Context) {
+        // no embedded localized strings on this view
+    }
+
+    override fun observeComponentChanges(lifecycleOwner: LifecycleOwner) = Unit
+
+    override fun onItemSelected(parent: AdapterView<*>, view: View, position: Int, id: Long) {
+        Logger.d(TAG, "onItemSelected - " + issuersAdapter.getItem(position).name)
+        component.inputData.selectedIssuer = issuersAdapter.getItem(position)
+        component.notifyInputDataChanged()
+    }
+
+    override fun onNothingSelected(p0: AdapterView<*>?) {
+        // nothing changed
+    }
+
+    override fun setEnabled(enabled: Boolean) {
+        super.setEnabled(enabled)
+        binding.autoCompleteTextViewIssuers.isEnabled = enabled
+        binding.textInputLayoutIssuers.isEnabled = enabled
+    }
+
+    private fun setupTermsAndConditionsHyperLink() {
+        binding.textviewTermsAndConditions.movementMethod = LinkMovementMethod.getInstance()
+        binding.textviewTermsAndConditions.setLinkTextColor(Color.BLUE)
     }
 
     private fun launchDownloadIntent() {
@@ -36,5 +108,9 @@ class OnlineBankingCZSpinnerView @JvmOverloads constructor(
             .setToolbarColor(ThemeUtil.getPrimaryThemeColor(context))
             .build()
         intent.launchUrl(context, Uri.parse(url))
+    }
+
+    companion object {
+        private val TAG = LogUtil.getTag()
     }
 }
