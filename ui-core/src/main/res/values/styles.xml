@@ -25,7 +25,7 @@
         <item name="android:textColorPrimary">?attr/colorOnBackground</item>
         <item name="android:textColorSecondary">?attr/colorOnBackground</item>
         <item name="android:textColorTertiary">?attr/colorOnBackground</item>
-
+        <item name="android:textColorLink">@color/textColorLink</item>
         <item name="bottomSheetDialogTheme">@style/AdyenCheckout.BottomSheetDialogTheme</item>
     </style>
 
