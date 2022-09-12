@@ -36,6 +36,7 @@ import kotlinx.coroutines.flow.onEach
 import org.json.JSONException
 import org.json.JSONObject
 
+@Suppress("TooManyFunctions")
 internal class DefaultAwaitDelegate(
     override val configuration: AwaitConfiguration,
     private val statusRepository: StatusRepository,
