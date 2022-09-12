@@ -16,4 +16,5 @@
     <color name="lineColor">#17000000</color>
     <color name="textColorNote">#7F4A00</color>
     <color name="backgroundColorNote">#FFEACC</color>
+    <color name="textColorLink">#0075FF</color>
 </resources>
