@@ -8,7 +8,9 @@
 
 <resources>
 
-    <dimen name="termsAndConditions_margin">16dp</dimen>
+    <dimen name="termsAndConditions_marginStart">17dp</dimen>
+    <dimen name="termsAndConditions_marginEnd">17dp</dimen>
+    <dimen name="termsAndConditions_marginBottom">16dp</dimen>
     <dimen name="termsAndConditions_text_size">12sp</dimen>
 
     <dimen name="issuersSpinner_side_margin">16dp</dimen>
