@@ -31,7 +31,6 @@
         android:id="@+id/textview_termsAndConditions"
         style="@style/AdyenCheckout.Issuer.TermsAndConditions"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        tools:text="A.Etman" />
+        android:layout_height="wrap_content" />
 
 </merge>
