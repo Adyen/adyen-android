@@ -9,11 +9,14 @@
 package com.adyen.checkout.onlinebankingcz
 
 import com.adyen.checkout.components.PaymentComponentState
+import com.adyen.checkout.components.flow.MutableSingleEventSharedFlow
 import com.adyen.checkout.components.model.paymentmethods.PaymentMethod
 import com.adyen.checkout.components.model.payments.request.OnlineBankingCZPaymentMethod
 import com.adyen.checkout.components.model.payments.request.PaymentComponentData
 import com.adyen.checkout.components.util.PaymentMethodTypes
+import com.adyen.checkout.core.exception.CheckoutException
 import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.MutableStateFlow
 
 class DefaultOnlineBankingCZDelegate(
@@ -26,6 +29,9 @@ class DefaultOnlineBankingCZDelegate(
 
     private val _componentStateFlow = MutableStateFlow<PaymentComponentState<OnlineBankingCZPaymentMethod>?>(null)
     override val componentStateFlow: Flow<PaymentComponentState<OnlineBankingCZPaymentMethod>?> = _componentStateFlow
+
+    private val _exceptionFlow: MutableSharedFlow<CheckoutException> = MutableSingleEventSharedFlow()
+    val exceptionFlow: Flow<CheckoutException> = _exceptionFlow
 
     override fun getIssuers(): List<OnlineBankingModel> {
         return paymentMethod.issuers?.let {
@@ -57,6 +63,10 @@ class DefaultOnlineBankingCZDelegate(
     }
 
     override fun getTermsAndConditionsUrl(): String = TERMS_CONDITIONS_URL
+
+    fun onExceptionHappen(e: CheckoutException) {
+        _exceptionFlow.tryEmit(e)
+    }
 
     companion object {
         private const val TERMS_CONDITIONS_URL = "https://static.payu.com/sites/terms/files/payu_privacy_policy_cs.pdf"
