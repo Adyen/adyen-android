@@ -26,7 +26,7 @@ import com.adyen.checkout.core.log.LogUtil
 import com.adyen.checkout.core.log.Logger
 import com.adyen.checkout.onlinebankingcz.databinding.OnlineBankingCzSpinnerLayoutBinding
 
-class OnlineBankingCZSpinnerView @JvmOverloads constructor(
+class OnlineBankingCZView @JvmOverloads constructor(
     context: Context,
     attrs: AttributeSet? = null,
     defStyleAttr: Int = 0

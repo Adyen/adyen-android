@@ -80,7 +80,7 @@ import com.adyen.checkout.molpay.MolpayComponent
 import com.adyen.checkout.molpay.MolpayConfiguration
 import com.adyen.checkout.molpay.MolpayRecyclerView
 import com.adyen.checkout.onlinebankingcz.OnlineBankingCZComponent
-import com.adyen.checkout.onlinebankingcz.OnlineBankingCZSpinnerView
+import com.adyen.checkout.onlinebankingcz.OnlineBankingCZView
 import com.adyen.checkout.onlinebankingcz.OnlineBankingConfiguration
 import com.adyen.checkout.onlinebankingpl.OnlineBankingPLComponent
 import com.adyen.checkout.onlinebankingpl.OnlineBankingPLConfiguration
@@ -431,7 +431,7 @@ internal fun getViewFor(
         PaymentMethodTypes.MOLPAY_THAILAND,
         PaymentMethodTypes.MOLPAY_MALAYSIA,
         PaymentMethodTypes.MOLPAY_VIETNAM -> MolpayRecyclerView(context)
-        PaymentMethodTypes.ONLINE_BANKING_CZ -> OnlineBankingCZSpinnerView(context)
+        PaymentMethodTypes.ONLINE_BANKING_CZ -> OnlineBankingCZView(context)
         PaymentMethodTypes.ONLINE_BANKING_PL -> OnlineBankingPLRecyclerView(context)
         PaymentMethodTypes.OPEN_BANKING -> OpenBankingRecyclerView(context)
         PaymentMethodTypes.SCHEME -> CardView(context)
