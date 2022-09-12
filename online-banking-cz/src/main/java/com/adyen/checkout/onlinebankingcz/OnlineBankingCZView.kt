@@ -10,7 +10,6 @@ package com.adyen.checkout.onlinebankingcz
 
 import android.content.Context
 import android.net.Uri
-import android.text.method.LinkMovementMethod
 import android.util.AttributeSet
 import android.view.LayoutInflater
 import android.view.View
@@ -63,10 +62,7 @@ class OnlineBankingCZView @JvmOverloads constructor(
                 component.notifyInputDataChanged()
             }
         }
-        binding.textviewTermsAndConditions.apply {
-            movementMethod = LinkMovementMethod.getInstance()
-            setOnClickListener { launchDownloadIntent() }
-        }
+        binding.textviewTermsAndConditions.setOnClickListener { launchDownloadIntent() }
     }
 
     override val isConfirmationRequired: Boolean
