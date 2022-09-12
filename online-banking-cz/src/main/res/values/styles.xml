@@ -13,10 +13,10 @@
 
     <style name="AdyenCheckout.Issuer.TermsAndConditions">
         <item name="android:text">@string/checkout_issuers_list_terms_and_conditions_text</item>
-        <item name="android:layout_marginStart">@dimen/termsAndConditions_margin</item>
+        <item name="android:layout_marginStart">@dimen/termsAndConditions_marginStart</item>
         <item name="android:textColorLink">@color/termsAndConditionsColor</item>
-        <item name="android:layout_marginEnd">@dimen/termsAndConditions_margin</item>
-        <item name="android:layout_marginBottom">@dimen/termsAndConditions_margin</item>
+        <item name="android:layout_marginEnd">@dimen/termsAndConditions_marginEnd</item>
+        <item name="android:layout_marginBottom">@dimen/termsAndConditions_marginBottom</item>
         <item name="android:textSize">@dimen/termsAndConditions_text_size</item>
     </style>
 
