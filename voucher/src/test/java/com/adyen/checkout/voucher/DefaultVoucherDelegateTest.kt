@@ -11,11 +11,13 @@ package com.adyen.checkout.voucher
 import android.app.Activity
 import app.cash.turbine.test
 import com.adyen.checkout.components.model.payments.response.VoucherAction
+import com.adyen.checkout.core.api.Environment
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.test.runTest
 import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
+import java.util.Locale
 
 @OptIn(ExperimentalCoroutinesApi::class)
 internal class DefaultVoucherDelegateTest {
@@ -24,7 +26,9 @@ internal class DefaultVoucherDelegateTest {
 
     @BeforeEach
     fun beforeEach() {
-        delegate = DefaultVoucherDelegate()
+        delegate = DefaultVoucherDelegate(
+            VoucherConfiguration.Builder(Locale.getDefault(), Environment.TEST, "clientKey").build()
+        )
     }
 
     @Test

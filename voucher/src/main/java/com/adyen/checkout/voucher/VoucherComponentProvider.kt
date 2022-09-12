@@ -56,7 +56,7 @@ class VoucherComponentProvider : ActionComponentProvider<VoucherComponent, Vouch
         savedStateHandle: SavedStateHandle,
         application: Application,
     ): VoucherDelegate {
-        return DefaultVoucherDelegate()
+        return DefaultVoucherDelegate(configuration)
     }
 
     override val supportedActionTypes: List<String>

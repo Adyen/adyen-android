@@ -11,5 +11,8 @@ package com.adyen.checkout.voucher
 import com.adyen.checkout.components.base.ActionDelegate
 import com.adyen.checkout.components.base.ViewableDelegate
 import com.adyen.checkout.components.model.payments.response.VoucherAction
+import com.adyen.checkout.components.ui.ViewProvidingDelegate
 
-interface VoucherDelegate : ActionDelegate<VoucherAction>, ViewableDelegate<VoucherOutputData>
+interface VoucherDelegate : ActionDelegate<VoucherAction>, ViewableDelegate<VoucherOutputData>, ViewProvidingDelegate {
+    val configuration: VoucherConfiguration
+}
