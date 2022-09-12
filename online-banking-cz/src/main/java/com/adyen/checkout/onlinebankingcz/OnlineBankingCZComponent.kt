@@ -15,6 +15,7 @@ import com.adyen.checkout.components.PaymentComponentState
 import com.adyen.checkout.components.base.BasePaymentComponent
 import com.adyen.checkout.components.model.payments.request.OnlineBankingCZPaymentMethod
 import com.adyen.checkout.components.util.PaymentMethodTypes
+import com.adyen.checkout.core.exception.CheckoutException
 import kotlinx.coroutines.flow.filterNotNull
 import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.onEach
@@ -45,10 +46,19 @@ class OnlineBankingCZComponent(
             .filterNotNull()
             .onEach { notifyStateChanged(it) }
             .launchIn(viewModelScope)
+
+        delegate.exceptionFlow
+            .filterNotNull()
+            .onEach { notifyException(it) }
+            .launchIn(viewModelScope)
     }
 
     override fun onInputDataChanged(inputData: OnlineBankingInputData) {
         delegate.onInputDataChanged(inputData)
+    }
+
+    fun onExceptionHappen(e: CheckoutException) {
+        delegate.onExceptionHappen(e)
     }
 
     fun getTermsAndConditionsUrl(): String = delegate.getTermsAndConditionsUrl()
