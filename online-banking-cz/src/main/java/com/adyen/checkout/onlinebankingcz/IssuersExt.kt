@@ -11,8 +11,8 @@ package com.adyen.checkout.onlinebankingcz
 import com.adyen.checkout.components.model.paymentmethods.InputDetail
 import com.adyen.checkout.components.model.paymentmethods.Issuer
 
-fun getIssuers(issuerList: List<Issuer>): List<OnlineBankingModel> =
-    issuerList.mapNotNull { issuer ->
+internal fun List<Issuer>.mapToModel(): List<OnlineBankingModel> =
+    this.mapNotNull { issuer ->
         val (id, name, isDisabled) = issuer
         if (!isDisabled && id != null && name != null) {
             OnlineBankingModel(id, name)
@@ -21,7 +21,7 @@ fun getIssuers(issuerList: List<Issuer>): List<OnlineBankingModel> =
         }
     }
 
-fun getLegacyIssuers(details: List<InputDetail>?): List<OnlineBankingModel> =
+internal fun getLegacyIssuers(details: List<InputDetail>?): List<OnlineBankingModel> =
     details.orEmpty()
         .flatMap { it.items.orEmpty() }
         .mapNotNull { item ->
