@@ -273,7 +273,7 @@ class DropInConfiguration : Configuration, Parcelable {
         }
 
         /**
-         * Add configuration for Online Banking Czech payment method.
+         * Add configuration for Online Banking Czech republic payment method.
          */
         fun addOnlineBankingCZConfiguration(onlineBankingCZConfiguration: OnlineBankingConfiguration): Builder {
             availablePaymentConfigs[PaymentMethodTypes.ONLINE_BANKING_CZ] = onlineBankingCZConfiguration
