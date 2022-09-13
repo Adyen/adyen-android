@@ -8,6 +8,7 @@
 
 package com.adyen.checkout.onlinebankingcz
 
+import android.content.Context
 import com.adyen.checkout.components.PaymentComponentState
 import com.adyen.checkout.components.base.PaymentMethodDelegate
 import com.adyen.checkout.components.model.payments.request.IssuerListPaymentMethod
@@ -24,5 +25,5 @@ interface OnlineBankingDelegate<IssuerListPaymentMethodT : IssuerListPaymentMeth
     val componentStateFlow: Flow<PaymentComponentState<IssuerListPaymentMethodT>?>
 
     fun getIssuers(): List<OnlineBankingModel>
-    fun getTermsAndConditionsUrl(): String
+    fun launchOpenPdf(context: Context)
 }
