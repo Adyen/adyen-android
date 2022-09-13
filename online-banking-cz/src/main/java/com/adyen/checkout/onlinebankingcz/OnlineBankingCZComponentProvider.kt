@@ -16,15 +16,16 @@ import com.adyen.checkout.components.PaymentComponentProvider
 import com.adyen.checkout.components.base.lifecycle.viewModelFactory
 import com.adyen.checkout.components.model.paymentmethods.PaymentMethod
 import com.adyen.checkout.components.model.payments.request.OnlineBankingCZPaymentMethod
+import com.adyen.checkout.onlinebankingcore.OnlineBankingConfiguration
 
 class OnlineBankingCZComponentProvider :
-    PaymentComponentProvider<OnlineBankingCZComponent, com.adyen.checkout.onlinebankingcore.OnlineBankingConfiguration> {
+    PaymentComponentProvider<OnlineBankingCZComponent, OnlineBankingConfiguration> {
 
     override fun get(
         savedStateRegistryOwner: SavedStateRegistryOwner,
         viewModelStoreOwner: ViewModelStoreOwner,
         paymentMethod: PaymentMethod,
-        configuration: com.adyen.checkout.onlinebankingcore.OnlineBankingConfiguration,
+        configuration: OnlineBankingConfiguration,
         defaultArgs: Bundle?
     ): OnlineBankingCZComponent {
         val genericFactory: ViewModelProvider.Factory =

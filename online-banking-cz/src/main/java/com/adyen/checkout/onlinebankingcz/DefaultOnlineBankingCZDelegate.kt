@@ -43,7 +43,7 @@ class DefaultOnlineBankingCZDelegate(
     override val componentStateFlow: Flow<PaymentComponentState<OnlineBankingCZPaymentMethod>?> = _componentStateFlow
 
     private val _exceptionFlow: MutableSharedFlow<CheckoutException> = MutableSingleEventSharedFlow()
-    val exceptionFlow: Flow<CheckoutException> = _exceptionFlow
+    override val exceptionFlow: Flow<CheckoutException> = _exceptionFlow
 
     override fun getIssuers(): List<OnlineBankingModel> {
         return paymentMethod.issuers?.let {
@@ -74,7 +74,7 @@ class DefaultOnlineBankingCZDelegate(
         _componentStateFlow.tryEmit(state)
     }
 
-    fun onExceptionHappen(e: CheckoutException) {
+    override fun onExceptionHappen(e: CheckoutException) {
         _exceptionFlow.tryEmit(e)
     }
 

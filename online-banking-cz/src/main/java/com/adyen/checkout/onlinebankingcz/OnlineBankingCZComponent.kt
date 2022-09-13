@@ -8,67 +8,19 @@
 
 package com.adyen.checkout.onlinebankingcz
 
-import android.content.Context
 import androidx.lifecycle.SavedStateHandle
-import androidx.lifecycle.viewModelScope
 import com.adyen.checkout.components.PaymentComponentProvider
-import com.adyen.checkout.components.PaymentComponentState
-import com.adyen.checkout.components.base.BasePaymentComponent
 import com.adyen.checkout.components.model.payments.request.OnlineBankingCZPaymentMethod
 import com.adyen.checkout.components.util.PaymentMethodTypes
-import com.adyen.checkout.core.exception.CheckoutException
+import com.adyen.checkout.onlinebankingcore.OnlineBankingComponent
 import com.adyen.checkout.onlinebankingcore.OnlineBankingConfiguration
-import com.adyen.checkout.onlinebankingcore.OnlineBankingInputData
-import com.adyen.checkout.onlinebankingcore.OnlineBankingModel
-import com.adyen.checkout.onlinebankingcore.OnlineBankingOutputData
-import kotlinx.coroutines.flow.filterNotNull
-import kotlinx.coroutines.flow.launchIn
-import kotlinx.coroutines.flow.onEach
+import com.adyen.checkout.onlinebankingcore.OnlineBankingDelegate
 
 class OnlineBankingCZComponent(
     savedStateHandle: SavedStateHandle,
-    private val delegate: DefaultOnlineBankingCZDelegate,
+    delegate: OnlineBankingDelegate<OnlineBankingCZPaymentMethod>,
     configuration: OnlineBankingConfiguration
-) : BasePaymentComponent<
-    OnlineBankingConfiguration,
-    OnlineBankingInputData,
-    OnlineBankingOutputData,
-    PaymentComponentState<OnlineBankingCZPaymentMethod>
-    >(savedStateHandle, delegate, configuration) {
-
-    override val inputData: OnlineBankingInputData = OnlineBankingInputData()
-
-    val issuers: List<OnlineBankingModel>
-        get() = delegate.getIssuers()
-
-    init {
-        delegate.outputDataFlow
-            .filterNotNull()
-            .onEach { notifyOutputDataChanged(it) }
-            .launchIn(viewModelScope)
-
-        delegate.componentStateFlow
-            .filterNotNull()
-            .onEach { notifyStateChanged(it) }
-            .launchIn(viewModelScope)
-
-        delegate.exceptionFlow
-            .filterNotNull()
-            .onEach { notifyException(it) }
-            .launchIn(viewModelScope)
-    }
-
-    override fun onInputDataChanged(inputData: OnlineBankingInputData) {
-        delegate.onInputDataChanged(inputData)
-    }
-
-    fun openTermsAndConditionsPdf(context: Context) {
-        try {
-            delegate.launchOpenPdf(context)
-        } catch (e: CheckoutException) {
-            delegate.onExceptionHappen(e)
-        }
-    }
+) : OnlineBankingComponent<OnlineBankingCZPaymentMethod>(savedStateHandle, delegate, configuration) {
 
     override fun getSupportedPaymentMethodTypes(): Array<String> = PAYMENT_METHOD_TYPES
 
