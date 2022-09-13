@@ -39,9 +39,7 @@ class DefaultOnlineBankingCZDelegate(
     val exceptionFlow: Flow<CheckoutException> = _exceptionFlow
 
     override fun getIssuers(): List<OnlineBankingModel> {
-        return paymentMethod.issuers?.let {
-            getIssuers(it)
-        } ?: getLegacyIssuers(paymentMethod.details)
+        return paymentMethod.issuers?.mapToModel() ?: getLegacyIssuers(paymentMethod.details)
     }
 
     override fun getPaymentMethodType(): String {
