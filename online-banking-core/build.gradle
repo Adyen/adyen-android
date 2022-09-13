@@ -3,7 +3,7 @@
  *
  * This file is open source and available under the MIT license. See the LICENSE file for more info.
  *
- * Created by atef on 23/8/2022.
+ * Created by atef on 13/9/2022.
  */
 
 plugins {
@@ -11,9 +11,9 @@ plugins {
     id 'kotlin-android'
 }
 
-ext.mavenArtifactId = "online-banking-cz"
-ext.mavenArtifactName = "Adyen checkout Online Banking Czech"
-ext.mavenArtifactDescription = "Adyen checkout Online Banking Czech component client for Adyen's Checkout API."
+ext.mavenArtifactId = "online-banking-core"
+ext.mavenArtifactName = "Adyen checkout Online Banking Core"
+ext.mavenArtifactDescription = "Adyen checkout Online Banking Core component client for Adyen's Checkout API."
 
 apply from: "${rootDir}/config/gradle/sharedTasks.gradle"
 
@@ -37,7 +37,7 @@ android {
 
 dependencies {
     // Checkout
-    api project(':online-banking-core')
+    api project(':issuer-list')
 
     // Dependencies
     implementation libraries.androidx.appcompat

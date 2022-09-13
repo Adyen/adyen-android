@@ -6,7 +6,7 @@
  * Created by atef on 9/9/2022.
  */
 
-package com.adyen.checkout.onlinebankingcz
+package com.adyen.checkout.onlinebankingcore
 
 import com.adyen.checkout.components.ui.adapter.SimpleTextListItem
 
