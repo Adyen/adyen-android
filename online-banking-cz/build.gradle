@@ -34,11 +34,4 @@ android {
 dependencies {
     // Checkout
     api project(':online-banking-core')
-
-    // Dependencies
-    implementation libraries.androidx.appcompat
-
-    //Tests
-    testImplementation testLibraries.junit5
-
 }
