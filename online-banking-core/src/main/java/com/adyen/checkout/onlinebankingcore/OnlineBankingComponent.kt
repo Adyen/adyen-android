@@ -64,5 +64,4 @@ abstract class OnlineBankingComponent<IssuerListPaymentMethodT : IssuerListPayme
             delegate.onExceptionHappen(e)
         }
     }
-
 }
