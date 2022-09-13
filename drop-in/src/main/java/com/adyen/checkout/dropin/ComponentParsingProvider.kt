@@ -79,6 +79,7 @@ import com.adyen.checkout.mbway.MBWayView
 import com.adyen.checkout.molpay.MolpayComponent
 import com.adyen.checkout.molpay.MolpayConfiguration
 import com.adyen.checkout.molpay.MolpayRecyclerView
+import com.adyen.checkout.onlinebankingcore.OnlineBankingConfiguration
 import com.adyen.checkout.onlinebankingcz.OnlineBankingCZComponent
 import com.adyen.checkout.onlinebankingcz.OnlineBankingCZView
 import com.adyen.checkout.onlinebankingpl.OnlineBankingPLComponent
@@ -532,7 +533,7 @@ private fun Configuration.toBuilder(): BaseConfigurationBuilder<out Configuratio
         is IdealConfiguration -> IdealConfiguration.Builder(this)
         is MBWayConfiguration -> MBWayConfiguration.Builder(this)
         is MolpayConfiguration -> MolpayConfiguration.Builder(this)
-        is com.adyen.checkout.onlinebankingcore.OnlineBankingConfiguration -> com.adyen.checkout.onlinebankingcore.OnlineBankingConfiguration.Builder(this)
+        is OnlineBankingConfiguration -> OnlineBankingConfiguration.Builder(this)
         is OnlineBankingPLConfiguration -> OnlineBankingPLConfiguration.Builder(this)
         is OpenBankingConfiguration -> OpenBankingConfiguration.Builder(this)
         is QRCodeConfiguration -> QRCodeConfiguration.Builder(this)
