@@ -11,8 +11,8 @@ package com.adyen.checkout.issuerlist
 import com.adyen.checkout.components.model.paymentmethods.InputDetail
 import com.adyen.checkout.components.model.paymentmethods.Issuer
 
-fun getIssuers(issuerList: List<Issuer>): List<IssuerModel> =
-    issuerList.mapNotNull { issuer ->
+internal fun List<Issuer>.mapToModel(): List<IssuerModel> =
+    this.mapNotNull { issuer ->
         val (id, name, isDisabled) = issuer
         if (!isDisabled && id != null && name != null) {
             IssuerModel(id, name)
@@ -21,7 +21,7 @@ fun getIssuers(issuerList: List<Issuer>): List<IssuerModel> =
         }
     }
 
-fun getLegacyIssuers(details: List<InputDetail>?): List<IssuerModel> =
+internal fun getLegacyIssuers(details: List<InputDetail>?): List<IssuerModel> =
     details.orEmpty()
         .flatMap { it.items.orEmpty() }
         .mapNotNull { item ->
