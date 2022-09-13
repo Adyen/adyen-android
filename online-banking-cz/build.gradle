@@ -12,8 +12,8 @@ plugins {
 }
 
 ext.mavenArtifactId = "online-banking-cz"
-ext.mavenArtifactName = "Adyen checkout Online Banking Czech"
-ext.mavenArtifactDescription = "Adyen checkout Online Banking Czech component client for Adyen's Checkout API."
+ext.mavenArtifactName = "Adyen checkout Online Banking Czech republic"
+ext.mavenArtifactDescription = "Adyen checkout Online Banking Czech republic component client for Adyen's Checkout API."
 
 apply from: "${rootDir}/config/gradle/sharedTasks.gradle"
 
