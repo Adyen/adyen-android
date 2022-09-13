@@ -8,6 +8,7 @@
 
 package com.adyen.checkout.onlinebankingcz
 
+import android.content.Context
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.viewModelScope
 import com.adyen.checkout.components.PaymentComponentProvider
@@ -57,11 +58,13 @@ class OnlineBankingCZComponent(
         delegate.onInputDataChanged(inputData)
     }
 
-    fun onExceptionHappen(e: CheckoutException) {
-        delegate.onExceptionHappen(e)
+    fun openTermsAndConditionsPdf(context: Context) {
+        try {
+            delegate.launchOpenPdf(context)
+        } catch (e: CheckoutException) {
+            delegate.onExceptionHappen(e)
+        }
     }
-
-    fun getTermsAndConditionsUrl(): String = delegate.getTermsAndConditionsUrl()
 
     override fun getSupportedPaymentMethodTypes(): Array<String> = PAYMENT_METHOD_TYPES
 
