@@ -13,7 +13,11 @@ import com.adyen.checkout.components.model.paymentmethods.PaymentMethod
 import com.adyen.checkout.components.model.payments.request.OnlineBankingCZPaymentMethod
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.test.runTest
-import org.junit.Assert
+import org.junit.Assert.assertEquals
+import org.junit.Assert.assertFalse
+import org.junit.Assert.assertNull
+import org.junit.Assert.assertTrue
+import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.DisplayName
 import org.junit.jupiter.api.Nested
 import org.junit.jupiter.api.Test
@@ -24,10 +28,15 @@ import org.mockito.junit.jupiter.MockitoExtension
 @ExtendWith(MockitoExtension::class)
 internal class DefaultOnlineBankingCZDelegateTest {
 
-    private val delegate = DefaultOnlineBankingCZDelegate(
-        paymentMethod = PaymentMethod(),
-        paymentMethodFactory = { OnlineBankingCZPaymentMethod() }
-    )
+    private lateinit var delegate: OnlineBankingDelegate<OnlineBankingCZPaymentMethod>
+
+    @BeforeEach
+    fun setUup() {
+        delegate = DefaultOnlineBankingCZDelegate(
+            paymentMethod = PaymentMethod(),
+            paymentMethodFactory = { OnlineBankingCZPaymentMethod() }
+        )
+    }
 
     @Nested
     @DisplayName("when input data changes and")
@@ -36,9 +45,12 @@ internal class DefaultOnlineBankingCZDelegateTest {
         @Test
         fun `selectedIssuer is null, then output should be null`() = runTest {
             delegate.outputDataFlow.test {
-                delegate.onInputDataChanged(OnlineBankingInputData(null))
+                val inputData = OnlineBankingInputData(null)
+
+                delegate.onInputDataChanged(inputData)
+
                 with(requireNotNull(expectMostRecentItem())) {
-                    Assert.assertNull(selectedIssuer)
+                    assertNull(selectedIssuer)
                 }
             }
         }
@@ -46,10 +58,13 @@ internal class DefaultOnlineBankingCZDelegateTest {
         @Test
         fun `selectedIssuer is null, then output should be invalid`() = runTest {
             delegate.outputDataFlow.test {
-                delegate.onInputDataChanged(OnlineBankingInputData(null))
+                val inputData = OnlineBankingInputData(null)
+
+                delegate.onInputDataChanged(inputData)
+
                 with(requireNotNull(expectMostRecentItem())) {
-                    Assert.assertNull(selectedIssuer)
-                    Assert.assertFalse(isValid)
+                    assertNull(selectedIssuer)
+                    assertFalse(isValid)
                 }
             }
         }
@@ -57,11 +72,15 @@ internal class DefaultOnlineBankingCZDelegateTest {
         @Test
         fun `selectedIssuer is valid, then output should be valid`() = runTest {
             delegate.outputDataFlow.test {
-                delegate.onInputDataChanged(OnlineBankingInputData(OnlineBankingModel(id = "id", name = "test")))
+                val model = OnlineBankingModel(id = "id", name = "test")
+                val input = OnlineBankingInputData(model)
+
+                delegate.onInputDataChanged(input)
+
                 with(requireNotNull(expectMostRecentItem())) {
-                    Assert.assertEquals("test", selectedIssuer?.name)
-                    Assert.assertEquals("id", selectedIssuer?.id)
-                    Assert.assertTrue(isValid)
+                    assertEquals("test", selectedIssuer?.name)
+                    assertEquals("id", selectedIssuer?.id)
+                    assertTrue(isValid)
                 }
             }
         }
@@ -69,10 +88,13 @@ internal class DefaultOnlineBankingCZDelegateTest {
         @Test
         fun `selectedIssuer is null, then component state should be invalid`() = runTest {
             delegate.componentStateFlow.test {
-                delegate.onInputDataChanged(OnlineBankingInputData())
+                val input = OnlineBankingInputData()
+
+                delegate.onInputDataChanged(input)
+
                 with(requireNotNull(expectMostRecentItem())) {
-                    Assert.assertEquals("", data.paymentMethod?.issuer)
-                    Assert.assertFalse(isValid)
+                    assertEquals("", data.paymentMethod?.issuer)
+                    assertFalse(isValid)
                 }
             }
         }
@@ -80,12 +102,14 @@ internal class DefaultOnlineBankingCZDelegateTest {
         @Test
         fun `selectIssuer is valid, then component state should be valid`() = runTest {
             delegate.componentStateFlow.test {
-                delegate.onInputDataChanged(
-                    OnlineBankingInputData(selectedIssuer = OnlineBankingModel(id = "issuer-id", name = "issuer-name"))
-                )
+                val model = OnlineBankingModel(id = "issuer-id", name = "issuer-name")
+                val input = OnlineBankingInputData(model)
+
+                delegate.onInputDataChanged(input)
+
                 with(requireNotNull(expectMostRecentItem())) {
-                    Assert.assertEquals("issuer-id", data.paymentMethod?.issuer)
-                    Assert.assertTrue(isValid)
+                    assertEquals("issuer-id", data.paymentMethod?.issuer)
+                    assertTrue(isValid)
                 }
             }
         }
@@ -97,10 +121,13 @@ internal class DefaultOnlineBankingCZDelegateTest {
         @Test
         fun `output is invalid, then component state should be invalid`() = runTest {
             delegate.componentStateFlow.test {
-                delegate.createComponentState(OnlineBankingOutputData(null))
+                val output = OnlineBankingOutputData(null)
+
+                delegate.createComponentState(output)
+
                 with(requireNotNull(expectMostRecentItem())) {
-                    Assert.assertFalse(isInputValid)
-                    Assert.assertFalse(isValid)
+                    assertFalse(isInputValid)
+                    assertFalse(isValid)
                 }
             }
         }
@@ -108,15 +135,15 @@ internal class DefaultOnlineBankingCZDelegateTest {
         @Test
         fun `output is valid, then component state should be valid`() = runTest {
             delegate.componentStateFlow.test {
-                delegate.createComponentState(
-                    OnlineBankingOutputData(
-                        OnlineBankingModel(id = "issuer-id", name = "issuer-name")
-                    )
-                )
+                val model = OnlineBankingModel(id = "issuer-id", name = "issuer-name")
+                val output = OnlineBankingOutputData(model)
+
+                delegate.createComponentState(output)
+
                 with(requireNotNull(expectMostRecentItem())) {
-                    Assert.assertEquals("issuer-id", data.paymentMethod?.issuer)
-                    Assert.assertTrue(isInputValid)
-                    Assert.assertTrue(isValid)
+                    assertEquals("issuer-id", data.paymentMethod?.issuer)
+                    assertTrue(isInputValid)
+                    assertTrue(isValid)
                 }
             }
         }
