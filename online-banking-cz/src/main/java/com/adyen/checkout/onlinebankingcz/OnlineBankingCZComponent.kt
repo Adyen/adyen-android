@@ -22,7 +22,7 @@ import kotlinx.coroutines.flow.onEach
 
 class OnlineBankingCZComponent(
     savedStateHandle: SavedStateHandle,
-    private val delegate: DefaultOnlineBankingCZDelegate,
+    private val delegate: OnlineBankingDelegate<OnlineBankingCZPaymentMethod>,
     configuration: OnlineBankingConfiguration
 ) : BasePaymentComponent<
     OnlineBankingConfiguration,
