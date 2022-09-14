@@ -9,7 +9,6 @@
 package com.adyen.checkout.onlinebankingcz
 
 import android.content.Context
-import android.net.Uri
 import com.adyen.checkout.components.PaymentComponentState
 import com.adyen.checkout.components.flow.MutableSingleEventSharedFlow
 import com.adyen.checkout.components.model.paymentmethods.PaymentMethod
@@ -17,14 +16,11 @@ import com.adyen.checkout.components.model.payments.request.OnlineBankingCZPayme
 import com.adyen.checkout.components.model.payments.request.PaymentComponentData
 import com.adyen.checkout.components.util.PaymentMethodTypes
 import com.adyen.checkout.core.exception.CheckoutException
-import com.adyen.checkout.core.exception.ComponentException
-import com.adyen.checkout.core.log.LogUtil
-import com.adyen.checkout.core.log.Logger
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.MutableStateFlow
 
-class DefaultOnlineBankingCZDelegate(
+internal class DefaultOnlineBankingCZDelegate(
     private val paymentMethod: PaymentMethod,
     private val paymentMethodFactory: () -> OnlineBankingCZPaymentMethod
 ) : OnlineBankingDelegate<OnlineBankingCZPaymentMethod> {
@@ -36,7 +32,7 @@ class DefaultOnlineBankingCZDelegate(
     override val componentStateFlow: Flow<PaymentComponentState<OnlineBankingCZPaymentMethod>?> = _componentStateFlow
 
     private val _exceptionFlow: MutableSharedFlow<CheckoutException> = MutableSingleEventSharedFlow()
-    val exceptionFlow: Flow<CheckoutException> = _exceptionFlow
+    override val exceptionFlow: Flow<CheckoutException> = _exceptionFlow
 
     override fun getIssuers(): List<OnlineBankingModel> =
         paymentMethod.issuers?.mapToModel() ?: paymentMethod.details.getLegacyIssuers()
@@ -64,22 +60,16 @@ class DefaultOnlineBankingCZDelegate(
         _componentStateFlow.tryEmit(state)
     }
 
-    fun onExceptionHappen(e: CheckoutException) {
-        _exceptionFlow.tryEmit(e)
-    }
-
     companion object {
-        private val TAG = LogUtil.getTag()
         private const val TERMS_CONDITIONS_URL = "https://static.payu.com/sites/terms/files/payu_privacy_policy_cs.pdf"
     }
 
-    @Suppress("ReturnCount")
-    override fun launchOpenPdf(context: Context) {
-        val uri = Uri.parse(TERMS_CONDITIONS_URL)
-        if (OpenPdfUtils.launchNative(context, uri)) return
-        if (OpenPdfUtils.launchWithCustomTabs(context, uri)) return
-        if (OpenPdfUtils.launchBrowser(context, uri)) return
-        Logger.e(TAG, "Could not launch url")
-        throw ComponentException("failed to open terms and conditions pdf.")
+    override fun openPdf(context: Context) {
+        val url = TERMS_CONDITIONS_URL
+        try {
+            PdfOpener.open(context, url)
+        } catch (e: CheckoutException) {
+            _exceptionFlow.tryEmit(e)
+        }
     }
 }

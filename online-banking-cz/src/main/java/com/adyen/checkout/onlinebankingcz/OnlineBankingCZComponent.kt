@@ -16,7 +16,6 @@ import com.adyen.checkout.components.PaymentComponentState
 import com.adyen.checkout.components.base.BasePaymentComponent
 import com.adyen.checkout.components.model.payments.request.OnlineBankingCZPaymentMethod
 import com.adyen.checkout.components.util.PaymentMethodTypes
-import com.adyen.checkout.core.exception.CheckoutException
 import kotlinx.coroutines.flow.filterNotNull
 import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.onEach
@@ -59,11 +58,7 @@ class OnlineBankingCZComponent(
     }
 
     fun openTermsAndConditionsPdf(context: Context) {
-        try {
-            delegate.launchOpenPdf(context)
-        } catch (e: CheckoutException) {
-            delegate.onExceptionHappen(e)
-        }
+        delegate.openPdf(context)
     }
 
     override fun getSupportedPaymentMethodTypes(): Array<String> = PAYMENT_METHOD_TYPES

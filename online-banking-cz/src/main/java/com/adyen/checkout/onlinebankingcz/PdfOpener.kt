@@ -17,19 +17,30 @@ import androidx.annotation.RequiresApi
 import androidx.browser.customtabs.CustomTabColorSchemeParams
 import androidx.browser.customtabs.CustomTabsIntent
 import com.adyen.checkout.components.ui.util.ThemeUtil
+import com.adyen.checkout.core.exception.ComponentException
 import com.adyen.checkout.core.log.LogUtil
 import com.adyen.checkout.core.log.Logger
 
-object OpenPdfUtils {
+internal object PdfOpener {
 
-    fun launchNative(context: Context, uri: Uri): Boolean {
+    fun open(context: Context, url: String) {
+        val uri = Uri.parse(url)
+        if (open(context, uri)) return
+        if (launchBrowser(context, uri)) return
+        Logger.e(TAG, "openPdf - Could not launch url")
+        throw ComponentException("failed to open terms and conditions pdf.")
+    }
+
+    // TODO: needs to be checked again in the future,
+    //  as we're not sure about the next chrome updates regarding custom tabs!!
+    private fun open(context: Context, uri: Uri): Boolean {
         return if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R) launchNativeApi30(context, uri)
         // because custom tabs pdf viewer is working before api 30 on chrome
         else launchWithCustomTabs(context, uri)
     }
 
     @RequiresApi(Build.VERSION_CODES.R)
-    fun launchNativeApi30(context: Context, uri: Uri): Boolean {
+    private fun launchNativeApi30(context: Context, uri: Uri): Boolean {
         val nativeAppIntent = Intent().apply {
             action = Intent.ACTION_VIEW
             setDataAndType(uri, "application/pdf")
@@ -44,7 +55,7 @@ object OpenPdfUtils {
         }
     }
 
-    fun launchWithCustomTabs(context: Context, uri: Uri): Boolean {
+    private fun launchWithCustomTabs(context: Context, uri: Uri): Boolean {
         // open in custom tabs if there's no native app for the target uri
         val defaultColors = CustomTabColorSchemeParams.Builder()
             .setToolbarColor(ThemeUtil.getPrimaryThemeColor(context))
@@ -66,7 +77,7 @@ object OpenPdfUtils {
     /**
      * in case the device doesn't support custom tabs or doesn't support google services (Huawei device).
      */
-    fun launchBrowser(context: Context, uri: Uri): Boolean {
+    private fun launchBrowser(context: Context, uri: Uri): Boolean {
         return try {
             val browserActivityIntent = Intent()
                 .setAction(Intent.ACTION_VIEW)
