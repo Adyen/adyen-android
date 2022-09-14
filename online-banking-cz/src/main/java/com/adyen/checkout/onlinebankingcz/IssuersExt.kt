@@ -21,8 +21,8 @@ internal fun List<Issuer>.mapToModel(): List<OnlineBankingModel> =
         }
     }
 
-internal fun getLegacyIssuers(details: List<InputDetail>?): List<OnlineBankingModel> =
-    details.orEmpty()
+internal fun List<InputDetail>?.getLegacyIssuers(): List<OnlineBankingModel> =
+    this.orEmpty()
         .flatMap { it.items.orEmpty() }
         .mapNotNull { item ->
             val (id, name) = item
