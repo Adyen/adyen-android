@@ -27,9 +27,8 @@ class DefaultIssuerListDelegate<IssuerListPaymentMethodT : IssuerListPaymentMeth
     private val _componentStateFlow = MutableStateFlow<PaymentComponentState<IssuerListPaymentMethodT>?>(null)
     override val componentStateFlow: Flow<PaymentComponentState<IssuerListPaymentMethodT>?> = _componentStateFlow
 
-    override fun getIssuers(): List<IssuerModel> {
-        return paymentMethod.issuers?.mapToModel() ?: getLegacyIssuers(paymentMethod.details)
-    }
+    override fun getIssuers(): List<IssuerModel> =
+        paymentMethod.issuers?.mapToModel() ?: paymentMethod.details.getLegacyIssuers()
 
     override fun onInputDataChanged(inputData: IssuerListInputData) {
         val outputData = IssuerListOutputData(inputData.selectedIssuer)

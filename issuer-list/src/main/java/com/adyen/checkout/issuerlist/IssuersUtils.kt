@@ -21,8 +21,8 @@ internal fun List<Issuer>.mapToModel(): List<IssuerModel> =
         }
     }
 
-internal fun getLegacyIssuers(details: List<InputDetail>?): List<IssuerModel> =
-    details.orEmpty()
+internal fun List<InputDetail>?.getLegacyIssuers(): List<IssuerModel> =
+    this.orEmpty()
         .flatMap { it.items.orEmpty() }
         .mapNotNull { item ->
             val (id, name) = item
