@@ -34,6 +34,8 @@ internal class DefaultOnlineBankingCZDelegate(
     private val _exceptionFlow: MutableSharedFlow<CheckoutException> = MutableSingleEventSharedFlow()
     override val exceptionFlow: Flow<CheckoutException> = _exceptionFlow
 
+    private val pdfOpener = PdfOpener()
+
     override fun getIssuers(): List<OnlineBankingModel> =
         paymentMethod.issuers?.mapToModel() ?: paymentMethod.details.getLegacyIssuers()
 
@@ -60,16 +62,16 @@ internal class DefaultOnlineBankingCZDelegate(
         _componentStateFlow.tryEmit(state)
     }
 
-    companion object {
-        private const val TERMS_CONDITIONS_URL = "https://static.payu.com/sites/terms/files/payu_privacy_policy_cs.pdf"
-    }
-
     override fun openPdf(context: Context) {
         val url = TERMS_CONDITIONS_URL
         try {
-            PdfOpener.open(context, url)
-        } catch (e: CheckoutException) {
-            _exceptionFlow.tryEmit(e)
+            pdfOpener.open(context, url)
+        } catch (e: IllegalStateException) {
+            _exceptionFlow.tryEmit(CheckoutException(e.message ?: "", e.cause))
         }
+    }
+
+    companion object {
+        private const val TERMS_CONDITIONS_URL = "https://static.payu.com/sites/terms/files/payu_privacy_policy_cs.pdf"
     }
 }
