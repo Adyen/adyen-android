@@ -28,11 +28,13 @@ class VoucherViewNew @JvmOverloads constructor(
     context: Context,
     attrs: AttributeSet? = null,
     defStyleAttr: Int = 0
-) : LinearLayout(
-    context,
-    attrs,
-    defStyleAttr
-), ComponentViewNew {
+) :
+    LinearLayout(
+        context,
+        attrs,
+        defStyleAttr
+    ),
+    ComponentViewNew {
 
     private val binding: VoucherViewBinding = VoucherViewBinding.inflate(LayoutInflater.from(context), this)
 
@@ -76,7 +78,6 @@ class VoucherViewNew @JvmOverloads constructor(
 
     private fun outputDataChanged(outputData: VoucherOutputData?) {
         Logger.d(TAG, "onChanged")
-
     }
 
     override val isConfirmationRequired: Boolean = false

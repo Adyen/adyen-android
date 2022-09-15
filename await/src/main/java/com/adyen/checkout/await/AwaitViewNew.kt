@@ -30,11 +30,13 @@ class AwaitViewNew @JvmOverloads constructor(
     context: Context,
     attrs: AttributeSet? = null,
     defStyleAttr: Int = 0
-) : LinearLayout(
-    context,
-    attrs,
-    defStyleAttr
-), ComponentViewNew {
+) :
+    LinearLayout(
+        context,
+        attrs,
+        defStyleAttr
+    ),
+    ComponentViewNew {
 
     private val binding: AwaitViewBinding = AwaitViewBinding.inflate(LayoutInflater.from(context), this)
 
@@ -114,4 +116,3 @@ class AwaitViewNew @JvmOverloads constructor(
         private val TAG = LogUtil.getTag()
     }
 }
-

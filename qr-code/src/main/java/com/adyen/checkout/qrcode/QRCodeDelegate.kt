@@ -24,5 +24,5 @@ interface QRCodeDelegate :
     StatusPollingDelegate,
     ViewProvidingDelegate {
 
-        val configuration: QRCodeConfiguration
+    val configuration: QRCodeConfiguration
 }

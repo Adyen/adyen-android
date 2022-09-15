@@ -27,7 +27,7 @@ internal class DefaultVoucherDelegateTest {
     @BeforeEach
     fun beforeEach() {
         delegate = DefaultVoucherDelegate(
-            VoucherConfiguration.Builder(Locale.getDefault(), Environment.TEST, "clientKey").build()
+            VoucherConfiguration.Builder(Locale.getDefault(), Environment.TEST, TEST_CLIENT_KEY).build()
         )
     }
 
@@ -51,4 +51,9 @@ internal class DefaultVoucherDelegateTest {
             }
         }
     }
+
+    companion object {
+        private const val TEST_CLIENT_KEY = "test_qwertyuiopasdfghjklzxcvbnmqwerty"
+    }
 }
+

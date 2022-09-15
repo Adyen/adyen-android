@@ -16,6 +16,7 @@ import com.adyen.checkout.components.model.payments.response.AwaitAction
 import com.adyen.checkout.components.repository.PaymentDataRepository
 import com.adyen.checkout.components.status.model.StatusResponse
 import com.adyen.checkout.components.test.TestStatusRepository
+import com.adyen.checkout.core.api.Environment
 import com.adyen.checkout.core.exception.ComponentException
 import com.adyen.checkout.core.log.Logger
 import kotlinx.coroutines.CoroutineScope
@@ -29,6 +30,7 @@ import org.junit.jupiter.api.Assertions.assertTrue
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 import java.io.IOException
+import java.util.Locale
 
 @OptIn(ExperimentalCoroutinesApi::class)
 internal class DefaultAwaitDelegateTest {
@@ -41,7 +43,12 @@ internal class DefaultAwaitDelegateTest {
     fun beforeEach() {
         statusRepository = TestStatusRepository()
         paymentDataRepository = PaymentDataRepository(SavedStateHandle())
-        delegate = DefaultAwaitDelegate(statusRepository, paymentDataRepository)
+        val configuration = AwaitConfiguration.Builder(
+            Locale.US,
+            Environment.TEST,
+            TEST_CLIENT_KEY
+        ).build()
+        delegate = DefaultAwaitDelegate(configuration, statusRepository, paymentDataRepository)
         Logger.setLogcatLevel(Logger.NONE)
     }
 
@@ -124,5 +131,9 @@ internal class DefaultAwaitDelegateTest {
 
             cancelAndIgnoreRemainingEvents()
         }
+    }
+
+    companion object {
+        private const val TEST_CLIENT_KEY = "test_qwertyuiopasdfghjklzxcvbnmqwerty"
     }
 }
