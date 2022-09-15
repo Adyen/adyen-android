@@ -19,12 +19,12 @@ ext {
     version_name = "4.7.1"
 
     // Build Script
-    android_gradle_plugin_version = '7.1.0'
-    kotlin_version = '1.6.21'
+    android_gradle_plugin_version = '7.2.0'
+    kotlin_version = '1.7.10'
     detekt_gradle_plugin_version = "1.17.1"
     spotbugs_gradle_plugin_version = "4.5.1"
     dokka_version = "1.6.21"
-    hilt_version = "2.40.1"
+    hilt_version = "2.43.2"
 
     // Code quality
     detekt_version = "1.17.1"
