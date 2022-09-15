@@ -154,7 +154,9 @@ internal fun <T : Configuration> getDefaultConfigForPaymentMethod(
         PaymentMethodTypes.MOLPAY_MALAYSIA,
         PaymentMethodTypes.MOLPAY_VIETNAM -> MolpayConfiguration.Builder(shopperLocale, environment, clientKey)
         PaymentMethodTypes.ONLINE_BANKING_PL -> OnlineBankingPLConfiguration.Builder(
-            shopperLocale, environment, clientKey
+            shopperLocale,
+            environment,
+            clientKey
         )
         PaymentMethodTypes.OPEN_BANKING -> OpenBankingConfiguration.Builder(shopperLocale, environment, clientKey)
         PaymentMethodTypes.SEPA -> SepaConfiguration.Builder(shopperLocale, environment, clientKey)
@@ -235,7 +237,6 @@ internal fun getComponentFor(
     dropInConfiguration: DropInConfiguration,
     amount: Amount
 ): PaymentComponent<PaymentComponentState<in PaymentMethodDetails>, Configuration> {
-
     val component = when (storedPaymentMethod.type) {
         PaymentMethodTypes.SCHEME -> {
             val cardConfig: CardConfiguration =
@@ -251,7 +252,9 @@ internal fun getComponentFor(
             throw CheckoutException("Unable to find stored component for type - ${storedPaymentMethod.type}")
         }
     }
+
     component.setCreatedForDropIn()
+
     return component as PaymentComponent<PaymentComponentState<in PaymentMethodDetails>, Configuration>
 }
 
@@ -269,7 +272,6 @@ internal fun getComponentFor(
     dropInConfiguration: DropInConfiguration,
     amount: Amount
 ): PaymentComponent<PaymentComponentState<in PaymentMethodDetails>, Configuration> {
-
     val component = when (paymentMethod.type) {
         PaymentMethodTypes.BACS -> {
             val bacsConfiguration: BacsDirectDebitConfiguration =
@@ -368,7 +370,9 @@ internal fun getComponentFor(
             throw CheckoutException("Unable to find component for type - ${paymentMethod.type}")
         }
     }
+
     component.setCreatedForDropIn()
+
     return component as PaymentComponent<PaymentComponentState<in PaymentMethodDetails>, Configuration>
 }
 

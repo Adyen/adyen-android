@@ -9,6 +9,7 @@ package com.adyen.checkout.bcmc
 
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.viewModelScope
+import com.adyen.checkout.bcmc.BcmcComponent.Companion.PROVIDER
 import com.adyen.checkout.card.data.CardType
 import com.adyen.checkout.components.PaymentComponentProvider
 import com.adyen.checkout.components.PaymentComponentState
@@ -62,6 +63,7 @@ class BcmcComponent(
     companion object {
         @JvmField
         val PROVIDER: PaymentComponentProvider<BcmcComponent, BcmcConfiguration> = BcmcComponentProvider()
+
         @JvmField
         val PAYMENT_METHOD_TYPES = arrayOf(PaymentMethodTypes.BCMC)
 

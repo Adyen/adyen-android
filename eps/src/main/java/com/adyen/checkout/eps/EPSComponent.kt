@@ -11,6 +11,7 @@ import androidx.lifecycle.SavedStateHandle
 import com.adyen.checkout.components.PaymentComponentProvider
 import com.adyen.checkout.components.model.payments.request.EPSPaymentMethod
 import com.adyen.checkout.components.util.PaymentMethodTypes
+import com.adyen.checkout.eps.EPSComponent.Companion.PROVIDER
 import com.adyen.checkout.issuerlist.IssuerListComponent
 import com.adyen.checkout.issuerlist.IssuerListDelegate
 
@@ -28,6 +29,7 @@ class EPSComponent(
     companion object {
         @JvmField
         val PROVIDER: PaymentComponentProvider<EPSComponent, EPSConfiguration> = EPSComponentProvider()
+
         @JvmField
         val PAYMENT_METHOD_TYPES = arrayOf(PaymentMethodTypes.EPS)
     }

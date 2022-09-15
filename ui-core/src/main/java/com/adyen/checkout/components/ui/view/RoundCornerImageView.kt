@@ -53,8 +53,10 @@ class RoundCornerImageView @JvmOverloads constructor(
 
     init {
         val typedArrayAttrs = context.theme.obtainStyledAttributes(
-            attrs, R.styleable.RoundCornerImageView,
-            0, 0
+            attrs,
+            R.styleable.RoundCornerImageView,
+            0,
+            0
         )
         applyAttrs(typedArrayAttrs)
     }
@@ -80,12 +82,17 @@ class RoundCornerImageView @JvmOverloads constructor(
             super.onDraw(canvas)
             return
         }
+
         val rect = RectF(
-            strokeWidth / 2, strokeWidth / 2,
+            strokeWidth / 2,
+            strokeWidth / 2,
             width - strokeWidth / 2,
             height - strokeWidth / 2
+
         )
+
         strokePaint.reset()
+
         if (strokeWidth > 0) {
             strokePaint.style = Paint.Style.STROKE
             strokePaint.isAntiAlias = true
@@ -93,9 +100,11 @@ class RoundCornerImageView @JvmOverloads constructor(
             strokePaint.strokeWidth = strokeWidth
             canvas.drawRoundRect(rect, radius, radius, strokePaint)
         }
+
         val path = Path()
         path.addRoundRect(rect, radius, radius, Path.Direction.CW)
         canvas.clipPath(path)
+
         super.onDraw(canvas)
     }
 

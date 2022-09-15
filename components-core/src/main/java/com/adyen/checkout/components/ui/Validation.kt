@@ -16,6 +16,7 @@ sealed class Validation {
      * Field is valid and can be accepted.
      */
     object Valid : Validation()
+
     /**
      * Field is not valid.
      */

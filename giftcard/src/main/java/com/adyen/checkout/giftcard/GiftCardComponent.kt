@@ -12,6 +12,7 @@ import androidx.lifecycle.viewModelScope
 import com.adyen.checkout.components.PaymentComponentProvider
 import com.adyen.checkout.components.base.BasePaymentComponent
 import com.adyen.checkout.components.util.PaymentMethodTypes
+import com.adyen.checkout.giftcard.GiftCardComponent.Companion.PROVIDER
 import kotlinx.coroutines.flow.filterNotNull
 import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.onEach
@@ -58,6 +59,7 @@ class GiftCardComponent(
     companion object {
         @JvmField
         val PROVIDER: PaymentComponentProvider<GiftCardComponent, GiftCardConfiguration> = GiftCardComponentProvider()
+
         @JvmField
         val PAYMENT_METHOD_TYPES = arrayOf(PaymentMethodTypes.GIFTCARD)
     }

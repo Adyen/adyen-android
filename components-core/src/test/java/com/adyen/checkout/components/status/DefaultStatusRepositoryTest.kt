@@ -17,6 +17,7 @@ import kotlinx.coroutines.flow.flowOn
 import kotlinx.coroutines.test.TestDispatcher
 import kotlinx.coroutines.test.runTest
 import org.junit.jupiter.api.Assertions.assertEquals
+import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.extension.ExtendWith
 import org.mockito.Mock
@@ -31,7 +32,12 @@ internal class DefaultStatusRepositoryTest(
     @Mock private val statusService: StatusService
 ) {
 
-    private val statusRepository = DefaultStatusRepository(statusService, "someclientkey")
+    private lateinit var statusRepository: DefaultStatusRepository
+
+    @BeforeEach
+    fun beforeEach() {
+        statusRepository = DefaultStatusRepository(statusService, "someclientkey")
+    }
 
     @Test
     fun `when receiving the final result, then it should be emitted and the flow should end`(

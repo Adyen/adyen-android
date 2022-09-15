@@ -10,6 +10,7 @@ package com.adyen.checkout.card
 
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.viewModelScope
+import com.adyen.checkout.card.CardComponent.Companion.PROVIDER
 import com.adyen.checkout.components.StoredPaymentComponentProvider
 import com.adyen.checkout.components.base.BasePaymentComponent
 import com.adyen.checkout.components.util.PaymentMethodTypes
@@ -80,6 +81,7 @@ class CardComponent(
 
         @JvmField
         val PROVIDER: StoredPaymentComponentProvider<CardComponent, CardConfiguration> = CardComponentProvider()
+
         @JvmField
         val PAYMENT_METHOD_TYPES = arrayOf(PaymentMethodTypes.SCHEME)
     }

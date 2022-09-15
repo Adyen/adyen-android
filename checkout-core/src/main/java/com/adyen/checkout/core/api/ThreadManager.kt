@@ -22,6 +22,7 @@ object ThreadManager {
         // avoid Looper class on testing
         Handler()
     }
+
     @JvmField
     val EXECUTOR: ExecutorService = Executors.newCachedThreadPool()
 }

@@ -13,11 +13,12 @@ import com.adyen.checkout.core.exception.CheckoutException
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.flow.Flow
 
-interface GiftCardDelegate : PaymentMethodDelegate<
-    GiftCardConfiguration,
-    GiftCardInputData,
-    GiftCardOutputData,
-    GiftCardComponentState> {
+interface GiftCardDelegate :
+    PaymentMethodDelegate<
+        GiftCardConfiguration,
+        GiftCardInputData,
+        GiftCardOutputData,
+        GiftCardComponentState> {
 
     val outputDataFlow: Flow<GiftCardOutputData?>
 

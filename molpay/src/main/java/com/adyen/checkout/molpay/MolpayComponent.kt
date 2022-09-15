@@ -13,6 +13,7 @@ import com.adyen.checkout.components.model.payments.request.MolpayPaymentMethod
 import com.adyen.checkout.components.util.PaymentMethodTypes
 import com.adyen.checkout.issuerlist.IssuerListComponent
 import com.adyen.checkout.issuerlist.IssuerListDelegate
+import com.adyen.checkout.molpay.MolpayComponent.Companion.PROVIDER
 
 /**
  * Component should not be instantiated directly. Instead use the [PROVIDER] object.
@@ -32,6 +33,7 @@ class MolpayComponent(
     companion object {
         @JvmField
         val PROVIDER: PaymentComponentProvider<MolpayComponent, MolpayConfiguration> = MolpayComponentProvider()
+
         @JvmField
         val PAYMENT_METHOD_TYPES = arrayOf(
             PaymentMethodTypes.MOLPAY_THAILAND,

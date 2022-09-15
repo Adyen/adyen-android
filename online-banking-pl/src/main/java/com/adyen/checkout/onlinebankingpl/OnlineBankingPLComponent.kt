@@ -14,6 +14,7 @@ import com.adyen.checkout.components.model.payments.request.OnlineBankingPLPayme
 import com.adyen.checkout.components.util.PaymentMethodTypes
 import com.adyen.checkout.issuerlist.IssuerListComponent
 import com.adyen.checkout.issuerlist.IssuerListDelegate
+import com.adyen.checkout.onlinebankingpl.OnlineBankingPLComponent.Companion.PROVIDER
 
 /**
  * Component should not be instantiated directly. Instead use the [PROVIDER] object.
@@ -33,6 +34,7 @@ class OnlineBankingPLComponent(
         @JvmField
         val PROVIDER: PaymentComponentProvider<OnlineBankingPLComponent, OnlineBankingPLConfiguration> =
             OnlineBankingPLComponentProvider()
+
         @JvmField
         val PAYMENT_METHOD_TYPES = arrayOf(PaymentMethodTypes.ONLINE_BANKING_PL)
     }
