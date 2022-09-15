@@ -38,7 +38,6 @@ import com.adyen.checkout.components.model.payments.response.BalanceResult
 import com.adyen.checkout.components.model.payments.response.OrderResponse
 import com.adyen.checkout.core.log.LogUtil
 import com.adyen.checkout.core.log.Logger
-import com.adyen.checkout.dropin.ActionHandler
 import com.adyen.checkout.dropin.DropIn
 import com.adyen.checkout.dropin.DropInConfiguration
 import com.adyen.checkout.dropin.DropInPrefs
@@ -55,7 +54,6 @@ import com.adyen.checkout.dropin.service.RecurringDropInServiceResult
 import com.adyen.checkout.dropin.service.SessionDropInServiceInterface
 import com.adyen.checkout.dropin.service.SessionDropInServiceResult
 import com.adyen.checkout.dropin.ui.action.ActionComponentDialogFragment
-import com.adyen.checkout.dropin.ui.action.ActionComponentDialogFragmentNew
 import com.adyen.checkout.dropin.ui.base.DropInBottomSheetDialogFragment
 import com.adyen.checkout.dropin.ui.component.BacsDirectDebitDialogFragment
 import com.adyen.checkout.dropin.ui.component.CardComponentDialogFragment
@@ -96,12 +94,9 @@ internal const val GOOGLE_PAY_REQUEST_CODE = 1
 @Suppress("TooManyFunctions")
 class DropInActivity :
     AppCompatActivity(),
-    DropInBottomSheetDialogFragment.Protocol,
-    ActionHandler.ActionHandlingInterface {
+    DropInBottomSheetDialogFragment.Protocol {
 
     private val dropInViewModel: DropInViewModel by viewModels { DropInViewModelFactory(this) }
-
-    private lateinit var actionHandler: ActionHandler
 
     private val loadingDialog = LoadingDialogFragment.newInstance()
 
@@ -188,9 +183,6 @@ class DropInActivity :
         if (noDialogPresent()) {
             dropInViewModel.onCreated()
         }
-
-        actionHandler = ActionHandler(this, dropInViewModel.dropInConfiguration)
-        actionHandler.restoreState(this, savedInstanceState)
 
         handleIntent(intent)
 
@@ -330,25 +322,6 @@ class DropInActivity :
         } else {
             setLoading(false)
         }
-    }
-
-    override fun displayAction(action: Action) {
-        Logger.d(TAG, "showActionDialog")
-        setLoading(false)
-        hideAllScreens()
-        val actionFragment = ActionComponentDialogFragment.newInstance(action)
-        actionFragment.show(supportFragmentManager, ACTION_FRAGMENT_TAG)
-        actionFragment.setToHandleWhenStarting()
-    }
-
-    override fun onActionError(errorMessage: String) {
-        showError(getString(R.string.action_failed), errorMessage, true)
-    }
-
-    override fun onSaveInstanceState(outState: Bundle) {
-        super.onSaveInstanceState(outState)
-        Logger.d(TAG, "onSaveInstanceState")
-        actionHandler.saveState(outState)
     }
 
     override fun onResume() {
@@ -531,9 +504,8 @@ class DropInActivity :
         setLoading(false)
         hideAllScreens()
         val actionConfiguration = createGenericActionConfiguration(dropInViewModel.dropInConfiguration)
-        val actionFragment = ActionComponentDialogFragmentNew.newInstance(action, actionConfiguration)
+        val actionFragment = ActionComponentDialogFragment.newInstance(action, actionConfiguration)
         actionFragment.show(supportFragmentManager, ACTION_FRAGMENT_TAG)
-        //actionHandler.handleAction(this, action, ::sendResult)
     }
 
     private fun handlePaymentMethodsUpdate(dropInServiceResult: DropInServiceResult.Update) {
@@ -574,7 +546,7 @@ class DropInActivity :
 
         if (WeChatPayUtils.isResultIntent(intent)) {
             Logger.d(TAG, "isResultIntent")
-            actionHandler.handleWeChatPayResponse(intent)
+            handleWeChatPayResponse(intent)
         }
 
         when (intent.action) {
@@ -582,7 +554,7 @@ class DropInActivity :
             Intent.ACTION_VIEW -> {
                 val data = intent.data
                 if (data != null && data.toString().startsWith(RedirectComponent.REDIRECT_RESULT_SCHEME)) {
-                    actionHandler.handleRedirectResponse(intent)
+                    handleRedirectResponse(intent)
                 } else {
                     Logger.e(TAG, "Unexpected response from ACTION_VIEW - ${intent.data}")
                 }
@@ -591,6 +563,22 @@ class DropInActivity :
                 Logger.e(TAG, "Unable to find action")
             }
         }
+    }
+
+    private fun handleWeChatPayResponse(intent: Intent) {
+        val actionFragment = getActionFragment() ?: return
+        actionFragment.handleWeChatPayResponse(intent)
+    }
+
+    private fun handleRedirectResponse(intent: Intent) {
+        val actionFragment = getActionFragment() ?: return
+        actionFragment.handleRedirectResponse(intent)
+    }
+
+    private fun getActionFragment(): ActionComponentDialogFragment? {
+        val fragment = getFragmentByTag(COMPONENT_FRAGMENT_TAG) as? ActionComponentDialogFragment
+        if (fragment == null) Logger.e(TAG, "ActionComponentDialogFragment is not loaded")
+        return fragment
     }
 
     private fun sendAnalyticsEvent() {
@@ -638,7 +626,6 @@ class DropInActivity :
 
     private fun loadFragment(destination: DropInDestination) {
         when (destination) {
-            is DropInDestination.ActionComponent -> displayAction(destination.action)
             is DropInDestination.GiftCardPaymentConfirmation -> showGiftCardPaymentConfirmationDialog(destination.data)
             is DropInDestination.PaymentComponent -> showComponentDialog(destination.paymentMethod)
             is DropInDestination.PaymentMethods -> showPaymentMethodsDialog()

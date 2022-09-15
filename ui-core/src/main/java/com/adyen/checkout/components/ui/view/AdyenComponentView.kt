@@ -21,6 +21,8 @@ import com.adyen.checkout.components.ui.ComponentViewNew
 import com.adyen.checkout.components.ui.ViewProvider
 import com.adyen.checkout.components.ui.ViewProvidingComponent
 import com.adyen.checkout.components.ui.ViewProvidingDelegate
+import com.adyen.checkout.core.log.LogUtil
+import com.adyen.checkout.core.log.Logger
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.onEach
@@ -48,7 +50,10 @@ class AdyenComponentView @JvmOverloads constructor(
         // TODO remove when all components are supported
         if (component !is ViewProvidingComponent) throw IllegalArgumentException("Not implemented yet")
         val delegate = component.delegate
-        if (delegate !is ViewProvidingDelegate) throw IllegalArgumentException("Not implemented yet")
+        if (delegate !is ViewProvidingDelegate) {
+            Logger.i(TAG, "View attached to non viewable component, ignoring.")
+            return
+        }
 
         component.viewFlow
             .onEach {
@@ -93,5 +98,9 @@ class AdyenComponentView @JvmOverloads constructor(
 
     fun highlightValidationErrors() {
         componentView.highlightValidationErrors()
+    }
+
+    companion object {
+        private val TAG = LogUtil.getTag()
     }
 }

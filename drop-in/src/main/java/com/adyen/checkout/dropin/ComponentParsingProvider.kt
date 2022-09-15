@@ -13,9 +13,6 @@ package com.adyen.checkout.dropin
 import android.app.Application
 import android.content.Context
 import androidx.fragment.app.Fragment
-import androidx.lifecycle.ViewModelStoreOwner
-import androidx.savedstate.SavedStateRegistryOwner
-import com.adyen.checkout.action.ActionDelegateProvider
 import com.adyen.checkout.action.GenericActionConfiguration
 import com.adyen.checkout.adyen3ds2.Adyen3DS2Component
 import com.adyen.checkout.adyen3ds2.Adyen3DS2Configuration
@@ -175,13 +172,6 @@ internal fun <T : Configuration> getDefaultConfigForPaymentMethod(
 
     @Suppress("UNCHECKED_CAST")
     return builder.build() as T
-}
-
-internal inline fun <reified T : Configuration> getConfigurationForAction(
-    dropInConfiguration: DropInConfiguration
-): T {
-    return dropInConfiguration.getConfigurationForAction()
-        ?: ActionDelegateProvider.getDefaultConfiguration(dropInConfiguration)
 }
 
 internal fun createGenericActionConfiguration(dropInConfiguration: DropInConfiguration): GenericActionConfiguration {
@@ -460,58 +450,6 @@ internal fun getActionProviderFor(
         VoucherComponent.PROVIDER
     )
     return allActionProviders.firstOrNull { it.canHandleAction(action) }
-}
-
-@Suppress("ComplexMethod", "LongMethod")
-internal fun <T> getActionComponentFor(
-    owner: T,
-    application: Application,
-    provider: ActionComponentProvider<
-        out BaseActionComponent<out Configuration>,
-        out Configuration,
-        out ActionDelegate<*>
-        >,
-    dropInConfiguration: DropInConfiguration
-): BaseActionComponent<out Configuration> where T : SavedStateRegistryOwner, T : ViewModelStoreOwner {
-    return when (provider) {
-        RedirectComponent.PROVIDER -> {
-            RedirectComponent.PROVIDER.get(
-                owner,
-                application,
-                getConfigurationForAction(dropInConfiguration)
-            )
-        }
-        Adyen3DS2Component.PROVIDER -> {
-            Adyen3DS2Component.PROVIDER.get(
-                owner,
-                application,
-                getConfigurationForAction(dropInConfiguration)
-            )
-        }
-        WeChatPayActionComponent.PROVIDER -> {
-            WeChatPayActionComponent.PROVIDER.get(
-                owner,
-                application,
-                getConfigurationForAction(dropInConfiguration)
-            )
-        }
-        AwaitComponent.PROVIDER -> {
-            AwaitComponent.PROVIDER.get(owner, application, getConfigurationForAction(dropInConfiguration))
-        }
-        QRCodeComponent.PROVIDER -> {
-            QRCodeComponent.PROVIDER.get(owner, application, getConfigurationForAction(dropInConfiguration))
-        }
-        VoucherComponent.PROVIDER -> {
-            VoucherComponent.PROVIDER.get(
-                owner,
-                application,
-                getConfigurationForAction(dropInConfiguration)
-            )
-        }
-        else -> {
-            throw CheckoutException("Unable to find component for provider - $provider")
-        }
-    }
 }
 
 @Suppress("ComplexMethod")
