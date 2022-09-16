@@ -37,8 +37,7 @@ internal class PdfOpener {
             if (openInExternalApp(context, uri)) true
             else
                 openInCustomTab(context, uri)
-        }
-        else openInCustomTab(context, uri)
+        } else openInCustomTab(context, uri)
     }
 
     private fun openInExternalApp(context: Context, uri: Uri): Boolean {
