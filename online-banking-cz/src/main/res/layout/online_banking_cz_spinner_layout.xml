@@ -14,17 +14,17 @@
     tools:parentTag="android.widget.LinearLayout">
 
     <com.google.android.material.textfield.TextInputLayout
-        android:id="@+id/textInputLayout_issuers"
+        android:id="@+id/textInputLayout_onlineBanking"
         style="@style/AdyenCheckout.OnlineBankingCZ.TermsAndConditionsInputLayout"
         android:layout_width="match_parent"
         android:layout_height="wrap_content">
 
         <androidx.appcompat.widget.AppCompatAutoCompleteTextView
-            android:id="@+id/autoCompleteTextView_issuers"
+            android:id="@+id/autoCompleteTextView_onlineBanking"
             style="@style/AdyenCheckout.DropdownTextInputEditText"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:dropDownAnchor="@id/textInputLayout_issuers" />
+            android:dropDownAnchor="@id/textInputLayout_onlineBanking" />
     </com.google.android.material.textfield.TextInputLayout>
 
     <TextView

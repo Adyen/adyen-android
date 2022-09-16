@@ -50,7 +50,7 @@ class OnlineBankingCZView @JvmOverloads constructor(
     }
 
     override fun initView() {
-        binding.autoCompleteTextViewIssuers.apply {
+        binding.autoCompleteTextViewOnlineBanking.apply {
             inputType = 0
             setAdapter(issuersAdapter)
             onItemClickListener = AdapterView.OnItemClickListener { _, _, position, _ ->
@@ -87,8 +87,8 @@ class OnlineBankingCZView @JvmOverloads constructor(
 
     override fun setEnabled(enabled: Boolean) {
         super.setEnabled(enabled)
-        binding.autoCompleteTextViewIssuers.isEnabled = enabled
-        binding.textInputLayoutIssuers.isEnabled = enabled
+        binding.autoCompleteTextViewOnlineBanking.isEnabled = enabled
+        binding.textInputLayoutOnlineBanking.isEnabled = enabled
     }
 
     companion object {
