@@ -15,7 +15,7 @@
 
     <com.google.android.material.textfield.TextInputLayout
         android:id="@+id/textInputLayout_issuers"
-        style="@style/AdyenCheckout.DropdownTextInputLayout.Issuer"
+        style="@style/AdyenCheckout.OnlineBankingCZ.TermsAndConditionsInputLayout"
         android:layout_width="match_parent"
         android:layout_height="wrap_content">
 
@@ -29,7 +29,7 @@
 
     <TextView
         android:id="@+id/textview_termsAndConditions"
-        style="@style/AdyenCheckout.Issuer.TermsAndConditions"
+        style="@style/AdyenCheckout.OnlineBankingCZ.TermsAndConditionsTextView"
         android:layout_width="match_parent"
         android:layout_height="wrap_content" />
 
