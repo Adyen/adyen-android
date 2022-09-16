@@ -16,6 +16,7 @@ import android.widget.AdapterView
 import androidx.lifecycle.LifecycleOwner
 import com.adyen.checkout.components.PaymentComponentState
 import com.adyen.checkout.components.model.payments.request.OnlineBankingCZPaymentMethod
+import com.adyen.checkout.components.ui.Validation
 import com.adyen.checkout.components.ui.adapter.SimpleTextListAdapter
 import com.adyen.checkout.components.ui.view.AdyenLinearLayout
 import com.adyen.checkout.core.log.LogUtil
@@ -57,6 +58,10 @@ class OnlineBankingCZView @JvmOverloads constructor(
                 Logger.d(TAG, "onItemSelected - " + issuersAdapter.getItem(position).name)
                 component.inputData.selectedIssuer = issuersAdapter.getItem(position)
                 component.notifyInputDataChanged()
+                binding.textInputLayoutOnlineBanking.apply {
+                    error = null
+                    isErrorEnabled = false
+                }
             }
         }
         binding.textviewTermsAndConditions.setOnClickListener { component.openTermsAndConditionsPdf(context) }
@@ -66,7 +71,17 @@ class OnlineBankingCZView @JvmOverloads constructor(
         get() = true
 
     override fun highlightValidationErrors() {
-        // no implementation
+        Logger.d(TAG, "highlightValidationErrors")
+        val output = component.outputData ?: return
+        val selectedIssuersValidation = output.selectedIssuerField.validation
+        if (!selectedIssuersValidation.isValid()) {
+            val errorReasonResId = (selectedIssuersValidation as Validation.Invalid).reason
+            binding.textInputLayoutOnlineBanking.apply {
+                requestFocus()
+                isErrorEnabled = true
+                error = localizedContext.getString(errorReasonResId)
+            }
+        }
     }
 
     override fun initLocalizedStrings(localizedContext: Context) {
