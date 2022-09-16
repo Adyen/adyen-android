@@ -23,6 +23,7 @@ import com.adyen.checkout.components.util.PaymentMethodTypes
 import com.adyen.checkout.core.log.LogUtil
 import com.adyen.checkout.core.log.Logger
 import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.flow.filterNotNull
 import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.onEach
 
@@ -69,14 +70,13 @@ class AwaitViewNew @JvmOverloads constructor(
 
     private fun observeDelegate(delegate: AwaitDelegate, coroutineScope: CoroutineScope) {
         delegate.outputDataFlow
+            .filterNotNull()
             .onEach { outputDataChanged(it) }
             .launchIn(coroutineScope)
     }
 
-    private fun outputDataChanged(outputData: AwaitOutputData?) {
-        Logger.d(TAG, "onChanged")
-
-        if (outputData == null) return
+    private fun outputDataChanged(outputData: AwaitOutputData) {
+        Logger.d(TAG, "outputDataChanged")
 
         updateMessageText(outputData.paymentMethodType)
         updateLogo(outputData.paymentMethodType)

@@ -15,13 +15,11 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.core.view.isVisible
-import androidx.lifecycle.Observer
 import com.adyen.checkout.action.GenericActionComponent
 import com.adyen.checkout.action.GenericActionConfiguration
 import com.adyen.checkout.components.ActionComponentData
 import com.adyen.checkout.components.ComponentError
 import com.adyen.checkout.components.model.payments.response.Action
-import com.adyen.checkout.components.ui.view.AdyenComponentView
 import com.adyen.checkout.core.exception.CheckoutException
 import com.adyen.checkout.core.log.LogUtil
 import com.adyen.checkout.core.log.Logger
@@ -31,7 +29,7 @@ import com.adyen.checkout.dropin.getActionProviderFor
 import com.adyen.checkout.dropin.ui.base.DropInBottomSheetDialogFragment
 
 @SuppressWarnings("TooManyFunctions")
-class ActionComponentDialogFragment : DropInBottomSheetDialogFragment(), Observer<ActionComponentData> {
+class ActionComponentDialogFragment : DropInBottomSheetDialogFragment() {
 
     companion object {
         private val TAG = LogUtil.getTag()
@@ -81,19 +79,22 @@ class ActionComponentDialogFragment : DropInBottomSheetDialogFragment(), Observe
         binding.header.isVisible = false
 
         try {
-
             actionComponent =
                 GenericActionComponent.PROVIDER.get(this, requireActivity().application, actionConfiguration)
 
             if (shouldFinishWithAction()) {
-                with(binding.buttonFinish) {
+                binding.buttonFinish.apply {
                     isVisible = true
                     setOnClickListener { protocol.finishWithAction() }
                 }
             }
 
+            actionComponent.observe(viewLifecycleOwner, ::onActionComponentDataChanged)
+            actionComponent.observeErrors(viewLifecycleOwner, ::onError)
+
+            binding.componentView.attach(actionComponent, viewLifecycleOwner)
+
             actionComponent.handleAction(requireActivity(), action)
-            attachComponent(actionComponent, binding.componentView)
         } catch (e: CheckoutException) {
             handleError(ComponentError(e))
         }
@@ -125,27 +126,17 @@ class ActionComponentDialogFragment : DropInBottomSheetDialogFragment(), Observe
         }
     }
 
-    override fun onChanged(actionComponentData: ActionComponentData?) {
-        Logger.d(TAG, "onChanged")
+    private fun onActionComponentDataChanged(actionComponentData: ActionComponentData?) {
+        Logger.d(TAG, "onActionComponentDataChanged")
         if (actionComponentData != null) {
             protocol.requestDetailsCall(actionComponentData)
         }
     }
 
-    private fun attachComponent(
-        component: GenericActionComponent,
-        componentView: AdyenComponentView
-    ) {
-        componentView.attach(component, viewLifecycleOwner)
-        component.observe(viewLifecycleOwner, this)
-        component.observeErrors(viewLifecycleOwner, createErrorHandlerObserver())
-    }
-
-    private fun createErrorHandlerObserver(): Observer<ComponentError> {
-        return Observer {
-            if (it != null) {
-                handleError(it)
-            }
+    private fun onError(error: ComponentError?) {
+        Logger.d(TAG, "onError")
+        if (error != null) {
+            handleError(error)
         }
     }
 
@@ -159,15 +150,7 @@ class ActionComponentDialogFragment : DropInBottomSheetDialogFragment(), Observe
         return getActionProviderFor(action)?.providesDetails() == false
     }
 
-    fun handleRedirectResponse(intent: Intent) {
-        handleIntent(intent)
-    }
-
-    fun handleWeChatPayResponse(intent: Intent) {
-        handleIntent(intent)
-    }
-
-    private fun handleIntent(intent: Intent) {
+    fun handleIntent(intent: Intent) {
         Logger.d(TAG, "handleAction")
         actionComponent.handleIntent(intent)
     }

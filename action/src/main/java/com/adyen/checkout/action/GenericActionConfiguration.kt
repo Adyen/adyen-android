@@ -10,6 +10,7 @@ package com.adyen.checkout.action
 
 import android.os.Parcel
 import android.os.Parcelable
+import androidx.annotation.RestrictTo
 import com.adyen.checkout.action.GenericActionConfiguration.Builder
 import com.adyen.checkout.adyen3ds2.Adyen3DS2Configuration
 import com.adyen.checkout.await.AwaitConfiguration
@@ -81,6 +82,7 @@ class GenericActionConfiguration : Configuration, Parcelable {
         builderClientKey
     ) {
 
+        @RestrictTo(RestrictTo.Scope.LIBRARY_GROUP)
         val availableActionConfigs = HashMap<Class<*>, Configuration>()
 
         /**

@@ -546,7 +546,7 @@ class DropInActivity :
 
         if (WeChatPayUtils.isResultIntent(intent)) {
             Logger.d(TAG, "isResultIntent")
-            handleWeChatPayResponse(intent)
+            handleActionIntentResponse(intent)
         }
 
         when (intent.action) {
@@ -554,7 +554,7 @@ class DropInActivity :
             Intent.ACTION_VIEW -> {
                 val data = intent.data
                 if (data != null && data.toString().startsWith(RedirectComponent.REDIRECT_RESULT_SCHEME)) {
-                    handleRedirectResponse(intent)
+                    handleActionIntentResponse(intent)
                 } else {
                     Logger.e(TAG, "Unexpected response from ACTION_VIEW - ${intent.data}")
                 }
@@ -565,14 +565,9 @@ class DropInActivity :
         }
     }
 
-    private fun handleWeChatPayResponse(intent: Intent) {
+    private fun handleActionIntentResponse(intent: Intent) {
         val actionFragment = getActionFragment() ?: return
-        actionFragment.handleWeChatPayResponse(intent)
-    }
-
-    private fun handleRedirectResponse(intent: Intent) {
-        val actionFragment = getActionFragment() ?: return
-        actionFragment.handleRedirectResponse(intent)
+        actionFragment.handleIntent(intent)
     }
 
     private fun getActionFragment(): ActionComponentDialogFragment? {

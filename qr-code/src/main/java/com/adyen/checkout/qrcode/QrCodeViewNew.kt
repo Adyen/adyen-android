@@ -25,6 +25,7 @@ import com.adyen.checkout.core.log.LogUtil
 import com.adyen.checkout.core.log.Logger
 import com.adyen.checkout.qrcode.databinding.QrcodeViewBinding
 import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.flow.filterNotNull
 import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.onEach
 import java.util.concurrent.TimeUnit
@@ -63,7 +64,7 @@ class QrCodeViewNew @JvmOverloads constructor(
 
         observeDelegate(delegate, coroutineScope)
 
-        binding.copyButton.setOnClickListener { copyCode(delegate) }
+        binding.copyButton.setOnClickListener { copyCode(delegate.outputData?.qrCodeData) }
     }
 
     private fun initLocalizedStrings(localizedContext: Context) {
@@ -72,6 +73,7 @@ class QrCodeViewNew @JvmOverloads constructor(
 
     private fun observeDelegate(delegate: QRCodeDelegate, coroutineScope: CoroutineScope) {
         delegate.outputDataFlow
+            .filterNotNull()
             .onEach { outputDataChanged(it) }
             .launchIn(coroutineScope)
 
@@ -80,10 +82,8 @@ class QrCodeViewNew @JvmOverloads constructor(
             .launchIn(coroutineScope)
     }
 
-    private fun outputDataChanged(outputData: QRCodeOutputData?) {
-        Logger.d(TAG, "onChanged")
-
-        if (outputData == null) return
+    private fun outputDataChanged(outputData: QRCodeOutputData) {
+        Logger.d(TAG, "outputDataChanged")
 
         updateMessageText(outputData.paymentMethodType)
         updateLogo(outputData.paymentMethodType)
@@ -126,11 +126,11 @@ class QrCodeViewNew @JvmOverloads constructor(
         binding.progressIndicator.progress = timerData.progress
     }
 
-    private fun copyCode(delegate: QRCodeDelegate) {
-        val code = delegate.outputData?.qrCodeData ?: return
+    private fun copyCode(qrCodeData: String?) {
+        qrCodeData ?: return
         context.copyTextToClipboard(
             "Pix Code",
-            code,
+            qrCodeData,
             localizedContext.getString(R.string.checkout_qr_code_copied_toast)
         )
     }

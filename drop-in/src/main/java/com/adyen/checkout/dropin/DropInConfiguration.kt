@@ -136,8 +136,8 @@ class DropInConfiguration : Configuration, Parcelable {
             private val TAG = LogUtil.getTag()
         }
 
-        val availablePaymentConfigs = HashMap<String, Configuration>()
-        val availableActionConfigs = HashMap<Class<*>, Configuration>()
+        internal val availablePaymentConfigs = HashMap<String, Configuration>()
+        internal val availableActionConfigs = HashMap<Class<*>, Configuration>()
 
         var amount: Amount = Amount.EMPTY
             private set
