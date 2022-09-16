@@ -12,7 +12,7 @@
     <style name="AdyenCheckout.OnlineBankingCZ" />
 
     <style name="AdyenCheckout.OnlineBankingCZ.TermsAndConditionsTextView">
-        <item name="android:text">@string/checkout_issuers_list_terms_and_conditions_text</item>
+        <item name="android:text">@string/checkout_online_banking_terms_and_conditions_text</item>
         <item name="android:minHeight">@dimen/termsAndConditions_minHeight</item>
         <item name="android:paddingStart">@dimen/termsAndConditions_paddingStart</item>
         <item name="android:paddingEnd">@dimen/termsAndConditions_paddingEnd</item>
@@ -25,7 +25,7 @@
         <item name="android:minHeight">64dp</item>
         <item name="android:layout_marginEnd">@dimen/issuersSpinner_side_margin</item>
         <item name="android:layout_marginStart">@dimen/issuersSpinner_side_margin</item>
-        <item name="android:hint">@string/checkout_issuers_list_hint</item>
+        <item name="android:hint">@string/checkout_online_banking_hint</item>
     </style>
 
 </resources>
