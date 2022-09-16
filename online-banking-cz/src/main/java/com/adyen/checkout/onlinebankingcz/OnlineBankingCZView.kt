@@ -85,7 +85,10 @@ class OnlineBankingCZView @JvmOverloads constructor(
     }
 
     override fun initLocalizedStrings(localizedContext: Context) {
-        // no embedded localized strings on this view
+        binding.textInputLayoutOnlineBanking
+            .setLocalizedHintFromStyle(R.style.AdyenCheckout_OnlineBankingCZ_TermsAndConditionsInputLayout)
+        binding.textviewTermsAndConditions
+            .setLocalizedTextFromStyle(R.style.AdyenCheckout_OnlineBankingCZ_TermsAndConditionsTextView)
     }
 
     override fun observeComponentChanges(lifecycleOwner: LifecycleOwner) = Unit
