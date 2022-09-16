@@ -29,7 +29,8 @@ class OnlineBankingCZComponentProvider :
     ): OnlineBankingCZComponent {
         val genericFactory: ViewModelProvider.Factory =
             viewModelFactory(savedStateRegistryOwner, defaultArgs) { savedStateHandle ->
-                val delegate = DefaultOnlineBankingCZDelegate(paymentMethod) { OnlineBankingCZPaymentMethod() }
+                val delegate =
+                    DefaultOnlineBankingCZDelegate(PdfOpener(), paymentMethod) { OnlineBankingCZPaymentMethod() }
 
                 OnlineBankingCZComponent(
                     savedStateHandle,

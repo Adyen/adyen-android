@@ -31,8 +31,9 @@ internal class DefaultOnlineBankingCZDelegateTest {
     private lateinit var delegate: OnlineBankingDelegate<OnlineBankingCZPaymentMethod>
 
     @BeforeEach
-    fun setUup() {
+    fun setup() {
         delegate = DefaultOnlineBankingCZDelegate(
+            pdfOpener = PdfOpener(),
             paymentMethod = PaymentMethod(),
             paymentMethodFactory = { OnlineBankingCZPaymentMethod() }
         )
