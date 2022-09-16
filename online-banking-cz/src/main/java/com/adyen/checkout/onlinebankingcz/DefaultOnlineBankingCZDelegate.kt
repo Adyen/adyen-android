@@ -21,6 +21,7 @@ import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.MutableStateFlow
 
 internal class DefaultOnlineBankingCZDelegate(
+    private val pdfOpener: PdfOpener,
     private val paymentMethod: PaymentMethod,
     private val paymentMethodFactory: () -> OnlineBankingCZPaymentMethod
 ) : OnlineBankingDelegate<OnlineBankingCZPaymentMethod> {
