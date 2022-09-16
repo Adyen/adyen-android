@@ -34,7 +34,11 @@ internal class DefaultOnlineBankingCZDelegate(
     private val _exceptionFlow: MutableSharedFlow<CheckoutException> = MutableSingleEventSharedFlow()
     override val exceptionFlow: Flow<CheckoutException> = _exceptionFlow
 
-    private val pdfOpener = PdfOpener()
+    init {
+        val outputData = OnlineBankingOutputData()
+        _outputDataFlow.tryEmit(outputData)
+        createComponentState(outputData)
+    }
 
     override fun getIssuers(): List<OnlineBankingModel> =
         paymentMethod.issuers?.mapToModel() ?: paymentMethod.details.getLegacyIssuers()
