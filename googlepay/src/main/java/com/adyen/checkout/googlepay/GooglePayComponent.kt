@@ -34,7 +34,8 @@ class GooglePayComponent(
     savedStateHandle: SavedStateHandle,
     private val googlePayDelegate: GooglePayDelegate,
     configuration: GooglePayConfiguration
-) : BasePaymentComponent<GooglePayConfiguration, GooglePayInputData, GooglePayOutputData, GooglePayComponentState>(
+) :
+    BasePaymentComponent<GooglePayConfiguration, GooglePayInputData, GooglePayOutputData, GooglePayComponentState>(
         savedStateHandle,
         googlePayDelegate,
         configuration

@@ -47,7 +47,6 @@ class KeyValueStorageImpl(
     }
 
     override fun getAmount(): Amount {
-
         val amountValue = sharedPreferences.get(appContext, R.string.value_key, DEFAULT_VALUE)
         val amountCurrency = sharedPreferences.get(appContext, R.string.currency_key, DEFAULT_CURRENCY)
 

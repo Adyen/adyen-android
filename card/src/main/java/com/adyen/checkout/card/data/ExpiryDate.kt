@@ -15,6 +15,7 @@ data class ExpiryDate(
     companion object {
         @JvmField
         val EMPTY_DATE = ExpiryDate(0, 0)
+
         @JvmField
         val INVALID_DATE = ExpiryDate(-1, -1)
     }

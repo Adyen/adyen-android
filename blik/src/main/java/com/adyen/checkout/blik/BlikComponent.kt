@@ -9,6 +9,7 @@ package com.adyen.checkout.blik
 
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.viewModelScope
+import com.adyen.checkout.blik.BlikComponent.Companion.PROVIDER
 import com.adyen.checkout.components.PaymentComponentState
 import com.adyen.checkout.components.StoredPaymentComponentProvider
 import com.adyen.checkout.components.base.BasePaymentComponent
@@ -68,6 +69,7 @@ class BlikComponent(
 
         @JvmField
         val PROVIDER: StoredPaymentComponentProvider<BlikComponent, BlikConfiguration> = BlikComponentProvider()
+
         @JvmField
         val PAYMENT_METHOD_TYPES = arrayOf(PaymentMethodTypes.BLIK)
     }

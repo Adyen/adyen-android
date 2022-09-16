@@ -27,11 +27,14 @@ data class Configuration(
     }
 
     companion object {
+
         // Google Pay
         private const val MERCHANT_ID = "merchantId"
         private const val GATEWAY_MERCHANT_ID = "gatewayMerchantId"
+
         // PayPal
         private const val INTENT = "intent"
+
         // Card
         private const val KOREAN_AUTHENTICATION_REQUIRED = "koreanAuthenticationRequired"
 

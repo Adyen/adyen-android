@@ -12,15 +12,15 @@ if (!hasProperty("checksums")) {
             "com.adyen.threeds:adyen-3ds2:2.2.6:a7f66ed68afc898d02ff71486747abec:MD5",
 
             // Kotlin
-            "org.jetbrains.kotlin:kotlin-stdlib-jdk8:1.6.21:9e7ee18a1a5dd5bf070c7e6f706ccc9c:MD5",
-            "org.jetbrains.kotlin:kotlin-compiler-embeddable:1.6.21:eb3d83e86861d7399e816410e1ceba2c:MD5",
-            "org.jetbrains.kotlin:kotlin-klib-commonizer-embeddable:1.6.21:ea6fa29c284656cd40b13825464f5972:MD5",
+            "org.jetbrains.kotlin:kotlin-stdlib-jdk8:1.7.10:83947a5800c9fae4d5e0aa15ed5f186f:MD5",
+            "org.jetbrains.kotlin:kotlin-compiler-embeddable:1.7.10:4f1e27281f449b88816c79be9ca28282:MD5",
+            "org.jetbrains.kotlin:kotlin-klib-commonizer-embeddable:1.7.10:de4db4c7bb06ac1e42d02c6cb3554824:MD5",
 
             // Coroutines
-            "org.jetbrains.kotlinx:kotlinx-coroutines-android:1.6.1:e427aac656a3159609ea059d38feaf7f:MD5",
+            "org.jetbrains.kotlinx:kotlinx-coroutines-android:1.6.3:5d4bb91bea603d79f1b03418988aa56e:MD5",
 
             // Android Gradle Plugin
-            "androidx.databinding:viewbinding:7.1.0:c59dfc4dbdf2bb7560b26e178fa3041a:MD5",
+            "androidx.databinding:viewbinding:7.2.0:8c048d5a6199e4209952fa47c3f87227:MD5",
 
             // AndroidX
             "androidx.annotation:annotation:1.3.0:a65958ba342e73cd31b9246352ce732a:MD5",

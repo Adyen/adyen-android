@@ -112,7 +112,8 @@ class ClientSideEncrypter(publicKeyString: String) {
                 PREFIX,
                 VERSION,
                 SEPARATOR,
-                Base64.encodeToString(encryptedAesKey, Base64.NO_WRAP), SEPARATOR,
+                Base64.encodeToString(encryptedAesKey, Base64.NO_WRAP),
+                SEPARATOR,
                 Base64.encodeToString(result, Base64.NO_WRAP)
             )
         } catch (e: IllegalBlockSizeException) {

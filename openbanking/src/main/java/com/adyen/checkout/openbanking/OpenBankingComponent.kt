@@ -13,6 +13,7 @@ import com.adyen.checkout.components.model.payments.request.OpenBankingPaymentMe
 import com.adyen.checkout.components.util.PaymentMethodTypes
 import com.adyen.checkout.issuerlist.IssuerListComponent
 import com.adyen.checkout.issuerlist.IssuerListDelegate
+import com.adyen.checkout.openbanking.OpenBankingComponent.Companion.PROVIDER
 
 /**
  * Component should not be instantiated directly. Instead use the [PROVIDER] object.
@@ -33,6 +34,7 @@ class OpenBankingComponent(
         @JvmField
         val PROVIDER: PaymentComponentProvider<OpenBankingComponent, OpenBankingConfiguration> =
             OpenBankingComponentProvider()
+
         @JvmField
         val PAYMENT_METHOD_TYPES = arrayOf(PaymentMethodTypes.OPEN_BANKING)
     }

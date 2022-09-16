@@ -11,6 +11,7 @@ import androidx.lifecycle.SavedStateHandle
 import com.adyen.checkout.components.PaymentComponentProvider
 import com.adyen.checkout.components.model.payments.request.EntercashPaymentMethod
 import com.adyen.checkout.components.util.PaymentMethodTypes
+import com.adyen.checkout.entercash.EntercashComponent.Companion.PROVIDER
 import com.adyen.checkout.issuerlist.IssuerListComponent
 import com.adyen.checkout.issuerlist.IssuerListDelegate
 
@@ -33,6 +34,7 @@ class EntercashComponent(
         @JvmField
         val PROVIDER: PaymentComponentProvider<EntercashComponent, EntercashConfiguration> =
             EntercashComponentProvider()
+
         @JvmField
         val PAYMENT_METHOD_TYPES = arrayOf(PaymentMethodTypes.ENTERCASH)
     }

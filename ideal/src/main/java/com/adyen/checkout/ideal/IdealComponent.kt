@@ -11,6 +11,7 @@ import androidx.lifecycle.SavedStateHandle
 import com.adyen.checkout.components.PaymentComponentProvider
 import com.adyen.checkout.components.model.payments.request.IdealPaymentMethod
 import com.adyen.checkout.components.util.PaymentMethodTypes
+import com.adyen.checkout.ideal.IdealComponent.Companion.PROVIDER
 import com.adyen.checkout.issuerlist.IssuerListComponent
 import com.adyen.checkout.issuerlist.IssuerListDelegate
 
@@ -32,6 +33,7 @@ class IdealComponent(
     companion object {
         @JvmField
         val PAYMENT_METHOD_TYPES = arrayOf(PaymentMethodTypes.IDEAL)
+
         @JvmField
         val PROVIDER: PaymentComponentProvider<IdealComponent, IdealConfiguration> = IdealComponentProvider()
     }

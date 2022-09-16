@@ -38,7 +38,6 @@ data class QrCodeAction(
         @JvmField
         val SERIALIZER: Serializer<QrCodeAction> = object : Serializer<QrCodeAction> {
             override fun serialize(modelObject: QrCodeAction): JSONObject {
-
                 return try {
                     JSONObject().apply {
                         putOpt(TYPE, modelObject.type)

@@ -96,8 +96,8 @@ object CardValidationUtils {
                 }
                 fieldState
             }
-            (fieldPolicy == Brand.FieldPolicy.OPTIONAL || fieldPolicy == Brand.FieldPolicy.HIDDEN)
-                && expiryDate != ExpiryDate.INVALID_DATE -> {
+            (fieldPolicy == Brand.FieldPolicy.OPTIONAL || fieldPolicy == Brand.FieldPolicy.HIDDEN) &&
+                expiryDate != ExpiryDate.INVALID_DATE -> {
                 FieldState(expiryDate, Validation.Valid)
             }
             else -> invalidState
@@ -129,8 +129,8 @@ object CardValidationUtils {
             !StringUtil.isDigitsAndSeparatorsOnly(normalizedSecurityCode) -> invalidState
             cardType?.cvcPolicy == Brand.FieldPolicy.OPTIONAL && length == 0 -> Validation.Valid
             cardType?.cardType == CardType.AMERICAN_EXPRESS && length == AMEX_SECURITY_CODE_SIZE -> Validation.Valid
-            cardType?.cardType != CardType.AMERICAN_EXPRESS
-                && length == GENERAL_CARD_SECURITY_CODE_SIZE -> Validation.Valid
+            cardType?.cardType != CardType.AMERICAN_EXPRESS &&
+                length == GENERAL_CARD_SECURITY_CODE_SIZE -> Validation.Valid
             else -> invalidState
         }
         return FieldState(normalizedSecurityCode, validation)

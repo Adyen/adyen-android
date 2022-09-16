@@ -263,7 +263,6 @@ ij_editorconfig_space_before_comma = false
 ij_editorconfig_spaces_around_assignment_operators = true
 
 [{*.ant,*.fxml,*.jhm,*.jnlp,*.jrxml,*.rng,*.tld,*.wsdl,*.xml,*.xsd,*.xsl,*.xslt,*.xul}]
-ij_continuation_indent_size = 4
 ij_xml_align_attributes = false
 ij_xml_align_text = false
 ij_xml_attribute_wrap = normal
@@ -472,7 +471,8 @@ ij_groovy_while_on_new_line = false
 ij_groovy_wrap_long_lines = false
 
 [{*.kt,*.kts}]
-disabled_rules=import-ordering
+# noinspection EditorConfigKeyCorrectness
+ktlint_disabled_rules=import-ordering,multiline-if-else,trailing-comma-on-call-site,trailing-comma-on-declaration-site
 max_line_length = 120
 ij_kotlin_align_in_columns_case_branch = false
 ij_kotlin_align_multiline_binary_operation = false
@@ -595,7 +595,6 @@ ij_html_space_after_tag_name = false
 ij_html_space_around_equality_in_attribute = false
 ij_html_space_inside_empty_tag = false
 ij_html_text_wrap = normal
-ij_html_uniform_ident = false
 
 [{*.yaml,*.yml}]
 indent_size = 2
