@@ -17,6 +17,7 @@ import android.util.AttributeSet
 import android.view.LayoutInflater
 import android.view.View
 import android.widget.AdapterView
+import androidx.core.content.res.ResourcesCompat
 import androidx.lifecycle.LifecycleOwner
 import com.adyen.checkout.components.PaymentComponentState
 import com.adyen.checkout.components.model.payments.request.OnlineBankingCZPaymentMethod
@@ -122,7 +123,7 @@ class OnlineBankingCZView @JvmOverloads constructor(
 
         val spannable = SpannableString(newString).apply {
             setSpan(
-                ForegroundColorSpan(resources.getColor(R.color.textColorLink)),
+                ForegroundColorSpan(ResourcesCompat.getColor(resources, R.color.textColorLink, null)),
                 firstIndex,
                 secondIndex - 2,
                 Spannable.SPAN_EXCLUSIVE_EXCLUSIVE
