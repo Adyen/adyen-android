@@ -157,7 +157,9 @@ internal fun <T : Configuration> getDefaultConfigForPaymentMethod(
         PaymentMethodTypes.MOLPAY_MALAYSIA,
         PaymentMethodTypes.MOLPAY_VIETNAM -> MolpayConfiguration.Builder(shopperLocale, environment, clientKey)
         PaymentMethodTypes.ONLINE_BANKING_CZ -> OnlineBankingConfiguration.Builder(
-            shopperLocale, environment, clientKey
+            shopperLocale,
+            environment,
+            clientKey
         )
         PaymentMethodTypes.ONLINE_BANKING_PL -> OnlineBankingPLConfiguration.Builder(
             shopperLocale,
