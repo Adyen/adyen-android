@@ -75,7 +75,7 @@ class RedirectComponentProvider : ActionComponentProvider<RedirectComponent, Red
         return supportedActionTypes.contains(action.type)
     }
 
-    override fun providesDetails(): Boolean {
+    override fun providesDetails(action: Action): Boolean {
         return true
     }
 }

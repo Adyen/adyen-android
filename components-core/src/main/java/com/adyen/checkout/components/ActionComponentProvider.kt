@@ -97,5 +97,5 @@ interface ActionComponentProvider<
      * @return If the provided component provides details to make an API call to /payments/details end point.
      */
     // TODO move to component?
-    fun providesDetails(): Boolean
+    fun providesDetails(action: Action): Boolean
 }

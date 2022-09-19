@@ -21,7 +21,6 @@ import com.adyen.checkout.components.status.model.StatusResponse
 import com.adyen.checkout.components.status.model.TimerData
 import com.adyen.checkout.components.ui.ViewProvider
 import com.adyen.checkout.components.ui.view.ComponentViewType
-import com.adyen.checkout.components.util.PaymentMethodTypes
 import com.adyen.checkout.core.exception.CheckoutException
 import com.adyen.checkout.core.exception.ComponentException
 import com.adyen.checkout.core.log.LogUtil
@@ -159,7 +158,7 @@ internal class DefaultQRCodeDelegate(
     }
 
     private fun requiresView(action: QrCodeAction): Boolean {
-        return VIEWABLE_PAYMENT_METHODS.contains(action.paymentMethodType)
+        return QRCodeComponent.PROVIDER.requiresView(action)
     }
 
     override fun refreshStatus() {
@@ -209,7 +208,5 @@ internal class DefaultQRCodeDelegate(
         internal const val PAYLOAD_DETAILS_KEY = "payload"
         private val STATUS_POLLING_INTERVAL_MILLIS = TimeUnit.SECONDS.toMillis(1L)
         private const val HUNDRED = 100
-
-        private val VIEWABLE_PAYMENT_METHODS = listOf(PaymentMethodTypes.PIX)
     }
 }

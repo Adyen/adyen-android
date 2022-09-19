@@ -25,7 +25,6 @@ import com.adyen.checkout.core.log.LogUtil
 import com.adyen.checkout.core.log.Logger
 import com.adyen.checkout.dropin.R
 import com.adyen.checkout.dropin.databinding.FragmentGenericActionComponentBinding
-import com.adyen.checkout.dropin.getActionProviderFor
 import com.adyen.checkout.dropin.ui.base.DropInBottomSheetDialogFragment
 
 @SuppressWarnings("TooManyFunctions")
@@ -145,9 +144,8 @@ class ActionComponentDialogFragment : DropInBottomSheetDialogFragment() {
         protocol.showError(getString(R.string.action_failed), componentError.errorMessage, true)
     }
 
-    // TODO this should rely on the generic component not the individual providers
     private fun shouldFinishWithAction(): Boolean {
-        return getActionProviderFor(action)?.providesDetails() == false
+        return !GenericActionComponent.PROVIDER.providesDetails(action)
     }
 
     fun handleIntent(intent: Intent) {

@@ -14,9 +14,7 @@ import android.app.Application
 import android.content.Context
 import androidx.fragment.app.Fragment
 import com.adyen.checkout.action.GenericActionConfiguration
-import com.adyen.checkout.adyen3ds2.Adyen3DS2Component
 import com.adyen.checkout.adyen3ds2.Adyen3DS2Configuration
-import com.adyen.checkout.await.AwaitComponent
 import com.adyen.checkout.await.AwaitConfiguration
 import com.adyen.checkout.await.AwaitView
 import com.adyen.checkout.bacs.BacsDirectDebitComponent
@@ -30,7 +28,6 @@ import com.adyen.checkout.blik.BlikView
 import com.adyen.checkout.card.CardComponent
 import com.adyen.checkout.card.CardConfiguration
 import com.adyen.checkout.card.CardView
-import com.adyen.checkout.components.ActionComponentProvider
 import com.adyen.checkout.components.AlwaysAvailablePaymentMethod
 import com.adyen.checkout.components.ComponentAvailableCallback
 import com.adyen.checkout.components.ComponentView
@@ -38,10 +35,8 @@ import com.adyen.checkout.components.PaymentComponent
 import com.adyen.checkout.components.PaymentComponentState
 import com.adyen.checkout.components.PaymentMethodAvailabilityCheck
 import com.adyen.checkout.components.ViewableComponent
-import com.adyen.checkout.components.base.ActionDelegate
 import com.adyen.checkout.components.base.AmountConfiguration
 import com.adyen.checkout.components.base.AmountConfigurationBuilder
-import com.adyen.checkout.components.base.BaseActionComponent
 import com.adyen.checkout.components.base.BaseConfigurationBuilder
 import com.adyen.checkout.components.base.Configuration
 import com.adyen.checkout.components.base.OutputData
@@ -49,7 +44,6 @@ import com.adyen.checkout.components.model.paymentmethods.PaymentMethod
 import com.adyen.checkout.components.model.paymentmethods.StoredPaymentMethod
 import com.adyen.checkout.components.model.payments.Amount
 import com.adyen.checkout.components.model.payments.request.PaymentMethodDetails
-import com.adyen.checkout.components.model.payments.response.Action
 import com.adyen.checkout.components.util.ActionTypes
 import com.adyen.checkout.components.util.PaymentMethodTypes
 import com.adyen.checkout.core.exception.CheckoutException
@@ -88,18 +82,14 @@ import com.adyen.checkout.onlinebankingpl.OnlineBankingPLRecyclerView
 import com.adyen.checkout.openbanking.OpenBankingComponent
 import com.adyen.checkout.openbanking.OpenBankingConfiguration
 import com.adyen.checkout.openbanking.OpenBankingRecyclerView
-import com.adyen.checkout.qrcode.QRCodeComponent
 import com.adyen.checkout.qrcode.QRCodeConfiguration
 import com.adyen.checkout.qrcode.QRCodeView
-import com.adyen.checkout.redirect.RedirectComponent
 import com.adyen.checkout.redirect.RedirectConfiguration
 import com.adyen.checkout.sepa.SepaComponent
 import com.adyen.checkout.sepa.SepaConfiguration
 import com.adyen.checkout.sepa.SepaView
-import com.adyen.checkout.voucher.VoucherComponent
 import com.adyen.checkout.voucher.VoucherConfiguration
 import com.adyen.checkout.voucher.VoucherView
-import com.adyen.checkout.wechatpay.WeChatPayActionComponent
 import com.adyen.checkout.wechatpay.WeChatPayActionConfiguration
 import com.adyen.checkout.wechatpay.WeChatPayProvider
 
@@ -431,25 +421,6 @@ internal fun getViewFor(
         }
         // TODO check if this generic approach can be improved
     } as ComponentView<in OutputData, ViewableComponent<*, *, *>>
-}
-
-/**
- * @param action The action to be handled
- *
- * @return The provider able to handle the action.
- */
-internal fun getActionProviderFor(
-    action: Action
-): ActionComponentProvider<out BaseActionComponent<out Configuration>, out Configuration, out ActionDelegate<*>>? {
-    val allActionProviders = listOf(
-        RedirectComponent.PROVIDER,
-        Adyen3DS2Component.PROVIDER,
-        WeChatPayActionComponent.PROVIDER,
-        AwaitComponent.PROVIDER,
-        QRCodeComponent.PROVIDER,
-        VoucherComponent.PROVIDER
-    )
-    return allActionProviders.firstOrNull { it.canHandleAction(action) }
 }
 
 @Suppress("ComplexMethod")

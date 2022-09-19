@@ -77,7 +77,7 @@ class VoucherComponentProvider : ActionComponentProvider<VoucherComponent, Vouch
         return true
     }
 
-    override fun providesDetails(): Boolean {
+    override fun providesDetails(action: Action): Boolean {
         return false
     }
 }

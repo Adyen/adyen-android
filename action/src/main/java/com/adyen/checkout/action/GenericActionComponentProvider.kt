@@ -81,13 +81,13 @@ class GenericActionComponentProvider :
     )
     override fun requiresConfiguration(): Boolean = true
 
-    override fun requiresView(action: Action): Boolean = true
+    override fun requiresView(action: Action): Boolean = getProvider(action).requiresView(action)
 
-    override fun canHandleAction(action: Action): Boolean {
-        return supportedActionTypes.contains(action.type)
-    }
+    override fun canHandleAction(action: Action): Boolean = getProvider(action).canHandleAction(action)
 
-    override fun providesDetails(): Boolean {
-        return true
+    override fun providesDetails(action: Action): Boolean = getProvider(action).providesDetails(action)
+
+    private fun getProvider(action: Action): ActionComponentProvider<*, *, *> {
+        return getActionProviderFor(action) ?: throw IllegalArgumentException("No provider available for this action")
     }
 }

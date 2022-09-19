@@ -81,7 +81,7 @@ class AwaitComponentProvider : ActionComponentProvider<AwaitComponent, AwaitConf
 
     override fun requiresView(action: Action): Boolean = true
 
-    override fun providesDetails(): Boolean {
+    override fun providesDetails(action: Action): Boolean {
         return true
     }
 }
