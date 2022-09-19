@@ -122,13 +122,14 @@ class OnlineBankingCZView @JvmOverloads constructor(
 
         val spannable = SpannableString(newString).apply {
             setSpan(
-                ForegroundColorSpan(R.color.textColorLink),
+                ForegroundColorSpan(resources.getColor(R.color.textColorLink, null)),
                 firstIndex,
                 secondIndex - 2,
                 Spannable.SPAN_EXCLUSIVE_EXCLUSIVE
             )
             setSpan(
-                UnderlineSpan(), firstIndex,
+                UnderlineSpan(),
+                firstIndex,
                 secondIndex - 2,
                 Spannable.SPAN_EXCLUSIVE_EXCLUSIVE
             )
