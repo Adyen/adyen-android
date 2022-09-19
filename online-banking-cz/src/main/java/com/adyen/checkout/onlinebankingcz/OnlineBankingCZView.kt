@@ -9,6 +9,10 @@
 package com.adyen.checkout.onlinebankingcz
 
 import android.content.Context
+import android.text.Spannable
+import android.text.SpannableString
+import android.text.style.ForegroundColorSpan
+import android.text.style.UnderlineSpan
 import android.util.AttributeSet
 import android.view.LayoutInflater
 import android.view.View
@@ -89,6 +93,7 @@ class OnlineBankingCZView @JvmOverloads constructor(
             .setLocalizedHintFromStyle(R.style.AdyenCheckout_OnlineBankingCZ_TermsAndConditionsInputLayout)
         binding.textviewTermsAndConditions
             .setLocalizedTextFromStyle(R.style.AdyenCheckout_OnlineBankingCZ_TermsAndConditionsTextView)
+        styleTermsAndConditions(localizedContext.getString(R.string.checkout_online_banking_terms_and_conditions_text))
     }
 
     override fun observeComponentChanges(lifecycleOwner: LifecycleOwner) = Unit
@@ -107,6 +112,29 @@ class OnlineBankingCZView @JvmOverloads constructor(
         super.setEnabled(enabled)
         binding.autoCompleteTextViewOnlineBanking.isEnabled = enabled
         binding.textInputLayoutOnlineBanking.isEnabled = enabled
+    }
+
+    private fun styleTermsAndConditions(string: String) {
+        val firstIndex = string.indexOf("%#", 0, ignoreCase = true)
+        val secondIndex = string.indexOf("%#", firstIndex + 2, ignoreCase = true)
+
+        val newString = string.replace("%#", "", ignoreCase = true)
+
+        val spannable = SpannableString(newString).apply {
+            setSpan(
+                ForegroundColorSpan(R.color.textColorLink),
+                firstIndex,
+                secondIndex - 2,
+                Spannable.SPAN_EXCLUSIVE_EXCLUSIVE
+            )
+            setSpan(
+                UnderlineSpan(), firstIndex,
+                secondIndex - 2,
+                Spannable.SPAN_EXCLUSIVE_EXCLUSIVE
+            )
+        }
+
+        binding.textviewTermsAndConditions.text = spannable
     }
 
     companion object {
