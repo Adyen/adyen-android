@@ -7,6 +7,6 @@
   -->
 
 <resources>
-    <string name="checkout_online_banking_terms_and_conditions_text">Αν κάνετε κλικ στη «Συνέχεια», αποδέχεστε τους <a href="">Όρους και προϋποθέσεις</a></string>
+    <string name="checkout_online_banking_terms_and_conditions_text">Αν κάνετε κλικ στη «Συνέχεια», αποδέχεστε τους %#Όρους και προϋποθέσεις%#</string>
     <string name="checkout_online_banking_hint">Επιλέξτε την τράπεζά σας</string>
 </resources>

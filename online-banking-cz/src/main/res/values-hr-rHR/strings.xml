@@ -7,6 +7,6 @@
   -->
 
 <resources>
-    <string name="checkout_online_banking_terms_and_conditions_text">Klikom na nastavak slažete se s <a href="">uvjetima i odredbama</a></string>
+    <string name="checkout_online_banking_terms_and_conditions_text">Klikom na nastavak slažete se s %#uvjetima i odredbama%#</string>
     <string name="checkout_online_banking_hint">Odaberite banku</string>
 </resources>
