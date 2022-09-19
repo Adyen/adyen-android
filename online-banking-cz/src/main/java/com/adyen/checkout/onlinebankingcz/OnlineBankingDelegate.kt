@@ -27,5 +27,5 @@ interface OnlineBankingDelegate<IssuerListPaymentMethodT : IssuerListPaymentMeth
     val exceptionFlow: Flow<CheckoutException>
 
     fun getIssuers(): List<OnlineBankingModel>
-    fun openPdf(context: Context)
+    fun openPdf(context: Context, url: String)
 }

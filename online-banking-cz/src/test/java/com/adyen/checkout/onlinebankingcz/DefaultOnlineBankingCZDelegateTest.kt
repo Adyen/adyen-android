@@ -8,6 +8,7 @@
 
 package com.adyen.checkout.onlinebankingcz
 
+import android.content.Context
 import app.cash.turbine.test
 import com.adyen.checkout.components.model.paymentmethods.PaymentMethod
 import com.adyen.checkout.components.model.payments.request.OnlineBankingCZPaymentMethod
@@ -15,14 +16,20 @@ import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.test.runTest
 import org.junit.Assert.assertEquals
 import org.junit.Assert.assertFalse
+import org.junit.Assert.assertNotNull
 import org.junit.Assert.assertNull
 import org.junit.Assert.assertTrue
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.DisplayName
 import org.junit.jupiter.api.Nested
 import org.junit.jupiter.api.Test
+import org.junit.jupiter.api.assertThrows
 import org.junit.jupiter.api.extension.ExtendWith
+import org.mockito.Mock
 import org.mockito.junit.jupiter.MockitoExtension
+import org.mockito.kotlin.doThrow
+import org.mockito.kotlin.verify
+import org.mockito.kotlin.whenever
 
 @OptIn(ExperimentalCoroutinesApi::class)
 @ExtendWith(MockitoExtension::class)
@@ -30,10 +37,16 @@ internal class DefaultOnlineBankingCZDelegateTest {
 
     private lateinit var delegate: OnlineBankingDelegate<OnlineBankingCZPaymentMethod>
 
+    @Mock
+    private lateinit var mockContext: Context
+
+    @Mock
+    private lateinit var pdfOpener: PdfOpener
+
     @BeforeEach
     fun setup() {
         delegate = DefaultOnlineBankingCZDelegate(
-            pdfOpener = PdfOpener(),
+            pdfOpener = pdfOpener,
             paymentMethod = PaymentMethod(),
             paymentMethodFactory = { OnlineBankingCZPaymentMethod() }
         )
@@ -148,5 +161,34 @@ internal class DefaultOnlineBankingCZDelegateTest {
                 }
             }
         }
+    }
+
+    @Nested
+    @DisplayName("when trying pdf opener and it")
+    inner class PdfOpenerTest {
+        @Test
+        fun `successfully open pdf`() {
+            val url = URL
+
+            delegate.openPdf(mockContext, url)
+
+            verify(pdfOpener).open(mockContext, url)
+            assertNotNull(url)
+        }
+
+        @Test
+        fun `failed to open pdf and throw an exception`() {
+            val url = URL
+            whenever(pdfOpener.open(mockContext, url)) doThrow IllegalStateException("failed")
+
+            delegate.openPdf(mockContext, url)
+
+            assertThrows<IllegalStateException> { pdfOpener.open(mockContext, url) }
+            assertNotNull(url)
+        }
+    }
+
+    companion object {
+        private const val URL = "any-url"
     }
 }

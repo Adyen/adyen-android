@@ -67,16 +67,11 @@ internal class DefaultOnlineBankingCZDelegate(
         _componentStateFlow.tryEmit(state)
     }
 
-    override fun openPdf(context: Context) {
-        val url = TERMS_CONDITIONS_URL
+    override fun openPdf(context: Context, url: String) {
         try {
             pdfOpener.open(context, url)
         } catch (e: IllegalStateException) {
             _exceptionFlow.tryEmit(CheckoutException(e.message ?: "", e.cause))
         }
-    }
-
-    companion object {
-        private const val TERMS_CONDITIONS_URL = "https://static.payu.com/sites/terms/files/payu_privacy_policy_cs.pdf"
     }
 }
