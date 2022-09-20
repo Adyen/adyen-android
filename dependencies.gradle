@@ -41,7 +41,7 @@ ext {
     recyclerview_version = "1.2.1"
 
     // Adyen Dependencies
-    adyen3ds2_version = "2.2.6"
+    adyen3ds2_version = "2.2.7"
 
     // External Dependencies
     okhttp_version = "4.9.3"
