@@ -69,7 +69,11 @@ abstract class AdyenLinearLayout<
         setLocalizedHintFromStyle(styleResId, localizedContext)
     }
 
-    protected fun TextView.setLocalizedTextFromStyle(@StyleRes styleResId: Int) {
-        setLocalizedTextFromStyle(styleResId, localizedContext)
+    protected fun TextView.setLocalizedTextFromStyle(
+        @StyleRes styleResId: Int,
+        formatHyperLink: Boolean = false,
+        replacementToken: String = ""
+    ) {
+        setLocalizedTextFromStyle(styleResId, localizedContext, formatHyperLink, replacementToken)
     }
 }

@@ -1,6 +1,9 @@
 package com.adyen.checkout.components.extensions
 
 import android.content.Context
+import android.text.Spannable
+import android.text.SpannableString
+import android.text.style.URLSpan
 import android.view.View
 import android.widget.TextView
 import androidx.annotation.StyleRes
@@ -24,9 +27,32 @@ fun TextInputLayout.setLocalizedHintFromStyle(@StyleRes styleResId: Int, localiz
     typedArray.recycle()
 }
 
-fun TextView.setLocalizedTextFromStyle(@StyleRes styleResId: Int, localizedContext: Context) {
+fun TextView.setLocalizedTextFromStyle(
+    @StyleRes styleResId: Int,
+    localizedContext: Context,
+    formatHyperLink: Boolean = false,
+    replacementToken: String = ""
+) {
     val attrs = intArrayOf(android.R.attr.text)
     val typedArray = localizedContext.obtainStyledAttributes(styleResId, attrs)
-    text = typedArray.getString(0)
+    val stringResValue = typedArray.getString(0)
+    text = if (formatHyperLink) {
+        // check if the string contains the replacement token twice
+        val counter = stringResValue?.split(replacementToken)?.size?.minus(1)
+        if (counter != 2) return
+        val spannable = stringResValue.formatStringWithHyperlink(replacementToken)
+        spannable
+    } else stringResValue
     typedArray.recycle()
+}
+
+fun String.formatStringWithHyperlink(replacementToken: String): SpannableString {
+    val firstTokenIndex = this.indexOf(replacementToken, 0, ignoreCase = true)
+    val lastTokenIndex = this.lastIndexOf(replacementToken) - replacementToken.length
+
+    val sanitizedText = this.replace(replacementToken, "", ignoreCase = true)
+
+    return SpannableString(sanitizedText).apply {
+        setSpan(URLSpan(""), firstTokenIndex, lastTokenIndex, Spannable.SPAN_EXCLUSIVE_EXCLUSIVE)
+    }
 }
