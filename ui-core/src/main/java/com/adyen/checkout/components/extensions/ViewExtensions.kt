@@ -36,13 +36,10 @@ fun TextView.setLocalizedTextFromStyle(
     val attrs = intArrayOf(android.R.attr.text)
     val typedArray = localizedContext.obtainStyledAttributes(styleResId, attrs)
     val stringResValue = typedArray.getString(0)
-    text = if (formatHyperLink) {
-        // check if the string contains the replacement token twice
-        val counter = stringResValue?.split(replacementToken)?.size?.minus(1)
-        if (counter != 2) return
-        val spannable = stringResValue.formatStringWithHyperlink(replacementToken)
-        spannable
-    } else stringResValue
+    // check if the string contains the replacement token twice
+    val counter = stringResValue?.split(replacementToken)?.size?.minus(1)
+    text = if (formatHyperLink && counter == 2) stringResValue.formatStringWithHyperlink(replacementToken)
+    else stringResValue
     typedArray.recycle()
 }
 
