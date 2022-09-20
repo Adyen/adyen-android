@@ -3,10 +3,10 @@
  *
  * This file is open source and available under the MIT license. See the LICENSE file for more info.
  *
- * Created by atef on 13/9/2022.
+ * Created by atef on 20/9/2022.
  */
 
-package com.adyen.checkout.onlinebankingcz
+package com.adyen.checkout.components.ui.util
 
 import android.content.ActivityNotFoundException
 import android.content.Context
@@ -15,11 +15,10 @@ import android.net.Uri
 import android.os.Build
 import androidx.browser.customtabs.CustomTabColorSchemeParams
 import androidx.browser.customtabs.CustomTabsIntent
-import com.adyen.checkout.components.ui.util.ThemeUtil
 import com.adyen.checkout.core.log.LogUtil
 import com.adyen.checkout.core.log.Logger
 
-internal class PdfOpener {
+class PdfOpener {
 
     @Throws(IllegalStateException::class)
     fun open(context: Context, url: String) {
