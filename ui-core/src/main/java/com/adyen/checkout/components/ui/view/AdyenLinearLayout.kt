@@ -34,7 +34,9 @@ abstract class AdyenLinearLayout<
 
     private var _component: ComponentT? = null
     protected val component: ComponentT
-        get() { return _component ?: throw IllegalStateException("Should not get Component before it's attached") }
+        get() {
+            return _component ?: throw IllegalStateException("Should not get Component before it's attached")
+        }
 
     protected lateinit var localizedContext: Context
 
@@ -69,11 +71,7 @@ abstract class AdyenLinearLayout<
         setLocalizedHintFromStyle(styleResId, localizedContext)
     }
 
-    protected fun TextView.setLocalizedTextFromStyle(
-        @StyleRes styleResId: Int,
-        formatHyperLink: Boolean = false,
-        replacementToken: String = ""
-    ) {
-        setLocalizedTextFromStyle(styleResId, localizedContext, formatHyperLink, replacementToken)
+    protected fun TextView.setLocalizedTextFromStyle(@StyleRes styleResId: Int, formatHyperLink: Boolean = false) {
+        setLocalizedTextFromStyle(styleResId, localizedContext, formatHyperLink)
     }
 }
