@@ -30,29 +30,9 @@ import com.adyen.checkout.dropin.ui.base.DropInBottomSheetDialogFragment
 @SuppressWarnings("TooManyFunctions")
 class ActionComponentDialogFragment : DropInBottomSheetDialogFragment() {
 
-    companion object {
-        private val TAG = LogUtil.getTag()
-
-        const val ACTION = "ACTION"
-        const val ACTION_CONFIGURATION = "ACTION_CONFIGURATION"
-
-        fun newInstance(
-            action: Action,
-            actionConfiguration: GenericActionConfiguration
-        ): ActionComponentDialogFragment {
-            val args = Bundle()
-            args.putParcelable(ACTION, action)
-            args.putParcelable(ACTION_CONFIGURATION, actionConfiguration)
-
-            val componentDialogFragment = ActionComponentDialogFragment()
-            componentDialogFragment.arguments = args
-
-            return componentDialogFragment
-        }
-    }
-
     private var _binding: FragmentGenericActionComponentBinding? = null
     private val binding: FragmentGenericActionComponentBinding get() = requireNotNull(_binding)
+
     private lateinit var action: Action
     private lateinit var actionType: String
     private lateinit var actionConfiguration: GenericActionConfiguration
@@ -156,5 +136,26 @@ class ActionComponentDialogFragment : DropInBottomSheetDialogFragment() {
     override fun onDestroyView() {
         _binding = null
         super.onDestroyView()
+    }
+
+    companion object {
+        private val TAG = LogUtil.getTag()
+
+        const val ACTION = "ACTION"
+        const val ACTION_CONFIGURATION = "ACTION_CONFIGURATION"
+
+        fun newInstance(
+            action: Action,
+            actionConfiguration: GenericActionConfiguration
+        ): ActionComponentDialogFragment {
+            val args = Bundle()
+            args.putParcelable(ACTION, action)
+            args.putParcelable(ACTION_CONFIGURATION, actionConfiguration)
+
+            val componentDialogFragment = ActionComponentDialogFragment()
+            componentDialogFragment.arguments = args
+
+            return componentDialogFragment
+        }
     }
 }

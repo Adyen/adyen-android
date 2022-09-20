@@ -571,7 +571,7 @@ class DropInActivity :
     }
 
     private fun getActionFragment(): ActionComponentDialogFragment? {
-        val fragment = getFragmentByTag(COMPONENT_FRAGMENT_TAG) as? ActionComponentDialogFragment
+        val fragment = getFragmentByTag(ACTION_FRAGMENT_TAG) as? ActionComponentDialogFragment
         if (fragment == null) Logger.e(TAG, "ActionComponentDialogFragment is not loaded")
         return fragment
     }
