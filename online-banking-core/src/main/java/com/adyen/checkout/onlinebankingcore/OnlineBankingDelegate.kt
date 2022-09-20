@@ -6,7 +6,7 @@
  * Created by atef on 8/9/2022.
  */
 
-package com.adyen.checkout.onlinebankingcz
+package com.adyen.checkout.onlinebankingcore
 
 import android.content.Context
 import com.adyen.checkout.components.PaymentComponentState

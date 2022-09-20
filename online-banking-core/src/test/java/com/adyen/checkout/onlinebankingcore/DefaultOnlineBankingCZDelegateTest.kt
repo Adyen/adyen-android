@@ -3,15 +3,16 @@
  *
  * This file is open source and available under the MIT license. See the LICENSE file for more info.
  *
- * Created by atef on 14/9/2022.
+ * Created by atef on 20/9/2022.
  */
 
-package com.adyen.checkout.onlinebankingcz
+package com.adyen.checkout.onlinebankingcore
 
 import android.content.Context
 import app.cash.turbine.test
 import com.adyen.checkout.components.model.paymentmethods.PaymentMethod
 import com.adyen.checkout.components.model.payments.request.OnlineBankingCZPaymentMethod
+import com.adyen.checkout.components.ui.util.PdfOpener
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.test.runTest
 import org.junit.jupiter.api.Assertions.assertEquals
@@ -45,7 +46,7 @@ internal class DefaultOnlineBankingCZDelegateTest {
 
     @BeforeEach
     fun setup() {
-        delegate = DefaultOnlineBankingCZDelegate(
+        delegate = DefaultOnlineBankingDelegate(
             pdfOpener = pdfOpener,
             paymentMethod = PaymentMethod(),
             paymentMethodFactory = { OnlineBankingCZPaymentMethod() }
