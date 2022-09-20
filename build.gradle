@@ -38,8 +38,8 @@ apply from: "config/gradle/dokkaRoot.gradle"
 allprojects {
     // SDK
     ext.min_sdk_version = 21
-    ext.target_sdk_version = 30
-    ext.compile_sdk_version = 30
+    ext.target_sdk_version = 31
+    ext.compile_sdk_version = 31
 
     // App version
     // just for example app, don't need to increment
@@ -63,7 +63,7 @@ allprojects {
     ext.browser_version = "1.3.0"
 
     // Adyen Dependencies
-    ext.adyen3ds2_version = "2.2.6"
+    ext.adyen3ds2_version = "2.2.7"
 
     // External Dependencies
     ext.play_services_wallet_version = '18.1.3'
