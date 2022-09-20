@@ -3,63 +3,31 @@
  *
  * This file is open source and available under the MIT license. See the LICENSE file for more info.
  *
- * Created by atef on 8/9/2022.
+ * Created by atef on 20/9/2022.
  */
 
 package com.adyen.checkout.onlinebankingcz
 
-import android.content.Context
 import androidx.lifecycle.SavedStateHandle
-import androidx.lifecycle.viewModelScope
 import com.adyen.checkout.components.PaymentComponentProvider
-import com.adyen.checkout.components.PaymentComponentState
-import com.adyen.checkout.components.base.BasePaymentComponent
 import com.adyen.checkout.components.model.payments.request.OnlineBankingCZPaymentMethod
 import com.adyen.checkout.components.util.PaymentMethodTypes
-import kotlinx.coroutines.flow.filterNotNull
-import kotlinx.coroutines.flow.launchIn
-import kotlinx.coroutines.flow.onEach
+import com.adyen.checkout.onlinebankingcore.OnlineBankingComponent
+import com.adyen.checkout.onlinebankingcore.DefaultOnlineBankingDelegate
+import com.adyen.checkout.onlinebankingcore.OnlineBankingConfiguration
 
 class OnlineBankingCZComponent(
     savedStateHandle: SavedStateHandle,
-    private val delegate: OnlineBankingDelegate<OnlineBankingCZPaymentMethod>,
+    delegate: DefaultOnlineBankingDelegate<OnlineBankingCZPaymentMethod>,
     configuration: OnlineBankingConfiguration
-) : BasePaymentComponent<
-    OnlineBankingConfiguration,
-    OnlineBankingInputData,
-    OnlineBankingOutputData,
-    PaymentComponentState<OnlineBankingCZPaymentMethod>
-    >(savedStateHandle, delegate, configuration) {
+) : OnlineBankingComponent<OnlineBankingCZPaymentMethod>(
+    savedStateHandle,
+    delegate,
+    configuration
+) {
 
-    override val inputData: OnlineBankingInputData = OnlineBankingInputData()
-
-    val issuers: List<OnlineBankingModel>
-        get() = delegate.getIssuers()
-
-    init {
-        delegate.outputDataFlow
-            .filterNotNull()
-            .onEach { notifyOutputDataChanged(it) }
-            .launchIn(viewModelScope)
-
-        delegate.componentStateFlow
-            .filterNotNull()
-            .onEach { notifyStateChanged(it) }
-            .launchIn(viewModelScope)
-
-        delegate.exceptionFlow
-            .filterNotNull()
-            .onEach { notifyException(it) }
-            .launchIn(viewModelScope)
-    }
-
-    override fun onInputDataChanged(inputData: OnlineBankingInputData) {
-        delegate.onInputDataChanged(inputData)
-    }
-
-    fun openTermsAndConditionsPdf(context: Context) {
-        delegate.openPdf(context, TERMS_CONDITIONS_URL)
-    }
+    override val termsAndConditionsUrl: String
+        get() = TERMS_CONDITIONS_URL
 
     override fun getSupportedPaymentMethodTypes(): Array<String> = PAYMENT_METHOD_TYPES
 
@@ -67,8 +35,9 @@ class OnlineBankingCZComponent(
         private const val TERMS_CONDITIONS_URL = "https://static.payu.com/sites/terms/files/payu_privacy_policy_cs.pdf"
 
         @JvmField
-        val PROVIDER: PaymentComponentProvider<OnlineBankingCZComponent, OnlineBankingConfiguration> =
-            OnlineBankingCZComponentProvider()
+        val PROVIDER: PaymentComponentProvider<
+            OnlineBankingComponent<OnlineBankingCZPaymentMethod>, OnlineBankingCZConfiguration
+            > = OnlineBankingCZComponentProvider()
         val PAYMENT_METHOD_TYPES = arrayOf(PaymentMethodTypes.ONLINE_BANKING_CZ)
     }
 }
