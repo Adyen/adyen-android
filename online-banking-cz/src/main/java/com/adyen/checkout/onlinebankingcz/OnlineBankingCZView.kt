@@ -89,8 +89,7 @@ class OnlineBankingCZView @JvmOverloads constructor(
             .setLocalizedHintFromStyle(R.style.AdyenCheckout_OnlineBankingCZ_TermsAndConditionsInputLayout)
         binding.textviewTermsAndConditions.setLocalizedTextFromStyle(
             R.style.AdyenCheckout_OnlineBankingCZ_TermsAndConditionsTextView,
-            formatHyperLink = true,
-            replacementToken = REPLACEMENT_TOKEN
+            formatHyperLink = true
         )
     }
 
@@ -113,7 +112,6 @@ class OnlineBankingCZView @JvmOverloads constructor(
     }
 
     companion object {
-        private const val REPLACEMENT_TOKEN = "%#"
         private val TAG = LogUtil.getTag()
     }
 }

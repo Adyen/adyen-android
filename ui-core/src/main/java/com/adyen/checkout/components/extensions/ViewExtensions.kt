@@ -30,20 +30,20 @@ fun TextInputLayout.setLocalizedHintFromStyle(@StyleRes styleResId: Int, localiz
 fun TextView.setLocalizedTextFromStyle(
     @StyleRes styleResId: Int,
     localizedContext: Context,
-    formatHyperLink: Boolean = false,
-    replacementToken: String = ""
+    formatHyperLink: Boolean = false
 ) {
     val attrs = intArrayOf(android.R.attr.text)
     val typedArray = localizedContext.obtainStyledAttributes(styleResId, attrs)
-    val stringResValue = typedArray.getString(0)
-    // check if the string contains the replacement token twice
-    val counter = stringResValue?.split(replacementToken)?.size?.minus(1)
-    text = if (formatHyperLink && counter == 2) stringResValue.formatStringWithHyperlink(replacementToken)
+    val stringResValue = typedArray.getString(0).orEmpty()
+    text = if (formatHyperLink) stringResValue.formatStringWithHyperlink()
     else stringResValue
     typedArray.recycle()
 }
 
-fun String.formatStringWithHyperlink(replacementToken: String): SpannableString {
+fun String.formatStringWithHyperlink(replacementToken: String = "%#"): CharSequence {
+    // check if the string contains the replacement token twice
+    val counter = this.split(replacementToken).size - 1
+    if (counter != 2) return this
     val firstTokenIndex = this.indexOf(replacementToken, 0, ignoreCase = true)
     val lastTokenIndex = this.lastIndexOf(replacementToken) - replacementToken.length
 
