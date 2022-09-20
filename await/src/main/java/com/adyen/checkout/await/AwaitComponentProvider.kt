@@ -65,7 +65,7 @@ class AwaitComponentProvider : ActionComponentProvider<AwaitComponent, AwaitConf
         val statusService = StatusService(configuration.environment.baseUrl)
         val statusRepository = DefaultStatusRepository(statusService, configuration.clientKey)
         val paymentDataRepository = PaymentDataRepository(savedStateHandle)
-        return DefaultAwaitDelegate(statusRepository, paymentDataRepository)
+        return DefaultAwaitDelegate(configuration, statusRepository, paymentDataRepository)
     }
 
     @Deprecated(
@@ -81,7 +81,7 @@ class AwaitComponentProvider : ActionComponentProvider<AwaitComponent, AwaitConf
 
     override fun requiresView(action: Action): Boolean = true
 
-    override fun providesDetails(): Boolean {
+    override fun providesDetails(action: Action): Boolean {
         return true
     }
 }

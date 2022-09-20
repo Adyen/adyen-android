@@ -19,7 +19,8 @@ import com.adyen.checkout.components.status.StatusRepository
 import com.adyen.checkout.components.status.api.StatusResponseUtils
 import com.adyen.checkout.components.status.model.StatusResponse
 import com.adyen.checkout.components.status.model.TimerData
-import com.adyen.checkout.components.util.PaymentMethodTypes
+import com.adyen.checkout.components.ui.ViewProvider
+import com.adyen.checkout.components.ui.view.ComponentViewType
 import com.adyen.checkout.core.exception.CheckoutException
 import com.adyen.checkout.core.exception.ComponentException
 import com.adyen.checkout.core.log.LogUtil
@@ -38,6 +39,7 @@ import java.util.concurrent.TimeUnit
 
 @Suppress("TooManyFunctions")
 internal class DefaultQRCodeDelegate(
+    override val configuration: QRCodeConfiguration,
     private val statusRepository: StatusRepository,
     private val statusCountDownTimer: QRCodeCountDownTimer,
     private val redirectHandler: RedirectHandler,
@@ -57,6 +59,8 @@ internal class DefaultQRCodeDelegate(
 
     private val _timerFlow = MutableStateFlow(TimerData(0, 0))
     override val timerFlow: Flow<TimerData> = _timerFlow
+
+    override val viewFlow: Flow<ComponentViewType?> = MutableStateFlow(QrCodeComponentViewType)
 
     private var _coroutineScope: CoroutineScope? = null
     private val coroutineScope: CoroutineScope get() = requireNotNull(_coroutineScope)
@@ -154,7 +158,7 @@ internal class DefaultQRCodeDelegate(
     }
 
     private fun requiresView(action: QrCodeAction): Boolean {
-        return VIEWABLE_PAYMENT_METHODS.contains(action.paymentMethodType)
+        return QRCodeComponent.PROVIDER.requiresView(action)
     }
 
     override fun refreshStatus() {
@@ -188,6 +192,8 @@ internal class DefaultQRCodeDelegate(
         return jsonObject
     }
 
+    override fun getViewProvider(): ViewProvider = QrCodeViewProvider()
+
     override fun onCleared() {
         statusPollingJob?.cancel()
         statusPollingJob = null
@@ -202,7 +208,5 @@ internal class DefaultQRCodeDelegate(
         internal const val PAYLOAD_DETAILS_KEY = "payload"
         private val STATUS_POLLING_INTERVAL_MILLIS = TimeUnit.SECONDS.toMillis(1L)
         private const val HUNDRED = 100
-
-        private val VIEWABLE_PAYMENT_METHODS = listOf(PaymentMethodTypes.PIX)
     }
 }

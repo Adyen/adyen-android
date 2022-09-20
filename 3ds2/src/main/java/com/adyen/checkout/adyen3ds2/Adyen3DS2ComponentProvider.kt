@@ -106,7 +106,7 @@ class Adyen3DS2ComponentProvider :
         return supportedActionTypes.contains(action.type)
     }
 
-    override fun providesDetails(): Boolean {
+    override fun providesDetails(action: Action): Boolean {
         return true
     }
 }

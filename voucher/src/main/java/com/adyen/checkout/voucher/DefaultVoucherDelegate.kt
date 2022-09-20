@@ -11,13 +11,17 @@ package com.adyen.checkout.voucher
 import android.app.Activity
 import com.adyen.checkout.components.flow.MutableSingleEventSharedFlow
 import com.adyen.checkout.components.model.payments.response.VoucherAction
+import com.adyen.checkout.components.ui.ViewProvider
+import com.adyen.checkout.components.ui.view.ComponentViewType
 import com.adyen.checkout.core.exception.CheckoutException
 import com.adyen.checkout.core.log.LogUtil
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.MutableStateFlow
 
-internal class DefaultVoucherDelegate : VoucherDelegate {
+internal class DefaultVoucherDelegate(
+    override val configuration: VoucherConfiguration
+) : VoucherDelegate {
 
     private val _outputDataFlow = MutableStateFlow<VoucherOutputData?>(null)
     override val outputDataFlow: Flow<VoucherOutputData?> = _outputDataFlow
@@ -26,6 +30,10 @@ internal class DefaultVoucherDelegate : VoucherDelegate {
     override val exceptionFlow: Flow<CheckoutException> = _exceptionFlow
 
     override val outputData: VoucherOutputData? get() = _outputDataFlow.value
+
+    override val viewFlow: Flow<ComponentViewType?> = MutableStateFlow(VoucherComponentViewType)
+
+    override fun getViewProvider(): ViewProvider = VoucherViewProvider
 
     override fun handleAction(action: VoucherAction, activity: Activity) {
         _outputDataFlow.tryEmit(

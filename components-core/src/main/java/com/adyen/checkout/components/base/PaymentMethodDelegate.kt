@@ -19,7 +19,7 @@ interface PaymentMethodDelegate<
     InputDataT : InputData,
     OutputDataT : OutputData,
     ComponentStateT : PaymentComponentState<out PaymentMethodDetails>
-    > {
+    > : ComponentDelegate {
     fun getPaymentMethodType(): String
 
     fun onInputDataChanged(inputData: InputDataT)

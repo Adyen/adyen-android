@@ -14,7 +14,6 @@ import androidx.lifecycle.DefaultLifecycleObserver
 import androidx.lifecycle.LifecycleOwner
 import androidx.lifecycle.Observer
 import androidx.lifecycle.SavedStateHandle
-import androidx.lifecycle.asLiveData
 import androidx.lifecycle.viewModelScope
 import com.adyen.checkout.components.ActionComponentData
 import com.adyen.checkout.components.ActionComponentProvider
@@ -22,10 +21,12 @@ import com.adyen.checkout.components.ViewableComponent
 import com.adyen.checkout.components.base.BaseActionComponent
 import com.adyen.checkout.components.model.payments.response.Action
 import com.adyen.checkout.components.model.payments.response.AwaitAction
+import com.adyen.checkout.components.ui.ViewProvidingComponent
+import com.adyen.checkout.components.ui.view.ComponentViewType
 import com.adyen.checkout.core.exception.ComponentException
 import com.adyen.checkout.core.log.LogUtil
 import com.adyen.checkout.core.log.Logger
-import kotlinx.coroutines.flow.filterNotNull
+import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.onEach
 
@@ -34,20 +35,23 @@ class AwaitComponent(
     savedStateHandle: SavedStateHandle,
     application: Application,
     configuration: AwaitConfiguration,
-    private val awaitDelegate: AwaitDelegate,
+    override val delegate: AwaitDelegate,
 ) : BaseActionComponent<AwaitConfiguration>(savedStateHandle, application, configuration),
-    ViewableComponent<AwaitOutputData, AwaitConfiguration, ActionComponentData> {
+    ViewableComponent<AwaitOutputData, AwaitConfiguration, ActionComponentData>,
+    ViewProvidingComponent {
 
-    override val outputData: AwaitOutputData? get() = awaitDelegate.outputData
+    override val viewFlow: Flow<ComponentViewType?> get() = delegate.viewFlow
+
+    override val outputData: AwaitOutputData? get() = delegate.outputData
 
     init {
-        awaitDelegate.initialize(viewModelScope)
+        delegate.initialize(viewModelScope)
 
-        awaitDelegate.detailsFlow
+        delegate.detailsFlow
             .onEach { notifyDetails(it) }
             .launchIn(viewModelScope)
 
-        awaitDelegate.exceptionFlow
+        delegate.exceptionFlow
             .onEach { notifyException(it) }
             .launchIn(viewModelScope)
     }
@@ -61,7 +65,7 @@ class AwaitComponent(
             notifyException(ComponentException("Unsupported action"))
             return
         }
-        awaitDelegate.handleAction(action, activity)
+        delegate.handleAction(action, activity)
     }
 
     override fun observe(lifecycleOwner: LifecycleOwner, observer: Observer<ActionComponentData>) {
@@ -70,16 +74,13 @@ class AwaitComponent(
         // Immediately request a new status if the user resumes the app
         lifecycleOwner.lifecycle.addObserver(object : DefaultLifecycleObserver {
             override fun onResume(owner: LifecycleOwner) {
-                awaitDelegate.refreshStatus()
+                delegate.refreshStatus()
             }
         })
     }
 
     override fun observeOutputData(lifecycleOwner: LifecycleOwner, observer: Observer<AwaitOutputData>) {
-        awaitDelegate.outputDataFlow
-            .filterNotNull()
-            .asLiveData()
-            .observe(lifecycleOwner, observer)
+        // TODO remove
     }
 
     override fun sendAnalyticsEvent(context: Context) = Unit
@@ -87,7 +88,7 @@ class AwaitComponent(
     override fun onCleared() {
         super.onCleared()
         Logger.d(TAG, "onCleared")
-        awaitDelegate.onCleared()
+        delegate.onCleared()
     }
 
     companion object {

@@ -1,74 +1,54 @@
 /*
- * Copyright (c) 2020 Adyen N.V.
+ * Copyright (c) 2022 Adyen N.V.
  *
  * This file is open source and available under the MIT license. See the LICENSE file for more info.
  *
- * Created by caiof on 4/9/2020.
+ * Created by josephj on 31/8/2022.
  */
 
 package com.adyen.checkout.dropin.ui.action
 
 import android.content.DialogInterface
+import android.content.Intent
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.core.view.isVisible
-import androidx.lifecycle.Observer
-import com.adyen.checkout.components.ActionComponent
+import com.adyen.checkout.action.GenericActionComponent
+import com.adyen.checkout.action.GenericActionConfiguration
 import com.adyen.checkout.components.ActionComponentData
 import com.adyen.checkout.components.ComponentError
-import com.adyen.checkout.components.ComponentView
-import com.adyen.checkout.components.ViewableComponent
-import com.adyen.checkout.components.base.OutputData
 import com.adyen.checkout.components.model.payments.response.Action
 import com.adyen.checkout.core.exception.CheckoutException
-import com.adyen.checkout.core.exception.ComponentException
 import com.adyen.checkout.core.log.LogUtil
 import com.adyen.checkout.core.log.Logger
 import com.adyen.checkout.dropin.R
-import com.adyen.checkout.dropin.databinding.FragmentActionComponentBinding
-import com.adyen.checkout.dropin.getActionComponentFor
-import com.adyen.checkout.dropin.getActionProviderFor
-import com.adyen.checkout.dropin.getViewFor
+import com.adyen.checkout.dropin.databinding.FragmentGenericActionComponentBinding
 import com.adyen.checkout.dropin.ui.base.DropInBottomSheetDialogFragment
 
 @SuppressWarnings("TooManyFunctions")
-class ActionComponentDialogFragment : DropInBottomSheetDialogFragment(), Observer<ActionComponentData> {
+class ActionComponentDialogFragment : DropInBottomSheetDialogFragment() {
 
-    companion object {
-        private val TAG = LogUtil.getTag()
+    private var _binding: FragmentGenericActionComponentBinding? = null
+    private val binding: FragmentGenericActionComponentBinding get() = requireNotNull(_binding)
 
-        const val ACTION = "ACTION"
-
-        fun newInstance(action: Action): ActionComponentDialogFragment {
-            val args = Bundle()
-            args.putParcelable(ACTION, action)
-
-            val componentDialogFragment = ActionComponentDialogFragment()
-            componentDialogFragment.arguments = args
-
-            return componentDialogFragment
-        }
-    }
-
-    private var _binding: FragmentActionComponentBinding? = null
-    private val binding: FragmentActionComponentBinding get() = requireNotNull(_binding)
     private lateinit var action: Action
     private lateinit var actionType: String
-    private lateinit var componentView: ComponentView<in OutputData, ViewableComponent<*, *, ActionComponentData>>
-    private lateinit var actionComponent: ViewableComponent<*, *, ActionComponentData>
-    private var isHandled = true
+    private lateinit var actionConfiguration: GenericActionConfiguration
+    private lateinit var actionComponent: GenericActionComponent
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         Logger.d(TAG, "onCreate")
         action = arguments?.getParcelable(ACTION) ?: throw IllegalArgumentException("Action not found")
         actionType = action.type ?: throw IllegalArgumentException("Action type not found")
+        actionConfiguration =
+            arguments?.getParcelable(ACTION_CONFIGURATION) ?: throw IllegalArgumentException("Configuration not found")
     }
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View {
-        _binding = FragmentActionComponentBinding.inflate(inflater)
+        _binding = FragmentGenericActionComponentBinding.inflate(inflater)
         return binding.root
     }
 
@@ -78,25 +58,22 @@ class ActionComponentDialogFragment : DropInBottomSheetDialogFragment(), Observe
         binding.header.isVisible = false
 
         try {
-            @Suppress("UNCHECKED_CAST")
-            componentView = getViewFor(requireContext(), actionType)
-                as ComponentView<in OutputData, ViewableComponent<*, *, ActionComponentData>>
-            actionComponent = getComponent(action)
-            attachComponent(actionComponent, componentView)
+            actionComponent =
+                GenericActionComponent.PROVIDER.get(this, requireActivity().application, actionConfiguration)
 
             if (shouldFinishWithAction()) {
-                with(binding.buttonFinish) {
+                binding.buttonFinish.apply {
                     isVisible = true
                     setOnClickListener { protocol.finishWithAction() }
                 }
             }
 
-            if (!isHandled) {
-                (actionComponent as ActionComponent<*>).handleAction(requireActivity(), action)
-                isHandled = true
-            } else {
-                Logger.d(TAG, "action already handled")
-            }
+            actionComponent.observe(viewLifecycleOwner, ::onActionComponentDataChanged)
+            actionComponent.observeErrors(viewLifecycleOwner, ::onError)
+
+            binding.componentView.attach(actionComponent, viewLifecycleOwner)
+
+            actionComponent.handleAction(requireActivity(), action)
         } catch (e: CheckoutException) {
             handleError(ComponentError(e))
         }
@@ -128,67 +105,17 @@ class ActionComponentDialogFragment : DropInBottomSheetDialogFragment(), Observe
         }
     }
 
-    override fun onChanged(actionComponentData: ActionComponentData?) {
-        Logger.d(TAG, "onChanged")
+    private fun onActionComponentDataChanged(actionComponentData: ActionComponentData?) {
+        Logger.d(TAG, "onActionComponentDataChanged")
         if (actionComponentData != null) {
             protocol.requestDetailsCall(actionComponentData)
         }
     }
 
-    fun setToHandleWhenStarting() {
-        Logger.d(TAG, "setToHandleWhenStarting")
-        isHandled = false
-    }
-
-    /**
-     * Return the possible viewable action components
-     */
-    @SuppressWarnings("ThrowsCount")
-    private fun getComponent(action: Action): ViewableComponent<*, *, ActionComponentData> {
-        val provider =
-            getActionProviderFor(action) ?: throw ComponentException("Unexpected Action component type - $actionType")
-
-        if (!provider.requiresView(action)) {
-            throw ComponentException(
-                "Action is not viewable - action: ${action.type} - " +
-                    "paymentMethod: ${action.paymentMethodType}"
-            )
-        }
-
-        val component = getActionComponentFor(
-            owner = this,
-            application = requireActivity().application,
-            provider = provider,
-            dropInConfiguration = dropInViewModel.dropInConfiguration
-        )
-
-        if (!component.canHandleAction(action)) {
-            throw ComponentException(
-                "Unexpected Action component type - action: ${action.type} - " +
-                    "paymentMethod: ${action.paymentMethodType}"
-            )
-        }
-
-        @Suppress("UNCHECKED_CAST")
-        return component as ViewableComponent<*, *, ActionComponentData>
-    }
-
-    private fun attachComponent(
-        component: ViewableComponent<*, *, ActionComponentData>,
-        componentView: ComponentView<in OutputData, ViewableComponent<*, *, ActionComponentData>>
-    ) {
-        component.observe(viewLifecycleOwner, this)
-        component.observeErrors(viewLifecycleOwner, createErrorHandlerObserver())
-        binding.componentContainer.addView(componentView as View)
-        @Suppress("UNCHECKED_CAST")
-        componentView.attach(component, viewLifecycleOwner)
-    }
-
-    private fun createErrorHandlerObserver(): Observer<ComponentError> {
-        return Observer {
-            if (it != null) {
-                handleError(it)
-            }
+    private fun onError(error: ComponentError?) {
+        Logger.d(TAG, "onError")
+        if (error != null) {
+            handleError(error)
         }
     }
 
@@ -198,11 +125,37 @@ class ActionComponentDialogFragment : DropInBottomSheetDialogFragment(), Observe
     }
 
     private fun shouldFinishWithAction(): Boolean {
-        return getActionProviderFor(action)?.providesDetails() == false
+        return !GenericActionComponent.PROVIDER.providesDetails(action)
+    }
+
+    fun handleIntent(intent: Intent) {
+        Logger.d(TAG, "handleAction")
+        actionComponent.handleIntent(intent)
     }
 
     override fun onDestroyView() {
         _binding = null
         super.onDestroyView()
+    }
+
+    companion object {
+        private val TAG = LogUtil.getTag()
+
+        const val ACTION = "ACTION"
+        const val ACTION_CONFIGURATION = "ACTION_CONFIGURATION"
+
+        fun newInstance(
+            action: Action,
+            actionConfiguration: GenericActionConfiguration
+        ): ActionComponentDialogFragment {
+            val args = Bundle()
+            args.putParcelable(ACTION, action)
+            args.putParcelable(ACTION_CONFIGURATION, actionConfiguration)
+
+            val componentDialogFragment = ActionComponentDialogFragment()
+            componentDialogFragment.arguments = args
+
+            return componentDialogFragment
+        }
     }
 }

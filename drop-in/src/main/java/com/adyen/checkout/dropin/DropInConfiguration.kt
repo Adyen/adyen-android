@@ -57,7 +57,7 @@ import kotlin.collections.set
 class DropInConfiguration : Configuration, Parcelable {
 
     private val availablePaymentConfigs: HashMap<String, Configuration>
-    private val availableActionConfigs: HashMap<Class<*>, Configuration>
+    internal val availableActionConfigs: HashMap<Class<*>, Configuration>
     val amount: Amount
     val showPreselectedStoredPaymentMethod: Boolean
     val skipListWhenSinglePaymentMethod: Boolean
@@ -136,8 +136,8 @@ class DropInConfiguration : Configuration, Parcelable {
             private val TAG = LogUtil.getTag()
         }
 
-        val availablePaymentConfigs = HashMap<String, Configuration>()
-        val availableActionConfigs = HashMap<Class<*>, Configuration>()
+        internal val availablePaymentConfigs = HashMap<String, Configuration>()
+        internal val availableActionConfigs = HashMap<Class<*>, Configuration>()
 
         var amount: Amount = Amount.EMPTY
             private set

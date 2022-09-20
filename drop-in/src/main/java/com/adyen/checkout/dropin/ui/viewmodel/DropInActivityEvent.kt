@@ -11,7 +11,6 @@ package com.adyen.checkout.dropin.ui.viewmodel
 import com.adyen.checkout.components.PaymentComponentState
 import com.adyen.checkout.components.model.paymentmethods.PaymentMethod
 import com.adyen.checkout.components.model.payments.request.OrderRequest
-import com.adyen.checkout.components.model.payments.response.Action
 import com.adyen.checkout.dropin.ui.giftcard.GiftCardPaymentConfirmationData
 import com.adyen.checkout.sessions.model.Session
 
@@ -34,6 +33,5 @@ sealed class DropInDestination {
     object PreselectedStored : DropInDestination()
     object PaymentMethods : DropInDestination()
     class PaymentComponent(val paymentMethod: PaymentMethod) : DropInDestination()
-    class ActionComponent(val action: Action) : DropInDestination()
     class GiftCardPaymentConfirmation(val data: GiftCardPaymentConfirmationData) : DropInDestination()
 }

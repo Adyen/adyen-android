@@ -19,6 +19,8 @@ import com.adyen.checkout.components.status.StatusRepository
 import com.adyen.checkout.components.status.api.StatusResponseUtils
 import com.adyen.checkout.components.status.model.StatusResponse
 import com.adyen.checkout.components.status.model.TimerData
+import com.adyen.checkout.components.ui.ViewProvider
+import com.adyen.checkout.components.ui.view.ComponentViewType
 import com.adyen.checkout.core.exception.CheckoutException
 import com.adyen.checkout.core.exception.ComponentException
 import com.adyen.checkout.core.log.LogUtil
@@ -34,7 +36,9 @@ import kotlinx.coroutines.flow.onEach
 import org.json.JSONException
 import org.json.JSONObject
 
+@Suppress("TooManyFunctions")
 internal class DefaultAwaitDelegate(
+    override val configuration: AwaitConfiguration,
     private val statusRepository: StatusRepository,
     private val paymentDataRepository: PaymentDataRepository,
 ) : AwaitDelegate {
@@ -49,6 +53,8 @@ internal class DefaultAwaitDelegate(
 
     private val _exceptionFlow: MutableSharedFlow<CheckoutException> = MutableSingleEventSharedFlow()
     override val exceptionFlow: Flow<CheckoutException> = _exceptionFlow
+
+    override val viewFlow: Flow<ComponentViewType?> = MutableStateFlow(AwaitComponentViewType)
 
     // unused in Await
     override val timerFlow: Flow<TimerData> = flowOf()
@@ -135,6 +141,8 @@ internal class DefaultAwaitDelegate(
         val paymentData = paymentDataRepository.paymentData ?: return
         statusRepository.refreshStatus(paymentData)
     }
+
+    override fun getViewProvider(): ViewProvider = AwaitViewProvider
 
     override fun onCleared() {
         statusPollingJob?.cancel()

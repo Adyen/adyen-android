@@ -13,12 +13,12 @@ import android.content.Intent
 import androidx.lifecycle.SavedStateHandle
 import app.cash.turbine.test
 import com.adyen.checkout.components.model.payments.response.QrCodeAction
-import com.adyen.checkout.components.model.payments.response.RedirectAction
 import com.adyen.checkout.components.repository.PaymentDataRepository
 import com.adyen.checkout.components.status.model.StatusResponse
 import com.adyen.checkout.components.status.model.TimerData
 import com.adyen.checkout.components.test.TestStatusRepository
 import com.adyen.checkout.components.util.PaymentMethodTypes
+import com.adyen.checkout.core.api.Environment
 import com.adyen.checkout.core.exception.ComponentException
 import com.adyen.checkout.core.log.Logger
 import com.adyen.checkout.qrcode.DefaultQRCodeDelegate.Companion.PAYLOAD_DETAILS_KEY
@@ -36,6 +36,7 @@ import org.junit.jupiter.api.extension.ExtendWith
 import org.mockito.Mock
 import org.mockito.junit.jupiter.MockitoExtension
 import java.io.IOException
+import java.util.Locale
 
 @OptIn(ExperimentalCoroutinesApi::class)
 @ExtendWith(MockitoExtension::class)
@@ -53,7 +54,18 @@ internal class DefaultQRCodeDelegateTest(
         statusRepository = TestStatusRepository()
         redirectHandler = TestRedirectHandler()
         paymentDataRepository = PaymentDataRepository(SavedStateHandle())
-        delegate = DefaultQRCodeDelegate(statusRepository, countDownTimer, redirectHandler, paymentDataRepository)
+        val configuration = QRCodeConfiguration.Builder(
+            Locale.US,
+            Environment.TEST,
+            TEST_CLIENT_KEY
+        ).build()
+        delegate = DefaultQRCodeDelegate(
+            configuration,
+            statusRepository,
+            countDownTimer,
+            redirectHandler,
+            paymentDataRepository
+        )
         Logger.setLogcatLevel(Logger.NONE)
     }
 
@@ -209,4 +221,9 @@ internal class DefaultQRCodeDelegateTest(
             }
         }
     }
+
+    companion object {
+        private const val TEST_CLIENT_KEY = "test_qwertyuiopasdfghjklzxcvbnmqwerty"
+    }
 }
+
