@@ -54,7 +54,7 @@ abstract class OnlineBankingView<IssuerListPaymentMethodT : IssuerListPaymentMet
             inputType = 0
             setAdapter(issuersAdapter)
             onItemClickListener = AdapterView.OnItemClickListener { _, _, position, _ ->
-                Logger.d(TAG, "onItemSelected - " + issuersAdapter.getItem(position).name)
+                Logger.d(TAG, "onItemSelected - ${issuersAdapter.getItem(position).name}")
                 component.inputData.selectedIssuer = issuersAdapter.getItem(position)
                 component.notifyInputDataChanged()
                 binding.textInputLayoutOnlineBanking.apply {
@@ -94,7 +94,7 @@ abstract class OnlineBankingView<IssuerListPaymentMethodT : IssuerListPaymentMet
     override fun observeComponentChanges(lifecycleOwner: LifecycleOwner) = Unit
 
     override fun onItemSelected(parent: AdapterView<*>, view: View, position: Int, id: Long) {
-        Logger.d(TAG, "onItemSelected - " + issuersAdapter.getItem(position).name)
+        Logger.d(TAG, "onItemSelected - ${issuersAdapter.getItem(position).name}")
         component.inputData.selectedIssuer = issuersAdapter.getItem(position)
         component.notifyInputDataChanged()
     }
