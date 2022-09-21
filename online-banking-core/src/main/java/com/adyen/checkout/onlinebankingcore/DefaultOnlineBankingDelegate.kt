@@ -9,6 +9,7 @@
 package com.adyen.checkout.onlinebankingcore
 
 import android.content.Context
+import androidx.annotation.RestrictTo
 import com.adyen.checkout.components.PaymentComponentState
 import com.adyen.checkout.components.flow.MutableSingleEventSharedFlow
 import com.adyen.checkout.components.model.paymentmethods.PaymentMethod
@@ -20,6 +21,7 @@ import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.MutableStateFlow
 
+@RestrictTo(RestrictTo.Scope.LIBRARY_GROUP)
 class DefaultOnlineBankingDelegate<IssuerListPaymentMethodT : IssuerListPaymentMethod>(
     private val pdfOpener: PdfOpener,
     private val paymentMethod: PaymentMethod,
