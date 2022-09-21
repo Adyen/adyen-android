@@ -9,6 +9,7 @@
 package com.adyen.checkout.dropin.ui.viewmodel
 
 import android.content.Intent
+import android.os.Bundle
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
@@ -343,6 +344,22 @@ class DropInViewModel(
                 putExtra(PAYMENT_METHODS_RESPONSE_KEY, paymentMethodsApiResponse)
                 putExtra(DROP_IN_CONFIGURATION_KEY, dropInConfiguration)
                 putExtra(DROP_IN_RESULT_INTENT_KEY, resultHandlerIntent)
+            }
+        }
+
+        fun assertBundleExists(bundle: Bundle?): Boolean {
+            return when {
+                bundle == null -> {
+                    Logger.e(TAG, "Failed to initialize - bundle is null")
+                    false
+                }
+                !bundle.containsKey(PAYMENT_METHODS_RESPONSE_KEY) ||
+                    !bundle.containsKey(DROP_IN_CONFIGURATION_KEY) ||
+                    !bundle.containsKey(DROP_IN_RESULT_INTENT_KEY) -> {
+                    Logger.e(TAG, "Failed to initialize - bundle does not have the required keys")
+                    false
+                }
+                else -> true
             }
         }
     }
