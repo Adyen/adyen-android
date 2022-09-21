@@ -28,7 +28,7 @@ abstract class OnlineBankingComponent<IssuerListPaymentMethodT : IssuerListPayme
     PaymentComponentState<IssuerListPaymentMethodT>
     >(savedStateHandle, delegate, configuration) {
 
-    abstract val termsAndConditionsUrl: String
+    protected abstract val termsAndConditionsUrl: String
 
     override val inputData: OnlineBankingInputData =
         OnlineBankingInputData()
