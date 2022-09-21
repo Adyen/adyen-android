@@ -77,6 +77,9 @@ import com.adyen.checkout.mbway.MBWayView
 import com.adyen.checkout.molpay.MolpayComponent
 import com.adyen.checkout.molpay.MolpayConfiguration
 import com.adyen.checkout.molpay.MolpayRecyclerView
+import com.adyen.checkout.onlinebankingpl.OnlineBankingPLComponent
+import com.adyen.checkout.onlinebankingpl.OnlineBankingPLConfiguration
+import com.adyen.checkout.onlinebankingpl.OnlineBankingPLRecyclerView
 import com.adyen.checkout.openbanking.OpenBankingComponent
 import com.adyen.checkout.openbanking.OpenBankingConfiguration
 import com.adyen.checkout.openbanking.OpenBankingRecyclerView
@@ -343,6 +346,11 @@ internal fun getComponentFor(
             val molpayConfig: MolpayConfiguration = getConfigurationForPaymentMethod(PaymentMethodTypes.MOLPAY_VIETNAM, dropInConfiguration, amount)
             MolpayComponent.PROVIDER.get(fragment, paymentMethod, molpayConfig)
         }
+        PaymentMethodTypes.ONLINE_BANKING_PL -> {
+            val onlineBankingPLConfig: OnlineBankingPLConfiguration =
+                    getConfigurationForPaymentMethod(PaymentMethodTypes.ONLINE_BANKING_PL, dropInConfiguration, amount)
+            OnlineBankingPLComponent.PROVIDER.get(fragment, paymentMethod, onlineBankingPLConfig)
+        }
         PaymentMethodTypes.OPEN_BANKING -> {
             val openBankingConfig: OpenBankingConfiguration =
                 getConfigurationForPaymentMethod(PaymentMethodTypes.OPEN_BANKING, dropInConfiguration, amount)
@@ -388,6 +396,7 @@ internal fun getViewFor(
         PaymentMethodTypes.MOLPAY_THAILAND,
         PaymentMethodTypes.MOLPAY_MALAYSIA,
         PaymentMethodTypes.MOLPAY_VIETNAM -> MolpayRecyclerView(context)
+        PaymentMethodTypes.ONLINE_BANKING_PL -> OnlineBankingPLRecyclerView(context)
         PaymentMethodTypes.OPEN_BANKING -> OpenBankingRecyclerView(context)
         PaymentMethodTypes.SCHEME -> CardView(context)
         PaymentMethodTypes.SEPA -> SepaView(context)
@@ -476,6 +485,7 @@ private fun Configuration.toBuilder(): BaseConfigurationBuilder<out Configuratio
         is IdealConfiguration -> IdealConfiguration.Builder(this)
         is MBWayConfiguration -> MBWayConfiguration.Builder(this)
         is MolpayConfiguration -> MolpayConfiguration.Builder(this)
+        is OnlineBankingPLConfiguration -> OnlineBankingPLConfiguration.Builder(this)
         is OpenBankingConfiguration -> OpenBankingConfiguration.Builder(this)
         is QRCodeConfiguration -> QRCodeConfiguration.Builder(this)
         is RedirectConfiguration -> RedirectConfiguration.Builder(this)
