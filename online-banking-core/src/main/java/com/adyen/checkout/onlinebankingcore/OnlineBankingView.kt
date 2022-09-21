@@ -22,6 +22,7 @@ import com.adyen.checkout.core.log.LogUtil
 import com.adyen.checkout.core.log.Logger
 import com.adyen.checkout.onlinebankingcore.databinding.OnlineBankingSpinnerLayoutBinding
 
+@Suppress("LeakingThis")
 abstract class OnlineBankingView<IssuerListPaymentMethodT : IssuerListPaymentMethod> @JvmOverloads constructor(
     context: Context,
     attrs: AttributeSet? = null,
