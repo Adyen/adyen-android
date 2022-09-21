@@ -71,6 +71,7 @@ dependencies {
     api project(':bacs')
     api project(':wechatpay')
     api project(':voucher')
+    api project(':online-banking-pl')
 
     // Dependencies
     implementation "androidx.recyclerview:recyclerview:$recyclerview_version"
