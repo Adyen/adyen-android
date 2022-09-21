@@ -41,6 +41,7 @@ public final class PaymentMethodTypes {
     public static final String MB_WAY = "mbway";
     public static final String BLIK = "blik";
     public static final String GIFTCARD = "giftcard";
+    public static final String ONLINE_BANKING_PL = "onlineBanking_PL";
 
     // Payment methods that do not need a payment component, but only an action component
     public static final String WECHAT_PAY_SDK = "wechatpaySDK";
@@ -113,7 +114,8 @@ public final class PaymentMethodTypes {
                 SCHEME,
                 BLIK,
                 WECHAT_PAY_SDK,
-                PIX
+                PIX,
+                ONLINE_BANKING_PL
         ));
 
         SUPPORTED_ACTION_ONLY_PAYMENT_METHODS = Collections.unmodifiableList(Arrays.asList(
