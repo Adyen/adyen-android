@@ -40,7 +40,8 @@ fun createPaymentRequest(
     redirectUrl: String,
     additionalData: AdditionalData,
     force3DS2Challenge: Boolean = true,
-    threeDSAuthenticationOnly: Boolean = false
+    threeDSAuthenticationOnly: Boolean = false,
+    shopperEmail: String? = null
 ): JSONObject {
 
     return JSONObject(paymentComponentData.toString()).apply {
@@ -62,6 +63,7 @@ fun createPaymentRequest(
             threeDS2RequestData.put("challengeIndicator", "requestChallenge")
             put("threeDS2RequestData", threeDS2RequestData)
         }
+        put("shopperEmail", shopperEmail)
     }
 }
 
