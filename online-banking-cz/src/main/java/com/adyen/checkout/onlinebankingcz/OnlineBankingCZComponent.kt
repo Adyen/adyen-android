@@ -26,8 +26,7 @@ class OnlineBankingCZComponent(
     configuration
 ) {
 
-    override val termsAndConditionsUrl: String
-        get() = TERMS_CONDITIONS_URL
+    override val termsAndConditionsUrl = TERMS_CONDITIONS_URL
 
     override fun getSupportedPaymentMethodTypes(): Array<String> = PAYMENT_METHOD_TYPES
 

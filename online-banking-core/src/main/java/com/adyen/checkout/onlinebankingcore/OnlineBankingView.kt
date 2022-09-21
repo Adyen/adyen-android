@@ -66,8 +66,7 @@ abstract class OnlineBankingView<IssuerListPaymentMethodT : IssuerListPaymentMet
         binding.textviewTermsAndConditions.setOnClickListener { component.openTermsAndConditionsPdf(context) }
     }
 
-    override val isConfirmationRequired: Boolean
-        get() = true
+    override val isConfirmationRequired = true
 
     override fun highlightValidationErrors() {
         Logger.d(TAG, "highlightValidationErrors")
