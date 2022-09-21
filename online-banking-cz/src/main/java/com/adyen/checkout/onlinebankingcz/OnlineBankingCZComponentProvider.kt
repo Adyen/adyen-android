@@ -16,7 +16,7 @@ import com.adyen.checkout.components.PaymentComponentProvider
 import com.adyen.checkout.components.base.lifecycle.viewModelFactory
 import com.adyen.checkout.components.model.paymentmethods.PaymentMethod
 import com.adyen.checkout.components.model.payments.request.OnlineBankingCZPaymentMethod
-import com.adyen.checkout.components.ui.util.PdfOpener
+import com.adyen.checkout.onlinebankingcore.PdfOpener
 import com.adyen.checkout.onlinebankingcore.DefaultOnlineBankingDelegate
 import com.adyen.checkout.onlinebankingcore.OnlineBankingComponent
 

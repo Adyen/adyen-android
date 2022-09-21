@@ -6,18 +6,21 @@
  * Created by atef on 20/9/2022.
  */
 
-package com.adyen.checkout.components.ui.util
+package com.adyen.checkout.onlinebankingcore
 
 import android.content.ActivityNotFoundException
 import android.content.Context
 import android.content.Intent
 import android.net.Uri
 import android.os.Build
+import androidx.annotation.RestrictTo
 import androidx.browser.customtabs.CustomTabColorSchemeParams
 import androidx.browser.customtabs.CustomTabsIntent
+import com.adyen.checkout.components.ui.util.ThemeUtil
 import com.adyen.checkout.core.log.LogUtil
 import com.adyen.checkout.core.log.Logger
 
+@RestrictTo(RestrictTo.Scope.LIBRARY_GROUP)
 class PdfOpener {
 
     @Throws(IllegalStateException::class)
