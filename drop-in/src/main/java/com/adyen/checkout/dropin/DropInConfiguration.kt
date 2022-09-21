@@ -38,6 +38,7 @@ import com.adyen.checkout.googlepay.GooglePayConfiguration
 import com.adyen.checkout.ideal.IdealConfiguration
 import com.adyen.checkout.mbway.MBWayConfiguration
 import com.adyen.checkout.molpay.MolpayConfiguration
+import com.adyen.checkout.onlinebankingpl.OnlineBankingPLConfiguration
 import com.adyen.checkout.openbanking.OpenBankingConfiguration
 import com.adyen.checkout.qrcode.QRCodeConfiguration
 import com.adyen.checkout.redirect.RedirectConfiguration
@@ -291,6 +292,15 @@ class DropInConfiguration : Configuration, Parcelable {
             availablePaymentConfigs[PaymentMethodTypes.DOTPAY] = dotpayConfiguration
             return this
         }
+
+        /**
+         * Add configuration for online banking Poland payment method.
+         */
+        fun addOnlineBankingPLConfiguration(onlineBankingPLConfiguration: OnlineBankingPLConfiguration): Builder {
+            availablePaymentConfigs[PaymentMethodTypes.ONLINE_BANKING_PL] = onlineBankingPLConfiguration
+            return this
+        }
+
 
         /**
          * Add configuration for EPS payment method.
