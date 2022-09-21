@@ -76,7 +76,8 @@ class ExampleAsyncDropInService : DropInService() {
                 AdditionalData(
                     allow3DS2 = keyValueStorage.isThreeds2Enable().toString(),
                     executeThreeD = keyValueStorage.isExecuteThreeD().toString()
-                )
+                ),
+                shopperEmail = keyValueStorage.getShopperEmail()
             )
 
             Logger.v(TAG, "paymentComponentJson - ${paymentComponentJson.toStringPretty()}")
