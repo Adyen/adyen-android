@@ -14,7 +14,7 @@ import com.adyen.checkout.components.model.payments.request.OnlineBankingPLPayme
 import com.adyen.checkout.issuerlist.IssuerListRecyclerView
 
 class OnlineBankingPLRecyclerView @JvmOverloads constructor(
-        context: Context,
-        attrs: AttributeSet? = null,
-        defStyleAttr: Int = 0
+    context: Context,
+    attrs: AttributeSet? = null,
+    defStyleAttr: Int = 0
 ) : IssuerListRecyclerView<OnlineBankingPLPaymentMethod, OnlineBankingPLComponent>(context, attrs, defStyleAttr)

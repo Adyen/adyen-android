@@ -6,7 +6,7 @@ import com.adyen.checkout.components.model.payments.request.OnlineBankingPLPayme
 import com.adyen.checkout.issuerlist.IssuerListSpinnerView
 
 class OnlineBankingPLSpinnerView @JvmOverloads constructor(
-        context: Context,
-        attrs: AttributeSet? = null,
-        defStyleAttr: Int = 0
+    context: Context,
+    attrs: AttributeSet? = null,
+    defStyleAttr: Int = 0
 ) : IssuerListSpinnerView<OnlineBankingPLPaymentMethod, OnlineBankingPLComponent>(context, attrs, defStyleAttr)

@@ -17,25 +17,24 @@ import com.adyen.checkout.components.util.PaymentMethodTypes
 import com.adyen.checkout.issuerlist.IssuerListComponent
 
 class OnlineBankingPLComponent(
-        savedStateHandle: SavedStateHandle,
-        paymentMethodDelegate: GenericPaymentMethodDelegate,
-        configuration: OnlineBankingPLConfiguration
+    savedStateHandle: SavedStateHandle,
+    paymentMethodDelegate: GenericPaymentMethodDelegate,
+    configuration: OnlineBankingPLConfiguration
 ) : IssuerListComponent<OnlineBankingPLPaymentMethod>(
-        savedStateHandle,
-        paymentMethodDelegate,
-        configuration
+    savedStateHandle,
+    paymentMethodDelegate,
+    configuration
 ) {
     override fun getSupportedPaymentMethodTypes(): Array<String> = PAYMENT_METHOD_TYPES
 
     companion object {
         @JvmField
         val PROVIDER: PaymentComponentProvider<OnlineBankingPLComponent, OnlineBankingPLConfiguration> =
-                GenericPaymentComponentProvider(OnlineBankingPLComponent::class.java)
+            GenericPaymentComponentProvider(OnlineBankingPLComponent::class.java)
         val PAYMENT_METHOD_TYPES = arrayOf(PaymentMethodTypes.ONLINE_BANKING_PL)
     }
 
     override fun instantiateTypedPaymentMethod(): OnlineBankingPLPaymentMethod {
         return OnlineBankingPLPaymentMethod()
     }
-
 }

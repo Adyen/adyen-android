@@ -18,9 +18,9 @@ import java.util.Locale
 class OnlineBankingPLConfiguration : IssuerListConfiguration {
 
     private constructor(
-            shopperLocale: Locale,
-            environment: Environment,
-            clientKey: String,
+        shopperLocale: Locale,
+        environment: Environment,
+        clientKey: String,
     ) : super(shopperLocale, environment, clientKey)
 
     private constructor(parcel: Parcel) : super(parcel)
@@ -42,9 +42,9 @@ class OnlineBankingPLConfiguration : IssuerListConfiguration {
          * @param clientKey Your Client Key used for network calls from the SDK to Adyen.
          */
         constructor(
-                shopperLocale: Locale,
-                environment: Environment,
-                clientKey: String
+            shopperLocale: Locale,
+            environment: Environment,
+            clientKey: String
         ) : super(shopperLocale, environment, clientKey)
 
         /**
@@ -64,9 +64,9 @@ class OnlineBankingPLConfiguration : IssuerListConfiguration {
 
         override fun buildInternal(): OnlineBankingPLConfiguration {
             return OnlineBankingPLConfiguration(
-                    shopperLocale = builderShopperLocale,
-                    environment = builderEnvironment,
-                    clientKey = builderClientKey,
+                shopperLocale = builderShopperLocale,
+                environment = builderEnvironment,
+                clientKey = builderClientKey,
             )
         }
     }
