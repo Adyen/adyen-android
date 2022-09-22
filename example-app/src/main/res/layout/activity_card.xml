@@ -12,7 +12,7 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
-    <com.adyen.checkout.card.CardView
+    <com.adyen.checkout.components.ui.view.AdyenComponentView
         android:id="@+id/card_view"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
