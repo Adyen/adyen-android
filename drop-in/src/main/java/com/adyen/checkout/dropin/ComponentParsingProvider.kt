@@ -30,20 +30,8 @@ import com.adyen.checkout.blik.BlikView
 import com.adyen.checkout.card.CardComponent
 import com.adyen.checkout.card.CardConfiguration
 import com.adyen.checkout.card.CardView
-import com.adyen.checkout.components.ActionComponentProvider
-import com.adyen.checkout.components.AlwaysAvailablePaymentMethod
-import com.adyen.checkout.components.ComponentAvailableCallback
-import com.adyen.checkout.components.ComponentView
-import com.adyen.checkout.components.PaymentComponent
-import com.adyen.checkout.components.PaymentComponentState
-import com.adyen.checkout.components.PaymentMethodAvailabilityCheck
-import com.adyen.checkout.components.ViewableComponent
-import com.adyen.checkout.components.base.AmountConfiguration
-import com.adyen.checkout.components.base.AmountConfigurationBuilder
-import com.adyen.checkout.components.base.BaseActionComponent
-import com.adyen.checkout.components.base.BaseConfigurationBuilder
-import com.adyen.checkout.components.base.Configuration
-import com.adyen.checkout.components.base.OutputData
+import com.adyen.checkout.components.*
+import com.adyen.checkout.components.base.*
 import com.adyen.checkout.components.model.paymentmethods.PaymentMethod
 import com.adyen.checkout.components.model.paymentmethods.StoredPaymentMethod
 import com.adyen.checkout.components.model.payments.Amount
@@ -152,6 +140,7 @@ internal fun <T : Configuration> getDefaultConfigForPaymentMethod(
         PaymentMethodTypes.MOLPAY_THAILAND,
         PaymentMethodTypes.MOLPAY_MALAYSIA,
         PaymentMethodTypes.MOLPAY_VIETNAM -> MolpayConfiguration.Builder(shopperLocale, environment, clientKey)
+        PaymentMethodTypes.ONLINE_BANKING_PL -> OnlineBankingPLConfiguration.Builder(shopperLocale, environment, clientKey)
         PaymentMethodTypes.OPEN_BANKING -> OpenBankingConfiguration.Builder(shopperLocale, environment, clientKey)
         PaymentMethodTypes.SEPA -> SepaConfiguration.Builder(shopperLocale, environment, clientKey)
         PaymentMethodTypes.SCHEME -> CardConfiguration.Builder(shopperLocale, environment, clientKey)
