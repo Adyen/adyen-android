@@ -64,6 +64,7 @@ internal class DefaultGenericActionDelegate(
     private var uiCustomization: UiCustomization? = null
 
     override fun initialize(coroutineScope: CoroutineScope) {
+        Logger.d(TAG, "initialize")
         _coroutineScope = coroutineScope
     }
 
@@ -92,27 +93,26 @@ internal class DefaultGenericActionDelegate(
     }
 
     private fun observeExceptions(delegate: ActionDelegate<Action>) {
+        Logger.d(TAG, "Observing exceptions")
         delegate.exceptionFlow
             .onEach { _exceptionFlow.tryEmit(it) }
             .launchIn(coroutineScope)
     }
 
     private fun observeDetails(delegate: ActionDelegate<Action>) {
-        if (delegate is DetailsEmittingDelegate) {
-            Logger.d(TAG, "Observing details")
-            delegate.detailsFlow
-                .onEach { _detailsFlow.tryEmit(it) }
-                .launchIn(coroutineScope)
-        }
+        if (delegate !is DetailsEmittingDelegate) return
+        Logger.d(TAG, "Observing details")
+        delegate.detailsFlow
+            .onEach { _detailsFlow.tryEmit(it) }
+            .launchIn(coroutineScope)
     }
 
     private fun observeViewFlow(delegate: ActionDelegate<Action>) {
-        if (delegate is ViewProvidingDelegate) {
-            Logger.d(TAG, "Observing view flow")
-            delegate.viewFlow
-                .onEach { _viewFlow.tryEmit(it) }
-                .launchIn(coroutineScope)
-        }
+        if (delegate !is ViewProvidingDelegate) return
+        Logger.d(TAG, "Observing view flow")
+        delegate.viewFlow
+            .onEach { _viewFlow.tryEmit(it) }
+            .launchIn(coroutineScope)
     }
 
     override fun set3DS2UICustomization(uiCustomization: UiCustomization?) {
@@ -121,36 +121,40 @@ internal class DefaultGenericActionDelegate(
     }
 
     private fun set3DS2UICustomizationInDelegate(delegate: ActionDelegate<Action>?) {
-        if (delegate is Adyen3DS2Delegate) {
-            if (uiCustomization != null) {
-                Logger.d(TAG, "Setting UICustomization on 3DS2 delegate")
-            }
-            delegate.set3DS2UICustomization(uiCustomization)
+        if (delegate !is Adyen3DS2Delegate) return
+        if (uiCustomization != null) {
+            Logger.d(TAG, "Setting UICustomization on 3DS2 delegate")
         }
+        delegate.set3DS2UICustomization(uiCustomization)
     }
 
     override fun handleIntent(intent: Intent) {
-        if (_delegate == null) {
-            _exceptionFlow.tryEmit(ComponentException("handleIntent should not be called before handleAction"))
-            return
-        }
-        (delegate as? IntentHandlingDelegate)?.let {
-            Logger.d(TAG, "Handling intent")
-            it.handleIntent(intent)
+        when (val delegate = _delegate) {
+            null -> {
+                _exceptionFlow.tryEmit(ComponentException("handleIntent should not be called before handleAction"))
+            }
+            !is IntentHandlingDelegate -> {
+                _exceptionFlow.tryEmit(ComponentException("Cannot handle intent with the current component"))
+            }
+            else -> {
+                Logger.d(TAG, "Handling intent")
+                delegate.handleIntent(intent)
+            }
         }
     }
 
     override fun refreshStatus() {
-        (_delegate as? StatusPollingDelegate)?.let {
-            Logger.d(TAG, "Refreshing status")
-            it.refreshStatus()
-        }
+        val delegate = _delegate
+        if (delegate !is StatusPollingDelegate) return
+        Logger.d(TAG, "Refreshing status")
+        delegate.refreshStatus()
     }
 
     override fun getViewProvider(): ViewProvider =
         throw IllegalStateException("GenericActionDelegate doesn't have a ViewProvider")
 
     override fun onCleared() {
+        Logger.d(TAG, "onCleared")
         _delegate?.onCleared()
         _delegate = null
         _coroutineScope = null
