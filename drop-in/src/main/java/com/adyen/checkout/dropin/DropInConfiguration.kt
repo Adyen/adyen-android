@@ -301,7 +301,6 @@ class DropInConfiguration : Configuration, Parcelable {
             return this
         }
 
-
         /**
          * Add configuration for EPS payment method.
          */

@@ -7,6 +7,7 @@
  */
 
 @file:Suppress("TooManyFunctions")
+
 package com.adyen.checkout.dropin
 
 import android.app.Application
@@ -107,10 +108,11 @@ internal inline fun <reified T : Configuration> getConfigurationForPaymentMethod
     dropInConfiguration: DropInConfiguration,
     amount: Amount
 ): T {
-    val configuration: T = dropInConfiguration.getConfigurationForPaymentMethod(paymentMethod) ?: getDefaultConfigForPaymentMethod(
-        paymentMethod,
-        dropInConfiguration
-    )
+    val configuration: T = dropInConfiguration.getConfigurationForPaymentMethod(paymentMethod)
+        ?: getDefaultConfigForPaymentMethod(
+            paymentMethod,
+            dropInConfiguration
+        )
     if (amount.isEmpty || configuration !is AmountConfiguration) return configuration
     return overrideConfigurationAmount(configuration, amount)
 }
@@ -163,7 +165,8 @@ internal fun <T : Configuration> getDefaultConfigForPaymentMethod(
 internal inline fun <reified T : Configuration> getConfigurationForAction(
     dropInConfiguration: DropInConfiguration
 ): T {
-    return dropInConfiguration.getConfigurationForAction() ?: getDefaultConfigForAction(dropInConfiguration)
+    return dropInConfiguration.getConfigurationForAction()
+        ?: getDefaultConfigForAction(dropInConfiguration)
 }
 
 @Suppress("ComplexMethod", "LongMethod")
@@ -348,7 +351,7 @@ internal fun getComponentFor(
         }
         PaymentMethodTypes.ONLINE_BANKING_PL -> {
             val onlineBankingPLConfig: OnlineBankingPLConfiguration =
-                    getConfigurationForPaymentMethod(PaymentMethodTypes.ONLINE_BANKING_PL, dropInConfiguration, amount)
+                getConfigurationForPaymentMethod(PaymentMethodTypes.ONLINE_BANKING_PL, dropInConfiguration, amount)
             OnlineBankingPLComponent.PROVIDER.get(fragment, paymentMethod, onlineBankingPLConfig)
         }
         PaymentMethodTypes.OPEN_BANKING -> {

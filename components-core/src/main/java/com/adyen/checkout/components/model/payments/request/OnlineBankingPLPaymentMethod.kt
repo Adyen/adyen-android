@@ -17,8 +17,8 @@ import org.json.JSONException
 import org.json.JSONObject
 
 class OnlineBankingPLPaymentMethod(
-        issuer: String? = null,
-        type: String? = null
+    issuer: String? = null,
+    type: String? = null
 ) : IssuerListPaymentMethod() {
 
     override fun writeToParcel(dest: Parcel, flags: Int) {
@@ -46,8 +46,8 @@ class OnlineBankingPLPaymentMethod(
 
             override fun deserialize(jsonObject: JSONObject): OnlineBankingPLPaymentMethod {
                 return OnlineBankingPLPaymentMethod(
-                        type = jsonObject.getStringOrNull(TYPE),
-                        issuer = jsonObject.getStringOrNull(ISSUER)
+                    type = jsonObject.getStringOrNull(TYPE),
+                    issuer = jsonObject.getStringOrNull(ISSUER)
                 )
             }
         }
