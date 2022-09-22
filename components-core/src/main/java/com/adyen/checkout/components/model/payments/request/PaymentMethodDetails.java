@@ -77,6 +77,8 @@ public abstract class PaymentMethodDetails extends ModelObject {
                 return DotpayPaymentMethod.SERIALIZER;
             case EPSPaymentMethod.PAYMENT_METHOD_TYPE:
                 return EPSPaymentMethod.SERIALIZER;
+            case OnlineBankingPLPaymentMethod.PAYMENT_METHOD_TYPE:
+                return OnlineBankingPLPaymentMethod.SERIALIZER;
             case OpenBankingPaymentMethod.PAYMENT_METHOD_TYPE:
                 return OpenBankingPaymentMethod.SERIALIZER;
             case EntercashPaymentMethod.PAYMENT_METHOD_TYPE:
