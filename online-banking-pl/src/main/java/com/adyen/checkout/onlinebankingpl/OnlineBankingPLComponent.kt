@@ -31,6 +31,7 @@ class OnlineBankingPLComponent(
         @JvmField
         val PROVIDER: PaymentComponentProvider<OnlineBankingPLComponent, OnlineBankingPLConfiguration> =
             GenericPaymentComponentProvider(OnlineBankingPLComponent::class.java)
+
         val PAYMENT_METHOD_TYPES = arrayOf(PaymentMethodTypes.ONLINE_BANKING_PL)
     }
 
