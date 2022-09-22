@@ -54,6 +54,7 @@ dependencies {
     api project(":3ds2")
     api project(":await")
     api project(':bcmc')
+    api project(':bacs')
     api project(':blik')
     api project(":card")
     api project(':dotpay')
@@ -64,14 +65,12 @@ dependencies {
     api project(':ideal')
     api project(':mbway')
     api project(':molpay')
-    api project(':qr-code')
+    api project(':online-banking-pl')
     api project(':openbanking')
     api project(":redirect")
     api project(':sepa')
-    api project(':bacs')
-    api project(':wechatpay')
     api project(':voucher')
-    api project(':online-banking-pl')
+    api project(':wechatpay')
 
     // Dependencies
     implementation "androidx.recyclerview:recyclerview:$recyclerview_version"
