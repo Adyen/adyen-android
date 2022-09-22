@@ -15,7 +15,6 @@ import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.ViewModelStoreOwner
 import androidx.savedstate.SavedStateRegistryOwner
 import com.adyen.checkout.components.ActionComponentProvider
-import com.adyen.checkout.components.base.ActionDelegate
 import com.adyen.checkout.components.base.lifecycle.viewModelFactory
 import com.adyen.checkout.components.model.payments.response.Action
 import com.adyen.checkout.components.model.payments.response.AwaitAction
@@ -28,7 +27,7 @@ import com.adyen.checkout.components.model.payments.response.Threeds2Fingerprint
 import com.adyen.checkout.components.model.payments.response.VoucherAction
 
 class GenericActionComponentProvider :
-    ActionComponentProvider<GenericActionComponent, GenericActionConfiguration, ActionDelegate<*>> {
+    ActionComponentProvider<GenericActionComponent, GenericActionConfiguration, GenericActionDelegate> {
     override fun <T> get(
         owner: T,
         application: Application,
@@ -45,10 +44,12 @@ class GenericActionComponentProvider :
         defaultArgs: Bundle?
     ): GenericActionComponent {
         val genericActionFactory = viewModelFactory(savedStateRegistryOwner, defaultArgs) { savedStateHandle ->
+            val genericActionDelegate = getDelegate(configuration, savedStateHandle, application)
             GenericActionComponent(
                 savedStateHandle,
                 application,
                 configuration,
+                genericActionDelegate
             )
         }
         return ViewModelProvider(viewModelStoreOwner, genericActionFactory).get(GenericActionComponent::class.java)
@@ -57,9 +58,9 @@ class GenericActionComponentProvider :
     override fun getDelegate(
         configuration: GenericActionConfiguration,
         savedStateHandle: SavedStateHandle,
-        application: Application,
-    ): ActionDelegate<*> {
-        throw IllegalStateException("GenericActionComponent doesn't have a delegate")
+        application: Application
+    ): GenericActionDelegate {
+        return DefaultGenericActionDelegate(savedStateHandle, configuration, ActionDelegateProvider())
     }
 
     override val supportedActionTypes: List<String>
