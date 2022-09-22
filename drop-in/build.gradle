@@ -53,8 +53,8 @@ dependencies {
     // Checkout
     api project(":3ds2")
     api project(":await")
-    api project(':bcmc')
     api project(':bacs')
+    api project(':bcmc')
     api project(':blik')
     api project(":card")
     api project(':dotpay')
@@ -67,6 +67,7 @@ dependencies {
     api project(':molpay')
     api project(':online-banking-pl')
     api project(':openbanking')
+    api project(':qr-code')
     api project(":redirect")
     api project(':sepa')
     api project(':voucher')
