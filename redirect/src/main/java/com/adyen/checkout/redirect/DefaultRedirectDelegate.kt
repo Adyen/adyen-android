@@ -14,12 +14,15 @@ import com.adyen.checkout.components.ActionComponentData
 import com.adyen.checkout.components.flow.MutableSingleEventSharedFlow
 import com.adyen.checkout.components.model.payments.response.RedirectAction
 import com.adyen.checkout.components.repository.PaymentDataRepository
+import com.adyen.checkout.components.ui.ViewProvider
+import com.adyen.checkout.components.ui.view.ComponentViewType
 import com.adyen.checkout.core.exception.CheckoutException
 import com.adyen.checkout.core.log.LogUtil
 import com.adyen.checkout.core.log.Logger
 import com.adyen.checkout.redirect.handler.RedirectHandler
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableSharedFlow
+import kotlinx.coroutines.flow.MutableStateFlow
 import org.json.JSONObject
 
 private val TAG = LogUtil.getTag()
@@ -34,6 +37,8 @@ internal class DefaultRedirectDelegate(
 
     private val _exceptionFlow: MutableSharedFlow<CheckoutException> = MutableSingleEventSharedFlow()
     override val exceptionFlow: Flow<CheckoutException> = _exceptionFlow
+
+    override val viewFlow: Flow<ComponentViewType?> = MutableStateFlow(RedirectComponentViewType)
 
     override fun handleAction(action: RedirectAction, activity: Activity) {
         paymentDataRepository.paymentData = action.paymentData
@@ -67,4 +72,6 @@ internal class DefaultRedirectDelegate(
             paymentData = paymentDataRepository.paymentData,
         )
     }
+
+    override fun getViewProvider(): ViewProvider = RedirectViewProvider
 }
