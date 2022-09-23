@@ -1,4 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
+
 <!--
   ~ Copyright (c) 2020 Adyen N.V.
   ~
@@ -7,8 +8,7 @@
   ~ Created by caiof on 2/9/2020.
   -->
 
-<merge
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<merge xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
@@ -42,8 +42,7 @@
         <ProgressBar
             android:layout_width="36dp"
             android:layout_height="36dp"
-            android:indeterminateTint="?android:attr/colorPrimary"
-            tools:targetApi="lollipop" />
+            android:indeterminateTint="?android:attr/colorPrimary" />
 
         <TextView
             android:id="@+id/textView_waiting_confirmation"
