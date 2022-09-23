@@ -12,12 +12,14 @@ import com.adyen.checkout.components.base.ActionDelegate
 import com.adyen.checkout.components.base.DetailsEmittingDelegate
 import com.adyen.checkout.components.base.IntentHandlingDelegate
 import com.adyen.checkout.components.model.payments.response.BaseThreeds2Action
+import com.adyen.checkout.components.ui.ViewProvidingDelegate
 import com.adyen.threeds2.customization.UiCustomization
 
 interface Adyen3DS2Delegate :
     ActionDelegate<BaseThreeds2Action>,
     DetailsEmittingDelegate,
-    IntentHandlingDelegate {
+    IntentHandlingDelegate,
+    ViewProvidingDelegate {
 
     fun set3DS2UICustomization(uiCustomization: UiCustomization?)
 }

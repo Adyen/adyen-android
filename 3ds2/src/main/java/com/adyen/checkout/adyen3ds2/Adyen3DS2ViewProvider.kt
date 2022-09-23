@@ -6,7 +6,7 @@
  * Created by oscars on 23/9/2022.
  */
 
-package com.adyen.checkout.redirect
+package com.adyen.checkout.adyen3ds2
 
 import android.content.Context
 import android.util.AttributeSet
@@ -15,7 +15,7 @@ import com.adyen.checkout.components.ui.PaymentInProgressView
 import com.adyen.checkout.components.ui.ViewProvider
 import com.adyen.checkout.components.ui.view.ComponentViewType
 
-internal object RedirectViewProvider : ViewProvider {
+object Adyen3DS2ViewProvider : ViewProvider {
 
     override fun getView(
         viewType: ComponentViewType,
@@ -24,9 +24,9 @@ internal object RedirectViewProvider : ViewProvider {
         defStyleAttr: Int
     ): ComponentViewNew = when (viewType) {
         // TODO find out why passing attrs crashes
-        RedirectComponentViewType -> PaymentInProgressView(context, null, defStyleAttr)
-        else -> throw IllegalArgumentException("Unsupported view type")
+        Adyen3DS2ComponentViewType -> PaymentInProgressView(context, null, defStyleAttr)
+        else -> throw IllegalStateException("Unsupported view type")
     }
 }
 
-object RedirectComponentViewType : ComponentViewType
+object Adyen3DS2ComponentViewType : ComponentViewType
