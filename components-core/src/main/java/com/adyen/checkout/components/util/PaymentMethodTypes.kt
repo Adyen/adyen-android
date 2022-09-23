@@ -36,6 +36,7 @@ object PaymentMethodTypes {
     const val BLIK = "blik"
     const val GIFTCARD = "giftcard"
     const val ONLINE_BANKING_CZ = "onlineBanking_CZ"
+    const val ONLINE_BANKING_SK = "onlineBanking_SK"
     const val ONLINE_BANKING_PL = "onlineBanking_PL"
 
     // Payment methods that do not need a payment component, but only an action component
