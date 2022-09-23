@@ -7,6 +7,12 @@
 [//]: # ( - DropIn service's package changed from `com.adyen.dropin` to `com.adyen.dropin.services`)
 [//]: # ( # Deprecated)
 [//]: # ( - Configurations public constructor are deprecated, please use each Configuration's builder to make a Configuration object)
+## Added
+- `Online banking Poland` Component
+
+## Changed
+- Update 3DS2 SDK version to `2.2.8`
 
 ## Fixed
-- For BACS Direct Debit, an error message appears under the payment agreement text if the shopper selects the **Continue** button without selecting the toggles to agree.
+- Gracefully terminate drop in without crashing when coming back from a redirect after drop-in was closed
+- Updating 3DS2 SDK version fixed a crash on Android 13
