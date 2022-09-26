@@ -145,12 +145,12 @@ internal fun <T : Configuration> getDefaultConfigForPaymentMethod(
             environment,
             clientKey
         )
-        PaymentMethodTypes.ONLINE_BANKING_SK -> OnlineBankingSKConfiguration.Builder(
+        PaymentMethodTypes.ONLINE_BANKING_PL -> OnlineBankingPLConfiguration.Builder(
             shopperLocale,
             environment,
             clientKey
         )
-        PaymentMethodTypes.ONLINE_BANKING_PL -> OnlineBankingPLConfiguration.Builder(
+        PaymentMethodTypes.ONLINE_BANKING_SK -> OnlineBankingSKConfiguration.Builder(
             shopperLocale,
             environment,
             clientKey
@@ -353,15 +353,15 @@ internal fun getComponentFor(
                 getConfigurationForPaymentMethod(PaymentMethodTypes.ONLINE_BANKING_CZ, dropInConfiguration, amount)
             OnlineBankingCZComponent.PROVIDER.get(fragment, paymentMethod, onlineBankingCZConfig)
         }
-        PaymentMethodTypes.ONLINE_BANKING_SK -> {
-            val onlineBankingSKConfig: OnlineBankingSKConfiguration =
-                getConfigurationForPaymentMethod(PaymentMethodTypes.ONLINE_BANKING_SK, dropInConfiguration, amount)
-            OnlineBankingSKComponent.PROVIDER.get(fragment, paymentMethod, onlineBankingSKConfig)
-        }
         PaymentMethodTypes.ONLINE_BANKING_PL -> {
             val onlineBankingPLConfig: OnlineBankingPLConfiguration =
                 getConfigurationForPaymentMethod(PaymentMethodTypes.ONLINE_BANKING_PL, dropInConfiguration, amount)
             OnlineBankingPLComponent.PROVIDER.get(fragment, paymentMethod, onlineBankingPLConfig)
+        }
+        PaymentMethodTypes.ONLINE_BANKING_SK -> {
+            val onlineBankingSKConfig: OnlineBankingSKConfiguration =
+                getConfigurationForPaymentMethod(PaymentMethodTypes.ONLINE_BANKING_SK, dropInConfiguration, amount)
+            OnlineBankingSKComponent.PROVIDER.get(fragment, paymentMethod, onlineBankingSKConfig)
         }
         PaymentMethodTypes.OPEN_BANKING -> {
             val openBankingConfig: OpenBankingConfiguration =
@@ -440,8 +440,8 @@ private fun Configuration.toBuilder(): BaseConfigurationBuilder<out Configuratio
         is MBWayConfiguration -> MBWayConfiguration.Builder(this)
         is MolpayConfiguration -> MolpayConfiguration.Builder(this)
         is OnlineBankingCZConfiguration -> OnlineBankingCZConfiguration.Builder(this)
-        is OnlineBankingSKConfiguration -> OnlineBankingSKConfiguration.Builder(this)
         is OnlineBankingPLConfiguration -> OnlineBankingPLConfiguration.Builder(this)
+        is OnlineBankingSKConfiguration -> OnlineBankingSKConfiguration.Builder(this)
         is OpenBankingConfiguration -> OpenBankingConfiguration.Builder(this)
         is QRCodeConfiguration -> QRCodeConfiguration.Builder(this)
         is RedirectConfiguration -> RedirectConfiguration.Builder(this)
