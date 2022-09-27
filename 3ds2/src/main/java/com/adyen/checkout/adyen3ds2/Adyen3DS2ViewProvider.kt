@@ -23,8 +23,7 @@ object Adyen3DS2ViewProvider : ViewProvider {
         attrs: AttributeSet?,
         defStyleAttr: Int
     ): ComponentViewNew = when (viewType) {
-        // TODO find out why passing attrs crashes
-        Adyen3DS2ComponentViewType -> PaymentInProgressView(context, null, defStyleAttr)
+        Adyen3DS2ComponentViewType -> PaymentInProgressView(context, attrs, defStyleAttr)
         else -> throw IllegalStateException("Unsupported view type")
     }
 }

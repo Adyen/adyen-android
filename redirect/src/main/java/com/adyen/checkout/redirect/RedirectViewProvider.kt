@@ -23,8 +23,7 @@ internal object RedirectViewProvider : ViewProvider {
         attrs: AttributeSet?,
         defStyleAttr: Int
     ): ComponentViewNew = when (viewType) {
-        // TODO find out why passing attrs crashes
-        RedirectComponentViewType -> PaymentInProgressView(context, null, defStyleAttr)
+        RedirectComponentViewType -> PaymentInProgressView(context, attrs, defStyleAttr)
         else -> throw IllegalArgumentException("Unsupported view type")
     }
 }
