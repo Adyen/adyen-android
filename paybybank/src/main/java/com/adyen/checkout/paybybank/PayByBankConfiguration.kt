@@ -14,9 +14,10 @@ import android.os.Parcelable
 import com.adyen.checkout.components.base.BaseConfigurationBuilder
 import com.adyen.checkout.components.base.Configuration
 import com.adyen.checkout.core.api.Environment
+import com.adyen.checkout.issuerlist.IssuerListConfiguration
 import java.util.Locale
 
-class PayByBankConfiguration : Configuration {
+class PayByBankConfiguration : IssuerListConfiguration {
 
     companion object {
         @JvmField

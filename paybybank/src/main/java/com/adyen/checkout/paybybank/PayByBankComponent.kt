@@ -9,42 +9,19 @@
 package com.adyen.checkout.paybybank
 
 import androidx.lifecycle.SavedStateHandle
-import androidx.lifecycle.viewModelScope
 import com.adyen.checkout.components.PaymentComponentProvider
-import com.adyen.checkout.components.PaymentComponentState
-import com.adyen.checkout.components.base.BasePaymentComponent
 import com.adyen.checkout.components.model.payments.request.PayByBankPaymentMethod
 import com.adyen.checkout.components.util.PaymentMethodTypes
-import kotlinx.coroutines.flow.filterNotNull
-import kotlinx.coroutines.flow.launchIn
-import kotlinx.coroutines.flow.onEach
+import com.adyen.checkout.issuerlist.IssuerListComponent
+import com.adyen.checkout.issuerlist.IssuerListDelegate
 
 class PayByBankComponent(
     savedStateHandle: SavedStateHandle,
-    private val payByBankDelegate: PayByBankDelegate,
+    issuerListDelegate: IssuerListDelegate<PayByBankPaymentMethod>,
     configuration: PayByBankConfiguration
-) : BasePaymentComponent<PayByBankConfiguration, PayByBankInputData, PayByBankOutputData,
-    PaymentComponentState<PayByBankPaymentMethod>>(savedStateHandle, payByBankDelegate, configuration) {
-
-    override val inputData: PayByBankInputData = PayByBankInputData()
-
-    init {
-        payByBankDelegate.outputDataFlow
-            .filterNotNull()
-            .onEach { notifyOutputDataChanged(it) }
-            .launchIn(viewModelScope)
-
-        payByBankDelegate.componentStateFlow
-            .filterNotNull()
-            .onEach { notifyStateChanged(it) }
-            .launchIn(viewModelScope)
-    }
+) : IssuerListComponent<PayByBankPaymentMethod>(savedStateHandle, issuerListDelegate, configuration) {
 
     override fun getSupportedPaymentMethodTypes(): Array<String> = PAYMENT_METHOD_TYPES
-
-    override fun onInputDataChanged(inputData: PayByBankInputData) {
-        payByBankDelegate.onInputDataChanged(inputData)
-    }
 
     companion object {
         @JvmField

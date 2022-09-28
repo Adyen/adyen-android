@@ -16,10 +16,10 @@ import com.adyen.checkout.core.model.getStringOrNull
 import org.json.JSONException
 import org.json.JSONObject
 
-// TODO other fields
 class PayByBankPaymentMethod(
-    override var type: String? = null
-) : PaymentMethodDetails() {
+    override var type: String? = null,
+    override var issuer: String? = null
+) : IssuerListPaymentMethod() {
 
     override fun writeToParcel(dest: Parcel, flags: Int) {
         JsonUtils.writeToParcel(dest, SERIALIZER.serialize(this))
@@ -37,6 +37,7 @@ class PayByBankPaymentMethod(
                 return try {
                     JSONObject().apply {
                         putOpt(TYPE, modelObject.type)
+                        putOpt(ISSUER, modelObject.issuer)
                     }
                 } catch (e: JSONException) {
                     throw ModelSerializationException(PayByBankPaymentMethod::class.java, e)
@@ -45,7 +46,8 @@ class PayByBankPaymentMethod(
 
             override fun deserialize(jsonObject: JSONObject): PayByBankPaymentMethod {
                 return PayByBankPaymentMethod(
-                    type = jsonObject.getStringOrNull(TYPE)
+                    type = jsonObject.getStringOrNull(TYPE),
+                    issuer = jsonObject.getStringOrNull(ISSUER)
                 )
             }
         }
