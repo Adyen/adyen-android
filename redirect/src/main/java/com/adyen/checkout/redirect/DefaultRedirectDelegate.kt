@@ -73,5 +73,9 @@ internal class DefaultRedirectDelegate(
         )
     }
 
+    override fun onError(e: CheckoutException) {
+        _exceptionFlow.tryEmit(e)
+    }
+
     override fun getViewProvider(): ViewProvider = RedirectViewProvider
 }

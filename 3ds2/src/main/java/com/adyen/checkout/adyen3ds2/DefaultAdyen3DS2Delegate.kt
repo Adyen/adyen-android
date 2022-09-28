@@ -412,6 +412,10 @@ internal class DefaultAdyen3DS2Delegate(
         }
     }
 
+    override fun onError(e: CheckoutException) {
+        _exceptionFlow.tryEmit(e)
+    }
+
     override fun getViewProvider(): ViewProvider = Adyen3DS2ViewProvider
 
     override fun onCleared() {

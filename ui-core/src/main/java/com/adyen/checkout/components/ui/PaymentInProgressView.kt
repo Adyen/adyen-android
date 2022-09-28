@@ -15,8 +15,10 @@ import android.view.View
 import android.view.ViewGroup.LayoutParams.MATCH_PARENT
 import android.view.ViewGroup.LayoutParams.WRAP_CONTENT
 import androidx.constraintlayout.widget.ConstraintLayout
+import com.adyen.checkout.components.base.ActionDelegate
 import com.adyen.checkout.components.base.ComponentDelegate
 import com.adyen.checkout.components.ui.databinding.ViewPaymentInProgressBinding
+import com.adyen.checkout.core.exception.CancellationException
 import kotlinx.coroutines.CoroutineScope
 
 class PaymentInProgressView @JvmOverloads constructor(
@@ -38,9 +40,12 @@ class PaymentInProgressView @JvmOverloads constructor(
     }
 
     override fun initView(delegate: ComponentDelegate, coroutineScope: CoroutineScope, localizedContext: Context) {
+        if (delegate !is ActionDelegate<*>) throw IllegalStateException("Unsupported delegate type")
+
         initLocalizedStrings(localizedContext)
 
         binding.buttonPaymentinprogressAbort.setOnClickListener {
+            delegate.onError(CancellationException("Payment in progress was cancelled"))
         }
     }
 
