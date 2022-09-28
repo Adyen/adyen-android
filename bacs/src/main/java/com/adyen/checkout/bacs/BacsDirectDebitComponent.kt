@@ -13,7 +13,10 @@ import androidx.lifecycle.viewModelScope
 import com.adyen.checkout.bacs.BacsDirectDebitComponent.Companion.PROVIDER
 import com.adyen.checkout.components.PaymentComponentProvider
 import com.adyen.checkout.components.base.BasePaymentComponent
+import com.adyen.checkout.components.ui.ViewProvidingComponent
+import com.adyen.checkout.components.ui.view.ComponentViewType
 import com.adyen.checkout.components.util.PaymentMethodTypes
+import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.filterNotNull
 import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.onEach
@@ -23,20 +26,24 @@ import kotlinx.coroutines.flow.onEach
  */
 class BacsDirectDebitComponent(
     savedStateHandle: SavedStateHandle,
-    private val bacsDirectDebitDelegate: BacsDirectDebitDelegate,
+    override val delegate: BacsDirectDebitDelegate,
     configuration: BacsDirectDebitConfiguration
 ) : BasePaymentComponent<BacsDirectDebitConfiguration, BacsDirectDebitInputData, BacsDirectDebitOutputData,
-    BacsDirectDebitComponentState>(savedStateHandle, bacsDirectDebitDelegate, configuration) {
+    BacsDirectDebitComponentState>(savedStateHandle, delegate, configuration),
+    ViewProvidingComponent {
 
-    override val inputData: BacsDirectDebitInputData = BacsDirectDebitInputData()
+    override val viewFlow: Flow<ComponentViewType?> get() = delegate.viewFlow
+
+    override val inputData: BacsDirectDebitInputData
+        get() = delegate.inputData
 
     init {
-        bacsDirectDebitDelegate.outputDataFlow
+        delegate.outputDataFlow
             .filterNotNull()
             .onEach { notifyOutputDataChanged(it) }
             .launchIn(viewModelScope)
 
-        bacsDirectDebitDelegate.componentStateFlow
+        delegate.componentStateFlow
             .filterNotNull()
             .onEach { notifyStateChanged(it) }
             .launchIn(viewModelScope)
@@ -45,17 +52,26 @@ class BacsDirectDebitComponent(
     override fun getSupportedPaymentMethodTypes(): Array<String> = PAYMENT_METHOD_TYPES
 
     override fun onInputDataChanged(inputData: BacsDirectDebitInputData) {
-        bacsDirectDebitDelegate.onInputDataChanged(inputData)
+        delegate.onInputDataChanged(inputData)
     }
 
-    fun setInputMode() {
-        inputData.mode = BacsDirectDebitMode.INPUT
-        notifyInputDataChanged()
+    /**
+     * Sets the displayed BACS view as the final confirmation view.
+     * Should only be called if the form is valid.
+     *
+     * @return whether the view was successfully changed.
+     */
+    fun setConfirmationMode(): Boolean {
+        return delegate.setMode(BacsDirectDebitMode.CONFIRMATION)
     }
 
-    fun setConfirmationMode() {
-        inputData.mode = BacsDirectDebitMode.CONFIRMATION
-        notifyInputDataChanged()
+    /**
+     * Resets the displayed BACS view back to the form input view.
+     *
+     * @return whether the view was successfully changed.
+     */
+    fun setInputMode(): Boolean {
+        return delegate.setMode(BacsDirectDebitMode.INPUT)
     }
 
     companion object {

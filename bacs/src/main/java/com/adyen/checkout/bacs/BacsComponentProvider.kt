@@ -28,7 +28,7 @@ class BacsComponentProvider : PaymentComponentProvider<BacsDirectDebitComponent,
             viewModelFactory(savedStateRegistryOwner, defaultArgs) { savedStateHandle ->
                 BacsDirectDebitComponent(
                     savedStateHandle,
-                    DefaultBacsDirectDebitDelegate(paymentMethod),
+                    DefaultBacsDirectDebitDelegate(configuration, paymentMethod),
                     configuration
                 )
             }
