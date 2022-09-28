@@ -13,8 +13,6 @@ import com.adyen.checkout.components.status.api.StatusService
 import com.adyen.checkout.components.status.model.StatusResponse
 import com.adyen.checkout.test.TestDispatcherExtension
 import kotlinx.coroutines.ExperimentalCoroutinesApi
-import kotlinx.coroutines.flow.flowOn
-import kotlinx.coroutines.test.TestDispatcher
 import kotlinx.coroutines.test.runTest
 import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.BeforeEach
@@ -40,15 +38,12 @@ internal class DefaultStatusRepositoryTest(
     }
 
     @Test
-    fun `when receiving the final result, then it should be emitted and the flow should end`(
-        dispatcher: TestDispatcher
-    ) = runTest(dispatcher) {
+    fun `when receiving the final result, then it should be emitted and the flow should end`() = runTest {
         val response = StatusResponse(resultCode = "final")
         whenever(statusService.checkStatus(any(), any())) doReturn response
 
         statusRepository
             .poll("paymentData")
-            .flowOn(dispatcher)
             .test {
                 val expected = Result.success(response)
                 assertEquals(expected, awaitItem())
@@ -58,9 +53,7 @@ internal class DefaultStatusRepositoryTest(
     }
 
     @Test
-    fun `when refreshing the status, then the result is emitted immediately`(
-        dispatcher: TestDispatcher
-    ) = runTest(dispatcher) {
+    fun `when refreshing the status, then the result is emitted immediately`() = runTest() {
         val refreshResponse = StatusResponse(resultCode = "refresh")
         whenever(statusService.checkStatus(any(), any()))
             // return final result first, so polling stops
@@ -68,7 +61,6 @@ internal class DefaultStatusRepositoryTest(
 
         statusRepository
             .poll("paymentData")
-            .flowOn(dispatcher)
             .test {
                 skipItems(1)
 
