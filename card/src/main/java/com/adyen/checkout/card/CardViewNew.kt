@@ -60,13 +60,6 @@ class CardViewNew @JvmOverloads constructor(
     ),
     ComponentViewNew {
 
-    companion object {
-        private const val UNSELECTED_BRAND_LOGO_ALPHA = 0.2f
-        private const val SELECTED_BRAND_LOGO_ALPHA = 1f
-        private const val PRIMARY_BRAND_INDEX = 0
-        private const val SECONDARY_BRAND_INDEX = 1
-    }
-
     private val binding: CardViewNewBinding = CardViewNewBinding.inflate(LayoutInflater.from(context), this)
 
     private var imageLoader: ImageLoader? = null
@@ -747,4 +740,11 @@ class CardViewNew @JvmOverloads constructor(
     override val isConfirmationRequired: Boolean = true
 
     override fun getView(): View = this
+
+    companion object {
+        private const val UNSELECTED_BRAND_LOGO_ALPHA = 0.2f
+        private const val SELECTED_BRAND_LOGO_ALPHA = 1f
+        private const val PRIMARY_BRAND_INDEX = 0
+        private const val SECONDARY_BRAND_INDEX = 1
+    }
 }
