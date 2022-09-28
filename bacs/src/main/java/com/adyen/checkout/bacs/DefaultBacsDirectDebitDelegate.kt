@@ -8,6 +8,7 @@
 
 package com.adyen.checkout.bacs
 
+import androidx.annotation.VisibleForTesting
 import com.adyen.checkout.components.model.paymentmethods.PaymentMethod
 import com.adyen.checkout.components.model.payments.request.BacsDirectDebitPaymentMethod
 import com.adyen.checkout.components.model.payments.request.PaymentComponentData
@@ -35,7 +36,9 @@ internal class DefaultBacsDirectDebitDelegate(
     private val _componentStateFlow = MutableStateFlow<BacsDirectDebitComponentState?>(null)
     override val componentStateFlow: Flow<BacsDirectDebitComponentState?> = _componentStateFlow
 
-    private val _viewFlow = MutableStateFlow(BacsComponentViewType.INPUT)
+    @VisibleForTesting
+    @Suppress("VariableNaming")
+    internal val _viewFlow = MutableStateFlow(BacsComponentViewType.INPUT)
     override val viewFlow: Flow<ComponentViewType?> = _viewFlow
 
     override fun getPaymentMethodType(): String = paymentMethod.type ?: PaymentMethodTypes.UNKNOWN
