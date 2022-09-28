@@ -13,8 +13,11 @@ import androidx.lifecycle.viewModelScope
 import com.adyen.checkout.card.CardComponent.Companion.PROVIDER
 import com.adyen.checkout.components.StoredPaymentComponentProvider
 import com.adyen.checkout.components.base.BasePaymentComponent
+import com.adyen.checkout.components.ui.ViewProvidingComponent
+import com.adyen.checkout.components.ui.view.ComponentViewType
 import com.adyen.checkout.components.util.PaymentMethodTypes
 import com.adyen.checkout.core.log.LogUtil
+import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.filterNotNull
 import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.onEach
@@ -24,19 +27,23 @@ import kotlinx.coroutines.flow.onEach
  */
 class CardComponent(
     savedStateHandle: SavedStateHandle,
-    private val cardDelegate: CardDelegate,
+    override val delegate: CardDelegate,
     cardConfiguration: CardConfiguration
-) : BasePaymentComponent<CardConfiguration, CardInputData, CardOutputData, CardComponentState>(
-    savedStateHandle,
-    cardDelegate,
-    cardConfiguration
-) {
+) :
+    BasePaymentComponent<CardConfiguration, CardInputData, CardOutputData, CardComponentState>(
+        savedStateHandle,
+        delegate,
+        cardConfiguration
+    ),
+    ViewProvidingComponent {
+
+    override val viewFlow: Flow<ComponentViewType?> get() = delegate.viewFlow
 
     override val inputData: CardInputData
-        get() = cardDelegate.inputData
+        get() = delegate.inputData
 
     init {
-        cardDelegate.initialize(viewModelScope)
+        delegate.initialize(viewModelScope)
 
         observeOutputData()
         observeComponentState()
@@ -44,36 +51,36 @@ class CardComponent(
     }
 
     private fun observeOutputData() {
-        cardDelegate.outputDataFlow
+        delegate.outputDataFlow
             .filterNotNull()
             .onEach { notifyOutputDataChanged(it) }
             .launchIn(viewModelScope)
     }
 
     private fun observeComponentState() {
-        cardDelegate.componentStateFlow
+        delegate.componentStateFlow
             .filterNotNull()
             .onEach { notifyStateChanged(it) }
             .launchIn(viewModelScope)
     }
 
     private fun observeExceptions() {
-        cardDelegate.exceptionFlow
+        delegate.exceptionFlow
             .onEach { notifyException(it) }
             .launchIn(viewModelScope)
     }
 
     override fun onInputDataChanged(inputData: CardInputData) {
-        cardDelegate.onInputDataChanged(inputData)
+        delegate.onInputDataChanged(inputData)
     }
 
-    override fun requiresInput() = cardDelegate.requiresInput()
+    override fun requiresInput() = delegate.requiresInput()
 
     override fun getSupportedPaymentMethodTypes() = PAYMENT_METHOD_TYPES
 
     override fun onCleared() {
         super.onCleared()
-        cardDelegate.onCleared()
+        delegate.onCleared()
     }
 
     companion object {

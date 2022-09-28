@@ -31,6 +31,8 @@ import com.adyen.checkout.components.repository.PublicKeyRepository
 import com.adyen.checkout.components.ui.ComponentMode
 import com.adyen.checkout.components.ui.FieldState
 import com.adyen.checkout.components.ui.Validation
+import com.adyen.checkout.components.ui.ViewProvider
+import com.adyen.checkout.components.ui.view.ComponentViewType
 import com.adyen.checkout.components.util.PaymentMethodTypes
 import com.adyen.checkout.core.exception.CheckoutException
 import com.adyen.checkout.core.exception.ComponentException
@@ -54,7 +56,7 @@ import kotlinx.coroutines.launch
 @Suppress("LongParameterList", "TooManyFunctions")
 class DefaultCardDelegate(
     private val publicKeyRepository: PublicKeyRepository,
-    private val configuration: CardConfiguration,
+    override val configuration: CardConfiguration,
     private val paymentMethod: PaymentMethod,
     private val addressRepository: AddressRepository,
     private val detectCardTypeRepository: DetectCardTypeRepository,
@@ -70,7 +72,7 @@ class DefaultCardDelegate(
     private val _outputDataFlow = MutableStateFlow<CardOutputData?>(null)
     override val outputDataFlow: Flow<CardOutputData?> = _outputDataFlow
 
-    private val outputData
+    override val outputData: CardOutputData?
         get() = _outputDataFlow.value
 
     private val _componentStateFlow = MutableStateFlow<CardComponentState?>(null)
@@ -81,6 +83,8 @@ class DefaultCardDelegate(
 
     private var _coroutineScope: CoroutineScope? = null
     private val coroutineScope: CoroutineScope get() = requireNotNull(_coroutineScope)
+
+    override val viewFlow: Flow<ComponentViewType?> = MutableStateFlow(CardComponentViewType)
 
     override fun initialize(coroutineScope: CoroutineScope) {
         _coroutineScope = coroutineScope
@@ -590,6 +594,8 @@ class DefaultCardDelegate(
     private fun isInstallmentsRequired(cardOutputData: CardOutputData): Boolean {
         return cardOutputData.installmentOptions.isNotEmpty()
     }
+
+    override fun getViewProvider(): ViewProvider = CardViewProvider
 
     override fun onCleared() {
         _coroutineScope = null

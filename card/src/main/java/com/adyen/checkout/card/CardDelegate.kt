@@ -9,13 +9,20 @@
 package com.adyen.checkout.card
 
 import com.adyen.checkout.components.base.PaymentMethodDelegate
+import com.adyen.checkout.components.ui.ViewProvidingDelegate
 import com.adyen.checkout.core.exception.CheckoutException
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.flow.Flow
 
-interface CardDelegate : PaymentMethodDelegate<CardConfiguration, CardInputData, CardOutputData, CardComponentState> {
+interface CardDelegate :
+    PaymentMethodDelegate<CardConfiguration, CardInputData, CardOutputData, CardComponentState>,
+    ViewProvidingDelegate {
+
+    val configuration: CardConfiguration
 
     val inputData: CardInputData
+
+    val outputData: CardOutputData?
 
     val outputDataFlow: Flow<CardOutputData?>
 

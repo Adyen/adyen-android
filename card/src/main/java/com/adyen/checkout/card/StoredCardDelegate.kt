@@ -22,6 +22,8 @@ import com.adyen.checkout.components.repository.PublicKeyRepository
 import com.adyen.checkout.components.ui.ComponentMode
 import com.adyen.checkout.components.ui.FieldState
 import com.adyen.checkout.components.ui.Validation
+import com.adyen.checkout.components.ui.ViewProvider
+import com.adyen.checkout.components.ui.view.ComponentViewType
 import com.adyen.checkout.components.util.PaymentMethodTypes
 import com.adyen.checkout.core.exception.CheckoutException
 import com.adyen.checkout.core.exception.ComponentException
@@ -41,7 +43,7 @@ import kotlinx.coroutines.launch
 @Suppress("TooManyFunctions")
 class StoredCardDelegate(
     private val storedPaymentMethod: StoredPaymentMethod,
-    private val configuration: CardConfiguration,
+    override val configuration: CardConfiguration,
     private val cardEncrypter: CardEncrypter,
     private val publicKeyRepository: PublicKeyRepository,
 ) : CardDelegate {
@@ -57,7 +59,9 @@ class StoredCardDelegate(
     private val _exceptionFlow: MutableSharedFlow<CheckoutException> = MutableSingleEventSharedFlow()
     override val exceptionFlow: Flow<CheckoutException> = _exceptionFlow
 
-    private val outputData
+    override val viewFlow: Flow<ComponentViewType?> = MutableStateFlow(CardComponentViewType)
+
+    override val outputData: CardOutputData?
         get() = _outputDataFlow.value
 
     private val noCvcBrands: Set<CardType> = hashSetOf(CardType.BCMC)
@@ -346,6 +350,8 @@ class StoredCardDelegate(
     private fun getPaymentMethodId(): String {
         return storedPaymentMethod.id ?: "ID_NOT_FOUND"
     }
+
+    override fun getViewProvider(): ViewProvider = CardViewProvider
 
     override fun onCleared() {
         this.coroutineScope = null

@@ -11,6 +11,7 @@ import android.content.Context
 import android.util.AttributeSet
 import android.widget.LinearLayout
 import androidx.core.view.isVisible
+import androidx.core.view.updateLayoutParams
 import androidx.lifecycle.LifecycleOwner
 import androidx.lifecycle.lifecycleScope
 import com.adyen.checkout.components.ViewableComponent
@@ -90,7 +91,9 @@ class AdyenComponentView @JvmOverloads constructor(
 
         val localizedContext = context.createLocalizedContext(configuration.shopperLocale)
 
-        addView(componentView.getView())
+        val view = componentView.getView()
+        addView(view)
+        view.updateLayoutParams { width = LayoutParams.MATCH_PARENT }
 
         componentView.initView(delegate, coroutineScope, localizedContext)
     }
