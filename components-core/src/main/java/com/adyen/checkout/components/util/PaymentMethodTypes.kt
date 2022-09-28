@@ -98,6 +98,7 @@ object PaymentMethodTypes {
             MOLPAY_THAILAND,
             MOLPAY_VIETNAM,
             OPEN_BANKING,
+            PAY_BY_BANK,
             SEPA,
             BACS,
             SCHEME,

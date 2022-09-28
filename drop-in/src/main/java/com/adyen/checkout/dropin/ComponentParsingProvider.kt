@@ -65,6 +65,8 @@ import com.adyen.checkout.onlinebankingsk.OnlineBankingSKComponent
 import com.adyen.checkout.onlinebankingsk.OnlineBankingSKConfiguration
 import com.adyen.checkout.openbanking.OpenBankingComponent
 import com.adyen.checkout.openbanking.OpenBankingConfiguration
+import com.adyen.checkout.paybybank.PayByBankComponent
+import com.adyen.checkout.paybybank.PayByBankConfiguration
 import com.adyen.checkout.qrcode.QRCodeConfiguration
 import com.adyen.checkout.redirect.RedirectConfiguration
 import com.adyen.checkout.sepa.SepaComponent
@@ -140,6 +142,7 @@ internal fun <T : Configuration> getDefaultConfigForPaymentMethod(
             clientKey
         )
         PaymentMethodTypes.OPEN_BANKING -> OpenBankingConfiguration.Builder(shopperLocale, environment, clientKey)
+        PaymentMethodTypes.PAY_BY_BANK -> PayByBankConfiguration.Builder(shopperLocale, environment, clientKey)
         PaymentMethodTypes.SEPA -> SepaConfiguration.Builder(shopperLocale, environment, clientKey)
         PaymentMethodTypes.SCHEME -> CardConfiguration.Builder(shopperLocale, environment, clientKey)
         else -> throw CheckoutException("Unable to find component configuration for paymentMethod - $paymentMethod")
@@ -352,6 +355,11 @@ internal fun getComponentFor(
                 getConfigurationForPaymentMethod(PaymentMethodTypes.OPEN_BANKING, dropInConfiguration, amount)
             OpenBankingComponent.PROVIDER.get(fragment, paymentMethod, openBankingConfig)
         }
+        PaymentMethodTypes.PAY_BY_BANK -> {
+            val payByBankConfig: PayByBankConfiguration =
+                getConfigurationForPaymentMethod(PaymentMethodTypes.PAY_BY_BANK, dropInConfiguration, amount)
+            PayByBankComponent.PROVIDER.get(fragment, paymentMethod, payByBankConfig)
+        }
         PaymentMethodTypes.SCHEME -> {
             val cardConfig: CardConfiguration =
                 getConfigurationForPaymentMethod(PaymentMethodTypes.SCHEME, dropInConfiguration, amount)
@@ -394,6 +402,7 @@ private fun Configuration.toBuilder(): BaseConfigurationBuilder<out Configuratio
         is OnlineBankingPLConfiguration -> OnlineBankingPLConfiguration.Builder(this)
         is OnlineBankingSKConfiguration -> OnlineBankingSKConfiguration.Builder(this)
         is OpenBankingConfiguration -> OpenBankingConfiguration.Builder(this)
+        is PayByBankConfiguration -> PayByBankConfiguration.Builder(this)
         is QRCodeConfiguration -> QRCodeConfiguration.Builder(this)
         is RedirectConfiguration -> RedirectConfiguration.Builder(this)
         is SepaConfiguration -> SepaConfiguration.Builder(this)

@@ -73,6 +73,7 @@ abstract class PaymentMethodDetails : ModelObject() {
                 MBWayPaymentMethod.PAYMENT_METHOD_TYPE -> MBWayPaymentMethod.SERIALIZER
                 BlikPaymentMethod.PAYMENT_METHOD_TYPE -> BlikPaymentMethod.SERIALIZER
                 BacsDirectDebitPaymentMethod.PAYMENT_METHOD_TYPE -> BacsDirectDebitPaymentMethod.SERIALIZER
+                PayByBankPaymentMethod.PAYMENT_METHOD_TYPE -> PayByBankPaymentMethod.SERIALIZER
                 else -> GenericPaymentMethod.SERIALIZER
             }
             @Suppress("UNCHECKED_CAST")
