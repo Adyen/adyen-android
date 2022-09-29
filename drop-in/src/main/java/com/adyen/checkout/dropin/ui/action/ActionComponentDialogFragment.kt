@@ -20,6 +20,7 @@ import com.adyen.checkout.action.GenericActionConfiguration
 import com.adyen.checkout.components.ActionComponentData
 import com.adyen.checkout.components.ComponentError
 import com.adyen.checkout.components.model.payments.response.Action
+import com.adyen.checkout.core.exception.CancellationException
 import com.adyen.checkout.core.exception.CheckoutException
 import com.adyen.checkout.core.log.LogUtil
 import com.adyen.checkout.core.log.Logger
@@ -116,8 +117,16 @@ class ActionComponentDialogFragment : DropInBottomSheetDialogFragment() {
     }
 
     private fun handleError(componentError: ComponentError) {
-        Logger.e(TAG, componentError.errorMessage)
-        protocol.showError(getString(R.string.action_failed), componentError.errorMessage, true)
+        when (componentError.exception) {
+            is CancellationException -> {
+                Logger.d(TAG, "Flow was cancelled by user")
+                onBackPressed()
+            }
+            else -> {
+                Logger.e(TAG, componentError.errorMessage)
+                protocol.showError(getString(R.string.action_failed), componentError.errorMessage, true)
+            }
+        }
     }
 
     private fun shouldFinishWithAction(): Boolean {
