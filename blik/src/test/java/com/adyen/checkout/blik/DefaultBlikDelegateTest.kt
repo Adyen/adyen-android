@@ -10,22 +10,35 @@ package com.adyen.checkout.blik
 
 import app.cash.turbine.test
 import com.adyen.checkout.components.model.paymentmethods.PaymentMethod
+import com.adyen.checkout.core.api.Environment
+import com.adyen.checkout.core.log.Logger
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.test.runTest
 import org.junit.Assert
+import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.DisplayName
 import org.junit.jupiter.api.Nested
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.extension.ExtendWith
 import org.mockito.junit.jupiter.MockitoExtension
+import java.util.Locale
 
 @OptIn(ExperimentalCoroutinesApi::class)
 @ExtendWith(MockitoExtension::class)
 internal class DefaultBlikDelegateTest {
 
-    private val delegate = DefaultBlikDelegate(
-        paymentMethod = PaymentMethod(),
-    )
+    private lateinit var delegate: DefaultBlikDelegate
+
+    @BeforeEach
+    fun beforeEach() {
+        val configuration = BlikConfiguration.Builder(
+            Locale.US,
+            Environment.TEST,
+            TEST_CLIENT_KEY
+        ).build()
+        delegate = DefaultBlikDelegate(configuration, PaymentMethod())
+        Logger.setLogcatLevel(Logger.NONE)
+    }
 
     @Nested
     @DisplayName("when input data changes and")
@@ -124,4 +137,9 @@ internal class DefaultBlikDelegateTest {
             }
         }
     }
+
+    companion object {
+        private const val TEST_CLIENT_KEY = "test_qwertyuiopasdfghjklzxcvbnmqwerty"
+    }
 }
+
