@@ -34,8 +34,7 @@ class BacsDirectDebitComponent(
 
     override val viewFlow: Flow<ComponentViewType?> get() = delegate.viewFlow
 
-    override val inputData: BacsDirectDebitInputData
-        get() = delegate.inputData
+    override val inputData: BacsDirectDebitInputData = delegate.inputData
 
     init {
         delegate.outputDataFlow
