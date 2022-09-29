@@ -14,7 +14,9 @@ import com.adyen.checkout.core.api.Environment
 import com.adyen.checkout.core.log.Logger
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.test.runTest
-import org.junit.Assert
+import org.junit.jupiter.api.Assertions.assertEquals
+import org.junit.jupiter.api.Assertions.assertFalse
+import org.junit.jupiter.api.Assertions.assertTrue
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.DisplayName
 import org.junit.jupiter.api.Nested
@@ -49,10 +51,11 @@ internal class DefaultBlikDelegateTest {
             delegate.outputDataFlow.test {
                 skipItems(1)
                 delegate.onInputDataChanged(BlikInputData(blikCode = ""))
-                val blikOutputData = awaitItem()
 
-                Assert.assertEquals("", blikOutputData?.blikCodeField?.value)
-                Assert.assertEquals(false, blikOutputData?.isValid)
+                with(requireNotNull(awaitItem())) {
+                    assertEquals("", blikCodeField.value)
+                    assertFalse(isValid)
+                }
 
                 cancelAndIgnoreRemainingEvents()
             }
@@ -63,11 +66,12 @@ internal class DefaultBlikDelegateTest {
             delegate.componentStateFlow.test {
                 skipItems(1)
                 delegate.onInputDataChanged(BlikInputData(blikCode = "1234"))
-                val componentState = awaitItem()
 
-                Assert.assertEquals("1234", componentState?.data?.paymentMethod?.blikCode)
-                Assert.assertEquals(false, componentState?.isInputValid)
-                Assert.assertEquals(false, componentState?.isValid)
+                with(requireNotNull(awaitItem())) {
+                    assertEquals("1234", data.paymentMethod?.blikCode)
+                    assertFalse(isInputValid)
+                    assertFalse(isValid)
+                }
 
                 cancelAndIgnoreRemainingEvents()
             }
@@ -78,10 +82,11 @@ internal class DefaultBlikDelegateTest {
             delegate.outputDataFlow.test {
                 skipItems(1)
                 delegate.onInputDataChanged(BlikInputData(blikCode = "545897"))
-                val blikOutputData = awaitItem()
 
-                Assert.assertEquals("545897", blikOutputData?.blikCodeField?.value)
-                Assert.assertEquals(true, blikOutputData?.isValid)
+                with(requireNotNull(awaitItem())) {
+                    assertEquals("545897", blikCodeField.value)
+                    assertTrue(isValid)
+                }
 
                 cancelAndIgnoreRemainingEvents()
             }
@@ -92,11 +97,12 @@ internal class DefaultBlikDelegateTest {
             delegate.componentStateFlow.test {
                 skipItems(1)
                 delegate.onInputDataChanged(BlikInputData(blikCode = "123243"))
-                val componentState = awaitItem()
 
-                Assert.assertEquals("123243", componentState?.data?.paymentMethod?.blikCode)
-                Assert.assertEquals(true, componentState?.isInputValid)
-                Assert.assertEquals(true, componentState?.isValid)
+                with(requireNotNull(awaitItem())) {
+                    assertEquals("123243", data.paymentMethod?.blikCode)
+                    assertTrue(isInputValid)
+                    assertTrue(isValid)
+                }
 
                 cancelAndIgnoreRemainingEvents()
             }
@@ -112,11 +118,12 @@ internal class DefaultBlikDelegateTest {
             delegate.componentStateFlow.test {
                 skipItems(1)
                 delegate.createComponentState(BlikOutputData("87909090"))
-                val componentState = awaitItem()
 
-                Assert.assertEquals("87909090", componentState?.data?.paymentMethod?.blikCode)
-                Assert.assertEquals(false, componentState?.isInputValid)
-                Assert.assertEquals(false, componentState?.isValid)
+                with(requireNotNull(awaitItem())) {
+                    assertEquals("87909090", data.paymentMethod?.blikCode)
+                    assertFalse(isInputValid)
+                    assertFalse(isValid)
+                }
 
                 cancelAndIgnoreRemainingEvents()
             }
@@ -127,11 +134,12 @@ internal class DefaultBlikDelegateTest {
             delegate.componentStateFlow.test {
                 skipItems(1)
                 delegate.createComponentState(BlikOutputData("777134"))
-                val componentState = awaitItem()
 
-                Assert.assertEquals("777134", componentState?.data?.paymentMethod?.blikCode)
-                Assert.assertEquals(true, componentState?.isInputValid)
-                Assert.assertEquals(true, componentState?.isValid)
+                with(requireNotNull(awaitItem())) {
+                    assertEquals("777134", data.paymentMethod?.blikCode)
+                    assertTrue(isInputValid)
+                    assertTrue(isValid)
+                }
 
                 cancelAndIgnoreRemainingEvents()
             }

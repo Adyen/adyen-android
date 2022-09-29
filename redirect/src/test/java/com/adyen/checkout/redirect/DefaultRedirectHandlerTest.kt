@@ -12,8 +12,8 @@ import android.net.Uri
 import com.adyen.checkout.core.exception.CheckoutException
 import com.adyen.checkout.redirect.handler.DefaultRedirectHandler
 import com.google.common.collect.Iterators
-import org.junit.Assert.assertEquals
 import org.junit.Test
+import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.runner.RunWith
 import org.robolectric.RobolectricTestRunner
 import org.robolectric.annotation.Config
