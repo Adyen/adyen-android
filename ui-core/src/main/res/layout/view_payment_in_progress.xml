@@ -16,29 +16,29 @@
     tools:parentTag="androidx.constraintlayout.widget.ConstraintLayout">
 
     <ProgressBar
-        android:id="@+id/progressbar_paymentinprogress"
+        android:id="@+id/progressBar_paymentInProgress"
         android:layout_width="36dp"
         android:layout_height="36dp"
         android:layout_marginTop="16dp"
         android:indeterminateTint="?android:attr/colorPrimary"
-        app:layout_constraintEnd_toStartOf="@id/textview_paymentinprogress_description"
+        app:layout_constraintEnd_toStartOf="@id/textView_paymentInProgress_description"
         app:layout_constraintHorizontal_chainStyle="packed"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
     <TextView
-        android:id="@+id/textview_paymentinprogress_description"
+        android:id="@+id/textView_paymentInProgress_description"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginHorizontal="8dp"
-        app:layout_constraintBottom_toBottomOf="@id/progressbar_paymentinprogress"
+        app:layout_constraintBottom_toBottomOf="@id/progressBar_paymentInProgress"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toEndOf="@+id/progressbar_paymentinprogress"
-        app:layout_constraintTop_toTopOf="@id/progressbar_paymentinprogress"
+        app:layout_constraintStart_toEndOf="@+id/progressBar_paymentInProgress"
+        app:layout_constraintTop_toTopOf="@id/progressBar_paymentInProgress"
         tools:text="Waiting for confirmation" />
 
     <Button
-        android:id="@+id/button_paymentinprogress_abort"
+        android:id="@+id/button_paymentInProgress_abort"
         style="@style/AdyenCheckout.Button.Secondary"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
@@ -46,7 +46,7 @@
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/progressbar_paymentinprogress"
-        tools:text="Abandon payment" />
+        app:layout_constraintTop_toBottomOf="@+id/progressBar_paymentInProgress"
+        tools:text="I'm too broke" />
 
 </merge>

@@ -12,8 +12,6 @@ import android.content.Context
 import android.util.AttributeSet
 import android.view.LayoutInflater
 import android.view.View
-import android.view.ViewGroup.LayoutParams.MATCH_PARENT
-import android.view.ViewGroup.LayoutParams.WRAP_CONTENT
 import androidx.constraintlayout.widget.ConstraintLayout
 import com.adyen.checkout.components.base.ActionDelegate
 import com.adyen.checkout.components.base.ComponentDelegate
@@ -35,16 +33,12 @@ class PaymentInProgressView @JvmOverloads constructor(
 
     private val binding = ViewPaymentInProgressBinding.inflate(LayoutInflater.from(context), this)
 
-    init {
-        layoutParams = LayoutParams(MATCH_PARENT, WRAP_CONTENT)
-    }
-
     override fun initView(delegate: ComponentDelegate, coroutineScope: CoroutineScope, localizedContext: Context) {
         if (delegate !is ActionDelegate<*>) throw IllegalStateException("Unsupported delegate type")
 
         initLocalizedStrings(localizedContext)
 
-        binding.buttonPaymentinprogressAbort.setOnClickListener {
+        binding.buttonPaymentInProgressAbort.setOnClickListener {
             delegate.onError(CancellationException("Payment in progress was cancelled"))
         }
     }
@@ -53,8 +47,8 @@ class PaymentInProgressView @JvmOverloads constructor(
     private fun initLocalizedStrings(localizedContext: Context) {
         with(binding) {
             // TODO: Use string resources when we have final design
-            textviewPaymentinprogressDescription.text = "Waiting for confirmation"
-            buttonPaymentinprogressAbort.text = "I'm too broke"
+            textViewPaymentInProgressDescription.text = "Waiting for confirmation"
+            buttonPaymentInProgressAbort.text = "I'm too broke"
         }
     }
 
