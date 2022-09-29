@@ -11,6 +11,7 @@ package com.adyen.checkout.blik
 import com.adyen.checkout.components.PaymentComponentState
 import com.adyen.checkout.components.base.PaymentMethodDelegate
 import com.adyen.checkout.components.model.payments.request.BlikPaymentMethod
+import com.adyen.checkout.components.ui.ViewProvidingDelegate
 import kotlinx.coroutines.flow.Flow
 
 interface BlikDelegate :
@@ -19,7 +20,14 @@ interface BlikDelegate :
         BlikInputData,
         BlikOutputData,
         PaymentComponentState<BlikPaymentMethod>
-        > {
+        >,
+    ViewProvidingDelegate {
+
+    val configuration: BlikConfiguration
+
+    val inputData: BlikInputData
+
+    val outputData: BlikOutputData?
 
     val outputDataFlow: Flow<BlikOutputData?>
 

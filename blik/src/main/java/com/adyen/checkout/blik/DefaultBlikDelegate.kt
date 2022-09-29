@@ -12,19 +12,31 @@ import com.adyen.checkout.components.PaymentComponentState
 import com.adyen.checkout.components.model.paymentmethods.PaymentMethod
 import com.adyen.checkout.components.model.payments.request.BlikPaymentMethod
 import com.adyen.checkout.components.model.payments.request.PaymentComponentData
+import com.adyen.checkout.components.ui.ViewProvider
+import com.adyen.checkout.components.ui.view.ComponentViewType
 import com.adyen.checkout.components.util.PaymentMethodTypes
 import com.adyen.checkout.core.log.LogUtil
 import com.adyen.checkout.core.log.Logger
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableStateFlow
 
-internal class DefaultBlikDelegate(val paymentMethod: PaymentMethod) : BlikDelegate {
+internal class DefaultBlikDelegate(
+    override val configuration: BlikConfiguration,
+    val paymentMethod: PaymentMethod
+) : BlikDelegate {
+
+    override val inputData: BlikInputData = BlikInputData()
 
     private val _outputDataFlow = MutableStateFlow<BlikOutputData?>(null)
     override val outputDataFlow: Flow<BlikOutputData?> = _outputDataFlow
 
+    override val outputData: BlikOutputData?
+        get() = _outputDataFlow.value
+
     private val _componentStateFlow = MutableStateFlow<PaymentComponentState<BlikPaymentMethod>?>(null)
     override val componentStateFlow: Flow<PaymentComponentState<BlikPaymentMethod>?> = _componentStateFlow
+
+    override val viewFlow: Flow<ComponentViewType?> = MutableStateFlow(BlikComponentViewType)
 
     override fun getPaymentMethodType(): String {
         return paymentMethod.type ?: PaymentMethodTypes.UNKNOWN
@@ -65,6 +77,8 @@ internal class DefaultBlikDelegate(val paymentMethod: PaymentMethod) : BlikDeleg
     }
 
     override fun requiresInput(): Boolean = true
+
+    override fun getViewProvider(): ViewProvider = BlikViewProvider
 
     companion object {
         private val TAG = LogUtil.getTag()

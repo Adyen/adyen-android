@@ -14,8 +14,11 @@ import com.adyen.checkout.components.PaymentComponentState
 import com.adyen.checkout.components.StoredPaymentComponentProvider
 import com.adyen.checkout.components.base.BasePaymentComponent
 import com.adyen.checkout.components.model.payments.request.BlikPaymentMethod
+import com.adyen.checkout.components.ui.ViewProvidingComponent
+import com.adyen.checkout.components.ui.view.ComponentViewType
 import com.adyen.checkout.components.util.PaymentMethodTypes
 import com.adyen.checkout.core.log.LogUtil
+import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.filterNotNull
 import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.onEach
@@ -25,13 +28,16 @@ import kotlinx.coroutines.flow.onEach
  */
 class BlikComponent(
     savedStateHandle: SavedStateHandle,
-    private val blikDelegate: BlikDelegate,
+    override val delegate: BlikDelegate,
     configuration: BlikConfiguration
 ) : BasePaymentComponent<
     BlikConfiguration,
     BlikInputData,
     BlikOutputData,
-    PaymentComponentState<BlikPaymentMethod>>(savedStateHandle, blikDelegate, configuration) {
+    PaymentComponentState<BlikPaymentMethod>>(savedStateHandle, delegate, configuration),
+    ViewProvidingComponent {
+
+    override val viewFlow: Flow<ComponentViewType?> = delegate.viewFlow
 
     override val inputData: BlikInputData = BlikInputData()
 
@@ -41,22 +47,22 @@ class BlikComponent(
     }
 
     override fun requiresInput(): Boolean {
-        return blikDelegate.requiresInput()
+        return delegate.requiresInput()
     }
 
     override fun onInputDataChanged(inputData: BlikInputData) {
-        blikDelegate.onInputDataChanged(inputData)
+        delegate.onInputDataChanged(inputData)
     }
 
     private fun observeOutputData() {
-        blikDelegate.outputDataFlow
+        delegate.outputDataFlow
             .filterNotNull()
             .onEach { notifyOutputDataChanged(it) }
             .launchIn(viewModelScope)
     }
 
     private fun observeComponentState() {
-        blikDelegate.componentStateFlow
+        delegate.componentStateFlow
             .filterNotNull()
             .onEach { notifyStateChanged(it) }
             .launchIn(viewModelScope)
