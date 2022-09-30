@@ -25,6 +25,8 @@ import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.extension.ExtendWith
 import org.mockito.Mock
 import org.mockito.junit.jupiter.MockitoExtension
+import org.mockito.kotlin.doReturn
+import org.mockito.kotlin.whenever
 
 @OptIn(ExperimentalCoroutinesApi::class)
 @ExtendWith(MockitoExtension::class)
@@ -36,6 +38,7 @@ internal class DefaultIssuerListDelegateTest(
 
     @BeforeEach
     fun beforeEach() {
+        whenever(configuration.viewType) doReturn IssuerListViewType.RECYCLER_VIEW
         delegate = DefaultIssuerListDelegate(configuration, PaymentMethod()) { TestIssuerPaymentMethod() }
         Logger.setLogcatLevel(Logger.NONE)
     }
@@ -127,6 +130,23 @@ internal class DefaultIssuerListDelegateTest(
                     assertTrue(isValid)
                 }
             }
+        }
+    }
+
+    @Test
+    fun `when configuration viewType is RECYCLER_VIEW then viewFlow should emit RECYCLER_VIEW`() = runTest {
+        whenever(configuration.viewType) doReturn IssuerListViewType.RECYCLER_VIEW
+        delegate.viewFlow.test {
+            assertEquals(IssuerListComponentViewType.RECYCLER_VIEW, expectMostRecentItem())
+        }
+    }
+
+    @Test
+    fun `when configuration viewType is SPINNER_VIEW then viewFlow should emit SPINNER_VIEW`() = runTest {
+        whenever(configuration.viewType) doReturn IssuerListViewType.SPINNER_VIEW
+        delegate = DefaultIssuerListDelegate(configuration, PaymentMethod()) { TestIssuerPaymentMethod() }
+        delegate.viewFlow.test {
+            assertEquals(IssuerListComponentViewType.SPINNER_VIEW, expectMostRecentItem())
         }
     }
 
