@@ -35,8 +35,14 @@ class DefaultIssuerListDelegate<IssuerListPaymentMethodT : IssuerListPaymentMeth
     private val _componentStateFlow = MutableStateFlow<PaymentComponentState<IssuerListPaymentMethodT>?>(null)
     override val componentStateFlow: Flow<PaymentComponentState<IssuerListPaymentMethodT>?> = _componentStateFlow
 
-    // TODO get from configuration
-    override val viewFlow: Flow<ComponentViewType?> = MutableStateFlow(IssuerListComponentViewType.RECYCLER_VIEW)
+    override val viewFlow: Flow<ComponentViewType?> = MutableStateFlow(getIssuerListComponentViewType())
+
+    private fun getIssuerListComponentViewType(): IssuerListComponentViewType {
+        return when (configuration.viewType) {
+            IssuerListViewType.RECYCLER_VIEW -> IssuerListComponentViewType.RECYCLER_VIEW
+            IssuerListViewType.SPINNER_VIEW -> IssuerListComponentViewType.SPINNER_VIEW
+        }
+    }
 
     override fun getIssuers(): List<IssuerModel> =
         paymentMethod.issuers?.mapToModel() ?: paymentMethod.details.getLegacyIssuers()

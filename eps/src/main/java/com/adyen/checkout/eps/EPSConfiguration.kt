@@ -12,22 +12,28 @@ import android.os.Parcel
 import android.os.Parcelable
 import com.adyen.checkout.core.api.Environment
 import com.adyen.checkout.issuerlist.IssuerListConfiguration
+import com.adyen.checkout.issuerlist.IssuerListViewType
 import java.util.Locale
 
 class EPSConfiguration : IssuerListConfiguration {
 
-    internal constructor(
+    private constructor(
         shopperLocale: Locale,
         environment: Environment,
-        clientKey: String
-    ) : super(shopperLocale, environment, clientKey)
+        clientKey: String,
+        viewType: IssuerListViewType,
+        hideIssuerLogos: Boolean,
+    ) : super(shopperLocale, environment, clientKey, viewType, hideIssuerLogos)
 
-    internal constructor(parcel: Parcel) : super(parcel)
+    private constructor(parcel: Parcel) : super(parcel)
 
     /**
      * Builder to create a [EPSConfiguration].
      */
     class Builder : IssuerListBuilder<EPSConfiguration> {
+
+        override var hideIssuerLogos: Boolean = true
+
         /**
          * Constructor for Builder with default values.
          *
@@ -54,7 +60,10 @@ class EPSConfiguration : IssuerListConfiguration {
          *
          * @param configuration A configuration to initialize the builder.
          */
-        constructor(configuration: EPSConfiguration) : super(configuration)
+        constructor(configuration: EPSConfiguration) : super(configuration) {
+            viewType = configuration.viewType
+            hideIssuerLogos = configuration.hideIssuerLogos
+        }
 
         override fun setShopperLocale(builderShopperLocale: Locale): Builder {
             return super.setShopperLocale(builderShopperLocale) as Builder
@@ -69,6 +78,8 @@ class EPSConfiguration : IssuerListConfiguration {
                 shopperLocale = builderShopperLocale,
                 environment = builderEnvironment,
                 clientKey = builderClientKey,
+                viewType = viewType,
+                hideIssuerLogos = hideIssuerLogos,
             )
         }
     }

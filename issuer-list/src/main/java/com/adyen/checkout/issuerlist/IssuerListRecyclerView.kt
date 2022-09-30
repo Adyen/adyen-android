@@ -56,7 +56,7 @@ class IssuerListRecyclerView @JvmOverloads constructor(
             issuerModelList = delegate.getIssuers(),
             imageLoader = getInstance(context, delegate.configuration.environment),
             paymentMethod = delegate.getPaymentMethodType(),
-            hideIssuerLogo = false // TODO get from configuration
+            hideIssuerLogo = delegate.configuration.hideIssuerLogos,
         ).apply {
             setItemCLickListener(::onItemClicked)
         }
