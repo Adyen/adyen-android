@@ -10,23 +10,29 @@ package com.adyen.checkout.openbanking
 import androidx.lifecycle.SavedStateHandle
 import com.adyen.checkout.components.PaymentComponentProvider
 import com.adyen.checkout.components.model.payments.request.OpenBankingPaymentMethod
+import com.adyen.checkout.components.ui.ViewProvidingComponent
+import com.adyen.checkout.components.ui.view.ComponentViewType
 import com.adyen.checkout.components.util.PaymentMethodTypes
 import com.adyen.checkout.issuerlist.IssuerListComponent
 import com.adyen.checkout.issuerlist.IssuerListDelegate
 import com.adyen.checkout.openbanking.OpenBankingComponent.Companion.PROVIDER
+import kotlinx.coroutines.flow.Flow
 
 /**
  * Component should not be instantiated directly. Instead use the [PROVIDER] object.
  */
 class OpenBankingComponent(
     savedStateHandle: SavedStateHandle,
-    issuerListDelegate: IssuerListDelegate<OpenBankingPaymentMethod>,
+    override val delegate: IssuerListDelegate<OpenBankingPaymentMethod>,
     configuration: OpenBankingConfiguration
 ) : IssuerListComponent<OpenBankingPaymentMethod>(
     savedStateHandle,
-    issuerListDelegate,
+    delegate,
     configuration
-) {
+),
+    ViewProvidingComponent {
+
+    override val viewFlow: Flow<ComponentViewType?> = delegate.viewFlow
 
     override fun getSupportedPaymentMethodTypes(): Array<String> = PAYMENT_METHOD_TYPES
 

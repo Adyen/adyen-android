@@ -10,23 +10,29 @@ package com.adyen.checkout.entercash
 import androidx.lifecycle.SavedStateHandle
 import com.adyen.checkout.components.PaymentComponentProvider
 import com.adyen.checkout.components.model.payments.request.EntercashPaymentMethod
+import com.adyen.checkout.components.ui.ViewProvidingComponent
+import com.adyen.checkout.components.ui.view.ComponentViewType
 import com.adyen.checkout.components.util.PaymentMethodTypes
 import com.adyen.checkout.entercash.EntercashComponent.Companion.PROVIDER
 import com.adyen.checkout.issuerlist.IssuerListComponent
 import com.adyen.checkout.issuerlist.IssuerListDelegate
+import kotlinx.coroutines.flow.Flow
 
 /**
  * Component should not be instantiated directly. Instead use the [PROVIDER] object.
  */
 class EntercashComponent(
     savedStateHandle: SavedStateHandle,
-    issuerListDelegate: IssuerListDelegate<EntercashPaymentMethod>,
+    override val delegate: IssuerListDelegate<EntercashPaymentMethod>,
     configuration: EntercashConfiguration
 ) : IssuerListComponent<EntercashPaymentMethod>(
     savedStateHandle,
-    issuerListDelegate,
+    delegate,
     configuration
-) {
+),
+    ViewProvidingComponent {
+
+    override val viewFlow: Flow<ComponentViewType?> = delegate.viewFlow
 
     override fun getSupportedPaymentMethodTypes(): Array<String> = PAYMENT_METHOD_TYPES
 
