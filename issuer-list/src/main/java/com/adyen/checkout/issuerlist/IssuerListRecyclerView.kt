@@ -10,86 +10,91 @@ package com.adyen.checkout.issuerlist
 import android.content.Context
 import android.util.AttributeSet
 import android.view.LayoutInflater
-import androidx.lifecycle.LifecycleOwner
-import androidx.recyclerview.widget.LinearLayoutManager
-import androidx.recyclerview.widget.RecyclerView
-import com.adyen.checkout.components.PaymentComponentState
+import android.view.View
+import android.widget.LinearLayout
 import com.adyen.checkout.components.api.ImageLoader.Companion.getInstance
-import com.adyen.checkout.components.model.payments.request.IssuerListPaymentMethod
-import com.adyen.checkout.components.ui.adapter.ClickableListRecyclerAdapter.OnItemCLickedListener
-import com.adyen.checkout.components.ui.view.AdyenLinearLayout
+import com.adyen.checkout.components.base.ComponentDelegate
+import com.adyen.checkout.components.ui.ComponentViewNew
 import com.adyen.checkout.core.log.LogUtil
 import com.adyen.checkout.core.log.Logger
+import com.adyen.checkout.issuerlist.databinding.IssuerListRecyclerViewBinding
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.flow.launchIn
+import kotlinx.coroutines.flow.onEach
 
-abstract class IssuerListRecyclerView<
-    IssuerListPaymentMethodT : IssuerListPaymentMethod,
-    IssuerListComponentT : IssuerListComponent<IssuerListPaymentMethodT>
-    >
-@JvmOverloads constructor(
+class IssuerListRecyclerView @JvmOverloads constructor(
     context: Context,
     attrs: AttributeSet? = null,
     defStyleAttr: Int = 0
 ) :
-    AdyenLinearLayout<
-        IssuerListOutputData,
-        IssuerListConfiguration,
-        PaymentComponentState<IssuerListPaymentMethodT>,
-        IssuerListComponentT
-        >(context, attrs, defStyleAttr),
-    OnItemCLickedListener {
+    LinearLayout(
+        context,
+        attrs,
+        defStyleAttr
+    ),
+    ComponentViewNew {
 
-    private lateinit var issuersRecyclerView: RecyclerView
+    private val binding: IssuerListRecyclerViewBinding =
+        IssuerListRecyclerViewBinding.inflate(LayoutInflater.from(context), this)
+
     private lateinit var issuersAdapter: IssuerListRecyclerAdapter
 
-    // Regular View constructor
-    init {
-        LayoutInflater.from(getContext()).inflate(R.layout.issuer_list_recycler_view, this, true)
-    }
+    private lateinit var localizedContext: Context
 
-    override fun initView() {
-        issuersRecyclerView = findViewById<RecyclerView?>(R.id.recycler_issuers).apply {
-            layoutManager = LinearLayoutManager(context)
+    private lateinit var issuerListDelegate: IssuerListDelegate<*>
+
+    override fun initView(delegate: ComponentDelegate, coroutineScope: CoroutineScope, localizedContext: Context) {
+        if (delegate !is IssuerListDelegate<*>) throw IllegalArgumentException("Unsupported delegate type")
+        issuerListDelegate = delegate
+
+        this.localizedContext = localizedContext
+        initLocalizedStrings(localizedContext)
+
+        observeDelegate(delegate, coroutineScope)
+
+        issuersAdapter = IssuerListRecyclerAdapter(
+            issuerModelList = delegate.getIssuers(),
+            imageLoader = getInstance(context, delegate.configuration.environment),
+            paymentMethod = delegate.getPaymentMethodType(),
+            hideIssuerLogo = false // TODO get from configuration
+        ).apply {
+            setItemCLickListener(::onItemClicked)
         }
-        issuersAdapter.setItemCLickListener(this)
-        issuersRecyclerView.adapter = issuersAdapter
+        binding.recyclerIssuers.adapter = issuersAdapter
     }
 
-    override fun initLocalizedStrings(localizedContext: Context) {
+    private fun initLocalizedStrings(localizedContext: Context) {
         // no embedded localized strings on this view
     }
 
-    override fun onComponentAttached() {
-        issuersAdapter = IssuerListRecyclerAdapter(
-            component.issuers,
-            getInstance(context, component.configuration.environment),
-            component.paymentMethodType,
-            hideIssuersLogo()
-        )
+    private fun observeDelegate(delegate: IssuerListDelegate<*>, coroutineScope: CoroutineScope) {
+        delegate.outputDataFlow
+            .onEach { outputDataChanged(it) }
+            .launchIn(coroutineScope)
     }
 
-    override fun observeComponentChanges(lifecycleOwner: LifecycleOwner) = Unit
+    private fun outputDataChanged(issuerListOutputData: IssuerListOutputData?) {
+        // no ops
+    }
 
-    override val isConfirmationRequired: Boolean
-        get() = false
+    override val isConfirmationRequired: Boolean = false
 
     override fun highlightValidationErrors() {
-        // no implementation
-    }
-
-    open fun hideIssuersLogo(): Boolean {
-        return false
+        // no ops
     }
 
     override fun setEnabled(enabled: Boolean) {
         super.setEnabled(enabled)
-        issuersRecyclerView.isEnabled = enabled
+        binding.recyclerIssuers.isEnabled = enabled
     }
 
-    override fun onItemClicked(position: Int) {
+    private fun onItemClicked(position: Int) {
         Logger.d(TAG, "onItemClicked - $position")
-        component.inputData.selectedIssuer = issuersAdapter.getIssuerAt(position)
-        component.notifyInputDataChanged()
+        issuerListDelegate.inputData.selectedIssuer = issuersAdapter.getIssuerAt(position)
+        issuerListDelegate.onInputDataChanged(issuerListDelegate.inputData)
     }
+
+    override fun getView(): View = this
 
     companion object {
         private val TAG = LogUtil.getTag()

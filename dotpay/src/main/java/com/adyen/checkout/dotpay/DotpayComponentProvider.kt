@@ -28,7 +28,7 @@ class DotpayComponentProvider : PaymentComponentProvider<DotpayComponent, Dotpay
     ): DotpayComponent {
         val genericFactory: ViewModelProvider.Factory =
             viewModelFactory(savedStateRegistryOwner, defaultArgs) { savedStateHandle ->
-                val delegate = DefaultIssuerListDelegate(paymentMethod) { DotpayPaymentMethod() }
+                val delegate = DefaultIssuerListDelegate(configuration, paymentMethod) { DotpayPaymentMethod() }
                 DotpayComponent(savedStateHandle, delegate, configuration)
             }
         return ViewModelProvider(viewModelStoreOwner, genericFactory).get(DotpayComponent::class.java)

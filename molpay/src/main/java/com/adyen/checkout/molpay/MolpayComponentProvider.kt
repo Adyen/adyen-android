@@ -29,7 +29,7 @@ class MolpayComponentProvider : PaymentComponentProvider<MolpayComponent, Molpay
     ): MolpayComponent {
         val genericFactory: ViewModelProvider.Factory =
             viewModelFactory(savedStateRegistryOwner, defaultArgs) { savedStateHandle ->
-                val delegate = DefaultIssuerListDelegate(paymentMethod) { MolpayPaymentMethod() }
+                val delegate = DefaultIssuerListDelegate(configuration, paymentMethod) { MolpayPaymentMethod() }
                 MolpayComponent(savedStateHandle, delegate, configuration)
             }
         return ViewModelProvider(viewModelStoreOwner, genericFactory).get(MolpayComponent::class.java)

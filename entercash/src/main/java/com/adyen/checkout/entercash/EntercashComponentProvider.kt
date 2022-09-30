@@ -28,7 +28,7 @@ class EntercashComponentProvider : PaymentComponentProvider<EntercashComponent, 
     ): EntercashComponent {
         val genericFactory: ViewModelProvider.Factory =
             viewModelFactory(savedStateRegistryOwner, defaultArgs) { savedStateHandle ->
-                val delegate = DefaultIssuerListDelegate(paymentMethod) { EntercashPaymentMethod() }
+                val delegate = DefaultIssuerListDelegate(configuration, paymentMethod) { EntercashPaymentMethod() }
                 EntercashComponent(
                     savedStateHandle,
                     delegate,

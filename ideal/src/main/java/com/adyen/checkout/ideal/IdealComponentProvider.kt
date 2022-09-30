@@ -28,7 +28,7 @@ class IdealComponentProvider : PaymentComponentProvider<IdealComponent, IdealCon
     ): IdealComponent {
         val genericFactory: ViewModelProvider.Factory =
             viewModelFactory(savedStateRegistryOwner, defaultArgs) { savedStateHandle ->
-                val delegate = DefaultIssuerListDelegate(paymentMethod) { IdealPaymentMethod() }
+                val delegate = DefaultIssuerListDelegate(configuration, paymentMethod) { IdealPaymentMethod() }
                 IdealComponent(savedStateHandle, delegate, configuration)
             }
         return ViewModelProvider(viewModelStoreOwner, genericFactory).get(IdealComponent::class.java)
