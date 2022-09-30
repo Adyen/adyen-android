@@ -15,9 +15,8 @@ import android.view.ViewGroup
 import android.widget.BaseAdapter
 import android.widget.Filter
 import android.widget.Filterable
-import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
-import com.adyen.checkout.components.ui.R
+import com.adyen.checkout.components.ui.databinding.SimpleTextItemViewBinding
 
 class SimpleTextListAdapter<T : SimpleTextListItem>(private val context: Context) : BaseAdapter(), Filterable {
 
@@ -43,9 +42,11 @@ class SimpleTextListAdapter<T : SimpleTextListItem>(private val context: Context
     override fun getView(position: Int, convertView: View?, parent: ViewGroup?): View {
         val view: View
         val viewHolder: SimpleTextViewHolder
+        val binding: SimpleTextItemViewBinding
         if (convertView == null) {
-            view = LayoutInflater.from(context).inflate(R.layout.simple_text_item_view, parent, false)
-            viewHolder = SimpleTextViewHolder(view)
+            binding = SimpleTextItemViewBinding.inflate(LayoutInflater.from(context), parent, false)
+            view = binding.root
+            viewHolder = SimpleTextViewHolder(binding)
             view.tag = viewHolder
         } else {
             view = convertView
@@ -80,11 +81,10 @@ class SimpleTextListFilter(
     }
 }
 
-class SimpleTextViewHolder(private val rootView: View) : RecyclerView.ViewHolder(rootView) {
-    private val textView: TextView = rootView.findViewById(R.id.textView_text)
+class SimpleTextViewHolder(private val binding: SimpleTextItemViewBinding) : RecyclerView.ViewHolder(binding.root) {
 
     fun bindItem(item: SimpleTextListItem) {
-        textView.text = item.text
+        binding.textViewText.text = item.text
     }
 }
 
