@@ -12,12 +12,14 @@ import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
 import androidx.preference.PreferenceFragmentCompat
 import com.adyen.checkout.example.R
+import com.adyen.checkout.example.databinding.ActivitySetttingsBinding
 
 class ConfigurationActivity : AppCompatActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_setttings)
+        val binding = ActivitySetttingsBinding.inflate(layoutInflater)
+        setContentView(binding.root)
         setSupportActionBar(findViewById(R.id.toolbar))
         supportFragmentManager
             .beginTransaction()
