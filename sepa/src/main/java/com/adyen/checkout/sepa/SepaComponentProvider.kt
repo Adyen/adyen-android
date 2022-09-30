@@ -28,7 +28,7 @@ class SepaComponentProvider : PaymentComponentProvider<SepaComponent, SepaConfig
             viewModelFactory(savedStateRegistryOwner, defaultArgs) { savedStateHandle ->
                 SepaComponent(
                     savedStateHandle,
-                    DefaultSepaDelegate(paymentMethod),
+                    DefaultSepaDelegate(configuration, paymentMethod),
                     configuration
                 )
             }

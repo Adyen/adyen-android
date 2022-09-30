@@ -31,6 +31,10 @@ android {
         consumerProguardFiles "consumer-rules.pro"
     }
 
+    buildFeatures {
+        viewBinding true
+    }
+
     testOptions {
         unitTests.returnDefaultValues = true
     }

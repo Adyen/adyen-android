@@ -4,19 +4,31 @@ import com.adyen.checkout.components.PaymentComponentState
 import com.adyen.checkout.components.model.paymentmethods.PaymentMethod
 import com.adyen.checkout.components.model.payments.request.PaymentComponentData
 import com.adyen.checkout.components.model.payments.request.SepaPaymentMethod
+import com.adyen.checkout.components.ui.ViewProvider
+import com.adyen.checkout.components.ui.view.ComponentViewType
 import com.adyen.checkout.components.util.PaymentMethodTypes
 import com.adyen.checkout.core.log.LogUtil
 import com.adyen.checkout.core.log.Logger
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableStateFlow
 
-internal class DefaultSepaDelegate(private val paymentMethod: PaymentMethod) : SepaDelegate {
+internal class DefaultSepaDelegate(
+    override val configuration: SepaConfiguration,
+    private val paymentMethod: PaymentMethod
+) : SepaDelegate {
+
+    override val inputData: SepaInputData = SepaInputData()
 
     private val _outputDataFlow = MutableStateFlow<SepaOutputData?>(null)
     override val outputDataFlow: Flow<SepaOutputData?> = _outputDataFlow
 
+    override val outputData: SepaOutputData?
+        get() = _outputDataFlow.value
+
     private val _componentStateFlow = MutableStateFlow<PaymentComponentState<SepaPaymentMethod>?>(null)
     override val componentStateFlow: Flow<PaymentComponentState<SepaPaymentMethod>?> = _componentStateFlow
+
+    override val viewFlow: Flow<ComponentViewType?> = MutableStateFlow(SepaComponentViewType)
 
     override fun getPaymentMethodType(): String {
         return paymentMethod.type ?: PaymentMethodTypes.UNKNOWN
@@ -52,6 +64,8 @@ internal class DefaultSepaDelegate(private val paymentMethod: PaymentMethod) : S
     private fun componentStateChanged(componentState: PaymentComponentState<SepaPaymentMethod>) {
         _componentStateFlow.tryEmit(componentState)
     }
+
+    override fun getViewProvider(): ViewProvider = SepaViewProvider
 
     companion object {
         private val TAG = LogUtil.getTag()
