@@ -12,7 +12,6 @@ import android.util.AttributeSet
 import android.view.LayoutInflater
 import android.view.View
 import android.widget.AdapterView
-import androidx.appcompat.widget.AppCompatSpinner
 import androidx.lifecycle.LifecycleOwner
 import com.adyen.checkout.components.PaymentComponentState
 import com.adyen.checkout.components.api.ImageLoader.Companion.getInstance
@@ -20,6 +19,7 @@ import com.adyen.checkout.components.model.payments.request.IssuerListPaymentMet
 import com.adyen.checkout.components.ui.view.AdyenLinearLayout
 import com.adyen.checkout.core.log.LogUtil
 import com.adyen.checkout.core.log.Logger
+import com.adyen.checkout.issuerlist.databinding.IssuerListSpinnerViewBinding
 
 @Suppress("TooManyFunctions")
 abstract class IssuerListSpinnerView<
@@ -38,15 +38,12 @@ abstract class IssuerListSpinnerView<
         IssuerListComponentT>(context, attrs, defStyleAttr),
     AdapterView.OnItemSelectedListener {
 
-    private lateinit var issuersSpinner: AppCompatSpinner
+    private val binding: IssuerListSpinnerViewBinding =
+        IssuerListSpinnerViewBinding.inflate(LayoutInflater.from(getContext()), this)
     private lateinit var issuersAdapter: IssuerListSpinnerAdapter
 
-    init {
-        LayoutInflater.from(getContext()).inflate(R.layout.issuer_list_spinner_view, this, true)
-    }
-
     override fun initView() {
-        issuersSpinner = findViewById<AppCompatSpinner?>(R.id.spinner_issuers).apply {
+        binding.spinnerIssuers.apply {
             adapter = issuersAdapter
             onItemSelectedListener = this@IssuerListSpinnerView
         }
@@ -87,7 +84,7 @@ abstract class IssuerListSpinnerView<
 
     override fun setEnabled(enabled: Boolean) {
         super.setEnabled(enabled)
-        issuersSpinner.isEnabled = enabled
+        binding.spinnerIssuers.isEnabled = enabled
     }
 
     override fun onNothingSelected(parent: AdapterView<*>) {

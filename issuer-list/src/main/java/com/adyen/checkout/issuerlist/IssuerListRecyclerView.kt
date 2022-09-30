@@ -12,7 +12,6 @@ import android.util.AttributeSet
 import android.view.LayoutInflater
 import androidx.lifecycle.LifecycleOwner
 import androidx.recyclerview.widget.LinearLayoutManager
-import androidx.recyclerview.widget.RecyclerView
 import com.adyen.checkout.components.PaymentComponentState
 import com.adyen.checkout.components.api.ImageLoader.Companion.getInstance
 import com.adyen.checkout.components.model.payments.request.IssuerListPaymentMethod
@@ -20,6 +19,7 @@ import com.adyen.checkout.components.ui.adapter.ClickableListRecyclerAdapter.OnI
 import com.adyen.checkout.components.ui.view.AdyenLinearLayout
 import com.adyen.checkout.core.log.LogUtil
 import com.adyen.checkout.core.log.Logger
+import com.adyen.checkout.issuerlist.databinding.IssuerListRecyclerViewBinding
 
 abstract class IssuerListRecyclerView<
     IssuerListPaymentMethodT : IssuerListPaymentMethod,
@@ -38,20 +38,16 @@ abstract class IssuerListRecyclerView<
         >(context, attrs, defStyleAttr),
     OnItemCLickedListener {
 
-    private lateinit var issuersRecyclerView: RecyclerView
+    private var binding: IssuerListRecyclerViewBinding =
+        IssuerListRecyclerViewBinding.inflate(LayoutInflater.from(getContext()), this)
     private lateinit var issuersAdapter: IssuerListRecyclerAdapter
 
-    // Regular View constructor
-    init {
-        LayoutInflater.from(getContext()).inflate(R.layout.issuer_list_recycler_view, this, true)
-    }
-
     override fun initView() {
-        issuersRecyclerView = findViewById<RecyclerView?>(R.id.recycler_issuers).apply {
+        binding.recyclerIssuers.apply {
             layoutManager = LinearLayoutManager(context)
+            adapter = issuersAdapter
         }
         issuersAdapter.setItemCLickListener(this)
-        issuersRecyclerView.adapter = issuersAdapter
     }
 
     override fun initLocalizedStrings(localizedContext: Context) {
@@ -82,7 +78,7 @@ abstract class IssuerListRecyclerView<
 
     override fun setEnabled(enabled: Boolean) {
         super.setEnabled(enabled)
-        issuersRecyclerView.isEnabled = enabled
+        binding.recyclerIssuers.isEnabled = enabled
     }
 
     override fun onItemClicked(position: Int) {
