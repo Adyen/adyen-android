@@ -10,6 +10,7 @@ package com.adyen.checkout.issuerlist
 
 import app.cash.turbine.test
 import com.adyen.checkout.components.model.paymentmethods.PaymentMethod
+import com.adyen.checkout.core.log.Logger
 import com.adyen.checkout.issuerlist.utils.TestIssuerPaymentMethod
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.test.runTest
@@ -17,20 +18,27 @@ import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.Assertions.assertFalse
 import org.junit.jupiter.api.Assertions.assertNull
 import org.junit.jupiter.api.Assertions.assertTrue
+import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.DisplayName
 import org.junit.jupiter.api.Nested
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.extension.ExtendWith
+import org.mockito.Mock
 import org.mockito.junit.jupiter.MockitoExtension
 
 @OptIn(ExperimentalCoroutinesApi::class)
 @ExtendWith(MockitoExtension::class)
-internal class DefaultIssuerListDelegateTest {
+internal class DefaultIssuerListDelegateTest(
+    @Mock private val configuration: IssuerListConfiguration,
+) {
 
-    private val delegate = DefaultIssuerListDelegate(
-        paymentMethod = PaymentMethod(),
-        typedPaymentMethodFactory = { TestIssuerPaymentMethod() }
-    )
+    private lateinit var delegate: DefaultIssuerListDelegate<*>
+
+    @BeforeEach
+    fun beforeEach() {
+        delegate = DefaultIssuerListDelegate(configuration, PaymentMethod()) { TestIssuerPaymentMethod() }
+        Logger.setLogcatLevel(Logger.NONE)
+    }
 
     @Nested
     @DisplayName("when input data changes and")
@@ -122,4 +130,7 @@ internal class DefaultIssuerListDelegateTest {
         }
     }
 
+    companion object {
+        private const val TEST_CLIENT_KEY = "test_qwertyuiopasdfghjklzxcvbnmqwerty"
+    }
 }
