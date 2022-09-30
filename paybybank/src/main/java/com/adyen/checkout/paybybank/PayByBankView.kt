@@ -8,6 +8,36 @@
 
 package com.adyen.checkout.paybybank
 
-class PayByBankView {
-    // TODO
+import android.content.Context
+import android.util.AttributeSet
+import android.view.View
+import android.widget.LinearLayout
+import com.adyen.checkout.components.base.ComponentDelegate
+import com.adyen.checkout.components.ui.ComponentView
+import com.adyen.checkout.core.log.LogUtil
+import kotlinx.coroutines.CoroutineScope
+
+private val TAG = LogUtil.getTag()
+
+class PayByBankView @JvmOverloads constructor(
+    context: Context,
+    attrs: AttributeSet? = null,
+    defStyleAttr: Int = 0
+): LinearLayout(context, attrs, defStyleAttr), ComponentView {
+
+    private lateinit var delegate: PayByBankDelegate
+
+    override fun initView(delegate: ComponentDelegate, coroutineScope: CoroutineScope, localizedContext: Context) {
+        if (delegate !is PayByBankDelegate) throw IllegalArgumentException("Unsupported delegate type")
+        this.delegate = delegate
+        // TODO init ui
+    }
+
+    override val isConfirmationRequired: Boolean = true
+
+    override fun highlightValidationErrors() {
+        // TODO highlight
+    }
+
+    override fun getView(): View = this
 }

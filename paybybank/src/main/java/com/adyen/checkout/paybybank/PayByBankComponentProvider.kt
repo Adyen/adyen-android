@@ -30,7 +30,8 @@ class PayByBankComponentProvider : PaymentComponentProvider<PayByBankComponent, 
             viewModelFactory(savedStateRegistryOwner, defaultArgs) { savedStateHandle ->
                 PayByBankComponent(
                     savedStateHandle,
-                    DefaultIssuerListDelegate(paymentMethod) { PayByBankPaymentMethod() },
+                    DefaultPayByBankDelegate(paymentMethod, configuration),
+                    DefaultIssuerListDelegate(configuration, paymentMethod) { PayByBankPaymentMethod() },
                     configuration
                 )
             }

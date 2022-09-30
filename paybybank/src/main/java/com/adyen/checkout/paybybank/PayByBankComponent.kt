@@ -10,16 +10,38 @@ package com.adyen.checkout.paybybank
 
 import androidx.lifecycle.SavedStateHandle
 import com.adyen.checkout.components.PaymentComponentProvider
+import com.adyen.checkout.components.PaymentComponentState
+import com.adyen.checkout.components.base.BasePaymentComponent
 import com.adyen.checkout.components.model.payments.request.PayByBankPaymentMethod
 import com.adyen.checkout.components.util.PaymentMethodTypes
-import com.adyen.checkout.issuerlist.IssuerListComponent
 import com.adyen.checkout.issuerlist.IssuerListDelegate
+import com.adyen.checkout.issuerlist.IssuerListOutputData
+import kotlinx.coroutines.flow.combine
+import kotlinx.coroutines.flow.filterNotNull
+import kotlinx.coroutines.flow.onEach
 
 class PayByBankComponent(
     savedStateHandle: SavedStateHandle,
-    issuerListDelegate: IssuerListDelegate<PayByBankPaymentMethod>,
+    override val delegate: PayByBankDelegate,
+    private val issuerListDelegate: IssuerListDelegate<PayByBankPaymentMethod>,
     configuration: PayByBankConfiguration
-) : IssuerListComponent<PayByBankPaymentMethod>(savedStateHandle, issuerListDelegate, configuration) {
+) : BasePaymentComponent<PayByBankConfiguration, PaymentComponentState<PayByBankPaymentMethod>>(
+    savedStateHandle,
+    delegate,
+    configuration
+) {
+
+    init {
+        // FIXME temp
+        delegate.outputDataFlow
+            .filterNotNull()
+            .combine(issuerListDelegate.outputDataFlow.filterNotNull()) { a: PayByBankOutputData, b: IssuerListOutputData ->
+                a to b
+            }
+            .onEach {
+
+            }
+    }
 
     override fun getSupportedPaymentMethodTypes(): Array<String> = PAYMENT_METHOD_TYPES
 

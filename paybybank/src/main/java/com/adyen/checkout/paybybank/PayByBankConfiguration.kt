@@ -12,9 +12,9 @@ import android.content.Context
 import android.os.Parcel
 import android.os.Parcelable
 import com.adyen.checkout.components.base.BaseConfigurationBuilder
-import com.adyen.checkout.components.base.Configuration
 import com.adyen.checkout.core.api.Environment
 import com.adyen.checkout.issuerlist.IssuerListConfiguration
+import com.adyen.checkout.issuerlist.IssuerListViewType
 import java.util.Locale
 
 class PayByBankConfiguration : IssuerListConfiguration {
@@ -33,32 +33,39 @@ class PayByBankConfiguration : IssuerListConfiguration {
         }
     }
 
-    internal constructor(builder: Builder) : super(
-        builder.builderShopperLocale,
-        builder.builderEnvironment,
-        builder.builderClientKey
-    )
+    private constructor(
+        shopperLocale: Locale,
+        environment: Environment,
+        clientKey: String,
+        viewType: IssuerListViewType,
+        hideIssuerLogos: Boolean,
+    ) : super(shopperLocale, environment, clientKey, viewType, hideIssuerLogos)
 
     internal constructor(parcel: Parcel) : super(parcel)
 
     /**
      * Builder to create a [PayByBankConfiguration].
      */
-    class Builder : BaseConfigurationBuilder<PayByBankConfiguration> {
+    class Builder : IssuerListBuilder<PayByBankConfiguration> {
         /**
          * Constructor for Builder with default values.
          *
-         * @param context   A context
-         * @param clientKey Your Client Key used for network calls from the SDK to Adyen.
+         * @param context       A context
+         * @param environment   The [Environment] to be used for network calls to Adyen.
+         * @param clientKey     Your Client Key used for network calls from the SDK to Adyen.
          */
-        constructor(context: Context, clientKey: String) : super(context, clientKey)
+        constructor(context: Context, environment: Environment, clientKey: String) : super(
+            context,
+            environment,
+            clientKey
+        )
 
         /**
          * Builder with required parameters.
          *
          * @param shopperLocale The Locale of the shopper.
          * @param environment   The [Environment] to be used for network calls to Adyen.
-         * @param clientKey Your Client Key used for network calls from the SDK to Adyen.
+         * @param clientKey     Your Client Key used for network calls from the SDK to Adyen.
          */
         constructor(
             shopperLocale: Locale,
@@ -82,7 +89,13 @@ class PayByBankConfiguration : IssuerListConfiguration {
         }
 
         override fun buildInternal(): PayByBankConfiguration {
-            return PayByBankConfiguration(this)
+            return PayByBankConfiguration(
+                shopperLocale = shopperLocale,
+                environment = environment,
+                clientKey = clientKey,
+                viewType = viewType,
+                hideIssuerLogos = hideIssuerLogos
+            )
         }
     }
 }
