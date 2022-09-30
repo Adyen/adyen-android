@@ -43,6 +43,7 @@ import com.adyen.checkout.dropin.DropInConfiguration
 import com.adyen.checkout.dropin.DropInPrefs
 import com.adyen.checkout.dropin.R
 import com.adyen.checkout.dropin.createGenericActionConfiguration
+import com.adyen.checkout.dropin.databinding.ActivityDropInBinding
 import com.adyen.checkout.dropin.service.BalanceDropInServiceResult
 import com.adyen.checkout.dropin.service.BaseDropInServiceResult
 import com.adyen.checkout.dropin.service.DropInService
@@ -169,7 +170,8 @@ class DropInActivity :
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         Logger.d(TAG, "onCreate - $savedInstanceState")
-        setContentView(R.layout.activity_drop_in)
+        val binding = ActivityDropInBinding.inflate(layoutInflater)
+        setContentView(binding.root)
         overridePendingTransition(0, 0)
 
         val bundle = savedInstanceState ?: intent.extras
