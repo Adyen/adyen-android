@@ -32,7 +32,7 @@ class GiftCardComponentProvider : PaymentComponentProvider<GiftCardComponent, Gi
         val giftCardFactory = viewModelFactory(savedStateRegistryOwner, defaultArgs) { savedStateHandle ->
             GiftCardComponent(
                 savedStateHandle = savedStateHandle,
-                giftCardDelegate = DefaultGiftCardDelegate(
+                delegate = DefaultGiftCardDelegate(
                     paymentMethod,
                     DefaultPublicKeyRepository(),
                     configuration,

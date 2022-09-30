@@ -11,8 +11,11 @@ import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.viewModelScope
 import com.adyen.checkout.components.PaymentComponentProvider
 import com.adyen.checkout.components.base.BasePaymentComponent
+import com.adyen.checkout.components.ui.ViewProvidingComponent
+import com.adyen.checkout.components.ui.view.ComponentViewType
 import com.adyen.checkout.components.util.PaymentMethodTypes
 import com.adyen.checkout.giftcard.GiftCardComponent.Companion.PROVIDER
+import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.filterNotNull
 import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.onEach
@@ -22,36 +25,40 @@ import kotlinx.coroutines.flow.onEach
  */
 class GiftCardComponent(
     savedStateHandle: SavedStateHandle,
-    private val giftCardDelegate: GiftCardDelegate,
+    override val delegate: GiftCardDelegate,
     configuration: GiftCardConfiguration,
 ) : BasePaymentComponent<GiftCardConfiguration, GiftCardInputData, GiftCardOutputData, GiftCardComponentState>(
     savedStateHandle,
-    giftCardDelegate,
+    delegate,
     configuration
-) {
+),
+    ViewProvidingComponent {
 
-    override val inputData: GiftCardInputData = GiftCardInputData()
+    override val viewFlow: Flow<ComponentViewType?> get() = delegate.viewFlow
+
+    override val inputData: GiftCardInputData
+        get() = delegate.inputData
 
     init {
-        giftCardDelegate.outputDataFlow
+        delegate.outputDataFlow
             .filterNotNull()
             .onEach { notifyOutputDataChanged(it) }
             .launchIn(viewModelScope)
 
-        giftCardDelegate.componentStateFlow
+        delegate.componentStateFlow
             .filterNotNull()
             .onEach { notifyStateChanged(it) }
             .launchIn(viewModelScope)
 
-        giftCardDelegate.exceptionFlow
+        delegate.exceptionFlow
             .onEach { notifyException(it) }
             .launchIn(viewModelScope)
 
-        giftCardDelegate.initialize(viewModelScope)
+        delegate.initialize(viewModelScope)
     }
 
     override fun onInputDataChanged(inputData: GiftCardInputData) {
-        giftCardDelegate.onInputDataChanged(inputData)
+        delegate.onInputDataChanged(inputData)
     }
 
     override fun getSupportedPaymentMethodTypes(): Array<String> = PAYMENT_METHOD_TYPES
