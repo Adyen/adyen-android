@@ -173,7 +173,7 @@ class MBWayView :
     }
 
     override fun onItemClick(parent: AdapterView<*>?, view: View?, position: Int, id: Long) {
-        val country = mCountryAdapter?.getCountries()?.get(position) ?: return
+        val country = mCountryAdapter?.getItem(position) ?: return
         countrySelected(country)
     }
 }
