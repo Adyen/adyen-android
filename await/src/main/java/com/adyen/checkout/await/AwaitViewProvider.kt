@@ -14,7 +14,7 @@ import com.adyen.checkout.components.ui.ComponentViewNew
 import com.adyen.checkout.components.ui.ViewProvider
 import com.adyen.checkout.components.ui.view.ComponentViewType
 
-object AwaitViewProvider : ViewProvider {
+internal object AwaitViewProvider : ViewProvider {
 
     override fun getView(
         viewType: ComponentViewType,
@@ -29,4 +29,4 @@ object AwaitViewProvider : ViewProvider {
     }
 }
 
-object AwaitComponentViewType : ComponentViewType
+internal object AwaitComponentViewType : ComponentViewType

@@ -35,7 +35,7 @@ class BcmcComponentProvider : PaymentComponentProvider<BcmcComponent, BcmcConfig
         val bcmcFactory = viewModelFactory(savedStateRegistryOwner, defaultArgs) { savedStateHandle ->
             BcmcComponent(
                 savedStateHandle = savedStateHandle,
-                bcmcDelegate = DefaultBcmcDelegate(
+                delegate = DefaultBcmcDelegate(
                     paymentMethod,
                     publicKeyRepository,
                     configuration,

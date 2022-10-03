@@ -15,7 +15,10 @@ import com.adyen.checkout.components.PaymentComponentProvider
 import com.adyen.checkout.components.PaymentComponentState
 import com.adyen.checkout.components.base.BasePaymentComponent
 import com.adyen.checkout.components.model.payments.request.CardPaymentMethod
+import com.adyen.checkout.components.ui.ViewProvidingComponent
+import com.adyen.checkout.components.ui.view.ComponentViewType
 import com.adyen.checkout.components.util.PaymentMethodTypes
+import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.filterNotNull
 import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.onEach
@@ -25,39 +28,42 @@ import kotlinx.coroutines.flow.onEach
  */
 class BcmcComponent(
     savedStateHandle: SavedStateHandle,
-    private val bcmcDelegate: BcmcDelegate,
+    override val delegate: BcmcDelegate,
     configuration: BcmcConfiguration,
 ) : BasePaymentComponent<BcmcConfiguration, BcmcInputData, BcmcOutputData,
-    PaymentComponentState<CardPaymentMethod>>(savedStateHandle, bcmcDelegate, configuration) {
+    PaymentComponentState<CardPaymentMethod>>(savedStateHandle, delegate, configuration),
+    ViewProvidingComponent {
 
     override val inputData: BcmcInputData = BcmcInputData()
 
+    override val viewFlow: Flow<ComponentViewType?> = delegate.viewFlow
+
     init {
-        bcmcDelegate.outputDataFlow
+        delegate.outputDataFlow
             .filterNotNull()
             .onEach { notifyOutputDataChanged(it) }
             .launchIn(viewModelScope)
 
-        bcmcDelegate.componentStateFlow
+        delegate.componentStateFlow
             .filterNotNull()
             .onEach { notifyStateChanged(it) }
             .launchIn(viewModelScope)
 
-        bcmcDelegate.exceptionFlow
+        delegate.exceptionFlow
             .onEach { notifyException(it) }
             .launchIn(viewModelScope)
 
-        bcmcDelegate.initialize(viewModelScope)
+        delegate.initialize(viewModelScope)
     }
 
     override fun getSupportedPaymentMethodTypes(): Array<String> = PAYMENT_METHOD_TYPES
 
     override fun onInputDataChanged(inputData: BcmcInputData) {
-        bcmcDelegate.onInputDataChanged(inputData)
+        delegate.onInputDataChanged(inputData)
     }
 
     fun isCardNumberSupported(cardNumber: String?): Boolean {
-        return bcmcDelegate.isCardNumberSupported(cardNumber)
+        return delegate.isCardNumberSupported(cardNumber)
     }
 
     companion object {
