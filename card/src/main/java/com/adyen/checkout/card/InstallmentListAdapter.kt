@@ -15,9 +15,9 @@ import android.view.ViewGroup
 import android.widget.BaseAdapter
 import android.widget.Filter
 import android.widget.Filterable
-import android.widget.TextView
 import androidx.annotation.StringRes
 import androidx.recyclerview.widget.RecyclerView
+import com.adyen.checkout.card.databinding.InstallmentViewBinding
 import com.adyen.checkout.card.util.InstallmentUtils
 
 // We need context to inflate the views and localizedContext to fetch the strings
@@ -44,9 +44,11 @@ class InstallmentListAdapter(
     override fun getView(position: Int, convertView: View?, parent: ViewGroup?): View {
         val view: View
         val viewHolder: InstallmentViewHolder
+        val binding: InstallmentViewBinding
         if (convertView == null) {
-            view = LayoutInflater.from(context).inflate(R.layout.installment_view, parent, false)
-            viewHolder = InstallmentViewHolder(view, localizedContext)
+            binding = InstallmentViewBinding.inflate(LayoutInflater.from(context), parent, false)
+            viewHolder = InstallmentViewHolder(binding, localizedContext)
+            view = binding.root
             view.tag = viewHolder
         } else {
             view = convertView
@@ -91,13 +93,12 @@ class InstallmentFilter(
 }
 
 class InstallmentViewHolder(
-    rootView: View,
+    private val binding: InstallmentViewBinding,
     private val localizedContext: Context
-) : RecyclerView.ViewHolder(rootView) {
-
-    private val installmentTextView: TextView = rootView.findViewById(R.id.textView_installmentOption)
+) : RecyclerView.ViewHolder(binding.root) {
 
     fun bindItem(installmentModel: InstallmentModel) {
-        installmentTextView.text = InstallmentUtils.getTextForInstallmentOption(localizedContext, installmentModel)
+        binding.textViewInstallmentOption.text =
+            InstallmentUtils.getTextForInstallmentOption(localizedContext, installmentModel)
     }
 }
