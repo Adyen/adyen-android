@@ -10,21 +10,37 @@ package com.adyen.checkout.bacs
 
 import app.cash.turbine.test
 import com.adyen.checkout.components.model.paymentmethods.PaymentMethod
+import com.adyen.checkout.core.api.Environment
+import com.adyen.checkout.core.log.Logger
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.test.runTest
-import org.junit.Assert.assertFalse
-import org.junit.Assert.assertTrue
+import org.junit.jupiter.api.Assertions.assertEquals
+import org.junit.jupiter.api.Assertions.assertFalse
+import org.junit.jupiter.api.Assertions.assertTrue
+import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.DisplayName
 import org.junit.jupiter.api.Nested
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.extension.ExtendWith
 import org.mockito.junit.jupiter.MockitoExtension
+import java.util.Locale
 
 @OptIn(ExperimentalCoroutinesApi::class)
 @ExtendWith(MockitoExtension::class)
 internal class DefaultBacsDirectDebitDelegateTest {
 
-    private val delegate = DefaultBacsDirectDebitDelegate(paymentMethod = PaymentMethod())
+    private lateinit var delegate: DefaultBacsDirectDebitDelegate
+
+    @BeforeEach
+    fun beforeEach() {
+        val configuration = BacsDirectDebitConfiguration.Builder(
+            Locale.US,
+            Environment.TEST,
+            TEST_CLIENT_KEY
+        ).build()
+        delegate = DefaultBacsDirectDebitDelegate(configuration, PaymentMethod())
+        Logger.setLogcatLevel(Logger.NONE)
+    }
 
     @Nested
     @DisplayName("when input data changes and")
@@ -223,7 +239,7 @@ internal class DefaultBacsDirectDebitDelegateTest {
         }
 
         @Test
-        fun `mode confirmation , then output should be invalid`() = runTest {
+        fun `input data is valid then output should be valid`() = runTest {
             delegate.outputDataFlow.test {
                 delegate.onInputDataChanged(
                     BacsDirectDebitInputData(
@@ -242,7 +258,7 @@ internal class DefaultBacsDirectDebitDelegateTest {
         }
 
         @Test
-        fun `input is invalid, them component state should be invalid`() = runTest {
+        fun `input is invalid, then component state should be invalid`() = runTest {
             delegate.componentStateFlow.test {
                 delegate.onInputDataChanged(
                     BacsDirectDebitInputData(
@@ -261,7 +277,7 @@ internal class DefaultBacsDirectDebitDelegateTest {
         }
 
         @Test
-        fun `input is valid and mode is INPUT, them component state should be invalid`() = runTest {
+        fun `input is valid and mode is INPUT, then component state should be invalid`() = runTest {
             delegate.componentStateFlow.test {
                 delegate.onInputDataChanged(
                     BacsDirectDebitInputData(
@@ -280,7 +296,7 @@ internal class DefaultBacsDirectDebitDelegateTest {
         }
 
         @Test
-        fun `input is valid and mode is  CONFIRMATION, them component state should be valid`() = runTest {
+        fun `input is valid and mode is  CONFIRMATION, then component state should be valid`() = runTest {
             delegate.componentStateFlow.test {
                 delegate.onInputDataChanged(
                     BacsDirectDebitInputData(
@@ -301,10 +317,98 @@ internal class DefaultBacsDirectDebitDelegateTest {
     }
 
     @Nested
+    @DisplayName("when setMode is called")
+    inner class SetModeTest {
+
+        @Test
+        fun `with INPUT parameter while current mode is also INPUT, then no value should be emitted`() = runTest {
+            delegate.inputData.mode = BacsDirectDebitMode.INPUT
+            delegate._viewFlow.value = BacsComponentViewType.INPUT
+
+            delegate.viewFlow.test {
+                awaitItem()
+
+                delegate.setMode(BacsDirectDebitMode.INPUT)
+
+                expectNoEvents()
+            }
+        }
+
+        @Test
+        fun `with CONFIRMATION parameter while current mode is also CONFIRMATION, then no value should be emitted`() =
+            runTest {
+                delegate.inputData.mode = BacsDirectDebitMode.CONFIRMATION
+                delegate._viewFlow.value = BacsComponentViewType.CONFIRMATION
+
+                delegate.viewFlow.test {
+                    awaitItem()
+
+                    delegate.setMode(BacsDirectDebitMode.CONFIRMATION)
+
+                    expectNoEvents()
+                }
+            }
+
+        @Test
+        fun `with INPUT parameter while current mode is CONFIRMATION, then INPUT should be emitted`() = runTest {
+            delegate.inputData.mode = BacsDirectDebitMode.CONFIRMATION
+            delegate._viewFlow.value = BacsComponentViewType.CONFIRMATION
+
+            delegate.viewFlow.test {
+                awaitItem()
+
+                delegate.setMode(BacsDirectDebitMode.INPUT)
+
+                assertEquals(BacsComponentViewType.INPUT, expectMostRecentItem())
+            }
+        }
+
+        @Test
+        fun `with CONFIRMATION parameter while current mode is INPUT and input data is valid, then CONFIRMATION should be emitted`() =
+            runTest {
+                delegate.onInputDataChanged(
+                    BacsDirectDebitInputData(
+                        holderName = "test",
+                        bankAccountNumber = "12345678",
+                        sortCode = "123456",
+                        shopperEmail = "test@adyen.com",
+                        isAmountConsentChecked = true,
+                        isAccountConsentChecked = true,
+                        mode = BacsDirectDebitMode.INPUT
+                    )
+                )
+                delegate._viewFlow.value = BacsComponentViewType.INPUT
+
+                delegate.viewFlow.test {
+                    awaitItem()
+
+                    delegate.setMode(BacsDirectDebitMode.CONFIRMATION)
+
+                    assertEquals(BacsComponentViewType.CONFIRMATION, expectMostRecentItem())
+                }
+            }
+
+        @Test
+        fun `with CONFIRMATION parameter while current mode is INPUT and input data is invalid, then no value should be emitted`() =
+            runTest {
+                delegate.inputData.mode = BacsDirectDebitMode.INPUT
+                delegate._viewFlow.value = BacsComponentViewType.INPUT
+
+                delegate.viewFlow.test {
+                    awaitItem()
+
+                    delegate.setMode(BacsDirectDebitMode.CONFIRMATION)
+
+                    expectNoEvents()
+                }
+            }
+    }
+
+    @Nested
     @DisplayName("when creating component state and")
     inner class CreateComponentStateTest {
         @Test
-        fun `input is invalid, them component state should be invalid`() = runTest {
+        fun `input is invalid, then component state should be invalid`() = runTest {
             delegate.componentStateFlow.test {
                 delegate.onInputDataChanged(
                     BacsDirectDebitInputData(
@@ -324,7 +428,7 @@ internal class DefaultBacsDirectDebitDelegateTest {
         }
 
         @Test
-        fun `input is valid and mode is INPUT, them component state should be invalid`() = runTest {
+        fun `input is valid and mode is INPUT, then component state should be invalid`() = runTest {
             delegate.componentStateFlow.test {
                 delegate.onInputDataChanged(
                     BacsDirectDebitInputData(
@@ -344,7 +448,7 @@ internal class DefaultBacsDirectDebitDelegateTest {
         }
 
         @Test
-        fun `input is valid and mode is  CONFIRMATION, them component state should be valid`() = runTest {
+        fun `input is valid and mode is  CONFIRMATION, then component state should be valid`() = runTest {
             delegate.componentStateFlow.test {
                 delegate.onInputDataChanged(
                     BacsDirectDebitInputData(
@@ -363,5 +467,9 @@ internal class DefaultBacsDirectDebitDelegateTest {
                 }
             }
         }
+    }
+
+    companion object {
+        private const val TEST_CLIENT_KEY = "test_qwertyuiopasdfghjklzxcvbnmqwerty"
     }
 }

@@ -118,15 +118,15 @@ class AddressFormInputNew @JvmOverloads constructor(
         }
     }
 
-    fun attachDelegate(delegate: CardDelegate) {
+    internal fun attachDelegate(delegate: CardDelegate) {
         this.delegate = delegate
     }
 
-    fun initLocalizedContext(localizedContext: Context) {
+    internal fun initLocalizedContext(localizedContext: Context) {
         this.localizedContext = localizedContext
     }
 
-    fun highlightValidationErrors(isErrorFocusedPreviously: Boolean) {
+    internal fun highlightValidationErrors(isErrorFocusedPreviously: Boolean) {
         var isErrorFocused = isErrorFocusedPreviously
         val streetValidation = delegate.outputData?.addressState?.street?.validation
         if (streetValidation is Validation.Invalid) {
@@ -178,7 +178,7 @@ class AddressFormInputNew @JvmOverloads constructor(
         }
     }
 
-    fun updateCountries(countryList: List<AddressListItem>) {
+    internal fun updateCountries(countryList: List<AddressListItem>) {
         countryAdapter.setItems(countryList)
         countryList.firstOrNull { it.selected }?.let {
             val selectedSpecification = AddressSpecification.fromString(it.code)
@@ -189,7 +189,7 @@ class AddressFormInputNew @JvmOverloads constructor(
         }
     }
 
-    fun updateStates(stateList: List<AddressListItem>) {
+    internal fun updateStates(stateList: List<AddressListItem>) {
         statesAdapter.setItems(stateList)
         stateList.firstOrNull { it.selected }?.let {
             autoCompleteTextViewState?.setText(it.name)

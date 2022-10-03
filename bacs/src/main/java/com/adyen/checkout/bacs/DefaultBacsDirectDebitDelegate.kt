@@ -8,24 +8,60 @@
 
 package com.adyen.checkout.bacs
 
+import androidx.annotation.VisibleForTesting
 import com.adyen.checkout.components.model.paymentmethods.PaymentMethod
 import com.adyen.checkout.components.model.payments.request.BacsDirectDebitPaymentMethod
 import com.adyen.checkout.components.model.payments.request.PaymentComponentData
+import com.adyen.checkout.components.ui.ViewProvider
+import com.adyen.checkout.components.ui.view.ComponentViewType
 import com.adyen.checkout.components.util.PaymentMethodTypes
+import com.adyen.checkout.core.log.LogUtil
+import com.adyen.checkout.core.log.Logger
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableStateFlow
 
 internal class DefaultBacsDirectDebitDelegate(
+    override val configuration: BacsDirectDebitConfiguration,
     val paymentMethod: PaymentMethod,
 ) : BacsDirectDebitDelegate {
+
+    override val inputData: BacsDirectDebitInputData = BacsDirectDebitInputData()
 
     private val _outputDataFlow = MutableStateFlow<BacsDirectDebitOutputData?>(null)
     override val outputDataFlow: Flow<BacsDirectDebitOutputData?> = _outputDataFlow
 
+    override val outputData
+        get() = _outputDataFlow.value
+
     private val _componentStateFlow = MutableStateFlow<BacsDirectDebitComponentState?>(null)
     override val componentStateFlow: Flow<BacsDirectDebitComponentState?> = _componentStateFlow
 
+    @VisibleForTesting
+    @Suppress("VariableNaming")
+    internal val _viewFlow = MutableStateFlow(BacsComponentViewType.INPUT)
+    override val viewFlow: Flow<ComponentViewType?> = _viewFlow
+
     override fun getPaymentMethodType(): String = paymentMethod.type ?: PaymentMethodTypes.UNKNOWN
+
+    override fun setMode(mode: BacsDirectDebitMode): Boolean {
+        val currentMode = inputData.mode
+        return when {
+            mode == currentMode -> {
+                Logger.e(TAG, "Current mode is already $mode")
+                false
+            }
+            mode == BacsDirectDebitMode.CONFIRMATION && outputData?.isValid != true -> {
+                Logger.e(TAG, "Cannot set confirmation view when input is not valid")
+                false
+            }
+            else -> {
+                Logger.d(TAG, "Setting mode to $mode")
+                inputData.mode = mode
+                onInputDataChanged(inputData)
+                true
+            }
+        }
+    }
 
     override fun onInputDataChanged(inputData: BacsDirectDebitInputData) {
         val outputData = BacsDirectDebitOutputData(
@@ -39,9 +75,22 @@ internal class DefaultBacsDirectDebitDelegate(
             mode = inputData.mode,
         )
 
+        updateViewType(inputData.mode)
+
         _outputDataFlow.tryEmit(outputData)
 
         createComponentState(outputData)
+    }
+
+    private fun updateViewType(mode: BacsDirectDebitMode) {
+        val viewType = when (mode) {
+            BacsDirectDebitMode.INPUT -> BacsComponentViewType.INPUT
+            BacsDirectDebitMode.CONFIRMATION -> BacsComponentViewType.CONFIRMATION
+        }
+        if (_viewFlow.value != viewType) {
+            Logger.d(TAG, "Updating view flow to $viewType")
+            _viewFlow.tryEmit(viewType)
+        }
     }
 
     override fun createComponentState(outputData: BacsDirectDebitOutputData) {
@@ -65,5 +114,11 @@ internal class DefaultBacsDirectDebitDelegate(
         )
 
         _componentStateFlow.tryEmit(componentState)
+    }
+
+    override fun getViewProvider(): ViewProvider = BacsViewProvider
+
+    companion object {
+        private val TAG = LogUtil.getTag()
     }
 }

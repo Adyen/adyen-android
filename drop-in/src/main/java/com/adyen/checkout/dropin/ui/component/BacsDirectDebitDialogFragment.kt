@@ -14,15 +14,10 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.view.WindowManager
-import android.view.animation.Animation
-import android.view.animation.AnimationUtils
 import android.widget.FrameLayout
-import androidx.core.view.children
 import androidx.core.view.isVisible
 import com.adyen.checkout.bacs.BacsDirectDebitComponent
 import com.adyen.checkout.bacs.BacsDirectDebitComponentState
-import com.adyen.checkout.bacs.BacsDirectDebitConfirmationView
-import com.adyen.checkout.bacs.BacsDirectDebitInputView
 import com.adyen.checkout.bacs.BacsDirectDebitMode
 import com.adyen.checkout.components.PaymentComponentState
 import com.adyen.checkout.components.model.payments.request.PaymentMethodDetails
@@ -40,6 +35,8 @@ class BacsDirectDebitDialogFragment : BaseComponentDialogFragment() {
     private var _binding: FragmentBacsDirectDebitComponentBinding? = null
     private val binding: FragmentBacsDirectDebitComponentBinding get() = requireNotNull(_binding)
 
+    private val bacsDirectDebitComponent: BacsDirectDebitComponent by lazy { component as BacsDirectDebitComponent }
+
     companion object : BaseCompanion<BacsDirectDebitDialogFragment>(BacsDirectDebitDialogFragment::class.java) {
         private val TAG = LogUtil.getTag()
     }
@@ -53,25 +50,17 @@ class BacsDirectDebitDialogFragment : BaseComponentDialogFragment() {
         Logger.d(TAG, "onViewCreated")
         binding.header.text = paymentMethod.name
 
-        val bacsDirectDebitComponent = component as BacsDirectDebitComponent
-
         component.observe(viewLifecycleOwner, this)
         bacsDirectDebitComponent.observeErrors(viewLifecycleOwner, createErrorHandlerObserver())
 
-        val bacsView = when (bacsDirectDebitComponent.state?.mode) {
-            BacsDirectDebitMode.CONFIRMATION -> BacsDirectDebitConfirmationView(requireContext())
-            else -> BacsDirectDebitInputView(requireContext())
-        }
+        binding.bacsView.attach(bacsDirectDebitComponent, viewLifecycleOwner)
 
-        binding.viewContainer.addView(bacsView)
-        bacsView.attach(bacsDirectDebitComponent, viewLifecycleOwner)
-
-        if (bacsView.isConfirmationRequired) {
+        if (binding.bacsView.isConfirmationRequired) {
             binding.payButton.setOnClickListener {
                 handleContinueClick()
             }
             setInitViewState(BottomSheetBehavior.STATE_EXPANDED)
-            bacsView.requestFocus()
+            binding.bacsView.requestFocus()
         } else {
             binding.payButton.isVisible = false
         }
@@ -85,7 +74,6 @@ class BacsDirectDebitDialogFragment : BaseComponentDialogFragment() {
     }
 
     override fun onChanged(paymentComponentState: PaymentComponentState<in PaymentMethodDetails>?) {
-        val bacsDirectDebitComponent = component as BacsDirectDebitComponent
         val bacsDirectDebitComponentState = paymentComponentState as? BacsDirectDebitComponentState
 
         if (bacsDirectDebitComponentState != null) {
@@ -106,17 +94,14 @@ class BacsDirectDebitDialogFragment : BaseComponentDialogFragment() {
     }
 
     override fun highlightValidationErrors() {
-        binding.viewContainer.children.firstOrNull { it is BacsDirectDebitInputView }?.let {
-            (it as BacsDirectDebitInputView).highlightValidationErrors()
-        }
+        binding.bacsView.highlightValidationErrors()
     }
 
     override fun onBackPressed(): Boolean {
-        val bacsDirectDebitComponent = component as BacsDirectDebitComponent
         val mode = bacsDirectDebitComponent.state?.mode
         val isConfirmationMode = mode == BacsDirectDebitMode.CONFIRMATION
         return if (isConfirmationMode) {
-            attachInputView()
+            bacsDirectDebitComponent.setInputMode()
             true
         } else {
             super.onBackPressed()
@@ -125,75 +110,14 @@ class BacsDirectDebitDialogFragment : BaseComponentDialogFragment() {
 
     private fun handleContinueClick() {
         componentDialogViewModel.payButtonClicked()
-        val bacsDirectDebitComponent = component as BacsDirectDebitComponent
         val mode = bacsDirectDebitComponent.state?.mode
         val isInputMode = mode == BacsDirectDebitMode.INPUT
         if (isInputMode && bacsDirectDebitComponent.state?.isInputValid == true) {
-            attachConfirmationView()
+            bacsDirectDebitComponent.setConfirmationMode()
         }
     }
 
-    private fun attachInputView() {
-        val bacsDirectDebitComponent = component as BacsDirectDebitComponent
-        val isInputViewAttached = binding.viewContainer.children.any { it is BacsDirectDebitInputView }
-        if (!isInputViewAttached) {
-            val inputView = BacsDirectDebitInputView(requireContext())
-            val confirmationRemoveAnimation =
-                AnimationUtils.loadAnimation(requireContext(), R.anim.slide_out_left_to_right)
-            val inputAddAnimation = AnimationUtils.loadAnimation(requireContext(), R.anim.slide_in_left_to_right)
-            binding.viewContainer.apply {
-                val confirmationView = children.firstOrNull { it is BacsDirectDebitConfirmationView }
-                confirmationRemoveAnimation.setAnimationListener(object : Animation.AnimationListener {
-                    override fun onAnimationStart(animation: Animation?) {
-                        // no ops
-                    }
-
-                    override fun onAnimationEnd(animation: Animation?) {
-                        removeView(confirmationView)
-                    }
-
-                    override fun onAnimationRepeat(animation: Animation?) {
-                        // no ops
-                    }
-                })
-                addView(inputView)
-                confirmationView?.startAnimation(confirmationRemoveAnimation)
-                inputView.startAnimation(inputAddAnimation)
-                inputView.attach(bacsDirectDebitComponent, viewLifecycleOwner)
-            }
-        }
-    }
-
-    private fun attachConfirmationView() {
-        val bacsDirectDebitComponent = component as BacsDirectDebitComponent
-        val isConfirmationViewAttached = binding.viewContainer.children.any { it is BacsDirectDebitConfirmationView }
-        if (!isConfirmationViewAttached) {
-            val confirmationView = BacsDirectDebitConfirmationView(requireContext())
-            val confirmationAddAnimation = AnimationUtils.loadAnimation(requireContext(), R.anim.slide_in_right_to_left)
-            val inputRemoveAnimation = AnimationUtils.loadAnimation(requireContext(), R.anim.slide_out_right_to_left)
-            binding.viewContainer.apply {
-                val inputView = children.firstOrNull { it is BacsDirectDebitInputView }
-                inputRemoveAnimation.setAnimationListener(object : Animation.AnimationListener {
-                    override fun onAnimationStart(animation: Animation?) {
-                        // no ops
-                    }
-
-                    override fun onAnimationEnd(animation: Animation?) {
-                        removeView(inputView)
-                    }
-
-                    override fun onAnimationRepeat(animation: Animation?) {
-                        // no ops
-                    }
-                })
-                addView(confirmationView)
-                inputView?.startAnimation(inputRemoveAnimation)
-                confirmationView.startAnimation(confirmationAddAnimation)
-                confirmationView.attach(bacsDirectDebitComponent, viewLifecycleOwner)
-            }
-        }
-    }
-
+    // TODO improve
     private fun setDialogToFullScreen(dialog: Dialog) {
         dialog.setOnShowListener {
             val bottomSheetDialog = dialog as BottomSheetDialog
