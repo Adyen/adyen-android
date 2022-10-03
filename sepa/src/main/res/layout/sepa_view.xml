@@ -1,5 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?>
-<!--
+<?xml version="1.0" encoding="utf-8"?><!--
   ~ Copyright (c) 2019 Adyen N.V.
   ~
   ~ This file is open source and available under the MIT license. See the LICENSE file for more info.
@@ -7,8 +6,7 @@
   ~ Created by caiof on 26/8/2019.
   -->
 
-<merge
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<merge xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
@@ -22,8 +20,9 @@
         android:layout_height="wrap_content">
 
         <com.adyen.checkout.components.ui.view.AdyenTextInputEditText
-            tools:ignore="RequiredSize"
-            style="@style/AdyenCheckout.Sepa.HolderNameInput" />
+            android:id="@+id/editText_holderName"
+            style="@style/AdyenCheckout.Sepa.HolderNameInput"
+            tools:ignore="RequiredSize" />
     </com.google.android.material.textfield.TextInputLayout>
 
     <com.google.android.material.textfield.TextInputLayout
@@ -33,8 +32,9 @@
         android:layout_height="wrap_content">
 
         <com.adyen.checkout.sepa.ui.IbanInput
-            tools:ignore="RequiredSize"
-            style="@style/AdyenCheckout.Sepa.AccountNumberInput" />
+            android:id="@+id/editText_ibanNumber"
+            style="@style/AdyenCheckout.Sepa.AccountNumberInput"
+            tools:ignore="RequiredSize" />
     </com.google.android.material.textfield.TextInputLayout>
 
 </merge>
