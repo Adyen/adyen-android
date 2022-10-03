@@ -12,7 +12,9 @@ import app.cash.turbine.test
 import com.adyen.checkout.components.model.paymentmethods.PaymentMethod
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.test.runTest
-import org.junit.Assert
+import org.junit.jupiter.api.Assertions.assertEquals
+import org.junit.jupiter.api.Assertions.assertFalse
+import org.junit.jupiter.api.Assertions.assertTrue
 import org.junit.jupiter.api.DisplayName
 import org.junit.jupiter.api.Nested
 import org.junit.jupiter.api.Test
@@ -36,10 +38,11 @@ internal class DefaultMBWayDelegateTest {
             delegate.outputDataFlow.test {
                 skipItems(1)
                 delegate.onInputDataChanged(MBWayInputData(countryCode = "+1", localPhoneNumber = "04023456"))
-                val mbWayOutputData = awaitItem()
 
-                Assert.assertEquals("+14023456", mbWayOutputData?.mobilePhoneNumberFieldState?.value)
-                Assert.assertEquals(false, mbWayOutputData?.isValid)
+                with(requireNotNull(awaitItem())) {
+                    assertEquals("+14023456", mobilePhoneNumberFieldState.value)
+                    assertFalse(isValid)
+                }
 
                 cancelAndIgnoreRemainingEvents()
             }
@@ -50,11 +53,12 @@ internal class DefaultMBWayDelegateTest {
             delegate.componentStateFlow.test {
                 skipItems(1)
                 delegate.onInputDataChanged(MBWayInputData(countryCode = "+23", localPhoneNumber = "0056778"))
-                val componentState = awaitItem()
 
-                Assert.assertEquals("+2356778", componentState?.data?.paymentMethod?.telephoneNumber)
-                Assert.assertEquals(false, componentState?.isInputValid)
-                Assert.assertEquals(false, componentState?.isValid)
+                with(requireNotNull(awaitItem())) {
+                    assertEquals("+2356778", data.paymentMethod?.telephoneNumber)
+                    assertFalse(isInputValid)
+                    assertFalse(isValid)
+                }
 
                 cancelAndIgnoreRemainingEvents()
             }
@@ -65,10 +69,11 @@ internal class DefaultMBWayDelegateTest {
             delegate.outputDataFlow.test {
                 skipItems(1)
                 delegate.onInputDataChanged(MBWayInputData(countryCode = "+351", localPhoneNumber = "234567890"))
-                val mbWayOutputData = awaitItem()
 
-                Assert.assertEquals("+351234567890", mbWayOutputData?.mobilePhoneNumberFieldState?.value)
-                Assert.assertEquals(true, mbWayOutputData?.isValid)
+                with(requireNotNull(awaitItem())) {
+                    assertEquals("+351234567890", mobilePhoneNumberFieldState.value)
+                    assertTrue(isValid)
+                }
 
                 cancelAndIgnoreRemainingEvents()
             }
@@ -79,11 +84,12 @@ internal class DefaultMBWayDelegateTest {
             delegate.componentStateFlow.test {
                 skipItems(1)
                 delegate.onInputDataChanged(MBWayInputData(countryCode = "+1", localPhoneNumber = "9257348920"))
-                val componentState = awaitItem()
 
-                Assert.assertEquals("+19257348920", componentState?.data?.paymentMethod?.telephoneNumber)
-                Assert.assertEquals(true, componentState?.isInputValid)
-                Assert.assertEquals(true, componentState?.isValid)
+                with(requireNotNull(awaitItem())) {
+                    assertEquals("+19257348920", data.paymentMethod?.telephoneNumber)
+                    assertTrue(isInputValid)
+                    assertTrue(isValid)
+                }
 
                 cancelAndIgnoreRemainingEvents()
             }
@@ -99,11 +105,12 @@ internal class DefaultMBWayDelegateTest {
             delegate.componentStateFlow.test {
                 skipItems(1)
                 delegate.createComponentState(MBWayOutputData("+7867676"))
-                val componentState = awaitItem()
 
-                Assert.assertEquals("+7867676", componentState?.data?.paymentMethod?.telephoneNumber)
-                Assert.assertEquals(false, componentState?.isInputValid)
-                Assert.assertEquals(false, componentState?.isValid)
+                with(requireNotNull(awaitItem())) {
+                    assertEquals("+7867676", data.paymentMethod?.telephoneNumber)
+                    assertFalse(isInputValid)
+                    assertFalse(isValid)
+                }
 
                 cancelAndIgnoreRemainingEvents()
             }
@@ -114,11 +121,12 @@ internal class DefaultMBWayDelegateTest {
             delegate.componentStateFlow.test {
                 skipItems(1)
                 delegate.createComponentState(MBWayOutputData("+31666666666"))
-                val componentState = awaitItem()
 
-                Assert.assertEquals("+31666666666", componentState?.data?.paymentMethod?.telephoneNumber)
-                Assert.assertEquals(true, componentState?.isInputValid)
-                Assert.assertEquals(true, componentState?.isValid)
+                with(requireNotNull(awaitItem())) {
+                    assertEquals("+31666666666", data.paymentMethod?.telephoneNumber)
+                    assertTrue(isInputValid)
+                    assertTrue(isValid)
+                }
 
                 cancelAndIgnoreRemainingEvents()
             }
