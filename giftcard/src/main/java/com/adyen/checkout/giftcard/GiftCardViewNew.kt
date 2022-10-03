@@ -14,7 +14,6 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.View.OnFocusChangeListener
 import android.widget.LinearLayout
-import com.adyen.checkout.components.api.ImageLoader
 import com.adyen.checkout.components.base.ComponentDelegate
 import com.adyen.checkout.components.extensions.setLocalizedHintFromStyle
 import com.adyen.checkout.components.ui.ComponentViewNew
@@ -25,8 +24,6 @@ import com.adyen.checkout.giftcard.databinding.GiftcardViewBinding
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.onEach
-
-private val TAG = LogUtil.getTag()
 
 class GiftCardViewNew @JvmOverloads constructor(
     context: Context,
@@ -42,7 +39,6 @@ class GiftCardViewNew @JvmOverloads constructor(
 
     private val binding: GiftcardViewBinding = GiftcardViewBinding.inflate(LayoutInflater.from(context), this)
 
-    private var imageLoader: ImageLoader? = null
     private lateinit var localizedContext: Context
 
     private lateinit var giftCardDelegate: GiftCardDelegate
@@ -59,8 +55,6 @@ class GiftCardViewNew @JvmOverloads constructor(
 
         this.localizedContext = localizedContext
         initLocalizedStrings(localizedContext)
-
-        imageLoader = ImageLoader.getInstance(context, delegate.configuration.environment)
 
         observeDelegate(delegate, coroutineScope)
         initInputs()
@@ -146,4 +140,8 @@ class GiftCardViewNew @JvmOverloads constructor(
     }
 
     override fun getView(): View = this
+
+    companion object {
+        private val TAG = LogUtil.getTag()
+    }
 }
