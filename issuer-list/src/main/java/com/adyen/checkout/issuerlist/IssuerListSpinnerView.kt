@@ -12,61 +12,75 @@ import android.util.AttributeSet
 import android.view.LayoutInflater
 import android.view.View
 import android.widget.AdapterView
-import androidx.appcompat.widget.AppCompatSpinner
-import androidx.lifecycle.LifecycleOwner
-import com.adyen.checkout.components.PaymentComponentState
+import android.widget.LinearLayout
 import com.adyen.checkout.components.api.ImageLoader.Companion.getInstance
-import com.adyen.checkout.components.model.payments.request.IssuerListPaymentMethod
-import com.adyen.checkout.components.ui.view.AdyenLinearLayout
+import com.adyen.checkout.components.base.ComponentDelegate
+import com.adyen.checkout.components.ui.ComponentViewNew
 import com.adyen.checkout.core.log.LogUtil
 import com.adyen.checkout.core.log.Logger
+import com.adyen.checkout.issuerlist.databinding.IssuerListSpinnerViewBinding
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.flow.launchIn
+import kotlinx.coroutines.flow.onEach
 
 @Suppress("TooManyFunctions")
-abstract class IssuerListSpinnerView<
-    IssuerListPaymentMethodT : IssuerListPaymentMethod,
-    IssuerListComponentT : IssuerListComponent<IssuerListPaymentMethodT>
-    >
-@JvmOverloads constructor(
+class IssuerListSpinnerView @JvmOverloads constructor(
     context: Context,
     attrs: AttributeSet? = null,
     defStyleAttr: Int = 0
 ) :
-    AdyenLinearLayout<
-        IssuerListOutputData,
-        IssuerListConfiguration,
-        PaymentComponentState<IssuerListPaymentMethodT>,
-        IssuerListComponentT>(context, attrs, defStyleAttr),
+    LinearLayout(
+        context,
+        attrs,
+        defStyleAttr
+    ),
+    ComponentViewNew,
     AdapterView.OnItemSelectedListener {
 
-    private lateinit var issuersSpinner: AppCompatSpinner
+    private val binding: IssuerListSpinnerViewBinding =
+        IssuerListSpinnerViewBinding.inflate(LayoutInflater.from(context), this)
+
     private lateinit var issuersAdapter: IssuerListSpinnerAdapter
 
-    init {
-        LayoutInflater.from(getContext()).inflate(R.layout.issuer_list_spinner_view, this, true)
-    }
+    private lateinit var localizedContext: Context
 
-    override fun initView() {
-        issuersSpinner = findViewById<AppCompatSpinner?>(R.id.spinner_issuers).apply {
+    private lateinit var issuerListDelegate: IssuerListDelegate<*>
+
+    override fun initView(delegate: ComponentDelegate, coroutineScope: CoroutineScope, localizedContext: Context) {
+        if (delegate !is IssuerListDelegate<*>) throw IllegalArgumentException("Unsupported delegate type")
+        issuerListDelegate = delegate
+
+        this.localizedContext = localizedContext
+        initLocalizedStrings(localizedContext)
+
+        observeDelegate(delegate, coroutineScope)
+
+        issuersAdapter = IssuerListSpinnerAdapter(
+            context = context,
+            issuerList = delegate.getIssuers(),
+            imageLoader = getInstance(context, delegate.configuration.environment),
+            paymentMethod = delegate.getPaymentMethodType(),
+            hideIssuerLogo = delegate.configuration.hideIssuerLogos,
+        )
+        binding.spinnerIssuers.apply {
             adapter = issuersAdapter
             onItemSelectedListener = this@IssuerListSpinnerView
         }
     }
 
-    override fun initLocalizedStrings(localizedContext: Context) {
+    private fun initLocalizedStrings(localizedContext: Context) {
         // no embedded localized strings on this view
     }
 
-    override fun onComponentAttached() {
-        issuersAdapter = IssuerListSpinnerAdapter(
-            context,
-            component.issuers,
-            getInstance(context, component.configuration.environment),
-            component.paymentMethodType,
-            hideIssuersLogo()
-        )
+    private fun observeDelegate(delegate: IssuerListDelegate<*>, coroutineScope: CoroutineScope) {
+        delegate.outputDataFlow
+            .onEach { outputDataChanged(it) }
+            .launchIn(coroutineScope)
     }
 
-    override fun observeComponentChanges(lifecycleOwner: LifecycleOwner) = Unit
+    private fun outputDataChanged(issuerListOutputData: IssuerListOutputData?) {
+        // no ops
+    }
 
     override val isConfirmationRequired: Boolean
         get() = true
@@ -75,24 +89,22 @@ abstract class IssuerListSpinnerView<
         // no implementation
     }
 
-    open fun hideIssuersLogo(): Boolean {
-        return false
-    }
-
     override fun onItemSelected(parent: AdapterView<*>, view: View, position: Int, id: Long) {
         Logger.d(TAG, "onItemSelected - " + issuersAdapter.getItem(position).name)
-        component.inputData.selectedIssuer = issuersAdapter.getItem(position)
-        component.notifyInputDataChanged()
+        issuerListDelegate.inputData.selectedIssuer = issuersAdapter.getItem(position)
+        issuerListDelegate.onInputDataChanged(issuerListDelegate.inputData)
     }
 
     override fun setEnabled(enabled: Boolean) {
         super.setEnabled(enabled)
-        issuersSpinner.isEnabled = enabled
+        binding.spinnerIssuers.isEnabled = enabled
     }
 
     override fun onNothingSelected(parent: AdapterView<*>) {
         // nothing changed
     }
+
+    override fun getView(): View = this
 
     companion object {
         private val TAG = LogUtil.getTag()

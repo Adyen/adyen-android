@@ -13,6 +13,7 @@ import android.os.Parcel
 import android.os.Parcelable
 import com.adyen.checkout.core.api.Environment
 import com.adyen.checkout.issuerlist.IssuerListConfiguration
+import com.adyen.checkout.issuerlist.IssuerListViewType
 import java.util.Locale
 
 class OnlineBankingConfiguration : IssuerListConfiguration {
@@ -21,7 +22,9 @@ class OnlineBankingConfiguration : IssuerListConfiguration {
         shopperLocale: Locale,
         environment: Environment,
         clientKey: String,
-    ) : super(shopperLocale, environment, clientKey)
+        viewType: IssuerListViewType,
+        hideIssuerLogos: Boolean,
+    ) : super(shopperLocale, environment, clientKey, viewType, hideIssuerLogos)
 
     private constructor(parcel: Parcel) : super(parcel)
 
@@ -52,7 +55,10 @@ class OnlineBankingConfiguration : IssuerListConfiguration {
          *
          * @param configuration A configuration to initialize the builder.
          */
-        constructor(configuration: OnlineBankingConfiguration) : super(configuration)
+        constructor(configuration: OnlineBankingConfiguration) : super(configuration) {
+            viewType = configuration.viewType
+            hideIssuerLogos = configuration.hideIssuerLogos
+        }
 
         override fun setShopperLocale(builderShopperLocale: Locale): Builder {
             return super.setShopperLocale(builderShopperLocale) as Builder
@@ -67,6 +73,8 @@ class OnlineBankingConfiguration : IssuerListConfiguration {
                 shopperLocale = builderShopperLocale,
                 environment = builderEnvironment,
                 clientKey = builderClientKey,
+                viewType = viewType,
+                hideIssuerLogos = hideIssuerLogos,
             )
         }
     }

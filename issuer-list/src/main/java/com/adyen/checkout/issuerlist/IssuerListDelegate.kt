@@ -11,6 +11,7 @@ package com.adyen.checkout.issuerlist
 import com.adyen.checkout.components.PaymentComponentState
 import com.adyen.checkout.components.base.PaymentMethodDelegate
 import com.adyen.checkout.components.model.payments.request.IssuerListPaymentMethod
+import com.adyen.checkout.components.ui.ViewProvidingDelegate
 import kotlinx.coroutines.flow.Flow
 
 interface IssuerListDelegate<IssuerListPaymentMethodT : IssuerListPaymentMethod> :
@@ -19,7 +20,14 @@ interface IssuerListDelegate<IssuerListPaymentMethodT : IssuerListPaymentMethod>
         IssuerListInputData,
         IssuerListOutputData,
         PaymentComponentState<IssuerListPaymentMethodT>
-        > {
+        >,
+    ViewProvidingDelegate {
+
+    val configuration: IssuerListConfiguration
+
+    val inputData: IssuerListInputData
+
+    val outputData: IssuerListOutputData?
 
     val outputDataFlow: Flow<IssuerListOutputData?>
     val componentStateFlow: Flow<PaymentComponentState<IssuerListPaymentMethodT>?>

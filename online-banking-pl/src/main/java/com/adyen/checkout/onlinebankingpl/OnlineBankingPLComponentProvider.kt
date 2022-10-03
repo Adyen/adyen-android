@@ -29,7 +29,10 @@ class OnlineBankingPLComponentProvider :
     ): OnlineBankingPLComponent {
         val genericFactory: ViewModelProvider.Factory =
             viewModelFactory(savedStateRegistryOwner, defaultArgs) { savedStateHandle ->
-                val delegate = DefaultIssuerListDelegate(paymentMethod) { OnlineBankingPLPaymentMethod() }
+                val delegate = DefaultIssuerListDelegate(
+                    configuration,
+                    paymentMethod
+                ) { OnlineBankingPLPaymentMethod() }
                 OnlineBankingPLComponent(
                     savedStateHandle,
                     delegate,

@@ -29,7 +29,7 @@ class OpenBankingComponentProvider : PaymentComponentProvider<OpenBankingCompone
     ): OpenBankingComponent {
         val genericFactory: ViewModelProvider.Factory =
             viewModelFactory(savedStateRegistryOwner, defaultArgs) { savedStateHandle ->
-                val delegate = DefaultIssuerListDelegate(paymentMethod) { OpenBankingPaymentMethod() }
+                val delegate = DefaultIssuerListDelegate(configuration, paymentMethod) { OpenBankingPaymentMethod() }
                 OpenBankingComponent(
                     savedStateHandle,
                     delegate,

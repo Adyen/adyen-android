@@ -12,20 +12,37 @@ import com.adyen.checkout.components.PaymentComponentState
 import com.adyen.checkout.components.model.paymentmethods.PaymentMethod
 import com.adyen.checkout.components.model.payments.request.IssuerListPaymentMethod
 import com.adyen.checkout.components.model.payments.request.PaymentComponentData
+import com.adyen.checkout.components.ui.ViewProvider
+import com.adyen.checkout.components.ui.view.ComponentViewType
 import com.adyen.checkout.components.util.PaymentMethodTypes
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableStateFlow
 
 class DefaultIssuerListDelegate<IssuerListPaymentMethodT : IssuerListPaymentMethod>(
+    override val configuration: IssuerListConfiguration,
     private val paymentMethod: PaymentMethod,
     private val typedPaymentMethodFactory: () -> IssuerListPaymentMethodT,
 ) : IssuerListDelegate<IssuerListPaymentMethodT> {
 
+    override val inputData: IssuerListInputData = IssuerListInputData()
+
     private val _outputDataFlow = MutableStateFlow<IssuerListOutputData?>(null)
     override val outputDataFlow: Flow<IssuerListOutputData?> = _outputDataFlow
 
+    override val outputData: IssuerListOutputData?
+        get() = _outputDataFlow.value
+
     private val _componentStateFlow = MutableStateFlow<PaymentComponentState<IssuerListPaymentMethodT>?>(null)
     override val componentStateFlow: Flow<PaymentComponentState<IssuerListPaymentMethodT>?> = _componentStateFlow
+
+    override val viewFlow: Flow<ComponentViewType?> = MutableStateFlow(getIssuerListComponentViewType())
+
+    private fun getIssuerListComponentViewType(): IssuerListComponentViewType {
+        return when (configuration.viewType) {
+            IssuerListViewType.RECYCLER_VIEW -> IssuerListComponentViewType.RECYCLER_VIEW
+            IssuerListViewType.SPINNER_VIEW -> IssuerListComponentViewType.SPINNER_VIEW
+        }
+    }
 
     override fun getIssuers(): List<IssuerModel> =
         paymentMethod.issuers?.mapToModel() ?: paymentMethod.details.getLegacyIssuers()
@@ -53,4 +70,6 @@ class DefaultIssuerListDelegate<IssuerListPaymentMethodT : IssuerListPaymentMeth
     override fun getPaymentMethodType(): String {
         return paymentMethod.type ?: PaymentMethodTypes.UNKNOWN
     }
+
+    override fun getViewProvider(): ViewProvider = IssuerListViewProvider
 }
