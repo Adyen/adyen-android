@@ -86,11 +86,9 @@ class PaymentMethodListDialogFragment :
             dropInViewModel.dropInConfiguration.environment
         )
 
-        paymentMethodAdapter = PaymentMethodAdapter(emptyList(), imageLoader) {
+        paymentMethodAdapter = PaymentMethodAdapter(emptyList(), imageLoader, this, this) {
             collapseNotUsedUnderlayButtons(binding.recyclerViewPaymentMethods, it)
         }
-        paymentMethodAdapter.setPaymentMethodSelectedCallback(this)
-        paymentMethodAdapter.setStoredPaymentRemovedCallback(this)
 
         binding.recyclerViewPaymentMethods.adapter = paymentMethodAdapter
     }
