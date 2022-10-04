@@ -21,7 +21,7 @@ import com.adyen.checkout.bcmc.databinding.BcmcViewBinding
 import com.adyen.checkout.components.base.ComponentDelegate
 import com.adyen.checkout.components.extensions.setLocalizedHintFromStyle
 import com.adyen.checkout.components.extensions.setLocalizedTextFromStyle
-import com.adyen.checkout.components.ui.ComponentViewNew
+import com.adyen.checkout.components.ui.ComponentView
 import com.adyen.checkout.components.ui.Validation
 import kotlinx.coroutines.CoroutineScope
 
@@ -30,7 +30,7 @@ internal class BcmcView @JvmOverloads constructor(
     attrs: AttributeSet? = null,
     defStyleAttr: Int = 0
 ) : LinearLayout(context, attrs, defStyleAttr),
-    ComponentViewNew {
+    ComponentView {
 
     private val binding = BcmcViewBinding.inflate(LayoutInflater.from(context), this)
 

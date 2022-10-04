@@ -18,7 +18,7 @@ import com.adyen.checkout.components.ViewableComponent
 import com.adyen.checkout.components.base.ComponentDelegate
 import com.adyen.checkout.components.base.Configuration
 import com.adyen.checkout.components.extensions.createLocalizedContext
-import com.adyen.checkout.components.ui.ComponentViewNew
+import com.adyen.checkout.components.ui.ComponentView
 import com.adyen.checkout.components.ui.ViewProvider
 import com.adyen.checkout.components.ui.ViewProvidingComponent
 import com.adyen.checkout.components.ui.ViewProvidingDelegate
@@ -37,7 +37,7 @@ class AdyenComponentView @JvmOverloads constructor(
     LinearLayout(context, attrs, defStyleAttr) {
 
     private lateinit var component: ViewableComponent<*, *, *>
-    private lateinit var componentView: ComponentViewNew
+    private lateinit var componentView: ComponentView
 
     init {
         isVisible = isInEditMode

@@ -31,7 +31,7 @@ class PaymentInProgressView @JvmOverloads constructor(
         attrs,
         defStyleAttr
     ),
-    ComponentViewNew {
+    ComponentView {
 
     private val binding = ViewPaymentInProgressBinding.inflate(LayoutInflater.from(context), this)
 

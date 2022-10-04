@@ -18,7 +18,7 @@ import com.adyen.checkout.components.api.ImageLoader
 import com.adyen.checkout.components.api.ImageLoader.Companion.getInstance
 import com.adyen.checkout.components.base.ComponentDelegate
 import com.adyen.checkout.components.extensions.setLocalizedTextFromStyle
-import com.adyen.checkout.components.ui.ComponentViewNew
+import com.adyen.checkout.components.ui.ComponentView
 import com.adyen.checkout.components.util.PaymentMethodTypes
 import com.adyen.checkout.core.log.LogUtil
 import com.adyen.checkout.core.log.Logger
@@ -37,7 +37,7 @@ internal class AwaitView @JvmOverloads constructor(
         attrs,
         defStyleAttr
     ),
-    ComponentViewNew {
+    ComponentView {
 
     private val binding: AwaitViewBinding = AwaitViewBinding.inflate(LayoutInflater.from(context), this)
 

@@ -16,7 +16,7 @@ import android.widget.LinearLayout
 import com.adyen.checkout.components.api.ImageLoader
 import com.adyen.checkout.components.base.ComponentDelegate
 import com.adyen.checkout.components.extensions.setLocalizedTextFromStyle
-import com.adyen.checkout.components.ui.ComponentViewNew
+import com.adyen.checkout.components.ui.ComponentView
 import com.adyen.checkout.core.log.LogUtil
 import com.adyen.checkout.core.log.Logger
 import com.adyen.checkout.voucher.databinding.VoucherViewBinding
@@ -35,7 +35,7 @@ internal class VoucherView @JvmOverloads constructor(
         attrs,
         defStyleAttr
     ),
-    ComponentViewNew {
+    ComponentView {
 
     private val binding: VoucherViewBinding = VoucherViewBinding.inflate(LayoutInflater.from(context), this)
 

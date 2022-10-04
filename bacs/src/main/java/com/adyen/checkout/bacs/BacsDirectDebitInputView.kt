@@ -19,7 +19,7 @@ import com.adyen.checkout.bacs.databinding.BacsDirectDebitInputViewBinding
 import com.adyen.checkout.components.base.ComponentDelegate
 import com.adyen.checkout.components.extensions.setLocalizedHintFromStyle
 import com.adyen.checkout.components.extensions.setLocalizedTextFromStyle
-import com.adyen.checkout.components.ui.ComponentViewNew
+import com.adyen.checkout.components.ui.ComponentView
 import com.adyen.checkout.components.ui.FieldState
 import com.adyen.checkout.components.ui.Validation
 import com.adyen.checkout.components.ui.view.AdyenTextInputEditText
@@ -43,7 +43,7 @@ internal class BacsDirectDebitInputView @JvmOverloads constructor(
         attrs,
         defStyleAttr
     ),
-    ComponentViewNew {
+    ComponentView {
 
     private val binding: BacsDirectDebitInputViewBinding =
         BacsDirectDebitInputViewBinding.inflate(LayoutInflater.from(context), this)

@@ -15,7 +15,7 @@ import android.view.View
 import android.view.View.OnFocusChangeListener
 import android.widget.LinearLayout
 import com.adyen.checkout.components.base.ComponentDelegate
-import com.adyen.checkout.components.ui.ComponentViewNew
+import com.adyen.checkout.components.ui.ComponentView
 import com.adyen.checkout.components.ui.Validation
 import com.adyen.checkout.components.util.CountryInfo
 import com.adyen.checkout.components.util.CountryUtils
@@ -31,7 +31,7 @@ internal class MbWayView @JvmOverloads constructor(
     attrs: AttributeSet? = null,
     defStyleAttr: Int = 0
 ) : LinearLayout(context, attrs, defStyleAttr),
-    ComponentViewNew {
+    ComponentView {
 
     private val binding = MbwayViewBinding.inflate(LayoutInflater.from(context), this)
 

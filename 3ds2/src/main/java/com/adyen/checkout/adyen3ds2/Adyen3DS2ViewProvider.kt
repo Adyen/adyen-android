@@ -10,7 +10,7 @@ package com.adyen.checkout.adyen3ds2
 
 import android.content.Context
 import android.util.AttributeSet
-import com.adyen.checkout.components.ui.ComponentViewNew
+import com.adyen.checkout.components.ui.ComponentView
 import com.adyen.checkout.components.ui.PaymentInProgressView
 import com.adyen.checkout.components.ui.ViewProvider
 import com.adyen.checkout.components.ui.view.ComponentViewType
@@ -22,7 +22,7 @@ object Adyen3DS2ViewProvider : ViewProvider {
         context: Context,
         attrs: AttributeSet?,
         defStyleAttr: Int
-    ): ComponentViewNew = when (viewType) {
+    ): ComponentView = when (viewType) {
         Adyen3DS2ComponentViewType -> PaymentInProgressView(context, attrs, defStyleAttr)
         else -> throw IllegalStateException("Unsupported view type")
     }

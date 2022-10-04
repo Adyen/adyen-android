@@ -15,7 +15,7 @@ import kotlinx.coroutines.CoroutineScope
 /**
  * A View that can display input and fill in details for a Component.
  */
-interface ComponentViewNew {
+interface ComponentView {
     /**
      * This function will be called when the component is attached and the view is ready to get initialized.
      */
