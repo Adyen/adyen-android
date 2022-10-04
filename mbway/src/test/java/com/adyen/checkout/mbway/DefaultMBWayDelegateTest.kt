@@ -10,6 +10,7 @@ package com.adyen.checkout.mbway
 
 import app.cash.turbine.test
 import com.adyen.checkout.components.model.paymentmethods.PaymentMethod
+import com.adyen.checkout.core.api.Environment
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.test.runTest
 import org.junit.jupiter.api.Assertions.assertEquals
@@ -20,6 +21,7 @@ import org.junit.jupiter.api.Nested
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.extension.ExtendWith
 import org.mockito.junit.jupiter.MockitoExtension
+import java.util.Locale
 
 @OptIn(ExperimentalCoroutinesApi::class)
 @ExtendWith(MockitoExtension::class)
@@ -27,6 +29,7 @@ internal class DefaultMBWayDelegateTest {
 
     private val delegate = DefaultMBWayDelegate(
         paymentMethod = PaymentMethod(),
+        configuration = MBWayConfiguration.Builder(Locale.getDefault(), Environment.TEST, TEST_CLIENT_KEY).build()
     )
 
     @Nested
@@ -131,5 +134,9 @@ internal class DefaultMBWayDelegateTest {
                 cancelAndIgnoreRemainingEvents()
             }
         }
+    }
+
+    companion object {
+        private const val TEST_CLIENT_KEY = "test_qwertyuiopasdfghjklzxcvbnmqwerty"
     }
 }

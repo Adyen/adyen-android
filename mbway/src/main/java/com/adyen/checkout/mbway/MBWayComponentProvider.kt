@@ -28,7 +28,10 @@ class MBWayComponentProvider : PaymentComponentProvider<MBWayComponent, MBWayCon
             viewModelFactory(savedStateRegistryOwner, defaultArgs) { savedStateHandle ->
                 MBWayComponent(
                     savedStateHandle,
-                    DefaultMBWayDelegate(paymentMethod),
+                    DefaultMBWayDelegate(
+                        paymentMethod = paymentMethod,
+                        configuration = configuration
+                    ),
                     configuration
                 )
             }

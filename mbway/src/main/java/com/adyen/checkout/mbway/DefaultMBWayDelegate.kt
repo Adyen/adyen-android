@@ -12,19 +12,33 @@ import com.adyen.checkout.components.PaymentComponentState
 import com.adyen.checkout.components.model.paymentmethods.PaymentMethod
 import com.adyen.checkout.components.model.payments.request.MBWayPaymentMethod
 import com.adyen.checkout.components.model.payments.request.PaymentComponentData
+import com.adyen.checkout.components.ui.ViewProvider
+import com.adyen.checkout.components.ui.view.ComponentViewType
+import com.adyen.checkout.components.util.CountryInfo
+import com.adyen.checkout.components.util.CountryUtils
 import com.adyen.checkout.components.util.PaymentMethodTypes
 import com.adyen.checkout.core.log.LogUtil
 import com.adyen.checkout.core.log.Logger
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableStateFlow
 
-internal class DefaultMBWayDelegate(val paymentMethod: PaymentMethod) : MBWayDelegate {
+internal class DefaultMBWayDelegate(
+    val paymentMethod: PaymentMethod,
+    override val configuration: MBWayConfiguration
+) : MBWayDelegate {
 
     private val _outputDataFlow = MutableStateFlow<MBWayOutputData?>(null)
     override val outputDataFlow: Flow<MBWayOutputData?> = _outputDataFlow
 
     private val _componentStateFlow = MutableStateFlow<PaymentComponentState<MBWayPaymentMethod>?>(null)
     override val componentStateFlow: Flow<PaymentComponentState<MBWayPaymentMethod>?> = _componentStateFlow
+
+    override val inputData = MBWayInputData()
+
+    override val outputData: MBWayOutputData?
+        get() = _outputDataFlow.value
+
+    override val viewFlow: Flow<ComponentViewType?> = MutableStateFlow(MbWayComponentViewType)
 
     override fun getPaymentMethodType(): String {
         return paymentMethod.type ?: PaymentMethodTypes.UNKNOWN
@@ -61,11 +75,20 @@ internal class DefaultMBWayDelegate(val paymentMethod: PaymentMethod) : MBWayDel
         componentStateChanged(paymentComponentState)
     }
 
+    override fun getSupportedCountries(): List<CountryInfo> = CountryUtils.getCountries(SUPPORTED_COUNTRIES)
+
+    override fun getViewProvider(): ViewProvider = MbWayViewProvider
+
     private fun componentStateChanged(componentState: PaymentComponentState<MBWayPaymentMethod>) {
         _componentStateFlow.tryEmit(componentState)
     }
 
     companion object {
         private val TAG = LogUtil.getTag()
+
+        private const val ISO_CODE_PORTUGAL = "PT"
+        private const val ISO_CODE_SPAIN = "ES"
+
+        private val SUPPORTED_COUNTRIES = listOf(ISO_CODE_PORTUGAL, ISO_CODE_SPAIN)
     }
 }
