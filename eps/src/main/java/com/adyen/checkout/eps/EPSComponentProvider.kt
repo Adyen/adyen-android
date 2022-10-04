@@ -28,7 +28,7 @@ class EPSComponentProvider : PaymentComponentProvider<EPSComponent, EPSConfigura
     ): EPSComponent {
         val genericFactory: ViewModelProvider.Factory =
             viewModelFactory(savedStateRegistryOwner, defaultArgs) { savedStateHandle ->
-                val delegate = DefaultIssuerListDelegate(paymentMethod) { EPSPaymentMethod() }
+                val delegate = DefaultIssuerListDelegate(configuration, paymentMethod) { EPSPaymentMethod() }
                 EPSComponent(savedStateHandle, delegate, configuration)
             }
         return ViewModelProvider(viewModelStoreOwner, genericFactory).get(EPSComponent::class.java)

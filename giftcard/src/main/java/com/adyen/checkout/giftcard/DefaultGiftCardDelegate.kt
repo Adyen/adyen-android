@@ -13,6 +13,8 @@ import com.adyen.checkout.components.model.paymentmethods.PaymentMethod
 import com.adyen.checkout.components.model.payments.request.GiftCardPaymentMethod
 import com.adyen.checkout.components.model.payments.request.PaymentComponentData
 import com.adyen.checkout.components.repository.PublicKeyRepository
+import com.adyen.checkout.components.ui.ViewProvider
+import com.adyen.checkout.components.ui.view.ComponentViewType
 import com.adyen.checkout.components.util.PaymentMethodTypes
 import com.adyen.checkout.core.exception.CheckoutException
 import com.adyen.checkout.core.exception.ComponentException
@@ -31,14 +33,16 @@ import kotlinx.coroutines.launch
 internal class DefaultGiftCardDelegate(
     private val paymentMethod: PaymentMethod,
     private val publicKeyRepository: PublicKeyRepository,
-    private val configuration: GiftCardConfiguration,
+    override val configuration: GiftCardConfiguration,
     private val cardEncrypter: CardEncrypter,
 ) : GiftCardDelegate {
+
+    override val inputData: GiftCardInputData = GiftCardInputData()
 
     private val _outputDataFlow = MutableStateFlow<GiftCardOutputData?>(null)
     override val outputDataFlow: Flow<GiftCardOutputData?> = _outputDataFlow
 
-    private val outputData
+    override val outputData
         get() = _outputDataFlow.value
 
     private val _componentStateFlow = MutableStateFlow<GiftCardComponentState?>(null)
@@ -46,6 +50,8 @@ internal class DefaultGiftCardDelegate(
 
     private val _exceptionFlow: MutableSharedFlow<CheckoutException> = MutableSingleEventSharedFlow()
     override val exceptionFlow: Flow<CheckoutException> = _exceptionFlow
+
+    override val viewFlow: Flow<ComponentViewType?> = MutableStateFlow(GiftCardComponentViewType)
 
     private var publicKey: String? = null
 
@@ -175,6 +181,8 @@ internal class DefaultGiftCardDelegate(
     override fun getPaymentMethodType(): String {
         return paymentMethod.type ?: PaymentMethodTypes.UNKNOWN
     }
+
+    override fun getViewProvider(): ViewProvider = GiftCardViewProvider
 
     companion object {
         private val TAG = LogUtil.getTag()

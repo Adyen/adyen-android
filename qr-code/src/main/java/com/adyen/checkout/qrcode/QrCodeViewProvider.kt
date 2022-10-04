@@ -27,4 +27,4 @@ internal class QrCodeViewProvider : ViewProvider {
     }
 }
 
-object QrCodeComponentViewType : ComponentViewType
+internal object QrCodeComponentViewType : ComponentViewType

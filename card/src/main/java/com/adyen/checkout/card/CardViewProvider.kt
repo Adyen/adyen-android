@@ -14,7 +14,7 @@ import com.adyen.checkout.components.ui.ComponentViewNew
 import com.adyen.checkout.components.ui.ViewProvider
 import com.adyen.checkout.components.ui.view.ComponentViewType
 
-object CardViewProvider : ViewProvider {
+internal object CardViewProvider : ViewProvider {
 
     override fun getView(
         viewType: ComponentViewType,
@@ -29,4 +29,4 @@ object CardViewProvider : ViewProvider {
     }
 }
 
-object CardComponentViewType : ComponentViewType
+internal object CardComponentViewType : ComponentViewType

@@ -115,7 +115,7 @@ class MBWayView :
     }
 
     private fun getCountries(): List<CountryModel> {
-        val countriesInfo = CountryUtils.getCountries(component.getSupportedCountries())
+        val countriesInfo = CountryUtils.getCountries(emptyList())
         return countriesInfo.map {
             CountryModel(
                 isoCode = it.isoCode,
@@ -173,7 +173,7 @@ class MBWayView :
     }
 
     override fun onItemClick(parent: AdapterView<*>?, view: View?, position: Int, id: Long) {
-        val country = mCountryAdapter?.getCountries()?.get(position) ?: return
+        val country = mCountryAdapter?.getItem(position) ?: return
         countrySelected(country)
     }
 }

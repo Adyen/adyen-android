@@ -10,23 +10,29 @@ package com.adyen.checkout.dotpay
 import androidx.lifecycle.SavedStateHandle
 import com.adyen.checkout.components.PaymentComponentProvider
 import com.adyen.checkout.components.model.payments.request.DotpayPaymentMethod
+import com.adyen.checkout.components.ui.ViewProvidingComponent
+import com.adyen.checkout.components.ui.view.ComponentViewType
 import com.adyen.checkout.components.util.PaymentMethodTypes
 import com.adyen.checkout.dotpay.DotpayComponent.Companion.PROVIDER
 import com.adyen.checkout.issuerlist.IssuerListComponent
 import com.adyen.checkout.issuerlist.IssuerListDelegate
+import kotlinx.coroutines.flow.Flow
 
 /**
  * Component should not be instantiated directly. Instead use the [PROVIDER] object.
  */
 class DotpayComponent(
     savedStateHandle: SavedStateHandle,
-    issuerListDelegate: IssuerListDelegate<DotpayPaymentMethod>,
+    override val delegate: IssuerListDelegate<DotpayPaymentMethod>,
     configuration: DotpayConfiguration
 ) : IssuerListComponent<DotpayPaymentMethod>(
     savedStateHandle,
-    issuerListDelegate,
+    delegate,
     configuration
-) {
+),
+    ViewProvidingComponent {
+
+    override val viewFlow: Flow<ComponentViewType?> = delegate.viewFlow
 
     override fun getSupportedPaymentMethodTypes(): Array<String> = PAYMENT_METHOD_TYPES
 

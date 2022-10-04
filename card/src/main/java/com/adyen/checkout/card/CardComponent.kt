@@ -39,8 +39,7 @@ class CardComponent(
 
     override val viewFlow: Flow<ComponentViewType?> get() = delegate.viewFlow
 
-    override val inputData: CardInputData
-        get() = delegate.inputData
+    override val inputData: CardInputData = delegate.inputData
 
     init {
         delegate.initialize(viewModelScope)

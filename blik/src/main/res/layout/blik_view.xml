@@ -27,6 +27,7 @@
         android:layout_height="wrap_content">
 
         <com.adyen.checkout.components.ui.view.AdyenTextInputEditText
+            android:id="@+id/editText_blikCode"
             style="@style/AdyenCheckout.Blik.BlikCodeInput"
             tools:ignore="RequiredSize" />
     </com.google.android.material.textfield.TextInputLayout>

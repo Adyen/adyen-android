@@ -18,6 +18,8 @@ import android.widget.Filterable
 import com.adyen.checkout.mbway.databinding.CountryViewBinding
 
 // We need context to inflate the views and localizedContext to fetch the strings
+// Do not remove localizedContext! It's not used at the moment, however it is kept to prevent usage of context
+// in case of the need to read strings.
 class CountryAdapter(private val context: Context, private val localizedContext: Context) : BaseAdapter(), Filterable {
 
     private val countries: MutableList<CountryModel> = mutableListOf()
@@ -28,8 +30,6 @@ class CountryAdapter(private val context: Context, private val localizedContext:
         this.countries.addAll(countries)
         notifyDataSetChanged()
     }
-
-    fun getCountries(): List<CountryModel> = countries
 
     override fun getView(position: Int, convertView: View?, parent: ViewGroup?): View {
         val view: View

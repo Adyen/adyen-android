@@ -78,11 +78,12 @@ internal class DefaultGooglePayDelegateTest {
 
             delegate.createComponentState(GooglePayOutputData(paymentData))
 
-            val componentState = awaitItem()
-            assertTrue(componentState!!.data.paymentMethod is GooglePayPaymentMethod)
-            assertTrue(componentState.isInputValid)
-            assertTrue(componentState.isReady)
-            assertEquals(paymentData, componentState.paymentData)
+            with(requireNotNull(awaitItem())) {
+                assertTrue(data.paymentMethod is GooglePayPaymentMethod)
+                assertTrue(isInputValid)
+                assertTrue(isReady)
+                assertEquals(paymentData, paymentData)
+            }
 
             cancelAndIgnoreRemainingEvents()
         }

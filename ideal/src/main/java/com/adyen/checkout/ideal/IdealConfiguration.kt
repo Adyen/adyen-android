@@ -12,21 +12,26 @@ import android.os.Parcel
 import android.os.Parcelable
 import com.adyen.checkout.core.api.Environment
 import com.adyen.checkout.issuerlist.IssuerListConfiguration
+import com.adyen.checkout.issuerlist.IssuerListViewType
 import java.util.Locale
 
 class IdealConfiguration : IssuerListConfiguration {
 
-    internal constructor(
+    private constructor(
         shopperLocale: Locale,
         environment: Environment,
         clientKey: String,
-    ) : super(shopperLocale, environment, clientKey)
-    internal constructor(parcel: Parcel) : super(parcel)
+        viewType: IssuerListViewType,
+        hideIssuerLogos: Boolean,
+    ) : super(shopperLocale, environment, clientKey, viewType, hideIssuerLogos)
+
+    private constructor(parcel: Parcel) : super(parcel)
 
     /**
      * Builder to create a [IdealConfiguration].
      */
     class Builder : IssuerListBuilder<IdealConfiguration> {
+
         /**
          * Constructor for Builder with default values.
          *
@@ -53,7 +58,10 @@ class IdealConfiguration : IssuerListConfiguration {
          *
          * @param configuration A configuration to initialize the builder.
          */
-        constructor(configuration: IdealConfiguration) : super(configuration)
+        constructor(configuration: IdealConfiguration) : super(configuration) {
+            viewType = configuration.viewType
+            hideIssuerLogos = configuration.hideIssuerLogos
+        }
 
         override fun setShopperLocale(builderShopperLocale: Locale): Builder {
             return super.setShopperLocale(builderShopperLocale) as Builder
@@ -68,6 +76,8 @@ class IdealConfiguration : IssuerListConfiguration {
                 shopperLocale = builderShopperLocale,
                 environment = builderEnvironment,
                 clientKey = builderClientKey,
+                viewType = viewType,
+                hideIssuerLogos = hideIssuerLogos,
             )
         }
     }

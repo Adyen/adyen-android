@@ -51,13 +51,10 @@ import com.adyen.checkout.core.log.LogUtil
 import com.adyen.checkout.core.log.Logger
 import com.adyen.checkout.dotpay.DotpayComponent
 import com.adyen.checkout.dotpay.DotpayConfiguration
-import com.adyen.checkout.dotpay.DotpayRecyclerView
 import com.adyen.checkout.entercash.EntercashComponent
 import com.adyen.checkout.entercash.EntercashConfiguration
-import com.adyen.checkout.entercash.EntercashRecyclerView
 import com.adyen.checkout.eps.EPSComponent
 import com.adyen.checkout.eps.EPSConfiguration
-import com.adyen.checkout.eps.EPSRecyclerView
 import com.adyen.checkout.giftcard.GiftCardComponent
 import com.adyen.checkout.giftcard.GiftCardConfiguration
 import com.adyen.checkout.giftcard.GiftCardView
@@ -66,22 +63,18 @@ import com.adyen.checkout.googlepay.GooglePayComponentProvider
 import com.adyen.checkout.googlepay.GooglePayConfiguration
 import com.adyen.checkout.ideal.IdealComponent
 import com.adyen.checkout.ideal.IdealConfiguration
-import com.adyen.checkout.ideal.IdealRecyclerView
 import com.adyen.checkout.mbway.MBWayComponent
 import com.adyen.checkout.mbway.MBWayConfiguration
 import com.adyen.checkout.mbway.MBWayView
 import com.adyen.checkout.molpay.MolpayComponent
 import com.adyen.checkout.molpay.MolpayConfiguration
-import com.adyen.checkout.molpay.MolpayRecyclerView
 import com.adyen.checkout.onlinebankingcz.OnlineBankingCZComponent
 import com.adyen.checkout.onlinebankingcz.OnlineBankingCZView
 import com.adyen.checkout.onlinebankingcz.OnlineBankingConfiguration
 import com.adyen.checkout.onlinebankingpl.OnlineBankingPLComponent
 import com.adyen.checkout.onlinebankingpl.OnlineBankingPLConfiguration
-import com.adyen.checkout.onlinebankingpl.OnlineBankingPLRecyclerView
 import com.adyen.checkout.openbanking.OpenBankingComponent
 import com.adyen.checkout.openbanking.OpenBankingConfiguration
-import com.adyen.checkout.openbanking.OpenBankingRecyclerView
 import com.adyen.checkout.qrcode.QRCodeConfiguration
 import com.adyen.checkout.qrcode.QRCodeView
 import com.adyen.checkout.redirect.RedirectConfiguration
@@ -397,18 +390,9 @@ internal fun getViewFor(
     @Suppress("UNCHECKED_CAST")
     return when (paymentType) {
         PaymentMethodTypes.BCMC -> BcmcView(context)
-        PaymentMethodTypes.DOTPAY -> DotpayRecyclerView(context)
-        PaymentMethodTypes.ENTERCASH -> EntercashRecyclerView(context)
-        PaymentMethodTypes.EPS -> EPSRecyclerView(context)
         PaymentMethodTypes.GIFTCARD -> GiftCardView(context)
-        PaymentMethodTypes.IDEAL -> IdealRecyclerView(context)
         PaymentMethodTypes.MB_WAY -> MBWayView(context)
-        PaymentMethodTypes.MOLPAY_THAILAND,
-        PaymentMethodTypes.MOLPAY_MALAYSIA,
-        PaymentMethodTypes.MOLPAY_VIETNAM -> MolpayRecyclerView(context)
         PaymentMethodTypes.ONLINE_BANKING_CZ -> OnlineBankingCZView(context)
-        PaymentMethodTypes.ONLINE_BANKING_PL -> OnlineBankingPLRecyclerView(context)
-        PaymentMethodTypes.OPEN_BANKING -> OpenBankingRecyclerView(context)
         PaymentMethodTypes.SCHEME -> CardView(context)
         PaymentMethodTypes.SEPA -> SepaView(context)
         PaymentMethodTypes.BLIK -> BlikView(context)

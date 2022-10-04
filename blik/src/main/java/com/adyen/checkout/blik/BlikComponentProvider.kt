@@ -30,7 +30,7 @@ class BlikComponentProvider : StoredPaymentComponentProvider<BlikComponent, Blik
             viewModelFactory(savedStateRegistryOwner, defaultArgs) { savedStateHandle ->
                 BlikComponent(
                     savedStateHandle = savedStateHandle,
-                    blikDelegate = DefaultBlikDelegate(paymentMethod),
+                    delegate = DefaultBlikDelegate(configuration, paymentMethod),
                     configuration = configuration,
                 )
             }
@@ -48,7 +48,7 @@ class BlikComponentProvider : StoredPaymentComponentProvider<BlikComponent, Blik
             viewModelFactory(savedStateRegistryOwner, defaultArgs) { savedStateHandle ->
                 BlikComponent(
                     savedStateHandle = savedStateHandle,
-                    blikDelegate = StoredBlikDelegate(storedPaymentMethod),
+                    delegate = StoredBlikDelegate(configuration, storedPaymentMethod),
                     configuration = configuration,
                 )
             }

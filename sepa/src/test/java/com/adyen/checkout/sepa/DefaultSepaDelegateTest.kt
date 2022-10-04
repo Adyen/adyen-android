@@ -3,21 +3,36 @@ package com.adyen.checkout.sepa
 import app.cash.turbine.test
 import com.adyen.checkout.components.model.paymentmethods.PaymentMethod
 import com.adyen.checkout.components.model.payments.request.SepaPaymentMethod
+import com.adyen.checkout.core.api.Environment
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.test.runTest
-import org.junit.Assert.assertEquals
+import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.Assertions.assertTrue
+import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.DisplayName
 import org.junit.jupiter.api.Nested
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.extension.ExtendWith
 import org.mockito.junit.jupiter.MockitoExtension
+import java.util.Locale
 
 @OptIn(ExperimentalCoroutinesApi::class)
 @ExtendWith(MockitoExtension::class)
 internal class DefaultSepaDelegateTest {
 
-    val delegate = DefaultSepaDelegate(PaymentMethod())
+    private lateinit var delegate: DefaultSepaDelegate
+
+    @BeforeEach
+    fun before() {
+        delegate = DefaultSepaDelegate(
+            paymentMethod = PaymentMethod(),
+            configuration = SepaConfiguration.Builder(
+                Locale.US,
+                Environment.TEST,
+                TEST_CLIENT_KEY
+            ).build(),
+        )
+    }
 
     @Nested
     @DisplayName("when input data changes and")
@@ -44,14 +59,19 @@ internal class DefaultSepaDelegateTest {
             skipItems(1)
             delegate.createComponentState(SepaOutputData("name", "NL02ABNA0123456789"))
 
-            val componentState = awaitItem()
-            assertTrue(componentState!!.data.paymentMethod is SepaPaymentMethod)
-            assertTrue(componentState.isInputValid)
-            assertTrue(componentState.isReady)
-            assertEquals("name", componentState.data.paymentMethod?.ownerName)
-            assertEquals("NL02ABNA0123456789", componentState.data.paymentMethod?.iban)
+            with(requireNotNull(awaitItem())) {
+                assertTrue(data.paymentMethod is SepaPaymentMethod)
+                assertTrue(isInputValid)
+                assertTrue(isReady)
+                assertEquals("name", data.paymentMethod?.ownerName)
+                assertEquals("NL02ABNA0123456789", data.paymentMethod?.iban)
+            }
 
             cancelAndIgnoreRemainingEvents()
         }
+    }
+
+    companion object {
+        private const val TEST_CLIENT_KEY = "test_qwertyuiopasdfghjklzxcvbnmqwerty"
     }
 }

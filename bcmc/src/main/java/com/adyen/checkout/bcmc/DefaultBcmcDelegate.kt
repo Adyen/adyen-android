@@ -20,6 +20,8 @@ import com.adyen.checkout.components.model.payments.request.CardPaymentMethod
 import com.adyen.checkout.components.model.payments.request.PaymentComponentData
 import com.adyen.checkout.components.repository.PublicKeyRepository
 import com.adyen.checkout.components.ui.FieldState
+import com.adyen.checkout.components.ui.ViewProvider
+import com.adyen.checkout.components.ui.view.ComponentViewType
 import com.adyen.checkout.components.util.PaymentMethodTypes
 import com.adyen.checkout.core.exception.CheckoutException
 import com.adyen.checkout.core.exception.ComponentException
@@ -40,7 +42,7 @@ import kotlinx.coroutines.launch
 internal class DefaultBcmcDelegate(
     private val paymentMethod: PaymentMethod,
     private val publicKeyRepository: PublicKeyRepository,
-    private val configuration: BcmcConfiguration,
+    override val configuration: BcmcConfiguration,
     private val cardValidationMapper: CardValidationMapper,
     private val cardEncrypter: CardEncrypter,
 ) : BcmcDelegate {
@@ -48,14 +50,17 @@ internal class DefaultBcmcDelegate(
     private val _outputDataFlow = MutableStateFlow<BcmcOutputData?>(null)
     override val outputDataFlow: Flow<BcmcOutputData?> = _outputDataFlow
 
-    private val outputData
-        get() = _outputDataFlow.value
-
     private val _componentStateFlow = MutableStateFlow<PaymentComponentState<CardPaymentMethod>?>(null)
     override val componentStateFlow: Flow<PaymentComponentState<CardPaymentMethod>?> = _componentStateFlow
 
     private val _exceptionFlow: MutableSharedFlow<CheckoutException> = MutableSingleEventSharedFlow()
     override val exceptionFlow: Flow<CheckoutException> = _exceptionFlow
+
+    override val inputData = BcmcInputData()
+
+    override val outputData get() = _outputDataFlow.value
+
+    override val viewFlow: Flow<ComponentViewType?> = MutableStateFlow(BcmcComponentViewType)
 
     private var publicKey: String? = null
 
@@ -211,6 +216,8 @@ internal class DefaultBcmcDelegate(
         if (cardNumber.isNullOrEmpty()) return false
         return CardType.estimate(cardNumber).contains(BcmcComponent.SUPPORTED_CARD_TYPE)
     }
+
+    override fun getViewProvider(): ViewProvider = BcmcViewProvider
 
     companion object {
         private val TAG = LogUtil.getTag()

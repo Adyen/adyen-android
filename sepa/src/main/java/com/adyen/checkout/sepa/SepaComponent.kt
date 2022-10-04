@@ -13,9 +13,12 @@ import com.adyen.checkout.components.PaymentComponentProvider
 import com.adyen.checkout.components.PaymentComponentState
 import com.adyen.checkout.components.base.BasePaymentComponent
 import com.adyen.checkout.components.model.payments.request.SepaPaymentMethod
+import com.adyen.checkout.components.ui.ViewProvidingComponent
+import com.adyen.checkout.components.ui.view.ComponentViewType
 import com.adyen.checkout.components.util.PaymentMethodTypes
 import com.adyen.checkout.core.log.LogUtil
 import com.adyen.checkout.sepa.SepaComponent.Companion.PROVIDER
+import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.filterNotNull
 import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.onEach
@@ -25,21 +28,24 @@ import kotlinx.coroutines.flow.onEach
  */
 class SepaComponent(
     savedStateHandle: SavedStateHandle,
-    private val sepaDelegate: SepaDelegate,
+    override val delegate: SepaDelegate,
     configuration: SepaConfiguration,
 ) : BasePaymentComponent<SepaConfiguration, SepaInputData, SepaOutputData, PaymentComponentState<SepaPaymentMethod>>(
     savedStateHandle,
-    sepaDelegate,
+    delegate,
     configuration
-) {
+),
+    ViewProvidingComponent {
+
+    override val viewFlow: Flow<ComponentViewType?> = delegate.viewFlow
 
     init {
-        sepaDelegate.outputDataFlow
+        delegate.outputDataFlow
             .filterNotNull()
             .onEach { notifyOutputDataChanged(it) }
             .launchIn(viewModelScope)
 
-        sepaDelegate.componentStateFlow
+        delegate.componentStateFlow
             .filterNotNull()
             .onEach { notifyStateChanged(it) }
             .launchIn(viewModelScope)
@@ -50,7 +56,7 @@ class SepaComponent(
     override fun getSupportedPaymentMethodTypes(): Array<String> = PAYMENT_METHOD_TYPES
 
     override fun onInputDataChanged(inputData: SepaInputData) {
-        sepaDelegate.onInputDataChanged(inputData)
+        delegate.onInputDataChanged(inputData)
     }
 
     companion object {

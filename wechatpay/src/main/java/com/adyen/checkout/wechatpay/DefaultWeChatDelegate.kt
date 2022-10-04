@@ -16,6 +16,8 @@ import com.adyen.checkout.components.flow.MutableSingleEventSharedFlow
 import com.adyen.checkout.components.model.payments.response.SdkAction
 import com.adyen.checkout.components.model.payments.response.WeChatPaySdkData
 import com.adyen.checkout.components.repository.PaymentDataRepository
+import com.adyen.checkout.components.ui.ViewProvider
+import com.adyen.checkout.components.ui.view.ComponentViewType
 import com.adyen.checkout.core.exception.CheckoutException
 import com.adyen.checkout.core.exception.ComponentException
 import com.adyen.checkout.core.log.LogUtil
@@ -26,6 +28,7 @@ import com.tencent.mm.opensdk.openapi.IWXAPI
 import com.tencent.mm.opensdk.openapi.IWXAPIEventHandler
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableSharedFlow
+import kotlinx.coroutines.flow.MutableStateFlow
 import org.json.JSONException
 import org.json.JSONObject
 
@@ -40,6 +43,8 @@ internal class DefaultWeChatDelegate(
 
     private val _exceptionFlow: MutableSharedFlow<CheckoutException> = MutableSingleEventSharedFlow()
     override val exceptionFlow: Flow<CheckoutException> = _exceptionFlow
+
+    override val viewFlow: Flow<ComponentViewType?> = MutableStateFlow(WeChatComponentViewType)
 
     private val eventHandler = object : IWXAPIEventHandler {
         override fun onReq(baseReq: BaseReq) = Unit
@@ -111,6 +116,8 @@ internal class DefaultWeChatDelegate(
             paymentData = paymentDataRepository.paymentData,
         )
     }
+
+    override fun getViewProvider(): ViewProvider = WeChatViewProvider
 
     companion object {
         private val TAG = LogUtil.getTag()

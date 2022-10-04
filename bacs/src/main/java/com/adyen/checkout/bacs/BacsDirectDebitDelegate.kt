@@ -9,6 +9,7 @@
 package com.adyen.checkout.bacs
 
 import com.adyen.checkout.components.base.PaymentMethodDelegate
+import com.adyen.checkout.components.ui.ViewProvidingDelegate
 import kotlinx.coroutines.flow.Flow
 
 interface BacsDirectDebitDelegate :
@@ -17,8 +18,18 @@ interface BacsDirectDebitDelegate :
         BacsDirectDebitInputData,
         BacsDirectDebitOutputData,
         BacsDirectDebitComponentState
-        > {
+        >,
+    ViewProvidingDelegate {
+
+    val configuration: BacsDirectDebitConfiguration
+
+    val inputData: BacsDirectDebitInputData
+
+    val outputData: BacsDirectDebitOutputData?
 
     val outputDataFlow: Flow<BacsDirectDebitOutputData?>
+
     val componentStateFlow: Flow<BacsDirectDebitComponentState?>
+
+    fun setMode(mode: BacsDirectDebitMode): Boolean
 }
