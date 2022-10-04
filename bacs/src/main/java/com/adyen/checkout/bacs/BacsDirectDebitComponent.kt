@@ -28,20 +28,14 @@ class BacsDirectDebitComponent(
     savedStateHandle: SavedStateHandle,
     override val delegate: BacsDirectDebitDelegate,
     configuration: BacsDirectDebitConfiguration
-) : BasePaymentComponent<BacsDirectDebitConfiguration, BacsDirectDebitInputData, BacsDirectDebitOutputData,
+) : BasePaymentComponent<
+    BacsDirectDebitConfiguration,
     BacsDirectDebitComponentState>(savedStateHandle, delegate, configuration),
     ViewProvidingComponent {
 
     override val viewFlow: Flow<ComponentViewType?> get() = delegate.viewFlow
 
-    override val inputData: BacsDirectDebitInputData = delegate.inputData
-
     init {
-        delegate.outputDataFlow
-            .filterNotNull()
-            .onEach { notifyOutputDataChanged(it) }
-            .launchIn(viewModelScope)
-
         delegate.componentStateFlow
             .filterNotNull()
             .onEach { notifyStateChanged(it) }
@@ -49,10 +43,6 @@ class BacsDirectDebitComponent(
     }
 
     override fun getSupportedPaymentMethodTypes(): Array<String> = PAYMENT_METHOD_TYPES
-
-    override fun onInputDataChanged(inputData: BacsDirectDebitInputData) {
-        delegate.onInputDataChanged(inputData)
-    }
 
     /**
      * Sets the displayed BACS view as the final confirmation view.

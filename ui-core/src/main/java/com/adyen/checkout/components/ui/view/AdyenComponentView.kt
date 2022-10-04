@@ -36,7 +36,7 @@ class AdyenComponentView @JvmOverloads constructor(
 ) :
     LinearLayout(context, attrs, defStyleAttr) {
 
-    private lateinit var component: ViewableComponent<*, *, *>
+    private lateinit var component: ViewableComponent<*, *>
     private lateinit var componentView: ComponentView
 
     init {
@@ -44,7 +44,7 @@ class AdyenComponentView @JvmOverloads constructor(
     }
 
     fun attach(
-        component: ViewableComponent<*, *, *>,
+        component: ViewableComponent<*, *>,
         lifecycleOwner: LifecycleOwner
     ) {
         this.component = component

@@ -73,7 +73,7 @@ class GiftCardComponentDialogFragment : BaseComponentDialogFragment() {
         component.observe(viewLifecycleOwner, this)
         component.observeErrors(viewLifecycleOwner, createErrorHandlerObserver())
 
-        binding.giftCardView.attach(component as ViewableComponent<*, *, *>, viewLifecycleOwner)
+        binding.giftCardView.attach(component as ViewableComponent<*, *>, viewLifecycleOwner)
 
         if (binding.giftCardView.isConfirmationRequired) {
             binding.redeemButton.setOnClickListener { componentDialogViewModel.payButtonClicked() }

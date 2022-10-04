@@ -16,9 +16,7 @@ import com.adyen.checkout.components.ActionComponentData
 import com.adyen.checkout.components.base.ActionDelegate
 import com.adyen.checkout.components.base.DetailsEmittingDelegate
 import com.adyen.checkout.components.base.IntentHandlingDelegate
-import com.adyen.checkout.components.base.OutputData
 import com.adyen.checkout.components.base.StatusPollingDelegate
-import com.adyen.checkout.components.base.ViewableDelegate
 import com.adyen.checkout.components.flow.MutableSingleEventSharedFlow
 import com.adyen.checkout.components.model.payments.response.Action
 import com.adyen.checkout.components.model.payments.response.Threeds2ChallengeAction
@@ -45,9 +43,6 @@ internal class DefaultGenericActionDelegate(
 ) : GenericActionDelegate {
     private var _delegate: ActionDelegate<Action>? = null
     override val delegate: ActionDelegate<Action> get() = requireNotNull(_delegate)
-
-    override val outputData: OutputData?
-        get() = (_delegate as? ViewableDelegate<*>)?.outputData
 
     private val _viewFlow = MutableStateFlow<ComponentViewType?>(null)
     override val viewFlow: Flow<ComponentViewType?> = _viewFlow

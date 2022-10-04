@@ -32,33 +32,17 @@ class BlikComponent(
     configuration: BlikConfiguration
 ) : BasePaymentComponent<
     BlikConfiguration,
-    BlikInputData,
-    BlikOutputData,
     PaymentComponentState<BlikPaymentMethod>>(savedStateHandle, delegate, configuration),
     ViewProvidingComponent {
 
     override val viewFlow: Flow<ComponentViewType?> = delegate.viewFlow
 
-    override val inputData: BlikInputData = BlikInputData()
-
     init {
-        observeOutputData()
         observeComponentState()
     }
 
     override fun requiresInput(): Boolean {
         return delegate.requiresInput()
-    }
-
-    override fun onInputDataChanged(inputData: BlikInputData) {
-        delegate.onInputDataChanged(inputData)
-    }
-
-    private fun observeOutputData() {
-        delegate.outputDataFlow
-            .filterNotNull()
-            .onEach { notifyOutputDataChanged(it) }
-            .launchIn(viewModelScope)
     }
 
     private fun observeComponentState() {

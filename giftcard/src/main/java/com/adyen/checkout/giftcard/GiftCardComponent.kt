@@ -27,7 +27,7 @@ class GiftCardComponent(
     savedStateHandle: SavedStateHandle,
     override val delegate: GiftCardDelegate,
     configuration: GiftCardConfiguration,
-) : BasePaymentComponent<GiftCardConfiguration, GiftCardInputData, GiftCardOutputData, GiftCardComponentState>(
+) : BasePaymentComponent<GiftCardConfiguration, GiftCardComponentState>(
     savedStateHandle,
     delegate,
     configuration
@@ -36,15 +36,7 @@ class GiftCardComponent(
 
     override val viewFlow: Flow<ComponentViewType?> get() = delegate.viewFlow
 
-    override val inputData: GiftCardInputData
-        get() = delegate.inputData
-
     init {
-        delegate.outputDataFlow
-            .filterNotNull()
-            .onEach { notifyOutputDataChanged(it) }
-            .launchIn(viewModelScope)
-
         delegate.componentStateFlow
             .filterNotNull()
             .onEach { notifyStateChanged(it) }
@@ -55,10 +47,6 @@ class GiftCardComponent(
             .launchIn(viewModelScope)
 
         delegate.initialize(viewModelScope)
-    }
-
-    override fun onInputDataChanged(inputData: GiftCardInputData) {
-        delegate.onInputDataChanged(inputData)
     }
 
     override fun getSupportedPaymentMethodTypes(): Array<String> = PAYMENT_METHOD_TYPES

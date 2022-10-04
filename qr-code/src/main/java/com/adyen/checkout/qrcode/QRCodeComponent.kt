@@ -15,7 +15,6 @@ import androidx.lifecycle.DefaultLifecycleObserver
 import androidx.lifecycle.LifecycleOwner
 import androidx.lifecycle.Observer
 import androidx.lifecycle.SavedStateHandle
-import androidx.lifecycle.asLiveData
 import androidx.lifecycle.viewModelScope
 import com.adyen.checkout.components.ActionComponentData
 import com.adyen.checkout.components.ActionComponentProvider
@@ -24,14 +23,12 @@ import com.adyen.checkout.components.base.BaseActionComponent
 import com.adyen.checkout.components.base.IntentHandlingComponent
 import com.adyen.checkout.components.model.payments.response.Action
 import com.adyen.checkout.components.model.payments.response.QrCodeAction
-import com.adyen.checkout.components.status.model.TimerData
 import com.adyen.checkout.components.ui.ViewProvidingComponent
 import com.adyen.checkout.components.ui.view.ComponentViewType
 import com.adyen.checkout.core.exception.ComponentException
 import com.adyen.checkout.core.log.LogUtil
 import com.adyen.checkout.core.log.Logger
 import kotlinx.coroutines.flow.Flow
-import kotlinx.coroutines.flow.filterNotNull
 import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.onEach
 
@@ -42,13 +39,11 @@ class QRCodeComponent(
     override val delegate: QRCodeDelegate,
 ) :
     BaseActionComponent<QRCodeConfiguration>(savedStateHandle, application, configuration),
-    ViewableComponent<QRCodeOutputData, QRCodeConfiguration, ActionComponentData>,
+    ViewableComponent<QRCodeConfiguration, ActionComponentData>,
     IntentHandlingComponent,
     ViewProvidingComponent {
 
     override val viewFlow: Flow<ComponentViewType?> get() = delegate.viewFlow
-
-    override val outputData: QRCodeOutputData? get() = delegate.outputData
 
     init {
         delegate.initialize(viewModelScope)
@@ -93,20 +88,6 @@ class QRCodeComponent(
                 delegate.refreshStatus()
             }
         })
-    }
-
-    // TODO remove?
-    override fun observeOutputData(lifecycleOwner: LifecycleOwner, observer: Observer<QRCodeOutputData>) {
-        delegate.outputDataFlow
-            .filterNotNull()
-            .asLiveData()
-            .observe(lifecycleOwner, observer)
-    }
-
-    fun observeTimer(lifecycleOwner: LifecycleOwner, observer: Observer<TimerData>) {
-        delegate.timerFlow
-            .asLiveData()
-            .observe(lifecycleOwner, observer)
     }
 
     override fun sendAnalyticsEvent(context: Context) = Unit

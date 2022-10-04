@@ -30,20 +30,13 @@ class BcmcComponent(
     savedStateHandle: SavedStateHandle,
     override val delegate: BcmcDelegate,
     configuration: BcmcConfiguration,
-) : BasePaymentComponent<BcmcConfiguration, BcmcInputData, BcmcOutputData,
+) : BasePaymentComponent<BcmcConfiguration,
     PaymentComponentState<CardPaymentMethod>>(savedStateHandle, delegate, configuration),
     ViewProvidingComponent {
-
-    override val inputData: BcmcInputData = BcmcInputData()
 
     override val viewFlow: Flow<ComponentViewType?> = delegate.viewFlow
 
     init {
-        delegate.outputDataFlow
-            .filterNotNull()
-            .onEach { notifyOutputDataChanged(it) }
-            .launchIn(viewModelScope)
-
         delegate.componentStateFlow
             .filterNotNull()
             .onEach { notifyStateChanged(it) }
@@ -57,14 +50,6 @@ class BcmcComponent(
     }
 
     override fun getSupportedPaymentMethodTypes(): Array<String> = PAYMENT_METHOD_TYPES
-
-    override fun onInputDataChanged(inputData: BcmcInputData) {
-        delegate.onInputDataChanged(inputData)
-    }
-
-    fun isCardNumberSupported(cardNumber: String?): Boolean {
-        return delegate.isCardNumberSupported(cardNumber)
-    }
 
     companion object {
         @JvmField

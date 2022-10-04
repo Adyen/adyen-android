@@ -37,12 +37,10 @@ class AwaitComponent(
     configuration: AwaitConfiguration,
     override val delegate: AwaitDelegate,
 ) : BaseActionComponent<AwaitConfiguration>(savedStateHandle, application, configuration),
-    ViewableComponent<AwaitOutputData, AwaitConfiguration, ActionComponentData>,
+    ViewableComponent<AwaitConfiguration, ActionComponentData>,
     ViewProvidingComponent {
 
     override val viewFlow: Flow<ComponentViewType?> get() = delegate.viewFlow
-
-    override val outputData: AwaitOutputData? get() = delegate.outputData
 
     init {
         delegate.initialize(viewModelScope)
@@ -77,10 +75,6 @@ class AwaitComponent(
                 delegate.refreshStatus()
             }
         })
-    }
-
-    override fun observeOutputData(lifecycleOwner: LifecycleOwner, observer: Observer<AwaitOutputData>) {
-        // TODO remove
     }
 
     override fun sendAnalyticsEvent(context: Context) = Unit

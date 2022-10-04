@@ -79,7 +79,7 @@ class GenericComponentDialogFragment : BaseComponentDialogFragment() {
     ) {
         component.observe(viewLifecycleOwner, this)
         component.observeErrors(viewLifecycleOwner, createErrorHandlerObserver())
-        binding.componentView.attach(component as ViewableComponent<*, *, *>, viewLifecycleOwner)
+        binding.componentView.attach(component as ViewableComponent<*, *>, viewLifecycleOwner)
 
         if (binding.componentView.isConfirmationRequired) {
             binding.payButton.setOnClickListener { componentDialogViewModel.payButtonClicked() }

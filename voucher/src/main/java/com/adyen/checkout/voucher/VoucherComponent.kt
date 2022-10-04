@@ -11,10 +11,7 @@ package com.adyen.checkout.voucher
 import android.app.Activity
 import android.app.Application
 import android.content.Context
-import androidx.lifecycle.LifecycleOwner
-import androidx.lifecycle.Observer
 import androidx.lifecycle.SavedStateHandle
-import androidx.lifecycle.asLiveData
 import com.adyen.checkout.components.ActionComponentData
 import com.adyen.checkout.components.ActionComponentProvider
 import com.adyen.checkout.components.ViewableComponent
@@ -22,7 +19,6 @@ import com.adyen.checkout.components.base.BaseActionComponent
 import com.adyen.checkout.components.model.payments.response.Action
 import com.adyen.checkout.components.model.payments.response.VoucherAction
 import com.adyen.checkout.core.exception.ComponentException
-import kotlinx.coroutines.flow.filterNotNull
 
 class VoucherComponent(
     savedStateHandle: SavedStateHandle,
@@ -30,19 +26,10 @@ class VoucherComponent(
     configuration: VoucherConfiguration,
     private val voucherDelegate: VoucherDelegate,
 ) : BaseActionComponent<VoucherConfiguration>(savedStateHandle, application, configuration),
-    ViewableComponent<VoucherOutputData, VoucherConfiguration, ActionComponentData> {
-
-    override val outputData: VoucherOutputData? get() = voucherDelegate.outputData
+    ViewableComponent<VoucherConfiguration, ActionComponentData> {
 
     override fun canHandleAction(action: Action): Boolean {
         return PROVIDER.canHandleAction(action)
-    }
-
-    override fun observeOutputData(lifecycleOwner: LifecycleOwner, observer: Observer<VoucherOutputData>) {
-        voucherDelegate.outputDataFlow
-            .filterNotNull()
-            .asLiveData()
-            .observe(lifecycleOwner, observer)
     }
 
     override fun sendAnalyticsEvent(context: Context) {
