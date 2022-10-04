@@ -20,11 +20,13 @@ import com.adyen.checkout.action.GenericActionConfiguration
 import com.adyen.checkout.components.ActionComponentData
 import com.adyen.checkout.components.ComponentError
 import com.adyen.checkout.components.model.payments.response.Action
+import com.adyen.checkout.core.exception.CancellationException
 import com.adyen.checkout.core.exception.CheckoutException
 import com.adyen.checkout.core.log.LogUtil
 import com.adyen.checkout.core.log.Logger
 import com.adyen.checkout.dropin.R
 import com.adyen.checkout.dropin.databinding.FragmentGenericActionComponentBinding
+import com.adyen.checkout.dropin.ui.arguments
 import com.adyen.checkout.dropin.ui.base.DropInBottomSheetDialogFragment
 
 @SuppressWarnings("TooManyFunctions")
@@ -33,18 +35,13 @@ class ActionComponentDialogFragment : DropInBottomSheetDialogFragment() {
     private var _binding: FragmentGenericActionComponentBinding? = null
     private val binding: FragmentGenericActionComponentBinding get() = requireNotNull(_binding)
 
-    private lateinit var action: Action
-    private lateinit var actionType: String
-    private lateinit var actionConfiguration: GenericActionConfiguration
+    private val action: Action by arguments(ACTION)
+    private val actionConfiguration: GenericActionConfiguration by arguments(ACTION_CONFIGURATION)
     private lateinit var actionComponent: GenericActionComponent
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         Logger.d(TAG, "onCreate")
-        action = arguments?.getParcelable(ACTION) ?: throw IllegalArgumentException("Action not found")
-        actionType = action.type ?: throw IllegalArgumentException("Action type not found")
-        actionConfiguration =
-            arguments?.getParcelable(ACTION_CONFIGURATION) ?: throw IllegalArgumentException("Configuration not found")
     }
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View {
@@ -68,12 +65,12 @@ class ActionComponentDialogFragment : DropInBottomSheetDialogFragment() {
                 }
             }
 
+            actionComponent.handleAction(requireActivity(), action)
+
             actionComponent.observe(viewLifecycleOwner, ::onActionComponentDataChanged)
             actionComponent.observeErrors(viewLifecycleOwner, ::onError)
 
             binding.componentView.attach(actionComponent, viewLifecycleOwner)
-
-            actionComponent.handleAction(requireActivity(), action)
         } catch (e: CheckoutException) {
             handleError(ComponentError(e))
         }
@@ -120,8 +117,16 @@ class ActionComponentDialogFragment : DropInBottomSheetDialogFragment() {
     }
 
     private fun handleError(componentError: ComponentError) {
-        Logger.e(TAG, componentError.errorMessage)
-        protocol.showError(getString(R.string.action_failed), componentError.errorMessage, true)
+        when (componentError.exception) {
+            is CancellationException -> {
+                Logger.d(TAG, "Flow was cancelled by user")
+                onBackPressed()
+            }
+            else -> {
+                Logger.e(TAG, componentError.errorMessage)
+                protocol.showError(getString(R.string.action_failed), componentError.errorMessage, true)
+            }
+        }
     }
 
     private fun shouldFinishWithAction(): Boolean {

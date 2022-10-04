@@ -29,6 +29,7 @@ import com.adyen.checkout.core.exception.CheckoutException
 import com.adyen.checkout.qrcode.QRCodeOutputData
 import com.adyen.threeds2.customization.UiCustomization
 import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.MutableStateFlow
 
@@ -83,22 +84,30 @@ internal class TestActionDelegate :
 }
 
 internal class Test3DS2Delegate : Adyen3DS2Delegate {
+
+    override val detailsFlow: MutableSharedFlow<ActionComponentData> = MutableSingleEventSharedFlow()
+
+    override val exceptionFlow: Flow<CheckoutException> = MutableSingleEventSharedFlow()
+
+    override val viewFlow: Flow<ComponentViewType?> = MutableSingleEventSharedFlow()
+
     var uiCustomization: UiCustomization? = null
+
+    var handleActionCalled = false
 
     override fun set3DS2UICustomization(uiCustomization: UiCustomization?) {
         this.uiCustomization = uiCustomization
     }
 
-    override val exceptionFlow: MutableSharedFlow<CheckoutException> = MutableSingleEventSharedFlow()
-
-    var handleActionCalled = false
     override fun handleAction(action: BaseThreeds2Action, activity: Activity) {
         handleActionCalled = true
     }
 
-    override val detailsFlow: MutableSharedFlow<ActionComponentData> = MutableSingleEventSharedFlow()
-
     override fun handleIntent(intent: Intent) = Unit
+
+    override fun getViewProvider(): ViewProvider {
+        throw IllegalStateException("This method should not be called from unit tests")
+    }
 }
 
 internal object TestComponentViewType : ComponentViewType

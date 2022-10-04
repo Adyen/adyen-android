@@ -26,6 +26,11 @@ interface ActionDelegate<ActionT : Action> : ComponentDelegate {
     fun initialize(coroutineScope: CoroutineScope) = Unit
 
     /**
+     * Override this method if you need to emit to the [exceptionFlow] from outside of this class.
+     */
+    fun onError(e: CheckoutException) = Unit
+
+    /**
      * Override this method if you used [initialize] to clear any local reference to [CoroutineScope].
      */
     fun onCleared() = Unit
