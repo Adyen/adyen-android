@@ -14,7 +14,6 @@ import android.view.ViewGroup
 import androidx.appcompat.app.AlertDialog
 import androidx.core.view.isVisible
 import androidx.recyclerview.widget.RecyclerView
-import androidx.viewbinding.ViewBinding
 import com.adyen.checkout.components.api.ImageLoader
 import com.adyen.checkout.components.ui.view.AdyenSwipeToRevealLayout
 import com.adyen.checkout.components.util.CurrencyUtils
@@ -38,7 +37,7 @@ class PaymentMethodAdapter @JvmOverloads constructor(
     private val onPaymentMethodSelectedCallback: OnPaymentMethodSelectedCallback? = null,
     private val onStoredPaymentRemovedCallback: OnStoredPaymentRemovedCallback? = null,
     private val onUnderlayExpandListener: ((AdyenSwipeToRevealLayout) -> Unit)? = null
-) : RecyclerView.Adapter<PaymentMethodAdapter.BaseViewHolder>() {
+) : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
 
     constructor(
         paymentMethods: Collection<PaymentMethodListItem>,
@@ -61,7 +60,7 @@ class PaymentMethodAdapter @JvmOverloads constructor(
         notifyDataSetChanged()
     }
 
-    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): BaseViewHolder {
+    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): RecyclerView.ViewHolder {
         val inflater = LayoutInflater.from(parent.context)
         return when (viewType) {
             PAYMENT_METHODS_HEADER -> HeaderVH(
@@ -89,7 +88,7 @@ class PaymentMethodAdapter @JvmOverloads constructor(
         return paymentMethods[position].getViewType()
     }
 
-    override fun onBindViewHolder(holder: BaseViewHolder, position: Int) {
+    override fun onBindViewHolder(holder: RecyclerView.ViewHolder, position: Int) {
         when (holder) {
             is HeaderVH -> holder.bind(paymentMethods[position] as PaymentMethodHeader, onPaymentMethodSelectedCallback)
             is StoredPaymentMethodVH -> holder.bind(
@@ -110,11 +109,11 @@ class PaymentMethodAdapter @JvmOverloads constructor(
         return paymentMethods.size
     }
 
-    class StoredPaymentMethodVH(
+    private class StoredPaymentMethodVH(
         private val binding: RemovablePaymentMethodsListItemBinding,
         private val imageLoader: ImageLoader,
         private val onUnderlayExpandListener: ((AdyenSwipeToRevealLayout) -> Unit)? = null
-    ) : BaseViewHolder(binding) {
+    ) : RecyclerView.ViewHolder(binding.root) {
 
         fun bind(
             model: StoredPaymentMethodModel,
@@ -185,10 +184,10 @@ class PaymentMethodAdapter @JvmOverloads constructor(
         }
     }
 
-    class PaymentMethodVH(
+    private class PaymentMethodVH(
         private val binding: PaymentMethodsListItemBinding,
         private val imageLoader: ImageLoader
-    ) : BaseViewHolder(binding) {
+    ) : RecyclerView.ViewHolder(binding.root) {
         fun bind(
             model: PaymentMethodModel,
             onPaymentMethodSelectedCallback: OnPaymentMethodSelectedCallback?
@@ -207,10 +206,10 @@ class PaymentMethodAdapter @JvmOverloads constructor(
         }
     }
 
-    class GiftCardPaymentMethodVH(
+    private class GiftCardPaymentMethodVH(
         private val binding: PaymentMethodsListItemBinding,
         private val imageLoader: ImageLoader
-    ) : BaseViewHolder(binding) {
+    ) : RecyclerView.ViewHolder(binding.root) {
         fun bind(model: GiftCardPaymentMethodModel) = with(binding) {
             val context = binding.root.context
             textViewTitle.text = context.getString(R.string.card_number_4digit, model.lastFour)
@@ -234,7 +233,7 @@ class PaymentMethodAdapter @JvmOverloads constructor(
                     model.amount,
                     model.shopperLocale
                 )
-                textViewEndText.apply {
+                textViewAmount.apply {
                     isVisible = true
                     text = context.getString(R.string.checkout_negative_amount, value)
                 }
@@ -243,7 +242,8 @@ class PaymentMethodAdapter @JvmOverloads constructor(
         }
     }
 
-    class HeaderVH(private val binding: PaymentMethodsListHeaderBinding) : BaseViewHolder(binding) {
+    private class HeaderVH(private val binding: PaymentMethodsListHeaderBinding) :
+        RecyclerView.ViewHolder(binding.root) {
         fun bind(
             model: PaymentMethodHeader,
             onPaymentMethodSelectedCallback: OnPaymentMethodSelectedCallback?
@@ -263,13 +263,11 @@ class PaymentMethodAdapter @JvmOverloads constructor(
         }
     }
 
-    class NoteVH(private val binding: PaymentMethodsListNoteBinding) : BaseViewHolder(binding) {
+    private class NoteVH(private val binding: PaymentMethodsListNoteBinding) : RecyclerView.ViewHolder(binding.root) {
         fun bind(model: PaymentMethodNote) = with(binding) {
             paymentMethodNote.text = model.note
         }
     }
-
-    open class BaseViewHolder(binding: ViewBinding) : RecyclerView.ViewHolder(binding.root)
 
     interface OnPaymentMethodSelectedCallback {
         fun onStoredPaymentMethodSelected(storedPaymentMethodModel: StoredPaymentMethodModel)
