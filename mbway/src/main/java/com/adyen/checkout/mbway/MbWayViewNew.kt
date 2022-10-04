@@ -17,7 +17,6 @@ import android.widget.LinearLayout
 import com.adyen.checkout.components.base.ComponentDelegate
 import com.adyen.checkout.components.ui.ComponentViewNew
 import com.adyen.checkout.components.ui.Validation
-import com.adyen.checkout.components.ui.view.AdyenTextInputEditText
 import com.adyen.checkout.components.util.CountryInfo
 import com.adyen.checkout.components.util.CountryUtils
 import com.adyen.checkout.core.log.LogUtil
@@ -59,13 +58,12 @@ class MbWayViewNew @JvmOverloads constructor(
     }
 
     private fun initMobileNumberInput() {
-        val mobileNumberEditText = binding.textInputLayoutMobileNumber.editText as? AdyenTextInputEditText
-        mobileNumberEditText?.setOnChangeListener {
+        binding.editTextMobileNumber.setOnChangeListener {
             delegate.inputData.localPhoneNumber = it.toString()
             notifyInputDataChanged()
             binding.textInputLayoutMobileNumber.error = null
         }
-        mobileNumberEditText?.onFocusChangeListener = OnFocusChangeListener { _, hasFocus: Boolean ->
+        binding.editTextMobileNumber.onFocusChangeListener = OnFocusChangeListener { _, hasFocus: Boolean ->
             val outputData = delegate.outputData
             val mobilePhoneNumberValidation = outputData?.mobilePhoneNumberFieldState?.validation
             if (hasFocus) {

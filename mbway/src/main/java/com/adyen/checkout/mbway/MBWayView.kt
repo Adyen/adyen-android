@@ -115,7 +115,7 @@ class MBWayView :
     }
 
     private fun getCountries(): List<CountryModel> {
-        val countriesInfo = CountryUtils.getCountries(component.getSupportedCountries())
+        val countriesInfo = CountryUtils.getCountries(emptyList())
         return countriesInfo.map {
             CountryModel(
                 isoCode = it.isoCode,
