@@ -63,7 +63,7 @@ android {
 dependencies {
     // Checkout
     implementation project(':drop-in')
-//    implementation "com.adyen.checkout:drop-in:4.7.1"
+//    implementation "com.adyen.checkout:drop-in:4.8.0"
 
     // Dependencies
     implementation libraries.kotlinCoroutines
