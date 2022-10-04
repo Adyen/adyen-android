@@ -7,6 +7,6 @@
   -->
 
 <resources>
-    <string name="checkout_online_banking_terms_and_conditions_text">Wenn Sie fortfahren, stimmen Sie den %#allgemeinen Geschäftsbedingungen%# zu</string>
+    <string name="checkout_online_banking_terms_and_conditions_text">Wenn Sie fortfahren, stimmen Sie den %#Allgemeinen Geschäftsbedingungen%# zu</string>
     <string name="checkout_online_banking_hint">Bank auswählen</string>
 </resources>

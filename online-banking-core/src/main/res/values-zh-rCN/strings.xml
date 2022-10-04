@@ -7,6 +7,6 @@
   -->
 
 <resources>
-    <string name="checkout_online_banking_terms_and_conditions_text">点击“继续”，即表示您同意%#条款和细则%#</string>
+    <string name="checkout_online_banking_terms_and_conditions_text">继续，即表示您同意%#条款和细则%#</string>
     <string name="checkout_online_banking_hint">选择您的银行</string>
 </resources>

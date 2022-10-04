@@ -7,6 +7,6 @@
   -->
 
 <resources>
-    <string name="checkout_online_banking_terms_and_conditions_text">Ved å klikke på Fortsett godtar du %#vilkårene%#</string>
+    <string name="checkout_online_banking_terms_and_conditions_text">Ved å fortsette godtar du %#terms and conditions%#</string>
     <string name="checkout_online_banking_hint">Velg din bank</string>
 </resources>
