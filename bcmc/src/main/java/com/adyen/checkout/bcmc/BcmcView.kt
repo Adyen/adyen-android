@@ -1,10 +1,11 @@
 /*
- * Copyright (c) 2019 Adyen N.V.
+ * Copyright (c) 2022 Adyen N.V.
  *
  * This file is open source and available under the MIT license. See the LICENSE file for more info.
  *
- * Created by arman on 18/9/2019.
+ * Created by oscars on 29/9/2022.
  */
+
 package com.adyen.checkout.bcmc
 
 import android.content.Context
@@ -13,132 +14,94 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.View.OnFocusChangeListener
 import android.widget.CompoundButton
+import android.widget.LinearLayout
 import androidx.annotation.StringRes
-import androidx.appcompat.widget.SwitchCompat
 import androidx.core.view.isVisible
-import androidx.lifecycle.LifecycleOwner
-import androidx.lifecycle.Observer
-import com.adyen.checkout.card.ui.CardNumberInput
-import com.adyen.checkout.card.ui.ExpiryDateInput
-import com.adyen.checkout.components.PaymentComponentState
-import com.adyen.checkout.components.api.ImageLoader
-import com.adyen.checkout.components.api.ImageLoader.Companion.getInstance
-import com.adyen.checkout.components.model.payments.request.CardPaymentMethod
-import com.adyen.checkout.components.ui.FieldState
+import com.adyen.checkout.bcmc.databinding.BcmcViewBinding
+import com.adyen.checkout.components.base.ComponentDelegate
+import com.adyen.checkout.components.extensions.setLocalizedHintFromStyle
+import com.adyen.checkout.components.extensions.setLocalizedTextFromStyle
+import com.adyen.checkout.components.ui.ComponentViewNew
 import com.adyen.checkout.components.ui.Validation
-import com.adyen.checkout.components.ui.view.AdyenLinearLayout
-import com.adyen.checkout.components.ui.view.RoundCornerImageView
-import com.google.android.material.textfield.TextInputLayout
+import kotlinx.coroutines.CoroutineScope
 
-/**
- * CardView for [BcmcComponent].
- */
-@Suppress("TooManyFunctions")
-class BcmcView @JvmOverloads constructor(
+internal class BcmcView @JvmOverloads constructor(
     context: Context,
     attrs: AttributeSet? = null,
     defStyleAttr: Int = 0
-) :
-    AdyenLinearLayout<BcmcOutputData, BcmcConfiguration, PaymentComponentState<CardPaymentMethod>, BcmcComponent>(
-        context,
-        attrs,
-        defStyleAttr
-    ),
-    Observer<BcmcOutputData> {
+) : LinearLayout(context, attrs, defStyleAttr),
+    ComponentViewNew {
 
-    private lateinit var cardBrandLogoImageView: RoundCornerImageView
-    private lateinit var cardNumberEditText: CardNumberInput
-    private lateinit var expiryDateEditText: ExpiryDateInput
-    private lateinit var expiryDateInput: TextInputLayout
-    private lateinit var cardNumberInput: TextInputLayout
-    private lateinit var switchStorePaymentMethod: SwitchCompat
-    private lateinit var imageLoader: ImageLoader
+    private val binding = BcmcViewBinding.inflate(LayoutInflater.from(context), this)
+
+    private lateinit var localizedContext: Context
+
+    private lateinit var delegate: BcmcDelegate
+
+    override val isConfirmationRequired: Boolean = true
 
     init {
         orientation = VERTICAL
-        LayoutInflater.from(getContext()).inflate(R.layout.bcmc_view, this, true)
         val padding = resources.getDimension(R.dimen.standard_margin).toInt()
         setPadding(padding, padding, padding, 0)
     }
 
-    override fun initLocalizedStrings(localizedContext: Context) {
-        cardNumberInput.setLocalizedHintFromStyle(R.style.AdyenCheckout_Card_CardNumberInput)
-        expiryDateInput.setLocalizedHintFromStyle(R.style.AdyenCheckout_Card_ExpiryDateInput)
-        switchStorePaymentMethod.setLocalizedTextFromStyle(R.style.AdyenCheckout_Card_StorePaymentSwitch)
-    }
+    override fun initView(delegate: ComponentDelegate, coroutineScope: CoroutineScope, localizedContext: Context) {
+        if (delegate !is BcmcDelegate) throw IllegalArgumentException("Unsupported delegate type")
+        this.delegate = delegate
 
-    override fun initView() {
-        cardBrandLogoImageView = findViewById(R.id.cardBrandLogo_imageView)
+        this.localizedContext = localizedContext
+        initLocalizedStrings(localizedContext)
+
         initCardNumberInput()
         initExpiryDateInput()
         initStorePaymentMethodSwitch()
     }
 
-    override fun onComponentAttached() {
-        imageLoader = getInstance(context, component.configuration.environment)
-    }
-
-    override fun onChanged(cardOutputData: BcmcOutputData?) {
-        if (cardOutputData != null) {
-            onCardNumberValidated(cardOutputData.cardNumberField)
+    private fun initLocalizedStrings(localizedContext: Context) {
+        with(binding) {
+            textInputLayoutCardNumber.setLocalizedHintFromStyle(
+                R.style.AdyenCheckout_Card_CardNumberInput,
+                localizedContext
+            )
+            textInputLayoutExpiryDate.setLocalizedHintFromStyle(
+                R.style.AdyenCheckout_Card_ExpiryDateInput,
+                localizedContext
+            )
+            switchStorePaymentMethod.setLocalizedTextFromStyle(
+                R.style.AdyenCheckout_Card_StorePaymentSwitch,
+                localizedContext
+            )
         }
     }
 
-    override fun observeComponentChanges(lifecycleOwner: LifecycleOwner) {
-        component.observeOutputData(lifecycleOwner, this)
-    }
-
-    override val isConfirmationRequired = true
-
-    override fun highlightValidationErrors() {
-        val outputData: BcmcOutputData? = if (component.outputData != null) {
-            component.outputData
-        } else {
-            return
+    private fun initExpiryDateInput() {
+        binding.editTextExpiryDate.setOnChangeListener {
+            delegate.inputData.expiryDate = binding.editTextExpiryDate.date
+            notifyInputDataChanged()
+            binding.textInputLayoutExpiryDate.error = null
         }
-        var isErrorFocused = false
-        val cardNumberValidation = outputData!!.cardNumberField.validation
-        if (!cardNumberValidation.isValid()) {
-            isErrorFocused = true
-            cardNumberEditText.requestFocus()
-            val errorReasonResId = (cardNumberValidation as Validation.Invalid).reason
-            setCardNumberError(errorReasonResId)
-        }
-        val expiryFieldValidation = outputData.expiryDateField.validation
-        if (!expiryFieldValidation.isValid()) {
-            if (!isErrorFocused) {
-                expiryDateInput.requestFocus()
+
+        binding.editTextExpiryDate.onFocusChangeListener = OnFocusChangeListener { _: View?, hasFocus: Boolean ->
+            val expiryDateValidation = delegate.outputData?.expiryDateField?.validation
+            if (hasFocus) {
+                binding.textInputLayoutExpiryDate.error = null
+            } else if (expiryDateValidation != null && !expiryDateValidation.isValid()) {
+                val errorReasonResId = (expiryDateValidation as Validation.Invalid).reason
+                binding.textInputLayoutExpiryDate.error = localizedContext.getString(errorReasonResId)
             }
-            val errorReasonResId = (expiryFieldValidation as Validation.Invalid).reason
-            expiryDateInput.error = localizedContext.getString(errorReasonResId)
-        }
-    }
-
-    private fun notifyInputDataChanged() {
-        component.notifyInputDataChanged()
-    }
-
-    private fun onCardNumberValidated(validatedNumber: FieldState<String>) {
-        if (!component.isCardNumberSupported(validatedNumber.value)) {
-            cardBrandLogoImageView.strokeWidth = 0f
-            cardBrandLogoImageView.setImageResource(R.drawable.ic_card)
-        } else {
-            cardBrandLogoImageView.strokeWidth = RoundCornerImageView.DEFAULT_STROKE_WIDTH
-            imageLoader.load(BcmcComponent.SUPPORTED_CARD_TYPE.txVariant, cardBrandLogoImageView)
         }
     }
 
     private fun initCardNumberInput() {
-        cardNumberInput = findViewById(R.id.textInputLayout_cardNumber)
-        cardNumberEditText = cardNumberInput.editText as CardNumberInput
-        cardNumberEditText.setOnChangeListener {
-            component.inputData.cardNumber = cardNumberEditText.rawValue
+        binding.editTextCardNumber.setOnChangeListener {
+            delegate.inputData.cardNumber = binding.editTextCardNumber.rawValue
             notifyInputDataChanged()
             setCardNumberError(null)
         }
-        cardNumberEditText.onFocusChangeListener = OnFocusChangeListener { _: View?, hasFocus: Boolean ->
-            val outputData = component.outputData
-            val cardNumberValidation = outputData?.cardNumberField?.validation
+
+        binding.editTextCardNumber.onFocusChangeListener = OnFocusChangeListener { _: View?, hasFocus: Boolean ->
+            val cardNumberValidation = delegate.outputData?.cardNumberField?.validation
             if (hasFocus) {
                 setCardNumberError(null)
             } else if (cardNumberValidation != null && !cardNumberValidation.isValid()) {
@@ -148,42 +111,48 @@ class BcmcView @JvmOverloads constructor(
         }
     }
 
+    private fun initStorePaymentMethodSwitch() {
+        binding.switchStorePaymentMethod.isVisible = delegate.configuration.isStorePaymentFieldVisible
+        binding.switchStorePaymentMethod.setOnCheckedChangeListener { _: CompoundButton?, isChecked: Boolean ->
+            delegate.inputData.isStorePaymentSelected = isChecked
+            notifyInputDataChanged()
+        }
+    }
+
+    private fun notifyInputDataChanged() {
+        delegate.onInputDataChanged(delegate.inputData)
+    }
+
+    override fun highlightValidationErrors() {
+        val outputData = delegate.outputData ?: return
+
+        var isErrorFocused = false
+        val cardNumberValidation = outputData.cardNumberField.validation
+        if (!cardNumberValidation.isValid()) {
+            isErrorFocused = true
+            binding.editTextCardNumber.requestFocus()
+            val errorReasonResId = (cardNumberValidation as Validation.Invalid).reason
+            setCardNumberError(errorReasonResId)
+        }
+        val expiryFieldValidation = outputData.expiryDateField.validation
+        if (!expiryFieldValidation.isValid()) {
+            if (!isErrorFocused) {
+                binding.textInputLayoutExpiryDate.requestFocus()
+            }
+            val errorReasonResId = (expiryFieldValidation as Validation.Invalid).reason
+            binding.textInputLayoutExpiryDate.error = localizedContext.getString(errorReasonResId)
+        }
+    }
+
     private fun setCardNumberError(@StringRes stringResId: Int?) {
         if (stringResId == null) {
-            cardNumberInput.error = null
-            cardBrandLogoImageView.isVisible = true
+            binding.textInputLayoutCardNumber.error = null
+            binding.cardBrandLogoImageView.isVisible = true
         } else {
-            cardNumberInput.error = localizedContext.getString(stringResId)
-            cardBrandLogoImageView.isVisible = false
+            binding.textInputLayoutCardNumber.error = localizedContext.getString(stringResId)
+            binding.cardBrandLogoImageView.isVisible = false
         }
     }
 
-    private fun initExpiryDateInput() {
-        expiryDateInput = findViewById(R.id.textInputLayout_expiryDate)
-        expiryDateEditText = expiryDateInput.editText as ExpiryDateInput
-        expiryDateEditText.setOnChangeListener {
-            component.inputData.expiryDate = expiryDateEditText.date
-            notifyInputDataChanged()
-            expiryDateInput.error = null
-        }
-        expiryDateEditText.onFocusChangeListener = OnFocusChangeListener { _: View?, hasFocus: Boolean ->
-            val outputData = component.outputData
-            val expiryDateValidation = outputData?.expiryDateField?.validation
-            if (hasFocus) {
-                expiryDateInput.error = null
-            } else if (expiryDateValidation != null && !expiryDateValidation.isValid()) {
-                val errorReasonResId = (expiryDateValidation as Validation.Invalid).reason
-                expiryDateInput.error = localizedContext.getString(errorReasonResId)
-            }
-        }
-    }
-
-    private fun initStorePaymentMethodSwitch() {
-        switchStorePaymentMethod = findViewById(R.id.switch_storePaymentMethod)
-        switchStorePaymentMethod.isVisible = component.configuration.isStorePaymentFieldVisible
-        switchStorePaymentMethod.setOnCheckedChangeListener { _: CompoundButton?, isChecked: Boolean ->
-            component.inputData.isStorePaymentSelected = isChecked
-            notifyInputDataChanged()
-        }
-    }
+    override fun getView(): View = this
 }

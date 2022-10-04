@@ -22,7 +22,7 @@ internal object BlikViewProvider : ViewProvider {
         defStyleAttr: Int
     ): ComponentViewNew {
         return when (viewType) {
-            BlikComponentViewType -> BlikViewNew(context, attrs, defStyleAttr)
+            BlikComponentViewType -> BlikView(context, attrs, defStyleAttr)
             else -> throw IllegalArgumentException("Unsupported view type")
         }
     }

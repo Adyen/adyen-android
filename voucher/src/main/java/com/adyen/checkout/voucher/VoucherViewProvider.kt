@@ -23,7 +23,7 @@ internal object VoucherViewProvider : ViewProvider {
         defStyleAttr: Int
     ): ComponentViewNew {
         return when (viewType) {
-            VoucherComponentViewType -> VoucherViewNew(context, attrs, defStyleAttr)
+            VoucherComponentViewType -> VoucherView(context, attrs, defStyleAttr)
             else -> throw IllegalArgumentException("Unsupported view type")
         }
     }

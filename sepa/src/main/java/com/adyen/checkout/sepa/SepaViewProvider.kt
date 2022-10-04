@@ -23,7 +23,7 @@ internal object SepaViewProvider : ViewProvider {
         defStyleAttr: Int
     ): ComponentViewNew {
         return when (viewType) {
-            SepaComponentViewType -> SepaViewNew(context, attrs, defStyleAttr)
+            SepaComponentViewType -> SepaView(context, attrs, defStyleAttr)
             else -> throw IllegalArgumentException("Unsupported view type")
         }
     }

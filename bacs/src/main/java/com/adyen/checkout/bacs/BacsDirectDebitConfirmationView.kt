@@ -19,7 +19,7 @@ import com.adyen.checkout.components.extensions.setLocalizedHintFromStyle
 import com.adyen.checkout.components.ui.ComponentViewNew
 import kotlinx.coroutines.CoroutineScope
 
-class BacsDirectDebitConfirmationView @JvmOverloads constructor(
+internal class BacsDirectDebitConfirmationView @JvmOverloads constructor(
     context: Context,
     attrs: AttributeSet? = null,
     defStyleAttr: Int = 0

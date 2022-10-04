@@ -1,9 +1,9 @@
 /*
- * Copyright (c) 2019 Adyen N.V.
+ * Copyright (c) 2022 Adyen N.V.
  *
  * This file is open source and available under the MIT license. See the LICENSE file for more info.
  *
- * Created by ran on 13/3/2019.
+ * Created by josephj on 16/9/2022.
  */
 package com.adyen.checkout.card
 
@@ -17,10 +17,9 @@ import android.view.View
 import android.view.View.OnFocusChangeListener
 import android.view.WindowManager
 import android.widget.AdapterView
+import android.widget.LinearLayout
 import androidx.annotation.StringRes
 import androidx.core.view.isVisible
-import androidx.lifecycle.LifecycleOwner
-import androidx.lifecycle.Observer
 import com.adyen.checkout.card.data.CardType
 import com.adyen.checkout.card.data.DetectedCardType
 import com.adyen.checkout.card.data.ExpiryDate
@@ -29,44 +28,47 @@ import com.adyen.checkout.card.ui.SecurityCodeInput
 import com.adyen.checkout.card.ui.model.AddressListItem
 import com.adyen.checkout.card.util.InstallmentUtils
 import com.adyen.checkout.components.api.ImageLoader
+import com.adyen.checkout.components.base.ComponentDelegate
 import com.adyen.checkout.components.extensions.isVisible
+import com.adyen.checkout.components.extensions.setLocalizedHintFromStyle
+import com.adyen.checkout.components.extensions.setLocalizedTextFromStyle
 import com.adyen.checkout.components.ui.ComponentMode
+import com.adyen.checkout.components.ui.ComponentViewNew
 import com.adyen.checkout.components.ui.FieldState
 import com.adyen.checkout.components.ui.Validation
-import com.adyen.checkout.components.ui.view.AdyenLinearLayout
 import com.adyen.checkout.components.ui.view.AdyenTextInputEditText
 import com.adyen.checkout.components.ui.view.RoundCornerImageView
 import com.adyen.checkout.core.exception.CheckoutException
 import com.adyen.checkout.core.util.BuildUtils
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.flow.launchIn
+import kotlinx.coroutines.flow.onEach
 
 /**
  * CardView for [CardComponent].
  */
-@Suppress("TooManyFunctions")
-class CardView @JvmOverloads constructor(
+@Suppress("TooManyFunctions", "LargeClass")
+internal class CardView @JvmOverloads constructor(
     context: Context,
     attrs: AttributeSet? = null,
     defStyleAttr: Int = 0
 ) :
-    AdyenLinearLayout<CardOutputData, CardConfiguration, CardComponentState, CardComponent>(
+    LinearLayout(
         context,
         attrs,
         defStyleAttr
     ),
-    Observer<CardOutputData> {
-
-    companion object {
-        private const val UNSELECTED_BRAND_LOGO_ALPHA = 0.2f
-        private const val SELECTED_BRAND_LOGO_ALPHA = 1f
-        private const val PRIMARY_BRAND_INDEX = 0
-        private const val SECONDARY_BRAND_INDEX = 1
-    }
+    ComponentViewNew {
 
     private val binding: CardViewBinding = CardViewBinding.inflate(LayoutInflater.from(context), this)
 
     private var imageLoader: ImageLoader? = null
     private var installmentListAdapter: InstallmentListAdapter? = null
     private var cardListAdapter: CardListAdapter? = null
+
+    private lateinit var localizedContext: Context
+
+    private lateinit var cardDelegate: CardDelegate
 
     init {
         orientation = VERTICAL
@@ -89,7 +91,17 @@ class CardView @JvmOverloads constructor(
         }
     }
 
-    override fun initView() {
+    override fun initView(delegate: ComponentDelegate, coroutineScope: CoroutineScope, localizedContext: Context) {
+        if (delegate !is CardDelegate) throw IllegalArgumentException("Unsupported delegate type")
+        cardDelegate = delegate
+
+        this.localizedContext = localizedContext
+        initLocalizedStrings(localizedContext)
+
+        imageLoader = ImageLoader.getInstance(context, delegate.configuration.environment)
+
+        observeDelegate(delegate, coroutineScope)
+
         initCardNumberInput()
         initExpiryDateInput()
         initSecurityCodeInput()
@@ -100,39 +112,63 @@ class CardView @JvmOverloads constructor(
         initAddressFormInput()
 
         binding.switchStorePaymentMethod.setOnCheckedChangeListener { _, isChecked ->
-            component.inputData.isStorePaymentSelected = isChecked
+            delegate.inputData.isStorePaymentSelected = isChecked
             notifyInputDataChanged()
         }
         notifyInputDataChanged()
     }
 
-    override fun initLocalizedStrings(localizedContext: Context) {
-        binding.textInputLayoutCardNumber.setLocalizedHintFromStyle(R.style.AdyenCheckout_Card_CardNumberInput)
-        binding.textInputLayoutExpiryDate.setLocalizedHintFromStyle(R.style.AdyenCheckout_Card_ExpiryDateInput)
-        binding.textInputLayoutSecurityCode.setLocalizedHintFromStyle(R.style.AdyenCheckout_Card_SecurityCodeInput)
-        binding.textInputLayoutCardHolder.setLocalizedHintFromStyle(R.style.AdyenCheckout_Card_HolderNameInput)
-        binding.textInputLayoutPostalCode.setLocalizedHintFromStyle(R.style.AdyenCheckout_Card_PostalCodeInput)
+    private fun initLocalizedStrings(localizedContext: Context) {
+        binding.textInputLayoutCardNumber.setLocalizedHintFromStyle(
+            R.style.AdyenCheckout_Card_CardNumberInput,
+            localizedContext
+        )
+        binding.textInputLayoutExpiryDate.setLocalizedHintFromStyle(
+            R.style.AdyenCheckout_Card_ExpiryDateInput,
+            localizedContext
+        )
+        binding.textInputLayoutSecurityCode.setLocalizedHintFromStyle(
+            R.style.AdyenCheckout_Card_SecurityCodeInput,
+            localizedContext
+        )
+        binding.textInputLayoutCardHolder.setLocalizedHintFromStyle(
+            R.style.AdyenCheckout_Card_HolderNameInput,
+            localizedContext
+        )
+        binding.textInputLayoutPostalCode.setLocalizedHintFromStyle(
+            R.style.AdyenCheckout_Card_PostalCodeInput,
+            localizedContext
+        )
         binding.textInputLayoutSocialSecurityNumber.setLocalizedHintFromStyle(
-            R.style.AdyenCheckout_Card_SocialSecurityNumberInput
+            R.style.AdyenCheckout_Card_SocialSecurityNumberInput,
+            localizedContext
         )
         binding.textInputLayoutKcpBirthDateOrTaxNumber.setLocalizedHintFromStyle(
-            R.style.AdyenCheckout_Card_KcpBirthDateOrTaxNumber
+            R.style.AdyenCheckout_Card_KcpBirthDateOrTaxNumber,
+            localizedContext
         )
         binding.textInputLayoutKcpCardPassword.setLocalizedHintFromStyle(
-            R.style.AdyenCheckout_Card_KcpCardPassword
+            R.style.AdyenCheckout_Card_KcpCardPassword,
+            localizedContext
         )
         binding.textInputLayoutInstallments.setLocalizedHintFromStyle(
-            R.style.AdyenCheckout_DropdownTextInputLayout_Installments
+            R.style.AdyenCheckout_DropdownTextInputLayout_Installments,
+            localizedContext
         )
-        binding.switchStorePaymentMethod.setLocalizedTextFromStyle(R.style.AdyenCheckout_Card_StorePaymentSwitch)
+        binding.switchStorePaymentMethod.setLocalizedTextFromStyle(
+            R.style.AdyenCheckout_Card_StorePaymentSwitch,
+            localizedContext
+        )
         binding.addressFormInput.initLocalizedContext(localizedContext)
     }
 
-    override fun onComponentAttached() {
-        imageLoader = ImageLoader.getInstance(context, component.configuration.environment)
+    private fun observeDelegate(delegate: CardDelegate, coroutineScope: CoroutineScope) {
+        delegate.outputDataFlow
+            .onEach { outputDataChanged(it) }
+            .launchIn(coroutineScope)
     }
 
-    override fun onChanged(cardOutputData: CardOutputData?) {
+    private fun outputDataChanged(cardOutputData: CardOutputData?) {
         cardOutputData ?: return
 
         if (isStoredPaymentMethod(cardOutputData)) setStoredCardInterface(cardOutputData)
@@ -154,16 +190,9 @@ class CardView @JvmOverloads constructor(
         setFilteredCards(cardOutputData.detectedCardTypes.map { it.cardType })
     }
 
-    override fun observeComponentChanges(lifecycleOwner: LifecycleOwner) {
-        component.observeOutputData(lifecycleOwner, this)
-    }
-
-    override val isConfirmationRequired: Boolean
-        get() = true
-
     @Suppress("ComplexMethod", "LongMethod")
     override fun highlightValidationErrors() {
-        component.outputData?.let {
+        cardDelegate.outputData?.let {
             var isErrorFocused = false
             val cardNumberValidation = it.cardNumberState.validation
             if (cardNumberValidation is Validation.Invalid) {
@@ -240,7 +269,7 @@ class CardView @JvmOverloads constructor(
     }
 
     private fun notifyInputDataChanged() {
-        component.notifyInputDataChanged()
+        cardDelegate.onInputDataChanged(cardDelegate.inputData)
     }
 
     private fun onCardNumberValidated(cardOutputData: CardOutputData) {
@@ -308,7 +337,7 @@ class CardView @JvmOverloads constructor(
 
     private fun initCardNumberInput() {
         binding.editTextCardNumber.setOnChangeListener {
-            component.inputData.cardNumber = binding.editTextCardNumber.rawValue
+            cardDelegate.inputData.cardNumber = binding.editTextCardNumber.rawValue
             notifyInputDataChanged()
             setCardErrorState(true)
         }
@@ -318,7 +347,7 @@ class CardView @JvmOverloads constructor(
     }
 
     private fun setCardErrorState(hasFocus: Boolean) {
-        val outputData = component.outputData ?: return
+        val outputData = cardDelegate.outputData ?: return
         if (isStoredPaymentMethod(outputData)) return
 
         val cardNumberValidation = outputData.cardNumberState.validation
@@ -356,13 +385,13 @@ class CardView @JvmOverloads constructor(
 
     private fun initBrandSelectionListeners() {
         binding.cardBrandLogoContainerPrimary.setOnClickListener {
-            component.inputData.selectedCardIndex = PRIMARY_BRAND_INDEX
+            cardDelegate.inputData.selectedCardIndex = PRIMARY_BRAND_INDEX
             notifyInputDataChanged()
             selectPrimaryBrand()
         }
 
         binding.cardBrandLogoContainerSecondary.setOnClickListener {
-            component.inputData.selectedCardIndex = SECONDARY_BRAND_INDEX
+            cardDelegate.inputData.selectedCardIndex = SECONDARY_BRAND_INDEX
             notifyInputDataChanged()
             selectSecondaryBrand()
         }
@@ -386,12 +415,12 @@ class CardView @JvmOverloads constructor(
     private fun initExpiryDateInput() {
         binding.editTextExpiryDate.setOnChangeListener {
             val date = binding.editTextExpiryDate.date
-            component.inputData.expiryDate = date
+            cardDelegate.inputData.expiryDate = date
             notifyInputDataChanged()
             binding.textInputLayoutExpiryDate.error = null
         }
         binding.editTextExpiryDate.onFocusChangeListener = OnFocusChangeListener { _, hasFocus ->
-            val expiryDateValidation = component.outputData?.expiryDateState?.validation
+            val expiryDateValidation = cardDelegate.outputData?.expiryDateState?.validation
             if (hasFocus) {
                 binding.textInputLayoutExpiryDate.error = null
             } else if (expiryDateValidation != null && expiryDateValidation is Validation.Invalid) {
@@ -403,12 +432,12 @@ class CardView @JvmOverloads constructor(
     private fun initSecurityCodeInput() {
         val securityCodeEditText = binding.textInputLayoutSecurityCode.editText as? SecurityCodeInput
         securityCodeEditText?.setOnChangeListener { editable: Editable ->
-            component.inputData.securityCode = editable.toString()
+            cardDelegate.inputData.securityCode = editable.toString()
             notifyInputDataChanged()
             binding.textInputLayoutSecurityCode.error = null
         }
         securityCodeEditText?.onFocusChangeListener = OnFocusChangeListener { _, hasFocus ->
-            val securityCodeValidation = component.outputData?.securityCodeState?.validation
+            val securityCodeValidation = cardDelegate.outputData?.securityCodeState?.validation
             if (hasFocus) {
                 binding.textInputLayoutSecurityCode.error = null
             } else if (securityCodeValidation != null && securityCodeValidation is Validation.Invalid) {
@@ -420,12 +449,12 @@ class CardView @JvmOverloads constructor(
     private fun initHolderNameInput() {
         val cardHolderEditText = binding.textInputLayoutCardHolder.editText as? AdyenTextInputEditText
         cardHolderEditText?.setOnChangeListener { editable: Editable ->
-            component.inputData.holderName = editable.toString()
+            cardDelegate.inputData.holderName = editable.toString()
             notifyInputDataChanged()
             binding.textInputLayoutCardHolder.error = null
         }
         cardHolderEditText?.onFocusChangeListener = OnFocusChangeListener { _, hasFocus ->
-            val holderNameValidation = component.outputData?.holderNameState?.validation
+            val holderNameValidation = cardDelegate.outputData?.holderNameState?.validation
             if (hasFocus) {
                 binding.textInputLayoutCardHolder.error = null
             } else if (holderNameValidation != null && holderNameValidation is Validation.Invalid) {
@@ -438,12 +467,12 @@ class CardView @JvmOverloads constructor(
         val socialSecurityNumberEditText =
             binding.textInputLayoutSocialSecurityNumber.editText as? AdyenTextInputEditText
         socialSecurityNumberEditText?.setOnChangeListener { editable ->
-            component.inputData.socialSecurityNumber = editable.toString()
+            cardDelegate.inputData.socialSecurityNumber = editable.toString()
             notifyInputDataChanged()
             binding.textInputLayoutSocialSecurityNumber.error = null
         }
         socialSecurityNumberEditText?.onFocusChangeListener = OnFocusChangeListener { _, hasFocus ->
-            val socialSecurityNumberValidation = component.outputData?.socialSecurityNumberState?.validation
+            val socialSecurityNumberValidation = cardDelegate.outputData?.socialSecurityNumberState?.validation
             if (hasFocus) {
                 binding.textInputLayoutSocialSecurityNumber.error = null
             } else if (socialSecurityNumberValidation != null && socialSecurityNumberValidation is Validation.Invalid) {
@@ -462,13 +491,13 @@ class CardView @JvmOverloads constructor(
         val kcpBirthDateOrRegistrationNumberEditText =
             binding.textInputLayoutKcpBirthDateOrTaxNumber.editText as? AdyenTextInputEditText
         kcpBirthDateOrRegistrationNumberEditText?.setOnChangeListener {
-            component.inputData.kcpBirthDateOrTaxNumber = it.toString()
+            cardDelegate.inputData.kcpBirthDateOrTaxNumber = it.toString()
             notifyInputDataChanged()
             binding.textInputLayoutKcpBirthDateOrTaxNumber.error = null
         }
 
         kcpBirthDateOrRegistrationNumberEditText?.onFocusChangeListener = OnFocusChangeListener { _, hasFocus ->
-            val kcpBirthDateOrTaxNumberValidation = component.outputData?.kcpBirthDateOrTaxNumberState?.validation
+            val kcpBirthDateOrTaxNumberValidation = cardDelegate.outputData?.kcpBirthDateOrTaxNumberState?.validation
             if (hasFocus) {
                 binding.textInputLayoutKcpBirthDateOrTaxNumber.error = null
             } else if (
@@ -484,13 +513,13 @@ class CardView @JvmOverloads constructor(
     private fun initKcpCardPasswordInput() {
         val kcpPasswordEditText = binding.textInputLayoutKcpCardPassword.editText as? AdyenTextInputEditText
         kcpPasswordEditText?.setOnChangeListener {
-            component.inputData.kcpCardPassword = it.toString()
+            cardDelegate.inputData.kcpCardPassword = it.toString()
             notifyInputDataChanged()
             binding.textInputLayoutKcpCardPassword.error = null
         }
 
         kcpPasswordEditText?.onFocusChangeListener = OnFocusChangeListener { _, hasFocus ->
-            val kcpBirthDateOrRegistrationNumberValidation = component.outputData?.kcpCardPasswordState?.validation
+            val kcpBirthDateOrRegistrationNumberValidation = cardDelegate.outputData?.kcpCardPasswordState?.validation
             if (hasFocus) {
                 binding.textInputLayoutKcpCardPassword.error = null
             } else if (kcpBirthDateOrRegistrationNumberValidation != null &&
@@ -505,13 +534,13 @@ class CardView @JvmOverloads constructor(
     private fun initPostalCodeInput() {
         val postalCodeEditText = binding.textInputLayoutPostalCode.editText as? AdyenTextInputEditText
         postalCodeEditText?.setOnChangeListener {
-            component.inputData.address.postalCode = it.toString()
+            cardDelegate.inputData.address.postalCode = it.toString()
             notifyInputDataChanged()
             binding.textInputLayoutPostalCode.error = null
         }
 
         postalCodeEditText?.onFocusChangeListener = OnFocusChangeListener { _, hasFocus ->
-            val postalCodeValidation = component.outputData?.addressState?.postalCode?.validation
+            val postalCodeValidation = cardDelegate.outputData?.addressState?.postalCode?.validation
             if (hasFocus) {
                 binding.textInputLayoutPostalCode.error = null
             } else if (postalCodeValidation != null && postalCodeValidation is Validation.Invalid) {
@@ -521,7 +550,7 @@ class CardView @JvmOverloads constructor(
     }
 
     private fun initAddressFormInput() {
-        binding.addressFormInput.attachComponent(component)
+        binding.addressFormInput.attachDelegate(cardDelegate)
     }
 
     private fun updateCountries(countryOptions: List<AddressListItem>) {
@@ -572,7 +601,8 @@ class CardView @JvmOverloads constructor(
             InputFieldUIState.REQUIRED -> {
                 binding.textInputLayoutSecurityCode.isVisible = true
                 binding.textInputLayoutSecurityCode.setLocalizedHintFromStyle(
-                    R.style.AdyenCheckout_Card_SecurityCodeInput
+                    R.style.AdyenCheckout_Card_SecurityCodeInput,
+                    localizedContext
                 )
             }
             InputFieldUIState.OPTIONAL -> {
@@ -596,7 +626,8 @@ class CardView @JvmOverloads constructor(
             InputFieldUIState.REQUIRED -> {
                 binding.textInputLayoutExpiryDate.isVisible = true
                 binding.textInputLayoutExpiryDate.setLocalizedHintFromStyle(
-                    R.style.AdyenCheckout_Card_ExpiryDateInput
+                    R.style.AdyenCheckout_Card_ExpiryDateInput,
+                    localizedContext
                 )
             }
             InputFieldUIState.OPTIONAL -> {
@@ -668,14 +699,14 @@ class CardView @JvmOverloads constructor(
         binding.textInputLayoutPostalCode.isVisible = false
         binding.addressFormInput.isVisible = false
 
-        if (component.requiresInput()) {
+        if (cardDelegate.requiresInput()) {
             binding.textInputLayoutSecurityCode.editText?.requestFocus()
         }
     }
 
     private fun updateInstallmentSelection(installmentModel: InstallmentModel?) {
         installmentModel?.let {
-            component.inputData.installmentOption = it
+            cardDelegate.inputData.installmentOption = it
             notifyInputDataChanged()
         }
     }
@@ -704,5 +735,16 @@ class CardView @JvmOverloads constructor(
 
     private fun isStoredPaymentMethod(outputData: CardOutputData): Boolean {
         return outputData.componentMode == ComponentMode.STORED
+    }
+
+    override val isConfirmationRequired: Boolean = true
+
+    override fun getView(): View = this
+
+    companion object {
+        private const val UNSELECTED_BRAND_LOGO_ALPHA = 0.2f
+        private const val SELECTED_BRAND_LOGO_ALPHA = 1f
+        private const val PRIMARY_BRAND_INDEX = 0
+        private const val SECONDARY_BRAND_INDEX = 1
     }
 }

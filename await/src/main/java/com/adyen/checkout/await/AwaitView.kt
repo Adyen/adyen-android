@@ -1,82 +1,85 @@
 /*
- * Copyright (c) 2020 Adyen N.V.
+ * Copyright (c) 2022 Adyen N.V.
  *
  * This file is open source and available under the MIT license. See the LICENSE file for more info.
  *
- * Created by caiof on 18/8/2020.
+ * Created by josephj on 31/8/2022.
  */
 package com.adyen.checkout.await
 
 import android.content.Context
 import android.util.AttributeSet
 import android.view.LayoutInflater
-import android.widget.ImageView
-import android.widget.TextView
+import android.view.View
+import android.widget.LinearLayout
 import androidx.annotation.StringRes
-import androidx.lifecycle.LifecycleOwner
-import androidx.lifecycle.Observer
-import com.adyen.checkout.components.ActionComponentData
+import com.adyen.checkout.await.databinding.AwaitViewBinding
 import com.adyen.checkout.components.api.ImageLoader
 import com.adyen.checkout.components.api.ImageLoader.Companion.getInstance
-import com.adyen.checkout.components.ui.view.AdyenLinearLayout
+import com.adyen.checkout.components.base.ComponentDelegate
+import com.adyen.checkout.components.extensions.setLocalizedTextFromStyle
+import com.adyen.checkout.components.ui.ComponentViewNew
 import com.adyen.checkout.components.util.PaymentMethodTypes
 import com.adyen.checkout.core.log.LogUtil
 import com.adyen.checkout.core.log.Logger
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.flow.filterNotNull
+import kotlinx.coroutines.flow.launchIn
+import kotlinx.coroutines.flow.onEach
 
-class AwaitView @JvmOverloads constructor(
+internal class AwaitView @JvmOverloads constructor(
     context: Context,
     attrs: AttributeSet? = null,
     defStyleAttr: Int = 0
 ) :
-    AdyenLinearLayout<AwaitOutputData, AwaitConfiguration, ActionComponentData, AwaitComponent>(
+    LinearLayout(
         context,
         attrs,
         defStyleAttr
     ),
-    Observer<AwaitOutputData> {
+    ComponentViewNew {
 
-    private lateinit var imageView: ImageView
-    private lateinit var textViewOpenApp: TextView
-    private lateinit var textViewWaitingConfirmation: TextView
+    private val binding: AwaitViewBinding = AwaitViewBinding.inflate(LayoutInflater.from(context), this)
+
     private lateinit var imageLoader: ImageLoader
-    private var paymentMethodType: String? = null
+
+    private lateinit var localizedContext: Context
 
     init {
         orientation = VERTICAL
-        LayoutInflater.from(getContext()).inflate(R.layout.await_view, this, true)
         val padding = resources.getDimension(R.dimen.standard_double_margin).toInt()
         setPadding(padding, padding, padding, padding)
     }
 
-    override fun onComponentAttached() {
-        imageLoader = getInstance(context, component.configuration.environment)
+    override fun initView(delegate: ComponentDelegate, coroutineScope: CoroutineScope, localizedContext: Context) {
+        if (delegate !is AwaitDelegate) throw IllegalArgumentException("Unsupported delegate type")
+
+        this.localizedContext = localizedContext
+        initLocalizedStrings(localizedContext)
+        imageLoader = getInstance(context, delegate.configuration.environment)
+
+        observeDelegate(delegate, coroutineScope)
     }
 
-    override fun initView() {
-        imageView = findViewById(R.id.imageView_logo)
-        textViewOpenApp = findViewById(R.id.textView_open_app)
-        textViewWaitingConfirmation = findViewById(R.id.textView_waiting_confirmation)
+    private fun initLocalizedStrings(localizedContext: Context) {
+        binding.textViewWaitingConfirmation.setLocalizedTextFromStyle(
+            R.style.AdyenCheckout_Await_WaitingConfirmationTextView,
+            localizedContext
+        )
     }
 
-    override fun initLocalizedStrings(localizedContext: Context) {
-        textViewWaitingConfirmation.setLocalizedTextFromStyle(R.style.AdyenCheckout_Await_WaitingConfirmationTextView)
+    private fun observeDelegate(delegate: AwaitDelegate, coroutineScope: CoroutineScope) {
+        delegate.outputDataFlow
+            .filterNotNull()
+            .onEach { outputDataChanged(it) }
+            .launchIn(coroutineScope)
     }
 
-    override fun observeComponentChanges(lifecycleOwner: LifecycleOwner) {
-        component.observeOutputData(lifecycleOwner, this)
-    }
+    private fun outputDataChanged(outputData: AwaitOutputData) {
+        Logger.d(TAG, "outputDataChanged")
 
-    override fun onChanged(awaitOutputData: AwaitOutputData?) {
-        Logger.d(TAG, "onChanged")
-
-        if (awaitOutputData == null) {
-            return
-        }
-        if (paymentMethodType == null || paymentMethodType != awaitOutputData.paymentMethodType) {
-            paymentMethodType = awaitOutputData.paymentMethodType
-            updateMessageText()
-            updateLogo()
-        }
+        updateMessageText(outputData.paymentMethodType)
+        updateLogo(outputData.paymentMethodType)
     }
 
     override val isConfirmationRequired = false
@@ -85,26 +88,29 @@ class AwaitView @JvmOverloads constructor(
         // No validation required
     }
 
-    private fun updateLogo() {
+    private fun updateMessageText(paymentMethodType: String?) {
+        getMessageTextResource(paymentMethodType)?.let {
+            binding.textViewOpenApp.text = localizedContext.getString(it)
+        }
+    }
+
+    private fun updateLogo(paymentMethodType: String?) {
         Logger.d(TAG, "updateLogo - $paymentMethodType")
         paymentMethodType?.let {
-            imageLoader.load(it, imageView)
+            imageLoader.load(it, binding.imageViewLogo)
         }
     }
 
-    private fun updateMessageText() {
-        messageTextResource?.let {
-            textViewOpenApp.text = localizedContext.getString(it)
-        }
-    }
-
-    @get:StringRes
-    private val messageTextResource: Int?
-        get() = when (paymentMethodType) {
+    @StringRes
+    private fun getMessageTextResource(paymentMethodType: String?): Int? {
+        return when (paymentMethodType) {
             PaymentMethodTypes.BLIK -> R.string.checkout_await_message_blik
             PaymentMethodTypes.MB_WAY -> R.string.checkout_await_message_mbway
             else -> null
         }
+    }
+
+    override fun getView(): View = this
 
     companion object {
         private val TAG = LogUtil.getTag()

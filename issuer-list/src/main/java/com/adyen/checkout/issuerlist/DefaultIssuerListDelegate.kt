@@ -8,6 +8,7 @@
 
 package com.adyen.checkout.issuerlist
 
+import androidx.annotation.RestrictTo
 import com.adyen.checkout.components.PaymentComponentState
 import com.adyen.checkout.components.model.paymentmethods.PaymentMethod
 import com.adyen.checkout.components.model.payments.request.IssuerListPaymentMethod
@@ -18,6 +19,7 @@ import com.adyen.checkout.components.util.PaymentMethodTypes
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableStateFlow
 
+@RestrictTo(RestrictTo.Scope.LIBRARY_GROUP)
 class DefaultIssuerListDelegate<IssuerListPaymentMethodT : IssuerListPaymentMethod>(
     override val configuration: IssuerListConfiguration,
     private val paymentMethod: PaymentMethod,

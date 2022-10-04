@@ -26,7 +26,7 @@ import com.adyen.checkout.mbway.country.CountryModel
 import com.adyen.checkout.mbway.databinding.MbwayViewBinding
 import kotlinx.coroutines.CoroutineScope
 
-class MbWayViewNew @JvmOverloads constructor(
+internal class MbWayView @JvmOverloads constructor(
     context: Context,
     attrs: AttributeSet? = null,
     defStyleAttr: Int = 0

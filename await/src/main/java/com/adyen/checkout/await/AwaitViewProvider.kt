@@ -23,7 +23,7 @@ internal object AwaitViewProvider : ViewProvider {
         defStyleAttr: Int
     ): ComponentViewNew {
         return when (viewType) {
-            AwaitComponentViewType -> AwaitViewNew(context, attrs, defStyleAttr)
+            AwaitComponentViewType -> AwaitView(context, attrs, defStyleAttr)
             else -> throw IllegalArgumentException("Unsupported view type")
         }
     }

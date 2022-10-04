@@ -24,7 +24,7 @@ import com.adyen.checkout.core.log.Logger
 import com.adyen.checkout.onlinebankingcore.databinding.OnlineBankingSpinnerLayoutBinding
 import kotlinx.coroutines.CoroutineScope
 
-class OnlineBankingView @JvmOverloads constructor(
+internal class OnlineBankingView @JvmOverloads constructor(
     context: Context,
     attrs: AttributeSet? = null,
     defStyleAttr: Int = 0

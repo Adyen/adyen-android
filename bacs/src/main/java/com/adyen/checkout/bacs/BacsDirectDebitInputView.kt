@@ -33,7 +33,7 @@ import kotlinx.coroutines.flow.onEach
 private val TAG = LogUtil.getTag()
 
 @Suppress("TooManyFunctions")
-class BacsDirectDebitInputView @JvmOverloads constructor(
+internal class BacsDirectDebitInputView @JvmOverloads constructor(
     context: Context,
     attrs: AttributeSet? = null,
     defStyleAttr: Int = 0

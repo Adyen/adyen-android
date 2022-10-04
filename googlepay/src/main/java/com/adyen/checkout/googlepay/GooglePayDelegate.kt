@@ -19,6 +19,8 @@ interface GooglePayDelegate :
         GooglePayOutputData,
         GooglePayComponentState> {
 
+    val inputData: GooglePayInputData
+
     val outputDataFlow: Flow<GooglePayOutputData?>
 
     val componentStateFlow: Flow<GooglePayComponentState?>

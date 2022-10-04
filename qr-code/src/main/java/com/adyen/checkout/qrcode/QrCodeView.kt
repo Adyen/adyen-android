@@ -31,7 +31,7 @@ import kotlinx.coroutines.flow.onEach
 import java.util.concurrent.TimeUnit
 
 @Suppress("TooManyFunctions")
-class QrCodeViewNew @JvmOverloads constructor(
+internal class QrCodeView @JvmOverloads constructor(
     context: Context,
     attrs: AttributeSet? = null,
     defStyleAttr: Int = 0

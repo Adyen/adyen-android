@@ -22,7 +22,7 @@ internal object MbWayViewProvider : ViewProvider {
         attrs: AttributeSet?,
         defStyleAttr: Int
     ): ComponentViewNew = when (viewType) {
-        MbWayComponentViewType -> MbWayViewNew(context, attrs, defStyleAttr)
+        MbWayComponentViewType -> MbWayView(context, attrs, defStyleAttr)
         else -> throw IllegalArgumentException("Unsupported view type")
     }
 }

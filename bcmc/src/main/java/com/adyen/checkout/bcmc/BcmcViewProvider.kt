@@ -22,7 +22,7 @@ internal object BcmcViewProvider : ViewProvider {
         attrs: AttributeSet?,
         defStyleAttr: Int
     ): ComponentViewNew = when (viewType) {
-        BcmcComponentViewType -> BcmcViewNew(context, attrs, defStyleAttr)
+        BcmcComponentViewType -> BcmcView(context, attrs, defStyleAttr)
         else -> throw IllegalArgumentException("Unsupported view type")
     }
 }

@@ -1,42 +1,47 @@
 /*
- * Copyright (c) 2021 Adyen N.V.
+ * Copyright (c) 2022 Adyen N.V.
  *
  * This file is open source and available under the MIT license. See the LICENSE file for more info.
  *
- * Created by ozgur on 30/11/2021.
+ * Created by ozgur on 12/9/2022.
  */
 
 package com.adyen.checkout.voucher
 
 import android.content.Context
-import android.net.Uri
 import android.util.AttributeSet
 import android.view.LayoutInflater
-import androidx.browser.customtabs.CustomTabsIntent
-import androidx.lifecycle.LifecycleOwner
-import androidx.lifecycle.Observer
-import com.adyen.checkout.components.ActionComponentData
+import android.view.View
+import android.widget.LinearLayout
 import com.adyen.checkout.components.api.ImageLoader
-import com.adyen.checkout.components.api.LogoApi
-import com.adyen.checkout.components.ui.util.ThemeUtil
-import com.adyen.checkout.components.ui.view.AdyenLinearLayout
+import com.adyen.checkout.components.base.ComponentDelegate
+import com.adyen.checkout.components.extensions.setLocalizedTextFromStyle
+import com.adyen.checkout.components.ui.ComponentViewNew
+import com.adyen.checkout.core.log.LogUtil
+import com.adyen.checkout.core.log.Logger
 import com.adyen.checkout.voucher.databinding.VoucherViewBinding
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.flow.filterNotNull
+import kotlinx.coroutines.flow.launchIn
+import kotlinx.coroutines.flow.onEach
 
-class VoucherView @JvmOverloads constructor(
+internal class VoucherView @JvmOverloads constructor(
     context: Context,
     attrs: AttributeSet? = null,
     defStyleAttr: Int = 0
 ) :
-    AdyenLinearLayout<VoucherOutputData, VoucherConfiguration, ActionComponentData, VoucherComponent>(
+    LinearLayout(
         context,
         attrs,
         defStyleAttr
     ),
-    Observer<VoucherOutputData> {
+    ComponentViewNew {
 
     private val binding: VoucherViewBinding = VoucherViewBinding.inflate(LayoutInflater.from(context), this)
 
     private lateinit var imageLoader: ImageLoader
+
+    private lateinit var localizedContext: Context
 
     init {
         orientation = VERTICAL
@@ -44,48 +49,48 @@ class VoucherView @JvmOverloads constructor(
         setPadding(padding, padding, padding, padding)
     }
 
-    override fun onComponentAttached() {
-        imageLoader = ImageLoader.getInstance(context, component.configuration.environment)
+    override fun initView(delegate: ComponentDelegate, coroutineScope: CoroutineScope, localizedContext: Context) {
+        if (delegate !is VoucherDelegate) throw IllegalArgumentException("Unsupported delegate type")
+
+        this.localizedContext = localizedContext
+        initLocalizedStrings(localizedContext)
+
+        imageLoader = ImageLoader.getInstance(context, delegate.configuration.environment)
+
+        observeDelegate(delegate, coroutineScope)
     }
 
-    override fun initView() {
-        binding.textViewDownload.setOnClickListener {
-            launchDownloadIntent()
-        }
+    private fun initLocalizedStrings(localizedContext: Context) {
+        binding.textViewDescription.setLocalizedTextFromStyle(
+            R.style.AdyenCheckout_Voucher_DescriptionTextAppearance,
+            localizedContext
+        )
+        binding.textViewDownload.setLocalizedTextFromStyle(
+            R.style.AdyenCheckout_Voucher_DownloadTextAppearance,
+            localizedContext
+        )
+    }
+
+    private fun observeDelegate(delegate: VoucherDelegate, coroutineScope: CoroutineScope) {
+        delegate.outputDataFlow
+            .filterNotNull()
+            .onEach { outputDataChanged(it) }
+            .launchIn(coroutineScope)
+    }
+
+    private fun outputDataChanged(outputData: VoucherOutputData) {
+        Logger.d(TAG, "outputDataChanged")
     }
 
     override val isConfirmationRequired: Boolean = false
 
     override fun highlightValidationErrors() {
-        // no validation required
+        // No validation required
     }
 
-    override fun initLocalizedStrings(localizedContext: Context) {
-        binding.textViewDescription.setLocalizedTextFromStyle(R.style.AdyenCheckout_Voucher_DescriptionTextAppearance)
-        binding.textViewDownload.setLocalizedTextFromStyle(R.style.AdyenCheckout_Voucher_DownloadTextAppearance)
-    }
+    override fun getView(): View = this
 
-    override fun observeComponentChanges(lifecycleOwner: LifecycleOwner) {
-        component.observeOutputData(lifecycleOwner, this)
-    }
-
-    override fun onChanged(outputData: VoucherOutputData?) {
-        if (outputData == null) return
-        loadLogo(outputData.paymentMethodType)
-    }
-
-    private fun launchDownloadIntent() {
-        val url = component.outputData?.downloadUrl ?: return
-        val intent = CustomTabsIntent.Builder()
-            .setShowTitle(true)
-            .setToolbarColor(ThemeUtil.getPrimaryThemeColor(context))
-            .build()
-        intent.launchUrl(context, Uri.parse(url))
-    }
-
-    private fun loadLogo(paymentMethodType: String?) {
-        if (!paymentMethodType.isNullOrEmpty()) {
-            imageLoader.load(paymentMethodType, binding.imageViewLogo, LogoApi.Size.MEDIUM)
-        }
+    companion object {
+        private val TAG = LogUtil.getTag()
     }
 }

@@ -22,7 +22,7 @@ internal object QrCodeViewProvider : ViewProvider {
         attrs: AttributeSet?,
         defStyleAttr: Int
     ): ComponentViewNew {
-        return if (viewType == QrCodeComponentViewType) QrCodeViewNew(context, attrs, defStyleAttr)
+        return if (viewType == QrCodeComponentViewType) QrCodeView(context, attrs, defStyleAttr)
         else throw IllegalArgumentException("Unsupported view type")
     }
 }
