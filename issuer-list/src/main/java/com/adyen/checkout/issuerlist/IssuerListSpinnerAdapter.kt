@@ -62,7 +62,7 @@ internal class IssuerListSpinnerViewHolder(
 ) : ViewHolder(binding.root) {
 
     fun bind(model: IssuerModel) {
-        binding.textViewText.text = model.name
+        binding.textViewTitle.text = model.name
         if (!hideIssuerLogo) {
             imageLoader.load(
                 paymentMethod,

@@ -20,7 +20,7 @@
         style="@style/AdyenCheckout.Image.Logo" />
 
     <androidx.appcompat.widget.AppCompatTextView
-        android:id="@+id/textView_text"
+        android:id="@+id/textView_title"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         style="@style/AdyenCheckout.ListItemText"

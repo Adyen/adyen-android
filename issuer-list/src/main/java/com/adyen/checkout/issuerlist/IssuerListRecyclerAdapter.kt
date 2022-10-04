@@ -51,7 +51,7 @@ internal class IssuerListRecyclerAdapter(
         }
 
         fun bind(paymentMethod: String, issuerModel: IssuerModel, hideIssuerLogo: Boolean, imageLoader: ImageLoader) {
-            binding.textViewText.text = issuerModel.name
+            binding.textViewTitle.text = issuerModel.name
             if (!hideIssuerLogo) {
                 imageLoader.load(
                     paymentMethod,

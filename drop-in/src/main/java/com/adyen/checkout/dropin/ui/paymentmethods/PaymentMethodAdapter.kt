@@ -147,22 +147,22 @@ class PaymentMethodAdapter @JvmOverloads constructor(
         private fun bindStoredCard(model: StoredCardModel, imageLoader: ImageLoader) {
             with(binding) {
                 val context = root.context
-                textViewText.text = context.getString(R.string.card_number_4digit, model.lastFour)
+                textViewTitle.text = context.getString(R.string.card_number_4digit, model.lastFour)
                 imageLoader.load(model.imageId, imageViewLogo)
                 textViewDetail.apply {
                     text = DateUtils.parseDateToView(model.expiryMonth, model.expiryYear)
                     isVisible = true
                 }
-                textViewEndText.isVisible = false
+                textViewAmount.isVisible = false
             }
         }
 
         private fun bindGenericStored(model: GenericStoredModel) {
             with(binding) {
-                textViewText.text = model.name
+                textViewTitle.text = model.name
                 textViewDetail.isVisible = false
                 imageLoader.load(model.imageId, imageViewLogo)
-                textViewEndText.isVisible = false
+                textViewAmount.isVisible = false
             }
         }
 
@@ -193,7 +193,7 @@ class PaymentMethodAdapter @JvmOverloads constructor(
             model: PaymentMethodModel,
             onPaymentMethodSelectedCallback: OnPaymentMethodSelectedCallback?
         ) = with(binding) {
-            textViewText.text = model.name
+            textViewTitle.text = model.name
             textViewDetail.isVisible = false
 
             imageViewLogo.borderEnabled = model.drawIconBorder
@@ -203,7 +203,7 @@ class PaymentMethodAdapter @JvmOverloads constructor(
                 onPaymentMethodSelectedCallback?.onPaymentMethodSelected(model)
             }
 
-            textViewEndText.isVisible = false
+            textViewAmount.isVisible = false
         }
     }
 
@@ -213,7 +213,7 @@ class PaymentMethodAdapter @JvmOverloads constructor(
     ) : BaseViewHolder(binding) {
         fun bind(model: GiftCardPaymentMethodModel) = with(binding) {
             val context = binding.root.context
-            textViewText.text = context.getString(R.string.card_number_4digit, model.lastFour)
+            textViewTitle.text = context.getString(R.string.card_number_4digit, model.lastFour)
             imageLoader.load(model.imageId, imageViewLogo)
             if (model.transactionLimit == null || model.shopperLocale == null) {
                 textViewDetail.isVisible = false
@@ -228,7 +228,7 @@ class PaymentMethodAdapter @JvmOverloads constructor(
                 }
             }
             if (model.amount == null || model.shopperLocale == null) {
-                textViewEndText.isVisible = false
+                textViewAmount.isVisible = false
             } else {
                 val value = CurrencyUtils.formatAmount(
                     model.amount,

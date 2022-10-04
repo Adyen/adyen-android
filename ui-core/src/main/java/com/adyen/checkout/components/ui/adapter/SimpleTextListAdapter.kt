@@ -84,7 +84,7 @@ class SimpleTextListFilter(
 class SimpleTextViewHolder(private val binding: SimpleTextItemViewBinding) : RecyclerView.ViewHolder(binding.root) {
 
     fun bindItem(item: SimpleTextListItem) {
-        binding.textViewText.text = item.text
+        binding.textViewTitle.text = item.text
     }
 }
 

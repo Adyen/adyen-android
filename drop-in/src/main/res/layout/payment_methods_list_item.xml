@@ -1,5 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?>
-<!--
+<?xml version="1.0" encoding="utf-8"?><!--
   ~ Copyright (c) 2019 Adyen N.V.
   ~
   ~ This file is open source and available under the MIT license. See the LICENSE file for more info.
@@ -7,8 +6,7 @@
   ~ Created by arman on 29/7/2019.
   -->
 
-<LinearLayout
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
@@ -35,7 +33,7 @@
         android:minHeight="@dimen/logo_height"
         android:scaleType="fitCenter"
         android:src="@drawable/ic_placeholder_image"
-        app:strokeColor="@color/stroke_color"/>
+        app:strokeColor="@color/stroke_color" />
 
     <LinearLayout
         android:layout_width="0dp"
@@ -43,14 +41,16 @@
         android:layout_gravity="center"
         android:layout_weight="1"
         android:orientation="vertical">
+
         <androidx.appcompat.widget.AppCompatTextView
-            android:id="@+id/textView_text"
+            android:id="@+id/textView_title"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="start|center_vertical"
             android:maxHeight="@dimen/logo_width"
             android:textSize="16sp"
-            tools:text="Test"/>
+            tools:text="Test" />
+
         <androidx.appcompat.widget.AppCompatTextView
             android:id="@+id/textView_detail"
             android:layout_width="wrap_content"
@@ -58,11 +58,11 @@
             android:layout_gravity="start|center_vertical"
             android:maxHeight="@dimen/logo_width"
             android:textSize="12sp"
-            tools:text="Test"/>
+            tools:text="Test" />
     </LinearLayout>
 
     <androidx.appcompat.widget.AppCompatTextView
-        android:id="@+id/textView_endText"
+        android:id="@+id/textView_amount"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_gravity="center_vertical"
