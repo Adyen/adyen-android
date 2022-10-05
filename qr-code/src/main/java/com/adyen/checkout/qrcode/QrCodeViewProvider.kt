@@ -14,7 +14,7 @@ import com.adyen.checkout.components.ui.ComponentViewNew
 import com.adyen.checkout.components.ui.ViewProvider
 import com.adyen.checkout.components.ui.view.ComponentViewType
 
-internal class QrCodeViewProvider : ViewProvider {
+internal object QrCodeViewProvider : ViewProvider {
 
     override fun getView(
         viewType: ComponentViewType,

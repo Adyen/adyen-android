@@ -192,7 +192,7 @@ internal class DefaultQRCodeDelegate(
         return jsonObject
     }
 
-    override fun getViewProvider(): ViewProvider = QrCodeViewProvider()
+    override fun getViewProvider(): ViewProvider = QrCodeViewProvider
 
     override fun onCleared() {
         statusPollingJob?.cancel()
