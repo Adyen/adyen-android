@@ -12,6 +12,8 @@ import androidx.annotation.StringRes
 
 sealed class Validation {
 
+    fun isValid(): Boolean = this is Valid
+
     /**
      * Field is valid and can be accepted.
      */
@@ -20,12 +22,5 @@ sealed class Validation {
     /**
      * Field is not valid.
      */
-    class Invalid(@StringRes val reason: Int, val showErrorWhileEditing: Boolean) : Validation() {
-        // Java doesn't understand optional params
-        constructor(reason: Int) : this(reason, false)
-    }
-
-    fun isValid(): Boolean {
-        return this is Valid
-    }
+    class Invalid(@StringRes val reason: Int, val showErrorWhileEditing: Boolean = false) : Validation()
 }

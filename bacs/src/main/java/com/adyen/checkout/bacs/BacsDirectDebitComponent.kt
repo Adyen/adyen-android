@@ -33,7 +33,10 @@ class BacsDirectDebitComponent(
     BacsDirectDebitComponentState>(savedStateHandle, delegate, configuration),
     ViewProvidingComponent {
 
-    override val viewFlow: Flow<ComponentViewType?> get() = delegate.viewFlow
+    override val viewFlow: Flow<ComponentViewType?>  = delegate.viewFlow
+
+    // TODO: Remove once possible
+    override val inputData: BacsDirectDebitInputData = throw IllegalStateException("Input data should not be used anymore")
 
     init {
         delegate.componentStateFlow
