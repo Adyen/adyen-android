@@ -282,18 +282,18 @@ class DropInConfiguration : Configuration, Parcelable {
         }
 
         /**
-         * Add configuration for Online Banking Slovakia payment method.
-         */
-        fun addOnlineBankingSKConfiguration(onlineBankingSKConfiguration: OnlineBankingSKConfiguration): Builder {
-            availablePaymentConfigs[PaymentMethodTypes.ONLINE_BANKING_SK] = onlineBankingSKConfiguration
-            return this
-        }
-
-        /**
          * Add configuration for Online Banking Poland payment method.
          */
         fun addOnlineBankingPLConfiguration(onlineBankingPLConfiguration: OnlineBankingPLConfiguration): Builder {
             availablePaymentConfigs[PaymentMethodTypes.ONLINE_BANKING_PL] = onlineBankingPLConfiguration
+            return this
+        }
+
+        /**
+         * Add configuration for Online Banking Slovakia payment method.
+         */
+        fun addOnlineBankingSKConfiguration(onlineBankingSKConfiguration: OnlineBankingSKConfiguration): Builder {
+            availablePaymentConfigs[PaymentMethodTypes.ONLINE_BANKING_SK] = onlineBankingSKConfiguration
             return this
         }
 
