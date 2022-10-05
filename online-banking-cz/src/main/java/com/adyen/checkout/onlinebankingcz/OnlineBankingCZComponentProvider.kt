@@ -16,9 +16,9 @@ import com.adyen.checkout.components.PaymentComponentProvider
 import com.adyen.checkout.components.base.lifecycle.viewModelFactory
 import com.adyen.checkout.components.model.paymentmethods.PaymentMethod
 import com.adyen.checkout.components.model.payments.request.OnlineBankingCZPaymentMethod
-import com.adyen.checkout.onlinebankingcore.PdfOpener
 import com.adyen.checkout.onlinebankingcore.DefaultOnlineBankingDelegate
 import com.adyen.checkout.onlinebankingcore.OnlineBankingComponent
+import com.adyen.checkout.onlinebankingcore.PdfOpener
 
 class OnlineBankingCZComponentProvider :
     PaymentComponentProvider<OnlineBankingComponent<OnlineBankingCZPaymentMethod>, OnlineBankingCZConfiguration> {
@@ -33,7 +33,12 @@ class OnlineBankingCZComponentProvider :
         val genericFactory: ViewModelProvider.Factory =
             viewModelFactory(savedStateRegistryOwner, defaultArgs) { savedStateHandle ->
                 val delegate =
-                    DefaultOnlineBankingDelegate(PdfOpener(), paymentMethod) { OnlineBankingCZPaymentMethod() }
+                    DefaultOnlineBankingDelegate(
+                        pdfOpener = PdfOpener(),
+                        paymentMethod = paymentMethod,
+                        configuration = configuration,
+                        termsAndConditionsUrl = OnlineBankingCZComponent.TERMS_CONDITIONS_URL
+                    ) { OnlineBankingCZPaymentMethod() }
 
                 OnlineBankingCZComponent(
                     savedStateHandle,
