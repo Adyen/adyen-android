@@ -13,13 +13,12 @@ import com.adyen.checkout.components.PaymentComponentProvider
 import com.adyen.checkout.components.model.payments.request.OnlineBankingCZPaymentMethod
 import com.adyen.checkout.components.util.PaymentMethodTypes
 import com.adyen.checkout.onlinebankingcore.OnlineBankingComponent
-import com.adyen.checkout.onlinebankingcore.OnlineBankingConfiguration
 import com.adyen.checkout.onlinebankingcore.OnlineBankingDelegate
 
 class OnlineBankingCZComponent(
     savedStateHandle: SavedStateHandle,
     delegate: OnlineBankingDelegate<OnlineBankingCZPaymentMethod>,
-    configuration: OnlineBankingConfiguration
+    configuration: OnlineBankingCZConfiguration
 ) : OnlineBankingComponent<OnlineBankingCZPaymentMethod>(
     savedStateHandle,
     delegate,
