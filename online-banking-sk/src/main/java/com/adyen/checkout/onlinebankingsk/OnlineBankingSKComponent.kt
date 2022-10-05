@@ -13,13 +13,12 @@ import com.adyen.checkout.components.PaymentComponentProvider
 import com.adyen.checkout.components.model.payments.request.OnlineBankingSKPaymentMethod
 import com.adyen.checkout.components.util.PaymentMethodTypes
 import com.adyen.checkout.onlinebankingcore.OnlineBankingComponent
-import com.adyen.checkout.onlinebankingcore.OnlineBankingConfiguration
 import com.adyen.checkout.onlinebankingcore.OnlineBankingDelegate
 
 class OnlineBankingSKComponent(
     savedStateHandle: SavedStateHandle,
     delegate: OnlineBankingDelegate<OnlineBankingSKPaymentMethod>,
-    configuration: OnlineBankingConfiguration
+    configuration: OnlineBankingSKConfiguration
 ) : OnlineBankingComponent<OnlineBankingSKPaymentMethod>(savedStateHandle, delegate, configuration) {
 
     override fun getSupportedPaymentMethodTypes(): Array<String> = PAYMENT_METHOD_TYPES
