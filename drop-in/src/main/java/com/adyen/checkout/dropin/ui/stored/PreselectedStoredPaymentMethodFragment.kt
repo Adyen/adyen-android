@@ -156,7 +156,7 @@ class PreselectedStoredPaymentMethodFragment : DropInBottomSheetDialogFragment()
             binding.storedPaymentMethodItem.swipeToRevealLayout.setDragLocked(!it.isRemovable)
             when (it) {
                 is StoredCardModel -> {
-                    binding.storedPaymentMethodItem.textViewText.text =
+                    binding.storedPaymentMethodItem.textViewTitle.text =
                         requireActivity().getString(R.string.card_number_4digit, it.lastFour)
                     imageLoader.load(it.imageId, binding.storedPaymentMethodItem.imageViewLogo)
                     binding.storedPaymentMethodItem.textViewDetail.text =
@@ -164,7 +164,7 @@ class PreselectedStoredPaymentMethodFragment : DropInBottomSheetDialogFragment()
                     binding.storedPaymentMethodItem.textViewDetail.isVisible = true
                 }
                 is GenericStoredModel -> {
-                    binding.storedPaymentMethodItem.textViewText.text = it.name
+                    binding.storedPaymentMethodItem.textViewTitle.text = it.name
                     binding.storedPaymentMethodItem.textViewDetail.isVisible = false
                     imageLoader.load(it.imageId, binding.storedPaymentMethodItem.imageViewLogo)
                 }

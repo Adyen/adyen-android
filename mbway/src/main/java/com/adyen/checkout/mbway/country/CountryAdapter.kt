@@ -15,7 +15,7 @@ import android.view.ViewGroup
 import android.widget.BaseAdapter
 import android.widget.Filter
 import android.widget.Filterable
-import com.adyen.checkout.mbway.R
+import com.adyen.checkout.mbway.databinding.CountryViewBinding
 
 // We need context to inflate the views and localizedContext to fetch the strings
 // Do not remove localizedContext! It's not used at the moment, however it is kept to prevent usage of context
@@ -34,9 +34,11 @@ class CountryAdapter(private val context: Context, private val localizedContext:
     override fun getView(position: Int, convertView: View?, parent: ViewGroup?): View {
         val view: View
         val viewHolder: CountryViewHolder
+        val binding: CountryViewBinding
         if (convertView == null) {
-            view = LayoutInflater.from(context).inflate(R.layout.country_view, parent, false)
-            viewHolder = CountryViewHolder(view)
+            binding = CountryViewBinding.inflate(LayoutInflater.from(context), parent, false)
+            view = binding.root
+            viewHolder = CountryViewHolder(binding)
             view.tag = viewHolder
         } else {
             view = convertView

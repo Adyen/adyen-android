@@ -10,21 +10,20 @@ package com.adyen.checkout.dropin.ui.paymentmethods
 
 import android.annotation.SuppressLint
 import android.view.LayoutInflater
-import android.view.View
 import android.view.ViewGroup
-import android.widget.FrameLayout
-import android.widget.TextView
 import androidx.appcompat.app.AlertDialog
 import androidx.core.view.isVisible
 import androidx.recyclerview.widget.RecyclerView
 import com.adyen.checkout.components.api.ImageLoader
 import com.adyen.checkout.components.ui.view.AdyenSwipeToRevealLayout
-import com.adyen.checkout.components.ui.view.RoundCornerImageView
 import com.adyen.checkout.components.util.CurrencyUtils
 import com.adyen.checkout.components.util.DateUtils
 import com.adyen.checkout.core.exception.CheckoutException
-import com.adyen.checkout.core.log.LogUtil
 import com.adyen.checkout.dropin.R
+import com.adyen.checkout.dropin.databinding.PaymentMethodsListHeaderBinding
+import com.adyen.checkout.dropin.databinding.PaymentMethodsListItemBinding
+import com.adyen.checkout.dropin.databinding.PaymentMethodsListNoteBinding
+import com.adyen.checkout.dropin.databinding.RemovablePaymentMethodsListItemBinding
 import com.adyen.checkout.dropin.ui.paymentmethods.PaymentMethodListItem.Companion.GIFT_CARD_PAYMENT_METHOD
 import com.adyen.checkout.dropin.ui.paymentmethods.PaymentMethodListItem.Companion.PAYMENT_METHOD
 import com.adyen.checkout.dropin.ui.paymentmethods.PaymentMethodListItem.Companion.PAYMENT_METHODS_HEADER
@@ -35,25 +34,24 @@ import com.adyen.checkout.dropin.ui.paymentmethods.PaymentMethodListItem.Compani
 class PaymentMethodAdapter @JvmOverloads constructor(
     private val paymentMethods: MutableList<PaymentMethodListItem>,
     private val imageLoader: ImageLoader,
+    private val onPaymentMethodSelectedCallback: OnPaymentMethodSelectedCallback? = null,
+    private val onStoredPaymentRemovedCallback: OnStoredPaymentRemovedCallback? = null,
     private val onUnderlayExpandListener: ((AdyenSwipeToRevealLayout) -> Unit)? = null
-) : RecyclerView.Adapter<PaymentMethodAdapter.BaseViewHolder>() {
+) : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
 
     constructor(
         paymentMethods: Collection<PaymentMethodListItem>,
         imageLoader: ImageLoader,
+        onPaymentMethodSelectedCallback: OnPaymentMethodSelectedCallback? = null,
+        onStoredPaymentRemovedCallback: OnStoredPaymentRemovedCallback? = null,
         onUnderlayExpandListener: ((AdyenSwipeToRevealLayout) -> Unit)? = null
-    ) : this(paymentMethods.toMutableList(), imageLoader, onUnderlayExpandListener)
-
-    private var onPaymentMethodSelectedCallback: OnPaymentMethodSelectedCallback? = null
-    private var onStoredPaymentRemovedCallback: OnStoredPaymentRemovedCallback? = null
-
-    fun setPaymentMethodSelectedCallback(onPaymentMethodSelectedCallback: OnPaymentMethodSelectedCallback) {
-        this.onPaymentMethodSelectedCallback = onPaymentMethodSelectedCallback
-    }
-
-    fun setStoredPaymentRemovedCallback(onStoredPaymentRemovedCallback: OnStoredPaymentRemovedCallback) {
-        this.onStoredPaymentRemovedCallback = onStoredPaymentRemovedCallback
-    }
+    ) : this(
+        paymentMethods.toMutableList(),
+        imageLoader,
+        onPaymentMethodSelectedCallback,
+        onStoredPaymentRemovedCallback,
+        onUnderlayExpandListener
+    )
 
     @SuppressLint("NotifyDataSetChanged")
     fun updatePaymentMethods(paymentMethods: List<PaymentMethodListItem>) {
@@ -62,15 +60,26 @@ class PaymentMethodAdapter @JvmOverloads constructor(
         notifyDataSetChanged()
     }
 
-    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): BaseViewHolder {
+    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): RecyclerView.ViewHolder {
+        val inflater = LayoutInflater.from(parent.context)
         return when (viewType) {
-            PAYMENT_METHODS_HEADER -> HeaderVH(getView(parent, R.layout.payment_methods_list_header))
-            STORED_PAYMENT_METHOD -> StoredPaymentMethodVH(
-                getView(parent, R.layout.removable_payment_methods_list_item)
+            PAYMENT_METHODS_HEADER -> HeaderVH(
+                PaymentMethodsListHeaderBinding.inflate(inflater, parent, false)
             )
-            PAYMENT_METHOD -> PaymentMethodVH(getView(parent, R.layout.payment_methods_list_item))
-            GIFT_CARD_PAYMENT_METHOD -> GiftCardPaymentMethodVH(getView(parent, R.layout.payment_methods_list_item))
-            PAYMENT_METHODS_NOTE -> NoteVH(getView(parent, R.layout.payment_methods_list_note))
+            STORED_PAYMENT_METHOD -> StoredPaymentMethodVH(
+                RemovablePaymentMethodsListItemBinding.inflate(inflater, parent, false),
+                imageLoader,
+                onUnderlayExpandListener
+            )
+            PAYMENT_METHOD -> PaymentMethodVH(
+                PaymentMethodsListItemBinding.inflate(inflater, parent, false),
+                imageLoader
+            )
+            GIFT_CARD_PAYMENT_METHOD -> GiftCardPaymentMethodVH(
+                PaymentMethodsListItemBinding.inflate(inflater, parent, false),
+                imageLoader
+            )
+            PAYMENT_METHODS_NOTE -> NoteVH(PaymentMethodsListNoteBinding.inflate(inflater, parent, false))
             else -> throw CheckoutException("Unexpected viewType on onCreateViewHolder - $viewType")
         }
     }
@@ -79,173 +88,185 @@ class PaymentMethodAdapter @JvmOverloads constructor(
         return paymentMethods[position].getViewType()
     }
 
-    override fun onBindViewHolder(holder: BaseViewHolder, position: Int) {
+    override fun onBindViewHolder(holder: RecyclerView.ViewHolder, position: Int) {
         when (holder) {
-            is HeaderVH -> bindHeader(holder, position)
-            is StoredPaymentMethodVH -> bindStoredPaymentMethod(holder, position)
-            is PaymentMethodVH -> bindPaymentMethod(holder, position)
-            is GiftCardPaymentMethodVH -> bindGiftCardPaymentMethod(holder, position)
-            is NoteVH -> bindNote(holder, position)
+            is HeaderVH -> holder.bind(paymentMethods[position] as PaymentMethodHeader, onPaymentMethodSelectedCallback)
+            is StoredPaymentMethodVH -> holder.bind(
+                paymentMethods[position] as StoredPaymentMethodModel,
+                onStoredPaymentRemovedCallback,
+                onPaymentMethodSelectedCallback
+            )
+            is PaymentMethodVH -> holder.bind(
+                paymentMethods[position] as PaymentMethodModel,
+                onPaymentMethodSelectedCallback
+            )
+            is GiftCardPaymentMethodVH -> holder.bind(paymentMethods[position] as GiftCardPaymentMethodModel)
+            is NoteVH -> holder.bind(paymentMethods[position] as PaymentMethodNote)
         }
-    }
-
-    private fun bindHeader(holder: HeaderVH, position: Int) {
-        val header = getHeaderAt(position)
-        holder.title.setText(header.titleResId)
-        with(holder.action) {
-            if (header.actionResId == null) {
-                isVisible = false
-            } else {
-                isVisible = true
-                setText(header.actionResId)
-                setOnClickListener {
-                    onHeaderActionClick(header)
-                }
-            }
-        }
-    }
-
-    private fun bindStoredPaymentMethod(holder: StoredPaymentMethodVH, position: Int) {
-        val storedPaymentMethod = getStoredPaymentMethodAt(position)
-
-        when (storedPaymentMethod) {
-            is StoredCardModel -> bindStoredCard(holder, storedPaymentMethod)
-            is GenericStoredModel -> bindGenericStored(holder, storedPaymentMethod)
-        }
-
-        holder.underlayButton.setOnClickListener {
-            showRemoveStoredPaymentDialog(holder.itemView, storedPaymentMethod)
-        }
-
-        holder.swipeToRevealLayout.apply {
-            setUnderlayListener { view ->
-                onUnderlayExpandListener?.invoke(view)
-            }
-            setOnMainClickListener {
-                onStoredPaymentMethodClick(storedPaymentMethod)
-            }
-            setDragLocked(!storedPaymentMethod.isRemovable)
-        }
-    }
-
-    private fun showRemoveStoredPaymentDialog(itemView: View, storedPaymentMethodModel: StoredPaymentMethodModel) {
-        AlertDialog.Builder(itemView.context)
-            .setTitle(R.string.checkout_giftcard_remove_gift_cards_title)
-            .setMessage(R.string.checkout_remove_stored_payment_method_body)
-            .setPositiveButton(R.string.checkout_giftcard_remove_gift_cards_positive_button) { dialog, _ ->
-                onStoredPaymentRemovedCallback?.onStoredPaymentMethodRemoved(storedPaymentMethodModel)
-                dialog.dismiss()
-            }
-            .setNegativeButton(R.string.checkout_giftcard_remove_gift_cards_negative_button) { dialog, _ ->
-                (itemView as? AdyenSwipeToRevealLayout)?.collapseUnderlay()
-                dialog.dismiss()
-            }
-            .show()
-    }
-
-    private fun bindStoredCard(holder: StoredPaymentMethodVH, storedCardModel: StoredCardModel) {
-        val context = holder.itemView.context
-        holder.text.text = context.getString(R.string.card_number_4digit, storedCardModel.lastFour)
-        imageLoader.load(storedCardModel.imageId, holder.logo)
-        holder.detail.text = DateUtils.parseDateToView(storedCardModel.expiryMonth, storedCardModel.expiryYear)
-        holder.detail.isVisible = true
-        holder.endText.isVisible = false
-    }
-
-    private fun bindGenericStored(holder: StoredPaymentMethodVH, genericStoredModel: GenericStoredModel) {
-        holder.text.text = genericStoredModel.name
-        holder.detail.isVisible = false
-        imageLoader.load(genericStoredModel.imageId, holder.logo)
-        holder.endText.isVisible = false
-    }
-
-    private fun bindPaymentMethod(holder: PaymentMethodVH, position: Int) {
-        val paymentMethod = getPaymentMethodAt(position)
-
-        holder.text.text = paymentMethod.name
-        holder.detail.isVisible = false
-
-        holder.logo.borderEnabled = paymentMethod.drawIconBorder
-        imageLoader.load(paymentMethod.icon, holder.logo)
-
-        holder.itemView.setOnClickListener {
-            onPaymentMethodClick(paymentMethod)
-        }
-        holder.endText.isVisible = false
-    }
-
-    private fun bindGiftCardPaymentMethod(holder: GiftCardPaymentMethodVH, position: Int) {
-        val giftCardPaymentMethod = getGiftCardPaymentMethodAt(position)
-
-        val context = holder.itemView.context
-        holder.text.text = context.getString(R.string.card_number_4digit, giftCardPaymentMethod.lastFour)
-        imageLoader.load(giftCardPaymentMethod.imageId, holder.logo)
-        if (giftCardPaymentMethod.transactionLimit == null || giftCardPaymentMethod.shopperLocale == null) {
-            holder.detail.isVisible = false
-        } else {
-            holder.detail.isVisible = true
-            val value =
-                CurrencyUtils.formatAmount(giftCardPaymentMethod.transactionLimit, giftCardPaymentMethod.shopperLocale)
-            holder.detail.text = context.getString(R.string.checkout_giftcard_max_transaction_limit, value)
-        }
-        if (giftCardPaymentMethod.amount == null || giftCardPaymentMethod.shopperLocale == null) {
-            holder.endText.isVisible = false
-        } else {
-            holder.endText.isVisible = true
-            val value = CurrencyUtils.formatAmount(giftCardPaymentMethod.amount, giftCardPaymentMethod.shopperLocale)
-            holder.endText.text = context.getString(R.string.checkout_negative_amount, value)
-        }
-
-        holder.itemView.setOnClickListener(null)
-    }
-
-    private fun bindNote(holder: NoteVH, position: Int) {
-        val header = getNoteAt(position)
-        holder.note.text = header.note
     }
 
     override fun getItemCount(): Int {
         return paymentMethods.size
     }
 
-    private fun getHeaderAt(position: Int): PaymentMethodHeader {
-        return paymentMethods[position] as PaymentMethodHeader
+    private class StoredPaymentMethodVH(
+        private val binding: RemovablePaymentMethodsListItemBinding,
+        private val imageLoader: ImageLoader,
+        private val onUnderlayExpandListener: ((AdyenSwipeToRevealLayout) -> Unit)? = null
+    ) : RecyclerView.ViewHolder(binding.root) {
+
+        fun bind(
+            model: StoredPaymentMethodModel,
+            onStoredPaymentRemovedCallback: OnStoredPaymentRemovedCallback?,
+            onPaymentMethodSelectedCallback: OnPaymentMethodSelectedCallback?
+        ) {
+            with(binding) {
+                when (model) {
+                    is StoredCardModel -> bindStoredCard(model, imageLoader)
+                    is GenericStoredModel -> bindGenericStored(model)
+                }
+                paymentMethodItemUnderlayButton.setOnClickListener {
+                    showRemoveStoredPaymentDialog(
+                        model,
+                        onStoredPaymentRemovedCallback
+                    )
+                }
+                swipeToRevealLayout.apply {
+                    setUnderlayListener { view ->
+                        onUnderlayExpandListener?.invoke(view)
+                    }
+                    setOnMainClickListener {
+                        onPaymentMethodSelectedCallback?.onStoredPaymentMethodSelected(model)
+                    }
+                    setDragLocked(!model.isRemovable)
+                }
+            }
+        }
+
+        private fun bindStoredCard(model: StoredCardModel, imageLoader: ImageLoader) {
+            with(binding) {
+                val context = root.context
+                textViewTitle.text = context.getString(R.string.card_number_4digit, model.lastFour)
+                imageLoader.load(model.imageId, imageViewLogo)
+                textViewDetail.apply {
+                    text = DateUtils.parseDateToView(model.expiryMonth, model.expiryYear)
+                    isVisible = true
+                }
+                textViewAmount.isVisible = false
+            }
+        }
+
+        private fun bindGenericStored(model: GenericStoredModel) {
+            with(binding) {
+                textViewTitle.text = model.name
+                textViewDetail.isVisible = false
+                imageLoader.load(model.imageId, imageViewLogo)
+                textViewAmount.isVisible = false
+            }
+        }
+
+        private fun showRemoveStoredPaymentDialog(
+            model: StoredPaymentMethodModel,
+            onStoredPaymentRemovedCallback: OnStoredPaymentRemovedCallback?
+        ) {
+            AlertDialog.Builder(binding.root.context)
+                .setTitle(R.string.checkout_giftcard_remove_gift_cards_title)
+                .setMessage(R.string.checkout_remove_stored_payment_method_body)
+                .setPositiveButton(R.string.checkout_giftcard_remove_gift_cards_positive_button) { dialog, _ ->
+                    onStoredPaymentRemovedCallback?.onStoredPaymentMethodRemoved(model)
+                    dialog.dismiss()
+                }
+                .setNegativeButton(R.string.checkout_giftcard_remove_gift_cards_negative_button) { dialog, _ ->
+                    (binding.root as? AdyenSwipeToRevealLayout)?.collapseUnderlay()
+                    dialog.dismiss()
+                }
+                .show()
+        }
     }
 
-    private fun getStoredPaymentMethodAt(position: Int): StoredPaymentMethodModel {
-        return paymentMethods[position] as StoredPaymentMethodModel
+    private class PaymentMethodVH(
+        private val binding: PaymentMethodsListItemBinding,
+        private val imageLoader: ImageLoader
+    ) : RecyclerView.ViewHolder(binding.root) {
+        fun bind(
+            model: PaymentMethodModel,
+            onPaymentMethodSelectedCallback: OnPaymentMethodSelectedCallback?
+        ) = with(binding) {
+            textViewTitle.text = model.name
+            textViewDetail.isVisible = false
+
+            imageViewLogo.borderEnabled = model.drawIconBorder
+            imageLoader.load(model.icon, imageViewLogo)
+
+            itemView.setOnClickListener {
+                onPaymentMethodSelectedCallback?.onPaymentMethodSelected(model)
+            }
+
+            textViewAmount.isVisible = false
+        }
     }
 
-    private fun getPaymentMethodAt(position: Int): PaymentMethodModel {
-        return paymentMethods[position] as PaymentMethodModel
+    private class GiftCardPaymentMethodVH(
+        private val binding: PaymentMethodsListItemBinding,
+        private val imageLoader: ImageLoader
+    ) : RecyclerView.ViewHolder(binding.root) {
+        fun bind(model: GiftCardPaymentMethodModel) = with(binding) {
+            val context = binding.root.context
+            textViewTitle.text = context.getString(R.string.card_number_4digit, model.lastFour)
+            imageLoader.load(model.imageId, imageViewLogo)
+            if (model.transactionLimit == null || model.shopperLocale == null) {
+                textViewDetail.isVisible = false
+            } else {
+                val value = CurrencyUtils.formatAmount(
+                    model.transactionLimit,
+                    model.shopperLocale
+                )
+                textViewDetail.apply {
+                    isVisible = true
+                    text = context.getString(R.string.checkout_giftcard_max_transaction_limit, value)
+                }
+            }
+            if (model.amount == null || model.shopperLocale == null) {
+                textViewAmount.isVisible = false
+            } else {
+                val value = CurrencyUtils.formatAmount(
+                    model.amount,
+                    model.shopperLocale
+                )
+                textViewAmount.apply {
+                    isVisible = true
+                    text = context.getString(R.string.checkout_negative_amount, value)
+                }
+            }
+            itemView.setOnClickListener(null)
+        }
     }
 
-    private fun getGiftCardPaymentMethodAt(position: Int): GiftCardPaymentMethodModel {
-        return paymentMethods[position] as GiftCardPaymentMethodModel
+    private class HeaderVH(private val binding: PaymentMethodsListHeaderBinding) :
+        RecyclerView.ViewHolder(binding.root) {
+        fun bind(
+            model: PaymentMethodHeader,
+            onPaymentMethodSelectedCallback: OnPaymentMethodSelectedCallback?
+        ) = with(binding) {
+            paymentMethodHeaderTitle.setText(model.titleResId)
+            if (model.actionResId == null) {
+                paymentMethodHeaderAction.isVisible = false
+            } else {
+                paymentMethodHeaderAction.apply {
+                    isVisible = true
+                    setText(model.actionResId)
+                    setOnClickListener {
+                        onPaymentMethodSelectedCallback?.onHeaderActionSelected(model)
+                    }
+                }
+            }
+        }
     }
 
-    private fun getNoteAt(position: Int): PaymentMethodNote {
-        return paymentMethods[position] as PaymentMethodNote
-    }
-
-    private fun onStoredPaymentMethodClick(storedPaymentMethodModel: StoredPaymentMethodModel) {
-        onPaymentMethodSelectedCallback?.onStoredPaymentMethodSelected(storedPaymentMethodModel)
-    }
-
-    private fun onPaymentMethodClick(paymentMethod: PaymentMethodModel) {
-        onPaymentMethodSelectedCallback?.onPaymentMethodSelected(paymentMethod)
-    }
-
-    private fun onHeaderActionClick(header: PaymentMethodHeader) {
-        onPaymentMethodSelectedCallback?.onHeaderActionSelected(header)
-    }
-
-    private fun getView(parent: ViewGroup, id: Int): View {
-        return LayoutInflater.from(parent.context).inflate(id, parent, false)
-    }
-
-    companion object {
-        private val TAG = LogUtil.getTag()
+    private class NoteVH(private val binding: PaymentMethodsListNoteBinding) : RecyclerView.ViewHolder(binding.root) {
+        fun bind(model: PaymentMethodNote) = with(binding) {
+            paymentMethodNote.text = model.note
+        }
     }
 
     interface OnPaymentMethodSelectedCallback {
@@ -257,38 +278,4 @@ class PaymentMethodAdapter @JvmOverloads constructor(
     interface OnStoredPaymentRemovedCallback {
         fun onStoredPaymentMethodRemoved(storedPaymentMethodModel: StoredPaymentMethodModel)
     }
-
-    class StoredPaymentMethodVH(rootView: View) : BaseViewHolder(rootView) {
-        internal val text: TextView = rootView.findViewById(R.id.textView_text)
-        internal val detail: TextView = rootView.findViewById(R.id.textView_detail)
-        internal val logo: RoundCornerImageView = rootView.findViewById(R.id.imageView_logo)
-        internal val endText: TextView = rootView.findViewById(R.id.textView_endText)
-        internal val swipeToRevealLayout: AdyenSwipeToRevealLayout = rootView.findViewById(R.id.swipeToRevealLayout)
-        internal val underlayButton: FrameLayout = rootView.findViewById(R.id.payment_method_item_underlay_button)
-    }
-
-    class PaymentMethodVH(rootView: View) : BaseViewHolder(rootView) {
-        internal val text: TextView = rootView.findViewById(R.id.textView_text)
-        internal val detail: TextView = rootView.findViewById(R.id.textView_detail)
-        internal val logo: RoundCornerImageView = rootView.findViewById(R.id.imageView_logo)
-        internal val endText: TextView = rootView.findViewById(R.id.textView_endText)
-    }
-
-    class GiftCardPaymentMethodVH(rootView: View) : BaseViewHolder(rootView) {
-        internal val text: TextView = rootView.findViewById(R.id.textView_text)
-        internal val detail: TextView = rootView.findViewById(R.id.textView_detail)
-        internal val logo: RoundCornerImageView = rootView.findViewById(R.id.imageView_logo)
-        internal val endText: TextView = rootView.findViewById(R.id.textView_endText)
-    }
-
-    class HeaderVH(rootView: View) : BaseViewHolder(rootView) {
-        internal val title: TextView = rootView.findViewById(R.id.payment_method_header_title)
-        internal val action: TextView = rootView.findViewById(R.id.payment_method_header_action)
-    }
-
-    class NoteVH(rootView: View) : BaseViewHolder(rootView) {
-        internal val note: TextView = rootView.findViewById(R.id.payment_method_note)
-    }
-
-    open class BaseViewHolder(rootView: View) : RecyclerView.ViewHolder(rootView)
 }

@@ -12,20 +12,18 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.BaseAdapter
-import androidx.appcompat.widget.AppCompatImageView
-import androidx.appcompat.widget.AppCompatTextView
 import androidx.core.view.isVisible
+import androidx.recyclerview.widget.RecyclerView.ViewHolder
 import com.adyen.checkout.components.api.ImageLoader
+import com.adyen.checkout.components.ui.databinding.SpinnerListWithImageBinding
 
 class IssuerListSpinnerAdapter internal constructor(
-    context: Context,
+    private val context: Context,
     private var issuerList: List<IssuerModel>,
     private val imageLoader: ImageLoader,
     private val paymentMethod: String,
     private val hideIssuerLogo: Boolean
 ) : BaseAdapter() {
-
-    private val inflater: LayoutInflater = LayoutInflater.from(context)
 
     override fun getCount(): Int {
         return issuerList.size
@@ -40,23 +38,41 @@ class IssuerListSpinnerAdapter internal constructor(
     }
 
     override fun getView(position: Int, convertView: View?, parent: ViewGroup?): View {
-        val (id, name) = getItem(position)
-        // TODO: 15/03/2019 check if optimization with ViewHolder is possible
-        val view: View = convertView ?: inflater.inflate(R.layout.spinner_list_with_image, parent, false)
-        val issuerLogo: AppCompatImageView = view.findViewById(R.id.imageView_logo)
-        val issuerName: AppCompatTextView = view.findViewById(R.id.textView_text)
-        issuerName.text = name
+        val view: View
+        val viewHolder: IssuerListSpinnerViewHolder
+        val binding: SpinnerListWithImageBinding
+        if (convertView == null) {
+            binding = SpinnerListWithImageBinding.inflate(LayoutInflater.from(context), parent, false)
+            view = binding.root
+            viewHolder = IssuerListSpinnerViewHolder(binding, imageLoader, paymentMethod, hideIssuerLogo)
+        } else {
+            view = convertView
+            viewHolder = view.tag as IssuerListSpinnerViewHolder
+        }
+        viewHolder.bind(getItem(position))
+        return view
+    }
+}
+
+internal class IssuerListSpinnerViewHolder(
+    private val binding: SpinnerListWithImageBinding,
+    private val imageLoader: ImageLoader,
+    private val paymentMethod: String,
+    private val hideIssuerLogo: Boolean
+) : ViewHolder(binding.root) {
+
+    fun bind(model: IssuerModel) {
+        binding.textViewTitle.text = model.name
         if (!hideIssuerLogo) {
             imageLoader.load(
                 paymentMethod,
-                id,
-                issuerLogo,
+                model.id,
+                binding.imageViewLogo,
                 R.drawable.ic_placeholder_image,
                 R.drawable.ic_placeholder_image
             )
         } else {
-            issuerLogo.isVisible = false
+            binding.imageViewLogo.isVisible = false
         }
-        return view
     }
 }

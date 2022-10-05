@@ -102,7 +102,7 @@ class MainActivityTest : KoinTest {
 //            FOOTER_OF_PAYEMENT_METHODS_FOOTER, findViewByIdAndPerformClick(R.id.change_payment_method_button)
 //        )
 
-        R.id.recyclerView_paymentMethods.findItemByTextinRecyclerAndPerformClick(R.id.textView_text, CREDIT_CARD)
+        R.id.recyclerView_paymentMethods.findItemByTextinRecyclerAndPerformClick(R.id.textView_title, CREDIT_CARD)
 
         R.id.editText_securityCode.performTypeText(normalScheme.cvc)
         R.id.editText_cardNumber.performTypeText(normalScheme.cardNumber)
@@ -123,7 +123,7 @@ class MainActivityTest : KoinTest {
 //                findViewByIdAndPerformClick(R.id.change_payment_method_button)
 //            )
 
-        R.id.recyclerView_paymentMethods.findItemByTextinRecyclerAndPerformClick(R.id.textView_text, IDEAL)
+        R.id.recyclerView_paymentMethods.findItemByTextinRecyclerAndPerformClick(R.id.textView_title, IDEAL)
 
         R.id.recycler_issuers.performActionOnRecyclerItemAtPosition<RecyclerView.ViewHolder>(0, click())
 
