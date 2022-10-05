@@ -69,10 +69,13 @@ import com.adyen.checkout.mbway.MBWayView
 import com.adyen.checkout.molpay.MolpayComponent
 import com.adyen.checkout.molpay.MolpayConfiguration
 import com.adyen.checkout.onlinebankingcz.OnlineBankingCZComponent
+import com.adyen.checkout.onlinebankingcz.OnlineBankingCZConfiguration
 import com.adyen.checkout.onlinebankingcz.OnlineBankingCZView
-import com.adyen.checkout.onlinebankingcz.OnlineBankingConfiguration
 import com.adyen.checkout.onlinebankingpl.OnlineBankingPLComponent
 import com.adyen.checkout.onlinebankingpl.OnlineBankingPLConfiguration
+import com.adyen.checkout.onlinebankingsk.OnlineBankingSKComponent
+import com.adyen.checkout.onlinebankingsk.OnlineBankingSKConfiguration
+import com.adyen.checkout.onlinebankingsk.OnlineBankingSKView
 import com.adyen.checkout.openbanking.OpenBankingComponent
 import com.adyen.checkout.openbanking.OpenBankingConfiguration
 import com.adyen.checkout.qrcode.QRCodeConfiguration
@@ -137,12 +140,17 @@ internal fun <T : Configuration> getDefaultConfigForPaymentMethod(
         PaymentMethodTypes.MOLPAY_THAILAND,
         PaymentMethodTypes.MOLPAY_MALAYSIA,
         PaymentMethodTypes.MOLPAY_VIETNAM -> MolpayConfiguration.Builder(shopperLocale, environment, clientKey)
-        PaymentMethodTypes.ONLINE_BANKING_CZ -> OnlineBankingConfiguration.Builder(
+        PaymentMethodTypes.ONLINE_BANKING_CZ -> OnlineBankingCZConfiguration.Builder(
             shopperLocale,
             environment,
             clientKey
         )
         PaymentMethodTypes.ONLINE_BANKING_PL -> OnlineBankingPLConfiguration.Builder(
+            shopperLocale,
+            environment,
+            clientKey
+        )
+        PaymentMethodTypes.ONLINE_BANKING_SK -> OnlineBankingSKConfiguration.Builder(
             shopperLocale,
             environment,
             clientKey
@@ -341,7 +349,7 @@ internal fun getComponentFor(
             MolpayComponent.PROVIDER.get(fragment, paymentMethod, molpayConfig)
         }
         PaymentMethodTypes.ONLINE_BANKING_CZ -> {
-            val onlineBankingCZConfig: OnlineBankingConfiguration =
+            val onlineBankingCZConfig: OnlineBankingCZConfiguration =
                 getConfigurationForPaymentMethod(PaymentMethodTypes.ONLINE_BANKING_CZ, dropInConfiguration, amount)
             OnlineBankingCZComponent.PROVIDER.get(fragment, paymentMethod, onlineBankingCZConfig)
         }
@@ -349,6 +357,11 @@ internal fun getComponentFor(
             val onlineBankingPLConfig: OnlineBankingPLConfiguration =
                 getConfigurationForPaymentMethod(PaymentMethodTypes.ONLINE_BANKING_PL, dropInConfiguration, amount)
             OnlineBankingPLComponent.PROVIDER.get(fragment, paymentMethod, onlineBankingPLConfig)
+        }
+        PaymentMethodTypes.ONLINE_BANKING_SK -> {
+            val onlineBankingSKConfig: OnlineBankingSKConfiguration =
+                getConfigurationForPaymentMethod(PaymentMethodTypes.ONLINE_BANKING_SK, dropInConfiguration, amount)
+            OnlineBankingSKComponent.PROVIDER.get(fragment, paymentMethod, onlineBankingSKConfig)
         }
         PaymentMethodTypes.OPEN_BANKING -> {
             val openBankingConfig: OpenBankingConfiguration =
@@ -393,6 +406,7 @@ internal fun getViewFor(
         PaymentMethodTypes.GIFTCARD -> GiftCardView(context)
         PaymentMethodTypes.MB_WAY -> MBWayView(context)
         PaymentMethodTypes.ONLINE_BANKING_CZ -> OnlineBankingCZView(context)
+        PaymentMethodTypes.ONLINE_BANKING_SK -> OnlineBankingSKView(context)
         PaymentMethodTypes.SCHEME -> CardView(context)
         PaymentMethodTypes.SEPA -> SepaView(context)
         PaymentMethodTypes.BLIK -> BlikView(context)
@@ -425,8 +439,9 @@ private fun Configuration.toBuilder(): BaseConfigurationBuilder<out Configuratio
         is IdealConfiguration -> IdealConfiguration.Builder(this)
         is MBWayConfiguration -> MBWayConfiguration.Builder(this)
         is MolpayConfiguration -> MolpayConfiguration.Builder(this)
-        is OnlineBankingConfiguration -> OnlineBankingConfiguration.Builder(this)
+        is OnlineBankingCZConfiguration -> OnlineBankingCZConfiguration.Builder(this)
         is OnlineBankingPLConfiguration -> OnlineBankingPLConfiguration.Builder(this)
+        is OnlineBankingSKConfiguration -> OnlineBankingSKConfiguration.Builder(this)
         is OpenBankingConfiguration -> OpenBankingConfiguration.Builder(this)
         is QRCodeConfiguration -> QRCodeConfiguration.Builder(this)
         is RedirectConfiguration -> RedirectConfiguration.Builder(this)

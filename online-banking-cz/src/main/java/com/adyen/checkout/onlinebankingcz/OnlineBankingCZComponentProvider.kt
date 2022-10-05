@@ -16,21 +16,24 @@ import com.adyen.checkout.components.PaymentComponentProvider
 import com.adyen.checkout.components.base.lifecycle.viewModelFactory
 import com.adyen.checkout.components.model.paymentmethods.PaymentMethod
 import com.adyen.checkout.components.model.payments.request.OnlineBankingCZPaymentMethod
+import com.adyen.checkout.onlinebankingcore.PdfOpener
+import com.adyen.checkout.onlinebankingcore.DefaultOnlineBankingDelegate
+import com.adyen.checkout.onlinebankingcore.OnlineBankingComponent
 
 class OnlineBankingCZComponentProvider :
-    PaymentComponentProvider<OnlineBankingCZComponent, OnlineBankingConfiguration> {
+    PaymentComponentProvider<OnlineBankingComponent<OnlineBankingCZPaymentMethod>, OnlineBankingCZConfiguration> {
 
     override fun get(
         savedStateRegistryOwner: SavedStateRegistryOwner,
         viewModelStoreOwner: ViewModelStoreOwner,
         paymentMethod: PaymentMethod,
-        configuration: OnlineBankingConfiguration,
+        configuration: OnlineBankingCZConfiguration,
         defaultArgs: Bundle?
-    ): OnlineBankingCZComponent {
+    ): OnlineBankingComponent<OnlineBankingCZPaymentMethod> {
         val genericFactory: ViewModelProvider.Factory =
             viewModelFactory(savedStateRegistryOwner, defaultArgs) { savedStateHandle ->
                 val delegate =
-                    DefaultOnlineBankingCZDelegate(PdfOpener(), paymentMethod) { OnlineBankingCZPaymentMethod() }
+                    DefaultOnlineBankingDelegate(PdfOpener(), paymentMethod) { OnlineBankingCZPaymentMethod() }
 
                 OnlineBankingCZComponent(
                     savedStateHandle,
@@ -38,6 +41,6 @@ class OnlineBankingCZComponentProvider :
                     configuration
                 )
             }
-        return ViewModelProvider(viewModelStoreOwner, genericFactory).get(OnlineBankingCZComponent::class.java)
+        return ViewModelProvider(viewModelStoreOwner, genericFactory)[OnlineBankingCZComponent::class.java]
     }
 }

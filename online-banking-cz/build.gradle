@@ -29,25 +29,9 @@ android {
         testInstrumentationRunner 'androidx.test.runner.AndroidJUnitRunner'
         consumerProguardFiles "consumer-rules.pro"
     }
-
-    buildFeatures {
-        viewBinding true
-    }
 }
 
 dependencies {
     // Checkout
-    api project(':issuer-list')
-
-    // Dependencies
-    implementation libraries.androidx.appcompat
-    implementation libraries.androidx.recyclerview
-    implementation libraries.androidx.browser
-    implementation libraries.material
-
-    //Tests
-    testImplementation testLibraries.junit5
-    testImplementation testLibraries.kotlinCoroutines
-    testImplementation testLibraries.mockito
-
+    api project(':online-banking-core')
 }
