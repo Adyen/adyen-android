@@ -152,13 +152,30 @@ class DropInConfiguration : Configuration, Parcelable {
             private set
 
         /**
-         *
          * Create a [DropInConfiguration]
          *
-         * @param context
+         * @param context   A context
+         * @param environment   The [Environment] to be used for network calls to Adyen.
          * @param clientKey Your Client Key used for network calls from the SDK to Adyen.
          */
-        constructor(context: Context, clientKey: String) : super(context, clientKey)
+        constructor(context: Context, environment: Environment, clientKey: String) : super(
+            context,
+            environment,
+            clientKey
+        )
+
+        /**
+         * Constructor for Builder with default values.
+         *
+         * @param shopperLocale The Locale of the shopper.
+         * @param environment   The [Environment] to be used for network calls to Adyen.
+         * @param clientKey Your Client Key used for network calls from the SDK to Adyen.
+         */
+        constructor(shopperLocale: Locale, environment: Environment, clientKey: String) : super(
+            shopperLocale,
+            environment,
+            clientKey
+        )
 
         /**
          * Create a Builder with the same values of an existing Configuration object.

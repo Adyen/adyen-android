@@ -136,7 +136,7 @@ class MainActivity : AppCompatActivity(), DropInCallback {
                     this,
                     dropInLauncher,
                     navigation.paymentMethodsApiResponse,
-                    checkoutConfigurationProvider.getDropInConfiguration(this),
+                    checkoutConfigurationProvider.getDropInConfiguration(),
                     ExampleFullAsyncDropInService::class.java,
                 )
             }
@@ -145,7 +145,7 @@ class MainActivity : AppCompatActivity(), DropInCallback {
                     this,
                     dropInLauncher,
                     navigation.session,
-                    checkoutConfigurationProvider.getDropInConfiguration(this)
+                    checkoutConfigurationProvider.getDropInConfiguration()
                 )
             }
             is MainNavigation.DropInWithCustomSession -> {
@@ -153,7 +153,7 @@ class MainActivity : AppCompatActivity(), DropInCallback {
                     this,
                     dropInLauncher,
                     navigation.session,
-                    checkoutConfigurationProvider.getDropInConfiguration(this),
+                    checkoutConfigurationProvider.getDropInConfiguration(),
                     ExampleSessionsDropInService::class.java
                 )
             }

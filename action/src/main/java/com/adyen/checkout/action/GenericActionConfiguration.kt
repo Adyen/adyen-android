@@ -8,6 +8,7 @@
 
 package com.adyen.checkout.action
 
+import android.content.Context
 import android.os.Parcel
 import android.os.Parcelable
 import androidx.annotation.RestrictTo
@@ -72,18 +73,43 @@ class GenericActionConfiguration : Configuration, Parcelable {
     /**
      * Builder for creating a [GenericActionConfiguration] where you can set specific Configurations for an action
      */
-    class Builder(
-        builderShopperLocale: Locale,
-        builderEnvironment: Environment,
-        builderClientKey: String
-    ) : BaseConfigurationBuilder<GenericActionConfiguration>(
-        builderShopperLocale,
-        builderEnvironment,
-        builderClientKey
-    ) {
+    class Builder : BaseConfigurationBuilder<GenericActionConfiguration> {
 
         @RestrictTo(RestrictTo.Scope.LIBRARY_GROUP)
         val availableActionConfigs = HashMap<Class<*>, Configuration>()
+
+        /**
+         * Constructor for Builder with default values.
+         *
+         * @param context   A context
+         * @param environment   The [Environment] to be used for network calls to Adyen.
+         * @param clientKey Your Client Key used for network calls from the SDK to Adyen.
+         */
+        constructor(context: Context, environment: Environment, clientKey: String) : super(
+            context,
+            environment,
+            clientKey
+        )
+
+        /**
+         * Builder with required parameters.
+         *
+         * @param shopperLocale The Locale of the shopper.
+         * @param environment   The [Environment] to be used for network calls to Adyen.
+         * @param clientKey Your Client Key used for network calls from the SDK to Adyen.
+         */
+        constructor(shopperLocale: Locale, environment: Environment, clientKey: String) : super(
+            shopperLocale,
+            environment,
+            clientKey
+        )
+
+        /**
+         * Constructor that copies an existing configuration.
+         *
+         * @param configuration A configuration to initialize the builder.
+         */
+        constructor(configuration: GenericActionConfiguration) : super(configuration)
 
         /**
          * Add configuration for 3DS2 action.

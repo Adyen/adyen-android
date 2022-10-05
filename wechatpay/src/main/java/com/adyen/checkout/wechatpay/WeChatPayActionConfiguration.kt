@@ -29,13 +29,19 @@ class WeChatPayActionConfiguration : Configuration {
      * Builder to create a [WeChatPayActionConfiguration].
      */
     class Builder : BaseConfigurationBuilder<WeChatPayActionConfiguration> {
+
         /**
          * Constructor for Builder with default values.
          *
          * @param context   A context
+         * @param environment   The [Environment] to be used for network calls to Adyen.
          * @param clientKey Your Client Key used for network calls from the SDK to Adyen.
          */
-        constructor(context: Context, clientKey: String) : super(context, clientKey)
+        constructor(context: Context, environment: Environment, clientKey: String) : super(
+            context,
+            environment,
+            clientKey
+        )
 
         /**
          * Builder with required parameters.
@@ -56,14 +62,6 @@ class WeChatPayActionConfiguration : Configuration {
          * @param configuration A configuration to initialize the builder.
          */
         constructor(configuration: WeChatPayActionConfiguration) : super(configuration)
-
-        override fun setShopperLocale(builderShopperLocale: Locale): Builder {
-            return super.setShopperLocale(builderShopperLocale) as Builder
-        }
-
-        override fun setEnvironment(builderEnvironment: Environment): Builder {
-            return super.setEnvironment(builderEnvironment) as Builder
-        }
 
         override fun buildInternal(): WeChatPayActionConfiguration {
             return WeChatPayActionConfiguration(

@@ -28,7 +28,11 @@ abstract class OnlineBankingConfiguration : Configuration {
     abstract class OnlineBankingBuilder<OnlineBankingConfigurationT : OnlineBankingConfiguration> :
         BaseConfigurationBuilder<OnlineBankingConfigurationT> {
 
-        protected constructor(context: Context, clientKey: String) : super(context, clientKey)
+        protected constructor(context: Context, environment: Environment, clientKey: String) : super(
+            context,
+            environment,
+            clientKey
+        )
 
         protected constructor(
             shopperLocale: Locale,

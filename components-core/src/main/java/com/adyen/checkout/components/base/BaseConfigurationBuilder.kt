@@ -30,9 +30,18 @@ abstract class BaseConfigurationBuilder<ConfigurationT : Configuration>(
      * Constructor that provides default values.
      *
      * @param context A Context
+     * @param environment   The [Environment] to be used for network calls to Adyen.
      * @param clientKey Your Client Key used for network calls from the SDK to Adyen.
      */
-    constructor(context: Context, clientKey: String) : this(LocaleUtil.getLocale(context), Environment.TEST, clientKey)
+    constructor(
+        context: Context,
+        environment: Environment,
+        clientKey: String
+    ) : this(
+        LocaleUtil.getLocale(context),
+        environment,
+        clientKey
+    )
 
     /**
      * Constructor that copies an existing configuration.

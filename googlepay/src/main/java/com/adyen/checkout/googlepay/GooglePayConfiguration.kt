@@ -158,12 +158,17 @@ class GooglePayConfiguration : Configuration, AmountConfiguration {
         }
 
         /**
-         * Builder with required parameters.
+         * Constructor for Builder with default values.
          *
-         * @param context   A context to get some information.
+         * @param context   A context
+         * @param environment   The [Environment] to be used for network calls to Adyen.
          * @param clientKey Your Client Key used for network calls from the SDK to Adyen.
          */
-        constructor(context: Context, clientKey: String) : super(context, clientKey)
+        constructor(context: Context, environment: Environment, clientKey: String) : super(
+            context,
+            environment,
+            clientKey
+        )
 
         /**
          * Builder with required parameters.
@@ -199,10 +204,6 @@ class GooglePayConfiguration : Configuration, AmountConfiguration {
             builderShippingAddressParameters = configuration.shippingAddressParameters
             builderBillingAddressRequired = configuration.isBillingAddressRequired
             builderBillingAddressParameters = configuration.billingAddressParameters
-        }
-
-        override fun setShopperLocale(builderShopperLocale: Locale): Builder {
-            return super.setShopperLocale(builderShopperLocale) as Builder
         }
 
         override fun setEnvironment(builderEnvironment: Environment): Builder {

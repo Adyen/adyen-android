@@ -48,7 +48,11 @@ abstract class IssuerListConfiguration : Configuration {
         protected open var viewType: IssuerListViewType = IssuerListViewType.RECYCLER_VIEW
         protected open var hideIssuerLogos: Boolean = false
 
-        protected constructor(context: Context, clientKey: String) : super(context, clientKey)
+        protected constructor(context: Context, environment: Environment, clientKey: String) : super(
+            context,
+            environment,
+            clientKey
+        )
 
         protected constructor(
             shopperLocale: Locale,
