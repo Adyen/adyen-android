@@ -62,6 +62,7 @@ abstract class PaymentMethodDetails : ModelObject() {
                 DotpayPaymentMethod.PAYMENT_METHOD_TYPE -> DotpayPaymentMethod.SERIALIZER
                 OnlineBankingCZPaymentMethod.PAYMENT_METHOD_TYPE -> OnlineBankingCZPaymentMethod.SERIALIZER
                 OnlineBankingPLPaymentMethod.PAYMENT_METHOD_TYPE -> OnlineBankingPLPaymentMethod.SERIALIZER
+                OnlineBankingSKPaymentMethod.PAYMENT_METHOD_TYPE -> OnlineBankingSKPaymentMethod.SERIALIZER
                 EPSPaymentMethod.PAYMENT_METHOD_TYPE -> EPSPaymentMethod.SERIALIZER
                 OpenBankingPaymentMethod.PAYMENT_METHOD_TYPE -> OpenBankingPaymentMethod.SERIALIZER
                 EntercashPaymentMethod.PAYMENT_METHOD_TYPE -> EntercashPaymentMethod.SERIALIZER

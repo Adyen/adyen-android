@@ -39,6 +39,7 @@ import com.adyen.checkout.mbway.MBWayConfiguration
 import com.adyen.checkout.molpay.MolpayConfiguration
 import com.adyen.checkout.onlinebankingcz.OnlineBankingCZConfiguration
 import com.adyen.checkout.onlinebankingpl.OnlineBankingPLConfiguration
+import com.adyen.checkout.onlinebankingsk.OnlineBankingSKConfiguration
 import com.adyen.checkout.openbanking.OpenBankingConfiguration
 import com.adyen.checkout.qrcode.QRCodeConfiguration
 import com.adyen.checkout.redirect.RedirectConfiguration
@@ -285,6 +286,14 @@ class DropInConfiguration : Configuration, Parcelable {
          */
         fun addOnlineBankingPLConfiguration(onlineBankingPLConfiguration: OnlineBankingPLConfiguration): Builder {
             availablePaymentConfigs[PaymentMethodTypes.ONLINE_BANKING_PL] = onlineBankingPLConfiguration
+            return this
+        }
+
+        /**
+         * Add configuration for Online Banking Slovakia payment method.
+         */
+        fun addOnlineBankingSKConfiguration(onlineBankingSKConfiguration: OnlineBankingSKConfiguration): Builder {
+            availablePaymentConfigs[PaymentMethodTypes.ONLINE_BANKING_SK] = onlineBankingSKConfiguration
             return this
         }
 
