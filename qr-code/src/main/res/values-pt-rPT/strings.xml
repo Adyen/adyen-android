@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+  ~ Copyright (c) 2021 Adyen N.V.
+  ~
+  ~ This file is open source and available under the MIT license. See the LICENSE file for more info.
+  ~
+  ~ Created by josephj on 26/3/2021.
+  -->
+
+<resources>
+    <string name="checkout_qr_code_pix">Copie o código e, em seguida, abra a aplicação com a chave PIX registada, escolha Pagar com PIX e cole o código.</string>
+    <string name="checkout_qr_code_copy_button">Copiar código</string>
+    <string name="checkout_qr_code_timer_text">Tem %s para pagar</string>
+    <string name="checkout_qr_code_copied_toast">Código copiado para a área de transferência</string>
+</resources>
