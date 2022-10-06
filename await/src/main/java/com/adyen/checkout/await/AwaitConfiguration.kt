@@ -18,9 +18,9 @@ import java.util.Locale
 class AwaitConfiguration : Configuration {
 
     constructor(builder: Builder) : super(
-        builder.builderShopperLocale,
-        builder.builderEnvironment,
-        builder.builderClientKey
+        builder.shopperLocale,
+        builder.environment,
+        builder.clientKey
     )
 
     constructor(parcel: Parcel) : super(parcel)
@@ -63,12 +63,12 @@ class AwaitConfiguration : Configuration {
          */
         constructor(configuration: AwaitConfiguration) : super(configuration)
 
-        override fun setShopperLocale(builderShopperLocale: Locale): Builder {
-            return super.setShopperLocale(builderShopperLocale) as Builder
+        override fun setShopperLocale(shopperLocale: Locale): Builder {
+            return super.setShopperLocale(shopperLocale) as Builder
         }
 
-        override fun setEnvironment(builderEnvironment: Environment): Builder {
-            return super.setEnvironment(builderEnvironment) as Builder
+        override fun setEnvironment(environment: Environment): Builder {
+            return super.setEnvironment(environment) as Builder
         }
 
         override fun buildInternal(): AwaitConfiguration {

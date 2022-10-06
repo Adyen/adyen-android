@@ -70,9 +70,9 @@ class IdealConfiguration : IssuerListConfiguration {
 
         override fun buildInternal(): IdealConfiguration {
             return IdealConfiguration(
-                shopperLocale = builderShopperLocale,
-                environment = builderEnvironment,
-                clientKey = builderClientKey,
+                shopperLocale = shopperLocale,
+                environment = environment,
+                clientKey = clientKey,
                 viewType = viewType,
                 hideIssuerLogos = hideIssuerLogos,
             )

@@ -46,7 +46,7 @@ class GenericActionConfiguration : Configuration, Parcelable {
 
     constructor(
         builder: Builder
-    ) : super(builder.builderShopperLocale, builder.builderEnvironment, builder.builderClientKey) {
+    ) : super(builder.shopperLocale, builder.environment, builder.clientKey) {
         this.availableActionConfigs = builder.availableActionConfigs
     }
 

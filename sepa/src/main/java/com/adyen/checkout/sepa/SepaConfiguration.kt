@@ -63,9 +63,9 @@ class SepaConfiguration : Configuration {
 
         override fun buildInternal(): SepaConfiguration {
             return SepaConfiguration(
-                shopperLocale = builderShopperLocale,
-                environment = builderEnvironment,
-                clientKey = builderClientKey
+                shopperLocale = shopperLocale,
+                environment = environment,
+                clientKey = clientKey
             )
         }
     }

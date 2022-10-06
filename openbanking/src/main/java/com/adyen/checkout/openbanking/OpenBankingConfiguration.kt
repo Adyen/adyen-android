@@ -70,9 +70,9 @@ class OpenBankingConfiguration : IssuerListConfiguration {
 
         override fun buildInternal(): OpenBankingConfiguration {
             return OpenBankingConfiguration(
-                shopperLocale = builderShopperLocale,
-                environment = builderEnvironment,
-                clientKey = builderClientKey,
+                shopperLocale = shopperLocale,
+                environment = environment,
+                clientKey = clientKey,
                 viewType = viewType,
                 hideIssuerLogos = hideIssuerLogos,
             )

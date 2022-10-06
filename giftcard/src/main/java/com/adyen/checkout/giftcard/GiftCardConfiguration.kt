@@ -32,9 +32,9 @@ class GiftCardConfiguration : Configuration {
     }
 
     internal constructor(builder: Builder) : super(
-        builder.builderShopperLocale,
-        builder.builderEnvironment,
-        builder.builderClientKey
+        builder.shopperLocale,
+        builder.environment,
+        builder.clientKey
     )
 
     internal constructor(parcel: Parcel) : super(parcel)

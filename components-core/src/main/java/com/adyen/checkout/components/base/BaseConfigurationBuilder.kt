@@ -10,18 +10,18 @@ import java.util.Locale
 /**
  * Base constructor with the required fields.
  *
- * @param builderShopperLocale The Locale of the shopper.
- * @param builderEnvironment   The [Environment] to be used for network calls to Adyen.
- * @param builderClientKey     Your Client Key used for network calls from the SDK to Adyen.
+ * @param shopperLocale The Locale of the shopper.
+ * @param environment   The [Environment] to be used for network calls to Adyen.
+ * @param clientKey     Your Client Key used for network calls from the SDK to Adyen.
  */
 abstract class BaseConfigurationBuilder<ConfigurationT : Configuration>(
-    var builderShopperLocale: Locale,
-    var builderEnvironment: Environment,
-    var builderClientKey: String
+    var shopperLocale: Locale,
+    var environment: Environment,
+    var clientKey: String
 ) {
 
     init {
-        if (!ValidationUtils.isClientKeyValid(builderClientKey)) {
+        if (!ValidationUtils.isClientKeyValid(clientKey)) {
             throw CheckoutException("Client key is not valid.")
         }
     }
@@ -55,32 +55,32 @@ abstract class BaseConfigurationBuilder<ConfigurationT : Configuration>(
     )
 
     /**
-     * @param builderShopperLocale the [Locale] used for translations.
+     * @param shopperLocale the [Locale] used for translations.
      * @return The builder instance to chain calls.
      */
-    open fun setShopperLocale(builderShopperLocale: Locale): BaseConfigurationBuilder<ConfigurationT> {
-        this.builderShopperLocale = builderShopperLocale
+    open fun setShopperLocale(shopperLocale: Locale): BaseConfigurationBuilder<ConfigurationT> {
+        this.shopperLocale = shopperLocale
         return this
     }
 
     /**
-     * @param builderEnvironment The [Environment] used for network calls.
+     * @param environment The [Environment] used for network calls.
      * @return The builder instance to chain calls.
      */
-    open fun setEnvironment(builderEnvironment: Environment): BaseConfigurationBuilder<ConfigurationT> {
-        this.builderEnvironment = builderEnvironment
+    open fun setEnvironment(environment: Environment): BaseConfigurationBuilder<ConfigurationT> {
+        this.environment = environment
         return this
     }
 
     protected abstract fun buildInternal(): ConfigurationT
 
     fun build(): ConfigurationT {
-        if (!ValidationUtils.doesClientKeyMatchEnvironment(builderClientKey, builderEnvironment)) {
+        if (!ValidationUtils.doesClientKeyMatchEnvironment(clientKey, environment)) {
             throw CheckoutException("Client key does not match the environment.")
         }
 
-        if (!LocaleUtil.isValidLocale(builderShopperLocale)) {
-            throw CheckoutException("Invalid shopper locale: $builderShopperLocale.")
+        if (!LocaleUtil.isValidLocale(shopperLocale)) {
+            throw CheckoutException("Invalid shopper locale: $shopperLocale.")
         }
 
         return buildInternal()

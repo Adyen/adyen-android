@@ -65,9 +65,9 @@ class WeChatPayActionConfiguration : Configuration {
 
         override fun buildInternal(): WeChatPayActionConfiguration {
             return WeChatPayActionConfiguration(
-                shopperLocale = builderShopperLocale,
-                environment = builderEnvironment,
-                clientKey = builderClientKey,
+                shopperLocale = shopperLocale,
+                environment = environment,
+                clientKey = clientKey,
             )
         }
     }

@@ -70,9 +70,9 @@ class EntercashConfiguration : IssuerListConfiguration {
 
         override fun buildInternal(): EntercashConfiguration {
             return EntercashConfiguration(
-                shopperLocale = builderShopperLocale,
-                environment = builderEnvironment,
-                clientKey = builderClientKey,
+                shopperLocale = shopperLocale,
+                environment = environment,
+                clientKey = clientKey,
                 viewType = viewType,
                 hideIssuerLogos = hideIssuerLogos,
             )

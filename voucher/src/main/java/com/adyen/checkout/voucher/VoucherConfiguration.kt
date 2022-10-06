@@ -19,9 +19,9 @@ import java.util.Locale
 class VoucherConfiguration : Configuration {
 
     private constructor(builder: Builder) : super(
-        builder.builderShopperLocale,
-        builder.builderEnvironment,
-        builder.builderClientKey
+        builder.shopperLocale,
+        builder.environment,
+        builder.clientKey
     )
 
     private constructor(parcel: Parcel) : super(parcel)

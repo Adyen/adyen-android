@@ -104,34 +104,34 @@ class CardConfiguration : Configuration {
      */
     @Suppress("TooManyFunctions")
     class Builder : BaseConfigurationBuilder<CardConfiguration> {
-        private var builderSupportedCardTypes: List<CardType> = emptyList()
-        private var builderHolderNameRequired = false
-        private var builderIsStorePaymentFieldVisible = true
-        private var builderShopperReference: String? = null
-        private var builderHideCvc = false
-        private var builderHideCvcStoredCard = false
-        private var builderSocialSecurityNumberVisibility: SocialSecurityNumberVisibility? =
+        private var supportedCardTypes: List<CardType> = emptyList()
+        private var holderNameRequired = false
+        private var isStorePaymentFieldVisible = true
+        private var shopperReference: String? = null
+        private var isHideCvc = false
+        private var isHideCvcStoredCard = false
+        private var socialSecurityNumberVisibility: SocialSecurityNumberVisibility? =
             SocialSecurityNumberVisibility.HIDE
-        private var builderKcpAuthVisibility: KCPAuthVisibility? = KCPAuthVisibility.HIDE
-        private var builderAddressVisibility = AddressVisibility.NONE
-        private var builderInstallmentConfiguration: InstallmentConfiguration? = null
-        private var builderAddressConfiguration: AddressConfiguration? = null
+        private var kcpAuthVisibility: KCPAuthVisibility? = KCPAuthVisibility.HIDE
+        private var addressVisibility = AddressVisibility.NONE
+        private var installmentConfiguration: InstallmentConfiguration? = null
+        private var addressConfiguration: AddressConfiguration? = null
 
         /**
          * Constructor of Card Configuration Builder with instance of CardConfiguration.
          */
         constructor(cardConfiguration: CardConfiguration) : super(cardConfiguration) {
-            builderSupportedCardTypes = cardConfiguration.supportedCardTypes
-            builderHolderNameRequired = cardConfiguration.isHolderNameRequired
-            builderIsStorePaymentFieldVisible = cardConfiguration.isStorePaymentFieldVisible
-            builderShopperReference = cardConfiguration.shopperReference
-            builderHideCvc = cardConfiguration.isHideCvc
-            builderHideCvcStoredCard = cardConfiguration.isHideCvcStoredCard
-            builderSocialSecurityNumberVisibility = cardConfiguration.socialSecurityNumberVisibility
-            builderKcpAuthVisibility = cardConfiguration.kcpAuthVisibility
-            builderAddressVisibility = cardConfiguration.addressVisibility
-            builderInstallmentConfiguration = cardConfiguration.installmentConfiguration
-            builderAddressConfiguration = cardConfiguration.addressConfiguration
+            supportedCardTypes = cardConfiguration.supportedCardTypes
+            holderNameRequired = cardConfiguration.isHolderNameRequired
+            isStorePaymentFieldVisible = cardConfiguration.isStorePaymentFieldVisible
+            shopperReference = cardConfiguration.shopperReference
+            isHideCvc = cardConfiguration.isHideCvc
+            isHideCvcStoredCard = cardConfiguration.isHideCvcStoredCard
+            socialSecurityNumberVisibility = cardConfiguration.socialSecurityNumberVisibility
+            kcpAuthVisibility = cardConfiguration.kcpAuthVisibility
+            addressVisibility = cardConfiguration.addressVisibility
+            installmentConfiguration = cardConfiguration.installmentConfiguration
+            addressConfiguration = cardConfiguration.addressConfiguration
         }
 
         /**
@@ -160,12 +160,12 @@ class CardConfiguration : Configuration {
             clientKey: String
         ) : super(shopperLocale, environment, clientKey)
 
-        override fun setShopperLocale(builderShopperLocale: Locale): Builder {
-            return super.setShopperLocale(builderShopperLocale) as Builder
+        override fun setShopperLocale(shopperLocale: Locale): Builder {
+            return super.setShopperLocale(shopperLocale) as Builder
         }
 
-        override fun setEnvironment(builderEnvironment: Environment): Builder {
-            return super.setEnvironment(builderEnvironment) as Builder
+        override fun setEnvironment(environment: Environment): Builder {
+            return super.setEnvironment(environment) as Builder
         }
 
         /**
@@ -175,7 +175,7 @@ class CardConfiguration : Configuration {
          * @return [CardConfiguration.Builder]
          */
         fun setSupportedCardTypes(vararg supportCardTypes: CardType): Builder {
-            builderSupportedCardTypes = listOf(*supportCardTypes)
+            supportedCardTypes = listOf(*supportCardTypes)
             return this
         }
 
@@ -186,7 +186,7 @@ class CardConfiguration : Configuration {
          * @return [CardConfiguration.Builder]
          */
         fun setHolderNameRequired(holderNameRequired: Boolean): Builder {
-            builderHolderNameRequired = holderNameRequired
+            this.holderNameRequired = holderNameRequired
             return this
         }
 
@@ -197,7 +197,7 @@ class CardConfiguration : Configuration {
          * @return [CardConfiguration.Builder]
          */
         fun setShowStorePaymentField(showStorePaymentField: Boolean): Builder {
-            builderIsStorePaymentFieldVisible = showStorePaymentField
+            isStorePaymentFieldVisible = showStorePaymentField
             return this
         }
 
@@ -210,7 +210,7 @@ class CardConfiguration : Configuration {
          * @return [CardConfiguration.Builder]
          */
         fun setShopperReference(shopperReference: String): Builder {
-            this.builderShopperReference = shopperReference
+            this.shopperReference = shopperReference
             return this
         }
 
@@ -222,7 +222,7 @@ class CardConfiguration : Configuration {
          * @return [CardConfiguration.Builder]
          */
         fun setHideCvc(hideCvc: Boolean): Builder {
-            builderHideCvc = hideCvc
+            this.isHideCvc = hideCvc
             return this
         }
 
@@ -234,7 +234,7 @@ class CardConfiguration : Configuration {
          * @return [CardConfiguration.Builder]
          */
         fun setHideCvcStoredCard(hideCvcStoredCard: Boolean): Builder {
-            builderHideCvcStoredCard = hideCvcStoredCard
+            isHideCvcStoredCard = hideCvcStoredCard
             return this
         }
 
@@ -245,12 +245,12 @@ class CardConfiguration : Configuration {
          * @return [CardConfiguration.Builder]
          */
         fun setSocialSecurityNumberVisibility(socialSecurityNumberVisibility: SocialSecurityNumberVisibility): Builder {
-            builderSocialSecurityNumberVisibility = socialSecurityNumberVisibility
+            this.socialSecurityNumberVisibility = socialSecurityNumberVisibility
             return this
         }
 
         fun setKcpAuthVisibility(kcpAuthVisibility: KCPAuthVisibility): Builder {
-            builderKcpAuthVisibility = kcpAuthVisibility
+            this.kcpAuthVisibility = kcpAuthVisibility
             return this
         }
 
@@ -265,7 +265,7 @@ class CardConfiguration : Configuration {
                 "form is only supported through using setAddressConfiguration(AddressConfiguration)."
         )
         fun setAddressVisibility(addressVisibility: AddressVisibility): Builder {
-            builderAddressVisibility = addressVisibility
+            this.addressVisibility = addressVisibility
             return this
         }
 
@@ -276,7 +276,7 @@ class CardConfiguration : Configuration {
          * @return [CardConfiguration.Builder]
          */
         fun setInstallmentConfigurations(installmentConfiguration: InstallmentConfiguration): Builder {
-            builderInstallmentConfiguration = installmentConfiguration
+            this.installmentConfiguration = installmentConfiguration
             return this
         }
 
@@ -287,7 +287,7 @@ class CardConfiguration : Configuration {
          * @return [CardConfiguration.Builder]
          */
         fun setAddressConfiguration(addressConfiguration: AddressConfiguration): Builder {
-            builderAddressConfiguration = addressConfiguration
+            this.addressConfiguration = addressConfiguration
             return this
         }
 
@@ -298,20 +298,20 @@ class CardConfiguration : Configuration {
          */
         override fun buildInternal(): CardConfiguration {
             return CardConfiguration(
-                shopperLocale = builderShopperLocale,
-                environment = builderEnvironment,
-                clientKey = builderClientKey,
-                isHolderNameRequired = builderHolderNameRequired,
-                supportedCardTypes = builderSupportedCardTypes,
-                shopperReference = builderShopperReference,
-                isStorePaymentFieldVisible = builderIsStorePaymentFieldVisible,
-                isHideCvc = builderHideCvc,
-                isHideCvcStoredCard = builderHideCvcStoredCard,
-                socialSecurityNumberVisibility = builderSocialSecurityNumberVisibility,
-                kcpAuthVisibility = builderKcpAuthVisibility,
-                addressVisibility = builderAddressVisibility,
-                installmentConfiguration = builderInstallmentConfiguration,
-                addressConfiguration = builderAddressConfiguration,
+                shopperLocale = shopperLocale,
+                environment = environment,
+                clientKey = clientKey,
+                isHolderNameRequired = holderNameRequired,
+                supportedCardTypes = supportedCardTypes,
+                shopperReference = shopperReference,
+                isStorePaymentFieldVisible = isStorePaymentFieldVisible,
+                isHideCvc = isHideCvc,
+                isHideCvcStoredCard = isHideCvcStoredCard,
+                socialSecurityNumberVisibility = socialSecurityNumberVisibility,
+                kcpAuthVisibility = kcpAuthVisibility,
+                addressVisibility = addressVisibility,
+                installmentConfiguration = installmentConfiguration,
+                addressConfiguration = addressConfiguration,
             )
         }
     }

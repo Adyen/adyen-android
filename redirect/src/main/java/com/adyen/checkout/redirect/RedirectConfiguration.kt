@@ -65,9 +65,9 @@ class RedirectConfiguration : Configuration {
 
         override fun buildInternal(): RedirectConfiguration {
             return RedirectConfiguration(
-                shopperLocale = builderShopperLocale,
-                environment = builderEnvironment,
-                clientKey = builderClientKey,
+                shopperLocale = shopperLocale,
+                environment = environment,
+                clientKey = clientKey,
             )
         }
     }

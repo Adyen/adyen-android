@@ -51,8 +51,8 @@ class BcmcConfiguration : Configuration {
      * Builder to create a [BcmcConfiguration].
      */
     class Builder : BaseConfigurationBuilder<BcmcConfiguration> {
-        private var builderShowStorePaymentField = false
-        private var builderShopperReference: String? = null
+        private var showStorePaymentField = false
+        private var shopperReference: String? = null
 
         /**
          * Constructor for Builder with default values.
@@ -86,16 +86,16 @@ class BcmcConfiguration : Configuration {
          * @param configuration A configuration to initialize the builder.
          */
         constructor(configuration: BcmcConfiguration) : super(configuration) {
-            builderShopperReference = configuration.shopperReference
-            builderShowStorePaymentField = configuration.isStorePaymentFieldVisible
+            shopperReference = configuration.shopperReference
+            showStorePaymentField = configuration.isStorePaymentFieldVisible
         }
 
-        override fun setShopperLocale(builderShopperLocale: Locale): Builder {
-            return super.setShopperLocale(builderShopperLocale) as Builder
+        override fun setShopperLocale(shopperLocale: Locale): Builder {
+            return super.setShopperLocale(shopperLocale) as Builder
         }
 
-        override fun setEnvironment(builderEnvironment: Environment): Builder {
-            return super.setEnvironment(builderEnvironment) as Builder
+        override fun setEnvironment(environment: Environment): Builder {
+            return super.setEnvironment(environment) as Builder
         }
 
         /**
@@ -105,7 +105,7 @@ class BcmcConfiguration : Configuration {
          * @return [BcmcConfiguration.Builder]
          */
         fun setShowStorePaymentField(showStorePaymentField: Boolean): Builder {
-            builderShowStorePaymentField = showStorePaymentField
+            this.showStorePaymentField = showStorePaymentField
             return this
         }
 
@@ -118,7 +118,7 @@ class BcmcConfiguration : Configuration {
          * @return [BcmcConfiguration.Builder]
          */
         fun setShopperReference(shopperReference: String): Builder {
-            builderShopperReference = shopperReference
+            this.shopperReference = shopperReference
             return this
         }
 
@@ -129,11 +129,11 @@ class BcmcConfiguration : Configuration {
          */
         override fun buildInternal(): BcmcConfiguration {
             return BcmcConfiguration(
-                shopperLocale = builderShopperLocale,
-                environment = builderEnvironment,
-                clientKey = builderClientKey,
-                shopperReference = builderShopperReference,
-                isStorePaymentFieldVisible = builderShowStorePaymentField,
+                shopperLocale = shopperLocale,
+                environment = environment,
+                clientKey = clientKey,
+                shopperReference = shopperReference,
+                isStorePaymentFieldVisible = showStorePaymentField,
             )
         }
     }

@@ -76,7 +76,7 @@ class DropInConfiguration : Configuration, Parcelable {
     @Suppress("LongParameterList")
     constructor(
         builder: Builder
-    ) : super(builder.builderShopperLocale, builder.builderEnvironment, builder.builderClientKey) {
+    ) : super(builder.shopperLocale, builder.environment, builder.clientKey) {
         this.availablePaymentConfigs = builder.availablePaymentConfigs
         this.availableActionConfigs = builder.availableActionConfigs
         this.amount = builder.amount
@@ -188,12 +188,12 @@ class DropInConfiguration : Configuration, Parcelable {
             additionalDataForDropInService = dropInConfiguration.additionalDataForDropInService
         }
 
-        override fun setShopperLocale(builderShopperLocale: Locale): Builder {
-            return super.setShopperLocale(builderShopperLocale) as Builder
+        override fun setShopperLocale(shopperLocale: Locale): Builder {
+            return super.setShopperLocale(shopperLocale) as Builder
         }
 
-        override fun setEnvironment(builderEnvironment: Environment): Builder {
-            return super.setEnvironment(builderEnvironment) as Builder
+        override fun setEnvironment(environment: Environment): Builder {
+            return super.setEnvironment(environment) as Builder
         }
 
         fun setAmount(amount: Amount): Builder {

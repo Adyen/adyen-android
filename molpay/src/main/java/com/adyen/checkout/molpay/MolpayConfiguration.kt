@@ -70,9 +70,9 @@ class MolpayConfiguration : IssuerListConfiguration {
 
         override fun buildInternal(): MolpayConfiguration {
             return MolpayConfiguration(
-                shopperLocale = builderShopperLocale,
-                environment = builderEnvironment,
-                clientKey = builderClientKey,
+                shopperLocale = shopperLocale,
+                environment = environment,
+                clientKey = clientKey,
                 viewType = viewType,
                 hideIssuerLogos = hideIssuerLogos,
             )

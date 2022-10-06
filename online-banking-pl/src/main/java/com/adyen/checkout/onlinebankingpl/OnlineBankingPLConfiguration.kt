@@ -68,9 +68,9 @@ class OnlineBankingPLConfiguration : IssuerListConfiguration {
 
         override fun buildInternal(): OnlineBankingPLConfiguration {
             return OnlineBankingPLConfiguration(
-                shopperLocale = builderShopperLocale,
-                environment = builderEnvironment,
-                clientKey = builderClientKey,
+                shopperLocale = shopperLocale,
+                environment = environment,
+                clientKey = clientKey,
                 viewType = viewType,
                 hideIssuerLogos = hideIssuerLogos,
             )

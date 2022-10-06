@@ -68,19 +68,19 @@ class DotpayConfiguration : IssuerListConfiguration {
             hideIssuerLogos = configuration.hideIssuerLogos
         }
 
-        override fun setShopperLocale(builderShopperLocale: Locale): Builder {
-            return super.setShopperLocale(builderShopperLocale) as Builder
+        override fun setShopperLocale(shopperLocale: Locale): Builder {
+            return super.setShopperLocale(shopperLocale) as Builder
         }
 
-        override fun setEnvironment(builderEnvironment: Environment): Builder {
-            return super.setEnvironment(builderEnvironment) as Builder
+        override fun setEnvironment(environment: Environment): Builder {
+            return super.setEnvironment(environment) as Builder
         }
 
         override fun buildInternal(): DotpayConfiguration {
             return DotpayConfiguration(
-                shopperLocale = builderShopperLocale,
-                environment = builderEnvironment,
-                clientKey = builderClientKey,
+                shopperLocale = shopperLocale,
+                environment = environment,
+                clientKey = clientKey,
                 viewType = viewType,
                 hideIssuerLogos = hideIssuerLogos,
             )

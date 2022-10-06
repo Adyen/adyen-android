@@ -72,9 +72,9 @@ class EPSConfiguration : IssuerListConfiguration {
 
         public override fun buildInternal(): EPSConfiguration {
             return EPSConfiguration(
-                shopperLocale = builderShopperLocale,
-                environment = builderEnvironment,
-                clientKey = builderClientKey,
+                shopperLocale = shopperLocale,
+                environment = environment,
+                clientKey = clientKey,
                 viewType = viewType,
                 hideIssuerLogos = hideIssuerLogos,
             )
