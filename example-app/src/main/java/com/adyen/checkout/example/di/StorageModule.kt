@@ -11,8 +11,8 @@ package com.adyen.checkout.example.di
 import android.app.Application
 import android.content.SharedPreferences
 import androidx.preference.PreferenceManager
+import com.adyen.checkout.example.data.storage.DefaultKeyValueStorage
 import com.adyen.checkout.example.data.storage.KeyValueStorage
-import com.adyen.checkout.example.data.storage.KeyValueStorageImpl
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
@@ -28,5 +28,5 @@ object StorageModule {
 
     @Provides
     fun provideKeyValueStorage(appContext: Application, sharedPreferences: SharedPreferences): KeyValueStorage =
-        KeyValueStorageImpl(appContext, sharedPreferences)
+        DefaultKeyValueStorage(appContext, sharedPreferences)
 }

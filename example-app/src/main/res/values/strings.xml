@@ -29,6 +29,8 @@
     <string name="shopper_email_title">Shopper Email</string>
     <string name="split_card_funding_sources_key">split_card_funding_sources</string>
     <string name="split_card_funding_sources_title">Split Card Funding Sources</string>
+    <string name="enable_card_address_form_key">enable_card_address_form</string>
+    <string name="enable_card_address_form_title">Enable card address form</string>
 
     <string name="payment_information">Payment Information</string>
     <string name="currency_key">amount_currency</string>

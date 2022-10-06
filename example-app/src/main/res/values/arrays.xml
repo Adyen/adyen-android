@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="utf-8"?><!--
+  ~ Copyright (c) 2022 Adyen N.V.
+  ~
+  ~ This file is open source and available under the MIT license. See the LICENSE file for more info.
+  ~
+  ~ Created by oscars on 6/10/2022.
+  -->
+
+<resources>
+
+    <array name="enable_card_address_form_entries">
+        <item>"None"</item>
+        <item>"Postal code"</item>
+        <item>"Full address"</item>
+    </array>
+
+    <array name="enable_card_address_form_entry_values">
+        <item>"0"</item>
+        <item>"1"</item>
+        <item>"2"</item>
+    </array>
+</resources>

@@ -3,6 +3,7 @@ package com.adyen.checkout.example.ui.configuration
 import android.content.Context
 import com.adyen.checkout.adyen3ds2.Adyen3DS2Configuration
 import com.adyen.checkout.bcmc.BcmcConfiguration
+import com.adyen.checkout.card.AddressConfiguration
 import com.adyen.checkout.card.CardConfiguration
 import com.adyen.checkout.components.model.payments.Amount
 import com.adyen.checkout.core.api.Environment
@@ -60,7 +61,17 @@ internal class CheckoutConfigurationProvider @Inject constructor(
     fun getCardConfiguration(): CardConfiguration =
         CardConfiguration.Builder(shopperLocale, environment, clientKey)
             .setShopperReference(keyValueStorage.getShopperReference())
+            .setAddressConfiguration(getAddressConfiguration())
             .build()
+
+    private fun getAddressConfiguration(): AddressConfiguration = when (keyValueStorage.isAddressFormEnabled()) {
+        0 -> AddressConfiguration.None
+        1 -> AddressConfiguration.PostalCode
+        else -> AddressConfiguration.FullAddress(
+            defaultCountryCode = "NL",
+            supportedCountryCodes = listOf("NL", "GB", "US", "CA", "BR"),
+        )
+    }
 
     private fun getBcmcConfiguration(): BcmcConfiguration =
         BcmcConfiguration.Builder(shopperLocale, environment, clientKey)

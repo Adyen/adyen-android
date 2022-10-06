@@ -25,22 +25,13 @@ interface KeyValueStorage {
     fun getShopperEmail(): String
     fun getMerchantAccount(): String
     fun isSplitCardFundingSources(): Boolean
+    fun isAddressFormEnabled(): Int
 }
 
-class KeyValueStorageImpl(
+internal class DefaultKeyValueStorage(
     private val appContext: Context,
     private val sharedPreferences: SharedPreferences
 ) : KeyValueStorage {
-
-    companion object {
-        private const val DEFAULT_COUNTRY = "NL"
-        private const val DEFAULT_LOCALE = "en-US"
-        private const val DEFAULT_VALUE = "1337"
-        private const val DEFAULT_CURRENCY = "EUR"
-        private const val DEFAULT_THREEDS2_ENABLE = true
-        private const val DEFAULT_EXECUTE_3D = false
-        private const val DEFAULT_SPLIT_CARD_FUNDING_SOURCES = false
-    }
 
     override fun getShopperReference(): String {
         return sharedPreferences.get(appContext, R.string.shopper_reference_key, BuildConfig.SHOPPER_REFERENCE)
@@ -87,5 +78,21 @@ class KeyValueStorageImpl(
             R.string.split_card_funding_sources_key,
             DEFAULT_SPLIT_CARD_FUNDING_SOURCES
         )
+    }
+
+    override fun isAddressFormEnabled(): Int {
+        return sharedPreferences.get(appContext, R.string.enable_card_address_form_key, DEFAULT_ENABLE_ADDRESS_FORM)
+            .toInt()
+    }
+
+    companion object {
+        private const val DEFAULT_COUNTRY = "NL"
+        private const val DEFAULT_LOCALE = "en-US"
+        private const val DEFAULT_VALUE = "1337"
+        private const val DEFAULT_CURRENCY = "EUR"
+        private const val DEFAULT_THREEDS2_ENABLE = true
+        private const val DEFAULT_EXECUTE_3D = false
+        private const val DEFAULT_SPLIT_CARD_FUNDING_SOURCES = false
+        private const val DEFAULT_ENABLE_ADDRESS_FORM = "0"
     }
 }
