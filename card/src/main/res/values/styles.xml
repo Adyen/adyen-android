@@ -153,7 +153,6 @@
     <style name="AdyenCheckout.AddressForm.HeaderTextAppearance" parent="AdyenCheckout.TextAppearance">
         <item name="android:textSize">12sp</item>
         <item name="android:textStyle">bold</item>
-        <item name="android:textColor">@color/textColor</item>
         <item name="android:alpha">0.5</item>
         <item name="android:layout_marginBottom">@dimen/standard_margin</item>
         <item name="android:text">@string/checkout_address_form_billing_address_title</item>
