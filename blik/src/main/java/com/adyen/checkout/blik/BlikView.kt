@@ -15,8 +15,10 @@ import android.view.View.OnFocusChangeListener
 import android.widget.LinearLayout
 import com.adyen.checkout.blik.databinding.BlikViewBinding
 import com.adyen.checkout.components.base.ComponentDelegate
+import com.adyen.checkout.components.extensions.hideError
 import com.adyen.checkout.components.extensions.setLocalizedHintFromStyle
 import com.adyen.checkout.components.extensions.setLocalizedTextFromStyle
+import com.adyen.checkout.components.extensions.showError
 import com.adyen.checkout.components.ui.ComponentView
 import com.adyen.checkout.components.ui.Validation
 import com.adyen.checkout.core.log.LogUtil
@@ -87,17 +89,17 @@ internal class BlikView @JvmOverloads constructor(
         binding.editTextBlikCode.setOnChangeListener {
             blikDelegate.inputData.blikCode = binding.editTextBlikCode.rawValue
             notifyInputDataChanged()
-            binding.textInputLayoutBlikCode.error = null
+            binding.textInputLayoutBlikCode.hideError()
         }
 
         binding.editTextBlikCode.onFocusChangeListener = OnFocusChangeListener { _: View?, hasFocus: Boolean ->
             val outputData = blikDelegate.outputData
             val blikCodeValidation = outputData?.blikCodeField?.validation
             if (hasFocus) {
-                binding.textInputLayoutBlikCode.error = null
+                binding.textInputLayoutBlikCode.hideError()
             } else if (blikCodeValidation != null && !blikCodeValidation.isValid()) {
                 val errorReasonResId = (blikCodeValidation as Validation.Invalid).reason
-                binding.textInputLayoutBlikCode.error = localizedContext.getString(errorReasonResId)
+                binding.textInputLayoutBlikCode.showError(localizedContext.getString(errorReasonResId))
             }
         }
     }
@@ -111,7 +113,7 @@ internal class BlikView @JvmOverloads constructor(
         if (!blikCodeValidation.isValid()) {
             binding.textInputLayoutBlikCode.requestFocus()
             val errorReasonResId = (blikCodeValidation as Validation.Invalid).reason
-            binding.textInputLayoutBlikCode.error = localizedContext.getString(errorReasonResId)
+            binding.textInputLayoutBlikCode.showError(localizedContext.getString(errorReasonResId))
         }
     }
 

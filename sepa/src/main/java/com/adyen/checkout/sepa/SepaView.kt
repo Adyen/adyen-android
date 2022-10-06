@@ -14,7 +14,9 @@ import android.view.View
 import android.view.View.OnFocusChangeListener
 import android.widget.LinearLayout
 import com.adyen.checkout.components.base.ComponentDelegate
+import com.adyen.checkout.components.extensions.hideError
 import com.adyen.checkout.components.extensions.setLocalizedHintFromStyle
+import com.adyen.checkout.components.extensions.showError
 import com.adyen.checkout.components.ui.ComponentView
 import com.adyen.checkout.components.ui.Validation
 import com.adyen.checkout.core.log.LogUtil
@@ -61,21 +63,21 @@ internal class SepaView @JvmOverloads constructor(
         binding.editTextHolderName.setOnChangeListener {
             sepaDelegate.inputData.name = binding.editTextHolderName.rawValue
             notifyInputDataChanged()
-            binding.textInputLayoutHolderName.error = null
+            binding.textInputLayoutHolderName.hideError()
         }
         binding.editTextIbanNumber.setOnChangeListener {
             sepaDelegate.inputData.iban = binding.editTextIbanNumber.rawValue
             notifyInputDataChanged()
-            binding.textInputLayoutIbanNumber.error = null
+            binding.textInputLayoutIbanNumber.hideError()
         }
         binding.editTextIbanNumber.onFocusChangeListener = OnFocusChangeListener { _: View?, hasFocus: Boolean ->
             val outputData = sepaDelegate.outputData
             val ibanNumberValidation = outputData?.ibanNumberField?.validation
             if (hasFocus) {
-                binding.textInputLayoutIbanNumber.error = null
+                binding.textInputLayoutIbanNumber.hideError()
             } else if (ibanNumberValidation != null && !ibanNumberValidation.isValid()) {
                 val errorReasonResId = (ibanNumberValidation as Validation.Invalid).reason
-                binding.textInputLayoutIbanNumber.error = localizedContext.getString(errorReasonResId)
+                binding.textInputLayoutIbanNumber.showError(localizedContext.getString(errorReasonResId))
             }
         }
     }
@@ -113,7 +115,7 @@ internal class SepaView @JvmOverloads constructor(
             errorFocused = true
             binding.textInputLayoutHolderName.requestFocus()
             val errorReasonResId = (ownerNameValidation as Validation.Invalid).reason
-            binding.textInputLayoutHolderName.error = localizedContext.getString(errorReasonResId)
+            binding.textInputLayoutHolderName.showError(localizedContext.getString(errorReasonResId))
         }
         val ibanNumberValidation = outputData.ibanNumberField.validation
         if (!ibanNumberValidation.isValid()) {
@@ -121,7 +123,7 @@ internal class SepaView @JvmOverloads constructor(
                 binding.textInputLayoutIbanNumber.requestFocus()
             }
             val errorReasonResId = (ibanNumberValidation as Validation.Invalid).reason
-            binding.textInputLayoutIbanNumber.error = localizedContext.getString(errorReasonResId)
+            binding.textInputLayoutIbanNumber.showError(localizedContext.getString(errorReasonResId))
         }
     }
 

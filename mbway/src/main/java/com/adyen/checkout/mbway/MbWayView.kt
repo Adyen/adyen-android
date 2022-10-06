@@ -15,6 +15,8 @@ import android.view.View
 import android.view.View.OnFocusChangeListener
 import android.widget.LinearLayout
 import com.adyen.checkout.components.base.ComponentDelegate
+import com.adyen.checkout.components.extensions.hideError
+import com.adyen.checkout.components.extensions.showError
 import com.adyen.checkout.components.ui.ComponentView
 import com.adyen.checkout.components.ui.Validation
 import com.adyen.checkout.components.util.CountryInfo
@@ -61,16 +63,17 @@ internal class MbWayView @JvmOverloads constructor(
         binding.editTextMobileNumber.setOnChangeListener {
             delegate.inputData.localPhoneNumber = it.toString()
             notifyInputDataChanged()
-            binding.textInputLayoutMobileNumber.error = null
+            binding.textInputLayoutMobileNumber.hideError()
         }
         binding.editTextMobileNumber.onFocusChangeListener = OnFocusChangeListener { _, hasFocus: Boolean ->
             val outputData = delegate.outputData
             val mobilePhoneNumberValidation = outputData?.mobilePhoneNumberFieldState?.validation
             if (hasFocus) {
-                binding.textInputLayoutMobileNumber.error = null
+                binding.textInputLayoutMobileNumber.hideError()
             } else if (outputData != null && mobilePhoneNumberValidation is Validation.Invalid) {
-                binding.textInputLayoutMobileNumber.error =
+                binding.textInputLayoutMobileNumber.showError(
                     localizedContext.getString(mobilePhoneNumberValidation.reason)
+                )
             }
         }
     }
@@ -101,7 +104,9 @@ internal class MbWayView @JvmOverloads constructor(
         Logger.d(TAG, "highlightValidationErrors")
         val mobilePhoneNumberValidation = delegate.outputData?.mobilePhoneNumberFieldState?.validation
         if (mobilePhoneNumberValidation is Validation.Invalid) {
-            binding.textInputLayoutMobileNumber.error = localizedContext.getString(mobilePhoneNumberValidation.reason)
+            binding.textInputLayoutMobileNumber.showError(
+                localizedContext.getString(mobilePhoneNumberValidation.reason)
+            )
         }
     }
 

@@ -14,8 +14,10 @@ import android.view.View
 import android.widget.AdapterView
 import android.widget.LinearLayout
 import com.adyen.checkout.components.base.ComponentDelegate
+import com.adyen.checkout.components.extensions.hideError
 import com.adyen.checkout.components.extensions.setLocalizedHintFromStyle
 import com.adyen.checkout.components.extensions.setLocalizedTextFromStyle
+import com.adyen.checkout.components.extensions.showError
 import com.adyen.checkout.components.ui.ComponentView
 import com.adyen.checkout.components.ui.Validation
 import com.adyen.checkout.components.ui.adapter.SimpleTextListAdapter
@@ -67,10 +69,7 @@ internal class OnlineBankingView @JvmOverloads constructor(
                 Logger.d(TAG, "onItemSelected - ${issuersAdapter.getItem(position).name}")
                 onlineBankingDelegate.inputData.selectedIssuer = issuersAdapter.getItem(position)
                 onlineBankingDelegate.onInputDataChanged(onlineBankingDelegate.inputData)
-                binding.textInputLayoutOnlineBanking.apply {
-                    error = null
-                    isErrorEnabled = false
-                }
+                binding.textInputLayoutOnlineBanking.hideError()
             }
         }
         binding.textviewTermsAndConditions.setOnClickListener {
@@ -88,8 +87,7 @@ internal class OnlineBankingView @JvmOverloads constructor(
             val errorReasonResId = (selectedIssuersValidation as Validation.Invalid).reason
             binding.textInputLayoutOnlineBanking.apply {
                 requestFocus()
-                isErrorEnabled = true
-                error = localizedContext.getString(errorReasonResId)
+                showError(localizedContext.getString(errorReasonResId))
             }
         }
     }

@@ -19,8 +19,10 @@ import androidx.annotation.StringRes
 import androidx.core.view.isVisible
 import com.adyen.checkout.bcmc.databinding.BcmcViewBinding
 import com.adyen.checkout.components.base.ComponentDelegate
+import com.adyen.checkout.components.extensions.hideError
 import com.adyen.checkout.components.extensions.setLocalizedHintFromStyle
 import com.adyen.checkout.components.extensions.setLocalizedTextFromStyle
+import com.adyen.checkout.components.extensions.showError
 import com.adyen.checkout.components.ui.ComponentView
 import com.adyen.checkout.components.ui.Validation
 import kotlinx.coroutines.CoroutineScope
@@ -79,16 +81,16 @@ internal class BcmcView @JvmOverloads constructor(
         binding.editTextExpiryDate.setOnChangeListener {
             delegate.inputData.expiryDate = binding.editTextExpiryDate.date
             notifyInputDataChanged()
-            binding.textInputLayoutExpiryDate.error = null
+            binding.textInputLayoutExpiryDate.hideError()
         }
 
         binding.editTextExpiryDate.onFocusChangeListener = OnFocusChangeListener { _: View?, hasFocus: Boolean ->
             val expiryDateValidation = delegate.outputData?.expiryDateField?.validation
             if (hasFocus) {
-                binding.textInputLayoutExpiryDate.error = null
+                binding.textInputLayoutExpiryDate.hideError()
             } else if (expiryDateValidation != null && !expiryDateValidation.isValid()) {
                 val errorReasonResId = (expiryDateValidation as Validation.Invalid).reason
-                binding.textInputLayoutExpiryDate.error = localizedContext.getString(errorReasonResId)
+                binding.textInputLayoutExpiryDate.showError(localizedContext.getString(errorReasonResId))
             }
         }
     }
@@ -140,16 +142,16 @@ internal class BcmcView @JvmOverloads constructor(
                 binding.textInputLayoutExpiryDate.requestFocus()
             }
             val errorReasonResId = (expiryFieldValidation as Validation.Invalid).reason
-            binding.textInputLayoutExpiryDate.error = localizedContext.getString(errorReasonResId)
+            binding.textInputLayoutExpiryDate.showError(localizedContext.getString(errorReasonResId))
         }
     }
 
     private fun setCardNumberError(@StringRes stringResId: Int?) {
         if (stringResId == null) {
-            binding.textInputLayoutCardNumber.error = null
+            binding.textInputLayoutCardNumber.hideError()
             binding.cardBrandLogoImageView.isVisible = true
         } else {
-            binding.textInputLayoutCardNumber.error = localizedContext.getString(stringResId)
+            binding.textInputLayoutCardNumber.showError(localizedContext.getString(stringResId))
             binding.cardBrandLogoImageView.isVisible = false
         }
     }
