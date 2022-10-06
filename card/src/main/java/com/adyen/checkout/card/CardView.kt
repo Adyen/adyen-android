@@ -26,6 +26,7 @@ import com.adyen.checkout.card.data.ExpiryDate
 import com.adyen.checkout.card.databinding.CardViewBinding
 import com.adyen.checkout.card.ui.SecurityCodeInput
 import com.adyen.checkout.card.ui.model.AddressListItem
+import com.adyen.checkout.card.ui.model.CardListItem
 import com.adyen.checkout.card.util.InstallmentUtils
 import com.adyen.checkout.components.api.ImageLoader
 import com.adyen.checkout.components.base.ComponentDelegate

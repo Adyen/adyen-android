@@ -15,6 +15,7 @@ import com.adyen.checkout.card.data.ExpiryDate
 import com.adyen.checkout.card.repository.AddressRepository
 import com.adyen.checkout.card.repository.DetectCardTypeRepository
 import com.adyen.checkout.card.ui.model.AddressListItem
+import com.adyen.checkout.card.ui.model.CardListItem
 import com.adyen.checkout.card.util.AddressFormUtils
 import com.adyen.checkout.card.util.AddressValidationUtils
 import com.adyen.checkout.card.util.CardValidationUtils
@@ -593,6 +594,17 @@ class DefaultCardDelegate(
 
     private fun isInstallmentsRequired(cardOutputData: CardOutputData): Boolean {
         return cardOutputData.installmentOptions.isNotEmpty()
+    }
+
+    override fun getCardListItems(): List<CardListItem> {
+        val originalCards = outputData?.supportedCardTypes.orEmpty()
+        val detectedCards = outputData?.detectedCardTypes.orEmpty()
+
+        val noCardDetected = detectedCards.isEmpty()
+
+        return originalCards.map { cardType ->
+            CardListItem(cardType, noCardDetected || detectedCards.map { it.cardType }.contains(cardType))
+        }
     }
 
     override fun getViewProvider(): ViewProvider = CardViewProvider

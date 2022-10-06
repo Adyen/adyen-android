@@ -13,8 +13,8 @@ import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
 import com.adyen.checkout.card.CardListAdapter.ImageViewHolder
-import com.adyen.checkout.card.data.CardType
 import com.adyen.checkout.card.databinding.BrandLogoBinding
+import com.adyen.checkout.card.ui.model.CardListItem
 import com.adyen.checkout.components.api.ImageLoader
 
 internal class CardListAdapter(
@@ -28,7 +28,7 @@ internal class CardListAdapter(
 
     override fun onBindViewHolder(holder: ImageViewHolder, position: Int) {
         val card = currentList[position]
-        val alpha = if (card.isDetected) ACTIVE else NOT_ACTIVE
+        val alpha = if (card.isDetected) VIEW_ALPHA_DETECTED else VIEW_ALPHA_NON_DETECTED
         holder.bind(card, alpha, imageLoader)
     }
 
@@ -43,8 +43,8 @@ internal class CardListAdapter(
     }
 
     companion object {
-        private const val ACTIVE = 1f
-        private const val NOT_ACTIVE = 0.2f
+        private const val VIEW_ALPHA_DETECTED = 1f
+        private const val VIEW_ALPHA_NON_DETECTED = 0.2f
     }
 
     object CardDiffCallback : DiffUtil.ItemCallback<CardListItem>() {
@@ -55,5 +55,3 @@ internal class CardListAdapter(
             oldItem == newItem
     }
 }
-
-internal data class CardListItem(val cardType: CardType, val isDetected: Boolean)

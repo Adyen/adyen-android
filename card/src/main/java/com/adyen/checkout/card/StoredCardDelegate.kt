@@ -12,6 +12,7 @@ import com.adyen.checkout.card.api.model.Brand
 import com.adyen.checkout.card.data.CardType
 import com.adyen.checkout.card.data.DetectedCardType
 import com.adyen.checkout.card.data.ExpiryDate
+import com.adyen.checkout.card.ui.model.CardListItem
 import com.adyen.checkout.card.util.AddressValidationUtils
 import com.adyen.checkout.card.util.CardValidationUtils
 import com.adyen.checkout.components.flow.MutableSingleEventSharedFlow
@@ -350,6 +351,9 @@ class StoredCardDelegate(
     private fun getPaymentMethodId(): String {
         return storedPaymentMethod.id ?: "ID_NOT_FOUND"
     }
+
+    // We don't show the card brands list for stored cards
+    override fun getCardListItems(): List<CardListItem> = emptyList()
 
     override fun getViewProvider(): ViewProvider = CardViewProvider
 
