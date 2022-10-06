@@ -12,6 +12,7 @@ import android.content.Context
 import com.adyen.checkout.components.PaymentComponentState
 import com.adyen.checkout.components.base.PaymentMethodDelegate
 import com.adyen.checkout.components.model.payments.request.IssuerListPaymentMethod
+import com.adyen.checkout.components.ui.ViewProvidingDelegate
 import com.adyen.checkout.core.exception.CheckoutException
 import kotlinx.coroutines.flow.Flow
 
@@ -20,12 +21,19 @@ interface OnlineBankingDelegate<IssuerListPaymentMethodT : IssuerListPaymentMeth
         OnlineBankingConfiguration,
         OnlineBankingInputData,
         OnlineBankingOutputData,
-        PaymentComponentState<IssuerListPaymentMethodT>> {
+        PaymentComponentState<IssuerListPaymentMethodT>>,
+    ViewProvidingDelegate {
+
+    val configuration: OnlineBankingConfiguration
+
+    val inputData: OnlineBankingInputData
+
+    val outputData: OnlineBankingOutputData?
 
     val outputDataFlow: Flow<OnlineBankingOutputData?>
     val componentStateFlow: Flow<PaymentComponentState<IssuerListPaymentMethodT>?>
     val exceptionFlow: Flow<CheckoutException>
 
     fun getIssuers(): List<OnlineBankingModel>
-    fun openPdf(context: Context, url: String)
+    fun openTermsAndConditionsPdf(context: Context)
 }

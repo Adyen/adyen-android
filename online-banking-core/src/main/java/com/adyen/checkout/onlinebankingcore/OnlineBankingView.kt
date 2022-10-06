@@ -12,28 +12,29 @@ import android.util.AttributeSet
 import android.view.LayoutInflater
 import android.view.View
 import android.widget.AdapterView
-import androidx.lifecycle.LifecycleOwner
-import com.adyen.checkout.components.PaymentComponentState
-import com.adyen.checkout.components.model.payments.request.IssuerListPaymentMethod
+import android.widget.LinearLayout
+import com.adyen.checkout.components.base.ComponentDelegate
+import com.adyen.checkout.components.extensions.setLocalizedHintFromStyle
+import com.adyen.checkout.components.extensions.setLocalizedTextFromStyle
+import com.adyen.checkout.components.ui.ComponentViewNew
 import com.adyen.checkout.components.ui.Validation
 import com.adyen.checkout.components.ui.adapter.SimpleTextListAdapter
-import com.adyen.checkout.components.ui.view.AdyenLinearLayout
 import com.adyen.checkout.core.log.LogUtil
 import com.adyen.checkout.core.log.Logger
 import com.adyen.checkout.onlinebankingcore.databinding.OnlineBankingSpinnerLayoutBinding
+import kotlinx.coroutines.CoroutineScope
 
-@Suppress("LeakingThis")
-abstract class OnlineBankingView<IssuerListPaymentMethodT : IssuerListPaymentMethod> @JvmOverloads constructor(
+class OnlineBankingView @JvmOverloads constructor(
     context: Context,
     attrs: AttributeSet? = null,
     defStyleAttr: Int = 0
 ) :
-    AdyenLinearLayout<
-        OnlineBankingOutputData,
-        OnlineBankingConfiguration,
-        PaymentComponentState<IssuerListPaymentMethodT>,
-        OnlineBankingComponent<IssuerListPaymentMethodT>
-        >(context, attrs, defStyleAttr),
+    LinearLayout(
+        context,
+        attrs,
+        defStyleAttr
+    ),
+    ComponentViewNew,
     AdapterView.OnItemSelectedListener {
 
     private val binding: OnlineBankingSpinnerLayoutBinding =
@@ -41,37 +42,47 @@ abstract class OnlineBankingView<IssuerListPaymentMethodT : IssuerListPaymentMet
 
     private val issuersAdapter: SimpleTextListAdapter<OnlineBankingModel> = SimpleTextListAdapter(context)
 
+    private lateinit var localizedContext: Context
+
+    private lateinit var onlineBankingDelegate: OnlineBankingDelegate<*>
+
     init {
         orientation = VERTICAL
         layoutParams = LayoutParams(LayoutParams.MATCH_PARENT, LayoutParams.WRAP_CONTENT)
     }
 
-    override fun onComponentAttached() {
-        issuersAdapter.setItems(component.issuers)
-    }
+    override fun initView(delegate: ComponentDelegate, coroutineScope: CoroutineScope, localizedContext: Context) {
+        if (delegate !is OnlineBankingDelegate<*>) throw IllegalArgumentException("Unsupported delegate type")
+        onlineBankingDelegate = delegate
 
-    override fun initView() {
+        this.localizedContext = localizedContext
+        initLocalizedStrings(localizedContext)
+
+        issuersAdapter.setItems(onlineBankingDelegate.getIssuers())
+
         binding.autoCompleteTextViewOnlineBanking.apply {
             inputType = 0
             setAdapter(issuersAdapter)
             onItemClickListener = AdapterView.OnItemClickListener { _, _, position, _ ->
                 Logger.d(TAG, "onItemSelected - ${issuersAdapter.getItem(position).name}")
-                component.inputData.selectedIssuer = issuersAdapter.getItem(position)
-                component.notifyInputDataChanged()
+                onlineBankingDelegate.inputData.selectedIssuer = issuersAdapter.getItem(position)
+                onlineBankingDelegate.onInputDataChanged(onlineBankingDelegate.inputData)
                 binding.textInputLayoutOnlineBanking.apply {
                     error = null
                     isErrorEnabled = false
                 }
             }
         }
-        binding.textviewTermsAndConditions.setOnClickListener { component.openTermsAndConditionsPdf(context) }
+        binding.textviewTermsAndConditions.setOnClickListener {
+            onlineBankingDelegate.openTermsAndConditionsPdf(context)
+        }
     }
 
     override val isConfirmationRequired = true
 
     override fun highlightValidationErrors() {
         Logger.d(TAG, "highlightValidationErrors")
-        val output = component.outputData ?: return
+        val output = onlineBankingDelegate.outputData ?: return
         val selectedIssuersValidation = output.selectedIssuerField.validation
         if (!selectedIssuersValidation.isValid()) {
             val errorReasonResId = (selectedIssuersValidation as Validation.Invalid).reason
@@ -83,21 +94,23 @@ abstract class OnlineBankingView<IssuerListPaymentMethodT : IssuerListPaymentMet
         }
     }
 
-    override fun initLocalizedStrings(localizedContext: Context) {
+    private fun initLocalizedStrings(localizedContext: Context) {
         binding.textInputLayoutOnlineBanking
-            .setLocalizedHintFromStyle(R.style.AdyenCheckout_OnlineBanking_TermsAndConditionsInputLayout)
+            .setLocalizedHintFromStyle(
+                R.style.AdyenCheckout_OnlineBanking_TermsAndConditionsInputLayout,
+                localizedContext
+            )
         binding.textviewTermsAndConditions.setLocalizedTextFromStyle(
             R.style.AdyenCheckout_OnlineBanking_TermsAndConditionsTextView,
+            localizedContext,
             formatHyperLink = true
         )
     }
 
-    override fun observeComponentChanges(lifecycleOwner: LifecycleOwner) = Unit
-
     override fun onItemSelected(parent: AdapterView<*>, view: View, position: Int, id: Long) {
         Logger.d(TAG, "onItemSelected - ${issuersAdapter.getItem(position).name}")
-        component.inputData.selectedIssuer = issuersAdapter.getItem(position)
-        component.notifyInputDataChanged()
+        onlineBankingDelegate.inputData.selectedIssuer = issuersAdapter.getItem(position)
+        onlineBankingDelegate.onInputDataChanged(onlineBankingDelegate.inputData)
     }
 
     override fun onNothingSelected(p0: AdapterView<*>?) {
@@ -109,6 +122,8 @@ abstract class OnlineBankingView<IssuerListPaymentMethodT : IssuerListPaymentMet
         binding.autoCompleteTextViewOnlineBanking.isEnabled = enabled
         binding.textInputLayoutOnlineBanking.isEnabled = enabled
     }
+
+    override fun getView(): View = this
 
     companion object {
         private val TAG = LogUtil.getTag()

@@ -25,12 +25,10 @@ class OnlineBankingCZComponent(
     configuration
 ) {
 
-    override val termsAndConditionsUrl = TERMS_CONDITIONS_URL
-
     override fun getSupportedPaymentMethodTypes(): Array<String> = PAYMENT_METHOD_TYPES
 
     companion object {
-        private const val TERMS_CONDITIONS_URL = "https://static.payu.com/sites/terms/files/payu_privacy_policy_cs.pdf"
+        internal const val TERMS_CONDITIONS_URL = "https://static.payu.com/sites/terms/files/payu_privacy_policy_cs.pdf"
 
         @JvmField
         val PROVIDER: PaymentComponentProvider<

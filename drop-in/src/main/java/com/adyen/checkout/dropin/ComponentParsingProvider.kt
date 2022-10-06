@@ -70,12 +70,10 @@ import com.adyen.checkout.molpay.MolpayComponent
 import com.adyen.checkout.molpay.MolpayConfiguration
 import com.adyen.checkout.onlinebankingcz.OnlineBankingCZComponent
 import com.adyen.checkout.onlinebankingcz.OnlineBankingCZConfiguration
-import com.adyen.checkout.onlinebankingcz.OnlineBankingCZView
 import com.adyen.checkout.onlinebankingpl.OnlineBankingPLComponent
 import com.adyen.checkout.onlinebankingpl.OnlineBankingPLConfiguration
 import com.adyen.checkout.onlinebankingsk.OnlineBankingSKComponent
 import com.adyen.checkout.onlinebankingsk.OnlineBankingSKConfiguration
-import com.adyen.checkout.onlinebankingsk.OnlineBankingSKView
 import com.adyen.checkout.openbanking.OpenBankingComponent
 import com.adyen.checkout.openbanking.OpenBankingConfiguration
 import com.adyen.checkout.qrcode.QRCodeConfiguration
@@ -405,8 +403,6 @@ internal fun getViewFor(
         PaymentMethodTypes.BCMC -> BcmcView(context)
         PaymentMethodTypes.GIFTCARD -> GiftCardView(context)
         PaymentMethodTypes.MB_WAY -> MBWayView(context)
-        PaymentMethodTypes.ONLINE_BANKING_CZ -> OnlineBankingCZView(context)
-        PaymentMethodTypes.ONLINE_BANKING_SK -> OnlineBankingSKView(context)
         PaymentMethodTypes.SCHEME -> CardView(context)
         PaymentMethodTypes.SEPA -> SepaView(context)
         PaymentMethodTypes.BLIK -> BlikView(context)

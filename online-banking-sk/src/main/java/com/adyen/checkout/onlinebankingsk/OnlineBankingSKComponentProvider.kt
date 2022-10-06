@@ -33,7 +33,12 @@ class OnlineBankingSKComponentProvider :
         val genericFactory: ViewModelProvider.Factory =
             viewModelFactory(savedStateRegistryOwner, defaultArgs) { savedStateHandle ->
                 val delegate =
-                    DefaultOnlineBankingDelegate(PdfOpener(), paymentMethod) { OnlineBankingSKPaymentMethod() }
+                    DefaultOnlineBankingDelegate(
+                        pdfOpener = PdfOpener(),
+                        paymentMethod = paymentMethod,
+                        configuration = configuration,
+                        termsAndConditionsUrl = OnlineBankingSKComponent.TERMS_CONDITIONS_URL
+                    ) { OnlineBankingSKPaymentMethod() }
 
                 OnlineBankingSKComponent(
                     savedStateHandle,

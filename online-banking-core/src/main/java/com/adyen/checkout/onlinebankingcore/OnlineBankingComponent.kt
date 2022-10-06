@@ -7,34 +7,34 @@
  */
 package com.adyen.checkout.onlinebankingcore
 
-import android.content.Context
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.viewModelScope
 import com.adyen.checkout.components.PaymentComponentState
 import com.adyen.checkout.components.base.BasePaymentComponent
 import com.adyen.checkout.components.model.payments.request.IssuerListPaymentMethod
+import com.adyen.checkout.components.ui.ViewProvidingComponent
+import com.adyen.checkout.components.ui.view.ComponentViewType
+import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.filterNotNull
 import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.onEach
 
 abstract class OnlineBankingComponent<IssuerListPaymentMethodT : IssuerListPaymentMethod>(
     savedStateHandle: SavedStateHandle,
-    private val delegate: OnlineBankingDelegate<IssuerListPaymentMethodT>,
+    final override val delegate: OnlineBankingDelegate<IssuerListPaymentMethodT>,
     configuration: OnlineBankingConfiguration
 ) : BasePaymentComponent<
     OnlineBankingConfiguration,
     OnlineBankingInputData,
     OnlineBankingOutputData,
     PaymentComponentState<IssuerListPaymentMethodT>
-    >(savedStateHandle, delegate, configuration) {
-
-    protected abstract val termsAndConditionsUrl: String
+    >(savedStateHandle, delegate, configuration),
+    ViewProvidingComponent {
 
     override val inputData: OnlineBankingInputData =
         OnlineBankingInputData()
 
-    val issuers: List<OnlineBankingModel>
-        get() = delegate.getIssuers()
+    override val viewFlow: Flow<ComponentViewType?> = delegate.viewFlow
 
     init {
         delegate.outputDataFlow
@@ -55,9 +55,5 @@ abstract class OnlineBankingComponent<IssuerListPaymentMethodT : IssuerListPayme
 
     override fun onInputDataChanged(inputData: OnlineBankingInputData) {
         delegate.onInputDataChanged(inputData)
-    }
-
-    internal fun openTermsAndConditionsPdf(context: Context) {
-        delegate.openPdf(context, termsAndConditionsUrl)
     }
 }
