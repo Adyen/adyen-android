@@ -186,8 +186,7 @@ internal class CardView @JvmOverloads constructor(
         updateInstallments(cardOutputData)
         updateCountries(cardOutputData.countryOptions)
         updateStates(cardOutputData.stateOptions)
-        setSupportedCardsList(cardOutputData.supportedCardTypes)
-        setFilteredCards(cardOutputData.detectedCardTypes.map { it.cardType })
+        setCardList(cardOutputData.supportedCardTypes, cardOutputData.detectedCardTypes)
     }
 
     @Suppress("ComplexMethod", "LongMethod")
@@ -719,18 +718,18 @@ internal class CardView @JvmOverloads constructor(
         }
     }
 
-    private fun setSupportedCardsList(cards: List<CardType>) {
-        binding.recyclerViewCardList.isVisible = cards.isNotEmpty()
+    private fun setCardList(originalCards: List<CardType>, detectedCards: List<DetectedCardType>) {
+        binding.recyclerViewCardList.isVisible = originalCards.isNotEmpty()
+
         if (cardListAdapter == null) {
             cardListAdapter = CardListAdapter(requireNotNull(imageLoader))
             binding.recyclerViewCardList.adapter = cardListAdapter
         }
 
+        val cards = originalCards.map { cardType ->
+            CardListItem(cardType, detectedCards.map { it.cardType }.contains(cardType))
+        }
         cardListAdapter?.submitList(cards)
-    }
-
-    private fun setFilteredCards(cards: List<CardType>) {
-        cardListAdapter?.filteredCards = cards
     }
 
     private fun isStoredPaymentMethod(outputData: CardOutputData): Boolean {

@@ -7,7 +7,6 @@
  */
 package com.adyen.checkout.card
 
-import android.annotation.SuppressLint
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.DiffUtil
@@ -15,39 +14,31 @@ import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
 import com.adyen.checkout.card.CardListAdapter.ImageViewHolder
 import com.adyen.checkout.card.data.CardType
+import com.adyen.checkout.card.databinding.BrandLogoBinding
 import com.adyen.checkout.components.api.ImageLoader
-import com.adyen.checkout.components.ui.view.RoundCornerImageView
 
 internal class CardListAdapter(
     private val imageLoader: ImageLoader,
-) : ListAdapter<CardType, ImageViewHolder>(CardDiffCallback) {
-
-    var filteredCards: List<CardType> = emptyList()
-        @SuppressLint("NotifyDataSetChanged")
-        set(value) {
-            field = value
-            notifyDataSetChanged()
-        }
+) : ListAdapter<CardListItem, ImageViewHolder>(CardDiffCallback) {
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ImageViewHolder {
-        val imageView = LayoutInflater.from(parent.context)
-            .inflate(R.layout.brand_logo, parent, false) as RoundCornerImageView
-        return ImageViewHolder(imageView)
+        val binding = BrandLogoBinding.inflate(LayoutInflater.from(parent.context), parent, false)
+        return ImageViewHolder(binding)
     }
 
     override fun onBindViewHolder(holder: ImageViewHolder, position: Int) {
         val card = currentList[position]
-        val alpha = if (filteredCards.isEmpty() || filteredCards.contains(card)) ACTIVE else NOT_ACTIVE
+        val alpha = if (card.isDetected) ACTIVE else NOT_ACTIVE
         holder.bind(card, alpha, imageLoader)
     }
 
     internal class ImageViewHolder(
-        private val imageView: RoundCornerImageView
-    ) : RecyclerView.ViewHolder(imageView) {
+        private val binding: BrandLogoBinding
+    ) : RecyclerView.ViewHolder(binding.root) {
 
-        fun bind(card: CardType, alpha: Float, imageLoader: ImageLoader) {
-            imageView.alpha = alpha
-            imageLoader.load(card.txVariant, imageView)
+        fun bind(card: CardListItem, alpha: Float, imageLoader: ImageLoader) {
+            binding.imageViewBrandLogo.alpha = alpha
+            imageLoader.load(card.cardType.txVariant, binding.imageViewBrandLogo)
         }
     }
 
@@ -56,11 +47,13 @@ internal class CardListAdapter(
         private const val NOT_ACTIVE = 0.2f
     }
 
-    object CardDiffCallback : DiffUtil.ItemCallback<CardType>() {
-        override fun areItemsTheSame(oldItem: CardType, newItem: CardType): Boolean =
-            oldItem == newItem
+    object CardDiffCallback : DiffUtil.ItemCallback<CardListItem>() {
+        override fun areItemsTheSame(oldItem: CardListItem, newItem: CardListItem): Boolean =
+            oldItem.cardType.txVariant == newItem.cardType.txVariant
 
-        override fun areContentsTheSame(oldItem: CardType, newItem: CardType): Boolean =
-            areItemsTheSame(oldItem, newItem)
+        override fun areContentsTheSame(oldItem: CardListItem, newItem: CardListItem): Boolean =
+            oldItem == newItem
     }
 }
+
+internal data class CardListItem(val cardType: CardType, val isDetected: Boolean)

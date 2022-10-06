@@ -23,7 +23,7 @@ internal object CardViewProvider : ViewProvider {
         defStyleAttr: Int
     ): ComponentView {
         return when (viewType) {
-            CardComponentViewType -> CardView(context, attrs, defStyleAttr)
+            CardComponentViewType -> CardView(context, null, defStyleAttr)
             else -> throw IllegalArgumentException("Unsupported view type")
         }
     }
