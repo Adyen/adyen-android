@@ -14,6 +14,7 @@ import com.adyen.checkout.card.data.CardType
 import com.adyen.checkout.card.data.DetectedCardType
 import com.adyen.checkout.card.data.ExpiryDate
 import com.adyen.checkout.card.ui.model.AddressListItem
+import com.adyen.checkout.card.ui.model.CardListItem
 import com.adyen.checkout.card.util.AddressValidationUtils
 import com.adyen.checkout.components.model.paymentmethods.StoredPaymentMethod
 import com.adyen.checkout.components.model.payments.request.CardPaymentMethod
@@ -364,7 +365,7 @@ internal class StoredCardDelegateTest {
         installmentOptions: List<InstallmentModel> = emptyList(),
         countryOptions: List<AddressListItem> = emptyList(),
         stateOptions: List<AddressListItem> = emptyList(),
-        supportedCardTypes: List<CardType> = emptyList(),
+        cardBrands: List<CardListItem> = emptyList(),
     ): CardOutputData {
         return CardOutputData(
             cardNumberState = cardNumberState,
@@ -388,7 +389,7 @@ internal class StoredCardDelegateTest {
             installmentOptions = installmentOptions,
             countryOptions = countryOptions,
             stateOptions = stateOptions,
-            supportedCardTypes = supportedCardTypes,
+            cardBrands = cardBrands,
             isDualBranded = false,
             kcpBirthDateOrTaxNumberHint = null,
             componentMode = ComponentMode.STORED,

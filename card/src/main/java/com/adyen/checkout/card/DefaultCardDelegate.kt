@@ -15,6 +15,7 @@ import com.adyen.checkout.card.data.ExpiryDate
 import com.adyen.checkout.card.repository.AddressRepository
 import com.adyen.checkout.card.repository.DetectCardTypeRepository
 import com.adyen.checkout.card.ui.model.AddressListItem
+import com.adyen.checkout.card.ui.model.CardListItem
 import com.adyen.checkout.card.util.AddressFormUtils
 import com.adyen.checkout.card.util.AddressValidationUtils
 import com.adyen.checkout.card.util.CardValidationUtils
@@ -240,7 +241,7 @@ class DefaultCardDelegate(
             ),
             countryOptions = updatedCountryOptions,
             stateOptions = updatedStateOptions,
-            supportedCardTypes = getSupportedCardTypes(),
+            cardBrands = getCardBrands(filteredDetectedCardTypes),
             isDualBranded = isDualBrandedFlow(filteredDetectedCardTypes),
             kcpBirthDateOrTaxNumberHint = getKcpBirthDateOrTaxNumberHint(inputData.kcpBirthDateOrTaxNumber),
             componentMode = ComponentMode.DEFAULT,
@@ -453,8 +454,6 @@ class DefaultCardDelegate(
         )
     }
 
-    private fun getSupportedCardTypes(): List<CardType> = configuration.supportedCardTypes
-
     private fun requestCountryList() {
         addressRepository.getCountryList(configuration, coroutineScope)
     }
@@ -593,6 +592,13 @@ class DefaultCardDelegate(
 
     private fun isInstallmentsRequired(cardOutputData: CardOutputData): Boolean {
         return cardOutputData.installmentOptions.isNotEmpty()
+    }
+
+    private fun getCardBrands(detectedCardTypes: List<DetectedCardType>): List<CardListItem> {
+        val noCardDetected = detectedCardTypes.isEmpty()
+        return configuration.supportedCardTypes.map { cardType ->
+            CardListItem(cardType, noCardDetected || detectedCardTypes.map { it.cardType }.contains(cardType))
+        }
     }
 
     override fun getViewProvider(): ViewProvider = CardViewProvider

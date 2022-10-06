@@ -215,8 +215,6 @@ class StoredCardDelegate(
         return !configuration.isHideCvcStoredCard
     }
 
-    private fun getSupportedCardTypes(): List<CardType> = emptyList()
-
     private fun mapComponentState(
         encryptedCard: EncryptedCard,
         cardNumber: String,
@@ -321,7 +319,7 @@ class StoredCardDelegate(
             installmentOptions = emptyList(),
             countryOptions = emptyList(),
             stateOptions = emptyList(),
-            supportedCardTypes = getSupportedCardTypes(),
+            cardBrands = emptyList(),
             isDualBranded = false,
             kcpBirthDateOrTaxNumberHint = null,
             componentMode = ComponentMode.STORED,

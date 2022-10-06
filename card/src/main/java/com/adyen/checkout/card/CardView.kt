@@ -26,6 +26,7 @@ import com.adyen.checkout.card.data.ExpiryDate
 import com.adyen.checkout.card.databinding.CardViewBinding
 import com.adyen.checkout.card.ui.SecurityCodeInput
 import com.adyen.checkout.card.ui.model.AddressListItem
+import com.adyen.checkout.card.ui.model.CardListItem
 import com.adyen.checkout.card.util.InstallmentUtils
 import com.adyen.checkout.components.api.ImageLoader
 import com.adyen.checkout.components.base.ComponentDelegate
@@ -186,8 +187,7 @@ internal class CardView @JvmOverloads constructor(
         updateInstallments(cardOutputData)
         updateCountries(cardOutputData.countryOptions)
         updateStates(cardOutputData.stateOptions)
-        setSupportedCardsList(cardOutputData.supportedCardTypes)
-        setFilteredCards(cardOutputData.detectedCardTypes.map { it.cardType })
+        setCardList(cardOutputData.cardBrands)
     }
 
     @Suppress("ComplexMethod", "LongMethod")
@@ -719,18 +719,15 @@ internal class CardView @JvmOverloads constructor(
         }
     }
 
-    private fun setSupportedCardsList(cards: List<CardType>) {
+    private fun setCardList(cards: List<CardListItem>) {
         binding.recyclerViewCardList.isVisible = cards.isNotEmpty()
+
         if (cardListAdapter == null) {
             cardListAdapter = CardListAdapter(requireNotNull(imageLoader))
             binding.recyclerViewCardList.adapter = cardListAdapter
         }
 
         cardListAdapter?.submitList(cards)
-    }
-
-    private fun setFilteredCards(cards: List<CardType>) {
-        cardListAdapter?.filteredCards = cards
     }
 
     private fun isStoredPaymentMethod(outputData: CardOutputData): Boolean {
