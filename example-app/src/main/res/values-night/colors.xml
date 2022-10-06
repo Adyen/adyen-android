@@ -10,7 +10,6 @@
     <color name="color_divider">#1AFFFFFF</color>
 
     <color name="text_color">@color/color_white</color>
-
     <bool name="has_light_system_bars">false</bool>
 
 </resources>
