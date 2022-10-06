@@ -25,17 +25,12 @@ abstract class IssuerListComponent<IssuerListPaymentMethodT : IssuerListPaymentM
     configuration: IssuerListConfiguration
 ) : BasePaymentComponent<
     IssuerListConfiguration,
-    IssuerListInputData,
-    IssuerListOutputData,
     PaymentComponentState<IssuerListPaymentMethodT>
     >(
     savedStateHandle,
     issuerListDelegate,
     configuration
 ) {
-
-    override val inputData: IssuerListInputData = IssuerListInputData()
-
     val issuers: List<IssuerModel>
         get() = issuerListDelegate.getIssuers()
 
@@ -43,18 +38,9 @@ abstract class IssuerListComponent<IssuerListPaymentMethodT : IssuerListPaymentM
         get() = issuerListDelegate.getPaymentMethodType()
 
     init {
-        issuerListDelegate.outputDataFlow
-            .filterNotNull()
-            .onEach { notifyOutputDataChanged(it) }
-            .launchIn(viewModelScope)
-
         issuerListDelegate.componentStateFlow
             .filterNotNull()
             .onEach { notifyStateChanged(it) }
             .launchIn(viewModelScope)
-    }
-
-    override fun onInputDataChanged(inputData: IssuerListInputData) {
-        issuerListDelegate.onInputDataChanged(inputData)
     }
 }

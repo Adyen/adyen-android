@@ -11,40 +11,31 @@
 package com.adyen.checkout.dropin
 
 import android.app.Application
-import android.content.Context
 import androidx.fragment.app.Fragment
 import com.adyen.checkout.action.GenericActionConfiguration
 import com.adyen.checkout.adyen3ds2.Adyen3DS2Configuration
 import com.adyen.checkout.await.AwaitConfiguration
-import com.adyen.checkout.await.AwaitView
 import com.adyen.checkout.bacs.BacsDirectDebitComponent
 import com.adyen.checkout.bacs.BacsDirectDebitConfiguration
 import com.adyen.checkout.bcmc.BcmcComponent
 import com.adyen.checkout.bcmc.BcmcConfiguration
-import com.adyen.checkout.bcmc.BcmcView
 import com.adyen.checkout.blik.BlikComponent
 import com.adyen.checkout.blik.BlikConfiguration
-import com.adyen.checkout.blik.BlikView
 import com.adyen.checkout.card.CardComponent
 import com.adyen.checkout.card.CardConfiguration
-import com.adyen.checkout.card.CardView
 import com.adyen.checkout.components.AlwaysAvailablePaymentMethod
 import com.adyen.checkout.components.ComponentAvailableCallback
-import com.adyen.checkout.components.ComponentView
 import com.adyen.checkout.components.PaymentComponent
 import com.adyen.checkout.components.PaymentComponentState
 import com.adyen.checkout.components.PaymentMethodAvailabilityCheck
-import com.adyen.checkout.components.ViewableComponent
 import com.adyen.checkout.components.base.AmountConfiguration
 import com.adyen.checkout.components.base.AmountConfigurationBuilder
 import com.adyen.checkout.components.base.BaseConfigurationBuilder
 import com.adyen.checkout.components.base.Configuration
-import com.adyen.checkout.components.base.OutputData
 import com.adyen.checkout.components.model.paymentmethods.PaymentMethod
 import com.adyen.checkout.components.model.paymentmethods.StoredPaymentMethod
 import com.adyen.checkout.components.model.payments.Amount
 import com.adyen.checkout.components.model.payments.request.PaymentMethodDetails
-import com.adyen.checkout.components.util.ActionTypes
 import com.adyen.checkout.components.util.PaymentMethodTypes
 import com.adyen.checkout.core.exception.CheckoutException
 import com.adyen.checkout.core.log.LogUtil
@@ -57,7 +48,6 @@ import com.adyen.checkout.eps.EPSComponent
 import com.adyen.checkout.eps.EPSConfiguration
 import com.adyen.checkout.giftcard.GiftCardComponent
 import com.adyen.checkout.giftcard.GiftCardConfiguration
-import com.adyen.checkout.giftcard.GiftCardView
 import com.adyen.checkout.googlepay.GooglePayComponent
 import com.adyen.checkout.googlepay.GooglePayComponentProvider
 import com.adyen.checkout.googlepay.GooglePayConfiguration
@@ -65,7 +55,6 @@ import com.adyen.checkout.ideal.IdealComponent
 import com.adyen.checkout.ideal.IdealConfiguration
 import com.adyen.checkout.mbway.MBWayComponent
 import com.adyen.checkout.mbway.MBWayConfiguration
-import com.adyen.checkout.mbway.MBWayView
 import com.adyen.checkout.molpay.MolpayComponent
 import com.adyen.checkout.molpay.MolpayConfiguration
 import com.adyen.checkout.onlinebankingcz.OnlineBankingCZComponent
@@ -77,13 +66,10 @@ import com.adyen.checkout.onlinebankingsk.OnlineBankingSKConfiguration
 import com.adyen.checkout.openbanking.OpenBankingComponent
 import com.adyen.checkout.openbanking.OpenBankingConfiguration
 import com.adyen.checkout.qrcode.QRCodeConfiguration
-import com.adyen.checkout.qrcode.QRCodeView
 import com.adyen.checkout.redirect.RedirectConfiguration
 import com.adyen.checkout.sepa.SepaComponent
 import com.adyen.checkout.sepa.SepaConfiguration
-import com.adyen.checkout.sepa.SepaView
 import com.adyen.checkout.voucher.VoucherConfiguration
-import com.adyen.checkout.voucher.VoucherView
 import com.adyen.checkout.wechatpay.WeChatPayActionConfiguration
 import com.adyen.checkout.wechatpay.WeChatPayProvider
 
@@ -384,37 +370,6 @@ internal fun getComponentFor(
     component.setCreatedForDropIn()
 
     return component as PaymentComponent<PaymentComponentState<in PaymentMethodDetails>, Configuration>
-}
-
-/**
- * Provides a [ComponentView] to be used in Drop-in using the [PaymentMethod] reference.
- * View type is defined by our UI specifications.
- *
- * @param context The context used to create the View
- * @param paymentType The type identifying the method to be parsed.
- */
-@Suppress("ComplexMethod")
-internal fun getViewFor(
-    context: Context,
-    paymentType: String
-): ComponentView<in OutputData, ViewableComponent<*, *, *>> {
-    @Suppress("UNCHECKED_CAST")
-    return when (paymentType) {
-        PaymentMethodTypes.BCMC -> BcmcView(context)
-        PaymentMethodTypes.GIFTCARD -> GiftCardView(context)
-        PaymentMethodTypes.MB_WAY -> MBWayView(context)
-        PaymentMethodTypes.SCHEME -> CardView(context)
-        PaymentMethodTypes.SEPA -> SepaView(context)
-        PaymentMethodTypes.BLIK -> BlikView(context)
-        // GooglePay and WeChatPay do not require a View in Drop-in
-        ActionTypes.AWAIT -> AwaitView(context)
-        ActionTypes.QR_CODE -> QRCodeView(context)
-        ActionTypes.VOUCHER -> VoucherView(context)
-        else -> {
-            throw CheckoutException("Unable to find view for type - $paymentType")
-        }
-        // TODO check if this generic approach can be improved
-    } as ComponentView<in OutputData, ViewableComponent<*, *, *>>
 }
 
 @Suppress("ComplexMethod")

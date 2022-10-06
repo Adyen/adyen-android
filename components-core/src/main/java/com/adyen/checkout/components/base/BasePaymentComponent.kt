@@ -27,20 +27,16 @@ import com.adyen.checkout.core.log.Logger
 @Suppress("TooManyFunctions")
 abstract class BasePaymentComponent<
     ConfigurationT : Configuration,
-    InputDataT : InputData,
-    OutputDataT : OutputData,
     ComponentStateT : PaymentComponentState<out PaymentMethodDetails>
     >(
     savedStateHandle: SavedStateHandle,
-    private val paymentMethodDelegate: PaymentMethodDelegate<ConfigurationT, InputDataT, OutputDataT, ComponentStateT>,
+    private val paymentMethodDelegate: PaymentMethodDelegate<ConfigurationT, *, *, ComponentStateT>,
     configuration: ConfigurationT
 ) : PaymentComponentViewModel<ConfigurationT, ComponentStateT>(savedStateHandle, configuration),
-    ViewableComponent<OutputDataT, ConfigurationT, ComponentStateT> {
+    ViewableComponent<ConfigurationT, ComponentStateT> {
 
-    abstract val inputData: InputDataT
     private val paymentComponentStateLiveData = MutableLiveData<ComponentStateT>()
     private val componentErrorLiveData = MutableLiveData<ComponentError>()
-    private val outputLiveData = MutableLiveData<OutputDataT>()
     private var isCreatedForDropIn = false
     private var isAnalyticsEnabled = true
 
@@ -81,14 +77,6 @@ abstract class BasePaymentComponent<
         get() = paymentComponentStateLiveData.value
 
     /**
-     * Receives a set of [InputData] from the user to be processed.
-     */
-    fun notifyInputDataChanged() {
-        Logger.v(TAG, "notifyInputDataChanged")
-        onInputDataChanged(inputData)
-    }
-
-    /**
      * Sets if the analytics events can be sent by the component.
      * Default is True.
      *
@@ -120,40 +108,9 @@ abstract class BasePaymentComponent<
         }
     }
 
-    override fun observeOutputData(lifecycleOwner: LifecycleOwner, observer: Observer<OutputDataT>) {
-        // Parent component needs to overrides this for view to have access to the method in the package
-        outputLiveData.observe(lifecycleOwner, observer)
-    }
-
-    override val outputData: OutputDataT?
-        get() = outputLiveData.value
-
-    /**
-     * Called every time the [InputData] changes.
-     *
-     * @param inputData The new InputData
-     * @return The OutputData after processing.
-     */
-    protected abstract fun onInputDataChanged(inputData: InputDataT)
-
     protected fun notifyException(e: CheckoutException) {
         Logger.e(TAG, "notifyException - " + e.message)
         componentErrorLiveData.postValue(ComponentError(e))
-    }
-
-    /**
-     * Indicates that the output data has changed and the component should recreate its state
-     * and notify its observers.
-     *
-     * @param outputData the new output data
-     */
-    protected fun notifyOutputDataChanged(outputData: OutputDataT) {
-        Logger.d(TAG, "notifyOutputDataChanged")
-        if (outputData != outputLiveData.value) {
-            outputLiveData.value = outputData
-        } else {
-            Logger.d(TAG, "state has not changed")
-        }
     }
 
     /**

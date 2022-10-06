@@ -18,5 +18,5 @@ interface ViewProvider {
         context: Context,
         attrs: AttributeSet?,
         defStyleAttr: Int
-    ): ComponentViewNew
+    ): ComponentView
 }

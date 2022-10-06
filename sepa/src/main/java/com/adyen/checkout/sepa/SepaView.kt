@@ -1,9 +1,9 @@
 /*
- * Copyright (c) 2019 Adyen N.V.
+ * Copyright (c) 2022 Adyen N.V.
  *
  * This file is open source and available under the MIT license. See the LICENSE file for more info.
  *
- * Created by caiof on 26/8/2019.
+ * Created by josephj on 30/9/2022.
  */
 package com.adyen.checkout.sepa
 
@@ -12,115 +12,124 @@ import android.util.AttributeSet
 import android.view.LayoutInflater
 import android.view.View
 import android.view.View.OnFocusChangeListener
-import androidx.lifecycle.LifecycleOwner
-import androidx.lifecycle.Observer
-import com.adyen.checkout.components.PaymentComponentState
-import com.adyen.checkout.components.model.payments.request.SepaPaymentMethod
+import android.widget.LinearLayout
+import com.adyen.checkout.components.base.ComponentDelegate
+import com.adyen.checkout.components.extensions.setLocalizedHintFromStyle
+import com.adyen.checkout.components.ui.ComponentView
 import com.adyen.checkout.components.ui.Validation
-import com.adyen.checkout.components.ui.view.AdyenLinearLayout
-import com.adyen.checkout.components.ui.view.AdyenTextInputEditText
 import com.adyen.checkout.core.log.LogUtil
-import com.adyen.checkout.core.log.Logger.d
-import com.adyen.checkout.core.log.Logger.v
-import com.google.android.material.textfield.TextInputLayout
+import com.adyen.checkout.core.log.Logger
+import com.adyen.checkout.sepa.databinding.SepaViewBinding
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.flow.launchIn
+import kotlinx.coroutines.flow.onEach
 
-class SepaView @JvmOverloads constructor(
+internal class SepaView @JvmOverloads constructor(
     context: Context,
     attrs: AttributeSet? = null,
     defStyleAttr: Int = 0
 ) :
-    AdyenLinearLayout<
-        SepaOutputData,
-        SepaConfiguration,
-        PaymentComponentState<SepaPaymentMethod>,
-        SepaComponent>(context, attrs, defStyleAttr),
-    Observer<SepaOutputData> {
+    LinearLayout(
+        context,
+        attrs,
+        defStyleAttr
+    ),
+    ComponentView {
 
-    private lateinit var holderNameInput: TextInputLayout
-    private lateinit var ibanNumberInput: TextInputLayout
-    private lateinit var holderNameEditText: AdyenTextInputEditText
-    private lateinit var ibanNumberEditText: AdyenTextInputEditText
+    private val binding: SepaViewBinding = SepaViewBinding.inflate(LayoutInflater.from(context), this)
+
+    private lateinit var localizedContext: Context
+
+    private lateinit var sepaDelegate: SepaDelegate
 
     // Regular View constructor
     init {
         orientation = VERTICAL
-        LayoutInflater.from(getContext()).inflate(R.layout.sepa_view, this, true)
         val padding = resources.getDimension(R.dimen.standard_margin).toInt()
         setPadding(padding, padding, padding, 0)
     }
 
-    override fun initLocalizedStrings(localizedContext: Context) {
-        holderNameInput.setLocalizedHintFromStyle(R.style.AdyenCheckout_Sepa_HolderNameInput)
-        ibanNumberInput.setLocalizedHintFromStyle(R.style.AdyenCheckout_Sepa_AccountNumberInput)
-    }
+    override fun initView(delegate: ComponentDelegate, coroutineScope: CoroutineScope, localizedContext: Context) {
+        if (delegate !is SepaDelegate) throw IllegalArgumentException("Unsupported delegate type")
+        sepaDelegate = delegate
 
-    override fun initView() {
-        holderNameInput = findViewById(R.id.textInputLayout_holderName)
-        ibanNumberInput = findViewById(R.id.textInputLayout_ibanNumber)
-        holderNameEditText = holderNameInput.editText as AdyenTextInputEditText
-        ibanNumberEditText = ibanNumberInput.editText as AdyenTextInputEditText
+        this.localizedContext = localizedContext
+        initLocalizedStrings(localizedContext)
 
-        holderNameEditText.setOnChangeListener {
-            component.inputData.name = holderNameEditText.rawValue
+        observeDelegate(delegate, coroutineScope)
+
+        binding.editTextHolderName.setOnChangeListener {
+            sepaDelegate.inputData.name = binding.editTextHolderName.rawValue
             notifyInputDataChanged()
-            holderNameInput.error = null
+            binding.textInputLayoutHolderName.error = null
         }
-        ibanNumberEditText.setOnChangeListener {
-            component.inputData.iban = ibanNumberEditText.rawValue
+        binding.editTextIbanNumber.setOnChangeListener {
+            sepaDelegate.inputData.iban = binding.editTextIbanNumber.rawValue
             notifyInputDataChanged()
-            ibanNumberInput.error = null
+            binding.textInputLayoutIbanNumber.error = null
         }
-        ibanNumberEditText.onFocusChangeListener = OnFocusChangeListener { _: View?, hasFocus: Boolean ->
-            val outputData = component.outputData
+        binding.editTextIbanNumber.onFocusChangeListener = OnFocusChangeListener { _: View?, hasFocus: Boolean ->
+            val outputData = sepaDelegate.outputData
             val ibanNumberValidation = outputData?.ibanNumberField?.validation
             if (hasFocus) {
-                ibanNumberInput.error = null
+                binding.textInputLayoutIbanNumber.error = null
             } else if (ibanNumberValidation != null && !ibanNumberValidation.isValid()) {
                 val errorReasonResId = (ibanNumberValidation as Validation.Invalid).reason
-                ibanNumberInput.error = localizedContext.getString(errorReasonResId)
+                binding.textInputLayoutIbanNumber.error = localizedContext.getString(errorReasonResId)
             }
         }
     }
 
-    override fun onChanged(sepaOutputData: SepaOutputData?) {
-        v(TAG, "sepaOutputData changed")
+    private fun initLocalizedStrings(localizedContext: Context) {
+        binding.textInputLayoutHolderName.setLocalizedHintFromStyle(
+            R.style.AdyenCheckout_Sepa_HolderNameInput,
+            localizedContext
+        )
+        binding.textInputLayoutIbanNumber.setLocalizedHintFromStyle(
+            R.style.AdyenCheckout_Sepa_AccountNumberInput,
+            localizedContext
+        )
     }
 
-    override fun onComponentAttached() {
-        // nothing to impl
+    private fun observeDelegate(delegate: SepaDelegate, coroutineScope: CoroutineScope) {
+        delegate.outputDataFlow
+            .onEach { outputDataChanged(it) }
+            .launchIn(coroutineScope)
     }
 
-    override fun observeComponentChanges(lifecycleOwner: LifecycleOwner) {
-        component.observeOutputData(lifecycleOwner, this)
+    private fun outputDataChanged(sepaOutputData: SepaOutputData?) {
+        Logger.v(TAG, "sepaOutputData changed")
+        // no ops
     }
 
-    override val isConfirmationRequired: Boolean
-        get() = true
+    override val isConfirmationRequired: Boolean = true
 
     override fun highlightValidationErrors() {
-        d(TAG, "highlightValidationErrors")
-        val outputData: SepaOutputData = component.outputData ?: return
+        Logger.d(TAG, "highlightValidationErrors")
+        val outputData: SepaOutputData = sepaDelegate.outputData ?: return
         var errorFocused = false
         val ownerNameValidation = outputData.ownerNameField.validation
         if (!ownerNameValidation.isValid()) {
             errorFocused = true
-            holderNameInput.requestFocus()
+            binding.textInputLayoutHolderName.requestFocus()
             val errorReasonResId = (ownerNameValidation as Validation.Invalid).reason
-            holderNameInput.error = localizedContext.getString(errorReasonResId)
+            binding.textInputLayoutHolderName.error = localizedContext.getString(errorReasonResId)
         }
         val ibanNumberValidation = outputData.ibanNumberField.validation
         if (!ibanNumberValidation.isValid()) {
             if (!errorFocused) {
-                ibanNumberInput.requestFocus()
+                binding.textInputLayoutIbanNumber.requestFocus()
             }
             val errorReasonResId = (ibanNumberValidation as Validation.Invalid).reason
-            ibanNumberInput.error = localizedContext.getString(errorReasonResId)
+            binding.textInputLayoutIbanNumber.error = localizedContext.getString(errorReasonResId)
         }
     }
 
     private fun notifyInputDataChanged() {
-        component.notifyInputDataChanged()
+        sepaDelegate.onInputDataChanged(sepaDelegate.inputData)
     }
+
+    override fun getView(): View = this
 
     companion object {
         private val TAG = LogUtil.getTag()

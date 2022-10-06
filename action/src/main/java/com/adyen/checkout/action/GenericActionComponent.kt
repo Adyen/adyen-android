@@ -22,7 +22,6 @@ import com.adyen.checkout.components.ViewableComponent
 import com.adyen.checkout.components.base.ActionDelegate
 import com.adyen.checkout.components.base.BaseActionComponent
 import com.adyen.checkout.components.base.IntentHandlingComponent
-import com.adyen.checkout.components.base.OutputData
 import com.adyen.checkout.components.model.payments.response.Action
 import com.adyen.checkout.components.ui.ViewProvidingComponent
 import com.adyen.checkout.components.ui.view.ComponentViewType
@@ -39,15 +38,12 @@ class GenericActionComponent(
     configuration: GenericActionConfiguration,
     private val genericActionDelegate: GenericActionDelegate,
 ) : BaseActionComponent<GenericActionConfiguration>(savedStateHandle, application, configuration),
-    ViewableComponent<OutputData, GenericActionConfiguration, ActionComponentData>,
+    ViewableComponent<GenericActionConfiguration, ActionComponentData>,
     IntentHandlingComponent,
     ViewProvidingComponent {
 
     override val delegate: ActionDelegate<Action>
         get() = genericActionDelegate.delegate
-
-    override val outputData: OutputData?
-        get() = genericActionDelegate.outputData
 
     override val viewFlow: Flow<ComponentViewType?>
         get() = genericActionDelegate.viewFlow
@@ -70,10 +66,6 @@ class GenericActionComponent(
 
     override fun handleActionInternal(action: Action, activity: Activity) {
         genericActionDelegate.handleAction(action, activity)
-    }
-
-    override fun observeOutputData(lifecycleOwner: LifecycleOwner, observer: Observer<OutputData>) {
-        // TODO remove
     }
 
     override fun observe(lifecycleOwner: LifecycleOwner, observer: Observer<ActionComponentData>) {

@@ -30,7 +30,7 @@ class SepaComponent(
     savedStateHandle: SavedStateHandle,
     override val delegate: SepaDelegate,
     configuration: SepaConfiguration,
-) : BasePaymentComponent<SepaConfiguration, SepaInputData, SepaOutputData, PaymentComponentState<SepaPaymentMethod>>(
+) : BasePaymentComponent<SepaConfiguration, PaymentComponentState<SepaPaymentMethod>>(
     savedStateHandle,
     delegate,
     configuration
@@ -40,24 +40,13 @@ class SepaComponent(
     override val viewFlow: Flow<ComponentViewType?> = delegate.viewFlow
 
     init {
-        delegate.outputDataFlow
-            .filterNotNull()
-            .onEach { notifyOutputDataChanged(it) }
-            .launchIn(viewModelScope)
-
         delegate.componentStateFlow
             .filterNotNull()
             .onEach { notifyStateChanged(it) }
             .launchIn(viewModelScope)
     }
 
-    override val inputData: SepaInputData = SepaInputData()
-
     override fun getSupportedPaymentMethodTypes(): Array<String> = PAYMENT_METHOD_TYPES
-
-    override fun onInputDataChanged(inputData: SepaInputData) {
-        delegate.onInputDataChanged(inputData)
-    }
 
     companion object {
         private val TAG = LogUtil.getTag()

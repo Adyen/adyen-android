@@ -12,6 +12,7 @@ import android.content.Context
 import android.util.AttributeSet
 import android.view.LayoutInflater
 import android.view.View
+import androidx.annotation.RestrictTo
 import androidx.constraintlayout.widget.ConstraintLayout
 import com.adyen.checkout.components.base.ActionDelegate
 import com.adyen.checkout.components.base.ComponentDelegate
@@ -19,6 +20,7 @@ import com.adyen.checkout.components.ui.databinding.ViewPaymentInProgressBinding
 import com.adyen.checkout.core.exception.CancellationException
 import kotlinx.coroutines.CoroutineScope
 
+@RestrictTo(RestrictTo.Scope.LIBRARY_GROUP)
 class PaymentInProgressView @JvmOverloads constructor(
     context: Context,
     attrs: AttributeSet? = null,
@@ -29,7 +31,7 @@ class PaymentInProgressView @JvmOverloads constructor(
         attrs,
         defStyleAttr
     ),
-    ComponentViewNew {
+    ComponentView {
 
     private val binding = ViewPaymentInProgressBinding.inflate(LayoutInflater.from(context), this)
 

@@ -19,7 +19,7 @@ import com.adyen.checkout.components.base.ComponentDelegate
 import com.adyen.checkout.components.extensions.copyTextToClipboard
 import com.adyen.checkout.components.extensions.setLocalizedTextFromStyle
 import com.adyen.checkout.components.status.model.TimerData
-import com.adyen.checkout.components.ui.ComponentViewNew
+import com.adyen.checkout.components.ui.ComponentView
 import com.adyen.checkout.components.util.PaymentMethodTypes
 import com.adyen.checkout.core.log.LogUtil
 import com.adyen.checkout.core.log.Logger
@@ -31,7 +31,7 @@ import kotlinx.coroutines.flow.onEach
 import java.util.concurrent.TimeUnit
 
 @Suppress("TooManyFunctions")
-class QrCodeViewNew @JvmOverloads constructor(
+internal class QrCodeView @JvmOverloads constructor(
     context: Context,
     attrs: AttributeSet? = null,
     defStyleAttr: Int = 0
@@ -41,7 +41,7 @@ class QrCodeViewNew @JvmOverloads constructor(
         attrs,
         defStyleAttr
     ),
-    ComponentViewNew {
+    ComponentView {
 
     private val binding: QrcodeViewBinding = QrcodeViewBinding.inflate(LayoutInflater.from(context), this)
 

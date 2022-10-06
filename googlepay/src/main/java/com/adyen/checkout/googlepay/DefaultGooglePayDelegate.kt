@@ -22,6 +22,8 @@ internal class DefaultGooglePayDelegate(
     private val configuration: GooglePayConfiguration,
 ) : GooglePayDelegate {
 
+    override val inputData: GooglePayInputData = GooglePayInputData()
+
     private val _outputDataFlow = MutableStateFlow<GooglePayOutputData?>(null)
     override val outputDataFlow: Flow<GooglePayOutputData?> = _outputDataFlow
 

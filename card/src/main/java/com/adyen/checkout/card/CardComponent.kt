@@ -30,7 +30,7 @@ class CardComponent(
     override val delegate: CardDelegate,
     cardConfiguration: CardConfiguration
 ) :
-    BasePaymentComponent<CardConfiguration, CardInputData, CardOutputData, CardComponentState>(
+    BasePaymentComponent<CardConfiguration, CardComponentState>(
         savedStateHandle,
         delegate,
         cardConfiguration
@@ -39,21 +39,11 @@ class CardComponent(
 
     override val viewFlow: Flow<ComponentViewType?> get() = delegate.viewFlow
 
-    override val inputData: CardInputData = delegate.inputData
-
     init {
         delegate.initialize(viewModelScope)
 
-        observeOutputData()
         observeComponentState()
         observeExceptions()
-    }
-
-    private fun observeOutputData() {
-        delegate.outputDataFlow
-            .filterNotNull()
-            .onEach { notifyOutputDataChanged(it) }
-            .launchIn(viewModelScope)
     }
 
     private fun observeComponentState() {
@@ -67,10 +57,6 @@ class CardComponent(
         delegate.exceptionFlow
             .onEach { notifyException(it) }
             .launchIn(viewModelScope)
-    }
-
-    override fun onInputDataChanged(inputData: CardInputData) {
-        delegate.onInputDataChanged(inputData)
     }
 
     override fun requiresInput() = delegate.requiresInput()

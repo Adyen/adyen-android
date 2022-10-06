@@ -15,7 +15,7 @@ import android.widget.AdapterView
 import android.widget.LinearLayout
 import com.adyen.checkout.components.api.ImageLoader.Companion.getInstance
 import com.adyen.checkout.components.base.ComponentDelegate
-import com.adyen.checkout.components.ui.ComponentViewNew
+import com.adyen.checkout.components.ui.ComponentView
 import com.adyen.checkout.core.log.LogUtil
 import com.adyen.checkout.core.log.Logger
 import com.adyen.checkout.issuerlist.databinding.IssuerListSpinnerViewBinding
@@ -24,7 +24,7 @@ import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.onEach
 
 @Suppress("TooManyFunctions")
-class IssuerListSpinnerView @JvmOverloads constructor(
+internal class IssuerListSpinnerView @JvmOverloads constructor(
     context: Context,
     attrs: AttributeSet? = null,
     defStyleAttr: Int = 0
@@ -34,7 +34,7 @@ class IssuerListSpinnerView @JvmOverloads constructor(
         attrs,
         defStyleAttr
     ),
-    ComponentViewNew,
+    ComponentView,
     AdapterView.OnItemSelectedListener {
 
     private val binding: IssuerListSpinnerViewBinding =

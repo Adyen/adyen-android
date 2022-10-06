@@ -18,7 +18,6 @@ import com.adyen.checkout.components.PaymentComponentState
 import com.adyen.checkout.components.model.payments.request.PaymentMethodDetails
 import com.adyen.checkout.components.util.CurrencyUtils
 import com.adyen.checkout.components.util.PaymentMethodTypes
-import com.adyen.checkout.core.exception.CheckoutException
 import com.adyen.checkout.core.log.LogUtil
 import com.adyen.checkout.core.log.Logger
 import com.adyen.checkout.dropin.R
@@ -27,10 +26,6 @@ import com.adyen.checkout.dropin.ui.base.BaseComponentDialogFragment
 import com.google.android.material.bottomsheet.BottomSheetBehavior
 
 class CardComponentDialogFragment : BaseComponentDialogFragment() {
-
-    companion object : BaseCompanion<CardComponentDialogFragment>(CardComponentDialogFragment::class.java) {
-        private val TAG = LogUtil.getTag()
-    }
 
     private var _binding: FragmentCardComponentBinding? = null
     private val binding: FragmentCardComponentBinding get() = requireNotNull(_binding)
@@ -50,19 +45,8 @@ class CardComponentDialogFragment : BaseComponentDialogFragment() {
         binding.cardView.highlightValidationErrors()
     }
 
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-        try {
-            component as CardComponent
-        } catch (e: ClassCastException) {
-            throw CheckoutException("Component is not CardComponent")
-        }
-    }
-
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         Logger.d(TAG, "onViewCreated")
-
-        val cardComponent = component as CardComponent
 
         if (!dropInViewModel.amount.isEmpty) {
             val value =
@@ -72,13 +56,13 @@ class CardComponentDialogFragment : BaseComponentDialogFragment() {
 
         // Keeping generic component to use the observer from the BaseComponentDialogFragment
         component.observe(viewLifecycleOwner, this)
-        cardComponent.observeErrors(viewLifecycleOwner, createErrorHandlerObserver())
+        component.observeErrors(viewLifecycleOwner, createErrorHandlerObserver())
 
         // try to get the name from the payment methods response
         binding.header.text = dropInViewModel.getPaymentMethods()
             .find { it.type == PaymentMethodTypes.SCHEME }?.name
 
-        binding.cardView.attach(cardComponent, viewLifecycleOwner)
+        binding.cardView.attach(component as CardComponent, viewLifecycleOwner)
 
         if (binding.cardView.isConfirmationRequired) {
             binding.payButton.setOnClickListener { componentDialogViewModel.payButtonClicked() }
@@ -96,5 +80,9 @@ class CardComponentDialogFragment : BaseComponentDialogFragment() {
     override fun onDestroyView() {
         _binding = null
         super.onDestroyView()
+    }
+
+    companion object : BaseCompanion<CardComponentDialogFragment>(CardComponentDialogFragment::class.java) {
+        private val TAG = LogUtil.getTag()
     }
 }

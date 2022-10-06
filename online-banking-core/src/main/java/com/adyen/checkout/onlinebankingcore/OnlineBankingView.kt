@@ -16,7 +16,7 @@ import android.widget.LinearLayout
 import com.adyen.checkout.components.base.ComponentDelegate
 import com.adyen.checkout.components.extensions.setLocalizedHintFromStyle
 import com.adyen.checkout.components.extensions.setLocalizedTextFromStyle
-import com.adyen.checkout.components.ui.ComponentViewNew
+import com.adyen.checkout.components.ui.ComponentView
 import com.adyen.checkout.components.ui.Validation
 import com.adyen.checkout.components.ui.adapter.SimpleTextListAdapter
 import com.adyen.checkout.core.log.LogUtil
@@ -24,7 +24,7 @@ import com.adyen.checkout.core.log.Logger
 import com.adyen.checkout.onlinebankingcore.databinding.OnlineBankingSpinnerLayoutBinding
 import kotlinx.coroutines.CoroutineScope
 
-class OnlineBankingView @JvmOverloads constructor(
+internal class OnlineBankingView @JvmOverloads constructor(
     context: Context,
     attrs: AttributeSet? = null,
     defStyleAttr: Int = 0
@@ -34,7 +34,7 @@ class OnlineBankingView @JvmOverloads constructor(
         attrs,
         defStyleAttr
     ),
-    ComponentViewNew,
+    ComponentView,
     AdapterView.OnItemSelectedListener {
 
     private val binding: OnlineBankingSpinnerLayoutBinding =

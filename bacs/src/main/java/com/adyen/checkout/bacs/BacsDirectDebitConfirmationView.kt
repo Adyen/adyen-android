@@ -16,10 +16,10 @@ import android.widget.LinearLayout
 import com.adyen.checkout.bacs.databinding.BacsDirectDebitConfirmationViewBinding
 import com.adyen.checkout.components.base.ComponentDelegate
 import com.adyen.checkout.components.extensions.setLocalizedHintFromStyle
-import com.adyen.checkout.components.ui.ComponentViewNew
+import com.adyen.checkout.components.ui.ComponentView
 import kotlinx.coroutines.CoroutineScope
 
-class BacsDirectDebitConfirmationView @JvmOverloads constructor(
+internal class BacsDirectDebitConfirmationView @JvmOverloads constructor(
     context: Context,
     attrs: AttributeSet? = null,
     defStyleAttr: Int = 0
@@ -29,7 +29,7 @@ class BacsDirectDebitConfirmationView @JvmOverloads constructor(
         attrs,
         defStyleAttr
     ),
-    ComponentViewNew {
+    ComponentView {
 
     private val binding: BacsDirectDebitConfirmationViewBinding =
         BacsDirectDebitConfirmationViewBinding.inflate(LayoutInflater.from(context), this)

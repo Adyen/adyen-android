@@ -10,7 +10,7 @@ package com.adyen.checkout.bacs
 
 import android.content.Context
 import android.util.AttributeSet
-import com.adyen.checkout.components.ui.ComponentViewNew
+import com.adyen.checkout.components.ui.ComponentView
 import com.adyen.checkout.components.ui.ViewProvider
 import com.adyen.checkout.components.ui.view.ComponentViewType
 
@@ -20,7 +20,7 @@ object BacsViewProvider : ViewProvider {
         context: Context,
         attrs: AttributeSet?,
         defStyleAttr: Int
-    ): ComponentViewNew {
+    ): ComponentView {
         return when (viewType) {
             BacsComponentViewType.INPUT -> BacsDirectDebitInputView(context, attrs, defStyleAttr)
             BacsComponentViewType.CONFIRMATION -> BacsDirectDebitConfirmationView(context, attrs, defStyleAttr)

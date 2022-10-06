@@ -10,7 +10,7 @@ package com.adyen.checkout.qrcode
 
 import android.content.Context
 import android.util.AttributeSet
-import com.adyen.checkout.components.ui.ComponentViewNew
+import com.adyen.checkout.components.ui.ComponentView
 import com.adyen.checkout.components.ui.ViewProvider
 import com.adyen.checkout.components.ui.view.ComponentViewType
 
@@ -21,8 +21,8 @@ internal object QrCodeViewProvider : ViewProvider {
         context: Context,
         attrs: AttributeSet?,
         defStyleAttr: Int
-    ): ComponentViewNew {
-        return if (viewType == QrCodeComponentViewType) QrCodeViewNew(context, attrs, defStyleAttr)
+    ): ComponentView {
+        return if (viewType == QrCodeComponentViewType) QrCodeView(context, attrs, defStyleAttr)
         else throw IllegalArgumentException("Unsupported view type")
     }
 }

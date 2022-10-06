@@ -1,9 +1,9 @@
 /*
- * Copyright (c) 2020 Adyen N.V.
+ * Copyright (c) 2022 Adyen N.V.
  *
  * This file is open source and available under the MIT license. See the LICENSE file for more info.
  *
- * Created by josephj on 4/12/2020.
+ * Created by josephj on 29/9/2022.
  */
 package com.adyen.checkout.blik
 
@@ -12,92 +12,114 @@ import android.util.AttributeSet
 import android.view.LayoutInflater
 import android.view.View
 import android.view.View.OnFocusChangeListener
-import android.widget.TextView
-import androidx.lifecycle.LifecycleOwner
-import androidx.lifecycle.Observer
-import com.adyen.checkout.components.PaymentComponentState
-import com.adyen.checkout.components.model.payments.request.BlikPaymentMethod
+import android.widget.LinearLayout
+import com.adyen.checkout.blik.databinding.BlikViewBinding
+import com.adyen.checkout.components.base.ComponentDelegate
+import com.adyen.checkout.components.extensions.setLocalizedHintFromStyle
+import com.adyen.checkout.components.extensions.setLocalizedTextFromStyle
+import com.adyen.checkout.components.ui.ComponentView
 import com.adyen.checkout.components.ui.Validation
-import com.adyen.checkout.components.ui.view.AdyenLinearLayout
-import com.adyen.checkout.components.ui.view.AdyenTextInputEditText
 import com.adyen.checkout.core.log.LogUtil
 import com.adyen.checkout.core.log.Logger
-import com.google.android.material.textfield.TextInputLayout
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.flow.launchIn
+import kotlinx.coroutines.flow.onEach
 
-class BlikView @JvmOverloads constructor(context: Context, attrs: AttributeSet? = null, defStyleAttr: Int = 0) :
-    AdyenLinearLayout<BlikOutputData, BlikConfiguration, PaymentComponentState<BlikPaymentMethod>, BlikComponent>(
+internal class BlikView @JvmOverloads constructor(
+    context: Context,
+    attrs: AttributeSet? = null,
+    defStyleAttr: Int = 0
+) :
+    LinearLayout(
         context,
         attrs,
         defStyleAttr
     ),
-    Observer<BlikOutputData> {
+    ComponentView {
 
-    private lateinit var blikHeader: TextView
-    private lateinit var blikCodeInput: TextInputLayout
-    private lateinit var blikCodeEditText: AdyenTextInputEditText
+    private val binding: BlikViewBinding = BlikViewBinding.inflate(LayoutInflater.from(context), this)
+
+    private lateinit var localizedContext: Context
+
+    private lateinit var blikDelegate: BlikDelegate
 
     init {
         orientation = VERTICAL
-        LayoutInflater.from(getContext()).inflate(R.layout.blik_view, this, true)
         val padding = resources.getDimension(R.dimen.standard_margin).toInt()
         setPadding(padding, padding, padding, 0)
     }
 
-    override fun initLocalizedStrings(localizedContext: Context) {
-        blikCodeInput.setLocalizedHintFromStyle(R.style.AdyenCheckout_Blik_BlikCodeInput)
-        blikHeader.setLocalizedTextFromStyle(R.style.AdyenCheckout_Blik_BlikHeaderTextView)
+    override fun initView(delegate: ComponentDelegate, coroutineScope: CoroutineScope, localizedContext: Context) {
+        if (delegate !is BlikDelegate) throw IllegalArgumentException("Unsupported delegate type")
+        blikDelegate = delegate
+
+        this.localizedContext = localizedContext
+        initLocalizedStrings(localizedContext)
+
+        observeDelegate(delegate, coroutineScope)
+
+        initBlikCodeInput()
     }
 
-    override fun initView() {
-        blikHeader = findViewById(R.id.textView_blikHeader)
-        blikCodeInput = findViewById(R.id.textInputLayout_blikCode)
-        blikCodeEditText = blikCodeInput.editText as AdyenTextInputEditText
+    private fun initLocalizedStrings(localizedContext: Context) {
+        binding.textInputLayoutBlikCode.setLocalizedHintFromStyle(
+            R.style.AdyenCheckout_Blik_BlikCodeInput,
+            localizedContext
+        )
+        binding.textViewBlikHeader.setLocalizedTextFromStyle(
+            R.style.AdyenCheckout_Blik_BlikHeaderTextView,
+            localizedContext
+        )
+    }
 
-        blikCodeEditText.setOnChangeListener {
-            component.inputData.blikCode = blikCodeEditText.rawValue
+    private fun observeDelegate(delegate: BlikDelegate, coroutineScope: CoroutineScope) {
+        delegate.outputDataFlow
+            .onEach { outputDataChanged(it) }
+            .launchIn(coroutineScope)
+    }
+
+    private fun outputDataChanged(blikOutputData: BlikOutputData?) {
+        blikOutputData ?: return
+        // no ops
+    }
+
+    private fun initBlikCodeInput() {
+        binding.editTextBlikCode.setOnChangeListener {
+            blikDelegate.inputData.blikCode = binding.editTextBlikCode.rawValue
             notifyInputDataChanged()
-            blikCodeInput.error = null
+            binding.textInputLayoutBlikCode.error = null
         }
 
-        blikCodeEditText.onFocusChangeListener = OnFocusChangeListener { _: View?, hasFocus: Boolean ->
-            val outputData = component.outputData
+        binding.editTextBlikCode.onFocusChangeListener = OnFocusChangeListener { _: View?, hasFocus: Boolean ->
+            val outputData = blikDelegate.outputData
             val blikCodeValidation = outputData?.blikCodeField?.validation
             if (hasFocus) {
-                blikCodeInput.error = null
+                binding.textInputLayoutBlikCode.error = null
             } else if (blikCodeValidation != null && !blikCodeValidation.isValid()) {
                 val errorReasonResId = (blikCodeValidation as Validation.Invalid).reason
-                blikCodeInput.error = localizedContext.getString(errorReasonResId)
+                binding.textInputLayoutBlikCode.error = localizedContext.getString(errorReasonResId)
             }
         }
     }
 
-    override fun onChanged(blikOutputData: BlikOutputData?) {
-        Logger.v(TAG, "blikOutputData changed")
-    }
-
-    override fun onComponentAttached() = Unit // nothing to impl
-
-    override fun observeComponentChanges(lifecycleOwner: LifecycleOwner) {
-        component.observeOutputData(lifecycleOwner, this)
-    }
-
-    override val isConfirmationRequired: Boolean
-        get() = true
+    override val isConfirmationRequired: Boolean = true
 
     override fun highlightValidationErrors() {
         Logger.d(TAG, "highlightValidationErrors")
-        val outputData = component.outputData ?: return
+        val outputData = blikDelegate.outputData ?: return
         val blikCodeValidation = outputData.blikCodeField.validation
         if (!blikCodeValidation.isValid()) {
-            blikCodeInput.requestFocus()
+            binding.textInputLayoutBlikCode.requestFocus()
             val errorReasonResId = (blikCodeValidation as Validation.Invalid).reason
-            blikCodeInput.error = localizedContext.getString(errorReasonResId)
+            binding.textInputLayoutBlikCode.error = localizedContext.getString(errorReasonResId)
         }
     }
 
     private fun notifyInputDataChanged() {
-        component.notifyInputDataChanged()
+        blikDelegate.onInputDataChanged(blikDelegate.inputData)
     }
+
+    override fun getView(): View = this
 
     companion object {
         private val TAG = LogUtil.getTag()

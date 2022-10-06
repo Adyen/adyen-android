@@ -19,7 +19,7 @@ import com.adyen.checkout.bacs.databinding.BacsDirectDebitInputViewBinding
 import com.adyen.checkout.components.base.ComponentDelegate
 import com.adyen.checkout.components.extensions.setLocalizedHintFromStyle
 import com.adyen.checkout.components.extensions.setLocalizedTextFromStyle
-import com.adyen.checkout.components.ui.ComponentViewNew
+import com.adyen.checkout.components.ui.ComponentView
 import com.adyen.checkout.components.ui.FieldState
 import com.adyen.checkout.components.ui.Validation
 import com.adyen.checkout.components.ui.view.AdyenTextInputEditText
@@ -33,7 +33,7 @@ import kotlinx.coroutines.flow.onEach
 private val TAG = LogUtil.getTag()
 
 @Suppress("TooManyFunctions")
-class BacsDirectDebitInputView @JvmOverloads constructor(
+internal class BacsDirectDebitInputView @JvmOverloads constructor(
     context: Context,
     attrs: AttributeSet? = null,
     defStyleAttr: Int = 0
@@ -43,7 +43,7 @@ class BacsDirectDebitInputView @JvmOverloads constructor(
         attrs,
         defStyleAttr
     ),
-    ComponentViewNew {
+    ComponentView {
 
     private val binding: BacsDirectDebitInputViewBinding =
         BacsDirectDebitInputViewBinding.inflate(LayoutInflater.from(context), this)

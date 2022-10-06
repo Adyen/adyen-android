@@ -10,7 +10,7 @@ package com.adyen.checkout.blik
 
 import android.content.Context
 import android.util.AttributeSet
-import com.adyen.checkout.components.ui.ComponentViewNew
+import com.adyen.checkout.components.ui.ComponentView
 import com.adyen.checkout.components.ui.ViewProvider
 import com.adyen.checkout.components.ui.view.ComponentViewType
 
@@ -20,9 +20,9 @@ internal object BlikViewProvider : ViewProvider {
         context: Context,
         attrs: AttributeSet?,
         defStyleAttr: Int
-    ): ComponentViewNew {
+    ): ComponentView {
         return when (viewType) {
-            BlikComponentViewType -> BlikViewNew(context, attrs, defStyleAttr)
+            BlikComponentViewType -> BlikView(context, attrs, defStyleAttr)
             else -> throw IllegalArgumentException("Unsupported view type")
         }
     }

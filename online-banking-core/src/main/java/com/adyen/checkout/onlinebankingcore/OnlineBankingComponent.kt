@@ -25,23 +25,13 @@ abstract class OnlineBankingComponent<IssuerListPaymentMethodT : IssuerListPayme
     configuration: OnlineBankingConfiguration
 ) : BasePaymentComponent<
     OnlineBankingConfiguration,
-    OnlineBankingInputData,
-    OnlineBankingOutputData,
     PaymentComponentState<IssuerListPaymentMethodT>
     >(savedStateHandle, delegate, configuration),
     ViewProvidingComponent {
 
-    override val inputData: OnlineBankingInputData =
-        OnlineBankingInputData()
-
     override val viewFlow: Flow<ComponentViewType?> = delegate.viewFlow
 
     init {
-        delegate.outputDataFlow
-            .filterNotNull()
-            .onEach { notifyOutputDataChanged(it) }
-            .launchIn(viewModelScope)
-
         delegate.componentStateFlow
             .filterNotNull()
             .onEach { notifyStateChanged(it) }
@@ -51,9 +41,5 @@ abstract class OnlineBankingComponent<IssuerListPaymentMethodT : IssuerListPayme
             .filterNotNull()
             .onEach { notifyException(it) }
             .launchIn(viewModelScope)
-    }
-
-    override fun onInputDataChanged(inputData: OnlineBankingInputData) {
-        delegate.onInputDataChanged(inputData)
     }
 }

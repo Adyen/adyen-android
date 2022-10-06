@@ -10,7 +10,7 @@ package com.adyen.checkout.await
 
 import android.content.Context
 import android.util.AttributeSet
-import com.adyen.checkout.components.ui.ComponentViewNew
+import com.adyen.checkout.components.ui.ComponentView
 import com.adyen.checkout.components.ui.ViewProvider
 import com.adyen.checkout.components.ui.view.ComponentViewType
 
@@ -21,9 +21,9 @@ internal object AwaitViewProvider : ViewProvider {
         context: Context,
         attrs: AttributeSet?,
         defStyleAttr: Int
-    ): ComponentViewNew {
+    ): ComponentView {
         return when (viewType) {
-            AwaitComponentViewType -> AwaitViewNew(context, attrs, defStyleAttr)
+            AwaitComponentViewType -> AwaitView(context, attrs, defStyleAttr)
             else -> throw IllegalArgumentException("Unsupported view type")
         }
     }

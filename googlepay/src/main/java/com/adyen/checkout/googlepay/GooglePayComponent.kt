@@ -35,21 +35,14 @@ class GooglePayComponent(
     private val googlePayDelegate: GooglePayDelegate,
     configuration: GooglePayConfiguration
 ) :
-    BasePaymentComponent<GooglePayConfiguration, GooglePayInputData, GooglePayOutputData, GooglePayComponentState>(
+    BasePaymentComponent<GooglePayConfiguration, GooglePayComponentState>(
         savedStateHandle,
         googlePayDelegate,
         configuration
     ),
     ActivityResultHandlingComponent {
 
-    override val inputData: GooglePayInputData = GooglePayInputData()
-
     init {
-        googlePayDelegate.outputDataFlow
-            .filterNotNull()
-            .onEach { notifyOutputDataChanged(it) }
-            .launchIn(viewModelScope)
-
         googlePayDelegate.componentStateFlow
             .filterNotNull()
             .onEach { notifyStateChanged(it) }
@@ -57,10 +50,6 @@ class GooglePayComponent(
     }
 
     override fun getSupportedPaymentMethodTypes() = PAYMENT_METHOD_TYPES
-
-    override fun onInputDataChanged(inputData: GooglePayInputData) {
-        googlePayDelegate.onInputDataChanged(inputData)
-    }
 
     /**
      * Start the GooglePay screen which will return the result to the provided Activity.
@@ -91,8 +80,8 @@ class GooglePayComponent(
                     return
                 }
                 val paymentData = PaymentData.getFromIntent(data)
-                inputData.paymentData = paymentData
-                notifyInputDataChanged()
+                googlePayDelegate.inputData.paymentData = paymentData
+                googlePayDelegate.onInputDataChanged(googlePayDelegate.inputData)
             }
             Activity.RESULT_CANCELED -> notifyException(ComponentException("Payment canceled."))
             AutoResolveHelper.RESULT_ERROR -> {

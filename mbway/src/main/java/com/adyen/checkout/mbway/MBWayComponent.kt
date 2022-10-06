@@ -27,28 +27,14 @@ class MBWayComponent(
     private val mbWayDelegate: MBWayDelegate,
     configuration: MBWayConfiguration
 ) :
-    BasePaymentComponent<MBWayConfiguration, MBWayInputData, MBWayOutputData,
+    BasePaymentComponent<MBWayConfiguration,
         PaymentComponentState<MBWayPaymentMethod>>(savedStateHandle, mbWayDelegate, configuration) {
 
     init {
-        observeOutputData()
         observeComponentState()
     }
 
-    override val inputData: MBWayInputData = MBWayInputData()
-
     override fun getSupportedPaymentMethodTypes(): Array<String> = PAYMENT_METHOD_TYPES
-
-    override fun onInputDataChanged(inputData: MBWayInputData) {
-        mbWayDelegate.onInputDataChanged(inputData)
-    }
-
-    private fun observeOutputData() {
-        mbWayDelegate.outputDataFlow
-            .filterNotNull()
-            .onEach { notifyOutputDataChanged(it) }
-            .launchIn(viewModelScope)
-    }
 
     private fun observeComponentState() {
         mbWayDelegate.componentStateFlow
