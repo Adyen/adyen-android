@@ -33,7 +33,9 @@ import org.mockito.kotlin.whenever
 
 @OptIn(ExperimentalCoroutinesApi::class)
 @ExtendWith(MockitoExtension::class)
-internal class DefaultOnlineBankingCZDelegateTest {
+internal class DefaultOnlineBankingDelegateTest(
+    @Mock private val configuration: OnlineBankingConfiguration
+) {
 
     private lateinit var delegate: OnlineBankingDelegate<OnlineBankingCZPaymentMethod>
 
@@ -48,6 +50,8 @@ internal class DefaultOnlineBankingCZDelegateTest {
         delegate = DefaultOnlineBankingDelegate(
             pdfOpener = pdfOpener,
             paymentMethod = PaymentMethod(),
+            configuration = configuration,
+            termsAndConditionsUrl = URL,
             paymentMethodFactory = { OnlineBankingCZPaymentMethod() }
         )
     }
@@ -170,7 +174,7 @@ internal class DefaultOnlineBankingCZDelegateTest {
         fun `successfully open pdf`() {
             val url = URL
 
-            delegate.openPdf(mockContext, url)
+            delegate.openTermsAndConditionsPdf(mockContext)
 
             verify(pdfOpener).open(mockContext, url)
             assertNotNull(url)
@@ -181,7 +185,7 @@ internal class DefaultOnlineBankingCZDelegateTest {
             val url = URL
             whenever(pdfOpener.open(mockContext, url)) doThrow IllegalStateException("failed")
 
-            delegate.openPdf(mockContext, url)
+            delegate.openTermsAndConditionsPdf(mockContext)
 
             assertThrows<IllegalStateException> { pdfOpener.open(mockContext, url) }
             assertNotNull(url)
