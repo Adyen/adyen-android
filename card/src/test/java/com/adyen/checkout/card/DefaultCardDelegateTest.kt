@@ -20,6 +20,7 @@ import com.adyen.checkout.card.repository.DetectCardTypeRepository
 import com.adyen.checkout.card.test.TestAddressRepository
 import com.adyen.checkout.card.test.TestDetectCardTypeRepository
 import com.adyen.checkout.card.ui.model.AddressListItem
+import com.adyen.checkout.card.ui.model.CardListItem
 import com.adyen.checkout.card.util.AddressFormUtils
 import com.adyen.checkout.card.util.DetectedCardTypesUtils
 import com.adyen.checkout.card.util.InstallmentUtils
@@ -343,7 +344,12 @@ internal class DefaultCardDelegateTest {
 
         @Test
         fun `input data with custom config is valid, then output data should be good`() = runTest {
-            val supportedCardTypes = listOf(CardType.VISA, CardType.MASTERCARD, CardType.AMERICAN_EXPRESS)
+            val cardBrands = listOf(
+                CardListItem(CardType.VISA, true),
+                CardListItem(CardType.MASTERCARD, false),
+                CardListItem(CardType.AMERICAN_EXPRESS, false)
+            )
+            val supportedCardTypes = cardBrands.map { it.cardType }
             val installmentConfiguration = InstallmentConfiguration(
                 InstallmentOptions.DefaultInstallmentOptions(
                     maxInstallments = 3,
@@ -451,7 +457,7 @@ internal class DefaultCardDelegateTest {
                     countryOptions = expectedCountries,
                     stateOptions = AddressFormUtils.initializeStateOptions(TestAddressRepository.STATES),
                     kcpBirthDateOrTaxNumberHint = R.string.checkout_kcp_tax_number_hint,
-                    supportedCardTypes = supportedCardTypes,
+                    cardBrands = cardBrands,
                 )
 
                 with(requireNotNull(expectMostRecentItem())) {
@@ -639,7 +645,11 @@ internal class DefaultCardDelegateTest {
                         installmentOptions = listOf(installmentModel),
                         countryOptions = emptyList(),
                         stateOptions = emptyList(),
-                        supportedCardTypes = listOf(CardType.VISA, CardType.MASTERCARD, CardType.AMERICAN_EXPRESS),
+                        cardBrands = listOf(
+                            CardListItem(CardType.VISA, false),
+                            CardListItem(CardType.MASTERCARD, false),
+                            CardListItem(CardType.AMERICAN_EXPRESS, false)
+                        ),
                     )
                 )
 
@@ -760,7 +770,7 @@ internal class DefaultCardDelegateTest {
         stateOptions: List<AddressListItem> = emptyList(),
         isDualBranded: Boolean = false,
         @StringRes kcpBirthDateOrTaxNumberHint: Int = R.string.checkout_kcp_birth_date_or_tax_number_hint,
-        supportedCardTypes: List<CardType> = listOf(CardType.VISA),
+        cardBrands: List<CardListItem> = listOf(CardListItem(CardType.VISA, true)),
     ): CardOutputData {
         return CardOutputData(
             cardNumberState = cardNumberState,
@@ -784,7 +794,7 @@ internal class DefaultCardDelegateTest {
             installmentOptions = installmentOptions,
             countryOptions = countryOptions,
             stateOptions = stateOptions,
-            supportedCardTypes = supportedCardTypes,
+            cardBrands = cardBrands,
             isDualBranded = isDualBranded,
             kcpBirthDateOrTaxNumberHint = kcpBirthDateOrTaxNumberHint,
             componentMode = ComponentMode.DEFAULT,

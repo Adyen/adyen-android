@@ -8,7 +8,6 @@
 
 package com.adyen.checkout.card
 
-import com.adyen.checkout.card.ui.model.CardListItem
 import com.adyen.checkout.components.base.PaymentMethodDelegate
 import com.adyen.checkout.components.ui.ViewProvidingDelegate
 import com.adyen.checkout.core.exception.CheckoutException
@@ -34,8 +33,6 @@ interface CardDelegate :
     fun initialize(coroutineScope: CoroutineScope)
 
     fun requiresInput(): Boolean
-
-    fun getCardListItems(): List<CardListItem>
 
     fun onCleared()
 }

@@ -187,7 +187,7 @@ internal class CardView @JvmOverloads constructor(
         updateInstallments(cardOutputData)
         updateCountries(cardOutputData.countryOptions)
         updateStates(cardOutputData.stateOptions)
-        setCardList(cardOutputData.supportedCardTypes, cardOutputData.detectedCardTypes)
+        setCardList(cardOutputData.cardBrands)
     }
 
     @Suppress("ComplexMethod", "LongMethod")
@@ -719,17 +719,14 @@ internal class CardView @JvmOverloads constructor(
         }
     }
 
-    private fun setCardList(originalCards: List<CardType>, detectedCards: List<DetectedCardType>) {
-        binding.recyclerViewCardList.isVisible = originalCards.isNotEmpty()
+    private fun setCardList(cards: List<CardListItem>) {
+        binding.recyclerViewCardList.isVisible = cards.isNotEmpty()
 
         if (cardListAdapter == null) {
             cardListAdapter = CardListAdapter(requireNotNull(imageLoader))
             binding.recyclerViewCardList.adapter = cardListAdapter
         }
 
-        val cards = originalCards.map { cardType ->
-            CardListItem(cardType, detectedCards.map { it.cardType }.contains(cardType))
-        }
         cardListAdapter?.submitList(cards)
     }
 

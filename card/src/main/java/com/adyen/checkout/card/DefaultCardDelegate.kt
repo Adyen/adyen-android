@@ -241,7 +241,7 @@ class DefaultCardDelegate(
             ),
             countryOptions = updatedCountryOptions,
             stateOptions = updatedStateOptions,
-            supportedCardTypes = getSupportedCardTypes(),
+            cardBrands = getCardBrands(filteredDetectedCardTypes),
             isDualBranded = isDualBrandedFlow(filteredDetectedCardTypes),
             kcpBirthDateOrTaxNumberHint = getKcpBirthDateOrTaxNumberHint(inputData.kcpBirthDateOrTaxNumber),
             componentMode = ComponentMode.DEFAULT,
@@ -454,8 +454,6 @@ class DefaultCardDelegate(
         )
     }
 
-    private fun getSupportedCardTypes(): List<CardType> = configuration.supportedCardTypes
-
     private fun requestCountryList() {
         addressRepository.getCountryList(configuration, coroutineScope)
     }
@@ -596,14 +594,10 @@ class DefaultCardDelegate(
         return cardOutputData.installmentOptions.isNotEmpty()
     }
 
-    override fun getCardListItems(): List<CardListItem> {
-        val originalCards = outputData?.supportedCardTypes.orEmpty()
-        val detectedCards = outputData?.detectedCardTypes.orEmpty()
-
-        val noCardDetected = detectedCards.isEmpty()
-
-        return originalCards.map { cardType ->
-            CardListItem(cardType, noCardDetected || detectedCards.map { it.cardType }.contains(cardType))
+    private fun getCardBrands(detectedCardTypes: List<DetectedCardType>): List<CardListItem> {
+        val noCardDetected = detectedCardTypes.isEmpty()
+        return configuration.supportedCardTypes.map { cardType ->
+            CardListItem(cardType, noCardDetected || detectedCardTypes.map { it.cardType }.contains(cardType))
         }
     }
 

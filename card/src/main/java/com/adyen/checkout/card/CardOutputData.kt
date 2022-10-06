@@ -8,10 +8,10 @@
 package com.adyen.checkout.card
 
 import androidx.annotation.StringRes
-import com.adyen.checkout.card.data.CardType
 import com.adyen.checkout.card.data.DetectedCardType
 import com.adyen.checkout.card.data.ExpiryDate
 import com.adyen.checkout.card.ui.model.AddressListItem
+import com.adyen.checkout.card.ui.model.CardListItem
 import com.adyen.checkout.components.base.OutputData
 import com.adyen.checkout.components.ui.ComponentMode
 import com.adyen.checkout.components.ui.FieldState
@@ -38,7 +38,7 @@ data class CardOutputData(
     val installmentOptions: List<InstallmentModel>,
     val countryOptions: List<AddressListItem>,
     val stateOptions: List<AddressListItem>,
-    val supportedCardTypes: List<CardType>,
+    val cardBrands: List<CardListItem>,
     val isDualBranded: Boolean,
     @StringRes
     val kcpBirthDateOrTaxNumberHint: Int?,
