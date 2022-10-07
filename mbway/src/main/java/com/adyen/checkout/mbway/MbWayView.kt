@@ -61,8 +61,9 @@ internal class MbWayView @JvmOverloads constructor(
 
     private fun initMobileNumberInput() {
         binding.editTextMobileNumber.setOnChangeListener {
-            delegate.inputData.localPhoneNumber = it.toString()
-            notifyInputDataChanged()
+            delegate.updateInputData {
+                localPhoneNumber = it.toString()
+            }
             binding.textInputLayoutMobileNumber.hideError()
         }
         binding.editTextMobileNumber.onFocusChangeListener = OnFocusChangeListener { _, hasFocus: Boolean ->
@@ -113,12 +114,9 @@ internal class MbWayView @JvmOverloads constructor(
     override fun getView(): View = this
 
     private fun onCountrySelected(countryModel: CountryModel) {
-        delegate.inputData.countryCode = countryModel.callingCode
-        notifyInputDataChanged()
-    }
-
-    private fun notifyInputDataChanged() {
-        delegate.onInputDataChanged(delegate.inputData)
+        delegate.updateInputData {
+            countryCode = countryModel.callingCode
+        }
     }
 
     private fun List<CountryInfo>.mapToCountryModel() = map {
