@@ -1,5 +1,6 @@
 package com.adyen.checkout.sepa
 
+import androidx.annotation.VisibleForTesting
 import com.adyen.checkout.components.PaymentComponentState
 import com.adyen.checkout.components.model.paymentmethods.PaymentMethod
 import com.adyen.checkout.components.model.payments.request.PaymentComponentData
@@ -17,13 +18,12 @@ internal class DefaultSepaDelegate(
     private val paymentMethod: PaymentMethod
 ) : SepaDelegate {
 
-    override val inputData: SepaInputData = SepaInputData()
+    private val inputData: SepaInputData = SepaInputData()
 
-    private val _outputDataFlow = MutableStateFlow<SepaOutputData?>(null)
-    override val outputDataFlow: Flow<SepaOutputData?> = _outputDataFlow
+    private val _outputDataFlow = MutableStateFlow(createOutputData())
+    override val outputDataFlow: Flow<SepaOutputData> = _outputDataFlow
 
-    override val outputData: SepaOutputData?
-        get() = _outputDataFlow.value
+    override val outputData: SepaOutputData get() = _outputDataFlow.value
 
     private val _componentStateFlow = MutableStateFlow<PaymentComponentState<SepaPaymentMethod>?>(null)
     override val componentStateFlow: Flow<PaymentComponentState<SepaPaymentMethod>?> = _componentStateFlow
@@ -34,18 +34,23 @@ internal class DefaultSepaDelegate(
         return paymentMethod.type ?: PaymentMethodTypes.UNKNOWN
     }
 
-    override fun onInputDataChanged(inputData: SepaInputData) {
+    override fun updateInputData(update: SepaInputData.() -> Unit) {
+        inputData.update()
+        onInputDataChanged()
+    }
+
+    private fun onInputDataChanged() {
         Logger.v(TAG, "onInputDataChanged")
-        val outputData = SepaOutputData(inputData.name, inputData.iban)
-        outputDataChanged(outputData)
+
+        val outputData = createOutputData()
+        _outputDataFlow.tryEmit(outputData)
         createComponentState(outputData)
     }
 
-    private fun outputDataChanged(outputData: SepaOutputData) {
-        _outputDataFlow.tryEmit(outputData)
-    }
+    private fun createOutputData() = SepaOutputData(inputData.name, inputData.iban)
 
-    override fun createComponentState(outputData: SepaOutputData) {
+    @VisibleForTesting
+    internal fun createComponentState(outputData: SepaOutputData) {
         val paymentMethod = SepaPaymentMethod(
             type = SepaPaymentMethod.PAYMENT_METHOD_TYPE,
             ownerName = outputData.ownerNameField.value,

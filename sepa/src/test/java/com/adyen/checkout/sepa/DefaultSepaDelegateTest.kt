@@ -42,11 +42,15 @@ internal class DefaultSepaDelegateTest {
         fun `everything is good, then output data should be propagated`() = runTest {
             delegate.outputDataFlow.test {
                 skipItems(1)
-                delegate.onInputDataChanged(SepaInputData(name = "name", iban = "NL02ABNA0123456789"))
-                val sepaOutputData = awaitItem()
+                delegate.updateInputData {
+                    name = "name"
+                    iban = "NL02ABNA0123456789"
+                }
 
-                assertEquals("name", sepaOutputData?.ownerNameField?.value)
-                assertEquals("NL02ABNA0123456789", sepaOutputData?.ibanNumberField?.value)
+                with(awaitItem()) {
+                    assertEquals("name", ownerNameField.value)
+                    assertEquals("NL02ABNA0123456789", ibanNumberField.value)
+                }
 
                 cancelAndIgnoreRemainingEvents()
             }
