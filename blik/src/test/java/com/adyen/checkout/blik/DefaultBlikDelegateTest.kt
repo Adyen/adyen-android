@@ -50,7 +50,9 @@ internal class DefaultBlikDelegateTest {
         fun `input is invalid, then output data should be invalid`() = runTest {
             delegate.outputDataFlow.test {
                 skipItems(1)
-                delegate.onInputDataChanged(BlikInputData(blikCode = ""))
+                delegate.updateInputData {
+                    blikCode = ""
+                }
 
                 with(requireNotNull(awaitItem())) {
                     assertEquals("", blikCodeField.value)
@@ -65,7 +67,9 @@ internal class DefaultBlikDelegateTest {
         fun `input is invalid, then component state should be invalid`() = runTest {
             delegate.componentStateFlow.test {
                 skipItems(1)
-                delegate.onInputDataChanged(BlikInputData(blikCode = "1234"))
+                delegate.updateInputData {
+                    blikCode = "1234"
+                }
 
                 with(requireNotNull(awaitItem())) {
                     assertEquals("1234", data.paymentMethod?.blikCode)
@@ -81,7 +85,9 @@ internal class DefaultBlikDelegateTest {
         fun `input is valid, then output data should be propagated`() = runTest {
             delegate.outputDataFlow.test {
                 skipItems(1)
-                delegate.onInputDataChanged(BlikInputData(blikCode = "545897"))
+                delegate.updateInputData {
+                    blikCode = "545897"
+                }
 
                 with(requireNotNull(awaitItem())) {
                     assertEquals("545897", blikCodeField.value)
@@ -96,7 +102,9 @@ internal class DefaultBlikDelegateTest {
         fun `input is valid, then component state should be propagated`() = runTest {
             delegate.componentStateFlow.test {
                 skipItems(1)
-                delegate.onInputDataChanged(BlikInputData(blikCode = "123243"))
+                delegate.updateInputData {
+                    blikCode = "123243"
+                }
 
                 with(requireNotNull(awaitItem())) {
                     assertEquals("123243", data.paymentMethod?.blikCode)

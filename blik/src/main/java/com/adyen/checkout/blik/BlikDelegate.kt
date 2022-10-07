@@ -25,8 +25,6 @@ interface BlikDelegate :
 
     val configuration: BlikConfiguration
 
-    val inputData: BlikInputData
-
     val outputData: BlikOutputData?
 
     val outputDataFlow: Flow<BlikOutputData?>
@@ -34,4 +32,6 @@ interface BlikDelegate :
     val componentStateFlow: Flow<PaymentComponentState<BlikPaymentMethod>?>
 
     fun requiresInput(): Boolean
+
+    fun updateInputData(update: BlikInputData.() -> Unit)
 }
