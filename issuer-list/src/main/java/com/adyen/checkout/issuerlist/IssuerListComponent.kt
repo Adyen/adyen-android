@@ -12,7 +12,7 @@ import androidx.lifecycle.viewModelScope
 import com.adyen.checkout.components.PaymentComponentState
 import com.adyen.checkout.components.base.BasePaymentComponent
 import com.adyen.checkout.components.model.payments.request.IssuerListPaymentMethod
-import com.adyen.checkout.components.ui.ViewProvidingComponent
+import com.adyen.checkout.components.ui.ViewableComponent
 import com.adyen.checkout.components.ui.view.ComponentViewType
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.filterNotNull
@@ -33,7 +33,8 @@ abstract class IssuerListComponent<IssuerListPaymentMethodT : IssuerListPaymentM
     savedStateHandle,
     delegate,
     configuration
-), ViewProvidingComponent {
+),
+    ViewableComponent {
 
     override val viewFlow: Flow<ComponentViewType?> = delegate.viewFlow
 

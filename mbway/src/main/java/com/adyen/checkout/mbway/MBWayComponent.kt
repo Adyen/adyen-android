@@ -13,7 +13,7 @@ import com.adyen.checkout.components.PaymentComponentProvider
 import com.adyen.checkout.components.PaymentComponentState
 import com.adyen.checkout.components.base.BasePaymentComponent
 import com.adyen.checkout.components.model.payments.request.MBWayPaymentMethod
-import com.adyen.checkout.components.ui.ViewProvidingComponent
+import com.adyen.checkout.components.ui.ViewableComponent
 import com.adyen.checkout.components.ui.view.ComponentViewType
 import com.adyen.checkout.components.util.PaymentMethodTypes
 import com.adyen.checkout.mbway.MBWayComponent.Companion.PROVIDER
@@ -32,7 +32,7 @@ class MBWayComponent(
 ) :
     BasePaymentComponent<MBWayConfiguration,
         PaymentComponentState<MBWayPaymentMethod>>(savedStateHandle, delegate, configuration),
-    ViewProvidingComponent {
+    ViewableComponent {
 
     override val viewFlow: Flow<ComponentViewType?> = delegate.viewFlow
 

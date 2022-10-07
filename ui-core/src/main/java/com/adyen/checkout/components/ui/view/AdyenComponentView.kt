@@ -14,14 +14,15 @@ import androidx.core.view.isVisible
 import androidx.core.view.updateLayoutParams
 import androidx.lifecycle.LifecycleOwner
 import androidx.lifecycle.lifecycleScope
-import com.adyen.checkout.components.ViewableComponent
+import com.adyen.checkout.components.Component
+import com.adyen.checkout.components.base.BasePaymentComponent
 import com.adyen.checkout.components.base.ComponentDelegate
 import com.adyen.checkout.components.base.Configuration
 import com.adyen.checkout.components.extensions.createLocalizedContext
 import com.adyen.checkout.components.ui.ComponentView
 import com.adyen.checkout.components.ui.ViewProvider
-import com.adyen.checkout.components.ui.ViewProvidingComponent
 import com.adyen.checkout.components.ui.ViewProvidingDelegate
+import com.adyen.checkout.components.ui.ViewableComponent
 import com.adyen.checkout.core.log.LogUtil
 import com.adyen.checkout.core.log.Logger
 import kotlinx.coroutines.CoroutineScope
@@ -36,22 +37,17 @@ class AdyenComponentView @JvmOverloads constructor(
 ) :
     LinearLayout(context, attrs, defStyleAttr) {
 
-    private lateinit var component: ViewableComponent<*, *>
+    private lateinit var component: Component<*, *>
     private lateinit var componentView: ComponentView
 
     init {
         isVisible = isInEditMode
     }
 
-    fun attach(
-        component: ViewableComponent<*, *>,
+    fun <T> attach(
+        component: T,
         lifecycleOwner: LifecycleOwner
-    ) {
-        this.component = component
-
-        // TODO remove when all components are supported
-        if (component !is ViewProvidingComponent) throw IllegalArgumentException("Not implemented yet")
-
+    ) where T : ViewableComponent, T : Component<*, *> {
         component.viewFlow
             .filterNotNull()
             .onEach {
@@ -71,7 +67,8 @@ class AdyenComponentView @JvmOverloads constructor(
             .launchIn(lifecycleOwner.lifecycleScope)
 
         isVisible = true
-        component.sendAnalyticsEvent(context)
+        // TODO change later when analytics are implemented
+        (component as? BasePaymentComponent<*, *>)?.sendAnalyticsEvent(context)
     }
 
     // TODO how does rotation affect this? when views are in the xml layout file their state gets automatically saved

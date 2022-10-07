@@ -18,7 +18,7 @@ import com.adyen.checkout.components.base.IntentHandlingComponent
 import com.adyen.checkout.components.model.payments.response.Action
 import com.adyen.checkout.components.model.payments.response.SdkAction
 import com.adyen.checkout.components.model.payments.response.WeChatPaySdkData
-import com.adyen.checkout.components.ui.ViewProvidingComponent
+import com.adyen.checkout.components.ui.ViewableComponent
 import com.adyen.checkout.components.ui.view.ComponentViewType
 import com.adyen.checkout.core.exception.ComponentException
 import kotlinx.coroutines.flow.Flow
@@ -32,7 +32,7 @@ class WeChatPayActionComponent(
     override val delegate: WeChatDelegate,
 ) : BaseActionComponent<WeChatPayActionConfiguration>(savedStateHandle, application, configuration),
     IntentHandlingComponent,
-    ViewProvidingComponent {
+    ViewableComponent {
 
     override val viewFlow: Flow<ComponentViewType?> = delegate.viewFlow
 

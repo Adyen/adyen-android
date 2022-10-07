@@ -13,7 +13,7 @@ import androidx.lifecycle.viewModelScope
 import com.adyen.checkout.card.CardComponent.Companion.PROVIDER
 import com.adyen.checkout.components.StoredPaymentComponentProvider
 import com.adyen.checkout.components.base.BasePaymentComponent
-import com.adyen.checkout.components.ui.ViewProvidingComponent
+import com.adyen.checkout.components.ui.ViewableComponent
 import com.adyen.checkout.components.ui.view.ComponentViewType
 import com.adyen.checkout.components.util.PaymentMethodTypes
 import com.adyen.checkout.core.log.LogUtil
@@ -35,7 +35,7 @@ class CardComponent(
         delegate,
         cardConfiguration
     ),
-    ViewProvidingComponent {
+    ViewableComponent {
 
     override val viewFlow: Flow<ComponentViewType?> get() = delegate.viewFlow
 

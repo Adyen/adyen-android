@@ -18,7 +18,7 @@ import com.adyen.checkout.components.base.BaseActionComponent
 import com.adyen.checkout.components.base.IntentHandlingComponent
 import com.adyen.checkout.components.model.payments.response.Action
 import com.adyen.checkout.components.model.payments.response.RedirectAction
-import com.adyen.checkout.components.ui.ViewProvidingComponent
+import com.adyen.checkout.components.ui.ViewableComponent
 import com.adyen.checkout.components.ui.view.ComponentViewType
 import com.adyen.checkout.core.exception.ComponentException
 import kotlinx.coroutines.flow.Flow
@@ -33,7 +33,7 @@ class RedirectComponent(
     override val delegate: RedirectDelegate
 ) : BaseActionComponent<RedirectConfiguration>(savedStateHandle, application, configuration),
     IntentHandlingComponent,
-    ViewProvidingComponent {
+    ViewableComponent {
 
     override val viewFlow: Flow<ComponentViewType?> = delegate.viewFlow
 
