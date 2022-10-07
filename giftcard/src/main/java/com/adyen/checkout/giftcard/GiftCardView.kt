@@ -15,7 +15,9 @@ import android.view.View
 import android.view.View.OnFocusChangeListener
 import android.widget.LinearLayout
 import com.adyen.checkout.components.base.ComponentDelegate
+import com.adyen.checkout.components.extensions.hideError
 import com.adyen.checkout.components.extensions.setLocalizedHintFromStyle
+import com.adyen.checkout.components.extensions.showError
 import com.adyen.checkout.components.ui.ComponentView
 import com.adyen.checkout.components.ui.Validation
 import com.adyen.checkout.core.log.LogUtil
@@ -86,30 +88,30 @@ internal class GiftCardView @JvmOverloads constructor(
         binding.editTextGiftcardNumber.setOnChangeListener {
             giftCardDelegate.inputData.cardNumber = binding.editTextGiftcardNumber.rawValue
             notifyInputDataChanged()
-            binding.textInputLayoutGiftcardNumber.error = null
+            binding.textInputLayoutGiftcardNumber.hideError()
         }
 
         binding.editTextGiftcardNumber.onFocusChangeListener = OnFocusChangeListener { _: View?, hasFocus: Boolean ->
             val cardNumberValidation = giftCardDelegate.outputData?.giftcardNumberFieldState?.validation
             if (hasFocus) {
-                binding.textInputLayoutGiftcardNumber.error = null
+                binding.textInputLayoutGiftcardNumber.hideError()
             } else if (cardNumberValidation != null && cardNumberValidation is Validation.Invalid) {
-                binding.textInputLayoutGiftcardNumber.error = localizedContext.getString(cardNumberValidation.reason)
+                binding.textInputLayoutGiftcardNumber.showError(localizedContext.getString(cardNumberValidation.reason))
             }
         }
 
         binding.editTextGiftcardPin.setOnChangeListener { editable: Editable ->
             giftCardDelegate.inputData.pin = editable.toString()
             notifyInputDataChanged()
-            binding.textInputLayoutGiftcardPin.error = null
+            binding.textInputLayoutGiftcardPin.hideError()
         }
 
         binding.editTextGiftcardPin.onFocusChangeListener = OnFocusChangeListener { _, hasFocus ->
             val pinValidation = giftCardDelegate.outputData?.giftcardPinFieldState?.validation
             if (hasFocus) {
-                binding.textInputLayoutGiftcardPin.error = null
+                binding.textInputLayoutGiftcardPin.hideError()
             } else if (pinValidation != null && pinValidation is Validation.Invalid) {
-                binding.textInputLayoutGiftcardPin.error = localizedContext.getString(pinValidation.reason)
+                binding.textInputLayoutGiftcardPin.showError(localizedContext.getString(pinValidation.reason))
             }
         }
     }
@@ -124,14 +126,14 @@ internal class GiftCardView @JvmOverloads constructor(
         if (cardNumberValidation is Validation.Invalid) {
             isErrorFocused = true
             binding.textInputLayoutGiftcardNumber.requestFocus()
-            binding.textInputLayoutGiftcardNumber.error = localizedContext.getString(cardNumberValidation.reason)
+            binding.textInputLayoutGiftcardNumber.showError(localizedContext.getString(cardNumberValidation.reason))
         }
         val pinValidation = outputData.giftcardPinFieldState.validation
         if (pinValidation is Validation.Invalid) {
             if (!isErrorFocused) {
                 binding.textInputLayoutGiftcardPin.requestFocus()
             }
-            binding.textInputLayoutGiftcardPin.error = localizedContext.getString(pinValidation.reason)
+            binding.textInputLayoutGiftcardPin.showError(localizedContext.getString(pinValidation.reason))
         }
     }
 

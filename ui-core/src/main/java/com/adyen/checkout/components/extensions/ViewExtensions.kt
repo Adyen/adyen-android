@@ -53,3 +53,13 @@ fun String.formatStringWithHyperlink(replacementToken: String = "%#"): CharSeque
         setSpan(URLSpan(""), firstTokenIndex, lastTokenIndex, Spannable.SPAN_EXCLUSIVE_EXCLUSIVE)
     }
 }
+
+fun TextInputLayout.showError(error: String) {
+    isErrorEnabled = true
+    this.error = error
+}
+
+fun TextInputLayout.hideError() {
+    error = null
+    isErrorEnabled = false
+}
