@@ -6,7 +6,8 @@
   ~ Created by caiof on 14/8/2019.
   -->
 
-<PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android">
+<PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
 
     <PreferenceCategory android:title="@string/merchant_information">
 
@@ -60,6 +61,13 @@
         <SwitchPreference
             android:key="@string/split_card_funding_sources_key"
             android:title="@string/split_card_funding_sources_title" />
+
+        <DropDownPreference
+            android:entries="@array/enable_card_address_form_entries"
+            android:entryValues="@array/enable_card_address_form_entry_values"
+            android:key="@string/enable_card_address_form_key"
+            android:title="@string/enable_card_address_form_title"
+            app:useSimpleSummaryProvider="true" />
 
     </PreferenceCategory>
 
