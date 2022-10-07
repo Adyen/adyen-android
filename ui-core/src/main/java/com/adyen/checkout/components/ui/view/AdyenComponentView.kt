@@ -30,6 +30,9 @@ import kotlinx.coroutines.flow.filterNotNull
 import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.onEach
 
+/**
+ * A View that can display input and fill in details for a Component.
+ */
 class AdyenComponentView @JvmOverloads constructor(
     context: Context,
     private val attrs: AttributeSet? = null,
@@ -37,13 +40,18 @@ class AdyenComponentView @JvmOverloads constructor(
 ) :
     LinearLayout(context, attrs, defStyleAttr) {
 
-    private lateinit var component: Component<*, *>
-    private lateinit var componentView: ComponentView
+    private var componentView: ComponentView? = null
 
     init {
         isVisible = isInEditMode
     }
 
+    /**
+     * Attach this view to a component to interact with.
+     *
+     * @param component      The component.
+     * @param lifecycleOwner The lifecycle owner where the view is.
+     */
     fun <T> attach(
         component: T,
         lifecycleOwner: LifecycleOwner
@@ -71,8 +79,6 @@ class AdyenComponentView @JvmOverloads constructor(
         (component as? BasePaymentComponent<*, *>)?.sendAnalyticsEvent(context)
     }
 
-    // TODO how does rotation affect this? when views are in the xml layout file their state gets automatically saved
-    //  but not with addView
     private fun loadView(
         viewType: ComponentViewType?,
         delegate: ComponentDelegate,
@@ -95,11 +101,24 @@ class AdyenComponentView @JvmOverloads constructor(
         componentView.initView(delegate, coroutineScope, localizedContext)
     }
 
-    val isConfirmationRequired
-        get() = componentView.isConfirmationRequired
+    /**
+     * Tells if the view interaction requires confirmation from the user to start the payment flow.
+     * Confirmation usually is obtained by a "Pay" button the user need to press to start processing the payment.
+     * If confirmation is not required, it means the view handles input in a way that the user has already expressed the desire to continue.
+     *
+     * Each type of view always returns the same value, so if the type of view is known, there is no need to check this method.
+     *
+     * @return If an update from the component attached to this View requires further user confirmation to continue or not.
+     */
+    val isConfirmationRequired: Boolean
+        get() = componentView?.isConfirmationRequired ?: false
 
+    /**
+     * Highlight and focus on the current validation errors for the user to take action.
+     * If the component doesn't need validation or if everything is already valid, nothing will happen.
+     */
     fun highlightValidationErrors() {
-        componentView.highlightValidationErrors()
+        componentView?.highlightValidationErrors()
     }
 
     companion object {
