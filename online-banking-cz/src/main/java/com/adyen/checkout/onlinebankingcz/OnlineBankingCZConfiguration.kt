@@ -26,13 +26,19 @@ class OnlineBankingCZConfiguration : OnlineBankingConfiguration {
     private constructor(parcel: Parcel) : super(parcel)
 
     class Builder : OnlineBankingBuilder<OnlineBankingCZConfiguration> {
+
         /**
          * Constructor for Builder with default values.
          *
          * @param context   A context
+         * @param environment   The [Environment] to be used for network calls to Adyen.
          * @param clientKey Your Client Key used for network calls from the SDK to Adyen.
          */
-        constructor(context: Context, clientKey: String) : super(context, clientKey)
+        constructor(context: Context, environment: Environment, clientKey: String) : super(
+            context,
+            environment,
+            clientKey
+        )
 
         /**
          * Builder with required parameters.
@@ -54,19 +60,19 @@ class OnlineBankingCZConfiguration : OnlineBankingConfiguration {
          */
         constructor(configuration: OnlineBankingCZConfiguration) : super(configuration)
 
-        override fun setShopperLocale(builderShopperLocale: Locale): Builder {
-            return super.setShopperLocale(builderShopperLocale) as Builder
+        override fun setShopperLocale(shopperLocale: Locale): Builder {
+            return super.setShopperLocale(shopperLocale) as Builder
         }
 
-        override fun setEnvironment(builderEnvironment: Environment): Builder {
-            return super.setEnvironment(builderEnvironment) as Builder
+        override fun setEnvironment(environment: Environment): Builder {
+            return super.setEnvironment(environment) as Builder
         }
 
         override fun buildInternal(): OnlineBankingCZConfiguration {
             return OnlineBankingCZConfiguration(
-                shopperLocale = builderShopperLocale,
-                environment = builderEnvironment,
-                clientKey = builderClientKey,
+                shopperLocale = shopperLocale,
+                environment = environment,
+                clientKey = clientKey,
             )
         }
     }

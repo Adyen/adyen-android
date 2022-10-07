@@ -76,7 +76,7 @@ class DropInConfiguration : Configuration, Parcelable {
     @Suppress("LongParameterList")
     constructor(
         builder: Builder
-    ) : super(builder.builderShopperLocale, builder.builderEnvironment, builder.builderClientKey) {
+    ) : super(builder.shopperLocale, builder.environment, builder.clientKey) {
         this.availablePaymentConfigs = builder.availablePaymentConfigs
         this.availableActionConfigs = builder.availableActionConfigs
         this.amount = builder.amount
@@ -152,13 +152,30 @@ class DropInConfiguration : Configuration, Parcelable {
             private set
 
         /**
-         *
          * Create a [DropInConfiguration]
          *
-         * @param context
+         * @param context   A context
+         * @param environment   The [Environment] to be used for network calls to Adyen.
          * @param clientKey Your Client Key used for network calls from the SDK to Adyen.
          */
-        constructor(context: Context, clientKey: String) : super(context, clientKey)
+        constructor(context: Context, environment: Environment, clientKey: String) : super(
+            context,
+            environment,
+            clientKey
+        )
+
+        /**
+         * Constructor for Builder with default values.
+         *
+         * @param shopperLocale The Locale of the shopper.
+         * @param environment   The [Environment] to be used for network calls to Adyen.
+         * @param clientKey Your Client Key used for network calls from the SDK to Adyen.
+         */
+        constructor(shopperLocale: Locale, environment: Environment, clientKey: String) : super(
+            shopperLocale,
+            environment,
+            clientKey
+        )
 
         /**
          * Create a Builder with the same values of an existing Configuration object.
@@ -171,12 +188,12 @@ class DropInConfiguration : Configuration, Parcelable {
             additionalDataForDropInService = dropInConfiguration.additionalDataForDropInService
         }
 
-        override fun setShopperLocale(builderShopperLocale: Locale): Builder {
-            return super.setShopperLocale(builderShopperLocale) as Builder
+        override fun setShopperLocale(shopperLocale: Locale): Builder {
+            return super.setShopperLocale(shopperLocale) as Builder
         }
 
-        override fun setEnvironment(builderEnvironment: Environment): Builder {
-            return super.setEnvironment(builderEnvironment) as Builder
+        override fun setEnvironment(environment: Environment): Builder {
+            return super.setEnvironment(environment) as Builder
         }
 
         fun setAmount(amount: Amount): Builder {

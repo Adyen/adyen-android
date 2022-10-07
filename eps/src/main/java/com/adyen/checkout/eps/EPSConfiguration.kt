@@ -38,9 +38,14 @@ class EPSConfiguration : IssuerListConfiguration {
          * Constructor for Builder with default values.
          *
          * @param context   A context
+         * @param environment   The [Environment] to be used for network calls to Adyen.
          * @param clientKey Your Client Key used for network calls from the SDK to Adyen.
          */
-        constructor(context: Context, clientKey: String) : super(context, clientKey)
+        constructor(context: Context, environment: Environment, clientKey: String) : super(
+            context,
+            environment,
+            clientKey
+        )
 
         /**
          * Builder with required parameters.
@@ -65,19 +70,11 @@ class EPSConfiguration : IssuerListConfiguration {
             hideIssuerLogos = configuration.hideIssuerLogos
         }
 
-        override fun setShopperLocale(builderShopperLocale: Locale): Builder {
-            return super.setShopperLocale(builderShopperLocale) as Builder
-        }
-
-        override fun setEnvironment(builderEnvironment: Environment): Builder {
-            return super.setEnvironment(builderEnvironment) as Builder
-        }
-
         public override fun buildInternal(): EPSConfiguration {
             return EPSConfiguration(
-                shopperLocale = builderShopperLocale,
-                environment = builderEnvironment,
-                clientKey = builderClientKey,
+                shopperLocale = shopperLocale,
+                environment = environment,
+                clientKey = clientKey,
                 viewType = viewType,
                 hideIssuerLogos = hideIssuerLogos,
             )

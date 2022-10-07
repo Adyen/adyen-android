@@ -130,26 +130,26 @@ class GooglePayConfiguration : Configuration, AmountConfiguration {
      */
     @Suppress("TooManyFunctions")
     class Builder : BaseConfigurationBuilder<GooglePayConfiguration>, AmountConfigurationBuilder {
-        private var builderMerchantAccount: String? = null
-        private var builderGooglePayEnvironment = getDefaultGooglePayEnvironment(builderEnvironment)
-        private var builderAmount = Amount().apply {
+        private var merchantAccount: String? = null
+        private var googlePayEnvironment = getDefaultGooglePayEnvironment(environment)
+        private var amount = Amount().apply {
             value = 0
             currency = CheckoutCurrency.USD.name
         }
-        private var builderMerchantInfo: MerchantInfo? = null
-        private var builderCountryCode: String? = null
-        private var builderAllowedAuthMethods: List<String>? = null
-        private var builderAllowedCardNetworks: List<String>? = null
-        private var builderAllowPrepaidCards = false
-        private var builderEmailRequired = false
-        private var builderExistingPaymentMethodRequired = false
-        private var builderShippingAddressRequired = false
-        private var builderShippingAddressParameters: ShippingAddressParameters? = null
-        private var builderBillingAddressRequired = false
-        private var builderBillingAddressParameters: BillingAddressParameters? = null
-        private var builderTotalPriceStatus: String = "FINAL"
+        private var merchantInfo: MerchantInfo? = null
+        private var countryCode: String? = null
+        private var allowedAuthMethods: List<String>? = null
+        private var allowedCardNetworks: List<String>? = null
+        private var isAllowPrepaidCards = false
+        private var isEmailRequired = false
+        private var isExistingPaymentMethodRequired = false
+        private var isShippingAddressRequired = false
+        private var shippingAddressParameters: ShippingAddressParameters? = null
+        private var isBillingAddressRequired = false
+        private var billingAddressParameters: BillingAddressParameters? = null
+        private var totalPriceStatus: String = "FINAL"
 
-        private var builderIsGoogleEnvironmentSetManually = false
+        private var isGoogleEnvironmentSetManually = false
 
         private fun getDefaultGooglePayEnvironment(environment: Environment): Int {
             return if (environment == Environment.TEST) {
@@ -158,12 +158,17 @@ class GooglePayConfiguration : Configuration, AmountConfiguration {
         }
 
         /**
-         * Builder with required parameters.
+         * Constructor for Builder with default values.
          *
-         * @param context   A context to get some information.
+         * @param context   A context
+         * @param environment   The [Environment] to be used for network calls to Adyen.
          * @param clientKey Your Client Key used for network calls from the SDK to Adyen.
          */
-        constructor(context: Context, clientKey: String) : super(context, clientKey)
+        constructor(context: Context, environment: Environment, clientKey: String) : super(
+            context,
+            environment,
+            clientKey
+        )
 
         /**
          * Builder with required parameters.
@@ -184,58 +189,54 @@ class GooglePayConfiguration : Configuration, AmountConfiguration {
          * @param configuration A configuration to initialize the builder.
          */
         constructor(configuration: GooglePayConfiguration) : super(configuration) {
-            builderMerchantAccount = configuration.merchantAccount
-            builderGooglePayEnvironment = configuration.googlePayEnvironment
-            builderAmount = configuration.amount
-            builderTotalPriceStatus = configuration.totalPriceStatus
-            builderCountryCode = configuration.countryCode
-            builderMerchantInfo = configuration.merchantInfo
-            builderAllowedAuthMethods = configuration.allowedAuthMethods
-            builderAllowedCardNetworks = configuration.allowedCardNetworks
-            builderAllowPrepaidCards = configuration.isAllowPrepaidCards
-            builderEmailRequired = configuration.isEmailRequired
-            builderExistingPaymentMethodRequired = configuration.isExistingPaymentMethodRequired
-            builderShippingAddressRequired = configuration.isShippingAddressRequired
-            builderShippingAddressParameters = configuration.shippingAddressParameters
-            builderBillingAddressRequired = configuration.isBillingAddressRequired
-            builderBillingAddressParameters = configuration.billingAddressParameters
+            merchantAccount = configuration.merchantAccount
+            googlePayEnvironment = configuration.googlePayEnvironment
+            amount = configuration.amount
+            totalPriceStatus = configuration.totalPriceStatus
+            countryCode = configuration.countryCode
+            merchantInfo = configuration.merchantInfo
+            allowedAuthMethods = configuration.allowedAuthMethods
+            allowedCardNetworks = configuration.allowedCardNetworks
+            isAllowPrepaidCards = configuration.isAllowPrepaidCards
+            isEmailRequired = configuration.isEmailRequired
+            isExistingPaymentMethodRequired = configuration.isExistingPaymentMethodRequired
+            isShippingAddressRequired = configuration.isShippingAddressRequired
+            shippingAddressParameters = configuration.shippingAddressParameters
+            isBillingAddressRequired = configuration.isBillingAddressRequired
+            billingAddressParameters = configuration.billingAddressParameters
         }
 
-        override fun setShopperLocale(builderShopperLocale: Locale): Builder {
-            return super.setShopperLocale(builderShopperLocale) as Builder
-        }
-
-        override fun setEnvironment(builderEnvironment: Environment): Builder {
-            if (!builderIsGoogleEnvironmentSetManually) {
-                builderGooglePayEnvironment = getDefaultGooglePayEnvironment(builderEnvironment)
+        override fun setEnvironment(environment: Environment): Builder {
+            if (!isGoogleEnvironmentSetManually) {
+                googlePayEnvironment = getDefaultGooglePayEnvironment(environment)
             }
-            return super.setEnvironment(builderEnvironment) as Builder
+            return super.setEnvironment(environment) as Builder
         }
 
         fun setTotalPriceStatus(totalPriceStatus: String) {
-            this.builderTotalPriceStatus = totalPriceStatus
+            this.totalPriceStatus = totalPriceStatus
         }
 
         override fun buildInternal(): GooglePayConfiguration {
             return GooglePayConfiguration(
-                shopperLocale = builderShopperLocale,
-                environment = builderEnvironment,
-                clientKey = builderClientKey,
-                merchantAccount = builderMerchantAccount,
-                googlePayEnvironment = builderGooglePayEnvironment,
-                amount = builderAmount,
-                totalPriceStatus = builderTotalPriceStatus,
-                countryCode = builderCountryCode,
-                merchantInfo = builderMerchantInfo,
-                allowedAuthMethods = builderAllowedAuthMethods,
-                allowedCardNetworks = builderAllowedCardNetworks,
-                isAllowPrepaidCards = builderAllowPrepaidCards,
-                isEmailRequired = builderEmailRequired,
-                isExistingPaymentMethodRequired = builderExistingPaymentMethodRequired,
-                isShippingAddressRequired = builderShippingAddressRequired,
-                shippingAddressParameters = builderShippingAddressParameters,
-                isBillingAddressRequired = builderBillingAddressRequired,
-                billingAddressParameters = builderBillingAddressParameters,
+                shopperLocale = shopperLocale,
+                environment = environment,
+                clientKey = clientKey,
+                merchantAccount = merchantAccount,
+                googlePayEnvironment = googlePayEnvironment,
+                amount = amount,
+                totalPriceStatus = totalPriceStatus,
+                countryCode = countryCode,
+                merchantInfo = merchantInfo,
+                allowedAuthMethods = allowedAuthMethods,
+                allowedCardNetworks = allowedCardNetworks,
+                isAllowPrepaidCards = isAllowPrepaidCards,
+                isEmailRequired = isEmailRequired,
+                isExistingPaymentMethodRequired = isExistingPaymentMethodRequired,
+                isShippingAddressRequired = isShippingAddressRequired,
+                shippingAddressParameters = shippingAddressParameters,
+                isBillingAddressRequired = isBillingAddressRequired,
+                billingAddressParameters = billingAddressParameters,
             )
         }
 
@@ -245,7 +246,7 @@ class GooglePayConfiguration : Configuration, AmountConfiguration {
          * @param merchantAccount Your merchant account.
          */
         fun setMerchantAccount(merchantAccount: String): Builder {
-            builderMerchantAccount = merchantAccount
+            this.merchantAccount = merchantAccount
             return this
         }
 
@@ -262,8 +263,8 @@ class GooglePayConfiguration : Configuration, AmountConfiguration {
                         " WalletConstants.ENVIRONMENT_PRODUCTION"
                 )
             }
-            builderGooglePayEnvironment = googlePayEnvironment
-            builderIsGoogleEnvironmentSetManually = true
+            this.googlePayEnvironment = googlePayEnvironment
+            isGoogleEnvironmentSetManually = true
             return this
         }
 
@@ -274,62 +275,62 @@ class GooglePayConfiguration : Configuration, AmountConfiguration {
             if (!isSupported(amount.currency) || amount.value < 0) {
                 throw CheckoutException("Currency is not valid.")
             }
-            builderAmount = amount
+            this.amount = amount
             return this
         }
 
         fun setMerchantInfo(merchantInfo: MerchantInfo?): Builder {
-            this.builderMerchantInfo = merchantInfo
+            this.merchantInfo = merchantInfo
             return this
         }
 
         fun setCountryCode(countryCode: String?): Builder {
-            builderCountryCode = countryCode
+            this.countryCode = countryCode
             return this
         }
 
         fun setAllowedAuthMethods(allowedAuthMethods: List<String>?): Builder {
-            builderAllowedAuthMethods = allowedAuthMethods
+            this.allowedAuthMethods = allowedAuthMethods
             return this
         }
 
         fun setAllowedCardNetworks(allowedCardNetworks: List<String>?): Builder {
-            builderAllowedCardNetworks = allowedCardNetworks
+            this.allowedCardNetworks = allowedCardNetworks
             return this
         }
 
-        fun setAllowPrepaidCards(allowPrepaidCards: Boolean): Builder {
-            builderAllowPrepaidCards = allowPrepaidCards
+        fun setAllowPrepaidCards(isAllowPrepaidCards: Boolean): Builder {
+            this.isAllowPrepaidCards = isAllowPrepaidCards
             return this
         }
 
-        fun setEmailRequired(emailRequired: Boolean): Builder {
-            this.builderEmailRequired = emailRequired
+        fun setEmailRequired(isEmailRequired: Boolean): Builder {
+            this.isEmailRequired = isEmailRequired
             return this
         }
 
-        fun setExistingPaymentMethodRequired(existingPaymentMethodRequired: Boolean): Builder {
-            this.builderExistingPaymentMethodRequired = existingPaymentMethodRequired
+        fun setExistingPaymentMethodRequired(isExistingPaymentMethodRequired: Boolean): Builder {
+            this.isExistingPaymentMethodRequired = isExistingPaymentMethodRequired
             return this
         }
 
-        fun setShippingAddressRequired(shippingAddressRequired: Boolean): Builder {
-            this.builderShippingAddressRequired = shippingAddressRequired
+        fun setShippingAddressRequired(isShippingAddressRequired: Boolean): Builder {
+            this.isShippingAddressRequired = isShippingAddressRequired
             return this
         }
 
         fun setShippingAddressParameters(shippingAddressParameters: ShippingAddressParameters?): Builder {
-            this.builderShippingAddressParameters = shippingAddressParameters
+            this.shippingAddressParameters = shippingAddressParameters
             return this
         }
 
-        fun setBillingAddressRequired(billingAddressRequired: Boolean): Builder {
-            this.builderBillingAddressRequired = billingAddressRequired
+        fun setBillingAddressRequired(isBillingAddressRequired: Boolean): Builder {
+            this.isBillingAddressRequired = isBillingAddressRequired
             return this
         }
 
         fun setBillingAddressParameters(billingAddressParameters: BillingAddressParameters?): Builder {
-            this.builderBillingAddressParameters = billingAddressParameters
+            this.billingAddressParameters = billingAddressParameters
             return this
         }
     }

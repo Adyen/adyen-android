@@ -1,6 +1,5 @@
 package com.adyen.checkout.example.ui.configuration
 
-import android.content.Context
 import com.adyen.checkout.adyen3ds2.Adyen3DS2Configuration
 import com.adyen.checkout.bcmc.BcmcConfiguration
 import com.adyen.checkout.card.AddressConfiguration
@@ -36,13 +35,12 @@ internal class CheckoutConfigurationProvider @Inject constructor(
 
     private val environment = Environment.TEST
 
-    fun getDropInConfiguration(context: Context): DropInConfiguration {
+    fun getDropInConfiguration(): DropInConfiguration {
         val dropInConfigurationBuilder = DropInConfiguration.Builder(
-            context,
-            clientKey
+            shopperLocale,
+            environment,
+            clientKey,
         )
-            .setEnvironment(environment)
-            .setShopperLocale(shopperLocale)
             .addCardConfiguration(getCardConfiguration())
             .addBcmcConfiguration(getBcmcConfiguration())
             .addGooglePayConfiguration(getGooglePayConfiguration())
