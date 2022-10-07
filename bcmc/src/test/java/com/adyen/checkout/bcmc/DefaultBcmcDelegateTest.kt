@@ -83,7 +83,7 @@ internal class DefaultBcmcDelegateTest {
         @Test
         fun `card number is empty, then output should be invalid`() = runTest {
             delegate.outputDataFlow.test {
-                delegate.onInputDataChanged(BcmcInputData(cardNumber = "", expiryDate = TEST_EXPIRY_DATE))
+                delegate.updateInputData { (BcmcInputData(cardNumber = "", expiryDate = TEST_EXPIRY_DATE)) }
 
                 with(requireNotNull(expectMostRecentItem())) {
                     assertTrue(cardNumberField.validation is Validation.Invalid)
@@ -96,7 +96,7 @@ internal class DefaultBcmcDelegateTest {
         @Test
         fun `card number is invalid, then output should be invalid`() = runTest {
             delegate.outputDataFlow.test {
-                delegate.onInputDataChanged(BcmcInputData(cardNumber = "12345678", expiryDate = TEST_EXPIRY_DATE))
+                delegate.updateInputData { BcmcInputData(cardNumber = "12345678", expiryDate = TEST_EXPIRY_DATE) }
 
                 with(requireNotNull(expectMostRecentItem())) {
                     assertTrue(cardNumberField.validation is Validation.Invalid)
@@ -110,12 +110,12 @@ internal class DefaultBcmcDelegateTest {
         fun `expiry date is invalid, then output should be invalid`() =
             runTest {
                 delegate.outputDataFlow.test {
-                    delegate.onInputDataChanged(
+                    delegate.updateInputData {
                         BcmcInputData(
                             cardNumber = TEST_CARD_NUMBER,
                             expiryDate = ExpiryDate.INVALID_DATE
                         )
-                    )
+                    }
                     with(requireNotNull(expectMostRecentItem())) {
                         assertTrue(cardNumberField.validation is Validation.Valid)
                         assertTrue(expiryDateField.validation is Validation.Invalid)
@@ -127,12 +127,12 @@ internal class DefaultBcmcDelegateTest {
         @Test
         fun `expiry date is empty, then output should be invalid`() = runTest {
             delegate.outputDataFlow.test {
-                delegate.onInputDataChanged(
+                delegate.updateInputData {
                     BcmcInputData(
                         cardNumber = TEST_CARD_NUMBER,
                         expiryDate = ExpiryDate.EMPTY_DATE
                     )
-                )
+                }
                 with(requireNotNull(expectMostRecentItem())) {
                     assertTrue(cardNumberField.validation is Validation.Valid)
                     assertTrue(expiryDateField.validation is Validation.Invalid)
@@ -144,12 +144,12 @@ internal class DefaultBcmcDelegateTest {
         @Test
         fun `input is valid, then output should be valid`() = runTest {
             delegate.outputDataFlow.test {
-                delegate.onInputDataChanged(
+                delegate.updateInputData {
                     BcmcInputData(
                         cardNumber = TEST_CARD_NUMBER,
                         expiryDate = TEST_EXPIRY_DATE
                     )
-                )
+                }
                 with(requireNotNull(expectMostRecentItem())) {
                     assertTrue(cardNumberField.validation is Validation.Valid)
                     assertTrue(expiryDateField.validation is Validation.Valid)
