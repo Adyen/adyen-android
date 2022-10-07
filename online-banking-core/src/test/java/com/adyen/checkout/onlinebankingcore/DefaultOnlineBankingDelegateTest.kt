@@ -16,7 +16,6 @@ import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.test.runTest
 import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.Assertions.assertFalse
-import org.junit.jupiter.api.Assertions.assertNotNull
 import org.junit.jupiter.api.Assertions.assertNull
 import org.junit.jupiter.api.Assertions.assertTrue
 import org.junit.jupiter.api.BeforeEach
@@ -37,10 +36,10 @@ internal class DefaultOnlineBankingDelegateTest(
     @Mock private val configuration: OnlineBankingConfiguration
 ) {
 
-    private lateinit var delegate: OnlineBankingDelegate<OnlineBankingCZPaymentMethod>
+    private lateinit var delegate: DefaultOnlineBankingDelegate<OnlineBankingCZPaymentMethod>
 
     @Mock
-    private lateinit var mockContext: Context
+    private lateinit var context: Context
 
     @Mock
     private lateinit var pdfOpener: PdfOpener
@@ -51,7 +50,7 @@ internal class DefaultOnlineBankingDelegateTest(
             pdfOpener = pdfOpener,
             paymentMethod = PaymentMethod(),
             configuration = configuration,
-            termsAndConditionsUrl = URL,
+            termsAndConditionsUrl = TEST_URL,
             paymentMethodFactory = { OnlineBankingCZPaymentMethod() }
         )
     }
@@ -61,26 +60,11 @@ internal class DefaultOnlineBankingDelegateTest(
     inner class InputDataChangedTest {
 
         @Test
-        fun `selectedIssuer is null, then output should be null`() = runTest {
-            delegate.outputDataFlow.test {
-                val inputData = OnlineBankingInputData(null)
-
-                delegate.onInputDataChanged(inputData)
-
-                with(requireNotNull(expectMostRecentItem())) {
-                    assertNull(selectedIssuer)
-                }
-            }
-        }
-
-        @Test
         fun `selectedIssuer is null, then output should be invalid`() = runTest {
             delegate.outputDataFlow.test {
-                val inputData = OnlineBankingInputData(null)
+                delegate.updateInputData { selectedIssuer = null }
 
-                delegate.onInputDataChanged(inputData)
-
-                with(requireNotNull(expectMostRecentItem())) {
+                with(expectMostRecentItem()) {
                     assertNull(selectedIssuer)
                     assertFalse(isValid)
                 }
@@ -90,43 +74,11 @@ internal class DefaultOnlineBankingDelegateTest(
         @Test
         fun `selectedIssuer is valid, then output should be valid`() = runTest {
             delegate.outputDataFlow.test {
-                val model = OnlineBankingModel(id = "id", name = "test")
-                val input = OnlineBankingInputData(model)
+                delegate.updateInputData { selectedIssuer = OnlineBankingModel(id = "id", name = "test") }
 
-                delegate.onInputDataChanged(input)
-
-                with(requireNotNull(expectMostRecentItem())) {
+                with(expectMostRecentItem()) {
                     assertEquals("test", selectedIssuer?.name)
                     assertEquals("id", selectedIssuer?.id)
-                    assertTrue(isValid)
-                }
-            }
-        }
-
-        @Test
-        fun `selectedIssuer is null, then component state should be invalid`() = runTest {
-            delegate.componentStateFlow.test {
-                val input = OnlineBankingInputData()
-
-                delegate.onInputDataChanged(input)
-
-                with(requireNotNull(expectMostRecentItem())) {
-                    assertEquals("", data.paymentMethod?.issuer)
-                    assertFalse(isValid)
-                }
-            }
-        }
-
-        @Test
-        fun `selectIssuer is valid, then component state should be valid`() = runTest {
-            delegate.componentStateFlow.test {
-                val model = OnlineBankingModel(id = "issuer-id", name = "issuer-name")
-                val input = OnlineBankingInputData(model)
-
-                delegate.onInputDataChanged(input)
-
-                with(requireNotNull(expectMostRecentItem())) {
-                    assertEquals("issuer-id", data.paymentMethod?.issuer)
                     assertTrue(isValid)
                 }
             }
@@ -168,31 +120,29 @@ internal class DefaultOnlineBankingDelegateTest(
     }
 
     @Nested
-    @DisplayName("when trying pdf opener and it")
-    inner class PdfOpenerTest {
+    @DisplayName("when opening terms and conditions and it")
+    inner class TermsAndConditionsTest {
         @Test
-        fun `successfully open pdf`() {
-            val url = URL
+        fun `successfully opens`() {
+            val url = TEST_URL
 
-            delegate.openTermsAndConditionsPdf(mockContext)
+            delegate.openTermsAndConditions(context)
 
-            verify(pdfOpener).open(mockContext, url)
-            assertNotNull(url)
+            verify(pdfOpener).open(context, url)
         }
 
         @Test
-        fun `failed to open pdf and throw an exception`() {
-            val url = URL
-            whenever(pdfOpener.open(mockContext, url)) doThrow IllegalStateException("failed")
+        fun `failed to open pdf and throws an exception`() {
+            val url = TEST_URL
+            whenever(pdfOpener.open(context, url)) doThrow IllegalStateException("failed")
 
-            delegate.openTermsAndConditionsPdf(mockContext)
+            delegate.openTermsAndConditions(context)
 
-            assertThrows<IllegalStateException> { pdfOpener.open(mockContext, url) }
-            assertNotNull(url)
+            assertThrows<IllegalStateException> { pdfOpener.open(context, url) }
         }
     }
 
     companion object {
-        private const val URL = "any-url"
+        private const val TEST_URL = "any-url"
     }
 }

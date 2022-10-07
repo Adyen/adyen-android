@@ -26,14 +26,17 @@ interface OnlineBankingDelegate<IssuerListPaymentMethodT : IssuerListPaymentMeth
 
     val configuration: OnlineBankingConfiguration
 
-    val inputData: OnlineBankingInputData
+    val outputData: OnlineBankingOutputData
 
-    val outputData: OnlineBankingOutputData?
+    val outputDataFlow: Flow<OnlineBankingOutputData>
 
-    val outputDataFlow: Flow<OnlineBankingOutputData?>
     val componentStateFlow: Flow<PaymentComponentState<IssuerListPaymentMethodT>?>
+
     val exceptionFlow: Flow<CheckoutException>
 
     fun getIssuers(): List<OnlineBankingModel>
-    fun openTermsAndConditionsPdf(context: Context)
+
+    fun openTermsAndConditions(context: Context)
+
+    fun updateInputData(update: OnlineBankingInputData.() -> Unit)
 }

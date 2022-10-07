@@ -10,6 +10,7 @@ package com.adyen.checkout.onlinebankingcore
 
 import android.content.Context
 import androidx.annotation.RestrictTo
+import androidx.annotation.VisibleForTesting
 import com.adyen.checkout.components.PaymentComponentState
 import com.adyen.checkout.components.flow.MutableSingleEventSharedFlow
 import com.adyen.checkout.components.model.paymentmethods.PaymentMethod
@@ -32,13 +33,12 @@ class DefaultOnlineBankingDelegate<IssuerListPaymentMethodT : IssuerListPaymentM
     private val paymentMethodFactory: () -> IssuerListPaymentMethodT
 ) : OnlineBankingDelegate<IssuerListPaymentMethodT> {
 
-    override val inputData: OnlineBankingInputData = OnlineBankingInputData()
+    private val inputData: OnlineBankingInputData = OnlineBankingInputData()
 
-    private val _outputDataFlow = MutableStateFlow<OnlineBankingOutputData?>(null)
-    override val outputDataFlow: Flow<OnlineBankingOutputData?> get() = _outputDataFlow
+    private val _outputDataFlow = MutableStateFlow(createOutputData())
+    override val outputDataFlow: Flow<OnlineBankingOutputData> get() = _outputDataFlow
 
-    override val outputData: OnlineBankingOutputData?
-        get() = _outputDataFlow.value
+    override val outputData: OnlineBankingOutputData get() = _outputDataFlow.value
 
     private val _componentStateFlow = MutableStateFlow<PaymentComponentState<IssuerListPaymentMethodT>?>(null)
     override val componentStateFlow: Flow<PaymentComponentState<IssuerListPaymentMethodT>?> = _componentStateFlow
@@ -61,18 +61,26 @@ class DefaultOnlineBankingDelegate<IssuerListPaymentMethodT : IssuerListPaymentM
         return paymentMethod.type ?: PaymentMethodTypes.UNKNOWN
     }
 
-    override fun onInputDataChanged(inputData: OnlineBankingInputData) {
-        val outputData = OnlineBankingOutputData(inputData.selectedIssuer)
+    override fun updateInputData(update: OnlineBankingInputData.() -> Unit) {
+        inputData.update()
+        onInputDataChanged()
+    }
+
+    private fun onInputDataChanged() {
+        val outputData = createOutputData()
 
         _outputDataFlow.tryEmit(outputData)
 
         createComponentState(outputData)
     }
 
-    override fun createComponentState(outputData: OnlineBankingOutputData) {
+    private fun createOutputData() = OnlineBankingOutputData(inputData.selectedIssuer)
+
+    @VisibleForTesting
+    internal fun createComponentState(outputData: OnlineBankingOutputData) {
         val issuerListPaymentMethod = paymentMethodFactory()
         issuerListPaymentMethod.type = getPaymentMethodType()
-        issuerListPaymentMethod.issuer = outputData.selectedIssuer?.id ?: ""
+        issuerListPaymentMethod.issuer = outputData.selectedIssuer?.id
 
         val paymentComponentData = PaymentComponentData(paymentMethod = issuerListPaymentMethod)
 
@@ -80,7 +88,7 @@ class DefaultOnlineBankingDelegate<IssuerListPaymentMethodT : IssuerListPaymentM
         _componentStateFlow.tryEmit(state)
     }
 
-    override fun openTermsAndConditionsPdf(context: Context) {
+    override fun openTermsAndConditions(context: Context) {
         try {
             pdfOpener.open(context, termsAndConditionsUrl)
         } catch (e: IllegalStateException) {

@@ -23,7 +23,7 @@ import com.adyen.checkout.components.ui.Validation
 import com.adyen.checkout.components.ui.adapter.SimpleTextListAdapter
 import com.adyen.checkout.core.log.LogUtil
 import com.adyen.checkout.core.log.Logger
-import com.adyen.checkout.onlinebankingcore.databinding.OnlineBankingSpinnerLayoutBinding
+import com.adyen.checkout.onlinebankingcore.databinding.OnlineBankingViewBinding
 import kotlinx.coroutines.CoroutineScope
 
 internal class OnlineBankingView @JvmOverloads constructor(
@@ -36,11 +36,10 @@ internal class OnlineBankingView @JvmOverloads constructor(
         attrs,
         defStyleAttr
     ),
-    ComponentView,
-    AdapterView.OnItemSelectedListener {
+    ComponentView {
 
-    private val binding: OnlineBankingSpinnerLayoutBinding =
-        OnlineBankingSpinnerLayoutBinding.inflate(LayoutInflater.from(context), this)
+    private val binding: OnlineBankingViewBinding =
+        OnlineBankingViewBinding.inflate(LayoutInflater.from(context), this)
 
     private val issuersAdapter: SimpleTextListAdapter<OnlineBankingModel> = SimpleTextListAdapter(context)
 
@@ -67,13 +66,12 @@ internal class OnlineBankingView @JvmOverloads constructor(
             setAdapter(issuersAdapter)
             onItemClickListener = AdapterView.OnItemClickListener { _, _, position, _ ->
                 Logger.d(TAG, "onItemSelected - ${issuersAdapter.getItem(position).name}")
-                onlineBankingDelegate.inputData.selectedIssuer = issuersAdapter.getItem(position)
-                onlineBankingDelegate.onInputDataChanged(onlineBankingDelegate.inputData)
+                onlineBankingDelegate.updateInputData { selectedIssuer = issuersAdapter.getItem(position) }
                 binding.textInputLayoutOnlineBanking.hideError()
             }
         }
         binding.textviewTermsAndConditions.setOnClickListener {
-            onlineBankingDelegate.openTermsAndConditionsPdf(context)
+            onlineBankingDelegate.openTermsAndConditions(context)
         }
     }
 
@@ -81,7 +79,7 @@ internal class OnlineBankingView @JvmOverloads constructor(
 
     override fun highlightValidationErrors() {
         Logger.d(TAG, "highlightValidationErrors")
-        val output = onlineBankingDelegate.outputData ?: return
+        val output = onlineBankingDelegate.outputData
         val selectedIssuersValidation = output.selectedIssuerField.validation
         if (!selectedIssuersValidation.isValid()) {
             val errorReasonResId = (selectedIssuersValidation as Validation.Invalid).reason
@@ -103,16 +101,6 @@ internal class OnlineBankingView @JvmOverloads constructor(
             localizedContext,
             formatHyperLink = true
         )
-    }
-
-    override fun onItemSelected(parent: AdapterView<*>, view: View, position: Int, id: Long) {
-        Logger.d(TAG, "onItemSelected - ${issuersAdapter.getItem(position).name}")
-        onlineBankingDelegate.inputData.selectedIssuer = issuersAdapter.getItem(position)
-        onlineBankingDelegate.onInputDataChanged(onlineBankingDelegate.inputData)
-    }
-
-    override fun onNothingSelected(p0: AdapterView<*>?) {
-        // nothing changed
     }
 
     override fun setEnabled(enabled: Boolean) {
