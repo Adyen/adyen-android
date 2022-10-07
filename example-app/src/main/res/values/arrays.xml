@@ -19,4 +19,16 @@
         <item>"1"</item>
         <item>"2"</item>
     </array>
+
+    <array name="night_theme_entries">
+        <item>@string/night_theme_system</item>
+        <item>@string/night_theme_day</item>
+        <item>@string/night_theme_night</item>
+    </array>
+
+    <array name="night_theme_entry_values">
+        <item>@string/night_theme_system</item>
+        <item>@string/night_theme_day</item>
+        <item>@string/night_theme_night</item>
+    </array>
 </resources>

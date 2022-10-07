@@ -11,10 +11,20 @@ package com.adyen.checkout.example
 import android.app.Application
 import android.util.Log
 import com.adyen.checkout.core.log.Logger
+import com.adyen.checkout.example.ui.NightThemeRepository
 import dagger.hilt.android.HiltAndroidApp
+import javax.inject.Inject
 
 @HiltAndroidApp
 class CheckoutExampleApplication : Application() {
+
+    @Inject
+    internal lateinit var nightThemeRepository: NightThemeRepository
+
+    override fun onCreate() {
+        super.onCreate()
+        nightThemeRepository.initialize()
+    }
 
     companion object {
         init {
