@@ -71,4 +71,15 @@
 
     </PreferenceCategory>
 
+    <PreferenceCategory android:title="@string/app_title">
+
+        <DropDownPreference
+            android:entries="@array/night_theme_entries"
+            android:entryValues="@array/night_theme_entry_values"
+            android:key="@string/night_theme_title"
+            android:title="@string/night_theme_title"
+            app:useSimpleSummaryProvider="true" />
+
+    </PreferenceCategory>
+
 </PreferenceScreen>

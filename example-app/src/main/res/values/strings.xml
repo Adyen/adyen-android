@@ -13,6 +13,7 @@
     <string name="merchant_account_key">merchant_account</string>
     <string name="merchant_account_title">Merchant Account</string>
     <string name="additional_data_title">Additional Data</string>
+    <string name="app_title">App</string>
 
     <string name="shopper_information">Shopper Information</string>
     <string name="shopper_reference_key">shopper_reference</string>
@@ -31,6 +32,12 @@
     <string name="split_card_funding_sources_title">Split Card Funding Sources</string>
     <string name="enable_card_address_form_key">enable_card_address_form</string>
     <string name="enable_card_address_form_title">Enable card address form</string>
+    <string name="night_theme_title">Theme</string>
+    <!-- Should be same as DefaultNightThemeRepository.PREF_KEY_NIGHT_THEME -->
+    <string name="night_theme_key">night_theme_key</string>
+    <string name="night_theme_day">Light</string>
+    <string name="night_theme_night">Dark</string>
+    <string name="night_theme_system">System</string>
 
     <string name="payment_information">Payment Information</string>
     <string name="currency_key">amount_currency</string>
