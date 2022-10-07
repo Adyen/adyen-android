@@ -115,10 +115,8 @@ internal class CardView @JvmOverloads constructor(
         initAddressFormInput()
 
         binding.switchStorePaymentMethod.setOnCheckedChangeListener { _, isChecked ->
-            delegate.inputData.isStorePaymentSelected = isChecked
-            notifyInputDataChanged()
+            delegate.updateInputData { isStorePaymentSelected = isChecked }
         }
-        notifyInputDataChanged()
     }
 
     private fun initLocalizedStrings(localizedContext: Context) {
@@ -194,7 +192,7 @@ internal class CardView @JvmOverloads constructor(
 
     @Suppress("ComplexMethod", "LongMethod")
     override fun highlightValidationErrors() {
-        cardDelegate.outputData?.let {
+        cardDelegate.outputData.let {
             var isErrorFocused = false
             val cardNumberValidation = it.cardNumberState.validation
             if (cardNumberValidation is Validation.Invalid) {
@@ -274,10 +272,6 @@ internal class CardView @JvmOverloads constructor(
         }
     }
 
-    private fun notifyInputDataChanged() {
-        cardDelegate.onInputDataChanged(cardDelegate.inputData)
-    }
-
     private fun onCardNumberValidated(cardOutputData: CardOutputData) {
         val detectedCardTypes = cardOutputData.detectedCardTypes
         if (detectedCardTypes.isEmpty()) {
@@ -343,8 +337,7 @@ internal class CardView @JvmOverloads constructor(
 
     private fun initCardNumberInput() {
         binding.editTextCardNumber.setOnChangeListener {
-            cardDelegate.inputData.cardNumber = binding.editTextCardNumber.rawValue
-            notifyInputDataChanged()
+            cardDelegate.updateInputData { cardNumber = binding.editTextCardNumber.rawValue }
             setCardErrorState(true)
         }
         binding.editTextCardNumber.onFocusChangeListener = OnFocusChangeListener { _: View?, hasFocus: Boolean ->
@@ -353,7 +346,7 @@ internal class CardView @JvmOverloads constructor(
     }
 
     private fun setCardErrorState(hasFocus: Boolean) {
-        val outputData = cardDelegate.outputData ?: return
+        val outputData = cardDelegate.outputData
         if (isStoredPaymentMethod(outputData)) return
 
         val cardNumberValidation = outputData.cardNumberState.validation
@@ -389,14 +382,12 @@ internal class CardView @JvmOverloads constructor(
 
     private fun initBrandSelectionListeners() {
         binding.cardBrandLogoContainerPrimary.setOnClickListener {
-            cardDelegate.inputData.selectedCardIndex = PRIMARY_BRAND_INDEX
-            notifyInputDataChanged()
+            cardDelegate.updateInputData { selectedCardIndex = PRIMARY_BRAND_INDEX }
             selectPrimaryBrand()
         }
 
         binding.cardBrandLogoContainerSecondary.setOnClickListener {
-            cardDelegate.inputData.selectedCardIndex = SECONDARY_BRAND_INDEX
-            notifyInputDataChanged()
+            cardDelegate.updateInputData { selectedCardIndex = SECONDARY_BRAND_INDEX }
             selectSecondaryBrand()
         }
     }
@@ -419,15 +410,14 @@ internal class CardView @JvmOverloads constructor(
     private fun initExpiryDateInput() {
         binding.editTextExpiryDate.setOnChangeListener {
             val date = binding.editTextExpiryDate.date
-            cardDelegate.inputData.expiryDate = date
-            notifyInputDataChanged()
+            cardDelegate.updateInputData { expiryDate = date }
             binding.textInputLayoutExpiryDate.hideError()
         }
         binding.editTextExpiryDate.onFocusChangeListener = OnFocusChangeListener { _, hasFocus ->
-            val expiryDateValidation = cardDelegate.outputData?.expiryDateState?.validation
+            val expiryDateValidation = cardDelegate.outputData.expiryDateState.validation
             if (hasFocus) {
                 binding.textInputLayoutExpiryDate.hideError()
-            } else if (expiryDateValidation != null && expiryDateValidation is Validation.Invalid) {
+            } else if (expiryDateValidation is Validation.Invalid) {
                 binding.textInputLayoutExpiryDate.showError(localizedContext.getString(expiryDateValidation.reason))
             }
         }
@@ -436,15 +426,14 @@ internal class CardView @JvmOverloads constructor(
     private fun initSecurityCodeInput() {
         val securityCodeEditText = binding.textInputLayoutSecurityCode.editText as? SecurityCodeInput
         securityCodeEditText?.setOnChangeListener { editable: Editable ->
-            cardDelegate.inputData.securityCode = editable.toString()
-            notifyInputDataChanged()
+            cardDelegate.updateInputData { securityCode = editable.toString() }
             binding.textInputLayoutSecurityCode.hideError()
         }
         securityCodeEditText?.onFocusChangeListener = OnFocusChangeListener { _, hasFocus ->
-            val securityCodeValidation = cardDelegate.outputData?.securityCodeState?.validation
+            val securityCodeValidation = cardDelegate.outputData.securityCodeState.validation
             if (hasFocus) {
                 binding.textInputLayoutSecurityCode.hideError()
-            } else if (securityCodeValidation != null && securityCodeValidation is Validation.Invalid) {
+            } else if (securityCodeValidation is Validation.Invalid) {
                 binding.textInputLayoutSecurityCode.showError(localizedContext.getString(securityCodeValidation.reason))
             }
         }
@@ -453,15 +442,14 @@ internal class CardView @JvmOverloads constructor(
     private fun initHolderNameInput() {
         val cardHolderEditText = binding.textInputLayoutCardHolder.editText as? AdyenTextInputEditText
         cardHolderEditText?.setOnChangeListener { editable: Editable ->
-            cardDelegate.inputData.holderName = editable.toString()
-            notifyInputDataChanged()
+            cardDelegate.updateInputData { holderName = editable.toString() }
             binding.textInputLayoutCardHolder.hideError()
         }
         cardHolderEditText?.onFocusChangeListener = OnFocusChangeListener { _, hasFocus ->
-            val holderNameValidation = cardDelegate.outputData?.holderNameState?.validation
+            val holderNameValidation = cardDelegate.outputData.holderNameState.validation
             if (hasFocus) {
                 binding.textInputLayoutCardHolder.hideError()
-            } else if (holderNameValidation != null && holderNameValidation is Validation.Invalid) {
+            } else if (holderNameValidation is Validation.Invalid) {
                 binding.textInputLayoutCardHolder.showError(localizedContext.getString(holderNameValidation.reason))
             }
         }
@@ -471,15 +459,14 @@ internal class CardView @JvmOverloads constructor(
         val socialSecurityNumberEditText =
             binding.textInputLayoutSocialSecurityNumber.editText as? AdyenTextInputEditText
         socialSecurityNumberEditText?.setOnChangeListener { editable ->
-            cardDelegate.inputData.socialSecurityNumber = editable.toString()
-            notifyInputDataChanged()
+            cardDelegate.updateInputData { socialSecurityNumber = editable.toString() }
             binding.textInputLayoutSocialSecurityNumber.hideError()
         }
         socialSecurityNumberEditText?.onFocusChangeListener = OnFocusChangeListener { _, hasFocus ->
-            val socialSecurityNumberValidation = cardDelegate.outputData?.socialSecurityNumberState?.validation
+            val socialSecurityNumberValidation = cardDelegate.outputData.socialSecurityNumberState.validation
             if (hasFocus) {
                 binding.textInputLayoutSocialSecurityNumber.hideError()
-            } else if (socialSecurityNumberValidation != null && socialSecurityNumberValidation is Validation.Invalid) {
+            } else if (socialSecurityNumberValidation is Validation.Invalid) {
                 binding.textInputLayoutSocialSecurityNumber.showError(
                     localizedContext.getString(socialSecurityNumberValidation.reason)
                 )
@@ -496,19 +483,15 @@ internal class CardView @JvmOverloads constructor(
         val kcpBirthDateOrRegistrationNumberEditText =
             binding.textInputLayoutKcpBirthDateOrTaxNumber.editText as? AdyenTextInputEditText
         kcpBirthDateOrRegistrationNumberEditText?.setOnChangeListener {
-            cardDelegate.inputData.kcpBirthDateOrTaxNumber = it.toString()
-            notifyInputDataChanged()
+            cardDelegate.updateInputData { kcpBirthDateOrTaxNumber = it.toString() }
             binding.textInputLayoutKcpBirthDateOrTaxNumber.hideError()
         }
 
         kcpBirthDateOrRegistrationNumberEditText?.onFocusChangeListener = OnFocusChangeListener { _, hasFocus ->
-            val kcpBirthDateOrTaxNumberValidation = cardDelegate.outputData?.kcpBirthDateOrTaxNumberState?.validation
+            val kcpBirthDateOrTaxNumberValidation = cardDelegate.outputData.kcpBirthDateOrTaxNumberState.validation
             if (hasFocus) {
                 binding.textInputLayoutKcpBirthDateOrTaxNumber.hideError()
-            } else if (
-                kcpBirthDateOrTaxNumberValidation != null &&
-                kcpBirthDateOrTaxNumberValidation is Validation.Invalid
-            ) {
+            } else if (kcpBirthDateOrTaxNumberValidation is Validation.Invalid) {
                 binding.textInputLayoutKcpBirthDateOrTaxNumber.showError(
                     localizedContext.getString(kcpBirthDateOrTaxNumberValidation.reason)
                 )
@@ -519,18 +502,15 @@ internal class CardView @JvmOverloads constructor(
     private fun initKcpCardPasswordInput() {
         val kcpPasswordEditText = binding.textInputLayoutKcpCardPassword.editText as? AdyenTextInputEditText
         kcpPasswordEditText?.setOnChangeListener {
-            cardDelegate.inputData.kcpCardPassword = it.toString()
-            notifyInputDataChanged()
+            cardDelegate.updateInputData { kcpCardPassword = it.toString() }
             binding.textInputLayoutKcpCardPassword.hideError()
         }
 
         kcpPasswordEditText?.onFocusChangeListener = OnFocusChangeListener { _, hasFocus ->
-            val kcpBirthDateOrRegistrationNumberValidation = cardDelegate.outputData?.kcpCardPasswordState?.validation
+            val kcpBirthDateOrRegistrationNumberValidation = cardDelegate.outputData.kcpCardPasswordState.validation
             if (hasFocus) {
                 binding.textInputLayoutKcpCardPassword.hideError()
-            } else if (kcpBirthDateOrRegistrationNumberValidation != null &&
-                kcpBirthDateOrRegistrationNumberValidation is Validation.Invalid
-            ) {
+            } else if (kcpBirthDateOrRegistrationNumberValidation is Validation.Invalid) {
                 binding.textInputLayoutKcpCardPassword.showError(
                     localizedContext.getString(kcpBirthDateOrRegistrationNumberValidation.reason)
                 )
@@ -541,16 +521,15 @@ internal class CardView @JvmOverloads constructor(
     private fun initPostalCodeInput() {
         val postalCodeEditText = binding.textInputLayoutPostalCode.editText as? AdyenTextInputEditText
         postalCodeEditText?.setOnChangeListener {
-            cardDelegate.inputData.address.postalCode = it.toString()
-            notifyInputDataChanged()
+            cardDelegate.updateInputData { address.postalCode = it.toString() }
             binding.textInputLayoutPostalCode.hideError()
         }
 
         postalCodeEditText?.onFocusChangeListener = OnFocusChangeListener { _, hasFocus ->
-            val postalCodeValidation = cardDelegate.outputData?.addressState?.postalCode?.validation
+            val postalCodeValidation = cardDelegate.outputData.addressState.postalCode.validation
             if (hasFocus) {
                 binding.textInputLayoutPostalCode.hideError()
-            } else if (postalCodeValidation != null && postalCodeValidation is Validation.Invalid) {
+            } else if (postalCodeValidation is Validation.Invalid) {
                 binding.textInputLayoutPostalCode.showError(localizedContext.getString(postalCodeValidation.reason))
             }
         }
@@ -713,8 +692,7 @@ internal class CardView @JvmOverloads constructor(
 
     private fun updateInstallmentSelection(installmentModel: InstallmentModel?) {
         installmentModel?.let {
-            cardDelegate.inputData.installmentOption = it
-            notifyInputDataChanged()
+            cardDelegate.updateInputData { installmentOption = it }
         }
     }
 

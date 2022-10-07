@@ -8,6 +8,7 @@
 
 package com.adyen.checkout.card
 
+import androidx.annotation.VisibleForTesting
 import com.adyen.checkout.card.api.model.Brand
 import com.adyen.checkout.card.data.CardType
 import com.adyen.checkout.card.data.DetectedCardType
@@ -55,7 +56,7 @@ import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.launch
 
 @Suppress("LongParameterList", "TooManyFunctions")
-class DefaultCardDelegate(
+internal class DefaultCardDelegate(
     private val publicKeyRepository: PublicKeyRepository,
     override val configuration: CardConfiguration,
     private val paymentMethod: PaymentMethod,
@@ -66,14 +67,14 @@ class DefaultCardDelegate(
     private val genericEncrypter: GenericEncrypter,
 ) : CardDelegate {
 
-    override val inputData: CardInputData = CardInputData()
+    private val inputData: CardInputData = CardInputData()
 
     private var publicKey: String? = null
 
-    private val _outputDataFlow = MutableStateFlow<CardOutputData?>(null)
-    override val outputDataFlow: Flow<CardOutputData?> = _outputDataFlow
+    private val _outputDataFlow = MutableStateFlow(createOutputData())
+    override val outputDataFlow: Flow<CardOutputData> = _outputDataFlow
 
-    override val outputData: CardOutputData?
+    override val outputData: CardOutputData
         get() = _outputDataFlow.value
 
     private val _componentStateFlow = MutableStateFlow<CardComponentState?>(null)
@@ -89,8 +90,6 @@ class DefaultCardDelegate(
 
     override fun initialize(coroutineScope: CoroutineScope) {
         _coroutineScope = coroutineScope
-
-        updateOutputData()
 
         fetchPublicKey()
         subscribeToDetectedCardTypes()
@@ -112,7 +111,7 @@ class DefaultCardDelegate(
                 onSuccess = { key ->
                     Logger.d(TAG, "Public key fetched")
                     publicKey = key
-                    outputData?.let { createComponentState(it) }
+                    createComponentState(outputData)
                 },
                 onFailure = { e ->
                     Logger.e(TAG, "Unable to fetch public key")
@@ -122,7 +121,12 @@ class DefaultCardDelegate(
         }
     }
 
-    override fun onInputDataChanged(inputData: CardInputData) {
+    override fun updateInputData(update: CardInputData.() -> Unit) {
+        inputData.update()
+        onInputDataChanged()
+    }
+
+    private fun onInputDataChanged() {
         Logger.v(TAG, "onInputDataChanged")
         detectCardTypeRepository.detectCardType(
             cardNumber = inputData.cardNumber,
@@ -176,13 +180,23 @@ class DefaultCardDelegate(
             .launchIn(coroutineScope)
     }
 
-    @Suppress("LongMethod")
     private fun updateOutputData(
-        detectedCardTypes: List<DetectedCardType> = outputData?.detectedCardTypes.orEmpty(),
-        countryOptions: List<AddressListItem> = outputData?.countryOptions.orEmpty(),
-        stateOptions: List<AddressListItem> = outputData?.stateOptions.orEmpty(),
+        detectedCardTypes: List<DetectedCardType> = outputData.detectedCardTypes,
+        countryOptions: List<AddressListItem> = outputData.countryOptions,
+        stateOptions: List<AddressListItem> = outputData.stateOptions,
     ) {
-        Logger.v(TAG, "updateOutputData")
+        val newOutputData = createOutputData(detectedCardTypes, countryOptions, stateOptions)
+        _outputDataFlow.tryEmit(newOutputData)
+        createComponentState(newOutputData)
+    }
+
+    @Suppress("LongMethod")
+    private fun createOutputData(
+        detectedCardTypes: List<DetectedCardType> = emptyList(),
+        countryOptions: List<AddressListItem> = emptyList(),
+        stateOptions: List<AddressListItem> = emptyList(),
+    ): CardOutputData {
+        Logger.v(TAG, "createOutputData")
         val updatedCountryOptions = AddressFormUtils.markAddressListItemSelected(
             countryOptions,
             inputData.address.country
@@ -211,7 +225,7 @@ class DefaultCardDelegate(
             addressVisibility = configuration.addressVisibility
         )
 
-        val newOutputData = CardOutputData(
+        return CardOutputData(
             cardNumberState = validateCardNumber(
                 cardNumber = inputData.cardNumber,
                 enableLuhnCheck = enableLuhnCheck,
@@ -246,16 +260,14 @@ class DefaultCardDelegate(
             kcpBirthDateOrTaxNumberHint = getKcpBirthDateOrTaxNumberHint(inputData.kcpBirthDateOrTaxNumber),
             componentMode = ComponentMode.DEFAULT,
         )
-
-        _outputDataFlow.tryEmit(newOutputData)
-        createComponentState(newOutputData)
     }
 
     override fun getPaymentMethodType(): String {
         return paymentMethod.type ?: PaymentMethodTypes.UNKNOWN
     }
 
-    override fun createComponentState(outputData: CardOutputData) {
+    @VisibleForTesting
+    internal fun createComponentState(outputData: CardOutputData) {
         Logger.v(TAG, "createComponentState")
 
         val cardNumber = outputData.cardNumberState.value

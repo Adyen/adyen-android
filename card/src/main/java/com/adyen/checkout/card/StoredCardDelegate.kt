@@ -8,6 +8,7 @@
 
 package com.adyen.checkout.card
 
+import androidx.annotation.VisibleForTesting
 import com.adyen.checkout.card.api.model.Brand
 import com.adyen.checkout.card.data.CardType
 import com.adyen.checkout.card.data.DetectedCardType
@@ -41,17 +42,19 @@ import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.launch
 
 @Suppress("TooManyFunctions")
-class StoredCardDelegate(
+internal class StoredCardDelegate(
     private val storedPaymentMethod: StoredPaymentMethod,
     override val configuration: CardConfiguration,
     private val cardEncrypter: CardEncrypter,
     private val publicKeyRepository: PublicKeyRepository,
 ) : CardDelegate {
 
-    override val inputData: CardInputData = CardInputData()
+    private val noCvcBrands: Set<CardType> = hashSetOf(CardType.BCMC)
 
-    private val _outputDataFlow = MutableStateFlow<CardOutputData?>(null)
-    override val outputDataFlow: Flow<CardOutputData?> = _outputDataFlow
+    private val inputData: CardInputData = CardInputData()
+
+    private val _outputDataFlow = MutableStateFlow(createOutputData())
+    override val outputDataFlow: Flow<CardOutputData> = _outputDataFlow
 
     private val _componentStateFlow = MutableStateFlow<CardComponentState?>(null)
     override val componentStateFlow: Flow<CardComponentState?> = _componentStateFlow
@@ -61,10 +64,7 @@ class StoredCardDelegate(
 
     override val viewFlow: Flow<ComponentViewType?> = MutableStateFlow(CardComponentViewType)
 
-    override val outputData: CardOutputData?
-        get() = _outputDataFlow.value
-
-    private val noCvcBrands: Set<CardType> = hashSetOf(CardType.BCMC)
+    override val outputData: CardOutputData get() = _outputDataFlow.value
 
     private var publicKey: String? = null
 
@@ -99,7 +99,7 @@ class StoredCardDelegate(
             ).fold(
                 onSuccess = { key ->
                     publicKey = key
-                    outputData?.let { createComponentState(it) }
+                    createComponentState(outputData)
                 },
                 onFailure = { e ->
                     _exceptionFlow.tryEmit(ComponentException("Unable to fetch publicKey.", e))
@@ -108,33 +108,51 @@ class StoredCardDelegate(
         }
     }
 
-    override fun onInputDataChanged(inputData: CardInputData) {
+    override fun updateInputData(update: CardInputData.() -> Unit) {
+        inputData.update()
+        onInputDataChanged()
+    }
+
+    private fun onInputDataChanged() {
         Logger.v(TAG, "onInputDataChanged")
 
-        val detectedCardTypes = storedDetectedCardTypes
-
-        val outputData = makeOutputData(
-            cardNumber = inputData.cardNumber,
-            expiryDate = inputData.expiryDate,
-            securityCode = inputData.securityCode,
-            holderName = inputData.holderName,
-            socialSecurityNumber = inputData.socialSecurityNumber,
-            kcpBirthDateOrTaxNumber = inputData.kcpBirthDateOrTaxNumber,
-            kcpCardPassword = inputData.kcpCardPassword,
-            addressInputModel = inputData.address,
-            isStorePaymentSelected = inputData.isStorePaymentSelected,
-            detectedCardType = detectedCardTypes,
-            selectedInstallmentOption = inputData.installmentOption,
-        )
+        val outputData = createOutputData()
         _outputDataFlow.tryEmit(outputData)
         createComponentState(outputData)
     }
 
-    override fun getPaymentMethodType(): String {
-        return storedPaymentMethod.type ?: PaymentMethodTypes.UNKNOWN
+    private fun createOutputData() = with(inputData) {
+        CardOutputData(
+            cardNumberState = FieldState(cardNumber, Validation.Valid),
+            expiryDateState = FieldState(expiryDate, Validation.Valid),
+            securityCodeState = validateSecurityCode(securityCode, storedDetectedCardTypes),
+            holderNameState = FieldState(holderName, Validation.Valid),
+            socialSecurityNumberState = FieldState(socialSecurityNumber, Validation.Valid),
+            kcpBirthDateOrTaxNumberState = FieldState(kcpBirthDateOrTaxNumber, Validation.Valid),
+            kcpCardPasswordState = FieldState(kcpCardPassword, Validation.Valid),
+            addressState = AddressValidationUtils.makeValidEmptyAddressOutput(inputData.address),
+            installmentState = FieldState(inputData.installmentOption, Validation.Valid),
+            isStoredPaymentMethodEnable = isStorePaymentSelected,
+            cvcUIState = makeCvcUIState(storedDetectedCardTypes?.cvcPolicy),
+            expiryDateUIState = makeExpiryDateUIState(storedDetectedCardTypes?.expiryDatePolicy),
+            holderNameUIState = InputFieldUIState.HIDDEN,
+            showStorePaymentField = false,
+            detectedCardTypes = listOfNotNull(storedDetectedCardTypes),
+            isSocialSecurityNumberRequired = false,
+            isKCPAuthRequired = false,
+            addressUIState = AddressFormUIState.NONE,
+            installmentOptions = emptyList(),
+            countryOptions = emptyList(),
+            stateOptions = emptyList(),
+            cardBrands = emptyList(),
+            isDualBranded = false,
+            kcpBirthDateOrTaxNumberHint = null,
+            componentMode = ComponentMode.STORED,
+        )
     }
 
-    override fun createComponentState(outputData: CardOutputData) {
+    @VisibleForTesting
+    internal fun createComponentState(outputData: CardOutputData) {
         Logger.v(TAG, "createComponentState")
 
         val cardNumber = outputData.cardNumberState.value
@@ -194,6 +212,10 @@ class StoredCardDelegate(
                 firstCardType,
             )
         )
+    }
+
+    override fun getPaymentMethodType(): String {
+        return storedPaymentMethod.type ?: PaymentMethodTypes.UNKNOWN
     }
 
     private fun validateSecurityCode(securityCode: String, cardType: DetectedCardType?): FieldState<String> {
@@ -279,51 +301,8 @@ class StoredCardDelegate(
         }
 
         if (!requiresInput()) {
-            onInputDataChanged(inputData)
+            onInputDataChanged()
         }
-    }
-
-    @Suppress("LongParameterList")
-    private fun makeOutputData(
-        cardNumber: String,
-        expiryDate: ExpiryDate,
-        securityCode: String,
-        holderName: String,
-        socialSecurityNumber: String,
-        kcpBirthDateOrTaxNumber: String,
-        kcpCardPassword: String,
-        addressInputModel: AddressInputModel,
-        isStorePaymentSelected: Boolean,
-        detectedCardType: DetectedCardType?,
-        selectedInstallmentOption: InstallmentModel?
-    ): CardOutputData {
-        return CardOutputData(
-            cardNumberState = FieldState(cardNumber, Validation.Valid),
-            expiryDateState = FieldState(expiryDate, Validation.Valid),
-            securityCodeState = validateSecurityCode(securityCode, detectedCardType),
-            holderNameState = FieldState(holderName, Validation.Valid),
-            socialSecurityNumberState = FieldState(socialSecurityNumber, Validation.Valid),
-            kcpBirthDateOrTaxNumberState = FieldState(kcpBirthDateOrTaxNumber, Validation.Valid),
-            kcpCardPasswordState = FieldState(kcpCardPassword, Validation.Valid),
-            addressState = AddressValidationUtils.makeValidEmptyAddressOutput(addressInputModel),
-            installmentState = FieldState(selectedInstallmentOption, Validation.Valid),
-            isStoredPaymentMethodEnable = isStorePaymentSelected,
-            cvcUIState = makeCvcUIState(detectedCardType?.cvcPolicy),
-            expiryDateUIState = makeExpiryDateUIState(detectedCardType?.expiryDatePolicy),
-            holderNameUIState = InputFieldUIState.HIDDEN,
-            showStorePaymentField = false,
-            detectedCardTypes = listOfNotNull(detectedCardType),
-            isSocialSecurityNumberRequired = false,
-            isKCPAuthRequired = false,
-            addressUIState = AddressFormUIState.NONE,
-            installmentOptions = emptyList(),
-            countryOptions = emptyList(),
-            stateOptions = emptyList(),
-            cardBrands = emptyList(),
-            isDualBranded = false,
-            kcpBirthDateOrTaxNumberHint = null,
-            componentMode = ComponentMode.STORED,
-        )
     }
 
     private fun makeCvcUIState(cvcPolicy: Brand.FieldPolicy?): InputFieldUIState {
