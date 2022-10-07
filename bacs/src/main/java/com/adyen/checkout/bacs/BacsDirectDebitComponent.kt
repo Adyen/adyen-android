@@ -33,7 +33,7 @@ class BacsDirectDebitComponent(
     BacsDirectDebitComponentState>(savedStateHandle, delegate, configuration),
     ViewProvidingComponent {
 
-    override val viewFlow: Flow<ComponentViewType?>  = delegate.viewFlow
+    override val viewFlow: Flow<ComponentViewType?> = delegate.viewFlow
 
     init {
         delegate.componentStateFlow

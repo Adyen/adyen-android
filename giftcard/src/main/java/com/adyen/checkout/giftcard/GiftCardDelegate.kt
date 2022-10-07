@@ -24,15 +24,15 @@ interface GiftCardDelegate :
 
     val configuration: GiftCardConfiguration
 
-    val inputData: GiftCardInputData
+    val outputData: GiftCardOutputData
 
-    val outputData: GiftCardOutputData?
-
-    val outputDataFlow: Flow<GiftCardOutputData?>
+    val outputDataFlow: Flow<GiftCardOutputData>
 
     val componentStateFlow: Flow<GiftCardComponentState?>
 
     val exceptionFlow: Flow<CheckoutException>
 
     fun initialize(coroutineScope: CoroutineScope)
+
+    fun updateInputData(update: GiftCardInputData.() -> Unit)
 }
