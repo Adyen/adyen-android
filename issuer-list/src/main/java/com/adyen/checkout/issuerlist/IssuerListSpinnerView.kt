@@ -91,8 +91,7 @@ internal class IssuerListSpinnerView @JvmOverloads constructor(
 
     override fun onItemSelected(parent: AdapterView<*>, view: View, position: Int, id: Long) {
         Logger.d(TAG, "onItemSelected - " + issuersAdapter.getItem(position).name)
-        issuerListDelegate.inputData.selectedIssuer = issuersAdapter.getItem(position)
-        issuerListDelegate.onInputDataChanged(issuerListDelegate.inputData)
+        issuerListDelegate.updateInputData { selectedIssuer = issuersAdapter.getItem(position) }
     }
 
     override fun setEnabled(enabled: Boolean) {

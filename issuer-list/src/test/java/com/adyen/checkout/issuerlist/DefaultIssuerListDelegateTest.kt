@@ -50,8 +50,9 @@ internal class DefaultIssuerListDelegateTest(
         @Test
         fun `selectedIssuer is null, then output should be null`() = runTest {
             delegate.outputDataFlow.test {
-                delegate.onInputDataChanged(IssuerListInputData(null))
-                with(requireNotNull(expectMostRecentItem())) {
+                delegate.updateInputData { selectedIssuer = null }
+
+                with(expectMostRecentItem()) {
                     assertNull(selectedIssuer)
                 }
             }
@@ -60,8 +61,9 @@ internal class DefaultIssuerListDelegateTest(
         @Test
         fun `selectedIssuer is null, then output should be invalid`() = runTest {
             delegate.outputDataFlow.test {
-                delegate.onInputDataChanged(IssuerListInputData(null))
-                with(requireNotNull(expectMostRecentItem())) {
+                delegate.updateInputData { selectedIssuer = null }
+
+                with(expectMostRecentItem()) {
                     assertNull(selectedIssuer)
                     assertFalse(isValid)
                 }
@@ -71,34 +73,11 @@ internal class DefaultIssuerListDelegateTest(
         @Test
         fun `selectedIssuer is valid, then output should be valid`() = runTest {
             delegate.outputDataFlow.test {
-                delegate.onInputDataChanged(IssuerListInputData(IssuerModel(id = "id", name = "test")))
-                with(requireNotNull(expectMostRecentItem())) {
+                delegate.updateInputData { selectedIssuer = IssuerModel(id = "id", name = "test") }
+
+                with(expectMostRecentItem()) {
                     assertEquals("test", selectedIssuer?.name)
                     assertEquals("id", selectedIssuer?.id)
-                    assertTrue(isValid)
-                }
-            }
-        }
-
-        @Test
-        fun `selectedIssuer is null, then component state should be invalid`() = runTest {
-            delegate.componentStateFlow.test {
-                delegate.onInputDataChanged(IssuerListInputData())
-                with(requireNotNull(expectMostRecentItem())) {
-                    assertEquals("", data.paymentMethod?.issuer)
-                    assertFalse(isValid)
-                }
-            }
-        }
-
-        @Test
-        fun `selectIssuer is valid, then component state should be valid`() = runTest {
-            delegate.componentStateFlow.test {
-                delegate.onInputDataChanged(
-                    IssuerListInputData(selectedIssuer = IssuerModel(id = "issuer-id", name = "issuer-name"))
-                )
-                with(requireNotNull(expectMostRecentItem())) {
-                    assertEquals("issuer-id", data.paymentMethod?.issuer)
                     assertTrue(isValid)
                 }
             }
@@ -148,9 +127,5 @@ internal class DefaultIssuerListDelegateTest(
         delegate.viewFlow.test {
             assertEquals(IssuerListComponentViewType.SPINNER_VIEW, expectMostRecentItem())
         }
-    }
-
-    companion object {
-        private const val TEST_CLIENT_KEY = "test_qwertyuiopasdfghjklzxcvbnmqwerty"
     }
 }

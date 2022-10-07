@@ -8,6 +8,7 @@
 
 package com.adyen.checkout.giftcard
 
+import androidx.annotation.VisibleForTesting
 import com.adyen.checkout.components.flow.MutableSingleEventSharedFlow
 import com.adyen.checkout.components.model.paymentmethods.PaymentMethod
 import com.adyen.checkout.components.model.payments.request.GiftCardPaymentMethod
@@ -93,6 +94,7 @@ internal class DefaultGiftCardDelegate(
     private fun createOutputData() = GiftCardOutputData(cardNumber = inputData.cardNumber, pin = inputData.pin)
 
     @Suppress("ReturnCount")
+    @VisibleForTesting
     internal fun createComponentState(outputData: GiftCardOutputData) {
         val paymentComponentData = PaymentComponentData<GiftCardPaymentMethod>()
 

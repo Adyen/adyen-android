@@ -25,12 +25,13 @@ interface IssuerListDelegate<IssuerListPaymentMethodT : IssuerListPaymentMethod>
 
     val configuration: IssuerListConfiguration
 
-    val inputData: IssuerListInputData
+    val outputData: IssuerListOutputData
 
-    val outputData: IssuerListOutputData?
+    val outputDataFlow: Flow<IssuerListOutputData>
 
-    val outputDataFlow: Flow<IssuerListOutputData?>
     val componentStateFlow: Flow<PaymentComponentState<IssuerListPaymentMethodT>?>
 
     fun getIssuers(): List<IssuerModel>
+
+    fun updateInputData(update: IssuerListInputData.() -> Unit)
 }
