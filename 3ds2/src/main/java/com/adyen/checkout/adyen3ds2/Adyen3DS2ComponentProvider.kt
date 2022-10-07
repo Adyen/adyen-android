@@ -54,7 +54,7 @@ class Adyen3DS2ComponentProvider :
                 savedStateHandle = savedStateHandle,
                 application = application,
                 configuration = configuration,
-                adyen3DS2Delegate = adyen3DS2Delegate,
+                delegate = adyen3DS2Delegate,
             )
         }
         return ViewModelProvider(viewModelStoreOwner, threeDS2Factory).get(Adyen3DS2Component::class.java)

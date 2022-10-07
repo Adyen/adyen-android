@@ -18,7 +18,10 @@ import com.adyen.checkout.components.base.BaseActionComponent
 import com.adyen.checkout.components.base.IntentHandlingComponent
 import com.adyen.checkout.components.model.payments.response.Action
 import com.adyen.checkout.components.model.payments.response.RedirectAction
+import com.adyen.checkout.components.ui.ViewProvidingComponent
+import com.adyen.checkout.components.ui.view.ComponentViewType
 import com.adyen.checkout.core.exception.ComponentException
+import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.filterNotNull
 import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.onEach
@@ -27,16 +30,20 @@ class RedirectComponent(
     savedStateHandle: SavedStateHandle,
     application: Application,
     configuration: RedirectConfiguration,
-    private val redirectDelegate: RedirectDelegate
-) : BaseActionComponent<RedirectConfiguration>(savedStateHandle, application, configuration), IntentHandlingComponent {
+    override val delegate: RedirectDelegate
+) : BaseActionComponent<RedirectConfiguration>(savedStateHandle, application, configuration),
+    IntentHandlingComponent,
+    ViewProvidingComponent {
+
+    override val viewFlow: Flow<ComponentViewType?> = delegate.viewFlow
 
     init {
-        redirectDelegate.detailsFlow
+        delegate.detailsFlow
             .filterNotNull()
             .onEach { notifyDetails(it) }
             .launchIn(viewModelScope)
 
-        redirectDelegate.exceptionFlow
+        delegate.exceptionFlow
             .onEach { notifyException(it) }
             .launchIn(viewModelScope)
     }
@@ -50,7 +57,7 @@ class RedirectComponent(
             notifyException(ComponentException("Unsupported action"))
             return
         }
-        redirectDelegate.handleAction(action, activity)
+        delegate.handleAction(action, activity)
     }
 
     /**
@@ -60,7 +67,7 @@ class RedirectComponent(
      * @param intent The received [Intent].
      */
     override fun handleIntent(intent: Intent) {
-        redirectDelegate.handleIntent(intent)
+        delegate.handleIntent(intent)
     }
 
     companion object {

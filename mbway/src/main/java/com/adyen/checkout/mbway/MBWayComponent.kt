@@ -13,8 +13,11 @@ import com.adyen.checkout.components.PaymentComponentProvider
 import com.adyen.checkout.components.PaymentComponentState
 import com.adyen.checkout.components.base.BasePaymentComponent
 import com.adyen.checkout.components.model.payments.request.MBWayPaymentMethod
+import com.adyen.checkout.components.ui.ViewProvidingComponent
+import com.adyen.checkout.components.ui.view.ComponentViewType
 import com.adyen.checkout.components.util.PaymentMethodTypes
 import com.adyen.checkout.mbway.MBWayComponent.Companion.PROVIDER
+import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.filterNotNull
 import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.onEach
@@ -24,11 +27,14 @@ import kotlinx.coroutines.flow.onEach
  */
 class MBWayComponent(
     savedStateHandle: SavedStateHandle,
-    private val mbWayDelegate: MBWayDelegate,
+    override val delegate: MBWayDelegate,
     configuration: MBWayConfiguration
 ) :
     BasePaymentComponent<MBWayConfiguration,
-        PaymentComponentState<MBWayPaymentMethod>>(savedStateHandle, mbWayDelegate, configuration) {
+        PaymentComponentState<MBWayPaymentMethod>>(savedStateHandle, delegate, configuration),
+    ViewProvidingComponent {
+
+    override val viewFlow: Flow<ComponentViewType?> = delegate.viewFlow
 
     init {
         observeComponentState()
@@ -37,7 +43,7 @@ class MBWayComponent(
     override fun getSupportedPaymentMethodTypes(): Array<String> = PAYMENT_METHOD_TYPES
 
     private fun observeComponentState() {
-        mbWayDelegate.componentStateFlow
+        delegate.componentStateFlow
             .filterNotNull()
             .onEach { notifyStateChanged(it) }
             .launchIn(viewModelScope)

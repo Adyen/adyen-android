@@ -18,7 +18,10 @@ import com.adyen.checkout.components.base.IntentHandlingComponent
 import com.adyen.checkout.components.model.payments.response.Action
 import com.adyen.checkout.components.model.payments.response.SdkAction
 import com.adyen.checkout.components.model.payments.response.WeChatPaySdkData
+import com.adyen.checkout.components.ui.ViewProvidingComponent
+import com.adyen.checkout.components.ui.view.ComponentViewType
 import com.adyen.checkout.core.exception.ComponentException
+import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.onEach
 
@@ -26,16 +29,19 @@ class WeChatPayActionComponent(
     savedStateHandle: SavedStateHandle,
     application: Application,
     configuration: WeChatPayActionConfiguration,
-    private val weChatDelegate: WeChatDelegate,
+    override val delegate: WeChatDelegate,
 ) : BaseActionComponent<WeChatPayActionConfiguration>(savedStateHandle, application, configuration),
-    IntentHandlingComponent {
+    IntentHandlingComponent,
+    ViewProvidingComponent {
+
+    override val viewFlow: Flow<ComponentViewType?> = delegate.viewFlow
 
     init {
-        weChatDelegate.detailsFlow
+        delegate.detailsFlow
             .onEach { notifyDetails(it) }
             .launchIn(viewModelScope)
 
-        weChatDelegate.exceptionFlow
+        delegate.exceptionFlow
             .onEach { notifyException(it) }
             .launchIn(viewModelScope)
     }
@@ -47,7 +53,7 @@ class WeChatPayActionComponent(
      * @param intent The intent result from WeChatPay SDK.
      */
     override fun handleIntent(intent: Intent) {
-        weChatDelegate.handleIntent(intent)
+        delegate.handleIntent(intent)
     }
 
     override fun canHandleAction(action: Action): Boolean {
@@ -61,7 +67,7 @@ class WeChatPayActionComponent(
             notifyException(ComponentException("Unsupported action"))
             return
         }
-        weChatDelegate.handleAction(action, activity)
+        delegate.handleAction(action, activity)
     }
 
     companion object {

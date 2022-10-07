@@ -49,7 +49,7 @@ class WeChatPayActionComponentProvider :
                 savedStateHandle = savedStateHandle,
                 application = application,
                 configuration = configuration,
-                weChatDelegate = weChatDelegate,
+                delegate = weChatDelegate,
             )
         }
 

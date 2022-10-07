@@ -23,16 +23,13 @@ import kotlinx.coroutines.flow.Flow
  */
 class DotpayComponent(
     savedStateHandle: SavedStateHandle,
-    override val delegate: IssuerListDelegate<DotpayPaymentMethod>,
+    delegate: IssuerListDelegate<DotpayPaymentMethod>,
     configuration: DotpayConfiguration
 ) : IssuerListComponent<DotpayPaymentMethod>(
     savedStateHandle,
     delegate,
     configuration
-),
-    ViewProvidingComponent {
-
-    override val viewFlow: Flow<ComponentViewType?> = delegate.viewFlow
+){
 
     override fun getSupportedPaymentMethodTypes(): Array<String> = PAYMENT_METHOD_TYPES
 

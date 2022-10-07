@@ -10,29 +10,23 @@ package com.adyen.checkout.eps
 import androidx.lifecycle.SavedStateHandle
 import com.adyen.checkout.components.PaymentComponentProvider
 import com.adyen.checkout.components.model.payments.request.EPSPaymentMethod
-import com.adyen.checkout.components.ui.ViewProvidingComponent
-import com.adyen.checkout.components.ui.view.ComponentViewType
 import com.adyen.checkout.components.util.PaymentMethodTypes
 import com.adyen.checkout.eps.EPSComponent.Companion.PROVIDER
 import com.adyen.checkout.issuerlist.IssuerListComponent
 import com.adyen.checkout.issuerlist.IssuerListDelegate
-import kotlinx.coroutines.flow.Flow
 
 /**
  * Component should not be instantiated directly. Instead use the [PROVIDER] object.
  */
 class EPSComponent(
     savedStateHandle: SavedStateHandle,
-    override val delegate: IssuerListDelegate<EPSPaymentMethod>,
+    delegate: IssuerListDelegate<EPSPaymentMethod>,
     configuration: EPSConfiguration
 ) : IssuerListComponent<EPSPaymentMethod>(
     savedStateHandle,
     delegate,
     configuration
-),
-    ViewProvidingComponent {
-
-    override val viewFlow: Flow<ComponentViewType?> = delegate.viewFlow
+) {
 
     override fun getSupportedPaymentMethodTypes(): Array<String> = PAYMENT_METHOD_TYPES
 

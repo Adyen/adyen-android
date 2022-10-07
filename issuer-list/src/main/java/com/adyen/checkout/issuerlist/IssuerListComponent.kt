@@ -12,6 +12,9 @@ import androidx.lifecycle.viewModelScope
 import com.adyen.checkout.components.PaymentComponentState
 import com.adyen.checkout.components.base.BasePaymentComponent
 import com.adyen.checkout.components.model.payments.request.IssuerListPaymentMethod
+import com.adyen.checkout.components.ui.ViewProvidingComponent
+import com.adyen.checkout.components.ui.view.ComponentViewType
+import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.filterNotNull
 import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.onEach
@@ -21,24 +24,27 @@ import kotlinx.coroutines.flow.onEach
  */
 abstract class IssuerListComponent<IssuerListPaymentMethodT : IssuerListPaymentMethod>(
     savedStateHandle: SavedStateHandle,
-    private val issuerListDelegate: IssuerListDelegate<IssuerListPaymentMethodT>,
+    final override val delegate: IssuerListDelegate<IssuerListPaymentMethodT>,
     configuration: IssuerListConfiguration
 ) : BasePaymentComponent<
     IssuerListConfiguration,
     PaymentComponentState<IssuerListPaymentMethodT>
     >(
     savedStateHandle,
-    issuerListDelegate,
+    delegate,
     configuration
-) {
+), ViewProvidingComponent {
+
+    override val viewFlow: Flow<ComponentViewType?> = delegate.viewFlow
+
     val issuers: List<IssuerModel>
-        get() = issuerListDelegate.getIssuers()
+        get() = delegate.getIssuers()
 
     val paymentMethodType: String
-        get() = issuerListDelegate.getPaymentMethodType()
+        get() = delegate.getPaymentMethodType()
 
     init {
-        issuerListDelegate.componentStateFlow
+        delegate.componentStateFlow
             .filterNotNull()
             .onEach { notifyStateChanged(it) }
             .launchIn(viewModelScope)

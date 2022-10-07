@@ -18,15 +18,21 @@ import com.adyen.checkout.components.ViewableComponent
 import com.adyen.checkout.components.base.BaseActionComponent
 import com.adyen.checkout.components.model.payments.response.Action
 import com.adyen.checkout.components.model.payments.response.VoucherAction
+import com.adyen.checkout.components.ui.ViewProvidingComponent
+import com.adyen.checkout.components.ui.view.ComponentViewType
 import com.adyen.checkout.core.exception.ComponentException
+import kotlinx.coroutines.flow.Flow
 
 class VoucherComponent(
     savedStateHandle: SavedStateHandle,
     application: Application,
     configuration: VoucherConfiguration,
-    private val voucherDelegate: VoucherDelegate,
+    override val delegate: VoucherDelegate,
 ) : BaseActionComponent<VoucherConfiguration>(savedStateHandle, application, configuration),
-    ViewableComponent<VoucherConfiguration, ActionComponentData> {
+    ViewableComponent<VoucherConfiguration, ActionComponentData>,
+    ViewProvidingComponent {
+
+    override val viewFlow: Flow<ComponentViewType?> = delegate.viewFlow
 
     override fun canHandleAction(action: Action): Boolean {
         return PROVIDER.canHandleAction(action)
@@ -41,7 +47,7 @@ class VoucherComponent(
             notifyException(ComponentException("Unsupported action"))
             return
         }
-        voucherDelegate.handleAction(action, activity)
+        delegate.handleAction(action, activity)
     }
 
     companion object {
