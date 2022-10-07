@@ -8,12 +8,9 @@
 
 package com.adyen.checkout.components.ui
 
-import com.adyen.checkout.components.base.ComponentDelegate
 import com.adyen.checkout.components.ui.view.ComponentViewType
 import kotlinx.coroutines.flow.Flow
 
 interface ViewProvidingComponent {
     val viewFlow: Flow<ComponentViewType?>
-
-    val delegate: ComponentDelegate
 }

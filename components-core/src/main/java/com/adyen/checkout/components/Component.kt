@@ -9,6 +9,7 @@ package com.adyen.checkout.components
 
 import androidx.lifecycle.LifecycleOwner
 import androidx.lifecycle.Observer
+import com.adyen.checkout.components.base.ComponentDelegate
 import com.adyen.checkout.components.base.Configuration
 
 /**
@@ -63,6 +64,11 @@ interface Component<ComponentResultT, ConfigurationT : Configuration> {
      * @param observer The observer to be removed.
      */
     fun removeErrorObserver(observer: Observer<ComponentError>)
+
+    /**
+     * The delegate from this component.
+     */
+    val delegate: ComponentDelegate
 
     /**
      * @return The [Configuration] object used to initialize this Component.
