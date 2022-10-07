@@ -22,25 +22,23 @@ internal class DefaultGooglePayDelegate(
     private val configuration: GooglePayConfiguration,
 ) : GooglePayDelegate {
 
-    override val inputData: GooglePayInputData = GooglePayInputData()
-
-    private val _outputDataFlow = MutableStateFlow<GooglePayOutputData?>(null)
-    override val outputDataFlow: Flow<GooglePayOutputData?> = _outputDataFlow
+    private val inputData: GooglePayInputData = GooglePayInputData()
 
     private val _componentStateFlow = MutableStateFlow<GooglePayComponentState?>(null)
     override val componentStateFlow: Flow<GooglePayComponentState?> = _componentStateFlow
 
-    override fun onInputDataChanged(inputData: GooglePayInputData) {
-        val paymentData = inputData.paymentData ?: throw CheckoutException("paymentData is null")
-
-        val outputData = GooglePayOutputData(paymentData)
-
-        _outputDataFlow.tryEmit(outputData)
-
-        createComponentState(outputData)
+    override fun updateInputData(update: GooglePayInputData.() -> Unit) {
+        inputData.update()
+        onInputDataChanged()
     }
 
-    override fun createComponentState(outputData: GooglePayOutputData) {
+    private fun onInputDataChanged() {
+        val paymentData = inputData.paymentData ?: throw CheckoutException("paymentData is null")
+
+        createComponentState(GooglePayOutputData(paymentData))
+    }
+
+    internal fun createComponentState(outputData: GooglePayOutputData) {
         val paymentMethod = GooglePayUtils.createGooglePayPaymentMethod(outputData.paymentData, paymentMethod.type)
         val paymentComponentData = PaymentComponentData(paymentMethod = paymentMethod)
 
