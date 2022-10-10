@@ -14,6 +14,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.widget.LinearLayout
 import com.adyen.checkout.components.api.ImageLoader
+import com.adyen.checkout.components.api.LogoApi
 import com.adyen.checkout.components.base.ComponentDelegate
 import com.adyen.checkout.components.extensions.setLocalizedTextFromStyle
 import com.adyen.checkout.components.ui.ComponentView
@@ -80,6 +81,7 @@ internal class VoucherView @JvmOverloads constructor(
 
     private fun outputDataChanged(outputData: VoucherOutputData) {
         Logger.d(TAG, "outputDataChanged")
+        loadLogo(outputData.paymentMethodType)
     }
 
     override val isConfirmationRequired: Boolean = false
@@ -89,6 +91,12 @@ internal class VoucherView @JvmOverloads constructor(
     }
 
     override fun getView(): View = this
+
+    private fun loadLogo(paymentMethodType: String?) {
+        if (!paymentMethodType.isNullOrEmpty()) {
+            imageLoader.load(paymentMethodType, binding.imageViewLogo, LogoApi.Size.MEDIUM)
+        }
+    }
 
     companion object {
         private val TAG = LogUtil.getTag()
