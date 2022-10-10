@@ -48,6 +48,8 @@ internal class DefaultBcmcDelegate(
     private val cardEncrypter: CardEncrypter,
 ) : BcmcDelegate {
 
+    private val inputData = BcmcInputData()
+
     private val _outputDataFlow = MutableStateFlow(createOutputData())
     override val outputDataFlow: Flow<BcmcOutputData> = _outputDataFlow
 
@@ -56,8 +58,6 @@ internal class DefaultBcmcDelegate(
 
     private val _exceptionFlow: MutableSharedFlow<CheckoutException> = MutableSingleEventSharedFlow()
     override val exceptionFlow: Flow<CheckoutException> = _exceptionFlow
-
-    private val inputData = BcmcInputData()
 
     override val outputData get() = _outputDataFlow.value
 
