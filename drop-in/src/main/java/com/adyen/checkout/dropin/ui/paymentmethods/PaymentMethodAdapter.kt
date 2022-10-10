@@ -8,12 +8,14 @@
 
 package com.adyen.checkout.dropin.ui.paymentmethods
 
-import android.annotation.SuppressLint
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.appcompat.app.AlertDialog
 import androidx.core.view.isVisible
+import androidx.recyclerview.widget.DiffUtil
+import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
+import androidx.recyclerview.widget.RecyclerView.INVALID_TYPE
 import com.adyen.checkout.components.api.ImageLoader
 import com.adyen.checkout.components.ui.view.AdyenSwipeToRevealLayout
 import com.adyen.checkout.components.util.CurrencyUtils
@@ -31,33 +33,15 @@ import com.adyen.checkout.dropin.ui.paymentmethods.PaymentMethodListItem.Compani
 import com.adyen.checkout.dropin.ui.paymentmethods.PaymentMethodListItem.Companion.STORED_PAYMENT_METHOD
 
 @SuppressWarnings("TooManyFunctions")
-class PaymentMethodAdapter @JvmOverloads constructor(
-    private val paymentMethods: MutableList<PaymentMethodListItem>,
+internal class PaymentMethodAdapter @JvmOverloads constructor(
     private val imageLoader: ImageLoader,
     private val onPaymentMethodSelectedCallback: OnPaymentMethodSelectedCallback? = null,
     private val onStoredPaymentRemovedCallback: OnStoredPaymentRemovedCallback? = null,
     private val onUnderlayExpandListener: ((AdyenSwipeToRevealLayout) -> Unit)? = null
-) : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
+) : ListAdapter<PaymentMethodListItem, RecyclerView.ViewHolder>(PaymentMethodDiffCallback) {
 
-    constructor(
-        paymentMethods: Collection<PaymentMethodListItem>,
-        imageLoader: ImageLoader,
-        onPaymentMethodSelectedCallback: OnPaymentMethodSelectedCallback? = null,
-        onStoredPaymentRemovedCallback: OnStoredPaymentRemovedCallback? = null,
-        onUnderlayExpandListener: ((AdyenSwipeToRevealLayout) -> Unit)? = null
-    ) : this(
-        paymentMethods.toMutableList(),
-        imageLoader,
-        onPaymentMethodSelectedCallback,
-        onStoredPaymentRemovedCallback,
-        onUnderlayExpandListener
-    )
-
-    @SuppressLint("NotifyDataSetChanged")
-    fun updatePaymentMethods(paymentMethods: List<PaymentMethodListItem>) {
-        this.paymentMethods.clear()
-        this.paymentMethods.addAll(paymentMethods)
-        notifyDataSetChanged()
+    override fun getItemViewType(position: Int): Int {
+        return currentList.getOrNull(position)?.getViewType() ?: INVALID_TYPE
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): RecyclerView.ViewHolder {
@@ -84,30 +68,25 @@ class PaymentMethodAdapter @JvmOverloads constructor(
         }
     }
 
-    override fun getItemViewType(position: Int): Int {
-        return paymentMethods[position].getViewType()
-    }
-
     override fun onBindViewHolder(holder: RecyclerView.ViewHolder, position: Int) {
+        val item = currentList.getOrNull(position)
         when (holder) {
-            is HeaderVH -> holder.bind(paymentMethods[position] as PaymentMethodHeader, onPaymentMethodSelectedCallback)
+            is HeaderVH -> holder.bind(item as PaymentMethodHeader, onPaymentMethodSelectedCallback)
             is StoredPaymentMethodVH -> holder.bind(
-                paymentMethods[position] as StoredPaymentMethodModel,
+                item as StoredPaymentMethodModel,
                 onStoredPaymentRemovedCallback,
                 onPaymentMethodSelectedCallback
             )
             is PaymentMethodVH -> holder.bind(
-                paymentMethods[position] as PaymentMethodModel,
+                item as PaymentMethodModel,
                 onPaymentMethodSelectedCallback
             )
-            is GiftCardPaymentMethodVH -> holder.bind(paymentMethods[position] as GiftCardPaymentMethodModel)
-            is NoteVH -> holder.bind(paymentMethods[position] as PaymentMethodNote)
+            is GiftCardPaymentMethodVH -> holder.bind(item as GiftCardPaymentMethodModel)
+            is NoteVH -> holder.bind(item as PaymentMethodNote)
         }
     }
 
-    override fun getItemCount(): Int {
-        return paymentMethods.size
-    }
+    override fun getItemCount(): Int = currentList.size
 
     private class StoredPaymentMethodVH(
         private val binding: RemovablePaymentMethodsListItemBinding,
@@ -188,6 +167,7 @@ class PaymentMethodAdapter @JvmOverloads constructor(
         private val binding: PaymentMethodsListItemBinding,
         private val imageLoader: ImageLoader
     ) : RecyclerView.ViewHolder(binding.root) {
+
         fun bind(
             model: PaymentMethodModel,
             onPaymentMethodSelectedCallback: OnPaymentMethodSelectedCallback?
@@ -210,6 +190,7 @@ class PaymentMethodAdapter @JvmOverloads constructor(
         private val binding: PaymentMethodsListItemBinding,
         private val imageLoader: ImageLoader
     ) : RecyclerView.ViewHolder(binding.root) {
+
         fun bind(model: GiftCardPaymentMethodModel) = with(binding) {
             val context = binding.root.context
             textViewTitle.text = context.getString(R.string.card_number_4digit, model.lastFour)
@@ -277,5 +258,13 @@ class PaymentMethodAdapter @JvmOverloads constructor(
 
     interface OnStoredPaymentRemovedCallback {
         fun onStoredPaymentMethodRemoved(storedPaymentMethodModel: StoredPaymentMethodModel)
+    }
+
+    object PaymentMethodDiffCallback : DiffUtil.ItemCallback<PaymentMethodListItem>() {
+        override fun areItemsTheSame(oldItem: PaymentMethodListItem, newItem: PaymentMethodListItem): Boolean =
+            oldItem == newItem
+
+        override fun areContentsTheSame(oldItem: PaymentMethodListItem, newItem: PaymentMethodListItem): Boolean =
+            areItemsTheSame(oldItem, newItem)
     }
 }

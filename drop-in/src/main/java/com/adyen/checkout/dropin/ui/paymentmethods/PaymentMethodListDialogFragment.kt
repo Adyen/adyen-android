@@ -86,7 +86,7 @@ class PaymentMethodListDialogFragment :
             dropInViewModel.dropInConfiguration.environment
         )
 
-        paymentMethodAdapter = PaymentMethodAdapter(emptyList(), imageLoader, this, this) {
+        paymentMethodAdapter = PaymentMethodAdapter(imageLoader, this, this) {
             collapseNotUsedUnderlayButtons(binding.recyclerViewPaymentMethods, it)
         }
 
@@ -101,7 +101,7 @@ class PaymentMethodListDialogFragment :
             if (paymentMethods == null) {
                 throw CheckoutException("List of PaymentMethodModel is null.")
             }
-            paymentMethodAdapter.updatePaymentMethods(paymentMethods)
+            paymentMethodAdapter.submitList(paymentMethods)
         }
     }
 

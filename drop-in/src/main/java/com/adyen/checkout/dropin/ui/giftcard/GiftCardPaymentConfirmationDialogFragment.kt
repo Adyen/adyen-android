@@ -102,7 +102,9 @@ class GiftCardPaymentConfirmationDialogFragment : DropInBottomSheetDialogFragmen
         )
 
         binding.recyclerViewGiftCards.layoutManager = LinearLayoutManager(requireContext())
-        binding.recyclerViewGiftCards.adapter = PaymentMethodAdapter(paymentMethods, imageLoader)
+        binding.recyclerViewGiftCards.adapter = PaymentMethodAdapter(imageLoader).apply {
+            submitList(paymentMethods)
+        }
     }
 
     override fun onCancel(dialog: DialogInterface) {
