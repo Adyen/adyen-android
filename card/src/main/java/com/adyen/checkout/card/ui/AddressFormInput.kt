@@ -29,8 +29,6 @@ import com.adyen.checkout.components.ui.adapter.SimpleTextListAdapter
 import com.adyen.checkout.components.ui.view.AdyenTextInputEditText
 import com.google.android.material.textfield.TextInputLayout
 
-// TODO: I have replaced all usage of inputData with outputData, but we have to make sure this works the same.
-
 /**
  * AddressFormInput to be used in [CardComponent].
  */
@@ -112,7 +110,6 @@ class AddressFormInput @JvmOverloads constructor(
             setAdapter(countryAdapter)
             onItemClickListener = AdapterView.OnItemClickListener { _, _, position, _ ->
                 val selectedCountryCode = countryAdapter.getItem(position).code
-                // TODO: Check if works
                 if (delegate.outputData.addressState.country.value != selectedCountryCode) {
                     delegate.updateInputData {
                         address.reset()
