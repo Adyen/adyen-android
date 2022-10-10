@@ -10,9 +10,11 @@ package com.adyen.checkout.action
 
 import android.app.Activity
 import android.content.Intent
+import com.adyen.checkout.adyen3ds2.Adyen3DS2Configuration
 import com.adyen.checkout.adyen3ds2.Adyen3DS2Delegate
 import com.adyen.checkout.components.ActionComponentData
 import com.adyen.checkout.components.base.ActionDelegate
+import com.adyen.checkout.components.base.Configuration
 import com.adyen.checkout.components.base.DetailsEmittingDelegate
 import com.adyen.checkout.components.base.IntentHandlingDelegate
 import com.adyen.checkout.components.base.OutputData
@@ -25,9 +27,11 @@ import com.adyen.checkout.components.status.model.TimerData
 import com.adyen.checkout.components.ui.ViewProvider
 import com.adyen.checkout.components.ui.ViewProvidingDelegate
 import com.adyen.checkout.components.ui.view.ComponentViewType
+import com.adyen.checkout.core.api.Environment
 import com.adyen.checkout.core.exception.CheckoutException
 import com.adyen.checkout.qrcode.QRCodeOutputData
 import com.adyen.threeds2.customization.UiCustomization
+import java.util.Locale
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableSharedFlow
@@ -58,6 +62,8 @@ internal class TestActionDelegate :
     override val timerFlow: MutableStateFlow<TimerData> = MutableStateFlow(TimerData(0, 0))
 
     override val viewFlow: MutableStateFlow<ComponentViewType?> = MutableStateFlow(null)
+
+    override val configuration: Configuration = object : Configuration(Locale.US, Environment.TEST, TEST_CLIENT_KEY) {}
 
     var initializeCalled = false
     override fun initialize(coroutineScope: CoroutineScope) {
@@ -91,6 +97,9 @@ internal class TestActionDelegate :
 
 internal class Test3DS2Delegate : Adyen3DS2Delegate {
 
+    override val configuration: Adyen3DS2Configuration =
+        Adyen3DS2Configuration.Builder(Locale.US, Environment.TEST, TEST_CLIENT_KEY).build()
+
     override val detailsFlow: MutableSharedFlow<ActionComponentData> = MutableSingleEventSharedFlow()
 
     override val exceptionFlow: Flow<CheckoutException> = MutableSingleEventSharedFlow()
@@ -117,3 +126,6 @@ internal class Test3DS2Delegate : Adyen3DS2Delegate {
 }
 
 internal object TestComponentViewType : ComponentViewType
+
+private const val TEST_CLIENT_KEY = "test_qwertyuiopasdfghjklzxcvbnmqwerty"
+
