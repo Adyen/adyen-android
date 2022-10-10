@@ -43,10 +43,10 @@ internal class DefaultAwaitDelegate(
     private val paymentDataRepository: PaymentDataRepository,
 ) : AwaitDelegate {
 
-    private val _outputDataFlow = MutableStateFlow<AwaitOutputData?>(null)
-    override val outputDataFlow: Flow<AwaitOutputData?> = _outputDataFlow
+    private val _outputDataFlow = MutableStateFlow(createInitialOutputData())
+    override val outputDataFlow: Flow<AwaitOutputData> = _outputDataFlow
 
-    override val outputData: AwaitOutputData? get() = _outputDataFlow.value
+    override val outputData: AwaitOutputData get() = _outputDataFlow.value
 
     private val _detailsFlow: MutableSharedFlow<ActionComponentData> = MutableSingleEventSharedFlow()
     override val detailsFlow: Flow<ActionComponentData> = _detailsFlow
@@ -108,6 +108,11 @@ internal class DefaultAwaitDelegate(
         val outputData = AwaitOutputData(isValid, action.paymentMethodType)
         _outputDataFlow.tryEmit(outputData)
     }
+
+    private fun createInitialOutputData() = AwaitOutputData(
+        isValid = false,
+        paymentMethodType = null
+    )
 
     private fun onPollingSuccessful(statusResponse: StatusResponse) {
         // Not authorized status should still call /details so that merchant can get more info

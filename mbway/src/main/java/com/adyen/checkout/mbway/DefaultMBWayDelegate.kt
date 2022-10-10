@@ -41,6 +41,10 @@ internal class DefaultMBWayDelegate(
 
     override val viewFlow: Flow<ComponentViewType?> = MutableStateFlow(MbWayComponentViewType)
 
+    init {
+        createComponentState(outputData)
+    }
+
     override fun getPaymentMethodType(): String {
         return paymentMethod.type ?: PaymentMethodTypes.UNKNOWN
     }

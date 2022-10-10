@@ -27,13 +27,17 @@ internal class DefaultBacsDirectDebitDelegate(
 
     private val inputData: BacsDirectDebitInputData = BacsDirectDebitInputData()
 
-    override val outputData get() = _outputDataFlow.value
-
     private val _outputDataFlow = MutableStateFlow(createOutputData())
     override val outputDataFlow: Flow<BacsDirectDebitOutputData> = _outputDataFlow
 
+    override val outputData get() = _outputDataFlow.value
+
     private val _componentStateFlow = MutableStateFlow<BacsDirectDebitComponentState?>(null)
     override val componentStateFlow: Flow<BacsDirectDebitComponentState?> = _componentStateFlow
+
+    init {
+        createComponentState(outputData)
+    }
 
     @VisibleForTesting
     @Suppress("VariableNaming", "PropertyName")

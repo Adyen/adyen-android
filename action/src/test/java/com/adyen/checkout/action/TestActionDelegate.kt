@@ -41,9 +41,15 @@ internal class TestActionDelegate :
     StatusPollingDelegate,
     ViewProvidingDelegate {
 
-    override val outputDataFlow: MutableStateFlow<QRCodeOutputData?> = MutableStateFlow(null)
+    override val outputDataFlow: MutableStateFlow<QRCodeOutputData> = MutableStateFlow(
+        QRCodeOutputData(
+            isValid = false,
+            paymentMethodType = null,
+            qrCodeData = null
+        )
+    )
 
-    override val outputData: QRCodeOutputData? get() = outputDataFlow.value
+    override val outputData: QRCodeOutputData get() = outputDataFlow.value
 
     override val exceptionFlow: MutableSharedFlow<CheckoutException> = MutableSingleEventSharedFlow()
 

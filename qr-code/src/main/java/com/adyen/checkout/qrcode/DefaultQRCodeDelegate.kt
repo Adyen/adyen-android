@@ -46,10 +46,10 @@ internal class DefaultQRCodeDelegate(
     private val paymentDataRepository: PaymentDataRepository,
 ) : QRCodeDelegate {
 
-    private val _outputDataFlow = MutableStateFlow<QRCodeOutputData?>(null)
-    override val outputDataFlow: Flow<QRCodeOutputData?> = _outputDataFlow
+    private val _outputDataFlow = MutableStateFlow(createInitialOutputData())
+    override val outputDataFlow: Flow<QRCodeOutputData> = _outputDataFlow
 
-    override val outputData: QRCodeOutputData? get() = _outputDataFlow.value
+    override val outputData: QRCodeOutputData get() = _outputDataFlow.value
 
     private val _exceptionFlow: MutableSharedFlow<CheckoutException> = MutableSingleEventSharedFlow()
     override val exceptionFlow: Flow<CheckoutException> = _exceptionFlow
@@ -200,6 +200,12 @@ internal class DefaultQRCodeDelegate(
         statusCountDownTimer.cancel()
         _coroutineScope = null
     }
+
+    private fun createInitialOutputData() = QRCodeOutputData(
+        isValid = false,
+        paymentMethodType = null,
+        qrCodeData = null
+    )
 
     companion object {
         private val TAG = LogUtil.getTag()

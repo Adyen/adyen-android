@@ -21,7 +21,7 @@ interface MBWayDelegate :
 
     val configuration: MBWayConfiguration
 
-    val outputData: MBWayOutputData?
+    val outputData: MBWayOutputData
 
     val outputDataFlow: Flow<MBWayOutputData?>
 

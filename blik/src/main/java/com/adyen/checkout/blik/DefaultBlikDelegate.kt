@@ -28,16 +28,20 @@ internal class DefaultBlikDelegate(
 
     private val inputData: BlikInputData = BlikInputData()
 
-    private val _outputDataFlow = MutableStateFlow<BlikOutputData?>(null)
-    override val outputDataFlow: Flow<BlikOutputData?> = _outputDataFlow
+    private val _outputDataFlow = MutableStateFlow(createInitialOutputData())
+    override val outputDataFlow: Flow<BlikOutputData> = _outputDataFlow
 
-    override val outputData: BlikOutputData?
+    override val outputData: BlikOutputData
         get() = _outputDataFlow.value
 
     private val _componentStateFlow = MutableStateFlow<PaymentComponentState<BlikPaymentMethod>?>(null)
     override val componentStateFlow: Flow<PaymentComponentState<BlikPaymentMethod>?> = _componentStateFlow
 
     override val viewFlow: Flow<ComponentViewType?> = MutableStateFlow(BlikComponentViewType)
+
+    init {
+        createComponentState(outputData)
+    }
 
     override fun getPaymentMethodType(): String {
         return paymentMethod.type ?: PaymentMethodTypes.UNKNOWN
@@ -84,6 +88,8 @@ internal class DefaultBlikDelegate(
     private fun componentStateChanged(componentState: PaymentComponentState<BlikPaymentMethod>) {
         _componentStateFlow.tryEmit(componentState)
     }
+
+    private fun createInitialOutputData() = BlikOutputData(blikCode = "")
 
     override fun requiresInput(): Boolean = true
 
