@@ -7,12 +7,7 @@ import com.adyen.checkout.components.ui.ViewProvidingDelegate
 import kotlinx.coroutines.flow.Flow
 
 interface SepaDelegate :
-    PaymentMethodDelegate<
-        SepaConfiguration,
-        SepaInputData,
-        SepaOutputData,
-        PaymentComponentState<SepaPaymentMethod>
-        >,
+    PaymentMethodDelegate,
     ViewProvidingDelegate {
 
     val configuration: SepaConfiguration

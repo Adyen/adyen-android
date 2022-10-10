@@ -15,7 +15,7 @@ import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.flow.Flow
 
 interface CardDelegate :
-    PaymentMethodDelegate<CardConfiguration, CardInputData, CardOutputData, CardComponentState>,
+    PaymentMethodDelegate,
     ViewProvidingDelegate {
 
     val configuration: CardConfiguration

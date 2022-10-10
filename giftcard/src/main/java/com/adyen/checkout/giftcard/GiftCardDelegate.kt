@@ -15,11 +15,7 @@ import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.flow.Flow
 
 interface GiftCardDelegate :
-    PaymentMethodDelegate<
-        GiftCardConfiguration,
-        GiftCardInputData,
-        GiftCardOutputData,
-        GiftCardComponentState>,
+    PaymentMethodDelegate,
     ViewProvidingDelegate {
 
     val configuration: GiftCardConfiguration

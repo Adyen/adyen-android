@@ -17,12 +17,7 @@ import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.flow.Flow
 
 interface BcmcDelegate :
-    PaymentMethodDelegate<
-        BcmcConfiguration,
-        BcmcInputData,
-        BcmcOutputData,
-        PaymentComponentState<CardPaymentMethod>
-        >,
+    PaymentMethodDelegate,
     ViewProvidingDelegate {
 
     val configuration: BcmcConfiguration

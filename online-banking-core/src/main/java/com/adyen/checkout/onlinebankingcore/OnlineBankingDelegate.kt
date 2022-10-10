@@ -17,11 +17,7 @@ import com.adyen.checkout.core.exception.CheckoutException
 import kotlinx.coroutines.flow.Flow
 
 interface OnlineBankingDelegate<IssuerListPaymentMethodT : IssuerListPaymentMethod> :
-    PaymentMethodDelegate<
-        OnlineBankingConfiguration,
-        OnlineBankingInputData,
-        OnlineBankingOutputData,
-        PaymentComponentState<IssuerListPaymentMethodT>>,
+    PaymentMethodDelegate,
     ViewProvidingDelegate {
 
     val configuration: OnlineBankingConfiguration

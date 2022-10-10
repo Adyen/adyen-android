@@ -30,7 +30,7 @@ abstract class BasePaymentComponent<
     ComponentStateT : PaymentComponentState<out PaymentMethodDetails>
     >(
     savedStateHandle: SavedStateHandle,
-    private val paymentMethodDelegate: PaymentMethodDelegate<ConfigurationT, *, *, ComponentStateT>,
+    private val paymentMethodDelegate: PaymentMethodDelegate,
     configuration: ConfigurationT
 ) : PaymentComponentViewModel<ConfigurationT, ComponentStateT>(savedStateHandle, configuration),
     ViewableComponent<ConfigurationT, ComponentStateT> {

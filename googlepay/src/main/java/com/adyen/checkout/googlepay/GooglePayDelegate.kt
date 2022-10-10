@@ -12,12 +12,7 @@ import com.adyen.checkout.components.base.PaymentMethodDelegate
 import com.adyen.checkout.googlepay.model.GooglePayParams
 import kotlinx.coroutines.flow.Flow
 
-interface GooglePayDelegate :
-    PaymentMethodDelegate<
-        GooglePayConfiguration,
-        GooglePayInputData,
-        GooglePayOutputData,
-        GooglePayComponentState> {
+interface GooglePayDelegate : PaymentMethodDelegate {
 
     val componentStateFlow: Flow<GooglePayComponentState?>
 

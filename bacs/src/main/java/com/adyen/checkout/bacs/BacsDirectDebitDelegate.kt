@@ -13,12 +13,7 @@ import com.adyen.checkout.components.ui.ViewProvidingDelegate
 import kotlinx.coroutines.flow.Flow
 
 interface BacsDirectDebitDelegate :
-    PaymentMethodDelegate<
-        BacsDirectDebitConfiguration,
-        BacsDirectDebitInputData,
-        BacsDirectDebitOutputData,
-        BacsDirectDebitComponentState
-        >,
+    PaymentMethodDelegate,
     ViewProvidingDelegate {
 
     val configuration: BacsDirectDebitConfiguration
