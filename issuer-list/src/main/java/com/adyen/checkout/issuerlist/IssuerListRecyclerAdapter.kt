@@ -10,18 +10,19 @@ package com.adyen.checkout.issuerlist
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.core.view.isVisible
+import androidx.recyclerview.widget.DiffUtil
+import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
 import com.adyen.checkout.components.api.ImageLoader
-import com.adyen.checkout.components.ui.adapter.ClickableListRecyclerAdapter
 import com.adyen.checkout.components.ui.databinding.RecyclerListWithImageBinding
 import com.adyen.checkout.issuerlist.IssuerListRecyclerAdapter.IssuerViewHolder
 
 internal class IssuerListRecyclerAdapter(
-    private var issuerModelList: List<IssuerModel>,
     private val imageLoader: ImageLoader,
     private val paymentMethod: String,
-    private val hideIssuerLogo: Boolean
-) : ClickableListRecyclerAdapter<IssuerViewHolder>() {
+    private val hideIssuerLogo: Boolean,
+    private val onItemClicked: (IssuerModel) -> Unit,
+) : ListAdapter<IssuerModel, IssuerViewHolder>(IssuerDiffCallBack) {
 
     override fun onCreateViewHolder(viewGroup: ViewGroup, viewType: Int): IssuerViewHolder {
         val binding = RecyclerListWithImageBinding.inflate(LayoutInflater.from(viewGroup.context), viewGroup, false)
@@ -29,19 +30,10 @@ internal class IssuerListRecyclerAdapter(
     }
 
     override fun onBindViewHolder(viewHolder: IssuerViewHolder, position: Int) {
-        super.onBindViewHolder(viewHolder, position)
-        viewHolder.bind(paymentMethod, issuerModelList[position], hideIssuerLogo, imageLoader)
+        viewHolder.bind(paymentMethod, currentList[position], hideIssuerLogo, imageLoader, onItemClicked)
     }
 
-    override fun getItemCount(): Int {
-        return issuerModelList.size
-    }
-
-    fun getIssuerAt(position: Int): IssuerModel {
-        return issuerModelList[position]
-    }
-
-    internal inner class IssuerViewHolder(
+    class IssuerViewHolder(
         private val binding: RecyclerListWithImageBinding,
         hideIssuerLogo: Boolean
     ) : RecyclerView.ViewHolder(binding.root) {
@@ -50,7 +42,15 @@ internal class IssuerListRecyclerAdapter(
             binding.imageViewLogo.isVisible = !hideIssuerLogo
         }
 
-        fun bind(paymentMethod: String, issuerModel: IssuerModel, hideIssuerLogo: Boolean, imageLoader: ImageLoader) {
+        fun bind(
+            paymentMethod: String,
+            issuerModel: IssuerModel,
+            hideIssuerLogo: Boolean,
+            imageLoader: ImageLoader,
+            onItemClicked: (IssuerModel) -> Unit,
+        ) {
+            binding.root.setOnClickListener { onItemClicked(issuerModel) }
+
             binding.textViewTitle.text = issuerModel.name
             if (!hideIssuerLogo) {
                 imageLoader.load(
@@ -62,5 +62,13 @@ internal class IssuerListRecyclerAdapter(
                 )
             }
         }
+    }
+
+    object IssuerDiffCallBack : DiffUtil.ItemCallback<IssuerModel>() {
+        override fun areItemsTheSame(oldItem: IssuerModel, newItem: IssuerModel): Boolean =
+            oldItem.id == newItem.id
+
+        override fun areContentsTheSame(oldItem: IssuerModel, newItem: IssuerModel): Boolean =
+            oldItem == newItem
     }
 }
