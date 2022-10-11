@@ -72,6 +72,8 @@ dependencies {
     implementation libraries.androidx.constraintlayout
     implementation libraries.androidx.preference
 
+    debugImplementation libraries.leakCanary
+
     implementation libraries.material
 
     implementation libraries.retrofit
