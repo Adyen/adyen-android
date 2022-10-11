@@ -37,8 +37,6 @@ internal class IssuerListRecyclerView @JvmOverloads constructor(
     private val binding: IssuerListRecyclerViewBinding =
         IssuerListRecyclerViewBinding.inflate(LayoutInflater.from(context), this)
 
-    private lateinit var issuersAdapter: IssuerListRecyclerAdapter
-
     private lateinit var localizedContext: Context
 
     private lateinit var issuerListDelegate: IssuerListDelegate<*>
@@ -52,7 +50,7 @@ internal class IssuerListRecyclerView @JvmOverloads constructor(
 
         observeDelegate(delegate, coroutineScope)
 
-        issuersAdapter = IssuerListRecyclerAdapter(
+        binding.recyclerIssuers.adapter = IssuerListRecyclerAdapter(
             imageLoader = getInstance(context, delegate.configuration.environment),
             paymentMethod = delegate.getPaymentMethodType(),
             hideIssuerLogo = delegate.configuration.hideIssuerLogos,
@@ -60,7 +58,6 @@ internal class IssuerListRecyclerView @JvmOverloads constructor(
         ).apply {
             submitList(delegate.getIssuers())
         }
-        binding.recyclerIssuers.adapter = issuersAdapter
     }
 
     private fun initLocalizedStrings(localizedContext: Context) {

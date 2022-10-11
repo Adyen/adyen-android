@@ -14,7 +14,6 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import androidx.recyclerview.widget.LinearLayoutManager
 import com.adyen.checkout.components.api.ImageLoader
 import com.adyen.checkout.components.util.CurrencyUtils
 import com.adyen.checkout.core.log.LogUtil
@@ -101,7 +100,6 @@ class GiftCardPaymentConfirmationDialogFragment : DropInBottomSheetDialogFragmen
             dropInViewModel.dropInConfiguration.environment
         )
 
-        binding.recyclerViewGiftCards.layoutManager = LinearLayoutManager(requireContext())
         binding.recyclerViewGiftCards.adapter = PaymentMethodAdapter(imageLoader).apply {
             submitList(paymentMethods)
         }
