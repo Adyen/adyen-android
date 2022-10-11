@@ -46,7 +46,7 @@ internal class DefaultQRCodeDelegate(
     private val paymentDataRepository: PaymentDataRepository,
 ) : QRCodeDelegate {
 
-    private val _outputDataFlow = MutableStateFlow(createInitialOutputData())
+    private val _outputDataFlow = MutableStateFlow(createOutputData())
     override val outputDataFlow: Flow<QRCodeOutputData> = _outputDataFlow
 
     override val outputData: QRCodeOutputData get() = _outputDataFlow.value
@@ -201,7 +201,7 @@ internal class DefaultQRCodeDelegate(
         _coroutineScope = null
     }
 
-    private fun createInitialOutputData() = QRCodeOutputData(
+    private fun createOutputData() = QRCodeOutputData(
         isValid = false,
         paymentMethodType = null,
         qrCodeData = null

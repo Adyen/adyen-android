@@ -43,7 +43,7 @@ internal class DefaultAwaitDelegate(
     private val paymentDataRepository: PaymentDataRepository,
 ) : AwaitDelegate {
 
-    private val _outputDataFlow = MutableStateFlow(createInitialOutputData())
+    private val _outputDataFlow = MutableStateFlow(createOutputData())
     override val outputDataFlow: Flow<AwaitOutputData> = _outputDataFlow
 
     override val outputData: AwaitOutputData get() = _outputDataFlow.value
@@ -109,7 +109,7 @@ internal class DefaultAwaitDelegate(
         _outputDataFlow.tryEmit(outputData)
     }
 
-    private fun createInitialOutputData() = AwaitOutputData(
+    private fun createOutputData() = AwaitOutputData(
         isValid = false,
         paymentMethodType = null
     )

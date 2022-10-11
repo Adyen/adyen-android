@@ -28,7 +28,7 @@ internal class DefaultBlikDelegate(
 
     private val inputData: BlikInputData = BlikInputData()
 
-    private val _outputDataFlow = MutableStateFlow(createInitialOutputData())
+    private val _outputDataFlow = MutableStateFlow(createOutputData())
     override val outputDataFlow: Flow<BlikOutputData> = _outputDataFlow
 
     override val outputData: BlikOutputData
@@ -88,8 +88,6 @@ internal class DefaultBlikDelegate(
     private fun componentStateChanged(componentState: PaymentComponentState<BlikPaymentMethod>) {
         _componentStateFlow.tryEmit(componentState)
     }
-
-    private fun createInitialOutputData() = BlikOutputData(blikCode = "")
 
     override fun requiresInput(): Boolean = true
 

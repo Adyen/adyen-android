@@ -23,7 +23,7 @@ internal class DefaultVoucherDelegate(
     override val configuration: VoucherConfiguration
 ) : VoucherDelegate {
 
-    private val _outputDataFlow = MutableStateFlow(createInitialOutputData())
+    private val _outputDataFlow = MutableStateFlow(createOutputData())
     override val outputDataFlow: Flow<VoucherOutputData> = _outputDataFlow
 
     private val _exceptionFlow: MutableSharedFlow<CheckoutException> = MutableSingleEventSharedFlow()
@@ -45,7 +45,7 @@ internal class DefaultVoucherDelegate(
         )
     }
 
-    private fun createInitialOutputData() = VoucherOutputData(
+    private fun createOutputData() = VoucherOutputData(
         isValid = false,
         paymentMethodType = null,
         downloadUrl = null
