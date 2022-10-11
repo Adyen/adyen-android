@@ -37,8 +37,6 @@ internal class IssuerListRecyclerView @JvmOverloads constructor(
     private val binding: IssuerListRecyclerViewBinding =
         IssuerListRecyclerViewBinding.inflate(LayoutInflater.from(context), this)
 
-    private lateinit var issuersAdapter: IssuerListRecyclerAdapter
-
     private lateinit var localizedContext: Context
 
     private lateinit var issuerListDelegate: IssuerListDelegate<*>
@@ -52,15 +50,14 @@ internal class IssuerListRecyclerView @JvmOverloads constructor(
 
         observeDelegate(delegate, coroutineScope)
 
-        issuersAdapter = IssuerListRecyclerAdapter(
-            issuerModelList = delegate.getIssuers(),
+        binding.recyclerIssuers.adapter = IssuerListRecyclerAdapter(
             imageLoader = getInstance(context, delegate.configuration.environment),
             paymentMethod = delegate.getPaymentMethodType(),
             hideIssuerLogo = delegate.configuration.hideIssuerLogos,
+            onItemClicked = ::onItemClicked,
         ).apply {
-            setItemCLickListener(::onItemClicked)
+            submitList(delegate.getIssuers())
         }
-        binding.recyclerIssuers.adapter = issuersAdapter
     }
 
     private fun initLocalizedStrings(localizedContext: Context) {
@@ -88,9 +85,9 @@ internal class IssuerListRecyclerView @JvmOverloads constructor(
         binding.recyclerIssuers.isEnabled = enabled
     }
 
-    private fun onItemClicked(position: Int) {
-        Logger.d(TAG, "onItemClicked - $position")
-        issuerListDelegate.inputData.selectedIssuer = issuersAdapter.getIssuerAt(position)
+    private fun onItemClicked(issuerModel: IssuerModel) {
+        Logger.d(TAG, "onItemClicked - ${issuerModel.name}")
+        issuerListDelegate.inputData.selectedIssuer = issuerModel
         issuerListDelegate.onInputDataChanged(issuerListDelegate.inputData)
     }
 

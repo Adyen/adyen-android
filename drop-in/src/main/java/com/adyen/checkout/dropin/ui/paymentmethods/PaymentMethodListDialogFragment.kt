@@ -47,7 +47,7 @@ class PaymentMethodListDialogFragment :
     private val binding: FragmentPaymentMethodsListBinding get() = requireNotNull(_binding)
 
     private lateinit var paymentMethodsListViewModel: PaymentMethodsListViewModel
-    private lateinit var paymentMethodAdapter: PaymentMethodAdapter
+    private var paymentMethodAdapter: PaymentMethodAdapter? = null
 
     override fun onAttach(context: Context) {
         super.onAttach(context)
@@ -86,7 +86,7 @@ class PaymentMethodListDialogFragment :
             dropInViewModel.dropInConfiguration.environment
         )
 
-        paymentMethodAdapter = PaymentMethodAdapter(emptyList(), imageLoader, this, this) {
+        paymentMethodAdapter = PaymentMethodAdapter(imageLoader, this, this) {
             collapseNotUsedUnderlayButtons(binding.recyclerViewPaymentMethods, it)
         }
 
@@ -101,12 +101,13 @@ class PaymentMethodListDialogFragment :
             if (paymentMethods == null) {
                 throw CheckoutException("List of PaymentMethodModel is null.")
             }
-            paymentMethodAdapter.updatePaymentMethods(paymentMethods)
+            paymentMethodAdapter?.submitList(paymentMethods)
         }
     }
 
     override fun onDestroyView() {
         super.onDestroyView()
+        paymentMethodAdapter = null
         binding.recyclerViewPaymentMethods.adapter = null
         _binding = null
     }

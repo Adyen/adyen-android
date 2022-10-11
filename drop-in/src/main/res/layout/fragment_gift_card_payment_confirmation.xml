@@ -6,11 +6,11 @@
   ~
   ~ Created by josephj on 1/10/2021.
   -->
-<LinearLayout
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:paddingBottom="@dimen/standard_half_margin"
     android:orientation="vertical"
     tools:context=".ui.stored.PreselectedStoredPaymentMethodFragment">
@@ -29,6 +29,7 @@
         android:clipToPadding="false"
         android:layout_marginTop="@dimen/standard_half_margin"
         android:layout_marginBottom="@dimen/standard_half_margin"
+        app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
         tools:itemCount="2"
         tools:listitem="@layout/payment_methods_list_item"/>
 
