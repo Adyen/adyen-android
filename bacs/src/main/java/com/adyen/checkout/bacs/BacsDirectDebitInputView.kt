@@ -69,7 +69,7 @@ internal class BacsDirectDebitInputView @JvmOverloads constructor(
 
         observeDelegate(delegate, coroutineScope)
 
-        bacsDelegate.outputData?.let {
+        bacsDelegate.outputData.let {
             updateInputData(it)
 
             binding.editTextHolderName.setText(it.holderNameState.value)
@@ -91,7 +91,7 @@ internal class BacsDirectDebitInputView @JvmOverloads constructor(
         get() = true
 
     override fun highlightValidationErrors() {
-        bacsDelegate.outputData?.let {
+        bacsDelegate.outputData.let {
             var isErrorFocused = false
             val holderNameValidation = it.holderNameState.validation
             if (holderNameValidation is Validation.Invalid) {
@@ -133,6 +133,8 @@ internal class BacsDirectDebitInputView @JvmOverloads constructor(
             }
             if (!it.isAccountConsentChecked) {
                 if (!isErrorFocused) {
+                    @Suppress("UNUSED_VALUE")
+                    isErrorFocused = true
                     binding.switchConsentAccount.requestFocus()
                 }
                 binding.textViewErrorConsentAccount.isVisible = true
@@ -178,22 +180,17 @@ internal class BacsDirectDebitInputView @JvmOverloads constructor(
         onSortCodeValidated(bacsDirectDebitOutputData.sortCodeState)
     }
 
-    private fun notifyInputDataChanged() {
-        bacsDelegate.onInputDataChanged(bacsDelegate.inputData)
-    }
-
     private fun initHolderNameInput() {
         val holderNameEditText = binding.editTextHolderName as? AdyenTextInputEditText
         holderNameEditText?.setOnChangeListener {
-            bacsDelegate.inputData.holderName = it.toString()
-            notifyInputDataChanged()
+            bacsDelegate.updateInputData { holderName = it.toString() }
             binding.textInputLayoutHolderName.hideError()
         }
         holderNameEditText?.onFocusChangeListener = OnFocusChangeListener { _, hasFocus ->
-            val holderNameValidation = bacsDelegate.outputData?.holderNameState?.validation
+            val holderNameValidation = bacsDelegate.outputData.holderNameState.validation
             if (hasFocus) {
                 binding.textInputLayoutHolderName.hideError()
-            } else if (holderNameValidation != null && holderNameValidation is Validation.Invalid) {
+            } else if (holderNameValidation is Validation.Invalid) {
                 binding.textInputLayoutHolderName.showError(localizedContext.getString(holderNameValidation.reason))
             }
         }
@@ -202,15 +199,14 @@ internal class BacsDirectDebitInputView @JvmOverloads constructor(
     private fun initBankAccountNumberInput() {
         val bankAccountNumberEditText = binding.editTextBankAccountNumber as? AdyenTextInputEditText
         bankAccountNumberEditText?.setOnChangeListener {
-            bacsDelegate.inputData.bankAccountNumber = it.toString()
-            notifyInputDataChanged()
+            bacsDelegate.updateInputData { bankAccountNumber = it.toString() }
             binding.textInputLayoutBankAccountNumber.hideError()
         }
         bankAccountNumberEditText?.onFocusChangeListener = OnFocusChangeListener { _, hasFocus ->
-            val bankAccountNumberValidation = bacsDelegate.outputData?.bankAccountNumberState?.validation
+            val bankAccountNumberValidation = bacsDelegate.outputData.bankAccountNumberState.validation
             if (hasFocus) {
                 binding.textInputLayoutBankAccountNumber.hideError()
-            } else if (bankAccountNumberValidation != null && bankAccountNumberValidation is Validation.Invalid) {
+            } else if (bankAccountNumberValidation is Validation.Invalid) {
                 binding.textInputLayoutBankAccountNumber.showError(
                     localizedContext.getString(bankAccountNumberValidation.reason)
                 )
@@ -221,15 +217,14 @@ internal class BacsDirectDebitInputView @JvmOverloads constructor(
     private fun initSortCodeInput() {
         val sortCodeEditText = binding.editTextSortCode as? AdyenTextInputEditText
         sortCodeEditText?.setOnChangeListener {
-            bacsDelegate.inputData.sortCode = it.toString()
-            notifyInputDataChanged()
+            bacsDelegate.updateInputData { sortCode = it.toString() }
             binding.textInputLayoutSortCode.hideError()
         }
         sortCodeEditText?.onFocusChangeListener = OnFocusChangeListener { _, hasFocus ->
-            val sortCodeValidation = bacsDelegate.outputData?.sortCodeState?.validation
+            val sortCodeValidation = bacsDelegate.outputData.sortCodeState.validation
             if (hasFocus) {
                 binding.textInputLayoutSortCode.hideError()
-            } else if (sortCodeValidation != null && sortCodeValidation is Validation.Invalid) {
+            } else if (sortCodeValidation is Validation.Invalid) {
                 binding.textInputLayoutSortCode.showError(localizedContext.getString(sortCodeValidation.reason))
             }
         }
@@ -238,15 +233,14 @@ internal class BacsDirectDebitInputView @JvmOverloads constructor(
     private fun initShopperEmailInput() {
         val shopperEmailEditText = binding.editTextShopperEmail as? AdyenTextInputEditText
         shopperEmailEditText?.setOnChangeListener {
-            bacsDelegate.inputData.shopperEmail = it.toString()
-            notifyInputDataChanged()
+            bacsDelegate.updateInputData { shopperEmail = it.toString() }
             binding.textInputLayoutShopperEmail.hideError()
         }
         shopperEmailEditText?.onFocusChangeListener = OnFocusChangeListener { _, hasFocus ->
-            val shopperEmailValidation = bacsDelegate.outputData?.shopperEmailState?.validation
+            val shopperEmailValidation = bacsDelegate.outputData.shopperEmailState.validation
             if (hasFocus) {
                 binding.textInputLayoutShopperEmail.hideError()
-            } else if (shopperEmailValidation != null && shopperEmailValidation is Validation.Invalid) {
+            } else if (shopperEmailValidation is Validation.Invalid) {
                 binding.textInputLayoutShopperEmail.showError(localizedContext.getString(shopperEmailValidation.reason))
             }
         }
@@ -254,15 +248,13 @@ internal class BacsDirectDebitInputView @JvmOverloads constructor(
 
     private fun initConsentSwitches() {
         binding.switchConsentAmount.setOnCheckedChangeListener { _, isChecked ->
-            bacsDelegate.inputData.isAmountConsentChecked = isChecked
+            bacsDelegate.updateInputData { isAmountConsentChecked = isChecked }
             binding.textViewErrorConsentAmount.isVisible = !isChecked
-            notifyInputDataChanged()
         }
 
         binding.switchConsentAccount.setOnCheckedChangeListener { _, isChecked ->
-            bacsDelegate.inputData.isAccountConsentChecked = isChecked
+            bacsDelegate.updateInputData { isAccountConsentChecked = isChecked }
             binding.textViewErrorConsentAccount.isVisible = !isChecked
-            notifyInputDataChanged()
         }
     }
 
@@ -281,7 +273,7 @@ internal class BacsDirectDebitInputView @JvmOverloads constructor(
     }
 
     private fun updateInputData(outputData: BacsDirectDebitOutputData) {
-        bacsDelegate.inputData.apply {
+        bacsDelegate.updateInputData {
             holderName = outputData.holderNameState.value
             bankAccountNumber = outputData.bankAccountNumberState.value
             sortCode = outputData.sortCodeState.value

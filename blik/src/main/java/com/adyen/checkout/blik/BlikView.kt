@@ -87,8 +87,9 @@ internal class BlikView @JvmOverloads constructor(
 
     private fun initBlikCodeInput() {
         binding.editTextBlikCode.setOnChangeListener {
-            blikDelegate.inputData.blikCode = binding.editTextBlikCode.rawValue
-            notifyInputDataChanged()
+            blikDelegate.updateInputData {
+                blikCode = binding.editTextBlikCode.rawValue
+            }
             binding.textInputLayoutBlikCode.hideError()
         }
 
@@ -115,10 +116,6 @@ internal class BlikView @JvmOverloads constructor(
             val errorReasonResId = (blikCodeValidation as Validation.Invalid).reason
             binding.textInputLayoutBlikCode.showError(localizedContext.getString(errorReasonResId))
         }
-    }
-
-    private fun notifyInputDataChanged() {
-        blikDelegate.onInputDataChanged(blikDelegate.inputData)
     }
 
     override fun getView(): View = this

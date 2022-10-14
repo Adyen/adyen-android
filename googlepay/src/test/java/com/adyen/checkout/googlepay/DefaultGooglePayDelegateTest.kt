@@ -19,6 +19,7 @@ import kotlinx.coroutines.test.runTest
 import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.Assertions.assertThrows
 import org.junit.jupiter.api.Assertions.assertTrue
+import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.DisplayName
 import org.junit.jupiter.api.Nested
 import org.junit.jupiter.api.Test
@@ -30,17 +31,22 @@ import java.util.Locale
 @ExtendWith(MockitoExtension::class)
 internal class DefaultGooglePayDelegateTest {
 
-    private val delegate = DefaultGooglePayDelegate(
-        paymentMethod = PaymentMethod(),
-        configuration = GooglePayConfiguration.Builder(
-            Locale.US,
-            Environment.TEST,
-            "test_qwertyuiopasdfghjklzxcvbnmqwerty"
-        ).build(),
-    )
+    private lateinit var delegate: DefaultGooglePayDelegate
 
     private val paymentData: PaymentData
         get() = PaymentData.fromJson("{\"paymentMethodData\": {\"tokenizationData\": {\"token\": \"test_token\"}}}")
+
+    @BeforeEach
+    fun beforeEach() {
+        delegate = DefaultGooglePayDelegate(
+            paymentMethod = PaymentMethod(),
+            configuration = GooglePayConfiguration.Builder(
+                Locale.US,
+                Environment.TEST,
+                "test_qwertyuiopasdfghjklzxcvbnmqwerty"
+            ).build(),
+        )
+    }
 
     @Nested
     @DisplayName("when input data changes and")
@@ -49,22 +55,7 @@ internal class DefaultGooglePayDelegateTest {
         @Test
         fun `payment data in null, then an exception should be thrown`() {
             assertThrows(CheckoutException::class.java) {
-                delegate.onInputDataChanged(GooglePayInputData(null))
-            }
-        }
-
-        @Test
-        fun `everything is good, then output data should be propagated`() = runTest {
-            delegate.outputDataFlow.test {
-                skipItems(1)
-
-                val paymentData = paymentData
-
-                delegate.onInputDataChanged(GooglePayInputData(paymentData))
-
-                assertEquals(paymentData, awaitItem()?.paymentData)
-
-                cancelAndIgnoreRemainingEvents()
+                delegate.updateInputData { paymentData = null }
             }
         }
     }

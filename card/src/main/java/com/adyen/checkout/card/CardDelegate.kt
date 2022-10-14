@@ -15,16 +15,14 @@ import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.flow.Flow
 
 interface CardDelegate :
-    PaymentMethodDelegate<CardConfiguration, CardInputData, CardOutputData, CardComponentState>,
+    PaymentMethodDelegate,
     ViewProvidingDelegate {
 
     val configuration: CardConfiguration
 
-    val inputData: CardInputData
+    val outputData: CardOutputData
 
-    val outputData: CardOutputData?
-
-    val outputDataFlow: Flow<CardOutputData?>
+    val outputDataFlow: Flow<CardOutputData>
 
     val componentStateFlow: Flow<CardComponentState?>
 
@@ -33,6 +31,8 @@ interface CardDelegate :
     fun initialize(coroutineScope: CoroutineScope)
 
     fun requiresInput(): Boolean
+
+    fun updateInputData(update: CardInputData.() -> Unit)
 
     fun onCleared()
 }

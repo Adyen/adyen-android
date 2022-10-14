@@ -80,8 +80,7 @@ class GooglePayComponent(
                     return
                 }
                 val paymentData = PaymentData.getFromIntent(data)
-                googlePayDelegate.inputData.paymentData = paymentData
-                googlePayDelegate.onInputDataChanged(googlePayDelegate.inputData)
+                googlePayDelegate.updateInputData { this.paymentData = paymentData }
             }
             Activity.RESULT_CANCELED -> notifyException(ComponentException("Payment canceled."))
             AutoResolveHelper.RESULT_ERROR -> {

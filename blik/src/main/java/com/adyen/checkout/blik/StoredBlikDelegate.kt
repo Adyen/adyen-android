@@ -25,12 +25,10 @@ internal class StoredBlikDelegate(
     val storedPaymentMethod: StoredPaymentMethod
 ) : BlikDelegate {
 
-    override val inputData: BlikInputData = BlikInputData()
+    private val _outputDataFlow = MutableStateFlow(createOutputData())
+    override val outputDataFlow: Flow<BlikOutputData> = _outputDataFlow
 
-    private val _outputDataFlow = MutableStateFlow<BlikOutputData?>(null)
-    override val outputDataFlow: Flow<BlikOutputData?> = _outputDataFlow
-
-    override val outputData: BlikOutputData?
+    override val outputData: BlikOutputData
         get() = _outputDataFlow.value
 
     private val _componentStateFlow = MutableStateFlow<PaymentComponentState<BlikPaymentMethod>?>(null)
@@ -45,18 +43,16 @@ internal class StoredBlikDelegate(
     init {
         // this stored component does not require any input currently, we just generate a valid ComponentState right when it loads
         // BlikOutputData is not needed by createComponentState
-        createComponentState(BlikOutputData(""))
+        createComponentState(outputData)
     }
 
-    override fun onInputDataChanged(inputData: BlikInputData) {
-        Logger.e(TAG, "onInputDataChanged should not be called in StoredBlikDelegate")
+    override fun updateInputData(update: BlikInputData.() -> Unit) {
+        Logger.e(TAG, "updateInputData should not be called in StoredBlikDelegate")
     }
 
-    private fun outputDataChanged(outputData: BlikOutputData) {
-        _outputDataFlow.tryEmit(outputData)
-    }
+    private fun createOutputData() = BlikOutputData(blikCode = "")
 
-    override fun createComponentState(outputData: BlikOutputData) {
+    private fun createComponentState(outputData: BlikOutputData) {
         val paymentMethod = BlikPaymentMethod(
             type = BlikPaymentMethod.PAYMENT_METHOD_TYPE,
             storedPaymentMethodId = storedPaymentMethod.id

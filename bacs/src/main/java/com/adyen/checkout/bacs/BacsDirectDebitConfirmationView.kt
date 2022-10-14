@@ -51,11 +51,11 @@ internal class BacsDirectDebitConfirmationView @JvmOverloads constructor(
         this.localizedContext = localizedContext
         initLocalizedStrings(localizedContext)
 
-        bacsDelegate.outputData?.let {
-            binding.editTextHolderName.setText(it.holderNameState.value)
-            binding.editTextBankAccountNumber.setText(it.bankAccountNumberState.value)
-            binding.editTextSortCode.setText(it.sortCodeState.value)
-            binding.editTextShopperEmail.setText(it.shopperEmailState.value)
+        with(bacsDelegate.outputData) {
+            binding.editTextHolderName.setText(holderNameState.value)
+            binding.editTextBankAccountNumber.setText(bankAccountNumberState.value)
+            binding.editTextSortCode.setText(sortCodeState.value)
+            binding.editTextShopperEmail.setText(shopperEmailState.value)
         }
     }
 

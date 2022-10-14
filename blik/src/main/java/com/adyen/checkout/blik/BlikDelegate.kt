@@ -15,23 +15,18 @@ import com.adyen.checkout.components.ui.ViewProvidingDelegate
 import kotlinx.coroutines.flow.Flow
 
 interface BlikDelegate :
-    PaymentMethodDelegate<
-        BlikConfiguration,
-        BlikInputData,
-        BlikOutputData,
-        PaymentComponentState<BlikPaymentMethod>
-        >,
+    PaymentMethodDelegate,
     ViewProvidingDelegate {
 
     val configuration: BlikConfiguration
 
-    val inputData: BlikInputData
+    val outputData: BlikOutputData
 
-    val outputData: BlikOutputData?
-
-    val outputDataFlow: Flow<BlikOutputData?>
+    val outputDataFlow: Flow<BlikOutputData>
 
     val componentStateFlow: Flow<PaymentComponentState<BlikPaymentMethod>?>
 
     fun requiresInput(): Boolean
+
+    fun updateInputData(update: BlikInputData.() -> Unit)
 }

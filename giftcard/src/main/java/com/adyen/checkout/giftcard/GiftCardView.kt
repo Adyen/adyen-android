@@ -79,38 +79,36 @@ internal class GiftCardView @JvmOverloads constructor(
             .launchIn(coroutineScope)
     }
 
-    private fun outputDataChanged(giftCardOutputData: GiftCardOutputData?) {
+    private fun outputDataChanged(@Suppress("UNUSED_PARAMETER") giftCardOutputData: GiftCardOutputData?) {
         Logger.v(TAG, "GiftCardOutputData changed")
         // no ops
     }
 
     private fun initInputs() {
         binding.editTextGiftcardNumber.setOnChangeListener {
-            giftCardDelegate.inputData.cardNumber = binding.editTextGiftcardNumber.rawValue
-            notifyInputDataChanged()
+            giftCardDelegate.updateInputData { cardNumber = binding.editTextGiftcardNumber.rawValue }
             binding.textInputLayoutGiftcardNumber.hideError()
         }
 
         binding.editTextGiftcardNumber.onFocusChangeListener = OnFocusChangeListener { _: View?, hasFocus: Boolean ->
-            val cardNumberValidation = giftCardDelegate.outputData?.giftcardNumberFieldState?.validation
+            val cardNumberValidation = giftCardDelegate.outputData.giftcardNumberFieldState.validation
             if (hasFocus) {
                 binding.textInputLayoutGiftcardNumber.hideError()
-            } else if (cardNumberValidation != null && cardNumberValidation is Validation.Invalid) {
+            } else if (cardNumberValidation is Validation.Invalid) {
                 binding.textInputLayoutGiftcardNumber.showError(localizedContext.getString(cardNumberValidation.reason))
             }
         }
 
         binding.editTextGiftcardPin.setOnChangeListener { editable: Editable ->
-            giftCardDelegate.inputData.pin = editable.toString()
-            notifyInputDataChanged()
+            giftCardDelegate.updateInputData { pin = editable.toString() }
             binding.textInputLayoutGiftcardPin.hideError()
         }
 
         binding.editTextGiftcardPin.onFocusChangeListener = OnFocusChangeListener { _, hasFocus ->
-            val pinValidation = giftCardDelegate.outputData?.giftcardPinFieldState?.validation
+            val pinValidation = giftCardDelegate.outputData.giftcardPinFieldState.validation
             if (hasFocus) {
                 binding.textInputLayoutGiftcardPin.hideError()
-            } else if (pinValidation != null && pinValidation is Validation.Invalid) {
+            } else if (pinValidation is Validation.Invalid) {
                 binding.textInputLayoutGiftcardPin.showError(localizedContext.getString(pinValidation.reason))
             }
         }
@@ -120,7 +118,7 @@ internal class GiftCardView @JvmOverloads constructor(
 
     override fun highlightValidationErrors() {
         Logger.d(TAG, "highlightValidationErrors")
-        val outputData = giftCardDelegate.outputData ?: return
+        val outputData = giftCardDelegate.outputData
         var isErrorFocused = false
         val cardNumberValidation = outputData.giftcardNumberFieldState.validation
         if (cardNumberValidation is Validation.Invalid) {
@@ -135,10 +133,6 @@ internal class GiftCardView @JvmOverloads constructor(
             }
             binding.textInputLayoutGiftcardPin.showError(localizedContext.getString(pinValidation.reason))
         }
-    }
-
-    private fun notifyInputDataChanged() {
-        giftCardDelegate.onInputDataChanged(giftCardDelegate.inputData)
     }
 
     override fun getView(): View = this

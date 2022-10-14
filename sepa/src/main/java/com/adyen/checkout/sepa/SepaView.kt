@@ -61,21 +61,19 @@ internal class SepaView @JvmOverloads constructor(
         observeDelegate(delegate, coroutineScope)
 
         binding.editTextHolderName.setOnChangeListener {
-            sepaDelegate.inputData.name = binding.editTextHolderName.rawValue
-            notifyInputDataChanged()
+            sepaDelegate.updateInputData { name = binding.editTextHolderName.rawValue }
             binding.textInputLayoutHolderName.hideError()
         }
         binding.editTextIbanNumber.setOnChangeListener {
-            sepaDelegate.inputData.iban = binding.editTextIbanNumber.rawValue
-            notifyInputDataChanged()
+            sepaDelegate.updateInputData { iban = binding.editTextIbanNumber.rawValue }
             binding.textInputLayoutIbanNumber.hideError()
         }
         binding.editTextIbanNumber.onFocusChangeListener = OnFocusChangeListener { _: View?, hasFocus: Boolean ->
             val outputData = sepaDelegate.outputData
-            val ibanNumberValidation = outputData?.ibanNumberField?.validation
+            val ibanNumberValidation = outputData.ibanNumberField.validation
             if (hasFocus) {
                 binding.textInputLayoutIbanNumber.hideError()
-            } else if (ibanNumberValidation != null && !ibanNumberValidation.isValid()) {
+            } else if (!ibanNumberValidation.isValid()) {
                 val errorReasonResId = (ibanNumberValidation as Validation.Invalid).reason
                 binding.textInputLayoutIbanNumber.showError(localizedContext.getString(errorReasonResId))
             }
@@ -108,7 +106,7 @@ internal class SepaView @JvmOverloads constructor(
 
     override fun highlightValidationErrors() {
         Logger.d(TAG, "highlightValidationErrors")
-        val outputData: SepaOutputData = sepaDelegate.outputData ?: return
+        val outputData: SepaOutputData = sepaDelegate.outputData
         var errorFocused = false
         val ownerNameValidation = outputData.ownerNameField.validation
         if (!ownerNameValidation.isValid()) {
@@ -125,10 +123,6 @@ internal class SepaView @JvmOverloads constructor(
             val errorReasonResId = (ibanNumberValidation as Validation.Invalid).reason
             binding.textInputLayoutIbanNumber.showError(localizedContext.getString(errorReasonResId))
         }
-    }
-
-    private fun notifyInputDataChanged() {
-        sepaDelegate.onInputDataChanged(sepaDelegate.inputData)
     }
 
     override fun getView(): View = this

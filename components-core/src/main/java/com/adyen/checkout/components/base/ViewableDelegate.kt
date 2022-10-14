@@ -12,7 +12,7 @@ import kotlinx.coroutines.flow.Flow
 
 interface ViewableDelegate<OutputDataT : OutputData> {
 
-    val outputDataFlow: Flow<OutputDataT?>
+    val outputDataFlow: Flow<OutputDataT>
 
-    val outputData: OutputDataT?
+    val outputData: OutputDataT
 }

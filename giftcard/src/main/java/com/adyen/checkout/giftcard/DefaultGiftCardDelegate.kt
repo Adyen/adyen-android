@@ -8,6 +8,7 @@
 
 package com.adyen.checkout.giftcard
 
+import androidx.annotation.VisibleForTesting
 import com.adyen.checkout.components.flow.MutableSingleEventSharedFlow
 import com.adyen.checkout.components.model.paymentmethods.PaymentMethod
 import com.adyen.checkout.components.model.payments.request.GiftCardPaymentMethod
@@ -37,13 +38,12 @@ internal class DefaultGiftCardDelegate(
     private val cardEncrypter: CardEncrypter,
 ) : GiftCardDelegate {
 
-    override val inputData: GiftCardInputData = GiftCardInputData()
+    private val inputData: GiftCardInputData = GiftCardInputData()
 
-    private val _outputDataFlow = MutableStateFlow<GiftCardOutputData?>(null)
-    override val outputDataFlow: Flow<GiftCardOutputData?> = _outputDataFlow
+    private val _outputDataFlow = MutableStateFlow(createOutputData())
+    override val outputDataFlow: Flow<GiftCardOutputData> = _outputDataFlow
 
-    override val outputData
-        get() = _outputDataFlow.value
+    override val outputData get() = _outputDataFlow.value
 
     private val _componentStateFlow = MutableStateFlow<GiftCardComponentState?>(null)
     override val componentStateFlow: Flow<GiftCardComponentState?> = _componentStateFlow
@@ -65,7 +65,7 @@ internal class DefaultGiftCardDelegate(
                 onSuccess = { key ->
                     Logger.d(TAG, "Public key fetched")
                     publicKey = key
-                    outputData?.let { createComponentState(it) }
+                    createComponentState(outputData)
                 },
                 onFailure = { e ->
                     Logger.e(TAG, "Unable to fetch public key")
@@ -78,16 +78,24 @@ internal class DefaultGiftCardDelegate(
         }
     }
 
-    override fun onInputDataChanged(inputData: GiftCardInputData) {
-        val outputData = GiftCardOutputData(cardNumber = inputData.cardNumber, pin = inputData.pin)
+    override fun updateInputData(update: GiftCardInputData.() -> Unit) {
+        inputData.update()
+        onInputDataChanged()
+    }
+
+    private fun onInputDataChanged() {
+        val outputData = createOutputData()
 
         _outputDataFlow.tryEmit(outputData)
 
         createComponentState(outputData)
     }
 
+    private fun createOutputData() = GiftCardOutputData(cardNumber = inputData.cardNumber, pin = inputData.pin)
+
     @Suppress("ReturnCount")
-    override fun createComponentState(outputData: GiftCardOutputData) {
+    @VisibleForTesting
+    internal fun createComponentState(outputData: GiftCardOutputData) {
         val paymentComponentData = PaymentComponentData<GiftCardPaymentMethod>()
 
         val publicKey = validatePublicKey(outputData, paymentComponentData) ?: return

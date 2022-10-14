@@ -83,9 +83,12 @@ internal class DefaultBcmcDelegateTest {
         @Test
         fun `card number is empty, then output should be invalid`() = runTest {
             delegate.outputDataFlow.test {
-                delegate.onInputDataChanged(BcmcInputData(cardNumber = "", expiryDate = TEST_EXPIRY_DATE))
+                delegate.updateInputData {
+                    cardNumber = ""
+                    expiryDate = TEST_EXPIRY_DATE
+                }
 
-                with(requireNotNull(expectMostRecentItem())) {
+                with(expectMostRecentItem()) {
                     assertTrue(cardNumberField.validation is Validation.Invalid)
                     assertTrue(expiryDateField.validation is Validation.Valid)
                     assertFalse(isValid)
@@ -96,9 +99,12 @@ internal class DefaultBcmcDelegateTest {
         @Test
         fun `card number is invalid, then output should be invalid`() = runTest {
             delegate.outputDataFlow.test {
-                delegate.onInputDataChanged(BcmcInputData(cardNumber = "12345678", expiryDate = TEST_EXPIRY_DATE))
+                delegate.updateInputData {
+                    cardNumber = "12345678"
+                    expiryDate = TEST_EXPIRY_DATE
+                }
 
-                with(requireNotNull(expectMostRecentItem())) {
+                with(expectMostRecentItem()) {
                     assertTrue(cardNumberField.validation is Validation.Invalid)
                     assertTrue(expiryDateField.validation is Validation.Valid)
                     assertFalse(isValid)
@@ -110,13 +116,12 @@ internal class DefaultBcmcDelegateTest {
         fun `expiry date is invalid, then output should be invalid`() =
             runTest {
                 delegate.outputDataFlow.test {
-                    delegate.onInputDataChanged(
-                        BcmcInputData(
-                            cardNumber = TEST_CARD_NUMBER,
-                            expiryDate = ExpiryDate.INVALID_DATE
-                        )
-                    )
-                    with(requireNotNull(expectMostRecentItem())) {
+                    delegate.updateInputData {
+                        cardNumber = TEST_CARD_NUMBER
+                        expiryDate = ExpiryDate.INVALID_DATE
+                    }
+
+                    with(expectMostRecentItem()) {
                         assertTrue(cardNumberField.validation is Validation.Valid)
                         assertTrue(expiryDateField.validation is Validation.Invalid)
                         assertFalse(isValid)
@@ -127,13 +132,12 @@ internal class DefaultBcmcDelegateTest {
         @Test
         fun `expiry date is empty, then output should be invalid`() = runTest {
             delegate.outputDataFlow.test {
-                delegate.onInputDataChanged(
-                    BcmcInputData(
-                        cardNumber = TEST_CARD_NUMBER,
-                        expiryDate = ExpiryDate.EMPTY_DATE
-                    )
-                )
-                with(requireNotNull(expectMostRecentItem())) {
+                delegate.updateInputData {
+                    cardNumber = TEST_CARD_NUMBER
+                    expiryDate = ExpiryDate.EMPTY_DATE
+                }
+
+                with(expectMostRecentItem()) {
                     assertTrue(cardNumberField.validation is Validation.Valid)
                     assertTrue(expiryDateField.validation is Validation.Invalid)
                     assertFalse(isValid)
@@ -144,13 +148,12 @@ internal class DefaultBcmcDelegateTest {
         @Test
         fun `input is valid, then output should be valid`() = runTest {
             delegate.outputDataFlow.test {
-                delegate.onInputDataChanged(
-                    BcmcInputData(
-                        cardNumber = TEST_CARD_NUMBER,
+                delegate.updateInputData {
+                        cardNumber = TEST_CARD_NUMBER
                         expiryDate = TEST_EXPIRY_DATE
-                    )
-                )
-                with(requireNotNull(expectMostRecentItem())) {
+                }
+
+                with(expectMostRecentItem()) {
                     assertTrue(cardNumberField.validation is Validation.Valid)
                     assertTrue(expiryDateField.validation is Validation.Valid)
                     assertTrue(isValid)

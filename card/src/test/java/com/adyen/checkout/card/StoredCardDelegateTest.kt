@@ -82,9 +82,9 @@ internal class StoredCardDelegateTest {
             delegate.initialize(CoroutineScope(UnconfinedTestDispatcher()))
 
             delegate.outputDataFlow.test {
-                delegate.onInputDataChanged(CardInputData())
+                delegate.updateInputData { /* Empty to trigger an update */ }
 
-                with(requireNotNull(expectMostRecentItem())) {
+                with(expectMostRecentItem()) {
                     assertFalse(isValid)
                     assertTrue(securityCodeState.validation is Validation.Invalid)
                     assertTrue(cardNumberState.validation is Validation.Valid)
@@ -108,9 +108,9 @@ internal class StoredCardDelegateTest {
             delegate.initialize(CoroutineScope(UnconfinedTestDispatcher()))
 
             delegate.outputDataFlow.test {
-                delegate.onInputDataChanged(CardInputData())
+                delegate.updateInputData { /* Empty to trigger an update */ }
 
-                with(requireNotNull(expectMostRecentItem())) {
+                with(expectMostRecentItem()) {
                     assertFalse(isValid)
                     assertTrue(securityCodeState.validation is Validation.Invalid)
                     assertTrue(cardNumberState.validation is Validation.Valid)
@@ -130,13 +130,11 @@ internal class StoredCardDelegateTest {
             delegate.initialize(CoroutineScope(UnconfinedTestDispatcher()))
 
             delegate.outputDataFlow.test {
-                val inputData = delegate.inputData.apply {
+                delegate.updateInputData {
                     securityCode = TEST_SECURITY_CODE
                 }
 
-                delegate.onInputDataChanged(inputData)
-
-                with(requireNotNull(expectMostRecentItem())) {
+                with(expectMostRecentItem()) {
                     assertTrue(isValid)
                     assertEquals(FieldState(TEST_SECURITY_CODE, Validation.Valid), securityCodeState)
                     assertEquals(createOutputData(), this)
@@ -155,9 +153,9 @@ internal class StoredCardDelegateTest {
             delegate.initialize(CoroutineScope(UnconfinedTestDispatcher()))
 
             delegate.outputDataFlow.test {
-                delegate.onInputDataChanged(CardInputData())
+                delegate.updateInputData { /* Empty to trigger an update */ }
 
-                with(requireNotNull(expectMostRecentItem())) {
+                with(expectMostRecentItem()) {
                     assertTrue(isValid)
                 }
             }
@@ -174,9 +172,9 @@ internal class StoredCardDelegateTest {
             delegate.initialize(CoroutineScope(UnconfinedTestDispatcher()))
 
             delegate.outputDataFlow.test {
-                delegate.onInputDataChanged(CardInputData())
+                delegate.updateInputData { /* Empty to trigger an update */ }
 
-                with(requireNotNull(expectMostRecentItem())) {
+                with(expectMostRecentItem()) {
                     assertTrue(isValid)
                 }
             }
@@ -190,7 +188,7 @@ internal class StoredCardDelegateTest {
         @Test
         fun `component is not initialized, then component state should not be ready`() = runTest {
             delegate.componentStateFlow.test {
-                delegate.createComponentState(createOutputData())
+                delegate.updateInputData { /* Empty to trigger an update */ }
 
                 val componentState = requireNotNull(expectMostRecentItem())
 
@@ -206,7 +204,7 @@ internal class StoredCardDelegateTest {
             delegate.initialize(CoroutineScope(UnconfinedTestDispatcher()))
 
             delegate.componentStateFlow.test {
-                delegate.createComponentState(createOutputData())
+                delegate.updateInputData { /* Empty to trigger an update */ }
 
                 val componentState = requireNotNull(expectMostRecentItem())
 

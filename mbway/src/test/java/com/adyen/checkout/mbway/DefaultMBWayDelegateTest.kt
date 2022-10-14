@@ -40,7 +40,10 @@ internal class DefaultMBWayDelegateTest {
         fun `input is invalid, then output data should be invalid`() = runTest {
             delegate.outputDataFlow.test {
                 skipItems(1)
-                delegate.onInputDataChanged(MBWayInputData(countryCode = "+1", localPhoneNumber = "04023456"))
+                delegate.updateInputData {
+                    countryCode = "+1"
+                    localPhoneNumber = "04023456"
+                }
 
                 with(requireNotNull(awaitItem())) {
                     assertEquals("+14023456", mobilePhoneNumberFieldState.value)
@@ -55,7 +58,10 @@ internal class DefaultMBWayDelegateTest {
         fun `input is invalid, then component state should be invalid`() = runTest {
             delegate.componentStateFlow.test {
                 skipItems(1)
-                delegate.onInputDataChanged(MBWayInputData(countryCode = "+23", localPhoneNumber = "0056778"))
+                delegate.updateInputData {
+                    countryCode = "+23"
+                    localPhoneNumber = "0056778"
+                }
 
                 with(requireNotNull(awaitItem())) {
                     assertEquals("+2356778", data.paymentMethod?.telephoneNumber)
@@ -71,7 +77,10 @@ internal class DefaultMBWayDelegateTest {
         fun `input is valid, then output data should be propagated`() = runTest {
             delegate.outputDataFlow.test {
                 skipItems(1)
-                delegate.onInputDataChanged(MBWayInputData(countryCode = "+351", localPhoneNumber = "234567890"))
+                delegate.updateInputData {
+                    countryCode = "+351"
+                    localPhoneNumber = "234567890"
+                }
 
                 with(requireNotNull(awaitItem())) {
                     assertEquals("+351234567890", mobilePhoneNumberFieldState.value)
@@ -86,7 +95,10 @@ internal class DefaultMBWayDelegateTest {
         fun `input is valid, then component state should be propagated`() = runTest {
             delegate.componentStateFlow.test {
                 skipItems(1)
-                delegate.onInputDataChanged(MBWayInputData(countryCode = "+1", localPhoneNumber = "9257348920"))
+                delegate.updateInputData {
+                    countryCode = "+1"
+                    localPhoneNumber = "9257348920"
+                }
 
                 with(requireNotNull(awaitItem())) {
                     assertEquals("+19257348920", data.paymentMethod?.telephoneNumber)

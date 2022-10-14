@@ -8,21 +8,10 @@
 
 package com.adyen.checkout.components.base
 
-import com.adyen.checkout.components.PaymentComponentState
-import com.adyen.checkout.components.model.payments.request.PaymentMethodDetails
-
 /**
  * Handles all the logic in payment components
  */
-interface PaymentMethodDelegate<
-    ConfigurationT : Configuration,
-    InputDataT : InputData,
-    OutputDataT : OutputData,
-    ComponentStateT : PaymentComponentState<out PaymentMethodDetails>
-    > : ComponentDelegate {
+interface PaymentMethodDelegate : ComponentDelegate {
+
     fun getPaymentMethodType(): String
-
-    fun onInputDataChanged(inputData: InputDataT)
-
-    fun createComponentState(outputData: OutputDataT)
 }

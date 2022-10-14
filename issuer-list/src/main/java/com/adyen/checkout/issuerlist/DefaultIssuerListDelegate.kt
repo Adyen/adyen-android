@@ -9,6 +9,7 @@
 package com.adyen.checkout.issuerlist
 
 import androidx.annotation.RestrictTo
+import androidx.annotation.VisibleForTesting
 import com.adyen.checkout.components.PaymentComponentState
 import com.adyen.checkout.components.model.paymentmethods.PaymentMethod
 import com.adyen.checkout.components.model.payments.request.IssuerListPaymentMethod
@@ -26,13 +27,12 @@ class DefaultIssuerListDelegate<IssuerListPaymentMethodT : IssuerListPaymentMeth
     private val typedPaymentMethodFactory: () -> IssuerListPaymentMethodT,
 ) : IssuerListDelegate<IssuerListPaymentMethodT> {
 
-    override val inputData: IssuerListInputData = IssuerListInputData()
+    private val inputData: IssuerListInputData = IssuerListInputData()
 
-    private val _outputDataFlow = MutableStateFlow<IssuerListOutputData?>(null)
-    override val outputDataFlow: Flow<IssuerListOutputData?> = _outputDataFlow
+    private val _outputDataFlow = MutableStateFlow(createOutputData())
+    override val outputDataFlow: Flow<IssuerListOutputData> = _outputDataFlow
 
-    override val outputData: IssuerListOutputData?
-        get() = _outputDataFlow.value
+    override val outputData: IssuerListOutputData get() = _outputDataFlow.value
 
     private val _componentStateFlow = MutableStateFlow<PaymentComponentState<IssuerListPaymentMethodT>?>(null)
     override val componentStateFlow: Flow<PaymentComponentState<IssuerListPaymentMethodT>?> = _componentStateFlow
@@ -49,15 +49,23 @@ class DefaultIssuerListDelegate<IssuerListPaymentMethodT : IssuerListPaymentMeth
     override fun getIssuers(): List<IssuerModel> =
         paymentMethod.issuers?.mapToModel() ?: paymentMethod.details.getLegacyIssuers()
 
-    override fun onInputDataChanged(inputData: IssuerListInputData) {
-        val outputData = IssuerListOutputData(inputData.selectedIssuer)
+    override fun updateInputData(update: IssuerListInputData.() -> Unit) {
+        inputData.update()
+        onInputDataChanged()
+    }
+
+    private fun onInputDataChanged() {
+        val outputData = createOutputData()
 
         _outputDataFlow.tryEmit(outputData)
 
         createComponentState(outputData)
     }
 
-    override fun createComponentState(outputData: IssuerListOutputData) {
+    private fun createOutputData() = IssuerListOutputData(inputData.selectedIssuer)
+
+    @VisibleForTesting
+    internal fun createComponentState(outputData: IssuerListOutputData) {
         val issuerListPaymentMethod = typedPaymentMethodFactory()
         issuerListPaymentMethod.type = getPaymentMethodType()
         issuerListPaymentMethod.issuer = outputData.selectedIssuer?.id ?: ""

@@ -8,6 +8,7 @@
 
 package com.adyen.checkout.blik
 
+import androidx.annotation.VisibleForTesting
 import com.adyen.checkout.components.PaymentComponentState
 import com.adyen.checkout.components.model.paymentmethods.PaymentMethod
 import com.adyen.checkout.components.model.payments.request.BlikPaymentMethod
@@ -25,12 +26,12 @@ internal class DefaultBlikDelegate(
     val paymentMethod: PaymentMethod
 ) : BlikDelegate {
 
-    override val inputData: BlikInputData = BlikInputData()
+    private val inputData: BlikInputData = BlikInputData()
 
-    private val _outputDataFlow = MutableStateFlow<BlikOutputData?>(null)
-    override val outputDataFlow: Flow<BlikOutputData?> = _outputDataFlow
+    private val _outputDataFlow = MutableStateFlow(createOutputData())
+    override val outputDataFlow: Flow<BlikOutputData> = _outputDataFlow
 
-    override val outputData: BlikOutputData?
+    override val outputData: BlikOutputData
         get() = _outputDataFlow.value
 
     private val _componentStateFlow = MutableStateFlow<PaymentComponentState<BlikPaymentMethod>?>(null)
@@ -38,22 +39,34 @@ internal class DefaultBlikDelegate(
 
     override val viewFlow: Flow<ComponentViewType?> = MutableStateFlow(BlikComponentViewType)
 
+    init {
+        createComponentState(outputData)
+    }
+
     override fun getPaymentMethodType(): String {
         return paymentMethod.type ?: PaymentMethodTypes.UNKNOWN
     }
 
-    override fun onInputDataChanged(inputData: BlikInputData) {
+    override fun updateInputData(update: BlikInputData.() -> Unit) {
+        inputData.update()
+        onInputDataChanged()
+    }
+
+    private fun onInputDataChanged() {
         Logger.v(TAG, "onInputDataChanged")
-        val outputData = BlikOutputData(inputData.blikCode)
+        val outputData = createOutputData()
         outputDataChanged(outputData)
         createComponentState(outputData)
     }
+
+    private fun createOutputData() = BlikOutputData(inputData.blikCode)
 
     private fun outputDataChanged(outputData: BlikOutputData) {
         _outputDataFlow.tryEmit(outputData)
     }
 
-    override fun createComponentState(outputData: BlikOutputData) {
+    @VisibleForTesting
+    internal fun createComponentState(outputData: BlikOutputData) {
         val paymentMethod = BlikPaymentMethod(
             type = BlikPaymentMethod.PAYMENT_METHOD_TYPE,
             blikCode = outputData.blikCodeField.value

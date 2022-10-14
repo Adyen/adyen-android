@@ -10,6 +10,8 @@ package com.adyen.checkout.bacs
 
 import app.cash.turbine.test
 import com.adyen.checkout.components.model.paymentmethods.PaymentMethod
+import com.adyen.checkout.components.ui.FieldState
+import com.adyen.checkout.components.ui.Validation
 import com.adyen.checkout.core.api.Environment
 import com.adyen.checkout.core.log.Logger
 import kotlinx.coroutines.ExperimentalCoroutinesApi
@@ -49,17 +51,16 @@ internal class DefaultBacsDirectDebitDelegateTest {
         @Test
         fun `account holder is empty, then output should be invalid`() = runTest {
             delegate.outputDataFlow.test {
-                delegate.onInputDataChanged(
-                    BacsDirectDebitInputData(
-                        holderName = "",
-                        bankAccountNumber = "12345678",
-                        sortCode = "123456",
-                        shopperEmail = "test@adyen.com",
-                        isAmountConsentChecked = true,
-                        isAccountConsentChecked = true
-                    )
-                )
-                with(requireNotNull(expectMostRecentItem())) {
+                delegate.updateInputData {
+                    holderName = ""
+                    bankAccountNumber = "12345678"
+                    sortCode = "123456"
+                    shopperEmail = "test@adyen.com"
+                    isAmountConsentChecked = true
+                    isAccountConsentChecked = true
+                }
+
+                with(expectMostRecentItem()) {
                     assertFalse(isValid)
                 }
             }
@@ -68,17 +69,16 @@ internal class DefaultBacsDirectDebitDelegateTest {
         @Test
         fun `bank account number length more than 8, then output should be invalid`() = runTest {
             delegate.outputDataFlow.test {
-                delegate.onInputDataChanged(
-                    BacsDirectDebitInputData(
-                        holderName = "test",
-                        bankAccountNumber = "1234567890",
-                        sortCode = "123456",
-                        shopperEmail = "test@adyen.com",
-                        isAmountConsentChecked = true,
-                        isAccountConsentChecked = true
-                    )
-                )
-                with(requireNotNull(expectMostRecentItem())) {
+                delegate.updateInputData {
+                    holderName = "test"
+                    bankAccountNumber = "1234567890"
+                    sortCode = "123456"
+                    shopperEmail = "test@adyen.com"
+                    isAmountConsentChecked = true
+                    isAccountConsentChecked = true
+                }
+
+                with(expectMostRecentItem()) {
                     assertFalse(isValid)
                 }
             }
@@ -87,17 +87,16 @@ internal class DefaultBacsDirectDebitDelegateTest {
         @Test
         fun `bank account number length less than 8, then output should be invalid`() = runTest {
             delegate.outputDataFlow.test {
-                delegate.onInputDataChanged(
-                    BacsDirectDebitInputData(
-                        holderName = "test",
-                        bankAccountNumber = "1234",
-                        sortCode = "123456",
-                        shopperEmail = "test@adyen.com",
-                        isAmountConsentChecked = true,
-                        isAccountConsentChecked = true
-                    )
-                )
-                with(requireNotNull(expectMostRecentItem())) {
+                delegate.updateInputData {
+                    holderName = "test"
+                    bankAccountNumber = "1234"
+                    sortCode = "123456"
+                    shopperEmail = "test@adyen.com"
+                    isAmountConsentChecked = true
+                    isAccountConsentChecked = true
+                }
+
+                with(expectMostRecentItem()) {
                     assertFalse(isValid)
                 }
             }
@@ -106,17 +105,16 @@ internal class DefaultBacsDirectDebitDelegateTest {
         @Test
         fun `bank account number is empty, then output should be invalid`() = runTest {
             delegate.outputDataFlow.test {
-                delegate.onInputDataChanged(
-                    BacsDirectDebitInputData(
-                        holderName = "test",
-                        bankAccountNumber = "",
-                        sortCode = "123456",
-                        shopperEmail = "test@adyen.com",
-                        isAmountConsentChecked = true,
-                        isAccountConsentChecked = true
-                    )
-                )
-                with(requireNotNull(expectMostRecentItem())) {
+                delegate.updateInputData {
+                    holderName = "test"
+                    bankAccountNumber = ""
+                    sortCode = "123456"
+                    shopperEmail = "test@adyen.com"
+                    isAmountConsentChecked = true
+                    isAccountConsentChecked = true
+                }
+
+                with(expectMostRecentItem()) {
                     assertFalse(isValid)
                 }
             }
@@ -125,17 +123,16 @@ internal class DefaultBacsDirectDebitDelegateTest {
         @Test
         fun `sort code is empty, then output should be invalid`() = runTest {
             delegate.outputDataFlow.test {
-                delegate.onInputDataChanged(
-                    BacsDirectDebitInputData(
-                        holderName = "test",
-                        bankAccountNumber = "12345678",
-                        sortCode = "",
-                        shopperEmail = "test@adyen.com",
-                        isAmountConsentChecked = true,
-                        isAccountConsentChecked = true
-                    )
-                )
-                with(requireNotNull(expectMostRecentItem())) {
+                delegate.updateInputData {
+                    holderName = "test"
+                    bankAccountNumber = "12345678"
+                    sortCode = ""
+                    shopperEmail = "test@adyen.com"
+                    isAmountConsentChecked = true
+                    isAccountConsentChecked = true
+                }
+
+                with(expectMostRecentItem()) {
                     assertFalse(isValid)
                 }
             }
@@ -144,17 +141,16 @@ internal class DefaultBacsDirectDebitDelegateTest {
         @Test
         fun `sort code length more than 6 , then output should be invalid`() = runTest {
             delegate.outputDataFlow.test {
-                delegate.onInputDataChanged(
-                    BacsDirectDebitInputData(
-                        holderName = "test",
-                        bankAccountNumber = "12345678",
-                        sortCode = "12345678",
-                        shopperEmail = "test@adyen.com",
-                        isAmountConsentChecked = true,
-                        isAccountConsentChecked = true
-                    )
-                )
-                with(requireNotNull(expectMostRecentItem())) {
+                delegate.updateInputData {
+                    holderName = "test"
+                    bankAccountNumber = "12345678"
+                    sortCode = "12345678"
+                    shopperEmail = "test@adyen.com"
+                    isAmountConsentChecked = true
+                    isAccountConsentChecked = true
+                }
+
+                with(expectMostRecentItem()) {
                     assertFalse(isValid)
                 }
             }
@@ -163,17 +159,16 @@ internal class DefaultBacsDirectDebitDelegateTest {
         @Test
         fun `sort code length less than 6 , then output should be invalid`() = runTest {
             delegate.outputDataFlow.test {
-                delegate.onInputDataChanged(
-                    BacsDirectDebitInputData(
-                        holderName = "test",
-                        bankAccountNumber = "12345678",
-                        sortCode = "123",
-                        shopperEmail = "test@adyen.com",
-                        isAmountConsentChecked = true,
-                        isAccountConsentChecked = true
-                    )
-                )
-                with(requireNotNull(expectMostRecentItem())) {
+                delegate.updateInputData {
+                    holderName = "test"
+                    bankAccountNumber = "12345678"
+                    sortCode = "123"
+                    shopperEmail = "test@adyen.com"
+                    isAmountConsentChecked = true
+                    isAccountConsentChecked = true
+                }
+
+                with(expectMostRecentItem()) {
                     assertFalse(isValid)
                 }
             }
@@ -183,17 +178,16 @@ internal class DefaultBacsDirectDebitDelegateTest {
         @Test
         fun `shopper email is invalid , then output should be invalid`() = runTest {
             delegate.outputDataFlow.test {
-                delegate.onInputDataChanged(
-                    BacsDirectDebitInputData(
-                        holderName = "test",
-                        bankAccountNumber = "12345678",
-                        sortCode = "123456",
-                        shopperEmail = "test@adyen",
-                        isAmountConsentChecked = true,
-                        isAccountConsentChecked = true
-                    )
-                )
-                with(requireNotNull(expectMostRecentItem())) {
+                delegate.updateInputData {
+                    holderName = "test"
+                    bankAccountNumber = "12345678"
+                    sortCode = "123456"
+                    shopperEmail = "test@adyen"
+                    isAmountConsentChecked = true
+                    isAccountConsentChecked = true
+                }
+
+                with(expectMostRecentItem()) {
                     assertFalse(isValid)
                 }
             }
@@ -202,17 +196,16 @@ internal class DefaultBacsDirectDebitDelegateTest {
         @Test
         fun `amount consent check false , then output should be invalid`() = runTest {
             delegate.outputDataFlow.test {
-                delegate.onInputDataChanged(
-                    BacsDirectDebitInputData(
-                        holderName = "test",
-                        bankAccountNumber = "12345678",
-                        sortCode = "123456",
-                        shopperEmail = "test@adyen.com",
-                        isAmountConsentChecked = false,
-                        isAccountConsentChecked = true
-                    )
-                )
-                with(requireNotNull(expectMostRecentItem())) {
+                delegate.updateInputData {
+                    holderName = "test"
+                    bankAccountNumber = "12345678"
+                    sortCode = "123456"
+                    shopperEmail = "test@adyen.com"
+                    isAmountConsentChecked = false
+                    isAccountConsentChecked = true
+                }
+
+                with(expectMostRecentItem()) {
                     assertFalse(isValid)
                 }
             }
@@ -222,17 +215,16 @@ internal class DefaultBacsDirectDebitDelegateTest {
         @Test
         fun `account consent check false , then output should be invalid`() = runTest {
             delegate.outputDataFlow.test {
-                delegate.onInputDataChanged(
-                    BacsDirectDebitInputData(
-                        holderName = "test",
-                        bankAccountNumber = "12345678",
-                        sortCode = "123456",
-                        shopperEmail = "test@adyen.com",
-                        isAmountConsentChecked = true,
-                        isAccountConsentChecked = false
-                    )
-                )
-                with(requireNotNull(expectMostRecentItem())) {
+                delegate.updateInputData {
+                    holderName = "test"
+                    bankAccountNumber = "12345678"
+                    sortCode = "123456"
+                    shopperEmail = "test@adyen.com"
+                    isAmountConsentChecked = true
+                    isAccountConsentChecked = false
+                }
+
+                with(expectMostRecentItem()) {
                     assertFalse(isValid)
                 }
             }
@@ -241,79 +233,21 @@ internal class DefaultBacsDirectDebitDelegateTest {
         @Test
         fun `input data is valid then output should be valid`() = runTest {
             delegate.outputDataFlow.test {
-                delegate.onInputDataChanged(
-                    BacsDirectDebitInputData(
-                        holderName = "test",
-                        bankAccountNumber = "12345678",
-                        sortCode = "123456",
-                        shopperEmail = "test@adyen.com",
-                        isAmountConsentChecked = true,
-                        isAccountConsentChecked = true
-                    )
-                )
-                with(requireNotNull(expectMostRecentItem())) {
+                delegate.updateInputData {
+                    holderName = "test"
+                    bankAccountNumber = "12345678"
+                    sortCode = "123456"
+                    shopperEmail = "test@adyen.com"
+                    isAmountConsentChecked = true
+                    isAccountConsentChecked = true
+                }
+
+                with(expectMostRecentItem()) {
                     assertTrue(isValid)
                 }
             }
         }
 
-        @Test
-        fun `input is invalid, then component state should be invalid`() = runTest {
-            delegate.componentStateFlow.test {
-                delegate.onInputDataChanged(
-                    BacsDirectDebitInputData(
-                        holderName = "test",
-                        bankAccountNumber = "12345678",
-                        sortCode = "123456",
-                        shopperEmail = "test@adyen.com",
-                        isAmountConsentChecked = true,
-                        isAccountConsentChecked = false
-                    )
-                )
-                with(requireNotNull(expectMostRecentItem())) {
-                    assertFalse(isValid)
-                }
-            }
-        }
-
-        @Test
-        fun `input is valid and mode is INPUT, then component state should be invalid`() = runTest {
-            delegate.componentStateFlow.test {
-                delegate.onInputDataChanged(
-                    BacsDirectDebitInputData(
-                        holderName = "test",
-                        bankAccountNumber = "12345678",
-                        sortCode = "123456",
-                        shopperEmail = "test@adyen.com",
-                        isAmountConsentChecked = true,
-                        isAccountConsentChecked = true
-                    )
-                )
-                with(requireNotNull(expectMostRecentItem())) {
-                    assertFalse(isValid)
-                }
-            }
-        }
-
-        @Test
-        fun `input is valid and mode is  CONFIRMATION, then component state should be valid`() = runTest {
-            delegate.componentStateFlow.test {
-                delegate.onInputDataChanged(
-                    BacsDirectDebitInputData(
-                        holderName = "test",
-                        bankAccountNumber = "12345678",
-                        sortCode = "123456",
-                        shopperEmail = "test@adyen.com",
-                        isAmountConsentChecked = true,
-                        isAccountConsentChecked = true,
-                        mode = BacsDirectDebitMode.CONFIRMATION
-                    )
-                )
-                with(requireNotNull(expectMostRecentItem())) {
-                    assertTrue(isValid)
-                }
-            }
-        }
     }
 
     @Nested
@@ -322,7 +256,7 @@ internal class DefaultBacsDirectDebitDelegateTest {
 
         @Test
         fun `with INPUT parameter while current mode is also INPUT, then no value should be emitted`() = runTest {
-            delegate.inputData.mode = BacsDirectDebitMode.INPUT
+            delegate.updateInputData { mode = BacsDirectDebitMode.INPUT }
             delegate._viewFlow.value = BacsComponentViewType.INPUT
 
             delegate.viewFlow.test {
@@ -337,7 +271,7 @@ internal class DefaultBacsDirectDebitDelegateTest {
         @Test
         fun `with CONFIRMATION parameter while current mode is also CONFIRMATION, then no value should be emitted`() =
             runTest {
-                delegate.inputData.mode = BacsDirectDebitMode.CONFIRMATION
+                delegate.updateInputData { mode = BacsDirectDebitMode.CONFIRMATION }
                 delegate._viewFlow.value = BacsComponentViewType.CONFIRMATION
 
                 delegate.viewFlow.test {
@@ -351,7 +285,7 @@ internal class DefaultBacsDirectDebitDelegateTest {
 
         @Test
         fun `with INPUT parameter while current mode is CONFIRMATION, then INPUT should be emitted`() = runTest {
-            delegate.inputData.mode = BacsDirectDebitMode.CONFIRMATION
+            delegate.updateInputData { mode = BacsDirectDebitMode.CONFIRMATION }
             delegate._viewFlow.value = BacsComponentViewType.CONFIRMATION
 
             delegate.viewFlow.test {
@@ -366,17 +300,15 @@ internal class DefaultBacsDirectDebitDelegateTest {
         @Test
         fun `with CONFIRMATION parameter while current mode is INPUT and input data is valid, then CONFIRMATION should be emitted`() =
             runTest {
-                delegate.onInputDataChanged(
-                    BacsDirectDebitInputData(
-                        holderName = "test",
-                        bankAccountNumber = "12345678",
-                        sortCode = "123456",
-                        shopperEmail = "test@adyen.com",
-                        isAmountConsentChecked = true,
-                        isAccountConsentChecked = true,
-                        mode = BacsDirectDebitMode.INPUT
-                    )
-                )
+                delegate.updateInputData {
+                    holderName = "test"
+                    bankAccountNumber = "12345678"
+                    sortCode = "123456"
+                    shopperEmail = "test@adyen.com"
+                    isAmountConsentChecked = true
+                    isAccountConsentChecked = true
+                    mode = BacsDirectDebitMode.INPUT
+                }
                 delegate._viewFlow.value = BacsComponentViewType.INPUT
 
                 delegate.viewFlow.test {
@@ -391,7 +323,7 @@ internal class DefaultBacsDirectDebitDelegateTest {
         @Test
         fun `with CONFIRMATION parameter while current mode is INPUT and input data is invalid, then no value should be emitted`() =
             runTest {
-                delegate.inputData.mode = BacsDirectDebitMode.INPUT
+                delegate.updateInputData { mode = BacsDirectDebitMode.INPUT }
                 delegate._viewFlow.value = BacsComponentViewType.INPUT
 
                 delegate.viewFlow.test {
@@ -410,16 +342,22 @@ internal class DefaultBacsDirectDebitDelegateTest {
         @Test
         fun `input is invalid, then component state should be invalid`() = runTest {
             delegate.componentStateFlow.test {
-                delegate.onInputDataChanged(
-                    BacsDirectDebitInputData(
-                        holderName = "test",
-                        bankAccountNumber = "12345678",
-                        sortCode = "123456",
-                        shopperEmail = "test@adyen.com",
+                delegate.createComponentState(
+                    BacsDirectDebitOutputData(
+                        holderNameState = FieldState("test", Validation.Invalid(R.string.bacs_holder_name_invalid)),
+                        bankAccountNumberState = FieldState(
+                            "12345678",
+                            Validation.Invalid(R.string.bacs_account_number_invalid)
+                        ),
+                        sortCodeState = FieldState("123456", Validation.Invalid(R.string.bacs_sort_code_invalid)),
+                        shopperEmailState = FieldState("test@adyen.com", Validation.Valid),
                         isAmountConsentChecked = true,
-                        isAccountConsentChecked = false
-                    )
+                        isAccountConsentChecked = false,
+                        mode = BacsDirectDebitMode.CONFIRMATION,
+
+                        )
                 )
+
                 with(requireNotNull(expectMostRecentItem())) {
                     assertFalse(isInputValid)
                     assertFalse(isValid)
@@ -430,16 +368,19 @@ internal class DefaultBacsDirectDebitDelegateTest {
         @Test
         fun `input is valid and mode is INPUT, then component state should be invalid`() = runTest {
             delegate.componentStateFlow.test {
-                delegate.onInputDataChanged(
-                    BacsDirectDebitInputData(
-                        holderName = "test",
-                        bankAccountNumber = "12345678",
-                        sortCode = "123456",
-                        shopperEmail = "test@adyen.com",
+                delegate.createComponentState(
+                    BacsDirectDebitOutputData(
+                        holderNameState = FieldState("test", Validation.Valid),
+                        bankAccountNumberState = FieldState("12345678", Validation.Valid),
+                        sortCodeState = FieldState("123456", Validation.Valid),
+                        shopperEmailState = FieldState("test@adyen.com", Validation.Valid),
                         isAmountConsentChecked = true,
-                        isAccountConsentChecked = true
-                    )
+                        isAccountConsentChecked = true,
+                        mode = BacsDirectDebitMode.INPUT,
+
+                        )
                 )
+
                 with(requireNotNull(expectMostRecentItem())) {
                     assertTrue(isInputValid)
                     assertFalse(isValid)
@@ -450,17 +391,18 @@ internal class DefaultBacsDirectDebitDelegateTest {
         @Test
         fun `input is valid and mode is  CONFIRMATION, then component state should be valid`() = runTest {
             delegate.componentStateFlow.test {
-                delegate.onInputDataChanged(
-                    BacsDirectDebitInputData(
-                        holderName = "test",
-                        bankAccountNumber = "12345678",
-                        sortCode = "123456",
-                        shopperEmail = "test@adyen.com",
+                delegate.createComponentState(
+                    BacsDirectDebitOutputData(
+                        holderNameState = FieldState("test", Validation.Valid),
+                        bankAccountNumberState = FieldState("12345678", Validation.Valid),
+                        sortCodeState = FieldState("123456", Validation.Valid),
+                        shopperEmailState = FieldState("test@adyen.com", Validation.Valid),
                         isAmountConsentChecked = true,
                         isAccountConsentChecked = true,
-                        mode = BacsDirectDebitMode.CONFIRMATION
+                        mode = BacsDirectDebitMode.CONFIRMATION,
                     )
                 )
+
                 with(requireNotNull(expectMostRecentItem())) {
                     assertTrue(isInputValid)
                     assertTrue(isValid)

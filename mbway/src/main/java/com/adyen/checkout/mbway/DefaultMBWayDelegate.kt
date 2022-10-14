@@ -8,6 +8,7 @@
 
 package com.adyen.checkout.mbway
 
+import androidx.annotation.VisibleForTesting
 import com.adyen.checkout.components.PaymentComponentState
 import com.adyen.checkout.components.model.paymentmethods.PaymentMethod
 import com.adyen.checkout.components.model.payments.request.MBWayPaymentMethod
@@ -27,36 +28,50 @@ internal class DefaultMBWayDelegate(
     override val configuration: MBWayConfiguration
 ) : MBWayDelegate {
 
-    private val _outputDataFlow = MutableStateFlow<MBWayOutputData?>(null)
-    override val outputDataFlow: Flow<MBWayOutputData?> = _outputDataFlow
+    private val inputData = MBWayInputData()
+
+    private val _outputDataFlow = MutableStateFlow(createOutputData())
+    override val outputDataFlow: Flow<MBWayOutputData> = _outputDataFlow
 
     private val _componentStateFlow = MutableStateFlow<PaymentComponentState<MBWayPaymentMethod>?>(null)
     override val componentStateFlow: Flow<PaymentComponentState<MBWayPaymentMethod>?> = _componentStateFlow
 
-    override val inputData = MBWayInputData()
-
-    override val outputData: MBWayOutputData?
+    override val outputData: MBWayOutputData
         get() = _outputDataFlow.value
 
     override val viewFlow: Flow<ComponentViewType?> = MutableStateFlow(MbWayComponentViewType)
+
+    init {
+        createComponentState(outputData)
+    }
 
     override fun getPaymentMethodType(): String {
         return paymentMethod.type ?: PaymentMethodTypes.UNKNOWN
     }
 
-    override fun onInputDataChanged(inputData: MBWayInputData) {
+    override fun updateInputData(update: MBWayInputData.() -> Unit) {
+        inputData.update()
+        onInputDataChanged()
+    }
+
+    private fun onInputDataChanged() {
         Logger.v(TAG, "onInputDataChanged")
-        val sanitizedNumber = inputData.localPhoneNumber.trimStart('0')
-        val outputData = MBWayOutputData(inputData.countryCode + sanitizedNumber)
+        val outputData = createOutputData()
         outputDataChanged(outputData)
         createComponentState(outputData)
+    }
+
+    private fun createOutputData(): MBWayOutputData {
+        val sanitizedNumber = inputData.localPhoneNumber.trimStart('0')
+        return MBWayOutputData(inputData.countryCode + sanitizedNumber)
     }
 
     private fun outputDataChanged(outputData: MBWayOutputData) {
         _outputDataFlow.tryEmit(outputData)
     }
 
-    override fun createComponentState(outputData: MBWayOutputData) {
+    @VisibleForTesting
+    internal fun createComponentState(outputData: MBWayOutputData) {
         val paymentMethod = MBWayPaymentMethod(
             type = MBWayPaymentMethod.PAYMENT_METHOD_TYPE,
             telephoneNumber = outputData.mobilePhoneNumberFieldState.value

@@ -8,6 +8,7 @@
 
 package com.adyen.checkout.bcmc
 
+import androidx.annotation.VisibleForTesting
 import com.adyen.checkout.card.CardValidationMapper
 import com.adyen.checkout.card.api.model.Brand
 import com.adyen.checkout.card.data.CardType
@@ -47,16 +48,16 @@ internal class DefaultBcmcDelegate(
     private val cardEncrypter: CardEncrypter,
 ) : BcmcDelegate {
 
-    private val _outputDataFlow = MutableStateFlow<BcmcOutputData?>(null)
-    override val outputDataFlow: Flow<BcmcOutputData?> = _outputDataFlow
+    private val inputData = BcmcInputData()
+
+    private val _outputDataFlow = MutableStateFlow(createOutputData())
+    override val outputDataFlow: Flow<BcmcOutputData> = _outputDataFlow
 
     private val _componentStateFlow = MutableStateFlow<PaymentComponentState<CardPaymentMethod>?>(null)
     override val componentStateFlow: Flow<PaymentComponentState<CardPaymentMethod>?> = _componentStateFlow
 
     private val _exceptionFlow: MutableSharedFlow<CheckoutException> = MutableSingleEventSharedFlow()
     override val exceptionFlow: Flow<CheckoutException> = _exceptionFlow
-
-    override val inputData = BcmcInputData()
 
     override val outputData get() = _outputDataFlow.value
 
@@ -78,7 +79,7 @@ internal class DefaultBcmcDelegate(
                 onSuccess = { key ->
                     Logger.d(TAG, "Public key fetched")
                     publicKey = key
-                    outputData?.let { createComponentState(it) }
+                    createComponentState(outputData)
                 },
                 onFailure = { e ->
                     Logger.e(TAG, "Unable to fetch public key")
@@ -88,17 +89,24 @@ internal class DefaultBcmcDelegate(
         }
     }
 
-    override fun onInputDataChanged(inputData: BcmcInputData) {
-        val outputData = BcmcOutputData(
-            validateCardNumber(inputData.cardNumber),
-            CardValidationUtils.validateExpiryDate(inputData.expiryDate, Brand.FieldPolicy.REQUIRED),
-            inputData.isStorePaymentSelected
-        )
+    override fun updateInputData(update: BcmcInputData.() -> Unit) {
+        inputData.update()
+        onInputDataChanged()
+    }
+
+    private fun onInputDataChanged() {
+        val outputData = createOutputData()
 
         _outputDataFlow.tryEmit(outputData)
 
         createComponentState(outputData)
     }
+
+    private fun createOutputData() = BcmcOutputData(
+        cardNumberField = validateCardNumber(inputData.cardNumber),
+        expiryDateField = CardValidationUtils.validateExpiryDate(inputData.expiryDate, Brand.FieldPolicy.REQUIRED),
+        isStoredPaymentMethodEnabled = inputData.isStorePaymentSelected
+    )
 
     private fun validateCardNumber(cardNumber: String): FieldState<String> {
         val validation =
@@ -107,7 +115,8 @@ internal class DefaultBcmcDelegate(
     }
 
     @Suppress("ReturnCount")
-    override fun createComponentState(outputData: BcmcOutputData) {
+    @VisibleForTesting
+    internal fun createComponentState(outputData: BcmcOutputData) {
         val paymentComponentData = PaymentComponentData<CardPaymentMethod>()
 
         val publicKey = validatePublicKey(outputData, paymentComponentData) ?: return

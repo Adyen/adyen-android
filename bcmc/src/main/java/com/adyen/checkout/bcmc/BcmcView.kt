@@ -79,16 +79,15 @@ internal class BcmcView @JvmOverloads constructor(
 
     private fun initExpiryDateInput() {
         binding.editTextExpiryDate.setOnChangeListener {
-            delegate.inputData.expiryDate = binding.editTextExpiryDate.date
-            notifyInputDataChanged()
+            delegate.updateInputData { expiryDate = binding.editTextExpiryDate.date }
             binding.textInputLayoutExpiryDate.hideError()
         }
 
         binding.editTextExpiryDate.onFocusChangeListener = OnFocusChangeListener { _: View?, hasFocus: Boolean ->
-            val expiryDateValidation = delegate.outputData?.expiryDateField?.validation
+            val expiryDateValidation = delegate.outputData.expiryDateField.validation
             if (hasFocus) {
                 binding.textInputLayoutExpiryDate.hideError()
-            } else if (expiryDateValidation != null && !expiryDateValidation.isValid()) {
+            } else if (!expiryDateValidation.isValid()) {
                 val errorReasonResId = (expiryDateValidation as Validation.Invalid).reason
                 binding.textInputLayoutExpiryDate.showError(localizedContext.getString(errorReasonResId))
             }
@@ -97,16 +96,15 @@ internal class BcmcView @JvmOverloads constructor(
 
     private fun initCardNumberInput() {
         binding.editTextCardNumber.setOnChangeListener {
-            delegate.inputData.cardNumber = binding.editTextCardNumber.rawValue
-            notifyInputDataChanged()
+            delegate.updateInputData { cardNumber = binding.editTextCardNumber.rawValue }
             setCardNumberError(null)
         }
 
         binding.editTextCardNumber.onFocusChangeListener = OnFocusChangeListener { _: View?, hasFocus: Boolean ->
-            val cardNumberValidation = delegate.outputData?.cardNumberField?.validation
+            val cardNumberValidation = delegate.outputData.cardNumberField.validation
             if (hasFocus) {
                 setCardNumberError(null)
-            } else if (cardNumberValidation != null && !cardNumberValidation.isValid()) {
+            } else if (!cardNumberValidation.isValid()) {
                 val errorReasonResId = (cardNumberValidation as Validation.Invalid).reason
                 setCardNumberError(errorReasonResId)
             }
@@ -116,17 +114,12 @@ internal class BcmcView @JvmOverloads constructor(
     private fun initStorePaymentMethodSwitch() {
         binding.switchStorePaymentMethod.isVisible = delegate.configuration.isStorePaymentFieldVisible
         binding.switchStorePaymentMethod.setOnCheckedChangeListener { _: CompoundButton?, isChecked: Boolean ->
-            delegate.inputData.isStorePaymentSelected = isChecked
-            notifyInputDataChanged()
+            delegate.updateInputData { isStorePaymentSelected = isChecked }
         }
     }
 
-    private fun notifyInputDataChanged() {
-        delegate.onInputDataChanged(delegate.inputData)
-    }
-
     override fun highlightValidationErrors() {
-        val outputData = delegate.outputData ?: return
+        val outputData = delegate.outputData
 
         var isErrorFocused = false
         val cardNumberValidation = outputData.cardNumberField.validation

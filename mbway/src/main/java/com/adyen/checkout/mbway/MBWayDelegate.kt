@@ -16,23 +16,18 @@ import com.adyen.checkout.components.util.CountryInfo
 import kotlinx.coroutines.flow.Flow
 
 interface MBWayDelegate :
-    PaymentMethodDelegate<
-        MBWayConfiguration,
-        MBWayInputData,
-        MBWayOutputData,
-        PaymentComponentState<MBWayPaymentMethod>
-        >,
+    PaymentMethodDelegate,
     ViewProvidingDelegate {
 
     val configuration: MBWayConfiguration
 
-    val inputData: MBWayInputData
-
-    val outputData: MBWayOutputData?
+    val outputData: MBWayOutputData
 
     val outputDataFlow: Flow<MBWayOutputData?>
 
     val componentStateFlow: Flow<PaymentComponentState<MBWayPaymentMethod>?>
 
     fun getSupportedCountries(): List<CountryInfo>
+
+    fun updateInputData(update: MBWayInputData.() -> Unit)
 }

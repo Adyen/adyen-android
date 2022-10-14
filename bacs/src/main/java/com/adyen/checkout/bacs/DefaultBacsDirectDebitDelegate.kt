@@ -25,19 +25,22 @@ internal class DefaultBacsDirectDebitDelegate(
     val paymentMethod: PaymentMethod,
 ) : BacsDirectDebitDelegate {
 
-    override val inputData: BacsDirectDebitInputData = BacsDirectDebitInputData()
+    private val inputData: BacsDirectDebitInputData = BacsDirectDebitInputData()
 
-    private val _outputDataFlow = MutableStateFlow<BacsDirectDebitOutputData?>(null)
-    override val outputDataFlow: Flow<BacsDirectDebitOutputData?> = _outputDataFlow
+    private val _outputDataFlow = MutableStateFlow(createOutputData())
+    override val outputDataFlow: Flow<BacsDirectDebitOutputData> = _outputDataFlow
 
-    override val outputData
-        get() = _outputDataFlow.value
+    override val outputData get() = _outputDataFlow.value
 
     private val _componentStateFlow = MutableStateFlow<BacsDirectDebitComponentState?>(null)
     override val componentStateFlow: Flow<BacsDirectDebitComponentState?> = _componentStateFlow
 
+    init {
+        createComponentState(outputData)
+    }
+
     @VisibleForTesting
-    @Suppress("VariableNaming")
+    @Suppress("VariableNaming", "PropertyName")
     internal val _viewFlow = MutableStateFlow(BacsComponentViewType.INPUT)
     override val viewFlow: Flow<ComponentViewType?> = _viewFlow
 
@@ -50,35 +53,28 @@ internal class DefaultBacsDirectDebitDelegate(
                 Logger.e(TAG, "Current mode is already $mode")
                 false
             }
-            mode == BacsDirectDebitMode.CONFIRMATION && outputData?.isValid != true -> {
+            mode == BacsDirectDebitMode.CONFIRMATION && !outputData.isValid -> {
                 Logger.e(TAG, "Cannot set confirmation view when input is not valid")
                 false
             }
             else -> {
                 Logger.d(TAG, "Setting mode to $mode")
-                inputData.mode = mode
-                onInputDataChanged(inputData)
+                updateInputData { this.mode = mode }
                 true
             }
         }
     }
 
-    override fun onInputDataChanged(inputData: BacsDirectDebitInputData) {
-        val outputData = BacsDirectDebitOutputData(
-            holderNameState = BacsDirectDebitValidationUtils.validateHolderName(inputData.holderName),
-            bankAccountNumberState = BacsDirectDebitValidationUtils
-                .validateBankAccountNumber(inputData.bankAccountNumber),
-            sortCodeState = BacsDirectDebitValidationUtils.validateSortCode(inputData.sortCode),
-            shopperEmailState = BacsDirectDebitValidationUtils.validateShopperEmail(inputData.shopperEmail),
-            isAmountConsentChecked = inputData.isAmountConsentChecked,
-            isAccountConsentChecked = inputData.isAccountConsentChecked,
-            mode = inputData.mode,
-        )
+    override fun updateInputData(update: BacsDirectDebitInputData.() -> Unit) {
+        inputData.update()
+        onInputDataChanged()
+    }
 
+    private fun onInputDataChanged() {
         updateViewType(inputData.mode)
 
+        val outputData = createOutputData()
         _outputDataFlow.tryEmit(outputData)
-
         createComponentState(outputData)
     }
 
@@ -93,7 +89,19 @@ internal class DefaultBacsDirectDebitDelegate(
         }
     }
 
-    override fun createComponentState(outputData: BacsDirectDebitOutputData) {
+    private fun createOutputData() = BacsDirectDebitOutputData(
+        holderNameState = BacsDirectDebitValidationUtils.validateHolderName(inputData.holderName),
+        bankAccountNumberState = BacsDirectDebitValidationUtils
+            .validateBankAccountNumber(inputData.bankAccountNumber),
+        sortCodeState = BacsDirectDebitValidationUtils.validateSortCode(inputData.sortCode),
+        shopperEmailState = BacsDirectDebitValidationUtils.validateShopperEmail(inputData.shopperEmail),
+        isAmountConsentChecked = inputData.isAmountConsentChecked,
+        isAccountConsentChecked = inputData.isAccountConsentChecked,
+        mode = inputData.mode,
+    )
+
+    @VisibleForTesting
+    internal fun createComponentState(outputData: BacsDirectDebitOutputData) {
         val bacsDirectDebitPaymentMethod = BacsDirectDebitPaymentMethod(
             type = BacsDirectDebitPaymentMethod.PAYMENT_METHOD_TYPE,
             holderName = outputData.holderNameState.value,

@@ -169,9 +169,9 @@ internal class DefaultCardDelegateTest {
             delegate.initialize(CoroutineScope(UnconfinedTestDispatcher()))
 
             delegate.outputDataFlow.test {
-                delegate.onInputDataChanged(CardInputData())
+                delegate.updateInputData { /* Empty to trigger an update */ }
 
-                with(requireNotNull(expectMostRecentItem())) {
+                with(expectMostRecentItem()) {
                     assertTrue(detectedCardTypes.isEmpty())
                 }
             }
@@ -191,12 +191,12 @@ internal class DefaultCardDelegateTest {
             delegate.initialize(CoroutineScope(UnconfinedTestDispatcher()))
 
             delegate.outputDataFlow.test {
-                delegate.onInputDataChanged(CardInputData())
+                delegate.updateInputData { /* Empty to trigger an update */ }
 
                 val expectedDetectedCardTypes =
                     detectCardTypeRepository.getDetectedCardTypesLocal(supportedCardTypes)
 
-                with(requireNotNull(expectMostRecentItem())) {
+                with(expectMostRecentItem()) {
                     assertEquals(expectedDetectedCardTypes, detectedCardTypes)
                     assertFalse(isDualBranded)
                 }
@@ -217,12 +217,12 @@ internal class DefaultCardDelegateTest {
             delegate.initialize(CoroutineScope(UnconfinedTestDispatcher()))
 
             delegate.outputDataFlow.test {
-                delegate.onInputDataChanged(CardInputData())
+                delegate.updateInputData { /* Empty to trigger an update */ }
 
                 val expectedDetectedCardTypes =
                     detectCardTypeRepository.getDetectedCardTypesNetwork(supportedCardTypes).filter { it.isSupported }
 
-                with(requireNotNull(expectMostRecentItem())) {
+                with(expectMostRecentItem()) {
                     assertEquals(expectedDetectedCardTypes, detectedCardTypes)
                     assertFalse(isDualBranded)
                 }
@@ -244,15 +244,14 @@ internal class DefaultCardDelegateTest {
             delegate.outputDataFlow.test {
                 val invalidLuhnCardNumber = "192382023091310912"
 
-                val inputData = delegate.inputData.apply {
+                delegate.updateInputData {
                     cardNumber = invalidLuhnCardNumber
                     selectedCardIndex = 1
                 }
-                delegate.onInputDataChanged(inputData)
 
                 val expectedDetectedCardTypes = DetectedCardTypesUtils.filterDetectedCardTypes(
-                    detectCardTypeRepository.getDetectedCardTypesDualBranded(supportedCardTypes),
-                    inputData.selectedCardIndex
+                    detectedCardTypes = detectCardTypeRepository.getDetectedCardTypesDualBranded(supportedCardTypes),
+                    selectedCardIndex = 1,
                 )
 
                 val selectedCard =
@@ -262,7 +261,7 @@ internal class DefaultCardDelegateTest {
                 assertEquals(Brand.FieldPolicy.HIDDEN, selectedCard.expiryDatePolicy)
                 assertEquals(Brand.FieldPolicy.OPTIONAL, selectedCard.cvcPolicy)
 
-                with(requireNotNull(expectMostRecentItem())) {
+                with(expectMostRecentItem()) {
                     assertEquals(expectedDetectedCardTypes, detectedCardTypes)
                     assertEquals(FieldState(invalidLuhnCardNumber, Validation.Valid), cardNumberState)
                     assertTrue(expiryDateState.validation is Validation.Valid)
@@ -279,9 +278,9 @@ internal class DefaultCardDelegateTest {
             delegate.initialize(CoroutineScope(UnconfinedTestDispatcher()))
 
             delegate.outputDataFlow.test {
-                delegate.onInputDataChanged(CardInputData())
+                delegate.updateInputData { /* Empty to trigger an update */ }
 
-                with(requireNotNull(expectMostRecentItem())) {
+                with(expectMostRecentItem()) {
                     assertFalse(isValid)
                     assertTrue(cardNumberState.validation is Validation.Invalid)
                     assertTrue(expiryDateState.validation is Validation.Invalid)
@@ -305,9 +304,9 @@ internal class DefaultCardDelegateTest {
             delegate.initialize(CoroutineScope(UnconfinedTestDispatcher()))
 
             delegate.outputDataFlow.test {
-                delegate.onInputDataChanged(CardInputData())
+                delegate.updateInputData { /* Empty to trigger an update */ }
 
-                with(requireNotNull(expectMostRecentItem())) {
+                with(expectMostRecentItem()) {
                     assertFalse(isValid)
                     assertTrue(cardNumberState.validation is Validation.Invalid)
                     assertTrue(expiryDateState.validation is Validation.Invalid)
@@ -327,15 +326,14 @@ internal class DefaultCardDelegateTest {
             delegate.initialize(CoroutineScope(UnconfinedTestDispatcher()))
 
             delegate.outputDataFlow.test {
-                val inputData = delegate.inputData.apply {
+                delegate.updateInputData {
                     cardNumber = TEST_CARD_NUMBER
                     securityCode = TEST_SECURITY_CODE
                     expiryDate = TEST_EXPIRY_DATE
                 }
 
-                delegate.onInputDataChanged(inputData)
 
-                with(requireNotNull(expectMostRecentItem())) {
+                with(expectMostRecentItem()) {
                     assertTrue(isValid)
                     assertEquals(createOutputData(), this)
                 }
@@ -381,7 +379,7 @@ internal class DefaultCardDelegateTest {
                     option = InstallmentOption.REVOLVING
                 )
 
-                val inputData = delegate.inputData.apply {
+                delegate.updateInputData {
                     cardNumber = TEST_CARD_NUMBER
                     securityCode = TEST_SECURITY_CODE
                     expiryDate = TEST_EXPIRY_DATE
@@ -402,9 +400,6 @@ internal class DefaultCardDelegateTest {
                         country = "Netherlands"
                     }
                 }
-
-                delegate.onInputDataChanged(inputData)
-
 
                 val expectedAddressOutputData = createAddressOutputData(
                     postalCode = FieldState("1011 DJ", Validation.Valid),
@@ -430,8 +425,8 @@ internal class DefaultCardDelegateTest {
                 )
 
                 val expectedCountries = AddressFormUtils.markAddressListItemSelected(
-                    countryOptions,
-                    inputData.address.country
+                    list = countryOptions,
+                    code = null,
                 )
 
                 val expectedOutputData = createOutputData(
@@ -460,7 +455,7 @@ internal class DefaultCardDelegateTest {
                     cardBrands = cardBrands,
                 )
 
-                with(requireNotNull(expectMostRecentItem())) {
+                with(expectMostRecentItem()) {
                     assertTrue(isValid)
                     assertEquals(expectedOutputData, this)
                 }

@@ -9,14 +9,18 @@
 package com.adyen.checkout.voucher
 
 import android.content.Context
+import android.net.Uri
 import android.util.AttributeSet
 import android.view.LayoutInflater
 import android.view.View
 import android.widget.LinearLayout
+import androidx.browser.customtabs.CustomTabsIntent
 import com.adyen.checkout.components.api.ImageLoader
+import com.adyen.checkout.components.api.LogoApi
 import com.adyen.checkout.components.base.ComponentDelegate
 import com.adyen.checkout.components.extensions.setLocalizedTextFromStyle
 import com.adyen.checkout.components.ui.ComponentView
+import com.adyen.checkout.components.ui.util.ThemeUtil
 import com.adyen.checkout.core.log.LogUtil
 import com.adyen.checkout.core.log.Logger
 import com.adyen.checkout.voucher.databinding.VoucherViewBinding
@@ -43,6 +47,8 @@ internal class VoucherView @JvmOverloads constructor(
 
     private lateinit var localizedContext: Context
 
+    override val isConfirmationRequired: Boolean = false
+
     init {
         orientation = VERTICAL
         val padding = resources.getDimension(R.dimen.standard_margin).toInt()
@@ -58,6 +64,8 @@ internal class VoucherView @JvmOverloads constructor(
         imageLoader = ImageLoader.getInstance(context, delegate.configuration.environment)
 
         observeDelegate(delegate, coroutineScope)
+
+        binding.textViewDownload.setOnClickListener { launchDownloadIntent(delegate.outputData.downloadUrl) }
     }
 
     private fun initLocalizedStrings(localizedContext: Context) {
@@ -80,9 +88,21 @@ internal class VoucherView @JvmOverloads constructor(
 
     private fun outputDataChanged(outputData: VoucherOutputData) {
         Logger.d(TAG, "outputDataChanged")
+        loadLogo(outputData.paymentMethodType)
+    }
+    private fun loadLogo(paymentMethodType: String?) {
+        if (!paymentMethodType.isNullOrEmpty()) {
+            imageLoader.load(paymentMethodType, binding.imageViewLogo, LogoApi.Size.MEDIUM)
+        }
     }
 
-    override val isConfirmationRequired: Boolean = false
+    private fun launchDownloadIntent(url: String?) {
+        CustomTabsIntent.Builder()
+            .setShowTitle(true)
+            .setToolbarColor(ThemeUtil.getPrimaryThemeColor(context))
+            .build()
+            .launchUrl(context, Uri.parse(url))
+    }
 
     override fun highlightValidationErrors() {
         // No validation required

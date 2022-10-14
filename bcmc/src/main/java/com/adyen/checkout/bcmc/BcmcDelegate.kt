@@ -17,21 +17,14 @@ import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.flow.Flow
 
 interface BcmcDelegate :
-    PaymentMethodDelegate<
-        BcmcConfiguration,
-        BcmcInputData,
-        BcmcOutputData,
-        PaymentComponentState<CardPaymentMethod>
-        >,
+    PaymentMethodDelegate,
     ViewProvidingDelegate {
 
     val configuration: BcmcConfiguration
 
-    val inputData: BcmcInputData
+    val outputData: BcmcOutputData
 
-    val outputData: BcmcOutputData?
-
-    val outputDataFlow: Flow<BcmcOutputData?>
+    val outputDataFlow: Flow<BcmcOutputData>
 
     val componentStateFlow: Flow<PaymentComponentState<CardPaymentMethod>?>
 
@@ -40,4 +33,6 @@ interface BcmcDelegate :
     fun initialize(coroutineScope: CoroutineScope)
 
     fun isCardNumberSupported(cardNumber: String?): Boolean
+
+    fun updateInputData(update: BcmcInputData.() -> Unit)
 }
