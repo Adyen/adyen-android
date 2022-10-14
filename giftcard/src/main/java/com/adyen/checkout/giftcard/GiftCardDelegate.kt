@@ -18,8 +18,6 @@ interface GiftCardDelegate :
     PaymentMethodDelegate,
     ViewProvidingDelegate {
 
-    val configuration: GiftCardConfiguration
-
     val outputData: GiftCardOutputData
 
     val outputDataFlow: Flow<GiftCardOutputData>

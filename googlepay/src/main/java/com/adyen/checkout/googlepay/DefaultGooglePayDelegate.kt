@@ -19,7 +19,7 @@ import kotlinx.coroutines.flow.MutableStateFlow
 
 internal class DefaultGooglePayDelegate(
     private val paymentMethod: PaymentMethod,
-    private val configuration: GooglePayConfiguration,
+    override val configuration: GooglePayConfiguration,
 ) : GooglePayDelegate {
 
     private val inputData: GooglePayInputData = GooglePayInputData()

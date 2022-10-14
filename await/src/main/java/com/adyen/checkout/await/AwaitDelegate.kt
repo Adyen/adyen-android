@@ -20,6 +20,4 @@ interface AwaitDelegate :
     DetailsEmittingDelegate,
     ViewableDelegate<AwaitOutputData>,
     StatusPollingDelegate,
-    ViewProvidingDelegate {
-    val configuration: AwaitConfiguration
-}
+    ViewProvidingDelegate

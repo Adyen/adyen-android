@@ -38,7 +38,7 @@ import kotlinx.coroutines.flow.onEach
 @Suppress("TooManyFunctions")
 internal class DefaultGenericActionDelegate(
     private val savedStateHandle: SavedStateHandle,
-    private val configuration: GenericActionConfiguration,
+    override val configuration: GenericActionConfiguration,
     private val actionDelegateProvider: ActionDelegateProvider,
 ) : GenericActionDelegate {
     private var _delegate: ActionDelegate<Action>? = null

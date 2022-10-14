@@ -203,6 +203,7 @@ internal class DefaultGenericActionDelegateTest(
     fun `when set3DS2UICustomization is called on the generic delegate after handleAction then it's also called on the 3DS2 delegate`() =
         runTest {
             val adyen3DS2Delegate = Test3DS2Delegate()
+            @Suppress("UNCHECKED_CAST")
             whenever(
                 actionDelegateProvider.get(any(), any(), any(), any())
             ) doReturn adyen3DS2Delegate as ActionDelegate<Action>
@@ -223,6 +224,7 @@ internal class DefaultGenericActionDelegateTest(
     fun `when set3DS2UICustomization is called on the generic delegate before handleAction then it's also called on the 3DS2 delegate`() =
         runTest {
             val adyen3DS2Delegate = Test3DS2Delegate()
+            @Suppress("UNCHECKED_CAST")
             whenever(
                 actionDelegateProvider.get(any(), any(), any(), any())
             ) doReturn adyen3DS2Delegate as ActionDelegate<Action>
@@ -242,8 +244,10 @@ internal class DefaultGenericActionDelegateTest(
     @Test
     fun `when handleAction is called with a Threeds2ChallengeAction the inner delegate is not re-created`() = runTest {
         val adyen3DS2Delegate = Test3DS2Delegate()
+        @Suppress("UNCHECKED_CAST")
         whenever(
             actionDelegateProvider.get(any(), any(), any(), any())
+
         ) doReturn adyen3DS2Delegate as ActionDelegate<Action>
 
         genericActionDelegate.initialize(CoroutineScope(UnconfinedTestDispatcher()))

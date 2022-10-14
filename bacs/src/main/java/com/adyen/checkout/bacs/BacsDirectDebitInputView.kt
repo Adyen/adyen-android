@@ -172,9 +172,8 @@ internal class BacsDirectDebitInputView @JvmOverloads constructor(
             .launchIn(coroutineScope)
     }
 
-    private fun outputDataChanged(bacsDirectDebitOutputData: BacsDirectDebitOutputData?) {
+    private fun outputDataChanged(bacsDirectDebitOutputData: BacsDirectDebitOutputData) {
         Logger.v(TAG, "bacsDirectDebitOutputData changed")
-        bacsDirectDebitOutputData ?: return
 
         onBankAccountNumberValidated(bacsDirectDebitOutputData.bankAccountNumberState)
         onSortCodeValidated(bacsDirectDebitOutputData.sortCodeState)

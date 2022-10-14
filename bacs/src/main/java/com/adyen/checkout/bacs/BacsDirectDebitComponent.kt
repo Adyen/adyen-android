@@ -13,7 +13,7 @@ import androidx.lifecycle.viewModelScope
 import com.adyen.checkout.bacs.BacsDirectDebitComponent.Companion.PROVIDER
 import com.adyen.checkout.components.PaymentComponentProvider
 import com.adyen.checkout.components.base.BasePaymentComponent
-import com.adyen.checkout.components.ui.ViewProvidingComponent
+import com.adyen.checkout.components.ui.ViewableComponent
 import com.adyen.checkout.components.ui.view.ComponentViewType
 import com.adyen.checkout.components.util.PaymentMethodTypes
 import kotlinx.coroutines.flow.Flow
@@ -31,7 +31,7 @@ class BacsDirectDebitComponent(
 ) : BasePaymentComponent<
     BacsDirectDebitConfiguration,
     BacsDirectDebitComponentState>(savedStateHandle, delegate, configuration),
-    ViewProvidingComponent {
+    ViewableComponent {
 
     override val viewFlow: Flow<ComponentViewType?> = delegate.viewFlow
 

@@ -32,18 +32,18 @@ import kotlinx.coroutines.flow.onEach
  */
 class GooglePayComponent(
     savedStateHandle: SavedStateHandle,
-    private val googlePayDelegate: GooglePayDelegate,
+    override val delegate: GooglePayDelegate,
     configuration: GooglePayConfiguration
 ) :
     BasePaymentComponent<GooglePayConfiguration, GooglePayComponentState>(
         savedStateHandle,
-        googlePayDelegate,
+        delegate,
         configuration
     ),
     ActivityResultHandlingComponent {
 
     init {
-        googlePayDelegate.componentStateFlow
+        delegate.componentStateFlow
             .filterNotNull()
             .onEach { notifyStateChanged(it) }
             .launchIn(viewModelScope)
@@ -59,7 +59,7 @@ class GooglePayComponent(
      */
     fun startGooglePayScreen(activity: Activity, requestCode: Int) {
         d(TAG, "startGooglePayScreen")
-        val googlePayParams = googlePayDelegate.getGooglePayParams()
+        val googlePayParams = delegate.getGooglePayParams()
         val paymentsClient = Wallet.getPaymentsClient(activity, GooglePayUtils.createWalletOptions(googlePayParams))
         val paymentDataRequest = GooglePayUtils.createPaymentDataRequest(googlePayParams)
         // TODO this forces us to use the deprecated onActivityResult. Look into alternatives when/if Google provides any later.
@@ -80,7 +80,7 @@ class GooglePayComponent(
                     return
                 }
                 val paymentData = PaymentData.getFromIntent(data)
-                googlePayDelegate.updateInputData { this.paymentData = paymentData }
+                delegate.updateInputData { this.paymentData = paymentData }
             }
             Activity.RESULT_CANCELED -> notifyException(ComponentException("Payment canceled."))
             AutoResolveHelper.RESULT_ERROR -> {

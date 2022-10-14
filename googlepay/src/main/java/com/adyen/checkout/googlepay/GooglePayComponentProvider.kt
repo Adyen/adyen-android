@@ -46,7 +46,7 @@ class GooglePayComponentProvider :
         val googlePayFactory = viewModelFactory(savedStateRegistryOwner, defaultArgs) { savedStateHandle ->
             GooglePayComponent(
                 savedStateHandle = savedStateHandle,
-                googlePayDelegate = DefaultGooglePayDelegate(paymentMethod, configuration),
+                delegate = DefaultGooglePayDelegate(paymentMethod, configuration),
                 configuration = configuration,
             )
         }

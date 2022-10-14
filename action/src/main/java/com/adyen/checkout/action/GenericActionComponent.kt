@@ -9,7 +9,6 @@ package com.adyen.checkout.action
 
 import android.app.Activity
 import android.app.Application
-import android.content.Context
 import android.content.Intent
 import androidx.lifecycle.DefaultLifecycleObserver
 import androidx.lifecycle.LifecycleOwner
@@ -18,12 +17,12 @@ import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.viewModelScope
 import com.adyen.checkout.components.ActionComponentData
 import com.adyen.checkout.components.ActionComponentProvider
-import com.adyen.checkout.components.ViewableComponent
 import com.adyen.checkout.components.base.ActionDelegate
 import com.adyen.checkout.components.base.BaseActionComponent
+import com.adyen.checkout.components.base.Configuration
 import com.adyen.checkout.components.base.IntentHandlingComponent
 import com.adyen.checkout.components.model.payments.response.Action
-import com.adyen.checkout.components.ui.ViewProvidingComponent
+import com.adyen.checkout.components.ui.ViewableComponent
 import com.adyen.checkout.components.ui.view.ComponentViewType
 import com.adyen.checkout.core.log.LogUtil
 import com.adyen.threeds2.customization.UiCustomization
@@ -37,10 +36,9 @@ class GenericActionComponent(
     application: Application,
     configuration: GenericActionConfiguration,
     private val genericActionDelegate: GenericActionDelegate,
-) : BaseActionComponent<GenericActionConfiguration>(savedStateHandle, application, configuration),
-    ViewableComponent<GenericActionConfiguration, ActionComponentData>,
-    IntentHandlingComponent,
-    ViewProvidingComponent {
+) : BaseActionComponent<Configuration>(savedStateHandle, application, configuration),
+    ViewableComponent,
+    IntentHandlingComponent {
 
     override val delegate: ActionDelegate<Action>
         get() = genericActionDelegate.delegate
@@ -92,8 +90,6 @@ class GenericActionComponent(
     override fun handleIntent(intent: Intent) {
         genericActionDelegate.handleIntent(intent)
     }
-
-    override fun sendAnalyticsEvent(context: Context) = Unit
 
     override fun onCleared() {
         super.onCleared()

@@ -10,8 +10,6 @@ interface SepaDelegate :
     PaymentMethodDelegate,
     ViewProvidingDelegate {
 
-    val configuration: SepaConfiguration
-
     val outputData: SepaOutputData
 
     val outputDataFlow: Flow<SepaOutputData>

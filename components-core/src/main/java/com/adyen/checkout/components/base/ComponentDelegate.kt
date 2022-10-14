@@ -8,4 +8,6 @@
 
 package com.adyen.checkout.components.base
 
-interface ComponentDelegate
+interface ComponentDelegate {
+    val configuration: Configuration
+}

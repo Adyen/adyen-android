@@ -64,7 +64,7 @@ internal class QrCodeView @JvmOverloads constructor(
 
         observeDelegate(delegate, coroutineScope)
 
-        binding.copyButton.setOnClickListener { copyCode(delegate.outputData?.qrCodeData) }
+        binding.copyButton.setOnClickListener { copyCode(delegate.outputData.qrCodeData) }
     }
 
     private fun initLocalizedStrings(localizedContext: Context) {

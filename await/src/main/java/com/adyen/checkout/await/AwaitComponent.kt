@@ -9,7 +9,6 @@ package com.adyen.checkout.await
 
 import android.app.Activity
 import android.app.Application
-import android.content.Context
 import androidx.lifecycle.DefaultLifecycleObserver
 import androidx.lifecycle.LifecycleOwner
 import androidx.lifecycle.Observer
@@ -17,11 +16,10 @@ import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.viewModelScope
 import com.adyen.checkout.components.ActionComponentData
 import com.adyen.checkout.components.ActionComponentProvider
-import com.adyen.checkout.components.ViewableComponent
 import com.adyen.checkout.components.base.BaseActionComponent
 import com.adyen.checkout.components.model.payments.response.Action
 import com.adyen.checkout.components.model.payments.response.AwaitAction
-import com.adyen.checkout.components.ui.ViewProvidingComponent
+import com.adyen.checkout.components.ui.ViewableComponent
 import com.adyen.checkout.components.ui.view.ComponentViewType
 import com.adyen.checkout.core.exception.ComponentException
 import com.adyen.checkout.core.log.LogUtil
@@ -37,8 +35,7 @@ class AwaitComponent(
     configuration: AwaitConfiguration,
     override val delegate: AwaitDelegate,
 ) : BaseActionComponent<AwaitConfiguration>(savedStateHandle, application, configuration),
-    ViewableComponent<AwaitConfiguration, ActionComponentData>,
-    ViewProvidingComponent {
+    ViewableComponent {
 
     override val viewFlow: Flow<ComponentViewType?> get() = delegate.viewFlow
 
@@ -76,8 +73,6 @@ class AwaitComponent(
             }
         })
     }
-
-    override fun sendAnalyticsEvent(context: Context) = Unit
 
     override fun onCleared() {
         super.onCleared()

@@ -19,8 +19,6 @@ import com.adyen.checkout.core.log.LogUtil
 import com.adyen.checkout.core.log.Logger
 import com.adyen.checkout.issuerlist.databinding.IssuerListRecyclerViewBinding
 import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.flow.launchIn
-import kotlinx.coroutines.flow.onEach
 
 internal class IssuerListRecyclerView @JvmOverloads constructor(
     context: Context,
@@ -48,8 +46,6 @@ internal class IssuerListRecyclerView @JvmOverloads constructor(
         this.localizedContext = localizedContext
         initLocalizedStrings(localizedContext)
 
-        observeDelegate(delegate, coroutineScope)
-
         binding.recyclerIssuers.adapter = IssuerListRecyclerAdapter(
             imageLoader = getInstance(context, delegate.configuration.environment),
             paymentMethod = delegate.getPaymentMethodType(),
@@ -62,16 +58,6 @@ internal class IssuerListRecyclerView @JvmOverloads constructor(
 
     private fun initLocalizedStrings(localizedContext: Context) {
         // no embedded localized strings on this view
-    }
-
-    private fun observeDelegate(delegate: IssuerListDelegate<*>, coroutineScope: CoroutineScope) {
-        delegate.outputDataFlow
-            .onEach { outputDataChanged(it) }
-            .launchIn(coroutineScope)
-    }
-
-    private fun outputDataChanged(issuerListOutputData: IssuerListOutputData?) {
-        // no ops
     }
 
     override val isConfirmationRequired: Boolean = false

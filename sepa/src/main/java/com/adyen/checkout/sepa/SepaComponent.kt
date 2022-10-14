@@ -13,7 +13,7 @@ import com.adyen.checkout.components.PaymentComponentProvider
 import com.adyen.checkout.components.PaymentComponentState
 import com.adyen.checkout.components.base.BasePaymentComponent
 import com.adyen.checkout.components.model.payments.request.SepaPaymentMethod
-import com.adyen.checkout.components.ui.ViewProvidingComponent
+import com.adyen.checkout.components.ui.ViewableComponent
 import com.adyen.checkout.components.ui.view.ComponentViewType
 import com.adyen.checkout.components.util.PaymentMethodTypes
 import com.adyen.checkout.core.log.LogUtil
@@ -35,7 +35,7 @@ class SepaComponent(
     delegate,
     configuration
 ),
-    ViewProvidingComponent {
+    ViewableComponent {
 
     override val viewFlow: Flow<ComponentViewType?> = delegate.viewFlow
 

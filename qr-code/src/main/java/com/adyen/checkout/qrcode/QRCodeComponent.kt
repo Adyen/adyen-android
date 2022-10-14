@@ -9,7 +9,6 @@ package com.adyen.checkout.qrcode
 
 import android.app.Activity
 import android.app.Application
-import android.content.Context
 import android.content.Intent
 import androidx.lifecycle.DefaultLifecycleObserver
 import androidx.lifecycle.LifecycleOwner
@@ -18,12 +17,11 @@ import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.viewModelScope
 import com.adyen.checkout.components.ActionComponentData
 import com.adyen.checkout.components.ActionComponentProvider
-import com.adyen.checkout.components.ViewableComponent
 import com.adyen.checkout.components.base.BaseActionComponent
 import com.adyen.checkout.components.base.IntentHandlingComponent
 import com.adyen.checkout.components.model.payments.response.Action
 import com.adyen.checkout.components.model.payments.response.QrCodeAction
-import com.adyen.checkout.components.ui.ViewProvidingComponent
+import com.adyen.checkout.components.ui.ViewableComponent
 import com.adyen.checkout.components.ui.view.ComponentViewType
 import com.adyen.checkout.core.exception.ComponentException
 import com.adyen.checkout.core.log.LogUtil
@@ -39,9 +37,8 @@ class QRCodeComponent(
     override val delegate: QRCodeDelegate,
 ) :
     BaseActionComponent<QRCodeConfiguration>(savedStateHandle, application, configuration),
-    ViewableComponent<QRCodeConfiguration, ActionComponentData>,
     IntentHandlingComponent,
-    ViewProvidingComponent {
+    ViewableComponent {
 
     override val viewFlow: Flow<ComponentViewType?> get() = delegate.viewFlow
 
@@ -89,8 +86,6 @@ class QRCodeComponent(
             }
         })
     }
-
-    override fun sendAnalyticsEvent(context: Context) = Unit
 
     override fun onCleared() {
         super.onCleared()

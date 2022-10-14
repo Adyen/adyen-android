@@ -14,6 +14,7 @@ import androidx.lifecycle.SavedStateHandle
 import app.cash.turbine.test
 import com.adyen.checkout.components.model.payments.response.RedirectAction
 import com.adyen.checkout.components.repository.PaymentDataRepository
+import com.adyen.checkout.core.api.Environment
 import com.adyen.checkout.core.exception.ComponentException
 import com.adyen.checkout.redirect.test.TestRedirectHandler
 import kotlinx.coroutines.ExperimentalCoroutinesApi
@@ -21,6 +22,7 @@ import kotlinx.coroutines.test.runTest
 import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
+import java.util.Locale
 
 @OptIn(ExperimentalCoroutinesApi::class)
 internal class DefaultRedirectDelegateTest {
@@ -31,9 +33,14 @@ internal class DefaultRedirectDelegateTest {
 
     @BeforeEach
     fun beforeEach() {
+        val configuration = RedirectConfiguration.Builder(
+            Locale.US,
+            Environment.TEST,
+            TEST_CLIENT_KEY
+        ).build()
         redirectHandler = TestRedirectHandler()
         paymentDataRepository = PaymentDataRepository(SavedStateHandle())
-        delegate = DefaultRedirectDelegate(redirectHandler, paymentDataRepository)
+        delegate = DefaultRedirectDelegate(configuration, redirectHandler, paymentDataRepository)
     }
 
     @Test
@@ -81,4 +88,9 @@ internal class DefaultRedirectDelegateTest {
             }
         }
     }
+
+    companion object {
+        private const val TEST_CLIENT_KEY = "test_qwertyuiopasdfghjklzxcvbnmqwerty"
+    }
 }
+

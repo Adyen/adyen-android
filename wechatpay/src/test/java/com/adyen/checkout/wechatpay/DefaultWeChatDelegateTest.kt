@@ -15,6 +15,7 @@ import app.cash.turbine.test
 import com.adyen.checkout.components.model.payments.response.SdkAction
 import com.adyen.checkout.components.model.payments.response.WeChatPaySdkData
 import com.adyen.checkout.components.repository.PaymentDataRepository
+import com.adyen.checkout.core.api.Environment
 import com.adyen.checkout.core.exception.ComponentException
 import com.tencent.mm.opensdk.modelpay.PayResp
 import com.tencent.mm.opensdk.openapi.IWXAPI
@@ -33,6 +34,7 @@ import org.mockito.kotlin.anyOrNull
 import org.mockito.kotlin.doReturn
 import org.mockito.kotlin.verify
 import org.mockito.kotlin.whenever
+import java.util.Locale
 
 @OptIn(ExperimentalCoroutinesApi::class)
 @ExtendWith(MockitoExtension::class)
@@ -46,8 +48,14 @@ internal class DefaultWeChatDelegateTest(
 
     @BeforeEach
     fun beforeEach() {
+        val configuration = WeChatPayActionConfiguration.Builder(
+            Locale.US,
+            Environment.TEST,
+            TEST_CLIENT_KEY
+        ).build()
         paymentDataRepository = PaymentDataRepository(SavedStateHandle())
         delegate = DefaultWeChatDelegate(
+            configuration = configuration,
             iwxApi = iwxApi,
             payRequestGenerator = weChatRequestGenerator,
             paymentDataRepository = paymentDataRepository,
@@ -137,5 +145,9 @@ internal class DefaultWeChatDelegateTest(
 
             cancelAndIgnoreRemainingEvents()
         }
+    }
+
+    companion object {
+        private const val TEST_CLIENT_KEY = "test_qwertyuiopasdfghjklzxcvbnmqwerty"
     }
 }

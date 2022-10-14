@@ -33,6 +33,7 @@ import org.json.JSONException
 import org.json.JSONObject
 
 internal class DefaultWeChatDelegate(
+    override val configuration: WeChatPayActionConfiguration,
     private val iwxApi: IWXAPI,
     private val payRequestGenerator: WeChatRequestGenerator<*>,
     private val paymentDataRepository: PaymentDataRepository,

@@ -14,7 +14,6 @@ import androidx.lifecycle.Observer
 import androidx.lifecycle.SavedStateHandle
 import com.adyen.checkout.components.ComponentError
 import com.adyen.checkout.components.PaymentComponentState
-import com.adyen.checkout.components.ViewableComponent
 import com.adyen.checkout.components.analytics.AnalyticEvent.Companion.create
 import com.adyen.checkout.components.analytics.AnalyticEvent.Flavor
 import com.adyen.checkout.components.analytics.AnalyticsDispatcher.Companion.dispatchEvent
@@ -32,8 +31,7 @@ abstract class BasePaymentComponent<
     savedStateHandle: SavedStateHandle,
     private val paymentMethodDelegate: PaymentMethodDelegate,
     configuration: ConfigurationT
-) : PaymentComponentViewModel<ConfigurationT, ComponentStateT>(savedStateHandle, configuration),
-    ViewableComponent<ConfigurationT, ComponentStateT> {
+) : PaymentComponentViewModel<ConfigurationT, ComponentStateT>(savedStateHandle, configuration) {
 
     private val paymentComponentStateLiveData = MutableLiveData<ComponentStateT>()
     private val componentErrorLiveData = MutableLiveData<ComponentError>()
@@ -92,7 +90,8 @@ abstract class BasePaymentComponent<
      *
      * @param context The context where the component is.
      */
-    override fun sendAnalyticsEvent(context: Context) {
+    // TODO change later when analytics are implemented
+    fun sendAnalyticsEvent(context: Context) {
         if (isAnalyticsEnabled) {
             val flavor: Flavor = if (isCreatedForDropIn) {
                 Flavor.DROPIN

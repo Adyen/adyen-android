@@ -10,29 +10,23 @@ package com.adyen.checkout.molpay
 import androidx.lifecycle.SavedStateHandle
 import com.adyen.checkout.components.PaymentComponentProvider
 import com.adyen.checkout.components.model.payments.request.MolpayPaymentMethod
-import com.adyen.checkout.components.ui.ViewProvidingComponent
-import com.adyen.checkout.components.ui.view.ComponentViewType
 import com.adyen.checkout.components.util.PaymentMethodTypes
 import com.adyen.checkout.issuerlist.IssuerListComponent
 import com.adyen.checkout.issuerlist.IssuerListDelegate
 import com.adyen.checkout.molpay.MolpayComponent.Companion.PROVIDER
-import kotlinx.coroutines.flow.Flow
 
 /**
  * Component should not be instantiated directly. Instead use the [PROVIDER] object.
  */
 class MolpayComponent(
     savedStateHandle: SavedStateHandle,
-    override val delegate: IssuerListDelegate<MolpayPaymentMethod>,
+    delegate: IssuerListDelegate<MolpayPaymentMethod>,
     configuration: MolpayConfiguration
 ) : IssuerListComponent<MolpayPaymentMethod>(
     savedStateHandle,
     delegate,
     configuration
-),
-    ViewProvidingComponent {
-
-    override val viewFlow: Flow<ComponentViewType?> = delegate.viewFlow
+) {
 
     override fun getSupportedPaymentMethodTypes(): Array<String> = PAYMENT_METHOD_TYPES
 

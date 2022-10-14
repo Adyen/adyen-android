@@ -24,8 +24,6 @@ import com.adyen.checkout.components.ui.Validation
 import com.adyen.checkout.core.log.LogUtil
 import com.adyen.checkout.core.log.Logger
 import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.flow.launchIn
-import kotlinx.coroutines.flow.onEach
 
 internal class BlikView @JvmOverloads constructor(
     context: Context,
@@ -58,8 +56,6 @@ internal class BlikView @JvmOverloads constructor(
         this.localizedContext = localizedContext
         initLocalizedStrings(localizedContext)
 
-        observeDelegate(delegate, coroutineScope)
-
         initBlikCodeInput()
     }
 
@@ -74,17 +70,6 @@ internal class BlikView @JvmOverloads constructor(
         )
     }
 
-    private fun observeDelegate(delegate: BlikDelegate, coroutineScope: CoroutineScope) {
-        delegate.outputDataFlow
-            .onEach { outputDataChanged(it) }
-            .launchIn(coroutineScope)
-    }
-
-    private fun outputDataChanged(blikOutputData: BlikOutputData?) {
-        blikOutputData ?: return
-        // no ops
-    }
-
     private fun initBlikCodeInput() {
         binding.editTextBlikCode.setOnChangeListener {
             blikDelegate.updateInputData {
@@ -95,10 +80,10 @@ internal class BlikView @JvmOverloads constructor(
 
         binding.editTextBlikCode.onFocusChangeListener = OnFocusChangeListener { _: View?, hasFocus: Boolean ->
             val outputData = blikDelegate.outputData
-            val blikCodeValidation = outputData?.blikCodeField?.validation
+            val blikCodeValidation = outputData.blikCodeField.validation
             if (hasFocus) {
                 binding.textInputLayoutBlikCode.hideError()
-            } else if (blikCodeValidation != null && !blikCodeValidation.isValid()) {
+            } else if (!blikCodeValidation.isValid()) {
                 val errorReasonResId = (blikCodeValidation as Validation.Invalid).reason
                 binding.textInputLayoutBlikCode.showError(localizedContext.getString(errorReasonResId))
             }
@@ -109,8 +94,7 @@ internal class BlikView @JvmOverloads constructor(
 
     override fun highlightValidationErrors() {
         Logger.d(TAG, "highlightValidationErrors")
-        val outputData = blikDelegate.outputData ?: return
-        val blikCodeValidation = outputData.blikCodeField.validation
+        val blikCodeValidation = blikDelegate.outputData.blikCodeField.validation
         if (!blikCodeValidation.isValid()) {
             binding.textInputLayoutBlikCode.requestFocus()
             val errorReasonResId = (blikCodeValidation as Validation.Invalid).reason

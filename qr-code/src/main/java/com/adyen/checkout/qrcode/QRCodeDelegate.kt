@@ -22,7 +22,4 @@ interface QRCodeDelegate :
     ViewableDelegate<QRCodeOutputData>,
     IntentHandlingDelegate,
     StatusPollingDelegate,
-    ViewProvidingDelegate {
-
-    val configuration: QRCodeConfiguration
-}
+    ViewProvidingDelegate

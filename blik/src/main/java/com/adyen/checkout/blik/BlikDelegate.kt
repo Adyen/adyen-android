@@ -18,8 +18,6 @@ interface BlikDelegate :
     PaymentMethodDelegate,
     ViewProvidingDelegate {
 
-    val configuration: BlikConfiguration
-
     val outputData: BlikOutputData
 
     val outputDataFlow: Flow<BlikOutputData>

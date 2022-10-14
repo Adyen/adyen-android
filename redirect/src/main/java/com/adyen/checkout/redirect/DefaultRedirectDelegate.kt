@@ -28,6 +28,7 @@ import org.json.JSONObject
 private val TAG = LogUtil.getTag()
 
 internal class DefaultRedirectDelegate(
+    override val configuration: RedirectConfiguration,
     private val redirectHandler: RedirectHandler,
     private val paymentDataRepository: PaymentDataRepository,
 ) : RedirectDelegate {

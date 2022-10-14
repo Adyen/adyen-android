@@ -169,9 +169,7 @@ internal class CardView @JvmOverloads constructor(
             .launchIn(coroutineScope)
     }
 
-    private fun outputDataChanged(cardOutputData: CardOutputData?) {
-        cardOutputData ?: return
-
+    private fun outputDataChanged(cardOutputData: CardOutputData) {
         if (isStoredPaymentMethod(cardOutputData)) setStoredCardInterface(cardOutputData)
 
         onCardNumberValidated(cardOutputData)

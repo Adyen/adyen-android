@@ -8,12 +8,16 @@
 
 package com.adyen.checkout.components.ui
 
-import com.adyen.checkout.components.base.ComponentDelegate
 import com.adyen.checkout.components.ui.view.ComponentViewType
 import kotlinx.coroutines.flow.Flow
 
-interface ViewProvidingComponent {
-    val viewFlow: Flow<ComponentViewType?>
+/**
+ * A Component that has an associated View to show or interact with the shopper.
+ */
+interface ViewableComponent {
 
-    val delegate: ComponentDelegate
+    /**
+     * Emits the type of view that should be displayed with the component.
+     */
+    val viewFlow: Flow<ComponentViewType?>
 }

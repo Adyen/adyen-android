@@ -16,9 +16,9 @@ import androidx.core.view.isVisible
 import com.adyen.checkout.components.ComponentError
 import com.adyen.checkout.components.PaymentComponent
 import com.adyen.checkout.components.PaymentComponentState
-import com.adyen.checkout.components.ViewableComponent
 import com.adyen.checkout.components.base.Configuration
 import com.adyen.checkout.components.model.payments.request.PaymentMethodDetails
+import com.adyen.checkout.components.ui.ViewableComponent
 import com.adyen.checkout.components.util.CurrencyUtils
 import com.adyen.checkout.core.exception.CheckoutException
 import com.adyen.checkout.core.log.LogUtil
@@ -77,9 +77,10 @@ class GenericComponentDialogFragment : BaseComponentDialogFragment() {
     private fun attachComponent(
         component: PaymentComponent<PaymentComponentState<in PaymentMethodDetails>, Configuration>
     ) {
+        if (component !is ViewableComponent) throw CheckoutException("Attached component is not viewable")
         component.observe(viewLifecycleOwner, this)
         component.observeErrors(viewLifecycleOwner, createErrorHandlerObserver())
-        binding.componentView.attach(component as ViewableComponent<*, *>, viewLifecycleOwner)
+        binding.componentView.attach(component, viewLifecycleOwner)
 
         if (binding.componentView.isConfirmationRequired) {
             binding.payButton.setOnClickListener { componentDialogViewModel.payButtonClicked() }
