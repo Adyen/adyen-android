@@ -45,7 +45,7 @@ internal class DefaultVoucherDelegateTest {
 
             skipItems(1)
 
-            with(requireNotNull(awaitItem())) {
+            with(awaitItem()) {
                 assertEquals("payment_method_type", paymentMethodType)
                 assertEquals("download_url", downloadUrl)
             }

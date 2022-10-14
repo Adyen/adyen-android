@@ -23,8 +23,6 @@ import com.adyen.checkout.core.log.LogUtil
 import com.adyen.checkout.core.log.Logger
 import com.adyen.checkout.sepa.databinding.SepaViewBinding
 import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.flow.launchIn
-import kotlinx.coroutines.flow.onEach
 
 internal class SepaView @JvmOverloads constructor(
     context: Context,
@@ -58,8 +56,6 @@ internal class SepaView @JvmOverloads constructor(
         this.localizedContext = localizedContext
         initLocalizedStrings(localizedContext)
 
-        observeDelegate(delegate, coroutineScope)
-
         binding.editTextHolderName.setOnChangeListener {
             sepaDelegate.updateInputData { name = binding.editTextHolderName.rawValue }
             binding.textInputLayoutHolderName.hideError()
@@ -89,17 +85,6 @@ internal class SepaView @JvmOverloads constructor(
             R.style.AdyenCheckout_Sepa_AccountNumberInput,
             localizedContext
         )
-    }
-
-    private fun observeDelegate(delegate: SepaDelegate, coroutineScope: CoroutineScope) {
-        delegate.outputDataFlow
-            .onEach { outputDataChanged(it) }
-            .launchIn(coroutineScope)
-    }
-
-    private fun outputDataChanged(sepaOutputData: SepaOutputData?) {
-        Logger.v(TAG, "sepaOutputData changed")
-        // no ops
     }
 
     override val isConfirmationRequired: Boolean = true

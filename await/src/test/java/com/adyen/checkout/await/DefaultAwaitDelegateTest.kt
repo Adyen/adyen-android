@@ -65,12 +65,12 @@ internal class DefaultAwaitDelegateTest {
 
             skipItems(1)
 
-            with(requireNotNull(awaitItem())) {
+            with(awaitItem()) {
                 assertFalse(isValid)
                 assertEquals("test", paymentMethodType)
             }
 
-            with(requireNotNull(awaitItem())) {
+            with(awaitItem()) {
                 assertTrue(isValid)
                 assertEquals("test", paymentMethodType)
             }

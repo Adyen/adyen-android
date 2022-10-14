@@ -45,7 +45,7 @@ internal class DefaultMBWayDelegateTest {
                     localPhoneNumber = "04023456"
                 }
 
-                with(requireNotNull(awaitItem())) {
+                with(awaitItem()) {
                     assertEquals("+14023456", mobilePhoneNumberFieldState.value)
                     assertFalse(isValid)
                 }
@@ -82,7 +82,7 @@ internal class DefaultMBWayDelegateTest {
                     localPhoneNumber = "234567890"
                 }
 
-                with(requireNotNull(awaitItem())) {
+                with(awaitItem()) {
                     assertEquals("+351234567890", mobilePhoneNumberFieldState.value)
                     assertTrue(isValid)
                 }

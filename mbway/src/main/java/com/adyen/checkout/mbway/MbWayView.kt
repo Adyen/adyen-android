@@ -68,10 +68,10 @@ internal class MbWayView @JvmOverloads constructor(
         }
         binding.editTextMobileNumber.onFocusChangeListener = OnFocusChangeListener { _, hasFocus: Boolean ->
             val outputData = delegate.outputData
-            val mobilePhoneNumberValidation = outputData?.mobilePhoneNumberFieldState?.validation
+            val mobilePhoneNumberValidation = outputData.mobilePhoneNumberFieldState.validation
             if (hasFocus) {
                 binding.textInputLayoutMobileNumber.hideError()
-            } else if (outputData != null && mobilePhoneNumberValidation is Validation.Invalid) {
+            } else if (mobilePhoneNumberValidation is Validation.Invalid) {
                 binding.textInputLayoutMobileNumber.showError(
                     localizedContext.getString(mobilePhoneNumberValidation.reason)
                 )
@@ -103,7 +103,7 @@ internal class MbWayView @JvmOverloads constructor(
 
     override fun highlightValidationErrors() {
         Logger.d(TAG, "highlightValidationErrors")
-        val mobilePhoneNumberValidation = delegate.outputData?.mobilePhoneNumberFieldState?.validation
+        val mobilePhoneNumberValidation = delegate.outputData.mobilePhoneNumberFieldState.validation
         if (mobilePhoneNumberValidation is Validation.Invalid) {
             binding.textInputLayoutMobileNumber.showError(
                 localizedContext.getString(mobilePhoneNumberValidation.reason)

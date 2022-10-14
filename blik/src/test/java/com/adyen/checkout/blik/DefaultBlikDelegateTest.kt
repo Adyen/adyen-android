@@ -54,7 +54,7 @@ internal class DefaultBlikDelegateTest {
                     blikCode = ""
                 }
 
-                with(requireNotNull(awaitItem())) {
+                with(awaitItem()) {
                     assertEquals("", blikCodeField.value)
                     assertFalse(isValid)
                 }
@@ -89,7 +89,7 @@ internal class DefaultBlikDelegateTest {
                     blikCode = "545897"
                 }
 
-                with(requireNotNull(awaitItem())) {
+                with(awaitItem()) {
                     assertEquals("545897", blikCodeField.value)
                     assertTrue(isValid)
                 }

@@ -24,8 +24,6 @@ import com.adyen.checkout.core.log.LogUtil
 import com.adyen.checkout.core.log.Logger
 import com.adyen.checkout.giftcard.databinding.GiftcardViewBinding
 import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.flow.launchIn
-import kotlinx.coroutines.flow.onEach
 
 internal class GiftCardView @JvmOverloads constructor(
     context: Context,
@@ -58,7 +56,6 @@ internal class GiftCardView @JvmOverloads constructor(
         this.localizedContext = localizedContext
         initLocalizedStrings(localizedContext)
 
-        observeDelegate(delegate, coroutineScope)
         initInputs()
     }
 
@@ -71,17 +68,6 @@ internal class GiftCardView @JvmOverloads constructor(
             R.style.AdyenCheckout_GiftCard_GiftCardPinInput,
             localizedContext
         )
-    }
-
-    private fun observeDelegate(delegate: GiftCardDelegate, coroutineScope: CoroutineScope) {
-        delegate.outputDataFlow
-            .onEach { outputDataChanged(it) }
-            .launchIn(coroutineScope)
-    }
-
-    private fun outputDataChanged(@Suppress("UNUSED_PARAMETER") giftCardOutputData: GiftCardOutputData?) {
-        Logger.v(TAG, "GiftCardOutputData changed")
-        // no ops
     }
 
     private fun initInputs() {
