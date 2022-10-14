@@ -19,8 +19,6 @@ interface MBWayDelegate :
     PaymentMethodDelegate,
     ViewProvidingDelegate {
 
-    val configuration: MBWayConfiguration
-
     val outputData: MBWayOutputData
 
     val outputDataFlow: Flow<MBWayOutputData?>

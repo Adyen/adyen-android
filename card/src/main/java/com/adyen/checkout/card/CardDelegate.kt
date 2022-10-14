@@ -18,8 +18,6 @@ interface CardDelegate :
     PaymentMethodDelegate,
     ViewProvidingDelegate {
 
-    val configuration: CardConfiguration
-
     val outputData: CardOutputData
 
     val outputDataFlow: Flow<CardOutputData>

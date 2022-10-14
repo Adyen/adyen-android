@@ -56,7 +56,7 @@ class RedirectComponentProvider : ActionComponentProvider<RedirectComponent, Red
     ): RedirectDelegate {
         val redirectHandler = DefaultRedirectHandler()
         val paymentDataRepository = PaymentDataRepository(savedStateHandle)
-        return DefaultRedirectDelegate(redirectHandler, paymentDataRepository)
+        return DefaultRedirectDelegate(configuration, redirectHandler, paymentDataRepository)
     }
 
     override val supportedActionTypes: List<String>

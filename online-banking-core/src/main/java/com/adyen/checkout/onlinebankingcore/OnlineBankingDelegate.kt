@@ -20,8 +20,6 @@ interface OnlineBankingDelegate<IssuerListPaymentMethodT : IssuerListPaymentMeth
     PaymentMethodDelegate,
     ViewProvidingDelegate {
 
-    val configuration: OnlineBankingConfiguration
-
     val outputData: OnlineBankingOutputData
 
     val outputDataFlow: Flow<OnlineBankingOutputData>

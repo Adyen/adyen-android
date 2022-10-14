@@ -60,7 +60,7 @@ class AdyenComponentView @JvmOverloads constructor(
                     viewType = it,
                     delegate = delegate,
                     viewProvider = delegate.getViewProvider(),
-                    configuration = component.configuration,
+                    configuration = delegate.configuration,
                     coroutineScope = lifecycleOwner.lifecycleScope,
                 )
             }

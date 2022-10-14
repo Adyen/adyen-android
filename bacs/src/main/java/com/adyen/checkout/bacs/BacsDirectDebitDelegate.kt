@@ -16,7 +16,7 @@ interface BacsDirectDebitDelegate :
     PaymentMethodDelegate,
     ViewProvidingDelegate {
 
-    val configuration: BacsDirectDebitConfiguration
+    override val configuration: BacsDirectDebitConfiguration
 
     val outputData: BacsDirectDebitOutputData
 

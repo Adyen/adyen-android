@@ -61,7 +61,7 @@ import org.json.JSONObject
 @Suppress("TooManyFunctions", "LongParameterList")
 internal class DefaultAdyen3DS2Delegate(
     private val savedStateHandle: SavedStateHandle,
-    private val configuration: Adyen3DS2Configuration,
+    override val configuration: Adyen3DS2Configuration,
     private val submitFingerprintRepository: SubmitFingerprintRepository,
     private val paymentDataRepository: PaymentDataRepository,
     private val adyen3DS2Serializer: Adyen3DS2Serializer,

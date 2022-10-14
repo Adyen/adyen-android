@@ -64,7 +64,7 @@ class WeChatPayActionComponentProvider :
         val iwxApi: IWXAPI = WXAPIFactory.createWXAPI(application, null, true)
         val requestGenerator = WeChatPayRequestGenerator()
         val paymentDataRepository = PaymentDataRepository(savedStateHandle)
-        return DefaultWeChatDelegate(iwxApi, requestGenerator, paymentDataRepository)
+        return DefaultWeChatDelegate(configuration, iwxApi, requestGenerator, paymentDataRepository)
     }
 
     override val supportedActionTypes: List<String>
