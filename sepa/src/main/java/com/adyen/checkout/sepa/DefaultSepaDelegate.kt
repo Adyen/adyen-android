@@ -25,8 +25,8 @@ internal class DefaultSepaDelegate(
 
     override val outputData: SepaOutputData get() = _outputDataFlow.value
 
-    private val _componentStateFlow = MutableStateFlow<PaymentComponentState<SepaPaymentMethod>?>(null)
-    override val componentStateFlow: Flow<PaymentComponentState<SepaPaymentMethod>?> = _componentStateFlow
+    private val _componentStateFlow = MutableStateFlow(createComponentState())
+    override val componentStateFlow: Flow<PaymentComponentState<SepaPaymentMethod>> = _componentStateFlow
 
     override val viewFlow: Flow<ComponentViewType?> = MutableStateFlow(SepaComponentViewType)
 
@@ -44,30 +44,32 @@ internal class DefaultSepaDelegate(
 
         val outputData = createOutputData()
         _outputDataFlow.tryEmit(outputData)
-        createComponentState(outputData)
+
+        updateComponentState(outputData)
     }
 
     private fun createOutputData() = SepaOutputData(inputData.name, inputData.iban)
 
     @VisibleForTesting
-    internal fun createComponentState(outputData: SepaOutputData) {
+    internal fun updateComponentState(outputData: SepaOutputData) {
+        val componentState = createComponentState(outputData)
+        _componentStateFlow.tryEmit(componentState)
+    }
+
+    private fun createComponentState(
+        outputData: SepaOutputData = this.outputData
+    ): PaymentComponentState<SepaPaymentMethod> {
         val paymentMethod = SepaPaymentMethod(
             type = SepaPaymentMethod.PAYMENT_METHOD_TYPE,
             ownerName = outputData.ownerNameField.value,
             iban = outputData.ibanNumberField.value
         )
         val paymentComponentData = PaymentComponentData(paymentMethod)
-        componentStateChanged(
-            PaymentComponentState(
-                paymentComponentData,
-                outputData.isValid,
-                true
-            )
+        return PaymentComponentState(
+            data = paymentComponentData,
+            isInputValid = outputData.isValid,
+            isReady = true,
         )
-    }
-
-    private fun componentStateChanged(componentState: PaymentComponentState<SepaPaymentMethod>) {
-        _componentStateFlow.tryEmit(componentState)
     }
 
     override fun getViewProvider(): ViewProvider = SepaViewProvider

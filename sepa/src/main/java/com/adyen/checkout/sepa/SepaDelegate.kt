@@ -14,7 +14,7 @@ interface SepaDelegate :
 
     val outputDataFlow: Flow<SepaOutputData>
 
-    val componentStateFlow: Flow<PaymentComponentState<SepaPaymentMethod>?>
+    val componentStateFlow: Flow<PaymentComponentState<SepaPaymentMethod>>
 
     fun updateInputData(update: SepaInputData.() -> Unit)
 }

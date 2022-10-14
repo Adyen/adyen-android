@@ -61,9 +61,9 @@ internal class DefaultSepaDelegateTest {
     fun `when creating component state is successful, then the state is propagated`() = runTest {
         delegate.componentStateFlow.test {
             skipItems(1)
-            delegate.createComponentState(SepaOutputData("name", "NL02ABNA0123456789"))
+            delegate.updateComponentState(SepaOutputData("name", "NL02ABNA0123456789"))
 
-            with(requireNotNull(awaitItem())) {
+            with(awaitItem()) {
                 assertTrue(data.paymentMethod is SepaPaymentMethod)
                 assertTrue(isInputValid)
                 assertTrue(isReady)

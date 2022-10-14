@@ -19,7 +19,6 @@ import com.adyen.checkout.components.util.PaymentMethodTypes
 import com.adyen.checkout.core.log.LogUtil
 import com.adyen.checkout.sepa.SepaComponent.Companion.PROVIDER
 import kotlinx.coroutines.flow.Flow
-import kotlinx.coroutines.flow.filterNotNull
 import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.onEach
 
@@ -41,7 +40,6 @@ class SepaComponent(
 
     init {
         delegate.componentStateFlow
-            .filterNotNull()
             .onEach { notifyStateChanged(it) }
             .launchIn(viewModelScope)
     }
