@@ -71,6 +71,20 @@
             tools:ignore="RequiredSize" />
     </com.google.android.material.textfield.TextInputLayout>
 
+    <com.google.android.material.textfield.TextInputLayout
+        android:id="@+id/textInputLayout_cardHolder"
+        style="@style/AdyenCheckout.TextInputLayout"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+        <com.adyen.checkout.components.ui.view.AdyenTextInputEditText
+            android:id="@+id/editText_cardHolder"
+            style="@style/AdyenCheckout.Card.HolderNameInput"
+            android:nextFocusDown="@id/editText_postalCode"
+            android:nextFocusForward="@id/editText_postalCode"
+            tools:ignore="RequiredSize" />
+    </com.google.android.material.textfield.TextInputLayout>
+
     <androidx.appcompat.widget.SwitchCompat
         android:id="@+id/switch_storePaymentMethod"
         style="@style/AdyenCheckout.Card.StorePaymentSwitch"

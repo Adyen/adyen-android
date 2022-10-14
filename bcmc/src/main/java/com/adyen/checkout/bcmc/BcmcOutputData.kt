@@ -14,11 +14,13 @@ import com.adyen.checkout.components.ui.FieldState
 data class BcmcOutputData internal constructor(
     val cardNumberField: FieldState<String>,
     val expiryDateField: FieldState<ExpiryDate>,
+    val cardHolderNameField: FieldState<String>,
     val isStoredPaymentMethodEnabled: Boolean
 ) : OutputData {
     override val isValid: Boolean
         get() = (
             cardNumberField.validation.isValid() &&
-                expiryDateField.validation.isValid()
+                expiryDateField.validation.isValid() &&
+                cardHolderNameField.validation.isValid()
             )
 }

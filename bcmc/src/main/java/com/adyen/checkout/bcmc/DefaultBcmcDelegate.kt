@@ -10,6 +10,7 @@ package com.adyen.checkout.bcmc
 
 import androidx.annotation.VisibleForTesting
 import com.adyen.checkout.card.CardValidationMapper
+import com.adyen.checkout.card.R
 import com.adyen.checkout.card.api.model.Brand
 import com.adyen.checkout.card.data.CardType
 import com.adyen.checkout.card.data.ExpiryDate
@@ -21,6 +22,7 @@ import com.adyen.checkout.components.model.payments.request.CardPaymentMethod
 import com.adyen.checkout.components.model.payments.request.PaymentComponentData
 import com.adyen.checkout.components.repository.PublicKeyRepository
 import com.adyen.checkout.components.ui.FieldState
+import com.adyen.checkout.components.ui.Validation
 import com.adyen.checkout.components.ui.ViewProvider
 import com.adyen.checkout.components.ui.view.ComponentViewType
 import com.adyen.checkout.components.util.PaymentMethodTypes
@@ -105,6 +107,7 @@ internal class DefaultBcmcDelegate(
     private fun createOutputData() = BcmcOutputData(
         cardNumberField = validateCardNumber(inputData.cardNumber),
         expiryDateField = CardValidationUtils.validateExpiryDate(inputData.expiryDate, Brand.FieldPolicy.REQUIRED),
+        cardHolderNameField = validateHolderName(inputData.cardHolderName),
         isStoredPaymentMethodEnabled = inputData.isStorePaymentSelected
     )
 
@@ -112,6 +115,20 @@ internal class DefaultBcmcDelegate(
         val validation =
             CardValidationUtils.validateCardNumber(cardNumber, enableLuhnCheck = true, isBrandSupported = true)
         return cardValidationMapper.mapCardNumberValidation(cardNumber, validation)
+    }
+
+    private fun validateHolderName(holderName: String): FieldState<String> {
+        return if (configuration.isHolderNameRequired && holderName.isBlank()) {
+            FieldState(
+                holderName,
+                Validation.Invalid(R.string.checkout_holder_name_not_valid)
+            )
+        } else {
+            FieldState(
+                holderName,
+                Validation.Valid
+            )
+        }
     }
 
     @Suppress("ReturnCount")
@@ -133,7 +150,11 @@ internal class DefaultBcmcDelegate(
             encryptedExpiryMonth = encryptedCard.encryptedExpiryMonth,
             encryptedExpiryYear = encryptedCard.encryptedExpiryYear,
             threeDS2SdkVersion = get3DS2SdkVersion(),
-        )
+        ).apply {
+            if (configuration.isHolderNameRequired) {
+                holderName = outputData.cardHolderNameField.value
+            }
+        }
         paymentComponentData.apply {
             paymentMethod = cardPaymentMethod
             storePaymentMethod = outputData.isStoredPaymentMethodEnabled

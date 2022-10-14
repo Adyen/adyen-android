@@ -20,6 +20,7 @@ import androidx.core.view.isVisible
 import com.adyen.checkout.bcmc.databinding.BcmcViewBinding
 import com.adyen.checkout.components.base.ComponentDelegate
 import com.adyen.checkout.components.extensions.hideError
+import com.adyen.checkout.components.extensions.isVisible
 import com.adyen.checkout.components.extensions.setLocalizedHintFromStyle
 import com.adyen.checkout.components.extensions.setLocalizedTextFromStyle
 import com.adyen.checkout.components.extensions.showError
@@ -57,6 +58,7 @@ internal class BcmcView @JvmOverloads constructor(
 
         initCardNumberInput()
         initExpiryDateInput()
+        initCardHolderInput()
         initStorePaymentMethodSwitch()
     }
 
@@ -68,6 +70,10 @@ internal class BcmcView @JvmOverloads constructor(
             )
             textInputLayoutExpiryDate.setLocalizedHintFromStyle(
                 R.style.AdyenCheckout_Card_ExpiryDateInput,
+                localizedContext
+            )
+            binding.textInputLayoutCardHolder.setLocalizedHintFromStyle(
+                com.adyen.checkout.card.R.style.AdyenCheckout_Card_HolderNameInput,
                 localizedContext
             )
             switchStorePaymentMethod.setLocalizedTextFromStyle(
@@ -111,6 +117,24 @@ internal class BcmcView @JvmOverloads constructor(
         }
     }
 
+    private fun initCardHolderInput() {
+        binding.textInputLayoutCardHolder.isVisible = delegate.configuration.isHolderNameRequired
+        binding.editTextCardHolder.setOnChangeListener {
+            delegate.updateInputData { cardHolderName = binding.editTextCardHolder.rawValue }
+            binding.textInputLayoutCardHolder.hideError()
+        }
+
+        binding.editTextCardHolder.onFocusChangeListener = OnFocusChangeListener { _, hasFocus ->
+            val cardHolderValidation = delegate.outputData.cardHolderNameField.validation
+            if (hasFocus) {
+                binding.textInputLayoutCardHolder.hideError()
+            } else if (!cardHolderValidation.isValid()) {
+                val errorReasonResId = (cardHolderValidation as Validation.Invalid).reason
+                binding.textInputLayoutCardHolder.showError(localizedContext.getString(errorReasonResId))
+            }
+        }
+    }
+
     private fun initStorePaymentMethodSwitch() {
         binding.switchStorePaymentMethod.isVisible = delegate.configuration.isStorePaymentFieldVisible
         binding.switchStorePaymentMethod.setOnCheckedChangeListener { _: CompoundButton?, isChecked: Boolean ->
@@ -129,6 +153,7 @@ internal class BcmcView @JvmOverloads constructor(
             val errorReasonResId = (cardNumberValidation as Validation.Invalid).reason
             setCardNumberError(errorReasonResId)
         }
+
         val expiryFieldValidation = outputData.expiryDateField.validation
         if (!expiryFieldValidation.isValid()) {
             if (!isErrorFocused) {
@@ -136,6 +161,15 @@ internal class BcmcView @JvmOverloads constructor(
             }
             val errorReasonResId = (expiryFieldValidation as Validation.Invalid).reason
             binding.textInputLayoutExpiryDate.showError(localizedContext.getString(errorReasonResId))
+        }
+
+        val cardHolderNameValidation = outputData.cardHolderNameField.validation
+        if (!cardHolderNameValidation.isValid()) {
+            if (!isErrorFocused) {
+                binding.textInputLayoutCardHolder.requestFocus()
+            }
+            val errorReasonResId = (cardHolderNameValidation as Validation.Invalid).reason
+            binding.textInputLayoutCardHolder.showError(localizedContext.getString(errorReasonResId))
         }
     }
 
