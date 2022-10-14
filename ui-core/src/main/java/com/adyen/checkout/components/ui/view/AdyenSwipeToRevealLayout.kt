@@ -28,7 +28,7 @@ import kotlin.math.min
 
 private const val CHILD_COUNT = 2
 
-private const val ELEVATION_CORRECTION = 56f
+private const val ELEVATION_CORRECTION = 44f
 
 /**
  * A swipeable view that contains two child views which are:
