@@ -93,8 +93,8 @@ internal class BcmcView @JvmOverloads constructor(
             val expiryDateValidation = delegate.outputData.expiryDateField.validation
             if (hasFocus) {
                 binding.textInputLayoutExpiryDate.hideError()
-            } else if (!expiryDateValidation.isValid()) {
-                val errorReasonResId = (expiryDateValidation as Validation.Invalid).reason
+            } else if (expiryDateValidation is Validation.Invalid) {
+                val errorReasonResId = expiryDateValidation.reason
                 binding.textInputLayoutExpiryDate.showError(localizedContext.getString(errorReasonResId))
             }
         }
@@ -110,8 +110,8 @@ internal class BcmcView @JvmOverloads constructor(
             val cardNumberValidation = delegate.outputData.cardNumberField.validation
             if (hasFocus) {
                 setCardNumberError(null)
-            } else if (!cardNumberValidation.isValid()) {
-                val errorReasonResId = (cardNumberValidation as Validation.Invalid).reason
+            } else if (cardNumberValidation is Validation.Invalid) {
+                val errorReasonResId = cardNumberValidation.reason
                 setCardNumberError(errorReasonResId)
             }
         }
@@ -128,8 +128,8 @@ internal class BcmcView @JvmOverloads constructor(
             val cardHolderValidation = delegate.outputData.cardHolderNameField.validation
             if (hasFocus) {
                 binding.textInputLayoutCardHolder.hideError()
-            } else if (!cardHolderValidation.isValid()) {
-                val errorReasonResId = (cardHolderValidation as Validation.Invalid).reason
+            } else if (cardHolderValidation is Validation.Invalid) {
+                val errorReasonResId = cardHolderValidation.reason
                 binding.textInputLayoutCardHolder.showError(localizedContext.getString(errorReasonResId))
             }
         }
@@ -147,28 +147,28 @@ internal class BcmcView @JvmOverloads constructor(
 
         var isErrorFocused = false
         val cardNumberValidation = outputData.cardNumberField.validation
-        if (!cardNumberValidation.isValid()) {
+        if (cardNumberValidation is Validation.Invalid) {
             isErrorFocused = true
             binding.editTextCardNumber.requestFocus()
-            val errorReasonResId = (cardNumberValidation as Validation.Invalid).reason
+            val errorReasonResId = cardNumberValidation.reason
             setCardNumberError(errorReasonResId)
         }
 
         val expiryFieldValidation = outputData.expiryDateField.validation
-        if (!expiryFieldValidation.isValid()) {
+        if (expiryFieldValidation is Validation.Invalid) {
             if (!isErrorFocused) {
                 binding.textInputLayoutExpiryDate.requestFocus()
             }
-            val errorReasonResId = (expiryFieldValidation as Validation.Invalid).reason
+            val errorReasonResId = expiryFieldValidation.reason
             binding.textInputLayoutExpiryDate.showError(localizedContext.getString(errorReasonResId))
         }
 
         val cardHolderNameValidation = outputData.cardHolderNameField.validation
-        if (!cardHolderNameValidation.isValid()) {
+        if (cardHolderNameValidation is Validation.Invalid) {
             if (!isErrorFocused) {
                 binding.textInputLayoutCardHolder.requestFocus()
             }
-            val errorReasonResId = (cardHolderNameValidation as Validation.Invalid).reason
+            val errorReasonResId = cardHolderNameValidation.reason
             binding.textInputLayoutCardHolder.showError(localizedContext.getString(errorReasonResId))
         }
     }
