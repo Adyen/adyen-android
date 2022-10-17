@@ -300,9 +300,7 @@ internal class StoredCardDelegate(
             inputData.expiryDate = ExpiryDate.EMPTY_DATE
         }
 
-        if (!requiresInput()) {
-            onInputDataChanged()
-        }
+        onInputDataChanged()
     }
 
     private fun makeCvcUIState(cvcPolicy: Brand.FieldPolicy?): InputFieldUIState {
