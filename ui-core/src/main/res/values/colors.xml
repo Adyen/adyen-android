@@ -17,5 +17,4 @@
     <color name="textColorNote">#7F4A00</color>
     <color name="backgroundColorNote">#FFEACC</color>
     <color name="textColorLink">#0075FF</color>
-    <color name="android_default_disabled">#61000000</color>
 </resources>
