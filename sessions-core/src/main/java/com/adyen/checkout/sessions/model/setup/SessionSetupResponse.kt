@@ -8,17 +8,16 @@
 
 package com.adyen.checkout.sessions.model.setup
 
-import android.os.Parcel
-import android.os.Parcelable
 import com.adyen.checkout.components.model.PaymentMethodsApiResponse
 import com.adyen.checkout.components.model.payments.Amount
 import com.adyen.checkout.core.exception.ModelSerializationException
-import com.adyen.checkout.core.model.JsonUtils
 import com.adyen.checkout.core.model.ModelObject
 import com.adyen.checkout.core.model.ModelUtils
+import kotlinx.parcelize.Parcelize
 import org.json.JSONException
 import org.json.JSONObject
 
+@Parcelize
 data class SessionSetupResponse(
     val id: String,
     val sessionData: String,
@@ -28,10 +27,6 @@ data class SessionSetupResponse(
     val returnUrl: String
 ) : ModelObject() {
 
-    override fun writeToParcel(parcel: Parcel, flags: Int) {
-        JsonUtils.writeToParcel(parcel, SERIALIZER.serialize(this))
-    }
-
     companion object {
         private const val ID = "id"
         private const val SESSION_DATA = "sessionData"
@@ -39,9 +34,6 @@ data class SessionSetupResponse(
         private const val EXPIRES_AT = "expiresAt"
         private const val PAYMENT_METHODS = "paymentMethods"
         private const val RETURN_URL = "returnUrl"
-
-        @JvmField
-        val CREATOR: Parcelable.Creator<SessionSetupResponse> = Creator(SessionSetupResponse::class.java)
 
         @JvmField
         val SERIALIZER: Serializer<SessionSetupResponse> = object : Serializer<SessionSetupResponse> {

@@ -7,15 +7,15 @@
  */
 package com.adyen.checkout.googlepay.model
 
-import android.os.Parcel
 import com.adyen.checkout.core.exception.ModelSerializationException
-import com.adyen.checkout.core.model.JsonUtils.writeToParcel
 import com.adyen.checkout.core.model.ModelObject
 import com.adyen.checkout.core.model.ModelUtils.deserializeOptList
 import com.adyen.checkout.core.model.ModelUtils.serializeOptList
+import kotlinx.parcelize.Parcelize
 import org.json.JSONException
 import org.json.JSONObject
 
+@Parcelize
 data class IsReadyToPayRequestModel(
     var apiVersion: Int = 0,
     var apiVersionMinor: Int = 0,
@@ -23,18 +23,11 @@ data class IsReadyToPayRequestModel(
     var isExistingPaymentMethodRequired: Boolean = false,
 ) : ModelObject() {
 
-    override fun writeToParcel(dest: Parcel, flags: Int) {
-        writeToParcel(dest, SERIALIZER.serialize(this))
-    }
-
     companion object {
         private const val API_VERSION = "apiVersion"
         private const val API_VERSION_MINOR = "apiVersionMinor"
         private const val ALLOWED_PAYMENT_METHODS = "allowedPaymentMethods"
         private const val EXISTING_PAYMENT_METHOD_REQUIRED = "existingPaymentMethodRequired"
-
-        @JvmField
-        val CREATOR = Creator(IsReadyToPayRequestModel::class.java)
 
         @JvmField
         val SERIALIZER: Serializer<IsReadyToPayRequestModel> = object : Serializer<IsReadyToPayRequestModel> {

@@ -7,14 +7,14 @@
  */
 package com.adyen.checkout.components.model.payments.response
 
-import android.os.Parcel
 import com.adyen.checkout.components.util.ActionTypes
 import com.adyen.checkout.core.exception.ModelSerializationException
-import com.adyen.checkout.core.model.JsonUtils.writeToParcel
 import com.adyen.checkout.core.model.getStringOrNull
+import kotlinx.parcelize.Parcelize
 import org.json.JSONException
 import org.json.JSONObject
 
+@Parcelize
 data class QrCodeAction(
     override var type: String? = null,
     override var paymentData: String? = null,
@@ -23,17 +23,10 @@ data class QrCodeAction(
     var url: String? = null,
 ) : Action() {
 
-    override fun writeToParcel(dest: Parcel, flags: Int) {
-        writeToParcel(dest, SERIALIZER.serialize(this))
-    }
-
     companion object {
         const val ACTION_TYPE = ActionTypes.QR_CODE
         private const val QR_CODE_DATA = "qrCodeData"
         private const val URL = "url"
-
-        @JvmField
-        val CREATOR = Creator(QrCodeAction::class.java)
 
         @JvmField
         val SERIALIZER: Serializer<QrCodeAction> = object : Serializer<QrCodeAction> {

@@ -7,16 +7,16 @@
  */
 package com.adyen.checkout.components.model.paymentmethods
 
-import android.os.Parcel
 import com.adyen.checkout.core.exception.ModelSerializationException
 import com.adyen.checkout.core.model.JsonUtils.parseOptStringList
-import com.adyen.checkout.core.model.JsonUtils.writeToParcel
 import com.adyen.checkout.core.model.ModelObject
 import com.adyen.checkout.core.model.getStringOrNull
+import kotlinx.parcelize.Parcelize
 import org.json.JSONArray
 import org.json.JSONException
 import org.json.JSONObject
 
+@Parcelize
 data class StoredPaymentMethod(
     var type: String? = null,
     var name: String? = null,
@@ -29,10 +29,6 @@ data class StoredPaymentMethod(
     var shopperEmail: String? = null,
     var supportedShopperInteractions: List<String>? = null,
 ) : ModelObject() {
-
-    override fun writeToParcel(dest: Parcel, flags: Int) {
-        writeToParcel(dest, SERIALIZER.serialize(this))
-    }
 
     val isEcommerce: Boolean
         get() = supportedShopperInteractions?.contains(ECOMMERCE) == true
@@ -49,9 +45,6 @@ data class StoredPaymentMethod(
         private const val SHOPPER_EMAIL = "shopperEmail"
         private const val SUPPORTED_SHOPPER_INTERACTIONS = "supportedShopperInteractions"
         private const val ECOMMERCE = "Ecommerce"
-
-        @JvmField
-        val CREATOR = Creator(StoredPaymentMethod::class.java)
 
         @JvmField
         val SERIALIZER: Serializer<StoredPaymentMethod> = object : Serializer<StoredPaymentMethod> {

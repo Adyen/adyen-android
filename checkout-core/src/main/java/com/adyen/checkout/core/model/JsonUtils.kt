@@ -7,7 +7,6 @@
  */
 package com.adyen.checkout.core.model
 
-import android.os.Parcel
 import org.json.JSONArray
 import org.json.JSONException
 import org.json.JSONObject
@@ -15,8 +14,6 @@ import java.util.Collections
 
 private const val INDENTATION_SPACES = 4
 private const val PARSING_ERROR = "PARSING_ERROR"
-private const val FLAG_NULL = 0
-private const val FLAG_NON_NULL = FLAG_NULL + 1
 
 fun JSONObject.getStringOrNull(key: String): String? {
     return if (has(key)) getString(key) else null
@@ -47,38 +44,6 @@ fun JSONArray.toStringPretty(): String {
 }
 
 object JsonUtils {
-
-    /**
-     * Writes a [JSONObject] to a [Parcel] as a [String].
-     *
-     * @param parcel The Parcel to be written to.
-     * @param jsonObject The JSONObject to be saved in the Parcel.
-     */
-    @JvmStatic
-    fun writeToParcel(parcel: Parcel, jsonObject: JSONObject?) {
-        if (jsonObject == null) {
-            parcel.writeInt(FLAG_NULL)
-        } else {
-            parcel.writeInt(FLAG_NON_NULL)
-            parcel.writeString(jsonObject.toString())
-        }
-    }
-
-    /**
-     * Reads a [JSONObject] previously saved on a [Parcel].
-     *
-     * @param parcel The Parcel to be read.
-     * @return The JSONObject that was contained in the Parcel.
-     */
-    @JvmStatic
-    @Throws(JSONException::class)
-    fun readFromParcel(parcel: Parcel): JSONObject? {
-        return when (parcel.readInt()) {
-            FLAG_NULL -> null
-            FLAG_NON_NULL -> JSONObject(parcel.readString() ?: "")
-            else -> throw IllegalArgumentException("Invalid flag.")
-        }
-    }
 
     /**
      * Parses a [JSONArray] to a list of Strings.

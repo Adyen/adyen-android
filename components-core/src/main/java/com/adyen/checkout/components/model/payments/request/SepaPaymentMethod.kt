@@ -7,31 +7,24 @@
  */
 package com.adyen.checkout.components.model.payments.request
 
-import android.os.Parcel
 import com.adyen.checkout.components.util.PaymentMethodTypes
 import com.adyen.checkout.core.exception.ModelSerializationException
-import com.adyen.checkout.core.model.JsonUtils.writeToParcel
 import com.adyen.checkout.core.model.getStringOrNull
+import kotlinx.parcelize.Parcelize
 import org.json.JSONException
 import org.json.JSONObject
 
+@Parcelize
 class SepaPaymentMethod(
     override var type: String? = null,
     var ownerName: String? = null,
     var iban: String? = null,
 ) : PaymentMethodDetails() {
 
-    override fun writeToParcel(dest: Parcel, flags: Int) {
-        writeToParcel(dest, SERIALIZER.serialize(this))
-    }
-
     companion object {
         const val PAYMENT_METHOD_TYPE = PaymentMethodTypes.SEPA
         private const val OWNER_NAME = "ownerName"
         private const val IBAN = "iban"
-
-        @JvmField
-        val CREATOR = Creator(SepaPaymentMethod::class.java)
 
         @JvmField
         val SERIALIZER: Serializer<SepaPaymentMethod> = object : Serializer<SepaPaymentMethod> {

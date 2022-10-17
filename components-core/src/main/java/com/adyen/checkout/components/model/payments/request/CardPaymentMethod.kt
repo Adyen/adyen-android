@@ -7,14 +7,14 @@
  */
 package com.adyen.checkout.components.model.payments.request
 
-import android.os.Parcel
 import com.adyen.checkout.components.util.PaymentMethodTypes
 import com.adyen.checkout.core.exception.ModelSerializationException
-import com.adyen.checkout.core.model.JsonUtils.writeToParcel
 import com.adyen.checkout.core.model.getStringOrNull
+import kotlinx.parcelize.Parcelize
 import org.json.JSONException
 import org.json.JSONObject
 
+@Parcelize
 data class CardPaymentMethod(
     override var type: String? = null,
     var encryptedCardNumber: String? = null,
@@ -30,10 +30,6 @@ data class CardPaymentMethod(
     var fundingSource: String? = null,
 ) : PaymentMethodDetails() {
 
-    override fun writeToParcel(dest: Parcel, flags: Int) {
-        writeToParcel(dest, SERIALIZER.serialize(this))
-    }
-
     companion object {
         const val PAYMENT_METHOD_TYPE = PaymentMethodTypes.SCHEME
         private const val ENCRYPTED_CARD_NUMBER = "encryptedCardNumber"
@@ -47,9 +43,6 @@ data class CardPaymentMethod(
         private const val BRAND = "brand"
         private const val THREEDS2_SDK_VERSION = "threeDS2SdkVersion"
         private const val FUNDING_SOURCE = "fundingSource"
-
-        @JvmField
-        val CREATOR = Creator(CardPaymentMethod::class.java)
 
         @JvmField
         val SERIALIZER: Serializer<CardPaymentMethod> = object : Serializer<CardPaymentMethod> {

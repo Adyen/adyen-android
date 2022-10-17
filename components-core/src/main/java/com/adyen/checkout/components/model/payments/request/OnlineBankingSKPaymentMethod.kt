@@ -8,28 +8,21 @@
 
 package com.adyen.checkout.components.model.payments.request
 
-import android.os.Parcel
 import com.adyen.checkout.components.util.PaymentMethodTypes
 import com.adyen.checkout.core.exception.ModelSerializationException
-import com.adyen.checkout.core.model.JsonUtils
 import com.adyen.checkout.core.model.getStringOrNull
+import kotlinx.parcelize.Parcelize
 import org.json.JSONException
 import org.json.JSONObject
 
+@Parcelize
 data class OnlineBankingSKPaymentMethod(
     override var type: String? = null,
     override var issuer: String? = null,
 ) : IssuerListPaymentMethod() {
 
-    override fun writeToParcel(dest: Parcel, flags: Int) {
-        JsonUtils.writeToParcel(dest, SERIALIZER.serialize(this))
-    }
-
     companion object {
         const val PAYMENT_METHOD_TYPE = PaymentMethodTypes.ONLINE_BANKING_SK
-
-        @JvmField
-        val CREATOR = Creator(OnlineBankingSKPaymentMethod::class.java)
 
         @JvmField
         val SERIALIZER: Serializer<OnlineBankingSKPaymentMethod> = object : Serializer<OnlineBankingSKPaymentMethod> {

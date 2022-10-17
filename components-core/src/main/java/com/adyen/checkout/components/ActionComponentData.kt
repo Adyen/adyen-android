@@ -7,29 +7,25 @@
  */
 package com.adyen.checkout.components
 
-import android.os.Parcel
 import com.adyen.checkout.core.exception.ModelSerializationException
-import com.adyen.checkout.core.model.JsonUtils.writeToParcel
 import com.adyen.checkout.core.model.ModelObject
 import com.adyen.checkout.core.model.getStringOrNull
+import com.adyen.checkout.core.util.JSONObjectParceler
+import kotlinx.parcelize.Parcelize
+import kotlinx.parcelize.WriteWith
 import org.json.JSONException
 import org.json.JSONObject
 
+@Parcelize
 data class ActionComponentData(
     var paymentData: String? = null,
-    var details: JSONObject? = null,
+    var details: @WriteWith<JSONObjectParceler> JSONObject? = null,
 ) : ModelObject() {
 
-    override fun writeToParcel(dest: Parcel, flags: Int) {
-        writeToParcel(dest, SERIALIZER.serialize(this))
-    }
 
     companion object {
         private const val PAYMENT_DATA = "paymentData"
         private const val DETAILS = "details"
-
-        @JvmField
-        val CREATOR = Creator(ActionComponentData::class.java)
 
         @JvmField
         val SERIALIZER: Serializer<ActionComponentData> = object : Serializer<ActionComponentData> {

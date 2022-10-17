@@ -7,15 +7,15 @@
  */
 package com.adyen.checkout.components.model.payments.response
 
-import android.os.Parcel
 import com.adyen.checkout.components.model.payments.Amount
 import com.adyen.checkout.core.exception.ModelSerializationException
-import com.adyen.checkout.core.model.JsonUtils.writeToParcel
 import com.adyen.checkout.core.model.ModelObject
 import com.adyen.checkout.core.model.ModelUtils
+import kotlinx.parcelize.Parcelize
 import org.json.JSONException
 import org.json.JSONObject
 
+@Parcelize
 data class OrderResponse(
     val pspReference: String,
     val orderData: String,
@@ -25,10 +25,6 @@ data class OrderResponse(
     val expiresAt: String?
 ) : ModelObject() {
 
-    override fun writeToParcel(dest: Parcel, flags: Int) {
-        writeToParcel(dest, SERIALIZER.serialize(this))
-    }
-
     companion object {
         private const val PSP_REFERENCE = "pspReference"
         private const val ORDER_DATA = "orderData"
@@ -36,9 +32,6 @@ data class OrderResponse(
         private const val AMOUNT = "amount"
         private const val REMAINING_AMOUNT = "remainingAmount"
         private const val EXPIRES_AT = "expiresAt"
-
-        @JvmField
-        val CREATOR = Creator(OrderResponse::class.java)
 
         @JvmField
         val SERIALIZER: Serializer<OrderResponse> = object : Serializer<OrderResponse> {

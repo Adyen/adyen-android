@@ -7,24 +7,20 @@
  */
 package com.adyen.checkout.components.model.paymentmethods
 
-import android.os.Parcel
 import com.adyen.checkout.core.exception.ModelSerializationException
-import com.adyen.checkout.core.model.JsonUtils.writeToParcel
 import com.adyen.checkout.core.model.ModelObject
 import com.adyen.checkout.core.model.getStringOrNull
+import kotlinx.parcelize.Parcelize
 import org.json.JSONException
 import org.json.JSONObject
 
+@Parcelize
 data class Configuration(
     var merchantId: String? = null,
     var gatewayMerchantId: String? = null,
     var intent: String? = null,
     var koreanAuthenticationRequired: String? = null,
 ) : ModelObject() {
-
-    override fun writeToParcel(dest: Parcel, flags: Int) {
-        writeToParcel(dest, SERIALIZER.serialize(this))
-    }
 
     companion object {
 
@@ -37,9 +33,6 @@ data class Configuration(
 
         // Card
         private const val KOREAN_AUTHENTICATION_REQUIRED = "koreanAuthenticationRequired"
-
-        @JvmField
-        val CREATOR = Creator(Configuration::class.java)
 
         @JvmField
         val SERIALIZER: Serializer<Configuration> = object : Serializer<Configuration> {

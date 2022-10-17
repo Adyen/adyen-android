@@ -7,18 +7,18 @@
  */
 package com.adyen.checkout.components.model.payments.response
 
-import android.os.Parcel
 import com.adyen.checkout.components.util.ActionTypes
 import com.adyen.checkout.components.util.PaymentMethodTypes
 import com.adyen.checkout.core.exception.CheckoutException
 import com.adyen.checkout.core.exception.ModelSerializationException
-import com.adyen.checkout.core.model.JsonUtils.writeToParcel
 import com.adyen.checkout.core.model.ModelUtils.deserializeOpt
 import com.adyen.checkout.core.model.ModelUtils.serializeOpt
 import com.adyen.checkout.core.model.getStringOrNull
+import kotlinx.parcelize.Parcelize
 import org.json.JSONException
 import org.json.JSONObject
 
+@Parcelize
 data class SdkAction<SdkDataT : SdkData>(
     override var type: String? = null,
     override var paymentData: String? = null,
@@ -26,16 +26,9 @@ data class SdkAction<SdkDataT : SdkData>(
     var sdkData: SdkDataT? = null,
 ) : Action() {
 
-    override fun writeToParcel(dest: Parcel, flags: Int) {
-        writeToParcel(dest, SERIALIZER.serialize(this))
-    }
-
     companion object {
         const val ACTION_TYPE = ActionTypes.SDK
         private const val SDK_DATA = "sdkData"
-
-        @JvmField
-        val CREATOR = Creator(SdkAction::class.java)
 
         @JvmField
         val SERIALIZER: Serializer<SdkAction<*>> = object : Serializer<SdkAction<*>> {

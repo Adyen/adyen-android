@@ -7,14 +7,14 @@
  */
 package com.adyen.checkout.adyen3ds2.model
 
-import android.os.Parcel
 import com.adyen.checkout.core.exception.ModelSerializationException
-import com.adyen.checkout.core.model.JsonUtils
 import com.adyen.checkout.core.model.ModelObject
 import com.adyen.checkout.core.model.getStringOrNull
+import kotlinx.parcelize.Parcelize
 import org.json.JSONException
 import org.json.JSONObject
 
+@Parcelize
 data class ChallengeToken(
     var acsReferenceNumber: String? = null,
     var acsSignedContent: String? = null,
@@ -24,10 +24,6 @@ data class ChallengeToken(
     var threeDSServerTransID: String? = null
 ) : ModelObject() {
 
-    override fun writeToParcel(dest: Parcel, flags: Int) {
-        JsonUtils.writeToParcel(dest, SERIALIZER.serialize(this))
-    }
-
     companion object {
         private const val ACS_REFERENCE_NUMBER = "acsReferenceNumber"
         private const val ACS_SIGNED_CONTENT = "acsSignedContent"
@@ -35,9 +31,6 @@ data class ChallengeToken(
         private const val ACS_URL = "acsURL"
         private const val MESSAGE_VERSION = "messageVersion"
         private const val THREEDS_SERVER_TRANS_ID = "threeDSServerTransID"
-
-        @JvmField
-        val CREATOR = Creator(ChallengeToken::class.java)
 
         @JvmField
         val SERIALIZER: Serializer<ChallengeToken> = object : Serializer<ChallengeToken> {

@@ -7,29 +7,22 @@
  */
 package com.adyen.checkout.googlepay.model
 
-import android.os.Parcel
 import com.adyen.checkout.core.exception.ModelSerializationException
-import com.adyen.checkout.core.model.JsonUtils.writeToParcel
 import com.adyen.checkout.core.model.ModelObject
 import com.adyen.checkout.core.model.getStringOrNull
+import kotlinx.parcelize.Parcelize
 import org.json.JSONException
 import org.json.JSONObject
 
+@Parcelize
 data class MerchantInfo(
     var merchantName: String? = null,
     var merchantId: String? = null,
 ) : ModelObject() {
 
-    override fun writeToParcel(dest: Parcel, flags: Int) {
-        writeToParcel(dest, SERIALIZER.serialize(this))
-    }
-
     companion object {
         private const val MERCHANT_NAME = "merchantName"
         private const val MERCHANT_ID = "merchantId"
-
-        @JvmField
-        val CREATOR = Creator(MerchantInfo::class.java)
 
         @JvmField
         val SERIALIZER: Serializer<MerchantInfo> = object : Serializer<MerchantInfo> {
