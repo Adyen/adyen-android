@@ -8,24 +8,20 @@
 package com.adyen.checkout.dotpay
 
 import android.content.Context
-import android.os.Parcel
-import android.os.Parcelable
 import com.adyen.checkout.core.api.Environment
 import com.adyen.checkout.issuerlist.IssuerListConfiguration
 import com.adyen.checkout.issuerlist.IssuerListViewType
-import java.util.Locale
+import kotlinx.parcelize.Parcelize
+import java.util.*
 
-class DotpayConfiguration : IssuerListConfiguration {
-
-    private constructor(
-        shopperLocale: Locale,
-        environment: Environment,
-        clientKey: String,
-        viewType: IssuerListViewType,
-        hideIssuerLogos: Boolean,
-    ) : super(shopperLocale, environment, clientKey, viewType, hideIssuerLogos)
-
-    private constructor(parcel: Parcel) : super(parcel)
+@Parcelize
+class DotpayConfiguration private constructor(
+    override val shopperLocale: Locale,
+    override val environment: Environment,
+    override val clientKey: String,
+    override val viewType: IssuerListViewType,
+    override val hideIssuerLogos: Boolean,
+) : IssuerListConfiguration() {
 
     /**
      * Builder to create a [DotpayConfiguration].
@@ -84,20 +80,6 @@ class DotpayConfiguration : IssuerListConfiguration {
                 viewType = viewType,
                 hideIssuerLogos = hideIssuerLogos,
             )
-        }
-    }
-
-    companion object {
-
-        @JvmField
-        val CREATOR: Parcelable.Creator<DotpayConfiguration> = object : Parcelable.Creator<DotpayConfiguration> {
-            override fun createFromParcel(parcel: Parcel): DotpayConfiguration {
-                return DotpayConfiguration(parcel)
-            }
-
-            override fun newArray(size: Int): Array<DotpayConfiguration?> {
-                return arrayOfNulls(size)
-            }
         }
     }
 }

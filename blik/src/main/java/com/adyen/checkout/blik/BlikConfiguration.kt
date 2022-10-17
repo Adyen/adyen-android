@@ -8,22 +8,24 @@
 package com.adyen.checkout.blik
 
 import android.content.Context
-import android.os.Parcel
-import android.os.Parcelable
 import com.adyen.checkout.components.base.BaseConfigurationBuilder
 import com.adyen.checkout.components.base.Configuration
 import com.adyen.checkout.core.api.Environment
+import kotlinx.parcelize.Parcelize
 import java.util.Locale
 
-class BlikConfiguration : Configuration {
+@Parcelize
+class BlikConfiguration private constructor(
+    override val shopperLocale: Locale,
+    override val environment: Environment,
+    override val clientKey: String,
+) : Configuration {
 
-    internal constructor(builder: Builder) : super(
+    private constructor(builder: Builder) : this(
         builder.shopperLocale,
         builder.environment,
         builder.clientKey
     )
-
-    internal constructor(parcel: Parcel) : super(parcel)
 
     /**
      * Builder to create a [BlikConfiguration].
@@ -73,19 +75,6 @@ class BlikConfiguration : Configuration {
 
         override fun buildInternal(): BlikConfiguration {
             return BlikConfiguration(this)
-        }
-    }
-
-    companion object {
-        @JvmField
-        val CREATOR: Parcelable.Creator<BlikConfiguration> = object : Parcelable.Creator<BlikConfiguration> {
-            override fun createFromParcel(parcel: Parcel): BlikConfiguration {
-                return BlikConfiguration(parcel)
-            }
-
-            override fun newArray(size: Int): Array<BlikConfiguration?> {
-                return arrayOfNulls(size)
-            }
         }
     }
 }

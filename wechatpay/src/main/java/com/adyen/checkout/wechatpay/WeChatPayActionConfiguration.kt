@@ -8,22 +8,18 @@
 package com.adyen.checkout.wechatpay
 
 import android.content.Context
-import android.os.Parcel
-import android.os.Parcelable
 import com.adyen.checkout.components.base.BaseConfigurationBuilder
 import com.adyen.checkout.components.base.Configuration
 import com.adyen.checkout.core.api.Environment
+import kotlinx.parcelize.Parcelize
 import java.util.Locale
 
-class WeChatPayActionConfiguration : Configuration {
-
-    constructor(
-        shopperLocale: Locale,
-        environment: Environment,
-        clientKey: String
-    ) : super(shopperLocale, environment, clientKey)
-
-    constructor(parcel: Parcel) : super(parcel)
+@Parcelize
+class WeChatPayActionConfiguration private constructor(
+    override val shopperLocale: Locale,
+    override val environment: Environment,
+    override val clientKey: String,
+) : Configuration {
 
     /**
      * Builder to create a [WeChatPayActionConfiguration].
@@ -70,19 +66,5 @@ class WeChatPayActionConfiguration : Configuration {
                 clientKey = clientKey,
             )
         }
-    }
-
-    companion object {
-        @JvmField
-        val CREATOR: Parcelable.Creator<WeChatPayActionConfiguration> =
-            object : Parcelable.Creator<WeChatPayActionConfiguration> {
-                override fun createFromParcel(parcel: Parcel): WeChatPayActionConfiguration {
-                    return WeChatPayActionConfiguration(parcel)
-                }
-
-                override fun newArray(size: Int): Array<WeChatPayActionConfiguration?> {
-                    return arrayOfNulls(size)
-                }
-            }
     }
 }

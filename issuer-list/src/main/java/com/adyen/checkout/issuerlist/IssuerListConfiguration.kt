@@ -8,39 +8,15 @@
 package com.adyen.checkout.issuerlist
 
 import android.content.Context
-import android.os.Parcel
 import com.adyen.checkout.components.base.BaseConfigurationBuilder
 import com.adyen.checkout.components.base.Configuration
 import com.adyen.checkout.core.api.Environment
-import com.adyen.checkout.core.util.ParcelUtils
 import java.util.Locale
 
 abstract class IssuerListConfiguration : Configuration {
 
-    val viewType: IssuerListViewType
-    val hideIssuerLogos: Boolean
-
-    protected constructor(
-        shopperLocale: Locale,
-        environment: Environment,
-        clientKey: String,
-        viewType: IssuerListViewType,
-        hideIssuerLogos: Boolean,
-    ) : super(shopperLocale, environment, clientKey) {
-        this.viewType = viewType
-        this.hideIssuerLogos = hideIssuerLogos
-    }
-
-    protected constructor(parcel: Parcel) : super(parcel) {
-        viewType = IssuerListViewType.valueOf(parcel.readString()!!)
-        hideIssuerLogos = ParcelUtils.readBoolean(parcel)
-    }
-
-    override fun writeToParcel(parcel: Parcel, flags: Int) {
-        super.writeToParcel(parcel, flags)
-        parcel.writeString(viewType.name)
-        ParcelUtils.writeBoolean(parcel, hideIssuerLogos)
-    }
+    abstract val viewType: IssuerListViewType
+    abstract val hideIssuerLogos: Boolean
 
     abstract class IssuerListBuilder<IssuerListConfigurationT : IssuerListConfiguration> :
         BaseConfigurationBuilder<IssuerListConfigurationT> {

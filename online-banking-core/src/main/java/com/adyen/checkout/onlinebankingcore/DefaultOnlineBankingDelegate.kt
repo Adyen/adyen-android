@@ -12,6 +12,7 @@ import android.content.Context
 import androidx.annotation.RestrictTo
 import androidx.annotation.VisibleForTesting
 import com.adyen.checkout.components.PaymentComponentState
+import com.adyen.checkout.components.base.Configuration
 import com.adyen.checkout.components.flow.MutableSingleEventSharedFlow
 import com.adyen.checkout.components.model.paymentmethods.PaymentMethod
 import com.adyen.checkout.components.model.payments.request.IssuerListPaymentMethod
@@ -28,7 +29,7 @@ import kotlinx.coroutines.flow.MutableStateFlow
 class DefaultOnlineBankingDelegate<IssuerListPaymentMethodT : IssuerListPaymentMethod>(
     private val pdfOpener: PdfOpener,
     private val paymentMethod: PaymentMethod,
-    override val configuration: OnlineBankingConfiguration,
+    override val configuration: Configuration,
     private val termsAndConditionsUrl: String,
     private val paymentMethodFactory: () -> IssuerListPaymentMethodT
 ) : OnlineBankingDelegate<IssuerListPaymentMethodT> {

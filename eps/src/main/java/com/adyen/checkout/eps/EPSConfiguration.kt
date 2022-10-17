@@ -8,24 +8,20 @@
 package com.adyen.checkout.eps
 
 import android.content.Context
-import android.os.Parcel
-import android.os.Parcelable
 import com.adyen.checkout.core.api.Environment
 import com.adyen.checkout.issuerlist.IssuerListConfiguration
 import com.adyen.checkout.issuerlist.IssuerListViewType
-import java.util.Locale
+import kotlinx.parcelize.Parcelize
+import java.util.*
 
-class EPSConfiguration : IssuerListConfiguration {
-
-    private constructor(
-        shopperLocale: Locale,
-        environment: Environment,
-        clientKey: String,
-        viewType: IssuerListViewType,
-        hideIssuerLogos: Boolean,
-    ) : super(shopperLocale, environment, clientKey, viewType, hideIssuerLogos)
-
-    private constructor(parcel: Parcel) : super(parcel)
+@Parcelize
+class EPSConfiguration private constructor(
+    override val shopperLocale: Locale,
+    override val environment: Environment,
+    override val clientKey: String,
+    override val viewType: IssuerListViewType,
+    override val hideIssuerLogos: Boolean,
+) : IssuerListConfiguration() {
 
     /**
      * Builder to create a [EPSConfiguration].
@@ -78,19 +74,6 @@ class EPSConfiguration : IssuerListConfiguration {
                 viewType = viewType,
                 hideIssuerLogos = hideIssuerLogos,
             )
-        }
-    }
-
-    companion object {
-        @JvmField
-        val CREATOR: Parcelable.Creator<EPSConfiguration> = object : Parcelable.Creator<EPSConfiguration> {
-            override fun createFromParcel(parcel: Parcel): EPSConfiguration {
-                return EPSConfiguration(parcel)
-            }
-
-            override fun newArray(size: Int): Array<EPSConfiguration?> {
-                return arrayOfNulls(size)
-            }
         }
     }
 }

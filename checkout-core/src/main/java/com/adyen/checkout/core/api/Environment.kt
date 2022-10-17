@@ -7,28 +7,20 @@
  */
 package com.adyen.checkout.core.api
 
-import android.os.Parcel
 import android.os.Parcelable
+import kotlinx.parcelize.IgnoredOnParcel
+import kotlinx.parcelize.Parcelize
 import java.net.URL
-import java.util.Objects
+import java.util.*
 
 /**
  * Identifies which host URL to be used for network calls.
  */
+@Parcelize
 class Environment(private val internalUrl: URL) : Parcelable {
 
-    val baseUrl: String
-        get() = internalUrl.toString()
-
-    private constructor(parcel: Parcel) : this(parcel.readSerializable() as URL)
-
-    override fun writeToParcel(dest: Parcel, flags: Int) {
-        dest.writeSerializable(internalUrl)
-    }
-
-    override fun describeContents(): Int {
-        return Parcelable.CONTENTS_FILE_DESCRIPTOR
-    }
+    @IgnoredOnParcel
+    val baseUrl: String = internalUrl.toString()
 
     override fun equals(other: Any?): Boolean {
         if (this === other) {
@@ -63,16 +55,5 @@ class Environment(private val internalUrl: URL) : Parcelable {
 
         @JvmField
         val APSE: Environment = Environment(URL("https://checkoutshopper-live-apse.adyen.com/checkoutshopper/"))
-
-        @JvmField
-        val CREATOR: Parcelable.Creator<Environment> = object : Parcelable.Creator<Environment> {
-            override fun createFromParcel(`in`: Parcel): Environment {
-                return Environment(`in`)
-            }
-
-            override fun newArray(size: Int): Array<Environment?> {
-                return arrayOfNulls(size)
-            }
-        }
     }
 }

@@ -8,24 +8,20 @@
 package com.adyen.checkout.molpay
 
 import android.content.Context
-import android.os.Parcel
-import android.os.Parcelable
 import com.adyen.checkout.core.api.Environment
 import com.adyen.checkout.issuerlist.IssuerListConfiguration
 import com.adyen.checkout.issuerlist.IssuerListViewType
+import kotlinx.parcelize.Parcelize
 import java.util.Locale
 
-class MolpayConfiguration : IssuerListConfiguration {
-
-    private constructor(
-        shopperLocale: Locale,
-        environment: Environment,
-        clientKey: String,
-        viewType: IssuerListViewType,
-        hideIssuerLogos: Boolean,
-    ) : super(shopperLocale, environment, clientKey, viewType, hideIssuerLogos)
-
-    private constructor(parcel: Parcel) : super(parcel)
+@Parcelize
+class MolpayConfiguration private constructor(
+    override val shopperLocale: Locale,
+    override val environment: Environment,
+    override val clientKey: String,
+    override val viewType: IssuerListViewType,
+    override val hideIssuerLogos: Boolean,
+) : IssuerListConfiguration() {
 
     /**
      * Builder to create a [MolpayConfiguration].
@@ -76,19 +72,6 @@ class MolpayConfiguration : IssuerListConfiguration {
                 viewType = viewType,
                 hideIssuerLogos = hideIssuerLogos,
             )
-        }
-    }
-
-    companion object {
-        @JvmField
-        val CREATOR: Parcelable.Creator<MolpayConfiguration> = object : Parcelable.Creator<MolpayConfiguration> {
-            override fun createFromParcel(parcel: Parcel): MolpayConfiguration {
-                return MolpayConfiguration(parcel)
-            }
-
-            override fun newArray(size: Int): Array<MolpayConfiguration?> {
-                return arrayOfNulls(size)
-            }
         }
     }
 }

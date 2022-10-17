@@ -8,22 +8,24 @@
 package com.adyen.checkout.adyen3ds2
 
 import android.content.Context
-import android.os.Parcel
-import android.os.Parcelable
 import com.adyen.checkout.components.base.BaseConfigurationBuilder
 import com.adyen.checkout.components.base.Configuration
 import com.adyen.checkout.core.api.Environment
-import java.util.Locale
+import kotlinx.parcelize.Parcelize
+import java.util.*
 
-class Adyen3DS2Configuration : Configuration {
+@Parcelize
+class Adyen3DS2Configuration private constructor(
+    override val shopperLocale: Locale,
+    override val environment: Environment,
+    override val clientKey: String,
+) : Configuration {
 
-    private constructor(builder: Builder) : super(
+    private constructor(builder: Builder) : this(
         builder.shopperLocale,
         builder.environment,
         builder.clientKey
     )
-
-    private constructor(inputParcel: Parcel) : super(inputParcel)
 
     /**
      * Builder to create a [Adyen3DS2Configuration].
@@ -73,19 +75,6 @@ class Adyen3DS2Configuration : Configuration {
 
         override fun buildInternal(): Adyen3DS2Configuration {
             return Adyen3DS2Configuration(this)
-        }
-    }
-
-    companion object {
-        @JvmField
-        val CREATOR: Parcelable.Creator<Adyen3DS2Configuration> = object : Parcelable.Creator<Adyen3DS2Configuration> {
-            override fun createFromParcel(`in`: Parcel): Adyen3DS2Configuration {
-                return Adyen3DS2Configuration(`in`)
-            }
-
-            override fun newArray(size: Int): Array<Adyen3DS2Configuration?> {
-                return arrayOfNulls(size)
-            }
         }
     }
 }

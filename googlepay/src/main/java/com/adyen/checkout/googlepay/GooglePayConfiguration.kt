@@ -10,8 +10,6 @@
 package com.adyen.checkout.googlepay
 
 import android.content.Context
-import android.os.Parcel
-import android.os.Parcelable
 import com.adyen.checkout.components.base.AmountConfiguration
 import com.adyen.checkout.components.base.AmountConfigurationBuilder
 import com.adyen.checkout.components.base.BaseConfigurationBuilder
@@ -21,109 +19,35 @@ import com.adyen.checkout.components.util.CheckoutCurrency
 import com.adyen.checkout.components.util.CheckoutCurrency.Companion.isSupported
 import com.adyen.checkout.core.api.Environment
 import com.adyen.checkout.core.exception.CheckoutException
-import com.adyen.checkout.core.util.ParcelUtils.readBoolean
-import com.adyen.checkout.core.util.ParcelUtils.writeBoolean
 import com.adyen.checkout.googlepay.model.BillingAddressParameters
 import com.adyen.checkout.googlepay.model.MerchantInfo
 import com.adyen.checkout.googlepay.model.ShippingAddressParameters
 import com.google.android.gms.wallet.WalletConstants
+import kotlinx.parcelize.Parcelize
 import java.util.Locale
 
-class GooglePayConfiguration : Configuration, AmountConfiguration {
+@Parcelize
+class GooglePayConfiguration private constructor(
+    override val shopperLocale: Locale,
+    override val environment: Environment,
+    override val clientKey: String,
+    val merchantAccount: String?,
+    val googlePayEnvironment: Int,
+    override val amount: Amount,
+    val totalPriceStatus: String,
+    val countryCode: String?,
+    val merchantInfo: MerchantInfo?,
+    val allowedAuthMethods: List<String>?,
+    val allowedCardNetworks: List<String>?,
+    val isAllowPrepaidCards: Boolean,
+    val isEmailRequired: Boolean,
+    val isExistingPaymentMethodRequired: Boolean,
+    val isShippingAddressRequired: Boolean,
+    val shippingAddressParameters: ShippingAddressParameters?,
+    val isBillingAddressRequired: Boolean,
+    val billingAddressParameters: BillingAddressParameters?,
+) : Configuration, AmountConfiguration {
 
-    val merchantAccount: String?
-    val googlePayEnvironment: Int
-    override val amount: Amount
-    val totalPriceStatus: String
-    val countryCode: String?
-    val merchantInfo: MerchantInfo?
-    val allowedAuthMethods: List<String>?
-    val allowedCardNetworks: List<String>?
-    val isAllowPrepaidCards: Boolean
-    val isEmailRequired: Boolean
-    val isExistingPaymentMethodRequired: Boolean
-    val isShippingAddressRequired: Boolean
-    val shippingAddressParameters: ShippingAddressParameters?
-    val isBillingAddressRequired: Boolean
-    val billingAddressParameters: BillingAddressParameters?
-
-    @Suppress("LongParameterList")
-    internal constructor(
-        shopperLocale: Locale,
-        environment: Environment,
-        clientKey: String,
-        merchantAccount: String?,
-        googlePayEnvironment: Int,
-        amount: Amount,
-        totalPriceStatus: String,
-        countryCode: String?,
-        merchantInfo: MerchantInfo?,
-        allowedAuthMethods: List<String>?,
-        allowedCardNetworks: List<String>?,
-        isAllowPrepaidCards: Boolean,
-        isEmailRequired: Boolean,
-        isExistingPaymentMethodRequired: Boolean,
-        isShippingAddressRequired: Boolean,
-        shippingAddressParameters: ShippingAddressParameters?,
-        isBillingAddressRequired: Boolean,
-        billingAddressParameters: BillingAddressParameters?,
-    ) : super(shopperLocale, environment, clientKey) {
-        this.merchantAccount = merchantAccount
-        this.googlePayEnvironment = googlePayEnvironment
-        this.amount = amount
-        this.totalPriceStatus = totalPriceStatus
-        this.countryCode = countryCode
-        this.merchantInfo = merchantInfo
-        this.allowedAuthMethods = allowedAuthMethods
-        this.allowedCardNetworks = allowedCardNetworks
-        this.isAllowPrepaidCards = isAllowPrepaidCards
-        this.isEmailRequired = isEmailRequired
-        this.isExistingPaymentMethodRequired = isExistingPaymentMethodRequired
-        this.isShippingAddressRequired = isShippingAddressRequired
-        this.shippingAddressParameters = shippingAddressParameters
-        this.isBillingAddressRequired = isBillingAddressRequired
-        this.billingAddressParameters = billingAddressParameters
-    }
-
-    internal constructor(parcel: Parcel) : super(parcel) {
-        merchantAccount = parcel.readString()
-        googlePayEnvironment = parcel.readInt()
-        amount = parcel.readParcelable(Amount::class.java.classLoader)
-            ?: throw CheckoutException("Failed to read amount from parcel.")
-        totalPriceStatus = parcel.readString()!!
-        countryCode = parcel.readString()
-        merchantInfo = parcel.readParcelable(MerchantInfo::class.java.classLoader)
-        @Suppress("UNCHECKED_CAST")
-        allowedAuthMethods = parcel.readArrayList(String::class.java.classLoader) as? List<String>
-        @Suppress("UNCHECKED_CAST")
-        allowedCardNetworks = parcel.readArrayList(String::class.java.classLoader) as? List<String>
-        isAllowPrepaidCards = readBoolean(parcel)
-        isEmailRequired = readBoolean(parcel)
-        isExistingPaymentMethodRequired = readBoolean(parcel)
-        isShippingAddressRequired = readBoolean(parcel)
-        shippingAddressParameters = parcel.readParcelable(ShippingAddressParameters::class.java.classLoader)
-        isBillingAddressRequired = readBoolean(parcel)
-        billingAddressParameters = parcel.readParcelable(BillingAddressParameters::class.java.classLoader)
-    }
-
-    override fun writeToParcel(parcel: Parcel, flags: Int) {
-        super.writeToParcel(parcel, flags)
-        parcel.writeString(merchantAccount)
-        parcel.writeInt(googlePayEnvironment)
-        parcel.writeParcelable(amount, flags)
-        parcel.writeString(totalPriceStatus)
-        parcel.writeString(countryCode)
-        parcel.writeParcelable(merchantInfo, flags)
-        parcel.writeList(allowedAuthMethods)
-        parcel.writeList(allowedCardNetworks)
-        writeBoolean(parcel, isAllowPrepaidCards)
-        writeBoolean(parcel, isEmailRequired)
-        writeBoolean(parcel, isExistingPaymentMethodRequired)
-        writeBoolean(parcel, isShippingAddressRequired)
-        parcel.writeParcelable(shippingAddressParameters, flags)
-        writeBoolean(parcel, isBillingAddressRequired)
-        parcel.writeParcelable(billingAddressParameters, flags)
-    }
 
     /**
      * Builder to create a [GooglePayConfiguration].
@@ -332,19 +256,6 @@ class GooglePayConfiguration : Configuration, AmountConfiguration {
         fun setBillingAddressParameters(billingAddressParameters: BillingAddressParameters?): Builder {
             this.billingAddressParameters = billingAddressParameters
             return this
-        }
-    }
-
-    companion object {
-        @JvmField
-        val CREATOR: Parcelable.Creator<GooglePayConfiguration> = object : Parcelable.Creator<GooglePayConfiguration> {
-            override fun createFromParcel(parcel: Parcel): GooglePayConfiguration {
-                return GooglePayConfiguration(parcel)
-            }
-
-            override fun newArray(size: Int): Array<GooglePayConfiguration?> {
-                return arrayOfNulls(size)
-            }
         }
     }
 }

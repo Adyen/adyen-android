@@ -9,8 +9,6 @@
 package com.adyen.checkout.action
 
 import android.content.Context
-import android.os.Parcel
-import android.os.Parcelable
 import androidx.annotation.RestrictTo
 import com.adyen.checkout.action.GenericActionConfiguration.Builder
 import com.adyen.checkout.adyen3ds2.Adyen3DS2Configuration
@@ -22,6 +20,7 @@ import com.adyen.checkout.qrcode.QRCodeConfiguration
 import com.adyen.checkout.redirect.RedirectConfiguration
 import com.adyen.checkout.voucher.VoucherConfiguration
 import com.adyen.checkout.wechatpay.WeChatPayActionConfiguration
+import kotlinx.parcelize.Parcelize
 import java.util.Locale
 import kotlin.collections.set
 
@@ -32,34 +31,20 @@ import kotlin.collections.set
  * their behavior.
  * If you don't specify anything, a default configuration will be used.
  */
-class GenericActionConfiguration : Configuration, Parcelable {
+@Parcelize
+class GenericActionConfiguration private constructor(
+    override val shopperLocale: Locale,
+    override val environment: Environment,
+    override val clientKey: String,
+    private val availableActionConfigs: HashMap<Class<*>, Configuration>,
+) : Configuration {
 
-    private val availableActionConfigs: HashMap<Class<*>, Configuration>
-
-    companion object {
-        @JvmField
-        val CREATOR = object : Parcelable.Creator<GenericActionConfiguration> {
-            override fun createFromParcel(parcel: Parcel) = GenericActionConfiguration(parcel)
-            override fun newArray(size: Int) = arrayOfNulls<GenericActionConfiguration>(size)
-        }
-    }
-
-    constructor(
-        builder: Builder
-    ) : super(builder.shopperLocale, builder.environment, builder.clientKey) {
-        this.availableActionConfigs = builder.availableActionConfigs
-    }
-
-    constructor(parcel: Parcel) : super(parcel) {
-        @Suppress("UNCHECKED_CAST")
-        availableActionConfigs =
-            parcel.readHashMap(Configuration::class.java.classLoader) as HashMap<Class<*>, Configuration>
-    }
-
-    override fun writeToParcel(parcel: Parcel, flags: Int) {
-        super.writeToParcel(parcel, flags)
-        parcel.writeMap(availableActionConfigs)
-    }
+    private constructor(builder: Builder) : this(
+        builder.shopperLocale,
+        builder.environment,
+        builder.clientKey,
+        builder.availableActionConfigs
+    )
 
     internal inline fun <reified T : Configuration> getConfigurationForAction(): T? {
         val actionClass = T::class.java
@@ -73,6 +58,7 @@ class GenericActionConfiguration : Configuration, Parcelable {
     /**
      * Builder for creating a [GenericActionConfiguration] where you can set specific Configurations for an action
      */
+    @Suppress("unused")
     class Builder : BaseConfigurationBuilder<GenericActionConfiguration> {
 
         @RestrictTo(RestrictTo.Scope.LIBRARY_GROUP)
