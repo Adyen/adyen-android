@@ -5,7 +5,6 @@ import com.adyen.checkout.card.AddressFormUIState
 import com.adyen.checkout.card.AddressOutputData
 import com.adyen.checkout.card.api.model.AddressItem
 import com.adyen.checkout.card.ui.model.AddressListItem
-import com.adyen.checkout.components.base.AddressVisibility
 import com.adyen.checkout.components.model.payments.request.Address
 
 internal object AddressFormUtils {
@@ -28,24 +27,6 @@ internal object AddressFormUtils {
                 val isFirstItem = index == 0
                 addressListItem.copy(selected = isFirstItem)
             }
-        }
-    }
-
-    /**
-     * Get visibility state of the address form.
-     *
-     * @param addressConfiguration Configuration object for address form.
-     * @param addressVisibility Visibility modifier for address form.
-     *
-     * @return Visibility state of the address form.
-     */
-    fun getAddressFormUIState(
-        addressConfiguration: AddressConfiguration?,
-        addressVisibility: AddressVisibility
-    ): AddressFormUIState {
-        return when {
-            addressConfiguration != null -> AddressFormUIState.fromAddressConfiguration(addressConfiguration)
-            else -> AddressFormUIState.fromAddressVisibility(addressVisibility)
         }
     }
 

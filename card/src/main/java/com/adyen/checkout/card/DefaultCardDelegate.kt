@@ -24,7 +24,6 @@ import com.adyen.checkout.card.util.DetectedCardTypesUtils
 import com.adyen.checkout.card.util.InstallmentUtils
 import com.adyen.checkout.card.util.KcpValidationUtils
 import com.adyen.checkout.card.util.SocialSecurityNumberUtils
-import com.adyen.checkout.components.base.AddressVisibility
 import com.adyen.checkout.components.flow.MutableSingleEventSharedFlow
 import com.adyen.checkout.components.model.paymentmethods.PaymentMethod
 import com.adyen.checkout.components.model.payments.request.CardPaymentMethod
@@ -220,10 +219,7 @@ internal class DefaultCardDelegate(
         // when no supported cards are detected, only show an error if the brand detection was reliable
         val shouldFailWithUnsupportedBrand = selectedOrFirstCardType == null && isReliable
 
-        val addressFormUIState = getAddressFormUIState(
-            addressConfiguration = configuration.addressConfiguration,
-            addressVisibility = configuration.addressVisibility
-        )
+        val addressFormUIState = AddressFormUIState.fromAddressConfiguration(configuration.addressConfiguration)
 
         return CardOutputData(
             cardNumberState = validateCardNumber(
@@ -454,16 +450,6 @@ internal class DefaultCardDelegate(
         } else {
             InstallmentUtils.makeInstallmentOptions(installmentConfiguration, cardType, isCardTypeReliable)
         }
-    }
-
-    private fun getAddressFormUIState(
-        addressConfiguration: AddressConfiguration?,
-        addressVisibility: AddressVisibility
-    ): AddressFormUIState {
-        return AddressFormUtils.getAddressFormUIState(
-            addressConfiguration,
-            addressVisibility
-        )
     }
 
     private fun requestCountryList() {

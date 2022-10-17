@@ -9,7 +9,6 @@ package com.adyen.checkout.components.base
 
 import android.app.Activity
 import android.app.Application
-import android.os.Bundle
 import androidx.lifecycle.LifecycleOwner
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.Observer
@@ -21,7 +20,6 @@ import com.adyen.checkout.components.model.payments.response.Action
 import com.adyen.checkout.core.exception.CheckoutException
 import com.adyen.checkout.core.exception.ComponentException
 import com.adyen.checkout.core.log.LogUtil
-import com.adyen.checkout.core.log.Logger
 
 @Suppress("TooManyFunctions")
 abstract class BaseActionComponent<ConfigurationT : Configuration>(
@@ -67,26 +65,6 @@ abstract class BaseActionComponent<ConfigurationT : Configuration>(
 
     override fun removeErrorObserver(observer: Observer<ComponentError>) {
         errorMutableLiveData.removeObserver(observer)
-    }
-
-    /**
-     * Call this method to save the current data of the Component to the Bundle from [Activity.onSaveInstanceState].
-     *
-     * @param bundle The bundle to save the sate into.
-     */
-    @Deprecated("You can safely remove this method, we rely on {@link SavedStateHandle} to handle the state.")
-    fun saveState(bundle: Bundle?) {
-        Logger.w(TAG, "Calling saveState is not necessary anymore, you can safely remove this method.")
-    }
-
-    /**
-     * Call this method to restore the current data of the Component from the savedInstanceState Bundle from [Activity.onCreate]}.
-     *
-     * @param bundle The bundle to restore the sate from.
-     */
-    @Deprecated("You can safely remove this method, we rely on {@link SavedStateHandle} to handle the state.")
-    fun restoreState(bundle: Bundle?) {
-        Logger.w(TAG, "Calling restoreState is not necessary anymore, you can safely remove this method.")
     }
 
     @Throws(ComponentException::class)

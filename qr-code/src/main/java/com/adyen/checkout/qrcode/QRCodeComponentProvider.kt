@@ -77,13 +77,6 @@ class QRCodeComponentProvider : ActionComponentProvider<QRCodeComponent, QRCodeC
     override val supportedActionTypes: List<String>
         get() = listOf(QrCodeAction.ACTION_TYPE)
 
-    @Deprecated(
-        message = "You can safely remove this method, it will always return true as all action components require" +
-            " a configuration.",
-        replaceWith = ReplaceWith("true")
-    )
-    override fun requiresConfiguration(): Boolean = true
-
     override fun canHandleAction(action: Action): Boolean {
         return when {
             !supportedActionTypes.contains(action.type) -> false
