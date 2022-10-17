@@ -149,8 +149,8 @@ internal class DefaultBcmcDelegateTest {
         fun `input is valid, then output should be valid`() = runTest {
             delegate.outputDataFlow.test {
                 delegate.updateInputData {
-                        cardNumber = TEST_CARD_NUMBER
-                        expiryDate = TEST_EXPIRY_DATE
+                    cardNumber = TEST_CARD_NUMBER
+                    expiryDate = TEST_EXPIRY_DATE
                 }
 
                 with(expectMostRecentItem()) {
@@ -174,7 +174,8 @@ internal class DefaultBcmcDelegateTest {
                 delegate.createComponentState(
                     createOutputData(
                         cardNumber = FieldState(TEST_CARD_NUMBER, Validation.Valid),
-                        expiryDate = FieldState(TEST_EXPIRY_DATE, Validation.Valid)
+                        expiryDate = FieldState(TEST_EXPIRY_DATE, Validation.Valid),
+                        cardHolder = FieldState("Name", Validation.Valid)
                     )
                 )
 
@@ -194,7 +195,8 @@ internal class DefaultBcmcDelegateTest {
                 delegate.createComponentState(
                     createOutputData(
                         cardNumber = FieldState(TEST_CARD_NUMBER, Validation.Valid),
-                        expiryDate = FieldState(TEST_EXPIRY_DATE, Validation.Valid)
+                        expiryDate = FieldState(TEST_EXPIRY_DATE, Validation.Valid),
+                        cardHolder = FieldState("Name", Validation.Valid)
                     )
                 )
 
@@ -215,6 +217,7 @@ internal class DefaultBcmcDelegateTest {
                             "12345678", Validation.Invalid(R.string.checkout_card_number_not_valid)
                         ),
                         expiryDate = FieldState(TEST_EXPIRY_DATE, Validation.Valid),
+                        cardHolder = FieldState("Name", Validation.Valid)
                     )
                 )
 
@@ -235,7 +238,27 @@ internal class DefaultBcmcDelegateTest {
                         expiryDate = FieldState(
                             ExpiryDate.INVALID_DATE,
                             Validation.Invalid(R.string.checkout_expiry_date_not_valid)
-                        )
+                        ),
+                        cardHolder = FieldState("Name", Validation.Valid),
+                    )
+                )
+
+                with(requireNotNull(expectMostRecentItem())) {
+                    assertFalse(isValid)
+                    assertFalse(isInputValid)
+                }
+            }
+        }
+
+        @Test
+        fun `holder name in output is invalid, then component state should be invalid`() = runTest {
+            delegate.initialize(CoroutineScope(UnconfinedTestDispatcher()))
+            delegate.componentStateFlow.test {
+                delegate.createComponentState(
+                    createOutputData(
+                        cardNumber = FieldState(TEST_CARD_NUMBER, Validation.Valid),
+                        expiryDate = FieldState(TEST_EXPIRY_DATE, Validation.Valid),
+                        cardHolder = FieldState("", Validation.Invalid(R.string.checkout_holder_name_not_valid)),
                     )
                 )
 
@@ -253,7 +276,8 @@ internal class DefaultBcmcDelegateTest {
                 delegate.createComponentState(
                     createOutputData(
                         cardNumber = FieldState(TEST_CARD_NUMBER, Validation.Valid),
-                        expiryDate = FieldState(TEST_EXPIRY_DATE, Validation.Valid)
+                        expiryDate = FieldState(TEST_EXPIRY_DATE, Validation.Valid),
+                        cardHolder = FieldState("Name", Validation.Valid)
                     )
                 )
                 with(requireNotNull(expectMostRecentItem())) {
@@ -267,11 +291,13 @@ internal class DefaultBcmcDelegateTest {
     private fun createOutputData(
         cardNumber: FieldState<String>,
         expiryDate: FieldState<ExpiryDate>,
+        cardHolder: FieldState<String>,
         isStoredPaymentMethodEnable: Boolean = false
     ): BcmcOutputData {
         return BcmcOutputData(
             cardNumber,
             expiryDate,
+            cardHolder,
             isStoredPaymentMethodEnable
         )
     }

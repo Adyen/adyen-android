@@ -13,5 +13,6 @@ import com.adyen.checkout.components.base.InputData
 data class BcmcInputData(
     var cardNumber: String = "",
     var expiryDate: ExpiryDate = ExpiryDate.EMPTY_DATE,
+    var cardHolderName: String = "",
     var isStorePaymentSelected: Boolean = false,
 ) : InputData

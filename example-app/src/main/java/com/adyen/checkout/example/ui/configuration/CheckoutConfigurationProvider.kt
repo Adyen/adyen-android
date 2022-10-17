@@ -74,6 +74,7 @@ internal class CheckoutConfigurationProvider @Inject constructor(
     private fun getBcmcConfiguration(): BcmcConfiguration =
         BcmcConfiguration.Builder(shopperLocale, environment, clientKey)
             .setShopperReference(keyValueStorage.getShopperReference())
+            .setHolderNameRequired(true)
             .setShowStorePaymentField(true)
             .build()
 

@@ -10,6 +10,7 @@ package com.adyen.checkout.bcmc
 import android.content.Context
 import android.os.Parcel
 import android.os.Parcelable
+import com.adyen.checkout.card.CardConfiguration
 import com.adyen.checkout.components.base.BaseConfigurationBuilder
 import com.adyen.checkout.components.base.Configuration
 import com.adyen.checkout.core.api.Environment
@@ -22,6 +23,7 @@ import java.util.Locale
  */
 class BcmcConfiguration : Configuration {
 
+    val isHolderNameRequired: Boolean
     val shopperReference: String?
     val isStorePaymentFieldVisible: Boolean
 
@@ -29,20 +31,24 @@ class BcmcConfiguration : Configuration {
         shopperLocale: Locale,
         environment: Environment,
         clientKey: String,
+        isHolderNameRequired: Boolean,
         shopperReference: String?,
         isStorePaymentFieldVisible: Boolean,
     ) : super(shopperLocale, environment, clientKey) {
+        this.isHolderNameRequired = isHolderNameRequired
         this.shopperReference = shopperReference
         this.isStorePaymentFieldVisible = isStorePaymentFieldVisible
     }
 
     internal constructor(parcel: Parcel) : super(parcel) {
+        isHolderNameRequired = readBoolean(parcel)
         shopperReference = parcel.readString()
         isStorePaymentFieldVisible = readBoolean(parcel)
     }
 
     override fun writeToParcel(parcel: Parcel, flags: Int) {
         super.writeToParcel(parcel, flags)
+        writeBoolean(parcel, isHolderNameRequired)
         parcel.writeString(shopperReference)
         writeBoolean(parcel, isStorePaymentFieldVisible)
     }
@@ -51,6 +57,8 @@ class BcmcConfiguration : Configuration {
      * Builder to create a [BcmcConfiguration].
      */
     class Builder : BaseConfigurationBuilder<BcmcConfiguration> {
+
+        private var isHolderNameRequired = false
         private var showStorePaymentField = false
         private var shopperReference: String? = null
 
@@ -99,6 +107,17 @@ class BcmcConfiguration : Configuration {
         }
 
         /**
+         * Set if the holder name is required and should be shown as an input field.
+         *
+         * @param isHolderNameRequired [Boolean]
+         * @return [CardConfiguration.Builder]
+         */
+        fun setHolderNameRequired(isHolderNameRequired: Boolean): Builder {
+            this.isHolderNameRequired = isHolderNameRequired
+            return this
+        }
+
+        /**
          * Set if the option to store the card for future payments should be shown as an input field.
          *
          * @param showStorePaymentField [Boolean]
@@ -132,6 +151,7 @@ class BcmcConfiguration : Configuration {
                 shopperLocale = shopperLocale,
                 environment = environment,
                 clientKey = clientKey,
+                isHolderNameRequired = isHolderNameRequired,
                 shopperReference = shopperReference,
                 isStorePaymentFieldVisible = showStorePaymentField,
             )
