@@ -20,7 +20,6 @@ class CardValidationMapper {
                 Validation.Invalid(R.string.checkout_card_number_not_valid)
             CardNumberValidation.INVALID_TOO_SHORT -> Validation.Invalid(R.string.checkout_card_number_not_valid)
             CardNumberValidation.INVALID_TOO_LONG -> Validation.Invalid(R.string.checkout_card_number_not_valid)
-            // TODO add string translations
             CardNumberValidation.INVALID_UNSUPPORTED_BRAND -> Validation.Invalid(
                 reason = R.string.checkout_card_brand_not_supported,
                 showErrorWhileEditing = true
