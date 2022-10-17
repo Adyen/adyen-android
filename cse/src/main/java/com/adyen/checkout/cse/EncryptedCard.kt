@@ -7,44 +7,13 @@
  */
 package com.adyen.checkout.cse
 
-import android.os.Parcel
 import android.os.Parcelable
+import kotlinx.parcelize.Parcelize
 
+@Parcelize
 data class EncryptedCard(
     val encryptedCardNumber: String?,
     val encryptedExpiryMonth: String?,
     val encryptedExpiryYear: String?,
     val encryptedSecurityCode: String?,
-) : Parcelable {
-
-    private constructor(source: Parcel) : this(
-        encryptedCardNumber = source.readString(),
-        encryptedExpiryMonth = source.readString(),
-        encryptedExpiryYear = source.readString(),
-        encryptedSecurityCode = source.readString(),
-    )
-
-    override fun describeContents(): Int {
-        return Parcelable.CONTENTS_FILE_DESCRIPTOR
-    }
-
-    override fun writeToParcel(dest: Parcel, flags: Int) {
-        dest.writeString(encryptedCardNumber)
-        dest.writeString(encryptedExpiryMonth)
-        dest.writeString(encryptedExpiryYear)
-        dest.writeString(encryptedSecurityCode)
-    }
-
-    companion object {
-        @JvmField
-        val CREATOR: Parcelable.Creator<EncryptedCard> = object : Parcelable.Creator<EncryptedCard> {
-            override fun createFromParcel(source: Parcel): EncryptedCard {
-                return EncryptedCard(source)
-            }
-
-            override fun newArray(size: Int): Array<EncryptedCard?> {
-                return arrayOfNulls(size)
-            }
-        }
-    }
-}
+) : Parcelable

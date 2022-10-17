@@ -21,11 +21,11 @@ open class PaymentComponentState<PaymentMethodDetailsT : PaymentMethodDetails>(
     /**
      * @return If the component UI data is valid.
      */
-    val isInputValid: Boolean,
+    open val isInputValid: Boolean,
     /**
      * @return If the component initialisation is done and data can be sent to the backend when valid.
      */
-    val isReady: Boolean
+    open val isReady: Boolean
 ) {
 
     /**
