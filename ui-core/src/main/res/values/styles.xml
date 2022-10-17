@@ -72,6 +72,7 @@
         <item name="android:textDirection">ltr</item>
         <item name="android:textAlignment">viewStart</item>
         <item name="android:inputType">text</item>
+        <item name="android:textColor">@drawable/edit_text_color_selector</item>
     </style>
 
     <style name="AdyenCheckout.DropdownTextInputEditText">
