@@ -93,13 +93,6 @@ class Adyen3DS2ComponentProvider :
             Threeds2Action.ACTION_TYPE
         )
 
-    @Deprecated(
-        message = "You can safely remove this method, it will always return true as all action components require " +
-            "a configuration.",
-        replaceWith = ReplaceWith("true")
-    )
-    override fun requiresConfiguration(): Boolean = true
-
     override fun requiresView(action: Action): Boolean = false
 
     override fun canHandleAction(action: Action): Boolean {

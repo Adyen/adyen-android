@@ -11,9 +11,6 @@ package com.adyen.checkout.dropin.service
 import com.adyen.checkout.components.model.PaymentMethodsApiResponse
 import com.adyen.checkout.components.model.payments.response.BalanceResult
 import com.adyen.checkout.components.model.payments.response.OrderResponse
-import com.adyen.checkout.core.exception.CheckoutException
-import org.json.JSONException
-import org.json.JSONObject
 import com.adyen.checkout.components.model.payments.response.Action as ActionResponse
 
 sealed class BaseDropInServiceResult
@@ -43,24 +40,7 @@ sealed class DropInServiceResult : BaseDropInServiceResult() {
      * Use [com.adyen.checkout.components.model.payments.response.Action.SERIALIZER] to serialize
      * your JSON response string.
      */
-    @Suppress("MemberNameEqualsClassName")
-    class Action : DropInServiceResult {
-        val action: ActionResponse
-
-        constructor(action: ActionResponse) {
-            this.action = action
-        }
-
-        @Deprecated("Use the new constructor which takes an Action object as parameter")
-        constructor(actionJSON: String) {
-            val actionJSONObject = try {
-                JSONObject(actionJSON)
-            } catch (e: JSONException) {
-                throw CheckoutException("Provided action is not a JSON object")
-            }
-            action = ActionResponse.SERIALIZER.deserialize(actionJSONObject)
-        }
-    }
+    class Action(val action: ActionResponse) : DropInServiceResult()
 
     /**
      * Only applicable for gift card flow.

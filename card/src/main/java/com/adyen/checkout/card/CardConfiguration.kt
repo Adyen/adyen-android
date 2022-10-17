@@ -11,10 +11,10 @@ import android.content.Context
 import android.os.Parcel
 import android.os.Parcelable
 import com.adyen.checkout.card.data.CardType
-import com.adyen.checkout.components.base.AddressVisibility
 import com.adyen.checkout.components.base.BaseConfigurationBuilder
 import com.adyen.checkout.components.base.Configuration
 import com.adyen.checkout.core.api.Environment
+import com.adyen.checkout.core.exception.CheckoutException
 import com.adyen.checkout.core.util.ParcelUtils.readBoolean
 import com.adyen.checkout.core.util.ParcelUtils.writeBoolean
 import java.util.Locale
@@ -32,9 +32,8 @@ class CardConfiguration : Configuration {
     val isHideCvcStoredCard: Boolean
     val socialSecurityNumberVisibility: SocialSecurityNumberVisibility?
     val kcpAuthVisibility: KCPAuthVisibility?
-    val addressVisibility: AddressVisibility
     val installmentConfiguration: InstallmentConfiguration?
-    val addressConfiguration: AddressConfiguration?
+    val addressConfiguration: AddressConfiguration
 
     @Suppress("LongParameterList")
     internal constructor(
@@ -49,9 +48,8 @@ class CardConfiguration : Configuration {
         isHideCvcStoredCard: Boolean,
         socialSecurityNumberVisibility: SocialSecurityNumberVisibility?,
         kcpAuthVisibility: KCPAuthVisibility?,
-        addressVisibility: AddressVisibility,
         installmentConfiguration: InstallmentConfiguration?,
-        addressConfiguration: AddressConfiguration?
+        addressConfiguration: AddressConfiguration
     ) : super(shopperLocale, environment, clientKey) {
         this.isHolderNameRequired = isHolderNameRequired
         this.supportedCardTypes = supportedCardTypes
@@ -61,7 +59,6 @@ class CardConfiguration : Configuration {
         this.isHideCvcStoredCard = isHideCvcStoredCard
         this.socialSecurityNumberVisibility = socialSecurityNumberVisibility
         this.kcpAuthVisibility = kcpAuthVisibility
-        this.addressVisibility = addressVisibility
         this.installmentConfiguration = installmentConfiguration
         this.addressConfiguration = addressConfiguration
     }
@@ -75,9 +72,9 @@ class CardConfiguration : Configuration {
         isHideCvcStoredCard = readBoolean(parcel)
         socialSecurityNumberVisibility = SocialSecurityNumberVisibility.valueOf(parcel.readString()!!)
         kcpAuthVisibility = KCPAuthVisibility.valueOf(parcel.readString()!!)
-        addressVisibility = (parcel.readSerializable() as AddressVisibility?)!!
         installmentConfiguration = parcel.readParcelable(InstallmentConfiguration::class.java.classLoader)
         addressConfiguration = parcel.readParcelable(AddressConfiguration::class.java.classLoader)
+            ?: throw CheckoutException("Failed to read address configuration from parcel")
     }
 
     override fun writeToParcel(parcel: Parcel, flags: Int) {
@@ -90,7 +87,6 @@ class CardConfiguration : Configuration {
         writeBoolean(parcel, isHideCvcStoredCard)
         parcel.writeString(socialSecurityNumberVisibility!!.name)
         parcel.writeString(kcpAuthVisibility!!.name)
-        parcel.writeSerializable(addressVisibility)
         parcel.writeParcelable(installmentConfiguration, flags)
         parcel.writeParcelable(addressConfiguration, flags)
     }
@@ -113,9 +109,8 @@ class CardConfiguration : Configuration {
         private var socialSecurityNumberVisibility: SocialSecurityNumberVisibility? =
             SocialSecurityNumberVisibility.HIDE
         private var kcpAuthVisibility: KCPAuthVisibility? = KCPAuthVisibility.HIDE
-        private var addressVisibility = AddressVisibility.NONE
         private var installmentConfiguration: InstallmentConfiguration? = null
-        private var addressConfiguration: AddressConfiguration? = null
+        private var addressConfiguration: AddressConfiguration = AddressConfiguration.None
 
         /**
          * Constructor of Card Configuration Builder with instance of CardConfiguration.
@@ -129,7 +124,6 @@ class CardConfiguration : Configuration {
             isHideCvcStoredCard = cardConfiguration.isHideCvcStoredCard
             socialSecurityNumberVisibility = cardConfiguration.socialSecurityNumberVisibility
             kcpAuthVisibility = cardConfiguration.kcpAuthVisibility
-            addressVisibility = cardConfiguration.addressVisibility
             installmentConfiguration = cardConfiguration.installmentConfiguration
             addressConfiguration = cardConfiguration.addressConfiguration
         }
@@ -255,21 +249,6 @@ class CardConfiguration : Configuration {
         }
 
         /**
-         * Specifies whether address input fields should be shown or not and in which form.
-         *
-         * @param addressVisibility The visibility state of the address input fields.
-         * @return [CardConfiguration.Builder]
-         */
-        @Deprecated(
-            message = "In favor of setAddressConfiguration(AddressConfiguration). Full address " +
-                "form is only supported through using setAddressConfiguration(AddressConfiguration)."
-        )
-        fun setAddressVisibility(addressVisibility: AddressVisibility): Builder {
-            this.addressVisibility = addressVisibility
-            return this
-        }
-
-        /**
          * Configures the installment options to be provided to the shopper.
          *
          * @param installmentConfiguration The configuration object for installment options.
@@ -309,7 +288,6 @@ class CardConfiguration : Configuration {
                 isHideCvcStoredCard = isHideCvcStoredCard,
                 socialSecurityNumberVisibility = socialSecurityNumberVisibility,
                 kcpAuthVisibility = kcpAuthVisibility,
-                addressVisibility = addressVisibility,
                 installmentConfiguration = installmentConfiguration,
                 addressConfiguration = addressConfiguration,
             )

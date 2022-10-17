@@ -3,7 +3,6 @@ package com.adyen.checkout.card
 import com.adyen.checkout.card.api.model.AddressItem
 import com.adyen.checkout.card.ui.model.AddressListItem
 import com.adyen.checkout.card.util.AddressFormUtils
-import com.adyen.checkout.components.base.AddressVisibility
 import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.Test
 
@@ -125,28 +124,6 @@ internal class AddressFormUtilsTest {
             )
         )
         assertEquals(expected, AddressFormUtils.markAddressListItemSelected(input, "TR"))
-    }
-
-    @Test
-    fun getAddressFormUIState_AddressConfigurationNull_ReturnUIStateUsingAddressVisibility() {
-        val addressConfiguration = null
-        val addressVisibility = AddressVisibility.POSTAL_CODE
-        val expected = AddressFormUIState.POSTAL_CODE
-        assertEquals(
-            expected,
-            AddressFormUtils.getAddressFormUIState(addressConfiguration, addressVisibility)
-        )
-    }
-
-    @Test
-    fun getAddressFormUIState_AddressConfigurationNotNull_ReturnUIStateUsingAddressConfiguration() {
-        val addressConfiguration = AddressConfiguration.FullAddress()
-        val addressVisibility = AddressVisibility.NONE
-        val expected = AddressFormUIState.FULL_ADDRESS
-        assertEquals(
-            expected,
-            AddressFormUtils.getAddressFormUIState(addressConfiguration, addressVisibility)
-        )
     }
 
     @Test
