@@ -51,6 +51,7 @@ import kotlin.collections.set
  * If you don't specify anything, a default configuration will be used.
  */
 @Parcelize
+@Suppress("LongParameterList")
 class DropInConfiguration private constructor(
     override val shopperLocale: Locale,
     override val environment: Environment,
@@ -100,7 +101,7 @@ class DropInConfiguration private constructor(
     /**
      * Builder for creating a [DropInConfiguration] where you can set specific Configurations for a Payment Method
      */
-    @Suppress("unused")
+    @Suppress("unused", "TooManyFunctions")
     class Builder : BaseConfigurationBuilder<DropInConfiguration> {
 
         internal val availablePaymentConfigs = HashMap<String, Configuration>()

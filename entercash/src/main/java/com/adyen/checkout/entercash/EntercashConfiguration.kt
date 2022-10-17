@@ -12,7 +12,7 @@ import com.adyen.checkout.core.api.Environment
 import com.adyen.checkout.issuerlist.IssuerListConfiguration
 import com.adyen.checkout.issuerlist.IssuerListViewType
 import kotlinx.parcelize.Parcelize
-import java.util.*
+import java.util.Locale
 
 @Parcelize
 class EntercashConfiguration private constructor(

@@ -18,7 +18,7 @@ import com.adyen.checkout.components.util.CheckoutCurrency
 import com.adyen.checkout.core.api.Environment
 import com.adyen.checkout.core.exception.CheckoutException
 import kotlinx.parcelize.Parcelize
-import java.util.*
+import java.util.Locale
 
 @Parcelize
 class BacsDirectDebitConfiguration private constructor(

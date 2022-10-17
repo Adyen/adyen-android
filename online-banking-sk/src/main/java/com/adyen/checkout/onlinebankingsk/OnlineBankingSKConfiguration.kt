@@ -22,7 +22,6 @@ class OnlineBankingSKConfiguration private constructor(
     override val clientKey: String,
 ) : Configuration {
 
-
     class Builder : BaseConfigurationBuilder<OnlineBankingSKConfiguration> {
 
         /**

@@ -22,7 +22,6 @@ data class ActionComponentData(
     var details: @WriteWith<JSONObjectParceler> JSONObject? = null,
 ) : ModelObject() {
 
-
     companion object {
         private const val PAYMENT_DATA = "paymentData"
         private const val DETAILS = "details"

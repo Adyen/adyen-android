@@ -77,7 +77,6 @@ sealed class InstallmentOptions : Parcelable {
          */
         constructor(maxInstallments: Int, includeRevolving: Boolean, cardType: CardType) :
             this((STARTING_INSTALLMENT_VALUE..maxInstallments).toList(), includeRevolving, cardType)
-
     }
 
     /**

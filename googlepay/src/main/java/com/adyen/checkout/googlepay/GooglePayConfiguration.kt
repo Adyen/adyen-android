@@ -27,6 +27,7 @@ import kotlinx.parcelize.Parcelize
 import java.util.Locale
 
 @Parcelize
+@Suppress("LongParameterList")
 class GooglePayConfiguration private constructor(
     override val shopperLocale: Locale,
     override val environment: Environment,
@@ -47,7 +48,6 @@ class GooglePayConfiguration private constructor(
     val isBillingAddressRequired: Boolean,
     val billingAddressParameters: BillingAddressParameters?,
 ) : Configuration, AmountConfiguration {
-
 
     /**
      * Builder to create a [GooglePayConfiguration].

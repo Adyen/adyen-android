@@ -10,6 +10,7 @@ package com.adyen.checkout.onlinebankingcore
 
 import android.content.Context
 import app.cash.turbine.test
+import com.adyen.checkout.components.base.Configuration
 import com.adyen.checkout.components.model.paymentmethods.PaymentMethod
 import com.adyen.checkout.components.model.payments.request.OnlineBankingCZPaymentMethod
 import kotlinx.coroutines.ExperimentalCoroutinesApi
@@ -33,7 +34,7 @@ import org.mockito.kotlin.whenever
 @OptIn(ExperimentalCoroutinesApi::class)
 @ExtendWith(MockitoExtension::class)
 internal class DefaultOnlineBankingDelegateTest(
-    @Mock private val configuration: OnlineBankingConfiguration
+    @Mock private val configuration: Configuration
 ) {
 
     private lateinit var delegate: DefaultOnlineBankingDelegate<OnlineBankingCZPaymentMethod>

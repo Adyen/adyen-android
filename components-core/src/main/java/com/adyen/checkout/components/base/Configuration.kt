@@ -2,7 +2,7 @@ package com.adyen.checkout.components.base
 
 import android.os.Parcelable
 import com.adyen.checkout.core.api.Environment
-import java.util.*
+import java.util.Locale
 
 interface Configuration : Parcelable {
 

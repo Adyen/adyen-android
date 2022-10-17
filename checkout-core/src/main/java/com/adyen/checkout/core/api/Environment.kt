@@ -11,7 +11,7 @@ import android.os.Parcelable
 import kotlinx.parcelize.IgnoredOnParcel
 import kotlinx.parcelize.Parcelize
 import java.net.URL
-import java.util.*
+import java.util.Objects
 
 /**
  * Identifies which host URL to be used for network calls.

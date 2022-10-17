@@ -19,6 +19,7 @@ import java.util.Locale
  * [Configuration] class required by [CardComponent] to change it's behavior. Pass it to the [CardComponent.PROVIDER].
  */
 @Parcelize
+@Suppress("LongParameterList")
 class CardConfiguration private constructor(
     override val shopperLocale: Locale,
     override val environment: Environment,

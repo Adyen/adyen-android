@@ -12,7 +12,7 @@ import com.adyen.checkout.components.base.BaseConfigurationBuilder
 import com.adyen.checkout.components.base.Configuration
 import com.adyen.checkout.core.api.Environment
 import kotlinx.parcelize.Parcelize
-import java.util.*
+import java.util.Locale
 
 @Parcelize
 class AwaitConfiguration private constructor(
