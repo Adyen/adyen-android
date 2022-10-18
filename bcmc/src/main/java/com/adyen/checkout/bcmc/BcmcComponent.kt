@@ -38,7 +38,6 @@ class BcmcComponent(
 
     init {
         delegate.componentStateFlow
-            .filterNotNull()
             .onEach { notifyStateChanged(it) }
             .launchIn(viewModelScope)
 

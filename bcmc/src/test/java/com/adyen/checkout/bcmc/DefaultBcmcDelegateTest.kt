@@ -171,7 +171,7 @@ internal class DefaultBcmcDelegateTest {
         @Test
         fun `component is not initialized, then component state should not be ready`() = runTest {
             delegate.componentStateFlow.test {
-                delegate.createComponentState(
+                delegate.updateComponentState(
                     createOutputData(
                         cardNumber = FieldState(TEST_CARD_NUMBER, Validation.Valid),
                         expiryDate = FieldState(TEST_EXPIRY_DATE, Validation.Valid),
@@ -179,7 +179,7 @@ internal class DefaultBcmcDelegateTest {
                     )
                 )
 
-                with(requireNotNull(expectMostRecentItem())) {
+                with(expectMostRecentItem()) {
                     assertFalse(isReady)
                 }
             }
@@ -192,7 +192,7 @@ internal class DefaultBcmcDelegateTest {
             delegate.initialize(CoroutineScope(UnconfinedTestDispatcher()))
 
             delegate.componentStateFlow.test {
-                delegate.createComponentState(
+                delegate.updateComponentState(
                     createOutputData(
                         cardNumber = FieldState(TEST_CARD_NUMBER, Validation.Valid),
                         expiryDate = FieldState(TEST_EXPIRY_DATE, Validation.Valid),
@@ -200,7 +200,7 @@ internal class DefaultBcmcDelegateTest {
                     )
                 )
 
-                with(requireNotNull(expectMostRecentItem())) {
+                with(expectMostRecentItem()) {
                     assertTrue(isReady)
                     assertFalse(isInputValid)
                 }
@@ -211,7 +211,7 @@ internal class DefaultBcmcDelegateTest {
         fun `card number in output data is invalid, then component state should be invalid`() = runTest {
             delegate.initialize(CoroutineScope(UnconfinedTestDispatcher()))
             delegate.componentStateFlow.test {
-                delegate.createComponentState(
+                delegate.updateComponentState(
                     createOutputData(
                         cardNumber = FieldState(
                             "12345678", Validation.Invalid(R.string.checkout_card_number_not_valid)
@@ -221,7 +221,7 @@ internal class DefaultBcmcDelegateTest {
                     )
                 )
 
-                with(requireNotNull(expectMostRecentItem())) {
+                with(expectMostRecentItem()) {
                     assertFalse(isValid)
                     assertFalse(isInputValid)
                 }
@@ -232,7 +232,7 @@ internal class DefaultBcmcDelegateTest {
         fun `expiry date in output is invalid, then component state should be invalid`() = runTest {
             delegate.initialize(CoroutineScope(UnconfinedTestDispatcher()))
             delegate.componentStateFlow.test {
-                delegate.createComponentState(
+                delegate.updateComponentState(
                     createOutputData(
                         cardNumber = FieldState(TEST_CARD_NUMBER, Validation.Valid),
                         expiryDate = FieldState(
@@ -243,7 +243,7 @@ internal class DefaultBcmcDelegateTest {
                     )
                 )
 
-                with(requireNotNull(expectMostRecentItem())) {
+                with(expectMostRecentItem()) {
                     assertFalse(isValid)
                     assertFalse(isInputValid)
                 }
@@ -254,7 +254,7 @@ internal class DefaultBcmcDelegateTest {
         fun `holder name in output is invalid, then component state should be invalid`() = runTest {
             delegate.initialize(CoroutineScope(UnconfinedTestDispatcher()))
             delegate.componentStateFlow.test {
-                delegate.createComponentState(
+                delegate.updateComponentState(
                     createOutputData(
                         cardNumber = FieldState(TEST_CARD_NUMBER, Validation.Valid),
                         expiryDate = FieldState(TEST_EXPIRY_DATE, Validation.Valid),
@@ -262,7 +262,7 @@ internal class DefaultBcmcDelegateTest {
                     )
                 )
 
-                with(requireNotNull(expectMostRecentItem())) {
+                with(expectMostRecentItem()) {
                     assertFalse(isValid)
                     assertFalse(isInputValid)
                 }
@@ -273,14 +273,14 @@ internal class DefaultBcmcDelegateTest {
         fun `output data is valid, then component state should be valid`() = runTest {
             delegate.initialize(CoroutineScope(UnconfinedTestDispatcher()))
             delegate.componentStateFlow.test {
-                delegate.createComponentState(
+                delegate.updateComponentState(
                     createOutputData(
                         cardNumber = FieldState(TEST_CARD_NUMBER, Validation.Valid),
                         expiryDate = FieldState(TEST_EXPIRY_DATE, Validation.Valid),
                         cardHolder = FieldState("Name", Validation.Valid)
                     )
                 )
-                with(requireNotNull(expectMostRecentItem())) {
+                with(expectMostRecentItem()) {
                     assertTrue(isValid)
                     assertTrue(isInputValid)
                 }
