@@ -470,7 +470,7 @@ internal class DefaultCardDelegateTest {
         @Test
         fun `component is not initialized, then component state should not be ready`() = runTest {
             delegate.componentStateFlow.test {
-                delegate.createComponentState(createOutputData())
+                delegate.updateComponentState(createOutputData())
 
                 val componentState = requireNotNull(expectMostRecentItem())
 
@@ -486,7 +486,7 @@ internal class DefaultCardDelegateTest {
             delegate.initialize(CoroutineScope(UnconfinedTestDispatcher()))
 
             delegate.componentStateFlow.test {
-                delegate.createComponentState(createOutputData())
+                delegate.updateComponentState(createOutputData())
 
                 val componentState = requireNotNull(expectMostRecentItem())
 
@@ -501,7 +501,7 @@ internal class DefaultCardDelegateTest {
             delegate.initialize(CoroutineScope(UnconfinedTestDispatcher()))
 
             delegate.componentStateFlow.test {
-                delegate.createComponentState(
+                delegate.updateComponentState(
                     createOutputData(
                         cardNumberState = FieldState(
                             "12345678",
@@ -523,7 +523,7 @@ internal class DefaultCardDelegateTest {
             delegate.initialize(CoroutineScope(UnconfinedTestDispatcher()))
 
             delegate.componentStateFlow.test {
-                delegate.createComponentState(
+                delegate.updateComponentState(
                     createOutputData(
                         expiryDateState = FieldState(
                             ExpiryDate(10, 2020),
@@ -545,7 +545,7 @@ internal class DefaultCardDelegateTest {
             delegate.initialize(CoroutineScope(UnconfinedTestDispatcher()))
 
             delegate.componentStateFlow.test {
-                delegate.createComponentState(createOutputData())
+                delegate.updateComponentState(createOutputData())
 
                 val componentState = requireNotNull(expectMostRecentItem())
 
@@ -622,7 +622,7 @@ internal class DefaultCardDelegateTest {
                     )
                 )
 
-                delegate.createComponentState(
+                delegate.updateComponentState(
                     createOutputData(
                         holderNameState = FieldState("S. Hopper", Validation.Valid),
                         socialSecurityNumberState = FieldState("0108", Validation.Valid),

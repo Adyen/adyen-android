@@ -219,7 +219,7 @@ internal class StoredCardDelegateTest {
             delegate.initialize(CoroutineScope(UnconfinedTestDispatcher()))
 
             delegate.componentStateFlow.test {
-                delegate.createComponentState(
+                delegate.updateComponentState(
                     createOutputData(
                         securityCodeState = FieldState(
                             "12",
@@ -241,7 +241,7 @@ internal class StoredCardDelegateTest {
             delegate.initialize(CoroutineScope(UnconfinedTestDispatcher()))
 
             delegate.componentStateFlow.test {
-                delegate.createComponentState(createOutputData())
+                delegate.updateComponentState(createOutputData())
 
                 val componentState = requireNotNull(expectMostRecentItem())
 
