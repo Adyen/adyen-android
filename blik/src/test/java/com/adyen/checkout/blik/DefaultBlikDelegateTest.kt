@@ -125,7 +125,7 @@ internal class DefaultBlikDelegateTest {
         fun `output data is invalid, then component state should be invalid`() = runTest {
             delegate.componentStateFlow.test {
                 skipItems(1)
-                delegate.createComponentState(BlikOutputData("87909090"))
+                delegate.updateComponentState(BlikOutputData("87909090"))
 
                 with(requireNotNull(awaitItem())) {
                     assertEquals("87909090", data.paymentMethod?.blikCode)
@@ -141,7 +141,7 @@ internal class DefaultBlikDelegateTest {
         fun `output data is valid, then component state should be propagated`() = runTest {
             delegate.componentStateFlow.test {
                 skipItems(1)
-                delegate.createComponentState(BlikOutputData("777134"))
+                delegate.updateComponentState(BlikOutputData("777134"))
 
                 with(requireNotNull(awaitItem())) {
                     assertEquals("777134", data.paymentMethod?.blikCode)

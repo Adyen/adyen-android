@@ -31,19 +31,13 @@ internal class StoredBlikDelegate(
     override val outputData: BlikOutputData
         get() = _outputDataFlow.value
 
-    private val _componentStateFlow = MutableStateFlow<PaymentComponentState<BlikPaymentMethod>?>(null)
-    override val componentStateFlow: Flow<PaymentComponentState<BlikPaymentMethod>?> = _componentStateFlow
+    private val _componentStateFlow = MutableStateFlow(createComponentState())
+    override val componentStateFlow: Flow<PaymentComponentState<BlikPaymentMethod>> = _componentStateFlow
 
     override val viewFlow: Flow<ComponentViewType?> = MutableStateFlow(BlikComponentViewType)
 
     override fun getPaymentMethodType(): String {
         return storedPaymentMethod.type ?: PaymentMethodTypes.UNKNOWN
-    }
-
-    init {
-        // this stored component does not require any input currently, we just generate a valid ComponentState right when it loads
-        // BlikOutputData is not needed by createComponentState
-        createComponentState(outputData)
     }
 
     override fun updateInputData(update: BlikInputData.() -> Unit) {
@@ -52,7 +46,7 @@ internal class StoredBlikDelegate(
 
     private fun createOutputData() = BlikOutputData(blikCode = "")
 
-    private fun createComponentState(outputData: BlikOutputData) {
+    private fun createComponentState(): PaymentComponentState<BlikPaymentMethod> {
         val paymentMethod = BlikPaymentMethod(
             type = BlikPaymentMethod.PAYMENT_METHOD_TYPE,
             storedPaymentMethodId = storedPaymentMethod.id
@@ -62,20 +56,14 @@ internal class StoredBlikDelegate(
             paymentMethod = paymentMethod
         )
 
-        val paymentComponentState = PaymentComponentState(
+        return PaymentComponentState(
             data = paymentComponentData,
             isInputValid = true,
             isReady = true
         )
-
-        componentStateChanged(paymentComponentState)
     }
 
     override fun requiresInput(): Boolean = false
-
-    private fun componentStateChanged(componentState: PaymentComponentState<BlikPaymentMethod>) {
-        _componentStateFlow.tryEmit(componentState)
-    }
 
     override fun getViewProvider(): ViewProvider = BlikViewProvider
 

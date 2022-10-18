@@ -18,7 +18,6 @@ import com.adyen.checkout.components.ui.view.ComponentViewType
 import com.adyen.checkout.components.util.PaymentMethodTypes
 import com.adyen.checkout.core.log.LogUtil
 import kotlinx.coroutines.flow.Flow
-import kotlinx.coroutines.flow.filterNotNull
 import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.onEach
 
@@ -48,7 +47,6 @@ class CardComponent(
 
     private fun observeComponentState() {
         delegate.componentStateFlow
-            .filterNotNull()
             .onEach { notifyStateChanged(it) }
             .launchIn(viewModelScope)
     }
