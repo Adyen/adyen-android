@@ -77,7 +77,7 @@ internal class DefaultGiftCardDelegateTest {
         @Test
         fun `public key is null, then component state should not be ready`() = runTest {
             delegate.componentStateFlow.test {
-                delegate.createComponentState(GiftCardOutputData("5555444433330000", "737"))
+                delegate.updateComponentState(GiftCardOutputData("5555444433330000", "737"))
 
                 val componentState = requireNotNull(expectMostRecentItem())
 
@@ -91,7 +91,7 @@ internal class DefaultGiftCardDelegateTest {
             delegate.initialize(CoroutineScope(UnconfinedTestDispatcher()))
 
             delegate.componentStateFlow.test {
-                delegate.createComponentState(GiftCardOutputData("123", "737"))
+                delegate.updateComponentState(GiftCardOutputData("123", "737"))
 
                 val componentState = requireNotNull(expectMostRecentItem())
 
@@ -108,7 +108,7 @@ internal class DefaultGiftCardDelegateTest {
             delegate.initialize(CoroutineScope(UnconfinedTestDispatcher()))
 
             delegate.componentStateFlow.test {
-                delegate.createComponentState(GiftCardOutputData("5555444433330000", "737"))
+                delegate.updateComponentState(GiftCardOutputData("5555444433330000", "737"))
 
                 val componentState = requireNotNull(expectMostRecentItem())
 
@@ -123,7 +123,7 @@ internal class DefaultGiftCardDelegateTest {
             delegate.initialize(CoroutineScope(UnconfinedTestDispatcher()))
 
             delegate.componentStateFlow.test {
-                delegate.createComponentState(GiftCardOutputData("5555444433330000", "737"))
+                delegate.updateComponentState(GiftCardOutputData("5555444433330000", "737"))
 
                 val componentState = requireNotNull(expectMostRecentItem())
 
