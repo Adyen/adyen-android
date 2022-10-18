@@ -16,7 +16,6 @@ import com.adyen.checkout.components.model.payments.request.IssuerListPaymentMet
 import com.adyen.checkout.components.ui.ViewableComponent
 import com.adyen.checkout.components.ui.view.ComponentViewType
 import kotlinx.coroutines.flow.Flow
-import kotlinx.coroutines.flow.filterNotNull
 import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.onEach
 
@@ -34,12 +33,10 @@ abstract class OnlineBankingComponent<IssuerListPaymentMethodT : IssuerListPayme
 
     init {
         delegate.componentStateFlow
-            .filterNotNull()
             .onEach { notifyStateChanged(it) }
             .launchIn(viewModelScope)
 
         delegate.exceptionFlow
-            .filterNotNull()
             .onEach { notifyException(it) }
             .launchIn(viewModelScope)
     }

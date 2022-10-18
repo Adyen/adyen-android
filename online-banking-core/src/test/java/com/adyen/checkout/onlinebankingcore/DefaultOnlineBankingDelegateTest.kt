@@ -94,7 +94,7 @@ internal class DefaultOnlineBankingDelegateTest(
             delegate.componentStateFlow.test {
                 val output = OnlineBankingOutputData(null)
 
-                delegate.createComponentState(output)
+                delegate.updateComponentState(output)
 
                 with(requireNotNull(expectMostRecentItem())) {
                     assertFalse(isInputValid)
@@ -109,7 +109,7 @@ internal class DefaultOnlineBankingDelegateTest(
                 val model = OnlineBankingModel(id = "issuer-id", name = "issuer-name")
                 val output = OnlineBankingOutputData(model)
 
-                delegate.createComponentState(output)
+                delegate.updateComponentState(output)
 
                 with(requireNotNull(expectMostRecentItem())) {
                     assertEquals("issuer-id", data.paymentMethod?.issuer)

@@ -41,8 +41,8 @@ class DefaultOnlineBankingDelegate<IssuerListPaymentMethodT : IssuerListPaymentM
 
     override val outputData: OnlineBankingOutputData get() = _outputDataFlow.value
 
-    private val _componentStateFlow = MutableStateFlow<PaymentComponentState<IssuerListPaymentMethodT>?>(null)
-    override val componentStateFlow: Flow<PaymentComponentState<IssuerListPaymentMethodT>?> = _componentStateFlow
+    private val _componentStateFlow = MutableStateFlow(createComponentState())
+    override val componentStateFlow: Flow<PaymentComponentState<IssuerListPaymentMethodT>> = _componentStateFlow
 
     private val _exceptionFlow: MutableSharedFlow<CheckoutException> = MutableSingleEventSharedFlow()
     override val exceptionFlow: Flow<CheckoutException> = _exceptionFlow
@@ -52,7 +52,7 @@ class DefaultOnlineBankingDelegate<IssuerListPaymentMethodT : IssuerListPaymentM
     init {
         val outputData = OnlineBankingOutputData()
         _outputDataFlow.tryEmit(outputData)
-        createComponentState(outputData)
+        updateComponentState(outputData)
     }
 
     override fun getIssuers(): List<OnlineBankingModel> =
@@ -72,21 +72,27 @@ class DefaultOnlineBankingDelegate<IssuerListPaymentMethodT : IssuerListPaymentM
 
         _outputDataFlow.tryEmit(outputData)
 
-        createComponentState(outputData)
+        updateComponentState(outputData)
     }
 
     private fun createOutputData() = OnlineBankingOutputData(inputData.selectedIssuer)
 
     @VisibleForTesting
-    internal fun createComponentState(outputData: OnlineBankingOutputData) {
+    internal fun updateComponentState(outputData: OnlineBankingOutputData) {
+        val componentState = createComponentState(outputData)
+        _componentStateFlow.tryEmit(componentState)
+    }
+
+    private fun createComponentState(
+        outputData: OnlineBankingOutputData = this.outputData
+    ): PaymentComponentState<IssuerListPaymentMethodT> {
         val issuerListPaymentMethod = paymentMethodFactory()
         issuerListPaymentMethod.type = getPaymentMethodType()
         issuerListPaymentMethod.issuer = outputData.selectedIssuer?.id
 
         val paymentComponentData = PaymentComponentData(paymentMethod = issuerListPaymentMethod)
 
-        val state = PaymentComponentState(paymentComponentData, outputData.isValid, true)
-        _componentStateFlow.tryEmit(state)
+        return PaymentComponentState(paymentComponentData, outputData.isValid, true)
     }
 
     override fun openTermsAndConditions(context: Context) {

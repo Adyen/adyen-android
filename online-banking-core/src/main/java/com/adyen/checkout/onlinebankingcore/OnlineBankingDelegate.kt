@@ -24,7 +24,7 @@ interface OnlineBankingDelegate<IssuerListPaymentMethodT : IssuerListPaymentMeth
 
     val outputDataFlow: Flow<OnlineBankingOutputData>
 
-    val componentStateFlow: Flow<PaymentComponentState<IssuerListPaymentMethodT>?>
+    val componentStateFlow: Flow<PaymentComponentState<IssuerListPaymentMethodT>>
 
     val exceptionFlow: Flow<CheckoutException>
 
