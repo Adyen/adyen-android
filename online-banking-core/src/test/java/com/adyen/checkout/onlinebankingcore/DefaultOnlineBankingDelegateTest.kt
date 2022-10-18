@@ -96,7 +96,7 @@ internal class DefaultOnlineBankingDelegateTest(
 
                 delegate.updateComponentState(output)
 
-                with(requireNotNull(expectMostRecentItem())) {
+                with(expectMostRecentItem()) {
                     assertFalse(isInputValid)
                     assertFalse(isValid)
                 }
@@ -111,7 +111,7 @@ internal class DefaultOnlineBankingDelegateTest(
 
                 delegate.updateComponentState(output)
 
-                with(requireNotNull(expectMostRecentItem())) {
+                with(expectMostRecentItem()) {
                     assertEquals("issuer-id", data.paymentMethod?.issuer)
                     assertTrue(isInputValid)
                     assertTrue(isValid)

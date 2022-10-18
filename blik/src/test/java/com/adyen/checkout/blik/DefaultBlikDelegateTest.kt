@@ -71,7 +71,7 @@ internal class DefaultBlikDelegateTest {
                     blikCode = "1234"
                 }
 
-                with(requireNotNull(awaitItem())) {
+                with(awaitItem()) {
                     assertEquals("1234", data.paymentMethod?.blikCode)
                     assertFalse(isInputValid)
                     assertFalse(isValid)
@@ -106,7 +106,7 @@ internal class DefaultBlikDelegateTest {
                     blikCode = "123243"
                 }
 
-                with(requireNotNull(awaitItem())) {
+                with(awaitItem()) {
                     assertEquals("123243", data.paymentMethod?.blikCode)
                     assertTrue(isInputValid)
                     assertTrue(isValid)
@@ -127,7 +127,7 @@ internal class DefaultBlikDelegateTest {
                 skipItems(1)
                 delegate.updateComponentState(BlikOutputData("87909090"))
 
-                with(requireNotNull(awaitItem())) {
+                with(awaitItem()) {
                     assertEquals("87909090", data.paymentMethod?.blikCode)
                     assertFalse(isInputValid)
                     assertFalse(isValid)
@@ -143,7 +143,7 @@ internal class DefaultBlikDelegateTest {
                 skipItems(1)
                 delegate.updateComponentState(BlikOutputData("777134"))
 
-                with(requireNotNull(awaitItem())) {
+                with(awaitItem()) {
                     assertEquals("777134", data.paymentMethod?.blikCode)
                     assertTrue(isInputValid)
                     assertTrue(isValid)

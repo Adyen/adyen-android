@@ -92,7 +92,7 @@ internal class DefaultIssuerListDelegateTest(
         fun `output is invalid, then component state should be invalid`() = runTest {
             delegate.componentStateFlow.test {
                 delegate.updateComponentState(IssuerListOutputData(null))
-                with(requireNotNull(expectMostRecentItem())) {
+                with(expectMostRecentItem()) {
                     assertFalse(isInputValid)
                     assertFalse(isValid)
                 }
@@ -103,7 +103,7 @@ internal class DefaultIssuerListDelegateTest(
         fun `output is valid, then component state should be valid`() = runTest {
             delegate.componentStateFlow.test {
                 delegate.updateComponentState(IssuerListOutputData(IssuerModel(id = "issuer-id", name = "issuer-name")))
-                with(requireNotNull(expectMostRecentItem())) {
+                with(expectMostRecentItem()) {
                     assertEquals("issuer-id", data.paymentMethod?.issuer)
                     assertTrue(isInputValid)
                     assertTrue(isValid)

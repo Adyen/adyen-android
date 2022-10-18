@@ -472,7 +472,7 @@ internal class DefaultCardDelegateTest {
             delegate.componentStateFlow.test {
                 delegate.updateComponentState(createOutputData())
 
-                val componentState = requireNotNull(expectMostRecentItem())
+                val componentState = expectMostRecentItem()
 
                 assertFalse(componentState.isReady)
                 assertNull(componentState.lastFourDigits)
@@ -488,7 +488,7 @@ internal class DefaultCardDelegateTest {
             delegate.componentStateFlow.test {
                 delegate.updateComponentState(createOutputData())
 
-                val componentState = requireNotNull(expectMostRecentItem())
+                val componentState = expectMostRecentItem()
 
                 assertTrue(componentState.isReady)
                 assertFalse(componentState.isInputValid)
@@ -510,7 +510,7 @@ internal class DefaultCardDelegateTest {
                     )
                 )
 
-                val componentState = requireNotNull(expectMostRecentItem())
+                val componentState = expectMostRecentItem()
 
                 assertTrue(componentState.isReady)
                 assertFalse(componentState.isInputValid)
@@ -532,7 +532,7 @@ internal class DefaultCardDelegateTest {
                     )
                 )
 
-                val componentState = requireNotNull(expectMostRecentItem())
+                val componentState = expectMostRecentItem()
 
                 assertTrue(componentState.isReady)
                 assertFalse(componentState.isInputValid)
@@ -547,7 +547,7 @@ internal class DefaultCardDelegateTest {
             delegate.componentStateFlow.test {
                 delegate.updateComponentState(createOutputData())
 
-                val componentState = requireNotNull(expectMostRecentItem())
+                val componentState = expectMostRecentItem()
 
                 assertTrue(componentState.isValid)
                 assertEquals(TEST_CARD_NUMBER.takeLast(4), componentState.lastFourDigits)
@@ -648,7 +648,7 @@ internal class DefaultCardDelegateTest {
                     )
                 )
 
-                val componentState = requireNotNull(expectMostRecentItem())
+                val componentState = expectMostRecentItem()
 
                 val expectedAddress = AddressFormUtils.makeAddressData(addressOutputData, addressUIState)
                 val expectedInstallments = InstallmentUtils.makeInstallmentModelObject(installmentModel)

@@ -79,7 +79,7 @@ internal class DefaultGiftCardDelegateTest {
             delegate.componentStateFlow.test {
                 delegate.updateComponentState(GiftCardOutputData("5555444433330000", "737"))
 
-                val componentState = requireNotNull(expectMostRecentItem())
+                val componentState = expectMostRecentItem()
 
                 assertFalse(componentState.isReady)
                 assertEquals(null, componentState.lastFourDigits)
@@ -93,7 +93,7 @@ internal class DefaultGiftCardDelegateTest {
             delegate.componentStateFlow.test {
                 delegate.updateComponentState(GiftCardOutputData("123", "737"))
 
-                val componentState = requireNotNull(expectMostRecentItem())
+                val componentState = expectMostRecentItem()
 
                 assertTrue(componentState.isReady)
                 assertFalse(componentState.isInputValid)
@@ -110,7 +110,7 @@ internal class DefaultGiftCardDelegateTest {
             delegate.componentStateFlow.test {
                 delegate.updateComponentState(GiftCardOutputData("5555444433330000", "737"))
 
-                val componentState = requireNotNull(expectMostRecentItem())
+                val componentState = expectMostRecentItem()
 
                 assertTrue(componentState.isReady)
                 assertFalse(componentState.isInputValid)
@@ -125,7 +125,7 @@ internal class DefaultGiftCardDelegateTest {
             delegate.componentStateFlow.test {
                 delegate.updateComponentState(GiftCardOutputData("5555444433330000", "737"))
 
-                val componentState = requireNotNull(expectMostRecentItem())
+                val componentState = expectMostRecentItem()
 
                 assertNotNull(componentState.data.paymentMethod)
                 assertTrue(componentState.isInputValid)

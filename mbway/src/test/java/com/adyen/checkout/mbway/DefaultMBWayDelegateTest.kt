@@ -63,7 +63,7 @@ internal class DefaultMBWayDelegateTest {
                     localPhoneNumber = "0056778"
                 }
 
-                with(requireNotNull(awaitItem())) {
+                with(awaitItem()) {
                     assertEquals("+2356778", data.paymentMethod?.telephoneNumber)
                     assertFalse(isInputValid)
                     assertFalse(isValid)
@@ -100,7 +100,7 @@ internal class DefaultMBWayDelegateTest {
                     localPhoneNumber = "9257348920"
                 }
 
-                with(requireNotNull(awaitItem())) {
+                with(awaitItem()) {
                     assertEquals("+19257348920", data.paymentMethod?.telephoneNumber)
                     assertTrue(isInputValid)
                     assertTrue(isValid)
@@ -121,7 +121,7 @@ internal class DefaultMBWayDelegateTest {
                 skipItems(1)
                 delegate.updateComponentState(MBWayOutputData("+7867676"))
 
-                with(requireNotNull(awaitItem())) {
+                with(awaitItem()) {
                     assertEquals("+7867676", data.paymentMethod?.telephoneNumber)
                     assertFalse(isInputValid)
                     assertFalse(isValid)
@@ -137,7 +137,7 @@ internal class DefaultMBWayDelegateTest {
                 skipItems(1)
                 delegate.updateComponentState(MBWayOutputData("+31666666666"))
 
-                with(requireNotNull(awaitItem())) {
+                with(awaitItem()) {
                     assertEquals("+31666666666", data.paymentMethod?.telephoneNumber)
                     assertTrue(isInputValid)
                     assertTrue(isValid)

@@ -358,7 +358,7 @@ internal class DefaultBacsDirectDebitDelegateTest {
                         )
                 )
 
-                with(requireNotNull(expectMostRecentItem())) {
+                with(expectMostRecentItem()) {
                     assertFalse(isInputValid)
                     assertFalse(isValid)
                 }
@@ -381,7 +381,7 @@ internal class DefaultBacsDirectDebitDelegateTest {
                         )
                 )
 
-                with(requireNotNull(expectMostRecentItem())) {
+                with(expectMostRecentItem()) {
                     assertTrue(isInputValid)
                     assertFalse(isValid)
                 }
@@ -403,7 +403,7 @@ internal class DefaultBacsDirectDebitDelegateTest {
                     )
                 )
 
-                with(requireNotNull(expectMostRecentItem())) {
+                with(expectMostRecentItem()) {
                     assertTrue(isInputValid)
                     assertTrue(isValid)
                 }
