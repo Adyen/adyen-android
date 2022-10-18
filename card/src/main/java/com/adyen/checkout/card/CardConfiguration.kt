@@ -8,88 +8,33 @@
 package com.adyen.checkout.card
 
 import android.content.Context
-import android.os.Parcel
-import android.os.Parcelable
 import com.adyen.checkout.card.data.CardType
 import com.adyen.checkout.components.base.BaseConfigurationBuilder
 import com.adyen.checkout.components.base.Configuration
 import com.adyen.checkout.core.api.Environment
-import com.adyen.checkout.core.exception.CheckoutException
-import com.adyen.checkout.core.util.ParcelUtils.readBoolean
-import com.adyen.checkout.core.util.ParcelUtils.writeBoolean
+import kotlinx.parcelize.Parcelize
 import java.util.Locale
 
 /**
  * [Configuration] class required by [CardComponent] to change it's behavior. Pass it to the [CardComponent.PROVIDER].
  */
-class CardConfiguration : Configuration {
-
-    val isHolderNameRequired: Boolean
-    val supportedCardTypes: List<CardType>
-    val shopperReference: String?
-    val isStorePaymentFieldVisible: Boolean
-    val isHideCvc: Boolean
-    val isHideCvcStoredCard: Boolean
-    val socialSecurityNumberVisibility: SocialSecurityNumberVisibility?
-    val kcpAuthVisibility: KCPAuthVisibility?
-    val installmentConfiguration: InstallmentConfiguration?
-    val addressConfiguration: AddressConfiguration
-
-    @Suppress("LongParameterList")
-    internal constructor(
-        shopperLocale: Locale,
-        environment: Environment,
-        clientKey: String,
-        isHolderNameRequired: Boolean,
-        supportedCardTypes: List<CardType>,
-        shopperReference: String?,
-        isStorePaymentFieldVisible: Boolean,
-        isHideCvc: Boolean,
-        isHideCvcStoredCard: Boolean,
-        socialSecurityNumberVisibility: SocialSecurityNumberVisibility?,
-        kcpAuthVisibility: KCPAuthVisibility?,
-        installmentConfiguration: InstallmentConfiguration?,
-        addressConfiguration: AddressConfiguration
-    ) : super(shopperLocale, environment, clientKey) {
-        this.isHolderNameRequired = isHolderNameRequired
-        this.supportedCardTypes = supportedCardTypes
-        this.shopperReference = shopperReference
-        this.isStorePaymentFieldVisible = isStorePaymentFieldVisible
-        this.isHideCvc = isHideCvc
-        this.isHideCvcStoredCard = isHideCvcStoredCard
-        this.socialSecurityNumberVisibility = socialSecurityNumberVisibility
-        this.kcpAuthVisibility = kcpAuthVisibility
-        this.installmentConfiguration = installmentConfiguration
-        this.addressConfiguration = addressConfiguration
-    }
-
-    internal constructor(parcel: Parcel) : super(parcel) {
-        shopperReference = parcel.readString()
-        isHolderNameRequired = readBoolean(parcel)
-        supportedCardTypes = parcel.readArrayList(CardType::class.java.classLoader) as List<CardType>
-        isStorePaymentFieldVisible = readBoolean(parcel)
-        isHideCvc = readBoolean(parcel)
-        isHideCvcStoredCard = readBoolean(parcel)
-        socialSecurityNumberVisibility = SocialSecurityNumberVisibility.valueOf(parcel.readString()!!)
-        kcpAuthVisibility = KCPAuthVisibility.valueOf(parcel.readString()!!)
-        installmentConfiguration = parcel.readParcelable(InstallmentConfiguration::class.java.classLoader)
-        addressConfiguration = parcel.readParcelable(AddressConfiguration::class.java.classLoader)
-            ?: throw CheckoutException("Failed to read address configuration from parcel")
-    }
-
-    override fun writeToParcel(parcel: Parcel, flags: Int) {
-        super.writeToParcel(parcel, flags)
-        parcel.writeString(shopperReference)
-        writeBoolean(parcel, isHolderNameRequired)
-        parcel.writeList(supportedCardTypes)
-        writeBoolean(parcel, isStorePaymentFieldVisible)
-        writeBoolean(parcel, isHideCvc)
-        writeBoolean(parcel, isHideCvcStoredCard)
-        parcel.writeString(socialSecurityNumberVisibility!!.name)
-        parcel.writeString(kcpAuthVisibility!!.name)
-        parcel.writeParcelable(installmentConfiguration, flags)
-        parcel.writeParcelable(addressConfiguration, flags)
-    }
+@Parcelize
+@Suppress("LongParameterList")
+class CardConfiguration private constructor(
+    override val shopperLocale: Locale,
+    override val environment: Environment,
+    override val clientKey: String,
+    val isHolderNameRequired: Boolean,
+    val supportedCardTypes: List<CardType>,
+    val shopperReference: String?,
+    val isStorePaymentFieldVisible: Boolean,
+    val isHideCvc: Boolean,
+    val isHideCvcStoredCard: Boolean,
+    val socialSecurityNumberVisibility: SocialSecurityNumberVisibility?,
+    val kcpAuthVisibility: KCPAuthVisibility?,
+    val installmentConfiguration: InstallmentConfiguration?,
+    val addressConfiguration: AddressConfiguration,
+) : Configuration {
 
     fun newBuilder(): Builder {
         return Builder(this)
@@ -300,16 +245,5 @@ class CardConfiguration : Configuration {
             CardType.AMERICAN_EXPRESS,
             CardType.MASTERCARD
         )
-
-        @JvmField
-        val CREATOR: Parcelable.Creator<CardConfiguration> = object : Parcelable.Creator<CardConfiguration> {
-            override fun createFromParcel(parcel: Parcel): CardConfiguration {
-                return CardConfiguration(parcel)
-            }
-
-            override fun newArray(size: Int): Array<CardConfiguration?> {
-                return arrayOfNulls(size)
-            }
-        }
     }
 }

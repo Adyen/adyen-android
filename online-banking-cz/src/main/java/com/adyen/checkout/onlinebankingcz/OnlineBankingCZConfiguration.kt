@@ -9,23 +9,20 @@
 package com.adyen.checkout.onlinebankingcz
 
 import android.content.Context
-import android.os.Parcel
-import android.os.Parcelable
+import com.adyen.checkout.components.base.BaseConfigurationBuilder
+import com.adyen.checkout.components.base.Configuration
 import com.adyen.checkout.core.api.Environment
-import com.adyen.checkout.onlinebankingcore.OnlineBankingConfiguration
+import kotlinx.parcelize.Parcelize
 import java.util.Locale
 
-class OnlineBankingCZConfiguration : OnlineBankingConfiguration {
+@Parcelize
+class OnlineBankingCZConfiguration private constructor(
+    override val shopperLocale: Locale,
+    override val environment: Environment,
+    override val clientKey: String,
+) : Configuration {
 
-    private constructor(
-        shopperLocale: Locale,
-        environment: Environment,
-        clientKey: String,
-    ) : super(shopperLocale, environment, clientKey)
-
-    private constructor(parcel: Parcel) : super(parcel)
-
-    class Builder : OnlineBankingBuilder<OnlineBankingCZConfiguration> {
+    class Builder : BaseConfigurationBuilder<OnlineBankingCZConfiguration> {
 
         /**
          * Constructor for Builder with default values.
@@ -74,16 +71,6 @@ class OnlineBankingCZConfiguration : OnlineBankingConfiguration {
                 environment = environment,
                 clientKey = clientKey,
             )
-        }
-    }
-
-    companion object CREATOR : Parcelable.Creator<OnlineBankingConfiguration> {
-        override fun createFromParcel(parcel: Parcel): OnlineBankingConfiguration {
-            return OnlineBankingCZConfiguration(parcel)
-        }
-
-        override fun newArray(size: Int): Array<OnlineBankingConfiguration?> {
-            return arrayOfNulls(size)
         }
     }
 }

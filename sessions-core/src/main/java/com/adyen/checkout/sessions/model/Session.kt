@@ -7,28 +7,21 @@
  */
 package com.adyen.checkout.sessions.model
 
-import android.os.Parcel
 import com.adyen.checkout.core.exception.ModelSerializationException
-import com.adyen.checkout.core.model.JsonUtils.writeToParcel
 import com.adyen.checkout.core.model.ModelObject
+import kotlinx.parcelize.Parcelize
 import org.json.JSONException
 import org.json.JSONObject
 
+@Parcelize
 data class Session(
     val id: String,
     val sessionData: String?
 ) : ModelObject() {
 
-    override fun writeToParcel(dest: Parcel, flags: Int) {
-        writeToParcel(dest, SERIALIZER.serialize(this))
-    }
-
     companion object {
         private const val ID = "id"
         private const val SESSION_DATA = "sessionData"
-
-        @JvmField
-        val CREATOR = Creator(Session::class.java)
 
         @JvmField
         val SERIALIZER: Serializer<Session> = object : Serializer<Session> {

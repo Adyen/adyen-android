@@ -7,17 +7,17 @@
  */
 package com.adyen.checkout.googlepay.model
 
-import android.os.Parcel
 import com.adyen.checkout.core.exception.ModelSerializationException
-import com.adyen.checkout.core.model.JsonUtils.writeToParcel
 import com.adyen.checkout.core.model.ModelObject
 import com.adyen.checkout.core.model.ModelUtils.deserializeOpt
 import com.adyen.checkout.core.model.ModelUtils.deserializeOptList
 import com.adyen.checkout.core.model.ModelUtils.serializeOpt
 import com.adyen.checkout.core.model.ModelUtils.serializeOptList
+import kotlinx.parcelize.Parcelize
 import org.json.JSONException
 import org.json.JSONObject
 
+@Parcelize
 data class PaymentDataRequestModel(
     var apiVersion: Int = 0,
     var apiVersionMinor: Int = 0,
@@ -29,10 +29,6 @@ data class PaymentDataRequestModel(
     var shippingAddressParameters: ShippingAddressParameters? = null,
 ) : ModelObject() {
 
-    override fun writeToParcel(dest: Parcel, flags: Int) {
-        writeToParcel(dest, SERIALIZER.serialize(this))
-    }
-
     companion object {
         private const val API_VERSION = "apiVersion"
         private const val API_VERSION_MINOR = "apiVersionMinor"
@@ -42,9 +38,6 @@ data class PaymentDataRequestModel(
         private const val EMAIL_REQUIRED = "emailRequired"
         private const val SHIPPING_ADDRESS_REQUIRED = "shippingAddressRequired"
         private const val SHIPPING_ADDRESS_PARAMETERS = "shippingAddressParameters"
-
-        @JvmField
-        val CREATOR = Creator(PaymentDataRequestModel::class.java)
 
         @JvmField
         val SERIALIZER: Serializer<PaymentDataRequestModel> = object : Serializer<PaymentDataRequestModel> {

@@ -7,31 +7,24 @@
  */
 package com.adyen.checkout.components.model.payments.request
 
-import android.os.Parcel
 import com.adyen.checkout.components.util.PaymentMethodTypes
 import com.adyen.checkout.core.exception.ModelSerializationException
-import com.adyen.checkout.core.model.JsonUtils.writeToParcel
 import com.adyen.checkout.core.model.getStringOrNull
+import kotlinx.parcelize.Parcelize
 import org.json.JSONException
 import org.json.JSONObject
 
+@Parcelize
 data class BlikPaymentMethod(
     override var type: String? = null,
     var blikCode: String? = null,
     var storedPaymentMethodId: String? = null,
 ) : PaymentMethodDetails() {
 
-    override fun writeToParcel(dest: Parcel, flags: Int) {
-        writeToParcel(dest, SERIALIZER.serialize(this))
-    }
-
     companion object {
         const val PAYMENT_METHOD_TYPE = PaymentMethodTypes.BLIK
         private const val BLIK_CODE = "blikCode"
         private const val STORED_PAYMENT_METHOD_ID = "storedPaymentMethodId"
-
-        @JvmField
-        val CREATOR = Creator(BlikPaymentMethod::class.java)
 
         @JvmField
         val SERIALIZER: Serializer<BlikPaymentMethod> = object : Serializer<BlikPaymentMethod> {

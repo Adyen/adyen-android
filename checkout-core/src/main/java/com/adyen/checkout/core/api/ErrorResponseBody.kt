@@ -8,14 +8,13 @@
 
 package com.adyen.checkout.core.api
 
-import android.os.Parcel
-import android.os.Parcelable
 import com.adyen.checkout.core.exception.ModelSerializationException
-import com.adyen.checkout.core.model.JsonUtils
 import com.adyen.checkout.core.model.ModelObject
+import kotlinx.parcelize.Parcelize
 import org.json.JSONException
 import org.json.JSONObject
 
+@Parcelize
 data class ErrorResponseBody(
     val status: Int,
     val errorCode: String,
@@ -23,19 +22,12 @@ data class ErrorResponseBody(
     val errorType: String,
 ) : ModelObject() {
 
-    override fun writeToParcel(dest: Parcel, flags: Int) {
-        JsonUtils.writeToParcel(dest, SERIALIZER.serialize(this))
-    }
-
     companion object {
 
         private const val STATUS = "status"
         private const val ERROR_CODE = "errorCode"
         private const val MESSAGE = "message"
         private const val ERROR_TYPE = "errorType"
-
-        @JvmField
-        val CREATOR: Parcelable.Creator<ErrorResponseBody> = Creator(ErrorResponseBody::class.java)
 
         @JvmField
         val SERIALIZER: Serializer<ErrorResponseBody> = object : Serializer<ErrorResponseBody> {

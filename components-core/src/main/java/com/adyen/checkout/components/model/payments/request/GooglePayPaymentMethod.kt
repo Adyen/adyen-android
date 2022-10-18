@@ -7,29 +7,22 @@
  */
 package com.adyen.checkout.components.model.payments.request
 
-import android.os.Parcel
 import com.adyen.checkout.core.exception.ModelSerializationException
-import com.adyen.checkout.core.model.JsonUtils.writeToParcel
 import com.adyen.checkout.core.model.getStringOrNull
+import kotlinx.parcelize.Parcelize
 import org.json.JSONException
 import org.json.JSONObject
 
+@Parcelize
 class GooglePayPaymentMethod(
     override var type: String? = null,
     var googlePayToken: String? = null,
     var googlePayCardNetwork: String? = null,
 ) : PaymentMethodDetails() {
 
-    override fun writeToParcel(dest: Parcel, flags: Int) {
-        writeToParcel(dest, SERIALIZER.serialize(this))
-    }
-
     companion object {
         private const val GOOGLE_PAY_TOKEN = "googlePayToken"
         private const val GOOGLE_PAY_CARD_NETWORK = "googlePayCardNetwork"
-
-        @JvmField
-        val CREATOR = Creator(GooglePayPaymentMethod::class.java)
 
         @JvmField
         val SERIALIZER: Serializer<GooglePayPaymentMethod> = object : Serializer<GooglePayPaymentMethod> {

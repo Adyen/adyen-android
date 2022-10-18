@@ -8,30 +8,22 @@
 
 package com.adyen.checkout.adyen3ds2.model
 
-import android.os.Parcel
-import android.os.Parcelable
 import com.adyen.checkout.core.exception.ModelSerializationException
-import com.adyen.checkout.core.model.JsonUtils
 import com.adyen.checkout.core.model.ModelObject
 import com.adyen.checkout.core.model.getStringOrNull
+import kotlinx.parcelize.Parcelize
 import org.json.JSONException
 import org.json.JSONObject
 
+@Parcelize
 data class SubmitFingerprintRequest(
     val encodedFingerprint: String?,
     val paymentData: String?
 ) : ModelObject() {
 
-    override fun writeToParcel(parcel: Parcel, flags: Int) {
-        JsonUtils.writeToParcel(parcel, SERIALIZER.serialize(this))
-    }
-
     companion object {
         private const val FINGERPRINT = "fingerprintResult"
         private const val PAYMENT_DATA = "paymentData"
-
-        @JvmField
-        val CREATOR: Parcelable.Creator<SubmitFingerprintRequest> = Creator(SubmitFingerprintRequest::class.java)
 
         @JvmField
         val SERIALIZER: Serializer<SubmitFingerprintRequest> = object : Serializer<SubmitFingerprintRequest> {

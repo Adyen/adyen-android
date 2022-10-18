@@ -8,36 +8,24 @@
 package com.adyen.checkout.giftcard
 
 import android.content.Context
-import android.os.Parcel
-import android.os.Parcelable
 import com.adyen.checkout.components.base.BaseConfigurationBuilder
 import com.adyen.checkout.components.base.Configuration
 import com.adyen.checkout.core.api.Environment
+import kotlinx.parcelize.Parcelize
 import java.util.Locale
 
-class GiftCardConfiguration : Configuration {
+@Parcelize
+class GiftCardConfiguration private constructor(
+    override val shopperLocale: Locale,
+    override val environment: Environment,
+    override val clientKey: String
+) : Configuration {
 
-    companion object {
-        @JvmField
-        val CREATOR: Parcelable.Creator<GiftCardConfiguration?> = object : Parcelable.Creator<GiftCardConfiguration?> {
-            override fun createFromParcel(source: Parcel?): GiftCardConfiguration? {
-                if (source == null) return null
-                return GiftCardConfiguration(source)
-            }
-
-            override fun newArray(size: Int): Array<GiftCardConfiguration?> {
-                return arrayOfNulls(size)
-            }
-        }
-    }
-
-    internal constructor(builder: Builder) : super(
+    private constructor(builder: Builder) : this(
         builder.shopperLocale,
         builder.environment,
         builder.clientKey
     )
-
-    internal constructor(parcel: Parcel) : super(parcel)
 
     /**
      * Builder to create a [GiftCardConfiguration].

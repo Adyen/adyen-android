@@ -7,14 +7,14 @@
  */
 package com.adyen.checkout.googlepay.model
 
-import android.os.Parcel
 import com.adyen.checkout.core.exception.ModelSerializationException
-import com.adyen.checkout.core.model.JsonUtils.writeToParcel
 import com.adyen.checkout.core.model.ModelObject
 import com.adyen.checkout.core.model.getStringOrNull
+import kotlinx.parcelize.Parcelize
 import org.json.JSONException
 import org.json.JSONObject
 
+@Parcelize
 data class TransactionInfoModel(
     var currencyCode: String? = null,
     var countryCode: String? = null,
@@ -25,10 +25,6 @@ data class TransactionInfoModel(
     var checkoutOption: String? = null,
 ) : ModelObject() {
 
-    override fun writeToParcel(dest: Parcel, flags: Int) {
-        writeToParcel(dest, SERIALIZER.serialize(this))
-    }
-
     companion object {
         private const val CURRENCY_CODE = "currencyCode"
         private const val COUNTRY_CODE = "countryCode"
@@ -37,9 +33,6 @@ data class TransactionInfoModel(
         private const val TOTAL_PRICE = "totalPrice"
         private const val TOTAL_PRICE_LABEL = "totalPriceLabel"
         private const val CHECKOUT_OPTION = "checkoutOption"
-
-        @JvmField
-        val CREATOR = Creator(TransactionInfoModel::class.java)
 
         @JvmField
         val SERIALIZER: Serializer<TransactionInfoModel> = object : Serializer<TransactionInfoModel> {

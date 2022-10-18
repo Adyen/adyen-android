@@ -8,29 +8,21 @@
 
 package com.adyen.checkout.components.model.payments.request
 
-import android.os.Parcel
-import android.os.Parcelable
 import com.adyen.checkout.core.exception.ModelSerializationException
-import com.adyen.checkout.core.model.JsonUtils
 import com.adyen.checkout.core.model.ModelObject
+import kotlinx.parcelize.Parcelize
 import org.json.JSONException
 import org.json.JSONObject
 
+@Parcelize
 data class Installments(
     val plan: String?,
     val value: Int?
 ) : ModelObject() {
 
-    override fun writeToParcel(parcel: Parcel, flags: Int) {
-        JsonUtils.writeToParcel(parcel, SERIALIZER.serialize(this))
-    }
-
     companion object {
         private const val PLAN = "plan"
         private const val VALUE = "value"
-
-        @JvmField
-        val CREATOR: Parcelable.Creator<Installments> = Creator(Installments::class.java)
 
         @JvmField
         val SERIALIZER: Serializer<Installments> = object : Serializer<Installments> {

@@ -8,31 +8,23 @@
 
 package com.adyen.checkout.sessions.model.orders
 
-import android.os.Parcel
-import android.os.Parcelable
 import com.adyen.checkout.components.model.payments.request.OrderRequest
 import com.adyen.checkout.core.exception.ModelSerializationException
-import com.adyen.checkout.core.model.JsonUtils
 import com.adyen.checkout.core.model.ModelObject
 import com.adyen.checkout.core.model.ModelUtils
+import kotlinx.parcelize.Parcelize
 import org.json.JSONException
 import org.json.JSONObject
 
+@Parcelize
 data class SessionCancelOrderRequest(
     val sessionData: String,
     val order: OrderRequest?
 ) : ModelObject() {
 
-    override fun writeToParcel(parcel: Parcel, flags: Int) {
-        JsonUtils.writeToParcel(parcel, SERIALIZER.serialize(this))
-    }
-
     companion object {
         private const val SESSION_DATA = "sessionData"
         private const val ORDER = "order"
-
-        @JvmField
-        val CREATOR: Parcelable.Creator<SessionCancelOrderRequest> = Creator(SessionCancelOrderRequest::class.java)
 
         @JvmField
         val SERIALIZER: Serializer<SessionCancelOrderRequest> = object : Serializer<SessionCancelOrderRequest> {

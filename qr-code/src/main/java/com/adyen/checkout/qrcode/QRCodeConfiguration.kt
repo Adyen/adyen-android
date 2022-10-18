@@ -8,36 +8,24 @@
 package com.adyen.checkout.qrcode
 
 import android.content.Context
-import android.os.Parcel
-import android.os.Parcelable
 import com.adyen.checkout.components.base.BaseConfigurationBuilder
 import com.adyen.checkout.components.base.Configuration
 import com.adyen.checkout.core.api.Environment
+import kotlinx.parcelize.Parcelize
 import java.util.Locale
 
-class QRCodeConfiguration : Configuration {
+@Parcelize
+class QRCodeConfiguration private constructor(
+    override val shopperLocale: Locale,
+    override val environment: Environment,
+    override val clientKey: String,
+) : Configuration {
 
-    companion object {
-        @JvmField
-        val CREATOR: Parcelable.Creator<QRCodeConfiguration?> = object : Parcelable.Creator<QRCodeConfiguration?> {
-            override fun createFromParcel(source: Parcel?): QRCodeConfiguration? {
-                if (source == null) return null
-                return QRCodeConfiguration(source)
-            }
-
-            override fun newArray(size: Int): Array<QRCodeConfiguration?> {
-                return arrayOfNulls(size)
-            }
-        }
-    }
-
-    internal constructor(builder: Builder) : super(
+    internal constructor(builder: Builder) : this(
         builder.shopperLocale,
         builder.environment,
         builder.clientKey
     )
-
-    internal constructor(parcel: Parcel) : super(parcel)
 
     /**
      * Builder to create a [QRCodeConfiguration].

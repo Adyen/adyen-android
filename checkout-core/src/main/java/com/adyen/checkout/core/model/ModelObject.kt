@@ -7,12 +7,8 @@
  */
 package com.adyen.checkout.core.model
 
-import android.os.Parcel
 import android.os.Parcelable
-import com.adyen.checkout.core.exception.CheckoutException
-import com.adyen.checkout.core.model.JsonUtils.readFromParcel
 import com.adyen.checkout.core.model.ModelObject.Serializer
-import org.json.JSONException
 import org.json.JSONObject
 
 /**
@@ -23,6 +19,7 @@ import org.json.JSONObject
  * The classes extending [ModelObject] are data classes designed to work standalone or in association with JSON libraries like GSON and Moshi.
  */
 abstract class ModelObject : Parcelable {
+
     override fun describeContents(): Int {
         return Parcelable.CONTENTS_FILE_DESCRIPTOR
     }
@@ -45,26 +42,5 @@ abstract class ModelObject : Parcelable {
          * @return The ModelObject parsed with the contents from the JSONObject.
          */
         fun deserialize(jsonObject: JSONObject): T
-    }
-
-    /**
-     * A helper class that implements the Parcelable.Creator for a ModelObject.
-     * @param <T> The specific class that extends the ModelObject.
-     */
-    class Creator<T : ModelObject>(private val mClass: Class<T>) : Parcelable.Creator<T> {
-        override fun createFromParcel(source: Parcel): T {
-            val jsonObject: JSONObject = try {
-                readFromParcel(source)
-                    ?: throw CheckoutException("Failed to create ModelObject from parcel. JSONObject is null.")
-            } catch (e: JSONException) {
-                throw CheckoutException("Failed to create ModelObject from parcel.", e)
-            }
-            return ModelUtils.deserializeModel(jsonObject, mClass)
-        }
-
-        override fun newArray(size: Int): Array<T> {
-            @Suppress("UNCHECKED_CAST")
-            return java.lang.reflect.Array.newInstance(mClass, size) as Array<T>
-        }
     }
 }

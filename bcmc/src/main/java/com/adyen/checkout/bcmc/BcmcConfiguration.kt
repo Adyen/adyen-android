@@ -8,49 +8,24 @@
 package com.adyen.checkout.bcmc
 
 import android.content.Context
-import android.os.Parcel
-import android.os.Parcelable
 import com.adyen.checkout.components.base.BaseConfigurationBuilder
 import com.adyen.checkout.components.base.Configuration
 import com.adyen.checkout.core.api.Environment
-import com.adyen.checkout.core.util.ParcelUtils.readBoolean
-import com.adyen.checkout.core.util.ParcelUtils.writeBoolean
+import kotlinx.parcelize.Parcelize
 import java.util.Locale
 
 /**
  * [Configuration] class required by [BcmcComponent] to change it's behavior. Pass it to the [BcmcComponent.PROVIDER].
  */
-class BcmcConfiguration : Configuration {
-
-    val isHolderNameRequired: Boolean
-    val shopperReference: String?
-    val isStorePaymentFieldVisible: Boolean
-
-    internal constructor(
-        shopperLocale: Locale,
-        environment: Environment,
-        clientKey: String,
-        isHolderNameRequired: Boolean,
-        shopperReference: String?,
-        isStorePaymentFieldVisible: Boolean,
-    ) : super(shopperLocale, environment, clientKey) {
-        this.isHolderNameRequired = isHolderNameRequired
-        this.shopperReference = shopperReference
-        this.isStorePaymentFieldVisible = isStorePaymentFieldVisible
-    }
-
-    internal constructor(parcel: Parcel) : super(parcel) {
-        isHolderNameRequired = readBoolean(parcel)
-        shopperReference = parcel.readString()
-        isStorePaymentFieldVisible = readBoolean(parcel)
-    }
-
-    override fun writeToParcel(parcel: Parcel, flags: Int) {
-        super.writeToParcel(parcel, flags)
-        writeBoolean(parcel, isHolderNameRequired)
-        parcel.writeString(shopperReference)
-        writeBoolean(parcel, isStorePaymentFieldVisible)
-    }
+@Parcelize
+class BcmcConfiguration private constructor(
+    override val shopperLocale: Locale,
+    override val environment: Environment,
+    override val clientKey: String,
+    val isHolderNameRequired: Boolean,
+    val shopperReference: String?,
+    val isStorePaymentFieldVisible: Boolean,
+) : Configuration {
 
     /**
      * Builder to create a [BcmcConfiguration].
@@ -154,19 +129,6 @@ class BcmcConfiguration : Configuration {
                 shopperReference = shopperReference,
                 isStorePaymentFieldVisible = showStorePaymentField,
             )
-        }
-    }
-
-    companion object {
-        @JvmField
-        val CREATOR: Parcelable.Creator<BcmcConfiguration> = object : Parcelable.Creator<BcmcConfiguration> {
-            override fun createFromParcel(parcel: Parcel): BcmcConfiguration {
-                return BcmcConfiguration(parcel)
-            }
-
-            override fun newArray(size: Int): Array<BcmcConfiguration?> {
-                return arrayOfNulls(size)
-            }
         }
     }
 }

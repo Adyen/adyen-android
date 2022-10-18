@@ -10,6 +10,7 @@ package com.adyen.checkout.action
 
 import android.app.Activity
 import android.content.Intent
+import android.os.Parcel
 import com.adyen.checkout.adyen3ds2.Adyen3DS2Configuration
 import com.adyen.checkout.adyen3ds2.Adyen3DS2Delegate
 import com.adyen.checkout.components.ActionComponentData
@@ -31,11 +32,11 @@ import com.adyen.checkout.core.api.Environment
 import com.adyen.checkout.core.exception.CheckoutException
 import com.adyen.checkout.qrcode.QRCodeOutputData
 import com.adyen.threeds2.customization.UiCustomization
-import java.util.Locale
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.MutableStateFlow
+import java.util.Locale
 
 internal class TestActionDelegate :
     ActionDelegate<Action>,
@@ -63,7 +64,19 @@ internal class TestActionDelegate :
 
     override val viewFlow: MutableStateFlow<ComponentViewType?> = MutableStateFlow(null)
 
-    override val configuration: Configuration = object : Configuration(Locale.US, Environment.TEST, TEST_CLIENT_KEY) {}
+    override val configuration: Configuration = object : Configuration {
+        override val shopperLocale: Locale = Locale.US
+        override val environment: Environment = Environment.TEST
+        override val clientKey: String = ""
+
+        override fun describeContents(): Int {
+            throw NotImplementedError("This method shouldn't be used in tests")
+        }
+
+        override fun writeToParcel(dest: Parcel?, flags: Int) {
+            throw NotImplementedError("This method shouldn't be used in tests")
+        }
+    }
 
     var initializeCalled = false
     override fun initialize(coroutineScope: CoroutineScope) {

@@ -8,16 +8,15 @@
 
 package com.adyen.checkout.card.api.model
 
-import android.os.Parcel
-import android.os.Parcelable
 import com.adyen.checkout.core.exception.ModelSerializationException
-import com.adyen.checkout.core.model.JsonUtils
 import com.adyen.checkout.core.model.ModelObject
 import com.adyen.checkout.core.model.getBooleanOrNull
 import com.adyen.checkout.core.model.getStringOrNull
+import kotlinx.parcelize.Parcelize
 import org.json.JSONException
 import org.json.JSONObject
 
+@Parcelize
 data class Brand(
     val brand: String? = null,
     val enableLuhnCheck: Boolean? = null,
@@ -26,10 +25,6 @@ data class Brand(
     val expiryDatePolicy: String? = null
 ) : ModelObject() {
 
-    override fun writeToParcel(parcel: Parcel, flags: Int) {
-        JsonUtils.writeToParcel(parcel, SERIALIZER.serialize(this))
-    }
-
     companion object {
         @Suppress("MemberNameEqualsClassName")
         private const val BRAND = "brand"
@@ -37,9 +32,6 @@ data class Brand(
         private const val SUPPORTED = "supported"
         private const val CVC_POLICY = "cvcPolicy"
         private const val EXPIRY_DATE_POLICY = "expiryDatePolicy"
-
-        @JvmField
-        val CREATOR: Parcelable.Creator<Brand> = Creator(Brand::class.java)
 
         @JvmField
         val SERIALIZER: Serializer<Brand> = object : Serializer<Brand> {

@@ -8,22 +8,24 @@
 package com.adyen.checkout.await
 
 import android.content.Context
-import android.os.Parcel
-import android.os.Parcelable
 import com.adyen.checkout.components.base.BaseConfigurationBuilder
 import com.adyen.checkout.components.base.Configuration
 import com.adyen.checkout.core.api.Environment
+import kotlinx.parcelize.Parcelize
 import java.util.Locale
 
-class AwaitConfiguration : Configuration {
+@Parcelize
+class AwaitConfiguration private constructor(
+    override val shopperLocale: Locale,
+    override val environment: Environment,
+    override val clientKey: String,
+) : Configuration {
 
-    constructor(builder: Builder) : super(
+    private constructor(builder: Builder) : this(
         builder.shopperLocale,
         builder.environment,
         builder.clientKey
     )
-
-    constructor(parcel: Parcel) : super(parcel)
 
     /**
      * Builder to create a [AwaitConfiguration].
@@ -73,19 +75,6 @@ class AwaitConfiguration : Configuration {
 
         override fun buildInternal(): AwaitConfiguration {
             return AwaitConfiguration(this)
-        }
-    }
-
-    companion object {
-        @JvmField
-        val CREATOR: Parcelable.Creator<AwaitConfiguration> = object : Parcelable.Creator<AwaitConfiguration> {
-            override fun createFromParcel(`in`: Parcel): AwaitConfiguration {
-                return AwaitConfiguration(`in`)
-            }
-
-            override fun newArray(size: Int): Array<AwaitConfiguration?> {
-                return arrayOfNulls(size)
-            }
         }
     }
 }

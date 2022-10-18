@@ -7,33 +7,25 @@
  */
 package com.adyen.checkout.components.status.model
 
-import android.os.Parcel
 import com.adyen.checkout.components.model.payments.request.Address
 import com.adyen.checkout.core.exception.ModelSerializationException
-import com.adyen.checkout.core.model.JsonUtils.writeToParcel
 import com.adyen.checkout.core.model.ModelObject
 import com.adyen.checkout.core.model.getStringOrNull
+import kotlinx.parcelize.Parcelize
 import org.json.JSONException
 import org.json.JSONObject
 
+@Parcelize
 data class StatusResponse(
     var type: String? = null,
     var payload: String? = null,
     var resultCode: String? = null,
 ) : ModelObject() {
-    override fun writeToParcel(dest: Parcel, flags: Int) {
-        writeToParcel(dest, SERIALIZER.serialize(this))
-    }
 
     companion object {
         const val TYPE = "type"
         const val PAYLOAD = "payload"
         const val RESULT_CODE = "resultCode"
-
-        @JvmField
-        val CREATOR = Creator(
-            StatusResponse::class.java
-        )
 
         @JvmField
         val SERIALIZER: Serializer<StatusResponse> = object : Serializer<StatusResponse> {

@@ -7,15 +7,14 @@
  */
 package com.adyen.checkout.components.model.payments.response
 
-import android.os.Parcel
-import android.os.Parcelable
 import com.adyen.checkout.components.util.ActionTypes
 import com.adyen.checkout.core.exception.ModelSerializationException
-import com.adyen.checkout.core.model.JsonUtils
 import com.adyen.checkout.core.model.getStringOrNull
+import kotlinx.parcelize.Parcelize
 import org.json.JSONException
 import org.json.JSONObject
 
+@Parcelize
 class Threeds2Action(
     override var type: String? = null,
     override var paymentData: String? = null,
@@ -25,19 +24,12 @@ class Threeds2Action(
     var authorisationToken: String? = null
 ) : BaseThreeds2Action() {
 
-    override fun writeToParcel(dest: Parcel, flags: Int) {
-        JsonUtils.writeToParcel(dest, SERIALIZER.serialize(this))
-    }
-
     companion object {
         const val ACTION_TYPE = ActionTypes.THREEDS2
 
         private const val TOKEN = "token"
         private const val SUBTYPE = "subtype"
         private const val AUTHORISATION_TOKEN = "authorisationToken"
-
-        @JvmField
-        val CREATOR: Parcelable.Creator<Threeds2Action> = Creator(Threeds2Action::class.java)
 
         @JvmField
         val SERIALIZER: Serializer<Threeds2Action> = object : Serializer<Threeds2Action> {

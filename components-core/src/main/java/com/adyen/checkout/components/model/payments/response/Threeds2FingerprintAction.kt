@@ -7,15 +7,14 @@
  */
 package com.adyen.checkout.components.model.payments.response
 
-import android.os.Parcel
-import android.os.Parcelable
 import com.adyen.checkout.components.util.ActionTypes
 import com.adyen.checkout.core.exception.ModelSerializationException
-import com.adyen.checkout.core.model.JsonUtils
 import com.adyen.checkout.core.model.getStringOrNull
+import kotlinx.parcelize.Parcelize
 import org.json.JSONException
 import org.json.JSONObject
 
+@Parcelize
 data class Threeds2FingerprintAction(
     override var type: String? = null,
     override var paymentData: String? = null,
@@ -23,16 +22,9 @@ data class Threeds2FingerprintAction(
     var token: String? = null,
 ) : BaseThreeds2Action() {
 
-    override fun writeToParcel(dest: Parcel, flags: Int) {
-        JsonUtils.writeToParcel(dest, SERIALIZER.serialize(this))
-    }
-
     companion object {
         const val ACTION_TYPE = ActionTypes.THREEDS2_FINGERPRINT
         private const val TOKEN = "token"
-
-        @JvmField
-        val CREATOR: Parcelable.Creator<Threeds2FingerprintAction> = Creator(Threeds2FingerprintAction::class.java)
 
         @JvmField
         val SERIALIZER: Serializer<Threeds2FingerprintAction> = object : Serializer<Threeds2FingerprintAction> {

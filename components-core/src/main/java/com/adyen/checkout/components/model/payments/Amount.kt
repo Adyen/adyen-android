@@ -7,22 +7,18 @@
  */
 package com.adyen.checkout.components.model.payments
 
-import android.os.Parcel
 import com.adyen.checkout.core.exception.ModelSerializationException
-import com.adyen.checkout.core.model.JsonUtils.writeToParcel
 import com.adyen.checkout.core.model.ModelObject
 import com.adyen.checkout.core.model.getStringOrNull
+import kotlinx.parcelize.Parcelize
 import org.json.JSONException
 import org.json.JSONObject
 
+@Parcelize
 data class Amount(
     var currency: String? = null,
     var value: Long = 0L,
 ) : ModelObject() {
-
-    override fun writeToParcel(dest: Parcel, flags: Int) {
-        writeToParcel(dest, SERIALIZER.serialize(this))
-    }
 
     val isEmpty: Boolean
         get() = currency == EMPTY_CURRENCY || value == EMPTY_VALUE
@@ -34,9 +30,6 @@ data class Amount(
         private const val VALUE = "value"
 
         val EMPTY = Amount(EMPTY_CURRENCY, EMPTY_VALUE)
-
-        @JvmField
-        val CREATOR = Creator(Amount::class.java)
 
         @JvmField
         val SERIALIZER: Serializer<Amount> = object : Serializer<Amount> {

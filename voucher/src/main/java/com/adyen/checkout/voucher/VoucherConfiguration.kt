@@ -9,22 +9,24 @@
 package com.adyen.checkout.voucher
 
 import android.content.Context
-import android.os.Parcel
-import android.os.Parcelable
 import com.adyen.checkout.components.base.BaseConfigurationBuilder
 import com.adyen.checkout.components.base.Configuration
 import com.adyen.checkout.core.api.Environment
+import kotlinx.parcelize.Parcelize
 import java.util.Locale
 
-class VoucherConfiguration : Configuration {
+@Parcelize
+class VoucherConfiguration private constructor(
+    override val shopperLocale: Locale,
+    override val environment: Environment,
+    override val clientKey: String,
+) : Configuration {
 
-    private constructor(builder: Builder) : super(
+    private constructor(builder: Builder) : this(
         builder.shopperLocale,
         builder.environment,
         builder.clientKey
     )
-
-    private constructor(parcel: Parcel) : super(parcel)
 
     class Builder : BaseConfigurationBuilder<VoucherConfiguration> {
 
@@ -63,19 +65,6 @@ class VoucherConfiguration : Configuration {
 
         override fun buildInternal(): VoucherConfiguration {
             return VoucherConfiguration(this)
-        }
-    }
-
-    companion object {
-        @JvmField
-        val CREATOR: Parcelable.Creator<VoucherConfiguration> = object : Parcelable.Creator<VoucherConfiguration> {
-            override fun createFromParcel(`in`: Parcel): VoucherConfiguration {
-                return VoucherConfiguration(`in`)
-            }
-
-            override fun newArray(size: Int): Array<VoucherConfiguration?> {
-                return arrayOfNulls(size)
-            }
         }
     }
 }

@@ -7,16 +7,16 @@
  */
 package com.adyen.checkout.components.model.payments.request
 
-import android.os.Parcel
 import com.adyen.checkout.components.model.payments.Amount
 import com.adyen.checkout.core.exception.ModelSerializationException
-import com.adyen.checkout.core.model.JsonUtils.writeToParcel
 import com.adyen.checkout.core.model.ModelObject
 import com.adyen.checkout.core.model.ModelUtils.deserializeOpt
 import com.adyen.checkout.core.model.ModelUtils.serializeOpt
+import kotlinx.parcelize.Parcelize
 import org.json.JSONException
 import org.json.JSONObject
 
+@Parcelize
 data class PaymentComponentData<PaymentMethodDetailsT : PaymentMethodDetails>(
     var paymentMethod: PaymentMethodDetailsT? = null,
     var storePaymentMethod: Boolean = false,
@@ -33,10 +33,6 @@ data class PaymentComponentData<PaymentMethodDetailsT : PaymentMethodDetails>(
     var order: OrderRequest? = null,
 ) : ModelObject() {
 
-    override fun writeToParcel(dest: Parcel, flags: Int) {
-        writeToParcel(dest, SERIALIZER.serialize(this))
-    }
-
     companion object {
         private const val PAYMENT_METHOD = "paymentMethod"
         private const val STORE_PAYMENT_METHOD = "storePaymentMethod"
@@ -51,9 +47,6 @@ data class PaymentComponentData<PaymentMethodDetailsT : PaymentMethodDetails>(
         private const val SOCIAL_SECURITY_NUMBER = "socialSecurityNumber"
         private const val INSTALLMENTS = "installments"
         private const val ORDER = "order"
-
-        @JvmField
-        val CREATOR = Creator(PaymentComponentData::class.java)
 
         @JvmField
         val SERIALIZER: Serializer<PaymentComponentData<*>> = object : Serializer<PaymentComponentData<*>> {

@@ -8,30 +8,22 @@
 
 package com.adyen.checkout.card.api.model
 
-import android.os.Parcel
-import android.os.Parcelable
 import com.adyen.checkout.core.exception.ModelSerializationException
-import com.adyen.checkout.core.model.JsonUtils
 import com.adyen.checkout.core.model.ModelObject
 import com.adyen.checkout.core.model.getStringOrNull
+import kotlinx.parcelize.Parcelize
 import org.json.JSONException
 import org.json.JSONObject
 
+@Parcelize
 data class AddressItem(
     val id: String? = null,
     val name: String? = null
 ) : ModelObject() {
 
-    override fun writeToParcel(dest: Parcel, flags: Int) {
-        JsonUtils.writeToParcel(dest, SERIALIZER.serialize(this))
-    }
-
     companion object {
         private const val ID = "id"
         private const val NAME = "name"
-
-        @JvmField
-        val CREATOR: Parcelable.Creator<AddressItem> = Creator(AddressItem::class.java)
 
         @JvmField
         val SERIALIZER: Serializer<AddressItem> = object : Serializer<AddressItem> {

@@ -7,17 +7,17 @@
  */
 package com.adyen.checkout.components.model.payments.response
 
-import android.os.Parcel
 import com.adyen.checkout.components.model.payments.Amount
 import com.adyen.checkout.components.util.ActionTypes
 import com.adyen.checkout.core.exception.ModelSerializationException
-import com.adyen.checkout.core.model.JsonUtils.writeToParcel
 import com.adyen.checkout.core.model.ModelUtils.deserializeOpt
 import com.adyen.checkout.core.model.ModelUtils.serializeOpt
 import com.adyen.checkout.core.model.getStringOrNull
+import kotlinx.parcelize.Parcelize
 import org.json.JSONException
 import org.json.JSONObject
 
+@Parcelize
 data class VoucherAction(
     override var type: String? = null,
     override var paymentData: String? = null,
@@ -32,9 +32,6 @@ data class VoucherAction(
     var merchantName: String? = null,
     var url: String? = null,
 ) : Action() {
-    override fun writeToParcel(dest: Parcel, flags: Int) {
-        writeToParcel(dest, SERIALIZER.serialize(this))
-    }
 
     companion object {
         const val ACTION_TYPE = ActionTypes.VOUCHER
@@ -47,9 +44,6 @@ data class VoucherAction(
         private const val ALTERNATIVE_REFERENCE = "alternativeReference"
         private const val MERCHANT_NAME = "merchantName"
         private const val URL = "url"
-
-        @JvmField
-        val CREATOR = Creator(VoucherAction::class.java)
 
         @JvmField
         val SERIALIZER: Serializer<VoucherAction> = object : Serializer<VoucherAction> {

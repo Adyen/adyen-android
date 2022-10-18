@@ -8,20 +8,18 @@
 package com.adyen.checkout.sepa
 
 import android.content.Context
-import android.os.Parcel
-import android.os.Parcelable
 import com.adyen.checkout.components.base.BaseConfigurationBuilder
 import com.adyen.checkout.components.base.Configuration
 import com.adyen.checkout.core.api.Environment
+import kotlinx.parcelize.Parcelize
 import java.util.Locale
 
-class SepaConfiguration : Configuration {
-    internal constructor(
-        shopperLocale: Locale,
-        environment: Environment,
-        clientKey: String,
-    ) : super(shopperLocale, environment, clientKey)
-    internal constructor(parcel: Parcel) : super(parcel)
+@Parcelize
+class SepaConfiguration private constructor(
+    override val shopperLocale: Locale,
+    override val environment: Environment,
+    override val clientKey: String,
+) : Configuration {
 
     /**
      * Builder to create a [SepaConfiguration].
@@ -67,19 +65,6 @@ class SepaConfiguration : Configuration {
                 environment = environment,
                 clientKey = clientKey
             )
-        }
-    }
-
-    companion object {
-        @JvmField
-        val CREATOR: Parcelable.Creator<SepaConfiguration> = object : Parcelable.Creator<SepaConfiguration> {
-            override fun createFromParcel(parcel: Parcel): SepaConfiguration {
-                return SepaConfiguration(parcel)
-            }
-
-            override fun newArray(size: Int): Array<SepaConfiguration?> {
-                return arrayOfNulls(size)
-            }
         }
     }
 }

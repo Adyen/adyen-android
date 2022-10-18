@@ -8,33 +8,26 @@
 
 package com.adyen.checkout.card.api.model
 
-import android.os.Parcel
-import android.os.Parcelable
 import com.adyen.checkout.core.exception.ModelSerializationException
 import com.adyen.checkout.core.model.JsonUtils
 import com.adyen.checkout.core.model.ModelObject
 import com.adyen.checkout.core.model.getStringOrNull
 import com.adyen.checkout.core.model.optStringList
+import kotlinx.parcelize.Parcelize
 import org.json.JSONException
 import org.json.JSONObject
 
+@Parcelize
 data class BinLookupRequest(
     val encryptedBin: String? = null,
     val requestId: String? = null,
     val supportedBrands: List<String>? = null
 ) : ModelObject() {
 
-    override fun writeToParcel(parcel: Parcel, flags: Int) {
-        JsonUtils.writeToParcel(parcel, SERIALIZER.serialize(this))
-    }
-
     companion object {
         private const val ENCRYPTED_BIN = "encryptedBin"
         private const val REQUEST_ID = "requestId"
         private const val SUPPORTED_BRANDS = "supportedBrands"
-
-        @JvmField
-        val CREATOR: Parcelable.Creator<BinLookupRequest> = Creator(BinLookupRequest::class.java)
 
         @JvmField
         val SERIALIZER: Serializer<BinLookupRequest> = object : Serializer<BinLookupRequest> {

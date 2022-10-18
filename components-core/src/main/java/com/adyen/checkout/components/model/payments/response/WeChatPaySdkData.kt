@@ -7,13 +7,13 @@
  */
 package com.adyen.checkout.components.model.payments.response
 
-import android.os.Parcel
 import com.adyen.checkout.core.exception.ModelSerializationException
-import com.adyen.checkout.core.model.JsonUtils.writeToParcel
 import com.adyen.checkout.core.model.getStringOrNull
+import kotlinx.parcelize.Parcelize
 import org.json.JSONException
 import org.json.JSONObject
 
+@Parcelize
 data class WeChatPaySdkData(
     var appid: String? = null,
     var noncestr: String? = null,
@@ -24,10 +24,6 @@ data class WeChatPaySdkData(
     var timestamp: String? = null,
 ) : SdkData() {
 
-    override fun writeToParcel(dest: Parcel, flags: Int) {
-        writeToParcel(dest, SERIALIZER.serialize(this))
-    }
-
     companion object {
         private const val APP_ID = "appid"
         private const val NONCE_STR = "noncestr"
@@ -36,9 +32,6 @@ data class WeChatPaySdkData(
         private const val PREPAY_ID = "prepayid"
         private const val SIGN = "sign"
         private const val TIMESTAMP = "timestamp"
-
-        @JvmField
-        val CREATOR = Creator(WeChatPaySdkData::class.java)
 
         @JvmField
         val SERIALIZER: Serializer<WeChatPaySdkData> = object : Serializer<WeChatPaySdkData> {

@@ -10,8 +10,6 @@ package com.adyen.checkout.dropin
 
 import android.content.Context
 import android.os.Bundle
-import android.os.Parcel
-import android.os.Parcelable
 import com.adyen.checkout.adyen3ds2.Adyen3DS2Configuration
 import com.adyen.checkout.await.AwaitConfiguration
 import com.adyen.checkout.bacs.BacsDirectDebitConfiguration
@@ -25,9 +23,6 @@ import com.adyen.checkout.components.util.CheckoutCurrency
 import com.adyen.checkout.components.util.PaymentMethodTypes
 import com.adyen.checkout.core.api.Environment
 import com.adyen.checkout.core.exception.CheckoutException
-import com.adyen.checkout.core.log.LogUtil
-import com.adyen.checkout.core.model.JsonUtils
-import com.adyen.checkout.core.util.ParcelUtils
 import com.adyen.checkout.dotpay.DotpayConfiguration
 import com.adyen.checkout.dropin.DropInConfiguration.Builder
 import com.adyen.checkout.dropin.service.DropInService
@@ -46,6 +41,7 @@ import com.adyen.checkout.redirect.RedirectConfiguration
 import com.adyen.checkout.sepa.SepaConfiguration
 import com.adyen.checkout.voucher.VoucherConfiguration
 import com.adyen.checkout.wechatpay.WeChatPayActionConfiguration
+import kotlinx.parcelize.Parcelize
 import java.util.Locale
 import kotlin.collections.set
 
@@ -54,62 +50,35 @@ import kotlin.collections.set
  * There you will find specific methods to add configurations for each specific PaymentComponent, to be able to customize their behavior.
  * If you don't specify anything, a default configuration will be used.
  */
-@SuppressWarnings("TooManyFunctions")
-class DropInConfiguration : Configuration, Parcelable {
+@Parcelize
+@Suppress("LongParameterList")
+class DropInConfiguration private constructor(
+    override val shopperLocale: Locale,
+    override val environment: Environment,
+    override val clientKey: String,
+    private val availablePaymentConfigs: HashMap<String, Configuration>,
+    internal val availableActionConfigs: HashMap<Class<*>, Configuration>,
+    val amount: Amount,
+    val showPreselectedStoredPaymentMethod: Boolean,
+    val skipListWhenSinglePaymentMethod: Boolean,
+    val isRemovingStoredPaymentMethodsEnabled: Boolean,
+    val additionalDataForDropInService: Bundle?,
+) : Configuration {
 
-    private val availablePaymentConfigs: HashMap<String, Configuration>
-    internal val availableActionConfigs: HashMap<Class<*>, Configuration>
-    val amount: Amount
-    val showPreselectedStoredPaymentMethod: Boolean
-    val skipListWhenSinglePaymentMethod: Boolean
-    val isRemovingStoredPaymentMethodsEnabled: Boolean
-    val additionalDataForDropInService: Bundle?
-
-    companion object {
-        @JvmField
-        val CREATOR = object : Parcelable.Creator<DropInConfiguration> {
-            override fun createFromParcel(parcel: Parcel) = DropInConfiguration(parcel)
-            override fun newArray(size: Int) = arrayOfNulls<DropInConfiguration>(size)
-        }
-    }
-
-    @Suppress("LongParameterList")
     constructor(
         builder: Builder
-    ) : super(builder.shopperLocale, builder.environment, builder.clientKey) {
-        this.availablePaymentConfigs = builder.availablePaymentConfigs
-        this.availableActionConfigs = builder.availableActionConfigs
-        this.amount = builder.amount
-        this.showPreselectedStoredPaymentMethod = builder.showPreselectedStoredPaymentMethod
-        this.skipListWhenSinglePaymentMethod = builder.skipListWhenSinglePaymentMethod
-        this.isRemovingStoredPaymentMethodsEnabled = builder.isRemovingStoredPaymentMethodsEnabled
-        this.additionalDataForDropInService = builder.additionalDataForDropInService
-    }
-
-    constructor(parcel: Parcel) : super(parcel) {
-        @Suppress("UNCHECKED_CAST")
-        availablePaymentConfigs =
-            parcel.readHashMap(Configuration::class.java.classLoader) as HashMap<String, Configuration>
-        @Suppress("UNCHECKED_CAST")
-        availableActionConfigs =
-            parcel.readHashMap(Configuration::class.java.classLoader) as HashMap<Class<*>, Configuration>
-        amount = Amount.CREATOR.createFromParcel(parcel)
-        showPreselectedStoredPaymentMethod = ParcelUtils.readBoolean(parcel)
-        skipListWhenSinglePaymentMethod = ParcelUtils.readBoolean(parcel)
-        isRemovingStoredPaymentMethodsEnabled = ParcelUtils.readBoolean(parcel)
-        additionalDataForDropInService = parcel.readBundle(Bundle::class.java.classLoader)
-    }
-
-    override fun writeToParcel(parcel: Parcel, flags: Int) {
-        super.writeToParcel(parcel, flags)
-        parcel.writeMap(availablePaymentConfigs)
-        parcel.writeMap(availableActionConfigs)
-        JsonUtils.writeToParcel(parcel, Amount.SERIALIZER.serialize(amount))
-        ParcelUtils.writeBoolean(parcel, showPreselectedStoredPaymentMethod)
-        ParcelUtils.writeBoolean(parcel, skipListWhenSinglePaymentMethod)
-        ParcelUtils.writeBoolean(parcel, isRemovingStoredPaymentMethodsEnabled)
-        parcel.writeBundle(additionalDataForDropInService)
-    }
+    ) : this(
+        builder.shopperLocale,
+        builder.environment,
+        builder.clientKey,
+        builder.availablePaymentConfigs,
+        builder.availableActionConfigs,
+        builder.amount,
+        builder.showPreselectedStoredPaymentMethod,
+        builder.skipListWhenSinglePaymentMethod,
+        builder.isRemovingStoredPaymentMethodsEnabled,
+        builder.additionalDataForDropInService,
+    )
 
     internal fun <T : Configuration> getConfigurationForPaymentMethod(paymentMethod: String): T? {
         if (availablePaymentConfigs.containsKey(paymentMethod)) {
@@ -119,6 +88,7 @@ class DropInConfiguration : Configuration, Parcelable {
         return null
     }
 
+    @Suppress("unused")
     internal inline fun <reified T : Configuration> getConfigurationForAction(): T? {
         val actionClass = T::class.java
         if (availableActionConfigs.containsKey(actionClass)) {
@@ -131,11 +101,8 @@ class DropInConfiguration : Configuration, Parcelable {
     /**
      * Builder for creating a [DropInConfiguration] where you can set specific Configurations for a Payment Method
      */
+    @Suppress("unused", "TooManyFunctions")
     class Builder : BaseConfigurationBuilder<DropInConfiguration> {
-
-        companion object {
-            private val TAG = LogUtil.getTag()
-        }
 
         internal val availablePaymentConfigs = HashMap<String, Configuration>()
         internal val availableActionConfigs = HashMap<Class<*>, Configuration>()

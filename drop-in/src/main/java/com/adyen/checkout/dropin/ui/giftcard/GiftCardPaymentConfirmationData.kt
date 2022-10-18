@@ -8,41 +8,16 @@
 
 package com.adyen.checkout.dropin.ui.giftcard
 
-import android.os.Parcel
 import android.os.Parcelable
 import com.adyen.checkout.components.model.payments.Amount
+import kotlinx.parcelize.Parcelize
 import java.util.Locale
 
+@Parcelize
 data class GiftCardPaymentConfirmationData(
     val amountPaid: Amount,
     val remainingBalance: Amount,
     val shopperLocale: Locale,
     val brand: String,
     val lastFourDigits: String
-) : Parcelable {
-    private constructor(parcel: Parcel) : this(
-        amountPaid = parcel.readParcelable(Amount::class.java.classLoader)!!,
-        remainingBalance = parcel.readParcelable(Amount::class.java.classLoader)!!,
-        shopperLocale = parcel.readSerializable() as Locale,
-        brand = parcel.readString().orEmpty(),
-        lastFourDigits = parcel.readString().orEmpty()
-    )
-
-    override fun writeToParcel(dest: Parcel, flags: Int) {
-        dest.writeParcelable(amountPaid, flags)
-        dest.writeParcelable(remainingBalance, flags)
-        dest.writeSerializable(shopperLocale)
-        dest.writeString(brand)
-        dest.writeString(lastFourDigits)
-    }
-
-    override fun describeContents() = Parcelable.CONTENTS_FILE_DESCRIPTOR
-
-    companion object {
-        @JvmField
-        val CREATOR = object : Parcelable.Creator<GiftCardPaymentConfirmationData> {
-            override fun createFromParcel(source: Parcel) = GiftCardPaymentConfirmationData(source)
-            override fun newArray(size: Int) = arrayOfNulls<GiftCardPaymentConfirmationData>(size)
-        }
-    }
-}
+) : Parcelable

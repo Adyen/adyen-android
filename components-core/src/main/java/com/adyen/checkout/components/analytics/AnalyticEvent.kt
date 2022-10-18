@@ -10,42 +10,24 @@ package com.adyen.checkout.components.analytics
 import android.content.Context
 import android.net.Uri
 import android.os.Build
-import android.os.Parcel
 import android.os.Parcelable
 import android.webkit.URLUtil
 import com.adyen.checkout.components.BuildConfig
+import kotlinx.parcelize.Parcelize
 import java.net.MalformedURLException
 import java.net.URL
 import java.util.Locale
 
-class AnalyticEvent : Parcelable {
+@Parcelize
+class AnalyticEvent(
+    private val flavor: String?, // e.g: 'dropin', 'component'
+    private val component: String?, // e.g: dropin, paymentType
+    private val locale: String?, // e.g: en_US
+    private val referer: String?, // e.g: package name
+) : Parcelable {
+
     enum class Flavor {
         DROPIN, COMPONENT
-    }
-
-    private val payloadVersion = CURRENT_PAYLOAD_VERSION
-    private val version = BuildConfig.CHECKOUT_VERSION
-    private val flavor: String? // e.g: 'dropin', 'component'
-    private val component: String? // e.g: dropin, paymentType
-    private val locale: String? // e.g: en_US
-    private val platform = ANDROID_PLATFORM
-    private val referer: String? // e.g: package name
-    private val deviceBrand = Build.BRAND
-    private val deviceModel = Build.MODEL
-    private val systemVersion = Build.VERSION.SDK_INT.toString()
-
-    internal constructor(input: Parcel) {
-        flavor = input.readString()
-        component = input.readString()
-        locale = input.readString()
-        referer = input.readString()
-    }
-
-    private constructor(packageName: String, flavor: String, components: String, locale: String) {
-        referer = packageName
-        this.locale = locale
-        this.flavor = flavor
-        component = components
     }
 
     /**
@@ -64,29 +46,18 @@ class AnalyticEvent : Parcelable {
             .scheme(baseUri.scheme)
             .authority(baseUri.authority)
             .path(baseUri.path)
-            .appendQueryParameter(PAYLOAD_VERSION_KEY, payloadVersion)
-            .appendQueryParameter(VERSION_KEY, version)
+            .appendQueryParameter(PAYLOAD_VERSION_KEY, CURRENT_PAYLOAD_VERSION)
+            .appendQueryParameter(VERSION_KEY, BuildConfig.CHECKOUT_VERSION)
             .appendQueryParameter(FLAVOR_KEY, flavor)
             .appendQueryParameter(COMPONENT_KEY, component)
             .appendQueryParameter(LOCALE_KEY, locale)
-            .appendQueryParameter(PLATFORM_KEY, platform)
+            .appendQueryParameter(PLATFORM_KEY, ANDROID_PLATFORM)
             .appendQueryParameter(REFERER_KEY, referer)
-            .appendQueryParameter(DEVICE_BRAND_KEY, deviceBrand)
-            .appendQueryParameter(DEVICE_MODEL_KEY, deviceModel)
-            .appendQueryParameter(SYSTEM_VERSION_KEY, systemVersion)
+            .appendQueryParameter(DEVICE_BRAND_KEY, Build.BRAND)
+            .appendQueryParameter(DEVICE_MODEL_KEY, Build.MODEL)
+            .appendQueryParameter(SYSTEM_VERSION_KEY, Build.VERSION.SDK_INT.toString())
             .build()
         return URL(finalUri.toString())
-    }
-
-    override fun describeContents(): Int {
-        return Parcelable.CONTENTS_FILE_DESCRIPTOR
-    }
-
-    override fun writeToParcel(dest: Parcel, flags: Int) {
-        dest.writeString(flavor)
-        dest.writeString(component)
-        dest.writeString(locale)
-        dest.writeString(referer)
     }
 
     companion object {
@@ -105,17 +76,6 @@ class AnalyticEvent : Parcelable {
         private const val DEVICE_MODEL_KEY = "device_model"
         private const val SYSTEM_VERSION_KEY = "system_version"
 
-        @JvmField
-        val CREATOR: Parcelable.Creator<AnalyticEvent> = object : Parcelable.Creator<AnalyticEvent> {
-            override fun createFromParcel(`in`: Parcel): AnalyticEvent {
-                return AnalyticEvent(`in`)
-            }
-
-            override fun newArray(size: Int): Array<AnalyticEvent?> {
-                return arrayOfNulls(size)
-            }
-        }
-
         /**
          * Create an AnalyticEvent representing a state of the usage of the components.
          *
@@ -131,7 +91,8 @@ class AnalyticEvent : Parcelable {
                 Flavor.DROPIN -> DROPIN_FLAVOR
                 Flavor.COMPONENT -> COMPONENT_FLAVOR
             }
-            return AnalyticEvent(context.packageName, flavorName, components, locale.toString())
+
+            return AnalyticEvent(flavorName, components, locale.toString(), context.packageName)
         }
     }
 }

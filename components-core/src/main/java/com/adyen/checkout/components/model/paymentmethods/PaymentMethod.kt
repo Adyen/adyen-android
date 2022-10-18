@@ -7,20 +7,20 @@
  */
 package com.adyen.checkout.components.model.paymentmethods
 
-import android.os.Parcel
 import com.adyen.checkout.core.exception.ModelSerializationException
 import com.adyen.checkout.core.model.JsonUtils.parseOptStringList
 import com.adyen.checkout.core.model.JsonUtils.serializeOptStringList
-import com.adyen.checkout.core.model.JsonUtils.writeToParcel
 import com.adyen.checkout.core.model.ModelObject
 import com.adyen.checkout.core.model.ModelUtils.deserializeOpt
 import com.adyen.checkout.core.model.ModelUtils.deserializeOptList
 import com.adyen.checkout.core.model.ModelUtils.serializeOpt
 import com.adyen.checkout.core.model.ModelUtils.serializeOptList
 import com.adyen.checkout.core.model.getStringOrNull
+import kotlinx.parcelize.Parcelize
 import org.json.JSONException
 import org.json.JSONObject
 
+@Parcelize
 data class PaymentMethod(
     var type: String? = null,
     var name: String? = null,
@@ -31,10 +31,6 @@ data class PaymentMethod(
     var configuration: Configuration? = null,
     var details: List<InputDetail>? = null,
 ) : ModelObject() {
-
-    override fun writeToParcel(dest: Parcel, flags: Int) {
-        writeToParcel(dest, SERIALIZER.serialize(this))
-    }
 
     companion object {
         private const val TYPE = "type"
@@ -51,9 +47,6 @@ data class PaymentMethod(
 
         // This field is returned in older API versions, only used to retrieve the issuers list
         private const val DETAILS = "details"
-
-        @JvmField
-        val CREATOR = Creator(PaymentMethod::class.java)
 
         @JvmField
         val SERIALIZER: Serializer<PaymentMethod> = object : Serializer<PaymentMethod> {

@@ -9,24 +9,20 @@
 package com.adyen.checkout.onlinebankingpl
 
 import android.content.Context
-import android.os.Parcel
-import android.os.Parcelable
 import com.adyen.checkout.core.api.Environment
 import com.adyen.checkout.issuerlist.IssuerListConfiguration
 import com.adyen.checkout.issuerlist.IssuerListViewType
+import kotlinx.parcelize.Parcelize
 import java.util.Locale
 
-class OnlineBankingPLConfiguration : IssuerListConfiguration {
-
-    private constructor(
-        shopperLocale: Locale,
-        environment: Environment,
-        clientKey: String,
-        viewType: IssuerListViewType,
-        hideIssuerLogos: Boolean,
-    ) : super(shopperLocale, environment, clientKey, viewType, hideIssuerLogos)
-
-    private constructor(parcel: Parcel) : super(parcel)
+@Parcelize
+class OnlineBankingPLConfiguration private constructor(
+    override val shopperLocale: Locale,
+    override val environment: Environment,
+    override val clientKey: String,
+    override val viewType: IssuerListViewType,
+    override val hideIssuerLogos: Boolean,
+) : IssuerListConfiguration() {
 
     class Builder : IssuerListBuilder<OnlineBankingPLConfiguration> {
 
@@ -74,16 +70,6 @@ class OnlineBankingPLConfiguration : IssuerListConfiguration {
                 viewType = viewType,
                 hideIssuerLogos = hideIssuerLogos,
             )
-        }
-    }
-
-    companion object CREATOR : Parcelable.Creator<OnlineBankingPLConfiguration> {
-        override fun createFromParcel(parcel: Parcel): OnlineBankingPLConfiguration {
-            return OnlineBankingPLConfiguration(parcel)
-        }
-
-        override fun newArray(size: Int): Array<OnlineBankingPLConfiguration?> {
-            return arrayOfNulls(size)
         }
     }
 }

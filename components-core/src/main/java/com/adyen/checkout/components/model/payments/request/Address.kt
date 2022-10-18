@@ -7,14 +7,14 @@
  */
 package com.adyen.checkout.components.model.payments.request
 
-import android.os.Parcel
 import com.adyen.checkout.core.exception.ModelSerializationException
-import com.adyen.checkout.core.model.JsonUtils.writeToParcel
 import com.adyen.checkout.core.model.ModelObject
 import com.adyen.checkout.core.model.getStringOrNull
+import kotlinx.parcelize.Parcelize
 import org.json.JSONException
 import org.json.JSONObject
 
+@Parcelize
 data class Address(
     var city: String? = null,
     var country: String? = null,
@@ -23,10 +23,6 @@ data class Address(
     var stateOrProvince: String? = null,
     var street: String? = null,
 ) : ModelObject() {
-
-    override fun writeToParcel(dest: Parcel, flags: Int) {
-        writeToParcel(dest, SERIALIZER.serialize(this))
-    }
 
     companion object {
         private const val CITY = "city"
@@ -37,9 +33,6 @@ data class Address(
         private const val STREET = "street"
         const val ADDRESS_NULL_PLACEHOLDER = "null"
         const val ADDRESS_COUNTRY_NULL_PLACEHOLDER = "ZZ"
-
-        @JvmField
-        val CREATOR = Creator(Address::class.java)
 
         @JvmField
         val SERIALIZER: Serializer<Address> = object : Serializer<Address> {

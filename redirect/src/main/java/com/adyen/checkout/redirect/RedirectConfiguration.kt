@@ -8,22 +8,18 @@
 package com.adyen.checkout.redirect
 
 import android.content.Context
-import android.os.Parcel
-import android.os.Parcelable
 import com.adyen.checkout.components.base.BaseConfigurationBuilder
 import com.adyen.checkout.components.base.Configuration
 import com.adyen.checkout.core.api.Environment
+import kotlinx.parcelize.Parcelize
 import java.util.Locale
 
-class RedirectConfiguration : Configuration {
-
-    constructor(
-        shopperLocale: Locale,
-        environment: Environment,
-        clientKey: String,
-    ) : super(shopperLocale, environment, clientKey)
-
-    constructor(parcel: Parcel) : super(parcel)
+@Parcelize
+class RedirectConfiguration private constructor(
+    override val shopperLocale: Locale,
+    override val environment: Environment,
+    override val clientKey: String,
+) : Configuration {
 
     /**
      * Builder to create a [RedirectConfiguration].
@@ -69,19 +65,6 @@ class RedirectConfiguration : Configuration {
                 environment = environment,
                 clientKey = clientKey,
             )
-        }
-    }
-
-    companion object {
-        @JvmField
-        val CREATOR: Parcelable.Creator<RedirectConfiguration> = object : Parcelable.Creator<RedirectConfiguration> {
-            override fun createFromParcel(parcel: Parcel): RedirectConfiguration {
-                return RedirectConfiguration(parcel)
-            }
-
-            override fun newArray(size: Int): Array<RedirectConfiguration?> {
-                return arrayOfNulls(size)
-            }
         }
     }
 }

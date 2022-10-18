@@ -8,14 +8,13 @@
 
 package com.adyen.checkout.components.model.payments.request
 
-import android.os.Parcel
-import android.os.Parcelable
 import com.adyen.checkout.core.exception.ModelSerializationException
-import com.adyen.checkout.core.model.JsonUtils
 import com.adyen.checkout.core.model.getStringOrNull
+import kotlinx.parcelize.Parcelize
 import org.json.JSONException
 import org.json.JSONObject
 
+@Parcelize
 data class BacsDirectDebitPaymentMethod(
     override var type: String? = null,
     var holderName: String? = null,
@@ -23,20 +22,12 @@ data class BacsDirectDebitPaymentMethod(
     var bankLocationId: String? = null,
 ) : PaymentMethodDetails() {
 
-    override fun writeToParcel(parcel: Parcel, flags: Int) {
-        JsonUtils.writeToParcel(parcel, SERIALIZER.serialize(this))
-    }
-
     companion object {
         private const val HOLDER_NAME = "holderName"
         private const val BANK_ACCOUNT_NUMBER = "bankAccountNumber"
         private const val BANK_LOCATION_ID = "bankLocationId"
 
         const val PAYMENT_METHOD_TYPE = "directdebit_GB"
-
-        @JvmField
-        val CREATOR: Parcelable.Creator<BacsDirectDebitPaymentMethod> =
-            Creator(BacsDirectDebitPaymentMethod::class.java)
 
         @JvmField
         val SERIALIZER: Serializer<BacsDirectDebitPaymentMethod> = object : Serializer<BacsDirectDebitPaymentMethod> {
