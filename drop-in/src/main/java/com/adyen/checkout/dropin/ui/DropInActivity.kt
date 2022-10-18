@@ -99,8 +99,6 @@ class DropInActivity :
 
     private val dropInViewModel: DropInViewModel by viewModels { DropInViewModelFactory(this) }
 
-    private val loadingDialog = LoadingDialogFragment.newInstance()
-
     private var dropInService: DropInServiceInterface? = null
     private var serviceBound: Boolean = false
 
@@ -640,12 +638,13 @@ class DropInActivity :
     }
 
     private fun setLoading(showLoading: Boolean) {
+        val loadingDialog = getFragmentByTag(LOADING_FRAGMENT_TAG)
         if (showLoading) {
-            if (!loadingDialog.isAdded) {
-                loadingDialog.show(supportFragmentManager, LOADING_FRAGMENT_TAG)
+            if (loadingDialog == null) {
+                LoadingDialogFragment.newInstance().show(supportFragmentManager, LOADING_FRAGMENT_TAG)
             }
         } else {
-            getFragmentByTag(LOADING_FRAGMENT_TAG)?.dismiss()
+            loadingDialog?.dismiss()
         }
     }
 
