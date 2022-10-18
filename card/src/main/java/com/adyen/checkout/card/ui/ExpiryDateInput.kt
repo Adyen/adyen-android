@@ -14,8 +14,7 @@ import android.util.AttributeSet
 import com.adyen.checkout.card.data.ExpiryDate
 import com.adyen.checkout.components.ui.view.AdyenTextInputEditText
 import com.adyen.checkout.core.log.LogUtil
-import com.adyen.checkout.core.log.Logger.d
-import com.adyen.checkout.core.log.Logger.v
+import com.adyen.checkout.core.log.Logger
 import com.adyen.checkout.core.util.StringUtil.normalize
 import java.text.ParseException
 import java.text.SimpleDateFormat
@@ -68,7 +67,7 @@ class ExpiryDateInput @JvmOverloads constructor(context: Context, attrs: Attribu
     var date: ExpiryDate
         get() {
             val normalizedExpiryDate = normalize(rawValue)
-            v(TAG, "getDate - $normalizedExpiryDate")
+            Logger.v(TAG, "getDate - $normalizedExpiryDate")
             return try {
                 val parsedDate = dateFormat.parse(normalizedExpiryDate)
                 val calendar = GregorianCalendar.getInstance()
@@ -77,13 +76,13 @@ class ExpiryDateInput @JvmOverloads constructor(context: Context, attrs: Attribu
                 // GregorianCalendar is 0 based
                 ExpiryDate(calendar[Calendar.MONTH] + 1, calendar[Calendar.YEAR])
             } catch (e: ParseException) {
-                d(TAG, "getDate - value does not match expected pattern. " + e.localizedMessage)
+                Logger.d(TAG, "getDate - value does not match expected pattern. " + e.localizedMessage)
                 if (rawValue.isEmpty()) ExpiryDate.EMPTY_DATE else ExpiryDate.INVALID_DATE
             }
         }
         set(expiryDate) {
             if (expiryDate !== ExpiryDate.EMPTY_DATE) {
-                v(TAG, "setDate - " + expiryDate.expiryYear + " " + expiryDate.expiryMonth)
+                Logger.v(TAG, "setDate - " + expiryDate.expiryYear + " " + expiryDate.expiryMonth)
                 val calendar = GregorianCalendar.getInstance()
                 calendar.clear()
                 // first day of month, GregorianCalendar month is 0 based.
