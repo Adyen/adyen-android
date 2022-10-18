@@ -22,7 +22,7 @@ interface BacsDirectDebitDelegate :
 
     val outputDataFlow: Flow<BacsDirectDebitOutputData>
 
-    val componentStateFlow: Flow<BacsDirectDebitComponentState?>
+    val componentStateFlow: Flow<BacsDirectDebitComponentState>
 
     fun setMode(mode: BacsDirectDebitMode): Boolean
 

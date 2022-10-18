@@ -342,7 +342,7 @@ internal class DefaultBacsDirectDebitDelegateTest {
         @Test
         fun `input is invalid, then component state should be invalid`() = runTest {
             delegate.componentStateFlow.test {
-                delegate.createComponentState(
+                delegate.updateComponentState(
                     BacsDirectDebitOutputData(
                         holderNameState = FieldState("test", Validation.Invalid(R.string.bacs_holder_name_invalid)),
                         bankAccountNumberState = FieldState(
@@ -368,7 +368,7 @@ internal class DefaultBacsDirectDebitDelegateTest {
         @Test
         fun `input is valid and mode is INPUT, then component state should be invalid`() = runTest {
             delegate.componentStateFlow.test {
-                delegate.createComponentState(
+                delegate.updateComponentState(
                     BacsDirectDebitOutputData(
                         holderNameState = FieldState("test", Validation.Valid),
                         bankAccountNumberState = FieldState("12345678", Validation.Valid),
@@ -391,7 +391,7 @@ internal class DefaultBacsDirectDebitDelegateTest {
         @Test
         fun `input is valid and mode is  CONFIRMATION, then component state should be valid`() = runTest {
             delegate.componentStateFlow.test {
-                delegate.createComponentState(
+                delegate.updateComponentState(
                     BacsDirectDebitOutputData(
                         holderNameState = FieldState("test", Validation.Valid),
                         bankAccountNumberState = FieldState("12345678", Validation.Valid),
