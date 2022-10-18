@@ -139,7 +139,9 @@ internal class DefaultBcmcDelegate(
     }
 
     @Suppress("ReturnCount")
-    private fun createComponentState(outputData: BcmcOutputData = this.outputData): PaymentComponentState<CardPaymentMethod> {
+    private fun createComponentState(
+        outputData: BcmcOutputData = this.outputData
+    ): PaymentComponentState<CardPaymentMethod> {
         val paymentComponentData = PaymentComponentData<CardPaymentMethod>()
 
         val publicKey = publicKey
