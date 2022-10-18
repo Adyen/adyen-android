@@ -119,7 +119,7 @@ internal class DefaultMBWayDelegateTest {
         fun `output data is invalid, then component state should be invalid`() = runTest {
             delegate.componentStateFlow.test {
                 skipItems(1)
-                delegate.createComponentState(MBWayOutputData("+7867676"))
+                delegate.updateComponentState(MBWayOutputData("+7867676"))
 
                 with(requireNotNull(awaitItem())) {
                     assertEquals("+7867676", data.paymentMethod?.telephoneNumber)
@@ -135,7 +135,7 @@ internal class DefaultMBWayDelegateTest {
         fun `output data is valid, then component state should be propagated`() = runTest {
             delegate.componentStateFlow.test {
                 skipItems(1)
-                delegate.createComponentState(MBWayOutputData("+31666666666"))
+                delegate.updateComponentState(MBWayOutputData("+31666666666"))
 
                 with(requireNotNull(awaitItem())) {
                     assertEquals("+31666666666", data.paymentMethod?.telephoneNumber)
