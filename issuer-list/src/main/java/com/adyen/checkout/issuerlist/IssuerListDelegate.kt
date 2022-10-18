@@ -24,7 +24,7 @@ interface IssuerListDelegate<IssuerListPaymentMethodT : IssuerListPaymentMethod>
 
     val outputDataFlow: Flow<IssuerListOutputData>
 
-    val componentStateFlow: Flow<PaymentComponentState<IssuerListPaymentMethodT>?>
+    val componentStateFlow: Flow<PaymentComponentState<IssuerListPaymentMethodT>>
 
     fun getIssuers(): List<IssuerModel>
 
