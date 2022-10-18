@@ -35,10 +35,6 @@ internal class DefaultBacsDirectDebitDelegate(
     private val _componentStateFlow = MutableStateFlow(createComponentState())
     override val componentStateFlow: Flow<BacsDirectDebitComponentState> = _componentStateFlow
 
-    init {
-        updateComponentState(outputData)
-    }
-
     @VisibleForTesting
     @Suppress("VariableNaming", "PropertyName")
     internal val _viewFlow = MutableStateFlow(BacsComponentViewType.INPUT)
