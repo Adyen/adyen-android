@@ -44,8 +44,6 @@ internal class MbWayView @JvmOverloads constructor(
     init {
         orientation = VERTICAL
 
-        LayoutInflater.from(context).inflate(R.layout.mbway_view, this, true)
-
         val padding = resources.getDimension(R.dimen.standard_margin).toInt()
         setPadding(padding, padding, padding, 0)
     }
