@@ -8,15 +8,19 @@
 
 package com.adyen.checkout.googlepay
 
+import android.app.Activity
+import android.content.Intent
 import com.adyen.checkout.components.base.PaymentMethodDelegate
-import com.adyen.checkout.googlepay.model.GooglePayParams
+import com.adyen.checkout.core.exception.CheckoutException
 import kotlinx.coroutines.flow.Flow
 
 interface GooglePayDelegate : PaymentMethodDelegate {
 
-    val componentStateFlow: Flow<GooglePayComponentState?>
+    val componentStateFlow: Flow<GooglePayComponentState>
 
-    fun getGooglePayParams(): GooglePayParams
+    val exceptionFlow: Flow<CheckoutException>
 
-    fun updateInputData(update: GooglePayInputData.() -> Unit)
+    fun startGooglePayScreen(activity: Activity, requestCode: Int)
+
+    fun handleActivityResult(resultCode: Int, data: Intent?)
 }
