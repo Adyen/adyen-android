@@ -10,7 +10,6 @@ package com.adyen.checkout.bcmc
 import android.content.Context
 import android.os.Parcel
 import android.os.Parcelable
-import com.adyen.checkout.card.CardConfiguration
 import com.adyen.checkout.components.base.BaseConfigurationBuilder
 import com.adyen.checkout.components.base.Configuration
 import com.adyen.checkout.core.api.Environment
@@ -110,7 +109,7 @@ class BcmcConfiguration : Configuration {
          * Set if the holder name is required and should be shown as an input field.
          *
          * @param isHolderNameRequired [Boolean]
-         * @return [CardConfiguration.Builder]
+         * @return [BcmcConfiguration.Builder]
          */
         fun setHolderNameRequired(isHolderNameRequired: Boolean): Builder {
             this.isHolderNameRequired = isHolderNameRequired

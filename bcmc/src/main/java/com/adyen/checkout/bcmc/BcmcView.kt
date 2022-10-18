@@ -73,7 +73,7 @@ internal class BcmcView @JvmOverloads constructor(
                 localizedContext
             )
             binding.textInputLayoutCardHolder.setLocalizedHintFromStyle(
-                com.adyen.checkout.card.R.style.AdyenCheckout_Card_HolderNameInput,
+                R.style.AdyenCheckout_Card_HolderNameInput,
                 localizedContext
             )
             switchStorePaymentMethod.setLocalizedTextFromStyle(
