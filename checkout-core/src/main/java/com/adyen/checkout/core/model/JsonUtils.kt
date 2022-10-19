@@ -23,6 +23,10 @@ fun JSONObject.getBooleanOrNull(key: String): Boolean? {
     return if (has(key)) getBoolean(key) else null
 }
 
+fun JSONObject.getIntOrNull(key: String): Int? {
+    return if (has(key)) getInt(key) else null
+}
+
 fun JSONObject.toStringPretty(): String {
     return try {
         toString(INDENTATION_SPACES)
