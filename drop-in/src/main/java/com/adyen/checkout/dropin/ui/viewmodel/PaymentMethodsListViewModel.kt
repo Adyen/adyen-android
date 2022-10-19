@@ -102,33 +102,41 @@ class PaymentMethodsListViewModel(
         availabilitySkipSum = 0
         availabilityChecksum = paymentMethods.size
         paymentMethodsList.clear()
-
-        paymentMethods.forEachIndexed { index, paymentMethod ->
-            val type = paymentMethod.type
-            when {
-                type == null -> {
-                    throw CheckoutException("PaymentMethod type is null")
-                }
-                PaymentMethodTypes.SUPPORTED_PAYMENT_METHODS.contains(type) -> {
-                    Logger.v(TAG, "Supported payment method: $type")
-                    // We assume payment method is available and remove it later when the callback comes
-                    // this is the overwhelming majority of cases, and we keep the list ordered this way.
-                    paymentMethodsList.add(paymentMethod.mapToModel(index))
-                    checkPaymentMethodAvailability(getApplication(), paymentMethod, dropInConfiguration, amount, this)
-                }
-                else -> {
-                    availabilitySkipSum++
-                    if (PaymentMethodTypes.UNSUPPORTED_PAYMENT_METHODS.contains(type)) {
-                        Logger.e(TAG, "PaymentMethod not yet supported - $type")
-                    } else {
-                        Logger.d(TAG, "No details required - $type")
-                        paymentMethodsList.add(paymentMethod.mapToModel(index))
+        if (paymentMethods.isEmpty())
+            checkIfListIsReady()
+        else
+            paymentMethods.forEachIndexed { index, paymentMethod ->
+                val type = paymentMethod.type
+                when {
+                    type == null -> {
+                        throw CheckoutException("PaymentMethod type is null")
                     }
-                    // If last payment method is redirect list might be ready now
-                    checkIfListIsReady()
+                    PaymentMethodTypes.SUPPORTED_PAYMENT_METHODS.contains(type) -> {
+                        Logger.v(TAG, "Supported payment method: $type")
+                        // We assume payment method is available and remove it later when the callback comes
+                        // this is the overwhelming majority of cases, and we keep the list ordered this way.
+                        paymentMethodsList.add(paymentMethod.mapToModel(index))
+                        checkPaymentMethodAvailability(
+                            getApplication(),
+                            paymentMethod,
+                            dropInConfiguration,
+                            amount,
+                            this
+                        )
+                    }
+                    else -> {
+                        availabilitySkipSum++
+                        if (PaymentMethodTypes.UNSUPPORTED_PAYMENT_METHODS.contains(type)) {
+                            Logger.e(TAG, "PaymentMethod not yet supported - $type")
+                        } else {
+                            Logger.d(TAG, "No details required - $type")
+                            paymentMethodsList.add(paymentMethod.mapToModel(index))
+                        }
+                        // If last payment method is redirect list might be ready now
+                        checkIfListIsReady()
+                    }
                 }
             }
-        }
     }
 
     private fun PaymentMethod.mapToModel(index: Int): PaymentMethodModel {
@@ -161,6 +169,7 @@ class PaymentMethodsListViewModel(
     }
 
     private fun checkIfListIsReady() {
+        Logger.d(TAG, "checkIfListIsReady")
         // All payment methods availability have been returned or skipped.
         if ((availabilitySum + availabilitySkipSum) == availabilityChecksum) {
             // Reset variables
