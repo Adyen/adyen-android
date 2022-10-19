@@ -16,5 +16,5 @@ class GooglePayComponentState(
     paymentComponentData: PaymentComponentData<GooglePayPaymentMethod>,
     isInputValid: Boolean,
     isReady: Boolean,
-    val paymentData: PaymentData,
+    val paymentData: PaymentData?,
 ) : PaymentComponentState<GooglePayPaymentMethod>(paymentComponentData, isInputValid, isReady)

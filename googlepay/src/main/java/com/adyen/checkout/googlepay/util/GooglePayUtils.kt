@@ -11,7 +11,7 @@ import com.adyen.checkout.components.model.payments.request.GooglePayPaymentMeth
 import com.adyen.checkout.components.util.AmountFormat.toBigDecimal
 import com.adyen.checkout.core.exception.CheckoutException
 import com.adyen.checkout.core.log.LogUtil
-import com.adyen.checkout.core.log.Logger.e
+import com.adyen.checkout.core.log.Logger
 import com.adyen.checkout.googlepay.model.CardParameters
 import com.adyen.checkout.googlepay.model.GooglePayParams
 import com.adyen.checkout.googlepay.model.GooglePayPaymentMethodModel
@@ -139,7 +139,7 @@ object GooglePayUtils {
             }
             paymentMethod
         } catch (e: JSONException) {
-            e(TAG, "Failed to find Google Pay token.", e)
+            Logger.e(TAG, "Failed to find Google Pay token.", e)
             null
         }
     }

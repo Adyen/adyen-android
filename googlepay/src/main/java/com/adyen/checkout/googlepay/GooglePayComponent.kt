@@ -15,15 +15,8 @@ import com.adyen.checkout.components.PaymentComponentProvider
 import com.adyen.checkout.components.base.ActivityResultHandlingComponent
 import com.adyen.checkout.components.base.BasePaymentComponent
 import com.adyen.checkout.components.util.PaymentMethodTypes
-import com.adyen.checkout.core.exception.ComponentException
 import com.adyen.checkout.core.log.LogUtil
-import com.adyen.checkout.core.log.Logger.d
 import com.adyen.checkout.googlepay.GooglePayComponent.Companion.PROVIDER
-import com.adyen.checkout.googlepay.util.GooglePayUtils
-import com.google.android.gms.wallet.AutoResolveHelper
-import com.google.android.gms.wallet.PaymentData
-import com.google.android.gms.wallet.Wallet
-import kotlinx.coroutines.flow.filterNotNull
 import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.onEach
 
@@ -44,8 +37,11 @@ class GooglePayComponent(
 
     init {
         delegate.componentStateFlow
-            .filterNotNull()
             .onEach { notifyStateChanged(it) }
+            .launchIn(viewModelScope)
+
+        delegate.exceptionFlow
+            .onEach { notifyException(it) }
             .launchIn(viewModelScope)
     }
 
@@ -58,12 +54,7 @@ class GooglePayComponent(
      * @param requestCode The code that will be returned on the [Activity.onActivityResult]
      */
     fun startGooglePayScreen(activity: Activity, requestCode: Int) {
-        d(TAG, "startGooglePayScreen")
-        val googlePayParams = delegate.getGooglePayParams()
-        val paymentsClient = Wallet.getPaymentsClient(activity, GooglePayUtils.createWalletOptions(googlePayParams))
-        val paymentDataRequest = GooglePayUtils.createPaymentDataRequest(googlePayParams)
-        // TODO this forces us to use the deprecated onActivityResult. Look into alternatives when/if Google provides any later.
-        AutoResolveHelper.resolveTask(paymentsClient.loadPaymentData(paymentDataRequest), activity, requestCode)
+        delegate.startGooglePayScreen(activity, requestCode)
     }
 
     /**
@@ -73,26 +64,7 @@ class GooglePayComponent(
      * @param data       The data intent from the [Activity.onActivityResult]
      */
     override fun handleActivityResult(resultCode: Int, data: Intent?) {
-        when (resultCode) {
-            Activity.RESULT_OK -> {
-                if (data == null) {
-                    notifyException(ComponentException("Result data is null"))
-                    return
-                }
-                val paymentData = PaymentData.getFromIntent(data)
-                delegate.updateInputData { this.paymentData = paymentData }
-            }
-            Activity.RESULT_CANCELED -> notifyException(ComponentException("Payment canceled."))
-            AutoResolveHelper.RESULT_ERROR -> {
-                val status = AutoResolveHelper.getStatusFromIntent(data)
-                var errorMessage = "GooglePay returned an error"
-                if (status != null) {
-                    errorMessage = errorMessage + ": " + status.statusMessage
-                }
-                notifyException(ComponentException(errorMessage))
-            }
-            else -> Unit
-        }
+        delegate.handleActivityResult(resultCode, data)
     }
 
     companion object {

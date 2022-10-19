@@ -12,16 +12,14 @@ import app.cash.turbine.test
 import com.adyen.checkout.components.model.paymentmethods.PaymentMethod
 import com.adyen.checkout.components.model.payments.request.GooglePayPaymentMethod
 import com.adyen.checkout.core.api.Environment
-import com.adyen.checkout.core.exception.CheckoutException
 import com.google.android.gms.wallet.PaymentData
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.test.runTest
 import org.junit.jupiter.api.Assertions.assertEquals
-import org.junit.jupiter.api.Assertions.assertThrows
+import org.junit.jupiter.api.Assertions.assertFalse
+import org.junit.jupiter.api.Assertions.assertNull
 import org.junit.jupiter.api.Assertions.assertTrue
 import org.junit.jupiter.api.BeforeEach
-import org.junit.jupiter.api.DisplayName
-import org.junit.jupiter.api.Nested
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.extension.ExtendWith
 import org.mockito.junit.jupiter.MockitoExtension
@@ -48,28 +46,48 @@ internal class DefaultGooglePayDelegateTest {
         )
     }
 
-    @Nested
-    @DisplayName("when input data changes and")
-    inner class InputDataChangedTest {
-
-        @Test
-        fun `payment data in null, then an exception should be thrown`() {
-            assertThrows(CheckoutException::class.java) {
-                delegate.updateInputData { paymentData = null }
+    @Test
+    fun `when delegate is initialized, then state is not valid`() = runTest {
+        delegate.componentStateFlow.test {
+            with(awaitItem()) {
+                assertNull(data.paymentMethod)
+                assertFalse(isInputValid)
+                assertTrue(isReady)
+                assertNull(paymentData)
             }
+
+            cancelAndIgnoreRemainingEvents()
         }
     }
 
     @Test
-    fun `when creating component state is successful, then the state is propagated`() = runTest {
+    fun `when payment data is null, then state is not valid`() = runTest {
+        delegate.componentStateFlow.test {
+            skipItems(1)
+
+            delegate.updateComponentState(null)
+
+            with(awaitItem()) {
+                assertNull(data.paymentMethod)
+                assertFalse(isInputValid)
+                assertTrue(isReady)
+                assertNull(paymentData)
+            }
+
+            cancelAndIgnoreRemainingEvents()
+        }
+    }
+
+    @Test
+    fun `when creating component state with valid payment data, then the state is propagated`() = runTest {
         delegate.componentStateFlow.test {
             skipItems(1)
 
             val paymentData = paymentData
 
-            delegate.createComponentState(GooglePayOutputData(paymentData))
+            delegate.updateComponentState(paymentData)
 
-            with(requireNotNull(awaitItem())) {
+            with(awaitItem()) {
                 assertTrue(data.paymentMethod is GooglePayPaymentMethod)
                 assertTrue(isInputValid)
                 assertTrue(isReady)
